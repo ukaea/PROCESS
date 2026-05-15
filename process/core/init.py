@@ -26,7 +26,6 @@ from process.data_structure.physics_variables import (
     init_physics_module,
     init_physics_variables,
 )
-from process.data_structure.power_variables import init_power_variables
 from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.scan_variables import init_scan_variables
 from process.data_structure.stellarator_variables import init_stellarator_variables
@@ -257,7 +256,6 @@ def init_all_module_vars():
     constants.init_constants()
     init_pf_power_variables()
     init_rebco_variables()
-    init_power_variables()
     init_neoclassics_variables()
 
 

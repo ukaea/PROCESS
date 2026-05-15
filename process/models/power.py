@@ -15,7 +15,6 @@ from process.data_structure import (
     numerics,
     pf_power_variables,
     physics_variables,
-    power_variables,
     tfcoil_variables,
 )
 from process.data_structure.pfcoil_variables import NGC2
@@ -811,27 +810,27 @@ class Power(Model):
         # than the power deposited in the coolant.
         # The difference should be lost as secondary heat.
 
-        power_variables.p_fw_blkt_coolant_pump_elec_mw = (
+        self.data.power.p_fw_blkt_coolant_pump_elec_mw = (
             self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
             / self.data.fwbs.eta_coolant_pump_electric
         )
-        power_variables.p_shld_coolant_pump_elec_mw = (
+        self.data.power.p_shld_coolant_pump_elec_mw = (
             self.data.heat_transport.p_shld_coolant_pump_mw
             / self.data.fwbs.eta_coolant_pump_electric
         )
-        power_variables.p_div_coolant_pump_elec_mw = (
+        self.data.power.p_div_coolant_pump_elec_mw = (
             self.data.heat_transport.p_div_coolant_pump_mw
             / self.data.fwbs.eta_coolant_pump_electric
         )
 
         # Secondary breeder coolant loop. Should return zero if not used.
-        power_variables.p_blkt_breeder_pump_elec_mw = (
+        self.data.power.p_blkt_breeder_pump_elec_mw = (
             self.data.heat_transport.p_blkt_breeder_pump_mw
             / self.data.fwbs.eta_coolant_pump_electric
         )
 
         # Total mechanical pump power needed (deposited in coolant)
-        power_variables.p_coolant_pump_total_mw = (
+        self.data.power.p_coolant_pump_total_mw = (
             self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
             + self.data.heat_transport.p_blkt_breeder_pump_mw
             + self.data.heat_transport.p_shld_coolant_pump_mw
@@ -840,16 +839,16 @@ class Power(Model):
 
         # Minimum total electrical power for primary coolant pumps (MW)
         self.data.heat_transport.p_coolant_pump_elec_total_mw = (
-            power_variables.p_fw_blkt_coolant_pump_elec_mw
-            + power_variables.p_blkt_breeder_pump_elec_mw
-            + power_variables.p_shld_coolant_pump_elec_mw
-            + power_variables.p_div_coolant_pump_elec_mw
+            self.data.power.p_fw_blkt_coolant_pump_elec_mw
+            + self.data.power.p_blkt_breeder_pump_elec_mw
+            + self.data.power.p_shld_coolant_pump_elec_mw
+            + self.data.power.p_div_coolant_pump_elec_mw
         )
 
         #  Heat lost through pump power inefficiencies (MW)
         self.data.heat_transport.p_coolant_pump_loss_total_mw = (
             self.data.heat_transport.p_coolant_pump_elec_total_mw
-            - power_variables.p_coolant_pump_total_mw
+            - self.data.power.p_coolant_pump_total_mw
         )
 
         # Heat lost in power supplies for heating and current drive
@@ -862,20 +861,20 @@ class Power(Model):
         # Calculate fraction of blanket nuclear power deposited in
         # liquid breeder / coolant
         if self.data.fwbs.i_blkt_dual_coolant == 2:
-            power_variables.p_blkt_liquid_breeder_heat_deposited_mw = (
+            self.data.power.p_blkt_liquid_breeder_heat_deposited_mw = (
                 self.data.fwbs.p_blkt_nuclear_heat_total_mw
                 * self.data.fwbs.f_nuc_pow_bz_liq
             ) + self.data.heat_transport.p_blkt_breeder_pump_mw
 
         # Liquid breeder is circulated but does no cooling
         elif self.data.fwbs.i_blkt_dual_coolant == 1:
-            power_variables.p_blkt_liquid_breeder_heat_deposited_mw = (
+            self.data.power.p_blkt_liquid_breeder_heat_deposited_mw = (
                 self.data.heat_transport.p_blkt_breeder_pump_mw
             )
 
         # Liquid breeder also acts a coolant
         if int(self.data.fwbs.i_blkt_dual_coolant) in {1, 2}:
-            power_variables.p_fw_blkt_heat_deposited_mw = (
+            self.data.power.p_fw_blkt_heat_deposited_mw = (
                 self.data.fwbs.p_fw_nuclear_heat_total_mw
                 + self.data.fwbs.p_fw_rad_total_mw
                 + self.data.fwbs.p_blkt_nuclear_heat_total_mw
@@ -887,7 +886,7 @@ class Power(Model):
             )
         else:
             # No secondary liquid metal breeder/coolant
-            power_variables.p_fw_blkt_heat_deposited_mw = (
+            self.data.power.p_fw_blkt_heat_deposited_mw = (
                 self.data.fwbs.p_fw_nuclear_heat_total_mw
                 + self.data.fwbs.p_fw_rad_total_mw
                 + self.data.fwbs.p_blkt_nuclear_heat_total_mw
@@ -898,7 +897,7 @@ class Power(Model):
             )
 
         #  Total power deposited in first wall coolant (MW)
-        power_variables.p_fw_heat_deposited_mw = (
+        self.data.power.p_fw_heat_deposited_mw = (
             self.data.fwbs.p_fw_nuclear_heat_total_mw
             + self.data.fwbs.p_fw_rad_total_mw
             + self.data.heat_transport.p_fw_coolant_pump_mw
@@ -908,20 +907,20 @@ class Power(Model):
         )
 
         #  Total power deposited in blanket coolant (MW)
-        power_variables.p_blkt_heat_deposited_mw = (
+        self.data.power.p_blkt_heat_deposited_mw = (
             self.data.fwbs.p_blkt_nuclear_heat_total_mw
             + self.data.heat_transport.p_blkt_coolant_pump_mw
         )
 
         #  Total power deposited in shield coolant (MW)
-        power_variables.p_shld_heat_deposited_mw = (
+        self.data.power.p_shld_heat_deposited_mw = (
             self.data.fwbs.p_cp_shield_nuclear_heat_mw
             + self.data.fwbs.p_shld_nuclear_heat_mw
             + self.data.heat_transport.p_shld_coolant_pump_mw
         )
 
         #  Total thermal power deposited in divertor (MW)
-        power_variables.p_div_heat_deposited_mw = (
+        self.data.power.p_div_heat_deposited_mw = (
             physics_variables.p_plasma_separatrix_mw
             + (
                 self.data.fwbs.p_div_nuclear_heat_total_mw
@@ -934,8 +933,8 @@ class Power(Model):
         i_p_coolant_pumping = PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping)
         if i_p_coolant_pumping != PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP:
             self.data.heat_transport.p_fw_div_heat_deposited_mw = (
-                power_variables.p_fw_heat_deposited_mw
-                + power_variables.p_div_heat_deposited_mw
+                self.data.power.p_fw_heat_deposited_mw
+                + self.data.power.p_div_heat_deposited_mw
             )
 
         #  Thermal to electric efficiency
@@ -955,41 +954,41 @@ class Power(Model):
         if i_thermal_electric_conversion == ElectricConversionModelTypes.CCFE_HCPB_VALUE:
             #  Primary thermal power (MW)
             self.data.heat_transport.p_plant_primary_heat_mw = (
-                power_variables.p_fw_blkt_heat_deposited_mw
+                self.data.power.p_fw_blkt_heat_deposited_mw
                 + self.data.heat_transport.i_shld_primary_heat
-                * power_variables.p_shld_heat_deposited_mw
+                * self.data.power.p_shld_heat_deposited_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
             self.data.heat_transport.p_div_secondary_heat_mw = (
-                power_variables.p_div_heat_deposited_mw
+                self.data.power.p_div_heat_deposited_mw
             )
             # Divertor primary/secondary power switch: does NOT contribute to
             # energy generation cycle
-            power_variables.i_div_primary_heat = 0
+            self.data.power.i_div_primary_heat = 0
         else:
             #  Primary thermal power used to generate electricity (MW)
             self.data.heat_transport.p_plant_primary_heat_mw = (
-                power_variables.p_fw_blkt_heat_deposited_mw
+                self.data.power.p_fw_blkt_heat_deposited_mw
                 + self.data.heat_transport.i_shld_primary_heat
-                * power_variables.p_shld_heat_deposited_mw
-                + power_variables.p_div_heat_deposited_mw
+                * self.data.power.p_shld_heat_deposited_mw
+                + self.data.power.p_div_heat_deposited_mw
             )
             #  Secondary thermal power deposited in divertor (MW)
             self.data.heat_transport.p_div_secondary_heat_mw = 0.0e0
             # Divertor primary/secondary power switch: contributes to energy
             # generation cycle
-            power_variables.i_div_primary_heat = 1
+            self.data.power.i_div_primary_heat = 1
 
         if abs(self.data.heat_transport.p_plant_primary_heat_mw) < 1.0e-4:
             logger.error(f"{'ERROR Primary thermal power is zero or negative'}")
 
         # #284 Fraction of total high-grade thermal power to divertor
-        power_variables.f_p_div_primary_heat = (
-            power_variables.p_div_heat_deposited_mw
+        self.data.power.f_p_div_primary_heat = (
+            self.data.power.p_div_heat_deposited_mw
             / self.data.heat_transport.p_plant_primary_heat_mw
         )
         # Loss in efficiency as this primary power is collecetd at very low temperature
-        power_variables.delta_eta = 0.339 * power_variables.f_p_div_primary_heat
+        self.data.power.delta_eta = 0.339 * self.data.power.f_p_div_primary_heat
 
         # ===============================================
         #  Secondary thermal powers
@@ -997,7 +996,7 @@ class Power(Model):
 
         #  Secondary thermal power deposited in shield
         self.data.heat_transport.p_shld_secondary_heat_mw = (
-            power_variables.p_shld_heat_deposited_mw
+            self.data.power.p_shld_heat_deposited_mw
             * (1 - self.data.heat_transport.i_shld_primary_heat)
         )
 
@@ -1140,7 +1139,7 @@ class Power(Model):
             self.outfile,
             "Total heat deposited in FW and coolant [MW]",
             "(p_fw_heat_deposited_mw)",
-            power_variables.p_fw_heat_deposited_mw,
+            self.data.power.p_fw_heat_deposited_mw,
         )
         po.oblnkl(self.outfile)
 
@@ -1177,7 +1176,7 @@ class Power(Model):
             self.outfile,
             "Total heat deposited in Blanket(s) and coolant [MW]",
             "(p_blkt_heat_deposited_mw)",
-            power_variables.p_blkt_heat_deposited_mw,
+            self.data.power.p_blkt_heat_deposited_mw,
         )
 
         po.oblnkl(self.outfile)
@@ -1194,7 +1193,7 @@ class Power(Model):
             self.outfile,
             "Total heat deposited in Blanket(s) and FW coolant [MW]",
             "(p_fw_blkt_heat_deposited_mw)",
-            power_variables.p_fw_blkt_heat_deposited_mw,
+            self.data.power.p_fw_blkt_heat_deposited_mw,
         )
 
         po.oblnkl(self.outfile)
@@ -1227,7 +1226,7 @@ class Power(Model):
             self.outfile,
             "Total heat deposited in VV and shield coolant(s) [MW]",
             "(p_shld_heat_deposited_mw)",
-            power_variables.p_shld_heat_deposited_mw,
+            self.data.power.p_shld_heat_deposited_mw,
         )
 
         po.oblnkl(self.outfile)
@@ -1266,7 +1265,7 @@ class Power(Model):
             self.outfile,
             "Total heat deposited in divertor and coolants [MW]",
             "(p_div_heat_deposited_mw)",
-            power_variables.p_div_heat_deposited_mw,
+            self.data.power.p_div_heat_deposited_mw,
         )
 
         po.oblnkl(self.outfile)
@@ -1277,7 +1276,7 @@ class Power(Model):
             self.outfile,
             "Mechanical pumping power of all coolant pumps [MW]",
             "(p_coolant_pump_total_mw)",
-            power_variables.p_coolant_pump_total_mw,
+            self.data.power.p_coolant_pump_total_mw,
         )
 
         po.oblnkl(self.outfile)
@@ -1290,7 +1289,7 @@ class Power(Model):
             self.outfile,
             "Electric power for core plant systems [MW]",
             "(p_plant_core_systems_elec_mw)",
-            power_variables.p_plant_core_systems_elec_mw,
+            self.data.power.p_plant_core_systems_elec_mw,
         )
         po.ovarre(
             self.outfile,
@@ -1359,19 +1358,19 @@ class Power(Model):
             self.outfile,
             "Total heat deposited in FW and coolant [MW]",
             "(p_fw_heat_deposited_mw)",
-            power_variables.p_fw_heat_deposited_mw,
+            self.data.power.p_fw_heat_deposited_mw,
         )
         po.ovarre(
             self.outfile,
             "Total heat deposited in Blanket(s) and coolant [MW]",
             "(p_blkt_heat_deposited_mw)",
-            power_variables.p_blkt_heat_deposited_mw,
+            self.data.power.p_blkt_heat_deposited_mw,
         )
         po.ovarre(
             self.outfile,
             "Total heat deposited in Blanket(s) and FW coolant [MW]",
             "(p_fw_blkt_heat_deposited_mw)",
-            power_variables.p_fw_blkt_heat_deposited_mw,
+            self.data.power.p_fw_blkt_heat_deposited_mw,
         )
         po.oblnkl(self.outfile)
 
@@ -1379,20 +1378,20 @@ class Power(Model):
             self.outfile,
             "Total heat deposited in VV and shield coolant(s) [MW]",
             "(p_shld_heat_deposited_mw)",
-            power_variables.p_shld_heat_deposited_mw,
+            self.data.power.p_shld_heat_deposited_mw,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Total heat deposited in divertor and coolants [MW]",
             "(p_div_heat_deposited_mw)",
-            power_variables.p_div_heat_deposited_mw,
+            self.data.power.p_div_heat_deposited_mw,
         )
         po.ovarre(
             self.outfile,
             "Fraction of total primary heat originating from divertor",
             "(f_p_div_primary_heat)",
-            power_variables.f_p_div_primary_heat,
+            self.data.power.f_p_div_primary_heat,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
@@ -1426,7 +1425,7 @@ class Power(Model):
             self.outfile,
             "Total thermal power lost in power conversion [MWth]",
             "(p_turbine_loss_mw)",
-            power_variables.p_turbine_loss_mw,
+            self.data.power.p_turbine_loss_mw,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
@@ -1502,14 +1501,14 @@ class Power(Model):
             self.outfile,
             "Electric power demand for CP coolant pumps [MWe]",
             "(p_cp_coolant_pump_elec_mw)",
-            power_variables.p_cp_coolant_pump_elec_mw,
+            self.data.power.p_cp_coolant_pump_elec_mw,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Electric power demand of core plant systems needed at all times [MWe]",
             "(p_plant_core_systems_elec_mw)",
-            power_variables.p_plant_core_systems_elec_mw,
+            self.data.power.p_plant_core_systems_elec_mw,
         )
 
         po.oblnkl(self.outfile)
@@ -1523,25 +1522,25 @@ class Power(Model):
             self.outfile,
             "Electric power demand of FW and Blanket coolant pumps [MWe]",
             "(p_fw_blkt_coolant_pump_elec_mw)",
-            power_variables.p_fw_blkt_coolant_pump_elec_mw,
+            self.data.power.p_fw_blkt_coolant_pump_elec_mw,
         )
         po.ovarre(
             self.outfile,
             "Electric power demand of Blanket secondary breeder coolant pumps [MWe]",
             "(p_blkt_breeder_pump_elec_mw)",
-            power_variables.p_blkt_breeder_pump_elec_mw,
+            self.data.power.p_blkt_breeder_pump_elec_mw,
         )
         po.ovarre(
             self.outfile,
             "Electric power demand of VV and Shield coolant pumps [MWe]",
             "(p_shld_coolant_pump_elec_mw)",
-            power_variables.p_shld_coolant_pump_elec_mw,
+            self.data.power.p_shld_coolant_pump_elec_mw,
         )
         po.ovarre(
             self.outfile,
             "Electric power demand of Divertor colant pumps [MWe]",
             "(p_div_coolant_pump_elec_mw)",
-            power_variables.p_div_coolant_pump_elec_mw,
+            self.data.power.p_div_coolant_pump_elec_mw,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
@@ -1594,13 +1593,13 @@ class Power(Model):
             self.outfile,
             "Total electric energy output per pulse (MJ)",
             "(e_plant_net_electric_pulse_mj)",
-            power_variables.e_plant_net_electric_pulse_mj,
+            self.data.power.e_plant_net_electric_pulse_mj,
         )
         po.ovarre(
             self.outfile,
             "Total electric energy output per pulse (kWh)",
             "(e_plant_net_electric_pulse_kwh)",
-            power_variables.e_plant_net_electric_pulse_kwh,
+            self.data.power.e_plant_net_electric_pulse_kwh,
         )
 
     def plant_electric_production(self):
@@ -1613,11 +1612,11 @@ class Power(Model):
         specified output file.
         """
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup == 0:
-            power_variables.p_cp_coolant_pump_elec_mw = (
+            self.data.power.p_cp_coolant_pump_elec_mw = (
                 1.0e-6 * tfcoil_variables.p_cp_coolant_pump_elec
             )
         else:
-            power_variables.p_cp_coolant_pump_elec_mw = 0.0e0
+            self.data.power.p_cp_coolant_pump_elec_mw = 0.0e0
 
         #  Total baseline power to facility loads, MW
         self.data.heat_transport.p_plant_electric_base_total_mw = (
@@ -1636,10 +1635,10 @@ class Power(Model):
         #  Electrical power consumed by fusion power core systems
         #  (excluding heat transport pumps and auxiliary injection power system)
 
-        power_variables.p_plant_core_systems_elec_mw = (
+        self.data.power.p_plant_core_systems_elec_mw = (
             self.data.heat_transport.p_cryo_plant_electric_mw
             + self.data.heat_transport.fachtmw
-            + power_variables.p_cp_coolant_pump_elec_mw
+            + self.data.power.p_cp_coolant_pump_elec_mw
             + self.data.heat_transport.p_tf_electric_supplies_mw
             + self.data.heat_transport.p_tritium_plant_electric_mw
             + self.data.heat_transport.vachtmw
@@ -1650,7 +1649,7 @@ class Power(Model):
         # contributes to the plant heat load and must be removed
         # by the cooling system (MW)
         self.data.heat_transport.p_plant_secondary_heat_mw = (
-            power_variables.p_plant_core_systems_elec_mw
+            self.data.power.p_plant_core_systems_elec_mw
             + self.data.heat_transport.p_hcd_electric_loss_mw
             + self.data.heat_transport.p_coolant_pump_loss_total_mw
             + self.data.heat_transport.p_div_secondary_heat_mw
@@ -1672,10 +1671,10 @@ class Power(Model):
                 self.data.heat_transport.p_plant_electric_gross_mw = (
                     (
                         self.data.heat_transport.p_plant_primary_heat_mw
-                        - power_variables.p_blkt_liquid_breeder_heat_deposited_mw
+                        - self.data.power.p_blkt_liquid_breeder_heat_deposited_mw
                     )
                     * self.data.heat_transport.eta_turbine
-                    + power_variables.p_blkt_liquid_breeder_heat_deposited_mw
+                    + self.data.power.p_blkt_liquid_breeder_heat_deposited_mw
                     * self.data.heat_transport.etath_liq
                 )
             else:
@@ -1685,14 +1684,14 @@ class Power(Model):
                 )
 
             # Total lost thermal power in the turbine
-            power_variables.p_turbine_loss_mw = (
+            self.data.power.p_turbine_loss_mw = (
                 self.data.heat_transport.p_plant_primary_heat_mw
                 * (1 - self.data.heat_transport.eta_turbine)
             )
 
             #  Total recirculating power
             self.data.heat_transport.p_plant_electric_recirc_mw = (
-                power_variables.p_plant_core_systems_elec_mw
+                self.data.power.p_plant_core_systems_elec_mw
                 + self.data.heat_transport.p_hcd_electric_total_mw
                 + self.data.heat_transport.p_coolant_pump_elec_total_mw
             )
@@ -1710,19 +1709,19 @@ class Power(Model):
             ) / self.data.heat_transport.p_plant_electric_gross_mw
 
         (
-            power_variables.e_plant_net_electric_pulse_kwh,
-            power_variables.e_plant_net_electric_pulse_mj,
-            power_variables.p_plant_electric_base_total_profile_mw,
-            power_variables.p_plant_electric_gross_profile_mw,
-            power_variables.p_plant_electric_net_profile_mw,
-            power_variables.p_hcd_electric_total_profile_mw,
-            power_variables.p_coolant_pump_elec_total_profile_mw,
-            power_variables.p_tf_electric_supplies_profile_mw,
-            power_variables.p_pf_electric_supplies_profile_mw,
-            power_variables.vachtmw_profile_mw,
-            power_variables.p_tritium_plant_electric_profile_mw,
-            power_variables.p_cryo_plant_electric_profile_mw,
-            power_variables.p_fusion_total_profile_mw,
+            self.data.power.e_plant_net_electric_pulse_kwh,
+            self.data.power.e_plant_net_electric_pulse_mj,
+            self.data.power.p_plant_electric_base_total_profile_mw,
+            self.data.power.p_plant_electric_gross_profile_mw,
+            self.data.power.p_plant_electric_net_profile_mw,
+            self.data.power.p_hcd_electric_total_profile_mw,
+            self.data.power.p_coolant_pump_elec_total_profile_mw,
+            self.data.power.p_tf_electric_supplies_profile_mw,
+            self.data.power.p_pf_electric_supplies_profile_mw,
+            self.data.power.vachtmw_profile_mw,
+            self.data.power.p_tritium_plant_electric_profile_mw,
+            self.data.power.p_cryo_plant_electric_profile_mw,
+            self.data.power.p_fusion_total_profile_mw,
         ) = self.power_profiles_over_time(
             t_precharge=self.data.times.t_plant_pulse_coil_precharge,
             t_current_ramp_up=self.data.times.t_plant_pulse_plasma_current_ramp_up,
@@ -1790,9 +1789,9 @@ class Power(Model):
         n_tf_coils :
 
         """
-        power_variables.qss = 4.3e-4 * coldmass
+        self.data.power.qss = 4.3e-4 * coldmass
         if i_tf_sup == 1:
-            power_variables.qss += 2.0e0 * tfcryoarea
+            self.data.power.qss += 2.0e0 * tfcryoarea
 
         #  Nuclear heating of TF coils (W) (zero if resistive)
         if self.data.fwbs.inuclear == 0 and i_tf_sup == 1:
@@ -1800,28 +1799,28 @@ class Power(Model):
         # Issue #511: if self.data.fwbs.inuclear = 1 : self.data.fwbs.qnuc is input.
 
         #  AC losses
-        power_variables.qac = 1.0e3 * ensxpfm / t_plant_pulse_plasma_present
+        self.data.power.qac = 1.0e3 * ensxpfm / t_plant_pulse_plasma_present
 
         #  Current leads
         if i_tf_sup == 1:
-            power_variables.qcl = 13.6e-3 * n_tf_coils * c_tf_turn
+            self.data.power.qcl = 13.6e-3 * n_tf_coils * c_tf_turn
         else:
-            power_variables.qcl = 0.0e0
+            self.data.power.qcl = 0.0e0
 
         #  45% extra miscellaneous, piping and reserves
-        power_variables.qmisc = 0.45e0 * (
-            power_variables.qss
+        self.data.power.qmisc = 0.45e0 * (
+            self.data.power.qss
             + self.data.fwbs.qnuc
-            + power_variables.qac
-            + power_variables.qcl
+            + self.data.power.qac
+            + self.data.power.qcl
         )
         return max(
             0.0e0,
-            power_variables.qmisc
-            + power_variables.qss
+            self.data.power.qmisc
+            + self.data.power.qss
             + self.data.fwbs.qnuc
-            + power_variables.qac
-            + power_variables.qcl,
+            + self.data.power.qac
+            + self.data.power.qcl,
         )
 
     def output_cryogenics(self):
@@ -1840,7 +1839,7 @@ class Power(Model):
             self.outfile,
             "Conduction and radiation heat loads on cryogenic components (MW)",
             "(qss/1.0d6)",
-            power_variables.qss / 1.0e6,
+            self.data.power.qss / 1.0e6,
             "OP ",
         )
         po.ovarre(
@@ -1858,21 +1857,21 @@ class Power(Model):
             self.outfile,
             "AC losses in cryogenic components (MW)",
             "(qac/1.0d6)",
-            power_variables.qac / 1.0e6,
+            self.data.power.qac / 1.0e6,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Resistive losses in current leads (MW)",
             "(qcl/1.0d6)",
-            power_variables.qcl / 1.0e6,
+            self.data.power.qcl / 1.0e6,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "45% allowance for heat loads in transfer lines, storage tanks etc (MW)",
             "(qmisc/1.0d6)",
-            power_variables.qmisc / 1.0e6,
+            self.data.power.qmisc / 1.0e6,
             "OP ",
         )
 
@@ -1956,7 +1955,7 @@ class Power(Model):
                 # Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
                 # Feedheat & reheat cycle assumed
-                eta_turbine = 0.411e0 - power_variables.delta_eta
+                eta_turbine = 0.411e0 - self.data.power.delta_eta
             else:
                 logger.log(f"{'i_blanket_type is not equal to 1.'}")
 
@@ -1998,7 +1997,7 @@ class Power(Model):
                 eta_turbine = (
                     0.1802e0 * np.log(self.data.heat_transport.temp_turbine_coolant_in)
                     - 0.7823
-                    - power_variables.delta_eta
+                    - self.data.power.delta_eta
                 )
 
             else:
@@ -2785,77 +2784,77 @@ class Power(Model):
         self,
     ):
         """Outputs the time-dependent power profiles to the output file"""
-        for i, val in enumerate(power_variables.p_plant_electric_base_total_profile_mw):
+        for i, val in enumerate(self.data.power.p_plant_electric_base_total_profile_mw):
             po.ovarre(
                 self.mfile,
                 f"Plant total electric base load at time point {i}",
                 f"(p_plant_electric_base_total_profile_mw{i})",
                 val,
             )
-        for i, val in enumerate(power_variables.p_plant_electric_gross_profile_mw):
+        for i, val in enumerate(self.data.power.p_plant_electric_gross_profile_mw):
             po.ovarre(
                 self.mfile,
                 f"Plant total electric gross at time point {i}",
                 f"(p_plant_electric_gross_profile_mw{i})",
                 val,
             )
-        for i, val in enumerate(power_variables.p_plant_electric_net_profile_mw):
+        for i, val in enumerate(self.data.power.p_plant_electric_net_profile_mw):
             po.ovarre(
                 self.mfile,
                 f"Plant total electric net at time point {i}",
                 f"(p_plant_electric_net_profile_mw{i})",
                 val,
             )
-        for i, val in enumerate(power_variables.p_hcd_electric_total_profile_mw):
+        for i, val in enumerate(self.data.power.p_hcd_electric_total_profile_mw):
             po.ovarre(
                 self.mfile,
                 f"Plant total electric HCD at time point {i}",
                 f"(p_hcd_electric_total_profile_mw{i})",
                 val,
             )
-        for i, val in enumerate(power_variables.p_coolant_pump_elec_total_profile_mw):
+        for i, val in enumerate(self.data.power.p_coolant_pump_elec_total_profile_mw):
             po.ovarre(
                 self.mfile,
                 f"Plant total electric coolant pump at time point {i}",
                 f"(p_coolant_pump_elec_total_profile_mw{i})",
                 val,
             )
-        for i, val in enumerate(power_variables.p_tf_electric_supplies_profile_mw):
+        for i, val in enumerate(self.data.power.p_tf_electric_supplies_profile_mw):
             po.ovarre(
                 self.mfile,
                 f"Plant total electric TF supplies at time point {i}",
                 f"(p_tf_electric_supplies_profile_mw{i})",
                 val,
             )
-        for i, val in enumerate(power_variables.p_pf_electric_supplies_profile_mw):
+        for i, val in enumerate(self.data.power.p_pf_electric_supplies_profile_mw):
             po.ovarre(
                 self.mfile,
                 f"Plant total electric PF supplies at time point {i}",
                 f"(p_pf_electric_supplies_profile_mw{i})",
                 val,
             )
-        for i, val in enumerate(power_variables.vachtmw_profile_mw):
+        for i, val in enumerate(self.data.power.vachtmw_profile_mw):
             po.ovarre(
                 self.mfile,
                 f"Plant total electric vacuum pump power at time point {i}",
                 f"(vachtmw_profile_mw{i})",
                 val,
             )
-        for i, val in enumerate(power_variables.p_tritium_plant_electric_profile_mw):
+        for i, val in enumerate(self.data.power.p_tritium_plant_electric_profile_mw):
             po.ovarre(
                 self.mfile,
                 f"Plant total electric tritium plant power at time point {i}",
                 f"(p_tritium_plant_electric_profile_mw{i})",
                 val,
             )
-        for i, val in enumerate(power_variables.p_cryo_plant_electric_profile_mw):
+        for i, val in enumerate(self.data.power.p_cryo_plant_electric_profile_mw):
             po.ovarre(
                 self.mfile,
                 f"Plant total electric cryo plant power at time point {i}",
                 f"(p_cryo_plant_electric_profile_mw{i})",
                 val,
             )
-        for i, val in enumerate(power_variables.p_fusion_total_profile_mw):
+        for i, val in enumerate(self.data.power.p_fusion_total_profile_mw):
             po.ovarre(
                 self.mfile,
                 f"Plant total electric fusion plant power at time point {i}",
