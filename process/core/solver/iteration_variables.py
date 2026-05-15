@@ -107,11 +107,11 @@ ITERATION_VARIABLES = {
     73: IterationVariable("dr_fw_plasma_gap_inboard", "build", 0.001, 10.00),
     74: IterationVariable("dr_fw_plasma_gap_outboard", "build", 0.001, 10.00),
     75: IterationVariable("f_dr_tf_outboard_inboard", "build", 0.200, 5.0),
-    81: IterationVariable("edrive", data_structure.ife_variables, 1.0e5, 5.0e7),
-    82: IterationVariable("drveff", data_structure.ife_variables, 0.010, 1.0),
-    83: IterationVariable("tgain", data_structure.ife_variables, 1.0, 500.0),
-    84: IterationVariable("chrad", data_structure.ife_variables, 0.1, 20.00),
-    85: IterationVariable("pdrive", data_structure.ife_variables, 1.0e6, 200.0e6),
+    81: IterationVariable("edrive", "ife", 1.0e5, 5.0e7),
+    82: IterationVariable("drveff", "ife", 0.010, 1.0),
+    83: IterationVariable("tgain", "ife", 1.0, 500.0),
+    84: IterationVariable("chrad", "ife", 0.1, 20.00),
+    85: IterationVariable("pdrive", "ife", 1.0e6, 200.0e6),
     90: IterationVariable("blbuith", "build", 0.001, 2.0),
     91: IterationVariable("blbuoth", "build", 0.001, 2.0),
     93: IterationVariable("dr_shld_inboard", "build", 0.001, 10.00),
@@ -246,8 +246,8 @@ ITERATION_VARIABLES = {
     152: IterationVariable(
         "f_nd_plasma_separatrix_greenwald", data_structure.physics_variables, 0.001, 0.5
     ),
-    155: IterationVariable("pfusife", data_structure.ife_variables, 5.0e2, 3.0e3),
-    156: IterationVariable("rrin", data_structure.ife_variables, 1.0, 1.0e1),
+    155: IterationVariable("pfusife", "ife", 5.0e2, 3.0e3),
+    156: IterationVariable("rrin", "ife", 1.0, 1.0e1),
     158: IterationVariable(
         "dx_croco_strand_copper", data_structure.rebco_variables, 1.0e-3, 1.0e-1
     ),

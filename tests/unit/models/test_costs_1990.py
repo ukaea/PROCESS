@@ -8,7 +8,6 @@ import pytest
 from process import data_structure
 from process.data_structure import (
     divertor_variables,
-    ife_variables,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
@@ -1094,13 +1093,13 @@ def test_acc2211(acc2211param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "lsa", acc2211param.lsa)
 
-    monkeypatch.setattr(ife_variables, "fwmatm", acc2211param.fwmatm)
+    monkeypatch.setattr(costs.data.ife, "fwmatm", acc2211param.fwmatm)
 
-    monkeypatch.setattr(ife_variables, "uccarb", acc2211param.uccarb)
+    monkeypatch.setattr(costs.data.ife, "uccarb", acc2211param.uccarb)
 
-    monkeypatch.setattr(ife_variables, "ife", acc2211param.ife)
+    monkeypatch.setattr(costs.data.ife, "ife", acc2211param.ife)
 
-    monkeypatch.setattr(ife_variables, "ucconc", acc2211param.ucconc)
+    monkeypatch.setattr(costs.data.ife, "ucconc", acc2211param.ucconc)
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2211param.c22)
 
@@ -1359,17 +1358,17 @@ def test_acc2212(acc2212param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.fwbs, "wtbllipb", acc2212param.wtbllipb)
 
-    monkeypatch.setattr(ife_variables, "ucflib", acc2212param.ucflib)
+    monkeypatch.setattr(costs.data.ife, "ucflib", acc2212param.ucflib)
 
-    monkeypatch.setattr(ife_variables, "blmatm", acc2212param.blmatm)
+    monkeypatch.setattr(costs.data.ife, "blmatm", acc2212param.blmatm)
 
-    monkeypatch.setattr(ife_variables, "ife", acc2212param.ife)
+    monkeypatch.setattr(costs.data.ife, "ife", acc2212param.ife)
 
-    monkeypatch.setattr(ife_variables, "ucconc", acc2212param.ucconc)
+    monkeypatch.setattr(costs.data.ife, "ucconc", acc2212param.ucconc)
 
-    monkeypatch.setattr(ife_variables, "mflibe", acc2212param.mflibe)
+    monkeypatch.setattr(costs.data.ife, "mflibe", acc2212param.mflibe)
 
-    monkeypatch.setattr(ife_variables, "uccarb", acc2212param.uccarb)
+    monkeypatch.setattr(costs.data.ife, "uccarb", acc2212param.uccarb)
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2212param.c22)
 
@@ -1538,13 +1537,13 @@ def test_acc2213(acc2213param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.fwbs, "whtshld", acc2213param.whtshld)
 
-    monkeypatch.setattr(ife_variables, "shmatm", acc2213param.shmatm)
+    monkeypatch.setattr(costs.data.ife, "shmatm", acc2213param.shmatm)
 
-    monkeypatch.setattr(ife_variables, "uccarb", acc2213param.uccarb)
+    monkeypatch.setattr(costs.data.ife, "uccarb", acc2213param.uccarb)
 
-    monkeypatch.setattr(ife_variables, "ife", acc2213param.ife)
+    monkeypatch.setattr(costs.data.ife, "ife", acc2213param.ife)
 
-    monkeypatch.setattr(ife_variables, "ucconc", acc2213param.ucconc)
+    monkeypatch.setattr(costs.data.ife, "ucconc", acc2213param.ucconc)
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2213param.c22)
 
@@ -1698,7 +1697,7 @@ def test_acc2215(acc2215param, monkeypatch, costs):
         divertor_variables, "a_div_surface_total", acc2215param.a_div_surface_total
     )
 
-    monkeypatch.setattr(ife_variables, "ife", acc2215param.ife)
+    monkeypatch.setattr(costs.data.ife, "ife", acc2215param.ife)
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2215param.c22)
 
@@ -3061,29 +3060,29 @@ def test_acc223(acc223param, monkeypatch, costs):
         costs.data.current_drive, "p_beam_injected_mw", acc223param.p_beam_injected_mw
     )
 
-    monkeypatch.setattr(ife_variables, "dcdrv2", acc223param.dcdrv2)
+    monkeypatch.setattr(costs.data.ife, "dcdrv2", acc223param.dcdrv2)
 
-    monkeypatch.setattr(ife_variables, "mcdriv", acc223param.mcdriv)
+    monkeypatch.setattr(costs.data.ife, "mcdriv", acc223param.mcdriv)
 
-    monkeypatch.setattr(ife_variables, "cdriv2", acc223param.cdriv2)
+    monkeypatch.setattr(costs.data.ife, "cdriv2", acc223param.cdriv2)
 
-    monkeypatch.setattr(ife_variables, "dcdrv0", acc223param.dcdrv0)
+    monkeypatch.setattr(costs.data.ife, "dcdrv0", acc223param.dcdrv0)
 
-    monkeypatch.setattr(ife_variables, "edrive", acc223param.edrive)
+    monkeypatch.setattr(costs.data.ife, "edrive", acc223param.edrive)
 
-    monkeypatch.setattr(ife_variables, "etadrv", acc223param.etadrv)
+    monkeypatch.setattr(costs.data.ife, "etadrv", acc223param.etadrv)
 
-    monkeypatch.setattr(ife_variables, "ifedrv", acc223param.ifedrv)
+    monkeypatch.setattr(costs.data.ife, "ifedrv", acc223param.ifedrv)
 
-    monkeypatch.setattr(ife_variables, "ife", acc223param.ife)
+    monkeypatch.setattr(costs.data.ife, "ife", acc223param.ife)
 
-    monkeypatch.setattr(ife_variables, "dcdrv1", acc223param.dcdrv1)
+    monkeypatch.setattr(costs.data.ife, "dcdrv1", acc223param.dcdrv1)
 
-    monkeypatch.setattr(ife_variables, "cdriv1", acc223param.cdriv1)
+    monkeypatch.setattr(costs.data.ife, "cdriv1", acc223param.cdriv1)
 
-    monkeypatch.setattr(ife_variables, "cdriv3", acc223param.cdriv3)
+    monkeypatch.setattr(costs.data.ife, "cdriv3", acc223param.cdriv3)
 
-    monkeypatch.setattr(ife_variables, "cdriv0", acc223param.cdriv0)
+    monkeypatch.setattr(costs.data.ife, "cdriv0", acc223param.cdriv0)
 
     monkeypatch.setattr(costs.data.costs, "c22", acc223param.c22)
 
@@ -4116,11 +4115,11 @@ def test_acc2262_rut(acc2262param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "fkind", acc2262param.fkind)
 
-    monkeypatch.setattr(ife_variables, "tfacmw", acc2262param.tfacmw)
+    monkeypatch.setattr(costs.data.ife, "tfacmw", acc2262param.tfacmw)
 
-    monkeypatch.setattr(ife_variables, "ife", acc2262param.ife)
+    monkeypatch.setattr(costs.data.ife, "ife", acc2262param.ife)
 
-    monkeypatch.setattr(ife_variables, "tdspmw", acc2262param.tdspmw)
+    monkeypatch.setattr(costs.data.ife, "tdspmw", acc2262param.tdspmw)
 
     monkeypatch.setattr(
         costs.data.heat_transport,
@@ -4456,15 +4455,15 @@ def test_acc2272_rut(acc2272param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "fkind", acc2272param.fkind)
 
-    monkeypatch.setattr(ife_variables, "fburn", acc2272param.fburn)
+    monkeypatch.setattr(costs.data.ife, "fburn", acc2272param.fburn)
 
-    monkeypatch.setattr(ife_variables, "reprat", acc2272param.reprat)
+    monkeypatch.setattr(costs.data.ife, "reprat", acc2272param.reprat)
 
-    monkeypatch.setattr(ife_variables, "ife", acc2272param.ife)
+    monkeypatch.setattr(costs.data.ife, "ife", acc2272param.ife)
 
-    monkeypatch.setattr(ife_variables, "gain", acc2272param.gain)
+    monkeypatch.setattr(costs.data.ife, "gain", acc2272param.gain)
 
-    monkeypatch.setattr(ife_variables, "edrive", acc2272param.edrive)
+    monkeypatch.setattr(costs.data.ife, "edrive", acc2272param.edrive)
 
     monkeypatch.setattr(physics_variables, "wtgpd", acc2272param.wtgpd)
 
@@ -5910,11 +5909,11 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.fwbs, "life_blkt", coelcparam.life_blkt)
 
-    monkeypatch.setattr(ife_variables, "uctarg", coelcparam.uctarg)
+    monkeypatch.setattr(costs.data.ife, "uctarg", coelcparam.uctarg)
 
-    monkeypatch.setattr(ife_variables, "ife", coelcparam.ife)
+    monkeypatch.setattr(costs.data.ife, "ife", coelcparam.ife)
 
-    monkeypatch.setattr(ife_variables, "reprat", coelcparam.reprat)
+    monkeypatch.setattr(costs.data.ife, "reprat", coelcparam.reprat)
 
     monkeypatch.setattr(
         costs.data.heat_transport,
