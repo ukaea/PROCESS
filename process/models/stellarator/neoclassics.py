@@ -8,7 +8,6 @@ from process.data_structure import (
     impurity_radiation_module,
     neoclassics_variables,
     physics_variables,
-    stellarator_configuration,
 )
 from process.models.stellarator.stellarator import KEV
 
@@ -281,13 +280,13 @@ class Neoclassics(Model):
         return dens, temp, dr_dens, dr_temp
 
     def calc_neoclassics(self):
-        if stellarator_configuration.stella_config_epseff < 0:
+        if self.data.stellarator_config.stella_config_epseff < 0:
             logger.error(
-                f"epseff value lower than 0:  {stellarator_configuration.stella_config_epseff}"
+                f"epseff value lower than 0:  {self.data.stellarator_config.stella_config_epseff}"
             )
         self.init_neoclassics(
             0.6,
-            stellarator_configuration.stella_config_epseff,
+            self.data.stellarator_config.stella_config_epseff,
             self.data.stellarator.iotabar,
         )
 
@@ -791,7 +790,7 @@ class Neoclassics(Model):
             * (
                 impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor
-                / stellarator_configuration.stella_config_rminor_ref
+                / self.data.stellarator_config.stella_config_rminor_ref
             )
             ** 2
         )
@@ -801,7 +800,7 @@ class Neoclassics(Model):
             * (
                 impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor
-                / stellarator_configuration.stella_config_rminor_ref
+                / self.data.stellarator_config.stella_config_rminor_ref
             )
         )
 
