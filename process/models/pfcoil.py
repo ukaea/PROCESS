@@ -9,7 +9,6 @@ from scipy.linalg import svd
 from scipy.special import ellipe, ellipk
 
 import process.core.io.mfile as mf
-import process.models.superconductors as superconductors
 from process.core import constants
 from process.core import process_output as op
 from process.core.exceptions import ProcessValueError
