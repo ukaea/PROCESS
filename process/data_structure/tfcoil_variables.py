@@ -615,7 +615,7 @@ For REBCO model, meaning depends on quench_model:
 
 
 a_tf_inboard_total: float = None
-"""Area of inboard midplane TF legs (m2)"""
+"""Total inboard area of all TF coils (m²)"""
 
 
 len_tf_bus: float = None
@@ -751,7 +751,7 @@ tftmp: float = None
 
 
 dx_tf_inboard_out_toroidal: float = None
-"""TF coil toroidal thickness (m)"""
+"""Inboard leg toroidal thickness at outer edge (m)"""
 
 
 dx_tf_turn_insulation: float = None
