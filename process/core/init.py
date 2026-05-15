@@ -17,7 +17,6 @@ from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.divertor_variables import init_divertor_variables
-from process.data_structure.ife_variables import init_ife_variables
 from process.data_structure.impurity_radiation_module import (
     init_impurity_radiation_module,
 )
@@ -72,7 +71,7 @@ def init_process(data: DataStructure):
     set_active_constraints()
 
     # set the device type (icase)
-    set_device_type()
+    set_device_type(data)
 
     # Initialise the Stellarator
     st_init(data)
@@ -252,7 +251,6 @@ def init_all_module_vars():
     data_structure.numerics.init_numerics()
     init_divertor_variables()
     data_structure.global_variables.init_global_variables()
-    init_ife_variables()
     init_impurity_radiation_module()
     init_pfcoil_module()
     init_physics_module()
@@ -394,10 +392,7 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     # Plasma profile consistency checks
-    if (
-        data_structure.ife_variables.ife != 1
-        and data_structure.physics_variables.i_plasma_pedestal == 1
-    ):
+    if data.ife.ife != 1 and data_structure.physics_variables.i_plasma_pedestal == 1:
         # Temperature checks
         if (
             data_structure.physics_variables.temp_plasma_pedestal_kev
@@ -1256,8 +1251,8 @@ def set_active_constraints():
         data_structure.numerics.nineqns = num_constraints - data_structure.numerics.neqns
 
 
-def set_device_type():
-    if data_structure.ife_variables.ife == 1:
+def set_device_type(data):
+    if data.ife.ife == 1:
         data_structure.global_variables.icase = "Inertial Fusion model"
     elif data_structure.stellarator_variables.istell != 0:
         data_structure.global_variables.icase = "Stellarator model"
