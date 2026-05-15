@@ -1,12 +1,14 @@
 import logging
 import math
 
+import matplotlib.pyplot as plt
 import numba
 import numpy as np
 from scipy import optimize
 from scipy.linalg import svd
 from scipy.special import ellipe, ellipk
 
+import process.core.io.mfile as mf
 from process.core import constants
 from process.core import process_output as op
 from process.core.exceptions import ProcessValueError
@@ -2545,6 +2547,13 @@ class PFCoil(Model):
                 f"(b_pf_coil_peak[{k}])",
                 pfcoil_variables.b_pf_coil_peak[k],
             )
+        for time in range(6):
+            op.ovarre(
+                self.mfile,
+                f"CS coil midplane axial stress at time point {time} (MPa)",
+                f"(stress_z_cs_self_midplane_profile[{time}])",
+                pfcoil_variables.stress_z_cs_self_midplane_profile[time],
+            )
         self.tf_pf_collision_detector()
 
         # Central Solenoid, if present
@@ -3550,6 +3559,7 @@ class CSCoil(Model):
             pfcoil_variables.p_pf_coil_resistive_total_flat_top += (
                 pfcoil_variables.p_cs_resistive_flat_top
             )
+        self.calculate_cs_self_midplane_axial_stress_time_profile()
 
     def calculate_cs_self_peak_magnetic_field(
         self,
@@ -3773,6 +3783,29 @@ class CSCoil(Model):
 
         return s_axial, forc_z_cs_self_peak_midplane
 
+    def calculate_cs_self_midplane_axial_stress_time_profile(
+        self,
+    ) -> None:
+        for time in range(6):
+            stress_value, _ = self.calculate_cs_self_peak_midplane_axial_stress(
+                r_cs_outer=pfcoil_variables.r_pf_coil_outer[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ],
+                r_cs_inner=pfcoil_variables.r_pf_coil_inner[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ],
+                dz_cs_half=pfcoil_variables.dz_cs_full / 2.0,
+                c_cs_peak=(
+                    pfcoil_variables.c_pf_coil_turn[
+                        pfcoil_variables.n_cs_pf_coils - 1, time
+                    ]
+                    * pfcoil_variables.n_pf_coil_turns[
+                        pfcoil_variables.n_cs_pf_coils - 1
+                    ]
+                ),
+            )
+            pfcoil_variables.stress_z_cs_self_midplane_profile[time] = stress_value
+
     def hoop_stress(self, r):
         """Calculation of hoop stress of central solenoid.
 
@@ -3844,6 +3877,56 @@ class CSCoil(Model):
         s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
         return s_hoop_nom / pfcoil_variables.f_a_cs_turn_steel
+
+    @staticmethod
+    def plot_stress_time_profile(axis: plt.Axes, mfile: mf.MFile, scan: int):
+        t_plant_pulse_coil_precharge = mfile.get(
+            "t_plant_pulse_coil_precharge", scan=scan
+        )
+        t_plant_pulse_plasma_current_ramp_up = mfile.get(
+            "t_plant_pulse_plasma_current_ramp_up", scan=scan
+        )
+        t_plant_pulse_fusion_ramp = mfile.get("t_plant_pulse_fusion_ramp", scan=scan)
+        t_plant_pulse_burn = mfile.get("t_plant_pulse_burn", scan=scan)
+        t_plant_pulse_plasma_current_ramp_down = mfile.get(
+            "t_plant_pulse_plasma_current_ramp_down", scan=scan
+        )
+
+        # Define a cumulative sum list for each point in the pulse
+        t_steps = np.cumsum([
+            0,
+            t_plant_pulse_coil_precharge,
+            t_plant_pulse_plasma_current_ramp_up,
+            t_plant_pulse_fusion_ramp,
+            t_plant_pulse_burn,
+            t_plant_pulse_plasma_current_ramp_down,
+        ])
+
+        stress_times = t_steps[
+            :6
+        ]  # Get the first 6 time points corresponding to the stress profile
+
+        stress_z_cs_self_midplane_profile = np.zeros(6)
+        for i in range(6):
+            stress_z_cs_self_midplane_profile[i] = mfile.get(
+                f"stress_z_cs_self_midplane_profile[{i}]", scan=scan
+            )
+
+        # Plot stress vs time
+        axis.plot(
+            stress_times,
+            stress_z_cs_self_midplane_profile / 1e6,
+            "o-",
+            linewidth=2,
+            markersize=8,
+            label="Midplane Axial Stress",
+        )
+        axis.set_xlabel("Pulse Time (s)")
+        axis.set_ylabel("Stress (MPa)")
+        axis.minorticks_on()
+        axis.legend(loc="best")
+        axis.set_title("Central Solenoid Stress")
+        axis.grid(True, alpha=0.3)
 
 
 def peak_b_field_at_pf_coil(
