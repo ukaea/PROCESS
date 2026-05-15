@@ -450,7 +450,6 @@ class SuperconductingTFCoil(TFCoil):
         base `TFCoil` class, which is relevant for all TF coil types.
 
         """
-        
         po.oheadr(self.outfile, "General Superconducting TF Coil Parameters ")
         # Turn/WP gemoetry
         if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
@@ -1261,7 +1260,7 @@ class SuperconductingTFCoil(TFCoil):
         # TF coil radial build
         po.osubhd(self.outfile, "Radial build of TF coil centre-line :")
 
-        radius = build_variables.r_tf_inboard_in
+        radius = self.data.build.r_tf_inboard_in
         po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
 
         # Radial build for SC TF coils
@@ -1355,7 +1354,7 @@ class SuperconductingTFCoil(TFCoil):
             po.obuild(
                 self.outfile,
                 "Plasma side case max radius",
-                build_variables.r_tf_inboard_out,
+                self.data.build.r_tf_inboard_out,
                 radius,
                 "(r_tf_inboard_out)",
             )
@@ -1428,21 +1427,21 @@ class SuperconductingTFCoil(TFCoil):
 
         # Radial build consistency check
         if not (
-            abs(radius - build_variables.r_tf_inboard_in - build_variables.dr_tf_inboard)
+            abs(radius - self.data.build.r_tf_inboard_in - self.data.build.dr_tf_inboard)
             < 10.0e0 * np.finfo(float(radius)).eps
         ):
             logger.error(
                 "TF coil dimensions are not consistent. Radius of plasma-facing side of inner leg should be "
-                f"{build_variables.r_tf_inboard_in + build_variables.dr_tf_inboard}m"
+                f"{self.data.build.r_tf_inboard_in + self.data.build.dr_tf_inboard}m"
             )
 
         tf_total_height = (
-            build_variables.dh_tf_inner_bore + 2 * build_variables.dr_tf_inboard
+            self.data.build.dh_tf_inner_bore + 2 * self.data.build.dr_tf_inboard
         )
         tf_total_width = (
-            build_variables.dr_tf_inner_bore
-            + build_variables.dr_tf_inboard
-            + build_variables.dr_tf_outboard
+            self.data.build.dr_tf_inner_bore
+            + self.data.build.dr_tf_inboard
+            + self.data.build.dr_tf_outboard
         )
         po.oblnkl(self.outfile)
         po.obuild(
@@ -1461,7 +1460,7 @@ class SuperconductingTFCoil(TFCoil):
             # write(self.outfile,5)
 
             # Restart the radial build at bucking cylindre inner radius
-            radius = build_variables.r_tf_inboard_in
+            radius = self.data.build.r_tf_inboard_in
             po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
 
             radius += tfcoil_variables.dr_tf_nose_case
@@ -1529,7 +1528,7 @@ class SuperconductingTFCoil(TFCoil):
             )
 
             # Consistency check
-            if abs(radius - build_variables.r_cp_top) < np.finfo(float(radius)).eps:
+            if abs(radius - self.data.build.r_cp_top) < np.finfo(float(radius)).eps:
                 po.ocmmnt(self.outfile, "Top TF coil dimensions are consistent")
             else:
                 po.ocmmnt(self.outfile, "ERROR: TF coil dimensions are NOT consistent:")
@@ -1537,7 +1536,7 @@ class SuperconductingTFCoil(TFCoil):
                     self.outfile,
                     "Radius of plasma-facing side of inner leg SHOULD BE [m]",
                     "",
-                    build_variables.r_cp_top,
+                    self.data.build.r_cp_top,
                 )
                 po.oblnkl(self.outfile)
 
@@ -3917,7 +3916,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             else:
                 logger.error(
                     "Cable space area problem; artificially set rounded corner "
-                        "radius to 0. %s %s",
+                    "radius to 0. %s %s",
                     a_tf_turn_cable_space_no_void,
                     dx_tf_turn_cable_space_average,
                 )

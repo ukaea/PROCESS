@@ -798,21 +798,21 @@ class TFCoil(Model):
             self.outfile,
             "Inboard leg inner radius (m)",
             "(r_tf_inboard_in)",
-            build_variables.r_tf_inboard_in,
+            self.data.build.r_tf_inboard_in,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Inboard leg centre radius (m)",
             "(r_tf_inboard_mid)",
-            build_variables.r_tf_inboard_mid,
+            self.data.build.r_tf_inboard_mid,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Inboard leg outer radius (m)",
             "(r_tf_inboard_out)",
-            build_variables.r_tf_inboard_out,
+            self.data.build.r_tf_inboard_out,
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -1004,7 +1004,7 @@ class TFCoil(Model):
                 self.outfile,
                 "Distance from the midplane to the top of the centrepost (m)",
                 "(z_tf_inside_half + dr_tf_outboard)",
-                build_variables.z_tf_inside_half + build_variables.dr_tf_outboard,
+                self.data.build.z_tf_inside_half + self.data.build.dr_tf_outboard,
             )
 
         po.oblnkl(self.outfile)
