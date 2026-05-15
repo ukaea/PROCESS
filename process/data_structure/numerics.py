@@ -208,7 +208,7 @@ lablxc: list[str] = None
 * ( 9) NOT USED
 * (10) hfact
 * (11) p_hcd_primary_extra_heat_mw
-* (12) oacdcp
+* (12) j_tf_coil_full_area
 * (13) dr_tf_inboard (NOT RECOMMENDED)
 * (14) NOT USED
 * (15) NOT USED
