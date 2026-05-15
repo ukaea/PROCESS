@@ -278,7 +278,7 @@ def calculate_coils_summary_variables(coilcurrent, r_coil_major, r_coil_minor, a
     # [A] Total current in ALL coils
     tfcoil_variables.c_tf_total = tfcoil_variables.n_tf_coils * coilcurrent * 1.0e6
     # [A / m^2] overall current density
-    tfcoil_variables.oacdcp = (
+    tfcoil_variables.j_tf_coil_full_area = (
         tfcoil_variables.c_tf_total / tfcoil_variables.a_tf_inboard_total
     )
     # [m] radius of peak field occurrence, average

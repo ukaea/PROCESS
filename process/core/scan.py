@@ -60,7 +60,9 @@ class ScanVariables(Enum):
         "p_plant_electric_net_required_mw", "Net_electric_power_(MW)", 3
     )
     hfact = ScanVariable("hfact", "Confinement_H_factor", 4)
-    oacdcp = ScanVariable("oacdcp", "TF_inboard_leg_J_(MA/m2)", 5)
+    j_tf_coil_full_area = ScanVariable(
+        "j_tf_coil_full_area", "TF_inboard_leg_J_(MA/m2)", 5
+    )
     pflux_fw_neutron_max_mw = ScanVariable(
         "pflux_fw_neutron_max_mw", "Allow._wall_load_(MW/m2)", 6
     )
@@ -1079,7 +1081,7 @@ class Scan:
             case 4:
                 physics_variables.hfact = swp[iscn - 1]
             case 5:
-                tfcoil_variables.oacdcp = swp[iscn - 1]
+                tfcoil_variables.j_tf_coil_full_area = swp[iscn - 1]
             case 6:
                 self.data.constraints.pflux_fw_neutron_max_mw = swp[iscn - 1]
             case 7:

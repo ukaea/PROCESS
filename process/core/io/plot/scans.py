@@ -82,7 +82,7 @@ def plot_scan(
         2: "pflux_div_heat_load_max_mw",
         3: "p_plant_electric_net_mw",
         4: "hfact",
-        5: "oacdcp",
+        5: "j_tf_coil_full_area",
         6: "pflux_fw_neutron_max_mw",
         7: "beamfus0",
         8: "Obsolete",  # OBSOLETE

@@ -57,7 +57,9 @@ ITERATION_VARIABLES = {
         1.0e-3,
         1.0e3,
     ),
-    12: IterationVariable("oacdcp", data_structure.tfcoil_variables, 1.0e5, 1.50e8),
+    12: IterationVariable(
+        "j_tf_coil_full_area", data_structure.tfcoil_variables, 1.0e5, 1.50e8
+    ),
     13: IterationVariable("dr_tf_inboard", "build", 0.1, 5.0),
     16: IterationVariable("dr_cs", "build", 0.01, 10.00),
     17: IterationVariable("t_plant_pulse_dwell", "times", 0.1, 1.0e8),

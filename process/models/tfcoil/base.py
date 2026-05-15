@@ -179,7 +179,7 @@ class TFCoil(Model):
             tfcoil_variables.b_tf_inboard_peak_symmetric,
             tfcoil_variables.c_tf_total,
             superconducting_tf_coil_variables.c_tf_coil,
-            tfcoil_variables.oacdcp,
+            tfcoil_variables.j_tf_coil_full_area,
         ) = self.tf_current(
             n_tf_coils=tfcoil_variables.n_tf_coils,
             b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
@@ -406,8 +406,7 @@ class TFCoil(Model):
               magnet [T].
             - **c_tf_total** (*float*): Total current in TF coils [A].
             - **c_tf_coil** (*float*): Current per TF coil [A].
-            - **oacdcp** (*float*): Global inboard leg average current density in TF
-              coils [A/m²].
+            - **j_tf_coil_full_area** (*float*): Global inboard leg average current density in TF coils [A/m²].
         """
         # Calculation of the maximum B field on the magnet [T]
         b_tf_inboard_peak_symmetric = (
@@ -425,9 +424,9 @@ class TFCoil(Model):
         c_tf_coil = c_tf_total / n_tf_coils
 
         # Global inboard leg average current in TF coils [A/m2]
-        oacdcp = c_tf_total / a_tf_inboard_total
+        j_tf_coil_full_area = c_tf_total / a_tf_inboard_total
 
-        return b_tf_inboard_peak_symmetric, c_tf_total, c_tf_coil, oacdcp
+        return b_tf_inboard_peak_symmetric, c_tf_total, c_tf_coil, j_tf_coil_full_area
 
     def tf_coil_shape_inner(
         self,
@@ -1030,14 +1029,14 @@ class TFCoil(Model):
 
         po.ovarre(
             self.outfile,
-            "Inboard leg mid-plane conductor current density (A/m2)",
-            "(oacdcp)",
-            tfcoil_variables.oacdcp,
+            "Inboard leg mid-plane full coil area current density (A/m²)",
+            "(j_tf_coil_full_area)",
+            tfcoil_variables.j_tf_coil_full_area,
         )
         if physics_variables.itart == 1:
             po.ovarre(
                 self.outfile,
-                "Outboard leg conductor current density (A/m2)",
+                "Outboard leg conductor current density (A/m²)",
                 "(cdtfleg)",
                 tfcoil_variables.cdtfleg,
             )

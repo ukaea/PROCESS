@@ -383,7 +383,7 @@ def check_process(inputs, data):  # noqa: ARG001
             data_structure.impurity_radiation_module.f_nd_impurity_electrons[imp]
         )
 
-    # Stop the run if oacdcp is used as an optimisation variable
+    # Stop the run if j_tf_coil_full_area is used as an optimisation variable
     # As the current density is now calculated from b_plasma_toroidal_on_axis without constraint 10
 
     if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 12).any():

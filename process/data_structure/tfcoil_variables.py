@@ -419,10 +419,8 @@ j_tf_wp: float = None
 """winding pack engineering current density (A/m2)"""
 
 
-oacdcp: float = None
-"""Overall current density in TF coil inboard legs midplane (A/m2)
-Rem SK : Not used in tfcoil to set the current any more. Should not be used as
-iteration variable 12 any more. It is now calculated.
+j_tf_coil_full_area: float = None
+"""Inboard leg mid-plane full coil area current density (A/m²)
 """
 
 
@@ -1156,7 +1154,7 @@ def init_tfcoil_variables():
         j_tf_wp_critical, \
         j_tf_wp_quench_heat_max, \
         j_tf_wp, \
-        oacdcp, \
+        j_tf_coil_full_area, \
         eyoung_ins, \
         eyoung_steel, \
         eyoung_cond_axial, \
@@ -1393,7 +1391,7 @@ def init_tfcoil_variables():
     j_tf_wp_critical = 0.0
     j_tf_wp_quench_heat_max = 0.0
     j_tf_wp = 0.0
-    oacdcp = 0.0
+    j_tf_coil_full_area = 0.0
     eyoung_ins = 1.0e8
     eyoung_steel = 2.05e11
     eyoung_cond_axial = 6.6e8
