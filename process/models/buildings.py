@@ -7,7 +7,6 @@ from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
     divertor_variables,
-    pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -73,8 +72,8 @@ class Buildings(Model):
                 self.data.buildings.elevol,
             ) = self.bldgs(
                 output,
-                pfcoil_variables.r_pf_coil_outer_max,
-                pfcoil_variables.m_pf_coil_max,
+                self.data.pf_coil.r_pf_coil_outer_max,
+                self.data.pf_coil.m_pf_coil_max,
                 tfro,
                 tfri,
                 tf_vertical_dim,
@@ -423,7 +422,7 @@ class Buildings(Model):
         # Lateral size driven by radial width of largest component, from:
         #  PF coil max radius, cryostat radius, TF coil outer radius
         width_reactor_piece = max(
-            pfcoil_variables.r_pf_coil_outer_max,
+            self.data.pf_coil.r_pf_coil_outer_max,
             self.data.fwbs.r_cryostat_inboard,
             tf_radial_dim,
         )

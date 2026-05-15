@@ -512,7 +512,7 @@ def constraint_equation_11(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(12, "V.sec", ">=")
-def constraint_equation_12(constraint_registration, _data):
+def constraint_equation_12(constraint_registration, data):
     """Equation for volt-second capability lower limit
 
     vs_plasma_total_required: total V-s needed (Wb)
@@ -521,7 +521,7 @@ def constraint_equation_12(constraint_registration, _data):
     """
     # vs_cs_pf_total_pulse is negative, requires sign change
     return geq(
-        -data_structure.pfcoil_variables.vs_cs_pf_total_pulse,
+        -data.pf_coil.vs_cs_pf_total_pulse,
         data_structure.physics_variables.vs_plasma_total_required,
         constraint_registration,
     )
@@ -822,10 +822,7 @@ def constraint_equation_26(constraint_registration, data):
     j_cs_flat_top_end: central solenoid overall current density at end of flat-top (A/m²)
     """
     return leq(
-        (
-            data_structure.pfcoil_variables.j_cs_flat_top_end
-            / data_structure.pfcoil_variables.j_cs_critical_flat_top_end
-        ),
+        (data.pf_coil.j_cs_flat_top_end / data.pf_coil.j_cs_critical_flat_top_end),
         data.constraints.fjohc,
         constraint_registration,
     )
@@ -840,10 +837,7 @@ def constraint_equation_27(constraint_registration, data):
     j_cs_pulse_start: central solenoid overall current density at beginning of pulse (A/m²)
     """
     return leq(
-        (
-            data_structure.pfcoil_variables.j_cs_pulse_start
-            / data_structure.pfcoil_variables.j_cs_critical_pulse_start
-        ),
+        (data.pf_coil.j_cs_pulse_start / data.pf_coil.j_cs_critical_pulse_start),
         data.constraints.fjohc0,
         constraint_registration,
     )
@@ -1197,7 +1191,7 @@ def constraint_equation_50(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(51, "V.s", "=")
-def constraint_equation_51(constraint_registration, _data):
+def constraint_equation_51(constraint_registration, data):
     """Equation to enforce startup flux = available startup flux
 
     vs_plasma_res_ramp: resistive losses in startup V-s (Wb)
@@ -1209,7 +1203,7 @@ def constraint_equation_51(constraint_registration, _data):
             data_structure.physics_variables.vs_plasma_res_ramp
             + data_structure.physics_variables.vs_plasma_ind_ramp
         ),
-        data_structure.pfcoil_variables.vs_cs_pf_total_ramp,
+        data.pf_coil.vs_cs_pf_total_ramp,
         constraint_registration,
     )
 
@@ -1296,14 +1290,14 @@ def constraint_equation_59(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(60, "K", ">=")
-def constraint_equation_60(constraint_registration, _data):
+def constraint_equation_60(constraint_registration, data):
     """Equation for Central Solenoid s/c temperature margin lower limit
 
     temp_cs_superconductor_margin: Central solenoid temperature margin (K)
     temp_cs_superconductor_margin_min: Minimum allowable temperature margin : CS (K)
     """
     return geq(
-        data_structure.pfcoil_variables.temp_cs_superconductor_margin,
+        data.pf_coil.temp_cs_superconductor_margin,
         data_structure.tfcoil_variables.temp_cs_superconductor_margin_min,
         constraint_registration,
     )
@@ -1483,16 +1477,16 @@ def constraint_equation_72(constraint_registration, data):
     ):
         return leq(
             max(
-                data_structure.pfcoil_variables.s_shear_cs_peak,
+                data.pf_coil.s_shear_cs_peak,
                 data_structure.tfcoil_variables.sig_tf_cs_bucked,
             ),
-            data_structure.pfcoil_variables.alstroh,
+            data.pf_coil.alstroh,
             constraint_registration,
         )
     # Free standing CS
     return leq(
-        data_structure.pfcoil_variables.s_shear_cs_peak,
-        data_structure.pfcoil_variables.alstroh,
+        data.pf_coil.s_shear_cs_peak,
+        data.pf_coil.alstroh,
         constraint_registration,
     )
 
@@ -1613,7 +1607,7 @@ def constraint_equation_78(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(79, "A/turn", "<=")
-def constraint_equation_79(constraint_registration, _data):
+def constraint_equation_79(constraint_registration, data):
     """Equation for maximum CS field
 
     b_cs_limit_max: Central solenoid max field limit [T]
@@ -1623,10 +1617,10 @@ def constraint_equation_79(constraint_registration, _data):
     """
     return leq(
         max(
-            data_structure.pfcoil_variables.b_cs_peak_flat_top_end,
-            data_structure.pfcoil_variables.b_cs_peak_pulse_start,
+            data.pf_coil.b_cs_peak_flat_top_end,
+            data.pf_coil.b_cs_peak_pulse_start,
         ),
-        data_structure.pfcoil_variables.b_cs_limit_max,
+        data.pf_coil.b_cs_limit_max,
         constraint_registration,
     )
 
