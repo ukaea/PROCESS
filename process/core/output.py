@@ -30,7 +30,7 @@ def write(models, data, _outfile):
         return
 
     #  Call IFE output routine instead if relevant
-    if data_structure.ife_variables.ife != 0:
+    if data.ife.ife != 0:
         models.ife.output()
         return
 
