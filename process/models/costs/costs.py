@@ -8,9 +8,7 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
     divertor_variables,
-    ife_variables,
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -98,7 +96,7 @@ class Costs(Model):
             self.data.fwbs.life_blkt,
         )
 
-        if ife_variables.ife != 1:
+        if self.data.ife.ife != 1:
             po.ovarrf(
                 self.outfile,
                 "Divertor life (years)",
@@ -132,7 +130,7 @@ class Costs(Model):
                 "(blkcst)",
                 self.data.costs.blkcst,
             )
-            if ife_variables.ife != 1:
+            if self.data.ife.ife != 1:
                 po.ovarrf(
                     self.outfile,
                     "Divertor direct capital cost (M$)",
@@ -260,7 +258,7 @@ class Costs(Model):
 
         po.oshead(self.outfile, "Reactor Systems")
         po.ocosts(self.outfile, "(c2211)", "First wall cost (M$)", self.data.costs.c2211)
-        if ife_variables.ife != 1:
+        if self.data.ife.ife != 1:
             po.ocosts(
                 self.outfile,
                 "(c22121)",
@@ -375,7 +373,7 @@ class Costs(Model):
             self.data.costs.c221,
         )
 
-        if ife_variables.ife != 1:
+        if self.data.ife.ife != 1:
             po.oshead(self.outfile, "Magnets")
 
             if (
@@ -492,7 +490,7 @@ class Costs(Model):
 
         po.oshead(self.outfile, "Power Injection")
 
-        if ife_variables.ife == 1:
+        if self.data.ife.ife == 1:
             po.ocosts(
                 self.outfile,
                 "(c2231)",
@@ -567,7 +565,7 @@ class Costs(Model):
             self.data.costs.c224,
         )
 
-        if ife_variables.ife != 1:
+        if self.data.ife.ife != 1:
             po.oshead(self.outfile, "Power Conditioning")
             po.ocosts(
                 self.outfile,
@@ -976,7 +974,7 @@ class Costs(Model):
         This routine evaluates the Account 222 (magnet) costs,
         including the costs of associated cryostats.
         """
-        if ife_variables.ife == 1:
+        if self.data.ife.ife == 1:
             self.data.costs.c222 = 0.0e0
             return
 
@@ -1001,7 +999,7 @@ class Costs(Model):
         """Account 225 : Power conditioning
         This routine evaluates the Account 225 (power conditioning) costs.
         """
-        if ife_variables.ife == 1:
+        if self.data.ife.ife == 1:
             self.data.costs.c225 = 0.0e0
         else:
             #  Account 225.1 : TF coil power conditioning
@@ -1153,7 +1151,7 @@ class Costs(Model):
         """
         cmlsa = [0.5000e0, 0.7500e0, 0.8750e0, 1.0000e0]
 
-        if ife_variables.ife != 1:
+        if self.data.ife.ife != 1:
             self.data.costs.c2211 = (
                 1.0e-6
                 * cmlsa[self.data.costs.lsa - 1]
@@ -1170,27 +1168,27 @@ class Costs(Model):
                 * (
                     self.data.costs.ucblss
                     * (
-                        ife_variables.fwmatm[0, 0]
-                        + ife_variables.fwmatm[1, 0]
-                        + ife_variables.fwmatm[2, 0]
+                        self.data.ife.fwmatm[0, 0]
+                        + self.data.ife.fwmatm[1, 0]
+                        + self.data.ife.fwmatm[2, 0]
                     )
-                    + ife_variables.uccarb
+                    + self.data.ife.uccarb
                     * (
-                        ife_variables.fwmatm[0, 1]
-                        + ife_variables.fwmatm[1, 1]
-                        + ife_variables.fwmatm[2, 1]
+                        self.data.ife.fwmatm[0, 1]
+                        + self.data.ife.fwmatm[1, 1]
+                        + self.data.ife.fwmatm[2, 1]
                     )
                     + self.data.costs.ucblli2o
                     * (
-                        ife_variables.fwmatm[0, 3]
-                        + ife_variables.fwmatm[1, 3]
-                        + ife_variables.fwmatm[2, 3]
+                        self.data.ife.fwmatm[0, 3]
+                        + self.data.ife.fwmatm[1, 3]
+                        + self.data.ife.fwmatm[2, 3]
                     )
-                    + ife_variables.ucconc
+                    + self.data.ife.ucconc
                     * (
-                        ife_variables.fwmatm[0, 4]
-                        + ife_variables.fwmatm[1, 4]
-                        + ife_variables.fwmatm[2, 4]
+                        self.data.ife.fwmatm[0, 4]
+                        + self.data.ife.fwmatm[1, 4]
+                        + self.data.ife.fwmatm[2, 4]
                     )
                 )
             )
@@ -1215,7 +1213,7 @@ class Costs(Model):
         """
         cmlsa = [0.5000e0, 0.7500e0, 0.8750e0, 1.0000e0]
 
-        if ife_variables.ife != 1:
+        if self.data.ife.ife != 1:
             #  Solid blanket (Li2O + Be)
             self.data.costs.c22121 = (
                 1.0e-6 * self.data.fwbs.m_blkt_beryllium * self.data.costs.ucblbe
@@ -1250,23 +1248,23 @@ class Costs(Model):
             self.data.costs.c22124 = 0.0e0
             self.data.costs.c22125 = (
                 1.0e-6
-                * ife_variables.uccarb
+                * self.data.ife.uccarb
                 * (
-                    ife_variables.blmatm[0, 1]
-                    + ife_variables.blmatm[1, 1]
-                    + ife_variables.blmatm[2, 1]
+                    self.data.ife.blmatm[0, 1]
+                    + self.data.ife.blmatm[1, 1]
+                    + self.data.ife.blmatm[2, 1]
                 )
             )
             self.data.costs.c22126 = (
                 1.0e-6
-                * ife_variables.ucconc
+                * self.data.ife.ucconc
                 * (
-                    ife_variables.blmatm[0, 4]
-                    + ife_variables.blmatm[1, 4]
-                    + ife_variables.blmatm[2, 4]
+                    self.data.ife.blmatm[0, 4]
+                    + self.data.ife.blmatm[1, 4]
+                    + self.data.ife.blmatm[2, 4]
                 )
             )
-            self.data.costs.c22127 = 1.0e-6 * ife_variables.ucflib * ife_variables.mflibe
+            self.data.costs.c22127 = 1.0e-6 * self.data.ife.ucflib * self.data.ife.mflibe
             self.data.costs.c22128 = (
                 1.0e-6 * self.data.costs.ucblli * self.data.fwbs.m_blkt_lithium
             )
@@ -1331,7 +1329,7 @@ class Costs(Model):
         """
         cmlsa = [0.5000e0, 0.7500e0, 0.8750e0, 1.0000e0]
 
-        if ife_variables.ife != 1:
+        if self.data.ife.ife != 1:
             self.data.costs.c22131 = (
                 1.0e-6
                 * self.data.fwbs.whtshld
@@ -1345,27 +1343,27 @@ class Costs(Model):
                 * (
                     self.data.costs.ucshld
                     * (
-                        ife_variables.shmatm[0, 0]
-                        + ife_variables.shmatm[1, 0]
-                        + ife_variables.shmatm[2, 0]
+                        self.data.ife.shmatm[0, 0]
+                        + self.data.ife.shmatm[1, 0]
+                        + self.data.ife.shmatm[2, 0]
                     )
-                    + ife_variables.uccarb
+                    + self.data.ife.uccarb
                     * (
-                        ife_variables.shmatm[0, 1]
-                        + ife_variables.shmatm[1, 1]
-                        + ife_variables.shmatm[2, 1]
+                        self.data.ife.shmatm[0, 1]
+                        + self.data.ife.shmatm[1, 1]
+                        + self.data.ife.shmatm[2, 1]
                     )
                     + self.data.costs.ucblli2o
                     * (
-                        ife_variables.shmatm[0, 3]
-                        + ife_variables.shmatm[1, 3]
-                        + ife_variables.shmatm[2, 3]
+                        self.data.ife.shmatm[0, 3]
+                        + self.data.ife.shmatm[1, 3]
+                        + self.data.ife.shmatm[2, 3]
                     )
-                    + ife_variables.ucconc
+                    + self.data.ife.ucconc
                     * (
-                        ife_variables.shmatm[0, 4]
-                        + ife_variables.shmatm[1, 4]
-                        + ife_variables.shmatm[2, 4]
+                        self.data.ife.shmatm[0, 4]
+                        + self.data.ife.shmatm[1, 4]
+                        + self.data.ife.shmatm[2, 4]
                     )
                 )
             )
@@ -1373,7 +1371,7 @@ class Costs(Model):
         self.data.costs.c22131 = self.data.costs.fkind * self.data.costs.c22131
 
         #  Penetration shield assumed to be typical steel plate
-        if ife_variables.ife != 1:
+        if self.data.ife.ife != 1:
             self.data.costs.c22132 = (
                 1.0e-6
                 * self.data.fwbs.wpenshld
@@ -1414,7 +1412,7 @@ class Costs(Model):
         <P>If ifueltyp = 2, the initial divertor is included as a capital cost
         and the replacement divertor costs ae treated as a fuel cost,
         """
-        if ife_variables.ife != 1:
+        if self.data.ife.ife != 1:
             self.data.costs.c2215 = (
                 1.0e-6 * divertor_variables.a_div_surface_total * self.data.costs.ucdiv
             )
@@ -1605,12 +1603,12 @@ class Costs(Model):
         #  Total length of PF coil windings (m)
 
         pfwndl = 0.0e0
-        for i in range(pfcoil_variables.n_cs_pf_coils):
+        for i in range(self.data.pf_coil.n_cs_pf_coils):
             pfwndl += (
                 2.0
                 * np.pi
-                * pfcoil_variables.r_pf_coil_middle[i]
-                * pfcoil_variables.n_pf_coil_turns[i]
+                * self.data.pf_coil.r_pf_coil_middle[i]
+                * self.data.pf_coil.n_pf_coil_turns[i]
             )
 
         #  Account 222.2.1 : Conductor
@@ -1620,75 +1618,75 @@ class Costs(Model):
         #  each superconducting cable (so is zero for resistive coils)
 
         costpfsh = (
-            0.0 if pfcoil_variables.i_pf_conductor == 1 else self.data.costs.cconshpf
+            0.0 if self.data.pf_coil.i_pf_conductor == 1 else self.data.costs.cconshpf
         )
 
         #  Non-Central Solenoid coils
 
         if self.data.build.iohcl == 1:
-            npf = pfcoil_variables.n_cs_pf_coils - 1
+            npf = self.data.pf_coil.n_cs_pf_coils - 1
         else:
-            npf = pfcoil_variables.n_cs_pf_coils
+            npf = self.data.pf_coil.n_cs_pf_coils
 
         self.data.costs.c22221 = 0.0e0
 
         for i in range(npf):
             #  Superconductor ($/m)
             if self.data.costs.supercond_cost_model == 0:
-                if pfcoil_variables.i_pf_conductor == 0:
+                if self.data.pf_coil.i_pf_conductor == 0:
                     costpfsc = (
-                        self.data.costs.ucsc[pfcoil_variables.i_pf_superconductor - 1]
-                        * (1.0e0 - pfcoil_variables.fcupfsu)
-                        * (1.0e0 - pfcoil_variables.f_a_pf_coil_void[i])
+                        self.data.costs.ucsc[self.data.pf_coil.i_pf_superconductor - 1]
+                        * (1.0e0 - self.data.pf_coil.fcupfsu)
+                        * (1.0e0 - self.data.pf_coil.f_a_pf_coil_void[i])
                         * abs(
-                            pfcoil_variables.c_pf_cs_coils_peak_ma[i]
-                            / pfcoil_variables.n_pf_coil_turns[i]
+                            self.data.pf_coil.c_pf_cs_coils_peak_ma[i]
+                            / self.data.pf_coil.n_pf_coil_turns[i]
                         )
                         * 1.0e6
-                        / pfcoil_variables.j_pf_coil_wp_peak[i]
+                        / self.data.pf_coil.j_pf_coil_wp_peak[i]
                         * tfcoil_variables.dcond[
-                            pfcoil_variables.i_pf_superconductor - 1
+                            self.data.pf_coil.i_pf_superconductor - 1
                         ]
                     )
                 else:
                     costpfsc = 0.0e0
-            elif pfcoil_variables.i_pf_conductor == 0:
+            elif self.data.pf_coil.i_pf_conductor == 0:
                 costpfsc = (
                     self.data.costs.sc_mat_cost_0[
-                        pfcoil_variables.i_pf_superconductor - 1
+                        self.data.pf_coil.i_pf_superconductor - 1
                     ]
                     * tfcoil_variables.j_crit_str_0[
-                        pfcoil_variables.i_pf_superconductor - 1
+                        self.data.pf_coil.i_pf_superconductor - 1
                     ]
-                    / pfcoil_variables.j_crit_str_pf
+                    / self.data.pf_coil.j_crit_str_pf
                 )
             else:
                 costpfsc = 0.0
 
             #  Copper ($/m)
-            if pfcoil_variables.i_pf_conductor == 0:
+            if self.data.pf_coil.i_pf_conductor == 0:
                 costpfcu = (
                     self.data.costs.uccu
-                    * pfcoil_variables.fcupfsu
-                    * (1.0e0 - pfcoil_variables.f_a_pf_coil_void[i])
+                    * self.data.pf_coil.fcupfsu
+                    * (1.0e0 - self.data.pf_coil.f_a_pf_coil_void[i])
                     * abs(
-                        pfcoil_variables.c_pf_cs_coils_peak_ma[i]
-                        / pfcoil_variables.n_pf_coil_turns[i]
+                        self.data.pf_coil.c_pf_cs_coils_peak_ma[i]
+                        / self.data.pf_coil.n_pf_coil_turns[i]
                     )
                     * 1.0e6
-                    / pfcoil_variables.j_pf_coil_wp_peak[i]
+                    / self.data.pf_coil.j_pf_coil_wp_peak[i]
                     * constants.den_copper
                 )
             else:
                 costpfcu = (
                     self.data.costs.uccu
-                    * (1.0e0 - pfcoil_variables.f_a_pf_coil_void[i])
+                    * (1.0e0 - self.data.pf_coil.f_a_pf_coil_void[i])
                     * abs(
-                        pfcoil_variables.c_pf_cs_coils_peak_ma[i]
-                        / pfcoil_variables.n_pf_coil_turns[i]
+                        self.data.pf_coil.c_pf_cs_coils_peak_ma[i]
+                        / self.data.pf_coil.n_pf_coil_turns[i]
                     )
                     * 1.0e6
-                    / pfcoil_variables.j_pf_coil_wp_peak[i]
+                    / self.data.pf_coil.j_pf_coil_wp_peak[i]
                     * constants.den_copper
                 )
 
@@ -1706,8 +1704,8 @@ class Costs(Model):
                 1.0e-6
                 * 2.0
                 * np.pi
-                * pfcoil_variables.r_pf_coil_middle[i]
-                * pfcoil_variables.n_pf_coil_turns[i]
+                * self.data.pf_coil.r_pf_coil_middle[i]
+                * self.data.pf_coil.n_pf_coil_turns[i]
                 * cpfconpm
             )
 
@@ -1717,44 +1715,44 @@ class Costs(Model):
             #  Superconductor ($/m)
             if self.data.costs.supercond_cost_model == 0:
                 #  Issue #328  Use CS conductor cross-sectional area (m2)
-                if pfcoil_variables.i_pf_conductor == 0:
+                if self.data.pf_coil.i_pf_conductor == 0:
                     costpfsc = (
-                        self.data.costs.ucsc[pfcoil_variables.i_cs_superconductor - 1]
-                        * pfcoil_variables.awpoh
-                        * (1 - pfcoil_variables.f_a_cs_void)
-                        * (1 - pfcoil_variables.fcuohsu)
-                        / pfcoil_variables.n_pf_coil_turns[
-                            pfcoil_variables.n_cs_pf_coils - 1
+                        self.data.costs.ucsc[self.data.pf_coil.i_cs_superconductor - 1]
+                        * self.data.pf_coil.awpoh
+                        * (1 - self.data.pf_coil.f_a_cs_void)
+                        * (1 - self.data.pf_coil.fcuohsu)
+                        / self.data.pf_coil.n_pf_coil_turns[
+                            self.data.pf_coil.n_cs_pf_coils - 1
                         ]
                         * tfcoil_variables.dcond[
-                            pfcoil_variables.i_cs_superconductor - 1
+                            self.data.pf_coil.i_cs_superconductor - 1
                         ]
                     )
                 else:
                     costpfsc = 0.0e0
-            elif pfcoil_variables.i_pf_conductor == 0:
+            elif self.data.pf_coil.i_pf_conductor == 0:
                 costpfsc = (
                     self.data.costs.sc_mat_cost_0[
-                        pfcoil_variables.i_cs_superconductor - 1
+                        self.data.pf_coil.i_cs_superconductor - 1
                     ]
                     * tfcoil_variables.j_crit_str_0[
-                        pfcoil_variables.i_cs_superconductor - 1
+                        self.data.pf_coil.i_cs_superconductor - 1
                     ]
-                    / pfcoil_variables.j_crit_str_cs
+                    / self.data.pf_coil.j_crit_str_cs
                 )
             else:
                 costpfsc = 0.0e0
 
             #  Copper ($/m)
 
-            if pfcoil_variables.i_pf_conductor == 0:
+            if self.data.pf_coil.i_pf_conductor == 0:
                 costpfcu = (
                     self.data.costs.uccu
-                    * pfcoil_variables.awpoh
-                    * (1 - pfcoil_variables.f_a_cs_void)
-                    * pfcoil_variables.fcuohsu
-                    / pfcoil_variables.n_pf_coil_turns[
-                        pfcoil_variables.n_cs_pf_coils - 1
+                    * self.data.pf_coil.awpoh
+                    * (1 - self.data.pf_coil.f_a_cs_void)
+                    * self.data.pf_coil.fcuohsu
+                    / self.data.pf_coil.n_pf_coil_turns[
+                        self.data.pf_coil.n_cs_pf_coils - 1
                     ]
                     * constants.den_copper
                 )
@@ -1762,10 +1760,10 @@ class Costs(Model):
                 # MDK I don't know if this is ccorrect as we never use the resistive model
                 costpfcu = (
                     self.data.costs.uccu
-                    * pfcoil_variables.awpoh
-                    * (1 - pfcoil_variables.f_a_cs_void)
-                    / pfcoil_variables.n_pf_coil_turns[
-                        pfcoil_variables.n_cs_pf_coils - 1
+                    * self.data.pf_coil.awpoh
+                    * (1 - self.data.pf_coil.f_a_cs_void)
+                    / self.data.pf_coil.n_pf_coil_turns[
+                        self.data.pf_coil.n_cs_pf_coils - 1
                     ]
                     * constants.den_copper
                 )
@@ -1784,8 +1782,8 @@ class Costs(Model):
                 1.0e-6
                 * 2.0
                 * np.pi
-                * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
-                * pfcoil_variables.n_pf_coil_turns[pfcoil_variables.n_cs_pf_coils - 1]
+                * self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1]
+                * self.data.pf_coil.n_pf_coil_turns[self.data.pf_coil.n_cs_pf_coils - 1]
                 * cpfconpm
             )
 
@@ -1807,7 +1805,7 @@ class Costs(Model):
         #  Account 222.2.3 : Steel case - will be zero for resistive coils
 
         self.data.costs.c22223 = (
-            1.0e-6 * self.data.costs.uccase * pfcoil_variables.m_pf_coil_structure_total
+            1.0e-6 * self.data.costs.uccase * self.data.pf_coil.m_pf_coil_structure_total
         )
         self.data.costs.c22223 = (
             self.data.costs.fkind
@@ -1861,7 +1859,7 @@ class Costs(Model):
         to the system's short life.
         """
         exprf = 1.0e0
-        if ife_variables.ife != 1:
+        if self.data.ife.ife != 1:
             #  Account 223.1 : ECH
 
             self.data.costs.c2231 = (
@@ -1921,36 +1919,36 @@ class Costs(Model):
             #  Assume offset linear form for generic and SOMBRERO types,
             #  or one of two offset linear forms for OSIRIS type
 
-            if ife_variables.ifedrv == 2:
-                if ife_variables.dcdrv1 <= ife_variables.dcdrv2:
+            if self.data.ife.ifedrv == 2:
+                if self.data.ife.dcdrv1 <= self.data.ife.dcdrv2:
                     switch = 0.0e0
                 else:
-                    switch = (ife_variables.cdriv2 - ife_variables.cdriv1) / (
-                        ife_variables.dcdrv1 - ife_variables.dcdrv2
+                    switch = (self.data.ife.cdriv2 - self.data.ife.cdriv1) / (
+                        self.data.ife.dcdrv1 - self.data.ife.dcdrv2
                     )
 
-                if ife_variables.edrive <= switch:
-                    self.data.costs.c2231 = ife_variables.mcdriv * (
-                        ife_variables.cdriv1
-                        + ife_variables.dcdrv1 * 1.0e-6 * ife_variables.edrive
+                if self.data.ife.edrive <= switch:
+                    self.data.costs.c2231 = self.data.ife.mcdriv * (
+                        self.data.ife.cdriv1
+                        + self.data.ife.dcdrv1 * 1.0e-6 * self.data.ife.edrive
                     )
                 else:
-                    self.data.costs.c2231 = ife_variables.mcdriv * (
-                        ife_variables.cdriv2
-                        + ife_variables.dcdrv2 * 1.0e-6 * ife_variables.edrive
+                    self.data.costs.c2231 = self.data.ife.mcdriv * (
+                        self.data.ife.cdriv2
+                        + self.data.ife.dcdrv2 * 1.0e-6 * self.data.ife.edrive
                     )
 
-            elif ife_variables.ifedrv == 3:
+            elif self.data.ife.ifedrv == 3:
                 self.data.costs.c2231 = (
-                    ife_variables.mcdriv
+                    self.data.ife.mcdriv
                     * 1.0e-6
-                    * ife_variables.cdriv3
-                    * (ife_variables.edrive / ife_variables.etadrv)
+                    * self.data.ife.cdriv3
+                    * (self.data.ife.edrive / self.data.ife.etadrv)
                 )
             else:
-                self.data.costs.c2231 = ife_variables.mcdriv * (
-                    ife_variables.cdriv0
-                    + ife_variables.dcdrv0 * 1.0e-6 * ife_variables.edrive
+                self.data.costs.c2231 = self.data.ife.mcdriv * (
+                    self.data.ife.cdriv0
+                    + self.data.ife.dcdrv0 * 1.0e-6 * self.data.ife.edrive
                 )
 
             if self.data.costs.ifueltyp == 1:
@@ -2273,13 +2271,13 @@ class Costs(Model):
             )
         )
 
-        if ife_variables.ife == 1:
+        if self.data.ife.ife == 1:
             self.data.costs.cppa += (
                 1.0e-6
                 * self.data.costs.UCAHTS
                 * (
-                    (1.0e6 * ife_variables.tdspmw) ** exphts
-                    + (1.0e6 * ife_variables.tfacmw) ** exphts
+                    (1.0e6 * self.data.ife.tdspmw) ** exphts
+                    + (1.0e6 * self.data.ife.tfacmw) ** exphts
                 )
             )
 
@@ -2337,7 +2335,7 @@ class Costs(Model):
         """Account 2272 : Fuel processing and purification
         This routine evaluates the Account 2272 - Fuel processing
         """
-        if ife_variables.ife != 1:
+        if self.data.ife.ife != 1:
             #  Previous calculation, using molflow_plasma_fuelling_required in Amps:
             #  1.3 should have been physics_variables.m_fuel_amu*umass/electron_charge*1000*s/day = 2.2
             # wtgpd = burnup * molflow_plasma_fuelling_required * 1.3e0
@@ -2353,14 +2351,14 @@ class Costs(Model):
             )
         else:
             targtm = (
-                ife_variables.gain
-                * ife_variables.edrive
+                self.data.ife.gain
+                * self.data.ife.edrive
                 * 3.0e0
                 * 1.67e-27
                 * 1.0e3
-                / (constants.ELECTRON_VOLT * 17.6e6 * ife_variables.fburn)
+                / (constants.ELECTRON_VOLT * 17.6e6 * self.data.ife.fburn)
             )
-            physics_variables.wtgpd = targtm * ife_variables.reprat * 86400.0e0
+            physics_variables.wtgpd = targtm * self.data.ife.reprat * 86400.0e0
 
         #  Assumes that He3 costs same as tritium to process...
         self.data.costs.c2272 = (
@@ -2697,7 +2695,7 @@ class Costs(Model):
         millidollars/kWh, while other costs are in megadollars.
         All values are based on 1990 dollars.
         """
-        if ife_variables.ife == 1:
+        if self.data.ife.ife == 1:
             kwhpy = (
                 1.0e3
                 * self.data.heat_transport.p_plant_electric_net_mw
@@ -2770,7 +2768,7 @@ class Costs(Model):
         #  Costs due to divertor renewal
         #  =============================
 
-        if ife_variables.ife == 1:
+        if self.data.ife.ife == 1:
             anndiv = 0.0e0
             coediv = 0.0e0
         else:
@@ -2803,7 +2801,7 @@ class Costs(Model):
         #  Costs due to centrepost renewal
         #  ===============================
 
-        if (physics_variables.itart == 1) and (ife_variables.ife != 1):
+        if (physics_variables.itart == 1) and (self.data.ife.ife != 1):
             #  Compound interest factor
 
             fefcp = (1.0e0 + self.data.costs.discount_rate) ** self.data.costs.cplife_cal
@@ -2888,7 +2886,7 @@ class Costs(Model):
 
         #  Annual cost of fuel
 
-        if ife_variables.ife != 1:
+        if self.data.ife.ife != 1:
             #  Sum D-T fuel cost and He3 fuel cost
             annfuel = (
                 self.data.costs.ucfuel
@@ -2905,8 +2903,8 @@ class Costs(Model):
         else:
             annfuel = (
                 1.0e-6
-                * ife_variables.uctarg
-                * ife_variables.reprat
+                * self.data.ife.uctarg
+                * self.data.ife.reprat
                 * 3.1536e7
                 * self.data.costs.f_t_plant_available
             )

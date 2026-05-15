@@ -17,21 +17,15 @@ from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.divertor_variables import init_divertor_variables
-from process.data_structure.ife_variables import init_ife_variables
 from process.data_structure.impurity_radiation_module import (
     init_impurity_radiation_module,
 )
 from process.data_structure.neoclassics_variables import init_neoclassics_variables
 from process.data_structure.pf_power_variables import init_pf_power_variables
-from process.data_structure.pfcoil_variables import (
-    init_pfcoil_module,
-    init_pfcoil_variables,
-)
 from process.data_structure.physics_variables import (
     init_physics_module,
     init_physics_variables,
 )
-from process.data_structure.power_variables import init_power_variables
 from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.scan_variables import init_scan_variables
 from process.data_structure.stellarator_variables import init_stellarator_variables
@@ -72,7 +66,7 @@ def init_process(data: DataStructure):
     set_active_constraints()
 
     # set the device type (icase)
-    set_device_type()
+    set_device_type(data)
 
     # Initialise the Stellarator
     st_init(data)
@@ -252,9 +246,7 @@ def init_all_module_vars():
     data_structure.numerics.init_numerics()
     init_divertor_variables()
     data_structure.global_variables.init_global_variables()
-    init_ife_variables()
     init_impurity_radiation_module()
-    init_pfcoil_module()
     init_physics_module()
     init_physics_variables()
     init_scan_variables()
@@ -262,10 +254,8 @@ def init_all_module_vars():
     init_stellarator_variables()
     init_tfcoil_variables()
     constants.init_constants()
-    init_pfcoil_variables()
     init_pf_power_variables()
     init_rebco_variables()
-    init_power_variables()
     init_neoclassics_variables()
 
 
@@ -394,10 +384,7 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     # Plasma profile consistency checks
-    if (
-        data_structure.ife_variables.ife != 1
-        and data_structure.physics_variables.i_plasma_pedestal == 1
-    ):
+    if data.ife.ife != 1 and data_structure.physics_variables.i_plasma_pedestal == 1:
         # Temperature checks
         if (
             data_structure.physics_variables.temp_plasma_pedestal_kev
@@ -615,9 +602,9 @@ def check_process(inputs, data):  # noqa: ARG001
         # 2 : PF coil on top of TF coil
         # 3 : PF coil outside of TF coil
         if data_structure.physics_variables.itartpf == 0:
-            data_structure.pfcoil_variables.i_pf_location[0] = 2
-            data_structure.pfcoil_variables.i_pf_location[1] = 3
-            data_structure.pfcoil_variables.i_pf_location[2] = 3
+            data.pf_coil.i_pf_location[0] = 2
+            data.pf_coil.i_pf_location[1] = 3
+            data.pf_coil.i_pf_location[2] = 3
 
         # Water cooled copper magnets initalisation / checks
         if (
@@ -757,18 +744,18 @@ def check_process(inputs, data):  # noqa: ARG001
         # Check PF coil configurations
         j = 0
         k = 0
-        for i in range(data_structure.pfcoil_variables.n_pf_coil_groups):
+        for i in range(data.pf_coil.n_pf_coil_groups):
             if (
-                data_structure.pfcoil_variables.i_pf_location[i] != 2
-                and data_structure.pfcoil_variables.n_pf_coils_in_group[i] != 2
+                data.pf_coil.i_pf_location[i] != 2
+                and data.pf_coil.n_pf_coils_in_group[i] != 2
             ):
                 raise ProcessValidationError(
                     "n_pf_coils_in_group(i) .ne. 2 is not a valid option except for (i_pf_location = 2)"
                 )
 
-            if data_structure.pfcoil_variables.i_pf_location[i] == 2:
+            if data.pf_coil.i_pf_location[i] == 2:
                 j += 1
-                k += data_structure.pfcoil_variables.n_pf_coils_in_group[i]
+                k += data.pf_coil.n_pf_coils_in_group[i]
 
         if k == 1:
             raise ProcessValidationError(
@@ -1119,8 +1106,8 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     # PF coil resistivity is zero if superconducting
-    if data_structure.pfcoil_variables.i_pf_conductor == 0:
-        data_structure.pfcoil_variables.rho_pf_coil = 0.0
+    if data.pf_coil.i_pf_conductor == 0:
+        data.pf_coil.rho_pf_coil = 0.0
 
     # If there is no NBI, then hot beam density should be zero
     if data.current_drive.i_hcd_calculations == 1:
@@ -1217,7 +1204,7 @@ def check_process(inputs, data):  # noqa: ARG001
             : data_structure.numerics.neqns + data_structure.numerics.nineqns
         ]
         == 60
-    ).any() and data_structure.pfcoil_variables.i_cs_superconductor == 8:
+    ).any() and data.pf_coil.i_cs_superconductor == 8:
         raise ProcessValidationError(
             "turn off CS temperature margin constraint icc = 60 when using REBCO"
         )
@@ -1256,8 +1243,8 @@ def set_active_constraints():
         data_structure.numerics.nineqns = num_constraints - data_structure.numerics.neqns
 
 
-def set_device_type():
-    if data_structure.ife_variables.ife == 1:
+def set_device_type(data):
+    if data.ife.ife == 1:
         data_structure.global_variables.icase = "Inertial Fusion model"
     elif data_structure.stellarator_variables.istell != 0:
         data_structure.global_variables.icase = "Stellarator model"

@@ -4,7 +4,6 @@ import pytest
 
 from process.core.init import init_all_module_vars
 from process.data_structure import divertor_variables as dv
-from process.data_structure import ife_variables as ifev
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 
@@ -33,7 +32,7 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     """
 
     # Mock module vars
-    monkeypatch.setattr(ifev, "ife", 0)
+    monkeypatch.setattr(availability.data.ife, "ife", 0)
     monkeypatch.setattr(pv, "p_fusion_total_mw", 4.0e3)
     monkeypatch.setattr(availability.data.fwbs, "life_fw_fpy", life_fw_fpy)
     monkeypatch.setattr(availability.data.costs, "ibkt_life", ibkt_life)
@@ -553,7 +552,7 @@ def test_avail_2(monkeypatch, availability):
     # Mock module variables
     monkeypatch.setattr(availability.data.times, "t_plant_pulse_burn", 5.0)
     monkeypatch.setattr(availability.data.times, "t_plant_pulse_total", 50.0)
-    monkeypatch.setattr(ifev, "ife", 0)
+    monkeypatch.setattr(availability.data.ife, "ife", 0)
     monkeypatch.setattr(pv, "itart", 1)
     monkeypatch.setattr(availability.data.fwbs, "life_blkt_fpy", 5.0)
     monkeypatch.setattr(availability.data.costs, "life_div_fpy", 10.0)

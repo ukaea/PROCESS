@@ -96,7 +96,7 @@ class Caller:
 
         # Evaluate models up to 10 times; any more implies non-converging values
         for _ in range(10):
-            self._call_models_once(xc)
+            self._call_models_once(xc, self.data)
             # Evaluate objective function and constraints
             objf = objective_function(data_structure.numerics.minmax, self.data)
             conf, _, _, _, _ = constraints.constraint_eqns(m, -1, self.data)
@@ -161,7 +161,7 @@ class Caller:
                 # Divert OUT.DAT and MFILE.DAT output to scratch files for
                 # idempotence checking
                 OutputFileManager.open_idempotence_files()
-                self._call_models_once(xc)
+                self._call_models_once(xc, self.data)
                 # Write mfile
                 finalise(self.models, self.data, ifail)
 
@@ -244,7 +244,7 @@ class Caller:
                 non_idempotent_msg=non_idempotent_warning + "\n" + non_idempotent_table,
             )
 
-    def _call_models_once(self, xc: np.ndarray):
+    def _call_models_once(self, xc: np.ndarray, data: DataStructure):
         """Call the physics and engineering models.
 
         This method is the principal caller of all the physics and
@@ -255,6 +255,8 @@ class Caller:
         ----------
         xc : np.array
             Array of optimisation parameters
+        data: DataStructure
+            data structure object
         """
         # Number of active iteration variables
         nvars = len(xc)
@@ -273,7 +275,7 @@ class Caller:
             return
 
         # Inertial Fusion Energy calls
-        if data_structure.ife_variables.ife != 0:
+        if data.ife.ife != 0:
             self.models.ife.run()
             return
 

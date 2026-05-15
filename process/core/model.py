@@ -14,6 +14,9 @@ from process.data_structure.dcll_variables import DCLLData
 from process.data_structure.first_wall_variables import FirstWallData
 from process.data_structure.fwbs_variables import FWBSData
 from process.data_structure.heat_transport_variables import HeatTransportData
+from process.data_structure.ife_variables import IFEData
+from process.data_structure.pfcoil_variables import PFCoilData
+from process.data_structure.power_variables import PowerData
 from process.data_structure.primary_pumping_variables import PrimaryPumpingData
 from process.data_structure.pulse_variables import PulseData
 from process.data_structure.reinke_variables import ReinkeData
@@ -47,6 +50,9 @@ class DataStructure:
     dcll: DCLLData = initialise_later
     current_drive: CurrentDriveData = initialise_later
     heat_transport: HeatTransportData = initialise_later
+    ife: IFEData = initialise_later
+    pf_coil: PFCoilData = initialise_later
+    power: PowerData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):

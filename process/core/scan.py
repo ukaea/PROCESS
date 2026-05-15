@@ -20,7 +20,6 @@ from process.data_structure import (
     global_variables,
     impurity_radiation_module,
     numerics,
-    pfcoil_variables,
     physics_variables,
     rebco_variables,
     scan_variables,
@@ -1121,7 +1120,7 @@ class Scan:
             case 28:
                 physics_variables.b_plasma_toroidal_on_axis = swp[iscn - 1]
             case 29:
-                impurity_radiation_module.coreradius = swp[iscn - 1]
+                impurity_radiation_module.radius_plasma_core_norm = swp[iscn - 1]
             case 31:
                 self.data.constraints.f_alpha_energy_confinement_min = swp[iscn - 1]
             case 32:
@@ -1177,15 +1176,15 @@ class Scan:
             case 61:
                 rebco_variables.copperaoh_m2_max = swp[iscn - 1]
             case 62:
-                pfcoil_variables.coheof = swp[iscn - 1]
+                self.data.pf_coil.j_cs_flat_top_end = swp[iscn - 1]
             case 63:
                 self.data.build.dr_cs = swp[iscn - 1]
             case 64:
-                pfcoil_variables.ohhghf = swp[iscn - 1]
+                self.data.pf_coil.f_z_cs_tf_internal = swp[iscn - 1]
             case 65:
                 self.data.cs_fatigue.n_cycle_min = swp[iscn - 1]
             case 66:
-                pfcoil_variables.oh_steel_frac = swp[iscn - 1]
+                self.data.pf_coil.f_a_cs_turn_steel = swp[iscn - 1]
             case 67:
                 self.data.cs_fatigue.t_crack_vertical = swp[iscn - 1]
             case 68:

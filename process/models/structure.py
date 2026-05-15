@@ -9,7 +9,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import divertor_variables as divv
-from process.data_structure import pfcoil_variables as pfv
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 
@@ -42,7 +41,10 @@ class Structure(Model):
             indicate whether output should be written to the output file, or not
         """
         # Total weight of the PF coil conductor and its structure
-        total_weight_pf = pfv.m_pf_coil_conductor_total + pfv.m_pf_coil_structure_total
+        total_weight_pf = (
+            self.data.pf_coil.m_pf_coil_conductor_total
+            + self.data.pf_coil.m_pf_coil_structure_total
+        )
 
         (
             self.data.structure.fncmass,
@@ -57,7 +59,7 @@ class Structure(Model):
             pv.kappa,
             pv.b_plasma_toroidal_on_axis,
             tfv.i_tf_sup,
-            pfv.i_pf_conductor,
+            self.data.pf_coil.i_pf_conductor,
             self.data.build.dr_tf_inner_bore
             + self.data.build.dr_tf_outboard
             + self.data.build.dr_tf_inboard,

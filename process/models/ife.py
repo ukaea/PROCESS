@@ -10,10 +10,8 @@ import numpy as np
 from process.core import constants, process_output
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    ife_variables,
-    physics_variables,
-)
+from process.data_structure import physics_variables
+from process.data_structure.ife_variables import MAXMAT
 
 MATERIALS = [
     "void",
@@ -124,7 +122,7 @@ class IFE(Model):
         output:
             boolean to control writing of output to outfile/mfile
         """
-        match ife_variables.ifetyp:
+        match self.data.ife.ifetyp:
             case 1:
                 self.osibld()
             case 2:
@@ -141,13 +139,13 @@ class IFE(Model):
 
         radial_build_data = [
             ["Device centreline", None, 0.0, 0.0],
-            ["Chamber", "chrad", ife_variables.chrad, ife_variables.r1],
-            ["First Wall", "fwdr", ife_variables.fwdr, ife_variables.r2],
-            ["Void 1", "v1dr", ife_variables.v1dr, ife_variables.r3],
-            ["Blanket", "bldr", ife_variables.bldr, ife_variables.r4],
-            ["Void 2", "v2dr", ife_variables.v2dr, ife_variables.r5],
-            ["Shield", "shdr", ife_variables.shdr, ife_variables.r6],
-            ["Void 3", "v3dr", ife_variables.v3dr, ife_variables.r7],
+            ["Chamber", "chrad", self.data.ife.chrad, self.data.ife.r1],
+            ["First Wall", "fwdr", self.data.ife.fwdr, self.data.ife.r2],
+            ["Void 1", "v1dr", self.data.ife.v1dr, self.data.ife.r3],
+            ["Blanket", "bldr", self.data.ife.bldr, self.data.ife.r4],
+            ["Void 2", "v2dr", self.data.ife.v2dr, self.data.ife.r5],
+            ["Shield", "shdr", self.data.ife.shdr, self.data.ife.r6],
+            ["Void 3", "v3dr", self.data.ife.v3dr, self.data.ife.r7],
         ]
 
         process_output.oheadr(self.outfile, "Radial build")
@@ -163,24 +161,24 @@ class IFE(Model):
             process_output.ovarre(self.outfile, f"{title} (m)", f"({name})", thickness)
 
         vertical_build_data = [
-            ["Base of device", None, 0.0, -ife_variables.zl7],
-            ["Void 3 lower", "v3dzl", ife_variables.v3dzl, -ife_variables.zl6],
-            ["Shield lower", "shdzl", ife_variables.shdzl, -ife_variables.zl5],
-            ["Void 2 lower", "v2dzl", ife_variables.v2dzl, -ife_variables.zl4],
-            ["Blanket lower", "bldzl", ife_variables.bldzl, -ife_variables.zl3],
-            ["Void 1 lower", "v1dzl", ife_variables.v1dzl, -ife_variables.zl2],
-            ["First wall lower", "fwdzl", ife_variables.fwdzl, -ife_variables.zl1],
-            ["Chamber lower", "chdzl", ife_variables.chdzl, 0.0],
-            ["Chamber upper", "chdzu", ife_variables.chdzu, ife_variables.zu1],
-            ["First wall upper", "fwdzu", ife_variables.fwdzu, ife_variables.zu2],
-            ["Void 1 upper", "v1dzu", ife_variables.v1dzu, ife_variables.zu3],
-            ["Blanket upper", "bldzu", ife_variables.bldzu, ife_variables.zu4],
-            ["Void 2 upper", "v2dzu", ife_variables.v2dzu, ife_variables.zu5],
-            ["Shield upper", "shdzu", ife_variables.shdzu, ife_variables.zu6],
-            ["Void 3 upper", "v3dzu", ife_variables.v3dzu, ife_variables.zu7],
+            ["Base of device", None, 0.0, -self.data.ife.zl7],
+            ["Void 3 lower", "v3dzl", self.data.ife.v3dzl, -self.data.ife.zl6],
+            ["Shield lower", "shdzl", self.data.ife.shdzl, -self.data.ife.zl5],
+            ["Void 2 lower", "v2dzl", self.data.ife.v2dzl, -self.data.ife.zl4],
+            ["Blanket lower", "bldzl", self.data.ife.bldzl, -self.data.ife.zl3],
+            ["Void 1 lower", "v1dzl", self.data.ife.v1dzl, -self.data.ife.zl2],
+            ["First wall lower", "fwdzl", self.data.ife.fwdzl, -self.data.ife.zl1],
+            ["Chamber lower", "chdzl", self.data.ife.chdzl, 0.0],
+            ["Chamber upper", "chdzu", self.data.ife.chdzu, self.data.ife.zu1],
+            ["First wall upper", "fwdzu", self.data.ife.fwdzu, self.data.ife.zu2],
+            ["Void 1 upper", "v1dzu", self.data.ife.v1dzu, self.data.ife.zu3],
+            ["Blanket upper", "bldzu", self.data.ife.bldzu, self.data.ife.zu4],
+            ["Void 2 upper", "v2dzu", self.data.ife.v2dzu, self.data.ife.zu5],
+            ["Shield upper", "shdzu", self.data.ife.shdzu, self.data.ife.zu6],
+            ["Void 3 upper", "v3dzu", self.data.ife.v3dzu, self.data.ife.zu7],
         ]
 
-        if ife_variables.ifetyp == 4:
+        if self.data.ife.ifetyp == 4:
             process_output.oheadr(self.outfile, "Vertical build - Midplane")
             process_output.write(
                 self.outfile, "\t" * 20 + "Thickness (m)" + "\t" * 3 + "Radius (m)"
@@ -192,26 +190,26 @@ class IFE(Model):
             process_output.obuild(
                 self.outfile,
                 "Blanket upper",
-                ife_variables.bldzu - ife_variables.bldzu,
-                ife_variables.zu4 - ife_variables.bldzu,
+                self.data.ife.bldzu - self.data.ife.bldzu,
+                self.data.ife.zu4 - self.data.ife.bldzu,
             )
             process_output.obuild(
                 self.outfile,
                 "Void 2 upper",
-                ife_variables.v2dzu,
-                ife_variables.zu5 - ife_variables.bldzu,
+                self.data.ife.v2dzu,
+                self.data.ife.zu5 - self.data.ife.bldzu,
             )
             process_output.obuild(
                 self.outfile,
                 "Shield upper",
-                ife_variables.shdzu,
-                ife_variables.zu6 - ife_variables.bldzu,
+                self.data.ife.shdzu,
+                self.data.ife.zu6 - self.data.ife.bldzu,
             )
             process_output.obuild(
                 self.outfile,
                 "Void 3 upper",
-                ife_variables.v3dzu + ife_variables.bldzu,
-                ife_variables.zu7,
+                self.data.ife.v3dzu + self.data.ife.bldzu,
+                self.data.ife.zu7,
             )
 
             process_output.oheadr(self.outfile, "Vertical build - Edge")
@@ -246,13 +244,13 @@ class IFE(Model):
             + "Void 3".ljust(10),
         )
         material_row_gen = _material_string_generator(
-            ife_variables.chmatv,
-            ife_variables.fwmatv,
-            ife_variables.v1matv,
-            ife_variables.blmatv,
-            ife_variables.v2matv,
-            ife_variables.shmatv,
-            ife_variables.v3matv,
+            self.data.ife.chmatv,
+            self.data.ife.fwmatv,
+            self.data.ife.v1matv,
+            self.data.ife.blmatv,
+            self.data.ife.v2matv,
+            self.data.ife.shmatv,
+            self.data.ife.v3matv,
         )
 
         for i in range(len(MATERIALS)):
@@ -273,8 +271,8 @@ class IFE(Model):
 
         # First wall area: no true first wall at bottom of chamber
         self.data.first_wall.a_fw_total = (
-            2.0 * np.pi * ife_variables.r1 * (ife_variables.zu1 + ife_variables.zl1)
-            + np.pi * ife_variables.r1 * ife_variables.r1
+            2.0 * np.pi * self.data.ife.r1 * (self.data.ife.zu1 + self.data.ife.zl1)
+            + np.pi * self.data.ife.r1 * self.data.ife.r1
         )
 
     def sombld(self):
@@ -287,31 +285,31 @@ class IFE(Model):
         Sviatoslavsky et al, Fusion Technology vol.21 (1992) 1470
         """
         # Radial build
-        ife_variables.r1 = ife_variables.chrad
-        ife_variables.r2 = ife_variables.r1 + ife_variables.fwdr
-        ife_variables.r3 = ife_variables.r2 + ife_variables.v1dr
-        ife_variables.r4 = ife_variables.r3 + ife_variables.bldr
-        ife_variables.r5 = ife_variables.r4 + ife_variables.v2dr
-        ife_variables.r6 = ife_variables.r5 + ife_variables.shdr
-        ife_variables.r7 = ife_variables.r6 + ife_variables.v3dr
+        self.data.ife.r1 = self.data.ife.chrad
+        self.data.ife.r2 = self.data.ife.r1 + self.data.ife.fwdr
+        self.data.ife.r3 = self.data.ife.r2 + self.data.ife.v1dr
+        self.data.ife.r4 = self.data.ife.r3 + self.data.ife.bldr
+        self.data.ife.r5 = self.data.ife.r4 + self.data.ife.v2dr
+        self.data.ife.r6 = self.data.ife.r5 + self.data.ife.shdr
+        self.data.ife.r7 = self.data.ife.r6 + self.data.ife.v3dr
 
         # Vertical build (below midplane)
-        ife_variables.zl1 = ife_variables.chdzl
-        ife_variables.zl2 = ife_variables.zl1 + ife_variables.fwdzl
-        ife_variables.zl3 = ife_variables.zl2 + ife_variables.v1dzl
-        ife_variables.zl4 = ife_variables.zl3 + ife_variables.bldzl
-        ife_variables.zl5 = ife_variables.zl4 + ife_variables.v2dzl
-        ife_variables.zl6 = ife_variables.zl5 + ife_variables.shdzl
-        ife_variables.zl7 = ife_variables.zl6 + ife_variables.v3dzl
+        self.data.ife.zl1 = self.data.ife.chdzl
+        self.data.ife.zl2 = self.data.ife.zl1 + self.data.ife.fwdzl
+        self.data.ife.zl3 = self.data.ife.zl2 + self.data.ife.v1dzl
+        self.data.ife.zl4 = self.data.ife.zl3 + self.data.ife.bldzl
+        self.data.ife.zl5 = self.data.ife.zl4 + self.data.ife.v2dzl
+        self.data.ife.zl6 = self.data.ife.zl5 + self.data.ife.shdzl
+        self.data.ife.zl7 = self.data.ife.zl6 + self.data.ife.v3dzl
 
         # Vertical build (above midplane)
-        ife_variables.zu1 = ife_variables.chdzu
-        ife_variables.zu2 = ife_variables.zu1 + ife_variables.fwdzu
-        ife_variables.zu3 = ife_variables.zu2 + ife_variables.v1dzu
-        ife_variables.zu4 = ife_variables.zu3 + ife_variables.bldzu
-        ife_variables.zu5 = ife_variables.zu4 + ife_variables.v2dzu
-        ife_variables.zu6 = ife_variables.zu5 + ife_variables.shdzu
-        ife_variables.zu7 = ife_variables.zu6 + ife_variables.v3dzu
+        self.data.ife.zu1 = self.data.ife.chdzu
+        self.data.ife.zu2 = self.data.ife.zu1 + self.data.ife.fwdzu
+        self.data.ife.zu3 = self.data.ife.zu2 + self.data.ife.v1dzu
+        self.data.ife.zu4 = self.data.ife.zu3 + self.data.ife.bldzu
+        self.data.ife.zu5 = self.data.ife.zu4 + self.data.ife.v2dzu
+        self.data.ife.zu6 = self.data.ife.zu5 + self.data.ife.shdzu
+        self.data.ife.zu7 = self.data.ife.zu6 + self.data.ife.v3dzu
 
         # The SOMBRERO chamber is made up of a cylindrical first wall/
         # blanket, with conical regions above and below. Outside this is
@@ -324,70 +322,70 @@ class IFE(Model):
         # J=3 : bottom part
 
         # Chamber : CHCYLH is the height of the cylindrical part
-        chcylh = ife_variables.chdzu + ife_variables.chdzl - 2.0 * ife_variables.chrad
+        chcylh = self.data.ife.chdzu + self.data.ife.chdzl - 2.0 * self.data.ife.chrad
 
-        ife_variables.chvol = (
+        self.data.ife.chvol = (
             np.pi
-            * ife_variables.r1
-            * ife_variables.r1
-            * (chcylh + (2.0 / 3.0) * ife_variables.chrad)
+            * self.data.ife.r1
+            * self.data.ife.r1
+            * (chcylh + (2.0 / 3.0) * self.data.ife.chrad)
         )
 
         # First wall
-        ife_variables.fwvol[0] = (
+        self.data.ife.fwvol[0] = (
             np.pi
-            * (ife_variables.r2 * ife_variables.r2 - ife_variables.r1 * ife_variables.r1)
+            * (self.data.ife.r2 * self.data.ife.r2 - self.data.ife.r1 * self.data.ife.r1)
             * chcylh
         )
-        ife_variables.fwvol[1] = (
+        self.data.ife.fwvol[1] = (
             (1.0 / 3.0)
             * np.pi
             * (
-                ife_variables.r2
-                * ife_variables.r2
-                * (ife_variables.chrad + ife_variables.fwdzu)
-                - ife_variables.r1 * ife_variables.r1 * ife_variables.chrad
+                self.data.ife.r2
+                * self.data.ife.r2
+                * (self.data.ife.chrad + self.data.ife.fwdzu)
+                - self.data.ife.r1 * self.data.ife.r1 * self.data.ife.chrad
             )
         )
-        ife_variables.fwvol[2] = (
+        self.data.ife.fwvol[2] = (
             (1.0 / 3.0)
             * np.pi
             * (
-                ife_variables.r2
-                * ife_variables.r2
-                * (ife_variables.chrad + ife_variables.fwdzl)
-                - ife_variables.r1 * ife_variables.r1 * ife_variables.chrad
+                self.data.ife.r2
+                * self.data.ife.r2
+                * (self.data.ife.chrad + self.data.ife.fwdzl)
+                - self.data.ife.r1 * self.data.ife.r1 * self.data.ife.chrad
             )
         )
 
         # First void
-        ife_variables.v1vol[0] = (
+        self.data.ife.v1vol[0] = (
             np.pi
-            * (ife_variables.r3 * ife_variables.r3 - ife_variables.r2 * ife_variables.r2)
+            * (self.data.ife.r3 * self.data.ife.r3 - self.data.ife.r2 * self.data.ife.r2)
             * chcylh
         )
-        ife_variables.v1vol[1] = (
+        self.data.ife.v1vol[1] = (
             (1.0 / 3.0)
             * np.pi
             * (
-                ife_variables.r3
-                * ife_variables.r3
-                * (ife_variables.chrad + ife_variables.fwdzu + ife_variables.v1dzu)
-                - ife_variables.r2
-                * ife_variables.r2
-                * (ife_variables.chrad + ife_variables.fwdzu)
+                self.data.ife.r3
+                * self.data.ife.r3
+                * (self.data.ife.chrad + self.data.ife.fwdzu + self.data.ife.v1dzu)
+                - self.data.ife.r2
+                * self.data.ife.r2
+                * (self.data.ife.chrad + self.data.ife.fwdzu)
             )
         )
-        ife_variables.v1vol[2] = (
+        self.data.ife.v1vol[2] = (
             (1.0 / 3.0)
             * np.pi
             * (
-                ife_variables.r3
-                * ife_variables.r3
-                * (ife_variables.chrad + ife_variables.fwdzl + ife_variables.v1dzl)
-                - ife_variables.r2
-                * ife_variables.r2
-                * (ife_variables.chrad + ife_variables.fwdzl)
+                self.data.ife.r3
+                * self.data.ife.r3
+                * (self.data.ife.chrad + self.data.ife.fwdzl + self.data.ife.v1dzl)
+                - self.data.ife.r2
+                * self.data.ife.r2
+                * (self.data.ife.chrad + self.data.ife.fwdzl)
             )
         )
 
@@ -396,223 +394,223 @@ class IFE(Model):
         # DDZ = Height of top cylindrical section (by similar triangles)
         # DVOL = Volume of top cylindrical section, less the internal cone
 
-        ife_variables.blvol[0] = (
+        self.data.ife.blvol[0] = (
             np.pi
-            * (ife_variables.r4 * ife_variables.r4 - ife_variables.r3 * ife_variables.r3)
+            * (self.data.ife.r4 * self.data.ife.r4 - self.data.ife.r3 * self.data.ife.r3)
             * chcylh
         )
 
-        ife_variables.blvol[1] = (
+        self.data.ife.blvol[1] = (
             (1.0 / 3.0)
             * np.pi
             * (
-                ife_variables.r4
-                * ife_variables.r4
+                self.data.ife.r4
+                * self.data.ife.r4
                 * (
-                    ife_variables.chrad
-                    + ife_variables.fwdzu
-                    + ife_variables.v1dzu
-                    + ife_variables.bldzu
+                    self.data.ife.chrad
+                    + self.data.ife.fwdzu
+                    + self.data.ife.v1dzu
+                    + self.data.ife.bldzu
                 )
-                - ife_variables.r3
-                * ife_variables.r3
-                * (ife_variables.chrad + ife_variables.fwdzu + ife_variables.v1dzu)
+                - self.data.ife.r3
+                * self.data.ife.r3
+                * (self.data.ife.chrad + self.data.ife.fwdzu + self.data.ife.v1dzu)
             )
         )
         ddz = (
             (
-                ife_variables.chrad
-                + ife_variables.fwdzu
-                + ife_variables.v1dzu
-                + ife_variables.bldzu
+                self.data.ife.chrad
+                + self.data.ife.fwdzu
+                + self.data.ife.v1dzu
+                + self.data.ife.bldzu
             )
             / (
-                ife_variables.chrad
-                + ife_variables.fwdr
-                + ife_variables.v1dr
-                + ife_variables.bldr
+                self.data.ife.chrad
+                + self.data.ife.fwdr
+                + self.data.ife.v1dr
+                + self.data.ife.bldr
             )
-            * ife_variables.somtdr
+            * self.data.ife.somtdr
         )
         dvol = (
-            2.0 * (1.0 / 3.0) * np.pi * ife_variables.somtdr * ife_variables.somtdr * ddz
+            2.0 * (1.0 / 3.0) * np.pi * self.data.ife.somtdr * self.data.ife.somtdr * ddz
         )
 
-        ife_variables.blvol[1] += dvol
+        self.data.ife.blvol[1] += dvol
 
         # Ditto for bottom region...
 
-        ife_variables.blvol[2] = (
+        self.data.ife.blvol[2] = (
             (1.0 / 3.0)
             * np.pi
             * (
-                ife_variables.r4
-                * ife_variables.r4
+                self.data.ife.r4
+                * self.data.ife.r4
                 * (
-                    ife_variables.chrad
-                    + ife_variables.fwdzl
-                    + ife_variables.v1dzl
-                    + ife_variables.bldzl
+                    self.data.ife.chrad
+                    + self.data.ife.fwdzl
+                    + self.data.ife.v1dzl
+                    + self.data.ife.bldzl
                 )
-                - ife_variables.r3
-                * ife_variables.r3
-                * (ife_variables.chrad + ife_variables.fwdzl + ife_variables.v1dzl)
+                - self.data.ife.r3
+                * self.data.ife.r3
+                * (self.data.ife.chrad + self.data.ife.fwdzl + self.data.ife.v1dzl)
             )
         )
         ddz = (
             (
-                ife_variables.chrad
-                + ife_variables.fwdzl
-                + ife_variables.v1dzl
-                + ife_variables.bldzl
+                self.data.ife.chrad
+                + self.data.ife.fwdzl
+                + self.data.ife.v1dzl
+                + self.data.ife.bldzl
             )
             / (
-                ife_variables.chrad
-                + ife_variables.fwdr
-                + ife_variables.v1dr
-                + ife_variables.bldr
+                self.data.ife.chrad
+                + self.data.ife.fwdr
+                + self.data.ife.v1dr
+                + self.data.ife.bldr
             )
-            * ife_variables.sombdr
+            * self.data.ife.sombdr
         )
         dvol = (
-            2.0 * (1.0 / 3.0) * np.pi * ife_variables.sombdr * ife_variables.sombdr * ddz
+            2.0 * (1.0 / 3.0) * np.pi * self.data.ife.sombdr * self.data.ife.sombdr * ddz
         )
 
-        ife_variables.blvol[2] += dvol
+        self.data.ife.blvol[2] += dvol
 
         # Second void
-        ife_variables.v2vol[0] = (
+        self.data.ife.v2vol[0] = (
             np.pi
-            * (ife_variables.r5 * ife_variables.r5 - ife_variables.r4 * ife_variables.r4)
+            * (self.data.ife.r5 * self.data.ife.r5 - self.data.ife.r4 * self.data.ife.r4)
             * chcylh
         )
-        ife_variables.v2vol[1] = np.pi * ife_variables.r5 * ife_variables.r5 * (
-            ife_variables.zu5 - ife_variables.chdzu + ife_variables.chrad
+        self.data.ife.v2vol[1] = np.pi * self.data.ife.r5 * self.data.ife.r5 * (
+            self.data.ife.zu5 - self.data.ife.chdzu + self.data.ife.chrad
         ) - (
-            ife_variables.fwvol[1]
-            + ife_variables.v1vol[1]
-            + ife_variables.blvol[1]
+            self.data.ife.fwvol[1]
+            + self.data.ife.v1vol[1]
+            + self.data.ife.blvol[1]
             + (
                 (1.0 / 3.0)
                 * np.pi
-                * ife_variables.r1
-                * ife_variables.r1
-                * ife_variables.chrad
+                * self.data.ife.r1
+                * self.data.ife.r1
+                * self.data.ife.chrad
             )
         )
-        ife_variables.v2vol[2] = np.pi * ife_variables.r5 * ife_variables.r5 * (
-            ife_variables.zl5 - ife_variables.chdzl + ife_variables.chrad
+        self.data.ife.v2vol[2] = np.pi * self.data.ife.r5 * self.data.ife.r5 * (
+            self.data.ife.zl5 - self.data.ife.chdzl + self.data.ife.chrad
         ) - (
-            ife_variables.fwvol[2]
-            + ife_variables.v1vol[2]
-            + ife_variables.blvol[2]
+            self.data.ife.fwvol[2]
+            + self.data.ife.v1vol[2]
+            + self.data.ife.blvol[2]
             + (
                 (1.0 / 3.0)
                 * np.pi
-                * ife_variables.r1
-                * ife_variables.r1
-                * ife_variables.chrad
+                * self.data.ife.r1
+                * self.data.ife.r1
+                * self.data.ife.chrad
             )
         )
 
         # Shield
-        ife_variables.shvol[0] = (
+        self.data.ife.shvol[0] = (
             np.pi
-            * (ife_variables.r6 * ife_variables.r6 - ife_variables.r5 * ife_variables.r5)
-            * (ife_variables.zu6 + ife_variables.zl6)
+            * (self.data.ife.r6 * self.data.ife.r6 - self.data.ife.r5 * self.data.ife.r5)
+            * (self.data.ife.zu6 + self.data.ife.zl6)
         )
-        ife_variables.shvol[1] = (
+        self.data.ife.shvol[1] = (
             np.pi
-            * ife_variables.r5
-            * ife_variables.r5
-            * (ife_variables.zu6 - ife_variables.zu5)
+            * self.data.ife.r5
+            * self.data.ife.r5
+            * (self.data.ife.zu6 - self.data.ife.zu5)
         )
-        ife_variables.shvol[2] = (
+        self.data.ife.shvol[2] = (
             np.pi
-            * ife_variables.r5
-            * ife_variables.r5
-            * (ife_variables.zl6 - ife_variables.zl5)
+            * self.data.ife.r5
+            * self.data.ife.r5
+            * (self.data.ife.zl6 - self.data.ife.zl5)
         )
 
         # Third void
-        ife_variables.v3vol[0] = (
+        self.data.ife.v3vol[0] = (
             np.pi
-            * (ife_variables.r7 * ife_variables.r7 - ife_variables.r6 * ife_variables.r6)
-            * (ife_variables.zu7 + ife_variables.zl7)
+            * (self.data.ife.r7 * self.data.ife.r7 - self.data.ife.r6 * self.data.ife.r6)
+            * (self.data.ife.zu7 + self.data.ife.zl7)
         )
-        ife_variables.v3vol[1] = (
+        self.data.ife.v3vol[1] = (
             np.pi
-            * ife_variables.r6
-            * ife_variables.r6
-            * (ife_variables.zu7 - ife_variables.zu6)
+            * self.data.ife.r6
+            * self.data.ife.r6
+            * (self.data.ife.zu7 - self.data.ife.zu6)
         )
-        ife_variables.v3vol[2] = (
+        self.data.ife.v3vol[2] = (
             np.pi
-            * ife_variables.r6
-            * ife_variables.r6
-            * (ife_variables.zl7 - ife_variables.zl6)
+            * self.data.ife.r6
+            * self.data.ife.r6
+            * (self.data.ife.zl7 - self.data.ife.zl6)
         )
 
         # Material volumes
-        for i in range(ife_variables.MAXMAT):
-            ife_variables.chmatv[i] = max(
-                0.0, ife_variables.chvol * ife_variables.chmatf[i]
+        for i in range(MAXMAT):
+            self.data.ife.chmatv[i] = max(
+                0.0, self.data.ife.chvol * self.data.ife.chmatf[i]
             )
             for j in range(3):
-                ife_variables.fwmatv[j, i] = max(
-                    0.0, ife_variables.fwvol[j] * ife_variables.fwmatf[j, i]
+                self.data.ife.fwmatv[j, i] = max(
+                    0.0, self.data.ife.fwvol[j] * self.data.ife.fwmatf[j, i]
                 )
-                ife_variables.v1matv[j, i] = max(
-                    0.0, ife_variables.v1vol[j] * ife_variables.v1matf[j, i]
+                self.data.ife.v1matv[j, i] = max(
+                    0.0, self.data.ife.v1vol[j] * self.data.ife.v1matf[j, i]
                 )
-                ife_variables.blmatv[j, i] = max(
-                    0.0, ife_variables.blvol[j] * ife_variables.blmatf[j, i]
+                self.data.ife.blmatv[j, i] = max(
+                    0.0, self.data.ife.blvol[j] * self.data.ife.blmatf[j, i]
                 )
-                ife_variables.v2matv[j, i] = max(
-                    0.0, ife_variables.v2vol[j] * ife_variables.v2matf[j, i]
+                self.data.ife.v2matv[j, i] = max(
+                    0.0, self.data.ife.v2vol[j] * self.data.ife.v2matf[j, i]
                 )
-                ife_variables.shmatv[j, i] = max(
-                    0.0, ife_variables.shvol[j] * ife_variables.shmatf[j, i]
+                self.data.ife.shmatv[j, i] = max(
+                    0.0, self.data.ife.shvol[j] * self.data.ife.shmatf[j, i]
                 )
-                ife_variables.v3matv[j, i] = max(
-                    0.0, ife_variables.v3vol[j] * ife_variables.v3matf[j, i]
+                self.data.ife.v3matv[j, i] = max(
+                    0.0, self.data.ife.v3vol[j] * self.data.ife.v3matf[j, i]
                 )
 
         # First wall area
         self.data.first_wall.a_fw_total = (
             2.0
             * np.pi
-            * ife_variables.r1
-            * ((ife_variables.zu1 + ife_variables.zl1) + ife_variables.r1 * np.sqrt(2.0))
+            * self.data.ife.r1
+            * ((self.data.ife.zu1 + self.data.ife.zl1) + self.data.ife.r1 * np.sqrt(2.0))
         )
 
     def hylbld(self):
         # Radial build
-        ife_variables.r1 = ife_variables.chrad
-        ife_variables.r2 = ife_variables.r1 + ife_variables.fwdr
-        ife_variables.r3 = ife_variables.r2 + ife_variables.v1dr
-        ife_variables.r4 = ife_variables.r3 + ife_variables.bldr
-        ife_variables.r5 = ife_variables.r4 + ife_variables.v2dr
-        ife_variables.r6 = ife_variables.r5 + ife_variables.shdr
-        ife_variables.r7 = ife_variables.r6 + ife_variables.v3dr
+        self.data.ife.r1 = self.data.ife.chrad
+        self.data.ife.r2 = self.data.ife.r1 + self.data.ife.fwdr
+        self.data.ife.r3 = self.data.ife.r2 + self.data.ife.v1dr
+        self.data.ife.r4 = self.data.ife.r3 + self.data.ife.bldr
+        self.data.ife.r5 = self.data.ife.r4 + self.data.ife.v2dr
+        self.data.ife.r6 = self.data.ife.r5 + self.data.ife.shdr
+        self.data.ife.r7 = self.data.ife.r6 + self.data.ife.v3dr
 
         # Vertical build (below midplane)
-        ife_variables.zl1 = ife_variables.chdzl
-        ife_variables.zl2 = ife_variables.zl1 + ife_variables.fwdzl
-        ife_variables.zl3 = ife_variables.zl2 + ife_variables.v1dzl
-        ife_variables.zl4 = ife_variables.zl3 + ife_variables.bldzl
-        ife_variables.zl5 = ife_variables.zl4 + ife_variables.v2dzl
-        ife_variables.zl6 = ife_variables.zl5 + ife_variables.shdzl
-        ife_variables.zl7 = ife_variables.zl6 + ife_variables.v3dzl
+        self.data.ife.zl1 = self.data.ife.chdzl
+        self.data.ife.zl2 = self.data.ife.zl1 + self.data.ife.fwdzl
+        self.data.ife.zl3 = self.data.ife.zl2 + self.data.ife.v1dzl
+        self.data.ife.zl4 = self.data.ife.zl3 + self.data.ife.bldzl
+        self.data.ife.zl5 = self.data.ife.zl4 + self.data.ife.v2dzl
+        self.data.ife.zl6 = self.data.ife.zl5 + self.data.ife.shdzl
+        self.data.ife.zl7 = self.data.ife.zl6 + self.data.ife.v3dzl
 
         # Vertical build (above midplane)
-        ife_variables.zu1 = ife_variables.chdzu
-        ife_variables.zu2 = ife_variables.zu1 + ife_variables.fwdzu
-        ife_variables.zu3 = ife_variables.zu2 + ife_variables.v1dzu
-        ife_variables.zu4 = ife_variables.zu3 + ife_variables.bldzu
-        ife_variables.zu5 = ife_variables.zu4 + ife_variables.v2dzu
-        ife_variables.zu6 = ife_variables.zu5 + ife_variables.shdzu
-        ife_variables.zu7 = ife_variables.zu6 + ife_variables.v3dzu
+        self.data.ife.zu1 = self.data.ife.chdzu
+        self.data.ife.zu2 = self.data.ife.zu1 + self.data.ife.fwdzu
+        self.data.ife.zu3 = self.data.ife.zu2 + self.data.ife.v1dzu
+        self.data.ife.zu4 = self.data.ife.zu3 + self.data.ife.bldzu
+        self.data.ife.zu5 = self.data.ife.zu4 + self.data.ife.v2dzu
+        self.data.ife.zu6 = self.data.ife.zu5 + self.data.ife.shdzu
+        self.data.ife.zu7 = self.data.ife.zu6 + self.data.ife.v3dzu
 
         # The HYLIFE-II chamber is assumed to be mostly cylindrical, but
         # with a conical region below the midplane that causes the Flibe
@@ -623,185 +621,185 @@ class IFE(Model):
         # J=1 : side part
         # J=2 : top part
         # J=3 : bottom part
-        ife_variables.chvol = (
+        self.data.ife.chvol = (
             np.pi
-            * ife_variables.r1
-            * ife_variables.r1
+            * self.data.ife.r1
+            * self.data.ife.r1
             * (
-                (ife_variables.zu1 + ife_variables.zl5)
-                - (1 / 3) * (ife_variables.zl5 - ife_variables.zl1)
+                (self.data.ife.zu1 + self.data.ife.zl5)
+                - (1 / 3) * (self.data.ife.zl5 - self.data.ife.zl1)
             )
         )
 
         # First wall
         # FLIRAD is the radius of the Flibe inlet
-        ife_variables.fwvol[0] = (
+        self.data.ife.fwvol[0] = (
             np.pi
-            * (ife_variables.r2 * ife_variables.r2 - ife_variables.r1 * ife_variables.r1)
-            * (ife_variables.zu2 + ife_variables.zl5)
+            * (self.data.ife.r2 * self.data.ife.r2 - self.data.ife.r1 * self.data.ife.r1)
+            * (self.data.ife.zu2 + self.data.ife.zl5)
         )
-        ife_variables.fwvol[1] = (
+        self.data.ife.fwvol[1] = (
             np.pi
             * (
-                ife_variables.r1 * ife_variables.r1
-                - ife_variables.flirad * ife_variables.flirad
+                self.data.ife.r1 * self.data.ife.r1
+                - self.data.ife.flirad * self.data.ife.flirad
             )
-            * (ife_variables.zu2 - ife_variables.zu1)
+            * (self.data.ife.zu2 - self.data.ife.zu1)
         )
-        ife_variables.fwvol[2] = (
+        self.data.ife.fwvol[2] = (
             (1 / 3)
             * np.pi
             * (
-                ife_variables.r2
-                * ife_variables.r2
-                * (ife_variables.zl5 - ife_variables.zl1)
-                - ife_variables.r1
-                * ife_variables.r1
-                * (ife_variables.zl5 - ife_variables.zl2)
+                self.data.ife.r2
+                * self.data.ife.r2
+                * (self.data.ife.zl5 - self.data.ife.zl1)
+                - self.data.ife.r1
+                * self.data.ife.r1
+                * (self.data.ife.zl5 - self.data.ife.zl2)
             )
         )
 
         # First void
-        ife_variables.v1vol[0] = (
+        self.data.ife.v1vol[0] = (
             np.pi
-            * (ife_variables.r3 * ife_variables.r3 - ife_variables.r2 * ife_variables.r2)
-            * (ife_variables.zu2 + ife_variables.zl3)
+            * (self.data.ife.r3 * self.data.ife.r3 - self.data.ife.r2 * self.data.ife.r2)
+            * (self.data.ife.zu2 + self.data.ife.zl3)
         )
-        ife_variables.v1vol[1] = (
+        self.data.ife.v1vol[1] = (
             np.pi
             * (
-                ife_variables.r4 * ife_variables.r4
-                - ife_variables.flirad * ife_variables.flirad
+                self.data.ife.r4 * self.data.ife.r4
+                - self.data.ife.flirad * self.data.ife.flirad
             )
-            * (ife_variables.zu3 - ife_variables.zu2)
+            * (self.data.ife.zu3 - self.data.ife.zu2)
         )
-        ife_variables.v1vol[2] = (
+        self.data.ife.v1vol[2] = (
             (1 / 3)
             * np.pi
-            * ife_variables.r1
-            * ife_variables.r1
-            * (ife_variables.zl3 - ife_variables.zl2)
+            * self.data.ife.r1
+            * self.data.ife.r1
+            * (self.data.ife.zl3 - self.data.ife.zl2)
         )
 
         # Blanket
-        ife_variables.blvol[0] = (
+        self.data.ife.blvol[0] = (
             np.pi
-            * (ife_variables.r4 * ife_variables.r4 - ife_variables.r3 * ife_variables.r3)
-            * (ife_variables.zu2 + ife_variables.zl3)
+            * (self.data.ife.r4 * self.data.ife.r4 - self.data.ife.r3 * self.data.ife.r3)
+            * (self.data.ife.zu2 + self.data.ife.zl3)
         )
-        ife_variables.blvol[1] = (
+        self.data.ife.blvol[1] = (
             np.pi
             * (
-                ife_variables.r4 * ife_variables.r4
-                - ife_variables.flirad * ife_variables.flirad
+                self.data.ife.r4 * self.data.ife.r4
+                - self.data.ife.flirad * self.data.ife.flirad
             )
-            * (ife_variables.zu4 - ife_variables.zu3)
+            * (self.data.ife.zu4 - self.data.ife.zu3)
         )
-        ife_variables.blvol[2] = (
+        self.data.ife.blvol[2] = (
             np.pi
-            * ife_variables.r4
-            * ife_variables.r4
-            * (ife_variables.zl4 - ife_variables.zl3)
+            * self.data.ife.r4
+            * self.data.ife.r4
+            * (self.data.ife.zl4 - self.data.ife.zl3)
         )
 
         # Second void
-        ife_variables.v2vol[0] = (
+        self.data.ife.v2vol[0] = (
             np.pi
-            * (ife_variables.r5 * ife_variables.r5 - ife_variables.r4 * ife_variables.r4)
-            * (ife_variables.zu4 + ife_variables.zl4)
+            * (self.data.ife.r5 * self.data.ife.r5 - self.data.ife.r4 * self.data.ife.r4)
+            * (self.data.ife.zu4 + self.data.ife.zl4)
         )
-        ife_variables.v2vol[1] = (
+        self.data.ife.v2vol[1] = (
             np.pi
             * (
-                ife_variables.r5 * ife_variables.r5
-                - ife_variables.flirad * ife_variables.flirad
+                self.data.ife.r5 * self.data.ife.r5
+                - self.data.ife.flirad * self.data.ife.flirad
             )
-            * (ife_variables.zu5 - ife_variables.zu4)
+            * (self.data.ife.zu5 - self.data.ife.zu4)
         )
-        ife_variables.v2vol[2] = (
+        self.data.ife.v2vol[2] = (
             np.pi
-            * ife_variables.r5
-            * ife_variables.r5
-            * (ife_variables.zl5 - ife_variables.zl4)
+            * self.data.ife.r5
+            * self.data.ife.r5
+            * (self.data.ife.zl5 - self.data.ife.zl4)
         )
 
         # Shield
-        ife_variables.shvol[0] = (
+        self.data.ife.shvol[0] = (
             np.pi
-            * (ife_variables.r6 * ife_variables.r6 - ife_variables.r5 * ife_variables.r5)
-            * (ife_variables.zu5 + ife_variables.zl5)
+            * (self.data.ife.r6 * self.data.ife.r6 - self.data.ife.r5 * self.data.ife.r5)
+            * (self.data.ife.zu5 + self.data.ife.zl5)
         )
-        ife_variables.shvol[1] = (
+        self.data.ife.shvol[1] = (
             np.pi
-            * ife_variables.r6
-            * ife_variables.r6
-            * (ife_variables.zu6 - ife_variables.zu5)
+            * self.data.ife.r6
+            * self.data.ife.r6
+            * (self.data.ife.zu6 - self.data.ife.zu5)
         )
-        ife_variables.shvol[2] = (
+        self.data.ife.shvol[2] = (
             np.pi
-            * ife_variables.r6
-            * ife_variables.r6
-            * (ife_variables.zl6 - ife_variables.zl5)
+            * self.data.ife.r6
+            * self.data.ife.r6
+            * (self.data.ife.zl6 - self.data.ife.zl5)
         )
 
         # Third void
-        ife_variables.v3vol[0] = (
+        self.data.ife.v3vol[0] = (
             np.pi
-            * (ife_variables.r7 * ife_variables.r7 - ife_variables.r6 * ife_variables.r6)
-            * (ife_variables.zu6 + ife_variables.zl6)
+            * (self.data.ife.r7 * self.data.ife.r7 - self.data.ife.r6 * self.data.ife.r6)
+            * (self.data.ife.zu6 + self.data.ife.zl6)
         )
-        ife_variables.v3vol[1] = (
+        self.data.ife.v3vol[1] = (
             np.pi
-            * ife_variables.r7
-            * ife_variables.r7
-            * (ife_variables.zu7 - ife_variables.zu6)
+            * self.data.ife.r7
+            * self.data.ife.r7
+            * (self.data.ife.zu7 - self.data.ife.zu6)
         )
-        ife_variables.v3vol[2] = (
+        self.data.ife.v3vol[2] = (
             np.pi
-            * ife_variables.r7
-            * ife_variables.r7
-            * (ife_variables.zl7 - ife_variables.zl6)
+            * self.data.ife.r7
+            * self.data.ife.r7
+            * (self.data.ife.zl7 - self.data.ife.zl6)
         )
 
         # Material volumes
-        for i in range(ife_variables.MAXMAT + 1):
-            ife_variables.chmatv[i] = max(
-                0.0, ife_variables.chvol * ife_variables.chmatf[i]
+        for i in range(MAXMAT + 1):
+            self.data.ife.chmatv[i] = max(
+                0.0, self.data.ife.chvol * self.data.ife.chmatf[i]
             )
             for j in range(3):
-                ife_variables.fwmatv[j, i] = max(
-                    0.0, ife_variables.fwvol[j] * ife_variables.fwmatf[j, i]
+                self.data.ife.fwmatv[j, i] = max(
+                    0.0, self.data.ife.fwvol[j] * self.data.ife.fwmatf[j, i]
                 )
-                ife_variables.v1matv[j, i] = max(
-                    0.0, ife_variables.v1vol[j] * ife_variables.v1matf[j, i]
+                self.data.ife.v1matv[j, i] = max(
+                    0.0, self.data.ife.v1vol[j] * self.data.ife.v1matf[j, i]
                 )
-                ife_variables.blmatv[j, i] = max(
-                    0.0, ife_variables.blvol[j] * ife_variables.blmatf[j, i]
+                self.data.ife.blmatv[j, i] = max(
+                    0.0, self.data.ife.blvol[j] * self.data.ife.blmatf[j, i]
                 )
-                ife_variables.v2matv[j, i] = max(
-                    0.0, ife_variables.v2vol[j] * ife_variables.v2matf[j, i]
+                self.data.ife.v2matv[j, i] = max(
+                    0.0, self.data.ife.v2vol[j] * self.data.ife.v2matf[j, i]
                 )
-                ife_variables.shmatv[j, i] = max(
-                    0.0, ife_variables.shvol[j] * ife_variables.shmatf[j, i]
+                self.data.ife.shmatv[j, i] = max(
+                    0.0, self.data.ife.shvol[j] * self.data.ife.shmatf[j, i]
                 )
-                ife_variables.v3matv[j, i] = max(
-                    0.0, ife_variables.v3vol[j] * ife_variables.v3matf[j, i]
+                self.data.ife.v3matv[j, i] = max(
+                    0.0, self.data.ife.v3vol[j] * self.data.ife.v3matf[j, i]
                 )
 
         # First wall area
         self.data.first_wall.a_fw_total = (
-            2.0 * np.pi * ife_variables.r1 * (ife_variables.zu1 + ife_variables.zl5)
+            2.0 * np.pi * self.data.ife.r1 * (self.data.ife.zu1 + self.data.ife.zl5)
         )
         self.data.first_wall.a_fw_total += np.pi * (
-            ife_variables.r1 * ife_variables.r1
-            - ife_variables.flirad * ife_variables.flirad
+            self.data.ife.r1 * self.data.ife.r1
+            - self.data.ife.flirad * self.data.ife.flirad
         )
         self.data.first_wall.a_fw_total += (
             np.pi
-            * ife_variables.r1
+            * self.data.ife.r1
             * np.sqrt(
-                ife_variables.r1 * ife_variables.r1
-                + (ife_variables.zl3 - ife_variables.zl1) ** 2
+                self.data.ife.r1 * self.data.ife.r1
+                + (self.data.ife.zl3 - self.data.ife.zl1) ** 2
             )
         )
 
@@ -815,13 +813,13 @@ class IFE(Model):
         Issue #907
         """
         # Check input
-        if ife_variables.fwdr > 0 or ife_variables.v1dr > 0:
+        if self.data.ife.fwdr > 0 or self.data.ife.v1dr > 0:
             raise ProcessValueError("fwdr and v1dr should be zero for 2019 IFE build")
-        if ife_variables.fwdzu > 0 or ife_variables.v1dzu > 0 or ife_variables.v2dzu > 0:
+        if self.data.ife.fwdzu > 0 or self.data.ife.v1dzu > 0 or self.data.ife.v2dzu > 0:
             raise ProcessValueError(
                 "fwdzu, v1dzu and v2dzu should be zero for 2019 IFE build"
             )
-        if ife_variables.fwdzl > 0 or ife_variables.v1dzl > 0 or ife_variables.v2dzu > 0:
+        if self.data.ife.fwdzl > 0 or self.data.ife.v1dzl > 0 or self.data.ife.v2dzu > 0:
             raise ProcessValueError(
                 "fwdzl, v1dzl and v2dzl should be zero for 2019 IFE build"
             )
@@ -831,105 +829,105 @@ class IFE(Model):
         vel = np.sqrt(
             2.0
             * constants.ACCELERATION_GRAVITY
-            * (ife_variables.chdzu + ife_variables.bldzu)
+            * (self.data.ife.chdzu + self.data.ife.bldzu)
         )
 
         # Lithium Fraction
-        ife_variables.blmatf[0, 8] = 0.91 * np.sqrt(
-            ife_variables.bldzu / (ife_variables.chdzu + ife_variables.bldzu)
+        self.data.ife.blmatf[0, 8] = 0.91 * np.sqrt(
+            self.data.ife.bldzu / (self.data.ife.chdzu + self.data.ife.bldzu)
         )
-        ife_variables.blmatf[0, 0] = 1.0 - ife_variables.blmatf[0, 8]
+        self.data.ife.blmatf[0, 0] = 1.0 - self.data.ife.blmatf[0, 8]
 
         # Spatial Thickness
-        ife_variables.bldr = ife_variables.bldrc / ife_variables.blmatf[0, 8]
+        self.data.ife.bldr = self.data.ife.bldrc / self.data.ife.blmatf[0, 8]
 
         # Area
         acurt = np.pi * (
-            (ife_variables.chrad + ife_variables.bldr) ** 2.0 - ife_variables.chrad**2.0
+            (self.data.ife.chrad + self.data.ife.bldr) ** 2.0 - self.data.ife.chrad**2.0
         )
 
         # Mass Flow
-        mdot = 512.0 * vel * ife_variables.blmatf[0, 8] * acurt
+        mdot = 512.0 * vel * self.data.ife.blmatf[0, 8] * acurt
 
         # Pump Power (MW)
-        ife_variables.lipmw = (
+        self.data.ife.lipmw = (
             1e-6
             * mdot
             * constants.ACCELERATION_GRAVITY
             * (
-                ife_variables.chdzl
-                + ife_variables.chdzu
-                + ife_variables.bldzu
-                + ife_variables.bldzl
+                self.data.ife.chdzl
+                + self.data.ife.chdzu
+                + self.data.ife.bldzu
+                + self.data.ife.bldzl
             )
-            / ife_variables.etali
+            / self.data.ife.etali
         )
 
         # Fall Time
-        ife_variables.taufall = (
-            2.0 * (ife_variables.chdzl + ife_variables.chdzu + ife_variables.bldzu) / vel
+        self.data.ife.taufall = (
+            2.0 * (self.data.ife.chdzl + self.data.ife.chdzu + self.data.ife.bldzu) / vel
         )
 
-        ife_variables.rrmax = 1.0 / ife_variables.taufall
+        self.data.ife.rrmax = 1.0 / self.data.ife.taufall
 
         # TBR and Emult model was for spherical lithium
         # Remove reactor head
-        phi = np.arctan(ife_variables.chrad / ife_variables.chdzu)
+        phi = np.arctan(self.data.ife.chrad / self.data.ife.chdzu)
         sang = 1.0 - np.cos(phi)
         li_frac = 1.0 - 0.5 * sang
 
         # TBR
         self.data.fwbs.tbr = (
             3.7418
-            * (1.0 / (1.0 + np.exp(-2.6366 * ife_variables.bldrc)) - 0.5)
+            * (1.0 / (1.0 + np.exp(-2.6366 * self.data.ife.bldrc)) - 0.5)
             * li_frac
         )
 
         # Energy Multiplication
         self.data.fwbs.f_p_blkt_multiplication = (
             2.2414
-            * (1.0 / (1.0 + np.exp(-3.0038 * ife_variables.bldrc)) - 0.5)
+            * (1.0 / (1.0 + np.exp(-3.0038 * self.data.ife.bldrc)) - 0.5)
             * li_frac
         )
 
         # Radial build
 
-        ife_variables.r1 = ife_variables.chrad
-        ife_variables.r2 = ife_variables.r1 + ife_variables.fwdr
-        ife_variables.r3 = ife_variables.r2 + ife_variables.v1dr
-        ife_variables.r4 = ife_variables.r3 + ife_variables.bldr
-        ife_variables.r5 = ife_variables.r4 + ife_variables.v2dr
-        ife_variables.r6 = ife_variables.r5 + ife_variables.shdr
-        ife_variables.r7 = ife_variables.r6 + ife_variables.v3dr
+        self.data.ife.r1 = self.data.ife.chrad
+        self.data.ife.r2 = self.data.ife.r1 + self.data.ife.fwdr
+        self.data.ife.r3 = self.data.ife.r2 + self.data.ife.v1dr
+        self.data.ife.r4 = self.data.ife.r3 + self.data.ife.bldr
+        self.data.ife.r5 = self.data.ife.r4 + self.data.ife.v2dr
+        self.data.ife.r6 = self.data.ife.r5 + self.data.ife.shdr
+        self.data.ife.r7 = self.data.ife.r6 + self.data.ife.v3dr
 
         # Vertical build (below midplane)
 
-        ife_variables.zl1 = ife_variables.chdzl
-        ife_variables.zl2 = ife_variables.zl1 + ife_variables.fwdzl
-        ife_variables.zl3 = ife_variables.zl2 + ife_variables.v1dzl
-        ife_variables.zl4 = ife_variables.zl3 + ife_variables.bldzl
-        ife_variables.zl5 = ife_variables.zl4 + ife_variables.v2dzl
-        ife_variables.zl6 = ife_variables.zl5 + ife_variables.shdzl
-        ife_variables.zl7 = ife_variables.zl6 + ife_variables.v3dzl
+        self.data.ife.zl1 = self.data.ife.chdzl
+        self.data.ife.zl2 = self.data.ife.zl1 + self.data.ife.fwdzl
+        self.data.ife.zl3 = self.data.ife.zl2 + self.data.ife.v1dzl
+        self.data.ife.zl4 = self.data.ife.zl3 + self.data.ife.bldzl
+        self.data.ife.zl5 = self.data.ife.zl4 + self.data.ife.v2dzl
+        self.data.ife.zl6 = self.data.ife.zl5 + self.data.ife.shdzl
+        self.data.ife.zl7 = self.data.ife.zl6 + self.data.ife.v3dzl
 
         # Vertical build (above midplane)
 
-        ife_variables.zu1 = ife_variables.chdzu
-        ife_variables.zu2 = ife_variables.zu1 + ife_variables.fwdzu
-        ife_variables.zu3 = ife_variables.zu2 + ife_variables.v1dzu
-        ife_variables.zu4 = ife_variables.zu3 + ife_variables.bldzu
-        ife_variables.zu5 = ife_variables.zu4 + ife_variables.v2dzu
-        ife_variables.zu6 = ife_variables.zu5 + ife_variables.shdzu
+        self.data.ife.zu1 = self.data.ife.chdzu
+        self.data.ife.zu2 = self.data.ife.zu1 + self.data.ife.fwdzu
+        self.data.ife.zu3 = self.data.ife.zu2 + self.data.ife.v1dzu
+        self.data.ife.zu4 = self.data.ife.zu3 + self.data.ife.bldzu
+        self.data.ife.zu5 = self.data.ife.zu4 + self.data.ife.v2dzu
+        self.data.ife.zu6 = self.data.ife.zu5 + self.data.ife.shdzu
 
-        ife_variables.v3dzu = (
-            (ife_variables.zu6 + ife_variables.zl6)
+        self.data.ife.v3dzu = (
+            (self.data.ife.zu6 + self.data.ife.zl6)
             + self.data.buildings.trcl
             + self.data.buildings.stcl
             + 5.1
             + 9.41e-6 * 1.0e5
         )
 
-        ife_variables.zu7 = ife_variables.zu6 + ife_variables.v3dzu
+        self.data.ife.zu7 = self.data.ife.zu6 + self.data.ife.v3dzu
 
         # Component volumes
         # The following notation applies below:
@@ -941,173 +939,173 @@ class IFE(Model):
 
         chvol = (
             np.pi
-            * ife_variables.r1
-            * ife_variables.r1
-            * (ife_variables.zu1 + ife_variables.zl1)
+            * self.data.ife.r1
+            * self.data.ife.r1
+            * (self.data.ife.zu1 + self.data.ife.zl1)
         )
 
         # First wall
 
-        ife_variables.fwvol[0] = (
+        self.data.ife.fwvol[0] = (
             np.pi
-            * (ife_variables.r2 * ife_variables.r2 - ife_variables.r1 * ife_variables.r1)
-            * (ife_variables.zu1 + ife_variables.zl1)
+            * (self.data.ife.r2 * self.data.ife.r2 - self.data.ife.r1 * self.data.ife.r1)
+            * (self.data.ife.zu1 + self.data.ife.zl1)
         )
-        ife_variables.fwvol[1] = (
+        self.data.ife.fwvol[1] = (
             np.pi
-            * ife_variables.r2
-            * ife_variables.r2
-            * (ife_variables.zu2 - ife_variables.zu1)
+            * self.data.ife.r2
+            * self.data.ife.r2
+            * (self.data.ife.zu2 - self.data.ife.zu1)
         )
-        ife_variables.fwvol[2] = (
+        self.data.ife.fwvol[2] = (
             np.pi
-            * ife_variables.r2
-            * ife_variables.r2
-            * (ife_variables.zl2 - ife_variables.zl1)
+            * self.data.ife.r2
+            * self.data.ife.r2
+            * (self.data.ife.zl2 - self.data.ife.zl1)
         )
 
         # First void
 
-        ife_variables.v1vol[0] = (
+        self.data.ife.v1vol[0] = (
             np.pi
-            * (ife_variables.r3 * ife_variables.r3 - ife_variables.r2 * ife_variables.r2)
-            * (ife_variables.zu2 + ife_variables.zl2)
+            * (self.data.ife.r3 * self.data.ife.r3 - self.data.ife.r2 * self.data.ife.r2)
+            * (self.data.ife.zu2 + self.data.ife.zl2)
         )
-        ife_variables.v1vol[1] = (
+        self.data.ife.v1vol[1] = (
             np.pi
-            * ife_variables.r3
-            * ife_variables.r3
-            * (ife_variables.zu3 - ife_variables.zu2)
+            * self.data.ife.r3
+            * self.data.ife.r3
+            * (self.data.ife.zu3 - self.data.ife.zu2)
         )
-        ife_variables.v1vol[2] = (
+        self.data.ife.v1vol[2] = (
             np.pi
-            * ife_variables.r3
-            * ife_variables.r3
-            * (ife_variables.zl3 - ife_variables.zl2)
+            * self.data.ife.r3
+            * self.data.ife.r3
+            * (self.data.ife.zl3 - self.data.ife.zl2)
         )
 
         # Blanket
         # Radial Blanket - between void 2 and chamber
-        ife_variables.blvol[0] = (
+        self.data.ife.blvol[0] = (
             np.pi
-            * (ife_variables.r4 * ife_variables.r4 - ife_variables.r3 * ife_variables.r3)
-            * (ife_variables.zu3 + ife_variables.zl3)
+            * (self.data.ife.r4 * self.data.ife.r4 - self.data.ife.r3 * self.data.ife.r3)
+            * (self.data.ife.zu3 + self.data.ife.zl3)
         )
         # Upper Blanket - Pool radially between shield and
         # chamber of input height.
-        ife_variables.blvol[1] = (
+        self.data.ife.blvol[1] = (
             np.pi
-            * (ife_variables.r5 * ife_variables.r5 - ife_variables.r3 * ife_variables.r3)
-            * ife_variables.bldzu
+            * (self.data.ife.r5 * self.data.ife.r5 - self.data.ife.r3 * self.data.ife.r3)
+            * self.data.ife.bldzu
         )
         # Lower Blanket - Pool filling base of device
-        ife_variables.blvol[2] = (
+        self.data.ife.blvol[2] = (
             np.pi
-            * ife_variables.r5
-            * ife_variables.r5
-            * (ife_variables.zl4 - ife_variables.zl3)
+            * self.data.ife.r5
+            * self.data.ife.r5
+            * (self.data.ife.zl4 - self.data.ife.zl3)
         )
 
         # Second void
 
-        ife_variables.v2vol[0] = (
+        self.data.ife.v2vol[0] = (
             np.pi
-            * (ife_variables.r5 * ife_variables.r5 - ife_variables.r4 * ife_variables.r4)
-            * (ife_variables.chdzl + ife_variables.chdzu)
+            * (self.data.ife.r5 * self.data.ife.r5 - self.data.ife.r4 * self.data.ife.r4)
+            * (self.data.ife.chdzl + self.data.ife.chdzu)
         )
-        ife_variables.v2vol[1] = 0.0
-        ife_variables.v2vol[2] = 0.0
+        self.data.ife.v2vol[1] = 0.0
+        self.data.ife.v2vol[2] = 0.0
 
         # Shield
-        ife_variables.shvol[0] = (
+        self.data.ife.shvol[0] = (
             np.pi
-            * (ife_variables.r6 * ife_variables.r6 - ife_variables.r5 * ife_variables.r5)
-            * (ife_variables.zu5 + ife_variables.zl5)
+            * (self.data.ife.r6 * self.data.ife.r6 - self.data.ife.r5 * self.data.ife.r5)
+            * (self.data.ife.zu5 + self.data.ife.zl5)
         )
         # Top Section is in three parts to account for the dip at
         # the centre.  The first is the horizontal top, the second is the
         # horizontal
-        ife_variables.shvol[1] = np.pi * (
+        self.data.ife.shvol[1] = np.pi * (
             (
                 (
-                    ife_variables.r6 * ife_variables.r6
-                    - (ife_variables.chrad - ife_variables.shdr)
-                    * (ife_variables.chrad - ife_variables.shdr)
+                    self.data.ife.r6 * self.data.ife.r6
+                    - (self.data.ife.chrad - self.data.ife.shdr)
+                    * (self.data.ife.chrad - self.data.ife.shdr)
                 )
-                * ife_variables.shdzu
+                * self.data.ife.shdzu
             )
             + (
                 (
-                    ife_variables.r1 * ife_variables.r1
-                    - ife_variables.flirad * ife_variables.flirad
+                    self.data.ife.r1 * self.data.ife.r1
+                    - self.data.ife.flirad * self.data.ife.flirad
                 )
-                * ife_variables.shdzu
+                * self.data.ife.shdzu
             )
             + (
                 (
-                    ife_variables.r1 * ife_variables.r1
-                    - (ife_variables.r1 - ife_variables.shdzu)
-                    * (ife_variables.r1 - ife_variables.shdzu)
+                    self.data.ife.r1 * self.data.ife.r1
+                    - (self.data.ife.r1 - self.data.ife.shdzu)
+                    * (self.data.ife.r1 - self.data.ife.shdzu)
                 )
-                * (ife_variables.bldzu - ife_variables.shdzu)
+                * (self.data.ife.bldzu - self.data.ife.shdzu)
             )
         )
-        ife_variables.shvol[2] = (
+        self.data.ife.shvol[2] = (
             np.pi
-            * ife_variables.r6
-            * ife_variables.r6
-            * (ife_variables.zl6 - ife_variables.zl5)
+            * self.data.ife.r6
+            * self.data.ife.r6
+            * (self.data.ife.zl6 - self.data.ife.zl5)
         )
 
         # Third void
 
-        ife_variables.v3vol[0] = (
+        self.data.ife.v3vol[0] = (
             np.pi
-            * (ife_variables.r7 * ife_variables.r7 - ife_variables.r6 * ife_variables.r6)
-            * (ife_variables.zu6 + ife_variables.zl6)
+            * (self.data.ife.r7 * self.data.ife.r7 - self.data.ife.r6 * self.data.ife.r6)
+            * (self.data.ife.zu6 + self.data.ife.zl6)
         )
-        ife_variables.v3vol[1] = (
+        self.data.ife.v3vol[1] = (
             np.pi
-            * ife_variables.r7
-            * ife_variables.r7
-            * (ife_variables.zu7 - ife_variables.zu6)
+            * self.data.ife.r7
+            * self.data.ife.r7
+            * (self.data.ife.zu7 - self.data.ife.zu6)
             + np.pi
             * (
-                (ife_variables.r1 - ife_variables.shdzu)
-                * (ife_variables.r1 - ife_variables.shdzu)
-                - ife_variables.flirad * ife_variables.flirad
+                (self.data.ife.r1 - self.data.ife.shdzu)
+                * (self.data.ife.r1 - self.data.ife.shdzu)
+                - self.data.ife.flirad * self.data.ife.flirad
             )
-            * ife_variables.bldzu
+            * self.data.ife.bldzu
         )
-        ife_variables.v3vol[2] = (
+        self.data.ife.v3vol[2] = (
             np.pi
-            * ife_variables.r7
-            * ife_variables.r7
-            * (ife_variables.zl7 - ife_variables.zl6)
+            * self.data.ife.r7
+            * self.data.ife.r7
+            * (self.data.ife.zl7 - self.data.ife.zl6)
         )
 
         # Material volumes
 
-        for i in range(ife_variables.MAXMAT + 1):
-            ife_variables.chmatv[i] = max(0.0, chvol * ife_variables.chmatf[i])
+        for i in range(MAXMAT + 1):
+            self.data.ife.chmatv[i] = max(0.0, chvol * self.data.ife.chmatf[i])
             for j in range(3):
-                ife_variables.fwmatv[j, i] = max(
-                    0.0, ife_variables.fwvol[j] * ife_variables.fwmatf[j, i]
+                self.data.ife.fwmatv[j, i] = max(
+                    0.0, self.data.ife.fwvol[j] * self.data.ife.fwmatf[j, i]
                 )
-                ife_variables.v1matv[j, i] = max(
-                    0.0, ife_variables.v1vol[j] * ife_variables.v1matf[j, i]
+                self.data.ife.v1matv[j, i] = max(
+                    0.0, self.data.ife.v1vol[j] * self.data.ife.v1matf[j, i]
                 )
-                ife_variables.blmatv[j, i] = max(
-                    0.0, ife_variables.blvol[j] * ife_variables.blmatf[j, i]
+                self.data.ife.blmatv[j, i] = max(
+                    0.0, self.data.ife.blvol[j] * self.data.ife.blmatf[j, i]
                 )
-                ife_variables.v2matv[j, i] = max(
-                    0.0, ife_variables.v2vol[j] * ife_variables.v2matf[j, i]
+                self.data.ife.v2matv[j, i] = max(
+                    0.0, self.data.ife.v2vol[j] * self.data.ife.v2matf[j, i]
                 )
-                ife_variables.shmatv[j, i] = max(
-                    0.0, ife_variables.shvol[j] * ife_variables.shmatf[j, i]
+                self.data.ife.shmatv[j, i] = max(
+                    0.0, self.data.ife.shvol[j] * self.data.ife.shmatf[j, i]
                 )
-                ife_variables.v3matv[j, i] = max(
-                    0.0, ife_variables.v3vol[j] * ife_variables.v3matf[j, i]
+                self.data.ife.v3matv[j, i] = max(
+                    0.0, self.data.ife.v3vol[j] * self.data.ife.v3matf[j, i]
                 )
 
         # First wall area
@@ -1116,8 +1114,8 @@ class IFE(Model):
         # of the shield. There is a target injector tube at the
         # centre of this area.
         self.data.first_wall.a_fw_total = np.pi * (
-            ife_variables.r1 * ife_variables.r1
-            - ife_variables.flirad * ife_variables.flirad
+            self.data.ife.r1 * self.data.ife.r1
+            - self.data.ife.flirad * self.data.ife.flirad
         )
 
     def genbld(self):
@@ -1130,33 +1128,33 @@ class IFE(Model):
         """
         # Radial build
 
-        ife_variables.r1 = ife_variables.chrad
-        ife_variables.r2 = ife_variables.r1 + ife_variables.fwdr
-        ife_variables.r3 = ife_variables.r2 + ife_variables.v1dr
-        ife_variables.r4 = ife_variables.r3 + ife_variables.bldr
-        ife_variables.r5 = ife_variables.r4 + ife_variables.v2dr
-        ife_variables.r6 = ife_variables.r5 + ife_variables.shdr
-        ife_variables.r7 = ife_variables.r6 + ife_variables.v3dr
+        self.data.ife.r1 = self.data.ife.chrad
+        self.data.ife.r2 = self.data.ife.r1 + self.data.ife.fwdr
+        self.data.ife.r3 = self.data.ife.r2 + self.data.ife.v1dr
+        self.data.ife.r4 = self.data.ife.r3 + self.data.ife.bldr
+        self.data.ife.r5 = self.data.ife.r4 + self.data.ife.v2dr
+        self.data.ife.r6 = self.data.ife.r5 + self.data.ife.shdr
+        self.data.ife.r7 = self.data.ife.r6 + self.data.ife.v3dr
 
         # Vertical build (below midplane)
 
-        ife_variables.zl1 = ife_variables.chdzl
-        ife_variables.zl2 = ife_variables.zl1 + ife_variables.fwdzl
-        ife_variables.zl3 = ife_variables.zl2 + ife_variables.v1dzl
-        ife_variables.zl4 = ife_variables.zl3 + ife_variables.bldzl
-        ife_variables.zl5 = ife_variables.zl4 + ife_variables.v2dzl
-        ife_variables.zl6 = ife_variables.zl5 + ife_variables.shdzl
-        ife_variables.zl7 = ife_variables.zl6 + ife_variables.v3dzl
+        self.data.ife.zl1 = self.data.ife.chdzl
+        self.data.ife.zl2 = self.data.ife.zl1 + self.data.ife.fwdzl
+        self.data.ife.zl3 = self.data.ife.zl2 + self.data.ife.v1dzl
+        self.data.ife.zl4 = self.data.ife.zl3 + self.data.ife.bldzl
+        self.data.ife.zl5 = self.data.ife.zl4 + self.data.ife.v2dzl
+        self.data.ife.zl6 = self.data.ife.zl5 + self.data.ife.shdzl
+        self.data.ife.zl7 = self.data.ife.zl6 + self.data.ife.v3dzl
 
         # Vertical build (above midplane)
 
-        ife_variables.zu1 = ife_variables.chdzu
-        ife_variables.zu2 = ife_variables.zu1 + ife_variables.fwdzu
-        ife_variables.zu3 = ife_variables.zu2 + ife_variables.v1dzu
-        ife_variables.zu4 = ife_variables.zu3 + ife_variables.bldzu
-        ife_variables.zu5 = ife_variables.zu4 + ife_variables.v2dzu
-        ife_variables.zu6 = ife_variables.zu5 + ife_variables.shdzu
-        ife_variables.zu7 = ife_variables.zu6 + ife_variables.v3dzu
+        self.data.ife.zu1 = self.data.ife.chdzu
+        self.data.ife.zu2 = self.data.ife.zu1 + self.data.ife.fwdzu
+        self.data.ife.zu3 = self.data.ife.zu2 + self.data.ife.v1dzu
+        self.data.ife.zu4 = self.data.ife.zu3 + self.data.ife.bldzu
+        self.data.ife.zu5 = self.data.ife.zu4 + self.data.ife.v2dzu
+        self.data.ife.zu6 = self.data.ife.zu5 + self.data.ife.shdzu
+        self.data.ife.zu7 = self.data.ife.zu6 + self.data.ife.v3dzu
 
         # Component volumes
         # The following notation applies below:
@@ -1168,153 +1166,153 @@ class IFE(Model):
 
         chvol = (
             np.pi
-            * ife_variables.r1
-            * ife_variables.r1
-            * (ife_variables.zu1 + ife_variables.zl1)
+            * self.data.ife.r1
+            * self.data.ife.r1
+            * (self.data.ife.zu1 + self.data.ife.zl1)
         )
 
         # First wall
 
-        ife_variables.fwvol[0] = (
+        self.data.ife.fwvol[0] = (
             np.pi
-            * (ife_variables.r2 * ife_variables.r2 - ife_variables.r1 * ife_variables.r1)
-            * (ife_variables.zu1 + ife_variables.zl1)
+            * (self.data.ife.r2 * self.data.ife.r2 - self.data.ife.r1 * self.data.ife.r1)
+            * (self.data.ife.zu1 + self.data.ife.zl1)
         )
-        ife_variables.fwvol[1] = (
+        self.data.ife.fwvol[1] = (
             np.pi
-            * ife_variables.r2
-            * ife_variables.r2
-            * (ife_variables.zu2 - ife_variables.zu1)
+            * self.data.ife.r2
+            * self.data.ife.r2
+            * (self.data.ife.zu2 - self.data.ife.zu1)
         )
-        ife_variables.fwvol[2] = (
+        self.data.ife.fwvol[2] = (
             np.pi
-            * ife_variables.r2
-            * ife_variables.r2
-            * (ife_variables.zl2 - ife_variables.zl1)
+            * self.data.ife.r2
+            * self.data.ife.r2
+            * (self.data.ife.zl2 - self.data.ife.zl1)
         )
 
         # First void
 
-        ife_variables.v1vol[0] = (
+        self.data.ife.v1vol[0] = (
             np.pi
-            * (ife_variables.r3 * ife_variables.r3 - ife_variables.r2 * ife_variables.r2)
-            * (ife_variables.zu2 + ife_variables.zl2)
+            * (self.data.ife.r3 * self.data.ife.r3 - self.data.ife.r2 * self.data.ife.r2)
+            * (self.data.ife.zu2 + self.data.ife.zl2)
         )
-        ife_variables.v1vol[1] = (
+        self.data.ife.v1vol[1] = (
             np.pi
-            * ife_variables.r3
-            * ife_variables.r3
-            * (ife_variables.zu3 - ife_variables.zu2)
+            * self.data.ife.r3
+            * self.data.ife.r3
+            * (self.data.ife.zu3 - self.data.ife.zu2)
         )
-        ife_variables.v1vol[2] = (
+        self.data.ife.v1vol[2] = (
             np.pi
-            * ife_variables.r3
-            * ife_variables.r3
-            * (ife_variables.zl3 - ife_variables.zl2)
+            * self.data.ife.r3
+            * self.data.ife.r3
+            * (self.data.ife.zl3 - self.data.ife.zl2)
         )
 
         # Blanket
 
-        ife_variables.blvol[0] = (
+        self.data.ife.blvol[0] = (
             np.pi
-            * (ife_variables.r4 * ife_variables.r4 - ife_variables.r3 * ife_variables.r3)
-            * (ife_variables.zu3 + ife_variables.zl3)
+            * (self.data.ife.r4 * self.data.ife.r4 - self.data.ife.r3 * self.data.ife.r3)
+            * (self.data.ife.zu3 + self.data.ife.zl3)
         )
-        ife_variables.blvol[1] = (
+        self.data.ife.blvol[1] = (
             np.pi
-            * ife_variables.r4
-            * ife_variables.r4
-            * (ife_variables.zu4 - ife_variables.zu3)
+            * self.data.ife.r4
+            * self.data.ife.r4
+            * (self.data.ife.zu4 - self.data.ife.zu3)
         )
-        ife_variables.blvol[2] = (
+        self.data.ife.blvol[2] = (
             np.pi
-            * ife_variables.r4
-            * ife_variables.r4
-            * (ife_variables.zl4 - ife_variables.zl3)
+            * self.data.ife.r4
+            * self.data.ife.r4
+            * (self.data.ife.zl4 - self.data.ife.zl3)
         )
 
         # Second void
 
-        ife_variables.v2vol[0] = (
+        self.data.ife.v2vol[0] = (
             np.pi
-            * (ife_variables.r5 * ife_variables.r5 - ife_variables.r4 * ife_variables.r4)
-            * (ife_variables.zu4 + ife_variables.zl4)
+            * (self.data.ife.r5 * self.data.ife.r5 - self.data.ife.r4 * self.data.ife.r4)
+            * (self.data.ife.zu4 + self.data.ife.zl4)
         )
-        ife_variables.v2vol[1] = (
+        self.data.ife.v2vol[1] = (
             np.pi
-            * ife_variables.r5
-            * ife_variables.r5
-            * (ife_variables.zu5 - ife_variables.zu4)
+            * self.data.ife.r5
+            * self.data.ife.r5
+            * (self.data.ife.zu5 - self.data.ife.zu4)
         )
-        ife_variables.v2vol[2] = (
+        self.data.ife.v2vol[2] = (
             np.pi
-            * ife_variables.r5
-            * ife_variables.r5
-            * (ife_variables.zl5 - ife_variables.zl4)
+            * self.data.ife.r5
+            * self.data.ife.r5
+            * (self.data.ife.zl5 - self.data.ife.zl4)
         )
 
         # Shield
 
-        ife_variables.shvol[0] = (
+        self.data.ife.shvol[0] = (
             np.pi
-            * (ife_variables.r6 * ife_variables.r6 - ife_variables.r5 * ife_variables.r5)
-            * (ife_variables.zu5 + ife_variables.zl5)
+            * (self.data.ife.r6 * self.data.ife.r6 - self.data.ife.r5 * self.data.ife.r5)
+            * (self.data.ife.zu5 + self.data.ife.zl5)
         )
-        ife_variables.shvol[1] = (
+        self.data.ife.shvol[1] = (
             np.pi
-            * ife_variables.r6
-            * ife_variables.r6
-            * (ife_variables.zu6 - ife_variables.zu5)
+            * self.data.ife.r6
+            * self.data.ife.r6
+            * (self.data.ife.zu6 - self.data.ife.zu5)
         )
-        ife_variables.shvol[2] = (
+        self.data.ife.shvol[2] = (
             np.pi
-            * ife_variables.r6
-            * ife_variables.r6
-            * (ife_variables.zl6 - ife_variables.zl5)
+            * self.data.ife.r6
+            * self.data.ife.r6
+            * (self.data.ife.zl6 - self.data.ife.zl5)
         )
 
         # Third void
 
-        ife_variables.v3vol[0] = (
+        self.data.ife.v3vol[0] = (
             np.pi
-            * (ife_variables.r7 * ife_variables.r7 - ife_variables.r6 * ife_variables.r6)
-            * (ife_variables.zu6 + ife_variables.zl6)
+            * (self.data.ife.r7 * self.data.ife.r7 - self.data.ife.r6 * self.data.ife.r6)
+            * (self.data.ife.zu6 + self.data.ife.zl6)
         )
-        ife_variables.v3vol[1] = (
+        self.data.ife.v3vol[1] = (
             np.pi
-            * ife_variables.r7
-            * ife_variables.r7
-            * (ife_variables.zu7 - ife_variables.zu6)
+            * self.data.ife.r7
+            * self.data.ife.r7
+            * (self.data.ife.zu7 - self.data.ife.zu6)
         )
-        ife_variables.v3vol[2] = (
+        self.data.ife.v3vol[2] = (
             np.pi
-            * ife_variables.r7
-            * ife_variables.r7
-            * (ife_variables.zl7 - ife_variables.zl6)
+            * self.data.ife.r7
+            * self.data.ife.r7
+            * (self.data.ife.zl7 - self.data.ife.zl6)
         )
 
         # Material volumes
 
-        for i in range(ife_variables.MAXMAT + 1):
-            ife_variables.chmatv[i] = max(0.0, chvol * ife_variables.chmatf[i])
+        for i in range(MAXMAT + 1):
+            self.data.ife.chmatv[i] = max(0.0, chvol * self.data.ife.chmatf[i])
             for j in range(3):
-                ife_variables.fwmatv[j, i] = max(
-                    0.0, ife_variables.fwvol[j] * ife_variables.fwmatf[j, i]
+                self.data.ife.fwmatv[j, i] = max(
+                    0.0, self.data.ife.fwvol[j] * self.data.ife.fwmatf[j, i]
                 )
-                ife_variables.v1matv[j, i] = max(
-                    0.0, ife_variables.v1vol[j] * ife_variables.v1matf[j, i]
+                self.data.ife.v1matv[j, i] = max(
+                    0.0, self.data.ife.v1vol[j] * self.data.ife.v1matf[j, i]
                 )
-                ife_variables.blmatv[j, i] = max(
-                    0.0, ife_variables.blvol[j] * ife_variables.blmatf[j, i]
+                self.data.ife.blmatv[j, i] = max(
+                    0.0, self.data.ife.blvol[j] * self.data.ife.blmatf[j, i]
                 )
-                ife_variables.v2matv[j, i] = max(
-                    0.0, ife_variables.v2vol[j] * ife_variables.v2matf[j, i]
+                self.data.ife.v2matv[j, i] = max(
+                    0.0, self.data.ife.v2vol[j] * self.data.ife.v2matf[j, i]
                 )
-                ife_variables.shmatv[j, i] = max(
-                    0.0, ife_variables.shvol[j] * ife_variables.shmatf[j, i]
+                self.data.ife.shmatv[j, i] = max(
+                    0.0, self.data.ife.shvol[j] * self.data.ife.shmatf[j, i]
                 )
-                ife_variables.v3matv[j, i] = max(
-                    0.0, ife_variables.v3vol[j] * ife_variables.v3matf[j, i]
+                self.data.ife.v3matv[j, i] = max(
+                    0.0, self.data.ife.v3vol[j] * self.data.ife.v3matf[j, i]
                 )
 
         # First wall area
@@ -1322,8 +1320,8 @@ class IFE(Model):
         self.data.first_wall.a_fw_total = (
             2.0
             * np.pi
-            * ife_variables.r1
-            * ((ife_variables.zu1 + ife_variables.zl1) + ife_variables.r1)
+            * self.data.ife.r1
+            * ((self.data.ife.zu1 + self.data.ife.zl1) + self.data.ife.r1)
         )
 
     def ifephy(self, output: bool = False):
@@ -1340,54 +1338,54 @@ class IFE(Model):
         output: bool
              (Default value = False)
         """
-        match ife_variables.ifedrv:
+        match self.data.ife.ifedrv:
             case -1:
                 # Target gain and driver efficiency dependencies on
                 # driver energy are input
-                ife_variables.gain, ife_variables.etadrv = self.driver(
-                    ife_variables.edrive, ife_variables.gainve, ife_variables.etave
+                self.data.ife.gain, self.data.ife.etadrv = self.driver(
+                    self.data.ife.edrive, self.data.ife.gainve, self.data.ife.etave
                 )
             case 0:  # Target gain and driver efficiency are input
-                ife_variables.gain = ife_variables.tgain
-                ife_variables.etadrv = ife_variables.drveff
+                self.data.ife.gain = self.data.ife.tgain
+                self.data.ife.etadrv = self.data.ife.drveff
             case 1:  # Laser driver based on SOMBRERO design
-                ife_variables.gain, ife_variables.etadrv = self.lasdrv(
-                    ife_variables.edrive
+                self.data.ife.gain, self.data.ife.etadrv = self.lasdrv(
+                    self.data.ife.edrive
                 )
             case 2:  # Heavy-ion beam driver based on OSIRIS design
-                ife_variables.gain, ife_variables.etadrv = self.iondrv(
-                    ife_variables.edrive
+                self.data.ife.gain, self.data.ife.etadrv = self.iondrv(
+                    self.data.ife.edrive
                 )
             case 3:
-                ife_variables.etadrv = ife_variables.drveff
+                self.data.ife.etadrv = self.data.ife.drveff
             case _:
                 raise ProcessValueError(
-                    f"ifedrv={ife_variables.ifedrv} is an invalid option"
+                    f"ifedrv={self.data.ife.ifedrv} is an invalid option"
                 )
 
-        if ife_variables.ifedrv != 3:
+        if self.data.ife.ifedrv != 3:
             # Repetition rate (Hz)
-            ife_variables.reprat = ife_variables.pdrive / ife_variables.edrive
+            self.data.ife.reprat = self.data.ife.pdrive / self.data.ife.edrive
             # Fusion power (MW)
             physics_variables.p_fusion_total_mw = (
-                1.0e-6 * ife_variables.pdrive * ife_variables.gain
+                1.0e-6 * self.data.ife.pdrive * self.data.ife.gain
             )
         else:
             # Driver Power
-            ife_variables.reprat = ife_variables.rrin
-            ife_variables.pdrive = ife_variables.reprat * ife_variables.edrive
+            self.data.ife.reprat = self.data.ife.rrin
+            self.data.ife.pdrive = self.data.ife.reprat * self.data.ife.edrive
             # Gain
-            physics_variables.p_fusion_total_mw = ife_variables.pfusife
-            ife_variables.gain = physics_variables.p_fusion_total_mw / (
-                1.0e-6 * ife_variables.pdrive
+            physics_variables.p_fusion_total_mw = self.data.ife.pfusife
+            self.data.ife.gain = physics_variables.p_fusion_total_mw / (
+                1.0e-6 * self.data.ife.pdrive
             )
 
         # Wall load (assume total fusion power applies)
 
-        if ife_variables.ifetyp == 1:
+        if self.data.ife.ifetyp == 1:
             # OSIRIS-type build: First wall subtends a solid angle of 2 pi * SANG
 
-            phi = 0.5 * np.pi + np.arctan(ife_variables.zl1 / ife_variables.r1)
+            phi = 0.5 * np.pi + np.arctan(self.data.ife.zl1 / self.data.ife.r1)
             sang = 1.0 - np.cos(phi)
             physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.p_fusion_total_mw
@@ -1396,13 +1394,13 @@ class IFE(Model):
                 / self.data.first_wall.a_fw_total
             )
 
-        elif ife_variables.ifetyp == 4:
+        elif self.data.ife.ifetyp == 4:
             # 2019 build only has first wall at the top which has a tube at
             # its centre.  This calculates solid angle and removes tube.
 
-            phi = np.arctan(ife_variables.r1 / ife_variables.zu1)
+            phi = np.arctan(self.data.ife.r1 / self.data.ife.zu1)
             sang = 1.0 - np.cos(phi)
-            phi = np.arctan(ife_variables.flirad / ife_variables.zu1)
+            phi = np.arctan(self.data.ife.flirad / self.data.ife.zu1)
             sang -= 1.0 - np.cos(phi)
             physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.p_fusion_total_mw
@@ -1421,7 +1419,7 @@ class IFE(Model):
 
         process_output.oheadr(self.outfile, "Physics / Driver Issues")
 
-        match ife_variables.ifedrv:
+        match self.data.ife.ifedrv:
             case -1 | 0:
                 process_output.ocmmnt(self.outfile, "Driver type : generic")
             case 1:
@@ -1432,24 +1430,24 @@ class IFE(Model):
         process_output.oblnkl(self.outfile)
 
         process_output.ovarre(
-            self.outfile, "Driver energy (J)", "(edrive)", ife_variables.edrive
+            self.outfile, "Driver energy (J)", "(edrive)", self.data.ife.edrive
         )
         process_output.ovarre(
-            self.outfile, "Driver efficiency", "(etadrv)", ife_variables.etadrv
+            self.outfile, "Driver efficiency", "(etadrv)", self.data.ife.etadrv
         )
         process_output.ovarre(
             self.outfile,
             "Driver power reaching target (W)",
             "(pdrive)",
-            ife_variables.pdrive,
+            self.data.ife.pdrive,
         )
         process_output.ovarre(
             self.outfile,
             "Driver repetition rate (Hz)",
             "(reprat)",
-            ife_variables.reprat,
+            self.data.ife.reprat,
         )
-        process_output.ovarre(self.outfile, "Target gain", "(gain)", ife_variables.gain)
+        process_output.ovarre(self.outfile, "Target gain", "(gain)", self.data.ife.gain)
         process_output.ovarre(
             self.outfile,
             "Fusion power (MW)",
@@ -1663,7 +1661,7 @@ class IFE(Model):
 
         # Target factory power (MWe)
         # Assumed to scale with repetition rate (not quite linearly)
-        ife_variables.tfacmw = ife_variables.ptargf * (ife_variables.reprat / 6.0) ** 0.7
+        self.data.ife.tfacmw = self.data.ife.ptargf * (self.data.ife.reprat / 6.0) ** 0.7
 
     def ifefbs(self, output: bool = False):
         """Routine to calculate the first wall, blanket and shield volumes,
@@ -1703,16 +1701,16 @@ class IFE(Model):
         ]
 
         # Material masses
-        for i in range(ife_variables.MAXMAT + 1):
+        for i in range(MAXMAT + 1):
             den = matden[i]
-            ife_variables.chmatm[i] = ife_variables.chmatv[i] * den
+            self.data.ife.chmatm[i] = self.data.ife.chmatv[i] * den
             for j in range(3):
-                ife_variables.fwmatm[j, i] = ife_variables.fwmatv[j, i] * den
-                ife_variables.v1matm[j, i] = ife_variables.v1matv[j, i] * den
-                ife_variables.blmatm[j, i] = ife_variables.blmatv[j, i] * den
-                ife_variables.v2matm[j, i] = ife_variables.v2matv[j, i] * den
-                ife_variables.shmatm[j, i] = ife_variables.shmatv[j, i] * den
-                ife_variables.v3matm[j, i] = ife_variables.v3matv[j, i] * den
+                self.data.ife.fwmatm[j, i] = self.data.ife.fwmatv[j, i] * den
+                self.data.ife.v1matm[j, i] = self.data.ife.v1matv[j, i] * den
+                self.data.ife.blmatm[j, i] = self.data.ife.blmatv[j, i] * den
+                self.data.ife.v2matm[j, i] = self.data.ife.v2matv[j, i] * den
+                self.data.ife.shmatm[j, i] = self.data.ife.shmatv[j, i] * den
+                self.data.ife.v3matm[j, i] = self.data.ife.v3matv[j, i] * den
 
         # Total masses of components (excluding coolant)
         self.data.fwbs.m_fw_total = 0.0
@@ -1720,9 +1718,9 @@ class IFE(Model):
         self.data.fwbs.whtshld = 0.0
         for i in range(5):
             for j in range(3):
-                self.data.fwbs.m_fw_total += ife_variables.fwmatm[j, i]
-                self.data.fwbs.m_blkt_total += ife_variables.blmatm[j, i]
-                self.data.fwbs.whtshld += ife_variables.shmatm[j, i]
+                self.data.fwbs.m_fw_total += self.data.ife.fwmatm[j, i]
+                self.data.fwbs.m_blkt_total += self.data.ife.blmatm[j, i]
+                self.data.fwbs.whtshld += self.data.ife.shmatm[j, i]
 
         # Other masses
         self.data.fwbs.m_blkt_beryllium = 0.0
@@ -1732,36 +1730,36 @@ class IFE(Model):
         self.data.fwbs.m_blkt_lithium = 0.0
 
         for j in range(3):
-            self.data.fwbs.m_blkt_steel_total += ife_variables.blmatm[j, 1]
-            self.data.fwbs.m_blkt_li2o += ife_variables.blmatm[j, 4]
-            self.data.fwbs.m_blkt_lithium += ife_variables.blmatm[j, 8]
+            self.data.fwbs.m_blkt_steel_total += self.data.ife.blmatm[j, 1]
+            self.data.fwbs.m_blkt_li2o += self.data.ife.blmatm[j, 4]
+            self.data.fwbs.m_blkt_lithium += self.data.ife.blmatm[j, 8]
 
         # Total mass of FLiBe
-        ife_variables.mflibe = ife_variables.chmatm[3]
+        self.data.ife.mflibe = self.data.ife.chmatm[3]
         for j in range(3):
-            ife_variables.mflibe = (
-                ife_variables.mflibe
-                + ife_variables.fwmatm[j, 3]
-                + ife_variables.v1matm[j, 3]
-                + ife_variables.blmatm[j, 3]
-                + ife_variables.v2matm[j, 3]
-                + ife_variables.shmatm[j, 3]
-                + ife_variables.v3matm[j, 3]
+            self.data.ife.mflibe = (
+                self.data.ife.mflibe
+                + self.data.ife.fwmatm[j, 3]
+                + self.data.ife.v1matm[j, 3]
+                + self.data.ife.blmatm[j, 3]
+                + self.data.ife.v2matm[j, 3]
+                + self.data.ife.shmatm[j, 3]
+                + self.data.ife.v3matm[j, 3]
             )
 
         # A fraction FBREED of the total breeder inventory is outside the
         # core region, i.e. is in the rest of the heat transport system
-        if (ife_variables.fbreed < 0.0) or (ife_variables.fbreed > 0.999):
-            raise ProcessValueError("Illegal fbreed value", fbreed=ife_variables.fbreed)
+        if (self.data.ife.fbreed < 0.0) or (self.data.ife.fbreed > 0.999):
+            raise ProcessValueError("Illegal fbreed value", fbreed=self.data.ife.fbreed)
 
         #  Following assumes that use of FLiBe and Li2O are
         # mutually exclusive
-        ife_variables.mflibe /= 1.0 - ife_variables.fbreed
-        self.data.fwbs.m_blkt_li2o /= 1.0 - ife_variables.fbreed
-        self.data.fwbs.m_blkt_lithium /= 1.0 - ife_variables.fbreed
+        self.data.ife.mflibe /= 1.0 - self.data.ife.fbreed
+        self.data.fwbs.m_blkt_li2o /= 1.0 - self.data.ife.fbreed
+        self.data.fwbs.m_blkt_lithium /= 1.0 - self.data.ife.fbreed
 
         # Blanket and first wall lifetimes (HYLIFE-II: = plant life)
-        if ife_variables.ifetyp in {3, 4}:
+        if self.data.ife.ifetyp in {3, 4}:
             life = self.data.costs.life_plant
         else:
             life = min(
@@ -1808,7 +1806,7 @@ class IFE(Model):
             self.outfile,
             "Total mass of FLiBe (kg)",
             "(mflibe)",
-            ife_variables.mflibe,
+            self.data.ife.mflibe,
         )
         process_output.ovarre(
             self.outfile, "Shield mass (kg)", "(whtshld)", self.data.fwbs.whtshld
@@ -1824,7 +1822,7 @@ class IFE(Model):
         """
         # Driver power reaching target (MW)
 
-        pdrvmw = 1.0e-6 * ife_variables.pdrive
+        pdrvmw = 1.0e-6 * self.data.ife.pdrive
 
         # Primary nuclear heating (MW)
         # Total thermal power removed from fusion core
@@ -1845,7 +1843,7 @@ class IFE(Model):
         # and provide the energy multiplication as though it were a
         # conventional blanket
 
-        if ife_variables.ifetyp not in {3, 4}:
+        if self.data.ife.ifetyp not in {3, 4}:
             self.data.heat_transport.p_fw_div_heat_deposited_mw = (
                 0.24 * self.data.heat_transport.p_plant_primary_heat_mw
             )
@@ -1878,7 +1876,7 @@ class IFE(Model):
 
         # Wall plug driver power (MW)
 
-        self.data.heat_transport.p_hcd_electric_total_mw = pdrvmw / ife_variables.etadrv
+        self.data.heat_transport.p_hcd_electric_total_mw = pdrvmw / self.data.ife.etadrv
 
         # Waste driver power (MW)
 
@@ -1889,7 +1887,7 @@ class IFE(Model):
         # Cryogenic power (MW)
         # Cryogenic temperature is assumed to be 4.5K
 
-        self.data.heat_transport.p_cryo_plant_electric_mw = ife_variables.pifecr
+        self.data.heat_transport.p_cryo_plant_electric_mw = self.data.ife.pifecr
         self.data.heat_transport.helpow = (
             1.0e6
             * self.data.heat_transport.p_cryo_plant_electric_mw
@@ -1925,10 +1923,10 @@ class IFE(Model):
             + self.data.heat_transport.fachtmw
             + self.data.heat_transport.vachtmw
             + self.data.heat_transport.p_tritium_plant_electric_mw
-            + ife_variables.tdspmw
-            + ife_variables.tfacmw
+            + self.data.ife.tdspmw
+            + self.data.ife.tfacmw
             + self.data.heat_transport.p_cryo_plant_electric_mw
-            + ife_variables.htpmw_ife
+            + self.data.ife.htpmw_ife
         )
 
         # Calculate powers relevant to a power-producing plant
@@ -1943,7 +1941,7 @@ class IFE(Model):
             self.data.heat_transport.fgrosbop = min(
                 0.5,
                 (
-                    ife_variables.fauxbop
+                    self.data.ife.fauxbop
                     / (self.data.heat_transport.p_plant_electric_gross_mw / 1000.0)
                     ** 0.6
                 ),
@@ -1977,7 +1975,7 @@ class IFE(Model):
                 "(f_p_blkt_multiplication)",
                 self.data.fwbs.f_p_blkt_multiplication,
             )
-            if ife_variables.ifetyp == 4:
+            if self.data.ife.ifetyp == 4:
                 process_output.ovarre(
                     self.outfile, "Tritium Breeding Ratio", "(tbr)", self.data.fwbs.tbr
                 )
@@ -1985,7 +1983,7 @@ class IFE(Model):
                     self.outfile,
                     "Lithium Fall Time (s)",
                     "(taufall)",
-                    ife_variables.taufall,
+                    self.data.ife.taufall,
                 )
 
             process_output.ovarre(
@@ -2041,13 +2039,13 @@ class IFE(Model):
                 self.outfile,
                 "Heat removal from target factory (MW)",
                 "(tfacmw)",
-                ife_variables.tfacmw,
+                self.data.ife.tfacmw,
             )
             process_output.ovarre(
                 self.outfile,
                 "Heat removal from delivery system (MW)",
                 "(tdspmw)",
-                ife_variables.tdspmw,
+                self.data.ife.tdspmw,
             )
             process_output.ovarre(
                 self.outfile,
@@ -2113,14 +2111,14 @@ class IFE(Model):
         self.data.heat_transport.pacpmw = (
             self.data.heat_transport.p_cryo_plant_electric_mw
             + self.data.heat_transport.vachtmw
-            + ife_variables.tdspmw
-            + ife_variables.tfacmw
-            + (ife_variables.htpmw_ife * ife_variables.reprat / 6.0)
+            + self.data.ife.tdspmw
+            + self.data.ife.tfacmw
+            + (self.data.ife.htpmw_ife * self.data.ife.reprat / 6.0)
             + self.data.heat_transport.p_tritium_plant_electric_mw
             + self.data.heat_transport.p_hcd_electric_total_mw
             + basemw
             + (self.data.buildings.a_plant_floor_effective * pmwpm2)
-            + ife_variables.lipmw
+            + self.data.ife.lipmw
         )
 
         # Total baseline power to facility loads, MW
@@ -2134,10 +2132,10 @@ class IFE(Model):
         self.data.heat_transport.tlvpmw = (
             self.data.heat_transport.p_plant_electric_base_total_mw
             + self.data.heat_transport.p_tritium_plant_electric_mw
-            + (ife_variables.htpmw_ife * ife_variables.reprat / 6.0)
+            + (self.data.ife.htpmw_ife * self.data.ife.reprat / 6.0)
             + self.data.heat_transport.vachtmw
             + 0.5 * self.data.heat_transport.p_cryo_plant_electric_mw
-            + ife_variables.tfacmw
+            + self.data.ife.tfacmw
         )
 
         if not output:
@@ -2167,10 +2165,10 @@ class IFE(Model):
             self.outfile,
             "Target delivery system (MW)",
             "(tdspmw)",
-            ife_variables.tdspmw,
+            self.data.ife.tdspmw,
         )
         process_output.ovarre(
-            self.outfile, "Target factory (MW)", "(tfacmw)", ife_variables.tfacmw
+            self.outfile, "Target factory (MW)", "(tfacmw)", self.data.ife.tfacmw
         )
         process_output.ovarre(
             self.outfile,
@@ -2194,14 +2192,14 @@ class IFE(Model):
             self.outfile,
             "Heat transport system pump motors (MW)",
             "(htpmw_ife*reprat/6)",
-            ife_variables.htpmw_ife * ife_variables.reprat / 6.0,
+            self.data.ife.htpmw_ife * self.data.ife.reprat / 6.0,
         )
-        if ife_variables.ifetyp == 4:
+        if self.data.ife.ifetyp == 4:
             process_output.ovarre(
                 self.outfile,
                 "Lithium Pump Power (MW)",
                 "(lipmw)",
-                ife_variables.lipmw,
+                self.data.ife.lipmw,
             )
         process_output.oblnkl(self.outfile)
         process_output.ovarre(
@@ -2240,10 +2238,10 @@ class IFE(Model):
         # ================
 
         # Total internal height
-        hrbi = ife_variables.zl7 + ife_variables.zu7
+        hrbi = self.data.ife.zl7 + self.data.ife.zu7
 
         # Distance from centre of device to wall
-        self.data.buildings.wrbi = ife_variables.r7
+        self.data.buildings.wrbi = self.data.ife.r7
 
         # Internal volume (square floor)
         vrci = (2.0 * self.data.buildings.wrbi) ** 2 * hrbi
@@ -2252,7 +2250,7 @@ class IFE(Model):
         # RBWT = wall thickness
         # RBRT = roof thickness
         # FNDT = foundation thickness
-        rbw = 2.0 * (ife_variables.r7 + self.data.buildings.rbwt)
+        rbw = 2.0 * (self.data.ife.r7 + self.data.buildings.rbwt)
         rbl = rbw
         rbh = hrbi + self.data.buildings.rbrt + self.data.buildings.fndt
 
@@ -2269,11 +2267,11 @@ class IFE(Model):
 
         # Shield height
 
-        shh = ife_variables.zl6 + ife_variables.zu6
+        shh = self.data.ife.zl6 + self.data.ife.zu6
 
         # Transport corridor size
 
-        tcw = ife_variables.r6 + 4.0 * self.data.buildings.trcl
+        tcw = self.data.ife.r6 + 4.0 * self.data.buildings.trcl
         tcl = 5.0 * tcw + 2.0 * self.data.buildings.hcwt
 
         # Decontamination cell size
@@ -2282,8 +2280,8 @@ class IFE(Model):
 
         # Hot cell size
 
-        hcw = ife_variables.r6 + 3.0 * self.data.buildings.hccl + 2.0
-        hcl = 3.0 * ife_variables.r6 + 4.0 * self.data.buildings.hccl + tcw
+        hcw = self.data.ife.r6 + 3.0 * self.data.buildings.hccl + 2.0
+        hcl = 3.0 * self.data.ife.r6 + 4.0 * self.data.buildings.hccl + tcw
 
         # Radioactive waste treatment
         # rww = dcw
@@ -2304,7 +2302,7 @@ class IFE(Model):
         cran = 9.41e-6 * wgts + 5.1
         rmbh = (
             10.0
-            + (ife_variables.zl6 + ife_variables.zu6)
+            + (self.data.ife.zl6 + self.data.ife.zu6)
             + self.data.buildings.trcl
             + cran
             + 5.1
