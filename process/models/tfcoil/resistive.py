@@ -1,3 +1,5 @@
+"""Resistive TF coil model."""
+
 import logging
 
 import numba
@@ -18,10 +20,13 @@ EPS = np.finfo(1.0).eps
 
 
 class ResistiveTFCoil(TFCoil):
+    """Class for resistive TF coil calculations."""
+
     def __init__(self):
         self.outfile = constants.NOUT
 
     def output(self):
+        """Run main tfcoil subroutine with outputting."""
         self.run(output=True)
 
     def run(self, output: bool = False):
@@ -259,7 +264,8 @@ class ResistiveTFCoil(TFCoil):
         except ValueError as e:
             if e.args[1] == 245 and e.args[2] == 0:
                 logger.error(
-                    "Invalid stress model (r_tf_inboard = 0), stress constraint switched off"
+                    "Invalid stress model (r_tf_inboard = 0), stress constraint "
+                    "switched off"
                 )
                 tfcoil_variables.sig_tf_case = 0.0e0
                 tfcoil_variables.sig_tf_wp = 0.0e0
@@ -287,7 +293,8 @@ class ResistiveTFCoil(TFCoil):
             )
 
         # Number of turns
-        # Set by user (no turn structure by default, i.e. tfcoil_variables.n_tf_coil_turns = 1 )
+        # Set by user (no turn structure by default, i.e.
+        # tfcoil_variables.n_tf_coil_turns = 1 )
         if (
             abs(tfcoil_variables.n_tf_coil_turns)
             < np.finfo(float(tfcoil_variables.n_tf_coil_turns)).eps
@@ -433,13 +440,15 @@ class ResistiveTFCoil(TFCoil):
         # Reporting negative WP areas issues
         if superconducting_tf_coil_variables.a_tf_wp_with_insulation < 0.0e0:
             logger.error(
-                f"Winding pack cross-section problem... {superconducting_tf_coil_variables.a_tf_wp_with_insulation=} "
+                f"Winding pack cross-section problem... "
+                f"{superconducting_tf_coil_variables.a_tf_wp_with_insulation=} "
                 f"{tfcoil_variables.dr_tf_wp_with_insulation=}"
             )
 
         elif superconducting_tf_coil_variables.a_tf_wp_no_insulation < 0.0e0:
             logger.error(
-                f"Negative cable space dimension. {superconducting_tf_coil_variables.a_tf_wp_no_insulation=}"
+                f"Negative cable space dimension. "
+                f"{superconducting_tf_coil_variables.a_tf_wp_no_insulation=}"
             )
 
     def tf_res_heating(self):
@@ -447,12 +456,14 @@ class ResistiveTFCoil(TFCoil):
 
         This method calculates the resistive heating for resistive magnets.
         It considers the following scenarios:
-        - Clamped joints in superconductors might have resistive power losses on the joints.
+        - Clamped joints in superconductors might have resistive power losses on
+          the joints.
         - Sliding joints might have a region of high resistivity.
 
         Notes
         -----
-        - The copper resistivity is set to be that for GLIDCOP AL-15 at 20°C for copper (i_tf_sup = 0).
+        - The copper resistivity is set to be that for GLIDCOP AL-15 at 20°C for copper
+          (i_tf_sup = 0).
         - The coefficient of resistivity is set to be that of pure copper
 
         References
@@ -537,7 +548,8 @@ class ResistiveTFCoil(TFCoil):
             )
 
         # Leg cross-section areas
-        # Rem : For physics_variables.itart = 1, these quantitire corresponds to the outer leg only
+        # Rem : For physics_variables.itart = 1, these quantitire corresponds to
+        # the outer leg only
         # ---
         # Leg ground insulation area per coil [m2]
         superconducting_tf_coil_variables.a_leg_gr_ins = (
@@ -644,7 +656,8 @@ class ResistiveTFCoil(TFCoil):
                 )
             )
 
-            # tfcoil_variables.p_cp_resistive containts the the total resistive power losses
+            # tfcoil_variables.p_cp_resistive containts the the total resistive
+            # power losses
             tfcoil_variables.p_tf_leg_resistive = 0.0e0
 
             # No joints if physics_variables.itart = 0
