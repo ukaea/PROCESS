@@ -22,10 +22,6 @@ from process.data_structure.impurity_radiation_module import (
 )
 from process.data_structure.neoclassics_variables import init_neoclassics_variables
 from process.data_structure.pf_power_variables import init_pf_power_variables
-from process.data_structure.pfcoil_variables import (
-    init_pfcoil_module,
-    init_pfcoil_variables,
-)
 from process.data_structure.physics_variables import (
     init_physics_module,
     init_physics_variables,
@@ -252,7 +248,6 @@ def init_all_module_vars():
     init_divertor_variables()
     data_structure.global_variables.init_global_variables()
     init_impurity_radiation_module()
-    init_pfcoil_module()
     init_physics_module()
     init_physics_variables()
     init_scan_variables()
@@ -260,7 +255,6 @@ def init_all_module_vars():
     init_stellarator_variables()
     init_tfcoil_variables()
     constants.init_constants()
-    init_pfcoil_variables()
     init_pf_power_variables()
     init_rebco_variables()
     init_power_variables()
@@ -610,9 +604,9 @@ def check_process(inputs, data):  # noqa: ARG001
         # 2 : PF coil on top of TF coil
         # 3 : PF coil outside of TF coil
         if data_structure.physics_variables.itartpf == 0:
-            data_structure.pfcoil_variables.i_pf_location[0] = 2
-            data_structure.pfcoil_variables.i_pf_location[1] = 3
-            data_structure.pfcoil_variables.i_pf_location[2] = 3
+            data.pf_coil.i_pf_location[0] = 2
+            data.pf_coil.i_pf_location[1] = 3
+            data.pf_coil.i_pf_location[2] = 3
 
         # Water cooled copper magnets initalisation / checks
         if (
@@ -752,18 +746,18 @@ def check_process(inputs, data):  # noqa: ARG001
         # Check PF coil configurations
         j = 0
         k = 0
-        for i in range(data_structure.pfcoil_variables.n_pf_coil_groups):
+        for i in range(data.pf_coil.n_pf_coil_groups):
             if (
-                data_structure.pfcoil_variables.i_pf_location[i] != 2
-                and data_structure.pfcoil_variables.n_pf_coils_in_group[i] != 2
+                data.pf_coil.i_pf_location[i] != 2
+                and data.pf_coil.n_pf_coils_in_group[i] != 2
             ):
                 raise ProcessValidationError(
                     "n_pf_coils_in_group(i) .ne. 2 is not a valid option except for (i_pf_location = 2)"
                 )
 
-            if data_structure.pfcoil_variables.i_pf_location[i] == 2:
+            if data.pf_coil.i_pf_location[i] == 2:
                 j += 1
-                k += data_structure.pfcoil_variables.n_pf_coils_in_group[i]
+                k += data.pf_coil.n_pf_coils_in_group[i]
 
         if k == 1:
             raise ProcessValidationError(
@@ -1114,8 +1108,8 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     # PF coil resistivity is zero if superconducting
-    if data_structure.pfcoil_variables.i_pf_conductor == 0:
-        data_structure.pfcoil_variables.rho_pf_coil = 0.0
+    if data.pf_coil.i_pf_conductor == 0:
+        data.pf_coil.rho_pf_coil = 0.0
 
     # If there is no NBI, then hot beam density should be zero
     if data.current_drive.i_hcd_calculations == 1:
@@ -1212,7 +1206,7 @@ def check_process(inputs, data):  # noqa: ARG001
             : data_structure.numerics.neqns + data_structure.numerics.nineqns
         ]
         == 60
-    ).any() and data_structure.pfcoil_variables.i_cs_superconductor == 8:
+    ).any() and data.pf_coil.i_cs_superconductor == 8:
         raise ProcessValidationError(
             "turn off CS temperature margin constraint icc = 60 when using REBCO"
         )
