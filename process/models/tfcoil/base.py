@@ -636,7 +636,7 @@ class TFCoil(Model):
             e_tf_coil_magnetic_stored,
         )
 
-    def output_general_tf_info(self):
+    def output_general_tf_info(self) -> None:
         """Writes generic TF coil parameters used by all types of TF coils to
         the output file.
         This should only contain variables calculated in the `TFCoil` class
@@ -795,11 +795,33 @@ class TFCoil(Model):
             "OP ",
         )
         po.oblnkl(self.outfile)
+
+        po.ovarre(
+            constants.MFILE,
+            "Inboard leg inner radius (m)",
+            "(r_tf_inboard_in)",
+            build_variables.r_tf_inboard_in,
+            "OP ",
+        )
         po.ovarre(
             self.outfile,
             "Inboard leg centre radius (m)",
             "(r_tf_inboard_mid)",
             self.data.build.r_tf_inboard_mid,
+            "OP ",
+        )
+        po.ovarre(
+            constants.MFILE,
+            "Inboard leg outer radius (m)",
+            "(r_tf_inboard_out)",
+            build_variables.r_tf_inboard_out,
+            "OP ",
+        )
+        po.ovarre(
+            constants.MFILE,
+            "Inboard leg outer radius (m)",
+            "(r_tf_inboard_out)",
+            build_variables.r_tf_inboard_out,
             "OP ",
         )
         po.ovarre(
@@ -860,6 +882,7 @@ class TFCoil(Model):
             self.data.build.r_tf_outboard_mid,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Total inboard leg radial thickness (m)",
@@ -874,21 +897,40 @@ class TFCoil(Model):
         )
         po.ovarre(
             self.outfile,
-            "Full external coil width at mid-plane (m)",
+            "Inboard leg nose case radial thickness (m)",
+            "(dr_tf_nose_case)",
+            tfcoil_variables.dr_tf_nose_case,
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard leg plasma side case thickness (m)",
+            "(dr_tf_plasma_case)",
+            tfcoil_variables.dr_tf_plasma_case,
+        )
+        po.ovarre(
+            self.outfile,
+            "Full external coil radial width at mid-plane (m)",
             "(dr_tf_full_midplane)",
             tfcoil_variables.dr_tf_full_midplane,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Full internal coil width at mid-plane (m)",
+            "Full internal coil radial width at mid-plane (m)",
             "(dr_tf_internal_midplane)",
             tfcoil_variables.dr_tf_internal_midplane,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Outboard leg toroidal thickness (m)",
+            "Inboard leg case sidewall thickness at its narrowest point (m)",
+            "(dx_tf_side_case_min)",
+            tfcoil_variables.dx_tf_side_case_min,
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard leg toroidal thickness at outer edge (m)",
             "(dx_tf_inboard_out_toroidal)",
             tfcoil_variables.dx_tf_inboard_out_toroidal,
             "OP ",
@@ -908,6 +950,7 @@ class TFCoil(Model):
             self.data.build.z_tf_top,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Height difference in upper and lower TF from midplane (m)",
@@ -939,6 +982,19 @@ class TFCoil(Model):
                 tfcoil_variables.len_tf_coil,
                 "OP ",
             )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total inboard area of all TF coils (m²)",
+            "(a_tf_inboard_total)",
+            tfcoil_variables.a_tf_inboard_total,
+        )
+        po.ovarre(
+            self.outfile,
+            "Outboard leg area of single TF coil (m²)",
+            "(a_tf_leg_outboard)",
+            tfcoil_variables.a_tf_leg_outboard,
+        )
 
         # CP tapering geometry
         if (
@@ -1054,36 +1110,67 @@ class TFCoil(Model):
         )
         po.ovarre(
             self.outfile,
-            "Total magnetic energy in a TF coil (J)",
+            "Total stored magnetic energy in a TF coil (J)",
             "(e_tf_coil_magnetic_stored)",
             tfcoil_variables.e_tf_coil_magnetic_stored,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Total stored energy in TF coils (J)",
+            "Total stored magnetic energy in all TF coils (J)",
             "(e_tf_magnetic_stored_total)",
             tfcoil_variables.e_tf_magnetic_stored_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Total stored energy in TF coils (GJ)",
+            "Total stored magnetic energy in all TF coils (GJ)",
             "(e_tf_magnetic_stored_total_gj)",
             tfcoil_variables.e_tf_magnetic_stored_total_gj,
             "OP ",
         )
 
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        # Ripple calculations
+        po.osubhd(
+            self.outfile, "Plasma outboard midplane toroidal ripple information (δₜ):"
+        )
+        if tfcoil_variables.i_tf_shape == TFCoilShapeModel.D_SHAPE:
+            po.ovarre(
+                self.outfile,
+                "Max allowed toroidal field ripple at plasma outboard midplane (%)",
+                "(ripple_b_tf_plasma_edge_max)",
+                tfcoil_variables.ripple_b_tf_plasma_edge_max,
+            )
+            po.ovarre(
+                self.outfile,
+                "Toroidal field ripple at plasma outboard midplane (%)",
+                "(ripple_b_tf_plasma_edge)",
+                tfcoil_variables.ripple_b_tf_plasma_edge,
+                "OP ",
+            )
+        else:
+            po.ovarre(
+                self.outfile,
+                "Max allowed toroidal field ripple at plasma outboard midplane (%)",
+                "(ripple_b_tf_plasma_edge_max)",
+                tfcoil_variables.ripple_b_tf_plasma_edge_max,
+            )
+            po.ovarre(
+                self.outfile,
+                "Toroidal field ripple at plasma outboard midplane (%)",
+                "(ripple_b_tf_plasma_edge)",
+                tfcoil_variables.ripple_b_tf_plasma_edge,
+            )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
         # Turn/WP gemoetry
         if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             # Total material fraction
             po.osubhd(self.outfile, "Global material area/fractions:")
-            po.ovarre(
-                self.outfile,
-                "TF cross-section (total) (m²)",
-                "(a_tf_inboard_total)",
-                tfcoil_variables.a_tf_inboard_total,
-            )
+
             po.ovarre(
                 self.outfile,
                 "Total steel cross-section (m²)",
@@ -1119,36 +1206,21 @@ class TFCoil(Model):
                 "(a_tf_coil_inboard_case)",
                 tfcoil_variables.a_tf_coil_inboard_case,
             )
-            po.ovarre(
-                self.outfile,
-                "Inboard leg case plasma side wall thickness (m)",
-                "(dr_tf_plasma_case)",
-                tfcoil_variables.dr_tf_plasma_case,
-            )
+
             po.ovarre(
                 self.outfile,
                 "Inboard leg plasma case area (m²)",
                 "(a_tf_plasma_case)",
                 superconducting_tf_coil_variables.a_tf_plasma_case,
             )
-            po.ovarre(
-                self.outfile,
-                'Inboard leg case inboard "nose" thickness (m)',
-                "(dr_tf_nose_case)",
-                tfcoil_variables.dr_tf_nose_case,
-            )
+
             po.ovarre(
                 self.outfile,
                 'Inboard leg case inboard "nose" area (m^2)',
                 "(a_tf_coil_nose_case)",
                 superconducting_tf_coil_variables.a_tf_coil_nose_case,
             )
-            po.ovarre(
-                self.outfile,
-                "Inboard leg case sidewall thickness at its narrowest point (m)",
-                "(dx_tf_side_case_min)",
-                tfcoil_variables.dx_tf_side_case_min,
-            )
+
             po.ovarre(
                 self.outfile,
                 "Inboard leg case sidewall average thickness (m)",
@@ -1870,41 +1942,6 @@ class TFCoil(Model):
                     "(temp_cp_average)",
                     tfcoil_variables.temp_cp_average,
                 )
-
-        # Ripple calculations
-        po.osubhd(self.outfile, "Ripple information:")
-        if tfcoil_variables.i_tf_shape == TFCoilShapeModel.D_SHAPE:
-            po.ovarre(
-                self.outfile,
-                "Max allowed tfcoil_variables.ripple amplitude at plasma outboard "
-                "midplane (%)",
-                "(ripple_b_tf_plasma_edge_max)",
-                tfcoil_variables.ripple_b_tf_plasma_edge_max,
-            )
-            po.ovarre(
-                self.outfile,
-                "Ripple amplitude at plasma outboard midplane (%)",
-                "(ripple_b_tf_plasma_edge)",
-                tfcoil_variables.ripple_b_tf_plasma_edge,
-                "OP ",
-            )
-        else:
-            po.ovarre(
-                self.outfile,
-                "Max allowed tfcoil_variables.ripple amplitude at plasma (%)",
-                "(ripple_b_tf_plasma_edge_max)",
-                tfcoil_variables.ripple_b_tf_plasma_edge_max,
-            )
-            po.ovarre(
-                self.outfile,
-                "Ripple at plasma edge (%)",
-                "(ripple_b_tf_plasma_edge)",
-                tfcoil_variables.ripple_b_tf_plasma_edge,
-            )
-            po.ocmmnt(
-                self.outfile,
-                "  Ripple calculation to be re-defined for picure frame coils",
-            )
 
         # Quench information
         if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
