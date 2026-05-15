@@ -4,9 +4,6 @@ from process.data_structure import (
     physics_variables,
     stellarator_configuration,
 )
-from process.data_structure import (
-    stellarator_variables as st,
-)
 
 
 def st_build(stellarator, f_output: bool, data: DataStructure):
@@ -92,12 +89,15 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
 
     # derivative_min_LCFS_coils_dist  for how strong the stellarator shape changes wrt to aspect ratio
     data.build.available_radial_space = (
-        st.r_coil_minor * st.f_coil_shape - physics_variables.rminor
+        data.stellarator.r_coil_minor * data.stellarator.f_coil_shape
+        - physics_variables.rminor
     )
     +stellarator_configuration.stella_config_derivative_min_lcfs_coils_dist * (
         physics_variables.rminor
-        - st.f_st_rmajor * stellarator_configuration.stella_config_rminor_ref
+        - data.stellarator.f_st_rmajor
+        * stellarator_configuration.stella_config_rminor_ref
     )
+
     #  Radius to inner edge of inboard shield
     data.build.r_shld_inboard_inner = (
         physics_variables.rmajor

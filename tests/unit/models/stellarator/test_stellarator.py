@@ -7,7 +7,6 @@ from process.data_structure import (
     impurity_radiation_module,
     physics_variables,
     stellarator_configuration,
-    stellarator_variables,
     tfcoil_variables,
 )
 from process.models.stellarator.build import st_build
@@ -160,9 +159,13 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
         stgeomparam.stella_config_plasma_surface,
     )
 
-    monkeypatch.setattr(stellarator_variables, "f_st_rmajor", stgeomparam.f_st_rmajor)
+    monkeypatch.setattr(
+        stellarator.data.stellarator, "f_st_rmajor", stgeomparam.f_st_rmajor
+    )
 
-    monkeypatch.setattr(stellarator_variables, "f_st_rminor", stgeomparam.f_st_rminor)
+    monkeypatch.setattr(
+        stellarator.data.stellarator, "f_st_rminor", stgeomparam.f_st_rminor
+    )
 
     stellarator.st_geom()
 
@@ -652,7 +655,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     )
 
     monkeypatch.setattr(
-        stellarator_variables,
+        stellarator.data.stellarator,
         "r_coil_minor",
         (
             stbildparam.stella_config_min_plasma_coil_distance
@@ -661,13 +664,19 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         * stbildparam.f_st_rminor,
     )
 
-    monkeypatch.setattr(stellarator_variables, "f_st_rmajor", stbildparam.f_st_rmajor)
+    monkeypatch.setattr(
+        stellarator.data.stellarator, "f_st_rmajor", stbildparam.f_st_rmajor
+    )
 
-    monkeypatch.setattr(stellarator_variables, "f_st_aspect", stbildparam.f_st_aspect)
+    monkeypatch.setattr(
+        stellarator.data.stellarator, "f_st_aspect", stbildparam.f_st_aspect
+    )
 
-    monkeypatch.setattr(stellarator_variables, "f_st_rminor", stbildparam.f_st_rminor)
+    monkeypatch.setattr(
+        stellarator.data.stellarator, "f_st_rminor", stbildparam.f_st_rminor
+    )
 
-    monkeypatch.setattr(stellarator_variables, "f_coil_shape", 1.0)
+    monkeypatch.setattr(stellarator.data.stellarator, "f_coil_shape", 1.0)
 
     st_build(stellarator, False, stellarator.data)
 
@@ -891,7 +900,7 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
     )
 
     monkeypatch.setattr(
-        stellarator_variables,
+        stellarator.data.stellarator,
         "r_coil_minor",
         ststrcparam.f_st_rmajor,
     )
@@ -908,11 +917,15 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
         1,
     )
 
-    monkeypatch.setattr(stellarator_variables, "f_st_n_coils", ststrcparam.f_st_n_coils)
+    monkeypatch.setattr(
+        stellarator.data.stellarator, "f_st_n_coils", ststrcparam.f_st_n_coils
+    )
 
-    monkeypatch.setattr(stellarator_variables, "f_st_rmajor", ststrcparam.f_st_rmajor)
+    monkeypatch.setattr(
+        stellarator.data.stellarator, "f_st_rmajor", ststrcparam.f_st_rmajor
+    )
 
-    monkeypatch.setattr(stellarator_variables, "f_st_b", ststrcparam.f_st_b)
+    monkeypatch.setattr(stellarator.data.stellarator, "f_st_b", ststrcparam.f_st_b)
 
     stellarator.st_strc(False)
 
@@ -2109,7 +2122,7 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     )
 
     monkeypatch.setattr(
-        stellarator_variables, "f_st_rmajor", stcalceffchiparam.f_st_rmajor
+        stellarator.data.stellarator, "f_st_rmajor", stcalceffchiparam.f_st_rmajor
     )
 
     output = stellarator.neoclassics.st_calc_eff_chi()

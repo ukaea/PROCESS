@@ -25,7 +25,7 @@ def write(models, data, _outfile):
     logging_model_handler.clear_logs()
 
     # Call stellarator output routine instead if relevant
-    if data_structure.stellarator_variables.istell != 0:
+    if data.stellarator.istell != 0:
         models.stellarator.output()
         return
 
