@@ -69,12 +69,8 @@ ITERATION_VARIABLES = {
     23: IterationVariable("fcoolcp", data_structure.tfcoil_variables, 0.1, 0.50),
     29: IterationVariable("dr_bore", "build", 0.1, 10.00),
     31: IterationVariable("gapomin", "build", 0.001, 1.0e1),
-    37: IterationVariable(
-        "j_cs_flat_top_end", data_structure.pfcoil_variables, 1.0e5, 1.0e8
-    ),
-    41: IterationVariable(
-        "f_j_cs_start_pulse_end_flat_top", data_structure.pfcoil_variables, 0.001, 1.0
-    ),
+    37: IterationVariable("j_cs_flat_top_end", "pf_coil", 1.0e5, 1.0e8),
+    41: IterationVariable("f_j_cs_start_pulse_end_flat_top", "pf_coil", 0.001, 1.0),
     42: IterationVariable("dr_cs_tf_gap", "build", 0.001, 10.00),
     44: IterationVariable(
         "f_c_plasma_non_inductive", data_structure.physics_variables, 0.001, 1.0
@@ -126,9 +122,7 @@ ITERATION_VARIABLES = {
     119: IterationVariable(
         "temp_plasma_separatrix_kev", data_structure.physics_variables, 0.0, 1.0e1
     ),
-    122: IterationVariable(
-        "f_a_cs_turn_steel", data_structure.pfcoil_variables, 0.001, 0.950
-    ),
+    122: IterationVariable("f_a_cs_turn_steel", "pf_coil", 0.001, 0.950),
     125: IterationVariable(
         "f_nd_impurity_electrons(03)",
         data_structure.impurity_radiation_module,

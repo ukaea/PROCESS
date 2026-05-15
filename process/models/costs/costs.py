@@ -9,7 +9,6 @@ from process.core.model import Model
 from process.data_structure import (
     divertor_variables,
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -1604,12 +1603,12 @@ class Costs(Model):
         #  Total length of PF coil windings (m)
 
         pfwndl = 0.0e0
-        for i in range(pfcoil_variables.n_cs_pf_coils):
+        for i in range(self.data.pf_coil.n_cs_pf_coils):
             pfwndl += (
                 2.0
                 * np.pi
-                * pfcoil_variables.r_pf_coil_middle[i]
-                * pfcoil_variables.n_pf_coil_turns[i]
+                * self.data.pf_coil.r_pf_coil_middle[i]
+                * self.data.pf_coil.n_pf_coil_turns[i]
             )
 
         #  Account 222.2.1 : Conductor
@@ -1619,75 +1618,75 @@ class Costs(Model):
         #  each superconducting cable (so is zero for resistive coils)
 
         costpfsh = (
-            0.0 if pfcoil_variables.i_pf_conductor == 1 else self.data.costs.cconshpf
+            0.0 if self.data.pf_coil.i_pf_conductor == 1 else self.data.costs.cconshpf
         )
 
         #  Non-Central Solenoid coils
 
         if self.data.build.iohcl == 1:
-            npf = pfcoil_variables.n_cs_pf_coils - 1
+            npf = self.data.pf_coil.n_cs_pf_coils - 1
         else:
-            npf = pfcoil_variables.n_cs_pf_coils
+            npf = self.data.pf_coil.n_cs_pf_coils
 
         self.data.costs.c22221 = 0.0e0
 
         for i in range(npf):
             #  Superconductor ($/m)
             if self.data.costs.supercond_cost_model == 0:
-                if pfcoil_variables.i_pf_conductor == 0:
+                if self.data.pf_coil.i_pf_conductor == 0:
                     costpfsc = (
-                        self.data.costs.ucsc[pfcoil_variables.i_pf_superconductor - 1]
-                        * (1.0e0 - pfcoil_variables.fcupfsu)
-                        * (1.0e0 - pfcoil_variables.f_a_pf_coil_void[i])
+                        self.data.costs.ucsc[self.data.pf_coil.i_pf_superconductor - 1]
+                        * (1.0e0 - self.data.pf_coil.fcupfsu)
+                        * (1.0e0 - self.data.pf_coil.f_a_pf_coil_void[i])
                         * abs(
-                            pfcoil_variables.c_pf_cs_coils_peak_ma[i]
-                            / pfcoil_variables.n_pf_coil_turns[i]
+                            self.data.pf_coil.c_pf_cs_coils_peak_ma[i]
+                            / self.data.pf_coil.n_pf_coil_turns[i]
                         )
                         * 1.0e6
-                        / pfcoil_variables.j_pf_coil_wp_peak[i]
+                        / self.data.pf_coil.j_pf_coil_wp_peak[i]
                         * tfcoil_variables.dcond[
-                            pfcoil_variables.i_pf_superconductor - 1
+                            self.data.pf_coil.i_pf_superconductor - 1
                         ]
                     )
                 else:
                     costpfsc = 0.0e0
-            elif pfcoil_variables.i_pf_conductor == 0:
+            elif self.data.pf_coil.i_pf_conductor == 0:
                 costpfsc = (
                     self.data.costs.sc_mat_cost_0[
-                        pfcoil_variables.i_pf_superconductor - 1
+                        self.data.pf_coil.i_pf_superconductor - 1
                     ]
                     * tfcoil_variables.j_crit_str_0[
-                        pfcoil_variables.i_pf_superconductor - 1
+                        self.data.pf_coil.i_pf_superconductor - 1
                     ]
-                    / pfcoil_variables.j_crit_str_pf
+                    / self.data.pf_coil.j_crit_str_pf
                 )
             else:
                 costpfsc = 0.0
 
             #  Copper ($/m)
-            if pfcoil_variables.i_pf_conductor == 0:
+            if self.data.pf_coil.i_pf_conductor == 0:
                 costpfcu = (
                     self.data.costs.uccu
-                    * pfcoil_variables.fcupfsu
-                    * (1.0e0 - pfcoil_variables.f_a_pf_coil_void[i])
+                    * self.data.pf_coil.fcupfsu
+                    * (1.0e0 - self.data.pf_coil.f_a_pf_coil_void[i])
                     * abs(
-                        pfcoil_variables.c_pf_cs_coils_peak_ma[i]
-                        / pfcoil_variables.n_pf_coil_turns[i]
+                        self.data.pf_coil.c_pf_cs_coils_peak_ma[i]
+                        / self.data.pf_coil.n_pf_coil_turns[i]
                     )
                     * 1.0e6
-                    / pfcoil_variables.j_pf_coil_wp_peak[i]
+                    / self.data.pf_coil.j_pf_coil_wp_peak[i]
                     * constants.den_copper
                 )
             else:
                 costpfcu = (
                     self.data.costs.uccu
-                    * (1.0e0 - pfcoil_variables.f_a_pf_coil_void[i])
+                    * (1.0e0 - self.data.pf_coil.f_a_pf_coil_void[i])
                     * abs(
-                        pfcoil_variables.c_pf_cs_coils_peak_ma[i]
-                        / pfcoil_variables.n_pf_coil_turns[i]
+                        self.data.pf_coil.c_pf_cs_coils_peak_ma[i]
+                        / self.data.pf_coil.n_pf_coil_turns[i]
                     )
                     * 1.0e6
-                    / pfcoil_variables.j_pf_coil_wp_peak[i]
+                    / self.data.pf_coil.j_pf_coil_wp_peak[i]
                     * constants.den_copper
                 )
 
@@ -1705,8 +1704,8 @@ class Costs(Model):
                 1.0e-6
                 * 2.0
                 * np.pi
-                * pfcoil_variables.r_pf_coil_middle[i]
-                * pfcoil_variables.n_pf_coil_turns[i]
+                * self.data.pf_coil.r_pf_coil_middle[i]
+                * self.data.pf_coil.n_pf_coil_turns[i]
                 * cpfconpm
             )
 
@@ -1716,44 +1715,44 @@ class Costs(Model):
             #  Superconductor ($/m)
             if self.data.costs.supercond_cost_model == 0:
                 #  Issue #328  Use CS conductor cross-sectional area (m2)
-                if pfcoil_variables.i_pf_conductor == 0:
+                if self.data.pf_coil.i_pf_conductor == 0:
                     costpfsc = (
-                        self.data.costs.ucsc[pfcoil_variables.i_cs_superconductor - 1]
-                        * pfcoil_variables.awpoh
-                        * (1 - pfcoil_variables.f_a_cs_void)
-                        * (1 - pfcoil_variables.fcuohsu)
-                        / pfcoil_variables.n_pf_coil_turns[
-                            pfcoil_variables.n_cs_pf_coils - 1
+                        self.data.costs.ucsc[self.data.pf_coil.i_cs_superconductor - 1]
+                        * self.data.pf_coil.awpoh
+                        * (1 - self.data.pf_coil.f_a_cs_void)
+                        * (1 - self.data.pf_coil.fcuohsu)
+                        / self.data.pf_coil.n_pf_coil_turns[
+                            self.data.pf_coil.n_cs_pf_coils - 1
                         ]
                         * tfcoil_variables.dcond[
-                            pfcoil_variables.i_cs_superconductor - 1
+                            self.data.pf_coil.i_cs_superconductor - 1
                         ]
                     )
                 else:
                     costpfsc = 0.0e0
-            elif pfcoil_variables.i_pf_conductor == 0:
+            elif self.data.pf_coil.i_pf_conductor == 0:
                 costpfsc = (
                     self.data.costs.sc_mat_cost_0[
-                        pfcoil_variables.i_cs_superconductor - 1
+                        self.data.pf_coil.i_cs_superconductor - 1
                     ]
                     * tfcoil_variables.j_crit_str_0[
-                        pfcoil_variables.i_cs_superconductor - 1
+                        self.data.pf_coil.i_cs_superconductor - 1
                     ]
-                    / pfcoil_variables.j_crit_str_cs
+                    / self.data.pf_coil.j_crit_str_cs
                 )
             else:
                 costpfsc = 0.0e0
 
             #  Copper ($/m)
 
-            if pfcoil_variables.i_pf_conductor == 0:
+            if self.data.pf_coil.i_pf_conductor == 0:
                 costpfcu = (
                     self.data.costs.uccu
-                    * pfcoil_variables.awpoh
-                    * (1 - pfcoil_variables.f_a_cs_void)
-                    * pfcoil_variables.fcuohsu
-                    / pfcoil_variables.n_pf_coil_turns[
-                        pfcoil_variables.n_cs_pf_coils - 1
+                    * self.data.pf_coil.awpoh
+                    * (1 - self.data.pf_coil.f_a_cs_void)
+                    * self.data.pf_coil.fcuohsu
+                    / self.data.pf_coil.n_pf_coil_turns[
+                        self.data.pf_coil.n_cs_pf_coils - 1
                     ]
                     * constants.den_copper
                 )
@@ -1761,10 +1760,10 @@ class Costs(Model):
                 # MDK I don't know if this is ccorrect as we never use the resistive model
                 costpfcu = (
                     self.data.costs.uccu
-                    * pfcoil_variables.awpoh
-                    * (1 - pfcoil_variables.f_a_cs_void)
-                    / pfcoil_variables.n_pf_coil_turns[
-                        pfcoil_variables.n_cs_pf_coils - 1
+                    * self.data.pf_coil.awpoh
+                    * (1 - self.data.pf_coil.f_a_cs_void)
+                    / self.data.pf_coil.n_pf_coil_turns[
+                        self.data.pf_coil.n_cs_pf_coils - 1
                     ]
                     * constants.den_copper
                 )
@@ -1783,8 +1782,8 @@ class Costs(Model):
                 1.0e-6
                 * 2.0
                 * np.pi
-                * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
-                * pfcoil_variables.n_pf_coil_turns[pfcoil_variables.n_cs_pf_coils - 1]
+                * self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1]
+                * self.data.pf_coil.n_pf_coil_turns[self.data.pf_coil.n_cs_pf_coils - 1]
                 * cpfconpm
             )
 
@@ -1806,7 +1805,7 @@ class Costs(Model):
         #  Account 222.2.3 : Steel case - will be zero for resistive coils
 
         self.data.costs.c22223 = (
-            1.0e-6 * self.data.costs.uccase * pfcoil_variables.m_pf_coil_structure_total
+            1.0e-6 * self.data.costs.uccase * self.data.pf_coil.m_pf_coil_structure_total
         )
         self.data.costs.c22223 = (
             self.data.costs.fkind

@@ -21,7 +21,8 @@ from scipy.interpolate import interp1d
 from process.core import constants
 from process.core.io.mfile import MFile, MFileErrorClass
 from process.core.solver.objectives import OBJECTIVE_NAMES
-from process.data_structure import impurity_radiation_module, pfcoil_variables
+from process.data_structure import impurity_radiation_module
+from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.build import Build
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
@@ -9618,12 +9619,10 @@ def plot_cs_coil_structure(
     dz_cs = mfile.get("dz_cs_full", scan=scan)
     dr_bore = mfile.get("dr_bore", scan=scan)
     r_cs_current_filaments_array = [
-        mfile.get(f"r_pf_cs_current_filaments{i}", scan=scan)
-        for i in range(pfcoil_variables.NFIXMX)
+        mfile.get(f"r_pf_cs_current_filaments{i}", scan=scan) for i in range(NFIXMX)
     ]
     z_cs_current_filaments_array = [
-        mfile.get(f"z_pf_cs_current_filaments{i}", scan=scan)
-        for i in range(pfcoil_variables.NFIXMX)
+        mfile.get(f"z_pf_cs_current_filaments{i}", scan=scan) for i in range(NFIXMX)
     ]
 
     # Plot the right side of the CS

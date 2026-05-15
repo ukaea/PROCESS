@@ -1,7 +1,6 @@
 from process.core.model import DataStructure
 from process.data_structure import (
     numerics,
-    pfcoil_variables,
     physics_variables,
     stellarator_variables,
 )
@@ -26,7 +25,7 @@ def st_init(data: DataStructure):
 
     data.build.dr_cs = 0.0
     data.build.iohcl = 0
-    pfcoil_variables.f_z_cs_tf_internal = 0.0
+    data.pf_coil.f_z_cs_tf_internal = 0.0
     data.build.dr_cs_tf_gap = 0.0
     data.build.f_dr_tf_outboard_inboard = 1.0
 

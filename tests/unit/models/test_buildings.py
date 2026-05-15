@@ -4,7 +4,6 @@ import pytest
 
 from process.data_structure import (
     divertor_variables,
-    pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -741,7 +740,9 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", bldgssizesparam.n_tf_coils)
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", bldgssizesparam.i_tf_sup)
     monkeypatch.setattr(
-        pfcoil_variables, "r_pf_coil_outer_max", bldgssizesparam.r_pf_coil_outer_max
+        buildings.data.pf_coil,
+        "r_pf_coil_outer_max",
+        bldgssizesparam.r_pf_coil_outer_max,
     )
     monkeypatch.setattr(buildings.data.costs, "life_plant", bldgssizesparam.life_plant)
     monkeypatch.setattr(buildings.data.costs, "cplife", bldgssizesparam.cplife)
