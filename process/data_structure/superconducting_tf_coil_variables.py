@@ -315,8 +315,6 @@ time2: float = None
 
 tau2: float = None
 
-e_tf_magnetic_stored_total: float = None
-
 is_leg_cp_temp_same: int = None
 
 
@@ -365,7 +363,6 @@ def init_superconducting_tf_coil_variables():
         t1, \
         time2, \
         tau2, \
-        e_tf_magnetic_stored_total, \
         radius_tf_turn_cable_space_corners, \
         a_tf_turn_cable_space_effective, \
         dr_tf_wp_no_insulation, \
@@ -447,7 +444,6 @@ def init_superconducting_tf_coil_variables():
     t1 = 0.0
     time2 = 0.0
     tau2 = 0.0
-    e_tf_magnetic_stored_total = 0.0
     radius_tf_turn_cable_space_corners = 0.0
     a_tf_turn_cable_space_effective = 0.0
     dr_tf_wp_no_insulation = 0.0

@@ -200,9 +200,11 @@ den_tf_wp_turn_insulation: float = None
 dia_tf_turn_coolant_channel: float = None
 """diameter of central helium channel in TF winding (m)"""
 
+e_tf_magnetic_stored_total: float = None
+"""Total magnetic stored energy in the toroidal field coils (J)"""
 
 e_tf_magnetic_stored_total_gj: float = None
-"""total magnetic stored energy in the toroidal field coils (GJ)"""
+"""Total magnetic stored energy in the toroidal field coils (GJ)"""
 
 e_tf_coil_magnetic_stored: float = None
 """Stored magnetic energy in a single TF coil (J)"""
@@ -1122,6 +1124,7 @@ def init_tfcoil_variables():
         dcond, \
         den_tf_wp_turn_insulation, \
         dia_tf_turn_coolant_channel, \
+        e_tf_magnetic_stored_total, \
         e_tf_magnetic_stored_total_gj, \
         e_tf_coil_magnetic_stored, \
         b_crit_upper_nbti, \
@@ -1348,6 +1351,7 @@ def init_tfcoil_variables():
     ])
     den_tf_wp_turn_insulation = 1800.0
     dia_tf_turn_coolant_channel = 0.005
+    e_tf_magnetic_stored_total = 0.0
     e_tf_magnetic_stored_total_gj = 0.0
     e_tf_coil_magnetic_stored = 0.0
     b_crit_upper_nbti = 14.86

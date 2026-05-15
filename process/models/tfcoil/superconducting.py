@@ -391,7 +391,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         (
-            superconducting_tf_coil_variables.e_tf_magnetic_stored_total,
+            tfcoil_variables.e_tf_magnetic_stored_total,
             tfcoil_variables.e_tf_magnetic_stored_total_gj,
             tfcoil_variables.e_tf_coil_magnetic_stored,
         ) = self.tf_stored_magnetic_energy(
@@ -3950,7 +3950,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 2.0e0
                 / superconducting_tf_coil_variables.time2
                 * (
-                    superconducting_tf_coil_variables.e_tf_magnetic_stored_total
+                    tfcoil_variables.e_tf_magnetic_stored_total
                     / tfcoil_variables.n_tf_coils
                 )
                 / tfcoil_variables.c_tf_turn
@@ -3963,7 +3963,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 2.0e0
                 / superconducting_tf_coil_variables.tau2
                 * (
-                    superconducting_tf_coil_variables.e_tf_magnetic_stored_total
+                    tfcoil_variables.e_tf_magnetic_stored_total
                     / tfcoil_variables.n_tf_coils
                 )
                 / tfcoil_variables.c_tf_turn
