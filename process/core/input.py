@@ -16,6 +16,7 @@ from process.core.exceptions import (
     ProcessValueError,
 )
 from process.core.solver.constraints import ConstraintManager
+from process.data_structure.pfcoil_variables import N_PF_GROUPS_MAX
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -192,10 +193,8 @@ INPUT_VARIABLES = {
     "adivflnc": InputVariable("costs", float, range=(0.1, 100.0)),
     "admv": InputVariable("buildings", float, range=(1.0e4, 1.0e6)),
     "airtemp": InputVariable("water_use", float, range=(-15.0, 40.0)),
-    "alfapf": InputVariable(data_structure.pfcoil_variables, float, range=(1e-12, 1.0)),
-    "alstroh": InputVariable(
-        data_structure.pfcoil_variables, float, range=(1000000.0, 100000000000.0)
-    ),
+    "alfapf": InputVariable("pf_coil", float, range=(1e-12, 1.0)),
+    "alstroh": InputVariable("pf_coil", float, range=(1000000.0, 100000000000.0)),
     "amortization": InputVariable("costs", float, range=(1.0, 50.0)),
     "anginc": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 1.5707)
@@ -244,9 +243,7 @@ INPUT_VARIABLES = {
     "bldzu": InputVariable("ife", float, range=(0.0, 10.0)),
     "pres_blkt_coolant": InputVariable("fwbs", float, range=(100000.0, 100000000.0)),
     "blpressure_liq": InputVariable("fwbs", float, range=(100000.0, 100000000.0)),
-    "b_cs_limit_max": InputVariable(
-        data_structure.pfcoil_variables, float, range=(0.01, 100.0)
-    ),
+    "b_cs_limit_max": InputVariable("pf_coil", float, range=(0.01, 100.0)),
     "bmn": InputVariable(
         data_structure.stellarator_variables, float, range=(0.0001, 0.01)
     ),
@@ -286,9 +283,7 @@ INPUT_VARIABLES = {
     "chrad": InputVariable("ife", float, range=(0.1, 20.0)),
     "cland": InputVariable("costs", float, range=(10.0, 100.0)),
     "clh2": InputVariable("buildings", float, range=(0.0, 30.0)),
-    "j_cs_flat_top_end": InputVariable(
-        data_structure.pfcoil_variables, float, range=(10000.0, 500000000.0)
-    ),
+    "j_cs_flat_top_end": InputVariable("pf_coil", float, range=(10000.0, 500000000.0)),
     "conf_mag": InputVariable("costs", float, range=(0.9, 1.0)),
     "control_buildings_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "control_buildings_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
@@ -457,7 +452,7 @@ INPUT_VARIABLES = {
     "eta_beam_injector_wall_plug": InputVariable(
         "current_drive", float, range=(0.0, 1.0)
     ),
-    "etapsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
+    "etapsu": InputVariable("pf_coil", float, range=(0.0, 1.0)),
     "etapump": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
     "etatf": InputVariable("heat_transport", float, range=(0.0, 1.0)),
     "eta_turbine": InputVariable("heat_transport", float, range=(0.0, 1.0)),
@@ -537,15 +532,13 @@ INPUT_VARIABLES = {
     "fcap0": InputVariable("costs", float, range=(1.0, 1.5)),
     "fcap0cp": InputVariable("costs", float, range=(1.0, 1.5)),
     "fcdfuel": InputVariable("costs", float, range=(0.0, 1.0)),
-    "f_j_cs_start_pulse_end_flat_top": InputVariable(
-        data_structure.pfcoil_variables, float, range=(0.0, 1.0)
-    ),
+    "f_j_cs_start_pulse_end_flat_top": InputVariable("pf_coil", float, range=(0.0, 1.0)),
     "fcontng": InputVariable("costs", float, range=(0.0, 1.0)),
     "fcoolcp": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
     "fcr0": InputVariable("costs", float, range=(0.0, 1.0)),
     "fcspc": InputVariable("build", float, range=(0.0, 1.0)),
-    "fcuohsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
-    "fcupfsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
+    "fcuohsu": InputVariable("pf_coil", float, range=(0.0, 1.0)),
+    "fcupfsu": InputVariable("pf_coil", float, range=(0.0, 1.0)),
     "f_a_tf_turn_cable_copper": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
@@ -678,9 +671,7 @@ INPUT_VARIABLES = {
     "kappa": InputVariable(data_structure.physics_variables, float, range=(0.99, 5.0)),
     "kappa95": InputVariable(data_structure.physics_variables, float, range=(0.99, 5.0)),
     "layer_ins": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 0.1)),
-    "f_dr_dz_cs_turn": InputVariable(
-        data_structure.pfcoil_variables, float, range=(0.0, 5.0)
-    ),
+    "f_dr_dz_cs_turn": InputVariable("pf_coil", float, range=(0.0, 5.0)),
     "len_fw_channel": InputVariable("fwbs", float, range=(0.001, 1000.0)),
     "len_tf_bus": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.01, 1000.0)
@@ -743,12 +734,8 @@ INPUT_VARIABLES = {
     "oacdcp": InputVariable(
         data_structure.tfcoil_variables, float, range=(10000.0, 1000000000.0)
     ),
-    "f_a_cs_turn_steel": InputVariable(
-        data_structure.pfcoil_variables, float, range=(0.001, 0.999)
-    ),
-    "f_z_cs_tf_internal": InputVariable(
-        data_structure.pfcoil_variables, float, range=(0.0, 2.0)
-    ),
+    "f_a_cs_turn_steel": InputVariable("pf_coil", float, range=(0.001, 0.999)),
+    "f_z_cs_tf_internal": InputVariable("pf_coil", float, range=(0.0, 2.0)),
     "outgasfactor": InputVariable("vacuum", float, range=(1e-06, 1000.0)),
     "outgasindex": InputVariable("vacuum", float, range=(1e-06, 1000.0)),
     "temp_blkt_coolant_out": InputVariable("fwbs", float, range=(450.0, 900.0)),
@@ -762,9 +749,7 @@ INPUT_VARIABLES = {
     ),
     "pdrive": InputVariable("ife", float, range=(1000000.0, 200000000.0)),
     "pfbldgm3": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
-    "rho_pf_coil": InputVariable(
-        data_structure.pfcoil_variables, float, range=(0.0, 0.0001)
-    ),
+    "rho_pf_coil": InputVariable("pf_coil", float, range=(0.0, 0.0001)),
     "pfusife": InputVariable("ife", float, range=(0.0, 10000.0)),
     "p_hcd_primary_extra_heat_mw": InputVariable(
         "current_drive", float, range=(0.0, 1000.0)
@@ -876,9 +861,7 @@ INPUT_VARIABLES = {
     "radius_plasma_pedestal_temp_norm": InputVariable(
         data_structure.physics_variables, float, range=(0.01, 1.0)
     ),
-    "rhopfbus": InputVariable(
-        data_structure.pfcoil_variables, float, range=(0.0, 1e-05)
-    ),
+    "rhopfbus": InputVariable("pf_coil", float, range=(0.0, 1e-05)),
     "rinboard": InputVariable("build", float, range=(0.1, 10.0)),
     "ripple_b_tf_plasma_edge_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.1, 100.0)
@@ -888,14 +871,10 @@ INPUT_VARIABLES = {
     "robotics_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "robotics_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "roughness_fw_channel": InputVariable("fwbs", float, range=(0.0, 0.01)),
-    "dr_pf_tf_outboard_out_offset": InputVariable(
-        data_structure.pfcoil_variables, float, range=(-3.0, 3.0)
-    ),
+    "dr_pf_tf_outboard_out_offset": InputVariable("pf_coil", float, range=(-3.0, 3.0)),
     "row": InputVariable("buildings", float, range=(0.0, 10.0)),
-    "dr_pf_cs_middle_offset": InputVariable(
-        data_structure.pfcoil_variables, float, range=(0.0, 3.0)
-    ),
-    "rpf2": InputVariable(data_structure.pfcoil_variables, float, range=(-3.0, 3.0)),
+    "dr_pf_cs_middle_offset": InputVariable("pf_coil", float, range=(0.0, 3.0)),
+    "rpf2": InputVariable("pf_coil", float, range=(-3.0, 3.0)),
     "rrin": InputVariable("ife", float, range=(0.1, 50.0)),
     "rrmax": InputVariable("ife", float, range=(1.0, 50.0)),
     "rrr_tf_cu": InputVariable(
@@ -925,10 +904,8 @@ INPUT_VARIABLES = {
         data_structure.tfcoil_variables, float, range=(1000000.0, 100000000000.0)
     ),
     "sigallpc": InputVariable("build", float, range=(0.0, 1000000000.0)),
-    "sigpfcalw": InputVariable(
-        data_structure.pfcoil_variables, float, range=(1.0, 1000.0)
-    ),
-    "sigpfcf": InputVariable(data_structure.pfcoil_variables, float, range=(0.1, 1.0)),
+    "sigpfcalw": InputVariable("pf_coil", float, range=(1.0, 1000.0)),
+    "sigpfcf": InputVariable("pf_coil", float, range=(0.1, 1.0)),
     "sombdr": InputVariable("ife", float, range=(0.0, 10.0)),
     "somtdr": InputVariable("ife", float, range=(0.0, 10.0)),
     "staff_buildings_area": InputVariable(
@@ -1173,9 +1150,7 @@ INPUT_VARIABLES = {
     ),
     "f_a_blkt_cooling_channels": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "vfcblkt": InputVariable("fwbs", float, range=(0.0, 1.0)),
-    "f_a_cs_void": InputVariable(
-        data_structure.pfcoil_variables, float, range=(0.0, 1.0)
-    ),
+    "f_a_cs_void": InputVariable("pf_coil", float, range=(0.0, 1.0)),
     "vfpblkt": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "vfshld": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "f_a_tf_turn_cable_space_extra_void": InputVariable(
@@ -1209,8 +1184,8 @@ INPUT_VARIABLES = {
     "blktmodel": InputVariable("fwbs", int, choices=[0, 1]),
     "blkttype": InputVariable("fwbs", int, choices=[1, 2, 3]),
     "breedmat": InputVariable("fwbs", int, choices=[1, 2, 3]),
-    "ccl0_ma": InputVariable(data_structure.pfcoil_variables, float, array=True),
-    "ccls_ma": InputVariable(data_structure.pfcoil_variables, float, array=True),
+    "ccl0_ma": InputVariable("pf_coil", float, array=True),
+    "ccls_ma": InputVariable("pf_coil", float, array=True),
     "cfind": InputVariable("costs", float, array=True),
     "i_blkt_coolant_type": InputVariable("fwbs", int, choices=[1, 2]),
     "coppera_m2_max": InputVariable(
@@ -1237,7 +1212,7 @@ INPUT_VARIABLES = {
     "i_cp_joints": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1]),
     "i_cp_lifetime": InputVariable("costs", int, range=(0, 3)),
     "i_cs_precomp": InputVariable("build", int, choices=[0, 1]),
-    "i_cs_stress": InputVariable(data_structure.pfcoil_variables, int, choices=[0, 1]),
+    "i_cs_stress": InputVariable("pf_coil", int, choices=[0, 1]),
     "i_density_limit": InputVariable(
         data_structure.physics_variables, int, range=(1, 8)
     ),
@@ -1250,9 +1225,7 @@ INPUT_VARIABLES = {
     "i_l_h_threshold": InputVariable(
         data_structure.physics_variables, int, range=(1, 21)
     ),
-    "i_pf_current": InputVariable(
-        data_structure.pfcoil_variables, int, choices=[0, 1, 2]
-    ),
+    "i_pf_current": InputVariable("pf_coil", int, choices=[0, 1, 2]),
     "i_pfirsch_schluter_current": InputVariable(
         data_structure.physics_variables, int, choices=[0, 1]
     ),
@@ -1279,9 +1252,7 @@ INPUT_VARIABLES = {
         data_structure.physics_variables, int, choices=[0, 1]
     ),
     "i_str_wp": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1]),
-    "i_r_pf_outside_tf_placement": InputVariable(
-        data_structure.pfcoil_variables, int, choices=[0, 1]
-    ),
+    "i_r_pf_outside_tf_placement": InputVariable("pf_coil", int, choices=[0, 1]),
     "i_tf_bucking": InputVariable(data_structure.tfcoil_variables, int, range=(0, 3)),
     "i_tf_case_geom": InputVariable(
         data_structure.tfcoil_variables, int, choices=[0, 1]
@@ -1324,9 +1295,7 @@ INPUT_VARIABLES = {
     "i_plasma_pedestal": InputVariable(
         data_structure.physics_variables, int, choices=[0, 1]
     ),
-    "i_pf_conductor": InputVariable(
-        data_structure.pfcoil_variables, int, choices=[0, 1]
-    ),
+    "i_pf_conductor": InputVariable("pf_coil", int, choices=[0, 1]),
     "ipnet": InputVariable("costs", int, choices=[0, 1]),
     "ipowerflow": InputVariable("heat_transport", int, choices=[0, 1]),
     "i_shld_primary_heat": InputVariable("heat_transport", int, choices=[0, 1]),
@@ -1347,12 +1316,8 @@ INPUT_VARIABLES = {
     "istell": InputVariable(data_structure.stellarator_variables, int, range=(0, 6)),
     "isthtr": InputVariable(data_structure.stellarator_variables, int, range=(1, 3)),
     "istore": InputVariable("pulse", int, range=(1, 3)),
-    "i_cs_superconductor": InputVariable(
-        data_structure.pfcoil_variables, int, range=(1, 9)
-    ),
-    "i_pf_superconductor": InputVariable(
-        data_structure.pfcoil_variables, int, range=(1, 9)
-    ),
+    "i_cs_superconductor": InputVariable("pf_coil", int, range=(1, 9)),
+    "i_pf_superconductor": InputVariable("pf_coil", int, range=(1, 9)),
     "itart": InputVariable(data_structure.physics_variables, int, choices=[0, 1]),
     "itartpf": InputVariable(data_structure.physics_variables, int, choices=[0, 1]),
     "itcycl": InputVariable("pulse", int, range=(1, 3)),
@@ -1411,26 +1376,18 @@ INPUT_VARIABLES = {
     "i_fw_coolant_type": InputVariable("fwbs", str, choices=["helium", "water"]),
     "i_vacuum_pumping": InputVariable("vacuum", str, choices=["old", "simple"]),
     "dcond": InputVariable(data_structure.tfcoil_variables, float, array=True),
-    "c_pf_coil_turn_peak_input": InputVariable(
-        data_structure.pfcoil_variables, float, array=True
-    ),
-    "i_pf_location": InputVariable(data_structure.pfcoil_variables, int, array=True),
-    "n_pf_coils_in_group": InputVariable(
-        data_structure.pfcoil_variables, int, array=True
-    ),
-    "n_cs_current_filaments": InputVariable(
-        data_structure.pfcoil_variables, int, array=True
-    ),
+    "c_pf_coil_turn_peak_input": InputVariable("pf_coil", float, array=True),
+    "i_pf_location": InputVariable("pf_coil", int, array=True),
+    "n_pf_coils_in_group": InputVariable("pf_coil", int, array=True),
+    "n_cs_current_filaments": InputVariable("pf_coil", int, array=True),
     "n_pf_coil_groups": InputVariable(
-        data_structure.pfcoil_variables,
+        "pf_coil",
         int,
-        range=(0, data_structure.pfcoil_variables.N_PF_GROUPS_MAX),
+        range=(0, N_PF_GROUPS_MAX),
     ),
-    "rref": InputVariable(data_structure.pfcoil_variables, float, array=True),
-    "f_a_pf_coil_void": InputVariable(
-        data_structure.pfcoil_variables, float, array=True
-    ),
-    "zref": InputVariable(data_structure.pfcoil_variables, float, array=True),
+    "rref": InputVariable("pf_coil", float, array=True),
+    "f_a_pf_coil_void": InputVariable("pf_coil", float, array=True),
+    "zref": InputVariable("pf_coil", float, array=True),
     "uchts": InputVariable("costs", float, array=True),
     "ucoam": InputVariable("costs", float, array=True),
     "ucsc": InputVariable("costs", float, array=True),
@@ -1472,9 +1429,7 @@ INPUT_VARIABLES = {
         int,
         choices=range(3, data_structure.impurity_radiation_module.N_IMPURITIES + 1),
     ),
-    "j_pf_coil_wp_peak": InputVariable(
-        data_structure.pfcoil_variables, float, array=True
-    ),
+    "j_pf_coil_wp_peak": InputVariable("pf_coil", float, array=True),
     "ixc": InputVariable(
         None,
         int,

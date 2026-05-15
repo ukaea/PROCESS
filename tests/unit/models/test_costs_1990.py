@@ -9,7 +9,6 @@ from process import data_structure
 from process.data_structure import (
     divertor_variables,
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -2717,58 +2716,60 @@ def test_acc2222(acc2222param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "fkind", acc2222param.fkind)
 
     monkeypatch.setattr(
-        pfcoil_variables, "j_pf_coil_wp_peak", acc2222param.j_pf_coil_wp_peak
+        costs.data.pf_coil, "j_pf_coil_wp_peak", acc2222param.j_pf_coil_wp_peak
     )
 
     monkeypatch.setattr(
         costs.data.costs, "supercond_cost_model", acc2222param.supercond_cost_model
     )
 
-    monkeypatch.setattr(pfcoil_variables, "j_crit_str_cs", acc2222param.j_crit_str_cs)
+    monkeypatch.setattr(costs.data.pf_coil, "j_crit_str_cs", acc2222param.j_crit_str_cs)
 
-    monkeypatch.setattr(pfcoil_variables, "j_crit_str_pf", acc2222param.j_crit_str_pf)
-
-    monkeypatch.setattr(pfcoil_variables, "i_pf_conductor", acc2222param.i_pf_conductor)
-
-    monkeypatch.setattr(pfcoil_variables, "f_a_cs_void", acc2222param.f_a_cs_void)
-
-    monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", acc2222param.n_cs_pf_coils)
+    monkeypatch.setattr(costs.data.pf_coil, "j_crit_str_pf", acc2222param.j_crit_str_pf)
 
     monkeypatch.setattr(
-        pfcoil_variables, "n_pf_coil_turns", acc2222param.n_pf_coil_turns
+        costs.data.pf_coil, "i_pf_conductor", acc2222param.i_pf_conductor
+    )
+
+    monkeypatch.setattr(costs.data.pf_coil, "f_a_cs_void", acc2222param.f_a_cs_void)
+
+    monkeypatch.setattr(costs.data.pf_coil, "n_cs_pf_coils", acc2222param.n_cs_pf_coils)
+
+    monkeypatch.setattr(
+        costs.data.pf_coil, "n_pf_coil_turns", acc2222param.n_pf_coil_turns
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "i_pf_superconductor", acc2222param.i_pf_superconductor
+        costs.data.pf_coil, "i_pf_superconductor", acc2222param.i_pf_superconductor
     )
 
     monkeypatch.setattr(
-        pfcoil_variables,
+        costs.data.pf_coil,
         "m_pf_coil_structure_total",
         acc2222param.m_pf_coil_structure_total,
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "c_pf_cs_coils_peak_ma", acc2222param.c_pf_cs_coils_peak_ma
+        costs.data.pf_coil, "c_pf_cs_coils_peak_ma", acc2222param.c_pf_cs_coils_peak_ma
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "r_pf_coil_middle", acc2222param.r_pf_coil_middle
+        costs.data.pf_coil, "r_pf_coil_middle", acc2222param.r_pf_coil_middle
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "i_cs_superconductor", acc2222param.i_cs_superconductor
+        costs.data.pf_coil, "i_cs_superconductor", acc2222param.i_cs_superconductor
     )
 
-    monkeypatch.setattr(pfcoil_variables, "fcupfsu", acc2222param.fcupfsu)
+    monkeypatch.setattr(costs.data.pf_coil, "fcupfsu", acc2222param.fcupfsu)
 
-    monkeypatch.setattr(pfcoil_variables, "fcuohsu", acc2222param.fcuohsu)
+    monkeypatch.setattr(costs.data.pf_coil, "fcuohsu", acc2222param.fcuohsu)
 
     monkeypatch.setattr(
-        pfcoil_variables, "f_a_pf_coil_void", acc2222param.f_a_pf_coil_void
+        costs.data.pf_coil, "f_a_pf_coil_void", acc2222param.f_a_pf_coil_void
     )
 
-    monkeypatch.setattr(pfcoil_variables, "awpoh", acc2222param.awpoh)
+    monkeypatch.setattr(costs.data.pf_coil, "awpoh", acc2222param.awpoh)
 
     monkeypatch.setattr(costs.data.structure, "fncmass", acc2222param.fncmass)
 

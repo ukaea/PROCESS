@@ -3,10 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import (
-    pfcoil_variables,
-)
-
 
 @pytest.fixture
 def cryostat(process_models):
@@ -187,10 +183,14 @@ def test_external_cryo_geometry(externalcryogeometryparam, monkeypatch, cryostat
     )
     monkeypatch.setattr(cryostat.data.fwbs, "dewmkg", externalcryogeometryparam.dewmkg)
     monkeypatch.setattr(
-        pfcoil_variables, "r_pf_coil_outer", externalcryogeometryparam.r_pf_coil_outer
+        cryostat.data.pf_coil,
+        "r_pf_coil_outer",
+        externalcryogeometryparam.r_pf_coil_outer,
     )
     monkeypatch.setattr(
-        pfcoil_variables, "z_pf_coil_upper", externalcryogeometryparam.z_pf_coil_upper
+        cryostat.data.pf_coil,
+        "z_pf_coil_upper",
+        externalcryogeometryparam.z_pf_coil_upper,
     )
     monkeypatch.setattr(
         cryostat.data.buildings,

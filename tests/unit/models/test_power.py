@@ -7,7 +7,6 @@ from process.data_structure import (
     divertor_variables,
     numerics,
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
     power_variables,
     tfcoil_variables,
@@ -1789,61 +1788,63 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
     monkeypatch.setattr(pf_power_variables, "srcktpm", pfpwrparam.srcktpm)
 
     monkeypatch.setattr(
-        pfcoil_variables, "n_pf_coil_groups", pfpwrparam.n_pf_coil_groups
+        power.data.pf_coil, "n_pf_coil_groups", pfpwrparam.n_pf_coil_groups
     )
 
-    monkeypatch.setattr(pfcoil_variables, "c_pf_coil_turn", pfpwrparam.c_pf_coil_turn)
+    monkeypatch.setattr(power.data.pf_coil, "c_pf_coil_turn", pfpwrparam.c_pf_coil_turn)
 
     monkeypatch.setattr(
-        pfcoil_variables,
+        power.data.pf_coil,
         "p_pf_electric_supplies_mw",
         pfpwrparam.p_pf_electric_supplies_mw,
     )
 
-    monkeypatch.setattr(pfcoil_variables, "rho_pf_coil", pfpwrparam.rho_pf_coil)
+    monkeypatch.setattr(power.data.pf_coil, "rho_pf_coil", pfpwrparam.rho_pf_coil)
 
     monkeypatch.setattr(
-        pfcoil_variables, "n_pf_cs_plasma_circuits", pfpwrparam.n_pf_cs_plasma_circuits
+        power.data.pf_coil, "n_pf_cs_plasma_circuits", pfpwrparam.n_pf_cs_plasma_circuits
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "n_pf_coils_in_group", pfpwrparam.n_pf_coils_in_group
+        power.data.pf_coil, "n_pf_coils_in_group", pfpwrparam.n_pf_coils_in_group
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "c_pf_cs_coils_peak_ma", pfpwrparam.c_pf_cs_coils_peak_ma
+        power.data.pf_coil, "c_pf_cs_coils_peak_ma", pfpwrparam.c_pf_cs_coils_peak_ma
     )
 
-    monkeypatch.setattr(pfcoil_variables, "etapsu", pfpwrparam.etapsu)
+    monkeypatch.setattr(power.data.pf_coil, "etapsu", pfpwrparam.etapsu)
 
     monkeypatch.setattr(
-        pfcoil_variables,
+        power.data.pf_coil,
         "c_pf_coil_turn_peak_input",
         pfpwrparam.c_pf_coil_turn_peak_input,
     )
 
     monkeypatch.setattr(
-        pfcoil_variables,
+        power.data.pf_coil,
         "c_pf_cs_coil_pulse_end_ma",
         pfpwrparam.c_pf_cs_coil_pulse_end_ma,
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "ind_pf_cs_plasma_mutual", pfpwrparam.ind_pf_cs_plasma_mutual
-    )
-
-    monkeypatch.setattr(pfcoil_variables, "n_pf_coil_turns", pfpwrparam.n_pf_coil_turns)
-
-    monkeypatch.setattr(
-        pfcoil_variables, "f_a_pf_coil_void", pfpwrparam.f_a_pf_coil_void
+        power.data.pf_coil, "ind_pf_cs_plasma_mutual", pfpwrparam.ind_pf_cs_plasma_mutual
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "j_pf_coil_wp_peak", pfpwrparam.j_pf_coil_wp_peak
+        power.data.pf_coil, "n_pf_coil_turns", pfpwrparam.n_pf_coil_turns
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "r_pf_coil_middle", pfpwrparam.r_pf_coil_middle
+        power.data.pf_coil, "f_a_pf_coil_void", pfpwrparam.f_a_pf_coil_void
+    )
+
+    monkeypatch.setattr(
+        power.data.pf_coil, "j_pf_coil_wp_peak", pfpwrparam.j_pf_coil_wp_peak
+    )
+
+    monkeypatch.setattr(
+        power.data.pf_coil, "r_pf_coil_middle", pfpwrparam.r_pf_coil_middle
     )
 
     monkeypatch.setattr(
@@ -2767,7 +2768,7 @@ def test_power2(power2param, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        pfcoil_variables,
+        power.data.pf_coil,
         "p_pf_electric_supplies_mw",
         power2param.p_pf_electric_supplies_mw,
     )
