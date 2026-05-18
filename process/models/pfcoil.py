@@ -1,14 +1,12 @@
 import logging
 import math
 
-import matplotlib.pyplot as plt
 import numba
 import numpy as np
 from scipy import optimize
 from scipy.linalg import svd
 from scipy.special import ellipe, ellipk
 
-import process.core.io.mfile as mf
 from process.core import constants
 from process.core import process_output as op
 from process.core.exceptions import ProcessValueError
@@ -2550,7 +2548,7 @@ class PFCoil(Model):
                 self.mfile,
                 f"CS coil midplane axial stress at time point {time} (MPa)",
                 f"(stress_z_cs_self_midplane_profile[{time}])",
-                pfcoil_variables.stress_z_cs_self_midplane_profile[time],
+                self.data.pf_coil.stress_z_cs_self_midplane_profile[time],
             )
         self.tf_pf_collision_detector()
 
@@ -3736,15 +3734,16 @@ class CSCoil(Model):
                 The first element is the unsmeared axial stress in MPa.
                 The second element is the axial force in newtons (N).
 
-        :note:
-           The axial force is computed using elliptic-integral based terms and the
-           unsmeared axial stress is obtained by dividing the axial force by
-           the effective steel area associated with the CS turns.
+        Notes
+        -----
+        The axial force is computed using elliptic-integral based terms and the
+        unsmeared axial stress is obtained by dividing the axial force by
+        the effective steel area associated with the CS turns.
 
         References
         ----------
-            - Case Studies in Superconducting Magnets. Boston, MA: Springer US, 2009.
-              doi: https://doi.org/10.1007/b112047.
+        [1] Case Studies in Superconducting Magnets. Boston, MA: Springer US, 2009.
+            doi: https://doi.org/10.1007/b112047.
         """
         # kb term for elliptical integrals
         # kb2 = SQRT((4.0e0*b**2)/(4.0e0*b**2 + hl**2))
@@ -3796,23 +3795,23 @@ class CSCoil(Model):
     ) -> None:
         for time in range(6):
             stress_value, _ = self.calculate_cs_self_peak_midplane_axial_stress(
-                r_cs_outer=pfcoil_variables.r_pf_coil_outer[
-                    pfcoil_variables.n_cs_pf_coils - 1
+                r_cs_outer=self.data.pf_coil.r_pf_coil_outer[
+                    self.data.pf_coil.n_cs_pf_coils - 1
                 ],
-                r_cs_inner=pfcoil_variables.r_pf_coil_inner[
-                    pfcoil_variables.n_cs_pf_coils - 1
+                r_cs_inner=self.data.pf_coil.r_pf_coil_inner[
+                    self.data.pf_coil.n_cs_pf_coils - 1
                 ],
-                dz_cs_half=pfcoil_variables.dz_cs_full / 2.0,
+                dz_cs_half=self.data.pf_coil.dz_cs_full / 2.0,
                 c_cs_peak=(
-                    pfcoil_variables.c_pf_coil_turn[
-                        pfcoil_variables.n_cs_pf_coils - 1, time
+                    self.data.pf_coil.c_pf_coil_turn[
+                        self.data.pf_coil.n_cs_pf_coils - 1, time
                     ]
-                    * pfcoil_variables.n_pf_coil_turns[
-                        pfcoil_variables.n_cs_pf_coils - 1
+                    * self.data.pf_coil.n_pf_coil_turns[
+                        self.data.pf_coil.n_cs_pf_coils - 1
                     ]
                 ),
             )
-            pfcoil_variables.stress_z_cs_self_midplane_profile[time] = stress_value
+            self.data.pf_coil.stress_z_cs_self_midplane_profile[time] = stress_value
 
     def hoop_stress(self, r):
         """Calculation of hoop stress of central solenoid.
@@ -3885,56 +3884,6 @@ class CSCoil(Model):
         s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
         return s_hoop_nom / self.data.pf_coil.f_a_cs_turn_steel
-
-    @staticmethod
-    def plot_stress_time_profile(axis: plt.Axes, mfile: mf.MFile, scan: int):
-        t_plant_pulse_coil_precharge = mfile.get(
-            "t_plant_pulse_coil_precharge", scan=scan
-        )
-        t_plant_pulse_plasma_current_ramp_up = mfile.get(
-            "t_plant_pulse_plasma_current_ramp_up", scan=scan
-        )
-        t_plant_pulse_fusion_ramp = mfile.get("t_plant_pulse_fusion_ramp", scan=scan)
-        t_plant_pulse_burn = mfile.get("t_plant_pulse_burn", scan=scan)
-        t_plant_pulse_plasma_current_ramp_down = mfile.get(
-            "t_plant_pulse_plasma_current_ramp_down", scan=scan
-        )
-
-        # Define a cumulative sum list for each point in the pulse
-        t_steps = np.cumsum([
-            0,
-            t_plant_pulse_coil_precharge,
-            t_plant_pulse_plasma_current_ramp_up,
-            t_plant_pulse_fusion_ramp,
-            t_plant_pulse_burn,
-            t_plant_pulse_plasma_current_ramp_down,
-        ])
-
-        stress_times = t_steps[
-            :6
-        ]  # Get the first 6 time points corresponding to the stress profile
-
-        stress_z_cs_self_midplane_profile = np.zeros(6)
-        for i in range(6):
-            stress_z_cs_self_midplane_profile[i] = mfile.get(
-                f"stress_z_cs_self_midplane_profile[{i}]", scan=scan
-            )
-
-        # Plot stress vs time
-        axis.plot(
-            stress_times,
-            stress_z_cs_self_midplane_profile / 1e6,
-            "o-",
-            linewidth=2,
-            markersize=8,
-            label="Midplane Axial Stress",
-        )
-        axis.set_xlabel("Pulse Time (s)")
-        axis.set_ylabel("Stress (MPa)")
-        axis.minorticks_on()
-        axis.legend(loc="best")
-        axis.set_title("Central Solenoid Stress")
-        axis.grid(True, alpha=0.3)
 
 
 def peak_b_field_at_pf_coil(

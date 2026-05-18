@@ -47,7 +47,6 @@ from process.models.geometry.vacuum_vessel import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )
-from process.models.pfcoil import CSCoil
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.confinement_time import (
     ConfinementTimeModel,
@@ -9798,6 +9797,55 @@ def plot_cs_coil_structure(
     axis.legend()
 
 
+def plot_cs_stress_time_profile(axis: plt.Axes, mfile: MFile, scan: int) -> None:
+    """Function to plot the time profile of the CS stress during the pulse."""
+    t_plant_pulse_coil_precharge = mfile.get("t_plant_pulse_coil_precharge", scan=scan)
+    t_plant_pulse_plasma_current_ramp_up = mfile.get(
+        "t_plant_pulse_plasma_current_ramp_up", scan=scan
+    )
+    t_plant_pulse_fusion_ramp = mfile.get("t_plant_pulse_fusion_ramp", scan=scan)
+    t_plant_pulse_burn = mfile.get("t_plant_pulse_burn", scan=scan)
+    t_plant_pulse_plasma_current_ramp_down = mfile.get(
+        "t_plant_pulse_plasma_current_ramp_down", scan=scan
+    )
+
+    # Define a cumulative sum list for each point in the pulse
+    t_steps = np.cumsum([
+        0,
+        t_plant_pulse_coil_precharge,
+        t_plant_pulse_plasma_current_ramp_up,
+        t_plant_pulse_fusion_ramp,
+        t_plant_pulse_burn,
+        t_plant_pulse_plasma_current_ramp_down,
+    ])
+
+    stress_times = t_steps[
+        :6
+    ]  # Get the first 6 time points corresponding to the stress profile
+
+    stress_z_cs_self_midplane_profile = np.zeros(6)
+    for i in range(6):
+        stress_z_cs_self_midplane_profile[i] = mfile.get(
+            f"stress_z_cs_self_midplane_profile[{i}]", scan=scan
+        )
+
+    # Plot stress vs time
+    axis.plot(
+        stress_times,
+        stress_z_cs_self_midplane_profile / 1e6,
+        "o-",
+        linewidth=2,
+        markersize=8,
+        label="Midplane Axial Stress",
+    )
+    axis.set_xlabel("Pulse Time (s)")
+    axis.set_ylabel("Stress (MPa)")
+    axis.minorticks_on()
+    axis.legend(loc="best")
+    axis.set_title("Central Solenoid Stress")
+    axis.grid(True, alpha=0.3)
+
+
 def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
     a_cs_turn = mfile.get("a_cs_turn", scan=scan)
     dz_cs_turn = mfile.get("dz_cs_turn", scan=scan)
@@ -14448,9 +14496,7 @@ def main_plot(
 
     plot_current_profiles_over_time(figs[29].add_subplot(111), m_file, scan)
 
-    CSCoil.plot_stress_time_profile(
-        axis=figs[30].add_subplot(311), mfile=m_file, scan=scan
-    )
+    plot_cs_stress_time_profile(axis=figs[30].add_subplot(311), mfile=m_file, scan=scan)
 
     plot_cs_coil_structure(
         figs[30].add_subplot(223, aspect="equal"), figs[30], m_file, scan
