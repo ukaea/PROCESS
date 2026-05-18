@@ -1002,14 +1002,14 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.m_tf_coil_wp_turn_insulation,
             "OP ",
         )
-        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            po.ovarre(
-                self.outfile,
-                "Total conduit mass per coil (kg)",
-                "(m_tf_coil_conductor)",
-                tfcoil_variables.m_tf_coil_conductor,
-                "OP ",
-            )
+
+        po.ovarre(
+            self.outfile,
+            "Total conduit mass per coil (kg)",
+            "(m_tf_coil_conductor)",
+            tfcoil_variables.m_tf_coil_conductor,
+            "OP ",
+        )
 
         if physics_variables.itart == 1:
             po.ovarre(
@@ -1131,167 +1131,99 @@ class SuperconductingTFCoil(TFCoil):
         radius = self.data.build.r_tf_inboard_in
         po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
 
-        # Radial build for SC TF coils
-        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            radius += tfcoil_variables.dr_tf_nose_case
-            po.obuild(
-                self.outfile,
-                'Coil case ("nose")',
-                tfcoil_variables.dr_tf_nose_case,
-                radius,
-                "(dr_tf_nose_case)",
-            )
+        radius += tfcoil_variables.dr_tf_nose_case
+        po.obuild(
+            self.outfile,
+            'Coil case ("nose")',
+            tfcoil_variables.dr_tf_nose_case,
+            radius,
+            "(dr_tf_nose_case)",
+        )
 
-            radius += tfcoil_variables.dx_tf_wp_insertion_gap
-            po.obuild(
-                self.outfile,
-                "Insertion gap for winding pack",
-                tfcoil_variables.dx_tf_wp_insertion_gap,
-                radius,
-                "(dx_tf_wp_insertion_gap)",
-            )
+        radius += tfcoil_variables.dx_tf_wp_insertion_gap
+        po.obuild(
+            self.outfile,
+            "Insertion gap for winding pack",
+            tfcoil_variables.dx_tf_wp_insertion_gap,
+            radius,
+            "(dx_tf_wp_insertion_gap)",
+        )
 
-            radius += tfcoil_variables.dx_tf_wp_insulation
-            po.obuild(
-                self.outfile,
-                "Winding pack ground insulation",
-                tfcoil_variables.dx_tf_wp_insulation,
-                radius,
-                "(dx_tf_wp_insulation)",
-            )
+        radius += tfcoil_variables.dx_tf_wp_insulation
+        po.obuild(
+            self.outfile,
+            "Winding pack ground insulation",
+            tfcoil_variables.dx_tf_wp_insulation,
+            radius,
+            "(dx_tf_wp_insulation)",
+        )
 
-            radius = (
-                radius
-                + 0.5e0 * tfcoil_variables.dr_tf_wp_with_insulation
-                - tfcoil_variables.dx_tf_wp_insulation
-                - tfcoil_variables.dx_tf_wp_insertion_gap
-            )
-            po.obuild(
-                self.outfile,
-                "Winding - first half",
-                tfcoil_variables.dr_tf_wp_with_insulation / 2e0
-                - tfcoil_variables.dx_tf_wp_insulation
-                - tfcoil_variables.dx_tf_wp_insertion_gap,
-                radius,
-                "(dr_tf_wp_with_insulation/2-dx_tf_wp_insulation-dx_tf_wp_insertion_gap)",
-            )
+        radius = (
+            radius
+            + 0.5e0 * tfcoil_variables.dr_tf_wp_with_insulation
+            - tfcoil_variables.dx_tf_wp_insulation
+            - tfcoil_variables.dx_tf_wp_insertion_gap
+        )
+        po.obuild(
+            self.outfile,
+            "Winding - first half",
+            tfcoil_variables.dr_tf_wp_with_insulation / 2e0
+            - tfcoil_variables.dx_tf_wp_insulation
+            - tfcoil_variables.dx_tf_wp_insertion_gap,
+            radius,
+            "(dr_tf_wp_with_insulation/2-dx_tf_wp_insulation-dx_tf_wp_insertion_gap)",
+        )
 
-            radius = (
-                radius
-                + 0.5e0 * tfcoil_variables.dr_tf_wp_with_insulation
-                - tfcoil_variables.dx_tf_wp_insulation
-                - tfcoil_variables.dx_tf_wp_insertion_gap
-            )
-            po.obuild(
-                self.outfile,
-                "Winding - second half",
-                tfcoil_variables.dr_tf_wp_with_insulation / 2e0
-                - tfcoil_variables.dx_tf_wp_insulation
-                - tfcoil_variables.dx_tf_wp_insertion_gap,
-                radius,
-                "(dr_tf_wp_with_insulation/2-dx_tf_wp_insulation-dx_tf_wp_insertion_gap)",
-            )
+        radius = (
+            radius
+            + 0.5e0 * tfcoil_variables.dr_tf_wp_with_insulation
+            - tfcoil_variables.dx_tf_wp_insulation
+            - tfcoil_variables.dx_tf_wp_insertion_gap
+        )
+        po.obuild(
+            self.outfile,
+            "Winding - second half",
+            tfcoil_variables.dr_tf_wp_with_insulation / 2e0
+            - tfcoil_variables.dx_tf_wp_insulation
+            - tfcoil_variables.dx_tf_wp_insertion_gap,
+            radius,
+            "(dr_tf_wp_with_insulation/2-dx_tf_wp_insulation-dx_tf_wp_insertion_gap)",
+        )
 
-            radius += tfcoil_variables.dx_tf_wp_insulation
-            po.obuild(
-                self.outfile,
-                "Winding pack insulation",
-                tfcoil_variables.dx_tf_wp_insulation,
-                radius,
-                "(dx_tf_wp_insulation)",
-            )
+        radius += tfcoil_variables.dx_tf_wp_insulation
+        po.obuild(
+            self.outfile,
+            "Winding pack insulation",
+            tfcoil_variables.dx_tf_wp_insulation,
+            radius,
+            "(dx_tf_wp_insulation)",
+        )
 
-            radius += tfcoil_variables.dx_tf_wp_insertion_gap
-            po.obuild(
-                self.outfile,
-                "Insertion gap for winding pack",
-                tfcoil_variables.dx_tf_wp_insertion_gap,
-                radius,
-                "(dx_tf_wp_insertion_gap)",
-            )
+        radius += tfcoil_variables.dx_tf_wp_insertion_gap
+        po.obuild(
+            self.outfile,
+            "Insertion gap for winding pack",
+            tfcoil_variables.dx_tf_wp_insertion_gap,
+            radius,
+            "(dx_tf_wp_insertion_gap)",
+        )
 
-            radius += tfcoil_variables.dr_tf_plasma_case
-            po.obuild(
-                self.outfile,
-                "Plasma side case min radius",
-                tfcoil_variables.dr_tf_plasma_case,
-                radius,
-                "(dr_tf_plasma_case)",
-            )
+        radius += tfcoil_variables.dr_tf_plasma_case
+        po.obuild(
+            self.outfile,
+            "Plasma side case min radius",
+            tfcoil_variables.dr_tf_plasma_case,
+            radius,
+            "(dr_tf_plasma_case)",
+        )
 
-            po.obuild(
-                self.outfile,
-                "Plasma side case max radius",
-                self.data.build.r_tf_inboard_out,
-                radius,
-                "(r_tf_inboard_out)",
-            )
-
-        # Radial build for restive coil
-        else:
-            radius += tfcoil_variables.dr_tf_nose_case
-            po.obuild(
-                self.outfile,
-                "Coil bucking cylindre",
-                tfcoil_variables.dr_tf_nose_case,
-                radius,
-                "(dr_tf_nose_case)",
-            )
-
-            radius += tfcoil_variables.dx_tf_wp_insulation
-            po.obuild(
-                self.outfile,
-                "Conductor ground insulation",
-                tfcoil_variables.dx_tf_wp_insulation,
-                radius,
-                "(dx_tf_wp_insulation)",
-            )
-
-            radius = (
-                radius
-                + 0.5e0 * tfcoil_variables.dr_tf_wp_with_insulation
-                - tfcoil_variables.dx_tf_wp_insulation
-            )
-            po.obuild(
-                self.outfile,
-                "Conductor - first half",
-                tfcoil_variables.dr_tf_wp_with_insulation / 2e0
-                - tfcoil_variables.dx_tf_wp_insulation,
-                radius,
-                "(tfcoil_variables.dr_tf_wp_with_insulation/2-tfcoil_variables.dx_tf_wp_insulation)",
-            )
-
-            radius = (
-                radius
-                + 0.5e0 * tfcoil_variables.dr_tf_wp_with_insulation
-                - tfcoil_variables.dx_tf_wp_insulation
-            )
-            po.obuild(
-                self.outfile,
-                "Conductor - second half",
-                tfcoil_variables.dr_tf_wp_with_insulation / 2e0
-                - tfcoil_variables.dx_tf_wp_insulation,
-                radius,
-                "(tfcoil_variables.dr_tf_wp_with_insulation/2-tfcoil_variables.dx_tf_wp_insulation)",
-            )
-
-            radius += tfcoil_variables.dx_tf_wp_insulation
-            po.obuild(
-                self.outfile,
-                "Conductor ground insulation",
-                tfcoil_variables.dx_tf_wp_insulation,
-                radius,
-                "(dx_tf_wp_insulation)",
-            )
-
-            radius += tfcoil_variables.dr_tf_plasma_case
-            po.obuild(
-                self.outfile,
-                "Plasma side TF coil support",
-                tfcoil_variables.dr_tf_plasma_case,
-                radius,
-                "(dr_tf_plasma_case)",
-            )
+        po.obuild(
+            self.outfile,
+            "Plasma side case max radius",
+            self.data.build.r_tf_inboard_out,
+            radius,
+            "(r_tf_inboard_out)",
+        )
 
         # Radial build consistency check
         if not (
@@ -1318,95 +1250,6 @@ class SuperconductingTFCoil(TFCoil):
             tf_total_height,
             tf_total_width,
         )
-
-        # Top section TF coil radial build (physics_variables.itart = 1 only)
-        if (
-            physics_variables.itart == 1
-            and tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
-        ):
-            po.osubhd(self.outfile, "Radial build of TF coil at central collumn top :")
-            # write(self.outfile,5)
-
-            # Restart the radial build at bucking cylindre inner radius
-            radius = self.data.build.r_tf_inboard_in
-            po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
-
-            radius += tfcoil_variables.dr_tf_nose_case
-            po.obuild(
-                self.outfile,
-                "Coil bucking cylindre",
-                tfcoil_variables.dr_tf_nose_case,
-                radius,
-                "(dr_tf_nose_case)",
-            )
-
-            radius += tfcoil_variables.dx_tf_wp_insulation
-            po.obuild(
-                self.outfile,
-                "Conductor ground insulation",
-                tfcoil_variables.dx_tf_wp_insulation,
-                radius,
-                "(dx_tf_wp_insulation)",
-            )
-
-            radius = (
-                radius
-                + 0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
-                - tfcoil_variables.dx_tf_wp_insulation
-            )
-            po.obuild(
-                self.outfile,
-                "Conductor - first half",
-                0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
-                - tfcoil_variables.dx_tf_wp_insulation,
-                radius,
-                "(dr_tf_wp_top/2-dx_tf_wp_insulation)",
-            )
-
-            radius = (
-                radius
-                + 0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
-                - tfcoil_variables.dx_tf_wp_insulation
-            )
-            po.obuild(
-                self.outfile,
-                "Conductor - second half",
-                0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
-                - tfcoil_variables.dx_tf_wp_insulation,
-                radius,
-                "(dr_tf_wp_top/2-dx_tf_wp_insulation)",
-            )
-
-            radius += tfcoil_variables.dx_tf_wp_insulation
-            po.obuild(
-                self.outfile,
-                "Conductor ground insulation",
-                tfcoil_variables.dx_tf_wp_insulation,
-                radius,
-                "(dx_tf_wp_insulation)",
-            )
-
-            radius += tfcoil_variables.dr_tf_plasma_case
-            po.obuild(
-                self.outfile,
-                "Plasma side TF coil support",
-                tfcoil_variables.dr_tf_plasma_case,
-                radius,
-                "(dr_tf_plasma_case)",
-            )
-
-            # Consistency check
-            if abs(radius - self.data.build.r_cp_top) < np.finfo(float(radius)).eps:
-                po.ocmmnt(self.outfile, "Top TF coil dimensions are consistent")
-            else:
-                po.ocmmnt(self.outfile, "ERROR: TF coil dimensions are NOT consistent:")
-                po.ovarre(
-                    self.outfile,
-                    "Radius of plasma-facing side of inner leg SHOULD BE [m]",
-                    "",
-                    self.data.build.r_cp_top,
-                )
-                po.oblnkl(self.outfile)
 
     def output_tf_superconductor_info(self):
         """Output TF superconductor information"""

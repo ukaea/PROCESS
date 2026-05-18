@@ -964,6 +964,188 @@ class ResistiveTFCoil(TFCoil):
             tfcoil_variables.voltfleg,
         )
 
+        # TF coil radial build
+        po.osubhd(self.outfile, "Radial build of TF coil centre-line :")
+
+        radius = self.data.build.r_tf_inboard_in
+        po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
+
+        radius += tfcoil_variables.dr_tf_nose_case
+        po.obuild(
+            self.outfile,
+            "Coil bucking cylindre",
+            tfcoil_variables.dr_tf_nose_case,
+            radius,
+            "(dr_tf_nose_case)",
+        )
+
+        radius += tfcoil_variables.dx_tf_wp_insulation
+        po.obuild(
+            self.outfile,
+            "Conductor ground insulation",
+            tfcoil_variables.dx_tf_wp_insulation,
+            radius,
+            "(dx_tf_wp_insulation)",
+        )
+
+        radius = (
+            radius
+            + 0.5e0 * tfcoil_variables.dr_tf_wp_with_insulation
+            - tfcoil_variables.dx_tf_wp_insulation
+        )
+        po.obuild(
+            self.outfile,
+            "Conductor - first half",
+            tfcoil_variables.dr_tf_wp_with_insulation / 2e0
+            - tfcoil_variables.dx_tf_wp_insulation,
+            radius,
+            "(tfcoil_variables.dr_tf_wp_with_insulation/2-tfcoil_variables.dx_tf_wp_insulation)",
+        )
+
+        radius = (
+            radius
+            + 0.5e0 * tfcoil_variables.dr_tf_wp_with_insulation
+            - tfcoil_variables.dx_tf_wp_insulation
+        )
+        po.obuild(
+            self.outfile,
+            "Conductor - second half",
+            tfcoil_variables.dr_tf_wp_with_insulation / 2e0
+            - tfcoil_variables.dx_tf_wp_insulation,
+            radius,
+            "(tfcoil_variables.dr_tf_wp_with_insulation/2-tfcoil_variables.dx_tf_wp_insulation)",
+        )
+
+        radius += tfcoil_variables.dx_tf_wp_insulation
+        po.obuild(
+            self.outfile,
+            "Conductor ground insulation",
+            tfcoil_variables.dx_tf_wp_insulation,
+            radius,
+            "(dx_tf_wp_insulation)",
+        )
+
+        radius += tfcoil_variables.dr_tf_plasma_case
+        po.obuild(
+            self.outfile,
+            "Plasma side TF coil support",
+            tfcoil_variables.dr_tf_plasma_case,
+            radius,
+            "(dr_tf_plasma_case)",
+        )
+
+        # Radial build consistency check
+        if not (
+            abs(radius - self.data.build.r_tf_inboard_in - self.data.build.dr_tf_inboard)
+            < 10.0e0 * np.finfo(float(radius)).eps
+        ):
+            logger.error(
+                "TF coil dimensions are not consistent. Radius of plasma-facing side of inner leg should be "
+                f"{self.data.build.r_tf_inboard_in + self.data.build.dr_tf_inboard}m"
+            )
+
+        tf_total_height = (
+            self.data.build.dh_tf_inner_bore + 2 * self.data.build.dr_tf_inboard
+        )
+        tf_total_width = (
+            self.data.build.dr_tf_inner_bore
+            + self.data.build.dr_tf_inboard
+            + self.data.build.dr_tf_outboard
+        )
+        po.oblnkl(self.outfile)
+        po.obuild(
+            self.outfile,
+            "Total height and width of TFC [m]",
+            tf_total_height,
+            tf_total_width,
+        )
+
+        # Top section TF coil radial build (physics_variables.itart = 1 only)
+        if physics_variables.itart == 1:
+            po.osubhd(self.outfile, "Radial build of TF coil at central collumn top :")
+            # write(self.outfile,5)
+
+            # Restart the radial build at bucking cylindre inner radius
+            radius = self.data.build.r_tf_inboard_in
+            po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
+
+            radius += tfcoil_variables.dr_tf_nose_case
+            po.obuild(
+                self.outfile,
+                "Coil bucking cylindre",
+                tfcoil_variables.dr_tf_nose_case,
+                radius,
+                "(dr_tf_nose_case)",
+            )
+
+            radius += tfcoil_variables.dx_tf_wp_insulation
+            po.obuild(
+                self.outfile,
+                "Conductor ground insulation",
+                tfcoil_variables.dx_tf_wp_insulation,
+                radius,
+                "(dx_tf_wp_insulation)",
+            )
+
+            radius = (
+                radius
+                + 0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
+                - tfcoil_variables.dx_tf_wp_insulation
+            )
+            po.obuild(
+                self.outfile,
+                "Conductor - first half",
+                0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
+                - tfcoil_variables.dx_tf_wp_insulation,
+                radius,
+                "(dr_tf_wp_top/2-dx_tf_wp_insulation)",
+            )
+
+            radius = (
+                radius
+                + 0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
+                - tfcoil_variables.dx_tf_wp_insulation
+            )
+            po.obuild(
+                self.outfile,
+                "Conductor - second half",
+                0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
+                - tfcoil_variables.dx_tf_wp_insulation,
+                radius,
+                "(dr_tf_wp_top/2-dx_tf_wp_insulation)",
+            )
+
+            radius += tfcoil_variables.dx_tf_wp_insulation
+            po.obuild(
+                self.outfile,
+                "Conductor ground insulation",
+                tfcoil_variables.dx_tf_wp_insulation,
+                radius,
+                "(dx_tf_wp_insulation)",
+            )
+
+            radius += tfcoil_variables.dr_tf_plasma_case
+            po.obuild(
+                self.outfile,
+                "Plasma side TF coil support",
+                tfcoil_variables.dr_tf_plasma_case,
+                radius,
+                "(dr_tf_plasma_case)",
+            )
+
+            # Consistency check
+            if abs(radius - self.data.build.r_cp_top) < np.finfo(float(radius)).eps:
+                po.ocmmnt(self.outfile, "Top TF coil dimensions are consistent")
+            else:
+                po.ocmmnt(self.outfile, "ERROR: TF coil dimensions are NOT consistent:")
+                po.ovarre(
+                    self.outfile,
+                    "Radius of plasma-facing side of inner leg SHOULD BE [m]",
+                    "",
+                    self.data.build.r_cp_top,
+                )
+                po.oblnkl(self.outfile)
+
     @staticmethod
     @numba.njit(cache=True)
     def cpost(
