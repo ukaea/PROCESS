@@ -8,7 +8,6 @@ from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
     numerics,
-    pfcoil_variables,
     physics_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
@@ -776,7 +775,7 @@ class Build(Model):
                 self.mfile,
                 "Ratio of Central Solenoid height to TF coil internal height",
                 "(f_z_cs_tf_internal)",
-                pfcoil_variables.f_z_cs_tf_internal,
+                self.data.pf_coil.f_z_cs_tf_internal,
             )
             po.ocmmnt(
                 self.outfile,

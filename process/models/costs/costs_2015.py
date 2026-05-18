@@ -8,7 +8,6 @@ from process.core.model import Model
 from process.data_structure import (
     global_variables,
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -520,7 +519,7 @@ class Costs2015(Model):
             190000.0e0 * self.data.costs.light_build_cost_per_vol
         )
         # Scale with the radius of the largest PF coil squared (m^2)
-        self.data.costs_2015.s_k[4] = pfcoil_variables.r_pf_coil_outer_max**2
+        self.data.costs_2015.s_k[4] = self.data.pf_coil.r_pf_coil_outer_max**2
         self.data.costs_2015.s_kref[4] = 12.4e0**2
         self.data.costs_2015.s_cost[4] = (
             self.data.costs_2015.s_cost_factor[4]
@@ -889,7 +888,7 @@ class Costs2015(Model):
         # #  Cost of ITER CS and PF magnets
         self.data.costs_2015.s_cref[35] = 1538.0e6
         #  Scale with sum of (A x turns x radius) of CS and all PF coils
-        self.data.costs_2015.s_k[35] = pfcoil_variables.itr_sum
+        self.data.costs_2015.s_k[35] = self.data.pf_coil.itr_sum
         self.data.costs_2015.s_kref[35] = 7.4e8
         self.data.costs_2015.s_cost[35] = (
             self.data.costs_2015.s_cost_factor[35]

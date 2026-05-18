@@ -3,9 +3,6 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import (
-    pfcoil_variables,
-)
 
 
 class Cryostat(Model):
@@ -31,7 +28,7 @@ class Cryostat(Model):
         # Cryostat radius [m]
         # Take radius of furthest PF coil and add clearance
         self.data.fwbs.r_cryostat_inboard = (
-            np.max(pfcoil_variables.r_pf_coil_outer) + self.data.fwbs.dr_pf_cryostat
+            np.max(self.data.pf_coil.r_pf_coil_outer) + self.data.fwbs.dr_pf_cryostat
         )
 
         # Clearance between uppermost PF coil and cryostat lid [m].
@@ -45,7 +42,7 @@ class Cryostat(Model):
         # Half-height of cryostat [m]
         # Take height of furthest PF coil and add clearance
         self.data.fwbs.z_cryostat_half_inside = (
-            np.max(pfcoil_variables.z_pf_coil_upper) + self.data.blanket.dz_pf_cryostat
+            np.max(self.data.pf_coil.z_pf_coil_upper) + self.data.blanket.dz_pf_cryostat
         )
 
         # Vertical clearance between TF coil and cryostat (m)
