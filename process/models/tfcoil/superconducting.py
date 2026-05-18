@@ -39,29 +39,36 @@ class SuperconductingTFTurnType(IntEnum):
     and stress calculations.
     """
 
-    CABLE_IN_CONDUIT = (1, "CICC")
-    CROSS_CONDUCTOR = (2, "CroCo")
+    CABLE_IN_CONDUIT = (1, "CICC", "Cable-in-Conduit Conductor")
+    CROSS_CONDUCTOR = (2, "CroCo", "Cross Conductor")
 
-    def __new__(cls, value: int, abbreviation: str):
-        """Create a new SuperconductingTFTurnType enum member with abbreviation.
+    def __new__(cls, value: int, abbreviation: str, full_name: str):
+        """Create a new SuperconductingTFTurnType enum member with abbreviation and full name.
 
         Args:
             value: The integer value of the enum member.
             abbreviation: The abbreviation for this turn type.
+            full_name: The full name for this turn type.
 
         Returns
         -------
-            The new enum member with attached abbreviation.
+            The new enum member with attached abbreviation and full name.
         """
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._abbreviation_ = abbreviation
+        obj._full_name_ = full_name
         return obj
 
     @DynamicClassAttribute
     def abbreviation(self):
         """Return the abbreviation for this superconductor type."""
         return self._abbreviation_
+
+    @DynamicClassAttribute
+    def full_name(self):
+        """Return the full name for this superconductor type."""
+        return self._full_name_
 
 
 class SuperconductingTFWPShapeType(IntEnum):
@@ -457,24 +464,10 @@ class SuperconductingTFCoil(TFCoil):
             "(i_tf_turn_type)",
             superconducting_tf_coil_variables.i_tf_turn_type,
         )
-        po.ovarin(
-            self.outfile,
-            "Winding pack shape selection switch",
-            "(i_tf_wp_geom)",
-            tfcoil_variables.i_tf_wp_geom,
-        )
 
-        po.ovarin(
+        po.ocmmnt(
             self.outfile,
-            "Superconducting TF coil turn type",
-            "(i_tf_turn_type)",
-            superconducting_tf_coil_variables.i_tf_turn_type,
-        )
-        po.ovarin(
-            self.outfile,
-            "Winding pack shape selection switch",
-            "(i_tf_wp_geom)",
-            tfcoil_variables.i_tf_wp_geom,
+            f"Turn geometry selected: {SuperconductingTFTurnType(superconducting_tf_coil_variables.i_tf_turn_type).full_name}",
         )
 
         # Total material fraction
@@ -525,7 +518,7 @@ class SuperconductingTFCoil(TFCoil):
 
         po.ovarre(
             self.outfile,
-            'Inboard leg case inboard "nose" area (m^2)',
+            'Inboard leg case inboard "nose" area (m²)',
             "(a_tf_coil_nose_case)",
             superconducting_tf_coil_variables.a_tf_coil_nose_case,
         )
@@ -550,20 +543,30 @@ class SuperconductingTFCoil(TFCoil):
             "OP ",
         )
 
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
         # Winding pack structure
         po.osubhd(self.outfile, "TF winding pack (WP) geometry:")
+
+        po.ovarin(
+            self.outfile,
+            "Winding pack shape selection switch",
+            "(i_tf_wp_geom)",
+            tfcoil_variables.i_tf_wp_geom,
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"Winding pack shape selected: {SuperconductingTFWPShapeType(tfcoil_variables.i_tf_wp_geom).full_name}",
+        )
+
+        po.oblnkl(self.outfile)
+
         po.ovarre(
             self.outfile,
             "WP cross section area with insulation and insertion (per coil) (m²)",
             "(a_tf_wp_with_insulation)",
             superconducting_tf_coil_variables.a_tf_wp_with_insulation,
-        )
-        po.ovarre(
-            self.outfile,
-            "Minimum toroidal thickness of winding pack (m)",
-            "(dx_tf_wp_toroidal_min)",
-            superconducting_tf_coil_variables.dx_tf_wp_toroidal_min,
-            "OP ",
         )
         po.ovarre(
             self.outfile,
@@ -579,11 +582,27 @@ class SuperconductingTFCoil(TFCoil):
         )
         po.ovarre(
             self.outfile,
+            "Ground wall insulation area (m²)",
+            "(a_tf_wp_ground_insulation)",
+            superconducting_tf_coil_variables.a_tf_wp_ground_insulation,
+        )
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
             "Winding pack radial thickness (m)",
             "(dr_tf_wp_with_insulation)",
             tfcoil_variables.dr_tf_wp_with_insulation,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Minimum toroidal thickness of winding pack (m)",
+            "(dx_tf_wp_toroidal_min)",
+            superconducting_tf_coil_variables.dx_tf_wp_toroidal_min,
+            "OP ",
+        )
+
         if tfcoil_variables.i_tf_turns_integer == 1:
             po.ovarre(
                 self.outfile,
@@ -614,12 +633,7 @@ class SuperconductingTFCoil(TFCoil):
             "(dx_tf_wp_insulation)",
             tfcoil_variables.dx_tf_wp_insulation,
         )
-        po.ovarre(
-            self.outfile,
-            "Ground wall insulation area (m²)",
-            "(a_tf_wp_ground_insulation)",
-            superconducting_tf_coil_variables.a_tf_wp_ground_insulation,
-        )
+
         po.ovarre(
             self.outfile,
             "Winding pack insertion gap (m)",
@@ -660,6 +674,10 @@ class SuperconductingTFCoil(TFCoil):
             )
             / superconducting_tf_coil_variables.a_tf_wp_with_insulation,
         )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
 
         # Number of turns
         po.osubhd(self.outfile, "WP turn information:")
@@ -1107,61 +1125,6 @@ class SuperconductingTFCoil(TFCoil):
                     tfcoil_variables.temp_cp_average,
                 )
 
-        # Quench information
-        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            po.osubhd(self.outfile, "Quench information :")
-            po.ovarre(
-                self.outfile,
-                "Actual quench time (or time constant) (s)",
-                "(t_tf_superconductor_quench)",
-                tfcoil_variables.t_tf_superconductor_quench,
-            )
-            po.ovarre(
-                self.outfile,
-                "Vacuum Vessel stress on quench (Pa)",
-                "(vv_stress_quench)",
-                superconducting_tf_coil_variables.vv_stress_quench,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Maximum allowed voltage during quench due to insulation (kV)",
-                "(v_tf_coil_dump_quench_max_kv)",
-                tfcoil_variables.v_tf_coil_dump_quench_max_kv,
-            )
-            po.ovarre(
-                self.outfile,
-                "Actual quench voltage (kV)",
-                "(v_tf_coil_dump_quench_kv)",
-                tfcoil_variables.v_tf_coil_dump_quench_kv,
-                "OP ",
-            )
-
-            if tfcoil_variables.i_tf_sc_mat in {1, 2, 3, 4, 5}:
-                po.ovarre(
-                    self.outfile,
-                    "Maximum allowed temp during a quench (K)",
-                    "(temp_tf_conductor_quench_max)",
-                    tfcoil_variables.temp_tf_conductor_quench_max,
-                )
-            elif tfcoil_variables == 6:
-                po.ocmmnt(self.outfile, "CroCo cable with jacket: ")
-
-                if 75 in numerics.icc:
-                    po.ovarre(
-                        self.outfile,
-                        "Maximum permitted TF coil current / copper area (A/m2)",
-                        "(copperA_m2_max)",
-                        rebco_variables.tf_coppera_m2_max,
-                    )
-
-                po.ovarre(
-                    self.outfile,
-                    "Actual TF coil current / copper area (A/m2)",
-                    "(copperA_m2)",
-                    rebco_variables.tf_coppera_m2,
-                )
-
         # TF coil radial build
         po.osubhd(self.outfile, "Radial build of TF coil centre-line :")
 
@@ -1473,6 +1436,59 @@ class SuperconductingTFCoil(TFCoil):
             "(temp_tf_superconductor_critical_zero_field_strain)",
             superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain,
         )
+
+        po.osubhd(self.outfile, "Quench information :")
+        po.ovarre(
+            self.outfile,
+            "Actual quench time (or time constant) (s)",
+            "(t_tf_superconductor_quench)",
+            tfcoil_variables.t_tf_superconductor_quench,
+        )
+        po.ovarre(
+            self.outfile,
+            "Vacuum Vessel stress on quench (Pa)",
+            "(vv_stress_quench)",
+            superconducting_tf_coil_variables.vv_stress_quench,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Maximum allowed voltage during quench due to insulation (kV)",
+            "(v_tf_coil_dump_quench_max_kv)",
+            tfcoil_variables.v_tf_coil_dump_quench_max_kv,
+        )
+        po.ovarre(
+            self.outfile,
+            "Actual quench voltage (kV)",
+            "(v_tf_coil_dump_quench_kv)",
+            tfcoil_variables.v_tf_coil_dump_quench_kv,
+            "OP ",
+        )
+
+        if tfcoil_variables.i_tf_sc_mat in {1, 2, 3, 4, 5}:
+            po.ovarre(
+                self.outfile,
+                "Maximum allowed temp during a quench (K)",
+                "(temp_tf_conductor_quench_max)",
+                tfcoil_variables.temp_tf_conductor_quench_max,
+            )
+        elif tfcoil_variables == 6:
+            po.ocmmnt(self.outfile, "CroCo cable with jacket: ")
+
+            if 75 in numerics.icc:
+                po.ovarre(
+                    self.outfile,
+                    "Maximum permitted TF coil current / copper area (A/m2)",
+                    "(copperA_m2_max)",
+                    rebco_variables.tf_coppera_m2_max,
+                )
+
+            po.ovarre(
+                self.outfile,
+                "Actual TF coil current / copper area (A/m2)",
+                "(copperA_m2)",
+                rebco_variables.tf_coppera_m2,
+            )
 
         if global_variables.run_tests == 1:
             po.oblnkl(self.outfile)
