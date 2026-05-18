@@ -233,6 +233,7 @@ def test_hijc_rebco():
                 a_croco_strand_rebco=pytest.approx(5.329972776538525e-06, rel=1e-3),
                 a_croco_strand=pytest.approx(7.85398e-5, rel=1e-3),
                 dr_hts_tape=pytest.approx(5.5556e-3, rel=1e-3),
+                dx_hts_tape_total=pytest.approx(6.0e-6, rel=1e-6),
                 dx_croco_strand_tape_stack=pytest.approx(0.005756370598661608, rel=1e-3),
             ),
         ),
@@ -244,15 +245,16 @@ def test_hijc_rebco():
             3e-6,
             CroCoCableGeometry(
                 dia_croco_strand_tape_region=0.0044,
-                n_croco_strand_hts_tapes=pytest.approx(527.6673048773141, rel=1e-6),
+                n_croco_strand_hts_tapes=pytest.approx(527, rel=1e-6),
                 a_croco_strand_copper_total=pytest.approx(
-                    1.0921535531100803e-05, rel=1e-6
+                    1.091745755685055e-05, rel=1e-6
                 ),
-                a_croco_strand_hastelloy=pytest.approx(4.836950294708712e-06, rel=1e-6),
+                a_croco_strand_hastelloy=pytest.approx(4.830833333333333e-06, rel=1e-6),
                 a_croco_strand_solder=pytest.approx(5.531407853957174e-06, rel=1e-6),
-                a_croco_strand_rebco=pytest.approx(1.612316764902904e-06, rel=1e-6),
+                a_croco_strand_rebco=pytest.approx(1.6102777777777774e-06, rel=1e-6),
                 a_croco_strand=pytest.approx(2.2902210444669593e-05, rel=1e-6),
                 dr_hts_tape=pytest.approx(0.0030555555555555553, rel=1e-6),
+                dx_hts_tape_total=pytest.approx(6.0e-6, rel=1e-7),
                 dx_croco_strand_tape_stack=pytest.approx(
                     0.0031660038292638847, rel=1e-6
                 ),

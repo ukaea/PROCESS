@@ -13,9 +13,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
-    divertor_variables,
     numerics,
-    pfcoil_variables,
     rebco_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
@@ -2747,19 +2745,19 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 float(self.data.build.r_tf_inboard_in),
                 self.data.build.dr_bore,
                 self.data.build.z_tf_inside_half,
-                pfcoil_variables.f_z_cs_tf_internal,
+                self.data.pf_coil.f_z_cs_tf_internal,
                 self.data.build.dr_cs,
                 self.data.build.i_tf_inside_cs,
                 self.data.build.dr_tf_inboard,
                 self.data.build.dr_cs_tf_gap,
-                pfcoil_variables.i_pf_conductor,
-                pfcoil_variables.j_cs_flat_top_end,
-                pfcoil_variables.j_cs_pulse_start,
-                pfcoil_variables.c_pf_coil_turn_peak_input,
-                pfcoil_variables.n_pf_coils_in_group,
-                pfcoil_variables.f_dr_dz_cs_turn,
-                pfcoil_variables.radius_cs_turn_corners,
-                pfcoil_variables.f_a_cs_turn_steel,
+                self.data.pf_coil.i_pf_conductor,
+                self.data.pf_coil.j_cs_flat_top_end,
+                self.data.pf_coil.j_cs_pulse_start,
+                self.data.pf_coil.c_pf_coil_turn_peak_input,
+                self.data.pf_coil.n_pf_coils_in_group,
+                self.data.pf_coil.f_dr_dz_cs_turn,
+                self.data.pf_coil.radius_cs_turn_corners,
+                self.data.pf_coil.f_a_cs_turn_steel,
                 tfcoil_variables.eyoung_steel,
                 tfcoil_variables.poisson_steel,
                 tfcoil_variables.eyoung_cond_axial,
@@ -4153,7 +4151,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             croco_cable_geometry.dr_hts_tape
         )
         superconducting_tf_coil_variables.dx_tf_hts_tape_total = (
-            croco_cable_geometry.dx_tf_hts_tape_total
+            croco_cable_geometry.dx_hts_tape_total
         )
         superconducting_tf_coil_variables.dx_tf_croco_strand_tape_stack = (
             croco_cable_geometry.dx_croco_strand_tape_stack
@@ -4243,7 +4241,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                     b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
                     cur_tf_turn=tfcoil_variables.c_tf_turn,
                     temp_tf_peak=tfcoil_variables.tftmp,
-                    i_tf_superconductor=tfcoil_variables.i_tf_sc_mat,
                 )
             )
 
@@ -4586,19 +4583,19 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 float(self.data.build.r_tf_inboard_in),
                 self.data.build.dr_bore,
                 self.data.build.z_tf_inside_half,
-                pfcoil_variables.f_z_cs_tf_internal,
+                self.data.pf_coil.f_z_cs_tf_internal,
                 self.data.build.dr_cs,
                 self.data.build.i_tf_inside_cs,
                 self.data.build.dr_tf_inboard,
                 self.data.build.dr_cs_tf_gap,
-                pfcoil_variables.i_pf_conductor,
-                pfcoil_variables.j_cs_flat_top_end,
-                pfcoil_variables.j_cs_pulse_start,
-                pfcoil_variables.c_pf_coil_turn_peak_input,
-                pfcoil_variables.n_pf_coils_in_group,
-                pfcoil_variables.f_dr_dz_cs_turn,
-                pfcoil_variables.radius_cs_turn_corners,
-                pfcoil_variables.f_a_cs_turn_steel,
+                self.data.pf_coil.i_pf_conductor,
+                self.data.pf_coil.j_cs_flat_top_end,
+                self.data.pf_coil.j_cs_pulse_start,
+                self.data.pf_coil.c_pf_coil_turn_peak_input,
+                self.data.pf_coil.n_pf_coils_in_group,
+                self.data.pf_coil.f_dr_dz_cs_turn,
+                self.data.pf_coil.radius_cs_turn_corners,
+                self.data.pf_coil.f_a_cs_turn_steel,
                 tfcoil_variables.eyoung_steel,
                 tfcoil_variables.poisson_steel,
                 tfcoil_variables.eyoung_cond_axial,
