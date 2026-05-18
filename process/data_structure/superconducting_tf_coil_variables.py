@@ -217,7 +217,7 @@ c_tf_turn_cables_critical: float = None
 """Critical current density in the turn cables [A/m²]"""
 
 j_tf_superconductor: float = None
-"""Current density in the superconducting cable [A/m²]"""
+"""Current density in the superconducting cable/tape/strand [A/m²]"""
 
 i_tf_turn_type: int = None
 """Switch for TF turn geometry type"""
