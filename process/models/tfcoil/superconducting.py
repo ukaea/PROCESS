@@ -470,6 +470,9 @@ class SuperconductingTFCoil(TFCoil):
             f"Turn geometry selected: {SuperconductingTFTurnType(superconducting_tf_coil_variables.i_tf_turn_type).full_name}",
         )
 
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
         # Total material fraction
         po.osubhd(self.outfile, "Global material area/fractions:")
 
@@ -499,6 +502,9 @@ class SuperconductingTFCoil(TFCoil):
             "(f_a_tf_coil_inboard_insulation)",
             superconducting_tf_coil_variables.f_a_tf_coil_inboard_insulation,
         )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
 
         # External casing
         po.osubhd(self.outfile, "External steel Case Information :")
@@ -641,6 +647,9 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.dx_tf_wp_insertion_gap,
         )
 
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
         # WP material fraction
         po.osubhd(self.outfile, "TF winding pack (WP) material area/fractions:")
         po.ovarre(
@@ -677,7 +686,6 @@ class SuperconductingTFCoil(TFCoil):
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
-        po.oblnkl(self.outfile)
 
         # Number of turns
         po.osubhd(self.outfile, "WP turn information:")
@@ -802,175 +810,8 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.dx_tf_turn_insulation,
         )
 
-        if tfcoil_variables.i_tf_sc_mat in {1, 2, 3, 4, 5, 7, 8, 9}:
-            po.osubhd(self.outfile, "Conductor information:")
-            po.ovarre(
-                self.outfile,
-                "Diameter of central helium channel in cable",
-                "(dia_tf_turn_coolant_channel)",
-                tfcoil_variables.dia_tf_turn_coolant_channel,
-            )
-            po.ovarre(
-                self.outfile,
-                "Diameter of superconducting cable",
-                "(dia_tf_turn_superconducting_cable)",
-                superconducting_tf_coil_variables.dia_tf_turn_superconducting_cable,
-            )
-            po.ovarre(
-                self.outfile,
-                "Number of superconducting cables per turn",
-                "(n_tf_turn_superconducting_cables)",
-                superconducting_tf_coil_variables.n_tf_turn_superconducting_cables,
-            )
-            po.ovarre(
-                self.outfile,
-                "Length of superconductor in TF coil (m)",
-                "(len_tf_coil_superconductor)",
-                superconducting_tf_coil_variables.len_tf_coil_superconductor,
-            )
-            po.ovarre(
-                self.outfile,
-                "Total length of superconductor in all TF coils (m)",
-                "(len_tf_superconductor_total)",
-                superconducting_tf_coil_variables.len_tf_superconductor_total,
-            )
-            po.ocmmnt(self.outfile, "Fractions by area")
-            po.ovarre(
-                self.outfile,
-                "internal area of the cable space",
-                "(a_tf_turn_cable_space_no_void)",
-                tfcoil_variables.a_tf_turn_cable_space_no_void,
-            )
-            po.ovarre(
-                self.outfile,
-                "True area of turn cable space with gaps and channels removed",
-                "(a_tf_turn_cable_space_effective)",
-                superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Coolant fraction in conductor excluding central channel",
-                "(f_a_tf_turn_cable_space_extra_void)",
-                tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
-            )
-            po.ovarre(
-                self.outfile,
-                "Area of steel in turn",
-                "(a_tf_turn_steel)",
-                tfcoil_variables.a_tf_turn_steel,
-            )
-            po.ovarre(
-                self.outfile,
-                "Area of all turn insulation in WP",
-                "(a_tf_coil_wp_turn_insulation)",
-                tfcoil_variables.a_tf_coil_wp_turn_insulation,
-            )
-            po.ovarre(
-                self.outfile,
-                "Total insulation area in TF coil (turn and WP)",
-                "(a_tf_coil_inboard_insulation)",
-                superconducting_tf_coil_variables.a_tf_coil_inboard_insulation,
-            )
-            po.ovarre(
-                self.outfile,
-                "Total steel area in inboard TF coil (turn and case)",
-                "(a_tf_coil_inboard_steel)",
-                superconducting_tf_coil_variables.a_tf_coil_inboard_steel,
-            )
-            po.ovarre(
-                self.outfile,
-                "Total conductor area in WP",
-                "(a_tf_wp_conductor)",
-                tfcoil_variables.a_tf_wp_conductor,
-            )
-            po.ovarre(
-                self.outfile,
-                "Total additional void area in WP",
-                "(a_tf_wp_extra_void)",
-                tfcoil_variables.a_tf_wp_extra_void,
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Area of all coolant channels in WP",
-                "(a_tf_wp_coolant_channels)",
-                tfcoil_variables.a_tf_wp_coolant_channels,
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Copper fraction of conductor",
-                "(f_a_tf_turn_cable_copper)",
-                tfcoil_variables.f_a_tf_turn_cable_copper,
-            )
-            po.ovarre(
-                self.outfile,
-                "Superconductor fraction of conductor",
-                "(1-f_a_tf_turn_cable_copper)",
-                1 - tfcoil_variables.f_a_tf_turn_cable_copper,
-            )
-            ap = (
-                tfcoil_variables.a_tf_wp_conductor
-                + tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
-                + tfcoil_variables.a_tf_coil_wp_turn_insulation
-                + tfcoil_variables.a_tf_wp_extra_void
-                + tfcoil_variables.a_tf_wp_coolant_channels
-            )
-            po.ovarrf(
-                self.outfile,
-                "Check total area fractions in winding pack = 1",
-                "",
-                (
-                    tfcoil_variables.a_tf_wp_conductor
-                    + tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
-                    + tfcoil_variables.a_tf_coil_wp_turn_insulation
-                    + tfcoil_variables.a_tf_wp_extra_void
-                    + tfcoil_variables.a_tf_wp_coolant_channels
-                )
-                / ap,
-            )
-            po.ovarrf(
-                self.outfile,
-                "minimum TF conductor temperature margin  (K)",
-                "(temp_tf_superconductor_margin_min)",
-                tfcoil_variables.temp_tf_superconductor_margin_min,
-            )
-            po.ovarrf(
-                self.outfile,
-                "TF conductor temperature margin (K)",
-                "(temp_tf_superconductor_margin)",
-                tfcoil_variables.temp_tf_superconductor_margin,
-            )
-
-            po.ovarin(
-                self.outfile,
-                "Elastic properties behavior",
-                "(i_tf_cond_eyoung_axial)",
-                tfcoil_variables.i_tf_cond_eyoung_axial,
-            )
-            if tfcoil_variables.i_tf_cond_eyoung_axial == 0:
-                po.ocmmnt(self.outfile, "  Conductor stiffness neglected")
-            elif tfcoil_variables.i_tf_cond_eyoung_axial == 1:
-                po.ocmmnt(self.outfile, "  Conductor stiffness is user-input")
-            elif tfcoil_variables.i_tf_cond_eyoung_axial == 2:
-                po.ocmmnt(
-                    self.outfile,
-                    "  Conductor stiffness is set by material-specific default",
-                )
-
-            po.ovarre(
-                self.outfile,
-                "Conductor axial Youngs modulus",
-                "(eyoung_cond_axial)",
-                tfcoil_variables.eyoung_cond_axial,
-            )
-            po.ovarre(
-                self.outfile,
-                "Conductor transverse Youngs modulus",
-                "(eyoung_cond_trans)",
-                tfcoil_variables.eyoung_cond_trans,
-            )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
 
         # Coil masses
         po.osubhd(self.outfile, "TF coil mass:")
@@ -1041,6 +882,9 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.m_tf_coils_total,
             "OP ",
         )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
 
         # TF coil radial build
         po.osubhd(self.outfile, "Radial build of TF coil centre-line :")
@@ -1183,6 +1027,7 @@ class SuperconductingTFCoil(TFCoil):
             f"Superconductor used: "
             f"{SuperconductorModel(tfcoil_variables.i_tf_sc_mat).full_name}",
         )
+        po.oblnkl(self.outfile)
 
         po.ovarre(
             self.outfile,
@@ -1197,92 +1042,10 @@ class SuperconductingTFCoil(TFCoil):
             superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain,
         )
 
-        po.osubhd(self.outfile, "Quench information :")
-        po.ovarre(
-            self.outfile,
-            "Actual quench time (or time constant) (s)",
-            "(t_tf_superconductor_quench)",
-            tfcoil_variables.t_tf_superconductor_quench,
-        )
-        po.ovarre(
-            self.outfile,
-            "Vacuum Vessel stress on quench (Pa)",
-            "(vv_stress_quench)",
-            superconducting_tf_coil_variables.vv_stress_quench,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Maximum allowed voltage during quench due to insulation (kV)",
-            "(v_tf_coil_dump_quench_max_kv)",
-            tfcoil_variables.v_tf_coil_dump_quench_max_kv,
-        )
-        po.ovarre(
-            self.outfile,
-            "Actual quench voltage (kV)",
-            "(v_tf_coil_dump_quench_kv)",
-            tfcoil_variables.v_tf_coil_dump_quench_kv,
-            "OP ",
-        )
-
-        if tfcoil_variables.i_tf_sc_mat in {1, 2, 3, 4, 5}:
-            po.ovarre(
-                self.outfile,
-                "Maximum allowed temp during a quench (K)",
-                "(temp_tf_conductor_quench_max)",
-                tfcoil_variables.temp_tf_conductor_quench_max,
-            )
-        elif tfcoil_variables == 6:
-            po.ocmmnt(self.outfile, "CroCo cable with jacket: ")
-
-            if 75 in numerics.icc:
-                po.ovarre(
-                    self.outfile,
-                    "Maximum permitted TF coil current / copper area (A/m2)",
-                    "(copperA_m2_max)",
-                    rebco_variables.tf_coppera_m2_max,
-                )
-
-            po.ovarre(
-                self.outfile,
-                "Actual TF coil current / copper area (A/m2)",
-                "(copperA_m2)",
-                rebco_variables.tf_coppera_m2,
-            )
-
-        if global_variables.run_tests == 1:
-            po.oblnkl(self.outfile)
-            po.ocmmnt(
-                self.outfile,
-                "PROCESS TF Coil peak field fit. Values for t, z and y:",
-            )
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Dimensionless winding pack width",
-                "(tf_fit_t)",
-                superconducting_tf_coil_variables.tf_fit_t,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Dimensionless winding pack radial thickness",
-                "(tf_fit_z)",
-                superconducting_tf_coil_variables.tf_fit_z,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Ratio of peak field with ripple to nominal axisymmetric peak field",
-                "(f_b_tf_inboard_peak_ripple_symmetric)",
-                superconducting_tf_coil_variables.f_b_tf_inboard_peak_ripple_symmetric,
-                "OP ",
-            )
-
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Helium temperature at peak field (= superconductor temperature) (K)",
+            "TF coil temperature at peak field (K)",
             "(tftmp)",
             tfcoil_variables.tftmp,
         )
@@ -1311,48 +1074,38 @@ class SuperconductingTFCoil(TFCoil):
             "(str_wp)",
             tfcoil_variables.str_wp,
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Critical current density in superconductor (A/m2)",
+            "Critical current density in superconductor (A/m²)",
             "(j_tf_superconductor_critical)",
             superconducting_tf_coil_variables.j_tf_superconductor_critical,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Critical current density in winding pack (A/m2)",
+            "Critical current density in winding pack (A/m²)",
             "(j_tf_wp_critical)",
             tfcoil_variables.j_tf_wp_critical,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Winding pack current density (A/m2)",
+            "Winding pack current density (A/m²)",
             "(j_tf_wp)",
             tfcoil_variables.j_tf_wp,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Actual current density in winding pack (A/m2)",
+            "Current density in TF coil turn (A/m²)",
             "(j_tf_coil_turn)",
             superconducting_tf_coil_variables.j_tf_coil_turn,
             "OP ",
         )
+        po.oblnkl(self.outfile)
 
-        po.ovarre(
-            self.outfile,
-            "Minimum allowed temperature margin in superconductor (K)",
-            "(temp_tf_superconductor_margin_min)",
-            tfcoil_variables.temp_tf_superconductor_margin_min,
-        )
-        po.ovarre(
-            self.outfile,
-            "Actual temperature margin in superconductor (K)",
-            "(temp_tf_superconductor_margin)",
-            tfcoil_variables.temp_tf_superconductor_margin,
-            "OP ",
-        )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Critical current (A)",
@@ -1382,10 +1135,53 @@ class SuperconductingTFCoil(TFCoil):
 
         po.ovarre(
             self.outfile,
-            "TF Superconductor quench dump time (s)",
+            "Minimum allowed temperature margin in superconductor (K)",
+            "(temp_tf_superconductor_margin_min)",
+            tfcoil_variables.temp_tf_superconductor_margin_min,
+        )
+        po.ovarre(
+            self.outfile,
+            "Actual temperature margin in superconductor (K)",
+            "(temp_tf_superconductor_margin)",
+            tfcoil_variables.temp_tf_superconductor_margin,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
+        po.osubhd(self.outfile, "Quench information :")
+
+        if tfcoil_variables.i_tf_sc_mat in {1, 2, 3, 4, 5}:
+            po.ovarre(
+                self.outfile,
+                "Maximum allowed temp during a quench (K)",
+                "(temp_tf_conductor_quench_max)",
+                tfcoil_variables.temp_tf_conductor_quench_max,
+            )
+        elif tfcoil_variables == 6:
+            po.ocmmnt(self.outfile, "CroCo cable with jacket: ")
+
+            if 75 in numerics.icc:
+                po.ovarre(
+                    self.outfile,
+                    "Maximum permitted TF coil current / copper area (A/m2)",
+                    "(copperA_m2_max)",
+                    rebco_variables.tf_coppera_m2_max,
+                )
+
+            po.ovarre(
+                self.outfile,
+                "Actual TF coil current / copper area (A/m2)",
+                "(copperA_m2)",
+                rebco_variables.tf_coppera_m2,
+            )
+
+        po.ovarre(
+            self.outfile,
+            "Actual quench time (or time constant) (s)",
             "(t_tf_superconductor_quench)",
             tfcoil_variables.t_tf_superconductor_quench,
-            "OP ",
         )
         po.ovarre(
             self.outfile,
@@ -1396,7 +1192,27 @@ class SuperconductingTFCoil(TFCoil):
         )
         po.ovarre(
             self.outfile,
-            "Maximum winding pack current density for protection (A/m2)",
+            "Vacuum Vessel stress on quench (Pa)",
+            "(vv_stress_quench)",
+            superconducting_tf_coil_variables.vv_stress_quench,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Maximum allowed voltage during quench due to insulation (kV)",
+            "(v_tf_coil_dump_quench_max_kv)",
+            tfcoil_variables.v_tf_coil_dump_quench_max_kv,
+        )
+        po.ovarre(
+            self.outfile,
+            "Actual quench voltage (kV)",
+            "(v_tf_coil_dump_quench_kv)",
+            tfcoil_variables.v_tf_coil_dump_quench_kv,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Maximum winding pack current density for protection (A/m²)",
             "(j_tf_wp_quench_heat_max)",
             tfcoil_variables.j_tf_wp_quench_heat_max,
             "OP ",
@@ -2874,6 +2690,186 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         if output:
             self.output_general_tf_info()
 
+    def output(self) -> None:
+        """Output the results of the superconducting TF coil calculations."""
+        self.output_general_tf_info()
+        self.output_general_superconducting_tf_info()
+        self.output_cable_in_conduit_cable_info()
+        self.output_tf_superconductor_info()
+
+        tfcoil_variables.n_rad_per_layer = 500
+
+        try:
+            (
+                sig_tf_r_max,
+                sig_tf_t_max,
+                sig_tf_z_max,
+                sig_tf_vmises_max,
+                s_shear_tf_peak,
+                deflect,
+                eyoung_axial,
+                eyoung_trans,
+                eyoung_wp_axial,
+                eyoung_wp_trans,
+                poisson_wp_trans,
+                radial_array,
+                s_shear_cea_tf_cond,
+                poisson_wp_axial,
+                sig_tf_r,
+                sig_tf_smeared_r,
+                sig_tf_smeared_t,
+                sig_tf_smeared_z,
+                sig_tf_t,
+                s_shear_tf,
+                sig_tf_vmises,
+                sig_tf_z,
+                str_tf_r,
+                str_tf_t,
+                str_tf_z,
+                n_radial_array,
+                n_tf_bucking,
+                tfcoil_variables.sig_tf_wp,
+                sig_tf_case,
+                sig_tf_cs_bucked,
+                str_wp,
+                casestr,
+                insstrain,
+                sig_tf_wp_av_z,
+            ) = self.stresscl(
+                int(tfcoil_variables.n_tf_stress_layers),
+                int(tfcoil_variables.n_rad_per_layer),
+                int(tfcoil_variables.n_tf_wp_stress_layers),
+                int(tfcoil_variables.i_tf_bucking),
+                float(self.data.build.r_tf_inboard_in),
+                self.data.build.dr_bore,
+                self.data.build.z_tf_inside_half,
+                pfcoil_variables.f_z_cs_tf_internal,
+                self.data.build.dr_cs,
+                self.data.build.i_tf_inside_cs,
+                self.data.build.dr_tf_inboard,
+                self.data.build.dr_cs_tf_gap,
+                pfcoil_variables.i_pf_conductor,
+                pfcoil_variables.j_cs_flat_top_end,
+                pfcoil_variables.j_cs_pulse_start,
+                pfcoil_variables.c_pf_coil_turn_peak_input,
+                pfcoil_variables.n_pf_coils_in_group,
+                pfcoil_variables.f_dr_dz_cs_turn,
+                pfcoil_variables.radius_cs_turn_corners,
+                pfcoil_variables.f_a_cs_turn_steel,
+                tfcoil_variables.eyoung_steel,
+                tfcoil_variables.poisson_steel,
+                tfcoil_variables.eyoung_cond_axial,
+                tfcoil_variables.poisson_cond_axial,
+                tfcoil_variables.eyoung_cond_trans,
+                tfcoil_variables.poisson_cond_trans,
+                tfcoil_variables.eyoung_ins,
+                tfcoil_variables.poisson_ins,
+                tfcoil_variables.dx_tf_turn_insulation,
+                tfcoil_variables.eyoung_copper,
+                tfcoil_variables.poisson_copper,
+                tfcoil_variables.i_tf_sup,
+                tfcoil_variables.eyoung_res_tf_buck,
+                superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
+                superconducting_tf_coil_variables.tan_theta_coil,
+                superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half,
+                superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
+                superconducting_tf_coil_variables.a_tf_coil_inboard_steel,
+                superconducting_tf_coil_variables.a_tf_plasma_case,
+                superconducting_tf_coil_variables.a_tf_coil_nose_case,
+                tfcoil_variables.dx_tf_wp_insertion_gap,
+                tfcoil_variables.dx_tf_wp_insulation,
+                tfcoil_variables.n_tf_coil_turns,
+                int(tfcoil_variables.i_tf_turns_integer),
+                superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
+                superconducting_tf_coil_variables.dr_tf_turn_cable_space,
+                tfcoil_variables.dia_tf_turn_coolant_channel,
+                tfcoil_variables.f_a_tf_turn_cable_copper,
+                tfcoil_variables.dx_tf_turn_steel,
+                superconducting_tf_coil_variables.dx_tf_side_case_average,
+                superconducting_tf_coil_variables.dx_tf_wp_toroidal_average,
+                superconducting_tf_coil_variables.a_tf_coil_inboard_insulation,
+                tfcoil_variables.a_tf_wp_steel,
+                tfcoil_variables.a_tf_wp_conductor,
+                superconducting_tf_coil_variables.a_tf_wp_with_insulation,
+                tfcoil_variables.eyoung_al,
+                tfcoil_variables.poisson_al,
+                tfcoil_variables.fcoolcp,
+                tfcoil_variables.n_tf_graded_layers,
+                tfcoil_variables.c_tf_total,
+                tfcoil_variables.dr_tf_plasma_case,
+                tfcoil_variables.i_tf_stress_model,
+                superconducting_tf_coil_variables.vforce_inboard_tot,
+                tfcoil_variables.i_tf_tresca,
+                tfcoil_variables.a_tf_coil_inboard_case,
+                tfcoil_variables.vforce,
+                tfcoil_variables.a_tf_turn_steel,
+            )
+
+            tfcoil_variables.sig_tf_case = (
+                tfcoil_variables.sig_tf_case
+                if tfcoil_variables.sig_tf_case is None
+                else sig_tf_case
+            )
+
+            tfcoil_variables.sig_tf_cs_bucked = (
+                tfcoil_variables.sig_tf_cs_bucked
+                if tfcoil_variables.sig_tf_cs_bucked is None
+                else sig_tf_cs_bucked
+            )
+
+            tfcoil_variables.str_wp = (
+                tfcoil_variables.str_wp if tfcoil_variables.str_wp is None else str_wp
+            )
+
+            tfcoil_variables.casestr = (
+                tfcoil_variables.casestr if tfcoil_variables.casestr is None else casestr
+            )
+
+            tfcoil_variables.insstrain = (
+                tfcoil_variables.insstrain
+                if tfcoil_variables.insstrain is None
+                else insstrain
+            )
+
+            self.out_stress(
+                sig_tf_r_max,
+                sig_tf_t_max,
+                sig_tf_z_max,
+                sig_tf_vmises_max,
+                s_shear_tf_peak,
+                deflect,
+                eyoung_axial,
+                eyoung_trans,
+                eyoung_wp_axial,
+                eyoung_wp_trans,
+                poisson_wp_trans,
+                radial_array,
+                s_shear_cea_tf_cond,
+                poisson_wp_axial,
+                sig_tf_r,
+                sig_tf_smeared_r,
+                sig_tf_smeared_t,
+                sig_tf_smeared_z,
+                sig_tf_t,
+                s_shear_tf,
+                sig_tf_vmises,
+                sig_tf_z,
+                str_tf_r,
+                str_tf_t,
+                str_tf_z,
+                n_radial_array,
+                n_tf_bucking,
+                sig_tf_wp_av_z,
+            )
+        except ValueError as e:
+            if e.args[1] == 245 and e.args[2] == 0:
+                logger.warning(
+                    "Invalid stress model (r_tf_inboard = 0), stress constraint "
+                    "switched off"
+                )
+                tfcoil_variables.sig_tf_case = 0.0e0
+                tfcoil_variables.sig_tf_wp = 0.0e0
+
     @staticmethod
     def tf_cable_in_conduit_superconductor_properties(
         a_tf_turn_cable_space: float,
@@ -3786,6 +3782,177 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         # -------------
 
+    def output_cable_in_conduit_cable_info(self) -> None:
+        """Outputs the calculated cable in condutit cable space geometry information for the TF coil."""
+        po.oheadr(self.outfile, "TF CICC Cable Space Information:")
+        po.ovarre(
+            self.outfile,
+            "Diameter of central helium channel in turn",
+            "(dia_tf_turn_coolant_channel)",
+            tfcoil_variables.dia_tf_turn_coolant_channel,
+        )
+        po.ovarre(
+            self.outfile,
+            "Diameter of superconducting cable",
+            "(dia_tf_turn_superconducting_cable)",
+            superconducting_tf_coil_variables.dia_tf_turn_superconducting_cable,
+        )
+        po.ovarre(
+            self.outfile,
+            "Number of superconducting cables per turn",
+            "(n_tf_turn_superconducting_cables)",
+            superconducting_tf_coil_variables.n_tf_turn_superconducting_cables,
+        )
+        po.ovarre(
+            self.outfile,
+            "Length of superconductor in TF coil (m)",
+            "(len_tf_coil_superconductor)",
+            superconducting_tf_coil_variables.len_tf_coil_superconductor,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total length of superconductor in all TF coils (m)",
+            "(len_tf_superconductor_total)",
+            superconducting_tf_coil_variables.len_tf_superconductor_total,
+        )
+        po.ocmmnt(self.outfile, "Fractions by area")
+        po.ovarre(
+            self.outfile,
+            "internal area of the cable space",
+            "(a_tf_turn_cable_space_no_void)",
+            tfcoil_variables.a_tf_turn_cable_space_no_void,
+        )
+        po.ovarre(
+            self.outfile,
+            "True area of turn cable space with gaps and channels removed",
+            "(a_tf_turn_cable_space_effective)",
+            superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Coolant fraction in conductor excluding central channel",
+            "(f_a_tf_turn_cable_space_extra_void)",
+            tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
+        )
+        po.ovarre(
+            self.outfile,
+            "Area of steel in turn",
+            "(a_tf_turn_steel)",
+            tfcoil_variables.a_tf_turn_steel,
+        )
+        po.ovarre(
+            self.outfile,
+            "Area of all turn insulation in WP",
+            "(a_tf_coil_wp_turn_insulation)",
+            tfcoil_variables.a_tf_coil_wp_turn_insulation,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total insulation area in TF coil (turn and WP)",
+            "(a_tf_coil_inboard_insulation)",
+            superconducting_tf_coil_variables.a_tf_coil_inboard_insulation,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total steel area in inboard TF coil (turn and case)",
+            "(a_tf_coil_inboard_steel)",
+            superconducting_tf_coil_variables.a_tf_coil_inboard_steel,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total conductor area in WP",
+            "(a_tf_wp_conductor)",
+            tfcoil_variables.a_tf_wp_conductor,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total additional void area in WP",
+            "(a_tf_wp_extra_void)",
+            tfcoil_variables.a_tf_wp_extra_void,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Area of all coolant channels in WP",
+            "(a_tf_wp_coolant_channels)",
+            tfcoil_variables.a_tf_wp_coolant_channels,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Copper fraction of conductor",
+            "(f_a_tf_turn_cable_copper)",
+            tfcoil_variables.f_a_tf_turn_cable_copper,
+        )
+        po.ovarre(
+            self.outfile,
+            "Superconductor fraction of conductor",
+            "(1-f_a_tf_turn_cable_copper)",
+            1 - tfcoil_variables.f_a_tf_turn_cable_copper,
+        )
+        ap = (
+            tfcoil_variables.a_tf_wp_conductor
+            + tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
+            + tfcoil_variables.a_tf_coil_wp_turn_insulation
+            + tfcoil_variables.a_tf_wp_extra_void
+            + tfcoil_variables.a_tf_wp_coolant_channels
+        )
+        po.ovarrf(
+            self.outfile,
+            "Check total area fractions in winding pack = 1",
+            "",
+            (
+                tfcoil_variables.a_tf_wp_conductor
+                + tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
+                + tfcoil_variables.a_tf_coil_wp_turn_insulation
+                + tfcoil_variables.a_tf_wp_extra_void
+                + tfcoil_variables.a_tf_wp_coolant_channels
+            )
+            / ap,
+        )
+        po.ovarrf(
+            self.outfile,
+            "minimum TF conductor temperature margin  (K)",
+            "(temp_tf_superconductor_margin_min)",
+            tfcoil_variables.temp_tf_superconductor_margin_min,
+        )
+        po.ovarrf(
+            self.outfile,
+            "TF conductor temperature margin (K)",
+            "(temp_tf_superconductor_margin)",
+            tfcoil_variables.temp_tf_superconductor_margin,
+        )
+
+        po.ovarin(
+            self.outfile,
+            "Elastic properties behavior",
+            "(i_tf_cond_eyoung_axial)",
+            tfcoil_variables.i_tf_cond_eyoung_axial,
+        )
+        if tfcoil_variables.i_tf_cond_eyoung_axial == 0:
+            po.ocmmnt(self.outfile, "  Conductor stiffness neglected")
+        elif tfcoil_variables.i_tf_cond_eyoung_axial == 1:
+            po.ocmmnt(self.outfile, "  Conductor stiffness is user-input")
+        elif tfcoil_variables.i_tf_cond_eyoung_axial == 2:
+            po.ocmmnt(
+                self.outfile,
+                "  Conductor stiffness is set by material-specific default",
+            )
+
+        po.ovarre(
+            self.outfile,
+            "Conductor axial Youngs modulus",
+            "(eyoung_cond_axial)",
+            tfcoil_variables.eyoung_cond_axial,
+        )
+        po.ovarre(
+            self.outfile,
+            "Conductor transverse Youngs modulus",
+            "(eyoung_cond_trans)",
+            tfcoil_variables.eyoung_cond_trans,
+        )
+
 
 @dataclass
 class CROCOAveragedTurnGeometry:
@@ -4584,34 +4751,34 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             po.oblnkl(self.outfile)
             po.ovarre(
                 self.outfile,
-                "Helium temperature at peak field (= superconductor temperature) (K)",
+                "TF coil temperature at peak field (K)",
                 "(temp_tf_peak)",
                 temp_tf_peak,
             )
             po.ovarre(
                 self.outfile,
-                "Critical current density in superconductor (A/m2)",
+                "Critical current density in superconductor (A/m²)",
                 "(j_crit_sc)",
                 j_crit_sc,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Critical current density in cable (A/m2)",
+                "Critical current density in cable (A/m²)",
                 "(j_crit_cable)",
                 j_crit_cable,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Critical current density in winding pack (A/m2)",
+                "Critical current density in winding pack (A/m²)",
                 "(j_tf_wp_critical)",
                 j_tf_wp_critical,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Actual current density in winding pack (A/m2)",
+                "Actual current density in winding pack (A/m²)",
                 "(jwdgop)",
                 jwdgop,
                 "OP ",
