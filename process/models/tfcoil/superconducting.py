@@ -4156,6 +4156,9 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         superconducting_tf_coil_variables.dr_tf_hts_tape = (
             croco_cable_geometry.dr_hts_tape
         )
+        superconducting_tf_coil_variables.dx_tf_hts_tape_total = (
+            croco_cable_geometry.dx_tf_hts_tape_total
+        )
         superconducting_tf_coil_variables.dx_tf_croco_strand_tape_stack = (
             croco_cable_geometry.dx_croco_strand_tape_stack
         )
@@ -4867,7 +4870,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         b_tf_inboard_peak: float,
         cur_tf_turn: float,
         temp_tf_peak: float,
-        i_tf_superconductor: int,
     ) -> TFSuperconductorLimits:
         """TF superconducting CroCo conductor using REBCO tape
 
@@ -5175,49 +5177,49 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         )
         po.ovarre(
             self.outfile,
-            "REBCO area of conductor (mm²)",
+            "REBCO area of conductor (m²)",
             "(a_tf_croco_strand_rebco)",
             superconducting_tf_coil_variables.conductor_rebco_area,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Area of central copper bar (mm²)",
+            "Area of central copper bar (m²)",
             "(copper_bar_area)",
             superconducting_tf_coil_variables.a_tf_turn_croco_copper_bar,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Total copper area of conductor, total (mm²)",
+            "Total copper area of conductor, total (m²)",
             "(a_tf_croco_strand_copper_total)",
             superconducting_tf_coil_variables.a_tf_turn_croco_cable_space_copper,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Hastelloy area of conductor (mm²)",
+            "Hastelloy area of conductor (m²)",
             "(a_tf_croco_strand_hastelloy)",
             superconducting_tf_coil_variables.a_tf_turn_croco_hastelloy,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Solder area of conductor (mm²)",
+            "Solder area of conductor (m²)",
             "(a_tf_croco_strand_solder)",
             superconducting_tf_coil_variables.conductor_solder_area,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Jacket area of conductor (mm²)",
+            "Jacket area of conductor (m²)",
             "(jacket_area)",
             superconducting_tf_coil_variables.conductor_jacket_area,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Helium area of conductor (mm²)",
+            "Helium area of conductor (m²)",
             "(helium_area)",
             superconducting_tf_coil_variables.conductor_helium_area,
             "OP ",

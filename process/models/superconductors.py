@@ -1045,6 +1045,7 @@ class CroCoCableGeometry:
     a_croco_strand_rebco: float
     a_croco_strand: float
     dr_hts_tape: float
+    dx_tf_hts_tape_total: float
     dx_croco_strand_tape_stack: float
 
 
@@ -1099,7 +1100,9 @@ def calculate_croco_cable_geometry(
         dia_croco_strand_tape_region**2 - dr_hts_tape**2
     )
     # Number of HTS tapes in the CroCo strand
-    n_croco_strand_hts_tapes = dx_croco_strand_tape_stack / dx_hts_tape_total
+    n_croco_strand_hts_tapes = np.floor(
+        dx_croco_strand_tape_stack / dx_hts_tape_total
+    ).astype(int)
 
     # Area of copper in the CroCo strand (copper tube + copper in HTS tapes)
     a_croco_strand_copper_total = (
@@ -1131,6 +1134,7 @@ def calculate_croco_cable_geometry(
         a_croco_strand_rebco=a_croco_strand_rebco,
         a_croco_strand=a_croco_strand,
         dr_hts_tape=dr_hts_tape,
+        dx_tf_hts_tape_total=dx_hts_tape_total,
         dx_croco_strand_tape_stack=dx_croco_strand_tape_stack,
     )
 
