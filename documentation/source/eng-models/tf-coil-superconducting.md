@@ -652,6 +652,29 @@ WIP
 
 WIP
 
+### Cable space dimensions | `tf_turn_croco_cable_space_properties()`
+
+This function calculates the dimensions of the circular cable space in the CroCo turn and that of the cables required to properly pack into the cable space.
+
+The required diameter of a single cable element in the turn is given by:
+
+$$
+\overbrace{D_{\text{CroCo cable}}}^{\texttt{dia_tf_turn_croco_cable}} = \frac{dx_{\text{turn,jacket}}}{3} -\left(\overbrace{dx_{\text{steel}}}^{\texttt{dx_tf_turn_steel}} \times \frac{2}{3}\right)
+$$
+
+The full area of the circular cable space is:
+
+$$
+\overbrace{A_{\text{cable space, full}}}^{\texttt{a_tf_turn_cable_space_no_void}} = \frac{9\pi}{4} - D_{\text{CroCo cable}}^2
+$$
+
+The effective cable space is just the total cable space minus the central full copper cable in the middle. 
+
+$$
+\overbrace{A_{\text{cable space, eff}}}^{\texttt{a_tf_turn_cable_space_effective}} = A_{\text{cable space, full}} - \left(\frac{\pi}{4} \times D_{\text{CroCo cable}}^2\right)
+$$
+
+
 ### Superconductor properties | `tf_croco_superconductor_properties()`
 
 ### Quench voltage | `croco_voltage()`

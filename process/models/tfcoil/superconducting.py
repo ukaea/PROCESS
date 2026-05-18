@@ -4038,16 +4038,12 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Areas and fractions
         # -------------------
-        # Central helium channel down the conductor core [m2]
-        tfcoil_variables.a_tf_wp_coolant_channels = (
-            0.25e0
-            * tfcoil_variables.n_tf_coil_turns
-            * np.pi
-            * tfcoil_variables.dia_tf_turn_coolant_channel**2
-        )
+        # Central helium channel down the conductor core [m²]
+        # No central channel in CroCo conductor,
+        tfcoil_variables.a_tf_wp_coolant_channels = 0.0
 
         # Total conductor cross-sectional area, taking account of void area
-        # and central helium channel [m2]
+        # and central helium channel [m²]
         tfcoil_variables.a_tf_wp_conductor = (
             tfcoil_variables.a_tf_turn_cable_space_no_void
             * tfcoil_variables.n_tf_coil_turns
@@ -4055,24 +4051,24 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             - tfcoil_variables.a_tf_wp_coolant_channels
         )
 
-        # Void area in conductor for He, not including central channel [m2]
+        # Void area in conductor for He, not including central channel [m²]
         tfcoil_variables.a_tf_wp_extra_void = (
             tfcoil_variables.a_tf_turn_cable_space_no_void
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.f_a_tf_turn_cable_space_extra_void
         )
 
-        # Area of inter-turn insulation: total [m2]
+        # Area of inter-turn insulation: total [m²]
         tfcoil_variables.a_tf_coil_wp_turn_insulation = (
             tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_insulation
         )
 
-        # Area of steel structure in winding pack [m2]
+        # Area of steel structure in winding pack [m²]
         tfcoil_variables.a_tf_wp_steel = (
             tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
         )
 
-        # Inboard coil steel area [m2]
+        # Inboard coil steel area [m²]
         superconducting_tf_coil_variables.a_tf_coil_inboard_steel = (
             tfcoil_variables.a_tf_coil_inboard_case + tfcoil_variables.a_tf_wp_steel
         )
@@ -4084,7 +4080,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             / tfcoil_variables.a_tf_inboard_total
         )
 
-        # Inboard coil insulation cross-section [m2]
+        # Inboard coil insulation cross-section [m²]
         superconducting_tf_coil_variables.a_tf_coil_inboard_insulation = (
             tfcoil_variables.a_tf_coil_wp_turn_insulation
             + superconducting_tf_coil_variables.a_tf_wp_ground_insulation
@@ -4730,12 +4726,9 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         layer_ins: float,
         a_tf_wp_no_insulation: float,
     ) -> CROCOAveragedTurnGeometry:
-        """Subroutine straight from Python, see comments in tf_averaged_turn_geom_wrapper
-        Setting the TF WP turn geometry for SC magnets from the number
-        the current per turn.
-        This calculation has two purposes, first to check if a turn can exist
-        (positive cable space) and the second to provide its dimensions,
-        areas and the (float) number of turns
+        """
+        Calculate the geometry of the TF turn based on the input parameters and
+        assumptions for a CroCo conductor.
 
         Parameters
         ----------
@@ -4786,17 +4779,22 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             - dx_tf_turn: Dimension of the TF turn (in meters).
             - dr_tf_turn: Dimension of the TF turn (in meters).
             - t_conductor: Thickness of the conductor in the TF turn (in meters).
-            - n_tf_coil_turns: Number of turns in the TF coil (not necessarily an integer).
-            - a_tf_turn_insulation: Area of the insulation in the TF turn (in square meters).
-            - a_tf_turn_cable_space_no_void: Area of the cable space in the TF turn without voids (in square meters).
+            - n_tf_coil_turns: Number of turns in the TF coil (not necessarily
+              an integer).
+            - a_tf_turn_insulation: Area of the insulation in the TF turn
+              (in square meters).
+            - a_tf_turn_cable_space_no_void: Area of the cable space in the TF turn
+              without voids (in square meters).
             - a_tf_turn_steel: Area of the steel in the TF turn (in square meters).
-            - a_tf_turn_cable_space_effective: Effective area of the cable space in the TF turn after accounting for cooling channels and voids (in square meters).
-            - f_a_tf_turn_cable_space_cooling: Fraction of the cable space used for cooling.
+            - a_tf_turn_cable_space_effective: Effective area of the cable space in the
+              TF turn after accounting for cooling channels and voids (in square meters).
+            - f_a_tf_turn_cable_space_cooling: Fraction of the cable space used for
+              cooling.
 
         """
         # Turn dimension is a an input
         if i_dx_tf_turn_general_input:
-            # Turn area [m2]
+            # Turn area [m²]
             a_tf_turn = dx_tf_turn_general**2
 
             # Current per turn [A]
@@ -4809,7 +4807,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 dx_tf_turn_insulation + dx_tf_turn_steel
             )
 
-            # Turn area [m2]
+            # Turn area [m²]
             a_tf_turn = dx_tf_turn_general**2
 
             # Current per turn [A]
@@ -4817,7 +4815,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Current per turn is an input
         else:
-            # Turn area [m2]
+            # Turn area [m²]
             # Allow for additional inter-layer insulation MDK 13/11/18
             # Area of turn including conduit and inter-layer insulation
             a_tf_turn = c_tf_turn / j_tf_wp
@@ -4829,8 +4827,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         dr_tf_turn = dx_tf_turn_general
         dx_tf_turn = dx_tf_turn_general
 
-        # See derivation in the following document
-        # k:\power plant physics and technology\process\hts\hts coil module for process.docx
         t_conductor = (
             -layer_ins + np.sqrt(layer_ins**2 + 4.0e00 * a_tf_turn)
         ) / 2 - 2.0e0 * dx_tf_turn_insulation
@@ -4838,7 +4834,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         # Total number of turns per TF coil (not required to be an integer)
         n_tf_coil_turns = a_tf_wp_no_insulation / a_tf_turn
 
-        # Area of inter-turn insulation: single turn [m2]
+        # Area of inter-turn insulation: single turn [m²]
         a_tf_turn_insulation = a_tf_turn - t_conductor**2
 
         a_tf_turn_cable_space_no_void = copy.copy(
@@ -4848,7 +4844,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         # Diameter of circular cable space inside conduit [m]
         dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
 
-        # Cross-sectional area of conduit jacket per turn [m2]
+        # Cross-sectional area of conduit jacket per turn [m²]
         a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
 
         return CROCOAveragedTurnGeometry(
@@ -4946,7 +4942,38 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
     def tf_turn_croco_cable_space_properties(
         t_conductor: float, dx_tf_turn_steel: float
     ) -> CroCoCableSpaceGeometry:
+        """Calculate the properties of the cable space in the TF turn for a CroCo
+        conductor.
 
+        Parameters
+        ----------
+        t_conductor : float
+            Thickness of the conductor in the TF turn (in meters).
+        dx_tf_turn_steel : float
+            Thickness of the steel layer in the TF turn (in meters).
+
+        Returns
+        -------
+        CroCoCableSpaceGeometry
+             A dataclass containing the calculated properties of the cable space in
+             the TF turn, including:
+            - dia_tf_turn_croco_cable: Diameter of the circular cable space in the TF
+              turn (in meters).
+            - a_tf_turn_cable_space_no_void: Area of the cable space in the TF turn
+              without voids (in square meters).
+            - a_tf_turn_cable_space_effective: Effective area of the cable space in
+              the TF turn after accounting for cooling channels and voids
+              (in square meters).
+            - a_tf_turn_steel: Area of the steel in the TF turn (in square meters).
+            - conductor_area: Total area of the conductor in the TF turn
+              (in square meters).
+            - conductor_jacket_area: Area of the conductor jacket in the TF turn
+              (in square meters).
+            - conductor_jacket_fraction: Fraction of the conductor area that is the
+              jacket (dimensionless).
+
+
+        """
         dia_tf_turn_croco_cable = t_conductor / 3.0e0 - dx_tf_turn_steel * (
             2.0e0 / 3.0e0
         )
@@ -4955,6 +4982,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         a_tf_turn_cable_space_no_void = (
             9.0e0 / 4.0e0 * np.pi * dia_tf_turn_croco_cable**2
         )
+
         # Area of the full cable spac circle minus the central copper strand
         a_tf_turn_cable_space_effective = (
             a_tf_turn_cable_space_no_void - 0.25e0 * np.pi * dia_tf_turn_croco_cable**2
@@ -5150,7 +5178,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         )
         po.ovarre(
             self.outfile,
-            "Total area of cable space (m²)",
+            "Total area of circular cable space (m²)",
             "(a_tf_turn_cable_space_no_void)",
             tfcoil_variables.a_tf_turn_cable_space_no_void,
             "OP ",
