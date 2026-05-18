@@ -1060,6 +1060,86 @@ class ResistiveTFCoil(TFCoil):
             tf_total_width,
         )
 
+        # Resistive coil parameters
+        po.osubhd(self.outfile, "Resitive loss parameters:")
+        if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+            po.ocmmnt(
+                self.outfile,
+                "Resistive Material : GLIDCOP AL-15 - Dispersion Strengthened Copper",
+            )
+        elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+            po.ocmmnt(self.outfile, "Resistive Material : Pure Aluminium (99.999+ %)")
+
+        if physics_variables.itart == 1:
+            po.ovarre(
+                self.outfile,
+                "CP resistivity (ohm.m)",
+                "(rho_cp)",
+                tfcoil_variables.rho_cp,
+            )
+            po.ovarre(
+                self.outfile,
+                "Leg resistivity (ohm.m)",
+                "(rho_tf_leg)",
+                tfcoil_variables.rho_tf_leg,
+            )
+            po.ovarre(
+                self.outfile,
+                "CP resistive power loss (W)",
+                "(p_cp_resistive)",
+                tfcoil_variables.p_cp_resistive,
+            )
+            po.ovarre(
+                self.outfile,
+                "Total legs resitive power loss, (W)",
+                "(p_tf_leg_resistive)",
+                tfcoil_variables.p_tf_leg_resistive,
+            )
+            po.ovarre(
+                self.outfile,
+                "joints resistive power loss (W)",
+                "(p_tf_joints_resistive)",
+                tfcoil_variables.p_tf_joints_resistive,
+            )
+            po.ovarre(
+                self.outfile,
+                "Outboard leg resistance per coil (ohm)",
+                "(res_tf_leg)",
+                tfcoil_variables.res_tf_leg,
+            )
+            po.ovarre(
+                self.outfile,
+                "Average CP temperature (K)",
+                "(temp_cp_average)",
+                tfcoil_variables.temp_cp_average,
+            )
+            po.ovarre(
+                self.outfile,
+                "Average leg temperature (K)",
+                "(temp_tf_legs_outboard)",
+                tfcoil_variables.temp_tf_legs_outboard,
+            )
+
+        else:
+            po.ovarre(
+                self.outfile,
+                "TF resistivity (ohm.m)",
+                "(p_cp_resistive)",
+                tfcoil_variables.rho_cp,
+            )
+            po.ovarre(
+                self.outfile,
+                "TF coil resistive power less (total) (ohm.m)",
+                "(p_cp_resistive)",
+                tfcoil_variables.p_cp_resistive,
+            )
+            po.ovarre(
+                self.outfile,
+                "Average coil temperature (K)",
+                "(temp_cp_average)",
+                tfcoil_variables.temp_cp_average,
+            )
+
         # Top section TF coil radial build (physics_variables.itart = 1 only)
         if physics_variables.itart == 1:
             po.osubhd(self.outfile, "Radial build of TF coil at central collumn top :")
