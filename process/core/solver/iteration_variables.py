@@ -255,9 +255,7 @@ ITERATION_VARIABLES = {
     169: IterationVariable(
         "te0_ecrh_achievable", data_structure.stellarator_variables, 1.0, 1.0e3
     ),
-    170: IterationVariable(
-        "deg_div_field_plate", data_structure.divertor_variables, 0.49, 5.01
-    ),
+    170: IterationVariable("deg_div_field_plate", "divertor", 0.49, 5.01),
     171: IterationVariable(
         "casths_fraction", data_structure.tfcoil_variables, 0.01, 0.99
     ),

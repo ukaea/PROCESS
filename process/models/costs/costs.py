@@ -7,7 +7,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    divertor_variables,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
@@ -1415,7 +1414,7 @@ class Costs(Model):
         """
         if self.data.ife.ife != 1:
             self.data.costs.c2215 = (
-                1.0e-6 * divertor_variables.a_div_surface_total * self.data.costs.ucdiv
+                1.0e-6 * self.data.divertor.a_div_surface_total * self.data.costs.ucdiv
             )
             self.data.costs.c2215 = self.data.costs.fkind * self.data.costs.c2215
 

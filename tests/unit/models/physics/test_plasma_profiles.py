@@ -3,9 +3,14 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import divertor_variables, physics_variables
-from process.models.physics.plasma_profiles import PlasmaProfile
+from process.data_structure import physics_variables
 from process.models.physics.profiles import NeProfile, TeProfile
+
+
+@pytest.fixture
+def plasmaprofile(process_models):
+    """Fixture to get the PlasmaProfile instance from process_models."""
+    return process_models.plasma_profile
 
 
 class ProfileParam(NamedTuple):
@@ -309,7 +314,7 @@ class PlasmaProfilesParam(NamedTuple):
         ),
     ],
 )
-def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
+def test_plasma_profiles(plasmaprofilesparam, monkeypatch, plasmaprofile):
     """
     Automatically generated Regression Unit Test for plasma_profiles.
 
@@ -323,7 +328,7 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(divertor_variables, "prn1", plasmaprofilesparam.prn1)
+    monkeypatch.setattr(plasmaprofile.data.divertor, "prn1", plasmaprofilesparam.prn1)
 
     monkeypatch.setattr(
         physics_variables,
@@ -471,10 +476,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "a_plasma_poloidal", 4.0)
 
-    plasmaprofile = PlasmaProfile()
     plasmaprofile.run()
 
-    assert divertor_variables.prn1 == pytest.approx(plasmaprofilesparam.expected_prn1)
+    assert plasmaprofile.data.divertor.prn1 == pytest.approx(
+        plasmaprofilesparam.expected_prn1
+    )
 
     assert physics_variables.temp_plasma_electron_density_weighted_kev == pytest.approx(
         plasmaprofilesparam.expected_ten

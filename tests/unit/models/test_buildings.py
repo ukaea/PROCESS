@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import (
-    divertor_variables,
     pfcoil_variables,
     physics_variables,
     tfcoil_variables,
@@ -805,7 +804,9 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         buildings.data.build, "dr_blkt_outboard", bldgssizesparam.dr_blkt_outboard
     )
     monkeypatch.setattr(buildings.data.build, "r_cp_top", bldgssizesparam.r_cp_top)
-    monkeypatch.setattr(divertor_variables, "dz_divertor", bldgssizesparam.dz_divertor)
+    monkeypatch.setattr(
+        buildings.data.divertor, "dz_divertor", bldgssizesparam.dz_divertor
+    )
     monkeypatch.setattr(physics_variables, "rmajor", bldgssizesparam.rmajor)
     monkeypatch.setattr(physics_variables, "rminor", bldgssizesparam.rminor)
 

@@ -1,123 +1,82 @@
-anginc: float = None
-"""angle of incidence of field line on plate (rad)"""
-
-deg_div_field_plate: float = None
-"""field line angle wrt divertor target plate (degrees)"""
-
-betai: float = None
-"""poloidal plane angle between divertor plate and leg, inboard (rad)"""
-
-betao: float = None
-"""poloidal plane angle between divertor plate and leg, outboard (rad)"""
-
-f_vol_div_coolant: float = None
-"""divertor coolant fraction"""
-
-den_div_structure: float = None
-"""divertor structure density (kg/m3)"""
-
-dz_divertor: float = None
-"""divertor structure vertical thickness (m)"""
-
-m_div_plate: float = None
-"""divertor plate mass (kg)"""
-
-dx_div_plate: float = None
-"""divertor plate thickness (m) (from Spears, Sept 1990)"""
-
-a_div_surface_total: float = None
-"""divertor surface area (m2)"""
-
-fdiva: float = None
-"""divertor area fudge factor (for ITER, Sept 1990)"""
-
-f_div_flux_expansion: float = None
-"""The plasma flux expansion in the divertor (default 2; Wade 2020)"""
-
-pflux_div_heat_load_mw: float = None
-"""divertor heat load (MW/m2)"""
-
-i_div_heat_load: int = None
-"""switch for user input pflux_div_heat_load_mw:
-
- - = 0: divtart model turned off and user inputs pflux_div_heat_load_mw
- - = 1: divtart model calculates pflux_div_heat_load_mw
- - = 2: divwade model calculates pflux_div_heat_load_mw"""
-
-pflux_div_heat_load_max_mw: float = None
-"""heat load limit (MW/m2)"""
-
-prn1: float = None
-"""n-scrape-off / n-average plasma; (input for `i_plasma_pedestal=0`, = nd_plasma_separatrix_electron/nd_plasma_electrons_vol_avg if `i_plasma_pedestal>=1`)"""
-
-tdiv: float = None
-"""temperature at divertor (eV) (input for stellarator only, calculated for tokamaks)"""
-
-xpertin: float = None
-"""perpendicular heat transport coefficient (m2/s)"""
-
-p_div_lower_nuclear_heat_mw: float = None
-"""Lower divertor neutron nuclear heat load on (MW)"""
-
-p_div_upper_nuclear_heat_mw: float = None
-"""Upper divertor neutron nuclear heat load on (MW)"""
-
-p_div_upper_rad_mw: float = None
-"""Upper divertor incident radiation power radiation power (MW)"""
-
-p_div_lower_rad_mw: float = None
-"""Lower divertor incident radiation power radiation power (MW)"""
-
-n_divertors: int = None
-"""Number of divertors (calculated from `i_single_null`)"""
+from dataclasses import dataclass
 
 
-def init_divertor_variables():
-    global \
-        anginc, \
-        deg_div_field_plate, \
-        betai, \
-        betao, \
-        f_vol_div_coolant, \
-        den_div_structure, \
-        dz_divertor, \
-        m_div_plate, \
-        dx_div_plate, \
-        a_div_surface_total, \
-        fdiva, \
-        f_div_flux_expansion, \
-        pflux_div_heat_load_mw, \
-        i_div_heat_load, \
-        pflux_div_heat_load_max_mw, \
-        prn1, \
-        tdiv, \
-        xpertin, \
-        p_div_lower_nuclear_heat_mw, \
-        p_div_upper_nuclear_heat_mw, \
-        p_div_upper_rad_mw, \
-        p_div_lower_rad_mw, \
-        n_divertors
+@dataclass
+class DivertorData:
+    """Divertor model dataclass"""
 
-    anginc = 0.262
-    deg_div_field_plate = 1.0
-    betai = 1.0
-    betao = 1.0
-    f_vol_div_coolant = 0.3
-    den_div_structure = 1.0e4
-    dz_divertor = 0.2
-    m_div_plate = 0.0
-    dx_div_plate = 0.035
-    a_div_surface_total = 0.0
-    fdiva = 1.11
-    f_div_flux_expansion = 2.0
-    pflux_div_heat_load_mw = 0.0
-    i_div_heat_load = 2
-    pflux_div_heat_load_max_mw = 5.0
-    prn1 = 0.285
-    tdiv = 2.0
-    xpertin = 2.0
-    p_div_lower_nuclear_heat_mw = 0.0
-    p_div_upper_nuclear_heat_mw = 0.0
-    p_div_upper_rad_mw = 0.0
-    p_div_lower_rad_mw = 0.0
-    n_divertors = 2
+    anginc: float = 0.262
+    """angle of incidence of field line on plate (rad)"""
+
+    deg_div_field_plate: float = 1.0
+    """field line angle wrt divertor target plate (degrees)"""
+
+    betai: float = 1.0
+    """poloidal plane angle between divertor plate and leg, inboard (rad)"""
+
+    betao: float = 1.0
+    """poloidal plane angle between divertor plate and leg, outboard (rad)"""
+
+    f_vol_div_coolant: float = 0.3
+    """divertor coolant fraction"""
+
+    den_div_structure: float = 1.0e4
+    """divertor structure density (kg/m3)"""
+
+    dz_divertor: float = 0.2
+    """divertor structure vertical thickness (m)"""
+
+    m_div_plate: float = 0.0
+    """divertor plate mass (kg)"""
+
+    dx_div_plate: float = 0.035
+    """divertor plate thickness (m) (from Spears, Sept 1990)"""
+
+    a_div_surface_total: float = 0.0
+    """divertor surface area (m2)"""
+
+    fdiva: float = 1.11
+    """divertor area fudge factor (for ITER, Sept 1990)"""
+
+    f_div_flux_expansion: float = 2.0
+    """The plasma flux expansion in the divertor (default 2; Wade 2020)"""
+
+    pflux_div_heat_load_mw: float = 0.0
+    """divertor heat load (MW/m2)"""
+
+    i_div_heat_load: int = 2
+    """switch for user input pflux_div_heat_load_mw:
+
+    - = 0: divtart model turned off and user inputs pflux_div_heat_load_mw
+    - = 1: divtart model calculates pflux_div_heat_load_mw
+    - = 2: divwade model calculates pflux_div_heat_load_mw"""
+
+    pflux_div_heat_load_max_mw: float = 5.0
+    """heat load limit (MW/m2)"""
+
+    prn1: float = 0.285
+    """n-scrape-off / n-average plasma; (input for `i_plasma_pedestal=0`, = nd_plasma_separatrix_electron/nd_plasma_electrons_vol_avg if `i_plasma_pedestal>=1`)"""
+
+    tdiv: float = 2.0
+    """temperature at divertor (eV) (input for stellarator only, calculated for tokamaks)"""
+
+    xpertin: float = 2.0
+    """perpendicular heat transport coefficient (m2/s)"""
+
+    p_div_lower_nuclear_heat_mw: float = 0.0
+    """Lower divertor neutron nuclear heat load on (MW)"""
+
+    p_div_upper_nuclear_heat_mw: float = 0.0
+    """Upper divertor neutron nuclear heat load on (MW)"""
+
+    p_div_upper_rad_mw: float = 0.0
+    """Upper divertor incident radiation power radiation power (MW)"""
+
+    p_div_lower_rad_mw: float = 0.0
+    """Lower divertor incident radiation power radiation power (MW)"""
+
+    n_divertors: int = 2
+    """Number of divertors (calculated from `i_single_null`)"""
+
+
+CREATE_DICTS_FROM_DATACLASS = DivertorData

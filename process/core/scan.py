@@ -16,7 +16,6 @@ from process.core.log import logging_model_handler, show_errors
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
-    divertor_variables,
     global_variables,
     impurity_radiation_module,
     numerics,
@@ -1073,7 +1072,7 @@ class Scan:
             case 1:
                 physics_variables.aspect = swp[iscn - 1]
             case 2:
-                divertor_variables.pflux_div_heat_load_max_mw = swp[iscn - 1]
+                self.data.divertor.pflux_div_heat_load_max_mw = swp[iscn - 1]
             case 3:
                 self.data.constraints.p_plant_electric_net_required_mw = swp[iscn - 1]
             case 4:

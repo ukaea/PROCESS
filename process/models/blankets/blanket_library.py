@@ -11,7 +11,6 @@ from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    divertor_variables,
     physics_variables,
 )
 from process.models.build import FwBlktVVShape
@@ -74,14 +73,14 @@ class BlanketLibrary(Model):
         self.data.blanket.dz_blkt_half = self.calculate_blkt_half_height(
             z_plasma_xpoint_lower=self.data.build.z_plasma_xpoint_lower,
             dz_xpoint_divertor=self.data.build.dz_xpoint_divertor,
-            dz_divertor=divertor_variables.dz_divertor,
+            dz_divertor=self.data.divertor.dz_divertor,
             z_plasma_xpoint_upper=self.data.build.z_plasma_xpoint_upper,
             dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
             dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
             dr_fw_inboard=self.data.build.dr_fw_inboard,
             dr_fw_outboard=self.data.build.dr_fw_outboard,
             dz_blkt_upper=self.data.build.dz_blkt_upper,
-            n_divertors=divertor_variables.n_divertors,
+            n_divertors=self.data.divertor.n_divertors,
         )
 
         # D-shaped blanket and shield
@@ -530,7 +529,7 @@ class BlanketLibrary(Model):
         Apply coverage factors to volumes
         """
         # Apply blanket coverage factors
-        if divertor_variables.n_divertors == 2:
+        if self.data.divertor.n_divertors == 2:
             # double null configuration
             self.data.build.a_blkt_outboard_surface = (
                 self.data.build.a_blkt_total_surface_full_coverage
@@ -929,7 +928,7 @@ class BlanketLibrary(Model):
                 rminor=physics_variables.rminor,
                 dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
-                n_divertors=divertor_variables.n_divertors,
+                n_divertors=self.data.divertor.n_divertors,
                 f_ster_div_single=self.data.fwbs.f_ster_div_single,
             )
         else:
@@ -940,7 +939,7 @@ class BlanketLibrary(Model):
                 dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
                 n_blkt_inboard_modules_poloidal=self.data.fwbs.n_blkt_inboard_modules_poloidal,
-                n_divertors=divertor_variables.n_divertors,
+                n_divertors=self.data.divertor.n_divertors,
                 f_ster_div_single=self.data.fwbs.f_ster_div_single,
             )
 
@@ -951,7 +950,7 @@ class BlanketLibrary(Model):
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
                 dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
                 n_blkt_outboard_modules_poloidal=self.data.fwbs.n_blkt_outboard_modules_poloidal,
-                n_divertors=divertor_variables.n_divertors,
+                n_divertors=self.data.divertor.n_divertors,
                 f_ster_div_single=self.data.fwbs.f_ster_div_single,
             )
 

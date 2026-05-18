@@ -13,7 +13,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
-    divertor_variables,
     global_variables,
     pfcoil_variables,
     physics_variables,
@@ -825,7 +824,7 @@ class SuperconductingTFCoil(TFCoil):
         H_vv = (
             self.data.build.z_plasma_xpoint_upper
             + self.data.build.dz_xpoint_divertor
-            + divertor_variables.dz_divertor
+            + self.data.divertor.dz_divertor
             + self.data.build.dz_shld_upper
             + (self.data.build.dz_vv_upper / 2)
         )

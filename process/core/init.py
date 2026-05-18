@@ -16,7 +16,6 @@ from process.core.input import parse_input_file
 from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
-from process.data_structure.divertor_variables import init_divertor_variables
 from process.data_structure.impurity_radiation_module import (
     init_impurity_radiation_module,
 )
@@ -249,7 +248,6 @@ def init_all_module_vars():
     """
     logging_model_handler.clear_logs()
     data_structure.numerics.init_numerics()
-    init_divertor_variables()
     data_structure.global_variables.init_global_variables()
     init_impurity_radiation_module()
     init_pfcoil_module()
@@ -581,13 +579,13 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
     if data_structure.physics_variables.i_single_null == 0:
-        data_structure.divertor_variables.n_divertors = 2
+        data.divertor.n_divertors = 2
         data.build.dz_fw_plasma_gap = data.build.dz_xpoint_divertor
         data.build.dz_shld_upper = data.build.dz_shld_lower
         data.build.dz_vv_upper = data.build.dz_vv_lower
         warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
     else:  # i_single_null == 1
-        data_structure.divertor_variables.n_divertors = 1
+        data.divertor.n_divertors = 1
 
     #  Tight aspect ratio options (ST)
     if data_structure.physics_variables.itart == 1:

@@ -4,20 +4,21 @@ import logging
 
 from process.core import constants
 from process.core import process_output as po
-from process.data_structure import (
-    divertor_variables,
-    physics_variables,
-)
+from process.core.model import Model
+from process.data_structure import physics_variables
 
 logger = logging.getLogger(__name__)
 
 
-class PlasmaExhaust:
+class PlasmaExhaust(Model):
     """Class to hold plasma exhaust calculations for plasma processing."""
 
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+
+    def run(self):
+        """This model isn't run."""
 
     def output(self):
         """Output plasma exhaust results to the output file."""
@@ -47,7 +48,7 @@ class PlasmaExhaust:
             )
             po.oblnkl(self.outfile)
 
-        if divertor_variables.n_divertors == 2:
+        if self.data.divertor.n_divertors == 2:
             # Double null divertor configuration
             po.ovarre(
                 self.outfile,

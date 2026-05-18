@@ -2,10 +2,7 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import (
-    divertor_variables,
-    physics_variables,
-)
+from process.data_structure import physics_variables
 
 
 @pytest.fixture
@@ -263,7 +260,7 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     )
 
     monkeypatch.setattr(
-        divertor_variables, "n_divertors", dcllneutronicsandpowerparam.n_divertors
+        dcll.data.divertor, "n_divertors", dcllneutronicsandpowerparam.n_divertors
     )
 
     monkeypatch.setattr(

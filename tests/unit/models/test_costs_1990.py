@@ -7,7 +7,6 @@ import pytest
 
 from process import data_structure
 from process.data_structure import (
-    divertor_variables,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
@@ -1694,7 +1693,7 @@ def test_acc2215(acc2215param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "ucdiv", acc2215param.ucdiv)
 
     monkeypatch.setattr(
-        divertor_variables, "a_div_surface_total", acc2215param.a_div_surface_total
+        costs.data.divertor, "a_div_surface_total", acc2215param.a_div_surface_total
     )
 
     monkeypatch.setattr(costs.data.ife, "ife", acc2215param.ife)

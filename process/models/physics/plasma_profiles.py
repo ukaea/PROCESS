@@ -12,7 +12,7 @@ import scipy as sp
 from process.core import constants
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import divertor_variables, physics_variables
+from process.data_structure import physics_variables
 from process.models.physics.profiles import NeProfile, PlasmaProfileShapeType, TeProfile
 
 logger = logging.getLogger(__name__)
@@ -232,7 +232,7 @@ class PlasmaProfile(Model):
         #  Scrape-off density / volume averaged density
         #  (Input value is used if i_plasma_pedestal = 0)
 
-        divertor_variables.prn1 = max(
+        self.data.divertor.prn1 = max(
             0.01e0,
             physics_variables.nd_plasma_separatrix_electron
             / physics_variables.nd_plasma_electrons_vol_avg,
