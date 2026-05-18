@@ -6,6 +6,7 @@ import numba
 import numpy as np
 
 from process.core import constants
+from process.core import process_output as po
 from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
@@ -26,6 +27,7 @@ class ResistiveTFCoil(TFCoil):
     def output(self):
         """Run main tfcoil subroutine with outputting."""
         self.run(output=True)
+        self.output_general_resistive_tf_info()
 
     def run(self, output: bool = False):
         """Run main tfcoil subroutine without outputting.
@@ -837,6 +839,130 @@ class ResistiveTFCoil(TFCoil):
             + tfcoil_variables.m_tf_coil_wp_turn_insulation
             + tfcoil_variables.m_tf_coil_wp_insulation
         ) * tfcoil_variables.n_tf_coils
+
+    def output_general_resistive_tf_info(self) -> None:
+        """Output general information on the resistive TF coil
+        Should only contain information found in the `ResistiveTFCoil` class
+        """
+        po.oheadr(self.outfile, "General Resistive TF Coil Parameters")
+
+        # External casing
+        po.osubhd(self.outfile, "Bucking cylinder information:")
+        po.ovarre(
+            self.outfile,
+            "Casing cross section area (per leg) (m2)",
+            "(a_tf_coil_inboard_case)",
+            tfcoil_variables.a_tf_coil_inboard_case,
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard leg case plasma side wall thickness (m)",
+            "(dr_tf_plasma_case)",
+            tfcoil_variables.dr_tf_plasma_case,
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard leg plasma case area (m^2)",
+            "(a_tf_plasma_case)",
+            superconducting_tf_coil_variables.a_tf_plasma_case,
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard leg bucking cylinder thickness (m)",
+            "(dr_tf_nose_case)",
+            tfcoil_variables.dr_tf_nose_case,
+        )
+        po.ovarre(
+            self.outfile,
+            'Inboard leg case inboard "nose" area (m^2)',
+            "(a_tf_coil_nose_case)",
+            superconducting_tf_coil_variables.a_tf_coil_nose_case,
+        )
+
+        # Conductor layer geometry
+        po.osubhd(self.outfile, "Inboard TFC conductor sector geometry:")
+        po.ovarre(
+            self.outfile,
+            "Inboard TFC conductor sector area with gr insulation (per leg) (m2)",
+            "(a_tf_wp_with_insulation)",
+            superconducting_tf_coil_variables.a_tf_wp_with_insulation,
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard TFC conductor sector area, NO ground & gap (per leg) (m2)",
+            "(a_tf_wp_no_insulation)",
+            superconducting_tf_coil_variables.a_tf_wp_no_insulation,
+        )
+        po.ovarre(
+            self.outfile,
+            "Ground wall insulation area (m^2)",
+            "(a_tf_wp_ground_insulation)",
+            superconducting_tf_coil_variables.a_tf_wp_ground_insulation,
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard conductor sector radial thickness (m)",
+            "(dr_tf_wp_with_insulation)",
+            tfcoil_variables.dr_tf_wp_with_insulation,
+        )
+        if physics_variables.itart == 1:
+            po.ovarre(
+                self.outfile,
+                "Central collumn top conductor sector radial thickness (m)",
+                "(dr_tf_wp_top)",
+                superconducting_tf_coil_variables.dr_tf_wp_top,
+            )
+
+        po.ovarre(
+            self.outfile,
+            "Ground wall insulation thickness (m)",
+            "(dx_tf_wp_insulation)",
+            tfcoil_variables.dx_tf_wp_insulation,
+        )
+        # Turn info
+        po.osubhd(self.outfile, "Coil turn information:")
+        po.ovarre(
+            self.outfile,
+            "Number of turns per TF leg",
+            "(n_tf_coil_turns)",
+            tfcoil_variables.n_tf_coil_turns,
+        )
+        po.ovarre(
+            self.outfile,
+            "Turn insulation thickness",
+            "(dx_tf_turn_insulation)",
+            tfcoil_variables.dx_tf_turn_insulation,
+        )
+        po.ovarre(
+            self.outfile,
+            "Mid-plane CP cooling fraction",
+            "(fcoolcp)",
+            tfcoil_variables.fcoolcp,
+        )
+        po.ovarre(
+            self.outfile,
+            "Area of resistive conductor per coil",
+            "(a_res_tf_coil_conductor)",
+            tfcoil_variables.a_res_tf_coil_conductor,
+        )
+        po.ovarre(
+            self.outfile,
+            "Outboard leg current per turn (A)",
+            "(c_tf_turn)",
+            tfcoil_variables.c_tf_turn,
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard leg conductor volume (m3)",
+            "(vol_cond_cp)",
+            tfcoil_variables.vol_cond_cp,
+        )
+        po.ovarre(
+            self.outfile,
+            "Outboard leg volume per coil (m3)",
+            "(voltfleg)",
+            tfcoil_variables.voltfleg,
+        )
 
     @staticmethod
     @numba.njit(cache=True)
