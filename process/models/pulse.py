@@ -7,7 +7,6 @@ from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
     numerics,
-    pf_power_variables,
     physics_variables,
 )
 
@@ -106,7 +105,7 @@ class Pulse(Model):
 
         #  Central Solenoid power source emf (volts)
 
-        v = pf_power_variables.vpfskv * 1.0e3
+        v = self.data.pf_power.vpfskv * 1.0e3
 
         #  Mutual inductance between Central Solenoid and plasma (H)
 

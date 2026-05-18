@@ -668,9 +668,7 @@ INPUT_VARIABLES = {
     "max_vv_stress": InputVariable(
         data_structure.tfcoil_variables, float, range=(100000.0, 500000000.0)
     ),
-    "maxpoloidalpower": InputVariable(
-        data_structure.pf_power_variables, float, range=(0.0, 2000.0)
-    ),
+    "maxpoloidalpower": InputVariable("pf_power", float, range=(0.0, 2000.0)),
     "pflux_fw_rad_max": InputVariable("constraints", float, range=(0.1, 10.0)),
     "mbvfac": InputVariable("buildings", float, range=(0.9, 3.0)),
     "mcdriv": InputVariable("ife", float, range=(0.1, 10.0)),
@@ -1266,9 +1264,7 @@ INPUT_VARIABLES = {
     "ireactor": InputVariable("costs", int, choices=[0, 1]),
     "irefprop": InputVariable("fwbs", int, choices=[0, 1]),
     "i_hcd_calculations": InputVariable("current_drive", int, choices=[0, 1]),
-    "i_pf_energy_storage_source": InputVariable(
-        data_structure.pf_power_variables, int, range=(1, 3)
-    ),
+    "i_pf_energy_storage_source": InputVariable("pf_power", int, range=(1, 3)),
     "istell": InputVariable("stellarator", int, range=(0, 6)),
     "isthtr": InputVariable("stellarator", int, range=(1, 3)),
     "istore": InputVariable("pulse", int, range=(1, 3)),

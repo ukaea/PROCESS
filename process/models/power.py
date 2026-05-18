@@ -13,7 +13,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
     numerics,
-    pf_power_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -109,6 +108,7 @@ class Power(Model):
         n_pf_cs_plasma_circuits: int,
         c_pf_coil_turn: np.ndarray,
         ind_pf_cs_plasma_mutual: np.ndarray,
+        f_p_pf_psu_loss: float,
     ) -> float:
         """
         Power supply conversion loss over interval idx_time_interval
@@ -126,6 +126,8 @@ class Power(Model):
             PF circuit current per turn at pulse times [A]
         ind_pf_cs_plasma_mutual : np.ndarray
             mutual inductance matrix between PF circuits [H]
+        f_p_pf_psu_loss: float
+            Fraction of inductive power flow lost in the PF power supplies/converters
 
         Returns
         -------
@@ -151,9 +153,7 @@ class Power(Model):
                 )
 
             e_loss_pf_psu_j += (
-                0.5e0
-                * pf_power_variables.f_p_pf_psu_loss
-                * abs(c_pf_sum_a * delta_flux_linkage_wb)
+                0.5e0 * f_p_pf_psu_loss * abs(c_pf_sum_a * delta_flux_linkage_wb)
             )
 
         return e_loss_pf_psu_j
@@ -267,6 +267,7 @@ class Power(Model):
             n_pf_cs_plasma_circuits=n_pf_cs_plasma_circuits,
             c_pf_coil_turn=c_pf_coil_turn,
             ind_pf_cs_plasma_mutual=ind_pf_cs_plasma_mutual,
+            f_p_pf_psu_loss=self.data.pf_power.f_p_pf_psu_loss,
         )
 
         e_loss_pf_bus_j = self._pf_loss_busbar_j(
@@ -300,7 +301,7 @@ class Power(Model):
         c_pf_coil_turn = self.data.pf_coil.c_pf_coil_turn  # [A]
         ind_pf_cs_plasma_mutual = self.data.pf_coil.ind_pf_cs_plasma_mutual  # [H]
         f_p_pf_energy_store_loss = (
-            pf_power_variables.f_p_pf_energy_store_loss
+            self.data.pf_power.f_p_pf_energy_store_loss
         )  # [unitless]
         n_pf_cs_plasma_circuits = self.data.pf_coil.n_pf_cs_plasma_circuits  # [unitless]
 
@@ -333,7 +334,7 @@ class Power(Model):
         # Map PF group to representative circuit index (used for busbar I^2R per circuit)
         pf_group_circuit_index = np.zeros((n_pf_coil_groups,), dtype=int)
 
-        pf_power_variables.srcktpm = 0.0e0
+        self.data.pf_power.srcktpm = 0.0e0
         pfbuspwr = 0.0e0
 
         for a_pf_bus_cm in range(n_pf_coil_groups):
@@ -392,7 +393,7 @@ class Power(Model):
 
             #  Compute the sum of resistive power in the PF circuits, kW
             pfbuspwr += 1.0e-3 * res_pf_bus[a_pf_bus_cm] * cptburn**2
-            pf_power_variables.srcktpm += (
+            self.data.pf_power.srcktpm += (
                 1.0e3 * p_pf_circuit_resistive_peak[a_pf_bus_cm]
             )
 
@@ -490,7 +491,7 @@ class Power(Model):
                 )
                 > 1.0e0
             ):
-                pf_power_variables.poloidalpower[idx_time_interval] = (
+                self.data.pf_power.poloidalpower[idx_time_interval] = (
                     poloidalenergy[idx_time_interval + 1]
                     - poloidalenergy[idx_time_interval]
                 ) / (
@@ -499,7 +500,7 @@ class Power(Model):
                 )
             else:
                 # Flag when an interval is small or zero MDK 30/11/16
-                pf_power_variables.poloidalpower[idx_time_interval] = 9.9e9
+                self.data.pf_power.poloidalpower[idx_time_interval] = 9.9e9
 
             dt_pulse_phase_s = (
                 t_pulse_cumulative[idx_time_interval + 1]
@@ -536,22 +537,22 @@ class Power(Model):
         #  Compute the maximum stored energy and the maximum dissipative
         #  energy in all the PF circuits over the entire cycle time, MJ
         # ensxpfm = 1.0e-6 * ensxpf
-        pf_power_variables.ensxpfm = 1.0e-6 * max(poloidalenergy)
+        self.data.pf_power.ensxpfm = 1.0e-6 * max(poloidalenergy)
         # Peak absolute rate of change of stored energy in poloidal field (MW)
-        pf_power_variables.peakpoloidalpower = (
-            max(abs(pf_power_variables.poloidalpower)) / 1.0e6
+        self.data.pf_power.peakpoloidalpower = (
+            max(abs(self.data.pf_power.poloidalpower)) / 1.0e6
         )
 
         #  Maximum total MVA requirements
         self.data.heat_transport.peakmva = max((powpfr + powpfi), powpfr2)
 
-        pf_power_variables.vpfskv = 20.0e0
-        pf_power_variables.pfckts = (
+        self.data.pf_power.vpfskv = 20.0e0
+        self.data.pf_power.pfckts = (
             self.data.pf_coil.n_pf_cs_plasma_circuits - 2
         ) + 6.0e0
-        pf_power_variables.spfbusl = pfbusl * pf_power_variables.pfckts
-        pf_power_variables.acptmax = 0.0e0
-        pf_power_variables.spsmva = 0.0e0
+        self.data.pf_power.spfbusl = pfbusl * self.data.pf_power.pfckts
+        self.data.pf_power.acptmax = 0.0e0
+        self.data.pf_power.spsmva = 0.0e0
 
         for idx_circuit in range(self.data.pf_coil.n_pf_cs_plasma_circuits - 1):
             #  Power supply MVA for each PF circuit
@@ -561,13 +562,13 @@ class Power(Model):
             )
 
             #  Sum of the power supply MVA of the PF circuits
-            pf_power_variables.spsmva += psmva[idx_circuit]
+            self.data.pf_power.spsmva += psmva[idx_circuit]
 
             #  Average of the maximum currents in the PF circuits, kA
-            pf_power_variables.acptmax += (
+            self.data.pf_power.acptmax += (
                 1.0e-3
                 * abs(self.data.pf_coil.c_pf_coil_turn_peak_input[idx_circuit])
-                / pf_power_variables.pfckts
+                / self.data.pf_power.pfckts
             )
 
         #  PF wall plug power dissipated in power supply for ohmic heating (MW)
@@ -589,20 +590,20 @@ class Power(Model):
             self.outfile,
             "Number of PF coil circuits",
             "(pfckts)",
-            pf_power_variables.pfckts,
+            self.data.pf_power.pfckts,
         )
         po.ovarre(
             self.outfile,
             "Sum of PF power supply ratings (MVA)",
             "(spsmva)",
-            pf_power_variables.spsmva,
+            self.data.pf_power.spsmva,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Total PF coil circuit bus length (m)",
             "(spfbusl)",
-            pf_power_variables.spfbusl,
+            self.data.pf_power.spfbusl,
             "OP ",
         )
         po.ovarre(
@@ -616,14 +617,14 @@ class Power(Model):
             self.outfile,
             "Total PF coil resistive power (kW)",
             "(srcktpm)",
-            pf_power_variables.srcktpm,
+            self.data.pf_power.srcktpm,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Maximum PF coil voltage (kV)",
             "(vpfskv)",
-            pf_power_variables.vpfskv,
+            self.data.pf_power.vpfskv,
         )
         po.ovarre(
             self.outfile,
@@ -641,14 +642,14 @@ class Power(Model):
             self.outfile,
             "Maximum stored energy in poloidal field (MJ)",
             "(ensxpfm)",
-            pf_power_variables.ensxpfm,
+            self.data.pf_power.ensxpfm,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Peak absolute rate of change of stored energy in poloidal field (MW)",
             "(peakpoloidalpower)",
-            pf_power_variables.peakpoloidalpower,
+            self.data.pf_power.peakpoloidalpower,
             "OP ",
         )
 
@@ -658,7 +659,7 @@ class Power(Model):
                 "Max permitted abs rate of change of stored energy in poloidal "
                 "field (MW)",
                 "maxpoloidalpower",
-                pf_power_variables.maxpoloidalpower,
+                self.data.pf_power.maxpoloidalpower,
             )
 
         if any(poloidalenergy < 0.0e0):
@@ -686,8 +687,8 @@ class Power(Model):
 
         """
         ptfmw = self.data.heat_transport.p_tf_electric_supplies_mw
-        ppfmw = 1.0e-3 * pf_power_variables.srcktpm
-        if pf_power_variables.i_pf_energy_storage_source == 2:
+        ppfmw = 1.0e-3 * self.data.pf_power.srcktpm
+        if self.data.pf_power.i_pf_energy_storage_source == 2:
             ppfmw += self.data.heat_transport.peakmva
 
         #  Power to plasma heating supplies, MW
@@ -715,7 +716,7 @@ class Power(Model):
 
         #  Add contribution from motor-generator flywheels if these are part of
         #  the PF coil energy storage system
-        if pf_power_variables.i_pf_energy_storage_source != 2:
+        if self.data.pf_power.i_pf_energy_storage_source != 2:
             self.data.heat_transport.pacpmw += self.data.heat_transport.fmgdmw
 
         # Estimate of the total low voltage power, MW
@@ -1036,7 +1037,7 @@ class Power(Model):
                 tfcoil_variables.tfcryoarea,
                 self.data.structure.coldmass,
                 self.data.fwbs.p_tf_nuclear_heat_mw,
-                pf_power_variables.ensxpfm,
+                self.data.pf_power.ensxpfm,
                 self.data.times.t_plant_pulse_plasma_present,
                 tfcoil_variables.c_tf_turn,
                 tfcoil_variables.n_tf_coils,

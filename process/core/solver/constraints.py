@@ -1376,15 +1376,15 @@ def constraint_equation_65(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(66, "MW", "<=")
-def constrain_equation_66(constraint_registration, _data):
+def constrain_equation_66(constraint_registration, data):
     """Upper limit on rate of change of energy in poloidal field
 
     maxpoloidalpower: Maximum permitted absolute rate of change of stored energy in poloidal field (MW)
     peakpoloidalpower: Peak absolute rate of change of stored energy in poloidal field (MW) (11/01/16)
     """
     return leq(
-        data_structure.pf_power_variables.peakpoloidalpower,
-        data_structure.pf_power_variables.maxpoloidalpower,
+        data.pf_power.peakpoloidalpower,
+        data.pf_power.maxpoloidalpower,
         constraint_registration,
     )
 

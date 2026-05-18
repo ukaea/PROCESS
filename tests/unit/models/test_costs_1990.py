@@ -7,7 +7,6 @@ import pytest
 
 from process import data_structure
 from process.data_structure import (
-    pf_power_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -3649,17 +3648,17 @@ def test_acc2252(acc2252param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.heat_transport, "peakmva", acc2252param.peakmva)
 
-    monkeypatch.setattr(pf_power_variables, "ensxpfm", acc2252param.ensxpfm)
+    monkeypatch.setattr(costs.data.pf_power, "ensxpfm", acc2252param.ensxpfm)
 
-    monkeypatch.setattr(pf_power_variables, "spfbusl", acc2252param.spfbusl)
+    monkeypatch.setattr(costs.data.pf_power, "spfbusl", acc2252param.spfbusl)
 
-    monkeypatch.setattr(pf_power_variables, "pfckts", acc2252param.pfckts)
+    monkeypatch.setattr(costs.data.pf_power, "pfckts", acc2252param.pfckts)
 
-    monkeypatch.setattr(pf_power_variables, "srcktpm", acc2252param.srcktpm)
+    monkeypatch.setattr(costs.data.pf_power, "srcktpm", acc2252param.srcktpm)
 
-    monkeypatch.setattr(pf_power_variables, "vpfskv", acc2252param.vpfskv)
+    monkeypatch.setattr(costs.data.pf_power, "vpfskv", acc2252param.vpfskv)
 
-    monkeypatch.setattr(pf_power_variables, "acptmax", acc2252param.acptmax)
+    monkeypatch.setattr(costs.data.pf_power, "acptmax", acc2252param.acptmax)
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2252param.c22)
 
