@@ -598,6 +598,32 @@ def plot_quench_time_evolution(
     axes_2.legend(fontsize=9)
     axes_2.grid(True, alpha=0.3)
 
+    # Mark tau_discharge after detection time with vertical and horizontal lines
+    tau_time = detection_time + tau_discharge
+    tau_j = j_max * np.exp(-1)  # current density at t = detection_time + tau_discharge
+    tau_temp = float(np.interp(tau_time, times, hotspot_temp))
+
+    for ax, val, label in [
+        (axes_1, tau_j, f"J at τ ({tau_j:.2e} A/m²)"),
+        (axes_2, tau_temp, f"T at τ ({tau_temp:.1f} K)"),
+    ]:
+        ax.axvline(
+            tau_time,
+            color="forestgreen",
+            linestyle="--",
+            linewidth=1.5,
+            label=f"t_detect + τ ({tau_time:.2f} s)",
+        )
+        ax.axhline(
+            val,
+            color="forestgreen",
+            linestyle=":",
+            linewidth=1.5,
+            label=label,
+        )
+    axes_1.legend(fontsize=9)
+    axes_2.legend(fontsize=9)
+
     if figure is not None:
         figure.tight_layout()
     else:
