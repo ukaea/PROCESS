@@ -443,8 +443,8 @@ def plot_quench_time_evolution(
     fluence: float,
     j_operating: float,
     n_points: int = 500,
-    axes_1: plt.Axes | None = None,
-    axes_2: plt.Axes | None = None,
+    axes_1: plt.Axes = None,
+    axes_2: plt.Axes = None,
     show: bool = False,
 ) -> None:
     """Plots the time evolution of the quench model hotspot temperature and current.
@@ -667,7 +667,7 @@ def plot_quench_time_evolution(
         color="grey",
         linestyle=":",
         linewidth=1.5,
-        label=f"temp_quench_max = {temp_quench_max} K",
+        label=f"$T_{{\\text{{max}}}}$ = {temp_quench_max} K",
     )
     axes_2.set_xlabel("Time [s]")
     axes_2.set_ylabel("Temperature [K]")
