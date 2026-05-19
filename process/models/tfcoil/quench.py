@@ -596,7 +596,7 @@ def plot_quench_time_evolution(
         j_profile_required,
         color="darkorange",
         linewidth=2,
-        label="Required current density for protection",
+        label=f"Max allowed current density for protection (fluence = {fluence:.2e} n/m²)",
     )
     axes_1.plot(
         times,
@@ -604,7 +604,7 @@ def plot_quench_time_evolution(
         color="darkorange",
         linewidth=2,
         linestyle="--",
-        label="Required current density for protection (fluence = 1e23 n/m²)",
+        label="Max allowed current density for protection (fluence = 1e23 n/m²)",
     )
     axes_1.plot(
         times,
@@ -636,7 +636,7 @@ def plot_quench_time_evolution(
         hotspot_temp_required,
         color="darkorange",
         linewidth=2,
-        label="Required hotspot temperature",
+        label=f"Hotspot temperature at protection limit (fluence = {fluence:.2e} n/m²)",
     )
     axes_2.plot(
         times,
@@ -644,14 +644,14 @@ def plot_quench_time_evolution(
         color="darkorange",
         linewidth=2,
         linestyle="--",
-        label="Required hotspot temperature (fluence = 1e23 n/m²)",
+        label="Hotspot temperature at protection limit (fluence = 1e23 n/m²)",
     )
     axes_2.plot(
         times,
         hotspot_temp_real,
         color="blue",
         linewidth=2,
-        label=f"Real hotspot temperature (fluence = {fluence} n/m²)",
+        label="Operating hotspot temperature",
     )
 
     axes_2.axvline(
@@ -659,7 +659,7 @@ def plot_quench_time_evolution(
         color="crimson",
         linestyle="--",
         linewidth=1.5,
-        label=f"$t_{{\\text{{detect}}}}$ ({t_quench_detection:.1f} s)",
+        label=f"$t_{{\\text{{detect}}}}$ ({t_quench_detection:.2f} s)",
     )
     axes_2.axvspan(0, t_quench_detection, alpha=0.08, color="crimson")
     axes_2.axhline(
