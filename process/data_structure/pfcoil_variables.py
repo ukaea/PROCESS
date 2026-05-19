@@ -37,6 +37,11 @@ class PFCoilData:
     stress_z_cs_self_peak_midplane: float = 0.0
     """Peak axial stress (z) in central solenoid at midplane due to its own field (when at peak current) (Pa)"""
 
+    stress_z_cs_self_midplane_profile: list[float] = field(
+        default_factory=lambda: np.zeros(6)
+    )
+    """Axial stress (z) in central solenoid at midplane due to its own field at each time point (Pa)"""
+
     sig_hoop: float = 0.0
 
     forc_z_cs_self_peak_midplane: float = 0.0

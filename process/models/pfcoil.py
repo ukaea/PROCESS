@@ -2543,6 +2543,13 @@ class PFCoil(Model):
                 f"(b_pf_coil_peak[{k}])",
                 self.data.pf_coil.b_pf_coil_peak[k],
             )
+        for time in range(6):
+            op.ovarre(
+                self.mfile,
+                f"CS coil midplane axial stress at time point {time} (MPa)",
+                f"(stress_z_cs_self_midplane_profile[{time}])",
+                self.data.pf_coil.stress_z_cs_self_midplane_profile[time],
+            )
         self.tf_pf_collision_detector()
 
         # Central Solenoid, if present
@@ -3558,6 +3565,7 @@ class CSCoil(Model):
             self.data.pf_coil.p_pf_coil_resistive_total_flat_top += (
                 self.data.pf_coil.p_cs_resistive_flat_top
             )
+        self.calculate_cs_self_midplane_axial_stress_time_profile()
 
     def calculate_cs_self_peak_magnetic_field(
         self,
@@ -3726,15 +3734,16 @@ class CSCoil(Model):
                 The first element is the unsmeared axial stress in MPa.
                 The second element is the axial force in newtons (N).
 
-        :note:
-           The axial force is computed using elliptic-integral based terms and the
-           unsmeared axial stress is obtained by dividing the axial force by
-           the effective steel area associated with the CS turns.
+        Notes
+        -----
+        The axial force is computed using elliptic-integral based terms and the
+        unsmeared axial stress is obtained by dividing the axial force by
+        the effective steel area associated with the CS turns.
 
         References
         ----------
-            - Case Studies in Superconducting Magnets. Boston, MA: Springer US, 2009.
-              doi: https://doi.org/10.1007/b112047.
+        [1] Case Studies in Superconducting Magnets. Boston, MA: Springer US, 2009.
+            doi: https://doi.org/10.1007/b112047.
         """
         # kb term for elliptical integrals
         # kb2 = SQRT((4.0e0*b**2)/(4.0e0*b**2 + hl**2))
@@ -3780,6 +3789,29 @@ class CSCoil(Model):
         s_axial = forc_z_cs_self_peak_midplane / (0.5 * area_ax)
 
         return s_axial, forc_z_cs_self_peak_midplane
+
+    def calculate_cs_self_midplane_axial_stress_time_profile(
+        self,
+    ) -> None:
+        for time in range(6):
+            stress_value, _ = self.calculate_cs_self_peak_midplane_axial_stress(
+                r_cs_outer=self.data.pf_coil.r_pf_coil_outer[
+                    self.data.pf_coil.n_cs_pf_coils - 1
+                ],
+                r_cs_inner=self.data.pf_coil.r_pf_coil_inner[
+                    self.data.pf_coil.n_cs_pf_coils - 1
+                ],
+                dz_cs_half=self.data.pf_coil.dz_cs_full / 2.0,
+                c_cs_peak=(
+                    self.data.pf_coil.c_pf_coil_turn[
+                        self.data.pf_coil.n_cs_pf_coils - 1, time
+                    ]
+                    * self.data.pf_coil.n_pf_coil_turns[
+                        self.data.pf_coil.n_cs_pf_coils - 1
+                    ]
+                ),
+            )
+            self.data.pf_coil.stress_z_cs_self_midplane_profile[time] = stress_value
 
     def hoop_stress(self, r):
         """Calculation of hoop stress of central solenoid.
