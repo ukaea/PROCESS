@@ -9,7 +9,7 @@ class StellaratorData:
     f_st_rmajor: float = 0.0
     """Actual major radius to reference value from stella_config file"""
 
-    f_st_aspect: float = None
+    f_st_aspect: float = 0.0
     """Actual aspect ratio to reference value from stella_config file"""
 
     f_st_coil_aspect: float = 1.0
