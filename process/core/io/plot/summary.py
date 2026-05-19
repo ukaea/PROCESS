@@ -80,6 +80,7 @@ from process.models.tfcoil.base import (
     TFPlasmaCaseType,
 )
 from process.models.tfcoil.superconducting import SuperconductingTFTurnType
+from process.models.tfcoil.quench import plot_quench_time_evolution
 
 
 @dataclass
@@ -14963,13 +14964,26 @@ def main_plot(
             plot_205 = figs[25].add_subplot(223, aspect="equal")
             plot_205.set_position([0.075, 0.1, 0.3, 0.3])
             plot_cable_in_conduit_cable(plot_205, figs[25], m_file, scan)
+            plot_quench_time_evolution(
+            tau_discharge=m_file.get("t_tf_superconductor_quench", scan=scan),
+            peak_field=m_file.get("b_tf_inboard_peak_with_ripple", scan=scan),
+            f_cu=0.3,
+            f_he=0.2,
+            t_he_peak=m_file.get("tftmp", scan=scan),
+            t_max=m_file.get("temp_tf_conductor_quench_max", scan=scan),
+            cu_rrr=100.0,
+            detection_time=m_file.get("t_tf_quench_detection", scan=scan),
+            fluence=0.0,
+            axes_1=figs[26].add_subplot(211),
+            axes_2=figs[26].add_subplot(212),
+        )
     else:
         ax19 = figs[24].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
         plot_resistive_tf_wp(ax19, m_file, scan, figs[24])
         plot_resistive_tf_info(ax19, m_file, scan, figs[24])
     plot_tf_coil_structure(
-        figs[26].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
+        figs[27].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
     )
 
     plot_plasma_outboard_toroidal_ripple_map(figs[27], m_file, scan)

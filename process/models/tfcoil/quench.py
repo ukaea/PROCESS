@@ -3,6 +3,7 @@
 from typing import Final
 from warnings import warn
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 # TODO: Use of CoolProp prevents nb.jit at present...
@@ -428,3 +429,179 @@ def calculate_quench_protection_current_density(
     total_integral = f_he * i_he + f_cu_cable * i_cu + f_sc_cable * i_sc
 
     return np.sqrt(factor * f_cu_cable * total_integral)
+
+
+def plot_quench_time_evolution(
+    tau_discharge: float,
+    peak_field: float,
+    f_cu: float,
+    f_he: float,
+    t_he_peak: float,
+    t_max: float,
+    cu_rrr: float,
+    detection_time: float,
+    fluence: float,
+    n_points: int = 500,
+    axes_1: plt.Axes | None = None,
+    axes_2: plt.Axes | None = None,
+    show: bool = False,
+) -> None:
+    """Plots the time evolution of the quench model hotspot temperature and current.
+
+    Visualises the adiabatic hotspot temperature rise and exponentially decaying
+    current during a quench, highlighting the quench detection time.
+
+    Parameters
+    ----------
+    tau_discharge:
+        Quench discharge time constant [s].
+    peak_field:
+        Magnetic field at the peak point [T].
+    f_cu:
+        Fraction of conductor cross-section that is copper.
+    f_he:
+        Fraction of cable occupied by helium.
+    t_he_peak:
+        Peak helium temperature at quench initiation [K].
+    t_max:
+        Maximum allowed conductor temperature during quench [K].
+    cu_rrr:
+        Residual resistivity ratio of copper.
+    detection_time:
+        Detection time delay [s].
+    fluence:
+        Neutron fluence [n/m²].
+    n_points:
+        Number of time points for the plot.
+    axes_1:
+        Optional axis for the current density panel.
+    axes_2:
+        Optional axis for the hotspot temperature panel.
+    show:
+        Whether to display the plot with Matplotlib. Defaults to False to avoid
+        GUI backend warnings in non-interactive environments.
+    """
+    figure = None
+    if axes_1 is None and axes_2 is None:
+        figure, (axes_1, axes_2) = plt.subplots(2, 1, sharex=True)
+    elif axes_1 is None or axes_2 is None:
+        msg = "Both axes_1 and axes_2 must be provided together, or neither."
+        raise ValueError(msg)
+
+    fluence = np.clip(fluence, 0.0, 1.5e23)
+
+    j_max = calculate_quench_protection_current_density(
+        tau_discharge,
+        peak_field,
+        f_cu,
+        f_he,
+        t_he_peak,
+        t_max,
+        cu_rrr,
+        detection_time,
+        fluence,
+    )
+
+    # Time axis: from 0 to ~4 time constants
+    t_end = 4.0 * tau_discharge
+    times = np.linspace(0.0, t_end, n_points)
+
+    # Current density decays exponentially after detection
+    current_density = np.where(
+        times < detection_time,
+        j_max,
+        j_max * np.exp(-(times - detection_time) / tau_discharge),
+    )
+
+    # Adiabatic hotspot temperature: integrate heat balance over time
+    # T(t) is found by inverting: integral_{T0}^{T(t)} [sum(rho*cp)] / rho_cu dT = integral_0^t J^2 dt
+    # We accumulate the "MIIT" (integral J^2 dt) and map it to temperature via the precomputed integral.
+    pressure = 6e5
+    f_cond = 1.0 - f_he
+    f_cu_cable = f_cond * f_cu
+    f_sc_cable = f_cond * (1.0 - f_cu)
+
+    # Build a temperature lookup: cumulative integral from t_he_peak to T
+    n_temp = 300
+    temp_array = np.linspace(t_he_peak, t_max, n_temp)
+    cum_integral = np.zeros(n_temp)
+    for k in range(1, n_temp):
+        t_lo = temp_array[k - 1]
+        t_hi = temp_array[k]
+        # Gauss-Legendre integration over [t_lo, t_hi]
+        val = 0.0
+        for xi, wi in zip(GAUSS_LEG_NODES, GAUSS_LEG_WEIGHTS, strict=False):
+            ti = 0.5 * (xi + 1.0) * (t_hi - t_lo) + t_lo
+            dti = 0.5 * wi * (t_hi - t_lo)
+            nu_cu = _copper_electrical_resistivity(ti, peak_field, cu_rrr, fluence)
+            he_props = FluidProperties.of("He", temperature=ti, pressure=pressure)
+            integrand = (
+                f_he * he_props.specific_heat_const_p * he_props.density
+                + f_cu_cable * _copper_specific_heat_capacity(ti) * COPPER_DENSITY
+                + f_sc_cable * _nb3sn_specific_heat_capacity(ti) * NB3SN_DENSITY
+            ) / nu_cu
+            val += dti * integrand
+        cum_integral[k] = cum_integral[k - 1] + val
+
+    # Numerically integrate J^2 dt over time to get MIIT at each time step
+    dt = times[1] - times[0]
+    miit = np.cumsum(current_density**2) * dt
+
+    # Map MIIT -> temperature via inverse interpolation of cum_integral * f_cu_cable
+    scaled_integral = f_cu_cable * cum_integral
+    hotspot_temp = np.interp(miit, scaled_integral, temp_array)
+
+    # --- Current density panel ---
+    axes_1.plot(
+        times,
+        current_density,
+        color="steelblue",
+        linewidth=2,
+        label="Current density",
+    )
+    axes_1.axvline(
+        detection_time,
+        color="crimson",
+        linestyle="--",
+        linewidth=1.5,
+        label=f"Detection time ({detection_time:.1f} s)",
+    )
+    axes_1.axvspan(
+        0, detection_time, alpha=0.08, color="crimson", label="Pre-detection phase"
+    )
+    axes_1.set_ylabel("Current density [A/m²]")
+    axes_1.legend(fontsize=9)
+    axes_1.grid(True, alpha=0.3)
+    axes_1.set_title("Quench model time evolution")
+
+    # --- Temperature panel ---
+    axes_2.plot(
+        times,
+        hotspot_temp,
+        color="darkorange",
+        linewidth=2,
+        label="Hotspot temperature",
+    )
+    axes_2.axvline(
+        detection_time,
+        color="crimson",
+        linestyle="--",
+        linewidth=1.5,
+        label=f"Detection time ({detection_time:.1f} s)",
+    )
+    axes_2.axvspan(0, detection_time, alpha=0.08, color="crimson")
+    axes_2.axhline(
+        t_max, color="grey", linestyle=":", linewidth=1.5, label=f"T_max = {t_max} K"
+    )
+    axes_2.set_xlabel("Time [s]")
+    axes_2.set_ylabel("Temperature [K]")
+    axes_2.legend(fontsize=9)
+    axes_2.grid(True, alpha=0.3)
+
+    if figure is not None:
+        figure.tight_layout()
+    else:
+        plt.tight_layout()
+
+    if show:
+        plt.show()
