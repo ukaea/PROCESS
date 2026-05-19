@@ -50,7 +50,7 @@ class NeoclassicsData:
     er: float = 0.0
     """Radial electrical field [V/m]"""
 
-    iota: float = None
+    iota: float = 0.0
     """Iota (1/safety factor)"""
 
     d11_mono: list[float] = field(default_factory=lambda: np.zeros((4, NO_ROOTS)))
