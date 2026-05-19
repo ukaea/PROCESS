@@ -626,7 +626,9 @@ def plot_quench_time_evolution(
     axes_1.set_ylabel("Current density [A/m²]")
     axes_1.legend(fontsize=9)
     axes_1.grid(True, alpha=0.3)
-    axes_1.set_title("Quench model time evolution")
+    axes_1.set_title(
+        "TF Coil Quench Protection: Current Density and Hotspot Temperature Evolution"
+    )
 
     # --- Temperature panel ---
     axes_2.plot(
@@ -649,7 +651,7 @@ def plot_quench_time_evolution(
         hotspot_temp_real,
         color="blue",
         linewidth=2,
-        label="Real hotspot temperature",
+        label=f"Real hotspot temperature (fluence = {fluence} n/m²)",
     )
 
     axes_2.axvline(
