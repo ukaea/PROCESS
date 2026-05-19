@@ -741,6 +741,9 @@ class Models:
             self.plasma_dia_current,
             self.plasma_bootstrap_current,
             self.plasma_exhaust,
+            self.stellarator,
+            self.plasma_current,
+            self.neoclassics,
         )
 
     def setup_data_structure(self):

@@ -3,9 +3,7 @@ import logging
 import numpy as np
 
 from process.core.exceptions import ProcessValueError
-from process.data_structure import (
-    stellarator_configuration,
-)
+from process.core.model import DataStructure
 from process.models import superconductors
 
 logger = logging.getLogger(__name__)
@@ -255,7 +253,9 @@ def intersect(x1, y1, x2, y2, xin):
     return x
 
 
-def bmax_from_awp(wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_minor):
+def bmax_from_awp(
+    wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_minor, data: DataStructure
+):
     """Returns a fitted function for bmax for stellarators
 
     Returns a fitted function for bmax in dependence
@@ -274,7 +274,8 @@ def bmax_from_awp(wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_min
 
     r_coil_minor :
 
-
+    data: DataStructure
+        data structure object
     """
     return (
         2e-1  # this is mu x 1e6, to use current in MA
@@ -282,7 +283,7 @@ def bmax_from_awp(wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_min
         * n_tf_coils
         / (r_coil_major - r_coil_minor)
         * (
-            stellarator_configuration.stella_config_a1
-            + stellarator_configuration.stella_config_a2 * r_coil_major / wp_width_radial
+            data.stellarator_config.stella_config_a1
+            + data.stellarator_config.stella_config_a2 * r_coil_major / wp_width_radial
         )
     )

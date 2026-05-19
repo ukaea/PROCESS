@@ -737,7 +737,7 @@ def constraint_equation_23(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(24, "", "<=")
-def constraint_equation_24(constraint_registration, _data):
+def constraint_equation_24(constraint_registration, data):
     """Equation for beta upper limit
 
     i_beta_component: switch for beta limit scaling (constraint equation  24):
@@ -758,7 +758,7 @@ def constraint_equation_24(constraint_registration, _data):
     # Include all beta components: relevant for both tokamaks and stellarators
     if (
         data_structure.physics_variables.i_beta_component == BetaComponentLimits.TOTAL
-        or data_structure.stellarator_variables.istell != 0
+        or data.stellarator.istell != 0
     ):
         value = data_structure.physics_variables.beta_total_vol_avg
     # Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
@@ -1821,15 +1821,15 @@ def constraint_equation_91(constraint_registration, data):
     # Achievable ECRH te needs to be larger than needed te for igntion
     if data_structure.physics_variables.i_plasma_ignited == 0:
         value = (
-            data_structure.stellarator_variables.powerht_constraint
+            data.stellarator.powerht_constraint
             + data.current_drive.p_hcd_primary_extra_heat_mw
         )
     else:
-        value = data_structure.stellarator_variables.powerht_constraint
+        value = data.stellarator.powerht_constraint
 
     return geq(
         value,
-        data_structure.stellarator_variables.powerscaling_constraint,
+        data.stellarator.powerscaling_constraint,
         constraint_registration,
     )
 

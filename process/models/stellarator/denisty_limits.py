@@ -5,15 +5,12 @@ import numpy as np
 
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
-from process.data_structure import (
-    physics_variables,
-    stellarator_variables,
-)
+from process.data_structure import physics_variables
 
 logger = logging.getLogger(__name__)
 
 
-def st_denisty_limits(stellarator, f_output):
+def st_denisty_limits(stellarator, f_output, data):
     """Routine to reiterate the physics loop
 
     This routine reiterates some physics modules.
@@ -24,6 +21,8 @@ def st_denisty_limits(stellarator, f_output):
 
     f_output :
 
+    data: DataStructure
+        data structure object
 
     """
     #  Set the required value for icc=5
@@ -37,7 +36,7 @@ def st_denisty_limits(stellarator, f_output):
     # Calculates the ECRH parameters
 
     ne0_max_ECRH, bt_ecrh = st_d_limit_ecrh(
-        stellarator_variables.max_gyrotron_frequency,
+        data.stellarator.max_gyrotron_frequency,
         physics_variables.b_plasma_toroidal_on_axis,
     )
 
@@ -45,11 +44,7 @@ def st_denisty_limits(stellarator, f_output):
     bt_ecrh = min(physics_variables.b_plasma_toroidal_on_axis, bt_ecrh)
 
     if f_output:
-        output(
-            stellarator,
-            bt_ecrh,
-            ne0_max_ECRH,
-        )
+        output(stellarator, bt_ecrh, ne0_max_ECRH, data)
 
 
 def st_sudo_density_limit(b_plasma_toroidal_on_axis, powht, rmajor, rminor):
@@ -218,14 +213,14 @@ def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available):
     return powerht_out, pscalingmw_out
 
 
-def output(stellarator, bt_ecrh, ne0_max_ECRH):
+def output(stellarator, bt_ecrh, ne0_max_ECRH, data):
     po.oheadr(stellarator.outfile, "ECRH Ignition at lower values. Information:")
 
     po.ovarre(
         stellarator.outfile,
         "Maximal available gyrotron freq (input)",
         "(max_gyro_frequency)",
-        stellarator_variables.max_gyrotron_frequency,
+        data.stellarator.max_gyrotron_frequency,
     )
 
     po.ovarre(
@@ -259,13 +254,13 @@ def output(stellarator, bt_ecrh, ne0_max_ECRH):
         stellarator.outfile,
         "Maximum reachable ECRH temperature (pseudo) (KEV)",
         "(te0_ecrh_achievable)",
-        stellarator_variables.te0_ecrh_achievable,
+        data.stellarator.te0_ecrh_achievable,
     )
 
     powerht_local, pscalingmw_local = power_at_ignition_point(
         stellarator,
-        stellarator_variables.max_gyrotron_frequency,
-        stellarator_variables.te0_ecrh_achievable,
+        data.stellarator.max_gyrotron_frequency,
+        data.stellarator.te0_ecrh_achievable,
     )
     po.ovarre(
         stellarator.outfile,

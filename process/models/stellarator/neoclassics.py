@@ -3,22 +3,27 @@ import logging
 import numpy as np
 
 from process.core import constants
+from process.core.model import Model
 from process.data_structure import (
     impurity_radiation_module,
     neoclassics_variables,
     physics_variables,
-    stellarator_configuration,
-    stellarator_variables,
 )
 from process.models.stellarator.stellarator import KEV
 
 logger = logging.getLogger(__name__)
 
 
-class Neoclassics:
+class Neoclassics(Model):
     @property
     def no_roots(self):
         return neoclassics_variables.roots.shape[0]
+
+    def output(self):
+        """This model doesn't have any output"""
+
+    def run(self):
+        """This model doesn't need to be run"""
 
     def init_neoclassics(self, r_effin, eps_effin, iotain):
         """Constructor of the neoclassics object from the effective radius,
@@ -275,14 +280,14 @@ class Neoclassics:
         return dens, temp, dr_dens, dr_temp
 
     def calc_neoclassics(self):
-        if stellarator_configuration.stella_config_epseff < 0:
+        if self.data.stellarator_config.stella_config_epseff < 0:
             logger.error(
-                f"epseff value lower than 0:  {stellarator_configuration.stella_config_epseff}"
+                f"epseff value lower than 0:  {self.data.stellarator_config.stella_config_epseff}"
             )
         self.init_neoclassics(
             0.6,
-            stellarator_configuration.stella_config_epseff,
-            stellarator_variables.iotabar,
+            self.data.stellarator_config.stella_config_epseff,
+            self.data.stellarator.iotabar,
         )
 
         q_PROCESS = (
@@ -781,21 +786,21 @@ class Neoclassics:
     def st_calc_eff_chi(self):
         volscaling = (
             physics_variables.vol_plasma
-            * stellarator_variables.f_st_rmajor
+            * self.data.stellarator.f_st_rmajor
             * (
                 impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor
-                / stellarator_configuration.stella_config_rminor_ref
+                / self.data.stellarator_config.stella_config_rminor_ref
             )
             ** 2
         )
         surfacescaling = (
             physics_variables.a_plasma_surface
-            * stellarator_variables.f_st_rmajor
+            * self.data.stellarator.f_st_rmajor
             * (
                 impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor
-                / stellarator_configuration.stella_config_rminor_ref
+                / self.data.stellarator_config.stella_config_rminor_ref
             )
         )
 
