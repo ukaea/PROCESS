@@ -2121,7 +2121,7 @@ class Physics(Model):
                 self.outfile,
                 "Divertor poloidal angle subtended by plasma (degrees)",
                 "(deg_div_poloidal_plasma)",
-                divertor_variables.deg_div_poloidal_plasma,
+                self.data.divertor.deg_div_poloidal_plasma,
                 "OP ",
             )
             po.ovarre(
