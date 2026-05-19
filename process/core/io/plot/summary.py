@@ -14966,14 +14966,15 @@ def main_plot(
             plot_cable_in_conduit_cable(plot_205, figs[25], m_file, scan)
             plot_quench_time_evolution(
             tau_discharge=m_file.get("t_tf_superconductor_quench", scan=scan),
-            peak_field=m_file.get("b_tf_inboard_peak_with_ripple", scan=scan),
+            b_peak=m_file.get("b_tf_inboard_peak_with_ripple", scan=scan),
             f_cu=0.3,
             f_he=0.2,
             t_he_peak=m_file.get("tftmp", scan=scan),
-            t_max=m_file.get("temp_tf_conductor_quench_max", scan=scan),
+            temp_quench_max=m_file.get("temp_tf_conductor_quench_max", scan=scan),
             cu_rrr=100.0,
-            detection_time=m_file.get("t_tf_quench_detection", scan=scan),
+            t_quench_detection=m_file.get("t_tf_quench_detection", scan=scan),
             fluence=0.0,
+            j_operating=m_file.get("j_tf_wp", scan=scan),
             axes_1=figs[26].add_subplot(211),
             axes_2=figs[26].add_subplot(212),
         )

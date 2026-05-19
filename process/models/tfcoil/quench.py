@@ -13,8 +13,8 @@ __all__ = ["calculate_quench_protection_current_density"]
 
 # Material property parameterisations
 
-COPPER_DENSITY = 8960.0  # [kg/m^3]
-NB3SN_DENSITY = 8040.0  # [kg/m^3]
+COPPER_DENSITY = 8960.0  # [kg/m³]
+NB3SN_DENSITY = 8040.0  # [kg/m³]
 
 
 def _copper_specific_heat_capacity(temperature: float) -> float:
@@ -37,11 +37,11 @@ def _copper_specific_heat_capacity(temperature: float) -> float:
 
     References
     ----------
-        - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of
-          Copper and Copper Alloys at Cryogenic Temperatures",
-          U.S. Government Printing Office, February 1992.
-          https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
-          Equation 7-1
+    [1] J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of
+        Copper and Copper Alloys at Cryogenic Temperatures",
+        U.S. Government Printing Office, February 1992.
+        https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
+        Equation 7-1
     """
     poly_coeffs: Final[list[float]] = [1.131, -9.454, 12.99, -5.501, 0.7637]
     logt = np.log10(temperature)
@@ -67,16 +67,14 @@ def _copper_rrr_resistivity(temperature: float, rrr: float) -> float:
 
     References
     ----------
-        - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of
-          Copper and Copper Alloys at Cryogenic Temperatures",
-          U.S. Government Printing Office, February 1992.
-          https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
-          Equation 8-1
+    [1] J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of
+    Copper and Copper Alloys at Cryogenic Temperatures", U.S. Government Printing Office,
+    February 1992. https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
+    Equation 8-1
 
-        - J. G. Hust, A. B. Lankford, NBSIR 84-3007 "THERMAL CONDUCTIVITY OF
-          ALUMINUM, COPPER, IRON, AND TUNGSTEN FOR TEMPERATURES FROM  1 K TO THE
-          MELTING POINT", 1984
-          https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nbsir84-3007.pdf
+    [2] J. G. Hust, A. B. Lankford, NBSIR 84-3007 "THERMAL CONDUCTIVITY OF ALUMINUM,
+    COPPER, IRON, AND TUNGSTEN FOR TEMPERATURES FROM  1 K TO THE MELTING POINT", 1984
+    https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nbsir84-3007.pdf
     """
     p1: Final[float] = 1.171e-17
     p2: Final[float] = 4.49
@@ -132,11 +130,12 @@ def _copper_irradiation_resistivity(fluence: float) -> float:
 
     References
     ----------
-        - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program,
-          WP12, PEX, Super-X Divertor for DEMO.
-        - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at
-          4.6 K", *Phys. Rev. B*, 16, 5285 (1977).
-          https://doi.org/10.1103/PhysRevB.16.5285 Figure 6
+    [1] M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program,
+    WP12, PEX, Super-X Divertor for DEMO.
+
+    [2] M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at
+    4.6 K", *Phys. Rev. B*, 16, 5285 (1977). https://doi.org/10.1103/PhysRevB.16.5285
+    Figure 6
     """
     c1: Final[float] = 0.00283
     c2: Final[float] = -0.0711
@@ -171,11 +170,10 @@ def _copper_magneto_resistivity(resistivity: float, field: float) -> float:
 
     References
     ----------
-        - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of
-          Copper and Copper Alloys at Cryogenic Temperatures",
-          U.S. Government Printing Office, February 1992.
-          https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
-          Equation 8-7
+    [1] J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of
+    Copper and Copper Alloys at Cryogenic Temperatures", U.S. Government Printing Office,
+    February 1992. https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
+    Equation 8-7
     """
     p9: Final[float] = 1.553e-8
 
@@ -195,8 +193,7 @@ def _copper_electrical_resistivity(
     temperature: float, field: float, rrr: float, fluence: float
 ) -> float:
     """Calculates the electrical resistivity of cryogenic copper with temperature, RRR,
-     magnetic field, and fluence dependence  [Ω·m].
-
+    magnetic field, and fluence dependence  [Ω·m].
 
     Parameters
     ----------
@@ -220,22 +217,21 @@ def _copper_electrical_resistivity(
 
     References
     ----------
-    - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of
-      Copper and Copper Alloys at Cryogenic Temperatures",
-      U.S. Government Printing Office, February 1992.
-      https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
-      Equation 8-1
+    [1] J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of
+    Copper and Copper Alloys at Cryogenic Temperatures", U.S. Government Printing Office,
+    February 1992. https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
+    Equation 8-1
 
-    - J. G. Hust, A. B. Lankford, NBSIR 84-3007 "THERMAL CONDUCTIVITY OF  ALUMINUM,
-      COPPER, IRON, AND TUNGSTEN FOR TEMPERATURES FROM  1 K TO THE MELTING POINT", 1984
-      https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nbsir84-3007.pdf
+    [2] J. G. Hust, A. B. Lankford, NBSIR 84-3007 "THERMAL CONDUCTIVITY OF  ALUMINUM,
+    COPPER, IRON, AND TUNGSTEN FOR TEMPERATURES FROM  1 K TO THE MELTING POINT", 1984
+    https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nbsir84-3007.pdf
 
-    - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program,
-      WP12, PEX, Super-X Divertor for DEMO.
+    [3] M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program,
+    WP12, PEX, Super-X Divertor for DEMO.
 
-    - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at
-      4.6 K", *Phys. Rev. B*, 16, 5285 (1977). https://doi.org/10.1103/PhysRevB.16.5285
-      Figure 6
+    [4] M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at
+    4.6 K", *Phys. Rev. B*, 16, 5285 (1977). https://doi.org/10.1103/PhysRevB.16.5285
+    Figure 6
     """
     rho_rrr = _copper_rrr_resistivity(temperature, rrr)
     rho_irr = _copper_irradiation_resistivity(fluence)
@@ -265,16 +261,18 @@ def _nb3sn_specific_heat_capacity(temperature: float) -> float:
 
     References
     ----------
-    - EFDA Material Data Compilation for Superconductor Simulation, P. Bauer,
-      H. Rajainmaki, E. Salpietro, EFDA CSU, Garching, 04/18/07.
+    [1] EFDA Material Data Compilation for Superconductor Simulation, P. Bauer,
+    H. Rajainmaki, E. Salpietro, EFDA CSU, Garching, 04/18/07.
 
-    - ITER DRG1 Annex, Superconducting Material Database, Article 5,
-      N 11 FDR 42 01-07-05 R 0.1.
-    - V.D. Arp, Stability and Thermal Quenches in Force-Cooled Superconducting Cables,
-      Superconducting MHD Magnet Design Conf., MIT, pp 142-157, 1980.
-    - G.S. Knapp, S.D. Bader, Z. Fisk, Phonon properties of A-15 superconductors
-      obtained from heat capacity measurements, Phys. Rev. B, 13(9), pp 3783-3789, 1976.
-      https://doi.org/10.1103/PhysRevB.13.3783
+    [2] ITER DRG1 Annex, Superconducting Material Database, Article 5,
+    N 11 FDR 42 01-07-05 R 0.1.
+
+    [3] V.D. Arp, Stability and Thermal Quenches in Force-Cooled Superconducting Cables,
+    Superconducting MHD Magnet Design Conf., MIT, pp 142-157, 1980.
+
+    [4] G.S. Knapp, S.D. Bader, Z. Fisk, Phonon properties of A-15 superconductors
+    obtained from heat capacity measurements, Phys. Rev. B, 13(9), pp 3783-3789, 1976.
+    https://doi.org/10.1103/PhysRevB.13.3783
     """
     gamma: Final[float] = 0.1  # [J/K²/kg] (Grueneisen)
     beta: Final[float] = 0.001  # [J/K⁴/kg] (Debye)
@@ -295,7 +293,7 @@ GAUSS_LEG_NODES, GAUSS_LEG_WEIGHTS = np.polynomial.legendre.leggauss(75)
 
 def _quench_integrals(
     t_he_peak: float,
-    t_max: float,
+    temp_quench_max: float,
     field: float,
     rrr: float,
     fluence: float,
@@ -310,8 +308,8 @@ def _quench_integrals(
     ----------
     t_he_peak:
         t_he_peak: Lower temperature bound of integration [K].
-    t_max:
-        t_max: Upper temperature bound of integration [K].
+    temp_quench_max:
+        temp_quench_max: Upper temperature bound of integration [K].
     field:
         field: Magnetic field [T].
     rrr:
@@ -328,7 +326,7 @@ def _quench_integrals(
     Notes
     -----
     - Integrals assume temperature-dependent material models are defined for the entire
-      range [t_he_peak, t_max].
+      range [t_he_peak, temp_quench_max].
     - Helium is assumed to be at constant pressure throughout the quench
       (i.e. some PRV in the cooling system)
     """
@@ -341,8 +339,8 @@ def _quench_integrals(
     isc = 0.0
 
     for xi, wi in zip(GAUSS_LEG_NODES, GAUSS_LEG_WEIGHTS, strict=False):
-        ti = 0.5 * (xi + 1.0) * (t_max - t_he_peak) + t_he_peak
-        dti = 0.5 * wi * (t_max - t_he_peak)
+        ti = 0.5 * (xi + 1.0) * (temp_quench_max - t_he_peak) + t_he_peak
+        dti = 0.5 * wi * (temp_quench_max - t_he_peak)
 
         nu_cu = _copper_electrical_resistivity(ti, field, rrr, fluence)
         factor = dti / nu_cu
@@ -358,13 +356,13 @@ def _quench_integrals(
 
 def calculate_quench_protection_current_density(
     tau_discharge: float,
-    peak_field: float,
+    b_peak: float,
     f_cu: float,
     f_he: float,
     t_he_peak: float,
-    t_max: float,
+    temp_quench_max: float,
     cu_rrr: float,
-    detection_time: float,
+    t_quench_detection: float,
     fluence: float,
 ) -> float:
     """Calculates the current density limited by the protection limit.
@@ -381,20 +379,20 @@ def calculate_quench_protection_current_density(
     ----------
     tau_discharge:
         tau_discharge: Quench discharge time constant [s].
-    peak_field:
-        peak_field: Magnetic field at the peak point [T].
+    b_peak:
+        b_peak: Magnetic field at the peak point [T].
     f_cu:
         f_cu: Fraction of conductor cross-section that is copper.
     f_he:
         f_he: Fraction of cable occupied by helium.
     t_he_peak:
         t_he_peak: Peak helium temperature at quench initiation [K].
-    t_max:
-        t_max: Maximum allowed conductor temperature during quench [K].
+    temp_quench_max:
+        temp_quench_max: Maximum allowed conductor temperature during quench [K].
     cu_rrr:
         cu_rrr: Residual resistivity ratio of copper.
-    detection_time:
-        detection_time: Detection time delay [s].
+    t_quench_detection:
+        t_quench_detection: Detection time delay [s].
     fluence:
         fluence: Neutron fluence [n/m²].
 
@@ -419,13 +417,15 @@ def calculate_quench_protection_current_density(
         warn("Fluence values out of range [0.0, 1.5e23]; kludging.", stacklevel=2)
         fluence = np.clip(fluence, 0.0, 1.5e23)
 
-    i_he, i_cu, i_sc = _quench_integrals(t_he_peak, t_max, peak_field, cu_rrr, fluence)
+    i_he, i_cu, i_sc = _quench_integrals(
+        t_he_peak, temp_quench_max, b_peak, cu_rrr, fluence
+    )
 
     f_cond = 1.0 - f_he  # Fraction of the cable XS area that is not helium
     f_cu_cable = f_cond * f_cu  # Fraction of the cable XS that is copper
     f_sc_cable = f_cond * (1.0 - f_cu)  # Fraction of the cable XS that is superconductor
 
-    factor = 1.0 / (0.5 * tau_discharge + detection_time)
+    factor = 1.0 / (0.5 * tau_discharge + t_quench_detection)
     total_integral = f_he * i_he + f_cu_cable * i_cu + f_sc_cable * i_sc
 
     return np.sqrt(factor * f_cu_cable * total_integral)
@@ -433,14 +433,15 @@ def calculate_quench_protection_current_density(
 
 def plot_quench_time_evolution(
     tau_discharge: float,
-    peak_field: float,
+    b_peak: float,
     f_cu: float,
     f_he: float,
     t_he_peak: float,
-    t_max: float,
+    temp_quench_max: float,
     cu_rrr: float,
-    detection_time: float,
+    t_quench_detection: float,
     fluence: float,
+    j_operating: float,
     n_points: int = 500,
     axes_1: plt.Axes | None = None,
     axes_2: plt.Axes | None = None,
@@ -455,7 +456,7 @@ def plot_quench_time_evolution(
     ----------
     tau_discharge:
         Quench discharge time constant [s].
-    peak_field:
+    b_peak:
         Magnetic field at the peak point [T].
     f_cu:
         Fraction of conductor cross-section that is copper.
@@ -463,14 +464,16 @@ def plot_quench_time_evolution(
         Fraction of cable occupied by helium.
     t_he_peak:
         Peak helium temperature at quench initiation [K].
-    t_max:
+    temp_quench_max:
         Maximum allowed conductor temperature during quench [K].
     cu_rrr:
         Residual resistivity ratio of copper.
-    detection_time:
+    t_quench_detection:
         Detection time delay [s].
     fluence:
         Neutron fluence [n/m²].
+    j_operating:
+        Operating current density [A/m²] to compare against the quench protection limit.
     n_points:
         Number of time points for the plot.
     axes_1:
@@ -492,13 +495,13 @@ def plot_quench_time_evolution(
 
     j_max = calculate_quench_protection_current_density(
         tau_discharge,
-        peak_field,
+        b_peak,
         f_cu,
         f_he,
         t_he_peak,
-        t_max,
+        temp_quench_max,
         cu_rrr,
-        detection_time,
+        t_quench_detection,
         fluence,
     )
 
@@ -507,10 +510,16 @@ def plot_quench_time_evolution(
     times = np.linspace(0.0, t_end, n_points)
 
     # Current density decays exponentially after detection
-    current_density = np.where(
-        times < detection_time,
+    j_profile_required = np.where(
+        times < t_quench_detection,
         j_max,
-        j_max * np.exp(-(times - detection_time) / tau_discharge),
+        j_max * np.exp(-(times - t_quench_detection) / tau_discharge),
+    )
+
+    j_profile_real = np.where(
+        times < t_quench_detection,
+        j_operating,
+        j_operating * np.exp(-(times - t_quench_detection) / tau_discharge),
     )
 
     # Adiabatic hotspot temperature: integrate heat balance over time
@@ -523,7 +532,7 @@ def plot_quench_time_evolution(
 
     # Build a temperature lookup: cumulative integral from t_he_peak to T
     n_temp = 300
-    temp_array = np.linspace(t_he_peak, t_max, n_temp)
+    temp_array = np.linspace(t_he_peak, temp_quench_max, n_temp)
     cum_integral = np.zeros(n_temp)
     for k in range(1, n_temp):
         t_lo = temp_array[k - 1]
@@ -533,7 +542,7 @@ def plot_quench_time_evolution(
         for xi, wi in zip(GAUSS_LEG_NODES, GAUSS_LEG_WEIGHTS, strict=False):
             ti = 0.5 * (xi + 1.0) * (t_hi - t_lo) + t_lo
             dti = 0.5 * wi * (t_hi - t_lo)
-            nu_cu = _copper_electrical_resistivity(ti, peak_field, cu_rrr, fluence)
+            nu_cu = _copper_electrical_resistivity(ti, b_peak, cu_rrr, fluence)
             he_props = FluidProperties.of("He", temperature=ti, pressure=pressure)
             integrand = (
                 f_he * he_props.specific_heat_const_p * he_props.density
@@ -543,31 +552,40 @@ def plot_quench_time_evolution(
             val += dti * integrand
         cum_integral[k] = cum_integral[k - 1] + val
 
-    # Numerically integrate J^2 dt over time to get MIIT at each time step
+    # Numerically integrate J² dt over time to get MIIT at each time step
     dt = times[1] - times[0]
-    miit = np.cumsum(current_density**2) * dt
+    miit_required = np.cumsum(j_profile_required**2) * dt
+    miit_real = np.cumsum(j_profile_real**2) * dt
 
     # Map MIIT -> temperature via inverse interpolation of cum_integral * f_cu_cable
     scaled_integral = f_cu_cable * cum_integral
-    hotspot_temp = np.interp(miit, scaled_integral, temp_array)
+    hotspot_temp_required = np.interp(miit_required, scaled_integral, temp_array)
+    hotspot_temp_real = np.interp(miit_real, scaled_integral, temp_array)
 
     # --- Current density panel ---
     axes_1.plot(
         times,
-        current_density,
-        color="steelblue",
+        j_profile_required,
+        color="darkorange",
         linewidth=2,
-        label="Current density",
+        label="Required current density for protection",
+    )
+    axes_1.plot(
+        times,
+        j_profile_real,
+        color="blue",
+        linewidth=2,
+        label="Operating current density",
     )
     axes_1.axvline(
-        detection_time,
+        t_quench_detection,
         color="crimson",
         linestyle="--",
         linewidth=1.5,
-        label=f"Detection time ({detection_time:.1f} s)",
+        label=f"Detection time ({t_quench_detection:.1f} s)",
     )
     axes_1.axvspan(
-        0, detection_time, alpha=0.08, color="crimson", label="Pre-detection phase"
+        0, t_quench_detection, alpha=0.08, color="crimson", label="Pre-detection phase"
     )
     axes_1.set_ylabel("Current density [A/m²]")
     axes_1.legend(fontsize=9)
@@ -577,21 +595,32 @@ def plot_quench_time_evolution(
     # --- Temperature panel ---
     axes_2.plot(
         times,
-        hotspot_temp,
+        hotspot_temp_required,
         color="darkorange",
         linewidth=2,
-        label="Hotspot temperature",
+        label="Required hotspot temperature",
+    )
+    axes_2.plot(
+        times,
+        hotspot_temp_real,
+        color="blue",
+        linewidth=2,
+        label="Real hotspot temperature",
     )
     axes_2.axvline(
-        detection_time,
+        t_quench_detection,
         color="crimson",
         linestyle="--",
         linewidth=1.5,
-        label=f"Detection time ({detection_time:.1f} s)",
+        label=f"Detection time ({t_quench_detection:.1f} s)",
     )
-    axes_2.axvspan(0, detection_time, alpha=0.08, color="crimson")
+    axes_2.axvspan(0, t_quench_detection, alpha=0.08, color="crimson")
     axes_2.axhline(
-        t_max, color="grey", linestyle=":", linewidth=1.5, label=f"T_max = {t_max} K"
+        temp_quench_max,
+        color="grey",
+        linestyle=":",
+        linewidth=1.5,
+        label=f"temp_quench_max = {temp_quench_max} K",
     )
     axes_2.set_xlabel("Time [s]")
     axes_2.set_ylabel("Temperature [K]")
@@ -599,9 +628,11 @@ def plot_quench_time_evolution(
     axes_2.grid(True, alpha=0.3)
 
     # Mark tau_discharge after detection time with vertical and horizontal lines
-    tau_time = detection_time + tau_discharge
-    tau_j = j_max * np.exp(-1)  # current density at t = detection_time + tau_discharge
-    tau_temp = float(np.interp(tau_time, times, hotspot_temp))
+    tau_time = t_quench_detection + tau_discharge
+    tau_j = j_max * np.exp(
+        -1
+    )  # current density at t = t_quench_detection + tau_discharge
+    tau_temp = float(np.interp(tau_time, times, hotspot_temp_required))
 
     for ax, val, label in [
         (axes_1, tau_j, f"J at τ ({tau_j:.2e} A/m²)"),
