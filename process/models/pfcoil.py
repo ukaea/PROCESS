@@ -2,6 +2,7 @@ import logging
 import math
 from enum import IntEnum
 
+import matplotlib.pyplot as plt
 import numba
 import numpy as np
 from scipy import optimize
@@ -11,6 +12,7 @@ from scipy.special import ellipe, ellipk
 from process.core import constants
 from process.core import process_output as op
 from process.core.exceptions import ProcessValueError
+from process.core.io.mfile import MFile
 from process.core.model import DataStructure, Model
 from process.data_structure.pfcoil_variables import (
     N_PF_COILS_IN_GROUP_MAX,
@@ -2175,47 +2177,47 @@ class PFCoil(Model):
                 self.data.pf_coil.r_cs_middle,
                 "OP ",
             )
-                op.ovarre(
-                    self.outfile,
-                    "CS radial inner (m)",
-                    "(r_cs_inner)",
-                    pfcoil_variables.r_cs_inner,
-                    "OP ",
-                )
-                op.ovarre(
-                    self.outfile,
-                    "CS radial outer (m)",
-                    "(r_cs_outer)",
-                    pfcoil_variables.r_cs_outer,
-                    "OP ",
-                )
+            op.ovarre(
+                self.outfile,
+                "CS radial inner (m)",
+                "(r_cs_inner)",
+                self.data.pf_coil.r_cs_inner,
+                "OP ",
+            )
+            op.ovarre(
+                self.outfile,
+                "CS radial outer (m)",
+                "(r_cs_outer)",
+                self.data.pf_coil.r_cs_outer,
+                "OP ",
+            )
             op.ovarre(
                 self.outfile,
                 "CS conductor+void cross-sectional area (m2)",
                 "(a_cs_cable_space)",
-                pfcoil_variables.a_cs_cable_space,
+                self.data.pf_coil.a_cs_cable_space,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
                 "   CS conductor cross-sectional area (m2)",
                 "(a_cs_cable_space*(1-f_a_cs_void))",
-                pfcoil_variables.a_cs_cable_space
-                    * (1.0e0 - pfcoil_variables.f_a_cs_void),
+                self.data.pf_coil.a_cs_cable_space
+                * (1.0e0 - self.data.pf_coil.f_a_cs_void),
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
                 "   CS void cross-sectional area (m2)",
                 "(a_cs_cable_space*f_a_cs_void)",
-                pfcoil_variables.a_cs_cable_space * pfcoil_variables.f_a_cs_void,
+                self.data.pf_coil.a_cs_cable_space * self.data.pf_coil.f_a_cs_void,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
                 "CS steel cross-sectional area (m2)",
                 "(a_cs_steel_poloidal)",
-                pfcoil_variables.a_cs_steel_poloidal,
+                self.data.pf_coil.a_cs_steel_poloidal,
                 "OP ",
             )
             op.ovarre(
@@ -2245,7 +2247,7 @@ class PFCoil(Model):
                 self.outfile,
                 "Hoop stress in CS steel (Pa)",
                 "(stress_hoop_cs_inner)",
-                pfcoil_variables.stress_hoop_cs_inner,
+                self.data.pf_coil.stress_hoop_cs_inner,
                 "OP ",
             )
             op.ovarre(
@@ -3253,11 +3255,11 @@ class CSCoil(Model):
             dr_bore=self.data.build.dr_bore,
         )
 
-        pfcoil_variables.r_cs_inner = pfcoil_variables.r_pf_coil_inner[
-            pfcoil_variables.n_cs_pf_coils - 1
+        self.data.pf_coil.r_cs_inner = self.data.pf_coil.r_pf_coil_inner[
+            self.data.pf_coil.n_cs_pf_coils - 1
         ]
-        pfcoil_variables.r_cs_outer = pfcoil_variables.r_pf_coil_outer[
-            pfcoil_variables.n_cs_pf_coils - 1
+        self.data.pf_coil.r_cs_outer = self.data.pf_coil.r_pf_coil_outer[
+            self.data.pf_coil.n_cs_pf_coils - 1
         ]
 
         # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
@@ -3324,9 +3326,9 @@ class CSCoil(Model):
 
         # Peak field due to central Solenoid itself
         b_cs_self_peak_flat_top_end = self.calculate_cs_self_peak_magnetic_field(
-            j_cs=pfcoil_variables.j_cs_flat_top_end,
-            r_cs_inner=pfcoil_variables.r_pf_coil_inner[
-                pfcoil_variables.n_cs_pf_coils - 1
+            j_cs=self.data.pf_coil.j_cs_flat_top_end,
+            r_cs_inner=self.data.pf_coil.r_pf_coil_inner[
+                self.data.pf_coil.n_cs_pf_coils - 1
             ],
             r_cs_outer=self.data.pf_coil.r_pf_coil_outer[
                 self.data.pf_coil.n_cs_pf_coils - 1
@@ -3339,18 +3341,18 @@ class CSCoil(Model):
         # Peak field due to other PF coils plus plasma
         timepoint = 5
         _, _, bzi, bzo = peak_b_field_at_pf_coil(
-            n_coil=pfcoil_variables.n_cs_pf_coils,
+            n_coil=self.data.pf_coil.n_cs_pf_coils,
             n_coil_group=99,
             t_b_field_peak=timepoint,
             data=self.data,
         )
 
-        pfcoil_variables.b_cs_peak_flat_top_end = abs(bzi - b_cs_self_peak_flat_top_end)
+        self.data.pf_coil.b_cs_peak_flat_top_end = abs(bzi - b_cs_self_peak_flat_top_end)
 
         # Peak field on outboard side of central Solenoid
         # (self-field is assumed to be zero - long solenoid approximation)
 
-        pfcoil_variables.b_cs_self_outer_midplane = 0.0
+        self.data.pf_coil.b_cs_self_outer_midplane = 0.0
 
         bohco = abs(bzo)
 
@@ -3372,7 +3374,7 @@ class CSCoil(Model):
         )
         timepoint = 2
         _, _, bzi, bzo = peak_b_field_at_pf_coil(
-            n_coil=pfcoil_variables.n_cs_pf_coils,
+            n_coil=self.data.pf_coil.n_cs_pf_coils,
             n_coil_group=99,
             t_b_field_peak=timepoint,
             data=self.data,
@@ -3396,18 +3398,18 @@ class CSCoil(Model):
             # Superconducting coil
 
             # New calculation from M. N. Wilson for hoop stress
-            pfcoil_variables.stress_hoop_cs_inner = self.calculate_cs_hoop_stress(
-                r_stress_point=pfcoil_variables.r_pf_coil_inner[
-                    pfcoil_variables.n_cs_pf_coils - 1
+            self.data.pf_coil.stress_hoop_cs_inner = self.calculate_cs_hoop_stress(
+                r_stress_point=self.data.pf_coil.r_pf_coil_inner[
+                    self.data.pf_coil.n_cs_pf_coils - 1
                 ],
-                r_cs_inner=pfcoil_variables.r_pf_coil_inner[
-                    pfcoil_variables.n_cs_pf_coils - 1
+                r_cs_inner=self.data.pf_coil.r_pf_coil_inner[
+                    self.data.pf_coil.n_cs_pf_coils - 1
                 ],
-                r_cs_outer=pfcoil_variables.r_pf_coil_outer[
-                    pfcoil_variables.n_cs_pf_coils - 1
+                r_cs_outer=self.data.pf_coil.r_pf_coil_outer[
+                    self.data.pf_coil.n_cs_pf_coils - 1
                 ],
-                j_cs=pfcoil_variables.j_cs_pulse_start,
-                b_cs_inner=pfcoil_variables.b_cs_peak_pulse_start,
+                j_cs=self.data.pf_coil.j_cs_pulse_start,
+                b_cs_inner=self.data.pf_coil.b_cs_peak_pulse_start,
                 f_poisson_cs_structure=tfv.poisson_steel,
             )
 
@@ -3440,7 +3442,7 @@ class CSCoil(Model):
                     self.data.cs_fatigue.n_cycle,
                     self.data.cs_fatigue.t_crack_radial,
                 ) = self.cs_fatigue.ncycle(
-                    pfcoil_variables.stress_hoop_cs_inner,
+                    self.data.pf_coil.stress_hoop_cs_inner,
                     self.data.cs_fatigue.residual_sig_hoop,
                     self.data.cs_fatigue.t_crack_vertical,
                     self.data.cs_fatigue.dz_cs_turn_conduit,
@@ -3451,24 +3453,24 @@ class CSCoil(Model):
             # equation is used for Central Solenoid stress
 
             # Area of steel in Central Solenoid
-            pfcoil_variables.a_cs_steel_poloidal = (
-                pfcoil_variables.f_a_cs_turn_steel * pfcoil_variables.a_cs_poloidal
+            self.data.pf_coil.a_cs_steel_poloidal = (
+                self.data.pf_coil.f_a_cs_turn_steel * self.data.pf_coil.a_cs_poloidal
             )
 
             if self.data.pf_coil.i_cs_stress == 1:
                 self.data.pf_coil.s_shear_cs_peak = max(
                     abs(
-                        pfcoil_variables.stress_hoop_cs_inner
-                        - pfcoil_variables.stress_z_cs_self_peak_midplane
+                        self.data.pf_coil.stress_hoop_cs_inner
+                        - self.data.pf_coil.stress_z_cs_self_peak_midplane
                     ),
-                    abs(pfcoil_variables.stress_z_cs_self_peak_midplane - 0.0e0),
-                    abs(0.0e0 - pfcoil_variables.stress_hoop_cs_inner),
+                    abs(self.data.pf_coil.stress_z_cs_self_peak_midplane - 0.0e0),
+                    abs(0.0e0 - self.data.pf_coil.stress_hoop_cs_inner),
                 )
             else:
-                pfcoil_variables.s_shear_cs_peak = max(
-                    abs(pfcoil_variables.stress_hoop_cs_inner - 0.0e0),
+                self.data.pf_coil.s_shear_cs_peak = max(
+                    abs(self.data.pf_coil.stress_hoop_cs_inner - 0.0e0),
                     abs(0.0e0 - 0.0e0),
-                    abs(0.0e0 - pfcoil_variables.stress_hoop_cs_inner),
+                    abs(0.0e0 - self.data.pf_coil.stress_hoop_cs_inner),
                 )
 
             # Thickness of hypothetical steel cylinders assumed to encase the CS along
@@ -3476,19 +3478,19 @@ class CSCoil(Model):
             # throughout the conductor
             self.data.pf_coil.pfcaseth[self.data.pf_coil.n_cs_pf_coils - 1] = (
                 0.25e0
-                * pfcoil_variables.a_cs_steel_poloidal
-                / pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
+                * self.data.pf_coil.a_cs_steel_poloidal
+                / self.data.pf_coil.z_pf_coil_upper[self.data.pf_coil.n_cs_pf_coils - 1]
             )
 
         else:
-            pfcoil_variables.a_cs_steel_poloidal = (
+            self.data.pf_coil.a_cs_steel_poloidal = (
                 0.0e0  # Resistive Central Solenoid - no steel needed
             )
-            pfcoil_variables.pfcaseth[pfcoil_variables.n_cs_pf_coils - 1] = 0.0e0
+            self.data.pf_coil.pfcaseth[self.data.pf_coil.n_cs_pf_coils - 1] = 0.0e0
 
         # Weight of steel
-        pfcoil_variables.m_pf_coil_structure[pfcoil_variables.n_cs_pf_coils - 1] = (
-            pfcoil_variables.a_cs_steel_poloidal
+        self.data.pf_coil.m_pf_coil_structure[self.data.pf_coil.n_cs_pf_coils - 1] = (
+            self.data.pf_coil.a_cs_steel_poloidal
             * 2.0e0
             * np.pi
             * self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1]
@@ -3496,33 +3498,37 @@ class CSCoil(Model):
         )
 
         # Non-steel cross-sectional area
-        pfcoil_variables.a_cs_cable_space = (
-            pfcoil_variables.a_cs_poloidal - pfcoil_variables.a_cs_steel_poloidal
+        self.data.pf_coil.a_cs_cable_space = (
+            self.data.pf_coil.a_cs_poloidal - self.data.pf_coil.a_cs_steel_poloidal
         )
 
         # Issue #97. Fudge to ensure a_cs_cable_space is positive; result is continuous, smooth and
         # monotonically decreases
 
         da = 0.0001e0  # 1 cm^2
-        if pfcoil_variables.a_cs_cable_space < da:
-            pfcoil_variables.a_cs_cable_space = (
-                da * da / (2.0e0 * da - pfcoil_variables.a_cs_cable_space)
+        if self.data.pf_coil.a_cs_cable_space < da:
+            self.data.pf_coil.a_cs_cable_space = (
+                da * da / (2.0e0 * da - self.data.pf_coil.a_cs_cable_space)
             )
 
         # Weight of conductor in central Solenoid
-        if pfcoil_variables.i_pf_conductor == 0:
-            pfcoil_variables.m_pf_coil_conductor[pfcoil_variables.n_cs_pf_coils - 1] = (
-                pfcoil_variables.a_cs_cable_space
-                * (1.0e0 - pfcoil_variables.f_a_cs_void)
+        if self.data.pf_coil.i_pf_conductor == 0:
+            self.data.pf_coil.m_pf_coil_conductor[
+                self.data.pf_coil.n_cs_pf_coils - 1
+            ] = (
+                self.data.pf_coil.a_cs_cable_space
+                * (1.0e0 - self.data.pf_coil.f_a_cs_void)
                 * 2.0e0
                 * np.pi
                 * self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1]
                 * self.data.tfcoil.dcond[self.data.pf_coil.i_cs_superconductor - 1]
             )
         else:
-            pfcoil_variables.m_pf_coil_conductor[pfcoil_variables.n_cs_pf_coils - 1] = (
-                pfcoil_variables.a_cs_cable_space
-                * (1.0e0 - pfcoil_variables.f_a_cs_void)
+            self.data.pf_coil.m_pf_coil_conductor[
+                self.data.pf_coil.n_cs_pf_coils - 1
+            ] = (
+                self.data.pf_coil.a_cs_cable_space
+                * (1.0e0 - self.data.pf_coil.f_a_cs_void)
                 * 2.0e0
                 * np.pi
                 * self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1]
@@ -3548,13 +3554,13 @@ class CSCoil(Model):
                             self.data.pf_coil.n_cs_pf_coils - 1
                         ]
                     )
-                    / pfcoil_variables.a_cs_cable_space
+                    / self.data.pf_coil.a_cs_cable_space
                 )
                 * 1.0e6,
                 self.data.pf_coil.i_cs_superconductor,
                 tfv.fhts,
                 tfv.str_cs_con_res,
-                pfcoil_variables.temp_cs_superconductor_operating,
+                self.data.pf_coil.temp_cs_superconductor_operating,
                 tfv.bcritsc,
                 tfv.tcritsc,
             )
@@ -3570,10 +3576,10 @@ class CSCoil(Model):
                     * (1 - self.data.pf_coil.fcuohsu)
                 )
 
-            pfcoil_variables.j_cs_critical_flat_top_end = (
+            self.data.pf_coil.j_cs_critical_flat_top_end = (
                 jcritwp
-                * pfcoil_variables.a_cs_cable_space
-                / pfcoil_variables.a_cs_poloidal
+                * self.data.pf_coil.a_cs_cable_space
+                / self.data.pf_coil.a_cs_poloidal
             )
 
             # Allowable coil overall current density at BOP
@@ -3593,21 +3599,21 @@ class CSCoil(Model):
                             self.data.pf_coil.n_cs_pf_coils - 1
                         ]
                     )
-                    / pfcoil_variables.a_cs_cable_space
+                    / self.data.pf_coil.a_cs_cable_space
                 )
                 * 1.0e6,
                 self.data.pf_coil.i_cs_superconductor,
                 tfv.fhts,
                 tfv.str_cs_con_res,
-                pfcoil_variables.temp_cs_superconductor_operating,
+                self.data.pf_coil.temp_cs_superconductor_operating,
                 tfv.bcritsc,
                 tfv.tcritsc,
             )
 
-            pfcoil_variables.j_pf_wp_critical[pfcoil_variables.n_cs_pf_coils - 1] = (
+            self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1] = (
                 jcritwp
-                * pfcoil_variables.a_cs_cable_space
-                / pfcoil_variables.a_cs_poloidal
+                * self.data.pf_coil.a_cs_cable_space
+                / self.data.pf_coil.a_cs_poloidal
             )
             self.data.pf_coil.j_cs_critical_pulse_start = (
                 self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1]
@@ -3641,7 +3647,6 @@ class CSCoil(Model):
         self.calculate_cs_self_midplane_axial_stress_time_profile()
 
     @staticmethod
-    @numba.njit(cache=True)
     def calculate_cs_bore_magnetic_field(
         j_cs: float,
         r_cs_inner: float,
@@ -3927,9 +3932,8 @@ class CSCoil(Model):
             )
             self.data.pf_coil.stress_z_cs_self_midplane_profile[time] = stress_value
 
-    @staticmethod
-    @numba.njit(cache=True)
     def calculate_cs_hoop_stress(
+        self,
         r_stress_point: float | np.ndarray,
         r_cs_inner: float,
         r_cs_outer: float,
@@ -3967,7 +3971,6 @@ class CSCoil(Model):
         - M. N. Wilson, Superconducting Magnets. Oxford University Press, USA, 1983.
         ‌
         """
-
         alpha = r_cs_outer / r_cs_inner
 
         # alpha
@@ -3979,9 +3982,6 @@ class CSCoil(Model):
         # Field at outer radius of coil [T]
         # Assume to be 0 for now
         b_b = 0.0e0
-
-        # current density [A/m^2]
-        j_cs = pfcoil_variables.j_cs_pulse_start
 
         # K term
         k = ((alpha * b_cs_inner - b_b) * j_cs * r_cs_inner) / (alpha - 1.0e0)
@@ -4019,11 +4019,10 @@ class CSCoil(Model):
 
         s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
-        return s_hoop_nom / pfcoil_variables.f_a_cs_turn_steel
+        return s_hoop_nom / self.data.pf_coil.f_a_cs_turn_steel
 
-    @staticmethod
-    @numba.njit(cache=True)
     def calculate_cs_radial_stress(
+        self,
         r_stress_point: float | np.ndarray,
         r_cs_inner: float,
         r_cs_outer: float,
@@ -4061,9 +4060,6 @@ class CSCoil(Model):
         - M. N. Wilson, Superconducting Magnets. Oxford University Press, USA, 1983.
         ‌
         """
-
-        alpha = r_cs_outer / r_cs_inner
-
         # alpha
         alpha = r_cs_outer / r_cs_inner
 
@@ -4073,9 +4069,6 @@ class CSCoil(Model):
         # Field at outer radius of coil [T]
         # Assume to be 0 for now
         b_b = 0.0e0
-
-        # current density [A/m^2]
-        j_cs = pfcoil_variables.j_cs_pulse_start
 
         # K term
         k = ((alpha * b_cs_inner - b_b) * j_cs * r_cs_inner) / (alpha - 1.0e0)
@@ -4097,7 +4090,7 @@ class CSCoil(Model):
         return hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
     @staticmethod
-    def plot_stress_time_profile(axis: plt.Axes, mfile: mf.MFile, scan: int):
+    def plot_stress_time_profile(axis: plt.Axes, mfile: MFile, scan: int):
         t_plant_pulse_coil_precharge = mfile.get(
             "t_plant_pulse_coil_precharge", scan=scan
         )
@@ -4149,7 +4142,7 @@ class CSCoil(Model):
     def plot_cs_radial_hoop_stress_profile(
         self,
         axis: plt.Axes,
-        mfile: mf.MFile,
+        mfile: MFile,
         scan: int,
         j_cs: float,
         b_cs_inner: float,
@@ -4188,7 +4181,7 @@ class CSCoil(Model):
     def plot_cs_radial_stress_profile(
         self,
         axis: plt.Axes,
-        mfile: mf.MFile,
+        mfile: MFile,
         scan: int,
         j_cs: float,
         b_cs_inner: float,

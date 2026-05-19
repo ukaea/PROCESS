@@ -43,10 +43,12 @@ class PFCoilData:
     """Axial stress (z) in central solenoid at midplane due to its own field at each time point (Pa)"""
 
     stress_hoop_cs_inner: float = 0.0
-"""Hoop stress in central solenoid at inboard edge due to its own field (when at peak current) (Pa)"""
+    """Hoop stress in central solenoid at inboard edge due to its own field (when at peak current) (Pa)"""
 
-stress_hoop_cs_inner_profile: list[float] = None
-"""Hoop stress in central solenoid at inboard edge due to its own field at each time point (Pa)"""
+    stress_hoop_cs_inner_profile: list[float] = field(
+        default_factory=lambda: np.zeros(6)
+    )
+    """Hoop stress in central solenoid at inboard edge due to its own field at each time point (Pa)"""
 
     forc_z_cs_self_peak_midplane: float = 0.0
     """Axial force (z) on central solenoid at midplane due to its own field (when at peak current) (N)"""
@@ -107,8 +109,8 @@ stress_hoop_cs_inner_profile: list[float] = None
     a_cs_poloidal: float = 0.0
     """Central solenoid vertical cross-sectional area (m2)"""
 
-a_cs_steel_poloidal: float = None
-"""Central solenoid vertical cross-sectional area of steel (m2)"""
+    a_cs_steel_poloidal: float = 0.0
+    """Central solenoid vertical cross-sectional area of steel (m2)"""
 
     a_cs_turn: float = 0.0
     """Central solenoid (OH) trun cross-sectional area (m2)"""
@@ -116,16 +118,18 @@ a_cs_steel_poloidal: float = None
     a_cs_cable_space: float = 0.0
     """central solenoid conductor+void area with area of steel subtracted (m2)"""
 
-b_cs_self_outer_midplane: float = None
-"""magnetic field at outer edge of central solenoid at midplane due to its own current (T)"""
+    b_cs_self_outer_midplane: float = 0.0
+    """magnetic field at outer edge of central solenoid at midplane due to its own current (T)"""
+
     b_cs_peak_flat_top_end: float = 0.0
     """maximum field in central solenoid at end of flat-top (EoF) (T)"""
 
     b_cs_peak_pulse_start: float = 0.0
     """maximum field in central solenoid at beginning of pulse (T)"""
 
-b_cs_bore_peak: float = None
-"""peak field in central solenoid bore (T)"""
+    b_cs_bore_peak: float = 0.0
+    """peak field in central solenoid bore (T)"""
+
     b_pf_coil_peak: list[float] = field(default_factory=lambda: np.zeros(NGC2))
     """peak field at coil i (T)"""
 
@@ -358,11 +362,11 @@ b_cs_bore_peak: float = None
     r_cs_middle: float = 0.0
     """radius to the centre of the central solenoid (m)"""
 
-r_cs_inner: float = None
-"""inner radius of the central solenoid (m)"""
+    r_cs_inner: float = 0.0
+    """inner radius of the central solenoid (m)"""
 
-r_cs_outer: float = None
-"""outer radius of the central solenoid (m)"""
+    r_cs_outer: float = 0.0
+    """outer radius of the central solenoid (m)"""
 
     dz_cs_full: float = 0.0
     """Full height of the central solenoid (m)"""
@@ -412,8 +416,8 @@ r_cs_outer: float = None
     temp_cs_superconductor_margin: float = 0.0
     """Central solenoid temperature margin (K)"""
 
-temp_cs_superconductor_operating: float = None
-"""Central solenoid operating temperature (K)"""
+    temp_cs_superconductor_operating: float = 4.75
+    """Central solenoid operating temperature (K)"""
 
     n_pf_coil_turns: list[float] = field(default_factory=lambda: np.zeros(NGC2))
     """number of turns in PF coil i"""

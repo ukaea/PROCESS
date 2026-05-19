@@ -2775,7 +2775,7 @@ def test_acc2222(acc2222param, monkeypatch, costs):
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "a_cs_cable_space", acc2222param.a_cs_cable_space
+        costs.data.pf_coil, "a_cs_cable_space", acc2222param.a_cs_cable_space
     )
 
     monkeypatch.setattr(costs.data.structure, "fncmass", acc2222param.fncmass)

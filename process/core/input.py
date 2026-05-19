@@ -798,6 +798,9 @@ INPUT_VARIABLES = {
     "dx_tf_wp_insertion_gap": InputVariable("tfcoil", float, range=(1e-10, 0.1)),
     "f_dr_tf_outboard_inboard": InputVariable("build", float, range=(0.2, 5.0)),
     "tftmp": InputVariable("tfcoil", float, range=(0.01, 293.0)),
+    "temp_cs_superconductor_operating": InputVariable(
+        data_structure.pfcoil_variables, float, range=(0.01, 293.0)
+    ),
     "tgain": InputVariable("ife", float, range=(1.0, 500.0)),
     "th_joint_contact": InputVariable("tfcoil", float, range=(0.0, 1.0)),
     "theta1_coil": InputVariable("tfcoil", float, range=(0.1, 60.0)),

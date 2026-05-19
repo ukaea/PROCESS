@@ -48,6 +48,7 @@ from process.models.geometry.vacuum_vessel import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )
+from process.models.pfcoil import CSCoil
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.confinement_time import (
     ConfinementTimeModel,
@@ -15590,9 +15591,10 @@ def main_plot(
 
     plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
 
-    CSCoil.plot_stress_time_profile(
-        axis=figs[29].add_subplot(322), mfile=m_file, scan=scan
-    )
+    
+    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
+
+    plot_cs_stress_time_profile(axis=figs[29].add_subplot(322), mfile=m_file, scan=scan)
 
     cs_coil = CSCoil(cs_fatigue=CsFatigue())
     cs_coil.plot_cs_radial_hoop_stress_profile(
