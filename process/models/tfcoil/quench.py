@@ -505,6 +505,19 @@ def plot_quench_time_evolution(
         fluence,
     )
 
+    fluence_1e23 = 1e23
+    j_max_1e23 = calculate_quench_protection_current_density(
+        tau_discharge,
+        b_peak,
+        f_cu,
+        f_he,
+        t_he_peak,
+        temp_quench_max,
+        cu_rrr,
+        t_quench_detection,
+        fluence_1e23,
+    )
+
     # Time axis: from 0 to ~4 time constants
     t_end = 4.0 * tau_discharge
     times = np.linspace(0.0, t_end, n_points)
@@ -514,6 +527,12 @@ def plot_quench_time_evolution(
         times < t_quench_detection,
         j_max,
         j_max * np.exp(-(times - t_quench_detection) / tau_discharge),
+    )
+
+    j_profile_required_1e23 = np.where(
+        times < t_quench_detection,
+        j_max_1e23,
+        j_max_1e23 * np.exp(-(times - t_quench_detection) / tau_discharge),
     )
 
     j_profile_real = np.where(
@@ -530,36 +549,45 @@ def plot_quench_time_evolution(
     f_cu_cable = f_cond * f_cu
     f_sc_cable = f_cond * (1.0 - f_cu)
 
+    def _build_cum_integral(fluence_val):
+        n_temp = 300
+        temp_array = np.linspace(t_he_peak, temp_quench_max, n_temp)
+        cum_integral = np.zeros(n_temp)
+        for k in range(1, n_temp):
+            t_lo = temp_array[k - 1]
+            t_hi = temp_array[k]
+            val = 0.0
+            for xi, wi in zip(GAUSS_LEG_NODES, GAUSS_LEG_WEIGHTS, strict=False):
+                ti = 0.5 * (xi + 1.0) * (t_hi - t_lo) + t_lo
+                dti = 0.5 * wi * (t_hi - t_lo)
+                nu_cu = _copper_electrical_resistivity(ti, b_peak, cu_rrr, fluence_val)
+                he_props = FluidProperties.of("He", temperature=ti, pressure=pressure)
+                integrand = (
+                    f_he * he_props.specific_heat_const_p * he_props.density
+                    + f_cu_cable * _copper_specific_heat_capacity(ti) * COPPER_DENSITY
+                    + f_sc_cable * _nb3sn_specific_heat_capacity(ti) * NB3SN_DENSITY
+                ) / nu_cu
+                val += dti * integrand
+            cum_integral[k] = cum_integral[k - 1] + val
+        return temp_array, cum_integral
+
     # Build a temperature lookup: cumulative integral from t_he_peak to T
-    n_temp = 300
-    temp_array = np.linspace(t_he_peak, temp_quench_max, n_temp)
-    cum_integral = np.zeros(n_temp)
-    for k in range(1, n_temp):
-        t_lo = temp_array[k - 1]
-        t_hi = temp_array[k]
-        # Gauss-Legendre integration over [t_lo, t_hi]
-        val = 0.0
-        for xi, wi in zip(GAUSS_LEG_NODES, GAUSS_LEG_WEIGHTS, strict=False):
-            ti = 0.5 * (xi + 1.0) * (t_hi - t_lo) + t_lo
-            dti = 0.5 * wi * (t_hi - t_lo)
-            nu_cu = _copper_electrical_resistivity(ti, b_peak, cu_rrr, fluence)
-            he_props = FluidProperties.of("He", temperature=ti, pressure=pressure)
-            integrand = (
-                f_he * he_props.specific_heat_const_p * he_props.density
-                + f_cu_cable * _copper_specific_heat_capacity(ti) * COPPER_DENSITY
-                + f_sc_cable * _nb3sn_specific_heat_capacity(ti) * NB3SN_DENSITY
-            ) / nu_cu
-            val += dti * integrand
-        cum_integral[k] = cum_integral[k - 1] + val
+    temp_array, cum_integral = _build_cum_integral(fluence)
+    temp_array_1e23, cum_integral_1e23 = _build_cum_integral(fluence_1e23)
 
     # Numerically integrate J² dt over time to get MIIT at each time step
     dt = times[1] - times[0]
     miit_required = np.cumsum(j_profile_required**2) * dt
+    miit_required_1e23 = np.cumsum(j_profile_required_1e23**2) * dt
     miit_real = np.cumsum(j_profile_real**2) * dt
 
     # Map MIIT -> temperature via inverse interpolation of cum_integral * f_cu_cable
     scaled_integral = f_cu_cable * cum_integral
+    scaled_integral_1e23 = f_cu_cable * cum_integral_1e23
     hotspot_temp_required = np.interp(miit_required, scaled_integral, temp_array)
+    hotspot_temp_required_1e23 = np.interp(
+        miit_required_1e23, scaled_integral_1e23, temp_array_1e23
+    )
     hotspot_temp_real = np.interp(miit_real, scaled_integral, temp_array)
 
     # --- Current density panel ---
@@ -569,6 +597,14 @@ def plot_quench_time_evolution(
         color="darkorange",
         linewidth=2,
         label="Required current density for protection",
+    )
+    axes_1.plot(
+        times,
+        j_profile_required_1e23,
+        color="darkorange",
+        linewidth=2,
+        linestyle="--",
+        label="Required current density for protection (fluence = 1e23 n/m²)",
     )
     axes_1.plot(
         times,
@@ -602,17 +638,26 @@ def plot_quench_time_evolution(
     )
     axes_2.plot(
         times,
+        hotspot_temp_required_1e23,
+        color="darkorange",
+        linewidth=2,
+        linestyle="--",
+        label="Required hotspot temperature (fluence = 1e23 n/m²)",
+    )
+    axes_2.plot(
+        times,
         hotspot_temp_real,
         color="blue",
         linewidth=2,
         label="Real hotspot temperature",
     )
+
     axes_2.axvline(
         t_quench_detection,
         color="crimson",
         linestyle="--",
         linewidth=1.5,
-        label=f"Detection time ({t_quench_detection:.1f} s)",
+        label=f"$t_{{\\text{{detect}}}}$ ({t_quench_detection:.1f} s)",
     )
     axes_2.axvspan(0, t_quench_detection, alpha=0.08, color="crimson")
     axes_2.axhline(
@@ -635,15 +680,15 @@ def plot_quench_time_evolution(
     tau_temp = float(np.interp(tau_time, times, hotspot_temp_required))
 
     for ax, val, label in [
-        (axes_1, tau_j, f"J at τ ({tau_j:.2e} A/m²)"),
-        (axes_2, tau_temp, f"T at τ ({tau_temp:.1f} K)"),
+        (axes_1, tau_j, f"$J$ at $\\tau_{{\\text{{discharge}}}}$ ({tau_j:.2e} A/m²)"),
+        (axes_2, tau_temp, f"$T$ at $\\tau_{{\\text{{discharge}}}}$ ({tau_temp:.1f} K)"),
     ]:
         ax.axvline(
             tau_time,
             color="forestgreen",
             linestyle="--",
             linewidth=1.5,
-            label=f"t_detect + τ ({tau_time:.2f} s)",
+            label=f"$t_{{\\text{{detect}}}} + \\tau_{{\\text{{discharge}}}}$ ({tau_time:.2f} s)",
         )
         ax.axhline(
             val,
@@ -653,7 +698,9 @@ def plot_quench_time_evolution(
             label=label,
         )
     axes_1.legend(fontsize=9)
+    axes_1.minorticks_on()
     axes_2.legend(fontsize=9)
+    axes_2.minorticks_on()
 
     if figure is not None:
         figure.tight_layout()

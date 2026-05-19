@@ -14967,8 +14967,8 @@ def main_plot(
             plot_quench_time_evolution(
             tau_discharge=m_file.get("t_tf_superconductor_quench", scan=scan),
             b_peak=m_file.get("b_tf_inboard_peak_with_ripple", scan=scan),
-            f_cu=0.3,
-            f_he=0.2,
+            f_cu=m_file.get("f_a_tf_turn_cable_copper", scan=scan),
+            f_he=m_file.get("f_a_tf_turn_cable_space_cooling", scan=scan),
             t_he_peak=m_file.get("tftmp", scan=scan),
             temp_quench_max=m_file.get("temp_tf_conductor_quench_max", scan=scan),
             cu_rrr=100.0,
