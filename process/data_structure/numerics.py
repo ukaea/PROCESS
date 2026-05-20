@@ -526,12 +526,12 @@ def init_numerics():
     active_constraints = [False] * ipeqns
 
     lablcc = [
-        "Beta consistency                 ",
+        "⟨β⟩ consistency                   ",
         "Global power balance consistency ",
         "Ion power balance                ",
         "Electron power balance           ",
-        "Density upper limit              ",
-        "(Epsilon x beta-pol) upper limit ",
+        "Electron density upper limit (nₑ<) ",
+        "(βₚε) upper limit ",
         "Beam ion density consistency     ",
         "Neutron wall load upper limit    ",
         "Fusion power upper limit         ",
@@ -549,7 +549,7 @@ def init_numerics():
         "Plasma minor radius lower limit  ",
         "Divertor collisionality upper lim",
         "Conducting shell radius upper lim",
-        "Beta upper limit                 ",
+        "⟨β⟩ upper limit                 ",
         "Peak toroidal field upper limit  ",
         "CS coil EOF current density limit",
         "CS coil BOP current density limit",
