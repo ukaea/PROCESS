@@ -454,7 +454,7 @@ class SuperconductingTFCoil(TFCoil):
 
         """
         po.oheadr(self.outfile, "General Superconducting TF Coil Parameters ")
-        # Turn/WP gemoetry
+        # Turn/WP geometry
 
         po.ovarin(
             self.outfile,
@@ -4270,11 +4270,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 self.croco_voltage() / 1.0e3
             )  # TFC Quench voltage in kV
 
-        if tfcoil_variables.i_str_wp == 0:
-            strain = tfcoil_variables.str_tf_con_res
-        else:
-            strain = tfcoil_variables.str_wp
-
         # Negative areas or fractions error reporting
         if (
             tfcoil_variables.a_tf_wp_conductor <= 0.0e0
@@ -4479,17 +4474,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 tfcoil_variables.sig_tf_wp = 0.0e0
 
         self.vv_stress_on_quench()
-
-        # tfcoil_variables.temp_tf_superconductor_margin = self.calculate_superconductor_temperature_margin(
-        #     i_tf_superconductor=tfcoil_variables.i_tf_sc_mat,
-        #     j_superconductor=superconducting_tf_coil_variables.j_tf_superconductor,
-        #     b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
-        #     strain=strain,
-        #     bc20m=superconducting_tf_coil_variables.b_tf_superconductor_critical_zero_temp_strain,
-        #     tc0m=superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain,
-        #     c0=1.0e10,
-        #     temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
-        # )
 
         # Do current density protection calculation
         # Only setup for Nb3Sn at present.
@@ -4899,10 +4883,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         )
 
         cur_critical = superconducting_tf_coil_variables.conductor_critical_current
-        j_crit_cable = (
-            superconducting_tf_coil_variables.cur_tf_turn_croco_strand_critical
-            / superconducting_tf_coil_variables.a_tf_croco_strand
-        )
 
         # Critical current density in winding pack
         # a_tf_turn : Area per turn (i.e. entire jacketed conductor with insulation) (m2)
@@ -4932,7 +4912,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             j_tf_coil_turn=jwdgop,
             bc20m=bc20m,
             tc0m=tc0m,
-            c_turn_cables_critical=0.0,
+            c_turn_cables_critical=superconducting_tf_coil_variables.cur_tf_turn_croco_strand_critical,
         )
 
     @staticmethod
@@ -5171,7 +5151,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             "Number of CroCo strands in the cable (fixed) ",
             "",
             N_CROCO_STRANDS_TURN,
-            "OP ",
         )
         po.ovarre(
             self.outfile,
