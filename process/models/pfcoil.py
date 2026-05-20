@@ -1,6 +1,7 @@
 import logging
 import math
 from enum import IntEnum
+from dataclasses import dataclass
 
 import matplotlib.pyplot as plt
 import numba
@@ -167,23 +168,35 @@ class PFCoil(Model):
         # Set up call to MHD scaling routine for coil currents.
         # First break up Central Solenoid solenoid into 'filaments'
 
-        (
-            self.data.pf_coil.z_pf_coil_upper[self.data.pf_coil.n_cs_pf_coils - 1],
-            self.data.pf_coil.z_pf_coil_lower[self.data.pf_coil.n_cs_pf_coils - 1],
-            self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1],
-            self.data.pf_coil.r_cs_middle,
-            self.data.pf_coil.z_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1],
-            self.data.pf_coil.r_pf_coil_outer[self.data.pf_coil.n_cs_pf_coils - 1],
-            self.data.pf_coil.r_pf_coil_inner[self.data.pf_coil.n_cs_pf_coils - 1],
-            self.data.pf_coil.a_cs_poloidal,
-            self.data.pf_coil.dz_cs_full,
-            self.data.pf_coil.dr_cs_full,
-        ) = self.cs_coil.calculate_cs_geometry(
+        cs_geometry: CSGeometry = self.cs_coil.calculate_cs_geometry(
             z_tf_inside_half=self.data.build.z_tf_inside_half,
             f_z_cs_tf_internal=self.data.pf_coil.f_z_cs_tf_internal,
             dr_cs=self.data.build.dr_cs,
             dr_bore=self.data.build.dr_bore,
         )
+
+        self.data.pf_coil.z_pf_coil_upper[self.data.pf_coil.n_cs_pf_coils - 1] = (
+            cs_geometry.z_cs_coil_upper
+        )
+        self.data.pf_coil.z_pf_coil_lower[self.data.pf_coil.n_cs_pf_coils - 1] = (
+            cs_geometry.z_cs_coil_lower
+        )
+        self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1] = (
+            cs_geometry.r_cs_coil_middle
+        )
+        self.data.pf_coil.r_cs_middle = cs_geometry.r_cs_middle
+        self.data.pf_coil.z_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1] = (
+            cs_geometry.z_cs_coil_middle
+        )
+        self.data.pf_coil.r_pf_coil_outer[self.data.pf_coil.n_cs_pf_coils - 1] = (
+            cs_geometry.r_cs_coil_outer
+        )
+        self.data.pf_coil.r_pf_coil_inner[self.data.pf_coil.n_cs_pf_coils - 1] = (
+            cs_geometry.r_cs_coil_inner
+        )
+        self.data.pf_coil.a_cs_poloidal = cs_geometry.a_cs_poloidal
+        self.data.pf_coil.dz_cs_full = cs_geometry.dz_cs_full
+        self.data.pf_coil.dr_cs_full = cs_geometry.dr_cs_full
 
         # nfxf is the total no of filaments into which the Central Solenoid is split,
         # if present
@@ -2997,6 +3010,32 @@ class PFCoil(Model):
             self.data.pf_coil.f_c_pf_cs_peak_time_array[ic, 5] = 0.0e0
 
 
+@dataclass
+class CSGeometry:
+    """Data class to hold the geometry parameters of the Central Solenoid (CS) coil."""
+
+    z_cs_coil_upper: float
+    """Upper Z coordinate of CS coil (m)"""
+    z_cs_coil_lower: float
+    """Lower Z coordinate of CS coil (m)"""
+    r_cs_coil_middle: float
+    """Radial coordinate of CS coil centre (m)"""
+    r_cs_middle: float
+    """Mean radius of CS coil (m)"""
+    z_cs_coil_middle: float
+    """Z coordinate of CS coil centre (m)"""
+    r_cs_coil_outer: float
+    """Outer radius of CS coil (m)"""
+    r_cs_coil_inner: float
+    """Inner radius of CS coil (m)"""
+    a_cs_poloidal: float
+    """Total poloidal cross-sectional area of CS coil (m²)"""
+    dz_cs_full: float
+    """Full height of CS coil (m)"""
+    dr_cs_full: float
+    """Full radial thickness of CS coil (m)"""
+
+
 class CSCoil(Model):
     """Calculate central solenoid coil system parameters."""
 
@@ -3018,7 +3057,7 @@ class CSCoil(Model):
         f_z_cs_tf_internal: float,
         dr_cs: float,
         dr_bore: float,
-    ) -> tuple[float, float, float, float, float, float, float, float, float]:
+    ) -> CSGeometry:
         """Calculate the geometry of the Central Solenoid (CS) coil.
 
         Parameters
@@ -3034,16 +3073,18 @@ class CSCoil(Model):
 
         Returns
         -------
-        tuple[float, float, float, float, float, float, float, float]
-            Tuple containing:
+        CSGeometry
+            Data class containing the geometry parameters of the CS coil, including:
             - z_cs_coil_upper: Upper Z coordinate of CS coil (m)
             - z_cs_coil_lower: Lower Z coordinate of CS coil (m)
             - r_cs_coil_middle: Radial coordinate of CS coil centre (m)
+            - r_cs_middle: Mean radius of CS coil (m)
             - z_cs_coil_middle: Z coordinate of CS coil centre (m)
             - r_cs_coil_outer: Outer radius of CS coil (m)
             - r_cs_coil_inner: Inner radius of CS coil (m)
             - a_cs_poloidal: Total poloidal cross-sectional area of CS coil (m²)
             - dz_cs_full: Full height of CS coil (m)
+            - dr_cs_full: Full radial thickness of CS coil (m)
         """
         # Central Solenoid mean radius
         r_cs_middle = dr_bore + (0.5e0 * dr_cs)
@@ -3073,17 +3114,17 @@ class CSCoil(Model):
         # Total cross-sectional area
         a_cs_poloidal = 2.0e0 * z_cs_inside_half * dr_cs
 
-        return (
-            z_cs_coil_upper,
-            z_cs_coil_lower,
-            r_cs_coil_middle,
-            r_cs_middle,
-            z_cs_coil_middle,
-            r_cs_coil_outer,
-            r_cs_coil_inner,
-            a_cs_poloidal,
-            dz_cs_full,
-            dr_cs_full,
+        return CSGeometry(
+            z_cs_coil_upper=z_cs_coil_upper,
+            z_cs_coil_lower=z_cs_coil_lower,
+            r_cs_coil_middle=r_cs_coil_middle,
+            r_cs_middle=r_cs_middle,
+            z_cs_coil_middle=z_cs_coil_middle,
+            r_cs_coil_outer=r_cs_coil_outer,
+            r_cs_coil_inner=r_cs_coil_inner,
+            a_cs_poloidal=a_cs_poloidal,
+            dz_cs_full=dz_cs_full,
+            dr_cs_full=dr_cs_full,
         )
 
     @staticmethod
@@ -3093,12 +3134,13 @@ class CSCoil(Model):
         radius_cs_turn_corners: float,
         f_a_cs_turn_steel: float,
     ) -> tuple[float, float, float, float, float]:
-        """Calculate the geometry of a CS (Central Solenoid) turn using the EU DEMO stadium-shaped model.
+        """Calculate the geometry of a CS (Central Solenoid) turn using the
+        EU DEMO stadium-shaped model.
 
         Parameters
         ----------
          a_cs_turn : float
-             Poloidal area of a CS turn (m^2)
+             Poloidal area of a CS turn (m²)
          f_dr_dz_cs_turn : float
              Length-to-height ratio of the CS turn
          radius_cs_turn_corners : float
@@ -3118,14 +3160,15 @@ class CSCoil(Model):
 
         Notes
         -----
-            - The calculation assumes a stadium-shaped cross-section for the CS turn.
-            - If the calculated conduit thickness is negative or too small, it is set to a minimum value of 1 mm.
+        - The calculation assumes a stadium-shaped cross-section for the CS turn.
+        - If the calculated conduit thickness is negative or too small, it is set
+            to a minimum value of 1 mm.
 
         References
         ----------
-            - R. Wesche et al., “Central solenoid winding pack design for DEMO,”
-            Fusion Engineering and Design, vol. 124, pp. 82-85, Apr. 2017,
-            doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
+        [1] R. Wesche et al., “Central solenoid winding pack design for DEMO,”
+        Fusion Engineering and Design, vol. 124, pp. 82-85, Apr. 2017,
+        doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
         """
         # Vertical height of CS turn conduit/turn
         dz_cs_turn = (a_cs_turn / f_dr_dz_cs_turn) ** 0.5
@@ -3237,30 +3280,35 @@ class CSCoil(Model):
 
     def ohcalc(self):
         """Routine to perform calculations for the Central Solenoid."""
-        (
-            self.data.pf_coil.z_pf_coil_upper[self.data.pf_coil.n_cs_pf_coils - 1],
-            self.data.pf_coil.z_pf_coil_lower[self.data.pf_coil.n_cs_pf_coils - 1],
-            self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1],
-            self.data.pf_coil.r_cs_middle,
-            self.data.pf_coil.z_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1],
-            self.data.pf_coil.r_pf_coil_outer[self.data.pf_coil.n_cs_pf_coils - 1],
-            self.data.pf_coil.r_pf_coil_inner[self.data.pf_coil.n_cs_pf_coils - 1],
-            self.data.pf_coil.a_cs_poloidal,
-            self.data.pf_coil.dz_cs_full,
-            self.data.pf_coil.dr_cs_full,
-        ) = self.calculate_cs_geometry(
+        cs_geometry: CSGeometry = self.calculate_cs_geometry(
             z_tf_inside_half=self.data.build.z_tf_inside_half,
             f_z_cs_tf_internal=self.data.pf_coil.f_z_cs_tf_internal,
             dr_cs=self.data.build.dr_cs,
             dr_bore=self.data.build.dr_bore,
         )
 
-        self.data.pf_coil.r_cs_inner = self.data.pf_coil.r_pf_coil_inner[
-            self.data.pf_coil.n_cs_pf_coils - 1
-        ]
+        self.data.pf_coil.z_pf_coil_upper[self.data.pf_coil.n_cs_pf_coils - 1] = (
+            cs_geometry.z_cs_coil_upper
+        )
+        self.data.pf_coil.z_pf_coil_lower[self.data.pf_coil.n_cs_pf_coils - 1] = (
+            cs_geometry.z_cs_coil_lower
+        )
+        self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1] = (
+            cs_geometry.r_cs_coil_middle
+        )
+        self.data.pf_coil.r_cs_middle = cs_geometry.r_cs_middle
+        self.data.pf_coil.z_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1] = (
+            cs_geometry.z_cs_coil_middle
+        )
         self.data.pf_coil.r_cs_outer = self.data.pf_coil.r_pf_coil_outer[
             self.data.pf_coil.n_cs_pf_coils - 1
-        ]
+        ] = cs_geometry.r_cs_coil_outer
+        self.data.pf_coil.r_cs_inner = self.data.pf_coil.r_pf_coil_inner[
+            self.data.pf_coil.n_cs_pf_coils - 1
+        ] = cs_geometry.r_cs_coil_inner
+        self.data.pf_coil.a_cs_poloidal = cs_geometry.a_cs_poloidal
+        self.data.pf_coil.dz_cs_full = cs_geometry.dz_cs_full
+        self.data.pf_coil.dr_cs_full = cs_geometry.dr_cs_full
 
         # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
         if self.data.pf_coil.j_cs_pulse_start > self.data.pf_coil.j_cs_flat_top_end:

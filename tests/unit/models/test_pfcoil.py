@@ -18,6 +18,7 @@ from numpy.testing import assert_array_almost_equal
 from process.core import constants
 from process.data_structure.pfcoil_variables import N_PF_COILS_IN_GROUP_MAX
 from process.models.pfcoil import (
+    CSGeometry,
     PFCoil,
     calculate_b_field_at_point,
     fixb,
@@ -2042,17 +2043,57 @@ def test_brookscoil(pfcoil):
     ("z_tf_inside_half", "f_z_cs_tf_internal", "dr_cs", "dr_bore", "expected"),
     [
         # Typical values
-        (2.0, 0.5, 0.3, 0.15, (1.0, -1.0, 0.3, 0.3, 0.0, 0.45, 0.15, 0.6, 2.0, 0.9)),
+        (
+            2.0,
+            0.5,
+            0.3,
+            0.15,
+            CSGeometry(
+                1.0,
+                -1.0,
+                0.3,
+                0.3,
+                0.0,
+                0.44999999999999996,
+                0.14999999999999997,
+                0.6,
+                2.0,
+                0.8999999999999999,
+            ),
+        ),
         # Zero thickness
-        (2.0, 0.5, 0.0, 0.0, (1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0)),
+        (
+            2.0,
+            0.5,
+            0.0,
+            0.0,
+            CSGeometry(1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0),
+        ),
         # Zero fractional height
-        (2.0, 0.0, 0.3, 1.5, (0.0, -0.0, 1.65, 1.65, 0.0, 1.8, 1.5, 0.0, 0.0, 3.6)),
+        (
+            2.0,
+            0.0,
+            0.3,
+            1.5,
+            CSGeometry(
+                0.0,
+                -0.0,
+                1.65,
+                1.65,
+                0.0,
+                1.7999999999999998,
+                1.4999999999999998,
+                0.0,
+                0.0,
+                3.5999999999999996,
+            ),
+        ),
     ],
 )
 def test_calculate_cs_geometry(
     cs_coil, z_tf_inside_half, f_z_cs_tf_internal, dr_cs, dr_bore, expected
 ):
-    result = cs_coil.calculate_cs_geometry(
+    result: CSGeometry = cs_coil.calculate_cs_geometry(
         z_tf_inside_half=z_tf_inside_half,
         f_z_cs_tf_internal=f_z_cs_tf_internal,
         dr_cs=dr_cs,
