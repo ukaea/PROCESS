@@ -1097,7 +1097,9 @@ def check_process(inputs, data):  # noqa: ARG001
     # Ensure that blanket material fractions allow non-zero space for steel
     # CCFE HCPB Model
 
-    if data.stellarator.istell == 0 and (data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB):
+    if data.stellarator.istell == 0 and (
+        data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB
+    ):
         fsum = data.fwbs.breeder_multiplier + data.fwbs.vfcblkt + data.fwbs.vfpblkt
         if fsum >= 1.0:
             raise ProcessValidationError(

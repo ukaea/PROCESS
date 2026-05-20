@@ -15,8 +15,8 @@ from process.data_structure import (
     numerics,
     tfcoil_variables,
 )
-from process.data_structure.pfcoil_variables import NGC2
 from process.data_structure.blanket_variables import BlktModelTypes
+from process.data_structure.pfcoil_variables import NGC2
 
 
 class PumpingPowerModelTypes(IntEnum):
