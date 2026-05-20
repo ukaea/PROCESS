@@ -1073,7 +1073,7 @@ INPUT_VARIABLES = {
     "cfind": InputVariable("costs", float, array=True),
     "i_blkt_coolant_type": InputVariable("fwbs", int, choices=[1, 2]),
     "tf_coppera_m2_max": InputVariable(
-        data_structure.rebco_variables, float, range=(1.0e6, 1.0e10)
+        data_structure.superconducting_tf_coil_variables, float, range=(1.0e6, 1.0e10)
     ),
     "cost_model": InputVariable("costs", int, choices=[0, 1, 2]),
     "i_vac_pump_dwell": InputVariable("vacuum", int, choices=[0, 1, 2]),
