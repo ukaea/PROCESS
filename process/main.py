@@ -306,6 +306,7 @@ class SingleRun:
         *,
         filepath_out: Path | str | None = None,
         update_obsolete: bool = False,
+        data_structure: DataStructure | None = None,
     ):
         """Read input file and initialise variables.
 
@@ -321,7 +322,7 @@ class SingleRun:
         self.validate_input(update_obsolete)
         self.init_module_vars()
         self.set_filenames(filepath_out)
-        self.data = DataStructure()
+        self.data = data_structure or DataStructure()
         self.initialise()
         self.models = Models(self.data)
         self.solver = solver
@@ -403,7 +404,7 @@ class SingleRun:
             Path(self.output_path.as_posix().replace("OUT.DAT", "process.log"))
         )
 
-        initialise_imprad()
+        initialise_imprad(self.data)
         # Reads in input file
         init.init_process(self.data)
 

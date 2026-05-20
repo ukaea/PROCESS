@@ -16,6 +16,7 @@ from process.core.exceptions import (
     ProcessValueError,
 )
 from process.core.solver.constraints import ConstraintManager
+from process.data_structure.impurity_radiation_module import N_IMPURITIES
 from process.data_structure.pfcoil_variables import N_PF_GROUPS_MAX
 
 if TYPE_CHECKING:
@@ -143,10 +144,10 @@ INPUT_VARIABLES = {
         data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
     "radius_plasma_core_norm": InputVariable(
-        data_structure.impurity_radiation_module, float, range=(0.0, 1.0)
+        "impurity_radiation", float, range=(0.0, 1.0)
     ),
     "f_p_plasma_core_rad_reduction": InputVariable(
-        data_structure.impurity_radiation_module, float, range=(0.0, 1.0)
+        "impurity_radiation", float, range=(0.0, 1.0)
     ),
     "c_beta": InputVariable(data_structure.physics_variables, float, range=(0.0, 1.0)),
     "csawth": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),
@@ -185,9 +186,7 @@ INPUT_VARIABLES = {
         data_structure.physics_variables, float, range=(-1.0, 5.0)
     ),
     # TODO: does f_nd_impurity_electrons require an additional range?
-    "f_nd_impurity_electrons": InputVariable(
-        data_structure.impurity_radiation_module, float, array=True
-    ),
+    "f_nd_impurity_electrons": InputVariable("impurity_radiation", float, array=True),
     "fkzohm": InputVariable(data_structure.physics_variables, float, range=(0.5, 2.0)),
     "abktflnc": InputVariable("costs", float, range=(0.1, 100.0)),
     "adivflnc": InputVariable("costs", float, range=(0.1, 100.0)),
@@ -1379,7 +1378,7 @@ INPUT_VARIABLES = {
     "impvardiv": InputVariable(
         "reinke",
         int,
-        choices=range(3, data_structure.impurity_radiation_module.N_IMPURITIES + 1),
+        choices=range(3, N_IMPURITIES + 1),
     ),
     "j_pf_coil_wp_peak": InputVariable("pf_coil", float, array=True),
     "ixc": InputVariable(

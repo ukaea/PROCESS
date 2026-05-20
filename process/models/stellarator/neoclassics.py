@@ -4,10 +4,7 @@ import numpy as np
 
 from process.core import constants
 from process.core.model import Model
-from process.data_structure import (
-    impurity_radiation_module,
-    physics_variables,
-)
+from process.data_structure import physics_variables
 from process.models.stellarator.stellarator import KEV
 
 logger = logging.getLogger(__name__)
@@ -297,7 +294,7 @@ class Neoclassics(Model):
             )
             * physics_variables.vol_plasma
             / physics_variables.a_plasma_surface
-            * impurity_radiation_module.radius_plasma_core_norm
+            * self.data.impurity_radiation.radius_plasma_core_norm
         )
         q_PROCESS_r1 = (
             (
@@ -366,7 +363,7 @@ class Neoclassics(Model):
         dndt_neo_fuel = (
             (dndt_neo_D + dndt_neo_T)
             * physics_variables.a_plasma_surface
-            * impurity_radiation_module.radius_plasma_core_norm
+            * self.data.impurity_radiation.radius_plasma_core_norm
         )
         dmdt_neo_fuel = (
             dndt_neo_fuel * physics_variables.m_fuel_amu * constants.PROTON_MASS * 1.0e6
@@ -375,7 +372,7 @@ class Neoclassics(Model):
             4
             * dndt_neo_e
             * physics_variables.a_plasma_surface
-            * impurity_radiation_module.radius_plasma_core_norm
+            * self.data.impurity_radiation.radius_plasma_core_norm
             * physics_variables.m_fuel_amu
             * constants.PROTON_MASS
             * 1.0e6
@@ -787,7 +784,7 @@ class Neoclassics(Model):
             physics_variables.vol_plasma
             * self.data.stellarator.f_st_rmajor
             * (
-                impurity_radiation_module.radius_plasma_core_norm
+                self.data.impurity_radiation.radius_plasma_core_norm
                 * physics_variables.rminor
                 / self.data.stellarator_config.stella_config_rminor_ref
             )
@@ -797,7 +794,7 @@ class Neoclassics(Model):
             physics_variables.a_plasma_surface
             * self.data.stellarator.f_st_rmajor
             * (
-                impurity_radiation_module.radius_plasma_core_norm
+                self.data.impurity_radiation.radius_plasma_core_norm
                 * physics_variables.rminor
                 / self.data.stellarator_config.stella_config_rminor_ref
             )
@@ -821,8 +818,8 @@ class Neoclassics(Model):
                 * physics_variables.temp_plasma_electron_on_axis_kev
                 * 1e3
                 * physics_variables.alphat
-                * impurity_radiation_module.radius_plasma_core_norm
-                * (1 - impurity_radiation_module.radius_plasma_core_norm**2)
+                * self.data.impurity_radiation.radius_plasma_core_norm
+                * (1 - self.data.impurity_radiation.radius_plasma_core_norm**2)
                 ** (physics_variables.alphan + physics_variables.alphat - 1)
             )
             * surfacescaling

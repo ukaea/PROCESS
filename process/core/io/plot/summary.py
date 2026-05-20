@@ -21,7 +21,7 @@ from scipy.interpolate import interp1d
 from process.core import constants
 from process.core.io.mfile import MFile, MFileErrorClass
 from process.core.solver.objectives import OBJECTIVE_NAMES
-from process.data_structure import impurity_radiation_module
+from process.data_structure.impurity_radiation_module import N_IMPURITIES
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.build import Build
 from process.models.geometry.blanket import (
@@ -12878,7 +12878,7 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
 
     n_charge_plasma_profile = []
     avg_ionisation_percentages = []
-    for imp in range(impurity_radiation_module.N_IMPURITIES):
+    for imp in range(N_IMPURITIES):
         if imp_frac[imp] > 1.0e-30:
             profile = [
                 mfile.get(f"n_charge_plasma_profile{imp}_{i}", scan=scan)

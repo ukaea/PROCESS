@@ -17,11 +17,8 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    impurity_radiation_module,
-    numerics,
-    physics_variables,
-)
+from process.data_structure import numerics, physics_variables
+from process.data_structure.impurity_radiation_module import N_IMPURITIES
 from process.models.physics import impurity_radiation
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.profiles import PlasmaProfileShapeType
@@ -712,6 +709,7 @@ class Physics(Model):
             physics_variables.rmajor,
             physics_variables.kappa,
             physics_variables.vol_plasma,
+            self.data,
         )
         physics_variables.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_mw
         physics_variables.pden_plasma_core_rad_mw = radpwrdata.pden_plasma_core_rad_mw
@@ -1061,7 +1059,7 @@ class Physics(Model):
                 self.outfile,
                 (
                     f" 'fzactual, frac, impvardiv = {self.data.reinke.fzactual},"
-                    f" {impurity_radiation_module.f_nd_impurity_electron_array(self.data.reinke.impvardiv)},"
+                    f" {self.data.impurity_radiation.f_nd_impurity_electron_array(self.data.reinke.impvardiv)},"
                     f" {self.data.reinke.impvardiv}"
                 ),
             )
@@ -1166,12 +1164,14 @@ class Physics(Model):
 
         # Sum of Zi.ni for all impurity ions (those with charge > helium)
         znimp = 0.0
-        for imp in range(impurity_radiation_module.N_IMPURITIES):
-            if impurity_radiation_module.impurity_arr_z[imp] > 2:
+        for imp in range(N_IMPURITIES):
+            if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
                 znimp += impurity_radiation.zav_of_te(
-                    imp, np.array([physics_variables.temp_plasma_electron_vol_avg_kev])
+                    imp,
+                    np.array([physics_variables.temp_plasma_electron_vol_avg_kev]),
+                    self.data,
                 ).squeeze() * (
-                    impurity_radiation_module.f_nd_impurity_electron_array[imp]
+                    self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
                     * physics_variables.nd_plasma_electrons_vol_avg
                 )
 
@@ -1202,8 +1202,8 @@ class Physics(Model):
 
         # Set hydrogen and helium relative impurity densities for
         # radiation calculations
-        impurity_radiation_module.f_nd_impurity_electron_array[
-            impurity_radiation.element2index("H_")
+        self.data.impurity_radiation.f_nd_impurity_electron_array[
+            impurity_radiation.element2index("H_", self.data)
         ] = (
             physics_variables.nd_plasma_protons_vol_avg
             + (
@@ -1214,8 +1214,8 @@ class Physics(Model):
             + physics_variables.nd_beam_ions
         ) / physics_variables.nd_plasma_electrons_vol_avg
 
-        impurity_radiation_module.f_nd_impurity_electron_array[
-            impurity_radiation.element2index("He")
+        self.data.impurity_radiation.f_nd_impurity_electron_array[
+            impurity_radiation.element2index("He", self.data)
         ] = (
             physics_variables.f_plasma_fuel_helium3
             * physics_variables.nd_plasma_fuel_ions_vol_avg
@@ -1227,10 +1227,10 @@ class Physics(Model):
 
         # Total impurity density
         physics_variables.nd_plasma_impurities_vol_avg = 0.0
-        for imp in range(impurity_radiation_module.N_IMPURITIES):
-            if impurity_radiation_module.impurity_arr_z[imp] > 2:
+        for imp in range(N_IMPURITIES):
+            if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
                 physics_variables.nd_plasma_impurities_vol_avg += (
-                    impurity_radiation_module.f_nd_impurity_electron_array[imp]
+                    self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
                     * physics_variables.nd_plasma_electrons_vol_avg
                 )
 
@@ -1250,21 +1250,21 @@ class Physics(Model):
         # Set some relative impurity density variables
         # for the benefit of other routines
         physics_variables.f_nd_plasma_carbon_electron = (
-            impurity_radiation_module.f_nd_impurity_electron_array[
-                impurity_radiation.element2index("C_")
+            self.data.impurity_radiation.f_nd_impurity_electron_array[
+                impurity_radiation.element2index("C_", self.data)
             ]
         )
         physics_variables.f_nd_plasma_oxygen_electron = (
-            impurity_radiation_module.f_nd_impurity_electron_array[
-                impurity_radiation.element2index("O_")
+            self.data.impurity_radiation.f_nd_impurity_electron_array[
+                impurity_radiation.element2index("O_", self.data)
             ]
         )
         physics_variables.f_nd_plasma_iron_argon_electron = (
-            impurity_radiation_module.f_nd_impurity_electron_array[
-                impurity_radiation.element2index("Fe")
+            self.data.impurity_radiation.f_nd_impurity_electron_array[
+                impurity_radiation.element2index("Fe", self.data)
             ]
-            + impurity_radiation_module.f_nd_impurity_electron_array[
-                impurity_radiation.element2index("Ar")
+            + self.data.impurity_radiation.f_nd_impurity_electron_array[
+                impurity_radiation.element2index("Ar", self.data)
             ]
         )
 
@@ -1274,11 +1274,13 @@ class Physics(Model):
         # Calculation should be sum(ni.Zi^2) / sum(ni.Zi),
         # but ne = sum(ni.Zi) through quasineutrality
         physics_variables.n_charge_plasma_effective_vol_avg = 0.0
-        for imp in range(impurity_radiation_module.N_IMPURITIES):
+        for imp in range(N_IMPURITIES):
             physics_variables.n_charge_plasma_effective_vol_avg += (
-                impurity_radiation_module.f_nd_impurity_electron_array[imp]
+                self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
                 * impurity_radiation.zav_of_te(
-                    imp, np.array([physics_variables.temp_plasma_electron_vol_avg_kev])
+                    imp,
+                    np.array([physics_variables.temp_plasma_electron_vol_avg_kev]),
+                    self.data,
                 ).squeeze()
                 ** 2
             )
@@ -1337,12 +1339,12 @@ class Physics(Model):
             + (physics_variables.nd_plasma_protons_vol_avg * constants.M_PROTON_AMU)
             + (physics_variables.m_beam_amu * physics_variables.nd_beam_ions)
         )
-        for imp in range(impurity_radiation_module.N_IMPURITIES):
-            if impurity_radiation_module.impurity_arr_z[imp] > 2:
+        for imp in range(N_IMPURITIES):
+            if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
                 physics_variables.m_ions_total_amu += (
                     physics_variables.nd_plasma_electrons_vol_avg
-                    * impurity_radiation_module.f_nd_impurity_electron_array[imp]
-                    * impurity_radiation_module.m_impurity_amu_array[imp]
+                    * self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
+                    * self.data.impurity_radiation.m_impurity_amu_array[imp]
                 )
 
         physics_variables.m_ions_total_amu /= (
@@ -1383,16 +1385,17 @@ class Physics(Model):
                 / constants.M_TRITON_AMU
             )
         ) / physics_variables.nd_plasma_electrons_vol_avg
-        for imp in range(impurity_radiation_module.N_IMPURITIES):
-            if impurity_radiation_module.impurity_arr_z[imp] > 2:
+        for imp in range(N_IMPURITIES):
+            if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
                 physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg += (
-                    impurity_radiation_module.f_nd_impurity_electron_array[imp]
+                    self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
                     * impurity_radiation.zav_of_te(
                         imp,
                         np.array([physics_variables.temp_plasma_electron_vol_avg_kev]),
+                        self.data,
                     ).squeeze()
                     ** 2
-                    / impurity_radiation_module.m_impurity_amu_array[imp]
+                    / self.data.impurity_radiation.m_impurity_amu_array[imp]
                 )
 
         # ======================================================================
@@ -1649,18 +1652,20 @@ class Physics(Model):
         zeff_profile = np.zeros_like(self.plasma_profile.teprofile.profile_y)
         for i in range(len(zeff_profile)):
             zeff_profile[i] = 0.0
-            for imp in range(impurity_radiation_module.N_IMPURITIES):
+            for imp in range(N_IMPURITIES):
                 zeff_profile[i] += (
-                    impurity_radiation_module.f_nd_impurity_electron_array[imp]
+                    self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
                     * impurity_radiation.zav_of_te(
-                        imp, np.array([self.plasma_profile.teprofile.profile_y[i]])
+                        imp,
+                        np.array([self.plasma_profile.teprofile.profile_y[i]]),
+                        self.data,
                     ).squeeze()
                     ** 2
                 )
         physics_variables.n_charge_plasma_effective_profile = zeff_profile
 
         # Assign the charge profiles of each species
-        n_impurities = impurity_radiation_module.N_IMPURITIES
+        n_impurities = N_IMPURITIES
         te_profile = self.plasma_profile.teprofile.profile_y
         n_points = len(te_profile)
         # Create a 2D array: (n_impurities, n_points)
@@ -1668,9 +1673,9 @@ class Physics(Model):
         for imp in range(n_impurities):
             for i in range(n_points):
                 charge_profiles[imp, i] = impurity_radiation.zav_of_te(
-                    imp, np.array([te_profile[i]])
+                    imp, np.array([te_profile[i]]), self.data
                 ).squeeze()
-        impurity_radiation_module.n_charge_impurity_profile = charge_profiles
+        self.data.impurity_radiation.n_charge_impurity_profile = charge_profiles
 
     def outplas(self):
         """Subroutine to output the plasma physics information
@@ -2037,13 +2042,13 @@ class Physics(Model):
             self.outfile,
             "Plasma normalised minor radius defining 'core' region (ρᵢₙₙₑᵣ)",
             "(radius_plasma_core_norm)",
-            impurity_radiation_module.radius_plasma_core_norm,
+            self.data.impurity_radiation.radius_plasma_core_norm,
         )
         po.ovarre(
             self.outfile,
             "Fractional scaling of radiation power along core profile",
             "(f_p_plasma_core_rad_reduction)",
-            impurity_radiation_module.f_p_plasma_core_rad_reduction,
+            self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
         )
         po.ovarre(
             self.outfile,
@@ -2709,14 +2714,17 @@ class Physics(Model):
         po.ocmmnt(self.outfile, "Plasma ion densities / electron density:")
         po.oblnkl(self.outfile)
 
-        for imp in range(impurity_radiation_module.N_IMPURITIES):
+        for imp in range(N_IMPURITIES):
             # MDK Update f_nd_impurity_electrons, as this will make the ITV output
             # work correctly.
-            impurity_radiation_module.f_nd_impurity_electrons[imp] = (
-                impurity_radiation_module.f_nd_impurity_electron_array[imp]
+            self.data.impurity_radiation.f_nd_impurity_electrons[imp] = (
+                self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
             )
             str1 = (
-                impurity_radiation_module.impurity_arr_label[imp].item().replace("_", "")
+                self.data.impurity_radiation
+                .impurity_arr_label[imp]
+                .item()
+                .replace("_", "")
                 + " concentration"
             )
             str2 = f"(f_nd_impurity_electrons({imp + 1:02}))"
@@ -2726,7 +2734,7 @@ class Physics(Model):
                     self.outfile,
                     str1,
                     str2,
-                    impurity_radiation_module.f_nd_impurity_electrons[imp],
+                    self.data.impurity_radiation.f_nd_impurity_electrons[imp],
                     "OP ",
                 )
             else:
@@ -2734,15 +2742,15 @@ class Physics(Model):
                     self.outfile,
                     str1,
                     str2,
-                    impurity_radiation_module.f_nd_impurity_electrons[imp],
+                    self.data.impurity_radiation.f_nd_impurity_electrons[imp],
                 )
-                if impurity_radiation_module.f_nd_impurity_electrons[imp] != 0.0:  # noqa: RUF069
+                if self.data.impurity_radiation.f_nd_impurity_electrons[imp] != 0.0:  # noqa: RUF069
                     for i in range(physics_variables.n_plasma_profile_elements):
                         po.ovarre(
                             self.mfile,
                             str1 + f" at point {i}",
                             f"(f_nd_impurity_electrons{imp}_{i})",
-                            impurity_radiation_module.f_nd_impurity_electrons[imp]
+                            self.data.impurity_radiation.f_nd_impurity_electrons[imp]
                             * self.plasma_profile.neprofile.profile_y[i],
                             "OP ",
                         )
@@ -2764,13 +2772,13 @@ class Physics(Model):
                 "OP ",
             )
 
-        for imp in range(impurity_radiation_module.N_IMPURITIES):
+        for imp in range(N_IMPURITIES):
             for i in range(physics_variables.n_plasma_profile_elements):
                 po.ovarre(
                     self.mfile,
                     "Impurity charge at point",
                     f"(n_charge_plasma_profile{imp}_{i})",
-                    impurity_radiation_module.n_charge_impurity_profile[imp][i],
+                    self.data.impurity_radiation.n_charge_impurity_profile[imp][i],
                     "OP ",
                 )
 

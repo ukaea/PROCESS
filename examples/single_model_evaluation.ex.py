@@ -51,7 +51,7 @@ single_run.run()
 # Print initial values of interest
 def print_values():
     print(
-        f"W frac = {data_structure.impurity_radiation_module.f_nd_impurity_electron_array[13]:.3e}"
+        f"W frac = {single_run.data.impurity_radiation.f_nd_impurity_electron_array[13]:.3e}"
     )
     print(f"p_plasma_rad_mw = {data_structure.physics_variables.p_plasma_rad_mw:.3e}")
     print(
@@ -65,7 +65,7 @@ print_values()
 # Now try increasing the tungsten impurity fraction to see if there's a change in the divertor power.
 
 # %%
-data_structure.impurity_radiation_module.f_nd_impurity_electron_array[13] = 5.0e-5
+single_run.data.impurity_radiation.f_nd_impurity_electron_array[13] = 5.0e-5
 single_run.models.physics.run()
 print_values()
 
@@ -90,9 +90,7 @@ def run_impurities(w_imp_fracs):
     # Loop over W impurity values, evaluate model and store responses at each point
     for i, imp_frac in enumerate(w_imp_fracs):
         # Set W impurity fraction, then run physics model
-        data_structure.impurity_radiation_module.f_nd_impurity_electron_array[13] = (
-            imp_frac
-        )
+        single_run.data.impurity_radiation.f_nd_impurity_electron_array[13] = imp_frac
         single_run.models.physics.run()
 
         # Evaluate constraint equation 15 (L-H threshold constraint)

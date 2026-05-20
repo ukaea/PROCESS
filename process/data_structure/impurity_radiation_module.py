@@ -1,3 +1,5 @@
+from dataclasses import dataclass, field
+
 import numpy as np
 
 N_IMPURITIES = 14
@@ -19,95 +21,90 @@ N_IMPURITIES = 14
 (14)  Tungsten
 """
 
-radius_plasma_core_norm: float = None
-"""Normalised radius defining the 'core' region"""
 
-f_p_plasma_core_rad_reduction: float = None
-"""Fraction of radiation from 'core' region"""
+@dataclass(slots=True)
+class ImpurityRadiationData:
+    radius_plasma_core_norm: float = 0.6
+    """Normalised radius defining the 'core' region"""
 
-f_nd_impurity_electrons: list[float] = None
+    f_p_plasma_core_rad_reduction: float = 1.0
+    """Fraction of radiation from 'core' region"""
 
-n_charge_impurity_profile: list[float] = None
-"""charge profile of impurities"""
+    f_nd_impurity_electrons: list[float] = field(
+        default_factory=lambda: np.array([
+            1.0,
+            0.1,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ])
+    )
 
-imp_label: list[str] = None
+    n_charge_impurity_profile: list[float] = field(
+        default_factory=lambda: np.zeros((N_IMPURITIES, 200))
+    )
+    """charge profile of impurities"""
 
-impurity_arr_label: list[str] = None
+    imp_label: list[str] = field(
+        default_factory=lambda: np.array([
+            "H_",
+            "He",
+            "Be",
+            "C_",
+            "N_",
+            "O_",
+            "Ne",
+            "Si",
+            "Ar",
+            "Fe",
+            "Ni",
+            "Kr",
+            "Xe",
+            "W_",
+        ])
+    )
 
-impurity_arr_z: list[float] = None
+    impurity_arr_label: list[str] = field(
+        default_factory=lambda: np.full(N_IMPURITIES, "  ")
+    )
 
-m_impurity_amu_array: list[float] = None
-"""2D array of impurity atomic masses in Atomic Mass Units (amu)"""
+    impurity_arr_z: list[float] = field(default_factory=lambda: np.zeros(N_IMPURITIES))
 
-f_nd_impurity_electron_array: list[float] = None
-"""2D array of impurity relative densities (n_imp/n_e)"""
+    m_impurity_amu_array: list[float] = field(
+        default_factory=lambda: np.zeros(N_IMPURITIES)
+    )
+    """2D array of impurity atomic masses in Atomic Mass Units (amu)"""
 
-impurity_arr_len_tab: list[int] = None
+    f_nd_impurity_electron_array: list[float] = field(
+        default_factory=lambda: np.zeros(N_IMPURITIES)
+    )
+    """2D array of impurity relative densities (n_imp/n_e)"""
 
-temp_impurity_keV_array: list[float] = None
-"""2D array of impurity temperatures in kilo-electronvolts (keV)"""
+    impurity_arr_len_tab: list[int] = field(
+        default_factory=lambda: np.full(N_IMPURITIES, 0)
+    )
 
-pden_impurity_lz_nd_temp_array: list[float] = None
+    temp_impurity_keV_array: list[float] = field(
+        default_factory=lambda: np.zeros((N_IMPURITIES, 200))
+    )
+    """2D array of impurity temperatures in kilo-electronvolts (keV)"""
 
-impurity_arr_zav: list[float] = None
+    pden_impurity_lz_nd_temp_array: list[float] = field(
+        default_factory=lambda: np.zeros((N_IMPURITIES, 200))
+    )
+
+    impurity_arr_zav: list[float] = field(
+        default_factory=lambda: np.zeros((N_IMPURITIES, 200))
+    )
 
 
-def init_impurity_radiation_module():
-    global \
-        radius_plasma_core_norm, \
-        f_p_plasma_core_rad_reduction, \
-        f_nd_impurity_electrons, \
-        n_charge_impurity_profile, \
-        imp_label, \
-        impurity_arr_label, \
-        impurity_arr_z, \
-        m_impurity_amu_array, \
-        f_nd_impurity_electron_array, \
-        impurity_arr_len_tab, \
-        temp_impurity_keV_array, \
-        pden_impurity_lz_nd_temp_array, \
-        impurity_arr_zav
-
-    radius_plasma_core_norm = 0.6
-    f_p_plasma_core_rad_reduction = 1.0
-    f_nd_impurity_electrons = np.array([
-        1.0,
-        0.1,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-    ])
-    imp_label = np.array([
-        "H_",
-        "He",
-        "Be",
-        "C_",
-        "N_",
-        "O_",
-        "Ne",
-        "Si",
-        "Ar",
-        "Fe",
-        "Ni",
-        "Kr",
-        "Xe",
-        "W_",
-    ])
-    impurity_arr_label = np.full(N_IMPURITIES, "  ")
-    impurity_arr_z = np.zeros(N_IMPURITIES)
-    m_impurity_amu_array = np.zeros(N_IMPURITIES)
-    f_nd_impurity_electron_array = np.zeros(N_IMPURITIES)
-    n_charge_impurity_profile = np.zeros((N_IMPURITIES, 200))
-    impurity_arr_len_tab = np.full(N_IMPURITIES, 0)
-    temp_impurity_keV_array = np.zeros((N_IMPURITIES, 200))
-    pden_impurity_lz_nd_temp_array = np.zeros((N_IMPURITIES, 200))
-    impurity_arr_zav = np.zeros((N_IMPURITIES, 200))
+CREATE_DICTS_FROM_DATACLASS = ImpurityRadiationData

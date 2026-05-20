@@ -3,11 +3,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import (
-    impurity_radiation_module,
-    physics_variables,
-    tfcoil_variables,
-)
+from process.data_structure import physics_variables, tfcoil_variables
 from process.models.stellarator.build import st_build
 from process.models.stellarator.coils.coils import bmax_from_awp, intersect
 from process.models.stellarator.coils.quench import (
@@ -2110,7 +2106,7 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     monkeypatch.setattr(physics_variables, "rminor", stcalceffchiparam.rminor)
 
     monkeypatch.setattr(
-        impurity_radiation_module,
+        stellarator.data.impurity_radiation,
         "radius_plasma_core_norm",
         stcalceffchiparam.radius_plasma_core_norm,
     )

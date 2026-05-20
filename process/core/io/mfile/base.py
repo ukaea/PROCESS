@@ -597,7 +597,7 @@ def get_mfile_initial_ixc_values(file_path: Path, data: DataStructure):
     """
     from process.main import SingleRun  # noqa:PLC0415
 
-    SingleRun(file_path.as_posix())
+    SingleRun(file_path.as_posix(), data_structure=data)
     iteration_variables.load_iteration_variables(data)
 
     iteration_variable_names = []

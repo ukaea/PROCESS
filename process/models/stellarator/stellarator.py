@@ -2163,6 +2163,7 @@ class Stellarator(Model):
             physics_variables.rmajor,
             physics_variables.kappa,
             physics_variables.vol_plasma,
+            self.data,
         )
         physics_variables.pden_plasma_sync_mw = radpwr_data.pden_plasma_sync_mw
         physics_variables.pden_plasma_core_rad_mw = radpwr_data.pden_plasma_core_rad_mw

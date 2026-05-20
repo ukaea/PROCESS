@@ -16,6 +16,7 @@ from process.data_structure.first_wall_variables import FirstWallData
 from process.data_structure.fwbs_variables import FWBSData
 from process.data_structure.heat_transport_variables import HeatTransportData
 from process.data_structure.ife_variables import IFEData
+from process.data_structure.impurity_radiation_module import ImpurityRadiationData
 from process.data_structure.neoclassics_variables import NeoclassicsData
 from process.data_structure.pf_power_variables import PFPowerData
 from process.data_structure.pfcoil_variables import PFCoilData
@@ -63,6 +64,7 @@ class DataStructure:
     stellarator_config: StellaratorConfigData = initialise_later
     pf_power: PFPowerData = initialise_later
     neoclassics: NeoclassicsData = initialise_later
+    impurity_radiation: ImpurityRadiationData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):
