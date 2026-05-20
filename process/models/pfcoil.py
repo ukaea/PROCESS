@@ -3411,6 +3411,7 @@ class CSCoil(Model):
                 j_cs=self.data.pf_coil.j_cs_pulse_start,
                 b_cs_inner=self.data.pf_coil.b_cs_peak_pulse_start,
                 f_poisson_cs_structure=tfv.poisson_steel,
+                f_a_cs_turn_steel=self.data.pf_coil.f_a_cs_turn_steel,
             )
 
             # New calculation from Y. Iwasa for axial stress
@@ -3940,6 +3941,7 @@ class CSCoil(Model):
         j_cs: float,
         b_cs_inner: float,
         f_poisson_cs_structure: float,
+        f_a_cs_turn_steel: float,
     ) -> float:
         """Calculation of hoop stress of central solenoid.
 
@@ -3960,6 +3962,9 @@ class CSCoil(Model):
             Magnetic field at the inner radius of the central solenoid (T)
         f_poisson_cs_structure : float
             Poisson's ratio of the central solenoid structure (dimensionless)
+        f_a_cs_turn_steel : float
+            Steel area fraction of the central solenoid turn cross-section
+            (dimensionless)
 
         Returns
         -------
@@ -4019,7 +4024,7 @@ class CSCoil(Model):
 
         s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
-        return s_hoop_nom / self.data.pf_coil.f_a_cs_turn_steel
+        return s_hoop_nom / f_a_cs_turn_steel
 
     def calculate_cs_radial_stress(
         self,
@@ -4159,6 +4164,7 @@ class CSCoil(Model):
                 j_cs=j_cs,
                 b_cs_inner=b_cs_inner,
                 f_poisson_cs_structure=tfv.poisson_steel,
+                f_a_cs_turn_steel=mfile.get("f_a_cs_turn_steel", scan=scan),
             )
             for radius in radii
         ])

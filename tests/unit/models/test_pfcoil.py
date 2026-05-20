@@ -1971,78 +1971,30 @@ def test_hoop_stress(cs_coil, monkeypatch):
     discovered using gdb to break on the first subroutine call when running the
     baseline 2018 IN.DAT.
 
-    :param pfcoil: PFCoil object
-    :type pfcoil: process.pfcoil.PFCoil
+    :param cs_coil: CSCoil object
+    :type cs_coil: process.pfcoil.CSCoil
     :param monkeypatch: mocking fixture
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
     """
-    monkeypatch.setattr(cs_coil.data.pf_coil, "f_a_cs_turn_steel", 0.57874999999999999)
-    monkeypatch.setattr(
-        cs_coil.data.pf_coil, "b_cs_peak_pulse_start", 13.522197474024983
-    )
-    monkeypatch.setattr(cs_coil.data.pf_coil, "j_cs_pulse_start", 19311657.760000002)
-    monkeypatch.setattr(cs_coil.data.pf_coil, "n_cs_pf_coils", 7)
-    monkeypatch.setattr(
-        cs_coil.data.pf_coil,
-        "r_pf_coil_outer",
-        np.array([
-            6.8520884119768697,
-            6.9480065348448967,
-            18.98258241468535,
-            18.98258241468535,
-            17.22166645654087,
-            17.22166645654087,
-            2.88462,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-        ]),
-    )
-    monkeypatch.setattr(
-        cs_coil.data.pf_coil,
-        "r_pf_coil_inner",
-        np.array([
-            5.6944236847973242,
-            5.5985055619292972,
-            17.819978201682968,
-            17.819978201682968,
-            16.385123084628962,
-            16.385123084628962,
-            2.3321999999999998,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-        ]),
-    )
-    monkeypatch.setattr(cs_coil.data.tfcoil, "poisson_steel", 0.29999999999999999)
 
-    r = 2.3
+    r_stress_point = 2.3
+    r_cs_inner = 2.3321999999999998
+    r_cs_outer = 2.88462
+    j_cs = 19311657.760000002
+    b_cs_inner = 13.522197474024983
+    f_poisson_cs_structure = 0.29999999999999999
+    f_a_cs_turn_steel = 0.57874999999999999
+
     s_hoop_exp = 6.737108e8
-    s_hoop = cs_coil.calculate_cs_hoop_stress(r)
+    s_hoop = cs_coil.calculate_cs_hoop_stress(
+        r_stress_point,
+        r_cs_inner,
+        r_cs_outer,
+        j_cs,
+        b_cs_inner,
+        f_poisson_cs_structure,
+        f_a_cs_turn_steel,
+    )
 
     assert pytest.approx(s_hoop) == s_hoop_exp
 
