@@ -47,7 +47,7 @@ $$
 \mathtt{ecgam} = 0.25(\mathtt{ecgam1} + \mathtt{ecgam2} +\mathtt{ecgam3} + \mathtt{ecgam4})
  $$
 
-7. Calculate the current drive efficiency by dividing `ecgam` by `(dlocal * physics_variables.rmajor)`.
+1. Calculate the current drive efficiency by dividing `ecgam` by `(dlocal * data.physics.rmajor)`.
 
 $$
 \text{Current drive efficiency [A/W]} = \frac{\mathtt{ecgam}}{\mathtt{dlocal} \times R_0}

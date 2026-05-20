@@ -11912,7 +11912,7 @@ def plot_max_normalised_beta_comparison(axis: plt.Axes, mfile: MFile, scan: int)
         f"{BetaNormMaxModel.WESSON.full_name}": beta_norm_max_wesson,
         f"{BetaNormMaxModel.ORIGINAL_SCALING.full_name}": beta_norm_max_original_scaling,
         f"{BetaNormMaxModel.MENARD.full_name}": beta_norm_max_menard,
-        f"{BetaNormMaxModel.THLOREUS.full_name}": beta_norm_max_thloreus,
+        f"{BetaNormMaxModel.THOLERUS.full_name}": beta_norm_max_thloreus,
         f"{BetaNormMaxModel.STAMBAUGH.full_name}": beta_norm_max_stambaugh,
     }
 

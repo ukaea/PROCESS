@@ -12,8 +12,7 @@ import scipy as sp
 from process.core import constants
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import physics_variables
-from process.models.physics.profiles import NeProfile, PlasmaProfileShapeType, TeProfile
+from process.models.physics.profiles import PlasmaProfileShapeType
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +22,7 @@ class PlasmaProfile(Model):
     profiles and handles the required physics variables.
     """
 
-    def __init__(self):
+    def __init__(self, ne_profile, te_profile):
         """
         Initialize the PlasmaProfile class.
 
@@ -34,11 +33,11 @@ class PlasmaProfile(Model):
             teprofile (TeProfile): An instance of the TeProfile class.
         """
         # Default profile_size = 501, but it's possible to experiment with this value.
-        self.profile_size = 501
-        physics_variables.n_plasma_profile_elements = self.profile_size
+        self.profile_size = self.data.physics.n_plasma_profile_elements
+        self.data.physics.n_plasma_profile_elements = self.profile_size
         self.outfile = constants.NOUT
-        self.neprofile = NeProfile(self.profile_size)
-        self.teprofile = TeProfile(self.profile_size)
+        self.neprofile = ne_profile
+        self.teprofile = te_profile
 
     def run(self):
         """Subroutine to execute PlasmaProfile functions.
@@ -63,15 +62,15 @@ class PlasmaProfile(Model):
         #  Volume-averaged ion temperature
         #  (input value used directly if f_temp_plasma_ion_electron=0.0)
 
-        if physics_variables.f_temp_plasma_ion_electron > 0.0e0:
-            physics_variables.temp_plasma_ion_vol_avg_kev = (
-                physics_variables.f_temp_plasma_ion_electron
-                * physics_variables.temp_plasma_electron_vol_avg_kev
+        if self.data.physics.f_temp_plasma_ion_electron > 0.0e0:
+            self.data.physics.temp_plasma_ion_vol_avg_kev = (
+                self.data.physics.f_temp_plasma_ion_electron
+                * self.data.physics.temp_plasma_electron_vol_avg_kev
             )
 
         # Parabolic profile case
         if (
-            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
         ):
             self.parabolic_paramterisation()
@@ -92,13 +91,13 @@ class PlasmaProfile(Model):
         # Reset pedestal values to agree with original parabolic profiles
         # ruff: disable[RUF069]
         if (
-            physics_variables.radius_plasma_pedestal_temp_norm != 1.0
-            or physics_variables.radius_plasma_pedestal_density_norm != 1.0
-            or physics_variables.temp_plasma_pedestal_kev != 0.0
-            or physics_variables.temp_plasma_separatrix_kev != 0.0
-            or physics_variables.nd_plasma_pedestal_electron != 0.0
-            or physics_variables.nd_plasma_separatrix_electron != 0.0
-            or physics_variables.tbeta != 2.0
+            self.data.physics.radius_plasma_pedestal_temp_norm != 1.0
+            or self.data.physics.radius_plasma_pedestal_density_norm != 1.0
+            or self.data.physics.temp_plasma_pedestal_kev != 0.0
+            or self.data.physics.temp_plasma_separatrix_kev != 0.0
+            or self.data.physics.nd_plasma_pedestal_electron != 0.0
+            or self.data.physics.nd_plasma_separatrix_electron != 0.0
+            or self.data.physics.tbeta != 2.0
         ):
             logger.error(
                 "Parabolic plasma profiles is used for an L-Mode plasma, "
@@ -110,13 +109,13 @@ class PlasmaProfile(Model):
                 "and 'tbeta' have all been reset to L-Mode appropriate values"
             )
 
-            physics_variables.radius_plasma_pedestal_temp_norm = 1.0e0
-            physics_variables.radius_plasma_pedestal_density_norm = 1.0e0
-            physics_variables.temp_plasma_pedestal_kev = 0.0e0
-            physics_variables.temp_plasma_separatrix_kev = 0.0e0
-            physics_variables.nd_plasma_pedestal_electron = 0.0e0
-            physics_variables.nd_plasma_separatrix_electron = 0.0e0
-            physics_variables.tbeta = 2.0e0
+            self.data.physics.radius_plasma_pedestal_temp_norm = 1.0e0
+            self.data.physics.radius_plasma_pedestal_density_norm = 1.0e0
+            self.data.physics.temp_plasma_pedestal_kev = 0.0e0
+            self.data.physics.temp_plasma_separatrix_kev = 0.0e0
+            self.data.physics.nd_plasma_pedestal_electron = 0.0e0
+            self.data.physics.nd_plasma_separatrix_electron = 0.0e0
+            self.data.physics.tbeta = 2.0e0
         # ruff: enable[RUF069]
         # Re-caluclate core and profile values
         self.teprofile.run()
@@ -125,53 +124,53 @@ class PlasmaProfile(Model):
         #  Profile factor; ratio of density-weighted to volume-averaged
         #  temperature
 
-        physics_variables.f_temp_plasma_electron_density_vol_avg = (
-            (1.0e0 + physics_variables.alphan)
-            * (1.0e0 + physics_variables.alphat)
-            / (1.0e0 + physics_variables.alphan + physics_variables.alphat)
+        self.data.physics.f_temp_plasma_electron_density_vol_avg = (
+            (1.0e0 + self.data.physics.alphan)
+            * (1.0e0 + self.data.physics.alphat)
+            / (1.0e0 + self.data.physics.alphan + self.data.physics.alphat)
         )
 
         # Line averaged electron density (IPDG89)
         # Taken by integrating the parabolic profile over rho in the bounds of 0 and
         # 1 and dividng by the width of the integration bounds
 
-        physics_variables.nd_plasma_electron_line = (
-            physics_variables.nd_plasma_electrons_vol_avg
-            * (1.0 + physics_variables.alphan)
+        self.data.physics.nd_plasma_electron_line = (
+            self.data.physics.nd_plasma_electrons_vol_avg
+            * (1.0 + self.data.physics.alphan)
             * (sp.special.gamma(0.5) / 2.0)
-            * sp.special.gamma(physics_variables.alphan + 1.0)
-            / sp.special.gamma(physics_variables.alphan + 1.5)
+            * sp.special.gamma(self.data.physics.alphan + 1.0)
+            / sp.special.gamma(self.data.physics.alphan + 1.5)
         )
 
         #  Density-weighted temperatures
 
-        physics_variables.temp_plasma_electron_density_weighted_kev = (
-            physics_variables.temp_plasma_electron_vol_avg_kev
-            * physics_variables.f_temp_plasma_electron_density_vol_avg
+        self.data.physics.temp_plasma_electron_density_weighted_kev = (
+            self.data.physics.temp_plasma_electron_vol_avg_kev
+            * self.data.physics.f_temp_plasma_electron_density_vol_avg
         )
-        physics_variables.temp_plasma_ion_density_weighted_kev = (
-            physics_variables.temp_plasma_ion_vol_avg_kev
-            * physics_variables.f_temp_plasma_electron_density_vol_avg
+        self.data.physics.temp_plasma_ion_density_weighted_kev = (
+            self.data.physics.temp_plasma_ion_vol_avg_kev
+            * self.data.physics.f_temp_plasma_electron_density_vol_avg
         )
 
         #  Central values for temperature (keV) and density (m**-3)
 
-        physics_variables.temp_plasma_electron_on_axis_kev = (
-            physics_variables.temp_plasma_electron_vol_avg_kev
-            * (1.0 + physics_variables.alphat)
+        self.data.physics.temp_plasma_electron_on_axis_kev = (
+            self.data.physics.temp_plasma_electron_vol_avg_kev
+            * (1.0 + self.data.physics.alphat)
         )
-        physics_variables.temp_plasma_ion_on_axis_kev = (
-            physics_variables.temp_plasma_ion_vol_avg_kev
-            * (1.0 + physics_variables.alphat)
+        self.data.physics.temp_plasma_ion_on_axis_kev = (
+            self.data.physics.temp_plasma_ion_vol_avg_kev
+            * (1.0 + self.data.physics.alphat)
         )
 
-        physics_variables.nd_plasma_electron_on_axis = (
-            physics_variables.nd_plasma_electrons_vol_avg
-            * (1.0 + physics_variables.alphan)
+        self.data.physics.nd_plasma_electron_on_axis = (
+            self.data.physics.nd_plasma_electrons_vol_avg
+            * (1.0 + self.data.physics.alphan)
         )
-        physics_variables.nd_plasma_ions_on_axis = (
-            physics_variables.nd_plasma_ions_total_vol_avg
-            * (1.0 + physics_variables.alphan)
+        self.data.physics.nd_plasma_ions_on_axis = (
+            self.data.physics.nd_plasma_ions_total_vol_avg
+            * (1.0 + self.data.physics.alphan)
         )
 
     def pedestal_parameterisation(self):
@@ -207,35 +206,35 @@ class PlasmaProfile(Model):
         integ1 = sp.integrate.simpson(arg1, x=rho, dx=drho)
         integ2 = sp.integrate.simpson(arg2, x=rho, dx=drho)
 
-        physics_variables.integ1 = integ1
-        physics_variables.integ2 = integ2
+        self.data.physics.integ1 = integ1
+        self.data.physics.integ2 = integ2
         #  Density-weighted temperatures
-        physics_variables.temp_plasma_electron_density_weighted_kev = integ1 / integ2
-        physics_variables.temp_plasma_ion_density_weighted_kev = (
-            physics_variables.temp_plasma_ion_vol_avg_kev
-            / physics_variables.temp_plasma_electron_vol_avg_kev
-            * physics_variables.temp_plasma_electron_density_weighted_kev
+        self.data.physics.temp_plasma_electron_density_weighted_kev = integ1 / integ2
+        self.data.physics.temp_plasma_ion_density_weighted_kev = (
+            self.data.physics.temp_plasma_ion_vol_avg_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
+            * self.data.physics.temp_plasma_electron_density_weighted_kev
         )
         #  Profile factor; ratio of density-weighted to volume-averaged
         #  temperature
 
-        physics_variables.f_temp_plasma_electron_density_vol_avg = (
-            physics_variables.temp_plasma_electron_density_weighted_kev
-            / physics_variables.temp_plasma_electron_vol_avg_kev
+        self.data.physics.f_temp_plasma_electron_density_vol_avg = (
+            self.data.physics.temp_plasma_electron_density_weighted_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
         )
 
         #  Line-averaged electron density
         #  = integral(n(rho).drho)
 
-        physics_variables.nd_plasma_electron_line = self.neprofile.profile_integ
+        self.data.physics.nd_plasma_electron_line = self.neprofile.profile_integ
 
         #  Scrape-off density / volume averaged density
         #  (Input value is used if i_plasma_pedestal = 0)
 
         self.data.divertor.prn1 = max(
             0.01e0,
-            physics_variables.nd_plasma_separatrix_electron
-            / physics_variables.nd_plasma_electrons_vol_avg,
+            self.data.physics.nd_plasma_separatrix_electron
+            / self.data.physics.nd_plasma_electrons_vol_avg,
         )  # Preventing division by zero later
 
     def calculate_profile_factors(self):
@@ -248,42 +247,42 @@ class PlasmaProfile(Model):
         """
         #  Central pressure (Pa), from ideal gas law : p = nkT
 
-        physics_variables.pres_plasma_thermal_on_axis = (
-            physics_variables.nd_plasma_electron_on_axis
-            * physics_variables.temp_plasma_electron_on_axis_kev
-            + physics_variables.nd_plasma_ions_on_axis
-            * physics_variables.temp_plasma_ion_on_axis_kev
+        self.data.physics.pres_plasma_thermal_on_axis = (
+            self.data.physics.nd_plasma_electron_on_axis
+            * self.data.physics.temp_plasma_electron_on_axis_kev
+            + self.data.physics.nd_plasma_ions_on_axis
+            * self.data.physics.temp_plasma_ion_on_axis_kev
         ) * constants.KILOELECTRON_VOLT
 
         # Electron pressure profile (Pa)
-        physics_variables.pres_plasma_electron_profile = self.neprofile.profile_y * (
+        self.data.physics.pres_plasma_electron_profile = self.neprofile.profile_y * (
             self.teprofile.profile_y * constants.KILOELECTRON_VOLT
         )
 
         # Total ion pressure profile (Pa)
-        physics_variables.pres_plasma_ion_total_profile = (
-            physics_variables.nd_plasma_ions_total_vol_avg
-            * (self.neprofile.profile_y / physics_variables.nd_plasma_electrons_vol_avg)
+        self.data.physics.pres_plasma_ion_total_profile = (
+            self.data.physics.nd_plasma_ions_total_vol_avg
+            * (self.neprofile.profile_y / self.data.physics.nd_plasma_electrons_vol_avg)
         ) * (
             self.teprofile.profile_y
             * constants.KILOELECTRON_VOLT
-            * physics_variables.f_temp_plasma_ion_electron
+            * self.data.physics.f_temp_plasma_ion_electron
         )
 
         # Total pressure profile (Pa)
-        physics_variables.pres_plasma_thermal_total_profile = (
-            physics_variables.pres_plasma_electron_profile
-            + physics_variables.pres_plasma_ion_total_profile
+        self.data.physics.pres_plasma_thermal_total_profile = (
+            self.data.physics.pres_plasma_electron_profile
+            + self.data.physics.pres_plasma_ion_total_profile
         )
 
         # Fuel ion pressure profile (Pa)
-        physics_variables.pres_plasma_fuel_profile = (
-            physics_variables.nd_plasma_fuel_ions_vol_avg
-            * (self.neprofile.profile_y / physics_variables.nd_plasma_electrons_vol_avg)
+        self.data.physics.pres_plasma_fuel_profile = (
+            self.data.physics.nd_plasma_fuel_ions_vol_avg
+            * (self.neprofile.profile_y / self.data.physics.nd_plasma_electrons_vol_avg)
         ) * (
             self.teprofile.profile_y
             * constants.KILOELECTRON_VOLT
-            * physics_variables.f_temp_plasma_ion_electron
+            * self.data.physics.f_temp_plasma_ion_electron
         )
 
         #  Pressure profile index (only true for a parabolic profile)
@@ -292,31 +291,30 @@ class PlasmaProfile(Model):
         #  and <p> = <n>.T_n where <...> denotes volume-averages and T_n is the
         #  density-weighted temperature
 
-        physics_variables.alphap = physics_variables.alphan + physics_variables.alphat
+        self.data.physics.alphap = self.data.physics.alphan + self.data.physics.alphat
 
         # Calculate the volume averaged plasma thermal pressure from the
         # density-weighted temperatures
         # Density-weighted temperatures are used as <nT> != <n>*<T>
-        physics_variables.pres_plasma_thermal_vol_avg = (
-            physics_variables.nd_plasma_electrons_vol_avg
-            * physics_variables.temp_plasma_electron_density_weighted_kev
-            + physics_variables.nd_plasma_ions_total_vol_avg
-            * physics_variables.temp_plasma_ion_density_weighted_kev
+        self.data.physics.pres_plasma_thermal_vol_avg = (
+            self.data.physics.nd_plasma_electrons_vol_avg
+            * self.data.physics.temp_plasma_electron_density_weighted_kev
+            + self.data.physics.nd_plasma_ions_total_vol_avg
+            * self.data.physics.temp_plasma_ion_density_weighted_kev
         ) * constants.KILOELECTRON_VOLT
 
         # Central plasma current density (A/m^2)
         # Assumes a parabolic profile for the current density
-        physics_variables.j_plasma_on_axis = (
-            (physics_variables.plasma_current)
+        self.data.physics.j_plasma_on_axis = (
+            (self.data.physics.plasma_current)
             * 2
             / (
-                sp.special.beta(0.5, physics_variables.alphaj + 1)
-                * physics_variables.a_plasma_poloidal
+                sp.special.beta(0.5, self.data.physics.alphaj + 1)
+                * self.data.physics.a_plasma_poloidal
             )
         )
 
-    @staticmethod
-    def calculate_parabolic_profile_factors():
+    def calculate_parabolic_profile_factors(self):
         """Calculate the gradient information for i_plasma_pedestal = 0.
 
         This function calculates the gradient information for the plasma profiles at
@@ -333,64 +331,64 @@ class PlasmaProfile(Model):
             If alphat or alphan is negative.
         """
         if (
-            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
         ):
-            if physics_variables.alphat > 1.0:
+            if self.data.physics.alphat > 1.0:
                 # Rho (normalized radius), where temperature derivative is largest
-                rho_te_max = 1.0 / np.sqrt(-1.0 + 2.0 * physics_variables.alphat)
+                rho_te_max = 1.0 / np.sqrt(-1.0 + 2.0 * self.data.physics.alphat)
                 dtdrho_max = (
-                    -(2.0**physics_variables.alphat)
-                    * (-1.0 + physics_variables.alphat)
-                    ** (-1.0 + physics_variables.alphat)
-                    * physics_variables.alphat
-                    * (-1.0 + 2.0 * physics_variables.alphat)
-                    ** (0.5e0 - physics_variables.alphat)
-                    * physics_variables.temp_plasma_electron_on_axis_kev
+                    -(2.0**self.data.physics.alphat)
+                    * (-1.0 + self.data.physics.alphat)
+                    ** (-1.0 + self.data.physics.alphat)
+                    * self.data.physics.alphat
+                    * (-1.0 + 2.0 * self.data.physics.alphat)
+                    ** (0.5e0 - self.data.physics.alphat)
+                    * self.data.physics.temp_plasma_electron_on_axis_kev
                 )
                 te_max = (
-                    physics_variables.temp_plasma_electron_on_axis_kev
-                    * (1 - rho_te_max**2) ** physics_variables.alphat
+                    self.data.physics.temp_plasma_electron_on_axis_kev
+                    * (1 - rho_te_max**2) ** self.data.physics.alphat
                 )
 
-            elif physics_variables.alphat <= 1.0 and physics_variables.alphat > 0.0:
+            elif self.data.physics.alphat <= 1.0 and self.data.physics.alphat > 0.0:
                 # This makes the profiles very 'boxy'
                 # The gradient diverges here at the edge so define some 'wrong' value of
                 # 0.9 to approximate the gradient
                 rho_te_max = 0.9
                 dtdrho_max = (
                     -2.0
-                    * physics_variables.alphat
+                    * self.data.physics.alphat
                     * rho_te_max
-                    * (1 - rho_te_max**2) ** (-1.0 + physics_variables.alphat)
-                    * physics_variables.temp_plasma_electron_on_axis_kev
+                    * (1 - rho_te_max**2) ** (-1.0 + self.data.physics.alphat)
+                    * self.data.physics.temp_plasma_electron_on_axis_kev
                 )
                 te_max = (
-                    physics_variables.temp_plasma_electron_on_axis_kev
-                    * (1 - rho_te_max**2) ** physics_variables.alphat
+                    self.data.physics.temp_plasma_electron_on_axis_kev
+                    * (1 - rho_te_max**2) ** self.data.physics.alphat
                 )
             else:
                 raise ProcessValueError(
-                    f"alphat is negative: {physics_variables.alphat}"
+                    f"alphat is negative: {self.data.physics.alphat}"
                 )
 
             # Same for density
-            if physics_variables.alphan > 1.0:
-                rho_ne_max = 1.0 / np.sqrt(-1.0 + 2.0 * physics_variables.alphan)
+            if self.data.physics.alphan > 1.0:
+                rho_ne_max = 1.0 / np.sqrt(-1.0 + 2.0 * self.data.physics.alphan)
                 dndrho_max = (
-                    -(2.0**physics_variables.alphan)
-                    * (-1.0 + physics_variables.alphan)
-                    ** (-1.0 + physics_variables.alphan)
-                    * physics_variables.alphan
-                    * (-1.0 + 2.0 * physics_variables.alphan)
-                    ** (0.5 - physics_variables.alphan)
-                    * physics_variables.nd_plasma_electron_on_axis
+                    -(2.0**self.data.physics.alphan)
+                    * (-1.0 + self.data.physics.alphan)
+                    ** (-1.0 + self.data.physics.alphan)
+                    * self.data.physics.alphan
+                    * (-1.0 + 2.0 * self.data.physics.alphan)
+                    ** (0.5 - self.data.physics.alphan)
+                    * self.data.physics.nd_plasma_electron_on_axis
                 )
                 ne_max = (
-                    physics_variables.nd_plasma_electron_on_axis
-                    * (1e0 - rho_ne_max**2) ** physics_variables.alphan
+                    self.data.physics.nd_plasma_electron_on_axis
+                    * (1e0 - rho_ne_max**2) ** self.data.physics.alphan
                 )
-            elif physics_variables.alphan <= 1.0 and physics_variables.alphan > 0.0:
+            elif self.data.physics.alphan <= 1.0 and self.data.physics.alphan > 0.0:
                 # This makes the profiles very 'boxy'
                 # The gradient diverges here at the edge so define some 'wrong' value of
                 # 0.9
@@ -398,26 +396,26 @@ class PlasmaProfile(Model):
                 rho_ne_max = 0.9
                 dndrho_max = (
                     -2.0
-                    * physics_variables.alphan
+                    * self.data.physics.alphan
                     * rho_ne_max
-                    * (1 - rho_ne_max**2) ** (-1.0 + physics_variables.alphan)
-                    * physics_variables.nd_plasma_electron_on_axis
+                    * (1 - rho_ne_max**2) ** (-1.0 + self.data.physics.alphan)
+                    * self.data.physics.nd_plasma_electron_on_axis
                 )
                 ne_max = (
-                    physics_variables.nd_plasma_electron_on_axis
-                    * (1 - rho_ne_max**2) ** physics_variables.alphan
+                    self.data.physics.nd_plasma_electron_on_axis
+                    * (1 - rho_ne_max**2) ** self.data.physics.alphan
                 )
             else:
                 raise ProcessValueError(
-                    f"alphan is negative: {physics_variables.alphan}"
+                    f"alphan is negative: {self.data.physics.alphan}"
                 )
 
             # set normalized gradient length
             # te at rho_te_max
-            physics_variables.gradient_length_te = (
-                -dtdrho_max * physics_variables.rminor * rho_te_max / te_max
+            self.data.physics.gradient_length_te = (
+                -dtdrho_max * self.data.physics.rminor * rho_te_max / te_max
             )
             # same for density:
-            physics_variables.gradient_length_ne = (
-                -dndrho_max * physics_variables.rminor * rho_ne_max / ne_max
+            self.data.physics.gradient_length_ne = (
+                -dndrho_max * self.data.physics.rminor * rho_ne_max / ne_max
             )

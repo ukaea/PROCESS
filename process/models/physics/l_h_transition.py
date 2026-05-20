@@ -5,10 +5,7 @@ from enum import IntEnum
 
 from process.core import constants
 from process.core import process_output as po
-from process.data_structure import (
-    numerics,
-    physics_variables,
-)
+from process.data_structure import numerics
 
 logger = logging.getLogger(__name__)
 
@@ -73,21 +70,21 @@ class PlasmaConfinementTransition:
         and sets the enforced L-H power threshold value based on the selected scaling.
         """
         # Calculate L- to H-mode power threshold for different scalings
-        physics_variables.l_h_threshold_powers = self.l_h_threshold_power(
-            physics_variables.nd_plasma_electron_line,
-            physics_variables.b_plasma_toroidal_on_axis,
-            physics_variables.rmajor,
-            physics_variables.rminor,
-            physics_variables.kappa,
-            physics_variables.a_plasma_surface,
-            physics_variables.m_ions_total_amu,
-            physics_variables.aspect,
-            physics_variables.plasma_current,
+        self.data.physics.l_h_threshold_powers = self.l_h_threshold_power(
+            self.data.physics.nd_plasma_electron_line,
+            self.data.physics.b_plasma_toroidal_on_axis,
+            self.data.physics.rmajor,
+            self.data.physics.rminor,
+            self.data.physics.kappa,
+            self.data.physics.a_plasma_surface,
+            self.data.physics.m_ions_total_amu,
+            self.data.physics.aspect,
+            self.data.physics.plasma_current,
         )
 
         # Enforced L-H power threshold value (if constraint 15 is turned on)
-        physics_variables.p_l_h_threshold_mw = physics_variables.l_h_threshold_powers[
-            physics_variables.i_l_h_threshold - 1
+        self.data.physics.p_l_h_threshold_mw = self.data.physics.l_h_threshold_powers[
+            self.data.physics.i_l_h_threshold - 1
         ]
 
     def l_h_threshold_power(
@@ -296,7 +293,7 @@ class PlasmaConfinementTransition:
             martin_lb_aspect,
         ]
 
-    def output_l_h_threshold_powers(self) -> None:
+    def output(self) -> None:
         """Output L-H transition power thresholds to file."""
         po.oheadr(self.outfile, "H-mode Power Threshold Scalings :")
 
@@ -304,18 +301,18 @@ class PlasmaConfinementTransition:
             self.outfile,
             "L-H threshold scaling switch",
             "(i_l_h_threshold)",
-            physics_variables.i_l_h_threshold,
+            self.data.physics.i_l_h_threshold,
         )
         po.ocmmnt(
             self.outfile,
-            f"{PlasmaConfinementTransitionModel(physics_variables.i_l_h_threshold).full_name}",
+            f"{PlasmaConfinementTransitionModel(self.data.physics.i_l_h_threshold).full_name}",
         )
         if (numerics.ioptimz > 0) and (numerics.active_constraints[14]):
             po.ovarre(
                 self.outfile,
                 "L-H threshold power (MW)",
                 "(p_l_h_threshold_mw)",
-                physics_variables.p_l_h_threshold_mw,
+                self.data.physics.p_l_h_threshold_mw,
                 "OP ",
             )
         else:
@@ -323,7 +320,7 @@ class PlasmaConfinementTransition:
                 self.outfile,
                 "L-H threshold power (NOT enforced) (MW)",
                 "(p_l_h_threshold_mw)",
-                physics_variables.p_l_h_threshold_mw,
+                self.data.physics.p_l_h_threshold_mw,
                 "OP ",
             )
         po.oblnkl(self.outfile)
@@ -332,153 +329,153 @@ class PlasmaConfinementTransition:
             self.outfile,
             "ITER 1996 scaling: nominal (MW)",
             "(l_h_threshold_powers(1))",
-            physics_variables.l_h_threshold_powers[0],
+            self.data.physics.l_h_threshold_powers[0],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "ITER 1996 scaling: upper bound (MW)",
             "(l_h_threshold_powers(2))",
-            physics_variables.l_h_threshold_powers[1],
+            self.data.physics.l_h_threshold_powers[1],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "ITER 1996 scaling: lower bound (MW)",
             "(l_h_threshold_powers(3))",
-            physics_variables.l_h_threshold_powers[2],
+            self.data.physics.l_h_threshold_powers[2],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "ITER 1997 scaling (1) (MW)",
             "(l_h_threshold_powers(4))",
-            physics_variables.l_h_threshold_powers[3],
+            self.data.physics.l_h_threshold_powers[3],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "ITER 1997 scaling (2) (MW)",
             "(l_h_threshold_powers(5))",
-            physics_variables.l_h_threshold_powers[4],
+            self.data.physics.l_h_threshold_powers[4],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Martin 2008 scaling: nominal (MW)",
             "(l_h_threshold_powers(6))",
-            physics_variables.l_h_threshold_powers[5],
+            self.data.physics.l_h_threshold_powers[5],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Martin 2008 scaling: 95% upper bound (MW)",
             "(l_h_threshold_powers(7))",
-            physics_variables.l_h_threshold_powers[6],
+            self.data.physics.l_h_threshold_powers[6],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Martin 2008 scaling: 95% lower bound (MW)",
             "(l_h_threshold_powers(8))",
-            physics_variables.l_h_threshold_powers[7],
+            self.data.physics.l_h_threshold_powers[7],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Snipes 2000 scaling: nominal (MW)",
             "(l_h_threshold_powers(9))",
-            physics_variables.l_h_threshold_powers[8],
+            self.data.physics.l_h_threshold_powers[8],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Snipes 2000 scaling: upper bound (MW)",
             "(l_h_threshold_powers(10))",
-            physics_variables.l_h_threshold_powers[9],
+            self.data.physics.l_h_threshold_powers[9],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Snipes 2000 scaling: lower bound (MW)",
             "(l_h_threshold_powers(11))",
-            physics_variables.l_h_threshold_powers[10],
+            self.data.physics.l_h_threshold_powers[10],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Snipes 2000 scaling (closed divertor): nominal (MW)",
             "(l_h_threshold_powers(12))",
-            physics_variables.l_h_threshold_powers[11],
+            self.data.physics.l_h_threshold_powers[11],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Snipes 2000 scaling (closed divertor): upper bound (MW)",
             "(l_h_threshold_powers(13))",
-            physics_variables.l_h_threshold_powers[12],
+            self.data.physics.l_h_threshold_powers[12],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Snipes 2000 scaling (closed divertor): lower bound (MW)",
             "(l_h_threshold_powers(14))",
-            physics_variables.l_h_threshold_powers[13],
+            self.data.physics.l_h_threshold_powers[13],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Hubbard 2012 L-I threshold - nominal (MW)",
             "(l_h_threshold_powers(15))",
-            physics_variables.l_h_threshold_powers[14],
+            self.data.physics.l_h_threshold_powers[14],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Hubbard 2012 L-I threshold - lower bound (MW)",
             "(l_h_threshold_powers(16))",
-            physics_variables.l_h_threshold_powers[15],
+            self.data.physics.l_h_threshold_powers[15],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Hubbard 2012 L-I threshold - upper bound (MW)",
             "(l_h_threshold_powers(17))",
-            physics_variables.l_h_threshold_powers[16],
+            self.data.physics.l_h_threshold_powers[16],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Hubbard 2017 L-I threshold",
             "(l_h_threshold_powers(18))",
-            physics_variables.l_h_threshold_powers[17],
+            self.data.physics.l_h_threshold_powers[17],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Martin 2008 aspect ratio corrected scaling: nominal (MW)",
             "(l_h_threshold_powers(19))",
-            physics_variables.l_h_threshold_powers[18],
+            self.data.physics.l_h_threshold_powers[18],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Martin 2008 aspect ratio corrected scaling: 95% upper bound (MW)",
             "(l_h_threshold_powers(20))",
-            physics_variables.l_h_threshold_powers[19],
+            self.data.physics.l_h_threshold_powers[19],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Martin 2008 aspect ratio corrected scaling: 95% lower bound (MW)",
             "(l_h_threshold_powers(21))",
-            physics_variables.l_h_threshold_powers[20],
+            self.data.physics.l_h_threshold_powers[20],
             "OP ",
         )
         po.oblnkl(self.outfile)
-        if physics_variables.i_l_h_threshold in {9, 10, 11}:
-            if (physics_variables.b_plasma_toroidal_on_axis < 0.78e0) or (
-                physics_variables.b_plasma_toroidal_on_axis > 7.94e0
+        if self.data.physics.i_l_h_threshold in {9, 10, 11}:
+            if (self.data.physics.b_plasma_toroidal_on_axis < 0.78e0) or (
+                self.data.physics.b_plasma_toroidal_on_axis > 7.94e0
             ):
                 po.ocmmnt(
                     self.outfile,
@@ -488,47 +485,47 @@ class PlasmaConfinementTransition:
                     "b_plasma_toroidal_on_axis outside Snipes 2000 fitted range"
                 )
 
-            if (physics_variables.rminor < 0.15e0) or (
-                physics_variables.rminor > 1.15e0
+            if (self.data.physics.rminor < 0.15e0) or (
+                self.data.physics.rminor > 1.15e0
             ):
                 po.ocmmnt(self.outfile, "(rminor outside Snipes 2000 fitted range)")
                 logger.warning("rminor outside Snipes 2000 fitted range")
 
-            if (physics_variables.rmajor < 0.55e0) or (
-                physics_variables.rmajor > 3.37e0
+            if (self.data.physics.rmajor < 0.55e0) or (
+                self.data.physics.rmajor > 3.37e0
             ):
                 po.ocmmnt(
                     self.outfile,
-                    "(physics_variables.rmajor outside Snipes 2000 fitted range)",
+                    "(self.data.physics.rmajor outside Snipes 2000 fitted range)",
                 )
                 logger.warning("rmajor outside Snipes 2000 fitted range")
 
-            if (physics_variables.nd_plasma_electron_line < 0.09e20) or (
-                physics_variables.nd_plasma_electron_line > 3.16e20
+            if (self.data.physics.nd_plasma_electron_line < 0.09e20) or (
+                self.data.physics.nd_plasma_electron_line > 3.16e20
             ):
                 po.ocmmnt(
                     self.outfile,
-                    "(physics_variables.nd_plasma_electron_line outside Snipes 2000 "
+                    "(self.data.physics.nd_plasma_electron_line outside Snipes 2000 "
                     "fitted range)",
                 )
                 logger.warning(
                     "nd_plasma_electron_line outside Snipes 2000 fitted range"
                 )
 
-            if (physics_variables.kappa < 1.0e0) or (physics_variables.kappa > 2.04e0):
+            if (self.data.physics.kappa < 1.0e0) or (self.data.physics.kappa > 2.04e0):
                 po.ocmmnt(
                     self.outfile,
-                    "(physics_variables.kappa outside Snipes 2000 fitted range)",
+                    "(self.data.physics.kappa outside Snipes 2000 fitted range)",
                 )
                 logger.warning("kappa outside Snipes 2000 fitted range")
 
-            if (physics_variables.triang < 0.07e0) or (
-                physics_variables.triang > 0.74e0
+            if (self.data.physics.triang < 0.07e0) or (
+                self.data.physics.triang > 0.74e0
             ):
                 po.ocmmnt(self.outfile, "(triang outside Snipes 2000 fitted range)")
                 logger.warning("triang outside Snipes 2000 fitted range")
 
-        if physics_variables.i_l_h_threshold in {12, 13, 14}:
+        if self.data.physics.i_l_h_threshold in {12, 13, 14}:
             po.ocmmnt(
                 self.outfile,
                 "(L-H threshold for closed divertor only. Limited data used in Snipes "

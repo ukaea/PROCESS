@@ -13,9 +13,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    physics_variables,
-)
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
@@ -86,32 +83,32 @@ class PlasmaBootstrapCurrent(Model):
         self.data.current_drive.f_c_plasma_bootstrap_iter89 = (
             self.data.current_drive.cboot
             * self.bootstrap_fraction_iter89(
-                aspect=physics_variables.aspect,
-                beta=physics_variables.beta_total_vol_avg,
-                b_plasma_toroidal_on_axis=physics_variables.b_plasma_total,
-                plasma_current=physics_variables.plasma_current,
-                q95=physics_variables.q95,
-                q0=physics_variables.q0,
-                rmajor=physics_variables.rmajor,
-                vol_plasma=physics_variables.vol_plasma,
+                aspect=self.data.physics.aspect,
+                beta=self.data.physics.beta_total_vol_avg,
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_total,
+                plasma_current=self.data.physics.plasma_current,
+                q95=self.data.physics.q95,
+                q0=self.data.physics.q0,
+                rmajor=self.data.physics.rmajor,
+                vol_plasma=self.data.physics.vol_plasma,
             )
         )
 
         self.data.current_drive.f_c_plasma_bootstrap_nevins = (
             self.data.current_drive.cboot
             * self.bootstrap_fraction_nevins(
-                alphan=physics_variables.alphan,
-                alphat=physics_variables.alphat,
-                beta_toroidal=physics_variables.beta_toroidal_vol_avg,
-                b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
-                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
-                plasma_current=physics_variables.plasma_current,
-                q95=physics_variables.q95,
-                q0=physics_variables.q0,
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
-                te=physics_variables.temp_plasma_electron_vol_avg_kev,
-                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
+                alphan=self.data.physics.alphan,
+                alphat=self.data.physics.alphat,
+                beta_toroidal=self.data.physics.beta_toroidal_vol_avg,
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+                nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                plasma_current=self.data.physics.plasma_current,
+                q95=self.data.physics.q95,
+                q0=self.data.physics.q0,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                te=self.data.physics.temp_plasma_electron_vol_avg_kev,
+                zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
             )
         )
 
@@ -119,20 +116,20 @@ class PlasmaBootstrapCurrent(Model):
         self.data.current_drive.f_c_plasma_bootstrap_wilson = (
             self.data.current_drive.cboot
             * self.bootstrap_fraction_wilson(
-                alphaj=physics_variables.alphaj,
-                alphap=physics_variables.alphap,
-                alphat=physics_variables.alphat,
-                betpth=physics_variables.beta_thermal_poloidal_vol_avg,
-                q0=physics_variables.q0,
-                q95=physics_variables.q95,
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
+                alphaj=self.data.physics.alphaj,
+                alphap=self.data.physics.alphap,
+                alphat=self.data.physics.alphat,
+                betpth=self.data.physics.beta_thermal_poloidal_vol_avg,
+                q0=self.data.physics.q0,
+                q95=self.data.physics.q95,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
             )
         )
 
         (
             self.data.current_drive.f_c_plasma_bootstrap_sauter,
-            physics_variables.j_plasma_bootstrap_sauter_profile,
+            self.data.physics.j_plasma_bootstrap_sauter_profile,
         ) = self.bootstrap_fraction_sauter(self.plasma_profile)
         self.data.current_drive.f_c_plasma_bootstrap_sauter *= (
             self.data.current_drive.cboot
@@ -141,112 +138,112 @@ class PlasmaBootstrapCurrent(Model):
         self.data.current_drive.f_c_plasma_bootstrap_sakai = (
             self.data.current_drive.cboot
             * self.bootstrap_fraction_sakai(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                q95=physics_variables.q95,
-                q0=physics_variables.q0,
-                alphan=physics_variables.alphan,
-                alphat=physics_variables.alphat,
-                eps=physics_variables.eps,
-                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                q95=self.data.physics.q95,
+                q0=self.data.physics.q0,
+                alphan=self.data.physics.alphan,
+                alphat=self.data.physics.alphat,
+                eps=self.data.physics.eps,
+                ind_plasma_internal_norm=self.data.physics.ind_plasma_internal_norm,
             )
         )
 
         self.data.current_drive.f_c_plasma_bootstrap_aries = (
             self.data.current_drive.cboot
             * self.bootstrap_fraction_aries(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
-                core_density=physics_variables.nd_plasma_electron_on_axis,
-                average_density=physics_variables.nd_plasma_electrons_vol_avg,
-                inverse_aspect=physics_variables.eps,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                ind_plasma_internal_norm=self.data.physics.ind_plasma_internal_norm,
+                core_density=self.data.physics.nd_plasma_electron_on_axis,
+                average_density=self.data.physics.nd_plasma_electrons_vol_avg,
+                inverse_aspect=self.data.physics.eps,
             )
         )
 
         self.data.current_drive.f_c_plasma_bootstrap_andrade = (
             self.data.current_drive.cboot
             * self.bootstrap_fraction_andrade(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                core_pressure=physics_variables.pres_plasma_thermal_on_axis,
-                average_pressure=physics_variables.pres_plasma_thermal_vol_avg,
-                inverse_aspect=physics_variables.eps,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                core_pressure=self.data.physics.pres_plasma_thermal_on_axis,
+                average_pressure=self.data.physics.pres_plasma_thermal_vol_avg,
+                inverse_aspect=self.data.physics.eps,
             )
         )
         self.data.current_drive.f_c_plasma_bootstrap_hoang = (
             self.data.current_drive.cboot
             * self.bootstrap_fraction_hoang(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                pressure_index=physics_variables.alphap,
-                current_index=physics_variables.alphaj,
-                inverse_aspect=physics_variables.eps,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                pressure_index=self.data.physics.alphap,
+                current_index=self.data.physics.alphaj,
+                inverse_aspect=self.data.physics.eps,
             )
         )
         self.data.current_drive.f_c_plasma_bootstrap_wong = (
             self.data.current_drive.cboot
             * self.bootstrap_fraction_wong(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                density_index=physics_variables.alphan,
-                temperature_index=physics_variables.alphat,
-                inverse_aspect=physics_variables.eps,
-                elongation=physics_variables.kappa,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                density_index=self.data.physics.alphan,
+                temperature_index=self.data.physics.alphat,
+                inverse_aspect=self.data.physics.eps,
+                elongation=self.data.physics.kappa,
             )
         )
         self.data.current_drive.bscf_gi_i = (
             self.data.current_drive.cboot
             * self.bootstrap_fraction_gi_I(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                pressure_index=physics_variables.alphap,
-                temperature_index=physics_variables.alphat,
-                inverse_aspect=physics_variables.eps,
-                effective_charge=physics_variables.n_charge_plasma_effective_vol_avg,
-                q95=physics_variables.q95,
-                q0=physics_variables.q0,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                pressure_index=self.data.physics.alphap,
+                temperature_index=self.data.physics.alphat,
+                inverse_aspect=self.data.physics.eps,
+                effective_charge=self.data.physics.n_charge_plasma_effective_vol_avg,
+                q95=self.data.physics.q95,
+                q0=self.data.physics.q0,
             )
         )
 
         self.data.current_drive.bscf_gi_ii = (
             self.data.current_drive.cboot
             * self.bootstrap_fraction_gi_II(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                pressure_index=physics_variables.alphap,
-                temperature_index=physics_variables.alphat,
-                inverse_aspect=physics_variables.eps,
-                effective_charge=physics_variables.n_charge_plasma_effective_vol_avg,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                pressure_index=self.data.physics.alphap,
+                temperature_index=self.data.physics.alphat,
+                inverse_aspect=self.data.physics.eps,
+                effective_charge=self.data.physics.n_charge_plasma_effective_vol_avg,
             )
         )
         self.data.current_drive.f_c_plasma_bootstrap_sugiyama_l = (
             self.data.current_drive.cboot
             * self.bootstrap_fraction_sugiyama_l_mode(
-                eps=physics_variables.eps,
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                alphan=physics_variables.alphan,
-                alphat=physics_variables.alphat,
-                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
-                q95=physics_variables.q95,
-                q0=physics_variables.q0,
+                eps=self.data.physics.eps,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                alphan=self.data.physics.alphan,
+                alphat=self.data.physics.alphat,
+                zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                q95=self.data.physics.q95,
+                q0=self.data.physics.q0,
             )
         )
         self.data.current_drive.f_c_plasma_bootstrap_sugiyama_h = (
             self.data.current_drive.cboot
             * self.bootstrap_fraction_sugiyama_h_mode(
-                eps=physics_variables.eps,
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                alphan=physics_variables.alphan,
-                alphat=physics_variables.alphat,
-                tbeta=physics_variables.tbeta,
-                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
-                q95=physics_variables.q95,
-                q0=physics_variables.q0,
-                radius_plasma_pedestal_density_norm=physics_variables.radius_plasma_pedestal_density_norm,
-                nd_plasma_pedestal_electron=physics_variables.nd_plasma_pedestal_electron,
-                n_greenwald=physics_variables.nd_plasma_electron_max_array[6],
-                temp_plasma_pedestal_kev=physics_variables.temp_plasma_pedestal_kev,
+                eps=self.data.physics.eps,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                alphan=self.data.physics.alphan,
+                alphat=self.data.physics.alphat,
+                tbeta=self.data.physics.tbeta,
+                zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                q95=self.data.physics.q95,
+                q0=self.data.physics.q0,
+                radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
+                nd_plasma_pedestal_electron=self.data.physics.nd_plasma_pedestal_electron,
+                n_greenwald=self.data.physics.nd_plasma_electron_max_array[6],
+                temp_plasma_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
             )
         )
 
         # Calculate beta_norm_max based on i_beta_norm_max
         try:
             model = BootstrapCurrentFractionModel(
-                int(physics_variables.i_bootstrap_current)
+                int(self.data.physics.i_bootstrap_current)
             )
             self.data.current_drive.f_c_plasma_bootstrap = (
                 self.get_bootstrap_current_fraction_value(model)
@@ -254,7 +251,7 @@ class PlasmaBootstrapCurrent(Model):
         except ValueError:
             raise ProcessValueError(
                 "Illegal value of i_bootstrap_current",
-                i_bootstrap_current=physics_variables.i_bootstrap_current,
+                i_bootstrap_current=self.data.physics.i_bootstrap_current,
             ) from None
 
     def get_bootstrap_current_fraction_value(
@@ -668,8 +665,8 @@ class PlasmaBootstrapCurrent(Model):
         # profiles.
 
         betae0 = (
-            physics_variables.nd_plasma_electron_on_axis
-            * physics_variables.temp_plasma_electron_on_axis_kev
+            self.data.physics.nd_plasma_electron_on_axis
+            * self.data.physics.temp_plasma_electron_on_axis_kev
             * 1.0e3
             * constants.ELECTRON_CHARGE
             / (b_plasma_toroidal_on_axis**2 / (2.0 * constants.RMU0))
@@ -1269,11 +1266,11 @@ class PlasmaBootstrapCurrent(Model):
             self.outfile,
             "Plasma bootstrap current fraction scaling used",
             "(i_bootstrap_current)",
-            physics_variables.i_bootstrap_current,
+            self.data.physics.i_bootstrap_current,
         )
         po.ocmmnt(
             self.outfile,
-            f"Bootstrap current fraction model selected: {BootstrapCurrentFractionModel(physics_variables.i_bootstrap_current).full_name} ",
+            f"Bootstrap current fraction model selected: {BootstrapCurrentFractionModel(self.data.physics.i_bootstrap_current).full_name} ",
         )
         po.oblnkl(self.outfile)
 
@@ -1312,12 +1309,12 @@ class PlasmaBootstrapCurrent(Model):
             self.data.current_drive.f_c_plasma_bootstrap_sauter,
             "OP ",
         )
-        for point in range(len(physics_variables.j_plasma_bootstrap_sauter_profile)):
+        for point in range(len(self.data.physics.j_plasma_bootstrap_sauter_profile)):
             po.ovarrf(
                 self.mfile,
                 f"Sauter et al bootstrap current density profile at point {point}",
                 f"(j_plasma_bootstrap_sauter_profile{point})",
-                physics_variables.j_plasma_bootstrap_sauter_profile[point],
+                self.data.physics.j_plasma_bootstrap_sauter_profile[point],
                 "OP ",
             )
 
@@ -1396,19 +1393,19 @@ class PlasmaBootstrapCurrent(Model):
             "OP ",
         )
         # Error to catch if bootstap fraction limit has been enforced
-        if physics_variables.err242 == 1:
+        if self.data.physics.err242 == 1:
             logger.error("Bootstrap fraction upper limit enforced")
 
         # Error to catch if self-driven current fraction limit has been enforced
-        if physics_variables.err243 == 1:
+        if self.data.physics.err243 == 1:
             logger.error(
                 "Predicted plasma driven current is more than upper limit on "
                 "non-inductive fraction"
             )
 
-        if physics_variables.i_pfirsch_schluter_current == 0:
+        if self.data.physics.i_pfirsch_schluter_current == 0:
             po.ocmmnt(self.outfile, "  Pfirsch-Schluter current fraction not calculated")
-        elif physics_variables.i_pfirsch_schluter_current == 1:
+        elif self.data.physics.i_pfirsch_schluter_current == 1:
             po.ocmmnt(
                 self.outfile,
                 "  (SCENE Pfirsch-Schluter current fraction scaling used)",
@@ -1437,8 +1434,14 @@ class PlasmaBootstrapCurrent(Model):
         )
 
 
-class SauterBootstrapCurrent:
+class SauterBootstrapCurrent(Model):
     """Class to calculate the bootstrap current using the Sauter et al formula."""
+
+    def run(self):
+        """This model isn't run"""
+
+    def output(self):
+        """This model doesn't have any output"""
 
     def bootstrap_fraction_sauter(self, plasma_profile: float) -> float:
         """Calculate the bootstrap current fraction from the Sauter et al scaling.
@@ -1478,40 +1481,40 @@ class SauterBootstrapCurrent:
         roa = plasma_profile.neprofile.profile_x
 
         # Local circularised minor radius
-        rho = np.sqrt(physics_variables.a_plasma_poloidal / np.pi) * roa
+        rho = np.sqrt(self.data.physics.a_plasma_poloidal / np.pi) * roa
 
         # Square root of local aspect ratio
-        sqeps = np.sqrt(roa * (physics_variables.rminor / physics_variables.rmajor))
+        sqeps = np.sqrt(roa * (self.data.physics.rminor / self.data.physics.rmajor))
 
         # Calculate electron and ion density profiles
         ne = plasma_profile.neprofile.profile_y * 1e-19
         ni = (
-            physics_variables.nd_plasma_ions_total_vol_avg
-            / physics_variables.nd_plasma_electrons_vol_avg
+            self.data.physics.nd_plasma_ions_total_vol_avg
+            / self.data.physics.nd_plasma_electrons_vol_avg
         ) * ne
 
         # Calculate electron and ion temperature profiles
         tempe = plasma_profile.teprofile.profile_y
         tempi = (
-            physics_variables.temp_plasma_ion_vol_avg_kev
-            / physics_variables.temp_plasma_electron_vol_avg_kev
+            self.data.physics.temp_plasma_ion_vol_avg_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
         ) * tempe
 
         # Flat Zeff profile assumed
         # Return tempi like array object filled with zeff
-        zeff = np.full_like(tempi, physics_variables.n_charge_plasma_effective_vol_avg)
+        zeff = np.full_like(tempi, self.data.physics.n_charge_plasma_effective_vol_avg)
 
         # inverse_q = 1/safety factor
         # Parabolic q profile assumed
         inverse_q = 1 / (
-            physics_variables.q0
-            + (physics_variables.q95 - physics_variables.q0) * roa**2
+            self.data.physics.q0
+            + (self.data.physics.q95 - self.data.physics.q0) * roa**2
         )
         # Create new array of average mass of fuel portion of ions
-        amain = np.full_like(inverse_q, physics_variables.m_ions_total_amu)
+        amain = np.full_like(inverse_q, self.data.physics.m_ions_total_amu)
 
         # Create new array of average main ion charge
-        zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_plasma_fuel_helium3)
+        zmain = np.full_like(inverse_q, 1.0 + self.data.physics.f_plasma_fuel_helium3)
 
         # Calculate total bootstrap current (MA) by summing along profiles
         # Looping from 2 because _calculate_l31_coefficient() etc should return 0
@@ -1535,9 +1538,9 @@ class SauterBootstrapCurrent:
                 self._calculate_l31_coefficient(
                     radial_elements,
                     plasma_profile.profile_size,
-                    physics_variables.rmajor,
-                    physics_variables.b_plasma_toroidal_on_axis,
-                    physics_variables.triang,
+                    self.data.physics.rmajor,
+                    self.data.physics.b_plasma_toroidal_on_axis,
+                    self.data.physics.triang,
                     ne,
                     ni,
                     tempe,
@@ -1551,9 +1554,9 @@ class SauterBootstrapCurrent:
                 + self._calculate_l31_32_coefficient(
                     radial_elements,
                     plasma_profile.profile_size,
-                    physics_variables.rmajor,
-                    physics_variables.b_plasma_toroidal_on_axis,
-                    physics_variables.triang,
+                    self.data.physics.rmajor,
+                    self.data.physics.b_plasma_toroidal_on_axis,
+                    self.data.physics.triang,
                     ne,
                     ni,
                     tempe,
@@ -1567,9 +1570,9 @@ class SauterBootstrapCurrent:
                 + self._calculate_l34_alpha_31_coefficient(
                     radial_elements,
                     plasma_profile.profile_size,
-                    physics_variables.rmajor,
-                    physics_variables.b_plasma_toroidal_on_axis,
-                    physics_variables.triang,
+                    self.data.physics.rmajor,
+                    self.data.physics.b_plasma_toroidal_on_axis,
+                    self.data.physics.triang,
                     inverse_q,
                     sqeps,
                     tempi,
@@ -1585,14 +1588,14 @@ class SauterBootstrapCurrent:
             )
             * 1.0e6
             * (
-                -physics_variables.b_plasma_toroidal_on_axis
-                / (0.2 * np.pi * physics_variables.rmajor)
+                -self.data.physics.b_plasma_toroidal_on_axis
+                / (0.2 * np.pi * self.data.physics.rmajor)
                 * rho[radial_elements - 1]
                 * inverse_q[radial_elements - 1]
             )
         )  # A/m2
 
-        return (np.sum(da * jboot, axis=0) / physics_variables.plasma_current), jboot
+        return (np.sum(da * jboot, axis=0) / self.data.physics.plasma_current), jboot
 
     @staticmethod
     @nb.njit(cache=True)

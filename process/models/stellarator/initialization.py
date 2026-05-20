@@ -1,8 +1,5 @@
 from process.core.model import DataStructure
-from process.data_structure import (
-    numerics,
-    physics_variables,
-)
+from process.data_structure import numerics
 
 
 def st_init(data: DataStructure):
@@ -30,11 +27,11 @@ def st_init(data: DataStructure):
 
     #  Physics quantities
 
-    physics_variables.i_plasma_pedestal = 0
-    physics_variables.beta_norm_max = 0.0
-    physics_variables.kappa95 = 1.0
-    physics_variables.triang = 0.0
-    physics_variables.q95 = 1.03
+    data.physics.i_plasma_pedestal = 0
+    data.physics.beta_norm_max = 0.0
+    data.physics.kappa95 = 1.0
+    data.physics.triang = 0.0
+    data.physics.q95 = 1.03
 
     #  Turn off current drive
 

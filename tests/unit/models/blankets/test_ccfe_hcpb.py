@@ -4,7 +4,6 @@ import pytest
 
 from process.data_structure import (
     global_variables,
-    physics_variables,
     tfcoil_variables,
 )
 
@@ -322,12 +321,14 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        ccfe_hcpb.data.physics,
         "p_fusion_total_mw",
         nuclearheatingmagnetsparam.p_fusion_total_mw,
     )
 
-    monkeypatch.setattr(physics_variables, "itart", nuclearheatingmagnetsparam.itart)
+    monkeypatch.setattr(
+        ccfe_hcpb.data.physics, "itart", nuclearheatingmagnetsparam.itart
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,
@@ -485,7 +486,9 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        physics_variables, "p_fusion_total_mw", nuclearheatingfwparam.p_fusion_total_mw
+        ccfe_hcpb.data.physics,
+        "p_fusion_total_mw",
+        nuclearheatingfwparam.p_fusion_total_mw,
     )
 
     monkeypatch.setattr(
@@ -1019,15 +1022,15 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        physics_variables, "p_plasma_rad_mw", powerflowcalcparam.p_plasma_rad_mw
+        ccfe_hcpb.data.physics, "p_plasma_rad_mw", powerflowcalcparam.p_plasma_rad_mw
     )
 
     monkeypatch.setattr(
-        physics_variables, "p_fw_alpha_mw", powerflowcalcparam.p_fw_alpha_mw
+        ccfe_hcpb.data.physics, "p_fw_alpha_mw", powerflowcalcparam.p_fw_alpha_mw
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        ccfe_hcpb.data.physics,
         "p_plasma_separatrix_mw",
         powerflowcalcparam.p_plasma_separatrix_mw,
     )
@@ -1243,7 +1246,7 @@ def test_st_centrepost_nuclear_heating(
     """
 
     monkeypatch.setattr(
-        physics_variables, "rmajor", stcentrepostnuclearheatingparam.rmajor
+        ccfe_hcpb.data.physics, "rmajor", stcentrepostnuclearheatingparam.rmajor
     )
 
     monkeypatch.setattr(
@@ -1482,13 +1485,13 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
         "den_div_structure",
         componentmassesparam.den_div_structure,
     )
-    monkeypatch.setattr(physics_variables, "rminor", componentmassesparam.rminor)
-    monkeypatch.setattr(physics_variables, "rmajor", componentmassesparam.rmajor)
+    monkeypatch.setattr(ccfe_hcpb.data.physics, "rminor", componentmassesparam.rminor)
+    monkeypatch.setattr(ccfe_hcpb.data.physics, "rmajor", componentmassesparam.rmajor)
     monkeypatch.setattr(
         ccfe_hcpb.data.divertor, "n_divertors", componentmassesparam.n_divertors
     )
     monkeypatch.setattr(
-        physics_variables, "a_plasma_surface", componentmassesparam.a_plasma_surface
+        ccfe_hcpb.data.physics, "a_plasma_surface", componentmassesparam.a_plasma_surface
     )
     monkeypatch.setattr(
         ccfe_hcpb.data.build, "dr_blkt_inboard", componentmassesparam.dr_blkt_inboard

@@ -15,9 +15,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    physics_variables,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -75,35 +72,38 @@ class PlasmaDensityLimit(Model):
         ProcessValueError
             If i_density_limit has an illegal value.
         """
-        physics_variables.nd_plasma_electron_max_array, _ = self.calculate_density_limit(
-            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
-            i_density_limit=physics_variables.i_density_limit,
-            p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
+        self.data.physics.nd_plasma_electron_max_array, _ = self.calculate_density_limit(
+            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+            i_density_limit=self.data.physics.i_density_limit,
+            p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
             p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
-            plasma_current=physics_variables.plasma_current,
+            plasma_current=self.data.physics.plasma_current,
             prn1=self.data.divertor.prn1,
-            qcyl=physics_variables.qstar,
-            q95=physics_variables.q95,
-            rmajor=physics_variables.rmajor,
-            rminor=physics_variables.rminor,
-            a_plasma_surface=physics_variables.a_plasma_surface,
-            zeff=physics_variables.n_charge_plasma_effective_vol_avg,
+            qcyl=self.data.physics.qstar,
+            q95=self.data.physics.q95,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
+            a_plasma_surface=self.data.physics.a_plasma_surface,
+            zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
         )
 
         # Calculate beta_norm_max based on i_beta_norm_max
         try:
-            model = DensityLimitModel(int(physics_variables.i_density_limit))
-            physics_variables.nd_plasma_electrons_max = self.get_density_limit_value(
-                model
+            model = DensityLimitModel(int(self.data.physics.i_density_limit))
+            self.data.physics.nd_plasma_electrons_max = self.get_density_limit_value(
+                model,
+                self.data.physics.nd_plasma_electron_max_array,
             )
         except ValueError:
             raise ProcessValueError(
                 "Illegal value of i_density_limit",
-                i_density_limit=physics_variables.i_density_limit,
+                i_density_limit=self.data.physics.i_density_limit,
             ) from None
 
     @staticmethod
-    def get_density_limit_value(model: DensityLimitModel) -> float:
+    def get_density_limit_value(
+        model: DensityLimitModel, nd_plasma_electron_max_array: np.ndarray
+    ) -> float:
         """
         Get the density limit value (n_e_max) for the specified model.
 
@@ -112,34 +112,23 @@ class PlasmaDensityLimit(Model):
         model : DensityLimitModel
             The density limit model type.
 
+        nd_plasma_electron_max_array: np.ndarray
+            Array of plasma electron density upper limits values (/m3)
+
         Returns
         -------
         float
             The density limit value (m⁻³).
         """
         model_map = {
-            DensityLimitModel.ASDEX: physics_variables.nd_plasma_electron_max_array[0],
-            DensityLimitModel.BORRASS_ITER_I: physics_variables.nd_plasma_electron_max_array[
-                1
-            ],
-            DensityLimitModel.BORRASS_ITER_II: physics_variables.nd_plasma_electron_max_array[
-                2
-            ],
-            DensityLimitModel.JET_EDGE_RADIATION: physics_variables.nd_plasma_electron_max_array[
-                3
-            ],
-            DensityLimitModel.JET_SIMPLE: physics_variables.nd_plasma_electron_max_array[
-                4
-            ],
-            DensityLimitModel.HUGILL_MURAKAMI: physics_variables.nd_plasma_electron_max_array[
-                5
-            ],
-            DensityLimitModel.GREENWALD: physics_variables.nd_plasma_electron_max_array[
-                6
-            ],
-            DensityLimitModel.ASDEX_NEW: physics_variables.nd_plasma_electron_max_array[
-                7
-            ],
+            DensityLimitModel.ASDEX: nd_plasma_electron_max_array[0],
+            DensityLimitModel.BORRASS_ITER_I: nd_plasma_electron_max_array[1],
+            DensityLimitModel.BORRASS_ITER_II: nd_plasma_electron_max_array[2],
+            DensityLimitModel.JET_EDGE_RADIATION: nd_plasma_electron_max_array[3],
+            DensityLimitModel.JET_SIMPLE: nd_plasma_electron_max_array[4],
+            DensityLimitModel.HUGILL_MURAKAMI: nd_plasma_electron_max_array[5],
+            DensityLimitModel.GREENWALD: nd_plasma_electron_max_array[6],
+            DensityLimitModel.ASDEX_NEW: nd_plasma_electron_max_array[7],
         }
         return model_map[model]
 
@@ -626,18 +615,18 @@ class PlasmaDensityLimit(Model):
             self.outfile,
             "Plasma density limit model used",
             "(i_density_limit)",
-            physics_variables.i_density_limit,
+            self.data.physics.i_density_limit,
         )
         po.ocmmnt(
             self.outfile,
             "Density limit model selected: "
-            f"{DensityLimitModel(physics_variables.i_density_limit).full_name}",
+            f"{DensityLimitModel(self.data.physics.i_density_limit).full_name}",
         )
         po.ovarre(
             self.outfile,
             "Density limit from scaling (nₑ<)(/m³)",
             "(nd_plasma_electrons_max)",
-            physics_variables.nd_plasma_electrons_max,
+            self.data.physics.nd_plasma_electrons_max,
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -645,56 +634,56 @@ class PlasmaDensityLimit(Model):
             self.outfile,
             "Old ASDEX model",
             "(nd_plasma_electron_max_array(1))",
-            physics_variables.nd_plasma_electron_max_array[0],
+            self.data.physics.nd_plasma_electron_max_array[0],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Borrass ITER model I",
             "(nd_plasma_electron_max_array(2))",
-            physics_variables.nd_plasma_electron_max_array[1],
+            self.data.physics.nd_plasma_electron_max_array[1],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Borrass ITER model II",
             "(nd_plasma_electron_max_array(3))",
-            physics_variables.nd_plasma_electron_max_array[2],
+            self.data.physics.nd_plasma_electron_max_array[2],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "JET edge radiation model",
             "(nd_plasma_electron_max_array(4))",
-            physics_variables.nd_plasma_electron_max_array[3],
+            self.data.physics.nd_plasma_electron_max_array[3],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "JET simplified model",
             "(nd_plasma_electron_max_array(5))",
-            physics_variables.nd_plasma_electron_max_array[4],
+            self.data.physics.nd_plasma_electron_max_array[4],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Hugill-Murakami Mq model",
             "(nd_plasma_electron_max_array(6))",
-            physics_variables.nd_plasma_electron_max_array[5],
+            self.data.physics.nd_plasma_electron_max_array[5],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Greenwald model",
             "(nd_plasma_electron_max_array(7))",
-            physics_variables.nd_plasma_electron_max_array[6],
+            self.data.physics.nd_plasma_electron_max_array[6],
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "ASDEX New",
             "(nd_plasma_electron_max_array(8))",
-            physics_variables.nd_plasma_electron_max_array[7],
+            self.data.physics.nd_plasma_electron_max_array[7],
             "OP ",
         )
         po.oblnkl(self.outfile)

@@ -2,8 +2,6 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import physics_variables
-
 
 @pytest.fixture
 def build(process_models):
@@ -111,17 +109,17 @@ def test_divgeom(divgeomparam, monkeypatch, build):
 
     monkeypatch.setattr(build.data.divertor, "betai", divgeomparam.betai)
 
-    monkeypatch.setattr(physics_variables, "itart", divgeomparam.itart)
+    monkeypatch.setattr(build.data.physics, "itart", divgeomparam.itart)
 
-    monkeypatch.setattr(physics_variables, "rmajor", divgeomparam.rmajor)
+    monkeypatch.setattr(build.data.physics, "rmajor", divgeomparam.rmajor)
 
-    monkeypatch.setattr(physics_variables, "rminor", divgeomparam.rminor)
+    monkeypatch.setattr(build.data.physics, "rminor", divgeomparam.rminor)
 
     monkeypatch.setattr(build.data.divertor, "n_divertors", divgeomparam.n_divertors)
 
-    monkeypatch.setattr(physics_variables, "kappa", divgeomparam.kappa)
+    monkeypatch.setattr(build.data.physics, "kappa", divgeomparam.kappa)
 
-    monkeypatch.setattr(physics_variables, "triang", divgeomparam.triang)
+    monkeypatch.setattr(build.data.physics, "triang", divgeomparam.triang)
 
     divht = build.divgeom(output=False)
 

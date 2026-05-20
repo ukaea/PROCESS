@@ -3,10 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import (
-    physics_variables,
-)
-
 
 @pytest.fixture
 def blanket_library(process_models):
@@ -971,12 +967,16 @@ def test_liquid_breeder_properties(
         liquidbreederpropertiesparam.i_blkt_dual_coolant,
     )
     monkeypatch.setattr(
-        physics_variables,
+        blanket_library.data.physics,
         "b_plasma_toroidal_on_axis",
         liquidbreederpropertiesparam.b_plasma_toroidal_on_axis,
     )
-    monkeypatch.setattr(physics_variables, "aspect", liquidbreederpropertiesparam.aspect)
-    monkeypatch.setattr(physics_variables, "rmajor", liquidbreederpropertiesparam.rmajor)
+    monkeypatch.setattr(
+        blanket_library.data.physics, "aspect", liquidbreederpropertiesparam.aspect
+    )
+    monkeypatch.setattr(
+        blanket_library.data.physics, "rmajor", liquidbreederpropertiesparam.rmajor
+    )
     monkeypatch.setattr(
         blanket_library.data.build,
         "dr_blkt_inboard",
@@ -1640,9 +1640,9 @@ def test_liquid_breeder_properties_part_1(monkeypatch, blanket_library):
     """
     # Set var values
     monkeypatch.setattr(blanket_library.data.fwbs, "a_bz_liq", 0.2)
-    monkeypatch.setattr(physics_variables, "b_plasma_toroidal_on_axis", 6.0)
-    monkeypatch.setattr(physics_variables, "rmajor", 8.0)
-    monkeypatch.setattr(physics_variables, "aspect", 3.0)
+    monkeypatch.setattr(blanket_library.data.physics, "b_plasma_toroidal_on_axis", 6.0)
+    monkeypatch.setattr(blanket_library.data.physics, "rmajor", 8.0)
+    monkeypatch.setattr(blanket_library.data.physics, "aspect", 3.0)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_inboard", 0.1)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_outboard", 0.2)
     monkeypatch.setattr(blanket_library.data.fwbs, "i_blkt_inboard", 1)
@@ -1714,9 +1714,9 @@ def test_liquid_breeder_properties_part_2(monkeypatch, blanket_library):
     """
     # Set var values
     monkeypatch.setattr(blanket_library.data.fwbs, "a_bz_liq", 0.2)
-    monkeypatch.setattr(physics_variables, "b_plasma_toroidal_on_axis", 6.0)
-    monkeypatch.setattr(physics_variables, "rmajor", 8.0)
-    monkeypatch.setattr(physics_variables, "aspect", 3.0)
+    monkeypatch.setattr(blanket_library.data.physics, "b_plasma_toroidal_on_axis", 6.0)
+    monkeypatch.setattr(blanket_library.data.physics, "rmajor", 8.0)
+    monkeypatch.setattr(blanket_library.data.physics, "aspect", 3.0)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_inboard", 0.0)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_outboard", 0.2)
     monkeypatch.setattr(blanket_library.data.fwbs, "i_blkt_inboard", 0)
@@ -1739,9 +1739,9 @@ def test_liquid_breeder_properties_part_3(monkeypatch, blanket_library):
     """
     # Set var values
     monkeypatch.setattr(blanket_library.data.fwbs, "a_bz_liq", 0.2)
-    monkeypatch.setattr(physics_variables, "b_plasma_toroidal_on_axis", 6.0)
-    monkeypatch.setattr(physics_variables, "rmajor", 8.0)
-    monkeypatch.setattr(physics_variables, "aspect", 3.0)
+    monkeypatch.setattr(blanket_library.data.physics, "b_plasma_toroidal_on_axis", 6.0)
+    monkeypatch.setattr(blanket_library.data.physics, "rmajor", 8.0)
+    monkeypatch.setattr(blanket_library.data.physics, "aspect", 3.0)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_inboard", 0.1)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_outboard", 0.2)
     monkeypatch.setattr(blanket_library.data.fwbs, "i_blkt_inboard", 1)

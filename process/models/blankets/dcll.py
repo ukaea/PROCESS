@@ -2,9 +2,6 @@ from process.core import constants
 from process.core import (
     process_output as po,
 )
-from process.data_structure import (
-    physics_variables,
-)
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
 from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
@@ -105,14 +102,14 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         self.data.blanket.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
             n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
-            rmajor=physics_variables.rmajor,
-            rminor=physics_variables.rminor,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
             dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
         )
         self.data.blanket.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
             n_blkt_outboard_modules_toroidal=self.data.fwbs.n_blkt_outboard_modules_toroidal,
-            rmajor=physics_variables.rmajor,
-            rminor=physics_variables.rminor,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
             dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
         )
 
@@ -158,7 +155,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         # Nuclear heating in the first wall (MW)
         self.data.fwbs.p_fw_nuclear_heat_total_mw = (
-            physics_variables.p_neutron_total_mw
+            self.data.physics.p_neutron_total_mw
             * self.data.fwbs.pnuc_fw_ratio_dcll
             * covf
         )
@@ -166,7 +163,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
         # Nuclear heating in the blanket with energy multiplication (MW)
         self.data.fwbs.pnuc_blkt_ratio_dcll = 1 - self.data.fwbs.pnuc_fw_ratio_dcll
         self.data.fwbs.p_blkt_nuclear_heat_total_mw = (
-            physics_variables.p_neutron_total_mw
+            self.data.physics.p_neutron_total_mw
             * self.data.fwbs.pnuc_blkt_ratio_dcll
             * self.data.fwbs.f_p_blkt_multiplication
             * covf
@@ -174,7 +171,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         # Energy multiplication energy (MW)
         self.data.fwbs.p_blkt_multiplication_mw = (
-            (physics_variables.p_neutron_total_mw * self.data.fwbs.pnuc_blkt_ratio_dcll)
+            (self.data.physics.p_neutron_total_mw * self.data.fwbs.pnuc_blkt_ratio_dcll)
             * (self.data.fwbs.f_p_blkt_multiplication - 1)
             * covf
         )
@@ -185,14 +182,14 @@ class DCLL(InboardBlanket, OutboardBlanket):
         self.data.fwbs.p_fw_hcd_nuclear_heat_mw = 0
         # Radiation power incident on HCD apparatus (MW)
         self.data.fwbs.p_fw_hcd_rad_total_mw = (
-            physics_variables.p_plasma_rad_mw * self.data.fwbs.f_a_fw_outboard_hcd
+            self.data.physics.p_plasma_rad_mw * self.data.fwbs.f_a_fw_outboard_hcd
         )
 
         # FW
 
         # Radiation power incident on first wall (MW)
         self.data.fwbs.p_fw_rad_total_mw = (
-            physics_variables.p_plasma_rad_mw
+            self.data.physics.p_plasma_rad_mw
             - self.data.fwbs.p_div_rad_total_mw
             - self.data.fwbs.p_fw_hcd_rad_total_mw
         )
@@ -204,7 +201,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
             * self.data.first_wall.a_fw_outboard
             / self.data.first_wall.a_fw_total
             + self.data.current_drive.p_beam_orbit_loss_mw
-            + physics_variables.p_fw_alpha_mw
+            + self.data.physics.p_fw_alpha_mw
         )
         self.data.fwbs.psurffwi = self.data.fwbs.p_fw_rad_total_mw * (
             1 - self.data.first_wall.a_fw_outboard / self.data.first_wall.a_fw_total
@@ -322,7 +319,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 p_blkt_nuclear_heat_total_mw=self.data.fwbs.p_blkt_nuclear_heat_total_mw,
                 p_shld_nuclear_heat_mw=self.data.fwbs.p_shld_nuclear_heat_mw,
                 p_cp_shield_nuclear_heat_mw=self.data.fwbs.p_cp_shield_nuclear_heat_mw,
-                p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
+                p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
                 p_div_nuclear_heat_total_mw=self.data.fwbs.p_div_nuclear_heat_total_mw,
                 p_div_rad_total_mw=self.data.fwbs.p_div_rad_total_mw,
             )
@@ -337,7 +334,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
             self.data.heat_transport.p_div_coolant_pump_mw = (
                 self.data.heat_transport.f_p_div_coolant_pump_total_heat
                 * (
-                    physics_variables.p_plasma_separatrix_mw
+                    self.data.physics.p_plasma_separatrix_mw
                     + self.data.fwbs.p_div_nuclear_heat_total_mw
                     + self.data.fwbs.p_div_rad_total_mw
                 )
@@ -721,7 +718,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
         )
         # First wall armour volume (m^3)
         self.data.fwbs.fw_armour_vol = (
-            physics_variables.a_plasma_surface * self.data.fwbs.fw_armour_thickness
+            self.data.physics.a_plasma_surface * self.data.fwbs.fw_armour_thickness
         )
         # First wall armour mass (kg)
         self.data.fwbs.fw_armour_mass = (
@@ -762,8 +759,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 + self.data.fwbs.fw_armour_mass
                 * (
                     (
-                        physics_variables.a_plasma_surface
-                        - physics_variables.a_plasma_surface_outboard
+                        self.data.physics.a_plasma_surface
+                        - self.data.physics.a_plasma_surface_outboard
                     )
                     * self.data.fwbs.fw_armour_thickness
                     / self.data.fwbs.fw_armour_vol
@@ -781,7 +778,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
             )
             + self.data.fwbs.fw_armour_mass
             * (
-                physics_variables.a_plasma_surface_outboard
+                self.data.physics.a_plasma_surface_outboard
                 * self.data.fwbs.fw_armour_thickness
                 / self.data.fwbs.fw_armour_vol
             )

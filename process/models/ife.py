@@ -10,7 +10,6 @@ import numpy as np
 from process.core import constants, process_output
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import physics_variables
 from process.data_structure.ife_variables import MAXMAT
 
 MATERIALS = [
@@ -1367,7 +1366,7 @@ class IFE(Model):
             # Repetition rate (Hz)
             self.data.ife.reprat = self.data.ife.pdrive / self.data.ife.edrive
             # Fusion power (MW)
-            physics_variables.p_fusion_total_mw = (
+            self.data.physics.p_fusion_total_mw = (
                 1.0e-6 * self.data.ife.pdrive * self.data.ife.gain
             )
         else:
@@ -1375,8 +1374,8 @@ class IFE(Model):
             self.data.ife.reprat = self.data.ife.rrin
             self.data.ife.pdrive = self.data.ife.reprat * self.data.ife.edrive
             # Gain
-            physics_variables.p_fusion_total_mw = self.data.ife.pfusife
-            self.data.ife.gain = physics_variables.p_fusion_total_mw / (
+            self.data.physics.p_fusion_total_mw = self.data.ife.pfusife
+            self.data.ife.gain = self.data.physics.p_fusion_total_mw / (
                 1.0e-6 * self.data.ife.pdrive
             )
 
@@ -1387,8 +1386,8 @@ class IFE(Model):
 
             phi = 0.5 * np.pi + np.arctan(self.data.ife.zl1 / self.data.ife.r1)
             sang = 1.0 - np.cos(phi)
-            physics_variables.pflux_fw_neutron_mw = (
-                physics_variables.p_fusion_total_mw
+            self.data.physics.pflux_fw_neutron_mw = (
+                self.data.physics.p_fusion_total_mw
                 * 0.5
                 * sang
                 / self.data.first_wall.a_fw_total
@@ -1402,16 +1401,16 @@ class IFE(Model):
             sang = 1.0 - np.cos(phi)
             phi = np.arctan(self.data.ife.flirad / self.data.ife.zu1)
             sang -= 1.0 - np.cos(phi)
-            physics_variables.pflux_fw_neutron_mw = (
-                physics_variables.p_fusion_total_mw
+            self.data.physics.pflux_fw_neutron_mw = (
+                self.data.physics.p_fusion_total_mw
                 * 0.5
                 * sang
                 / self.data.first_wall.a_fw_total
             )
 
         else:
-            physics_variables.pflux_fw_neutron_mw = (
-                physics_variables.p_fusion_total_mw / self.data.first_wall.a_fw_total
+            self.data.physics.pflux_fw_neutron_mw = (
+                self.data.physics.p_fusion_total_mw / self.data.first_wall.a_fw_total
             )
 
         if not output:
@@ -1452,13 +1451,13 @@ class IFE(Model):
             self.outfile,
             "Fusion power (MW)",
             "(p_fusion_total_mw)",
-            physics_variables.p_fusion_total_mw,
+            self.data.physics.p_fusion_total_mw,
         )
         process_output.ovarre(
             self.outfile,
             "Neutron wall load (MW/m2)",
             "(pflux_fw_neutron_mw)",
-            physics_variables.pflux_fw_neutron_mw,
+            self.data.physics.pflux_fw_neutron_mw,
         )
 
     def driver(self, edrive, gainve, etave):
@@ -1766,7 +1765,7 @@ class IFE(Model):
                 self.data.costs.life_plant,
                 self.data.costs.abktflnc
                 / (
-                    physics_variables.pflux_fw_neutron_mw
+                    self.data.physics.pflux_fw_neutron_mw
                     * self.data.costs.f_t_plant_available
                 ),
             )
@@ -1828,7 +1827,7 @@ class IFE(Model):
         # Total thermal power removed from fusion core
 
         self.data.heat_transport.priheat = (
-            self.data.fwbs.f_p_blkt_multiplication * physics_variables.p_fusion_total_mw
+            self.data.fwbs.f_p_blkt_multiplication * self.data.physics.p_fusion_total_mw
         )
 
         # Useful (high-grade) thermal power (MW)

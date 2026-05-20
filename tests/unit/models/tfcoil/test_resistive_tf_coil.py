@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import (
-    physics_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
@@ -236,7 +235,9 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
         resistive_tf_coil.data.build, "r_cp_top", restfinternalgeomparam.r_cp_top
     )
 
-    monkeypatch.setattr(physics_variables, "itart", restfinternalgeomparam.itart)
+    monkeypatch.setattr(
+        resistive_tf_coil.data.physics, "itart", restfinternalgeomparam.itart
+    )
 
     resistive_tf_coil.res_tf_internal_geom()
 
@@ -580,7 +581,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
         tfresheatingparam.r_tf_inboard_out,
     )
 
-    monkeypatch.setattr(physics_variables, "itart", tfresheatingparam.itart)
+    monkeypatch.setattr(resistive_tf_coil.data.physics, "itart", tfresheatingparam.itart)
 
     monkeypatch.setattr(
         superconducting_tf_coil_variables, "z_cp_top", tfresheatingparam.z_cp_top

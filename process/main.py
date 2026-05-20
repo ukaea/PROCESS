@@ -82,6 +82,7 @@ from process.models.physics.current_drive import (
 )
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.fusion_reactions import FusionReactionRate
 from process.models.physics.impurity_radiation import initialise_imprad
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
 from process.models.physics.physics import (
@@ -94,6 +95,7 @@ from process.models.physics.plasma_current import PlasmaCurrent, PlasmaDiamagnet
 from process.models.physics.plasma_fields import PlasmaFields
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
+from process.models.physics.profiles import NeProfile, TeProfile
 from process.models.power import Power
 from process.models.pulse import Pulse
 from process.models.shield import Shield
@@ -614,7 +616,9 @@ class Models:
         self.pulse = Pulse()
         self.shield = Shield()
         self.ife = IFE(availability=self.availability, costs=self.costs)
-        self.plasma_profile = PlasmaProfile()
+        self.ne_profile = NeProfile()
+        self.te_profile = TeProfile()
+        self.plasma_profile = PlasmaProfile(self.ne_profile, self.te_profile)
         self.fw = FirstWall()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(fw=self.fw)
@@ -674,6 +678,9 @@ class Models:
         )
 
         self.dcll = DCLL(fw=self.fw)
+        self.fusion_reaction_rate = FusionReactionRate(
+            plasma_profile=self.plasma_profile
+        )
 
         self.setup_data_structure()
 
@@ -745,6 +752,8 @@ class Models:
             self.stellarator,
             self.plasma_current,
             self.neoclassics,
+            self.plasma_inductance,
+            self.fusion_reaction_rate,
         )
 
     def setup_data_structure(self):

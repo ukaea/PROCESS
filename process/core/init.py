@@ -17,11 +17,7 @@ from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
-from process.data_structure.physics_variables import (
-    DivertorNumberModels,
-    init_physics_module,
-    init_physics_variables,
-)
+from process.data_structure.physics_variables import DivertorNumberModels
 from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.scan_variables import init_scan_variables
 from process.data_structure.superconducting_tf_coil_variables import (
@@ -240,8 +236,6 @@ def init_all_module_vars():
     logging_model_handler.clear_logs()
     data_structure.numerics.init_numerics()
     data_structure.global_variables.init_global_variables()
-    init_physics_module()
-    init_physics_variables()
     init_scan_variables()
     init_superconducting_tf_coil_variables()
     init_tfcoil_variables()
@@ -334,22 +328,20 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         abs(
             1.0
-            - data_structure.physics_variables.f_plasma_fuel_deuterium
-            - data_structure.physics_variables.f_plasma_fuel_tritium
-            - data_structure.physics_variables.f_plasma_fuel_helium3
+            - data.physics.f_plasma_fuel_deuterium
+            - data.physics.f_plasma_fuel_tritium
+            - data.physics.f_plasma_fuel_helium3
         )
         > 1e-6
     ):
         raise ProcessValidationError(
             "Fuel ion fractions do not sum to 1.0",
-            f_plasma_fuel_deuterium=data_structure.physics_variables.f_plasma_fuel_deuterium,
-            f_plasma_fuel_tritium=data_structure.physics_variables.f_plasma_fuel_tritium,
-            f_plasma_fuel_helium3=data_structure.physics_variables.f_plasma_fuel_helium3,
+            f_plasma_fuel_deuterium=data.physics.f_plasma_fuel_deuterium,
+            f_plasma_fuel_tritium=data.physics.f_plasma_fuel_tritium,
+            f_plasma_fuel_helium3=data.physics.f_plasma_fuel_helium3,
         )
 
-    if (
-        data_structure.physics_variables.f_plasma_fuel_tritium < 1.0e-3
-    ):  # tritium fraction is negligible
+    if data.physics.f_plasma_fuel_tritium < 1.0e-3:  # tritium fraction is negligible
         data.buildings.triv = 0.0
         data.heat_transport.p_tritium_plant_electric_mw = 0.0
 
@@ -374,32 +366,29 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     # Plasma profile consistency checks
-    if data.ife.ife != 1 and data_structure.physics_variables.i_plasma_pedestal == 1:
+    if data.ife.ife != 1 and data.physics.i_plasma_pedestal == 1:
         # Temperature checks
         if (
-            data_structure.physics_variables.temp_plasma_pedestal_kev
-            < data_structure.physics_variables.temp_plasma_separatrix_kev
+            data.physics.temp_plasma_pedestal_kev
+            < data.physics.temp_plasma_separatrix_kev
         ):
             raise ProcessValidationError(
                 "Pedestal temperature is lower than separatrix temperature",
-                temp_plasma_pedestal_kev=data_structure.physics_variables.temp_plasma_pedestal_kev,
-                temp_plasma_separatrix_kev=data_structure.physics_variables.temp_plasma_separatrix_kev,
+                temp_plasma_pedestal_kev=data.physics.temp_plasma_pedestal_kev,
+                temp_plasma_separatrix_kev=data.physics.temp_plasma_separatrix_kev,
             )
 
-        if (
-            abs(data_structure.physics_variables.radius_plasma_pedestal_temp_norm - 1.0)
-            <= 1e-7
-        ) and (
+        if (abs(data.physics.radius_plasma_pedestal_temp_norm - 1.0) <= 1e-7) and (
             (
-                data_structure.physics_variables.temp_plasma_pedestal_kev
-                - data_structure.physics_variables.temp_plasma_separatrix_kev
+                data.physics.temp_plasma_pedestal_kev
+                - data.physics.temp_plasma_separatrix_kev
             )
             >= 1e-7
         ):
             warn(
                 f"Temperature pedestal is at plasma edge, but temp_plasma_pedestal_kev "
-                f"({data_structure.physics_variables.temp_plasma_pedestal_kev}) differs from temp_plasma_separatrix_kev "
-                f"({data_structure.physics_variables.temp_plasma_separatrix_kev})",
+                f"({data.physics.temp_plasma_pedestal_kev}) differs from temp_plasma_separatrix_kev "
+                f"({data.physics.temp_plasma_separatrix_kev})",
                 stacklevel=2,
             )
 
@@ -409,31 +398,31 @@ def check_process(inputs, data):  # noqa: ARG001
         # temperature. Prevent this by adjusting te, and its lower bound
         # (which will only have an effect if this is an optimisation run)
         if (
-            data_structure.physics_variables.temp_plasma_electron_vol_avg_kev
-            <= data_structure.physics_variables.temp_plasma_pedestal_kev
+            data.physics.temp_plasma_electron_vol_avg_kev
+            <= data.physics.temp_plasma_pedestal_kev
         ):
             warn(
-                f"Volume-averaged temperature ({data_structure.physics_variables.te}) has been "
-                f"forced to exceed input pedestal height ({data_structure.physics_variables.temp_plasma_pedestal_kev}). "
+                f"Volume-averaged temperature ({data.physics.te}) has been "
+                f"forced to exceed input pedestal height ({data.physics.temp_plasma_pedestal_kev}). "
                 "Changing to te = temp_plasma_pedestal_kev*1.001",
                 stacklevel=2,
             )
-            data_structure.physics_variables.temp_plasma_electron_vol_avg_kev = (
-                data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
+            data.physics.temp_plasma_electron_vol_avg_kev = (
+                data.physics.temp_plasma_pedestal_kev * 1.001
             )
 
         if (
             data_structure.numerics.ioptimz >= 0
             and (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 4).any()
             and data_structure.numerics.boundl[3]
-            < data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
+            < data.physics.temp_plasma_pedestal_kev * 1.001
         ):
             warn(
                 "Lower limit of volume averaged electron temperature (temp_plasma_electron_vol_avg_kev) has been raised to ensure temp_plasma_electron_vol_avg_kev > temp_plasma_pedestal_kev",
                 stacklevel=2,
             )
             data_structure.numerics.boundl[3] = (
-                data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
+                data.physics.temp_plasma_pedestal_kev * 1.001
             )
             data_structure.numerics.boundu[3] = max(
                 data_structure.numerics.boundu[3], data_structure.numerics.boundl[3]
@@ -442,41 +431,37 @@ def check_process(inputs, data):  # noqa: ARG001
         # Density checks
         # Case where pedestal density is set manually
         if (
-            data_structure.physics_variables.f_nd_plasma_pedestal_greenwald < 0
+            data.physics.f_nd_plasma_pedestal_greenwald < 0
             or not (
                 data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
             ).any()
         ):
             # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron but it is less than nd_plasma_separatrix_electron.
             if (
-                data_structure.physics_variables.nd_plasma_pedestal_electron
-                < data_structure.physics_variables.nd_plasma_separatrix_electron
+                data.physics.nd_plasma_pedestal_electron
+                < data.physics.nd_plasma_separatrix_electron
             ):
                 raise ProcessValidationError(
                     "Density pedestal is lower than separatrix density",
-                    nd_plasma_pedestal_electron=data_structure.physics_variables.nd_plasma_pedestal_electron,
-                    nd_plasma_separatrix_electron=data_structure.physics_variables.nd_plasma_separatrix_electron,
+                    nd_plasma_pedestal_electron=data.physics.nd_plasma_pedestal_electron,
+                    nd_plasma_separatrix_electron=data.physics.nd_plasma_separatrix_electron,
                 )
 
             # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron,
             # but pedestal width = 0.
             if (
-                abs(
-                    data_structure.physics_variables.radius_plasma_pedestal_density_norm
-                    - 1.0
-                )
-                <= 1e-7
+                abs(data.physics.radius_plasma_pedestal_density_norm - 1.0) <= 1e-7
                 and (
-                    data_structure.physics_variables.nd_plasma_pedestal_electron
-                    - data_structure.physics_variables.nd_plasma_separatrix_electron
+                    data.physics.nd_plasma_pedestal_electron
+                    - data.physics.nd_plasma_separatrix_electron
                 )
                 >= 1e-7
             ):
                 warn(
                     "Density pedestal is at plasma edge "
-                    f"({data_structure.physics_variables.radius_plasma_pedestal_density_norm = }), but nd_plasma_pedestal_electron "
-                    f"({data_structure.physics_variables.nd_plasma_pedestal_electron}) differs from "
-                    f"nd_plasma_separatrix_electron ({data_structure.physics_variables.nd_plasma_separatrix_electron})",
+                    f"({data.physics.radius_plasma_pedestal_density_norm = }), but nd_plasma_pedestal_electron "
+                    f"({data.physics.nd_plasma_pedestal_electron}) differs from "
+                    f"nd_plasma_separatrix_electron ({data.physics.nd_plasma_separatrix_electron})",
                     stacklevel=2,
                 )
 
@@ -525,11 +510,11 @@ def check_process(inputs, data):  # noqa: ARG001
         data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
     ).any() and data_structure.numerics.boundl[
         144
-    ] < data_structure.physics_variables.f_nd_plasma_separatrix_greenwald:
+    ] < data.physics.f_nd_plasma_separatrix_greenwald:
         raise ProcessValidationError(
             "Set lower bound of iteration variable 145, f_nd_plasma_pedestal_greenwald, to be greater than f_nd_plasma_separatrix_greenwald",
             boundl_145=data_structure.numerics.boundl[144],
-            f_nd_plasma_separatrix_greenwald=data_structure.physics_variables.f_nd_plasma_separatrix_greenwald,
+            f_nd_plasma_separatrix_greenwald=data.physics.f_nd_plasma_separatrix_greenwald,
         )
 
     if (
@@ -548,20 +533,20 @@ def check_process(inputs, data):  # noqa: ARG001
 
         # If Reinke criterion is used need to enforce LH-threshold
         # using Martin scaling for consistency
-        if (data_structure.physics_variables.i_l_h_threshold != 6) or (
+        if (data.physics.i_l_h_threshold != 6) or (
             not (
                 data_structure.numerics.icc[
                     : data_structure.numerics.neqns + data_structure.numerics.nineqns
                 ]
                 == 15
             ).any()
-            and data_structure.physics_variables.i_plasma_pedestal
+            and data.physics.i_plasma_pedestal
         ):
             warn(
                 "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommended for the Reinke model",
                 stacklevel=2,
             )
-    i_single_null = DivertorNumberModels(data_structure.physics_variables.i_single_null)
+    i_single_null = DivertorNumberModels(data.physics.i_single_null)
     if i_single_null == DivertorNumberModels.DOUBLE_NULL:
         data.divertor.n_divertors = 2
         data.build.dz_fw_plasma_gap = data.build.dz_xpoint_divertor
@@ -572,7 +557,7 @@ def check_process(inputs, data):  # noqa: ARG001
         data.divertor.n_divertors = 1
 
     #  Tight aspect ratio options (ST)
-    if data_structure.physics_variables.itart == 1:
+    if data.physics.itart == 1:
         data_structure.global_variables.icase = "Tight aspect ratio tokamak model"
 
         # Disabled Forcing that no inboard breeding blanket is used
@@ -581,7 +566,7 @@ def check_process(inputs, data):  # noqa: ARG001
         # Check if the choice of plasma current is addapted for ST
         # 2 : Peng Ip scaling (See STAR code documentation)
         # 9 : Fiesta Ip scaling
-        if data_structure.physics_variables.i_plasma_current not in {2, 9}:
+        if data.physics.i_plasma_current not in {2, 9}:
             warn(
                 "Usual current scaling for TARTs (i_plasma_current=2 or 9) is not being used",
                 stacklevel=2,
@@ -591,7 +576,7 @@ def check_process(inputs, data):  # noqa: ARG001
         # Overwrite the location of the TF coils
         # 2 : PF coil on top of TF coil
         # 3 : PF coil outside of TF coil
-        if data_structure.physics_variables.itartpf == 0:
+        if data.physics.itartpf == 0:
             data.pf_coil.i_pf_location[0] = 2
             data.pf_coil.i_pf_location[1] = 3
             data.pf_coil.i_pf_location[2] = 3
@@ -667,14 +652,14 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
         # Check if the boostrap current selection is addapted to ST
-        if data_structure.physics_variables.i_bootstrap_current == 1:
+        if data.physics.i_bootstrap_current == 1:
             raise ProcessValidationError(
                 "Invalid boostrap current law for ST, do not use i_bootstrap_current = 1"
             )
 
         # Check if a single null divertor is used in double null machine
         if i_single_null == DivertorNumberModels.DOUBLE_NULL and (
-            data_structure.physics_variables.f_p_div_lower in {1.0, 0.0}
+            data.physics.f_p_div_lower in {1.0, 0.0}
         ):
             warn("Operating with a single null in a double null machine", stacklevel=2)
 
@@ -693,7 +678,7 @@ def check_process(inputs, data):  # noqa: ARG001
                 ]
                 == 85
             ).any()
-            and data_structure.physics_variables.itart == 1
+            and data.physics.itart == 1
         ):
             raise ProcessValidationError(
                 "Al TF coil fluence not calculated properly for Al CP, do not use constraint 85"
@@ -722,7 +707,7 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Conventionnal aspect ratios specific
     else:
-        if data_structure.physics_variables.i_plasma_current in {2, 9}:
+        if data.physics.i_plasma_current in {2, 9}:
             raise ProcessValidationError(
                 "i_plasma_current=2,9 is not a valid option for a non-TART device"
             )
@@ -1054,10 +1039,7 @@ def check_process(inputs, data):  # noqa: ARG001
             "Can only have i_tf_turns_integer = 1 with i_tf_wp_geom = 0"
         )
 
-    if (
-        data_structure.physics_variables.i_bootstrap_current == 5
-        and data_structure.physics_variables.i_diamagnetic_current != 0
-    ):
+    if data.physics.i_bootstrap_current == 5 and data.physics.i_diamagnetic_current != 0:
         raise ProcessValidationError(
             "i_diamagnetic_current = 0 should be used with the Sakai plasma current scaling"
         )
@@ -1102,9 +1084,9 @@ def check_process(inputs, data):  # noqa: ARG001
     # If there is no NBI, then hot beam density should be zero
     if data.current_drive.i_hcd_calculations == 1:
         if data.current_drive.i_hcd_primary not in {5, 8}:
-            data_structure.physics_variables.f_nd_beam_electron = 0.0
+            data.physics.f_nd_beam_electron = 0.0
     else:
-        data_structure.physics_variables.f_nd_beam_electron = 0.0
+        data.physics.f_nd_beam_electron = 0.0
 
     # Set inboard blanket thickness to zero if no inboard blanket switch
     # used (Issue #732)
@@ -1149,25 +1131,16 @@ def check_process(inputs, data):  # noqa: ARG001
             data_structure.tfcoil_variables.tmargmin
         )
 
-    if (
-        data_structure.physics_variables.tauee_in > 1e-10
-        and data_structure.physics_variables.i_confinement_time != 48
-    ):
+    if data.physics.tauee_in > 1e-10 and data.physics.i_confinement_time != 48:
         # Report error if confinement time is in the input
         # but the scaling to use it is not selected.
         warn("tauee_in is for use with i_confinement_time=48 only", stacklevel=2)
 
-    if (
-        data_structure.physics_variables.aspect > 1.7
-        and data_structure.physics_variables.i_confinement_time == 46
-    ):
+    if data.physics.aspect > 1.7 and data.physics.i_confinement_time == 46:
         # NSTX scaling is for A<1.7
         warn("NSTX scaling is for A<1.7", stacklevel=2)
 
-    if (
-        data_structure.physics_variables.i_plasma_current == 2
-        and data_structure.physics_variables.i_confinement_time == 42
-    ):
+    if data.physics.i_plasma_current == 2 and data.physics.i_confinement_time == 42:
         raise ProcessValidationError(
             "Lang 2012 confinement scaling cannot be used for i_plasma_current=2 due to wrong q"
         )

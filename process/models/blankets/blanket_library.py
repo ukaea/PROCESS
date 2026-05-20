@@ -10,9 +10,6 @@ from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    physics_variables,
-)
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
@@ -85,7 +82,7 @@ class BlanketLibrary(Model):
 
         # D-shaped blanket and shield
         if (
-            physics_variables.itart == 1
+            self.data.physics.itart == 1
             or self.data.fwbs.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
             (
@@ -98,7 +95,7 @@ class BlanketLibrary(Model):
                 dr_blkt_inboard=self.data.build.dr_blkt_inboard,
                 dr_fw_inboard=self.data.build.dr_fw_inboard,
                 dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
-                rminor=physics_variables.rminor,
+                rminor=self.data.physics.rminor,
                 dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
                 dr_fw_outboard=self.data.build.dr_fw_outboard,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
@@ -114,7 +111,7 @@ class BlanketLibrary(Model):
                 dr_blkt_inboard=self.data.build.dr_blkt_inboard,
                 dr_fw_inboard=self.data.build.dr_fw_inboard,
                 dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
-                rminor=physics_variables.rminor,
+                rminor=self.data.physics.rminor,
                 dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
                 dr_fw_outboard=self.data.build.dr_fw_outboard,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
@@ -129,9 +126,9 @@ class BlanketLibrary(Model):
                 self.data.build.a_blkt_outboard_surface_full_coverage,
                 self.data.build.a_blkt_total_surface_full_coverage,
             ) = self.calculate_elliptical_blkt_areas(
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
-                triang=physics_variables.triang,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                triang=self.data.physics.triang,
                 r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
                 dr_shld_inboard=self.data.build.dr_shld_inboard,
                 dr_blkt_inboard=self.data.build.dr_blkt_inboard,
@@ -146,9 +143,9 @@ class BlanketLibrary(Model):
                 self.data.fwbs.vol_blkt_outboard_full_coverage,
                 self.data.fwbs.vol_blkt_total_full_coverage,
             ) = self.calculate_elliptical_blkt_volumes(
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
-                triang=physics_variables.triang,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                triang=self.data.physics.triang,
                 r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
                 dr_shld_inboard=self.data.build.dr_shld_inboard,
                 dr_blkt_inboard=self.data.build.dr_blkt_inboard,
@@ -914,7 +911,7 @@ class BlanketLibrary(Model):
             self.data.fwbs.n_blkt_outboard_modules_poloidal = 1
 
         if (
-            physics_variables.itart == 1
+            self.data.physics.itart == 1
             or self.data.fwbs.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
             self.data.blanket.len_blkt_inboard_segment_poloidal = self.calculate_dshaped_inboard_blkt_segment_poloidal(
@@ -925,7 +922,7 @@ class BlanketLibrary(Model):
             self.data.blanket.len_blkt_outboard_segment_poloidal = self.calculate_dshaped_outboard_blkt_segment_poloidal(
                 n_blkt_outboard_modules_poloidal=self.data.fwbs.n_blkt_outboard_modules_poloidal,
                 dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
-                rminor=physics_variables.rminor,
+                rminor=self.data.physics.rminor,
                 dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
                 n_divertors=self.data.divertor.n_divertors,
@@ -933,9 +930,9 @@ class BlanketLibrary(Model):
             )
         else:
             self.data.blanket.len_blkt_inboard_segment_poloidal = self.calculate_elliptical_inboard_blkt_segment_poloidal(
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
-                triang=physics_variables.triang,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                triang=self.data.physics.triang,
                 dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
                 n_blkt_inboard_modules_poloidal=self.data.fwbs.n_blkt_inboard_modules_poloidal,
@@ -944,9 +941,9 @@ class BlanketLibrary(Model):
             )
 
             self.data.blanket.len_blkt_outboard_segment_poloidal = self.calculate_elliptical_outboard_blkt_segment_poloidal(
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
-                triang=physics_variables.triang,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                triang=self.data.physics.triang,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
                 dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
                 n_blkt_outboard_modules_poloidal=self.data.fwbs.n_blkt_outboard_modules_poloidal,
@@ -1829,31 +1826,31 @@ class BlanketLibrary(Model):
         # IB
         if self.data.fwbs.i_blkt_inboard == 1:
             self.data.fwbs.b_mag_blkt[0] = (
-                physics_variables.b_plasma_toroidal_on_axis
-                * physics_variables.rmajor
+                self.data.physics.b_plasma_toroidal_on_axis
+                * self.data.physics.rmajor
                 / (
-                    physics_variables.rmajor
-                    - (physics_variables.rmajor / physics_variables.aspect)
+                    self.data.physics.rmajor
+                    - (self.data.physics.rmajor / self.data.physics.aspect)
                     - (self.data.build.dr_blkt_inboard / 2)
                 )
             )
         # We do not use this if there is no IB blanket, but will use edge as fill value
         if self.data.fwbs.i_blkt_inboard == 0:
             self.data.fwbs.b_mag_blkt[0] = (
-                physics_variables.b_plasma_toroidal_on_axis
-                * physics_variables.rmajor
+                self.data.physics.b_plasma_toroidal_on_axis
+                * self.data.physics.rmajor
                 / (
-                    physics_variables.rmajor
-                    - (physics_variables.rmajor / physics_variables.aspect)
+                    self.data.physics.rmajor
+                    - (self.data.physics.rmajor / self.data.physics.aspect)
                 )
             )
         # OB
         self.data.fwbs.b_mag_blkt[1] = (
-            physics_variables.b_plasma_toroidal_on_axis
-            * physics_variables.rmajor
+            self.data.physics.b_plasma_toroidal_on_axis
+            * self.data.physics.rmajor
             / (
-                physics_variables.rmajor
-                + (physics_variables.rmajor / physics_variables.aspect)
+                self.data.physics.rmajor
+                + (self.data.physics.rmajor / self.data.physics.aspect)
                 + (self.data.build.dr_blkt_outboard / 2)
             )
         )

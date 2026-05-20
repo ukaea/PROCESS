@@ -7,7 +7,6 @@ from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import physics_variables
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
@@ -48,7 +47,7 @@ class FirstWall(Model):
         )
 
         if (
-            physics_variables.itart == 1
+            self.data.physics.itart == 1
             or self.data.fwbs.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
             (
@@ -56,8 +55,8 @@ class FirstWall(Model):
                 self.data.first_wall.a_fw_outboard_full_coverage,
                 self.data.first_wall.a_fw_total_full_coverage,
             ) = self.calculate_dshaped_first_wall_areas(
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
                 dz_fw_half=self.data.fwbs.dz_fw_half,
                 dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
                 dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
@@ -69,9 +68,9 @@ class FirstWall(Model):
                 self.data.first_wall.a_fw_outboard_full_coverage,
                 self.data.first_wall.a_fw_total_full_coverage,
             ) = self.calculate_elliptical_first_wall_areas(
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
-                triang=physics_variables.triang,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                triang=self.data.physics.triang,
                 dz_fw_half=self.data.fwbs.dz_fw_half,
                 dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
                 dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
@@ -110,34 +109,34 @@ class FirstWall(Model):
             b_bz_liq=self.data.fwbs.b_bz_liq,
         )
 
-        if physics_variables.i_pflux_fw_neutron == 1:
-            physics_variables.pflux_fw_neutron_mw = (
-                physics_variables.ffwal
-                * physics_variables.pflux_plasma_surface_neutron_avg_mw
+        if self.data.physics.i_pflux_fw_neutron == 1:
+            self.data.physics.pflux_fw_neutron_mw = (
+                self.data.physics.ffwal
+                * self.data.physics.pflux_plasma_surface_neutron_avg_mw
             )
         else:
-            physics_variables.pflux_fw_neutron_mw = (
-                physics_variables.p_neutron_total_mw / self.data.first_wall.a_fw_total
+            self.data.physics.pflux_fw_neutron_mw = (
+                self.data.physics.p_neutron_total_mw / self.data.first_wall.a_fw_total
             )
 
-        if physics_variables.i_pflux_fw_neutron == 1:
-            physics_variables.pflux_fw_rad_mw = (
-                physics_variables.ffwal
-                * physics_variables.p_plasma_rad_mw
-                / physics_variables.a_plasma_surface
+        if self.data.physics.i_pflux_fw_neutron == 1:
+            self.data.physics.pflux_fw_rad_mw = (
+                self.data.physics.ffwal
+                * self.data.physics.p_plasma_rad_mw
+                / self.data.physics.a_plasma_surface
             )
         else:
-            physics_variables.pflux_fw_rad_mw = (
-                physics_variables.p_plasma_rad_mw / self.data.first_wall.a_fw_total
+            self.data.physics.pflux_fw_rad_mw = (
+                self.data.physics.p_plasma_rad_mw / self.data.first_wall.a_fw_total
             )
 
         self.data.constraints.pflux_fw_rad_max_mw = (
-            physics_variables.pflux_fw_rad_mw * self.data.constraints.f_fw_rad_max
+            self.data.physics.pflux_fw_rad_mw * self.data.constraints.f_fw_rad_max
         )
 
         # Power transported to the first wall by escaped alpha particles
-        physics_variables.p_fw_alpha_mw = physics_variables.p_alpha_total_mw * (
-            1.0e0 - physics_variables.f_p_alpha_plasma_deposited
+        self.data.physics.p_fw_alpha_mw = self.data.physics.p_alpha_total_mw * (
+            1.0e0 - self.data.physics.f_p_alpha_plasma_deposited
         )
 
     @staticmethod
@@ -794,7 +793,7 @@ class FirstWall(Model):
             self.outfile,
             "Nominal mean radiation load on vessel first-wall (MW/m^2)",
             "(pflux_fw_rad_mw)",
-            physics_variables.pflux_fw_rad_mw,
+            self.data.physics.pflux_fw_rad_mw,
             "OP ",
         )
         po.ovarre(
@@ -822,13 +821,13 @@ class FirstWall(Model):
             self.outfile,
             "Fast alpha particle power incident on the first-wall (MW)",
             "(p_fw_alpha_mw)",
-            physics_variables.p_fw_alpha_mw,
+            self.data.physics.p_fw_alpha_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Nominal mean neutron load on vessel first-wall (MW/m^2)",
             "(pflux_fw_neutron_mw)",
-            physics_variables.pflux_fw_neutron_mw,
+            self.data.physics.pflux_fw_neutron_mw,
             "OP ",
         )

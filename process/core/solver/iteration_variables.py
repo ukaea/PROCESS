@@ -33,24 +33,14 @@ class IterationVariable:
 
 
 ITERATION_VARIABLES = {
-    1: IterationVariable("aspect", data_structure.physics_variables, 1.1, 10.00),
-    2: IterationVariable(
-        "b_plasma_toroidal_on_axis", data_structure.physics_variables, 0.010, 30.00
-    ),
-    3: IterationVariable("rmajor", data_structure.physics_variables, 0.1, 50.00),
-    4: IterationVariable(
-        "temp_plasma_electron_vol_avg_kev", data_structure.physics_variables, 5.0, 150.0
-    ),
-    5: IterationVariable(
-        "beta_total_vol_avg", data_structure.physics_variables, 0.001, 1.0
-    ),
-    6: IterationVariable(
-        "nd_plasma_electrons_vol_avg", data_structure.physics_variables, 2.0e19, 1.0e21
-    ),
-    7: IterationVariable(
-        "f_nd_beam_electron", data_structure.physics_variables, 1.0e-6, 1.0
-    ),
-    10: IterationVariable("hfact", data_structure.physics_variables, 0.1, 3.0),
+    1: IterationVariable("aspect", "physics", 1.1, 10.00),
+    2: IterationVariable("b_plasma_toroidal_on_axis", "physics", 0.010, 30.00),
+    3: IterationVariable("rmajor", "physics", 0.1, 50.00),
+    4: IterationVariable("temp_plasma_electron_vol_avg_kev", "physics", 5.0, 150.0),
+    5: IterationVariable("beta_total_vol_avg", "physics", 0.001, 1.0),
+    6: IterationVariable("nd_plasma_electrons_vol_avg", "physics", 2.0e19, 1.0e21),
+    7: IterationVariable("f_nd_beam_electron", "physics", 1.0e-6, 1.0),
+    10: IterationVariable("hfact", "physics", 0.1, 3.0),
     11: IterationVariable(
         "p_hcd_primary_extra_heat_mw",
         "current_drive",
@@ -61,7 +51,7 @@ ITERATION_VARIABLES = {
     13: IterationVariable("dr_tf_inboard", "build", 0.1, 5.0),
     16: IterationVariable("dr_cs", "build", 0.01, 10.00),
     17: IterationVariable("t_plant_pulse_dwell", "times", 0.1, 1.0e8),
-    18: IterationVariable("q95", data_structure.physics_variables, 2.0, 50.00),
+    18: IterationVariable("q95", "physics", 2.0, 50.00),
     19: IterationVariable("e_beam_kev", "current_drive", 1.0, 1.0e6),
     20: IterationVariable(
         "temp_cp_average", data_structure.tfcoil_variables, 40.00, 573.0
@@ -72,9 +62,7 @@ ITERATION_VARIABLES = {
     37: IterationVariable("j_cs_flat_top_end", "pf_coil", 1.0e5, 1.0e8),
     41: IterationVariable("f_j_cs_start_pulse_end_flat_top", "pf_coil", 0.001, 1.0),
     42: IterationVariable("dr_cs_tf_gap", "build", 0.001, 10.00),
-    44: IterationVariable(
-        "f_c_plasma_non_inductive", data_structure.physics_variables, 0.001, 1.0
-    ),
+    44: IterationVariable("f_c_plasma_non_inductive", "physics", 0.001, 1.0),
     47: IterationVariable("feffcd", "current_drive", 0.001, 1.0),
     56: IterationVariable(
         "t_tf_superconductor_quench", data_structure.tfcoil_variables, 0.1, 100.0
@@ -115,13 +103,9 @@ ITERATION_VARIABLES = {
     98: IterationVariable("f_blkt_li6_enrichment", "fwbs", 10.00, 100.0),
     104: IterationVariable("fcwr", "constraints", 0.001, 1.0),
     108: IterationVariable("breeder_f", "fwbs", 0.060, 1.0),
-    109: IterationVariable(
-        "f_nd_alpha_electron", data_structure.physics_variables, 0.05, 0.15
-    ),
+    109: IterationVariable("f_nd_alpha_electron", "physics", 0.05, 0.15),
     114: IterationVariable("len_fw_channel", "fwbs", 0.001, 1.0e3),
-    119: IterationVariable(
-        "temp_plasma_separatrix_kev", data_structure.physics_variables, 0.0, 1.0e1
-    ),
+    119: IterationVariable("temp_plasma_separatrix_kev", "physics", 0.0, 1.0e1),
     122: IterationVariable("f_a_cs_turn_steel", "pf_coil", 0.001, 0.950),
     125: IterationVariable(
         "f_nd_impurity_electrons(03)",
@@ -219,9 +203,7 @@ ITERATION_VARIABLES = {
         target_name="f_nd_impurity_electron_array",
         array_index=13,
     ),
-    138: IterationVariable(
-        "dx_hts_tape_rebco", data_structure.physics_variables, 0.01e-6, 100.0e-6
-    ),
+    138: IterationVariable("dx_hts_tape_rebco", "physics", 0.01e-6, 100.0e-6),
     139: IterationVariable(
         "dx_hts_tape_copper", data_structure.rebco_variables, 1.0e-6, 1.0e-3
     ),
@@ -230,16 +212,12 @@ ITERATION_VARIABLES = {
     ),
     142: IterationVariable(
         "nd_plasma_separatrix_electron",
-        data_structure.physics_variables,
+        "physics",
         1.0e17,
         1.0e20,
     ),
-    145: IterationVariable(
-        "f_nd_plasma_pedestal_greenwald", data_structure.physics_variables, 0.1, 0.9
-    ),
-    152: IterationVariable(
-        "f_nd_plasma_separatrix_greenwald", data_structure.physics_variables, 0.001, 0.5
-    ),
+    145: IterationVariable("f_nd_plasma_pedestal_greenwald", "physics", 0.1, 0.9),
+    152: IterationVariable("f_nd_plasma_separatrix_greenwald", "physics", 0.001, 0.5),
     155: IterationVariable("pfusife", "ife", 5.0e2, 3.0e3),
     156: IterationVariable("rrin", "ife", 1.0, 1.0e1),
     158: IterationVariable(
@@ -254,11 +232,9 @@ ITERATION_VARIABLES = {
     172: IterationVariable(
         "dx_tf_side_case_min", data_structure.tfcoil_variables, 0.001, 1.0
     ),
-    173: IterationVariable(
-        "f_plasma_fuel_tritium", data_structure.physics_variables, 0.000, 1.000
-    ),
-    174: IterationVariable("triang", data_structure.physics_variables, 0.00, 1.00),
-    175: IterationVariable("kappa", data_structure.physics_variables, 0.00, 10.00),
+    173: IterationVariable("f_plasma_fuel_tritium", "physics", 0.000, 1.000),
+    174: IterationVariable("triang", "physics", 0.00, 1.00),
+    175: IterationVariable("kappa", "physics", 0.00, 10.00),
     176: IterationVariable("f_st_coil_aspect", "stellarator", 0.70, 1.30),
 }
 

@@ -95,7 +95,7 @@ def write(models, data, _outfile):
 
     # Tight aspect ratio machine model
     if (
-        data_structure.physics_variables.itart == 1
+        data.physics.itart == 1
         and data_structure.tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
     ):
         models.tfcoil.output()

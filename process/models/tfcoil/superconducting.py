@@ -14,7 +14,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     global_variables,
-    physics_variables,
     rebco_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
@@ -366,7 +365,7 @@ class SuperconductingTFCoil(TFCoil):
             dr_tf_inboard=self.data.build.dr_tf_inboard,
             r_tf_arc=tfcoil_variables.r_tf_arc,
             z_tf_arc=tfcoil_variables.z_tf_arc,
-            itart=physics_variables.itart,
+            itart=self.data.physics.itart,
             i_tf_shape=tfcoil_variables.i_tf_shape,
             z_tf_inside_half=self.data.build.z_tf_inside_half,
             dr_tf_outboard=self.data.build.dr_tf_outboard,
@@ -401,10 +400,10 @@ class SuperconductingTFCoil(TFCoil):
             c_tf_total=tfcoil_variables.c_tf_total,
             n_tf_coils=tfcoil_variables.n_tf_coils,
             dr_tf_plasma_case=tfcoil_variables.dr_tf_plasma_case,
-            rmajor=physics_variables.rmajor,
-            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            rmajor=self.data.physics.rmajor,
+            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
             r_cp_top=self.data.build.r_cp_top,
-            itart=physics_variables.itart,
+            itart=self.data.physics.itart,
             i_cp_joints=tfcoil_variables.i_cp_joints,
             f_vforce_inboard=tfcoil_variables.f_vforce_inboard,
         )
@@ -1448,7 +1447,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # The 2.2 factor is used as a scaling factor to fit
         # to the ITER-FDR value of 450 tonnes; see CCFE note T&M/PKNIGHT/PROCESS/026
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             # tfcoil_variables.len_tf_coil does not include inboard leg
             # ('centrepost') length in TART
             tfcoil_variables.m_tf_coil_case = (
@@ -1534,7 +1533,7 @@ class SuperconductingTFCoil(TFCoil):
         # If spherical tokamak, distribute between centrepost and outboard legs
         # (in this case, total TF coil length = inboard `cplen` +
         # outboard `len_tf_coil`)
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             tfleng_sph = tfcoil_variables.cplen + tfcoil_variables.len_tf_coil
             tfcoil_variables.whtcp = tfcoil_variables.m_tf_coils_total * (
                 tfcoil_variables.cplen / tfleng_sph

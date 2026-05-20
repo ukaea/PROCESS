@@ -12,9 +12,6 @@ from process.core import (
 )
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    physics_variables,
-)
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
@@ -173,64 +170,64 @@ class NeutralBeam(Model):
         """
         # Check argument sanity
         if (
-            1 + physics_variables.eps
+            1 + self.data.physics.eps
         ) < self.data.current_drive.f_radius_beam_tangency_rmajor:
             raise ProcessValueError(
                 "Imminent negative square root argument; NBI will miss plasma "
                 "completely",
-                eps=physics_variables.eps,
+                eps=self.data.physics.eps,
                 f_radius_beam_tangency_rmajor=self.data.current_drive.f_radius_beam_tangency_rmajor,
             )
 
         # Calculate beam path length to centre
-        dpath = physics_variables.rmajor * np.sqrt(
-            (1.0 + physics_variables.eps) ** 2
+        dpath = self.data.physics.rmajor * np.sqrt(
+            (1.0 + self.data.physics.eps) ** 2
             - self.data.current_drive.f_radius_beam_tangency_rmajor**2
         )
 
         # Calculate beam stopping cross-section
         sigstop = self.sigbeam(
-            self.data.current_drive.e_beam_kev / physics_variables.m_beam_amu,
-            physics_variables.temp_plasma_electron_vol_avg_kev,
-            physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.f_nd_alpha_electron,
-            physics_variables.f_nd_plasma_carbon_electron,
-            physics_variables.f_nd_plasma_oxygen_electron,
-            physics_variables.f_nd_plasma_iron_argon_electron,
+            self.data.current_drive.e_beam_kev / self.data.physics.m_beam_amu,
+            self.data.physics.temp_plasma_electron_vol_avg_kev,
+            self.data.physics.nd_plasma_electrons_vol_avg,
+            self.data.physics.f_nd_alpha_electron,
+            self.data.physics.f_nd_plasma_carbon_electron,
+            self.data.physics.f_nd_plasma_oxygen_electron,
+            self.data.physics.f_nd_plasma_iron_argon_electron,
         )
 
         # Calculate number of decay lengths to centre
         self.data.current_drive.n_beam_decay_lengths_core = (
-            dpath * physics_variables.nd_plasma_electrons_vol_avg * sigstop
+            dpath * self.data.physics.nd_plasma_electrons_vol_avg * sigstop
         )
 
         # Shine-through fraction of beam
         fshine = np.exp(
-            -2.0 * dpath * physics_variables.nd_plasma_electrons_vol_avg * sigstop
+            -2.0 * dpath * self.data.physics.nd_plasma_electrons_vol_avg * sigstop
         )
         fshine = max(fshine, 1e-20)
 
         # Power split to ions / electrons
         f_p_beam_injected_ions = self.cfnbi(
-            afast=physics_variables.m_beam_amu,
+            afast=self.data.physics.m_beam_amu,
             efast=self.data.current_drive.e_beam_kev,
-            te=physics_variables.temp_plasma_electron_density_weighted_kev,
-            ne=physics_variables.nd_plasma_electrons_vol_avg,
-            n_charge_plasma_effective_mass_weighted_vol_avg=physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
-            xlmbda=physics_variables.dlamie,
+            te=self.data.physics.temp_plasma_electron_density_weighted_kev,
+            ne=self.data.physics.nd_plasma_electrons_vol_avg,
+            n_charge_plasma_effective_mass_weighted_vol_avg=self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+            xlmbda=self.data.physics.dlamie,
         )
 
         # Current drive efficiency
         effnbss = self.data.current_drive.f_radius_beam_tangency_rmajor * self.etanb(
-            physics_variables.m_beam_amu,
-            physics_variables.alphan,
-            physics_variables.alphat,
-            physics_variables.aspect,
-            physics_variables.nd_plasma_electrons_vol_avg,
+            self.data.physics.m_beam_amu,
+            self.data.physics.alphan,
+            self.data.physics.alphat,
+            self.data.physics.aspect,
+            self.data.physics.nd_plasma_electrons_vol_avg,
             self.data.current_drive.e_beam_kev,
-            physics_variables.rmajor,
-            physics_variables.temp_plasma_electron_density_weighted_kev,
-            physics_variables.n_charge_plasma_effective_vol_avg,
+            self.data.physics.rmajor,
+            self.data.physics.temp_plasma_electron_density_weighted_kev,
+            self.data.physics.n_charge_plasma_effective_vol_avg,
         )
 
         return effnbss, f_p_beam_injected_ions, fshine
@@ -263,74 +260,74 @@ class NeutralBeam(Model):
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         if (
-            1.0e0 + physics_variables.eps
+            1.0e0 + self.data.physics.eps
         ) < self.data.current_drive.f_radius_beam_tangency_rmajor:
             raise ProcessValueError(
                 "Imminent negative square root argument; NBI will miss plasma "
                 "completely",
-                eps=physics_variables.eps,
+                eps=self.data.physics.eps,
                 f_radius_beam_tangency_rmajor=self.data.current_drive.f_radius_beam_tangency_rmajor,
             )
 
         #  Calculate beam path length to centre
 
-        dpath = physics_variables.rmajor * np.sqrt(
-            (1.0e0 + physics_variables.eps) ** 2
+        dpath = self.data.physics.rmajor * np.sqrt(
+            (1.0e0 + self.data.physics.eps) ** 2
             - self.data.current_drive.f_radius_beam_tangency_rmajor**2
         )
 
         #  Calculate beam stopping cross-section
 
         sigstop = self.sigbeam(
-            self.data.current_drive.e_beam_kev / physics_variables.m_beam_amu,
-            physics_variables.temp_plasma_electron_vol_avg_kev,
-            physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.f_nd_alpha_electron,
-            physics_variables.f_nd_plasma_carbon_electron,
-            physics_variables.f_nd_plasma_oxygen_electron,
-            physics_variables.f_nd_plasma_iron_argon_electron,
+            self.data.current_drive.e_beam_kev / self.data.physics.m_beam_amu,
+            self.data.physics.temp_plasma_electron_vol_avg_kev,
+            self.data.physics.nd_plasma_electrons_vol_avg,
+            self.data.physics.f_nd_alpha_electron,
+            self.data.physics.f_nd_plasma_carbon_electron,
+            self.data.physics.f_nd_plasma_oxygen_electron,
+            self.data.physics.f_nd_plasma_iron_argon_electron,
         )
 
         #  Calculate number of decay lengths to centre
 
         self.data.current_drive.n_beam_decay_lengths_core = (
-            dpath * physics_variables.nd_plasma_electron_line * sigstop
+            dpath * self.data.physics.nd_plasma_electron_line * sigstop
         )
 
         #  Shine-through fraction of beam
 
         fshine = np.exp(
-            -2.0e0 * dpath * physics_variables.nd_plasma_electron_line * sigstop
+            -2.0e0 * dpath * self.data.physics.nd_plasma_electron_line * sigstop
         )
         fshine = max(fshine, 1.0e-20)
 
         #  Power split to ions / electrons
 
         f_p_beam_injected_ions = self.cfnbi(
-            afast=physics_variables.m_beam_amu,
+            afast=self.data.physics.m_beam_amu,
             efast=self.data.current_drive.e_beam_kev,
-            te=physics_variables.temp_plasma_electron_density_weighted_kev,
-            ne=physics_variables.nd_plasma_electrons_vol_avg,
-            n_charge_plasma_effective_mass_weighted_vol_avg=physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
-            xlmbda=physics_variables.dlamie,
+            te=self.data.physics.temp_plasma_electron_density_weighted_kev,
+            ne=self.data.physics.nd_plasma_electrons_vol_avg,
+            n_charge_plasma_effective_mass_weighted_vol_avg=self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+            xlmbda=self.data.physics.dlamie,
         )
 
         #  Current drive efficiency
 
         effnbss = self.etanb2(
-            physics_variables.m_beam_amu,
-            physics_variables.alphan,
-            physics_variables.alphat,
-            physics_variables.aspect,
-            physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.nd_plasma_electron_line,
+            self.data.physics.m_beam_amu,
+            self.data.physics.alphan,
+            self.data.physics.alphat,
+            self.data.physics.aspect,
+            self.data.physics.nd_plasma_electrons_vol_avg,
+            self.data.physics.nd_plasma_electron_line,
             self.data.current_drive.e_beam_kev,
             self.data.current_drive.f_radius_beam_tangency_rmajor,
             fshine,
-            physics_variables.rmajor,
-            physics_variables.rminor,
-            physics_variables.temp_plasma_electron_density_weighted_kev,
-            physics_variables.n_charge_plasma_effective_vol_avg,
+            self.data.physics.rmajor,
+            self.data.physics.rminor,
+            self.data.physics.temp_plasma_electron_density_weighted_kev,
+            self.data.physics.n_charge_plasma_effective_vol_avg,
         )
 
         return effnbss, f_p_beam_injected_ions, fshine
@@ -810,29 +807,29 @@ class ElectronCyclotron:
         #  Temperature
         tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rrr,
-            physics_variables.radius_plasma_pedestal_temp_norm,
-            physics_variables.temp_plasma_electron_on_axis_kev,
-            physics_variables.temp_plasma_pedestal_kev,
-            physics_variables.temp_plasma_separatrix_kev,
-            physics_variables.alphat,
-            physics_variables.tbeta,
+            self.data.physics.radius_plasma_pedestal_temp_norm,
+            self.data.physics.temp_plasma_electron_on_axis_kev,
+            self.data.physics.temp_plasma_pedestal_kev,
+            self.data.physics.temp_plasma_separatrix_kev,
+            self.data.physics.alphat,
+            self.data.physics.tbeta,
         )
 
         #  Density (10**20 m**-3)
         dlocal = 1.0e-20 * self.plasma_profile.neprofile.calculate_profile_y(
             rrr,
-            physics_variables.radius_plasma_pedestal_density_norm,
-            physics_variables.nd_plasma_electron_on_axis,
-            physics_variables.nd_plasma_pedestal_electron,
-            physics_variables.nd_plasma_separatrix_electron,
-            physics_variables.alphan,
+            self.data.physics.radius_plasma_pedestal_density_norm,
+            self.data.physics.nd_plasma_electron_on_axis,
+            self.data.physics.nd_plasma_pedestal_electron,
+            self.data.physics.nd_plasma_separatrix_electron,
+            self.data.physics.alphan,
         )
 
         #  Inverse aspect ratio
-        epsloc = rrr * physics_variables.rminor / physics_variables.rmajor
+        epsloc = rrr * self.data.physics.rminor / self.data.physics.rmajor
 
         #  Effective charge (use average value)
-        zlocal = physics_variables.n_charge_plasma_effective_vol_avg
+        zlocal = self.data.physics.n_charge_plasma_effective_vol_avg
 
         #  Coulomb logarithm for ion-electron collisions
         #  (From J. A. Wesson, 'Tokamaks', Clarendon Press, Oxford, p.293)
@@ -855,7 +852,7 @@ class ElectronCyclotron:
         ecgam = 0.25e0 * (ecgam1 + ecgam2 + ecgam3 + ecgam4)
 
         #  Current drive efficiency (A/W)
-        return ecgam / (dlocal * physics_variables.rmajor)
+        return ecgam / (dlocal * self.data.physics.rmajor)
 
     def eccdef(self, tlocal, epsloc, zlocal, cosang, coulog):
         """Calculate Electron Cyclotron current drive efficiency.
@@ -1336,31 +1333,31 @@ class LowerHybrid:
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         rratio = self.lhrad()
-        rpenet = rratio * physics_variables.rminor
+        rpenet = rratio * self.data.physics.rminor
 
         # Local density, temperature, toroidal field at this minor radius
 
         dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
             rratio,
-            physics_variables.radius_plasma_pedestal_density_norm,
-            physics_variables.nd_plasma_electron_on_axis,
-            physics_variables.nd_plasma_pedestal_electron,
-            physics_variables.nd_plasma_separatrix_electron,
-            physics_variables.alphan,
+            self.data.physics.radius_plasma_pedestal_density_norm,
+            self.data.physics.nd_plasma_electron_on_axis,
+            self.data.physics.nd_plasma_pedestal_electron,
+            self.data.physics.nd_plasma_separatrix_electron,
+            self.data.physics.alphan,
         )
         tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rratio,
-            physics_variables.radius_plasma_pedestal_temp_norm,
-            physics_variables.temp_plasma_electron_on_axis_kev,
-            physics_variables.temp_plasma_pedestal_kev,
-            physics_variables.temp_plasma_separatrix_kev,
-            physics_variables.alphat,
-            physics_variables.tbeta,
+            self.data.physics.radius_plasma_pedestal_temp_norm,
+            self.data.physics.temp_plasma_electron_on_axis_kev,
+            self.data.physics.temp_plasma_pedestal_kev,
+            self.data.physics.temp_plasma_separatrix_kev,
+            self.data.physics.alphat,
+            self.data.physics.tbeta,
         )
         blocal = (
-            physics_variables.b_plasma_toroidal_on_axis
-            * physics_variables.rmajor
-            / (physics_variables.rmajor - rpenet)
+            self.data.physics.b_plasma_toroidal_on_axis
+            * self.data.physics.rmajor
+            / (self.data.physics.rmajor - rpenet)
         )  # Calculated on inboard side
 
         # Parallel refractive index needed for plasma access
@@ -1370,7 +1367,7 @@ class LowerHybrid:
 
         # Local inverse aspect ratio
 
-        epslh = rpenet / physics_variables.rmajor
+        epslh = rpenet / self.data.physics.rmajor
 
         # LH normalised efficiency (A/W m**-2)
 
@@ -1379,7 +1376,7 @@ class LowerHybrid:
         term01 = 6.1e0 / (
             nplacc
             * nplacc
-            * (physics_variables.n_charge_plasma_effective_vol_avg + 5.0e0)
+            * (self.data.physics.n_charge_plasma_effective_vol_avg + 5.0e0)
         )
         term02 = 1.0e0 + (tlocal / 25.0e0) ** 1.16e0
         term03 = epslh**0.77e0 * np.sqrt(12.25e0 + x * x)
@@ -1396,7 +1393,7 @@ class LowerHybrid:
 
         # Current drive efficiency (A/W)
 
-        return gamlh / ((0.1e0 * dlocal) * physics_variables.rmajor)
+        return gamlh / ((0.1e0 * dlocal) * self.data.physics.rmajor)
 
     def lhrad(self):
         """Routine to calculate Lower Hybrid wave absorption radius
@@ -1409,7 +1406,7 @@ class LowerHybrid:
         #  Correction to refractive index (kept within valid bounds)
         drfind = min(
             0.7e0,
-            max(0.1e0, 12.5e0 / physics_variables.temp_plasma_electron_on_axis_kev),
+            max(0.1e0, 12.5e0 / self.data.physics.temp_plasma_electron_on_axis_kev),
         )
 
         #  Use Newton-Raphson method to establish the correct minor radius
@@ -1487,31 +1484,31 @@ class LowerHybrid:
         """
         dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
             rratio,
-            physics_variables.radius_plasma_pedestal_density_norm,
-            physics_variables.nd_plasma_electron_on_axis,
-            physics_variables.nd_plasma_pedestal_electron,
-            physics_variables.nd_plasma_separatrix_electron,
-            physics_variables.alphan,
+            self.data.physics.radius_plasma_pedestal_density_norm,
+            self.data.physics.nd_plasma_electron_on_axis,
+            self.data.physics.nd_plasma_pedestal_electron,
+            self.data.physics.nd_plasma_separatrix_electron,
+            self.data.physics.alphan,
         )
 
         #  Local electron temperature
 
         tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rratio,
-            physics_variables.radius_plasma_pedestal_temp_norm,
-            physics_variables.temp_plasma_electron_on_axis_kev,
-            physics_variables.temp_plasma_pedestal_kev,
-            physics_variables.temp_plasma_separatrix_kev,
-            physics_variables.alphat,
-            physics_variables.tbeta,
+            self.data.physics.radius_plasma_pedestal_temp_norm,
+            self.data.physics.temp_plasma_electron_on_axis_kev,
+            self.data.physics.temp_plasma_pedestal_kev,
+            self.data.physics.temp_plasma_separatrix_kev,
+            self.data.physics.alphat,
+            self.data.physics.tbeta,
         )
 
         #  Local toroidal field (evaluated at the inboard region of the flux surface)
 
         blocal = (
-            physics_variables.b_plasma_toroidal_on_axis
-            * physics_variables.rmajor
-            / (physics_variables.rmajor - rratio * physics_variables.rminor)
+            self.data.physics.b_plasma_toroidal_on_axis
+            * self.data.physics.rmajor
+            / (self.data.physics.rmajor - rratio * self.data.physics.rminor)
         )
 
         #  Parallel refractive index needed for plasma access
@@ -1677,7 +1674,7 @@ class CurrentDrive(Model):
 
         if self.data.current_drive.i_hcd_calculations != 0:
             # Put electron density in desired units (10^-20 m-3)
-            dene20 = physics_variables.nd_plasma_electrons_vol_avg * 1.0e-20
+            dene20 = self.data.physics.nd_plasma_electrons_vol_avg * 1.0e-20
 
             # Calculate current drive efficiencies
             # ==============================================================
@@ -1687,37 +1684,37 @@ class CurrentDrive(Model):
             hcd_models = {
                 1: lambda: (
                     self.lower_hybrid.lower_hybrid_fenstermacher(
-                        physics_variables.temp_plasma_electron_vol_avg_kev,
-                        physics_variables.rmajor,
+                        self.data.physics.temp_plasma_electron_vol_avg_kev,
+                        self.data.physics.rmajor,
                         dene20,
                     )
                     * self.data.current_drive.feffcd
                 ),
                 2: lambda: (
                     self.ion_cyclotron.ion_cyclotron_ipdg89(
-                        temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
-                        zeff=physics_variables.n_charge_plasma_effective_vol_avg,
-                        rmajor=physics_variables.rmajor,
+                        temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
+                        zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                        rmajor=self.data.physics.rmajor,
                         dene20=dene20,
                     )
                     * self.data.current_drive.feffcd
                 ),
                 3: lambda: (
                     self.electron_cyclotron.electron_cyclotron_fenstermacher(
-                        temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
-                        rmajor=physics_variables.rmajor,
+                        temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
+                        rmajor=self.data.physics.rmajor,
                         dene20=dene20,
-                        dlamee=physics_variables.dlamee,
+                        dlamee=self.data.physics.dlamee,
                     )
                     * self.data.current_drive.feffcd
                 ),
                 4: lambda: (
                     self.lower_hybrid.lower_hybrid_ehst(
-                        te=physics_variables.temp_plasma_electron_vol_avg_kev,
-                        beta=physics_variables.beta_total_vol_avg,
-                        rmajor=physics_variables.rmajor,
+                        te=self.data.physics.temp_plasma_electron_vol_avg_kev,
+                        beta=self.data.physics.beta_total_vol_avg,
+                        rmajor=self.data.physics.rmajor,
                         dene20=dene20,
-                        zeff=physics_variables.n_charge_plasma_effective_vol_avg,
+                        zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
                     )
                     * self.data.current_drive.feffcd
                 ),
@@ -1733,14 +1730,14 @@ class CurrentDrive(Model):
                 ),
                 10: lambda: (
                     self.data.current_drive.eta_cd_norm_ecrh
-                    / (dene20 * physics_variables.rmajor)
+                    / (dene20 * self.data.physics.rmajor)
                 ),
                 12: lambda: (
                     self.electron_bernstein.electron_bernstein_freethy(
-                        te=physics_variables.temp_plasma_electron_vol_avg_kev,
-                        rmajor=physics_variables.rmajor,
+                        te=self.data.physics.temp_plasma_electron_vol_avg_kev,
+                        rmajor=self.data.physics.rmajor,
                         dene20=dene20,
-                        b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+                        b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
                         n_ecrh_harmonic=self.data.current_drive.n_ecrh_harmonic,
                         xi_ebw=self.data.current_drive.xi_ebw,
                     )
@@ -1748,11 +1745,11 @@ class CurrentDrive(Model):
                 ),
                 13: lambda: (
                     self.electron_cyclotron.electron_cyclotron_freethy(
-                        te=physics_variables.temp_plasma_electron_vol_avg_kev,
-                        zeff=physics_variables.n_charge_plasma_effective_vol_avg,
-                        rmajor=physics_variables.rmajor,
-                        nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
-                        b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+                        te=self.data.physics.temp_plasma_electron_vol_avg_kev,
+                        zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                        rmajor=self.data.physics.rmajor,
+                        nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                        b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
                         n_ecrh_harmonic=self.data.current_drive.n_ecrh_harmonic,
                         i_ecrh_wave_mode=self.data.current_drive.i_ecrh_wave_mode,
                     )
@@ -1796,15 +1793,15 @@ class CurrentDrive(Model):
             # heating method
             self.data.current_drive.eta_cd_norm_hcd_primary = self.calculate_normalised_current_drive_efficiency(
                 eta_cd_hcd=self.data.current_drive.eta_cd_hcd_primary,
-                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
-                rmajor=physics_variables.rmajor,
+                nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                rmajor=self.data.physics.rmajor,
             )
             # Calculate the normalised current drive efficieny for the secondary
             # heating method
             self.data.current_drive.eta_cd_norm_hcd_secondary = self.calculate_normalised_current_drive_efficiency(
                 eta_cd_hcd=self.data.current_drive.eta_cd_hcd_secondary,
-                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
-                rmajor=physics_variables.rmajor,
+                nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                rmajor=self.data.physics.rmajor,
             )
 
             # Calculate the driven current for the secondary heating method
@@ -1817,17 +1814,17 @@ class CurrentDrive(Model):
             # heating method
             self.data.current_drive.f_c_plasma_hcd_secondary = (
                 self.data.current_drive.c_hcd_secondary_driven
-                / physics_variables.plasma_current
+                / self.data.physics.plasma_current
             )
 
             # Calculate the injected power for the primary heating method
             self.data.current_drive.p_hcd_primary_injected_mw = (
                 1.0e-6
                 * (
-                    physics_variables.f_c_plasma_auxiliary
+                    self.data.physics.f_c_plasma_auxiliary
                     - self.data.current_drive.f_c_plasma_hcd_secondary
                 )
-                * physics_variables.plasma_current
+                * self.data.physics.plasma_current
                 / self.data.current_drive.eta_cd_hcd_primary
             )
 
@@ -1841,14 +1838,14 @@ class CurrentDrive(Model):
             # heating method
             self.data.current_drive.f_c_plasma_hcd_primary = (
                 self.data.current_drive.c_hcd_primary_driven
-                / physics_variables.plasma_current
+                / self.data.physics.plasma_current
             )
 
             # Calculate the dimensionless current drive efficiency for the primary heating method (ζ)
             self.data.current_drive.eta_cd_dimensionless_hcd_primary = self.calculate_dimensionless_current_drive_efficiency(
-                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
-                rmajor=physics_variables.rmajor,
-                temp_plasma_electron_vol_avg_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+                nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                rmajor=self.data.physics.rmajor,
+                temp_plasma_electron_vol_avg_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
                 c_hcd_driven=self.data.current_drive.c_hcd_primary_driven,
                 p_hcd_injected=self.data.current_drive.p_hcd_primary_injected_mw * 1.0e6,
             )
@@ -1857,9 +1854,9 @@ class CurrentDrive(Model):
                 # Calculate the dimensionless current drive efficiency for the secondary
                 # heating method (ζ)
                 self.data.current_drive.eta_cd_dimensionless_hcd_secondary = self.calculate_dimensionless_current_drive_efficiency(
-                    nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
-                    rmajor=physics_variables.rmajor,
-                    temp_plasma_electron_vol_avg_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+                    nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                    rmajor=self.data.physics.rmajor,
+                    temp_plasma_electron_vol_avg_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
                     c_hcd_driven=self.data.current_drive.c_hcd_secondary_driven,
                     p_hcd_injected=self.data.current_drive.p_hcd_secondary_injected_mw
                     * 1.0e6,
@@ -2281,16 +2278,16 @@ class CurrentDrive(Model):
             )
 
             # Reset injected power to zero for ignited plasma (fudge)
-            if physics_variables.i_plasma_ignited == 1:
+            if self.data.physics.i_plasma_ignited == 1:
                 self.data.heat_transport.p_hcd_electric_total_mw = 0.0e0
 
             # Ratio of fusion to input (injection+ohmic) power
             self.data.current_drive.big_q_plasma = (
-                physics_variables.p_fusion_total_mw
+                self.data.physics.p_fusion_total_mw
                 / (
                     self.data.current_drive.p_hcd_injected_total_mw
                     + self.data.current_drive.p_beam_orbit_loss_mw
-                    + physics_variables.p_plasma_ohmic_mw
+                    + self.data.physics.p_plasma_ohmic_mw
                 )
             )
 
@@ -2383,15 +2380,15 @@ class CurrentDrive(Model):
             self.outfile,
             "Ignited plasma switch (0=not ignited, 1=ignited)",
             "(i_plasma_ignited)",
-            physics_variables.i_plasma_ignited,
+            self.data.physics.i_plasma_ignited,
         )
-        if physics_variables.i_plasma_ignited == 1:
+        if self.data.physics.i_plasma_ignited == 1:
             po.ocmmnt(
                 self.outfile,
                 "Ignited plasma; injected power only used for start-up phase",
             )
         po.oblnkl(self.outfile)
-        if abs(physics_variables.f_c_plasma_inductive) > 1.0e-8:
+        if abs(self.data.physics.f_c_plasma_inductive) > 1.0e-8:
             po.ocmmnt(
                 self.outfile,
                 "Current is driven by both inductive and non-inductive means.",
@@ -2946,24 +2943,24 @@ class CurrentDrive(Model):
             self.outfile,
             "Auxiliary current drive fraction",
             "(f_c_plasma_auxiliary)",
-            physics_variables.f_c_plasma_auxiliary,
+            self.data.physics.f_c_plasma_auxiliary,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Inductive fraction",
             "(f_c_plasma_inductive)",
-            physics_variables.f_c_plasma_inductive,
+            self.data.physics.f_c_plasma_inductive,
             "OP ",
         )
 
-        # MDK Add physics_variables.f_c_plasma_non_inductive as it can be an iteration
+        # MDK Add self.data.physics.f_c_plasma_non_inductive as it can be an iteration
         # variable
         po.ovarrf(
             self.outfile,
             "Fraction of the plasma current produced by non-inductive means",
             "(f_c_plasma_non_inductive)",
-            physics_variables.f_c_plasma_non_inductive,
+            self.data.physics.f_c_plasma_non_inductive,
         )
 
         if (

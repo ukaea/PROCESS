@@ -3,10 +3,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import (
-    numerics,
-    physics_variables,
-)
+from process.data_structure import numerics
 
 
 @pytest.fixture
@@ -1237,9 +1234,9 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
         tohswgparam.c_pf_coil_turn_peak_input,
     )
 
-    monkeypatch.setattr(physics_variables, "plasma_current", tohswgparam.plasma_current)
+    monkeypatch.setattr(pulse.data.physics, "plasma_current", tohswgparam.plasma_current)
 
-    monkeypatch.setattr(physics_variables, "rmajor", tohswgparam.rmajor)
+    monkeypatch.setattr(pulse.data.physics, "rmajor", tohswgparam.rmajor)
 
     monkeypatch.setattr(numerics, "active_constraints", tohswgparam.active_constraints)
 

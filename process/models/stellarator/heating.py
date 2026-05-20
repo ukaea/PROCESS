@@ -3,7 +3,6 @@ import logging
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
-from process.data_structure import physics_variables
 
 logger = logging.getLogger(__name__)
 
@@ -117,16 +116,16 @@ def st_heat(stellarator, f_output: bool, data: DataStructure):
         abs(
             data.current_drive.p_hcd_injected_total_mw
             + data.current_drive.p_beam_orbit_loss_mw
-            + physics_variables.p_plasma_ohmic_mw
+            + data.physics.p_plasma_ohmic_mw
         )
         < 1e-6
     ):
         data.current_drive.big_q_plasma = 1e18
     else:
-        data.current_drive.big_q_plasma = physics_variables.p_fusion_total_mw / (
+        data.current_drive.big_q_plasma = data.physics.p_fusion_total_mw / (
             data.current_drive.p_hcd_injected_total_mw
             + data.current_drive.p_beam_orbit_loss_mw
-            + physics_variables.p_plasma_ohmic_mw
+            + data.physics.p_plasma_ohmic_mw
         )
 
     if f_output:
@@ -143,7 +142,7 @@ def output(stellarator, data: DataStructure, f_p_beam_injected_ions=None):
     elif data.stellarator.isthtr == 3:
         po.ocmmnt(stellarator.outfile, "Neutral Beam Injection Heating")
 
-    if physics_variables.i_plasma_ignited == 1:
+    if data.physics.i_plasma_ignited == 1:
         po.ocmmnt(
             stellarator.outfile,
             "Ignited plasma; injected power only used for start-up phase",

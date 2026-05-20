@@ -177,7 +177,7 @@ It updates the instance attributes for the cumulative power densities and reacti
 
 ### Set global physics variables | `set_physics_variables()`
 
-This method sets the required physics variables in the `physics_variables` and `physics_module` modules. It updates the global physics variables and module variables with the current instance's fusion power densities and reaction rates.
+This method sets the required physics variables in the `physics_variables` and `physics` module. It updates the global physics variables and module variables with the current instance's fusion power densities and reaction rates.
 
 #### Updates:
 - `physics_variables.pden_plasma_alpha_mw`: Updated with `self.alpha_power_density`

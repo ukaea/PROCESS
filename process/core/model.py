@@ -20,6 +20,7 @@ from process.data_structure.impurity_radiation_variables import ImpurityRadiatio
 from process.data_structure.neoclassics_variables import NeoclassicsData
 from process.data_structure.pf_power_variables import PFPowerData
 from process.data_structure.pfcoil_variables import PFCoilData
+from process.data_structure.physics_variables import PhysicsData
 from process.data_structure.power_variables import PowerData
 from process.data_structure.primary_pumping_variables import PrimaryPumpingData
 from process.data_structure.pulse_variables import PulseData
@@ -65,6 +66,7 @@ class DataStructure:
     pf_power: PFPowerData = initialise_later
     neoclassics: NeoclassicsData = initialise_later
     impurity_radiation: ImpurityRadiationData = initialise_later
+    physics: PhysicsData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):

@@ -5,10 +5,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import (
-    physics_variables,
-    tfcoil_variables,
-)
+from process.data_structure import tfcoil_variables
 from process.models.physics.current_drive import (
     CurrentDriveMethodType,
     CurrentDriveModel,
@@ -579,9 +576,9 @@ class Buildings(Model):
                 2
                 * np.pi
                 * (
-                    physics_variables.rmajor
+                    self.data.physics.rmajor
                     - (
-                        physics_variables.rminor
+                        self.data.physics.rminor
                         + self.data.build.dr_fw_plasma_gap_inboard
                         + self.data.build.dr_fw_inboard
                         + self.data.build.dr_blkt_inboard
@@ -624,8 +621,8 @@ class Buildings(Model):
                 2
                 * np.pi
                 * (
-                    physics_variables.rmajor
-                    + physics_variables.rminor
+                    self.data.physics.rmajor
+                    + self.data.physics.rminor
                     + self.data.build.dr_fw_plasma_gap_outboard
                     + self.data.build.dr_fw_outboard
                     + self.data.build.dr_blkt_outboard
@@ -652,8 +649,8 @@ class Buildings(Model):
         # Note: this estimation developed before the divertor design has been finalised
         if self.data.costs.life_div_fpy != 0.0e0:  # noqa: RUF069
             hcomp_height = self.data.divertor.dz_divertor
-            hcomp_rad_thk = 2 * physics_variables.rminor
-            hcomp_tor_thk = physics_variables.rmajor + physics_variables.rminor
+            hcomp_rad_thk = 2 * self.data.physics.rminor
+            hcomp_tor_thk = self.data.physics.rmajor + self.data.physics.rminor
             hcomp_footprint = (hcomp_height + self.data.buildings.hot_sepdist) * (
                 max(hcomp_rad_thk, hcomp_tor_thk) + self.data.buildings.hot_sepdist
             )

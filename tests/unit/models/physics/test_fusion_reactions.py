@@ -1,4 +1,4 @@
-"""Unit tests for physics_functions.f90."""
+"""Unit tests for fusion_reactions.py."""
 
 from typing import Any, NamedTuple
 
@@ -6,8 +6,13 @@ import numpy as np
 import pytest
 
 from process.core import constants
-from process.data_structure import physics_variables as pv
 from process.models.physics import fusion_reactions as reactions
+
+
+@pytest.fixture
+def fusion_reaction_rate(process_models):
+    """Fixture to get the FusionReactionRate instance from process_models."""
+    return process_models.fusion_reaction_rate
 
 
 class SetFusionPowersParam(NamedTuple):
@@ -131,7 +136,7 @@ class SetFusionPowersParam(NamedTuple):
         ),
     ],
 )
-def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
+def test_set_fusion_powers(setfusionpowersparam, monkeypatch, fusion_reaction_rate):
     """
     Automatically generated Regression Unit Test for set_fusion_powers().
 
@@ -144,12 +149,14 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(
-        pv,
+        fusion_reaction_rate.data.physics,
         "f_p_alpha_plasma_deposited",
         setfusionpowersparam.f_p_alpha_plasma_deposited,
     )
     monkeypatch.setattr(
-        pv, "f_plasma_fuel_deuterium", setfusionpowersparam.f_plasma_fuel_deuterium
+        fusion_reaction_rate.data.physics,
+        "f_plasma_fuel_deuterium",
+        setfusionpowersparam.f_plasma_fuel_deuterium,
     )
 
     (
@@ -172,6 +179,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
         pden_plasma_neutron_mw=setfusionpowersparam.pden_plasma_neutron_mw,
         vol_plasma=setfusionpowersparam.vol_plasma,
         pden_plasma_alpha_mw=setfusionpowersparam.pden_plasma_alpha_mw,
+        f_p_alpha_plasma_deposited=setfusionpowersparam.f_p_alpha_plasma_deposited,
     )
 
     assert pden_alpha_total_mw == pytest.approx(

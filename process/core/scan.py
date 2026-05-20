@@ -18,7 +18,6 @@ from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
     global_variables,
     numerics,
-    physics_variables,
     rebco_variables,
     scan_variables,
     tfcoil_variables,
@@ -1068,31 +1067,31 @@ class Scan:
     def scan_select(self, nwp, swp, iscn):
         match nwp:
             case 1:
-                physics_variables.aspect = swp[iscn - 1]
+                self.data.physics.aspect = swp[iscn - 1]
             case 2:
                 self.data.divertor.pflux_div_heat_load_max_mw = swp[iscn - 1]
             case 3:
                 self.data.constraints.p_plant_electric_net_required_mw = swp[iscn - 1]
             case 4:
-                physics_variables.hfact = swp[iscn - 1]
+                self.data.physics.hfact = swp[iscn - 1]
             case 5:
                 tfcoil_variables.oacdcp = swp[iscn - 1]
             case 6:
                 self.data.constraints.pflux_fw_neutron_max_mw = swp[iscn - 1]
             case 7:
-                physics_variables.beamfus0 = swp[iscn - 1]
+                self.data.physics.beamfus0 = swp[iscn - 1]
             case 9:
-                physics_variables.temp_plasma_electron_vol_avg_kev = swp[iscn - 1]
+                self.data.physics.temp_plasma_electron_vol_avg_kev = swp[iscn - 1]
             case 10:
                 numerics.boundu[14] = swp[iscn - 1]
             case 11:
-                physics_variables.beta_norm_max = swp[iscn - 1]
+                self.data.physics.beta_norm_max = swp[iscn - 1]
             case 12:
                 self.data.current_drive.f_c_plasma_bootstrap_max = swp[iscn - 1]
             case 13:
                 numerics.boundu[9] = swp[iscn - 1]
             case 16:
-                physics_variables.rmajor = swp[iscn - 1]
+                self.data.physics.rmajor = swp[iscn - 1]
             case 17:
                 self.data.constraints.b_tf_inboard_max = swp[iscn - 1]
             case 18:
@@ -1110,13 +1109,13 @@ class Scan:
             case 24:
                 self.data.constraints.p_fusion_total_max_mw = swp[iscn - 1]
             case 25:
-                physics_variables.kappa = swp[iscn - 1]
+                self.data.physics.kappa = swp[iscn - 1]
             case 26:
-                physics_variables.triang = swp[iscn - 1]
+                self.data.physics.triang = swp[iscn - 1]
             case 27:
                 self.data.constraints.tbrmin = swp[iscn - 1]
             case 28:
-                physics_variables.b_plasma_toroidal_on_axis = swp[iscn - 1]
+                self.data.physics.b_plasma_toroidal_on_axis = swp[iscn - 1]
             case 29:
                 self.data.impurity_radiation.radius_plasma_core_norm = swp[iscn - 1]
             case 31:
@@ -1152,9 +1151,9 @@ class Scan:
                     self.data.impurity_radiation.f_nd_impurity_electrons[12]
                 )
             case 51:
-                physics_variables.f_p_div_lower = swp[iscn - 1]
+                self.data.physics.f_p_div_lower = swp[iscn - 1]
             case 52:
-                physics_variables.rad_fraction_sol = swp[iscn - 1]
+                self.data.physics.rad_fraction_sol = swp[iscn - 1]
             case 53:
                 numerics.boundu[156] = swp[iscn - 1]
             case 54:

@@ -5,10 +5,7 @@ import logging
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import (
-    numerics,
-    physics_variables,
-)
+from process.data_structure import numerics
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +38,7 @@ class Pulse(Model):
 
             self.data.times.t_plant_pulse_burn = self.calculate_burn_time(
                 vs_cs_pf_total_burn=self.data.pf_coil.vs_cs_pf_total_burn,
-                v_plasma_loop_burn=physics_variables.v_plasma_loop_burn,
+                v_plasma_loop_burn=self.data.physics.v_plasma_loop_burn,
                 t_plant_pulse_fusion_ramp=self.data.times.t_plant_pulse_fusion_ramp,
             )
 
@@ -88,7 +85,7 @@ class Pulse(Model):
         #  Central Solenoid bus resistance (ohms) (assumed to include power supply)
         #  Bus parameters taken from routine PFPWR.
 
-        pfbusl = 8.0e0 * physics_variables.rmajor + 140.0e0
+        pfbusl = 8.0e0 * self.data.physics.rmajor + 140.0e0
         albusa = (
             abs(
                 self.data.pf_coil.c_pf_coil_turn_peak_input[
@@ -123,7 +120,7 @@ class Pulse(Model):
         #  Maximum rate of change of plasma current (A/s)
         #  - now a function of the plasma current itself (previously just 0.5e6)
 
-        ipdot = 0.0455e0 * physics_variables.plasma_current
+        ipdot = 0.0455e0 * self.data.physics.plasma_current
 
         #  Minimum plasma current ramp-up time (s)
         #  - corrected (bus resistance is not a function of self.data.pf_coil.turns)

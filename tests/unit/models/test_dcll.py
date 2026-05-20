@@ -2,8 +2,6 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import physics_variables
-
 
 @pytest.fixture
 def dcll(process_models):
@@ -264,19 +262,19 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        dcll.data.physics,
         "p_neutron_total_mw",
         dcllneutronicsandpowerparam.p_neutron_total_mw,
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        dcll.data.physics,
         "p_plasma_rad_mw",
         dcllneutronicsandpowerparam.p_plasma_rad_mw,
     )
 
     monkeypatch.setattr(
-        physics_variables, "p_fw_alpha_mw", dcllneutronicsandpowerparam.p_fw_alpha_mw
+        dcll.data.physics, "p_fw_alpha_mw", dcllneutronicsandpowerparam.p_fw_alpha_mw
     )
 
     dcll.dcll_neutronics_and_power(False)
@@ -821,11 +819,11 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
     monkeypatch.setattr(dcll.data.build, "blbmoth", dcllmassesparam.blbmoth)
 
     monkeypatch.setattr(
-        physics_variables, "a_plasma_surface", dcllmassesparam.a_plasma_surface
+        dcll.data.physics, "a_plasma_surface", dcllmassesparam.a_plasma_surface
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        dcll.data.physics,
         "a_plasma_surface_outboard",
         dcllmassesparam.a_plasma_surface_outboard,
     )

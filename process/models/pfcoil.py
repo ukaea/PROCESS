@@ -11,7 +11,6 @@ from process.core import constants
 from process.core import process_output as op
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure, Model
-from process.data_structure import physics_variables as pv
 from process.data_structure import rebco_variables as rcv
 from process.data_structure import superconducting_tf_coil_variables
 from process.data_structure import tfcoil_variables as tfv
@@ -252,11 +251,11 @@ class PFCoil(Model):
                 ) = self.place_pf_above_tf(
                     n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
                     n_pf_group=group,
-                    rmajor=pv.rmajor,
-                    triang=pv.triang,
-                    rminor=pv.rminor,
-                    itart=pv.itart,
-                    itartpf=pv.itartpf,
+                    rmajor=self.data.physics.rmajor,
+                    triang=self.data.physics.triang,
+                    rminor=self.data.physics.rminor,
+                    itart=self.data.physics.itart,
+                    itartpf=self.data.physics.itartpf,
                     z_tf_inside_half=self.data.build.z_tf_inside_half,
                     dz_tf_upper_lower_midplane=self.data.build.dz_tf_upper_lower_midplane,
                     z_tf_top=self.data.build.z_tf_top,
@@ -282,7 +281,7 @@ class PFCoil(Model):
                 ) = self.place_pf_outside_tf(
                     n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
                     n_pf_group=group,
-                    rminor=pv.rminor,
+                    rminor=self.data.physics.rminor,
                     zref=self.data.pf_coil.zref,
                     i_tf_shape=tfv.i_tf_shape,
                     i_r_pf_outside_tf_placement=self.data.pf_coil.i_r_pf_outside_tf_placement,
@@ -306,8 +305,8 @@ class PFCoil(Model):
                 ) = self.place_pf_generally(
                     n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
                     n_pf_group=group,
-                    rminor=pv.rminor,
-                    rmajor=pv.rmajor,
+                    rminor=self.data.physics.rminor,
+                    rmajor=self.data.physics.rmajor,
                     zref=self.data.pf_coil.zref,
                     rref=self.data.pf_coil.rref,
                 )
@@ -349,8 +348,8 @@ class PFCoil(Model):
                 )
 
             # Position and B-field at each test point
-            drpt = 2.0e0 * pv.rminor / (npts - 1)
-            rpt0 = pv.rmajor - pv.rminor
+            drpt = 2.0e0 * self.data.physics.rminor / (npts - 1)
+            rpt0 = self.data.physics.rmajor - self.data.physics.rminor
 
             for i in range(npts):
                 rpts[i] = rpt0 + (i) * drpt
@@ -383,7 +382,7 @@ class PFCoil(Model):
         if self.data.pf_coil.i_pf_current == 1:
             # Simple coil current scaling for STs (good only for A < about 1.8)
             # Bypasses SVD solver
-            if pv.itart == 1 and pv.itartpf == 0:
+            if self.data.physics.itart == 1 and self.data.physics.itartpf == 0:
                 for i in range(self.data.pf_coil.n_pf_coil_groups):
                     if self.data.pf_coil.i_pf_location[i] == 1:
                         # PF coil is stacked on top of the Central Solenoid
@@ -395,12 +394,16 @@ class PFCoil(Model):
                     if self.data.pf_coil.i_pf_location[i] == 2:
                         # PF coil is on top of the TF coil
                         self.data.pf_coil.ccls[i] = (
-                            0.3e0 * pv.aspect**1.6e0 * pv.plasma_current
+                            0.3e0
+                            * self.data.physics.aspect**1.6e0
+                            * self.data.physics.plasma_current
                         )
 
                     elif self.data.pf_coil.i_pf_location[i] == 3:
                         # PF coil is radially outside the TF coil
-                        self.data.pf_coil.ccls[i] = -0.4e0 * pv.plasma_current
+                        self.data.pf_coil.ccls[i] = (
+                            -0.4e0 * self.data.physics.plasma_current
+                        )
 
                     else:
                         raise ProcessValueError(
@@ -410,14 +413,14 @@ class PFCoil(Model):
                         )
 
                 # Vertical field (T)
-                pv.b_plasma_vertical_required = (
+                self.data.physics.b_plasma_vertical_required = (
                     -1.0e-7
-                    * pv.plasma_current
-                    / pv.rmajor
+                    * self.data.physics.plasma_current
+                    / self.data.physics.rmajor
                     * (
-                        math.log(8.0e0 * pv.aspect)
-                        + pv.beta_poloidal_vol_avg
-                        + (pv.ind_plasma_internal_norm / 2.0e0)
+                        math.log(8.0e0 * self.data.physics.aspect)
+                        + self.data.physics.beta_poloidal_vol_avg
+                        + (self.data.physics.ind_plasma_internal_norm / 2.0e0)
                         - 1.5e0
                     )
                 )
@@ -456,11 +459,11 @@ class PFCoil(Model):
                         # This is a fixed current for this calculation -- RK 07/12
 
                         self.data.pf_coil.ccls[i] = (
-                            pv.plasma_current
+                            self.data.physics.plasma_current
                             * 2.0e0
                             * (
                                 1.0e0
-                                - (pv.kappa * pv.rminor)
+                                - (self.data.physics.kappa * self.data.physics.rminor)
                                 / abs(
                                     self.data.pf_coil.z_pf_coil_middle_group_array[i, 0]
                                 )
@@ -518,25 +521,25 @@ class PFCoil(Model):
                     ]
 
                 npts0 = 1
-                rpts[0] = pv.rmajor
+                rpts[0] = self.data.physics.rmajor
                 zpts[0] = 0.0e0
                 brin[0] = 0.0e0
 
-                # Added pv.ind_plasma_internal_norm term correctly -- RK 07/12
+                # Added self.data.physics.ind_plasma_internal_norm term correctly -- RK 07/12
 
                 bzin[0] = (
                     -1.0e-7
-                    * pv.plasma_current
-                    / pv.rmajor
+                    * self.data.physics.plasma_current
+                    / self.data.physics.rmajor
                     * (
-                        math.log(8.0e0 * pv.aspect)
-                        + pv.beta_poloidal_vol_avg
-                        + (pv.ind_plasma_internal_norm / 2.0e0)
+                        math.log(8.0e0 * self.data.physics.aspect)
+                        + self.data.physics.beta_poloidal_vol_avg
+                        + (self.data.physics.ind_plasma_internal_norm / 2.0e0)
                         - 1.5e0
                     )
                 )
 
-                pv.b_plasma_vertical_required = bzin[0]
+                self.data.physics.b_plasma_vertical_required = bzin[0]
 
                 _ssqef, ccls0 = self.efc(
                     npts0,
@@ -585,7 +588,13 @@ class PFCoil(Model):
                 nocoil += 1
 
         # Flux swing required from CS coil
-        csflux = -(pv.vs_plasma_res_ramp + pv.vs_plasma_ind_ramp) - pfflux
+        csflux = (
+            -(
+                self.data.physics.vs_plasma_res_ramp
+                + self.data.physics.vs_plasma_ind_ramp
+            )
+            - pfflux
+        )
 
         if self.data.build.iohcl == 1:
             # Required current change in CS coil
@@ -1016,16 +1025,16 @@ class PFCoil(Model):
 
         # Plasma size and shape
         self.data.pf_coil.z_pf_coil_upper[self.data.pf_coil.n_cs_pf_coils] = (
-            pv.rminor * pv.kappa
+            self.data.physics.rminor * self.data.physics.kappa
         )
         self.data.pf_coil.z_pf_coil_lower[self.data.pf_coil.n_cs_pf_coils] = (
-            -pv.rminor * pv.kappa
+            -self.data.physics.rminor * self.data.physics.kappa
         )
         self.data.pf_coil.r_pf_coil_inner[self.data.pf_coil.n_cs_pf_coils] = (
-            pv.rmajor - pv.rminor
+            self.data.physics.rmajor - self.data.physics.rminor
         )
         self.data.pf_coil.r_pf_coil_outer[self.data.pf_coil.n_cs_pf_coils] = (
-            pv.rmajor + pv.rminor
+            self.data.physics.rmajor + self.data.physics.rminor
         )
         self.data.pf_coil.n_pf_coil_turns[self.data.pf_coil.n_cs_pf_coils] = 1.0e0
 
@@ -1050,13 +1059,13 @@ class PFCoil(Model):
         ] = 0.0e0
         self.data.pf_coil.c_pf_coil_turn[
             self.data.pf_coil.n_pf_cs_plasma_circuits - 1, 2
-        ] = pv.plasma_current
+        ] = self.data.physics.plasma_current
         self.data.pf_coil.c_pf_coil_turn[
             self.data.pf_coil.n_pf_cs_plasma_circuits - 1, 3
-        ] = pv.plasma_current
+        ] = self.data.physics.plasma_current
         self.data.pf_coil.c_pf_coil_turn[
             self.data.pf_coil.n_pf_cs_plasma_circuits - 1, 4
-        ] = pv.plasma_current
+        ] = self.data.physics.plasma_current
         self.data.pf_coil.c_pf_coil_turn[
             self.data.pf_coil.n_pf_cs_plasma_circuits - 1, 5
         ] = 0.0e0
@@ -1726,7 +1735,7 @@ class PFCoil(Model):
                     self.data.pf_coil.n_cs_pf_coils - 1
                 ] - delzoh * (0.5e0 + i)
 
-        rplasma[0] = pv.rmajor  # assumes nplas==1
+        rplasma[0] = self.data.physics.rmajor  # assumes nplas==1
         zplasma[0] = 0.0
 
         # Central Solenoid / plasma mutual inductance
@@ -1797,7 +1806,7 @@ class PFCoil(Model):
         self.data.pf_coil.ind_pf_cs_plasma_mutual[
             self.data.pf_coil.n_pf_cs_plasma_circuits - 1,
             self.data.pf_coil.n_pf_cs_plasma_circuits - 1,
-        ] = pv.ind_plasma
+        ] = self.data.physics.ind_plasma
 
         # PF coil / plasma mutual inductances
         ncoils = 0
@@ -2267,7 +2276,7 @@ class PFCoil(Model):
                 tfv.temp_cs_superconductor_margin_min,
             )
             # only output CS fatigue model for pulsed reactor design
-            if pv.f_c_plasma_inductive > 0.0e-4:
+            if self.data.physics.f_c_plasma_inductive > 0.0e-4:
                 op.ovarre(
                     self.outfile,
                     "Residual hoop stress in CS Steel (Pa)",
@@ -2609,7 +2618,7 @@ class PFCoil(Model):
         # Plasma
         op.write(
             self.outfile,
-            f"Plasma\t\t\t{pv.rmajor:.2e}\t0.0e0\t\t{2.0e0 * pv.rminor:.2e}\t{2.0e0 * pv.rminor * pv.kappa:.2e}\t1.0e0",
+            f"Plasma\t\t\t{self.data.physics.rmajor:.2e}\t0.0e0\t\t{2.0e0 * self.data.physics.rminor:.2e}\t{2.0e0 * self.data.physics.rminor * self.data.physics.kappa:.2e}\t1.0e0",
         )
 
         op.osubhd(self.outfile, "PF Coil Information at Peak Current:")
@@ -3358,7 +3367,7 @@ class CSCoil(Model):
 
             # Calculation of CS fatigue
             # this is only valid for pulsed reactor design
-            if pv.f_c_plasma_inductive > 0.0e-4:
+            if self.data.physics.f_c_plasma_inductive > 0.0e-4:
                 (
                     self.data.cs_fatigue.n_cycle,
                     self.data.cs_fatigue.t_crack_radial,
@@ -4050,9 +4059,9 @@ def peak_b_field_at_pf_coil(
     # Plasma contribution
     if t_b_field_peak > 2:
         kk += 1
-        data.pf_coil.r_pf_cs_current_filaments[kk - 1] = pv.rmajor
+        data.pf_coil.r_pf_cs_current_filaments[kk - 1] = data.physics.rmajor
         data.pf_coil.z_pf_cs_current_filaments[kk - 1] = 0.0e0
-        data.pf_coil.c_pf_cs_current_filaments[kk - 1] = pv.plasma_current
+        data.pf_coil.c_pf_cs_current_filaments[kk - 1] = data.physics.plasma_current
 
     # Calculate the field at the inner and outer edges
     # of the coil of interest

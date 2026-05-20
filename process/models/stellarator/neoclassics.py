@@ -4,7 +4,6 @@ import numpy as np
 
 from process.core import constants
 from process.core.model import Model
-from process.data_structure import physics_variables
 from process.models.stellarator.stellarator import KEV
 
 logger = logging.getLogger(__name__)
@@ -146,126 +145,126 @@ class Neoclassics(Model):
 
         """
         tempe = (
-            physics_variables.temp_plasma_electron_on_axis_kev
-            * (1 - rho**2) ** physics_variables.alphat
+            self.data.physics.temp_plasma_electron_on_axis_kev
+            * (1 - rho**2) ** self.data.physics.alphat
             * KEV
         )
         tempT = (
-            physics_variables.temp_plasma_ion_on_axis_kev
-            * (1 - rho**2) ** physics_variables.alphat
+            self.data.physics.temp_plasma_ion_on_axis_kev
+            * (1 - rho**2) ** self.data.physics.alphat
             * KEV
         )
         tempD = (
-            physics_variables.temp_plasma_ion_on_axis_kev
-            * (1 - rho**2) ** physics_variables.alphat
+            self.data.physics.temp_plasma_ion_on_axis_kev
+            * (1 - rho**2) ** self.data.physics.alphat
             * KEV
         )
         tempa = (
-            physics_variables.temp_plasma_ion_on_axis_kev
-            * (1 - rho**2) ** physics_variables.alphat
+            self.data.physics.temp_plasma_ion_on_axis_kev
+            * (1 - rho**2) ** self.data.physics.alphat
             * KEV
         )
 
         dense = (
-            physics_variables.nd_plasma_electron_on_axis
-            * (1 - rho**2) ** physics_variables.alphan
+            self.data.physics.nd_plasma_electron_on_axis
+            * (1 - rho**2) ** self.data.physics.alphan
         )
         densT = (
-            (1 - physics_variables.f_plasma_fuel_deuterium)
-            * physics_variables.nd_plasma_ions_on_axis
-            * (1 - rho**2) ** physics_variables.alphan
+            (1 - self.data.physics.f_plasma_fuel_deuterium)
+            * self.data.physics.nd_plasma_ions_on_axis
+            * (1 - rho**2) ** self.data.physics.alphan
         )
         densD = (
-            physics_variables.f_plasma_fuel_deuterium
-            * physics_variables.nd_plasma_ions_on_axis
-            * (1 - rho**2) ** physics_variables.alphan
+            self.data.physics.f_plasma_fuel_deuterium
+            * self.data.physics.nd_plasma_ions_on_axis
+            * (1 - rho**2) ** self.data.physics.alphan
         )
         densa = (
-            physics_variables.nd_plasma_alphas_vol_avg
-            * (1 + physics_variables.alphan)
-            * (1 - rho**2) ** physics_variables.alphan
+            self.data.physics.nd_plasma_alphas_vol_avg
+            * (1 + self.data.physics.alphan)
+            * (1 - rho**2) ** self.data.physics.alphan
         )
 
         # Derivatives in real space
         dr_tempe = (
             -2.0
             * 1.0
-            / physics_variables.rminor
-            * physics_variables.temp_plasma_electron_on_axis_kev
+            / self.data.physics.rminor
+            * self.data.physics.temp_plasma_electron_on_axis_kev
             * rho
-            * (1.0 - rho**2) ** (physics_variables.alphat - 1.0)
-            * physics_variables.alphat
+            * (1.0 - rho**2) ** (self.data.physics.alphat - 1.0)
+            * self.data.physics.alphat
             * KEV
         )
         dr_tempT = (
             -2.0
             * 1.0
-            / physics_variables.rminor
-            * physics_variables.temp_plasma_ion_on_axis_kev
+            / self.data.physics.rminor
+            * self.data.physics.temp_plasma_ion_on_axis_kev
             * rho
-            * (1.0 - rho**2) ** (physics_variables.alphat - 1.0)
-            * physics_variables.alphat
+            * (1.0 - rho**2) ** (self.data.physics.alphat - 1.0)
+            * self.data.physics.alphat
             * KEV
         )
         dr_tempD = (
             -2.0
             * 1.0
-            / physics_variables.rminor
-            * physics_variables.temp_plasma_ion_on_axis_kev
+            / self.data.physics.rminor
+            * self.data.physics.temp_plasma_ion_on_axis_kev
             * rho
-            * (1.0 - rho**2) ** (physics_variables.alphat - 1.0)
-            * physics_variables.alphat
+            * (1.0 - rho**2) ** (self.data.physics.alphat - 1.0)
+            * self.data.physics.alphat
             * KEV
         )
         dr_tempa = (
             -2.0
             * 1.0
-            / physics_variables.rminor
-            * physics_variables.temp_plasma_ion_on_axis_kev
+            / self.data.physics.rminor
+            * self.data.physics.temp_plasma_ion_on_axis_kev
             * rho
-            * (1.0 - rho**2) ** (physics_variables.alphat - 1.0)
-            * physics_variables.alphat
+            * (1.0 - rho**2) ** (self.data.physics.alphat - 1.0)
+            * self.data.physics.alphat
             * KEV
         )
 
         dr_dense = (
             -2.0
             * 1.0
-            / physics_variables.rminor
+            / self.data.physics.rminor
             * rho
-            * physics_variables.nd_plasma_electron_on_axis
-            * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
-            * physics_variables.alphan
+            * self.data.physics.nd_plasma_electron_on_axis
+            * (1.0 - rho**2) ** (self.data.physics.alphan - 1.0)
+            * self.data.physics.alphan
         )
         dr_densT = (
             -2.0
             * 1.0
-            / physics_variables.rminor
+            / self.data.physics.rminor
             * rho
-            * (1 - physics_variables.f_plasma_fuel_deuterium)
-            * physics_variables.nd_plasma_ions_on_axis
-            * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
-            * physics_variables.alphan
+            * (1 - self.data.physics.f_plasma_fuel_deuterium)
+            * self.data.physics.nd_plasma_ions_on_axis
+            * (1.0 - rho**2) ** (self.data.physics.alphan - 1.0)
+            * self.data.physics.alphan
         )
         dr_densD = (
             -2.0
             * 1.0
-            / physics_variables.rminor
+            / self.data.physics.rminor
             * rho
-            * physics_variables.f_plasma_fuel_deuterium
-            * physics_variables.nd_plasma_ions_on_axis
-            * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
-            * physics_variables.alphan
+            * self.data.physics.f_plasma_fuel_deuterium
+            * self.data.physics.nd_plasma_ions_on_axis
+            * (1.0 - rho**2) ** (self.data.physics.alphan - 1.0)
+            * self.data.physics.alphan
         )
         dr_densa = (
             -2.0
             * 1.0
-            / physics_variables.rminor
+            / self.data.physics.rminor
             * rho
-            * physics_variables.nd_plasma_alphas_vol_avg
-            * (1 + physics_variables.alphan)
-            * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
-            * physics_variables.alphan
+            * self.data.physics.nd_plasma_alphas_vol_avg
+            * (1 + self.data.physics.alphan)
+            * (1.0 - rho**2) ** (self.data.physics.alphan - 1.0)
+            * self.data.physics.alphan
         )
 
         dens = np.array([dense, densD, densT, densa])
@@ -288,22 +287,22 @@ class Neoclassics(Model):
 
         q_PROCESS = (
             (
-                physics_variables.f_p_alpha_plasma_deposited
-                * physics_variables.pden_alpha_total_mw
-                - physics_variables.pden_plasma_core_rad_mw
+                self.data.physics.f_p_alpha_plasma_deposited
+                * self.data.physics.pden_alpha_total_mw
+                - self.data.physics.pden_plasma_core_rad_mw
             )
-            * physics_variables.vol_plasma
-            / physics_variables.a_plasma_surface
+            * self.data.physics.vol_plasma
+            / self.data.physics.a_plasma_surface
             * self.data.impurity_radiation.radius_plasma_core_norm
         )
         q_PROCESS_r1 = (
             (
-                physics_variables.f_p_alpha_plasma_deposited
-                * physics_variables.pden_alpha_total_mw
-                - physics_variables.pden_plasma_core_rad_mw
+                self.data.physics.f_p_alpha_plasma_deposited
+                * self.data.physics.pden_alpha_total_mw
+                - self.data.physics.pden_plasma_core_rad_mw
             )
-            * physics_variables.vol_plasma
-            / physics_variables.a_plasma_surface
+            * self.data.physics.vol_plasma
+            / self.data.physics.a_plasma_surface
         )
 
         q_neo = sum(self.data.neoclassics.q_flux * 1e-6)
@@ -362,18 +361,18 @@ class Neoclassics(Model):
 
         dndt_neo_fuel = (
             (dndt_neo_D + dndt_neo_T)
-            * physics_variables.a_plasma_surface
+            * self.data.physics.a_plasma_surface
             * self.data.impurity_radiation.radius_plasma_core_norm
         )
         dmdt_neo_fuel = (
-            dndt_neo_fuel * physics_variables.m_fuel_amu * constants.PROTON_MASS * 1.0e6
+            dndt_neo_fuel * self.data.physics.m_fuel_amu * constants.PROTON_MASS * 1.0e6
         )  # mg
         dmdt_neo_fuel_from_e = (
             4
             * dndt_neo_e
-            * physics_variables.a_plasma_surface
+            * self.data.physics.a_plasma_surface
             * self.data.impurity_radiation.radius_plasma_core_norm
-            * physics_variables.m_fuel_amu
+            * self.data.physics.m_fuel_amu
             * constants.PROTON_MASS
             * 1.0e6
         )  # kg
@@ -522,7 +521,7 @@ class Neoclassics(Model):
         )
 
         return (
-            physics_variables.rmajor
+            self.data.physics.rmajor
             * self.data.neoclassics.nu
             / (self.data.neoclassics.iota * v)
         )
@@ -538,20 +537,20 @@ class Neoclassics(Model):
         """
         temp = (
             np.array([
-                physics_variables.temp_plasma_electron_vol_avg_kev,
-                physics_variables.temp_plasma_ion_vol_avg_kev,
-                physics_variables.temp_plasma_ion_vol_avg_kev,
-                physics_variables.temp_plasma_ion_vol_avg_kev,
+                self.data.physics.temp_plasma_electron_vol_avg_kev,
+                self.data.physics.temp_plasma_ion_vol_avg_kev,
+                self.data.physics.temp_plasma_ion_vol_avg_kev,
+                self.data.physics.temp_plasma_ion_vol_avg_kev,
             ])
             * KEV
         )
         density = np.array([
-            physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.nd_plasma_fuel_ions_vol_avg
-            * physics_variables.f_plasma_fuel_deuterium,
-            physics_variables.nd_plasma_fuel_ions_vol_avg
-            * (1 - physics_variables.f_plasma_fuel_deuterium),
-            physics_variables.nd_plasma_alphas_vol_avg,
+            self.data.physics.nd_plasma_electrons_vol_avg,
+            self.data.physics.nd_plasma_fuel_ions_vol_avg
+            * self.data.physics.f_plasma_fuel_deuterium,
+            self.data.physics.nd_plasma_fuel_ions_vol_avg
+            * (1 - self.data.physics.f_plasma_fuel_deuterium),
+            self.data.physics.nd_plasma_alphas_vol_avg,
         ])
 
         mass = np.array([
@@ -602,7 +601,7 @@ class Neoclassics(Model):
                     * lnlambda
                     * phixmgx
                     / (4.0 * np.pi * constants.EPSILON0**2 * mass[j] ** 2 * v**4)
-                    * physics_variables.rmajor
+                    * self.data.physics.rmajor
                     / iota
                 )
         return neoclassics_calc_nu_star_fromT
@@ -613,8 +612,8 @@ class Neoclassics(Model):
             * self.data.neoclassics.temperatures[0]
             / (
                 constants.ELECTRON_CHARGE
-                * physics_variables.rmajor
-                * physics_variables.b_plasma_toroidal_on_axis
+                * self.data.physics.rmajor
+                * self.data.physics.b_plasma_toroidal_on_axis
             )
         )
         vdD = (
@@ -622,8 +621,8 @@ class Neoclassics(Model):
             * self.data.neoclassics.temperatures[1]
             / (
                 constants.ELECTRON_CHARGE
-                * physics_variables.rmajor
-                * physics_variables.b_plasma_toroidal_on_axis
+                * self.data.physics.rmajor
+                * self.data.physics.b_plasma_toroidal_on_axis
             )
         )
         vdT = (
@@ -631,8 +630,8 @@ class Neoclassics(Model):
             * self.data.neoclassics.temperatures[2]
             / (
                 constants.ELECTRON_CHARGE
-                * physics_variables.rmajor
-                * physics_variables.b_plasma_toroidal_on_axis
+                * self.data.physics.rmajor
+                * self.data.physics.b_plasma_toroidal_on_axis
             )
         )
         vda = (
@@ -641,8 +640,8 @@ class Neoclassics(Model):
             / (
                 2.0
                 * constants.ELECTRON_CHARGE
-                * physics_variables.rmajor
-                * physics_variables.b_plasma_toroidal_on_axis
+                * self.data.physics.rmajor
+                * self.data.physics.b_plasma_toroidal_on_axis
             )
         )
 
@@ -690,7 +689,7 @@ class Neoclassics(Model):
             np.pi
             / 4.0
             * self.data.neoclassics.vd**2
-            * physics_variables.rmajor
+            * self.data.physics.rmajor
             / self.data.neoclassics.iota
             / v
         )
@@ -781,29 +780,29 @@ class Neoclassics(Model):
 
     def st_calc_eff_chi(self):
         volscaling = (
-            physics_variables.vol_plasma
+            self.data.physics.vol_plasma
             * self.data.stellarator.f_st_rmajor
             * (
                 self.data.impurity_radiation.radius_plasma_core_norm
-                * physics_variables.rminor
+                * self.data.physics.rminor
                 / self.data.stellarator_config.stella_config_rminor_ref
             )
             ** 2
         )
         surfacescaling = (
-            physics_variables.a_plasma_surface
+            self.data.physics.a_plasma_surface
             * self.data.stellarator.f_st_rmajor
             * (
                 self.data.impurity_radiation.radius_plasma_core_norm
-                * physics_variables.rminor
+                * self.data.physics.rminor
                 / self.data.stellarator_config.stella_config_rminor_ref
             )
         )
 
         nominator = (
-            physics_variables.f_p_alpha_plasma_deposited
-            * physics_variables.pden_alpha_total_mw
-            - physics_variables.pden_plasma_core_rad_mw
+            self.data.physics.f_p_alpha_plasma_deposited
+            * self.data.physics.pden_alpha_total_mw
+            - self.data.physics.pden_plasma_core_rad_mw
         ) * volscaling
 
         # in fortran there was a 0*alphan term which I have removed for obvious reasons
@@ -813,14 +812,14 @@ class Neoclassics(Model):
         denominator = (
             (
                 3
-                * physics_variables.nd_plasma_electron_on_axis
+                * self.data.physics.nd_plasma_electron_on_axis
                 * constants.ELECTRON_CHARGE
-                * physics_variables.temp_plasma_electron_on_axis_kev
+                * self.data.physics.temp_plasma_electron_on_axis_kev
                 * 1e3
-                * physics_variables.alphat
+                * self.data.physics.alphat
                 * self.data.impurity_radiation.radius_plasma_core_norm
                 * (1 - self.data.impurity_radiation.radius_plasma_core_norm**2)
-                ** (physics_variables.alphan + physics_variables.alphat - 1)
+                ** (self.data.physics.alphan + self.data.physics.alphat - 1)
             )
             * surfacescaling
             * 1e-6

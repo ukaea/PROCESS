@@ -8,7 +8,6 @@ from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
     numerics,
-    physics_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
@@ -51,7 +50,7 @@ class Build(Model):
             self.data.current_drive.radius_beam_tangency_max,
         ) = self.calculate_beam_port_size(
             f_radius_beam_tangency_rmajor=self.data.current_drive.f_radius_beam_tangency_rmajor,
-            rmajor=physics_variables.rmajor,
+            rmajor=self.data.physics.rmajor,
             n_tf_coils=tfcoil_variables.n_tf_coils,
             dx_tf_inboard_out_toroidal=tfcoil_variables.dx_tf_inboard_out_toroidal,
             dr_tf_outboard=self.data.build.dr_tf_outboard,
@@ -157,10 +156,10 @@ class Build(Model):
         # Set the X-point heights for the top and bottom of the plasma
         # Assumes top-down plasma symmetry
         self.data.build.z_plasma_xpoint_upper = (
-            physics_variables.rminor * physics_variables.kappa
+            self.data.physics.rminor * self.data.physics.kappa
         )
         self.data.build.z_plasma_xpoint_lower = (
-            physics_variables.rminor * physics_variables.kappa
+            self.data.physics.rminor * self.data.physics.kappa
         )
 
         if output:
@@ -170,10 +169,10 @@ class Build(Model):
                 self.mfile,
                 "Divertor null switch",
                 "(i_single_null)",
-                physics_variables.i_single_null,
+                self.data.physics.i_single_null,
             )
 
-            i_single_null = DivertorNumberModels(physics_variables.i_single_null)
+            i_single_null = DivertorNumberModels(self.data.physics.i_single_null)
             if i_single_null == DivertorNumberModels.DOUBLE_NULL:
                 po.ocmmnt(self.outfile, "Double null case")
 
@@ -806,7 +805,7 @@ class Build(Model):
         )
 
         #  Vertical locations of divertor coils
-        i_single_null = DivertorNumberModels(physics_variables.i_single_null)
+        i_single_null = DivertorNumberModels(self.data.physics.i_single_null)
         if i_single_null == DivertorNumberModels.DOUBLE_NULL:
             self.data.build.z_tf_top = (
                 self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
@@ -849,14 +848,14 @@ class Build(Model):
         divht:
             divertor height (m)
         """
-        if physics_variables.itart == 1:
-            return 1.75e0 * physics_variables.rminor
+        if self.data.physics.itart == 1:
+            return 1.75e0 * self.data.physics.rminor
         #  Conventional tokamak divertor model
-        #  options for seperate upper and lower physics_variables.triangularity
+        #  options for seperate upper and lower self.data.physics.triangularity
 
-        kap = physics_variables.kappa
-        triu = physics_variables.triang
-        tril = physics_variables.triang
+        kap = self.data.physics.kappa
+        triu = self.data.physics.triang
+        tril = self.data.physics.triang
 
         # New method, assuming straight legs -- superceded by new method 26/5/2016
         # Assumed 90 degrees at X-pt -- wrong#
@@ -871,26 +870,26 @@ class Build(Model):
         # Find radius of inner and outer plasma arcs
 
         rco = 0.5 * np.sqrt(
-            (physics_variables.rminor**2 * ((tril + 1.0e0) ** 2 + kap**2) ** 2)
+            (self.data.physics.rminor**2 * ((tril + 1.0e0) ** 2 + kap**2) ** 2)
             / ((tril + 1.0e0) ** 2)
         )
         rci = 0.5 * np.sqrt(
-            (physics_variables.rminor**2 * ((tril - 1.0e0) ** 2 + kap**2) ** 2)
+            (self.data.physics.rminor**2 * ((tril - 1.0e0) ** 2 + kap**2) ** 2)
             / ((tril - 1.0e0) ** 2)
         )
 
         # Find angles between vertical and legs
         # Inboard arc angle = outboard leg angle
 
-        thetao = np.arcsin(1.0e0 - (physics_variables.rminor * (1.0e0 - tril)) / rci)
+        thetao = np.arcsin(1.0e0 - (self.data.physics.rminor * (1.0e0 - tril)) / rci)
 
         # Outboard arc angle = inboard leg angle
 
-        thetai = np.arcsin(1.0e0 - (physics_variables.rminor * (1.0e0 + tril)) / rco)
+        thetai = np.arcsin(1.0e0 - (self.data.physics.rminor * (1.0e0 + tril)) / rco)
 
         #  Position of lower x-pt
-        rxpt = physics_variables.rmajor - tril * physics_variables.rminor
-        zxpt = -1.0e0 * kap * physics_variables.rminor
+        rxpt = self.data.physics.rmajor - tril * self.data.physics.rminor
+        zxpt = -1.0e0 * kap * self.data.physics.rminor
 
         # Position of inner strike point
         # rspi = rxpt - self.data.build.plsepi*cos(alphad)
@@ -937,8 +936,8 @@ class Build(Model):
                 po.oheadr(self.outfile, "Divertor build and plasma position")
                 po.ocmmnt(self.outfile, "Divertor Configuration = Single Null Divertor")
                 po.oblnkl(self.outfile)
-                ptop_radial = physics_variables.rmajor - triu * physics_variables.rminor
-                ptop_vertical = kap * physics_variables.rminor
+                ptop_radial = self.data.physics.rmajor - triu * self.data.physics.rminor
+                ptop_vertical = kap * self.data.physics.rminor
                 po.ovarrf(
                     self.outfile,
                     "Plasma top position, radial (m)",
@@ -957,7 +956,7 @@ class Build(Model):
                     self.outfile,
                     "Plasma geometric centre, radial (m)",
                     "(rmajor.)",
-                    physics_variables.rmajor,
+                    self.data.physics.rmajor,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1151,8 +1150,8 @@ class Build(Model):
                 po.ocmmnt(self.outfile, "Divertor Configuration = Double Null Divertor")
                 po.oblnkl(self.outfile)
                 # Assume upper and lower divertors geometries are symmetric.
-                ptop_radial = physics_variables.rmajor - triu * physics_variables.rminor
-                ptop_vertical = kap * physics_variables.rminor
+                ptop_radial = self.data.physics.rmajor - triu * self.data.physics.rminor
+                ptop_vertical = kap * self.data.physics.rminor
                 po.ovarrf(
                     self.outfile,
                     "Plasma top position, radial (m)",
@@ -1171,7 +1170,7 @@ class Build(Model):
                     self.outfile,
                     "Plasma geometric centre, radial (m)",
                     "(rmajor.)",
-                    physics_variables.rmajor,
+                    self.data.physics.rmajor,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1183,7 +1182,7 @@ class Build(Model):
                 )
                 po.ovarrf(
                     self.outfile,
-                    "Plasma physics_variables.triangularity",
+                    "Plasma self.data.physics.triangularity",
                     "(tril)",
                     tril,
                     "OP ",
@@ -1648,7 +1647,7 @@ class Build(Model):
             self.data.build.dr_blkt_inboard + self.data.build.dr_blkt_outboard
         )
 
-        i_single_null = DivertorNumberModels(physics_variables.i_single_null)
+        i_single_null = DivertorNumberModels(self.data.physics.i_single_null)
         if i_single_null == DivertorNumberModels.SINGLE_NULL:
             #  Check if self.data.build.dz_fw_plasma_gap has been set too small
             self.data.build.dz_fw_plasma_gap = max(
@@ -1734,12 +1733,12 @@ class Build(Model):
             )
 
         # Radius of the centrepost at the top of the machine
-        if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
+        if self.data.physics.itart == 1 and tfcoil_variables.i_tf_sup != 1:
             # self.data.build.r_cp_top is set using the plasma shape
             if self.data.build.i_r_cp_top == 0:
                 self.data.build.r_cp_top = (
-                    physics_variables.rmajor
-                    - physics_variables.rminor * physics_variables.triang
+                    self.data.physics.rmajor
+                    - self.data.physics.rminor * self.data.physics.triang
                     - (
                         self.data.build.dr_tf_shld_gap
                         + self.data.build.dr_shld_thermal_inboard
@@ -1790,13 +1789,13 @@ class Build(Model):
                     self.data.build.f_r_cp * self.data.build.r_tf_inboard_out
                 )
 
-        else:  # End of physics_variables.itart == 1 .and. tfcoil_variables.i_tf_sup /= 1
+        else:  # End of self.data.physics.itart == 1 .and. tfcoil_variables.i_tf_sup /= 1
             self.data.build.r_cp_top = self.data.build.r_tf_inboard_out
 
         if self.data.build.i_r_cp_top != 0 and (
             self.data.build.r_cp_top
-            > physics_variables.rmajor
-            - physics_variables.rminor * physics_variables.triang
+            > self.data.physics.rmajor
+            - self.data.physics.rminor * self.data.physics.triang
             - (
                 self.data.build.dr_tf_shld_gap
                 + self.data.build.dr_shld_thermal_inboard
@@ -1839,20 +1838,20 @@ class Build(Model):
             self.data.build.r_sh_inboard_in + self.data.build.dr_shld_inboard
         )
 
-        #  Radial build to centre of plasma (should be equal to physics_variables.rmajor)
+        #  Radial build to centre of plasma (should be equal to self.data.physics.rmajor)
         self.data.build.rbld = (
             self.data.build.r_sh_inboard_out
             + self.data.build.dr_shld_blkt_gap
             + self.data.build.dr_blkt_inboard
             + self.data.build.dr_fw_inboard
             + self.data.build.dr_fw_plasma_gap_inboard
-            + physics_variables.rminor
+            + self.data.physics.rminor
         )
 
         #  Radius to inner edge of inboard shield
         self.data.build.r_shld_inboard_inner = (
-            physics_variables.rmajor
-            - physics_variables.rminor
+            self.data.physics.rmajor
+            - self.data.physics.rminor
             - self.data.build.dr_fw_plasma_gap_inboard
             - self.data.build.dr_fw_inboard
             - self.data.build.dr_blkt_inboard
@@ -1861,8 +1860,8 @@ class Build(Model):
 
         #  Radius to outer edge of outboard shield
         self.data.build.r_shld_outboard_outer = (
-            physics_variables.rmajor
-            + physics_variables.rminor
+            self.data.physics.rmajor
+            + self.data.physics.rminor
             + self.data.build.dr_fw_plasma_gap_outboard
             + self.data.build.dr_fw_outboard
             + self.data.build.dr_blkt_outboard
@@ -1901,8 +1900,8 @@ class Build(Model):
             ripple_b_tf_plasma_edge_max=tfcoil_variables.ripple_b_tf_plasma_edge_max,
             r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
             n_tf_coils=tfcoil_variables.n_tf_coils,
-            rmajor=physics_variables.rmajor,
-            rminor=physics_variables.rminor,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
             r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
             r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
             r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
@@ -1942,8 +1941,8 @@ class Build(Model):
             ripple_b_tf_plasma_edge_max=tfcoil_variables.ripple_b_tf_plasma_edge_max,
             r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
             n_tf_coils=tfcoil_variables.n_tf_coils,
-            rmajor=physics_variables.rmajor,
-            rminor=physics_variables.rminor,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
             r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
             r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
             r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
@@ -1974,7 +1973,7 @@ class Build(Model):
                     diagnostic = (
                         tfcoil_variables.dx_tf_wp_primary_toroidal
                         * tfcoil_variables.n_tf_coils
-                        / physics_variables.rmajor
+                        / self.data.physics.rmajor
                     )
                     logger.warning(
                         "(TF coil ripple calculation) Dimensionless coil width X out of fitted range. %s",
@@ -1986,7 +1985,7 @@ class Build(Model):
                     )
                 else:
                     diagnostic = (
-                        physics_variables.rmajor + physics_variables.rminor
+                        self.data.physics.rmajor + self.data.physics.rminor
                     ) / self.data.build.r_tf_outboard_mid
 
                     logger.warning(
@@ -2004,7 +2003,7 @@ class Build(Model):
                 self.outfile,
                 "Inboard build thickness (m)",
                 "(dr_inboard_build)",
-                physics_variables.rmajor - physics_variables.rminor,
+                self.data.physics.rmajor - self.data.physics.rminor,
                 "OP ",
             )
 
@@ -2187,19 +2186,19 @@ class Build(Model):
                 radius,
             ])
 
-            radius += physics_variables.rminor
+            radius += self.data.physics.rminor
             radial_build_data.append([
                 "Plasma geometric centre",
                 "rminor",
-                physics_variables.rminor,
+                self.data.physics.rminor,
                 radius,
             ])
 
-            radius += physics_variables.rminor
+            radius += self.data.physics.rminor
             radial_build_data.append([
                 "Plasma outboard edge",
                 "rminor",
-                physics_variables.rminor,
+                self.data.physics.rminor,
                 radius,
             ])
 

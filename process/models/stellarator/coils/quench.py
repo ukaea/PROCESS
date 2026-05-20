@@ -4,7 +4,6 @@ import numpy as np
 
 from process.core.model import DataStructure
 from process.data_structure import (
-    physics_variables,
     rebco_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
@@ -26,8 +25,8 @@ def calculate_quench_protection(coilcurrent, data: DataStructure):
     # This copied from the tokamak module:
     # Radial position of vacuum vessel [m]
     rad_vv_in = (
-        physics_variables.rmajor
-        - physics_variables.rminor
+        data.physics.rmajor
+        - data.physics.rminor
         - data.build.dr_fw_plasma_gap_inboard
         - data.build.dr_fw_inboard
         - data.build.dr_blkt_inboard
@@ -35,8 +34,8 @@ def calculate_quench_protection(coilcurrent, data: DataStructure):
         - data.build.dr_shld_inboard
     )
     rad_vv_out = (
-        physics_variables.rmajor
-        + physics_variables.rminor
+        data.physics.rmajor
+        + data.physics.rminor
         + data.build.dr_fw_plasma_gap_outboard
         + data.build.dr_fw_outboard
         + data.build.dr_blkt_outboard
@@ -47,7 +46,7 @@ def calculate_quench_protection(coilcurrent, data: DataStructure):
     # Stellarator version is working on the W7-X scaling, so we should actual use vv r_major
     # plasma r_major is just an approximation, but exact calculations require 3D geometry
     # Maybe it can be added to the stella_config file in the future
-    rad_vv = physics_variables.rmajor
+    rad_vv = data.physics.rmajor
 
     # MN/m^3
     f_vv_actual = calculate_vv_max_force_density_from_W7X_scaling(rad_vv, data)
@@ -132,11 +131,11 @@ def calculate_vv_max_force_density_from_W7X_scaling(
         force_density_ref
         * (
             b_ref
-            / physics_variables.b_plasma_toroidal_on_axis
+            / data.physics.b_plasma_toroidal_on_axis
             * i_total_ref
             / tfcoil_variables.c_tf_total
             * rminor_ref**2
-            / physics_variables.rminor**2
+            / data.physics.rminor**2
         )
         ** (-1)
         * (
