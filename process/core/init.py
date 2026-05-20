@@ -19,7 +19,6 @@ from process.core.solver.constraints import ConstraintManager
 from process.data_structure.impurity_radiation_module import (
     init_impurity_radiation_module,
 )
-from process.data_structure.neoclassics_variables import init_neoclassics_variables
 from process.data_structure.physics_variables import (
     init_physics_module,
     init_physics_variables,
@@ -250,7 +249,6 @@ def init_all_module_vars():
     init_tfcoil_variables()
     constants.init_constants()
     init_rebco_variables()
-    init_neoclassics_variables()
 
 
 def check_process(inputs, data):  # noqa: ARG001
