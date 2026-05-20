@@ -1050,6 +1050,20 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.j_tf_wp_quench_heat_max,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Max allowed fast neutron fluence on TF coil (n/m²)",
+            "(nflutfmax)",
+            self.data.constraints.nflutfmax,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Residual resistivity ratio of TF coil copper",
+            "(rrr_tf_cu)",
+            tfcoil_variables.rrr_tf_cu,
+            "OP ",
+        )
 
     @staticmethod
     def calculate_superconductor_temperature_margin(

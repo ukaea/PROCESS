@@ -15251,7 +15251,7 @@ def main_plot(
             f_he=m_file.get("f_a_tf_turn_cable_space_cooling", scan=scan),
             t_he_peak=m_file.get("tftmp", scan=scan),
             temp_quench_max=m_file.get("temp_tf_conductor_quench_max", scan=scan),
-            cu_rrr=100.0,
+            cu_rrr=m_file.get("rrr_tf_cu", scan=scan),
             t_quench_detection=m_file.get("t_tf_quench_detection", scan=scan),
             fluence=m_file.get("nflutfmax", scan=scan),
             j_operating=m_file.get("j_tf_wp", scan=scan),
