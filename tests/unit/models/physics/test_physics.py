@@ -3430,19 +3430,19 @@ def test_calculate_beta_norm_max_menard():
     assert result == pytest.approx(4.197251361676802, abs=0.000001)
 
 
-def test_calculate_beta_norm_max_thloreus():
-    """Test calculate_beta_norm_max_thloreus()"""
+def test_calculate_beta_norm_max_tholerus():
+    """Test calculate_beta_norm_max_tholerus()"""
     c_beta = 0.5
     pres_plasma_on_axis = 2.0
     pres_plasma_vol_avg = 1.0
-    result = PlasmaBeta.calculate_beta_norm_max_thloreus(
+    result = PlasmaBeta.calculate_beta_norm_max_tholerus(
         c_beta, pres_plasma_on_axis, pres_plasma_vol_avg
     )
     assert result == pytest.approx(5.075, abs=0.00001)
 
 
 def test_calculate_beta_norm_max_stambaugh():
-    """Test calculate_beta_norm_max_thloreus()"""
+    """Test calculate_beta_norm_max_tholerus()"""
     f_c_plasma_bootstrap = 0.7
     kappa = 2.0
     aspect = 2.5

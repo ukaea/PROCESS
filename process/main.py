@@ -754,6 +754,8 @@ class Models:
             self.neoclassics,
             self.plasma_inductance,
             self.fusion_reaction_rate,
+            self.ne_profile,
+            self.te_profile,
         )
 
     def setup_data_structure(self):
