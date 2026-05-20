@@ -127,7 +127,7 @@ lablcc: list[str] = None
 * (32) TF coil conduit stress upper limit (SCTF) (itv 49,56,57,58,59,60,24)
 * (33) I_op / I_critical (TF coil) (SCTF) (itv 50,56,57,58,59,60,24)
 * (34) Dump voltage upper limit (SCTF) (itv 51,52,56,57,58,59,60,24)
-* (35) J_winding pack/J_protection upper limit (SCTF) (itv 53,56,57,58,59,60,24)
+* (35) TF Quench Hotspot J limit (SCTF) (itv 53,56,57,58,59,60,24)
 * (36) TF coil temperature margin lower limit (SCTF) (itv 54,55,56,57,58,59,60,24)
 * (37) Current drive gamma upper limit (itv 40,47)
 * (38) First wall coolant temperature rise upper limit (itv 62)
