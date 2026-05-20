@@ -5,7 +5,6 @@ import pytest
 
 from process.data_structure import (
     numerics,
-    pf_power_variables,
     physics_variables,
 )
 
@@ -1198,7 +1197,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
         tohswgparam.t_current_ramp_up_min,
     )
 
-    monkeypatch.setattr(pf_power_variables, "vpfskv", tohswgparam.vpfskv)
+    monkeypatch.setattr(pulse.data.pf_power, "vpfskv", tohswgparam.vpfskv)
 
     monkeypatch.setattr(
         pulse.data.pf_coil,

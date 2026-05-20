@@ -2,80 +2,56 @@
 Module containing global variables relating to the PF coil power conversion system
 """
 
+from dataclasses import dataclass, field
+
 import numpy as np
 
-acptmax: float = None
-"""average of currents in PF circuits (kA)"""
 
-ensxpfm: float = None
-"""maximum stored energy in the PF circuits (MJ)"""
+@dataclass
+class PFPowerData:
+    acptmax: float = 0.0
+    """average of currents in PF circuits (kA)"""
 
-i_pf_energy_storage_source: int = None
-"""Switch for PF coil energy storage option:
- - =1 all power from MGF (motor-generator flywheel) units
- - =2 all pulsed power from line
- - =3 PF power from MGF, heating from line
-   (In fact, options 1 and 3 are not treated differently)
-"""
+    ensxpfm: float = 0.0
+    """maximum stored energy in the PF circuits (MJ)"""
 
-pfckts: float = None
-"""number of PF coil circuits"""
+    i_pf_energy_storage_source: int = 2
+    """Switch for PF coil energy storage option:
+    - =1 all power from MGF (motor-generator flywheel) units
+    - =2 all pulsed power from line
+    - =3 PF power from MGF, heating from line
+    (In fact, options 1 and 3 are not treated differently)
+    """
 
-spfbusl: float = None
-"""total PF coil circuit bus length (m)"""
+    pfckts: float = 0.0
+    """number of PF coil circuits"""
 
-spsmva: float = None
-"""sum of PF power supply ratings (MVA)"""
+    spfbusl: float = 0.0
+    """total PF coil circuit bus length (m)"""
 
-srcktpm: float = None
-"""sum of resistive PF coil power (kW)"""
+    spsmva: float = 0.0
+    """sum of PF power supply ratings (MVA)"""
 
-vpfskv: float = None
-"""PF coil voltage (kV)"""
+    srcktpm: float = 0.0
+    """sum of resistive PF coil power (kW)"""
 
-peakpoloidalpower: float = None
-"""Peak absolute rate of change of stored energy in poloidal field (MW)"""
+    vpfskv: float = 0.0
+    """PF coil voltage (kV)"""
 
-maxpoloidalpower: float = None
-"""Maximum permitted absolute rate of change of stored energy in poloidal field (MW)"""
+    peakpoloidalpower: float = 0.0
+    """Peak absolute rate of change of stored energy in poloidal field (MW)"""
 
-poloidalpower: list[float] = None
-"""Poloidal power usage at time t (MW)"""
+    maxpoloidalpower: float = 1000.0
+    """Maximum permitted absolute rate of change of stored energy in poloidal field (MW)"""
 
-f_p_pf_energy_store_loss: float = None
-"""Fraction of PF magnetic energy moved into/out of storage that is lost each time"""
+    poloidalpower: list[float] = field(default_factory=lambda: np.zeros(5))
+    """Poloidal power usage at time t (MW)"""
 
-f_p_pf_psu_loss: float = None
-"""Fraction of inductive power flow lost in the PF power supplies/converters."""
+    f_p_pf_energy_store_loss: float = 0.1
+    """Fraction of PF magnetic energy moved into/out of storage that is lost each time"""
+
+    f_p_pf_psu_loss: float = 0.1
+    """Fraction of inductive power flow lost in the PF power supplies/converters."""
 
 
-def init_pf_power_variables():
-    """Initialise PF coil power variables"""
-    global \
-        acptmax, \
-        ensxpfm, \
-        i_pf_energy_storage_source, \
-        pfckts, \
-        spfbusl, \
-        spsmva, \
-        srcktpm, \
-        vpfskv, \
-        peakpoloidalpower, \
-        maxpoloidalpower, \
-        poloidalpower, \
-        f_p_pf_energy_store_loss, \
-        f_p_pf_psu_loss
-
-    acptmax = 0.0
-    ensxpfm = 0.0
-    i_pf_energy_storage_source = 2
-    pfckts = 0.0
-    spfbusl = 0.0
-    spsmva = 0.0
-    srcktpm = 0.0
-    vpfskv = 0.0
-    peakpoloidalpower = 0.0
-    maxpoloidalpower = 1000.0
-    poloidalpower = np.zeros(5)
-    f_p_pf_energy_store_loss = 0.1
-    f_p_pf_psu_loss = 0.1
+CREATE_DICTS_FROM_DATACLASS = PFPowerData

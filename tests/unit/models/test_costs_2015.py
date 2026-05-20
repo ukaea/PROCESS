@@ -6,7 +6,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    pf_power_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -15944,7 +15943,7 @@ def test_calc_remaining_subsystems(calcremainingsubsystemsparam, monkeypatch, co
     )
 
     monkeypatch.setattr(
-        pf_power_variables,
+        costs2015.data.pf_power,
         "ensxpfm",
         calcremainingsubsystemsparam.ensxpfm,
     )

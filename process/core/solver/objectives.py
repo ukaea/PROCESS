@@ -3,7 +3,6 @@ import numpy as np
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 from process.data_structure import (
-    pf_power_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -70,7 +69,7 @@ def objective_function(minmax: int, data: DataStructure) -> float:
             objective_metric = physics_variables.pflux_fw_neutron_mw
         case 4:
             objective_metric = (
-                tfcoil_variables.tfcmw + 1e-3 * pf_power_variables.srcktpm
+                tfcoil_variables.tfcmw + 1e-3 * data.pf_power.srcktpm
             ) / 10.0
         case 5:
             objective_metric = physics_variables.p_fusion_total_mw / (

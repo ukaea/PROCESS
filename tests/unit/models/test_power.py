@@ -5,7 +5,6 @@ import pytest
 
 from process.data_structure import (
     numerics,
-    pf_power_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -1761,29 +1760,29 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(power.data.heat_transport, "peakmva", pfpwrparam.peakmva)
 
-    monkeypatch.setattr(pf_power_variables, "pfckts", pfpwrparam.pfckts)
+    monkeypatch.setattr(power.data.pf_power, "pfckts", pfpwrparam.pfckts)
 
     monkeypatch.setattr(
-        pf_power_variables, "maxpoloidalpower", pfpwrparam.maxpoloidalpower
+        power.data.pf_power, "maxpoloidalpower", pfpwrparam.maxpoloidalpower
     )
 
     monkeypatch.setattr(
-        pf_power_variables, "peakpoloidalpower", pfpwrparam.peakpoloidalpower
+        power.data.pf_power, "peakpoloidalpower", pfpwrparam.peakpoloidalpower
     )
 
-    monkeypatch.setattr(pf_power_variables, "spfbusl", pfpwrparam.spfbusl)
+    monkeypatch.setattr(power.data.pf_power, "spfbusl", pfpwrparam.spfbusl)
 
-    monkeypatch.setattr(pf_power_variables, "poloidalpower", pfpwrparam.poloidalpower)
+    monkeypatch.setattr(power.data.pf_power, "poloidalpower", pfpwrparam.poloidalpower)
 
-    monkeypatch.setattr(pf_power_variables, "spsmva", pfpwrparam.spsmva)
+    monkeypatch.setattr(power.data.pf_power, "spsmva", pfpwrparam.spsmva)
 
-    monkeypatch.setattr(pf_power_variables, "vpfskv", pfpwrparam.vpfskv)
+    monkeypatch.setattr(power.data.pf_power, "vpfskv", pfpwrparam.vpfskv)
 
-    monkeypatch.setattr(pf_power_variables, "ensxpfm", pfpwrparam.ensxpfm)
+    monkeypatch.setattr(power.data.pf_power, "ensxpfm", pfpwrparam.ensxpfm)
 
-    monkeypatch.setattr(pf_power_variables, "acptmax", pfpwrparam.acptmax)
+    monkeypatch.setattr(power.data.pf_power, "acptmax", pfpwrparam.acptmax)
 
-    monkeypatch.setattr(pf_power_variables, "srcktpm", pfpwrparam.srcktpm)
+    monkeypatch.setattr(power.data.pf_power, "srcktpm", pfpwrparam.srcktpm)
 
     monkeypatch.setattr(
         power.data.pf_coil, "n_pf_coil_groups", pfpwrparam.n_pf_coil_groups
@@ -1871,27 +1870,27 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
         pfpwrparam.expected_peakmva
     )
 
-    assert pf_power_variables.pfckts == pytest.approx(pfpwrparam.expected_pfckts)
+    assert power.data.pf_power.pfckts == pytest.approx(pfpwrparam.expected_pfckts)
 
-    assert pf_power_variables.peakpoloidalpower == pytest.approx(
+    assert power.data.pf_power.peakpoloidalpower == pytest.approx(
         pfpwrparam.expected_peakpoloidalpower
     )
 
-    assert pf_power_variables.spfbusl == pytest.approx(pfpwrparam.expected_spfbusl)
+    assert power.data.pf_power.spfbusl == pytest.approx(pfpwrparam.expected_spfbusl)
 
-    assert pf_power_variables.poloidalpower == pytest.approx(
+    assert power.data.pf_power.poloidalpower == pytest.approx(
         pfpwrparam.expected_poloidalpower
     )
 
-    assert pf_power_variables.spsmva == pytest.approx(pfpwrparam.expected_spsmva)
+    assert power.data.pf_power.spsmva == pytest.approx(pfpwrparam.expected_spsmva)
 
-    assert pf_power_variables.vpfskv == pytest.approx(pfpwrparam.expected_vpfskv)
+    assert power.data.pf_power.vpfskv == pytest.approx(pfpwrparam.expected_vpfskv)
 
-    assert pf_power_variables.ensxpfm == pytest.approx(pfpwrparam.expected_ensxpfm)
+    assert power.data.pf_power.ensxpfm == pytest.approx(pfpwrparam.expected_ensxpfm)
 
-    assert pf_power_variables.acptmax == pytest.approx(pfpwrparam.expected_acptmax)
+    assert power.data.pf_power.acptmax == pytest.approx(pfpwrparam.expected_acptmax)
 
-    assert pf_power_variables.srcktpm == pytest.approx(pfpwrparam.expected_srcktpm)
+    assert power.data.pf_power.srcktpm == pytest.approx(pfpwrparam.expected_srcktpm)
 
 
 class AcpowParam(NamedTuple):
@@ -2059,12 +2058,12 @@ def test_acpow(acpowparam, monkeypatch, power):
     monkeypatch.setattr(power.data.heat_transport, "pacpmw", acpowparam.pacpmw)
 
     monkeypatch.setattr(
-        pf_power_variables,
+        power.data.pf_power,
         "i_pf_energy_storage_source",
         acpowparam.i_pf_energy_storage_source,
     )
 
-    monkeypatch.setattr(pf_power_variables, "srcktpm", acpowparam.srcktpm)
+    monkeypatch.setattr(power.data.pf_power, "srcktpm", acpowparam.srcktpm)
 
     power.acpow(output=False)
 

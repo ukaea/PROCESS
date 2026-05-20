@@ -7,7 +7,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    pf_power_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -2132,7 +2131,7 @@ class Costs(Model):
         #  Account 225.2.2 : PF coil instrumentation and control
 
         self.data.costs.c22522 = (
-            1.0e-6 * self.data.costs.ucpfic * pf_power_variables.pfckts * 30.0e0
+            1.0e-6 * self.data.costs.ucpfic * self.data.pf_power.pfckts * 30.0e0
         )
         self.data.costs.c22522 = self.data.costs.fkind * self.data.costs.c22522
 
@@ -2141,19 +2140,19 @@ class Costs(Model):
         self.data.costs.c22523 = (
             1.0e-6
             * self.data.costs.ucpfb
-            * pf_power_variables.spfbusl
-            * pf_power_variables.acptmax
+            * self.data.pf_power.spfbusl
+            * self.data.pf_power.acptmax
         )
         self.data.costs.c22523 = self.data.costs.fkind * self.data.costs.c22523
 
         #  Account 225.2.4 : PF coil burn power supplies
 
-        if pf_power_variables.pfckts != 0.0e0:  # noqa: RUF069
+        if self.data.pf_power.pfckts != 0.0e0:  # noqa: RUF069
             self.data.costs.c22524 = (
                 1.0e-6
                 * self.data.costs.ucpfbs
-                * pf_power_variables.pfckts
-                * (pf_power_variables.srcktpm / pf_power_variables.pfckts) ** 0.7e0
+                * self.data.pf_power.pfckts
+                * (self.data.pf_power.srcktpm / self.data.pf_power.pfckts) ** 0.7e0
             )
         else:
             self.data.costs.c22524 = 0.0e0
@@ -2165,22 +2164,22 @@ class Costs(Model):
         self.data.costs.c22525 = (
             1.0e-6
             * self.data.costs.ucpfbk
-            * pf_power_variables.pfckts
-            * (pf_power_variables.acptmax * pf_power_variables.vpfskv) ** 0.7e0
+            * self.data.pf_power.pfckts
+            * (self.data.pf_power.acptmax * self.data.pf_power.vpfskv) ** 0.7e0
         )
         self.data.costs.c22525 = self.data.costs.fkind * self.data.costs.c22525
 
         #  Account 225.2.6 : PF coil dump resistors
 
         self.data.costs.c22526 = (
-            1.0e-6 * self.data.costs.ucpfdr1 * pf_power_variables.ensxpfm
+            1.0e-6 * self.data.costs.ucpfdr1 * self.data.pf_power.ensxpfm
         )
         self.data.costs.c22526 = self.data.costs.fkind * self.data.costs.c22526
 
         #  Account 225.2.7 : PF coil AC breakers
 
         self.data.costs.c22527 = (
-            1.0e-6 * self.data.costs.ucpfcb * pf_power_variables.pfckts
+            1.0e-6 * self.data.costs.ucpfcb * self.data.pf_power.pfckts
         )
         self.data.costs.c22527 = self.data.costs.fkind * self.data.costs.c22527
 
