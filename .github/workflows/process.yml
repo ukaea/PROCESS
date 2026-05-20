@@ -253,3 +253,29 @@ jobs:
       - name: Deploy GitHub pages
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
+
+  examples:
+    # Job to make examples browser link
+    concurrency:
+      group: docs-jobs
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    # depends on tracking; only runs upon merge to main
+    needs: tracking
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Setup python and hatch
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
+        with:
+          python-version: ${{ env.python-version }}
+      - run: git config --global --add safe.directory '*'
+      - name: Build the JupyterLite site
+        run: |
+          jupyter lite build --contents examples/ --output-dir dist
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist 
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

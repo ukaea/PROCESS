@@ -60,7 +60,7 @@ test = [
   "filelock",
   "process[examples]"
 ]
-examples = ["jupyter==1.0.0", "jupytext"]
+examples = ["jupyter==1.0.0", "jupytext", "jupyterlite-core==0.7.1", "jupyterlab~=4.5.1", "notebook~=7.5.1"]
 plotly = ["plotly>=5.15.0,<6"]
 docs = [
   "mkdocs>=1.1",
