@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from process.models.build import DivertorNumberModels
+from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.physics.plasma_geometry import PlasmaShapeModelType
 
 

@@ -8,7 +8,17 @@ for a tokamak device.
 Module containing global variables relating to the plasma physics
 """
 
+from enum import IntEnum
+
 import numpy as np
+
+
+class DivertorNumberModels(IntEnum):
+    """Enum for divertor number models. `i_single_null` is the index for this enum."""
+
+    DOUBLE_NULL = 0
+    SINGLE_NULL = 1
+
 
 # From physics.f90:
 iscz: int = None

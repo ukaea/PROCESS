@@ -25,7 +25,7 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.models.build import DivertorNumberModels
+from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.superconductors import SuperconductorModel
 
 if TYPE_CHECKING:

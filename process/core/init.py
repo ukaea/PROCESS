@@ -22,6 +22,7 @@ from process.data_structure.impurity_radiation_module import (
 from process.data_structure.neoclassics_variables import init_neoclassics_variables
 from process.data_structure.pf_power_variables import init_pf_power_variables
 from process.data_structure.physics_variables import (
+    DivertorNumberModels,
     init_physics_module,
     init_physics_variables,
 )
@@ -32,7 +33,6 @@ from process.data_structure.superconducting_tf_coil_variables import (
     init_superconducting_tf_coil_variables,
 )
 from process.data_structure.tfcoil_variables import init_tfcoil_variables
-from process.models.build import DivertorNumberModels
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,

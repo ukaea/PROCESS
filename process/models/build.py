@@ -12,6 +12,7 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
+from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.physics.current_drive import (
     CurrentDriveMethodType,
     CurrentDriveModel,
@@ -20,13 +21,6 @@ from process.models.tfcoil.base import TFCoilShapeModel
 from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
 
 logger = logging.getLogger(__name__)
-
-
-class DivertorNumberModels(IntEnum):
-    """Enum for divertor number models. `i_single_null` is the index for this enum."""
-
-    DOUBLE_NULL = 0
-    SINGLE_NULL = 1
 
 
 class FwBlktVVShape(IntEnum):
@@ -812,6 +806,7 @@ class Build(Model):
         )
 
         #  Vertical locations of divertor coils
+        i_single_null = DivertorNumberModels(physics_variables.i_single_null)
         if i_single_null == DivertorNumberModels.DOUBLE_NULL:
             self.data.build.z_tf_top = (
                 self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard

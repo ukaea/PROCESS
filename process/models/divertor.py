@@ -8,7 +8,7 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
-from process.models.build import DivertorNumberModels
+from process.data_structure.physics_variables import DivertorNumberModels
 
 
 class Divertor(Model):
