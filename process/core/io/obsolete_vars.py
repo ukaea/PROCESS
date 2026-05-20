@@ -448,6 +448,14 @@ OBS_VARS = {
     "vcool": "vel_cp_coolant_midplane",
     "rcool": "radius_cp_coolant_channel",
     "fl_h_threshold": None,
+    "dx_hts_tape_copper": "dx_tf_hts_tape_copper",
+    "dx_croco_strand_copper": "dx_tf_croco_strand_copper",
+    "dx_hts_tape_hastelloy": "dx_tf_hts_tape_hastelloy",
+    "dx_hts_tape_rebco": "dx_tf_hts_tape_rebco",
+    "oacdcp": "j_tf_coil_full_area",
+    "dx_hts_tape_total": "dx_tf_hts_tape_total",
+    "dr_hts_tape": "dr_tf_hts_tape",
+    "coppera_m2_max": "tf_coppera_m2_max",
 }
 
 OBS_VARS_HELP = {
