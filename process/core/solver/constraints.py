@@ -511,7 +511,7 @@ def constraint_equation_11(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(12, "V.sec", ">=")
+@ConstraintManager.register_constraint(12, "Vs", ">=")
 def constraint_equation_12(constraint_registration, data):
     """Equation for volt-second capability lower limit
 
@@ -1141,7 +1141,7 @@ def constraint_manager_45(constraint_registration, _data):
 
 @ConstraintManager.register_constraint(46, "", "<=")
 def constraint_equation_46(constraint_registration, _data):
-    """Equation for Ip/Irod upper limit (TART)
+    """Equation for Iₚ/I_rod upper limit (TART)
 
     eps: inverse aspect ratio
     c_tf_total: total (summed) current in TF coils (A)
@@ -1194,15 +1194,11 @@ def constraint_equation_50(constraint_registration, data):
 def constraint_equation_51(constraint_registration, data):
     """Equation to enforce startup flux = available startup flux
 
-    vs_plasma_res_ramp: resistive losses in startup V-s (Wb)
-    vs_plasma_ind_ramp: internal and external plasma inductance V-s (Wb))
+    vs_plasma_ramp_required: Required flux swing for startup (Wb)
     vs_cs_pf_total_ramp: total flux swing for startup (Wb)
     """
     return eq(
-        abs(
-            data_structure.physics_variables.vs_plasma_res_ramp
-            + data_structure.physics_variables.vs_plasma_ind_ramp
-        ),
+        abs(data_structure.physics_variables.vs_plasma_ramp_required),
         data.pf_coil.vs_cs_pf_total_ramp,
         constraint_registration,
     )
