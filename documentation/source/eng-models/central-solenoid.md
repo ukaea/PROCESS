@@ -66,21 +66,27 @@ This method calculates the CS geometry parameters. The CS is assumed to be a per
 
 -----------
 
-### Self peak magnetic field | `calculate_cs_self_peak_magnetic_field()`
+### Self peak bore magnetic field | `calculate_cs_bore_magnetic_field()`
 
-The general form for the field at the very centre of the central solenoid bore with uniform current density and rectangular cross-section is given by:
+The self induced peak field at the central bore of a homogenous current density rectangular cross-section solenoid is given by:
 
 $$
-B_0 = J_{\text{CS}}aF(\alpha,\beta)
+B_0 = J_{\text{CS}}r_{\text{CS,inner}}F(\alpha,\beta)
 $$
 
 $$
 F(\alpha,\beta) = \mu_0\beta \ln{\left[\frac{\alpha+\sqrt{\alpha^2+\beta^2}}{1+\sqrt{1+\beta^2}}\right]}
 $$
 
-where $\alpha = \frac{r_{\text{CS,outer}}}{r_{\text{CS,inner}}}$, is the ratio of the outer and inner radii of the solenoid and $\beta = \frac{z_{\text{CS,half}}}{r_{\text{CS,outer}}}$, is the ratio of the solenoid half height to its inboard radius.
+where $\alpha = \frac{r_{\text{CS,outer}}}{r_{\text{CS,inner}}}$, is the ratio of the outer and inner radii of the solenoid and $\beta = \frac{z_{\text{CS,half}}}{r_{\text{CS,inner}}}$, is the ratio of the solenoid half height to its inboard radius.
 
-The peak field at the bore of the central solenoid will not be the same as that felt by the conductors inside the structures. We require to know the peak field on the conductor if we are to design a superconducting central solenoid that has enough margin. Fits to data[^1] for different ranges of $\beta$ have been calculated as follows:
+This is Equation 3.13 from "Case Studies in Superconducting Magnets"[^2].
+
+-------------
+
+### Self peak on coil magnetic field | `calculate_cs_self_peak_magnetic_field()`
+
+The peak field at the bore of the central solenoid will not be the same as that felt by the conductors inside the structures.So wecannot use the bore value directly calculated by [`calculate_cs_bore_magnetic_field()`](#self-peak-bore-magnetic-field--calculate_cs_bore_magnetic_field). We require to know the peak field on the conductor if we are to design a superconducting central solenoid that has enough margin. Fits to data[^1] for different ranges of $\beta$ have been calculated as follows to scale the bore field value by:
 
 - $\beta > 3.0$
 
@@ -123,10 +129,10 @@ The peak field at the bore of the central solenoid will not be the same as that 
 
 -----------
 
-### Axial stresses | `calculate_cs_self_peak_midplane_axial_stress()`
+### Peak Axial Stresses | `calculate_cs_self_peak_midplane_axial_stress()`
 
 
-The vertical (axial) force for a "thin-walled" solenoid ($\alpha = 1$) at the midplane is given by[^2]:
+The vertical (axial) force for a "thin-walled" solenoid ($\alpha = 1$) at the midplane where the force is maximum is given by Equation 3.41 in "Case studies in superconducting magnets" [^2]:
 
 $$
 F_{z}(0)=\frac{\mu_0}{2}\left(\frac{N I}{2 \times dz_{\text{half}}}\right) \times \\
@@ -148,48 +154,13 @@ $$
 
 Here $K(k)$ and $E(k)$ are the complete elliptic integrals, respectively of the first and second kinds.
 
+!!! info "Non thin-walled solenoids"
+
+    For solenoids that can be classed as "thick-walled" ($\alpha > 1$), the coil has to be divided radially into several thin-walled solenoids. This is not currently performed though more info can be found in Section 3.5.5 of "Case studies in superconducting magnets" [^2].
 
 The axial compressive force at $z$ in an isolated solenoid increases from 0 at $z  = dz_{\text{half}}$
 to the maximum at the midplane, $F_{z}(0)$.
 
-
-
---------------------------
-
-
-### Hoop stress | `calculate_cs_hoop_stress()`
-
-
-
-
-The hoop stress is calculated using equations 4.10 and 4.11 from "Superconducting magnets", Martin N. 
-Wilson (1983).  This is divided by the fraction of the area occupied by steel to obtain the hoop 
-stress in the steel, $\sigma_{hoop}$.
-
-$$
-\sigma_{\theta} = \frac{K(2+v)}{3(\alpha+1)}\times \left(\alpha^2+\alpha+1+\frac{\alpha^2}{\epsilon^2}-\epsilon \frac{(1+2v)(\alpha+1)}{(2+v)}\right) \\
-- \frac{M(3+v)}{8}\left(\alpha^2+1+\frac{\alpha^2}{\epsilon^2}-\frac{(1+3v)}{(3+v)}\epsilon^2\right)
-$$
-
-Where:
-
-- $\epsilon = \frac{r}{r_{CS,inner}}$
-- $\alpha = \frac{r_{CS,outer}}{r_{CS,inner}}$
-
-The terms $K$ and $M$ are given by:
-
-$$
-K = \frac{Ja\left(\alpha B_{\text{a}} - B_{\text{b}}\right)}{(\alpha-1)}
-$$
-
-$$
-M = \frac{Ja\left(B_{\text{a}} - B_{\text{b}}\right)}{(\alpha-1)}
-$$
-
-For a special infinite solenoid case $B$
-
-The axial stress can be calculated using "Case studies in superconducting magnets", Y. Iwasa, p. 
-86, 3.5.2, Special Case 4: Midplane force.  This applies exactly only to a thin-walled solenoid. 
 The axial stress in the steel is given by:
 
 $$
@@ -203,8 +174,79 @@ The fraction of the horizontal cross-section occupied by steel is calculated ass
 conductor is square and has a steel jacket with the same thickness on all four sides, giving:
 
 $$
-f_z = \frac{f_V}{2}.
+f_z = 0.5.
 $$
+
+
+
+--------------------------
+
+
+### Radial stress | `calculate_cs_radial_stress()`
+
+
+The self induced radial stress is calculated using Equation 4.11 from "Superconducting magnets" [^1].
+
+$$
+\sigma_{r} = \frac{K(2+v)}{3(\alpha+1)}\times \left(\alpha^2+\alpha+1-\frac{\alpha^2}{\epsilon^2}-\epsilon(\alpha+1)\right) \\
+- \frac{M(3+v)}{8}\left(\alpha^2+1-\frac{\alpha^2}{\epsilon^2}-\epsilon^2\right)
+$$
+
+Where:
+
+- $\epsilon = \frac{r}{r_{\text{CS,inner}}}$
+- $\alpha = \frac{r_{\text{CS,outer}}}{r_{\text{CS,inner}}}$
+
+The terms $K$ and $M$ are given by:
+
+$$
+K = \frac{J r_{\text{CS,inner}}\left(\alpha B_{\text{CS,inner}} - B_{\text{CS,outer}}\right)}{(\alpha-1)}
+$$
+
+$$
+M = \frac{J r_{\text{CS,inner}}\left(B_{\text{CS,inner}} - B_{\text{CS,outer}}\right)}{(\alpha-1)}
+$$
+
+-------------
+
+
+### Hoop stress | `calculate_cs_hoop_stress()`
+
+
+
+
+The hoop stress is calculated using Equation 4.10 from "Superconducting magnets" [^1]. This is divided by the fraction of the area occupied by steel to obtain the hoop 
+stress in the steel, $\sigma_{\theta}$.
+
+$$
+\sigma_{\theta} = \frac{K(2+v)}{3(\alpha+1)}\times \left(\alpha^2+\alpha+1+\frac{\alpha^2}{\epsilon^2}-\epsilon \frac{(1+2v)(\alpha+1)}{(2+v)}\right) \\
+- \frac{M(3+v)}{8}\left(\alpha^2+1+\frac{\alpha^2}{\epsilon^2}-\frac{(1+3v)}{(3+v)}\epsilon^2\right)
+$$
+
+Where:
+
+- $\epsilon = \frac{r}{r_{\text{CS,inner}}}$
+- $\alpha = \frac{r_{\text{CS,outer}}}{r_{\text{CS,inner}}}$
+
+The terms $K$ and $M$ are given by:
+
+$$
+K = \frac{J r_{\text{CS,inner}}\left(\alpha B_{\text{CS,inner}} - B_{\text{CS,outer}}\right)}{(\alpha-1)}
+$$
+
+$$
+M = \frac{J r_{\text{CS,inner}}\left(B_{\text{CS,inner}} - B_{\text{CS,outer}}\right)}{(\alpha-1)}
+$$
+
+!!! warning "Assumption of outer field, $B_{\text{CS,outer}}$" 
+
+    In this case we currently assume that $B_{\text{CS,outer}} = 0$. This is the same as that for an infinite solenoid. Approximation of the outboard field is currently not performed.
+
+--------------------------
+
+
+
+
 
 The radial stress is neglected. The hoop and axial stresses are combined to give the maximum shear 
 stress, as required by the Tresca stress criterion:

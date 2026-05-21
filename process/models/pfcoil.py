@@ -3722,8 +3722,8 @@ class CSCoil(Model):
 
         References
         ----------
-            -"Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983,
-            ISBN 13: 9780198548102
+        [1] "Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983,
+        ISBN 13: 9780198548102
         """
         beta = dz_cs_half / r_cs_inner
         alpha = r_cs_outer / r_cs_inner
@@ -4120,14 +4120,14 @@ class CSCoil(Model):
         epsilon = r_stress_point / r_cs_inner
 
         # Field at outer radius of coil [T]
-        # Assume to be 0 for now
-        b_b = 0.0e0
+        # Assume to be 0 for now same as for an infinite solenoid
+        b_cs_outer = 0.0e0
 
         # K term
-        k = ((alpha * b_cs_inner - b_b) * j_cs * r_cs_inner) / (alpha - 1.0e0)
+        k = ((alpha * b_cs_inner - b_cs_outer) * j_cs * r_cs_inner) / (alpha - 1.0e0)
 
         # M term
-        m = ((b_cs_inner - b_b) * j_cs * r_cs_inner) / (alpha - 1.0e0)
+        m = ((b_cs_inner - b_cs_outer) * j_cs * r_cs_inner) / (alpha - 1.0e0)
 
         # calculate hoop stress terms
         hp_term_1 = k * ((2.0e0 + f_poisson_cs_structure) / (3.0e0 * (alpha + 1.0e0)))
