@@ -73,7 +73,7 @@ class PFCoil(Model):
         pcls0 = np.zeros(N_PF_GROUPS_MAX, dtype=int)
         ncls0 = np.zeros(N_PF_GROUPS_MAX + 2, dtype=int)
 
-        self.data.pf_coil.rcls0, self.data.pf_coil.zcls0 = np.zeros(
+        rcls0, zcls0 = np.zeros(
             (
                 2,
                 N_PF_GROUPS_MAX,
@@ -81,7 +81,7 @@ class PFCoil(Model):
             ),
             order="F",
         )
-        self.data.pf_coil.ccls0 = np.zeros(int(N_PF_GROUPS_MAX / 2))
+        ccls0 = np.zeros(int(N_PF_GROUPS_MAX / 2))
         brin, bzin, rpts, zpts = np.zeros((4, NPTSMX))
         bfix, bvec = np.zeros((2, lrow1))
         gmat, _, _ = np.zeros((3, lrow1, lcol1), order="F")
@@ -504,26 +504,18 @@ class PFCoil(Model):
 
                 for ccount in range(ngrp0):
                     ncls0[ccount] = 2
-                    self.data.pf_coil.rcls0[ccount, 0] = (
-                        self.data.pf_coil.r_pf_coil_middle_group_array[
-                            pcls0[ccount] - 1, 0
-                        ]
-                    )
-                    self.data.pf_coil.rcls0[ccount, 1] = (
-                        self.data.pf_coil.r_pf_coil_middle_group_array[
-                            pcls0[ccount] - 1, 1
-                        ]
-                    )
-                    self.data.pf_coil.zcls0[ccount, 0] = (
-                        self.data.pf_coil.z_pf_coil_middle_group_array[
-                            pcls0[ccount] - 1, 0
-                        ]
-                    )
-                    self.data.pf_coil.zcls0[ccount, 1] = (
-                        self.data.pf_coil.z_pf_coil_middle_group_array[
-                            pcls0[ccount] - 1, 1
-                        ]
-                    )
+                    rcls0[ccount, 0] = self.data.pf_coil.r_pf_coil_middle_group_array[
+                        pcls0[ccount] - 1, 0
+                    ]
+                    rcls0[ccount, 1] = self.data.pf_coil.r_pf_coil_middle_group_array[
+                        pcls0[ccount] - 1, 1
+                    ]
+                    zcls0[ccount, 0] = self.data.pf_coil.z_pf_coil_middle_group_array[
+                        pcls0[ccount] - 1, 0
+                    ]
+                    zcls0[ccount, 1] = self.data.pf_coil.z_pf_coil_middle_group_array[
+                        pcls0[ccount] - 1, 1
+                    ]
 
                 npts0 = 1
                 rpts[0] = pv.rmajor
@@ -546,7 +538,7 @@ class PFCoil(Model):
 
                 pv.b_plasma_vertical_required = bzin[0]
 
-                _ssqef, self.data.pf_coil.ccls0 = self.efc(
+                _ssqef, ccls0 = self.efc(
                     npts0,
                     rpts,
                     zpts,
@@ -558,8 +550,8 @@ class PFCoil(Model):
                     self.data.pf_coil.c_pf_cs_current_filaments,
                     ngrp0,
                     ncls0,
-                    self.data.pf_coil.rcls0,
-                    self.data.pf_coil.zcls0,
+                    rcls0,
+                    zcls0,
                     self.data.pf_coil.alfapf,
                     bfix,
                     gmat,
@@ -567,9 +559,7 @@ class PFCoil(Model):
                 )
 
                 for ccount in range(ngrp0):
-                    self.data.pf_coil.ccls[pcls0[ccount] - 1] = self.data.pf_coil.ccls0[
-                        ccount
-                    ]
+                    self.data.pf_coil.ccls[pcls0[ccount] - 1] = ccls0[ccount]
 
         # Flux swing from vertical field
 
