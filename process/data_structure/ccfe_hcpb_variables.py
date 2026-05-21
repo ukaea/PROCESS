@@ -9,7 +9,7 @@ PROCESS Engineering paper (M. Kovari et al.)
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class CCFEHCPBData:
     armour_density: float = 0.0
     """FW armour density [kg/m3]"""

@@ -23,7 +23,7 @@ NGC2 = NGC + 2
 """new variable to include 2 additional circuits: plasma and central solenoid"""
 
 
-@dataclass
+@dataclass(slots=True)
 class PFCoilData:
     # PF coil module variables
     nef: int = 0

@@ -8,7 +8,7 @@ shield components
 from dataclasses import dataclass, field
 
 
-@dataclass
+@dataclass(slots=True)
 class FWBSData:
     life_blkt_fpy: float = 0.0
     """Full power blanket lifetime (years)"""

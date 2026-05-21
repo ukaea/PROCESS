@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class BuildData:
     aplasmin: float = 0.25
     """minimum minor radius (m)"""

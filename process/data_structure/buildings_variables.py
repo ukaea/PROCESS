@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class BuildingsData:
     admv: float = 1.0e5
     """administration building volume (m3)"""

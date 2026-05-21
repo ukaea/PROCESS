@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 
-@dataclass
+@dataclass(slots=True)
 class Cost2015Data:
     mean_electric_output: float = 0.0
 

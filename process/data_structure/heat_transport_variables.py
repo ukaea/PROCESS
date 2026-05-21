@@ -8,7 +8,7 @@ of a fusion power plant, and also those for a hydrogen production plant.
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class HeatTransportData:
     p_plant_electric_base: float = 5.0e6
     """base plant electric load (W)"""

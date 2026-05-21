@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class PrimaryPumpingData:
     gamma_he: float = 1.667
     """ratio of specific heats for helium (`i_p_coolant_pumping=3`)"""

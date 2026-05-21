@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 
-@dataclass
+@dataclass(slots=True)
 class TimesData:
     pulsetimings: int = 1
     """Switch for pulse timings (if i_pulsed_plant=1):

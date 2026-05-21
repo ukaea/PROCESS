@@ -72,7 +72,7 @@ Note: request for when CCFE Bluemira neutronics work is added: output maximum va
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class DCLLData:
     r_fci: float = 0.0
     """Radial thickness of FCIs [m]"""

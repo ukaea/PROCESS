@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class StellaratorConfigData:
     stella_config_name: str = ""
     """Name of the configuration"""
