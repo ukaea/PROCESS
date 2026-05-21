@@ -7,6 +7,7 @@ from process.models.neutronics.data import (
     DT_NEUTRON_E,
     EV_TO_J,
     MaterialMacroInfo,
+    calculate_mean_energy_and_incident_bin,
     scattering_weight_matrix,
 )
 
@@ -285,7 +286,8 @@ def test_5_5():
         np.where([1, 0, 1, 1, 1], sigma_t_lists[3] * 2.2, [0, 0, 0, 0, 0]),
         [0, 0, 0, 0, 0],
     ]
-    # sigma_in_list = [[0,0,0,0,0] for _ in range(5)]
+    incident_energy = np.mean(sorted(dummy_group_structure)[-2:])
+    dummy_group_energy, _ = calculate_mean_energy_and_incident_bin(dummy_group_structure, incident_energy)
     for i in range(5):
         mat = MaterialMacroInfo(dummy_group_structure, 1.0, {"C": 1.0}, name=f"mat{i}")
         mat.avg_atomic_mass = at_masses[i]
@@ -293,11 +295,11 @@ def test_5_5():
             sigma_t=sigma_t_lists[i],
             sigma_s=(
                 sigma_s_list[i]
-                * scattering_weight_matrix(dummy_group_structure, at_masses[i]).T
+                * scattering_weight_matrix(dummy_group_structure, dummy_group_energy, at_masses[i]).T
             ).T,
             sigma_in=(
                 sigma_in_list[i]
-                * scattering_weight_matrix(dummy_group_structure, at_masses[i]).T
+                * scattering_weight_matrix(dummy_group_structure, dummy_group_energy, at_masses[i]).T
             ).T,
         )
         mat_list.append(mat)
