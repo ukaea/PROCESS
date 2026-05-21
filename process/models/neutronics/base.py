@@ -36,7 +36,7 @@ from matplotlib import pyplot as plt
 from numpy import typing as npt
 
 from process.core.exceptions import ProcessValidationError, ProcessValueError
-from process.models.neutronics.data import DT_NEUTRON_E, N_A, MaterialMacroInfo
+from process.models.neutronics.data import N_A, MaterialMacroInfo
 
 
 def summarize_values(func):
@@ -344,18 +344,15 @@ class NeutronFluxProfile:
         flux: float,
         layer_x: npt.NDArray[np.float64],
         materials: Iterable[MaterialMacroInfo],
-        init_neutron_energy: float = DT_NEUTRON_E,
     ):
-        """Initialize a particular FW-BZ geometry and neutron flux.
+        """Initialize a particular geometry and neutron flux.
 
         Parameters
         ----------
         flux:
             Neutron flux directly emitted by the plasma, incident on the first
             wall. unit: m^-2 s^-1
-        init_neutron_energy:
-            Neutron's initial energy when it first exit the plasma, before any
-            downscattering or reactions. unit: J.
+        
         layer_x:
             The x-coordinates of the right side of every layers. By definition,
             the plasma is situated at x=0, so all values in layer_x must be >0.
@@ -382,7 +379,9 @@ class NeutronFluxProfile:
             Energy bin edges, 1D array of len = n_groups+1
         group_energy:
             The average neutron energy of each group.
-
+        init_neutron_energy:
+            Neutron's initial energy when it first exit the plasma, before any
+            downscattering or reactions. unit: J.
         coefficients:
             Coefficients that determine the flux shape (and therefore reaction
             rates, neutron current, etc.) of each group. Each coefficient has
@@ -402,9 +401,6 @@ class NeutronFluxProfile:
             A boolean to denote if all materials here only allow for
             downscattering.
         """
-        # flux incident on the first wall at the highest energy.
-        self.init_neutron_energy = init_neutron_energy
-
         # layers
         self.layer_x = np.array(layer_x).ravel()
         if not (np.diff(self.layer_x) > 0).all():
@@ -435,13 +431,10 @@ class NeutronFluxProfile:
                 )
         self.n_groups = fw_mat.n_groups
         self.group_structure = fw_mat.group_structure
-        self.group_energy, incident_neutron_group = (
-            self._calculate_mean_energy_and_incident_bin(
-                self.group_structure, self.init_neutron_energy
-            )
-        )
+        self.group_energy = fw_mat.group_energy
+        self.incident_neutron_group = fw_mat.incident_neutron_group
         self.fluxes = np.array([
-            flux if n == incident_neutron_group else 0.0 for n in range(self.n_groups)
+            flux if n == self.incident_neutron_group else 0.0 for n in range(self.n_groups)
         ])
 
         mat_name_list = [mat.name for mat in self.materials]
@@ -454,64 +447,6 @@ class NeutronFluxProfile:
         self.num_iteration = [0 for n in range(self.n_groups)]
         self.contains_upscatter = any(not mat.downscatter_only for mat in self.materials)
 
-    @staticmethod
-    def _calculate_mean_energy_and_incident_bin(
-        group_structure: npt.NDArray[np.float64],
-        init_neutron_e: float,
-    ) -> npt.NDArray[np.float64]:
-        """
-        Calculate the average energy of each neutron group in Joule.
-        When implementing this method, we can choose either a weighted mean or
-        an unweighted mean. The weighted mean (where neutron flux is assumed
-        constant w.r.t. neutron lethargy within the bin) is more accurate, but
-        may end up being incorrect if the bins in the group structure are too
-        wide, as it heavily biases towards lower energy. In contrast, the
-        simple unweighted mean does not have such problem, but is inconsistent
-        with the rest of the program's assumption (const. flux w.r.t. lethargy),
-        therefore the former is chosen.
-
-        Parameters
-        ----------
-        group_structure:
-            The neutron energy bin's edges, in descending order, with len=
-            n_groups + 1.
-        init_neutron_e:
-            The neutrons entering from the plasma to the FW is assumed to be
-            monoenergetic, with this energy.
-
-        Returns
-        -------
-        avg_neutron_E:
-            Mean energy of neutrons. The bin containing init_neutron_e
-            (likely the highest energy bin, i.e. bin[0]) is assumed to be
-            dominated by the unscattered neutrons entering from the plasma,
-            therefore it is
-        incident_neutron_group:
-            The group index (n) of the neutron group whose energy range
-            includes the incident (monoenergetic) plasma neutron's energy.
-        """
-        high, low = group_structure[:-1], group_structure[1:]
-        weighted_mean = (high - low) / (np.log(high) - np.log(low))
-        # unweighted_mean = np.mean([high, low], axis=0)
-        first_bin = np.logical_and(low <= init_neutron_e, init_neutron_e < high)
-        incident_neutron_group = np.where(first_bin)[0][0]
-        if first_bin.sum() < 1:
-            raise ValueError(
-                "The energy of neutrons incident from the plasma is not "
-                "captured by the group structure!"
-            )
-        if first_bin.sum() > 1:
-            raise ValueError(
-                "The energy of neutrons incident from the plasma is captured "
-                "multiple times, by more than one bin in the group structure!"
-            )
-        if incident_neutron_group != 0:
-            raise NotImplementedError(
-                "If init_neutron_e does not sit inside the lowest lethargy "
-                "group, then solve_lowest_group would have to be re-written."
-            )
-        weighted_mean[first_bin] = init_neutron_e
-        return weighted_mean, incident_neutron_group
 
     def _groupwise_cs_values_in_layer(
         self, n: int, num_layer: int, x: float | npt.NDArray
