@@ -1,6 +1,5 @@
 """Module containing tokamak plasma physics routines
 
-N/A
 This module contains all the primary plasma physics routines
 for a tokamak device.
 

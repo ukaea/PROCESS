@@ -3,8 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.models.physics.profiles import NeProfile, TeProfile
-
 
 @pytest.fixture
 def plasmaprofile(process_models):
@@ -53,8 +51,13 @@ class NeProfileParam(NamedTuple):
     ],
     ids=["baseline_2018"],
 )
-def test_neprofile(neprofileparam: ProfileParam, monkeypatch):
-    neprofile = NeProfile(10)
+def test_neprofile(neprofileparam: ProfileParam, monkeypatch, plasmaprofile):
+    monkeypatch.setattr(
+        plasmaprofile.data.physics,
+        "n_plasma_profile_elements",
+        10,
+    )
+    neprofile = plasmaprofile.neprofile
     neprofile.run()
     assert neprofile.profile_y == pytest.approx(neprofileparam.expected_neprofile)
 
@@ -65,7 +68,7 @@ def test_ncore(monkeypatch, plasmaprofile):
         "n_plasma_profile_elements",
         10,
     )
-    neprofile = NeProfile()
+    neprofile = plasmaprofile.neprofile
     radius_plasma_pedestal_density_norm = 0.94
     nped = 5.8300851381352219e19
     nsep = 3.4294618459618943e19
@@ -121,13 +124,13 @@ def test_teprofile(teprofileparam: ProfileParam, monkeypatch, plasmaprofile):
         "n_plasma_profile_elements",
         10,
     )
-    teprofile = TeProfile()
+    teprofile = plasmaprofile.teprofile
     teprofile.run()
     assert teprofile.profile_y == pytest.approx(teprofileparam.expected_teprofile)
 
 
-def test_tcore():
-    teprofile = TeProfile()
+def test_tcore(plasmaprofile):
+    teprofile = plasmaprofile.teprofile
     radius_plasma_pedestal_temp_norm = 0.94
     tped = 3.7775374842470044
     tsep = 0.1

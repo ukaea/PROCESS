@@ -210,10 +210,11 @@ class FusionReactionRate(Model):
 
         # Calculate the fusion reaction rate integral using Simpson's rule
         sigmav = integrate.simpson(
-            fusion_rate_integral(self.plasma_profile, dt),
+            fusion_rate_integral(
+                self.plasma_profile, dt, physics_data=self.data.physics
+            ),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
-            physics_data=self.data.physics,
         )
 
         # Store the average fusion reaction rate
@@ -290,10 +291,11 @@ class FusionReactionRate(Model):
 
         # Calculate the fusion reaction rate integral using Simpson's rule
         sigmav = integrate.simpson(
-            fusion_rate_integral(self.plasma_profile, dhe3),
+            fusion_rate_integral(
+                self.plasma_profile, dhe3, physics_data=self.data.physics
+            ),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
-            physics_data=self.data.physics,
         )
 
         self.data.physics.fusrat_plasma_dhe3_profile = (
@@ -388,10 +390,13 @@ class FusionReactionRate(Model):
 
         # Calculate the fusion reaction rate integral using Simpson's rule
         sigmav = integrate.simpson(
-            fusion_rate_integral(self.plasma_profile, dd1),
+            fusion_rate_integral(
+                self.plasma_profile,
+                dd1,
+                physics_data=self.data.physics,
+            ),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
-            physics_data=self.data.physics,
         )
 
         self.data.physics.fusrat_plasma_dd_helion_profile = (
@@ -489,10 +494,13 @@ class FusionReactionRate(Model):
 
         # Calculate the fusion reaction rate integral using Simpson's rule
         sigmav = integrate.simpson(
-            fusion_rate_integral(self.plasma_profile, dd2),
+            fusion_rate_integral(
+                self.plasma_profile,
+                dd2,
+                physics_data=self.data.physics,
+            ),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
-            physics_data=self.data.physics,
         )
 
         self.data.physics.fusrat_plasma_dd_triton_profile = (

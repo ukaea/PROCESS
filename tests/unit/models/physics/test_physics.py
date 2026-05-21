@@ -2270,6 +2270,8 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         sbar=phyauxparam.sbar,
         t_energy_confinement=phyauxparam.t_energy_confinement,
         vol_plasma=phyauxparam.vol_plasma,
+        burnup_in=phyauxparam.burnup_in,
+        tauratio=phyauxparam.tauratio,
     )
 
     assert burnup == pytest.approx(phyauxparam.expected_burnup)
@@ -2378,6 +2380,8 @@ def test_pohm(pohmparam, monkeypatch, physics):
         temp_plasma_electron_density_weighted_kev=pohmparam.temp_plasma_electron_density_weighted_kev,
         vol_plasma=pohmparam.vol_plasma,
         zeff=pohmparam.zeff,
+        plasma_res_factor=pohmparam.plasma_res_factor,
+        aspect=pohmparam.aspect,
     )
 
     assert pden_plasma_ohmic_mw == pytest.approx(pohmparam.expected_pden_plasma_ohmic_mw)
@@ -3598,9 +3602,9 @@ def test_calculate_debye_length_parametrized(temp_keV, nd, expected):
     assert result == pytest.approx(expected, rel=1e-12)
 
 
-def test_detailed_physics_run_computes_profiles(monkeypatch, physics):
+def test_detailed_physics_run_computes_profiles(monkeypatch, physics, process_models):
     # Minimal plasma profile
-    plasma = physics.data.plasma_profile
+    plasma = process_models.plasma_profile
     plasma.teprofile.profile_x = np.array([0.0, 0.5, 1.0])
     plasma.teprofile.profile_y = np.array([1.0, 2.0, 3.0])  # keV
     plasma.neprofile.profile_x = plasma.teprofile.profile_x
@@ -3664,7 +3668,7 @@ def test_detailed_physics_run_computes_profiles(monkeypatch, physics):
         np.ones(2 * len(plasma.neprofile.profile_y)) * 5.0
     )
 
-    dp = DetailedPhysics(plasma)
+    dp = process_models.physics_detailed
 
     # Run should complete without error and populate physics.data.physics
     dp.run()

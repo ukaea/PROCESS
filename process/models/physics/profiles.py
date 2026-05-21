@@ -51,14 +51,14 @@ class Profile(Model, ABC):
         - profile_integ (int): The integral of the profile_y array.
         - profile_dx (int): The step size between consecutive values in profile_x.
         """
-        self.profile_size = self.data.physics.n_plasma_profile_elements
-        self.profile_x = np.arange(self.profile_size, dtype=float)
-        self.profile_y = np.zeros(self.profile_size)
         self.profile_integ = 0
         self.profile_dx = 0
 
     def run(self):
-        """This model isn't run"""
+        self.profile_x = np.arange(
+            self.data.physics.n_plasma_profile_elements, dtype=float
+        )
+        self.profile_y = np.zeros(self.data.physics.n_plasma_profile_elements)
 
     def output(self):
         """This model doesn't have any output"""
@@ -87,7 +87,9 @@ class Profile(Model, ABC):
         dividing the maximum x value in the profile by the difference in size between
         the points. The result is stored in the `profile_dx` attribute.
         """
-        self.profile_dx = max(self.profile_x) / (self.profile_size - 1)
+        self.profile_dx = max(self.profile_x) / (
+            self.data.physics.n_plasma_profile_elements - 1
+        )
 
     @abstractmethod
     def calculate_profile_y(self):
@@ -114,6 +116,7 @@ class NeProfile(Profile):
 
     def run(self):
         """Subroutine which calls profile functions and stores neprofile data."""
+        super().run()
         self.normalise_profile_x()
         self.calculate_profile_dx()
         self.set_physics_variables()
@@ -287,6 +290,7 @@ class TeProfile(Profile):
 
     def run(self):
         """Subroutine to initialise neprofile and execute calculations."""
+        super().run()
         self.normalise_profile_x()
         self.calculate_profile_dx()
         self.set_physics_variables()

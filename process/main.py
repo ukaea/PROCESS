@@ -70,7 +70,10 @@ from process.models.divertor import Divertor
 from process.models.fw import FirstWall
 from process.models.ife import IFE
 from process.models.pfcoil import CSCoil, PFCoil
-from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
+from process.models.physics.bootstrap_current import (
+    PlasmaBootstrapCurrent,
+    SauterBootstrapCurrent,
+)
 from process.models.physics.confinement_time import PlasmaConfinementTime
 from process.models.physics.current_drive import (
     CurrentDrive,
@@ -83,7 +86,9 @@ from process.models.physics.current_drive import (
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.fusion_reactions import FusionReactionRate
-from process.models.physics.impurity_radiation import initialise_imprad
+from process.models.physics.impurity_radiation import (
+    initialise_imprad,
+)
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
 from process.models.physics.physics import (
     DetailedPhysics,
@@ -635,14 +640,19 @@ class Models:
         self.plasma_inductance = PlasmaInductance()
         self.plasma_density_limit = PlasmaDensityLimit()
         self.plasma_exhaust = PlasmaExhaust()
+        self.sauter_bootstrap_current = SauterBootstrapCurrent()
         self.plasma_bootstrap_current = PlasmaBootstrapCurrent(
-            plasma_profile=self.plasma_profile
+            plasma_profile=self.plasma_profile,
+            sauter_bootstrap=self.sauter_bootstrap_current,
         )
         self.plasma_confinement = PlasmaConfinementTime()
         self.plasma_transition = PlasmaConfinementTransition()
         self.plasma_current = PlasmaCurrent()
         self.plasma_fields = PlasmaFields()
         self.plasma_dia_current = PlasmaDiamagneticCurrent()
+        self.fusion_reaction_rate = FusionReactionRate(
+            plasma_profile=self.plasma_profile
+        )
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
@@ -657,6 +667,7 @@ class Models:
             plasma_fields=self.plasma_fields,
             plasma_dia_current=self.plasma_dia_current,
             plasma_geometry=self.plasma_geom,
+            fusion_reactions=self.fusion_reaction_rate,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
@@ -675,13 +686,10 @@ class Models:
             neoclassics=self.neoclassics,
             plasma_beta=self.plasma_beta,
             plasma_bootstrap=self.plasma_bootstrap_current,
+            fusion_reactions=self.fusion_reaction_rate,
         )
 
         self.dcll = DCLL(fw=self.fw)
-        self.fusion_reaction_rate = FusionReactionRate(
-            plasma_profile=self.plasma_profile
-        )
-
         self.setup_data_structure()
 
     @property
@@ -756,6 +764,10 @@ class Models:
             self.fusion_reaction_rate,
             self.ne_profile,
             self.te_profile,
+            self.plasma_fields,
+            self.sauter_bootstrap_current,
+            self.plasma_transition,
+            self.physics_detailed,
         )
 
     def setup_data_structure(self):

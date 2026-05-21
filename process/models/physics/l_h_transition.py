@@ -5,6 +5,7 @@ from enum import IntEnum
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.model import Model
 from process.data_structure import numerics
 
 logger = logging.getLogger(__name__)
@@ -56,7 +57,7 @@ class PlasmaConfinementTransitionModel(IntEnum):
         return obj
 
 
-class PlasmaConfinementTransition:
+class PlasmaConfinementTransition(Model):
     """Class to calculate plasma L -> H and L -> I transition power thresholds."""
 
     def __init__(self):

@@ -91,6 +91,7 @@ class Stellarator(Model):
         neoclassics: Neoclassics,
         plasma_beta,
         plasma_bootstrap,
+        fusion_reactions: reactions.FusionReactionRate,
     ) -> None:
         self.outfile: int = constants.NOUT
         self.first_call_stfwbs = True
@@ -107,6 +108,7 @@ class Stellarator(Model):
         self.neoclassics = neoclassics
         self.beta = plasma_beta
         self.bootstrap = plasma_bootstrap
+        self.fusion_reactions = fusion_reactions
 
     def output(self):
         self.run(output=True)
@@ -2006,12 +2008,11 @@ class Stellarator(Model):
 
         #  Calculate fusion power
 
-        fusion_reactions = reactions.FusionReactionRate(self.plasma_profile)
-        fusion_reactions.deuterium_branching(
+        self.fusion_reactions.deuterium_branching(
             self.data.physics.temp_plasma_ion_vol_avg_kev
         )
-        fusion_reactions.calculate_fusion_rates()
-        fusion_reactions.set_physics_variables()
+        self.fusion_reactions.calculate_fusion_rates()
+        self.fusion_reactions.set_physics_variables()
 
         # D-T power density is named differently to differentiate it from the beam given component
         self.data.physics.p_plasma_dt_mw = (

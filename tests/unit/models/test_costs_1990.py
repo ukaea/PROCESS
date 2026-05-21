@@ -600,7 +600,7 @@ def acc26_params():
         acc26_param(),
         acc26_param(
             ireactor=1,
-            p_fusion_total_mw=costs.data.physics.p_fusion_total_mw,
+            p_fusion_total_mw=0.0,
             p_hcd_electric_total_mw=0.0,
             tfcmw=data_structure.tfcoil_variables.tfcmw,
             p_plant_primary_heat_mw=3000.0,

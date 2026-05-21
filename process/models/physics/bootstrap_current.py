@@ -1,8 +1,11 @@
 """Bootstrap current models and calculations for plasma physics simulations."""
 
+from __future__ import annotations
+
 import logging
 from enum import IntEnum
 from types import DynamicClassAttribute
+from typing import TYPE_CHECKING
 
 import numba as nb
 import numpy as np
@@ -13,7 +16,9 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.models.physics.plasma_profiles import PlasmaProfile
+
+if TYPE_CHECKING:
+    from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 
@@ -65,11 +70,13 @@ class BootstrapCurrentFractionModel(IntEnum):
 class PlasmaBootstrapCurrent(Model):
     """Class to hold plasma bootstrap current for plasma processing."""
 
-    def __init__(self, plasma_profile: PlasmaProfile) -> None:
+    def __init__(
+        self, plasma_profile: PlasmaProfile, sauter_bootstrap: SauterBootstrapCurrent
+    ) -> None:
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
-        self.sauter_bootstrap = SauterBootstrapCurrent()
+        self.sauter_bootstrap = sauter_bootstrap
 
     def run(self) -> None:
         """Calculate bootstrap current fraction using various models.
@@ -1443,7 +1450,7 @@ class SauterBootstrapCurrent(Model):
     def output(self):
         """This model doesn't have any output"""
 
-    def bootstrap_fraction_sauter(self, plasma_profile: float) -> float:
+    def bootstrap_fraction_sauter(self, plasma_profile: PlasmaProfile) -> float:
         """Calculate the bootstrap current fraction from the Sauter et al scaling.
 
         Parameters
@@ -1519,7 +1526,7 @@ class SauterBootstrapCurrent(Model):
         # Calculate total bootstrap current (MA) by summing along profiles
         # Looping from 2 because _calculate_l31_coefficient() etc should return 0
         # @ j == 1
-        radial_elements = np.arange(2, plasma_profile.profile_size)
+        radial_elements = np.arange(2, self.data.physics.n_plasma_profile_elements)
 
         # Change in localised minor radius to be used as delta term in derivative
         drho = rho[radial_elements] - rho[radial_elements - 1]
@@ -1537,7 +1544,7 @@ class SauterBootstrapCurrent(Model):
             * (
                 self._calculate_l31_coefficient(
                     radial_elements,
-                    plasma_profile.profile_size,
+                    self.data.physics.n_plasma_profile_elements,
                     self.data.physics.rmajor,
                     self.data.physics.b_plasma_toroidal_on_axis,
                     self.data.physics.triang,
@@ -1553,7 +1560,7 @@ class SauterBootstrapCurrent(Model):
                 * dlogne_drho
                 + self._calculate_l31_32_coefficient(
                     radial_elements,
-                    plasma_profile.profile_size,
+                    self.data.physics.n_plasma_profile_elements,
                     self.data.physics.rmajor,
                     self.data.physics.b_plasma_toroidal_on_axis,
                     self.data.physics.triang,
@@ -1569,7 +1576,7 @@ class SauterBootstrapCurrent(Model):
                 * dlogte_drho
                 + self._calculate_l34_alpha_31_coefficient(
                     radial_elements,
-                    plasma_profile.profile_size,
+                    self.data.physics.n_plasma_profile_elements,
                     self.data.physics.rmajor,
                     self.data.physics.b_plasma_toroidal_on_axis,
                     self.data.physics.triang,
