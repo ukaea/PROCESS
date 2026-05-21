@@ -16,7 +16,7 @@ from process.core.exceptions import (
     ProcessValueError,
 )
 from process.core.solver.constraints import ConstraintManager
-from process.data_structure.impurity_radiation_module import N_IMPURITIES
+from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.pfcoil_variables import N_PF_GROUPS_MAX
 
 if TYPE_CHECKING:

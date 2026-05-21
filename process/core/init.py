@@ -16,7 +16,7 @@ from process.core.input import parse_input_file
 from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
-from process.data_structure.impurity_radiation_module import N_IMPURITIES
+from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.physics_variables import (
     init_physics_module,
     init_physics_variables,

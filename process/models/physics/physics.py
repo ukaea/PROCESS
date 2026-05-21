@@ -18,7 +18,7 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import numerics, physics_variables
-from process.data_structure.impurity_radiation_module import N_IMPURITIES
+from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.models.physics import impurity_radiation
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.profiles import PlasmaProfileShapeType
