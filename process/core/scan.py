@@ -17,7 +17,6 @@ from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
     global_variables,
-    impurity_radiation_module,
     numerics,
     physics_variables,
     rebco_variables,
@@ -1119,7 +1118,7 @@ class Scan:
             case 28:
                 physics_variables.b_plasma_toroidal_on_axis = swp[iscn - 1]
             case 29:
-                impurity_radiation_module.radius_plasma_core_norm = swp[iscn - 1]
+                self.data.impurity_radiation.radius_plasma_core_norm = swp[iscn - 1]
             case 31:
                 self.data.constraints.f_alpha_energy_confinement_min = swp[iscn - 1]
             case 32:
@@ -1133,9 +1132,9 @@ class Scan:
             case 41:
                 self.data.build.dr_blkt_outboard = swp[iscn - 1]
             case 42:
-                impurity_radiation_module.f_nd_impurity_electrons[8] = swp[iscn - 1]
-                impurity_radiation_module.f_nd_impurity_electron_array[8] = (
-                    impurity_radiation_module.f_nd_impurity_electrons[8]
+                self.data.impurity_radiation.f_nd_impurity_electrons[8] = swp[iscn - 1]
+                self.data.impurity_radiation.f_nd_impurity_electron_array[8] = (
+                    self.data.impurity_radiation.f_nd_impurity_electrons[8]
                 )
             case 44:
                 tfcoil_variables.sig_tf_case_max = swp[iscn - 1]
@@ -1148,9 +1147,9 @@ class Scan:
             case 49:
                 tfcoil_variables.n_tf_wp_layers = int(swp[iscn - 1])
             case 50:
-                impurity_radiation_module.f_nd_impurity_electrons[12] = swp[iscn - 1]
-                impurity_radiation_module.f_nd_impurity_electron_array[12] = (
-                    impurity_radiation_module.f_nd_impurity_electrons[12]
+                self.data.impurity_radiation.f_nd_impurity_electrons[12] = swp[iscn - 1]
+                self.data.impurity_radiation.f_nd_impurity_electron_array[12] = (
+                    self.data.impurity_radiation.f_nd_impurity_electrons[12]
                 )
             case 51:
                 physics_variables.f_p_div_lower = swp[iscn - 1]

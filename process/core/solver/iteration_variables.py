@@ -125,7 +125,7 @@ ITERATION_VARIABLES = {
     122: IterationVariable("f_a_cs_turn_steel", "pf_coil", 0.001, 0.950),
     125: IterationVariable(
         "f_nd_impurity_electrons(03)",
-        data_structure.impurity_radiation_module,
+        "impurity_radiation",
         1e-8,
         0.01,
         target_name="f_nd_impurity_electron_array",
@@ -133,7 +133,7 @@ ITERATION_VARIABLES = {
     ),
     126: IterationVariable(
         "f_nd_impurity_electrons(04)",
-        data_structure.impurity_radiation_module,
+        "impurity_radiation",
         1e-8,
         0.01,
         target_name="f_nd_impurity_electron_array",
@@ -141,7 +141,7 @@ ITERATION_VARIABLES = {
     ),
     127: IterationVariable(
         "f_nd_impurity_electrons(05)",
-        data_structure.impurity_radiation_module,
+        "impurity_radiation",
         1e-8,
         0.01,
         target_name="f_nd_impurity_electron_array",
@@ -149,7 +149,7 @@ ITERATION_VARIABLES = {
     ),
     128: IterationVariable(
         "f_nd_impurity_electrons(06)",
-        data_structure.impurity_radiation_module,
+        "impurity_radiation",
         1e-8,
         0.01,
         target_name="f_nd_impurity_electron_array",
@@ -157,7 +157,7 @@ ITERATION_VARIABLES = {
     ),
     129: IterationVariable(
         "f_nd_impurity_electrons(07)",
-        data_structure.impurity_radiation_module,
+        "impurity_radiation",
         1e-8,
         0.01,
         target_name="f_nd_impurity_electron_array",
@@ -165,7 +165,7 @@ ITERATION_VARIABLES = {
     ),
     130: IterationVariable(
         "f_nd_impurity_electrons(08)",
-        data_structure.impurity_radiation_module,
+        "impurity_radiation",
         1e-8,
         0.01,
         target_name="f_nd_impurity_electron_array",
@@ -173,7 +173,7 @@ ITERATION_VARIABLES = {
     ),
     131: IterationVariable(
         "f_nd_impurity_electrons(09)",
-        data_structure.impurity_radiation_module,
+        "impurity_radiation",
         1e-8,
         0.01,
         target_name="f_nd_impurity_electron_array",
@@ -181,7 +181,7 @@ ITERATION_VARIABLES = {
     ),
     132: IterationVariable(
         "f_nd_impurity_electrons(10)",
-        data_structure.impurity_radiation_module,
+        "impurity_radiation",
         1e-8,
         0.01,
         target_name="f_nd_impurity_electron_array",
@@ -189,7 +189,7 @@ ITERATION_VARIABLES = {
     ),
     133: IterationVariable(
         "f_nd_impurity_electrons(11)",
-        data_structure.impurity_radiation_module,
+        "impurity_radiation",
         1e-8,
         0.01,
         target_name="f_nd_impurity_electron_array",
@@ -197,7 +197,7 @@ ITERATION_VARIABLES = {
     ),
     134: IterationVariable(
         "f_nd_impurity_electrons(12)",
-        data_structure.impurity_radiation_module,
+        "impurity_radiation",
         1e-8,
         0.01,
         target_name="f_nd_impurity_electron_array",
@@ -205,7 +205,7 @@ ITERATION_VARIABLES = {
     ),
     135: IterationVariable(
         "f_nd_impurity_electrons(13)",
-        data_structure.impurity_radiation_module,
+        "impurity_radiation",
         1e-8,
         0.01,
         target_name="f_nd_impurity_electron_array",
@@ -213,7 +213,7 @@ ITERATION_VARIABLES = {
     ),
     136: IterationVariable(
         "f_nd_impurity_electrons(14)",
-        data_structure.impurity_radiation_module,
+        "impurity_radiation",
         1e-8,
         0.01,
         target_name="f_nd_impurity_electron_array",

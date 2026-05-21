@@ -10,6 +10,7 @@ from dataclasses import dataclass
 import numpy as np
 
 import process.models.physics.impurity_radiation as impurity
+from process.core.model import DataStructure
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
@@ -39,6 +40,7 @@ def calculate_radiation_powers(
     rmajor: float,
     kappa: float,
     vol_plasma: float,
+    data_structure: DataStructure,
 ) -> RadpwrData:
     """Calculate the radiation powers in MW/m^3 by calling relevant routines.
 
@@ -98,7 +100,7 @@ def calculate_radiation_powers(
           of arbitrary geometry,” Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758,
           Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
     """
-    imp_rad = impurity.ImpurityRadiation(plasma_profile)
+    imp_rad = impurity.ImpurityRadiation(plasma_profile, data_structure)
     imp_rad.calculate_imprad()
 
     pden_plasma_outer_rad_mw = (

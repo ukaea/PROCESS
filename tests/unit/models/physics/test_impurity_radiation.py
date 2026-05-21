@@ -5,14 +5,12 @@ from typing import NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import impurity_radiation_module
 from process.models.physics import impurity_radiation
 
 
 @pytest.fixture(autouse=True)
-def initialise_impurity_radiation():
-    impurity_radiation_module.init_impurity_radiation_module()
-    impurity_radiation.initialise_imprad()
+def initialise_impurity_radiation(process_models):
+    impurity_radiation.initialise_imprad(process_models.physics.data)
 
 
 class PimpdenParam(NamedTuple):
@@ -22,7 +20,7 @@ class PimpdenParam(NamedTuple):
     expected_pimpden: np.array = np.array
 
 
-def test_pimpden():
+def test_pimpden(process_models):
     """Tests `pimpden` function.
 
     :param imp_element_index: impurity element
@@ -78,7 +76,10 @@ def test_pimpden():
     )
 
     pimpden = impurity_radiation.pimpden(
-        pimden_parameters.imp_element_index, pimden_parameters.ne, pimden_parameters.te
+        pimden_parameters.imp_element_index,
+        pimden_parameters.ne,
+        pimden_parameters.te,
+        process_models.physics.data,
     )
     assert pytest.approx(pimpden) == pimden_parameters.expected_pimpden
 
@@ -134,7 +135,7 @@ class ZavofteParam(NamedTuple):
     expected_zav_of_te: np.array = np.array
 
 
-def test_zav_of_te():
+def test_zav_of_te(process_models):
     """Tests `Zav_of_te` function.
 
     :param imp_element_index: impurity element
@@ -174,7 +175,7 @@ def test_zav_of_te():
         ]),
     )
     zav_of_te = impurity_radiation.zav_of_te(
-        zavofteparam.imp_element_index, zavofteparam.te
+        zavofteparam.imp_element_index, zavofteparam.te, process_models.physics.data
     )
 
     assert pytest.approx(zav_of_te) == zavofteparam.expected_zav_of_te

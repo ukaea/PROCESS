@@ -16,9 +16,7 @@ from process.core.input import parse_input_file
 from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
-from process.data_structure.impurity_radiation_module import (
-    init_impurity_radiation_module,
-)
+from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.physics_variables import (
     DivertorNumberModels,
     init_physics_module,
@@ -242,7 +240,6 @@ def init_all_module_vars():
     logging_model_handler.clear_logs()
     data_structure.numerics.init_numerics()
     data_structure.global_variables.init_global_variables()
-    init_impurity_radiation_module()
     init_physics_module()
     init_physics_variables()
     init_scan_variables()
@@ -356,16 +353,16 @@ def check_process(inputs, data):  # noqa: ARG001
         data.buildings.triv = 0.0
         data.heat_transport.p_tritium_plant_electric_mw = 0.0
 
-    if data_structure.impurity_radiation_module.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069
+    if data.impurity_radiation.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069
         raise ProcessValidationError(
             "The thermal alpha/electron density ratio should be controlled using f_nd_alpha_electron (itv 109) and not f_nd_impurity_electrons(2)."
             "f_nd_impurity_electrons(2) should be removed from the input file, or set to the default value 0.1D0."
         )
 
     # Impurity fractions
-    for imp in range(data_structure.impurity_radiation_module.N_IMPURITIES):
-        data_structure.impurity_radiation_module.f_nd_impurity_electron_array[imp] = (
-            data_structure.impurity_radiation_module.f_nd_impurity_electrons[imp]
+    for imp in range(N_IMPURITIES):
+        data.impurity_radiation.f_nd_impurity_electron_array[imp] = (
+            data.impurity_radiation.f_nd_impurity_electrons[imp]
         )
 
     # Stop the run if oacdcp is used as an optimisation variable

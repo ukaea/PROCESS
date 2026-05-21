@@ -6,10 +6,7 @@ import numpy as np
 import pytest
 
 from process.core import constants
-from process.data_structure import (
-    impurity_radiation_module,
-    physics_variables,
-)
+from process.data_structure import physics_variables
 from process.models.physics.impurity_radiation import initialise_imprad
 from process.models.physics.physics import (
     DetailedPhysics,
@@ -1702,7 +1699,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    initialise_imprad()
+    initialise_imprad(physics.data)
 
     monkeypatch.setattr(
         physics.data.current_drive,
@@ -1711,19 +1708,19 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     )
 
     monkeypatch.setattr(
-        impurity_radiation_module,
+        physics.data.impurity_radiation,
         "f_nd_impurity_electron_array",
         plasmacompositionparam.f_nd_impurity_electron_array,
     )
 
     monkeypatch.setattr(
-        impurity_radiation_module,
+        physics.data.impurity_radiation,
         "impurity_arr_z",
         plasmacompositionparam.impurity_arr_z,
     )
 
     monkeypatch.setattr(
-        impurity_radiation_module,
+        physics.data.impurity_radiation,
         "m_impurity_amu_array",
         plasmacompositionparam.m_impurity_amu_array,
     )
@@ -1916,7 +1913,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     physics.plasma_composition()
 
-    assert impurity_radiation_module.f_nd_impurity_electron_array == pytest.approx(
+    assert physics.data.impurity_radiation.f_nd_impurity_electron_array == pytest.approx(
         plasmacompositionparam.expected_impurity_arr_frac
     )
 
