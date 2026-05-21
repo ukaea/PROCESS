@@ -200,7 +200,7 @@ class Stellarator(Model):
 
         To clarify the coils scaling factor:
         Coil aspect ratio factor can be described with the reversed equation (so if we would know r_coil_minor)
-        self.data.stellarator.f_coil_aspect = (
+        f_coil_aspect = (
             (physics_variables.rmajor / self.data.stellarator.r_coil_minor) /
             (self.data.stellarator_config.stella_config_rmajor_ref /
              self.data.stellarator_config.stella_config_coil_rminor)
@@ -252,7 +252,7 @@ class Stellarator(Model):
         )  # B-field scaling factor
 
         # Coil aspect ratio factor to the reference calculation (we use it to scale the coil minor radius)
-        self.data.stellarator.f_coil_aspect = self.data.stellarator.f_st_coil_aspect
+        f_coil_aspect = self.data.stellarator.f_st_coil_aspect
 
         # Coil major radius, scaled with respect to the reference calculation
         self.data.stellarator.r_coil_major = (
@@ -263,7 +263,7 @@ class Stellarator(Model):
         self.data.stellarator.r_coil_minor = (
             self.data.stellarator_config.stella_config_coil_rminor
             * self.data.stellarator.f_st_rmajor
-            / self.data.stellarator.f_coil_aspect
+            / f_coil_aspect
         )
 
         self.data.stellarator.f_coil_shape = (
