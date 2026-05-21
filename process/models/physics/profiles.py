@@ -117,7 +117,12 @@ class DensityProfilePedestalType(IntEnum):
     GREENWALD_FRACTION = (1, "Fractions of the Greenwald limit")
 
     def __new__(cls, value: int, description: str):
-        """Create a new PlasmaProfileShapeType instance."""
+        """Create a new DensityProfilePedestalType instance.
+
+        Parameters:
+            value: Integer value for the enum member.
+            description: Human-readable description for the enum member.
+        """
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._description_ = description
