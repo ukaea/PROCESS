@@ -302,43 +302,23 @@ class ExtractedNuclearData:
         species: str,
         atomic_mass: float,
         endf_record: ENDFRecord,
-        init_neutron_energy: float = DT_NEUTRON_E,
     ):
         """
         Parameters
         ----------
-        endf_record:
-            The ENDF record that records the data.
-        group_structure:
-            Energy bin edges, 1D array of len = n_groups+1
-        init_neutron_energy:
-            Neutron's initial energy when it first exit the plasma, before any
-            downscattering or reactions. unit: J.
-        atomic_mass:
-            The average atomic mass
         species:
             The name of the species which nuclear data is being extracted from.
-
-        Attributes
-        ----------
-        group_energy:
-            The average neutron energy of each group.
-        incident_neutron_group:
-            The neutron group index which contains the neutron's initial energy when it
-            first exit the plasma.
+        group_structure:
+            Energy bin edges, 1D array of len = n_groups+1
+        atomic_mass:
+            The average atomic mass
+        endf_record:
+            The ENDF record that records the data.
         """
         self.group_structure = np.asarray(group_structure)
         self.species = species
         self.atomic_mass = atomic_mass
         self.endf_record = endf_record
-
-        # flux incident on the first wall at the highest energy, then is expected to down-scatter.
-        self.init_neutron_energy = init_neutron_energy
-        self.group_energy, self.incident_neutron_group = (
-            calculate_mean_energy_and_incident_bin(
-                self.group_structure, self.init_neutron_energy
-            )
-        )
 
         self.sigma_total = self.rules["total"].resolve_xs(
             self.endf_record, self.group_structure
@@ -750,6 +730,7 @@ class MaterialMacroInfo:
         group_structure: npt.NDArray[np.float64],
         density: float,
         elements: dict[str, float],
+        init_neutron_energy: float = DT_NEUTRON_E,
         name: str = "",
         source: str = "",
         comment: str = "",
@@ -767,6 +748,17 @@ class MaterialMacroInfo:
             data source described by a string.
         comment:
             comment on the data (string)
+        init_neutron_energy:
+            Neutron's initial energy when it first exit the plasma, before any
+            downscattering or reactions. unit: J.
+
+        Attributes
+        ----------
+        group_energy:
+            The average neutron energy of each group.
+        incident_neutron_group:
+            The neutron group index which contains the neutron's initial energy when it
+            first exit the plasma.
         """
         self.group_structure = np.asarray(group_structure)
         if (np.diff(self.group_structure) >= 0).any():
@@ -780,6 +772,13 @@ class MaterialMacroInfo:
         if (self.group_structure <= 0).any():
             warnings.warn("Zero energy (inf. lethargy) not allowed.", stacklevel=2)
             self.group_structure = np.clip(self.group_structure, 1e-9 * EV_TO_J, np.inf)
+        # flux incident on the first wall at the highest energy, then is expected to down-scatter.
+        self.init_neutron_energy = init_neutron_energy
+        self.group_energy, self.incident_neutron_group = (
+            calculate_mean_energy_and_incident_bin(
+                self.group_structure, self.init_neutron_energy
+            )
+        )
         self.density = float(density)
         self.name = name
         self.source = source

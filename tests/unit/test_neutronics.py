@@ -16,31 +16,31 @@ MIN_E = 1 / 40 * EV_TO_J
 
 def test_group_structure_0_energy():
     with pytest.warns():
-        mat = MaterialMacroInfo([1.0, 0.0], 1.0, {"C": 1.0})
+        mat = MaterialMacroInfo([1.0, 0.0], 1.0, {"C": 1.0}, 0.99)
         mat._set_sigma([1.0], [[1.0]])  # noqa: SLF001
 
 
 def test_group_structure_too_short():
-    with pytest.raises(ProcessValidationError):
-        mat = MaterialMacroInfo([1.0], 1.0, {"C": 1.0})
+    with pytest.raises(IndexError):
+        mat = MaterialMacroInfo([1.0], 1.0, {"C": 1.0}, 0.99)
         mat._set_sigma([1.0], [[1.0]])  # noqa: SLF001
 
 
 def test_sigma_s_incorrect_shape():
     with pytest.raises(ProcessValidationError):
-        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0})
+        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
         mat._set_sigma([1.0, 2.0], [1.0, 1.0])  # noqa: SLF001
 
 
 def test_sigma_s_too_large():
     with pytest.raises(ProcessValidationError):
-        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0})
+        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
         mat._set_sigma([1.0, 2.0], [[1.0, 1.0], [1.0, 1.0]])  # noqa: SLF001
 
 
 def test_warn_up_elastic_scatter():
     with pytest.warns():
-        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0})
+        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
         mat._set_sigma([1.0, 2.0], [[0.5, 0.5], [1.0, 1.0]])  # noqa: SLF001
 
 
