@@ -1401,9 +1401,9 @@ def constraint_equation_67(constraint_registration, data):
 
 @ConstraintManager.register_constraint(68, "MWT/m", "<=")
 def constraint_equation_68(constraint_registration, data):
-    """Upper limit on Psep scaling (PsepB/qAR)
+    """Upper limit on Psep scaling (PₛₑₚBₜ / q₉₅AR₀)
 
-    psepbqarmax: maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)
+    psepbqarmax: maximum permitted value of ratio of PₛₑₚBₜ / q₉₅AR₀ (MWT/m)
     p_plasma_separatrix_mw: Power to conducted to the divertor region (MW)
     b_plasma_toroidal_on_axis: toroidal field on axis (T) (iteration variable 2)
     q95: safety factor q at 95% flux surface
@@ -1448,7 +1448,7 @@ def constraint_equation_68(constraint_registration, data):
 
 @ConstraintManager.register_constraint(72, "Pa", "<=")
 def constraint_equation_72(constraint_registration, data):
-    """Upper limit on central Solenoid Tresca yield stress
+    """Upper limit on Central Solenoid Tresca yield stress
 
     In the case if the bucked and wedged option ( i_tf_bucking >= 2 ) the constrained
     stress is the largest the largest stress of the
