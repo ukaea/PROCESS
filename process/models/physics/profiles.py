@@ -113,8 +113,20 @@ class Profile(Model, ABC):
 class DensityProfilePedestalType(IntEnum):
     """Enum for i_nd_plasma_pedestal_separatrix types"""
 
-    USER_INPUT = 0
-    GREENWALD_FRACTION = 1
+    USER_INPUT = (0, "User input direct values")
+    GREENWALD_FRACTION = (1, "Fractions of the Greenwald limit")
+
+    def __new__(cls, value: int, description: str):
+        """Create a new PlasmaProfileShapeType instance."""
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._description_ = description
+        return obj
+
+    @DynamicClassAttribute
+    def description(self):
+        """Get the description of the plasma profile shape."""
+        return self._description_
 
 
 class NeProfile(Profile):
@@ -265,12 +277,29 @@ class NeProfile(Profile):
 
     def set_pedestal_and_separatrix_values(self):
         """Sets the pedestal and separatrix density values based on the user input or greenwald fraction method."""
-
         if (
             DensityProfilePedestalType(physics_variables.i_nd_plasma_pedestal_separatrix)
             == DensityProfilePedestalType.USER_INPUT
         ):
-            pass
+            physics_variables.f_nd_plasma_pedestal_greenwald = (
+                physics_variables.nd_plasma_pedestal_electron
+                / (
+                    PlasmaDensityLimit.calculate_greenwald_density_limit(
+                        c_plasma=physics_variables.plasma_current,
+                        rminor=physics_variables.rminor,
+                    )
+                )
+            )
+
+            physics_variables.f_nd_plasma_separatrix_greenwald = (
+                physics_variables.nd_plasma_separatrix_electron
+                / (
+                    PlasmaDensityLimit.calculate_greenwald_density_limit(
+                        c_plasma=physics_variables.plasma_current,
+                        rminor=physics_variables.rminor,
+                    )
+                )
+            )
         elif (
             DensityProfilePedestalType(physics_variables.i_nd_plasma_pedestal_separatrix)
             == DensityProfilePedestalType.GREENWALD_FRACTION

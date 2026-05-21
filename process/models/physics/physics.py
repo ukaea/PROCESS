@@ -19,13 +19,12 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import numerics
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
+from process.models.physics import impurity_radiation
+from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
     PlasmaProfileShapeType,
 )
-from process.models.physics import impurity_radiation
-from process.models.physics.plasma_geometry import PlasmaGeom
-from process.models.physics.profiles import PlasmaProfileShapeType
 
 if TYPE_CHECKING:
     from process.data_structure.physics_variables import PhysicsData
@@ -2503,68 +2502,90 @@ class Physics(Model):
         )
         po.oblnkl(self.outfile)
         if (
-            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            self.data.physics.i_plasma_pedestal
             == PlasmaProfileShapeType.PEDESTAL_PROFILE
         ):
+            po.ovarin(
+                self.outfile,
+                "Pedestal and separatrix density model selected",
+                "(i_nd_plasma_pedestal_separatrix)",
+                physics_variables.i_nd_plasma_pedestal_separatrix,
+            )
+            po.ocmmnt(
+                self.outfile,
+                f"Pedestal and separatrix values set by: "
+                f"{DensityProfilePedestalType(physics_variables.i_nd_plasma_pedestal_separatrix).description}",
+            )
+            po.oblnkl(self.outfile)
+
             po.ovarrf(
                 self.outfile,
                 "Density pedestal r/a location (ρₙ,pedestal)",
                 "(radius_plasma_pedestal_density_norm)",
                 self.data.physics.radius_plasma_pedestal_density_norm,
             )
-            if self.data.physics.f_nd_plasma_pedestal_greenwald >= 0e0:
-                po.ovarre(
+            if (
+                self.data.physics.i_nd_plasma_pedestal_separatrix
+                == DensityProfilePedestalType.USER_INPUT
+            ):
+                po.ovarin(
                     self.outfile,
                     "Electron density pedestal height (nₑ_pedestal) (/m³)",
                     "(nd_plasma_pedestal_electron)",
                     self.data.physics.nd_plasma_pedestal_electron,
+                )
+                po.ovarin(
+                    self.outfile,
+                    "Electron separatrix density (nₑ,ₛₑₚ) (/m³)",
+                    "(nd_plasma_separatrix_electron)",
+                    physics_variables.nd_plasma_separatrix_electron,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Pedestal Greenwald fraction",
+                    "(f_nd_plasma_pedestal_greenwald)",
+                    physics_variables.f_nd_plasma_pedestal_greenwald,
                     "OP ",
                 )
-            else:
+                po.ovarre(
+                    self.outfile,
+                    "Separatrix Greenwald fraction",
+                    "(f_nd_plasma_separatrix_greenwald)",
+                    physics_variables.f_nd_plasma_separatrix_greenwald,
+                    "OP ",
+                )
+
+            elif (
+                physics_variables.i_nd_plasma_pedestal_separatrix
+                == DensityProfilePedestalType.GREENWALD_FRACTION
+            ):
                 po.ovarre(
                     self.outfile,
                     "Electron density pedestal height (nₑ_pedestal) (/m³)",
                     "(nd_plasma_pedestal_electron)",
-                    self.data.physics.nd_plasma_pedestal_electron,
+                    physics_variables.nd_plasma_pedestal_electron,
+                    "OP ",
                 )
-            # must be assigned to their exisiting values#
-            fgwped_out = (
-                self.data.physics.nd_plasma_pedestal_electron
-                / self.data.physics.nd_plasma_electron_max_array[6]
-            )
-            fgwsep_out = (
-                self.data.physics.nd_plasma_separatrix_electron
-                / self.data.physics.nd_plasma_electron_max_array[6]
-            )
-            if self.data.physics.f_nd_plasma_pedestal_greenwald >= 0e0:
-                self.data.physics.f_nd_plasma_pedestal_greenwald = (
-                    self.data.physics.nd_plasma_pedestal_electron
-                    / self.data.physics.nd_plasma_electron_max_array[6]
+                po.ovarre(
+                    self.outfile,
+                    "Electron separatrix density (nₑ,ₛₑₚ) (/m³)",
+                    "(nd_plasma_separatrix_electron)",
+                    physics_variables.nd_plasma_separatrix_electron,
+                    "OP ",
                 )
-            if self.data.physics.f_nd_plasma_separatrix_greenwald >= 0e0:
-                self.data.physics.f_nd_plasma_separatrix_greenwald = (
-                    self.data.physics.nd_plasma_separatrix_electron
-                    / self.data.physics.nd_plasma_electron_max_array[6]
+                po.ovarin(
+                    self.outfile,
+                    "Pedestal Greenwald fraction",
+                    "(f_nd_plasma_pedestal_greenwald)",
+                    physics_variables.f_nd_plasma_pedestal_greenwald,
+                )
+                po.ovarin(
+                    self.outfile,
+                    "Separatrix Greenwald fraction",
+                    "(f_nd_plasma_separatrix_greenwald)",
+                    physics_variables.f_nd_plasma_separatrix_greenwald,
                 )
 
-            po.ovarre(
-                self.outfile,
-                "Pedestal Greenwald fraction",
-                "(fgwped_out)",
-                fgwped_out,
-            )
-            po.ovarre(
-                self.outfile,
-                "Electron density at separatrix (nₑ,ₛₑₚ) (/m³)",
-                "(nd_plasma_separatrix_electron)",
-                self.data.physics.nd_plasma_separatrix_electron,
-            )
-            po.ovarre(
-                self.outfile,
-                "Separatrix Greenwald fraction",
-                "(fgwsep_out)",
-                fgwsep_out,
-            )
             po.oblnkl(self.outfile)
 
         po.ovarre(
