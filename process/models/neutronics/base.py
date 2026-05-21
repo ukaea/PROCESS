@@ -379,6 +379,10 @@ class NeutronFluxProfile:
             Energy bin edges, 1D array of len = n_groups+1
         group_energy:
             The average neutron energy of each group.
+        fluxes:
+            Particle flux (defined by number of neutrons 1 /s /cm^2) entering
+            the first wall for the first time from the plasma. It's a vector
+            since each neutron group can have a different value.
         init_neutron_energy:
             Neutron's initial energy when it first exit the plasma, before any
             downscattering or reactions. unit: J.
