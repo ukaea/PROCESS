@@ -171,9 +171,8 @@ n_{\text{sep}} = \overbrace{f_{\text{GW,sep}}}^{\texttt{f_nd_plasma_separatrix_g
 $$
 
 
-$\texttt{f_nd_plasma_pedestal_greenwald}$ and $\texttt{f_nd_plasma_separatrix_greenwald}$ can be set as iteration variables respectively by using `ixc = 145`
+`f_nd_plasma_pedestal_greenwald` and `f_nd_plasma_separatrix_greenwald` can be set as iteration variables respectively by using `ixc = 145`
 and `ixc = 152` respectively
 
-------
 
 [^1]: Jean, J. (2011). *HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies*. Fusion Science and Technology, 59(2), 308–349. <https://doi.org/10.13182/FST11-A11650>

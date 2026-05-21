@@ -338,12 +338,12 @@ class PhysicsData:
 
 
 f_nd_plasma_pedestal_greenwald: float = 0.85
-"""fraction of Greenwald density to set as pedestal-top density.
+"""Greenwald fraction of the pedestal density
 """
 
 
 f_nd_plasma_separatrix_greenwald: float = 0.5
-"""fraction of Greenwald density to set as separatrix density.
+"""Greenwald fraction of the separatrix density
 """
 
     f_plasma_fuel_helium3: float = 0.0
@@ -987,8 +987,9 @@ i_nd_plasma_pedestal_separatrix: int = None
     temp_plasma_electron_density_weighted_kev: float = 0.0
     """density weighted average electron temperature (keV)"""
 
-temp_plasma_electron_line_avg_kev: float = None
-"""line averaged electron temperature (keV)"""
+    temp_plasma_electron_line_avg_kev: float = None
+    """Line averaged electron temperature (keV)"""
+    
     temp_plasma_ion_vol_avg_kev: float = 12.9
     """volume averaged ion temperature (keV). N.B. calculated from temp_plasma_electron_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`"""
 

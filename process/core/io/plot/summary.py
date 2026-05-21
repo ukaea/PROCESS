@@ -3866,8 +3866,12 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     nd_ions_total = mfile.get("nd_plasma_ions_total_vol_avg", scan=scan)
     nd_fuel_ions = mfile.get("nd_plasma_fuel_ions_vol_avg", scan=scan)
     alphan = mfile.get("alphan", scan=scan)
-    fgwped_out = mfile.get("fgwped_out", scan=scan)
-    fgwsep_out = mfile.get("fgwsep_out", scan=scan)
+    f_nd_plasma_pedestal_greenwald = mfile.get(
+        "f_nd_plasma_pedestal_greenwald", scan=scan
+    )
+    f_nd_plasma_separatrix_greenwald = mfile.get(
+        "f_nd_plasma_separatrix_greenwald", scan=scan
+    )
     nd_plasma_electrons_vol_avg = mfile.get("nd_plasma_electrons_vol_avg", scan=scan)
     # find impurity densities
     imp_frac = np.array([
@@ -4071,7 +4075,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
             f"{nd_fuel_ions / nd_plasma_electrons_vol_avg:.3f}"
         ),
         (
-            rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}"
+            rf"$f_{{\text{{GW e,ped}}}}$: {f_nd_plasma_pedestal_greenwald:.3f}"
             r"$ \hspace{7} \frac{n_{e,0}}{\langle n_e \rangle}$: "
             f"{ne0 / nd_plasma_electrons_vol_avg:.3f}"
         ),
@@ -4081,12 +4085,12 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
             f"{mfile.get('nd_plasma_electron_line', scan=scan) / mfile.get('nd_plasma_electron_max_array(7)', scan=scan):.3f}"
         ),
         rf"$n_{{\text{{e,sep}}}}$: {nd_plasma_separatrix_electron:.3e} m$^{{-3}}$",
-        rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
+        rf"$f_{{\text{{GW e,sep}}}}$: {f_nd_plasma_separatrix_greenwald:.3f}",
     ))
 
     props_density = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
     ax_main.text(
-        0.0,
+        -0.05,
         -0.175,
         textstr_density,
         transform=ax_impurity.transAxes,
