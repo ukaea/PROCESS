@@ -428,17 +428,30 @@ def check_process(inputs, data):  # noqa: ARG001
                 data.physics.i_nd_plasma_pedestal_separatrix
             )
             == DensityProfilePedestalType.USER_INPUT
+            and data_structure.physics_variables.nd_plasma_pedestal_electron
+            < data_structure.physics_variables.nd_plasma_separatrix_electron
         ):
             # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron but it is less than nd_plasma_separatrix_electron.
-            if (
-                data.physics.nd_plasma_pedestal_electron
-                < data.physics.nd_plasma_separatrix_electron
-            ):
-                raise ProcessValidationError(
-                    "Density pedestal is lower than separatrix density",
-                    nd_plasma_pedestal_electron=data.physics.nd_plasma_pedestal_electron,
-                    nd_plasma_separatrix_electron=data.physics.nd_plasma_separatrix_electron,
-                )
+            raise ProcessValidationError(
+                "Density pedestal is lower than separatrix density",
+                nd_plasma_pedestal_electron=data_structure.physics_variables.nd_plasma_pedestal_electron,
+                nd_plasma_separatrix_electron=data_structure.physics_variables.nd_plasma_separatrix_electron,
+            )
+
+        if (
+            DensityProfilePedestalType(
+                data_structure.physics_variables.i_nd_plasma_pedestal_separatrix
+            )
+            == DensityProfilePedestalType.GREENWALD_FRACTION
+            and data_structure.physics_variables.f_nd_plasma_pedestal_greenwald
+            < data_structure.physics_variables.f_nd_plasma_separatrix_greenwald
+        ):
+            # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron but it is less than nd_plasma_separatrix_electron.
+            raise ProcessValidationError(
+                "Density pedestal is lower than separatrix density",
+                f_nd_plasma_pedestal_greenwald=data_structure.physics_variables.f_nd_plasma_pedestal_greenwald,
+                f_nd_plasma_separatrix_greenwald=data_structure.physics_variables.f_nd_plasma_separatrix_greenwald,
+            )
 
             # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron,
             # but pedestal width = 0.

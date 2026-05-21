@@ -277,10 +277,11 @@ class NeProfile(Profile):
 
     def set_pedestal_and_separatrix_values(self):
         """Sets the pedestal and separatrix density values based on the user input or greenwald fraction method."""
-        if (
-            DensityProfilePedestalType(physics_variables.i_nd_plasma_pedestal_separatrix)
-            == DensityProfilePedestalType.USER_INPUT
-        ):
+        i_nd_plasma_pedestal_separatrix = DensityProfilePedestalType(
+            physics_variables.i_nd_plasma_pedestal_separatrix
+        )
+
+        if i_nd_plasma_pedestal_separatrix == DensityProfilePedestalType.USER_INPUT:
             physics_variables.f_nd_plasma_pedestal_greenwald = (
                 physics_variables.nd_plasma_pedestal_electron
                 / (
@@ -301,7 +302,7 @@ class NeProfile(Profile):
                 )
             )
         elif (
-            DensityProfilePedestalType(physics_variables.i_nd_plasma_pedestal_separatrix)
+            i_nd_plasma_pedestal_separatrix
             == DensityProfilePedestalType.GREENWALD_FRACTION
         ):
             physics_variables.nd_plasma_pedestal_electron = (
