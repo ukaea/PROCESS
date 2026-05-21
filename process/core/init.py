@@ -422,54 +422,53 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
         # Density checks
-        # Case where pedestal density is set manually
+        # Issue #589: Pedestal density is lower than separatrix density
+        pedestal_type = DensityProfilePedestalType(
+            data_structure.physics_variables.i_nd_plasma_pedestal_separatrix
+        )
         if (
-            DensityProfilePedestalType(
-                data.physics.i_nd_plasma_pedestal_separatrix
-            )
-            == DensityProfilePedestalType.USER_INPUT
+            pedestal_type == DensityProfilePedestalType.USER_INPUT
             and data_structure.physics_variables.nd_plasma_pedestal_electron
             < data_structure.physics_variables.nd_plasma_separatrix_electron
-        ):
-            # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron but it is less than nd_plasma_separatrix_electron.
-            raise ProcessValidationError(
-                "Density pedestal is lower than separatrix density",
-                nd_plasma_pedestal_electron=data_structure.physics_variables.nd_plasma_pedestal_electron,
-                nd_plasma_separatrix_electron=data_structure.physics_variables.nd_plasma_separatrix_electron,
-            )
-
-        if (
-            DensityProfilePedestalType(
-                data_structure.physics_variables.i_nd_plasma_pedestal_separatrix
-            )
-            == DensityProfilePedestalType.GREENWALD_FRACTION
+        ) or (
+            pedestal_type == DensityProfilePedestalType.GREENWALD_FRACTION
             and data_structure.physics_variables.f_nd_plasma_pedestal_greenwald
             < data_structure.physics_variables.f_nd_plasma_separatrix_greenwald
         ):
-            # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron but it is less than nd_plasma_separatrix_electron.
             raise ProcessValidationError(
                 "Density pedestal is lower than separatrix density",
-                f_nd_plasma_pedestal_greenwald=data_structure.physics_variables.f_nd_plasma_pedestal_greenwald,
-                f_nd_plasma_separatrix_greenwald=data_structure.physics_variables.f_nd_plasma_separatrix_greenwald,
+                **(
+                    {
+                        "nd_plasma_pedestal_electron": data_structure.physics_variables.nd_plasma_pedestal_electron,
+                        "nd_plasma_separatrix_electron": data_structure.physics_variables.nd_plasma_separatrix_electron,
+                    }
+                    if pedestal_type == DensityProfilePedestalType.USER_INPUT
+                    else {
+                        "f_nd_plasma_pedestal_greenwald": data_structure.physics_variables.f_nd_plasma_pedestal_greenwald,
+                        "f_nd_plasma_separatrix_greenwald": data_structure.physics_variables.f_nd_plasma_separatrix_greenwald,
+                    }
+                ),
             )
 
-            # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron,
-            # but pedestal width = 0.
-            if (
-                abs(data.physics.radius_plasma_pedestal_density_norm - 1.0) <= 1e-7
-                and (
-                    data.physics.nd_plasma_pedestal_electron
-                    - data.physics.nd_plasma_separatrix_electron
-                )
-                >= 1e-7
-            ):
-                warn(
-                    "Density pedestal is at plasma edge "
-                    f"({data.physics.radius_plasma_pedestal_density_norm = }), but nd_plasma_pedestal_electron "
-                    f"({data.physics.nd_plasma_pedestal_electron}) differs from "
-                    f"nd_plasma_separatrix_electron ({data.physics.nd_plasma_separatrix_electron})",
-                    stacklevel=2,
-                )
+        if (
+            abs(
+                data_structure.physics_variables.radius_plasma_pedestal_density_norm
+                - 1.0
+            )
+            <= 1e-7
+            and (
+                data_structure.physics_variables.nd_plasma_pedestal_electron
+                - data_structure.physics_variables.nd_plasma_separatrix_electron
+            )
+            >= 1e-7
+        ):
+            warn(
+                "Density pedestal is at plasma edge "
+                f"({data_structure.physics_variables.radius_plasma_pedestal_density_norm = }), but nd_plasma_pedestal_electron "
+                f"({data_structure.physics_variables.nd_plasma_pedestal_electron}) differs from "
+                f"nd_plasma_separatrix_electron ({data_structure.physics_variables.nd_plasma_separatrix_electron})",
+                stacklevel=2,
+            )
 
         # Issue #862 : Variable nd_plasma_electron_on_axis/nd_plasma_pedestal_electron ratio without constraint eq 81 (nd_plasma_electron_on_axis>nd_plasma_pedestal_electron)
         #  -> Potential hollowed density profile

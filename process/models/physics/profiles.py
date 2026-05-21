@@ -119,7 +119,8 @@ class DensityProfilePedestalType(IntEnum):
     def __new__(cls, value: int, description: str):
         """Create a new DensityProfilePedestalType instance.
 
-        Parameters:
+        Parameters
+        ----------
             value: Integer value for the enum member.
             description: Human-readable description for the enum member.
         """
