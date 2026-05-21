@@ -195,6 +195,7 @@ class PFCoil(Model):
             cs_geometry.r_cs_coil_inner
         )
         self.data.pf_coil.a_cs_poloidal = cs_geometry.a_cs_poloidal
+        self.data.pf_coil.a_cs_toroidal = cs_geometry.a_cs_toroidal
         self.data.pf_coil.dz_cs_full = cs_geometry.dz_cs_full
         self.data.pf_coil.dr_cs_full = cs_geometry.dr_cs_full
 
@@ -2086,28 +2087,28 @@ class PFCoil(Model):
             )
             op.ovarre(
                 self.outfile,
-                "Critical superconductor current density at BOP (A/m2)",
+                "Critical superconductor current density at BOP [A/m²]",
                 "(j_cs_conductor_critical_pulse_start)",
                 self.data.pf_coil.j_cs_conductor_critical_pulse_start,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
-                "Critical cable current density at BOP (A/m2)",
+                "Critical cable current density at BOP [A/m²]",
                 "(jcableoh_bop)",
                 self.data.pf_coil.jcableoh_bop,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
-                "Allowable overall current density at BOP (A/m2)",
+                "Allowable overall current density at BOP [A/m²]",
                 "(j_cs_critical_pulse_start)",
                 self.data.pf_coil.j_cs_critical_pulse_start,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
-                "Actual overall current density at BOP (A/m2)",
+                "Actual overall current density at BOP [A/m²]",
                 "(j_cs_pulse_start)",
                 self.data.pf_coil.j_cs_pulse_start,
                 "OP ",
@@ -2115,35 +2116,35 @@ class PFCoil(Model):
             op.oblnkl(self.outfile)
             op.ovarre(
                 self.outfile,
-                "Maximum field at End Of Flattop (T)",
+                "Maximum field at End Of Flattop [T]",
                 "(b_cs_peak_flat_top_end)",
                 self.data.pf_coil.b_cs_peak_flat_top_end,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
-                "Critical superconductor current density at EOF (A/m2)",
+                "Critical superconductor current density at EOF [A/m²]",
                 "(j_cs_conductor_critical_flat_top_end)",
                 self.data.pf_coil.j_cs_conductor_critical_flat_top_end,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
-                "Critical cable current density at EOF (A/m2)",
+                "Critical cable current density at EOF [A/m²]",
                 "(jcableoh_eof)",
                 self.data.pf_coil.jcableoh_eof,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
-                "Allowable overall current density at EOF (A/m2)",
+                "Allowable overall current density at EOF [A/m²]",
                 "(j_cs_critical_flat_top_end)",
                 self.data.pf_coil.j_cs_critical_flat_top_end,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
-                "Actual overall current density at EOF (A/m2)",
+                "Actual overall current density at EOF [A/m²]",
                 "(j_cs_flat_top_end)",
                 self.data.pf_coil.j_cs_flat_top_end,
             )
@@ -2165,55 +2166,62 @@ class PFCoil(Model):
             # MDK add self.data.build.dr_cs, self.data.build.dr_bore and self.data.build.dr_cs_tf_gap as they can be iteration variables
             op.ovarre(
                 self.outfile,
-                "CS inside radius (m)",
+                "CS inside radius [m]",
                 "(dr_bore)",
                 self.data.build.dr_bore,
             )
-            op.ovarre(self.outfile, "CS thickness (m)", "(dr_cs)", self.data.build.dr_cs)
+            op.ovarre(self.outfile, "CS thickness [m]", "(dr_cs)", self.data.build.dr_cs)
             op.ovarre(
                 self.outfile,
-                "Gap between central solenoid and TF coil (m)",
+                "Gap between central solenoid and TF coil [m]",
                 "(dr_cs_tf_gap)",
                 self.data.build.dr_cs_tf_gap,
             )
             op.ovarre(
                 self.outfile,
-                "CS overall cross-sectional area (m2)",
+                "CS total poloidal cross-sectional area [m²]",
                 "(a_cs_poloidal)",
                 self.data.pf_coil.a_cs_poloidal,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
-                "CS radial middle (m)",
+                "CS total top-down toroidal cross-sectional area [m²]",
+                "(a_cs_toroidal)",
+                self.data.pf_coil.a_cs_toroidal,
+                "OP ",
+            )
+            op.ovarre(
+                self.outfile,
+                "CS radial middle [m]",
                 "(r_cs_middle)",
                 self.data.pf_coil.r_cs_middle,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
-                "CS radial inner (m)",
+                "CS radial inner [m]",
                 "(r_cs_inner)",
                 self.data.pf_coil.r_cs_inner,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
-                "CS radial outer (m)",
+                "CS radial outer [m]",
                 "(r_cs_outer)",
                 self.data.pf_coil.r_cs_outer,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
-                "CS conductor+void cross-sectional area (m2)",
+                "CS conductor+void cross-sectional area [m²]",
                 "(a_cs_cable_space)",
                 self.data.pf_coil.a_cs_cable_space,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
-                "   CS conductor cross-sectional area (m2)",
+                "   CS conductor cross-sectional area [m²]",
                 "(a_cs_cable_space*(1-f_a_cs_void))",
                 self.data.pf_coil.a_cs_cable_space
                 * (1.0e0 - self.data.pf_coil.f_a_cs_void),
@@ -2221,14 +2229,14 @@ class PFCoil(Model):
             )
             op.ovarre(
                 self.outfile,
-                "   CS void cross-sectional area (m2)",
+                "   CS void cross-sectional area [m²]",
                 "(a_cs_cable_space*f_a_cs_void)",
                 self.data.pf_coil.a_cs_cable_space * self.data.pf_coil.f_a_cs_void,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
-                "CS steel cross-sectional area (m2)",
+                "CS steel cross-sectional area [m²]",
                 "(a_cs_steel_poloidal)",
                 self.data.pf_coil.a_cs_steel_poloidal,
                 "OP ",
@@ -3030,6 +3038,8 @@ class CSGeometry:
     """Inner radius of CS coil (m)"""
     a_cs_poloidal: float
     """Total poloidal cross-sectional area of CS coil (m²)"""
+    a_cs_toroidal: float
+    """Total top-down toroidal cross-sectional area of CS coil (m²)"""
     dz_cs_full: float
     """Full height of CS coil (m)"""
     dr_cs_full: float
@@ -3075,16 +3085,17 @@ class CSCoil(Model):
         -------
         CSGeometry
             Data class containing the geometry parameters of the CS coil, including:
-            - z_cs_coil_upper: Upper Z coordinate of CS coil (m)
-            - z_cs_coil_lower: Lower Z coordinate of CS coil (m)
-            - r_cs_coil_middle: Radial coordinate of CS coil centre (m)
-            - r_cs_middle: Mean radius of CS coil (m)
-            - z_cs_coil_middle: Z coordinate of CS coil centre (m)
-            - r_cs_coil_outer: Outer radius of CS coil (m)
-            - r_cs_coil_inner: Inner radius of CS coil (m)
-            - a_cs_poloidal: Total poloidal cross-sectional area of CS coil (m²)
-            - dz_cs_full: Full height of CS coil (m)
-            - dr_cs_full: Full radial thickness of CS coil (m)
+            - z_cs_coil_upper: Upper Z coordinate of CS coil [m]
+            - z_cs_coil_lower: Lower Z coordinate of CS coil [m]
+            - r_cs_coil_middle: Radial coordinate of CS coil centre [m]
+            - r_cs_middle: Mean radius of CS coil [m]
+            - z_cs_coil_middle: Z coordinate of CS coil centre [m]
+            - r_cs_coil_outer: Outer radius of CS coil [m]
+            - r_cs_coil_inner: Inner radius of CS coil [m]
+            - a_cs_poloidal: Total poloidal cross-sectional area of CS coil [m²]
+            - a_cs_toroidal: Total top-down toroidal cross-sectional area of CS coil [m²]
+            - dz_cs_full: Full height of CS coil [m]
+            - dr_cs_full: Full radial thickness of CS coil [m]
         """
         # Central Solenoid mean radius
         r_cs_middle = dr_bore + (0.5e0 * dr_cs)
@@ -3111,8 +3122,11 @@ class CSCoil(Model):
         # Full radial thickness of CS coil
         dr_cs_full = 2 * r_cs_coil_outer
 
-        # Total cross-sectional area
+        # Total poloidal cross-sectional area [m²]
         a_cs_poloidal = 2.0e0 * z_cs_inside_half * dr_cs
+
+        # Total top-down toroidal cross-sectional area [m²]
+        a_cs_toroidal = np.pi * (r_cs_coil_outer**2 - r_cs_coil_inner**2)
 
         return CSGeometry(
             z_cs_coil_upper=z_cs_coil_upper,
@@ -3123,6 +3137,7 @@ class CSCoil(Model):
             r_cs_coil_outer=r_cs_coil_outer,
             r_cs_coil_inner=r_cs_coil_inner,
             a_cs_poloidal=a_cs_poloidal,
+            a_cs_toroidal=a_cs_toroidal,
             dz_cs_full=dz_cs_full,
             dr_cs_full=dr_cs_full,
         )
@@ -3307,6 +3322,7 @@ class CSCoil(Model):
             self.data.pf_coil.n_cs_pf_coils - 1
         ] = cs_geometry.r_cs_coil_inner
         self.data.pf_coil.a_cs_poloidal = cs_geometry.a_cs_poloidal
+        self.data.pf_coil.a_cs_toroidal = cs_geometry.a_cs_toroidal
         self.data.pf_coil.dz_cs_full = cs_geometry.dz_cs_full
         self.data.pf_coil.dr_cs_full = cs_geometry.dr_cs_full
 
@@ -3462,7 +3478,6 @@ class CSCoil(Model):
                 f_a_cs_turn_steel=self.data.pf_coil.f_a_cs_turn_steel,
             )
 
-            # New calculation from Y. Iwasa for axial stress
             (
                 self.data.pf_coil.stress_z_cs_self_peak_midplane,
                 self.data.pf_coil.forc_z_cs_self_peak_midplane,
@@ -3470,14 +3485,12 @@ class CSCoil(Model):
                 r_cs_outer=self.data.pf_coil.r_pf_coil_outer[
                     self.data.pf_coil.n_cs_pf_coils - 1
                 ],
-                r_cs_inner=self.data.pf_coil.r_pf_coil_inner[
-                    self.data.pf_coil.n_cs_pf_coils - 1
-                ],
                 dz_cs_half=self.data.pf_coil.dz_cs_full / 2.0,
                 c_cs_peak=self.data.pf_coil.c_pf_cs_coils_peak_ma[
                     self.data.pf_coil.n_cs_pf_coils - 1
                 ]
                 * 1.0e6,
+                a_cs_toroidal=self.data.pf_coil.a_cs_toroidal,
             )
 
             # Allowable (hoop) stress (Pa) alstroh
@@ -3878,22 +3891,22 @@ class CSCoil(Model):
     @staticmethod
     def calculate_cs_self_peak_midplane_axial_stress(
         r_cs_outer: float,
-        r_cs_inner: float,
         dz_cs_half: float,
         c_cs_peak: float,
+        a_cs_toroidal: float,
     ) -> tuple[float, float]:
         """Calculate axial stress and axial force for the central solenoid.
 
         Parameters
         ----------
         r_cs_outer:
-            Outer radius of the central solenoid (m).
-        r_cs_inner:
-            Inner radius of the central solenoid (m).
+            Outer radius of the central solenoid [m].
         dz_cs_half:
-            Half-height of the central solenoid (m).
+            Half-height of the central solenoid [m].
         c_cs_peak:
-            Peak CS coil current (A).
+            Peak CS coil current [A].
+        a_cs_toroidal:
+            Total top-down toroidal area of the CS [m²].
 
         Returns
         -------
@@ -3949,12 +3962,9 @@ class CSCoil(Model):
         # calculate axial force [N]
         forc_z_cs_self_peak_midplane = axial_term_1 * (axial_term_2 - axial_term_3)
 
-        # axial area [m2]
-        area_ax = np.pi * (r_cs_outer**2 - r_cs_inner**2)
-
         # Calculate unsmeared axial stress
         # Average axial stress at the interface of each half of the coil
-        s_axial = forc_z_cs_self_peak_midplane / (0.5 * area_ax)
+        s_axial = forc_z_cs_self_peak_midplane / (0.5 * a_cs_toroidal)
 
         return s_axial, forc_z_cs_self_peak_midplane
 
@@ -3966,9 +3976,6 @@ class CSCoil(Model):
                 r_cs_outer=self.data.pf_coil.r_pf_coil_outer[
                     self.data.pf_coil.n_cs_pf_coils - 1
                 ],
-                r_cs_inner=self.data.pf_coil.r_pf_coil_inner[
-                    self.data.pf_coil.n_cs_pf_coils - 1
-                ],
                 dz_cs_half=self.data.pf_coil.dz_cs_full / 2.0,
                 c_cs_peak=(
                     self.data.pf_coil.c_pf_coil_turn[
@@ -3978,6 +3985,7 @@ class CSCoil(Model):
                         self.data.pf_coil.n_cs_pf_coils - 1
                     ]
                 ),
+                a_cs_toroidal=self.data.pf_coil.a_cs_toroidal,
             )
             self.data.pf_coil.stress_z_cs_self_midplane_profile[time] = stress_value
 

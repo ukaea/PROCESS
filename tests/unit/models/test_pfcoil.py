@@ -2057,6 +2057,7 @@ def test_brookscoil(pfcoil):
                 0.44999999999999996,
                 0.14999999999999997,
                 0.6,
+                0.5654866776461627,
                 2.0,
                 0.8999999999999999,
             ),
@@ -2067,7 +2068,7 @@ def test_brookscoil(pfcoil):
             0.5,
             0.0,
             0.0,
-            CSGeometry(1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0),
+            CSGeometry(1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0),
         ),
         # Zero fractional height
         (
@@ -2084,6 +2085,7 @@ def test_brookscoil(pfcoil):
                 1.7999999999999998,
                 1.4999999999999998,
                 0.0,
+                3.1101767270538945,
                 0.0,
                 3.5999999999999996,
             ),
@@ -2356,12 +2358,12 @@ def test_calculate_cs_turn_geometry_eu_demo_output_consistency(
 def test_calculate_cs_self_peak_midplane_axial_stress_basic(cs_coil):
     # Typical values for a CS coil
     r_cs_outer = 2.0
-    r_cs_inner = 1.5
+    a_cs_toroidal = 5.497787144
     dz_cs_half = 1.0
     c_cs_peak = 1.2e7  # 12 MA
 
     s_axial, force_axial = cs_coil.calculate_cs_self_peak_midplane_axial_stress(
-        r_cs_outer, r_cs_inner, dz_cs_half, c_cs_peak
+        r_cs_outer, dz_cs_half, c_cs_peak, a_cs_toroidal
     )
 
     # Check actual output numbers
@@ -2376,12 +2378,12 @@ def test_calculate_cs_self_peak_midplane_axial_stress_basic(cs_coil):
 def test_calculate_cs_self_peak_midplane_axial_stress_zero_current(cs_coil):
     # Zero current should yield zero force and stress
     r_cs_outer = 2.0
-    r_cs_inner = 1.5
+    a_cs_toroidal = 5.497787144
     dz_cs_half = 1.0
     c_cs_peak = 0.0
 
     s_axial, force_axial = cs_coil.calculate_cs_self_peak_midplane_axial_stress(
-        r_cs_outer, r_cs_inner, dz_cs_half, c_cs_peak
+        r_cs_outer, dz_cs_half, c_cs_peak, a_cs_toroidal
     )
 
     assert pytest.approx(s_axial) == 0.0
@@ -2391,12 +2393,12 @@ def test_calculate_cs_self_peak_midplane_axial_stress_zero_current(cs_coil):
 def test_calculate_cs_self_peak_midplane_axial_stress_extreme_geometry(cs_coil):
     # Very thin coil, large dz_cs_half
     r_cs_outer = 1.01
-    r_cs_inner = 1.0
+    a_cs_toroidal = 0.06314601234
     dz_cs_half = 10.0
     c_cs_peak = 1.0e7
 
     s_axial, force_axial = cs_coil.calculate_cs_self_peak_midplane_axial_stress(
-        r_cs_outer, r_cs_inner, dz_cs_half, c_cs_peak
+        r_cs_outer, dz_cs_half, c_cs_peak, a_cs_toroidal
     )
 
     # Check actual output numbers
@@ -2410,12 +2412,12 @@ def test_calculate_cs_self_peak_midplane_axial_stress_extreme_geometry(cs_coil):
 def test_calculate_cs_self_peak_midplane_axial_stress_invalid(cs_coil):
     # Negative dz_cs_half should still return floats, but may be positive force
     r_cs_outer = 2.0
-    r_cs_inner = 1.5
+    a_cs_toroidal = 5.497787144
     dz_cs_half = 2.0
     c_cs_peak = 1.2e7
 
     s_axial, force_axial = cs_coil.calculate_cs_self_peak_midplane_axial_stress(
-        r_cs_outer, r_cs_inner, dz_cs_half, c_cs_peak
+        r_cs_outer, dz_cs_half, c_cs_peak, a_cs_toroidal
     )
 
     # Check actual output numbers

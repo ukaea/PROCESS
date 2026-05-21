@@ -106,6 +106,9 @@ class PFCoilData:
     - =1 Hoop + Axial stress
     """
 
+    a_cs_toroidal: float = 0.0
+    """Central solenoid top-down toroidal cross-sectional area (m2)"""
+
     a_cs_poloidal: float = 0.0
     """Central solenoid vertical cross-sectional area (m2)"""
 

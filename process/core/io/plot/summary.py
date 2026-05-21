@@ -10052,6 +10052,7 @@ def plot_cs_coil_structure(
         f"CS full height: {mfile.get('dz_cs_full', scan=scan):.4f} m\n"
         f"CS full width: {mfile.get('dr_cs_full', scan=scan):.4f} m\n"
         f"CS poloidal area: {mfile.get('a_cs_poloidal', scan=scan):.4f} m$^2$\n"
+        f"CS top-down toroidal area: {mfile.get('a_cs_toroidal', scan=scan):.4f} m$^2$\n"
         f"$N_{{\\text{{turns}}}}:$ {mfile.get('n_pf_coil_turns[n_cs_pf_coils-1]', scan=scan):,.2f}\n"
         f"$I_{{\\text{{peak}}}}:$ {mfile.get('c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]', scan=scan):.3f}$ \\ MA$\n"
         f"$B_{{\\text{{peak}}}}:$ {mfile.get('b_pf_coil_peak[n_cs_pf_coils-1]', scan=scan):.3f}$ \\ T$\n"
