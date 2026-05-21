@@ -26,6 +26,8 @@ BARNS_TO_M2 = 1e-28
 N_A = Avogadro
 EV_TO_J = 1.602e-19
 DT_NEUTRON_E = 14.06e6 * EV_TO_J
+NEUTRON_MASS_AS_ENERGY = 939.565E6 * EV_TO_J
+SPEED_OF_LIGHT = 299_792_458
 
 with open(Path(__file__).parent / "atomic_data.json") as j:
     _data = json.load(j)
@@ -219,9 +221,72 @@ MT_SCAT_INELASTIC = MTTreeNode(
     },
 )
 
+def calculate_mean_energy_and_incident_bin(
+    group_structure: npt.NDArray[np.float64],
+    init_neutron_e: float,
+) -> npt.NDArray[np.float64]:
+    """
+    Calculate the average energy of each neutron group in Joule.
+    When implementing this method, we can choose either a weighted mean or
+    an unweighted mean. The weighted mean (where neutron flux is assumed
+    constant w.r.t. neutron lethargy within the bin) is more accurate, but
+    may end up being incorrect if the bins in the group structure are too
+    wide, as it heavily biases towards lower energy. In contrast, the
+    simple unweighted mean does not have such problem, but is inconsistent
+    with the rest of the program's assumption (const. flux w.r.t. lethargy),
+    therefore the former is chosen.
+
+    Parameters
+    ----------
+    group_structure:
+        The neutron energy bin's edges, in descending order, with len=
+        n_groups + 1.
+    init_neutron_e:
+        The neutrons entering from the plasma to the FW is assumed to be
+        monoenergetic, with this energy.
+
+    Returns
+    -------
+    avg_neutron_E:
+        Mean energy of neutrons. The bin containing init_neutron_e
+        (likely the highest energy bin, i.e. bin[0]) is assumed to be
+        dominated by the unscattered neutrons entering from the plasma,
+        therefore for that particular bin, it is assigned to have energy =
+        init_neutron_e.
+    incident_neutron_group:
+        The group index (n) of the neutron group whose energy range
+        includes the incident (monoenergetic) plasma neutron's energy.
+    """
+    high, low = group_structure[:-1], group_structure[1:]
+    weighted_mean = (high - low) / (np.log(high) - np.log(low))
+    # unweighted_mean = np.mean([high, low], axis=0)
+    first_bin = np.logical_and(low <= init_neutron_e, init_neutron_e < high)
+    incident_neutron_group = np.where(first_bin)[0][0]
+    if first_bin.sum() < 1:
+        raise ValueError(
+            "The energy of neutrons incident from the plasma is not "
+            "captured by the group structure!"
+        )
+    if first_bin.sum() > 1:
+        raise ValueError(
+            "The energy of neutrons incident from the plasma is captured "
+            "multiple times, by more than one bin in the group structure!"
+        )
+    if incident_neutron_group != 0:
+        raise NotImplementedError(
+            "If init_neutron_e does not sit inside the lowest lethargy "
+            "group, then solve_lowest_group would have to be re-written."
+        )
+    weighted_mean[first_bin] = init_neutron_e
+    return weighted_mean, incident_neutron_group
 
 class ExtractedNuclearData:
-    """A class for storing the useful nuclear data extracted out of the ENDFRecord."""
+    """
+    A class for storing the useful nuclear data extracted out of the ENDFRecord.
+    This extracted data is formatted according to the group structure and the dominant
+    fusion neutron energy, and therefore is not interchangeable across different group
+    structures.
+    """
 
     rules: ClassVar[dict[str, MTResolutionRule]] = {
         "total": MTResolutionRule((), "n,tot", 1),
@@ -237,11 +302,43 @@ class ExtractedNuclearData:
         species: str,
         atomic_mass: float,
         endf_record: ENDFRecord,
+        init_neutron_energy: float = DT_NEUTRON_E,
     ):
+        """
+        Parameters
+        ----------
+        endf_record:
+            The ENDF record that records the data.
+        group_structure:
+            Energy bin edges, 1D array of len = n_groups+1
+        init_neutron_energy:
+            Neutron's initial energy when it first exit the plasma, before any
+            downscattering or reactions. unit: J.
+        atomic_mass:
+            The average atomic mass
+        species:
+            The name of the species which nuclear data is being extracted from.
+
+        Attributes
+        ----------
+        group_energy:
+            The average neutron energy of each group.
+        incident_neutron_group:
+            The neutron group index which contains the neutron's initial energy when it
+            first exit the plasma.
+        """
         self.group_structure = np.asarray(group_structure)
         self.species = species
         self.atomic_mass = atomic_mass
         self.endf_record = endf_record
+
+        # flux incident on the first wall at the highest energy, then is expected to down-scatter.
+        self.init_neutron_energy = init_neutron_energy
+        self.group_energy, self.incident_neutron_group = (
+            calculate_mean_energy_and_incident_bin(
+                self.group_structure, self.init_neutron_energy
+            )
+        )
 
         self.sigma_total = self.rules["total"].resolve_xs(
             self.endf_record, self.group_structure
@@ -254,7 +351,7 @@ class ExtractedNuclearData:
             self.rules["elastic_scattering"].resolve_xs(
                 self.endf_record, self.group_structure
             )
-            * scattering_weight_matrix(self.group_structure, self.atomic_mass).T
+            * scattering_weight_matrix(self.group_structure, self.group_energy, self.atomic_mass).T
         ).T
         self.sigma_scatter += (
             self.rules["inelastic_scattering"].resolve_xs(
@@ -262,6 +359,7 @@ class ExtractedNuclearData:
             )
             * scattering_weight_matrix(
                 self.group_structure,
+                self.group_energy,
                 self.atomic_mass,
                 self.endf_record.q_values.get(4, 0.0),
             ).T  # TODO: calculate with an inelastic scattering weight matrix instead.
@@ -393,9 +491,14 @@ def is_natural(iso_name: str):
 def _get_alpha(atomic_mass: float):
     return ((atomic_mass - 1) / (atomic_mass + 1)) ** 2
 
+def relativistic_energy_to_speed(energy_in_J):
+    """Calculate neutron's speed from its relativistic kinetic energy"""
+    ratio = energy_in_J / NEUTRON_MASS_AS_ENERGY
+    return np.sqrt(1-1/(ratio+1)**2) * SPEED_OF_LIGHT
 
 def scattering_weight_matrix(
     group_structure: npt.NDArray[np.float64],
+    group_energy: npt.NDArray[np.float64],
     atomic_mass: float,
     energy_lost=0.0,  # noqa: ARG001
 ) -> npt.NDArray:
@@ -425,20 +528,22 @@ def scattering_weight_matrix(
     alpha = _get_alpha(atomic_mass)
     n_groups = len(group_structure) - 1
     matrix = np.zeros([n_groups, n_groups], dtype=float)
+    group_speed = relativistic_energy_to_speed(group_energy)
     for i, in_group in enumerate(pairwise(group_structure)):
         for g, out_group in enumerate(pairwise(group_structure)):
+            speed_scale_factor = group_speed[g] / group_speed[i]
             if i == g:
                 for energy_limits, case_descr in _split_into_energy_limits(
                     alpha, in_group
                 ):
-                    matrix[i, g] += _convolved_scattering_fraction(
+                    matrix[i, g] += speed_scale_factor * _convolved_scattering_fraction(
                         energy_limits, alpha, in_group, out_group, case_descr
                     )
             elif i < g:
                 for energy_limits, case_descr in _split_into_energy_limits(
                     alpha, in_group, out_group
                 ):
-                    matrix[i, g] += _convolved_scattering_fraction(
+                    matrix[i, g] += speed_scale_factor * _convolved_scattering_fraction(
                         energy_limits, alpha, in_group, out_group, case_descr
                     )
     return matrix
