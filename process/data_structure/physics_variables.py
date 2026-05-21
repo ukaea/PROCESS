@@ -336,6 +336,9 @@ class PhysicsData:
     load calculation (`i_pflux_fw_neutron=1`)
     """
 
+f_nd_plasma_greenwald: float = None
+"""Greenwald fraction of the line averaged electron density. The classic Greenwald
+limit value"""
 
 f_nd_plasma_pedestal_greenwald: float = 0.85
 """Greenwald fraction of the pedestal density

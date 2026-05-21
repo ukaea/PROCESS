@@ -117,7 +117,7 @@ BASELINE_LIST = [
     "temp_plasma_electron_on_axis_kev",
     "nd_plasma_electrons_vol_avg",
     "nd_plasma_electron_on_axis",
-    "dnla_gw",
+    "f_nd_plasma_greenwald",
     "temp_plasma_separatrix_kev",
     "nd_plasma_separatrix_electron",
     "temp_plasma_pedestal_kev",

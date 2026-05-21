@@ -3172,7 +3172,7 @@ def plot_main_plasma_information(
         f"$\\mathbf{{Density \\ limit:}}$\n"
         f"({DensityLimitModel(int(mfile.get('i_density_limit', scan=scan))).full_name})\n"
         f"$n_{{\\text{{e,limit}}}}: {mfile.get('nd_plasma_electrons_max', scan=scan):.3e} \\ m^{{-3}}$\n"
-        f"$f_{{\\text{{GW}}}}$: {mfile.get('dnla_gw', scan=scan):.4f}"
+        f"$f_{{\\text{{GW}}}}$: {mfile.get('f_nd_plasma_greenwald', scan=scan):.4f}"
     )
 
     axis.text(

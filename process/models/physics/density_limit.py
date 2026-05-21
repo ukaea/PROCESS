@@ -87,7 +87,9 @@ class PlasmaDensityLimit(Model):
             zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
         )
 
-        # Calculate beta_norm_max based on i_beta_norm_max
+        # Convert the chosen density limit model to the actual density limit value and
+        # store in physics variables. This is the value that will be used for all
+        # comparisons to the plasma density in the rest of the code.
         try:
             model = DensityLimitModel(int(self.data.physics.i_density_limit))
             self.data.physics.nd_plasma_electrons_max = self.get_density_limit_value(
@@ -99,6 +101,12 @@ class PlasmaDensityLimit(Model):
                 "Illegal value of i_density_limit",
                 i_density_limit=self.data.physics.i_density_limit,
             ) from None
+
+        # Assign the Greenwald fraction for the rest of the code
+        physics_variables.f_nd_plasma_greenwald = (
+            physics_variables.nd_plasma_electron_line
+            / physics_variables.nd_plasma_electron_max_array[6]
+        )
 
     @staticmethod
     def get_density_limit_value(

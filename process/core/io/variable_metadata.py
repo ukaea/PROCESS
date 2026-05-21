@@ -187,7 +187,7 @@ var_dicts = {
         description="Average electron density",
         units="m^{-3}",
     ),
-    "dnla_gw": VariableMetadata(
+    "f_nd_plasma_greenwald": VariableMetadata(
         latex=r"$f_{\mathrm{GW}}$", description="Greenwald fraction", units=""
     ),
     "normalised_toroidal_beta": VariableMetadata(

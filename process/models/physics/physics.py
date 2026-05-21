@@ -2612,9 +2612,8 @@ class Physics(Model):
             po.ovarre(
                 self.outfile,
                 "Greenwald fraction (f_GW)",
-                "(dnla_gw)",
-                self.data.physics.nd_plasma_electron_line
-                / self.data.physics.nd_plasma_electron_max_array[6],
+                "(f_nd_plasma_greenwald)",
+                physics_variables.f_nd_plasma_greenwald,
                 "OP ",
             )
         po.oblnkl(self.outfile)
