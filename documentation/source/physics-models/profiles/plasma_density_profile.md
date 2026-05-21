@@ -171,7 +171,7 @@ n_{\text{sep}} = \overbrace{f_{\text{GW,sep}}}^{\texttt{f_nd_plasma_separatrix_g
 $$
 
 
-$\texttt{f_nd_plasma_pedestal_greenwald}$ and $\texttt{f_nd_plasma_separatrix_greenwald}$ can be set as iteration variables respectively by using `ixc = 45`
+$\texttt{f_nd_plasma_pedestal_greenwald}$ and $\texttt{f_nd_plasma_separatrix_greenwald}$ can be set as iteration variables respectively by using `ixc = 145`
 and `ixc = 152` respectively
 
 ------
