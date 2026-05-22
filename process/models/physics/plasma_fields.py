@@ -88,7 +88,7 @@ class PlasmaFields(Model):
         ff1, ff2, _, _ = self.current.plascar_bpol(aspect, eps, kappa, delta)
 
         # Transform q95 to qbar
-        qbar = q95 * 1.3e0 * (1.0e0 - self.data.physics.eps) ** 0.6e0
+        qbar = q95 * 1.3e0 * (1.0e0 - eps) ** 0.6e0
 
         return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)
 

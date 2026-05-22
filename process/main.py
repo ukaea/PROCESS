@@ -85,7 +85,6 @@ from process.models.physics.current_drive import (
 )
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
-from process.models.physics.fusion_reactions import FusionReactionRate
 from process.models.physics.impurity_radiation import (
     initialise_imprad,
 )
@@ -650,9 +649,6 @@ class Models:
         self.plasma_current = PlasmaCurrent()
         self.plasma_fields = PlasmaFields()
         self.plasma_dia_current = PlasmaDiamagneticCurrent()
-        self.fusion_reaction_rate = FusionReactionRate(
-            plasma_profile=self.plasma_profile
-        )
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
@@ -667,7 +663,6 @@ class Models:
             plasma_fields=self.plasma_fields,
             plasma_dia_current=self.plasma_dia_current,
             plasma_geometry=self.plasma_geom,
-            fusion_reactions=self.fusion_reaction_rate,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
@@ -686,7 +681,6 @@ class Models:
             neoclassics=self.neoclassics,
             plasma_beta=self.plasma_beta,
             plasma_bootstrap=self.plasma_bootstrap_current,
-            fusion_reactions=self.fusion_reaction_rate,
         )
 
         self.dcll = DCLL(fw=self.fw)
@@ -761,7 +755,6 @@ class Models:
             self.plasma_current,
             self.neoclassics,
             self.plasma_inductance,
-            self.fusion_reaction_rate,
             self.ne_profile,
             self.te_profile,
             self.plasma_fields,

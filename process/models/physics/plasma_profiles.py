@@ -204,8 +204,6 @@ class PlasmaProfile(Model):
         integ1 = sp.integrate.simpson(arg1, x=rho, dx=drho)
         integ2 = sp.integrate.simpson(arg2, x=rho, dx=drho)
 
-        self.data.physics.integ1 = integ1
-        self.data.physics.integ2 = integ2
         #  Density-weighted temperatures
         self.data.physics.temp_plasma_electron_density_weighted_kev = integ1 / integ2
         self.data.physics.temp_plasma_ion_density_weighted_kev = (

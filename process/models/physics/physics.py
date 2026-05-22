@@ -189,7 +189,6 @@ class Physics(Model):
         plasma_fields: PlasmaFields,
         plasma_dia_current: PlasmaDiamagneticCurrent,
         plasma_geometry: PlasmaGeom,
-        fusion_reactions: reactions.FusionReactionRate,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -206,7 +205,6 @@ class Physics(Model):
         self.fields = plasma_fields
         self.dia_current = plasma_dia_current
         self.geometry = plasma_geometry
-        self.fusion_reactions = fusion_reactions
 
     def output(self) -> None:
         """Output plasma physics information."""
@@ -568,11 +566,12 @@ class Physics(Model):
 
         # Calculate fusion power + components
 
-        self.fusion_reactions.deuterium_branching(
+        fusion_reactions = reactions.FusionReactionRate(self.plasma_profile, self.data)
+        fusion_reactions.deuterium_branching(
             self.data.physics.temp_plasma_ion_vol_avg_kev
         )
-        self.fusion_reactions.calculate_fusion_rates()
-        self.fusion_reactions.set_physics_variables()
+        fusion_reactions.calculate_fusion_rates()
+        fusion_reactions.set_physics_variables()
 
         # This neglects the power from the beam
         self.data.physics.p_plasma_dt_mw = (

@@ -7,7 +7,7 @@ import numpy as np
 from scipy import integrate
 
 from process.core import constants
-from process.core.model import Model
+from process.core.model import DataStructure
 from process.data_structure.physics_variables import PhysicsData
 from process.models.physics.plasma_profiles import PlasmaProfile
 
@@ -63,7 +63,7 @@ REACTION_CONSTANTS_DD2 = {
 }
 
 
-class FusionReactionRate(Model):
+class FusionReactionRate:
     """Calculate the fusion reaction rate for each reaction case (DT, DHE3, DD1, DD2).
 
     This class provides methods to numerically integrate over the plasma cross-section
@@ -102,7 +102,7 @@ class FusionReactionRate(Model):
           Apr. 1992, doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """
 
-    def __init__(self, plasma_profile: PlasmaProfile):
+    def __init__(self, plasma_profile: PlasmaProfile, data: DataStructure):
         """
         Initialize the FusionReactionRate class with the given plasma profile.
 
@@ -114,6 +114,8 @@ class FusionReactionRate(Model):
 
         """
         self.plasma_profile = plasma_profile
+        self.data = data
+
         self.sigmav_dt_average = 0.0
         self.dhe3_power_density = 0.0
         self.dd_power_density = 0.0
@@ -125,12 +127,6 @@ class FusionReactionRate(Model):
         self.alpha_rate_density = 0.0
         self.proton_rate_density = 0.0
         self.f_dd_branching_trit = 0.0
-
-    def run(self):
-        """This model isn't run"""
-
-    def output(self):
-        """This model has no output"""
 
     def deuterium_branching(self, ion_temperature: float) -> float:
         """Calculate the relative rate of tritium producing D-D reactions to 3He ones

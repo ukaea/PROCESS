@@ -24,7 +24,7 @@ N_CONFINEMENT_SCALINGS = 51
 """number of energy confinement time scaling laws"""
 
 
-@dataclass
+@dataclass(slots=True)
 class PhysicsData:
     iscz: int = 0
 
@@ -1272,6 +1272,12 @@ class PhysicsData:
 
     res_plasma_fuel_spitzer_vol_avg: float = 0.0
     """Volume averaged plasma Spitzer resistivity due to fuel ions (ohm m)"""
+
+    dt_power_density_plasma: float = 0.0
+    sigmav_dt_average: float = 0.0
+    dhe3_power_density: float = 0.0
+    dd_power_density: float = 0.0
+    fusrat: float = 0.0
 
 
 CREATE_DICTS_FROM_DATACLASS = PhysicsData
