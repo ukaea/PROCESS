@@ -48,9 +48,9 @@ def objective_function(minmax: int, data: DataStructure) -> float:
         objective_metric = 0.2 * data.physics.rmajor
     elif figure_of_merit == FiguresOfMerit.NEUTRON_WALL_LOAD:
         objective_metric = data.physics.pflux_fw_neutron_mw
-    elif figure_of_merit == FiguresOfMerit.TF_PF_COIL_POWER:
+    elif figure_of_merit == FiguresOfMerit.P_TF_PLUS_P_PF:
         objective_metric = (tfcoil_variables.tfcmw + 1e-3 * data.pf_power.srcktpm) / 10.0
-    elif figure_of_merit == FiguresOfMerit.FUSION_GAIN:
+    elif figure_of_merit == FiguresOfMerit.FUSION_GAIN_Q:
         objective_metric = data.current_drive.big_q_plasma
     elif figure_of_merit == FiguresOfMerit.COST_OF_ELECTRICITY:
         objective_metric = data.costs.coe / 100.0
