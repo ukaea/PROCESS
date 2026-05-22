@@ -185,7 +185,6 @@ class Stellarator(Model):
                 self,
                 self.data.stellarator.max_gyrotron_frequency,
                 self.data.stellarator.te0_ecrh_achievable,
-                self.data,
             )
 
         self.data.stellarator.first_call = False

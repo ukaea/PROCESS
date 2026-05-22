@@ -146,7 +146,7 @@ def st_d_limit_ecrh(gyro_frequency_max, bt_input, i_plasma_pedestal):
     return dlimit_ecrh, bt_max
 
 
-def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available, data):
+def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available):
     """Routine to calculate if the plasma is ignitable with the current values for the B field. Assumes
     current ECRH achievable peak temperature (which is inaccurate as the cordey pass should be calculated)
 
@@ -163,8 +163,6 @@ def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available, data
 
     te0_available :
         Reachable peak electron temperature, reached by ECRH (KEV)
-    data: DataStructure
-        data structure object
 
     Returns
     -------
@@ -174,27 +172,27 @@ def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available, data
         Heating Power loss at ignition point (MW)
 
     """
-    te_old = copy(data.physics.temp_plasma_electron_vol_avg_kev)
+    te_old = copy(stellarator.data.physics.temp_plasma_electron_vol_avg_kev)
     # Volume averaged data.physics.te from te0_achievable
-    data.physics.temp_plasma_electron_vol_avg_kev = te0_available / (
-        1.0e0 + data.physics.alphat
+    stellarator.data.physics.temp_plasma_electron_vol_avg_kev = te0_available / (
+        1.0e0 + stellarator.data.physics.alphat
     )
     ne0_max, bt_ecrh_max = st_d_limit_ecrh(
         gyro_frequency_max,
-        data.physics.b_plasma_toroidal_on_axis,
-        data.physics.i_plasma_pedestal,
+        stellarator.data.physics.b_plasma_toroidal_on_axis,
+        stellarator.data.physics.i_plasma_pedestal,
     )
     # Now go to point where ECRH is still available
     # In density..
-    dene_old = copy(data.physics.nd_plasma_electrons_vol_avg)
-    data.physics.nd_plasma_electrons_vol_avg = min(
-        dene_old, ne0_max / (1.0e0 + data.physics.alphan)
+    dene_old = copy(stellarator.data.physics.nd_plasma_electrons_vol_avg)
+    stellarator.data.physics.nd_plasma_electrons_vol_avg = min(
+        dene_old, ne0_max / (1.0e0 + stellarator.data.physics.alphan)
     )
 
     # And B-field..
-    bt_old = copy(data.physics.b_plasma_toroidal_on_axis)
-    data.physics.b_plasma_toroidal_on_axis = min(
-        bt_ecrh_max, data.physics.b_plasma_toroidal_on_axis
+    bt_old = copy(stellarator.data.physics.b_plasma_toroidal_on_axis)
+    stellarator.data.physics.b_plasma_toroidal_on_axis = min(
+        bt_ecrh_max, stellarator.data.physics.b_plasma_toroidal_on_axis
     )
 
     stellarator.st_phys(False)
@@ -203,15 +201,15 @@ def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available, data
     )  # The second call seems to be necessary for all values to "converge" (and is sufficient)
 
     powerht_out = max(
-        copy(data.physics.p_plasma_loss_mw), 0.00001e0
+        copy(stellarator.data.physics.p_plasma_loss_mw), 0.00001e0
     )  # the radiation module sometimes returns negative heating power
-    pscalingmw_out = copy(data.physics.pscalingmw)
+    pscalingmw_out = copy(stellarator.data.physics.pscalingmw)
 
     # Reverse it and do it again because anything more efficiently isn't suitable with the current implementation
     # This is bad practice but seems to be necessary as of now:
-    data.physics.temp_plasma_electron_vol_avg_kev = te_old
-    data.physics.nd_plasma_electrons_vol_avg = dene_old
-    data.physics.b_plasma_toroidal_on_axis = bt_old
+    stellarator.data.physics.temp_plasma_electron_vol_avg_kev = te_old
+    stellarator.data.physics.nd_plasma_electrons_vol_avg = dene_old
+    stellarator.data.physics.b_plasma_toroidal_on_axis = bt_old
 
     # The second call seems to be necessary for all values to "converge" (and is sufficient)
     stellarator.st_phys(False)
@@ -268,7 +266,6 @@ def output(stellarator, bt_ecrh, ne0_max_ECRH, data):
         stellarator,
         data.stellarator.max_gyrotron_frequency,
         data.stellarator.te0_ecrh_achievable,
-        data,
     )
     po.ovarre(
         stellarator.outfile,
