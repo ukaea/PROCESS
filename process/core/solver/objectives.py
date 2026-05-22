@@ -35,7 +35,10 @@ def objective_function(minmax: int, data: DataStructure) -> float:
         data structure object for providing data to the
         objective function
     """
-    figure_of_merit = FiguresOfMerit(abs(minmax))
+    try:
+        figure_of_merit = FiguresOfMerit(abs(minmax))
+    except ValueError as err:
+        raise ProcessValueError(f"Invalid minmax value: {minmax}") from err
 
     # -1 = maximise
     # +1 = minimise

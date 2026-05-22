@@ -447,7 +447,7 @@ def _plot_solutions(
     else:
         numerics.init_numerics()
         objf_list = {
-            FiguresOfMerit(abs(minmax)).description for minmax in diffs_df["minmax"]
+            FiguresOfMerit(abs(int(minmax))).description for minmax in diffs_df["minmax"]
         }
 
     if len(objf_list) != 1:

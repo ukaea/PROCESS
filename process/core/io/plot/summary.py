@@ -8106,7 +8106,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
         ("!Evaluation", "Run type", "")
         if isinstance(mfile.data["minmax"], MFileErrorClass)
         else (
-            f"!{FiguresOfMerit(abs(int(mfile.get('minmax', scan=-1)))).name}",
+            f"!{FiguresOfMerit(abs(int(mfile.get('minmax', scan=-1)))).description}",
             "Optimising:",
             "",
         ),
