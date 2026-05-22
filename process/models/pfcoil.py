@@ -2540,11 +2540,11 @@ class PFCoil(Model):
 
         op.write(
             self.outfile,
-            "coil\tcurrent\t\tallowed J\tactual J\tJ\t\tcond. mass\tsteel mass\tfield",
+            r"Coil   Peak Current   Critical J  Peak J        Critical J Ratio  Cond. Mass     Steel Mass     Field",
         )
         op.write(
             self.outfile,
-            "\t(MA)\t\t(A/m2)\t\t(A/m2)\t\f_temp_plasma_ion_electron\t\t(kg)\t\t(kg)\t\t(T)",
+            "       (MA)          (A/m²)      (A/m²)          (-)            (kg)            (kg)           (T)",
         )
 
         op.oblnkl(self.outfile)
@@ -2554,12 +2554,18 @@ class PFCoil(Model):
             if self.data.pf_coil.i_pf_conductor == 0:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{self.data.pf_coil.c_pf_cs_coils_peak_ma[k]:.2e}\t{self.data.pf_coil.j_pf_wp_critical[k]:.2e}\t{self.data.pf_coil.j_pf_coil_wp_peak[k]:.2e}\t{self.data.pf_coil.j_pf_coil_wp_peak[k] / self.data.pf_coil.j_pf_wp_critical[k]:.2e}\t{self.data.pf_coil.m_pf_coil_conductor[k]:.2e}\t{self.data.pf_coil.m_pf_coil_structure[k]:.2e}\t{self.data.pf_coil.b_pf_coil_peak[k]:.2e}",
+                    f"PF {k}   {self.data.pf_coil.c_pf_cs_coils_peak_ma[k]:{'.3e' if self.data.pf_coil.c_pf_cs_coils_peak_ma[k] >= 0 else '.2e'}}    "
+                    f"{self.data.pf_coil.j_pf_wp_critical[k]:{'.3e' if self.data.pf_coil.j_pf_wp_critical[k] >= 0 else '.2e'}}    "
+                    f"{self.data.pf_coil.j_pf_coil_wp_peak[k]:{'.3e' if self.data.pf_coil.j_pf_coil_wp_peak[k] >= 0 else '.2e'}}      "
+                    f"{self.data.pf_coil.j_pf_coil_wp_peak[k] / self.data.pf_coil.j_pf_wp_critical[k]:{'.3e' if (self.data.pf_coil.j_pf_coil_wp_peak[k] / self.data.pf_coil.j_pf_wp_critical[k]) >= 0 else '.2e'}}          "
+                    f"{self.data.pf_coil.m_pf_coil_conductor[k]:{'.3e' if self.data.pf_coil.m_pf_coil_conductor[k] >= 0 else '.2e'}}          "
+                    f"{self.data.pf_coil.m_pf_coil_structure[k]:{'.3e' if self.data.pf_coil.m_pf_coil_structure[k] >= 0 else '.2e'}}          "
+                    f"{self.data.pf_coil.b_pf_coil_peak[k]:{'.3e' if self.data.pf_coil.b_pf_coil_peak[k] >= 0 else '.2e'}}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"PF {k}\t{self.data.pf_coil.c_pf_cs_coils_peak_ma[k]:.2e}\t-1.0e0\t{self.data.pf_coil.j_pf_coil_wp_peak[k]:.2e}\t1.0e0\t{self.data.pf_coil.m_pf_coil_conductor[k]:.2e}\t{self.data.pf_coil.m_pf_coil_structure[k]:.2e}\t{self.data.pf_coil.b_pf_coil_peak[k]:.2e}\t",
+                    f"PF {k}   {self.data.pf_coil.c_pf_cs_coils_peak_ma[k]:.2e}\t-1.0e0\t{self.data.pf_coil.j_pf_coil_wp_peak[k]:.2e}\t1.0e0\t{self.data.pf_coil.m_pf_coil_conductor[k]:.2e}\t{self.data.pf_coil.m_pf_coil_structure[k]:.2e}\t{self.data.pf_coil.b_pf_coil_peak[k]:.2e}\t",
                 )
 
         # Central Solenoid, if present
@@ -2568,12 +2574,18 @@ class PFCoil(Model):
                 # Issue #328
                 op.write(
                     self.outfile,
-                    f"CS\t\t{self.data.pf_coil.c_pf_cs_coils_peak_ma[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{max(abs(self.data.pf_coil.j_cs_pulse_start), abs(self.data.pf_coil.j_cs_flat_top_end)):.2e}\t{max(abs(self.data.pf_coil.j_cs_pulse_start), abs(self.data.pf_coil.j_cs_flat_top_end)) / self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.m_pf_coil_conductor[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.m_pf_coil_structure[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.b_pf_coil_peak[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}",
+                    f"CS    {self.data.pf_coil.c_pf_cs_coils_peak_ma[self.data.pf_coil.n_cs_pf_coils - 1]:{'.3e' if self.data.pf_coil.c_pf_cs_coils_peak_ma[self.data.pf_coil.n_cs_pf_coils - 1] >= 0 else '.2e'}}    "
+                    f"{self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1]:{'.3e' if self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1] >= 0 else '.2e'}}    "
+                    f"{max(abs(self.data.pf_coil.j_cs_pulse_start), abs(self.data.pf_coil.j_cs_flat_top_end)):{'.3e' if max(abs(self.data.pf_coil.j_cs_pulse_start), abs(self.data.pf_coil.j_cs_flat_top_end)) >= 0 else '.2e'}}      "
+                    f"{max(abs(self.data.pf_coil.j_cs_pulse_start), abs(self.data.pf_coil.j_cs_flat_top_end)) / self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1]:{'.3e' if (max(abs(self.data.pf_coil.j_cs_pulse_start), abs(self.data.pf_coil.j_cs_flat_top_end)) / self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1]) >= 0 else '.2e'}}          "
+                    f"{self.data.pf_coil.m_pf_coil_conductor[self.data.pf_coil.n_cs_pf_coils - 1]:{'.3e' if self.data.pf_coil.m_pf_coil_conductor[self.data.pf_coil.n_cs_pf_coils - 1] >= 0 else '.2e'}}          "
+                    f"{self.data.pf_coil.m_pf_coil_structure[self.data.pf_coil.n_cs_pf_coils - 1]:{'.3e' if self.data.pf_coil.m_pf_coil_structure[self.data.pf_coil.n_cs_pf_coils - 1] >= 0 else '.2e'}}          "
+                    f"{self.data.pf_coil.b_pf_coil_peak[self.data.pf_coil.n_cs_pf_coils - 1]:{'.3e' if self.data.pf_coil.b_pf_coil_peak[self.data.pf_coil.n_cs_pf_coils - 1] >= 0 else '.2e'}}",
                 )
             else:
                 op.write(
                     self.outfile,
-                    f"CS\t\t{self.data.pf_coil.c_pf_cs_coils_peak_ma[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(self.data.pf_coil.j_cs_pulse_start)):.2e}\t{abs(self.data.pf_coil.j_cs_flat_top_end):.2e}\t1.0e0\t{self.data.pf_coil.m_pf_coil_conductor[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.m_pf_coil_structure[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.b_pf_coil_peak[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}",
+                    f"CS     {self.data.pf_coil.c_pf_cs_coils_peak_ma[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(self.data.pf_coil.j_cs_pulse_start), abs(self.data.pf_coil.j_cs_flat_top_end)):.2e}\t1.0e0\t{self.data.pf_coil.m_pf_coil_conductor[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.m_pf_coil_structure[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.b_pf_coil_peak[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}",
                 )
 
         # Miscellaneous totals
@@ -2614,22 +2626,23 @@ class PFCoil(Model):
         """
         op.oheadr(self.outfile, "Volt Second Consumption")
 
-        op.write(self.outfile, "\t" * 3 + "volt-sec\t\t\tvolt-sec\t\tvolt-sec")
-        op.write(self.outfile, "\t" * 3 + "start-up\t\t\t_burn\t\t\ttotal")
+        pf = self.data.pf_coil
+        op.write(self.outfile, "\t" * 6 + "volt-sec\t\t\tvolt-sec\t\tvolt-sec")
+        op.write(self.outfile, "\t" * 6 + "start-up\t\t\tburn\t\t\t\ttotal")
         op.write(
             self.outfile,
-            f"PF coils:\t\t{self.data.pf_coil.vs_pf_coils_total_ramp:.2f}\t\t\t\t{self.data.pf_coil.vs_pf_coils_total_burn:.2f}\t\t\t{self.data.pf_coil.vs_pf_coils_total_pulse:.2f}",
+            f"PF coils:\t\t{pf.vs_pf_coils_total_ramp:.2f}\t\t\t\t{pf.vs_pf_coils_total_burn:.2f}\t\t\t{pf.vs_pf_coils_total_pulse:.2f}",
         )
         op.write(
             self.outfile,
-            f"CS coil:\t\t{self.data.pf_coil.vs_cs_ramp:.2f}\t\t\t\t{self.data.pf_coil.vs_cs_burn:.2f}\t\t\t{self.data.pf_coil.vs_cs_total_pulse:.2f}",
+            f"CS coil:\t\t{pf.vs_cs_ramp:.2f}\t\t\t\t{pf.vs_cs_burn:.2f}\t\t\t{pf.vs_cs_total_pulse:.2f}",
         )
         op.write(
-            self.outfile, "\t" * 3 + "-" * 7 + "\t" * 4 + "-" * 7 + "\t" * 3 + "-" * 7
+            self.outfile, "\t" * 6 + "-" * 7 + "\t" * 4 + "-" * 7 + "\t" * 3 + "-" * 7
         )
         op.write(
             self.outfile,
-            f"Total:\t\t\t{self.data.pf_coil.vs_cs_pf_total_ramp:.2f}\t\t\t\t{self.data.pf_coil.vs_cs_pf_total_burn:.2f}\t\t\t{self.data.pf_coil.vs_cs_pf_total_pulse:.2f}",
+            f"Total:\t\t\t{pf.vs_cs_pf_total_ramp:.2f}\t\t\t\t{pf.vs_cs_pf_total_burn:.2f}\t\t\t{pf.vs_cs_pf_total_pulse:.2f}",
         )
 
         op.oblnkl(self.outfile)
@@ -2649,8 +2662,7 @@ class PFCoil(Model):
         )
 
         op.osubhd(self.outfile, "Summary of volt-second consumption by circuit (Wb):")
-
-        op.write(self.outfile, "circuit\t\t\tBOP\t\t\tBOF\t\tEOF")
+        op.write(self.outfile, "Circuit\t\t\tBOP\t\t\tBOF\t\tEOF")
         op.oblnkl(self.outfile)
 
         for k in range(self.data.pf_coil.nef):
@@ -2659,9 +2671,10 @@ class PFCoil(Model):
                 f"\t{k}\t\t\t{self.data.pf_coil.vsdum[k, 0]:.3f}\t\t\t{self.data.pf_coil.vsdum[k, 1]:.3f}\t\t{self.data.pf_coil.vsdum[k, 2]:.3f}",
             )
 
+        n_cs = self.data.pf_coil.n_cs_pf_coils - 1
         op.write(
             self.outfile,
-            f"\tCS coil\t\t\t{self.data.pf_coil.vsdum[self.data.pf_coil.n_cs_pf_coils - 1, 0]:.3f}\t\t\t{self.data.pf_coil.vsdum[self.data.pf_coil.n_cs_pf_coils - 1, 1]:.3f}\t\t{self.data.pf_coil.vsdum[self.data.pf_coil.n_cs_pf_coils - 1, 2]:.3f}",
+            f"\tCS coil\t\t\t{self.data.pf_coil.vsdum[n_cs, 0]:.3f}\t\t\t{self.data.pf_coil.vsdum[n_cs, 1]:.3f}\t\t{self.data.pf_coil.vsdum[n_cs, 2]:.3f}",
         )
 
         op.oshead(self.outfile, "Waveforms")
