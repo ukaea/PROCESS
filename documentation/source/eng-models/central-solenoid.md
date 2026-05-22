@@ -33,7 +33,7 @@ This method calculates the CS geometry parameters. The CS is assumed to be a per
 2. The half height of the CS is set relative to that of the inside height of the TF and can be scaled by changing the input value of `f_z_cs_tf_internal`:
 
     $$
-    \overbrace{z_{\text{CS,half}}}^{\texttt{z_cs_inside_half}} = \overbrace{z_{\text{TF,inside-half}}}^{\texttt{z_tf_inside_half}} \times \texttt{f_z_cs_tf_internal}
+    \overbrace{z_{\text{CS,half}}}^{\texttt{z_cs_half}} = \overbrace{z_{\text{TF,inside-half}}}^{\texttt{z_tf_inside_half}} \times \texttt{f_z_cs_tf_internal}
     $$
 
 3. The full height of the CS is thus simply given by
@@ -42,6 +42,17 @@ This method calculates the CS geometry parameters. The CS is assumed to be a per
     \overbrace{dz_{\text{CS}}}^{\texttt{dz_cs_full}} = z_{\text{CS,half}} \times 2
     $$
 
+    Along with the upper and lower dimensions:
+
+    $$
+    z_{\text{CS,upper}} = z_{\text{CS,half}}
+    $$
+
+    $$
+    z_{\text{CS,lower}} = -z_{\text{CS,upper}}
+    $$
+
+
 4. The outboard edge of the CS is given by:
 
 
@@ -49,10 +60,29 @@ This method calculates the CS geometry parameters. The CS is assumed to be a per
     r_{\text{CS,outer}} = r_{\text{CS,middle}} + \frac{dr_{\text{CS}}}{2}
     $$
 
-5. The full poloidal cross-sectional area is given by:
+5. The inboard edge of the CS is given by:
+
+    $$
+    r_{\text{CS,inner}} = r_{\text{CS,outer}} - dr_{\text{CS}}
+    $$
+
+6. The full radial width of the CS is given by:
+
+    $$
+    dr_{\text{CS,full}}  = 2 \times r_{\text{CS,outer}}
+    $$
+
+
+7. The full poloidal cross-sectional area is given by:
 
     $$
     \overbrace{A_{\text{CS,poloidal}}}^{\texttt{a_cs_poloidal}} = 2 \times dr_{\text{CS}} \times dz_{\text{CS}}
+    $$
+
+8. The full top-down toroidal cross-sectional area is given by:
+
+    $$
+    \overbrace{A_{\text{CS,toroidal}}}^{\texttt{a_cs_toroidal}} = \pi \left(r_{\text{CS,outer}}^2 - r_{\text{CS,inner}}^2 \right)
     $$
 
 

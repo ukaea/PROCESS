@@ -3101,12 +3101,12 @@ class CSCoil(Model):
         r_cs_middle = dr_bore + (0.5e0 * dr_cs)
 
         # Scale the CS height relative to TF bore height
-        z_cs_inside_half = z_tf_inside_half * f_z_cs_tf_internal
+        z_cs_half = z_tf_inside_half * f_z_cs_tf_internal
 
-        dz_cs_full = 2.0e0 * z_cs_inside_half  # Full height of CS coil
+        dz_cs_full = 2.0e0 * z_cs_half  # Full height of CS coil
 
         # Z coordinates of CS coil edges
-        z_cs_coil_upper = z_cs_inside_half
+        z_cs_coil_upper = z_cs_half
         z_cs_coil_lower = -z_cs_coil_upper
 
         # (R,Z) coordinates of coil centre
@@ -3123,7 +3123,7 @@ class CSCoil(Model):
         dr_cs_full = 2 * r_cs_coil_outer
 
         # Total poloidal cross-sectional area [m²]
-        a_cs_poloidal = 2.0e0 * z_cs_inside_half * dr_cs
+        a_cs_poloidal = dz_cs_full * dr_cs
 
         # Total top-down toroidal cross-sectional area [m²]
         a_cs_toroidal = np.pi * (r_cs_coil_outer**2 - r_cs_coil_inner**2)
@@ -3778,9 +3778,9 @@ class CSCoil(Model):
 
         References
         ----------
-            - Fits are taken from the figure on p.22 of M. Wilson's book
-            "Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983,
-            ISBN 13: 9780198548102
+        [1] Fits are taken from the figure on p.22 of M. Wilson's book
+        "Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983,
+        ISBN 13: 9780198548102
         """
         beta = dz_cs_half / r_cs_inner
         alpha = r_cs_outer / r_cs_inner
