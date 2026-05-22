@@ -20,9 +20,9 @@ from scipy.interpolate import interp1d
 
 from process.core import constants
 from process.core.io.mfile import MFile, MFileErrorClass
-from process.core.solver.objectives import OBJECTIVE_NAMES
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import PROCESSRunMode
+from process.data_structure.numerics import FiguresOfMerit
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.build import Build
 from process.models.geometry.blanket import (
@@ -8106,7 +8106,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
         ("!Evaluation", "Run type", "")
         if isinstance(mfile.data["minmax"], MFileErrorClass)
         else (
-            f"!{OBJECTIVE_NAMES[abs(int(mfile.get('minmax', scan=-1)))]}",
+            f"!{FiguresOfMerit(abs(int(mfile.get('minmax', scan=-1)))).name}",
             "Optimising:",
             "",
         ),

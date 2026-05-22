@@ -55,10 +55,10 @@ class FiguresOfMerit(IntEnum):
     objective functions for optimisation in PROCESS.
     """
 
-    MAJOR_RADIUS = (1, "Plasma major radius")
+    MAJOR_RADIUS = (1, "Plasma major radius (R₀)")
     NEUTRON_WALL_LOAD = (3, "Neutron wall load")
     P_TF_PLUS_P_PF = (4, "P_tf + P_pf")
-    FUSION_GAIN_Q = (5, "Fusion gain Q")
+    FUSION_GAIN_Q = (5, "Fusion gain Qₚₗₐₛₘₐ")
     COST_OF_ELECTRICITY = (6, "Cost of electricity")
     CAPITAL_COST = (7, "Capital cost")
     ASPECT_RATIO = (8, "Aspect ratio")
