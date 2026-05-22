@@ -851,7 +851,7 @@ class Build(Model):
         if self.data.physics.itart == 1:
             return 1.75e0 * self.data.physics.rminor
         #  Conventional tokamak divertor model
-        #  options for seperate upper and lower self.data.physics.triangularity
+        #  options for separate upper and lower self.data.physics.triangularity
 
         kap = self.data.physics.kappa
         triu = self.data.physics.triang
@@ -1182,7 +1182,7 @@ class Build(Model):
                 )
                 po.ovarrf(
                     self.outfile,
-                    "Plasma self.data.physics.triangularity",
+                    "Plasma data.physics.triangularity",
                     "(tril)",
                     tril,
                     "OP ",

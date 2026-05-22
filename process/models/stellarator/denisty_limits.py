@@ -117,6 +117,8 @@ def st_d_limit_ecrh(gyro_frequency_max, bt_input, i_plasma_pedestal):
         Maximal available Gyrotron frequency (1/s) NOT (rad/s)
     bt_input :
         Maximal magnetic field on axis (T)
+    i_plasma_pedestal: int
+        switch for pedestal profiles
 
     Returns
     -------

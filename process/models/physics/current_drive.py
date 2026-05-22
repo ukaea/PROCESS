@@ -783,12 +783,18 @@ class NeutralBeam(Model):
         return 23.7 + np.log(x2 * np.sqrt(x1))
 
 
-class ElectronCyclotron:
+class ElectronCyclotron(Model):
     """Class for calculating electron cyclotron current drive parameters"""
 
     def __init__(self, plasma_profile: PlasmaProfile):
         self.outfile = constants.NOUT
         self.plasma_profile = plasma_profile
+
+    def run(self):
+        """This model isn't run"""
+
+    def output(self):
+        """This has no output"""
 
     def culecd(self):
         """Routine to calculate Electron Cyclotron current drive efficiency
@@ -1300,12 +1306,18 @@ class ElectronBernstein:
         return eta_cd * density_factor
 
 
-class LowerHybrid:
+class LowerHybrid(Model):
     """Class to calculate Lower Hybrid current drive efficiency."""
 
     def __init__(self, plasma_profile: PlasmaProfile):
         self.outfile = constants.NOUT
         self.plasma_profile = plasma_profile
+
+    def run(self):
+        """This isn't run"""
+
+    def output(self):
+        """This has no output"""
 
     def cullhy(self):
         """Calculate Culham Lower Hybrid current drive efficiency.

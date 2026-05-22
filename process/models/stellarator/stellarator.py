@@ -182,6 +182,7 @@ class Stellarator(Model):
                 self.data.stellarator.powerht_constraint,
                 self.data.stellarator.powerscaling_constraint,
             ) = power_at_ignition_point(
+                self,
                 self.data.stellarator.max_gyrotron_frequency,
                 self.data.stellarator.te0_ecrh_achievable,
                 self.data,
