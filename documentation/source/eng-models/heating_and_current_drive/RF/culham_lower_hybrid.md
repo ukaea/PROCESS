@@ -15,7 +15,7 @@ AEA FUS 172: Physics Assessment for the European Reactor Study[^1]
 6. Calculate the parallel refractive index, `nplacc`, which is needed for plasma access. It uses the local density `dlocal` and the local magnetic field `blocal` to calculate a fraction `frac`. `nplacc` is then obtained by adding `frac` to the square root of `1.0 + frac * frac`.
 7. Calculate the local inverse aspect ratio, `epslh`, by dividing `rpenet` by `rmajor`.
 8. Calculate the LH normalised efficiency, `x`, using the formula `24.0 / (nplacc * sqrt(tlocal))`.
-9. Calculate several intermediate terms, `term01`, `term02`, `term03`, and `term04`, using different formulas involving `nplacc`, `data.physics.zeff`, `tlocal`, `epslh`, and `x`.
+9. Calculate several intermediate terms, `term01`, `term02`, `term03`, and `term04`, using different formulas involving `nplacc`, `zeff`, `tlocal`, `epslh`, and `x`.
 10. Calculate the current drive efficiency, `gamlh`, using the formula `term01 * term02 * (1.0e0 - term03 / term04)`.
 11. Return the current drive efficiency normalised by the product of `0.1e0 * dlocal` and `data.physics`.
 
