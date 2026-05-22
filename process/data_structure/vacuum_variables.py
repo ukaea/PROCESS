@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class VacuumData:
     i_vacuum_pumping: str = "old"
     """switch for vacuum pumping model:

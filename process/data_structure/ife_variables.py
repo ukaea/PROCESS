@@ -29,7 +29,7 @@ MAXMAT = 8
 """
 
 
-@dataclass
+@dataclass(slots=True)
 class IFEData:
     bldr: float = 1.0
     """radial thickness of IFE blanket (m; calculated `if ifetyp=4`)"""

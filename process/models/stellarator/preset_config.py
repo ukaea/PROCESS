@@ -248,8 +248,11 @@ def load_stellarator_config(istell: int, config_file: Path | None, data: DataStr
             raise ProcessValueError(f"{istell=} is not an integer in the range [1, 6]")
 
     for variable_name, variable_value in machine_config.items():
-        setattr(
-            data.stellarator_config,
-            f"stella_config_{variable_name.lower()}",
-            variable_value,
-        )
+        name_on_data_structure = f"stella_config_{variable_name.lower()}"
+
+        if hasattr(data.stellarator_config, name_on_data_structure):
+            setattr(
+                data.stellarator_config,
+                name_on_data_structure,
+                variable_value,
+            )

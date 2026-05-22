@@ -23,7 +23,7 @@ NGC2 = NGC + 2
 """new variable to include 2 additional circuits: plasma and central solenoid"""
 
 
-@dataclass
+@dataclass(slots=True)
 class PFCoilData:
     # PF coil module variables
     nef: int = 0
@@ -503,6 +503,9 @@ class PFCoilData:
 
     radius_cs_turn_cable_space: float = 0.0
     """Length of CS of CS coil turn conduit length"""
+
+    r_pf_outside_tf_midplane: float = 0.0
+    """ Radial position of PF coil at the midplane."""
 
 
 CREATE_DICTS_FROM_DATACLASS = PFCoilData

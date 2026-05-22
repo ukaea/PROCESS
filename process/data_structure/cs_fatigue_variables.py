@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class CSFatigueData:
     residual_sig_hoop: float = 2.4e8
     """residual hoop stress in strucutal material (Pa)"""

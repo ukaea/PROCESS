@@ -37,7 +37,7 @@ def st_heat(stellarator, f_output: bool, data: DataStructure):
         data.current_drive.eta_hcd_primary_injector_wall_plug = (
             data.current_drive.eta_ecrh_injector_wall_plug
         )
-        data.current_drive.p_hcd_electric_total_mw = (
+        data.heat_transport.p_hcd_electric_total_mw = (
             data.current_drive.p_hcd_injected_ions_mw
             + data.current_drive.p_hcd_injected_electrons_mw
         ) / data.current_drive.eta_hcd_primary_injector_wall_plug
@@ -82,7 +82,7 @@ def st_heat(stellarator, f_output: bool, data: DataStructure):
         data.current_drive.eta_hcd_primary_injector_wall_plug = (
             data.current_drive.eta_beam_injector_wall_plug
         )
-        data.current_drive.p_hcd_electric_total_mw = (
+        data.heat_transport.p_hcd_electric_total_mw = (
             data.current_drive.p_hcd_injected_ions_mw
             + data.current_drive.p_hcd_injected_electrons_mw
         ) / data.current_drive.eta_hcd_primary_injector_wall_plug

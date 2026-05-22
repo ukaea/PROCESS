@@ -12,7 +12,7 @@ NO_ROOTS = 30
 """Number of Gauss laguerre roots"""
 
 
-@dataclass
+@dataclass(slots=True)
 class NeoclassicsData:
     densities: list[float] = field(default_factory=lambda: np.zeros(4))
     """Densities of the species that are considered [/m3]"""

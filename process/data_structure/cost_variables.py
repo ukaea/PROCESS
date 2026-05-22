@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
 
-@dataclass
+@dataclass(slots=True)
 class CostData:
     c228: float = 0.0
     """c228 account cost"""

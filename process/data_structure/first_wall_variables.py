@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class FirstWallData:
     a_fw_total_full_coverage: float = 0.0
     """First wall total surface area with no holes or ports [m^2]"""

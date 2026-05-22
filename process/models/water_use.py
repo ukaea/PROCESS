@@ -201,7 +201,7 @@ class WaterUse(Model):
             # self.data.water_use.watertemp < 25 degC
 
             # convert self.data.water_use.windspeed to mph
-            self.data.water_use.windspeedmph = self.data.water_use.windspeed * 2.237e0
+            windspeedmph = self.data.water_use.windspeed * 2.237e0
 
             # convert heat loading into cal/(cm2.sec)
             heatloadimp = heatload * 1000000.0e0 * 0.239e0 / 40469000.0e0
@@ -210,17 +210,15 @@ class WaterUse(Model):
             heatratio = (
                 d
                 + (e * self.data.water_use.watertemp)
-                + (f * self.data.water_use.windspeedmph)
+                + (f * windspeedmph)
                 + (g * heatload)
                 + (h * self.data.water_use.watertemp**2)
-                + (i * self.data.water_use.windspeedmph**2)
+                + (i * windspeedmph**2)
                 + (j * heatload**2)
             )
 
             # estimate resultant heated water temperature
-            self.data.water_use.watertempheated = self.data.water_use.watertemp + (
-                heatloadimp * heatratio
-            )
+            watertempheated = self.data.water_use.watertemp + (heatloadimp * heatratio)
 
             # find wind function, m/(day.kPa), applicable to this water body:
             windfunction = (
@@ -232,10 +230,7 @@ class WaterUse(Model):
             # difference in saturation vapour pressure (Clausius-Clapeyron approximation)
             satvapdelta = (
                 0.611e0
-                * np.exp(
-                    (17.27e0 * self.data.water_use.watertempheated)
-                    / (237.3e0 + self.data.water_use.watertempheated)
-                )
+                * np.exp((17.27e0 * watertempheated) / (237.3e0 + watertempheated))
             ) - (
                 0.611e0
                 * np.exp(

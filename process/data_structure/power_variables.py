@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
 
-@dataclass
+@dataclass(slots=True)
 class PowerData:
     qmisc: float = 0.0
 
@@ -72,7 +72,7 @@ class PowerData:
     p_cryo_plant_electric_profile_mw: list[float] = field(default_factory=list)
     """Profile of total cryo plant electric power (MW) over pulse"""
 
-    p_plant_electric_base_total__profile_mw: list[float] = field(default_factory=list)
+    p_plant_electric_base_total_profile_mw: list[float] = field(default_factory=list)
     """Profile of total plant electric base power (MW) over pulse"""
 
     p_plant_electric_gross_profile_mw: list[float] = field(default_factory=list)

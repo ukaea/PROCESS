@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class PulseData:
     bctmp: float = 320.0
     """first wall bulk coolant temperature (C)"""

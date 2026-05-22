@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class ReinkeData:
     impvardiv: int = 9
     """Index of impurity to be iterated for Reinke divertor detachment criterion"""

@@ -28,7 +28,7 @@ Any changes within a subroutine or function code will have a comment explaining 
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class BlanketData:
     vol_shld_inboard: float = 0.0
     """Volume of inboard shield (m3)"""

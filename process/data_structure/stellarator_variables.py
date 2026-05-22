@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class StellaratorData:
     f_st_n_coils: float = 0.0
     """Actual number of coils to reference value from stella_config file"""

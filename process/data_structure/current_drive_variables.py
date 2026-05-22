@@ -5,7 +5,7 @@ Module containing global variables relating to the current drive system
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class CurrentDriveData:
     dx_beam_duct: float = 0.58
     """width of neutral beam duct where it passes between the TF coils (m)

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class ConstraintData:
     p_hcd_injected_min_mw: float = 0.1
     """minimum auxiliary power (MW) (`constraint equation 40`)"""

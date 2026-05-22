@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 
-@dataclass
+@dataclass(slots=True)
 class PFPowerData:
     acptmax: float = 0.0
     """average of currents in PF circuits (kA)"""
