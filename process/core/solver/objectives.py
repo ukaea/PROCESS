@@ -50,11 +50,7 @@ def objective_function(minmax: int, data: DataStructure) -> float:
                 tfcoil_variables.tfcmw + 1e-3 * data.pf_power.srcktpm
             ) / 10.0
         case 5:
-            objective_metric = data.physics.p_fusion_total_mw / (
-                data.current_drive.p_hcd_injected_total_mw
-                + data.current_drive.p_beam_orbit_loss_mw
-                + data.physics.p_plasma_ohmic_mw
-            )
+            objective_metric = data.current_drive.big_q_plasma
         case 6:
             objective_metric = data.costs.coe / 100.0
         case 7:
