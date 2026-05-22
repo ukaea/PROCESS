@@ -511,11 +511,11 @@ def constraint_equation_11(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(12, "V.sec", ">=")
+@ConstraintManager.register_constraint(12, "Vs", ">=")
 def constraint_equation_12(constraint_registration, data):
     """Equation for volt-second capability lower limit
 
-    vs_plasma_total_required: total V-s needed (Wb)
+    vs_plasma_total_required: total Vs needed (Wb)
     vs_plasma_total_required (lower limit) is positive; vs_cs_pf_total_pulse (available) is negative
     vs_cs_pf_total_pulse: total flux swing for pulse (Wb)
     """
@@ -1141,7 +1141,7 @@ def constraint_manager_45(constraint_registration, _data):
 
 @ConstraintManager.register_constraint(46, "", "<=")
 def constraint_equation_46(constraint_registration, _data):
-    """Equation for Ip/Irod upper limit (TART)
+    """Equation for Iₚ/I_rod upper limit (TART)
 
     eps: inverse aspect ratio
     c_tf_total: total (summed) current in TF coils (A)
@@ -1190,19 +1190,15 @@ def constraint_equation_50(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(51, "V.s", "=")
+@ConstraintManager.register_constraint(51, "Vs", "=")
 def constraint_equation_51(constraint_registration, data):
     """Equation to enforce startup flux = available startup flux
 
-    vs_plasma_res_ramp: resistive losses in startup V-s (Wb)
-    vs_plasma_ind_ramp: internal and external plasma inductance V-s (Wb))
+    vs_plasma_ramp_required: Required flux swing for startup (Wb)
     vs_cs_pf_total_ramp: total flux swing for startup (Wb)
     """
     return eq(
-        abs(
-            data_structure.physics_variables.vs_plasma_res_ramp
-            + data_structure.physics_variables.vs_plasma_ind_ramp
-        ),
+        abs(data_structure.physics_variables.vs_plasma_ramp_required),
         data.pf_coil.vs_cs_pf_total_ramp,
         constraint_registration,
     )
@@ -1405,9 +1401,9 @@ def constraint_equation_67(constraint_registration, data):
 
 @ConstraintManager.register_constraint(68, "MWT/m", "<=")
 def constraint_equation_68(constraint_registration, data):
-    """Upper limit on Psep scaling (PsepB/qAR)
+    """Upper limit on Psep scaling (PₛₑₚBₜ / q₉₅AR₀)
 
-    psepbqarmax: maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)
+    psepbqarmax: maximum permitted value of ratio of PₛₑₚBₜ / q₉₅AR₀ (MWT/m)
     p_plasma_separatrix_mw: Power to conducted to the divertor region (MW)
     b_plasma_toroidal_on_axis: toroidal field on axis (T) (iteration variable 2)
     q95: safety factor q at 95% flux surface
@@ -1452,7 +1448,7 @@ def constraint_equation_68(constraint_registration, data):
 
 @ConstraintManager.register_constraint(72, "Pa", "<=")
 def constraint_equation_72(constraint_registration, data):
-    """Upper limit on central Solenoid Tresca yield stress
+    """Upper limit on Central Solenoid Tresca yield stress
 
     In the case if the bucked and wedged option ( i_tf_bucking >= 2 ) the constrained
     stress is the largest the largest stress of the
