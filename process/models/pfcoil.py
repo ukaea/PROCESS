@@ -3046,6 +3046,24 @@ class CSGeometry:
     """Full radial thickness of CS coil (m)"""
 
 
+@dataclass
+class CSEUDEMOTurnGeometry:
+    """Data class to hold the geometry parameters of a CS turn using the
+    EU DEMO stadium-shaped model.
+    """
+
+    dz_cs_turn: float
+    """Vertical thickness of CS turn (m)"""
+    dr_cs_turn: float
+    """Length/ radial width of CS turn (m)"""
+    radius_cs_turn_cable_space: float
+    """Radius of CS turn cable space corners (m)"""
+    dr_cs_turn_conduit: float
+    """Radial thickness of CS turn conduit (m)"""
+    dz_cs_turn_conduit: float
+    """Vertical thickness of CS turn conduit (m)"""
+
+
 class CSCoil(Model):
     """Calculate central solenoid coil system parameters."""
 
@@ -3148,7 +3166,7 @@ class CSCoil(Model):
         f_dr_dz_cs_turn: float,
         radius_cs_turn_corners: float,
         f_a_cs_turn_steel: float,
-    ) -> tuple[float, float, float, float, float]:
+    ) -> CSEUDEMOTurnGeometry:
         """Calculate the geometry of a CS (Central Solenoid) turn using the
         EU DEMO stadium-shaped model.
 
@@ -3165,8 +3183,7 @@ class CSCoil(Model):
 
         Returns
         -------
-        :
-            Tuple containing:
+        CSEUDEMOTurnGeometry
             - dz_cs_turn: Depth/width of CS turn conduit (m)
             - dr_cs_turn: Length of CS turn conduit (m)
             - radius_cs_turn_cable_space: Radius of CS turn cable space (m)
@@ -3214,12 +3231,12 @@ class CSCoil(Model):
             dr_cs_turn_conduit = 1.0e-3
             logger.error("CS turn conduit radial thickness < 1 mm, kludged to 1 mm")
 
-        return (
-            dz_cs_turn,
-            dr_cs_turn,
-            radius_cs_turn_cable_space,
-            dr_cs_turn_conduit,
-            dz_cs_turn_conduit,
+        return CSEUDEMOTurnGeometry(
+            dz_cs_turn=dz_cs_turn,
+            dr_cs_turn=dr_cs_turn,
+            radius_cs_turn_cable_space=radius_cs_turn_cable_space,
+            dr_cs_turn_conduit=dr_cs_turn_conduit,
+            dz_cs_turn_conduit=dz_cs_turn_conduit,
         )
 
     @staticmethod
@@ -3367,17 +3384,25 @@ class CSCoil(Model):
             / self.data.pf_coil.n_pf_coil_turns[self.data.pf_coil.n_cs_pf_coils - 1]
         )
 
-        (
-            self.data.pf_coil.dz_cs_turn,
-            self.data.pf_coil.dr_cs_turn,
-            self.data.pf_coil.radius_cs_turn_cable_space,
-            self.data.cs_fatigue.dr_cs_turn_conduit,
-            self.data.cs_fatigue.dz_cs_turn_conduit,
-        ) = self.calculate_cs_turn_geometry_eu_demo(
-            a_cs_turn=self.data.pf_coil.a_cs_turn,
-            f_dr_dz_cs_turn=self.data.pf_coil.f_dr_dz_cs_turn,
-            radius_cs_turn_corners=self.data.pf_coil.radius_cs_turn_corners,
-            f_a_cs_turn_steel=self.data.pf_coil.f_a_cs_turn_steel,
+        eu_demo_turn_geometry: CSEUDEMOTurnGeometry = (
+            self.calculate_cs_turn_geometry_eu_demo(
+                a_cs_turn=self.data.pf_coil.a_cs_turn,
+                f_dr_dz_cs_turn=self.data.pf_coil.f_dr_dz_cs_turn,
+                radius_cs_turn_corners=self.data.pf_coil.radius_cs_turn_corners,
+                f_a_cs_turn_steel=self.data.pf_coil.f_a_cs_turn_steel,
+            )
+        )
+
+        self.data.pf_coil.dz_cs_turn = eu_demo_turn_geometry.dz_cs_turn
+        self.data.pf_coil.dr_cs_turn = eu_demo_turn_geometry.dr_cs_turn
+        self.data.pf_coil.radius_cs_turn_cable_space = (
+            eu_demo_turn_geometry.radius_cs_turn_cable_space
+        )
+        self.data.cs_fatigue.dr_cs_turn_conduit = (
+            eu_demo_turn_geometry.dr_cs_turn_conduit
+        )
+        self.data.cs_fatigue.dz_cs_turn_conduit = (
+            eu_demo_turn_geometry.dz_cs_turn_conduit
         )
 
         # Non-steel area void fraction for coolant

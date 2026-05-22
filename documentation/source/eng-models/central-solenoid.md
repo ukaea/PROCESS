@@ -85,6 +85,50 @@ This method calculates the CS geometry parameters. The CS is assumed to be a per
     \overbrace{A_{\text{CS,toroidal}}}^{\texttt{a_cs_toroidal}} = \pi \left(r_{\text{CS,outer}}^2 - r_{\text{CS,inner}}^2 \right)
     $$
 
+------------
+
+### EU-DEMO Turn Geometry | `calculate_cs_turn_geometry_eu_demo()`
+
+This turn superconducting turn strucutre for the CS assumes a rectangular turn shape with a "stadium" shaped cable area[^eu_demo_turn].
+
+
+![CS turn layout](../eng-models/images/cs_eu_demo_turn.PNG "CS EU-DEMO like turn")
+
+The turn geometry is calculated as follows:
+
+1. The vertical height of the turn is given by:
+
+    $$
+    dz_{\text{CS,turn}} = \left(\frac{A_{\text{CS,turn}}}{\texttt{f_dr_dz_cs_turn}}\right)^2
+    $$
+
+    $\texttt{f_dr_dz_cs_turn}$ is the intended length to height ratio of the turn
+
+2. The radial width or length of the turn is now given by:
+
+    $$
+    dr_{\text{CS,turn}} = \texttt{f_dr_dz_cs_turn} \times dz_{\text{CS,turn}}
+    $$
+
+3. The radius of the corners of the cable space is given by:
+
+    $$
+    r_{\text{CS,cable space corner}} = - \frac{dr_{\text{CS,turn}}-dz_{\text{CS,turn}}}{\pi} \\
+    + \sqrt{\left(\frac{dr_{\text{CS,turn}}-dz_{\text{CS,turn}}}{\pi}\right)^2+ \frac{dr_{\text{CS,turn}}dz_{\text{CS,turn}}(4-\pi)r_{\text{CS,turn corners}}^2 - (A_{\text{CS,turn}}\times \texttt{f_a_cs_turn_steel})}{\pi}}
+    $$
+
+4. The thickness of the conduit around the cable space is given by:
+
+    $$
+    dz_{\text{CS,turn conduit}} = \frac{dz_{\text{CS,turn}}}{2} - r_{\text{CS,cable space corner}}
+    $$
+
+    In this model the vertical and radial conduit thicknesses are equal so:
+
+    $$
+    dr_{\text{CS,turn conduit}}  = dz_{\text{CS,turn conduit}}
+    $$
+
 
 ------------
 
@@ -414,4 +458,5 @@ constraints (26 and 27) are activated.
 
 [^1]: M. N. Wilson, Superconducting Magnets. Oxford University Press, USA, 1983, ISBN 13: 9780198548102
 [^2]: Case Studies in Superconducting Magnets. Boston, MA: Springer US, 2009. doi: https://doi.org/10.1007/b112047.
+[^eu_demo_turn]: R. Wesche et al., “Central solenoid winding pack design for DEMO,” Fusion Engineering and Design, vol. 124, pp. 82-85, Apr. 2017, doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
 ‌

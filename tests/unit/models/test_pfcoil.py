@@ -18,6 +18,7 @@ from numpy.testing import assert_array_almost_equal
 from process.core import constants
 from process.data_structure.pfcoil_variables import N_PF_COILS_IN_GROUP_MAX
 from process.models.pfcoil import (
+    CSEUDEMOTurnGeometry,
     CSGeometry,
     PFCoil,
     calculate_b_field_at_point,
@@ -2262,27 +2263,22 @@ def test_calculate_cs_turn_geometry_eu_demo_basic(cs_coil):
     radius_cs_turn_corners = 0.01  # m
     f_a_cs_turn_steel = 0.4
 
-    (
-        dz_cs_turn,
-        dr_cs_turn,
-        radius_cs_turn_cable_space,
-        dr_cs_turn_conduit,
-        dz_cs_turn_conduit,
-    ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
+    result = cs_coil.calculate_cs_turn_geometry_eu_demo(
         a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
     )
 
     # Check types and positivity
-    assert isinstance(dz_cs_turn, float)
-    assert isinstance(dr_cs_turn, float)
-    assert isinstance(radius_cs_turn_cable_space, float)
-    assert isinstance(dr_cs_turn_conduit, float)
-    assert isinstance(dz_cs_turn_conduit, float)
-    assert dz_cs_turn > 0
-    assert dr_cs_turn > 0
-    assert radius_cs_turn_cable_space > 0
-    assert dr_cs_turn_conduit > 0
-    assert dz_cs_turn_conduit > 0
+    assert isinstance(result, CSEUDEMOTurnGeometry)
+    assert isinstance(result.dz_cs_turn, float)
+    assert isinstance(result.dr_cs_turn, float)
+    assert isinstance(result.radius_cs_turn_cable_space, float)
+    assert isinstance(result.dr_cs_turn_conduit, float)
+    assert isinstance(result.dz_cs_turn_conduit, float)
+    assert result.dz_cs_turn > 0
+    assert result.dr_cs_turn > 0
+    assert result.radius_cs_turn_cable_space > 0
+    assert result.dr_cs_turn_conduit > 0
+    assert result.dz_cs_turn_conduit > 0
 
 
 @pytest.mark.parametrize(
@@ -2295,18 +2291,12 @@ def test_calculate_cs_turn_geometry_eu_demo_zero_corner(
     cs_coil, a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
 ):
     # Test with zero corner radius
-    (
-        dz_cs_turn,
-        dr_cs_turn,
-        radius_cs_turn_cable_space,
-        _dr_cs_turn_conduit,
-        _dz_cs_turn_conduit,
-    ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
+    result = cs_coil.calculate_cs_turn_geometry_eu_demo(
         a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
     )
-    assert dz_cs_turn > 0
-    assert dr_cs_turn > 0
-    assert radius_cs_turn_cable_space > 0
+    assert result.dz_cs_turn > 0
+    assert result.dr_cs_turn > 0
+    assert result.radius_cs_turn_cable_space > 0
 
 
 @pytest.mark.parametrize(
@@ -2319,17 +2309,11 @@ def test_calculate_cs_turn_geometry_eu_demo_high_aspect(
     cs_coil, a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
 ):
     # High aspect ratio
-    (
-        dz_cs_turn,
-        dr_cs_turn,
-        radius_cs_turn_cable_space,
-        _dr_cs_turn_conduit,
-        _dz_cs_turn_conduit,
-    ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
+    result = cs_coil.calculate_cs_turn_geometry_eu_demo(
         a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
     )
-    assert dr_cs_turn > dz_cs_turn
-    assert radius_cs_turn_cable_space > 0
+    assert result.dr_cs_turn > result.dz_cs_turn
+    assert result.radius_cs_turn_cable_space > 0
 
 
 @pytest.mark.parametrize(
@@ -2342,17 +2326,14 @@ def test_calculate_cs_turn_geometry_eu_demo_output_consistency(
     cs_coil, a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
 ):
     # Check that the sum of cable space and conduit thicknesses doesn't exceed half-width
-    (
-        dz_cs_turn,
-        _dr_cs_turn,
-        radius_cs_turn_cable_space,
-        _dr_cs_turn_conduit,
-        dz_cs_turn_conduit,
-    ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
+    result = cs_coil.calculate_cs_turn_geometry_eu_demo(
         a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
     )
     # The cable space plus conduit thickness should not exceed half the turn width
-    assert radius_cs_turn_cable_space + dz_cs_turn_conduit <= dz_cs_turn / 2 + 1e-8
+    assert (
+        result.radius_cs_turn_cable_space + result.dz_cs_turn_conduit
+        <= result.dz_cs_turn / 2 + 1e-8
+    )
 
 
 def test_calculate_cs_self_peak_midplane_axial_stress_basic(cs_coil):
