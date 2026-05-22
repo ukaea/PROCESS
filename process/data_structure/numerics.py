@@ -576,7 +576,7 @@ def init_numerics():
         "⟨βₚ⟩ upper limit        ",
         "RFP reversal parameter < 0       ",
         "IFE repetition rate upper limit  ",
-        "CS & PF system rampup Vs consistency ",
+        "CS & PF system ramp-up Vs consistency ",
         "Tritium breeding ratio lower limit ",
         "TF fast neutron fluence upper limit ",
         "TF peak nuclear heating upper limit ",
