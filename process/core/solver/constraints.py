@@ -515,7 +515,7 @@ def constraint_equation_11(constraint_registration, data):
 def constraint_equation_12(constraint_registration, data):
     """Equation for volt-second capability lower limit
 
-    vs_plasma_total_required: total V-s needed (Wb)
+    vs_plasma_total_required: total Vs needed (Wb)
     vs_plasma_total_required (lower limit) is positive; vs_cs_pf_total_pulse (available) is negative
     vs_cs_pf_total_pulse: total flux swing for pulse (Wb)
     """
@@ -1190,7 +1190,7 @@ def constraint_equation_50(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(51, "V.s", "=")
+@ConstraintManager.register_constraint(51, "Vs", "=")
 def constraint_equation_51(constraint_registration, data):
     """Equation to enforce startup flux = available startup flux
 

@@ -535,7 +535,7 @@ def init_numerics():
         "Beam ion density consistency     ",
         "Neutron wall load upper limit    ",
         "Fusion power upper limit         ",
-        "Toroidal field 1/R consistency   ",
+        "NOT USED",  # REMOVED
         "Radial build consistency         ",
         "CS & PF system whole pulse Vs lower limit          ",
         "Burn time lower limit            ",
@@ -572,18 +572,18 @@ def init_numerics():
         "Peak CP temperature upper limit",
         "Edge safety factor (q₉₅) lower limit   ",
         "Iₚ/I_rod upper limit              ",
-        "TF coil tor. thickness upper limit ",
+        "NOT USED",  # REMOVED
         "⟨βₚ⟩ upper limit        ",
-        "RFP reversal parameter < 0       ",
+        "NOT USED",  # REMOVED
         "IFE repetition rate upper limit  ",
         "CS & PF system ramp-up Vs consistency ",
         "Tritium breeding ratio lower limit ",
         "TF fast neutron fluence upper limit ",
         "TF peak nuclear heating upper limit ",
-        "Vessel helium concentration limit",  # REMOVED
+        "NOT USED",  # REMOVED
         "Pₛₑₚ / R₀ upper limit             ",
-        "TF coil leg rad width lower limit",  # REMOVED
-        "TF coil leg rad width lower limit",  # REMOVED
+        "NOT USED",  # REMOVED
+        "NOT USED",  # REMOVED
         "NB shine-through fraction upper limit",
         "CS superconductor temperature margin lower limit",
         "Plant availability lower limit",
@@ -594,9 +594,9 @@ def init_numerics():
         "Rate of change of energy in PF system upper limit",
         "FW radiation wall load upper limit",
         "(PₛₑₚBₜ / q₉₅AR₀) upper limit      ",
-        "p_sep < psep_kallenbach divertor ",  # REMOVED
-        "Separatrix temp consistency      ",  # REMOVED
-        "Separatrix density consistency   ",  # REMOVED
+        "NOT USED",  # REMOVED
+        "NOT USED",  # REMOVED
+        "NOT USED",  # REMOVED
         "CS Tresca yield criterion upper limit     ",
         "Pₛₑₚ > Pₗₕ + Pₐᵤₓ consistency           ",
         "TF quench temperature < temp_croco_quench_max",
