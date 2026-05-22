@@ -86,17 +86,16 @@ New figures of merit are added to `PROCESS` in the following way:
   
 3. Add the new figure of merit equation to `objective_function()` in `objectives.py`, following the method used in the existing examples. The value of figure of merit case should be of order unity, so select a reasonable scaling factor if necessary. 
   
-4. Add the new figure of merit description to the `OBJECTIVES_NAMES` dictionary in `objectives.py`
-  
 An example can be found below:
 
 
 ```python
 objective_function():
   ...
-  match figure_of_merit:
+  try:
+      figure_of_merit = FiguresOfMerit(abs(minmax))
   ...  
-  case 1:
+  if figure_of_merit == FiguresOfMerit.MAJOR_RADIUS:
         objective_metric = 0.2 * data.physics.rmajor
 ```
 
