@@ -49,6 +49,57 @@ class PROCESSRunMode(IntEnum):
         return self._description_
 
 
+
+class FiguresOfMerit(IntEnum):
+    """Enumeration of the available figures of merit (FoM) that can be used as
+    objective functions for optimisation in PROCESS.
+    """
+
+    MAJOR_RADIUS = (1, "Plasma major radius")
+    NEUTRON_WALL_LOAD = (3, "Neutron wall load")
+    P_TF_PLUS_P_PF = (4, "P_tf + P_pf")
+    FUSION_GAIN_Q = (5, "Fusion gain Q")
+    COST_OF_ELECTRICITY = (6, "Cost of electricity")
+    CAPITAL_COST = (7, "Capital cost")
+    ASPECT_RATIO = (8, "Aspect ratio")
+    DIVERTOR_HEAT_LOAD = (9, "Divertor heat load")
+    TOROIDAL_FIELD = (10, "Toroidal field")
+    TOTAL_INJECTED_POWER = (11, "Total injected power")
+    PULSE_LENGTH = (14, "Pulse length")
+    PLANT_AVAILABILITY_FACTOR = (15, "Plant availability factor")
+    MIN_R0_MAX_TAU_BURN = (
+        16,
+        "Linear combination of major radius (minimised) and pulse length (maximised)",
+    )
+    NET_ELECTRICAL_OUTPUT = (17, "Net electrical output")
+    NULL_FIGURE_OF_MERIT = (18, "Null Figure of Merit")
+    MAX_Q_MAX_T_PLANT_PULSE_BURN = (
+        19,
+        "Linear combination of big Q and pulse length (maximised)",
+    )
+
+    def __new__(cls, value: int, description: str):
+        """Create a new FiguresOfMerit enum member with description.
+
+        Args:
+            value: The integer value of the enum member.
+            description: The description for this figure of merit.
+
+        Returns
+        -------
+            The new enum member with attached description.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._description_ = description
+        return obj
+
+    @DynamicClassAttribute
+    def description(self):
+        """Return the description for this figure of merit."""
+        return self._description_
+
+
 ipnvars: int = 177
 """total number of variables available for iteration"""
 
@@ -70,35 +121,8 @@ ioptimz: int = None
 
 minmax: int = None
 """
-Switch for figure-of-merit (see lablmm for descriptions)
+Switch for figure-of-merit (see `FiguresOfMerit` for descriptions)
 negative => maximise, positive => minimise
-"""
-
-lablmm: list[str] = None
-"""lablmm(ipnfoms) : labels describing figures of merit:<UL>
-* ( 1) major radius
-* ( 2) not used
-* ( 3) neutron wall load
-* ( 4) P_tf + P_pf
-* ( 5) fusion gain Q
-* ( 6) cost of electricity
-* ( 7) capital cost (direct cost if ireactor=0,
-constructed cost otherwise)
-* ( 8) aspect ratio
-* ( 9) divertor heat load
-* (10) toroidal field
-* (11) total injected power
-* (12) hydrogen plant capital cost OBSOLETE
-* (13) hydrogen production rate OBSOLETE
-* (14) pulse length
-* (15) plant availability factor (N.B. requires
-i_plant_availability=1 to be set)
-* (16) linear combination of major radius (minimised) and pulse length (maximised)
-note: FoM should be minimised only!
-* (17) net electrical output
-* (18) Null Figure of Merit
-* (19) linear combination of big Q and pulse length (maximised)
-note: FoM should be minimised only!
 """
 
 n_constraints: int = None
@@ -503,7 +527,6 @@ def init_numerics():
     global \
         ioptimz, \
         minmax, \
-        lablmm, \
         n_constraints, \
         ncalls, \
         neqns, \
@@ -541,27 +564,6 @@ def init_numerics():
     """Initialise module variables"""
     ioptimz = 1
     minmax = 7
-    lablmm = [
-        "major radius          ",
-        "not used              ",
-        "neutron wall load     ",
-        "P_tf + P_pf           ",
-        "fusion gain           ",
-        "cost of electricity   ",
-        "capital cost          ",
-        "aspect ratio          ",
-        "divertor heat load    ",
-        "toroidal field        ",
-        "total injected power  ",
-        "H plant capital cost  ",
-        "H production rate     ",
-        "pulse length          ",
-        "plant availability    ",
-        "min R0, max tau_burn  ",
-        "net electrical output ",
-        "Null figure of merit  ",
-        "max Q, max t_plant_pulse_burn     ",
-    ]
 
     ncalls = 0
     neqns = -1

@@ -23,6 +23,7 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.data_structure.numerics import PROCESSRunMode
+from process.data_structure.numerics import FiguresOfMerit
 
 if TYPE_CHECKING:
     from process.core.model import DataStructure, Model
@@ -358,7 +359,7 @@ class Scan:
                 constants.NOUT, "Figure of merit switch", "(minmax)", numerics.minmax
             )
 
-            objf_name = f'"{numerics.lablmm[abs(numerics.minmax) - 1]}"'
+            objf_name = f'"{FiguresOfMerit(abs(numerics.minmax)).description}"'
 
             numerics.objf_name = objf_name
 

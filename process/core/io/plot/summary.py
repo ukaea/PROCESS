@@ -11880,10 +11880,10 @@ def plot_cover_page(
         objective_text = ""
     elif minmax_switch >= 0:
         minmax_switch = int(minmax_switch)
-        objective_text = f"• Minimising {objf_name}"
+        objective_text = f"  -> Minimising: {objf_name}"
     else:
         minmax_switch = int(minmax_switch)
-        objective_text = f"• Maximising {objf_name}"
+        objective_text = f"  -> Maximising: {objf_name}"
 
     axis.text(
         0.1,
@@ -11946,9 +11946,9 @@ def plot_cover_page(
         f"• Optimisation Switch: {int(optmisation_switch)}\n"
         f"     {PROCESSRunMode(int(optmisation_switch)).description}\n"
         f"• Figure of Merit Switch (minmax): {minmax_switch}\n"
+        f"     {objective_text}\n"
         f"• Fail Status (ifail): {int(ifail)}\n"
         f"• Number of Iteration Variables: {int(nvars)}\n"
-        f"{objective_text}\n"
         f"• Constraint Residuals (sqrt sum sq): {sqsumsq}\n"
         f"• Convergence Parameter: {convergence_parameter}\n"
         f"• Solver Iterations: {nviter}\n"
