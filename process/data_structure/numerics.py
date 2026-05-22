@@ -57,21 +57,21 @@ class FiguresOfMerit(IntEnum):
 
     MAJOR_RADIUS = (1, "Plasma major radius (R₀)")
     NEUTRON_WALL_LOAD = (3, "Neutron wall load")
-    P_TF_PLUS_P_PF = (4, "P_tf + P_pf")
-    FUSION_GAIN_Q = (5, "Fusion gain Qₚₗₐₛₘₐ")
+    P_TF_PLUS_P_PF = (4, "TF & PF coil power")
+    FUSION_GAIN_Q = (5, "Fusion gain (Qₚₗₐₛₘₐ)")
     COST_OF_ELECTRICITY = (6, "Cost of electricity")
-    CAPITAL_COST = (7, "Capital cost")
-    ASPECT_RATIO = (8, "Aspect ratio")
+    CAPITAL_COST = (7, "Plant capital cost")
+    ASPECT_RATIO = (8, "Plasma aspect ratio")
     DIVERTOR_HEAT_LOAD = (9, "Divertor heat load")
-    TOROIDAL_FIELD = (10, "Toroidal field")
-    TOTAL_INJECTED_POWER = (11, "Total injected power")
+    TOROIDAL_FIELD = (10, "Plasma toroidal field on axis (B₀)")
+    TOTAL_INJECTED_POWER = (11, "Plasma total injected power (Pᵢₙⱼ)")
     PULSE_LENGTH = (14, "Pulse length")
     PLANT_AVAILABILITY_FACTOR = (15, "Plant availability factor")
     MIN_R0_MAX_TAU_BURN = (
         16,
         "Linear combination of major radius (minimised) and pulse length (maximised)",
     )
-    NET_ELECTRICAL_OUTPUT = (17, "Net electrical output")
+    NET_ELECTRICAL_OUTPUT = (17, "Plant net electrical output")
     NULL_FIGURE_OF_MERIT = (18, "Null Figure of Merit")
     MAX_Q_MAX_T_PLANT_PULSE_BURN = (
         19,
