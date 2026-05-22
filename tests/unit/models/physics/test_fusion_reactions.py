@@ -9,12 +9,6 @@ from process.core import constants
 from process.models.physics import fusion_reactions as reactions
 
 
-@pytest.fixture
-def fusion_reaction_rate(process_models):
-    """Fixture to get the FusionReactionRate instance from process_models."""
-    return process_models.fusion_reaction_rate
-
-
 class SetFusionPowersParam(NamedTuple):
     f_p_alpha_plasma_deposited: Any = None
 
@@ -136,7 +130,7 @@ class SetFusionPowersParam(NamedTuple):
         ),
     ],
 )
-def test_set_fusion_powers(setfusionpowersparam, monkeypatch, fusion_reaction_rate):
+def test_set_fusion_powers(setfusionpowersparam):
     """
     Automatically generated Regression Unit Test for set_fusion_powers().
 
@@ -148,16 +142,6 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch, fusion_reaction_ra
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(
-        fusion_reaction_rate.data.physics,
-        "f_p_alpha_plasma_deposited",
-        setfusionpowersparam.f_p_alpha_plasma_deposited,
-    )
-    monkeypatch.setattr(
-        fusion_reaction_rate.data.physics,
-        "f_plasma_fuel_deuterium",
-        setfusionpowersparam.f_plasma_fuel_deuterium,
-    )
 
     (
         pden_neutron_total_mw,
