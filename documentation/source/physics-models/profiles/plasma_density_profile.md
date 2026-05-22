@@ -8,7 +8,7 @@ The density profile class is organised around a central runner function that is 
 
 2. The steps between the normalised points is then done by [`calculate_profile_dx()`](./plasma_profiles_abstract_class.md#calculate-the-profile-steps-in-x--calculate_profile_dx) which divides the max x-dimension by the number of points.
 
-3. The core electron and ion temperatures are claculated via [`set_physics_variables()`]()
+3. The core electron and ion temperatures are calculated via [`set_physics_variables()`]()
 
 ### Calculate core values | `set_physics_variables()`
 

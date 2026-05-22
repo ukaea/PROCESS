@@ -180,17 +180,17 @@ It updates the instance attributes for the cumulative power densities and reacti
 This method sets the required physics variables on the `physics` data structure with the current instance's fusion power densities and reaction rates.
 
 #### Updates:
-- `physics_variables.pden_plasma_alpha_mw`: Updated with `self.alpha_power_density`
-- `physics_variables.pden_non_alpha_charged_mw`: Updated with `self.pden_non_alpha_charged_mw`
-- `physics_variables.pden_plasma_neutron_mw`: Updated with `self.neutron_power_density`
-- `physics_variables.fusden_plasma`: Updated with `self.fusion_rate_density`
-- `physics_variables.fusden_plasma_alpha`: Updated with `self.alpha_rate_density`
-- `physics_variables.proton_rate_density`: Updated with `self.proton_rate_density`
-- `physics_module.sigmav_dt_average`: Updated with `self.sigmav_dt_average`
-- `physics_module.dt_power_density_plasma`: Updated with `self.dt_power_density`
-- `physics_module.dhe3_power_density`: Updated with `self.dhe3_power_density`
-- `physics_module.dd_power_density`: Updated with `self.dd_power_density`
-- `physics_functions.f_dd_branching_trit`: Updated with `self.f_dd_branching_trit`
+- `pden_plasma_alpha_mw`: Updated with `self.alpha_power_density`
+- `pden_non_alpha_charged_mw`: Updated with `self.pden_non_alpha_charged_mw`
+- `pden_plasma_neutron_mw`: Updated with `self.neutron_power_density`
+- `fusden_plasma`: Updated with `self.fusion_rate_density`
+- `fusden_plasma_alpha`: Updated with `self.alpha_rate_density`
+- `proton_rate_density`: Updated with `self.proton_rate_density`
+- `sigmav_dt_average`: Updated with `self.sigmav_dt_average`
+- `dt_power_density_plasma`: Updated with `self.dt_power_density`
+- `dhe3_power_density`: Updated with `self.dhe3_power_density`
+- `dd_power_density`: Updated with `self.dd_power_density`
+- `f_dd_branching_trit`: Updated with `self.f_dd_branching_trit`
 
 -----------------------
 
