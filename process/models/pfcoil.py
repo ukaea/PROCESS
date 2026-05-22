@@ -2046,36 +2046,34 @@ class PFCoil(Model):
                 self.data.pf_coil.i_cs_superconductor,
             )
 
-            if self.data.pf_coil.i_cs_superconductor == 1:
-                op.ocmmnt(self.outfile, "  (ITER Nb3Sn critical surface model)")
-            elif self.data.pf_coil.i_cs_superconductor == 2:
-                op.ocmmnt(self.outfile, "  (Bi-2212 high temperature superconductor)")
-            elif self.data.pf_coil.i_cs_superconductor == 3:
-                op.ocmmnt(self.outfile, "  (NbTi)")
-            elif self.data.pf_coil.i_cs_superconductor == 4:
-                op.ocmmnt(
-                    self.outfile,
-                    "  (ITER Nb3Sn critical surface model, user-defined parameters)",
-                )
-            elif self.data.pf_coil.i_cs_superconductor == 5:
-                op.ocmmnt(self.outfile, " (WST Nb3Sn critical surface model)")
-            elif self.data.pf_coil.i_cs_superconductor == 6:
-                op.ocmmnt(self.outfile, " (REBCO HTS)")
-            elif self.data.pf_coil.i_cs_superconductor == 7:
-                op.ocmmnt(
-                    self.outfile,
-                    " (Durham Ginzburg-Landau critical surface model for Nb-Ti)",
-                )
-            elif self.data.pf_coil.i_cs_superconductor == 8:
-                op.ocmmnt(
-                    self.outfile,
-                    " (Durham Ginzburg-Landau critical surface model for REBCO)",
-                )
-            elif self.data.pf_coil.i_cs_superconductor == 9:
-                op.ocmmnt(
-                    self.outfile,
-                    " (Hazelton experimental data + Zhai conceptual model for REBCO)",
-                )
+            op.ocmmnt(
+                self.outfile,
+                f"Superconductor used: "
+                f"{SuperconductorModel(self.data.pf_coil.i_cs_superconductor).full_name}",
+            )
+            op.oblnkl(self.outfile)
+            op.ovarre(
+                self.outfile,
+                "CS superconductor operating temperature (K)",
+                "(temp_cs_superconductor_operating)",
+                self.data.pf_coil.temp_cs_superconductor_operating,
+            )
+            op.ovarre(
+                self.outfile,
+                "CS temperature margin (K)",
+                "(temp_cs_superconductor_margin)",
+                self.data.pf_coil.temp_cs_superconductor_margin,
+                "OP ",
+            )
+            op.ovarre(
+                self.outfile,
+                "Minimum permitted temperature margin (K)",
+                "(temp_cs_superconductor_margin_min)",
+                tfv.temp_cs_superconductor_margin_min,
+            )
+
+            op.oblnkl(self.outfile)
+            op.ocmmnt(self.outfile, "----------------------------")
 
             op.osubhd(self.outfile, "Central Solenoid Current Density Limits :")
             op.ovarre(
@@ -2163,55 +2161,9 @@ class PFCoil(Model):
                     self.data.pf_coil.z_pf_cs_current_filaments[i],
                 )
             op.oblnkl(self.outfile)
-            # MDK add self.data.build.dr_cs, self.data.build.dr_bore and self.data.build.dr_cs_tf_gap as they can be iteration variables
 
-            op.ovarre(self.outfile, "CS thickness [m]", "(dr_cs)", self.data.build.dr_cs)
-            op.ovarre(
-                self.outfile,
-                "Gap between central solenoid and TF coil [m]",
-                "(dr_cs_tf_gap)",
-                self.data.build.dr_cs_tf_gap,
-            )
-
-            op.ovarre(
-                self.outfile,
-                "CS conductor+void cross-sectional area [m²]",
-                "(a_cs_cable_space)",
-                self.data.pf_coil.a_cs_cable_space,
-                "OP ",
-            )
-            op.ovarre(
-                self.outfile,
-                "   CS conductor cross-sectional area [m²]",
-                "(a_cs_cable_space*(1-f_a_cs_void))",
-                self.data.pf_coil.a_cs_cable_space
-                * (1.0e0 - self.data.pf_coil.f_a_cs_void),
-                "OP ",
-            )
-            op.ovarre(
-                self.outfile,
-                "   CS void cross-sectional area [m²]",
-                "(a_cs_cable_space*f_a_cs_void)",
-                self.data.pf_coil.a_cs_cable_space * self.data.pf_coil.f_a_cs_void,
-                "OP ",
-            )
-            op.ovarre(
-                self.outfile,
-                "CS steel cross-sectional area [m²]",
-                "(a_cs_steel_poloidal)",
-                self.data.pf_coil.a_cs_steel_poloidal,
-                "OP ",
-            )
-            op.ovarre(
-                self.outfile,
-                "CS steel area fraction",
-                "(f_a_cs_turn_steel)",
-                self.data.pf_coil.f_a_cs_turn_steel,
-            )
-            if self.data.pf_coil.i_cs_stress == 1:
-                op.ocmmnt(self.outfile, "Hoop + axial stress considered")
-            else:
-                op.ocmmnt(self.outfile, "Only hoop stress considered")
+            op.ocmmnt(self.outfile, "----------------------------")
+            op.osubhd(self.outfile, "CS Stresses:")
 
             op.ovarin(
                 self.outfile,
@@ -2219,6 +2171,10 @@ class PFCoil(Model):
                 "(i_cs_stress)",
                 self.data.pf_coil.i_cs_stress,
             )
+            if self.data.pf_coil.i_cs_stress == 1:
+                op.ocmmnt(self.outfile, "Hoop + axial stress considered")
+            else:
+                op.ocmmnt(self.outfile, "Only hoop stress considered")
             op.ovarre(
                 self.outfile,
                 "Allowable stress in CS steel (Pa)",
@@ -2259,52 +2215,8 @@ class PFCoil(Model):
                 "(str_cs_con_res)",
                 self.data.tfcoil.str_cs_con_res,
             )
-            op.ovarre(
-                self.outfile,
-                "Copper fraction in strand",
-                "(fcuohsu)",
-                self.data.pf_coil.fcuohsu,
-            )
-            # If REBCO material is used, print copperaoh_m2
-            if self.data.pf_coil.i_cs_superconductor in {6, 8, 9}:
-                op.ovarre(
-                    self.outfile,
-                    "CS current/copper area (A/m2)",
-                    "(copperaoh_m2)",
-                    self.data.rebco.copperaoh_m2,
-                )
-                op.ovarre(
-                    self.outfile,
-                    "Max CS current/copper area (A/m2)",
-                    "(copperaoh_m2_max)",
-                    self.data.rebco.copperaoh_m2_max,
-                )
 
-            op.ovarre(
-                self.outfile,
-                "Void (coolant) fraction in conductor",
-                "(f_a_cs_void)",
-                self.data.pf_coil.f_a_cs_void,
-            )
-            op.ovarre(
-                self.outfile,
-                "Helium coolant temperature (K)",
-                "(tftmp)",
-                self.data.tfcoil.tftmp,
-            )
-            op.ovarre(
-                self.outfile,
-                "CS temperature margin (K)",
-                "(temp_cs_superconductor_margin)",
-                self.data.pf_coil.temp_cs_superconductor_margin,
-                "OP ",
-            )
-            op.ovarre(
-                self.outfile,
-                "Minimum permitted temperature margin (K)",
-                "(temp_cs_superconductor_margin_min)",
-                self.data.tfcoil.temp_cs_superconductor_margin_min,
-            )
+            op.oblnkl(self.outfile)
             # only output CS fatigue model for pulsed reactor design
             if self.data.physics.f_c_plasma_inductive > 0.0e-4:
                 op.ovarre(
@@ -2331,42 +2243,7 @@ class PFCoil(Model):
                     "(t_crack_radial)",
                     self.data.cs_fatigue.t_crack_radial,
                 )
-                op.ovarre(
-                    self.outfile,
-                    "CS turn area (m)",
-                    "(a_cs_turn)",
-                    self.data.pf_coil.a_cs_turn,
-                )
-                op.ovarre(
-                    self.outfile,
-                    "CS turn length (m)",
-                    "(dr_cs_turn)",
-                    self.data.pf_coil.dr_cs_turn,
-                )
-                op.ovarre(
-                    self.outfile,
-                    "CS turn internal cable space radius (m)",
-                    "(radius_cs_turn_cable_space)",
-                    self.data.pf_coil.radius_cs_turn_cable_space,
-                )
-                op.ovarre(
-                    self.outfile,
-                    "CS turn width (m)",
-                    "(dz_cs_turn)",
-                    self.data.pf_coil.dz_cs_turn,
-                )
-                op.ovarre(
-                    self.outfile,
-                    "CS structural vertical thickness (m)",
-                    "(dz_cs_turn_conduit)",
-                    self.data.cs_fatigue.dz_cs_turn_conduit,
-                )
-                op.ovarre(
-                    self.outfile,
-                    "CS structural radial thickness (m)",
-                    "(dr_cs_turn_conduit)",
-                    self.data.cs_fatigue.dr_cs_turn_conduit,
-                )
+
                 op.ovarre(
                     self.outfile,
                     "Allowable number of cycles till CS fracture",
@@ -2450,6 +2327,10 @@ class PFCoil(Model):
         else:
             op.ocmmnt(self.outfile, "Resistive central solenoid")
 
+        op.oblnkl(self.outfile)
+        op.ocmmnt(self.outfile, "----------------------------")
+        op.oblnkl(self.outfile)
+
         if self.data.pf_coil.i_pf_conductor == 0:
             op.oblnkl(self.outfile)
             op.ocmmnt(self.outfile, "Superconducting PF coils")
@@ -2463,7 +2344,7 @@ class PFCoil(Model):
 
             op.ocmmnt(
                 self.outfile,
-                f"  -> {SuperconductorModel(self.data.pf_coil.i_pf_superconductor).full_name}",
+                f"Superconductor used: {SuperconductorModel(self.data.pf_coil.i_pf_superconductor).full_name}",
             )
 
             op.ovarre(
@@ -2516,7 +2397,7 @@ class PFCoil(Model):
         op.osubhd(self.outfile, "Geometry of PF coils, central solenoid and plasma:")
         op.write(
             self.outfile,
-            "coil\t\t\tR(m)\t\tZ(m)\t\tdR(m)\t\tdZ(m)\t\tturns",
+            "Coil\t\t\tR(m)\t\tZ(m)\t\tdR(m)\t\tdZ(m)\t\tturns",
         )
         op.oblnkl(self.outfile)
 
@@ -2651,6 +2532,10 @@ class PFCoil(Model):
             f"Plasma\t\t\t{self.data.physics.rmajor:.2e}\t0.0e0\t\t{2.0e0 * self.data.physics.rminor:.2e}\t{2.0e0 * self.data.physics.rminor * self.data.physics.kappa:.2e}\t1.0e0",
         )
 
+        op.oblnkl(self.outfile)
+        op.ocmmnt(self.outfile, "----------------------------")
+        op.oblnkl(self.outfile)
+
         op.osubhd(self.outfile, "PF Coil Information at Peak Current:")
 
         op.write(
@@ -2704,6 +2589,10 @@ class PFCoil(Model):
             + "\t" * 7
             + f"{self.data.pf_coil.m_pf_coil_conductor_total:.2e}\t{self.data.pf_coil.m_pf_coil_structure_total:.2e}",
         )
+
+        op.oblnkl(self.outfile)
+        op.ocmmnt(self.outfile, "----------------------------")
+        op.oblnkl(self.outfile)
 
         op.osubhd(self.outfile, "PF coil current scaling information :")
         op.ovarre(
@@ -3974,6 +3863,67 @@ class CSCoil(Model):
             self.data.pf_coil.radius_cs_turn_corners,
             "OP ",
         )
+        op.ovarre(
+            self.outfile,
+            "CS conductor+void cross-sectional area [m²]",
+            "(a_cs_cable_space)",
+            self.data.pf_coil.a_cs_cable_space,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "CS conductor cross-sectional area [m²]",
+            "(a_cs_cable_space*(1-f_a_cs_void))",
+            self.data.pf_coil.a_cs_cable_space * (1.0e0 - self.data.pf_coil.f_a_cs_void),
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "CS void cross-sectional area [m²]",
+            "(a_cs_cable_space*f_a_cs_void)",
+            self.data.pf_coil.a_cs_cable_space * self.data.pf_coil.f_a_cs_void,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "CS steel cross-sectional area [m²]",
+            "(a_cs_steel_poloidal)",
+            self.data.pf_coil.a_cs_steel_poloidal,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "CS steel area fraction",
+            "(f_a_cs_turn_steel)",
+            self.data.pf_coil.f_a_cs_turn_steel,
+        )
+        op.ovarre(
+            self.outfile,
+            "Copper fraction in strand",
+            "(fcuohsu)",
+            self.data.pf_coil.fcuohsu,
+        )
+        # If REBCO material is used, print copperaoh_m2
+        if self.data.pf_coil.i_cs_superconductor in {6, 8, 9}:
+            op.ovarre(
+                self.outfile,
+                "CS current/copper area (A/m²)",
+                "(copperaoh_m2)",
+                rcv.copperaoh_m2,
+            )
+            op.ovarre(
+                self.outfile,
+                "Max CS current/copper area (A/m²)",
+                "(copperaoh_m2_max)",
+                rcv.copperaoh_m2_max,
+            )
+
+            op.ovarre(
+                self.outfile,
+                "Void (coolant) fraction in conductor",
+                "(f_a_cs_void)",
+                self.data.pf_coil.f_a_cs_void,
+            )
 
     @staticmethod
     def calculate_cs_self_peak_midplane_axial_stress(
