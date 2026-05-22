@@ -17,7 +17,7 @@ AEA FUS 172: Physics Assessment for the European Reactor Study[^1]
 8. Calculate the LH normalised efficiency, `x`, using the formula `24.0 / (nplacc * sqrt(tlocal))`.
 9. Calculate several intermediate terms, `term01`, `term02`, `term03`, and `term04`, using different formulas involving `nplacc`, `zeff`, `tlocal`, `epslh`, and `x`.
 10. Calculate the current drive efficiency, `gamlh`, using the formula `term01 * term02 * (1.0e0 - term03 / term04)`.
-11. Return the current drive efficiency normalised by the product of `0.1e0 * dlocal` and `data.physics`.
+11. Return the current drive efficiency normalised by the product of `0.1e0 * dlocal` and `rmajor`.
 
 [^1]: T. C. Hender, M. K. Bevir, M. Cox, R. J. Hastie, P. J. Knight, C. N. Lashmore-Davies, B. Lloyd, G. P. Maddison, A. W. Morris, M. R. O'Brien, M.F. Turner abd H. R. Wilson, *"Physics Assessment for the European Reactor Study"*, AEA Fusion Report AEA FUS 172 (1992)
 
