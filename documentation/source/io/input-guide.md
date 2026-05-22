@@ -121,6 +121,9 @@ The user can select the figure of merit to be used:
 minmax   = 1 * Switch for figure-of-merit (see `FiguresOfMerit` for descriptions)
 ```
 
+!!! Info "Figures of Merit"
+    The full list of valid `minmax` values is documented in the API reference for [`process.data_structure.numerics.FiguresOfMerit`](../../source/reference/process/data_structure/numerics/#process.data_structure.numerics.FiguresOfMerit).
+
 In this case the user is choosing option `1`, which is major radius. For `minmax`
 
 * a **positive** value means **minimise** the figure of merit
