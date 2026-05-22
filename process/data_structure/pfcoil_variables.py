@@ -366,10 +366,19 @@ class PFCoilData:
     """radius to the centre of the central solenoid (m)"""
 
     r_cs_inner: float = 0.0
-    """inner radius of the central solenoid (m)"""
+    """Inner radius of the central solenoid (m)"""
 
     r_cs_outer: float = 0.0
-    """outer radius of the central solenoid (m)"""
+    """Outer radius of the central solenoid (m)"""
+
+    z_cs_upper: float = 0.0
+    """z location of upper end of central solenoid (m)"""
+
+    z_cs_lower: float = 0.0
+    """z location of lower end of central solenoid (m)"""
+
+    z_cs_middle: float = 0.0
+    """z location of middle of central solenoid (m)"""
 
     dz_cs_full: float = 0.0
     """Full height of the central solenoid (m)"""

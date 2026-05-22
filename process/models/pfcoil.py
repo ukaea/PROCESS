@@ -175,25 +175,25 @@ class PFCoil(Model):
             dr_bore=self.data.build.dr_bore,
         )
 
-        self.data.pf_coil.z_pf_coil_upper[self.data.pf_coil.n_cs_pf_coils - 1] = (
-            cs_geometry.z_cs_coil_upper
-        )
-        self.data.pf_coil.z_pf_coil_lower[self.data.pf_coil.n_cs_pf_coils - 1] = (
-            cs_geometry.z_cs_coil_lower
-        )
+        self.data.pf_coil.z_cs_upper = self.data.pf_coil.z_pf_coil_upper[
+            self.data.pf_coil.n_cs_pf_coils - 1
+        ] = cs_geometry.z_cs_coil_upper
+        self.data.pf_coil.z_cs_lower = self.data.pf_coil.z_pf_coil_lower[
+            self.data.pf_coil.n_cs_pf_coils - 1
+        ] = cs_geometry.z_cs_coil_lower
         self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1] = (
             cs_geometry.r_cs_coil_middle
         )
         self.data.pf_coil.r_cs_middle = cs_geometry.r_cs_middle
-        self.data.pf_coil.z_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1] = (
-            cs_geometry.z_cs_coil_middle
-        )
-        self.data.pf_coil.r_pf_coil_outer[self.data.pf_coil.n_cs_pf_coils - 1] = (
-            cs_geometry.r_cs_coil_outer
-        )
-        self.data.pf_coil.r_pf_coil_inner[self.data.pf_coil.n_cs_pf_coils - 1] = (
-            cs_geometry.r_cs_coil_inner
-        )
+        self.data.pf_coil.z_cs_middle = self.data.pf_coil.z_pf_coil_middle[
+            self.data.pf_coil.n_cs_pf_coils - 1
+        ] = cs_geometry.z_cs_coil_middle
+        self.data.pf_coil.r_cs_outer = self.data.pf_coil.r_pf_coil_outer[
+            self.data.pf_coil.n_cs_pf_coils - 1
+        ] = cs_geometry.r_cs_coil_outer
+        self.data.pf_coil.r_cs_inner = self.data.pf_coil.r_pf_coil_inner[
+            self.data.pf_coil.n_cs_pf_coils - 1
+        ] = cs_geometry.r_cs_coil_inner
         self.data.pf_coil.a_cs_poloidal = cs_geometry.a_cs_poloidal
         self.data.pf_coil.a_cs_toroidal = cs_geometry.a_cs_toroidal
         self.data.pf_coil.dz_cs_full = cs_geometry.dz_cs_full
@@ -2164,12 +2164,7 @@ class PFCoil(Model):
                 )
             op.oblnkl(self.outfile)
             # MDK add self.data.build.dr_cs, self.data.build.dr_bore and self.data.build.dr_cs_tf_gap as they can be iteration variables
-            op.ovarre(
-                self.outfile,
-                "CS inside radius [m]",
-                "(dr_bore)",
-                self.data.build.dr_bore,
-            )
+
             op.ovarre(self.outfile, "CS thickness [m]", "(dr_cs)", self.data.build.dr_cs)
             op.ovarre(
                 self.outfile,
@@ -2177,41 +2172,7 @@ class PFCoil(Model):
                 "(dr_cs_tf_gap)",
                 self.data.build.dr_cs_tf_gap,
             )
-            op.ovarre(
-                self.outfile,
-                "CS total poloidal cross-sectional area [m²]",
-                "(a_cs_poloidal)",
-                self.data.pf_coil.a_cs_poloidal,
-                "OP ",
-            )
-            op.ovarre(
-                self.outfile,
-                "CS total top-down toroidal cross-sectional area [m²]",
-                "(a_cs_toroidal)",
-                self.data.pf_coil.a_cs_toroidal,
-                "OP ",
-            )
-            op.ovarre(
-                self.outfile,
-                "CS radial middle [m]",
-                "(r_cs_middle)",
-                self.data.pf_coil.r_cs_middle,
-                "OP ",
-            )
-            op.ovarre(
-                self.outfile,
-                "CS radial inner [m]",
-                "(r_cs_inner)",
-                self.data.pf_coil.r_cs_inner,
-                "OP ",
-            )
-            op.ovarre(
-                self.outfile,
-                "CS radial outer [m]",
-                "(r_cs_outer)",
-                self.data.pf_coil.r_cs_outer,
-                "OP ",
-            )
+
             op.ovarre(
                 self.outfile,
                 "CS conductor+void cross-sectional area [m²]",
@@ -3319,19 +3280,19 @@ class CSCoil(Model):
             dr_bore=self.data.build.dr_bore,
         )
 
-        self.data.pf_coil.z_pf_coil_upper[self.data.pf_coil.n_cs_pf_coils - 1] = (
-            cs_geometry.z_cs_coil_upper
-        )
-        self.data.pf_coil.z_pf_coil_lower[self.data.pf_coil.n_cs_pf_coils - 1] = (
-            cs_geometry.z_cs_coil_lower
-        )
+        self.data.pf_coil.z_cs_upper = self.data.pf_coil.z_pf_coil_upper[
+            self.data.pf_coil.n_cs_pf_coils - 1
+        ] = cs_geometry.z_cs_coil_upper
+        self.data.pf_coil.z_cs_lower = self.data.pf_coil.z_pf_coil_lower[
+            self.data.pf_coil.n_cs_pf_coils - 1
+        ] = cs_geometry.z_cs_coil_lower
         self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1] = (
             cs_geometry.r_cs_coil_middle
         )
         self.data.pf_coil.r_cs_middle = cs_geometry.r_cs_middle
-        self.data.pf_coil.z_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1] = (
-            cs_geometry.z_cs_coil_middle
-        )
+        self.data.pf_coil.z_cs_middle = self.data.pf_coil.z_pf_coil_middle[
+            self.data.pf_coil.n_cs_pf_coils - 1
+        ] = cs_geometry.z_cs_coil_middle
         self.data.pf_coil.r_cs_outer = self.data.pf_coil.r_pf_coil_outer[
             self.data.pf_coil.n_cs_pf_coils - 1
         ] = cs_geometry.r_cs_coil_outer
@@ -3850,22 +3811,123 @@ class CSCoil(Model):
 
         return b_cs_peak
 
-    def output_cs_structure(self):
+    def output_cs_structure(self) -> None:
+        """Outputs the central solenoid structure parameters to the output file."""
         op.oheadr(self.outfile, "Central Solenoid Structure")
 
-        op.ocmmnt(self.outfile, "CS turn structure")
+        op.osubhd(self.outfile, "CS coil geometry:")
+
+        op.ovarre(
+            self.outfile,
+            "Inner radius of the CS coil [m]",
+            "(r_cs_inner)",
+            self.data.pf_coil.r_cs_inner,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Middle radius of the CS coil [m]",
+            "(r_cs_middle)",
+            self.data.pf_coil.r_cs_middle,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Outer radius of the CS coil [m]",
+            "(r_cs_outer)",
+            self.data.pf_coil.r_cs_outer,
+            "OP ",
+        )
+        op.oblnkl(self.outfile)
+        op.ovarre(
+            self.outfile,
+            "Full radial extent of the CS coil [m]",
+            "(dr_cs_full)",
+            self.data.pf_coil.dr_cs_full,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Radial thickness of the CS coil [m]",
+            "(dr_cs)",
+            self.data.build.dr_cs,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Radial thickness of the CS bore [m]",
+            "(dr_bore)",
+            self.data.build.dr_bore,
+            "OP ",
+        )
+        op.oblnkl(self.outfile)
+        op.ovarre(
+            self.outfile,
+            "Vertical top of the CS coil [m]",
+            "(z_cs_upper)",
+            self.data.pf_coil.z_cs_upper,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Vertical middle of the CS coil [m]",
+            "(z_cs_middle)",
+            self.data.pf_coil.z_cs_middle,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Vertical bottom of the CS coil [m]",
+            "(z_cs_lower)",
+            self.data.pf_coil.z_cs_lower,
+            "OP ",
+        )
         op.oblnkl(self.outfile)
 
         op.ovarre(
             self.outfile,
-            "Poloidal area of a CS turn [m^2]",
+            "Full vertical extent of the CS coil [m]",
+            "(dz_cs_full)",
+            self.data.pf_coil.dz_cs_full,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Central solenoid to TF coil internal edge height [m]",
+            "(f_z_cs_tf_internal)",
+            self.data.pf_coil.f_z_cs_tf_internal,
+            "OP ",
+        )
+        op.oblnkl(self.outfile)
+        op.ovarre(
+            self.outfile,
+            "CS poloidal cross-sectional area [m²]",
+            "(a_cs_poloidal)",
+            self.data.pf_coil.a_cs_poloidal,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "CS total top-down toroidal cross-sectional area [m²]",
+            "(a_cs_toroidal)",
+            self.data.pf_coil.a_cs_toroidal,
+            "OP ",
+        )
+
+        op.oblnkl(self.outfile)
+        op.ocmmnt(self.outfile, "----------------------------")
+        op.osubhd(self.outfile, "CS turn structure:")
+
+        op.ovarre(
+            self.outfile,
+            "Poloidal area of a CS turn [m²]",
             "(a_cs_turn)",
             self.data.pf_coil.a_cs_turn,
             "OP ",
         )
         op.ovarre(
             self.outfile,
-            "Radial width a CS turn [m^2]",
+            "Radial width a CS turn [m²]",
             "(dz_cs_turn)",
             self.data.pf_coil.dz_cs_turn,
             "OP ",
