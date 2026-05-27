@@ -4082,8 +4082,6 @@ class CSCoil(Model):
         - M. N. Wilson, Superconducting Magnets. Oxford University Press, USA, 1983.
         ‌
         """
-        alpha = r_cs_outer / r_cs_inner
-
         # alpha
         alpha = r_cs_outer / r_cs_inner
 
