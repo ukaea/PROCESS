@@ -905,7 +905,7 @@ class ResistiveTFCoil(TFCoil):
             "(dr_tf_wp_with_insulation)",
             tfcoil_variables.dr_tf_wp_with_insulation,
         )
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             po.ovarre(
                 self.outfile,
                 "Central collumn top conductor sector radial thickness (m)",
@@ -1070,7 +1070,7 @@ class ResistiveTFCoil(TFCoil):
         elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             po.ocmmnt(self.outfile, "Resistive Material : Pure Aluminium (99.999+ %)")
 
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             po.ovarre(
                 self.outfile,
                 "CP resistivity (ohm.m)",
@@ -1141,7 +1141,7 @@ class ResistiveTFCoil(TFCoil):
             )
 
         # Top section TF coil radial build (physics_variables.itart = 1 only)
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             po.osubhd(self.outfile, "Radial build of TF coil at central collumn top :")
             # write(self.outfile,5)
 

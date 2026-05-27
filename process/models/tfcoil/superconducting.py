@@ -678,7 +678,7 @@ class SuperconductingTFCoil(TFCoil):
             "OP ",
         )
 
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             po.ovarre(
                 self.outfile,
                 "Mass of inboard legs (kg)",

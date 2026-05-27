@@ -1063,7 +1063,7 @@ class TFCoil(Model):
             "(j_tf_coil_full_area)",
             tfcoil_variables.j_tf_coil_full_area,
         )
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             po.ovarre(
                 self.outfile,
                 "Outboard leg conductor current density (A/m²)",
