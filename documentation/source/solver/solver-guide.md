@@ -106,9 +106,9 @@ maximised figure of merit is desired, `minmax` should be **negative**.
 
 ## Optimisation mode
 
-Switch `ioptimz` should be set to 1 for optimisation mode.
+Switch `i_process_run_mode` should be set to 1 for optimisation mode.
 
-If `ioptimz = 0`, a non-optimisation pass is performed first. Occasionally this provides a feasible set of initial conditions that aids convergence of the optimiser, but it is recommended to use `ioptimz = 1`.
+If `i_process_run_mode = 0`, a non-optimisation pass is performed first. Occasionally this provides a feasible set of initial conditions that aids convergence of the optimiser, but it is recommended to use `i_process_run_mode = 1`.
 
 Enable all the relevant consistency equations, and it is advisable to enable the corresponding iterations variables. A number of limit equations (inequality constraints) can also be activated. In optimisation mode, the number of iteration variables is unlimited.
 
@@ -137,7 +137,7 @@ Running `PROCESS` in evaluation mode requires few changes to be made to the inpu
 As before, the user must decide which constraint equations and iteration variables to activate. For example, an extract from an input file might look like:
 ```
 * Evaluation problem: evaluate models consistently by solving equality constraints only
-ioptimz  = -2 * evaluation mode
+i_process_run_mode  = -2 * evaluation mode
 
 *---------------Constraint Equations---------------*
 * Define number of equality constraints

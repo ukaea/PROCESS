@@ -344,7 +344,10 @@ class Scan:
             numerics.neqns + numerics.nineqns,
         )
         process_output.ovarin(
-            constants.NOUT, "Optimisation switch", "(ioptimz)", numerics.ioptimz
+            constants.NOUT,
+            "Optimisation switch",
+            "(i_process_run_mode)",
+            numerics.i_process_run_mode,
         )
         # Objective function output: none for fsolve
         if self.solver != "fsolve":

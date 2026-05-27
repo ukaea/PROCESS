@@ -13,7 +13,7 @@ ipvlam: int = N_CONSTRAINT_EQUATIONS_MAX + 2 * N_ITERATION_VARIABLES_MAX + 1
 iptnt: int = (N_CONSTRAINT_EQUATIONS_MAX * (3 * N_CONSTRAINT_EQUATIONS_MAX + 13)) / 2
 ipvp1: int = N_ITERATION_VARIABLES_MAX + 1
 
-ioptimz: int = None
+i_process_run_mode: int = None
 """Code operation switch:
 * -2 for evaluation mode (i.e. no optimisation)
 * 1 for optimisation mode (e.g. via VMCON)
@@ -452,7 +452,7 @@ ftol: float = None
 
 def init_numerics():
     global \
-        ioptimz, \
+        i_process_run_mode, \
         minmax, \
         lablmm, \
         n_constraints, \
@@ -490,7 +490,7 @@ def init_numerics():
         force_vmcon_inequality_satisfication, \
         force_vmcon_inequality_tolerance
     """Initialise module variables"""
-    ioptimz = 1
+    i_process_run_mode = 1
     minmax = 7
     lablmm = [
         "major radius          ",

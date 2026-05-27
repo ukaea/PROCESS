@@ -112,7 +112,7 @@ If bounds are not specified default values are used.
 The user can select which solver to use, but only one solver is available at present (VMCON).
 
 ```
-ioptimz  = 1 * for optimisation VMCON only
+i_process_run_mode  = 1 * for optimisation VMCON only
 ```
 
 The user can select the figure of merit to be used:

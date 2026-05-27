@@ -17,7 +17,7 @@ from process.core.exceptions import ProcessValidationError
 from process.core.io.data_structure_dicts import get_dicts
 from process.core.solver.constraints import ConstraintManager
 
-# ioptimz values
+# i_process_run_mode values
 ioptimz_des = {
     "-2": "for no optimisation, no VMCOM or HYBRD",
     "-1": "for no optimisation HYBRD only",
@@ -453,14 +453,14 @@ def get_parameters(data, use_string_values=True):
                         value = data["f_nd_impurity_electrons"].get_value[k]
                         parameters[module][name] = value
 
-                elif item == "ioptimz":
+                elif item == "i_process_run_mode":
                     name = item
-                    ioptimz = {}
-                    iop_val = data["ioptimz"].get_value
+                    i_process_run_mode = {}
+                    iop_val = data["i_process_run_mode"].get_value
                     iop_comment = ioptimz_des[str(iop_val)]
-                    ioptimz["value"] = iop_val
-                    ioptimz["comment"] = iop_comment
-                    parameters[module][name] = ioptimz
+                    i_process_run_mode["value"] = iop_val
+                    i_process_run_mode["comment"] = iop_comment
+                    parameters[module][name] = i_process_run_mode
 
                 elif item == "zref":
                     for j in range(len(data["zref"].get_value)):

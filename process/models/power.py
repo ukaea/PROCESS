@@ -652,7 +652,7 @@ class Power(Model):
             "OP ",
         )
 
-        if (numerics.ioptimz > 0) and (numerics.active_constraints[65]):
+        if (numerics.i_process_run_mode > 0) and (numerics.active_constraints[65]):
             po.ovarre(
                 self.outfile,
                 "Max permitted abs rate of change of stored energy in poloidal "

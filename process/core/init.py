@@ -174,7 +174,7 @@ def run_summary():
             outfile, f"Iteration variables : {data_structure.numerics.nvar}"
         )
         # If optimising, write objective function and convergence parameter
-        if data_structure.numerics.ioptimz == 1:
+        if data_structure.numerics.i_process_run_mode == 1:
             process_output.ocmmnt(
                 outfile,
                 f"Max iterations : {data_structure.global_variables.maxcal}",
@@ -217,10 +217,13 @@ def run_summary():
     process_output.ovarst(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
 
     process_output.ovarin(
-        mfile, "Optimisation switch", "(ioptimz)", data_structure.numerics.ioptimz
+        mfile,
+        "Optimisation switch",
+        "(i_process_run_mode)",
+        data_structure.numerics.i_process_run_mode,
     )
     # If optimising, write figure of merit switch
-    if data_structure.numerics.ioptimz == 1:
+    if data_structure.numerics.i_process_run_mode == 1:
         process_output.ovarin(
             mfile, "Figure of merit switch", "(minmax)", data_structure.numerics.minmax
         )
@@ -412,7 +415,7 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
         if (
-            data_structure.numerics.ioptimz >= 0
+            data_structure.numerics.i_process_run_mode >= 0
             and (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 4).any()
             and data_structure.numerics.boundl[3]
             < data.physics.temp_plasma_pedestal_kev * 1.001
@@ -468,7 +471,7 @@ def check_process(inputs, data):  # noqa: ARG001
         # Issue #862 : Variable nd_plasma_electron_on_axis/nd_plasma_pedestal_electron ratio without constraint eq 81 (nd_plasma_electron_on_axis>nd_plasma_pedestal_electron)
         #  -> Potential hollowed density profile
         if (
-            data_structure.numerics.ioptimz >= 0
+            data_structure.numerics.i_process_run_mode >= 0
             and not (
                 data_structure.numerics.icc[
                     : data_structure.numerics.neqns + data_structure.numerics.nineqns
