@@ -10378,7 +10378,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: MFile, scan: int):
 
     """
     # Get total number of iteration variables
-    n_itvars = int(m_file.get("nvar", scan=scan))
+    n_itvars = int(m_file.get("n_iteration_variables", scan=scan))
 
     y_labels = []
     y_pos = []
@@ -11581,7 +11581,7 @@ def plot_cover_page(
     optmisation_switch = mfile.get("i_process_run_mode", scan=-1)
     minmax_switch = mfile.get("i_figure_merit", scan=-1) or "N/A"
     ifail = mfile.get("ifail", scan=-1)
-    nvars = mfile.get("nvar", scan=-1)
+    nvars = mfile.get("n_iteration_variables", scan=-1)
     # Objective_function_name
     objf_name = mfile.get("objf_name", scan=-1)
     # Square_root_of_the_sum_of_squares_of_the_constraint_residuals

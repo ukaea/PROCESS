@@ -337,7 +337,10 @@ class Scan:
                 logger.warning(f"High final constraint residues. {numerics.sqsumsq=}")
 
         process_output.ovarin(
-            constants.NOUT, "Number of iteration variables", "(nvar)", numerics.nvar
+            constants.NOUT,
+            "Number of iteration variables",
+            "(n_iteration_variables)",
+            numerics.n_iteration_variables,
         )
         process_output.ovarin(
             constants.NOUT,
@@ -428,7 +431,7 @@ class Scan:
 
         # Output optimisation parameters
         solution_vector_table = []
-        for i in range(numerics.nvar):
+        for i in range(numerics.n_iteration_variables):
             numerics.xcs[i] = numerics.xcm[i] * numerics.scafc[i]
 
             name = numerics.lablxc[numerics.ixc[i] - 1]

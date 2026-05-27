@@ -33,8 +33,8 @@ DataTypes = (int, float, str)
 
 
 def _ixc_additional_actions(_name, value: int, _array_index, _config):
-    data_structure.numerics.ixc[data_structure.numerics.nvar] = value
-    data_structure.numerics.nvar += 1
+    data_structure.numerics.ixc[data_structure.numerics.n_iteration_variables] = value
+    data_structure.numerics.n_iteration_variables += 1
 
 
 def _icc_additional_actions(_name, value: int, _array_index, _config):

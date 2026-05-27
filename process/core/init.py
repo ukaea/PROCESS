@@ -172,7 +172,8 @@ def run_summary():
             f"Total constraints : {data_structure.numerics.n_inequality_constraints + data_structure.numerics.n_equality_constraints}",
         )
         process_output.ocmmnt(
-            outfile, f"Iteration variables : {data_structure.numerics.nvar}"
+            outfile,
+            f"Iteration variables : {data_structure.numerics.n_iteration_variables}",
         )
         # If optimising, write objective function and convergence parameter
         if data_structure.numerics.i_process_run_mode == 1:
@@ -258,23 +259,32 @@ def check_process(inputs, data):  # noqa: ARG001
     and ensures other dependent variables are given suitable values.
     """
     # Check that there are sufficient iteration variables
-    if data_structure.numerics.nvar < data_structure.numerics.n_equality_constraints:
+    if (
+        data_structure.numerics.n_iteration_variables
+        < data_structure.numerics.n_equality_constraints
+    ):
         raise ProcessValidationError(
             "Insufficient iteration variables to solve the problem! NVAR < NEQNS",
-            nvar=data_structure.numerics.nvar,
+            n_iteration_variables=data_structure.numerics.n_iteration_variables,
             n_equality_constraints=data_structure.numerics.n_equality_constraints,
         )
 
     # Check that sufficient elements of ixc and icc have been specified
-    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 0).any():
+    if (
+        data_structure.numerics.ixc[: data_structure.numerics.n_iteration_variables] == 0
+    ).any():
         raise ProcessValidationError(
             "The number of iteration variables specified is smaller than the number stated in ixc",
-            nvar=data_structure.numerics.nvar,
+            n_iteration_variables=data_structure.numerics.n_iteration_variables,
         )
 
     # Check that dr_tf_wp_with_insulation (ixc = 140) and dr_tf_inboard (ixc = 13) are not being used simultaneously as iteration variables
-    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 13).any() and (
-        data_structure.numerics.ixc[: data_structure.numerics.nvar] == 140
+    if (
+        data_structure.numerics.ixc[: data_structure.numerics.n_iteration_variables]
+        == 13
+    ).any() and (
+        data_structure.numerics.ixc[: data_structure.numerics.n_iteration_variables]
+        == 140
     ).any():
         raise ProcessValidationError(
             "Iteration variables 13 and 140 cannot be used simultaneously",
@@ -282,15 +292,20 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Can't use c_tf_turn as interation var, constraint or input if i_tf_turns_integer == 1
     if (
-        data_structure.numerics.ixc[: data_structure.numerics.nvar] == 60
+        data_structure.numerics.ixc[: data_structure.numerics.n_iteration_variables]
+        == 60
     ).any() and data_structure.tfcoil_variables.i_tf_turns_integer == 1:
         raise ProcessValidationError(
             "Iteration variable 60 (TF current per turn, c_tf_turn) cannot be used with the TF coil integer turn model (i_tf_turns_integer == 1) as it is a calculated output instead for this model. However, the maximum current per turn can be constrained with constraint 77."
         )
 
     # Can't have icc 77 and ixc 60 at the same time
-    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 60).any() and (
-        data_structure.numerics.icc[: data_structure.numerics.nvar] == 77
+    if (
+        data_structure.numerics.ixc[: data_structure.numerics.n_iteration_variables]
+        == 60
+    ).any() and (
+        data_structure.numerics.icc[: data_structure.numerics.n_iteration_variables]
+        == 77
     ).any():
         raise ProcessValidationError(
             "Cannot use iteration variable 60 (TF coil current per turn, c_tf_turn) and constraint 77 (maximum TF current per turn) simultaneously."
@@ -370,7 +385,10 @@ def check_process(inputs, data):  # noqa: ARG001
     # Stop the run if oacdcp is used as an optimisation variable
     # As the current density is now calculated from b_plasma_toroidal_on_axis without constraint 10
 
-    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 12).any():
+    if (
+        data_structure.numerics.ixc[: data_structure.numerics.n_iteration_variables]
+        == 12
+    ).any():
         raise ProcessValidationError(
             "The 1/R toroidal B field dependency constraint is being depreciated"
         )
@@ -423,7 +441,12 @@ def check_process(inputs, data):  # noqa: ARG001
 
         if (
             data_structure.numerics.i_process_run_mode >= 0
-            and (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 4).any()
+            and (
+                data_structure.numerics.ixc[
+                    : data_structure.numerics.n_iteration_variables
+                ]
+                == 4
+            ).any()
             and data_structure.numerics.boundl[3]
             < data.physics.temp_plasma_pedestal_kev * 1.001
         ):
@@ -443,7 +466,10 @@ def check_process(inputs, data):  # noqa: ARG001
         if (
             data.physics.f_nd_plasma_pedestal_greenwald < 0
             or not (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
+                data_structure.numerics.ixc[
+                    : data_structure.numerics.n_iteration_variables
+                ]
+                == 145
             ).any()
         ):
             # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron but it is less than nd_plasma_separatrix_electron.
@@ -488,13 +514,21 @@ def check_process(inputs, data):  # noqa: ARG001
             ).any()
         ):
             if (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
+                data_structure.numerics.ixc[
+                    : data_structure.numerics.n_iteration_variables
+                ]
+                == 145
             ).any():
                 warn(
                     "nd_plasma_pedestal_electron set with f_nd_plasma_pedestal_greenwald without constraint eq 81 (nd_plasma_pedestal_electron<nd_plasma_electron_on_axis)",
                     stacklevel=2,
                 )
-            if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 6).any():
+            if (
+                data_structure.numerics.ixc[
+                    : data_structure.numerics.n_iteration_variables
+                ]
+                == 6
+            ).any():
                 warn(
                     "nd_plasma_electrons_vol_avg used as iteration variable without constraint 81 (nd_plasma_pedestal_electron<nd_plasma_electron_on_axis)",
                     stacklevel=2,
@@ -520,7 +554,8 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # if lower bound of f_nd_plasma_pedestal_greenwald < f_nd_plasma_separatrix_greenwald
     if (
-        data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
+        data_structure.numerics.ixc[: data_structure.numerics.n_iteration_variables]
+        == 145
     ).any() and data_structure.numerics.boundl[
         144
     ] < data.physics.f_nd_plasma_separatrix_greenwald:
@@ -539,7 +574,10 @@ def check_process(inputs, data):  # noqa: ARG001
     ).any():
         # If Reinke criterion is used temp_plasma_separatrix_kev is calculated and cannot be an
         # iteration variable
-        if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 119).any():
+        if (
+            data_structure.numerics.ixc[: data_structure.numerics.n_iteration_variables]
+            == 119
+        ).any():
             raise ProcessValidationError(
                 "REINKE IMPURITY MODEL: temp_plasma_separatrix_kev is calculated and cannot be an "
                 "iteration variable for the Reinke model"
@@ -619,7 +657,10 @@ def check_process(inputs, data):  # noqa: ARG001
 
             # Check if conductor upper limit is properly set to 50 K or below
             if (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 20
+                data_structure.numerics.ixc[
+                    : data_structure.numerics.n_iteration_variables
+                ]
+                == 20
             ).any() and data_structure.numerics.boundu[19] < 273.15:
                 raise ProcessValidationError(
                     "Too low CP conductor temperature (temp_cp_average). Lower limit for copper > 273.15 K"
@@ -655,7 +696,10 @@ def check_process(inputs, data):  # noqa: ARG001
 
             # Check if conductor upper limit is properly set to 50 K or below
             if (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 20
+                data_structure.numerics.ixc[
+                    : data_structure.numerics.n_iteration_variables
+                ]
+                == 20
             ).any() and data_structure.numerics.boundu[19] > 50.0:
                 raise ProcessValidationError(
                     "Too large CP conductor temperature (temp_cp_average). Upper limit for cryo-al < 50 K"
@@ -715,7 +759,12 @@ def check_process(inputs, data):  # noqa: ARG001
         # Checking the CP TF top radius
         if (
             abs(data.build.r_cp_top) > 0
-            or (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 174).any()
+            or (
+                data_structure.numerics.ixc[
+                    : data_structure.numerics.n_iteration_variables
+                ]
+                == 174
+            ).any()
         ) and data.build.i_r_cp_top != 1:
             raise ProcessValidationError(
                 "To set the TF CP top value, you must use i_r_cp_top = 1"
@@ -788,12 +837,23 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         (
             not (
-                (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 16).any()
-                or (
-                    data_structure.numerics.ixc[: data_structure.numerics.nvar] == 29
+                (
+                    data_structure.numerics.ixc[
+                        : data_structure.numerics.n_iteration_variables
+                    ]
+                    == 16
                 ).any()
                 or (
-                    data_structure.numerics.ixc[: data_structure.numerics.nvar] == 42
+                    data_structure.numerics.ixc[
+                        : data_structure.numerics.n_iteration_variables
+                    ]
+                    == 29
+                ).any()
+                or (
+                    data_structure.numerics.ixc[
+                        : data_structure.numerics.n_iteration_variables
+                    ]
+                    == 42
                 ).any()
             )
         )  # No dr_bore,dr_cs_tf_gap, dr_cs iteration
@@ -999,7 +1059,10 @@ def check_process(inputs, data):  # noqa: ARG001
     # Check if the WP/conductor radial thickness (dr_tf_wp_with_insulation) is large enough
     # To contains the insulation, cooling and the support structure
     # Rem : Only verified if the WP thickness is used
-    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 140).any():
+    if (
+        data_structure.numerics.ixc[: data_structure.numerics.n_iteration_variables]
+        == 140
+    ).any():
         # Minimal WP thickness
         if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             dr_tf_wp_min = 2.0 * (
@@ -1010,7 +1073,12 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
             # Steel conduit thickness (can be an iteration variable)
-            if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 58).any():
+            if (
+                data_structure.numerics.ixc[
+                    : data_structure.numerics.n_iteration_variables
+                ]
+                == 58
+            ).any():
                 dr_tf_wp_min += 2.0 * data_structure.numerics.boundl[57]
             else:
                 dr_tf_wp_min += 2.0 * data_structure.tfcoil_variables.dx_tf_turn_steel

@@ -73,8 +73,8 @@ n_inequality_constraints: int = None
 (leave at zero for now)
 """
 
-nvar: int = None
-"""number of iteration variables to use"""
+n_iteration_variables: int = None
+"""Number of iteration variables active during a run"""
 
 nviter: int = None
 """number of optimisation iterations performed"""
@@ -461,7 +461,7 @@ def init_numerics():
         nfev1, \
         nfev2, \
         n_inequality_constraints, \
-        nvar, \
+        n_iteration_variables, \
         nviter, \
         icc, \
         active_constraints, \
@@ -519,7 +519,7 @@ def init_numerics():
     nfev1 = 0
     nfev2 = 0
     n_inequality_constraints = 0
-    nvar = 0
+    n_iteration_variables = 0
     n_constraints = 0
     nviter = 0
     icc = np.array([0] * N_CONSTRAINT_EQUATIONS_MAX)

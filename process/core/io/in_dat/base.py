@@ -427,7 +427,7 @@ def get_parameters(data, use_string_values=True):
     parameters = {}
     # dict of all parameters set in input file, grouped by module
     # Include n_equality_constraints to allow eq and ineq constraints to be defined in produced IN.DAT
-    exclusions = ["nvar", "icc", "ixc"]
+    exclusions = ["n_iteration_variables", "icc", "ixc"]
     # Parameters to exclude
 
     # Change module keys from DICT_MODULE: replace spaces with underscores and

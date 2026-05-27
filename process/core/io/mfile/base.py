@@ -603,7 +603,7 @@ def get_mfile_initial_ixc_values(file_path: Path, data: DataStructure):
     iteration_variable_names = []
     iteration_variable_values = []
 
-    for i in range(data_structure.numerics.nvar):
+    for i in range(data_structure.numerics.n_iteration_variables):
         ivar = data_structure.numerics.ixc[i].item()
 
         itv = iteration_variables.ITERATION_VARIABLES[ivar]
