@@ -27,7 +27,7 @@ EXCLUSIONS = {
     "xcm",
     "convergence_parameter",
     "sqsumsq",
-    "nviter",
+    "n_solver_iterations",
     "commsg",
     "procver",
     r"sig_tf_r_max\(1\)",  # weird value, flips between 0 and very low?

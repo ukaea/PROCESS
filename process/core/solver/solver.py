@@ -182,7 +182,7 @@ class Vmcon(_Solver):
             bb = np.identity(numerics.n_iteration_variables) * self.b
 
         def _solver_callback(i: int, _result, _x, convergence_param: float):
-            numerics.nviter = i + 1
+            numerics.n_solver_iterations = i + 1
             global_variables.convergence_parameter = convergence_param
             print(
                 f"{i + 1} | Convergence Parameter: {convergence_param:.3E}",

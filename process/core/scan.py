@@ -399,8 +399,8 @@ class Scan:
             process_output.ovarin(
                 constants.NOUT,
                 "Number of optimising solver iterations",
-                "(nviter)",
-                numerics.nviter,
+                "(n_solver_iterations)",
+                numerics.n_solver_iterations,
                 "OP ",
             )
         process_output.oblnkl(constants.NOUT)

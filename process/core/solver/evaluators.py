@@ -71,9 +71,9 @@ class Evaluators:
 
             sqsumconfsq = math.sqrt(summ)
             logger.debug("Key evaluator values:")
-            logger.debug(f"{numerics.nviter = }")
+            logger.debug(f"{numerics.n_solver_iterations = }")
             logger.debug(f"{(1 - (ifail % 7)) - 1 = }")
-            logger.debug(f"{(numerics.nviter % 2) - 1 = }")
+            logger.debug(f"{(numerics.n_solver_iterations % 2) - 1 = }")
             logger.debug(f"{self.data.physics.temp_plasma_electron_vol_avg_kev = }")
             logger.debug(f"{self.data.costs.coe = }")
             logger.debug(f"{self.data.physics.rmajor = }")
