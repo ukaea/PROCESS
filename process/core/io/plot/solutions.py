@@ -446,7 +446,8 @@ def _plot_solutions(
     else:
         numerics.init_numerics()
         objf_list = {
-            numerics.lablmm[int(abs(i_figure_merit)) - 1] for i_figure_merit in diffs_df["i_figure_merit"]
+            numerics.lablmm[int(abs(i_figure_merit)) - 1]
+            for i_figure_merit in diffs_df["i_figure_merit"]
         }
 
     if len(objf_list) != 1:

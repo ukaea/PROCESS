@@ -448,6 +448,8 @@ OBS_VARS = {
     "vcool": "vel_cp_coolant_midplane",
     "rcool": "radius_cp_coolant_channel",
     "fl_h_threshold": None,
+    "minmax": "i_figure_merit",
+    "neqns": "n_equality_constraints",
 }
 
 OBS_VARS_HELP = {

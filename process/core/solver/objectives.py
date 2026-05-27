@@ -94,7 +94,9 @@ def objective_function(i_figure_merit: int, data: DataStructure) -> float:
             objective_metric = data.times.t_plant_pulse_burn / 2.0e4
         case 15:
             if data.costs.i_plant_availability != 1:
-                raise ProcessValueError("i_figure_merit=15 requires i_plant_availability=1")
+                raise ProcessValueError(
+                    "i_figure_merit=15 requires i_plant_availability=1"
+                )
             objective_metric = data.costs.f_t_plant_available
         case 16:
             objective_metric = 0.95 * (data.physics.rmajor / 9.0) - 0.05 * (

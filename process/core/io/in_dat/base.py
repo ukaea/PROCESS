@@ -426,7 +426,7 @@ def get_parameters(data, use_string_values=True):
     # dict of all module-level variables in source, grouped by module
     parameters = {}
     # dict of all parameters set in input file, grouped by module
-    # Include neqns to allow eq and ineq constraints to be defined in produced IN.DAT
+    # Include n_equality_constraints to allow eq and ineq constraints to be defined in produced IN.DAT
     exclusions = ["nvar", "icc", "ixc"]
     # Parameters to exclude
 
@@ -1306,7 +1306,7 @@ class InDat:
                     # Duplicate constraint equation number
                     self.add_duplicate_variable(f"icc = {item}")
             # Don't sort the constraints! Preserves what's eq, what's ineq;
-            # first neqns are eqs, rest are ineqs
+            # first n_equality_constraints are eqs, rest are ineqs
             # self.data["icc"].value.sort()
 
     def process_iteration_variables(self, line):

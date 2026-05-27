@@ -3,7 +3,7 @@ i_process_run_modess_run_mode  = -2
 
 *---------------Constraint Equations---------------*
 * Define number of equality constraints
-neqns = 2
+n_equality_constraints = 2
 
 * Equalities
 icc = 1 * Beta

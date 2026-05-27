@@ -63,12 +63,15 @@ def output_evaluation(data):
     # Print the residuals of the constraint equations
 
     residual_error, value, residual, symbols, units = constraints.constraint_eqns(
-        numerics.neqns + numerics.nineqns, -1, data
+        numerics.n_equality_constraints + numerics.nineqns, -1, data
     )
 
     labels = [
         numerics.lablcc[j]
-        for j in [i - 1 for i in numerics.icc[: numerics.neqns + numerics.nineqns]]
+        for j in [
+            i - 1
+            for i in numerics.icc[: numerics.n_equality_constraints + numerics.nineqns]
+        ]
     ]
     physical_constraint = [f"{c} {u}" for c, u in zip(value, units, strict=False)]
     physical_residual = [f"{c} {u}" for c, u in zip(residual, units, strict=False)]
@@ -83,7 +86,7 @@ def output_evaluation(data):
 
     po.write(constants.NOUT, tabulate(table_data, headers="keys"))
 
-    for i in range(numerics.neqns):
+    for i in range(numerics.n_equality_constraints):
         constraint_id = numerics.icc[i]
         po.ovarre(
             constants.MFILE,
@@ -93,10 +96,10 @@ def output_evaluation(data):
         )
 
     for i in range(numerics.nineqns):
-        constraint_id = numerics.icc[numerics.neqns + i]
+        constraint_id = numerics.icc[numerics.n_equality_constraints + i]
         po.ovarre(
             constants.MFILE,
-            f"{labels[numerics.neqns + i]}",
+            f"{labels[numerics.n_equality_constraints + i]}",
             f"(ineq_con{constraint_id:03d})",
-            residual_error[numerics.neqns + i],
+            residual_error[numerics.n_equality_constraints + i],
         )

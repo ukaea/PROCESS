@@ -160,7 +160,8 @@ def run_summary():
         process_output.oblnkl(outfile)
 
         process_output.ocmmnt(
-            outfile, f"Equality constraints : {data_structure.numerics.neqns}"
+            outfile,
+            f"Equality constraints : {data_structure.numerics.n_equality_constraints}",
         )
         process_output.ocmmnt(
             outfile,
@@ -168,7 +169,7 @@ def run_summary():
         )
         process_output.ocmmnt(
             outfile,
-            f"Total constraints : {data_structure.numerics.nineqns + data_structure.numerics.neqns}",
+            f"Total constraints : {data_structure.numerics.nineqns + data_structure.numerics.n_equality_constraints}",
         )
         process_output.ocmmnt(
             outfile, f"Iteration variables : {data_structure.numerics.nvar}"
@@ -225,7 +226,10 @@ def run_summary():
     # If optimising, write figure of merit switch
     if data_structure.numerics.i_process_run_mode == 1:
         process_output.ovarin(
-            mfile, "Figure of merit switch", "(i_figure_merit)", data_structure.numerics.i_figure_merit
+            mfile,
+            "Figure of merit switch",
+            "(i_figure_merit)",
+            data_structure.numerics.i_figure_merit,
         )
 
 
@@ -254,11 +258,11 @@ def check_process(inputs, data):  # noqa: ARG001
     and ensures other dependent variables are given suitable values.
     """
     # Check that there are sufficient iteration variables
-    if data_structure.numerics.nvar < data_structure.numerics.neqns:
+    if data_structure.numerics.nvar < data_structure.numerics.n_equality_constraints:
         raise ProcessValidationError(
             "Insufficient iteration variables to solve the problem! NVAR < NEQNS",
             nvar=data_structure.numerics.nvar,
-            neqns=data_structure.numerics.neqns,
+            n_equality_constraints=data_structure.numerics.n_equality_constraints,
         )
 
     # Check that sufficient elements of ixc and icc have been specified
@@ -294,13 +298,14 @@ def check_process(inputs, data):  # noqa: ARG001
 
     if (
         data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+            : data_structure.numerics.n_equality_constraints
+            + data_structure.numerics.nineqns
         ]
         == 0
     ).any():
         raise ProcessValidationError(
-            "The number of constraints specified is smaller than the number stated in neqns+nineqns",
-            neqns=data_structure.numerics.neqns,
+            "The number of constraints specified is smaller than the number stated in n_equality_constraints+nineqns",
+            n_equality_constraints=data_structure.numerics.n_equality_constraints,
             nineqns=data_structure.numerics.nineqns,
         )
 
@@ -308,7 +313,8 @@ def check_process(inputs, data):  # noqa: ARG001
     for depcrecated_constraint in [3, 4, 10, 74, 42]:
         if (
             data_structure.numerics.icc[
-                : data_structure.numerics.neqns + data_structure.numerics.nineqns
+                : data_structure.numerics.n_equality_constraints
+                + data_structure.numerics.nineqns
             ]
             == depcrecated_constraint
         ).any():
@@ -319,7 +325,8 @@ def check_process(inputs, data):  # noqa: ARG001
     # MDK Report error if constraint 63 is used with old vacuum model
     if (
         data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+            : data_structure.numerics.n_equality_constraints
+            + data_structure.numerics.nineqns
         ]
         == 63
     ).any() and data.vacuum.i_vacuum_pumping != "simple":
@@ -474,7 +481,8 @@ def check_process(inputs, data):  # noqa: ARG001
             data_structure.numerics.i_process_run_mode >= 0
             and not (
                 data_structure.numerics.icc[
-                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
+                    : data_structure.numerics.n_equality_constraints
+                    + data_structure.numerics.nineqns
                 ]
                 == 81
             ).any()
@@ -495,12 +503,14 @@ def check_process(inputs, data):  # noqa: ARG001
     # Cannot use Psep/R and PsepB/qAR limits at the same time
     if (
         data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+            : data_structure.numerics.n_equality_constraints
+            + data_structure.numerics.nineqns
         ]
         == 68
     ).any() and (
         data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+            : data_structure.numerics.n_equality_constraints
+            + data_structure.numerics.nineqns
         ]
         == 56
     ).any():
@@ -522,7 +532,8 @@ def check_process(inputs, data):  # noqa: ARG001
 
     if (
         data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+            : data_structure.numerics.n_equality_constraints
+            + data_structure.numerics.nineqns
         ]
         == 78
     ).any():
@@ -539,7 +550,8 @@ def check_process(inputs, data):  # noqa: ARG001
         if (data.physics.i_l_h_threshold != 6) or (
             not (
                 data_structure.numerics.icc[
-                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
+                    : data_structure.numerics.n_equality_constraints
+                    + data_structure.numerics.nineqns
                 ]
                 == 15
             ).any()
@@ -677,7 +689,8 @@ def check_process(inputs, data):  # noqa: ARG001
             == TFConductorModel.HELIUM_COOLED_ALUMINIUM
             and (
                 data_structure.numerics.icc[
-                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
+                    : data_structure.numerics.n_equality_constraints
+                    + data_structure.numerics.nineqns
                 ]
                 == 85
             ).any()
@@ -751,7 +764,8 @@ def check_process(inputs, data):  # noqa: ARG001
         # Constraint 10 is dedicated to ST designs with demountable joints
         if (
             data_structure.numerics.icc[
-                : data_structure.numerics.neqns + data_structure.numerics.nineqns
+                : data_structure.numerics.n_equality_constraints
+                + data_structure.numerics.nineqns
             ]
             == 10
         ).any():
@@ -795,13 +809,15 @@ def check_process(inputs, data):  # noqa: ARG001
         and (
             (
                 data_structure.numerics.icc[
-                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
+                    : data_structure.numerics.n_equality_constraints
+                    + data_structure.numerics.nineqns
                 ]
                 == 31
             ).any()
             or (
                 data_structure.numerics.icc[
-                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
+                    : data_structure.numerics.n_equality_constraints
+                    + data_structure.numerics.nineqns
                 ]
                 == 32
             ).any()
@@ -1151,7 +1167,8 @@ def check_process(inputs, data):  # noqa: ARG001
     # Cannot use temperature margin constraint with REBCO TF coils
     if (
         data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+            : data_structure.numerics.n_equality_constraints
+            + data_structure.numerics.nineqns
         ]
         == 36
     ).any() and (
@@ -1165,7 +1182,8 @@ def check_process(inputs, data):  # noqa: ARG001
     # Cannot use temperature margin constraint with REBCO CS coils
     if (
         data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+            : data_structure.numerics.n_equality_constraints
+            + data_structure.numerics.nineqns
         ]
         == 60
     ).any() and data.pf_coil.i_cs_superconductor == 8:
@@ -1183,7 +1201,8 @@ def check_process(inputs, data):  # noqa: ARG001
     # Cannot use TF coil strain limit if i_str_wp is off:
     if (
         data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+            : data_structure.numerics.n_equality_constraints
+            + data_structure.numerics.nineqns
         ]
         == 88
     ).any() and data_structure.tfcoil_variables.i_str_wp == 0:
@@ -1200,11 +1219,15 @@ def set_active_constraints():
             ] = True
             num_constraints += 1
 
-    if data_structure.numerics.neqns < 0:
-        # The value of neqns has not been set in the input file.  Default = 0.
-        data_structure.numerics.neqns = num_constraints - data_structure.numerics.nineqns
+    if data_structure.numerics.n_equality_constraints < 0:
+        # The value of n_equality_constraints has not been set in the input file.  Default = 0.
+        data_structure.numerics.n_equality_constraints = (
+            num_constraints - data_structure.numerics.nineqns
+        )
     else:
-        data_structure.numerics.nineqns = num_constraints - data_structure.numerics.neqns
+        data_structure.numerics.nineqns = (
+            num_constraints - data_structure.numerics.n_equality_constraints
+        )
 
 
 def set_device_type(data):

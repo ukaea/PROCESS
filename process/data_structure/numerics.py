@@ -53,14 +53,14 @@ note: FoM should be minimised only!
 """
 
 n_constraints: int = None
-"""Total number of constraints (neqns + nineqns)"""
+"""Total number of constraints (n_equality_constraints + nineqns)"""
 
 
 ncalls: int = None
 """number of function calls during solution"""
 
-neqns: int = None
-"""number of equality constraints to be satisfied"""
+n_equality_constraints: int = None
+"""Number of equality constraints to be satisfied"""
 
 nfev1: int = None
 """number of calls to FCNHYB (HYBRD function caller) made"""
@@ -457,7 +457,7 @@ def init_numerics():
         lablmm, \
         n_constraints, \
         ncalls, \
-        neqns, \
+        n_equality_constraints, \
         nfev1, \
         nfev2, \
         nineqns, \
@@ -515,7 +515,7 @@ def init_numerics():
     ]
 
     ncalls = 0
-    neqns = -1
+    n_equality_constraints = -1
     nfev1 = 0
     nfev2 = 0
     nineqns = 0

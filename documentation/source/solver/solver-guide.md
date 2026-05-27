@@ -15,7 +15,7 @@ A PROCESS input file will, for example, define which constraint equations are be
 
 ```
 ...
-neqns = 3
+n_equality_constraints = 3
 
 * Equalities
 icc = 1 * Beta
@@ -33,7 +33,7 @@ icc = 15 * LH power threshold limit
 Here each `icc=n` statement tells PROCESS to activate a constraint with the name `n`. A list of the constraints and 
 their corresponding names can be found [here](../../source/reference/process/data_structure/numerics/#process.data_structure.numerics.lablcc).
 
-The `neqns = 3` statement is telling PROCESS to treat the first `3` equations as equality constraints, and the rest as inequality constraints. Therefore, it is imperative that all equality constraints are stated before any inequality constraints.
+The `n_equality_constraints = 3` statement is telling PROCESS to treat the first `3` equations as equality constraints, and the rest as inequality constraints. Therefore, it is imperative that all equality constraints are stated before any inequality constraints.
 
 
 In both types of equations, an optimiser/solver uses the normalised residuals $c_i$ of the constraints (and sometimes its gradient, depending on the solver/optimiser) to guide the solution towards one that satisfies all of the constraints.
@@ -141,7 +141,7 @@ i_process_run_mode  = -2 * evaluation mode
 
 *---------------Constraint Equations---------------*
 * Define number of equality constraints
-neqns = 2
+n_equality_constraints = 2
 
 * Equalities
 icc = 1 * Beta
