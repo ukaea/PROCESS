@@ -336,18 +336,17 @@ class PhysicsData:
     load calculation (`i_pflux_fw_neutron=1`)
     """
 
-f_nd_plasma_greenwald: float = None
-"""Greenwald fraction of the line averaged electron density. The classic Greenwald
-limit value"""
+    f_nd_plasma_greenwald: float = None
+    """Greenwald fraction of the line averaged electron density. The classic Greenwald
+    limit value"""
 
-f_nd_plasma_pedestal_greenwald: float = 0.85
-"""Greenwald fraction of the pedestal density
-"""
+    f_nd_plasma_pedestal_greenwald: float = 0.85
+    """Greenwald fraction of the pedestal density
+    """
 
-
-f_nd_plasma_separatrix_greenwald: float = 0.5
-"""Greenwald fraction of the separatrix density
-"""
+    f_nd_plasma_separatrix_greenwald: float = 0.5
+    """Greenwald fraction of the separatrix density
+    """
 
     f_plasma_fuel_helium3: float = 0.0
     """Plasma Helium-3 fuel fraction"""
@@ -489,22 +488,22 @@ f_nd_plasma_separatrix_greenwald: float = 0.5
     """
 
     nd_plasma_pedestal_electron: float = 4.0e19
-    """electron density of pedestal [m-3] (`i_plasma_pedestal==1)"""
+    """electron density of pedestal [m⁻³] (`i_plasma_pedestal==1)"""
 
     nd_plasma_separatrix_electron: float = 3.0e19
-    """electron density at separatrix [m-3] (`i_plasma_pedestal==1)"""
+    """electron density at separatrix [m⁻³] (`i_plasma_pedestal==1)"""
 
-i_nd_plasma_pedestal_separatrix: int = None
-"""switch for pedestal and separatrix density calculation:
-- =0 User input pedestal and separatrix density
-- =1 Calculate pedestal and separatrix density as fraction of Greenwald limit (see `f_nd_plasma_pedestal_greenwald` and `f_nd_plasma_separatrix_greenwald`)
-"""
+    i_nd_plasma_pedestal_separatrix: int = 1
+    """switch for pedestal and separatrix density calculation:
+    - =0 User input pedestal and separatrix density
+    - =1 Calculate pedestal and separatrix density as fraction of Greenwald limit (see `f_nd_plasma_pedestal_greenwald` and `f_nd_plasma_separatrix_greenwald`)
+    """
 
     alpha_crit: float = 0.0
     """critical ballooning parameter value"""
 
     nd_plasma_separatrix_electron_eich_max: float = 0.0
-    """Eich critical electron density at separatrix [m-3]"""
+    """Eich critical electron density at separatrix [m⁻³]"""
 
     plasma_res_factor: float = 1.0
     """plasma resistivity pre-factor"""
@@ -992,7 +991,7 @@ i_nd_plasma_pedestal_separatrix: int = None
 
     temp_plasma_electron_line_avg_kev: float = None
     """Line averaged electron temperature (keV)"""
-    
+
     temp_plasma_ion_vol_avg_kev: float = 12.9
     """volume averaged ion temperature (keV). N.B. calculated from temp_plasma_electron_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`"""
 

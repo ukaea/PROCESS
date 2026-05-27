@@ -103,9 +103,9 @@ class PlasmaDensityLimit(Model):
             ) from None
 
         # Assign the Greenwald fraction for the rest of the code
-        physics_variables.f_nd_plasma_greenwald = (
-            physics_variables.nd_plasma_electron_line
-            / physics_variables.nd_plasma_electron_max_array[6]
+        self.data.physics.f_nd_plasma_greenwald = (
+            self.data.physics.nd_plasma_electron_line
+            / self.data.physics.nd_plasma_electron_max_array[6]
         )
 
     @staticmethod

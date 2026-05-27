@@ -284,26 +284,26 @@ class NeProfile(Profile):
     def set_pedestal_and_separatrix_values(self):
         """Sets the pedestal and separatrix density values based on the user input or greenwald fraction method."""
         i_nd_plasma_pedestal_separatrix = DensityProfilePedestalType(
-            physics_variables.i_nd_plasma_pedestal_separatrix
+            self.data.physics.i_nd_plasma_pedestal_separatrix
         )
 
         if i_nd_plasma_pedestal_separatrix == DensityProfilePedestalType.USER_INPUT:
-            physics_variables.f_nd_plasma_pedestal_greenwald = (
-                physics_variables.nd_plasma_pedestal_electron
+            self.data.physics.f_nd_plasma_pedestal_greenwald = (
+                self.data.physics.nd_plasma_pedestal_electron
                 / (
                     PlasmaDensityLimit.calculate_greenwald_density_limit(
-                        c_plasma=physics_variables.plasma_current,
-                        rminor=physics_variables.rminor,
+                        c_plasma=self.data.physics.plasma_current,
+                        rminor=self.data.physics.rminor,
                     )
                 )
             )
 
-            physics_variables.f_nd_plasma_separatrix_greenwald = (
-                physics_variables.nd_plasma_separatrix_electron
+            self.data.physics.f_nd_plasma_separatrix_greenwald = (
+                self.data.physics.nd_plasma_separatrix_electron
                 / (
                     PlasmaDensityLimit.calculate_greenwald_density_limit(
-                        c_plasma=physics_variables.plasma_current,
-                        rminor=physics_variables.rminor,
+                        c_plasma=self.data.physics.plasma_current,
+                        rminor=self.data.physics.rminor,
                     )
                 )
             )
@@ -311,18 +311,18 @@ class NeProfile(Profile):
             i_nd_plasma_pedestal_separatrix
             == DensityProfilePedestalType.GREENWALD_FRACTION
         ):
-            physics_variables.nd_plasma_pedestal_electron = (
-                physics_variables.f_nd_plasma_pedestal_greenwald
+            self.data.physics.nd_plasma_pedestal_electron = (
+                self.data.physics.f_nd_plasma_pedestal_greenwald
                 * PlasmaDensityLimit.calculate_greenwald_density_limit(
-                    c_plasma=physics_variables.plasma_current,
-                    rminor=physics_variables.rminor,
+                    c_plasma=self.data.physics.plasma_current,
+                    rminor=self.data.physics.rminor,
                 )
             )
-            physics_variables.nd_plasma_separatrix_electron = (
-                physics_variables.f_nd_plasma_separatrix_greenwald
+            self.data.physics.nd_plasma_separatrix_electron = (
+                self.data.physics.f_nd_plasma_separatrix_greenwald
                 * PlasmaDensityLimit.calculate_greenwald_density_limit(
-                    c_plasma=physics_variables.plasma_current,
-                    rminor=physics_variables.rminor,
+                    c_plasma=self.data.physics.plasma_current,
+                    rminor=self.data.physics.rminor,
                 )
             )
 

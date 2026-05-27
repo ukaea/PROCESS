@@ -2452,7 +2452,7 @@ class Physics(Model):
             self.outfile,
             "Line averaged electron temperature (keV)",
             "(temp_plasma_electron_line_avg_kev)",
-            physics_variables.temp_plasma_electron_line_avg_kev,
+            self.data.physics.temp_plasma_electron_line_avg_kev,
         )
         po.ovarrf(
             self.outfile,
@@ -2509,12 +2509,12 @@ class Physics(Model):
                 self.outfile,
                 "Pedestal and separatrix density model selected",
                 "(i_nd_plasma_pedestal_separatrix)",
-                physics_variables.i_nd_plasma_pedestal_separatrix,
+                self.data.physics.i_nd_plasma_pedestal_separatrix,
             )
             po.ocmmnt(
                 self.outfile,
                 f"Pedestal and separatrix values set by: "
-                f"{DensityProfilePedestalType(physics_variables.i_nd_plasma_pedestal_separatrix).description}",
+                f"{DensityProfilePedestalType(self.data.physics.i_nd_plasma_pedestal_separatrix).description}",
             )
             po.oblnkl(self.outfile)
 
@@ -2538,52 +2538,52 @@ class Physics(Model):
                     self.outfile,
                     "Electron separatrix density (nₑ,ₛₑₚ) (/m³)",
                     "(nd_plasma_separatrix_electron)",
-                    physics_variables.nd_plasma_separatrix_electron,
+                    self.data.physics.nd_plasma_separatrix_electron,
                 )
                 po.ovarre(
                     self.outfile,
                     "Pedestal Greenwald fraction",
                     "(f_nd_plasma_pedestal_greenwald)",
-                    physics_variables.f_nd_plasma_pedestal_greenwald,
+                    self.data.physics.f_nd_plasma_pedestal_greenwald,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Separatrix Greenwald fraction",
                     "(f_nd_plasma_separatrix_greenwald)",
-                    physics_variables.f_nd_plasma_separatrix_greenwald,
+                    self.data.physics.f_nd_plasma_separatrix_greenwald,
                     "OP ",
                 )
 
             elif (
-                physics_variables.i_nd_plasma_pedestal_separatrix
+                self.data.physics.i_nd_plasma_pedestal_separatrix
                 == DensityProfilePedestalType.GREENWALD_FRACTION
             ):
                 po.ovarre(
                     self.outfile,
                     "Electron density pedestal height (nₑ_pedestal) (/m³)",
                     "(nd_plasma_pedestal_electron)",
-                    physics_variables.nd_plasma_pedestal_electron,
+                    self.data.physics.nd_plasma_pedestal_electron,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Electron separatrix density (nₑ,ₛₑₚ) (/m³)",
                     "(nd_plasma_separatrix_electron)",
-                    physics_variables.nd_plasma_separatrix_electron,
+                    self.data.physics.nd_plasma_separatrix_electron,
                     "OP ",
                 )
                 po.ovarin(
                     self.outfile,
                     "Pedestal Greenwald fraction",
                     "(f_nd_plasma_pedestal_greenwald)",
-                    physics_variables.f_nd_plasma_pedestal_greenwald,
+                    self.data.physics.f_nd_plasma_pedestal_greenwald,
                 )
                 po.ovarin(
                     self.outfile,
                     "Separatrix Greenwald fraction",
                     "(f_nd_plasma_separatrix_greenwald)",
-                    physics_variables.f_nd_plasma_separatrix_greenwald,
+                    self.data.physics.f_nd_plasma_separatrix_greenwald,
                 )
 
             po.oblnkl(self.outfile)
@@ -2613,7 +2613,7 @@ class Physics(Model):
                 self.outfile,
                 "Greenwald fraction (f_GW)",
                 "(f_nd_plasma_greenwald)",
-                physics_variables.f_nd_plasma_greenwald,
+                self.data.physics.f_nd_plasma_greenwald,
                 "OP ",
             )
         po.oblnkl(self.outfile)

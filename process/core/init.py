@@ -424,49 +424,45 @@ def check_process(inputs, data):  # noqa: ARG001
         # Density checks
         # Issue #589: Pedestal density is lower than separatrix density
         pedestal_type = DensityProfilePedestalType(
-            data_structure.physics_variables.i_nd_plasma_pedestal_separatrix
+            data.physics.i_nd_plasma_pedestal_separatrix
         )
         if (
             pedestal_type == DensityProfilePedestalType.USER_INPUT
-            and data_structure.physics_variables.nd_plasma_pedestal_electron
-            < data_structure.physics_variables.nd_plasma_separatrix_electron
+            and data.physics.nd_plasma_pedestal_electron
+            < data.physics.nd_plasma_separatrix_electron
         ) or (
             pedestal_type == DensityProfilePedestalType.GREENWALD_FRACTION
-            and data_structure.physics_variables.f_nd_plasma_pedestal_greenwald
-            < data_structure.physics_variables.f_nd_plasma_separatrix_greenwald
+            and data.physics.f_nd_plasma_pedestal_greenwald
+            < data.physics.f_nd_plasma_separatrix_greenwald
         ):
             raise ProcessValidationError(
                 "Density pedestal is lower than separatrix density",
                 **(
                     {
-                        "nd_plasma_pedestal_electron": data_structure.physics_variables.nd_plasma_pedestal_electron,
-                        "nd_plasma_separatrix_electron": data_structure.physics_variables.nd_plasma_separatrix_electron,
+                        "nd_plasma_pedestal_electron": data.physics.nd_plasma_pedestal_electron,
+                        "nd_plasma_separatrix_electron": data.physics.nd_plasma_separatrix_electron,
                     }
                     if pedestal_type == DensityProfilePedestalType.USER_INPUT
                     else {
-                        "f_nd_plasma_pedestal_greenwald": data_structure.physics_variables.f_nd_plasma_pedestal_greenwald,
-                        "f_nd_plasma_separatrix_greenwald": data_structure.physics_variables.f_nd_plasma_separatrix_greenwald,
+                        "f_nd_plasma_pedestal_greenwald": data.physics.f_nd_plasma_pedestal_greenwald,
+                        "f_nd_plasma_separatrix_greenwald": data.physics.f_nd_plasma_separatrix_greenwald,
                     }
                 ),
             )
 
         if (
-            abs(
-                data_structure.physics_variables.radius_plasma_pedestal_density_norm
-                - 1.0
-            )
-            <= 1e-7
+            abs(data.physics.radius_plasma_pedestal_density_norm - 1.0) <= 1e-7
             and (
-                data_structure.physics_variables.nd_plasma_pedestal_electron
-                - data_structure.physics_variables.nd_plasma_separatrix_electron
+                data.physics.nd_plasma_pedestal_electron
+                - data.physics.nd_plasma_separatrix_electron
             )
             >= 1e-7
         ):
             warn(
                 "Density pedestal is at plasma edge "
-                f"({data_structure.physics_variables.radius_plasma_pedestal_density_norm = }), but nd_plasma_pedestal_electron "
-                f"({data_structure.physics_variables.nd_plasma_pedestal_electron}) differs from "
-                f"nd_plasma_separatrix_electron ({data_structure.physics_variables.nd_plasma_separatrix_electron})",
+                f"({data.physics.radius_plasma_pedestal_density_norm = }), but nd_plasma_pedestal_electron "
+                f"({data.physics.nd_plasma_pedestal_electron}) differs from "
+                f"nd_plasma_separatrix_electron ({data.physics.nd_plasma_separatrix_electron})",
                 stacklevel=2,
             )
 

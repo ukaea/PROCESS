@@ -140,12 +140,12 @@ class PlasmaProfile(Model):
             / sp.special.gamma(self.data.physics.alphan + 1.5)
         )
 
-        physics_variables.temp_plasma_electron_line_avg_kev = (
-            physics_variables.temp_plasma_electron_vol_avg_kev
-            * (1.0 + physics_variables.alphat)
+        self.data.physics.temp_plasma_electron_line_avg_kev = (
+            self.data.physics.temp_plasma_electron_vol_avg_kev
+            * (1.0 + self.data.physics.alphat)
             * (sp.special.gamma(0.5) / 2.0)
-            * sp.special.gamma(physics_variables.alphat + 1.0)
-            / sp.special.gamma(physics_variables.alphat + 1.5)
+            * sp.special.gamma(self.data.physics.alphat + 1.0)
+            / sp.special.gamma(self.data.physics.alphat + 1.5)
         )
 
         #  Density-weighted temperatures
@@ -232,7 +232,7 @@ class PlasmaProfile(Model):
 
         self.data.physics.nd_plasma_electron_line = self.neprofile.profile_integ
 
-        physics_variables.temp_plasma_electron_line_avg_kev = (
+        self.data.physics.temp_plasma_electron_line_avg_kev = (
             self.teprofile.profile_integ
         )
 

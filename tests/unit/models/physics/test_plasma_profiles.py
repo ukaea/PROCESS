@@ -552,11 +552,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch, plasmaprofile):
         plasmaprofilesparam.expected_nd_electron_line
     )
 
-    assert physics_variables.temp_plasma_electron_line_avg_kev == pytest.approx(
+    assert plasmaprofile.data.physics.temp_plasma_electron_line_avg_kev == pytest.approx(
         plasmaprofilesparam.expected_temp_plasma_electron_line_avg_kev
     )
 
-    assert physics_variables.temp_plasma_electron_line_avg_kev == pytest.approx(
+    assert plasmaprofile.data.physics.temp_plasma_electron_line_avg_kev == pytest.approx(
         plasmaprofilesparam.expected_temp_plasma_electron_line_avg_kev
     )
 
