@@ -1284,7 +1284,7 @@ INPUT_VARIABLES = {
     "icc": InputVariable(
         None,
         int,
-        range=(1, data_structure.numerics.ipeqns),
+        range=(1, data_structure.numerics.N_CONSTRAINT_EQUATIONS_MAX),
         additional_actions=_icc_additional_actions,
         set_variable=False,
     ),

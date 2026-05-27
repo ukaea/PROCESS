@@ -3,14 +3,14 @@ import numpy as np
 N_ITERATION_VARIABLES_MAX: int = 177
 """total number of variables available for iteration"""
 
-ipeqns: int = 92
+N_CONSTRAINT_EQUATIONS_MAX: int = 92
 """number of constraint equations available"""
 
 ipnfoms: int = 19
 """number of available figures of merit"""
 
-ipvlam: int = ipeqns + 2 * N_ITERATION_VARIABLES_MAX + 1
-iptnt: int = (ipeqns * (3 * ipeqns + 13)) / 2
+ipvlam: int = N_CONSTRAINT_EQUATIONS_MAX + 2 * N_ITERATION_VARIABLES_MAX + 1
+iptnt: int = (N_CONSTRAINT_EQUATIONS_MAX * (3 * N_CONSTRAINT_EQUATIONS_MAX + 13)) / 2
 ipvp1: int = N_ITERATION_VARIABLES_MAX + 1
 
 ioptimz: int = None
@@ -522,8 +522,8 @@ def init_numerics():
     nvar = 0
     n_constraints = 0
     nviter = 0
-    icc = np.array([0] * ipeqns)
-    active_constraints = [False] * ipeqns
+    icc = np.array([0] * N_CONSTRAINT_EQUATIONS_MAX)
+    active_constraints = [False] * N_CONSTRAINT_EQUATIONS_MAX
 
     lablcc = [
         "⟨β⟩ consistency                   ",
