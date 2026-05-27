@@ -66,23 +66,23 @@ def objective_function(minmax: int, data: DataStructure) -> float:
         objective_metric = data.divertor.pflux_div_heat_load_mw
     elif figure_of_merit == FiguresOfMerit.TOROIDAL_FIELD:
         objective_metric = data.physics.b_plasma_toroidal_on_axis
-    elif figure_of_merit == FiguresOfMerit.INJECTED_POWER:
+    elif figure_of_merit == FiguresOfMerit.TOTAL_INJECTED_POWER:
         objective_metric = data.current_drive.p_hcd_injected_total_mw
     elif figure_of_merit == FiguresOfMerit.PULSE_LENGTH:
         objective_metric = data.times.t_plant_pulse_burn / 2.0e4
-    elif figure_of_merit == FiguresOfMerit.PLANT_AVAILABILITY:
+    elif figure_of_merit == FiguresOfMerit.PLANT_AVAILABILITY_FACTOR:
         if data.costs.i_plant_availability != 1:
             raise ProcessValueError("minmax=15 requires i_plant_availability=1")
         objective_metric = data.costs.f_t_plant_available
-    elif figure_of_merit == FiguresOfMerit.MAJOR_RADIUS_BURN_TIME:
+    elif figure_of_merit == FiguresOfMerit.MIN_R0_MAX_TAU_BURN:
         objective_metric = 0.95 * (data.physics.rmajor / 9.0) - 0.05 * (
             data.times.t_plant_pulse_burn / 7200.0
         )
     elif figure_of_merit == FiguresOfMerit.NET_ELECTRICAL_OUTPUT:
         objective_metric = data.heat_transport.p_plant_electric_net_mw / 500.0
-    elif figure_of_merit == FiguresOfMerit.NULL:
+    elif figure_of_merit == FiguresOfMerit.NULL_FIGURE_OF_MERIT:
         objective_metric = 1.0
-    elif figure_of_merit == FiguresOfMerit.FUSION_GAIN_BURN_TIME:
+    elif figure_of_merit == FiguresOfMerit.MAX_Q_MAX_T_PLANT_PULSE_BURN:
         objective_metric = -0.5 * (data.current_drive.big_q_plasma / 20.0) - 0.5 * (
             data.times.t_plant_pulse_burn / 7200.0
         )
