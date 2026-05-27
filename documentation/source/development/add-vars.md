@@ -80,7 +80,7 @@ ITERATION_VARIABLES = {
 
 New figures of merit are added to `PROCESS` in the following way:
 
-1. Increment the parameter `ipnfoms` in module `numerics` in source file `numerics.f90` to accommodate the new figure of merit.
+1. Increment the parameter `N_FIGURES_MERIT_MAX` in module `numerics` in source file `numerics.f90` to accommodate the new figure of merit.
   
 2. Assign a description of the new figure of merit to the relevant element of array `lablmm` in module `numerics` in the source file `numerics.f90`.
   

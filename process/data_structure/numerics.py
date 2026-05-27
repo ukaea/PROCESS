@@ -1,12 +1,12 @@
 import numpy as np
 
 N_ITERATION_VARIABLES_MAX: int = 177
-"""total number of variables available for iteration"""
+"""Total number of variables available for iteration (i.e. optimisation)"""
 
 N_CONSTRAINT_EQUATIONS_MAX: int = 92
-"""number of constraint equations available"""
+"""Number of constraint equations available to be activated"""
 
-ipnfoms: int = 19
+N_FIGURES_MERIT_MAX: int = 19
 """number of available figures of merit"""
 
 ipvlam: int = N_CONSTRAINT_EQUATIONS_MAX + 2 * N_ITERATION_VARIABLES_MAX + 1
@@ -26,7 +26,7 @@ negative => maximise, positive => minimise
 """
 
 lablmm: list[str] = None
-"""lablmm(ipnfoms) : labels describing figures of merit:<UL>
+"""lablmm(N_FIGURES_MERIT_MAX) : labels describing figures of merit:<UL>
 * ( 1) major radius
 * ( 2) not used
 * ( 3) neutron wall load
