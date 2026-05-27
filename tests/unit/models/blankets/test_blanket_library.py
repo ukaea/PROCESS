@@ -2,6 +2,7 @@ from typing import Any, NamedTuple
 
 import numpy as np
 import pytest
+
 from process.models.blankets.blanket_library import InboardBlanket
 
 

@@ -55,7 +55,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         self.data.blanket.deg_blkt_inboard_poloidal_plasma = (
             self.calculate_blkt_inboard_poloidal_plasma_angle(
-                rminor=physics_variables.rminor,
+                rminor=self.data.physics.rminor,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
                 dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
             )
