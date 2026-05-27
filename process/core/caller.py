@@ -320,6 +320,8 @@ class Caller:
         # Pulsed reactor model
         self.models.pulse.run()
 
+        self.models.divertor.run()
+
         # First wall model
         self.models.fw.run()
 
@@ -344,8 +346,6 @@ class Caller:
         elif self.data.fwbs.i_blanket_type == BlktModelTypes.DCLL:
             # DCLL model
             self.models.dcll.run()
-
-        self.models.divertor.run()
 
         self.models.cryostat.run()
 
