@@ -5,10 +5,7 @@ from dataclasses import dataclass
 import numpy as np
 import pytest
 
-from process.data_structure import (
-    physics_variables,
-    tfcoil_variables,
-)
+from process.data_structure import tfcoil_variables
 
 
 @pytest.fixture
@@ -15921,19 +15918,19 @@ def test_calc_remaining_subsystems(calcremainingsubsystemsparam, monkeypatch, co
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        costs2015.data.physics,
         "p_plasma_separatrix_mw",
         calcremainingsubsystemsparam.p_plasma_separatrix_mw,
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        costs2015.data.physics,
         "p_fusion_total_mw",
         calcremainingsubsystemsparam.p_fusion_total_mw,
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        costs2015.data.physics,
         "t_plasma_res_diffusion",
         calcremainingsubsystemsparam.t_plasma_res_diffusion,
     )

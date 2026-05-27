@@ -8,9 +8,6 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import (
-    physics_variables,
-)
 from process.models.physics.plasma_current import PlasmaCurrent
 
 logger = logging.getLogger(__name__)
@@ -91,7 +88,7 @@ class PlasmaFields(Model):
         ff1, ff2, _, _ = self.current.plascar_bpol(aspect, eps, kappa, delta)
 
         # Transform q95 to qbar
-        qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
+        qbar = q95 * 1.3e0 * (1.0e0 - self.data.physics.eps) ** 0.6e0
 
         return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
@@ -208,7 +205,7 @@ class PlasmaFields(Model):
             self.outfile,
             "Vertical field at plasma (Bᵥ) (T)",
             "(b_plasma_vertical_required)",
-            physics_variables.b_plasma_vertical_required,
+            self.data.physics.b_plasma_vertical_required,
             "OP ",
         )
 
@@ -216,33 +213,33 @@ class PlasmaFields(Model):
             self.outfile,
             "Vacuum toroidal field at R₀ (Bᴛ(R₀)) (T)",
             "(b_plasma_toroidal_on_axis)",
-            physics_variables.b_plasma_toroidal_on_axis,
+            self.data.physics.b_plasma_toroidal_on_axis,
         )
         po.ovarrf(
             self.outfile,
             "Toroidal field at plasma inboard (Bᴛ(R₀-a)) (T)",
             "(b_plasma_inboard_toroidal)",
-            physics_variables.b_plasma_inboard_toroidal,
+            self.data.physics.b_plasma_inboard_toroidal,
         )
         po.ovarrf(
             self.outfile,
             "Toroidal field at plasma outboard (Bᴛ(R₀+a)) (T)",
             "(b_plasma_outboard_toroidal)",
-            physics_variables.b_plasma_outboard_toroidal,
+            self.data.physics.b_plasma_outboard_toroidal,
         )
 
-        for i in range(len(physics_variables.b_plasma_toroidal_profile)):
+        for i in range(len(self.data.physics.b_plasma_toroidal_profile)):
             po.ovarre(
                 self.mfile,
                 f"Toroidal field in plasma at point {i}",
                 f"b_plasma_toroidal_profile{i}",
-                physics_variables.b_plasma_toroidal_profile[i],
+                self.data.physics.b_plasma_toroidal_profile[i],
             )
         po.ovarrf(
             self.outfile,
             "Plasma surface averaged poloidal field (⟨Bₚₒₗ(a)⟩) (T)",
             "(b_plasma_surface_poloidal_average)",
-            physics_variables.b_plasma_surface_poloidal_average,
+            self.data.physics.b_plasma_surface_poloidal_average,
             "OP ",
         )
 
@@ -250,6 +247,6 @@ class PlasmaFields(Model):
             self.outfile,
             "Total field (Bₜₒₜ) (T)",
             "(b_plasma_total)",
-            physics_variables.b_plasma_total,
+            self.data.physics.b_plasma_total,
             "OP ",
         )

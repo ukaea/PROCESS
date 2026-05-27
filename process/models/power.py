@@ -13,7 +13,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
     numerics,
-    physics_variables,
     tfcoil_variables,
 )
 from process.data_structure.pfcoil_variables import NGC2
@@ -319,7 +318,7 @@ class Power(Model):
         pfdissipation = np.zeros((5,))
 
         #  Bus length
-        pfbusl = 8.0e0 * physics_variables.rmajor + 140.0e0
+        pfbusl = 8.0e0 * self.data.physics.rmajor + 140.0e0
 
         #  Find power requirements for PF coils at
         # self.data.times.t_pulse_cumulative(ktim)
@@ -573,9 +572,9 @@ class Power(Model):
 
         #  PF wall plug power dissipated in power supply for ohmic heating (MW)
         #  This is additional to that required for moving stored energy around
-        # p_pf_electric_supplies_mw = physics_variables.p_plasma_ohmic_mw
+        # p_pf_electric_supplies_mw = self.data.physics.p_plasma_ohmic_mw
         # / self.data.pf_coil.etapsu
-        wall_plug_ohmicmw = physics_variables.p_plasma_ohmic_mw * (
+        wall_plug_ohmicmw = self.data.physics.p_plasma_ohmic_mw * (
             1.0e0 / self.data.pf_coil.etapsu - 1.0e0
         )
         # Total mean wall plug power dissipated in PFC and CS power supplies. Issue #713
@@ -882,7 +881,7 @@ class Power(Model):
                 + self.data.heat_transport.p_blkt_breeder_pump_mw
                 + self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
                 + self.data.current_drive.p_beam_orbit_loss_mw
-                + physics_variables.p_fw_alpha_mw
+                + self.data.physics.p_fw_alpha_mw
                 + self.data.current_drive.p_beam_shine_through_mw
             )
         else:
@@ -893,7 +892,7 @@ class Power(Model):
                 + self.data.fwbs.p_blkt_nuclear_heat_total_mw
                 + self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
                 + self.data.current_drive.p_beam_orbit_loss_mw
-                + physics_variables.p_fw_alpha_mw
+                + self.data.physics.p_fw_alpha_mw
                 + self.data.current_drive.p_beam_shine_through_mw
             )
 
@@ -903,7 +902,7 @@ class Power(Model):
             + self.data.fwbs.p_fw_rad_total_mw
             + self.data.heat_transport.p_fw_coolant_pump_mw
             + self.data.current_drive.p_beam_orbit_loss_mw
-            + physics_variables.p_fw_alpha_mw
+            + self.data.physics.p_fw_alpha_mw
             + self.data.current_drive.p_beam_shine_through_mw
         )
 
@@ -922,7 +921,7 @@ class Power(Model):
 
         #  Total thermal power deposited in divertor (MW)
         self.data.power.p_div_heat_deposited_mw = (
-            physics_variables.p_plasma_separatrix_mw
+            self.data.physics.p_plasma_separatrix_mw
             + (
                 self.data.fwbs.p_div_nuclear_heat_total_mw
                 + self.data.fwbs.p_div_rad_total_mw
@@ -1114,7 +1113,7 @@ class Power(Model):
             self.outfile,
             "Lost alpha-particle heat deposited in FW [MW]",
             "(p_fw_alpha_mw)",
-            physics_variables.p_fw_alpha_mw,
+            self.data.physics.p_fw_alpha_mw,
         )
         po.ovarre(
             self.outfile,
@@ -1239,7 +1238,7 @@ class Power(Model):
             self.outfile,
             "Plasma separatrix power deposited in divertor [MW]",
             "(p_plasma_separatrix_mw)",
-            physics_variables.p_plasma_separatrix_mw,
+            self.data.physics.p_plasma_separatrix_mw,
         )
         po.ovarre(
             self.outfile,
@@ -1612,7 +1611,7 @@ class Power(Model):
         power and heat transport balance, assumptions, and efficiency metrics to the
         specified output file.
         """
-        if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup == 0:
+        if self.data.physics.itart == 1 and tfcoil_variables.i_tf_sup == 0:
             self.data.power.p_cp_coolant_pump_elec_mw = (
                 1.0e-6 * tfcoil_variables.p_cp_coolant_pump_elec
             )
@@ -1738,7 +1737,7 @@ class Power(Model):
             p_pf_electric_supplies_mw=self.data.pf_coil.p_pf_electric_supplies_mw,
             p_coolant_pump_elec_total_mw=self.data.heat_transport.p_coolant_pump_elec_total_mw,
             p_hcd_electric_total_mw=self.data.heat_transport.p_hcd_electric_total_mw,
-            p_fusion_total_mw=physics_variables.p_fusion_total_mw,
+            p_fusion_total_mw=self.data.physics.p_fusion_total_mw,
             p_plant_electric_gross_mw=self.data.heat_transport.p_plant_electric_gross_mw,
             p_plant_electric_net_mw=self.data.heat_transport.p_plant_electric_net_mw,
         )
@@ -2294,7 +2293,7 @@ class Power(Model):
         ) = self.tfcpwr(
             output,
             itfka,
-            physics_variables.rmajor,
+            self.data.physics.rmajor,
             tfcoil_variables.n_tf_coils,
             tfcoil_variables.v_tf_coil_dump_quench_kv,
             ettfmj,

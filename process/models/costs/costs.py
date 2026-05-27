@@ -6,10 +6,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    physics_variables,
-    tfcoil_variables,
-)
+from process.data_structure import tfcoil_variables
 from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
@@ -101,7 +98,7 @@ class Costs(Model):
                 "(life_div)",
                 self.data.costs.life_div,
             )
-            if physics_variables.itart == 1:
+            if self.data.physics.itart == 1:
                 po.ovarrf(
                     self.outfile,
                     "Centrepost life (years)",
@@ -135,7 +132,7 @@ class Costs(Model):
                     "(divcst)",
                     self.data.costs.divcst,
                 )
-                if physics_variables.itart == 1:
+                if self.data.physics.itart == 1:
                     po.ovarrf(
                         self.outfile,
                         "Centrepost direct capital cost (M$)",
@@ -377,7 +374,7 @@ class Costs(Model):
             if (
                 tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
             ):  # Resistive TF coils
-                if physics_variables.itart == 1:
+                if self.data.physics.itart == 1:
                     po.ocosts(
                         self.outfile,
                         "(c22211)",
@@ -1455,10 +1452,10 @@ class Costs(Model):
             self.data.costs.c22211 = self.data.costs.fkind * self.data.costs.c22211
 
             self.data.costs.cpstcst = 0.0e0  # TART centrepost
-            if (physics_variables.itart == 1) and (self.data.costs.ifueltyp == 1):
+            if (self.data.physics.itart == 1) and (self.data.costs.ifueltyp == 1):
                 self.data.costs.cpstcst = self.data.costs.c22211
                 self.data.costs.c22211 = 0.0e0
-            elif (physics_variables.itart == 1) and (self.data.costs.ifueltyp == 2):
+            elif (self.data.physics.itart == 1) and (self.data.costs.ifueltyp == 2):
                 self.data.costs.cpstcst = self.data.costs.c22211
 
             #  Account 222.1.2 : Outboard TF coil legs
@@ -2335,14 +2332,14 @@ class Costs(Model):
         """
         if self.data.ife.ife != 1:
             #  Previous calculation, using molflow_plasma_fuelling_required in Amps:
-            #  1.3 should have been physics_variables.m_fuel_amu*umass/electron_charge*1000*s/day = 2.2
+            #  1.3 should have been self.data.physics.m_fuel_amu*umass/electron_charge*1000*s/day = 2.2
             # wtgpd = burnup * molflow_plasma_fuelling_required * 1.3e0
 
             #  New calculation: 2 nuclei * reactions/sec * kg/nucleus * g/kg * sec/day
-            physics_variables.wtgpd = (
+            self.data.physics.wtgpd = (
                 2.0e0
-                * physics_variables.rndfuel
-                * physics_variables.m_fuel_amu
+                * self.data.physics.rndfuel
+                * self.data.physics.m_fuel_amu
                 * constants.UMASS
                 * 1000.0e0
                 * 86400.0e0
@@ -2356,13 +2353,13 @@ class Costs(Model):
                 * 1.0e3
                 / (constants.ELECTRON_VOLT * 17.6e6 * self.data.ife.fburn)
             )
-            physics_variables.wtgpd = targtm * self.data.ife.reprat * 86400.0e0
+            self.data.physics.wtgpd = targtm * self.data.ife.reprat * 86400.0e0
 
         #  Assumes that He3 costs same as tritium to process...
         self.data.costs.c2272 = (
             1.0e-6
             * self.data.costs.UCFPR
-            * (0.5e0 + 0.5e0 * (physics_variables.wtgpd / 60.0e0) ** 0.67e0)
+            * (0.5e0 + 0.5e0 * (self.data.physics.wtgpd / 60.0e0) ** 0.67e0)
         )
 
         self.data.costs.c2272 = self.data.costs.fkind * self.data.costs.c2272
@@ -2374,7 +2371,7 @@ class Costs(Model):
         cfrht = 1.0e5
 
         #  No detritiation needed if purely D-He3 reaction
-        if physics_variables.f_plasma_fuel_tritium > 1.0e-3:
+        if self.data.physics.f_plasma_fuel_tritium > 1.0e-3:
             self.data.costs.c2273 = (
                 1.0e-6
                 * self.data.costs.UCDTC
@@ -2538,7 +2535,7 @@ class Costs(Model):
         # Calculate rejected heat for non-reactor (==0) and reactor (==1)
         if self.data.costs.ireactor == 0:
             pwrrej = (
-                physics_variables.p_fusion_total_mw
+                self.data.physics.p_fusion_total_mw
                 + self.data.heat_transport.p_hcd_electric_total_mw
                 + tfcoil_variables.tfcmw
             )
@@ -2799,7 +2796,7 @@ class Costs(Model):
         #  Costs due to centrepost renewal
         #  ===============================
 
-        if (physics_variables.itart == 1) and (self.data.ife.ife != 1):
+        if (self.data.physics.itart == 1) and (self.data.ife.ife != 1):
             #  Compound interest factor
 
             fefcp = (1.0e0 + self.data.costs.discount_rate) ** self.data.costs.cplife_cal
@@ -2891,8 +2888,8 @@ class Costs(Model):
                 * self.data.heat_transport.p_plant_electric_net_mw
                 / 1200.0e0
                 + 1.0e-6
-                * physics_variables.f_plasma_fuel_helium3
-                * physics_variables.wtgpd
+                * self.data.physics.f_plasma_fuel_helium3
+                * self.data.physics.wtgpd
                 * 1.0e-3
                 * self.data.costs.uche3
                 * constants.N_DAY_YEAR
@@ -2996,7 +2993,7 @@ class Costs(Model):
             self.data.costs.life_div = self.data.costs.life_div_fpy
 
         # Centrepost
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             if self.data.costs.cplife < self.data.costs.life_plant:
                 self.data.costs.cplife_cal = (
                     self.data.costs.cplife * self.data.costs.f_t_plant_available

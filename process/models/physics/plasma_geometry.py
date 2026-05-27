@@ -10,9 +10,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    physics_variables,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -224,151 +221,151 @@ class PlasmaGeom(Model):
         xo = 0.0e0
 
         # Define plasma minor radius from major radius and aspect ratio
-        physics_variables.rminor = physics_variables.rmajor / physics_variables.aspect
+        self.data.physics.rminor = self.data.physics.rmajor / self.data.physics.aspect
 
         # Define the inverse aspect ratio
-        physics_variables.eps = 1.0e0 / physics_variables.aspect
+        self.data.physics.eps = 1.0e0 / self.data.physics.aspect
 
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == PlasmaGeometryModelType.IPDG89_X_POINT
-        ):  # Use input kappa, physics_variables.triang values
+            self.data.physics.i_plasma_geometry == PlasmaGeometryModelType.IPDG89_X_POINT
+        ):  # Use input kappa, self.data.physics.triang values
             #  Rough estimate of 95% values
             #  ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
-            #  (close to previous estimate of (physics_variables.kappa - 0.04) / 1.1
-            #  over a large physics_variables.kappa range)
+            #  (close to previous estimate of (self.data.physics.kappa - 0.04) / 1.1
+            #  over a large self.data.physics.kappa range)
 
-            physics_variables.kappa95 = physics_variables.kappa / 1.12e0
-            physics_variables.triang95 = physics_variables.triang / 1.50e0
+            self.data.physics.kappa95 = self.data.physics.kappa / 1.12e0
+            self.data.physics.triang95 = self.data.physics.triang / 1.50e0
 
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == PlasmaGeometryModelType.STAR_FIESTA
-        ):  # ST scaling with physics_variables.aspect ratio [STAR Code]
-            physics_variables.q95_min = 3.0e0 * (
-                1.0e0 + 2.6e0 * physics_variables.eps**2.8e0
+            self.data.physics.i_plasma_geometry == PlasmaGeometryModelType.STAR_FIESTA
+        ):  # ST scaling with self.data.physics.aspect ratio [STAR Code]
+            self.data.physics.q95_min = 3.0e0 * (
+                1.0e0 + 2.6e0 * self.data.physics.eps**2.8e0
             )
 
-            physics_variables.kappa = 2.05e0 * (
-                1.0e0 + 0.44e0 * physics_variables.eps**2.1e0
+            self.data.physics.kappa = 2.05e0 * (
+                1.0e0 + 0.44e0 * self.data.physics.eps**2.1e0
             )
-            physics_variables.triang = 0.53e0 * (
-                1.0e0 + 0.77e0 * physics_variables.eps**3
+            self.data.physics.triang = 0.53e0 * (
+                1.0e0 + 0.77e0 * self.data.physics.eps**3
             )
 
             # SIM 10/09/2020: Switched to FIESTA ST scaling  from IPDG89
-            physics_variables.kappa95 = (
-                physics_variables.kappa - 0.39467e0
+            self.data.physics.kappa95 = (
+                self.data.physics.kappa - 0.39467e0
             ) / 0.90698e0  # Fit to FIESTA (Issue #1086)
-            physics_variables.triang95 = (
-                physics_variables.triang - 0.048306e0
+            self.data.physics.triang95 = (
+                self.data.physics.triang - 0.048306e0
             ) / 1.3799e0
 
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry
+            self.data.physics.i_plasma_geometry
             == PlasmaGeometryModelType.ZOHM_ITER_X_POINT
-        ):  # Zohm et al. ITER scaling for elongation, input physics_variables.triang
-            physics_variables.kappa = physics_variables.fkzohm * min(
-                2.0e0, 1.5e0 + 0.5e0 / (physics_variables.aspect - 1.0e0)
+        ):  # Zohm et al. ITER scaling for elongation, input self.data.physics.triang
+            self.data.physics.kappa = self.data.physics.fkzohm * min(
+                2.0e0, 1.5e0 + 0.5e0 / (self.data.physics.aspect - 1.0e0)
             )
 
             # ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
-            physics_variables.kappa95 = physics_variables.kappa / 1.12e0
-            physics_variables.triang95 = physics_variables.triang / 1.50e0
+            self.data.physics.kappa95 = self.data.physics.kappa / 1.12e0
+            self.data.physics.triang95 = self.data.physics.triang / 1.50e0
 
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == PlasmaGeometryModelType.ZOHM_ITER_95
-        ):  # Zohm et al. ITER scaling for elongation, input physics_variables.triang95
-            physics_variables.kappa = physics_variables.fkzohm * min(
-                2.0e0, 1.5e0 + 0.5e0 / (physics_variables.aspect - 1.0e0)
+            self.data.physics.i_plasma_geometry == PlasmaGeometryModelType.ZOHM_ITER_95
+        ):  # Zohm et al. ITER scaling for elongation, input self.data.physics.triang95
+            self.data.physics.kappa = self.data.physics.fkzohm * min(
+                2.0e0, 1.5e0 + 0.5e0 / (self.data.physics.aspect - 1.0e0)
             )
 
             # ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
-            physics_variables.triang = 1.5e0 * physics_variables.triang95
+            self.data.physics.triang = 1.5e0 * self.data.physics.triang95
 
-            physics_variables.kappa95 = physics_variables.kappa / 1.12e0
+            self.data.physics.kappa95 = self.data.physics.kappa / 1.12e0
 
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == PlasmaGeometryModelType.IPDG89_95
-        ):  # Use input kappa95, physics_variables.triang95 values
+            self.data.physics.i_plasma_geometry == PlasmaGeometryModelType.IPDG89_95
+        ):  # Use input kappa95, self.data.physics.triang95 values
             # ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
-            physics_variables.kappa = 1.12e0 * physics_variables.kappa95
-            physics_variables.triang = 1.5e0 * physics_variables.triang95
+            self.data.physics.kappa = 1.12e0 * self.data.physics.kappa95
+            self.data.physics.triang = 1.5e0 * self.data.physics.triang95
 
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == PlasmaGeometryModelType.MAST_DATA_95
-        ):  # Use input kappa95, physics_variables.triang95 values
+            self.data.physics.i_plasma_geometry == PlasmaGeometryModelType.MAST_DATA_95
+        ):  # Use input kappa95, self.data.physics.triang95 values
             # Fit to MAST data (Issue #1086)
-            physics_variables.kappa = 0.91300e0 * physics_variables.kappa95 + 0.38654e0
-            physics_variables.triang = 0.77394e0 * physics_variables.triang95 + 0.18515e0
+            self.data.physics.kappa = 0.91300e0 * self.data.physics.kappa95 + 0.38654e0
+            self.data.physics.triang = 0.77394e0 * self.data.physics.triang95 + 0.18515e0
 
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry
+            self.data.physics.i_plasma_geometry
             == PlasmaGeometryModelType.MAST_DATA_X_POINT
-        ):  # Use input kappa, physics_variables.triang values
+        ):  # Use input kappa, self.data.physics.triang values
             # Fit to MAST data (Issue #1086)
-            physics_variables.kappa95 = (physics_variables.kappa - 0.38654e0) / 0.91300e0
-            physics_variables.triang95 = (
-                physics_variables.triang - 0.18515e0
+            self.data.physics.kappa95 = (self.data.physics.kappa - 0.38654e0) / 0.91300e0
+            self.data.physics.triang95 = (
+                self.data.physics.triang - 0.18515e0
             ) / 0.77394e0
 
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == PlasmaGeometryModelType.FIESTA_RUNS_95
-        ):  # Use input kappa95, physics_variables.triang95 values
+            self.data.physics.i_plasma_geometry == PlasmaGeometryModelType.FIESTA_RUNS_95
+        ):  # Use input kappa95, self.data.physics.triang95 values
             # Fit to FIESTA (Issue #1086)
-            physics_variables.kappa = 0.90698e0 * physics_variables.kappa95 + 0.39467e0
-            physics_variables.triang = 1.3799e0 * physics_variables.triang95 + 0.048306e0
+            self.data.physics.kappa = 0.90698e0 * self.data.physics.kappa95 + 0.39467e0
+            self.data.physics.triang = 1.3799e0 * self.data.physics.triang95 + 0.048306e0
 
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry
+            self.data.physics.i_plasma_geometry
             == PlasmaGeometryModelType.FIESTA_RUNS_X_POINT
-        ):  # Use input kappa, physics_variables.triang values
+        ):  # Use input kappa, self.data.physics.triang values
             # Fit to FIESTA (Issue #1086)
-            physics_variables.kappa95 = (physics_variables.kappa - 0.39467e0) / 0.90698e0
-            physics_variables.triang95 = (
-                physics_variables.triang - 0.048306e0
+            self.data.physics.kappa95 = (self.data.physics.kappa - 0.39467e0) / 0.90698e0
+            self.data.physics.triang95 = (
+                self.data.physics.triang - 0.048306e0
             ) / 1.3799e0
 
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry
+            self.data.physics.i_plasma_geometry
             == PlasmaGeometryModelType.INDUCTANCE_SCALING_X_POINT
-        ):  # Use input triang, physics_variables.ind_plasma_internal_norm values
-            # physics_variables.kappa found from physics_variables.aspect ratio and
+        ):  # Use input triang, self.data.physics.ind_plasma_internal_norm values
+            # self.data.physics.kappa found from self.data.physics.aspect ratio and
             # plasma internal inductance li(3)
-            physics_variables.kappa = (
-                1.09e0 + 0.26e0 / physics_variables.ind_plasma_internal_norm
-            ) * (1.5e0 / physics_variables.aspect) ** 0.4e0
+            self.data.physics.kappa = (
+                1.09e0 + 0.26e0 / self.data.physics.ind_plasma_internal_norm
+            ) * (1.5e0 / self.data.physics.aspect) ** 0.4e0
 
-            physics_variables.kappa95 = physics_variables.kappa / 1.12e0
-            physics_variables.triang95 = physics_variables.triang / 1.50e0
+            self.data.physics.kappa95 = self.data.physics.kappa / 1.12e0
+            self.data.physics.triang95 = self.data.physics.triang / 1.50e0
 
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry
+            self.data.physics.i_plasma_geometry
             == PlasmaGeometryModelType.CREATE_DATA_EU_DEMO_X_POINT
         ):
-            # physics_variables.kappa95 found from physics_variables.aspect ratio and
+            # self.data.physics.kappa95 found from self.data.physics.aspect ratio and
             # stability margin Based on fit to CREATE data. ref Issue #1399
-            # valid for EU-DEMO like machine - physics_variables.aspect ratio 2.6 - 3.6
+            # valid for EU-DEMO like machine - self.data.physics.aspect ratio 2.6 - 3.6
             # Model updated see Issue #1648
             a = 3.68436807e0
             b = -0.27706527e0
@@ -377,125 +374,125 @@ class PlasmaGeom(Model):
             e = -0.27267618e0
             f = 20.5141261e0
 
-            physics_variables.kappa95 = (
+            self.data.physics.kappa95 = (
                 -d
-                - c * physics_variables.aspect
+                - c * self.data.physics.aspect
                 - np.sqrt(
-                    (c**2.0e0 - 4.0e0 * a * b) * physics_variables.aspect**2.0e0
-                    + (2.0e0 * d * c - 4.0e0 * a * e) * physics_variables.aspect
+                    (c**2.0e0 - 4.0e0 * a * b) * self.data.physics.aspect**2.0e0
+                    + (2.0e0 * d * c - 4.0e0 * a * e) * self.data.physics.aspect
                     + d**2.0e0
                     - 4.0e0 * a * f
-                    + 4.0e0 * a * physics_variables.m_s_limit
+                    + 4.0e0 * a * self.data.physics.m_s_limit
                 )
             ) / (2.0e0 * a)
 
-            if physics_variables.kappa95 > 1.77:
-                ratio = 1.77 / physics_variables.kappa95
-                corner_fudge = 0.3 * (physics_variables.kappa95 - 1.77) / ratio
-                physics_variables.kappa95 = (
-                    physics_variables.kappa95 ** (ratio) + corner_fudge
+            if self.data.physics.kappa95 > 1.77:
+                ratio = 1.77 / self.data.physics.kappa95
+                corner_fudge = 0.3 * (self.data.physics.kappa95 - 1.77) / ratio
+                self.data.physics.kappa95 = (
+                    self.data.physics.kappa95 ** (ratio) + corner_fudge
                 )
 
-            physics_variables.kappa = 1.12e0 * physics_variables.kappa95
-            physics_variables.triang95 = physics_variables.triang / 1.50e0
+            self.data.physics.kappa = 1.12e0 * self.data.physics.kappa95
+            self.data.physics.triang95 = self.data.physics.triang / 1.50e0
 
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry
+            self.data.physics.i_plasma_geometry
             == PlasmaGeometryModelType.MENARD_2016_X_POINT
         ):
             # See Issue #1439
-            # physics_variables.triang is an input
-            # physics_variables.kappa found from physics_variables.aspect ratio scaling
+            # self.data.physics.triang is an input
+            # self.data.physics.kappa found from self.data.physics.aspect ratio scaling
             # on p32 of Menard: Menard, et al. "Fusion Nuclear Science Facilities
             # and Pilot Plants Based on the Spherical Tokamak." Nucl. Fusion, 2016, 44.
 
-            physics_variables.kappa = 0.95e0 * (
-                1.9e0 + 1.9e0 / physics_variables.aspect**1.4e0
+            self.data.physics.kappa = 0.95e0 * (
+                1.9e0 + 1.9e0 / self.data.physics.aspect**1.4e0
             )
-            physics_variables.kappa95 = physics_variables.kappa / 1.12e0
-            physics_variables.triang95 = physics_variables.triang / 1.50e0
+            self.data.physics.kappa95 = self.data.physics.kappa / 1.12e0
+            self.data.physics.triang95 = self.data.physics.triang / 1.50e0
 
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry
+            self.data.physics.i_plasma_geometry
             == PlasmaGeometryModelType.MENARD_1997_X_POINT
         ):
-            # physics_variables.triang is an input
-            # physics_variables.kappa found from physics_variables.aspect ratio scaling from
+            # self.data.physics.triang is an input
+            # self.data.physics.kappa found from self.data.physics.aspect ratio scaling from
             # J.E. Menard et al 1997 Nucl. Fusion 37 595 and assume max controllable kappa
             # and assume lᵢ(3) is held constant
 
-            physics_variables.kappa = (
-                2.93e0 * (1.8e0 / physics_variables.aspect) ** 0.4e0
+            self.data.physics.kappa = (
+                2.93e0 * (1.8e0 / self.data.physics.aspect) ** 0.4e0
             )
 
-            physics_variables.kappa95 = physics_variables.kappa / 1.12e0
-            physics_variables.triang95 = physics_variables.triang / 1.50e0
+            self.data.physics.kappa95 = self.data.physics.kappa / 1.12e0
+            self.data.physics.triang95 = self.data.physics.triang / 1.50e0
 
         # ======================================================================
 
         #  Scrape-off layer thicknesses
-        if physics_variables.i_plasma_wall_gap == 0:
-            self.data.build.dr_fw_plasma_gap_outboard = 0.1e0 * physics_variables.rminor
-            self.data.build.dr_fw_plasma_gap_inboard = 0.1e0 * physics_variables.rminor
+        if self.data.physics.i_plasma_wall_gap == 0:
+            self.data.build.dr_fw_plasma_gap_outboard = 0.1e0 * self.data.physics.rminor
+            self.data.build.dr_fw_plasma_gap_inboard = 0.1e0 * self.data.physics.rminor
 
         # ======================================================================
 
         # Find parameters of arcs describing plasma surfaces
         xi, thetai, xo, thetao = self.plasma_angles_arcs(
-            physics_variables.rminor,
-            physics_variables.kappa,
-            physics_variables.triang,
+            self.data.physics.rminor,
+            self.data.physics.kappa,
+            self.data.physics.triang,
         )
 
         #  Surface area - inboard and outboard.  These are not given by Sauter but
         #  the outboard area is required by DCLL and divertor
         xsi, xso = self.plasma_surface_area(
-            physics_variables.rmajor,
-            physics_variables.rminor,
+            self.data.physics.rmajor,
+            self.data.physics.rminor,
             xi,
             thetai,
             xo,
             thetao,
         )
-        physics_variables.a_plasma_surface_outboard = xso
+        self.data.physics.a_plasma_surface_outboard = xso
 
         # ======================================================================
 
         # i_plasma_current = 8 specifies use of the Sauter geometry as well as plasma
         # current.
         if (
-            physics_variables.i_plasma_current == 8
-            or physics_variables.i_plasma_shape == PlasmaShapeModelType.SAUTER
+            self.data.physics.i_plasma_current == 8
+            or self.data.physics.i_plasma_shape == PlasmaShapeModelType.SAUTER
         ):
             (
-                physics_variables.len_plasma_poloidal,
-                physics_variables.a_plasma_surface,
-                physics_variables.a_plasma_poloidal,
-                physics_variables.vol_plasma,
+                self.data.physics.len_plasma_poloidal,
+                self.data.physics.a_plasma_surface,
+                self.data.physics.a_plasma_poloidal,
+                self.data.physics.vol_plasma,
             ) = self.sauter_geometry(
-                physics_variables.rminor,
-                physics_variables.rmajor,
-                physics_variables.kappa,
-                physics_variables.triang,
-                physics_variables.plasma_square,
+                self.data.physics.rminor,
+                self.data.physics.rmajor,
+                self.data.physics.kappa,
+                self.data.physics.triang,
+                self.data.physics.plasma_square,
             )
 
         else:
             #  Poloidal perimeter
-            physics_variables.len_plasma_poloidal = self.plasma_poloidal_perimeter(
+            self.data.physics.len_plasma_poloidal = self.plasma_poloidal_perimeter(
                 xi, thetai, xo, thetao
             )
 
             #  Volume
-            physics_variables.vol_plasma = (
-                physics_variables.f_vol_plasma
+            self.data.physics.vol_plasma = (
+                self.data.physics.f_vol_plasma
                 * self.plasma_volume(
-                    physics_variables.rmajor,
-                    physics_variables.rminor,
+                    self.data.physics.rmajor,
+                    self.data.physics.rminor,
                     xi,
                     thetai,
                     xo,
@@ -504,12 +501,12 @@ class PlasmaGeom(Model):
             )
 
             #  Cross-sectional area
-            physics_variables.a_plasma_poloidal = self.plasma_cross_section(
+            self.data.physics.a_plasma_poloidal = self.plasma_cross_section(
                 xi, thetai, xo, thetao
             )
 
             #  Surface area - sum of inboard and outboard.
-            physics_variables.a_plasma_surface = xsi + xso
+            self.data.physics.a_plasma_surface = xsi + xso
 
         # ======================================================================
 
@@ -539,52 +536,52 @@ class PlasmaGeom(Model):
             po.ocmmnt(self.outfile, "Plasma configuration = stellarator")
 
         if self.data.stellarator.istell == 0:
-            if physics_variables.itart == 0:
-                physics_variables.itart_r = physics_variables.itart
+            if self.data.physics.itart == 0:
+                self.data.physics.itart_r = self.data.physics.itart
                 po.ovarin(
                     self.outfile,
                     "Tokamak aspect ratio = Conventional, itart = 0",
                     "(itart)",
-                    physics_variables.itart_r,
+                    self.data.physics.itart_r,
                 )
-            elif physics_variables.itart == 1:
-                physics_variables.itart_r = physics_variables.itart
+            elif self.data.physics.itart == 1:
+                self.data.physics.itart_r = self.data.physics.itart
                 po.ovarin(
                     self.outfile,
                     "Tokamak aspect ratio = Spherical, itart = 1",
                     "(itart)",
-                    physics_variables.itart_r,
+                    self.data.physics.itart_r,
                 )
 
         po.ovarin(
             self.outfile,
             "Plasma shaping model",
             "(i_plasma_shape)",
-            physics_variables.i_plasma_shape,
+            self.data.physics.i_plasma_shape,
         )
 
         po.osubhd(
             self.outfile,
-            f"{PlasmaShapeModelType(physics_variables.i_plasma_shape).full_name} "
+            f"{PlasmaShapeModelType(self.data.physics.i_plasma_shape).full_name} "
             "plasma shape model is used :",
         )
 
         po.ovarrf(
-            self.outfile, "Major radius (R₀) (m)", "(rmajor)", physics_variables.rmajor
+            self.outfile, "Major radius (R₀) (m)", "(rmajor)", self.data.physics.rmajor
         )
         po.ovarrf(
             self.outfile,
             "Minor radius (a) (m)",
             "(rminor)",
-            physics_variables.rminor,
+            self.data.physics.rminor,
             "OP ",
         )
-        po.ovarrf(self.outfile, "Aspect ratio (A)", "(aspect)", physics_variables.aspect)
+        po.ovarrf(self.outfile, "Aspect ratio (A)", "(aspect)", self.data.physics.aspect)
         po.ovarrf(
             self.outfile,
             "Plasma squareness (ζ)",
             "(plasma_square)",
-            physics_variables.plasma_square,
+            self.data.physics.plasma_square,
             "IP",
         )
         po.oblnkl(self.outfile)
@@ -593,18 +590,18 @@ class PlasmaGeom(Model):
             self.outfile,
             "Plasma geometry model",
             "(i_plasma_geometry)",
-            physics_variables.i_plasma_geometry,
+            self.data.physics.i_plasma_geometry,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "ITER Physics Basis definition of elongation (κₐ)",
             "(kappa_ipb)",
-            physics_variables.kappa_ipb,
+            self.data.physics.kappa_ipb,
             "OP ",
         )
         po.oblnkl(self.outfile)
-        geom_type = PlasmaGeometryModelType(physics_variables.i_plasma_geometry)
+        geom_type = PlasmaGeometryModelType(self.data.physics.i_plasma_geometry)
 
         if self.data.stellarator.istell == 0:
             po.ocmmnt(
@@ -616,7 +613,7 @@ class PlasmaGeom(Model):
                 self.outfile,
                 "Elongation, X-point (κₐ)",
                 "(kappa)",
-                physics_variables.kappa,
+                self.data.physics.kappa,
                 "IP"
                 if geom_type.kappa_model == PlasmaGeometryModels.USER_INPUT
                 else "OP",
@@ -626,7 +623,7 @@ class PlasmaGeom(Model):
                     self.outfile,
                     "Zohm scaling adjustment factor",
                     "(fkzohm)",
-                    physics_variables.fkzohm,
+                    self.data.physics.fkzohm,
                 )
 
             po.oblnkl(self.outfile)
@@ -639,7 +636,7 @@ class PlasmaGeom(Model):
                 self.outfile,
                 "Elongation, 95% surface (κ₉₅)",
                 "(kappa95)",
-                physics_variables.kappa95,
+                self.data.physics.kappa95,
                 "IP"
                 if geom_type.kappa95_model == PlasmaGeometryModels.USER_INPUT
                 else "OP",
@@ -656,7 +653,7 @@ class PlasmaGeom(Model):
                 self.outfile,
                 "Triangularity, X-point (δ)",
                 "(triang)",
-                physics_variables.triang,
+                self.data.physics.triang,
                 "IP "
                 if geom_type.triang_model == PlasmaGeometryModels.USER_INPUT
                 else "OP",
@@ -671,7 +668,7 @@ class PlasmaGeom(Model):
                 self.outfile,
                 "Triangularity, 95% surface (δ₉₅)",
                 "(triang95)",
-                physics_variables.triang95,
+                self.data.physics.triang95,
                 "IP "
                 if geom_type.triang95_model == PlasmaGeometryModels.USER_INPUT
                 else "OP",
@@ -683,7 +680,7 @@ class PlasmaGeom(Model):
                 self.outfile,
                 "Plasma poloidal perimeter (m)",
                 "(len_plasma_poloidal)",
-                physics_variables.len_plasma_poloidal,
+                self.data.physics.len_plasma_poloidal,
                 "OP ",
             )
 
@@ -691,21 +688,21 @@ class PlasmaGeom(Model):
                 self.outfile,
                 "Plasma cross-sectional area (m²)",
                 "(a_plasma_poloidal)",
-                physics_variables.a_plasma_poloidal,
+                self.data.physics.a_plasma_poloidal,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Plasma surface area (m²)",
                 "(a_plasma_surface)",
-                physics_variables.a_plasma_surface,
+                self.data.physics.a_plasma_surface,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Plasma volume (m³)",
                 "(vol_plasma)",
-                physics_variables.vol_plasma,
+                self.data.physics.vol_plasma,
                 "OP ",
             )
 

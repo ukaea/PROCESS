@@ -7,7 +7,6 @@ from process.core.caller import Caller
 from process.core.model import DataStructure
 from process.data_structure import global_variables as gv
 from process.data_structure import numerics
-from process.data_structure import physics_variables as pv
 
 logger = logging.getLogger(__name__)
 
@@ -75,11 +74,11 @@ class Evaluators:
             logger.debug(f"{numerics.nviter = }")
             logger.debug(f"{(1 - (ifail % 7)) - 1 = }")
             logger.debug(f"{(numerics.nviter % 2) - 1 = }")
-            logger.debug(f"{pv.temp_plasma_electron_vol_avg_kev = }")
+            logger.debug(f"{self.data.physics.temp_plasma_electron_vol_avg_kev = }")
             logger.debug(f"{self.data.costs.coe = }")
-            logger.debug(f"{pv.rmajor = }")
-            logger.debug(f"{pv.p_fusion_total_mw = }")
-            logger.debug(f"{pv.b_plasma_toroidal_on_axis = }")
+            logger.debug(f"{self.data.physics.rmajor = }")
+            logger.debug(f"{self.data.physics.p_fusion_total_mw = }")
+            logger.debug(f"{self.data.physics.b_plasma_toroidal_on_axis = }")
             logger.debug(f"{self.data.times.t_plant_pulse_burn = }")
             logger.debug("%s", sqsumconfsq)
             logger.debug("%s", xv)

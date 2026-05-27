@@ -2,10 +2,7 @@ import numpy as np
 
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
-from process.data_structure import (
-    physics_variables,
-    tfcoil_variables,
-)
+from process.data_structure import tfcoil_variables
 
 OBJECTIVE_NAMES = {
     1: "Plasma major radius",
@@ -64,18 +61,18 @@ def objective_function(minmax: int, data: DataStructure) -> float:
 
     match figure_of_merit:
         case 1:
-            objective_metric = 0.2 * physics_variables.rmajor
+            objective_metric = 0.2 * data.physics.rmajor
         case 3:
-            objective_metric = physics_variables.pflux_fw_neutron_mw
+            objective_metric = data.physics.pflux_fw_neutron_mw
         case 4:
             objective_metric = (
                 tfcoil_variables.tfcmw + 1e-3 * data.pf_power.srcktpm
             ) / 10.0
         case 5:
-            objective_metric = physics_variables.p_fusion_total_mw / (
+            objective_metric = data.physics.p_fusion_total_mw / (
                 data.current_drive.p_hcd_injected_total_mw
                 + data.current_drive.p_beam_orbit_loss_mw
-                + physics_variables.p_plasma_ohmic_mw
+                + data.physics.p_plasma_ohmic_mw
             )
         case 6:
             objective_metric = data.costs.coe / 100.0
@@ -86,11 +83,11 @@ def objective_function(minmax: int, data: DataStructure) -> float:
                 else data.costs.concost / 1.0e4
             )
         case 8:
-            objective_metric = physics_variables.aspect
+            objective_metric = data.physics.aspect
         case 9:
             objective_metric = data.divertor.pflux_div_heat_load_mw
         case 10:
-            objective_metric = physics_variables.b_plasma_toroidal_on_axis
+            objective_metric = data.physics.b_plasma_toroidal_on_axis
         case 11:
             objective_metric = data.current_drive.p_hcd_injected_total_mw
         case 14:
@@ -100,7 +97,7 @@ def objective_function(minmax: int, data: DataStructure) -> float:
                 raise ProcessValueError("minmax=15 requires i_plant_availability=1")
             objective_metric = data.costs.f_t_plant_available
         case 16:
-            objective_metric = 0.95 * (physics_variables.rmajor / 9.0) - 0.05 * (
+            objective_metric = 0.95 * (data.physics.rmajor / 9.0) - 0.05 * (
                 data.times.t_plant_pulse_burn / 7200.0
             )
         case 17:

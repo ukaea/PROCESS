@@ -1,9 +1,6 @@
 import pytest
 
 from process.core import constants
-from process.data_structure import (
-    physics_variables,
-)
 
 
 @pytest.fixture
@@ -22,11 +19,11 @@ def test_current_drive_primary_lower_hybrid(current_drive):
     current_drive.data.current_drive.i_hcd_calculations = 1
     current_drive.data.current_drive.p_hcd_primary_extra_heat_mw = 0.0
     current_drive.data.current_drive.eta_cd_hcd_secondary = 0.0
-    physics_variables.nd_plasma_electrons_vol_avg = 1e20
-    physics_variables.temp_plasma_electron_vol_avg_kev = 10
-    physics_variables.rmajor = 6.2
-    physics_variables.plasma_current = 15e6
-    physics_variables.f_c_plasma_auxiliary = 0.2
+    current_drive.data.physics.nd_plasma_electrons_vol_avg = 1e20
+    current_drive.data.physics.temp_plasma_electron_vol_avg_kev = 10
+    current_drive.data.physics.rmajor = 6.2
+    current_drive.data.physics.plasma_current = 15e6
+    current_drive.data.physics.f_c_plasma_auxiliary = 0.2
     current_drive.data.current_drive.eta_lowhyb_injector_wall_plug = 0.4
     current_drive.current_drive()
 
@@ -71,11 +68,11 @@ def test_current_drive_primary_lower_hybrid_with_heat(current_drive):
         5.0  # Adding primary heat
     )
     current_drive.data.current_drive.eta_cd_hcd_secondary = 0.0
-    physics_variables.nd_plasma_electrons_vol_avg = 1e20
-    physics_variables.temp_plasma_electron_vol_avg_kev = 10
-    physics_variables.rmajor = 6.2
-    physics_variables.plasma_current = 15e6
-    physics_variables.f_c_plasma_auxiliary = 0.2
+    current_drive.data.physics.nd_plasma_electrons_vol_avg = 1e20
+    current_drive.data.physics.temp_plasma_electron_vol_avg_kev = 10
+    current_drive.data.physics.rmajor = 6.2
+    current_drive.data.physics.plasma_current = 15e6
+    current_drive.data.physics.f_c_plasma_auxiliary = 0.2
     current_drive.data.current_drive.eta_lowhyb_injector_wall_plug = 0.4
     current_drive.current_drive()
 
@@ -127,17 +124,17 @@ def test_current_drive_primary_neutral_beam(current_drive):
     current_drive.data.current_drive.i_hcd_calculations = 1
     current_drive.data.current_drive.p_hcd_primary_extra_heat_mw = 0.0
     current_drive.data.current_drive.eta_cd_hcd_secondary = 0.0
-    physics_variables.nd_plasma_electrons_vol_avg = 1e20
-    physics_variables.temp_plasma_electron_vol_avg_kev = 10
-    physics_variables.rmajor = 6.2
-    physics_variables.plasma_current = 15e6
-    physics_variables.f_c_plasma_auxiliary = 0.2
+    current_drive.data.physics.nd_plasma_electrons_vol_avg = 1e20
+    current_drive.data.physics.temp_plasma_electron_vol_avg_kev = 10
+    current_drive.data.physics.rmajor = 6.2
+    current_drive.data.physics.plasma_current = 15e6
+    current_drive.data.physics.f_c_plasma_auxiliary = 0.2
     current_drive.data.current_drive.eta_beam_injector_wall_plug = 0.3
-    physics_variables.m_beam_amu = 2.0
-    physics_variables.temp_plasma_electron_density_weighted_kev = 10.0
-    physics_variables.n_charge_plasma_effective_vol_avg = 2.0
-    physics_variables.dlamie = 1.0
-    physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg = 0.4
+    current_drive.data.physics.m_beam_amu = 2.0
+    current_drive.data.physics.temp_plasma_electron_density_weighted_kev = 10.0
+    current_drive.data.physics.n_charge_plasma_effective_vol_avg = 2.0
+    current_drive.data.physics.dlamie = 1.0
+    current_drive.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg = 0.4
     current_drive.current_drive()
 
     assert current_drive.data.current_drive.eta_cd_hcd_primary == pytest.approx(
@@ -176,14 +173,14 @@ def test_current_drive_primary_electron_cyclotron(current_drive):
     current_drive.data.current_drive.i_hcd_calculations = 1
     current_drive.data.current_drive.p_hcd_primary_extra_heat_mw = 0.0
     current_drive.data.current_drive.eta_cd_hcd_secondary = 0.0
-    physics_variables.nd_plasma_electrons_vol_avg = 1e20
-    physics_variables.temp_plasma_electron_vol_avg_kev = 10
-    physics_variables.rmajor = 6.2
-    physics_variables.plasma_current = 15e6
-    physics_variables.f_c_plasma_auxiliary = 0.2
+    current_drive.data.physics.nd_plasma_electrons_vol_avg = 1e20
+    current_drive.data.physics.temp_plasma_electron_vol_avg_kev = 10
+    current_drive.data.physics.rmajor = 6.2
+    current_drive.data.physics.plasma_current = 15e6
+    current_drive.data.physics.f_c_plasma_auxiliary = 0.2
     current_drive.data.current_drive.eta_ecrh_injector_wall_plug = 0.5
-    physics_variables.dlamee = 1.0
-    physics_variables.temp_plasma_electron_density_weighted_kev = 10.0
+    current_drive.data.physics.dlamee = 1.0
+    current_drive.data.physics.temp_plasma_electron_density_weighted_kev = 10.0
     current_drive.current_drive()
 
     assert current_drive.data.current_drive.eta_cd_hcd_primary == pytest.approx(
@@ -225,14 +222,14 @@ def test_current_drive_primary_ion_cyclotron(current_drive):
     current_drive.data.current_drive.i_hcd_calculations = 1
     current_drive.data.current_drive.p_hcd_primary_extra_heat_mw = 0.0
     current_drive.data.current_drive.eta_cd_hcd_secondary = 0.0
-    physics_variables.nd_plasma_electrons_vol_avg = 1e20
-    physics_variables.temp_plasma_electron_vol_avg_kev = 10
-    physics_variables.rmajor = 6.2
-    physics_variables.plasma_current = 15e6
-    physics_variables.f_c_plasma_auxiliary = 0.2
+    current_drive.data.physics.nd_plasma_electrons_vol_avg = 1e20
+    current_drive.data.physics.temp_plasma_electron_vol_avg_kev = 10
+    current_drive.data.physics.rmajor = 6.2
+    current_drive.data.physics.plasma_current = 15e6
+    current_drive.data.physics.f_c_plasma_auxiliary = 0.2
     current_drive.data.current_drive.eta_icrh_injector_wall_plug = 0.35
-    physics_variables.n_charge_plasma_effective_vol_avg = 2.0
-    physics_variables.temp_plasma_electron_density_weighted_kev = 10.0
+    current_drive.data.physics.n_charge_plasma_effective_vol_avg = 2.0
+    current_drive.data.physics.temp_plasma_electron_density_weighted_kev = 10.0
     current_drive.current_drive()
 
     assert current_drive.data.current_drive.eta_cd_hcd_primary == pytest.approx(
@@ -271,14 +268,14 @@ def test_current_drive_primary_electron_bernstein(current_drive):
     current_drive.data.current_drive.i_hcd_calculations = 1
     current_drive.data.current_drive.p_hcd_primary_extra_heat_mw = 0.0
     current_drive.data.current_drive.eta_cd_hcd_secondary = 0.0
-    physics_variables.nd_plasma_electrons_vol_avg = 2e20
-    physics_variables.temp_plasma_electron_vol_avg_kev = 10
-    physics_variables.rmajor = 6.2
-    physics_variables.plasma_current = 15e6
-    physics_variables.f_c_plasma_auxiliary = 0.2
+    current_drive.data.physics.nd_plasma_electrons_vol_avg = 2e20
+    current_drive.data.physics.temp_plasma_electron_vol_avg_kev = 10
+    current_drive.data.physics.rmajor = 6.2
+    current_drive.data.physics.plasma_current = 15e6
+    current_drive.data.physics.f_c_plasma_auxiliary = 0.2
     current_drive.data.current_drive.eta_ebw_injector_wall_plug = 0.45
-    physics_variables.b_plasma_toroidal_on_axis = 2.0
-    physics_variables.temp_plasma_electron_density_weighted_kev = 10.0
+    current_drive.data.physics.b_plasma_toroidal_on_axis = 2.0
+    current_drive.data.physics.temp_plasma_electron_density_weighted_kev = 10.0
     current_drive.data.current_drive.n_ecrh_harmonic = 2
     current_drive.data.current_drive.xi_ebw = 0.7
     constants.ELECTRON_CHARGE = constants.ELECTRON_CHARGE

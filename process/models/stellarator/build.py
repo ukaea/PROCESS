@@ -1,6 +1,5 @@
 from process.core import process_output as po
 from process.core.model import DataStructure
-from process.data_structure import physics_variables
 
 
 def st_build(stellarator, f_output: bool, data: DataStructure):
@@ -44,7 +43,7 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
     )
     data.build.dr_fw_outboard = data.build.dr_fw_inboard
 
-    data.build.dr_bore = physics_variables.rmajor - (
+    data.build.dr_bore = data.physics.rmajor - (
         data.build.dr_cs
         + data.build.dr_cs_tf_gap
         + data.build.dr_tf_inboard
@@ -54,10 +53,10 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
         + data.build.dr_blkt_inboard
         + data.build.dr_fw_inboard
         + data.build.dr_fw_plasma_gap_inboard
-        + physics_variables.rminor
+        + data.physics.rminor
     )
 
-    #  Radial build to centre of plasma (should be equal to physics_variables.rmajor)
+    #  Radial build to centre of plasma (should be equal to data.physics.rmajor)
     data.build.rbld = (
         data.build.dr_bore
         + data.build.dr_cs
@@ -69,10 +68,10 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
         + data.build.dr_blkt_inboard
         + data.build.dr_fw_inboard
         + data.build.dr_fw_plasma_gap_inboard
-        + physics_variables.rminor
+        + data.physics.rminor
     )
 
-    # Bc stellarators cannot scale physics_variables.rminor reasonably well an additional constraint equation is required,
+    # Bc stellarators cannot scale data.physics.rminor reasonably well an additional constraint equation is required,
     # that ensures that there is enough space between coils and plasma.
     data.build.required_radial_space = (
         data.build.dr_tf_inboard / 2.0e0
@@ -87,17 +86,17 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
     # derivative_min_LCFS_coils_dist  for how strong the stellarator shape changes wrt to aspect ratio
     data.build.available_radial_space = (
         data.stellarator.r_coil_minor * data.stellarator.f_coil_shape
-        - physics_variables.rminor
+        - data.physics.rminor
     )
     +data.stellarator_config.stella_config_derivative_min_lcfs_coils_dist * (
-        physics_variables.rminor
+        data.physics.rminor
         - data.stellarator.f_st_rmajor * data.stellarator_config.stella_config_rminor_ref
     )
 
     #  Radius to inner edge of inboard shield
     data.build.r_shld_inboard_inner = (
-        physics_variables.rmajor
-        - physics_variables.rminor
+        data.physics.rmajor
+        - data.physics.rminor
         - data.build.dr_fw_plasma_gap_inboard
         - data.build.dr_fw_inboard
         - data.build.dr_blkt_inboard
@@ -106,8 +105,8 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
 
     #  Radius to outer edge of outboard shield
     data.build.r_shld_outboard_outer = (
-        physics_variables.rmajor
-        + physics_variables.rminor
+        data.physics.rmajor
+        + data.physics.rminor
         + data.build.dr_fw_plasma_gap_outboard
         + data.build.dr_fw_outboard
         + data.build.dr_blkt_outboard
@@ -139,10 +138,10 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
             + data.build.dr_blkt_inboard
             + data.build.dr_fw_inboard
             + data.build.dr_fw_plasma_gap_inboard
-            + physics_variables.rminor
+            + data.physics.rminor
         )
         + (
-            physics_variables.rminor
+            data.physics.rminor
             + data.build.dr_fw_plasma_gap_outboard
             + data.build.dr_fw_outboard
             + data.build.dr_blkt_outboard
@@ -154,16 +153,16 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
 
     #  Outer divertor strike point radius, set equal to major radius
 
-    data.build.rspo = physics_variables.rmajor
+    data.build.rspo = data.physics.rmajor
 
     #  First wall area: scales with minor radius
 
     # Average minor radius of the first wall
-    awall = physics_variables.rminor + 0.5e0 * (
+    awall = data.physics.rminor + 0.5e0 * (
         data.build.dr_fw_plasma_gap_inboard + data.build.dr_fw_plasma_gap_outboard
     )
     data.first_wall.a_fw_total = (
-        physics_variables.a_plasma_surface * awall / physics_variables.rminor
+        data.physics.a_plasma_surface * awall / data.physics.rminor
     )
 
     if data.heat_transport.ipowerflow == 0:
@@ -312,20 +311,20 @@ def output(stellarator, data):
         data.build.dr_fw_plasma_gap_inboard,
     )
 
-    radius += physics_variables.rminor
+    radius += data.physics.rminor
     po.obuild(
         stellarator.outfile,
         "Plasma geometric centre",
-        physics_variables.rminor,
+        data.physics.rminor,
         radius,
         "(rminor)",
     )
 
-    radius += physics_variables.rminor
+    radius += data.physics.rminor
     po.obuild(
         stellarator.outfile,
         "Plasma outboard edge",
-        physics_variables.rminor,
+        data.physics.rminor,
         radius,
         "(rminor)",
     )

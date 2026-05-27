@@ -5,8 +5,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import physics_variables
-
 
 @pytest.fixture
 def ife(process_models):
@@ -1609,7 +1607,7 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     monkeypatch.setattr(ife.data.ife, "fbreed", ifefbsparam.fbreed)
     monkeypatch.setattr(ife.data.ife, "ifetyp", ifefbsparam.ifetyp)
     monkeypatch.setattr(
-        physics_variables, "pflux_fw_neutron_mw", ifefbsparam.pflux_fw_neutron_mw
+        ife.data.physics, "pflux_fw_neutron_mw", ifefbsparam.pflux_fw_neutron_mw
     )
 
     ife.ifefbs(output=False)
@@ -2237,7 +2235,7 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     monkeypatch.setattr(ife.data.ife, "etadrv", ifepw1param.etadrv)
     monkeypatch.setattr(ife.data.ife, "pifecr", ifepw1param.pifecr)
     monkeypatch.setattr(
-        physics_variables, "p_fusion_total_mw", ifepw1param.p_fusion_total_mw
+        ife.data.physics, "p_fusion_total_mw", ifepw1param.p_fusion_total_mw
     )
 
     ife.ifepw1()

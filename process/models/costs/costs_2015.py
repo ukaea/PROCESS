@@ -7,7 +7,6 @@ from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
     global_variables,
-    physics_variables,
     tfcoil_variables,
 )
 
@@ -915,7 +914,7 @@ class Costs2015(Model):
         #  Cost of ITER divertor
         self.data.costs_2015.s_cref[37] = 381.0e6
         #  Scale with max power to SOL (MW)
-        self.data.costs_2015.s_k[37] = physics_variables.p_plasma_separatrix_mw
+        self.data.costs_2015.s_k[37] = self.data.physics.p_plasma_separatrix_mw
         self.data.costs_2015.s_kref[37] = 140.0e0
         self.data.costs_2015.s_cost[37] = (
             self.data.costs_2015.s_cost_factor[37]
@@ -1018,7 +1017,7 @@ class Costs2015(Model):
         #  Cost of ITER pellet injector and pellet injection system
         self.data.costs_2015.s_cref[46] = 25.0e6
         #  Scale with fusion power (MW)
-        self.data.costs_2015.s_k[46] = physics_variables.p_fusion_total_mw
+        self.data.costs_2015.s_k[46] = self.data.physics.p_fusion_total_mw
         self.data.costs_2015.s_kref[46] = 500.0e0
         self.data.costs_2015.s_cost[46] = (
             self.data.costs_2015.s_cost_factor[46]
@@ -1031,7 +1030,7 @@ class Costs2015(Model):
         # #  Cost of ITER gas injection system, GDC, Gi valve boxes
         self.data.costs_2015.s_cref[47] = 32.0e6
         #  Scale with fusion power (MW)
-        self.data.costs_2015.s_k[47] = physics_variables.p_fusion_total_mw
+        self.data.costs_2015.s_k[47] = self.data.physics.p_fusion_total_mw
         self.data.costs_2015.s_kref[47] = 500.0e0
         self.data.costs_2015.s_cost[47] = (
             self.data.costs_2015.s_cost_factor[47]
@@ -1044,7 +1043,7 @@ class Costs2015(Model):
         #  Cost of ITER vacuum pumping
         self.data.costs_2015.s_cref[48] = 201.0e6
         #  Scale with fusion power (MW)
-        self.data.costs_2015.s_k[48] = physics_variables.p_fusion_total_mw
+        self.data.costs_2015.s_k[48] = self.data.physics.p_fusion_total_mw
         self.data.costs_2015.s_kref[48] = 500.0e0
         self.data.costs_2015.s_cost[48] = (
             self.data.costs_2015.s_cost_factor[48]
@@ -1057,7 +1056,7 @@ class Costs2015(Model):
         #  Cost of ITER tritium plant
         self.data.costs_2015.s_cref[49] = 226.0e6
         #  Scale with fusion power (MW)
-        self.data.costs_2015.s_k[49] = physics_variables.p_fusion_total_mw
+        self.data.costs_2015.s_k[49] = self.data.physics.p_fusion_total_mw
         self.data.costs_2015.s_kref[49] = 500.0e0
         self.data.costs_2015.s_cost[49] = (
             self.data.costs_2015.s_cost_factor[49]
@@ -1086,7 +1085,7 @@ class Costs2015(Model):
         #  For ITER value see
         #  K:\Power Plant Physics and Technology\PROCESS\PROCESS documentation papers\resistive diffusion time.xmcd or pdf
         self.data.costs_2015.s_k[51] = (
-            self.data.pf_power.ensxpfm * 1.0e6 / physics_variables.t_plasma_res_diffusion
+            self.data.pf_power.ensxpfm * 1.0e6 / self.data.physics.t_plasma_res_diffusion
         )
         self.data.costs_2015.s_kref[51] = 8.0e9 / 953.0e0
         self.data.costs_2015.s_cost[51] = (
@@ -1123,7 +1122,7 @@ class Costs2015(Model):
         #  Cost of ITER radiological protection
         self.data.costs_2015.s_cref[54] = 19.0e6
         #  Scale with fusion power (MW)
-        self.data.costs_2015.s_k[54] = physics_variables.p_fusion_total_mw
+        self.data.costs_2015.s_k[54] = self.data.physics.p_fusion_total_mw
         self.data.costs_2015.s_kref[54] = 500.0e0
         self.data.costs_2015.s_cost[54] = (
             self.data.costs_2015.s_cost_factor[54]

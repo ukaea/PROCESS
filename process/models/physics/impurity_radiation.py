@@ -575,18 +575,26 @@ class ImpurityRadiation:
         """
         self.data = data_structure
         self.plasma_profile = plasma_profile
-        self.rho = plasma_profile.neprofile.profile_x
-        self.rhodx = plasma_profile.neprofile.profile_dx
         self.imp = np.nonzero(
             self.data.impurity_radiation.f_nd_impurity_electron_array > 1.0e-30
         )[0]
 
-        self.pimp_profile = np.zeros(self.plasma_profile.profile_size)
-        self.pden_impurity_rad_profile = np.zeros(self.plasma_profile.profile_size)
-        self.pden_impurity_core_rad_profile = np.zeros(self.plasma_profile.profile_size)
+        self.pimp_profile = np.zeros(self.data.physics.n_plasma_profile_elements)
+        self.pden_impurity_rad_profile = np.zeros(
+            self.data.physics.n_plasma_profile_elements
+        )
+        self.pden_impurity_core_rad_profile = np.zeros(
+            self.data.physics.n_plasma_profile_elements
+        )
 
         self.pden_impurity_rad_total_mw = 0.0
         self.pden_impurity_core_rad_total_mw = 0.0
+
+    def run(self):
+        """This model isn't run"""
+
+    def output(self):
+        """This model has no output"""
 
     def map_imprad_profile(self):
         """Map imprad_profile() over each impurity element index."""
@@ -624,11 +632,13 @@ class ImpurityRadiation:
         radiation  (pden_impurity_rad_total_mw). Update the stored arrays with the
         values.
         """
-        pden_impurity_rad_total = self.pimp_profile * self.rho
+        pden_impurity_rad_total = (
+            self.pimp_profile * self.plasma_profile.neprofile.profile_x
+        )
         pden_impurity_core_rad_total = self.pimp_profile * (
-            self.rho
+            self.plasma_profile.neprofile.profile_x
             * fradcore(
-                self.rho,
+                self.plasma_profile.neprofile.profile_x,
                 self.data.impurity_radiation.radius_plasma_core_norm,
                 self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
             )
@@ -648,10 +658,14 @@ class ImpurityRadiation:
         # 2.0e-6 converts from W/m^3 to MW/m^3 and also accounts for both sides of the
         # plasma
         self.pden_impurity_rad_total_mw = 2.0e-6 * integrate.simpson(
-            self.pden_impurity_rad_profile, x=self.rho, dx=self.rhodx
+            self.pden_impurity_rad_profile,
+            x=self.plasma_profile.neprofile.profile_x,
+            dx=self.plasma_profile.neprofile.profile_dx,
         )
         self.pden_impurity_core_rad_total_mw = 2.0e-6 * integrate.simpson(
-            self.pden_impurity_core_rad_profile, x=self.rho, dx=self.rhodx
+            self.pden_impurity_core_rad_profile,
+            x=self.plasma_profile.neprofile.profile_x,
+            dx=self.plasma_profile.neprofile.profile_dx,
         )
 
     def calculate_imprad(self):

@@ -1,51 +1,16 @@
 import pytest
 
-from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
-from process.models.physics.current_drive import (
-    CurrentDrive,
-    ElectronBernstein,
-    ElectronCyclotron,
-    IonCyclotron,
-    LowerHybrid,
-    NeutralBeam,
-)
-from process.models.physics.density_limit import PlasmaDensityLimit
-from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
-from process.models.physics.physics import (
-    Physics,
-    PlasmaBeta,
-    PlasmaInductance,
-)
-from process.models.physics.plasma_geometry import PlasmaGeom
-from process.models.physics.plasma_profiles import PlasmaProfile
 
 
 @pytest.fixture
-def physics():
+def physics(process_models):
     """Provides Physics object for testing.
 
     :returns: initialised Physics object
     :rtype: process.physics.Physics
     """
-    return Physics(
-        PlasmaProfile(),
-        CurrentDrive(
-            PlasmaProfile(),
-            electron_cyclotron=ElectronCyclotron(plasma_profile=PlasmaProfile()),
-            ion_cyclotron=IonCyclotron(plasma_profile=PlasmaProfile()),
-            neutral_beam=NeutralBeam(plasma_profile=PlasmaProfile()),
-            electron_bernstein=ElectronBernstein(plasma_profile=PlasmaProfile()),
-            lower_hybrid=LowerHybrid(plasma_profile=PlasmaProfile()),
-        ),
-        PlasmaBeta(),
-        PlasmaInductance(),
-        PlasmaDensityLimit(),
-        PlasmaExhaust(),
-        PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
-        PlasmaConfinementTransition(),
-        plasma_geometry=PlasmaGeom(),
-    )
+    return process_models.physics
 
 
 @pytest.mark.parametrize(

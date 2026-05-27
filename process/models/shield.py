@@ -5,7 +5,6 @@ import logging
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import physics_variables
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import (
     dshellarea,
@@ -47,7 +46,7 @@ class Shield(Model):
         )
         # D-shaped blanket and shield
         if (
-            physics_variables.itart == 1
+            self.data.physics.itart == 1
             or self.data.fwbs.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
             (
@@ -59,7 +58,7 @@ class Shield(Model):
                 dr_shld_inboard=self.data.build.dr_shld_inboard,
                 dr_fw_inboard=self.data.build.dr_fw_inboard,
                 dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
-                rminor=physics_variables.rminor,
+                rminor=self.data.physics.rminor,
                 dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
                 dr_fw_outboard=self.data.build.dr_fw_outboard,
                 dr_blkt_inboard=self.data.build.dr_blkt_inboard,
@@ -76,7 +75,7 @@ class Shield(Model):
                 dr_shld_inboard=self.data.build.dr_shld_inboard,
                 dr_fw_inboard=self.data.build.dr_fw_inboard,
                 dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
-                rminor=physics_variables.rminor,
+                rminor=self.data.physics.rminor,
                 dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
                 dr_fw_outboard=self.data.build.dr_fw_outboard,
                 dr_blkt_inboard=self.data.build.dr_blkt_inboard,
@@ -94,10 +93,10 @@ class Shield(Model):
             ) = self.calculate_elliptical_shield_areas(
                 r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
                 r_shld_outboard_outer=self.data.build.r_shld_outboard_outer,
-                rmajor=physics_variables.rmajor,
-                triang=physics_variables.triang,
+                rmajor=self.data.physics.rmajor,
+                triang=self.data.physics.triang,
                 dr_shld_inboard=self.data.build.dr_shld_inboard,
-                rminor=physics_variables.rminor,
+                rminor=self.data.physics.rminor,
                 dz_shld_half=self.data.blanket.dz_shld_half,
                 dr_shld_outboard=self.data.build.dr_shld_outboard,
             )
@@ -109,10 +108,10 @@ class Shield(Model):
             ) = self.calculate_elliptical_shield_volumes(
                 r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
                 r_shld_outboard_outer=self.data.build.r_shld_outboard_outer,
-                rmajor=physics_variables.rmajor,
-                triang=physics_variables.triang,
+                rmajor=self.data.physics.rmajor,
+                triang=self.data.physics.triang,
                 dr_shld_inboard=self.data.build.dr_shld_inboard,
-                rminor=physics_variables.rminor,
+                rminor=self.data.physics.rminor,
                 dz_shld_half=self.data.blanket.dz_shld_half,
                 dr_shld_outboard=self.data.build.dr_shld_outboard,
                 dz_shld_upper=self.data.build.dz_shld_upper,

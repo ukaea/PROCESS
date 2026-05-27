@@ -3,7 +3,6 @@
 import pytest
 
 from process.core.init import init_all_module_vars
-from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 
 
@@ -32,11 +31,11 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
 
     # Mock module vars
     monkeypatch.setattr(availability.data.ife, "ife", 0)
-    monkeypatch.setattr(pv, "p_fusion_total_mw", 4.0e3)
+    monkeypatch.setattr(availability.data.physics, "p_fusion_total_mw", 4.0e3)
     monkeypatch.setattr(availability.data.fwbs, "life_fw_fpy", life_fw_fpy)
     monkeypatch.setattr(availability.data.costs, "ibkt_life", ibkt_life)
     monkeypatch.setattr(availability.data.costs, "abktflnc", 4.0)
-    monkeypatch.setattr(pv, "pflux_fw_neutron_mw", 10.0)
+    monkeypatch.setattr(availability.data.physics, "pflux_fw_neutron_mw", 10.0)
     monkeypatch.setattr(availability.data.costs, "life_plant", 30.0)
     monkeypatch.setattr(availability.data.costs, "life_dpa", 40.0)
     monkeypatch.setattr(availability.data.costs, "adivflnc", 8.0)
@@ -45,7 +44,7 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     monkeypatch.setattr(availability.data.costs, "i_plant_availability", 0)
     monkeypatch.setattr(availability.data.costs, "f_t_plant_available", 0.8)
     monkeypatch.setattr(availability.data.times, "t_plant_pulse_burn", 500.0)
-    monkeypatch.setattr(pv, "itart", 1)
+    monkeypatch.setattr(availability.data.physics, "itart", 1)
 
     availability.avail(output=False)
     cpfact_obs = availability.data.costs.cpfact
@@ -203,8 +202,10 @@ def calc_u_planned_fix(availability, request, monkeypatch):
         param["pflux_div_heat_load_mw"],
     )
     monkeypatch.setattr(availability.data.fwbs, "life_blkt_fpy", 0.0)
-    monkeypatch.setattr(pv, "pflux_fw_neutron_mw", param["pflux_fw_neutron_mw"])
-    monkeypatch.setattr(pv, "itart", param["itart"])
+    monkeypatch.setattr(
+        availability.data.physics, "pflux_fw_neutron_mw", param["pflux_fw_neutron_mw"]
+    )
+    monkeypatch.setattr(availability.data.physics, "itart", param["itart"])
     monkeypatch.setattr(availability.data.costs, "life_plant", param["life_plant"])
     monkeypatch.setattr(availability.data.costs, "life_div_fpy", 0.0)
     monkeypatch.setattr(availability.data.costs, "adivflnc", param["adivflnc"])
@@ -552,7 +553,7 @@ def test_avail_2(monkeypatch, availability):
     monkeypatch.setattr(availability.data.times, "t_plant_pulse_burn", 5.0)
     monkeypatch.setattr(availability.data.times, "t_plant_pulse_total", 50.0)
     monkeypatch.setattr(availability.data.ife, "ife", 0)
-    monkeypatch.setattr(pv, "itart", 1)
+    monkeypatch.setattr(availability.data.physics, "itart", 1)
     monkeypatch.setattr(availability.data.fwbs, "life_blkt_fpy", 5.0)
     monkeypatch.setattr(availability.data.costs, "life_div_fpy", 10.0)
     monkeypatch.setattr(availability.data.costs, "cplife", 15.0)
@@ -600,7 +601,7 @@ def test_avail_st(monkeypatch, availability):
     monkeypatch.setattr(availability.data.divertor, "pflux_div_heat_load_mw", 10.0)
     monkeypatch.setattr(availability.data.costs, "ibkt_life", 0)
     monkeypatch.setattr(availability.data.costs, "abktflnc", 10.0)
-    monkeypatch.setattr(pv, "pflux_fw_neutron_mw", 10.0)
+    monkeypatch.setattr(availability.data.physics, "pflux_fw_neutron_mw", 10.0)
     monkeypatch.setattr(availability.data.costs, "cplife", 5.0)
     monkeypatch.setattr(availability.data.costs, "life_hcd_fpy", 15.0)
 
@@ -626,7 +627,7 @@ def test_cp_lifetime(monkeypatch, availability, i_tf_sup, exp):
     monkeypatch.setattr(availability.data.constraints, "nflutfmax", 1.0e23)
     monkeypatch.setattr(availability.data.fwbs, "neut_flux_cp", 5.0e14)
     monkeypatch.setattr(availability.data.costs, "cpstflnc", 20.0)
-    monkeypatch.setattr(pv, "pflux_fw_neutron_mw", 5.0)
+    monkeypatch.setattr(availability.data.physics, "pflux_fw_neutron_mw", 5.0)
     monkeypatch.setattr(availability.data.costs, "life_plant", 30.0)
 
     cplife = availability.cp_lifetime()

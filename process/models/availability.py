@@ -7,7 +7,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.models.tfcoil.base import TFConductorModel
 
@@ -61,7 +60,7 @@ class Availability(Model):
             indicate whether output should be written to the output file, or not (default = False)
         """
         if self.data.costs.i_plant_availability == 3:
-            if pv.itart != 1:
+            if self.data.physics.itart != 1:
                 raise ProcessValueError(
                     f"{self.data.costs.i_plant_availability=} is for a Spherical Tokamak. Please set itart=1 to use this model."
                 )
@@ -96,7 +95,7 @@ class Availability(Model):
             # - all of the above and more leading to the dpa/fpy in EUROfer at the FW OMP
             # About a relatively "constant" reference point, we can reasonably assume they all equal to 1.0.
             ref_fusion_power = 2.0e3  # (MW) fusion power for EU-DEMO
-            f_scale = pv.p_fusion_total_mw / ref_fusion_power
+            f_scale = self.data.physics.p_fusion_total_mw / ref_fusion_power
             ref_dpa_fpy = (
                 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
             )
@@ -111,9 +110,12 @@ class Availability(Model):
                 if self.data.costs.ibkt_life == 0:
                     self.data.fwbs.life_blkt_fpy = (
                         self.data.costs.life_plant
-                        if pv.pflux_fw_neutron_mw == 0.0  # noqa: RUF069
+                        if self.data.physics.pflux_fw_neutron_mw == 0.0  # noqa: RUF069
                         else min(
-                            (self.data.costs.abktflnc / pv.pflux_fw_neutron_mw),
+                            (
+                                self.data.costs.abktflnc
+                                / self.data.physics.pflux_fw_neutron_mw
+                            ),
                             self.data.costs.life_plant,
                         )
                     )
@@ -124,7 +126,7 @@ class Availability(Model):
             elif self.data.costs.ibkt_life == 0:
                 self.data.fwbs.life_blkt_fpy = min(
                     self.data.fwbs.life_fw_fpy,
-                    self.data.costs.abktflnc / pv.pflux_fw_neutron_mw,
+                    self.data.costs.abktflnc / self.data.physics.pflux_fw_neutron_mw,
                     self.data.costs.life_plant,
                 )
             else:
@@ -144,7 +146,7 @@ class Availability(Model):
             self.data.costs.life_div_fpy = self.divertor_lifetime()
 
             # Centrepost lifetime (years) (ST machines only)
-            if pv.itart == 1:
+            if self.data.physics.itart == 1:
                 self.data.costs.cplife = self.cp_lifetime()
 
         # Plant Availability (i_plant_availability=0,1)
@@ -215,7 +217,10 @@ class Availability(Model):
                 )
 
             # Centrepost
-            if pv.itart == 1 and self.data.costs.cplife < self.data.costs.life_plant:
+            if (
+                self.data.physics.itart == 1
+                and self.data.costs.cplife < self.data.costs.life_plant
+            ):
                 self.data.costs.cplife = min(
                     self.data.costs.cplife / self.data.costs.f_t_plant_available,
                     self.data.costs.life_plant,
@@ -256,7 +261,7 @@ class Availability(Model):
                 "OP ",
             )
 
-            if pv.itart == 1:
+            if self.data.physics.itart == 1:
                 po.ovarre(
                     self.outfile,
                     "Centrepost lifetime (years)",
@@ -425,7 +430,10 @@ class Availability(Model):
                 )
 
             # Centrepost
-            if pv.itart == 1 and self.data.costs.cplife < self.data.costs.life_plant:
+            if (
+                self.data.physics.itart == 1
+                and self.data.costs.cplife < self.data.costs.life_plant
+            ):
                 self.data.costs.cplife = min(
                     self.data.costs.cplife / self.data.costs.f_t_plant_available,
                     self.data.costs.life_plant,
@@ -452,7 +460,7 @@ class Availability(Model):
                 self.data.costs.life_div_fpy,
                 "OP ",
             )
-            if pv.itart == 1:
+            if self.data.physics.itart == 1:
                 po.ovarre(
                     self.outfile,
                     "Centrepost lifetime (FPY)",
@@ -537,7 +545,7 @@ class Availability(Model):
         # - all of the above and more leading to the dpa/fpy in EUROfer at the FW OMP
         # About a relatively "constant" reference point, we can reasonably assume they all equal to 1.0.
         ref_fusion_power = 2.0e3  # (MW) fusion power for EU-DEMO
-        f_scale = pv.p_fusion_total_mw / ref_fusion_power
+        f_scale = self.data.physics.p_fusion_total_mw / ref_fusion_power
         ref_dpa_fpy = 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
         dpa_fpy = f_scale * ref_dpa_fpy
 
@@ -546,7 +554,7 @@ class Availability(Model):
         # or DEMO fusion power model (ibkt_life=1)
         if self.data.costs.ibkt_life == 0:
             self.data.fwbs.life_blkt_fpy = min(
-                self.data.costs.abktflnc / pv.pflux_fw_neutron_mw,
+                self.data.costs.abktflnc / self.data.physics.pflux_fw_neutron_mw,
                 self.data.costs.life_plant,
             )
         else:
@@ -558,7 +566,7 @@ class Availability(Model):
         self.data.costs.life_div_fpy = self.divertor_lifetime()
 
         # Centrepost lifetime (years) (ST only)
-        if pv.itart == 1:
+        if self.data.physics.itart == 1:
             self.data.costs.cplife = self.cp_lifetime()
 
         # Current drive lifetime (assumed equal to first wall and blanket lifetime)
@@ -1173,13 +1181,13 @@ class Availability(Model):
           https://www.sciencedirect.com/science/article/pii/S0920379620301952#bib0075
         """
         ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
-        f_scale = pv.p_fusion_total_mw / ref_powfmw
+        f_scale = self.data.physics.p_fusion_total_mw / ref_powfmw
         ref_dpa_fpy = 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
         dpa_fpy = f_scale * ref_dpa_fpy
 
         if self.data.costs.ibkt_life == 0:
             self.data.fwbs.life_blkt_fpy = min(
-                self.data.costs.abktflnc / pv.pflux_fw_neutron_mw,
+                self.data.costs.abktflnc / self.data.physics.pflux_fw_neutron_mw,
                 self.data.costs.life_plant,
             )
         else:
@@ -1286,7 +1294,10 @@ class Availability(Model):
                 )
 
             # Centrepost
-            if pv.itart == 1 and self.data.costs.cplife < self.data.costs.life_plant:
+            if (
+                self.data.physics.itart == 1
+                and self.data.costs.cplife < self.data.costs.life_plant
+            ):
                 self.data.costs.cplife = min(
                     self.data.costs.cplife / self.data.costs.f_t_plant_available,
                     self.data.costs.life_plant,
@@ -1353,7 +1364,7 @@ class Availability(Model):
                     self.outfile,
                     "Average neutron wall load (MW/m2)",
                     "(pflux_fw_neutron_mw)",
-                    pv.pflux_fw_neutron_mw,
+                    self.data.physics.pflux_fw_neutron_mw,
                     "OP ",
                 )
             po.ovarre(
@@ -1466,7 +1477,7 @@ class Availability(Model):
         # For now, we keep the original def, developed for GLIDCOP magnets ...
         else:
             cplife = min(
-                self.data.costs.cpstflnc / pv.pflux_fw_neutron_mw,
+                self.data.costs.cpstflnc / self.data.physics.pflux_fw_neutron_mw,
                 self.data.costs.life_plant,
             )
 

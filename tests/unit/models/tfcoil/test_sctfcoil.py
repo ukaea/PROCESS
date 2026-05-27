@@ -5,7 +5,6 @@ import pytest
 
 from process.data_structure import (
     global_variables,
-    physics_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
@@ -1933,7 +1932,7 @@ def test_superconducting_tf_coil_area_and_masses(
     monkeypatch.setattr(
         sctfcoil.data.fwbs, "den_steel", tfcoilareaandmassesparam.den_steel
     )
-    monkeypatch.setattr(physics_variables, "itart", tfcoilareaandmassesparam.itart)
+    monkeypatch.setattr(sctfcoil.data.physics, "itart", tfcoilareaandmassesparam.itart)
 
     for name, val in (
         ("hr1", tfcoilareaandmassesparam.hr1),

@@ -3,7 +3,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import physics_variables, tfcoil_variables
+from process.data_structure import tfcoil_variables
 from process.models.stellarator.build import st_build
 from process.models.stellarator.coils.coils import bmax_from_awp, intersect
 from process.models.stellarator.coils.quench import (
@@ -114,30 +114,30 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "aspect", stgeomparam.aspect)
+    monkeypatch.setattr(stellarator.data.physics, "aspect", stgeomparam.aspect)
 
-    monkeypatch.setattr(physics_variables, "rmajor", stgeomparam.rmajor)
+    monkeypatch.setattr(stellarator.data.physics, "rmajor", stgeomparam.rmajor)
 
-    monkeypatch.setattr(physics_variables, "rminor", stgeomparam.rminor)
+    monkeypatch.setattr(stellarator.data.physics, "rminor", stgeomparam.rminor)
 
     monkeypatch.setattr(
-        physics_variables, "a_plasma_surface", stgeomparam.a_plasma_surface
+        stellarator.data.physics, "a_plasma_surface", stgeomparam.a_plasma_surface
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        stellarator.data.physics,
         "a_plasma_surface_outboard",
         stgeomparam.a_plasma_surface_outboard,
     )
 
-    monkeypatch.setattr(physics_variables, "vol_plasma", stgeomparam.vol_plasma)
+    monkeypatch.setattr(stellarator.data.physics, "vol_plasma", stgeomparam.vol_plasma)
 
     monkeypatch.setattr(
-        physics_variables, "a_plasma_poloidal", stgeomparam.a_plasma_poloidal
+        stellarator.data.physics, "a_plasma_poloidal", stgeomparam.a_plasma_poloidal
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        stellarator.data.physics,
         "b_plasma_toroidal_on_axis",
         stgeomparam.b_plasma_toroidal_on_axis,
     )
@@ -164,17 +164,17 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
 
     stellarator.st_geom()
 
-    assert physics_variables.a_plasma_surface == pytest.approx(
+    assert stellarator.data.physics.a_plasma_surface == pytest.approx(
         stgeomparam.expected_a_plasma_surface
     )
 
-    assert physics_variables.a_plasma_surface_outboard == pytest.approx(
+    assert stellarator.data.physics.a_plasma_surface_outboard == pytest.approx(
         stgeomparam.expected_a_plasma_surface_outboard
     )
 
-    assert physics_variables.vol_plasma == pytest.approx(stgeomparam.expected_vol)
+    assert stellarator.data.physics.vol_plasma == pytest.approx(stgeomparam.expected_vol)
 
-    assert physics_variables.a_plasma_poloidal == pytest.approx(
+    assert stellarator.data.physics.a_plasma_poloidal == pytest.approx(
         stgeomparam.expected_a_plasma_poloidal
     )
 
@@ -623,12 +623,12 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         stellarator.data.heat_transport, "ipowerflow", stbildparam.ipowerflow
     )
 
-    monkeypatch.setattr(physics_variables, "rmajor", stbildparam.rmajor)
+    monkeypatch.setattr(stellarator.data.physics, "rmajor", stbildparam.rmajor)
 
-    monkeypatch.setattr(physics_variables, "rminor", stbildparam.rminor)
+    monkeypatch.setattr(stellarator.data.physics, "rminor", stbildparam.rminor)
 
     monkeypatch.setattr(
-        physics_variables, "a_plasma_surface", stbildparam.a_plasma_surface
+        stellarator.data.physics, "a_plasma_surface", stbildparam.a_plasma_surface
     )
 
     monkeypatch.setattr(
@@ -1900,19 +1900,19 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
     """
 
     monkeypatch.setattr(
-        physics_variables,
+        stellarator.data.physics,
         "nd_plasma_electrons_vol_avg",
         stdlimparam.nd_plasma_electrons_vol_avg,
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        stellarator.data.physics,
         "nd_plasma_electron_line",
         stdlimparam.nd_plasma_electron_line,
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        stellarator.data.physics,
         "nd_plasma_electrons_max",
         stdlimparam.nd_plasma_electrons_max,
     )
@@ -1922,9 +1922,10 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
         powht=stdlimparam.powht,
         rmajor=stdlimparam.rmajor,
         rminor=stdlimparam.rminor,
+        data=stellarator.data,
     )
 
-    assert physics_variables.nd_plasma_electrons_max == pytest.approx(
+    assert stellarator.data.physics.nd_plasma_electrons_max == pytest.approx(
         stdlimparam.expected_dnelimt
     )
 
@@ -1955,7 +1956,7 @@ class StdlimEcrhParam(NamedTuple):
         ),
     ],
 )
-def test_stdlim_ecrh(stdlimecrhparam, monkeypatch):
+def test_stdlim_ecrh(stdlimecrhparam, monkeypatch, stellarator):
     """
     Automatically generated Regression Unit Test for stdlim_ecrh.
 
@@ -1969,12 +1970,13 @@ def test_stdlim_ecrh(stdlimecrhparam, monkeypatch):
     """
 
     monkeypatch.setattr(
-        physics_variables, "i_plasma_pedestal", stdlimecrhparam.i_plasma_pedestal
+        stellarator.data.physics, "i_plasma_pedestal", stdlimecrhparam.i_plasma_pedestal
     )
 
     dlimit_ecrh, bt_max = st_d_limit_ecrh(
         bt_input=stdlimecrhparam.bt_input,
         gyro_frequency_max=stdlimecrhparam.gyro_frequency_max,
+        i_plasma_pedestal=stellarator.data.physics.i_plasma_pedestal,
     )
 
     assert dlimit_ecrh == pytest.approx(stdlimecrhparam.expected_dlimit_ecrh)
@@ -2064,46 +2066,48 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     """
 
     monkeypatch.setattr(
-        physics_variables,
+        stellarator.data.physics,
         "temp_plasma_electron_on_axis_kev",
         stcalceffchiparam.temp_plasma_electron_on_axis_kev,
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        stellarator.data.physics,
         "nd_plasma_electron_on_axis",
         stcalceffchiparam.nd_plasma_electron_on_axis,
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        stellarator.data.physics,
         "f_p_alpha_plasma_deposited",
         stcalceffchiparam.f_p_alpha_plasma_deposited,
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        stellarator.data.physics,
         "pden_alpha_total_mw",
         stcalceffchiparam.pden_alpha_total_mw,
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        stellarator.data.physics,
         "pden_plasma_core_rad_mw",
         stcalceffchiparam.pden_plasma_core_rad_mw,
     )
 
-    monkeypatch.setattr(physics_variables, "alphan", stcalceffchiparam.alphan)
+    monkeypatch.setattr(stellarator.data.physics, "alphan", stcalceffchiparam.alphan)
 
-    monkeypatch.setattr(physics_variables, "alphat", stcalceffchiparam.alphat)
-
-    monkeypatch.setattr(physics_variables, "vol_plasma", stcalceffchiparam.vol_plasma)
+    monkeypatch.setattr(stellarator.data.physics, "alphat", stcalceffchiparam.alphat)
 
     monkeypatch.setattr(
-        physics_variables, "a_plasma_surface", stcalceffchiparam.a_plasma_surface
+        stellarator.data.physics, "vol_plasma", stcalceffchiparam.vol_plasma
     )
 
-    monkeypatch.setattr(physics_variables, "rminor", stcalceffchiparam.rminor)
+    monkeypatch.setattr(
+        stellarator.data.physics, "a_plasma_surface", stcalceffchiparam.a_plasma_surface
+    )
+
+    monkeypatch.setattr(stellarator.data.physics, "rminor", stcalceffchiparam.rminor)
 
     monkeypatch.setattr(
         stellarator.data.impurity_radiation,
@@ -2241,7 +2245,7 @@ def test_sctfcoil_nuclear_heating_iter90(
         sctfcoilnuclearheatingiter90param.life_plant,
     )
     monkeypatch.setattr(
-        physics_variables,
+        stellarator.data.physics,
         "pflux_fw_neutron_mw",
         sctfcoilnuclearheatingiter90param.pflux_fw_neutron_mw,
     )

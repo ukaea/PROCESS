@@ -10,7 +10,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import physics_variables
+from process.data_structure.physics_variables import N_CONFINEMENT_SCALINGS
 from process.models.physics.plasma_geometry import PlasmaGeom
 
 logger = logging.getLogger(__name__)
@@ -237,9 +237,9 @@ class PlasmaConfinementTime(Model):
 
         # Calculate heating power (MW)
         p_plasma_loss_mw = (
-            physics_variables.f_p_alpha_plasma_deposited * p_alpha_total_mw
+            self.data.physics.f_p_alpha_plasma_deposited * p_alpha_total_mw
             + p_non_alpha_charged_mw
-            + physics_variables.p_plasma_ohmic_mw
+            + self.data.physics.p_plasma_ohmic_mw
         )
 
         # If the device is not ignited, add the injected auxiliary power
@@ -248,17 +248,17 @@ class PlasmaConfinementTime(Model):
 
         # Include the radiation as a loss term based on radiation model
         try:
-            model = ConfinementRadiationLossModel(int(physics_variables.i_rad_loss))
+            model = ConfinementRadiationLossModel(int(self.data.physics.i_rad_loss))
 
             if model == ConfinementRadiationLossModel.FULL_RADIATION:
-                p_plasma_loss_mw -= physics_variables.pden_plasma_rad_mw * vol_plasma
+                p_plasma_loss_mw -= self.data.physics.pden_plasma_rad_mw * vol_plasma
             elif model == ConfinementRadiationLossModel.CORE_ONLY:
                 p_plasma_loss_mw -= pden_plasma_core_rad_mw * vol_plasma
             # NO_RADIATION: do not adjust p_plasma_loss_mw for radiation
         except ValueError as e:
             raise ProcessValueError(
                 "Illegal value of i_rad_loss",
-                i_rad_loss=physics_variables.i_rad_loss,
+                i_rad_loss=self.data.physics.i_rad_loss,
             ) from e
 
         # Ensure heating power is positive (shouldn't be necessary)
@@ -284,7 +284,7 @@ class PlasmaConfinementTime(Model):
         # vol. 48, no. 9, pp. 099801099801, Aug. 2008,
         # doi: https://doi.org/10.1088/0029-5515/48/9/099801.
 
-        physics_variables.kappa_ipb = PlasmaGeom.calculate_iter_physics_basis_elongation(
+        self.data.physics.kappa_ipb = PlasmaGeom.calculate_iter_physics_basis_elongation(
             vol_plasma=vol_plasma, rmajor=rmajor, rminor=rminor
         )
 
@@ -304,7 +304,7 @@ class PlasmaConfinementTime(Model):
         if (
             model == ConfinementTimeModel.USER_INPUT
         ):  # t_electron_energy_confinement is an input
-            t_electron_confinement = physics_variables.tauee_in
+            t_electron_confinement = self.data.physics.tauee_in
 
         # ========================================================================
 
@@ -731,7 +731,7 @@ class PlasmaConfinementTime(Model):
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
-                physics_variables.kappa_ipb,
+                self.data.physics.kappa_ipb,
                 aspect,
                 m_fuel_amu,
             )
@@ -761,7 +761,7 @@ class PlasmaConfinementTime(Model):
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
-                physics_variables.kappa_ipb,
+                self.data.physics.kappa_ipb,
                 aspect,
                 m_fuel_amu,
             )
@@ -776,7 +776,7 @@ class PlasmaConfinementTime(Model):
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
-                physics_variables.kappa_ipb,
+                self.data.physics.kappa_ipb,
                 aspect,
                 m_fuel_amu,
             )
@@ -791,7 +791,7 @@ class PlasmaConfinementTime(Model):
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
-                physics_variables.kappa_ipb,
+                self.data.physics.kappa_ipb,
                 aspect,
                 m_fuel_amu,
             )
@@ -806,7 +806,7 @@ class PlasmaConfinementTime(Model):
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
-                physics_variables.kappa_ipb,
+                self.data.physics.kappa_ipb,
                 aspect,
                 m_fuel_amu,
             )
@@ -863,7 +863,7 @@ class PlasmaConfinementTime(Model):
             t_electron_confinement = self.murari_confinement_time(
                 pcur,
                 rmajor,
-                physics_variables.kappa_ipb,
+                self.data.physics.kappa_ipb,
                 dnla19,
                 b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
@@ -879,7 +879,7 @@ class PlasmaConfinementTime(Model):
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
-                physics_variables.kappa_ipb,
+                self.data.physics.kappa_ipb,
                 aspect,
             )
 
@@ -898,7 +898,7 @@ class PlasmaConfinementTime(Model):
                 qstar,
                 aspect,
                 m_fuel_amu,
-                physics_variables.kappa_ipb,
+                self.data.physics.kappa_ipb,
             )
 
         # ==========================================================================
@@ -944,7 +944,7 @@ class PlasmaConfinementTime(Model):
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
-                physics_variables.kappa_ipb,
+                self.data.physics.kappa_ipb,
                 aspect,
                 m_fuel_amu,
             )
@@ -959,7 +959,7 @@ class PlasmaConfinementTime(Model):
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
-                physics_variables.kappa_ipb,
+                self.data.physics.kappa_ipb,
                 aspect,
                 m_fuel_amu,
             )
@@ -986,10 +986,10 @@ class PlasmaConfinementTime(Model):
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
-                physics_variables.triang,
-                physics_variables.kappa_ipb,
+                self.data.physics.triang,
+                self.data.physics.kappa_ipb,
                 eps,
-                physics_variables.m_ions_total_amu,
+                self.data.physics.m_ions_total_amu,
             )
 
         # ==========================================================================
@@ -1001,10 +1001,10 @@ class PlasmaConfinementTime(Model):
                 b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 dnla19,
-                physics_variables.m_ions_total_amu,
+                self.data.physics.m_ions_total_amu,
                 rmajor,
-                physics_variables.triang,
-                physics_variables.kappa_ipb,
+                self.data.physics.triang,
+                self.data.physics.kappa_ipb,
             )
 
         # ==========================================================================
@@ -1023,33 +1023,33 @@ class PlasmaConfinementTime(Model):
 
         # Calculate H* non-radiation corrected H factor
         # Note: we will assume the IPB-98y2 scaling.
-        if physics_variables.i_rad_loss == 1:
-            physics_variables.hstar = (
+        if self.data.physics.i_rad_loss == 1:
+            self.data.physics.hstar = (
                 hfact
                 * (
                     p_plasma_loss_mw
                     / (
                         p_plasma_loss_mw
-                        + physics_variables.pden_plasma_sync_mw * vol_plasma
-                        + physics_variables.p_plasma_inner_rad_mw
+                        + self.data.physics.pden_plasma_sync_mw * vol_plasma
+                        + self.data.physics.p_plasma_inner_rad_mw
                     )
                 )
                 ** 0.31
             )
-        elif physics_variables.i_rad_loss == 0:
-            physics_variables.hstar = (
+        elif self.data.physics.i_rad_loss == 0:
+            self.data.physics.hstar = (
                 hfact
                 * (
                     p_plasma_loss_mw
                     / (
                         p_plasma_loss_mw
-                        + physics_variables.pden_plasma_rad_mw * vol_plasma
+                        + self.data.physics.pden_plasma_rad_mw * vol_plasma
                     )
                 )
                 ** 0.31
             )
-        elif physics_variables.i_rad_loss == 2:
-            physics_variables.hstar = hfact
+        elif self.data.physics.i_rad_loss == 2:
+            self.data.physics.hstar = hfact
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
@@ -1087,8 +1087,8 @@ class PlasmaConfinementTime(Model):
 
         # For comparison directly calculate the confinement time from the stored energy
         # calculated from the total plasma beta and the loss power used above.
-        physics_variables.t_energy_confinement_beta = (
-            physics_variables.e_plasma_beta / 1e6
+        self.data.physics.t_energy_confinement_beta = (
+            self.data.physics.e_plasma_beta / 1e6
         ) / p_plasma_loss_mw
 
         return (
@@ -1171,56 +1171,56 @@ class PlasmaConfinementTime(Model):
                 _,
                 _,
             ) = self.calculate_confinement_time(
-                m_fuel_amu=physics_variables.m_fuel_amu,
-                p_alpha_total_mw=physics_variables.p_alpha_total_mw,
-                aspect=physics_variables.aspect,
-                b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
-                nd_plasma_ions_total_vol_avg=physics_variables.nd_plasma_ions_total_vol_avg,
-                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
-                nd_plasma_electron_line=physics_variables.nd_plasma_electron_line,
-                eps=physics_variables.eps,
+                m_fuel_amu=self.data.physics.m_fuel_amu,
+                p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
+                aspect=self.data.physics.aspect,
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+                nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
+                nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                nd_plasma_electron_line=self.data.physics.nd_plasma_electron_line,
+                eps=self.data.physics.eps,
                 hfact=hfact,
                 i_confinement_time=i_confinement_time,
-                i_plasma_ignited=physics_variables.i_plasma_ignited,
-                kappa=physics_variables.kappa,
-                kappa95=physics_variables.kappa95,
-                p_non_alpha_charged_mw=physics_variables.p_non_alpha_charged_mw,
+                i_plasma_ignited=self.data.physics.i_plasma_ignited,
+                kappa=self.data.physics.kappa,
+                kappa95=self.data.physics.kappa95,
+                p_non_alpha_charged_mw=self.data.physics.p_non_alpha_charged_mw,
                 p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
-                plasma_current=physics_variables.plasma_current,
-                pden_plasma_core_rad_mw=physics_variables.pden_plasma_core_rad_mw,
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
-                temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
-                temp_plasma_ion_density_weighted_kev=physics_variables.temp_plasma_ion_density_weighted_kev,
-                q95=physics_variables.q95,
-                qstar=physics_variables.qstar,
-                vol_plasma=physics_variables.vol_plasma,
-                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
+                plasma_current=self.data.physics.plasma_current,
+                pden_plasma_core_rad_mw=self.data.physics.pden_plasma_core_rad_mw,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
+                temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
+                q95=self.data.physics.q95,
+                qstar=self.data.physics.qstar,
+                vol_plasma=self.data.physics.vol_plasma,
+                zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
             )
 
             # At power balance, fhz is zero.
             fhz_value = (
                 ptrez
                 + ptriz
-                - physics_variables.f_p_alpha_plasma_deposited
-                * physics_variables.pden_alpha_total_mw
-                - physics_variables.pden_non_alpha_charged_mw
-                - physics_variables.pden_plasma_ohmic_mw
+                - self.data.physics.f_p_alpha_plasma_deposited
+                * self.data.physics.pden_alpha_total_mw
+                - self.data.physics.pden_non_alpha_charged_mw
+                - self.data.physics.pden_plasma_ohmic_mw
             )
 
             # Take into account whether injected power is included in tau_e calculation
             # (i.e. whether device is ignited)
-            if physics_variables.i_plasma_ignited == 0:
+            if self.data.physics.i_plasma_ignited == 0:
                 fhz_value -= (
                     self.data.current_drive.p_hcd_injected_total_mw
-                    / physics_variables.vol_plasma
+                    / self.data.physics.vol_plasma
                 )
 
             # Include the radiation power if requested
-            if physics_variables.i_rad_loss == 0:
-                fhz_value += physics_variables.pden_plasma_rad_mw
-            elif physics_variables.i_rad_loss == 1:
-                fhz_value += physics_variables.pden_plasma_core_rad_mw
+            if self.data.physics.i_rad_loss == 0:
+                fhz_value += self.data.physics.pden_plasma_rad_mw
+            elif self.data.physics.i_rad_loss == 1:
+                fhz_value += self.data.physics.pden_plasma_core_rad_mw
 
             return fhz_value
 
@@ -1234,7 +1234,7 @@ class PlasmaConfinementTime(Model):
         """
         po.oheadr(self.outfile, "Plasma Energy Confinement")
 
-        if physics_variables.i_plasma_ignited == 1:
+        if self.data.physics.i_plasma_ignited == 1:
             po.ocmmnt(
                 self.outfile,
                 "Device is assumed to be ignited for the calculation of confinement "
@@ -1242,7 +1242,7 @@ class PlasmaConfinementTime(Model):
             )
             po.oblnkl(self.outfile)
 
-        tauelaw = ConfinementTimeModel(physics_variables.i_confinement_time).full_name
+        tauelaw = ConfinementTimeModel(self.data.physics.i_confinement_time).full_name
 
         po.ocmmnt(
             self.outfile,
@@ -1257,20 +1257,20 @@ class PlasmaConfinementTime(Model):
         )
 
         po.ovarrf(
-            self.outfile, "Confinement H factor", "(hfact)", physics_variables.hfact
+            self.outfile, "Confinement H factor", "(hfact)", self.data.physics.hfact
         )
         po.ovarrf(
             self.outfile,
             "Global thermal energy confinement time, from scaling (τₑ) (s)",
             "(t_energy_confinement)",
-            physics_variables.t_energy_confinement,
+            self.data.physics.t_energy_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Directly calculated total energy confinement time (τₑᵦ) (s)",
             "(t_energy_confinement_beta)",
-            physics_variables.t_energy_confinement_beta,
+            self.data.physics.t_energy_confinement_beta,
             "OP ",
         )
         po.ocmmnt(
@@ -1285,14 +1285,14 @@ class PlasmaConfinementTime(Model):
             self.outfile,
             "Ion energy confinement time, from scaling (s)",
             "(t_ion_energy_confinement)",
-            physics_variables.t_ion_energy_confinement,
+            self.data.physics.t_ion_energy_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Electron energy confinement time, from scaling (s)",
             "(t_electron_energy_confinement)",
-            physics_variables.t_electron_energy_confinement,
+            self.data.physics.t_electron_energy_confinement,
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -1302,14 +1302,14 @@ class PlasmaConfinementTime(Model):
             self.outfile,
             "Fusion double product (nτ) (s/m³)",
             "(ntau)",
-            physics_variables.ntau,
+            self.data.physics.ntau,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Lawson Triple product (nTτ) (keV s/m³)",
             "(nTtau)",
-            physics_variables.nTtau,
+            self.data.physics.nTtau,
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -1319,23 +1319,23 @@ class PlasmaConfinementTime(Model):
             self.outfile,
             "Transport loss power assumed in scaling law (MW)",
             "(p_plasma_loss_mw)",
-            physics_variables.p_plasma_loss_mw,
+            self.data.physics.p_plasma_loss_mw,
             "OP ",
         )
         po.ovarin(
             self.outfile,
             "Switch for radiation loss term usage in power balance",
             "(i_rad_loss)",
-            physics_variables.i_rad_loss,
+            self.data.physics.i_rad_loss,
         )
-        model = ConfinementRadiationLossModel(physics_variables.i_rad_loss)
+        model = ConfinementRadiationLossModel(self.data.physics.i_rad_loss)
 
         if model == ConfinementRadiationLossModel.FULL_RADIATION:
             po.ovarre(
                 self.outfile,
                 "Radiation power subtracted from plasma heating power balance (MW)",
                 "",
-                physics_variables.p_plasma_rad_mw,
+                self.data.physics.p_plasma_rad_mw,
                 "OP ",
             )
         elif model == ConfinementRadiationLossModel.CORE_ONLY:
@@ -1343,7 +1343,7 @@ class PlasmaConfinementTime(Model):
                 self.outfile,
                 "Radiation power subtracted from plasma heating power balance (MW)",
                 "",
-                physics_variables.p_plasma_inner_rad_mw,
+                self.data.physics.p_plasma_inner_rad_mw,
                 "OP ",
             )
         else:  # NO_RADIATION
@@ -1359,7 +1359,7 @@ class PlasmaConfinementTime(Model):
             self.outfile,
             "H* non-radiation corrected",
             "(hstar)",
-            physics_variables.hstar,
+            self.data.physics.hstar,
             "OP",
         )
         po.ocmmnt(self.outfile, "  (H* assumes IPB98(y,2), ELMy H-mode scaling)")
@@ -1371,7 +1371,7 @@ class PlasmaConfinementTime(Model):
             self.outfile,
             "Alpha particle confinement time (τ_α) (s)",  # noqa: RUF001
             "(t_alpha_confinement)",
-            physics_variables.t_alpha_confinement,
+            self.data.physics.t_alpha_confinement,
             "OP ",
         )
         # Note alpha confinement time is no longer equal to fuel particle
@@ -1380,7 +1380,7 @@ class PlasmaConfinementTime(Model):
             self.outfile,
             "Alpha particle to energy confinement time ratio (τ_α/τₑ)",  # noqa: RUF001
             "(f_alpha_energy_confinement)",
-            physics_variables.f_alpha_energy_confinement,
+            self.data.physics.f_alpha_energy_confinement,
             "OP ",
         )
         po.ovarrf(
@@ -1445,9 +1445,7 @@ class PlasmaConfinementTime(Model):
         # Start from range 1 as the first i_confinement_time is a user input
         # If stellarator, use the stellarator scalings
         for i_confinement_time in (
-            range(1, physics_variables.N_CONFINEMENT_SCALINGS)
-            if istell == 0
-            else stellarator_scalings
+            range(1, N_CONFINEMENT_SCALINGS) if istell == 0 else stellarator_scalings
         ):
             if i_confinement_time == 25:
                 continue
@@ -1459,49 +1457,49 @@ class PlasmaConfinementTime(Model):
                 _,
                 _,
             ) = self.calculate_confinement_time(
-                m_fuel_amu=physics_variables.m_fuel_amu,
-                p_alpha_total_mw=physics_variables.p_alpha_total_mw,
-                aspect=physics_variables.aspect,
-                b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
-                nd_plasma_ions_total_vol_avg=physics_variables.nd_plasma_ions_total_vol_avg,
-                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
-                nd_plasma_electron_line=physics_variables.nd_plasma_electron_line,
-                eps=physics_variables.eps,
+                m_fuel_amu=self.data.physics.m_fuel_amu,
+                p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
+                aspect=self.data.physics.aspect,
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+                nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
+                nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                nd_plasma_electron_line=self.data.physics.nd_plasma_electron_line,
+                eps=self.data.physics.eps,
                 hfact=1.0,
                 i_confinement_time=i_confinement_time,
-                i_plasma_ignited=physics_variables.i_plasma_ignited,
-                kappa=physics_variables.kappa,
-                kappa95=physics_variables.kappa95,
-                p_non_alpha_charged_mw=physics_variables.p_non_alpha_charged_mw,
+                i_plasma_ignited=self.data.physics.i_plasma_ignited,
+                kappa=self.data.physics.kappa,
+                kappa95=self.data.physics.kappa95,
+                p_non_alpha_charged_mw=self.data.physics.p_non_alpha_charged_mw,
                 p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
-                plasma_current=physics_variables.plasma_current,
-                pden_plasma_core_rad_mw=physics_variables.pden_plasma_core_rad_mw,
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
-                temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
-                temp_plasma_ion_density_weighted_kev=physics_variables.temp_plasma_ion_density_weighted_kev,
-                q95=physics_variables.q95,
-                qstar=physics_variables.qstar,
-                vol_plasma=physics_variables.vol_plasma,
-                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
+                plasma_current=self.data.physics.plasma_current,
+                pden_plasma_core_rad_mw=self.data.physics.pden_plasma_core_rad_mw,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
+                temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
+                q95=self.data.physics.q95,
+                qstar=self.data.physics.qstar,
+                vol_plasma=self.data.physics.vol_plasma,
+                zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
             )
 
             try:
                 # Calculate the H-factor for the same confinement time in other scalings
-                physics_variables.hfac[i_confinement_time - 1] = (
+                self.data.physics.hfac[i_confinement_time - 1] = (
                     self.find_other_h_factors(i_confinement_time)
                 )
             except ValueError:
                 # This is only used for a table in the OUT.DAT so if it fails
                 # just write a NaN--its not worth crashing PROCESS over.
-                physics_variables.hfac[i_confinement_time - 1] = np.nan
+                self.data.physics.hfac[i_confinement_time - 1] = np.nan
 
             scaling_name = ConfinementTimeModel(i_confinement_time).full_name
 
             po.ocmmnt(
                 self.outfile,
                 f"{'':>2}{scaling_name:<38}"
-                f"{taueez:<28.3f}{physics_variables.hfac[i_confinement_time - 1]:.3f}",
+                f"{taueez:<28.3f}{self.data.physics.hfac[i_confinement_time - 1]:.3f}",
             )
 
         po.oblnkl(self.outfile)

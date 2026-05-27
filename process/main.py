@@ -70,7 +70,10 @@ from process.models.divertor import Divertor
 from process.models.fw import FirstWall
 from process.models.ife import IFE
 from process.models.pfcoil import CSCoil, PFCoil
-from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
+from process.models.physics.bootstrap_current import (
+    PlasmaBootstrapCurrent,
+    SauterBootstrapCurrent,
+)
 from process.models.physics.confinement_time import PlasmaConfinementTime
 from process.models.physics.current_drive import (
     CurrentDrive,
@@ -82,7 +85,9 @@ from process.models.physics.current_drive import (
 )
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
-from process.models.physics.impurity_radiation import initialise_imprad
+from process.models.physics.impurity_radiation import (
+    initialise_imprad,
+)
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
 from process.models.physics.physics import (
     DetailedPhysics,
@@ -94,6 +99,7 @@ from process.models.physics.plasma_current import PlasmaCurrent, PlasmaDiamagnet
 from process.models.physics.plasma_fields import PlasmaFields
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
+from process.models.physics.profiles import NeProfile, TeProfile
 from process.models.power import Power
 from process.models.pulse import Pulse
 from process.models.shield import Shield
@@ -614,16 +620,20 @@ class Models:
         self.pulse = Pulse()
         self.shield = Shield()
         self.ife = IFE(availability=self.availability, costs=self.costs)
-        self.plasma_profile = PlasmaProfile()
+        self.ne_profile = NeProfile()
+        self.te_profile = TeProfile()
+        self.plasma_profile = PlasmaProfile(self.ne_profile, self.te_profile)
         self.fw = FirstWall()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(fw=self.fw)
         self.neutral_beam = NeutralBeam(plasma_profile=self.plasma_profile)
+        self.electron_cyclotron = ElectronCyclotron(plasma_profile=self.plasma_profile)
+        self.lower_hybrid = LowerHybrid(plasma_profile=self.plasma_profile)
         self.current_drive = CurrentDrive(
             plasma_profile=self.plasma_profile,
-            electron_cyclotron=ElectronCyclotron(plasma_profile=self.plasma_profile),
+            electron_cyclotron=self.electron_cyclotron,
             ion_cyclotron=IonCyclotron(plasma_profile=self.plasma_profile),
-            lower_hybrid=LowerHybrid(plasma_profile=self.plasma_profile),
+            lower_hybrid=self.lower_hybrid,
             neutral_beam=self.neutral_beam,
             electron_bernstein=ElectronBernstein(plasma_profile=self.plasma_profile),
         )
@@ -631,8 +641,10 @@ class Models:
         self.plasma_inductance = PlasmaInductance()
         self.plasma_density_limit = PlasmaDensityLimit()
         self.plasma_exhaust = PlasmaExhaust()
+        self.sauter_bootstrap_current = SauterBootstrapCurrent()
         self.plasma_bootstrap_current = PlasmaBootstrapCurrent(
-            plasma_profile=self.plasma_profile
+            plasma_profile=self.plasma_profile,
+            sauter_bootstrap=self.sauter_bootstrap_current,
         )
         self.plasma_confinement = PlasmaConfinementTime()
         self.plasma_transition = PlasmaConfinementTransition()
@@ -674,7 +686,6 @@ class Models:
         )
 
         self.dcll = DCLL(fw=self.fw)
-
         self.setup_data_structure()
 
     @property
@@ -745,6 +756,15 @@ class Models:
             self.stellarator,
             self.plasma_current,
             self.neoclassics,
+            self.plasma_inductance,
+            self.ne_profile,
+            self.te_profile,
+            self.plasma_fields,
+            self.sauter_bootstrap_current,
+            self.plasma_transition,
+            self.physics_detailed,
+            self.electron_cyclotron,
+            self.lower_hybrid,
         )
 
     def setup_data_structure(self):

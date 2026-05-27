@@ -8,7 +8,7 @@ import numpy as np
 from process.core import constants, process_output
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import physics_variables, tfcoil_variables
+from process.data_structure import tfcoil_variables
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import dshellvol, eshellvol
 
@@ -49,8 +49,8 @@ class Vacuum(Model):
         # MDK Check this!!
         gasld = (
             2.0e0
-            * physics_variables.molflow_plasma_fuelling_required
-            * physics_variables.m_fuel_amu
+            * self.data.physics.molflow_plasma_fuelling_required
+            * self.data.physics.m_fuel_amu
             * constants.UMASS
         )
 
@@ -66,16 +66,16 @@ class Vacuum(Model):
                 self.data.vacuum.m_vv_vacuum_duct_shield,
                 self.data.vacuum.dia_vv_vacuum_ducts,
             ) = self.vacuum(
-                physics_variables.p_fusion_total_mw,
-                physics_variables.rmajor,
-                physics_variables.rminor,
+                self.data.physics.p_fusion_total_mw,
+                self.data.physics.rmajor,
+                self.data.physics.rminor,
                 0.5e0
                 * (
                     self.data.build.dr_fw_plasma_gap_inboard
                     + self.data.build.dr_fw_plasma_gap_outboard
                 ),
-                physics_variables.a_plasma_surface,
-                physics_variables.vol_plasma,
+                self.data.physics.a_plasma_surface,
+                self.data.physics.vol_plasma,
                 self.data.build.dr_shld_outboard,
                 self.data.build.dr_shld_inboard,
                 self.data.build.dr_tf_inboard,
@@ -84,7 +84,7 @@ class Vacuum(Model):
                 - self.data.build.dr_vv_inboard,
                 tfcoil_variables.n_tf_coils,
                 self.data.times.t_plant_pulse_dwell,
-                physics_variables.nd_plasma_electrons_vol_avg,
+                self.data.physics.nd_plasma_electrons_vol_avg,
                 self.data.divertor.n_divertors,
                 qtorus,
                 gasld,
@@ -117,7 +117,7 @@ class Vacuum(Model):
         # One ITER torus cryopump has a throughput of 50 Pa m3/s = 1.2155e+22 molecules/s
         # Issue #304
         n_iter_vacuum_pumps = (
-            physics_variables.molflow_plasma_fuelling_required
+            self.data.physics.molflow_plasma_fuelling_required
             / self.data.vacuum.molflow_vac_pumps
         )
 
@@ -127,11 +127,11 @@ class Vacuum(Model):
             self.data.vacuum.volflow_vac_pumps_max
             * self.data.vacuum.f_a_vac_pump_port_plasma_surface
             * self.data.vacuum.f_volflow_vac_pumps_impedance
-            * physics_variables.a_plasma_surface
+            * self.data.physics.a_plasma_surface
             / tfcoil_variables.n_tf_coils
         )
 
-        wallarea = (physics_variables.a_plasma_surface / 1084.0e0) * 2000.0e0
+        wallarea = (self.data.physics.a_plasma_surface / 1084.0e0) * 2000.0e0
         # Required pumping speed for pump-down
         pumpdownspeed = (
             self.data.vacuum.outgasfactor
@@ -162,7 +162,7 @@ class Vacuum(Model):
                 self.outfile,
                 "Plasma fuelling rate (nucleus-pairs/s)",
                 "(molflow_plasma_fuelling_required)",
-                physics_variables.molflow_plasma_fuelling_required,
+                self.data.physics.molflow_plasma_fuelling_required,
                 "OP ",
             )
             process_output.ocmmnt(
@@ -468,8 +468,8 @@ class Vacuum(Model):
                 else:
                     logger.error(
                         f"Newton's method not converging; check fusion power, te "
-                        f"{physics_variables.p_fusion_total_mw=} "
-                        f"{physics_variables.temp_plasma_electron_vol_avg_kev=}"
+                        f"{self.data.physics.p_fusion_total_mw=} "
+                        f"{self.data.physics.temp_plasma_electron_vol_avg_kev=}"
                     )
 
                 theta = math.pi / ntf
@@ -741,7 +741,7 @@ class VacuumVessel(Model):
         )
         # D-shaped blanket and shield
         if (
-            physics_variables.itart == 1
+            self.data.physics.itart == 1
             or self.data.fwbs.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
             (
@@ -763,9 +763,9 @@ class VacuumVessel(Model):
                 self.data.blanket.vol_vv_outboard,
                 self.data.fwbs.vol_vv,
             ) = self.calculate_elliptical_vessel_volumes(
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
-                triang=physics_variables.triang,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                triang=self.data.physics.triang,
                 r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
                 r_shld_outboard_outer=self.data.build.r_shld_outboard_outer,
                 dz_vv_half=self.data.blanket.dz_vv_half,

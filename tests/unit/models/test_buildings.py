@@ -2,10 +2,7 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import (
-    physics_variables,
-    tfcoil_variables,
-)
+from process.data_structure import tfcoil_variables
 
 
 @pytest.fixture
@@ -808,8 +805,8 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(
         buildings.data.divertor, "dz_divertor", bldgssizesparam.dz_divertor
     )
-    monkeypatch.setattr(physics_variables, "rmajor", bldgssizesparam.rmajor)
-    monkeypatch.setattr(physics_variables, "rminor", bldgssizesparam.rminor)
+    monkeypatch.setattr(buildings.data.physics, "rmajor", bldgssizesparam.rmajor)
+    monkeypatch.setattr(buildings.data.physics, "rminor", bldgssizesparam.rminor)
 
     buildings.bldgs_sizes(
         tf_radial_dim=bldgssizesparam.tf_radial_dim,

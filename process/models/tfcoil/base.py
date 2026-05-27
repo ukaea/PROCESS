@@ -20,7 +20,6 @@ from process.core.model import Model
 from process.data_structure import (
     global_variables,
     numerics,
-    physics_variables,
     rebco_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
@@ -184,8 +183,8 @@ class TFCoil(Model):
             tfcoil_variables.oacdcp,
         ) = self.tf_current(
             n_tf_coils=tfcoil_variables.n_tf_coils,
-            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
-            rmajor=physics_variables.rmajor,
+            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+            rmajor=self.data.physics.rmajor,
             r_b_tf_inboard_peak=tfcoil_variables.r_b_tf_inboard_peak,
             a_tf_inboard_total=tfcoil_variables.a_tf_inboard_total,
         )
@@ -198,12 +197,12 @@ class TFCoil(Model):
             tfcoil_variables.z_tf_arc,
         ) = self.tf_coil_shape_inner(
             i_tf_shape=tfcoil_variables.i_tf_shape,
-            itart=physics_variables.itart,
-            i_single_null=physics_variables.i_single_null,
+            itart=self.data.physics.itart,
+            i_single_null=self.data.physics.i_single_null,
             r_tf_inboard_out=self.data.build.r_tf_inboard_out,
             r_cp_top=self.data.build.r_cp_top,
-            rmajor=physics_variables.rmajor,
-            rminor=physics_variables.rminor,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
             r_tf_outboard_in=superconducting_tf_coil_variables.r_tf_outboard_in,
             z_tf_inside_half=self.data.build.z_tf_inside_half,
             z_tf_top=self.data.build.z_tf_top,
@@ -690,9 +689,9 @@ class TFCoil(Model):
             self.outfile,
             "Presence of TF demountable joints",
             "(itart)",
-            physics_variables.itart,
+            self.data.physics.itart,
         )
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             po.ocmmnt(
                 self.outfile, "  -> TF coil made of a Centerpost (CP) and outer legs"
             )
@@ -884,7 +883,7 @@ class TFCoil(Model):
             self.data.build.dz_tf_upper_lower_midplane,
             "OP ",
         )
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             po.ovarre(
                 self.outfile,
                 "Mean coil circumference (inboard leg not included) (m)",
@@ -954,7 +953,7 @@ class TFCoil(Model):
 
         # CP tapering geometry
         if (
-            physics_variables.itart == 1
+            self.data.physics.itart == 1
             and tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
         ):
             po.osubhd(self.outfile, "Tapered Centrepost TF coil Dimensions:")
@@ -1542,7 +1541,7 @@ class TFCoil(Model):
                 "(dr_tf_wp_with_insulation)",
                 tfcoil_variables.dr_tf_wp_with_insulation,
             )
-            if physics_variables.itart == 1:
+            if self.data.physics.itart == 1:
                 po.ovarre(
                     self.outfile,
                     "Central collumn top conductor sector radial thickness (m)",
@@ -1640,7 +1639,7 @@ class TFCoil(Model):
                 "OP ",
             )
 
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             po.ovarre(
                 self.outfile,
                 "Mass of inboard legs (kg)",
@@ -1729,7 +1728,7 @@ class TFCoil(Model):
             "(oacdcp)",
             tfcoil_variables.oacdcp,
         )
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             po.ovarre(
                 self.outfile,
                 "Outboard leg conductor current density (A/m2)",
@@ -1804,7 +1803,7 @@ class TFCoil(Model):
                     self.outfile, "Resistive Material : Pure Aluminium (99.999+ %)"
                 )
 
-            if physics_variables.itart == 1:
+            if self.data.physics.itart == 1:
                 po.ovarre(
                     self.outfile,
                     "CP resistivity (ohm.m)",
@@ -2163,9 +2162,9 @@ class TFCoil(Model):
             tf_total_width,
         )
 
-        # Top section TF coil radial build (physics_variables.itart = 1 only)
+        # Top section TF coil radial build (self.data.physics.itart = 1 only)
         if (
-            physics_variables.itart == 1
+            self.data.physics.itart == 1
             and tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
         ):
             po.osubhd(self.outfile, "Radial build of TF coil at central collumn top :")
@@ -2287,13 +2286,13 @@ class TFCoil(Model):
         i.e. narrowest on the midplane (z=0).
         """
         # Vertical distance from the midplane to the top of the tapered section [m]
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             superconducting_tf_coil_variables.z_cp_top = (
                 self.data.build.z_plasma_xpoint_upper + tfcoil_variables.dztop
             )
 
         if (
-            physics_variables.itart == 1
+            self.data.physics.itart == 1
             and tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
         ):
             tfcoil_variables.dx_tf_inboard_out_toroidal = (
@@ -2843,7 +2842,7 @@ class TFCoil(Model):
             )
         )
 
-        # Case of a centrepost (physics_variables.itart == 1) with sliding joints
+        # Case of a centrepost (self.data.physics.itart == 1) with sliding joints
         # (the CP vertical are separated from the leg ones)
         # Rem SK : casing/insulation thickness not subtracted as part of the CP is
         # genuinely connected to the legs..

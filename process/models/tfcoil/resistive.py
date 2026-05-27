@@ -7,7 +7,6 @@ import numpy as np
 
 from process.core import constants
 from process.data_structure import (
-    physics_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
@@ -46,7 +45,7 @@ class ResistiveTFCoil(TFCoil):
             dr_tf_inboard=self.data.build.dr_tf_inboard,
             r_tf_arc=tfcoil_variables.r_tf_arc,
             z_tf_arc=tfcoil_variables.z_tf_arc,
-            itart=physics_variables.itart,
+            itart=self.data.physics.itart,
             i_tf_shape=tfcoil_variables.i_tf_shape,
             z_tf_inside_half=self.data.build.z_tf_inside_half,
             dr_tf_outboard=self.data.build.dr_tf_outboard,
@@ -81,10 +80,10 @@ class ResistiveTFCoil(TFCoil):
             c_tf_total=tfcoil_variables.c_tf_total,
             n_tf_coils=tfcoil_variables.n_tf_coils,
             dr_tf_plasma_case=tfcoil_variables.dr_tf_plasma_case,
-            rmajor=physics_variables.rmajor,
-            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            rmajor=self.data.physics.rmajor,
+            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
             r_cp_top=self.data.build.r_cp_top,
-            itart=physics_variables.itart,
+            itart=self.data.physics.itart,
             i_cp_joints=tfcoil_variables.i_cp_joints,
             f_vforce_inboard=tfcoil_variables.f_vforce_inboard,
         )
@@ -283,7 +282,7 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Conductor layer radial thickness at centercollumn top [m]
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             superconducting_tf_coil_variables.dr_tf_wp_top = (
                 self.data.build.r_cp_top
                 - tfcoil_variables.dr_tf_plasma_case
@@ -404,7 +403,7 @@ class ResistiveTFCoil(TFCoil):
 
         # Total cross-sectional area of the bucking cylindre and the outer support
         # support structure per coil [m2]
-        # physics_variables.itart = 1 : Only valid at mid-plane
+        # self.data.physics.itart = 1 : Only valid at mid-plane
         tfcoil_variables.a_tf_coil_inboard_case = (
             tfcoil_variables.a_tf_inboard_total / tfcoil_variables.n_tf_coils
         ) - superconducting_tf_coil_variables.a_tf_wp_with_insulation
@@ -490,7 +489,7 @@ class ResistiveTFCoil(TFCoil):
             )
 
         # Calculations dedicated for configurations with CP
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             # Tricky trick to make the leg / CP tempearture the same
             if (
                 abs(tfcoil_variables.temp_tf_legs_outboard + 1.0e0)
@@ -547,7 +546,7 @@ class ResistiveTFCoil(TFCoil):
             )
 
         # Leg cross-section areas
-        # Rem : For physics_variables.itart = 1, these quantitire corresponds to
+        # Rem : For self.data.physics.itart = 1, these quantitire corresponds to
         # the outer leg only
         # ---
         # Leg ground insulation area per coil [m2]
@@ -594,7 +593,7 @@ class ResistiveTFCoil(TFCoil):
         )
         # ---
 
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             # Outer leg resistive power loss
             # ---
             # TF outboard leg's resistance calculation (per leg) [ohm]
@@ -659,7 +658,7 @@ class ResistiveTFCoil(TFCoil):
             # power losses
             tfcoil_variables.p_tf_leg_resistive = 0.0e0
 
-            # No joints if physics_variables.itart = 0
+            # No joints if self.data.physics.itart = 0
             tfcoil_variables.p_tf_joints_resistive = 0.0e0
 
     def resistive_tf_coil_areas_and_masses(self):
@@ -676,7 +675,7 @@ class ResistiveTFCoil(TFCoil):
         # -------
         # CP with joints
         # ---
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             # Total volume of one outerleg [m3]
             tfcoil_variables.voltfleg = (
                 tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_leg_outboard
@@ -763,7 +762,7 @@ class ResistiveTFCoil(TFCoil):
             tfcoil_variables.whtconal = 0.0e0
 
             # Outer legs/CP weights
-            if physics_variables.itart == 1:
+            if self.data.physics.itart == 1:
                 # Weight of all the TF legs
                 tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
                     constants.den_copper * vol_cond_leg
@@ -786,7 +785,7 @@ class ResistiveTFCoil(TFCoil):
         # Cryo-aluminium conductor weights
         # Casing made of re-inforced aluminium alloy
         elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-            # Casing weight (CP only if physics_variables.itart = 1)bper leg/coil
+            # Casing weight (CP only if self.data.physics.itart = 1)bper leg/coil
             tfcoil_variables.m_tf_coil_case = (
                 constants.den_aluminium * vol_case / tfcoil_variables.n_tf_coils
             )
@@ -796,7 +795,7 @@ class ResistiveTFCoil(TFCoil):
             )
 
             # Outer legs/CP weights
-            if physics_variables.itart == 1:
+            if self.data.physics.itart == 1:
                 # Weight of all the TF legs
                 tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
                     constants.den_aluminium * vol_cond_leg

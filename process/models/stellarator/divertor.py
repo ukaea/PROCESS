@@ -3,9 +3,6 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import DataStructure
-from process.data_structure import (
-    physics_variables,
-)
 
 
 def st_div(stellarator, f_output: bool, data: DataStructure):
@@ -27,8 +24,8 @@ def st_div(stellarator, f_output: bool, data: DataStructure):
     Stellarator Divertor Model for the Systems Code PROCESS, F. Warmer, 21/06/2013
     """
     Theta = data.stellarator.flpitch  # ~bmn [rad] field line pitch
-    r = physics_variables.rmajor
-    p_div = physics_variables.p_plasma_separatrix_mw
+    r = data.physics.rmajor
+    p_div = data.physics.p_plasma_separatrix_mw
     alpha = data.divertor.anginc
     xi_p = data.divertor.xpertin
     T_scrape = data.divertor.tdiv
@@ -39,7 +36,7 @@ def st_div(stellarator, f_output: bool, data: DataStructure):
 
     #  Sound speed of particles (m/s)
 
-    c_s = np.sqrt(e / (physics_variables.m_fuel_amu * constants.UMASS))
+    c_s = np.sqrt(e / (data.physics.m_fuel_amu * constants.UMASS))
 
     #  Island size (m)
 
@@ -139,7 +136,7 @@ def output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta, data: DataStructu
         stellarator.outfile,
         "Power to divertor (MW)",
         "(p_plasma_separatrix_mw.)",
-        physics_variables.p_plasma_separatrix_mw,
+        data.physics.p_plasma_separatrix_mw,
     )
     po.ovarre(
         stellarator.outfile,

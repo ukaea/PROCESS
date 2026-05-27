@@ -5,7 +5,6 @@ import logging
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import physics_variables
 
 logger = logging.getLogger(__name__)
 
@@ -27,15 +26,15 @@ class PlasmaExhaust(Model):
             self.outfile,
             "Plasma separatrix power (Pₛₑₚ) (MW)",
             "(p_plasma_separatrix_mw)",
-            physics_variables.p_plasma_separatrix_mw,
+            self.data.physics.p_plasma_separatrix_mw,
             "OP ",
         )
 
-        if physics_variables.p_plasma_separatrix_mw <= 0.001e0:
+        if self.data.physics.p_plasma_separatrix_mw <= 0.001e0:
             logger.error(
                 "Possible problem with high radiation power, forcing "
                 "p_plasma_separatrix_mw to odd values. "
-                f"{physics_variables.p_plasma_separatrix_mw=}"
+                f"{self.data.physics.p_plasma_separatrix_mw=}"
             )
             po.oblnkl(self.outfile)
             po.ocmmnt(
@@ -55,7 +54,7 @@ class PlasmaExhaust(Model):
                 "Plasma separatrix power over major radius (Pₛₑₚ / R₀) (MW/m) "
                 "(On peak divertor)",
                 "(p_plasma_separatrix_rmajor_mw)",
-                physics_variables.p_plasma_separatrix_rmajor_mw,
+                self.data.physics.p_plasma_separatrix_rmajor_mw,
                 "OP ",
             )
             po.ovarre(
@@ -63,7 +62,7 @@ class PlasmaExhaust(Model):
                 "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) "
                 "(MWT/m) (On peak divertor)",
                 "(p_div_bt_q_aspect_rmajor_mw)",
-                physics_variables.p_div_bt_q_aspect_rmajor_mw,
+                self.data.physics.p_div_bt_q_aspect_rmajor_mw,
                 "OP ",
             )
         else:
@@ -72,7 +71,7 @@ class PlasmaExhaust(Model):
                 self.outfile,
                 "Plasma separatrix power over major radius (Pₛₑₚ / R₀) (MW/m)",
                 "(p_plasma_separatrix_rmajor_mw)",
-                physics_variables.p_plasma_separatrix_rmajor_mw,
+                self.data.physics.p_plasma_separatrix_rmajor_mw,
                 "OP ",
             )
             po.ovarre(
@@ -80,7 +79,7 @@ class PlasmaExhaust(Model):
                 "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) "
                 "(MWT/m)",
                 "(p_div_bt_q_aspect_rmajor_mw)",
-                physics_variables.p_div_bt_q_aspect_rmajor_mw,
+                self.data.physics.p_div_bt_q_aspect_rmajor_mw,
                 "OP ",
             )
 

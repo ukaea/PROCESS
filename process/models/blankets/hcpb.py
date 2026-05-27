@@ -8,10 +8,7 @@ from process.core import (
 )
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
-from process.data_structure import (
-    physics_variables,
-    tfcoil_variables,
-)
+from process.data_structure import tfcoil_variables
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
 from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
@@ -61,24 +58,24 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         self.data.blanket.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
             n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
-            rmajor=physics_variables.rmajor,
-            rminor=physics_variables.rminor,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
             dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
         )
         self.data.blanket.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
             n_blkt_outboard_modules_toroidal=self.data.fwbs.n_blkt_outboard_modules_toroidal,
-            rmajor=physics_variables.rmajor,
-            rminor=physics_variables.rminor,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
             dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
         )
 
         # Centrepost neutronics
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             # CP radius at the point of maximum sield radius [m]
             # The maximum shield radius is assumed to be at the X-point
             r_sh_inboard_out_top = (
-                physics_variables.rmajor
-                - physics_variables.rminor * physics_variables.triang
+                self.data.physics.rmajor
+                - self.data.physics.rminor * self.data.physics.triang
                 - 3 * self.data.build.dr_fw_plasma_gap_inboard
             )
 
@@ -94,14 +91,14 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 h_sh_max_r,
                 self.data.build.r_sh_inboard_out,
                 r_sh_inboard_out_top,
-                physics_variables.rmajor,
+                self.data.physics.rmajor,
             )
 
             # TF fast neutron flux (E > 0.1 MeV) [m^{-2}.s^{-1}]
             self.data.fwbs.neut_flux_cp = self.st_tf_centrepost_fast_neut_flux(
-                physics_variables.p_neutron_total_mw,
+                self.data.physics.p_neutron_total_mw,
                 self.data.build.dr_shld_inboard,
-                physics_variables.rmajor,
+                self.data.physics.rmajor,
             )
 
             # TF, shield and total CP nuclear heating [MW]
@@ -110,7 +107,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 self.data.fwbs.p_cp_shield_nuclear_heat_mw,
                 self.data.fwbs.pnuc_cp,
             ) = self.st_centrepost_nuclear_heating(
-                physics_variables.p_neutron_total_mw, self.data.build.dr_shld_inboard
+                self.data.physics.p_neutron_total_mw, self.data.build.dr_shld_inboard
             )
 
         else:  # No CP
@@ -130,13 +127,13 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         self.data.fwbs.p_fw_nuclear_heat_total_mw = self.nuclear_heating_fw(
             m_fw_total=self.data.fwbs.m_fw_total,
             fw_armour_u_nuc_heating=self.data.ccfe_hcpb.fw_armour_u_nuc_heating,
-            p_fusion_total_mw=physics_variables.p_fusion_total_mw,
+            p_fusion_total_mw=self.data.physics.p_fusion_total_mw,
         )
 
         self.data.fwbs.p_blkt_nuclear_heat_total_mw, self.data.ccfe_hcpb.exp_blanket = (
             self.nuclear_heating_blanket(
                 m_blkt_total=self.data.fwbs.m_blkt_total,
-                p_fusion_total_mw=physics_variables.p_fusion_total_mw,
+                p_fusion_total_mw=self.data.physics.p_fusion_total_mw,
             )
         )
         (
@@ -145,13 +142,13 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.data.ccfe_hcpb.exp_shield2,
             self.data.ccfe_hcpb.shld_u_nuc_heating,
         ) = self.nuclear_heating_shield(
-            itart=physics_variables.itart,
+            itart=self.data.physics.itart,
             dr_shld_outboard=self.data.build.dr_shld_outboard,
             dr_shld_inboard=self.data.build.dr_shld_inboard,
             shield_density=self.data.ccfe_hcpb.shield_density,
             whtshld=self.data.fwbs.whtshld,
             x_blanket=self.data.ccfe_hcpb.x_blanket,
-            p_fusion_total_mw=physics_variables.p_fusion_total_mw,
+            p_fusion_total_mw=self.data.physics.p_fusion_total_mw,
         )
 
         # Normalisation of the nuclear heating
@@ -193,7 +190,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             )
             * self.data.fwbs.f_p_blkt_multiplication
             * f_geom_blanket
-            * physics_variables.p_neutron_total_mw
+            * self.data.physics.p_neutron_total_mw
         )
 
         # Power to the blanket (MW)
@@ -204,7 +201,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             )
             * self.data.fwbs.f_p_blkt_multiplication
             * f_geom_blanket
-            * physics_variables.p_neutron_total_mw
+            * self.data.physics.p_neutron_total_mw
         )
 
         # Power to the shield(MW)
@@ -216,7 +213,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             )
             * self.data.fwbs.f_p_blkt_multiplication
             * f_geom_blanket
-            * physics_variables.p_neutron_total_mw
+            * self.data.physics.p_neutron_total_mw
         )
 
         # Power to the TF coils (MW)
@@ -228,20 +225,20 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             )
             * self.data.fwbs.f_p_blkt_multiplication
             * f_geom_blanket
-            * physics_variables.p_neutron_total_mw
+            * self.data.physics.p_neutron_total_mw
             + self.data.fwbs.pnuc_cp_tf
         )
 
         # Power deposited in the CP
         self.data.fwbs.p_cp_shield_nuclear_heat_mw = (
-            f_geom_cp * physics_variables.p_neutron_total_mw - self.data.fwbs.pnuc_cp_tf
+            f_geom_cp * self.data.physics.p_neutron_total_mw - self.data.fwbs.pnuc_cp_tf
         )
 
         # New code, a bit simpler
         self.data.fwbs.p_blkt_multiplication_mw = (
             (self.data.fwbs.f_p_blkt_multiplication - 1)
             * f_geom_blanket
-            * physics_variables.p_neutron_total_mw
+            * self.data.physics.p_neutron_total_mw
         )
 
         # powerflow calculation for pumping power
@@ -319,8 +316,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.data.divertor.fdiva
             * 2.0
             * np.pi
-            * physics_variables.rmajor
-            * physics_variables.rminor
+            * self.data.physics.rmajor
+            * self.data.physics.rminor
         )
         if self.data.divertor.n_divertors == 2:
             self.data.divertor.a_div_surface_total *= 2.0
@@ -358,7 +355,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         # First wall armour volume (m^3)
         self.data.fwbs.fw_armour_vol = (
-            physics_variables.a_plasma_surface * self.data.fwbs.fw_armour_thickness
+            self.data.physics.a_plasma_surface * self.data.fwbs.fw_armour_thickness
         )
 
         # First wall armour mass (kg)
@@ -477,7 +474,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.data.ccfe_hcpb.vv_density = 0.0
 
         # Calculation of average blanket/shield thickness [m]
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             # There is no inner blanket for TART design [m]
             th_blanket_av = self.data.build.dr_blkt_outboard
 
@@ -514,7 +511,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         ) / 1000.0
 
         # If spherical tokamak, this is outboard only. pnuc_cp_tf is evaluated separately
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             # Nuclear heating in outobard TF coil legs (whttflgs)
             # Unit heating (W/kg/GW of fusion power) x legs mass only (kg)
             self.data.ccfe_hcpb.tfc_nuc_heating = (
@@ -536,7 +533,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Total heating (MW)
         self.data.fwbs.p_tf_nuclear_heat_mw = (
             self.data.ccfe_hcpb.tfc_nuc_heating
-            * (physics_variables.p_fusion_total_mw / 1000.0)
+            * (self.data.physics.p_fusion_total_mw / 1000.0)
             / 1.0e6
         )
 
@@ -570,7 +567,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 self.outfile,
                 "p_fusion_total_mw",
                 "(p_fusion_total_mw.)",
-                physics_variables.p_fusion_total_mw,
+                self.data.physics.p_fusion_total_mw,
             )
             po.ovarre(
                 self.outfile,
@@ -744,12 +741,12 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         """
         # Radiation power incident on HCD apparatus (MW)
         self.data.fwbs.p_fw_hcd_rad_total_mw = (
-            physics_variables.p_plasma_rad_mw * self.data.fwbs.f_a_fw_outboard_hcd
+            self.data.physics.p_plasma_rad_mw * self.data.fwbs.f_a_fw_outboard_hcd
         )
 
         # Radiation power incident on first wall (MW)
         self.data.fwbs.p_fw_rad_total_mw = (
-            physics_variables.p_plasma_rad_mw
+            self.data.physics.p_plasma_rad_mw
             - self.data.fwbs.p_div_rad_total_mw
             - self.data.fwbs.p_fw_hcd_rad_total_mw
         )
@@ -773,7 +770,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             * self.data.first_wall.a_fw_outboard
             / self.data.first_wall.a_fw_total
             + self.data.current_drive.p_beam_orbit_loss_mw
-            + physics_variables.p_fw_alpha_mw
+            + self.data.physics.p_fw_alpha_mw
         )
         self.data.fwbs.psurffwi = self.data.fwbs.p_fw_rad_total_mw * (
             1 - self.data.first_wall.a_fw_outboard / self.data.first_wall.a_fw_total
@@ -798,7 +795,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 p_blkt_nuclear_heat_total_mw=self.data.fwbs.p_blkt_nuclear_heat_total_mw,
                 p_shld_nuclear_heat_mw=self.data.heat_transport.p_shld_nuclear_heat_mw,
                 p_cp_shield_nuclear_heat_mw=self.data.fwbs.p_cp_shield_nuclear_heat_mw,
-                p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
+                p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
                 p_div_nuclear_heat_total_mw=self.data.fwbs.p_div_nuclear_heat_total_mw,
                 p_div_rad_total_mw=self.data.fwbs.p_div_rad_total_mw,
             )
@@ -821,7 +818,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.data.heat_transport.p_div_coolant_pump_mw = (
                 self.data.heat_transport.f_p_div_coolant_pump_total_heat
                 * (
-                    physics_variables.p_plasma_separatrix_mw
+                    self.data.physics.p_plasma_separatrix_mw
                     + self.data.fwbs.p_div_nuclear_heat_total_mw
                     + self.data.fwbs.p_div_rad_total_mw
                 )
@@ -876,7 +873,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.data.heat_transport.p_div_coolant_pump_mw = (
                 self.data.heat_transport.f_p_div_coolant_pump_total_heat
                 * (
-                    physics_variables.p_plasma_separatrix_mw
+                    self.data.physics.p_plasma_separatrix_mw
                     + self.data.fwbs.p_div_nuclear_heat_total_mw
                     + self.data.fwbs.p_div_rad_total_mw
                 )
@@ -1175,28 +1172,28 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             # Nuclear power deposited in the CP winding pack by gammas [MW]
             pnuc_cp_wp_gam = 16.3 * np.exp(
                 -14.63 * sh_width_eff
-            ) + 143.08 * sh_width_eff * (sh_width / physics_variables.rmajor) * np.exp(
+            ) + 143.08 * sh_width_eff * (sh_width / self.data.physics.rmajor) * np.exp(
                 -21.747 * sh_width_eff
             )
 
             # Nuclear power deposited in the CP winding pack by neutrons [MW]
             pnuc_cp_wp_n = 1.403 * np.exp(
                 -16.535 * sh_width_eff
-            ) + 3.812 * sh_width_eff * (sh_width / physics_variables.rmajor) * np.exp(
+            ) + 3.812 * sh_width_eff * (sh_width / self.data.physics.rmajor) * np.exp(
                 -23.631 * sh_width_eff
             )
 
             # Nuclear power deposited in the CP steel case by gammas [MW]
             pnuc_cp_case_gam = 1.802 * np.exp(
                 -13.993 * sh_width_eff
-            ) + 38.592 * sh_width * (sh_width_eff / physics_variables.rmajor) * np.exp(
+            ) + 38.592 * sh_width * (sh_width_eff / self.data.physics.rmajor) * np.exp(
                 -27.051 * sh_width_eff
             )
 
             # Nuclear power deposited in the CP steel case by neutrons [MW]
             pnuc_cp_case_n = 0.158 * np.exp(
                 -55.046 * sh_width_eff
-            ) + 2.0742 * sh_width_eff * (sh_width / physics_variables.rmajor) * np.exp(
+            ) + 2.0742 * sh_width_eff * (sh_width / self.data.physics.rmajor) * np.exp(
                 -24.401 * sh_width_eff
             )
 
@@ -1383,7 +1380,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         po.osubhd(self.outfile, "Nuclear heating :")
 
         #  ST centre post
-        if physics_variables.itart == 1:
+        if self.data.physics.itart == 1:
             if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
                 po.osubhd(self.outfile, "(Copper resistive centrepost used)")
             elif tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:

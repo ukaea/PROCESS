@@ -5,7 +5,6 @@ import pytest
 
 from process.data_structure import (
     numerics,
-    physics_variables,
     tfcoil_variables,
 )
 
@@ -1845,10 +1844,10 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        physics_variables, "p_plasma_ohmic_mw", pfpwrparam.p_plasma_ohmic_mw
+        power.data.physics, "p_plasma_ohmic_mw", pfpwrparam.p_plasma_ohmic_mw
     )
 
-    monkeypatch.setattr(physics_variables, "rmajor", pfpwrparam.rmajor)
+    monkeypatch.setattr(power.data.physics, "rmajor", pfpwrparam.rmajor)
 
     monkeypatch.setattr(numerics, "active_constraints", pfpwrparam.active_constraints)
 
@@ -2771,51 +2770,51 @@ def test_power2(power2param, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        physics_variables, "p_alpha_total_mw", power2param.p_alpha_total_mw
+        power.data.physics, "p_alpha_total_mw", power2param.p_alpha_total_mw
     )
 
     monkeypatch.setattr(
-        physics_variables, "i_plasma_ignited", power2param.i_plasma_ignited
+        power.data.physics, "i_plasma_ignited", power2param.i_plasma_ignited
     )
 
     monkeypatch.setattr(
-        physics_variables, "p_plasma_inner_rad_mw", power2param.p_plasma_inner_rad_mw
+        power.data.physics, "p_plasma_inner_rad_mw", power2param.p_plasma_inner_rad_mw
     )
 
     monkeypatch.setattr(
-        physics_variables, "p_plasma_rad_mw", power2param.p_plasma_rad_mw
+        power.data.physics, "p_plasma_rad_mw", power2param.p_plasma_rad_mw
     )
 
-    monkeypatch.setattr(physics_variables, "itart", power2param.itart)
+    monkeypatch.setattr(power.data.physics, "itart", power2param.itart)
 
     monkeypatch.setattr(
-        physics_variables, "p_plasma_separatrix_mw", power2param.p_plasma_separatrix_mw
+        power.data.physics, "p_plasma_separatrix_mw", power2param.p_plasma_separatrix_mw
     )
 
-    monkeypatch.setattr(physics_variables, "p_fw_alpha_mw", power2param.p_fw_alpha_mw)
+    monkeypatch.setattr(power.data.physics, "p_fw_alpha_mw", power2param.p_fw_alpha_mw)
 
     monkeypatch.setattr(power.data.divertor, "n_divertors", power2param.n_divertors)
 
     monkeypatch.setattr(
-        physics_variables, "p_plasma_ohmic_mw", power2param.p_plasma_ohmic_mw
+        power.data.physics, "p_plasma_ohmic_mw", power2param.p_plasma_ohmic_mw
     )
 
-    monkeypatch.setattr(physics_variables, "i_rad_loss", power2param.i_rad_loss)
+    monkeypatch.setattr(power.data.physics, "i_rad_loss", power2param.i_rad_loss)
 
     monkeypatch.setattr(
-        physics_variables, "p_fusion_total_mw", power2param.p_fusion_total_mw
+        power.data.physics, "p_fusion_total_mw", power2param.p_fusion_total_mw
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        power.data.physics,
         "p_non_alpha_charged_mw",
         power2param.p_non_alpha_charged_mw,
     )
 
-    monkeypatch.setattr(physics_variables, "pscalingmw", power2param.pscalingmw)
+    monkeypatch.setattr(power.data.physics, "pscalingmw", power2param.pscalingmw)
 
     monkeypatch.setattr(
-        physics_variables,
+        power.data.physics,
         "f_p_alpha_plasma_deposited",
         power2param.f_p_alpha_plasma_deposited,
     )

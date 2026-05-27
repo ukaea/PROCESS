@@ -192,7 +192,7 @@ def eq(value: float, bound: float, registration: ConstraintRegistration):
 
 
 @ConstraintManager.register_constraint(1, "", "=")
-def constraint_equation_1(constraint_registration, _data):
+def constraint_equation_1(constraint_registration, data):
     """Relationship between beta, temperature (keV) and density
 
     beta_total_vol_avg: total plasma beta
@@ -207,20 +207,20 @@ def constraint_equation_1(constraint_registration, _data):
     return eq(
         # Density weighted temperature is used here as 〈nT〉 != 〈n〉_V * 〈T〉_V
         (
-            data_structure.physics_variables.beta_fast_alpha
-            + data_structure.physics_variables.beta_beam
+            data.physics.beta_fast_alpha
+            + data.physics.beta_beam
             + 2.0e3
             * constants.RMU0
             * constants.ELECTRON_CHARGE
             * (
-                data_structure.physics_variables.nd_plasma_electrons_vol_avg
-                * data_structure.physics_variables.temp_plasma_electron_density_weighted_kev
-                + data_structure.physics_variables.nd_plasma_ions_total_vol_avg
-                * data_structure.physics_variables.temp_plasma_ion_density_weighted_kev
+                data.physics.nd_plasma_electrons_vol_avg
+                * data.physics.temp_plasma_electron_density_weighted_kev
+                + data.physics.nd_plasma_ions_total_vol_avg
+                * data.physics.temp_plasma_ion_density_weighted_kev
             )
-            / data_structure.physics_variables.b_plasma_total**2
+            / data.physics.b_plasma_total**2
         ),
-        data_structure.physics_variables.beta_total_vol_avg,
+        data.physics.beta_total_vol_avg,
         constraint_registration,
     )
 
@@ -253,34 +253,31 @@ def constraint_equation_2(constraint_registration, data):
     # pscaling: total transport power per volume (MW/m3)
 
     pscaling = (
-        data_structure.physics_variables.pden_electron_transport_loss_mw
-        + data_structure.physics_variables.pden_ion_transport_loss_mw
+        data.physics.pden_electron_transport_loss_mw
+        + data.physics.pden_ion_transport_loss_mw
     )
     # Total power lost is scaling power plus radiation:
-    if data_structure.physics_variables.i_rad_loss == 0:
-        pnumerator = pscaling + data_structure.physics_variables.pden_plasma_rad_mw
-    elif data_structure.physics_variables.i_rad_loss == 1:
-        pnumerator = pscaling + data_structure.physics_variables.pden_plasma_core_rad_mw
+    if data.physics.i_rad_loss == 0:
+        pnumerator = pscaling + data.physics.pden_plasma_rad_mw
+    elif data.physics.i_rad_loss == 1:
+        pnumerator = pscaling + data.physics.pden_plasma_core_rad_mw
     else:
         pnumerator = pscaling
 
     # if plasma not ignited include injected power
-    if data_structure.physics_variables.i_plasma_ignited == 0:
+    if data.physics.i_plasma_ignited == 0:
         pdenom = (
-            data_structure.physics_variables.f_p_alpha_plasma_deposited
-            * data_structure.physics_variables.pden_alpha_total_mw
-            + data_structure.physics_variables.pden_non_alpha_charged_mw
-            + data_structure.physics_variables.pden_plasma_ohmic_mw
-            + data.current_drive.p_hcd_injected_total_mw
-            / data_structure.physics_variables.vol_plasma
+            data.physics.f_p_alpha_plasma_deposited * data.physics.pden_alpha_total_mw
+            + data.physics.pden_non_alpha_charged_mw
+            + data.physics.pden_plasma_ohmic_mw
+            + data.current_drive.p_hcd_injected_total_mw / data.physics.vol_plasma
         )
     else:
         # if plasma ignited
         pdenom = (
-            data_structure.physics_variables.f_p_alpha_plasma_deposited
-            * data_structure.physics_variables.pden_alpha_total_mw
-            + data_structure.physics_variables.pden_non_alpha_charged_mw
-            + data_structure.physics_variables.pden_plasma_ohmic_mw
+            data.physics.f_p_alpha_plasma_deposited * data.physics.pden_alpha_total_mw
+            + data.physics.pden_non_alpha_charged_mw
+            + data.physics.pden_plasma_ohmic_mw
         )
 
     return eq(pnumerator, pdenom, constraint_registration)
@@ -301,17 +298,16 @@ def constraint_equation_3(constraint_registration, data):
     vol_plasma: plasma volume (m3)
     """
     # No assume plasma ignition:
-    if data_structure.physics_variables.i_plasma_ignited == 0:
+    if data.physics.i_plasma_ignited == 0:
         return eq(
             (
-                data_structure.physics_variables.pden_ion_transport_loss_mw
-                + data_structure.physics_variables.pden_ion_electron_equilibration_mw
+                data.physics.pden_ion_transport_loss_mw
+                + data.physics.pden_ion_electron_equilibration_mw
             ),
             (
-                data_structure.physics_variables.f_p_alpha_plasma_deposited
-                * data_structure.physics_variables.f_pden_alpha_ions_mw
-                + data.current_drive.p_hcd_injected_ions_mw
-                / data_structure.physics_variables.vol_plasma
+                data.physics.f_p_alpha_plasma_deposited
+                * data.physics.f_pden_alpha_ions_mw
+                + data.current_drive.p_hcd_injected_ions_mw / data.physics.vol_plasma
             ),
             constraint_registration,
         )
@@ -319,13 +315,10 @@ def constraint_equation_3(constraint_registration, data):
     # Plasma ignited
     return eq(
         (
-            data_structure.physics_variables.pden_ion_transport_loss_mw
-            + data_structure.physics_variables.pden_ion_electron_equilibration_mw
+            data.physics.pden_ion_transport_loss_mw
+            + data.physics.pden_ion_electron_equilibration_mw
         ),
-        (
-            data_structure.physics_variables.f_p_alpha_plasma_deposited
-            * data_structure.physics_variables.f_pden_alpha_ions_mw
-        ),
+        (data.physics.f_p_alpha_plasma_deposited * data.physics.f_pden_alpha_ions_mw),
         constraint_registration,
     )
 
@@ -355,30 +348,29 @@ def constraint_equation_4(constraint_registration, data):
     """
     # pscaling: total transport power per volume (MW/m3)
 
-    pscaling = data_structure.physics_variables.pden_electron_transport_loss_mw
+    pscaling = data.physics.pden_electron_transport_loss_mw
     # Total power lost is scaling power plus radiation:
-    if data_structure.physics_variables.i_rad_loss == 0:
-        pnumerator = pscaling + data_structure.physics_variables.pden_plasma_rad_mw
-    elif data_structure.physics_variables.i_rad_loss == 1:
-        pnumerator = pscaling + data_structure.physics_variables.pden_plasma_core_rad_mw
+    if data.physics.i_rad_loss == 0:
+        pnumerator = pscaling + data.physics.pden_plasma_rad_mw
+    elif data.physics.i_rad_loss == 1:
+        pnumerator = pscaling + data.physics.pden_plasma_core_rad_mw
     else:
         pnumerator = pscaling
 
     # if plasma not ignited include injected power
-    if data_structure.physics_variables.i_plasma_ignited == 0:
+    if data.physics.i_plasma_ignited == 0:
         pdenom = (
-            data_structure.physics_variables.f_p_alpha_plasma_deposited
-            * data_structure.physics_variables.f_pden_alpha_electron_mw
-            + data_structure.physics_variables.pden_ion_electron_equilibration_mw
-            + data.current_drive.p_hcd_injected_electrons_mw
-            / data_structure.physics_variables.vol_plasma
+            data.physics.f_p_alpha_plasma_deposited
+            * data.physics.f_pden_alpha_electron_mw
+            + data.physics.pden_ion_electron_equilibration_mw
+            + data.current_drive.p_hcd_injected_electrons_mw / data.physics.vol_plasma
         )
     else:
         # if plasma ignited
         pdenom = (
-            data_structure.physics_variables.f_p_alpha_plasma_deposited
-            * data_structure.physics_variables.f_pden_alpha_electron_mw
-            + data_structure.physics_variables.pden_ion_electron_equilibration_mw
+            data.physics.f_p_alpha_plasma_deposited
+            * data.physics.f_pden_alpha_electron_mw
+            + data.physics.pden_ion_electron_equilibration_mw
         )
 
     return eq(pnumerator, pdenom, constraint_registration)
@@ -407,28 +399,22 @@ def constraint_equation_5(constraint_registration, data):
     (Except when i_density_limit=7 when nd_plasma_electron_line is used, not nd_plasma_electrons_vol_avg)
     """
     # Apply Greenwald limit to line-averaged density
-    if data_structure.physics_variables.i_density_limit == 7:
+    if data.physics.i_density_limit == 7:
         return leq(
-            data_structure.physics_variables.nd_plasma_electron_line,
-            (
-                data_structure.physics_variables.nd_plasma_electrons_max
-                * data.constraints.fdene
-            ),
+            data.physics.nd_plasma_electron_line,
+            (data.physics.nd_plasma_electrons_max * data.constraints.fdene),
             constraint_registration,
         )
 
     return leq(
-        data_structure.physics_variables.nd_plasma_electrons_vol_avg,
-        (
-            data_structure.physics_variables.nd_plasma_electrons_max
-            * data.constraints.fdene
-        ),
+        data.physics.nd_plasma_electrons_vol_avg,
+        (data.physics.nd_plasma_electrons_max * data.constraints.fdene),
         constraint_registration,
     )
 
 
 @ConstraintManager.register_constraint(6, "", "<=")
-def constraint_equation_6(constraint_registration, _data):
+def constraint_equation_6(constraint_registration, data):
     """Equation for epsilon beta-poloidal upper limit
 
     beta_poloidal_eps_max: maximum (eps*beta_poloidal)
@@ -436,17 +422,14 @@ def constraint_equation_6(constraint_registration, _data):
     beta_poloidal: poloidal beta
     """
     return leq(
-        (
-            data_structure.physics_variables.eps
-            * data_structure.physics_variables.beta_poloidal_vol_avg
-        ),
-        data_structure.physics_variables.beta_poloidal_eps_max,
+        (data.physics.eps * data.physics.beta_poloidal_vol_avg),
+        data.physics.beta_poloidal_eps_max,
         constraint_registration,
     )
 
 
 @ConstraintManager.register_constraint(7, "/m³", "=")
-def constraint_equation_7(constraint_registration, _data):
+def constraint_equation_7(constraint_registration, data):
     """Equation for hot beam ion density
 
     i_plasma_ignited: switch for ignition assumption:
@@ -459,12 +442,12 @@ def constraint_equation_7(constraint_registration, _data):
     nd_beam_ions_out: hot beam ion density from calculation (/m³)
     nd_beam_ions: hot beam ion density, variable (/m³)
     """
-    if data_structure.physics_variables.i_plasma_ignited == 1:
+    if data.physics.i_plasma_ignited == 1:
         raise ProcessValueError("Do not use constraint equation 7 if i_plasma_ignited=1")
 
     return eq(
-        data_structure.physics_variables.nd_beam_ions_out,
-        data_structure.physics_variables.nd_beam_ions,
+        data.physics.nd_beam_ions_out,
+        data.physics.nd_beam_ions,
         constraint_registration,
     )
 
@@ -477,7 +460,7 @@ def constraint_equation_8(constraint_registration, data):
     pflux_fw_neutron_mw: average neutron wall load (MW/m²)
     """
     return leq(
-        data_structure.physics_variables.pflux_fw_neutron_mw,
+        data.physics.pflux_fw_neutron_mw,
         data.constraints.pflux_fw_neutron_max_mw,
         constraint_registration,
     )
@@ -491,7 +474,7 @@ def constraint_equation_9(constraint_registration, data):
     p_fusion_total_mw: fusion power (MW)
     """
     return leq(
-        data_structure.physics_variables.p_fusion_total_mw,
+        data.physics.p_fusion_total_mw,
         data.constraints.p_fusion_total_max_mw,
         constraint_registration,
     )
@@ -506,7 +489,7 @@ def constraint_equation_11(constraint_registration, data):
     """
     return eq(
         data.build.rbld,
-        data_structure.physics_variables.rmajor,
+        data.physics.rmajor,
         constraint_registration,
     )
 
@@ -522,7 +505,7 @@ def constraint_equation_12(constraint_registration, data):
     # vs_cs_pf_total_pulse is negative, requires sign change
     return geq(
         -data.pf_coil.vs_cs_pf_total_pulse,
-        data_structure.physics_variables.vs_plasma_total_required,
+        data.physics.vs_plasma_total_required,
         constraint_registration,
     )
 
@@ -570,11 +553,8 @@ def constraint_equation_15(constraint_registration, data):
     p_plasma_separatrix_mw is at least 1.2*p_l_h_threshold_mw (ie in H-mode).
     """
     return geq(
-        data_structure.physics_variables.p_plasma_separatrix_mw,
-        (
-            data_structure.physics_variables.p_l_h_threshold_mw
-            * data.constraints.f_h_mode_margin
-        ),
+        data.physics.p_plasma_separatrix_mw,
+        (data.physics.p_l_h_threshold_mw * data.constraints.f_h_mode_margin),
         constraint_registration,
     )
 
@@ -612,16 +592,14 @@ def constraint_equation_17(constraint_registration, data):
     """
     # Maximum possible power/vol_plasma that can be radiated (local)
     pradmaxpv = (
-        data.current_drive.p_hcd_injected_total_mw
-        / data_structure.physics_variables.vol_plasma
-        + data_structure.physics_variables.pden_alpha_total_mw
-        * data_structure.physics_variables.f_p_alpha_plasma_deposited
-        + data_structure.physics_variables.pden_non_alpha_charged_mw
-        + data_structure.physics_variables.pden_plasma_ohmic_mw
+        data.current_drive.p_hcd_injected_total_mw / data.physics.vol_plasma
+        + data.physics.pden_alpha_total_mw * data.physics.f_p_alpha_plasma_deposited
+        + data.physics.pden_non_alpha_charged_mw
+        + data.physics.pden_plasma_ohmic_mw
     )
 
     return leq(
-        data_structure.physics_variables.pden_plasma_rad_mw / pradmaxpv,
+        data.physics.pden_plasma_rad_mw / pradmaxpv,
         data.constraints.fradpwr,
         constraint_registration,
     )
@@ -679,7 +657,7 @@ def constraint_equation_21(constraint_registration, data):
     aplasmin: minimum minor radius (m)
     """
     return geq(
-        data_structure.physics_variables.rminor,
+        data.physics.rminor,
         data.build.aplasmin,
         constraint_registration,
     )
@@ -700,11 +678,8 @@ def constraint_equation_22(constraint_registration, data):
     p_l_h_threshold_mw is at least 1.2*p_plasma_separatrix_mw (ie in L-mode).
     """
     return geq(
-        data_structure.physics_variables.p_l_h_threshold_mw,
-        (
-            data.constraints.f_l_mode_margin
-            * data_structure.physics_variables.p_plasma_separatrix_mw
-        ),
+        data.physics.p_l_h_threshold_mw,
+        (data.constraints.f_l_mode_margin * data.physics.p_plasma_separatrix_mw),
         constraint_registration,
     )
 
@@ -721,17 +696,14 @@ def constraint_equation_23(constraint_registration, data):
     """
     # conducting shell radius (m)
     rcw = (
-        data_structure.physics_variables.rminor
+        data.physics.rminor
         + data.build.dr_fw_plasma_gap_outboard
         + data.build.dr_fw_outboard
         + data.build.dr_blkt_outboard
     )
     return leq(
         rcw,
-        (
-            data_structure.physics_variables.f_r_conducting_wall
-            * data_structure.physics_variables.rminor
-        ),
+        (data.physics.f_r_conducting_wall * data.physics.rminor),
         constraint_registration,
     )
 
@@ -757,44 +729,30 @@ def constraint_equation_24(constraint_registration, data):
     """
     # Include all beta components: relevant for both tokamaks and stellarators
     if (
-        data_structure.physics_variables.i_beta_component == BetaComponentLimits.TOTAL
+        data.physics.i_beta_component == BetaComponentLimits.TOTAL
         or data.stellarator.istell != 0
     ):
-        value = data_structure.physics_variables.beta_total_vol_avg
+        value = data.physics.beta_total_vol_avg
     # Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
-    elif (
-        data_structure.physics_variables.i_beta_component == BetaComponentLimits.THERMAL
-    ):
+    elif data.physics.i_beta_component == BetaComponentLimits.THERMAL:
         value = (
-            data_structure.physics_variables.beta_total_vol_avg
-            - data_structure.physics_variables.beta_fast_alpha
-            - data_structure.physics_variables.beta_beam
+            data.physics.beta_total_vol_avg
+            - data.physics.beta_fast_alpha
+            - data.physics.beta_beam
         )
     # Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas
-    elif (
-        data_structure.physics_variables.i_beta_component
-        == BetaComponentLimits.THERMAL_AND_BEAM
-    ):
-        value = (
-            data_structure.physics_variables.beta_total_vol_avg
-            - data_structure.physics_variables.beta_fast_alpha
-        )
+    elif data.physics.i_beta_component == BetaComponentLimits.THERMAL_AND_BEAM:
+        value = data.physics.beta_total_vol_avg - data.physics.beta_fast_alpha
     # Beta limit applies to toroidal beta
-    elif (
-        data_structure.physics_variables.i_beta_component == BetaComponentLimits.TOROIDAL
-    ):
+    elif data.physics.i_beta_component == BetaComponentLimits.TOROIDAL:
         value = (
-            data_structure.physics_variables.beta_total_vol_avg
-            * (
-                data_structure.physics_variables.b_plasma_total
-                / data_structure.physics_variables.b_plasma_toroidal_on_axis
-            )
-            ** 2
+            data.physics.beta_total_vol_avg
+            * (data.physics.b_plasma_total / data.physics.b_plasma_toroidal_on_axis) ** 2
         )
 
     return leq(
         value,
-        data_structure.physics_variables.beta_vol_avg_max,
+        data.physics.beta_vol_avg_max,
         constraint_registration,
     )
 
@@ -857,7 +815,7 @@ def constraint_equation_28(constraint_registration, data):
     during plasma start-up, and is excluded from all steady-state
     power balance calculations.
     """
-    if data_structure.physics_variables.i_plasma_ignited != 0:
+    if data.physics.i_plasma_ignited != 0:
         raise ProcessValueError("Do not use constraint 28 if i_plasma_ignited=1")
 
     return geq(
@@ -876,10 +834,7 @@ def constraint_equation_29(constraint_registration, data):
     rinboard: plasma inboard radius (m)
     """
     return eq(
-        (
-            data_structure.physics_variables.rmajor
-            - data_structure.physics_variables.rminor
-        ),
+        (data.physics.rmajor - data.physics.rminor),
         data.build.rinboard,
         constraint_registration,
     )
@@ -1071,7 +1026,7 @@ def constraint_equation_42(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(43, "deg C", "=")
-def constraint_equation_43(constraint_registration, _data):
+def constraint_equation_43(constraint_registration, data):
     """Equation for average centrepost temperature: This is a consistency equation (TART)
 
     temp_cp_average: average temp of TF coil inboard leg conductor (C)e
@@ -1080,7 +1035,7 @@ def constraint_equation_43(constraint_registration, _data):
     - 0 use conventional aspect ratio models;
     - 1 use spherical tokamak models
     """
-    if data_structure.physics_variables.itart == 0:
+    if data.physics.itart == 0:
         raise ProcessValueError("Do not use constraint 43 if itart=0")
 
     if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
@@ -1094,7 +1049,7 @@ def constraint_equation_43(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(44, "deg C", "<=")
-def constraint_equation_44(constraint_registration, _data):
+def constraint_equation_44(constraint_registration, data):
     """Equation for centrepost temperature upper limit (TART)
 
     temp_cp_max: maximum peak centrepost temperature (K)
@@ -1103,7 +1058,7 @@ def constraint_equation_44(constraint_registration, _data):
     - 0: use conventional aspect ratio models;
     - 1: use spherical tokamak models
     """
-    if data_structure.physics_variables.itart == 0:
+    if data.physics.itart == 0:
         raise ProcessValueError("Do not use constraint 44 if itart=0")
 
     if (
@@ -1119,7 +1074,7 @@ def constraint_equation_44(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(45, "", ">=")
-def constraint_manager_45(constraint_registration, _data):
+def constraint_manager_45(constraint_registration, data):
     """Equation for edge safety factor lower limit (TART)
 
     q95 : safety factor 'near' plasma edge
@@ -1129,18 +1084,18 @@ def constraint_manager_45(constraint_registration, _data):
     - 0 use conventional aspect ratio models;
     - 1 use spherical tokamak models
     """
-    if data_structure.physics_variables.itart == 0:
+    if data.physics.itart == 0:
         raise ProcessValueError("Do not use constraint 45 if itart=0")
 
     return geq(
-        data_structure.physics_variables.q95,
-        data_structure.physics_variables.q95_min,
+        data.physics.q95,
+        data.physics.q95_min,
         constraint_registration,
     )
 
 
 @ConstraintManager.register_constraint(46, "", "<=")
-def constraint_equation_46(constraint_registration, _data):
+def constraint_equation_46(constraint_registration, data):
     """Equation for Iₚ/I_rod upper limit (TART)
 
     eps: inverse aspect ratio
@@ -1150,17 +1105,14 @@ def constraint_equation_46(constraint_registration, _data):
     - 0: use conventional aspect ratio models;
     - 1: use spherical tokamak models
     """
-    if data_structure.physics_variables.itart == 0:
+    if data.physics.itart == 0:
         raise ProcessValueError("Do not use constraint 46 if itart=0")
 
     # maximum ratio of plasma current to centrepost current
-    cratmx = 1.0 + 4.91 * (data_structure.physics_variables.eps - 0.62)
+    cratmx = 1.0 + 4.91 * (data.physics.eps - 0.62)
 
     return leq(
-        (
-            data_structure.physics_variables.plasma_current
-            / data_structure.tfcoil_variables.c_tf_total
-        ),
+        (data.physics.plasma_current / data_structure.tfcoil_variables.c_tf_total),
         cratmx,
         constraint_registration,
     )
@@ -1174,7 +1126,7 @@ def constraint_equation_48(constraint_registration, data):
     beta_poloidal: poloidal beta
     """
     return leq(
-        data_structure.physics_variables.beta_poloidal_vol_avg,
+        data.physics.beta_poloidal_vol_avg,
         data.constraints.beta_poloidal_max,
         constraint_registration,
     )
@@ -1198,7 +1150,7 @@ def constraint_equation_51(constraint_registration, data):
     vs_cs_pf_total_ramp: total flux swing for startup (Wb)
     """
     return eq(
-        abs(data_structure.physics_variables.vs_plasma_ramp_required),
+        abs(data.physics.vs_plasma_ramp_required),
         data.pf_coil.vs_cs_pf_total_ramp,
         constraint_registration,
     )
@@ -1262,10 +1214,7 @@ def constraint_equation_56(constraint_registration, data):
     rmajor: plasma major radius (m)
     """
     return leq(
-        (
-            data_structure.physics_variables.p_plasma_separatrix_mw
-            / data_structure.physics_variables.rmajor
-        ),
+        (data.physics.p_plasma_separatrix_mw / data.physics.rmajor),
         data.constraints.pseprmax,
         constraint_registration,
     )
@@ -1322,8 +1271,7 @@ def constraint_equation_62(constraint_registration, data):
     f_alpha_energy_confinement_min: Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
     """
     return geq(
-        data_structure.physics_variables.t_alpha_confinement
-        / data_structure.physics_variables.t_energy_confinement,
+        data.physics.t_alpha_confinement / data.physics.t_energy_confinement,
         data.constraints.f_alpha_energy_confinement_min,
         constraint_registration,
     )
@@ -1351,7 +1299,7 @@ def constraint_equation_64(constraint_registration, data):
     n_charge_plasma_effective_vol_avg: plasma effective charge
     """
     return leq(
-        data_structure.physics_variables.n_charge_plasma_effective_vol_avg,
+        data.physics.n_charge_plasma_effective_vol_avg,
         data.constraints.zeff_max,
         constraint_registration,
     )
@@ -1416,13 +1364,13 @@ def constraint_equation_68(constraint_registration, data):
         return leq(
             (
                 (
-                    data_structure.physics_variables.p_plasma_separatrix_mw
-                    * data_structure.physics_variables.b_plasma_toroidal_on_axis
+                    data.physics.p_plasma_separatrix_mw
+                    * data.physics.b_plasma_toroidal_on_axis
                 )
                 / (
                     data.constraints.q95_fixed
-                    * data_structure.physics_variables.aspect
-                    * data_structure.physics_variables.rmajor
+                    * data.physics.aspect
+                    * data.physics.rmajor
                 )
             ),
             data.constraints.psepbqarmax,
@@ -1432,14 +1380,10 @@ def constraint_equation_68(constraint_registration, data):
     return leq(
         (
             (
-                data_structure.physics_variables.p_plasma_separatrix_mw
-                * data_structure.physics_variables.b_plasma_toroidal_on_axis
+                data.physics.p_plasma_separatrix_mw
+                * data.physics.b_plasma_toroidal_on_axis
             )
-            / (
-                data_structure.physics_variables.q95
-                * data_structure.physics_variables.aspect
-                * data_structure.physics_variables.rmajor
-            )
+            / (data.physics.q95 * data.physics.aspect * data.physics.rmajor)
         ),
         data.constraints.psepbqarmax,
         constraint_registration,
@@ -1497,11 +1441,8 @@ def constraint_equation_73(constraint_registration, data):
     p_hcd_injected_total_mw : inout real : total auxiliary injected power (MW)
     """
     return geq(
-        data_structure.physics_variables.p_plasma_separatrix_mw,
-        (
-            data_structure.physics_variables.p_l_h_threshold_mw
-            + data.current_drive.p_hcd_injected_total_mw
-        ),
+        data.physics.p_plasma_separatrix_mw,
+        (data.physics.p_l_h_threshold_mw + data.current_drive.p_hcd_injected_total_mw),
         constraint_registration,
     )
 
@@ -1537,7 +1478,7 @@ def constraint_equation_75(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(76, "/m³", "<=")
-def constraint_equation_76(constraint_registration, _data):
+def constraint_equation_76(constraint_registration, data):
     """Upper limit for Eich critical separatrix density model: Added for issue 558
 
     Eich critical separatrix density model
@@ -1552,24 +1493,21 @@ def constraint_equation_76(constraint_registration, _data):
     nd_plasma_electron_max_array(7)array : density limit [/m³] as calculated using various models
     """
     # TODO: why on earth are these variables being set here!? Should they be local?
-    data_structure.physics_variables.alpha_crit = (
-        data_structure.physics_variables.kappa**1.2
-    ) * (1.0 + 1.5 * data_structure.physics_variables.triang)
-    data_structure.physics_variables.nd_plasma_separatrix_electron_eich_max = (
+    data.physics.alpha_crit = (data.physics.kappa**1.2) * (
+        1.0 + 1.5 * data.physics.triang
+    )
+    data.physics.nd_plasma_separatrix_electron_eich_max = (
         5.9
-        * data_structure.physics_variables.alpha_crit
-        * (data_structure.physics_variables.aspect ** (-2.0 / 7.0))
-        * (((1.0 + (data_structure.physics_variables.kappa**2.0)) / 2.0) ** (-6.0 / 7.0))
-        * (
-            (data_structure.physics_variables.p_plasma_separatrix_mw * 1.0e6)
-            ** (-11.0 / 70.0)
-        )
-        * data_structure.physics_variables.nd_plasma_electron_max_array[6]
+        * data.physics.alpha_crit
+        * (data.physics.aspect ** (-2.0 / 7.0))
+        * (((1.0 + (data.physics.kappa**2.0)) / 2.0) ** (-6.0 / 7.0))
+        * ((data.physics.p_plasma_separatrix_mw * 1.0e6) ** (-11.0 / 70.0))
+        * data.physics.nd_plasma_electron_max_array[6]
     )
 
     return leq(
-        data_structure.physics_variables.nd_plasma_separatrix_electron,
-        data_structure.physics_variables.nd_plasma_separatrix_electron_eich_max,
+        data.physics.nd_plasma_separatrix_electron,
+        data.physics.nd_plasma_separatrix_electron_eich_max,
         constraint_registration,
     )
 
@@ -1633,14 +1571,14 @@ def constraint_equation_80(constraint_registration, data):
     p_plasma_separatrix_mw : input : Power crossing separatrix [MW]
     """
     return geq(
-        data_structure.physics_variables.p_plasma_separatrix_mw,
+        data.physics.p_plasma_separatrix_mw,
         data.constraints.p_plasma_separatrix_min_mw,
         constraint_registration,
     )
 
 
 @ConstraintManager.register_constraint(81, "/m³", ">=")
-def constraint_equation_81(constraint_registration, _data):
+def constraint_equation_81(constraint_registration, data):
     """Lower limit to ensure central density is larger that the pedestal one
 
     args : output structure : residual error; constraint value;
@@ -1651,8 +1589,8 @@ def constraint_equation_81(constraint_registration, _data):
     nd_plasma_pedestal_electron : input : Electron density at pedestal [/m³]
     """
     return geq(
-        data_structure.physics_variables.nd_plasma_electron_on_axis,
-        data_structure.physics_variables.nd_plasma_pedestal_electron,
+        data.physics.nd_plasma_electron_on_axis,
+        data.physics.nd_plasma_pedestal_electron,
         constraint_registration,
     )
 
@@ -1686,15 +1624,15 @@ def constraint_equation_83(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(84, "", ">=")
-def constraint_equation_84(constraint_registration, _data):
+def constraint_equation_84(constraint_registration, data):
     """Equation for the lower limit of beta
 
     beta_vol_avg_min: Lower limit for beta
     beta: plasma beta
     """
     return geq(
-        data_structure.physics_variables.beta_total_vol_avg,
-        data_structure.physics_variables.beta_vol_avg_min,
+        data.physics.beta_total_vol_avg,
+        data.physics.beta_vol_avg_min,
         constraint_registration,
     )
 
@@ -1815,7 +1753,7 @@ def constraint_equation_91(constraint_registration, data):
     te0_ecrh_achievable: Max. achievable electron temperature at ignition point
     """
     # Achievable ECRH te needs to be larger than needed te for igntion
-    if data_structure.physics_variables.i_plasma_ignited == 0:
+    if data.physics.i_plasma_ignited == 0:
         value = (
             data.stellarator.powerht_constraint
             + data.current_drive.p_hcd_primary_extra_heat_mw
@@ -1831,7 +1769,7 @@ def constraint_equation_91(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(92, "", "=")
-def constraint_equation_92(constraint_registration, _data):
+def constraint_equation_92(constraint_registration, data):
     """Equation for checking is D/T ratio is consistent, and sums to 1.
 
     f_plasma_fuel_deuterium: fraction of deuterium ions
@@ -1839,9 +1777,9 @@ def constraint_equation_92(constraint_registration, _data):
     f_plasma_fuel_helium3: fraction of helium-3 ions
     """
     return eq(
-        data_structure.physics_variables.f_plasma_fuel_deuterium
-        + data_structure.physics_variables.f_plasma_fuel_tritium
-        + data_structure.physics_variables.f_plasma_fuel_helium3,
+        data.physics.f_plasma_fuel_deuterium
+        + data.physics.f_plasma_fuel_tritium
+        + data.physics.f_plasma_fuel_helium3,
         1.0,
         constraint_registration,
     )

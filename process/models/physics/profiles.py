@@ -12,7 +12,7 @@ from types import DynamicClassAttribute
 import numpy as np
 import scipy as sp
 
-from process.data_structure import physics_variables
+from process.core.model import Model
 
 logger = logging.getLogger(__name__)
 
@@ -36,16 +36,12 @@ class PlasmaProfileShapeType(IntEnum):
         return self._description_
 
 
-class Profile(ABC):
+class Profile(Model, ABC):
     """Abstract base class used to create and hold profiles (temperature, density)"""
 
-    def __init__(self, profile_size: int):
+    def __init__(self):
         """
         Initialize a Profiles object.
-
-        Parameters
-        ----------
-        - profile_size (int): The size of the profile.
 
         Attributes
         ----------
@@ -55,11 +51,17 @@ class Profile(ABC):
         - profile_integ (int): The integral of the profile_y array.
         - profile_dx (int): The step size between consecutive values in profile_x.
         """
-        self.profile_size = profile_size
-        self.profile_x = np.arange(self.profile_size, dtype=float)
-        self.profile_y = np.zeros(self.profile_size)
         self.profile_integ = 0
         self.profile_dx = 0
+
+    def run(self):
+        self.profile_x = np.arange(
+            self.data.physics.n_plasma_profile_elements, dtype=float
+        )
+        self.profile_y = np.zeros(self.data.physics.n_plasma_profile_elements)
+
+    def output(self):
+        """This model doesn't have any output"""
 
     def normalise_profile_x(self):
         """Normalizes the x-dimension of the profile.
@@ -85,7 +87,9 @@ class Profile(ABC):
         dividing the maximum x value in the profile by the difference in size between
         the points. The result is stored in the `profile_dx` attribute.
         """
-        self.profile_dx = max(self.profile_x) / (self.profile_size - 1)
+        self.profile_dx = max(self.profile_x) / (
+            self.data.physics.n_plasma_profile_elements - 1
+        )
 
     @abstractmethod
     def calculate_profile_y(self):
@@ -112,16 +116,17 @@ class NeProfile(Profile):
 
     def run(self):
         """Subroutine which calls profile functions and stores neprofile data."""
+        super().run()
         self.normalise_profile_x()
         self.calculate_profile_dx()
         self.set_physics_variables()
         self.calculate_profile_y(
             self.profile_x,
-            physics_variables.radius_plasma_pedestal_density_norm,
-            physics_variables.nd_plasma_electron_on_axis,
-            physics_variables.nd_plasma_pedestal_electron,
-            physics_variables.nd_plasma_separatrix_electron,
-            physics_variables.alphan,
+            self.data.physics.radius_plasma_pedestal_density_norm,
+            self.data.physics.nd_plasma_electron_on_axis,
+            self.data.physics.nd_plasma_pedestal_electron,
+            self.data.physics.nd_plasma_separatrix_electron,
+            self.data.physics.alphan,
         )
         self.integrate_profile_y()
 
@@ -153,7 +158,7 @@ class NeProfile(Profile):
             Density peaking parameter.
         """
         if (
-            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
         ):
             self.profile_y = n0 * (1 - rho**2) ** alphan
@@ -253,28 +258,28 @@ class NeProfile(Profile):
     def set_physics_variables(self):
         """Calculates and sets physics variables required for the profile."""
         if (
-            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
         ):
-            physics_variables.nd_plasma_electron_on_axis = (
-                physics_variables.nd_plasma_electrons_vol_avg
-                * (1.0 + physics_variables.alphan)
+            self.data.physics.nd_plasma_electron_on_axis = (
+                self.data.physics.nd_plasma_electrons_vol_avg
+                * (1.0 + self.data.physics.alphan)
             )
         elif (
-            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PEDESTAL_PROFILE
         ):
-            physics_variables.nd_plasma_electron_on_axis = self.ncore(
-                physics_variables.radius_plasma_pedestal_density_norm,
-                physics_variables.nd_plasma_pedestal_electron,
-                physics_variables.nd_plasma_separatrix_electron,
-                physics_variables.nd_plasma_electrons_vol_avg,
-                physics_variables.alphan,
+            self.data.physics.nd_plasma_electron_on_axis = self.ncore(
+                self.data.physics.radius_plasma_pedestal_density_norm,
+                self.data.physics.nd_plasma_pedestal_electron,
+                self.data.physics.nd_plasma_separatrix_electron,
+                self.data.physics.nd_plasma_electrons_vol_avg,
+                self.data.physics.alphan,
             )
-        physics_variables.nd_plasma_ions_on_axis = (
-            physics_variables.nd_plasma_ions_total_vol_avg
-            / physics_variables.nd_plasma_electrons_vol_avg
-            * physics_variables.nd_plasma_electron_on_axis
+        self.data.physics.nd_plasma_ions_on_axis = (
+            self.data.physics.nd_plasma_ions_total_vol_avg
+            / self.data.physics.nd_plasma_electrons_vol_avg
+            * self.data.physics.nd_plasma_electron_on_axis
         )
 
 
@@ -285,17 +290,18 @@ class TeProfile(Profile):
 
     def run(self):
         """Subroutine to initialise neprofile and execute calculations."""
+        super().run()
         self.normalise_profile_x()
         self.calculate_profile_dx()
         self.set_physics_variables()
         self.calculate_profile_y(
             self.profile_x,
-            physics_variables.radius_plasma_pedestal_temp_norm,
-            physics_variables.temp_plasma_electron_on_axis_kev,
-            physics_variables.temp_plasma_pedestal_kev,
-            physics_variables.temp_plasma_separatrix_kev,
-            physics_variables.alphat,
-            physics_variables.tbeta,
+            self.data.physics.radius_plasma_pedestal_temp_norm,
+            self.data.physics.temp_plasma_electron_on_axis_kev,
+            self.data.physics.temp_plasma_pedestal_kev,
+            self.data.physics.temp_plasma_separatrix_kev,
+            self.data.physics.alphat,
+            self.data.physics.tbeta,
         )
         self.integrate_profile_y()
 
@@ -337,7 +343,7 @@ class TeProfile(Profile):
             https://doi.org/10.13182/FST11-A11650
         """
         if (
-            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
         ):
             # profile values of 0 cause divide by 0 errors so ensure the profile value
@@ -440,28 +446,28 @@ class TeProfile(Profile):
     def set_physics_variables(self):
         """Calculates and sets physics variables required for the temperature profile."""
         if (
-            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
         ):
-            physics_variables.temp_plasma_electron_on_axis_kev = (
-                physics_variables.temp_plasma_electron_vol_avg_kev
-                * (1.0 + physics_variables.alphat)
+            self.data.physics.temp_plasma_electron_on_axis_kev = (
+                self.data.physics.temp_plasma_electron_vol_avg_kev
+                * (1.0 + self.data.physics.alphat)
             )
         elif (
-            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PEDESTAL_PROFILE
         ):
-            physics_variables.temp_plasma_electron_on_axis_kev = self.tcore(
-                physics_variables.radius_plasma_pedestal_temp_norm,
-                physics_variables.temp_plasma_pedestal_kev,
-                physics_variables.temp_plasma_separatrix_kev,
-                physics_variables.temp_plasma_electron_vol_avg_kev,
-                physics_variables.alphat,
-                physics_variables.tbeta,
+            self.data.physics.temp_plasma_electron_on_axis_kev = self.tcore(
+                self.data.physics.radius_plasma_pedestal_temp_norm,
+                self.data.physics.temp_plasma_pedestal_kev,
+                self.data.physics.temp_plasma_separatrix_kev,
+                self.data.physics.temp_plasma_electron_vol_avg_kev,
+                self.data.physics.alphat,
+                self.data.physics.tbeta,
             )
 
-        physics_variables.temp_plasma_ion_on_axis_kev = (
-            physics_variables.temp_plasma_ion_vol_avg_kev
-            / physics_variables.temp_plasma_electron_vol_avg_kev
-            * physics_variables.temp_plasma_electron_on_axis_kev
+        self.data.physics.temp_plasma_ion_on_axis_kev = (
+            self.data.physics.temp_plasma_ion_vol_avg_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
+            * self.data.physics.temp_plasma_electron_on_axis_kev
         )

@@ -16,7 +16,6 @@ import pytest
 from numpy.testing import assert_array_almost_equal
 
 from process.core import constants
-from process.data_structure import physics_variables as pv
 from process.data_structure import superconducting_tf_coil_variables
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure.pfcoil_variables import N_PF_COILS_IN_GROUP_MAX
@@ -2534,19 +2533,19 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfcoil.data.pf_coil, "i_pf_current", 1)
     monkeypatch.setattr(pfcoil.data.pf_coil, "ccl0_ma", np.full(10, 0.0))
     monkeypatch.setattr(pfcoil.data.pf_coil, "ccls_ma", np.full(10, 0.0))
-    monkeypatch.setattr(pv, "b_plasma_vertical_required", -6.51e-1)
-    monkeypatch.setattr(pv, "kappa", 1.727)
-    monkeypatch.setattr(pv, "ind_plasma_internal_norm", 1.693)
-    monkeypatch.setattr(pv, "itartpf", 0)
-    monkeypatch.setattr(pv, "vs_plasma_res_ramp", 6.151e1)
-    monkeypatch.setattr(pv, "plasma_current", 1.8254e7)
-    monkeypatch.setattr(pv, "triang", 0.413)
-    monkeypatch.setattr(pv, "rminor", 2.883)
-    monkeypatch.setattr(pv, "rmajor", 8.938)
-    monkeypatch.setattr(pv, "vs_plasma_ind_ramp", 3.497e2)
-    monkeypatch.setattr(pv, "aspect", 3.1)
-    monkeypatch.setattr(pv, "itart", 0)
-    monkeypatch.setattr(pv, "beta_poloidal_vol_avg", 6.313e-1)
+    monkeypatch.setattr(pfcoil.data.physics, "b_plasma_vertical_required", -6.51e-1)
+    monkeypatch.setattr(pfcoil.data.physics, "kappa", 1.727)
+    monkeypatch.setattr(pfcoil.data.physics, "ind_plasma_internal_norm", 1.693)
+    monkeypatch.setattr(pfcoil.data.physics, "itartpf", 0)
+    monkeypatch.setattr(pfcoil.data.physics, "vs_plasma_res_ramp", 6.151e1)
+    monkeypatch.setattr(pfcoil.data.physics, "plasma_current", 1.8254e7)
+    monkeypatch.setattr(pfcoil.data.physics, "triang", 0.413)
+    monkeypatch.setattr(pfcoil.data.physics, "rminor", 2.883)
+    monkeypatch.setattr(pfcoil.data.physics, "rmajor", 8.938)
+    monkeypatch.setattr(pfcoil.data.physics, "vs_plasma_ind_ramp", 3.497e2)
+    monkeypatch.setattr(pfcoil.data.physics, "aspect", 3.1)
+    monkeypatch.setattr(pfcoil.data.physics, "itart", 0)
+    monkeypatch.setattr(pfcoil.data.physics, "beta_poloidal_vol_avg", 6.313e-1)
     monkeypatch.setattr(tfv, "tftmp", 4.750)
     monkeypatch.setattr(tfv, "dcond", np.full(9, 9.0e3))
     monkeypatch.setattr(tfv, "i_tf_sup", 1)
@@ -2571,7 +2570,7 @@ def test_pfcoil(monkeypatch, pfcoil):
 
     pfcoil.pfcoil()
 
-    assert pytest.approx(pv.b_plasma_vertical_required) == -0.65121393
+    assert pytest.approx(pfcoil.data.physics.b_plasma_vertical_required) == -0.65121393
     assert pytest.approx(pfcoil.data.pf_coil.z_pf_coil_middle) == np.array([
         4.86,
         -4.86,
@@ -2675,8 +2674,8 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
         "c_pf_cs_coil_pulse_end_ma",
         np.full(22, -175.84911993600002),
     )
-    monkeypatch.setattr(pv, "rmajor", 8.938)
-    monkeypatch.setattr(pv, "plasma_current", 1.8254e7)
+    monkeypatch.setattr(cs_coil.data.physics, "rmajor", 8.938)
+    monkeypatch.setattr(cs_coil.data.physics, "plasma_current", 1.8254e7)
 
     # Mocks for hoop_stress()
     monkeypatch.setattr(tfv, "poisson_steel", 3.0e-1)
@@ -3553,8 +3552,8 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
             *np.zeros(16),
         ]),
     )
-    monkeypatch.setattr(pv, "rmajor", 8.8901000000000003)
-    monkeypatch.setattr(pv, "plasma_current", 17721306.969367817)
+    monkeypatch.setattr(pfcoil.data.physics, "rmajor", 8.8901000000000003)
+    monkeypatch.setattr(pfcoil.data.physics, "plasma_current", 17721306.969367817)
 
     i = 1
     ii = 1
@@ -3745,8 +3744,8 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
             *np.zeros(14),
         ]),
     )
-    monkeypatch.setattr(pv, "rmajor", 8.8901000000000003)
-    monkeypatch.setattr(pv, "ind_plasma", 1.6039223939491056e-05)
+    monkeypatch.setattr(pfcoil.data.physics, "rmajor", 8.8901000000000003)
+    monkeypatch.setattr(pfcoil.data.physics, "ind_plasma", 1.6039223939491056e-05)
 
     ind_pf_cs_plasma_mutual_exp = np.zeros((22, 22))
     ind_pf_cs_plasma_mutual_exp[0, :8] = [

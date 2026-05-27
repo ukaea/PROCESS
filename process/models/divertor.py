@@ -6,7 +6,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure.physics_variables import DivertorNumberModels
 
@@ -37,13 +36,13 @@ class Divertor(Model):
             indicate whether output should be written to the output file, or not
         """
         self.data.fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(
-            p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
+            p_plasma_neutron_mw=self.data.physics.p_plasma_neutron_mw,
             f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=self.data.divertor.n_divertors,
         )
 
         self.data.fwbs.p_div_rad_total_mw = self.incident_radiation_power(
-            p_plasma_rad_mw=pv.p_plasma_rad_mw,
+            p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
             f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=self.data.divertor.n_divertors,
         )
@@ -58,30 +57,30 @@ class Divertor(Model):
             return
         if self.data.divertor.i_div_heat_load == 1:
             self.divtart(
-                pv.rmajor,
-                pv.rminor,
-                pv.triang,
+                self.data.physics.rmajor,
+                self.data.physics.rminor,
+                self.data.physics.triang,
                 self.data.build.dr_fw_plasma_gap_inboard,
                 self.data.build.dz_xpoint_divertor,
-                pv.p_plasma_separatrix_mw,
+                self.data.physics.p_plasma_separatrix_mw,
                 output=output,
-                i_single_null=pv.i_single_null,
+                i_single_null=self.data.physics.i_single_null,
                 dz_divertor=self.data.divertor.dz_divertor,
             )
             return
         if self.data.divertor.i_div_heat_load == 2:
             self.divwade(
-                pv.rmajor,
-                pv.rminor,
-                pv.aspect,
-                pv.b_plasma_toroidal_on_axis,
-                pv.b_plasma_surface_poloidal_average,
-                pv.p_plasma_separatrix_mw,
+                self.data.physics.rmajor,
+                self.data.physics.rminor,
+                self.data.physics.aspect,
+                self.data.physics.b_plasma_toroidal_on_axis,
+                self.data.physics.b_plasma_surface_poloidal_average,
+                self.data.physics.p_plasma_separatrix_mw,
                 self.data.divertor.f_div_flux_expansion,
-                pv.nd_plasma_separatrix_electron,
+                self.data.physics.nd_plasma_separatrix_electron,
                 self.data.divertor.deg_div_field_plate,
-                pv.rad_fraction_sol,
-                pv.f_p_div_lower,
+                self.data.physics.rad_fraction_sol,
+                self.data.physics.f_p_div_lower,
                 output=output,
             )
             return
@@ -411,13 +410,13 @@ class LowerDivertor(Divertor):
         super().run(output=output)
 
         self.data.divertor.p_div_lower_nuclear_heat_mw = self.incident_neutron_power(
-            p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
+            p_plasma_neutron_mw=self.data.physics.p_plasma_neutron_mw,
             f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=1,
         )
 
         self.data.divertor.p_div_lower_rad_mw = self.incident_radiation_power(
-            p_plasma_rad_mw=pv.p_plasma_rad_mw,
+            p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
             f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=1,
         )
@@ -430,13 +429,13 @@ class UpperDivertor(Divertor):
         super().run(output=output)
 
         self.data.divertor.p_div_upper_nuclear_heat_mw = self.incident_neutron_power(
-            p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
+            p_plasma_neutron_mw=self.data.physics.p_plasma_neutron_mw,
             f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=1,
         )
 
         self.data.divertor.p_div_upper_rad_mw = self.incident_radiation_power(
-            p_plasma_rad_mw=pv.p_plasma_rad_mw,
+            p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
             f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=1,
         )

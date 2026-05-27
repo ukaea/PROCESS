@@ -6,10 +6,7 @@ import numpy as np
 import pytest
 
 from process import data_structure
-from process.data_structure import (
-    physics_variables,
-    tfcoil_variables,
-)
+from process.data_structure import tfcoil_variables
 
 
 @pytest.fixture
@@ -147,8 +144,8 @@ def test_acc2272(monkeypatch, costs):
     :param monkeypatch: Mock fixture
     :type monkeypatch: object
     """
-    monkeypatch.setattr(physics_variables, "rndfuel", 7.158e20)
-    monkeypatch.setattr(physics_variables, "m_fuel_amu", 2.5)
+    monkeypatch.setattr(costs.data.physics, "rndfuel", 7.158e20)
+    monkeypatch.setattr(costs.data.physics, "m_fuel_amu", 2.5)
     monkeypatch.setattr(costs.data.costs, "fkind", 1)
     monkeypatch.setattr(costs.data.costs, "c2271", 0)
 
@@ -212,7 +209,7 @@ def acc2273_fix(request, monkeypatch, costs):
     monkeypatch.setattr(costs.data.buildings, "wsvol", param["wsvol"])
     monkeypatch.setattr(costs.data.buildings, "volrci", param["volrci"])
     monkeypatch.setattr(
-        physics_variables, "f_plasma_fuel_tritium", param["f_plasma_fuel_tritium"]
+        costs.data.physics, "f_plasma_fuel_tritium", param["f_plasma_fuel_tritium"]
     )
 
     # Mock result var as negative, as an expected result is 0
@@ -603,7 +600,7 @@ def acc26_params():
         acc26_param(),
         acc26_param(
             ireactor=1,
-            p_fusion_total_mw=physics_variables.p_fusion_total_mw,
+            p_fusion_total_mw=0.0,
             p_hcd_electric_total_mw=0.0,
             tfcmw=data_structure.tfcoil_variables.tfcmw,
             p_plant_primary_heat_mw=3000.0,
@@ -630,7 +627,7 @@ def acc26_fix(request, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "lsa", 4)
     monkeypatch.setattr(costs.data.costs, "ireactor", param["ireactor"])
     monkeypatch.setattr(
-        physics_variables,
+        costs.data.physics,
         "p_fusion_total_mw",
         param["p_fusion_total_mw"],
     )
@@ -1944,7 +1941,7 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "cconfix", acc2221param.cconfix)
 
-    monkeypatch.setattr(physics_variables, "itart", acc2221param.itart)
+    monkeypatch.setattr(costs.data.physics, "itart", acc2221param.itart)
 
     monkeypatch.setattr(costs.data.structure, "clgsmass", acc2221param.clgsmass)
 
@@ -4464,11 +4461,11 @@ def test_acc2272_rut(acc2272param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.ife, "edrive", acc2272param.edrive)
 
-    monkeypatch.setattr(physics_variables, "wtgpd", acc2272param.wtgpd)
+    monkeypatch.setattr(costs.data.physics, "wtgpd", acc2272param.wtgpd)
 
-    monkeypatch.setattr(physics_variables, "rndfuel", acc2272param.rndfuel)
+    monkeypatch.setattr(costs.data.physics, "rndfuel", acc2272param.rndfuel)
 
-    monkeypatch.setattr(physics_variables, "m_fuel_amu", acc2272param.m_fuel_amu)
+    monkeypatch.setattr(costs.data.physics, "m_fuel_amu", acc2272param.m_fuel_amu)
 
     monkeypatch.setattr(costs.data.costs, "c227", acc2272param.c227)
 
@@ -4478,7 +4475,7 @@ def test_acc2272_rut(acc2272param, monkeypatch, costs):
 
     costs.acc2272()
 
-    assert physics_variables.wtgpd == pytest.approx(acc2272param.expected_wtgpd)
+    assert costs.data.physics.wtgpd == pytest.approx(acc2272param.expected_wtgpd)
 
     assert costs.data.costs.c2272 == pytest.approx(acc2272param.expected_c2272)
 
@@ -4546,7 +4543,7 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "fkind", acc2273param.fkind)
 
     monkeypatch.setattr(
-        physics_variables, "f_plasma_fuel_tritium", acc2273param.f_plasma_fuel_tritium
+        costs.data.physics, "f_plasma_fuel_tritium", acc2273param.f_plasma_fuel_tritium
     )
 
     monkeypatch.setattr(costs.data.costs, "c227", acc2273param.c227)
@@ -5308,7 +5305,7 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
     )
 
     monkeypatch.setattr(
-        physics_variables,
+        costs.data.physics,
         "p_fusion_total_mw",
         acc26param.p_fusion_total_mw,
     )
@@ -5920,12 +5917,12 @@ def test_coelc(coelcparam, monkeypatch, costs):
         coelcparam.p_plant_electric_net_mw,
     )
 
-    monkeypatch.setattr(physics_variables, "itart", coelcparam.itart)
+    monkeypatch.setattr(costs.data.physics, "itart", coelcparam.itart)
 
-    monkeypatch.setattr(physics_variables, "wtgpd", coelcparam.wtgpd)
+    monkeypatch.setattr(costs.data.physics, "wtgpd", coelcparam.wtgpd)
 
     monkeypatch.setattr(
-        physics_variables, "f_plasma_fuel_helium3", coelcparam.f_plasma_fuel_helium3
+        costs.data.physics, "f_plasma_fuel_helium3", coelcparam.f_plasma_fuel_helium3
     )
 
     monkeypatch.setattr(

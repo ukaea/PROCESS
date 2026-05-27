@@ -16,7 +16,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import physics_variables
 from process.models.physics.plasma_geometry import PlasmaGeometryModelType
 
 logger = logging.getLogger(__name__)
@@ -86,10 +85,10 @@ class PlasmaCurrent(Model):
                 self.outfile,
                 "Plasma current scaling law used",
                 "(i_plasma_current)",
-                physics_variables.i_plasma_current,
+                self.data.physics.i_plasma_current,
             )
             full_model_name = PlasmaCurrentModel(
-                physics_variables.i_plasma_current
+                self.data.physics.i_plasma_current
             ).full_name
             po.ocmmnt(
                 self.outfile,
@@ -100,26 +99,26 @@ class PlasmaCurrent(Model):
                 self.outfile,
                 "Plasma current (Iₚ) (MA)",
                 "(plasma_current_MA)",
-                physics_variables.plasma_current / 1.0e6,
+                self.data.physics.plasma_current / 1.0e6,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
                 "Plasma current (Iₚ) (A)",
                 "(plasma_current)",
-                physics_variables.plasma_current,
+                self.data.physics.plasma_current,
                 "OP ",
             )
 
             self.output_plasma_current_models()
             po.oblnkl(self.outfile)
 
-            if physics_variables.i_alphaj == 1:
+            if self.data.physics.i_alphaj == 1:
                 po.ovarrf(
                     self.outfile,
                     "Current density profile factor (αⱼ)",
                     "(alphaj)",
-                    physics_variables.alphaj,
+                    self.data.physics.alphaj,
                     "OP ",
                 )
             else:
@@ -127,7 +126,7 @@ class PlasmaCurrent(Model):
                     self.outfile,
                     "Current density profile factor (αⱼ)",
                     "(alphaj)",
-                    physics_variables.alphaj,
+                    self.data.physics.alphaj,
                 )
             po.ocmmnt(self.outfile, "Current profile index scalings:")
             po.oblnkl(self.outfile)
@@ -136,7 +135,7 @@ class PlasmaCurrent(Model):
                 self.outfile,
                 "J. Wesson plasma current profile index",
                 "(alphaj_wesson)",
-                physics_variables.alphaj_wesson,
+                self.data.physics.alphaj_wesson,
                 "OP ",
             )
             po.oblnkl(self.outfile)
@@ -144,47 +143,47 @@ class PlasmaCurrent(Model):
                 self.outfile,
                 "On-axis plasma current density (j₀) (A/m²)",
                 "(j_plasma_on_axis)",
-                physics_variables.j_plasma_on_axis,
+                self.data.physics.j_plasma_on_axis,
                 "OP ",
             )
 
         if self.data.stellarator.istell == 0:
             po.ovarrf(
-                self.outfile, "Safety factor on axis (q₀)", "(q0)", physics_variables.q0
+                self.outfile, "Safety factor on axis (q₀)", "(q0)", self.data.physics.q0
             )
 
-            if physics_variables.i_plasma_current == 2:
+            if self.data.physics.i_plasma_current == 2:
                 po.ovarrf(
                     self.outfile,
                     "Mean edge safety factor (q₉₅)",
                     "(q95)",
-                    physics_variables.q95,
+                    self.data.physics.q95,
                 )
 
             po.ovarrf(
                 self.outfile,
                 "Safety factor at 95% flux surface (q₉₅)",
                 "(q95)",
-                physics_variables.q95,
+                self.data.physics.q95,
             )
 
             po.ovarrf(
                 self.outfile,
                 "Cylindrical safety factor (qcyl)",
                 "(qstar)",
-                physics_variables.qstar,
+                self.data.physics.qstar,
                 "OP ",
             )
 
             if (
-                physics_variables.i_plasma_geometry
+                self.data.physics.i_plasma_geometry
                 == PlasmaGeometryModelType.STAR_FIESTA
             ):
                 po.ovarrf(
                     self.outfile,
                     "Lower limit for edge safety factor q95",
                     "(q95_min)",
-                    physics_variables.q95_min,
+                    self.data.physics.q95_min,
                     "OP ",
                 )
             po.oblnkl(self.outfile)
@@ -381,7 +380,7 @@ class PlasmaCurrent(Model):
         except ValueError as e:
             raise ProcessValueError(
                 "Illegal value of i_plasma_current",
-                i_plasma_current=physics_variables.i_plasma_current,
+                i_plasma_current=self.data.physics.i_plasma_current,
             ) from e
 
         # Main plasma current calculation using the fq value from the different settings
@@ -479,46 +478,46 @@ class PlasmaCurrent(Model):
         This function outputs the plasma current for all models to the output file.
         """
         plasma_currents = self.calculate_all_plasma_current_models(
-            alphaj=physics_variables.alphaj,
-            alphap=physics_variables.alphap,
-            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
-            eps=physics_variables.eps,
-            kappa=physics_variables.kappa,
-            kappa95=physics_variables.kappa95,
-            pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
-            len_plasma_poloidal=physics_variables.len_plasma_poloidal,
-            q95=physics_variables.q95,
-            rmajor=physics_variables.rmajor,
-            rminor=physics_variables.rminor,
-            triang=physics_variables.triang,
-            triang95=physics_variables.triang95,
+            alphaj=self.data.physics.alphaj,
+            alphap=self.data.physics.alphap,
+            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+            eps=self.data.physics.eps,
+            kappa=self.data.physics.kappa,
+            kappa95=self.data.physics.kappa95,
+            pres_plasma_on_axis=self.data.physics.pres_plasma_thermal_on_axis,
+            len_plasma_poloidal=self.data.physics.len_plasma_poloidal,
+            q95=self.data.physics.q95,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
+            triang=self.data.physics.triang,
+            triang95=self.data.physics.triang95,
         )
 
-        physics_variables.c_plasma_peng_analytic = plasma_currents.get(
+        self.data.physics.c_plasma_peng_analytic = plasma_currents.get(
             PlasmaCurrentModel.PENG_ANALYTIC_FIT
         )
-        physics_variables.c_plasma_peng_double_null = plasma_currents.get(
+        self.data.physics.c_plasma_peng_double_null = plasma_currents.get(
             PlasmaCurrentModel.PENG_DIVERTOR_SCALING
         )
-        physics_variables.c_plasma_cyclindrical = plasma_currents.get(
+        self.data.physics.c_plasma_cyclindrical = plasma_currents.get(
             PlasmaCurrentModel.ITER_SCALING
         )
-        physics_variables.c_plasma_ipdg89 = plasma_currents.get(
+        self.data.physics.c_plasma_ipdg89 = plasma_currents.get(
             PlasmaCurrentModel.IPDG89_SCALING
         )
-        physics_variables.c_plasma_todd_empirical_i = plasma_currents.get(
+        self.data.physics.c_plasma_todd_empirical_i = plasma_currents.get(
             PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_I
         )
-        physics_variables.c_plasma_todd_empirical_ii = plasma_currents.get(
+        self.data.physics.c_plasma_todd_empirical_ii = plasma_currents.get(
             PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II
         )
-        physics_variables.c_plasma_connor_hastie = plasma_currents.get(
+        self.data.physics.c_plasma_connor_hastie = plasma_currents.get(
             PlasmaCurrentModel.CONNOR_HASTIE_MODEL
         )
-        physics_variables.c_plasma_sauter = plasma_currents.get(
+        self.data.physics.c_plasma_sauter = plasma_currents.get(
             PlasmaCurrentModel.SAUTER_SCALING
         )
-        physics_variables.c_plasma_fiesta_st = plasma_currents.get(
+        self.data.physics.c_plasma_fiesta_st = plasma_currents.get(
             PlasmaCurrentModel.FIESTA_ST_SCALING
         )
 
@@ -528,63 +527,63 @@ class PlasmaCurrent(Model):
             self.outfile,
             f"{PlasmaCurrentModel.PENG_ANALYTIC_FIT.full_name}",
             "(c_plasma_peng_analytic)",
-            physics_variables.c_plasma_peng_analytic,
+            self.data.physics.c_plasma_peng_analytic,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             f"{PlasmaCurrentModel.PENG_DIVERTOR_SCALING.full_name}",
             "(c_plasma_peng_double_null)",
-            physics_variables.c_plasma_peng_double_null,
+            self.data.physics.c_plasma_peng_double_null,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             f"{PlasmaCurrentModel.ITER_SCALING.full_name}",
             "(c_plasma_cyclindrical)",
-            physics_variables.c_plasma_cyclindrical,
+            self.data.physics.c_plasma_cyclindrical,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             f"{PlasmaCurrentModel.IPDG89_SCALING.full_name}",
             "(c_plasma_ipdg89)",
-            physics_variables.c_plasma_ipdg89,
+            self.data.physics.c_plasma_ipdg89,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             f"{PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_I.full_name}",
             "(c_plasma_todd_empirical_i)",
-            physics_variables.c_plasma_todd_empirical_i,
+            self.data.physics.c_plasma_todd_empirical_i,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             f"{PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II.full_name}",
             "(c_plasma_todd_empirical_ii)",
-            physics_variables.c_plasma_todd_empirical_ii,
+            self.data.physics.c_plasma_todd_empirical_ii,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             f"{PlasmaCurrentModel.CONNOR_HASTIE_MODEL.full_name}",
             "(c_plasma_connor_hastie)",
-            physics_variables.c_plasma_connor_hastie,
+            self.data.physics.c_plasma_connor_hastie,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             f"{PlasmaCurrentModel.SAUTER_SCALING.full_name}",
             "(c_plasma_sauter)",
-            physics_variables.c_plasma_sauter,
+            self.data.physics.c_plasma_sauter,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             f"{PlasmaCurrentModel.FIESTA_ST_SCALING.full_name}",
             "(c_plasma_fiesta_st)",
-            physics_variables.c_plasma_fiesta_st,
+            self.data.physics.c_plasma_fiesta_st,
             "OP ",
         )
 
@@ -744,7 +743,7 @@ class PlasmaCurrent(Model):
         ff1, ff2, _, _ = self.plascar_bpol(aspect, eps, kappa, delta)
 
         # Transform q95 to qbar
-        qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
+        qbar = q95 * 1.3e0 * (1.0e0 - self.data.physics.eps) ** 0.6e0
 
         return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
@@ -821,7 +820,7 @@ class PlasmaCurrent(Model):
         1729-1738. https://doi.org/10.13182/FST92-A29971
         """
         # Transform q95 to qbar
-        qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
+        qbar = q95 * 1.3e0 * (1.0e0 - self.data.physics.eps) ** 0.6e0
 
         ff1, ff2, d1, d2 = self.plascar_bpol(aspect, eps, kappa, delta)
 
@@ -1119,29 +1118,29 @@ class PlasmaDiamagneticCurrent(Model):
 
     def run(self):
         """Calculate plasma diamagnetic current fractions using scalings."""
-        # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
+        # Hender scaling for diamagnetic current at tight self.data.physics.aspect ratio
         self.data.current_drive.f_c_plasma_diamagnetic_hender = (
-            self.diamagnetic_fraction_hender(physics_variables.beta_total_vol_avg)
+            self.diamagnetic_fraction_hender(self.data.physics.beta_total_vol_avg)
         )
 
         # SCENE scaling for diamagnetic current
         self.data.current_drive.f_c_plasma_diamagnetic_scene = (
             self.diamagnetic_fraction_scene(
-                physics_variables.beta_total_vol_avg,
-                physics_variables.q95,
-                physics_variables.q0,
+                self.data.physics.beta_total_vol_avg,
+                self.data.physics.q95,
+                self.data.physics.q0,
             )
         )
 
         if (
-            physics_variables.i_diamagnetic_current
+            self.data.physics.i_diamagnetic_current
             == PlasmaDiamagneticCurrentModel.HENDER_ST_FIT
         ):
             self.data.current_drive.f_c_plasma_diamagnetic = (
                 self.data.current_drive.f_c_plasma_diamagnetic_hender
             )
         elif (
-            physics_variables.i_diamagnetic_current
+            self.data.physics.i_diamagnetic_current
             == PlasmaDiamagneticCurrentModel.SCENE_FIT
         ):
             self.data.current_drive.f_c_plasma_diamagnetic = (
@@ -1155,10 +1154,10 @@ class PlasmaDiamagneticCurrent(Model):
             self.outfile,
             "Plasma diamagnetic current fraction scaling law used",
             "(i_diamagnetic_current)",
-            physics_variables.i_diamagnetic_current,
+            self.data.physics.i_diamagnetic_current,
         )
         full_model_name = PlasmaDiamagneticCurrentModel(
-            physics_variables.i_diamagnetic_current
+            self.data.physics.i_diamagnetic_current
         ).full_name
         po.ocmmnt(
             self.outfile,
@@ -1181,7 +1180,7 @@ class PlasmaDiamagneticCurrent(Model):
         )
         po.oblnkl(self.outfile)
         if (
-            physics_variables.i_diamagnetic_current == PlasmaDiamagneticCurrentModel.NONE
+            self.data.physics.i_diamagnetic_current == PlasmaDiamagneticCurrentModel.NONE
             and self.data.current_drive.f_c_plasma_diamagnetic_scene > 0.01e0
         ):
             # Error to show if diamagnetic current is above 1% but not used

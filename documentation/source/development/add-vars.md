@@ -71,7 +71,7 @@ Here is a code snippet showing how `rmajor` is defined in `iteration_variables.p
 ```python
 ITERATION_VARIABLES = {
   ...
-  3: IterationVariable("rmajor", fortran.physics_variables, 0.1, 50.00),
+  3: IterationVariable("rmajor", "physics", 0.1, 50.00),
 ```
 
 -----------------
@@ -97,7 +97,7 @@ objective_function():
   match figure_of_merit:
   ...  
   case 1:
-        objective_metric = 0.2 * physics_variables.rmajor
+        objective_metric = 0.2 * data.physics.rmajor
 ```
 
 -----------
