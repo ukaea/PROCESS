@@ -1,4 +1,38 @@
+from enum import IntEnum
+from types import DynamicClassAttribute
+
 import numpy as np
+
+
+class PROCESSRunMode(IntEnum):
+    """Enumeration of the available PROCESS run modes, which determine the behaviour
+    of the code in various places. This is controlled by the `ioptimz` variable
+    """
+
+    EVALUATION = (-2, "Evaluation mode (no optimisation)")
+    OPTIMISATION = (1, "Optimisation mode (e.g. via VMCON)")
+
+    def __new__(cls, value: int, description: str):
+        """Create a new PROCESSRunMode enum member with description.
+
+        Args:
+            value: The integer value of the enum member.
+            description: The description for this run mode.
+
+        Returns
+        -------
+            The new enum member with attached description.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._description_ = description
+        return obj
+
+    @DynamicClassAttribute
+    def description(self):
+        """Return the description for this run mode."""
+        return self._description_
+
 
 ipnvars: int = 177
 """total number of variables available for iteration"""
