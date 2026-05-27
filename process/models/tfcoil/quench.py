@@ -422,7 +422,7 @@ def calculate_quench_protection_current_density(
     )
 
     f_cu_cable = (1.0 - f_he) * f_cu
-    f_sc_cable = (1.0 - f_he) * (1.0 - f_cu_cable)
+    f_sc_cable = (1.0 - f_he) * (1.0 - f_cu)
 
     factor = 1.0 / (0.5 * tau_discharge + t_quench_detection)
     total_integral = f_he * i_he + f_cu_cable * i_cu + f_sc_cable * i_sc
@@ -554,9 +554,8 @@ def plot_quench_time_evolution(
     # T(t) is found by inverting: integral_{T0}^{T(t)} [sum(rho*cp)] / rho_cu dT = integral_0^t J^2 dt
     # We accumulate the "MIIT" (integral J^2 dt) and map it to temperature via the precomputed integral.
     pressure = 6e5
-    f_cond = 1.0 - f_he
-    f_cu_cable = f_cond * f_cu
-    f_sc_cable = f_cond * (1.0 - f_cu)
+    f_cu_cable = (1.0 - f_he) * f_cu
+    f_sc_cable = (1.0 - f_he) * (1.0 - f_cu)
 
     def _build_cum_integral(fluence_val):
         n_temp = 300
@@ -590,9 +589,10 @@ def plot_quench_time_evolution(
     miit_required_1e23 = np.cumsum(j_profile_required_1e23**2) * dt
     miit_real = np.cumsum(j_profile_real**2) * dt
 
-    # Map MIIT -> temperature via inverse interpolation of cum_integral * f_cu_cable
-    scaled_integral = f_cu_cable * cum_integral
-    scaled_integral_1e23 = f_cu_cable * cum_integral_1e23
+    # Convert the cable-space thermal integral to winding-pack basis to match j_profile_*.
+    area_ratio = a_tf_turn_cable_space / a_tf_turn
+    scaled_integral = (area_ratio**2) * f_cu_cable * cum_integral
+    scaled_integral_1e23 = (area_ratio**2) * f_cu_cable * cum_integral_1e23
     hotspot_temp_required = np.interp(miit_required, scaled_integral, temp_array)
     hotspot_temp_required_1e23 = np.interp(
         miit_required_1e23, scaled_integral_1e23, temp_array_1e23
