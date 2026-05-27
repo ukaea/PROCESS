@@ -11579,7 +11579,7 @@ def plot_cover_page(
     tagno = mfile.get("tagno", scan=-1)
     branch_name = mfile.get("branch_name", scan=-1)
     fileprefix = mfile.get("fileprefix", scan=-1)
-    optmisation_switch = mfile.get("ioptimz", scan=-1)
+    optmisation_switch = int(mfile.get("ioptimz", scan=-1))
     minmax_switch = mfile.get("minmax", scan=-1) or "N/A"
     ifail = mfile.get("ifail", scan=-1)
     nvars = mfile.get("nvar", scan=-1)
@@ -11661,7 +11661,7 @@ def plot_cover_page(
     # Box 3: Run Settings
     settings_info = (
         f"• Optimisation Switch: {int(optmisation_switch)}\n"
-        f"     {PROCESSRunMode(optmisation_switch).description}\n"
+        f"     {PROCESSRunMode(int(optmisation_switch)).description}\n"
         f"• Figure of Merit Switch (minmax): {minmax_switch}\n"
         f"• Fail Status (ifail): {int(ifail)}\n"
         f"• Number of Iteration Variables: {int(nvars)}\n"
