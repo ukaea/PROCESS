@@ -262,7 +262,7 @@ class Caller:
         nvars = len(xc)
 
         # Increment the call counter
-        data_structure.numerics.ncalls += 1
+        data_structure.numerics.n_model_calls += 1
 
         # Convert variables
         set_scaled_iteration_variable(xc, nvars, self.data)

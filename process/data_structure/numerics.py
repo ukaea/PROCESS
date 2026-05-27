@@ -56,8 +56,8 @@ n_constraints: int = None
 """Total number of constraints (n_equality_constraints + n_inequality_constraints)"""
 
 
-ncalls: int = None
-"""number of function calls during solution"""
+n_model_calls: int = None
+"""Number of model calls during solution"""
 
 n_equality_constraints: int = None
 """Number of equality constraints to be satisfied"""
@@ -456,7 +456,7 @@ def init_numerics():
         i_figure_merit, \
         lablmm, \
         n_constraints, \
-        ncalls, \
+        n_model_calls, \
         n_equality_constraints, \
         nfev1, \
         nfev2, \
@@ -514,7 +514,7 @@ def init_numerics():
         "max Q, max t_plant_pulse_burn     ",
     ]
 
-    ncalls = 0
+    n_model_calls = 0
     n_equality_constraints = -1
     nfev1 = 0
     nfev2 = 0
