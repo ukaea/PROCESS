@@ -1,6 +1,6 @@
 import numpy as np
 
-ipnvars: int = 177
+N_ITERATION_VARIABLES_MAX: int = 177
 """total number of variables available for iteration"""
 
 ipeqns: int = 92
@@ -9,9 +9,9 @@ ipeqns: int = 92
 ipnfoms: int = 19
 """number of available figures of merit"""
 
-ipvlam: int = ipeqns + 2 * ipnvars + 1
+ipvlam: int = ipeqns + 2 * N_ITERATION_VARIABLES_MAX + 1
 iptnt: int = (ipeqns * (3 * ipeqns + 13)) / 2
-ipvp1: int = ipnvars + 1
+ipvp1: int = N_ITERATION_VARIABLES_MAX + 1
 
 ioptimz: int = None
 """Code operation switch:
@@ -620,11 +620,11 @@ def init_numerics():
         "Fuel composition consistency     ",
     ]
 
-    ixc = np.array([0] * ipnvars)
+    ixc = np.array([0] * N_ITERATION_VARIABLES_MAX)
 
     # WARNING These labels are used as variable names by write_new_in_dat.py, and possibly
     # other python utilities, so they cannot easily be changed.
-    lablxc = [""] * ipnvars
+    lablxc = [""] * N_ITERATION_VARIABLES_MAX
 
     sqsumsq = 0.0
     objf_name = ""
@@ -634,18 +634,18 @@ def init_numerics():
     factor = 0.1e0
     ftol = 1.0e-4
 
-    boundl = np.array([9.0e-99] * ipnvars)
-    boundu = np.array([9.0e99] * ipnvars)
+    boundl = np.array([9.0e-99] * N_ITERATION_VARIABLES_MAX)
+    boundu = np.array([9.0e99] * N_ITERATION_VARIABLES_MAX)
 
-    itv_scaled_lower_bounds = np.array([0.0] * ipnvars)
-    itv_scaled_upper_bounds = np.array([0.0] * ipnvars)
-    rcm = np.array([0.0] * ipnvars)
-    resdl = np.array([0.0] * ipnvars)
-    scafc = np.array([0.0] * ipnvars)
-    scale = np.array([0.0] * ipnvars)
-    xcm = np.array([0.0] * ipnvars)
-    xcs = np.array([0.0] * ipnvars)
-    vlam = np.array([0.0] * ipnvars)
-    name_xc = [""] * ipnvars
+    itv_scaled_lower_bounds = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    itv_scaled_upper_bounds = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    rcm = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    resdl = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    scafc = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    scale = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    xcm = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    xcs = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    vlam = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    name_xc = [""] * N_ITERATION_VARIABLES_MAX
     force_vmcon_inequality_satisfication = 1
     force_vmcon_inequality_tolerance = 1e-8

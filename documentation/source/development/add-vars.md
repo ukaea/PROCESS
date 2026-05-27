@@ -55,7 +55,7 @@ Code example in the `input.py` file:
 To add a `PROCESS` iteration variable please follow the steps below, in addition to the instructions for adding an input variable:
 
 
-1. The parameter `ipnvars` in module `numerics` of `numerics.f90` will normally be greater than the actual number of iteration variables, and does not need to be changed.
+1. The parameter `N_ITERATION_VARIABLES_MAX` in module `numerics` of `numerics.f90` will normally be greater than the actual number of iteration variables, and does not need to be changed.
 2. Append a new iteration number key to the end of the `ITERATION_VARIABLES` dictionary  in `iteration_variables.py`. The associated variable is the corresponding key value.
 3. Set the variable origin file and then the associated lower and upper bounds
 4. Update the `lablxc` description in `numerics.f90`.

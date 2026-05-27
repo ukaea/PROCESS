@@ -1277,7 +1277,7 @@ INPUT_VARIABLES = {
     "ixc": InputVariable(
         None,
         int,
-        range=(1, data_structure.numerics.ipnvars),
+        range=(1, data_structure.numerics.N_ITERATION_VARIABLES_MAX),
         additional_actions=_ixc_additional_actions,
         set_variable=False,
     ),
