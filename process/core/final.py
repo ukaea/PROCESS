@@ -8,6 +8,7 @@ from process.core import process_output as po
 from process.core.solver import constraints
 from process.core.solver.objectives import objective_function
 from process.data_structure.numerics import PROCESSRunMode
+from process.data_structure.numerics import SolverOutputCondition
 
 
 def finalise(models, data, ifail: int, non_idempotent_msg: str | None = None):
@@ -26,7 +27,7 @@ def finalise(models, data, ifail: int, non_idempotent_msg: str | None = None):
     non_idempotent_msg : None | str, optional
         warning about non-idempotent variables, defaults to None
     """
-    if ifail == 1:
+    if ifail == SolverOutputCondition.CONVERGED:
         po.oheadr(constants.NOUT, "Final Feasible Point")
     else:
         po.oheadr(constants.NOUT, "Final UNFEASIBLE Point")

@@ -17,6 +17,7 @@ from filelock import FileLock
 from regression_test_assets import RegressionTestAssetCollector
 
 from process.core.io.mfile import MFile
+from process.data_structure.numerics import SolverOutputCondition
 from process.main import process_cli
 
 logger = logging.getLogger(__name__)
@@ -120,7 +121,10 @@ class RegressionTestScenario:
 
         ifail = mfile.data["ifail"].get_scan(-1)
 
-        assert ifail == 1 or mfile.data["ioptimz"].get_scan(-1) == -2, (
+        assert (
+            ifail == SolverOutputCondition.CONVERGED
+            or mfile.data["ioptimz"].get_scan(-1) == -2
+        ), (
             f"\033[0;36m ifail of {ifail} indicates PROCESS did not solve successfully\033[0m"
         )
 

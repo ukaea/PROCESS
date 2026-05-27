@@ -12,6 +12,8 @@ class SolverOutputCondition(IntEnum):
     This is for the `ifail` condition
     """
 
+    USER_TERMINATED = -1
+
     IMPROPER_INPUT = 0
     """Solver failed due to improper input (e.g. invalid parameters, or failure to
     satisfy solver preconditions)"""
