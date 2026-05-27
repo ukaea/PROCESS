@@ -51,7 +51,7 @@ i_process_run_mode = 1
 * DESCRIPTION:   Code operation switch (1: VMCON)
 * JUSTIFICATION: Optimised run
 
-minmax = -5
+i_figure_merit = -5
 * DESCRIPTION:   Switch for Figure-of-Merit 
 * JUSTIFICATION: Selected optimisation
 

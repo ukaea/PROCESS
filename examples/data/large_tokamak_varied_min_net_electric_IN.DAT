@@ -12,7 +12,7 @@
 runtitle = Generic large tokamak
 
 * Figure of merit - minimise major radius
-minmax = 1
+i_figure_merit = 1
 
 * Error tolerance for VMCON
 epsvmc = 1e-7

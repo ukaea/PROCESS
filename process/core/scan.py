@@ -352,10 +352,10 @@ class Scan:
         # Objective function output: none for fsolve
         if self.solver != "fsolve":
             process_output.ovarin(
-                constants.NOUT, "Figure of merit switch", "(minmax)", numerics.minmax
+                constants.NOUT, "Figure of merit switch", "(i_figure_merit)", numerics.i_figure_merit
             )
 
-            objf_name = f'"{numerics.lablmm[abs(numerics.minmax) - 1]}"'
+            objf_name = f'"{numerics.lablmm[abs(numerics.i_figure_merit) - 1]}"'
 
             numerics.objf_name = objf_name
 
@@ -412,7 +412,7 @@ class Scan:
             else:
                 string1 = "PROCESS has failed to optimise"
 
-            string2 = "minimise" if numerics.minmax > 0 else "maximise"
+            string2 = "minimise" if numerics.i_figure_merit > 0 else "maximise"
 
             process_output.write(
                 constants.NOUT,

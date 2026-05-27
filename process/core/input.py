@@ -112,7 +112,7 @@ INPUT_VARIABLES = {
     "boundu": InputVariable(data_structure.numerics, float, array=True),
     "epsfcn": InputVariable(data_structure.numerics, float, range=(0.0, 1.0)),
     "maxcal": InputVariable(data_structure.global_variables, int, range=(0, 10000)),
-    "minmax": InputVariable(data_structure.numerics, int),
+    "i_figure_merit": InputVariable(data_structure.numerics, int),
     "neqns": InputVariable(
         data_structure.numerics, int, range=(0, ConstraintManager.num_constraints())
     ),

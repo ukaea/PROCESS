@@ -7820,9 +7820,9 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
         (f"!{mfile.get('time', scan=-1)}", "Time:", ""),
         (f"!{mfile.get('username', scan=-1)}", "User:", ""),
         ("!Evaluation", "Run type", "")
-        if isinstance(mfile.data["minmax"], MFileErrorClass)
+        if isinstance(mfile.data["i_figure_merit"], MFileErrorClass)
         else (
-            f"!{OBJECTIVE_NAMES[abs(int(mfile.get('minmax', scan=-1)))]}",
+            f"!{OBJECTIVE_NAMES[abs(int(mfile.get('i_figure_merit', scan=-1)))]}",
             "Optimising:",
             "",
         ),
@@ -11579,7 +11579,7 @@ def plot_cover_page(
     branch_name = mfile.get("branch_name", scan=-1)
     fileprefix = mfile.get("fileprefix", scan=-1)
     optmisation_switch = mfile.get("i_process_run_mode", scan=-1)
-    minmax_switch = mfile.get("minmax", scan=-1) or "N/A"
+    minmax_switch = mfile.get("i_figure_merit", scan=-1) or "N/A"
     ifail = mfile.get("ifail", scan=-1)
     nvars = mfile.get("nvar", scan=-1)
     # Objective_function_name
@@ -11660,7 +11660,7 @@ def plot_cover_page(
     # Box 3: Run Settings
     settings_info = (
         f"• Optimisation Switch: {int(optmisation_switch)}\n"
-        f"• Figure of Merit Switch (minmax): {minmax_switch}\n"
+        f"• Figure of Merit Switch (i_figure_merit): {minmax_switch}\n"
         f"• Fail Status (ifail): {int(ifail)}\n"
         f"• Number of Iteration Variables: {int(nvars)}\n"
         f"{objective_text}\n"

@@ -137,7 +137,7 @@ def plot_mfile_solutions(
     filtered_results_df = _filter_vars_of_interest(
         results_df,
         opt_param_value_pattern=opt_param_value_pattern,
-        extra_var_names=["minmax"],
+        extra_var_names=["i_figure_merit"],
     )
 
     if normalising_tag is not None:
@@ -436,7 +436,7 @@ def _plot_solutions(
     # Acquire objective function name(s), then check only one type is being plotted
     # The objective function is found by first checking the NORM_OBJF_NAME column.
     # If this entry does not exist for any of the MFiles (ie they are old),
-    # then the code 'falls back' to the the minmax output. Which holds the same
+    # then the code 'falls back' to the the i_figure_merit output. Which holds the same
     # information, but is less descriptive.
     if (
         NORM_OBJF_NAME in norm_objf_df.columns
@@ -446,7 +446,7 @@ def _plot_solutions(
     else:
         numerics.init_numerics()
         objf_list = {
-            numerics.lablmm[int(abs(minmax)) - 1] for minmax in diffs_df["minmax"]
+            numerics.lablmm[int(abs(i_figure_merit)) - 1] for i_figure_merit in diffs_df["i_figure_merit"]
         }
 
     if len(objf_list) != 1:

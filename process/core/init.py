@@ -180,7 +180,7 @@ def run_summary():
                 f"Max iterations : {data_structure.global_variables.maxcal}",
             )
 
-            if data_structure.numerics.minmax > 0:
+            if data_structure.numerics.i_figure_merit > 0:
                 minmax_string = "  -- minimise "
                 minmax_sign = "+"
             else:
@@ -188,11 +188,11 @@ def run_summary():
                 minmax_sign = "-"
 
             fom_string = data_structure.numerics.lablmm[
-                abs(data_structure.numerics.minmax) - 1
+                abs(data_structure.numerics.i_figure_merit) - 1
             ]
             process_output.ocmmnt(
                 outfile,
-                f"Figure of merit : {minmax_sign}{abs(data_structure.numerics.minmax)}{minmax_string}{fom_string}",
+                f"Figure of merit : {minmax_sign}{abs(data_structure.numerics.i_figure_merit)}{minmax_string}{fom_string}",
             )
             process_output.ocmmnt(
                 outfile,
@@ -225,7 +225,7 @@ def run_summary():
     # If optimising, write figure of merit switch
     if data_structure.numerics.i_process_run_mode == 1:
         process_output.ovarin(
-            mfile, "Figure of merit switch", "(minmax)", data_structure.numerics.minmax
+            mfile, "Figure of merit switch", "(i_figure_merit)", data_structure.numerics.i_figure_merit
         )
 
 

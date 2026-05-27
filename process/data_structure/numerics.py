@@ -19,7 +19,7 @@ i_process_run_mode: int = None
 * 1 for optimisation mode (e.g. via VMCON)
 """
 
-minmax: int = None
+i_figure_merit: int = None
 """
 Switch for figure-of-merit (see lablmm for descriptions)
 negative => maximise, positive => minimise
@@ -453,7 +453,7 @@ ftol: float = None
 def init_numerics():
     global \
         i_process_run_mode, \
-        minmax, \
+        i_figure_merit, \
         lablmm, \
         n_constraints, \
         ncalls, \
@@ -491,7 +491,7 @@ def init_numerics():
         force_vmcon_inequality_tolerance
     """Initialise module variables"""
     i_process_run_mode = 1
-    minmax = 7
+    i_figure_merit = 7
     lablmm = [
         "major radius          ",
         "not used              ",
