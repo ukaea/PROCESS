@@ -1,6 +1,6 @@
 {
   "vars": [
-    "minmax",
+    "i_figure_merit",
     "p_hcd_injected_max",
     "p_plant_electric_net_required_mw",
     "ripple_b_tf_plasma_edge_max",

@@ -7820,9 +7820,9 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
         (f"!{mfile.get('time', scan=-1)}", "Time:", ""),
         (f"!{mfile.get('username', scan=-1)}", "User:", ""),
         ("!Evaluation", "Run type", "")
-        if isinstance(mfile.data["minmax"], MFileErrorClass)
+        if isinstance(mfile.data["i_figure_merit"], MFileErrorClass)
         else (
-            f"!{OBJECTIVE_NAMES[abs(int(mfile.get('minmax', scan=-1)))]}",
+            f"!{OBJECTIVE_NAMES[abs(int(mfile.get('i_figure_merit', scan=-1)))]}",
             "Optimising:",
             "",
         ),
@@ -10378,7 +10378,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: MFile, scan: int):
 
     """
     # Get total number of iteration variables
-    n_itvars = int(m_file.get("nvar", scan=scan))
+    n_itvars = int(m_file.get("n_iteration_variables", scan=scan))
 
     y_labels = []
     y_pos = []
@@ -11578,10 +11578,10 @@ def plot_cover_page(
     tagno = mfile.get("tagno", scan=-1)
     branch_name = mfile.get("branch_name", scan=-1)
     fileprefix = mfile.get("fileprefix", scan=-1)
-    optmisation_switch = mfile.get("ioptimz", scan=-1)
-    minmax_switch = mfile.get("minmax", scan=-1) or "N/A"
+    optmisation_switch = mfile.get("i_process_run_mode", scan=-1)
+    minmax_switch = mfile.get("i_figure_merit", scan=-1) or "N/A"
     ifail = mfile.get("ifail", scan=-1)
-    nvars = mfile.get("nvar", scan=-1)
+    nvars = mfile.get("n_iteration_variables", scan=-1)
     # Objective_function_name
     objf_name = mfile.get("objf_name", scan=-1)
     # Square_root_of_the_sum_of_squares_of_the_constraint_residuals
@@ -11589,7 +11589,7 @@ def plot_cover_page(
     # VMCON_convergence_parameter
     convergence_parameter = mfile.get("convergence_parameter", scan=-1) or "N/A"
     # Number_of_optimising_solver_iterations
-    nviter = int(mfile.get("nviter", scan=-1)) or "N/A"
+    n_solver_iterations = int(mfile.get("n_solver_iterations", scan=-1)) or "N/A"
 
     # Objective name with minimising/maximising
     if isinstance(minmax_switch, str):
@@ -11660,13 +11660,13 @@ def plot_cover_page(
     # Box 3: Run Settings
     settings_info = (
         f"• Optimisation Switch: {int(optmisation_switch)}\n"
-        f"• Figure of Merit Switch (minmax): {minmax_switch}\n"
+        f"• Figure of Merit Switch (i_figure_merit): {minmax_switch}\n"
         f"• Fail Status (ifail): {int(ifail)}\n"
         f"• Number of Iteration Variables: {int(nvars)}\n"
         f"{objective_text}\n"
         f"• Constraint Residuals (sqrt sum sq): {sqsumsq}\n"
         f"• Convergence Parameter: {convergence_parameter}\n"
-        f"• Solver Iterations: {nviter}\n"
+        f"• Solver Iterations: {n_solver_iterations}\n"
         f"• Runtime: {mfile.get('process_runtime', scan=-1):.6f} seconds"
     )
     axis.text(

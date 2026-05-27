@@ -24,16 +24,16 @@ epsvmc   = 1.0e-8
 * DESCRIPTION:   Error tolerance for VMCON
 * JUSTIFICATION: Same tolerance as used on on previous DEMO
 
-ioptimz  = 1 
+i_process_run_mode  = 1 
 * DESCRIPTION:   Code operation switch (1: VMCON)
 * JUSTIFICATION: Optimised run
 
-minmax   = -14 * Switch for figure-of-merit (see lablmm for descriptions)
+i_figure_merit   = -14 * Switch for figure-of-merit (see lablmm for descriptions)
 * 14: pulse legnth
 * DESCRIPTION:   Switch for Figure-of-Merit (1: Minimise major radius)
 * JUSTIFICATION: Aim to minimise major radius
 
-neqns = 4
+n_equality_constraints = 4
 * DESCRIPTION:   No of equality constraints
 * JUSTIFICATION: 
 

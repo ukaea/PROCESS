@@ -9,7 +9,7 @@
 
 *---------------Constraint Equations---------------*
 
-neqns = 2               *number of equalities
+n_equality_constraints = 2               *number of equalities
 
 
 *--------------- equaltities
@@ -224,9 +224,9 @@ f_nd_impurity_electrons(14) = 1.0E-5       *Tungsten
 
 *---------------------Numerics---------------------*
 
-ioptimz  = 1            *Code operation switch (1: Optimisation, VMCON only)
+i_process_run_mode  = 1            *Code operation switch (1: Optimisation, VMCON only)
 maxcal   = 100          *Maximum number of VMCON iterations
-minmax   = 6            *Switch for figure-of-merit (7: Min Capital Cost)
+i_figure_merit   = 6            *Switch for figure-of-merit (7: Min Capital Cost)
 epsfcn   = 0.001
 runtitle = SQuID
 

@@ -33,8 +33,8 @@ DataTypes = (int, float, str)
 
 
 def _ixc_additional_actions(_name, value: int, _array_index, _config):
-    data_structure.numerics.ixc[data_structure.numerics.nvar] = value
-    data_structure.numerics.nvar += 1
+    data_structure.numerics.ixc[data_structure.numerics.n_iteration_variables] = value
+    data_structure.numerics.n_iteration_variables += 1
 
 
 def _icc_additional_actions(_name, value: int, _array_index, _config):
@@ -106,17 +106,17 @@ INPUT_VARIABLES = {
     "runtitle": InputVariable(data_structure.global_variables, str),
     "verbose": InputVariable(data_structure.global_variables, int, choices=[0, 1]),
     "run_tests": InputVariable(data_structure.global_variables, int, choices=[0, 1]),
-    "ioptimz": InputVariable(data_structure.numerics, int, choices=[1, -2]),
+    "i_process_run_mode": InputVariable(data_structure.numerics, int, choices=[1, -2]),
     "epsvmc": InputVariable(data_structure.numerics, float, range=(0.0, 1.0)),
     "boundl": InputVariable(data_structure.numerics, float, array=True),
     "boundu": InputVariable(data_structure.numerics, float, array=True),
     "epsfcn": InputVariable(data_structure.numerics, float, range=(0.0, 1.0)),
     "maxcal": InputVariable(data_structure.global_variables, int, range=(0, 10000)),
-    "minmax": InputVariable(data_structure.numerics, int),
-    "neqns": InputVariable(
+    "i_figure_merit": InputVariable(data_structure.numerics, int),
+    "n_equality_constraints": InputVariable(
         data_structure.numerics, int, range=(0, ConstraintManager.num_constraints())
     ),
-    "nineqns": InputVariable(
+    "n_inequality_constraints": InputVariable(
         data_structure.numerics, int, range=(0, ConstraintManager.num_constraints())
     ),
     "alphaj": InputVariable("physics", float, range=(0.0, 10.0)),
@@ -1277,14 +1277,14 @@ INPUT_VARIABLES = {
     "ixc": InputVariable(
         None,
         int,
-        range=(1, data_structure.numerics.ipnvars),
+        range=(1, data_structure.numerics.N_ITERATION_VARIABLES_MAX),
         additional_actions=_ixc_additional_actions,
         set_variable=False,
     ),
     "icc": InputVariable(
         None,
         int,
-        range=(1, data_structure.numerics.ipeqns),
+        range=(1, data_structure.numerics.N_CONSTRAINT_EQUATIONS_MAX),
         additional_actions=_icc_additional_actions,
         set_variable=False,
     ),

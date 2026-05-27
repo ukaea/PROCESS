@@ -15,7 +15,7 @@ A PROCESS input file will, for example, define which constraint equations are be
 
 ```
 ...
-neqns = 3
+n_equality_constraints = 3
 
 * Equalities
 icc = 1 * Beta
@@ -33,7 +33,7 @@ icc = 15 * LH power threshold limit
 Here each `icc=n` statement tells PROCESS to activate a constraint with the name `n`. A list of the constraints and 
 their corresponding names can be found [here](../../source/reference/process/data_structure/numerics/#process.data_structure.numerics.lablcc).
 
-The `neqns = 3` statement is telling PROCESS to treat the first `3` equations as equality constraints, and the rest as inequality constraints. Therefore, it is imperative that all equality constraints are stated before any inequality constraints.
+The `n_equality_constraints = 3` statement is telling PROCESS to treat the first `3` equations as equality constraints, and the rest as inequality constraints. Therefore, it is imperative that all equality constraints are stated before any inequality constraints.
 
 
 In both types of equations, an optimiser/solver uses the normalised residuals $c_i$ of the constraints (and sometimes its gradient, depending on the solver/optimiser) to guide the solution towards one that satisfies all of the constraints.
@@ -96,9 +96,9 @@ known as the figure of merit.
 Several possible figures of merit are available, all of which are in the 
 source file `evaluators.f90`. 
 
-Switch `minmax` is used to control which figure of merit is to be used. If the 
-figure of merit is to be minimised, `minmax` should be **positive**, and if a 
-maximised figure of merit is desired, `minmax` should be **negative**.
+Switch `i_figure_merit` is used to control which figure of merit is to be used. If the 
+figure of merit is to be minimised, `i_figure_merit` should be **positive**, and if a 
+maximised figure of merit is desired, `i_figure_merit` should be **negative**.
 
 ## Convergence
 
@@ -106,9 +106,9 @@ maximised figure of merit is desired, `minmax` should be **negative**.
 
 ## Optimisation mode
 
-Switch `ioptimz` should be set to 1 for optimisation mode.
+Switch `i_process_run_mode` should be set to 1 for optimisation mode.
 
-If `ioptimz = 0`, a non-optimisation pass is performed first. Occasionally this provides a feasible set of initial conditions that aids convergence of the optimiser, but it is recommended to use `ioptimz = 1`.
+If `i_process_run_mode = 0`, a non-optimisation pass is performed first. Occasionally this provides a feasible set of initial conditions that aids convergence of the optimiser, but it is recommended to use `i_process_run_mode = 1`.
 
 Enable all the relevant consistency equations, and it is advisable to enable the corresponding iterations variables. A number of limit equations (inequality constraints) can also be activated. In optimisation mode, the number of iteration variables is unlimited.
 
@@ -137,11 +137,11 @@ Running `PROCESS` in evaluation mode requires few changes to be made to the inpu
 As before, the user must decide which constraint equations and iteration variables to activate. For example, an extract from an input file might look like:
 ```
 * Evaluation problem: evaluate models consistently by solving equality constraints only
-ioptimz  = -2 * evaluation mode
+i_process_run_mode  = -2 * evaluation mode
 
 *---------------Constraint Equations---------------*
 * Define number of equality constraints
-neqns = 2
+n_equality_constraints = 2
 
 * Equalities
 icc = 1 * Beta

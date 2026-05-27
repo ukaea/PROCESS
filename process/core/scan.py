@@ -259,7 +259,9 @@ class Scan:
         ifail: int :
 
         """
-        numerics.sqsumsq = sum(r**2 for r in numerics.rcm[: numerics.neqns]) ** 0.5
+        numerics.sqsumsq = (
+            sum(r**2 for r in numerics.rcm[: numerics.n_equality_constraints]) ** 0.5
+        )
 
         process_output.oheadr(constants.NOUT, "Numerics")
         if self.solver == "fsolve":
@@ -335,24 +337,33 @@ class Scan:
                 logger.warning(f"High final constraint residues. {numerics.sqsumsq=}")
 
         process_output.ovarin(
-            constants.NOUT, "Number of iteration variables", "(nvar)", numerics.nvar
+            constants.NOUT,
+            "Number of iteration variables",
+            "(n_iteration_variables)",
+            numerics.n_iteration_variables,
         )
         process_output.ovarin(
             constants.NOUT,
             "Number of constraints (total)",
-            "(neqns+nineqns)",
-            numerics.neqns + numerics.nineqns,
+            "(n_equality_constraints+n_inequality_constraints)",
+            numerics.n_equality_constraints + numerics.n_inequality_constraints,
         )
         process_output.ovarin(
-            constants.NOUT, "Optimisation switch", "(ioptimz)", numerics.ioptimz
+            constants.NOUT,
+            "Optimisation switch",
+            "(i_process_run_mode)",
+            numerics.i_process_run_mode,
         )
         # Objective function output: none for fsolve
         if self.solver != "fsolve":
             process_output.ovarin(
-                constants.NOUT, "Figure of merit switch", "(minmax)", numerics.minmax
+                constants.NOUT,
+                "Figure of merit switch",
+                "(i_figure_merit)",
+                numerics.i_figure_merit,
             )
 
-            objf_name = f'"{numerics.lablmm[abs(numerics.minmax) - 1]}"'
+            objf_name = f'"{numerics.lablmm[abs(numerics.i_figure_merit) - 1]}"'
 
             numerics.objf_name = objf_name
 
@@ -388,8 +399,8 @@ class Scan:
             process_output.ovarin(
                 constants.NOUT,
                 "Number of optimising solver iterations",
-                "(nviter)",
-                numerics.nviter,
+                "(n_solver_iterations)",
+                numerics.n_solver_iterations,
                 "OP ",
             )
         process_output.oblnkl(constants.NOUT)
@@ -409,7 +420,7 @@ class Scan:
             else:
                 string1 = "PROCESS has failed to optimise"
 
-            string2 = "minimise" if numerics.minmax > 0 else "maximise"
+            string2 = "minimise" if numerics.i_figure_merit > 0 else "maximise"
 
             process_output.write(
                 constants.NOUT,
@@ -420,7 +431,7 @@ class Scan:
 
         # Output optimisation parameters
         solution_vector_table = []
-        for i in range(numerics.nvar):
+        for i in range(numerics.n_iteration_variables):
             numerics.xcs[i] = numerics.xcm[i] * numerics.scafc[i]
 
             name = numerics.lablxc[numerics.ixc[i] - 1]
@@ -523,12 +534,14 @@ class Scan:
         )
 
         con1, con2, err, _, lab = constraints.constraint_eqns(
-            numerics.neqns + numerics.nineqns, -1, self.data
+            numerics.n_equality_constraints + numerics.n_inequality_constraints,
+            -1,
+            self.data,
         )
 
         # Write equality constraints to mfile
         equality_constraint_table = []
-        for i in range(numerics.neqns):
+        for i in range(numerics.n_equality_constraints):
             name = numerics.lablcc[numerics.icc[i] - 1]
 
             equality_constraint_table.append([
@@ -582,7 +595,7 @@ class Scan:
         )
 
         # Write inequality constraints
-        if numerics.nineqns > 0:
+        if numerics.n_inequality_constraints > 0:
             inequality_constraint_table = []
             # Inequalities not necessarily satisfied when evaluating
             process_output.osubhd(
@@ -596,7 +609,10 @@ class Scan:
                     "might be violated.",
                 )
 
-            for i in range(numerics.neqns, numerics.neqns + numerics.nineqns):
+            for i in range(
+                numerics.n_equality_constraints,
+                numerics.n_equality_constraints + numerics.n_inequality_constraints,
+            ):
                 name = numerics.lablcc[numerics.icc[i] - 1]
                 constraint = constraints.ConstraintManager.evaluate_constraint(
                     int(numerics.icc[i]), self.data

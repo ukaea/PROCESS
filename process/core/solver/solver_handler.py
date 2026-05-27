@@ -37,14 +37,14 @@ class SolverHandler:
         # Initialise iteration variables and bounds in Python: relies on Fortran
         # iteration variables being defined above
         # Trim maximum size arrays down to actually used size
-        n = numerics.nvar
+        n = numerics.n_iteration_variables
         x = numerics.xcm[:n]
         bndl = numerics.itv_scaled_lower_bounds[:n]
         bndu = numerics.itv_scaled_upper_bounds[:n]
 
         # Define total number of constraints and equality constraints
-        m = numerics.neqns + numerics.nineqns
-        meq = numerics.neqns
+        m = numerics.n_equality_constraints + numerics.n_inequality_constraints
+        meq = numerics.n_equality_constraints
 
         # Evaluators() calculates the objective and constraint functions and
         # their gradients for a given vector x
@@ -82,8 +82,8 @@ class SolverHandler:
 
             # If VMCON has exited with error code 5 try another run using a multiple
             # of the identity matrix as input for the Hessian b(n,n)
-            # Only do this if VMCON has not iterated (nviter=1)
-            if ifail == 5 and numerics.nviter < 2:
+            # Only do this if VMCON has not iterated (n_solver_iterations=1)
+            if ifail == 5 and numerics.n_solver_iterations < 2:
                 print(
                     "VMCON error code = 5.  Rerunning VMCON with a new initial "
                     "estimate of the second derivative matrix."

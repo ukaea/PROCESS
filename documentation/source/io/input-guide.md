@@ -112,16 +112,16 @@ If bounds are not specified default values are used.
 The user can select which solver to use, but only one solver is available at present (VMCON).
 
 ```
-ioptimz  = 1 * for optimisation VMCON only
+i_process_run_mode  = 1 * for optimisation VMCON only
 ```
 
 The user can select the figure of merit to be used:
 
 ```
-minmax   = 1 * Switch for figure-of-merit (see lablmm for descriptions)
+i_figure_merit   = 1 * Switch for figure-of-merit (see lablmm for descriptions)
 ```
 
-In this case the user is choosing option `1`, which is major radius. For `minmax`
+In this case the user is choosing option `1`, which is major radius. For `i_figure_merit`
 
 * a **positive** value means **minimise** the figure of merit
 * a **negative** value means **maximise** the figure of merit

@@ -98,7 +98,7 @@ class Caller:
         for _ in range(10):
             self._call_models_once(xc, self.data)
             # Evaluate objective function and constraints
-            objf = objective_function(data_structure.numerics.minmax, self.data)
+            objf = objective_function(data_structure.numerics.i_figure_merit, self.data)
             conf, _, _, _, _ = constraints.constraint_eqns(m, -1, self.data)
 
             if objf_prev is None and conf_prev is None:
@@ -262,7 +262,7 @@ class Caller:
         nvars = len(xc)
 
         # Increment the call counter
-        data_structure.numerics.ncalls += 1
+        data_structure.numerics.n_model_calls += 1
 
         # Convert variables
         set_scaled_iteration_variable(xc, nvars, self.data)
@@ -417,7 +417,7 @@ def write_output_files(
     ifail : int
         solver return code
     """
-    n = data_structure.numerics.nvar
+    n = data_structure.numerics.n_iteration_variables
     x = data_structure.numerics.xcm[:n]
     # Call models, ensuring output mfiles are fully idempotent
     caller = Caller(models, data)

@@ -1,32 +1,32 @@
 import numpy as np
 
-ipnvars: int = 177
-"""total number of variables available for iteration"""
+N_ITERATION_VARIABLES_MAX: int = 177
+"""Total number of variables available for iteration (i.e. optimisation)"""
 
-ipeqns: int = 92
-"""number of constraint equations available"""
+N_CONSTRAINT_EQUATIONS_MAX: int = 92
+"""Number of constraint equations available to be activated"""
 
-ipnfoms: int = 19
+N_FIGURES_MERIT_MAX: int = 19
 """number of available figures of merit"""
 
-ipvlam: int = ipeqns + 2 * ipnvars + 1
-iptnt: int = (ipeqns * (3 * ipeqns + 13)) / 2
-ipvp1: int = ipnvars + 1
+ipvlam: int = N_CONSTRAINT_EQUATIONS_MAX + 2 * N_ITERATION_VARIABLES_MAX + 1
+iptnt: int = (N_CONSTRAINT_EQUATIONS_MAX * (3 * N_CONSTRAINT_EQUATIONS_MAX + 13)) / 2
+ipvp1: int = N_ITERATION_VARIABLES_MAX + 1
 
-ioptimz: int = None
+i_process_run_mode: int = None
 """Code operation switch:
 * -2 for evaluation mode (i.e. no optimisation)
 * 1 for optimisation mode (e.g. via VMCON)
 """
 
-minmax: int = None
+i_figure_merit: int = None
 """
 Switch for figure-of-merit (see lablmm for descriptions)
 negative => maximise, positive => minimise
 """
 
 lablmm: list[str] = None
-"""lablmm(ipnfoms) : labels describing figures of merit:<UL>
+"""lablmm(N_FIGURES_MERIT_MAX) : labels describing figures of merit:<UL>
 * ( 1) major radius
 * ( 2) not used
 * ( 3) neutron wall load
@@ -53,14 +53,14 @@ note: FoM should be minimised only!
 """
 
 n_constraints: int = None
-"""Total number of constraints (neqns + nineqns)"""
+"""Total number of constraints (n_equality_constraints + n_inequality_constraints)"""
 
 
-ncalls: int = None
-"""number of function calls during solution"""
+n_model_calls: int = None
+"""Number of model calls during solution"""
 
-neqns: int = None
-"""number of equality constraints to be satisfied"""
+n_equality_constraints: int = None
+"""Number of equality constraints to be satisfied"""
 
 nfev1: int = None
 """number of calls to FCNHYB (HYBRD function caller) made"""
@@ -68,16 +68,16 @@ nfev1: int = None
 nfev2: int = None
 """number of calls to FCNVMC1 (VMCON function caller) made"""
 
-nineqns: int = None
+n_inequality_constraints: int = None
 """number of inequality constraints VMCON must satisfy
 (leave at zero for now)
 """
 
-nvar: int = None
-"""number of iteration variables to use"""
+n_iteration_variables: int = None
+"""Number of iteration variables active during a run"""
 
-nviter: int = None
-"""number of optimisation iterations performed"""
+n_solver_iterations: int = None
+"""Number of optimisation iterations performed"""
 
 icc: list[int] = None
 
@@ -452,17 +452,17 @@ ftol: float = None
 
 def init_numerics():
     global \
-        ioptimz, \
-        minmax, \
+        i_process_run_mode, \
+        i_figure_merit, \
         lablmm, \
         n_constraints, \
-        ncalls, \
-        neqns, \
+        n_model_calls, \
+        n_equality_constraints, \
         nfev1, \
         nfev2, \
-        nineqns, \
-        nvar, \
-        nviter, \
+        n_inequality_constraints, \
+        n_iteration_variables, \
+        n_solver_iterations, \
         icc, \
         active_constraints, \
         lablcc, \
@@ -490,8 +490,8 @@ def init_numerics():
         force_vmcon_inequality_satisfication, \
         force_vmcon_inequality_tolerance
     """Initialise module variables"""
-    ioptimz = 1
-    minmax = 7
+    i_process_run_mode = 1
+    i_figure_merit = 7
     lablmm = [
         "major radius          ",
         "not used              ",
@@ -514,16 +514,16 @@ def init_numerics():
         "max Q, max t_plant_pulse_burn     ",
     ]
 
-    ncalls = 0
-    neqns = -1
+    n_model_calls = 0
+    n_equality_constraints = -1
     nfev1 = 0
     nfev2 = 0
-    nineqns = 0
-    nvar = 0
+    n_inequality_constraints = 0
+    n_iteration_variables = 0
     n_constraints = 0
-    nviter = 0
-    icc = np.array([0] * ipeqns)
-    active_constraints = [False] * ipeqns
+    n_solver_iterations = 0
+    icc = np.array([0] * N_CONSTRAINT_EQUATIONS_MAX)
+    active_constraints = [False] * N_CONSTRAINT_EQUATIONS_MAX
 
     lablcc = [
         "⟨β⟩ consistency                   ",
@@ -620,11 +620,11 @@ def init_numerics():
         "Fuel composition consistency     ",
     ]
 
-    ixc = np.array([0] * ipnvars)
+    ixc = np.array([0] * N_ITERATION_VARIABLES_MAX)
 
     # WARNING These labels are used as variable names by write_new_in_dat.py, and possibly
     # other python utilities, so they cannot easily be changed.
-    lablxc = [""] * ipnvars
+    lablxc = [""] * N_ITERATION_VARIABLES_MAX
 
     sqsumsq = 0.0
     objf_name = ""
@@ -634,18 +634,18 @@ def init_numerics():
     factor = 0.1e0
     ftol = 1.0e-4
 
-    boundl = np.array([9.0e-99] * ipnvars)
-    boundu = np.array([9.0e99] * ipnvars)
+    boundl = np.array([9.0e-99] * N_ITERATION_VARIABLES_MAX)
+    boundu = np.array([9.0e99] * N_ITERATION_VARIABLES_MAX)
 
-    itv_scaled_lower_bounds = np.array([0.0] * ipnvars)
-    itv_scaled_upper_bounds = np.array([0.0] * ipnvars)
-    rcm = np.array([0.0] * ipnvars)
-    resdl = np.array([0.0] * ipnvars)
-    scafc = np.array([0.0] * ipnvars)
-    scale = np.array([0.0] * ipnvars)
-    xcm = np.array([0.0] * ipnvars)
-    xcs = np.array([0.0] * ipnvars)
-    vlam = np.array([0.0] * ipnvars)
-    name_xc = [""] * ipnvars
+    itv_scaled_lower_bounds = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    itv_scaled_upper_bounds = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    rcm = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    resdl = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    scafc = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    scale = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    xcm = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    xcs = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    vlam = np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    name_xc = [""] * N_ITERATION_VARIABLES_MAX
     force_vmcon_inequality_satisfication = 1
     force_vmcon_inequality_tolerance = 1e-8

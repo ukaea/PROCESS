@@ -12,14 +12,14 @@
 runtitle = Generic large tokamak
 
 * Figure of merit - minimise major radius
-minmax = 1
+i_figure_merit = 1
 
 * Error tolerance for VMCON
 epsvmc = 1e-7
 
 * Number of equality constraints
-* (the first neqns icc=... statements are equality constraints)
-neqns = 3
+* (the first n_equality_constraints icc=... statements are equality constraints)
+n_equality_constraints = 3
 
 * Maximum number of solver iterations
 maxcal = 100

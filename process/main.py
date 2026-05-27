@@ -416,23 +416,23 @@ class SingleRun:
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
-        n = int(data_structure.numerics.nvar)
+        n = int(data_structure.numerics.n_iteration_variables)
         # [:n] as array always at max size: contains 0s
         data_structure.numerics.ixc[:n].sort()
 
     def run_scan(self):
         """Create scan object if required."""
         # TODO Move this solver logic up to init?
-        # ioptimz == 1: optimisation
-        if data_structure.numerics.ioptimz == 1:
+        # i_process_run_mode == 1: optimisation
+        if data_structure.numerics.i_process_run_mode == 1:
             pass
-        # ioptimz == -2: evaluation
-        elif data_structure.numerics.ioptimz == -2:
+        # i_process_run_mode == -2: evaluation
+        elif data_structure.numerics.i_process_run_mode == -2:
             # No optimisation: solve equality (consistency) constraints only using fsolve (HYBRD)
             self.solver = "fsolve"
         else:
             raise ValueError(
-                f"Invalid ioptimz value: {data_structure.numerics.ioptimz}. Please "
+                f"Invalid i_process_run_mode value: {data_structure.numerics.i_process_run_mode}. Please "
                 "select either 1 (optimise) or -2 (no optimisation)."
             )
         self.scan = Scan(self.models, self.solver, self.data)

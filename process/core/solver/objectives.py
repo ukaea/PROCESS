@@ -24,7 +24,7 @@ OBJECTIVE_NAMES = {
 }
 
 
-def objective_function(minmax: int, data: DataStructure) -> float:
+def objective_function(i_figure_merit: int, data: DataStructure) -> float:
     """Calculate the specified objective function
 
     Parameters
@@ -53,11 +53,11 @@ def objective_function(minmax: int, data: DataStructure) -> float:
         data structure object for providing data to the
         objective function
     """
-    figure_of_merit = abs(minmax)
+    figure_of_merit = abs(i_figure_merit)
 
     # -1 = maximise
     # +1 = minimise
-    objective_sign = np.sign(minmax)
+    objective_sign = np.sign(i_figure_merit)
 
     match figure_of_merit:
         case 1:
@@ -94,7 +94,9 @@ def objective_function(minmax: int, data: DataStructure) -> float:
             objective_metric = data.times.t_plant_pulse_burn / 2.0e4
         case 15:
             if data.costs.i_plant_availability != 1:
-                raise ProcessValueError("minmax=15 requires i_plant_availability=1")
+                raise ProcessValueError(
+                    "i_figure_merit=15 requires i_plant_availability=1"
+                )
             objective_metric = data.costs.f_t_plant_available
         case 16:
             objective_metric = 0.95 * (data.physics.rmajor / 9.0) - 0.05 * (
