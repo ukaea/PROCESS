@@ -53,7 +53,7 @@ note: FoM should be minimised only!
 """
 
 n_constraints: int = None
-"""Total number of constraints (n_equality_constraints + nineqns)"""
+"""Total number of constraints (n_equality_constraints + n_inequality_constraints)"""
 
 
 ncalls: int = None
@@ -68,7 +68,7 @@ nfev1: int = None
 nfev2: int = None
 """number of calls to FCNVMC1 (VMCON function caller) made"""
 
-nineqns: int = None
+n_inequality_constraints: int = None
 """number of inequality constraints VMCON must satisfy
 (leave at zero for now)
 """
@@ -460,7 +460,7 @@ def init_numerics():
         n_equality_constraints, \
         nfev1, \
         nfev2, \
-        nineqns, \
+        n_inequality_constraints, \
         nvar, \
         nviter, \
         icc, \
@@ -518,7 +518,7 @@ def init_numerics():
     n_equality_constraints = -1
     nfev1 = 0
     nfev2 = 0
-    nineqns = 0
+    n_inequality_constraints = 0
     nvar = 0
     n_constraints = 0
     nviter = 0

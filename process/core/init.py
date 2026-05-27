@@ -165,11 +165,11 @@ def run_summary():
         )
         process_output.ocmmnt(
             outfile,
-            f"Inequality constraints : {data_structure.numerics.nineqns}",
+            f"Inequality constraints : {data_structure.numerics.n_inequality_constraints}",
         )
         process_output.ocmmnt(
             outfile,
-            f"Total constraints : {data_structure.numerics.nineqns + data_structure.numerics.n_equality_constraints}",
+            f"Total constraints : {data_structure.numerics.n_inequality_constraints + data_structure.numerics.n_equality_constraints}",
         )
         process_output.ocmmnt(
             outfile, f"Iteration variables : {data_structure.numerics.nvar}"
@@ -299,14 +299,14 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         data_structure.numerics.icc[
             : data_structure.numerics.n_equality_constraints
-            + data_structure.numerics.nineqns
+            + data_structure.numerics.n_inequality_constraints
         ]
         == 0
     ).any():
         raise ProcessValidationError(
-            "The number of constraints specified is smaller than the number stated in n_equality_constraints+nineqns",
+            "The number of constraints specified is smaller than the number stated in n_equality_constraints+n_inequality_constraints",
             n_equality_constraints=data_structure.numerics.n_equality_constraints,
-            nineqns=data_structure.numerics.nineqns,
+            n_inequality_constraints=data_structure.numerics.n_inequality_constraints,
         )
 
     # Deprecate constraints
@@ -314,7 +314,7 @@ def check_process(inputs, data):  # noqa: ARG001
         if (
             data_structure.numerics.icc[
                 : data_structure.numerics.n_equality_constraints
-                + data_structure.numerics.nineqns
+                + data_structure.numerics.n_inequality_constraints
             ]
             == depcrecated_constraint
         ).any():
@@ -326,7 +326,7 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         data_structure.numerics.icc[
             : data_structure.numerics.n_equality_constraints
-            + data_structure.numerics.nineqns
+            + data_structure.numerics.n_inequality_constraints
         ]
         == 63
     ).any() and data.vacuum.i_vacuum_pumping != "simple":
@@ -482,7 +482,7 @@ def check_process(inputs, data):  # noqa: ARG001
             and not (
                 data_structure.numerics.icc[
                     : data_structure.numerics.n_equality_constraints
-                    + data_structure.numerics.nineqns
+                    + data_structure.numerics.n_inequality_constraints
                 ]
                 == 81
             ).any()
@@ -504,13 +504,13 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         data_structure.numerics.icc[
             : data_structure.numerics.n_equality_constraints
-            + data_structure.numerics.nineqns
+            + data_structure.numerics.n_inequality_constraints
         ]
         == 68
     ).any() and (
         data_structure.numerics.icc[
             : data_structure.numerics.n_equality_constraints
-            + data_structure.numerics.nineqns
+            + data_structure.numerics.n_inequality_constraints
         ]
         == 56
     ).any():
@@ -533,7 +533,7 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         data_structure.numerics.icc[
             : data_structure.numerics.n_equality_constraints
-            + data_structure.numerics.nineqns
+            + data_structure.numerics.n_inequality_constraints
         ]
         == 78
     ).any():
@@ -551,7 +551,7 @@ def check_process(inputs, data):  # noqa: ARG001
             not (
                 data_structure.numerics.icc[
                     : data_structure.numerics.n_equality_constraints
-                    + data_structure.numerics.nineqns
+                    + data_structure.numerics.n_inequality_constraints
                 ]
                 == 15
             ).any()
@@ -690,7 +690,7 @@ def check_process(inputs, data):  # noqa: ARG001
             and (
                 data_structure.numerics.icc[
                     : data_structure.numerics.n_equality_constraints
-                    + data_structure.numerics.nineqns
+                    + data_structure.numerics.n_inequality_constraints
                 ]
                 == 85
             ).any()
@@ -765,7 +765,7 @@ def check_process(inputs, data):  # noqa: ARG001
         if (
             data_structure.numerics.icc[
                 : data_structure.numerics.n_equality_constraints
-                + data_structure.numerics.nineqns
+                + data_structure.numerics.n_inequality_constraints
             ]
             == 10
         ).any():
@@ -810,14 +810,14 @@ def check_process(inputs, data):  # noqa: ARG001
             (
                 data_structure.numerics.icc[
                     : data_structure.numerics.n_equality_constraints
-                    + data_structure.numerics.nineqns
+                    + data_structure.numerics.n_inequality_constraints
                 ]
                 == 31
             ).any()
             or (
                 data_structure.numerics.icc[
                     : data_structure.numerics.n_equality_constraints
-                    + data_structure.numerics.nineqns
+                    + data_structure.numerics.n_inequality_constraints
                 ]
                 == 32
             ).any()
@@ -1168,7 +1168,7 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         data_structure.numerics.icc[
             : data_structure.numerics.n_equality_constraints
-            + data_structure.numerics.nineqns
+            + data_structure.numerics.n_inequality_constraints
         ]
         == 36
     ).any() and (
@@ -1183,7 +1183,7 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         data_structure.numerics.icc[
             : data_structure.numerics.n_equality_constraints
-            + data_structure.numerics.nineqns
+            + data_structure.numerics.n_inequality_constraints
         ]
         == 60
     ).any() and data.pf_coil.i_cs_superconductor == 8:
@@ -1202,7 +1202,7 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         data_structure.numerics.icc[
             : data_structure.numerics.n_equality_constraints
-            + data_structure.numerics.nineqns
+            + data_structure.numerics.n_inequality_constraints
         ]
         == 88
     ).any() and data_structure.tfcoil_variables.i_str_wp == 0:
@@ -1222,10 +1222,10 @@ def set_active_constraints():
     if data_structure.numerics.n_equality_constraints < 0:
         # The value of n_equality_constraints has not been set in the input file.  Default = 0.
         data_structure.numerics.n_equality_constraints = (
-            num_constraints - data_structure.numerics.nineqns
+            num_constraints - data_structure.numerics.n_inequality_constraints
         )
     else:
-        data_structure.numerics.nineqns = (
+        data_structure.numerics.n_inequality_constraints = (
             num_constraints - data_structure.numerics.n_equality_constraints
         )
 

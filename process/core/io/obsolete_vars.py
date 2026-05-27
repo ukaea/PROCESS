@@ -450,6 +450,7 @@ OBS_VARS = {
     "fl_h_threshold": None,
     "minmax": "i_figure_merit",
     "neqns": "n_equality_constraints",
+    "nineqns": "n_inequality_constraints",
 }
 
 OBS_VARS_HELP = {

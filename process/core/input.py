@@ -116,7 +116,7 @@ INPUT_VARIABLES = {
     "n_equality_constraints": InputVariable(
         data_structure.numerics, int, range=(0, ConstraintManager.num_constraints())
     ),
-    "nineqns": InputVariable(
+    "n_inequality_constraints": InputVariable(
         data_structure.numerics, int, range=(0, ConstraintManager.num_constraints())
     ),
     "alphaj": InputVariable("physics", float, range=(0.0, 10.0)),

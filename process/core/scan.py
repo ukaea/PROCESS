@@ -342,8 +342,8 @@ class Scan:
         process_output.ovarin(
             constants.NOUT,
             "Number of constraints (total)",
-            "(n_equality_constraints+nineqns)",
-            numerics.n_equality_constraints + numerics.nineqns,
+            "(n_equality_constraints+n_inequality_constraints)",
+            numerics.n_equality_constraints + numerics.n_inequality_constraints,
         )
         process_output.ovarin(
             constants.NOUT,
@@ -531,7 +531,9 @@ class Scan:
         )
 
         con1, con2, err, _, lab = constraints.constraint_eqns(
-            numerics.n_equality_constraints + numerics.nineqns, -1, self.data
+            numerics.n_equality_constraints + numerics.n_inequality_constraints,
+            -1,
+            self.data,
         )
 
         # Write equality constraints to mfile
@@ -590,7 +592,7 @@ class Scan:
         )
 
         # Write inequality constraints
-        if numerics.nineqns > 0:
+        if numerics.n_inequality_constraints > 0:
             inequality_constraint_table = []
             # Inequalities not necessarily satisfied when evaluating
             process_output.osubhd(
@@ -606,7 +608,7 @@ class Scan:
 
             for i in range(
                 numerics.n_equality_constraints,
-                numerics.n_equality_constraints + numerics.nineqns,
+                numerics.n_equality_constraints + numerics.n_inequality_constraints,
             ):
                 name = numerics.lablcc[numerics.icc[i] - 1]
                 constraint = constraints.ConstraintManager.evaluate_constraint(

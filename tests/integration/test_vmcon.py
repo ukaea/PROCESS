@@ -423,10 +423,10 @@ def get_case1():
 
     # Set up solver args for this case
     n_equality_constraints = 1
-    nineqns = 1
+    n_inequality_constraints = 1
     case.solver_args.x[0:2] = 2.0e0
     case.solver_args.n = 2
-    case.solver_args.m = n_equality_constraints + nineqns
+    case.solver_args.m = n_equality_constraints + n_inequality_constraints
     case.solver_args.meq = n_equality_constraints
 
     # Expected values
@@ -457,9 +457,9 @@ def get_case2():
 
     # Solver args for this case
     n_equality_constraints = 0
-    nineqns = 2
+    n_inequality_constraints = 2
     case.solver_args.n = 2
-    case.solver_args.m = n_equality_constraints + nineqns
+    case.solver_args.m = n_equality_constraints + n_inequality_constraints
     case.solver_args.meq = n_equality_constraints
     case.solver_args.x[0:2] = 2.0e0
 
@@ -494,9 +494,9 @@ def get_case3():
 
     # Solver args for this case
     n_equality_constraints = 1
-    nineqns = 1
+    n_inequality_constraints = 1
     case.solver_args.n = 2
-    case.solver_args.m = n_equality_constraints + nineqns
+    case.solver_args.m = n_equality_constraints + n_inequality_constraints
     case.solver_args.meq = n_equality_constraints
     case.solver_args.x[0:2] = 2.0e0
 
@@ -528,9 +528,9 @@ def get_case4():
 
     # Set up vmcon values for this case
     n_equality_constraints = 1
-    nineqns = 0
+    n_inequality_constraints = 0
     case.solver_args.n = 2
-    case.solver_args.m = n_equality_constraints + nineqns
+    case.solver_args.m = n_equality_constraints + n_inequality_constraints
     case.solver_args.meq = n_equality_constraints
     case.solver_args.xtol = 2.0e-8
     case.solver_args.x[0:2] = 1.0e0
@@ -570,9 +570,9 @@ def get_case5():
 
     # Set up vmcon values for this case
     n_equality_constraints = 1
-    nineqns = 0
+    n_inequality_constraints = 0
     case.solver_args.n = 1
-    case.solver_args.m = n_equality_constraints + nineqns
+    case.solver_args.m = n_equality_constraints + n_inequality_constraints
     case.solver_args.meq = n_equality_constraints
     case.solver_args.x = np.array([
         5.0
