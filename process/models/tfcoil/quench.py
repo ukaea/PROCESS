@@ -421,9 +421,8 @@ def calculate_quench_protection_current_density(
         t_he_peak, temp_quench_max, b_peak, cu_rrr, fluence
     )
 
-    f_cond = 1.0 - f_he  # Fraction of the cable XS area that is not helium
-    f_cu_cable = f_cond * f_cu  # Fraction of the cable XS that is copper
-    f_sc_cable = f_cond * (1.0 - f_cu)  # Fraction of the cable XS that is superconductor
+    f_cu_cable = (1.0 - f_he) * f_cu
+    f_sc_cable = (1.0 - f_he) * (1.0 - f_cu_cable)
 
     factor = 1.0 / (0.5 * tau_discharge + t_quench_detection)
     total_integral = f_he * i_he + f_cu_cable * i_cu + f_sc_cable * i_sc
@@ -442,6 +441,8 @@ def plot_quench_time_evolution(
     t_quench_detection: float,
     fluence: float,
     j_operating: float,
+    a_tf_turn_cable_space: float,
+    a_tf_turn: float,
     n_points: int = 500,
     axes_1: plt.Axes = None,
     axes_2: plt.Axes = None,
@@ -474,6 +475,10 @@ def plot_quench_time_evolution(
         Neutron fluence [n/m²].
     j_operating:
         Operating current density [A/m²] to compare against the quench protection limit.
+    a_tf_turn_cable_space:
+        Area of the TF turn cable space [m²].
+    a_tf_turn:
+        Area of the TF turn [m²].
     n_points:
         Number of time points for the plot.
     axes_1:
@@ -493,29 +498,33 @@ def plot_quench_time_evolution(
 
     fluence = np.clip(fluence, 0.0, 1.5e23)
 
-    j_max = calculate_quench_protection_current_density(
-        tau_discharge,
-        b_peak,
-        f_cu,
-        f_he,
-        t_he_peak,
-        temp_quench_max,
-        cu_rrr,
-        t_quench_detection,
-        fluence,
+    j_max = (
+        a_tf_turn_cable_space / a_tf_turn
+    ) * calculate_quench_protection_current_density(
+        tau_discharge=tau_discharge,
+        b_peak=b_peak,
+        f_cu=f_cu,
+        f_he=f_he,
+        t_he_peak=t_he_peak,
+        temp_quench_max=temp_quench_max,
+        cu_rrr=cu_rrr,
+        t_quench_detection=t_quench_detection,
+        fluence=fluence,
     )
 
     fluence_1e23 = 1e23
-    j_max_1e23 = calculate_quench_protection_current_density(
-        tau_discharge,
-        b_peak,
-        f_cu,
-        f_he,
-        t_he_peak,
-        temp_quench_max,
-        cu_rrr,
-        t_quench_detection,
-        fluence_1e23,
+    j_max_1e23 = (
+        a_tf_turn_cable_space / a_tf_turn
+    ) * calculate_quench_protection_current_density(
+        tau_discharge=tau_discharge,
+        b_peak=b_peak,
+        f_cu=f_cu,
+        f_he=f_he,
+        t_he_peak=t_he_peak,
+        temp_quench_max=temp_quench_max,
+        cu_rrr=cu_rrr,
+        t_quench_detection=t_quench_detection,
+        fluence=fluence_1e23,
     )
 
     # Time axis: from 0 to ~4 time constants

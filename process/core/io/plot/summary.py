@@ -14976,6 +14976,10 @@ def main_plot(
                 t_quench_detection=m_file.get("t_tf_quench_detection", scan=scan),
                 fluence=m_file.get("nflutfmax", scan=scan),
                 j_operating=m_file.get("j_tf_wp", scan=scan),
+                a_tf_turn_cable_space=m_file.get(
+                    "a_tf_turn_cable_space_no_void", scan=scan
+                ),
+                a_tf_turn=m_file.get("a_tf_turn", scan=scan),
                 axes_1=figs[26].add_subplot(211),
                 axes_2=figs[26].add_subplot(212),
             )

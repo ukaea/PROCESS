@@ -635,6 +635,12 @@ class SuperconductingTFCoil(TFCoil):
             "(dx_tf_turn_insulation)",
             tfcoil_variables.dx_tf_turn_insulation,
         )
+        po.ovarre(
+            self.outfile,
+            "TF coil turn area (m²)",
+            "(a_tf_turn)",
+            tfcoil_variables.a_tf_turn,
+        )
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
@@ -1196,7 +1202,7 @@ class SuperconductingTFCoil(TFCoil):
         a_tf_turn_cable_space: float,
         a_tf_turn: float,
         t_tf_quench_dump: float,
-        f_a_tf_turn_cable_space_conductor: float,
+        f_a_tf_turn_cable_space_cooling: float,
         f_a_tf_turn_cable_copper: float,
         temp_tf_coolant_peak_field: float,
         temp_tf_conductor_quench_max: float,
@@ -1259,15 +1265,15 @@ class SuperconductingTFCoil(TFCoil):
             a_tf_turn_cable_space
             / a_tf_turn
             * quench.calculate_quench_protection_current_density(
-                t_tf_quench_dump,
-                b_tf_inboard_peak,
-                f_a_tf_turn_cable_copper,
-                1.0 - f_a_tf_turn_cable_space_conductor,
-                temp_tf_coolant_peak_field,
-                temp_tf_conductor_quench_max,
-                cu_rrr,
-                t_tf_quench_detection,
-                nflutfmax,
+                tau_discharge=t_tf_quench_dump,
+                b_peak=b_tf_inboard_peak,
+                f_cu=f_a_tf_turn_cable_copper,
+                f_he=f_a_tf_turn_cable_space_cooling,
+                t_he_peak=temp_tf_coolant_peak_field,
+                temp_quench_max=temp_tf_conductor_quench_max,
+                cu_rrr=cu_rrr,
+                t_quench_detection=t_tf_quench_detection,
+                fluence=nflutfmax,
             )
         )
 
@@ -2617,7 +2623,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         self.vv_stress_on_quench()
 
         # Cross-sectional area per turn
-        a_tf_turn = tfcoil_variables.c_tf_total / (
+        tfcoil_variables.a_tf_turn = tfcoil_variables.c_tf_total / (
             tfcoil_variables.j_tf_wp
             * tfcoil_variables.n_tf_coils
             * tfcoil_variables.n_tf_coil_turns
@@ -2625,7 +2631,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         critical_superconductor_info: TFSuperconductorLimits = self.tf_cable_in_conduit_superconductor_properties(
             a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
-            a_tf_turn=a_tf_turn,
+            a_tf_turn=tfcoil_variables.a_tf_turn,
             a_tf_turn_cable_space_effective=superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
             f_a_tf_turn_cable_space_cooling=superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
             b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
@@ -2691,11 +2697,10 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 c_tf_turn=tfcoil_variables.c_tf_turn,
                 e_tf_coil_magnetic_stored=tfcoil_variables.e_tf_coil_magnetic_stored,
                 a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
-                a_tf_turn=a_tf_turn,
+                a_tf_turn=tfcoil_variables.a_tf_turn,
                 t_tf_quench_dump=tfcoil_variables.t_tf_superconductor_quench,
-                f_a_tf_turn_cable_space_conductor=1.0e0
-                - superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
                 f_a_tf_turn_cable_copper=tfcoil_variables.f_a_tf_turn_cable_copper,
+                f_a_tf_turn_cable_space_cooling=superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
                 temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
                 temp_tf_conductor_quench_max=tfcoil_variables.temp_tf_conductor_quench_max,
                 b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
@@ -4070,7 +4075,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         )
 
         # Cross-sectional area per turn
-        a_tf_turn = tfcoil_variables.c_tf_total / (
+        tfcoil_variables.a_tf_turn = tfcoil_variables.c_tf_total / (
             tfcoil_variables.j_tf_wp
             * tfcoil_variables.n_tf_coils
             * tfcoil_variables.n_tf_coil_turns
@@ -4082,7 +4087,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         ):
             superconductor_critical_properties: TFSuperconductorLimits = (
                 self.tf_croco_superconductor_properties(
-                    a_tf_turn=a_tf_turn,
+                    a_tf_turn=tfcoil_variables.a_tf_turn,
                     b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
                     cur_tf_turn=tfcoil_variables.c_tf_turn,
                     temp_tf_peak=tfcoil_variables.tftmp,
@@ -4337,10 +4342,9 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 c_tf_turn=tfcoil_variables.c_tf_turn,
                 e_tf_coil_magnetic_stored=tfcoil_variables.e_tf_coil_magnetic_stored,
                 a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
-                a_tf_turn=a_tf_turn,
+                a_tf_turn=tfcoil_variables.a_tf_turn,
                 t_tf_quench_dump=tfcoil_variables.t_tf_superconductor_quench,
-                f_a_tf_turn_cable_space_conductor=1.0e0
-                - superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
+                f_a_tf_turn_cable_space_cooling=superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
                 f_a_tf_turn_cable_copper=tfcoil_variables.f_a_tf_turn_cable_copper,
                 temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
                 temp_tf_conductor_quench_max=tfcoil_variables.temp_tf_conductor_quench_max,
