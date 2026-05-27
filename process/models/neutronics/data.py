@@ -302,6 +302,7 @@ class ExtractedNuclearData:
         species: str,
         atomic_mass: float,
         endf_record: ENDFRecord,
+        init_neutron_energy: float = DT_NEUTRON_E,
     ):
         """
         Parameters
@@ -314,12 +315,28 @@ class ExtractedNuclearData:
             The average atomic mass
         endf_record:
             The ENDF record that records the data.
+        init_neutron_energy:
+            Neutron's initial energy when it first exit the plasma, before any
+            downscattering or reactions. unit: J.
+
+        Attributes
+        ----------
+        group_energy:
+            The average neutron energy of each group.
+        incident_neutron_group:
+            The neutron group index which contains the neutron's initial energy when it
+            first exit the plasma.
         """
         self.group_structure = np.asarray(group_structure)
         self.species = species
         self.atomic_mass = atomic_mass
         self.endf_record = endf_record
-
+        self.init_neutron_energy = init_neutron_energy
+        self.group_energy, self.incident_neutron_group = (
+            calculate_mean_energy_and_incident_bin(
+                self.group_structure, self.init_neutron_energy
+            )
+        )
         self.sigma_total = self.rules["total"].resolve_xs(
             self.endf_record, self.group_structure
         )
@@ -854,8 +871,24 @@ class MaterialMacroInfo:
     def _add_data_from_single_record(
         self, xs_data: ExtractedNuclearData, partial_number_density: float
     ) -> None:
-        if not np.isclose(self.group_structure, xs_data.group_structure, atol=0.0).all():
-            raise ValueError(f"Mismatched group structure with {xs_data}.")
+        if not np.isclose(
+                self.group_structure, xs_data.group_structure, atol=0.0
+            ).all():
+            raise ValueError(
+                f"Mismatched group structure between {self} and {xs_data}."
+            )
+        if not np.isclose(
+                self.group_energy, xs_data.group_energy, atol=0.0
+            ).all():
+            raise ValueError(
+                f"Mismatched group energy between {self} and {xs_data}."
+            )
+        if not np.isclose(
+                self.init_neutron_energy, xs_data.init_neutron_energy
+            ):
+            raise ValueError(
+                f"Mismatched incident neutron energy between {self} and {xs_data}."
+            )
         self._sigma_total += xs_data.sigma_total * partial_number_density * BARNS_TO_M2
         self._sigma_scatter += (
             xs_data.sigma_scatter * partial_number_density * BARNS_TO_M2
