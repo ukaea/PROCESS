@@ -8,6 +8,7 @@ from process import data_structure
 from process.core import init
 from process.core.exceptions import ProcessValidationError
 from process.core.model import DataStructure
+from process.data_structure.numerics import PROCESSRunMode
 
 
 @pytest.fixture
@@ -106,7 +107,7 @@ def test_parse_input(tmp_path, data_structure_obj):
     init.init_process(data_structure_obj)
 
     assert data_structure.global_variables.runtitle == "my run title"
-    assert data_structure.numerics.ioptimz == -2
+    assert data_structure.numerics.ioptimz == PROCESSRunMode.EVALUATION
     assert pytest.approx(data_structure.numerics.epsvmc) == 0.6
     assert pytest.approx(data_structure.numerics.boundl[0]) == 0.5
 

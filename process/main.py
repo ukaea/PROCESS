@@ -56,6 +56,7 @@ from process.core.log import logging_model_handler, show_errors
 from process.core.model import DataStructure, Model
 from process.core.process_output import OutputFileManager, oheadr
 from process.core.scan import Scan
+from process.data_structure.numerics import PROCESSRunMode
 from process.models.availability import Availability
 from process.models.blankets.blanket_library import BlanketLibrary
 from process.models.blankets.dcll import DCLL
@@ -424,10 +425,10 @@ class SingleRun:
         """Create scan object if required."""
         # TODO Move this solver logic up to init?
         # ioptimz == 1: optimisation
-        if data_structure.numerics.ioptimz == 1:
+        if data_structure.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
             pass
         # ioptimz == -2: evaluation
-        elif data_structure.numerics.ioptimz == -2:
+        elif data_structure.numerics.ioptimz == PROCESSRunMode.EVALUATION:
             # No optimisation: solve equality (consistency) constraints only using fsolve (HYBRD)
             self.solver = "fsolve"
         else:
