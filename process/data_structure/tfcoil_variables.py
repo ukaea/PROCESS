@@ -200,9 +200,11 @@ den_tf_wp_turn_insulation: float = None
 dia_tf_turn_coolant_channel: float = None
 """diameter of central helium channel in TF winding (m)"""
 
+e_tf_magnetic_stored_total: float = None
+"""Total magnetic stored energy in the toroidal field coils (J)"""
 
 e_tf_magnetic_stored_total_gj: float = None
-"""total magnetic stored energy in the toroidal field coils (GJ)"""
+"""Total magnetic stored energy in the toroidal field coils (GJ)"""
 
 e_tf_coil_magnetic_stored: float = None
 """Stored magnetic energy in a single TF coil (J)"""
@@ -417,10 +419,8 @@ j_tf_wp: float = None
 """winding pack engineering current density (A/m2)"""
 
 
-oacdcp: float = None
-"""Overall current density in TF coil inboard legs midplane (A/m2)
-Rem SK : Not used in tfcoil to set the current any more. Should not be used as
-iteration variable 12 any more. It is now calculated.
+j_tf_coil_full_area: float = None
+"""Inboard leg mid-plane full coil area current density (A/m²)
 """
 
 
@@ -615,7 +615,7 @@ For REBCO model, meaning depends on quench_model:
 
 
 a_tf_inboard_total: float = None
-"""Area of inboard midplane TF legs (m2)"""
+"""Total inboard area of all TF coils (m²)"""
 
 
 len_tf_bus: float = None
@@ -751,7 +751,7 @@ tftmp: float = None
 
 
 dx_tf_inboard_out_toroidal: float = None
-"""TF coil toroidal thickness (m)"""
+"""Inboard leg toroidal thickness at outer edge (m)"""
 
 
 dx_tf_turn_insulation: float = None
@@ -1122,6 +1122,7 @@ def init_tfcoil_variables():
         dcond, \
         den_tf_wp_turn_insulation, \
         dia_tf_turn_coolant_channel, \
+        e_tf_magnetic_stored_total, \
         e_tf_magnetic_stored_total_gj, \
         e_tf_coil_magnetic_stored, \
         b_crit_upper_nbti, \
@@ -1153,7 +1154,7 @@ def init_tfcoil_variables():
         j_tf_wp_critical, \
         j_tf_wp_quench_heat_max, \
         j_tf_wp, \
-        oacdcp, \
+        j_tf_coil_full_area, \
         eyoung_ins, \
         eyoung_steel, \
         eyoung_cond_axial, \
@@ -1348,6 +1349,7 @@ def init_tfcoil_variables():
     ])
     den_tf_wp_turn_insulation = 1800.0
     dia_tf_turn_coolant_channel = 0.005
+    e_tf_magnetic_stored_total = 0.0
     e_tf_magnetic_stored_total_gj = 0.0
     e_tf_coil_magnetic_stored = 0.0
     b_crit_upper_nbti = 14.86
@@ -1389,7 +1391,7 @@ def init_tfcoil_variables():
     j_tf_wp_critical = 0.0
     j_tf_wp_quench_heat_max = 0.0
     j_tf_wp = 0.0
-    oacdcp = 0.0
+    j_tf_coil_full_area = 0.0
     eyoung_ins = 1.0e8
     eyoung_steel = 2.05e11
     eyoung_cond_axial = 6.6e8

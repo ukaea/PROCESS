@@ -47,7 +47,9 @@ ITERATION_VARIABLES = {
         1.0e-3,
         1.0e3,
     ),
-    12: IterationVariable("oacdcp", data_structure.tfcoil_variables, 1.0e5, 1.50e8),
+    12: IterationVariable(
+        "j_tf_coil_full_area", data_structure.tfcoil_variables, 1.0e5, 1.50e8
+    ),
     13: IterationVariable("dr_tf_inboard", "build", 0.1, 5.0),
     16: IterationVariable("dr_cs", "build", 0.01, 10.00),
     17: IterationVariable("t_plant_pulse_dwell", "times", 0.1, 1.0e8),
@@ -203,9 +205,17 @@ ITERATION_VARIABLES = {
         target_name="f_nd_impurity_electron_array",
         array_index=13,
     ),
-    138: IterationVariable("dx_hts_tape_rebco", "physics", 0.01e-6, 100.0e-6),
+    138: IterationVariable(
+        "dx_tf_hts_tape_rebco",
+        data_structure.superconducting_tf_coil_variables,
+        0.01e-6,
+        100.0e-6,
+    ),
     139: IterationVariable(
-        "dx_hts_tape_copper", data_structure.rebco_variables, 1.0e-6, 1.0e-3
+        "dx_tf_hts_tape_copper",
+        data_structure.superconducting_tf_coil_variables,
+        1.0e-6,
+        1.0e-3,
     ),
     140: IterationVariable(
         "dr_tf_wp_with_insulation", data_structure.tfcoil_variables, 0.001, 2.0
@@ -221,7 +231,10 @@ ITERATION_VARIABLES = {
     155: IterationVariable("pfusife", "ife", 5.0e2, 3.0e3),
     156: IterationVariable("rrin", "ife", 1.0, 1.0e1),
     158: IterationVariable(
-        "dx_croco_strand_copper", data_structure.rebco_variables, 1.0e-3, 1.0e-1
+        "dx_tf_croco_strand_copper",
+        data_structure.superconducting_tf_coil_variables,
+        1.0e-3,
+        1.0e-1,
     ),
     162: IterationVariable("r_cp_top", "build", 0.0010, 10.0),
     169: IterationVariable("te0_ecrh_achievable", "stellarator", 1.0, 1.0e3),
