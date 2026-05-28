@@ -413,7 +413,7 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
         if (
-            data_structure.numerics.ioptimz >= 0
+            data_structure.numerics.ioptimz == PROCESSRunMode.OPTIMISATION
             and (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 4).any()
             and data_structure.numerics.boundl[3]
             < data.physics.temp_plasma_pedestal_kev * 1.001
@@ -469,7 +469,7 @@ def check_process(inputs, data):  # noqa: ARG001
         # Issue #862 : Variable nd_plasma_electron_on_axis/nd_plasma_pedestal_electron ratio without constraint eq 81 (nd_plasma_electron_on_axis>nd_plasma_pedestal_electron)
         #  -> Potential hollowed density profile
         if (
-            data_structure.numerics.ioptimz >= 0
+            data_structure.numerics.ioptimz == PROCESSRunMode.OPTIMISATION
             and not (
                 data_structure.numerics.icc[
                     : data_structure.numerics.neqns + data_structure.numerics.nineqns

@@ -10,7 +10,17 @@ class PROCESSRunMode(IntEnum):
     """
 
     EVALUATION = (-2, "Evaluation mode (no optimisation)")
+    """In this mode, the code will not perform any optimisation, and will instead
+    simply evaluate the constraints for the given input parameters.
+    This is useful for testing and for evaluating the performance of a given design
+    point without trying to optimise it.
+    """
     OPTIMISATION = (1, "Optimisation mode (e.g. via VMCON)")
+    """In this mode, the code will perform optimisation using the VMCON solver
+    (or other solvers in the future) to try to find a design point that optimises
+    the figure of merit while satisfying the constraints.  This is the default mode
+    of operation for PROCESS.
+    """
 
     def __new__(cls, value: int, description: str):
         """Create a new PROCESSRunMode enum member with description.
