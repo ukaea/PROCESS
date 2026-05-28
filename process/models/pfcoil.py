@@ -22,7 +22,10 @@ from process.data_structure.pfcoil_variables import (
     NPTSMX,
 )
 from process.models import superconductors
-from process.models.engineering.materials import calculate_tresca_stress
+from process.models.engineering.materials import (
+    calculate_tresca_stress,
+    calculate_von_mises_stress,
+)
 from process.models.superconductors import SuperconductorMaterial, SuperconductorModel
 from process.models.tfcoil.base import TFCoilShapeModel
 
@@ -2218,6 +2221,13 @@ class PFCoil(Model):
             )
             op.ovarre(
                 self.outfile,
+                "Maximum von Mises stress in CS steel (Pa)",
+                "(stress_mises_cs_peak)",
+                self.data.pf_coil.stress_mises_cs_peak,
+                "OP ",
+            )
+            op.ovarre(
+                self.outfile,
                 "Axial force in CS (N)",
                 "(forc_z_cs_self_peak_midplane)",
                 self.data.pf_coil.forc_z_cs_self_peak_midplane,
@@ -3463,6 +3473,12 @@ class CSCoil(Model):
                     stress_z=self.data.pf_coil.stress_radial_cs_peak,
                 )
 
+                self.data.pf_coil.stress_mises_cs_peak = calculate_von_mises_stress(
+                    stress_x=self.data.pf_coil.stress_hoop_cs_inner,
+                    stress_y=self.data.pf_coil.stress_z_cs_self_peak_midplane,
+                    stress_z=self.data.pf_coil.stress_radial_cs_peak,
+                )
+
             else:
                 self.data.pf_coil.s_shear_cs_peak = max(
                     abs(self.data.pf_coil.stress_hoop_cs_inner - 0.0e0),
@@ -4342,6 +4358,8 @@ class CSCoil(Model):
         )
         stress_hoop_cs_inner = mfile.get("stress_hoop_cs_inner", scan=scan)
         stress_yield_mpa = stress_yield / 1e6
+        stress_mises_cs_peak = mfile.get("stress_mises_cs_peak", scan=scan) / 1e6
+        s_shear_cs_peak = mfile.get("s_shear_cs_peak", scan=scan) / 1e6
         s1_boundary = [
             stress_yield_mpa,
             stress_yield_mpa,
@@ -4360,6 +4378,15 @@ class CSCoil(Model):
             -stress_yield_mpa,
             0,
         ]
+
+        angles = np.linspace(0, 2 * np.pi, 300)
+        # Coordinate transformation to rotate the standard ellipse into the principal stress plane
+        vm_s1 = stress_yield_mpa * np.cos(angles)
+        vm_s2 = stress_yield_mpa * (np.cos(angles) / 2 + np.sin(angles) * np.sqrt(3) / 2)
+        axis.plot(
+            vm_s1, vm_s2, "b-", linewidth=2, label="von Mises Yield Locus (Ellipse)"
+        )
+
         axis.plot(
             s1_boundary,
             s2_boundary,
@@ -4370,9 +4397,31 @@ class CSCoil(Model):
             stress_hoop_cs_inner / 1e6,
             stress_z_cs_self_peak_midplane / 1e6,
             marker="o",
+            markersize=12,
             color="blue",
-            label="CS Stress State",
+            label=(
+                f"CS Inboard Midplane Stress Point\n"
+                f"Tresca = {s_shear_cs_peak:.1f} MPa, "
+                f"von Mises = {stress_mises_cs_peak:.1f} MPa"
+            ),
         )
+        axis.axhline(0, color="black", linewidth=1)
+        axis.axvline(0, color="black", linewidth=1)
+        axis.axhline(
+            stress_z_cs_self_peak_midplane / 1e6,
+            color="blue",
+            linewidth=1,
+            linestyle="--",
+            alpha=0.6,
+        )
+        axis.axvline(
+            stress_hoop_cs_inner / 1e6,
+            color="blue",
+            linewidth=1,
+            linestyle="--",
+            alpha=0.6,
+        )
+
         axis.legend(loc="best")
         axis.grid(True, alpha=0.3)
         axis.set_xlabel("Hoop Stress (MPa)")
