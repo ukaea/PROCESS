@@ -15000,7 +15000,7 @@ def main_plot(
 
     plot_current_profiles_over_time(figs[30].add_subplot(111), m_file, scan)
 
-    plot_cs_stress_time_profile(axis=figs[30].add_subplot(311), mfile=m_file, scan=scan)
+    plot_cs_stress_time_profile(axis=figs[31].add_subplot(311), mfile=m_file, scan=scan)
 
     plot_cs_coil_structure(
         figs[31].add_subplot(223, aspect="equal"), figs[31], m_file, scan
