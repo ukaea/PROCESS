@@ -15693,6 +15693,13 @@ def main_plot(
     )
     figs[32].subplots_adjust(wspace=0.3)
 
+    cs_coil.plot_stress_yield_locus(
+        axis=figs[30].add_subplot(111),
+        mfile=m_file,
+        scan=scan,
+        stress_yield=6e8,
+    )
+
     plot_first_wall_top_down_cross_section(
         figs[33].add_subplot(221, aspect="equal"), m_file, scan
     )

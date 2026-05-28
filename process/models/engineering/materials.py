@@ -2,6 +2,8 @@
 
 import logging
 
+import numpy as np
+
 logger = logging.getLogger(__name__)
 
 poisson_steel: float = 0.3
@@ -46,7 +48,11 @@ def eurofer97_thermal_conductivity(temp: float, fw_th_conductivity: float) -> fl
     )
 
 
-def calculate_tresca_stress(stress_x: float, stress_y: float, stress_z: float) -> float:
+def calculate_tresca_stress(
+    stress_x: float | np.ndarray,
+    stress_y: float | np.ndarray,
+    stress_z: float | np.ndarray,
+) -> float | np.ndarray:
     """Calculates the Tresca (maximum shear stress) criterion from three principal
     stress components.
 
@@ -69,4 +75,36 @@ def calculate_tresca_stress(stress_x: float, stress_y: float, stress_z: float) -
         abs(stress_x - stress_y),
         abs(stress_y - stress_z),
         abs(stress_x - stress_z),
+    )
+
+
+def calculate_von_mises_stress(
+    stress_x: float | np.ndarray,
+    stress_y: float | np.ndarray,
+    stress_z: float | np.ndarray,
+) -> float | np.ndarray:
+    """Calculates the von Mises stress criterion from three principal stress components.
+
+    Parameters
+    ----------
+    stress_x:
+        First principal stress in Pa.
+    stress_y:
+        Second principal stress in Pa.
+    stress_z:
+        Third principal stress in Pa.
+
+    Returns
+    -------
+    :
+        Von Mises stress in Pa, defined as:
+        sqrt(0.5 * ((sx - sy)^2 + (sy - sz)^2 + (sx - sz)^2))
+    """
+    return np.sqrt(
+        0.5
+        * (
+            (stress_x - stress_y) ** 2
+            + (stress_y - stress_z) ** 2
+            + (stress_x - stress_z) ** 2
+        )
     )

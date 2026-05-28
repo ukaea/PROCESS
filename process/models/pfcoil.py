@@ -4238,6 +4238,131 @@ class CSCoil(Model):
 
         return hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
+    def plot_cs_radial_hoop_stress_profile(
+        self,
+        axis: plt.Axes,
+        mfile: MFile,
+        scan: int,
+        j_cs: float,
+        b_cs_inner: float,
+    ):
+        r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+        r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+
+        radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
+        stress_values = np.array([
+            self.calculate_cs_hoop_stress(
+                r_stress_point=radius,
+                r_cs_inner=r_cs_inner,
+                r_cs_outer=r_cs_outer,
+                j_cs=j_cs,
+                b_cs_inner=b_cs_inner,
+                f_poisson_cs_structure=tfv.poisson_steel,
+                f_a_cs_turn_steel=mfile.get("f_a_cs_turn_steel", scan=scan),
+            )
+            for radius in radii
+        ])
+
+        axis.plot(
+            radii,
+            stress_values / 1e6,
+            linewidth=2,
+            label="$\\sigma_{\\theta}$,Hoop Stress",
+        )
+        axis.set_xlabel("Radial Position (m)")
+        axis.set_ylabel("Hoop Stress (MPa)")
+        axis.minorticks_on()
+        axis.legend(loc="best")
+        axis.set_title("CS Hoop Stress at BOP")
+        axis.grid(True, alpha=0.3)
+
+    def plot_cs_radial_stress_profile(
+        self,
+        axis: plt.Axes,
+        mfile: MFile,
+        scan: int,
+        j_cs: float,
+        b_cs_inner: float,
+    ):
+        r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+        r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+
+        radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
+        stress_values = np.array([
+            self.calculate_cs_radial_stress(
+                r_stress_point=radius,
+                r_cs_inner=r_cs_inner,
+                r_cs_outer=r_cs_outer,
+                j_cs=j_cs,
+                b_cs_inner=b_cs_inner,
+                f_poisson_cs_structure=tfv.poisson_steel,
+            )
+            for radius in radii
+        ])
+
+        axis.plot(
+            radii,
+            stress_values / 1e6,
+            linewidth=2,
+            label="$\\sigma_{r}$,Radial Stress",
+        )
+        axis.set_xlabel("Radial Position (m)")
+        axis.set_ylabel("Radial Stress (MPa)")
+        axis.minorticks_on()
+        axis.grid(True, alpha=0.3)
+        axis.set_title("CS Radial Stress at BOP")
+        axis.legend(loc="best")
+
+    def plot_stress_yield_locus(
+        self,
+        axis: plt.Axes,
+        mfile: MFile,
+        scan: int,
+        stress_yield: float,
+    ):
+        stress_z_cs_self_peak_midplane = mfile.get(
+            "stress_z_cs_self_peak_midplane", scan=scan
+        )
+        stress_hoop_cs_inner = mfile.get("stress_hoop_cs_inner", scan=scan)
+        stress_yield_mpa = stress_yield / 1e6
+        s1_boundary = [
+            stress_yield_mpa,
+            stress_yield_mpa,
+            0,
+            -stress_yield_mpa,
+            -stress_yield_mpa,
+            0,
+            stress_yield_mpa,
+        ]
+        s2_boundary = [
+            0,
+            stress_yield_mpa,
+            stress_yield_mpa,
+            0,
+            -stress_yield_mpa,
+            -stress_yield_mpa,
+            0,
+        ]
+        axis.plot(
+            s1_boundary,
+            s2_boundary,
+            color="red",
+            label="Tresca Limit Envelope",
+        )
+        axis.plot(
+            stress_hoop_cs_inner / 1e6,
+            stress_z_cs_self_peak_midplane / 1e6,
+            marker="o",
+            color="blue",
+            label="CS Stress State",
+        )
+        axis.legend(loc="best")
+        axis.grid(True, alpha=0.3)
+        axis.set_xlabel("Hoop Stress (MPa)")
+        axis.set_ylabel("Vertical Stress (MPa)")
+        axis.set_title("Stress Yield Locus")
+        axis.minorticks_on()
+
 
 def peak_b_field_at_pf_coil(
     n_coil: int, n_coil_group: int, t_b_field_peak: int, data: DataStructure
