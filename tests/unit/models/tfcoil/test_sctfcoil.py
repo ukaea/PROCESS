@@ -58,7 +58,7 @@ class ProtectParam(NamedTuple):
 
     tdump: Any = None
 
-    fcond: Any = None
+    f_a_cool: Any = None
 
     fcu: Any = None
 
@@ -88,7 +88,7 @@ class ProtectParam(NamedTuple):
             acs=0.001293323051622732,
             aturn=0.0032012300777680192,
             tdump=25.829000000000001,
-            fcond=0.63927285511442711,
+            f_a_cool=1 - 0.63927285511442711,
             fcu=0.80884,
             tba=4.75,
             tmax=150,
@@ -107,7 +107,7 @@ class ProtectParam(NamedTuple):
             acs=0.001293323051622732,
             aturn=0.0032012300777680192,
             tdump=25.829000000000001,
-            fcond=0.63927285511442711,
+            f_a_cool=1 - 0.63927285511442711,
             fcu=0.80884,
             tba=4.75,
             tmax=150,
@@ -139,7 +139,7 @@ def test_protect(protectparam, sctfcoil):
         a_tf_turn_cable_space=protectparam.acs,
         a_tf_turn=protectparam.aturn,
         t_tf_quench_dump=protectparam.tdump,
-        f_a_tf_turn_cable_space_conductor=protectparam.fcond,
+        f_a_tf_turn_cable_space_cooling=protectparam.f_a_cool,
         f_a_tf_turn_cable_copper=protectparam.fcu,
         temp_tf_coolant_peak_field=protectparam.tba,
         temp_tf_conductor_quench_max=protectparam.tmax,
