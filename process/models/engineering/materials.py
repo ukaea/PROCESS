@@ -44,3 +44,29 @@ def eurofer97_thermal_conductivity(temp: float, fw_th_conductivity: float) -> fl
         * fw_th_conductivity
         / 28.34
     )
+
+
+def calculate_tresca_stress(stress_x: float, stress_y: float, stress_z: float) -> float:
+    """Calculates the Tresca (maximum shear stress) criterion from three principal
+    stress components.
+
+    Parameters
+    ----------
+    stress_x:
+        First principal stress in Pa.
+    stress_y:
+        Second principal stress in Pa.
+    stress_z:
+        Third principal stress in Pa.
+
+    Returns
+    -------
+    :
+        Tresca stress (maximum shear stress criterion) in Pa, defined as the
+        maximum of |stress_x - stress_y|, |stress_y - stress_z|, |stress_x - stress_z|.
+    """
+    return max(
+        abs(stress_x - stress_y),
+        abs(stress_y - stress_z),
+        abs(stress_x - stress_z),
+    )
