@@ -2197,9 +2197,16 @@ class PFCoil(Model):
             )
             op.ovarre(
                 self.outfile,
-                "Radial stress in CS steel (Pa)",
+                "Radial stress in CS steel at midplane at coil centre (Pa)",
                 "(stress_radial_cs_peak)",
                 self.data.pf_coil.stress_radial_cs_peak,
+                "OP ",
+            )
+            op.ovarre(
+                self.outfile,
+                "Radial stress in CS steel at inboard edge (Pa)",
+                "(stress_radial_cs_inner)",
+                self.data.pf_coil.stress_radial_cs_inner,
                 "OP ",
             )
             op.ovarre(
@@ -3406,6 +3413,16 @@ class CSCoil(Model):
 
             self.data.pf_coil.stress_radial_cs_peak = self.calculate_cs_radial_stress(
                 r_stress_point=self.data.pf_coil.r_cs_middle,
+                r_cs_inner=self.data.pf_coil.r_cs_inner,
+                r_cs_outer=self.data.pf_coil.r_cs_outer,
+                j_cs=self.data.pf_coil.j_cs_pulse_start,
+                b_cs_inner=self.data.pf_coil.b_cs_peak_pulse_start,
+                f_poisson_cs_structure=tfv.poisson_steel,
+            )
+
+            # In reality this is practially 0
+            self.data.pf_coil.stress_radial_cs_inner = self.calculate_cs_radial_stress(
+                r_stress_point=self.data.pf_coil.r_cs_inner,
                 r_cs_inner=self.data.pf_coil.r_cs_inner,
                 r_cs_outer=self.data.pf_coil.r_cs_outer,
                 j_cs=self.data.pf_coil.j_cs_pulse_start,
