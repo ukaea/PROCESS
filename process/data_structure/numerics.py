@@ -11,9 +11,14 @@ class PROCESSRunMode(IntEnum):
 
     EVALUATION = (-2, "Evaluation mode (no optimisation)")
     """In this mode, the code will not perform any optimisation, and will instead
-    simply evaluate the constraints for the given input parameters.
-    This is useful for testing and for evaluating the performance of a given design
-    point without trying to optimise it.
+    simply evaluate the constraints for the given input parameters, which is useful
+    for testing and for evaluating the performance of a given design point without
+    trying to optimise it. Internally, PROCESS uses `fsolve` (a Newton-Krylov/hybrd
+    root-finding method from `scipy.optimize`) to seek a *consistent* solution by
+    varying a subset of the iteration variables until the consistency constraints
+    (equality constraints whose residuals must be driven to zero) are simultaneously
+    satisfied; no figure-of-merit is optimised, and the solver simply tries to find
+    a root of the constraint-residual vector.
     """
     OPTIMISATION = (1, "Optimisation mode (e.g. via VMCON)")
     """In this mode, the code will perform optimisation using the VMCON solver
