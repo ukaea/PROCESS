@@ -1267,9 +1267,9 @@ class SuperconductingTFCoil(TFCoil):
             * quench.calculate_quench_protection_current_density(
                 tau_discharge=t_tf_quench_dump,
                 b_peak=b_tf_inboard_peak,
-                f_cu=f_a_tf_turn_cable_copper,
-                f_he=f_a_tf_turn_cable_space_cooling,
-                t_he_peak=temp_tf_coolant_peak_field,
+                f_a_cable_copper=f_a_tf_turn_cable_copper,
+                f_a_cable_space_helium=f_a_tf_turn_cable_space_cooling,
+                temp_he_peak=temp_tf_coolant_peak_field,
                 temp_quench_max=temp_tf_conductor_quench_max,
                 cu_rrr=cu_rrr,
                 t_quench_detection=t_tf_quench_detection,

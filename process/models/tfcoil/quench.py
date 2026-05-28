@@ -357,9 +357,9 @@ def _quench_integrals(
 def calculate_quench_protection_current_density(
     tau_discharge: float,
     b_peak: float,
-    f_cu: float,
-    f_he: float,
-    t_he_peak: float,
+    f_a_cable_copper: float,
+    f_a_cable_space_helium: float,
+    temp_he_peak: float,
     temp_quench_max: float,
     cu_rrr: float,
     t_quench_detection: float,
@@ -381,12 +381,12 @@ def calculate_quench_protection_current_density(
         tau_discharge: Quench discharge time constant [s].
     b_peak:
         b_peak: Magnetic field at the peak point [T].
-    f_cu:
-        f_cu: Fraction of conductor cross-section that is copper.
-    f_he:
-        f_he: Fraction of cable occupied by helium.
-    t_he_peak:
-        t_he_peak: Peak helium temperature at quench initiation [K].
+    f_a_cable_copper:
+        f_a_cable_copper: Fraction of cable cross-section that is copper.
+    f_a_cable_space_helium:
+        f_a_cable_space_helium: Fraction of cable space occupied by helium.
+    temp_he_peak:
+        temp_he_peak: Peak helium temperature at quench initiation [K].
     temp_quench_max:
         temp_quench_max: Maximum allowed conductor temperature during quench [K].
     cu_rrr:
@@ -418,14 +418,16 @@ def calculate_quench_protection_current_density(
         fluence = np.clip(fluence, 0.0, 1.5e23)
 
     i_he, i_cu, i_sc = _quench_integrals(
-        t_he_peak, temp_quench_max, b_peak, cu_rrr, fluence
+        temp_he_peak, temp_quench_max, b_peak, cu_rrr, fluence
     )
 
-    f_cu_cable = (1.0 - f_he) * f_cu
-    f_sc_cable = (1.0 - f_he) * (1.0 - f_cu)
+    f_cu_cable = (1.0 - f_a_cable_space_helium) * f_a_cable_copper
+    f_sc_cable = (1.0 - f_a_cable_space_helium) * (1.0 - f_a_cable_copper)
 
     factor = 1.0 / (0.5 * tau_discharge + t_quench_detection)
-    total_integral = f_he * i_he + f_cu_cable * i_cu + f_sc_cable * i_sc
+    total_integral = (
+        f_a_cable_space_helium * i_he + f_cu_cable * i_cu + f_sc_cable * i_sc
+    )
 
     return np.sqrt(factor * f_cu_cable * total_integral)
 
@@ -433,9 +435,9 @@ def calculate_quench_protection_current_density(
 def plot_quench_time_evolution(
     tau_discharge: float,
     b_peak: float,
-    f_cu: float,
-    f_he: float,
-    t_he_peak: float,
+    f_a_cable_copper: float,
+    f_a_cable_space_helium: float,
+    temp_he_peak: float,
     temp_quench_max: float,
     cu_rrr: float,
     t_quench_detection: float,
@@ -459,11 +461,11 @@ def plot_quench_time_evolution(
         Quench discharge time constant [s].
     b_peak:
         Magnetic field at the peak point [T].
-    f_cu:
-        Fraction of conductor cross-section that is copper.
-    f_he:
-        Fraction of cable occupied by helium.
-    t_he_peak:
+    f_a_cable_copper:
+        Fraction of cable cross-section that is copper.
+    f_a_cable_space_helium:
+        Fraction of cable space occupied by helium.
+    temp_he_peak:
         Peak helium temperature at quench initiation [K].
     temp_quench_max:
         Maximum allowed conductor temperature during quench [K].
@@ -503,9 +505,9 @@ def plot_quench_time_evolution(
     ) * calculate_quench_protection_current_density(
         tau_discharge=tau_discharge,
         b_peak=b_peak,
-        f_cu=f_cu,
-        f_he=f_he,
-        t_he_peak=t_he_peak,
+        f_a_cable_copper=f_a_cable_copper,
+        f_a_cable_space_helium=f_a_cable_space_helium,
+        temp_he_peak=temp_he_peak,
         temp_quench_max=temp_quench_max,
         cu_rrr=cu_rrr,
         t_quench_detection=t_quench_detection,
@@ -518,9 +520,9 @@ def plot_quench_time_evolution(
     ) * calculate_quench_protection_current_density(
         tau_discharge=tau_discharge,
         b_peak=b_peak,
-        f_cu=f_cu,
-        f_he=f_he,
-        t_he_peak=t_he_peak,
+        f_a_cable_copper=f_a_cable_copper,
+        f_a_cable_space_helium=f_a_cable_space_helium,
+        temp_he_peak=temp_he_peak,
         temp_quench_max=temp_quench_max,
         cu_rrr=cu_rrr,
         t_quench_detection=t_quench_detection,
@@ -532,23 +534,23 @@ def plot_quench_time_evolution(
     times = np.linspace(0.0, t_end, n_points)
 
     # Current density decays exponentially after detection
-decay = np.exp(-(times - t_quench_detection) / tau_discharge)
+    decay = np.exp(-(times - t_quench_detection) / tau_discharge)
 
-j_profile_required, j_profile_required_1e23, j_profile_real = [
-    np.where(times < t_quench_detection, j0, j0 * decay)
-    for j0 in (j_max, j_max_1e23, j_operating)
-]
+    j_profile_required, j_profile_required_1e23, j_profile_real = [
+        np.where(times < t_quench_detection, j0, j0 * decay)
+        for j0 in (j_max, j_max_1e23, j_operating)
+    ]
 
     # Adiabatic hotspot temperature: integrate heat balance over time
     # T(t) is found by inverting: integral_{T0}^{T(t)} [sum(rho*cp)] / rho_cu dT = integral_0^t J^2 dt
     # We accumulate the "MIIT" (integral J^2 dt) and map it to temperature via the precomputed integral.
     pressure = 6e5
-    f_cu_cable = (1.0 - f_he) * f_cu
-    f_sc_cable = (1.0 - f_he) * (1.0 - f_cu)
+    f_cu_cable = (1.0 - f_a_cable_space_helium) * f_a_cable_copper
+    f_sc_cable = (1.0 - f_a_cable_space_helium) * (1.0 - f_a_cable_copper)
 
     def _build_cum_integral(fluence_val):
         n_temp = 300
-        temp_array = np.linspace(t_he_peak, temp_quench_max, n_temp)
+        temp_array = np.linspace(temp_he_peak, temp_quench_max, n_temp)
         cum_integral = np.zeros(n_temp)
         for k in range(1, n_temp):
             t_lo = temp_array[k - 1]
@@ -560,7 +562,9 @@ j_profile_required, j_profile_required_1e23, j_profile_real = [
                 nu_cu = _copper_electrical_resistivity(ti, b_peak, cu_rrr, fluence_val)
                 he_props = FluidProperties.of("He", temperature=ti, pressure=pressure)
                 integrand = (
-                    f_he * he_props.specific_heat_const_p * he_props.density
+                    f_a_cable_space_helium
+                    * he_props.specific_heat_const_p
+                    * he_props.density
                     + f_cu_cable * _copper_specific_heat_capacity(ti) * COPPER_DENSITY
                     + f_sc_cable * _nb3sn_specific_heat_capacity(ti) * NB3SN_DENSITY
                 ) / nu_cu
