@@ -445,23 +445,26 @@ def _build_cumulative_quench_integral(
     """
     pressure = 6e5  # ITER TF coolant pressure
 
+    # Evaluate the integrand on a fine uniform grid and integrate with the
+    # trapezoidal rule.  This is much cheaper than nested Gauss-Legendre
+    # quadrature because each temperature point is evaluated exactly once
+    # (avoiding repeated CoolProp calls) and the result is accumulated with
+    # np.cumsum - which is important when this function is called multiple
+    # times (e.g. from plot_quench_time_evolution).
     temp_array = np.linspace(temp_he_peak, temp_quench_max, n_temp)
-    cum_integral = np.zeros(n_temp)
+    integrand = np.empty(n_temp)
+    for k, t in enumerate(temp_array):
+        ihe_i, icu_i, isc_i = _quench_integrand_at_temperature(
+            t, field, rrr, fluence, pressure
+        )
+        integrand[k] = (
+            f_a_cable_space_helium * ihe_i + f_cu_cable * icu_i + f_sc_cable * isc_i
+        )
 
-    for k in range(1, n_temp):
-        t_lo = temp_array[k - 1]
-        t_hi = temp_array[k]
-        val = 0.0
-        for xi, wi in zip(GAUSS_LEG_NODES, GAUSS_LEG_WEIGHTS, strict=False):
-            ti = 0.5 * (xi + 1.0) * (t_hi - t_lo) + t_lo
-            dti = 0.5 * wi * (t_hi - t_lo)
-            ihe_i, icu_i, isc_i = _quench_integrand_at_temperature(
-                ti, field, rrr, fluence, pressure
-            )
-            val += dti * (
-                f_a_cable_space_helium * ihe_i + f_cu_cable * icu_i + f_sc_cable * isc_i
-            )
-        cum_integral[k] = cum_integral[k - 1] + val
+    # Cumulative trapezoid integration
+    dt = temp_array[1] - temp_array[0]
+    cum_integral = np.zeros(n_temp)
+    cum_integral[1:] = np.cumsum(0.5 * (integrand[:-1] + integrand[1:]) * dt)
 
     return temp_array, cum_integral
 
@@ -558,8 +561,8 @@ def plot_quench_time_evolution(
     a_tf_turn_cable_space: float,
     a_tf_turn: float,
     n_points: int = 500,
-    axes_1: plt.Axes = None,
-    axes_2: plt.Axes = None,
+    axes_1: plt.Axes | None = None,
+    axes_2: plt.Axes | None = None,
     show: bool = False,
 ) -> None:
     """Plots the time evolution of the quench model hotspot temperature and current.

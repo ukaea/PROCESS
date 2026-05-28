@@ -1226,10 +1226,10 @@ class SuperconductingTFCoil(TFCoil):
             Area per turn (i.e. entire cable) (m²)
         t_tf_quench_dump : float
             Dump time (s)
-        f_a_tf_turn_cable_space_conductor : float
-            Fraction of cable space containing conductor
+        f_a_tf_turn_cable_space_cooling : float
+            Fraction of cable space containing coolant
         f_a_tf_turn_cable_copper : float
-            Fraction of conductor that is copper
+            Fraction of conductor cable that is copper
         temp_tf_coolant_peak_field : float
             Helium temperature at peak field point (K)
         temp_tf_conductor_quench_max : float
