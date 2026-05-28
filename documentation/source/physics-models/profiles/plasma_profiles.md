@@ -277,10 +277,10 @@ $$
 
 --------
 
-The line averaged density is then calculated for the profile paramaters
+The line averaged density/temperature is then calculated for the profile paramaters
 
-###### Line averaged density derivation
-Line averaged electron density is calculated by integrating the profile across the normalised width of the profile and then dividing by the width of the integration bounds
+###### Line averaged density/temperature derivation
+Line averaged electron density/temperature is calculated by integrating the profile across the normalised width of the profile and then dividing by the width of the integration bounds. Using the density as an example:
 
 $$
 \overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_plasma_electron_line}} = \frac{\int^1_0 n_0(1-\rho^2)^{\alpha_n} \ d\rho}{\rho}
@@ -612,10 +612,14 @@ $$
 \texttt{f_temp_plasma_electron_density_vol_avg} =\frac{\langle T_{\text{e}} \rangle_{\text{n}}}{\underbrace{\langle T_{\text{e}} \rangle_{\text{V}}}_{\texttt{temp_plasma_electrons_vol_avg}}}
 $$
 
-Calculate the line averaged electron density by integrating the normalised profile using the class [`integrate_profile_y()`](./plasma_profiles_abstract_class.md#calculate-the-profile-integral-value-integrate_profile_y) function
+Calculate the line averaged electron density and temperature by integrating the normalised profile using the class [`integrate_profile_y()`](./plasma_profiles_abstract_class.md#calculate-the-profile-integral-value-integrate_profile_y) function
 
 $$
  \overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_plasma_electron_line}} = \int_0^1{n(\rho) \ d\rho}
+$$
+
+$$
+ \overbrace{\bar{T_{\text{e}}}}^{\texttt{temp_plasma_electron_line_avg_kev}} = \int_0^1{T(\rho) \ d\rho}
 $$
 
 A divertor variable `prn1` is set to be equal to the separatrix density over the mean density:

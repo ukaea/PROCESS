@@ -159,7 +159,7 @@ class PlasmaProfile(Model):
             * self.data.physics.f_temp_plasma_electron_density_vol_avg
         )
 
-        #  Central values for temperature (keV) and density (m**-3)
+        #  Central values for temperature (keV) and density (m^-3)
 
         self.data.physics.temp_plasma_electron_on_axis_kev = (
             self.data.physics.temp_plasma_electron_vol_avg_kev
@@ -197,9 +197,9 @@ class PlasmaProfile(Model):
 
         #  Perform integrations to calculate ratio of density-weighted
         #  to volume-averaged temperature, etc.
-        #  Density-weighted temperature = integral(n.T dV) / integral(n dV)
+        #  Density-weighted temperature = ∫(n.T dV) / ∫(n dV)
         #  which is approximately equal to the ratio
-        #  integral(rho.n(rho).T(rho) drho) / integral(rho.n(rho) drho)
+        #  ∫(ρ.n(ρ).T(ρ) dρ) / ∫(ρ.n(ρ) dρ) # noqa: RUF003
 
         drho = self.neprofile.profile_dx
         dens = self.neprofile.profile_y
@@ -228,7 +228,7 @@ class PlasmaProfile(Model):
         )
 
         #  Line-averaged electron density and temperature
-        #  = integral(n(rho).drho)
+        #  = ∫(n(ρ).dρ) # noqa: RUF003
 
         self.data.physics.nd_plasma_electron_line = self.neprofile.profile_integ
 
@@ -295,7 +295,7 @@ class PlasmaProfile(Model):
 
         #  Pressure profile index (only true for a parabolic profile)
         #  N.B. pres_plasma_thermal_on_axis is NOT equal to <p> * (1 + alphap),
-        #  but p(rho) = n(rho)*T(rho)
+        #  but p(ρ) = n(ρ)*T(ρ) # noqa: RUF003
         #  and <p> = <n>.T_n where <...> denotes volume-averages and T_n is the
         #  density-weighted temperature
 
@@ -311,7 +311,7 @@ class PlasmaProfile(Model):
             * self.data.physics.temp_plasma_ion_density_weighted_kev
         ) * constants.KILOELECTRON_VOLT
 
-        # Central plasma current density (A/m^2)
+        # Central plasma current density (A/m²)
         # Assumes a parabolic profile for the current density
         self.data.physics.j_plasma_on_axis = (
             (self.data.physics.plasma_current)
