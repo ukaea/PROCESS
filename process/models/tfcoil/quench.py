@@ -641,8 +641,10 @@ def plot_quench_time_evolution(
         fluence=fluence_1e23,
     )
 
-    # Time axis: from 0 to ~4 time constants
-    t_end = 4.0 * tau_discharge
+    # Time axis: from 0 to ~4 time constants after discharge begins at detection.
+    # This ensures later annotations/interpolations at t_quench_detection + tau_discharge
+    # and beyond remain within the sampled domain.
+    t_end = max(4.0 * tau_discharge, t_quench_detection + 4.0 * tau_discharge)
     times = np.linspace(0.0, t_end, n_points)
 
     # Current density decays exponentially after detection
