@@ -291,6 +291,51 @@ def _nb3sn_specific_heat_capacity(temperature: float) -> float:
 GAUSS_LEG_NODES, GAUSS_LEG_WEIGHTS = np.polynomial.legendre.leggauss(75)
 
 
+def _quench_integrand_at_temperature(
+    temperature: float,
+    field: float,
+    rrr: float,
+    fluence: float,
+    pressure: float = 6e5,
+) -> tuple[float, float, float]:
+    """Calculates the per-unit-temperature integrands for quench protection.
+
+    Returns the volumetric heat capacity divided by copper resistivity for each
+    material component at a given temperature.
+
+    Parameters
+    ----------
+    temperature:
+        Temperature [K].
+    field:
+        Magnetic field [T].
+    rrr:
+        Residual resistivity ratio of copper.
+    fluence:
+        Neutron fluence [n/m²] (for irradiation effects).
+    pressure:
+        Helium pressure [Pa]. Defaults to 6e5 (ITER TF coolant pressure).
+
+    Returns
+    -------
+    tuple[float, float, float]
+        Tuple of (helium, copper, superconductor) integrands [J·s/(m³·Ω·m·K)]
+        i.e. (rho·cp / rho_cu) for each material at the given temperature.
+
+    Notes
+    -----
+    - Helium is assumed to be at constant pressure.
+    """
+    nu_cu = _copper_electrical_resistivity(temperature, field, rrr, fluence)
+    he_properties = FluidProperties.of("He", temperature=temperature, pressure=pressure)
+
+    ihe_integrand = he_properties.specific_heat_const_p * he_properties.density / nu_cu
+    icu_integrand = _copper_specific_heat_capacity(temperature) * COPPER_DENSITY / nu_cu
+    isc_integrand = _nb3sn_specific_heat_capacity(temperature) * NB3SN_DENSITY / nu_cu
+
+    return ihe_integrand, icu_integrand, isc_integrand
+
+
 def _quench_integrals(
     t_he_peak: float,
     temp_quench_max: float,
@@ -342,16 +387,83 @@ def _quench_integrals(
         ti = 0.5 * (xi + 1.0) * (temp_quench_max - t_he_peak) + t_he_peak
         dti = 0.5 * wi * (temp_quench_max - t_he_peak)
 
-        nu_cu = _copper_electrical_resistivity(ti, field, rrr, fluence)
-        factor = dti / nu_cu
+        ihe_i, icu_i, isc_i = _quench_integrand_at_temperature(
+            ti, field, rrr, fluence, pressure
+        )
 
-        he_properties = FluidProperties.of("He", temperature=ti, pressure=pressure)
-
-        ihe += factor * he_properties.specific_heat_const_p * he_properties.density
-        icu += factor * _copper_specific_heat_capacity(ti) * COPPER_DENSITY
-        isc += factor * _nb3sn_specific_heat_capacity(ti) * NB3SN_DENSITY
+        ihe += dti * ihe_i
+        icu += dti * icu_i
+        isc += dti * isc_i
 
     return ihe, icu, isc
+
+
+def _build_cumulative_quench_integral(
+    temp_he_peak: float,
+    temp_quench_max: float,
+    field: float,
+    rrr: float,
+    fluence: float,
+    f_a_cable_space_helium: float,
+    f_cu_cable: float,
+    f_sc_cable: float,
+    n_temp: int = 300,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Builds a cumulative temperature integral lookup for hotspot temperature inversion.
+
+    Computes the cumulative integral of the combined volumetric heat capacity
+    (weighted by material fractions) divided by copper resistivity, from
+    `temp_he_peak` to `temp_quench_max`. This lookup is used to map
+    accumulated (∫J² dt) to hotspot temperature.
+
+    Parameters
+    ----------
+    temp_he_peak:
+        Lower temperature bound [K].
+    temp_quench_max:
+        Upper temperature bound [K].
+    field:
+        Magnetic field [T].
+    rrr:
+        Residual resistivity ratio of copper.
+    fluence:
+        Neutron fluence [n/m²].
+    f_a_cable_space_helium:
+        Fraction of cable space occupied by helium.
+    f_cu_cable:
+        Effective copper fraction of cable cross-section.
+    f_sc_cable:
+        Effective superconductor fraction of cable cross-section.
+    n_temp:
+        Number of temperature points in the lookup array.
+
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray]
+        `(temp_array, cum_integral)` where `cum_integral[k]` is the
+        cumulative integral from `temp_he_peak` to `temp_array[k]`.
+    """
+    pressure = 6e5  # ITER TF coolant pressure
+
+    temp_array = np.linspace(temp_he_peak, temp_quench_max, n_temp)
+    cum_integral = np.zeros(n_temp)
+
+    for k in range(1, n_temp):
+        t_lo = temp_array[k - 1]
+        t_hi = temp_array[k]
+        val = 0.0
+        for xi, wi in zip(GAUSS_LEG_NODES, GAUSS_LEG_WEIGHTS, strict=False):
+            ti = 0.5 * (xi + 1.0) * (t_hi - t_lo) + t_lo
+            dti = 0.5 * wi * (t_hi - t_lo)
+            ihe_i, icu_i, isc_i = _quench_integrand_at_temperature(
+                ti, field, rrr, fluence, pressure
+            )
+            val += dti * (
+                f_a_cable_space_helium * ihe_i + f_cu_cable * icu_i + f_sc_cable * isc_i
+            )
+        cum_integral[k] = cum_integral[k - 1] + val
+
+    return temp_array, cum_integral
 
 
 def calculate_quench_protection_current_density(
@@ -542,41 +654,35 @@ def plot_quench_time_evolution(
     ]
 
     # Adiabatic hotspot temperature: integrate heat balance over time
-    # T(t) is found by inverting: integral_{T0}^{T(t)} [sum(rho*cp)] / rho_cu dT = integral_0^t J^2 dt
-    # We accumulate the "MIIT" (integral J^2 dt) and map it to temperature via the precomputed integral.
-    pressure = 6e5
+    # T(t) is found by inverting: integral_{T0}^{T(t)} [sum(rho*cp)] / rho_cu dT = integral_0^t J² dt
+    # We accumulate the (∫J² dt) and map it to temperature via the precomputed integral.
     f_cu_cable = (1.0 - f_a_cable_space_helium) * f_a_cable_copper
     f_sc_cable = (1.0 - f_a_cable_space_helium) * (1.0 - f_a_cable_copper)
 
-    def _build_cum_integral(fluence_val):
-        n_temp = 300
-        temp_array = np.linspace(temp_he_peak, temp_quench_max, n_temp)
-        cum_integral = np.zeros(n_temp)
-        for k in range(1, n_temp):
-            t_lo = temp_array[k - 1]
-            t_hi = temp_array[k]
-            val = 0.0
-            for xi, wi in zip(GAUSS_LEG_NODES, GAUSS_LEG_WEIGHTS, strict=False):
-                ti = 0.5 * (xi + 1.0) * (t_hi - t_lo) + t_lo
-                dti = 0.5 * wi * (t_hi - t_lo)
-                nu_cu = _copper_electrical_resistivity(ti, b_peak, cu_rrr, fluence_val)
-                he_props = FluidProperties.of("He", temperature=ti, pressure=pressure)
-                integrand = (
-                    f_a_cable_space_helium
-                    * he_props.specific_heat_const_p
-                    * he_props.density
-                    + f_cu_cable * _copper_specific_heat_capacity(ti) * COPPER_DENSITY
-                    + f_sc_cable * _nb3sn_specific_heat_capacity(ti) * NB3SN_DENSITY
-                ) / nu_cu
-                val += dti * integrand
-            cum_integral[k] = cum_integral[k - 1] + val
-        return temp_array, cum_integral
-
     # Build a temperature lookup: cumulative integral from t_he_peak to T
-    temp_array, cum_integral = _build_cum_integral(fluence)
-    temp_array_1e23, cum_integral_1e23 = _build_cum_integral(fluence_1e23)
+    temp_array, cum_integral = _build_cumulative_quench_integral(
+        temp_he_peak=temp_he_peak,
+        temp_quench_max=temp_quench_max,
+        field=b_peak,
+        rrr=cu_rrr,
+        fluence=fluence,
+        f_a_cable_space_helium=f_a_cable_space_helium,
+        f_cu_cable=f_cu_cable,
+        f_sc_cable=f_sc_cable,
+    )
+    temp_array_1e23, cum_integral_1e23 = _build_cumulative_quench_integral(
+        temp_he_peak=temp_he_peak,
+        temp_quench_max=temp_quench_max,
+        field=b_peak,
+        rrr=cu_rrr,
+        fluence=fluence_1e23,
+        f_a_cable_space_helium=f_a_cable_space_helium,
+        f_cu_cable=f_cu_cable,
+        f_sc_cable=f_sc_cable,
+    )
 
-    # Numerically integrate J² dt over time to get MIIT at each time step
+    # Numerically integrate J² dt over time to get MIIT (Mega-Ampere²-seconds) at
+    # each time step
     dt = times[1] - times[0]
     miit_required = np.cumsum(j_profile_required**2) * dt
     miit_required_1e23 = np.cumsum(j_profile_required_1e23**2) * dt
