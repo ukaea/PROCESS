@@ -18,7 +18,6 @@ from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
     global_variables,
     numerics,
-    rebco_variables,
     scan_variables,
     tfcoil_variables,
 )
@@ -1173,7 +1172,7 @@ class Scan:
             case 60:
                 tfcoil_variables.sig_tf_wp_max = swp[iscn - 1]
             case 61:
-                rebco_variables.copperaoh_m2_max = swp[iscn - 1]
+                self.data.rebco.copperaoh_m2_max = swp[iscn - 1]
             case 62:
                 self.data.pf_coil.j_cs_flat_top_end = swp[iscn - 1]
             case 63:

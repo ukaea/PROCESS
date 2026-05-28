@@ -3,10 +3,7 @@ import logging
 import numpy as np
 
 from process.core.model import DataStructure
-from process.data_structure import (
-    rebco_variables,
-    tfcoil_variables,
-)
+from process.data_structure import tfcoil_variables
 from process.models.stellarator.coils import forces
 from process.models.stellarator.coils.coils import (
     bmax_from_awp,
@@ -153,8 +150,8 @@ def st_coil(stellarator, output: bool, data: DataStructure):
             centering_force_max_mn=centering_force_max_mn,
             centering_force_min_mn=centering_force_min_mn,
             coilcoilgap=coil_coil_gap,
-            coppera_m2=rebco_variables.coppera_m2,
-            coppera_m2_max=rebco_variables.coppera_m2_max,
+            coppera_m2=data.rebco.coppera_m2,
+            coppera_m2_max=data.rebco.coppera_m2_max,
             f_a_scu_of_wp=f_a_scu_of_wp,
             f_vv_actual=f_vv_actual,
             fiooic=data.constraints.fiooic,

@@ -24,6 +24,7 @@ from process.data_structure.physics_variables import PhysicsData
 from process.data_structure.power_variables import PowerData
 from process.data_structure.primary_pumping_variables import PrimaryPumpingData
 from process.data_structure.pulse_variables import PulseData
+from process.data_structure.rebco_variables import RebcoData
 from process.data_structure.reinke_variables import ReinkeData
 from process.data_structure.stellarator_configuration import StellaratorConfigData
 from process.data_structure.stellarator_variables import StellaratorData
@@ -67,6 +68,7 @@ class DataStructure:
     neoclassics: NeoclassicsData = initialise_later
     impurity_radiation: ImpurityRadiationData = initialise_later
     physics: PhysicsData = initialise_later
+    rebco: RebcoData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):
