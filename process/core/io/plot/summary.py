@@ -6995,9 +6995,9 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         n_cols = int((width - 2 * radius) // strand_spacing)
 
         # Calculate the radius of the inner superconductor circle based on the copper area fraction
-        # Area_superconductor = f_a_tf_turn_cable_copper * Area_strand
+        # Area_superconductor = (1 - f_a_tf_turn_cable_copper) * Area_strand
         # Area_strand = pi * radius^2
-        # So, radius_superconductor = sqrt(f_a_tf_turn_cable_copper) * radius
+        # So, radius_superconductor = sqrt(1 - f_a_tf_turn_cable_copper) * radius
         radius_superconductor = np.sqrt(1 - f_a_tf_turn_cable_copper) * radius
 
         # Generate hexagonal grid positions
