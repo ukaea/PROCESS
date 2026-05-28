@@ -22,6 +22,7 @@ from process.data_structure.pfcoil_variables import (
     NPTSMX,
 )
 from process.models import superconductors
+from process.models.engineering.materials import calculate_tresca_stress
 from process.models.superconductors import SuperconductorMaterial, SuperconductorModel
 from process.models.tfcoil.base import TFCoilShapeModel
 
@@ -2196,6 +2197,13 @@ class PFCoil(Model):
             )
             op.ovarre(
                 self.outfile,
+                "Radial stress in CS steel (Pa)",
+                "(stress_radial_cs_peak)",
+                self.data.pf_coil.stress_radial_cs_peak,
+                "OP ",
+            )
+            op.ovarre(
+                self.outfile,
                 "Maximum shear stress in CS steel for the Tresca criterion (Pa)",
                 "(s_shear_cs_peak)",
                 self.data.pf_coil.s_shear_cs_peak,
@@ -3396,6 +3404,15 @@ class CSCoil(Model):
                 a_cs_toroidal=self.data.pf_coil.a_cs_toroidal,
             )
 
+            self.data.pf_coil.stress_radial_cs_peak = self.calculate_cs_radial_stress(
+                r_stress_point=self.data.pf_coil.r_cs_middle,
+                r_cs_inner=self.data.pf_coil.r_cs_inner,
+                r_cs_outer=self.data.pf_coil.r_cs_outer,
+                j_cs=self.data.pf_coil.j_cs_pulse_start,
+                b_cs_inner=self.data.pf_coil.b_cs_peak_pulse_start,
+                f_poisson_cs_structure=tfv.poisson_steel,
+            )
+
             # Allowable (hoop) stress (Pa) alstroh
             # Now a user input
             # alstroh = min( (2.0e0*csytf/3.0e0), (0.5e0*csutf) )
@@ -3423,14 +3440,12 @@ class CSCoil(Model):
             )
 
             if self.data.pf_coil.i_cs_stress == 1:
-                self.data.pf_coil.s_shear_cs_peak = max(
-                    abs(
-                        self.data.pf_coil.stress_hoop_cs_inner
-                        - self.data.pf_coil.stress_z_cs_self_peak_midplane
-                    ),
-                    abs(self.data.pf_coil.stress_z_cs_self_peak_midplane - 0.0e0),
-                    abs(0.0e0 - self.data.pf_coil.stress_hoop_cs_inner),
+                self.data.pf_coil.s_shear_cs_peak = calculate_tresca_stress(
+                    stress_x=self.data.pf_coil.stress_hoop_cs_inner,
+                    stress_y=self.data.pf_coil.stress_z_cs_self_peak_midplane,
+                    stress_z=self.data.pf_coil.stress_radial_cs_peak,
                 )
+
             else:
                 self.data.pf_coil.s_shear_cs_peak = max(
                     abs(self.data.pf_coil.stress_hoop_cs_inner - 0.0e0),

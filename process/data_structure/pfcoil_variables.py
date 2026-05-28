@@ -50,6 +50,9 @@ class PFCoilData:
     )
     """Hoop stress in central solenoid at inboard edge due to its own field at each time point (Pa)"""
 
+    stress_radial_cs_peak: float = 0.0
+    """Radial stress in central solenoid at midplane due to its own field (when at peak current) (Pa)"""
+
     forc_z_cs_self_peak_midplane: float = 0.0
     """Axial force (z) on central solenoid at midplane due to its own field (when at peak current) (N)"""
 
