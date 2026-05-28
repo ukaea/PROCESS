@@ -532,23 +532,12 @@ def plot_quench_time_evolution(
     times = np.linspace(0.0, t_end, n_points)
 
     # Current density decays exponentially after detection
-    j_profile_required = np.where(
-        times < t_quench_detection,
-        j_max,
-        j_max * np.exp(-(times - t_quench_detection) / tau_discharge),
-    )
+decay = np.exp(-(times - t_quench_detection) / tau_discharge)
 
-    j_profile_required_1e23 = np.where(
-        times < t_quench_detection,
-        j_max_1e23,
-        j_max_1e23 * np.exp(-(times - t_quench_detection) / tau_discharge),
-    )
-
-    j_profile_real = np.where(
-        times < t_quench_detection,
-        j_operating,
-        j_operating * np.exp(-(times - t_quench_detection) / tau_discharge),
-    )
+j_profile_required, j_profile_required_1e23, j_profile_real = [
+    np.where(times < t_quench_detection, j0, j0 * decay)
+    for j0 in (j_max, j_max_1e23, j_operating)
+]
 
     # Adiabatic hotspot temperature: integrate heat balance over time
     # T(t) is found by inverting: integral_{T0}^{T(t)} [sum(rho*cp)] / rho_cu dT = integral_0^t J^2 dt
