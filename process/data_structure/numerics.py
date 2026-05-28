@@ -17,7 +17,7 @@ class PROCESSRunMode(IntEnum):
     """
     OPTIMISATION = (1, "Optimisation mode (e.g. via VMCON)")
     """In this mode, the code will perform optimisation using the VMCON solver
-    (or other solvers in the future) to try to find a design point that optimises
+    (or a custom solver if specified) to try to find a design point that optimises
     the figure of merit while satisfying the constraints.  This is the default mode
     of operation for PROCESS.
     """
