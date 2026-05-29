@@ -16,6 +16,7 @@ from process.core.input import parse_input_file
 from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
+from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
@@ -1097,7 +1098,9 @@ def check_process(inputs, data):  # noqa: ARG001
     # Ensure that blanket material fractions allow non-zero space for steel
     # CCFE HCPB Model
 
-    if data.stellarator.istell == 0 and (data.fwbs.i_blanket_type == 1):
+    if data.stellarator.istell == 0 and (
+        data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB
+    ):
         fsum = data.fwbs.breeder_multiplier + data.fwbs.vfcblkt + data.fwbs.vfpblkt
         if fsum >= 1.0:
             raise ProcessValidationError(

@@ -10,6 +10,7 @@ from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.data_structure.blanket_variables import BlktModelTypes
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
@@ -885,7 +886,8 @@ class BlanketLibrary(Model):
         Error
             If the poloidal segment length is less than three times the minimum liquid breeder pipe width.
         """
-        if self.data.fwbs.i_blanket_type == 5:
+        i_blanket_type = BlktModelTypes(self.data.fwbs.i_blanket_type)
+        if i_blanket_type == BlktModelTypes.DCLL:
             # Unless DCLL then we will use BZ
             self.data.blanket.len_blkt_inboard_coolant_channel_radial = (
                 self.data.build.blbuith
