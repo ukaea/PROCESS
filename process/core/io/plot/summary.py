@@ -15676,12 +15676,13 @@ def main_plot(
     figs[30].subplots_adjust(wspace=0.3)
 
     cs_coil = CSCoil(cs_fatigue=CsFatigue())
-    figs[31].subplots_adjust(wspace=0.45)
+    figs[31].subplots_adjust(wspace=0.45, hspace=0.45)
 
     plot_cs_stress_time_profile(axis=figs[31].add_subplot(337), mfile=m_file, scan=scan)
 
+    ax_332 = figs[31].add_subplot(332)
     cs_coil.plot_cs_hoop_stress_profile(
-        axis=figs[31].add_subplot(332),
+        axis=ax_332,
         mfile=m_file,
         scan=scan,
         j_cs=m_file.get("j_cs_pulse_start", scan=scan),
@@ -15737,7 +15738,7 @@ def main_plot(
         colorbar_axis=cbar_ax_334,
     )
 
-    ax_335 = figs[31].add_subplot(335, sharex=ax_333, sharey=ax_334)
+    ax_335 = figs[31].add_subplot(335, sharex=ax_332, sharey=ax_334)
     ax_335_position = ax_335.get_position()
     cbar_ax_335 = figs[31].add_axes([
         ax_335_position.x1 + 0.01,
@@ -15764,6 +15765,21 @@ def main_plot(
         mfile=m_file,
         scan=scan,
         stress_yield=6e8,
+    )
+
+    ax_338 = figs[31].add_subplot(338, sharex=ax_332, sharey=ax_335)
+    ax_338_position = ax_338.get_position()
+    cbar_ax_338 = figs[31].add_axes([
+        ax_338_position.x1 + 0.01,
+        ax_338_position.y0,
+        0.012,
+        ax_338_position.height,
+    ])
+    cs_coil.plot_cs_tresca_2d_contour(
+        axis=ax_338,
+        mfile=m_file,
+        scan=scan,
+        colorbar_axis=cbar_ax_338,
     )
 
     plot_first_wall_top_down_cross_section(
