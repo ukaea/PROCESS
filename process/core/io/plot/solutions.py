@@ -22,6 +22,7 @@ import seaborn as sns
 
 from process.core.io.mfile import MFile
 from process.data_structure import numerics
+from process.data_structure.numerics import FiguresOfMerit
 
 # Variables of interest in mfiles and subsequent dataframes
 # Be specific about exact names, patterns and regex
@@ -446,7 +447,7 @@ def _plot_solutions(
     else:
         numerics.init_numerics()
         objf_list = {
-            numerics.lablmm[int(abs(minmax)) - 1] for minmax in diffs_df["minmax"]
+            FiguresOfMerit(abs(int(minmax))).description for minmax in diffs_df["minmax"]
         }
 
     if len(objf_list) != 1:

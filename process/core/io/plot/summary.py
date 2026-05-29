@@ -20,9 +20,8 @@ from scipy.interpolate import interp1d
 
 from process.core import constants
 from process.core.io.mfile import MFile, MFileErrorClass
-from process.core.solver.objectives import OBJECTIVE_NAMES
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
-from process.data_structure.numerics import PROCESSRunMode
+from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.build import Build
 from process.models.geometry.blanket import (
@@ -8106,7 +8105,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
         ("!Evaluation", "Run type", "")
         if isinstance(mfile.data["minmax"], MFileErrorClass)
         else (
-            f"!{OBJECTIVE_NAMES[abs(int(mfile.get('minmax', scan=-1)))]}",
+            f"!{FiguresOfMerit(abs(int(mfile.get('minmax', scan=-1)))).description}",
             "Optimising:",
             "",
         ),
@@ -11880,10 +11879,10 @@ def plot_cover_page(
         objective_text = ""
     elif minmax_switch >= 0:
         minmax_switch = int(minmax_switch)
-        objective_text = f"• Minimising {objf_name}"
+        objective_text = f"  -> Minimising: {objf_name}"
     else:
         minmax_switch = int(minmax_switch)
-        objective_text = f"• Maximising {objf_name}"
+        objective_text = f"  -> Maximising: {objf_name}"
 
     axis.text(
         0.1,
@@ -11946,9 +11945,9 @@ def plot_cover_page(
         f"• Optimisation Switch: {int(optmisation_switch)}\n"
         f"     {PROCESSRunMode(int(optmisation_switch)).description}\n"
         f"• Figure of Merit Switch (minmax): {minmax_switch}\n"
+        f"     {objective_text}\n"
         f"• Fail Status (ifail): {int(ifail)}\n"
         f"• Number of Iteration Variables: {int(nvars)}\n"
-        f"{objective_text}\n"
         f"• Constraint Residuals (sqrt sum sq): {sqsumsq}\n"
         f"• Convergence Parameter: {convergence_parameter}\n"
         f"• Solver Iterations: {nviter}\n"

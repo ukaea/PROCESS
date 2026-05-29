@@ -118,8 +118,11 @@ ioptimz  = 1 * for optimisation VMCON only
 The user can select the figure of merit to be used:
 
 ```
-minmax   = 1 * Switch for figure-of-merit (see lablmm for descriptions)
+minmax   = 1 * Switch for figure-of-merit (see `FiguresOfMerit` for descriptions)
 ```
+
+!!! Info "Figures of Merit"
+    The full list of valid `minmax` values is documented in the API reference for [`process.data_structure.numerics.FiguresOfMerit`](../../source/reference/process/data_structure/numerics/#process.data_structure.numerics.FiguresOfMerit).
 
 In this case the user is choosing option `1`, which is major radius. For `minmax`
 
@@ -131,10 +134,6 @@ The user can also input the allowed error tolerance on the solver solution:
 ```
 epsvmc   = 1.0e-8 * Error tolerance for vmcon
 ```
-
-!!! Info "Figure of Merit"  
-    A full list of figures of merit is given on the variable description page in the row labelled 
-    `lablmm` [here](../../source/reference/process/data_structure/numerics/#process.data_structure.numerics.lablmm).
 
 ## Input Variables
 
