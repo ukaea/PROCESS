@@ -15676,10 +15676,11 @@ def main_plot(
     figs[30].subplots_adjust(wspace=0.3)
 
     cs_coil = CSCoil(cs_fatigue=CsFatigue())
+    figs[31].subplots_adjust(wspace=0.45)
 
-    plot_cs_stress_time_profile(axis=figs[31].add_subplot(331), mfile=m_file, scan=scan)
+    plot_cs_stress_time_profile(axis=figs[31].add_subplot(337), mfile=m_file, scan=scan)
 
-    cs_coil.plot_cs_radial_hoop_stress_profile(
+    cs_coil.plot_cs_hoop_stress_profile(
         axis=figs[31].add_subplot(332),
         mfile=m_file,
         scan=scan,
@@ -15687,22 +15688,79 @@ def main_plot(
         b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
     )
 
+    ax_333 = figs[31].add_subplot(333)
     cs_coil.plot_cs_radial_stress_profile(
-        axis=figs[31].add_subplot(333),
+        axis=ax_333,
         mfile=m_file,
         scan=scan,
         j_cs=m_file.get("j_cs_pulse_start", scan=scan),
         b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
     )
 
-    cs_coil.plot_vertical_stress_profile(
-        axis=figs[31].add_subplot(334),
+    ax_334 = figs[31].add_subplot(334)
+    ax_334_position = ax_334.get_position()
+    cbar_ax_334 = figs[31].add_axes([
+        ax_334_position.x1 + 0.01,
+        ax_334_position.y0,
+        0.012,
+        ax_334_position.height,
+    ])
+
+    ax_336 = figs[31].add_subplot(336, sharex=ax_333, sharey=ax_334)
+    ax_336_position = ax_336.get_position()
+    cbar_ax_336 = figs[31].add_axes([
+        ax_336_position.x1 + 0.01,
+        ax_336_position.y0,
+        0.012,
+        ax_336_position.height,
+    ])
+
+    cs_coil.plot_cs_radial_stress_contour_profile(
+        axis=ax_336,
+        mfile=m_file,
+        scan=scan,
+        j_cs=m_file.get("j_cs_pulse_start", scan=scan),
+        b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
+        colorbar_axis=cbar_ax_336,
+    )
+
+    ax_331 = figs[31].add_subplot(331)
+    cs_coil.plot_cs_vertical_stress_profile(
+        axis=ax_331,
         mfile=m_file,
         scan=scan,
     )
+    cs_coil.plot_vertical_stress_contour_profile(
+        axis=ax_334,
+        mfile=m_file,
+        scan=scan,
+        colorbar_axis=cbar_ax_334,
+    )
+
+    ax_335 = figs[31].add_subplot(335, sharex=ax_333, sharey=ax_334)
+    ax_335_position = ax_335.get_position()
+    cbar_ax_335 = figs[31].add_axes([
+        ax_335_position.x1 + 0.01,
+        ax_335_position.y0,
+        0.012,
+        ax_335_position.height,
+    ])
+    cs_coil.plot_cs_hoop_stress_contour_profile(
+        axis=ax_335,
+        mfile=m_file,
+        scan=scan,
+        j_cs=m_file.get("j_cs_pulse_start", scan=scan),
+        b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
+        colorbar_axis=cbar_ax_335,
+    )
+
+    # Keep y-axis labeling on the left contour only when sharing y across contour subplots.
+    for axis in (ax_335, ax_336):
+        axis.set_ylabel("")
+        axis.tick_params(axis="y", labelleft=False)
 
     cs_coil.plot_stress_yield_locus(
-        axis=figs[31].add_subplot(339),
+        axis=figs[31].add_subplot(339, aspect="equal"),
         mfile=m_file,
         scan=scan,
         stress_yield=6e8,
