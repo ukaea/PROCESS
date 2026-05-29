@@ -49,7 +49,6 @@ class PROCESSRunMode(IntEnum):
         return self._description_
 
 
-
 class FiguresOfMerit(IntEnum):
     """Enumeration of the available figures of merit (FoM) that can be used as
     objective functions for optimisation in PROCESS.

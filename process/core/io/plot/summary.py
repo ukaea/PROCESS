@@ -21,8 +21,7 @@ from scipy.interpolate import interp1d
 from process.core import constants
 from process.core.io.mfile import MFile, MFileErrorClass
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
-from process.data_structure.numerics import PROCESSRunMode
-from process.data_structure.numerics import FiguresOfMerit
+from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.build import Build
 from process.models.geometry.blanket import (

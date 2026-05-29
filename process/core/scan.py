@@ -22,8 +22,7 @@ from process.data_structure import (
     scan_variables,
     tfcoil_variables,
 )
-from process.data_structure.numerics import PROCESSRunMode
-from process.data_structure.numerics import FiguresOfMerit
+from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 
 if TYPE_CHECKING:
     from process.core.model import DataStructure, Model

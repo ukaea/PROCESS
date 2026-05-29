@@ -17,8 +17,7 @@ from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
-from process.data_structure.numerics import PROCESSRunMode
-from process.data_structure.numerics import FiguresOfMerit
+from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.scan_variables import init_scan_variables
