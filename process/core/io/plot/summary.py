@@ -22,6 +22,7 @@ from process.core import constants
 from process.core.io.mfile import MFile, MFileErrorClass
 from process.core.solver.objectives import OBJECTIVE_NAMES
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
+from process.data_structure.numerics import PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.build import Build
 from process.models.geometry.blanket import (
@@ -11861,7 +11862,7 @@ def plot_cover_page(
     tagno = mfile.get("tagno", scan=-1)
     branch_name = mfile.get("branch_name", scan=-1)
     fileprefix = mfile.get("fileprefix", scan=-1)
-    optmisation_switch = mfile.get("ioptimz", scan=-1)
+    optmisation_switch = int(mfile.get("ioptimz", scan=-1))
     minmax_switch = mfile.get("minmax", scan=-1) or "N/A"
     ifail = mfile.get("ifail", scan=-1)
     nvars = mfile.get("nvar", scan=-1)
@@ -11943,6 +11944,7 @@ def plot_cover_page(
     # Box 3: Run Settings
     settings_info = (
         f"• Optimisation Switch: {int(optmisation_switch)}\n"
+        f"     {PROCESSRunMode(int(optmisation_switch)).description}\n"
         f"• Figure of Merit Switch (minmax): {minmax_switch}\n"
         f"• Fail Status (ifail): {int(ifail)}\n"
         f"• Number of Iteration Variables: {int(nvars)}\n"
@@ -11954,7 +11956,7 @@ def plot_cover_page(
     )
     axis.text(
         0.1,
-        0.41,
+        0.46,
         settings_info,
         fontsize=14,
         ha="left",

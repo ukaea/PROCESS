@@ -22,6 +22,7 @@ from process.data_structure import (
     scan_variables,
     tfcoil_variables,
 )
+from process.data_structure.numerics import PROCESSRunMode
 
 if TYPE_CHECKING:
     from process.core.model import DataStructure, Model
@@ -347,6 +348,9 @@ class Scan:
         )
         process_output.ovarin(
             constants.NOUT, "Optimisation switch", "(ioptimz)", numerics.ioptimz
+        )
+        process_output.ocmmnt(
+            constants.NOUT, f"     {PROCESSRunMode(numerics.ioptimz).description}"
         )
         # Objective function output: none for fsolve
         if self.solver != "fsolve":

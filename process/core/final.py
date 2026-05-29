@@ -8,6 +8,7 @@ from process.core import process_output as po
 from process.core.solver import constraints
 from process.core.solver.objectives import objective_function
 from process.data_structure import numerics
+from process.data_structure.numerics import PROCESSRunMode
 
 
 def finalise(models, data, ifail: int, non_idempotent_msg: str | None = None):
@@ -32,7 +33,7 @@ def finalise(models, data, ifail: int, non_idempotent_msg: str | None = None):
         po.oheadr(constants.NOUT, "Final UNFEASIBLE Point")
 
     # Output relevant to no optimisation
-    if numerics.ioptimz == -2:
+    if numerics.ioptimz == PROCESSRunMode.EVALUATION:
         output_evaluation(data)
 
     # Print non-idempotence warning to OUT.DAT only

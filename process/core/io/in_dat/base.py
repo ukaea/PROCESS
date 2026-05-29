@@ -16,14 +16,7 @@ from re import sub
 from process.core.exceptions import ProcessValidationError
 from process.core.io.data_structure_dicts import get_dicts
 from process.core.solver.constraints import ConstraintManager
-
-# ioptimz values
-ioptimz_des = {
-    "-2": "for no optimisation, no VMCOM or HYBRD",
-    "-1": "for no optimisation HYBRD only",
-    "0": "for HYBRD and VMCON (not recommended)",
-    "1": "for optimisation VMCON only",
-}
+from process.data_structure.numerics import PROCESSRunMode
 
 
 def fortran_python_scientific(var_value):
@@ -457,7 +450,7 @@ def get_parameters(data, use_string_values=True):
                     name = item
                     ioptimz = {}
                     iop_val = data["ioptimz"].get_value
-                    iop_comment = ioptimz_des[str(iop_val)]
+                    iop_comment = f"{PROCESSRunMode(iop_val).description}"
                     ioptimz["value"] = iop_val
                     ioptimz["comment"] = iop_comment
                     parameters[module][name] = ioptimz
