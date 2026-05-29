@@ -42,6 +42,9 @@ class PFCoilData:
     )
     """Axial stress (z) in central solenoid at midplane due to its own field at each time point (Pa)"""
 
+    stress_z_cs_self_profile: list[float] = field(default_factory=lambda: np.zeros(20))
+    """Vertical profile of axial stress (z) in central solenoid at midplane due to its own field at each time point (Pa)"""
+
     stress_hoop_cs_inner: float = 0.0
     """Hoop stress in central solenoid at inboard edge due to its own field (when at peak current) (Pa)"""
 

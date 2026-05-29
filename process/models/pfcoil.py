@@ -2513,6 +2513,13 @@ class PFCoil(Model):
                 f"(stress_z_cs_self_midplane_profile[{time}])",
                 self.data.pf_coil.stress_z_cs_self_midplane_profile[time],
             )
+        for position in range(20):
+            op.ovarre(
+                self.mfile,
+                f"CS coil axial stress at position {position} (MPa)",
+                f"(stress_z_cs_self_profile[{position}])",
+                self.data.pf_coil.stress_z_cs_self_profile[position],
+            )
         self.tf_pf_collision_detector()
 
         if self.data.build.iohcl != 0:
@@ -3421,6 +3428,33 @@ class CSCoil(Model):
                 a_cs_toroidal=self.data.pf_coil.a_cs_toroidal,
             )
 
+            # Create vertical profile of the self-axial stress in the CS coil, for fatigue calculations
+            for i, position in enumerate(
+                np.linspace(
+                    -self.data.pf_coil.z_cs_upper,
+                    self.data.pf_coil.z_cs_upper,
+                    num=20,
+                    endpoint=True,
+                )
+            ):
+                stress_value, _ = self.calculate_cs_self_axial_stress(
+                    z_stress_point=position,
+                    r_cs_outer=self.data.pf_coil.r_pf_coil_outer[
+                        self.data.pf_coil.n_cs_pf_coils - 1
+                    ],
+                    dz_cs_half=self.data.pf_coil.dz_cs_full / 2.0,
+                    cur_cs=self.data.pf_coil.c_pf_cs_coils_peak_ma[
+                        self.data.pf_coil.n_cs_pf_coils - 1
+                    ]
+                    * 1.0e6,
+                    a_cs_toroidal=self.data.pf_coil.a_cs_toroidal,
+                )
+                # If the stress value is NaN (e.g., due to a division by zero or other numerical issue), set it to 0.0
+                # The value will always be NaN at the top and bottom of the coil
+                self.data.pf_coil.stress_z_cs_self_profile[i] = (
+                    0.0 if np.isnan(stress_value) else stress_value
+                )
+
             self.data.pf_coil.stress_radial_cs_peak = self.calculate_cs_radial_stress(
                 r_stress_point=self.data.pf_coil.r_cs_middle,
                 r_cs_inner=self.data.pf_coil.r_cs_inner,
@@ -4091,6 +4125,98 @@ class CSCoil(Model):
 
         return s_axial, forc_z_cs_self_peak_midplane
 
+    def calculate_cs_self_axial_stress(
+        self,
+        z_stress_point: float,
+        r_cs_outer: float,
+        dz_cs_half: float,
+        cur_cs: float,
+        a_cs_toroidal: float,
+    ) -> tuple[float, float]:
+        """Calculate axial stress and axial force for the central solenoid.
+
+        Parameters
+        ----------
+        z_stress_point:
+            Vertical position where the stress is evaluated [m].
+        r_cs_outer:
+            Outer radius of the central solenoid [m].
+        dz_cs_half:
+            Half-height of the central solenoid [m].
+        cur_cs:
+            CS coil current [A].
+        a_cs_toroidal:
+            Total top-down toroidal area of the CS [m²].
+
+        Returns
+        -------
+        tuple(float, float)
+            A tuple containing the unsmeared axial stress and the axial force.
+                The first element is the unsmeared axial stress in MPa.
+                The second element is the axial force in newtons (N).
+
+        Notes
+        -----
+        The axial force is computed using elliptic-integral based terms and the
+        unsmeared axial stress is obtained by dividing the axial force by
+        the effective steel area associated with the CS turns.
+
+        References
+        ----------
+        [1] Case Studies in Superconducting Magnets. Boston, MA: Springer US, 2009.
+            doi: https://doi.org/10.1007/b112047.
+        """
+        # k2b term for elliptical integrals
+        # k2b2 = SQRT((4.0e0*b**2)/(4.0e0*b**2 + 4.0e0*hl**2))
+        k2b2 = (4.0e0 * r_cs_outer**2) / (4.0e0 * r_cs_outer**2 + 4.0e0 * dz_cs_half**2)
+
+        # k
+        kb_minus_2 = (4.0e0 * r_cs_outer**2) / (
+            4.0e0 * r_cs_outer**2 + (dz_cs_half - z_stress_point) ** 2
+        )
+        kb_plus_2 = (4.0e0 * r_cs_outer**2) / (
+            4.0e0 * r_cs_outer**2 + (dz_cs_half + z_stress_point) ** 2
+        )
+
+        # term 1
+        axial_term_1 = -(constants.RMU0 / 2.0e0) * (cur_cs / (2.0e0 * dz_cs_half)) ** 2
+
+        # term 2
+        ekb2_1 = ellipk(kb_minus_2)
+        ekb2_2 = ellipe(kb_minus_2)
+        axial_term_2 = (
+            (dz_cs_half - z_stress_point)
+            * (math.sqrt(4.0e0 * r_cs_outer**2 + (dz_cs_half - z_stress_point) ** 2))
+            * (ekb2_1 - ekb2_2)
+        )
+
+        # term 3
+        ek2b2_1 = ellipk(kb_plus_2)
+        ek2b2_2 = ellipe(kb_plus_2)
+        axial_term_3 = (
+            (dz_cs_half + z_stress_point)
+            * (math.sqrt(4.0e0 * r_cs_outer**2 + (dz_cs_half + z_stress_point) ** 2))
+            * (ek2b2_1 - ek2b2_2)
+        )
+
+        # Term 4
+        ek2b2_1 = ellipk(k2b2)
+        ek2b2_2 = ellipe(k2b2)
+        axial_term_4 = (
+            (2 * dz_cs_half)
+            * (math.sqrt(4.0e0 * r_cs_outer**2 + 4.0e0 * dz_cs_half**2))
+            * (ek2b2_1 - ek2b2_2)
+        )
+
+        # calculate axial force [N]
+        forc_z_cs_self = axial_term_1 * (axial_term_2 + axial_term_3 - axial_term_4)
+
+        # Calculate unsmeared axial stress
+        # Average axial stress at the interface of each half of the coil
+        s_axial = forc_z_cs_self / (0.5 * a_cs_toroidal)
+
+        return s_axial, forc_z_cs_self
+
     def calculate_cs_self_midplane_axial_stress_time_profile(
         self,
     ) -> None:
@@ -4428,6 +4554,78 @@ class CSCoil(Model):
         axis.set_ylabel("Vertical Stress (MPa)")
         axis.set_title("Stress Yield Locus")
         axis.minorticks_on()
+
+    def plot_vertical_stress_profile(
+        self,
+        axis: plt.Axes,
+        mfile: MFile,
+        scan: int,
+    ):
+        dz_cs_full = mfile.get("dz_cs_full", scan=scan)
+        r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+        r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+
+        stress_z_profile = [
+            float(mfile.data[f"stress_z_cs_self_profile[{i}]"].get_scan(scan)) / 1e6
+            for i in range(20)
+        ]
+
+        # Create 2D grid for contour plot: radial and vertical dimensions
+        n_radial = 50
+        radial_grid = np.linspace(r_cs_inner, r_cs_outer, n_radial)
+        height_grid = np.linspace(-dz_cs_full / 2, dz_cs_full / 2, len(stress_z_profile))
+
+        # Create meshgrid for filled contour
+        r, z = np.meshgrid(radial_grid, height_grid)
+
+        # Interpolate stress values across radial direction (assume linear variation)
+        stress_data = np.zeros((len(stress_z_profile), n_radial))
+        for i, stress_val in enumerate(stress_z_profile):
+            stress_data[i, :] = stress_val
+
+        # Plot filled contour of stress distribution
+        contour_fill = axis.contourf(r, z, stress_data, levels=15, cmap="RdYlBu")
+        contour_lines = axis.contour(
+            r, z, stress_data, levels=10, colors="black", linewidths=0.5, alpha=0.4
+        )
+        axis.clabel(contour_lines, inline=True, fontsize=8)
+
+        # Plot CS outline
+        axis.plot(
+            [r_cs_inner, r_cs_inner],
+            [-dz_cs_full / 2, dz_cs_full / 2],
+            "k-",
+            linewidth=2,
+            label="CS Inner",
+        )
+        axis.plot(
+            [r_cs_outer, r_cs_outer],
+            [-dz_cs_full / 2, dz_cs_full / 2],
+            "k-",
+            linewidth=2,
+            label="CS Outer",
+        )
+        axis.plot(
+            [r_cs_inner, r_cs_outer], [dz_cs_full / 2, dz_cs_full / 2], "k-", linewidth=2
+        )
+        axis.plot(
+            [r_cs_inner, r_cs_outer],
+            [-dz_cs_full / 2, -dz_cs_full / 2],
+            "k-",
+            linewidth=2,
+        )
+
+        # Add colorbar
+        cbar = plt.colorbar(contour_fill, ax=axis)
+        cbar.set_label("Vertical Stress (MPa)")
+
+        axis.set_xlabel("R [m]")
+        axis.set_ylabel("Z [m]")
+        axis.minorticks_on()
+        axis.set_xlim(0.0, r_cs_outer + 0.1)
+        axis.set_ylim((-dz_cs_full / 2) * 1.1, (dz_cs_full / 2) * 1.1)
+        axis.grid(True, alpha=0.3)
+        axis.set_title("CS Vertical Stress Profile at BOP")
 
 
 def peak_b_field_at_pf_coil(

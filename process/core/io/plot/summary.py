@@ -15667,57 +15667,65 @@ def main_plot(
 
     plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
 
-    plot_cs_stress_time_profile(axis=figs[32].add_subplot(431), mfile=m_file, scan=scan)
-
-    plot_cs_radial_hoop_stress_profile(
-        axis=figs[32].add_subplot(432),
-        mfile=m_file,
-        scan=scan,
-        j_cs=m_file.get("j_cs_pulse_start", scan=scan),
-        b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
-    )
-
-    plot_cs_radial_stress_profile(
-        axis=figs[32].add_subplot(433),
-        mfile=m_file,
-        scan=scan,
-        j_cs=m_file.get("j_cs_pulse_start", scan=scan),
-        b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
-    )
-
     plot_cs_coil_structure(
-        figs[32].add_subplot(223, aspect="equal"), figs[32], m_file, scan
+        figs[30].add_subplot(121, aspect="equal"), figs[30], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[32].add_subplot(326, aspect="equal"), figs[32], m_file, scan
+        figs[32].add_subplot(326, aspect="equal"), figs[30], m_file, scan
     )
-    figs[32].subplots_adjust(wspace=0.3)
+    figs[30].subplots_adjust(wspace=0.3)
+
+    cs_coil = CSCoil(cs_fatigue=CsFatigue())
+
+    plot_cs_stress_time_profile(axis=figs[31].add_subplot(331), mfile=m_file, scan=scan)
+
+    cs_coil.plot_cs_radial_hoop_stress_profile(
+        axis=figs[31].add_subplot(332),
+        mfile=m_file,
+        scan=scan,
+        j_cs=m_file.get("j_cs_pulse_start", scan=scan),
+        b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
+    )
+
+    cs_coil.plot_cs_radial_stress_profile(
+        axis=figs[31].add_subplot(333),
+        mfile=m_file,
+        scan=scan,
+        j_cs=m_file.get("j_cs_pulse_start", scan=scan),
+        b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
+    )
+
+    cs_coil.plot_vertical_stress_profile(
+        axis=figs[31].add_subplot(334),
+        mfile=m_file,
+        scan=scan,
+    )
 
     cs_coil.plot_stress_yield_locus(
-        axis=figs[30].add_subplot(111),
+        axis=figs[31].add_subplot(339),
         mfile=m_file,
         scan=scan,
         stress_yield=6e8,
     )
 
     plot_first_wall_top_down_cross_section(
-        figs[33].add_subplot(221, aspect="equal"), m_file, scan
+        figs[32].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[33].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[33].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[32].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[32].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[34], m_file, scan)
-    ax_blanket = figs[34].add_subplot(122, aspect="equal")
-    plot_blkt_structure(ax_blanket, figs[34], m_file, scan, radial_build, colour_scheme)
+    plot_blkt_pipe_bends(figs[33], m_file, scan)
+    ax_blanket = figs[33].add_subplot(122, aspect="equal")
+    plot_blkt_structure(ax_blanket, figs[33], m_file, scan, radial_build, colour_scheme)
 
     plot_main_power_flow(
-        figs[35].add_subplot(111, aspect="equal"), m_file, scan, figs[35]
+        figs[34].add_subplot(111, aspect="equal"), m_file, scan, figs[34]
     )
 
-    ax24 = figs[36].add_subplot(111)
+    ax24 = figs[35].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[36])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[35])
 
 
 def create_thickness_builds(m_file, scan: int):
