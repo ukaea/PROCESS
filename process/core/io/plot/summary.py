@@ -79,6 +79,10 @@ from process.models.tfcoil.base import (
     TFConductorModel,
     TFPlasmaCaseType,
 )
+from process.models.tfcoil.quench import (
+    _build_cumulative_quench_integral,
+    calculate_quench_protection_current_density,
+)
 from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
 
@@ -6994,10 +6998,10 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         n_cols = int((width - 2 * radius) // strand_spacing)
 
         # Calculate the radius of the inner superconductor circle based on the copper area fraction
-        # Area_superconductor = f_a_tf_turn_cable_copper * Area_strand
+        # Area_superconductor = (1 - f_a_tf_turn_cable_copper) * Area_strand
         # Area_strand = pi * radius^2
-        # So, radius_superconductor = sqrt(f_a_tf_turn_cable_copper) * radius
-        radius_superconductor = np.sqrt(f_a_tf_turn_cable_copper) * radius
+        # So, radius_superconductor = sqrt(1 - f_a_tf_turn_cable_copper) * radius
+        radius_superconductor = np.sqrt(1 - f_a_tf_turn_cable_copper) * radius
 
         # Generate hexagonal grid positions
         for row in range(n_rows):
@@ -7479,7 +7483,8 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
     textstr_superconductor = (
         f"$\\mathbf{{Superconductor:}}$\n \n"
-        f"Superconductor used: {SuperconductorModel(mfile.get('i_tf_sc_mat', scan=scan)).full_name}\n"
+        f"Superconductor used: \n"
+        f"{SuperconductorModel(mfile.get('i_tf_sc_mat', scan=scan)).full_name}\n"
         f"Critical field at zero \ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
         f"Critical temperature at \nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
         f"Temperature at conductor: {mfile.get('tftmp', scan=scan):.4f} K\n"
@@ -7488,8 +7493,8 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f"Critcal current ratio: {mfile.get('f_c_tf_turn_operating_critical', scan=scan):,.4f}\n"
         f"Superconductor temperature \nmargin: {mfile.get('temp_tf_superconductor_margin', scan=scan):,.4f} K\n"
         f"\n$\\mathbf{{Quench:}}$\n \n"
-        f"Quench dump time: {mfile.get('t_tf_superconductor_quench', scan=scan):.4e} s\n"
-        f"Quench detection time: {mfile.get('t_tf_quench_detection', scan=scan):.4e} s\n"
+        f"Quench dump time: {mfile.get('t_tf_superconductor_quench', scan=scan):.4f} s\n"
+        f"Quench detection time: {mfile.get('t_tf_quench_detection', scan=scan):.4f} s\n"
         f"User input max temperature \nduring quench: {mfile.get('temp_tf_conductor_quench_max', scan=scan):.2f} K\n"
         f"Required maxium WP current \ndensity for heat protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e} A/m$^2$\n"
     )
@@ -7809,7 +7814,7 @@ def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
     # Convert to mm
     dia_mm = dia_tf_turn_superconducting_cable * 1000
-    radius_superconductor_mm = np.sqrt(f_a_tf_turn_cable_copper) * (dia_mm / 2)
+    radius_superconductor_mm = np.sqrt(1 - f_a_tf_turn_cable_copper) * (dia_mm / 2)
 
     # Draw the outer copper circle
     circle_copper_surrounding = patches.Circle(
@@ -14634,6 +14639,285 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
     axis.axis("off")
 
 
+def plot_quench_time_evolution(
+    tau_discharge: float,
+    b_peak: float,
+    f_a_cable_copper: float,
+    f_a_cable_space_helium: float,
+    temp_he_peak: float,
+    temp_quench_max: float,
+    cu_rrr: float,
+    t_quench_detection: float,
+    fluence: float,
+    j_operating: float,
+    a_tf_turn_cable_space: float,
+    a_tf_turn: float,
+    n_points: int = 500,
+    axes_1: plt.Axes | None = None,
+    axes_2: plt.Axes | None = None,
+    show: bool = False,
+) -> None:
+    """Plots the time evolution of the quench model hotspot temperature and current.
+
+    Visualises the adiabatic hotspot temperature rise and exponentially decaying
+    current during a quench, highlighting the quench detection time.
+
+    Parameters
+    ----------
+    tau_discharge:
+        Quench discharge time constant [s].
+    b_peak:
+        Magnetic field at the peak point [T].
+    f_a_cable_copper:
+        Fraction of cable cross-section that is copper.
+    f_a_cable_space_helium:
+        Fraction of cable space occupied by helium.
+    temp_he_peak:
+        Peak helium temperature at quench initiation [K].
+    temp_quench_max:
+        Maximum allowed conductor temperature during quench [K].
+    cu_rrr:
+        Residual resistivity ratio of copper.
+    t_quench_detection:
+        Detection time delay [s].
+    fluence:
+        Neutron fluence [n/m²].
+    j_operating:
+        Operating current density [A/m²] to compare against the quench protection limit.
+    a_tf_turn_cable_space:
+        Area of the TF turn cable space [m²].
+    a_tf_turn:
+        Area of the TF turn [m²].
+    n_points:
+        Number of time points for the plot.
+    axes_1:
+        Optional axis for the current density panel.
+    axes_2:
+        Optional axis for the hotspot temperature panel.
+    show:
+        Whether to display the plot with Matplotlib. Defaults to False to avoid
+        GUI backend warnings in non-interactive environments.
+    """
+    figure = None
+    if axes_1 is None and axes_2 is None:
+        figure, (axes_1, axes_2) = plt.subplots(2, 1, sharex=True)
+    elif axes_1 is None or axes_2 is None:
+        msg = "Both axes_1 and axes_2 must be provided together, or neither."
+        raise ValueError(msg)
+
+    fluence = np.clip(fluence, 0.0, 1.5e23)
+
+    j_max = (
+        a_tf_turn_cable_space / a_tf_turn
+    ) * calculate_quench_protection_current_density(
+        tau_discharge=tau_discharge,
+        b_peak=b_peak,
+        f_a_cable_copper=f_a_cable_copper,
+        f_a_cable_space_helium=f_a_cable_space_helium,
+        temp_he_peak=temp_he_peak,
+        temp_quench_max=temp_quench_max,
+        cu_rrr=cu_rrr,
+        t_quench_detection=t_quench_detection,
+        fluence=fluence,
+    )
+
+    fluence_1e23 = 1e23
+    j_max_1e23 = (
+        a_tf_turn_cable_space / a_tf_turn
+    ) * calculate_quench_protection_current_density(
+        tau_discharge=tau_discharge,
+        b_peak=b_peak,
+        f_a_cable_copper=f_a_cable_copper,
+        f_a_cable_space_helium=f_a_cable_space_helium,
+        temp_he_peak=temp_he_peak,
+        temp_quench_max=temp_quench_max,
+        cu_rrr=cu_rrr,
+        t_quench_detection=t_quench_detection,
+        fluence=fluence_1e23,
+    )
+
+    # Time axis: from 0 to ~4 time constants after discharge begins at detection.
+    # This ensures later annotations/interpolations at t_quench_detection + tau_discharge
+    # and beyond remain within the sampled domain.
+    t_end = max(4.0 * tau_discharge, t_quench_detection + 4.0 * tau_discharge)
+    times = np.linspace(0.0, t_end, n_points)
+
+    # Current density decays exponentially after detection
+    decay = np.exp(-(times - t_quench_detection) / tau_discharge)
+
+    j_profile_required, j_profile_required_1e23, j_profile_real = [
+        np.where(times < t_quench_detection, j0, j0 * decay)
+        for j0 in (j_max, j_max_1e23, j_operating)
+    ]
+
+    # Adiabatic hotspot temperature: integrate heat balance over time
+    # T(t) is found by inverting: integral_{T0}^{T(t)} [sum(rho*cp)] / rho_cu dT = integral_0^t J² dt
+    # We accumulate the (∫J² dt) and map it to temperature via the precomputed integral.
+    f_cu_cable = (1.0 - f_a_cable_space_helium) * f_a_cable_copper
+    f_sc_cable = (1.0 - f_a_cable_space_helium) * (1.0 - f_a_cable_copper)
+
+    # Build a temperature lookup: cumulative integral from t_he_peak to T
+    temp_array, cum_integral = _build_cumulative_quench_integral(
+        temp_he_peak=temp_he_peak,
+        temp_quench_max=temp_quench_max,
+        field=b_peak,
+        rrr=cu_rrr,
+        fluence=fluence,
+        f_a_cable_space_helium=f_a_cable_space_helium,
+        f_cu_cable=f_cu_cable,
+        f_sc_cable=f_sc_cable,
+    )
+    temp_array_1e23, cum_integral_1e23 = _build_cumulative_quench_integral(
+        temp_he_peak=temp_he_peak,
+        temp_quench_max=temp_quench_max,
+        field=b_peak,
+        rrr=cu_rrr,
+        fluence=fluence_1e23,
+        f_a_cable_space_helium=f_a_cable_space_helium,
+        f_cu_cable=f_cu_cable,
+        f_sc_cable=f_sc_cable,
+    )
+
+    # Numerically integrate J² dt over time to get MIIT (Mega-Ampere²-seconds) at
+    # each time step
+    dt = times[1] - times[0]
+    miit_required = np.cumsum(j_profile_required**2) * dt
+    miit_required_1e23 = np.cumsum(j_profile_required_1e23**2) * dt
+    miit_real = np.cumsum(j_profile_real**2) * dt
+
+    # Convert the cable-space thermal integral to winding-pack basis to match j_profile_*.
+    area_ratio = a_tf_turn_cable_space / a_tf_turn
+    scaled_integral = (area_ratio**2) * f_cu_cable * cum_integral
+    scaled_integral_1e23 = (area_ratio**2) * f_cu_cable * cum_integral_1e23
+    hotspot_temp_required = np.interp(miit_required, scaled_integral, temp_array)
+    hotspot_temp_required_1e23 = np.interp(
+        miit_required_1e23, scaled_integral_1e23, temp_array_1e23
+    )
+    hotspot_temp_real = np.interp(miit_real, scaled_integral, temp_array)
+
+    # --- Current density panel ---
+    axes_1.plot(
+        times,
+        j_profile_required,
+        color="darkorange",
+        linewidth=2,
+        label=f"Max allowed current density for protection (fluence = {fluence:.2e} n/m²)",
+    )
+    axes_1.plot(
+        times,
+        j_profile_required_1e23,
+        color="darkorange",
+        linewidth=2,
+        linestyle="--",
+        label="Max allowed current density for protection (fluence = 1e23 n/m²)",
+    )
+    axes_1.plot(
+        times,
+        j_profile_real,
+        color="blue",
+        linewidth=2,
+        label="Operating current density",
+    )
+    axes_1.axvline(
+        t_quench_detection,
+        color="crimson",
+        linestyle="--",
+        linewidth=1.5,
+        label=f"Detection time ({t_quench_detection:.1f} s)",
+    )
+    axes_1.axvspan(
+        0, t_quench_detection, alpha=0.08, color="crimson", label="Pre-detection phase"
+    )
+    axes_1.set_ylabel("Current density [A/m²]")
+    axes_1.legend(fontsize=9)
+    axes_1.grid(True, alpha=0.3)
+    axes_1.set_title(
+        "TF Coil Quench Protection: Current Density and Hotspot Temperature Evolution"
+    )
+
+    # --- Temperature panel ---
+    axes_2.plot(
+        times,
+        hotspot_temp_required,
+        color="darkorange",
+        linewidth=2,
+        label=f"Hotspot temperature at protection limit (fluence = {fluence:.2e} n/m²)",
+    )
+    axes_2.plot(
+        times,
+        hotspot_temp_required_1e23,
+        color="darkorange",
+        linewidth=2,
+        linestyle="--",
+        label="Hotspot temperature at protection limit (fluence = 1e23 n/m²)",
+    )
+    axes_2.plot(
+        times,
+        hotspot_temp_real,
+        color="blue",
+        linewidth=2,
+        label="Operating hotspot temperature",
+    )
+
+    axes_2.axvline(
+        t_quench_detection,
+        color="crimson",
+        linestyle="--",
+        linewidth=1.5,
+        label=f"$t_{{\\text{{detect}}}}$ ({t_quench_detection:.2f} s)",
+    )
+    axes_2.axvspan(0, t_quench_detection, alpha=0.08, color="crimson")
+    axes_2.axhline(
+        temp_quench_max,
+        color="grey",
+        linestyle=":",
+        linewidth=1.5,
+        label=f"$T_{{\\text{{max}}}}$ = {temp_quench_max} K",
+    )
+    axes_2.set_xlabel("Time [s]")
+    axes_2.set_ylabel("Temperature [K]")
+    axes_2.legend(fontsize=9)
+    axes_2.grid(True, alpha=0.3)
+
+    # Mark tau_discharge after detection time with vertical and horizontal lines
+    tau_time = t_quench_detection + tau_discharge
+    tau_j = j_max * np.exp(
+        -1
+    )  # current density at t = t_quench_detection + tau_discharge
+    tau_temp = float(np.interp(tau_time, times, hotspot_temp_required))
+
+    for ax, val, label in [
+        (axes_1, tau_j, f"$J$ at $\\tau_{{\\text{{discharge}}}}$ ({tau_j:.2e} A/m²)"),
+        (axes_2, tau_temp, f"$T$ at $\\tau_{{\\text{{discharge}}}}$ ({tau_temp:.1f} K)"),
+    ]:
+        ax.axvline(
+            tau_time,
+            color="forestgreen",
+            linestyle="--",
+            linewidth=1.5,
+            label=f"$t_{{\\text{{detect}}}} + \\tau_{{\\text{{discharge}}}}$ ({tau_time:.2f} s)",
+        )
+        ax.axhline(
+            val,
+            color="forestgreen",
+            linestyle=":",
+            linewidth=1.5,
+            label=label,
+        )
+    axes_1.legend(fontsize=9)
+    axes_1.minorticks_on()
+    axes_2.legend(fontsize=9)
+    axes_2.minorticks_on()
+
+    if figure is not None:
+        figure.tight_layout()
+    else:
+        plt.tight_layout()
+
+    if show:
+        plt.show()
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -14964,48 +15248,68 @@ def main_plot(
             plot_205 = figs[25].add_subplot(223, aspect="equal")
             plot_205.set_position([0.075, 0.1, 0.3, 0.3])
             plot_cable_in_conduit_cable(plot_205, figs[25], m_file, scan)
+            plot_quench_time_evolution(
+                tau_discharge=m_file.get("t_tf_superconductor_quench", scan=scan),
+                b_peak=m_file.get("b_tf_inboard_peak_with_ripple", scan=scan),
+                f_a_cable_copper=m_file.get("f_a_tf_turn_cable_copper", scan=scan),
+                f_a_cable_space_helium=m_file.get(
+                    "f_a_tf_turn_cable_space_cooling", scan=scan
+                ),
+                temp_he_peak=m_file.get("tftmp", scan=scan),
+                temp_quench_max=m_file.get("temp_tf_conductor_quench_max", scan=scan),
+                cu_rrr=m_file.get("rrr_tf_cu", scan=scan),
+                t_quench_detection=m_file.get("t_tf_quench_detection", scan=scan),
+                fluence=m_file.get("nflutfmax", scan=scan),
+                j_operating=m_file.get("j_tf_wp", scan=scan),
+                a_tf_turn_cable_space=m_file.get(
+                    "a_tf_turn_cable_space_no_void", scan=scan
+                ),
+                a_tf_turn=m_file.get("a_tf_turn", scan=scan),
+                axes_1=figs[26].add_subplot(211),
+                axes_2=figs[26].add_subplot(212),
+            )
     else:
         ax19 = figs[24].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
         plot_resistive_tf_wp(ax19, m_file, scan, figs[24])
         plot_resistive_tf_info(ax19, m_file, scan, figs[24])
     plot_tf_coil_structure(
-        figs[26].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
+        figs[27].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
     )
 
-    plot_plasma_outboard_toroidal_ripple_map(figs[27], m_file, scan)
+    plot_plasma_outboard_toroidal_ripple_map(figs[28], m_file, scan)
 
-    plot_tf_stress(figs[28].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+    plot_tf_stress(figs[29].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
-    plot_current_profiles_over_time(figs[29].add_subplot(111), m_file, scan)
+    plot_current_profiles_over_time(figs[30].add_subplot(111), m_file, scan)
 
-    plot_cs_stress_time_profile(axis=figs[30].add_subplot(311), mfile=m_file, scan=scan)
+    plot_cs_stress_time_profile(axis=figs[31].add_subplot(311), mfile=m_file, scan=scan)
 
     plot_cs_coil_structure(
-        figs[30].add_subplot(223, aspect="equal"), figs[30], m_file, scan
+        figs[31].add_subplot(223, aspect="equal"), figs[31], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[30].add_subplot(326, aspect="equal"), figs[30], m_file, scan
+        figs[31].add_subplot(326, aspect="equal"), figs[31], m_file, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        figs[31].add_subplot(221, aspect="equal"), m_file, scan
+        figs[32].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[31].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[31].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[32].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[32].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[32], m_file, scan)
-    ax_blanket = figs[32].add_subplot(122, aspect="equal")
-    plot_blkt_structure(ax_blanket, figs[32], m_file, scan, radial_build, colour_scheme)
+    plot_blkt_pipe_bends(figs[33], m_file, scan)
+    ax_blanket = figs[33].add_subplot(122, aspect="equal")
+    plot_blkt_structure(ax_blanket, figs[33], m_file, scan, radial_build, colour_scheme)
 
     plot_main_power_flow(
-        figs[33].add_subplot(111, aspect="equal"), m_file, scan, figs[33]
+        figs[34].add_subplot(111, aspect="equal"), m_file, scan, figs[34]
     )
 
-    ax24 = figs[34].add_subplot(111)
+    ax24 = figs[35].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[34])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[35])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -15087,7 +15391,7 @@ def plot_summary(
 ):
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(35)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(36)]
 
     # run main_plot
     main_plot(

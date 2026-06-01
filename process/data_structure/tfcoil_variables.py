@@ -1,7 +1,5 @@
 """
 Module containing global variables relating to the toroidal field coil systems
-### References
-- ITER Magnets design description document DDD11-2 v2 2 (2009)
 """
 
 import numpy as np
@@ -1078,6 +1076,9 @@ t_tf_quench_detection: float = None
 rrr_tf_cu: float = None
 """TF coil copper residual-resistance-ratio (RRR). Only used for quench protection."""
 
+a_tf_turn: float = None
+"""TF coil turn area (m²)"""
+
 
 def init_tfcoil_variables():
     global \
@@ -1297,7 +1298,8 @@ def init_tfcoil_variables():
         theta1_vv, \
         max_vv_stress, \
         t_tf_quench_detection, \
-        rrr_tf_cu
+        rrr_tf_cu, \
+        a_tf_turn
 
     a_tf_coil_inboard_case = 0.0
     a_tf_coil_outboard_case = 0.0
@@ -1536,3 +1538,4 @@ def init_tfcoil_variables():
     max_vv_stress = 143.0e6
     rrr_tf_cu = 100.0
     t_tf_quench_detection = 3.0
+    a_tf_turn = 0.0
