@@ -1398,7 +1398,7 @@ def constraint_equation_72(constraint_registration, data):
     Reverse the sign so it works as an inequality constraint (tmp_cc > 0)
     This will have no effect if it is used as an equality constraint because it will be squared.
 
-    stress_cs_steel_max: allowable hoop stress in Central Solenoid structural material (Pa)
+    stress_cs_steel_max: allowable stress in Central Solenoid structural material (Pa)
     stress_shear_cs_peak: Maximum shear stress coils/central solenoid (Pa)
     sig_tf_cs_bucked: Maximum shear stress in CS case at flux swing (no current in CS)
                           can be significant for the bucked and weged design

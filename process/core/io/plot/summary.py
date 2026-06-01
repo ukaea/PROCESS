@@ -15764,7 +15764,7 @@ def main_plot(
         axis=figs[31].add_subplot(339, aspect="equal"),
         mfile=m_file,
         scan=scan,
-        stress_yield=6e8,
+        stress_yield=m_file.get("stress_cs_steel_max", scan=scan),
     )
 
     ax_338 = figs[31].add_subplot(338, sharex=ax_332, sharey=ax_335)

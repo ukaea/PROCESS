@@ -457,6 +457,7 @@ OBS_VARS = {
     "dr_hts_tape": "dr_tf_hts_tape",
     "coppera_m2_max": "tf_coppera_m2_max",
     "f_ster_div_single": None,
+    "alstroh": "stress_cs_steel_max",
 }
 
 OBS_VARS_HELP = {
