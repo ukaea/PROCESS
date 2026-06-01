@@ -612,13 +612,7 @@ class PFCoil(Model):
                 nocoil += 1
 
         # Flux swing required from CS coil
-        csflux = (
-            -(
-                self.data.physics.vs_plasma_res_ramp
-                + self.data.physics.vs_plasma_ind_ramp
-            )
-            - pfflux
-        )
+        csflux = -(self.data.physics.vs_plasma_ramp_required) - pfflux
 
         if self.data.build.iohcl == 1:
             # Required current change in CS coil
@@ -636,11 +630,7 @@ class PFCoil(Model):
                     + (self.data.build.dr_cs * self.data.build.dr_cs) / 6.0e0
                     + (self.data.build.dr_cs * self.data.build.dr_bore) / 2.0e0
                 )
-                / (
-                    self.data.build.z_tf_inside_half
-                    * self.data.pf_coil.f_z_cs_tf_internal
-                    * 2.0e0
-                )
+                / (self.data.pf_coil.dz_cs_full)
             )
             dics = csflux / ddics
 
@@ -4016,11 +4006,8 @@ def peak_b_field_at_pf_coil(
                     ]
                     * data.pf_coil.j_cs_flat_top_end
                     * sgn
-                    * data.build.dr_cs
-                    * data.pf_coil.f_z_cs_tf_internal
-                    * data.build.z_tf_inside_half
+                    * data.pf_coil.a_cs_poloidal
                     / data.pf_coil.nfxf
-                    * 2.0e0
                 )
 
             kk = data.pf_coil.nfxf
