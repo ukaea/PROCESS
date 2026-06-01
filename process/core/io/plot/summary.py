@@ -15601,11 +15601,23 @@ def main_plot(
     
     plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
 
-    plot_cs_stress_time_profile(axis=figs[30].add_subplot(431), mfile=m_file, scan=scan)
+    
+    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
+
+    
+    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
+
+    
+    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
+
+    
+    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
+
+    plot_cs_stress_time_profile(axis=figs[31].add_subplot(431), mfile=m_file, scan=scan)
 
     cs_coil = CSCoil(cs_fatigue=CsFatigue())
     cs_coil.plot_cs_radial_hoop_stress_profile(
-        axis=figs[30].add_subplot(432),
+        axis=figs[31].add_subplot(432),
         mfile=m_file,
         scan=scan,
         j_cs=m_file.get("j_cs_pulse_start", scan=scan),
@@ -15613,7 +15625,7 @@ def main_plot(
     )
 
     cs_coil.plot_cs_radial_stress_profile(
-        axis=figs[30].add_subplot(433),
+        axis=figs[31].add_subplot(433),
         mfile=m_file,
         scan=scan,
         j_cs=m_file.get("j_cs_pulse_start", scan=scan),
@@ -15626,7 +15638,7 @@ def main_plot(
     plot_cs_turn_structure(
         figs[32].add_subplot(326, aspect="equal"), figs[32], m_file, scan
     )
-    figs[30].subplots_adjust(wspace=0.3)
+    figs[31].subplots_adjust(wspace=0.3)
 
     plot_first_wall_top_down_cross_section(
         figs[33].add_subplot(221, aspect="equal"), m_file, scan

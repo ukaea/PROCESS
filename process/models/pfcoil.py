@@ -3922,13 +3922,13 @@ class CSCoil(Model):
                 self.outfile,
                 "CS current/copper area (A/m²)",
                 "(copperaoh_m2)",
-                rcv.copperaoh_m2,
+                self.data.rebco.copperaoh_m2,
             )
             op.ovarre(
                 self.outfile,
                 "Max CS current/copper area (A/m²)",
                 "(copperaoh_m2_max)",
-                rcv.copperaoh_m2_max,
+                self.data.rebco.copperaoh_m2_max,
             )
 
             op.ovarre(
