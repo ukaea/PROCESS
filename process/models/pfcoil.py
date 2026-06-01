@@ -1988,15 +1988,15 @@ class PFCoil(Model):
         """
         op.oheadr(self.outfile, "Central Solenoid and PF Coils")
 
+        op.ovarin(
+            self.mfile,
+            "Existence_of_central_solenoid",
+            "(iohcl)",
+            self.data.build.iohcl,
+        )
         if self.data.build.iohcl == 0:
             op.ocmmnt(self.outfile, "No central solenoid included")
             op.oblnkl(self.outfile)
-            op.ovarin(
-                self.mfile,
-                "Existence_of_central_solenoid",
-                "(iohcl)",
-                self.data.build.iohcl,
-            )
         elif self.data.pf_coil.i_pf_conductor == 0:
             op.ocmmnt(self.outfile, "Superconducting central solenoid")
 
