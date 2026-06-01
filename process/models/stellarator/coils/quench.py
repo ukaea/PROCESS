@@ -3,11 +3,7 @@
 import numpy as np
 
 from process.core.model import DataStructure
-from process.data_structure import (
-    rebco_variables,
-    superconducting_tf_coil_variables,
-    tfcoil_variables,
-)
+from process.data_structure import superconducting_tf_coil_variables, tfcoil_variables
 
 
 def calculate_quench_protection(coilcurrent, data: DataStructure):
@@ -74,7 +70,7 @@ def calculate_quench_protection(coilcurrent, data: DataStructure):
     )
 
     # Also give the copper current density (copper A/m2) for REBCO quench calculations:
-    rebco_variables.coppera_m2 = (
+    data.rebco.coppera_m2 = (
         coilcurrent
         * 1.0e6
         / (

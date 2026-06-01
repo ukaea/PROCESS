@@ -14,7 +14,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     numerics,
-    rebco_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
@@ -1006,14 +1005,14 @@ class SuperconductingTFCoil(TFCoil):
                     self.outfile,
                     "Maximum permitted TF coil current / copper area (A/m2)",
                     "(copperA_m2_max)",
-                    rebco_variables.tf_coppera_m2_max,
+                    self.data.rebco.tf_coppera_m2_max,
                 )
 
             po.ovarre(
                 self.outfile,
                 "Actual TF coil current / copper area (A/m2)",
                 "(copperA_m2)",
-                rebco_variables.tf_coppera_m2,
+                self.data.rebco.tf_coppera_m2,
             )
 
         po.ovarre(

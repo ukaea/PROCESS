@@ -1463,7 +1463,7 @@ def constraint_equation_74(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(75, "A/m²", "<=")
-def constraint_equation_75(constraint_registration, _data):
+def constraint_equation_75(constraint_registration, data):
     """Upper limit to ensure that TF coil current / copper area < Maximum value
     ONLY used for croco HTS coil
 
@@ -1471,7 +1471,7 @@ def constraint_equation_75(constraint_registration, _data):
     copperA_m2_max: Maximum TF coil current / copper area (A/m²)
     """
     return leq(
-        data_structure.rebco_variables.coppera_m2,
+        data.rebco.coppera_m2,
         data_structure.superconducting_tf_coil_variables.tf_coppera_m2_max,
         constraint_registration,
     )
@@ -1713,15 +1713,15 @@ def constraint_equation_88(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(89, "A/m²", "<=")
-def constraint_equation_89(constraint_registration, _data):
+def constraint_equation_89(constraint_registration, data):
     """Upper limit to ensure that the Central Solenoid [OH] coil current / copper area < Maximum value
 
     copperaoh_m2: CS coil current at EOF / copper area [A/m²]
     copperaoh_m2_max: maximum coil current / copper area [A/m²]
     """
     return leq(
-        data_structure.rebco_variables.copperaoh_m2,
-        data_structure.rebco_variables.copperaoh_m2_max,
+        data.rebco.copperaoh_m2,
+        data.rebco.copperaoh_m2_max,
         constraint_registration,
     )
 

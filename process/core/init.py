@@ -20,7 +20,6 @@ from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
-from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.scan_variables import init_scan_variables
 from process.data_structure.superconducting_tf_coil_variables import (
     init_superconducting_tf_coil_variables,
@@ -240,7 +239,6 @@ def init_all_module_vars():
     init_superconducting_tf_coil_variables()
     init_tfcoil_variables()
     constants.init_constants()
-    init_rebco_variables()
 
 
 def check_process(inputs, data):  # noqa: ARG001

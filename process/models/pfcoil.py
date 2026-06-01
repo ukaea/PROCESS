@@ -11,7 +11,6 @@ from process.core import constants
 from process.core import process_output as op
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure, Model
-from process.data_structure import rebco_variables as rcv
 from process.data_structure import superconducting_tf_coil_variables
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure.pfcoil_variables import (
@@ -2241,13 +2240,13 @@ class PFCoil(Model):
                     self.outfile,
                     "CS current/copper area (A/m2)",
                     "(copperaoh_m2)",
-                    rcv.copperaoh_m2,
+                    self.data.rebco.copperaoh_m2,
                 )
                 op.ovarre(
                     self.outfile,
                     "Max CS current/copper area (A/m2)",
                     "(copperaoh_m2_max)",
-                    rcv.copperaoh_m2_max,
+                    self.data.rebco.copperaoh_m2_max,
                 )
 
             op.ovarre(
