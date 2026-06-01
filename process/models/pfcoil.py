@@ -1963,13 +1963,22 @@ class PFCoil(Model):
             if self.data.build.iohcl != 0:
                 op.write(
                     self.outfile,
-                    f"CS\t\t\t{self.data.pf_coil.ind_pf_cs_plasma_mutual[: self.data.pf_coil.n_pf_cs_plasma_circuits, self.data.pf_coil.n_pf_cs_plasma_circuits - 2]}",
+                    f"CS\t{self.data.pf_coil.ind_pf_cs_plasma_mutual[: self.data.pf_coil.n_pf_cs_plasma_circuits, self.data.pf_coil.n_pf_cs_plasma_circuits - 2]}",
                 )
 
             op.write(
                 self.outfile,
                 f"Plasma\t{self.data.pf_coil.ind_pf_cs_plasma_mutual[: self.data.pf_coil.n_pf_cs_plasma_circuits, self.data.pf_coil.n_pf_cs_plasma_circuits - 1]}",
             )
+        # Output to MFILE for use in other modules
+        for coil in range(self.data.pf_coil.n_pf_cs_plasma_circuits):
+            for circuit in range(self.data.pf_coil.n_pf_cs_plasma_circuits):
+                op.ovarre(
+                    self.mfile,
+                    f"Mutual inductance between PF coil group {coil} and plasma circuit",
+                    f"(ind_pf_cs_plasma_mutual[{coil}, {circuit}])",
+                    self.data.pf_coil.ind_pf_cs_plasma_mutual[coil, circuit],
+                )
 
     def outpf(self):
         """Routine to write output from PF coil module to file.
