@@ -208,27 +208,31 @@ have been calculated as follows to scale the bore field value by:
 
 -----------
 
-### Peak Axial Stresses | `calculate_cs_self_peak_midplane_axial_stress()`
+### Axial Stress | `calculate_cs_self_axial_stress()`
 
-
-The vertical (axial) force for a "thin-walled" solenoid ($\alpha = 1$) at the midplane where the force is maximum is given by Equation 3.41 in "Case studies in superconducting magnets" [^2]:
+The vertical (axial) force at location $z$ for a "thin-walled" solenoid ($\alpha = 1$) with a uniform surface current density and its midplane at $z=0$ is given by Equation 3.40 in "Case studies in superconducting magnets" [^2]:
 
 $$
-F_{z}(0)=\frac{\mu_0}{2}\left(\frac{N I}{2 \times dz_{\text{half}}}\right) \times \\
- \left(2dz_{\text{half}} \sqrt{4r_{\text{CS,outer}}^2 + dz_{\text{half}}^2} \left[K(k_b) - E(k_b)\right]\\
+F_{z}(z)=\frac{\mu_0}{2}\left(\frac{N I}{2 \times dz_{\text{half}}}\right) \times \\
+ \left((dz_{\text{half}}-z) \sqrt{4r_{\text{CS,outer}}^2 + (dz_{\text{half}}-z)^2} \left[K(k_{b-}) - E(k_{b-})\right]\\
+ +(dz_{\text{half}}+z) \sqrt{4r_{\text{CS,outer}}^2 + (dz_{\text{half}}+z)^2} \left[K(k_{b+}) - E(k_{b+})\right]\\
   - 2dz_{\text{half}} \sqrt{4r_{\text{CS,outer}}^2 + 4dz_{\text{half}}^2} \left[K(k_{2b}) - E(k_{2b})\right]  \right)
 $$
 
-where the modulus $k_{2b}$ is given by
+The ellipticic integral moduli, $k_{b-}^2$, $k_{b+}^2$, $k_{2b}^2$
 
 $$
-k_{2b} = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+4dz_{\text{half}}^2}}
+k_{b-}^2 = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+(dz_{\text{half}}-z)^2}}
+$$
+
+$$
+k_{b+}^2 = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+(dz_{\text{half}}+z)^2}}
 $$
 
 and $k_b$ is given by:
 
 $$
-k_{2b} = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+dz_{\text{half}}^2}}
+k_{2b}^2 = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+4dz_{\text{half}}^2}}
 $$
 
 Here $K(k)$ and $E(k)$ are the complete elliptic integrals, respectively of the first and second kinds.
@@ -237,7 +241,7 @@ Here $K(k)$ and $E(k)$ are the complete elliptic integrals, respectively of the 
 
     For solenoids that can be classed as "thick-walled" ($\alpha > 1$), the coil has to be divided radially into several thin-walled solenoids. This is not currently performed though more info can be found in Section 3.5.5 of "Case studies in superconducting magnets" [^2].
 
-The axial compressive force at $z$ in an isolated solenoid increases from 0 at $z  = dz_{\text{half}}$
+The axial compressive force at $z$ in an isolated solenoid increases from $0$ at $z  = dz_{\text{half}}$
 to the maximum at the midplane, $F_{z}(0)$.
 
 The axial stress in the steel is given by:
@@ -256,6 +260,31 @@ $$
 f_z = 0.5.
 $$
 
+--------------
+
+
+#### Peak Axial Stress | `calculate_cs_self_peak_midplane_axial_stress()`
+
+
+By inserting $z=0$ into the general axial stress equation above we can get an expression for the midplane force which is the peak value. This is also given as Equation 3.41 in "Case studies in superconducting magnets" [^2]:
+
+$$
+F_{z}(0)=\frac{\mu_0}{2}\left(\frac{N I}{2 \times dz_{\text{half}}}\right) \times \\
+ \left(2dz_{\text{half}} \sqrt{4r_{\text{CS,outer}}^2 + dz_{\text{half}}^2} \left[K(k_b) - E(k_b)\right]\\
+  - 2dz_{\text{half}} \sqrt{4r_{\text{CS,outer}}^2 + 4dz_{\text{half}}^2} \left[K(k_{2b}) - E(k_{2b})\right]  \right)
+$$
+
+where the modulus $k_{2b}$ is given by
+
+$$
+k_{2b} = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+4dz_{\text{half}}^2}}
+$$
+
+and $k_b$ is given by:
+
+$$
+k_{2b} = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+dz_{\text{half}}^2}}
+$$
 
 
 --------------------------
