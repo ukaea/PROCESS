@@ -476,7 +476,7 @@ sig_tf_wp_max = 5.8E8
 * DESCRIPTION:   Allowable Tresca stress in TF coil winding pack (Pa) (icc=33)
 * JUSTIFICATION: 
 
-alstroh = 6.6D8 
+stress_cs_steel_max = 6.6D8 
 * DESCRIPTION:   Allowable hoop stress in CS coil (Pa) (icc=72)
 * JUSTIFICATION: 
 

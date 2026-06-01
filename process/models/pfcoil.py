@@ -2181,8 +2181,8 @@ class PFCoil(Model):
             op.ovarre(
                 self.outfile,
                 "Allowable stress in CS steel (Pa)",
-                "(alstroh)",
-                self.data.pf_coil.alstroh,
+                "(stress_cs_steel_max)",
+                self.data.pf_coil.stress_cs_steel_max,
             )
             op.ovarre(
                 self.outfile,
@@ -3474,9 +3474,9 @@ class CSCoil(Model):
                 f_poisson_cs_structure=tfv.poisson_steel,
             )
 
-            # Allowable (hoop) stress (Pa) alstroh
+            # Allowable (hoop) stress (Pa) stress_cs_steel_max
             # Now a user input
-            # alstroh = min( (2.0e0*csytf/3.0e0), (0.5e0*csutf) )
+            # stress_cs_steel_max = min( (2.0e0*csytf/3.0e0), (0.5e0*csutf) )
 
             # Calculation of CS fatigue
             # this is only valid for pulsed reactor design

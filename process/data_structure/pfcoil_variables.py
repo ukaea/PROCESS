@@ -109,8 +109,8 @@ class PFCoilData:
     alfapf: float = 5e-10
     """smoothing parameter used in PF coil current calculation at the beginning of pulse (BoP)"""
 
-    alstroh: float = 4.0e8
-    """allowable hoop stress in Central Solenoid structural material (Pa)"""
+    stress_cs_steel_max: float = 4.0e8
+    """Max allowable stress in Central Solenoid structural material (Pa)"""
 
     i_cs_stress: int = 1
     """Switch for CS stress calculation:
