@@ -1975,9 +1975,10 @@ class PFCoil(Model):
             for circuit in range(self.data.pf_coil.n_pf_cs_plasma_circuits):
                 op.ovarre(
                     self.mfile,
-                    f"Mutual inductance between PF coil group {coil} and plasma circuit",
-                    f"(ind_pf_cs_plasma_mutual[{coil}, {circuit}])",
+                    f"Mutual inductance between PF/CS/plasma circuits {coil} and {circuit} (H)",
+                    f"(ind_pf_cs_plasma_mutual[{coil},_{circuit}])",
                     self.data.pf_coil.ind_pf_cs_plasma_mutual[coil, circuit],
+                )
                 )
 
     def outpf(self):
