@@ -1979,7 +1979,6 @@ class PFCoil(Model):
                     f"(ind_pf_cs_plasma_mutual[{coil},_{circuit}])",
                     self.data.pf_coil.ind_pf_cs_plasma_mutual[coil, circuit],
                 )
-                )
 
     def outpf(self):
         """Routine to write output from PF coil module to file.
