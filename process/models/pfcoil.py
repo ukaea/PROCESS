@@ -2215,8 +2215,8 @@ class PFCoil(Model):
             op.ovarre(
                 self.outfile,
                 "Maximum shear stress in CS steel for the Tresca criterion (Pa)",
-                "(s_shear_cs_peak)",
-                self.data.pf_coil.s_shear_cs_peak,
+                "(stress_shear_cs_peak)",
+                self.data.pf_coil.stress_shear_cs_peak,
                 "OP ",
             )
             op.ovarre(
@@ -3501,7 +3501,7 @@ class CSCoil(Model):
             )
 
             if self.data.pf_coil.i_cs_stress == 1:
-                self.data.pf_coil.s_shear_cs_peak = calculate_tresca_stress(
+                self.data.pf_coil.stress_shear_cs_peak = calculate_tresca_stress(
                     stress_x=self.data.pf_coil.stress_hoop_cs_inner,
                     stress_y=self.data.pf_coil.stress_z_cs_self_peak_midplane,
                     stress_z=self.data.pf_coil.stress_radial_cs_peak,
@@ -3514,7 +3514,7 @@ class CSCoil(Model):
                 )
 
             else:
-                self.data.pf_coil.s_shear_cs_peak = max(
+                self.data.pf_coil.stress_shear_cs_peak = max(
                     abs(self.data.pf_coil.stress_hoop_cs_inner - 0.0e0),
                     abs(0.0e0 - 0.0e0),
                     abs(0.0e0 - self.data.pf_coil.stress_hoop_cs_inner),
@@ -4675,7 +4675,7 @@ class CSCoil(Model):
         stress_hoop_cs_inner = mfile.get("stress_hoop_cs_inner", scan=scan)
         stress_yield_mpa = stress_yield / 1e6
         stress_mises_cs_peak = mfile.get("stress_mises_cs_peak", scan=scan) / 1e6
-        s_shear_cs_peak = mfile.get("s_shear_cs_peak", scan=scan) / 1e6
+        stress_shear_cs_peak = mfile.get("stress_shear_cs_peak", scan=scan) / 1e6
         s1_boundary = [
             stress_yield_mpa,
             stress_yield_mpa,
@@ -4721,7 +4721,7 @@ class CSCoil(Model):
             color="blue",
             label=(
                 f"CS Inboard Midplane Stress Point\n"
-                f"Tresca = {s_shear_cs_peak:.1f} MPa\n"
+                f"Tresca = {stress_shear_cs_peak:.1f} MPa\n"
                 f"von Mises = {stress_mises_cs_peak:.1f} MPa"
             ),
         )

@@ -421,8 +421,8 @@ class PFCoilData:
     (r = rmajor + rref*rminor)
     """
 
-    s_shear_cs_peak: float = 0.0
-    """Maximum shear stress (Tresca criterion) coils/central solenoid [MPa]"""
+    stress_shear_cs_peak: float = 0.0
+    """Peak achieved shear stress (Tresca criterion) in central solenoid [MPa]"""
 
     sigpfcalw: float = 500.0
     """maximum permissible tensile stress (MPa) in steel coil cases for superconducting

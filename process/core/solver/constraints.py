@@ -1399,7 +1399,7 @@ def constraint_equation_72(constraint_registration, data):
     This will have no effect if it is used as an equality constraint because it will be squared.
 
     alstroh: allowable hoop stress in Central Solenoid structural material (Pa)
-    s_shear_cs_peak: Maximum shear stress coils/central solenoid (Pa)
+    stress_shear_cs_peak: Maximum shear stress coils/central solenoid (Pa)
     sig_tf_cs_bucked: Maximum shear stress in CS case at flux swing (no current in CS)
                           can be significant for the bucked and weged design
     i_tf_bucking: switch for TF structure design
@@ -1408,7 +1408,7 @@ def constraint_equation_72(constraint_registration, data):
     if data.tfcoil.i_tf_bucking >= 2 and data.build.i_tf_inside_cs == 0:
         return leq(
             max(
-                data.pf_coil.s_shear_cs_peak,
+                data.pf_coil.stress_shear_cs_peak,
                 data.tfcoil.sig_tf_cs_bucked,
             ),
             data.pf_coil.alstroh,
@@ -1416,7 +1416,7 @@ def constraint_equation_72(constraint_registration, data):
         )
     # Free standing CS
     return leq(
-        data.pf_coil.s_shear_cs_peak,
+        data.pf_coil.stress_shear_cs_peak,
         data.pf_coil.alstroh,
         constraint_registration,
     )

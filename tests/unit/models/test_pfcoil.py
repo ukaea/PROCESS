@@ -2587,7 +2587,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     monkeypatch.setattr(cs_coil.data.pf_coil, "jcableoh_eof", 1.427e8)
     monkeypatch.setattr(cs_coil.data.pf_coil, "p_cs_resistive_flat_top", 0.0)
     monkeypatch.setattr(cs_coil.data.pf_coil, "j_cs_critical_pulse_start", 3.048e7)
-    monkeypatch.setattr(cs_coil.data.pf_coil, "s_shear_cs_peak", 5.718e8)
+    monkeypatch.setattr(cs_coil.data.pf_coil, "stress_shear_cs_peak", 5.718e8)
     monkeypatch.setattr(cs_coil.data.pf_coil, "a_cs_cable_space", 4.232)
     monkeypatch.setattr(cs_coil.data.pf_coil, "f_a_cs_turn_steel", 5.926e-1)
     monkeypatch.setattr(cs_coil.data.pf_coil, "b_cs_peak_pulse_start", 1.4e1)
