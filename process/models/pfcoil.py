@@ -3829,7 +3829,7 @@ class CSCoil(Model):
         )
         op.ovarre(
             self.outfile,
-            "Radial width a CS turn [m²]",
+            "Vertical thickness of a CS turn [m]",
             "(dz_cs_turn)",
             self.data.pf_coil.dz_cs_turn,
             "OP ",
@@ -3931,12 +3931,12 @@ class CSCoil(Model):
                 self.data.rebco.copperaoh_m2_max,
             )
 
-            op.ovarre(
-                self.outfile,
-                "Void (coolant) fraction in conductor",
-                "(f_a_cs_void)",
-                self.data.pf_coil.f_a_cs_void,
-            )
+        op.ovarre(
+            self.outfile,
+            "Void (coolant) fraction in conductor",
+            "(f_a_cs_void)",
+            self.data.pf_coil.f_a_cs_void,
+        )
 
     @staticmethod
     def calculate_cs_self_peak_midplane_axial_stress(
@@ -4048,7 +4048,7 @@ class CSCoil(Model):
         b_cs_inner: float,
         f_poisson_cs_structure: float,
         f_a_cs_turn_steel: float,
-    ) -> float:
+    ) -> float | np.ndarray:
         """Calculation of hoop stress of central solenoid.
 
         This routine calculates the hoop stress of the central solenoid
@@ -4075,7 +4075,7 @@ class CSCoil(Model):
         Returns
         -------
         float
-            hoop stress at the specified radial location (MPa)
+            hoop stress at the specified radial location (Pa)
 
         References
         ----------

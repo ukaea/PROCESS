@@ -76,7 +76,7 @@ This method calculates the CS geometry parameters. The CS is assumed to be a per
 7. The full poloidal cross-sectional area is given by:
 
     $$
-    \overbrace{A_{\text{CS,poloidal}}}^{\texttt{a_cs_poloidal}} = 2 \times dr_{\text{CS}} \times dz_{\text{CS}}
+    \overbrace{A_{\text{CS,poloidal}}}^{\texttt{a_cs_poloidal}} = dr_{\text{CS}} \times dz_{\text{CS}}
     $$
 
 8. The full top-down toroidal cross-sectional area is given by:
@@ -89,7 +89,7 @@ This method calculates the CS geometry parameters. The CS is assumed to be a per
 
 ### EU-DEMO Turn Geometry | `calculate_cs_turn_geometry_eu_demo()`
 
-This turn superconducting turn strucutre for the CS assumes a rectangular turn shape with a "stadium" shaped cable area[^eu_demo_turn].
+This superconducting turn structure for the CS assumes a rectangular turn shape with a "stadium"-shaped cable area[^eu_demo_turn].
 
 
 ![CS turn layout](../eng-models/images/cs_eu_demo_turn.PNG "CS EU-DEMO like turn")
@@ -99,7 +99,7 @@ The turn geometry is calculated as follows:
 1. The vertical height of the turn is given by:
 
     $$
-    dz_{\text{CS,turn}} = \left(\frac{A_{\text{CS,turn}}}{\texttt{f_dr_dz_cs_turn}}\right)^2
+    dz_{\text{CS,turn}} = \sqrt{\frac{A_{\text{CS,turn}}}{\texttt{f_dr_dz_cs_turn}}}
     $$
 
     $\texttt{f_dr_dz_cs_turn}$ is the intended length to height ratio of the turn
@@ -160,7 +160,12 @@ This is Equation 3.13 from "Case Studies in Superconducting Magnets"[^2].
 
 ### Self peak on coil magnetic field | `calculate_cs_self_peak_magnetic_field()`
 
-The peak field at the bore of the central solenoid will not be the same as that felt by the conductors inside the structures.So wecannot use the bore value directly calculated by [`calculate_cs_bore_magnetic_field()`](#self-peak-bore-magnetic-field--calculate_cs_bore_magnetic_field). We require to know the peak field on the conductor if we are to design a superconducting central solenoid that has enough margin. Fits to data[^1] for different ranges of $\beta$ have been calculated as follows to scale the bore field value by:
+The peak field at the bore of the central solenoid will not be the same as that felt by the 
+conductors inside the structures. So we cannot use the bore value directly calculated by 
+[`calculate_cs_bore_magnetic_field()`](#self-peak-bore-magnetic-field--calculate_cs_bore_magnetic_field). 
+We require to know the peak field on the conductor if we are to design a superconducting 
+central solenoid that has enough margin. Fits to data[^1] for different ranges of $\beta$ 
+have been calculated as follows to scale the bore field value by:
 
 - $\beta > 3.0$
 
