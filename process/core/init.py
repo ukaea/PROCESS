@@ -22,6 +22,7 @@ from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.data_structure.scan_variables import init_scan_variables
 from process.models.physics.profiles import DensityProfilePedestalType
+from process.models.pfcoil import PFLocationTypes
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
@@ -578,9 +579,9 @@ def check_process(inputs, data):  # noqa: ARG001
         # 2 : PF coil on top of TF coil
         # 3 : PF coil outside of TF coil
         if data.physics.itartpf == 0:
-            data.pf_coil.i_pf_location[0] = 2
-            data.pf_coil.i_pf_location[1] = 3
-            data.pf_coil.i_pf_location[2] = 3
+            data.pf_coil.i_pf_location[0] = PFLocationTypes.ABOVE_TF
+            data.pf_coil.i_pf_location[1] = PFLocationTypes.OUTSIDE_TF
+            data.pf_coil.i_pf_location[2] = PFLocationTypes.OUTSIDE_TF
 
         # Water cooled copper magnets initalisation / checks
         if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
@@ -708,14 +709,14 @@ def check_process(inputs, data):  # noqa: ARG001
         k = 0
         for i in range(data.pf_coil.n_pf_coil_groups):
             if (
-                data.pf_coil.i_pf_location[i] != 2
+                data.pf_coil.i_pf_location[i] != PFLocationTypes.ABOVE_TF
                 and data.pf_coil.n_pf_coils_in_group[i] != 2
             ):
                 raise ProcessValidationError(
                     "n_pf_coils_in_group(i) .ne. 2 is not a valid option except for (i_pf_location = 2)"
                 )
 
-            if data.pf_coil.i_pf_location[i] == 2:
+            if data.pf_coil.i_pf_location[i] == PFLocationTypes.ABOVE_TF:
                 j += 1
                 k += data.pf_coil.n_pf_coils_in_group[i]
 
