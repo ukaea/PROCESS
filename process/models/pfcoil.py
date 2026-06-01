@@ -4138,7 +4138,7 @@ class CSCoil(Model):
         j_cs: float,
         b_cs_inner: float,
         f_poisson_cs_structure: float,
-    ) -> float:
+    ) -> float | np.ndarray:
         """Calculation of radial stress of central solenoid.
 
         This routine calculates the radial stress of the central solenoid
@@ -4153,7 +4153,7 @@ class CSCoil(Model):
         r_cs_outer : float
             Outer radius of the central solenoid (m)
         j_cs : float
-            Current density in the central solenoid (A/m^2)
+            Current density in the central solenoid (A/m²)
         b_cs_inner : float
             Magnetic field at the inner radius of the central solenoid (T)
         f_poisson_cs_structure : float
