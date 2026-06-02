@@ -945,7 +945,9 @@ INPUT_VARIABLES = {
     "wsvfac": InputVariable("buildings", float, range=(0.9, 3.0)),
     "xi_ebw": InputVariable("current_drive", float, range=(0.0, 1.0)),
     "xpertin": InputVariable("divertor", float, range=(0.0, 10.0)),
-    "zeff_max": InputVariable("constraints", float, range=(1.0, 10.0)),
+    "n_charge_plasma_effective_vol_avg_max": InputVariable(
+        "constraints", float, range=(1.0, 10.0)
+    ),
     "blktmodel": InputVariable("fwbs", int, choices=[0, 1]),
     "blkttype": InputVariable("fwbs", int, choices=[1, 2, 3]),
     "breedmat": InputVariable("fwbs", int, choices=[1, 2, 3]),

@@ -621,9 +621,9 @@ f_nd_impurity_electrons(14) = 5e-05    *Tungsten
 *icc = 64
 * DESCRIPTION:   Upper limit on Zeff
 * JUSTIFICATION: Turned off, dont care about maximum effective charge
-* VARIABLES:     zeff_max (maximum value for Zeff), zeff calculated in-situ
+* VARIABLES:     n_charge_plasma_effective_vol_avg_max (maximum value for Zeff), zeff calculated in-situ
 
-*zeff_max = 
+*n_charge_plasma_effective_vol_avg_max = 
 * DESCRIPTION:   Maximum value for Zeff (`constraint equation 64`)
 * JUSTIFICATION: Not set, not using icc = 64
 

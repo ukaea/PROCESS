@@ -112,7 +112,7 @@ class ConstraintData:
     times (`constraint equation 62`)
     """
 
-    zeff_max: float = 3.6
+    n_charge_plasma_effective_vol_avg_max: float = 3.6
     """maximum value for Zeff (`constraint equation 64`)"""
 
     f_h_mode_margin: float = 1.0

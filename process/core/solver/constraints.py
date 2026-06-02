@@ -1274,12 +1274,12 @@ def constraint_equation_63(constraint_registration, data):
 def constraint_equation_64(constraint_registration, data):
     """Upper limit on Zeff
 
-    zeff_max: maximum value for Zeff
+    n_charge_plasma_effective_vol_avg_max: maximum value for Zeff
     n_charge_plasma_effective_vol_avg: plasma effective charge
     """
     return leq(
         data.physics.n_charge_plasma_effective_vol_avg,
-        data.constraints.zeff_max,
+        data.constraints.n_charge_plasma_effective_vol_avg_max,
         constraint_registration,
     )
 

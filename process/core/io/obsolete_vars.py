@@ -360,7 +360,7 @@ OBS_VARS = {
     "tmax_croco": "temp_croco_quench_max",
     "vdalw": "v_tf_coil_dump_quench_max_kv",
     "vvhealw": None,
-    "zeffmax": "zeff_max",
+    "zeffmax": "n_charge_plasma_effective_vol_avg_max",
     "f_a_fw_hcd": "f_a_fw_outboard_hcd",
     "fpumpblkt": "f_p_blkt_coolant_pump_total_heat",
     "fpumpshld": "f_p_shld_coolant_pump_total_heat",
@@ -463,6 +463,7 @@ OBS_VARS = {
     "pseprmax": "p_plasma_separatrix_rmajor_max_mw",
     "avail_min": "f_t_plant_available_min",
     "f_alpha_energy_confinement_min": "f_t_alpha_energy_confinement_min",
+    "zeff_max": "n_charge_plasma_effective_vol_avg_max",
 }
 
 OBS_VARS_HELP = {
