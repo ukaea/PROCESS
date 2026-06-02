@@ -1638,7 +1638,7 @@ i_pf_conductor = 0
 *icc = 60
 * DESCRIPTION:   Constraint equation for Central Solenoid s/c temperature margin lower limit
 * JUSTIFICATION: Turned off, do not care about temp lower limit 
-* VARIABLES:     avail_min (Minimum availability), f_t_plant_available calculated in-situ
+* VARIABLES:     f_t_plant_available_min (Minimum availability), f_t_plant_available calculated in-situ
 
 *temp_cs_superconductor_margin_min = 
 * DESCRIPTION:   Minimum allowable temp margin: CS (K) (icc = 60)
@@ -3166,7 +3166,7 @@ i_plant_availability = 0
 * JUSTIFICATION: Turned off, do not care about availability limit 
 * VARIABLES:     temp_cs_superconductor_margin_min (Minimum allowable temperature margin in CS (K)), temp_cs_superconductor_margin calculated in-situ
 
-*avail_min = 
+*f_t_plant_available_min = 
 * DESCRIPTION: Minimum availability (`constraint equation 61`)
 * JUSTIFICATION: testing
 

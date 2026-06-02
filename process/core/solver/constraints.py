@@ -1232,11 +1232,11 @@ def constraint_equation_61(constraint_registration, data):
     """Equation for availability lower limit
 
     f_t_plant_available: Total plant availability fraction
-    avail_min: Minimum availability
+    f_t_plant_available_min: Minimum availability
     """
     return geq(
         data.costs.f_t_plant_available,
-        data.costs.avail_min,
+        data.costs.f_t_plant_available_min,
         constraint_registration,
     )
 

@@ -177,7 +177,7 @@ INPUT_VARIABLES = {
     "auxcool_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "auxcool_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "p_hcd_injected_min_mw": InputVariable("constraints", float, range=(0.01, 100.0)),
-    "avail_min": InputVariable("costs", float, range=(0.0, 1.0)),
+    "f_t_plant_available_min": InputVariable("costs", float, range=(0.0, 1.0)),
     "b_crit_upper_nbti": InputVariable("tfcoil", float, range=(0.0, 30.0)),
     "p_plant_electric_base": InputVariable(
         "heat_transport", float, range=(1000000.0, 10000000000.0)
