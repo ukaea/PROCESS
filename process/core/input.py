@@ -639,7 +639,9 @@ INPUT_VARIABLES = {
     "pres_fw_coolant": InputVariable("fwbs", float, range=(100000.0, 100000000.0)),
     "prn1": InputVariable("divertor", float, range=(0.0, 1.0)),
     "psepbqarmax": InputVariable("constraints", float, range=(1.0, 50.0)),
-    "pseprmax": InputVariable("constraints", float, range=(1.0, 60.0)),
+    "p_plasma_separatrix_rmajor_max_mw": InputVariable(
+        "constraints", float, range=(1.0, 60.0)
+    ),
     "ptargf": InputVariable("ife", float, range=(0.1, 100.0)),
     "temp_cp_max": InputVariable("tfcoil", float, range=(4.0, 573.15)),
     "ptfnucmax": InputVariable("constraints", float, range=(1e-06, 1.0)),

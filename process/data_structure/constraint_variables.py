@@ -84,8 +84,8 @@ class ConstraintData:
     psepbqarmax: float = 9.5
     """maximum ratio of Psep*Bt/qAR (MWT/m) (`constraint equation 68`)"""
 
-    pseprmax: float = 25.0
-    """maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
+    p_plasma_separatrix_rmajor_max_mw: float = 25.0
+    """Maximum allowed ratio of power crossing the separatrix to plasma major radius (Pₛₑₚ / R₀) [MW/m]
     (`constraint equation 56`)
     """
 

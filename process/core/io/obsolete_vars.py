@@ -460,6 +460,7 @@ OBS_VARS = {
     "fradpwr": "f_p_plasma_separatrix_rad_max",
     "aplasmin": "rminor_min",
     "nflutfmax": "flu_tf_neutron_fast_max",
+    "pseprmax": "p_plasma_separatrix_rmajor_max_mw",
 }
 
 OBS_VARS_HELP = {

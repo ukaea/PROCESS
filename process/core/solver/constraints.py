@@ -1185,15 +1185,16 @@ def constraint_equation_54(constraint_registration, data):
 
 @ConstraintManager.register_constraint(56, "MW/m", "<=")
 def constraint_equation_56(constraint_registration, data):
-    """Equation for power through separatrix / major radius upper limit
+    """Equation for Pₛₑₚ / R₀ upper limit
 
-    pseprmax: maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
+    p_plasma_separatrix_rmajor_max_mw: maximum ratio of power crossing the separatrix to
+    plasma major radius (Pₛₑₚ / R₀) [MW/m]
     p_plasma_separatrix_mw: power to be conducted to the divertor region (MW)
-    rmajor: plasma major radius (m)
+
     """
     return leq(
-        (data.physics.p_plasma_separatrix_mw / data.physics.rmajor),
-        data.constraints.pseprmax,
+        data.physics.p_plasma_separatrix_rmajor_mw,
+        data.constraints.p_plasma_separatrix_rmajor_max_mw,
         constraint_registration,
     )
 

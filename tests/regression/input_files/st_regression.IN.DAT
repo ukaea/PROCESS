@@ -691,7 +691,7 @@ icc = 56
 * JUSTIFICATION: Divertor protection
 * VARIABLES:     rmajor. p_plasma_separatrix_mw calculated in situ
 
-pseprmax = 40.0 
+p_plasma_separatrix_rmajor_max_mw = 40.0 
 * DESCRIPTION:   Maximum ratio of Psep/R (MW/m) (icc=56)
 * JUSTIFICATION: 
 

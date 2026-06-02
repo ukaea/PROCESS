@@ -100,7 +100,7 @@ i_bldgs_size = 0 * switch between routines estimating building sizes (0 = defaul
 pflux_fw_rad_max = 1.2 * Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
 f_fw_rad_max = 1.0 * peaking factor for radiation wall load (`constraint equation 67`)
 p_fusion_total_max_mw  = 2500.0 * maximum fusion power (MW) (`constraint equation 9`)
-pseprmax = 40.0 * maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
+p_plasma_separatrix_rmajor_max_mw = 40.0 * maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
 f_alpha_energy_confinement_min = 5.0 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
 p_plant_electric_net_required_mw = 100.0 * minimum net electric
 
