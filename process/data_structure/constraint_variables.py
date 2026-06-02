@@ -81,8 +81,8 @@ class ConstraintData:
     p_fusion_total_max_mw: float = 1.5e3
     """maximum fusion power (MW) (`constraint equation 9`)"""
 
-    psepbqarmax: float = 9.5
-    """maximum ratio of Psep*Bt/qAR (MWT/m) (`constraint equation 68`)"""
+    p_div_bt_q_aspect_rmajor_max_mw: float = 9.5
+    """Max allowed value of  PₛₑₚBₜ / q₉₅AR₀ [MWT/m] (`constraint equation 68`)"""
 
     p_plasma_separatrix_rmajor_max_mw: float = 25.0
     """Maximum allowed ratio of power crossing the separatrix to plasma major radius (Pₛₑₚ / R₀) [MW/m]

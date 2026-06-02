@@ -464,7 +464,7 @@ pflux_fw_neutron_max_mw = 8.0
 * DESCRIPTION:   Allowable wall-load (mw/m2) (icc=8)
 * JUSTIFICATION: Used with icc=8 to set the enforced max allowable wall load
 
-psepbqarmax = 6.0
+p_div_bt_q_aspect_rmajor_max_mw = 6.0
 * DESCRIPTION:   maximum ratio of Psep*Bt/qAR (MWT/m) (icc=68)
 * JUSTIFICATION: 
 

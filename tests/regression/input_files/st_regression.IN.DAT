@@ -678,7 +678,7 @@ i_single_null = 0
 *icc = 68
 * DESCRIPTION:   Upper limit on  Psep scaling (PsepB/qAR)
 * JUSTIFICATION: Turned off, just using Psep/R constraint
-* VARIABLES:     psepbqarmax (maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)). Rest calculated in-situ 
+* VARIABLES:     p_div_bt_q_aspect_rmajor_max_mw (maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)). Rest calculated in-situ 
 
 *psepbqarmaX
 * DESCRIPTION:   maximum ratio of Psep*Bt/qAR (MWT/m) (`constraint equation 68`)

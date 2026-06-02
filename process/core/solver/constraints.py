@@ -1330,7 +1330,7 @@ def constraint_equation_67(constraint_registration, data):
 def constraint_equation_68(constraint_registration, data):
     """Upper limit on Psep scaling (PₛₑₚBₜ / q₉₅AR₀)
 
-    psepbqarmax: maximum permitted value of ratio of PₛₑₚBₜ / q₉₅AR₀ (MWT/m)
+    p_div_bt_q_aspect_rmajor_max_mw: maximum permitted value of ratio of PₛₑₚBₜ / q₉₅AR₀ (MWT/m)
     p_plasma_separatrix_mw: Power to conducted to the divertor region (MW)
     b_plasma_toroidal_on_axis: toroidal field on axis (T) (iteration variable 2)
     q95: safety factor q at 95% flux surface
@@ -1352,7 +1352,7 @@ def constraint_equation_68(constraint_registration, data):
                     * data.physics.rmajor
                 )
             ),
-            data.constraints.psepbqarmax,
+            data.constraints.p_div_bt_q_aspect_rmajor_max_mw,
             constraint_registration,
         )
 
@@ -1364,7 +1364,7 @@ def constraint_equation_68(constraint_registration, data):
             )
             / (data.physics.q95 * data.physics.aspect * data.physics.rmajor)
         ),
-        data.constraints.psepbqarmax,
+        data.constraints.p_div_bt_q_aspect_rmajor_max_mw,
         constraint_registration,
     )
 

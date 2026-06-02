@@ -638,7 +638,9 @@ INPUT_VARIABLES = {
     "pres_div_chamber_burn": InputVariable("vacuum", float, range=(0.0, 10.0)),
     "pres_fw_coolant": InputVariable("fwbs", float, range=(100000.0, 100000000.0)),
     "prn1": InputVariable("divertor", float, range=(0.0, 1.0)),
-    "psepbqarmax": InputVariable("constraints", float, range=(1.0, 50.0)),
+    "p_div_bt_q_aspect_rmajor_max_mw": InputVariable(
+        "constraints", float, range=(1.0, 50.0)
+    ),
     "p_plasma_separatrix_rmajor_max_mw": InputVariable(
         "constraints", float, range=(1.0, 60.0)
     ),
