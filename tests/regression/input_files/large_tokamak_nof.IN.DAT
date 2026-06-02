@@ -114,7 +114,7 @@ tmargmin = 1.5
 icc = 60
 temp_cs_superconductor_margin_min = 1.5
 
-* Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
+* Lower limit on f_t_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
 icc = 62 
 f_alpha_energy_confinement_min = 5.0

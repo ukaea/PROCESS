@@ -321,7 +321,7 @@ class NumericsData:
     * (59) Neutral beam shine-through fraction upper limit (NBI) (itv 105,6,19,4 )
     * (60) Central solenoid temperature margin lower limit (SCTF) (itv 106)
     * (61) Minimum availability value (itv 107)
-    * (62) f_alpha_energy_confinement the ratio of particle to energy confinement times (itv 110)
+    * (62) f_t_alpha_energy_confinement the ratio of particle to energy confinement times (itv 110)
     * (63) The number of ITER-like vacuum pumps n_iter_vacuum_pumps < tfno (itv 111)
     * (64) Zeff less than or equal to zeff_max (itv 112)
     * (65) Dump time set by VV loads (itv 56, 113)

@@ -2290,7 +2290,7 @@ class Stellarator(Model):
             self.data.physics.molflow_plasma_fuelling_required,
             self.data.physics.rndfuel,
             self.data.physics.t_alpha_confinement,
-            self.data.physics.f_alpha_energy_confinement,
+            self.data.physics.f_t_alpha_energy_confinement,
         ) = self.physics.phyaux(
             self.data.physics.aspect,
             self.data.physics.nd_plasma_fuel_ions_vol_avg,

@@ -894,7 +894,7 @@ class Physics(Model):
             self.data.physics.molflow_plasma_fuelling_required,
             self.data.physics.rndfuel,
             self.data.physics.t_alpha_confinement,
-            self.data.physics.f_alpha_energy_confinement,
+            self.data.physics.f_t_alpha_energy_confinement,
         ) = self.phyaux(
             self.data.physics.aspect,
             self.data.physics.nd_plasma_fuel_ions_vol_avg,
@@ -1444,7 +1444,7 @@ class Physics(Model):
               (nucleus-pairs/sec).
             - rndfuel (float): Fuel burnup rate (reactions/s).
             - t_alpha_confinement (float): Alpha particle confinement time (s).
-            - f_alpha_energy_confinement (float): Fraction of alpha energy confinement.
+            - f_t_alpha_energy_confinement (float): Fraction of alpha energy confinement.
             This subroutine calculates extra physics related items needed by other
             parts of the code.
 
@@ -1490,7 +1490,7 @@ class Physics(Model):
         # Required fuelling rate (fuel ion pairs/second) (previously Amps)
         molflow_plasma_fuelling_required = rndfuel / burnup
 
-        f_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
+        f_t_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
 
         return (
             burnup,
@@ -1499,7 +1499,7 @@ class Physics(Model):
             molflow_plasma_fuelling_required,
             rndfuel,
             t_alpha_confinement,
-            f_alpha_energy_confinement,
+            f_t_alpha_energy_confinement,
         )
 
     @staticmethod

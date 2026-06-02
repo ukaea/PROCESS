@@ -1243,14 +1243,14 @@ def constraint_equation_61(constraint_registration, data):
 
 @ConstraintManager.register_constraint(62, "", ">=")
 def constraint_equation_62(constraint_registration, data):
-    """Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
+    """Lower limit on f_t_alpha_energy_confinement the ratio of alpha particle to energy confinement times
 
     t_alpha_confinement: alpha particle confinement time (s)
     t_energy_confinement: global thermal energy confinement time (sec)
-    f_alpha_energy_confinement_min: Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
+    f_alpha_energy_confinement_min: Lower limit on f_t_alpha_energy_confinement the ratio of alpha particle to energy confinement times
     """
     return geq(
-        data.physics.f_alpha_energy_confinement,
+        data.physics.f_t_alpha_energy_confinement,
         data.constraints.f_alpha_energy_confinement_min,
         constraint_registration,
     )
