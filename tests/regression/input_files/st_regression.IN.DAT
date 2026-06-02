@@ -562,7 +562,7 @@ icc = 17
 * JUSTIFICATION: Limit for plasma stability
 * VARIABLES:     Rest calculated in-situ
 
-fradpwr  = 0.64 
+f_p_plasma_separatrix_rad_max  = 0.64 
 * DESCRIPTION:   Radiation power upper limit constraint scale (constraint equation 17)
 * JUSTIFICATION: Scales the bound of constraint equation 17
 

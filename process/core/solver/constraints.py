@@ -573,34 +573,17 @@ def constraint_equation_16(constraint_registration, data):
     )
 
 
-@ConstraintManager.register_constraint(17, "MW/m³", "<=")
+@ConstraintManager.register_constraint(17, "", "<=")
 def constraint_equation_17(constraint_registration, data):
-    """Equation for radiation power upper limit
+    """Equation for plasma radiation fraction upper limit
 
-    f_p_alpha_plasma_deposited: fraction of alpha power deposited in plasma
-    p_hcd_injected_total_mw: total auxiliary injected power (MW)
-    vol_plasma: plasma volume (m³)
-    pden_alpha_total_mw: alpha power per volume (MW/m³)
-    pden_non_alpha_charged_mw: non-alpha charged particle fusion power per volume (MW/m³)
-    pden_plasma_ohmic_mw: ohmic heating power per volume (MW/m³)
-    pden_plasma_rad_mw: total radiation power per volume (MW/m³)
-    fradpwr: core radiation power limit scale
-
-    fradpwr adds a margin to the constraint constraint such that
-
-    pden_plasma_rad_mw / pradmaxpv <= fradpwr
+    f_p_plasma_separatrix_rad: plasma radiation fraction at the separatrix
+    f_p_plasma_separatrix_rad_max: maximum allowed plasma radiation fraction at the
+    separatrix
     """
-    # Maximum possible power/vol_plasma that can be radiated (local)
-    pradmaxpv = (
-        data.current_drive.p_hcd_injected_total_mw / data.physics.vol_plasma
-        + data.physics.pden_alpha_total_mw * data.physics.f_p_alpha_plasma_deposited
-        + data.physics.pden_non_alpha_charged_mw
-        + data.physics.pden_plasma_ohmic_mw
-    )
-
     return leq(
-        data.physics.pden_plasma_rad_mw / pradmaxpv,
-        data.constraints.fradpwr,
+        data.physics.f_p_plasma_separatrix_rad,
+        data.constraints.f_p_plasma_separatrix_rad_max,
         constraint_registration,
     )
 

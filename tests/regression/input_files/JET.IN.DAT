@@ -575,7 +575,7 @@ icc = 17
 * JUSTIFICATION: Limit for plasma stability
 * VARIABLES:     Rest calculated in-situ
 
-fradpwr = 0.7
+f_p_plasma_separatrix_rad_max = 0.7
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

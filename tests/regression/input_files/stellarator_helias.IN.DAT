@@ -130,7 +130,7 @@ i_confinement_time = 38 *Switch for energy confinement time scaling law (38: ISS
 f_sync_reflect = 0.6    *Synchrotron wall reflectivity factor
 f_temp_plasma_ion_electron  = 0.95         *Ion temperature / electron temperature
 
-fradpwr = 1.
+f_p_plasma_separatrix_rad_max = 1.
 
 *--------------Stellarator Variables---------------*
 

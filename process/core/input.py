@@ -497,7 +497,9 @@ INPUT_VARIABLES = {
         "heat_transport", float, range=(0.0, 0.2)
     ),
     "fracture_toughness": InputVariable("cs_fatigue", float, range=(0.1, 100000000.0)),
-    "fradpwr": InputVariable("constraints", float, range=(0.0, 1.0)),
+    "f_p_plasma_separatrix_rad_max": InputVariable(
+        "constraints", float, range=(0.0, 1.0)
+    ),
     "f_radius_beam_tangency_rmajor": InputVariable(
         "current_drive", float, range=(0.5, 2.0)
     ),

@@ -456,6 +456,7 @@ OBS_VARS = {
     "dx_hts_tape_total": "dx_tf_hts_tape_total",
     "dr_hts_tape": "dr_tf_hts_tape",
     "coppera_m2_max": "tf_coppera_m2_max",
+    "fradpwr": "f_p_plasma_separatrix_rad_max",
 }
 
 OBS_VARS_HELP = {
