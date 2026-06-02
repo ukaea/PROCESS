@@ -432,7 +432,9 @@ INPUT_VARIABLES = {
     "fcuohsu": InputVariable("pf_coil", float, range=(0.0, 1.0)),
     "fcupfsu": InputVariable("pf_coil", float, range=(0.0, 1.0)),
     "f_a_tf_turn_cable_copper": InputVariable("tfcoil", float, range=(0.0, 1.0)),
-    "fdene": InputVariable("constraints", float, range=(0.001, 10.0)),
+    "f_nd_plasma_electron_limit_max": InputVariable(
+        "constraints", float, range=(0.001, 10.0)
+    ),
     "fiooic": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fjohc": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fjohc0": InputVariable("constraints", float, range=(0.001, 1.0)),

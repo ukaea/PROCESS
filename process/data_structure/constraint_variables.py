@@ -15,8 +15,8 @@ class ConstraintData:
     b_tf_inboard_max: float = 12.0
     """maximum peak toroidal field (T) (`constraint equation 25`)"""
 
-    fdene: float = 1.0
-    """Scaling value for density limit (constraint equation 5)"""
+    f_nd_plasma_electron_limit_max: float = 1.0
+    """Max allowed fraction of electron density limit (`constraint equation 5`)"""
 
     f_p_plasma_separatrix_rad_max: float = 1.0
     """Maximum allowed plasma radiation fraction at the separatrix

@@ -181,10 +181,10 @@ beta_total_vol_avg = 3.71965626913446160e-02
 ixc = 6
 nd_plasma_electrons_vol_avg = 6.88360041658364314e+19
 * DESCRIPTION:   Electron density (/m3)
-* JUSTIFICATION: Density is constrained by fdene
+* JUSTIFICATION: Density is constrained by f_nd_plasma_electron_limit_max
 
 *ixc = 9
-fdene = 1.2
+f_nd_plasma_electron_limit_max = 1.2
 *boundu(9) = 1.2
 * DESCRIPTION:   margin for density limit (used to set max greenwald fraction)
 * JUSTIFICATION: Used with icc=5 to enforce density limit

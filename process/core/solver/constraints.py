@@ -9,6 +9,7 @@ from process.core import constants
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.core.model import DataStructure
 from process.data_structure.build_variables import TFCSRadialConfiguration
+from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.physics import BetaComponentLimits
 from process.models.tfcoil.base import TFConductorModel
 
@@ -378,9 +379,9 @@ def constraint_equation_4(constraint_registration, data):
 
 @ConstraintManager.register_constraint(5, "/m³", "<=")
 def constraint_equation_5(constraint_registration, data):
-    """Equation for density upper limit
+    """Equation for electron density upper limit
 
-    fdene: density limit scale
+    f_nd_plasma_electron_limit_max: density limit scale
     nd_plasma_electrons_vol_avg: electron density (/m³)
     nd_plasma_electrons_max: density limit (/m³)
     nd_plasma_electron_line: line averaged electron density (/m³)
@@ -394,21 +395,27 @@ def constraint_equation_5(constraint_registration, data):
     - 6 Hugill-Murakami Mq limit;
     - 7 Greenwald limit
 
-    fdene scales the constraint such that:
-    nd_plasma_electrons_vol_avg / nd_plasma_electrons_max <= fdene.
+    f_nd_plasma_electron_limit_max scales the constraint such that:
+    nd_plasma_electrons_vol_avg / nd_plasma_electrons_max <= f_nd_plasma_electron_limit_max.
     (Except when i_density_limit=7 when nd_plasma_electron_line is used, not nd_plasma_electrons_vol_avg)
     """
     # Apply Greenwald limit to line-averaged density
-    if data.physics.i_density_limit == 7:
+    if data.physics.i_density_limit == DensityLimitModel.GREENWALD:
         return leq(
             data.physics.nd_plasma_electron_line,
-            (data.physics.nd_plasma_electrons_max * data.constraints.fdene),
+            (
+                data.physics.nd_plasma_electrons_max
+                * data.constraints.f_nd_plasma_electron_limit_max
+            ),
             constraint_registration,
         )
 
     return leq(
         data.physics.nd_plasma_electrons_vol_avg,
-        (data.physics.nd_plasma_electrons_max * data.constraints.fdene),
+        (
+            data.physics.nd_plasma_electrons_max
+            * data.constraints.f_nd_plasma_electron_limit_max
+        ),
         constraint_registration,
     )
 

@@ -92,7 +92,7 @@ dr_shld_blkt_gap  = 0.02 * gap between vacuum vessel and blanket (m)
 *---------------Constraint Variables---------------*
 
 b_tf_inboard_max   = 14.0 * maximum peak toroidal field (T) (`constraint equation 25`)
-fdene    = 1.2 * density limit constraint scale (constraint equation 5)
+f_nd_plasma_electron_limit_max    = 1.2 * density limit constraint scale (constraint equation 5)
 fiooic   = 0.65
 fjohc    = 0.6
 fjohc0   = 0.6
