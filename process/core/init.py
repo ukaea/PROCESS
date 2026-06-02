@@ -21,9 +21,6 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.data_structure.scan_variables import init_scan_variables
-from process.data_structure.superconducting_tf_coil_variables import (
-    init_superconducting_tf_coil_variables,
-)
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
@@ -235,7 +232,6 @@ def init_all_module_vars():
     data_structure.numerics.init_numerics()
     data_structure.global_variables.init_global_variables()
     init_scan_variables()
-    init_superconducting_tf_coil_variables()
     constants.init_constants()
 
 

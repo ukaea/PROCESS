@@ -729,7 +729,6 @@ class Models:
             self.fw,
             self.dcll,
             self.blanket_library,
-            self.pfcoil,
             self.cryostat,
             self.fw,
             self.sctfcoil,

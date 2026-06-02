@@ -3,7 +3,6 @@
 import numpy as np
 
 from process.core.model import DataStructure
-from process.data_structure import superconducting_tf_coil_variables
 
 
 def calculate_quench_protection(coilcurrent, data: DataStructure):
@@ -51,9 +50,7 @@ def calculate_quench_protection(coilcurrent, data: DataStructure):
     a_vv = (rad_vv_out + rad_vv_in) / (rad_vv_out - rad_vv_in)
     zeta = 1 + ((a_vv - 1) * np.log((a_vv + 1) / (a_vv - 1)) / (2 * a_vv))
 
-    superconducting_tf_coil_variables.vv_stress_quench = (
-        zeta * f_vv_actual * 1e6 * rad_vv_in
-    )
+    data.superconducting_tfcoil.vv_stress_quench = zeta * f_vv_actual * 1e6 * rad_vv_in
 
     # comparison
     # the new quench protection routine, see #1047

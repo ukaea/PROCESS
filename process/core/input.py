@@ -291,7 +291,7 @@ INPUT_VARIABLES = {
     "den_steel": InputVariable("fwbs", float, range=(5000.0, 10000.0)),
     "dia_tf_turn_coolant_channel": InputVariable("tfcoil", float, range=(0.0, 0.1)),
     "dia_tf_turn_superconducting_cable": InputVariable(
-        data_structure.superconducting_tf_coil_variables, float, range=(0.0001, 0.01)
+        "superconducting_tfcoil", float, range=(0.0001, 0.01)
     ),
     "dintrt": InputVariable("costs", float, range=(0.0, 0.1)),
     "discount_rate": InputVariable("costs", float, range=(0.0, 0.5)),
@@ -935,7 +935,7 @@ INPUT_VARIABLES = {
     "cfind": InputVariable("costs", float, array=True),
     "i_blkt_coolant_type": InputVariable("fwbs", int, choices=[1, 2]),
     "tf_coppera_m2_max": InputVariable(
-        data_structure.superconducting_tf_coil_variables, float, range=(1.0e6, 1.0e10)
+        "superconducting_tfcoil", float, range=(1.0e6, 1.0e10)
     ),
     "cost_model": InputVariable("costs", int, choices=[0, 1, 2]),
     "i_vac_pump_dwell": InputVariable("vacuum", int, choices=[0, 1, 2]),
@@ -1021,9 +1021,7 @@ INPUT_VARIABLES = {
     "lsa": InputVariable("costs", int, range=(1, 4)),
     "m_res": InputVariable("stellarator", int, range=(1, 10)),
     "n_tf_wp_layers": InputVariable("tfcoil", int, range=(1, 100)),
-    "i_tf_turn_type": InputVariable(
-        data_structure.superconducting_tf_coil_variables, int, choices=[1, 2]
-    ),
+    "i_tf_turn_type": InputVariable("superconducting_tfcoil", int, choices=[1, 2]),
     "n_liq_recirc": InputVariable("fwbs", int, range=(1, 50)),
     "n_tf_wp_pancakes": InputVariable("tfcoil", int, range=(1, 100)),
     "n_rad_per_layer": InputVariable("tfcoil", int, range=(1, 500)),

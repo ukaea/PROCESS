@@ -193,13 +193,13 @@ ITERATION_VARIABLES = {
     ),
     138: IterationVariable(
         "dx_tf_hts_tape_rebco",
-        data_structure.superconducting_tf_coil_variables,
+        "superconducting_tfcoil",
         0.01e-6,
         100.0e-6,
     ),
     139: IterationVariable(
         "dx_tf_hts_tape_copper",
-        data_structure.superconducting_tf_coil_variables,
+        "superconducting_tfcoil",
         1.0e-6,
         1.0e-3,
     ),
@@ -216,7 +216,7 @@ ITERATION_VARIABLES = {
     156: IterationVariable("rrin", "ife", 1.0, 1.0e1),
     158: IterationVariable(
         "dx_tf_croco_strand_copper",
-        data_structure.superconducting_tf_coil_variables,
+        "superconducting_tfcoil",
         1.0e-3,
         1.0e-1,
     ),

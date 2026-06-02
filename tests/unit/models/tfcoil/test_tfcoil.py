@@ -10,7 +10,6 @@ import numpy as np
 import pytest
 
 import process.models.tfcoil.base as tfcoil_module
-from process.data_structure import superconducting_tf_coil_variables
 
 
 @pytest.fixture
@@ -760,12 +759,12 @@ def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, 
     )
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables,
+        tfcoil.data.superconducting_tfcoil,
         "rad_tf_coil_inboard_toroidal_half",
         tfcoilareaandmassesparam.rad_tf_coil_inboard_toroidal_half,
     )
     monkeypatch.setattr(
-        superconducting_tf_coil_variables,
+        tfcoil.data.superconducting_tfcoil,
         "tan_theta_coil",
         tfcoilareaandmassesparam.tan_theta_coil,
     )

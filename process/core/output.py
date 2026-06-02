@@ -1,4 +1,3 @@
-from process import data_structure
 from process.core.log import logging_model_handler
 from process.data_structure.blanket_variables import BlktModelTypes
 from process.models.tfcoil.base import TFConductorModel
@@ -75,7 +74,7 @@ def write(models, data, _outfile):
     # Toroidal field coil superconductor model
     if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
         tf_turn_type = SuperconductingTFTurnType(
-            data_structure.superconducting_tf_coil_variables.i_tf_turn_type
+            data.superconducting_tfcoil.i_tf_turn_type
         )
         if tf_turn_type == SuperconductingTFTurnType.CABLE_IN_CONDUIT:
             models.cicc_sctfcoil.output()
@@ -84,7 +83,7 @@ def write(models, data, _outfile):
         else:
             raise ValueError(
                 "Unsupported superconducting TF turn type: "
-                f"{data_structure.superconducting_tf_coil_variables.i_tf_turn_type}"
+                f"{data.superconducting_tfcoil.i_tf_turn_type}"
             )
 
     # Toroidal field coil aluminium model

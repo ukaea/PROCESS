@@ -1308,7 +1308,7 @@ def constraint_equation_65(constraint_registration, data):
     vv_stress_quench: Stress of the VV (Pa)
     """
     return leq(
-        data_structure.superconducting_tf_coil_variables.vv_stress_quench,
+        data.superconducting_tfcoil.vv_stress_quench,
         data.tfcoil.max_vv_stress,
         constraint_registration,
     )
@@ -1464,7 +1464,7 @@ def constraint_equation_75(constraint_registration, data):
     """
     return leq(
         data.rebco.coppera_m2,
-        data_structure.superconducting_tf_coil_variables.tf_coppera_m2_max,
+        data.superconducting_tfcoil.tf_coppera_m2_max,
         constraint_registration,
     )
 

@@ -3,10 +3,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import (
-    global_variables,
-    superconducting_tf_coil_variables,
-)
+from process.data_structure import global_variables
 from process.models.tfcoil import superconducting as sctf
 
 
@@ -419,15 +416,15 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
     )
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables, "tf_fit_t", superconparam.tf_fit_t
+        cicc_sctfcoil.data.superconducting_tfcoil, "tf_fit_t", superconparam.tf_fit_t
     )
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables, "tf_fit_z", superconparam.tf_fit_z
+        cicc_sctfcoil.data.superconducting_tfcoil, "tf_fit_z", superconparam.tf_fit_z
     )
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables,
+        cicc_sctfcoil.data.superconducting_tfcoil,
         "f_b_tf_inboard_peak_ripple_symmetric",
         superconparam.f_b_tf_inboard_peak_ripple_symmetric,
     )
@@ -553,15 +550,15 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     """
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables, "tf_fit_t", peaktfwithrippleparam.tf_fit_t
+        sctfcoil.data.superconducting_tfcoil, "tf_fit_t", peaktfwithrippleparam.tf_fit_t
     )
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables, "tf_fit_z", peaktfwithrippleparam.tf_fit_z
+        sctfcoil.data.superconducting_tfcoil, "tf_fit_z", peaktfwithrippleparam.tf_fit_z
     )
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables,
+        sctfcoil.data.superconducting_tfcoil,
         "f_b_tf_inboard_peak_ripple_symmetric",
         peaktfwithrippleparam.f_b_tf_inboard_peak_ripple_symmetric,
     )
@@ -574,16 +571,16 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
         b_tf_inboard_peak_symmetric=peaktfwithrippleparam.b_tf_inboard_peak_symmetric,
     )
 
-    assert superconducting_tf_coil_variables.tf_fit_t == pytest.approx(
+    assert sctfcoil.data.superconducting_tfcoil.tf_fit_t == pytest.approx(
         peaktfwithrippleparam.expected_tf_fit_t
     )
 
-    assert superconducting_tf_coil_variables.tf_fit_z == pytest.approx(
+    assert sctfcoil.data.superconducting_tfcoil.tf_fit_z == pytest.approx(
         peaktfwithrippleparam.expected_tf_fit_z
     )
 
     assert (
-        superconducting_tf_coil_variables.f_b_tf_inboard_peak_ripple_symmetric
+        sctfcoil.data.superconducting_tfcoil.f_b_tf_inboard_peak_ripple_symmetric
         == pytest.approx(
             peaktfwithrippleparam.expected_f_b_tf_inboard_peak_ripple_symmetric
         )
@@ -1499,7 +1496,7 @@ def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(sctfcoil.data.tfcoil, "j_tf_wp", tfwpcurrentsparam.j_tf_wp)
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables,
+        sctfcoil.data.superconducting_tfcoil,
         "a_tf_wp_no_insulation",
         tfwpcurrentsparam.a_tf_wp_no_insulation,
     )
@@ -1569,14 +1566,16 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     )  # Baseline 2018
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables, "a_tf_coil_inboard_steel", 0.55
+        sctfcoil.data.superconducting_tfcoil, "a_tf_coil_inboard_steel", 0.55
     )  # Section 3
 
     # Sum from Section 3
-    monkeypatch.setattr(superconducting_tf_coil_variables, "a_tf_plasma_case", 0.42)
-    monkeypatch.setattr(superconducting_tf_coil_variables, "a_tf_coil_nose_case", 0.42)
+    monkeypatch.setattr(sctfcoil.data.superconducting_tfcoil, "a_tf_plasma_case", 0.42)
     monkeypatch.setattr(
-        superconducting_tf_coil_variables, "dx_tf_side_case_average", 0.05
+        sctfcoil.data.superconducting_tfcoil, "a_tf_coil_nose_case", 0.42
+    )
+    monkeypatch.setattr(
+        sctfcoil.data.superconducting_tfcoil, "dx_tf_side_case_average", 0.05
     )
 
     monkeypatch.setattr(sctfcoil.data.build, "dz_xpoint_divertor", 0.05)  # Baseline 2018
@@ -1608,7 +1607,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
         sctfcoil.data.tfcoil, "t_tf_superconductor_quench", 30
     )  # Figure 6
     monkeypatch.setattr(
-        superconducting_tf_coil_variables, "c_tf_coil", 83200 * 192
+        sctfcoil.data.superconducting_tfcoil, "c_tf_coil", 83200 * 192
     )  # Section 3
 
     monkeypatch.setattr(
@@ -1620,7 +1619,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     sctfcoil.vv_stress_on_quench()
 
     assert (
-        pytest.approx(superconducting_tf_coil_variables.vv_stress_quench)
+        pytest.approx(sctfcoil.data.superconducting_tfcoil.vv_stress_quench)
         == 56893800.120420754
     )
 
@@ -2005,7 +2004,7 @@ def test_superconducting_tf_coil_area_and_masses(
         ),
         ("tan_theta_coil", tfcoilareaandmassesparam.tan_theta_coil),
     ):
-        monkeypatch.setattr(superconducting_tf_coil_variables, name, val)
+        monkeypatch.setattr(sctfcoil.data.superconducting_tfcoil, name, val)
 
     sctfcoil.superconducting_tf_coil_areas_and_masses()
 

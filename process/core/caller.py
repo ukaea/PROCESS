@@ -97,7 +97,7 @@ class Caller:
 
         # Evaluate models up to 10 times; any more implies non-converging values
         for _ in range(10):
-            self._call_models_once(xc, self.data)
+            self._call_models_once(xc)
             # Evaluate objective function and constraints
             objf = objective_function(data_structure.numerics.minmax, self.data)
             conf, _, _, _, _ = constraints.constraint_eqns(m, -1, self.data)
@@ -162,7 +162,7 @@ class Caller:
                 # Divert OUT.DAT and MFILE.DAT output to scratch files for
                 # idempotence checking
                 OutputFileManager.open_idempotence_files()
-                self._call_models_once(xc, self.data)
+                self._call_models_once(xc)
                 # Write mfile
                 finalise(self.models, self.data, ifail)
 
@@ -245,7 +245,7 @@ class Caller:
                 non_idempotent_msg=non_idempotent_warning + "\n" + non_idempotent_table,
             )
 
-    def _call_models_once(self, xc: np.ndarray, data: DataStructure):
+    def _call_models_once(self, xc: np.ndarray):
         """Call the physics and engineering models.
 
         This method is the principal caller of all the physics and
@@ -256,8 +256,6 @@ class Caller:
         ----------
         xc : np.array
             Array of optimisation parameters
-        data: DataStructure
-            data structure object
         """
         # Number of active iteration variables
         nvars = len(xc)
@@ -270,13 +268,13 @@ class Caller:
 
         # Perform the various function calls
         # Stellarator caller
-        if data.stellarator.istell != 0:
+        if self.data.stellarator.istell != 0:
             self.models.stellarator.run()
             # TODO Is this return safe?
             return
 
         # Inertial Fusion Energy calls
-        if data.ife.ife != 0:
+        if self.data.ife.ife != 0:
             self.models.ife.run()
             return
 
@@ -293,27 +291,27 @@ class Caller:
         # Toroidal field coil model
 
         # Toroidal field coil resistive model
-        if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             self.models.copper_tf_coil.run()
 
         # Toroidal field coil superconductor model
-        if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             if (
                 SuperconductingTFTurnType(
-                    data_structure.superconducting_tf_coil_variables.i_tf_turn_type
+                    self.data.superconducting_tfcoil.i_tf_turn_type
                 )
                 == SuperconductingTFTurnType.CABLE_IN_CONDUIT
             ):
                 self.models.cicc_sctfcoil.run()
             elif (
                 SuperconductingTFTurnType(
-                    data_structure.superconducting_tf_coil_variables.i_tf_turn_type
+                    self.data.superconducting_tfcoil.i_tf_turn_type
                 )
                 == SuperconductingTFTurnType.CROSS_CONDUCTOR
             ):
                 self.models.croco_sctfcoil.run()
 
-        if data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             self.models.aluminium_tf_coil.run()
 
         # Poloidal field and central solenoid model
@@ -356,8 +354,8 @@ class Caller:
 
         # Tight aspect ratio machine model
         if (
-            data.physics.itart == 1
-            and data.tfcoil.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+            self.data.physics.itart == 1
+            and self.data.tfcoil.i_tf_sup != TFConductorModel.SUPERCONDUCTING
         ):
             self.models.tfcoil.run()
 

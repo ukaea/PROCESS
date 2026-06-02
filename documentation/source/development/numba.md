@@ -46,14 +46,13 @@ But, also **cannot** do the following:
 
 ```python
 from numba import njit
-from process.data_structure import superconducting_tf_coil_variables as sctfv
 
 @njit
-def my_other_function(n):
-    return n + sctfv.n_tf_coils
+def my_other_function(n, data):
+    return n + data.superconducting_tfcoil.n_tf_coils
 ```
 
-because Numba does not know what `sctfv` is.
+because Numba does not know what `data` is.
 
 !!! Info "Numba benefits"
     The above examples are simple by design, however this also means they are poor candidates for 

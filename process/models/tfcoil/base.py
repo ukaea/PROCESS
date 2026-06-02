@@ -16,10 +16,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure, Model
-from process.data_structure import (
-    global_variables,
-    superconducting_tf_coil_variables,
-)
+from process.data_structure import global_variables
 from process.data_structure.physics_variables import DivertorNumberModels
 
 logger = logging.getLogger(__name__)
@@ -136,17 +133,17 @@ class TFCoil(Model):
             data=self.data,
         )
 
-        superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half = (
+        self.data.superconducting_tfcoil.rad_tf_coil_inboard_toroidal_half = (
             global_tf_geometry.rad_tf_coil_inboard_toroidal_half
         )
-        superconducting_tf_coil_variables.tan_theta_coil = (
+        self.data.superconducting_tfcoil.tan_theta_coil = (
             global_tf_geometry.tan_theta_coil
         )
         self.data.tfcoil.a_tf_inboard_total = global_tf_geometry.a_tf_inboard_total
-        superconducting_tf_coil_variables.r_tf_outboard_in = (
+        self.data.superconducting_tfcoil.r_tf_outboard_in = (
             global_tf_geometry.r_tf_outboard_in
         )
-        superconducting_tf_coil_variables.r_tf_outboard_out = (
+        self.data.superconducting_tfcoil.r_tf_outboard_out = (
             global_tf_geometry.r_tf_outboard_out
         )
         self.data.tfcoil.dx_tf_inboard_out_toroidal = (
@@ -170,7 +167,7 @@ class TFCoil(Model):
         (
             self.data.tfcoil.b_tf_inboard_peak_symmetric,
             self.data.tfcoil.c_tf_total,
-            superconducting_tf_coil_variables.c_tf_coil,
+            self.data.superconducting_tfcoil.c_tf_coil,
             self.data.tfcoil.j_tf_coil_full_area,
         ) = self.tf_current(
             n_tf_coils=self.data.tfcoil.n_tf_coils,
@@ -194,7 +191,7 @@ class TFCoil(Model):
             r_cp_top=self.data.build.r_cp_top,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
-            r_tf_outboard_in=superconducting_tf_coil_variables.r_tf_outboard_in,
+            r_tf_outboard_in=self.data.superconducting_tfcoil.r_tf_outboard_in,
             z_tf_inside_half=self.data.build.z_tf_inside_half,
             z_tf_top=self.data.build.z_tf_top,
             dr_tf_inboard=self.data.build.dr_tf_inboard,
@@ -784,7 +781,7 @@ class TFCoil(Model):
             self.outfile,
             "Inboard TF coil toroidal half angle [rad]",
             "(rad_tf_coil_inboard_toroidal_half)",
-            superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half,
+            self.data.superconducting_tfcoil.rad_tf_coil_inboard_toroidal_half,
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -816,7 +813,7 @@ class TFCoil(Model):
             self.outfile,
             "Radial position of inner edge and centre of winding pack (m)",
             "(r_tf_wp_inboard_inner)",
-            superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
+            self.data.superconducting_tfcoil.r_tf_wp_inboard_inner,
             "OP ",
         )
 
@@ -824,14 +821,14 @@ class TFCoil(Model):
             self.outfile,
             "Radial position of centre of winding pack (m)",
             "(r_tf_wp_inboard_centre)",
-            superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
+            self.data.superconducting_tfcoil.r_tf_wp_inboard_centre,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Radial position of outer edge and of winding pack (m)",
             "(r_tf_wp_inboard_outer)",
-            superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
+            self.data.superconducting_tfcoil.r_tf_wp_inboard_outer,
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -840,7 +837,7 @@ class TFCoil(Model):
             self.outfile,
             "Outboard leg inner radius (m)",
             "(r_tf_outboard_in)",
-            superconducting_tf_coil_variables.r_tf_outboard_in,
+            self.data.superconducting_tfcoil.r_tf_outboard_in,
             "OP ",
         )
 
@@ -993,7 +990,7 @@ class TFCoil(Model):
                 self.outfile,
                 "Distance from the midplane to the top of the tapered section (m)",
                 "(z_cp_top)",
-                superconducting_tf_coil_variables.z_cp_top,
+                self.data.superconducting_tfcoil.z_cp_top,
             )
             po.ovarre(
                 self.outfile,
@@ -1034,7 +1031,7 @@ class TFCoil(Model):
             self.outfile,
             "Ratio of peak field with ripple to nominal axisymmetric peak field",
             "(f_b_tf_inboard_peak_ripple_symmetric)",
-            superconducting_tf_coil_variables.f_b_tf_inboard_peak_ripple_symmetric,
+            self.data.superconducting_tfcoil.f_b_tf_inboard_peak_ripple_symmetric,
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -1042,7 +1039,7 @@ class TFCoil(Model):
             self.outfile,
             "Current in a single TF coil (A)",
             "(c_tf_coil)",
-            superconducting_tf_coil_variables.c_tf_coil,
+            self.data.superconducting_tfcoil.c_tf_coil,
             "OP ",
         )
         po.ovarre(
@@ -1155,7 +1152,7 @@ class TFCoil(Model):
             self.outfile,
             "Total inboard vertical tension (N)",
             "(vforce_inboard_total)",
-            superconducting_tf_coil_variables.vforce_inboard_tot,
+            self.data.superconducting_tfcoil.vforce_inboard_tot,
             "OP ",
         )
         po.ovarre(
@@ -1210,7 +1207,7 @@ class TFCoil(Model):
         """
         # Vertical distance from the midplane to the top of the tapered section [m]
         if self.data.physics.itart == 1:
-            superconducting_tf_coil_variables.z_cp_top = (
+            self.data.superconducting_tfcoil.z_cp_top = (
                 self.data.build.z_plasma_xpoint_upper + self.data.tfcoil.dztop
             )
 
@@ -1222,7 +1219,7 @@ class TFCoil(Model):
                 2.0e0
                 * self.data.build.r_cp_top
                 * np.sin(
-                    superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half
+                    self.data.superconducting_tfcoil.rad_tf_coil_inboard_toroidal_half
                 )
             )
 
@@ -2188,13 +2185,13 @@ class TFCoil(Model):
         # Surface areas (for cryo system) [m²]
         wbtf = (
             self.data.build.r_tf_inboard_out
-            * np.sin(superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half)
+            * np.sin(self.data.superconducting_tfcoil.rad_tf_coil_inboard_toroidal_half)
             - self.data.build.r_tf_inboard_in
-            * superconducting_tf_coil_variables.tan_theta_coil
+            * self.data.superconducting_tfcoil.tan_theta_coil
         )
         self.data.tfcoil.tfocrn = (
             self.data.build.r_tf_inboard_in
-            * superconducting_tf_coil_variables.tan_theta_coil
+            * self.data.superconducting_tfcoil.tan_theta_coil
         )
         self.data.tfcoil.tficrn = self.data.tfcoil.tfocrn + wbtf
 
