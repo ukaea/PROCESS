@@ -166,9 +166,9 @@ aspect = 1.8
 *icc = 21
 * DESCRIPTION:   Constraint equation for plasma minor radius lower limit 
 * JUSTIFICATION: Turned off, dont care about lower limit
-* VARIABLES:     aplasmin (minimum minor radius (m)), rminor calculated in-situ
+* VARIABLES:     rminor_min (minimum minor radius (m)), rminor calculated in-situ
 
-*aplasmin = 0 
+*rminor_min = 0 
 * DESCRIPTION:   Minimum minor radius (m) (icc=21)
 * JUSTIFICATION: Not used, using a defined minor radius
 

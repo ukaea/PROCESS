@@ -641,11 +641,11 @@ def constraint_equation_21(constraint_registration, data):
     """Equation for minor radius lower limit
 
     rminor: plasma minor radius (m)
-    aplasmin: minimum minor radius (m)
+    rminor_min: minimum minor radius (m)
     """
     return geq(
         data.physics.rminor,
-        data.build.aplasmin,
+        data.build.rminor_min,
         constraint_registration,
     )
 

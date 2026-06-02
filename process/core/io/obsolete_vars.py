@@ -458,6 +458,7 @@ OBS_VARS = {
     "coppera_m2_max": "tf_coppera_m2_max",
     "f_ster_div_single": None,
     "fradpwr": "f_p_plasma_separatrix_rad_max",
+    "aplasmin": "rminor_min",
 }
 
 OBS_VARS_HELP = {
