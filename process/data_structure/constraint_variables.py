@@ -18,8 +18,9 @@ class ConstraintData:
     fdene: float = 1.0
     """Scaling value for density limit (constraint equation 5)"""
 
-    fradpwr: float = 1.0
-    """Scaling value for radiation power upper limit (constraint equation 17)"""
+    f_p_plasma_separatrix_rad_max: float = 1.0
+    """Maximum allowed plasma radiation fraction at the separatrix
+    (`constraint equation 17`)"""
 
     fiooic: float = 0.7
     """Constraint margin for TF coil operating current / critical current ratio
