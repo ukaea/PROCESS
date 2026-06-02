@@ -182,7 +182,7 @@ OBS_VARS = {
     "d_vv_in": "dr_vv_inboard",
     "d_vv_out": "dr_vv_outboard",
     "iblnkith": "i_blkt_inboard",
-    "taulimit": "f_alpha_energy_confinement_min",
+    "taulimit": "f_t_alpha_energy_confinement_min",
     "isc": "i_confinement_time",
     "iradloss": "i_rad_loss",
     "iinvqd": None,
@@ -462,6 +462,7 @@ OBS_VARS = {
     "nflutfmax": "flu_tf_neutron_fast_max",
     "pseprmax": "p_plasma_separatrix_rmajor_max_mw",
     "avail_min": "f_t_plant_available_min",
+    "f_alpha_energy_confinement_min": "f_t_alpha_energy_confinement_min",
 }
 
 OBS_VARS_HELP = {

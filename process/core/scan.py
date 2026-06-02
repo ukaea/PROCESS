@@ -88,8 +88,8 @@ class ScanVariables(Enum):
         "b_plasma_toroidal_on_axis", "Tor._field_on_axis_(T)", 28
     )
     coreradius = ScanVariable("coreradius", "Core_radius", 29)
-    f_alpha_energy_confinement_min = ScanVariable(
-        "f_alpha_energy_confinement_min", "t_alpha_confinement/taueff_lower_limit", 31
+    f_t_alpha_energy_confinement_min = ScanVariable(
+        "f_t_alpha_energy_confinement_min", "t_alpha_confinement/taueff_lower_limit", 31
     )
     epsvmc = ScanVariable("epsvmc", "VMCON error tolerance", 32)
     boundu129 = ScanVariable("boundu(129)", " Neon upper limit", 38)
@@ -1150,7 +1150,7 @@ class Scan:
             case 29:
                 self.data.impurity_radiation.radius_plasma_core_norm = swp[iscn - 1]
             case 31:
-                self.data.constraints.f_alpha_energy_confinement_min = swp[iscn - 1]
+                self.data.constraints.f_t_alpha_energy_confinement_min = swp[iscn - 1]
             case 32:
                 self.data.numerics.epsvmc = swp[iscn - 1]
             case 38:

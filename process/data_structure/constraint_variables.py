@@ -107,7 +107,7 @@ class ConstraintData:
     pflux_fw_neutron_max_mw: float = 1.0
     """allowable neutron wall-load (MW/m2) (`constraint equation 8`)"""
 
-    f_alpha_energy_confinement_min: float = 5.0
+    f_t_alpha_energy_confinement_min: float = 5.0
     """Minimum allowed value for f_t_alpha_energy_confinement, the ratio of alpha particle to energy confinement
     times (`constraint equation 62`)
     """

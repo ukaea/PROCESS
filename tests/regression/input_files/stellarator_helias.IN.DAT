@@ -46,7 +46,7 @@ icc = 83 * icc_placeforblanket
 
 * f_t_alpha_energy_confinement the ratio of particle to energy confinement times (itv 110)
 icc = 62 * icc_thermalHe
-f_alpha_energy_confinement_min = 4     * tau_He/tau_E
+f_t_alpha_energy_confinement_min = 4     * tau_He/tau_E
 
 *** QUENCH LIMITS *** 
 

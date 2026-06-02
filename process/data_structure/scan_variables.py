@@ -63,7 +63,7 @@ class ScanData:
     <LI> 28 b_plasma_toroidal_on_axis
     <LI> 29 radius_plasma_core_norm
     <LI> 30 fimpvar # OBSOLETE
-    <LI> 31 f_alpha_energy_confinement_min
+    <LI> 31 f_t_alpha_energy_confinement_min
     <LI> 32 epsvmc
     <LI> 33 ttarget
     <LI> 34 qtargettotal

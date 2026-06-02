@@ -107,7 +107,7 @@ def plot_scan(
         28: "b_plasma_toroidal_on_axis",
         29: "radius_plasma_core_norm",
         30: "",  # OBSOLETE
-        31: "f_alpha_energy_confinement_min",
+        31: "f_t_alpha_energy_confinement_min",
         32: "epsvmc",
         33: "ttarget",
         34: "qtargettotal",

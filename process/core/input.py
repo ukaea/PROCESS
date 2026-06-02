@@ -385,7 +385,7 @@ INPUT_VARIABLES = {
         "tfcoil", float, range=(100000000.0, 10000000000000.0)
     ),
     "f_a_tf_cool_outboard": InputVariable("tfcoil", float, range=(0.0, 1.0)),
-    "f_alpha_energy_confinement_min": InputVariable(
+    "f_t_alpha_energy_confinement_min": InputVariable(
         "constraints", float, range=(1.0, 100.0)
     ),
     "f_asym": InputVariable("stellarator", float, range=(0.9, 2.0)),

@@ -416,7 +416,7 @@ icc = 62
 * JUSTIFICATION: Used to constrain helium fraction
 * VARIABLES:     t_energy_confinement,t_alpha_confinement calculated in-situ
 
-f_alpha_energy_confinement_min = 5.0 
+f_t_alpha_energy_confinement_min = 5.0 
 * DESCRIPTION:   Ratio of Alpha Particle to Energy Confinement times (icc=62)
 * JUSTIFICATION: Default based on JET
 
