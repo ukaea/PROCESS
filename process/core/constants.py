@@ -269,8 +269,7 @@ DEN_TUNGSTEN = 19250.0
 """Density of Tungsten [kg/m3]"""
 
 TEMP_ROOM = 293.15
-""" Room temperature in Kelvin
-Assume the room is at 20 degrees Celsius
+""" Room temperature in Kelvin. Assuming the room is at 20 degrees Celsius
 """
 
 RMU0 = 1.256637062e-6

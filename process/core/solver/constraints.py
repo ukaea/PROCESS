@@ -1019,8 +1019,8 @@ def constraint_equation_43(constraint_registration, data):
         raise ProcessValueError("Do not use constraint 43 if itart=0")
 
     if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-        temp_cp_average = data.tfcoil.temp_cp_average - 273.15
-        tcpav2 = data.tfcoil.tcpav2 - 273.15
+        temp_cp_average = data.tfcoil.temp_cp_average - constants.TEMP_ROOM
+        tcpav2 = data.tfcoil.tcpav2 - constants.TEMP_ROOM
     else:
         temp_cp_average = data.tfcoil.temp_cp_average
         tcpav2 = data.tfcoil.tcpav2
@@ -1042,8 +1042,8 @@ def constraint_equation_44(constraint_registration, data):
         raise ProcessValueError("Do not use constraint 44 if itart=0")
 
     if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:  # ! Copper case
-        temp_cp_max = data.tfcoil.temp_cp_max - 273.15
-        temp_cp_peak = data.tfcoil.temp_cp_peak - 273.15
+        temp_cp_max = data.tfcoil.temp_cp_max - constants.TEMP_ROOM
+        temp_cp_peak = data.tfcoil.temp_cp_peak - constants.TEMP_ROOM
     else:
         temp_cp_max = data.tfcoil.temp_cp_max
         temp_cp_peak = data.tfcoil.temp_cp_peak
