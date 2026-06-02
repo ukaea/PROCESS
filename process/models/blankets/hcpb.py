@@ -8,7 +8,6 @@ from process.core import (
 )
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
-from process.data_structure import tfcoil_variables
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
 from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
@@ -518,7 +517,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 e
                 * np.exp(-a * self.data.ccfe_hcpb.x_blanket)
                 * np.exp(-b * self.data.ccfe_hcpb.x_shield)
-                * tfcoil_variables.whttflgs
+                * self.data.tfcoil.whttflgs
             )
         else:
             # Nuclear heating in TF coil
@@ -527,7 +526,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 e
                 * np.exp(-a * self.data.ccfe_hcpb.x_blanket)
                 * np.exp(-b * self.data.ccfe_hcpb.x_shield)
-                * tfcoil_variables.m_tf_coils_total
+                * self.data.tfcoil.m_tf_coils_total
             )
 
         # Total heating (MW)
@@ -573,7 +572,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 self.outfile,
                 "total mass of the TF coils (kg)",
                 "(m_tf_coils_total)",
-                tfcoil_variables.m_tf_coils_total,
+                self.data.tfcoil.m_tf_coils_total,
             )
 
     def nuclear_heating_fw(
@@ -1071,7 +1070,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # CP fast neutron flux (E > 0.1 MeV) [m^{-2}.s^}{-1}]
         neut_flux_cp = 0
 
-        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             # Effecting shield width, removing steel structures
             sh_width_eff = sh_width * (1.0 - f_steel_struct)
 
@@ -1149,7 +1148,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # ------------
         # From Pfus = 1 GW ST MCNP neutronic calculations assuming
         # Tungsten carbyde with 13% water cooling fraction
-        if tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             pnuc_cp_tf = (pneut / 800) * np.exp(3.882 - 16.69 * sh_width_eff)
 
             # WARINING, this is an extraoilation from TF heat ...
@@ -1381,9 +1380,9 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         #  ST centre post
         if self.data.physics.itart == 1:
-            if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+            if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
                 po.osubhd(self.outfile, "(Copper resistive centrepost used)")
-            elif tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+            elif self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
                 po.osubhd(self.outfile, "(Superdonducting magnet centrepost used)")
                 po.ovarre(
                     self.outfile,
@@ -1392,7 +1391,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     self.data.fwbs.neut_flux_cp,
                     "OP ",
                 )
-            elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+            elif self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
                 po.osubhd(self.outfile, "(Aluminium magnet centrepost used)")
 
             po.ovarre(

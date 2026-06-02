@@ -24,7 +24,6 @@ from process.data_structure.scan_variables import init_scan_variables
 from process.data_structure.superconducting_tf_coil_variables import (
     init_superconducting_tf_coil_variables,
 )
-from process.data_structure.tfcoil_variables import init_tfcoil_variables
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
@@ -237,7 +236,6 @@ def init_all_module_vars():
     data_structure.global_variables.init_global_variables()
     init_scan_variables()
     init_superconducting_tf_coil_variables()
-    init_tfcoil_variables()
     constants.init_constants()
 
 
@@ -274,7 +272,7 @@ def check_process(inputs, data):  # noqa: ARG001
     # Can't use c_tf_turn as interation var, constraint or input if i_tf_turns_integer == 1
     if (
         data_structure.numerics.ixc[: data_structure.numerics.nvar] == 60
-    ).any() and data_structure.tfcoil_variables.i_tf_turns_integer == 1:
+    ).any() and data.tfcoil.i_tf_turns_integer == 1:
         raise ProcessValidationError(
             "Iteration variable 60 (TF current per turn, c_tf_turn) cannot be used with the TF coil integer turn model (i_tf_turns_integer == 1) as it is a calculated output instead for this model. However, the maximum current per turn can be constrained with constraint 77."
         )
@@ -580,21 +578,18 @@ def check_process(inputs, data):  # noqa: ARG001
             data.pf_coil.i_pf_location[2] = 3
 
         # Water cooled copper magnets initalisation / checks
-        if (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.WATER_COOLED_COPPER
-        ):
+        if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             # Check if the initial centrepost coolant loop adapted to the magnet technology
             # Ice cannot flow so temp_cp_coolant_inlet > 273.15 K
-            if data_structure.tfcoil_variables.temp_cp_coolant_inlet < 273.15:
+            if data.tfcoil.temp_cp_coolant_inlet < 273.15:
                 raise ProcessValidationError(
                     "Coolant temperature (temp_cp_coolant_inlet) cannot be < 0 C (273.15 K) for water cooled copper magents"
                 )
 
             # Temperature of the TF legs cannot be cooled down
             if (
-                data_structure.tfcoil_variables.temp_tf_legs_outboard > 0
-                and data_structure.tfcoil_variables.temp_tf_legs_outboard < 273.15
+                data.tfcoil.temp_tf_legs_outboard > 0
+                and data.tfcoil.temp_tf_legs_outboard < 273.15
             ):
                 raise ProcessValidationError(
                     "TF legs conductor temperature (temp_tf_legs_outboard) cannot be < 0 C (273.15 K) for water cooled magents"
@@ -609,29 +604,24 @@ def check_process(inputs, data):  # noqa: ARG001
                 )
 
         # Call a lvl 3 error if superconductor magnets are used
-        elif (
-            data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING
-        ):
+        elif data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             warn(
-                "Joints res not cal. for SC (itart = 1) TF (data_structure.tfcoil_variables.i_tf_sup = 1)",
+                "Joints res not cal. for SC (itart = 1) TF (data.tfcoil.i_tf_sup = 1)",
                 stacklevel=2,
             )
 
         # Aluminium magnets initalisation / checks
         # Initialize the CP conductor temperature to cryogenic temperature for cryo-al magnets (20 K)
-        elif (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
-        ):
+        elif data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             # Call a lvl 3 error if the inlet coolant temperature is too large
             # Motivation : ill-defined aluminium resistivity fit for T > 40-50 K
-            if data_structure.tfcoil_variables.temp_cp_coolant_inlet > 40.0:
+            if data.tfcoil.temp_cp_coolant_inlet > 40.0:
                 raise ProcessValidationError(
                     "Coolant temperature (temp_cp_coolant_inlet) should be < 40 K for the cryo-al resistivity to be defined"
                 )
 
             # Check if the leg average temperature is low enough for the resisitivity fit
-            if data_structure.tfcoil_variables.temp_tf_legs_outboard > 50.0:
+            if data.tfcoil.temp_tf_legs_outboard > 50.0:
                 raise ProcessValidationError(
                     "TF legs conductor temperature (temp_tf_legs_outboard) should be < 40 K for the cryo-al resistivity to be defined"
                 )
@@ -645,9 +635,7 @@ def check_process(inputs, data):  # noqa: ARG001
                 )
 
             # Otherwise intitialise the average conductor temperature at
-            data_structure.tfcoil_variables.temp_cp_average = (
-                data_structure.tfcoil_variables.temp_cp_coolant_inlet
-            )
+            data.tfcoil.temp_cp_average = data.tfcoil.temp_cp_coolant_inlet
 
         # Check if the boostrap current selection is addapted to ST
         if data.physics.i_bootstrap_current == 1:
@@ -662,14 +650,13 @@ def check_process(inputs, data):  # noqa: ARG001
             warn("Operating with a single null in a double null machine", stacklevel=2)
 
         # Set the TF coil shape to picture frame (if default value)
-        if data_structure.tfcoil_variables.i_tf_shape == TFCoilShapeModel.DEFAULT:
-            data_structure.tfcoil_variables.i_tf_shape = TFCoilShapeModel.PICTURE_FRAME
+        if data.tfcoil.i_tf_shape == TFCoilShapeModel.DEFAULT:
+            data.tfcoil.i_tf_shape = TFCoilShapeModel.PICTURE_FRAME
 
         # Warning stating that the CP fast neutron fluence calculation
         # is not addapted for cryoaluminium calculations yet
         if (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
+            data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM
             and (
                 data_structure.numerics.icc[
                     : data_structure.numerics.neqns + data_structure.numerics.nineqns
@@ -683,16 +670,13 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
         # Setting the CP joints default options :
-        #  0 : No joints for superconducting magents (data_structure.tfcoil_variables.i_tf_sup = 1)
-        #  1 : Sliding joints for resistive magnets (data_structure.tfcoil_variables.i_tf_sup = 0, 2)
-        if data_structure.tfcoil_variables.i_cp_joints == -1:
-            if (
-                data_structure.tfcoil_variables.i_tf_sup
-                == TFConductorModel.SUPERCONDUCTING
-            ):
-                data_structure.tfcoil_variables.i_cp_joints = 0
+        #  0 : No joints for superconducting magents (data.tfcoil.i_tf_sup = 1)
+        #  1 : Sliding joints for resistive magnets (data.tfcoil.i_tf_sup = 0, 2)
+        if data.tfcoil.i_cp_joints == -1:
+            if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+                data.tfcoil.i_cp_joints = 0
             else:
-                data_structure.tfcoil_variables.i_cp_joints = 1
+                data.tfcoil.i_cp_joints = 1
 
         # Checking the CP TF top radius
         if (
@@ -711,8 +695,8 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
         # Set the TF coil shape to PROCESS D-shape (if default value)
-        if data_structure.tfcoil_variables.i_tf_shape == TFCoilShapeModel.DEFAULT:
-            data_structure.tfcoil_variables.i_tf_shape = TFCoilShapeModel.D_SHAPE
+        if data.tfcoil.i_tf_shape == TFCoilShapeModel.DEFAULT:
+            data.tfcoil.i_tf_shape = TFCoilShapeModel.D_SHAPE
 
         # Check PF coil configurations
         j = 0
@@ -802,7 +786,7 @@ def check_process(inputs, data):  # noqa: ARG001
             ).any()
         )  # Stress constraints (31 or 32) is used
         and (
-            data_structure.tfcoil_variables.i_tf_stress_model != 2
+            data.tfcoil.i_tf_stress_model != 2
         )  # TF stress model can't handle no dr_bore
     ):
         raise ProcessValidationError(
@@ -811,8 +795,8 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Make sure that plane stress model is not used for resistive magnets
     if (
-        data_structure.tfcoil_variables.i_tf_stress_model == 1
-        and data_structure.tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+        data.tfcoil.i_tf_stress_model == 1
+        and data.tfcoil.i_tf_sup != TFConductorModel.SUPERCONDUCTING
     ):
         raise ProcessValidationError(
             "Use generalized plane strain for resistive magnets (i_tf_stress_model = 0 or 2)"
@@ -822,69 +806,52 @@ def check_process(inputs, data):  # noqa: ARG001
     # - bucking (casing) for SC i_tf_bucking ( i_tf_bucking = 1 )
     # - No bucking for copper magnets ( i_tf_bucking = 0 )
     # - Bucking for aluminium magnets ( i_tf_bucking = 1 )
-    if data_structure.tfcoil_variables.i_tf_bucking == -1:
-        if (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.WATER_COOLED_COPPER
-        ):
-            data_structure.tfcoil_variables.i_tf_bucking = 0
+    if data.tfcoil.i_tf_bucking == -1:
+        if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+            data.tfcoil.i_tf_bucking = 0
         else:
-            data_structure.tfcoil_variables.i_tf_bucking = 1
+            data.tfcoil.i_tf_bucking = 1
 
     # Ensure that the TF isnt placed against the
     # CS which is now outside it
-    if (
-        data_structure.tfcoil_variables.i_tf_bucking >= 2
-        and data.build.i_tf_inside_cs == 1
-    ):
+    if data.tfcoil.i_tf_bucking >= 2 and data.build.i_tf_inside_cs == 1:
         raise ProcessValidationError(
             "Cannot have i_tf_bucking >= 2 when i_tf_inside_cs = 1"
         )
 
     # Ensure that no pre-compression structure
     # is used for bucked and wedged design
-    if (
-        data_structure.tfcoil_variables.i_tf_bucking >= 2
-        and data.build.i_cs_precomp == 1
-    ):
+    if data.tfcoil.i_tf_bucking >= 2 and data.build.i_cs_precomp == 1:
         raise ProcessValidationError(
             "No CS precompression structure for bucked and wedged, use i_cs_precomp = 0"
         )
 
     # Number of stress calculation layers
     # +1 to add in the inboard TF coil case on the plasma side, per Issue #1509
-    data_structure.tfcoil_variables.n_tf_stress_layers = (
-        data_structure.tfcoil_variables.i_tf_bucking
-        + data_structure.tfcoil_variables.n_tf_graded_layers
-        + 1
+    data.tfcoil.n_tf_stress_layers = (
+        data.tfcoil.i_tf_bucking + data.tfcoil.n_tf_graded_layers + 1
     )
 
     # If TFC sidewall has not been set by user
-    if data_structure.tfcoil_variables.dx_tf_side_case_min < 0.1e-10:
-        data_structure.tfcoil_variables.tfc_sidewall_is_fraction = True
+    if data.tfcoil.dx_tf_side_case_min < 0.1e-10:
+        data.tfcoil.tfc_sidewall_is_fraction = True
 
     # If inboard TF coil case plasma side thickness has not been set by user
-    if data_structure.tfcoil_variables.dr_tf_plasma_case < 0.1e-10:
-        data_structure.tfcoil_variables.i_f_dr_tf_plasma_case = True
+    if data.tfcoil.dr_tf_plasma_case < 0.1e-10:
+        data.tfcoil.i_f_dr_tf_plasma_case = True
 
     # Setting the default cryo-plants efficiencies
-    if abs(data_structure.tfcoil_variables.eff_tf_cryo + 1) < 1e-6:
+    if abs(data.tfcoil.eff_tf_cryo + 1) < 1e-6:
         # The ITER cyoplant efficiency is used for SC
-        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            data_structure.tfcoil_variables.eff_tf_cryo = 0.13
+        if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+            data.tfcoil.eff_tf_cryo = 0.13
 
         # Strawbrige plot extrapolation is used for Cryo-Al
-        elif (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
-        ):
-            data_structure.tfcoil_variables.eff_tf_cryo = 0.40
+        elif data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+            data.tfcoil.eff_tf_cryo = 0.40
 
     # Cryo-plane efficiency must be in [0-1.0]
-    elif (
-        data_structure.tfcoil_variables.eff_tf_cryo > 1.0
-        or data_structure.tfcoil_variables.eff_tf_cryo < 0.0
-    ):
+    elif data.tfcoil.eff_tf_cryo > 1.0 or data.tfcoil.eff_tf_cryo < 0.0:
         raise ProcessValidationError(
             "TF cryo-plant efficiency `eff_tf_cryo` must be within [0-1]"
         )
@@ -892,8 +859,8 @@ def check_process(inputs, data):  # noqa: ARG001
     # Integer turns option not yet available for REBCO taped turns
 
     if (
-        data_structure.tfcoil_variables.i_tf_sc_mat == SuperconductorModel.CROCO_REBCO
-        and data_structure.tfcoil_variables.i_tf_turns_integer == 1
+        data.tfcoil.i_tf_sc_mat == SuperconductorModel.CROCO_REBCO
+        and data.tfcoil.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
             "Integer turns (i_tf_turns_integer = 1) not supported for REBCO (i_tf_sc_mat = 6)"
@@ -901,111 +868,97 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Setting up insulation layer young modulae default values [Pa]
 
-    if data_structure.tfcoil_variables.eyoung_ins <= 1.0e8:
+    if data.tfcoil.eyoung_ins <= 1.0e8:
         # Copper magnets, no insulation material defined
         # But use the ITER design by default
-        if data_structure.tfcoil_variables.i_tf_sup in {
+        if data.tfcoil.i_tf_sup in {
             TFConductorModel.WATER_COOLED_COPPER,
             TFConductorModel.SUPERCONDUCTING,
         }:
             # SC magnets
             # Value from DDD11-2 v2 2 (2009)
-            data_structure.tfcoil_variables.eyoung_ins = 20.0e9
+            data.tfcoil.eyoung_ins = 20.0e9
 
         # Cryo-aluminum magnets (Kapton polymer)
-        elif (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
-        ):
-            data_structure.tfcoil_variables.eyoung_ins = 2.5e9
+        elif data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+            data.tfcoil.eyoung_ins = 2.5e9
 
     # Setting the default WP geometry
-    i_tf_wp_geom = SuperconductingTFWPShapeType(
-        data_structure.tfcoil_variables.i_tf_wp_geom
-    )
+    i_tf_wp_geom = SuperconductingTFWPShapeType(data.tfcoil.i_tf_wp_geom)
     if i_tf_wp_geom == SuperconductingTFWPShapeType.UNSET:
-        if data_structure.tfcoil_variables.i_tf_turns_integer == 0:
-            data_structure.tfcoil_variables.i_tf_wp_geom = (
-                SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR
-            )
-        if data_structure.tfcoil_variables.i_tf_turns_integer == 1:
-            data_structure.tfcoil_variables.i_tf_wp_geom = (
-                SuperconductingTFWPShapeType.RECTANGULAR
-            )
+        if data.tfcoil.i_tf_turns_integer == 0:
+            data.tfcoil.i_tf_wp_geom = SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR
+        if data.tfcoil.i_tf_turns_integer == 1:
+            data.tfcoil.i_tf_wp_geom = SuperconductingTFWPShapeType.RECTANGULAR
 
     # Setting the TF coil conductor elastic properties
 
-    if data_structure.tfcoil_variables.i_tf_cond_eyoung_axial == 0:
+    if data.tfcoil.i_tf_cond_eyoung_axial == 0:
         # Conductor stiffness is not considered
-        data_structure.tfcoil_variables.eyoung_cond_axial = 0
-        data_structure.tfcoil_variables.eyoung_cond_trans = 0
-    elif data_structure.tfcoil_variables.i_tf_cond_eyoung_axial == 2:
+        data.tfcoil.eyoung_cond_axial = 0
+        data.tfcoil.eyoung_cond_trans = 0
+    elif data.tfcoil.i_tf_cond_eyoung_axial == 2:
         # Select sensible defaults from the literature
         if (
-            SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).material
+            SuperconductorModel(data.tfcoil.i_tf_sc_mat).material
             == SuperconductorMaterial.NB3SN
         ):
             # Nb3Sn: Nyilas, A et. al, Superconductor Science and Technology 16, no. 9 (2003): 1036-42. https://doi.org/10.1088/0953-2048/16/9/313.
-            data_structure.tfcoil_variables.eyoung_cond_axial = 32e9
+            data.tfcoil.eyoung_cond_axial = 32e9
         elif (
-            SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).material
+            SuperconductorModel(data.tfcoil.i_tf_sc_mat).material
             == SuperconductorMaterial.BI2212
         ):
             # Bi-2212: Brown, M. et al, IOP Conference Series: Materials Science and Engineering 279 (2017): 012022. https://doi.org/10.1088/1757-899X/279/1/012022.
-            data_structure.tfcoil_variables.eyoung_cond_axial = 80e9
+            data.tfcoil.eyoung_cond_axial = 80e9
         elif (
-            SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).material
+            SuperconductorModel(data.tfcoil.i_tf_sc_mat).material
             == SuperconductorMaterial.NBTI
         ):
             # NbTi: Vedrine, P. et. al, IEEE Transactions on Applied Superconductivity 9, no. 2 (1999): 236-39. https://doi.org/10.1109/77.783280.
-            data_structure.tfcoil_variables.eyoung_cond_axial = 6.8e9
+            data.tfcoil.eyoung_cond_axial = 6.8e9
         elif (
-            SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).material
+            SuperconductorModel(data.tfcoil.i_tf_sc_mat).material
             == SuperconductorMaterial.REBCO
         ):
             # REBCO: Fujishiro, H. et. al, Physica C: Superconductivity, 426-431 (2005): 699-704. https://doi.org/10.1016/j.physc.2005.01.045.
-            data_structure.tfcoil_variables.eyoung_cond_axial = 145e9
+            data.tfcoil.eyoung_cond_axial = 145e9
 
-        if data_structure.tfcoil_variables.i_tf_cond_eyoung_trans == 0:
+        if data.tfcoil.i_tf_cond_eyoung_trans == 0:
             # Transverse stiffness is not considered
-            data_structure.tfcoil_variables.eyoung_cond_trans = 0
+            data.tfcoil.eyoung_cond_trans = 0
         else:
             # Transverse stiffness is significant
-            data_structure.tfcoil_variables.eyoung_cond_trans = (
-                data_structure.tfcoil_variables.eyoung_cond_axial
-            )
+            data.tfcoil.eyoung_cond_trans = data.tfcoil.eyoung_cond_axial
 
     # Check if the WP/conductor radial thickness (dr_tf_wp_with_insulation) is large enough
     # To contains the insulation, cooling and the support structure
     # Rem : Only verified if the WP thickness is used
     if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 140).any():
         # Minimal WP thickness
-        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+        if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             dr_tf_wp_min = 2.0 * (
-                data_structure.tfcoil_variables.dx_tf_wp_insulation
-                + data_structure.tfcoil_variables.dx_tf_wp_insertion_gap
-                + data_structure.tfcoil_variables.dx_tf_turn_insulation
-                + data_structure.tfcoil_variables.dia_tf_turn_coolant_channel
+                data.tfcoil.dx_tf_wp_insulation
+                + data.tfcoil.dx_tf_wp_insertion_gap
+                + data.tfcoil.dx_tf_turn_insulation
+                + data.tfcoil.dia_tf_turn_coolant_channel
             )
 
             # Steel conduit thickness (can be an iteration variable)
             if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 58).any():
                 dr_tf_wp_min += 2.0 * data_structure.numerics.boundl[57]
             else:
-                dr_tf_wp_min += 2.0 * data_structure.tfcoil_variables.dx_tf_turn_steel
+                dr_tf_wp_min += 2.0 * data.tfcoil.dx_tf_turn_steel
 
         # Minimal conductor layer thickness
-        elif data_structure.tfcoil_variables.i_tf_sup in {
+        elif data.tfcoil.i_tf_sup in {
             TFConductorModel.WATER_COOLED_COPPER,
             TFConductorModel.HELIUM_COOLED_ALUMINIUM,
         }:
             dr_tf_wp_min = (
                 2.0
-                * (
-                    data_structure.tfcoil_variables.dx_tf_turn_insulation
-                    + data_structure.tfcoil_variables.dx_tf_wp_insulation
-                )
-                + 4.0 * data_structure.tfcoil_variables.radius_cp_coolant_channel
+                * (data.tfcoil.dx_tf_turn_insulation + data.tfcoil.dx_tf_wp_insulation)
+                + 4.0 * data.tfcoil.radius_cp_coolant_channel
             )
 
         if data_structure.numerics.boundl[139] < dr_tf_wp_min:
@@ -1015,23 +968,17 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
     # Setting i_dx_tf_turn_general_input to true if dx_tf_turn_general is an input
-    data_structure.tfcoil_variables.i_dx_tf_turn_general_input = (
-        abs(data_structure.tfcoil_variables.dx_tf_turn_general) > 0
-    )
+    data.tfcoil.i_dx_tf_turn_general_input = abs(data.tfcoil.dx_tf_turn_general) > 0
 
     # Impossible to set the turn size of integer turn option
-    if (
-        data_structure.tfcoil_variables.i_dx_tf_turn_general_input
-        and data_structure.tfcoil_variables.i_tf_turns_integer == 1
-    ):
+    if data.tfcoil.i_dx_tf_turn_general_input and data.tfcoil.i_tf_turns_integer == 1:
         raise ProcessValidationError(
             "Impossible to set the TF turn/cable size with the integer turn option (i_tf_turns_integer: 1)"
         )
 
     if (
-        data_structure.tfcoil_variables.i_tf_wp_geom
-        != SuperconductingTFWPShapeType.RECTANGULAR
-        and data_structure.tfcoil_variables.i_tf_turns_integer == 1
+        data.tfcoil.i_tf_wp_geom != SuperconductingTFWPShapeType.RECTANGULAR
+        and data.tfcoil.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
             "Can only have i_tf_turns_integer = 1 with i_tf_wp_geom = 0"
@@ -1043,14 +990,14 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     # Setting i_dx_tf_turn_cable_space_general_input to true if dx_tf_turn_cable_space_general is an input
-    data_structure.tfcoil_variables.i_dx_tf_turn_cable_space_general_input = (
-        abs(data_structure.tfcoil_variables.dx_tf_turn_cable_space_general) > 0
+    data.tfcoil.i_dx_tf_turn_cable_space_general_input = (
+        abs(data.tfcoil.dx_tf_turn_cable_space_general) > 0
     )
 
     # Impossible to set the cable size of integer turn option
     if (
-        data_structure.tfcoil_variables.i_dx_tf_turn_cable_space_general_input
-        and data_structure.tfcoil_variables.i_tf_turns_integer == 1
+        data.tfcoil.i_dx_tf_turn_cable_space_general_input
+        and data.tfcoil.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
             "Impossible to set the TF turn/cable size with the integer turn option (i_tf_turns_integer: 1)"
@@ -1058,8 +1005,8 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Impossible to set both the TF coil turn and the cable dimension
     if (
-        data_structure.tfcoil_variables.i_dx_tf_turn_general_input
-        and data_structure.tfcoil_variables.i_dx_tf_turn_cable_space_general_input
+        data.tfcoil.i_dx_tf_turn_general_input
+        and data.tfcoil.i_dx_tf_turn_cable_space_general_input
     ):
         raise ProcessValidationError(
             "Impossible to set the TF coil turn and cable size simultaneously"
@@ -1067,9 +1014,9 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Checking the SC temperature for LTS
     if (
-        SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).sc_type
+        SuperconductorModel(data.tfcoil.i_tf_sc_mat).sc_type
         == SuperconductorType.LOW_TEMPERATURE
-        and data_structure.tfcoil_variables.tftmp > 10.0
+        and data.tfcoil.tftmp > 10.0
     ):
         raise ProcessValidationError(
             "The LTS conductor temperature (tftmp) has to be lower than 10"
@@ -1109,27 +1056,23 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
     # Check that the temperature margins are not overdetermined
-    if data_structure.tfcoil_variables.tmargmin > 0.0001:
+    if data.tfcoil.tmargmin > 0.0001:
         # This limit has been input and will be applied to both TFC and CS
-        if data_structure.tfcoil_variables.temp_tf_superconductor_margin_min > 0.0001:
+        if data.tfcoil.temp_tf_superconductor_margin_min > 0.0001:
             warn(
                 "temp_tf_superconductor_margin_min and tmargmin should not both be specified in IN.DAT "
                 "temp_tf_superconductor_margin_min has been ignored",
                 stacklevel=2,
             )
-        if data_structure.tfcoil_variables.temp_cs_superconductor_margin_min > 0.0001:
+        if data.tfcoil.temp_cs_superconductor_margin_min > 0.0001:
             warn(
                 "temp_cs_superconductor_margin_min and tmargmin should not both be specified in IN.DAT "
                 "temp_cs_superconductor_margin_min has been ignored",
                 stacklevel=2,
             )
 
-        data_structure.tfcoil_variables.temp_tf_superconductor_margin_min = (
-            data_structure.tfcoil_variables.tmargmin
-        )
-        data_structure.tfcoil_variables.temp_cs_superconductor_margin_min = (
-            data_structure.tfcoil_variables.tmargmin
-        )
+        data.tfcoil.temp_tf_superconductor_margin_min = data.tfcoil.tmargmin
+        data.tfcoil.temp_cs_superconductor_margin_min = data.tfcoil.tmargmin
 
     if data.physics.tauee_in > 1e-10 and data.physics.i_confinement_time != 48:
         # Report error if confinement time is in the input
@@ -1152,7 +1095,7 @@ def check_process(inputs, data):  # noqa: ARG001
         ]
         == 36
     ).any() and (
-        SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).sc_type
+        SuperconductorModel(data.tfcoil.i_tf_sc_mat).sc_type
         == SuperconductorMaterial.REBCO
     ):
         raise ProcessValidationError(
@@ -1171,10 +1114,7 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     # Cold end of the cryocooler should be colder than the TF
-    if (
-        data_structure.tfcoil_variables.temp_tf_cryo
-        > data_structure.tfcoil_variables.tftmp
-    ):
+    if data.tfcoil.temp_tf_cryo > data.tfcoil.tftmp:
         raise ProcessValidationError("temp_tf_cryo should be lower than tftmp")
 
     # Cannot use TF coil strain limit if i_str_wp is off:
@@ -1183,7 +1123,7 @@ def check_process(inputs, data):  # noqa: ARG001
             : data_structure.numerics.neqns + data_structure.numerics.nineqns
         ]
         == 88
-    ).any() and data_structure.tfcoil_variables.i_str_wp == 0:
+    ).any() and data.tfcoil.i_str_wp == 0:
         raise ProcessValidationError("Can't use constraint 88 if i_strain_tf == 0")
 
 

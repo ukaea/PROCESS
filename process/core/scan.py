@@ -19,7 +19,6 @@ from process.data_structure import (
     global_variables,
     numerics,
     scan_variables,
-    tfcoil_variables,
 )
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 
@@ -1080,7 +1079,7 @@ class Scan:
             case 4:
                 self.data.physics.hfact = swp[iscn - 1]
             case 5:
-                tfcoil_variables.j_tf_coil_full_area = swp[iscn - 1]
+                self.data.tfcoil.j_tf_coil_full_area = swp[iscn - 1]
             case 6:
                 self.data.constraints.pflux_fw_neutron_max_mw = swp[iscn - 1]
             case 7:
@@ -1141,15 +1140,15 @@ class Scan:
                     self.data.impurity_radiation.f_nd_impurity_electrons[8]
                 )
             case 44:
-                tfcoil_variables.sig_tf_case_max = swp[iscn - 1]
+                self.data.tfcoil.sig_tf_case_max = swp[iscn - 1]
             case 45:
-                tfcoil_variables.temp_tf_superconductor_margin_min = swp[iscn - 1]
+                self.data.tfcoil.temp_tf_superconductor_margin_min = swp[iscn - 1]
             case 46:
                 numerics.boundu[151] = swp[iscn - 1]
             case 48:
-                tfcoil_variables.n_tf_wp_pancakes = int(swp[iscn - 1])
+                self.data.tfcoil.n_tf_wp_pancakes = int(swp[iscn - 1])
             case 49:
-                tfcoil_variables.n_tf_wp_layers = int(swp[iscn - 1])
+                self.data.tfcoil.n_tf_wp_layers = int(swp[iscn - 1])
             case 50:
                 self.data.impurity_radiation.f_nd_impurity_electrons[12] = swp[iscn - 1]
                 self.data.impurity_radiation.f_nd_impurity_electron_array[12] = (
@@ -1162,7 +1161,7 @@ class Scan:
             case 53:
                 numerics.boundu[156] = swp[iscn - 1]
             case 54:
-                tfcoil_variables.b_crit_upper_nbti = swp[iscn - 1]
+                self.data.tfcoil.b_crit_upper_nbti = swp[iscn - 1]
             case 55:
                 self.data.build.dr_shld_inboard = swp[iscn - 1]
             case 56:
@@ -1174,7 +1173,7 @@ class Scan:
             case 59:
                 self.data.build.dr_fw_plasma_gap_outboard = swp[iscn - 1]
             case 60:
-                tfcoil_variables.sig_tf_wp_max = swp[iscn - 1]
+                self.data.tfcoil.sig_tf_wp_max = swp[iscn - 1]
             case 61:
                 self.data.rebco.copperaoh_m2_max = swp[iscn - 1]
             case 62:
@@ -1214,9 +1213,9 @@ class Scan:
             case 79:
                 self.data.current_drive.eta_ecrh_injector_wall_plug = swp[iscn - 1]
             case 80:
-                tfcoil_variables.fcoolcp = swp[iscn - 1]
+                self.data.tfcoil.fcoolcp = swp[iscn - 1]
             case 81:
-                tfcoil_variables.n_tf_coil_turns = swp[iscn - 1]
+                self.data.tfcoil.n_tf_coil_turns = swp[iscn - 1]
             case _:
                 raise ProcessValueError("Illegal scan variable number", nwp=nwp)
 

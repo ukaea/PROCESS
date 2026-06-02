@@ -5,9 +5,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process import data_structure
-from process.data_structure import tfcoil_variables
-
 
 @pytest.fixture
 def costs(process_models):
@@ -116,7 +113,7 @@ def test_acc2263(monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "fkind", 1)
     monkeypatch.setattr(costs.data.costs, "lsa", 4)
     monkeypatch.setattr(costs.data.costs, "uccry", 9.3e4)
-    monkeypatch.setattr(data_structure.tfcoil_variables, "tftmp", 4.5)
+    monkeypatch.setattr(costs.data.tfcoil, "tftmp", 4.5)
     monkeypatch.setattr(costs.data.heat_transport, "helpow", 80.980e3)
     monkeypatch.setattr(costs.data.costs, "c2263", 0)
 
@@ -602,7 +599,7 @@ def acc26_params():
             ireactor=1,
             p_fusion_total_mw=0.0,
             p_hcd_electric_total_mw=0.0,
-            tfcmw=data_structure.tfcoil_variables.tfcmw,
+            tfcmw=0.0,
             p_plant_primary_heat_mw=3000.0,
             p_plant_electric_gross_mw=700.0,
         ),
@@ -636,7 +633,7 @@ def acc26_fix(request, monkeypatch, costs):
         "p_hcd_electric_total_mw",
         param["p_hcd_electric_total_mw"],
     )
-    monkeypatch.setattr(data_structure.tfcoil_variables, "tfcmw", param["tfcmw"])
+    monkeypatch.setattr(costs.data.tfcoil, "tfcmw", param["tfcmw"])
     monkeypatch.setattr(
         costs.data.heat_transport,
         "p_plant_primary_heat_mw",
@@ -1948,38 +1945,38 @@ def test_acc2221(acc2221param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.structure, "aintmass", acc2221param.aintmass)
 
     monkeypatch.setattr(
-        tfcoil_variables, "m_tf_coil_copper", acc2221param.m_tf_coil_copper
+        costs.data.tfcoil, "m_tf_coil_copper", acc2221param.m_tf_coil_copper
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        costs.data.tfcoil,
         "m_tf_coil_superconductor",
         acc2221param.m_tf_coil_superconductor,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "m_tf_coil_case", acc2221param.m_tf_coil_case)
+    monkeypatch.setattr(costs.data.tfcoil, "m_tf_coil_case", acc2221param.m_tf_coil_case)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", acc2221param.n_tf_coils)
+    monkeypatch.setattr(costs.data.tfcoil, "n_tf_coils", acc2221param.n_tf_coils)
 
-    monkeypatch.setattr(tfcoil_variables, "whttflgs", acc2221param.whttflgs)
+    monkeypatch.setattr(costs.data.tfcoil, "whttflgs", acc2221param.whttflgs)
 
-    monkeypatch.setattr(tfcoil_variables, "whtcp", acc2221param.whtcp)
+    monkeypatch.setattr(costs.data.tfcoil, "whtcp", acc2221param.whtcp)
 
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", acc2221param.i_tf_sup)
+    monkeypatch.setattr(costs.data.tfcoil, "i_tf_sup", acc2221param.i_tf_sup)
 
     monkeypatch.setattr(
         costs.data.costs, "supercond_cost_model", acc2221param.supercond_cost_model
     )
 
-    monkeypatch.setattr(tfcoil_variables, "j_crit_str_tf", acc2221param.j_crit_str_tf)
+    monkeypatch.setattr(costs.data.tfcoil, "j_crit_str_tf", acc2221param.j_crit_str_tf)
 
     monkeypatch.setattr(
-        tfcoil_variables, "n_tf_coil_turns", acc2221param.n_tf_coil_turns
+        costs.data.tfcoil, "n_tf_coil_turns", acc2221param.n_tf_coil_turns
     )
 
-    monkeypatch.setattr(tfcoil_variables, "len_tf_coil", acc2221param.len_tf_coil)
+    monkeypatch.setattr(costs.data.tfcoil, "len_tf_coil", acc2221param.len_tf_coil)
 
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sc_mat", acc2221param.i_tf_sc_mat)
+    monkeypatch.setattr(costs.data.tfcoil, "i_tf_sc_mat", acc2221param.i_tf_sc_mat)
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2221param.c22)
 
@@ -2768,7 +2765,7 @@ def test_acc2222(acc2222param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.structure, "fncmass", acc2222param.fncmass)
 
-    monkeypatch.setattr(tfcoil_variables, "dcond", acc2222param.dcond)
+    monkeypatch.setattr(costs.data.tfcoil, "dcond", acc2222param.dcond)
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2222param.c22)
 
@@ -3431,30 +3428,30 @@ def test_acc2251(acc2251param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "uctfbus", acc2251param.uctfbus)
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        costs.data.tfcoil,
         "v_tf_coil_dump_quench_kv",
         acc2251param.v_tf_coil_dump_quench_kv,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tfcmw", acc2251param.tfcmw)
+    monkeypatch.setattr(costs.data.tfcoil, "tfcmw", acc2251param.tfcmw)
 
-    monkeypatch.setattr(tfcoil_variables, "len_tf_bus", acc2251param.len_tf_bus)
+    monkeypatch.setattr(costs.data.tfcoil, "len_tf_bus", acc2251param.len_tf_bus)
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        costs.data.tfcoil,
         "e_tf_magnetic_stored_total_gj",
         acc2251param.e_tf_magnetic_stored_total_gj,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", acc2251param.i_tf_sup)
+    monkeypatch.setattr(costs.data.tfcoil, "i_tf_sup", acc2251param.i_tf_sup)
 
-    monkeypatch.setattr(tfcoil_variables, "m_tf_bus", acc2251param.m_tf_bus)
+    monkeypatch.setattr(costs.data.tfcoil, "m_tf_bus", acc2251param.m_tf_bus)
 
-    monkeypatch.setattr(tfcoil_variables, "tfckw", acc2251param.tfckw)
+    monkeypatch.setattr(costs.data.tfcoil, "tfckw", acc2251param.tfckw)
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", acc2251param.n_tf_coils)
+    monkeypatch.setattr(costs.data.tfcoil, "n_tf_coils", acc2251param.n_tf_coils)
 
-    monkeypatch.setattr(tfcoil_variables, "c_tf_turn", acc2251param.c_tf_turn)
+    monkeypatch.setattr(costs.data.tfcoil, "c_tf_turn", acc2251param.c_tf_turn)
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2251param.c22)
 
@@ -4224,7 +4221,7 @@ def test_acc2263_rut(acc2263param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.heat_transport, "helpow", acc2263param.helpow)
 
-    monkeypatch.setattr(tfcoil_variables, "temp_tf_cryo", acc2263param.temp_tf_cryo)
+    monkeypatch.setattr(costs.data.tfcoil, "temp_tf_cryo", acc2263param.temp_tf_cryo)
 
     monkeypatch.setattr(costs.data.costs, "c226", acc2263param.c226)
 
@@ -5310,7 +5307,7 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
         acc26param.p_fusion_total_mw,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tfcmw", acc26param.tfcmw)
+    monkeypatch.setattr(costs.data.tfcoil, "tfcmw", acc26param.tfcmw)
 
     monkeypatch.setattr(costs.data.costs, "c26", acc26param.c26)
 

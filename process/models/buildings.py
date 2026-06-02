@@ -5,7 +5,6 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import tfcoil_variables
 from process.models.physics.current_drive import (
     CurrentDriveMethodType,
     CurrentDriveModel,
@@ -49,7 +48,7 @@ class Buildings(Model):
         )
 
         # Find mass of each TF coil, in tonnes
-        tfmtn = 1.0e-3 * tfcoil_variables.m_tf_coils_total / tfcoil_variables.n_tf_coils
+        tfmtn = 1.0e-3 * self.data.tfcoil.m_tf_coils_total / self.data.tfcoil.n_tf_coils
 
         # Calculate building areas and volumes
 
@@ -74,7 +73,7 @@ class Buildings(Model):
                 tfri,
                 tf_vertical_dim,
                 tfmtn,
-                tfcoil_variables.n_tf_coils,
+                self.data.tfcoil.n_tf_coils,
                 self.data.build.r_shld_outboard_outer,
                 self.data.build.r_shld_inboard_inner,
                 2.0e0
@@ -550,7 +549,7 @@ class Buildings(Model):
         # Footprints and volumes required for storage include hot separation distance (self.data.buildings.hot_sepdist).
 
         # Assumptions:
-        # tokomak is toroidally segmented based on number of TF coils (tfcoil_variables.n_tf_coils);
+        # tokomak is toroidally segmented based on number of TF coils (self.data.tfcoil.n_tf_coils);
         # component will be stored with the largest dimension oriented horizontally;
         # height is the largest dimension;
         # if a component lifetime == 0, that component is not in the current machine build.
@@ -585,7 +584,7 @@ class Buildings(Model):
                         + self.data.build.dr_shld_inboard
                     )
                 )
-            ) / tfcoil_variables.n_tf_coils
+            ) / self.data.tfcoil.n_tf_coils
             # find footprint and volume for storing component
             hcomp_footprint = (hcomp_height + self.data.buildings.hot_sepdist) * (
                 max(hcomp_rad_thk, hcomp_tor_thk) + self.data.buildings.hot_sepdist
@@ -596,7 +595,7 @@ class Buildings(Model):
             # required lifetime supply of components =
             #   ( number in build * (plant lifetime / component lifetime) ) * quantity safety factor
             hcomp_req_supply = (
-                tfcoil_variables.n_tf_coils
+                self.data.tfcoil.n_tf_coils
                 * (self.data.costs.life_plant / self.data.costs.life_plant)
             ) * self.data.buildings.qnty_sfty_fac
             # total storage space for required supply of inboard shield-blanket-wall
@@ -628,7 +627,7 @@ class Buildings(Model):
                     + self.data.build.dr_blkt_outboard
                     + self.data.build.dr_shld_outboard
                 )
-            ) / tfcoil_variables.n_tf_coils
+            ) / self.data.tfcoil.n_tf_coils
             hcomp_footprint = (hcomp_height + self.data.buildings.hot_sepdist) * (
                 max(hcomp_rad_thk, hcomp_tor_thk) + self.data.buildings.hot_sepdist
             )
@@ -636,7 +635,7 @@ class Buildings(Model):
                 min(hcomp_rad_thk, hcomp_tor_thk) + self.data.buildings.hot_sepdist
             )
             hcomp_req_supply = (
-                tfcoil_variables.n_tf_coils
+                self.data.tfcoil.n_tf_coils
                 * (self.data.costs.life_plant / self.data.costs.life_plant)
             ) * self.data.buildings.qnty_sfty_fac
             # total storage space for required supply of outboard wall-blanket-shield
@@ -658,7 +657,7 @@ class Buildings(Model):
                 min(hcomp_rad_thk, hcomp_tor_thk) + self.data.buildings.hot_sepdist
             )
             hcomp_req_supply = (
-                tfcoil_variables.n_tf_coils
+                self.data.tfcoil.n_tf_coils
                 * (self.data.costs.life_plant / self.data.costs.life_div_fpy)
             ) * self.data.buildings.qnty_sfty_fac
             # total storage space for required supply of divertor segments
@@ -669,7 +668,7 @@ class Buildings(Model):
         # Centre post
         if self.data.costs.cplife != 0.0e0:  # noqa: RUF069
             hcomp_height = 2 * self.data.build.z_tf_inside_half
-            if tfcoil_variables.i_tf_sup != 1:
+            if self.data.tfcoil.i_tf_sup != 1:
                 hcomp_rad_thk = self.data.build.r_cp_top
             else:
                 hcomp_rad_thk = self.data.build.dr_tf_inboard

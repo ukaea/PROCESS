@@ -8,7 +8,6 @@ import numpy as np
 from process.core import constants, process_output
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import tfcoil_variables
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import dshellvol, eshellvol
 
@@ -82,7 +81,7 @@ class Vacuum(Model):
                 self.data.build.r_shld_inboard_inner
                 - self.data.build.dr_shld_vv_gap_inboard
                 - self.data.build.dr_vv_inboard,
-                tfcoil_variables.n_tf_coils,
+                self.data.tfcoil.n_tf_coils,
                 self.data.times.t_plant_pulse_dwell,
                 self.data.physics.nd_plasma_electrons_vol_avg,
                 self.data.divertor.n_divertors,
@@ -128,7 +127,7 @@ class Vacuum(Model):
             * self.data.vacuum.f_a_vac_pump_port_plasma_surface
             * self.data.vacuum.f_volflow_vac_pumps_impedance
             * self.data.physics.a_plasma_surface
-            / tfcoil_variables.n_tf_coils
+            / self.data.tfcoil.n_tf_coils
         )
 
         wallarea = (self.data.physics.a_plasma_surface / 1084.0e0) * 2000.0e0

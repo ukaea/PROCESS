@@ -2,10 +2,7 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import (
-    global_variables,
-    tfcoil_variables,
-)
+from process.data_structure import global_variables
 
 
 @pytest.fixture
@@ -331,13 +328,13 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        ccfe_hcpb.data.tfcoil,
         "m_tf_coils_total",
         nuclearheatingmagnetsparam.m_tf_coils_total,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "whttflgs", nuclearheatingmagnetsparam.whttflgs
+        ccfe_hcpb.data.tfcoil, "whttflgs", nuclearheatingmagnetsparam.whttflgs
     )
 
     monkeypatch.setattr(global_variables, "verbose", nuclearheatingmagnetsparam.verbose)
@@ -1177,7 +1174,7 @@ def test_st_tf_centrepost_fast_neut_flux(
     """
 
     monkeypatch.setattr(
-        tfcoil_variables, "i_tf_sup", sttfcentrepostfastneutfluxparam.i_tf_sup
+        ccfe_hcpb.data.tfcoil, "i_tf_sup", sttfcentrepostfastneutfluxparam.i_tf_sup
     )
 
     neut_flux_cp = ccfe_hcpb.st_tf_centrepost_fast_neut_flux(
@@ -1250,7 +1247,7 @@ def test_st_centrepost_nuclear_heating(
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "i_tf_sup", stcentrepostnuclearheatingparam.i_tf_sup
+        ccfe_hcpb.data.tfcoil, "i_tf_sup", stcentrepostnuclearheatingparam.i_tf_sup
     )
 
     pnuc_cp_tf, p_cp_shield_nuclear_heat_mw, pnuc_cp = (

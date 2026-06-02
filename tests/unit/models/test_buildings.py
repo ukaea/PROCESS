@@ -2,8 +2,6 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import tfcoil_variables
-
 
 @pytest.fixture
 def buildings(process_models):
@@ -733,8 +731,8 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(
         buildings.data.current_drive, "i_hcd_primary", bldgssizesparam.i_hcd_primary
     )
-    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", bldgssizesparam.n_tf_coils)
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", bldgssizesparam.i_tf_sup)
+    monkeypatch.setattr(buildings.data.tfcoil, "n_tf_coils", bldgssizesparam.n_tf_coils)
+    monkeypatch.setattr(buildings.data.tfcoil, "i_tf_sup", bldgssizesparam.i_tf_sup)
     monkeypatch.setattr(
         buildings.data.pf_coil,
         "r_pf_coil_outer_max",

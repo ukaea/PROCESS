@@ -29,6 +29,7 @@ from process.data_structure.reinke_variables import ReinkeData
 from process.data_structure.stellarator_configuration import StellaratorConfigData
 from process.data_structure.stellarator_variables import StellaratorData
 from process.data_structure.structure_variables import StructureData
+from process.data_structure.tfcoil_variables import TFData
 from process.data_structure.times_variables import TimesData
 from process.data_structure.vacuum_variables import VacuumData
 from process.data_structure.water_usage_variables import WaterUseData
@@ -69,6 +70,7 @@ class DataStructure:
     impurity_radiation: ImpurityRadiationData = initialise_later
     physics: PhysicsData = initialise_later
     rebco: RebcoData = initialise_later
+    tfcoil: TFData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):

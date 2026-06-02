@@ -16,7 +16,6 @@ from process.core.model import Model
 from process.data_structure import (
     global_variables,
     numerics,
-    tfcoil_variables,
 )
 from process.models.physics.physics import Physics, rether
 from process.models.power import PumpingPowerModelTypes
@@ -224,10 +223,10 @@ class Stellarator(Model):
         self.data.physics.rminor = self.data.physics.rmajor / self.data.physics.aspect
         self.data.physics.eps = 1.0e0 / self.data.physics.aspect
 
-        tfcoil_variables.n_tf_coils = (
+        self.data.tfcoil.n_tf_coils = (
             self.data.stellarator_config.stella_config_coilspermodule
             * self.data.stellarator_config.stella_config_symmetry
-        )  # This overwrites tfcoil_variables.n_tf_coils in input file.
+        )  # This overwrites self.data.tfcoil.n_tf_coils in input file.
 
         self.data.stellarator.f_st_rmajor = (
             self.data.physics.rmajor
@@ -242,7 +241,7 @@ class Stellarator(Model):
             self.data.physics.aspect
             / self.data.stellarator_config.stella_config_aspect_ref
         )
-        self.data.stellarator.f_st_n_coils = tfcoil_variables.n_tf_coils / (
+        self.data.stellarator.f_st_n_coils = self.data.tfcoil.n_tf_coils / (
             self.data.stellarator_config.stella_config_coilspermodule
             * self.data.stellarator_config.stella_config_symmetry
         )  # Coil number factor
@@ -343,7 +342,7 @@ class Stellarator(Model):
         #  Values based on regression analysis by Greifswald, March 2014
         m_struc = (
             1.3483e0
-            * (1000.0e0 * tfcoil_variables.e_tf_magnetic_stored_total_gj) ** 0.7821e0
+            * (1000.0e0 * self.data.tfcoil.e_tf_magnetic_stored_total_gj) ** 0.7821e0
         )
         msupstr = 1000.0e0 * m_struc  # kg
 
@@ -358,9 +357,9 @@ class Stellarator(Model):
                 self.data.stellarator.r_coil_minor
                 / self.data.stellarator_config.stella_config_coil_rminor
             )
-            - tfcoil_variables.dx_tf_inboard_out_toroidal
-            * tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_coils
+            - self.data.tfcoil.dx_tf_inboard_out_toroidal
+            * self.data.tfcoil.len_tf_coil
+            * self.data.tfcoil.n_tf_coils
         )
 
         # This 0.18 m is an effective thickness which is scaled with empirial 1.5 law. 5.6 T is reference point of Helias
@@ -379,7 +378,7 @@ class Stellarator(Model):
 
         #  Total mass of cooled components
         self.data.structure.coldmass = (
-            tfcoil_variables.m_tf_coils_total
+            self.data.tfcoil.m_tf_coils_total
             + self.data.structure.aintmass
             + self.data.fwbs.dewmkg
         )
@@ -439,11 +438,11 @@ class Stellarator(Model):
         # Rough estimate of TF coil volume used, assuming 25% of the total
         # TF coil perimeter is inboard, 75% outboard
         tf_volume = (
-            0.25 * tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_inboard_total
+            0.25 * self.data.tfcoil.len_tf_coil * self.data.tfcoil.a_tf_inboard_total
             + 0.75
-            * tfcoil_variables.len_tf_coil
-            * tfcoil_variables.a_tf_leg_outboard
-            * tfcoil_variables.n_tf_coils
+            * self.data.tfcoil.len_tf_coil
+            * self.data.tfcoil.a_tf_leg_outboard
+            * self.data.tfcoil.n_tf_coils
         )
 
         self.data.fwbs.ptfnucpm3 = self.data.fwbs.p_tf_nuclear_heat_mw / tf_volume
@@ -1003,7 +1002,7 @@ class Stellarator(Model):
                 #  coils, and so contributes to the cryogenic load
 
                 if (
-                    tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING
+                    self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING
                 ):  # superconducting coils
                     self.data.fwbs.p_tf_nuclear_heat_mw = (
                         pnucsi + pnucso - pnucshldi - pnucshldo
@@ -1752,7 +1751,7 @@ class Stellarator(Model):
         ishmat = 0  # stainless steel coil casing is assumed
 
         if (
-            tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+            self.data.tfcoil.i_tf_sup != TFConductorModel.SUPERCONDUCTING
         ):  # Resistive coils
             coilhtmx = 0.0
             ptfiwp = 0.0
@@ -1796,8 +1795,8 @@ class Stellarator(Model):
             # Winding pack radial thickness, including groundwall insulation
 
             wpthk = (
-                tfcoil_variables.dr_tf_wp_with_insulation
-                + 2.0 * tfcoil_variables.dx_tf_wp_insulation
+                self.data.tfcoil.dr_tf_wp_with_insulation
+                + 2.0 * self.data.tfcoil.dx_tf_wp_insulation
             )
 
             # Nuclear heating rate in inboard TF coil (MW/m**3)
@@ -1807,7 +1806,7 @@ class Stellarator(Model):
                 * self.data.physics.pflux_fw_neutron_mw
                 * coef[0, ishmat]
                 * np.exp(
-                    -decay[5, ishmat] * (dshieq + tfcoil_variables.dr_tf_plasma_case)
+                    -decay[5, ishmat] * (dshieq + self.data.tfcoil.dr_tf_plasma_case)
                 )
             )
 
@@ -1815,7 +1814,7 @@ class Stellarator(Model):
 
             ptfiwp = (
                 coilhtmx
-                * tfcoil_variables.tfsai
+                * self.data.tfcoil.tfsai
                 * (1.0 - np.exp(-decay[0, ishmat] * wpthk))
                 / decay[0, ishmat]
             )
@@ -1824,9 +1823,9 @@ class Stellarator(Model):
                 * self.data.physics.pflux_fw_neutron_mw
                 * coef[0, ishmat]
                 * np.exp(
-                    -decay[5, ishmat] * (dshoeq + tfcoil_variables.dr_tf_plasma_case)
+                    -decay[5, ishmat] * (dshoeq + self.data.tfcoil.dr_tf_plasma_case)
                 )
-                * tfcoil_variables.tfsao
+                * self.data.tfcoil.tfsao
                 * (1.0 - np.exp(-decay[0, ishmat] * wpthk))
                 / decay[0, ishmat]
             )
@@ -1841,8 +1840,8 @@ class Stellarator(Model):
             )
             pheci = (
                 htheci
-                * tfcoil_variables.tfsai
-                * (1.0 - np.exp(-decay[1, ishmat] * tfcoil_variables.dr_tf_plasma_case))
+                * self.data.tfcoil.tfsai
+                * (1.0 - np.exp(-decay[1, ishmat] * self.data.tfcoil.dr_tf_plasma_case))
                 / decay[1, ishmat]
             )
             pheco = (
@@ -1850,8 +1849,8 @@ class Stellarator(Model):
                 * self.data.physics.pflux_fw_neutron_mw
                 * coef[1, ishmat]
                 * np.exp(-decay[6, ishmat] * dshoeq)
-                * tfcoil_variables.tfsao
-                * (1.0 - np.exp(-decay[1, ishmat] * tfcoil_variables.dr_tf_plasma_case))
+                * self.data.tfcoil.tfsao
+                * (1.0 - np.exp(-decay[1, ishmat] * self.data.tfcoil.dr_tf_plasma_case))
                 / decay[1, ishmat]
             )
             ptfi = ptfiwp + pheci
@@ -1873,7 +1872,7 @@ class Stellarator(Model):
                 * fact[2]
                 * self.data.physics.pflux_fw_neutron_mw
                 * np.exp(
-                    -decay[2, ishmat] * (dshieq + tfcoil_variables.dr_tf_plasma_case)
+                    -decay[2, ishmat] * (dshieq + self.data.tfcoil.dr_tf_plasma_case)
                 )
             )
 
@@ -1885,7 +1884,7 @@ class Stellarator(Model):
                 * self.data.physics.pflux_fw_neutron_mw
                 * coef[3, ishmat]
                 * np.exp(
-                    -decay[3, ishmat] * (dshieq + tfcoil_variables.dr_tf_plasma_case)
+                    -decay[3, ishmat] * (dshieq + self.data.tfcoil.dr_tf_plasma_case)
                 )
             )
 
@@ -1897,7 +1896,7 @@ class Stellarator(Model):
                 * self.data.physics.pflux_fw_neutron_mw
                 * coef[4, ishmat]
                 * np.exp(
-                    -decay[4, ishmat] * (dshieq + tfcoil_variables.dr_tf_plasma_case)
+                    -decay[4, ishmat] * (dshieq + self.data.tfcoil.dr_tf_plasma_case)
                 )
             )
 

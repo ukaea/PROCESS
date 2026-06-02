@@ -5,8 +5,6 @@ from dataclasses import dataclass
 import numpy as np
 import pytest
 
-from process.data_structure import tfcoil_variables
-
 
 @pytest.fixture
 def costs2015(process_models):
@@ -2285,15 +2283,15 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "c_tf_total", calcbuildingcostsparam.c_tf_total
+        costs2015.data.tfcoil, "c_tf_total", calcbuildingcostsparam.c_tf_total
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "n_tf_coils", calcbuildingcostsparam.n_tf_coils
+        costs2015.data.tfcoil, "n_tf_coils", calcbuildingcostsparam.n_tf_coils
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        costs2015.data.tfcoil,
         "e_tf_magnetic_stored_total_gj",
         calcbuildingcostsparam.e_tf_magnetic_stored_total_gj,
     )
@@ -6837,22 +6835,24 @@ def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", calctfcoilcostsparam.n_tf_coils)
-
     monkeypatch.setattr(
-        tfcoil_variables, "len_tf_coil", calctfcoilcostsparam.len_tf_coil
+        costs2015.data.tfcoil, "n_tf_coils", calctfcoilcostsparam.n_tf_coils
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "n_tf_coil_turns", calctfcoilcostsparam.n_tf_coil_turns
+        costs2015.data.tfcoil, "len_tf_coil", calctfcoilcostsparam.len_tf_coil
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "m_tf_coil_copper", calctfcoilcostsparam.m_tf_coil_copper
+        costs2015.data.tfcoil, "n_tf_coil_turns", calctfcoilcostsparam.n_tf_coil_turns
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        costs2015.data.tfcoil, "m_tf_coil_copper", calctfcoilcostsparam.m_tf_coil_copper
+    )
+
+    monkeypatch.setattr(
+        costs2015.data.tfcoil,
         "m_tf_coil_superconductor",
         calctfcoilcostsparam.m_tf_coil_superconductor,
     )

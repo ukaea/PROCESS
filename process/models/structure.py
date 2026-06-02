@@ -8,7 +8,6 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import tfcoil_variables as tfv
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +55,7 @@ class Structure(Model):
             self.data.physics.rminor,
             self.data.physics.kappa,
             self.data.physics.b_plasma_toroidal_on_axis,
-            tfv.i_tf_sup,
+            self.data.tfcoil.i_tf_sup,
             self.data.pf_coil.i_pf_conductor,
             self.data.build.dr_tf_inner_bore
             + self.data.build.dr_tf_outboard
@@ -65,7 +64,7 @@ class Structure(Model):
             self.data.fwbs.whtshld,
             self.data.divertor.m_div_plate,
             total_weight_pf,
-            tfv.m_tf_coils_total,
+            self.data.tfcoil.m_tf_coils_total,
             self.data.fwbs.m_fw_total,
             self.data.fwbs.m_blkt_total,
             self.data.fwbs.m_fw_blkt_div_coolant_total,

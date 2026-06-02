@@ -12,7 +12,6 @@ from process.core import process_output as op
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure, Model
 from process.data_structure import superconducting_tf_coil_variables
-from process.data_structure import tfcoil_variables as tfv
 from process.data_structure.pfcoil_variables import (
     N_PF_COILS_IN_GROUP_MAX,
     N_PF_GROUPS_MAX,
@@ -282,7 +281,7 @@ class PFCoil(Model):
                     n_pf_group=group,
                     rminor=self.data.physics.rminor,
                     zref=self.data.pf_coil.zref,
-                    i_tf_shape=tfv.i_tf_shape,
+                    i_tf_shape=self.data.tfcoil.i_tf_shape,
                     i_r_pf_outside_tf_placement=self.data.pf_coil.i_r_pf_outside_tf_placement,
                     r_pf_outside_tf_midplane=self.data.pf_coil.r_pf_outside_tf_midplane,
                 )
@@ -847,11 +846,13 @@ class PFCoil(Model):
                             self.data.pf_coil.fcupfsu,
                             self.data.pf_coil.j_pf_coil_wp_peak[i],
                             self.data.pf_coil.i_pf_superconductor,
-                            tfv.fhts,
-                            tfv.str_pf_con_res,
-                            tfv.tftmp,
-                            tfv.bcritsc,
-                            tfv.tcritsc,
+                            self.data.tfcoil.fhts,
+                            self.data.tfcoil.str_pf_con_res,
+                            self.data.tfcoil.tftmp,
+                            self.data.tfcoil.bcritsc,
+                            self.data.tfcoil.tcritsc,
+                            self.data.tfcoil.b_crit_upper_nbti,
+                            self.data.tfcoil.t_crit_nbti,
                         )
                     )
 
@@ -905,7 +906,9 @@ class PFCoil(Model):
                 if self.data.pf_coil.i_pf_conductor == 0:
                     self.data.pf_coil.m_pf_coil_conductor[i] = (
                         volpf
-                        * tfv.dcond[self.data.pf_coil.i_pf_superconductor - 1]
+                        * self.data.tfcoil.dcond[
+                            self.data.pf_coil.i_pf_superconductor - 1
+                        ]
                         * (1.0e0 - self.data.pf_coil.f_a_pf_coil_void[i])
                     )
                 else:
@@ -1456,7 +1459,7 @@ class PFCoil(Model):
         #  See issue 1612
         #  https://git.ccfe.ac.uk/process/process/-/issues/1612
 
-        if tfv.i_tf_shape == 2:
+        if self.data.tfcoil.i_tf_shape == 2:
             pf_tf_collision = 0
 
             for i in range(self.data.pf_coil.n_pf_coil_groups):
@@ -2226,7 +2229,7 @@ class PFCoil(Model):
                 self.outfile,
                 "Residual manufacturing strain in CS superconductor material",
                 "(str_cs_con_res)",
-                tfv.str_cs_con_res,
+                self.data.tfcoil.str_cs_con_res,
             )
             op.ovarre(
                 self.outfile,
@@ -2259,7 +2262,7 @@ class PFCoil(Model):
                 self.outfile,
                 "Helium coolant temperature (K)",
                 "(tftmp)",
-                tfv.tftmp,
+                self.data.tfcoil.tftmp,
             )
             op.ovarre(
                 self.outfile,
@@ -2272,7 +2275,7 @@ class PFCoil(Model):
                 self.outfile,
                 "Minimum permitted temperature margin (K)",
                 "(temp_cs_superconductor_margin_min)",
-                tfv.temp_cs_superconductor_margin_min,
+                self.data.tfcoil.temp_cs_superconductor_margin_min,
             )
             # only output CS fatigue model for pulsed reactor design
             if self.data.physics.f_c_plasma_inductive > 0.0e-4:
@@ -2390,7 +2393,7 @@ class PFCoil(Model):
 
             if (
                 self.data.pf_coil.temp_cs_superconductor_margin
-                < 1.01e0 * tfv.temp_cs_superconductor_margin_min
+                < 1.01e0 * self.data.tfcoil.temp_cs_superconductor_margin_min
             ):
                 self.data.pf_coil.cslimit = True
             if not self.data.pf_coil.cslimit:
@@ -2402,7 +2405,7 @@ class PFCoil(Model):
             if (
                 SuperconductorModel(self.data.pf_coil.i_pf_superconductor).material
                 == SuperconductorMaterial.REBCO
-            ) and abs(tfv.str_cs_con_res) > 0.7e-2:
+            ) and abs(self.data.tfcoil.str_cs_con_res) > 0.7e-2:
                 logger.error(
                     "Non physical strain used in CS. Use superconductor strain < +/- 0.7%"
                 )
@@ -2410,7 +2413,7 @@ class PFCoil(Model):
             if (
                 SuperconductorModel(self.data.pf_coil.i_pf_superconductor).material
                 == SuperconductorMaterial.REBCO
-                and abs(tfv.str_pf_con_res) > 0.7e-2
+                and abs(self.data.tfcoil.str_pf_con_res) > 0.7e-2
             ):
                 logger.error(
                     "Non physical strain used in PF. Use superconductor strain < +/- 0.7%"
@@ -3444,7 +3447,7 @@ class CSCoil(Model):
                 * 2.0e0
                 * np.pi
                 * self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1]
-                * tfv.dcond[self.data.pf_coil.i_cs_superconductor - 1]
+                * self.data.tfcoil.dcond[self.data.pf_coil.i_cs_superconductor - 1]
             )
         else:
             self.data.pf_coil.m_pf_coil_conductor[
@@ -3481,11 +3484,13 @@ class CSCoil(Model):
                 )
                 * 1.0e6,
                 self.data.pf_coil.i_cs_superconductor,
-                tfv.fhts,
-                tfv.str_cs_con_res,
-                tfv.tftmp,
-                tfv.bcritsc,
-                tfv.tcritsc,
+                self.data.tfcoil.fhts,
+                self.data.tfcoil.str_cs_con_res,
+                self.data.tfcoil.tftmp,
+                self.data.tfcoil.bcritsc,
+                self.data.tfcoil.tcritsc,
+                self.data.tfcoil.b_crit_upper_nbti,
+                self.data.tfcoil.t_crit_nbti,
             )
             # Strand critical current calculation for costing in $/kAm
             # = superconducting filaments jc * (1 - strand copper fraction)
@@ -3524,11 +3529,13 @@ class CSCoil(Model):
                 )
                 * 1.0e6,
                 self.data.pf_coil.i_cs_superconductor,
-                tfv.fhts,
-                tfv.str_cs_con_res,
-                tfv.tftmp,
-                tfv.bcritsc,
-                tfv.tcritsc,
+                self.data.tfcoil.fhts,
+                self.data.tfcoil.str_cs_con_res,
+                self.data.tfcoil.tftmp,
+                self.data.tfcoil.bcritsc,
+                self.data.tfcoil.tcritsc,
+                self.data.tfcoil.b_crit_upper_nbti,
+                self.data.tfcoil.t_crit_nbti,
             )
 
             self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1] = (
@@ -3855,7 +3862,9 @@ class CSCoil(Model):
         m = ((b_a - b_b) * j * a) / (alpha - 1.0e0)
 
         # calculate hoop stress terms
-        hp_term_1 = k * ((2.0e0 + tfv.poisson_steel) / (3.0e0 * (alpha + 1.0e0)))
+        hp_term_1 = k * (
+            (2.0e0 + self.data.tfcoil.poisson_steel) / (3.0e0 * (alpha + 1.0e0))
+        )
 
         hp_term_2 = (
             alpha**2
@@ -3864,19 +3873,22 @@ class CSCoil(Model):
             + alpha**2 / epsilon**2
             - epsilon
             * (
-                ((1.0e0 + 2.0e0 * tfv.poisson_steel) * (alpha + 1.0e0))
-                / (2.0e0 + tfv.poisson_steel)
+                ((1.0e0 + 2.0e0 * self.data.tfcoil.poisson_steel) * (alpha + 1.0e0))
+                / (2.0e0 + self.data.tfcoil.poisson_steel)
             )
         )
 
-        hp_term_3 = m * ((3.0e0 + tfv.poisson_steel) / (8.0e0))
+        hp_term_3 = m * ((3.0e0 + self.data.tfcoil.poisson_steel) / (8.0e0))
 
         hp_term_4 = (
             alpha**2
             + 1.0e0
             + alpha**2 / epsilon**2
             - epsilon**2
-            * ((1.0e0 + 3.0e0 * tfv.poisson_steel) / (3.0e0 + tfv.poisson_steel))
+            * (
+                (1.0e0 + 3.0e0 * self.data.tfcoil.poisson_steel)
+                / (3.0e0 + self.data.tfcoil.poisson_steel)
+            )
         )
 
         s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
@@ -4106,7 +4118,20 @@ def peak_b_field_at_pf_coil(
     )
 
 
-def superconpf(bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcritsc):
+def superconpf(
+    bmax,
+    fhe,
+    fcu,
+    jwp,
+    isumat,
+    fhts,
+    strain,
+    thelium,
+    bcritsc,
+    tcritsc,
+    b_crit_upper_nbti,
+    t_crit_nbti,
+):
     """Routine to calculate the PF coil superconductor properties.
 
     This routine calculates the superconductor critical winding pack
@@ -4150,6 +4175,10 @@ def superconpf(bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcri
         Critical field at zero temperature and strain (T) (isumat=4 only)
     tcritsc : float
         Critical temperature at zero field and strain (K) (isumat=4 only)
+    b_crit_upper_nbti: float
+        upper critical field of GL_nbti
+    t_crit_nbti: float
+        critical temperature of GL_nbti
 
     Returns
     -------
@@ -4227,8 +4256,8 @@ def superconpf(bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcri
 
     elif isumat == 7:
         # Durham Ginzburg-Landau critical surface model for Nb-Ti
-        bc20m = tfv.b_crit_upper_nbti
-        tc0m = tfv.t_crit_nbti
+        bc20m = b_crit_upper_nbti
+        tc0m = t_crit_nbti
         j_crit_sc, _, _ = superconductors.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)

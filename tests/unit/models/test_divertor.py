@@ -2,8 +2,6 @@
 
 import pytest
 
-from process.data_structure import tfcoil_variables as tfv
-
 
 @pytest.fixture
 def divertor(process_models):
@@ -28,7 +26,7 @@ class TestDivertor:
         :type divertor: tests.unit.test_divertor.divertor (functional fixture)
         """
 
-        monkeypatch.setattr(tfv, "drtop", 0)
+        monkeypatch.setattr(divertor.data.tfcoil, "drtop", 0)
 
         rmajor = 1.7
         rminor = 0.97142857142857153
@@ -68,7 +66,7 @@ class TestDivertor:
         :type divertor: tests.unit.test_divertor.divertor (functional fixture)
         """
 
-        monkeypatch.setattr(tfv, "drtop", 0)
+        monkeypatch.setattr(divertor.data.tfcoil, "drtop", 0)
 
         rmajor = 2.0
         rminor = 1.0

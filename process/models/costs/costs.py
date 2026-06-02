@@ -6,7 +6,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import tfcoil_variables
 from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
@@ -372,7 +371,7 @@ class Costs(Model):
             po.oshead(self.outfile, "Magnets")
 
             if (
-                tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+                self.data.tfcoil.i_tf_sup != TFConductorModel.SUPERCONDUCTING
             ):  # Resistive TF coils
                 if self.data.physics.itart == 1:
                     po.ocosts(
@@ -1439,13 +1438,13 @@ class Costs(Model):
         cmlsa = [0.6900e0, 0.8450e0, 0.9225e0, 1.0000e0]
 
         if (
-            tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+            self.data.tfcoil.i_tf_sup != TFConductorModel.SUPERCONDUCTING
         ):  # Resistive TF coils
             #  Account 222.1.1 : Inboard TF coil legs
 
             self.data.costs.c22211 = (
                 1.0e-6
-                * tfcoil_variables.whtcp
+                * self.data.tfcoil.whtcp
                 * self.data.costs.uccpcl1
                 * cmlsa[self.data.costs.lsa - 1]
             )
@@ -1462,7 +1461,7 @@ class Costs(Model):
 
             self.data.costs.c22212 = (
                 1.0e-6
-                * tfcoil_variables.whttflgs
+                * self.data.tfcoil.whttflgs
                 * self.data.costs.uccpclb
                 * cmlsa[self.data.costs.lsa - 1]
             )
@@ -1479,23 +1478,23 @@ class Costs(Model):
 
             if self.data.costs.supercond_cost_model == 0:
                 costtfsc = (
-                    self.data.costs.ucsc[tfcoil_variables.i_tf_sc_mat - 1]
-                    * tfcoil_variables.m_tf_coil_superconductor
-                    / (tfcoil_variables.len_tf_coil * tfcoil_variables.n_tf_coil_turns)
+                    self.data.costs.ucsc[self.data.tfcoil.i_tf_sc_mat - 1]
+                    * self.data.tfcoil.m_tf_coil_superconductor
+                    / (self.data.tfcoil.len_tf_coil * self.data.tfcoil.n_tf_coil_turns)
                 )
             else:
                 costtfsc = (
-                    self.data.costs.sc_mat_cost_0[tfcoil_variables.i_tf_sc_mat - 1]
-                    * tfcoil_variables.j_crit_str_0[tfcoil_variables.i_tf_sc_mat - 1]
-                    / tfcoil_variables.j_crit_str_tf
+                    self.data.costs.sc_mat_cost_0[self.data.tfcoil.i_tf_sc_mat - 1]
+                    * self.data.tfcoil.j_crit_str_0[self.data.tfcoil.i_tf_sc_mat - 1]
+                    / self.data.tfcoil.j_crit_str_tf
                 )
 
             #  Copper ($/m)
 
             costtfcu = (
                 self.data.costs.uccu
-                * tfcoil_variables.m_tf_coil_copper
-                / (tfcoil_variables.len_tf_coil * tfcoil_variables.n_tf_coil_turns)
+                * self.data.tfcoil.m_tf_coil_copper
+                / (self.data.tfcoil.len_tf_coil * self.data.tfcoil.n_tf_coil_turns)
             )
 
             #  Total cost/metre of superconductor and copper wire
@@ -1511,9 +1510,9 @@ class Costs(Model):
             self.data.costs.c22211 = (
                 1.0e-6
                 * ctfconpm
-                * tfcoil_variables.n_tf_coils
-                * tfcoil_variables.len_tf_coil
-                * tfcoil_variables.n_tf_coil_turns
+                * self.data.tfcoil.n_tf_coils
+                * self.data.tfcoil.len_tf_coil
+                * self.data.tfcoil.n_tf_coil_turns
             )
             self.data.costs.c22211 = (
                 self.data.costs.fkind
@@ -1526,9 +1525,9 @@ class Costs(Model):
             self.data.costs.c22212 = (
                 1.0e-6
                 * self.data.costs.ucwindtf
-                * tfcoil_variables.n_tf_coils
-                * tfcoil_variables.len_tf_coil
-                * tfcoil_variables.n_tf_coil_turns
+                * self.data.tfcoil.n_tf_coils
+                * self.data.tfcoil.len_tf_coil
+                * self.data.tfcoil.n_tf_coil_turns
             )
             self.data.costs.c22212 = (
                 self.data.costs.fkind
@@ -1540,8 +1539,8 @@ class Costs(Model):
 
             self.data.costs.c22213 = (
                 1.0e-6
-                * (tfcoil_variables.m_tf_coil_case * self.data.costs.uccase)
-                * tfcoil_variables.n_tf_coils
+                * (self.data.tfcoil.m_tf_coil_case * self.data.costs.uccase)
+                * self.data.tfcoil.n_tf_coils
             )
             self.data.costs.c22213 = (
                 self.data.costs.fkind
@@ -1639,7 +1638,7 @@ class Costs(Model):
                         )
                         * 1.0e6
                         / self.data.pf_coil.j_pf_coil_wp_peak[i]
-                        * tfcoil_variables.dcond[
+                        * self.data.tfcoil.dcond[
                             self.data.pf_coil.i_pf_superconductor - 1
                         ]
                     )
@@ -1650,7 +1649,7 @@ class Costs(Model):
                     self.data.costs.sc_mat_cost_0[
                         self.data.pf_coil.i_pf_superconductor - 1
                     ]
-                    * tfcoil_variables.j_crit_str_0[
+                    * self.data.tfcoil.j_crit_str_0[
                         self.data.pf_coil.i_pf_superconductor - 1
                     ]
                     / self.data.pf_coil.j_crit_str_pf
@@ -1719,7 +1718,7 @@ class Costs(Model):
                         / self.data.pf_coil.n_pf_coil_turns[
                             self.data.pf_coil.n_cs_pf_coils - 1
                         ]
-                        * tfcoil_variables.dcond[
+                        * self.data.tfcoil.dcond[
                             self.data.pf_coil.i_cs_superconductor - 1
                         ]
                     )
@@ -1730,7 +1729,7 @@ class Costs(Model):
                     self.data.costs.sc_mat_cost_0[
                         self.data.pf_coil.i_cs_superconductor - 1
                     ]
-                    * tfcoil_variables.j_crit_str_0[
+                    * self.data.tfcoil.j_crit_str_0[
                         self.data.pf_coil.i_cs_superconductor - 1
                     ]
                     / self.data.pf_coil.j_crit_str_cs
@@ -2047,23 +2046,23 @@ class Costs(Model):
         self.data.costs.c22511 = (
             1.0e-6
             * self.data.costs.uctfps
-            * (tfcoil_variables.tfckw * 1.0e3 + tfcoil_variables.tfcmw * 1.0e6) ** expel
+            * (self.data.tfcoil.tfckw * 1.0e3 + self.data.tfcoil.tfcmw * 1.0e6) ** expel
         )
         self.data.costs.c22511 = self.data.costs.fkind * self.data.costs.c22511
 
         #  Account 225.1.2 : TF coil breakers (zero cost for copper coils)
 
-        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             self.data.costs.c22512 = 1.0e-6 * (
                 self.data.costs.uctfbr
-                * tfcoil_variables.n_tf_coils
+                * self.data.tfcoil.n_tf_coils
                 * (
-                    tfcoil_variables.c_tf_turn
-                    * tfcoil_variables.v_tf_coil_dump_quench_kv
+                    self.data.tfcoil.c_tf_turn
+                    * self.data.tfcoil.v_tf_coil_dump_quench_kv
                     * 1.0e3
                 )
                 ** expel
-                + self.data.costs.uctfsw * tfcoil_variables.c_tf_turn
+                + self.data.costs.uctfsw * self.data.tfcoil.c_tf_turn
             )
         else:
             self.data.costs.c22512 = 0.0e0
@@ -2075,30 +2074,30 @@ class Costs(Model):
         self.data.costs.c22513 = 1.0e-6 * (
             1.0e9
             * self.data.costs.UCTFDR
-            * tfcoil_variables.e_tf_magnetic_stored_total_gj
-            + self.data.costs.UCTFGR * 0.5e0 * tfcoil_variables.n_tf_coils
+            * self.data.tfcoil.e_tf_magnetic_stored_total_gj
+            + self.data.costs.UCTFGR * 0.5e0 * self.data.tfcoil.n_tf_coils
         )
         self.data.costs.c22513 = self.data.costs.fkind * self.data.costs.c22513
 
         #  Account 225.1.4 : TF coil instrumentation and control
 
         self.data.costs.c22514 = (
-            1.0e-6 * self.data.costs.UCTFIC * (30.0e0 * tfcoil_variables.n_tf_coils)
+            1.0e-6 * self.data.costs.UCTFIC * (30.0e0 * self.data.tfcoil.n_tf_coils)
         )
         self.data.costs.c22514 = self.data.costs.fkind * self.data.costs.c22514
 
         #  Account 225.1.5 : TF coil bussing
 
-        if tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING:
+        if self.data.tfcoil.i_tf_sup != TFConductorModel.SUPERCONDUCTING:
             self.data.costs.c22515 = (
-                1.0e-6 * self.data.costs.uctfbus * tfcoil_variables.m_tf_bus
+                1.0e-6 * self.data.costs.uctfbus * self.data.tfcoil.m_tf_bus
             )
         else:
             self.data.costs.c22515 = (
                 1.0e-6
                 * self.data.costs.ucbus
-                * tfcoil_variables.c_tf_turn
-                * tfcoil_variables.len_tf_bus
+                * self.data.tfcoil.c_tf_turn
+                * self.data.tfcoil.len_tf_bus
             )
 
         self.data.costs.c22515 = self.data.costs.fkind * self.data.costs.c22515
@@ -2294,7 +2293,7 @@ class Costs(Model):
             1.0e-6
             * self.data.costs.uccry
             * 4.5e0
-            / tfcoil_variables.temp_tf_cryo
+            / self.data.tfcoil.temp_tf_cryo
             * self.data.heat_transport.helpow**expcry
         )
 
@@ -2537,7 +2536,7 @@ class Costs(Model):
             pwrrej = (
                 self.data.physics.p_fusion_total_mw
                 + self.data.heat_transport.p_hcd_electric_total_mw
-                + tfcoil_variables.tfcmw
+                + self.data.tfcoil.tfcmw
             )
         else:
             pwrrej = (
