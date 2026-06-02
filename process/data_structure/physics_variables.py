@@ -710,7 +710,7 @@ class PhysicsData:
     """Power to conducted to the divertor region per major radius (MW/m)"""
 
     p_div_bt_q_aspect_rmajor_mw: float = 0.0
-    """EU DEMO divertor protection parameter (MW/T/m)"""
+    """EU DEMO divertor protection parameter (PₛₑₚBₜ / q₉₅AR₀)  [MWT/m]"""
 
     p_div_lower_separatrix_mw: float = 0.0
     """Separatrix power conducted to the lower divertor region (calculated if `i_single_null = 0`) (MW)"""
