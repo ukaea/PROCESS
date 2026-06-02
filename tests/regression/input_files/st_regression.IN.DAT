@@ -1451,7 +1451,7 @@ tftmp = 20.0
 *icc = 53
 * DESCRIPTION:   Constraint equation for fast neutron fluence on TF coil upper limit
 * JUSTIFICATION: Turned off, do not care about TF coil fluence.
-* VARIABLES:     nflutfmax(max fast neutron fluence on TF coil (n/m2)),nflutf calculated in situ
+* VARIABLES:     nflutfmax(max fast neutron fluence on TF coil (n/m2)),flu_tf_neutron_fast_peak calculated in situ
 
 * nflutfmax = 
 * DESCRIPTION:   max fast neutron fluence on TF coil (n/m2) (`blktmodel>0`) (`constraint equation 53`)

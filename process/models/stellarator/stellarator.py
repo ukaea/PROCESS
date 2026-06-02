@@ -455,7 +455,7 @@ class Stellarator(Model):
             _,
             _,
             _,
-            self.data.fwbs.nflutf,
+            self.data.fwbs.flu_tf_neutron_fast_peak,
             _,
             _,
             _,
@@ -701,7 +701,7 @@ class Stellarator(Model):
                     coilhtmx,
                     dpacop,
                     htheci,
-                    self.data.fwbs.nflutf,
+                    self.data.fwbs.flu_tf_neutron_fast_peak,
                     pheci,
                     pheco,
                     ptfiwp,
@@ -1441,8 +1441,8 @@ class Stellarator(Model):
                 po.ovarre(
                     self.outfile,
                     "Maximum neutron fluence (n/m2)",
-                    "(nflutf)",
-                    self.data.fwbs.nflutf,
+                    "(flu_tf_neutron_fast_peak)",
+                    self.data.fwbs.flu_tf_neutron_fast_peak,
                 )
                 po.ovarre(
                     self.outfile,
@@ -1681,7 +1681,7 @@ class Stellarator(Model):
              copper stabiliser displacements/atom
         htheci :
              peak TF coil case heating (MW/m3)
-        nflutf :
+        flu_tf_neutron_fast_peak :
              maximum neutron fluence (n/m2)
         pheci :
              inboard coil case heating (MW)
@@ -1708,7 +1708,7 @@ class Stellarator(Model):
             pheci = 0.0
             pheco = 0.0
             raddose = 0.0
-            nflutf = 0.0
+            flu_tf_neutron_fast_peak = 0.0
             dpacop = 0.0
             p_tf_nuclear_heat_mw = 0.0
 
@@ -1826,7 +1826,7 @@ class Stellarator(Model):
 
             # Maximum neutron fluence in superconductor (n/m**2)
 
-            nflutf = (
+            flu_tf_neutron_fast_peak = (
                 fpsdt
                 * fact[3]
                 * self.data.physics.pflux_fw_neutron_mw
@@ -1852,7 +1852,7 @@ class Stellarator(Model):
             coilhtmx,
             dpacop,
             htheci,
-            nflutf,
+            flu_tf_neutron_fast_peak,
             pheci,
             pheco,
             ptfiwp,

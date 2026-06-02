@@ -1160,10 +1160,10 @@ def constraint_equation_53(constraint_registration, data):
     """Equation for fast neutron fluence on TF coil upper limit
 
     nflutfmax: max fast neutron fluence on TF coil (n/m²)
-    nflutf: peak fast neutron fluence on TF coil superconductor (n/m²)
+    flu_tf_neutron_fast_peak: peak fast neutron fluence on TF coil superconductor (n/m²)
     """
     return leq(
-        data.fwbs.nflutf,
+        data.fwbs.flu_tf_neutron_fast_peak,
         data.constraints.nflutfmax,
         constraint_registration,
     )
