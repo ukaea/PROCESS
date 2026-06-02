@@ -745,7 +745,7 @@ def constraint_equation_25(constraint_registration, data):
     b_tf_inboard_peak_symmetric: mean peak field at TF coil (T)
     """
     return leq(
-        data.tfcoil.b_tf_inboard_peak_symmetric,
+        data.tfcoil.b_tf_inboard_peak_with_ripple,
         data.constraints.b_tf_inboard_max,
         constraint_registration,
     )
