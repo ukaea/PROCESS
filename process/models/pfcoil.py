@@ -2657,7 +2657,7 @@ class PFCoil(Model):
             else:
                 op.write(
                     self.outfile,
-                    f"CS\t\t{self.data.pf_coil.c_pf_cs_coils_peak_ma[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(self.data.pf_coil.j_cs_pulse_start)):.2e}\t{abs(self.data.pf_coil.j_cs_flat_top_end):.2e}\t1.0e0\t{self.data.pf_coil.m_pf_coil_conductor[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.m_pf_coil_structure[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.b_pf_coil_peak[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}",
+                    f"CS\t\t{self.data.pf_coil.c_pf_cs_coils_peak_ma[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{abs(self.data.pf_coil.j_cs_pulse_start):.2e}\t{abs(self.data.pf_coil.j_cs_flat_top_end):.2e}\t1.0e0\t{self.data.pf_coil.m_pf_coil_conductor[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.m_pf_coil_structure[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.b_pf_coil_peak[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}",
                 )
 
         # Miscellaneous totals
