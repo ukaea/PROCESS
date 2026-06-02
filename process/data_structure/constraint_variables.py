@@ -7,7 +7,7 @@ class ConstraintData:
     """minimum auxiliary power (MW) (`constraint equation 40`)"""
 
     beta_poloidal_max: float = 0.19
-    """maximum poloidal beta (`constraint equation 48`)"""
+    """Maximum allowed poloidal beta (⟨βₚ⟩<) (`constraint equation 48`)"""
 
     big_q_plasma_min: float = 10.0
     """minimum fusion gain Q (`constraint equation 28`)"""

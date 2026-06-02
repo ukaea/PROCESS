@@ -132,52 +132,52 @@ class PhysicsData:
     """multiplier for beam-background fusion calculation"""
 
     beta_total_vol_avg: float = 0.042
-    """Volume averaged total plasma beta (`iteration variable 5`) (calculated if stellarator)"""
+    """Volume averaged total plasma beta (⟨β⟩) (`iteration variable 5`) (calculated if stellarator)"""
 
     beta_fast_alpha: float = 0.0
-    """fast alpha beta component"""
+    """Fast alpha beta component (β_alpha)"""
 
     beta_vol_avg_max: float = 0.0
-    """Max allowable volume averaged beta"""
+    """Max allowable volume averaged beta (⟨β⟩<)"""
 
     beta_vol_avg_min: float = 0.0
-    """Minimum allowable volume averaged beta"""
+    """Minimum allowable volume averaged beta (⟨β⟩>)"""
 
     beta_beam: float = 0.0
-    """neutral beam beta component"""
+    """Neutral beam beta component (β_beam)"""
 
     beta_poloidal_vol_avg: float = 0.0
-    """poloidal beta"""
+    """Volume averaged poloidal beta (⟨βₚ⟩)"""
 
     beta_poloidal_eps: float = 0.0
-    """Poloidal beta and inverse aspcet ratio product"""
+    """Poloidal beta and inverse aspcet ratio product (⟨βₚ⟩*ε)"""
 
     beta_toroidal_vol_avg: float = 0.0
-    """Plasma volume averaged toroidal beta"""
+    """Volume averaged toroidal beta (⟨βₜ⟩)"""
 
     beta_thermal_toroidal_profile: list[float] = field(default_factory=list)
-    """toroidal beta profile"""
+    """Toroidal beta profile"""
 
     beta_thermal_vol_avg: float = 0.0
-    """Plasma volume averaged thermal beta"""
+    """Volume averaged thermal beta (⟨βₜₕ⟩)"""
 
     beta_thermal_poloidal_vol_avg: float = 0.0
-    """Plasma volume averaged poloidal thermal beta"""
+    """Volume averaged poloidal thermal beta (⟨βₚₜₕ⟩)"""
 
     beta_thermal_toroidal_vol_avg: float = 0.0
-    """Plasma volume averaged toloidal thermal beta"""
+    """Volume averaged toroidal thermal beta (⟨βₜₕ⟩)"""
 
     beta_norm_total: float = 0.0
-    """normaised total beta"""
+    """Normalised total beta (βₙ)"""
 
     beta_norm_thermal: float = 0.0
-    """normaised thermal beta"""
+    """Normalised thermal beta (βₙₜₕ)"""
 
     beta_norm_toroidal: float = 0.0
-    """normaised toroidal beta"""
+    """Normalised toroidal beta (βₙₜ)"""
 
     beta_norm_poloidal: float = 0.0
-    """normaised poloidal beta"""
+    """Normalised poloidal beta (βₙₚ)"""
 
     e_plasma_beta_thermal: float = 0.0
     """Plasma thermal energy derived from thermal beta"""

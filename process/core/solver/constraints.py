@@ -722,20 +722,13 @@ def constraint_equation_24(constraint_registration, data):
         value = data.physics.beta_total_vol_avg
     # Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
     elif data.physics.i_beta_component == BetaComponentLimits.THERMAL:
-        value = (
-            data.physics.beta_total_vol_avg
-            - data.physics.beta_fast_alpha
-            - data.physics.beta_beam
-        )
+        value = data.physics.beta_thermal_vol_avg
     # Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas
     elif data.physics.i_beta_component == BetaComponentLimits.THERMAL_AND_BEAM:
         value = data.physics.beta_total_vol_avg - data.physics.beta_fast_alpha
     # Beta limit applies to toroidal beta
     elif data.physics.i_beta_component == BetaComponentLimits.TOROIDAL:
-        value = (
-            data.physics.beta_total_vol_avg
-            * (data.physics.b_plasma_total / data.physics.b_plasma_toroidal_on_axis) ** 2
-        )
+        value = data.physics.beta_toroidal_vol_avg
 
     return leq(
         value,
