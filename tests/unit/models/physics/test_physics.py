@@ -6,7 +6,6 @@ import numpy as np
 import pytest
 
 from process.core import constants
-from process.models.physics.fuelling import PlasmaFuelling
 from process.models.physics.impurity_radiation import initialise_imprad
 from process.models.physics.physics import (
     DetailedPhysics,

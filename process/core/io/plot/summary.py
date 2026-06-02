@@ -15505,42 +15505,42 @@ def main_plot(
 
     plot_ebw_ecrh_coupling_graph(figs[14].add_subplot(111), m_file, scan)
 
-    plot_bootstrap_comparison(figs[14].add_subplot(221), m_file, scan)
-    plot_plasma_current_comparison(figs[14].add_subplot(224), m_file, scan)
-    plot_h_threshold_comparison(figs[15].add_subplot(224), m_file, scan)
-    plot_density_limit_comparison(figs[15].add_subplot(221), m_file, scan)
-    plot_max_normalised_beta_comparison(figs[16].add_subplot(221), m_file, scan)
-    plot_confinement_time_comparison(figs[16].add_subplot(224), m_file, scan)
+    plot_bootstrap_comparison(figs[15].add_subplot(221), m_file, scan)
+    plot_plasma_current_comparison(figs[15].add_subplot(224), m_file, scan)
+    plot_h_threshold_comparison(figs[16].add_subplot(224), m_file, scan)
+    plot_density_limit_comparison(figs[16].add_subplot(221), m_file, scan)
+    plot_max_normalised_beta_comparison(figs[17].add_subplot(221), m_file, scan)
+    plot_confinement_time_comparison(figs[17].add_subplot(224), m_file, scan)
 
-    plot_debye_length_profile(figs[17].add_subplot(232), m_file, scan)
-    plot_velocity_profile(figs[17].add_subplot(233), m_file, scan)
-    plot_plasma_coloumb_logarithms(figs[17].add_subplot(231), m_file, scan)
-    plot_collision_time_profile(figs[17].add_subplot(234), m_file, scan)
-    plot_collision_frequency_profile(figs[17].add_subplot(235), m_file, scan)
-    plot_mean_free_path_profile(figs[17].add_subplot(236), m_file, scan)
+    plot_debye_length_profile(figs[18].add_subplot(232), m_file, scan)
+    plot_velocity_profile(figs[18].add_subplot(233), m_file, scan)
+    plot_plasma_coloumb_logarithms(figs[18].add_subplot(231), m_file, scan)
+    plot_collision_time_profile(figs[18].add_subplot(234), m_file, scan)
+    plot_collision_frequency_profile(figs[18].add_subplot(235), m_file, scan)
+    plot_mean_free_path_profile(figs[18].add_subplot(236), m_file, scan)
 
-    plot_ion_slowing_down_time_profile(figs[18].add_subplot(231), m_file, scan)
+    plot_ion_slowing_down_time_profile(figs[19].add_subplot(231), m_file, scan)
 
-    plot_resistivity_profile(figs[18].add_subplot(232), m_file, scan)
+    plot_resistivity_profile(figs[19].add_subplot(232), m_file, scan)
 
     plot_detailed_plasma_parameters(
-        figs[18].add_subplot(233), fig=figs[18], mfile=m_file, scan=scan
+        figs[19].add_subplot(233), fig=figs[19], mfile=m_file, scan=scan
     )
 
-    ax_electron_freq = figs[19].add_subplot(211)
+    ax_electron_freq = figs[20].add_subplot(211)
     plot_electron_frequency_profile(ax_electron_freq, m_file, scan)
 
-    ax_ion_freq = figs[19].add_subplot(413, sharex=ax_electron_freq)
+    ax_ion_freq = figs[20].add_subplot(413, sharex=ax_electron_freq)
     plot_ion_frequency_profile(ax_ion_freq, m_file, scan)
 
-    ax_larmor = figs[19].add_subplot(414, sharex=ax_electron_freq)
+    ax_larmor = figs[20].add_subplot(414, sharex=ax_electron_freq)
     plot_larmor_radius_profile(ax_larmor, m_file, scan)
 
-    figs[19].subplots_adjust(hspace=0.5)
+    figs[20].subplots_adjust(hspace=0.5)
 
     # Plot poloidal cross-section
     poloidal_cross_section(
-        figs[20].add_subplot(121, aspect="equal"),
+        figs[21].add_subplot(121, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -15550,7 +15550,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     toroidal_cross_section(
-        figs[20].add_subplot(122, aspect="equal"),
+        figs[21].add_subplot(122, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -15558,27 +15558,27 @@ def main_plot(
     )
 
     # Plot color key
-    ax17 = figs[20].add_subplot(222)
+    ax17 = figs[21].add_subplot(222)
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file, scan, colour_scheme)
 
     plot_full_machine_poloidal_cross_section(
-        figs[21].add_subplot(111, aspect="equal"),
+        figs[22].add_subplot(111, aspect="equal"),
         m_file,
         scan,
         radial_build,
         colour_scheme,
     )
 
-    ax18 = figs[22].add_subplot(211)
+    ax18 = figs[23].add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    ax185 = figs[23].add_subplot(211)
+    ax185 = figs[24].add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = figs[23].add_subplot(212)
+    ax18b = figs[24].add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file, colour_scheme)
@@ -15586,36 +15586,36 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file.get("i_tf_sup", scan=scan) == TFConductorModel.SUPERCONDUCTING:
         # TF coil with WP
-        ax19 = figs[24].add_subplot(221, aspect="equal")
+        ax19 = figs[25].add_subplot(221, aspect="equal")
         ax19.set_position([
             0.025,
             0.45,
             0.5,
             0.5,
         ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file, scan, figs[24])
+        plot_superconducting_tf_wp(ax19, m_file, scan, figs[25])
 
         if (
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CROSS_CONDUCTOR
         ):
-            ax20 = figs[25].add_subplot(325, aspect="equal")
+            ax20 = figs[26].add_subplot(325, aspect="equal")
             ax20.set_position([0.025, 0.5, 0.4, 0.4])
-            plot_tf_croco_turn(ax20, figs[25], m_file, scan)
+            plot_tf_croco_turn(ax20, figs[26], m_file, scan)
         elif (
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CABLE_IN_CONDUIT
         ):
             # TF coil turn structure
-            ax20 = figs[25].add_subplot(325, aspect="equal")
+            ax20 = figs[26].add_subplot(325, aspect="equal")
             ax20.set_position([0.025, 0.5, 0.4, 0.4])
-            plot_tf_cable_in_conduit_turn(ax20, figs[25], m_file, scan)
+            plot_tf_cable_in_conduit_turn(ax20, figs[26], m_file, scan)
 
         if (
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CROSS_CONDUCTOR
         ):
-            plot_205 = figs[25].add_subplot(223, aspect="equal")
+            plot_205 = figs[26].add_subplot(223, aspect="equal")
             plot_205.set_position([0.075, 0.1, 0.3, 0.3])
             plot_corc_cable_geometry(
                 plot_205,
@@ -15637,8 +15637,8 @@ def main_plot(
                 dx_hts_tape_hastelloy=m_file.get("dx_tf_hts_tape_hastelloy", scan=scan),
                 show_legend=True,
             )
-            plot_tf_corc_cable_summary_box(plot_205, figs[25], m_file, scan)
-            ax_hts_tape = figs[25].add_subplot(339)
+            plot_tf_corc_cable_summary_box(plot_205, figs[26], m_file, scan)
+            ax_hts_tape = figs[26].add_subplot(339)
             ax_hts_tape.set_position([0.75, 0.1, 0.2, 0.2])
             plot_hts_tape_geometry(
                 axis=ax_hts_tape,
@@ -15654,9 +15654,9 @@ def main_plot(
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CABLE_IN_CONDUIT
         ):
-            plot_205 = figs[25].add_subplot(223, aspect="equal")
+            plot_205 = figs[26].add_subplot(223, aspect="equal")
             plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-            plot_cable_in_conduit_cable(plot_205, figs[25], m_file, scan)
+            plot_cable_in_conduit_cable(plot_205, figs[26], m_file, scan)
             plot_quench_time_evolution(
                 tau_discharge=m_file.get("t_tf_superconductor_quench", scan=scan),
                 b_peak=m_file.get("b_tf_inboard_peak_with_ripple", scan=scan),
@@ -15674,23 +15674,23 @@ def main_plot(
                     "a_tf_turn_cable_space_no_void", scan=scan
                 ),
                 a_tf_turn=m_file.get("a_tf_turn", scan=scan),
-                axes_1=figs[26].add_subplot(211),
-                axes_2=figs[26].add_subplot(212),
+                axes_1=figs[27].add_subplot(211),
+                axes_2=figs[27].add_subplot(212),
             )
     else:
-        ax19 = figs[24].add_subplot(211, aspect="equal")
+        ax19 = figs[25].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file, scan, figs[24])
-        plot_resistive_tf_info(ax19, m_file, scan, figs[24])
+        plot_resistive_tf_wp(ax19, m_file, scan, figs[25])
+        plot_resistive_tf_info(ax19, m_file, scan, figs[25])
     plot_tf_coil_structure(
-        figs[27].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
+        figs[28].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
     )
 
-    plot_plasma_outboard_toroidal_ripple_map(figs[28], m_file, scan)
+    plot_plasma_outboard_toroidal_ripple_map(figs[29], m_file, scan)
 
-    plot_tf_stress(figs[29].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+    plot_tf_stress(figs[30].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
-    plot_current_profiles_over_time(figs[30].add_subplot(111), m_file, scan)
+    plot_current_profiles_over_time(figs[31].add_subplot(111), m_file, scan)
 
     plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
 

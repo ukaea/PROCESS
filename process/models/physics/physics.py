@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     from process.models.physics.density_limit import PlasmaDensityLimit
     from process.models.physics.exhaust import PlasmaExhaust
     from process.models.physics.fuelling import PlasmaFuelling
-from process.models.physics.l_h_transition import PlasmaConfinementTransition
+    from process.models.physics.l_h_transition import PlasmaConfinementTransition
     from process.models.physics.plasma_current import (
         PlasmaCurrent,
         PlasmaDiamagneticCurrent,
@@ -634,20 +634,20 @@ class Physics(Model):
         self.data.physics.fusrat_total = (
             self.data.physics.fusden_total * self.data.physics.vol_plasma
         )
-        physics_variables.fusrat_plasma_dt = (physics_variables.p_plasma_dt_mw * 1e6) / (
+        self.data.physics.fusrat_plasma_dt = (self.data.physics.p_plasma_dt_mw * 1e6) / (
             constants.D_T_ENERGY
         )
-        physics_variables.fusrat_plasma_dd_total = (
-            physics_variables.fusrat_plasma_dd_helion
-            + physics_variables.fusrat_plasma_dd_triton
+        self.data.physics.fusrat_plasma_dd_total = (
+            self.data.physics.fusrat_plasma_dd_helion
+            + self.data.physics.fusrat_plasma_dd_triton
         )
 
-        physics_variables.fusrat_neutron_production_total = (
-            physics_variables.fusrat_plasma_dd_helion + physics_variables.fusrat_dt_total
+        self.data.physics.fusrat_neutron_production_total = (
+            self.data.physics.fusrat_plasma_dd_helion + self.data.physics.fusrat_dt_total
         )
 
-        physics_variables.fusrat_dt_total = (
-            physics_variables.p_dt_total_mw * 1e6 / (constants.D_T_ENERGY)
+        self.data.physics.fusrat_dt_total = (
+            self.data.physics.p_dt_total_mw * 1e6 / (constants.D_T_ENERGY)
         )
 
         # Create some derived values and add beam contribution to fusion power
@@ -901,22 +901,22 @@ class Physics(Model):
             self.data.physics.ind_plasma_internal_norm,
         )
 
-        physics_variables.e_plasma_magnetic_stored = (
-            0.5e0 * physics_variables.ind_plasma * physics_variables.plasma_current**2
+        self.data.physics.e_plasma_magnetic_stored = (
+            0.5e0 * self.data.physics.ind_plasma * self.data.physics.plasma_current**2
         )
 
         (
-            physics_variables.t_alpha_confinement,
-            physics_variables.f_alpha_energy_confinement,
+            self.data.physics.t_alpha_confinement,
+            self.data.physics.f_alpha_energy_confinement,
         ) = self.phyaux(
-            physics_variables.fusden_alpha_total,
-            physics_variables.nd_plasma_alphas_vol_avg,
-            physics_variables.t_energy_confinement,
+            self.data.physics.fusden_alpha_total,
+            self.data.physics.nd_plasma_alphas_vol_avg,
+            self.data.physics.t_energy_confinement,
         )
 
         self.fuelling.run()
 
-        physics_variables.ntau, physics_variables.nTtau = (
+        self.data.physics.ntau, self.data.physics.nTtau = (
             self.confinement.calculate_double_and_triple_product(
                 nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
                 t_energy_confinement=self.data.physics.t_energy_confinement,
@@ -1404,8 +1404,6 @@ class Physics(Model):
         fusden_alpha_total: float,
         nd_plasma_alphas_vol_avg: float,
         t_energy_confinement: float,
-        burnup_in: float,
-        tauratio: float,
     ) -> tuple[float, float]:
         """Auxiliary physics quantities
 
@@ -1428,7 +1426,6 @@ class Physics(Model):
             parts of the code.
 
         """
-
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
         # only likely if DD is only active fusion reaction
@@ -1721,14 +1718,14 @@ class Physics(Model):
             self.outfile,
             "D-T Fusion rate: total (reactions/sec)",
             "(fusrat_dt_total)",
-            physics_variables.fusrat_dt_total,
+            self.data.physics.fusrat_dt_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "D-T Fusion rate: plasma (reactions/sec)",
             "(fusrat_plasma_dt)",
-            physics_variables.fusrat_plasma_dt,
+            self.data.physics.fusrat_plasma_dt,
             "OP ",
         )
 
@@ -1736,56 +1733,56 @@ class Physics(Model):
             self.outfile,
             "D-D -> 3He Fusion rate: plasma (reactions/sec)",
             "(fusrat_plasma_dd_helion)",
-            physics_variables.fusrat_plasma_dd_helion,
+            self.data.physics.fusrat_plasma_dd_helion,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "D-D -> T Fusion rate: plasma (reactions/sec)",
             "(fusrat_plasma_dd_triton)",
-            physics_variables.fusrat_plasma_dd_triton,
+            self.data.physics.fusrat_plasma_dd_triton,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "D-D Fusion rate: total (reactions/sec)",
             "(fusrat_plasma_dd_total)",
-            physics_variables.fusrat_plasma_dd_total,
+            self.data.physics.fusrat_plasma_dd_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "D-3He Fusion rate: total (reactions/sec)",
             "(fusrat_plasma_dhe3)",
-            physics_variables.fusrat_plasma_dhe3,
+            self.data.physics.fusrat_plasma_dhe3,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Neutron production rate: total (particles/sec)",
             "(fusrat_neutron_production_total)",
-            physics_variables.fusrat_neutron_production_total,
+            self.data.physics.fusrat_neutron_production_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "D-3He Fusion rate: total (reactions/sec)",
             "(fusrat_plasma_dhe3)",
-            physics_variables.fusrat_plasma_dhe3,
+            self.data.physics.fusrat_plasma_dhe3,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Neutron production rate: total (particles/sec)",
             "(fusrat_neutron_production_total)",
-            physics_variables.fusrat_neutron_production_total,
+            self.data.physics.fusrat_neutron_production_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "D-D Fusion rate: total (reactions/sec)",
             "(fusrat_plasma_dd_total)",
-            physics_variables.fusrat_plasma_dd_total,
+            self.data.physics.fusrat_plasma_dd_total,
             "OP ",
         )
         po.ovarre(
@@ -2323,6 +2320,525 @@ class Physics(Model):
             self.dia_current.output()
 
         self.fuelling.output_fuelling_info()
+
+    def output_temperature_density_profile_info(self) -> None:
+        """Output information about plasma temperature and density profiles."""
+        po.oheadr(self.outfile, "Plasma Density and Temperature Profiles")
+        po.ovarrf(
+            self.outfile,
+            "Number of radial points in plasma profiles",
+            "(n_plasma_profile_elements)",
+            self.data.physics.n_plasma_profile_elements,
+        )
+        po.ovarin(
+            self.outfile,
+            "Plasma profile model selected",
+            "(i_plasma_pedestal)",
+            self.data.physics.i_plasma_pedestal,
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"Plasma profile model selected: "
+            f"{PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal).description}",
+        )
+
+        if (
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ) and (
+            self.data.physics.nd_plasma_electron_on_axis
+            < self.data.physics.nd_plasma_pedestal_electron
+        ):
+            logger.error("Central density is less than pedestal density")
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Temperature:")
+        po.ovarrf(
+            self.outfile,
+            "Temperature profile index (αₜ)",
+            "(alphat)",
+            self.data.physics.alphat,
+        )
+        po.ovarrf(
+            self.outfile,
+            "Temperature profile index beta (βₜ)",
+            "(tbeta)",
+            self.data.physics.tbeta,
+        )
+        po.oblnkl(self.outfile)
+
+        if (
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
+            po.ovarrf(
+                self.outfile,
+                "Temperature pedestal r/a location (ρₜ,pedestal)",
+                "(radius_plasma_pedestal_temp_norm)",
+                self.data.physics.radius_plasma_pedestal_temp_norm,
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Electron temperature pedestal height (Tₑ,pedestal) (keV)",
+                "(temp_plasma_pedestal_kev)",
+                self.data.physics.temp_plasma_pedestal_kev,
+            )
+            if 78 in numerics.icc:
+                po.ovarrf(
+                    self.outfile,
+                    "Electron temperature at separatrix (Tₑ,ₛₑₚ) (keV)",
+                    "(temp_plasma_separatrix_kev)",
+                    self.data.physics.temp_plasma_separatrix_kev,
+                    "OP ",
+                )
+            else:
+                po.ovarrf(
+                    self.outfile,
+                    "Electron temperature at separatrix (Tₑ,ₛₑₚ) (keV)",
+                    "(temp_plasma_separatrix_kev)",
+                    self.data.physics.temp_plasma_separatrix_kev,
+                )
+            po.oblnkl(self.outfile)
+
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged electron temperature (⟨Tₑ⟩) (keV)",
+            "(temp_plasma_electron_vol_avg_kev)",
+            self.data.physics.temp_plasma_electron_vol_avg_kev,
+        )
+        po.ovarrf(
+            self.outfile,
+            "Electron temperature on axis (Tₑ₀) (keV)",
+            "(temp_plasma_electron_on_axis_kev)",
+            self.data.physics.temp_plasma_electron_on_axis_kev,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged density weighted electron temperature (⟨Tₑ⟩ₙ) (keV)",
+            "(temp_plasma_electron_density_weighted_kev)",
+            self.data.physics.temp_plasma_electron_density_weighted_kev,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Ratio of electron density weighted to volume averaged temperature",
+            "(f_temp_plasma_electron_density_vol_avg)",
+            self.data.physics.f_temp_plasma_electron_density_vol_avg,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarrf(
+            self.outfile,
+            "Ratio of ion to electron volume-averaged temperature",
+            "(f_temp_plasma_ion_electron)",
+            self.data.physics.f_temp_plasma_ion_electron,
+            "IP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged ion temperature (⟨Tᵢ⟩) (keV)",
+            "(temp_plasma_ion_vol_avg_kev)",
+            self.data.physics.temp_plasma_ion_vol_avg_kev,
+        )
+        po.ovarrf(
+            self.outfile,
+            "Ion temperature on axis (Tᵢ₀) (keV)",
+            "(temp_plasma_ion_on_axis_kev)",
+            self.data.physics.temp_plasma_ion_on_axis_kev,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
+        po.osubhd(self.outfile, "Density:")
+        po.ovarrf(
+            self.outfile,
+            "Density profile factor (αₙ)",
+            "(alphan)",
+            self.data.physics.alphan,
+        )
+        po.oblnkl(self.outfile)
+        if (
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
+            po.ovarrf(
+                self.outfile,
+                "Density pedestal r/a location (ρₙ,pedestal)",
+                "(radius_plasma_pedestal_density_norm)",
+                self.data.physics.radius_plasma_pedestal_density_norm,
+            )
+            if self.data.physics.f_nd_plasma_pedestal_greenwald >= 0e0:
+                po.ovarre(
+                    self.outfile,
+                    "Electron density pedestal height (nₑ_pedestal) (/m³)",
+                    "(nd_plasma_pedestal_electron)",
+                    self.data.physics.nd_plasma_pedestal_electron,
+                    "OP ",
+                )
+            else:
+                po.ovarre(
+                    self.outfile,
+                    "Electron density pedestal height (nₑ_pedestal) (/m³)",
+                    "(nd_plasma_pedestal_electron)",
+                    self.data.physics.nd_plasma_pedestal_electron,
+                )
+            # must be assigned to their exisiting values#
+            fgwped_out = (
+                self.data.physics.nd_plasma_pedestal_electron
+                / self.data.physics.nd_plasma_electron_max_array[6]
+            )
+            fgwsep_out = (
+                self.data.physics.nd_plasma_separatrix_electron
+                / self.data.physics.nd_plasma_electron_max_array[6]
+            )
+            if self.data.physics.f_nd_plasma_pedestal_greenwald >= 0e0:
+                self.data.physics.f_nd_plasma_pedestal_greenwald = (
+                    self.data.physics.nd_plasma_pedestal_electron
+                    / self.data.physics.nd_plasma_electron_max_array[6]
+                )
+            if self.data.physics.f_nd_plasma_separatrix_greenwald >= 0e0:
+                self.data.physics.f_nd_plasma_separatrix_greenwald = (
+                    self.data.physics.nd_plasma_separatrix_electron
+                    / self.data.physics.nd_plasma_electron_max_array[6]
+                )
+
+            po.ovarre(
+                self.outfile,
+                "Pedestal Greenwald fraction",
+                "(fgwped_out)",
+                fgwped_out,
+            )
+            po.ovarre(
+                self.outfile,
+                "Electron density at separatrix (nₑ,ₛₑₚ) (/m³)",
+                "(nd_plasma_separatrix_electron)",
+                self.data.physics.nd_plasma_separatrix_electron,
+            )
+            po.ovarre(
+                self.outfile,
+                "Separatrix Greenwald fraction",
+                "(fgwsep_out)",
+                fgwsep_out,
+            )
+            po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron number density (⟨nₑ⟩) (/m³)",
+            "(nd_plasma_electrons_vol_avg)",
+            self.data.physics.nd_plasma_electrons_vol_avg,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electron number density on axis (nₑ₀) (/m³)",
+            "(nd_plasma_electron_on_axis)",
+            self.data.physics.nd_plasma_electron_on_axis,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Line-averaged electron number density (ñₑ) (/m³)",
+            "(nd_plasma_electron_line)",
+            self.data.physics.nd_plasma_electron_line,
+            "OP ",
+        )
+        if self.data.stellarator.istell == 0:
+            po.ovarre(
+                self.outfile,
+                "Greenwald fraction (f_GW)",
+                "(dnla_gw)",
+                self.data.physics.nd_plasma_electron_line
+                / self.data.physics.nd_plasma_electron_max_array[6],
+                "OP ",
+            )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total ion volume averaged number density (⟨nᵢ⟩) (/m³)",
+            "(nd_plasma_ions_total_vol_avg)",
+            self.data.physics.nd_plasma_ions_total_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fuel ion volume averaged number density (⟨n_fuel⟩) (/m³)",
+            "(nd_plasma_fuel_ions_vol_avg)",
+            self.data.physics.nd_plasma_fuel_ions_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total impurity volume averaged number density with Z > 2 (⟨nᵢₘₚ⟩) (/m³)",
+            "(nd_plasma_impurities_vol_avg)",
+            self.data.physics.nd_plasma_impurities_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Thermalised alpha volume averaged number density (⟨n_alpha⟩) (/m³)",
+            "(nd_plasma_alphas_vol_avg)",
+            self.data.physics.nd_plasma_alphas_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Thermalised alpha to electron number density ratio (⟨n_alpha⟩/⟨nₑ⟩)",
+            "(f_nd_alpha_electron)",
+            self.data.physics.f_nd_alpha_electron,
+        )
+        po.ovarre(
+            self.outfile,
+            "Proton volume averaged number density (⟨nₚ⟩) (/m³)",
+            "(nd_plasma_protons_vol_avg)",
+            self.data.physics.nd_plasma_protons_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Proton to electron volume averaged number density ratio (⟨nₚ⟩/⟨nₑ⟩)",
+            "(f_nd_protium_electrons)",
+            self.data.physics.f_nd_protium_electrons,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Hot beam ion volume averaged number density (⟨n_beam⟩) (/m³)",
+            "(nd_beam_ions)",
+            self.data.physics.nd_beam_ions,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Hot beam ion to electron number density ratio (⟨n_beam⟩/⟨nₑ⟩)",
+            "(f_nd_beam_electron)",
+            self.data.physics.f_nd_beam_electron,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
+        po.osubhd(self.outfile, "Pressure:")
+
+        po.ovarrf(
+            self.outfile,
+            "Pressure profile index (αₚ)",
+            "(alphap)",
+            self.data.physics.alphap,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma thermal pressure on axis (p₀) (Pa)",
+            "(pres_plasma_thermal_on_axis)",
+            self.data.physics.pres_plasma_thermal_on_axis,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume averaged plasma thermal pressure (⟨p⟩) (Pa)",
+            "(pres_plasma_thermal_vol_avg)",
+            self.data.physics.pres_plasma_thermal_vol_avg,
+            "OP ",
+        )
+        # As array output is not currently supported, each element is output as a float
+        # instance
+        # Output plasma pressure profiles to mfile
+        for i in range(len(self.data.physics.pres_plasma_thermal_total_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma pressure at point {i}",
+                f"(pres_plasma_thermal_total_profile{i})",
+                self.data.physics.pres_plasma_thermal_total_profile[i],
+            )
+        for i in range(len(self.data.physics.pres_plasma_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma electron pressure at point {i}",
+                f"(pres_plasma_electron_profile{i})",
+                self.data.physics.pres_plasma_electron_profile[i],
+            )
+        for i in range(len(self.data.physics.pres_plasma_ion_total_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma ion pressure at point {i}",
+                f"(pres_plasma_ion_total_profile{i})",
+                self.data.physics.pres_plasma_ion_total_profile[i],
+            )
+        for i in range(len(self.data.physics.pres_plasma_fuel_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma fuel pressure at point {i}",
+                f"(pres_plasma_fuel_profile{i})",
+                self.data.physics.pres_plasma_fuel_profile[i],
+            )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+
+        po.ocmmnt(self.outfile, "Impurities:")
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Plasma ion densities / electron density:")
+        po.oblnkl(self.outfile)
+
+        for imp in range(N_IMPURITIES):
+            # MDK Update f_nd_impurity_electrons, as this will make the ITV output
+            # work correctly.
+            self.data.impurity_radiation.f_nd_impurity_electrons[imp] = (
+                self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
+            )
+            str1 = (
+                self.data.impurity_radiation
+                .impurity_arr_label[imp]
+                .item()
+                .replace("_", "")
+                + " concentration"
+            )
+            str2 = f"(f_nd_impurity_electrons({imp + 1:02}))"
+            # MDK Add output flag for H which is calculated.
+            if imp == 0:
+                po.ovarre(
+                    self.outfile,
+                    str1,
+                    str2,
+                    self.data.impurity_radiation.f_nd_impurity_electrons[imp],
+                    "OP ",
+                )
+            else:
+                po.ovarre(
+                    self.outfile,
+                    str1,
+                    str2,
+                    self.data.impurity_radiation.f_nd_impurity_electrons[imp],
+                )
+                if self.data.impurity_radiation.f_nd_impurity_electrons[imp] != 0.0:  # noqa: RUF069
+                    for i in range(self.data.physics.n_plasma_profile_elements):
+                        po.ovarre(
+                            self.mfile,
+                            str1 + f" at point {i}",
+                            f"(f_nd_impurity_electrons{imp}_{i})",
+                            self.data.impurity_radiation.f_nd_impurity_electrons[imp]
+                            * self.plasma_profile.neprofile.profile_y[i],
+                            "OP ",
+                        )
+
+        po.oblnkl(self.outfile)
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged plasma effective charge (⟨Zₑ⟩)",
+            "(n_charge_plasma_effective_vol_avg)",
+            self.data.physics.n_charge_plasma_effective_vol_avg,
+            "OP ",
+        )
+        for i in range(len(self.data.physics.n_charge_plasma_effective_profile)):
+            po.ovarre(
+                self.mfile,
+                "Effective charge at point",
+                f"(n_charge_plasma_effective_profile{i})",
+                self.data.physics.n_charge_plasma_effective_profile[i],
+                "OP ",
+            )
+
+        for imp in range(N_IMPURITIES):
+            for i in range(self.data.physics.n_plasma_profile_elements):
+                po.ovarre(
+                    self.mfile,
+                    "Impurity charge at point",
+                    f"(n_charge_plasma_profile{imp}_{i})",
+                    self.data.impurity_radiation.n_charge_impurity_profile[imp][i],
+                    "OP ",
+                )
+
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged mass-weighted plasma effective charge (⟨Zₑ⟩ₘ)",
+            "(n_charge_plasma_effective_mass_weighted_vol_avg)",
+            self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Masses:")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Average mass of all ions (amu)",
+            "(m_ions_total_amu)",
+            self.data.physics.m_ions_total_amu,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total mass of all ions in plasma (kg)",
+            "(m_plasma_ions_total)",
+            self.data.physics.m_plasma_ions_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Average mass of all fuel ions (amu)",
+            "(m_fuel_amu)",
+            self.data.physics.m_fuel_amu,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total mass of all fuel ions in plasma (kg)",
+            "(m_plasma_fuel_ions)",
+            self.data.physics.m_plasma_fuel_ions,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Average mass of all beam ions (amu)",
+            "(m_beam_amu)",
+            self.data.physics.m_beam_amu,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total mass of all alpha particles in plasma (kg)",
+            "(m_plasma_alpha)",
+            self.data.physics.m_plasma_alpha,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total mass of all electrons in plasma (kg)",
+            "(m_plasma_electron)",
+            self.data.physics.m_plasma_electron,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total mass of the plasma (kg)",
+            "(m_plasma)",
+            self.data.physics.m_plasma,
+            "OP ",
+        )
+
+        # Issue 558 - addition of constraint 76 to limit the value of
+        # nd_plasma_separatrix_electron, in proportion with the ballooning parameter
+        # and Greenwald density
+        if 76 in numerics.icc:
+            po.ovarre(
+                self.outfile,
+                "Critical ballooning parameter value",
+                "(alpha_crit)",
+                self.data.physics.alpha_crit,
+            )
+            po.ovarre(
+                self.outfile,
+                "Critical electron density at separatrix (/m3)",
+                "(nd_plasma_separatrix_electron_eich_max)",
+                self.data.physics.nd_plasma_separatrix_electron_eich_max,
+            )
 
     @staticmethod
     @nb.njit(cache=True)

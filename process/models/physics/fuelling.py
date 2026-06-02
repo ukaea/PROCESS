@@ -6,53 +6,59 @@ import numpy as np
 import process.core.io.mfile as mf
 from process.core import constants
 from process.core import process_output as po
+from process.core.model import Model
 from process.data_structure import (
     numerics,
-    physics_variables,
     reinke_variables,
 )
 
 logger = logging.getLogger(__name__)
 
 
-class PlasmaFuelling:
+class PlasmaFuelling(Model):
     """Class to hold plasma fuelling calculations for plasma processing."""
 
     def __init__(self):
+
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
 
     def run(self):
-        physics_variables.molflow_plasma_fuelling_vv_injected_moles = (
-            physics_variables.molflow_plasma_fuelling_vv_injected
+        self.data.physics.molflow_plasma_fuelling_vv_injected_moles = (
+            self.data.physics.molflow_plasma_fuelling_vv_injected
             / constants.AVOGADRO_NUMBER
         )
 
-        physics_variables.molflow_plasma_fuelling_loss = (
-            physics_variables.molflow_plasma_fuelling_vv_injected
-            * (1 - physics_variables.eta_plasma_fuelling)
+        self.data.physics.molflow_plasma_fuelling_loss = (
+            self.data.physics.molflow_plasma_fuelling_vv_injected
+            * (1 - self.data.physics.eta_plasma_fuelling)
         )
-        physics_variables.molflow_plasma_fuelling_loss_moles = (
-            physics_variables.molflow_plasma_fuelling_loss / constants.AVOGADRO_NUMBER
-        )
-
-        physics_variables.f_plasma_fuel_burnup = self.calculate_fuel_burnup_fraction(
-            fusrat_total=physics_variables.fusrat_total,
-            molflow_plasma_fuelling_vv_injected=physics_variables.molflow_plasma_fuelling_vv_injected,
-        )
-        physics_variables.f_plasma_tritium_burnup = self.calculate_tritium_burnup_fraction(
-            fusrat_dt_total=physics_variables.fusrat_dt_total,
-            molflow_plasma_fuelling_vv_injected=physics_variables.molflow_plasma_fuelling_vv_injected,
-            f_molflow_plasma_fuelling_tritium=physics_variables.f_molflow_plasma_fuelling_tritium,
+        self.data.physics.molflow_plasma_fuelling_loss_moles = (
+            self.data.physics.molflow_plasma_fuelling_loss / constants.AVOGADRO_NUMBER
         )
 
-        physics_variables.f_plasma_deuterium_burnup = self.calculate_deuterium_burnup_fraction(
-            fusrat_plasma_dd_total=physics_variables.fusrat_plasma_dd_total,
-            molflow_plasma_fuelling_vv_injected=physics_variables.molflow_plasma_fuelling_vv_injected,
-            f_molflow_plasma_fuelling_deuterium=physics_variables.f_molflow_plasma_fuelling_deuterium,
-            fusrat_dt_total=physics_variables.fusrat_dt_total,
-            fusrat_plasma_dhe3=physics_variables.fusrat_plasma_dhe3,
+        self.data.physics.f_plasma_fuel_burnup = self.calculate_fuel_burnup_fraction(
+            fusrat_total=self.data.physics.fusrat_total,
+            molflow_plasma_fuelling_vv_injected=self.data.physics.molflow_plasma_fuelling_vv_injected,
         )
+        self.data.physics.f_plasma_tritium_burnup = self.calculate_tritium_burnup_fraction(
+            fusrat_dt_total=self.data.physics.fusrat_dt_total,
+            molflow_plasma_fuelling_vv_injected=self.data.physics.molflow_plasma_fuelling_vv_injected,
+            f_molflow_plasma_fuelling_tritium=self.data.physics.f_molflow_plasma_fuelling_tritium,
+        )
+
+        self.data.physics.f_plasma_deuterium_burnup = self.calculate_deuterium_burnup_fraction(
+            fusrat_plasma_dd_total=self.data.physics.fusrat_plasma_dd_total,
+            molflow_plasma_fuelling_vv_injected=self.data.physics.molflow_plasma_fuelling_vv_injected,
+            f_molflow_plasma_fuelling_deuterium=self.data.physics.f_molflow_plasma_fuelling_deuterium,
+            fusrat_dt_total=self.data.physics.fusrat_dt_total,
+            fusrat_plasma_dhe3=self.data.physics.fusrat_plasma_dhe3,
+        )
+
+    def output(self):
+        """This model doesn't output to the output file, but it does generate contour
+        plots of plasma fuel flow rates vs recycling and fuelling efficiency.
+        """
 
     @staticmethod
     def calculate_fuel_burnup_fraction(
@@ -77,7 +83,6 @@ class PlasmaFuelling:
         The fusion rate is multiplied by two to convert from nucleus pairs to particles, as the fuelling rate is in particles/s.
 
         """
-
         return 2 * fusrat_total / molflow_plasma_fuelling_vv_injected
 
     @staticmethod
@@ -106,7 +111,6 @@ class PlasmaFuelling:
         The fusion rate is multiplied by two to convert from nucleus pairs to particles, as the fuelling rate is in particles/s.
 
         """
-
         return fusrat_dt_total / (
             molflow_plasma_fuelling_vv_injected * f_molflow_plasma_fuelling_tritium
         )
@@ -143,7 +147,6 @@ class PlasmaFuelling:
         The fusion rate is multiplied by two to convert from nucleus pairs to particles, as the fuelling rate is in particles/s.
 
         """
-
         return (fusrat_dt_total + 2 * fusrat_plasma_dd_total + fusrat_plasma_dhe3) / (
             molflow_plasma_fuelling_vv_injected * f_molflow_plasma_fuelling_deuterium
         )
@@ -192,7 +195,6 @@ class PlasmaFuelling:
             Tritium flow rate in the plasma exhaust (particles/s).
 
         """
-
         return (
             (
                 f_molflow_plasma_fuelling_tritium
@@ -311,7 +313,6 @@ class PlasmaFuelling:
             Helium-3 flow rate in the plasma exhaust (particles/s).
 
         """
-
         return (
             (
                 f_molflow_plasma_fuelling_helium3
@@ -357,7 +358,6 @@ class PlasmaFuelling:
             Alpha particle flow rate in the plasma exhaust (particles/s).
 
         """
-
         # Alpha particle balance
 
         return (
@@ -369,7 +369,6 @@ class PlasmaFuelling:
 
     def plot_tritium_flow_contour(self, axis: plt.Axes, mfile: mf.MFile, scan: int):
         """Plot contour of tritium flow rate vs recycling and fuelling rate."""
-
         recycling_range = np.linspace(0.01, 0.99, 20)
         fuelling_range = np.linspace(0.01, 1.0, 20)
         tritium_flow = np.zeros((len(recycling_range), len(fuelling_range)))
@@ -439,7 +438,6 @@ class PlasmaFuelling:
 
     def plot_deuterium_flow_contour(self, axis: plt.Axes, mfile: mf.MFile, scan: int):
         """Plot contour of deuterium flow rate vs recycling and fuelling rate."""
-
         recycling_range = np.linspace(0.01, 0.99, 20)
         fuelling_range = np.linspace(0.01, 1.0, 20)
         deuterium_flow = np.zeros((len(recycling_range), len(fuelling_range)))
@@ -510,7 +508,6 @@ class PlasmaFuelling:
 
     def plot_alpha_flow_contour(self, axis: plt.Axes, mfile: mf.MFile, scan: int):
         """Plot contour of alpha particle flow rate vs recycling and fuelling rate."""
-
         fusion_dt_range = np.linspace(1e19, 5e21, 20)
         f_t_alpha_energy_confinement_range = np.linspace(2.0, 10.0, 20)
         alpha_flow = np.zeros((
@@ -576,7 +573,6 @@ class PlasmaFuelling:
 
     def plot_helium3_flow_contour(self, axis: plt.Axes, mfile: mf.MFile, scan: int):
         """Plot contour of helium-3 flow rate vs recycling and fuelling rate."""
-
         recycling_range = np.linspace(0.01, 0.99, 20)
         fuelling_range = np.linspace(0.01, 1.0, 20)
         helium3_flow = np.zeros((len(recycling_range), len(fuelling_range)))
@@ -684,91 +680,91 @@ class PlasmaFuelling:
             self.outfile,
             "Fuelling rate (nucleus-pairs/s)",
             "(molflow_plasma_fuelling_vv_injected)",
-            physics_variables.molflow_plasma_fuelling_vv_injected,
+            self.data.physics.molflow_plasma_fuelling_vv_injected,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Fuelling rate (moles/s)",
             "(molflow_plasma_fuelling_vv_injected_moles)",
-            physics_variables.molflow_plasma_fuelling_vv_injected_moles,
+            self.data.physics.molflow_plasma_fuelling_vv_injected_moles,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Fuelling loss (nucleus-pairs/s)",
             "(molflow_plasma_fuelling_loss)",
-            physics_variables.molflow_plasma_fuelling_loss,
+            self.data.physics.molflow_plasma_fuelling_loss,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Fuelling loss (moles/s)",
             "(molflow_plasma_fuelling_loss_moles)",
-            physics_variables.molflow_plasma_fuelling_loss_moles,
+            self.data.physics.molflow_plasma_fuelling_loss_moles,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Fraction of plasma fuelling that is deuterium",
             "(f_molflow_plasma_fuelling_deuterium)",
-            physics_variables.f_molflow_plasma_fuelling_deuterium,
+            self.data.physics.f_molflow_plasma_fuelling_deuterium,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Fraction of plasma fuelling that is tritium",
             "(f_molflow_plasma_fuelling_tritium)",
-            physics_variables.f_molflow_plasma_fuelling_tritium,
+            self.data.physics.f_molflow_plasma_fuelling_tritium,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Fraction of plasma fuelling that is helium-3",
             "(f_molflow_plasma_fuelling_helium3)",
-            physics_variables.f_molflow_plasma_fuelling_helium3,
+            self.data.physics.f_molflow_plasma_fuelling_helium3,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Fuelling efficiency",
             "(eta_plasma_fuelling)",
-            physics_variables.eta_plasma_fuelling,
+            self.data.physics.eta_plasma_fuelling,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Fraction of plasma particles recycled at the LCFS",
             "(f_plasma_particles_lcfs_recycled)",
-            physics_variables.f_plasma_particles_lcfs_recycled,
+            self.data.physics.f_plasma_particles_lcfs_recycled,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Fuel burn-up rate (reactions/s)",
             "(fusrat_total)",
-            physics_variables.fusrat_total,
+            self.data.physics.fusrat_total,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Total fuel burn-up fraction",
             "(f_plasma_fuel_burnup)",
-            physics_variables.f_plasma_fuel_burnup,
+            self.data.physics.f_plasma_fuel_burnup,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Tritium burn-up fraction",
             "(f_plasma_tritium_burnup)",
-            physics_variables.f_plasma_tritium_burnup,
+            self.data.physics.f_plasma_tritium_burnup,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Deuterium burn-up fraction",
             "(f_plasma_deuterium_burnup)",
-            physics_variables.f_plasma_deuterium_burnup,
+            self.data.physics.f_plasma_deuterium_burnup,
             "OP ",
         )
 

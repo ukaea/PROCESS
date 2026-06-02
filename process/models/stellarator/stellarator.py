@@ -2284,17 +2284,17 @@ class Stellarator(Model):
         #  for the rest of the code
 
         (
-            physics_variables.t_alpha_confinement,
-            physics_variables.f_alpha_energy_confinement,
+            self.data.physics.t_alpha_confinement,
+            self.data.physics.f_alpha_energy_confinement,
         ) = self.physics.phyaux(
-            physics_variables.fusden_alpha_total,
-            physics_variables.nd_plasma_alphas_vol_avg,
-            physics_variables.t_energy_confinement,
+            self.data.physics.fusden_alpha_total,
+            self.data.physics.nd_plasma_alphas_vol_avg,
+            self.data.physics.t_energy_confinement,
         )
 
-        physics_variables.f_plasma_fuel_burnup = self.physics.fuelling.calculate_fuel_burnup_fraction(
-            fusrat_total=physics_variables.fusrat_total,
-            molflow_plasma_fuelling_vv_injected=physics_variables.molflow_plasma_fuelling_vv_injected,
+        self.data.physics.f_plasma_fuel_burnup = self.physics.fuelling.calculate_fuel_burnup_fraction(
+            fusrat_total=self.data.physics.fusrat_total,
+            molflow_plasma_fuelling_vv_injected=self.data.physics.molflow_plasma_fuelling_vv_injected,
         )
 
         # Calculate the neoclassical sanity check with PROCESS parameters

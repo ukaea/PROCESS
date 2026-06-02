@@ -229,12 +229,8 @@ ITERATION_VARIABLES = {
     174: IterationVariable("triang", "physics", 0.00, 1.00),
     175: IterationVariable("kappa", "physics", 0.00, 10.00),
     176: IterationVariable("f_st_coil_aspect", "stellarator", 0.70, 1.30),
-    177: IterationVariable(
-        "f_plasma_particles_lcfs_recycled", "physics", 0.01, 1.0
-    ),
-    178: IterationVariable(
-        "eta_plasma_fuelling", "physics", 0.01, 1.0
-    ),
+    177: IterationVariable("f_plasma_particles_lcfs_recycled", "physics", 0.01, 1.0),
+    178: IterationVariable("eta_plasma_fuelling", "physics", 0.01, 1.0),
     179: IterationVariable(
         "molflow_plasma_fuelling_vv_injected",
         "physics",
