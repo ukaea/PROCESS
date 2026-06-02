@@ -429,7 +429,7 @@ def constraint_equation_6(constraint_registration, data):
     beta_poloidal: poloidal beta
     """
     return leq(
-        (data.physics.eps * data.physics.beta_poloidal_vol_avg),
+        (data.physics.beta_poloidal_eps),
         data.physics.beta_poloidal_eps_max,
         constraint_registration,
     )
