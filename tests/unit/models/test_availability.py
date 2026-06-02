@@ -3,7 +3,6 @@
 import pytest
 
 from process.core.init import init_all_module_vars
-from process.data_structure import tfcoil_variables as tfv
 
 
 @pytest.fixture
@@ -313,16 +312,16 @@ def calc_u_unplanned_magnets_fix(availability, request, monkeypatch):
     )
     monkeypatch.setattr(availability.data.costs, "conf_mag", param["conf_mag"])
     monkeypatch.setattr(
-        tfv,
+        availability.data.tfcoil,
         "temp_cs_superconductor_margin_min",
         param["temp_cs_superconductor_margin_min"],
     )
     monkeypatch.setattr(
-        tfv,
+        availability.data.tfcoil,
         "temp_tf_superconductor_margin_min",
         param["temp_tf_superconductor_margin_min"],
     )
-    monkeypatch.setattr(tfv, "temp_margin", param["temp_margin"])
+    monkeypatch.setattr(availability.data.tfcoil, "temp_margin", param["temp_margin"])
 
     return param["expected"]
 
@@ -623,7 +622,7 @@ def test_cp_lifetime(monkeypatch, availability, i_tf_sup, exp):
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
 
-    monkeypatch.setattr(tfv, "i_tf_sup", i_tf_sup)
+    monkeypatch.setattr(availability.data.tfcoil, "i_tf_sup", i_tf_sup)
     monkeypatch.setattr(availability.data.constraints, "nflutfmax", 1.0e23)
     monkeypatch.setattr(availability.data.fwbs, "neut_flux_cp", 5.0e14)
     monkeypatch.setattr(availability.data.costs, "cpstflnc", 20.0)

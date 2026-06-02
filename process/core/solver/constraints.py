@@ -627,10 +627,7 @@ def constraint_equation_19(constraint_registration, data):
     p_tf_leg_resistive_mw: TF coil outboard leg resistive power (total) (MW)
     mvalim: MVA limit for resistive TF coil set (total) (MW)
     """
-    totmva = (
-        data_structure.tfcoil_variables.p_cp_resistive_mw
-        + data_structure.tfcoil_variables.p_tf_leg_resistive_mw
-    )
+    totmva = data.tfcoil.p_cp_resistive_mw + data.tfcoil.p_tf_leg_resistive_mw
 
     return leq(totmva, data.constraints.mvalim, constraint_registration)
 
@@ -765,7 +762,7 @@ def constraint_equation_25(constraint_registration, data):
     b_tf_inboard_peak_symmetric: mean peak field at TF coil (T)
     """
     return leq(
-        data_structure.tfcoil_variables.b_tf_inboard_peak_symmetric,
+        data.tfcoil.b_tf_inboard_peak_symmetric,
         data.constraints.b_tf_inboard_max,
         constraint_registration,
     )
@@ -855,29 +852,29 @@ def constraint_equation_30(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(31, "Pa", "<=")
-def constraint_equation_31(constraint_registration, _data):
+def constraint_equation_31(constraint_registration, data):
     """Equation for TF coil case stress upper limit (SCTF)
 
     sig_tf_case_max: Allowable maximum shear stress in TF coil case (Tresca criterion) (Pa)
     sig_tf_case: Constrained stress in TF coil case (Pa)
     """
     return leq(
-        data_structure.tfcoil_variables.sig_tf_case,
-        data_structure.tfcoil_variables.sig_tf_case_max,
+        data.tfcoil.sig_tf_case,
+        data.tfcoil.sig_tf_case_max,
         constraint_registration,
     )
 
 
 @ConstraintManager.register_constraint(32, "Pa", "<=")
-def constraint_equation_32(constraint_registration, _data):
+def constraint_equation_32(constraint_registration, data):
     """Equation for TF coil conduit stress upper limit (SCTF)
 
     sig_tf_wp_max: Allowable maximum shear stress in TF coil conduit (Tresca criterion) (Pa)
     sig_tf_wp: Constrained stress in TF conductor conduit (Pa)
     """
     return leq(
-        data_structure.tfcoil_variables.sig_tf_wp,
-        data_structure.tfcoil_variables.sig_tf_wp_max,
+        data.tfcoil.sig_tf_wp,
+        data.tfcoil.sig_tf_wp_max,
         constraint_registration,
     )
 
@@ -896,28 +893,28 @@ def constraint_equation_33(constraint_registration, data):
     j_tf_wp / j_tf_wp_critical <= fiooic.
     """
     return leq(
-        data_structure.tfcoil_variables.j_tf_wp,
-        (data_structure.tfcoil_variables.j_tf_wp_critical * data.constraints.fiooic),
+        data.tfcoil.j_tf_wp,
+        (data.tfcoil.j_tf_wp_critical * data.constraints.fiooic),
         constraint_registration,
     )
 
 
 @ConstraintManager.register_constraint(34, "V", "<=")
-def constraint_equation_34(constraint_registration, _data):
+def constraint_equation_34(constraint_registration, data):
     """Equation for TF coil dump voltage upper limit (SCTF)
 
     v_tf_coil_dump_quench_max_kv: max voltage across TF coil during quench (kV)
     v_tf_coil_dump_quench_kv: voltage across a TF coil during quench (kV)
     """
     return leq(
-        data_structure.tfcoil_variables.v_tf_coil_dump_quench_kv,
-        data_structure.tfcoil_variables.v_tf_coil_dump_quench_max_kv,
+        data.tfcoil.v_tf_coil_dump_quench_kv,
+        data.tfcoil.v_tf_coil_dump_quench_max_kv,
         constraint_registration,
     )
 
 
 @ConstraintManager.register_constraint(35, "A/m²", "<=")
-def constraint_equation_35(constraint_registration, _data):
+def constraint_equation_35(constraint_registration, data):
     """Equation for TF coil J_wp/J_prot upper limit (SCTF)
 
     j_tf_wp_quench_heat_max: allowable TF coil winding pack current density, for dump temperature
@@ -925,22 +922,22 @@ def constraint_equation_35(constraint_registration, _data):
     j_tf_wp: winding pack current density (A/m²)
     """
     return leq(
-        data_structure.tfcoil_variables.j_tf_wp,
-        data_structure.tfcoil_variables.j_tf_wp_quench_heat_max,
+        data.tfcoil.j_tf_wp,
+        data.tfcoil.j_tf_wp_quench_heat_max,
         constraint_registration,
     )
 
 
 @ConstraintManager.register_constraint(36, "K", ">=")
-def constraint_equation_36(constraint_registration, _data):
+def constraint_equation_36(constraint_registration, data):
     """Equation for TF coil s/c temperature margin lower limit (SCTF)
 
     temp_tf_superconductor_margin: TF coil temperature margin (K)
     temp_tf_superconductor_margin_min: minimum allowable temperature margin : TF coils (K)
     """
     return geq(
-        data_structure.tfcoil_variables.temp_tf_superconductor_margin,
-        data_structure.tfcoil_variables.temp_tf_superconductor_margin_min,
+        data.tfcoil.temp_tf_superconductor_margin,
+        data.tfcoil.temp_tf_superconductor_margin_min,
         constraint_registration,
     )
 
@@ -1038,12 +1035,12 @@ def constraint_equation_43(constraint_registration, data):
     if data.physics.itart == 0:
         raise ProcessValueError("Do not use constraint 43 if itart=0")
 
-    if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-        temp_cp_average = data_structure.tfcoil_variables.temp_cp_average - 273.15
-        tcpav2 = data_structure.tfcoil_variables.tcpav2 - 273.15
+    if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+        temp_cp_average = data.tfcoil.temp_cp_average - 273.15
+        tcpav2 = data.tfcoil.tcpav2 - 273.15
     else:
-        temp_cp_average = data_structure.tfcoil_variables.temp_cp_average
-        tcpav2 = data_structure.tfcoil_variables.tcpav2
+        temp_cp_average = data.tfcoil.temp_cp_average
+        tcpav2 = data.tfcoil.tcpav2
 
     return eq(temp_cp_average, tcpav2, constraint_registration)
 
@@ -1061,14 +1058,12 @@ def constraint_equation_44(constraint_registration, data):
     if data.physics.itart == 0:
         raise ProcessValueError("Do not use constraint 44 if itart=0")
 
-    if (
-        data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER
-    ):  # ! Copper case
-        temp_cp_max = data_structure.tfcoil_variables.temp_cp_max - 273.15
-        temp_cp_peak = data_structure.tfcoil_variables.temp_cp_peak - 273.15
+    if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:  # ! Copper case
+        temp_cp_max = data.tfcoil.temp_cp_max - 273.15
+        temp_cp_peak = data.tfcoil.temp_cp_peak - 273.15
     else:
-        temp_cp_max = data_structure.tfcoil_variables.temp_cp_max
-        temp_cp_peak = data_structure.tfcoil_variables.temp_cp_peak
+        temp_cp_max = data.tfcoil.temp_cp_max
+        temp_cp_peak = data.tfcoil.temp_cp_peak
 
     return leq(temp_cp_peak, temp_cp_max, constraint_registration)
 
@@ -1112,7 +1107,7 @@ def constraint_equation_46(constraint_registration, data):
     cratmx = 1.0 + 4.91 * (data.physics.eps - 0.62)
 
     return leq(
-        (data.physics.plasma_current / data_structure.tfcoil_variables.c_tf_total),
+        (data.physics.plasma_current / data.tfcoil.c_tf_total),
         cratmx,
         constraint_registration,
     )
@@ -1243,7 +1238,7 @@ def constraint_equation_60(constraint_registration, data):
     """
     return geq(
         data.pf_coil.temp_cs_superconductor_margin,
-        data_structure.tfcoil_variables.temp_cs_superconductor_margin_min,
+        data.tfcoil.temp_cs_superconductor_margin_min,
         constraint_registration,
     )
 
@@ -1286,7 +1281,7 @@ def constraint_equation_63(constraint_registration, data):
     """
     return leq(
         data.vacuum.n_iter_vacuum_pumps,
-        data_structure.tfcoil_variables.n_tf_coils,
+        data.tfcoil.n_tf_coils,
         constraint_registration,
     )
 
@@ -1306,7 +1301,7 @@ def constraint_equation_64(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(65, "Pa", "<=")
-def constraint_equation_65(constraint_registration, _data):
+def constraint_equation_65(constraint_registration, data):
     """Upper limit on stress of the vacuum vessel that occurs when the TF coil quenches.
 
     max_vv_stress: Maximum permitted stress of the VV (Pa)
@@ -1314,7 +1309,7 @@ def constraint_equation_65(constraint_registration, _data):
     """
     return leq(
         data_structure.superconducting_tf_coil_variables.vv_stress_quench,
-        data_structure.tfcoil_variables.max_vv_stress,
+        data.tfcoil.max_vv_stress,
         constraint_registration,
     )
 
@@ -1411,14 +1406,11 @@ def constraint_equation_72(constraint_registration, data):
     i_tf_bucking: switch for TF structure design
     """
     # bucked and wedged desing
-    if (
-        data_structure.tfcoil_variables.i_tf_bucking >= 2
-        and data.build.i_tf_inside_cs == 0
-    ):
+    if data.tfcoil.i_tf_bucking >= 2 and data.build.i_tf_inside_cs == 0:
         return leq(
             max(
                 data.pf_coil.s_shear_cs_peak,
-                data_structure.tfcoil_variables.sig_tf_cs_bucked,
+                data.tfcoil.sig_tf_cs_bucked,
             ),
             data.pf_coil.alstroh,
             constraint_registration,
@@ -1448,7 +1440,7 @@ def constraint_equation_73(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(74, "K", "<=")
-def constraint_equation_74(constraint_registration, _data):
+def constraint_equation_74(constraint_registration, data):
     """Upper limit to ensure TF coil quench temperature < temp_croco_quench_max
     ONLY used for croco HTS coil
 
@@ -1456,8 +1448,8 @@ def constraint_equation_74(constraint_registration, _data):
     temp_croco_quench_max: CroCo strand: maximum permitted temp during a quench (K)
     """
     return leq(
-        data_structure.tfcoil_variables.temp_croco_quench,
-        data_structure.tfcoil_variables.temp_croco_quench_max,
+        data.tfcoil.temp_croco_quench,
+        data.tfcoil.temp_croco_quench_max,
         constraint_registration,
     )
 
@@ -1513,15 +1505,15 @@ def constraint_equation_76(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(77, "A/turn", "<=")
-def constraint_equation_77(constraint_registration, _data):
+def constraint_equation_77(constraint_registration, data):
     """Equation for maximum TF current per turn upper limit
 
     c_tf_turn_max : allowable TF coil current per turn [A/turn]
     c_tf_turn : TF coil current per turn [A/turn]
     """
     return leq(
-        data_structure.tfcoil_variables.c_tf_turn,
-        data_structure.tfcoil_variables.c_tf_turn_max,
+        data.tfcoil.c_tf_turn,
+        data.tfcoil.c_tf_turn_max,
         constraint_registration,
     )
 
@@ -1596,15 +1588,15 @@ def constraint_equation_81(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(82, "m", ">=")
-def constraint_equation_82(constraint_registration, _data):
+def constraint_equation_82(constraint_registration, data):
     """Equation for toroidal consistency of stellarator build
 
     toroidalgap: minimal gap between two stellarator coils
     dx_tf_inboard_out_toroidal: total toroidal width of a tf coil
     """
     return geq(
-        data_structure.tfcoil_variables.toroidalgap,
-        data_structure.tfcoil_variables.dx_tf_inboard_out_toroidal,
+        data.tfcoil.toroidalgap,
+        data.tfcoil.dx_tf_inboard_out_toroidal,
         constraint_registration,
     )
 
@@ -1671,15 +1663,15 @@ def constraint_equation_85(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(86, "m", "<=")
-def constraint_equation_86(constraint_registration, _data):
+def constraint_equation_86(constraint_registration, data):
     """Upper limit on the turn edge length in the TF winding pack
 
     dx_tf_turn_general: TF coil turn edge length including turn insulation [m]
     t_turn_tf_max: TF turn edge length including turn insulation upper limit [m]
     """
     return leq(
-        data_structure.tfcoil_variables.dx_tf_turn_general,
-        data_structure.tfcoil_variables.t_turn_tf_max,
+        data.tfcoil.dx_tf_turn_general,
+        data.tfcoil.t_turn_tf_max,
         constraint_registration,
     )
 
@@ -1699,15 +1691,15 @@ def constraint_equation_87(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(88, "", "<=")
-def constraint_equation_88(constraint_registration, _data):
+def constraint_equation_88(constraint_registration, data):
     """Equation for TF coil vertical strain upper limit (absolute value)
 
     str_wp_max: Allowable maximum TF coil vertical strain
     str_wp: Constrained TF coil vertical strain
     """
     return leq(
-        abs(data_structure.tfcoil_variables.str_wp),
-        data_structure.tfcoil_variables.str_wp_max,
+        abs(data.tfcoil.str_wp),
+        data.tfcoil.str_wp_max,
         constraint_registration,
     )
 

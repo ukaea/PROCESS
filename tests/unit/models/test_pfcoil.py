@@ -17,7 +17,6 @@ from numpy.testing import assert_array_almost_equal
 
 from process.core import constants
 from process.data_structure import superconducting_tf_coil_variables
-from process.data_structure import tfcoil_variables as tfv
 from process.data_structure.pfcoil_variables import N_PF_COILS_IN_GROUP_MAX
 from process.models.pfcoil import (
     PFCoil,
@@ -2040,7 +2039,7 @@ def test_hoop_stress(cs_coil, monkeypatch):
             0.0,
         ]),
     )
-    monkeypatch.setattr(tfv, "poisson_steel", 0.29999999999999999)
+    monkeypatch.setattr(cs_coil.data.tfcoil, "poisson_steel", 0.29999999999999999)
 
     r = 2.3
     s_hoop_exp = 6.737108e8
@@ -2546,15 +2545,15 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfcoil.data.physics, "aspect", 3.1)
     monkeypatch.setattr(pfcoil.data.physics, "itart", 0)
     monkeypatch.setattr(pfcoil.data.physics, "beta_poloidal_vol_avg", 6.313e-1)
-    monkeypatch.setattr(tfv, "tftmp", 4.750)
-    monkeypatch.setattr(tfv, "dcond", np.full(9, 9.0e3))
-    monkeypatch.setattr(tfv, "i_tf_sup", 1)
-    monkeypatch.setattr(tfv, "fhts", 0.5)
-    monkeypatch.setattr(tfv, "tcritsc", 1.6e1)
-    monkeypatch.setattr(tfv, "str_pf_con_res", -5.0e-3)
-    monkeypatch.setattr(tfv, "bcritsc", 2.4e1)
-    monkeypatch.setattr(tfv, "b_crit_upper_nbti", 1.486e1)
-    monkeypatch.setattr(tfv, "t_crit_nbti", 9.04)
+    monkeypatch.setattr(pfcoil.data.tfcoil, "tftmp", 4.750)
+    monkeypatch.setattr(pfcoil.data.tfcoil, "dcond", np.full(9, 9.0e3))
+    monkeypatch.setattr(pfcoil.data.tfcoil, "i_tf_sup", 1)
+    monkeypatch.setattr(pfcoil.data.tfcoil, "fhts", 0.5)
+    monkeypatch.setattr(pfcoil.data.tfcoil, "tcritsc", 1.6e1)
+    monkeypatch.setattr(pfcoil.data.tfcoil, "str_pf_con_res", -5.0e-3)
+    monkeypatch.setattr(pfcoil.data.tfcoil, "bcritsc", 2.4e1)
+    monkeypatch.setattr(pfcoil.data.tfcoil, "b_crit_upper_nbti", 1.486e1)
+    monkeypatch.setattr(pfcoil.data.tfcoil, "t_crit_nbti", 9.04)
     monkeypatch.setattr(pfcoil.data.times, "t_pulse_cumulative", np.full(6, 0.0))
     monkeypatch.setattr(pfcoil.data.times, "t_plant_pulse_coil_precharge", 5.0e2)
     monkeypatch.setattr(pfcoil.data.times, "t_plant_pulse_burn", 7.1263e-1)
@@ -2642,14 +2641,14 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     monkeypatch.setattr(cs_coil.data.pf_coil, "n_pf_coil_turns", np.full(22, 0.0))
     monkeypatch.setattr(cs_coil.data.pf_coil, "m_pf_coil_structure", np.full(22, 0.0))
     monkeypatch.setattr(cs_coil.data.pf_coil, "a_cs_turn", 0.0)
-    monkeypatch.setattr(tfv, "dcond", np.full(9, 9.0e3))
-    monkeypatch.setattr(tfv, "tftmp", 4.750)
-    monkeypatch.setattr(tfv, "tcritsc", 1.6e1)
-    monkeypatch.setattr(tfv, "str_cs_con_res", -5.000e-3)
-    monkeypatch.setattr(tfv, "fhts", 0.5)
-    monkeypatch.setattr(tfv, "bcritsc", 2.4e1)
-    monkeypatch.setattr(tfv, "b_crit_upper_nbti", 1.486e1)
-    monkeypatch.setattr(tfv, "t_crit_nbti", 9.04)
+    monkeypatch.setattr(cs_coil.data.tfcoil, "dcond", np.full(9, 9.0e3))
+    monkeypatch.setattr(cs_coil.data.tfcoil, "tftmp", 4.750)
+    monkeypatch.setattr(cs_coil.data.tfcoil, "tcritsc", 1.6e1)
+    monkeypatch.setattr(cs_coil.data.tfcoil, "str_cs_con_res", -5.000e-3)
+    monkeypatch.setattr(cs_coil.data.tfcoil, "fhts", 0.5)
+    monkeypatch.setattr(cs_coil.data.tfcoil, "bcritsc", 2.4e1)
+    monkeypatch.setattr(cs_coil.data.tfcoil, "b_crit_upper_nbti", 1.486e1)
+    monkeypatch.setattr(cs_coil.data.tfcoil, "t_crit_nbti", 9.04)
     monkeypatch.setattr(constants, "den_copper", 8.9e3)
 
     # Mocks for peak_b_field_at_pf_coil()
@@ -2678,13 +2677,13 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     monkeypatch.setattr(cs_coil.data.physics, "plasma_current", 1.8254e7)
 
     # Mocks for hoop_stress()
-    monkeypatch.setattr(tfv, "poisson_steel", 3.0e-1)
+    monkeypatch.setattr(cs_coil.data.tfcoil, "poisson_steel", 3.0e-1)
 
     # Mocks for superconpf()
-    monkeypatch.setattr(tfv, "temp_cs_superconductor_margin_min", 1.5)
-    monkeypatch.setattr(tfv, "temp_margin", 0.0)
-    monkeypatch.setattr(tfv, "b_crit_upper_nbti", 1.486e1)
-    monkeypatch.setattr(tfv, "b_crit_upper_nbti", 9.04)
+    monkeypatch.setattr(cs_coil.data.tfcoil, "temp_cs_superconductor_margin_min", 1.5)
+    monkeypatch.setattr(cs_coil.data.tfcoil, "temp_margin", 0.0)
+    monkeypatch.setattr(cs_coil.data.tfcoil, "b_crit_upper_nbti", 1.486e1)
+    monkeypatch.setattr(cs_coil.data.tfcoil, "b_crit_upper_nbti", 9.04)
 
     cs_coil.ohcalc()
 
@@ -3572,7 +3571,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     assert pytest.approx(bzo) == bzo_exp
 
 
-def test_superconpf(monkeypatch: pytest.MonkeyPatch):
+def test_superconpf(monkeypatch: pytest.MonkeyPatch, pfcoil):
     """Test superconpf subroutine.
 
     superconpf() requires specific arguments in order to work; these were
@@ -3585,10 +3584,10 @@ def test_superconpf(monkeypatch: pytest.MonkeyPatch):
     """
     # TODO This test would benefit from parameterisation for different SC
     # materials (isumat)
-    monkeypatch.setattr(tfv, "temp_cs_superconductor_margin_min", 0.0)
-    monkeypatch.setattr(tfv, "temp_margin", 0.0)
-    monkeypatch.setattr(tfv, "b_crit_upper_nbti", 0.0)
-    monkeypatch.setattr(tfv, "t_crit_nbti", 0.0)
+    monkeypatch.setattr(pfcoil.data.tfcoil, "temp_cs_superconductor_margin_min", 0.0)
+    monkeypatch.setattr(pfcoil.data.tfcoil, "temp_margin", 0.0)
+    monkeypatch.setattr(pfcoil.data.tfcoil, "b_crit_upper_nbti", 0.0)
+    monkeypatch.setattr(pfcoil.data.tfcoil, "t_crit_nbti", 0.0)
 
     bmax = 10.514241695080285
     fhe = 0.29999999999999999
@@ -3600,6 +3599,8 @@ def test_superconpf(monkeypatch: pytest.MonkeyPatch):
     thelium = 4.75
     bcritsc = 24
     tcritsc = 16
+    b_crit_upper_nbti = 14.86
+    t_crit_nbti = 9.04
 
     jcritwp_exp = -2.6716372e7
     jcritstr_exp = -3.8166246e7 * (1.0 - fhe)
@@ -3607,7 +3608,18 @@ def test_superconpf(monkeypatch: pytest.MonkeyPatch):
     tmarg_exp = -2.651537e-1
 
     jcritwp, jcritstr, jcritsc, tmarg = superconpf(
-        bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcritsc
+        bmax,
+        fhe,
+        fcu,
+        jwp,
+        isumat,
+        fhts,
+        strain,
+        thelium,
+        bcritsc,
+        tcritsc,
+        b_crit_upper_nbti,
+        t_crit_nbti,
     )
 
     assert pytest.approx(jcritwp) == jcritwp_exp

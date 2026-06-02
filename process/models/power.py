@@ -11,10 +11,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    numerics,
-    tfcoil_variables,
-)
+from process.data_structure import numerics
 from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.pfcoil_variables import NGC2
 
@@ -1027,31 +1024,31 @@ class Power(Model):
         self.data.heat_transport.helpow = 0.0e0
         self.data.heat_transport.p_cryo_plant_electric_mw = 0.0e0
         p_tf_cryoal_cryo = 0.0e0
-        tfcoil_variables.cryo_cool_req = 0.0e0
+        self.data.tfcoil.cryo_cool_req = 0.0e0
 
         # Superconductors TF/PF cryogenic cooling
-        if tfcoil_variables.i_tf_sup == 1 or self.data.pf_coil.i_pf_conductor == 0:
+        if self.data.tfcoil.i_tf_sup == 1 or self.data.pf_coil.i_pf_conductor == 0:
             # self.data.heat_transport.helpow calculation
             self.data.heat_transport.helpow = self.cryo(
-                tfcoil_variables.i_tf_sup,
-                tfcoil_variables.tfcryoarea,
+                self.data.tfcoil.i_tf_sup,
+                self.data.tfcoil.tfcryoarea,
                 self.data.structure.coldmass,
                 self.data.fwbs.p_tf_nuclear_heat_mw,
                 self.data.pf_power.ensxpfm,
                 self.data.times.t_plant_pulse_plasma_present,
-                tfcoil_variables.c_tf_turn,
-                tfcoil_variables.n_tf_coils,
+                self.data.tfcoil.c_tf_turn,
+                self.data.tfcoil.n_tf_coils,
             )
 
             # Use 13% of ideal Carnot efficiency to fit J. Miller estimate
             # Rem SK : This ITER efficiency is very low compare to the Strowbridge curve
             #          any reasons why?
             # Calculate electric power requirement for cryogenic plant at
-            # tfcoil_variables.temp_tf_cryo (MW)
+            # self.data.tfcoil.temp_tf_cryo (MW)
             self.data.heat_transport.p_cryo_plant_electric_mw = (
                 1.0e-6
-                * (constants.TEMP_ROOM - tfcoil_variables.temp_tf_cryo)
-                / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_tf_cryo)
+                * (constants.TEMP_ROOM - self.data.tfcoil.temp_tf_cryo)
+                / (self.data.tfcoil.eff_tf_cryo * self.data.tfcoil.temp_tf_cryo)
                 * self.data.heat_transport.helpow
             )
 
@@ -1060,22 +1057,22 @@ class Power(Model):
         # assumption since a 50% has been deduced from detailed studies
         # Rem : Nuclear heating on the outer legs assumed to be negligible
         # Rem : To be updated with 2 cooling loops for TART designs
-        if tfcoil_variables.i_tf_sup == 2:
+        if self.data.tfcoil.i_tf_sup == 2:
             # Heat removal power at cryogenic temperature
-            # tfcoil_variables.temp_cp_coolant_inlet (W)
+            # self.data.tfcoil.temp_cp_coolant_inlet (W)
             self.data.heat_transport.helpow_cryal = (
-                tfcoil_variables.p_cp_resistive
-                + tfcoil_variables.p_tf_leg_resistive
-                + tfcoil_variables.p_tf_joints_resistive
+                self.data.tfcoil.p_cp_resistive
+                + self.data.tfcoil.p_tf_leg_resistive
+                + self.data.tfcoil.p_tf_joints_resistive
                 + self.data.fwbs.pnuc_cp_tf * 1.0e6
             )
 
             # Calculate electric power requirement for cryogenic plant at
-            # tfcoil_variables.temp_cp_coolant_inlet (MW)
+            # self.data.tfcoil.temp_cp_coolant_inlet (MW)
             p_tf_cryoal_cryo = (
                 1.0e-6
-                * (constants.TEMP_ROOM - tfcoil_variables.temp_cp_coolant_inlet)
-                / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_cp_coolant_inlet)
+                * (constants.TEMP_ROOM - self.data.tfcoil.temp_cp_coolant_inlet)
+                / (self.data.tfcoil.eff_tf_cryo * self.data.tfcoil.temp_cp_coolant_inlet)
                 * self.data.heat_transport.helpow_cryal
             )
 
@@ -1083,12 +1080,12 @@ class Power(Model):
             self.data.heat_transport.p_cryo_plant_electric_mw += p_tf_cryoal_cryo
 
         # Calculate cryo cooling requirement at 4.5K (kW)
-        tfcoil_variables.cryo_cool_req = (
+        self.data.tfcoil.cryo_cool_req = (
             self.data.heat_transport.helpow
-            * ((293 / tfcoil_variables.temp_tf_cryo) - 1)
+            * ((293 / self.data.tfcoil.temp_tf_cryo) - 1)
             / ((293 / 4.5) - 1)
             + self.data.heat_transport.helpow_cryal
-            * ((293 / tfcoil_variables.temp_cp_coolant_inlet) - 1)
+            * ((293 / self.data.tfcoil.temp_cp_coolant_inlet) - 1)
             / ((293 / 4.5) - 1)
         ) / 1.0e3
 
@@ -1612,9 +1609,9 @@ class Power(Model):
         power and heat transport balance, assumptions, and efficiency metrics to the
         specified output file.
         """
-        if self.data.physics.itart == 1 and tfcoil_variables.i_tf_sup == 0:
+        if self.data.physics.itart == 1 and self.data.tfcoil.i_tf_sup == 0:
             self.data.power.p_cp_coolant_pump_elec_mw = (
-                1.0e-6 * tfcoil_variables.p_cp_coolant_pump_elec
+                1.0e-6 * self.data.tfcoil.p_cp_coolant_pump_elec
             )
         else:
             self.data.power.p_cp_coolant_pump_elec_mw = 0.0e0
@@ -1889,13 +1886,13 @@ class Power(Model):
             self.outfile,
             "Temperature of cryogenic superconducting components (K)",
             "(temp_tf_cryo)",
-            tfcoil_variables.temp_tf_cryo,
+            self.data.tfcoil.temp_tf_cryo,
         )
         po.ovarre(
             self.outfile,
             "Temperature of cryogenic aluminium components (K)",
             "(temp_cp_coolant_inlet)",
-            tfcoil_variables.temp_cp_coolant_inlet,
+            self.data.tfcoil.temp_cp_coolant_inlet,
         )
         po.ovarre(
             self.outfile,
@@ -2101,54 +2098,54 @@ class Power(Model):
         output: bool
 
         """
-        if tfcoil_variables.i_tf_sup != 1:
+        if self.data.tfcoil.i_tf_sup != 1:
             # Cross-sectional area of bus
-            # tfcoil_variables.c_tf_turn  - current per TFC turn (A)
-            # tfcoil_variables.j_tf_bus   - bus current density (A/m2)
-            a_tf_bus = tfcoil_variables.c_tf_turn / tfcoil_variables.j_tf_bus
+            # self.data.tfcoil.c_tf_turn  - current per TFC turn (A)
+            # self.data.tfcoil.j_tf_bus   - bus current density (A/m2)
+            a_tf_bus = self.data.tfcoil.c_tf_turn / self.data.tfcoil.j_tf_bus
 
             # Bus resistance [ohm]
-            # Bus resistivity (tfcoil_variables.rho_tf_bus)
+            # Bus resistivity (self.data.tfcoil.rho_tf_bus)
             # Issue #1253: there was a fudge here to set the bus bar resistivity equal
             # to the TF conductor resistivity. I have removed this.
             tfbusres = (
-                tfcoil_variables.rho_tf_bus * tfcoil_variables.len_tf_bus / a_tf_bus
+                self.data.tfcoil.rho_tf_bus * self.data.tfcoil.len_tf_bus / a_tf_bus
             )
 
             #  Bus mass (kg)
-            tfcoil_variables.m_tf_bus = (
-                tfcoil_variables.len_tf_bus * a_tf_bus * constants.den_copper
+            self.data.tfcoil.m_tf_bus = (
+                self.data.tfcoil.len_tf_bus * a_tf_bus * constants.den_copper
             )
 
             #  Total maximum impedance MDK actually just fixed resistance
             res_tf_system_total = (
-                tfcoil_variables.n_tf_coils * tfcoil_variables.res_tf_leg
-                + (tfcoil_variables.p_cp_resistive / tfcoil_variables.c_tf_total**2)
+                self.data.tfcoil.n_tf_coils * self.data.tfcoil.res_tf_leg
+                + (self.data.tfcoil.p_cp_resistive / self.data.tfcoil.c_tf_total**2)
                 + tfbusres
             )
 
             #  No reactive portion of the voltage is included here - assume long
             #  ramp times
             #  MDK This is steady state voltage, not "peak" voltage
-            tfcoil_variables.vtfkv = (
+            self.data.tfcoil.vtfkv = (
                 1.0e-3
                 * res_tf_system_total
-                * tfcoil_variables.c_tf_turn
-                / tfcoil_variables.n_tf_coils
+                * self.data.tfcoil.c_tf_turn
+                / self.data.tfcoil.n_tf_coils
             )
 
             # Resistive powers (MW):
-            tfcoil_variables.p_cp_resistive_mw = (
-                1.0e-6 * tfcoil_variables.p_cp_resistive
+            self.data.tfcoil.p_cp_resistive_mw = (
+                1.0e-6 * self.data.tfcoil.p_cp_resistive
             )  # inboard legs (called centrepost, CP for tart design)
-            tfcoil_variables.p_tf_leg_resistive_mw = (
-                1.0e-6 * tfcoil_variables.p_tf_leg_resistive
+            self.data.tfcoil.p_tf_leg_resistive_mw = (
+                1.0e-6 * self.data.tfcoil.p_tf_leg_resistive
             )  # outboard legs
-            tfcoil_variables.p_tf_joints_resistive_mw = (
-                1.0e-6 * tfcoil_variables.p_tf_joints_resistive
+            self.data.tfcoil.p_tf_joints_resistive_mw = (
+                1.0e-6 * self.data.tfcoil.p_tf_joints_resistive
             )  # Joints
             tfbusmw = (
-                1.0e-6 * tfcoil_variables.c_tf_turn**2 * tfbusres
+                1.0e-6 * self.data.tfcoil.c_tf_turn**2 * tfbusres
             )  # TF coil bus => Dodgy #
 
             # TF coil reactive power
@@ -2157,22 +2154,22 @@ class Power(Model):
             # (although this will affect the time to recover from a magnet quench).
             # tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_plant_pulse_plasma_current_ramp_up
             # + t_plant_pulse_coil_precharge)
-            # estotf(=e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils)
+            # estotf(=e_tf_magnetic_stored_total_gj/self.data.tfcoil.n_tf_coils)
             # has been removed (#199 #847)
             tfreacmw = 0.0e0
 
             # Total power consumption (MW)
-            tfcoil_variables.tfcmw = (
-                tfcoil_variables.p_cp_resistive_mw
-                + tfcoil_variables.p_tf_leg_resistive_mw
+            self.data.tfcoil.tfcmw = (
+                self.data.tfcoil.p_cp_resistive_mw
+                + self.data.tfcoil.p_tf_leg_resistive_mw
                 + tfbusmw
                 + tfreacmw
-                + tfcoil_variables.p_tf_joints_resistive_mw
+                + self.data.tfcoil.p_tf_joints_resistive_mw
             )
 
             # Total steady state AC power demand (MW)
             self.data.heat_transport.p_tf_electric_supplies_mw = (
-                tfcoil_variables.tfcmw / self.data.heat_transport.etatf
+                self.data.tfcoil.tfcmw / self.data.heat_transport.etatf
             )
 
         else:  # Superconducting TF coil option
@@ -2189,19 +2186,19 @@ class Power(Model):
             self.outfile,
             "Bus current density (A/m2)",
             "(j_tf_bus)",
-            tfcoil_variables.j_tf_bus,
+            self.data.tfcoil.j_tf_bus,
         )
         po.ovarre(
             self.outfile,
             "Bus length - all coils (m)",
             "(len_tf_bus)",
-            tfcoil_variables.len_tf_bus,
+            self.data.tfcoil.len_tf_bus,
         )
         po.ovarre(
             self.outfile,
             "Bus mass (kg)",
             "(m_tf_bus)",
-            tfcoil_variables.m_tf_bus,
+            self.data.tfcoil.m_tf_bus,
             "OP ",
         )
         # po.ovarre(outfile,'Maximum impedance (ohm)','(ztot)',ztot)
@@ -2217,7 +2214,7 @@ class Power(Model):
             self.outfile,
             "Steady-state voltage per coil (kV)",
             "(vtfkv)",
-            tfcoil_variables.vtfkv,
+            self.data.tfcoil.vtfkv,
             "OP ",
         )
         # po.ovarre(outfile,'Peak power (MW)','(tfcmw..)',tfcmw)
@@ -2225,21 +2222,21 @@ class Power(Model):
             self.outfile,
             "Total power dissipation in TF coil set (MW)",
             "(tfcmw..)",
-            tfcoil_variables.tfcmw,
+            self.data.tfcoil.tfcmw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Power dissipation in TF coil set: inboard legs (MW)",
             "(p_cp_resistive_mw)",
-            tfcoil_variables.p_cp_resistive_mw,
+            self.data.tfcoil.p_cp_resistive_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Power dissipation in TF coil set: outboard legs (MW)",
             "(p_tf_leg_resistive_mw)",
-            tfcoil_variables.p_tf_leg_resistive_mw,
+            self.data.tfcoil.p_tf_leg_resistive_mw,
             "OP ",
         )
         po.ovarre(
@@ -2249,12 +2246,12 @@ class Power(Model):
             tfbusmw,
             "OP ",
         )
-        if tfcoil_variables.i_cp_joints != 0:
+        if self.data.tfcoil.i_cp_joints != 0:
             po.ovarre(
                 self.outfile,
                 "Power dissipation in TF coil set: joints",
                 "(p_tf_joints_resistive_mw)",
-                tfcoil_variables.p_tf_joints_resistive_mw,
+                self.data.tfcoil.p_tf_joints_resistive_mw,
                 "OP ",
             )
 
@@ -2277,29 +2274,29 @@ class Power(Model):
 
         """
         ettfmj = (
-            tfcoil_variables.e_tf_magnetic_stored_total_gj
-            / tfcoil_variables.n_tf_coils
+            self.data.tfcoil.e_tf_magnetic_stored_total_gj
+            / self.data.tfcoil.n_tf_coils
             * 1.0e3
         )
 
         #  TF coil current (kA)
 
-        itfka = 1.0e-3 * tfcoil_variables.c_tf_turn
+        itfka = 1.0e-3 * self.data.tfcoil.c_tf_turn
 
         (
-            tfcoil_variables.tfckw,
-            tfcoil_variables.len_tf_bus,
-            tfcoil_variables.drarea,
+            self.data.tfcoil.tfckw,
+            self.data.tfcoil.len_tf_bus,
+            self.data.tfcoil.drarea,
             self.data.buildings.tfcbv,
             self.data.heat_transport.p_tf_electric_supplies_mw,
         ) = self.tfcpwr(
             output,
             itfka,
             self.data.physics.rmajor,
-            tfcoil_variables.n_tf_coils,
-            tfcoil_variables.v_tf_coil_dump_quench_kv,
+            self.data.tfcoil.n_tf_coils,
+            self.data.tfcoil.v_tf_coil_dump_quench_kv,
             ettfmj,
-            tfcoil_variables.res_tf_leg,
+            self.data.tfcoil.res_tf_leg,
         )
 
     def tfcpwr(
@@ -2372,7 +2369,7 @@ class Power(Model):
 
         #  Total resistance of TF bus, ohms
         # rtfbus = 2.62e-4 * len_tf_bus / albusa
-        rtfbus = tfcoil_variables.rho_tf_bus * len_tf_bus / (albusa / 10000)
+        rtfbus = self.data.tfcoil.rho_tf_bus * len_tf_bus / (albusa / 10000)
 
         #  Total voltage drop across TF bus, volts
         vtfbus = 1000.0e0 * itfka * rtfbus

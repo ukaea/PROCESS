@@ -6,7 +6,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import tfcoil_variables as tfv
 from process.data_structure.physics_variables import DivertorNumberModels
 
 
@@ -148,7 +147,12 @@ class Divertor(Model):
         """
         #  Thickness of centrepost + first wall at divertor height
 
-        r1 = rmajor - rminor * triang - 3.0e0 * dr_fw_plasma_gap_inboard + tfv.drtop
+        r1 = (
+            rmajor
+            - rminor * triang
+            - 3.0e0 * dr_fw_plasma_gap_inboard
+            + self.data.tfcoil.drtop
+        )
 
         #  Outer radius of divertor region
 

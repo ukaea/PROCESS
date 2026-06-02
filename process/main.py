@@ -606,7 +606,7 @@ class Models:
         self.sctfcoil = SuperconductingTFCoil()
         self.cicc_sctfcoil = CICCSuperconductingTFCoil()
         self.croco_sctfcoil = CROCOSuperconductingTFCoil()
-        self.tfcoil = TFCoil(build=self.build)
+        self.tfcoil = TFCoil()
         self.resistive_tf_coil = ResistiveTFCoil()
         self.copper_tf_coil = CopperTFCoil()
         self.aluminium_tf_coil = AluminiumTFCoil()

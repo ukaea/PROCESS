@@ -174,13 +174,11 @@ INPUT_VARIABLES = {
     "auxcool_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "p_hcd_injected_min_mw": InputVariable("constraints", float, range=(0.01, 100.0)),
     "avail_min": InputVariable("costs", float, range=(0.0, 1.0)),
-    "b_crit_upper_nbti": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 30.0)
-    ),
+    "b_crit_upper_nbti": InputVariable("tfcoil", float, range=(0.0, 30.0)),
     "p_plant_electric_base": InputVariable(
         "heat_transport", float, range=(1000000.0, 10000000000.0)
     ),
-    "bcritsc": InputVariable(data_structure.tfcoil_variables, float, range=(10.0, 50.0)),
+    "bcritsc": InputVariable("tfcoil", float, range=(10.0, 50.0)),
     "bctmp": InputVariable("pulse", float, range=(1.0, 800.0)),
     "e_beam_kev": InputVariable("current_drive", float, range=(1.0, 1000000.0)),
     "dx_beam_duct": InputVariable("current_drive", float, range=(0.001, 5.0)),
@@ -213,18 +211,10 @@ INPUT_VARIABLES = {
     "breeder_f": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "breeder_multiplier": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "bz_channel_conduct_liq": InputVariable("fwbs", float, range=(1e-06, 1000000.0)),
-    "dr_tf_plasma_case": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
-    "f_dr_tf_plasma_case": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
-    "dx_tf_side_case_min": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
-    "casths_fraction": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
+    "dr_tf_plasma_case": InputVariable("tfcoil", float, range=(0.0, 1.0)),
+    "f_dr_tf_plasma_case": InputVariable("tfcoil", float, range=(0.0, 1.0)),
+    "dx_tf_side_case_min": InputVariable("tfcoil", float, range=(0.0, 1.0)),
+    "casths_fraction": InputVariable("tfcoil", float, range=(0.0, 1.0)),
     "cboot": InputVariable("current_drive", float, range=(0.0, 10.0)),
     "cconfix": InputVariable("costs", float, range=(50.0, 200.0)),
     "cconshpf": InputVariable("costs", float, range=(50.0, 200.0)),
@@ -265,12 +255,8 @@ INPUT_VARIABLES = {
     "cowner": InputVariable("costs", float, range=(0.0, 1.0)),
     "cplife_input": InputVariable("costs", float, range=(0.001, 50.0)),
     "cpstflnc": InputVariable("costs", float, range=(0.01, 30.0)),
-    "c_tf_turn": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.001, 1000000.0)
-    ),
-    "c_tf_turn_max": InputVariable(
-        data_structure.tfcoil_variables, float, range=(1.0, 1000000.0)
-    ),
+    "c_tf_turn": InputVariable("tfcoil", float, range=(0.001, 1000000.0)),
+    "c_tf_turn_max": InputVariable("tfcoil", float, range=(1.0, 1000000.0)),
     "crane_arm_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "crane_clrnc_h": InputVariable("buildings", float, range=(0.0, 10.0)),
     "crane_clrnc_v": InputVariable("buildings", float, range=(0.0, 10.0)),
@@ -292,24 +278,18 @@ INPUT_VARIABLES = {
     "den_aluminium": InputVariable(
         process.core.constants, float, range=(2500.0, 30000.0)
     ),
-    "den_tf_coil_case": InputVariable(
-        data_structure.tfcoil_variables, float, range=(1000.0, 100000.0)
-    ),
+    "den_tf_coil_case": InputVariable("tfcoil", float, range=(1000.0, 100000.0)),
     "dcdrv0": InputVariable("ife", float, range=(0.0, 200.0)),
     "dcdrv1": InputVariable("ife", float, range=(0.0, 200.0)),
     "dcdrv2": InputVariable("ife", float, range=(0.0, 200.0)),
-    "den_tf_wp_turn_insulation": InputVariable(
-        data_structure.tfcoil_variables, float, range=(500.0, 10000.0)
-    ),
+    "den_tf_wp_turn_insulation": InputVariable("tfcoil", float, range=(500.0, 10000.0)),
     "den_copper": InputVariable(process.core.constants, float, range=(8000.0, 10000.0)),
     "declblkt": InputVariable("fwbs", float, range=(0.01, 0.2)),
     "declfw": InputVariable("fwbs", float, range=(0.01, 0.2)),
     "declshld": InputVariable("fwbs", float, range=(0.01, 0.2)),
     "decomf": InputVariable("costs", float, range=(0.0, 1.0)),
     "den_steel": InputVariable("fwbs", float, range=(5000.0, 10000.0)),
-    "dia_tf_turn_coolant_channel": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
-    ),
+    "dia_tf_turn_coolant_channel": InputVariable("tfcoil", float, range=(0.0, 0.1)),
     "dia_tf_turn_superconducting_cable": InputVariable(
         data_structure.superconducting_tf_coil_variables, float, range=(0.0001, 0.01)
     ),
@@ -344,22 +324,18 @@ INPUT_VARIABLES = {
     "dr_shld_vv_gap_inboard": InputVariable("build", float, range=(0.0, 10.0)),
     "dr_tf_inboard": InputVariable("build", float, range=(0.0, 10.0)),
     "dr_tf_shld_gap": InputVariable("build", float, range=(0.0, 5.0)),
-    "dr_tf_wp_with_insulation": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 10.0)
-    ),
+    "dr_tf_wp_with_insulation": InputVariable("tfcoil", float, range=(0.0, 10.0)),
     "dr_vv_inboard": InputVariable("build", float, range=(0.0, 10.0)),
     "dr_vv_outboard": InputVariable("build", float, range=(0.0, 10.0)),
-    "drtop": InputVariable(data_structure.tfcoil_variables, float, range=(-1.5, 1.5)),
+    "drtop": InputVariable("tfcoil", float, range=(-1.5, 1.5)),
     "drveff": InputVariable("ife", float, range=(0.01, 1.0)),
     "dtlife": InputVariable("costs", float, range=(0.0, 15.0)),
     "dtstor": InputVariable("pulse", float, range=(50.0, 500.0)),
     "dx_fw_module": InputVariable("fwbs", float, range=(0.0005, 0.1)),
     "dz_tf_cryostat": InputVariable("buildings", float, range=(0.0, 20.0)),
-    "dztop": InputVariable(data_structure.tfcoil_variables, float, range=(-0.5, 0.5)),
+    "dztop": InputVariable("tfcoil", float, range=(-0.5, 0.5)),
     "edrive": InputVariable("ife", float, range=(100000.0, 5000000000.0)),
-    "eff_tf_cryo": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
+    "eff_tf_cryo": InputVariable("tfcoil", float, range=(0.0, 1.0)),
     "ejima_coeff": InputVariable("physics", float, range=(0.1, 1.0)),
     "elecdist_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "elecdist_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
@@ -391,28 +367,18 @@ INPUT_VARIABLES = {
         "current_drive", float, range=(0.0, 1.0)
     ),
     "etapsu": InputVariable("pf_coil", float, range=(0.0, 1.0)),
-    "etapump": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
+    "etapump": InputVariable("tfcoil", float, range=(0.0, 1.0)),
     "etatf": InputVariable("heat_transport", float, range=(0.0, 1.0)),
     "eta_turbine": InputVariable("heat_transport", float, range=(0.0, 1.0)),
-    "eyoung_al": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
-    "eyoung_cond_axial": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 10000000000000.0)
-    ),
-    "eyoung_cond_trans": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 10000000000000.0)
-    ),
-    "eyoung_ins": InputVariable(
-        data_structure.tfcoil_variables, float, range=(100000000.0, 10000000000000.0)
-    ),
-    "eyoung_res_tf_buck": InputVariable(
-        data_structure.tfcoil_variables, float, range=(1e-10, 1000000000000.0)
-    ),
+    "eyoung_al": InputVariable("tfcoil", float, range=(0.0, 1.0)),
+    "eyoung_cond_axial": InputVariable("tfcoil", float, range=(0.0, 10000000000000.0)),
+    "eyoung_cond_trans": InputVariable("tfcoil", float, range=(0.0, 10000000000000.0)),
+    "eyoung_ins": InputVariable("tfcoil", float, range=(100000000.0, 10000000000000.0)),
+    "eyoung_res_tf_buck": InputVariable("tfcoil", float, range=(1e-10, 1000000000000.0)),
     "eyoung_steel": InputVariable(
-        data_structure.tfcoil_variables, float, range=(100000000.0, 10000000000000.0)
+        "tfcoil", float, range=(100000000.0, 10000000000000.0)
     ),
-    "f_a_tf_cool_outboard": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
+    "f_a_tf_cool_outboard": InputVariable("tfcoil", float, range=(0.0, 1.0)),
     "f_alpha_energy_confinement_min": InputVariable(
         "constraints", float, range=(1.0, 100.0)
     ),
@@ -429,9 +395,7 @@ INPUT_VARIABLES = {
     "f_sync_reflect": InputVariable("physics", float, range=(0.0, 1.0)),
     "f_plasma_fuel_tritium": InputVariable("physics", float, range=(0.0, 1.0)),
     "f_beam_tritium": InputVariable("current_drive", float, range=(0.0, 1.0)),
-    "f_vforce_inboard": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
+    "f_vforce_inboard": InputVariable("tfcoil", float, range=(0.0, 1.0)),
     "f_w": InputVariable("stellarator", float, range=(0.1, 1.0)),
     "f_st_coil_aspect": InputVariable("stellarator", float, range=(0.1, 10.0)),
     "f_z_cryostat": InputVariable("build", float, range=(2.0, 10.0)),
@@ -456,14 +420,12 @@ INPUT_VARIABLES = {
     "fcdfuel": InputVariable("costs", float, range=(0.0, 1.0)),
     "f_j_cs_start_pulse_end_flat_top": InputVariable("pf_coil", float, range=(0.0, 1.0)),
     "fcontng": InputVariable("costs", float, range=(0.0, 1.0)),
-    "fcoolcp": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
+    "fcoolcp": InputVariable("tfcoil", float, range=(0.0, 1.0)),
     "fcr0": InputVariable("costs", float, range=(0.0, 1.0)),
     "fcspc": InputVariable("build", float, range=(0.0, 1.0)),
     "fcuohsu": InputVariable("pf_coil", float, range=(0.0, 1.0)),
     "fcupfsu": InputVariable("pf_coil", float, range=(0.0, 1.0)),
-    "f_a_tf_turn_cable_copper": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
+    "f_a_tf_turn_cable_copper": InputVariable("tfcoil", float, range=(0.0, 1.0)),
     "fdene": InputVariable("constraints", float, range=(0.001, 10.0)),
     "fiooic": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fjohc": InputVariable("constraints", float, range=(0.001, 1.0)),
@@ -474,7 +436,7 @@ INPUT_VARIABLES = {
     "feffcd": InputVariable("current_drive", float, range=(0.0, 20.0)),
     "f_a_fw_outboard_hcd": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "fhole": InputVariable("fwbs", float, range=(0.0, 1.0)),
-    "fhts": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 1.0)),
+    "fhts": InputVariable("tfcoil", float, range=(0.01, 1.0)),
     "fkind": InputVariable("costs", float, range=(0.5, 1.0)),
     "f_h_mode_margin": InputVariable("constraints", float, range=(0.001, 1000000.0)),
     "f_l_mode_margin": InputVariable("constraints", float, range=(0.001, 1000000.0)),
@@ -501,8 +463,8 @@ INPUT_VARIABLES = {
     "f_radius_beam_tangency_rmajor": InputVariable(
         "current_drive", float, range=(0.5, 2.0)
     ),
-    "frhocp": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 5.0)),
-    "frholeg": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 5.0)),
+    "frhocp": InputVariable("tfcoil", float, range=(0.01, 5.0)),
+    "frholeg": InputVariable("tfcoil", float, range=(0.01, 5.0)),
     "fseppc": InputVariable("build", float, range=(1000000.0, 1000000000.0)),
     "fvoldw": InputVariable("fwbs", float, range=(0.0, 10.0)),
     "fvolsi": InputVariable("fwbs", float, range=(0.0, 10.0)),
@@ -569,17 +531,13 @@ INPUT_VARIABLES = {
     "temp_blkt_coolant_in": InputVariable("fwbs", float, range=(200.0, 600.0)),
     "inlet_temp_liq": InputVariable("fwbs", float, range=(508.0, 1500.0)),
     "iotabar": InputVariable("stellarator", float, range=(0.1, 10.0)),
-    "j_tf_bus": InputVariable(
-        data_structure.tfcoil_variables, float, range=(10000.0, 100000000.0)
-    ),
+    "j_tf_bus": InputVariable("tfcoil", float, range=(10000.0, 100000000.0)),
     "kappa": InputVariable("physics", float, range=(0.99, 5.0)),
     "kappa95": InputVariable("physics", float, range=(0.99, 5.0)),
-    "layer_ins": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 0.1)),
+    "layer_ins": InputVariable("tfcoil", float, range=(0.0, 0.1)),
     "f_dr_dz_cs_turn": InputVariable("pf_coil", float, range=(0.0, 5.0)),
     "len_fw_channel": InputVariable("fwbs", float, range=(0.001, 1000.0)),
-    "len_tf_bus": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.01, 1000.0)
-    ),
+    "len_tf_bus": InputVariable("tfcoil", float, range=(0.01, 1000.0)),
     "lhat": InputVariable("reinke", float, range=(1.0, 15.0)),
     "f_blkt_li6_enrichment": InputVariable("fwbs", float, range=(7.4, 100.0)),
     "life_dpa": InputVariable("costs", float, range=(10.0, 100.0)),
@@ -603,21 +561,15 @@ INPUT_VARIABLES = {
         float,
         range=(1000000000.0, 100000000000000.0),
     ),
-    "max_vv_stress": InputVariable(
-        data_structure.tfcoil_variables, float, range=(100000.0, 500000000.0)
-    ),
+    "max_vv_stress": InputVariable("tfcoil", float, range=(100000.0, 500000000.0)),
     "maxpoloidalpower": InputVariable("pf_power", float, range=(0.0, 2000.0)),
     "pflux_fw_rad_max": InputVariable("constraints", float, range=(0.1, 10.0)),
     "mbvfac": InputVariable("buildings", float, range=(0.9, 3.0)),
     "mcdriv": InputVariable("ife", float, range=(0.1, 10.0)),
     "mvalim": InputVariable("constraints", float, range=(0.0, 1000.0)),
     "n_cycle_min": InputVariable("cs_fatigue", float, range=(0.0, 100000000.0)),
-    "n_tf_coils": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 100.0)
-    ),
-    "n_tf_coil_turns": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 100.0)
-    ),
+    "n_tf_coils": InputVariable("tfcoil", float, range=(0.0, 100.0)),
+    "n_tf_coil_turns": InputVariable("tfcoil", float, range=(0.0, 100.0)),
     "nbi_sys_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "nbi_sys_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "dx_beam_shield": InputVariable("current_drive", float, range=(0.01, 0.5)),
@@ -627,9 +579,7 @@ INPUT_VARIABLES = {
     "nd_plasma_pedestal_electron": InputVariable("physics", float, range=(0.0, 1e21)),
     "nd_plasma_separatrix_electron": InputVariable("physics", float, range=(0.0, 1e21)),
     "nflutfmax": InputVariable("constraints", float, range=(0.0, 1e24)),
-    "j_tf_coil_full_area": InputVariable(
-        data_structure.tfcoil_variables, float, range=(10000.0, 1000000000.0)
-    ),
+    "j_tf_coil_full_area": InputVariable("tfcoil", float, range=(10000.0, 1000000000.0)),
     "f_a_cs_turn_steel": InputVariable("pf_coil", float, range=(0.001, 0.999)),
     "f_z_cs_tf_internal": InputVariable("pf_coil", float, range=(0.0, 2.0)),
     "outgasfactor": InputVariable("vacuum", float, range=(1e-06, 1000.0)),
@@ -669,15 +619,9 @@ INPUT_VARIABLES = {
         "constraints", float, range=(1.0, 10000.0)
     ),
     "pnuc_fw_ratio_dcll": InputVariable("fwbs", float, range=(0.0, 1.0)),
-    "poisson_al": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
-    "poisson_copper": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
-    "poisson_steel": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
+    "poisson_al": InputVariable("tfcoil", float, range=(0.0, 1.0)),
+    "poisson_copper": InputVariable("tfcoil", float, range=(0.0, 1.0)),
+    "poisson_steel": InputVariable("tfcoil", float, range=(0.0, 1.0)),
     "p_fusion_total_max_mw": InputVariable("constraints", float, range=(1.0, 10000.0)),
     "pres_div_chamber_burn": InputVariable("vacuum", float, range=(0.0, 10.0)),
     "pres_fw_coolant": InputVariable("fwbs", float, range=(100000.0, 100000000.0)),
@@ -685,9 +629,7 @@ INPUT_VARIABLES = {
     "psepbqarmax": InputVariable("constraints", float, range=(1.0, 50.0)),
     "pseprmax": InputVariable("constraints", float, range=(1.0, 60.0)),
     "ptargf": InputVariable("ife", float, range=(0.1, 100.0)),
-    "temp_cp_max": InputVariable(
-        data_structure.tfcoil_variables, float, range=(4.0, 573.15)
-    ),
+    "temp_cp_max": InputVariable("tfcoil", float, range=(4.0, 573.15)),
     "ptfnucmax": InputVariable("constraints", float, range=(1e-06, 1.0)),
     "pulsetimings": InputVariable("times", int, choices=[0, 1]),
     "f_a_vac_pump_port_plasma_surface": InputVariable(
@@ -711,9 +653,7 @@ INPUT_VARIABLES = {
     "rbrt": InputVariable("buildings", float, range=(0.0, 10.0)),
     "rbvfac": InputVariable("buildings", float, range=(0.9, 3.0)),
     "rbwt": InputVariable("buildings", float, range=(0.0, 10.0)),
-    "radius_cp_coolant_channel": InputVariable(
-        data_structure.tfcoil_variables, float, range=(1e-06, 1.0)
-    ),
+    "radius_cp_coolant_channel": InputVariable("tfcoil", float, range=(1e-06, 1.0)),
     "reactor_clrnc": InputVariable("buildings", float, range=(0.0, 10.0)),
     "reactor_fndtn_thk": InputVariable("buildings", float, range=(0.25, 25.0)),
     "reactor_hall_h": InputVariable("buildings", float, range=(1.0, 100.0)),
@@ -739,12 +679,8 @@ INPUT_VARIABLES = {
     ),
     "redun_vacp": InputVariable("costs", float, range=(0.0, 100.0)),
     "residual_sig_hoop": InputVariable("cs_fatigue", float, range=(0.0, 1000000000.0)),
-    "rho_tf_bus": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1e-05)
-    ),
-    "rho_tf_joints": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 0.01)
-    ),
+    "rho_tf_bus": InputVariable("tfcoil", float, range=(0.0, 1e-05)),
+    "rho_tf_joints": InputVariable("tfcoil", float, range=(0.0, 0.01)),
     "radius_plasma_pedestal_density_norm": InputVariable(
         "physics", float, range=(0.01, 1.0)
     ),
@@ -753,9 +689,7 @@ INPUT_VARIABLES = {
     ),
     "rhopfbus": InputVariable("pf_coil", float, range=(0.0, 1e-05)),
     "rinboard": InputVariable("build", float, range=(0.1, 10.0)),
-    "ripple_b_tf_plasma_edge_max": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.1, 100.0)
-    ),
+    "ripple_b_tf_plasma_edge_max": InputVariable("tfcoil", float, range=(0.1, 100.0)),
     "rmajor": InputVariable("physics", float, range=(0.1, 50.0)),
     "robotics_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "robotics_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
@@ -767,9 +701,7 @@ INPUT_VARIABLES = {
     "rpf2": InputVariable("pf_coil", float, range=(-3.0, 3.0)),
     "rrin": InputVariable("ife", float, range=(0.1, 50.0)),
     "rrmax": InputVariable("ife", float, range=(1.0, 50.0)),
-    "rrr_tf_cu": InputVariable(
-        data_structure.tfcoil_variables, float, range=(1.0, 1000.0)
-    ),
+    "rrr_tf_cu": InputVariable("tfcoil", float, range=(1.0, 1000.0)),
     "rxcl": InputVariable("buildings", float, range=(0.0, 10.0)),
     "sec_buildings_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "sec_buildings_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
@@ -785,12 +717,8 @@ INPUT_VARIABLES = {
     "dz_shld_upper": InputVariable("build", float, range=(0.0, 10.0)),
     "shmf": InputVariable("buildings", float, range=(0.0, 1.0)),
     "shov": InputVariable("buildings", float, range=(1000.0, 1000000.0)),
-    "sig_tf_case_max": InputVariable(
-        data_structure.tfcoil_variables, float, range=(1000000.0, 100000000000.0)
-    ),
-    "sig_tf_wp_max": InputVariable(
-        data_structure.tfcoil_variables, float, range=(1000000.0, 100000000000.0)
-    ),
+    "sig_tf_case_max": InputVariable("tfcoil", float, range=(1000000.0, 100000000000.0)),
+    "sig_tf_wp_max": InputVariable("tfcoil", float, range=(1000000.0, 100000000000.0)),
     "sigallpc": InputVariable("build", float, range=(0.0, 1000000000.0)),
     "sigpfcalw": InputVariable("pf_coil", float, range=(1.0, 1000.0)),
     "sigpfcf": InputVariable("pf_coil", float, range=(0.1, 1.0)),
@@ -802,37 +730,23 @@ INPUT_VARIABLES = {
     "staff_buildings_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "startupratio": InputVariable("costs", float, range=(0.0, 10.0)),
     "stcl": InputVariable("buildings", float, range=(0.0, 10.0)),
-    "str_cs_con_res": InputVariable(
-        data_structure.tfcoil_variables, float, range=(-0.02, 0.02)
-    ),
-    "str_pf_con_res": InputVariable(
-        data_structure.tfcoil_variables, float, range=(-0.02, 0.02)
-    ),
-    "str_tf_con_res": InputVariable(
-        data_structure.tfcoil_variables, float, range=(-0.02, 0.02)
-    ),
-    "str_wp_max": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 0.3)
-    ),
+    "str_cs_con_res": InputVariable("tfcoil", float, range=(-0.02, 0.02)),
+    "str_pf_con_res": InputVariable("tfcoil", float, range=(-0.02, 0.02)),
+    "str_tf_con_res": InputVariable("tfcoil", float, range=(-0.02, 0.02)),
+    "str_wp_max": InputVariable("tfcoil", float, range=(0.0, 0.3)),
     "t_plant_pulse_dwell": InputVariable("times", float, range=(0.0, 100000000.0)),
     "t_plant_pulse_burn": InputVariable("times", float, range=(0.0, 100000000.0)),
     "t_burn_min": InputVariable("constraints", float, range=(0.001, 1000000.0)),
-    "dx_tf_turn_cable_space_general": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
-    ),
+    "dx_tf_turn_cable_space_general": InputVariable("tfcoil", float, range=(0.0, 0.1)),
     "t_crack_radial": InputVariable("cs_fatigue", float, range=(1e-05, 1.0)),
     "t_crack_vertical": InputVariable("cs_fatigue", float, range=(1e-05, 1.0)),
-    "t_crit_nbti": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 15.0)
-    ),
+    "t_crit_nbti": InputVariable("tfcoil", float, range=(0.0, 15.0)),
     "t_plant_pulse_plasma_current_ramp_up": InputVariable(
         "times", float, range=(0.0, 10000.0)
     ),
     "t_plant_pulse_fusion_ramp": InputVariable("times", float, range=(0.0, 10000.0)),
     "t_in_bb": InputVariable("primary_pumping", float, range=(200.0, 1000.0)),
-    "t_tf_quench_detection": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 100.0)
-    ),
+    "t_tf_quench_detection": InputVariable("tfcoil", float, range=(0.0, 100.0)),
     "t_out_bb": InputVariable("primary_pumping", float, range=(200.0, 1000.0)),
     "t_plant_pulse_coil_precharge": InputVariable("times", float, range=(0.0, 10000.0)),
     "t_plant_pulse_plasma_current_ramp_down": InputVariable(
@@ -840,12 +754,8 @@ INPUT_VARIABLES = {
     ),
     "dr_cs_turn_conduit": InputVariable("cs_fatigue", float, range=(0.001, 1.0)),
     "dz_cs_turn_conduit": InputVariable("cs_fatigue", float, range=(0.001, 1.0)),
-    "dx_tf_turn_general": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
-    ),
-    "t_turn_tf_max": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
+    "dx_tf_turn_general": InputVariable("tfcoil", float, range=(0.0, 0.1)),
+    "t_turn_tf_max": InputVariable("tfcoil", float, range=(0.0, 1.0)),
     "dx_tf_hts_tape_total": InputVariable("rebco", float, range=(0.0, 0.1)),
     "dr_tf_hts_tape": InputVariable("rebco", float, range=(0.0, 0.1)),
     "tauee_in": InputVariable("physics", float, range=(0.0, 100.0)),
@@ -860,76 +770,48 @@ INPUT_VARIABLES = {
     "t_blkt_replace_yrs": InputVariable("costs", float, range=(0.01, 2.0)),
     "tbrmin": InputVariable("constraints", float, range=(0.001, 2.0)),
     "tcomrepl": InputVariable("costs", float, range=(0.01, 2.0)),
-    "temp_cp_coolant_inlet": InputVariable(
-        data_structure.tfcoil_variables, float, range=(4.0, 373.15)
-    ),
-    "tcritsc": InputVariable(data_structure.tfcoil_variables, float, range=(1.0, 300.0)),
+    "temp_cp_coolant_inlet": InputVariable("tfcoil", float, range=(4.0, 373.15)),
+    "tcritsc": InputVariable("tfcoil", float, range=(1.0, 300.0)),
     "t_cycle_min": InputVariable("constraints", float, range=(0.001, 2000000.0)),
     "tdiv": InputVariable("divertor", float, range=(0.1, 100.0)),
     "t_div_replace_yrs": InputVariable("costs", float, range=(0.01, 2.0)),
-    "t_tf_superconductor_quench": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.1, 100.0)
-    ),
+    "t_tf_superconductor_quench": InputVariable("tfcoil", float, range=(0.1, 100.0)),
     "temp_plasma_electron_vol_avg_kev": InputVariable(
         "physics", float, range=(1.0, 200.0)
     ),
     "te0_ecrh_achievable": InputVariable("stellarator", float, range=(1.0, 1000.0)),
-    "temp_cp_average": InputVariable(
-        data_structure.tfcoil_variables, float, range=(4.0, 573.15)
-    ),
+    "temp_cp_average": InputVariable("tfcoil", float, range=(4.0, 573.15)),
     "temp_fw_coolant_in": InputVariable("fwbs", float, range=(300.0, 1500.0)),
     "temp_fw_coolant_out": InputVariable("fwbs", float, range=(300.0, 1500.0)),
     "temp_fw_max": InputVariable("fwbs", float, range=(500.0, 2000.0)),
     "temp_plasma_pedestal_kev": InputVariable("physics", float, range=(0.0, 20.0)),
     "temp_plasma_separatrix_kev": InputVariable("physics", float, range=(0.0, 20.0)),
     "tfcbv": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
-    "dx_tf_wp_insertion_gap": InputVariable(
-        data_structure.tfcoil_variables, float, range=(1e-10, 0.1)
-    ),
+    "dx_tf_wp_insertion_gap": InputVariable("tfcoil", float, range=(1e-10, 0.1)),
     "f_dr_tf_outboard_inboard": InputVariable("build", float, range=(0.2, 5.0)),
-    "tftmp": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 293.0)),
+    "tftmp": InputVariable("tfcoil", float, range=(0.01, 293.0)),
     "tgain": InputVariable("ife", float, range=(1.0, 500.0)),
-    "th_joint_contact": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
-    "theta1_coil": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.1, 60.0)
-    ),
-    "theta1_vv": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.1, 60.0)
-    ),
-    "dx_tf_turn_insulation": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
-    ),
-    "dr_tf_nose_case": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
+    "th_joint_contact": InputVariable("tfcoil", float, range=(0.0, 1.0)),
+    "theta1_coil": InputVariable("tfcoil", float, range=(0.1, 60.0)),
+    "theta1_vv": InputVariable("tfcoil", float, range=(0.1, 60.0)),
+    "dx_tf_turn_insulation": InputVariable("tfcoil", float, range=(0.0, 0.1)),
+    "dr_tf_nose_case": InputVariable("tfcoil", float, range=(0.0, 1.0)),
     "dz_shld_thermal": InputVariable("build", float, range=(0.0, 10.0)),
-    "dx_tf_turn_steel": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
-    ),
+    "dx_tf_turn_steel": InputVariable("tfcoil", float, range=(0.0, 0.1)),
     "temp_plasma_ion_vol_avg_kev": InputVariable("physics", float, range=(5.0, 50.0)),
-    "dx_tf_wp_insulation": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
-    ),
+    "dx_tf_wp_insulation": InputVariable("tfcoil", float, range=(0.0, 0.1)),
     "life_plant": InputVariable("costs", float, range=(1.0, 100.0)),
     "tmain": InputVariable("costs", float, range=(0.0, 100.0)),
-    "tmargmin": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 20.0)),
+    "tmargmin": InputVariable("tfcoil", float, range=(0.0, 20.0)),
     "temp_cs_superconductor_margin_min": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 20.0)
+        "tfcoil", float, range=(0.0, 20.0)
     ),
     "temp_tf_superconductor_margin_min": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 20.0)
+        "tfcoil", float, range=(0.0, 20.0)
     ),
-    "temp_croco_quench_max": InputVariable(
-        data_structure.tfcoil_variables, float, range=(4.0, 1000.0)
-    ),
-    "temp_tf_conductor_quench_max": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1000.0)
-    ),
-    "temp_tf_cryo": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.01, 293.0)
-    ),
+    "temp_croco_quench_max": InputVariable("tfcoil", float, range=(4.0, 1000.0)),
+    "temp_tf_conductor_quench_max": InputVariable("tfcoil", float, range=(0.0, 1000.0)),
+    "temp_tf_cryo": InputVariable("tfcoil", float, range=(0.01, 293.0)),
     "temp_vv_chamber_gas_burn_end": InputVariable("vacuum", float, range=(1.0, 1000.0)),
     "i_t_current_ramp_up": InputVariable("times", int, choices=[0, 1]),
     "transp_clrnc": InputVariable("buildings", float, range=(0.0, 10.0)),
@@ -1012,19 +894,15 @@ INPUT_VARIABLES = {
     "v3dzl": InputVariable("ife", float, range=(0.0, 30.0)),
     "v3dzu": InputVariable("ife", float, range=(0.0, 30.0)),
     "vachtmw": InputVariable("heat_transport", float, range=(0.0, 100.0)),
-    "vel_cp_coolant_midplane": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.001, 100.0)
-    ),
-    "v_tf_coil_dump_quench_max_kv": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 100.0)
-    ),
+    "vel_cp_coolant_midplane": InputVariable("tfcoil", float, range=(0.001, 100.0)),
+    "v_tf_coil_dump_quench_max_kv": InputVariable("tfcoil", float, range=(0.0, 100.0)),
     "f_a_blkt_cooling_channels": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "vfcblkt": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "f_a_cs_void": InputVariable("pf_coil", float, range=(0.0, 1.0)),
     "vfpblkt": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "vfshld": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "f_a_tf_turn_cable_space_extra_void": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
+        "tfcoil", float, range=(0.0, 1.0)
     ),
     "dz_shld_vv_gap": InputVariable("build", float, range=(0.0, 10.0)),
     "dz_xpoint_divertor": InputVariable("build", float, range=(0.0, 10.0)),
@@ -1071,7 +949,7 @@ INPUT_VARIABLES = {
     "i_bldgs_v": InputVariable("buildings", int, choices=[0, 1]),
     "i_blkt_inboard": InputVariable("fwbs", int, choices=[0, 1]),
     "i_bootstrap_current": InputVariable("physics", int, range=(0, 13)),
-    "i_cp_joints": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1]),
+    "i_cp_joints": InputVariable("tfcoil", int, choices=[0, 1]),
     "i_cp_lifetime": InputVariable("costs", int, range=(0, 3)),
     "i_cs_precomp": InputVariable("build", int, choices=[0, 1]),
     "i_cs_stress": InputVariable("pf_coil", int, choices=[0, 1]),
@@ -1091,31 +969,19 @@ INPUT_VARIABLES = {
     "i_rad_loss": InputVariable("physics", int, choices=[0, 1, 2]),
     "i_shield_mat": InputVariable("fwbs", int, choices=[0, 1]),
     "i_single_null": InputVariable("physics", int, choices=[0, 1]),
-    "i_str_wp": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1]),
+    "i_str_wp": InputVariable("tfcoil", int, choices=[0, 1]),
     "i_r_pf_outside_tf_placement": InputVariable("pf_coil", int, choices=[0, 1]),
-    "i_tf_bucking": InputVariable(data_structure.tfcoil_variables, int, range=(0, 3)),
-    "i_tf_case_geom": InputVariable(
-        data_structure.tfcoil_variables, int, choices=[0, 1]
-    ),
-    "i_tf_cond_eyoung_axial": InputVariable(
-        data_structure.tfcoil_variables, int, choices=[0, 1, 2]
-    ),
-    "i_tf_cond_eyoung_trans": InputVariable(
-        data_structure.tfcoil_variables, int, choices=[0, 1]
-    ),
-    "i_tf_sc_mat": InputVariable(data_structure.tfcoil_variables, int, range=(1, 9)),
-    "i_tf_shape": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1, 2]),
-    "i_tf_stress_model": InputVariable(
-        data_structure.tfcoil_variables, int, choices=[0, 1, 2]
-    ),
-    "i_tf_sup": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1, 2]),
-    "i_tf_tresca": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1]),
-    "i_tf_turns_integer": InputVariable(
-        data_structure.tfcoil_variables, int, choices=[0, 1]
-    ),
-    "i_tf_wp_geom": InputVariable(
-        data_structure.tfcoil_variables, int, choices=[0, 1, 2]
-    ),
+    "i_tf_bucking": InputVariable("tfcoil", int, range=(0, 3)),
+    "i_tf_case_geom": InputVariable("tfcoil", int, choices=[0, 1]),
+    "i_tf_cond_eyoung_axial": InputVariable("tfcoil", int, choices=[0, 1, 2]),
+    "i_tf_cond_eyoung_trans": InputVariable("tfcoil", int, choices=[0, 1]),
+    "i_tf_sc_mat": InputVariable("tfcoil", int, range=(1, 9)),
+    "i_tf_shape": InputVariable("tfcoil", int, choices=[0, 1, 2]),
+    "i_tf_stress_model": InputVariable("tfcoil", int, choices=[0, 1, 2]),
+    "i_tf_sup": InputVariable("tfcoil", int, choices=[0, 1, 2]),
+    "i_tf_tresca": InputVariable("tfcoil", int, choices=[0, 1]),
+    "i_tf_turns_integer": InputVariable("tfcoil", int, choices=[0, 1]),
+    "i_tf_wp_geom": InputVariable("tfcoil", int, choices=[0, 1, 2]),
     "i_plant_availability": InputVariable("costs", int, range=(0, 3)),
     "ibkt_life": InputVariable("costs", int, choices=[0, 1, 2]),
     "i_blkt_dual_coolant": InputVariable("fwbs", int, choices=[0, 1, 2]),
@@ -1154,27 +1020,17 @@ INPUT_VARIABLES = {
     "i_pflux_fw_neutron": InputVariable("physics", int, range=(1, 2)),
     "lsa": InputVariable("costs", int, range=(1, 4)),
     "m_res": InputVariable("stellarator", int, range=(1, 10)),
-    "n_tf_wp_layers": InputVariable(
-        data_structure.tfcoil_variables, int, range=(1, 100)
-    ),
+    "n_tf_wp_layers": InputVariable("tfcoil", int, range=(1, 100)),
     "i_tf_turn_type": InputVariable(
         data_structure.superconducting_tf_coil_variables, int, choices=[1, 2]
     ),
     "n_liq_recirc": InputVariable("fwbs", int, range=(1, 50)),
-    "n_tf_wp_pancakes": InputVariable(
-        data_structure.tfcoil_variables, int, range=(1, 100)
-    ),
-    "n_rad_per_layer": InputVariable(
-        data_structure.tfcoil_variables, int, range=(1, 500)
-    ),
+    "n_tf_wp_pancakes": InputVariable("tfcoil", int, range=(1, 100)),
+    "n_rad_per_layer": InputVariable("tfcoil", int, range=(1, 500)),
     "n_res": InputVariable("stellarator", int, range=(3, 6)),
-    "n_tf_graded_layers": InputVariable(
-        data_structure.tfcoil_variables, int, range=(1, 20)
-    ),
-    "n_tf_joints": InputVariable(data_structure.tfcoil_variables, int, range=(1, 50)),
-    "n_tf_joints_contact": InputVariable(
-        data_structure.tfcoil_variables, int, range=(1, 50)
-    ),
+    "n_tf_graded_layers": InputVariable("tfcoil", int, range=(1, 20)),
+    "n_tf_joints": InputVariable("tfcoil", int, range=(1, 50)),
+    "n_tf_joints_contact": InputVariable("tfcoil", int, range=(1, 50)),
     "n_blkt_inboard_modules_poloidal": InputVariable("fwbs", int, range=(1, 16)),
     "n_blkt_outboard_modules_poloidal": InputVariable("fwbs", int, range=(1, 16)),
     "n_blkt_inboard_modules_toroidal": InputVariable("fwbs", int, range=(8, 96)),
@@ -1198,12 +1054,10 @@ INPUT_VARIABLES = {
         int,
         choices=list(range(N_CONFINEMENT_SCALINGS)),
     ),
-    "quench_model": InputVariable(
-        data_structure.tfcoil_variables, str, choices=["exponential", "linear"]
-    ),
+    "quench_model": InputVariable("tfcoil", str, choices=["exponential", "linear"]),
     "i_fw_coolant_type": InputVariable("fwbs", str, choices=["helium", "water"]),
     "i_vacuum_pumping": InputVariable("vacuum", str, choices=["old", "simple"]),
-    "dcond": InputVariable(data_structure.tfcoil_variables, float, array=True),
+    "dcond": InputVariable("tfcoil", float, array=True),
     "c_pf_coil_turn_peak_input": InputVariable("pf_coil", float, array=True),
     "i_pf_location": InputVariable("pf_coil", int, array=True),
     "n_pf_coils_in_group": InputVariable("pf_coil", int, array=True),

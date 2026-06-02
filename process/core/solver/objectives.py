@@ -2,7 +2,6 @@ import numpy as np
 
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
-from process.data_structure import tfcoil_variables
 from process.data_structure.numerics import FiguresOfMerit
 
 
@@ -49,7 +48,7 @@ def objective_function(minmax: int, data: DataStructure) -> float:
     elif figure_of_merit == FiguresOfMerit.NEUTRON_WALL_LOAD:
         objective_metric = data.physics.pflux_fw_neutron_mw
     elif figure_of_merit == FiguresOfMerit.P_TF_PLUS_P_PF:
-        objective_metric = (tfcoil_variables.tfcmw + 1e-3 * data.pf_power.srcktpm) / 10.0
+        objective_metric = (data.tfcoil.tfcmw + 1e-3 * data.pf_power.srcktpm) / 10.0
     elif figure_of_merit == FiguresOfMerit.FUSION_GAIN_Q:
         objective_metric = data.current_drive.big_q_plasma
     elif figure_of_merit == FiguresOfMerit.COST_OF_ELECTRICITY:

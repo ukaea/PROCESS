@@ -2,8 +2,6 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import tfcoil_variables as tfv
-
 
 @pytest.fixture
 def vacuum(process_models):
@@ -43,7 +41,7 @@ class TestVacuum:
             7.5745668997694112e22,
         )
         monkeypatch.setattr(vacuum.data.physics, "a_plasma_surface", 1500.3146527709359)
-        monkeypatch.setattr(tfv, "n_tf_coils", 18)
+        monkeypatch.setattr(vacuum.data.tfcoil, "n_tf_coils", 18)
         monkeypatch.setattr(vacuum.data.times, "t_plant_pulse_dwell", 500)
         monkeypatch.setattr(vacuum.data.vacuum, "outgasfactor", 0.0235)
         monkeypatch.setattr(vacuum.data.vacuum, "outgasindex", 1)

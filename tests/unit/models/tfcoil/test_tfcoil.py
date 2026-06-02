@@ -1,4 +1,4 @@
-"""Unit and Integration tests for tfcoil.f90."""
+"""Unit and Integration tests for tfcoil.py."""
 
 import json
 from collections.abc import Sequence
@@ -10,11 +10,7 @@ import numpy as np
 import pytest
 
 import process.models.tfcoil.base as tfcoil_module
-from process.data_structure import (
-    superconducting_tf_coil_variables,
-    tfcoil_variables,
-)
-from process.models.tfcoil.base import TFCoil
+from process.data_structure import superconducting_tf_coil_variables
 
 
 @pytest.fixture
@@ -104,21 +100,21 @@ class CntrpstTestAsset(NamedTuple):
     """Test asset for a test case of cntrpst"""
 
     i_tf_sup: int
-    """tfcoil_variables.i_tf_sup value to be mocked (0=Copper, 2=Cryogenic aluminium)"""
+    """tfcoil.data.tfcoil.i_tf_sup value to be mocked (0=Copper, 2=Cryogenic aluminium)"""
     temp_cp_coolant_inlet: float
-    """tfcoil_variables.temp_cp_coolant_inlet value to be mocked
+    """tfcoil.data.tfcoil.temp_cp_coolant_inlet value to be mocked
     (centrepost coolant inlet temperature)"""
     expected_dtiocool: float
-    """expected value of tfcoil_variables.dtemp_cp_coolant
+    """expected value of tfcoil.data.tfcoil.dtemp_cp_coolant
     after tfcoil.cntrpst routine has run"""
     expected_tcpav2: float
-    """expected value of tfcoil_variables.tcpav2
+    """expected value of tfcoil.data.tfcoil.tcpav2
     after tfcoil.cntrpst routine has run"""
     expected_temp_cp_peak: float
-    """expected value of tfcoil_variables.temp_cp_peak
+    """expected value of tfcoil.data.tfcoil.temp_cp_peak
     after tfcoil.cntrpst routine has run"""
     expected_ppump: float
-    """expected value of tfcoil_variables.p_cp_coolant_pump_elec
+    """expected value of tfcoil.data.tfcoil.p_cp_coolant_pump_elec
     after tfcoil.cntrpst routine has run"""
 
 
@@ -143,15 +139,15 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
         - temp_cp_peak
         - p_cp_coolant_pump_elec
     """
-    monkeypatch.setattr(tfcoil_variables, "a_cp_cool", 1)
-    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 16)
-    monkeypatch.setattr(tfcoil_variables, "radius_cp_coolant_channel", 0.005)
-    monkeypatch.setattr(tfcoil_variables, "vel_cp_coolant_midplane", 20.0)
-    monkeypatch.setattr(tfcoil_variables, "vol_cond_cp", 2)
-    monkeypatch.setattr(tfcoil_variables, "p_cp_resistive", 1)
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", cntrpst_asset.i_tf_sup)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "a_cp_cool", 1)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "n_tf_coils", 16)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "radius_cp_coolant_channel", 0.005)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "vel_cp_coolant_midplane", 20.0)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "vol_cond_cp", 2)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "p_cp_resistive", 1)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "i_tf_sup", cntrpst_asset.i_tf_sup)
     monkeypatch.setattr(
-        tfcoil_variables, "temp_cp_coolant_inlet", cntrpst_asset.temp_cp_coolant_inlet
+        tfcoil.data.tfcoil, "temp_cp_coolant_inlet", cntrpst_asset.temp_cp_coolant_inlet
     )
     monkeypatch.setattr(tfcoil.data.fwbs, "pnuc_cp_tf", 1)
     monkeypatch.setattr(tfcoil.data.build, "z_tf_inside_half", 1)
@@ -160,19 +156,21 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     tfcoil.cntrpst()
 
     # appears to be the same for all cases?
-    assert pytest.approx(tfcoil_variables.n_cp_coolant_channels_total) == 203718.3271576
+    assert (
+        pytest.approx(tfcoil.data.tfcoil.n_cp_coolant_channels_total) == 203718.3271576
+    )
 
     assert (
-        pytest.approx(tfcoil_variables.dtemp_cp_coolant, abs=1e-8)
+        pytest.approx(tfcoil.data.tfcoil.dtemp_cp_coolant, abs=1e-8)
         == cntrpst_asset.expected_dtiocool
     )
-    assert pytest.approx(tfcoil_variables.tcpav2) == cntrpst_asset.expected_tcpav2
+    assert pytest.approx(tfcoil.data.tfcoil.tcpav2) == cntrpst_asset.expected_tcpav2
     assert (
-        pytest.approx(tfcoil_variables.temp_cp_peak)
+        pytest.approx(tfcoil.data.tfcoil.temp_cp_peak)
         == cntrpst_asset.expected_temp_cp_peak
     )
     assert (
-        pytest.approx(tfcoil_variables.p_cp_coolant_pump_elec)
+        pytest.approx(tfcoil.data.tfcoil.p_cp_coolant_pump_elec)
         == cntrpst_asset.expected_ppump
     )
 
@@ -280,6 +278,7 @@ def test_tf_global_geometry(
         r_tf_inboard_in,
         r_tf_outboard_mid,
         dr_tf_outboard,
+        tfcoil.data,
     )
     assert astuple(result) == expected
 
@@ -663,7 +662,7 @@ def test_tf_coil_self_inductance(tfcindparam, monkeypatch, tfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(tfcoil_variables, "ind_tf_coil", tfcindparam.ind_tf_coil)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "ind_tf_coil", tfcindparam.ind_tf_coil)
 
     ind_tf_coil = tfcoil.tf_coil_self_inductance(
         dr_tf_inboard=tfcindparam.dr_tf_inboard,
@@ -745,7 +744,7 @@ def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, 
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "len_tf_coil", tfcoilareaandmassesparam.len_tf_coil
+        tfcoil.data.tfcoil, "len_tf_coil", tfcoilareaandmassesparam.len_tf_coil
     )
 
     monkeypatch.setattr(
@@ -773,15 +772,15 @@ def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, 
 
     tfcoil.generic_tf_coil_area_and_masses()
 
-    assert tfcoil_variables.tficrn == pytest.approx(
+    assert tfcoil.data.tfcoil.tficrn == pytest.approx(
         tfcoilareaandmassesparam.expected_tficrn
     )
 
-    assert tfcoil_variables.tfcryoarea == pytest.approx(
+    assert tfcoil.data.tfcoil.tfcryoarea == pytest.approx(
         tfcoilareaandmassesparam.expected_tfcryoarea
     )
 
-    assert tfcoil_variables.tfocrn == pytest.approx(
+    assert tfcoil.data.tfcoil.tfocrn == pytest.approx(
         tfcoilareaandmassesparam.expected_tfocrn
     )
 
@@ -1989,9 +1988,9 @@ def test_tf_stored_magnetic_energy(
     expected_total,
     expected_total_gj,
     expected_single,
+    tfcoil,
 ):
-    tfc = TFCoil(build=None)
-    result = tfc.tf_stored_magnetic_energy(
+    result = tfcoil.tf_stored_magnetic_energy(
         ind_tf_coil=ind_tf_coil, c_tf_total=c_tf_total, n_tf_coils=n_tf_coils
     )
     assert pytest.approx(result[0]) == expected_total

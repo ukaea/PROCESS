@@ -5,10 +5,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import (
-    global_variables,
-    tfcoil_variables,
-)
+from process.data_structure import global_variables
 
 logger = logging.getLogger(__name__)
 
@@ -532,7 +529,7 @@ class Costs2015(Model):
         )
         # Scale with TF current per coil (MA)
         self.data.costs_2015.s_k[5] = (
-            tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils
+            self.data.tfcoil.c_tf_total / self.data.tfcoil.n_tf_coils
         ) / 1.0e6
         self.data.costs_2015.s_kref[5] = 9.1e0
         self.data.costs_2015.s_cost[5] = (
@@ -547,7 +544,7 @@ class Costs2015(Model):
             35000.0e0 * self.data.costs.light_build_cost_per_vol
         )
         # Scale with total stored energy in TF coils (GJ)
-        self.data.costs_2015.s_k[6] = tfcoil_variables.e_tf_magnetic_stored_total_gj
+        self.data.costs_2015.s_k[6] = self.data.tfcoil.e_tf_magnetic_stored_total_gj
         self.data.costs_2015.s_kref[6] = 41.0e0
         self.data.costs_2015.s_cost[6] = (
             self.data.costs_2015.s_cost_factor[6]
@@ -665,7 +662,7 @@ class Costs2015(Model):
         self.data.costs_2015.s_cref[13] = 258.0e6
         # Scale with total TF coil length (m)
         self.data.costs_2015.s_k[13] = (
-            tfcoil_variables.n_tf_coils * tfcoil_variables.len_tf_coil
+            self.data.tfcoil.n_tf_coils * self.data.tfcoil.len_tf_coil
         )
         self.data.costs_2015.s_kref[13] = 18.0e0 * 34.1e0
         self.data.costs_2015.s_cost[13] = (
@@ -681,9 +678,9 @@ class Costs2015(Model):
         self.data.costs_2015.s_cref[15] = 414.0e6
         # Scale with the total turn length (m)
         self.data.costs_2015.s_k[15] = (
-            tfcoil_variables.n_tf_coils
-            * tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_coil_turns
+            self.data.tfcoil.n_tf_coils
+            * self.data.tfcoil.len_tf_coil
+            * self.data.tfcoil.n_tf_coil_turns
         )
         self.data.costs_2015.s_kref[15] = 82249.0e0
         self.data.costs_2015.s_cost[15] = (
@@ -699,7 +696,7 @@ class Costs2015(Model):
         self.data.costs_2015.s_cref[16] = 21.0e6
         # Scale with total copper mass (kg)
         self.data.costs_2015.s_k[16] = (
-            tfcoil_variables.m_tf_coil_copper * tfcoil_variables.n_tf_coils
+            self.data.tfcoil.m_tf_coil_copper * self.data.tfcoil.n_tf_coils
         )
         self.data.costs_2015.s_kref[16] = 244.0e3
         self.data.costs_2015.s_cost[16] = (
@@ -717,7 +714,7 @@ class Costs2015(Model):
         self.data.costs_2015.s_cref[17] = 526.0e6
         # Scale with the total mass of Nb3Sn (kg)
         self.data.costs_2015.s_k[17] = (
-            tfcoil_variables.m_tf_coil_superconductor * tfcoil_variables.n_tf_coils
+            self.data.tfcoil.m_tf_coil_superconductor * self.data.tfcoil.n_tf_coils
         )
         self.data.costs_2015.s_kref[17] = 210.0e3
         self.data.costs_2015.s_cost[17] = (
@@ -741,9 +738,9 @@ class Costs2015(Model):
         self.data.costs_2015.s_cref[19] = 81.0e6
         # Scale with total turn length.
         self.data.costs_2015.s_k[19] = (
-            tfcoil_variables.n_tf_coils
-            * tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_coil_turns
+            self.data.tfcoil.n_tf_coils
+            * self.data.tfcoil.len_tf_coil
+            * self.data.tfcoil.n_tf_coil_turns
         )
         self.data.costs_2015.s_kref[19] = 82249.0e0
         self.data.costs_2015.s_cost[19] = (

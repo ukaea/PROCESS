@@ -3,10 +3,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import (
-    numerics,
-    tfcoil_variables,
-)
+from process.data_structure import numerics
 
 
 @pytest.fixture
@@ -2820,20 +2817,20 @@ def test_power2(power2param, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "p_cp_coolant_pump_elec", power2param.p_cp_coolant_pump_elec
+        power.data.tfcoil, "p_cp_coolant_pump_elec", power2param.p_cp_coolant_pump_elec
     )
 
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", power2param.i_tf_sup)
+    monkeypatch.setattr(power.data.tfcoil, "i_tf_sup", power2param.i_tf_sup)
 
-    monkeypatch.setattr(tfcoil_variables, "tfcmw", power2param.tfcmw)
+    monkeypatch.setattr(power.data.tfcoil, "tfcmw", power2param.tfcmw)
 
-    monkeypatch.setattr(tfcoil_variables, "temp_tf_cryo", power2param.temp_tf_cryo)
+    monkeypatch.setattr(power.data.tfcoil, "temp_tf_cryo", power2param.temp_tf_cryo)
 
     monkeypatch.setattr(
-        tfcoil_variables, "temp_cp_coolant_inlet", power2param.temp_cp_coolant_inlet
+        power.data.tfcoil, "temp_cp_coolant_inlet", power2param.temp_cp_coolant_inlet
     )
 
-    monkeypatch.setattr(tfcoil_variables, "eff_tf_cryo", power2param.eff_tf_cryo)
+    monkeypatch.setattr(power.data.tfcoil, "eff_tf_cryo", power2param.eff_tf_cryo)
 
     monkeypatch.setattr(
         power.data.primary_pumping,

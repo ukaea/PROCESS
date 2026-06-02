@@ -12938,6 +12938,7 @@ def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: MFile, scan: int):
     dx_tf_wp_insulation = mfile.get("dx_tf_wp_insulation", scan=scan)
     dx_tf_wp_insertion_gap = mfile.get("dx_tf_wp_insertion_gap", scan=scan)
     ripple_b_tf_plasma_edge_max = mfile.get("ripple_b_tf_plasma_edge_max", scan=scan)
+    i_tf_wp_geom = round(mfile.get("i_tf_wp_geom", scan=scan))
 
     build = Build()
 
@@ -12986,6 +12987,7 @@ def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: MFile, scan: int):
                     i_tf_sup=i_tf_sup,
                     dx_tf_wp_insulation=dx_tf_wp_insulation,
                     dx_tf_wp_insertion_gap=dx_tf_wp_insertion_gap,
+                    i_tf_wp_geom=i_tf_wp_geom,
                 )
             except (ValueError, ZeroDivisionError, OverflowError, TypeError):
                 # Only catch expected numeric/validation errors from the ripple calculation;
@@ -13131,6 +13133,7 @@ def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: MFile, scan: int):
                     i_tf_sup=i_tf_sup,
                     dx_tf_wp_insulation=dx_tf_wp_insulation,
                     dx_tf_wp_insertion_gap=dx_tf_wp_insertion_gap,
+                    i_tf_wp_geom=i_tf_wp_geom,
                 )
             except (ValueError, ZeroDivisionError, OverflowError, TypeError):
                 # Only catch expected numeric/validation errors from the ripple calculation;

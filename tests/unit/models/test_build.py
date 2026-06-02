@@ -360,6 +360,7 @@ def test_plasma_outboard_edge_toroidal_ripple_additional(param, build):
         i_tf_sup=param.i_tf_sup,
         dx_tf_wp_insulation=param.dx_tf_wp_insulation,
         dx_tf_wp_insertion_gap=param.dx_tf_wp_insertion_gap,
+        i_tf_wp_geom=1,
     )
 
     if param.i_tf_shape == 2:

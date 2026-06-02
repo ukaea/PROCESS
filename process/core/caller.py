@@ -293,14 +293,11 @@ class Caller:
         # Toroidal field coil model
 
         # Toroidal field coil resistive model
-        if (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.WATER_COOLED_COPPER
-        ):
+        if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             self.models.copper_tf_coil.run()
 
         # Toroidal field coil superconductor model
-        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+        if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             if (
                 SuperconductingTFTurnType(
                     data_structure.superconducting_tf_coil_variables.i_tf_turn_type
@@ -316,10 +313,7 @@ class Caller:
             ):
                 self.models.croco_sctfcoil.run()
 
-        if (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
-        ):
+        if data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             self.models.aluminium_tf_coil.run()
 
         # Poloidal field and central solenoid model
@@ -363,8 +357,7 @@ class Caller:
         # Tight aspect ratio machine model
         if (
             data.physics.itart == 1
-            and data_structure.tfcoil_variables.i_tf_sup
-            != TFConductorModel.SUPERCONDUCTING
+            and data.tfcoil.i_tf_sup != TFConductorModel.SUPERCONDUCTING
         ):
             self.models.tfcoil.run()
 

@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import tfcoil_variables
 from process.models.stellarator.build import st_build
 from process.models.stellarator.coils.coils import bmax_from_awp, intersect
 from process.models.stellarator.coils.quench import (
@@ -853,25 +852,25 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
     monkeypatch.setattr(stellarator.data.structure, "gsmass", ststrcparam.gsmass)
 
     monkeypatch.setattr(
-        tfcoil_variables, "m_tf_coils_total", ststrcparam.m_tf_coils_total
+        stellarator.data.tfcoil, "m_tf_coils_total", ststrcparam.m_tf_coils_total
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tcritsc", ststrcparam.tcritsc)
+    monkeypatch.setattr(stellarator.data.tfcoil, "tcritsc", ststrcparam.tcritsc)
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        stellarator.data.tfcoil,
         "e_tf_magnetic_stored_total_gj",
         ststrcparam.e_tf_magnetic_stored_total_gj,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        stellarator.data.tfcoil,
         "v_tf_coil_dump_quench_kv",
         ststrcparam.v_tf_coil_dump_quench_kv,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        stellarator.data.tfcoil,
         "dx_tf_inboard_out_toroidal",
         ststrcparam.dx_tf_inboard_out_toroidal,
     )
@@ -901,13 +900,13 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        stellarator.data.tfcoil,
         "len_tf_coil",
         ststrcparam.stella_config_coillength * ststrcparam.f_st_rmajor,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        stellarator.data.tfcoil,
         "n_tf_coils",
         1,
     )
@@ -2250,26 +2249,26 @@ def test_sctfcoil_nuclear_heating_iter90(
         sctfcoilnuclearheatingiter90param.pflux_fw_neutron_mw,
     )
     monkeypatch.setattr(
-        tfcoil_variables,
+        stellarator.data.tfcoil,
         "dr_tf_plasma_case",
         sctfcoilnuclearheatingiter90param.dr_tf_plasma_case,
     )
     monkeypatch.setattr(
-        tfcoil_variables, "i_tf_sup", sctfcoilnuclearheatingiter90param.i_tf_sup
+        stellarator.data.tfcoil, "i_tf_sup", sctfcoilnuclearheatingiter90param.i_tf_sup
     )
     monkeypatch.setattr(
-        tfcoil_variables, "tfsai", sctfcoilnuclearheatingiter90param.tfsai
+        stellarator.data.tfcoil, "tfsai", sctfcoilnuclearheatingiter90param.tfsai
     )
     monkeypatch.setattr(
-        tfcoil_variables, "tfsao", sctfcoilnuclearheatingiter90param.tfsao
+        stellarator.data.tfcoil, "tfsao", sctfcoilnuclearheatingiter90param.tfsao
     )
     monkeypatch.setattr(
-        tfcoil_variables,
+        stellarator.data.tfcoil,
         "dr_tf_wp_with_insulation",
         sctfcoilnuclearheatingiter90param.dr_tf_wp_with_insulation,
     )
     monkeypatch.setattr(
-        tfcoil_variables,
+        stellarator.data.tfcoil,
         "dx_tf_wp_insulation",
         sctfcoilnuclearheatingiter90param.dx_tf_wp_insulation,
     )

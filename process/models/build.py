@@ -9,7 +9,6 @@ from process.core.model import Model
 from process.data_structure import (
     numerics,
     superconducting_tf_coil_variables,
-    tfcoil_variables,
 )
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.physics.current_drive import (
@@ -51,8 +50,8 @@ class Build(Model):
         ) = self.calculate_beam_port_size(
             f_radius_beam_tangency_rmajor=self.data.current_drive.f_radius_beam_tangency_rmajor,
             rmajor=self.data.physics.rmajor,
-            n_tf_coils=tfcoil_variables.n_tf_coils,
-            dx_tf_inboard_out_toroidal=tfcoil_variables.dx_tf_inboard_out_toroidal,
+            n_tf_coils=self.data.tfcoil.n_tf_coils,
+            dx_tf_inboard_out_toroidal=self.data.tfcoil.dx_tf_inboard_out_toroidal,
             dr_tf_outboard=self.data.build.dr_tf_outboard,
             r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
             dx_beam_duct=self.data.current_drive.dx_beam_duct,
@@ -1477,6 +1476,7 @@ class Build(Model):
         i_tf_sup: int,
         dx_tf_wp_insulation: float,
         dx_tf_wp_insertion_gap: float,
+        i_tf_wp_geom: int,
     ) -> tuple[float, float, int]:
         """Plasma outboard toroidal field (TF) ripple calculation.
 
@@ -1515,6 +1515,9 @@ class Build(Model):
             Winding-pack insulation thickness (m)
         dx_tf_wp_insertion_gap : float
             Winding-pack insertion gap (m)
+        i_tf_wp_geom: int
+            Specifies type of shape for the winding pack
+            See SuperconductingTFWPShapeType for more information
 
         Returns
         -------
@@ -1535,7 +1538,7 @@ class Build(Model):
             # Minimal inboard WP radius [m]
             r_wp_min = r_tf_wp_inboard_inner
 
-            i_tf_wp_geom = SuperconductingTFWPShapeType(tfcoil_variables.i_tf_wp_geom)
+            i_tf_wp_geom = SuperconductingTFWPShapeType(i_tf_wp_geom)
 
             # Rectangular WP
             if i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
@@ -1689,12 +1692,12 @@ class Build(Model):
             self.data.build.dr_cs_precomp = 0.0e0
 
         # Issue #514 Radial dimensions of inboard leg
-        # Calculate self.data.build.dr_tf_inboard if tfcoil_variables.dr_tf_wp_with_insulation is an iteration variable (140)
+        # Calculate self.data.build.dr_tf_inboard if self.data.tfcoil.dr_tf_wp_with_insulation is an iteration variable (140)
         if 140 in numerics.ixc[0 : numerics.nvar]:
             self.data.build.dr_tf_inboard = (
-                tfcoil_variables.dr_tf_wp_with_insulation
-                + tfcoil_variables.dr_tf_plasma_case
-                + tfcoil_variables.dr_tf_nose_case
+                self.data.tfcoil.dr_tf_wp_with_insulation
+                + self.data.tfcoil.dr_tf_plasma_case
+                + self.data.tfcoil.dr_tf_nose_case
             )
 
         if self.data.build.i_tf_inside_cs == 1:
@@ -1726,14 +1729,14 @@ class Build(Model):
         # WP radial thickness [m]
         # Calculated only if not used as an iteration variable
         if 140 not in numerics.ixc[0 : numerics.nvar]:
-            tfcoil_variables.dr_tf_wp_with_insulation = (
+            self.data.tfcoil.dr_tf_wp_with_insulation = (
                 self.data.build.dr_tf_inboard
-                - tfcoil_variables.dr_tf_plasma_case
-                - tfcoil_variables.dr_tf_nose_case
+                - self.data.tfcoil.dr_tf_plasma_case
+                - self.data.tfcoil.dr_tf_nose_case
             )
 
         # Radius of the centrepost at the top of the machine
-        if self.data.physics.itart == 1 and tfcoil_variables.i_tf_sup != 1:
+        if self.data.physics.itart == 1 and self.data.tfcoil.i_tf_sup != 1:
             # self.data.build.r_cp_top is set using the plasma shape
             if self.data.build.i_r_cp_top == 0:
                 self.data.build.r_cp_top = (
@@ -1748,7 +1751,7 @@ class Build(Model):
                         + self.data.build.dr_fw_inboard
                         + 3.0e0 * self.data.build.dr_fw_plasma_gap_inboard
                     )
-                    + tfcoil_variables.drtop
+                    + self.data.tfcoil.drtop
                 )
 
                 # Notify user that self.data.build.r_cp_top has been set to 1.01*self.data.build.r_tf_inboard_out (lvl 2 error)
@@ -1789,7 +1792,7 @@ class Build(Model):
                     self.data.build.f_r_cp * self.data.build.r_tf_inboard_out
                 )
 
-        else:  # End of self.data.physics.itart == 1 .and. tfcoil_variables.i_tf_sup /= 1
+        else:  # End of self.data.physics.itart == 1 .and. self.data.tfcoil.i_tf_sup /= 1
             self.data.build.r_cp_top = self.data.build.r_tf_inboard_out
 
         if self.data.build.i_r_cp_top != 0 and (
@@ -1805,7 +1808,7 @@ class Build(Model):
                 + self.data.build.dr_fw_inboard
                 + 3.0e0 * self.data.build.dr_fw_plasma_gap_inboard
             )
-            + tfcoil_variables.drtop
+            + self.data.tfcoil.drtop
         ):
             logger.error(
                 f"Top CP radius larger that its value determined with plasma shape {self.data.build.r_cp_top=}"
@@ -1869,7 +1872,7 @@ class Build(Model):
         )
 
         #  Thickness of outboard TF coil legs
-        if tfcoil_variables.i_tf_sup != 1:
+        if self.data.tfcoil.i_tf_sup != 1:
             self.data.build.dr_tf_outboard = (
                 self.data.build.f_dr_tf_outboard_inboard * self.data.build.dr_tf_inboard
             )
@@ -1893,26 +1896,27 @@ class Build(Model):
         ) - (self.data.build.r_tf_inboard_mid - 0.5e0 * self.data.build.dr_tf_inboard)
 
         (
-            tfcoil_variables.ripple_b_tf_plasma_edge,
+            self.data.tfcoil.ripple_b_tf_plasma_edge,
             r_tf_outboard_midl,
             self.data.build.ripflag,
         ) = self.plasma_outboard_edge_toroidal_ripple(
-            ripple_b_tf_plasma_edge_max=tfcoil_variables.ripple_b_tf_plasma_edge_max,
+            ripple_b_tf_plasma_edge_max=self.data.tfcoil.ripple_b_tf_plasma_edge_max,
             r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
-            n_tf_coils=tfcoil_variables.n_tf_coils,
+            n_tf_coils=self.data.tfcoil.n_tf_coils,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
             r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
             r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
-            dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
-            i_tf_shape=tfcoil_variables.i_tf_shape,
-            i_tf_sup=tfcoil_variables.i_tf_sup,
-            dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
-            dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
+            dx_tf_wp_primary_toroidal=self.data.tfcoil.dx_tf_wp_primary_toroidal,
+            i_tf_shape=self.data.tfcoil.i_tf_shape,
+            i_tf_sup=self.data.tfcoil.i_tf_sup,
+            dx_tf_wp_insulation=self.data.tfcoil.dx_tf_wp_insulation,
+            dx_tf_wp_insertion_gap=self.data.tfcoil.dx_tf_wp_insertion_gap,
+            i_tf_wp_geom=self.data.tfcoil.i_tf_wp_geom,
         )
 
-        #  If the tfcoil_variables.ripple is too large then move the outboard TF coil leg
+        #  If the self.data.tfcoil.ripple is too large then move the outboard TF coil leg
         if r_tf_outboard_midl > self.data.build.r_tf_outboard_mid:
             self.data.build.r_tf_outboard_mid = r_tf_outboard_midl
             self.data.build.dr_shld_vv_gap_outboard = (
@@ -1934,23 +1938,24 @@ class Build(Model):
             self.data.build.dr_shld_vv_gap_outboard = self.data.build.gapomin
 
         (
-            tfcoil_variables.ripple_b_tf_plasma_edge,
+            self.data.tfcoil.ripple_b_tf_plasma_edge,
             r_tf_outboard_midl,
             self.data.build.ripflag,
         ) = self.plasma_outboard_edge_toroidal_ripple(
-            ripple_b_tf_plasma_edge_max=tfcoil_variables.ripple_b_tf_plasma_edge_max,
+            ripple_b_tf_plasma_edge_max=self.data.tfcoil.ripple_b_tf_plasma_edge_max,
             r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
-            n_tf_coils=tfcoil_variables.n_tf_coils,
+            n_tf_coils=self.data.tfcoil.n_tf_coils,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
             r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
             r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
-            dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
-            i_tf_shape=tfcoil_variables.i_tf_shape,
-            i_tf_sup=tfcoil_variables.i_tf_sup,
-            dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
-            dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
+            dx_tf_wp_primary_toroidal=self.data.tfcoil.dx_tf_wp_primary_toroidal,
+            i_tf_shape=self.data.tfcoil.i_tf_shape,
+            i_tf_sup=self.data.tfcoil.i_tf_sup,
+            dx_tf_wp_insulation=self.data.tfcoil.dx_tf_wp_insulation,
+            dx_tf_wp_insertion_gap=self.data.tfcoil.dx_tf_wp_insertion_gap,
+            i_tf_wp_geom=self.data.tfcoil.i_tf_wp_geom,
         )
 
         if output:
@@ -1971,8 +1976,8 @@ class Build(Model):
 
                 if self.data.build.ripflag == 1:
                     diagnostic = (
-                        tfcoil_variables.dx_tf_wp_primary_toroidal
-                        * tfcoil_variables.n_tf_coils
+                        self.data.tfcoil.dx_tf_wp_primary_toroidal
+                        * self.data.tfcoil.n_tf_coils
                         / self.data.physics.rmajor
                     )
                     logger.warning(
@@ -1981,7 +1986,7 @@ class Build(Model):
                     )
                 elif self.data.build.ripflag == 2:
                     logger.warning(
-                        f"(TF coil ripple calculation) No of TF coils not between 16 and 20 inclusive {tfcoil_variables.n_tf_coils=}"
+                        f"(TF coil ripple calculation) No of TF coils not between 16 and 20 inclusive {self.data.tfcoil.n_tf_coils=}"
                     )
                 else:
                     diagnostic = (
@@ -2022,7 +2027,7 @@ class Build(Model):
                 )
             if (
                 self.data.build.i_tf_inside_cs == 1
-                and tfcoil_variables.i_tf_bucking >= 2
+                and self.data.tfcoil.i_tf_bucking >= 2
             ):
                 po.ocmmnt(
                     self.outfile,
@@ -2037,7 +2042,7 @@ class Build(Model):
             radial_build_data.append(["Device centreline", None, 0.0, radius])
             if (
                 self.data.build.i_tf_inside_cs == 1
-                and tfcoil_variables.i_tf_bucking >= 2
+                and self.data.tfcoil.i_tf_bucking >= 2
             ):
                 radius += self.data.build.dr_bore
 
@@ -2048,7 +2053,7 @@ class Build(Model):
                     radius,
                 ])
             elif (
-                self.data.build.i_tf_inside_cs == 1 and tfcoil_variables.i_tf_bucking < 2
+                self.data.build.i_tf_inside_cs == 1 and self.data.tfcoil.i_tf_bucking < 2
             ):
                 radius += self.data.build.dr_bore
                 radial_build_data.append([

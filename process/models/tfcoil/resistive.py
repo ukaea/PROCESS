@@ -7,10 +7,7 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
-from process.data_structure import (
-    superconducting_tf_coil_variables,
-    tfcoil_variables,
-)
+from process.data_structure import superconducting_tf_coil_variables
 from process.models.tfcoil.base import TFCoil, TFConductorModel
 
 logger = logging.getLogger(__name__)
@@ -43,12 +40,12 @@ class ResistiveTFCoil(TFCoil):
         self.res_tf_internal_geom()
         self.tf_res_heating()
 
-        tfcoil_variables.ind_tf_coil = self.tf_coil_self_inductance(
+        self.data.tfcoil.ind_tf_coil = self.tf_coil_self_inductance(
             dr_tf_inboard=self.data.build.dr_tf_inboard,
-            r_tf_arc=tfcoil_variables.r_tf_arc,
-            z_tf_arc=tfcoil_variables.z_tf_arc,
+            r_tf_arc=self.data.tfcoil.r_tf_arc,
+            z_tf_arc=self.data.tfcoil.z_tf_arc,
             itart=self.data.physics.itart,
-            i_tf_shape=tfcoil_variables.i_tf_shape,
+            i_tf_shape=self.data.tfcoil.i_tf_shape,
             z_tf_inside_half=self.data.build.z_tf_inside_half,
             dr_tf_outboard=self.data.build.dr_tf_outboard,
             r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
@@ -56,38 +53,38 @@ class ResistiveTFCoil(TFCoil):
         )
 
         (
-            tfcoil_variables.e_tf_magnetic_stored_total,
-            tfcoil_variables.e_tf_magnetic_stored_total_gj,
-            tfcoil_variables.e_tf_coil_magnetic_stored,
+            self.data.tfcoil.e_tf_magnetic_stored_total,
+            self.data.tfcoil.e_tf_magnetic_stored_total_gj,
+            self.data.tfcoil.e_tf_coil_magnetic_stored,
         ) = self.tf_stored_magnetic_energy(
-            ind_tf_coil=tfcoil_variables.ind_tf_coil,
-            c_tf_total=tfcoil_variables.c_tf_total,
-            n_tf_coils=tfcoil_variables.n_tf_coils,
+            ind_tf_coil=self.data.tfcoil.ind_tf_coil,
+            c_tf_total=self.data.tfcoil.c_tf_total,
+            n_tf_coils=self.data.tfcoil.n_tf_coils,
         )
 
         (
-            tfcoil_variables.cforce,
-            tfcoil_variables.vforce,
-            tfcoil_variables.vforce_outboard,
+            self.data.tfcoil.cforce,
+            self.data.tfcoil.vforce,
+            self.data.tfcoil.vforce_outboard,
             superconducting_tf_coil_variables.vforce_inboard_tot,
-            tfcoil_variables.f_vforce_inboard,
+            self.data.tfcoil.f_vforce_inboard,
         ) = self.tf_field_and_force(
-            i_tf_sup=tfcoil_variables.i_tf_sup,
+            i_tf_sup=self.data.tfcoil.i_tf_sup,
             r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
             r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
             r_tf_outboard_in=superconducting_tf_coil_variables.r_tf_outboard_in,
-            dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
-            dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
-            b_tf_inboard_peak_symmetric=tfcoil_variables.b_tf_inboard_peak_symmetric,
-            c_tf_total=tfcoil_variables.c_tf_total,
-            n_tf_coils=tfcoil_variables.n_tf_coils,
-            dr_tf_plasma_case=tfcoil_variables.dr_tf_plasma_case,
+            dx_tf_wp_insulation=self.data.tfcoil.dx_tf_wp_insulation,
+            dx_tf_wp_insertion_gap=self.data.tfcoil.dx_tf_wp_insertion_gap,
+            b_tf_inboard_peak_symmetric=self.data.tfcoil.b_tf_inboard_peak_symmetric,
+            c_tf_total=self.data.tfcoil.c_tf_total,
+            n_tf_coils=self.data.tfcoil.n_tf_coils,
+            dr_tf_plasma_case=self.data.tfcoil.dr_tf_plasma_case,
             rmajor=self.data.physics.rmajor,
             b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
             r_cp_top=self.data.build.r_cp_top,
             itart=self.data.physics.itart,
-            i_cp_joints=tfcoil_variables.i_cp_joints,
-            f_vforce_inboard=tfcoil_variables.f_vforce_inboard,
+            i_cp_joints=self.data.tfcoil.i_cp_joints,
+            f_vforce_inboard=self.data.tfcoil.f_vforce_inboard,
         )
 
         # Calculate TF coil areas and masses
@@ -96,7 +93,7 @@ class ResistiveTFCoil(TFCoil):
 
         # Do stress calculations (writes the stress output)
         if output:
-            tfcoil_variables.n_rad_per_layer = 500
+            self.data.tfcoil.n_rad_per_layer = 500
 
         try:
             (
@@ -127,7 +124,7 @@ class ResistiveTFCoil(TFCoil):
                 str_tf_z,
                 n_radial_array,
                 n_tf_bucking,
-                tfcoil_variables.sig_tf_wp,
+                self.data.tfcoil.sig_tf_wp,
                 sig_tf_case,
                 sig_tf_cs_bucked,
                 str_wp,
@@ -135,10 +132,10 @@ class ResistiveTFCoil(TFCoil):
                 insstrain,
                 sig_tf_wp_av_z,
             ) = self.stresscl(
-                int(tfcoil_variables.n_tf_stress_layers),
-                int(tfcoil_variables.n_rad_per_layer),
-                int(tfcoil_variables.n_tf_wp_stress_layers),
-                int(tfcoil_variables.i_tf_bucking),
+                int(self.data.tfcoil.n_tf_stress_layers),
+                int(self.data.tfcoil.n_rad_per_layer),
+                int(self.data.tfcoil.n_tf_wp_stress_layers),
+                int(self.data.tfcoil.i_tf_bucking),
                 float(self.data.build.r_tf_inboard_in),
                 self.data.build.dr_bore,
                 self.data.build.z_tf_inside_half,
@@ -155,19 +152,19 @@ class ResistiveTFCoil(TFCoil):
                 self.data.pf_coil.f_dr_dz_cs_turn,
                 self.data.pf_coil.radius_cs_turn_corners,
                 self.data.pf_coil.f_a_cs_turn_steel,
-                tfcoil_variables.eyoung_steel,
-                tfcoil_variables.poisson_steel,
-                tfcoil_variables.eyoung_cond_axial,
-                tfcoil_variables.poisson_cond_axial,
-                tfcoil_variables.eyoung_cond_trans,
-                tfcoil_variables.poisson_cond_trans,
-                tfcoil_variables.eyoung_ins,
-                tfcoil_variables.poisson_ins,
-                tfcoil_variables.dx_tf_turn_insulation,
-                tfcoil_variables.eyoung_copper,
-                tfcoil_variables.poisson_copper,
-                tfcoil_variables.i_tf_sup,
-                tfcoil_variables.eyoung_res_tf_buck,
+                self.data.tfcoil.eyoung_steel,
+                self.data.tfcoil.poisson_steel,
+                self.data.tfcoil.eyoung_cond_axial,
+                self.data.tfcoil.poisson_cond_axial,
+                self.data.tfcoil.eyoung_cond_trans,
+                self.data.tfcoil.poisson_cond_trans,
+                self.data.tfcoil.eyoung_ins,
+                self.data.tfcoil.poisson_ins,
+                self.data.tfcoil.dx_tf_turn_insulation,
+                self.data.tfcoil.eyoung_copper,
+                self.data.tfcoil.poisson_copper,
+                self.data.tfcoil.i_tf_sup,
+                self.data.tfcoil.eyoung_res_tf_buck,
                 superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
                 superconducting_tf_coil_variables.tan_theta_coil,
                 superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half,
@@ -175,58 +172,58 @@ class ResistiveTFCoil(TFCoil):
                 superconducting_tf_coil_variables.a_tf_coil_inboard_steel,
                 superconducting_tf_coil_variables.a_tf_plasma_case,
                 superconducting_tf_coil_variables.a_tf_coil_nose_case,
-                tfcoil_variables.dx_tf_wp_insertion_gap,
-                tfcoil_variables.dx_tf_wp_insulation,
-                tfcoil_variables.n_tf_coil_turns,
-                int(tfcoil_variables.i_tf_turns_integer),
+                self.data.tfcoil.dx_tf_wp_insertion_gap,
+                self.data.tfcoil.dx_tf_wp_insulation,
+                self.data.tfcoil.n_tf_coil_turns,
+                int(self.data.tfcoil.i_tf_turns_integer),
                 superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
                 superconducting_tf_coil_variables.dr_tf_turn_cable_space,
-                tfcoil_variables.dia_tf_turn_coolant_channel,
-                tfcoil_variables.f_a_tf_turn_cable_copper,
-                tfcoil_variables.dx_tf_turn_steel,
+                self.data.tfcoil.dia_tf_turn_coolant_channel,
+                self.data.tfcoil.f_a_tf_turn_cable_copper,
+                self.data.tfcoil.dx_tf_turn_steel,
                 superconducting_tf_coil_variables.dx_tf_side_case_average,
                 superconducting_tf_coil_variables.dx_tf_wp_toroidal_average,
                 superconducting_tf_coil_variables.a_tf_coil_inboard_insulation,
-                tfcoil_variables.a_tf_wp_steel,
-                tfcoil_variables.a_tf_wp_conductor,
+                self.data.tfcoil.a_tf_wp_steel,
+                self.data.tfcoil.a_tf_wp_conductor,
                 superconducting_tf_coil_variables.a_tf_wp_with_insulation,
-                tfcoil_variables.eyoung_al,
-                tfcoil_variables.poisson_al,
-                tfcoil_variables.fcoolcp,
-                tfcoil_variables.n_tf_graded_layers,
-                tfcoil_variables.c_tf_total,
-                tfcoil_variables.dr_tf_plasma_case,
-                tfcoil_variables.i_tf_stress_model,
+                self.data.tfcoil.eyoung_al,
+                self.data.tfcoil.poisson_al,
+                self.data.tfcoil.fcoolcp,
+                self.data.tfcoil.n_tf_graded_layers,
+                self.data.tfcoil.c_tf_total,
+                self.data.tfcoil.dr_tf_plasma_case,
+                self.data.tfcoil.i_tf_stress_model,
                 superconducting_tf_coil_variables.vforce_inboard_tot,
-                tfcoil_variables.i_tf_tresca,
-                tfcoil_variables.a_tf_coil_inboard_case,
-                tfcoil_variables.vforce,
-                tfcoil_variables.a_tf_turn_steel,
+                self.data.tfcoil.i_tf_tresca,
+                self.data.tfcoil.a_tf_coil_inboard_case,
+                self.data.tfcoil.vforce,
+                self.data.tfcoil.a_tf_turn_steel,
             )
 
-            tfcoil_variables.sig_tf_case = (
-                tfcoil_variables.sig_tf_case
-                if tfcoil_variables.sig_tf_case is None
+            self.data.tfcoil.sig_tf_case = (
+                self.data.tfcoil.sig_tf_case
+                if self.data.tfcoil.sig_tf_case is None
                 else sig_tf_case
             )
 
-            tfcoil_variables.sig_tf_cs_bucked = (
-                tfcoil_variables.sig_tf_cs_bucked
-                if tfcoil_variables.sig_tf_cs_bucked is None
+            self.data.tfcoil.sig_tf_cs_bucked = (
+                self.data.tfcoil.sig_tf_cs_bucked
+                if self.data.tfcoil.sig_tf_cs_bucked is None
                 else sig_tf_cs_bucked
             )
 
-            tfcoil_variables.str_wp = (
-                tfcoil_variables.str_wp if tfcoil_variables.str_wp is None else str_wp
+            self.data.tfcoil.str_wp = (
+                self.data.tfcoil.str_wp if self.data.tfcoil.str_wp is None else str_wp
             )
 
-            tfcoil_variables.casestr = (
-                tfcoil_variables.casestr if tfcoil_variables.casestr is None else casestr
+            self.data.tfcoil.casestr = (
+                self.data.tfcoil.casestr if self.data.tfcoil.casestr is None else casestr
             )
 
-            tfcoil_variables.insstrain = (
-                tfcoil_variables.insstrain
-                if tfcoil_variables.insstrain is None
+            self.data.tfcoil.insstrain = (
+                self.data.tfcoil.insstrain
+                if self.data.tfcoil.insstrain is None
                 else insstrain
             )
 
@@ -267,8 +264,8 @@ class ResistiveTFCoil(TFCoil):
                     "Invalid stress model (r_tf_inboard = 0), stress constraint "
                     "switched off"
                 )
-                tfcoil_variables.sig_tf_case = 0.0e0
-                tfcoil_variables.sig_tf_wp = 0.0e0
+                self.data.tfcoil.sig_tf_case = 0.0e0
+                self.data.tfcoil.sig_tf_wp = 0.0e0
         if output:
             self.output_general_tf_info()
 
@@ -277,29 +274,29 @@ class ResistiveTFCoil(TFCoil):
         Resistive TF turn geometry, equivalent to winding_pack subroutines
         """
         superconducting_tf_coil_variables.r_tf_wp_inboard_inner = (
-            self.data.build.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
+            self.data.build.r_tf_inboard_in + self.data.tfcoil.dr_tf_nose_case
         )
         superconducting_tf_coil_variables.r_tf_wp_inboard_outer = (
-            self.data.build.r_tf_inboard_out - tfcoil_variables.dr_tf_plasma_case
+            self.data.build.r_tf_inboard_out - self.data.tfcoil.dr_tf_plasma_case
         )
 
         # Conductor layer radial thickness at centercollumn top [m]
         if self.data.physics.itart == 1:
             superconducting_tf_coil_variables.dr_tf_wp_top = (
                 self.data.build.r_cp_top
-                - tfcoil_variables.dr_tf_plasma_case
-                - tfcoil_variables.dr_tf_nose_case
+                - self.data.tfcoil.dr_tf_plasma_case
+                - self.data.tfcoil.dr_tf_nose_case
                 - self.data.build.r_tf_inboard_in
             )
 
         # Number of turns
         # Set by user (no turn structure by default, i.e.
-        # tfcoil_variables.n_tf_coil_turns = 1 )
+        # self.data.tfcoil.n_tf_coil_turns = 1 )
         if (
-            abs(tfcoil_variables.n_tf_coil_turns)
-            < np.finfo(float(tfcoil_variables.n_tf_coil_turns)).eps
+            abs(self.data.tfcoil.n_tf_coil_turns)
+            < np.finfo(float(self.data.tfcoil.n_tf_coil_turns)).eps
         ):
-            tfcoil_variables.n_tf_coil_turns = 1.0e0
+            self.data.tfcoil.n_tf_coil_turns = 1.0e0
 
         # Total mid-plane cross-sectional area of winding pack, [m2]
         # including the surrounding ground-wall insulation layer
@@ -309,7 +306,7 @@ class ResistiveTFCoil(TFCoil):
                 superconducting_tf_coil_variables.r_tf_wp_inboard_outer**2
                 - superconducting_tf_coil_variables.r_tf_wp_inboard_inner**2
             )
-            / tfcoil_variables.n_tf_coils
+            / self.data.tfcoil.n_tf_coils
         )
 
         # Area of the front case, the plasma-facing case of the inner TF coil [m2]
@@ -318,12 +315,12 @@ class ResistiveTFCoil(TFCoil):
             * (
                 (
                     superconducting_tf_coil_variables.r_tf_wp_inboard_outer
-                    + tfcoil_variables.dr_tf_plasma_case
+                    + self.data.tfcoil.dr_tf_plasma_case
                 )
                 ** 2
                 - superconducting_tf_coil_variables.r_tf_wp_inboard_outer**2
             )
-            / tfcoil_variables.n_tf_coils
+            / self.data.tfcoil.n_tf_coils
         )
 
         # WP mid-plane cross-section excluding ground insulation per coil [m2]
@@ -332,21 +329,21 @@ class ResistiveTFCoil(TFCoil):
             * (
                 (
                     superconducting_tf_coil_variables.r_tf_wp_inboard_outer
-                    - tfcoil_variables.dx_tf_wp_insulation
+                    - self.data.tfcoil.dx_tf_wp_insulation
                 )
                 ** 2
                 - (
                     superconducting_tf_coil_variables.r_tf_wp_inboard_inner
-                    + tfcoil_variables.dx_tf_wp_insulation
+                    + self.data.tfcoil.dx_tf_wp_insulation
                 )
                 ** 2
             )
-            / tfcoil_variables.n_tf_coils
+            / self.data.tfcoil.n_tf_coils
             - 2.0e0
-            * tfcoil_variables.dx_tf_wp_insulation
+            * self.data.tfcoil.dx_tf_wp_insulation
             * (
-                tfcoil_variables.dr_tf_wp_with_insulation
-                - 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
+                self.data.tfcoil.dr_tf_wp_with_insulation
+                - 2.0e0 * self.data.tfcoil.dx_tf_wp_insulation
             )
         )
 
@@ -357,82 +354,82 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Exact mid-plane cross-section area of the conductor per TF coil [m2]
-        tfcoil_variables.a_res_tf_coil_conductor = np.pi * (
+        self.data.tfcoil.a_res_tf_coil_conductor = np.pi * (
             (
                 superconducting_tf_coil_variables.r_tf_wp_inboard_outer
-                - tfcoil_variables.dx_tf_wp_insulation
-                - tfcoil_variables.dx_tf_turn_insulation
+                - self.data.tfcoil.dx_tf_wp_insulation
+                - self.data.tfcoil.dx_tf_turn_insulation
             )
             ** 2
             - (
                 superconducting_tf_coil_variables.r_tf_wp_inboard_inner
-                + tfcoil_variables.dx_tf_wp_insulation
-                + tfcoil_variables.dx_tf_turn_insulation
+                + self.data.tfcoil.dx_tf_wp_insulation
+                + self.data.tfcoil.dx_tf_turn_insulation
             )
             ** 2
-        ) / tfcoil_variables.n_tf_coils - (
-            tfcoil_variables.dr_tf_wp_with_insulation
+        ) / self.data.tfcoil.n_tf_coils - (
+            self.data.tfcoil.dr_tf_wp_with_insulation
             - 2.0e0
             * (
-                tfcoil_variables.dx_tf_wp_insulation
-                + tfcoil_variables.dx_tf_turn_insulation
+                self.data.tfcoil.dx_tf_wp_insulation
+                + self.data.tfcoil.dx_tf_turn_insulation
             )
         ) * 2.0e0 * (
-            tfcoil_variables.dx_tf_wp_insulation
-            + tfcoil_variables.dx_tf_turn_insulation * tfcoil_variables.n_tf_coil_turns
+            self.data.tfcoil.dx_tf_wp_insulation
+            + self.data.tfcoil.dx_tf_turn_insulation * self.data.tfcoil.n_tf_coil_turns
         )
-        tfcoil_variables.a_res_tf_coil_conductor *= 1.0e0 - tfcoil_variables.fcoolcp
+        self.data.tfcoil.a_res_tf_coil_conductor *= 1.0e0 - self.data.tfcoil.fcoolcp
 
         # Inter turn insulation area per coil [m2]
-        tfcoil_variables.a_tf_coil_wp_turn_insulation = (
+        self.data.tfcoil.a_tf_coil_wp_turn_insulation = (
             superconducting_tf_coil_variables.a_tf_wp_no_insulation
-            - tfcoil_variables.a_res_tf_coil_conductor
-            / (1.0e0 - tfcoil_variables.fcoolcp)
+            - self.data.tfcoil.a_res_tf_coil_conductor
+            / (1.0e0 - self.data.tfcoil.fcoolcp)
         )
 
         # Total insulation cross-section per coil [m2]
         superconducting_tf_coil_variables.a_tf_coil_inboard_insulation = (
-            tfcoil_variables.a_tf_coil_wp_turn_insulation
+            self.data.tfcoil.a_tf_coil_wp_turn_insulation
             + superconducting_tf_coil_variables.a_tf_wp_ground_insulation
         )
 
         # Insulation fraction [-]
         superconducting_tf_coil_variables.f_a_tf_coil_inboard_insulation = (
-            tfcoil_variables.n_tf_coils
+            self.data.tfcoil.n_tf_coils
             * superconducting_tf_coil_variables.a_tf_coil_inboard_insulation
-            / tfcoil_variables.a_tf_inboard_total
+            / self.data.tfcoil.a_tf_inboard_total
         )
 
         # Total cross-sectional area of the bucking cylindre and the outer support
         # support structure per coil [m2]
         # self.data.physics.itart = 1 : Only valid at mid-plane
-        tfcoil_variables.a_tf_coil_inboard_case = (
-            tfcoil_variables.a_tf_inboard_total / tfcoil_variables.n_tf_coils
+        self.data.tfcoil.a_tf_coil_inboard_case = (
+            self.data.tfcoil.a_tf_inboard_total / self.data.tfcoil.n_tf_coils
         ) - superconducting_tf_coil_variables.a_tf_wp_with_insulation
 
         # Current per turn
-        tfcoil_variables.c_tf_turn = tfcoil_variables.c_tf_total / (
-            tfcoil_variables.n_tf_coil_turns * tfcoil_variables.n_tf_coils
+        self.data.tfcoil.c_tf_turn = self.data.tfcoil.c_tf_total / (
+            self.data.tfcoil.n_tf_coil_turns * self.data.tfcoil.n_tf_coils
         )
 
         # Exact current density on TF oubard legs
-        tfcoil_variables.cdtfleg = tfcoil_variables.c_tf_total / (
-            (1.0e0 - tfcoil_variables.fcoolcp)
+        self.data.tfcoil.cdtfleg = self.data.tfcoil.c_tf_total / (
+            (1.0e0 - self.data.tfcoil.fcoolcp)
             * (
-                tfcoil_variables.dx_tf_inboard_out_toroidal
+                self.data.tfcoil.dx_tf_inboard_out_toroidal
                 - 2.0e0
                 * (
-                    tfcoil_variables.n_tf_coil_turns
-                    * tfcoil_variables.dx_tf_turn_insulation
-                    + tfcoil_variables.dx_tf_wp_insulation
+                    self.data.tfcoil.n_tf_coil_turns
+                    * self.data.tfcoil.dx_tf_turn_insulation
+                    + self.data.tfcoil.dx_tf_wp_insulation
                 )
             )
             * (
                 self.data.build.dr_tf_outboard
                 - 2.0e0
                 * (
-                    tfcoil_variables.dx_tf_turn_insulation
-                    + tfcoil_variables.dx_tf_wp_insulation
+                    self.data.tfcoil.dx_tf_turn_insulation
+                    + self.data.tfcoil.dx_tf_wp_insulation
                 )
             )
         )
@@ -442,7 +439,7 @@ class ResistiveTFCoil(TFCoil):
             logger.error(
                 f"Winding pack cross-section problem... "
                 f"{superconducting_tf_coil_variables.a_tf_wp_with_insulation=} "
-                f"{tfcoil_variables.dr_tf_wp_with_insulation=}"
+                f"{self.data.tfcoil.dr_tf_wp_with_insulation=}"
             )
 
         elif superconducting_tf_coil_variables.a_tf_wp_no_insulation < 0.0e0:
@@ -473,60 +470,60 @@ class ResistiveTFCoil(TFCoil):
             - https://cirris.com/temperature-coefficient-of-copper/
         """
         # Resistivity of the Glidcop copper centerpost
-        if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-            tfcoil_variables.rho_cp = (
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+            self.data.tfcoil.rho_cp = (
                 # 1.86 is the resistivity at `20°C` for GLIDCOP AL-15
                 # 0.00393 is the coefficient of resistivity for copper
-                tfcoil_variables.frhocp
-                * (1.86e0 + 0.00393e0 * (tfcoil_variables.temp_cp_average - 293.15e0))
+                self.data.tfcoil.frhocp
+                * (1.86e0 + 0.00393e0 * (self.data.tfcoil.temp_cp_average - 293.15e0))
                 * 1.0e-8
             )
 
         # Resistivity of the aluminium centerpost
-        if tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-            tfcoil_variables.rho_cp = tfcoil_variables.frhocp * (
-                2.00016e-14 * tfcoil_variables.temp_cp_average**3
-                - 6.75384e-13 * tfcoil_variables.temp_cp_average**2
-                + 8.89159e-12 * tfcoil_variables.temp_cp_average
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+            self.data.tfcoil.rho_cp = self.data.tfcoil.frhocp * (
+                2.00016e-14 * self.data.tfcoil.temp_cp_average**3
+                - 6.75384e-13 * self.data.tfcoil.temp_cp_average**2
+                + 8.89159e-12 * self.data.tfcoil.temp_cp_average
             )
 
         # Calculations dedicated for configurations with CP
         if self.data.physics.itart == 1:
             # Tricky trick to make the leg / CP tempearture the same
             if (
-                abs(tfcoil_variables.temp_tf_legs_outboard + 1.0e0)
-                < np.finfo(float(tfcoil_variables.temp_tf_legs_outboard)).eps
+                abs(self.data.tfcoil.temp_tf_legs_outboard + 1.0e0)
+                < np.finfo(float(self.data.tfcoil.temp_tf_legs_outboard)).eps
             ):
                 superconducting_tf_coil_variables.is_leg_cp_temp_same = 1
-                tfcoil_variables.temp_tf_legs_outboard = tfcoil_variables.temp_cp_average
+                self.data.tfcoil.temp_tf_legs_outboard = self.data.tfcoil.temp_cp_average
 
             # Leg resistivity (different leg temperature as separate cooling channels)
-            if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-                tfcoil_variables.rho_tf_leg = (
-                    tfcoil_variables.frholeg
+            if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+                self.data.tfcoil.rho_tf_leg = (
+                    self.data.tfcoil.frholeg
                     * (
                         1.86e0
-                        + 0.00393e0 * (tfcoil_variables.temp_tf_legs_outboard - 293.15e0)
+                        + 0.00393e0 * (self.data.tfcoil.temp_tf_legs_outboard - 293.15e0)
                     )
                     * 1.0e-8
                 )
-            elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-                tfcoil_variables.rho_tf_leg = tfcoil_variables.frholeg * (
-                    2.00016e-14 * tfcoil_variables.temp_tf_legs_outboard**3
-                    - 6.75384e-13 * tfcoil_variables.temp_tf_legs_outboard**2
-                    + 8.89159e-12 * tfcoil_variables.temp_tf_legs_outboard
+            elif self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+                self.data.tfcoil.rho_tf_leg = self.data.tfcoil.frholeg * (
+                    2.00016e-14 * self.data.tfcoil.temp_tf_legs_outboard**3
+                    - 6.75384e-13 * self.data.tfcoil.temp_tf_legs_outboard**2
+                    + 8.89159e-12 * self.data.tfcoil.temp_tf_legs_outboard
                 )
 
             # Tricky trick to make the leg / CP tempearture the same
             if superconducting_tf_coil_variables.is_leg_cp_temp_same == 1:
-                tfcoil_variables.temp_tf_legs_outboard = -1.0e0
+                self.data.tfcoil.temp_tf_legs_outboard = -1.0e0
 
             # Centrepost resisitivity and conductor/insulation volume
 
             (
-                tfcoil_variables.a_cp_cool,
-                tfcoil_variables.vol_cond_cp,
-                tfcoil_variables.p_cp_resistive,
+                self.data.tfcoil.a_cp_cool,
+                self.data.tfcoil.vol_cond_cp,
+                self.data.tfcoil.p_cp_resistive,
                 superconducting_tf_coil_variables.vol_ins_cp,
                 superconducting_tf_coil_variables.vol_case_cp,
                 superconducting_tf_coil_variables.vol_gr_ins_cp,
@@ -536,15 +533,15 @@ class ResistiveTFCoil(TFCoil):
                 self.data.build.r_cp_top,
                 superconducting_tf_coil_variables.z_cp_top,
                 self.data.build.z_tf_inside_half + self.data.build.dr_tf_outboard,
-                tfcoil_variables.dr_tf_nose_case,
-                tfcoil_variables.dr_tf_plasma_case,
-                tfcoil_variables.dx_tf_wp_insulation,
-                tfcoil_variables.dx_tf_turn_insulation,
-                tfcoil_variables.n_tf_coil_turns,
-                tfcoil_variables.c_tf_total,
-                tfcoil_variables.rho_cp,
-                tfcoil_variables.fcoolcp,
-                tfcoil_variables.n_tf_coils,
+                self.data.tfcoil.dr_tf_nose_case,
+                self.data.tfcoil.dr_tf_plasma_case,
+                self.data.tfcoil.dx_tf_wp_insulation,
+                self.data.tfcoil.dx_tf_turn_insulation,
+                self.data.tfcoil.n_tf_coil_turns,
+                self.data.tfcoil.c_tf_total,
+                self.data.tfcoil.rho_cp,
+                self.data.tfcoil.fcoolcp,
+                self.data.tfcoil.n_tf_coils,
             )
 
         # Leg cross-section areas
@@ -553,43 +550,43 @@ class ResistiveTFCoil(TFCoil):
         # ---
         # Leg ground insulation area per coil [m2]
         superconducting_tf_coil_variables.a_leg_gr_ins = (
-            tfcoil_variables.a_tf_leg_outboard
+            self.data.tfcoil.a_tf_leg_outboard
             - (
-                tfcoil_variables.dx_tf_inboard_out_toroidal
-                - 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
+                self.data.tfcoil.dx_tf_inboard_out_toroidal
+                - 2.0e0 * self.data.tfcoil.dx_tf_wp_insulation
             )
             * (
                 self.data.build.dr_tf_outboard
-                - 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
+                - 2.0e0 * self.data.tfcoil.dx_tf_wp_insulation
             )
         )
 
         # Outboard leg turns insulation area per coil [m2]
         superconducting_tf_coil_variables.a_leg_ins = (
             2.0e0
-            * tfcoil_variables.dx_tf_turn_insulation
+            * self.data.tfcoil.dx_tf_turn_insulation
             * (
-                tfcoil_variables.dx_tf_inboard_out_toroidal
-                - 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
+                self.data.tfcoil.dx_tf_inboard_out_toroidal
+                - 2.0e0 * self.data.tfcoil.dx_tf_wp_insulation
             )
             + 2.0e0
-            * tfcoil_variables.dx_tf_turn_insulation
-            * tfcoil_variables.n_tf_coil_turns
+            * self.data.tfcoil.dx_tf_turn_insulation
+            * self.data.tfcoil.n_tf_coil_turns
             * (
                 self.data.build.dr_tf_outboard
                 - 2.0e0
                 * (
-                    tfcoil_variables.dx_tf_turn_insulation
-                    + tfcoil_variables.dx_tf_wp_insulation
+                    self.data.tfcoil.dx_tf_turn_insulation
+                    + self.data.tfcoil.dx_tf_wp_insulation
                 )
             )
         )  # toroidal direction + radial direction
 
         # Exact TF outboard leg conductor area per coil [m2]
         superconducting_tf_coil_variables.a_leg_cond = (
-            1.0e0 - tfcoil_variables.f_a_tf_cool_outboard
+            1.0e0 - self.data.tfcoil.f_a_tf_cool_outboard
         ) * (
-            tfcoil_variables.a_tf_leg_outboard
+            self.data.tfcoil.a_tf_leg_outboard
             - superconducting_tf_coil_variables.a_leg_gr_ins
             - superconducting_tf_coil_variables.a_leg_ins
         )
@@ -599,46 +596,46 @@ class ResistiveTFCoil(TFCoil):
             # Outer leg resistive power loss
             # ---
             # TF outboard leg's resistance calculation (per leg) [ohm]
-            tfcoil_variables.res_tf_leg = (
-                tfcoil_variables.rho_tf_leg
-                * tfcoil_variables.len_tf_coil
+            self.data.tfcoil.res_tf_leg = (
+                self.data.tfcoil.rho_tf_leg
+                * self.data.tfcoil.len_tf_coil
                 / superconducting_tf_coil_variables.a_leg_cond
             )
 
             # TF outer leg resistive power (TOTAL) [W]
-            tfcoil_variables.p_tf_leg_resistive = (
-                tfcoil_variables.res_tf_leg
-                * (tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils) ** 2
-            ) * tfcoil_variables.n_tf_coils
+            self.data.tfcoil.p_tf_leg_resistive = (
+                self.data.tfcoil.res_tf_leg
+                * (self.data.tfcoil.c_tf_total / self.data.tfcoil.n_tf_coils) ** 2
+            ) * self.data.tfcoil.n_tf_coils
             # ---
 
             # Sliding joints resistive heating
             # ---
-            if tfcoil_variables.i_cp_joints != 0:
+            if self.data.tfcoil.i_cp_joints != 0:
                 # Number of contact area per joint (all legs)
                 n_contact_tot = (
-                    tfcoil_variables.n_tf_joints_contact
-                    * np.round(tfcoil_variables.n_tf_coil_turns)
-                    * np.round(tfcoil_variables.n_tf_coils)
+                    self.data.tfcoil.n_tf_joints_contact
+                    * np.round(self.data.tfcoil.n_tf_coil_turns)
+                    * np.round(self.data.tfcoil.n_tf_coils)
                 )
 
                 # Area of joint contact (all legs)
                 a_joints = (
                     self.data.build.dr_tf_outboard
-                    * tfcoil_variables.th_joint_contact
+                    * self.data.tfcoil.th_joint_contact
                     * n_contact_tot
                 )
 
                 # Total joints resistive power losses
-                tfcoil_variables.p_tf_joints_resistive = (
-                    tfcoil_variables.n_tf_joints
-                    * tfcoil_variables.rho_tf_joints
-                    * tfcoil_variables.c_tf_total**2
+                self.data.tfcoil.p_tf_joints_resistive = (
+                    self.data.tfcoil.n_tf_joints
+                    * self.data.tfcoil.rho_tf_joints
+                    * self.data.tfcoil.c_tf_total**2
                     / a_joints
                 )
             else:
                 # Joints resistance to be evaluated for SC
-                tfcoil_variables.p_tf_joints_resistive = 0.0e0
+                self.data.tfcoil.p_tf_joints_resistive = 0.0e0
 
             # ---
 
@@ -646,22 +643,22 @@ class ResistiveTFCoil(TFCoil):
         # ***
         else:
             # TF resistive powers
-            tfcoil_variables.p_cp_resistive = (
-                tfcoil_variables.rho_cp
-                * tfcoil_variables.c_tf_total**2
-                * tfcoil_variables.len_tf_coil
+            self.data.tfcoil.p_cp_resistive = (
+                self.data.tfcoil.rho_cp
+                * self.data.tfcoil.c_tf_total**2
+                * self.data.tfcoil.len_tf_coil
                 / (
                     superconducting_tf_coil_variables.a_leg_cond
-                    * tfcoil_variables.n_tf_coils
+                    * self.data.tfcoil.n_tf_coils
                 )
             )
 
-            # tfcoil_variables.p_cp_resistive containts the the total resistive
+            # self.data.tfcoil.p_cp_resistive containts the the total resistive
             # power losses
-            tfcoil_variables.p_tf_leg_resistive = 0.0e0
+            self.data.tfcoil.p_tf_leg_resistive = 0.0e0
 
             # No joints if self.data.physics.itart = 0
-            tfcoil_variables.p_tf_joints_resistive = 0.0e0
+            self.data.tfcoil.p_tf_joints_resistive = 0.0e0
 
     def resistive_tf_coil_areas_and_masses(self):
         """Calculate the areas and masses of the resistive TF coil"""
@@ -679,43 +676,43 @@ class ResistiveTFCoil(TFCoil):
         # ---
         if self.data.physics.itart == 1:
             # Total volume of one outerleg [m3]
-            tfcoil_variables.voltfleg = (
-                tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_leg_outboard
+            self.data.tfcoil.voltfleg = (
+                self.data.tfcoil.len_tf_coil * self.data.tfcoil.a_tf_leg_outboard
             )
 
             # Outboard leg TF conductor volume [m3]
             vol_cond_leg = (
-                tfcoil_variables.len_tf_coil
+                self.data.tfcoil.len_tf_coil
                 * superconducting_tf_coil_variables.a_leg_cond
             )
 
             # Total TF conductor volume [m3]
             vol_cond = (
-                tfcoil_variables.vol_cond_cp + tfcoil_variables.n_tf_coils * vol_cond_leg
+                self.data.tfcoil.vol_cond_cp + self.data.tfcoil.n_tf_coils * vol_cond_leg
             )
 
             # Outboard leg TF turn insulation layer volume (per leg) [m3]
             vol_ins_leg = (
-                tfcoil_variables.len_tf_coil
+                self.data.tfcoil.len_tf_coil
                 * superconducting_tf_coil_variables.a_leg_ins
             )
 
             # Total turn insulation layer volume [m3]
             vol_ins = (
                 superconducting_tf_coil_variables.vol_ins_cp
-                + tfcoil_variables.n_tf_coils * vol_ins_leg
+                + self.data.tfcoil.n_tf_coils * vol_ins_leg
             )
 
             # Ouboard leg TF ground insulation layer volume (per leg) [m3]
             vol_gr_ins_leg = (
-                tfcoil_variables.len_tf_coil
+                self.data.tfcoil.len_tf_coil
                 * superconducting_tf_coil_variables.a_leg_gr_ins
             )
 
             # Total ground insulation layer volume [m3]
             vol_gr_ins = (
                 superconducting_tf_coil_variables.vol_gr_ins_cp
-                + tfcoil_variables.n_tf_coils * vol_gr_ins_leg
+                + self.data.tfcoil.n_tf_coils * vol_gr_ins_leg
             )
 
             # Total volume of the CP casing [m3]
@@ -727,55 +724,55 @@ class ResistiveTFCoil(TFCoil):
         else:
             # Total TF outer leg conductor volume [m3]
             vol_cond = (
-                tfcoil_variables.len_tf_coil
+                self.data.tfcoil.len_tf_coil
                 * superconducting_tf_coil_variables.a_leg_cond
-                * tfcoil_variables.n_tf_coils
+                * self.data.tfcoil.n_tf_coils
             )
 
             # Total turn insulation layer volume [m3]
             vol_ins = (
-                tfcoil_variables.len_tf_coil
+                self.data.tfcoil.len_tf_coil
                 * superconducting_tf_coil_variables.a_leg_ins
-                * tfcoil_variables.n_tf_coils
+                * self.data.tfcoil.n_tf_coils
             )
 
             # Total ground insulation volume [m3]
             vol_gr_ins = (
-                tfcoil_variables.len_tf_coil
+                self.data.tfcoil.len_tf_coil
                 * superconducting_tf_coil_variables.a_leg_gr_ins
-                * tfcoil_variables.n_tf_coils
+                * self.data.tfcoil.n_tf_coils
             )
 
             # Total case volume [m3]
             vol_case = (
-                tfcoil_variables.len_tf_coil
-                * tfcoil_variables.a_tf_coil_inboard_case
-                * tfcoil_variables.n_tf_coils
+                self.data.tfcoil.len_tf_coil
+                * self.data.tfcoil.a_tf_coil_inboard_case
+                * self.data.tfcoil.n_tf_coils
             )
 
         # Copper magnets casing/conductor weights per coil [kg]
-        if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-            tfcoil_variables.m_tf_coil_case = (
-                self.data.fwbs.den_steel * vol_case / tfcoil_variables.n_tf_coils
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+            self.data.tfcoil.m_tf_coil_case = (
+                self.data.fwbs.den_steel * vol_case / self.data.tfcoil.n_tf_coils
             )  # Per TF leg, no casing for outer leg
-            tfcoil_variables.m_tf_coil_copper = (
-                constants.den_copper * vol_cond / tfcoil_variables.n_tf_coils
+            self.data.tfcoil.m_tf_coil_copper = (
+                constants.den_copper * vol_cond / self.data.tfcoil.n_tf_coils
             )
-            tfcoil_variables.whtconal = 0.0e0
+            self.data.tfcoil.whtconal = 0.0e0
 
             # Outer legs/CP weights
             if self.data.physics.itart == 1:
                 # Weight of all the TF legs
-                tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
+                self.data.tfcoil.whttflgs = self.data.tfcoil.n_tf_coils * (
                     constants.den_copper * vol_cond_leg
-                    + tfcoil_variables.den_tf_wp_turn_insulation
+                    + self.data.tfcoil.den_tf_wp_turn_insulation
                     * (vol_ins_leg + vol_gr_ins_leg)
                 )
 
                 # CP weight
-                tfcoil_variables.whtcp = (
-                    constants.den_copper * tfcoil_variables.vol_cond_cp
-                    + tfcoil_variables.den_tf_wp_turn_insulation
+                self.data.tfcoil.whtcp = (
+                    constants.den_copper * self.data.tfcoil.vol_cond_cp
+                    + self.data.tfcoil.den_tf_wp_turn_insulation
                     * (
                         superconducting_tf_coil_variables.vol_ins_cp
                         + superconducting_tf_coil_variables.vol_gr_ins_cp
@@ -786,29 +783,29 @@ class ResistiveTFCoil(TFCoil):
 
         # Cryo-aluminium conductor weights
         # Casing made of re-inforced aluminium alloy
-        elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+        elif self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             # Casing weight (CP only if self.data.physics.itart = 1)bper leg/coil
-            tfcoil_variables.m_tf_coil_case = (
-                constants.den_aluminium * vol_case / tfcoil_variables.n_tf_coils
+            self.data.tfcoil.m_tf_coil_case = (
+                constants.den_aluminium * vol_case / self.data.tfcoil.n_tf_coils
             )
-            tfcoil_variables.m_tf_coil_copper = 0.0e0
-            tfcoil_variables.whtconal = (
-                constants.den_aluminium * vol_cond / tfcoil_variables.n_tf_coils
+            self.data.tfcoil.m_tf_coil_copper = 0.0e0
+            self.data.tfcoil.whtconal = (
+                constants.den_aluminium * vol_cond / self.data.tfcoil.n_tf_coils
             )
 
             # Outer legs/CP weights
             if self.data.physics.itart == 1:
                 # Weight of all the TF legs
-                tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
+                self.data.tfcoil.whttflgs = self.data.tfcoil.n_tf_coils * (
                     constants.den_aluminium * vol_cond_leg
-                    + tfcoil_variables.den_tf_wp_turn_insulation
+                    + self.data.tfcoil.den_tf_wp_turn_insulation
                     * (vol_ins_leg + vol_gr_ins_leg)
                 )
 
                 # CP weight
-                tfcoil_variables.whtcp = (
-                    constants.den_aluminium * tfcoil_variables.vol_cond_cp
-                    + tfcoil_variables.den_tf_wp_turn_insulation
+                self.data.tfcoil.whtcp = (
+                    constants.den_aluminium * self.data.tfcoil.vol_cond_cp
+                    + self.data.tfcoil.den_tf_wp_turn_insulation
                     * (
                         superconducting_tf_coil_variables.vol_ins_cp
                         + superconducting_tf_coil_variables.vol_gr_ins_cp
@@ -818,27 +815,27 @@ class ResistiveTFCoil(TFCoil):
                 )
 
         # Turn insulation mass [kg]
-        tfcoil_variables.m_tf_coil_wp_turn_insulation = (
-            tfcoil_variables.den_tf_wp_turn_insulation
+        self.data.tfcoil.m_tf_coil_wp_turn_insulation = (
+            self.data.tfcoil.den_tf_wp_turn_insulation
             * vol_ins
-            / tfcoil_variables.n_tf_coils
+            / self.data.tfcoil.n_tf_coils
         )
 
         # Ground wall insulation layer weight
-        tfcoil_variables.m_tf_coil_wp_insulation = (
-            tfcoil_variables.den_tf_wp_turn_insulation
+        self.data.tfcoil.m_tf_coil_wp_insulation = (
+            self.data.tfcoil.den_tf_wp_turn_insulation
             * vol_gr_ins
-            / tfcoil_variables.n_tf_coils
+            / self.data.tfcoil.n_tf_coils
         )
 
         # Total weight
-        tfcoil_variables.m_tf_coils_total = (
-            tfcoil_variables.m_tf_coil_case
-            + tfcoil_variables.m_tf_coil_copper
-            + tfcoil_variables.whtconal
-            + tfcoil_variables.m_tf_coil_wp_turn_insulation
-            + tfcoil_variables.m_tf_coil_wp_insulation
-        ) * tfcoil_variables.n_tf_coils
+        self.data.tfcoil.m_tf_coils_total = (
+            self.data.tfcoil.m_tf_coil_case
+            + self.data.tfcoil.m_tf_coil_copper
+            + self.data.tfcoil.whtconal
+            + self.data.tfcoil.m_tf_coil_wp_turn_insulation
+            + self.data.tfcoil.m_tf_coil_wp_insulation
+        ) * self.data.tfcoil.n_tf_coils
 
     def output_general_resistive_tf_info(self) -> None:
         """Output general information on the resistive TF coil
@@ -852,13 +849,13 @@ class ResistiveTFCoil(TFCoil):
             self.outfile,
             "Casing cross section area (per leg) (m2)",
             "(a_tf_coil_inboard_case)",
-            tfcoil_variables.a_tf_coil_inboard_case,
+            self.data.tfcoil.a_tf_coil_inboard_case,
         )
         po.ovarre(
             self.outfile,
             "Inboard leg case plasma side wall thickness (m)",
             "(dr_tf_plasma_case)",
-            tfcoil_variables.dr_tf_plasma_case,
+            self.data.tfcoil.dr_tf_plasma_case,
         )
         po.ovarre(
             self.outfile,
@@ -870,7 +867,7 @@ class ResistiveTFCoil(TFCoil):
             self.outfile,
             "Inboard leg bucking cylinder thickness (m)",
             "(dr_tf_nose_case)",
-            tfcoil_variables.dr_tf_nose_case,
+            self.data.tfcoil.dr_tf_nose_case,
         )
         po.ovarre(
             self.outfile,
@@ -903,7 +900,7 @@ class ResistiveTFCoil(TFCoil):
             self.outfile,
             "Inboard conductor sector radial thickness (m)",
             "(dr_tf_wp_with_insulation)",
-            tfcoil_variables.dr_tf_wp_with_insulation,
+            self.data.tfcoil.dr_tf_wp_with_insulation,
         )
         if self.data.physics.itart == 1:
             po.ovarre(
@@ -917,7 +914,7 @@ class ResistiveTFCoil(TFCoil):
             self.outfile,
             "Ground wall insulation thickness (m)",
             "(dx_tf_wp_insulation)",
-            tfcoil_variables.dx_tf_wp_insulation,
+            self.data.tfcoil.dx_tf_wp_insulation,
         )
         # Turn info
         po.osubhd(self.outfile, "Coil turn information:")
@@ -925,43 +922,43 @@ class ResistiveTFCoil(TFCoil):
             self.outfile,
             "Number of turns per TF leg",
             "(n_tf_coil_turns)",
-            tfcoil_variables.n_tf_coil_turns,
+            self.data.tfcoil.n_tf_coil_turns,
         )
         po.ovarre(
             self.outfile,
             "Turn insulation thickness",
             "(dx_tf_turn_insulation)",
-            tfcoil_variables.dx_tf_turn_insulation,
+            self.data.tfcoil.dx_tf_turn_insulation,
         )
         po.ovarre(
             self.outfile,
             "Mid-plane CP cooling fraction",
             "(fcoolcp)",
-            tfcoil_variables.fcoolcp,
+            self.data.tfcoil.fcoolcp,
         )
         po.ovarre(
             self.outfile,
             "Area of resistive conductor per coil",
             "(a_res_tf_coil_conductor)",
-            tfcoil_variables.a_res_tf_coil_conductor,
+            self.data.tfcoil.a_res_tf_coil_conductor,
         )
         po.ovarre(
             self.outfile,
             "Outboard leg current per turn (A)",
             "(c_tf_turn)",
-            tfcoil_variables.c_tf_turn,
+            self.data.tfcoil.c_tf_turn,
         )
         po.ovarre(
             self.outfile,
             "Inboard leg conductor volume (m3)",
             "(vol_cond_cp)",
-            tfcoil_variables.vol_cond_cp,
+            self.data.tfcoil.vol_cond_cp,
         )
         po.ovarre(
             self.outfile,
             "Outboard leg volume per coil (m3)",
             "(voltfleg)",
-            tfcoil_variables.voltfleg,
+            self.data.tfcoil.voltfleg,
         )
 
         # TF coil radial build
@@ -970,66 +967,66 @@ class ResistiveTFCoil(TFCoil):
         radius = self.data.build.r_tf_inboard_in
         po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
 
-        radius += tfcoil_variables.dr_tf_nose_case
+        radius += self.data.tfcoil.dr_tf_nose_case
         po.obuild(
             self.outfile,
             "Coil bucking cylindre",
-            tfcoil_variables.dr_tf_nose_case,
+            self.data.tfcoil.dr_tf_nose_case,
             radius,
             "(dr_tf_nose_case)",
         )
 
-        radius += tfcoil_variables.dx_tf_wp_insulation
+        radius += self.data.tfcoil.dx_tf_wp_insulation
         po.obuild(
             self.outfile,
             "Conductor ground insulation",
-            tfcoil_variables.dx_tf_wp_insulation,
+            self.data.tfcoil.dx_tf_wp_insulation,
             radius,
             "(dx_tf_wp_insulation)",
         )
 
         radius = (
             radius
-            + 0.5e0 * tfcoil_variables.dr_tf_wp_with_insulation
-            - tfcoil_variables.dx_tf_wp_insulation
+            + 0.5e0 * self.data.tfcoil.dr_tf_wp_with_insulation
+            - self.data.tfcoil.dx_tf_wp_insulation
         )
         po.obuild(
             self.outfile,
             "Conductor - first half",
-            tfcoil_variables.dr_tf_wp_with_insulation / 2e0
-            - tfcoil_variables.dx_tf_wp_insulation,
+            self.data.tfcoil.dr_tf_wp_with_insulation / 2e0
+            - self.data.tfcoil.dx_tf_wp_insulation,
             radius,
-            "(tfcoil_variables.dr_tf_wp_with_insulation/2-tfcoil_variables.dx_tf_wp_insulation)",
+            "(self.data.tfcoil.dr_tf_wp_with_insulation/2-self.data.tfcoil.dx_tf_wp_insulation)",
         )
 
         radius = (
             radius
-            + 0.5e0 * tfcoil_variables.dr_tf_wp_with_insulation
-            - tfcoil_variables.dx_tf_wp_insulation
+            + 0.5e0 * self.data.tfcoil.dr_tf_wp_with_insulation
+            - self.data.tfcoil.dx_tf_wp_insulation
         )
         po.obuild(
             self.outfile,
             "Conductor - second half",
-            tfcoil_variables.dr_tf_wp_with_insulation / 2e0
-            - tfcoil_variables.dx_tf_wp_insulation,
+            self.data.tfcoil.dr_tf_wp_with_insulation / 2e0
+            - self.data.tfcoil.dx_tf_wp_insulation,
             radius,
-            "(tfcoil_variables.dr_tf_wp_with_insulation/2-tfcoil_variables.dx_tf_wp_insulation)",
+            "(self.data.tfcoil.dr_tf_wp_with_insulation/2-self.data.tfcoil.dx_tf_wp_insulation)",
         )
 
-        radius += tfcoil_variables.dx_tf_wp_insulation
+        radius += self.data.tfcoil.dx_tf_wp_insulation
         po.obuild(
             self.outfile,
             "Conductor ground insulation",
-            tfcoil_variables.dx_tf_wp_insulation,
+            self.data.tfcoil.dx_tf_wp_insulation,
             radius,
             "(dx_tf_wp_insulation)",
         )
 
-        radius += tfcoil_variables.dr_tf_plasma_case
+        radius += self.data.tfcoil.dr_tf_plasma_case
         po.obuild(
             self.outfile,
             "Plasma side TF coil support",
-            tfcoil_variables.dr_tf_plasma_case,
+            self.data.tfcoil.dr_tf_plasma_case,
             radius,
             "(dr_tf_plasma_case)",
         )
@@ -1062,12 +1059,12 @@ class ResistiveTFCoil(TFCoil):
 
         # Resistive coil parameters
         po.osubhd(self.outfile, "Resitive loss parameters:")
-        if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             po.ocmmnt(
                 self.outfile,
                 "Resistive Material : GLIDCOP AL-15 - Dispersion Strengthened Copper",
             )
-        elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+        elif self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             po.ocmmnt(self.outfile, "Resistive Material : Pure Aluminium (99.999+ %)")
 
         if self.data.physics.itart == 1:
@@ -1075,49 +1072,49 @@ class ResistiveTFCoil(TFCoil):
                 self.outfile,
                 "CP resistivity (ohm.m)",
                 "(rho_cp)",
-                tfcoil_variables.rho_cp,
+                self.data.tfcoil.rho_cp,
             )
             po.ovarre(
                 self.outfile,
                 "Leg resistivity (ohm.m)",
                 "(rho_tf_leg)",
-                tfcoil_variables.rho_tf_leg,
+                self.data.tfcoil.rho_tf_leg,
             )
             po.ovarre(
                 self.outfile,
                 "CP resistive power loss (W)",
                 "(p_cp_resistive)",
-                tfcoil_variables.p_cp_resistive,
+                self.data.tfcoil.p_cp_resistive,
             )
             po.ovarre(
                 self.outfile,
                 "Total legs resitive power loss, (W)",
                 "(p_tf_leg_resistive)",
-                tfcoil_variables.p_tf_leg_resistive,
+                self.data.tfcoil.p_tf_leg_resistive,
             )
             po.ovarre(
                 self.outfile,
                 "joints resistive power loss (W)",
                 "(p_tf_joints_resistive)",
-                tfcoil_variables.p_tf_joints_resistive,
+                self.data.tfcoil.p_tf_joints_resistive,
             )
             po.ovarre(
                 self.outfile,
                 "Outboard leg resistance per coil (ohm)",
                 "(res_tf_leg)",
-                tfcoil_variables.res_tf_leg,
+                self.data.tfcoil.res_tf_leg,
             )
             po.ovarre(
                 self.outfile,
                 "Average CP temperature (K)",
                 "(temp_cp_average)",
-                tfcoil_variables.temp_cp_average,
+                self.data.tfcoil.temp_cp_average,
             )
             po.ovarre(
                 self.outfile,
                 "Average leg temperature (K)",
                 "(temp_tf_legs_outboard)",
-                tfcoil_variables.temp_tf_legs_outboard,
+                self.data.tfcoil.temp_tf_legs_outboard,
             )
 
         else:
@@ -1125,19 +1122,19 @@ class ResistiveTFCoil(TFCoil):
                 self.outfile,
                 "TF resistivity (ohm.m)",
                 "(p_cp_resistive)",
-                tfcoil_variables.rho_cp,
+                self.data.tfcoil.rho_cp,
             )
             po.ovarre(
                 self.outfile,
                 "TF coil resistive power less (total) (ohm.m)",
                 "(p_cp_resistive)",
-                tfcoil_variables.p_cp_resistive,
+                self.data.tfcoil.p_cp_resistive,
             )
             po.ovarre(
                 self.outfile,
                 "Average coil temperature (K)",
                 "(temp_cp_average)",
-                tfcoil_variables.temp_cp_average,
+                self.data.tfcoil.temp_cp_average,
             )
 
         # Top section TF coil radial build (physics_variables.itart = 1 only)
@@ -1149,20 +1146,20 @@ class ResistiveTFCoil(TFCoil):
             radius = self.data.build.r_tf_inboard_in
             po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
 
-            radius += tfcoil_variables.dr_tf_nose_case
+            radius += self.data.tfcoil.dr_tf_nose_case
             po.obuild(
                 self.outfile,
                 "Coil bucking cylindre",
-                tfcoil_variables.dr_tf_nose_case,
+                self.data.tfcoil.dr_tf_nose_case,
                 radius,
                 "(dr_tf_nose_case)",
             )
 
-            radius += tfcoil_variables.dx_tf_wp_insulation
+            radius += self.data.tfcoil.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Conductor ground insulation",
-                tfcoil_variables.dx_tf_wp_insulation,
+                self.data.tfcoil.dx_tf_wp_insulation,
                 radius,
                 "(dx_tf_wp_insulation)",
             )
@@ -1170,13 +1167,13 @@ class ResistiveTFCoil(TFCoil):
             radius = (
                 radius
                 + 0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
-                - tfcoil_variables.dx_tf_wp_insulation
+                - self.data.tfcoil.dx_tf_wp_insulation
             )
             po.obuild(
                 self.outfile,
                 "Conductor - first half",
                 0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
-                - tfcoil_variables.dx_tf_wp_insulation,
+                - self.data.tfcoil.dx_tf_wp_insulation,
                 radius,
                 "(dr_tf_wp_top/2-dx_tf_wp_insulation)",
             )
@@ -1184,31 +1181,31 @@ class ResistiveTFCoil(TFCoil):
             radius = (
                 radius
                 + 0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
-                - tfcoil_variables.dx_tf_wp_insulation
+                - self.data.tfcoil.dx_tf_wp_insulation
             )
             po.obuild(
                 self.outfile,
                 "Conductor - second half",
                 0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
-                - tfcoil_variables.dx_tf_wp_insulation,
+                - self.data.tfcoil.dx_tf_wp_insulation,
                 radius,
                 "(dr_tf_wp_top/2-dx_tf_wp_insulation)",
             )
 
-            radius += tfcoil_variables.dx_tf_wp_insulation
+            radius += self.data.tfcoil.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Conductor ground insulation",
-                tfcoil_variables.dx_tf_wp_insulation,
+                self.data.tfcoil.dx_tf_wp_insulation,
                 radius,
                 "(dx_tf_wp_insulation)",
             )
 
-            radius += tfcoil_variables.dr_tf_plasma_case
+            radius += self.data.tfcoil.dr_tf_plasma_case
             po.obuild(
                 self.outfile,
                 "Plasma side TF coil support",
-                tfcoil_variables.dr_tf_plasma_case,
+                self.data.tfcoil.dr_tf_plasma_case,
                 radius,
                 "(dr_tf_plasma_case)",
             )

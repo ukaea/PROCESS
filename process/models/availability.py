@@ -7,7 +7,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import tfcoil_variables as tfv
 from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
@@ -681,7 +680,8 @@ class Availability(Model):
         # Magnet temperature margin limit (K)
         # Use the lower of the two values.  Issue #526
         tmargmin = min(
-            tfv.temp_tf_superconductor_margin_min, tfv.temp_cs_superconductor_margin_min
+            self.data.tfcoil.temp_tf_superconductor_margin_min,
+            self.data.tfcoil.temp_cs_superconductor_margin_min,
         )
         mag_temp_marg_limit = tmargmin
 
@@ -699,7 +699,7 @@ class Availability(Model):
         start_of_risk = mag_temp_marg_limit / self.data.costs.conf_mag
 
         # Determine if temperature margin is in region with risk of unplanned unavailability
-        if tfv.temp_margin >= start_of_risk:
+        if self.data.tfcoil.temp_margin >= start_of_risk:
             u_unplanned_magnets = mag_min_u_unplanned
         else:
             # Linear decrease in expected lifetime when approaching the limit
@@ -709,7 +709,7 @@ class Availability(Model):
                     self.data.costs.t_plant_operational_total_yrs
                     / (start_of_risk - tmargmin)
                 )
-                * (tfv.temp_margin - tmargmin),
+                * (self.data.tfcoil.temp_margin - tmargmin),
             )
             u_unplanned_magnets = mag_main_time / (t_life + mag_main_time)
 
@@ -732,7 +732,7 @@ class Availability(Model):
                 self.outfile,
                 "Temperature Margin (K)",
                 "(temp_margin)",
-                tfv.temp_margin,
+                self.data.tfcoil.temp_margin,
                 "OP ",
             )
             po.ovarre(
@@ -1337,7 +1337,7 @@ class Availability(Model):
                 self.data.costs.life_div_fpy,
                 "OP ",
             )
-            if tfv.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+            if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
                 po.ovarre(
                     self.outfile,
                     "Max fast neutron fluence on TF coil (n/m2)",
@@ -1460,7 +1460,7 @@ class Availability(Model):
         """
         # SC magnets CP lifetime
         # Rem : only the TF maximum fluence is considered for now
-        if tfv.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             cplife = (
                 self.data.costs.life_plant
                 if self.data.fwbs.neut_flux_cp <= 0.0
