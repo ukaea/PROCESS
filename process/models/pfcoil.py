@@ -11,7 +11,6 @@ from process.core import constants
 from process.core import process_output as op
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure, Model
-from process.data_structure import superconducting_tf_coil_variables
 from process.data_structure.pfcoil_variables import (
     N_PF_COILS_IN_GROUP_MAX,
     N_PF_GROUPS_MAX,
@@ -206,7 +205,7 @@ class PFCoil(Model):
         signn[0] = 1.0e0
         signn[1] = -1.0e0
         self.data.pf_coil.r_pf_outside_tf_midplane = (
-            superconducting_tf_coil_variables.r_tf_outboard_out
+            self.data.superconducting_tfcoil.r_tf_outboard_out
             + self.data.pf_coil.dr_pf_tf_outboard_out_offset
         )
 
@@ -853,6 +852,9 @@ class PFCoil(Model):
                             self.data.tfcoil.tcritsc,
                             self.data.tfcoil.b_crit_upper_nbti,
                             self.data.tfcoil.t_crit_nbti,
+                            self.data.superconducting_tfcoil.dr_tf_hts_tape,
+                            self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
+                            self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
                         )
                     )
 
@@ -3491,6 +3493,9 @@ class CSCoil(Model):
                 self.data.tfcoil.tcritsc,
                 self.data.tfcoil.b_crit_upper_nbti,
                 self.data.tfcoil.t_crit_nbti,
+                self.data.superconducting_tfcoil.dr_tf_hts_tape,
+                self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
+                self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
             )
             # Strand critical current calculation for costing in $/kAm
             # = superconducting filaments jc * (1 - strand copper fraction)
@@ -3536,6 +3541,9 @@ class CSCoil(Model):
                 self.data.tfcoil.tcritsc,
                 self.data.tfcoil.b_crit_upper_nbti,
                 self.data.tfcoil.t_crit_nbti,
+                self.data.superconducting_tfcoil.dr_tf_hts_tape,
+                self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
+                self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
             )
 
             self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1] = (
@@ -4131,6 +4139,9 @@ def superconpf(
     tcritsc,
     b_crit_upper_nbti,
     t_crit_nbti,
+    dr_tf_hts_tape,
+    dx_tf_hts_tape_rebco,
+    dx_tf_hts_tape_total,
 ):
     """Routine to calculate the PF coil superconductor properties.
 
@@ -4179,6 +4190,12 @@ def superconpf(
         upper critical field of GL_nbti
     t_crit_nbti: float
         critical temperature of GL_nbti
+    dr_tf_hts_tape: float
+        Mean width of tape (m)
+    dx_tf_hts_tape_rebco: float
+        thickness of REBCO layer in tape (m)
+    dx_tf_hts_tape_total: float
+        thickness of tape, inc. all layers (hts, copper, substrate, etc.) (m)
 
     Returns
     -------
@@ -4280,9 +4297,9 @@ def superconpf(
             bmax,
             bc20m,
             tc0m,
-            superconducting_tf_coil_variables.dr_tf_hts_tape,
-            superconducting_tf_coil_variables.dx_tf_hts_tape_rebco,
-            superconducting_tf_coil_variables.dx_tf_hts_tape_total,
+            dr_tf_hts_tape,
+            dx_tf_hts_tape_rebco,
+            dx_tf_hts_tape_total,
         )
         # A0 calculated for tape cross section already
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
@@ -4303,9 +4320,30 @@ def superconpf(
     # Find temperature at which current density margin = 0
     if isumat in {1, 3, 4, 5, 7, 8, 9}:
         if isumat == 3:
-            arguments = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
+            arguments = (
+                isumat,
+                jsc,
+                bmax,
+                strain,
+                bc20m,
+                tc0m,
+                dr_tf_hts_tape,
+                dx_tf_hts_tape_rebco,
+                dx_tf_hts_tape_total,
+                c0,
+            )
         else:
-            arguments = (isumat, jsc, bmax, strain, bc20m, tc0m)
+            arguments = (
+                isumat,
+                jsc,
+                bmax,
+                strain,
+                bc20m,
+                tc0m,
+                dr_tf_hts_tape,
+                dx_tf_hts_tape_rebco,
+                dx_tf_hts_tape_total,
+            )
 
         another_estimate = 2 * thelium
         t_zero_margin, _root_result = optimize.newton(

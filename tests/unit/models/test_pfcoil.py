@@ -16,7 +16,6 @@ import pytest
 from numpy.testing import assert_array_almost_equal
 
 from process.core import constants
-from process.data_structure import superconducting_tf_coil_variables
 from process.data_structure.pfcoil_variables import N_PF_COILS_IN_GROUP_MAX
 from process.models.pfcoil import (
     PFCoil,
@@ -2486,7 +2485,7 @@ def test_pfcoil(monkeypatch, pfcoil):
         pfcoil.data.pf_coil, "c_pf_cs_coil_pulse_start_ma", np.full(22, 0.0)
     )
     monkeypatch.setattr(pfcoil.data.pf_coil, "dr_pf_tf_outboard_out_offset", 1.5)
-    monkeypatch.setattr(superconducting_tf_coil_variables, "r_tf_outboard_out", 10.0)
+    monkeypatch.setattr(pfcoil.data.superconducting_tfcoil, "r_tf_outboard_out", 10.0)
     monkeypatch.setattr(pfcoil.data.pf_coil, "c_pf_cs_coils_peak_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfcoil.data.pf_coil, "f_j_cs_start_end_flat_top", 2.654e-1)
     monkeypatch.setattr(pfcoil.data.pf_coil, "rpf2", -1.825)
@@ -3601,6 +3600,9 @@ def test_superconpf(monkeypatch: pytest.MonkeyPatch, pfcoil):
     tcritsc = 16
     b_crit_upper_nbti = 14.86
     t_crit_nbti = 9.04
+    dr_tf_hts_tape = 4.0e-3
+    dx_tf_hts_tape_rebco = 1.0e-6
+    dx_tf_hts_tape_total = 6.5e-5
 
     jcritwp_exp = -2.6716372e7
     jcritstr_exp = -3.8166246e7 * (1.0 - fhe)
@@ -3620,6 +3622,9 @@ def test_superconpf(monkeypatch: pytest.MonkeyPatch, pfcoil):
         tcritsc,
         b_crit_upper_nbti,
         t_crit_nbti,
+        dr_tf_hts_tape,
+        dx_tf_hts_tape_rebco,
+        dx_tf_hts_tape_total,
     )
 
     assert pytest.approx(jcritwp) == jcritwp_exp

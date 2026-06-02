@@ -2,8 +2,6 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import superconducting_tf_coil_variables
-
 
 @pytest.fixture
 def resistive_tf_coil(process_models):
@@ -641,11 +639,13 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
     monkeypatch.setattr(resistive_tf_coil.data.physics, "itart", tfresheatingparam.itart)
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables, "z_cp_top", tfresheatingparam.z_cp_top
+        resistive_tf_coil.data.superconducting_tfcoil,
+        "z_cp_top",
+        tfresheatingparam.z_cp_top,
     )
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables,
+        resistive_tf_coil.data.superconducting_tfcoil,
         "is_leg_cp_temp_same",
         tfresheatingparam.is_leg_cp_temp_same,
     )
@@ -684,8 +684,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
         tfresheatingparam.expected_a_cp_cool
     )
 
-    assert superconducting_tf_coil_variables.is_leg_cp_temp_same == pytest.approx(
-        tfresheatingparam.expected_is_leg_cp_temp_same
+    assert (
+        resistive_tf_coil.data.superconducting_tfcoil.is_leg_cp_temp_same
+        == pytest.approx(tfresheatingparam.expected_is_leg_cp_temp_same)
     )
 
 

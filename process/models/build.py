@@ -6,10 +6,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import (
-    numerics,
-    superconducting_tf_coil_variables,
-)
+from process.data_structure import numerics
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.physics.current_drive import (
     CurrentDriveMethodType,
@@ -1905,9 +1902,9 @@ class Build(Model):
             n_tf_coils=self.data.tfcoil.n_tf_coils,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
-            r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
-            r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
-            r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
+            r_tf_wp_inboard_inner=self.data.superconducting_tfcoil.r_tf_wp_inboard_inner,
+            r_tf_wp_inboard_centre=self.data.superconducting_tfcoil.r_tf_wp_inboard_centre,
+            r_tf_wp_inboard_outer=self.data.superconducting_tfcoil.r_tf_wp_inboard_outer,
             dx_tf_wp_primary_toroidal=self.data.tfcoil.dx_tf_wp_primary_toroidal,
             i_tf_shape=self.data.tfcoil.i_tf_shape,
             i_tf_sup=self.data.tfcoil.i_tf_sup,
@@ -1947,9 +1944,9 @@ class Build(Model):
             n_tf_coils=self.data.tfcoil.n_tf_coils,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
-            r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
-            r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
-            r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
+            r_tf_wp_inboard_inner=self.data.superconducting_tfcoil.r_tf_wp_inboard_inner,
+            r_tf_wp_inboard_centre=self.data.superconducting_tfcoil.r_tf_wp_inboard_centre,
+            r_tf_wp_inboard_outer=self.data.superconducting_tfcoil.r_tf_wp_inboard_outer,
             dx_tf_wp_primary_toroidal=self.data.tfcoil.dx_tf_wp_primary_toroidal,
             i_tf_shape=self.data.tfcoil.i_tf_shape,
             i_tf_sup=self.data.tfcoil.i_tf_sup,

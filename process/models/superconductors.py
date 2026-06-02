@@ -9,9 +9,6 @@ import numpy as np
 from scipy import optimize
 
 from process.core.exceptions import ProcessValueError
-from process.data_structure import (
-    superconducting_tf_coil_variables,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -1147,6 +1144,9 @@ def superconductor_current_density_margin(
     strain: float,
     bc20m: float,
     tc0m: float,
+    dr_tf_hts_tape: float,
+    dx_tf_hts_tape_rebco: float,
+    dx_tf_hts_tape_total: float,
     c0: float = 0.0,
 ) -> float:
     """Calculate the current density margin for a superconductor.
@@ -1213,9 +1213,9 @@ def superconductor_current_density_margin(
             b_superconductor,
             bc20m,
             tc0m,
-            superconducting_tf_coil_variables.dr_tf_hts_tape,
-            superconducting_tf_coil_variables.dx_tf_hts_tape_rebco,
-            superconducting_tf_coil_variables.dx_tf_hts_tape_total,
+            dr_tf_hts_tape,
+            dx_tf_hts_tape_rebco,
+            dx_tf_hts_tape_total,
         )[0],
     }
 
