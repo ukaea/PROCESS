@@ -108,7 +108,7 @@ class ConstraintData:
     """allowable neutron wall-load (MW/m2) (`constraint equation 8`)"""
 
     f_alpha_energy_confinement_min: float = 5.0
-    """Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement
+    """Minimum allowed value for f_alpha_energy_confinement, the ratio of alpha particle to energy confinement
     times (`constraint equation 62`)
     """
 

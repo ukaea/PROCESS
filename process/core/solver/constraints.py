@@ -1250,7 +1250,7 @@ def constraint_equation_62(constraint_registration, data):
     f_alpha_energy_confinement_min: Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
     """
     return geq(
-        data.physics.t_alpha_confinement / data.physics.t_energy_confinement,
+        data.physics.f_alpha_energy_confinement,
         data.constraints.f_alpha_energy_confinement_min,
         constraint_registration,
     )
