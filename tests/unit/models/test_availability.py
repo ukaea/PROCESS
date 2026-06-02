@@ -623,7 +623,7 @@ def test_cp_lifetime(monkeypatch, availability, i_tf_sup, exp):
     """
 
     monkeypatch.setattr(availability.data.tfcoil, "i_tf_sup", i_tf_sup)
-    monkeypatch.setattr(availability.data.constraints, "nflutfmax", 1.0e23)
+    monkeypatch.setattr(availability.data.constraints, "flu_tf_neutron_fast_max", 1.0e23)
     monkeypatch.setattr(availability.data.fwbs, "neut_flux_cp", 5.0e14)
     monkeypatch.setattr(availability.data.costs, "cpstflnc", 20.0)
     monkeypatch.setattr(availability.data.physics, "pflux_fw_neutron_mw", 5.0)

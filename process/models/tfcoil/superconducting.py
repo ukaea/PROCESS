@@ -1054,8 +1054,8 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "Max allowed fast neutron fluence on TF coil (n/m²)",
-            "(nflutfmax)",
-            self.data.constraints.nflutfmax,
+            "(flu_tf_neutron_fast_max)",
+            self.data.constraints.flu_tf_neutron_fast_max,
             "OP ",
         )
         po.ovarre(
@@ -1211,7 +1211,7 @@ class SuperconductingTFCoil(TFCoil):
         b_tf_inboard_peak: float,
         cu_rrr: float,
         t_tf_quench_detection: float,
-        nflutfmax: float,
+        flu_tf_neutron_fast_max: float,
     ) -> tuple[float, float]:
         """Calculates the maximum conductor current density limited by the protection
         limit, and the discharge voltage for a TF coil.
@@ -1242,7 +1242,7 @@ class SuperconductingTFCoil(TFCoil):
             Copper residual-resistance-ratio
         t_tf_quench_detection : float
             Quench detection time (s)
-        nflutfmax : float
+        flu_tf_neutron_fast_max : float
             End-of-life neutron fluence in the copper (1/m²)
 
         Returns
@@ -1275,7 +1275,7 @@ class SuperconductingTFCoil(TFCoil):
                 temp_quench_max=temp_tf_conductor_quench_max,
                 cu_rrr=cu_rrr,
                 t_quench_detection=t_tf_quench_detection,
-                fluence=nflutfmax,
+                fluence=flu_tf_neutron_fast_max,
             )
         )
 
@@ -2712,7 +2712,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
                 cu_rrr=self.data.tfcoil.rrr_tf_cu,
                 t_tf_quench_detection=self.data.tfcoil.t_tf_quench_detection,
-                nflutfmax=self.data.constraints.nflutfmax,
+                flu_tf_neutron_fast_max=self.data.constraints.flu_tf_neutron_fast_max,
             )
         )
 
@@ -4360,7 +4360,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
                 cu_rrr=self.data.tfcoil.rrr_tf_cu,
                 t_tf_quench_detection=self.data.tfcoil.t_tf_quench_detection,
-                nflutfmax=self.data.constraints.nflutfmax,
+                flu_tf_neutron_fast_max=self.data.constraints.flu_tf_neutron_fast_max,
             )
         )
 

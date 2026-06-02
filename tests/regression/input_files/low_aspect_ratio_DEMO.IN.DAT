@@ -635,7 +635,7 @@ bkt_life_csf = 1
 * DESCRIPTION:   Switch for whether blanket model feeds n_cycle_min
 * JUSTIFICATION: choose to make the constraint on blanket and CS the same 
 
-nflutfmax = 0.0
+flu_tf_neutron_fast_max = 0.0
 * DESCRIPTION:   max fast neutron fluence on TF coil (n/m2) used in quench protection
 * JUSTIFICATION: zero to align with older quench protection model 
 

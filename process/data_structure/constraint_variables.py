@@ -59,8 +59,8 @@ class ConstraintData:
     f_p_beam_shine_through_max: float = 1e-3
     """maximum neutral beam shine-through fraction (`constraint equation 59`)"""
 
-    nflutfmax: float = 1.0e23
-    """max fast neutron fluence on TF coil (n/m2) (`blktmodel>0`) (`constraint equation 53`)
+    flu_tf_neutron_fast_max: float = 1.0e23
+    """Max allowed fast neutron fluence on TF coil (n/m²) (`blktmodel>0`) (`constraint equation 53`)
     Also used for demontable magnets (itart = 1) and superconducting coils (i_tf_sup = 1)
     and quench protection
     To set the CP lifetime (`constraint equation 85`)
