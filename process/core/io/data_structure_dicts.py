@@ -220,7 +220,7 @@ def remove_comments(line):
 
 def dict_var_type():
     """Function to return a dictionary mapping variable name to variable type
-    eg. 'real_variable' or 'int_array'. Looks in input.f90 at the process
+    eg. 'real_variable' or 'int_array'. Looks in input.py at the process
     functions that read in variables from IN.DAT.
 
     Example of line we are looking for:
@@ -244,7 +244,7 @@ def dict_var_type():
 def dict_input_bounds():
     """Returns a dictionary matching variable names to dictionary containing
     upper and lower bounds that PROCESS checks variable lies between when
-    reading IN.DAT. Looks in input.f90 for parse_real_variable and
+    reading IN.DAT. Looks in input.py for parse_real_variable and
     parse_int_variable.
 
     Example of a line we are looking for:

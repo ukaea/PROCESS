@@ -5,9 +5,6 @@ optimisation figure of merit and constraints to the `PROCESS` code.
 
   **At all times the [`PROCESS` style guide](../development/standards.md) must be used.**
 
-!!! note
-
-    As the code is quickly converging towards a wholly Python codebase the respective files may change in type from `.f90` to `.py`.
 
 -----------------
 
@@ -15,7 +12,7 @@ optimisation figure of merit and constraints to the `PROCESS` code.
 
 To add a `PROCESS` input, please follow below:
 
-1. Choose the most relevant module `XX` and add the variable in the `XX_variables` defined in `XX_variables.f90`.
+1. Choose the most relevant module `XX` and add the variable in the `XX_variables` defined in `XX_variables.py`.
  
 2. Add a description of the input variable below the declaration, using the FORD      formatting described in the standards section specifying the units.
   
@@ -26,11 +23,10 @@ To add a `PROCESS` input, please follow below:
 Here is an example of the code to add:
   
 
-Variable definition example in `tfcoil_variables.f90`:
-```fortran
-  real(dp) :: rho_tf_joints
-  !! TF joints surfacic resistivity [ohm.m]
-  !! Feldmetal joints assumed.
+Variable definition example in `tfcoil_variables.py`:
+```python
+  e_tf_coil_magnetic_stored: float = 0.0
+  """Stored magnetic energy in a single TF coil (J)"""
 ```
 
 Variable initialization example in `tf_coil.py`:
@@ -55,10 +51,10 @@ Code example in the `input.py` file:
 To add a `PROCESS` iteration variable please follow the steps below, in addition to the instructions for adding an input variable:
 
 
-1. The parameter `IPNVARS` in module `numerics` of `numerics.f90` will normally be greater than the actual number of iteration variables, and does not need to be changed.
+1. The parameter `IPNVARS` in module `numerics` of `numerics.py` will normally be greater than the actual number of iteration variables, and does not need to be changed.
 2. Append a new iteration number key to the end of the `ITERATION_VARIABLES` dictionary  in `iteration_variables.py`. The associated variable is the corresponding key value.
 3. Set the variable origin file and then the associated lower and upper bounds
-4. Update the `lablxc` description in `numerics.f90`.
+4. Update the `lablxc` description in `numerics.py`.
   
 It should be noted that iteration variables must not be reset elsewhere in the
 code. That is, they may only be assigned new values when originally
@@ -115,15 +111,13 @@ After following the instruction to add an input variable, you can make the varia
   
 
 `nsweep` comment example:
-```fortran
-
-  integer :: nsweep = 1
-  !! nsweep /1/ : switch denoting quantity to scan:<UL>
-  !!         <LI> 1  aspect
-  !!         <LI> 2  pflux_div_heat_load_max_mw
-  ...
-  !!         <LI> 54 GL_nbti upper critical field at 0 Kelvin
-  !!         <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness </UL>
+```python
+  nsweep: int = None
+  """Switch denoting quantity to scan:<UL>
+  <LI> 1  aspect
+  <LI> 2  pflux_div_heat_load_max_mw
+  <LI> 3  p_plant_electric_net_required_mw
+  <LI> 4  hfact
 ```
 
 `SCAN_VARIABLES` case example:

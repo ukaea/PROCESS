@@ -2539,8 +2539,6 @@ class TFCoil(Model):
             # Superconducting CS
             if i_pf_conductor == 0:
                 # Getting the turn dimention from scratch
-                # as the TF is called before CS in caller.f90
-                # -#
 
                 # CS vertical cross-section area [m2]
                 if i_tf_inside_cs == 1:

@@ -1,9 +1,4 @@
-"""Run Process by calling into the Python module.
-
-This uses a Python module called fortran.py, which uses an extension module
-called "_fortran.cpython... .so", which are both generated from
-process_module.f90. The process_module module contains the code to actually run
-Process.
+"""Run `PROCESS` by calling into the Python module.
 
 Power Reactor Optimisation Code for Environmental and Safety Studies
 

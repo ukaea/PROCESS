@@ -71,7 +71,7 @@ def test_avail_1(monkeypatch, availability):
     :param availability: fixture containing an initialised `Availability` object
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
-    # Initialise fortran variables to keep test isolated from others
+
     init_all_module_vars()
 
     # Mock module vars
@@ -95,7 +95,6 @@ def test_avail_1(monkeypatch, availability):
     cfactr_exp = 0.0006344554455445239
     assert pytest.approx(cfactr_exp) == cfactr_obs
 
-    # Initialise fortran variables again to reset for other tests
     init_all_module_vars()
 
 
@@ -589,7 +588,7 @@ def test_avail_st(monkeypatch, availability):
     :param availability: fixture containing an initialised `Availability` object
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
-    # Initialise fortran variables to keep test isolated from others
+
     init_all_module_vars()
     monkeypatch.setattr(availability.data.costs, "tmain", 1.0)
     monkeypatch.setattr(availability.data.costs, "life_plant", 30.0)
