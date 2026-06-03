@@ -550,7 +550,7 @@ Example:
 
 ```python
 p_fusion_total_mw = 1000.0
-"""Fusion power [W]"""
+"""Fusion power [MW]"""
 ```
 
 ---------------------
@@ -564,15 +564,15 @@ r_plasma_centre = 9.0
 
 z_plasma_centre = 0.0
 
-theta_ = 
+theta_ = ...
 ```
 
 For dimensions
 
 ```python
-dr_cs = 
+dr_cs = ...
 
-dz_cs = 
+dz_cs = ...
 
 ```
 

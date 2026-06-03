@@ -461,7 +461,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         FW Armour
              - Tungsten
-             - Use den_tungsten form constants.py
+             - Use DEN_TUNGSTEN from constants.py
         FW and BB Structure Coolant
              - Helium
              - See primary_coolant_properties for denisty etc.
