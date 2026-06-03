@@ -48,7 +48,7 @@ class PFCoil(Model):
     """Calculate poloidal field coil system parameters."""
 
     def __init__(self, cs_fatigue, cs_coil):
-        """Initialise Fortran module variables."""
+        """Initialise the PF coil model."""
         self.outfile = constants.NOUT  # output file unit
         self.mfile = constants.MFILE  # mfile file unit
         self.cs_fatigue = cs_fatigue
@@ -1752,8 +1752,6 @@ class PFCoil(Model):
 
         noh = min(noh, nohmax)
 
-        # TODO In FNSF case, noh = -7! noh should always be positive. Fortran
-        # array allocation with -ve bound previously coerced to 0
         noh = max(noh, 0)
 
         roh = np.zeros(noh)
@@ -2960,7 +2958,7 @@ class CSCoil(Model):
     """Calculate central solenoid coil system parameters."""
 
     def __init__(self, cs_fatigue):
-        """Initialise Fortran module variables."""
+        """Initialise the CS coil model."""
         self.outfile = constants.NOUT  # output file unit``
         self.mfile = constants.MFILE  # mfile file unit
         self.cs_fatigue = cs_fatigue

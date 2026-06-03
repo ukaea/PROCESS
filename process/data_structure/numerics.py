@@ -155,8 +155,6 @@ class NumericsData:
     active_constraints: list[bool] = field(default_factory=lambda: [False] * IPEQNS)
     """Logical array showing which constraints are active"""
 
-    # TODO Do not change the comments for lablcc: they are used to create the
-    # Python-Fortran dictionaries. This must be improved on.
 
     lablcc: list[str] = field(
         default_factory=lambda: [

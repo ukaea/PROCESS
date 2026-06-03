@@ -107,7 +107,7 @@ class TFCoil(Model):
     """
 
     def __init__(self):
-        """Initialise Fortran module variables."""
+        """Initialise the TF coil model."""
         self.outfile = constants.NOUT  # output file unit
 
     def run(self):

@@ -172,7 +172,6 @@ def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
     if isinstance(value, np.ndarray):
         value = value.item()
     if isinstance(value, bytes):
-        # TODO: remove when Fortran is gone
         value = value.decode().strip()
     if isinstance(value, str):
         # try and convert the value to a float

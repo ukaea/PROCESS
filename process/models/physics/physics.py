@@ -1682,7 +1682,7 @@ class Physics(Model):
 
     def outplas(self):
         """Subroutine to output the plasma physics information
-        self.outfile : input integer : Fortran output unit identifier
+        self.outfile : file to write to
         This routine writes the plasma physics information
         to a file, in a tidy format.
         """
