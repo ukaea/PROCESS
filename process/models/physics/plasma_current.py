@@ -276,26 +276,26 @@ class PlasmaCurrent(Model):
 
         References
         ----------
-            - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-              unpublished internal Oak Ridge document
+        [1] J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+        unpublished internal Oak Ridge document
 
-            - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
-              'Small Tokamaks for Fusion Technology Testing'. Fusion Technology,
-              21(3P2A), 1729-1738. https://doi.org/10.13182/FST92-A29971
+        [2] Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+        'Small Tokamaks for Fusion Technology Testing'. Fusion Technology,
+        21(3P2A), 1729-1738. https://doi.org/10.13182/FST92-A29971
 
-            - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-              ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        [3] ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
 
-            - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants
-              - Part 1: Physics
+        [4] M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants
+        - Part 1: Physics
 
-            - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
+        [5] H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
 
-            - T. Hartmann, 2013, Development of a modular systems code to analyse the
-              implications of physics assumptions on the design of a demonstration
-              fusion power plant
+        [6] T. Hartmann, 2013, Development of a modular systems code to analyse the
+        implications of physics assumptions on the design of a demonstration
+        fusion power plant
 
-            - Sauter, Geometric formulas for systems codes..., FED 2016
+        [7] Sauter, Geometric formulas for systems codes..., FED 2016
         """
         # Aspect ratio
         aspect_ratio = 1.0 / eps
@@ -315,19 +315,19 @@ class PlasmaCurrent(Model):
             # Peng analytical fit
             if model == PlasmaCurrentModel.PENG_ANALYTIC_FIT:
                 fq = self.calculate_current_coefficient_peng(
-                    eps, len_plasma_poloidal, rminor
+                    eps=eps, len_plasma_poloidal=len_plasma_poloidal, rminor=rminor
                 )
 
             # Peng scaling for double null divertor; TARTs [STAR Code]
             elif model == PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
                 plasma_current = 1.0e6 * self.calculate_plasma_current_peng(
-                    q95,
-                    aspect_ratio,
-                    eps,
-                    rminor,
-                    b_plasma_toroidal_on_axis,
-                    kappa,
-                    triang,
+                    q95=q95,
+                    aspect=aspect_ratio,
+                    eps=eps,
+                    rminor=rminor,
+                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                    kappa=kappa,
+                    triang=triang,
                 )
 
             # Simple ITER scaling (simply the cylindrical case)
@@ -336,7 +336,9 @@ class PlasmaCurrent(Model):
 
             # ITER formula (IPDG89)
             elif model == PlasmaCurrentModel.IPDG89_SCALING:
-                fq = self.calculate_current_coefficient_ipdg89(eps, kappa95, triang95)
+                fq = self.calculate_current_coefficient_ipdg89(
+                    eps=eps, kappa95=kappa95, triang95=triang95
+                )
 
             # Todd empirical scalings
             # D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
@@ -345,37 +347,41 @@ class PlasmaCurrent(Model):
                 PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II,
             }:
                 fq = self.calculate_current_coefficient_todd(
-                    eps, kappa95, triang95, model=1
+                    eps=eps, kappa95=kappa95, triang95=triang95, model=1
                 )
 
                 if model == PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II:
                     fq = self.calculate_current_coefficient_todd(
-                        eps, kappa95, triang95, model=2
+                        eps=eps, kappa95=kappa95, triang95=triang95, model=2
                     )
 
             # Connor-Hastie asymptotically-correct expression
             elif model == PlasmaCurrentModel.CONNOR_HASTIE_MODEL:
                 fq = self.calculate_current_coefficient_hastie(
-                    alphaj,
-                    alphap,
-                    b_plasma_toroidal_on_axis,
-                    triang95,
-                    eps,
-                    kappa95,
-                    pres_plasma_on_axis,
-                    constants.RMU0,
+                    alphaj=alphaj,
+                    alphap=alphap,
+                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                    triang95=triang95,
+                    eps=eps,
+                    kappa95=kappa95,
+                    pres_plasma_on_axis=pres_plasma_on_axis,
+                    rmu0=constants.RMU0,
                 )
 
             # Sauter scaling allowing negative triangularity [FED May 2016]
             # https://doi.org/10.1016/j.fusengdes.2016.04.033.
             elif model == PlasmaCurrentModel.SAUTER_SCALING:
                 # Assumes zero squareness, note takes kappa, delta at separatrix not _95
-                fq = self.calculate_current_coefficient_sauter(eps, kappa, triang)
+                fq = self.calculate_current_coefficient_sauter(
+                    eps=eps, kappa=kappa, triang=triang
+                )
 
             # FIESTA ST scaling
             # https://doi.org/10.1016/j.fusengdes.2020.111530.
             elif model == PlasmaCurrentModel.FIESTA_ST_SCALING:
-                fq = self.calculate_current_coefficient_fiesta(eps, kappa, triang)
+                fq = self.calculate_current_coefficient_fiesta(
+                    eps=eps, kappa=kappa, triang=triang
+                )
 
         except ValueError as e:
             raise ProcessValueError(
@@ -729,11 +735,12 @@ class PlasmaCurrent(Model):
 
         References
         ----------
-            - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-            unpublished internal Oak Ridge document
-            - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
-            'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-            1729-1738. https://doi.org/10.13182/FST92-A29971
+        [1] J D Galambos, STAR Code: Spherical Tokamak Analysis and Reactor Code,
+        unpublished internal Oak Ridge document
+
+        [2] Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+        'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
+        1729-1738. https://doi.org/10.13182/FST92-A29971
 
         """
         # Use Ampere's law using the plasma poloidal cross-section
@@ -743,7 +750,7 @@ class PlasmaCurrent(Model):
         ff1, ff2, _, _ = self.plascar_bpol(aspect, eps, kappa, delta)
 
         # Transform q95 to qbar
-        qbar = q95 * 1.3e0 * (1.0e0 - self.data.physics.eps) ** 0.6e0
+        qbar = q95 * 1.3e0 * (1.0e0 - eps) ** 0.6e0
 
         return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
@@ -813,14 +820,15 @@ class PlasmaCurrent(Model):
 
         References
         ----------
-        - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+        [1] J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
         unpublished internal Oak Ridge document
-        - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+
+        [2] Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
         'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
         1729-1738. https://doi.org/10.13182/FST92-A29971
         """
         # Transform q95 to qbar
-        qbar = q95 * 1.3e0 * (1.0e0 - self.data.physics.eps) ** 0.6e0
+        qbar = q95 * 1.3e0 * (1.0e0 - eps) ** 0.6e0
 
         ff1, ff2, d1, d2 = self.plascar_bpol(aspect, eps, kappa, delta)
 
@@ -861,9 +869,10 @@ class PlasmaCurrent(Model):
 
         References
         ----------
-        - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
-        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
-          AEA FUS 172, 1992
+        [1] N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
+
+        [2] T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        AEA FUS 172, 1992
         """
         return (
             0.5
@@ -899,9 +908,10 @@ class PlasmaCurrent(Model):
 
         References
         ----------
-        - D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
-        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
-          AEA FUS 172, 1992
+        [1] D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
+
+        [2] T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        AEA FUS 172, 1992
         """
         # Calculate the Todd scaling based on the model
         base_scaling = (
@@ -925,7 +935,7 @@ class PlasmaCurrent(Model):
         alphaj: float,
         alphap: float,
         b_plasma_toroidal_on_axis: float,
-        delta95: float,
+        triang95: float,
         eps: float,
         kappa95: float,
         pres_plasma_on_axis: float,
@@ -940,7 +950,7 @@ class PlasmaCurrent(Model):
         - alphaj: float, the current profile index
         - alphap: float, the pressure profile index
         - b_plasma_toroidal_on_axis: float, the toroidal field on axis (T)
-        - delta95: float, the plasma triangularity 95%
+        - triang95: float, the plasma triangularity 95%
         - eps: float, the inverse aspect ratio
         - kappa95: float, the plasma elongation 95%
         - pres_plasma_on_axis: float, the central plasma pressure (Pa)
@@ -953,11 +963,13 @@ class PlasmaCurrent(Model):
         This routine calculates the f_q coefficient used for scaling the plasma current,
         using the Connor-Hastie scaling
 
-        Reference:
-        - J.W.Connor and R.J.Hastie, Culham Lab Report CLM-M106 (1985).
-          https://scientific-publications.ukaea.uk/wp-content/uploads/CLM-M106-1.pdf
-        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
-          AEA FUS 172, 1992
+        References
+        ----------
+        [1] J.W.Connor and R.J.Hastie, Culham Lab Report CLM-M106 (1985).
+        https://scientific-publications.ukaea.uk/wp-content/uploads/CLM-M106-1.pdf
+
+        [2] T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        AEA FUS 172, 1992
         """
         # Exponent in Connor-Hastie current profile
         lamda = alphaj
@@ -974,7 +986,7 @@ class PlasmaCurrent(Model):
 
         # T/r in AEA FUS 172
         kap1 = kappa95 + 1.0
-        tr = kappa95 * delta95 / kap1**2
+        tr = kappa95 * triang95 / kap1**2
 
         # E/r in AEA FUS 172
         er = (kappa95 - 1.0) / kap1
@@ -1025,8 +1037,9 @@ class PlasmaCurrent(Model):
         -------
         - float, the fq coefficient
 
-        Reference:
-        - O. Sauter, Geometric formulas for system codes including the effect of
+        References
+        ----------
+        [1] O. Sauter, Geometric formulas for system codes including the effect of
         negative triangularity, Fusion Engineering and Design, Volume 112, 2016,
         Pages 633-645, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2016.04.033.
         """
@@ -1063,9 +1076,9 @@ class PlasmaCurrent(Model):
 
         References
         ----------
-        - S.Muldrew et.al,“PROCESS”: Systems studies of spherical tokamaks,
-          Fusion Engineering and Design, Volume 154, 2020, 111530, ISSN 0920-3796,
-          https://doi.org/10.1016/j.fusengdes.2020.111530.
+        [1] S.Muldrew et.al,“PROCESS”: Systems studies of spherical tokamaks,
+        Fusion Engineering and Design, Volume 154, 2020, 111530, ISSN 0920-3796,
+        https://doi.org/10.1016/j.fusengdes.2020.111530.
         """
         return 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
 
