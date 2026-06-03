@@ -77,11 +77,8 @@ class HardcodedDictionary(Dictionary):
 
 def dict_var_type():
     """Function to return a dictionary mapping variable name to variable type
-    eg. 'real_variable' or 'int_array'. Looks in input.py at the process
-    functions that read in variables from IN.DAT.
-
-    Example of line we are looking for:
-        call parse_real_variable('BETA', beta, 0.0D0, 1.0D0, &
+    eg. 'real_variable' or 'int_array'. Iterates over INPUT_VARIABLES to build
+    the mapping using the type and array properties of each variable config.
 
     Example dictionary entry:
         DICT_VAR_TYPE['beta'] = 'real_variable'

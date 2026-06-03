@@ -446,9 +446,7 @@ class SingleRun:
 
     @staticmethod
     def finish():
-        """Run the finish subroutine to close files that are open at the end of a run.
-        n.
-        """
+        """Run the finish subroutine to close files that are open at the end of a run."""
         oheadr(constants.NOUT, "End of PROCESS Output")
         oheadr(constants.IOTTY, "End of PROCESS Output")
         oheadr(constants.NOUT, "Copy of PROCESS Input Follows")
