@@ -709,7 +709,7 @@ def check_process(inputs, data):  # noqa: ARG001
         k = 0
         for i in range(data.pf_coil.n_pf_coil_groups):
             if (
-                data.pf_coil.i_pf_location[i] != PFLocationTypes.ABOVE_TF
+                PFLocationTypes(data.pf_coil.i_pf_location[i]) != PFLocationTypes.ABOVE_TF
                 and data.pf_coil.n_pf_coils_in_group[i] != 2
             ):
                 raise ProcessValidationError(
