@@ -41,7 +41,7 @@ def jcrit_from_material(
     # of a cable conductor.
 
     if i_tf_sc_mat == 1:  # ITER Nb3Sn critical surface parameterization
-        bc20m = 32.97  # these are values taken from sctfcoil.f90
+        bc20m = 32.97
         tc0m = 16.06
 
         #  j_crit_sc returned by itersc is the critical current density in the

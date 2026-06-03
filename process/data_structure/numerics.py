@@ -536,8 +536,7 @@ class NumericsData:
     * (174) NOT USED
     * (175) NOT USED
     """
-    # Issue 287 iteration variables are now defined in module define_iteration_variables in iteration variables.f90
-    # WARNING These labels are used as variable names by new_indat(), and possibly
+        # WARNING These labels are used as variable names by new_indat(), and possibly
     # other python utilities, so they cannot easily be changed.
 
     name_xc: list[str] = field(default_factory=lambda: [""] * IPNVARS)

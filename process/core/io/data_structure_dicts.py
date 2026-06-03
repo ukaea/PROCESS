@@ -77,7 +77,7 @@ class HardcodedDictionary(Dictionary):
 
 def dict_var_type():
     """Function to return a dictionary mapping variable name to variable type
-    eg. 'real_variable' or 'int_array'. Looks in input.f90 at the process
+    eg. 'real_variable' or 'int_array'. Looks in input.py at the process
     functions that read in variables from IN.DAT.
 
     Example of line we are looking for:
