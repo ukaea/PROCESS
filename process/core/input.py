@@ -149,9 +149,9 @@ INPUT_VARIABLES = {
     "f_p_div_lower": InputVariable("physics", float, range=(0.0, 1.0)),
     "f_plasma_fuel_deuterium": InputVariable("physics", float, range=(0.0, 1.0)),
     "ffwal": InputVariable("physics", float, range=(0.0, 10.0)),
-    "f_nd_plasma_pedestal_greenwald": InputVariable("physics", float, range=(-1.0, 5.0)),
+    "f_nd_plasma_pedestal_greenwald": InputVariable("physics", float, range=(0.1, 1.5)),
     "f_nd_plasma_separatrix_greenwald": InputVariable(
-        "physics", float, range=(-1.0, 5.0)
+        "physics", float, range=(0.001, 0.9)
     ),
     "f_plasma_fuel_helium3": InputVariable("physics", float, range=(-1.0, 5.0)),
     # TODO: does f_nd_impurity_electrons require an additional range?
@@ -578,6 +578,9 @@ INPUT_VARIABLES = {
     ),
     "nd_plasma_pedestal_electron": InputVariable("physics", float, range=(0.0, 1e21)),
     "nd_plasma_separatrix_electron": InputVariable("physics", float, range=(0.0, 1e21)),
+    "i_nd_plasma_pedestal_separatrix": InputVariable(
+        data_structure.physics_variables, int, choices=[0, 1]
+    ),
     "nflutfmax": InputVariable("constraints", float, range=(0.0, 1e24)),
     "j_tf_coil_full_area": InputVariable("tfcoil", float, range=(10000.0, 1000000000.0)),
     "f_a_cs_turn_steel": InputVariable("pf_coil", float, range=(0.001, 0.999)),

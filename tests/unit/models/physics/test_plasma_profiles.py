@@ -228,6 +228,8 @@ class PlasmaProfilesParam(NamedTuple):
 
     expected_nd_electron_line: float = 0.0
 
+    expected_temp_plasma_electron_line_avg_kev: float = 0.0
+
     expected_ti: float = 0.0
 
 
@@ -277,6 +279,7 @@ class PlasmaProfilesParam(NamedTuple):
             expected_ne0=1.0585658890823703e20,
             expected_ti0=27.370104119511087,
             expected_nd_electron_line=8.8687354645836431e19,
+            expected_temp_plasma_electron_line_avg_kev=17.582796426026842,
             expected_ti=13.07,
         ),
         PlasmaProfilesParam(
@@ -322,6 +325,7 @@ class PlasmaProfilesParam(NamedTuple):
             expected_ne0=1.0585658890823703e20,
             expected_ti0=27.370104119511087,
             expected_nd_electron_line=8.8687354645836431e19,
+            expected_temp_plasma_electron_line_avg_kev=17.582796426026842,
             expected_ti=13.07,
         ),
     ],
@@ -546,6 +550,14 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch, plasmaprofile):
 
     assert plasmaprofile.data.physics.nd_plasma_electron_line == pytest.approx(
         plasmaprofilesparam.expected_nd_electron_line
+    )
+
+    assert plasmaprofile.data.physics.temp_plasma_electron_line_avg_kev == pytest.approx(
+        plasmaprofilesparam.expected_temp_plasma_electron_line_avg_kev
+    )
+
+    assert plasmaprofile.data.physics.temp_plasma_electron_line_avg_kev == pytest.approx(
+        plasmaprofilesparam.expected_temp_plasma_electron_line_avg_kev
     )
 
     assert plasmaprofile.data.physics.temp_plasma_ion_vol_avg_kev == pytest.approx(

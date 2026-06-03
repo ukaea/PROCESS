@@ -13,6 +13,7 @@ import numpy as np
 import scipy as sp
 
 from process.core.model import Model
+from process.models.physics.density_limit import PlasmaDensityLimit
 
 logger = logging.getLogger(__name__)
 
@@ -107,6 +108,31 @@ class Profile(Model, ABC):
         self.profile_integ = sp.integrate.simpson(
             self.profile_y, x=self.profile_x, dx=self.profile_dx
         )
+
+
+class DensityProfilePedestalType(IntEnum):
+    """Enum for i_nd_plasma_pedestal_separatrix types"""
+
+    USER_INPUT = (0, "User input direct values")
+    GREENWALD_FRACTION = (1, "Fractions of the Greenwald limit")
+
+    def __new__(cls, value: int, description: str):
+        """Create a new DensityProfilePedestalType instance.
+
+        Parameters
+        ----------
+            value: Integer value for the enum member.
+            description: Human-readable description for the enum member.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._description_ = description
+        return obj
+
+    @DynamicClassAttribute
+    def description(self):
+        """Get the description of the plasma profile shape."""
+        return self._description_
 
 
 class NeProfile(Profile):
@@ -254,6 +280,51 @@ class NeProfile(Profile):
             )
             ncore = 1.0e-6
         return ncore
+
+    def set_pedestal_and_separatrix_values(self):
+        """Sets the pedestal and separatrix density values based on the user input or greenwald fraction method."""
+        i_nd_plasma_pedestal_separatrix = DensityProfilePedestalType(
+            self.data.physics.i_nd_plasma_pedestal_separatrix
+        )
+
+        if i_nd_plasma_pedestal_separatrix == DensityProfilePedestalType.USER_INPUT:
+            self.data.physics.f_nd_plasma_pedestal_greenwald = (
+                self.data.physics.nd_plasma_pedestal_electron
+                / (
+                    PlasmaDensityLimit.calculate_greenwald_density_limit(
+                        c_plasma=self.data.physics.plasma_current,
+                        rminor=self.data.physics.rminor,
+                    )
+                )
+            )
+
+            self.data.physics.f_nd_plasma_separatrix_greenwald = (
+                self.data.physics.nd_plasma_separatrix_electron
+                / (
+                    PlasmaDensityLimit.calculate_greenwald_density_limit(
+                        c_plasma=self.data.physics.plasma_current,
+                        rminor=self.data.physics.rminor,
+                    )
+                )
+            )
+        elif (
+            i_nd_plasma_pedestal_separatrix
+            == DensityProfilePedestalType.GREENWALD_FRACTION
+        ):
+            self.data.physics.nd_plasma_pedestal_electron = (
+                self.data.physics.f_nd_plasma_pedestal_greenwald
+                * PlasmaDensityLimit.calculate_greenwald_density_limit(
+                    c_plasma=self.data.physics.plasma_current,
+                    rminor=self.data.physics.rminor,
+                )
+            )
+            self.data.physics.nd_plasma_separatrix_electron = (
+                self.data.physics.f_nd_plasma_separatrix_greenwald
+                * PlasmaDensityLimit.calculate_greenwald_density_limit(
+                    c_plasma=self.data.physics.plasma_current,
+                    rminor=self.data.physics.rminor,
+                )
+            )
 
     def set_physics_variables(self):
         """Calculates and sets physics variables required for the profile."""

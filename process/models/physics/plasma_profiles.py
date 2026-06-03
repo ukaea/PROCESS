@@ -140,6 +140,14 @@ class PlasmaProfile(Model):
             / sp.special.gamma(self.data.physics.alphan + 1.5)
         )
 
+        self.data.physics.temp_plasma_electron_line_avg_kev = (
+            self.data.physics.temp_plasma_electron_vol_avg_kev
+            * (1.0 + self.data.physics.alphat)
+            * (sp.special.gamma(0.5) / 2.0)
+            * sp.special.gamma(self.data.physics.alphat + 1.0)
+            / sp.special.gamma(self.data.physics.alphat + 1.5)
+        )
+
         #  Density-weighted temperatures
 
         self.data.physics.temp_plasma_electron_density_weighted_kev = (
@@ -151,7 +159,7 @@ class PlasmaProfile(Model):
             * self.data.physics.f_temp_plasma_electron_density_vol_avg
         )
 
-        #  Central values for temperature (keV) and density (m**-3)
+        #  Central values for temperature (keV) and density (m^-3)
 
         self.data.physics.temp_plasma_electron_on_axis_kev = (
             self.data.physics.temp_plasma_electron_vol_avg_kev
@@ -189,9 +197,9 @@ class PlasmaProfile(Model):
 
         #  Perform integrations to calculate ratio of density-weighted
         #  to volume-averaged temperature, etc.
-        #  Density-weighted temperature = integral(n.T dV) / integral(n dV)
+        #  Density-weighted temperature = ∫(n.T dV) / ∫(n dV)
         #  which is approximately equal to the ratio
-        #  integral(rho.n(rho).T(rho) drho) / integral(rho.n(rho) drho)
+        #  ∫(ρ.n(ρ).T(ρ) dρ) / ∫(ρ.n(ρ) dρ) # noqa: RUF003
 
         drho = self.neprofile.profile_dx
         dens = self.neprofile.profile_y
@@ -219,10 +227,14 @@ class PlasmaProfile(Model):
             / self.data.physics.temp_plasma_electron_vol_avg_kev
         )
 
-        #  Line-averaged electron density
-        #  = integral(n(rho).drho)
+        #  Line-averaged electron density and temperature
+        #  = ∫(n(ρ).dρ) # noqa: RUF003
 
         self.data.physics.nd_plasma_electron_line = self.neprofile.profile_integ
+
+        self.data.physics.temp_plasma_electron_line_avg_kev = (
+            self.teprofile.profile_integ
+        )
 
         #  Scrape-off density / volume averaged density
         #  (Input value is used if i_plasma_pedestal = 0)
@@ -283,7 +295,7 @@ class PlasmaProfile(Model):
 
         #  Pressure profile index (only true for a parabolic profile)
         #  N.B. pres_plasma_thermal_on_axis is NOT equal to <p> * (1 + alphap),
-        #  but p(rho) = n(rho)*T(rho)
+        #  but p(ρ) = n(ρ)*T(ρ) # noqa: RUF003
         #  and <p> = <n>.T_n where <...> denotes volume-averages and T_n is the
         #  density-weighted temperature
 
@@ -299,7 +311,7 @@ class PlasmaProfile(Model):
             * self.data.physics.temp_plasma_ion_density_weighted_kev
         ) * constants.KILOELECTRON_VOLT
 
-        # Central plasma current density (A/m^2)
+        # Central plasma current density (A/m²)
         # Assumes a parabolic profile for the current density
         self.data.physics.j_plasma_on_axis = (
             (self.data.physics.plasma_current)
