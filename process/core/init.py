@@ -21,8 +21,8 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.data_structure.scan_variables import init_scan_variables
-from process.models.physics.profiles import DensityProfilePedestalType
 from process.models.pfcoil import PFLocationTypes
+from process.models.physics.profiles import DensityProfilePedestalType
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
