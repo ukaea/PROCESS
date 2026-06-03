@@ -242,7 +242,7 @@ OBS_VARS = {
     "divfix": "dz_divertor",
     "coreradius": "radius_plasma_core_norm",
     "maxradwallload": "pflux_fw_rad_max",
-    "fdiv": "f_ster_div_single",
+    "fdiv": None,
     "fhcd": "f_a_fw_outboard_hcd",
     "nblktmodti": "n_blkt_inboard_modules_toroidal",
     "nblktmodpo": "n_blkt_outboard_modules_poloidal",
