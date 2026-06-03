@@ -41,9 +41,6 @@ This dataframe is then processed into a tracking dashboard:
 To add a variable to track:
 
 Add the variable to ProcessTracker.tracking_variables (in this file).
-If the variable is not a fortran module variable,
-ensure to override its parent module name
-e.g. FOO.bar says `bar`'s parent module is `FOO`.
 """
 
 import argparse

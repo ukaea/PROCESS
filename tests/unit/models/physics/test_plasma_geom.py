@@ -1,4 +1,4 @@
-"""Unit tests for plasma_geometry.f90."""
+"""Unit tests for plasma_geometry.py module."""
 
 from typing import Any, NamedTuple
 
