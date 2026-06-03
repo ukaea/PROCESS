@@ -323,7 +323,6 @@ class PlasmaCurrent(Model):
                 plasma_current = 1.0e6 * self.calculate_plasma_current_peng(
                     q95=q95,
                     aspect=aspect_ratio,
-                    eps=eps,
                     rminor=rminor,
                     b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
                     kappa=kappa,
@@ -625,7 +624,7 @@ class PlasmaCurrent(Model):
 
     @staticmethod
     def plascar_bpol(
-        aspect: float, eps: float, kappa: float, delta: float
+        aspect: float, eps: float, kappa: float, triang: float
     ) -> tuple[float, float, float, float]:
         """Calculate the poloidal field coefficients for determining the plasma current
         and poloidal field.
@@ -652,33 +651,34 @@ class PlasmaCurrent(Model):
 
         References
         ----------
-            - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
-            'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-            1729-1738. https://doi.org/10.13182/FST92-A29971
-            - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-            unpublished internal Oak Ridge document
+        [1] Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+        'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
+        1729-1738. https://doi.org/10.13182/FST92-A29971
+
+        [2] J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+        unpublished internal Oak Ridge document
 
         """
         # Original coding, only suitable for TARTs [STAR Code]
 
-        c1 = (kappa**2 / (1.0 + delta)) + delta
-        c2 = (kappa**2 / (1.0 - delta)) - delta
+        c1 = (kappa**2 / (1.0 + triang)) + triang
+        c2 = (kappa**2 / (1.0 - triang)) - triang
 
-        d1 = (kappa / (1.0 + delta)) ** 2 + 1.0
-        d2 = (kappa / (1.0 - delta)) ** 2 + 1.0
+        d1 = (kappa / (1.0 + triang)) ** 2 + 1.0
+        d2 = (kappa / (1.0 - triang)) ** 2 + 1.0
 
         c1_aspect = ((c1 * eps) - 1.0) if aspect < c1 else (1.0 - (c1 * eps))
 
-        y1 = np.sqrt(c1_aspect / (1.0 + eps)) * ((1.0 + delta) / kappa)
-        y2 = np.sqrt((c2 * eps + 1.0) / (1.0 - eps)) * ((1.0 - delta) / kappa)
+        y1 = np.sqrt(c1_aspect / (1.0 + eps)) * ((1.0 + triang) / kappa)
+        y2 = np.sqrt((c2 * eps + 1.0) / (1.0 - eps)) * ((1.0 - triang) / kappa)
 
         h2 = (1.0 + (c2 - 1.0) * (eps / 2.0)) / np.sqrt((1.0 - eps) * (c2 * eps + 1.0))
-        f2 = (d2 * (1.0 - delta) * eps) / ((1.0 - eps) * ((c2 * eps) + 1.0))
-        g = (eps * kappa) / (1.0 - (eps * delta))
+        f2 = (d2 * (1.0 - triang) * eps) / ((1.0 - eps) * ((c2 * eps) + 1.0))
+        g = (eps * kappa) / (1.0 - (eps * triang))
         ff2 = f2 * (g + 2.0 * h2 * np.arctan(y2))
 
         h1 = (1.0 + (1.0 - c1) * (eps / 2.0)) / np.sqrt((1.0 + eps) * c1_aspect)
-        f1 = (d1 * (1.0 + delta) * eps) / ((1.0 + eps) * (c1 * eps - 1.0))
+        f1 = (d1 * (1.0 + triang) * eps) / ((1.0 + eps) * (c1 * eps - 1.0))
 
         if aspect < c1:
             ff1 = f1 * (g - h1 * np.log((1.0 + y1) / (1.0 - y1)))
@@ -723,11 +723,10 @@ class PlasmaCurrent(Model):
         self,
         q95: float,
         aspect: float,
-        eps: float,
         rminor: float,
         b_plasma_toroidal_on_axis: float,
         kappa: float,
-        delta: float,
+        triang: float,
     ) -> float:
         """
         Function to calculate plasma current (Peng scaling from the STAR code)
@@ -736,11 +735,10 @@ class PlasmaCurrent(Model):
         ----------
         - q95: float, 95% flux surface safety factor
         - aspect: float, plasma aspect ratio
-        - eps: float, inverse aspect ratio
         - rminor: float, plasma minor radius (m)
         - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
         - kappa: float, plasma elongation
-        - delta: float, plasma triangularity
+        - triang: float, plasma triangularity
 
         Returns
         -------
@@ -761,12 +759,14 @@ class PlasmaCurrent(Model):
         1729-1738. https://doi.org/10.13182/FST92-A29971
         """
         # Transform q95 to qbar
-        qbar = q95 * 1.3e0 * (1.0e0 - eps) ** 0.6e0
+        qbar = q95 * 1.3e0 * (1.0e0 - (1.0 / aspect)) ** 0.6e0
 
-        ff1, ff2, d1, d2 = self.plascar_bpol(aspect, eps, kappa, delta)
+        ff1, ff2, d1, d2 = self.plascar_bpol(
+            aspect=aspect, eps=(1.0 / aspect), kappa=kappa, triang=triang
+        )
 
-        e1 = (2.0 * kappa) / (d1 * (1.0 + delta))
-        e2 = (2.0 * kappa) / (d2 * (1.0 - delta))
+        e1 = (2.0 * kappa) / (d1 * (1.0 + triang))
+        e2 = (2.0 * kappa) / (d2 * (1.0 - triang))
 
         return (
             rminor

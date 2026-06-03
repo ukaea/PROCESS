@@ -8,7 +8,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.models.physics.plasma_current import PlasmaCurrent
+from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
 
 logger = logging.getLogger(__name__)
 
@@ -27,10 +27,9 @@ class PlasmaFields(Model):
     def calculate_surface_averaged_poloidal_field(
         self,
         i_plasma_current: int,
-        ip: float,
+        cur_plasma: float,
         q95: float,
         aspect: float,
-        eps: float,
         b_plasma_toroidal_on_axis: float,
         kappa: float,
         delta: float,
@@ -48,14 +47,12 @@ class PlasmaFields(Model):
         ----------
         i_plasma_current :
             current scaling model to use
-        ip :
+        cur_plasma :
             plasma current (A)
         q95 :
             95% flux surface safety factor
         aspect :
             plasma aspect ratio
-        eps :
-            inverse aspect ratio
         b_plasma_toroidal_on_axis :
             toroidal field on axis (T)
         kappa :
@@ -83,13 +80,15 @@ class PlasmaFields(Model):
         """
         # Use Ampere's law using the plasma poloidal cross-section this simply returns
         # ⟨Bₚ(a)⟩
-        if i_plasma_current != 2:
-            return constants.RMU0 * ip / perim
+        if i_plasma_current != PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
+            return constants.RMU0 * cur_plasma / perim
         # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
-        ff1, ff2, _, _ = self.current.plascar_bpol(aspect, eps, kappa, delta)
+        ff1, ff2, _, _ = self.current.plascar_bpol(
+            aspect=aspect, eps=(1 / aspect), kappa=kappa, triang=delta
+        )
 
         # Transform q95 to qbar
-        qbar = q95 * 1.3e0 * (1.0e0 - eps) ** 0.6e0
+        qbar = q95 * 1.3e0 * (1.0e0 - (1 / aspect)) ** 0.6e0
 
         return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
