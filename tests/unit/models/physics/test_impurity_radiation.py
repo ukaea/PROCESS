@@ -1,4 +1,4 @@
-"""Unit tests for the impurity_radiation.f90.py module."""
+"""Unit tests for the impurity_radiation.py module."""
 
 from typing import NamedTuple
 

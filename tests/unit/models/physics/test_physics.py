@@ -1,4 +1,4 @@
-"""Unit tests for physics.f90."""
+"""Unit tests for physics.py module."""
 
 from typing import Any, NamedTuple
 

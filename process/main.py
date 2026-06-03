@@ -1,4 +1,5 @@
-"""
+"""Run `PROCESS` by calling into the Python module.
+
 Power Reactor Optimisation Code for Environmental and Safety Studies
 
 This is a systems code that evaluates various physics and
