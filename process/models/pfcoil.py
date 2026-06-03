@@ -2069,7 +2069,7 @@ class PFCoil(Model):
                 self.outfile,
                 "Minimum permitted temperature margin (K)",
                 "(temp_cs_superconductor_margin_min)",
-                tfv.temp_cs_superconductor_margin_min,
+                self.data.tfcoil.temp_cs_superconductor_margin_min,
             )
 
             op.oblnkl(self.outfile)
@@ -3362,7 +3362,7 @@ class CSCoil(Model):
                 ],
                 j_cs=self.data.pf_coil.j_cs_pulse_start,
                 b_cs_inner=self.data.pf_coil.b_cs_peak_pulse_start,
-                f_poisson_cs_structure=tfv.poisson_steel,
+                f_poisson_cs_structure=self.data.tfcoil.poisson_steel,
                 f_a_cs_turn_steel=self.data.pf_coil.f_a_cs_turn_steel,
             )
 
@@ -3508,11 +3508,16 @@ class CSCoil(Model):
                 )
                 * 1.0e6,
                 self.data.pf_coil.i_cs_superconductor,
-                tfv.fhts,
-                tfv.str_cs_con_res,
+                self.data.tfcoil.fhts,
+                self.data.tfcoil.str_cs_con_res,
                 self.data.pf_coil.temp_cs_superconductor_operating,
-                tfv.bcritsc,
-                tfv.tcritsc,
+                self.data.tfcoil.bcritsc,
+                self.data.tfcoil.tcritsc,
+                self.data.tfcoil.b_crit_upper_nbti,
+                self.data.tfcoil.t_crit_nbti,
+                self.data.superconducting_tfcoil.dr_tf_hts_tape,
+                self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
+                self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
             )
             # Strand critical current calculation for costing in $/kAm
             # = superconducting filaments jc * (1 - strand copper fraction)
@@ -3553,11 +3558,16 @@ class CSCoil(Model):
                 )
                 * 1.0e6,
                 self.data.pf_coil.i_cs_superconductor,
-                tfv.fhts,
-                tfv.str_cs_con_res,
+                self.data.tfcoil.fhts,
+                self.data.tfcoil.str_cs_con_res,
                 self.data.pf_coil.temp_cs_superconductor_operating,
-                tfv.bcritsc,
-                tfv.tcritsc,
+                self.data.tfcoil.bcritsc,
+                self.data.tfcoil.tcritsc,
+                self.data.tfcoil.b_crit_upper_nbti,
+                self.data.tfcoil.t_crit_nbti,
+                self.data.superconducting_tfcoil.dr_tf_hts_tape,
+                self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
+                self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
             )
 
             self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1] = (
@@ -4217,7 +4227,7 @@ class CSCoil(Model):
                 r_cs_outer=r_cs_outer,
                 j_cs=j_cs,
                 b_cs_inner=b_cs_inner,
-                f_poisson_cs_structure=tfv.poisson_steel,
+                f_poisson_cs_structure=self.data.tfcoil.poisson_steel,
                 f_a_cs_turn_steel=mfile.get("f_a_cs_turn_steel", scan=scan),
             )
             for radius in radii
@@ -4255,7 +4265,7 @@ class CSCoil(Model):
                 r_cs_outer=r_cs_outer,
                 j_cs=j_cs,
                 b_cs_inner=b_cs_inner,
-                f_poisson_cs_structure=tfv.poisson_steel,
+                f_poisson_cs_structure=self.data.tfcoil.poisson_steel,
             )
             for radius in radii
         ])
