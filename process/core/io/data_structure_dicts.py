@@ -51,7 +51,6 @@ class Dictionary:
 
 
 class SourceDictionary(Dictionary):
-    # Dictionary created from Fortran source
     def __init__(self, name, dict_creator_func):
         Dictionary.__init__(self, name)
         # Function that creates the dict

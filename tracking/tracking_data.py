@@ -261,9 +261,6 @@ class ProcessTracker:
         # tracking data
         for var in self.tracking_variables:
             if "." in var:
-                # a dotted variable is for variables that
-                # no longer exist in Fortran module variables
-                # see tracking_variables docstring
                 try:
                     _, var = var.split(".")  # noqa: PLW2901
                 except (AttributeError, ValueError):
