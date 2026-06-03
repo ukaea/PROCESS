@@ -90,7 +90,7 @@ class ConstraintData:
     """
 
     ptfnucmax: float = 1e-3
-    """maximum nuclear heating in TF coil (MW/m3) (`constraint equation 54`)"""
+    """Maximum allowed nuclear heating in TF coil [MW/m³] (`constraint equation 54`)"""
 
     tbrmin: float = 1.1
     """minimum tritium breeding ratio (`constraint equation 52`)"""
