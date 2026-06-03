@@ -14,26 +14,19 @@ To add a `PROCESS` input, please follow below:
 
 1. Choose the most relevant module `XX` and add the variable in the `XX_variables` defined in `XX_variables.py`.
  
-2. Add a description of the input variable below the declaration, using the FORD      formatting described in the standards section specifying the units.
-  
-3. Specify a sensible default value in the `init_XX_variables()` function within the corresponding model `.py` main file
+2. Add a description of the input variable below the declaration, using the formatting described in the standards section specifying the units.
+
+3. Assign a sensible initial value as the default type.
   
 4. Add the parameter to the `INPUT_VARIABLES` dictionary in `input.py`.  
 
 Here is an example of the code to add:
   
 
-Variable definition example in `tfcoil_variables.py`:
+Variable definition and initial value setting example in `tfcoil_variables.py`:
 ```python
   e_tf_coil_magnetic_stored: float = 0.0
   """Stored magnetic energy in a single TF coil (J)"""
-```
-
-Variable initialization example in `tf_coil.py`:
-```python
-    def init_tfcoil_variables():
-    ...
-      tfv.rho_tf_joints = 2.5e-10
 ```
 
 Code example in the `input.py` file:
@@ -120,16 +113,40 @@ After following the instruction to add an input variable, you can make the varia
   <LI> 4  hfact
 ```
 
-`SCAN_VARIABLES` case example:
+`nsweep_dict` example in `scans.py`
+```python
+nsweep_dict = {
+        1: "aspect",
+        2: "pflux_div_heat_load_max_mw",
+        3: "p_plant_electric_net_mw",
+        4: "hfact",
+        ...
+}
+```
+
+
+`ScanVariables` case example:
 
 ```python
   class ScanVariables(Enum):
-    aspect: ScanVariable("aspect", "Aspect_ratio", 1),
-    pflux_div_heat_load_max_mw: ScanVariable("pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)", 2),
-    ...
-    Bc2_0K: ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)", 54),
-    dr_shld_inboard : ScanVariable("dr_shld_inboard", "Inboard neutronic shield", 55),
+    @classmethod
+    def _missing_(cls, var):
+        if isinstance(var, int):
+            for sv in cls:
+                if sv.value.variable_num == var:
+                    return sv
+        return super()._missing_(var)
+
+    aspect = ScanVariable("aspect", "Aspect_ratio", 1)
+    pflux_div_heat_load_max_mw = ScanVariable(
+        "pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)", 2
+    )
+    p_plant_electric_net_required_mw = ScanVariable(
+        "p_plant_electric_net_required_mw", "Net_electric_power_(MW)", 3
+    )
 ```
+
+
 
 ---------------
 
