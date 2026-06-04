@@ -803,7 +803,7 @@ class MaterialMacroInfo:
         self._populated = False
         self.elements = elements
         self.avg_atomic_mass = get_avg_atomic_mass(elem_to_isotopic_comp(self.elements))
-        self.number_density = N_A / self.avg_atomic_mass * 1000
+        self.number_density = N_A / self.avg_atomic_mass * 1000 * self.density
 
         if (self.group_structure <= 0).any():
             warnings.warn("Zero energy (inf. lethargy) not allowed.", stacklevel=2)
