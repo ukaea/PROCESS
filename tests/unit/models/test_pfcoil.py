@@ -3370,6 +3370,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     monkeypatch.setattr(pfcoil.data.pf_coil, "bpf2", np.zeros(22))
 
     monkeypatch.setattr(pfcoil.data.build, "iohcl", 1)
+    monkeypatch.setattr(pfcoil.data.pf_coil, "a_cs_poloidal", 9.0218815014803365874412)
     monkeypatch.setattr(pfcoil.data.build, "z_tf_inside_half", 9.0730900215620327)
     monkeypatch.setattr(pfcoil.data.build, "dr_cs", 0.55242000000000002)
     monkeypatch.setattr(
