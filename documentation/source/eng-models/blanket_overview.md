@@ -78,27 +78,5 @@ $$
 
 -------------------
 
-### Pipe bend elbow coefficient | `elbow_coeff()`
 
-This function calculates the elbow bend coefficients for pressure drop calculations.
-
-$$
-a = 1.0 \quad \text{if} \ \theta = 90^{\circ} \\
-a = 0.9 \times \sin{\left(\frac{\theta \pi}{180^{\circ}}\right)} \quad \text{if} \ \theta < 70^{\circ} \\
-a = 0.7 + 0.35 \times \sin{\left(\frac{\theta}{90^{\circ}} \times \frac{\pi}{180^{\circ}}\right)} \quad \text{if} \ \theta > 90^{\circ} \\
-$$
-
-where $\theta$ is the angle of the pipe bend.
-
-$$
-b = \frac{0.21}{\sqrt{\frac{R_{\text{elbow}}}{D_{\text{pipe}}}}}\quad \text{if} \ \frac{R_{\text{elbow}}}{D_{\text{pipe}}} \ge 1 \\
-b = \frac{0.21}{\left(\frac{R_{\text{elbow}}}{D_{\text{pipe}}}\right)^{2.5}}\quad \text{if} \ \frac{R_{\text{elbow}}}{D_{\text{pipe}}} \le 1 \\
-\text{else} \quad b =0.21
-$$
-
-The elbow coefficient is given by:
-
-$$
-ab + \left( f_{\text{D}} \times \frac{R_{\text{elbow}}}{D_{\text{pipe}}}\right) \times \theta \times \left(\frac{\pi}{180^{\circ}}\right)
-$$
 
