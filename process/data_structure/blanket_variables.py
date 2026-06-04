@@ -206,5 +206,35 @@ class BlanketData:
     f_deg_blkt_inboard_poloidal_plasma: float = 0.0
     """Fraction of inboard blanket poloidal angle subtended by plasma (degrees)"""
 
+    reynolds_blkt_inboard_coolant: float = 0.0
+    """Inboard blanket coolant Reynolds number"""
+
+    reynolds_blkt_outboard_coolant: float = 0.0
+    """Outboard blanket coolant Reynolds number"""
+
+    darcy_frict_blkt_inboard_coolant: float = 0.0
+    """Inboard blanket coolant Darcy friction factor"""
+
+    darcy_frict_blkt_outboard_coolant: float = 0.0
+    """Outboard blanket coolant Darcy friction factor"""
+
+    f_elbow_blkt_inboard_90_bend: float = 0.0
+    """Inboard blanket coolant 90 degree bend loss coefficient"""
+
+    f_elbow_blkt_outboard_90_bend: float = 0.0
+    """Outboard blanket coolant 90 degree bend loss coefficient"""
+
+    f_elbow_blkt_inboard_180_bend: float = 0.0
+    """Inboard blanket coolant 180 degree bend loss coefficient"""
+
+    f_elbow_blkt_outboard_180_bend: float = 0.0
+    """Outboard blanket coolant 180 degree bend loss coefficient"""
+
+    len_blkt_inboard_coolant_channel_straight_total: float = 0.0
+    """Total length of inboard blanket coolant channel straight sections (m)"""
+
+    len_blkt_outboard_coolant_channel_straight_total: float = 0.0
+    """Total length of outboard blanket coolant channel straight sections (m)"""
+
 
 CREATE_DICTS_FROM_DATACLASS = BlanketData
