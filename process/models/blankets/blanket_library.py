@@ -24,6 +24,7 @@ from process.models.engineering.pumping import (
     CoolantType,
     calculate_reynolds_number,
     darcy_friction_haaland,
+    elbow_coeff,
 )
 from process.models.power import PumpingPowerModelTypes
 
@@ -3171,7 +3172,7 @@ class BlanketLibrary(Model):
         f_straight = darcy_friction_factor * len_pipe / dia_pipe
 
         # 90 degree elbow pressure drop coefficient
-        f_elbow_90 = self.elbow_coeff(
+        f_elbow_90 = elbow_coeff(
             radius_pipe_elbow=radius_pipe_90_deg_bend,
             deg_pipe_elbow=90.0,
             darcy_friction=darcy_friction_factor,
@@ -3179,7 +3180,7 @@ class BlanketLibrary(Model):
         )
 
         # 180 degree elbow pressure drop coefficient
-        f_elbow_180 = self.elbow_coeff(
+        f_elbow_180 = elbow_coeff(
             radius_pipe_elbow=radius_pipe_180_deg_bend,
             deg_pipe_elbow=180.0,
             darcy_friction=darcy_friction_factor,
@@ -3289,70 +3290,6 @@ class BlanketLibrary(Model):
         raise ProcessValueError(
             f"i_channel_shape ={i_channel_shape} is an invalid option."
         )
-
-    @staticmethod
-    def elbow_coeff(
-        radius_pipe_elbow: float,
-        deg_pipe_elbow: float,
-        darcy_friction: float,
-        dia_pipe: float,
-    ) -> float:
-        """Calculates elbow bend coefficients for pressure drop calculations.
-
-        Parameters
-        ----------
-        radius_pipe_elbow : float
-            Pipe elbow radius (m)
-        deg_pipe_elbow : float
-            Pipe elbow angle (degrees)
-        darcy_friction : float
-            Darcy friction factor
-        dia_pipe : float
-            Pipe diameter (m)
-
-        Returns
-        -------
-        float
-            Elbow coefficient for pressure drop calculation
-
-        References
-        ----------
-        - [Ide1969] Idel'Cik, I. E. (1969), Memento des pertes de charge,
-        Collection de la Direction des Etudes et Recherches d'Electricité de France.
-        """
-        if deg_pipe_elbow == 90:
-            a = 1.0
-        elif deg_pipe_elbow < 70:
-            a = 0.9 * np.sin(deg_pipe_elbow * np.pi / 180.0)
-        elif deg_pipe_elbow > 100:
-            a = 0.7 + (0.35 * np.sin((deg_pipe_elbow / 90.0) * (np.pi / 180.0)))
-        else:
-            raise ProcessValueError(
-                "No formula for 70 <= elbow angle(deg) <= 100, only 90 deg option available in this range."
-            )
-
-        r_ratio = radius_pipe_elbow / dia_pipe
-
-        if r_ratio > 1:
-            b = 0.21 / r_ratio**0.5
-        elif r_ratio < 1:
-            b = 0.21 / r_ratio**2.5
-        else:
-            b = 0.21
-
-        # Singularity
-        ximt = a * b
-
-        # Friction
-        xift = (
-            (np.pi / 180.0)
-            * darcy_friction
-            * (radius_pipe_elbow / dia_pipe)
-            * deg_pipe_elbow
-        )
-
-        # Elbow Coefficient
-        return ximt + xift
 
     def coolant_pumping_power(
         self,

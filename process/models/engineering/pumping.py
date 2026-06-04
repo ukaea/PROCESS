@@ -40,6 +40,8 @@ class CoolantType(IntEnum):
         return self._full_name_
 
 
+from process.core.exceptions import ProcessValueError
+
 logger = logging.getLogger(__name__)
 
 
@@ -199,3 +201,67 @@ def calculate_reynolds_number(
 
     # Calculate Reynolds number
     return den_coolant * vel_coolant * diameter / visc_coolant
+
+
+def elbow_coeff(
+    radius_pipe_elbow: float,
+    deg_pipe_elbow: float,
+    darcy_friction: float,
+    dia_pipe: float,
+) -> float:
+    """Calculates elbow bend coefficients for pressure drop calculations.
+
+    Parameters
+    ----------
+    radius_pipe_elbow : float
+        Pipe elbow radius (m)
+    deg_pipe_elbow : float
+        Pipe elbow angle (degrees)
+    darcy_friction : float
+        Darcy friction factor
+    dia_pipe : float
+        Pipe diameter (m)
+
+    Returns
+    -------
+    float
+        Elbow coefficient for pressure drop calculation
+
+    References
+    ----------
+    [1] Idel'Cik, I. E. (1969), Memento des pertes de charge,
+    Collection de la Direction des Etudes et Recherches d'Electricité de France.
+    """
+    if deg_pipe_elbow == 90:
+        a = 1.0
+    elif deg_pipe_elbow < 70:
+        a = 0.9 * np.sin(deg_pipe_elbow * np.pi / 180.0)
+    elif deg_pipe_elbow > 100:
+        a = 0.7 + (0.35 * np.sin((deg_pipe_elbow / 90.0) * (np.pi / 180.0)))
+    else:
+        raise ProcessValueError(
+            "No formula for 70 <= elbow angle(deg) <= 100, only 90 deg option available in this range."
+        )
+
+    r_ratio = radius_pipe_elbow / dia_pipe
+
+    if r_ratio > 1:
+        b = 0.21 / r_ratio**0.5
+    elif r_ratio < 1:
+        b = 0.21 / r_ratio**2.5
+    else:
+        b = 0.21
+
+    # Singularity
+    ximt = a * b
+
+    # Friction
+    xift = (
+        (np.pi / 180.0)
+        * darcy_friction
+        * (radius_pipe_elbow / dia_pipe)
+        * deg_pipe_elbow
+    )
+
+    # Elbow Coefficient
+    return ximt + xift

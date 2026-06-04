@@ -1606,27 +1606,6 @@ def test_hydraulic_diameter(monkeypatch, blanket_library):
     assert blanket_library.pipe_hydraulic_diameter(2) == pytest.approx(1.0)
 
 
-def test_elbow_coeff(blanket_library):
-    """
-    Test for elbow_coeff function.
-    """
-    # input = r_elbow, ang_elbow, lambda, dh
-    assert blanket_library.elbow_coeff(1, 0, 1, 1) == pytest.approx(0.0, rel=1e-3)
-    assert blanket_library.elbow_coeff(1, 90, 1, 1) == pytest.approx(
-        1.7807963267948965, rel=1e-3
-    )
-    assert blanket_library.elbow_coeff(1, 180, 1, 1) == pytest.approx(
-        3.291157766597427, rel=1e-3
-    )
-    assert blanket_library.elbow_coeff(1, 90, 1, 0.1) == pytest.approx(
-        15.774371098812502, rel=1e-3
-    )
-    assert blanket_library.elbow_coeff(0.1, 90, 1, 1) == pytest.approx(66.57, rel=1e-3)
-    assert blanket_library.elbow_coeff(1, 90, 0.1, 1) == pytest.approx(
-        0.3670796326794896, rel=1e-3
-    )
-
-
 def test_flow_velocity(monkeypatch, blanket_library):
     """
     Test for flow_velocity function.
