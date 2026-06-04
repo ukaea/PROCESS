@@ -4227,7 +4227,7 @@ class CSCoil(Model):
                 r_cs_outer=r_cs_outer,
                 j_cs=j_cs,
                 b_cs_inner=b_cs_inner,
-                f_poisson_cs_structure=self.data.tfcoil.poisson_steel,
+                f_poisson_cs_structure=0.3,  # Assume Poisson's ratio of 0.3 for steel structure
                 f_a_cs_turn_steel=mfile.get("f_a_cs_turn_steel", scan=scan),
             )
             for radius in radii
@@ -4265,7 +4265,7 @@ class CSCoil(Model):
                 r_cs_outer=r_cs_outer,
                 j_cs=j_cs,
                 b_cs_inner=b_cs_inner,
-                f_poisson_cs_structure=self.data.tfcoil.poisson_steel,
+                f_poisson_cs_structure=0.3,  # Assume Poisson's ratio of 0.3 for steel structure
             )
             for radius in radii
         ])
