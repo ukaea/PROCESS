@@ -302,8 +302,8 @@ def load_iteration_variables(data):
         # warn of the iteration variable is also a scan variable because this will cause
         # the optimiser and scan to overwrite the same variable and conflict
         if iteration_variable.name in {
-            data_structure.global_variables.vlabel,
-            data_structure.global_variables.vlabel_2,
+            data.globals.vlabel,
+            data.globals.vlabel_2,
         }:
             warn(
                 (

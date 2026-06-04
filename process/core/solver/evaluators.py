@@ -5,7 +5,6 @@ import numpy as np
 
 from process.core.caller import Caller
 from process.core.model import DataStructure
-from process.data_structure import global_variables as gv
 from process.data_structure import numerics
 
 logger = logging.getLogger(__name__)
@@ -64,7 +63,7 @@ class Evaluators:
         objf, conf = self.caller.call_models(xv, m)
 
         # Verbose diagnostics
-        if gv.verbose == 1:
+        if self.data.globals.verbose == 1:
             summ = 0.0
             for i in range(m):
                 summ += conf[i] ** 2

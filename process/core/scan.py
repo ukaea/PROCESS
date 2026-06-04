@@ -16,7 +16,6 @@ from process.core.log import logging_model_handler, show_errors
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
-    global_variables,
     numerics,
     scan_variables,
 )
@@ -386,7 +385,7 @@ class Scan:
                 constants.NOUT,
                 "VMCON convergence parameter",
                 "(convergence_parameter)",
-                global_variables.convergence_parameter,
+                self.data.globals.convergence_parameter,
                 "OP ",
             )
             process_output.ovarin(
@@ -993,8 +992,8 @@ class Scan:
         )
 
     def scan_1d_write_point_header(self, iscan: int):
-        global_variables.iscan_global = iscan
-        global_variables.vlabel, global_variables.xlabel = self.scan_select(
+        self.data.globals.iscan_global = iscan
+        self.data.globals.vlabel, self.data.globals.xlabel = self.scan_select(
             scan_variables.nsweep, scan_variables.sweep, iscan
         )
 
@@ -1003,8 +1002,8 @@ class Scan:
 
         process_output.write(
             constants.NOUT,
-            f"***** Scan point {iscan} of {scan_variables.isweep} : {global_variables.xlabel}"
-            f", {global_variables.vlabel} = {scan_variables.sweep[iscan - 1]} "
+            f"***** Scan point {iscan} of {scan_variables.isweep} : {self.data.globals.xlabel}"
+            f", {self.data.globals.vlabel} = {scan_variables.sweep[iscan - 1]} "
             "*****",
         )
         process_output.ostars(constants.NOUT, 110)
@@ -1013,7 +1012,7 @@ class Scan:
 
         print(
             f"Starting scan point {iscan} of {scan_variables.isweep} : "
-            f"{global_variables.xlabel} , {global_variables.vlabel}"
+            f"{self.data.globals.xlabel} , {self.data.globals.vlabel}"
             f" = {scan_variables.sweep[iscan - 1]}"
         )
 
@@ -1021,12 +1020,12 @@ class Scan:
         iscan_r = scan_variables.isweep_2 - iscan_2 + 1 if iscan_1 % 2 == 0 else iscan_2
 
         # Makes iscan available globally (read-only)
-        global_variables.iscan_global = iscan
+        self.data.globals.iscan_global = iscan
 
-        global_variables.vlabel, global_variables.xlabel = self.scan_select(
+        self.data.globals.vlabel, self.data.globals.xlabel = self.scan_select(
             scan_variables.nsweep, scan_variables.sweep, iscan_1
         )
-        global_variables.vlabel_2, global_variables.xlabel_2 = self.scan_select(
+        self.data.globals.vlabel_2, self.data.globals.xlabel_2 = self.scan_select(
             scan_variables.nsweep_2, scan_variables.sweep_2, iscan_r
         )
 
@@ -1036,8 +1035,8 @@ class Scan:
         process_output.write(
             constants.NOUT,
             f"***** 2D Scan point {iscan} of {scan_variables.isweep * scan_variables.isweep_2} : "
-            f"{global_variables.vlabel} = {scan_variables.sweep[iscan_1 - 1]} and"
-            f" {global_variables.vlabel_2} = {scan_variables.sweep_2[iscan_r - 1]} "
+            f"{self.data.globals.vlabel} = {scan_variables.sweep[iscan_1 - 1]} and"
+            f" {self.data.globals.vlabel_2} = {scan_variables.sweep_2[iscan_r - 1]} "
             "*****",
         )
         process_output.ostars(constants.NOUT, 110)
@@ -1045,10 +1044,10 @@ class Scan:
         process_output.ovarin(constants.MFILE, "Scan point number", "(iscan)", iscan)
 
         print(
-            f"Starting scan point {iscan}:  {global_variables.xlabel}, "
-            f"{global_variables.vlabel} = {scan_variables.sweep[iscan_1 - 1]}"
-            f" and {global_variables.xlabel_2}, "
-            f"{global_variables.vlabel_2} = {scan_variables.sweep_2[iscan_r - 1]} "
+            f"Starting scan point {iscan}:  {self.data.globals.xlabel}, "
+            f"{self.data.globals.vlabel} = {scan_variables.sweep[iscan_1 - 1]}"
+            f" and {self.data.globals.xlabel_2}, "
+            f"{self.data.globals.vlabel_2} = {scan_variables.sweep_2[iscan_r - 1]} "
         )
 
         return iscan_r

@@ -48,7 +48,7 @@ def init_process(data: DataStructure):
     iteration_variables.initialise_iteration_variables()
 
     # Creating and open the files MFile and OUTFile
-    process_output.OutputFileManager.open_files()
+    process_output.OutputFileManager.open_files(data.globals.output_prefix)
 
     # Input any desired new initial values
     inputs = parse_input_file(data)
@@ -65,7 +65,7 @@ def init_process(data: DataStructure):
     # Check input data for errors/ambiguities
     check_process(inputs, data)
 
-    run_summary()
+    run_summary(data)
 
 
 def get_git_summary() -> tuple[str, str]:
@@ -103,7 +103,7 @@ def get_git_summary() -> tuple[str, str]:
         return git_branch, git_tag
 
 
-def run_summary():
+def run_summary(data: DataStructure):
     """Write a summary of the PROCESS run to the output file and MFile"""
     # Outfile and terminal #
     for outfile in [constants.NOUT, constants.IOTTY]:
@@ -139,12 +139,12 @@ def run_summary():
         process_output.ocmmnt(outfile, f"Computer : {machine}")
         process_output.ocmmnt(outfile, f"Directory : {Path.cwd()}")
 
-        fileprefix = data_structure.global_variables.fileprefix
+        fileprefix = data.globals.fileprefix
         process_output.ocmmnt(
             outfile,
             f"Input : {fileprefix}",
         )
-        runtitle = data_structure.global_variables.runtitle
+        runtitle = data.globals.runtitle
         process_output.ocmmnt(
             outfile,
             f"Run title : {runtitle}",
@@ -152,7 +152,7 @@ def run_summary():
 
         process_output.ocmmnt(
             outfile,
-            f"Run type : Reactor concept design: {data_structure.global_variables.icase}, (c) UK Atomic Energy Authority",
+            f"Run type : Reactor concept design: {data.globals.icase}, (c) UK Atomic Energy Authority",
         )
 
         process_output.oblnkl(outfile)
@@ -177,7 +177,7 @@ def run_summary():
         if data_structure.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
             process_output.ocmmnt(
                 outfile,
-                f"Max iterations : {data_structure.global_variables.maxcal}",
+                f"Max iterations : {data.globals.maxcal}",
             )
 
             if data_structure.numerics.minmax > 0:
@@ -233,7 +233,6 @@ def init_all_module_vars():
     """
     logging_model_handler.clear_logs()
     data_structure.numerics.init_numerics()
-    data_structure.global_variables.init_global_variables()
     init_scan_variables()
     constants.init_constants()
 
@@ -561,7 +560,7 @@ def check_process(inputs, data):  # noqa: ARG001
 
     #  Tight aspect ratio options (ST)
     if data.physics.itart == 1:
-        data_structure.global_variables.icase = "Tight aspect ratio tokamak model"
+        data.globals.icase = "Tight aspect ratio tokamak model"
 
         # Disabled Forcing that no inboard breeding blanket is used
         # Disabled i_blkt_inboard = 0
@@ -748,7 +747,7 @@ def check_process(inputs, data):  # noqa: ARG001
 
     #  Pulsed power plant model
     if data.pulse.i_pulsed_plant == 1:
-        data_structure.global_variables.icase = "Pulsed tokamak model"
+        data.globals.icase = "Pulsed tokamak model"
     else:
         data.buildings.esbldgm3 = 0.0
 
@@ -1154,6 +1153,6 @@ def set_active_constraints():
 
 def set_device_type(data):
     if data.ife.ife == 1:
-        data_structure.global_variables.icase = "Inertial Fusion model"
+        data.globals.icase = "Inertial Fusion model"
     elif data.stellarator.istell != 0:
-        data_structure.global_variables.icase = "Stellarator model"
+        data.globals.icase = "Stellarator model"

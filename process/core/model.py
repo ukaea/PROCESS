@@ -14,6 +14,7 @@ from process.data_structure.dcll_variables import DCLLData
 from process.data_structure.divertor_variables import DivertorData
 from process.data_structure.first_wall_variables import FirstWallData
 from process.data_structure.fwbs_variables import FWBSData
+from process.data_structure.global_variables import GlobalData
 from process.data_structure.heat_transport_variables import HeatTransportData
 from process.data_structure.ife_variables import IFEData
 from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
@@ -75,6 +76,7 @@ class DataStructure:
     rebco: RebcoData = initialise_later
     tfcoil: TFData = initialise_later
     superconducting_tfcoil: SuperconductingTFData = initialise_later
+    globals: GlobalData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):

@@ -161,15 +161,13 @@ class Caller:
             for _ in range(10):
                 # Divert OUT.DAT and MFILE.DAT output to scratch files for
                 # idempotence checking
-                OutputFileManager.open_idempotence_files()
+                OutputFileManager.open_idempotence_files(self.data.globals.output_prefix)
                 self._call_models_once(xc)
                 # Write mfile
                 finalise(self.models, self.data, ifail)
 
                 # Extract data from intermediate idempotence-checking mfile
-                mfile_path = (
-                    data_structure.global_variables.output_prefix
-                ) + "IDEM_MFILE.DAT"
+                mfile_path = (self.data.globals.output_prefix) + "IDEM_MFILE.DAT"
                 mfile = MFile(mfile_path)
                 # Create mfile dict of float values: only compare floats
                 mfile_data = {
@@ -204,7 +202,9 @@ class Caller:
                     logger.debug("Mfiles idempotent, returning")
                     # Divert OUT.DAT and MFILE.DAT output back to original files
                     # now idempotence checking complete
-                    OutputFileManager.close_idempotence_files()
+                    OutputFileManager.close_idempotence_files(
+                        self.data.globals.output_prefix
+                    )
                     # Write final output file and mfile
                     finalise(self.models, self.data, ifail)
                     return
@@ -230,12 +230,12 @@ class Caller:
             )
 
             # Close idempotence files, write final output file and mfile
-            OutputFileManager.close_idempotence_files()
+            OutputFileManager.close_idempotence_files(self.data.globals.output_prefix)
 
         except Exception:
             # If exception in model evaluations delete intermediate idempotence
             # files to clean up
-            OutputFileManager.close_idempotence_files()
+            OutputFileManager.close_idempotence_files(self.data.globals.output_prefix)
             raise
         else:
             finalise(
