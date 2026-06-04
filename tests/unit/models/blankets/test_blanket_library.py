@@ -1118,7 +1118,6 @@ def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library):
         den_coolant=pressuredropparam.den,
         visc_coolant=pressuredropparam.vsc,
         vel_coolant=pressuredropparam.vv,
-        label=pressuredropparam.label,
     )
 
     assert pressure_drop_out == pytest.approx(

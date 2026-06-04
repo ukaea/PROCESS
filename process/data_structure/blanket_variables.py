@@ -230,6 +230,48 @@ class BlanketData:
     f_elbow_blkt_outboard_180_bend: float = 0.0
     """Outboard blanket coolant 180 degree bend loss coefficient"""
 
+    f_straight_blkt_inboard_coolant: float = 0.0
+    """Inboard blanket coolant straight length loss coefficient"""
+
+    f_straight_blkt_outboard_coolant: float = 0.0
+    """Outboard blanket coolant straight length loss coefficient"""
+
+    dpres_blkt_inboard_coolant_channel_straight_total: float = 0.0
+    """Total pressure drop in inboard blanket coolant channel straight sections (Pa)"""
+
+    dpres_blkt_outboard_coolant_channel_straight_total: float = 0.0
+    """Total pressure drop in outboard blanket coolant channel straight sections (Pa)"""
+
+    dpres_blkt_inboard_coolant_channel_90_bends_total: float = 0.0
+    """Total pressure drop in inboard blanket coolant channel 90 degree bends (Pa)"""
+
+    dpres_blkt_outboard_coolant_channel_90_bends_total: float = 0.0
+    """Total pressure drop in outboard blanket coolant channel 90 degree bends (Pa)"""
+
+    dpres_blkt_inboard_coolant_channel_180_bends_total: float = 0.0
+    """Total pressure drop in inboard blanket coolant channel 180 degree bends (Pa)"""
+
+    dpres_blkt_outboard_coolant_channel_180_bends_total: float = 0.0
+    """Total pressure drop in outboard blanket coolant channel 180 degree bends (Pa)"""
+
+    dpres_blkt_inboard_coolant_channel_90_bend: float = 0.0
+    """Pressure drop in inboard blanket coolant channel 90 degree bend (Pa)"""
+
+    dpres_blkt_outboard_coolant_channel_90_bend: float = 0.0
+    """Pressure drop in outboard blanket coolant channel 90 degree bend (Pa)"""
+
+    dpres_blkt_inboard_coolant_channel_180_bend: float = 0.0
+    """Pressure drop in inboard blanket coolant channel 180 degree bend (Pa)"""
+
+    dpres_blkt_outboard_coolant_channel_180_bend: float = 0.0
+    """Pressure drop in outboard blanket coolant channel 180 degree bend (Pa)"""
+
+    dpres_blkt_inboard_bends_total: float = 0.0
+    """Total pressure drop in inboard blanket coolant channel bends (Pa)"""
+
+    dpres_blkt_outboard_bends_total: float = 0.0
+    """Total pressure drop in outboard blanket coolant channel bends (Pa)"""
+
     len_blkt_inboard_coolant_channel_straight_total: float = 0.0
     """Total length of inboard blanket coolant channel straight sections (m)"""
 

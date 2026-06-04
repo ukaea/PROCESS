@@ -127,6 +127,8 @@ def write(models, data, _outfile):
         # DCLL model
         models.dcll.output()
 
+    models.blanket_library.output_blkt_pumping_variables()
+
     # FISPACT and LOCA model (not used)- removed
 
     # Power model

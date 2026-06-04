@@ -22,6 +22,7 @@ from process.models.engineering.ivc_functions import (
 )
 from process.models.engineering.pumping import (
     CoolantType,
+    CoolantFrictionLossParameters,
     calculate_reynolds_number,
     darcy_friction_haaland,
     elbow_coeff,
@@ -1393,7 +1394,7 @@ class BlanketLibrary(Model):
             b_bz_liq=self.data.fwbs.b_bz_liq,
         )
 
-        dpres_fw_inboard_coolant = self.total_pressure_drop(
+        dpres_fw_inboard_coolant, fw_inboard_friction_params = self.total_pressure_drop(
             output,
             icoolpump=1,
             vel_coolant=vel_fw_inboard_coolant,
@@ -1408,19 +1409,21 @@ class BlanketLibrary(Model):
             label="Inboard first wall",
         )
 
-        dpres_fw_outboard_coolant = self.total_pressure_drop(
-            output,
-            icoolpump=1,
-            vel_coolant=vel_fw_outboard_coolant,
-            len_pipe=self.data.fwbs.len_fw_channel,
-            n_pipe_90_deg_bends=N_FW_PIPE_90_DEG_BENDS,
-            n_pipe_180_deg_bends=N_FW_PIPE_180_DEG_BENDS,
-            den_coolant=self.data.fwbs.den_fw_coolant,
-            visc_coolant_dynamic=self.data.fwbs.visc_fw_coolant,
-            coolant_electrical_conductivity=0.0e0,
-            pol_channel_length=pollengo,
-            nopolchan=npoltoto,
-            label="Outboard first wall",
+        dpres_fw_outboard_coolant, fw_outboard_friction_params = (
+            self.total_pressure_drop(
+                output,
+                icoolpump=1,
+                vel_coolant=vel_fw_outboard_coolant,
+                len_pipe=self.data.fwbs.len_fw_channel,
+                n_pipe_90_deg_bends=N_FW_PIPE_90_DEG_BENDS,
+                n_pipe_180_deg_bends=N_FW_PIPE_180_DEG_BENDS,
+                den_coolant=self.data.fwbs.den_fw_coolant,
+                visc_coolant_dynamic=self.data.fwbs.visc_fw_coolant,
+                coolant_electrical_conductivity=0.0e0,
+                pol_channel_length=pollengo,
+                nopolchan=npoltoto,
+                label="Outboard first wall",
+            )
         )
 
         # BB Presure Drops ###############
@@ -1441,43 +1444,85 @@ class BlanketLibrary(Model):
             npoltoti = self.data.fwbs.nopol * npblkti_liq
         npoltoto = self.data.fwbs.nopol * npblkto_liq
 
-        dpres_blkt_outboard_coolant = self.total_pressure_drop(
-            output,
-            icoolpump=1,
-            vel_coolant=self.data.blanket.vel_blkt_outboard_coolant,
-            len_pipe=self.data.blanket.len_blkt_outboard_channel_total,
-            n_pipe_90_deg_bends=N_BLKT_PIPE_90_DEG_BENDS,
-            n_pipe_180_deg_bends=N_BLKT_PIPE_180_DEG_BENDS,
-            den_coolant=self.data.fwbs.den_blkt_coolant,
-            visc_coolant_dynamic=self.data.fwbs.visc_blkt_coolant,
-            coolant_electrical_conductivity=0.0e0,
-            pol_channel_length=pollengo,
-            nopolchan=npoltoto,
-            label="Outboard blanket",
+        dpres_blkt_outboard_coolant, blkt_outboard_friction_params = (
+            self.total_pressure_drop(
+                output,
+                icoolpump=1,
+                vel_coolant=self.data.blanket.vel_blkt_outboard_coolant,
+                len_pipe=self.data.blanket.len_blkt_outboard_channel_total,
+                n_pipe_90_deg_bends=N_BLKT_PIPE_90_DEG_BENDS,
+                n_pipe_180_deg_bends=N_BLKT_PIPE_180_DEG_BENDS,
+                den_coolant=self.data.fwbs.den_blkt_coolant,
+                visc_coolant_dynamic=self.data.fwbs.visc_blkt_coolant,
+                coolant_electrical_conductivity=0.0e0,
+                pol_channel_length=pollengo,
+                nopolchan=npoltoto,
+                label="Outboard blanket",
+            )
+        )
+
+        self.data.blanket.dpres_blkt_outboard_coolant_channel_straight_total = (
+            blkt_outboard_friction_params.dpres_straight
+        )
+        self.data.blanket.dpres_blkt_outboard_coolant_channel_90_bend = (
+            blkt_outboard_friction_params.dpres_90
+        )
+        self.data.blanket.dpres_blkt_outboard_coolant_channel_90_bends_total = (
+            blkt_outboard_friction_params.dpres_90_total
+        )
+        self.data.blanket.dpres_blkt_outboard_coolant_channel_180_bend = (
+            blkt_outboard_friction_params.dpres_180
+        )
+        self.data.blanket.dpres_blkt_outboard_coolant_channel_180_bends_total = (
+            blkt_outboard_friction_params.dpres_180_total
+        )
+        self.data.blanket.dpres_blkt_outboard_bends_total = (
+            blkt_outboard_friction_params.dpres_bends_total
+        )
+
+        self.data.blanket.reynolds_blkt_outboard_coolant = (
+            blkt_outboard_friction_params.reynolds_number
+        )
+        self.data.blanket.darcy_frict_blkt_outboard_coolant = (
+            blkt_outboard_friction_params.darcy_friction_factor
+        )
+        self.data.blanket.f_straight_blkt_outboard_coolant = (
+            blkt_outboard_friction_params.f_straight
+        )
+        self.data.blanket.len_blkt_outboard_coolant_channel_straight_total = (
+            blkt_outboard_friction_params.len_straight
+        )
+        self.data.blanket.f_elbow_blkt_outboard_90_bend = (
+            blkt_outboard_friction_params.f_elbow_90
+        )
+        self.data.blanket.f_elbow_blkt_outboard_180_bend = (
+            blkt_outboard_friction_params.f_elbow_180
         )
 
         if (
             self.data.build.i_blkt_inboard
             == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
         ):
-            dpres_blkt_inboard_coolant = self.total_pressure_drop(
-                output,
-                icoolpump=1,
-                vel_coolant=self.data.blanket.vel_blkt_inboard_coolant,
-                len_pipe=self.data.blanket.len_blkt_inboard_channel_total,
-                n_pipe_90_deg_bends=N_BLKT_PIPE_90_DEG_BENDS,
-                n_pipe_180_deg_bends=N_BLKT_PIPE_180_DEG_BENDS,
-                den_coolant=self.data.fwbs.den_blkt_coolant,
-                visc_coolant_dynamic=self.data.fwbs.visc_blkt_coolant,
-                coolant_electrical_conductivity=0.0e0,
-                pol_channel_length=pollengi,
-                nopolchan=npoltoti,
-                label="Inboard blanket",
+            dpres_blkt_inboard_coolant, blkt_inboard_friction_params = (
+                self.total_pressure_drop(
+                    output,
+                    icoolpump=1,
+                    vel_coolant=self.data.blanket.vel_blkt_inboard_coolant,
+                    len_pipe=self.data.blanket.len_blkt_inboard_channel_total,
+                    n_pipe_90_deg_bends=N_BLKT_PIPE_90_DEG_BENDS,
+                    n_pipe_180_deg_bends=N_BLKT_PIPE_180_DEG_BENDS,
+                    den_coolant=self.data.fwbs.den_blkt_coolant,
+                    visc_coolant_dynamic=self.data.fwbs.visc_blkt_coolant,
+                    coolant_electrical_conductivity=0.0e0,
+                    pol_channel_length=pollengi,
+                    nopolchan=npoltoti,
+                    label="Inboard blanket",
+                )
             )
 
         # If the blanket has a liquid metal breeder...
         if self.data.fwbs.i_blkt_dual_coolant > 0:
-            deltap_blo_liq = self.total_pressure_drop(
+            deltap_blo_liq, _ = self.total_pressure_drop(
                 output,
                 icoolpump=2,
                 vel_coolant=velblkto_liq,
@@ -1495,7 +1540,7 @@ class BlanketLibrary(Model):
                 self.data.build.i_blkt_inboard
                 == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
             ):
-                deltap_bli_liq = self.total_pressure_drop(
+                deltap_bli_liq, _ = self.total_pressure_drop(
                     output,
                     icoolpump=2,
                     vel_coolant=velblkti_liq,
@@ -2412,6 +2457,7 @@ class BlanketLibrary(Model):
             deltap = self.thermo_hydraulic_model_pressure_drop_calculations(
                 output=output
             )
+            print(deltap)
             deltap_fwi = deltap[0]
             deltap_fwo = deltap[1]
             deltap_blo = deltap[2]
@@ -2841,7 +2887,7 @@ class BlanketLibrary(Model):
         pol_channel_length: float,
         nopolchan: int,
         label: str,
-    ) -> float:
+    ) -> tuple[float, CoolantFrictionLossParameters]:
         """Calculate the total pressure drop (Pa) for coolant flow in the first wall (FW) and breeding blanket (BZ).
 
         This includes frictional losses and, for liquid breeder coolants, magnetohydrodynamic (MHD) losses.
@@ -2875,8 +2921,8 @@ class BlanketLibrary(Model):
 
         Returns
         -------
-        float
-            Total pressure drop (Pa).
+        tuple
+            Total pressure drop (Pa) and friction loss parameters.
         """
         radius_pipe_90_deg_bend, radius_pipe_180_deg_bend = calculate_pipe_bend_radius(
             i_ps=icoolpump,
@@ -2885,19 +2931,20 @@ class BlanketLibrary(Model):
         )
 
         # Friction - for all coolants
-        dpres_friction = self.coolant_friction_pressure_drop(
-            i_ps=icoolpump,
-            radius_pipe_90_deg_bend=radius_pipe_90_deg_bend,
-            radius_pipe_180_deg_bend=radius_pipe_180_deg_bend,
-            n_pipe_90_deg_bends=n_pipe_90_deg_bends,
-            n_pipe_180_deg_bends=n_pipe_180_deg_bends,
-            len_pipe=len_pipe,
-            den_coolant=den_coolant,
-            visc_coolant=visc_coolant_dynamic,
-            vel_coolant=vel_coolant,
-            label=label,
-            output=output,
+        friction_params: CoolantFrictionLossParameters = (
+            self.coolant_friction_pressure_drop(
+                i_ps=icoolpump,
+                radius_pipe_90_deg_bend=radius_pipe_90_deg_bend,
+                radius_pipe_180_deg_bend=radius_pipe_180_deg_bend,
+                n_pipe_90_deg_bends=n_pipe_90_deg_bends,
+                n_pipe_180_deg_bends=n_pipe_180_deg_bends,
+                len_pipe=len_pipe,
+                den_coolant=den_coolant,
+                visc_coolant=visc_coolant_dynamic,
+                vel_coolant=vel_coolant,
+            )
         )
+        dpres_friction = friction_params.dpres_total
 
         if icoolpump == 2:
             dpres_mhd = self.liquid_breeder_mhd_pressure_drop(
@@ -2915,22 +2962,7 @@ class BlanketLibrary(Model):
         # Total pressure drop (Pa)
         dpres_total = dpres_friction + dpres_mhd
 
-        if output:
-            po.osubhd(self.outfile, f"Total pressure drop for {label}")
-
-            po.ocmmnt(self.outfile, "Friction drops plus MHD drops if applicaple")
-            po.ovarre(
-                self.outfile, "Total pressure drop (Pa)", "(deltap)", dpres_total, "OP "
-            )
-            po.ovarre(
-                self.outfile,
-                "Coolant flow velocity (m/s)",
-                "(flow_velocity, formerly vv)",
-                vel_coolant,
-                "OP ",
-            )
-
-        return dpres_total
+        return dpres_total, friction_params
 
     def liquid_breeder_mhd_pressure_drop(
         self,
@@ -3097,9 +3129,7 @@ class BlanketLibrary(Model):
         den_coolant: float,
         visc_coolant: float,
         vel_coolant: float,
-        label: str,
-        output: bool = False,
-    ):
+    ) -> CoolantFrictionLossParameters:
         """Pressure drops are calculated for a pipe with a number of 90
         and 180 degree bends. The pressure drop due to frictional forces along
         the total straight length of the pipe is calculated, then the pressure
@@ -3126,12 +3156,23 @@ class BlanketLibrary(Model):
             coolant viscosity (Pa s)
         vel_coolant :
             coolant flow velocity (m/s)
-        label :
-            component name
-        output :
-            boolean of whether to write data to output file
 
-        :Notes:
+        Returns
+        -------
+        :
+            CoolantFrictionLossParameters dataclass containing:
+            - Total pressure drop due to friction (Pa)
+            - Pressure drop due to straight sections (Pa)
+            - Pressure drop due to 90 degree bends (Pa)
+            - Pressure drop due to 180 degree bends (Pa)
+            - Reynolds number
+            - Darcy friction factor
+            - Pressure drop coefficient for straight sections
+            - Pressure drop coefficient for 90 degree bends
+            - Pressure drop coefficient for 180 degree bends
+
+        Notes
+        -----
             Darcy-Weisbach Equation (straight pipe):
 
             ΔP = λ * L/D * (p 〈v〉²) / 2
@@ -3191,78 +3232,31 @@ class BlanketLibrary(Model):
         dpres_straight = f_straight * 0.5 * den_coolant * vel_coolant**2
 
         # Pressure drop due to 90 and 180 degree bends
-        dpres_90 = n_pipe_90_deg_bends * f_elbow_90 * 0.5 * den_coolant * vel_coolant**2
-        dpres_180 = (
-            n_pipe_180_deg_bends * f_elbow_180 * 0.5 * den_coolant * vel_coolant**2
-        )
+        dpres_90 = f_elbow_90 * 0.5 * den_coolant * vel_coolant**2
+        dpres_90_total = n_pipe_90_deg_bends * dpres_90
+        dpres_180 = f_elbow_180 * 0.5 * den_coolant * vel_coolant**2
+        dpres_180_total = n_pipe_180_deg_bends * dpres_180
+
+        dpres_bends_total = dpres_90_total + dpres_180_total
 
         # Total pressure drop (Pa)
-        dpres_total = dpres_straight + dpres_90 + dpres_180
+        dpres_total = dpres_straight + dpres_bends_total
 
-        if output:
-            po.osubhd(self.outfile, f"Pressure drop (friction) for {label}")
-            po.ovarre(self.outfile, "Reynolds number", "(reyn)", reynolds_number, "OP ")
-            po.ovarre(
-                self.outfile,
-                "Darcy friction factor",
-                "(lambda)",
-                darcy_friction_factor,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Pressure drop (Pa)",
-                "(pressure_drop)",
-                dpres_total,
-                "OP ",
-            )
-            po.ocmmnt(self.outfile, "This is the sum of the following:")
-            po.ovarre(
-                self.outfile,
-                "            Straight sections (Pa)",
-                "(pdropstraight)",
-                dpres_straight,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "            90 degree bends (Pa)",
-                "(pdrop90)",
-                dpres_90,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "            180 degree bends (Pa)",
-                "(pdrop180)",
-                dpres_180,
-                "OP ",
-            )
-
-            # TN: always write verbose stuff, it has no harm
-            po.ovarre(
-                self.outfile,
-                "Straight section pressure drop coefficient",
-                "(kstrght)",
-                f_straight,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "90 degree elbow coefficient",
-                "(kelbwn)",
-                f_elbow_90,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "180 degree elbow coefficient coefficient",
-                "(kelbwt)",
-                f_elbow_180,
-                "OP ",
-            )
-
-        return dpres_total
+        return CoolantFrictionLossParameters(
+            dpres_total=dpres_total,
+            dpres_straight=dpres_straight,
+            dpres_90=dpres_90,
+            dpres_90_total=dpres_90_total,
+            dpres_180=dpres_180,
+            dpres_180_total=dpres_180_total,
+            dpres_bends_total=dpres_bends_total,
+            reynolds_number=reynolds_number,
+            darcy_friction_factor=darcy_friction_factor,
+            f_straight=f_straight,
+            len_straight=len_pipe,
+            f_elbow_90=f_elbow_90,
+            f_elbow_180=f_elbow_180,
+        )
 
     def pipe_hydraulic_diameter(self, i_channel_shape):
         """Caculate the hydraulic diameter (m) for a given coolant pipe size/shape.
@@ -3461,6 +3455,187 @@ class BlanketLibrary(Model):
             )
 
         return pumppower
+
+    def output_blkt_pumping_variables(self):
+
+        po.oheadr(self.outfile, "Blanket pumping variables")
+
+        po.osubhd(self.outfile, "Inboard Blanket")
+
+        po.ovarre(
+            self.outfile,
+            "Inboard blanket coolant channel length (radial direction) (m)",
+            "(len_blkt_inboard_coolant_channel_radial)",
+            self.data.blanket.len_blkt_inboard_coolant_channel_radial,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard blanket coolant channel length (toroidal direction) (m)",
+            "(len_blkt_inboard_segment_toroidal)",
+            self.data.blanket.len_blkt_inboard_segment_toroidal,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Number of inboard blanket coolant sections in the radial direction",
+            "(n_blkt_inboard_module_coolant_sections_radial)",
+            self.data.fwbs.n_blkt_inboard_module_coolant_sections_radial,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Number of inboard blanket coolant sections in the poloidal direction",
+            "(n_blkt_inboard_module_coolant_sections_poloidal)",
+            self.data.fwbs.n_blkt_inboard_module_coolant_sections_poloidal,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total length of inboard blanket coolant channel straight sections (m)",
+            "(len_blkt_inboard_channel_total)",
+            self.data.blanket.len_blkt_inboard_channel_total,
+            "OP ",
+        )
+
+        po.osubhd(self.outfile, "Outboard Blanket")
+
+        po.ovarre(
+            self.outfile,
+            "Outboard blanket coolant channel length (radial direction) (m)",
+            "(len_blkt_outboard_coolant_channel_radial)",
+            self.data.blanket.len_blkt_outboard_coolant_channel_radial,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Outboard blanket coolant channel length (toroidal direction) (m)",
+            "(len_blkt_outboard_segment_toroidal)",
+            self.data.blanket.len_blkt_outboard_segment_toroidal,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Number of outboard blanket coolant sections in the radial direction",
+            "(n_blkt_outboard_module_coolant_sections_radial)",
+            self.data.fwbs.n_blkt_outboard_module_coolant_sections_radial,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Number of outboard blanket coolant sections in the poloidal direction",
+            "(n_blkt_outboard_module_coolant_sections_poloidal)",
+            self.data.fwbs.n_blkt_outboard_module_coolant_sections_poloidal,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total length of outboard blanket coolant channel straight sections (m)",
+            "(len_blkt_outboard_channel_total)",
+            self.data.blanket.len_blkt_outboard_channel_total,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
+        po.ovarre(
+            self.outfile,
+            "Pressure drop for straight sections of outboard blanket (Pa)",
+            "(dpres_blkt_outboard_coolant_channel_straight_total)",
+            self.data.blanket.dpres_blkt_outboard_coolant_channel_straight_total,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Pressure drop for 90° bends of outboard blanket (Pa)",
+            "(dpres_blkt_outboard_coolant_channel_90_bend)",
+            self.data.blanket.dpres_blkt_outboard_coolant_channel_90_bend,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total pressure drop for 90° bends of outboard blanket (Pa)",
+            "(dpres_blkt_outboard_coolant_channel_90_bends_total)",
+            self.data.blanket.dpres_blkt_outboard_coolant_channel_90_bends_total,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Pressure drop for 180° bends of outboard blanket (Pa)",
+            "(dpres_blkt_outboard_coolant_channel_180_bend)",
+            self.data.blanket.dpres_blkt_outboard_coolant_channel_180_bend,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total pressure drop for 180° bends of outboard blanket (Pa)",
+            "(dpres_blkt_outboard_coolant_channel_180_bends_total)",
+            self.data.blanket.dpres_blkt_outboard_coolant_channel_180_bends_total,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total pressure drop for all bends (Pa)",
+            "(dpres_blkt_outboard_bends_total)",
+            self.data.blanket.dpres_blkt_outboard_bends_total,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Reynolds number of outboard blanket coolant",
+            "(reynolds_blkt_outboard_coolant)",
+            self.data.blanket.reynolds_blkt_outboard_coolant,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Darcy friction factor of outboard blanket coolant",
+            "(darcy_frict_blkt_outboard_coolant)",
+            self.data.blanket.darcy_frict_blkt_outboard_coolant,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Pressure drop coefficient for straight sections of outboard blanket",
+            "(f_straight_blkt_outboard_coolant)",
+            self.data.blanket.f_straight_blkt_outboard_coolant,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Total length of straight sections of outboard blanket coolant channels (m)",
+            "(len_blkt_outboard_coolant_channel_straight_total)",
+            self.data.blanket.len_blkt_outboard_coolant_channel_straight_total,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Pressure drop coefficient for 90° bends in outboard blanket",
+            "(f_elbow_blkt_outboard_90_bend)",
+            self.data.blanket.f_elbow_blkt_outboard_90_bend,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Pressure drop coefficient for 180° bends in outboard blanket",
+            "(f_elbow_blkt_outboard_180_bend)",
+            self.data.blanket.f_elbow_blkt_outboard_180_bend,
+            "OP ",
+        )
 
 
 class OutboardBlanket(BlanketLibrary):

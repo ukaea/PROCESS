@@ -3,6 +3,7 @@
 import logging
 from enum import IntEnum
 from types import DynamicClassAttribute
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -43,6 +44,38 @@ class CoolantType(IntEnum):
 from process.core.exceptions import ProcessValueError
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class CoolantFrictionLossParameters:
+    """Parameters for calculating coolant friction losses."""
+
+    dpres_total: float
+    """Total pressure drop across the coolant channel (Pa)"""
+    dpres_straight: float
+    """Pressure drop due to straight length of the coolant channel (Pa)"""
+    dpres_90: float
+    """Pressure drop due to 90 degree bends in the coolant channel (Pa)"""
+    dpres_90_total: float
+    """Total pressure drop due to 90 degree bends in the coolant channel (Pa)"""
+    dpres_180: float
+    """Pressure drop due to 180 degree bends in the coolant channel (Pa)"""
+    dpres_180_total: float
+    """Total pressure drop due to 180 degree bends in the coolant channel (Pa)"""
+    dpres_bends_total: float
+    """Total pressure drop due to bends in the coolant channel (Pa)"""
+    reynolds_number: float
+    """Reynolds number of the coolant flow in the channel"""
+    darcy_friction_factor: float
+    """Darcy friction factor for the coolant flow in the channel"""
+    f_straight: float
+    """Friction factor for straight length of the coolant channel"""
+    len_straight: float
+    """Length of straight sections of the coolant channel (m)"""
+    f_elbow_90: float
+    """Friction factor for 90 degree bends in the coolant channel"""
+    f_elbow_180: float
+    """Friction factor for 180 degree bends in the coolant channel"""
 
 
 def darcy_friction_haaland(
