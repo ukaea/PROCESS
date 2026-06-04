@@ -847,6 +847,53 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     + self.data.fwbs.p_div_rad_total_mw
                 )
             )
+            if output:
+                po.ovarre(
+                    self.outfile,
+                    "Mechanical pumping power for FW and blanket cooling loop including heat exchanger (MW)",
+                    "(p_fw_blkt_coolant_pump_mw)",
+                    self.data.primary_pumping.p_fw_blkt_coolant_pump_mw,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Pumping power for FW and Blanket multiplier factor",
+                    "(f_p_fw_blkt_pump)",
+                    self.data.primary_pumping.f_p_fw_blkt_pump,
+                    "IP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Mechanical pumping power for divertor (MW)",
+                    "(p_div_coolant_pump_mw)",
+                    self.data.heat_transport.p_div_coolant_pump_mw,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Mechanical pumping power for shield and vacuum vessel (MW)",
+                    "(p_shld_coolant_pump_mw)",
+                    self.data.heat_transport.p_shld_coolant_pump_mw,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of blanket cooling channels (m)",
+                    "(radius_blkt_channel)",
+                    self.data.fwbs.radius_blkt_channel,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of 90 degree coolant channel bend (m)",
+                    "(radius_blkt_channel_90_bend)",
+                    self.data.fwbs.radius_blkt_channel_90_bend,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of 180 degree coolant channel bend (m)",
+                    "(radius_blkt_channel_180_bend)",
+                    self.data.fwbs.radius_blkt_channel_180_bend,
+                )
 
         elif i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP:
             # Issue #503
