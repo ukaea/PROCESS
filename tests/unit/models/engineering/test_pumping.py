@@ -3,6 +3,7 @@ import pytest
 from process.models.engineering.pumping import (
     calculate_reynolds_number,
     darcy_friction_haaland,
+    elbow_coeff,
     gnielinski_heat_transfer_coefficient,
 )
 
@@ -33,3 +34,16 @@ def test_calculate_reynolds_number():
         radius_channel=0.0060000000000000001,
         visc_coolant=4.0416219836935569e-05,
     ) == pytest.approx(33302.602975971815)
+
+
+def test_elbow_coeff():
+    """
+    Test for elbow_coeff function.
+    """
+    # input = r_elbow, ang_elbow, lambda, dh
+    assert elbow_coeff(1, 0, 1, 1) == pytest.approx(0.0, rel=1e-3)
+    assert elbow_coeff(1, 90, 1, 1) == pytest.approx(1.7807963267948965, rel=1e-3)
+    assert elbow_coeff(1, 180, 1, 1) == pytest.approx(3.291157766597427, rel=1e-3)
+    assert elbow_coeff(1, 90, 1, 0.1) == pytest.approx(15.774371098812502, rel=1e-3)
+    assert elbow_coeff(0.1, 90, 1, 1) == pytest.approx(66.57, rel=1e-3)
+    assert elbow_coeff(1, 90, 0.1, 1) == pytest.approx(0.3670796326794896, rel=1e-3)
