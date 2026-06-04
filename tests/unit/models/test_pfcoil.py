@@ -9,6 +9,7 @@ are also many variables that could be asserted, so a few key variables central
 to the testing of the subroutine have been chosen.
 """
 
+from dataclasses import fields
 from typing import NamedTuple
 
 import numpy as np
@@ -2102,7 +2103,10 @@ def test_calculate_cs_geometry(
         dr_cs=dr_cs,
         dr_bore=dr_bore,
     )
-    assert pytest.approx(result) == expected
+    for field in fields(result):
+        assert pytest.approx(getattr(result, field.name)) == getattr(
+            expected, field.name
+        )
 
 
 @pytest.mark.parametrize(
