@@ -1,5 +1,5 @@
+import copy
 import logging
-from copy import copy
 
 import numpy as np
 
@@ -172,50 +172,40 @@ def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available):
         Heating Power loss at ignition point (MW)
 
     """
-    te_old = copy(stellarator.data.physics.temp_plasma_electron_vol_avg_kev)
+    # Create a copy of the data structure so we can run models without side effects!
+    proxy_stellarator = copy.deepcopy(stellarator)
+
     # Volume averaged data.physics.te from te0_achievable
-    stellarator.data.physics.temp_plasma_electron_vol_avg_kev = te0_available / (
-        1.0e0 + stellarator.data.physics.alphat
+    proxy_stellarator.data.physics.temp_plasma_electron_vol_avg_kev = te0_available / (
+        1.0e0 + proxy_stellarator.data.physics.alphat
     )
     ne0_max, bt_ecrh_max = st_d_limit_ecrh(
         gyro_frequency_max,
-        stellarator.data.physics.b_plasma_toroidal_on_axis,
-        stellarator.data.physics.i_plasma_pedestal,
+        proxy_stellarator.data.physics.b_plasma_toroidal_on_axis,
+        proxy_stellarator.data.physics.i_plasma_pedestal,
     )
     # Now go to point where ECRH is still available
     # In density..
-    dene_old = copy(stellarator.data.physics.nd_plasma_electrons_vol_avg)
-    stellarator.data.physics.nd_plasma_electrons_vol_avg = min(
-        dene_old, ne0_max / (1.0e0 + stellarator.data.physics.alphan)
+    proxy_stellarator.data.physics.nd_plasma_electrons_vol_avg = min(
+        proxy_stellarator.data.physics.nd_plasma_electrons_vol_avg,
+        ne0_max / (1.0e0 + proxy_stellarator.data.physics.alphan),
     )
 
     # And B-field..
-    bt_old = copy(stellarator.data.physics.b_plasma_toroidal_on_axis)
-    stellarator.data.physics.b_plasma_toroidal_on_axis = min(
-        bt_ecrh_max, stellarator.data.physics.b_plasma_toroidal_on_axis
+    proxy_stellarator.data.physics.b_plasma_toroidal_on_axis = min(
+        bt_ecrh_max, proxy_stellarator.data.physics.b_plasma_toroidal_on_axis
     )
 
-    stellarator.st_phys(False)
-    stellarator.st_phys(
+    proxy_stellarator.st_phys(False)
+    proxy_stellarator.st_phys(
         False
     )  # The second call seems to be necessary for all values to "converge" (and is sufficient)
 
     powerht_out = max(
-        copy(stellarator.data.physics.p_plasma_loss_mw), 0.00001e0
+        proxy_stellarator.data.physics.p_plasma_loss_mw, 0.00001e0
     )  # the radiation module sometimes returns negative heating power
-    pscalingmw_out = copy(stellarator.data.physics.pscalingmw)
 
-    # Reverse it and do it again because anything more efficiently isn't suitable with the current implementation
-    # This is bad practice but seems to be necessary as of now:
-    stellarator.data.physics.temp_plasma_electron_vol_avg_kev = te_old
-    stellarator.data.physics.nd_plasma_electrons_vol_avg = dene_old
-    stellarator.data.physics.b_plasma_toroidal_on_axis = bt_old
-
-    # The second call seems to be necessary for all values to "converge" (and is sufficient)
-    stellarator.st_phys(False)
-    stellarator.st_phys(False)
-
-    return powerht_out, pscalingmw_out
+    return powerht_out, proxy_stellarator.data.physics.pscalingmw
 
 
 def output(stellarator, bt_ecrh, ne0_max_ECRH, data):
