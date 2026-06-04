@@ -15148,6 +15148,80 @@ def plot_quench_time_evolution(
         plt.show()
 
 
+def plot_pf_cs_plasma_mutual_inductance(
+    axis: plt.Axes, m_file: MFile, scan: int
+) -> None:
+    """Plot the mutual inductance between the plasma and PF/CS coils.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        Axis to plot on
+    m_file : MFile
+        MFILE data object
+    scan : int
+        Scan number to read from MFILE
+
+    """
+    n_pf_cs_plasma_circuits = int(m_file.get("n_pf_cs_plasma_circuits", scan=scan))
+    mutual_inductance = np.zeros((n_pf_cs_plasma_circuits, n_pf_cs_plasma_circuits))
+    iohcl = int(m_file.get("iohcl", scan=scan))
+
+    for coil in range(n_pf_cs_plasma_circuits):
+        for circuit in range(n_pf_cs_plasma_circuits):
+            mutual_inductance[coil, circuit] = m_file.get(
+                f"ind_pf_cs_plasma_mutual[{coil},_{circuit}]",
+                scan=scan,
+            )
+
+    # Create lower triangular matrix
+    mutual_inductance = np.tril(mutual_inductance)
+    im = axis.imshow(mutual_inductance, cmap="RdBu_r", aspect="auto")
+    axis.set_xlabel("Circuit")
+    axis.set_ylabel("Circuit")
+    axis.set_title("PF/CS Plasma Mutual Inductance")
+    axis.set_xticks(range(n_pf_cs_plasma_circuits))
+    axis.set_yticks(range(n_pf_cs_plasma_circuits))
+    x_labels = list(range(n_pf_cs_plasma_circuits))
+
+    if iohcl == 1:
+        x_labels[-2] = "CS"
+    x_labels[-1] = "Plasma"
+    y_labels = list(range(n_pf_cs_plasma_circuits))
+    if iohcl == 1:
+        y_labels[-2] = "CS"
+    y_labels[-1] = "Plasma"
+    axis.set_xticklabels(x_labels)
+    axis.set_yticklabels(y_labels)
+
+    # Add boxes around each cell
+    for i in range(n_pf_cs_plasma_circuits):
+        for j in range(n_pf_cs_plasma_circuits):
+            if mutual_inductance[i, j] != 0:
+                axis.add_patch(
+                    plt.Rectangle(
+                        (j - 0.5, i - 0.5),
+                        1,
+                        1,
+                        fill=False,
+                        edgecolor="black",
+                        linewidth=0.5,
+                    )
+                )
+                # Add text annotation with values
+                axis.text(
+                    j,
+                    i,
+                    f"{mutual_inductance[i, j]:.3e}",
+                    ha="center",
+                    va="center",
+                    color="white",
+                    fontsize=8,
+                )
+
+    axis.get_figure().colorbar(im, ax=axis, label="Mutual Inductance (H)")
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -15513,33 +15587,35 @@ def main_plot(
 
     plot_current_profiles_over_time(figs[30].add_subplot(111), m_file, scan)
 
-    plot_cs_stress_time_profile(axis=figs[31].add_subplot(311), mfile=m_file, scan=scan)
+    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
+
+    plot_cs_stress_time_profile(axis=figs[32].add_subplot(311), mfile=m_file, scan=scan)
 
     plot_cs_coil_structure(
-        figs[31].add_subplot(223, aspect="equal"), figs[31], m_file, scan
+        figs[32].add_subplot(223, aspect="equal"), figs[32], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[31].add_subplot(326, aspect="equal"), figs[31], m_file, scan
+        figs[32].add_subplot(326, aspect="equal"), figs[32], m_file, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        figs[32].add_subplot(221, aspect="equal"), m_file, scan
+        figs[33].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[32].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[32].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[33].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[33].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[33], m_file, scan)
-    ax_blanket = figs[33].add_subplot(122, aspect="equal")
-    plot_blkt_structure(ax_blanket, figs[33], m_file, scan, radial_build, colour_scheme)
+    plot_blkt_pipe_bends(figs[34], m_file, scan)
+    ax_blanket = figs[34].add_subplot(122, aspect="equal")
+    plot_blkt_structure(ax_blanket, figs[34], m_file, scan, radial_build, colour_scheme)
 
     plot_main_power_flow(
-        figs[34].add_subplot(111, aspect="equal"), m_file, scan, figs[34]
+        figs[35].add_subplot(111, aspect="equal"), m_file, scan, figs[35]
     )
 
-    ax24 = figs[35].add_subplot(111)
+    ax24 = figs[36].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[35])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[36])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -15621,7 +15697,7 @@ def plot_summary(
 ):
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(36)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(37)]
 
     # run main_plot
     main_plot(

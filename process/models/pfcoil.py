@@ -1968,13 +1968,22 @@ class PFCoil(Model):
             if self.data.build.iohcl != 0:
                 op.write(
                     self.outfile,
-                    f"CS\t\t\t{self.data.pf_coil.ind_pf_cs_plasma_mutual[: self.data.pf_coil.n_pf_cs_plasma_circuits, self.data.pf_coil.n_pf_cs_plasma_circuits - 2]}",
+                    f"CS\t{self.data.pf_coil.ind_pf_cs_plasma_mutual[: self.data.pf_coil.n_pf_cs_plasma_circuits, self.data.pf_coil.n_pf_cs_plasma_circuits - 2]}",
                 )
 
             op.write(
                 self.outfile,
                 f"Plasma\t{self.data.pf_coil.ind_pf_cs_plasma_mutual[: self.data.pf_coil.n_pf_cs_plasma_circuits, self.data.pf_coil.n_pf_cs_plasma_circuits - 1]}",
             )
+        # Output to MFILE for use in other modules
+        for coil in range(self.data.pf_coil.n_pf_cs_plasma_circuits):
+            for circuit in range(self.data.pf_coil.n_pf_cs_plasma_circuits):
+                op.ovarre(
+                    self.mfile,
+                    f"Mutual inductance between PF/CS/plasma circuits {coil} and {circuit} (H)",
+                    f"(ind_pf_cs_plasma_mutual[{coil},_{circuit}])",
+                    self.data.pf_coil.ind_pf_cs_plasma_mutual[coil, circuit],
+                )
 
     def outpf(self):
         """Routine to write output from PF coil module to file.
@@ -1984,15 +1993,15 @@ class PFCoil(Model):
         """
         op.oheadr(self.outfile, "Central Solenoid and PF Coils")
 
+        op.ovarin(
+            self.mfile,
+            "Existence_of_central_solenoid",
+            "(iohcl)",
+            self.data.build.iohcl,
+        )
         if self.data.build.iohcl == 0:
             op.ocmmnt(self.outfile, "No central solenoid included")
             op.oblnkl(self.outfile)
-            op.ovarin(
-                self.mfile,
-                "Existence_of_central_solenoid",
-                "(iohcl)",
-                self.data.build.iohcl,
-            )
         elif self.data.pf_coil.i_pf_conductor == 0:
             op.ocmmnt(self.outfile, "Superconducting central solenoid")
 
