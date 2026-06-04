@@ -943,6 +943,8 @@ class Models:
             # DCLL model
             self.dcll.output()
 
+        self.blanket_library.output_blkt_pumping_variables()
+
         # FISPACT and LOCA model (not used)- removed
 
         # Power model
