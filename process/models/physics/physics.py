@@ -2104,6 +2104,13 @@ class Physics(Model):
                 self.data.physics.ptarmw,
                 "OP ",
             )
+            po.ovarrf(
+                self.outfile,
+                "Divertor poloidal angle subtended by plasma (degrees)",
+                "(deg_div_poloidal_plasma)",
+                self.data.divertor.deg_div_poloidal_plasma,
+                "OP ",
+            )
             po.ovarre(
                 self.outfile,
                 "Fraction of power to the lower divertor",
