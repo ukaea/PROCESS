@@ -2518,7 +2518,6 @@ class BlanketLibrary(Model):
             deltap = self.thermo_hydraulic_model_pressure_drop_calculations(
                 output=output
             )
-            print(deltap)
             deltap_fwi = deltap[0]
             deltap_fwo = deltap[1]
             deltap_blo = deltap[2]
