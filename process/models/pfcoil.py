@@ -1,7 +1,7 @@
 import logging
 import math
-from enum import IntEnum
 from dataclasses import dataclass
+from enum import IntEnum
 
 import matplotlib.pyplot as plt
 import numba
