@@ -1,8 +1,17 @@
 """Engineering models for pumping system analysis."""
 
 import logging
+from enum import IntEnum
 
 import numpy as np
+
+
+class CoolantType(IntEnum):
+    """Enum for coolant types."""
+
+    HELIUM = 1
+    WATER = 2
+
 
 logger = logging.getLogger(__name__)
 

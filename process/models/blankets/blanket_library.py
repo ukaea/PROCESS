@@ -21,6 +21,7 @@ from process.models.engineering.ivc_functions import (
     eshellvol,
 )
 from process.models.engineering.pumping import (
+    CoolantType,
     calculate_reynolds_number,
     darcy_friction_haaland,
 )
@@ -697,14 +698,14 @@ class BlanketLibrary(Model):
         # the i_fw_blkt_shared_coolant variable is appropriately set for separate coolants
         if (
             self.data.fwbs.i_fw_coolant_type == "Helium"
-            and self.data.fwbs.i_blkt_coolant_type == 2
+            and self.data.fwbs.i_blkt_coolant_type == CoolantType.WATER
         ):
             self.data.fwbs.i_fw_blkt_shared_coolant = (
                 FWBlktCoolantLoopTypes.SEPARATE_LOOPS
             )
         if (
             self.data.fwbs.i_fw_coolant_type == "Water"
-            and self.data.fwbs.i_blkt_coolant_type == 1
+            and self.data.fwbs.i_blkt_coolant_type == CoolantType.HELIUM
         ):
             self.data.fwbs.i_fw_blkt_shared_coolant = (
                 FWBlktCoolantLoopTypes.SEPARATE_LOOPS
@@ -757,7 +758,9 @@ class BlanketLibrary(Model):
                 + self.data.fwbs.temp_blkt_coolant_out
             ) * 0.5
             bb_fluid_properties = FluidProperties.of(
-                "Helium" if self.data.fwbs.i_blkt_coolant_type == 1 else "Water",
+                "Helium"
+                if self.data.fwbs.i_blkt_coolant_type == CoolantType.HELIUM
+                else "Water",
                 temperature=mid_temp_bl,
                 pressure=self.data.fwbs.pres_blkt_coolant,
             )
@@ -856,11 +859,11 @@ class BlanketLibrary(Model):
             ):
                 po.osubhd(self.outfile, "Breeding Blanket :")
 
-                if self.data.fwbs.i_blkt_coolant_type == 1:
+                if self.data.fwbs.i_blkt_coolant_type == CoolantType.HELIUM:
                     po.ocmmnt(
                         self.outfile, "Coolant type (i_blkt_coolant_type=1), Helium"
                     )
-                if self.data.fwbs.i_blkt_coolant_type == 2:
+                if self.data.fwbs.i_blkt_coolant_type == CoolantType.WATER:
                     po.ocmmnt(
                         self.outfile, "Coolant type (i_blkt_coolant_type=2), Water"
                     )
@@ -2176,14 +2179,14 @@ class BlanketLibrary(Model):
         # the i_fw_blkt_shared_coolant variable is appropriately set for separate coolants
         if (
             self.data.fwbs.i_fw_coolant_type == "Helium"
-            and self.data.fwbs.i_blkt_coolant_type == 2
+            and self.data.fwbs.i_blkt_coolant_type == CoolantType.WATER
         ):
             self.data.fwbs.i_fw_blkt_shared_coolant = (
                 FWBlktCoolantLoopTypes.SEPARATE_LOOPS
             )
         if (
             self.data.fwbs.i_fw_coolant_type == "Water"
-            and self.data.fwbs.i_blkt_coolant_type == 1
+            and self.data.fwbs.i_blkt_coolant_type == CoolantType.HELIUM
         ):
             self.data.fwbs.i_fw_blkt_shared_coolant = (
                 FWBlktCoolantLoopTypes.SEPARATE_LOOPS
@@ -2549,7 +2552,9 @@ class BlanketLibrary(Model):
                 dpres_coolant=deltap_blkt,
                 mflow_coolant_total=self.data.blanket.mflow_blkt_coolant_total,
                 primary_coolant_switch=(
-                    "Helium" if self.data.fwbs.i_blkt_coolant_type == 1 else "Water"
+                    "Helium"
+                    if self.data.fwbs.i_blkt_coolant_type == CoolantType.HELIUM
+                    else "Water"
                 ),
                 den_coolant=self.data.fwbs.den_blkt_coolant,
                 label="Blanket",
@@ -3426,7 +3431,11 @@ class BlanketLibrary(Model):
         pres_coolant_pump_outlet = pres_coolant_pump_inlet + dpres_coolant
 
         # Adiabatic index for helium or water
-        gamma = (5 / 3) if self.data.fwbs.i_blkt_coolant_type == 1 else (4 / 3)
+        gamma = (
+            (5 / 3)
+            if self.data.fwbs.i_blkt_coolant_type == CoolantType.HELIUM
+            else (4 / 3)
+        )
 
         # If calculating for primary coolant
         if i_liquid_breeder == 1:

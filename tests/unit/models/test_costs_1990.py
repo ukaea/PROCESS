@@ -5,6 +5,8 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
+from process.models.engineering.pumping import CoolantType
+
 
 @pytest.fixture
 def costs(process_models):
@@ -23,7 +25,10 @@ def acc2261_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"i_blkt_coolant_type": 1, "expected": pytest.approx(49.68, abs=0.01)}
+    defaults = {
+        "i_blkt_coolant_type": CoolantType.HELIUM,
+        "expected": pytest.approx(49.68, abs=0.01),
+    }
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -40,7 +45,10 @@ def acc2261_params():
     """
     return [
         acc2261_param(),
-        acc2261_param(i_blkt_coolant_type=2, expected=pytest.approx(53.85, abs=0.01)),
+        acc2261_param(
+            i_blkt_coolant_type=CoolantType.WATER,
+            expected=pytest.approx(53.85, abs=0.01),
+        ),
     ]
 
 
@@ -375,7 +383,10 @@ def acc23_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"i_blkt_coolant_type": 1, "expected": pytest.approx(230, abs=0.01)}
+    defaults = {
+        "i_blkt_coolant_type": CoolantType.HELIUM,
+        "expected": pytest.approx(230, abs=0.01),
+    }
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -392,7 +403,9 @@ def acc23_params():
     """
     return [
         acc23_param(),
-        acc23_param(i_blkt_coolant_type=2, expected=pytest.approx(245, abs=0.01)),
+        acc23_param(
+            i_blkt_coolant_type=CoolantType.WATER, expected=pytest.approx(245, abs=0.01)
+        ),
     ]
 
 
@@ -3903,7 +3916,7 @@ class Acc2261Param(NamedTuple):
             ).transpose(),
             lsa=2,
             fkind=1,
-            i_blkt_coolant_type=1,
+            i_blkt_coolant_type=CoolantType.HELIUM,
             p_shld_nuclear_heat_mw=1.3609360176065353,
             p_blkt_nuclear_heat_total_mw=1504.711566619962,
             p_plant_primary_heat_mw=2620.2218111502593,
@@ -3925,7 +3938,7 @@ class Acc2261Param(NamedTuple):
             ).transpose(),
             lsa=2,
             fkind=1,
-            i_blkt_coolant_type=1,
+            i_blkt_coolant_type=CoolantType.HELIUM,
             p_shld_nuclear_heat_mw=1.4036212304705389,
             p_blkt_nuclear_heat_total_mw=1549.9285082739402,
             p_plant_primary_heat_mw=2619.4223856129224,
@@ -4759,7 +4772,7 @@ class Acc23Param(NamedTuple):
                 np.array((230000000, 245000000), order="F"), order="F"
             ).transpose(),
             ireactor=1,
-            i_blkt_coolant_type=1,
+            i_blkt_coolant_type=CoolantType.HELIUM,
             p_plant_electric_gross_mw=982.58317918134742,
             c23=0,
             expected_c23=194.83812507173698,
@@ -4769,7 +4782,7 @@ class Acc23Param(NamedTuple):
                 np.array((230000000, 245000000), order="F"), order="F"
             ).transpose(),
             ireactor=1,
-            i_blkt_coolant_type=1,
+            i_blkt_coolant_type=CoolantType.HELIUM,
             p_plant_electric_gross_mw=982.28339460484608,
             c23=194.83812507173698,
             expected_c23=194.78878460447092,

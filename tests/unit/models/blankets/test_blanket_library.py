@@ -5,6 +5,7 @@ import pytest
 
 from process.data_structure.build_variables import InboardBlanketConfiguration
 from process.models.blankets.blanket_library import InboardBlanket
+from process.models.engineering.pumping import CoolantType
 
 
 @pytest.fixture
@@ -82,7 +83,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             den_fw_coolant=0,
             cp_fw=0,
             cv_fw=0,
-            i_blkt_coolant_type=1,
+            i_blkt_coolant_type=CoolantType.HELIUM,
             temp_blkt_coolant_in=573,
             temp_blkt_coolant_out=773,
             pres_blkt_coolant=8000000,
@@ -110,7 +111,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             den_fw_coolant=5.6389735407435868,
             cp_fw=5188.5588430173211,
             cv_fw=3123.5687263525392,
-            i_blkt_coolant_type=1,
+            i_blkt_coolant_type=CoolantType.HELIUM,
             temp_blkt_coolant_in=573,
             temp_blkt_coolant_out=773,
             pres_blkt_coolant=8000000,
