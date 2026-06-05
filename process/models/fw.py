@@ -14,7 +14,10 @@ from process.models.engineering.ivc_functions import (
     eshellarea,
 )
 from process.models.engineering.materials import eurofer97_thermal_conductivity
-from process.models.engineering.pumping import gnielinski_heat_transfer_coefficient
+from process.models.engineering.pumping import (
+    CoolantType,
+    gnielinski_heat_transfer_coefficient,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -393,14 +396,14 @@ class FirstWall(Model):
 
         # Calculate inlet coolant fluid properties (fixed pressure)
         inlet_coolant_properties = FluidProperties.of(
-            self.data.fwbs.i_fw_coolant_type,
+            CoolantType(self.data.fwbs.i_fw_coolant_type).name,
             temperature=self.data.fwbs.temp_fw_coolant_in,
             pressure=self.data.fwbs.pres_fw_coolant,
         )
 
         # Calculate outlet coolant fluid properties (fixed pressure)
         outlet_coolant_properties = FluidProperties.of(
-            self.data.fwbs.i_fw_coolant_type,
+            CoolantType(self.data.fwbs.i_fw_coolant_type).name,
             temperature=self.data.fwbs.temp_fw_coolant_out,
             pressure=self.data.fwbs.pres_fw_coolant,
         )
@@ -754,7 +757,7 @@ class FirstWall(Model):
             self.outfile,
             "First wall coolant type",
             "(i_fw_coolant_type)",
-            f"'{self.data.fwbs.i_fw_coolant_type}'",
+            self.data.fwbs.i_fw_coolant_type,
         )
         po.ovarrf(
             self.outfile,

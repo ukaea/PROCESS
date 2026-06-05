@@ -76,7 +76,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
     "primarycoolantpropertiesparam",
     [
         PrimaryCoolantPropertiesParam(
-            i_fw_coolant_type="helium",
+            i_fw_coolant_type=CoolantType.HELIUM,
             temp_fw_coolant_in=573,
             temp_fw_coolant_out=773,
             pres_fw_coolant=8000000,
@@ -104,7 +104,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             expected_visc_fw_coolant=3.5036293160410249e-05,
         ),
         PrimaryCoolantPropertiesParam(
-            i_fw_coolant_type="helium",
+            i_fw_coolant_type=CoolantType.HELIUM,
             temp_fw_coolant_in=573,
             temp_fw_coolant_out=773,
             pres_fw_coolant=8000000,
@@ -371,7 +371,7 @@ def test_pumppower_secondary_pb_li(monkeypatch, blanket_library):
         "pres_coolant_pump_inlet": 8000000,
         "dpres_coolant": 20088.23,
         "mflow_coolant_total": 956.3,
-        "primary_coolant_switch": "Helium",
+        "primary_coolant_switch": CoolantType.HELIUM,
         "den_coolant": 5.64,
         "label": "First Wall and Blanket",
     }

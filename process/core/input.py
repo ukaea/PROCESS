@@ -1061,7 +1061,7 @@ INPUT_VARIABLES = {
         choices=list(range(N_CONFINEMENT_SCALINGS)),
     ),
     "quench_model": InputVariable("tfcoil", str, choices=["exponential", "linear"]),
-    "i_fw_coolant_type": InputVariable("fwbs", str, choices=["helium", "water"]),
+    "i_fw_coolant_type": InputVariable("fwbs", int, choices=[1, 2]),
     "i_vacuum_pumping": InputVariable("vacuum", str, choices=["old", "simple"]),
     "dcond": InputVariable("tfcoil", float, array=True),
     "c_pf_coil_turn_peak_input": InputVariable("pf_coil", float, array=True),

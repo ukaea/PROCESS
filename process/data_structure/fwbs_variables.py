@@ -285,10 +285,10 @@ class FWBSData:
     - =2 pressurized water
     """
 
-    i_fw_coolant_type: str = "helium"
+    i_fw_coolant_type: int = 1
     """switch for first wall coolant (can be different from blanket coolant):
-    - 'helium'
-    - 'water'
+    - =1 helium
+    - =2 water
     """
 
     dr_fw_wall: float = 0.003

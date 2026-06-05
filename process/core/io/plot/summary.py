@@ -24,6 +24,7 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.build import Build
+from process.models.engineering.pumping import CoolantType
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -5452,7 +5453,7 @@ def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: i
     )
 
     textstr_fw = "\n".join((
-        rf"Coolant type: {i_fw_coolant_type}",
+        rf"Coolant type: {CoolantType(i_fw_coolant_type).name}",
         rf"$T_{{FW,peak}}$: {temp_fw_peak:,.3f} K",
         rf"$P_{{FW}}$: {pres_fw_coolant / 1e3:,.3f} kPa",
         rf"$P_{{FW}}$: {pres_fw_coolant / 1e5:,.3f} bar",

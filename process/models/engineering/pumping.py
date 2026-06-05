@@ -2,6 +2,7 @@
 
 import logging
 from enum import IntEnum
+from types import DynamicClassAttribute
 
 import numpy as np
 
@@ -9,8 +10,33 @@ import numpy as np
 class CoolantType(IntEnum):
     """Enum for coolant types."""
 
-    HELIUM = 1
-    WATER = 2
+    HELIUM = (1, "Helium")
+    WATER = (2, "Water")
+
+    def __new__(cls, value: int, name: str):
+        """Create a new CoolantType enum member with value and full_name.
+
+        Parameters
+        ----------
+        value : int
+            The numeric value of the enum member.
+        full_name : str
+            The full name description of the plasma current model.
+
+        Returns
+        -------
+        CoolantType
+            A new enum member with the specified value and full_name.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._name_ = name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        """Return the full name of the coolant type."""
+        return self._name_
 
 
 logger = logging.getLogger(__name__)
@@ -42,7 +68,7 @@ def darcy_friction_haaland(
 
     References
     ----------
-        - https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation
+    [1] https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation
     """
     # Bracketed term in Haaland equation
     bracket = (roughness_channel / radius_channel / 3.7) ** 1.11 + 6.9 / reynolds
@@ -91,7 +117,7 @@ def gnielinski_heat_transfer_coefficient(
 
     References
     ----------
-        - https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation
+    [1] https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation
 
     """
     # Calculate pipe diameter (m)
