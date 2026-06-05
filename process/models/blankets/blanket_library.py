@@ -2349,8 +2349,8 @@ class BlanketLibrary(Model):
                     + self.data.fwbs.psurffwi
                 ),
                 heatcap_coolant=self.data.fwbs.heatcap_pres_fw_coolant_average,
-                temp_in_coolant=temp_fw_coolant_out,
-                temp_out_coolant=self.data.fwbs.temp_fw_coolant_in,
+                temp_in_coolant=self.data.fwbs.temp_fw_coolant_in,
+                temp_out_coolant=temp_fw_coolant_out,
             )
         )
 
@@ -2363,8 +2363,8 @@ class BlanketLibrary(Model):
                     + self.data.fwbs.psurffwo
                 ),
                 heatcap_coolant=self.data.fwbs.heatcap_pres_fw_coolant_average,
-                temp_in_coolant=temp_fw_coolant_out,
-                temp_out_coolant=self.data.fwbs.temp_fw_coolant_in,
+                temp_in_coolant=self.data.fwbs.temp_fw_coolant_in,
+                temp_out_coolant=temp_fw_coolant_out,
             )
         )
 

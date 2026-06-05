@@ -313,7 +313,7 @@ class FWBSData:
     """peak first wall temperature [K]"""
 
     roughness_fw_channel: float = 1.0e-6
-    """first wall channel roughness epsilon [m]"""
+    """First wall channel roughness (ε) [m]"""
 
     len_fw_channel: float = 4.0
     """Length of a single first wall channel (all in parallel) [m]
