@@ -3801,7 +3801,7 @@ def test_calculate_cylindrical_safety_factor_parametrized(
         ),
     ],
 )
-def test_calculate_polidal_field(
+def test_calculate_surface_averaged_poloidal_field(
     i_plasma_current,
     c_plasma,
     q95,
