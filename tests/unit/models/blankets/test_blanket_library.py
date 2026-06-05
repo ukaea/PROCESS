@@ -301,10 +301,8 @@ def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library):
         "label": "Inboard first wall",
     }
 
-    assert (
-        pytest.approx(blanket_library.total_pressure_drop(False, **data))
-        == 5884.982168510442
-    )
+    dpres_total, _ = blanket_library.total_pressure_drop(False, **data)
+    assert dpres_total == pytest.approx(5884.982168510442)
 
 
 def test_deltap_tot_outboard_blanket_breeder_liquid(monkeypatch, blanket_library):
@@ -332,10 +330,8 @@ def test_deltap_tot_outboard_blanket_breeder_liquid(monkeypatch, blanket_library
         "label": "Outboard blanket breeder liquid",
     }
 
-    assert (
-        pytest.approx(blanket_library.total_pressure_drop(False, **data))
-        == 56.95922064419226
-    )
+    dpres_total, _ = blanket_library.total_pressure_drop(False, **data)
+    assert dpres_total == pytest.approx(56.95922064419226)
 
 
 def test_pumppower_primary_helium(monkeypatch, blanket_library):
@@ -1108,7 +1104,7 @@ def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library):
         pressuredropparam.roughness_fw_channel,
     )
 
-    pressure_drop_out = blanket_library.coolant_friction_pressure_drop(
+    pressure_params = blanket_library.coolant_friction_pressure_drop(
         i_ps=pressuredropparam.i_ps,
         radius_pipe_90_deg_bend=pressuredropparam.radius_pipe_90_deg_bend,
         radius_pipe_180_deg_bend=pressuredropparam.radius_pipe_180_deg_bend,
@@ -1120,7 +1116,7 @@ def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library):
         vel_coolant=pressuredropparam.vv,
     )
 
-    assert pressure_drop_out == pytest.approx(
+    assert pressure_params.dpres_total == pytest.approx(
         pressuredropparam.expected_pressure_drop_out
     )
 
