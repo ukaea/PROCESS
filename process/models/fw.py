@@ -396,14 +396,14 @@ class FirstWall(Model):
 
         # Calculate inlet coolant fluid properties (fixed pressure)
         inlet_coolant_properties = FluidProperties.of(
-            CoolantType(self.data.fwbs.i_fw_coolant_type).name,
+            CoolantType(self.data.fwbs.i_fw_coolant_type).full_name,
             temperature=self.data.fwbs.temp_fw_coolant_in,
             pressure=self.data.fwbs.pres_fw_coolant,
         )
 
         # Calculate outlet coolant fluid properties (fixed pressure)
         outlet_coolant_properties = FluidProperties.of(
-            CoolantType(self.data.fwbs.i_fw_coolant_type).name,
+            CoolantType(self.data.fwbs.i_fw_coolant_type).full_name,
             temperature=self.data.fwbs.temp_fw_coolant_out,
             pressure=self.data.fwbs.pres_fw_coolant,
         )

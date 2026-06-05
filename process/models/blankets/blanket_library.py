@@ -714,7 +714,7 @@ class BlanketLibrary(Model):
             ) * 0.5
             # FW/BB
             fw_bb_fluid_properties = FluidProperties.of(
-                CoolantType(self.data.fwbs.i_fw_coolant_type).name,
+                CoolantType(self.data.fwbs.i_fw_coolant_type).full_name,
                 temperature=mid_temp,
                 pressure=self.data.fwbs.pres_fw_coolant,
             )
@@ -735,7 +735,7 @@ class BlanketLibrary(Model):
                 self.data.fwbs.temp_fw_coolant_in + self.data.fwbs.temp_fw_coolant_out
             ) * 0.5
             fw_fluid_properties = FluidProperties.of(
-                CoolantType(self.data.fwbs.i_fw_coolant_type).name,
+                CoolantType(self.data.fwbs.i_fw_coolant_type).full_name,
                 temperature=mid_temp_fw,
                 pressure=self.data.fwbs.pres_fw_coolant,
             )
@@ -2535,11 +2535,7 @@ class BlanketLibrary(Model):
                 pres_coolant_pump_inlet=self.data.fwbs.pres_blkt_coolant,
                 dpres_coolant=deltap_blkt,
                 mflow_coolant_total=self.data.blanket.mflow_blkt_coolant_total,
-                primary_coolant_switch=(
-                    "Helium"
-                    if self.data.fwbs.i_blkt_coolant_type == CoolantType.HELIUM
-                    else "Water"
-                ),
+                primary_coolant_switch=(self.data.fwbs.i_blkt_coolant_type),
                 den_coolant=self.data.fwbs.den_blkt_coolant,
                 label="Blanket",
             )

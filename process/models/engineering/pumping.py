@@ -13,31 +13,31 @@ class CoolantType(IntEnum):
     HELIUM = (1, "Helium")
     WATER = (2, "Water")
 
-    def __new__(cls, value: int, name: str):
+    def __new__(cls, value: int, full_name: str):
         """Create a new CoolantType enum member with value and full_name.
 
         Parameters
         ----------
         value : int
             The numeric value of the enum member.
-        name : str
-            The name description of the coolant type.
+        full_name : str
+            The full name description of the coolant type.
             This should match the CoolProp name for the coolant type.
 
         Returns
         -------
         CoolantType
-            A new enum member with the specified value and name.
+            A new enum member with the specified value and full_name.
         """
         obj = int.__new__(cls, value)
         obj._value_ = value
-        obj._name_ = name
+        obj._full_name_ = full_name
         return obj
 
     @DynamicClassAttribute
     def full_name(self):
         """Return the full name of the coolant type."""
-        return self._name_
+        return self._full_name_
 
 
 logger = logging.getLogger(__name__)
