@@ -2263,26 +2263,26 @@ class BlanketLibrary(Model):
                 self.data.build.i_blkt_inboard
                 == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
             ):
-                fwoutleti = (f_nuc_fwi * self.data.fwbs.temp_blkt_coolant_out) + (
-                    1 - f_nuc_fwi
-                ) * self.data.fwbs.temp_fw_coolant_in
-                inlet_tempi = fwoutleti
+                temp_fw_coolant_out = (
+                    f_nuc_fwi * self.data.fwbs.temp_blkt_coolant_out
+                ) + (1 - f_nuc_fwi) * self.data.fwbs.temp_fw_coolant_in
+                temp_blkt_coolant_in = temp_fw_coolant_out
             else:
-                fwoutleti = self.data.fwbs.temp_fw_coolant_out
+                temp_fw_coolant_out = self.data.fwbs.temp_fw_coolant_out
 
-            fwoutleto = (f_nuc_fwo * self.data.fwbs.temp_blkt_coolant_out) + (
+            temp_fw_coolant_out = (f_nuc_fwo * self.data.fwbs.temp_blkt_coolant_out) + (
                 1 - f_nuc_fwo
             ) * self.data.fwbs.temp_fw_coolant_in
-            inlet_tempo = fwoutleto
+            temp_blkt_coolant_in = temp_fw_coolant_out
 
         elif (
             self.data.fwbs.i_fw_blkt_shared_coolant
             == FWBlktCoolantLoopTypes.SEPARATE_LOOPS
         ):
-            fwoutleti = self.data.fwbs.temp_fw_coolant_out
-            inlet_tempi = self.data.fwbs.temp_blkt_coolant_in
-            fwoutleto = self.data.fwbs.temp_fw_coolant_out
-            inlet_tempo = self.data.fwbs.temp_blkt_coolant_in
+            temp_fw_coolant_out = self.data.fwbs.temp_fw_coolant_out
+            temp_blkt_coolant_in = self.data.fwbs.temp_blkt_coolant_in
+            temp_fw_coolant_out = self.data.fwbs.temp_fw_coolant_out
+            temp_blkt_coolant_in = self.data.fwbs.temp_blkt_coolant_in
 
         # Maximum FW temperature. (27/11/2015) Issue #348
         # First wall flow is just along the first wall, with no allowance for radial
@@ -2327,13 +2327,19 @@ class BlanketLibrary(Model):
         self.data.blanket.mflow_fw_inboard_coolant_total = (
             1.0e6
             * (self.data.blanket.p_fw_inboard_nuclear_heat_mw + self.data.fwbs.psurffwi)
-            / (self.data.fwbs.cp_fw * (fwoutleti - self.data.fwbs.temp_fw_coolant_in))
+            / (
+                self.data.fwbs.cp_fw
+                * (temp_fw_coolant_out - self.data.fwbs.temp_fw_coolant_in)
+            )
         )
         # Total mass flow rate to remove outboard FW power (kg/s)
         self.data.blanket.mflow_fw_outboard_coolant_total = (
             1.0e6
             * (self.data.blanket.p_fw_outboard_nuclear_heat_mw + self.data.fwbs.psurffwo)
-            / (self.data.fwbs.cp_fw * (fwoutleto - self.data.fwbs.temp_fw_coolant_in))
+            / (
+                self.data.fwbs.cp_fw
+                * (temp_fw_coolant_out - self.data.fwbs.temp_fw_coolant_in)
+            )
         )
 
         # If the blanket is dual-coolant...
@@ -2344,7 +2350,7 @@ class BlanketLibrary(Model):
                 * (pnucblkto_struct)
                 / (
                     self.data.fwbs.cp_bl
-                    * (self.data.fwbs.temp_blkt_coolant_out - inlet_tempo)
+                    * (self.data.fwbs.temp_blkt_coolant_out - temp_blkt_coolant_in)
                 )
             )
             self.data.blanket.mfblkto_liq = (
@@ -2367,7 +2373,7 @@ class BlanketLibrary(Model):
                     * (pnucblkti_struct)
                     / (
                         self.data.fwbs.cp_bl
-                        * (self.data.fwbs.temp_blkt_coolant_out - inlet_tempi)
+                        * (self.data.fwbs.temp_blkt_coolant_out - temp_blkt_coolant_in)
                     )
                 )
                 self.data.blanket.mfblkti_liq = (
@@ -2390,7 +2396,7 @@ class BlanketLibrary(Model):
                 * (self.data.blanket.p_blkt_nuclear_heat_outboard_mw)
                 / (
                     self.data.fwbs.cp_bl
-                    * (self.data.fwbs.temp_blkt_coolant_out - inlet_tempo)
+                    * (self.data.fwbs.temp_blkt_coolant_out - temp_blkt_coolant_in)
                 )
             )
 
@@ -2412,7 +2418,7 @@ class BlanketLibrary(Model):
                     * (self.data.blanket.p_blkt_nuclear_heat_inboard_mw)
                     / (
                         self.data.fwbs.cp_bl
-                        * (self.data.fwbs.temp_blkt_coolant_out - inlet_tempi)
+                        * (self.data.fwbs.temp_blkt_coolant_out - temp_blkt_coolant_in)
                     )
                 )
                 # Mass flow rate for inboard breeder flow (kg/s)
@@ -2428,7 +2434,7 @@ class BlanketLibrary(Model):
                 * (self.data.blanket.p_blkt_nuclear_heat_outboard_mw)
                 / (
                     self.data.fwbs.cp_bl
-                    * (self.data.fwbs.temp_blkt_coolant_out - inlet_tempo)
+                    * (self.data.fwbs.temp_blkt_coolant_out - temp_blkt_coolant_in)
                 )
             )
 
@@ -2443,7 +2449,7 @@ class BlanketLibrary(Model):
                     * (self.data.blanket.p_blkt_nuclear_heat_inboard_mw)
                     / (
                         self.data.fwbs.cp_bl
-                        * (self.data.fwbs.temp_blkt_coolant_out - inlet_tempi)
+                        * (self.data.fwbs.temp_blkt_coolant_out - temp_blkt_coolant_in)
                     )
                 )
 
@@ -2457,15 +2463,15 @@ class BlanketLibrary(Model):
             deltap = self.thermo_hydraulic_model_pressure_drop_calculations(
                 output=output
             )
-            deltap_fwi = deltap[0]
-            deltap_fwo = deltap[1]
-            deltap_blo = deltap[2]
+            dpres_fw_inboard_coolant = deltap[0]
+            dpres_fw_outboard_coolant = deltap[1]
+            dpres_blkt_outboard_coolant = deltap[2]
             if self.data.fwbs.i_blkt_dual_coolant > 0:
                 if (
                     self.data.build.i_blkt_inboard
                     == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
                 ):
-                    deltap_bli = deltap[3]
+                    dpres_blkt_inboard_coolant = deltap[3]
                     deltap_blo_liq = deltap[4]
                     deltap_bli_liq = deltap[5]
                 else:
@@ -2474,7 +2480,7 @@ class BlanketLibrary(Model):
                 self.data.build.i_blkt_inboard
                 == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
             ):
-                deltap_bli = deltap[3]
+                dpres_blkt_inboard_coolant = deltap[3]
 
         # Pumping Power
         # If FW and BB have the same coolant...
@@ -2485,12 +2491,21 @@ class BlanketLibrary(Model):
                     self.data.build.i_blkt_inboard
                     == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
                 ):
-                    deltap_fw_blkt = deltap_fwi + deltap_bli + deltap_fwo + deltap_blo
+                    deltap_fw_blkt = (
+                        dpres_fw_inboard_coolant
+                        + dpres_blkt_inboard_coolant
+                        + dpres_fw_outboard_coolant
+                        + dpres_blkt_outboard_coolant
+                    )
                 if (
                     self.data.build.i_blkt_inboard
                     == InboardBlanketConfiguration.NO_INBOARD_BLANKET
                 ):
-                    deltap_fw_blkt = deltap_fwi + deltap_fwo + deltap_blo
+                    deltap_fw_blkt = (
+                        dpres_fw_inboard_coolant
+                        + dpres_fw_outboard_coolant
+                        + dpres_blkt_outboard_coolant
+                    )
             elif (
                 i_p_coolant_pumping
                 == PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP
@@ -2525,25 +2540,29 @@ class BlanketLibrary(Model):
         ):
             if i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL:
                 # Total pressure drop in the first wall (Pa)
-                deltap_fw = deltap_fwi + deltap_fwo
+                dpres_fw_coolant_total = (
+                    dpres_fw_inboard_coolant + dpres_fw_outboard_coolant
+                )
 
                 # Total pressure drop in the blanket (Pa)
                 if (
                     self.data.build.i_blkt_inboard
                     == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
                 ):
-                    deltap_blkt = deltap_bli + deltap_blo
+                    dpres_blkt_coolant_total = (
+                        dpres_blkt_inboard_coolant + dpres_blkt_outboard_coolant
+                    )
                 if (
                     self.data.build.i_blkt_inboard
                     == InboardBlanketConfiguration.NO_INBOARD_BLANKET
                 ):
-                    deltap_blkt = deltap_blo
+                    dpres_blkt_coolant_total = dpres_blkt_outboard_coolant
             elif (
                 i_p_coolant_pumping
                 == PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP
             ):
-                deltap_fw = self.data.primary_pumping.dp_fw
-                deltap_blkt = self.data.primary_pumping.dp_blkt
+                dpres_fw_coolant_total = self.data.primary_pumping.dp_fw
+                dpres_blkt_coolant_total = self.data.primary_pumping.dp_blkt
 
             # Total coolant mass flow rate in the first wall (kg/s)
             self.data.blanket.mflow_fw_coolant_total = (
@@ -2563,7 +2582,7 @@ class BlanketLibrary(Model):
                 temp_coolant_pump_outlet=self.data.fwbs.temp_fw_coolant_in,
                 temp_coolant_pump_inlet=self.data.fwbs.temp_fw_coolant_out,
                 pres_coolant_pump_inlet=self.data.fwbs.pres_fw_coolant,
-                dpres_coolant=deltap_fw,
+                dpres_coolant=dpres_fw_coolant_total,
                 mflow_coolant_total=self.data.blanket.mflow_fw_coolant_total,
                 i_coolant_type=self.data.fwbs.i_fw_coolant_type,
                 den_coolant=self.data.fwbs.den_fw_coolant,
@@ -2577,7 +2596,7 @@ class BlanketLibrary(Model):
                 temp_coolant_pump_outlet=self.data.fwbs.temp_blkt_coolant_in,
                 temp_coolant_pump_inlet=self.data.fwbs.temp_blkt_coolant_out,
                 pres_coolant_pump_inlet=self.data.fwbs.pres_blkt_coolant,
-                dpres_coolant=deltap_blkt,
+                dpres_coolant=dpres_blkt_coolant_total,
                 mflow_coolant_total=self.data.blanket.mflow_blkt_coolant_total,
                 i_coolant_type=(self.data.fwbs.i_blkt_coolant_type),
                 den_coolant=self.data.fwbs.den_blkt_coolant,
