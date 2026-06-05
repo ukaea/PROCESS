@@ -7,11 +7,14 @@ from importlib import resources
 from pathlib import Path
 from typing import Any, Literal
 
+import CoolProp
 import matplotlib as mpl
 import matplotlib.backends.backend_pdf as bpdf
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
+from CoolProp.CoolProp import PropsSI
+from CoolProp.Plots import PropertyPlot
 from matplotlib import patches
 from matplotlib.axes import Axes
 from matplotlib.patches import Circle, Rectangle
@@ -15534,6 +15537,102 @@ def plot_blanket_coolant_channel_structure(self, m_file: MFile, scan: int):
     return axis
 
 
+def plot_outboard_blanket_coolant_properties(fig: plt.Figure, m_file: MFile, scan: int):
+    """Plots the properties of the outboard blanket coolant along the poloidal direction."""
+    temp_blkt_coolant_in = float(m_file.get("temp_blkt_coolant_in", scan=scan))
+    temp_blkt_coolant_out = float(m_file.get("temp_blkt_coolant_out", scan=scan))
+    pres_blkt_coolant = float(m_file.get("pres_blkt_coolant", scan=scan))
+    dens_blkt_coolant_in = PropsSI(
+        "Dmass", "T", temp_blkt_coolant_in, "P", pres_blkt_coolant, "Helium"
+    )
+    dens_blkt_coolant_out = PropsSI(
+        "Dmass", "T", temp_blkt_coolant_out, "P", pres_blkt_coolant, "Helium"
+    )
+
+    fig.clear()
+    axes = fig.subplots(2, 2)
+
+    axis = axes[0, 0]
+
+    plot = PropertyPlot("Helium", "PH", axis=axis, unit_system="SI")
+
+    # #axis.set_xscale('log')
+    axis.set_ylim(((pres_blkt_coolant) * 0.9), (pres_blkt_coolant) * 1.5)
+    # plot.set_axis_limits([None, None, (pres_blkt_coolant/1e3)*0.9, (pres_blkt_coolant/1e3)*1.1])
+
+    plot.calc_isolines(CoolProp.iT)  # Temperature
+    plot.calc_isolines(CoolProp.iSmass)  # Entropy
+    plot.calc_isolines(CoolProp.iDmass)  # Density
+    # plot.axis.relim()
+    # plot.axis.autoscale_view()
+    plot.draw()
+
+    axis.set_title("Pressure-enthalpy plot")
+
+    axis = axes[0, 1]
+    plot = PropertyPlot("Helium", "TD", axis=axis, unit_system="SI")
+
+    density_min = min(dens_blkt_coolant_in, dens_blkt_coolant_out)
+    density_max = max(dens_blkt_coolant_in, dens_blkt_coolant_out)
+    temperature_min = min(temp_blkt_coolant_in, temp_blkt_coolant_out)
+    temperature_max = max(temp_blkt_coolant_in, temp_blkt_coolant_out)
+
+    density_margin = max((density_max - density_min) * 0.2, max(density_max, 1.0) * 0.05)
+    temperature_margin = max(
+        (temperature_max - temperature_min) * 0.2,
+        max(temperature_max, 1.0) * 0.05,
+    )
+
+    axis.set_xlim(density_min - density_margin, density_max + density_margin)
+    axis.set_ylim(
+        temperature_min - temperature_margin, temperature_max + temperature_margin
+    )
+
+    plot.calc_isolines(CoolProp.iP)  # Pressure
+    plot.calc_isolines(CoolProp.iHmass)  # Enthalpy
+    plot.draw()
+
+    axis.plot(
+        [dens_blkt_coolant_in, dens_blkt_coolant_out],
+        [temp_blkt_coolant_in, temp_blkt_coolant_out],
+        color="C3",
+        marker="o",
+        linewidth=1.5,
+        label="Coolant path",
+    )
+    axis.legend(fontsize=8, loc="best")
+    axis.set_title("Temperature-density plot")
+
+    axis = axes[1, 0]
+    plot = PropertyPlot("Helium", "PD", axis=axis, unit_system="SI")
+
+    pressure_margin = max(pres_blkt_coolant * 0.1, 1.0)
+
+    axis.set_xlim(density_min - density_margin, density_max + density_margin)
+    axis.set_ylim(
+        pres_blkt_coolant - pressure_margin, pres_blkt_coolant + pressure_margin
+    )
+
+    plot.calc_isolines(CoolProp.iT)  # Temperature
+    plot.calc_isolines(CoolProp.iHmass)  # Enthalpy
+    plot.draw()
+
+    axis.plot(
+        [dens_blkt_coolant_in, dens_blkt_coolant_out],
+        [pres_blkt_coolant, pres_blkt_coolant],
+        color="C3",
+        marker="o",
+        linewidth=1.5,
+        label="Coolant path",
+    )
+    axis.legend(fontsize=8, loc="best")
+    axis.set_title("Pressure-density plot")
+
+    axes[1, 1].axis("off")
+
+    fig.tight_layout()
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -15948,6 +16047,7 @@ def main_plot(
 
     plot_blanket_coolant_channel_structure(figs[37].add_subplot(111), m_file, scan)
 
+    plot_outboard_blanket_coolant_properties(figs[37], m_file, scan)
 
 
 def create_thickness_builds(m_file, scan: int):
