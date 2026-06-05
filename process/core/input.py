@@ -1406,6 +1406,7 @@ def set_scalar_variable(name: str, value: ValidInputTypes, config: InputVariable
     """
     current_value = getattr(config.module, name, ...)
 
+    # use ... sentinel because None is a valid initial/default value for variables
     if current_value is ...:
         error_msg = f"Module '{config.module}' does not have a variable '{name}'."
         raise ProcessValueError(error_msg)

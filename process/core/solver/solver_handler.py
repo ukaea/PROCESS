@@ -32,6 +32,7 @@ class SolverHandler:
         load_iteration_variables(self.data)
         load_scaled_bounds(self.data)
 
+        # Initialise solver variables from numerics module
         n = self.data.numerics.nvar
         x = self.data.numerics.xcm[:n]
         bndl = self.data.numerics.itv_scaled_lower_bounds[:n]
