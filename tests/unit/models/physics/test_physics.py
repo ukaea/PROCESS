@@ -1238,25 +1238,23 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
             {
                 "q95": 2.5,
                 "aspect": 2.7,
-                "eps": 0.37037037,
                 "rminor": 1.5,
                 "b_plasma_toroidal_on_axis": 12,
                 "kappa": 1.85,
-                "delta": 0.5,
+                "triang": 0.5,
             },
-            37.08247253247967,
+            38.00677211030666,
         ),
         (
             {
                 "q95": 2.5,
                 "aspect": 3.0,
-                "eps": 0.33333333,
                 "rminor": 1.5,
                 "b_plasma_toroidal_on_axis": 12,
                 "kappa": 1.85,
-                "delta": 0.5,
+                "triang": 0.5,
             },
-            31.594671010223617,
+            31.290463480745593,
         ),
     ],
 )
@@ -1272,51 +1270,62 @@ def test_calculate_plasma_current_peng(arguments, expected, physics):
         (
             {
                 "i_plasma_current": 2,
-                "ip": 1.6e7,
+                "cur_plasma": 1.6e7,
                 "q95": 2.5,
                 "aspect": 2.7,
-                "eps": 0.37037037,
                 "b_plasma_toroidal_on_axis": 12,
                 "kappa": 1.85,
-                "delta": 0.5,
-                "perim": 24,
+                "triang": 0.5,
+                "len_plasma_poloidal": 24,
             },
-            3.4401302177092803,
+            3.5258772213675047,
         ),
         (
             {
                 "i_plasma_current": 2,
-                "ip": 1.6e7,
+                "cur_plasma": 1.6e7,
                 "q95": 2.5,
                 "aspect": 3.0,
-                "eps": 0.33333333,
                 "b_plasma_toroidal_on_axis": 12,
                 "kappa": 1.85,
-                "delta": 0.5,
-                "perim": 24,
+                "triang": 0.5,
+                "len_plasma_poloidal": 24,
             },
-            2.9310284627233205,
+            2.902807218476584,
         ),
         (
             {
                 "i_plasma_current": 3,
-                "ip": 1.6e7,
+                "cur_plasma": 1.6e7,
                 "q95": 2.5,
                 "aspect": 3.0,
-                "eps": 0.33333333,
                 "b_plasma_toroidal_on_axis": 12,
                 "kappa": 1.85,
-                "delta": 0.5,
-                "perim": 24,
+                "triang": 0.5,
+                "len_plasma_poloidal": 24,
             },
             0.8377580413333333,
         ),
+        (
+            {
+                "i_plasma_current": 4,
+                "cur_plasma": 18398455.678867526,
+                "q95": 3.5,
+                "aspect": (8.0 / 2.6666666666666665),
+                "b_plasma_toroidal_on_axis": 5.7000000000000002,
+                "kappa": 1.8500000000000001,
+                "triang": 0.5,
+                "len_plasma_poloidal": 24.081367139525412,
+            },
+            0.96008591022564971,
+        ),
     ],
 )
-def test_calculate_poloidal_field(arguments, expected, physics):
+def test_calculate_surface_averaged_poloidal_field(arguments, expected, physics):
+    """Parametrized test for calculate_surface_averaged_poloidal_field."""
     assert physics.fields.calculate_surface_averaged_poloidal_field(
         **arguments
-    ) == pytest.approx(expected)
+    ) == pytest.approx(expected, rel=1e-12)
 
 
 def test_calculate_beta_limit():
@@ -3774,61 +3783,5 @@ def test_calculate_cylindrical_safety_factor_parametrized(
     """Parametrized test for calculate_cylindrical_safety_factor."""
     result = calculate_cylindrical_safety_factor(
         rmajor, rminor, plasma_current, b_plasma_toroidal_on_axis, kappa95, triang95
-    )
-    assert result == pytest.approx(expected, rel=1e-12)
-
-
-@pytest.mark.parametrize(
-    (
-        "i_plasma_current",
-        "c_plasma",
-        "q95",
-        "aspect",
-        "eps",
-        "b_plasma_toroidal_on_axis",
-        "kappa",
-        "delta",
-        "perim",
-        "expected",
-    ),
-    [
-        (
-            4,
-            18398455.678867526,
-            3.5,
-            (8.0 / 2.6666666666666665),
-            (2.6666666666666665 / 8.0),
-            5.7000000000000002,
-            1.8500000000000001,
-            0.5,
-            24.081367139525412,
-            0.96008591022564971,
-        ),
-    ],
-)
-def test_calculate_polidal_field(
-    i_plasma_current,
-    c_plasma,
-    q95,
-    b_plasma_toroidal_on_axis,
-    aspect,
-    eps,
-    kappa,
-    delta,
-    perim,
-    expected,
-    physics,
-):
-    """Parametrized test for calculate_poloidal_field."""
-    result = physics.fields.calculate_surface_averaged_poloidal_field(
-        i_plasma_current,
-        c_plasma,
-        q95,
-        b_plasma_toroidal_on_axis,
-        aspect,
-        eps,
-        kappa,
-        delta,
-        perim,
     )
     assert result == pytest.approx(expected, rel=1e-12)

@@ -306,14 +306,13 @@ class Physics(Model):
         self.data.physics.b_plasma_surface_poloidal_average = (
             self.fields.calculate_surface_averaged_poloidal_field(
                 i_plasma_current=self.data.physics.i_plasma_current,
-                ip=self.data.physics.plasma_current,
+                cur_plasma=self.data.physics.plasma_current,
                 q95=self.data.physics.q95,
                 aspect=self.data.physics.aspect,
-                eps=self.data.physics.eps,
                 b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
                 kappa=self.data.physics.kappa,
-                delta=self.data.physics.triang,
-                perim=self.data.physics.len_plasma_poloidal,
+                triang=self.data.physics.triang,
+                len_plasma_poloidal=self.data.physics.len_plasma_poloidal,
             )
         )
 
