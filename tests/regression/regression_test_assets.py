@@ -90,9 +90,9 @@ class RegressionTestAssetCollector:
         :rtype: list[str]
         """
         return (
-            subprocess.run(
+            subprocess.run(  # noqa: S602
                 'git log --format="%H"',  # noqa: S607
-                shell=True,  # noqa: S602
+                shell=True,
                 capture_output=True,
                 check=True,
             )
