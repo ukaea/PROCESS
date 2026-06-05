@@ -24,7 +24,6 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.build import Build
-from process.models.cs_fatigue import CsFatigue
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -48,7 +47,6 @@ from process.models.geometry.vacuum_vessel import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )
-from process.models.pfcoil import CSCoil
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.confinement_time import (
     ConfinementTimeModel,
@@ -15225,6 +15223,83 @@ def plot_pf_cs_plasma_mutual_inductance(
     axis.get_figure().colorbar(im, ax=axis, label="Mutual Inductance (H)")
 
 
+def plot_cs_radial_hoop_stress_profile(
+    self,
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    j_cs: float,
+    b_cs_inner: float,
+):
+    r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+    r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+
+    radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
+    stress_values = np.array([
+        self.calculate_cs_hoop_stress(
+            r_stress_point=radius,
+            r_cs_inner=r_cs_inner,
+            r_cs_outer=r_cs_outer,
+            j_cs=j_cs,
+            b_cs_inner=b_cs_inner,
+            f_poisson_cs_structure=0.3,  # Assume Poisson's ratio of 0.3 for steel structure
+            f_a_cs_turn_steel=mfile.get("f_a_cs_turn_steel", scan=scan),
+        )
+        for radius in radii
+    ])
+
+    axis.plot(
+        radii,
+        stress_values / 1e6,
+        linewidth=2,
+        label="$\\sigma_{\\theta}$,Hoop Stress",
+    )
+    axis.set_xlabel("Radial Position (m)")
+    axis.set_ylabel("Hoop Stress (MPa)")
+    axis.minorticks_on()
+    axis.legend(loc="best")
+    axis.set_title("CS Hoop Stress at BOP")
+    axis.grid(True, alpha=0.3)
+
+
+def plot_cs_radial_stress_profile(
+    self,
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    j_cs: float,
+    b_cs_inner: float,
+):
+    r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+    r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+
+    radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
+    stress_values = np.array([
+        self.calculate_cs_radial_stress(
+            r_stress_point=radius,
+            r_cs_inner=r_cs_inner,
+            r_cs_outer=r_cs_outer,
+            j_cs=j_cs,
+            b_cs_inner=b_cs_inner,
+            f_poisson_cs_structure=0.3,  # Assume Poisson's ratio of 0.3 for steel structure
+        )
+        for radius in radii
+    ])
+
+    axis.plot(
+        radii,
+        stress_values / 1e6,
+        linewidth=2,
+        label="$\\sigma_{r}$,Radial Stress",
+    )
+    axis.set_xlabel("Radial Position (m)")
+    axis.set_ylabel("Radial Stress (MPa)")
+    axis.minorticks_on()
+    axis.grid(True, alpha=0.3)
+    axis.set_title("CS Radial Stress at BOP")
+    axis.legend(loc="best")
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -15592,33 +15667,18 @@ def main_plot(
 
     plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
 
-    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
+    plot_cs_stress_time_profile(axis=figs[32].add_subplot(431), mfile=m_file, scan=scan)
 
-    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
-
-    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
-
-    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
-
-    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
-
-    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
-
-    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
-
-    plot_cs_stress_time_profile(axis=figs[31].add_subplot(431), mfile=m_file, scan=scan)
-
-    cs_coil = CSCoil(cs_fatigue=CsFatigue())
-    cs_coil.plot_cs_radial_hoop_stress_profile(
-        axis=figs[31].add_subplot(432),
+    plot_cs_radial_hoop_stress_profile(
+        axis=figs[32].add_subplot(432),
         mfile=m_file,
         scan=scan,
         j_cs=m_file.get("j_cs_pulse_start", scan=scan),
         b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
     )
 
-    cs_coil.plot_cs_radial_stress_profile(
-        axis=figs[31].add_subplot(433),
+    plot_cs_radial_stress_profile(
+        axis=figs[32].add_subplot(433),
         mfile=m_file,
         scan=scan,
         j_cs=m_file.get("j_cs_pulse_start", scan=scan),
@@ -15631,7 +15691,7 @@ def main_plot(
     plot_cs_turn_structure(
         figs[32].add_subplot(326, aspect="equal"), figs[32], m_file, scan
     )
-    figs[31].subplots_adjust(wspace=0.3)
+    figs[32].subplots_adjust(wspace=0.3)
 
     plot_first_wall_top_down_cross_section(
         figs[33].add_subplot(221, aspect="equal"), m_file, scan

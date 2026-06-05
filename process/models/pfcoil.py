@@ -3,7 +3,6 @@ import math
 from dataclasses import dataclass
 from enum import IntEnum
 
-import matplotlib.pyplot as plt
 import numba
 import numpy as np
 from scipy import optimize
@@ -13,7 +12,6 @@ from scipy.special import ellipe, ellipk
 from process.core import constants
 from process.core import process_output as op
 from process.core.exceptions import ProcessValueError
-from process.core.io.mfile import MFile
 from process.core.model import DataStructure, Model
 from process.data_structure.pfcoil_variables import (
     N_PF_COILS_IN_GROUP_MAX,
@@ -4207,81 +4205,6 @@ class CSCoil(Model):
         hp_term_4 = alpha**2 + 1.0e0 - alpha**2 / epsilon**2 - epsilon**2
 
         return hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
-
-    def plot_cs_radial_hoop_stress_profile(
-        self,
-        axis: plt.Axes,
-        mfile: MFile,
-        scan: int,
-        j_cs: float,
-        b_cs_inner: float,
-    ):
-        r_cs_inner = mfile.get("r_cs_inner", scan=scan)
-        r_cs_outer = mfile.get("r_cs_outer", scan=scan)
-
-        radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
-        stress_values = np.array([
-            self.calculate_cs_hoop_stress(
-                r_stress_point=radius,
-                r_cs_inner=r_cs_inner,
-                r_cs_outer=r_cs_outer,
-                j_cs=j_cs,
-                b_cs_inner=b_cs_inner,
-                f_poisson_cs_structure=0.3,  # Assume Poisson's ratio of 0.3 for steel structure
-                f_a_cs_turn_steel=mfile.get("f_a_cs_turn_steel", scan=scan),
-            )
-            for radius in radii
-        ])
-
-        axis.plot(
-            radii,
-            stress_values / 1e6,
-            linewidth=2,
-            label="$\\sigma_{\\theta}$,Hoop Stress",
-        )
-        axis.set_xlabel("Radial Position (m)")
-        axis.set_ylabel("Hoop Stress (MPa)")
-        axis.minorticks_on()
-        axis.legend(loc="best")
-        axis.set_title("CS Hoop Stress at BOP")
-        axis.grid(True, alpha=0.3)
-
-    def plot_cs_radial_stress_profile(
-        self,
-        axis: plt.Axes,
-        mfile: MFile,
-        scan: int,
-        j_cs: float,
-        b_cs_inner: float,
-    ):
-        r_cs_inner = mfile.get("r_cs_inner", scan=scan)
-        r_cs_outer = mfile.get("r_cs_outer", scan=scan)
-
-        radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
-        stress_values = np.array([
-            self.calculate_cs_radial_stress(
-                r_stress_point=radius,
-                r_cs_inner=r_cs_inner,
-                r_cs_outer=r_cs_outer,
-                j_cs=j_cs,
-                b_cs_inner=b_cs_inner,
-                f_poisson_cs_structure=0.3,  # Assume Poisson's ratio of 0.3 for steel structure
-            )
-            for radius in radii
-        ])
-
-        axis.plot(
-            radii,
-            stress_values / 1e6,
-            linewidth=2,
-            label="$\\sigma_{r}$,Radial Stress",
-        )
-        axis.set_xlabel("Radial Position (m)")
-        axis.set_ylabel("Radial Stress (MPa)")
-        axis.minorticks_on()
-        axis.grid(True, alpha=0.3)
-        axis.set_title("CS Radial Stress at BOP")
-        axis.legend(loc="best")
 
 
 def peak_b_field_at_pf_coil(
