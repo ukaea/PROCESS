@@ -3572,6 +3572,7 @@ class OutboardBlanket(BlanketLibrary):
             )
         )
 
+    @staticmethod
     def calculate_blanket_outboard_module_geometry(
         n_blkt_outboard_modules_toroidal: int,
         rmajor: float,
