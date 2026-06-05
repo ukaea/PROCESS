@@ -641,7 +641,7 @@ class PlasmaCurrent(Model):
             inverse aspect ratio
         kappa :
             plasma elongation
-        delta :
+        triang :
             plasma triangularity
 
         Returns
