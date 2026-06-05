@@ -81,12 +81,6 @@ class FWBSData:
     -  please use i_p_coolant_pumping = 0 or 1.
     """
 
-    i_blkt_inboard: int = 1
-    """switch for inboard blanket:
-    - =0 No inboard blanket (dr_blkt_inboard=0.0)
-    - =1 Inboard blanket present
-    """
-
     inuclear: int = 0
     """switch for nuclear heating in the coils:
     - =0 Frances Fox model (default)

@@ -303,5 +303,11 @@ class BuildData:
     the ripple calculation, else 0
     """
 
+    i_blkt_inboard: int = 1
+    """switch for inboard blanket:
+    - =0 No inboard blanket (dr_blkt_inboard=0.0)
+    - =1 Inboard blanket present
+    """
+
 
 CREATE_DICTS_FROM_DATACLASS = BuildData

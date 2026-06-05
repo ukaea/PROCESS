@@ -959,7 +959,7 @@ def test_liquid_breeder_properties(
         liquidbreederpropertiesparam.b_mag_blkt,
     )
     monkeypatch.setattr(
-        blanket_library.data.fwbs,
+        blanket_library.data.build,
         "i_blkt_inboard",
         liquidbreederpropertiesparam.i_blkt_inboard,
     )
@@ -1647,7 +1647,7 @@ def test_liquid_breeder_properties_part_1(monkeypatch, blanket_library):
     monkeypatch.setattr(blanket_library.data.physics, "aspect", 3.0)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_inboard", 0.1)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_outboard", 0.2)
-    monkeypatch.setattr(blanket_library.data.fwbs, "i_blkt_inboard", 1)
+    monkeypatch.setattr(blanket_library.data.build, "i_blkt_inboard", 1)
     monkeypatch.setattr(blanket_library.data.fwbs, "inlet_temp_liq", 1.0)
     monkeypatch.setattr(blanket_library.data.fwbs, "outlet_temp_liq", 1.0)
 
@@ -1721,7 +1721,7 @@ def test_liquid_breeder_properties_part_2(monkeypatch, blanket_library):
     monkeypatch.setattr(blanket_library.data.physics, "aspect", 3.0)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_inboard", 0.0)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_outboard", 0.2)
-    monkeypatch.setattr(blanket_library.data.fwbs, "i_blkt_inboard", 0)
+    monkeypatch.setattr(blanket_library.data.build, "i_blkt_inboard", 0)
     monkeypatch.setattr(blanket_library.data.fwbs, "i_blkt_liquid_breeder_type", 0)
     monkeypatch.setattr(blanket_library.data.fwbs, "inlet_temp_liq", 0.0)
     monkeypatch.setattr(blanket_library.data.fwbs, "outlet_temp_liq", 0.0)
@@ -1746,7 +1746,7 @@ def test_liquid_breeder_properties_part_3(monkeypatch, blanket_library):
     monkeypatch.setattr(blanket_library.data.physics, "aspect", 3.0)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_inboard", 0.1)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_outboard", 0.2)
-    monkeypatch.setattr(blanket_library.data.fwbs, "i_blkt_inboard", 1)
+    monkeypatch.setattr(blanket_library.data.build, "i_blkt_inboard", 1)
     monkeypatch.setattr(blanket_library.data.fwbs, "inlet_temp_liq", 0.0)
     monkeypatch.setattr(blanket_library.data.fwbs, "outlet_temp_liq", 1.0)
 

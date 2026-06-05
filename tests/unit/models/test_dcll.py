@@ -828,7 +828,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         dcllmassesparam.a_plasma_surface_outboard,
     )
 
-    monkeypatch.setattr(dcll.data.fwbs, "i_blkt_inboard", dcllmassesparam.i_blkt_inboard)
+    monkeypatch.setattr(
+        dcll.data.build, "i_blkt_inboard", dcllmassesparam.i_blkt_inboard
+    )
 
     monkeypatch.setattr(dcll.data.fwbs, "vol_blkt_total", dcllmassesparam.vol_blkt_total)
 

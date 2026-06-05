@@ -1042,7 +1042,7 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Set inboard blanket thickness to zero if no inboard blanket switch
     # used (Issue #732)
-    if data.fwbs.i_blkt_inboard == 0:
+    if data.build.i_blkt_inboard == 0:
         data.build.dr_blkt_inboard = 0.0
 
     # Ensure that blanket material fractions allow non-zero space for steel

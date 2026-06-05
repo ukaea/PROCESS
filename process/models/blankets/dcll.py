@@ -549,7 +549,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
         self.data.dcll.f_vol_mfbss_pbli = 0.4436
 
         # Calculate Volumes
-        if self.data.fwbs.i_blkt_inboard == 1:
+        if self.data.build.i_blkt_inboard == 1:
             # IB and OB blanket
 
             # BZ
@@ -770,7 +770,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
         )
 
         # Total mass of IB/OB segment
-        if self.data.fwbs.i_blkt_inboard == 1:
+        if self.data.build.i_blkt_inboard == 1:
             self.data.dcll.mass_segm_ib = (
                 self.data.fwbs.m_blkt_total
                 * (self.data.fwbs.vol_blkt_inboard / self.data.fwbs.vol_blkt_total)

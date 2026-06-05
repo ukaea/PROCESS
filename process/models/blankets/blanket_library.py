@@ -981,7 +981,7 @@ class BlanketLibrary(Model):
         # If liquid breeder or dual coolant blanket then calculate
         if self.data.fwbs.i_blkt_dual_coolant > 0:
             # Use smallest space available to pipes for pipe sizes in pumping calculations (worst case)
-            if self.data.fwbs.i_blkt_inboard == 1:
+            if self.data.build.i_blkt_inboard == 1:
                 # Radial direction
                 self.data.fwbs.b_bz_liq = (
                     min(
@@ -1181,7 +1181,7 @@ class BlanketLibrary(Model):
                 flow_density=self.data.fwbs.den_liq,
             )
 
-            if self.data.fwbs.i_blkt_inboard == 1:
+            if self.data.build.i_blkt_inboard == 1:
                 # Calc total num of pipes (in all inboard modules) from
                 # coolant frac and channel dimensions
                 # Assumes up/down flow, two 90 deg bends per length
@@ -1270,7 +1270,7 @@ class BlanketLibrary(Model):
                 flow_density=self.data.fwbs.den_liq,
             )
 
-            if self.data.fwbs.i_blkt_inboard == 1:
+            if self.data.build.i_blkt_inboard == 1:
                 # Calc total num of pipes (in all inboard modules) from
                 # coolant frac and channel dimensions
                 # Assumes up/down flow, two 90 deg bends per length
@@ -1347,7 +1347,7 @@ class BlanketLibrary(Model):
                 flow_density=self.data.fwbs.den_blkt_coolant,
             )
 
-            if self.data.fwbs.i_blkt_inboard == 1:
+            if self.data.build.i_blkt_inboard == 1:
                 # Calc total num of pipes (in all inboard modules) from
                 # coolant frac and channel dimensions
                 # Assumes up/down flow, two 90 deg bends per length
@@ -1427,7 +1427,7 @@ class BlanketLibrary(Model):
         )
 
         # Long polodal flows
-        if self.data.fwbs.i_blkt_inboard == 1:
+        if self.data.build.i_blkt_inboard == 1:
             npoltoti = self.data.fwbs.nopol * npblkti_liq
         npoltoto = self.data.fwbs.nopol * npblkto_liq
 
@@ -1446,7 +1446,7 @@ class BlanketLibrary(Model):
             label="Outboard blanket",
         )
 
-        if self.data.fwbs.i_blkt_inboard == 1:
+        if self.data.build.i_blkt_inboard == 1:
             dpres_blkt_inboard_coolant = self.total_pressure_drop(
                 output,
                 icoolpump=1,
@@ -1478,7 +1478,7 @@ class BlanketLibrary(Model):
                 nopolchan=npoltoto,
                 label="Outboard blanket breeder liquid",
             )
-            if self.data.fwbs.i_blkt_inboard == 1:
+            if self.data.build.i_blkt_inboard == 1:
                 deltap_bli_liq = self.total_pressure_drop(
                     output,
                     icoolpump=2,
@@ -1509,7 +1509,7 @@ class BlanketLibrary(Model):
                 deltap_blo_liq,
             ]
 
-        if self.data.fwbs.i_blkt_inboard == 1:
+        if self.data.build.i_blkt_inboard == 1:
             return [
                 dpres_fw_inboard_coolant,
                 dpres_fw_outboard_coolant,
@@ -1851,7 +1851,7 @@ class BlanketLibrary(Model):
 
         # Magnetic feild strength in T for Hartmann calculation
         # IB
-        if self.data.fwbs.i_blkt_inboard == 1:
+        if self.data.build.i_blkt_inboard == 1:
             self.data.fwbs.b_mag_blkt[0] = (
                 self.data.physics.b_plasma_toroidal_on_axis
                 * self.data.physics.rmajor
@@ -1862,7 +1862,7 @@ class BlanketLibrary(Model):
                 )
             )
         # We do not use this if there is no IB blanket, but will use edge as fill value
-        if self.data.fwbs.i_blkt_inboard == 0:
+        if self.data.build.i_blkt_inboard == 0:
             self.data.fwbs.b_mag_blkt[0] = (
                 self.data.physics.b_plasma_toroidal_on_axis
                 * self.data.physics.rmajor
@@ -2098,7 +2098,7 @@ class BlanketLibrary(Model):
         # IB/OB Blanket (MW)
 
         # Neutron power deposited in inboard blanket (MW)
-        if self.data.fwbs.i_blkt_inboard == 1:
+        if self.data.build.i_blkt_inboard == 1:
             self.data.blanket.p_blkt_nuclear_heat_inboard_mw = (
                 self.data.fwbs.p_blkt_nuclear_heat_total_mw
                 * self.data.fwbs.vol_blkt_inboard
@@ -2194,7 +2194,7 @@ class BlanketLibrary(Model):
                 )
 
             # Outlet FW/inlet BB temp (mass flow FW = mass flow BB)
-            if self.data.fwbs.i_blkt_inboard == 1:
+            if self.data.build.i_blkt_inboard == 1:
                 fwoutleti = (f_nuc_fwi * self.data.fwbs.temp_blkt_coolant_out) + (
                     1 - f_nuc_fwi
                 ) * self.data.fwbs.temp_fw_coolant_in
@@ -2289,7 +2289,7 @@ class BlanketLibrary(Model):
             )
 
             # If there is an IB blanket...
-            if self.data.fwbs.i_blkt_inboard == 1:
+            if self.data.build.i_blkt_inboard == 1:
                 # Mass flow rates for inboard blanket coolants (kg/s)
                 self.data.blanket.mflow_blkt_inboard_coolant = (
                     1.0e6
@@ -2331,7 +2331,7 @@ class BlanketLibrary(Model):
             ) / (24 * 3600)
 
             # If there is an IB blanket...
-            if self.data.fwbs.i_blkt_inboard == 1:
+            if self.data.build.i_blkt_inboard == 1:
                 # Mass flow rate for inboard blanket coolant (kg/s)
                 self.data.blanket.mflow_blkt_inboard_coolant = (
                     1.0e6
@@ -2360,7 +2360,7 @@ class BlanketLibrary(Model):
 
             # If there is an IB blanket...
             # Mass flow rate for inboard blanket coolant (kg/s)
-            if self.data.fwbs.i_blkt_inboard == 1:
+            if self.data.build.i_blkt_inboard == 1:
                 self.data.blanket.mflow_blkt_inboard_coolant = (
                     1.0e6
                     * (self.data.blanket.p_blkt_nuclear_heat_inboard_mw)
@@ -2384,13 +2384,13 @@ class BlanketLibrary(Model):
             deltap_fwo = deltap[1]
             deltap_blo = deltap[2]
             if self.data.fwbs.i_blkt_dual_coolant > 0:
-                if self.data.fwbs.i_blkt_inboard == 1:
+                if self.data.build.i_blkt_inboard == 1:
                     deltap_bli = deltap[3]
                     deltap_blo_liq = deltap[4]
                     deltap_bli_liq = deltap[5]
                 else:
                     deltap_blo_liq = deltap[3]
-            elif self.data.fwbs.i_blkt_inboard == 1:
+            elif self.data.build.i_blkt_inboard == 1:
                 deltap_bli = deltap[3]
 
         # Pumping Power
@@ -2398,9 +2398,9 @@ class BlanketLibrary(Model):
         if self.data.fwbs.i_fw_blkt_shared_coolant == FWBlktCoolantLoopTypes.SHARED_LOOP:
             # Total pressure drop in the first wall/blanket  (Pa)
             if i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL:
-                if self.data.fwbs.i_blkt_inboard == 1:
+                if self.data.build.i_blkt_inboard == 1:
                     deltap_fw_blkt = deltap_fwi + deltap_bli + deltap_fwo + deltap_blo
-                if self.data.fwbs.i_blkt_inboard == 0:
+                if self.data.build.i_blkt_inboard == 0:
                     deltap_fw_blkt = deltap_fwi + deltap_fwo + deltap_blo
             elif (
                 i_p_coolant_pumping
@@ -2439,9 +2439,9 @@ class BlanketLibrary(Model):
                 deltap_fw = deltap_fwi + deltap_fwo
 
                 # Total pressure drop in the blanket (Pa)
-                if self.data.fwbs.i_blkt_inboard == 1:
+                if self.data.build.i_blkt_inboard == 1:
                     deltap_blkt = deltap_bli + deltap_blo
-                if self.data.fwbs.i_blkt_inboard == 0:
+                if self.data.build.i_blkt_inboard == 0:
                     deltap_blkt = deltap_blo
             elif (
                 i_p_coolant_pumping
@@ -2501,9 +2501,9 @@ class BlanketLibrary(Model):
         if self.data.fwbs.i_blkt_dual_coolant > 0:
             # Total pressure drop in the blanket (Pa)
             if i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL:
-                if self.data.fwbs.i_blkt_inboard == 1:
+                if self.data.build.i_blkt_inboard == 1:
                     deltap_bl_liq = deltap_bli_liq + deltap_blo_liq
-                if self.data.fwbs.i_blkt_inboard == 0:
+                if self.data.build.i_blkt_inboard == 0:
                     deltap_bl_liq = deltap_blo_liq
             elif (
                 i_p_coolant_pumping
