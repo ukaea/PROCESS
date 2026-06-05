@@ -29,9 +29,9 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     den_fw_coolant: Any = None
 
-    cp_fw: Any = None
+    heatcap_pres_fw_coolant_average: Any = None
 
-    cv_fw: Any = None
+    heatcap_vol_fw_coolant_average: Any = None
 
     i_blkt_coolant_type: Any = None
 
@@ -47,9 +47,9 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     visc_blkt_coolant: Any = None
 
-    cp_bl: Any = None
+    heatcap_pres_blkt_coolant_average: Any = None
 
-    cv_bl: Any = None
+    heatcap_vol_blkt_coolant_average: Any = None
 
     visc_fw_coolant: Any = None
 
@@ -81,8 +81,8 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             temp_fw_coolant_out=773,
             pres_fw_coolant=8000000,
             den_fw_coolant=0,
-            cp_fw=0,
-            cv_fw=0,
+            heatcap_pres_fw_coolant_average=0,
+            heatcap_vol_fw_coolant_average=0,
             i_blkt_coolant_type=CoolantType.HELIUM,
             temp_blkt_coolant_in=573,
             temp_blkt_coolant_out=773,
@@ -90,8 +90,8 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             den_blkt_coolant=0,
             i_blkt_dual_coolant=2,
             visc_blkt_coolant=0,
-            cp_bl=0,
-            cv_bl=0,
+            heatcap_pres_blkt_coolant_average=0,
+            heatcap_vol_blkt_coolant_average=0,
             visc_fw_coolant=0,
             i_fw_blkt_shared_coolant=0,
             expected_den_fw_coolant=5.6389735407435868,
@@ -109,8 +109,8 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             temp_fw_coolant_out=773,
             pres_fw_coolant=8000000,
             den_fw_coolant=5.6389735407435868,
-            cp_fw=5188.5588430173211,
-            cv_fw=3123.5687263525392,
+            heatcap_pres_fw_coolant_average=5188.5588430173211,
+            heatcap_vol_fw_coolant_average=3123.5687263525392,
             i_blkt_coolant_type=CoolantType.HELIUM,
             temp_blkt_coolant_in=573,
             temp_blkt_coolant_out=773,
@@ -118,8 +118,8 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             den_blkt_coolant=5.6389735407435868,
             i_blkt_dual_coolant=2,
             visc_blkt_coolant=3.5036293160410249e-05,
-            cp_bl=5188.5588430173211,
-            cv_bl=3123.5687263525392,
+            heatcap_pres_blkt_coolant_average=5188.5588430173211,
+            heatcap_vol_blkt_coolant_average=3123.5687263525392,
             visc_fw_coolant=3.5036293160410249e-05,
             i_fw_blkt_shared_coolant=0,
             expected_den_fw_coolant=5.6389735407435868,
@@ -179,11 +179,15 @@ def test_primary_coolant_properties(
     )
 
     monkeypatch.setattr(
-        blanket_library.data.fwbs, "cp_fw", primarycoolantpropertiesparam.cp_fw
+        blanket_library.data.fwbs,
+        "heatcap_pres_fw_coolant_average",
+        primarycoolantpropertiesparam.heatcap_pres_fw_coolant_average,
     )
 
     monkeypatch.setattr(
-        blanket_library.data.fwbs, "cv_fw", primarycoolantpropertiesparam.cv_fw
+        blanket_library.data.fwbs,
+        "heatcap_vol_fw_coolant_average",
+        primarycoolantpropertiesparam.heatcap_vol_fw_coolant_average,
     )
 
     monkeypatch.setattr(
@@ -229,11 +233,15 @@ def test_primary_coolant_properties(
     )
 
     monkeypatch.setattr(
-        blanket_library.data.fwbs, "cp_bl", primarycoolantpropertiesparam.cp_bl
+        blanket_library.data.fwbs,
+        "heatcap_pres_blkt_coolant_average",
+        primarycoolantpropertiesparam.heatcap_pres_blkt_coolant_average,
     )
 
     monkeypatch.setattr(
-        blanket_library.data.fwbs, "cv_bl", primarycoolantpropertiesparam.cv_bl
+        blanket_library.data.fwbs,
+        "heatcap_vol_blkt_coolant_average",
+        primarycoolantpropertiesparam.heatcap_vol_blkt_coolant_average,
     )
 
     monkeypatch.setattr(
@@ -254,11 +262,11 @@ def test_primary_coolant_properties(
         primarycoolantpropertiesparam.expected_den_fw_coolant, rel=1e-4
     )
 
-    assert blanket_library.data.fwbs.cp_fw == pytest.approx(
+    assert blanket_library.data.fwbs.heatcap_pres_fw_coolant_average == pytest.approx(
         primarycoolantpropertiesparam.expected_cp_fw, rel=1e-4
     )
 
-    assert blanket_library.data.fwbs.cv_fw == pytest.approx(
+    assert blanket_library.data.fwbs.heatcap_vol_fw_coolant_average == pytest.approx(
         primarycoolantpropertiesparam.expected_cv_fw, rel=1e-4
     )
 
@@ -270,11 +278,11 @@ def test_primary_coolant_properties(
         primarycoolantpropertiesparam.expected_visc_blkt_coolant, rel=1e-4
     )
 
-    assert blanket_library.data.fwbs.cp_bl == pytest.approx(
+    assert blanket_library.data.fwbs.heatcap_pres_blkt_coolant_average == pytest.approx(
         primarycoolantpropertiesparam.expected_cp_bl, rel=1e-4
     )
 
-    assert blanket_library.data.fwbs.cv_bl == pytest.approx(
+    assert blanket_library.data.fwbs.heatcap_vol_blkt_coolant_average == pytest.approx(
         primarycoolantpropertiesparam.expected_cv_bl, rel=1e-4
     )
 
