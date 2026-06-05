@@ -174,17 +174,16 @@ class Stellarator(Model):
         self.availability.avail(output=False)
         self.costs.run()
 
-        if 91 in numerics.icc:
-            # This call is comparably time consuming..
-            # If the respective constraint equation is not called, do not set the values
-            (
-                self.data.stellarator.powerht_constraint,
-                self.data.stellarator.powerscaling_constraint,
-            ) = power_at_ignition_point(
-                self,
-                self.data.stellarator.max_gyrotron_frequency,
-                self.data.stellarator.te0_ecrh_achievable,
-            )
+        # This call is comparably time consuming..
+        # If the respective constraint equation is not called, do not set the values
+        (
+            self.data.stellarator.powerht_constraint,
+            self.data.stellarator.powerscaling_constraint,
+        ) = power_at_ignition_point(
+            self,
+            self.data.stellarator.max_gyrotron_frequency,
+            self.data.stellarator.te0_ecrh_achievable,
+        )
 
         self.data.stellarator.first_call = False
 
