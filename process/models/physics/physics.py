@@ -308,8 +308,8 @@ class Physics(Model):
                 aspect=self.data.physics.aspect,
                 b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
                 kappa=self.data.physics.kappa,
-                delta=self.data.physics.triang,
-                perim=self.data.physics.len_plasma_poloidal,
+                triang=self.data.physics.triang,
+                len_plasma_poloidal=self.data.physics.len_plasma_poloidal,
             )
         )
 

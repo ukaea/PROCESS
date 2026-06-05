@@ -32,8 +32,8 @@ class PlasmaFields(Model):
         aspect: float,
         b_plasma_toroidal_on_axis: float,
         kappa: float,
-        delta: float,
-        perim: float,
+        triang: float,
+        len_plasma_poloidal: float,
     ) -> float:
         """Function to calculate surface-averaged poloidal field (⟨Bₚ(a)⟩) from the
         plasma current
@@ -57,10 +57,10 @@ class PlasmaFields(Model):
             toroidal field on axis (T)
         kappa :
             plasma elongation
-        delta :
+        triang :
             plasma triangularity
-        perim :
-            plasma perimeter (m)
+        len_plasma_poloidal :
+            plasma poloidal length (m)
 
         Returns
         -------
@@ -81,10 +81,10 @@ class PlasmaFields(Model):
         # Use Ampere's law using the plasma poloidal cross-section this simply returns
         # ⟨Bₚ(a)⟩
         if i_plasma_current != PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
-            return constants.RMU0 * cur_plasma / perim
+            return constants.RMU0 * cur_plasma / len_plasma_poloidal
         # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
         ff1, ff2, _, _ = self.current.plascar_bpol(
-            aspect=aspect, eps=(1 / aspect), kappa=kappa, triang=delta
+            aspect=aspect, eps=(1 / aspect), kappa=kappa, triang=triang
         )
 
         # Transform q95 to qbar
