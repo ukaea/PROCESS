@@ -78,5 +78,8 @@ class DivertorData:
     n_divertors: int = 2
     """Number of divertors (calculated from `i_single_null`)"""
 
+    deg_div_poloidal_plasma: float = 0.0
+    """Divertor poloidal angle subtended by plasma (degrees)"""
+
 
 CREATE_DICTS_FROM_DATACLASS = DivertorData

@@ -366,8 +366,13 @@ class SingleRun:
             Path(filepath_out or self.input_file)
             .name.replace("IN.DAT", "")
             .replace("MFILE.DAT", "")
-        )
+        ).strip()
         self.set_input()
+        data_structure.global_variables.output_prefix = (
+            ""
+            if not self.filename_prefix
+            else Path(self.filepath, self.filename_prefix).as_posix().strip()
+        )
         self.set_output()
         self.set_mfile()
 
@@ -399,14 +404,15 @@ class SingleRun:
 
         Set Path object on the Process object, and set the prefix in the Fortran.
         """
-        self.output_path = Path(self.filepath, self.filename_prefix.strip() + "OUT.DAT")
-        data_structure.global_variables.output_prefix = (
-            Path(self.filepath, self.filename_prefix).as_posix().strip()
+        self.output_path = Path(
+            data_structure.global_variables.output_prefix + "OUT.DAT"
         )
 
     def set_mfile(self):
         """Set the mfile filename."""
-        self.mfile_path = Path(self.filepath, self.filename_prefix.strip() + "MFILE.DAT")
+        self.mfile_path = Path(
+            data_structure.global_variables.output_prefix + "MFILE.DAT"
+        )
 
     def initialise(self):
         """Run the init module to call all initialisation routines."""

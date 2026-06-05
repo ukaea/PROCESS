@@ -239,7 +239,9 @@ INPUT_VARIABLES = {
     "conv": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
     "coolp": InputVariable("fwbs", float, range=(100000.0, 100000000.0)),
     "copper_rrr": InputVariable("rebco", float, range=(1.0, 10000.0)),
-    "dx_tf_hts_tape_copper": InputVariable("rebco", float, range=(0.0, 0.001)),
+    "dx_tf_hts_tape_copper": InputVariable(
+        "superconducting_tfcoil", float, range=(0.0, 0.001)
+    ),
     "copperaoh_m2": InputVariable("rebco", float, range=(1.0, 10000000000.0)),
     "copperaoh_m2_max": InputVariable("rebco", float, range=(10000.0, 10000000000.0)),
     "cost_factor_bop": InputVariable("costs", float, range=(0.1, 10.0)),
@@ -430,7 +432,6 @@ INPUT_VARIABLES = {
     "fiooic": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fjohc": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fjohc0": InputVariable("constraints", float, range=(0.001, 1.0)),
-    "f_ster_div_single": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "fdiva": InputVariable("divertor", float, range=(0.1, 2.0)),
     "fdivwet": InputVariable("stellarator", float, range=(0.01, 1.0)),
     "feffcd": InputVariable("current_drive", float, range=(0.0, 20.0)),
@@ -492,7 +493,9 @@ INPUT_VARIABLES = {
     "gas_buildings_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "ground_clrnc": InputVariable("buildings", float, range=(0.0, 10.0)),
     "n_ecrh_harmonic": InputVariable("current_drive", float, range=(1.0, 10.0)),
-    "dx_tf_hts_tape_hastelloy": InputVariable("rebco", float, range=(1e-08, 0.001)),
+    "dx_tf_hts_tape_hastelloy": InputVariable(
+        "superconducting_tfcoil", float, range=(1e-08, 0.001)
+    ),
     "hccl": InputVariable("buildings", float, range=(0.0, 10.0)),
     "hcd_building_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "hcd_building_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
@@ -665,7 +668,7 @@ INPUT_VARIABLES = {
     "reactor_roof_thk": InputVariable("buildings", float, range=(0.25, 25.0)),
     "reactor_wall_thk": InputVariable("buildings", float, range=(0.25, 25.0)),
     "dx_tf_hts_tape_rebco": InputVariable(
-        "rebco",
+        "superconducting_tfcoil",
         float,
         range=(1e-08, 0.0001),
         additional_actions=lambda _n, rt, _i, _c: (
@@ -759,8 +762,10 @@ INPUT_VARIABLES = {
     "dz_cs_turn_conduit": InputVariable("cs_fatigue", float, range=(0.001, 1.0)),
     "dx_tf_turn_general": InputVariable("tfcoil", float, range=(0.0, 0.1)),
     "t_turn_tf_max": InputVariable("tfcoil", float, range=(0.0, 1.0)),
-    "dx_tf_hts_tape_total": InputVariable("rebco", float, range=(0.0, 0.1)),
-    "dr_tf_hts_tape": InputVariable("rebco", float, range=(0.0, 0.1)),
+    "dx_tf_hts_tape_total": InputVariable(
+        "superconducting_tfcoil", float, range=(0.0, 0.1)
+    ),
+    "dr_tf_hts_tape": InputVariable("superconducting_tfcoil", float, range=(0.0, 0.1)),
     "tauee_in": InputVariable("physics", float, range=(0.0, 100.0)),
     "t_plasma_energy_confinement_max": InputVariable(
         "physics", float, range=(0.1, 100.0)

@@ -1,5 +1,6 @@
 import logging
 import math
+from enum import IntEnum
 
 import numba
 import numpy as np
@@ -23,6 +24,22 @@ from process.models.superconductors import SuperconductorMaterial, Superconducto
 from process.models.tfcoil.base import TFCoilShapeModel
 
 logger = logging.getLogger(__name__)
+
+
+class PFLocationTypes(IntEnum):
+    """Enum for PF coil location types."""
+
+    ABOVE_CS = 1
+    """PF coil is stacked on top of the Central Solenoid"""
+
+    ABOVE_TF = 2
+    """PF coil is stacked on top of the TF coil"""
+
+    OUTSIDE_TF = 3
+    """PF coil is placed outside of the TF coil"""
+
+    GENERALLY_PLACED = 4
+    """PF coil is generally placed"""
 
 
 class PFCoil(Model):
@@ -213,7 +230,7 @@ class PFCoil(Model):
 
         # N.B. Problems here if coil=n_pf_coils_in_group(group) is greater than 2.
         for group in range(self.data.pf_coil.n_pf_coil_groups):
-            if self.data.pf_coil.i_pf_location[group] == 1:
+            if self.data.pf_coil.i_pf_location[group] == PFLocationTypes.ABOVE_CS:
                 # PF coil is stacked on top of the Central Solenoid
                 # Use a helper function to compute r_pf_coil_middle_group_array and
                 # z_pf_coil_middle_group_array arrays for this group
@@ -239,7 +256,7 @@ class PFCoil(Model):
 
             # =========================================================================
 
-            elif self.data.pf_coil.i_pf_location[group] == 2:
+            elif self.data.pf_coil.i_pf_location[group] == PFLocationTypes.ABOVE_TF:
                 # PF coil is on top of the TF coil
                 (
                     r_pf_coil_middle_group_array,
@@ -270,7 +287,7 @@ class PFCoil(Model):
                     )
             # =========================================================================
 
-            elif self.data.pf_coil.i_pf_location[group] == 3:
+            elif self.data.pf_coil.i_pf_location[group] == PFLocationTypes.OUTSIDE_TF:
                 # PF coil is radially outside the TF coil
                 (
                     r_pf_coil_middle_group_array,
@@ -295,7 +312,10 @@ class PFCoil(Model):
 
             # =========================================================================
 
-            elif self.data.pf_coil.i_pf_location[group] == 4:
+            elif (
+                self.data.pf_coil.i_pf_location[group]
+                == PFLocationTypes.GENERALLY_PLACED
+            ):
                 (
                     r_pf_coil_middle_group_array,
                     z_pf_coil_middle_group_array,
@@ -381,14 +401,14 @@ class PFCoil(Model):
             # Bypasses SVD solver
             if self.data.physics.itart == 1 and self.data.physics.itartpf == 0:
                 for i in range(self.data.pf_coil.n_pf_coil_groups):
-                    if self.data.pf_coil.i_pf_location[i] == 1:
+                    if self.data.pf_coil.i_pf_location[i] == PFLocationTypes.ABOVE_CS:
                         # PF coil is stacked on top of the Central Solenoid
                         self.data.pf_coil.ccls[i] = 0.0e0
                         raise ProcessValueError(
                             "i_pf_location(i) should not be 1 if itart=1", i=i
                         )
 
-                    if self.data.pf_coil.i_pf_location[i] == 2:
+                    if self.data.pf_coil.i_pf_location[i] == PFLocationTypes.ABOVE_TF:
                         # PF coil is on top of the TF coil
                         self.data.pf_coil.ccls[i] = (
                             0.3e0
@@ -396,7 +416,9 @@ class PFCoil(Model):
                             * self.data.physics.plasma_current
                         )
 
-                    elif self.data.pf_coil.i_pf_location[i] == 3:
+                    elif (
+                        self.data.pf_coil.i_pf_location[i] == PFLocationTypes.OUTSIDE_TF
+                    ):
                         # PF coil is radially outside the TF coil
                         self.data.pf_coil.ccls[i] = (
                             -0.4e0 * self.data.physics.plasma_current
@@ -428,7 +450,7 @@ class PFCoil(Model):
                 ngrp0 = 0
                 nocoil = 0
                 for i in range(self.data.pf_coil.n_pf_coil_groups):
-                    if self.data.pf_coil.i_pf_location[i] == 1:
+                    if self.data.pf_coil.i_pf_location[i] == PFLocationTypes.ABOVE_CS:
                         # Do not allow if no central solenoid
                         if self.data.build.iohcl == 0:
                             raise ProcessValueError(
@@ -451,7 +473,7 @@ class PFCoil(Model):
                             )
                             nocoil += 1
 
-                    elif self.data.pf_coil.i_pf_location[i] == 2:
+                    elif self.data.pf_coil.i_pf_location[i] == PFLocationTypes.ABOVE_TF:
                         # PF coil is on top of the TF coil; divertor coil
                         # This is a fixed current for this calculation -- RK 07/12
 
@@ -479,14 +501,19 @@ class PFCoil(Model):
                             )
                             nocoil += 1
 
-                    elif self.data.pf_coil.i_pf_location[i] == 3:
+                    elif (
+                        self.data.pf_coil.i_pf_location[i] == PFLocationTypes.OUTSIDE_TF
+                    ):
                         # PF coil is radially outside the TF coil
                         # This is an equilibrium coil, current must be solved for
 
                         pcls0[ngrp0] = i + 1
                         ngrp0 += 1
 
-                    elif self.data.pf_coil.i_pf_location[i] == 4:
+                    elif (
+                        self.data.pf_coil.i_pf_location[i]
+                        == PFLocationTypes.GENERALLY_PLACED
+                    ):
                         # PF coil is generally placed
                         # See issue 1418
                         # https://git.ccfe.ac.uk/process/process/-/issues/1418
@@ -585,13 +612,7 @@ class PFCoil(Model):
                 nocoil += 1
 
         # Flux swing required from CS coil
-        csflux = (
-            -(
-                self.data.physics.vs_plasma_res_ramp
-                + self.data.physics.vs_plasma_ind_ramp
-            )
-            - pfflux
-        )
+        csflux = -(self.data.physics.vs_plasma_ramp_required) - pfflux
 
         if self.data.build.iohcl == 1:
             # Required current change in CS coil
@@ -609,11 +630,7 @@ class PFCoil(Model):
                     + (self.data.build.dr_cs * self.data.build.dr_cs) / 6.0e0
                     + (self.data.build.dr_cs * self.data.build.dr_bore) / 2.0e0
                 )
-                / (
-                    self.data.build.z_tf_inside_half
-                    * self.data.pf_coil.f_z_cs_tf_internal
-                    * 2.0e0
-                )
+                / (self.data.pf_coil.dz_cs_full)
             )
             dics = csflux / ddics
 
@@ -706,7 +723,7 @@ class PFCoil(Model):
 
         for ii in range(self.data.pf_coil.n_pf_coil_groups):
             for _ij in range(self.data.pf_coil.n_pf_coils_in_group[ii]):
-                if self.data.pf_coil.i_pf_location[ii] == 1:
+                if self.data.pf_coil.i_pf_location[ii] == PFLocationTypes.ABOVE_CS:
                     # PF coil is stacked on top of the Central Solenoid
                     dx = 0.5e0 * self.data.build.dr_cs
                     dz = 0.5e0 * (
@@ -1969,13 +1986,22 @@ class PFCoil(Model):
             if self.data.build.iohcl != 0:
                 op.write(
                     self.outfile,
-                    f"CS\t\t\t{self.data.pf_coil.ind_pf_cs_plasma_mutual[: self.data.pf_coil.n_pf_cs_plasma_circuits, self.data.pf_coil.n_pf_cs_plasma_circuits - 2]}",
+                    f"CS\t{self.data.pf_coil.ind_pf_cs_plasma_mutual[: self.data.pf_coil.n_pf_cs_plasma_circuits, self.data.pf_coil.n_pf_cs_plasma_circuits - 2]}",
                 )
 
             op.write(
                 self.outfile,
                 f"Plasma\t{self.data.pf_coil.ind_pf_cs_plasma_mutual[: self.data.pf_coil.n_pf_cs_plasma_circuits, self.data.pf_coil.n_pf_cs_plasma_circuits - 1]}",
             )
+        # Output to MFILE for use in other modules
+        for coil in range(self.data.pf_coil.n_pf_cs_plasma_circuits):
+            for circuit in range(self.data.pf_coil.n_pf_cs_plasma_circuits):
+                op.ovarre(
+                    self.mfile,
+                    f"Mutual inductance between PF/CS/plasma circuits {coil} and {circuit} (H)",
+                    f"(ind_pf_cs_plasma_mutual[{coil},_{circuit}])",
+                    self.data.pf_coil.ind_pf_cs_plasma_mutual[coil, circuit],
+                )
 
     def outpf(self):
         """Routine to write output from PF coil module to file.
@@ -1985,15 +2011,15 @@ class PFCoil(Model):
         """
         op.oheadr(self.outfile, "Central Solenoid and PF Coils")
 
+        op.ovarin(
+            self.mfile,
+            "Existence_of_central_solenoid",
+            "(iohcl)",
+            self.data.build.iohcl,
+        )
         if self.data.build.iohcl == 0:
             op.ocmmnt(self.outfile, "No central solenoid included")
             op.oblnkl(self.outfile)
-            op.ovarin(
-                self.mfile,
-                "Existence_of_central_solenoid",
-                "(iohcl)",
-                self.data.build.iohcl,
-            )
         elif self.data.pf_coil.i_pf_conductor == 0:
             op.ocmmnt(self.outfile, "Superconducting central solenoid")
 
@@ -3991,11 +4017,8 @@ def peak_b_field_at_pf_coil(
                     ]
                     * data.pf_coil.j_cs_flat_top_end
                     * sgn
-                    * data.build.dr_cs
-                    * data.pf_coil.f_z_cs_tf_internal
-                    * data.build.z_tf_inside_half
+                    * data.pf_coil.a_cs_poloidal
                     / data.pf_coil.nfxf
-                    * 2.0e0
                 )
 
             kk = data.pf_coil.nfxf

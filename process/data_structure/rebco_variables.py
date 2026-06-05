@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass(slots=True)
 class RebcoData:
-    dx_tf_hts_tape_rebco: float = 1.0e-6
+    dx_hts_tape_rebco: float = 1.0e-6
     """thickness of REBCO layer in tape (m) (`iteration variable 138`)"""
 
     dx_hts_tape_copper: float = 100.0e-6

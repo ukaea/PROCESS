@@ -85,7 +85,7 @@ def test_set_output(single_run, monkeypatch):
     # Expected output prefix
     expected = "output_prefix"
     # Mock self.filename_prefix on single_run with the value of expected
-    monkeypatch.setattr(single_run, "filename_prefix", expected, raising=False)
+    monkeypatch.setattr(data_structure.global_variables, "output_prefix", expected)
 
     # Mocking undo trys to set the value as none
     # monkeypatch.setattr(data_structure.global_variables, "output_prefix", None)
@@ -117,7 +117,7 @@ def test_set_mfile(single_run, monkeypatch):
     prefix = "test"
     expected = Path(prefix + "MFILE.DAT")
     # Mock filename_prefix and run
-    monkeypatch.setattr(single_run, "filename_prefix", prefix, raising=False)
+    monkeypatch.setattr(data_structure.global_variables, "output_prefix", prefix)
     single_run.set_mfile()
     assert single_run.mfile_path.name == expected.name
 

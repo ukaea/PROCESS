@@ -14323,26 +14323,55 @@ def plot_blkt_structure(
     radial_build: dict[str, float],
     colour_scheme: Literal[1, 2],
 ):
-    """Plot the BLKT structure on the given axis."""
+    """Plot the blkt structure and relevant angles"""
+    # MFILE variables needed to plot the blkt structure and angles
     rmajor = m_file.get("rmajor", scan=scan)
+    rminor = m_file.get("rminor", scan=scan)
+    dr_fw_plasma_gap_outboard = m_file.get("dr_fw_plasma_gap_outboard", scan=scan)
+    dr_fw_plasma_gap_inboard = m_file.get("dr_fw_plasma_gap_inboard", scan=scan)
+    dr_fw_inboard = m_file.get("dr_fw_inboard", scan=scan)
+    dr_fw_outboard = m_file.get("dr_fw_outboard", scan=scan)
+    dr_blkt_outboard = m_file.get("dr_blkt_outboard", scan=scan)
+    dr_blkt_inboard = m_file.get("dr_blkt_inboard", scan=scan)
+    dz_blkt_half = m_file.get("dz_blkt_half", scan=scan)
+    deg_blkt_outboard_poloidal_plasma = m_file.get(
+        "deg_blkt_outboard_poloidal_plasma", scan=scan
+    )
+    deg_blkt_inboard_poloidal_plasma = m_file.get(
+        "deg_blkt_inboard_poloidal_plasma", scan=scan
+    )
+    f_deg_blkt_outboard_poloidal_plasma = m_file.get(
+        "f_deg_blkt_outboard_poloidal_plasma", scan=scan
+    )
+    f_deg_blkt_inboard_poloidal_plasma = m_file.get(
+        "f_deg_blkt_inboard_poloidal_plasma", scan=scan
+    )
+    deg_div_poloidal_plasma = m_file.get("deg_div_poloidal_plasma", scan=scan)
+    f_ster_div_single = m_file.get("f_ster_div_single", scan=scan)
+    i_single_null = m_file.get("i_single_null", scan=scan)
+
+    # ======================
 
     plot_blanket(ax, m_file, scan, radial_build, colour_scheme)
+    plot_plasma(ax, m_file, scan, colour_scheme)
     plot_firstwall(ax, m_file, scan, radial_build, colour_scheme)
+
     ax.set_xlabel("Radial position [m]")
     ax.set_ylabel("Vertical position [m]")
     ax.set_title("Blanket and First Wall Poloidal Cross-Section")
     ax.minorticks_on()
     ax.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
-    # Plot major radius line (vertical dashed line at rmajor)
-    ax.axvline(
-        m_file.get("rminor", scan=scan),
-        color="black",
-        linestyle="--",
-        linewidth=1.5,
-        label="Major Radius $R_0$",
+
+    r_blkt_outboard_out = (
+        rmajor + rminor + dr_fw_outboard + dr_fw_plasma_gap_outboard + dr_blkt_outboard
     )
+    r_blkt_inboard_in = (
+        rmajor - rminor - dr_fw_plasma_gap_inboard - dr_fw_inboard - dr_blkt_inboard
+    )
+    r_fw_outboard_in = r_blkt_outboard_out - dr_blkt_outboard - dr_fw_outboard
+    r_fw_inboard_out = r_blkt_inboard_in + dr_blkt_inboard + dr_fw_inboard
+
     # Plot a horizontal line at dz_blkt_half (blanket half height)
-    dz_blkt_half = m_file.get("dz_blkt_half", scan=scan)
     ax.axhline(
         dz_blkt_half,
         color="purple",
@@ -14358,25 +14387,215 @@ def plot_blkt_structure(
         label="Blanket Half Height",
     )
 
+    if i_single_null == 0:
+        # Plot arrows for the outboard blanket angles
+        ax.annotate(
+            "",
+            xy=(rmajor, 0),
+            xytext=(rmajor, dz_blkt_half),
+            arrowprops={"arrowstyle": "<-", "color": "purple"},
+            zorder=5,
+        )
+    # If single null then only plot the lower arrow for the outboard blanket angle
     ax.annotate(
         "",
-        xy=(rmajor, dz_blkt_half),
+        xy=(rmajor, 0),
         xytext=(rmajor, -dz_blkt_half),
-        arrowprops={"arrowstyle": "<->", "color": "black"},
+        arrowprops={"arrowstyle": "<-", "color": "purple"},
+        zorder=5,
     )
 
-    # Add a label for the internal coil width
+    # Plot arc showing the angle between the two outboard blanket arrows
+    arc_radius = 1.0
+
+    # 3 to 6 o'clock position is -90 degrees,
+    angle_start = -90.0
+    if i_single_null == 1:
+        angle_end = 90.0 + deg_div_poloidal_plasma
+    elif i_single_null == 0:
+        # 3 to 12 o'clock position is +90 degrees
+        angle_end = 90.0
+
+    theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
+    arc_x = rmajor + arc_radius * np.cos(theta)
+    arc_y = arc_radius * np.sin(theta)
+
+    ax.plot(arc_x, arc_y, color="purple", linewidth=2)
+
+    # Add angle label at the arc
+    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
+    label_radius = arc_radius * 1.8
+    label_x = rmajor + label_radius * np.cos(mid_angle)
+    label_y = label_radius * np.sin(mid_angle)
+
+    # Plot the info box for the outboard blanket
     ax.text(
-        rmajor,
-        0.0,
-        f"{2 * dz_blkt_half:.3f} m",
+        label_x,
+        label_y,
+        f"{deg_blkt_outboard_poloidal_plasma:.1f}°\n({f_deg_blkt_outboard_poloidal_plasma * 100:.1f}%)",
+        fontsize=7,
+        color="purple",
+        ha="center",
+        va="center",
+        weight="bold",
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "white",
+            "alpha": 0.8,
+            "edgecolor": "purple",
+            "linewidth": 1.5,
+        },
+    )
+
+    # Plot arrows for the inboard blanket angles
+    ax.annotate(
+        "",
+        xy=(rmajor, 0),
+        xytext=(r_fw_inboard_out, dz_blkt_half),
+        arrowprops={"arrowstyle": "<-", "color": "green"},
+        zorder=5,
+    )
+
+    ax.annotate(
+        "",
+        xy=(rmajor, 0),
+        xytext=(r_fw_inboard_out, -dz_blkt_half),
+        arrowprops={"arrowstyle": "<-", "color": "green"},
+        zorder=5,
+    )
+
+    # Plot arc showing the angle between the two inboard blanket arrows
+    arc_radius = 1.0
+    angle_start = -deg_blkt_inboard_poloidal_plasma / 2
+    angle_end = deg_blkt_inboard_poloidal_plasma / 2
+
+    theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
+    arc_x = rmajor - arc_radius * np.cos(theta)
+    arc_y = arc_radius * np.sin(theta)
+
+    ax.plot(arc_x, arc_y, color="green", linewidth=2)
+
+    # Add angle label at the arc
+    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
+    label_radius = arc_radius * 1.8
+    label_x = rmajor - label_radius * np.cos(mid_angle)
+    label_y = label_radius * np.sin(mid_angle)
+
+    # Plot the info box for the inboard blanket
+    ax.text(
+        label_x,
+        label_y,
+        f"{deg_blkt_inboard_poloidal_plasma:.1f}°\n({f_deg_blkt_inboard_poloidal_plasma * 100:.1f}%)",
+        fontsize=7,
+        color="green",
+        ha="center",
+        va="center",
+        weight="bold",
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "white",
+            "alpha": 0.8,
+            "edgecolor": "green",
+            "linewidth": 1.5,
+        },
+        zorder=5,
+    )
+
+    # Plot arrows for the divertor angles
+    # If double null then plot the upper also
+    if i_single_null == 0:
+        # Plot arc showing the angle between the two arrows (divertor angle)
+        arc_radius = 1.5
+        # 3 to 12 o'clock position is +90 degrees,
+        angle_start = 90.0
+        angle_end = 90.0 + deg_div_poloidal_plasma
+
+        theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
+        arc_x = rmajor + arc_radius * np.cos(theta)
+        arc_y = arc_radius * np.sin(theta)
+
+        ax.plot(arc_x, arc_y, color="black", linewidth=2)
+
+        # Add angle label at the arc
+        mid_angle = np.deg2rad((angle_start + angle_end) / 2)
+        label_radius = arc_radius * 1.8
+        label_x = rmajor + label_radius * np.cos(mid_angle)
+        label_y = label_radius * np.sin(mid_angle)
+
+        ax.text(
+            label_x,
+            label_y,
+            f"{deg_div_poloidal_plasma:.1f}°\n({f_ster_div_single * 100:.1f}%)",
+            fontsize=7,
+            color="black",
+            ha="center",
+            va="center",
+            weight="bold",
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "white",
+                "alpha": 0.8,
+                "edgecolor": "black",
+                "linewidth": 1.5,
+            },
+            zorder=5,
+        )
+
+    # Plot arc showing the angle between the two arrows for the lower divertor (divertor angle)
+    arc_radius = 1.5
+    # 3 to 6 o'clock is -90 degrees
+    angle_start = -90.0
+    angle_end = -90.0 - deg_div_poloidal_plasma
+
+    theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
+    arc_x = rmajor + arc_radius * np.cos(theta)
+    arc_y = arc_radius * np.sin(theta)
+
+    ax.plot(arc_x, arc_y, color="black", linewidth=2)
+
+    # Add angle label at the arc
+    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
+    label_radius = arc_radius * 1.8
+    label_x = rmajor + label_radius * np.cos(mid_angle)
+    label_y = label_radius * np.sin(mid_angle)
+
+    # Plot the info box for the lower divertor angle
+    ax.text(
+        label_x,
+        label_y,
+        f"{deg_div_poloidal_plasma:.1f}°\n({f_ster_div_single * 100:.1f}%)",
         fontsize=7,
         color="black",
-        rotation=270,
-        verticalalignment="center",
-        horizontalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
-        zorder=101,  # Ensure label is on top of all plots
+        ha="center",
+        va="center",
+        weight="bold",
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "white",
+            "alpha": 0.8,
+            "edgecolor": "black",
+            "linewidth": 1.5,
+        },
+        zorder=5,
+    )
+
+    # Plot vertical lines at the inner and outer radial boundaries of the blanket
+    ax.axvline(
+        r_blkt_inboard_in, color="black", linestyle="--", linewidth=1.5, zorder=10
+    )
+    ax.axvline(
+        r_blkt_outboard_out, color="black", linestyle="--", linewidth=1.5, zorder=10
+    )
+    ax.axvline(r_fw_inboard_out, color="black", linestyle="--", linewidth=1.5, zorder=10)
+
+    ax.axvline(r_fw_outboard_in, color="black", linestyle="--", linewidth=1.5, zorder=10)
+
+    ax.axvline(
+        rmajor,
+        color="black",
+        linestyle="--",
+        linewidth=1.5,
+        label="Major Radius $R_0$",
     )
 
     # Plot midplane line (horizontal dashed line at Z=0)
@@ -14929,6 +15148,80 @@ def plot_quench_time_evolution(
         plt.show()
 
 
+def plot_pf_cs_plasma_mutual_inductance(
+    axis: plt.Axes, m_file: MFile, scan: int
+) -> None:
+    """Plot the mutual inductance between the plasma and PF/CS coils.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        Axis to plot on
+    m_file : MFile
+        MFILE data object
+    scan : int
+        Scan number to read from MFILE
+
+    """
+    n_pf_cs_plasma_circuits = int(m_file.get("n_pf_cs_plasma_circuits", scan=scan))
+    mutual_inductance = np.zeros((n_pf_cs_plasma_circuits, n_pf_cs_plasma_circuits))
+    iohcl = int(m_file.get("iohcl", scan=scan))
+
+    for coil in range(n_pf_cs_plasma_circuits):
+        for circuit in range(n_pf_cs_plasma_circuits):
+            mutual_inductance[coil, circuit] = m_file.get(
+                f"ind_pf_cs_plasma_mutual[{coil},_{circuit}]",
+                scan=scan,
+            )
+
+    # Create lower triangular matrix
+    mutual_inductance = np.tril(mutual_inductance)
+    im = axis.imshow(mutual_inductance, cmap="RdBu_r", aspect="auto")
+    axis.set_xlabel("Circuit")
+    axis.set_ylabel("Circuit")
+    axis.set_title("PF/CS Plasma Mutual Inductance")
+    axis.set_xticks(range(n_pf_cs_plasma_circuits))
+    axis.set_yticks(range(n_pf_cs_plasma_circuits))
+    x_labels = list(range(n_pf_cs_plasma_circuits))
+
+    if iohcl == 1:
+        x_labels[-2] = "CS"
+    x_labels[-1] = "Plasma"
+    y_labels = list(range(n_pf_cs_plasma_circuits))
+    if iohcl == 1:
+        y_labels[-2] = "CS"
+    y_labels[-1] = "Plasma"
+    axis.set_xticklabels(x_labels)
+    axis.set_yticklabels(y_labels)
+
+    # Add boxes around each cell
+    for i in range(n_pf_cs_plasma_circuits):
+        for j in range(n_pf_cs_plasma_circuits):
+            if mutual_inductance[i, j] != 0:
+                axis.add_patch(
+                    plt.Rectangle(
+                        (j - 0.5, i - 0.5),
+                        1,
+                        1,
+                        fill=False,
+                        edgecolor="black",
+                        linewidth=0.5,
+                    )
+                )
+                # Add text annotation with values
+                axis.text(
+                    j,
+                    i,
+                    f"{mutual_inductance[i, j]:.3e}",
+                    ha="center",
+                    va="center",
+                    color="white",
+                    fontsize=8,
+                )
+
+    axis.get_figure().colorbar(im, ax=axis, label="Mutual Inductance (H)")
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -15294,33 +15587,35 @@ def main_plot(
 
     plot_current_profiles_over_time(figs[30].add_subplot(111), m_file, scan)
 
-    plot_cs_stress_time_profile(axis=figs[31].add_subplot(311), mfile=m_file, scan=scan)
+    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
+
+    plot_cs_stress_time_profile(axis=figs[32].add_subplot(311), mfile=m_file, scan=scan)
 
     plot_cs_coil_structure(
-        figs[31].add_subplot(223, aspect="equal"), figs[31], m_file, scan
+        figs[32].add_subplot(223, aspect="equal"), figs[32], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[31].add_subplot(326, aspect="equal"), figs[31], m_file, scan
+        figs[32].add_subplot(326, aspect="equal"), figs[32], m_file, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        figs[32].add_subplot(221, aspect="equal"), m_file, scan
+        figs[33].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[32].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[32].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[33].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[33].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[33], m_file, scan)
-    ax_blanket = figs[33].add_subplot(122, aspect="equal")
-    plot_blkt_structure(ax_blanket, figs[33], m_file, scan, radial_build, colour_scheme)
+    plot_blkt_pipe_bends(figs[34], m_file, scan)
+    ax_blanket = figs[34].add_subplot(122, aspect="equal")
+    plot_blkt_structure(ax_blanket, figs[34], m_file, scan, radial_build, colour_scheme)
 
     plot_main_power_flow(
-        figs[34].add_subplot(111, aspect="equal"), m_file, scan, figs[34]
+        figs[35].add_subplot(111, aspect="equal"), m_file, scan, figs[35]
     )
 
-    ax24 = figs[35].add_subplot(111)
+    ax24 = figs[36].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[35])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[36])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -15402,7 +15697,7 @@ def plot_summary(
 ):
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(36)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(37)]
 
     # run main_plot
     main_plot(
