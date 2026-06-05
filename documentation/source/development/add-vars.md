@@ -16,7 +16,7 @@ To add a `PROCESS` input, please follow below:
  
 2. Add a description of the input variable below the declaration, using the formatting described in the standards section specifying the units.
 
-3. Assign a sensible initial value as the default type.
+3. Assign a sensible default initial value, and a type.
   
 4. Add the parameter to the `INPUT_VARIABLES` dictionary in `input.py`.  
 
