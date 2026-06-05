@@ -736,14 +736,22 @@ class BlanketLibrary(Model):
                 pressure=self.data.fwbs.pres_fw_coolant,
             )
             self.data.fwbs.den_fw_coolant = fw_bb_fluid_properties.density
-            self.data.fwbs.cp_fw = fw_bb_fluid_properties.specific_heat_const_p
-            self.data.fwbs.cv_fw = fw_bb_fluid_properties.specific_heat_const_v
+            self.data.fwbs.heatcap_pres_fw_coolant_average = (
+                fw_bb_fluid_properties.specific_heat_const_p
+            )
+            self.data.fwbs.heatcap_vol_fw_coolant_average = (
+                fw_bb_fluid_properties.specific_heat_const_v
+            )
             self.data.fwbs.visc_fw_coolant = fw_bb_fluid_properties.viscosity
 
             self.data.fwbs.den_blkt_coolant = self.data.fwbs.den_fw_coolant
             self.data.fwbs.visc_blkt_coolant = self.data.fwbs.visc_fw_coolant
-            self.data.fwbs.cp_bl = self.data.fwbs.cp_fw
-            self.data.fwbs.cv_bl = self.data.fwbs.cv_fw
+            self.data.fwbs.heatcap_pres_blkt_coolant_average = (
+                self.data.fwbs.heatcap_pres_fw_coolant_average
+            )
+            self.data.fwbs.heatcap_vol_blkt_coolant_average = (
+                self.data.fwbs.heatcap_vol_fw_coolant_average
+            )
 
         # If FW and BB have different coolants...
         else:
@@ -757,8 +765,12 @@ class BlanketLibrary(Model):
                 pressure=self.data.fwbs.pres_fw_coolant,
             )
             self.data.fwbs.den_fw_coolant = fw_fluid_properties.density
-            self.data.fwbs.cp_fw = fw_fluid_properties.specific_heat_const_p
-            self.data.fwbs.cv_fw = fw_fluid_properties.specific_heat_const_v
+            self.data.fwbs.heatcap_pres_fw_coolant_average = (
+                fw_fluid_properties.specific_heat_const_p
+            )
+            self.data.fwbs.heatcap_vol_fw_coolant_average = (
+                fw_fluid_properties.specific_heat_const_v
+            )
             self.data.fwbs.visc_fw_coolant = fw_fluid_properties.viscosity
 
             # BB
@@ -772,8 +784,12 @@ class BlanketLibrary(Model):
                 pressure=self.data.fwbs.pres_blkt_coolant,
             )
             self.data.fwbs.den_blkt_coolant = bb_fluid_properties.density
-            self.data.fwbs.cp_bl = bb_fluid_properties.specific_heat_const_p
-            self.data.fwbs.cv_bl = bb_fluid_properties.specific_heat_const_v
+            self.data.fwbs.heatcap_pres_blkt_coolant_average = (
+                bb_fluid_properties.specific_heat_const_p
+            )
+            self.data.fwbs.heatcap_vol_blkt_coolant_average = (
+                bb_fluid_properties.specific_heat_const_v
+            )
             self.data.fwbs.visc_blkt_coolant = bb_fluid_properties.viscosity
 
         if (
@@ -2391,7 +2407,7 @@ class BlanketLibrary(Model):
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
                     + self.data.fwbs.psurffwi
                 ),
-                heatcap_coolant=self.data.fwbs.cp_fw,
+                heatcap_coolant=self.data.fwbs.heatcap_pres_fw_coolant_average,
                 temp_in_coolant=temp_fw_coolant_out,
                 temp_out_coolant=self.data.fwbs.temp_fw_coolant_in,
             )
@@ -2405,7 +2421,7 @@ class BlanketLibrary(Model):
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
                     + self.data.fwbs.psurffwo
                 ),
-                heatcap_coolant=self.data.fwbs.cp_fw,
+                heatcap_coolant=self.data.fwbs.heatcap_pres_fw_coolant_average,
                 temp_in_coolant=temp_fw_coolant_out,
                 temp_out_coolant=self.data.fwbs.temp_fw_coolant_in,
             )
@@ -2417,7 +2433,7 @@ class BlanketLibrary(Model):
             self.data.blanket.mflow_blkt_outboard_coolant = (
                 calculate_required_mass_flow_rate(
                     p_heat_total=1.0e6 * pnucblkto_struct,
-                    heatcap_coolant=self.data.fwbs.cp_bl,
+                    heatcap_coolant=self.data.fwbs.heatcap_pres_blkt_coolant_average,
                     temp_in_coolant=temp_blkt_coolant_in,
                     temp_out_coolant=self.data.fwbs.temp_blkt_coolant_out,
                 )
@@ -2439,7 +2455,7 @@ class BlanketLibrary(Model):
                 self.data.blanket.mflow_blkt_inboard_coolant = (
                     calculate_required_mass_flow_rate(
                         p_heat_total=1.0e6 * pnucblkti_struct,
-                        heatcap_coolant=self.data.fwbs.cp_bl,
+                        heatcap_coolant=self.data.fwbs.heatcap_pres_blkt_coolant_average,
                         temp_in_coolant=temp_blkt_coolant_in,
                         temp_out_coolant=self.data.fwbs.temp_blkt_coolant_out,
                     )
@@ -2459,7 +2475,7 @@ class BlanketLibrary(Model):
                 calculate_required_mass_flow_rate(
                     p_heat_total=1.0e6
                     * self.data.blanket.p_blkt_nuclear_heat_outboard_mw,
-                    heatcap_coolant=self.data.fwbs.cp_bl,
+                    heatcap_coolant=self.data.fwbs.heatcap_pres_blkt_coolant_average,
                     temp_in_coolant=temp_blkt_coolant_in,
                     temp_out_coolant=self.data.fwbs.temp_blkt_coolant_out,
                 )
@@ -2484,7 +2500,7 @@ class BlanketLibrary(Model):
                     calculate_required_mass_flow_rate(
                         p_heat_total=1.0e6
                         * self.data.blanket.p_blkt_nuclear_heat_inboard_mw,
-                        heatcap_coolant=self.data.fwbs.cp_bl,
+                        heatcap_coolant=self.data.fwbs.heatcap_pres_blkt_coolant_average,
                         temp_in_coolant=temp_blkt_coolant_in,
                         temp_out_coolant=self.data.fwbs.temp_blkt_coolant_out,
                     )
@@ -2502,7 +2518,7 @@ class BlanketLibrary(Model):
                 calculate_required_mass_flow_rate(
                     p_heat_total=1.0e6
                     * self.data.blanket.p_blkt_nuclear_heat_outboard_mw,
-                    heatcap_coolant=self.data.fwbs.cp_bl,
+                    heatcap_coolant=self.data.fwbs.heatcap_pres_blkt_coolant_average,
                     temp_in_coolant=temp_blkt_coolant_in,
                     temp_out_coolant=self.data.fwbs.temp_blkt_coolant_out,
                 )
@@ -2518,7 +2534,7 @@ class BlanketLibrary(Model):
                     calculate_required_mass_flow_rate(
                         p_heat_total=1.0e6
                         * self.data.blanket.p_blkt_nuclear_heat_inboard_mw,
-                        heatcap_coolant=self.data.fwbs.cp_bl,
+                        heatcap_coolant=self.data.fwbs.heatcap_pres_blkt_coolant_average,
                         temp_in_coolant=temp_blkt_coolant_in,
                         temp_out_coolant=self.data.fwbs.temp_blkt_coolant_out,
                     )
