@@ -514,11 +514,10 @@ class PlasmaDensityLimit(Model):
         tokamak," vol. 57, no. 1, pp. 014038-014038, Nov. 2014,
         doi: https://doi.org/10.1088/0741-3335/57/1/014038.
         """
-        if i_density_limit < 1 or i_density_limit > 7:
-            raise ProcessValueError(
-                "Illegal value for i_density_limit", i_density_limit=i_density_limit
-            )
-
+        try:
+            i_density_limit = DensityLimitModel(i_density_limit)
+        except ValueError as e:
+            raise ProcessValueError from e
         nd_plasma_electron_max_array = np.empty((8,))
 
         # Power per unit area crossing the plasma edge
