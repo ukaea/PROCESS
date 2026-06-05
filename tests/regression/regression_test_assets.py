@@ -82,7 +82,8 @@ class RegressionTestAssetCollector:
 
         return None
 
-    def _git_commit_hashes():
+    @classmethod
+    def _git_commit_hashes(cls):
         """Returns the list of commit hashes.
 
         :returns: a list of commit hashes from 'git log'
