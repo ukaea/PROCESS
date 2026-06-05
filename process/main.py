@@ -366,7 +366,7 @@ class SingleRun:
         ).strip()
         self.set_input()
         data_structure.global_variables.output_prefix = (
-            ""
+            f"{Path(self.filepath).as_posix().strip()}/"
             if not self.filename_prefix
             else Path(self.filepath, self.filename_prefix).as_posix().strip()
         )
