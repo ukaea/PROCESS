@@ -3814,7 +3814,7 @@ def test_calculate_polidal_field(
     expected,
     physics,
 ):
-    """Parametrized test for calculate_poloidal_field."""
+    """Parametrized test for calculate_surface_averaged_poloidal_field."""
     result = physics.fields.calculate_surface_averaged_poloidal_field(
         i_plasma_current,
         c_plasma,
