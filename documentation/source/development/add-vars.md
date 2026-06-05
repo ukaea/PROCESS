@@ -129,13 +129,8 @@ nsweep_dict = {
 
 ```python
   class ScanVariables(Enum):
-    @classmethod
-    def _missing_(cls, var):
-        if isinstance(var, int):
-            for sv in cls:
-                if sv.value.variable_num == var:
-                    return sv
-        return super()._missing_(var)
+    
+    ...
 
     aspect = ScanVariable("aspect", "Aspect_ratio", 1)
     pflux_div_heat_load_max_mw = ScanVariable(

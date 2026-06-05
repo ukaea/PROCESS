@@ -1224,7 +1224,6 @@ class Stellarator(Model):
             )
 
             #  Average first wall coolant fraction, only used by old routines
-            #  in fispact.f90, safety.f90
 
             self.data.fwbs.fwclfr = (
                 self.data.first_wall.a_fw_inboard
