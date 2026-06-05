@@ -15632,6 +15632,41 @@ def plot_outboard_blanket_coolant_properties(fig: plt.Figure, m_file: MFile, sca
 
     fig.tight_layout()
 
+def plot_blanket_coolant_channel_structure_and_properties(fig: plt.Figure, m_file: MFile, scan: int):
+    """Combined plot of blanket coolant channel structure and properties."""
+    
+    # Add info about the Winding Pack
+    textstr_outboard_blkt = (
+        f"$\\mathbf{{Outboard \\ blanket:}}$\n \n"
+        f"Radial coolant channel length: {m_file.get('len_blkt_outboard_coolant_channel_radial', scan=scan):.4f}\n"
+        f"Toroidal coolant channel length: {m_file.get('len_blkt_outboard_coolant_channel_toroidal', scan=scan):.4f}\n"
+        f"Number of radial channels: {m_file.get('n_blkt_outboard_coolant_channels_radial', scan=scan)}\n"
+        f"Number of poloidal channels: {m_file.get('n_blkt_outboard_coolant_channels_poloidal', scan=scan)}\n"
+        f"Stored energy of all coils: {m_file.get('e_tf_magnetic_stored_total_gj', scan=scan):.4f} GJ\n"
+        f"Stored energy of a single coil: {m_file.get('e_tf_coil_magnetic_stored', scan=scan) / 1e9:.2f} GJ\n"
+        f"Total area of steel in coil: {m_file.get('a_tf_coil_inboard_steel', scan=scan):.4f} $\\mathrm{{m}}^2$\n"
+        f"Total area fraction of steel: {m_file.get('f_a_tf_coil_inboard_steel', scan=scan):.4f}\n"
+        f"Total area fraction of insulation: {m_file.get('f_a_tf_coil_inboard_insulation', scan=scan):.4f}\n"
+        f"$A$, all insulation in coil: {m_file.get('a_tf_coil_inboard_insulation', scan=scan):.4f} $\\mathrm{{m}}^2$\n"
+    )
+    
+    fig.text(
+        0.775,
+        0.58,
+        textstr_outboard_blkt,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+    
+    
 
 def main_plot(
     figs: list[Axes],
@@ -16032,22 +16067,26 @@ def main_plot(
     plot_first_wall_poloidal_cross_section(figs[33].add_subplot(122), m_file, scan)
     plot_fw_90_deg_pipe_bend(figs[33].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[34], m_file, scan)
+    
     ax_blanket = figs[34].add_subplot(122, aspect="equal")
     plot_blkt_structure(ax_blanket, figs[34], m_file, scan, radial_build, colour_scheme)
+    
+    plot_blkt_pipe_bends(figs[35], m_file, scan)
+    plot_blanket_coolant_channel_structure(figs[35].add_subplot(111), m_file, scan)
+    plot_blanket_coolant_channel_structure_and_properties(figs[35], m_file, scan)
 
     plot_main_power_flow(
-        figs[35].add_subplot(111, aspect="equal"), m_file, scan, figs[35]
+        figs[36].add_subplot(111, aspect="equal"), m_file, scan, figs[36]
     )
 
-    ax24 = figs[36].add_subplot(111)
+    ax24 = figs[37].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[36])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[37])
 
-    plot_blanket_coolant_channel_structure(figs[37].add_subplot(111), m_file, scan)
+    
 
-    plot_outboard_blanket_coolant_properties(figs[37], m_file, scan)
+    # plot_outboard_blanket_coolant_properties(figs[37], m_file, scan)
 
 
 def create_thickness_builds(m_file, scan: int):
