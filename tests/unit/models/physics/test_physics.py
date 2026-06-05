@@ -1306,12 +1306,26 @@ def test_calculate_plasma_current_peng(arguments, expected, physics):
             },
             0.8377580413333333,
         ),
+        (
+            {
+                "i_plasma_current": 4,
+                "cur_plasma": 18398455.678867526,
+                "q95": 3.5,
+                "aspect": (8.0 / 2.6666666666666665),
+                "b_plasma_toroidal_on_axis": 5.7000000000000002,
+                "kappa": 1.8500000000000001,
+                "triang": 0.5,
+                "len_plasma_poloidal": 24.081367139525412,
+            },
+            0.96008591022564971,
+        ),
     ],
 )
-def test_calculate_poloidal_field(arguments, expected, physics):
+def test_calculate_surface_averaged_poloidal_field(arguments, expected, physics):
+    """Parametrized test for calculate_surface_averaged_poloidal_field."""
     assert physics.fields.calculate_surface_averaged_poloidal_field(
         **arguments
-    ) == pytest.approx(expected)
+    ) == pytest.approx(expected, rel=1e-12)
 
 
 def test_calculate_beta_limit():
@@ -3769,57 +3783,5 @@ def test_calculate_cylindrical_safety_factor_parametrized(
     """Parametrized test for calculate_cylindrical_safety_factor."""
     result = calculate_cylindrical_safety_factor(
         rmajor, rminor, plasma_current, b_plasma_toroidal_on_axis, kappa95, triang95
-    )
-    assert result == pytest.approx(expected, rel=1e-12)
-
-
-@pytest.mark.parametrize(
-    (
-        "i_plasma_current",
-        "c_plasma",
-        "q95",
-        "aspect",
-        "b_plasma_toroidal_on_axis",
-        "kappa",
-        "triang",
-        "len_plasma_poloidal",
-        "expected",
-    ),
-    [
-        (
-            4,
-            18398455.678867526,
-            3.5,
-            (8.0 / 2.6666666666666665),
-            5.7000000000000002,
-            1.8500000000000001,
-            0.5,
-            24.081367139525412,
-            0.96008591022564971,
-        ),
-    ],
-)
-def test_calculate_surface_averaged_poloidal_field(
-    i_plasma_current,
-    c_plasma,
-    q95,
-    b_plasma_toroidal_on_axis,
-    aspect,
-    kappa,
-    triang,
-    len_plasma_poloidal,
-    expected,
-    physics,
-):
-    """Parametrized test for calculate_surface_averaged_poloidal_field."""
-    result = physics.fields.calculate_surface_averaged_poloidal_field(
-        i_plasma_current=i_plasma_current,
-        cur_plasma=c_plasma,
-        q95=q95,
-        aspect=aspect,
-        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-        kappa=kappa,
-        triang=triang,
-        len_plasma_poloidal=len_plasma_poloidal,
     )
     assert result == pytest.approx(expected, rel=1e-12)
