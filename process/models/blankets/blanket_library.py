@@ -23,6 +23,7 @@ from process.models.engineering.ivc_functions import (
 from process.models.engineering.pumping import (
     CoolantType,
     CoolantFrictionLossParameters,
+    calculate_required_mass_flow_rate,
     calculate_reynolds_number,
     darcy_friction_haaland,
     elbow_coeff,
@@ -2325,20 +2326,29 @@ class BlanketLibrary(Model):
 
         # Total mass flow rate to remove inboard FW power (kg/s)
         self.data.blanket.mflow_fw_inboard_coolant_total = (
-            1.0e6
-            * (self.data.blanket.p_fw_inboard_nuclear_heat_mw + self.data.fwbs.psurffwi)
-            / (
-                self.data.fwbs.cp_fw
-                * (temp_fw_coolant_out - self.data.fwbs.temp_fw_coolant_in)
+            calculate_required_mass_flow_rate(
+                p_heat_total=1.0e6
+                * (
+                    self.data.blanket.p_fw_inboard_nuclear_heat_mw
+                    + self.data.fwbs.psurffwi
+                ),
+                heatcap_coolant=self.data.fwbs.cp_fw,
+                temp_in_coolant=temp_fw_coolant_out,
+                temp_out_coolant=self.data.fwbs.temp_fw_coolant_in,
             )
         )
+
         # Total mass flow rate to remove outboard FW power (kg/s)
         self.data.blanket.mflow_fw_outboard_coolant_total = (
-            1.0e6
-            * (self.data.blanket.p_fw_outboard_nuclear_heat_mw + self.data.fwbs.psurffwo)
-            / (
-                self.data.fwbs.cp_fw
-                * (temp_fw_coolant_out - self.data.fwbs.temp_fw_coolant_in)
+            calculate_required_mass_flow_rate(
+                p_heat_total=1.0e6
+                * (
+                    self.data.blanket.p_fw_outboard_nuclear_heat_mw
+                    + self.data.fwbs.psurffwo
+                ),
+                heatcap_coolant=self.data.fwbs.cp_fw,
+                temp_in_coolant=temp_fw_coolant_out,
+                temp_out_coolant=self.data.fwbs.temp_fw_coolant_in,
             )
         )
 
@@ -2346,20 +2356,19 @@ class BlanketLibrary(Model):
         if self.data.fwbs.i_blkt_dual_coolant == 2:
             # Mass flow rates for outboard blanket coolants (kg/s)
             self.data.blanket.mflow_blkt_outboard_coolant = (
-                1.0e6
-                * (pnucblkto_struct)
-                / (
-                    self.data.fwbs.cp_bl
-                    * (self.data.fwbs.temp_blkt_coolant_out - temp_blkt_coolant_in)
+                calculate_required_mass_flow_rate(
+                    p_heat_total=1.0e6 * pnucblkto_struct,
+                    heatcap_coolant=self.data.fwbs.cp_bl,
+                    temp_in_coolant=temp_blkt_coolant_in,
+                    temp_out_coolant=self.data.fwbs.temp_blkt_coolant_out,
                 )
             )
-            self.data.blanket.mfblkto_liq = (
-                1.0e6
-                * (pnucblkto_liq)
-                / (
-                    self.data.fwbs.specific_heat_liq
-                    * (self.data.fwbs.outlet_temp_liq - self.data.fwbs.inlet_temp_liq)
-                )
+
+            self.data.blanket.mfblkto_liq = calculate_required_mass_flow_rate(
+                p_heat_total=1.0e6 * pnucblkto_liq,
+                heatcap_coolant=self.data.fwbs.specific_heat_liq,
+                temp_in_coolant=self.data.fwbs.inlet_temp_liq,
+                temp_out_coolant=self.data.fwbs.outlet_temp_liq,
             )
 
             # If there is an IB blanket...
@@ -2369,34 +2378,31 @@ class BlanketLibrary(Model):
             ):
                 # Mass flow rates for inboard blanket coolants (kg/s)
                 self.data.blanket.mflow_blkt_inboard_coolant = (
-                    1.0e6
-                    * (pnucblkti_struct)
-                    / (
-                        self.data.fwbs.cp_bl
-                        * (self.data.fwbs.temp_blkt_coolant_out - temp_blkt_coolant_in)
+                    calculate_required_mass_flow_rate(
+                        p_heat_total=1.0e6 * pnucblkti_struct,
+                        heatcap_coolant=self.data.fwbs.cp_bl,
+                        temp_in_coolant=temp_blkt_coolant_in,
+                        temp_out_coolant=self.data.fwbs.temp_blkt_coolant_out,
                     )
                 )
-                self.data.blanket.mfblkti_liq = (
-                    1.0e6
-                    * (pnucblkti_liq)
-                    / (
-                        self.data.fwbs.specific_heat_liq
-                        * (
-                            self.data.fwbs.outlet_temp_liq
-                            - self.data.fwbs.inlet_temp_liq
-                        )
-                    )
+
+                self.data.blanket.mfblkti_liq = calculate_required_mass_flow_rate(
+                    p_heat_total=1.0e6 * pnucblkti_liq,
+                    heatcap_coolant=self.data.fwbs.specific_heat_liq,
+                    temp_in_coolant=self.data.fwbs.inlet_temp_liq,
+                    temp_out_coolant=self.data.fwbs.outlet_temp_liq,
                 )
 
         # If the blanket is single-coolant with liquid metal breeder...
         elif self.data.fwbs.i_blkt_dual_coolant == 1:
             # Mass flow rate for outboard blanket coolant (kg/s)
             self.data.blanket.mflow_blkt_outboard_coolant = (
-                1.0e6
-                * (self.data.blanket.p_blkt_nuclear_heat_outboard_mw)
-                / (
-                    self.data.fwbs.cp_bl
-                    * (self.data.fwbs.temp_blkt_coolant_out - temp_blkt_coolant_in)
+                calculate_required_mass_flow_rate(
+                    p_heat_total=1.0e6
+                    * self.data.blanket.p_blkt_nuclear_heat_outboard_mw,
+                    heatcap_coolant=self.data.fwbs.cp_bl,
+                    temp_in_coolant=temp_blkt_coolant_in,
+                    temp_out_coolant=self.data.fwbs.temp_blkt_coolant_out,
                 )
             )
 
@@ -2414,13 +2420,15 @@ class BlanketLibrary(Model):
             ):
                 # Mass flow rate for inboard blanket coolant (kg/s)
                 self.data.blanket.mflow_blkt_inboard_coolant = (
-                    1.0e6
-                    * (self.data.blanket.p_blkt_nuclear_heat_inboard_mw)
-                    / (
-                        self.data.fwbs.cp_bl
-                        * (self.data.fwbs.temp_blkt_coolant_out - temp_blkt_coolant_in)
+                    calculate_required_mass_flow_rate(
+                        p_heat_total=1.0e6
+                        * self.data.blanket.p_blkt_nuclear_heat_inboard_mw,
+                        heatcap_coolant=self.data.fwbs.cp_bl,
+                        temp_in_coolant=temp_blkt_coolant_in,
+                        temp_out_coolant=self.data.fwbs.temp_blkt_coolant_out,
                     )
                 )
+
                 # Mass flow rate for inboard breeder flow (kg/s)
                 self.data.fwbs.mfblkti_liq = (
                     self.data.fwbs.n_liq_recirc * self.data.fwbs.wht_liq_ib
@@ -2430,11 +2438,12 @@ class BlanketLibrary(Model):
         else:
             # Mass flow rate for inboard blanket coolant (kg/s)
             self.data.blanket.mflow_blkt_outboard_coolant = (
-                1.0e6
-                * (self.data.blanket.p_blkt_nuclear_heat_outboard_mw)
-                / (
-                    self.data.fwbs.cp_bl
-                    * (self.data.fwbs.temp_blkt_coolant_out - temp_blkt_coolant_in)
+                calculate_required_mass_flow_rate(
+                    p_heat_total=1.0e6
+                    * self.data.blanket.p_blkt_nuclear_heat_outboard_mw,
+                    heatcap_coolant=self.data.fwbs.cp_bl,
+                    temp_in_coolant=temp_blkt_coolant_in,
+                    temp_out_coolant=self.data.fwbs.temp_blkt_coolant_out,
                 )
             )
 
@@ -2445,11 +2454,12 @@ class BlanketLibrary(Model):
                 == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
             ):
                 self.data.blanket.mflow_blkt_inboard_coolant = (
-                    1.0e6
-                    * (self.data.blanket.p_blkt_nuclear_heat_inboard_mw)
-                    / (
-                        self.data.fwbs.cp_bl
-                        * (self.data.fwbs.temp_blkt_coolant_out - temp_blkt_coolant_in)
+                    calculate_required_mass_flow_rate(
+                        p_heat_total=1.0e6
+                        * self.data.blanket.p_blkt_nuclear_heat_inboard_mw,
+                        heatcap_coolant=self.data.fwbs.cp_bl,
+                        temp_in_coolant=temp_blkt_coolant_in,
+                        temp_out_coolant=self.data.fwbs.temp_blkt_coolant_out,
                     )
                 )
 

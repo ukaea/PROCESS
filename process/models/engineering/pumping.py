@@ -298,3 +298,37 @@ def elbow_coeff(
 
     # Elbow Coefficient
     return ximt + xift
+
+
+def calculate_required_mass_flow_rate(
+    p_heat_total: float,
+    heatcap_coolant: float,
+    temp_in_coolant: float,
+    temp_out_coolant: float,
+) -> float:
+    """Calculate the required mass flow rate of coolant to remove the specified heat
+    load, due to the fundamental energy balance formula.
+
+    Parameters
+    ----------
+    p_heat_total:
+        Total heat load to be removed (W).
+    heatcap_coolant:
+        Specific heat capacity of the coolant (J/kg/K).
+    temp_in_coolant:
+        Inlet temperature of the coolant (K).
+    temp_out_coolant:
+        Outlet temperature of the coolant (K).
+
+    Returns
+    -------
+    float
+        Required mass flow rate of the coolant (kg/s).
+
+    Notes
+    -----
+    The heat capacity is assumed to be constant over the temperature range of the
+    coolant.
+
+    """
+    return p_heat_total / (heatcap_coolant * (temp_out_coolant - temp_in_coolant))
