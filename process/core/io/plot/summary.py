@@ -47,6 +47,7 @@ from process.models.geometry.vacuum_vessel import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )
+from process.models.pfcoil import CSCoil
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.confinement_time import (
     ConfinementTimeModel,
@@ -15224,7 +15225,6 @@ def plot_pf_cs_plasma_mutual_inductance(
 
 
 def plot_cs_radial_hoop_stress_profile(
-    self,
     axis: plt.Axes,
     mfile: MFile,
     scan: int,
@@ -15236,7 +15236,7 @@ def plot_cs_radial_hoop_stress_profile(
 
     radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
     stress_values = np.array([
-        self.calculate_cs_hoop_stress(
+        CSCoil.calculate_cs_hoop_stress(
             r_stress_point=radius,
             r_cs_inner=r_cs_inner,
             r_cs_outer=r_cs_outer,
@@ -15263,7 +15263,6 @@ def plot_cs_radial_hoop_stress_profile(
 
 
 def plot_cs_radial_stress_profile(
-    self,
     axis: plt.Axes,
     mfile: MFile,
     scan: int,
@@ -15275,7 +15274,7 @@ def plot_cs_radial_stress_profile(
 
     radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
     stress_values = np.array([
-        self.calculate_cs_radial_stress(
+        CSCoil.calculate_cs_radial_stress(
             r_stress_point=radius,
             r_cs_inner=r_cs_inner,
             r_cs_outer=r_cs_outer,

@@ -4047,8 +4047,8 @@ class CSCoil(Model):
             )
             self.data.pf_coil.stress_z_cs_self_midplane_profile[time] = stress_value
 
+    @staticmethod
     def calculate_cs_hoop_stress(
-        self,
         r_stress_point: float | np.ndarray,
         r_cs_inner: float,
         r_cs_outer: float,
@@ -4138,8 +4138,8 @@ class CSCoil(Model):
 
         return s_hoop_nom / f_a_cs_turn_steel
 
+    @staticmethod
     def calculate_cs_radial_stress(
-        self,
         r_stress_point: float | np.ndarray,
         r_cs_inner: float,
         r_cs_outer: float,
