@@ -20,13 +20,14 @@ class CoolantType(IntEnum):
         ----------
         value : int
             The numeric value of the enum member.
-        full_name : str
-            The full name description of the plasma current model.
+        name : str
+            The name description of the coolant type.
+            This should match the CoolProp name for the coolant type.
 
         Returns
         -------
         CoolantType
-            A new enum member with the specified value and full_name.
+            A new enum member with the specified value and name.
         """
         obj = int.__new__(cls, value)
         obj._value_ = value

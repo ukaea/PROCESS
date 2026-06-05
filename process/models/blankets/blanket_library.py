@@ -696,16 +696,8 @@ class BlanketLibrary(Model):
         """
         # Make sure that, if the inputs for the FW and blanket inputs are different,
         # the i_fw_blkt_shared_coolant variable is appropriately set for separate coolants
-        if (
-            self.data.fwbs.i_fw_coolant_type == CoolantType.HELIUM
-            and self.data.fwbs.i_blkt_coolant_type == CoolantType.WATER
-        ):
-            self.data.fwbs.i_fw_blkt_shared_coolant = (
-                FWBlktCoolantLoopTypes.SEPARATE_LOOPS
-            )
-        if (
-            self.data.fwbs.i_fw_coolant_type == CoolantType.WATER
-            and self.data.fwbs.i_blkt_coolant_type == CoolantType.HELIUM
+        if CoolantType(self.data.fwbs.i_fw_coolant_type) != CoolantType(
+            self.data.fwbs.i_blkt_coolant_type
         ):
             self.data.fwbs.i_fw_blkt_shared_coolant = (
                 FWBlktCoolantLoopTypes.SEPARATE_LOOPS
@@ -2177,16 +2169,8 @@ class BlanketLibrary(Model):
 
         # Make sure that, if the inputs for the FW and blanket inputs are different,
         # the i_fw_blkt_shared_coolant variable is appropriately set for separate coolants
-        if (
-            self.data.fwbs.i_fw_coolant_type == CoolantType.HELIUM
-            and self.data.fwbs.i_blkt_coolant_type == CoolantType.WATER
-        ):
-            self.data.fwbs.i_fw_blkt_shared_coolant = (
-                FWBlktCoolantLoopTypes.SEPARATE_LOOPS
-            )
-        if (
-            self.data.fwbs.i_fw_coolant_type == CoolantType.WATER
-            and self.data.fwbs.i_blkt_coolant_type == CoolantType.HELIUM
+        if CoolantType(self.data.fwbs.i_fw_coolant_type) != CoolantType(
+            self.data.fwbs.i_blkt_coolant_type
         ):
             self.data.fwbs.i_fw_blkt_shared_coolant = (
                 FWBlktCoolantLoopTypes.SEPARATE_LOOPS
