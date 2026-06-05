@@ -96,7 +96,10 @@ from process.models.physics.physics import (
     PlasmaBeta,
     PlasmaInductance,
 )
-from process.models.physics.plasma_current import PlasmaCurrent, PlasmaDiamagneticCurrent
+from process.models.physics.plasma_current import (
+    PlasmaCurrent,
+    PlasmaDiamagneticCurrent,
+)
 from process.models.physics.plasma_fields import PlasmaFields
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
@@ -438,11 +441,13 @@ class SingleRun:
             )
         self.scan = Scan(self.models, self.solver, self.data)
 
-    def show_errors(self):
+    @staticmethod
+    def show_errors():
         """Report all informational/error messages encountered."""
         show_errors(constants.NOUT)
 
-    def finish(self):
+    @staticmethod
+    def finish():
         """Run the finish subroutine to close files open in the Fortran.
 
         Files being handled by Fortran must be closed before attempting to

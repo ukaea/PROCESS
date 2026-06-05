@@ -1460,7 +1460,8 @@ class IFE(Model):
             self.data.physics.pflux_fw_neutron_mw,
         )
 
-    def driver(self, edrive, gainve, etave):
+    @staticmethod
+    def driver(edrive, gainve, etave):
         """Routine to calculate parameters of a generic driver
         suitable for inertial fusion energy
 
@@ -1512,7 +1513,8 @@ class IFE(Model):
 
         return gain, etadrv
 
-    def lasdrv(self, edrive):
+    @staticmethod
+    def lasdrv(edrive):
         """Routine to calculate parameters of a laser driver
         suitable for inertial fusion energy
 
@@ -1569,7 +1571,8 @@ class IFE(Model):
 
         return gain, etadrv
 
-    def iondrv(self, edrive):
+    @staticmethod
+    def iondrv(edrive):
         """Routine to calculate parameters of a heavy ion driver
         suitable for inertial fusion energy
 

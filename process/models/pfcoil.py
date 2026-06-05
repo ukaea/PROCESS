@@ -1514,7 +1514,8 @@ class PFCoil(Model):
                                 "One or more collision between TF and PF coils. Check PF placement."
                             )
 
-    def solv(self, n_pf_groups_max, n_pf_coil_groups, nrws, gmat, bvec):
+    @staticmethod
+    def solv(n_pf_groups_max, n_pf_coil_groups, nrws, gmat, bvec):
         """Solve a matrix using singular value decomposition.
 
         This routine solves the matrix equation for calculating the
@@ -2850,7 +2851,8 @@ class PFCoil(Model):
                     * self.data.pf_coil.n_pf_coil_turns[k],
                 )
 
-    def selfinductance(self, a, b, c, n):
+    @staticmethod
+    def selfinductance(a, b, c, n):
         """Calculates the selfinductance using Bunet's formula.
 
 
@@ -2967,8 +2969,8 @@ class CSCoil(Model):
     def run(self):
         """This model doesn't need to be run"""
 
+    @staticmethod
     def calculate_cs_geometry(
-        self,
         z_tf_inside_half: float,
         f_z_cs_tf_internal: float,
         dr_cs: float,
@@ -3041,8 +3043,8 @@ class CSCoil(Model):
             dr_cs_full,
         )
 
+    @staticmethod
     def calculate_cs_turn_geometry_eu_demo(
-        self,
         a_cs_turn: float,
         f_dr_dz_cs_turn: float,
         radius_cs_turn_corners: float,
@@ -3119,8 +3121,8 @@ class CSCoil(Model):
             dz_cs_turn_conduit,
         )
 
+    @staticmethod
     def place_cs_filaments(
-        self,
         n_cs_current_filaments: int,
         r_cs_middle: float,
         z_cs_inside_half: float,
@@ -3580,8 +3582,8 @@ class CSCoil(Model):
             )
         self.calculate_cs_self_midplane_axial_stress_time_profile()
 
+    @staticmethod
     def calculate_cs_self_peak_magnetic_field(
-        self,
         j_cs: float,
         r_cs_inner: float,
         r_cs_outer: float,
@@ -3720,8 +3722,8 @@ class CSCoil(Model):
             "OP ",
         )
 
+    @staticmethod
     def calculate_cs_self_peak_midplane_axial_stress(
-        self,
         r_cs_outer: float,
         r_cs_inner: float,
         dz_cs_half: float,

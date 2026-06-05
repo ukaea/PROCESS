@@ -55,8 +55,8 @@ class Build(Model):
             dx_beam_shield=self.data.current_drive.dx_beam_shield,
         )
 
+    @staticmethod
     def calculate_beam_port_size(
-        self,
         f_radius_beam_tangency_rmajor: float,
         rmajor: float,
         n_tf_coils: int,
@@ -1458,8 +1458,8 @@ class Build(Model):
                 )
         return divht
 
+    @staticmethod
     def plasma_outboard_edge_toroidal_ripple(
-        self,
         ripple_b_tf_plasma_edge_max: float,
         r_tf_outboard_mid: float,
         n_tf_coils: int,

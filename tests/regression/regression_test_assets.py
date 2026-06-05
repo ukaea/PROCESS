@@ -82,14 +82,14 @@ class RegressionTestAssetCollector:
 
         return None
 
-    def _git_commit_hashes(self):
+    def _git_commit_hashes():
         """Returns the list of commit hashes.
 
         :returns: a list of commit hashes from 'git log'
         :rtype: list[str]
         """
         return (
-            subprocess  # noqa: S602
+            subprocess
             .run(
                 'git log --format="%H"',  # noqa: S607
                 shell=True,
@@ -125,7 +125,8 @@ class RegressionTestAssetCollector:
             key=lambda m: self._hashes.index(m.hash),
         )
 
-    def _get_tracked_mfile(self, file: Path):
+    @staticmethod
+    def _get_tracked_mfile(file: Path):
         """Converts JSON data of a file tracked on GitHub into a
         `TrackedMFile`, if appropriate
 

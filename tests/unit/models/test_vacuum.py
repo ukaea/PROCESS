@@ -24,7 +24,8 @@ def vacuum_vessel(process_models):
 
 
 class TestVacuum:
-    def test_simple_model(self, monkeypatch, vacuum):
+    @staticmethod
+    def test_simple_model(monkeypatch, vacuum):
         """Tests `vacuum_simple` subroutine.
 
         Values taken from first calling of the model in i_vacuum_pumping regression test.
@@ -57,7 +58,8 @@ class TestVacuum:
 
         assert n_iter_vacuum_pumps == pytest.approx(14.082585474801862)
 
-    def test_old_model(self, monkeypatch, vacuum):
+    @staticmethod
+    def test_old_model(monkeypatch, vacuum):
         """Test `vacuum` subroutine.
 
         Values taken from first calling of the model in G-L_Nb-Ti regression test.

@@ -16,7 +16,8 @@ def structure():
 
 
 class TestStructure:
-    def test_structure(self, structure):
+    @staticmethod
+    def test_structure(structure):
         """Tests the structure subroutine"""
 
         expected_fncmass = 310716.52923547616

@@ -14,7 +14,8 @@ def divertor(process_models):
 
 
 class TestDivertor:
-    def test_divtart(self, monkeypatch, divertor):
+    @staticmethod
+    def test_divtart(monkeypatch, divertor):
         """Test the divtart subroutine.
 
         Uses test data from the second call of this subroutine by FNSF regression test.
@@ -54,7 +55,8 @@ class TestDivertor:
 
         assert pflux_div_heat_load_mw == pytest.approx(expected_pflux_div_heat_load_mw)
 
-    def test_divwade(self, monkeypatch, divertor):
+    @staticmethod
+    def test_divwade(monkeypatch, divertor):
         """Test the divwade subroutine.
 
         Uses test data from the second call of this subroutine by FNSF regression test.

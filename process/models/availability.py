@@ -783,11 +783,9 @@ class Availability(Model):
         # Integrating the instantaneous availability gives the mean
         # availability over the planned cycle life N
         if self.data.costs.div_nu <= self.data.costs.div_nref:
-            logger.error(
-                """div_nu <= div_nref
+            logger.error("""div_nu <= div_nref
             The cycle when the divertor fails with 100% probability <= & Reference value for cycle life of divertor
-            """
-            )
+            """)
             po.ocmmnt(
                 self.outfile,
                 "ERROR: The cycle when the divertor fails with 100% probability & <= Reference value for cycle cycle life of divertor",
@@ -895,11 +893,9 @@ class Availability(Model):
         )
 
         if self.data.costs.fwbs_nu <= self.data.costs.fwbs_nref:
-            logger.error(
-                """fwbs_nu <= fwbs_nref
+            logger.error("""fwbs_nu <= fwbs_nref
             The cycle when the blanket fails with 100% probability <= &Reference value for cycle life of blanket
-            """
-            )
+            """)
             po.ocmmnt(
                 self.outfile,
                 "EROROR: The cycle when the blanket fails with 100% probability& <= Reference value for cycle life of blanket",
@@ -1029,7 +1025,8 @@ class Availability(Model):
 
         return u_unplanned_bop
 
-    def calc_u_unplanned_hcd(self) -> float:
+    @staticmethod
+    def calc_u_unplanned_hcd() -> float:
         """Calculates the unplanned unavailability of the heating and current drive system
 
 

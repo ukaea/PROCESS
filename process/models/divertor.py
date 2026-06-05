@@ -358,8 +358,8 @@ class Divertor(Model):
             )
         return self.data.divertor.pflux_div_heat_load_mw
 
+    @staticmethod
     def incident_radiation_power(
-        self,
         p_plasma_rad_mw: float,
         f_ster_div_single: float,
         n_divertors: int,
@@ -382,8 +382,8 @@ class Divertor(Model):
         """
         return p_plasma_rad_mw * f_ster_div_single * n_divertors
 
+    @staticmethod
     def incident_neutron_power(
-        self,
         p_plasma_neutron_mw: float,
         f_ster_div_single: float,
         n_divertors: int,

@@ -3214,8 +3214,8 @@ class BlanketLibrary(Model):
             f"i_channel_shape ={i_channel_shape} is an invalid option."
         )
 
+    @staticmethod
     def elbow_coeff(
-        self,
         radius_pipe_elbow: float,
         deg_pipe_elbow: float,
         darcy_friction: float,
@@ -3465,8 +3465,8 @@ class OutboardBlanket(BlanketLibrary):
             b_bz_liq=self.data.fwbs.b_bz_liq,
         )
 
+    @staticmethod
     def calculate_blanket_outboard_module_geometry(
-        self,
         n_blkt_outboard_modules_toroidal: int,
         rmajor: float,
         rminor: float,
@@ -3512,8 +3512,8 @@ class InboardBlanket(BlanketLibrary):
 
         self.set_blanket_module_geometry()
 
+    @staticmethod
     def calculate_blanket_inboard_module_geometry(
-        self,
         n_blkt_inboard_modules_toroidal: int,
         rmajor: float,
         rminor: float,
