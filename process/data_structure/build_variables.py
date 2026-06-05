@@ -1,4 +1,12 @@
 from dataclasses import dataclass
+from enum import IntEnum
+
+
+class InboardBlanketConfiguration(IntEnum):
+    """Switch for inboard blanket, controlled through `BuildData.i_blkt_inboard`"""
+
+    NO_INBOARD_BLANKET = 0
+    INBOARD_BLANKET_PRESENT = 1
 
 
 @dataclass(slots=True)
@@ -304,7 +312,7 @@ class BuildData:
     """
 
     i_blkt_inboard: int = 1
-    """switch for inboard blanket:
+    """Switch for inboard blanket, controlled through InboardBlanketConfiguration enum:
     - =0 No inboard blanket (dr_blkt_inboard=0.0)
     - =1 Inboard blanket present
     """

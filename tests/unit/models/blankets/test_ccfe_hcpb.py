@@ -3,6 +3,7 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import global_variables
+from process.data_structure.build_variables import InboardBlanketConfiguration
 
 
 @pytest.fixture
@@ -1409,7 +1410,7 @@ class ComponentMassesParam(NamedTuple):
             armour_fw_bl_mass=0,
             vol_blkt_inboard=315.83946385183026,
             vol_blkt_outboard=866.70391336775992,
-            i_blkt_inboard=1,
+            i_blkt_inboard=InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT,
             fblhebmi=0.40000000000000002,
             fblhebpi=0.65949999999999998,
             fblhebmo=0.40000000000000002,

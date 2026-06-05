@@ -2,6 +2,7 @@ from process.core import constants
 from process.core import (
     process_output as po,
 )
+from process.data_structure.build_variables import InboardBlanketConfiguration
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
 from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
@@ -549,7 +550,10 @@ class DCLL(InboardBlanket, OutboardBlanket):
         self.data.dcll.f_vol_mfbss_pbli = 0.4436
 
         # Calculate Volumes
-        if self.data.build.i_blkt_inboard == 1:
+        if (
+            self.data.build.i_blkt_inboard
+            == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
+        ):
             # IB and OB blanket
 
             # BZ
@@ -770,7 +774,10 @@ class DCLL(InboardBlanket, OutboardBlanket):
         )
 
         # Total mass of IB/OB segment
-        if self.data.build.i_blkt_inboard == 1:
+        if (
+            self.data.build.i_blkt_inboard
+            == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
+        ):
             self.data.dcll.mass_segm_ib = (
                 self.data.fwbs.m_blkt_total
                 * (self.data.fwbs.vol_blkt_inboard / self.data.fwbs.vol_blkt_total)

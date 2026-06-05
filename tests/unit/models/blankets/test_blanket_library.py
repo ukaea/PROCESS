@@ -3,6 +3,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
+from process.data_structure.build_variables import InboardBlanketConfiguration
 from process.models.blankets.blanket_library import InboardBlanket
 
 
@@ -823,7 +824,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
                 np.array((0.0, 0.0), order="F"), order="F"
             ).transpose(),
             b_mag_blkt=np.array(np.array((5.0, 5.0), order="F"), order="F").transpose(),
-            i_blkt_inboard=1,
+            i_blkt_inboard=InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT,
             i_blkt_dual_coolant=0,
             b_plasma_toroidal_on_axis=5.7000000000000002,
             aspect=3,
@@ -861,7 +862,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
                 np.array((0.0, 0.0), order="F"), order="F"
             ).transpose(),
             b_mag_blkt=np.array(np.array((5.0, 5.0), order="F"), order="F").transpose(),
-            i_blkt_inboard=1,
+            i_blkt_inboard=InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT,
             i_blkt_dual_coolant=0,
             b_plasma_toroidal_on_axis=5.7000000000000002,
             aspect=3,
@@ -1647,7 +1648,11 @@ def test_liquid_breeder_properties_part_1(monkeypatch, blanket_library):
     monkeypatch.setattr(blanket_library.data.physics, "aspect", 3.0)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_inboard", 0.1)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_outboard", 0.2)
-    monkeypatch.setattr(blanket_library.data.build, "i_blkt_inboard", 1)
+    monkeypatch.setattr(
+        blanket_library.data.build,
+        "i_blkt_inboard",
+        InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT,
+    )
     monkeypatch.setattr(blanket_library.data.fwbs, "inlet_temp_liq", 1.0)
     monkeypatch.setattr(blanket_library.data.fwbs, "outlet_temp_liq", 1.0)
 
@@ -1721,7 +1726,11 @@ def test_liquid_breeder_properties_part_2(monkeypatch, blanket_library):
     monkeypatch.setattr(blanket_library.data.physics, "aspect", 3.0)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_inboard", 0.0)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_outboard", 0.2)
-    monkeypatch.setattr(blanket_library.data.build, "i_blkt_inboard", 0)
+    monkeypatch.setattr(
+        blanket_library.data.build,
+        "i_blkt_inboard",
+        InboardBlanketConfiguration.NO_INBOARD_BLANKET,
+    )
     monkeypatch.setattr(blanket_library.data.fwbs, "i_blkt_liquid_breeder_type", 0)
     monkeypatch.setattr(blanket_library.data.fwbs, "inlet_temp_liq", 0.0)
     monkeypatch.setattr(blanket_library.data.fwbs, "outlet_temp_liq", 0.0)
@@ -1746,7 +1755,11 @@ def test_liquid_breeder_properties_part_3(monkeypatch, blanket_library):
     monkeypatch.setattr(blanket_library.data.physics, "aspect", 3.0)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_inboard", 0.1)
     monkeypatch.setattr(blanket_library.data.build, "dr_blkt_outboard", 0.2)
-    monkeypatch.setattr(blanket_library.data.build, "i_blkt_inboard", 1)
+    monkeypatch.setattr(
+        blanket_library.data.build,
+        "i_blkt_inboard",
+        InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT,
+    )
     monkeypatch.setattr(blanket_library.data.fwbs, "inlet_temp_liq", 0.0)
     monkeypatch.setattr(blanket_library.data.fwbs, "outlet_temp_liq", 1.0)
 
