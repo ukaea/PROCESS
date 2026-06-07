@@ -2986,6 +2986,8 @@ class BlanketLibrary(Model):
                 den_coolant=den_coolant,
                 visc_coolant=visc_coolant_dynamic,
                 vel_coolant=vel_coolant,
+                roughness_channel=self.data.fwbs.roughness_fw_channel,
+                radius_channel=self.data.fwbs.radius_fw_channel,
             )
         )
         dpres_friction = friction_params.dpres_total
@@ -3173,6 +3175,8 @@ class BlanketLibrary(Model):
         den_coolant: float,
         visc_coolant: float,
         vel_coolant: float,
+        roughness_channel: float,
+        radius_channel: float,
     ) -> CoolantFrictionLossParameters:
         """Pressure drops are calculated for a pipe with a number of 90
         and 180 degree bends. The pressure drop due to frictional forces along
@@ -3185,26 +3189,30 @@ class BlanketLibrary(Model):
         i_ps :
             switch for primary or secondary coolant
         radius_pipe_90_deg_bend :
-            radius of 90 degree bend in pipe (m)
+            radius of 90 degree bend in pipe [m]
         radius_pipe_180_deg_bend :
-            radius of 180 degree bend in pipe (m)
+            radius of 180 degree bend in pipe [m]
         n_pipe_90_deg_bends :
             number of 90 degree bends in the pipe
         n_pipe_180_deg_bends :
             number of 180 degree bends in the pipe
         len_pipe :
-            total flow length along pipe (m)
+            total flow length along pipe [m]
         den_coolant :
-            coolant density (kg/m³)
+            coolant density [kg/m³]
         visc_coolant :
-            coolant viscosity (Pa s)
+            coolant viscosity [Pa s]
         vel_coolant :
-            coolant flow velocity (m/s)
+            coolant flow velocity [m/s]
+        roughness_channel :
+            roughness of the channel wall (ε) [m]
+        radius_channel :
+            radius of the channel [m]
 
         Returns
         -------
         :
-            CoolantFrictionLossParameters dataclass containing:
+            `CoolantFrictionLossParameters` dataclass containing:
             - Total pressure drop due to friction (Pa)
             - Pressure drop due to straight sections (Pa)
             - Pressure drop due to 90 degree bends (Pa)
@@ -3230,7 +3238,7 @@ class BlanketLibrary(Model):
             N.B. Darcy friction factor is estimated from the Haaland approximation.
         """
         # Calculate hydraulic dimater for round or retancular pipe (m)
-        dia_pipe = self.pipe_hydraulic_diameter(i_ps)
+        dia_pipe = self.pipe_hydraulic_diameter(i_channel_shape=i_ps)
 
         # Reynolds number
         reynolds_number = calculate_reynolds_number(
@@ -3241,14 +3249,15 @@ class BlanketLibrary(Model):
         )
 
         # Calculate Darcy friction factor
-        # N.B. friction function Uses Haaland approx. which assumes a filled circular pipe.
-        # Use dh which allows us to do fluid calculations for non-cicular tubes
+        # N.B. friction function Uses Haaland approx. which assumes a filled
+        # circular pipe.
+        # Use dh which allows us to do fluid calculations for non-circular tubes
         # (dh is estimate appropriate for fully developed flow).
 
         darcy_friction_factor = darcy_friction_haaland(
             reynolds=reynolds_number,
-            roughness_channel=self.data.fwbs.roughness_fw_channel,
-            radius_channel=self.data.fwbs.radius_fw_channel,
+            roughness_channel=roughness_channel,
+            radius_channel=radius_channel,
         )
 
         # Pressure drop coefficient

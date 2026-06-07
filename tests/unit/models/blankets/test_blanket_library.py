@@ -1,4 +1,4 @@
-from typing import Any, NamedTuple
+from typing import TYPE_CHECKING, Any, NamedTuple
 
 import numpy as np
 import pytest
@@ -6,6 +6,9 @@ import pytest
 from process.data_structure.build_variables import InboardBlanketConfiguration
 from process.models.blankets.blanket_library import InboardBlanket
 from process.models.engineering.pumping import CoolantType
+
+if TYPE_CHECKING:
+    from process.models.engineering.pumping import CoolantFrictionLossParameters
 
 
 @pytest.fixture
@@ -1022,110 +1025,106 @@ def test_liquid_breeder_properties(
     )
 
 
-class PressureDropParam(NamedTuple):
-    radius_fw_channel: Any = None
+class CoolantFrictionLossParam(NamedTuple):
+    radius_channel: Any = None
     radius_pipe_90_deg_bend: Any = None
     radius_pipe_180_deg_bend: Any = None
     a_bz_liq: Any = None
     b_bz_liq: Any = None
-    roughness_fw_channel: Any = None
-    ip: Any = None
+    roughness_channel: Any = None
     i_ps: Any = None
-    num_90: Any = None
-    num_180: Any = None
-    l_pipe: Any = None
-    den: Any = None
-    vsc: Any = None
-    vv: Any = None
+    n_pipe_90_deg_bends: Any = None
+    n_pipe_180_deg_bends: Any = None
+    len_pipe: Any = None
+    den_coolant: Any = None
+    visc_coolant: Any = None
+    vel_coolant: Any = None
     label: Any = None
     expected_pressure_drop_out: Any = None
 
 
 @pytest.mark.parametrize(
-    "pressuredropparam",
+    "coolantfrictionlossparam",
     [
-        PressureDropParam(
-            radius_fw_channel=0.0060000000000000001,
+        CoolantFrictionLossParam(
+            radius_channel=0.0060000000000000001,
             radius_pipe_90_deg_bend=0.018,
             radius_pipe_180_deg_bend=0.09,
             a_bz_liq=0.20000000000000001,
             b_bz_liq=0.20000000000000001,
-            roughness_fw_channel=9.9999999999999995e-07,
-            ip=0,
+            roughness_channel=9.9999999999999995e-07,
             i_ps=1,
-            num_90=2,
-            num_180=0,
-            l_pipe=4,
-            den=10.405276820718059,
-            vsc=3.604452999475736e-05,
-            vv=32.753134225223164,
+            n_pipe_90_deg_bends=2,
+            n_pipe_180_deg_bends=0,
+            len_pipe=4,
+            den_coolant=10.405276820718059,
+            visc_coolant=3.604452999475736e-05,
+            vel_coolant=32.753134225223164,
             label="Inboard first wall",
             expected_pressure_drop_out=36213.58989742931,
         ),
-        PressureDropParam(
-            radius_fw_channel=1.0,
+        CoolantFrictionLossParam(
+            radius_channel=1.0,
             radius_pipe_90_deg_bend=1.0,
             radius_pipe_180_deg_bend=1.0,
             a_bz_liq=1.0,
             b_bz_liq=1.0,
-            roughness_fw_channel=1e-6,
-            ip=0,
+            roughness_channel=1e-6,
             i_ps=2,
-            num_90=1.0,
-            num_180=1.0,
-            l_pipe=1.0,
-            den=1.0,
-            vsc=1.0,
-            vv=1.0,
+            n_pipe_90_deg_bends=1.0,
+            n_pipe_180_deg_bends=1.0,
+            len_pipe=1.0,
+            den_coolant=1.0,
+            visc_coolant=1.0,
+            vel_coolant=1.0,
             label="label",
             expected_pressure_drop_out=1.4325633520224854,
         ),
     ],
 )
-def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library):
+def test_coolant_friction_loss(coolantfrictionlossparam, monkeypatch, blanket_library):
     """
-    Automatically generated Regression Unit Test for pressure_drop.
+    Automatically generated Regression Unit Test for coolant_friction_loss.
 
     This test was generated using data from
     blanket_files/large_tokamak_primary_pumping2.IN.DAT.
 
-    :param pressuredropparam: the data used to mock and assert in this test.
-    :type pressuredropparam: pressuredropparam
+    Parameters
+    ----------
+    coolantfrictionlossparam : CoolantFrictionLossParam
+        the data used to mock and assert in this test.
+    monkeypatch : _pytest.monkeypatch.monkeypatch
+        pytest fixture used to mock module/class variables
+    blanket_library : BlanketLibrary
+        the blanket library instance used in this test.
 
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
+
     monkeypatch.setattr(
-        blanket_library.data.fwbs,
-        "radius_fw_channel",
-        pressuredropparam.radius_fw_channel,
+        blanket_library.data.fwbs, "a_bz_liq", coolantfrictionlossparam.a_bz_liq
     )
     monkeypatch.setattr(
-        blanket_library.data.fwbs, "a_bz_liq", pressuredropparam.a_bz_liq
-    )
-    monkeypatch.setattr(
-        blanket_library.data.fwbs, "b_bz_liq", pressuredropparam.b_bz_liq
-    )
-    monkeypatch.setattr(
-        blanket_library.data.fwbs,
-        "roughness_fw_channel",
-        pressuredropparam.roughness_fw_channel,
+        blanket_library.data.fwbs, "b_bz_liq", coolantfrictionlossparam.b_bz_liq
     )
 
-    pressure_params = blanket_library.coolant_friction_pressure_drop(
-        i_ps=pressuredropparam.i_ps,
-        radius_pipe_90_deg_bend=pressuredropparam.radius_pipe_90_deg_bend,
-        radius_pipe_180_deg_bend=pressuredropparam.radius_pipe_180_deg_bend,
-        n_pipe_90_deg_bends=pressuredropparam.num_90,
-        n_pipe_180_deg_bends=pressuredropparam.num_180,
-        len_pipe=pressuredropparam.l_pipe,
-        den_coolant=pressuredropparam.den,
-        visc_coolant=pressuredropparam.vsc,
-        vel_coolant=pressuredropparam.vv,
+    pressure_params: CoolantFrictionLossParameters = (
+        blanket_library.coolant_friction_pressure_drop(
+            i_ps=coolantfrictionlossparam.i_ps,
+            radius_pipe_90_deg_bend=(coolantfrictionlossparam.radius_pipe_90_deg_bend),
+            radius_pipe_180_deg_bend=(coolantfrictionlossparam.radius_pipe_180_deg_bend),
+            n_pipe_90_deg_bends=coolantfrictionlossparam.n_pipe_90_deg_bends,
+            n_pipe_180_deg_bends=coolantfrictionlossparam.n_pipe_180_deg_bends,
+            len_pipe=coolantfrictionlossparam.len_pipe,
+            den_coolant=coolantfrictionlossparam.den_coolant,
+            visc_coolant=coolantfrictionlossparam.visc_coolant,
+            vel_coolant=coolantfrictionlossparam.vel_coolant,
+            roughness_channel=coolantfrictionlossparam.roughness_channel,
+            radius_channel=coolantfrictionlossparam.radius_channel,
+        )
     )
 
     assert pressure_params.dpres_total == pytest.approx(
-        pressuredropparam.expected_pressure_drop_out
+        coolantfrictionlossparam.expected_pressure_drop_out
     )
 
 
