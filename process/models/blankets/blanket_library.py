@@ -1537,6 +1537,44 @@ class BlanketLibrary(Model):
                 )
             )
 
+        self.data.blanket.dpres_blkt_inboard_coolant_channel_straight_total = (
+            blkt_inboard_friction_params.dpres_straight
+        )
+        self.data.blanket.dpres_blkt_inboard_coolant_channel_90_bend = (
+            blkt_inboard_friction_params.dpres_90
+        )
+        self.data.blanket.dpres_blkt_inboard_coolant_channel_90_bends_total = (
+            blkt_inboard_friction_params.dpres_90_total
+        )
+        self.data.blanket.dpres_blkt_inboard_coolant_channel_180_bend = (
+            blkt_inboard_friction_params.dpres_180
+        )
+        self.data.blanket.dpres_blkt_inboard_coolant_channel_180_bends_total = (
+            blkt_inboard_friction_params.dpres_180_total
+        )
+        self.data.blanket.dpres_blkt_inboard_bends_total = (
+            blkt_inboard_friction_params.dpres_bends_total
+        )
+
+        self.data.blanket.reynolds_blkt_inboard_coolant = (
+            blkt_inboard_friction_params.reynolds_number
+        )
+        self.data.blanket.darcy_frict_blkt_inboard_coolant = (
+            blkt_inboard_friction_params.darcy_friction_factor
+        )
+        self.data.blanket.f_straight_blkt_inboard_coolant = (
+            blkt_inboard_friction_params.f_straight
+        )
+        self.data.blanket.len_blkt_inboard_coolant_channel_straight_total = (
+            blkt_inboard_friction_params.len_straight
+        )
+        self.data.blanket.f_elbow_blkt_inboard_90_bend = (
+            blkt_inboard_friction_params.f_elbow_90
+        )
+        self.data.blanket.f_elbow_blkt_inboard_180_bend = (
+            blkt_inboard_friction_params.f_elbow_180
+        )
+
         # If the blanket has a liquid metal breeder...
         if self.data.fwbs.i_blkt_dual_coolant > 0:
             deltap_blo_liq, _ = self.total_pressure_drop(
@@ -3524,11 +3562,12 @@ class BlanketLibrary(Model):
         )
         po.ovarre(
             self.outfile,
-            "Inboard blanket coolant channel length (toroidal direction) (m)",
-            "(len_blkt_inboard_segment_toroidal)",
-            self.data.blanket.len_blkt_inboard_segment_toroidal,
+            "Inboard blanket coolant channel length (poloidal direction) (m)",
+            "(len_blkt_inboard_segment_poloidal)",
+            self.data.blanket.len_blkt_inboard_segment_poloidal,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Number of inboard blanket coolant sections in the radial direction",
@@ -3543,11 +3582,111 @@ class BlanketLibrary(Model):
             self.data.fwbs.n_blkt_inboard_module_coolant_sections_poloidal,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Total length of inboard blanket coolant channel straight sections (m)",
             "(len_blkt_inboard_channel_total)",
             self.data.blanket.len_blkt_inboard_channel_total,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
+        po.ovarre(
+            self.outfile,
+            "Pressure drop for straight sections of inboard blanket (Pa)",
+            "(dpres_blkt_inboard_coolant_channel_straight_total)",
+            self.data.blanket.dpres_blkt_inboard_coolant_channel_straight_total,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Pressure drop for 90° bends of inboard blanket (Pa)",
+            "(dpres_blkt_inboard_coolant_channel_90_bend)",
+            self.data.blanket.dpres_blkt_inboard_coolant_channel_90_bend,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total pressure drop for 90° bends of inboard blanket (Pa)",
+            "(dpres_blkt_inboard_coolant_channel_90_bends_total)",
+            self.data.blanket.dpres_blkt_inboard_coolant_channel_90_bends_total,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Pressure drop for 180° bends of inboard blanket (Pa)",
+            "(dpres_blkt_inboard_coolant_channel_180_bend)",
+            self.data.blanket.dpres_blkt_inboard_coolant_channel_180_bend,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total pressure drop for 180° bends of inboard blanket (Pa)",
+            "(dpres_blkt_inboard_coolant_channel_180_bends_total)",
+            self.data.blanket.dpres_blkt_inboard_coolant_channel_180_bends_total,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total pressure drop for all bends (Pa)",
+            "(dpres_blkt_inboard_bends_total)",
+            self.data.blanket.dpres_blkt_inboard_bends_total,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Reynolds number of inboard blanket coolant",
+            "(reynolds_blkt_inboard_coolant)",
+            self.data.blanket.reynolds_blkt_inboard_coolant,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Darcy friction factor of inboard blanket coolant",
+            "(darcy_frict_blkt_inboard_coolant)",
+            self.data.blanket.darcy_frict_blkt_inboard_coolant,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Pressure drop coefficient for straight sections of inboard blanket",
+            "(f_straight_blkt_inboard_coolant)",
+            self.data.blanket.f_straight_blkt_inboard_coolant,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Total length of straight sections of inboard blanket coolant channels (m)",
+            "(len_blkt_inboard_coolant_channel_straight_total)",
+            self.data.blanket.len_blkt_inboard_coolant_channel_straight_total,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Pressure drop coefficient for 90° bends in inboard blanket",
+            "(f_elbow_blkt_inboard_90_bend)",
+            self.data.blanket.f_elbow_blkt_inboard_90_bend,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Pressure drop coefficient for 180° bends in inboard blanket",
+            "(f_elbow_blkt_inboard_180_bend)",
+            self.data.blanket.f_elbow_blkt_inboard_180_bend,
             "OP ",
         )
 
@@ -3562,9 +3701,9 @@ class BlanketLibrary(Model):
         )
         po.ovarre(
             self.outfile,
-            "Outboard blanket coolant channel length (toroidal direction) (m)",
-            "(len_blkt_outboard_segment_toroidal)",
-            self.data.blanket.len_blkt_outboard_segment_toroidal,
+            "Outboard blanket coolant channel length (poloidal direction) (m)",
+            "(len_blkt_outboard_segment_poloidal)",
+            self.data.blanket.len_blkt_outboard_segment_poloidal,
             "OP ",
         )
         po.oblnkl(self.outfile)
