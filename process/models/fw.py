@@ -161,6 +161,11 @@ class FirstWall(Model):
             self.data.physics.p_alpha_total_mw
             * (1.0e0 - self.data.physics.f_p_alpha_plasma_deposited)
         )
+        
+        # Will assume that all alpha power reaching the first wall is deposited on the 
+        # outboard side.
+        self.data.fwbs.p_fw_inboard_alpha_surface_mw = 0.0
+        self.data.fwbs.p_fw_outboard_alpha_surface_mw = self.data.physics.p_fw_alpha_surface_total_mw
 
     @staticmethod
     def calculate_first_wall_half_height(
