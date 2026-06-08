@@ -173,8 +173,8 @@ class FWBSData:
     p_fw_inboard_surface_heat_mw: float = 0.0
     """Surface heat flux on inboard first wall [MW] """
 
-    psurffwo: float = 0.0
-    """Surface heat flux on first wall [MW] (sum = p_fw_rad_total_mw)"""
+    p_fw_outboard_surface_heat_mw: float = 0.0
+    """Surface heat flux on outboard first wall [MW]"""
 
     vol_fw_total: float = 0.0
     """First wall volume [m3]"""
