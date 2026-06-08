@@ -379,12 +379,6 @@ class FWBSData:
     p_fw_rad_total_mw: float = 0.0
     """Radiation power incident on the first wall (MW)"""
 
-    p_fw_inboard_rad_mw: float = 0.0
-    """Radiation power incident on the inboard first wall [MW]"""
-
-    p_fw_outboard_rad_mw: float = 0.0
-    """Radiation power incident on the outboard first wall [MW]"""
-
     p_fw_hcd_rad_total_mw: float = 0.0
     """Radiation power incident on the heating and current drive systems on the first wall (MW)"""
 
