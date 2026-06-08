@@ -498,8 +498,7 @@ class PhysicsData:
     - =0 User input pedestal and separatrix density
     - =1 Calculate pedestal and separatrix density as fraction of Greenwald limit (see `f_nd_plasma_pedestal_greenwald` and `f_nd_plasma_separatrix_greenwald`)
     """
-    
-    
+
     alpha_crit: float = 0.0
     """critical ballooning parameter value"""
 
