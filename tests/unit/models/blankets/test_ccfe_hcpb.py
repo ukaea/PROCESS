@@ -724,7 +724,7 @@ class PowerflowCalcParam(NamedTuple):
 
     p_plasma_rad_mw: Any = None
 
-    p_fw_alpha_mw: Any = None
+    p_fw_alpha_surface_total_mw: Any = None
 
     p_plasma_separatrix_mw: Any = None
 
@@ -787,7 +787,7 @@ class PowerflowCalcParam(NamedTuple):
             f_p_div_coolant_pump_total_heat=0.0050000000000000001,
             n_divertors=1,
             p_plasma_rad_mw=287.44866938104849,
-            p_fw_alpha_mw=19.835845058655043,
+            p_fw_alpha_surface_total_mw=19.835845058655043,
             p_plasma_separatrix_mw=143.6315222649435,
             p_he=8000000,
             dp_he=550000,
@@ -832,7 +832,7 @@ class PowerflowCalcParam(NamedTuple):
             f_p_div_coolant_pump_total_heat=0.0050000000000000001,
             n_divertors=1,
             p_plasma_rad_mw=287.44866938104849,
-            p_fw_alpha_mw=19.829653483586444,
+            p_fw_alpha_surface_total_mw=19.829653483586444,
             p_plasma_separatrix_mw=143.51338080047339,
             p_he=8000000,
             dp_he=550000,
@@ -1022,7 +1022,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb.data.physics, "p_fw_alpha_mw", powerflowcalcparam.p_fw_alpha_mw
+        ccfe_hcpb.data.physics,
+        "p_fw_alpha_surface_total_mw",
+        powerflowcalcparam.p_fw_alpha_surface_total_mw,
     )
 
     monkeypatch.setattr(

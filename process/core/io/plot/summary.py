@@ -522,7 +522,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     axis.text(
         0.22,
         0.81,
-        f"$P_{{\\alpha,{{loss}}}}$\n{mfile.get('p_fw_alpha_mw', scan=scan):,.2f} MW",
+        f"$P_{{\\alpha,{{loss}}}}$\n{mfile.get('p_fw_alpha_surface_total_mw', scan=scan):,.2f} MW",
         transform=fig.transFigure,
         horizontalalignment="left",
         verticalalignment="bottom",
@@ -1366,7 +1366,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     axis.text(
         0.46,
         0.85,
-        f"$P_{{\\text{{FW, }}\\alpha}}$:\n{mfile.get('p_fw_alpha_mw', scan=scan):.2f} MW",
+        f"$P_{{\\text{{FW, }}\\alpha}}$:\n{mfile.get('p_fw_alpha_surface_total_mw', scan=scan):.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -2872,7 +2872,7 @@ def plot_main_plasma_information(
     )
 
     textstr_alpha = (
-        f"$P_{{\\alpha,\\text{{loss}}}}$ {mfile.get('p_fw_alpha_mw', scan=scan):.2f} MW \n"
+        f"$P_{{\\alpha,\\text{{loss}}}}$ {mfile.get('p_fw_alpha_surface_total_mw', scan=scan):.2f} MW \n"
         f"$f_{{\\alpha,\\text{{coupled}}}}$ {mfile.get('f_p_alpha_plasma_deposited', scan=scan):.2f}"
     )
 

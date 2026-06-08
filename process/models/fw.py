@@ -157,8 +157,9 @@ class FirstWall(Model):
         )
 
         # Power transported to the first wall by escaped alpha particles
-        self.data.physics.p_fw_alpha_mw = self.data.physics.p_alpha_total_mw * (
-            1.0e0 - self.data.physics.f_p_alpha_plasma_deposited
+        self.data.physics.p_fw_alpha_surface_total_mw = (
+            self.data.physics.p_alpha_total_mw
+            * (1.0e0 - self.data.physics.f_p_alpha_plasma_deposited)
         )
 
     @staticmethod
@@ -842,8 +843,8 @@ class FirstWall(Model):
         po.ovarre(
             self.outfile,
             "Fast alpha particle power incident on the first-wall (MW)",
-            "(p_fw_alpha_mw)",
-            self.data.physics.p_fw_alpha_mw,
+            "(p_fw_alpha_surface_total_mw)",
+            self.data.physics.p_fw_alpha_surface_total_mw,
             "OP ",
         )
         po.ovarre(

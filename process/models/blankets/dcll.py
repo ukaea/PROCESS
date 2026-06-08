@@ -219,7 +219,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
             * self.data.first_wall.a_fw_outboard
             / self.data.first_wall.a_fw_total
             + self.data.current_drive.p_beam_orbit_loss_mw
-            + self.data.physics.p_fw_alpha_mw
+            + self.data.physics.p_fw_alpha_surface_total_mw
         )
         self.data.fwbs.p_fw_inboard_surface_heat_mw = (
             self.data.fwbs.p_fw_rad_total_mw
