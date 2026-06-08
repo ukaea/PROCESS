@@ -796,7 +796,7 @@ class BlanketLibrary(Model):
                 self.outfile,
                 "Coolant type",
                 "(i_fw_coolant_type)",
-                self.data.fwbs.i_fw_coolant_type,
+                CoolantType(self.data.fwbs.i_fw_coolant_type).full_name,
             )
             po.ovarrf(
                 self.outfile,
