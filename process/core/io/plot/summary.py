@@ -14822,7 +14822,8 @@ def plot_poloidal_power_distribution(
     ax.text(
         label_x,
         label_y,
-        f"{deg_blkt_outboard_poloidal_plasma:.1f}°\n({f_deg_blkt_outboard_poloidal_plasma * 100:.1f}%)",
+        f"$P_{{\\gamma}}$={m_file.get('p_fw_outboard_rad_mw', scan=scan):.1f}MW\n"
+        f"$P_{{\\alpha}}$={m_file.get('p_fw_outboard_alpha_surface_mw', scan=scan):.1f}MW",
         fontsize=7,
         color="purple",
         ha="center",
@@ -14875,7 +14876,8 @@ def plot_poloidal_power_distribution(
     ax.text(
         label_x,
         label_y,
-        f"{deg_blkt_inboard_poloidal_plasma:.1f}°\n({f_deg_blkt_inboard_poloidal_plasma * 100:.1f}%)",
+        f"$P_{{\\gamma}}$={m_file.get('p_fw_inboard_rad_mw', scan=scan):.1f}MW\n"
+        f"$P_{{\\alpha}}$={m_file.get('p_fw_inboard_alpha_surface_mw', scan=scan):.1f}MW",
         fontsize=7,
         color="green",
         ha="center",
