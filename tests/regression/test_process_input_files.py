@@ -38,7 +38,8 @@ EXCLUSIONS = {
 
 
 class ProcessModelFilter(logging.Filter):
-    def filter(self, record):
+    @staticmethod
+    def filter(record):
         return 0 if record.levelno < logging.CRITICAL else 1
 
 

@@ -598,8 +598,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 self.data.tfcoil.m_tf_coils_total,
             )
 
+    @staticmethod
     def nuclear_heating_fw(
-        self,
         m_fw_total: float,
         fw_armour_u_nuc_heating: float,
         p_fusion_total_mw: float,
@@ -640,8 +640,9 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             )
         return p_fw_nuclear_heat_total_mw
 
+    @staticmethod
     def nuclear_heating_blanket(
-        self, m_blkt_total: float, p_fusion_total_mw: float
+        m_blkt_total: float, p_fusion_total_mw: float
     ) -> tuple[float, float]:
         """Calculates the nuclear heating in the blanket for the CCFE HCPB model.
 
@@ -685,8 +686,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         return p_blkt_nuclear_heat_total_mw, exp_blanket
 
+    @staticmethod
     def nuclear_heating_shield(
-        self,
         itart: int,
         dr_shld_outboard: float,
         dr_shld_inboard: float,
@@ -988,7 +989,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     self.data.fwbs.radius_blkt_channel_180_bend,
                 )
 
-    def st_cp_angle_fraction(self, z_cp_top, r_cp_mid, r_cp_top, rmajor):
+    @staticmethod
+    def st_cp_angle_fraction(z_cp_top, r_cp_mid, r_cp_top, rmajor):
         """
         Estimates the CP angular solid angle coverage fration
         Equation (1-3) from

@@ -664,7 +664,8 @@ class Scan:
                 ),
             )
 
-    def verror(self, ifail: int):
+    @staticmethod
+    def verror(ifail: int):
         """Routine to print out relevant messages in the case of an
         unfeasible result from a VMCON (optimisation) run
 
@@ -952,7 +953,8 @@ class Scan:
         )
         print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
 
-    def scan_2d_init(self):
+    @staticmethod
+    def scan_2d_init():
         process_output.ovarin(
             constants.MFILE,
             "Number of first variable scan points",
@@ -1051,7 +1053,8 @@ class Scan:
 
         return iscan_r
 
-    def scan_1d_write_plot(self):
+    @staticmethod
+    def scan_1d_write_plot():
         if scan_variables.first_call_1d:
             process_output.ovarin(
                 constants.MFILE,

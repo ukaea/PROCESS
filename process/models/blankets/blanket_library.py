@@ -3239,8 +3239,8 @@ class BlanketLibrary(Model):
             f"i_channel_shape ={i_channel_shape} is an invalid option."
         )
 
+    @staticmethod
     def elbow_coeff(
-        self,
         radius_pipe_elbow: float,
         deg_pipe_elbow: float,
         darcy_friction: float,
@@ -3490,8 +3490,9 @@ class OutboardBlanket(BlanketLibrary):
             b_bz_liq=self.data.fwbs.b_bz_liq,
         )
 
+    @staticmethod
     def blkt_outboard_poloidal_plasma_angle(
-        self, n_divertors: int, deg_div_poloidal_plasma: float
+        n_divertors: int, deg_div_poloidal_plasma: float
     ) -> float:
         """Calculate the poloidal angle subtended by the outboard blanket at the
         plasma mid-plane.
@@ -3571,8 +3572,8 @@ class OutboardBlanket(BlanketLibrary):
             )
         )
 
+    @staticmethod
     def calculate_blanket_outboard_module_geometry(
-        self,
         n_blkt_outboard_modules_toroidal: int,
         rmajor: float,
         rminor: float,
@@ -3647,8 +3648,8 @@ class InboardBlanket(BlanketLibrary):
             2.0 * np.arctan(dz_blkt_half / (rminor + dr_fw_plasma_gap_inboard))
         )
 
+    @staticmethod
     def calculate_blanket_inboard_module_geometry(
-        self,
         n_blkt_inboard_modules_toroidal: int,
         rmajor: float,
         rminor: float,

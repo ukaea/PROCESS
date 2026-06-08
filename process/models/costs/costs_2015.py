@@ -1236,7 +1236,8 @@ class Costs2015(Model):
         for j in range(35, 60):
             self.data.costs_2015.s_cost[60] += self.data.costs_2015.s_cost[j]
 
-    def value_function(self, x):
+    @staticmethod
+    def value_function(x):
         """Value function
         Function for separative work unit calculation for enrichment cost
         PROCESS Costs Paper (M. Kovari, J. Morris)
@@ -1244,7 +1245,8 @@ class Costs2015(Model):
         """
         return (1.0e0 - 2.0e0 * x) * np.log((1.0e0 - x) / x)
 
-    def ocost(self, file, descr, vname, value):
+    @staticmethod
+    def ocost(file, descr, vname, value):
         """Routine to print out the code, description and value
         of a cost item from array s in costs_2015
 

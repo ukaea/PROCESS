@@ -280,7 +280,8 @@ iteration variables should get varied"""
         )
         data_structure.global_variables.fileprefix = str(self.wdir / self.infile)
 
-    def run_process(self, input_path: Path, solver: str = "vmcon"):
+    @staticmethod
+    def run_process(input_path: Path, solver: str = "vmcon"):
         """Perform a single run of PROCESS, catching any errors.
 
         Parameters

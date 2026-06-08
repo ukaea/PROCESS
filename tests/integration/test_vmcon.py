@@ -115,7 +115,8 @@ class Evaluator1(CustomFunctionEvaluator):
     :type CustomFunctionEvaluator: CustomFunctionEvaluator
     """
 
-    def fcnvmc1(self, n, m, x, ifail):
+    @staticmethod
+    def fcnvmc1(n, m, x, ifail):
         """Function evaluator.
 
 
@@ -141,7 +142,8 @@ class Evaluator1(CustomFunctionEvaluator):
 
         return objf, conf
 
-    def fcnvmc2(self, n, m, x, lcnorm):
+    @staticmethod
+    def fcnvmc2(n, m, x, lcnorm):
         """Gradient function evaluator.
 
         Calculates the gradients of the objective and constraint functions at
@@ -178,7 +180,8 @@ class Evaluator2(CustomFunctionEvaluator):
     :type CustomFunctionEvaluator: CustomFunctionEvaluator
     """
 
-    def fcnvmc1(self, n, m, x, ifail):
+    @staticmethod
+    def fcnvmc1(n, m, x, ifail):
         """Function evaluator.
 
 
@@ -204,7 +207,8 @@ class Evaluator2(CustomFunctionEvaluator):
 
         return objf, conf
 
-    def fcnvmc2(self, n, m, x, lcnorm):
+    @staticmethod
+    def fcnvmc2(n, m, x, lcnorm):
         """Gradient function evaluator.
 
         Calculates the gradients of the objective and constraint functions at
@@ -242,7 +246,8 @@ class Evaluator3(CustomFunctionEvaluator):
     :type CustomFunctionEvaluator: CustomFunctionEvaluator
     """
 
-    def fcnvmc1(self, n, m, x, ifail):
+    @staticmethod
+    def fcnvmc1(n, m, x, ifail):
         """Function evaluator.
 
 
@@ -265,7 +270,8 @@ class Evaluator3(CustomFunctionEvaluator):
 
         return objf, conf
 
-    def fcnvmc2(self, n, m, x, lcnorm):
+    @staticmethod
+    def fcnvmc2(n, m, x, lcnorm):
         """Gradient function evaluator.
 
         Calculates the gradients of the objective and constraint functions at
@@ -303,7 +309,8 @@ class Evaluator4(CustomFunctionEvaluator):
     :type CustomFunctionEvaluator: CustomFunctionEvaluator
     """
 
-    def fcnvmc1(self, n, m, x, ifail):
+    @staticmethod
+    def fcnvmc1(n, m, x, ifail):
         """Function evaluator.
 
         Calculates the objective and constraint functions at the
@@ -325,7 +332,8 @@ class Evaluator4(CustomFunctionEvaluator):
 
         return objf, conf
 
-    def fcnvmc2(self, n, m, x, lcnorm):
+    @staticmethod
+    def fcnvmc2(n, m, x, lcnorm):
         """Gradient function evaluator.
 
         Calculates the gradients of the objective and constraint functions at
@@ -358,7 +366,8 @@ class Evaluator5(CustomFunctionEvaluator):
     :type CustomFunctionEvaluator: CustomFunctionEvaluator
     """
 
-    def fcnvmc1(self, n, m, x, ifail):
+    @staticmethod
+    def fcnvmc1(n, m, x, ifail):
         """Function evaluator.
 
         Calculates the objective and constraint functions at the
@@ -380,7 +389,8 @@ class Evaluator5(CustomFunctionEvaluator):
 
         return objf, conf
 
-    def fcnvmc2(self, n, m, x, lcnorm):
+    @staticmethod
+    def fcnvmc2(n, m, x, lcnorm):
         """Gradient function evaluator.
 
         Calculates the gradients of the objective and constraint functions at
