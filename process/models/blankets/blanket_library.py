@@ -782,7 +782,7 @@ class BlanketLibrary(Model):
             )
             po.ocmmnt(
                 self.outfile,
-                "Calculated using mid temp(s) of system (or systems if use different collant types).",
+                "Calculated using mid temp(s) of system (or systems if use different coolant types).",
             )
 
             # FW (or FW/BB)
