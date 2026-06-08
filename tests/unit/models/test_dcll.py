@@ -42,7 +42,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     p_fw_inboard_surface_heat_mw: Any = None
 
-    psurffwo: Any = None
+    p_fw_outboard_surface_heat_mw: Any = None
 
     p_blkt_nuclear_heat_total_mw: Any = None
 
@@ -88,7 +88,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_fw_rad_total_mw=0,
             p_fw_nuclear_heat_total_mw=0,
             p_fw_inboard_surface_heat_mw=0,
-            psurffwo=0,
+            p_fw_outboard_surface_heat_mw=0,
             p_blkt_nuclear_heat_total_mw=0,
             pnuc_fw_ratio_dcll=0.14000000000000001,
             pnuc_blkt_ratio_dcll=0.85999999999999999,
@@ -117,7 +117,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_fw_rad_total_mw=254.39207240222791,
             p_fw_nuclear_heat_total_mw=196.72081918001697,
             p_fw_inboard_surface_heat_mw=97.271629070225231,
-            psurffwo=176.95628839065773,
+            p_fw_outboard_surface_heat_mw=176.95628839065773,
             p_blkt_nuclear_heat_total_mw=1533.4949914565693,
             pnuc_fw_ratio_dcll=0.14000000000000001,
             pnuc_blkt_ratio_dcll=0.85999999999999999,
@@ -221,7 +221,11 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
         dcllneutronicsandpowerparam.p_fw_inboard_surface_heat_mw,
     )
 
-    monkeypatch.setattr(dcll.data.fwbs, "psurffwo", dcllneutronicsandpowerparam.psurffwo)
+    monkeypatch.setattr(
+        dcll.data.fwbs,
+        "p_fw_outboard_surface_heat_mw",
+        dcllneutronicsandpowerparam.p_fw_outboard_surface_heat_mw,
+    )
 
     monkeypatch.setattr(
         dcll.data.fwbs,

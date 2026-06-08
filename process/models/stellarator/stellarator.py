@@ -831,7 +831,7 @@ class Stellarator(Model):
                     * self.data.first_wall.a_fw_inboard
                     / self.data.first_wall.a_fw_total
                 )
-                psurffwo = (
+                p_fw_outboard_surface_heat_mw = (
                     self.data.fwbs.p_fw_rad_total_mw
                     * self.data.first_wall.a_fw_outboard
                     / self.data.first_wall.a_fw_total
@@ -892,7 +892,7 @@ class Stellarator(Model):
                             p_fw_inboard_nuclear_heat_mw
                             + p_fw_outboard_nuclear_heat_mw
                             + p_fw_inboard_surface_heat_mw
-                            + psurffwo
+                            + p_fw_outboard_surface_heat_mw
                             + self.data.current_drive.p_beam_orbit_loss_mw
                         )
                     )

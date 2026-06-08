@@ -702,7 +702,7 @@ class PowerflowCalcParam(NamedTuple):
 
     p_fw_inboard_surface_heat_mw: Any = None
 
-    psurffwo: Any = None
+    p_fw_outboard_surface_heat_mw: Any = None
 
     p_fw_coolant_pump_mw: Any = None
 
@@ -776,7 +776,7 @@ class PowerflowCalcParam(NamedTuple):
             etaiso=0.90000000000000002,
             p_cp_shield_nuclear_heat_mw=0,
             p_fw_inboard_surface_heat_mw=0,
-            psurffwo=0,
+            p_fw_outboard_surface_heat_mw=0,
             p_fw_coolant_pump_mw=0,
             f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_blkt_coolant_pump_mw=0,
@@ -821,7 +821,7 @@ class PowerflowCalcParam(NamedTuple):
             etaiso=0.90000000000000002,
             p_cp_shield_nuclear_heat_mw=0,
             p_fw_inboard_surface_heat_mw=97.271629070225231,
-            psurffwo=176.95628839065773,
+            p_fw_outboard_surface_heat_mw=176.95628839065773,
             p_fw_coolant_pump_mw=0,
             f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_blkt_coolant_pump_mw=0,
@@ -959,7 +959,11 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.p_fw_inboard_surface_heat_mw,
     )
 
-    monkeypatch.setattr(ccfe_hcpb.data.fwbs, "psurffwo", powerflowcalcparam.psurffwo)
+    monkeypatch.setattr(
+        ccfe_hcpb.data.fwbs,
+        "p_fw_outboard_surface_heat_mw",
+        powerflowcalcparam.p_fw_outboard_surface_heat_mw,
+    )
 
     monkeypatch.setattr(
         ccfe_hcpb.data.heat_transport,
@@ -1057,7 +1061,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.expected_psurffwi
     )
 
-    assert ccfe_hcpb.data.fwbs.psurffwo == pytest.approx(
+    assert ccfe_hcpb.data.fwbs.p_fw_outboard_surface_heat_mw == pytest.approx(
         powerflowcalcparam.expected_psurffwo
     )
 

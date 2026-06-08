@@ -782,7 +782,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         # Surface heat flux on first wall (outboard and inboard) (MW)
         # All of the fast particle losses go to the outer wall.
-        self.data.fwbs.psurffwo = (
+        self.data.fwbs.p_fw_outboard_surface_heat_mw = (
             self.data.fwbs.p_fw_rad_total_mw
             * self.data.first_wall.a_fw_outboard
             / self.data.first_wall.a_fw_total
@@ -809,7 +809,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 f_p_div_coolant_pump_total_heat=self.data.heat_transport.f_p_div_coolant_pump_total_heat,
                 p_fw_nuclear_heat_total_mw=self.data.fwbs.p_fw_nuclear_heat_total_mw,
                 p_fw_inboard_surface_heat_mw=self.data.fwbs.p_fw_inboard_surface_heat_mw,
-                psurffwo=self.data.fwbs.psurffwo,
+                p_fw_outboard_surface_heat_mw=self.data.fwbs.p_fw_outboard_surface_heat_mw,
                 p_blkt_nuclear_heat_total_mw=self.data.fwbs.p_blkt_nuclear_heat_total_mw,
                 p_shld_nuclear_heat_mw=self.data.heat_transport.p_shld_nuclear_heat_mw,
                 p_cp_shield_nuclear_heat_mw=self.data.fwbs.p_cp_shield_nuclear_heat_mw,
@@ -869,7 +869,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             p_plasma = (
                 self.data.fwbs.p_fw_nuclear_heat_total_mw
                 + self.data.fwbs.p_fw_inboard_surface_heat_mw
-                + self.data.fwbs.psurffwo
+                + self.data.fwbs.p_fw_outboard_surface_heat_mw
                 + self.data.fwbs.p_blkt_nuclear_heat_total_mw
             )
             self.data.primary_pumping.p_fw_blkt_coolant_pump_mw = (
