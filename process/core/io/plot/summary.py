@@ -16119,7 +16119,6 @@ def main_plot(
     plot_blkt_structure(ax_blanket, figs[34], m_file, scan, radial_build, colour_scheme)
 
     plot_blkt_pipe_bends(figs[35], m_file, scan)
-    plot_blanket_coolant_channel_structure(figs[35].add_subplot(111), m_file, scan)
     plot_blanket_coolant_channel_structure_and_properties(figs[35], m_file, scan)
 
     plot_main_power_flow(
