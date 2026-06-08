@@ -38,7 +38,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     p_plasma_rad_mw: Any = None
 
-    p_fw_alpha_mw: Any = None
+    p_fw_alpha_surface_total_mw: Any = None
 
     expected_p_fw_nuclear_heat_total_mw: Any = None
 
@@ -62,7 +62,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             n_divertors=1,
             p_neutron_total_mw=1587.7386535917431,
             p_plasma_rad_mw=287.44866938104849,
-            p_fw_alpha_mw=19.835845058655043,
+            p_fw_alpha_surface_total_mw=19.835845058655043,
             expected_p_fw_nuclear_heat_total_mw=196.72081918001697,
             expected_p_blkt_nuclear_heat_total_mw=1533.4949914565693,
             expected_p_blkt_multiplication_mw=325.06710220789364,
@@ -79,7 +79,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             n_divertors=1,
             p_neutron_total_mw=1587.2430556964196,
             p_plasma_rad_mw=287.44866938104849,
-            p_fw_alpha_mw=19.829653483586444,
+            p_fw_alpha_surface_total_mw=19.829653483586444,
             expected_p_fw_nuclear_heat_total_mw=196.65941460078642,
             expected_p_blkt_nuclear_heat_total_mw=1533.0163252173013,
             expected_p_blkt_multiplication_mw=324.96563552675644,
