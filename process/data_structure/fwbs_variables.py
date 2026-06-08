@@ -182,6 +182,18 @@ class FWBSData:
     p_fw_outboard_alpha_surface_mw: float = 0.0
     """Alpha particle heat flux on outboard first wall [MW]"""
 
+    pflux_fw_inboard_neutron_surface_average_mw: float = 0.0
+    """Average neutron flux on inboard first wall surface [MW/m²]"""
+
+    pflux_fw_outboard_neutron_surface_average_mw: float = 0.0
+    """Average neutron flux on outboard first wall surface [MW/m²]"""
+
+    pflux_fw_inboard_rad_surface_average_mw: float = 0.0
+    """Average radiation flux on inboard first wall surface [MW/m²]"""
+
+    pflux_fw_outboard_rad_surface_average_mw: float = 0.0
+    """Average radiation flux on outboard first wall surface [MW/m²]"""
+
     vol_fw_total: float = 0.0
     """First wall volume [m3]"""
 
