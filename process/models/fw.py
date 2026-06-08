@@ -122,23 +122,25 @@ class FirstWall(Model):
                 self.data.physics.p_neutron_total_mw / self.data.first_wall.a_fw_total
             )
 
-        # Radiation power incident on first wall (MW)
-        # Set based on the total radiation power and the angular fractions taken up by
-        # the inboard and outboard first wall, which are calculated based on the
-        # geometry of the first wall and the plasma.
-        self.data.fwbs.p_fw_rad_total_mw = self.data.physics.p_plasma_rad_mw * (
-            self.data.blanket.f_deg_blkt_outboard_poloidal_plasma
-            + self.data.blanket.f_deg_blkt_inboard_poloidal_plasma
-        )
-
         self.data.fwbs.p_fw_inboard_rad_mw = (
             self.data.physics.p_plasma_rad_mw
             * self.data.blanket.f_deg_blkt_inboard_poloidal_plasma
         )
 
+        # Some power is lost to HCD and ports on the outboard wall, so this is taken
+        # into account with a coverage factor.
         self.data.fwbs.p_fw_outboard_rad_mw = (
             self.data.physics.p_plasma_rad_mw
             * self.data.blanket.f_deg_blkt_outboard_poloidal_plasma
+            * (1.0 - self.data.fwbs.f_a_fw_outboard_hcd)
+        )
+
+        # Radiation power incident on first wall (MW)
+        # Set based on the total radiation power and the angular fractions taken up by
+        # the inboard and outboard first wall, which are calculated based on the
+        # geometry of the first wall and the plasma.
+        self.data.fwbs.p_fw_rad_total_mw = (
+            self.data.fwbs.p_fw_inboard_rad_mw + self.data.fwbs.p_fw_outboard_rad_mw
         )
 
         if self.data.physics.i_pflux_fw_neutron == 1:
@@ -157,16 +159,21 @@ class FirstWall(Model):
         )
 
         # Power transported to the first wall by escaped alpha particles
-        self.data.physics.p_fw_alpha_surface_total_mw = (
+        # Some is lost to HCD and ports on the outboard wall, so this is taken into
+        # account with a coverage factor.
+
+        self.data.fwbs.p_fw_outboard_alpha_surface_mw = (
             self.data.physics.p_alpha_total_mw
             * (1.0e0 - self.data.physics.f_p_alpha_plasma_deposited)
+            * (1.0 - self.data.fwbs.f_a_fw_outboard_hcd)
         )
-
         # Will assume that all alpha power reaching the first wall is deposited on the
         # outboard side.
         self.data.fwbs.p_fw_inboard_alpha_surface_mw = 0.0
-        self.data.fwbs.p_fw_outboard_alpha_surface_mw = (
-            self.data.physics.p_fw_alpha_surface_total_mw
+
+        self.data.physics.p_fw_alpha_surface_total_mw = (
+            self.data.fwbs.p_fw_outboard_alpha_surface_mw
+            + self.data.fwbs.p_fw_inboard_alpha_surface_mw
         )
 
         # Surface heat flux on first wall (MW)
@@ -179,7 +186,7 @@ class FirstWall(Model):
             + self.data.current_drive.p_beam_orbit_loss_mw
             + self.data.fwbs.p_fw_outboard_alpha_surface_mw
             + self.data.current_drive.p_beam_shine_through_mw
-        ) * (1.0 - self.data.fwbs.f_a_fw_outboard_hcd)
+        )
 
         self.data.fwbs.p_fw_inboard_surface_heat_mw = (
             self.data.fwbs.p_fw_inboard_rad_mw
