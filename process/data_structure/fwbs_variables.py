@@ -176,6 +176,12 @@ class FWBSData:
     p_fw_outboard_surface_heat_mw: float = 0.0
     """Surface heat flux on outboard first wall [MW]"""
 
+    p_fw_inboard_alpha_surface_mw: float = 0.0
+    """Alpha particle heat flux on inboard first wall [MW]"""
+
+    p_fw_outboard_alpha_surface_mw: float = 0.0
+    """Alpha particle heat flux on outboard first wall [MW]"""
+
     vol_fw_total: float = 0.0
     """First wall volume [m3]"""
 
