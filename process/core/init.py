@@ -17,6 +17,7 @@ from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.blanket_variables import BlktModelTypes
+from process.data_structure.build_variables import InboardBlanketConfiguration
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
@@ -1042,7 +1043,7 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Set inboard blanket thickness to zero if no inboard blanket switch
     # used (Issue #732)
-    if data.fwbs.i_blkt_inboard == 0:
+    if data.build.i_blkt_inboard == InboardBlanketConfiguration.NO_INBOARD_BLANKET:
         data.build.dr_blkt_inboard = 0.0
 
     # Ensure that blanket material fractions allow non-zero space for steel

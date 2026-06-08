@@ -1,4 +1,12 @@
 from dataclasses import dataclass
+from enum import IntEnum
+
+
+class InboardBlanketConfiguration(IntEnum):
+    """Switch for inboard blanket, controlled through `BuildData.i_blkt_inboard`"""
+
+    NO_INBOARD_BLANKET = 0
+    INBOARD_BLANKET_PRESENT = 1
 
 
 @dataclass(slots=True)
@@ -301,6 +309,12 @@ class BuildData:
     ripflag: int = 0
     """1 if the fitted range of applicability is exceeded for
     the ripple calculation, else 0
+    """
+
+    i_blkt_inboard: int = 1
+    """Switch for inboard blanket, controlled through InboardBlanketConfiguration enum:
+    - =0 No inboard blanket (dr_blkt_inboard=0.0)
+    - =1 Inboard blanket present
     """
 
 

@@ -2,6 +2,8 @@ from typing import Any, NamedTuple
 
 import pytest
 
+from process.data_structure.build_variables import InboardBlanketConfiguration
+
 
 @pytest.fixture
 def dcll(process_models):
@@ -548,7 +550,7 @@ class DcllMassesParam(NamedTuple):
             blbmoth=0.27000000000000002,
             a_plasma_surface=1403.2719775669307,
             a_plasma_surface_outboard=949.22962703393853,
-            i_blkt_inboard=1,
+            i_blkt_inboard=InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT,
             vol_blkt_total=1397.9003011502937,
             vol_blkt_inboard=401.90579863726225,
             vol_blkt_outboard=995.99450251303142,
@@ -667,7 +669,7 @@ class DcllMassesParam(NamedTuple):
             blbmoth=0.49699999999999994,
             a_plasma_surface=1403.2719775669307,
             a_plasma_surface_outboard=949.22962703393853,
-            i_blkt_inboard=1,
+            i_blkt_inboard=InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT,
             vol_blkt_total=1400.4860764869636,
             vol_blkt_inboard=402.02180553751157,
             vol_blkt_outboard=998.46427094945204,
@@ -828,7 +830,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         dcllmassesparam.a_plasma_surface_outboard,
     )
 
-    monkeypatch.setattr(dcll.data.fwbs, "i_blkt_inboard", dcllmassesparam.i_blkt_inboard)
+    monkeypatch.setattr(
+        dcll.data.build, "i_blkt_inboard", dcllmassesparam.i_blkt_inboard
+    )
 
     monkeypatch.setattr(dcll.data.fwbs, "vol_blkt_total", dcllmassesparam.vol_blkt_total)
 
