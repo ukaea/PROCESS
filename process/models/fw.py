@@ -161,11 +161,30 @@ class FirstWall(Model):
             self.data.physics.p_alpha_total_mw
             * (1.0e0 - self.data.physics.f_p_alpha_plasma_deposited)
         )
-        
-        # Will assume that all alpha power reaching the first wall is deposited on the 
+
+        # Will assume that all alpha power reaching the first wall is deposited on the
         # outboard side.
         self.data.fwbs.p_fw_inboard_alpha_surface_mw = 0.0
-        self.data.fwbs.p_fw_outboard_alpha_surface_mw = self.data.physics.p_fw_alpha_surface_total_mw
+        self.data.fwbs.p_fw_outboard_alpha_surface_mw = (
+            self.data.physics.p_fw_alpha_surface_total_mw
+        )
+
+        # Surface heat flux on first wall (MW)
+        # All of the fast particle losses go to the outer wall, as do all beam losses
+        # and shine through.
+        # Some power is lost to HCD and ports on the outboard wall, so this is
+        # taken into account with a coverage factor.
+        self.data.fwbs.p_fw_outboard_surface_heat_mw = (
+            self.data.fwbs.p_fw_outboard_rad_mw
+            + self.data.current_drive.p_beam_orbit_loss_mw
+            + self.data.fwbs.p_fw_outboard_alpha_surface_mw
+            + self.data.current_drive.p_beam_shine_through_mw
+        ) * (1.0 - self.data.fwbs.f_a_fw_outboard_hcd)
+
+        self.data.fwbs.p_fw_inboard_surface_heat_mw = (
+            self.data.fwbs.p_fw_inboard_rad_mw
+            + self.data.fwbs.p_fw_inboard_alpha_surface_mw
+        )
 
     @staticmethod
     def calculate_first_wall_half_height(

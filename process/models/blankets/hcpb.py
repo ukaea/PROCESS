@@ -780,20 +780,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 outlet_saturated_fluid_properties.temperature - 20.0
             )  # in K
 
-        # Surface heat flux on first wall (outboard and inboard) (MW)
-        # All of the fast particle losses go to the outer wall.
-        self.data.fwbs.p_fw_outboard_surface_heat_mw = (
-            self.data.fwbs.p_fw_rad_total_mw
-            * self.data.first_wall.a_fw_outboard
-            / self.data.first_wall.a_fw_total
-            + self.data.current_drive.p_beam_orbit_loss_mw
-            + self.data.physics.p_fw_alpha_surface_total_mw
-        )
-        self.data.fwbs.p_fw_inboard_surface_heat_mw = (
-            self.data.fwbs.p_fw_rad_total_mw
-            * (1 - self.data.first_wall.a_fw_outboard / self.data.first_wall.a_fw_total)
-        )
-
         i_p_coolant_pumping = PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping)
         if i_p_coolant_pumping == PumpingPowerModelTypes.FRACTION_OF_HEAT:
             # User sets mechanical pumping power directly
