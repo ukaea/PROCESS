@@ -18,7 +18,7 @@ from process.core.io.data_structure_dicts import get_dicts
 from process.core.log import logging_model_handler, show_errors
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
-from process.data_structure.scan_variables import IPNSCNS, NOUTVARS, ScanData
+from process.data_structure.scan_variables import IPNSCNS, NOUTVARS
 from process.models.availability import AvailabilityModel
 
 if TYPE_CHECKING:
@@ -325,20 +325,18 @@ class Scan:
             max_sweep_value_length - len(str(sweep_val).replace(".", ""))
             for sweep_val in sweep_values
         ]
-        for iscan in range(1, self.data.scan.isweep + 1):
-            if scan_1d_ifail_dict[iscan] == 1:
+        for iscan in range(self.data.scan.isweep):
+            pstring = (
+                f"Scan {iscan:02d}: {nsweep_var.name} = {sweep_values[iscan]} "
+                + " " * offsets[iscan]
+                + "\u001b[32m{}CONVERGED \u001b[0m"
+            )
+            if scan_1d_ifail_dict[iscan + 1] == 1:
                 converged_count += 1
-                print(
-                    f"Scan {iscan:02d}: {nsweep_var.fname} = {sweep_values[iscan - 1]} "
-                    + " " * offsets[iscan - 1]
-                    + "\u001b[32mCONVERGED \u001b[0m"
-                )
+                pstring.format("")
             else:
-                print(
-                    f"Scan {iscan:02d}: {nsweep_var.fname} = {sweep_values[iscan - 1]} "
-                    + " " * offsets[iscan - 1]
-                    + "\u001b[31mUNCONVERGED \u001b[0m"
-                )
+                pstring.format("UN")
+            print(pstring)
         converged_percentage = converged_count / self.data.scan.isweep * 100
         print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
 
@@ -399,95 +397,59 @@ class Scan:
 
         for iscan_1 in range(1, self.data.scan.isweep + 1):
             for iscan_2 in range(1, self.data.scan.isweep_2 + 1):
+                string = (
+                    f"Scan {scan_point:02d}: ({nsweep_var.name} = "
+                    f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var.name} "
+                    f"= {sweep_2_values[iscan_2 - 1]}) "
+                    + " " * offsets[iscan_1 - 1][iscan_2 - 1]
+                    + "\u001b[32m{}CONVERGED \u001b[0m"
+                )
                 if scan_2d_ifail_list[iscan_1][iscan_2] == 1:
                     converged_count += 1
-                    print(
-                        (
-                            f"Scan {scan_point:02d}: ({nsweep_var.fname} = "
-                            f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var.fname} "
-                            f"= {sweep_2_values[iscan_2 - 1]}) "
-                        )
-                        + " " * offsets[iscan_1 - 1][iscan_2 - 1]
-                        + "\u001b[32mCONVERGED \u001b[0m"
-                    )
-                    scan_point += 1
+                    print(string.format())
                 else:
-                    print(
-                        (
-                            f"Scan {scan_point:02d}: ({nsweep_var.fname} = "
-                            f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var.fname} = "
-                            f"{sweep_2_values[iscan_2 - 1]}) "
-                        )
-                        + " " * offsets[iscan_1 - 1][iscan_2 - 1]
-                        + "\u001b[31mUNCONVERGED \u001b[0m"
-                    )
-                    scan_point += 1
+                    print(string.format("UN"))
+                scan_point += 1
         converged_percentage = (
             converged_count / (self.data.scan.isweep * self.data.scan.isweep_2) * 100
         )
         print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
 
-    @staticmethod
-    def scan_2d_init(scan_data: ScanData):
-        """Scan 2d initialisation"""
-        process_output.ovarre(
-            constants.MFILE,
-            "Number of first variable scan points",
-            "(isweep)",
-            scan_data.isweep,
-        )
-        process_output.ovarre(
-            constants.MFILE,
-            "Number of second variable scan points",
-            "(isweep_2)",
-            scan_data.isweep_2,
-        )
-        process_output.ovarre(
-            constants.MFILE,
-            "Scanning first variable number",
-            "(nsweep)",
-            scan_data.nsweep,
-        )
-        process_output.ovarre(
-            constants.MFILE,
-            "Scanning second variable number",
-            "(nsweep_2)",
-            scan_data.nsweep_2,
-        )
-        process_output.ovarre(
-            constants.MFILE,
-            "Scanning second variable number",
-            "(nsweep_2)",
-            scan_data.nsweep_2,
-        )
-        process_output.ovarre(
-            constants.MFILE,
-            "Scanning second variable number",
-            "(nsweep_2)",
-            scan_data.nsweep_2,
-        )
+    def scan_2d_init(self):
+        sv = self.data.scan
+        for d, n, v in (
+            ("Number of first variable scan points", "(isweep)", sv.isweep),
+            ("Number of second variable scan points", "(isweep_2)", sv.isweep_2),
+            ("Scanning first variable number", "(nsweep)", sv.nsweep),
+            ("Scanning second variable number", "(nsweep_2)", sv.nsweep_2),
+            ("Scanning second variable number", "(nsweep_2)", sv.nsweep_2),
+            ("Scanning second variable number", "(nsweep_2)", sv.nsweep_2),
+        ):
+            process_output.ovarin(constants.MFILE, d, n, v)
+
+    def _set_v_x_label(self, iscan, twod=False):
+        if twod:
+            sv = self.scan_select(self.data.scan.nsweep_2, self.data.scan.sweep_2, iscan)
+        else:
+            sv = self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan)
+        self.data.globals.vlabel = sv.fname
+        self.data.globals.xlabel = sv.description
 
     def scan_1d_write_point_header(self, iscan: int):
         """Scan 1d header"""
         self.data.globals.iscan_global = iscan
-        sv = self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan)
-
-        self.data.globals.vlabel = sv.fname
-        self.data.globals.xlabel = sv.description
+        self._set_v_x_label(iscan)
 
         process_output.oblnkl(constants.NOUT)
-        process_output.ostars(constants.NOUT, 110)
+        process_output.oblnkl(constants.MFILE)
 
         process_output.write(
             constants.NOUT,
-            f"***** Scan point {iscan} of {self.data.scan.isweep} : "
-            f"{self.data.globals.xlabel}"
+            f"Scan point {iscan} of {self.data.scan.isweep} : {self.data.globals.xlabel}"
             f", {self.data.globals.vlabel} = {self.data.scan.sweep[iscan - 1]} "
-            "*****",
+            "",
         )
-        process_output.ostars(constants.NOUT, 110)
-        process_output.oblnkl(constants.MFILE)
-        process_output.ovarre(constants.MFILE, "Scan point number", "(iscan)", iscan)
+        process_output.ovarin(constants.MFILE, "Scan point number", "(iscan)", iscan)
 
         print(
             f"Starting scan point {iscan} of {self.data.scan.isweep} : "
@@ -501,18 +463,12 @@ class Scan:
 
         # Makes iscan available globally (read-only)
         self.data.globals.iscan_global = iscan
-        sv_1 = self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan_1)
 
-        self.data.globals.vlabel = sv_1.fname
-        self.data.globals.xlabel = sv_1.data.description
-
-        sv_2 = self.scan_select(self.data.scan.nsweep_2, self.data.scan.sweep_2, iscan_r)
-
-        self.data.globals.vlabel_2 = sv_2.fname
-        self.data.globals.xlabel_2 = sv_2.data.description
+        self._set_v_x_label(iscan_1)
+        self._set_v_x_label(iscan_r)
 
         process_output.oblnkl(constants.NOUT)
-        process_output.ostars(constants.NOUT, 110)
+        process_output.oblnkl(constants.MFILE)
 
         process_output.write(
             constants.NOUT,
@@ -522,9 +478,7 @@ class Scan:
             f" {self.data.globals.vlabel_2} = {self.data.scan.sweep_2[iscan_r - 1]} "
             "*****",
         )
-        process_output.ostars(constants.NOUT, 110)
-        process_output.oblnkl(constants.MFILE)
-        process_output.ovarre(constants.MFILE, "Scan point number", "(iscan)", iscan)
+        process_output.ovarin(constants.MFILE, "Scan point number", "(iscan)", iscan)
 
         print(
             f"Starting scan point {iscan}:  {self.data.globals.xlabel}, "
@@ -535,27 +489,17 @@ class Scan:
 
         return iscan_r
 
-    @staticmethod
-    def scan_1d_write_plot(scan_data: ScanData):
-        """Scan 1d plotter"""
-        if scan_data.first_call_1d:
-            process_output.ovarre(
-                constants.MFILE,
-                "Number of scan points",
-                "(isweep)",
-                scan_data.isweep,
-            )
-            process_output.ovarre(
-                constants.MFILE,
-                "Scanning variable number",
-                "(nsweep)",
-                scan_data.nsweep,
-            )
+    def scan_1d_write_plot(self):
+        if self.data.scan.first_call_1d:
+            for d, n, v in (
+                ("Number of scan points", "(isweep)", self.data.scan.isweep),
+                ("Scanning variable number", "(nsweep)", self.data.scan.nsweep),
+            ):
+                process_output.ovarin(constants.MFILE, d, n, v)
 
-            scan_data.first_call_1d = False
+            self.data.scan.first_call_1d = False
 
     def scan_select(self, nsweep, sweep, iscan) -> ScanVariables:
         """Select a scan"""
         sv = ScanVariables(nsweep)
         sv.set(self.data, sweep[iscan - 1])
-        return sv
