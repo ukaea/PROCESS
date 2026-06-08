@@ -3429,7 +3429,7 @@ class BlanketLibrary(Model):
 
             # Get specific enthalpy at the outlet (J/kg) before pump using pressure and entropy s1
             pump_inlet_fluid_properties = FluidProperties.of(
-                fluid_name=CoolantType(primary_coolant_switch).name,
+                fluid_name=CoolantType(primary_coolant_switch).full_name,
                 pressure=pres_coolant_pump_inlet,
                 entropy=s1,
             )
