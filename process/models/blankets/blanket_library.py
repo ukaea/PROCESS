@@ -1406,7 +1406,7 @@ class BlanketLibrary(Model):
             b_bz_liq=self.data.fwbs.b_bz_liq,
         )
 
-        dpres_fw_inboard_coolant, fw_inboard_friction_params = self.total_pressure_drop(
+        dpres_fw_inboard_coolant, _ = self.total_pressure_drop(
             output,
             icoolpump=1,
             vel_coolant=vel_fw_inboard_coolant,
@@ -1421,21 +1421,19 @@ class BlanketLibrary(Model):
             label="Inboard first wall",
         )
 
-        dpres_fw_outboard_coolant, fw_outboard_friction_params = (
-            self.total_pressure_drop(
-                output,
-                icoolpump=1,
-                vel_coolant=vel_fw_outboard_coolant,
-                len_pipe=self.data.fwbs.len_fw_channel,
-                n_pipe_90_deg_bends=N_FW_PIPE_90_DEG_BENDS,
-                n_pipe_180_deg_bends=N_FW_PIPE_180_DEG_BENDS,
-                den_coolant=self.data.fwbs.den_fw_coolant,
-                visc_coolant_dynamic=self.data.fwbs.visc_fw_coolant,
-                coolant_electrical_conductivity=0.0e0,
-                pol_channel_length=pollengo,
-                nopolchan=npoltoto,
-                label="Outboard first wall",
-            )
+        dpres_fw_outboard_coolant, _ = self.total_pressure_drop(
+            output,
+            icoolpump=1,
+            vel_coolant=vel_fw_outboard_coolant,
+            len_pipe=self.data.fwbs.len_fw_channel,
+            n_pipe_90_deg_bends=N_FW_PIPE_90_DEG_BENDS,
+            n_pipe_180_deg_bends=N_FW_PIPE_180_DEG_BENDS,
+            den_coolant=self.data.fwbs.den_fw_coolant,
+            visc_coolant_dynamic=self.data.fwbs.visc_fw_coolant,
+            coolant_electrical_conductivity=0.0e0,
+            pol_channel_length=pollengo,
+            nopolchan=npoltoto,
+            label="Outboard first wall",
         )
 
         # BB Presure Drops ###############

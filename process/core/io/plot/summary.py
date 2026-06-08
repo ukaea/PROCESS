@@ -15662,7 +15662,7 @@ def plot_blanket_coolant_channel_structure_and_properties(
 
     fig.text(
         0.5,
-        0.65,
+        0.5,
         textstr_outboard_blkt,
         fontsize=9,
         verticalalignment="top",
@@ -15700,8 +15700,8 @@ def plot_blanket_coolant_channel_structure_and_properties(
     )
 
     fig.text(
-        0.2,
-        0.65,
+        0.1,
+        0.5,
         textstr_inboard_blkt,
         fontsize=9,
         verticalalignment="top",
@@ -16129,8 +16129,6 @@ def main_plot(
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(ax24, m_file, scan, figs[37])
-
-    # plot_outboard_blanket_coolant_properties(figs[37], m_file, scan)
 
 
 def create_thickness_builds(m_file, scan: int):
