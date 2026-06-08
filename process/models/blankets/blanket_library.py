@@ -3419,7 +3419,7 @@ class BlanketLibrary(Model):
             # using enthalpies before and after the pump.
 
             pump_outlet_fluid_properties = FluidProperties.of(
-                fluid_name=CoolantType(primary_coolant_switch).name,
+                fluid_name=CoolantType(primary_coolant_switch).full_name,
                 temperature=temp_coolant_pump_outlet,
                 pressure=pres_coolant_pump_outlet,
             )
