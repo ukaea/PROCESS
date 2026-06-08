@@ -742,8 +742,6 @@ class PowerflowCalcParam(NamedTuple):
 
     expected_p_div_rad_total_mw: Any = None
 
-    expected_p_fw_rad_total_mw: Any = None
-
     expected_psurffwi: Any = None
 
     expected_psurffwo: Any = None
@@ -797,7 +795,6 @@ class PowerflowCalcParam(NamedTuple):
             t_in_bb=573.13,
             t_out_bb=773.13,
             p_fw_blkt_coolant_pump_mw=0,
-            expected_p_fw_rad_total_mw=254.39207240222791,
             expected_psurffwi=97.271629070225231,
             expected_psurffwo=176.95628839065773,
             expected_p_shld_coolant_pump_mw=0.0068056297940224456,
@@ -843,7 +840,6 @@ class PowerflowCalcParam(NamedTuple):
             t_in_bb=573.13,
             t_out_bb=773.13,
             p_fw_blkt_coolant_pump_mw=202.00455086503842,
-            expected_p_fw_rad_total_mw=254.39207240222791,
             expected_psurffwi=97.271629070225259,
             expected_psurffwo=176.95009681558912,
             expected_p_shld_coolant_pump_mw=0.007019085478296147,
@@ -1052,10 +1048,6 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     ccfe_hcpb.powerflow_calc(False)
-
-    assert ccfe_hcpb.data.fwbs.p_fw_rad_total_mw == pytest.approx(
-        powerflowcalcparam.expected_p_fw_rad_total_mw
-    )
 
     assert ccfe_hcpb.data.fwbs.psurffwi == pytest.approx(
         powerflowcalcparam.expected_psurffwi

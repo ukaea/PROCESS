@@ -212,13 +212,6 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         # FW
 
-        # Radiation power incident on first wall (MW)
-        self.data.fwbs.p_fw_rad_total_mw = (
-            self.data.physics.p_plasma_rad_mw
-            - self.data.fwbs.p_div_rad_total_mw
-            - self.data.fwbs.p_fw_hcd_rad_total_mw
-        )
-
         # Surface heat flux on first wall (MW)
         # All of the fast particle losses go to the outer wall.
         self.data.fwbs.psurffwo = (

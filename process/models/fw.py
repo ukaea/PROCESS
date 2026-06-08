@@ -122,6 +122,25 @@ class FirstWall(Model):
                 self.data.physics.p_neutron_total_mw / self.data.first_wall.a_fw_total
             )
 
+        # Radiation power incident on first wall (MW)
+        # Set based on the total radiation power and the angular fractions taken up by
+        # the inboard and outboard first wall, which are calculated based on the
+        # geometry of the first wall and the plasma.
+        self.data.fwbs.p_fw_rad_total_mw = self.data.physics.p_plasma_rad_mw * (
+            self.data.blanket.f_deg_blkt_outboard_poloidal_plasma
+            + self.data.blanket.f_deg_blkt_inboard_poloidal_plasma
+        )
+
+        self.data.fwbs.p_fw_inboard_rad_mw = (
+            self.data.physics.p_plasma_rad_mw
+            * self.data.blanket.f_deg_blkt_inboard_poloidal_plasma
+        )
+
+        self.data.fwbs.p_fw_outboard_rad_mw = (
+            self.data.physics.p_plasma_rad_mw
+            * self.data.blanket.f_deg_blkt_outboard_poloidal_plasma
+        )
+
         if self.data.physics.i_pflux_fw_neutron == 1:
             self.data.physics.pflux_fw_rad_mw = (
                 self.data.physics.ffwal
