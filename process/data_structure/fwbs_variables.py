@@ -170,8 +170,8 @@ class FWBSData:
     f_a_fw_coolant_outboard: float = 0.0
     """Outboard FW coolant cross-sectional area void fraction"""
 
-    psurffwi: float = 0.0
-    """Surface heat flux on first wall [MW] (sum = p_fw_rad_total_mw)"""
+    p_fw_inboard_surface_heat_mw: float = 0.0
+    """Surface heat flux on inboard first wall [MW] """
 
     psurffwo: float = 0.0
     """Surface heat flux on first wall [MW] (sum = p_fw_rad_total_mw)"""

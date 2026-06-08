@@ -2180,10 +2180,10 @@ class BlanketLibrary(Model):
             if self.data.fwbs.i_blkt_dual_coolant == 2:
                 f_nuc_fwi = (
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                 ) / (
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                     + pnucblkti_struct
                 )
                 f_nuc_fwo = (
@@ -2197,10 +2197,10 @@ class BlanketLibrary(Model):
             else:
                 f_nuc_fwi = (
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                 ) / (
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                     + self.data.blanket.p_blkt_nuclear_heat_inboard_mw
                 )
                 f_nuc_fwo = (
@@ -2252,7 +2252,7 @@ class BlanketLibrary(Model):
             self.data.fwbs.radius_fw_channel,
             self.data.build.dr_fw_inboard,
             self.data.first_wall.a_fw_inboard,
-            self.data.fwbs.psurffwi,
+            self.data.fwbs.p_fw_inboard_surface_heat_mw,
             self.data.blanket.p_fw_inboard_nuclear_heat_mw,
             "Inboard first wall",
         )
@@ -2280,7 +2280,10 @@ class BlanketLibrary(Model):
         # Total mass flow rate to remove inboard FW power (kg/s)
         self.data.blanket.mflow_fw_inboard_coolant_total = (
             1.0e6
-            * (self.data.blanket.p_fw_inboard_nuclear_heat_mw + self.data.fwbs.psurffwi)
+            * (
+                self.data.blanket.p_fw_inboard_nuclear_heat_mw
+                + self.data.fwbs.p_fw_inboard_surface_heat_mw
+            )
             / (self.data.fwbs.cp_fw * (fwoutleti - self.data.fwbs.temp_fw_coolant_in))
         )
         # Total mass flow rate to remove outboard FW power (kg/s)

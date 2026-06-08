@@ -30,7 +30,7 @@ def pumping_powers_as_fractions(
     f_p_shld_coolant_pump_total_heat: float,
     f_p_div_coolant_pump_total_heat: float,
     p_fw_nuclear_heat_total_mw: float,
-    psurffwi: float,
+    p_fw_inboard_surface_heat_mw: float,
     psurffwo: float,
     p_blkt_nuclear_heat_total_mw: float,
     p_shld_nuclear_heat_mw: float,
@@ -53,7 +53,7 @@ def pumping_powers_as_fractions(
         Fraction for divertor coolant pump.
     p_fw_nuclear_heat_total_mw : float
         Total FW nuclear heating (MW).
-    psurffwi : float
+    p_fw_inboard_surface_heat_mw : float
         Inboard FW surface heating (MW).
     psurffwo : float
         Outboard FW surface heating (MW).
@@ -76,7 +76,7 @@ def pumping_powers_as_fractions(
         Tuple of pumping powers (MW) for FW, blanket, shield, and divertor.
     """
     p_fw_coolant_pump_mw = f_p_fw_coolant_pump_total_heat * (
-        p_fw_nuclear_heat_total_mw + psurffwi + psurffwo
+        p_fw_nuclear_heat_total_mw + p_fw_inboard_surface_heat_mw + psurffwo
     )
     p_blkt_coolant_pump_mw = (
         f_p_blkt_coolant_pump_total_heat * p_blkt_nuclear_heat_total_mw

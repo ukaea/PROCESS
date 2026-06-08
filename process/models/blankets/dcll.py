@@ -221,8 +221,9 @@ class DCLL(InboardBlanket, OutboardBlanket):
             + self.data.current_drive.p_beam_orbit_loss_mw
             + self.data.physics.p_fw_alpha_mw
         )
-        self.data.fwbs.psurffwi = self.data.fwbs.p_fw_rad_total_mw * (
-            1 - self.data.first_wall.a_fw_outboard / self.data.first_wall.a_fw_total
+        self.data.fwbs.p_fw_inboard_surface_heat_mw = (
+            self.data.fwbs.p_fw_rad_total_mw
+            * (1 - self.data.first_wall.a_fw_outboard / self.data.first_wall.a_fw_total)
         )
 
         if output:
@@ -332,7 +333,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 f_p_shld_coolant_pump_total_heat=self.data.heat_transport.f_p_shld_coolant_pump_total_heat,
                 f_p_div_coolant_pump_total_heat=self.data.heat_transport.f_p_div_coolant_pump_total_heat,
                 p_fw_nuclear_heat_total_mw=self.data.fwbs.p_fw_nuclear_heat_total_mw,
-                psurffwi=self.data.fwbs.psurffwi,
+                p_fw_inboard_surface_heat_mw=self.data.fwbs.p_fw_inboard_surface_heat_mw,
                 psurffwo=self.data.fwbs.psurffwo,
                 p_blkt_nuclear_heat_total_mw=self.data.fwbs.p_blkt_nuclear_heat_total_mw,
                 p_shld_nuclear_heat_mw=self.data.fwbs.p_shld_nuclear_heat_mw,
