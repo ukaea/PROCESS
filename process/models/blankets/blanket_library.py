@@ -28,6 +28,7 @@ from process.models.engineering.pumping import (
     darcy_friction_haaland,
     elbow_coeff,
 )
+from process.models.fw import N_FW_PIPE_90_DEG_BENDS, N_FW_PIPE_180_DEG_BENDS
 from process.models.power import PumpingPowerModelTypes
 
 logger = logging.getLogger(__name__)
@@ -1115,12 +1116,6 @@ class BlanketLibrary(Model):
         # ======================================================================
 
         # Coolant channel bends
-
-        # Number of angle turns in FW and blanket flow channels, n.b. these are the
-        # same for CCFE HCPB and KIT DCLL. FW is also be the same for DCLL MMS ans SMS.
-
-        N_FW_PIPE_90_DEG_BENDS = 2
-        N_FW_PIPE_180_DEG_BENDS = 0
 
         # N.B. This is for BZ only, does not include MF/BSS.
         if self.data.fwbs.i_blkt_dual_coolant in {1, 2}:
