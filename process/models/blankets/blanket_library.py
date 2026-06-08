@@ -2247,10 +2247,10 @@ class BlanketLibrary(Model):
                 )
                 f_nuc_fwo = (
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                 ) / (
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                     + pnucblkto_struct
                 )
             else:
@@ -2264,10 +2264,10 @@ class BlanketLibrary(Model):
                 )
                 f_nuc_fwo = (
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                 ) / (
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                     + self.data.blanket.p_blkt_nuclear_heat_outboard_mw
                 )
 
@@ -2325,7 +2325,7 @@ class BlanketLibrary(Model):
             self.data.fwbs.radius_fw_channel,
             self.data.build.dr_fw_outboard,
             self.data.first_wall.a_fw_outboard,
-            self.data.fwbs.psurffwo,
+            self.data.fwbs.p_fw_outboard_surface_heat_mw,
             self.data.blanket.p_fw_outboard_nuclear_heat_mw,
             "Outboard first wall",
         )
@@ -2348,7 +2348,10 @@ class BlanketLibrary(Model):
         # Total mass flow rate to remove outboard FW power (kg/s)
         self.data.blanket.mflow_fw_outboard_coolant_total = (
             1.0e6
-            * (self.data.blanket.p_fw_outboard_nuclear_heat_mw + self.data.fwbs.psurffwo)
+            * (
+                self.data.blanket.p_fw_outboard_nuclear_heat_mw
+                + self.data.fwbs.p_fw_outboard_surface_heat_mw
+            )
             / (self.data.fwbs.cp_fw * (fwoutleto - self.data.fwbs.temp_fw_coolant_in))
         )
 
