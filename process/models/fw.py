@@ -122,17 +122,29 @@ class FirstWall(Model):
                 self.data.physics.p_neutron_total_mw / self.data.first_wall.a_fw_total
             )
 
-        self.data.fwbs.p_fw_inboard_rad_mw = (
-            self.data.physics.p_plasma_rad_mw
-            * self.data.blanket.f_deg_blkt_inboard_poloidal_plasma
+        # Radiation surface heat flux on first wall (MW/m²)
+        # The full area is used as the radiation is assumed to be uniformly distributed
+        # across the first wall, so the coverage factors are not applied here.
+        (
+            self.data.fwbs.p_fw_inboard_rad_mw,
+            self.data.fwbs.pflux_fw_inboard_rad_surface_average_mw,
+        ) = self.calculate_fw_surface_load(
+            p_plasma_source_mw=self.data.physics.p_plasma_rad_mw,
+            f_deg_blkt_poloidal_plasma=self.data.blanket.f_deg_blkt_inboard_poloidal_plasma,
+            a_fw_full_coverage=self.data.first_wall.a_fw_inboard_full_coverage,
+            f_a_fw_hcd_ports=0.0,  # Inboard is toroidally continous with no ports or
+            # HCD, so no coverage factor applied
         )
 
-        # Some power is lost to HCD and ports on the outboard wall, so this is taken
-        # into account with a coverage factor.
-        self.data.fwbs.p_fw_outboard_rad_mw = (
-            self.data.physics.p_plasma_rad_mw
-            * self.data.blanket.f_deg_blkt_outboard_poloidal_plasma
-            * (1.0 - self.data.fwbs.f_a_fw_outboard_hcd)
+        (
+            self.data.fwbs.p_fw_outboard_rad_mw,
+            self.data.fwbs.pflux_fw_outboard_rad_surface_average_mw,
+        ) = self.calculate_fw_surface_load(
+            p_plasma_source_mw=self.data.physics.p_plasma_rad_mw,
+            f_deg_blkt_poloidal_plasma=self.data.blanket.f_deg_blkt_outboard_poloidal_plasma,
+            a_fw_full_coverage=self.data.first_wall.a_fw_outboard_full_coverage,
+            f_a_fw_hcd_ports=self.data.fwbs.f_a_fw_outboard_hcd,  # Coverage factor
+            # applied to outboard wall to account for HCD and ports
         )
 
         # Radiation power incident on first wall (MW)
@@ -141,21 +153,6 @@ class FirstWall(Model):
         # geometry of the first wall and the plasma.
         self.data.fwbs.p_fw_rad_total_mw = (
             self.data.fwbs.p_fw_inboard_rad_mw + self.data.fwbs.p_fw_outboard_rad_mw
-        )
-
-        # Radiation surface heat flux on first wall (MW/m²)
-        # The full area is used as the radiation is assumed to be uniformly distributed
-        # across the first wall, so the coverage factors are not applied here.
-        self.data.fwbs.pflux_fw_inboard_rad_surface_average_mw = (
-            self.data.physics.p_plasma_rad_mw
-            * self.data.blanket.f_deg_blkt_inboard_poloidal_plasma
-            / self.data.first_wall.a_fw_inboard_full_coverage
-        )
-
-        self.data.fwbs.pflux_fw_outboard_rad_surface_average_mw = (
-            self.data.physics.p_plasma_rad_mw
-            * self.data.blanket.f_deg_blkt_outboard_poloidal_plasma
-            / self.data.first_wall.a_fw_outboard_full_coverage
         )
 
         if self.data.physics.i_pflux_fw_neutron == 1:
@@ -177,11 +174,20 @@ class FirstWall(Model):
         # Some is lost to HCD and ports on the outboard wall, so this is taken into
         # account with a coverage factor.
 
-        self.data.fwbs.p_fw_outboard_alpha_surface_mw = (
-            self.data.physics.p_alpha_total_mw
-            * (1.0e0 - self.data.physics.f_p_alpha_plasma_deposited)
-            * (1.0 - self.data.fwbs.f_a_fw_outboard_hcd)
+        (
+            self.data.fwbs.p_fw_outboard_alpha_surface_mw,
+            _,
+        ) = self.calculate_fw_surface_load(
+            p_plasma_source_mw=(
+                self.data.physics.p_alpha_total_mw
+                * (1.0e0 - self.data.physics.f_p_alpha_plasma_deposited)
+            ),
+            f_deg_blkt_poloidal_plasma=1.0,
+            a_fw_full_coverage=self.data.first_wall.a_fw_outboard_full_coverage,
+            f_a_fw_hcd_ports=self.data.fwbs.f_a_fw_outboard_hcd,  # Coverage factor
+            # applied to outboard wall to account for HCD and ports
         )
+
         # Will assume that all alpha power reaching the first wall is deposited on the
         # outboard side.
         self.data.fwbs.p_fw_inboard_alpha_surface_mw = 0.0
@@ -208,26 +214,26 @@ class FirstWall(Model):
             + self.data.fwbs.p_fw_inboard_alpha_surface_mw
         )
 
-        self.data.fwbs.p_fw_inboard_neutron_incident_mw = (
-            self.data.physics.p_neutron_total_mw
-            * self.data.blanket.f_deg_blkt_inboard_poloidal_plasma
+        (
+            self.data.fwbs.p_fw_inboard_neutron_incident_mw,
+            self.data.fwbs.pflux_fw_inboard_neutron_surface_average_mw,
+        ) = self.calculate_fw_surface_load(
+            p_plasma_source_mw=self.data.physics.p_neutron_total_mw,
+            f_deg_blkt_poloidal_plasma=self.data.blanket.f_deg_blkt_inboard_poloidal_plasma,
+            a_fw_full_coverage=self.data.first_wall.a_fw_inboard_full_coverage,
+            f_a_fw_hcd_ports=0.0,  # Inboard is toroidally continous with no ports
+            # or HCD, so no coverage factor applied
         )
 
-        self.data.fwbs.p_fw_outboard_neutron_incident_mw = (
-            self.data.physics.p_neutron_total_mw
-            * self.data.blanket.f_deg_blkt_outboard_poloidal_plasma
-        )
-
-        self.data.fwbs.pflux_fw_outboard_neutron_surface_average_mw = (
-            self.data.physics.p_neutron_total_mw
-            * self.data.blanket.f_deg_blkt_outboard_poloidal_plasma
-            / self.data.first_wall.a_fw_outboard_full_coverage
-        )
-
-        self.data.fwbs.pflux_fw_inboard_neutron_surface_average_mw = (
-            self.data.physics.p_neutron_total_mw
-            * self.data.blanket.f_deg_blkt_inboard_poloidal_plasma
-            / self.data.first_wall.a_fw_inboard_full_coverage
+        (
+            self.data.fwbs.p_fw_outboard_neutron_incident_mw,
+            self.data.fwbs.pflux_fw_outboard_neutron_surface_average_mw,
+        ) = self.calculate_fw_surface_load(
+            p_plasma_source_mw=self.data.physics.p_neutron_total_mw,
+            f_deg_blkt_poloidal_plasma=self.data.blanket.f_deg_blkt_outboard_poloidal_plasma,
+            a_fw_full_coverage=self.data.first_wall.a_fw_outboard_full_coverage,
+            f_a_fw_hcd_ports=self.data.fwbs.f_a_fw_outboard_hcd,  # Coverage factor
+            # applied to outboard wall to account for HCD and ports
         )
 
     @staticmethod
@@ -734,6 +740,47 @@ class FirstWall(Model):
             den_fw_coolant_average,
             mflow_fw_coolant,
         )
+
+    @staticmethod
+    def calculate_fw_surface_load(
+        p_plasma_source_mw: float,
+        f_deg_blkt_poloidal_plasma: float,
+        a_fw_full_coverage: float,
+        f_a_fw_hcd_ports: float = 0.0,
+    ) -> tuple[float, float]:
+        """Calculate the surface load on the first wall due to some incident power
+
+        Parameters
+        ----------
+        p_plasma_source_mw:
+            Total plasma power source, can be neutrons or other forms of energy etc [MW]
+        f_deg_blkt_poloidal_plasma:
+            Fraction of the plasma poloidal circumference covered by the first wall.
+        a_fw_full_coverage:
+            Area of the first wall with full coverage [m²].
+        f_a_fw_hcd_ports:
+            Fraction of the first wall area occupied by HCD and ports.
+            This is a loss term that reduces the effective area for power deposition on
+            the first wall. Default is 0.0 (no loss).
+
+        Returns
+        -------
+        tuple
+            Power incident on the first wall [MW] and the surface heat flux on the
+            first wall [MW/m²].
+
+        Notes
+        -----
+        We use the full coverage area here as the surface is toroidally continous and
+        the radiation is assumed to be uniformly distributed across the first wall,
+        so the coverage factors are not applied here.
+        """
+        p_fw_incident_mw = (
+            p_plasma_source_mw * f_deg_blkt_poloidal_plasma * (1.0 - f_a_fw_hcd_ports)
+        )
+        pflux_fw_inboard_surface_average_mw = p_fw_incident_mw / a_fw_full_coverage
+
+        return p_fw_incident_mw, pflux_fw_inboard_surface_average_mw
 
     @staticmethod
     def calculate_total_fw_channels(
