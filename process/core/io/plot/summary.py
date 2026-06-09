@@ -14674,6 +14674,8 @@ def plot_poloidal_power_distribution(
     # MFILE variables needed to plot the blkt structure and angles
     rmajor = m_file.get("rmajor", scan=scan)
     rminor = m_file.get("rminor", scan=scan)
+    triang = m_file.get("triang", scan=scan)
+    kappa = m_file.get("kappa", scan=scan)
     dr_fw_plasma_gap_outboard = m_file.get("dr_fw_plasma_gap_outboard", scan=scan)
     dr_fw_plasma_gap_inboard = m_file.get("dr_fw_plasma_gap_inboard", scan=scan)
     dr_fw_inboard = m_file.get("dr_fw_inboard", scan=scan)
@@ -14775,7 +14777,9 @@ def plot_poloidal_power_distribution(
         0.0,
         f"$P_{{\\gamma}}$={m_file.get('p_fw_outboard_rad_mw', scan=scan):.3f} MW\n"
         f"$\\Gamma_{{\\gamma}}$={m_file.get('pflux_fw_outboard_rad_surface_average_mw', scan=scan):.3f} MW/m²\n\n"
-        f"$P_{{\\alpha}}$={m_file.get('p_fw_outboard_alpha_surface_mw', scan=scan):.3f} MW",
+        f"$P_{{\\alpha}}$={m_file.get('p_fw_outboard_alpha_surface_mw', scan=scan):.3f} MW\n\n"
+        f"$P_n$={m_file.get('p_fw_outboard_neutron_incident_mw', scan=scan):.3f} MW\n"
+        f"$\\Gamma_{{n}}$={m_file.get('pflux_fw_outboard_neutron_surface_average_mw', scan=scan):.3f} MW/m²\n",
         fontsize=7,
         color="purple",
         ha="center",
@@ -14859,9 +14863,11 @@ def plot_poloidal_power_distribution(
     ax.text(
         rmajor / 3,
         0.0,
-        f"$P_{{\\gamma}}$={m_file.get('p_fw_inboard_rad_mw', scan=scan):.2f} MW\n"
+        f"$P_{{\\gamma}}$={m_file.get('p_fw_inboard_rad_mw', scan=scan):.3f} MW\n"
         f"$\\Gamma_{{\\gamma}}$={m_file.get('pflux_fw_inboard_rad_surface_average_mw', scan=scan):.3f} MW/m²\n\n"
-        f"$P_{{\\alpha}}$={m_file.get('p_fw_inboard_alpha_surface_mw', scan=scan):.2f}MW",
+        f"$P_{{\\alpha}}$={m_file.get('p_fw_inboard_alpha_surface_mw', scan=scan):.3f} MW\n\n"
+        f"$P_n$={m_file.get('p_fw_inboard_neutron_incident_mw', scan=scan):.3f} MW\n"
+        f"$\\Gamma_{{n}}$={m_file.get('pflux_fw_inboard_neutron_surface_average_mw', scan=scan):.3f} MW/m²\n\n",
         fontsize=7,
         color="green",
         ha="center",
@@ -14946,9 +14952,10 @@ def plot_poloidal_power_distribution(
 
     # Plot the info box for the lower divertor angle
     ax.text(
-        label_x,
-        label_y,
-        f"{deg_div_poloidal_plasma:.1f}°\n({f_ster_div_single * 100:.1f}%)",
+        rmajor - (triang * rminor),
+        -(rminor * kappa),
+        f"$P_{{\\gamma}}$={m_file.get('p_div_rad_total_mw', scan=scan):.3f} MW\n\n"
+        f"$P_n$={m_file.get('p_div_nuclear_heat_total_mw', scan=scan):.3f} MW\n",
         fontsize=7,
         color="black",
         ha="center",

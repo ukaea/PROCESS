@@ -208,6 +208,16 @@ class FirstWall(Model):
             + self.data.fwbs.p_fw_inboard_alpha_surface_mw
         )
 
+        self.data.fwbs.p_fw_inboard_neutron_incident_mw = (
+            self.data.physics.p_neutron_total_mw
+            * self.data.blanket.f_deg_blkt_inboard_poloidal_plasma
+        )
+
+        self.data.fwbs.p_fw_outboard_neutron_incident_mw = (
+            self.data.physics.p_neutron_total_mw
+            * self.data.blanket.f_deg_blkt_outboard_poloidal_plasma
+        )
+
         self.data.fwbs.pflux_fw_outboard_neutron_surface_average_mw = (
             self.data.physics.p_neutron_total_mw
             * self.data.blanket.f_deg_blkt_outboard_poloidal_plasma
@@ -958,15 +968,29 @@ class FirstWall(Model):
         )
         po.ovarre(
             self.outfile,
+            "Neutron heat flux on inboard first wall [MW]",
+            "(p_fw_inboard_neutron_incident_mw)",
+            self.data.fwbs.p_fw_inboard_neutron_incident_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Nominal mean neutron load on inboard first-wall [MW/m²]",
-            "(pflux_fw_inboard_neutron_mw)",
+            "(pflux_fw_inboard_neutron_surface_average_mw)",
             self.data.fwbs.pflux_fw_inboard_neutron_surface_average_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
+            "Neutron heat flux on outboard first wall [MW]",
+            "(p_fw_outboard_neutron_incident_mw)",
+            self.data.fwbs.p_fw_outboard_neutron_incident_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Nominal mean neutron load on outboard first-wall [MW/m²]",
-            "(pflux_fw_outboard_neutron_mw)",
+            "(pflux_fw_outboard_neutron_surface_average_mw)",
             self.data.fwbs.pflux_fw_outboard_neutron_surface_average_mw,
             "OP ",
         )
