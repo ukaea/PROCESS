@@ -2519,7 +2519,7 @@ class BlanketLibrary(Model):
                 pres_coolant_pump_inlet=self.data.fwbs.pres_fw_coolant,
                 dpres_coolant=deltap_fw,
                 mflow_coolant_total=self.data.blanket.mflow_fw_coolant_total,
-                primary_coolant_switch=self.data.fwbs.i_fw_coolant_type,
+                i_coolant_type=self.data.fwbs.i_fw_coolant_type,
                 den_coolant=self.data.fwbs.den_fw_coolant,
                 label="First Wall",
             )
@@ -2533,7 +2533,7 @@ class BlanketLibrary(Model):
                 pres_coolant_pump_inlet=self.data.fwbs.pres_blkt_coolant,
                 dpres_coolant=deltap_blkt,
                 mflow_coolant_total=self.data.blanket.mflow_blkt_coolant_total,
-                primary_coolant_switch=(self.data.fwbs.i_blkt_coolant_type),
+                i_coolant_type=(self.data.fwbs.i_blkt_coolant_type),
                 den_coolant=self.data.fwbs.den_blkt_coolant,
                 label="Blanket",
             )
@@ -2577,7 +2577,7 @@ class BlanketLibrary(Model):
                 pres_coolant_pump_inlet=self.data.fwbs.blpressure_liq,
                 dpres_coolant=deltap_bl_liq,
                 mflow_coolant_total=self.data.blanket.mfblkt_liq,
-                primary_coolant_switch=(self.data.fwbs.i_blkt_coolant_type),
+                i_coolant_type=(self.data.fwbs.i_blkt_coolant_type),
                 den_coolant=self.data.fwbs.den_liq,
                 label="Liquid Metal Breeder/Coolant",
             )
@@ -3363,7 +3363,7 @@ class BlanketLibrary(Model):
         pres_coolant_pump_inlet: float,
         dpres_coolant: float,
         mflow_coolant_total: float,
-        primary_coolant_switch: int,
+        i_coolant_type: int,
         den_coolant: float,
         label: str,
     ) -> float:
@@ -3385,8 +3385,8 @@ class BlanketLibrary(Model):
             Coolant pressure drop (Pa).
         mflow_coolant_total : float
             Total coolant mass flow rate in (kg/s).
-        primary_coolant_switch : int
-            Type of FW/blanket coolant (e.g., 1=Helium, 2=Water) if icoolpump=1.
+        i_coolant_type : int
+            Type of FW/blanket coolant (e.g., 1=Helium, 2=Water)
         den_coolant : float
             Density of coolant or liquid breeder (kg/m³).
         label : str
@@ -3407,11 +3407,7 @@ class BlanketLibrary(Model):
         pres_coolant_pump_outlet = pres_coolant_pump_inlet + dpres_coolant
 
         # Adiabatic index for helium or water
-        gamma = (
-            (5 / 3)
-            if self.data.fwbs.i_blkt_coolant_type == CoolantType.HELIUM
-            else (4 / 3)
-        )
+        gamma = (5 / 3) if i_coolant_type == CoolantType.HELIUM else (4 / 3)
 
         # If calculating for primary coolant
         if i_liquid_breeder == 1:
@@ -3419,7 +3415,7 @@ class BlanketLibrary(Model):
             # using enthalpies before and after the pump.
 
             pump_outlet_fluid_properties = FluidProperties.of(
-                fluid_name=CoolantType(primary_coolant_switch).full_name,
+                fluid_name=CoolantType(i_coolant_type).full_name,
                 temperature=temp_coolant_pump_outlet,
                 pressure=pres_coolant_pump_outlet,
             )
@@ -3429,7 +3425,7 @@ class BlanketLibrary(Model):
 
             # Get specific enthalpy at the outlet (J/kg) before pump using pressure and entropy s1
             pump_inlet_fluid_properties = FluidProperties.of(
-                fluid_name=CoolantType(primary_coolant_switch).full_name,
+                fluid_name=CoolantType(i_coolant_type).full_name,
                 pressure=pres_coolant_pump_inlet,
                 entropy=s1,
             )

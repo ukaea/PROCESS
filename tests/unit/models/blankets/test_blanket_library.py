@@ -349,7 +349,7 @@ def test_pumppower_primary_helium(monkeypatch, blanket_library):
         "pres_coolant_pump_inlet": 1700000,
         "dpres_coolant": 303517.3,
         "mflow_coolant_total": 35677.7,
-        "primary_coolant_switch": 1,
+        "i_coolant_type": 1,
         "den_coolant": 9753.25,
         "label": "Liquid Metal Breeder/Coolant",
     }
@@ -371,7 +371,7 @@ def test_pumppower_secondary_pb_li(monkeypatch, blanket_library):
         "pres_coolant_pump_inlet": 8000000,
         "dpres_coolant": 20088.23,
         "mflow_coolant_total": 956.3,
-        "primary_coolant_switch": CoolantType.HELIUM,
+        "i_coolant_type": CoolantType.HELIUM,
         "den_coolant": 5.64,
         "label": "First Wall and Blanket",
     }
