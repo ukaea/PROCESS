@@ -3,7 +3,7 @@ import numpy as np
 ipnvars: int = 177
 """total number of variables available for iteration"""
 
-ipeqns: int = 92
+ipeqns: int = 93
 """number of constraint equations available"""
 
 ipnfoms: int = 19
@@ -188,6 +188,7 @@ lablcc: list[str] = None
 * (90) Lower Limit on number of stress load cycles for CS
 * (91) Checking if the design point is ECRH ignitable
 * (92) D/T/He3 ratio in fuel sums to 1
+* (93) Lower limit of the copper in TF coil needed for quench protection
 """
 
 ixc: list[int] = None
@@ -618,6 +619,7 @@ def init_numerics():
         "CS stress load cycles            ",
         "ECRH ignitability                ",
         "Fuel composition consistency     ",
+        "TFC stored energy/copper area    ",
     ]
 
     ixc = np.array([0] * ipnvars)
