@@ -25,9 +25,7 @@ def jcrit_from_material(
     strain = -0.005  # for now a small value
     f_he = f_a_tf_turn_cable_space_extra_void  # this is helium fraction in the superconductor (set it to the fixed global variable here)
 
-    f_tf_conductor_copper = (
-        f_a_tf_turn_cable_copper  # fcutfsu is a global variable. Is the copper fraction
-    )
+    f_tf_conductor_copper = f_a_tf_turn_cable_copper  # f_a_tf_turn_cable_copper is a global variable. Is the copper fraction
     # of a cable conductor.
 
     if i_tf_sc_mat == 1:  # ITER Nb3Sn critical surface parameterization
@@ -139,6 +137,16 @@ def jcrit_from_material(
         )
         # A0 calculated for tape cross section already
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
+    elif i_tf_sc_mat == 9:  # SOX YBCO
+        j_crit_tape_per_width = superconductors.jcrit_ybco(b_max)
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        # scaled a tape thickness of 0.1mm and a ratio 1.811 between tape radial thickness and total conductor
+        n_tapes = 180  # 1.0e4 * superconducting_tf_coil_variables.dr_tf_turn / 1.811
+        tape_height = 0.0123
+        j_crit_sc = (
+            j_crit_tape_per_width * n_tapes * tape_height
+        )  # pull this in to the funciton? ??
         j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
     else:
         raise ProcessValueError(

@@ -1589,6 +1589,15 @@ class Power(Model):
             self.data.heat_transport.p_plant_electric_net_mw,
         )
 
+        po.ovarre(
+            self.outfile,
+            "Total net-electric power of the plant with updated targets [MWe]",
+            "(p_plant_update_electric_net_mw)",
+            0.36 * physics_variables.p_fusion_total_mw
+            - 1.42 * heat_transport_variables.p_hcd_electric_total_mw
+            - 63.0,
+        )
+
         po.oblnkl(self.outfile)
 
         po.ovarre(

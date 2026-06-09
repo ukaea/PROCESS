@@ -720,6 +720,34 @@ def gl_rebco(
     return j_critical, b_critical, temp_critical
 
 
+def jcrit_ybco(b_field_on_tape: float) -> float:
+    """Calculates the criticial current per tape based on the magnetic field on the tape
+
+    Parameters
+    ----------
+    b_field_on_tape : float
+        B-field on the tape
+
+    Returns
+    -------
+    i_crit_per_tape : float
+        Criticial current per tape
+
+    Notes
+    -----
+    - This parameterisation includes a 0.95 factor for reduced performance under strain conditions.
+    - This assumes operation in a regime well above the lower critical field B_c1.
+
+    References
+    ----------
+    Based on data for SOx YBCO 021 from the robinson database https://htsdb.wimbush.eu/
+    """
+    k = 1482.0
+    C = 0.55204
+    cm = 0.01
+    return cm * 0.95 * k * b_field_on_tape**C
+
+
 def hijc_rebco(
     temp_conductor: float,
     b_conductor: float,
