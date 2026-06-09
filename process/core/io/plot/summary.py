@@ -15269,18 +15269,13 @@ def plot_poloidal_power_distribution(
 
     ax.plot(arc_x, arc_y, color="purple", linewidth=2)
 
-    # Add angle label at the arc
-    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
-    label_radius = arc_radius * 1.8
-    label_x = rmajor + label_radius * np.cos(mid_angle)
-    label_y = label_radius * np.sin(mid_angle)
-
     # Plot the info box for the outboard blanket
     ax.text(
-        label_x,
-        label_y,
-        f"$P_{{\\gamma}}$={m_file.get('p_fw_outboard_rad_mw', scan=scan):.1f}MW\n"
-        f"$P_{{\\alpha}}$={m_file.get('p_fw_outboard_alpha_surface_mw', scan=scan):.1f}MW",
+        rmajor * 1.75,
+        0.0,
+        f"$P_{{\\gamma}}$={m_file.get('p_fw_outboard_rad_mw', scan=scan):.3f} MW\n"
+        f"$\\Gamma_{{\\gamma}}$={m_file.get('pflux_fw_outboard_rad_surface_average_mw', scan=scan):.3f} MW/m²\n\n"
+        f"$P_{{\\alpha}}$={m_file.get('p_fw_outboard_alpha_surface_mw', scan=scan):.3f} MW",
         fontsize=7,
         color="purple",
         ha="center",
@@ -15289,10 +15284,19 @@ def plot_poloidal_power_distribution(
         bbox={
             "boxstyle": "round",
             "facecolor": "white",
-            "alpha": 0.8,
+            "alpha": 1.0,
             "edgecolor": "purple",
             "linewidth": 1.5,
         },
+    )
+
+    # Plot arrow for the outboard blanket
+    ax.annotate(
+        "",
+        xy=(rmajor, 0),
+        xytext=(rmajor + rminor, 0),
+        arrowprops={"arrowstyle": "<-", "color": "purple", "linewidth": 1.5},
+        zorder=5,
     )
 
     # Plot arrows for the inboard blanket angles
@@ -15302,6 +15306,28 @@ def plot_poloidal_power_distribution(
         xytext=(r_fw_inboard_out, dz_blkt_half),
         arrowprops={"arrowstyle": "<-", "color": "green"},
         zorder=5,
+    )
+
+    # Plot the total loads at the centre of the plasma
+    ax.text(
+        rmajor,
+        0.0,
+        f"$P_{{\\gamma}}$={m_file.get('p_plasma_rad_mw', scan=scan):.1f}MW\n"
+        f"$P_{{\\alpha}}$={m_file.get('p_fw_outboard_alpha_surface_mw', scan=scan):.1f}MW\n"
+        f"$P_n$={m_file.get('p_neutron_total_mw', scan=scan):.1f}MW",
+        fontsize=7,
+        color="black",
+        ha="center",
+        va="center",
+        weight="bold",
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "edgecolor": "black",
+            "linewidth": 1.5,
+        },
+        zorder=20,
     )
 
     ax.annotate(
@@ -15329,12 +15355,13 @@ def plot_poloidal_power_distribution(
     label_x = rmajor - label_radius * np.cos(mid_angle)
     label_y = label_radius * np.sin(mid_angle)
 
-    # Plot the info box for the inboard blanket
+    # Plot the info box for the inboard blanket/FW
     ax.text(
-        label_x,
-        label_y,
-        f"$P_{{\\gamma}}$={m_file.get('p_fw_inboard_rad_mw', scan=scan):.1f}MW\n"
-        f"$P_{{\\alpha}}$={m_file.get('p_fw_inboard_alpha_surface_mw', scan=scan):.1f}MW",
+        rmajor / 3,
+        0.0,
+        f"$P_{{\\gamma}}$={m_file.get('p_fw_inboard_rad_mw', scan=scan):.2f} MW\n"
+        f"$\\Gamma_{{\\gamma}}$={m_file.get('pflux_fw_inboard_rad_surface_average_mw', scan=scan):.3f} MW/m²\n\n"
+        f"$P_{{\\alpha}}$={m_file.get('p_fw_inboard_alpha_surface_mw', scan=scan):.2f}MW",
         fontsize=7,
         color="green",
         ha="center",
@@ -15343,10 +15370,19 @@ def plot_poloidal_power_distribution(
         bbox={
             "boxstyle": "round",
             "facecolor": "white",
-            "alpha": 0.8,
+            "alpha": 1.0,
             "edgecolor": "green",
             "linewidth": 1.5,
         },
+        zorder=5,
+    )
+
+    # Plot arrow for the inboard blanket
+    ax.annotate(
+        "",
+        xy=(rmajor, 0),
+        xytext=(rmajor - rminor, 0),
+        arrowprops={"arrowstyle": "<-", "color": "green", "linewidth": 1.5},
         zorder=5,
     )
 
@@ -15383,7 +15419,7 @@ def plot_poloidal_power_distribution(
             bbox={
                 "boxstyle": "round",
                 "facecolor": "white",
-                "alpha": 0.8,
+                "alpha": 1.0,
                 "edgecolor": "black",
                 "linewidth": 1.5,
             },
@@ -15421,7 +15457,7 @@ def plot_poloidal_power_distribution(
         bbox={
             "boxstyle": "round",
             "facecolor": "white",
-            "alpha": 0.8,
+            "alpha": 1.0,
             "edgecolor": "black",
             "linewidth": 1.5,
         },
@@ -15455,6 +15491,8 @@ def plot_poloidal_power_distribution(
         linewidth=1.5,
         label="Midplane",
     )
+
+    ax.set_xlim(-rmajor / 4, 2 * rmajor)
 
 
 def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int):
