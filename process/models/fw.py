@@ -144,14 +144,14 @@ class FirstWall(Model):
         )
 
         # Radiation surface heat flux on first wall (MW/m²)
-        # The full area is used as the radiation is assumed to be uniformly distributed 
+        # The full area is used as the radiation is assumed to be uniformly distributed
         # across the first wall, so the coverage factors are not applied here.
         self.data.fwbs.pflux_fw_inboard_rad_surface_average_mw = (
             self.data.physics.p_plasma_rad_mw
             * self.data.blanket.f_deg_blkt_inboard_poloidal_plasma
             / self.data.first_wall.a_fw_inboard_full_coverage
         )
-        
+
         self.data.fwbs.pflux_fw_outboard_rad_surface_average_mw = (
             self.data.physics.p_plasma_rad_mw
             * self.data.blanket.f_deg_blkt_outboard_poloidal_plasma
@@ -206,6 +206,18 @@ class FirstWall(Model):
         self.data.fwbs.p_fw_inboard_surface_heat_mw = (
             self.data.fwbs.p_fw_inboard_rad_mw
             + self.data.fwbs.p_fw_inboard_alpha_surface_mw
+        )
+
+        self.data.fwbs.pflux_fw_outboard_neutron_surface_average_mw = (
+            self.data.physics.p_neutron_total_mw
+            * self.data.blanket.f_deg_blkt_outboard_poloidal_plasma
+            / self.data.first_wall.a_fw_outboard_full_coverage
+        )
+
+        self.data.fwbs.pflux_fw_inboard_neutron_surface_average_mw = (
+            self.data.physics.p_neutron_total_mw
+            * self.data.blanket.f_deg_blkt_inboard_poloidal_plasma
+            / self.data.first_wall.a_fw_inboard_full_coverage
         )
 
     @staticmethod
@@ -942,5 +954,19 @@ class FirstWall(Model):
             "Nominal mean neutron load on vessel first-wall [MW/m²]",
             "(pflux_fw_neutron_mw)",
             self.data.physics.pflux_fw_neutron_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Nominal mean neutron load on inboard first-wall [MW/m²]",
+            "(pflux_fw_inboard_neutron_mw)",
+            self.data.fwbs.pflux_fw_inboard_neutron_surface_average_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Nominal mean neutron load on outboard first-wall [MW/m²]",
+            "(pflux_fw_outboard_neutron_mw)",
+            self.data.fwbs.pflux_fw_outboard_neutron_surface_average_mw,
             "OP ",
         )
