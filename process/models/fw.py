@@ -202,11 +202,11 @@ class FirstWall(Model):
         # and shine through.
         # Some power is lost to HCD and ports on the outboard wall, so this is
         # taken into account with a coverage factor.
-        self.data.fwbs.p_fw_outboard_surface_heat_mw = (
-            self.data.fwbs.p_fw_outboard_rad_mw
-            + self.data.current_drive.p_beam_orbit_loss_mw
-            + self.data.fwbs.p_fw_outboard_alpha_surface_mw
-            + self.data.current_drive.p_beam_shine_through_mw
+        self.data.fwbs.p_fw_outboard_surface_heat_mw = self.calculate_fw_outboard_surface_loads(
+            p_fw_outboard_rad_mw=self.data.fwbs.p_fw_outboard_rad_mw,
+            p_beam_orbit_loss_mw=self.data.current_drive.p_beam_orbit_loss_mw,
+            p_fw_outboard_alpha_surface_mw=self.data.fwbs.p_fw_outboard_alpha_surface_mw,
+            p_beam_shine_through_mw=self.data.current_drive.p_beam_shine_through_mw,
         )
 
         self.data.fwbs.p_fw_inboard_surface_heat_mw = (
@@ -1040,4 +1040,42 @@ class FirstWall(Model):
             "(pflux_fw_outboard_neutron_surface_average_mw)",
             self.data.fwbs.pflux_fw_outboard_neutron_surface_average_mw,
             "OP ",
+        )
+
+    @staticmethod
+    def calculate_fw_outboard_surface_loads(
+        p_fw_outboard_rad_mw: float,
+        p_beam_orbit_loss_mw: float,
+        p_fw_outboard_alpha_surface_mw: float,
+        p_beam_shine_through_mw: float,
+    ) -> float:
+        """Calculate the surface loads on the first wall.
+
+        Parameters
+        ----------
+        p_fw_outboard_rad_mw:
+            Radiation heat flux on outboard first wall [MW].
+        p_beam_orbit_loss_mw:
+            Beam orbit loss power [MW].
+        p_fw_outboard_alpha_surface_mw:
+            Alpha particle heat flux on outboard first wall [MW].
+        p_beam_shine_through_mw:
+            Beam shine through power [MW].
+
+        Returns
+        -------
+        p_fw_outboard_surface_heat_mw:
+            Total surface heat flux on the outboard first wall [MW].
+
+        """
+        # Surface heat flux on first wall (MW)
+        # All of the fast particle losses go to the outer wall, as do all beam losses
+        # and shine through.
+        # Some power is lost to HCD and ports on the outboard wall, so this is
+        # taken into account with a coverage factor.
+        return (
+            p_fw_outboard_rad_mw
+            + p_beam_orbit_loss_mw
+            + p_fw_outboard_alpha_surface_mw
+            + p_beam_shine_through_mw
         )

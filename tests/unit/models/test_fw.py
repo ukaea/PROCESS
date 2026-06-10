@@ -238,3 +238,69 @@ def test_calculate_fw_surface_load(calculatefwsurfaceloadparam, fw):
     assert pflux_fw_surface_mw_m2 == pytest.approx(
         calculatefwsurfaceloadparam.expected_pflux_fw_surface_mw_m2
     )
+
+
+class CalculateFwOutboardSurfaceLoadsParam(NamedTuple):
+    p_fw_outboard_rad_mw: float
+    p_beam_orbit_loss_mw: float
+    p_fw_outboard_alpha_surface_mw: float
+    p_beam_shine_through_mw: float
+    expected_p_fw_outboard_surface_heat_mw: float
+    label: str = None
+
+
+@pytest.mark.parametrize(
+    "calculatefwoutboardsurfaceloadsparam",
+    [
+        CalculateFwOutboardSurfaceLoadsParam(
+            p_fw_outboard_rad_mw=100.0,
+            p_beam_orbit_loss_mw=50.0,
+            p_fw_outboard_alpha_surface_mw=75.0,
+            p_beam_shine_through_mw=25.0,
+            expected_p_fw_outboard_surface_heat_mw=250.0,
+            label="Equal power contributions",
+        ),
+        CalculateFwOutboardSurfaceLoadsParam(
+            p_fw_outboard_rad_mw=500.0,
+            p_beam_orbit_loss_mw=100.0,
+            p_fw_outboard_alpha_surface_mw=150.0,
+            p_beam_shine_through_mw=50.0,
+            expected_p_fw_outboard_surface_heat_mw=800.0,
+            label="Dominant radiation load",
+        ),
+        CalculateFwOutboardSurfaceLoadsParam(
+            p_fw_outboard_rad_mw=0.0,
+            p_beam_orbit_loss_mw=0.0,
+            p_fw_outboard_alpha_surface_mw=0.0,
+            p_beam_shine_through_mw=0.0,
+            expected_p_fw_outboard_surface_heat_mw=0.0,
+            label="Zero power contributions",
+        ),
+        CalculateFwOutboardSurfaceLoadsParam(
+            p_fw_outboard_rad_mw=200.0,
+            p_beam_orbit_loss_mw=75.0,
+            p_fw_outboard_alpha_surface_mw=100.0,
+            p_beam_shine_through_mw=25.0,
+            expected_p_fw_outboard_surface_heat_mw=400.0,
+            label="Mixed power contributions",
+        ),
+    ],
+)
+def test_calculate_fw_outboard_surface_loads(calculatefwoutboardsurfaceloadsparam, fw):
+    """
+    Unit test for calculate_fw_outboard_surface_loads.
+
+    :param calculatefwoutboardsurfaceloadsparam: the data used to assert in this test.
+    :type calculatefwoutboardsurfaceloadsparam: CalculateFwOutboardSurfaceLoadsParam
+    """
+
+    p_fw_outboard_surface_heat_mw = fw.calculate_fw_outboard_surface_loads(
+        p_fw_outboard_rad_mw=calculatefwoutboardsurfaceloadsparam.p_fw_outboard_rad_mw,
+        p_beam_orbit_loss_mw=calculatefwoutboardsurfaceloadsparam.p_beam_orbit_loss_mw,
+        p_fw_outboard_alpha_surface_mw=calculatefwoutboardsurfaceloadsparam.p_fw_outboard_alpha_surface_mw,
+        p_beam_shine_through_mw=calculatefwoutboardsurfaceloadsparam.p_beam_shine_through_mw,
+    )
+
+    assert p_fw_outboard_surface_heat_mw == pytest.approx(
+        calculatefwoutboardsurfaceloadsparam.expected_p_fw_outboard_surface_heat_mw
+    )
