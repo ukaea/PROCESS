@@ -5,6 +5,7 @@ import pytest
 
 from process.data_structure.build_variables import InboardBlanketConfiguration
 from process.models.blankets.blanket_library import InboardBlanket
+from process.models.engineering.pumping import CoolantType
 
 
 @pytest.fixture
@@ -75,14 +76,14 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
     "primarycoolantpropertiesparam",
     [
         PrimaryCoolantPropertiesParam(
-            i_fw_coolant_type="helium",
+            i_fw_coolant_type=CoolantType.HELIUM,
             temp_fw_coolant_in=573,
             temp_fw_coolant_out=773,
             pres_fw_coolant=8000000,
             den_fw_coolant=0,
             cp_fw=0,
             cv_fw=0,
-            i_blkt_coolant_type=1,
+            i_blkt_coolant_type=CoolantType.HELIUM,
             temp_blkt_coolant_in=573,
             temp_blkt_coolant_out=773,
             pres_blkt_coolant=8000000,
@@ -103,14 +104,14 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             expected_visc_fw_coolant=3.5036293160410249e-05,
         ),
         PrimaryCoolantPropertiesParam(
-            i_fw_coolant_type="helium",
+            i_fw_coolant_type=CoolantType.HELIUM,
             temp_fw_coolant_in=573,
             temp_fw_coolant_out=773,
             pres_fw_coolant=8000000,
             den_fw_coolant=5.6389735407435868,
             cp_fw=5188.5588430173211,
             cv_fw=3123.5687263525392,
-            i_blkt_coolant_type=1,
+            i_blkt_coolant_type=CoolantType.HELIUM,
             temp_blkt_coolant_in=573,
             temp_blkt_coolant_out=773,
             pres_blkt_coolant=8000000,
@@ -348,7 +349,7 @@ def test_pumppower_primary_helium(monkeypatch, blanket_library):
         "pres_coolant_pump_inlet": 1700000,
         "dpres_coolant": 303517.3,
         "mflow_coolant_total": 35677.7,
-        "primary_coolant_switch": 1,
+        "i_coolant_type": 1,
         "den_coolant": 9753.25,
         "label": "Liquid Metal Breeder/Coolant",
     }
@@ -370,7 +371,7 @@ def test_pumppower_secondary_pb_li(monkeypatch, blanket_library):
         "pres_coolant_pump_inlet": 8000000,
         "dpres_coolant": 20088.23,
         "mflow_coolant_total": 956.3,
-        "primary_coolant_switch": "Helium",
+        "i_coolant_type": CoolantType.HELIUM,
         "den_coolant": 5.64,
         "label": "First Wall and Blanket",
     }

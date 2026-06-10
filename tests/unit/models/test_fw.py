@@ -2,6 +2,8 @@ from typing import Any, NamedTuple
 
 import pytest
 
+from process.models.engineering.pumping import CoolantType
+
 
 @pytest.fixture
 def fw(process_models):
@@ -60,7 +62,7 @@ class FwTempParam(NamedTuple):
     [
         FwTempParam(
             fw_th_conductivity=28.34,
-            i_fw_coolant_type="helium",
+            i_fw_coolant_type=CoolantType.HELIUM,
             temp_fw_coolant_in=573,
             pres_fw_coolant=8000000,
             temp_fw_coolant_out=773,
@@ -82,7 +84,7 @@ class FwTempParam(NamedTuple):
         ),
         FwTempParam(
             fw_th_conductivity=28.34,
-            i_fw_coolant_type="helium",
+            i_fw_coolant_type=CoolantType.HELIUM,
             temp_fw_coolant_in=573,
             pres_fw_coolant=8000000,
             temp_fw_coolant_out=773,

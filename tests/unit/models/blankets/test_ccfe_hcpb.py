@@ -4,6 +4,7 @@ import pytest
 
 from process.data_structure import global_variables
 from process.data_structure.build_variables import InboardBlanketConfiguration
+from process.models.engineering.pumping import CoolantType
 
 
 @pytest.fixture
@@ -772,7 +773,7 @@ class PowerflowCalcParam(NamedTuple):
             p_fw_hcd_rad_total_mw=0,
             f_a_fw_outboard_hcd=0,
             p_fw_rad_total_mw=0,
-            i_blkt_coolant_type=1,
+            i_blkt_coolant_type=CoolantType.HELIUM,
             temp_blkt_coolant_out=823,
             pres_blkt_coolant=15500000,
             i_p_coolant_pumping=3,
@@ -819,7 +820,7 @@ class PowerflowCalcParam(NamedTuple):
             f_a_fw_outboard_hcd=0,
             p_fw_rad_total_mw=254.39207240222791,
             p_div_rad_total_mw=33.056596978820579,
-            i_blkt_coolant_type=1,
+            i_blkt_coolant_type=CoolantType.HELIUM,
             temp_blkt_coolant_out=823,
             pres_blkt_coolant=15500000,
             i_p_coolant_pumping=3,

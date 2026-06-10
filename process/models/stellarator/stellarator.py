@@ -17,6 +17,7 @@ from process.data_structure import (
     global_variables,
     numerics,
 )
+from process.models.engineering.pumping import CoolantType
 from process.models.physics.physics import Physics, rether
 from process.models.power import PumpingPowerModelTypes
 from process.models.stellarator.build import st_build
@@ -786,7 +787,7 @@ class Stellarator(Model):
                 #  If we have chosen pressurised water as the coolant, set the
                 #  coolant outlet temperature as 20 deg C below the boiling point
 
-                if self.data.fwbs.i_blkt_coolant_type == 2:
+                if self.data.fwbs.i_blkt_coolant_type == CoolantType.WATER:
                     if self.data.fwbs.irefprop:
                         self.data.fwbs.temp_blkt_coolant_out = (
                             FluidProperties.of(
@@ -1248,7 +1249,7 @@ class Stellarator(Model):
         #  structures is used (see comment above)
 
         if (self.data.fwbs.blktmodel > 0) or (
-            self.data.fwbs.i_blkt_coolant_type == 2
+            self.data.fwbs.i_blkt_coolant_type == CoolantType.WATER
         ):  # pressurised water coolant
             self.data.fwbs.m_fw_blkt_div_coolant_total = coolvol * 806.719e0
         else:  # gaseous helium coolant

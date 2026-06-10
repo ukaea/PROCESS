@@ -13,6 +13,7 @@ from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
     pumping_powers_as_fractions,
 )
+from process.models.engineering.pumping import CoolantType
 from process.models.power import PumpingPowerModelTypes
 from process.models.tfcoil.base import TFConductorModel
 
@@ -36,7 +37,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
     def run(self, output: bool = False):
         # Coolant type
-        self.data.fwbs.i_blkt_coolant_type = 1
+        self.data.fwbs.i_blkt_coolant_type = CoolantType.HELIUM
         # Note that the first wall coolant is now input separately.
 
         # Calculate blanket, shield, vacuum vessel and cryostat volumes
@@ -776,7 +777,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         # If we have chosen pressurised water as the blanket coolant, set the
         # coolant outlet temperature as 20 deg C below the boiling point
-        if self.data.fwbs.i_blkt_coolant_type == 2:
+        if self.data.fwbs.i_blkt_coolant_type == CoolantType.WATER:
             outlet_saturated_fluid_properties = FluidProperties.of(
                 "Water",
                 pressure=self.data.fwbs.pres_blkt_coolant * 1.0e6,
