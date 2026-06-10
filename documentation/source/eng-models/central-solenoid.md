@@ -174,7 +174,7 @@ have been calculated as follows to scale the bore field value by:
     +\left(1.0- \left(\frac{3}{\beta}\right)^2\right) \times  (J_{\text{CS}}dr_{\text{CS}})
     $$
 
-- $\beta > 2.0$
+- $2.0 \le \beta \le 3.0$
 
     $$
     B_{\text{conductor,peak}} = B_0 \times \left(1.025-(\beta-2.0)\times 0.018\right) + (\alpha -1.0) \\
@@ -182,7 +182,7 @@ have been calculated as follows to scale the bore field value by:
     $$
 
 
-- $\beta > 1.0$
+- $1.0 \le \beta \le 2.0$
 
     $$
     B_{\text{conductor,peak}} = B_0 \times \left(1.117-(\beta-1.0)\times 0.092\right) + (\alpha -1.0) \\
@@ -190,14 +190,14 @@ have been calculated as follows to scale the bore field value by:
     $$
 
 
-- $\beta > 0.75$
+- $0.75 \le \beta \le 1.0$
 
     $$
     B_{\text{conductor,peak}} = B_0 \times \left(1.3-0.732(\beta-0.75)\right) + (\alpha -1.0) \\
      \times 0.2((\beta-0.75)-0.05)
     $$
 
-- $\beta \le 0.75$
+- $\beta < 0.75$
 
     $$
     B_{\text{conductor,peak}} = B_0 \times \left(1.65-1.4(\beta-0.5)\right) + (\alpha -1.0) \\
