@@ -1,11 +1,15 @@
 """Engineering models for pumping system analysis."""
 
 import logging
+from dataclasses import dataclass
 from enum import IntEnum, unique
 from types import DynamicClassAttribute
-from dataclasses import dataclass
 
 import numpy as np
+
+from process.core.exceptions import ProcessValueError
+
+logger = logging.getLogger(__name__)
 
 
 @unique
@@ -40,11 +44,6 @@ class CoolantType(IntEnum):
     def full_name(self):
         """The full name of the coolant type."""
         return self._full_name_
-
-
-from process.core.exceptions import ProcessValueError
-
-logger = logging.getLogger(__name__)
 
 
 @dataclass
