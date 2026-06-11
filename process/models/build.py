@@ -6,7 +6,6 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import numerics
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.physics.current_drive import (
     CurrentDriveMethodType,
@@ -1690,7 +1689,7 @@ class Build(Model):
 
         # Issue #514 Radial dimensions of inboard leg
         # Calculate self.data.build.dr_tf_inboard if self.data.tfcoil.dr_tf_wp_with_insulation is an iteration variable (140)
-        if 140 in numerics.ixc[0 : numerics.nvar]:
+        if 140 in self.data.numerics.ixc[0 : self.data.numerics.nvar]:
             self.data.build.dr_tf_inboard = (
                 self.data.tfcoil.dr_tf_wp_with_insulation
                 + self.data.tfcoil.dr_tf_plasma_case
@@ -1725,7 +1724,7 @@ class Build(Model):
 
         # WP radial thickness [m]
         # Calculated only if not used as an iteration variable
-        if 140 not in numerics.ixc[0 : numerics.nvar]:
+        if 140 not in self.data.numerics.ixc[0 : self.data.numerics.nvar]:
             self.data.tfcoil.dr_tf_wp_with_insulation = (
                 self.data.build.dr_tf_inboard
                 - self.data.tfcoil.dr_tf_plasma_case

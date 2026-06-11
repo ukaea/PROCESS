@@ -10,7 +10,7 @@ from time import sleep
 from process.core.io.data_structure_dicts import get_dicts
 from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile
-from process.data_structure import numerics
+from process.core.model import DataStructure
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +55,7 @@ def update_ixc_bounds(indat, wdir="."):
             dicts["DICT_IXC_BOUNDS"][name]["ub"] = float(value["u"])
 
 
-def get_variable_range(itervars, factor, indat, wdir="."):
+def get_variable_range(itervars, factor, indat, data: DataStructure, wdir="."):
     """Returns the lower and upper bounds of the variable range
     for each iteration variable.
 
@@ -70,6 +70,10 @@ def get_variable_range(itervars, factor, indat, wdir="."):
         setting them to value * factor and value / factor
         respectively while taking their process bounds
         into account.
+    indat : str
+        input file name
+    data : DataStructure
+        data structure object
     wdir :
          (Default value = ".")
     """
@@ -80,12 +84,12 @@ def get_variable_range(itervars, factor, indat, wdir="."):
     lbs = []
     ubs = []
 
-    iteration_variables = numerics.lablxc
+    iteration_variables = data.numerics.lablxc
 
     for varname in itervars:
         iteration_variable_index = iteration_variables.index(varname)
-        lb = numerics.boundl[iteration_variable_index]
-        ub = numerics.boundu[iteration_variable_index]
+        lb = data.numerics.boundl[iteration_variable_index]
+        ub = data.numerics.boundu[iteration_variable_index]
         # for f-values we set the same range as in process
         if varname[0] == "f" and (varname not in dicts["NON_F_VALUES"]):
             lbs += [lb]

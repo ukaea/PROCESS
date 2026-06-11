@@ -17,7 +17,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import numerics
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.models.physics import impurity_radiation
 from process.models.physics.plasma_geometry import PlasmaGeom
@@ -1018,7 +1017,7 @@ class Physics(Model):
             self.data.physics.rad_fraction_sol * self.data.physics.p_plasma_separatrix_mw
         )
 
-        if 78 in numerics.icc:
+        if 78 in self.data.numerics.icc:
             po.write(
                 self.outfile,
                 (
@@ -2339,7 +2338,7 @@ class Physics(Model):
             "OP ",
         )
 
-        if 78 in numerics.icc:
+        if 78 in self.data.numerics.icc:
             po.osubhd(self.outfile, "Reinke Criterion :")
             po.ovarin(
                 self.outfile,
@@ -2424,7 +2423,7 @@ class Physics(Model):
                 "(temp_plasma_pedestal_kev)",
                 self.data.physics.temp_plasma_pedestal_kev,
             )
-            if 78 in numerics.icc:
+            if 78 in self.data.numerics.icc:
                 po.ovarrf(
                     self.outfile,
                     "Electron temperature at separatrix (Tₑ,ₛₑₚ) (keV)",
@@ -2893,7 +2892,7 @@ class Physics(Model):
         # Issue 558 - addition of constraint 76 to limit the value of
         # nd_plasma_separatrix_electron, in proportion with the ballooning parameter
         # and Greenwald density
-        if 76 in numerics.icc:
+        if 76 in self.data.numerics.icc:
             po.ovarre(
                 self.outfile,
                 "Critical ballooning parameter value",

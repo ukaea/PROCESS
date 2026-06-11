@@ -55,7 +55,7 @@ Code example in the `input.py` file:
 To add a `PROCESS` iteration variable please follow the steps below, in addition to the instructions for adding an input variable:
 
 
-1. The parameter `ipnvars` in module `numerics` of `numerics.f90` will normally be greater than the actual number of iteration variables, and does not need to be changed.
+1. The parameter `IPNVARS` in module `numerics` of `numerics.f90` will normally be greater than the actual number of iteration variables, and does not need to be changed.
 2. Append a new iteration number key to the end of the `ITERATION_VARIABLES` dictionary  in `iteration_variables.py`. The associated variable is the corresponding key value.
 3. Set the variable origin file and then the associated lower and upper bounds
 4. Update the `lablxc` description in `numerics.f90`.
@@ -80,7 +80,7 @@ ITERATION_VARIABLES = {
 
 New figures of merit are added to `PROCESS` in the following way:
 
-1. Increment the parameter `ipnfoms` in module `numerics` in source file `numerics.py` to accommodate the new figure of merit.
+1. Increment the parameter `IPNFOMS` in module `numerics` in source file `numerics.py` to accommodate the new figure of merit.
   
 2. Assign the new integer value and description string of the new figure of merit to the `FiguresOfMerit` enumerator in `numerics.py`.
   

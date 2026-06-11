@@ -146,7 +146,9 @@ iteration variables should get varied"""
 
     def __next__(self):
         _neqns, itervars = get_neqns_itervars(in_dat=self.infile, wdir=self.wdir)
-        lbs, ubs = get_variable_range(itervars, self.factor, self.infile, self.wdir)
+        lbs, ubs = get_variable_range(
+            itervars, self.factor, self.infile, self.data, self.wdir
+        )
         self.run_process(self.wdir / self.infile, self.solver)
         check_input_error(mfile=self.outfile, wdir=self.wdir)
 
@@ -263,6 +265,7 @@ iteration variables should get varied"""
 
     def setup(self, data: DataStructure):
         """Sets up the program for running"""
+        self.data = data
         self.echo()
 
         self.prepare_wdir()
@@ -275,8 +278,10 @@ iteration variables should get varied"""
 
         self.generator = default_rng(seed=self.u_seed)
 
-        data.globals.output_prefix = str(self.wdir / self.outfile.strip("MFILE.DAT"))
-        data.globals.fileprefix = str(self.wdir / self.infile)
+        self.data.globals.output_prefix = str(
+            self.wdir / self.outfile.strip("MFILE.DAT")
+        )
+        self.data.globals.fileprefix = str(self.wdir / self.infile)
 
     @staticmethod
     def run_process(input_path: Path, solver: str = "vmcon"):

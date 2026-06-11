@@ -15,7 +15,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.log import logging_model_handler, show_errors
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
-from process.data_structure import numerics
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.scan_variables import IPNSCNS, NOUTVARS, ScanData
 
@@ -257,7 +256,9 @@ class Scan:
         ifail: int :
 
         """
-        numerics.sqsumsq = sum(r**2 for r in numerics.rcm[: numerics.neqns]) ** 0.5
+        self.data.numerics.sqsumsq = (
+            sum(r**2 for r in self.data.numerics.rcm[: self.data.numerics.neqns]) ** 0.5
+        )
 
         process_output.oheadr(constants.NOUT, "Numerics")
         if self.solver == "fsolve":
@@ -301,7 +302,7 @@ class Scan:
             process_output.oblnkl(constants.NOUT)
             process_output.ovarin(constants.NOUT, "Error flag", "(ifail)", ifail)
 
-            if numerics.sqsumsq >= 1.0e-2:
+            if self.data.numerics.sqsumsq >= 1.0e-2:
                 process_output.oblnkl(constants.NOUT)
                 process_output.ocmmnt(
                     constants.NOUT,
@@ -330,44 +331,56 @@ class Scan:
                 )
                 process_output.oblnkl(constants.IOTTY)
 
-                logger.warning(f"High final constraint residues. {numerics.sqsumsq=}")
+                logger.warning(
+                    f"High final constraint residues. {self.data.numerics.sqsumsq=}"
+                )
 
         process_output.ovarin(
-            constants.NOUT, "Number of iteration variables", "(nvar)", numerics.nvar
+            constants.NOUT,
+            "Number of iteration variables",
+            "(nvar)",
+            self.data.numerics.nvar,
         )
         process_output.ovarin(
             constants.NOUT,
             "Number of constraints (total)",
             "(neqns+nineqns)",
-            numerics.neqns + numerics.nineqns,
+            self.data.numerics.neqns + self.data.numerics.nineqns,
         )
         process_output.ovarin(
-            constants.NOUT, "Optimisation switch", "(ioptimz)", numerics.ioptimz
+            constants.NOUT,
+            "Optimisation switch",
+            "(ioptimz)",
+            self.data.numerics.ioptimz,
         )
         process_output.ocmmnt(
-            constants.NOUT, f"     {PROCESSRunMode(numerics.ioptimz).description}"
+            constants.NOUT,
+            f"     {PROCESSRunMode(self.data.numerics.ioptimz).description}",
         )
         # Objective function output: none for fsolve
         if self.solver != "fsolve":
             process_output.ovarin(
-                constants.NOUT, "Figure of merit switch", "(minmax)", numerics.minmax
+                constants.NOUT,
+                "Figure of merit switch",
+                "(minmax)",
+                self.data.numerics.minmax,
             )
 
-            objf_name = f'"{FiguresOfMerit(abs(numerics.minmax)).description}"'
+            objf_name = f'"{FiguresOfMerit(abs(self.data.numerics.minmax)).description}"'
 
-            numerics.objf_name = objf_name
+            self.data.numerics.objf_name = objf_name
 
             process_output.ovarst(
                 constants.NOUT,
                 "Objective function name",
                 "(objf_name)",
-                numerics.objf_name,
+                self.data.numerics.objf_name,
             )
             process_output.ovarre(
                 constants.NOUT,
                 "Normalised objective function",
                 "(norm_objf)",
-                numerics.norm_objf,
+                self.data.numerics.norm_objf,
                 "OP ",
             )
 
@@ -375,7 +388,7 @@ class Scan:
             constants.NOUT,
             "Square root of the sum of squares of the constraint residuals",
             "(sqsumsq)",
-            numerics.sqsumsq,
+            self.data.numerics.sqsumsq,
             "OP ",
         )
         if self.solver != "fsolve":
@@ -390,7 +403,7 @@ class Scan:
                 constants.NOUT,
                 "Number of optimising solver iterations",
                 "(nviter)",
-                numerics.nviter,
+                self.data.numerics.nviter,
                 "OP ",
             )
         process_output.oblnkl(constants.NOUT)
@@ -410,7 +423,7 @@ class Scan:
             else:
                 string1 = "PROCESS has failed to optimise"
 
-            string2 = "minimise" if numerics.minmax > 0 else "maximise"
+            string2 = "minimise" if self.data.numerics.minmax > 0 else "maximise"
 
             process_output.write(
                 constants.NOUT,
@@ -421,17 +434,23 @@ class Scan:
 
         # Output optimisation parameters
         solution_vector_table = []
-        for i in range(numerics.nvar):
-            numerics.xcs[i] = numerics.xcm[i] * numerics.scafc[i]
+        for i in range(self.data.numerics.nvar):
+            self.data.numerics.xcs[i] = (
+                self.data.numerics.xcm[i] * self.data.numerics.scafc[i]
+            )
 
-            name = numerics.lablxc[numerics.ixc[i] - 1]
-            solution_vector_table.append([name, numerics.xcs[i], numerics.xcm[i]])
+            name = self.data.numerics.lablxc[self.data.numerics.ixc[i] - 1]
+            solution_vector_table.append([
+                name,
+                self.data.numerics.xcs[i],
+                self.data.numerics.xcm[i],
+            ])
 
-            xminn = 1.01 * numerics.itv_scaled_lower_bounds[i]
-            xmaxx = 0.99 * numerics.itv_scaled_upper_bounds[i]
+            xminn = 1.01 * self.data.numerics.itv_scaled_lower_bounds[i]
+            xmaxx = 0.99 * self.data.numerics.itv_scaled_upper_bounds[i]
 
             # Write to output file if close to optimisation parameter bounds
-            if numerics.xcm[i] < xminn or numerics.xcm[i] > xmaxx:
+            if self.data.numerics.xcm[i] < xminn or self.data.numerics.xcm[i] > xmaxx:
                 if not written_warning:
                     written_warning = True
                     process_output.ocmmnt(
@@ -443,37 +462,40 @@ class Scan:
                         ),
                     )
 
-                xcval = numerics.xcm[i] * numerics.scafc[i]
+                xcval = self.data.numerics.xcm[i] * self.data.numerics.scafc[i]
 
-                if numerics.xcm[i] < xminn:
+                if self.data.numerics.xcm[i] < xminn:
                     location, bound = "below", "lower"
-                    bounds = numerics.itv_scaled_lower_bounds
+                    bounds = self.data.numerics.itv_scaled_lower_bounds
                 else:
                     location, bound = "above", "upper"
-                    bounds = numerics.itv_scaled_upper_bounds
+                    bounds = self.data.numerics.itv_scaled_upper_bounds
                 process_output.write(
                     constants.NOUT,
                     f"   {name:<30}= {xcval} is at or {location} its {bound} bound:"
-                    f" {bounds[i] * numerics.scafc[i]}",
+                    f" {bounds[i] * self.data.numerics.scafc[i]}",
                 )
 
             # Write optimisation parameters to mfile
             process_output.ovarre(
                 constants.MFILE,
-                numerics.lablxc[numerics.ixc[i] - 1],
+                self.data.numerics.lablxc[self.data.numerics.ixc[i] - 1],
                 f"(itvar{i + 1:03d})",
-                numerics.xcs[i],
+                self.data.numerics.xcs[i],
             )
 
-            if numerics.boundu[i] == numerics.boundl[i]:
+            if self.data.numerics.boundu[i] == self.data.numerics.boundl[i]:
                 xnorm = 1.0
             else:
                 xnorm = min(
                     max(
-                        (numerics.xcm[i] - numerics.itv_scaled_lower_bounds[i])
+                        (
+                            self.data.numerics.xcm[i]
+                            - self.data.numerics.itv_scaled_lower_bounds[i]
+                        )
                         / (
-                            numerics.itv_scaled_upper_bounds[i]
-                            - numerics.itv_scaled_lower_bounds[i]
+                            self.data.numerics.itv_scaled_upper_bounds[i]
+                            - self.data.numerics.itv_scaled_lower_bounds[i]
                         ),
                         0.0,
                     ),
@@ -484,7 +506,7 @@ class Scan:
                 constants.MFILE,
                 f"{name} (final value/initial value)",
                 f"(xcm{i + 1:03d})",
-                numerics.xcm[i],
+                self.data.numerics.xcm[i],
             )
             process_output.ovarre(
                 constants.MFILE,
@@ -496,13 +518,15 @@ class Scan:
                 constants.MFILE,
                 f"{name} (upper bound)",
                 f"(boundu{i + 1:03d})",
-                numerics.itv_scaled_upper_bounds[i] * numerics.scafc[i],
+                self.data.numerics.itv_scaled_upper_bounds[i]
+                * self.data.numerics.scafc[i],
             )
             process_output.ovarre(
                 constants.MFILE,
                 f"{name} (lower bound)",
                 f"(boundl{i + 1:03d})",
-                numerics.itv_scaled_lower_bounds[i] * numerics.scafc[i],
+                self.data.numerics.itv_scaled_lower_bounds[i]
+                * self.data.numerics.scafc[i],
             )
 
         # Write optimisation parameter headings to output file
@@ -524,13 +548,13 @@ class Scan:
         )
 
         con1, con2, err, _, lab = constraints.constraint_eqns(
-            numerics.neqns + numerics.nineqns, -1, self.data
+            self.data.numerics.neqns + self.data.numerics.nineqns, -1, self.data
         )
 
         # Write equality constraints to mfile
         equality_constraint_table = []
-        for i in range(numerics.neqns):
-            name = numerics.lablcc[numerics.icc[i] - 1]
+        for i in range(self.data.numerics.neqns):
+            name = self.data.numerics.lablcc[self.data.numerics.icc[i] - 1]
 
             equality_constraint_table.append([
                 name,
@@ -542,27 +566,27 @@ class Scan:
             process_output.ovarre(
                 constants.MFILE,
                 f"{name:<33} normalised residue",
-                f"(eq_con{numerics.icc[i]:03d})",
+                f"(eq_con{self.data.numerics.icc[i]:03d})",
                 con1[i],
             )
 
             process_output.ovarre(
                 constants.MFILE,
                 f"{name:<33} residual",
-                f"(res_eq_con{numerics.icc[i]:03d})",
+                f"(res_eq_con{self.data.numerics.icc[i]:03d})",
                 err[i],
             )
             process_output.ovarre(
                 constants.MFILE,
                 f"{name} constraint value",
-                f"(val_eq_con{numerics.icc[i]:03d})",
+                f"(val_eq_con{self.data.numerics.icc[i]:03d})",
                 con2[i],
             )
 
             process_output.ovarre(
                 constants.MFILE,
                 f"{name} units",
-                f"(eq_units_con{numerics.icc[i]:03d})",
+                f"(eq_units_con{self.data.numerics.icc[i]:03d})",
                 f"'{lab[i]}'",
             )
 
@@ -583,7 +607,7 @@ class Scan:
         )
 
         # Write inequality constraints
-        if numerics.nineqns > 0:
+        if self.data.numerics.nineqns > 0:
             inequality_constraint_table = []
             # Inequalities not necessarily satisfied when evaluating
             process_output.osubhd(
@@ -597,10 +621,13 @@ class Scan:
                     "might be violated.",
                 )
 
-            for i in range(numerics.neqns, numerics.neqns + numerics.nineqns):
-                name = numerics.lablcc[numerics.icc[i] - 1]
+            for i in range(
+                self.data.numerics.neqns,
+                self.data.numerics.neqns + self.data.numerics.nineqns,
+            ):
+                name = self.data.numerics.lablcc[self.data.numerics.icc[i] - 1]
                 constraint = constraints.ConstraintManager.evaluate_constraint(
-                    int(numerics.icc[i]), self.data
+                    int(self.data.numerics.icc[i]), self.data
                 )
 
                 inequality_constraint_table.append([
@@ -614,34 +641,34 @@ class Scan:
                 process_output.ovarre(
                     constants.MFILE,
                     f"{name} normalised residue",
-                    f"(ineq_con{numerics.icc[i]:03d})",
+                    f"(ineq_con{self.data.numerics.icc[i]:03d})",
                     -constraint.normalised_residual,
                 )
                 process_output.ovarre(
                     constants.MFILE,
                     f"{name} physical value",
-                    f"(ineq_value_con{numerics.icc[i]:03d})",
+                    f"(ineq_value_con{self.data.numerics.icc[i]:03d})",
                     constraint.constraint_value,
                 )
 
                 process_output.ovarre(
                     constants.MFILE,
                     f"{name} symbol",
-                    f"(ineq_symbol_con{numerics.icc[i]:03d})",
+                    f"(ineq_symbol_con{self.data.numerics.icc[i]:03d})",
                     f"'{constraint.symbol}'",
                 )
 
                 process_output.ovarre(
                     constants.MFILE,
                     f"{name} units",
-                    f"(ineq_units_con{numerics.icc[i]:03d})",
+                    f"(ineq_units_con{self.data.numerics.icc[i]:03d})",
                     f"'{constraint.units}'",
                 )
 
                 process_output.ovarre(
                     constants.MFILE,
                     f"{name} physical bound",
-                    f"(ineq_bound_con{numerics.icc[i]:03d})",
+                    f"(ineq_bound_con{self.data.numerics.icc[i]:03d})",
                     constraint.constraint_bound,
                 )
 
@@ -1087,13 +1114,13 @@ class Scan:
             case 9:
                 self.data.physics.temp_plasma_electron_vol_avg_kev = swp[iscn - 1]
             case 10:
-                numerics.boundu[14] = swp[iscn - 1]
+                self.data.numerics.boundu[14] = swp[iscn - 1]
             case 11:
                 self.data.physics.beta_norm_max = swp[iscn - 1]
             case 12:
                 self.data.current_drive.f_c_plasma_bootstrap_max = swp[iscn - 1]
             case 13:
-                numerics.boundu[9] = swp[iscn - 1]
+                self.data.numerics.boundu[9] = swp[iscn - 1]
             case 16:
                 self.data.physics.rmajor = swp[iscn - 1]
             case 17:
@@ -1101,7 +1128,7 @@ class Scan:
             case 18:
                 self.data.constraints.eta_cd_norm_hcd_primary_max = swp[iscn - 1]
             case 19:
-                numerics.boundl[15] = swp[iscn - 1]
+                self.data.numerics.boundl[15] = swp[iscn - 1]
             case 20:
                 self.data.constraints.t_burn_min = swp[iscn - 1]
             case 22:
@@ -1125,13 +1152,13 @@ class Scan:
             case 31:
                 self.data.constraints.f_alpha_energy_confinement_min = swp[iscn - 1]
             case 32:
-                numerics.epsvmc = swp[iscn - 1]
+                self.data.numerics.epsvmc = swp[iscn - 1]
             case 38:
-                numerics.boundu[128] = swp[iscn - 1]
+                self.data.numerics.boundu[128] = swp[iscn - 1]
             case 39:
-                numerics.boundu[130] = swp[iscn - 1]
+                self.data.numerics.boundu[130] = swp[iscn - 1]
             case 40:
-                numerics.boundu[134] = swp[iscn - 1]
+                self.data.numerics.boundu[134] = swp[iscn - 1]
             case 41:
                 self.data.build.dr_blkt_outboard = swp[iscn - 1]
             case 42:
@@ -1144,7 +1171,7 @@ class Scan:
             case 45:
                 self.data.tfcoil.temp_tf_superconductor_margin_min = swp[iscn - 1]
             case 46:
-                numerics.boundu[151] = swp[iscn - 1]
+                self.data.numerics.boundu[151] = swp[iscn - 1]
             case 48:
                 self.data.tfcoil.n_tf_wp_pancakes = int(swp[iscn - 1])
             case 49:
@@ -1159,7 +1186,7 @@ class Scan:
             case 52:
                 self.data.physics.rad_fraction_sol = swp[iscn - 1]
             case 53:
-                numerics.boundu[156] = swp[iscn - 1]
+                self.data.numerics.boundu[156] = swp[iscn - 1]
             case 54:
                 self.data.tfcoil.b_crit_upper_nbti = swp[iscn - 1]
             case 55:
@@ -1167,7 +1194,7 @@ class Scan:
             case 56:
                 self.data.heat_transport.p_cryo_plant_electric_max_mw = swp[iscn - 1]
             case 57:
-                numerics.boundl[1] = swp[iscn - 1]
+                self.data.numerics.boundl[1] = swp[iscn - 1]
             case 58:
                 self.data.build.dr_fw_plasma_gap_inboard = swp[iscn - 1]
             case 59:

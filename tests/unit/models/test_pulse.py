@@ -3,8 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import numerics
-
 
 @pytest.fixture
 def pulse(process_models):
@@ -1238,7 +1236,9 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
     monkeypatch.setattr(pulse.data.physics, "rmajor", tohswgparam.rmajor)
 
-    monkeypatch.setattr(numerics, "active_constraints", tohswgparam.active_constraints)
+    monkeypatch.setattr(
+        pulse.data.numerics, "active_constraints", tohswgparam.active_constraints
+    )
 
     monkeypatch.setattr(pulse.data.pulse, "i_pulsed_plant", tohswgparam.i_pulsed_plant)
 

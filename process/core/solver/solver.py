@@ -19,7 +19,6 @@ from scipy.optimize import fsolve
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 from process.core.solver.evaluators import Evaluators
-from process.data_structure import numerics
 
 logger = logging.getLogger(__name__)
 
@@ -27,11 +26,12 @@ logger = logging.getLogger(__name__)
 class _Solver(ABC):
     """Base class for different solver implementations."""
 
-    def __init__(self, *, maxcal: int | None = None):
+    def __init__(self, *, data: DataStructure, maxcal: int | None = None):
         """Initialise a solver."""
         # Exit code for the solver
         self.ifail = 0
-        self.tolerance = numerics.epsvmc
+        self.data = data
+        self.tolerance = self.data.numerics.epsvmc
         self.b: float | None = None
         self.convergence_parameter: float | None = None
         self.maxcal = maxcal
@@ -182,10 +182,10 @@ class Vmcon(_Solver):
 
         bb = None
         if self.b is not None:
-            bb = np.identity(numerics.nvar) * self.b
+            bb = np.identity(self.data.numerics.nvar) * self.b
 
         def _solver_callback(i: int, _result, _x, convergence_param: float):
-            numerics.nviter = i + 1
+            self.data.numerics.nviter = i + 1
             self.convergence_parameter = convergence_param
             print(
                 f"{i + 1} | Convergence Parameter: {convergence_param:.3E}",
@@ -227,7 +227,9 @@ class Vmcon(_Solver):
             # negative constraint value = violated
             # Check all ineqs are satisfied to within the tolerance
             # E.g. the relative violations are no more than v=0-tolerance
-            return bool(np.all(result.ie >= -numerics.force_vmcon_inequality_tolerance))
+            return bool(
+                np.all(result.ie >= -self.data.numerics.force_vmcon_inequality_tolerance)
+            )
 
         try:
             x, _, _, res = solve(
@@ -241,7 +243,7 @@ class Vmcon(_Solver):
                 initial_B=bb,
                 callback=_solver_callback,
                 additional_convergence=_ineq_cons_satisfied
-                if numerics.force_vmcon_inequality_satisfication
+                if self.data.numerics.force_vmcon_inequality_satisfication
                 else None,
             )
         except VMCONConvergenceException as e:
@@ -259,8 +261,10 @@ class Vmcon(_Solver):
 
         except ValueError:
             itervar_name_list = ""
-            for count, iter_var in enumerate(numerics.ixc[: numerics.nvar]):
-                itervar_name = numerics.lablxc[iter_var - 1]
+            for count, iter_var in enumerate(
+                self.data.numerics.ixc[: self.data.numerics.nvar]
+            ):
+                itervar_name = self.data.numerics.lablxc[iter_var - 1]
                 itervar_name_list += f"{count}: {itervar_name} \n"
 
             logger.warning(f"Active iteration variables are : \n{itervar_name_list}")
@@ -359,11 +363,13 @@ def get_solver(data: DataStructure, solver_name: str = "vmcon") -> _Solver:
     solver: _Solver
 
     if solver_name == "vmcon":
-        solver = Vmcon(maxcal=data.globals.maxcal)
+        solver = Vmcon(data=data, maxcal=data.globals.maxcal)
     elif solver_name == "vmcon_bounded":
-        solver = VmconBounded(maxcal=data.globals.maxcal)
+        solver = VmconBounded(data=data, maxcal=data.globals.maxcal)
     elif solver_name == "fsolve":
-        solver = FSolve()
+        solver = FSolve(
+            data=data,
+        )
     else:
         try:
             solver = load_external_solver(solver_name)

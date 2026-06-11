@@ -5,7 +5,6 @@ import logging
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import numerics
 
 logger = logging.getLogger(__name__)
 
@@ -144,7 +143,7 @@ class Pulse(Model):
 
         #  Output section
 
-        if output == 1 and numerics.active_constraints[40]:
+        if output == 1 and self.data.numerics.active_constraints[40]:
             po.osubhd(self.outfile, "Central solenoid considerations:")
             po.ovarre(
                 self.outfile,

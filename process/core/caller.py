@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 import numpy as np
 from tabulate import tabulate
 
-from process import data_structure
 from process.core import constants
 from process.core.final import finalise
 from process.core.io.mfile import MFile
@@ -99,7 +98,7 @@ class Caller:
         for _ in range(10):
             self._call_models_once(xc)
             # Evaluate objective function and constraints
-            objf = objective_function(data_structure.numerics.minmax, self.data)
+            objf = objective_function(self.data.numerics.minmax, self.data)
             conf, _, _, _, _ = constraints.constraint_eqns(m, -1, self.data)
 
             if objf_prev is None and conf_prev is None:
@@ -261,7 +260,7 @@ class Caller:
         nvars = len(xc)
 
         # Increment the call counter
-        data_structure.numerics.ncalls += 1
+        self.data.numerics.ncalls += 1
 
         # Convert variables
         set_scaled_iteration_variable(xc, nvars, self.data)
@@ -409,8 +408,8 @@ def write_output_files(
     ifail : int
         solver return code
     """
-    n = data_structure.numerics.nvar
-    x = data_structure.numerics.xcm[:n]
+    n = data.numerics.nvar
+    x = data.numerics.xcm[:n]
     # Call models, ensuring output mfiles are fully idempotent
     caller = Caller(models, data)
     if runtime is not None:

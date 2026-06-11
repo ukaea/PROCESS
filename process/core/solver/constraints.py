@@ -5,7 +5,6 @@ from typing import ClassVar, Literal
 
 import numpy as np
 
-from process import data_structure
 from process.core import constants
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.core.model import DataStructure
@@ -1802,7 +1801,7 @@ def constraint_eqns(m: int, ieqn: int, data: DataStructure):
     cc, con, err, symbol, units = [], [], [], [], []
 
     for i in range(i1, i2):
-        constraint_id = data_structure.numerics.icc[i]
+        constraint_id = data.numerics.icc[i]
         result = ConstraintManager.evaluate_constraint(constraint_id, data)
 
         tmp_cc, tmp_con, tmp_err = (

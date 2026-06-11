@@ -1,5 +1,4 @@
 from process.core.model import DataStructure
-from process.data_structure import numerics
 
 
 def st_init(data: DataStructure):
@@ -12,7 +11,7 @@ def st_init(data: DataStructure):
     if data.stellarator.istell == 0:
         return
 
-    numerics.boundu[0] = 40.0  # allow higher aspect ratio
+    data.numerics.boundu[0] = 40.0  # allow higher aspect ratio
 
     # These lines switch off tokamak specifics (solenoid, pf coils, pulses etc.).
     # Are they still up to date? (26/07/22 JL)

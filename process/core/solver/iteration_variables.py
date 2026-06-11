@@ -5,7 +5,6 @@ from warnings import warn
 
 import numpy as np
 
-from process import data_structure
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 
@@ -259,8 +258,8 @@ def check_iteration_variable(iteration_variable_value, name: str = ""):
 
 def load_iteration_variables(data):
     """Loads the physics and engineering variables into the optimisation variable array."""
-    for i in range(data_structure.numerics.nvar):
-        variable_index = data_structure.numerics.ixc[i]
+    for i in range(data.numerics.nvar):
+        variable_index = data.numerics.ixc[i]
         iteration_variable = ITERATION_VARIABLES[variable_index]
 
         # use ... as the default return value because None might be a valid return from Fortran?
@@ -293,9 +292,9 @@ def load_iteration_variables(data):
                 iteration_variable.array_index
             ]
 
-        data_structure.numerics.xcm[i] = iteration_variable_value
-        data_structure.numerics.name_xc[i] = (
-            data_structure.numerics.name_xc[i],
+        data.numerics.xcm[i] = iteration_variable_value
+        data.numerics.name_xc[i] = (
+            data.numerics.name_xc[i],
             iteration_variable.name,
         )
 
@@ -320,12 +319,10 @@ def load_iteration_variables(data):
             name=f"{variable_index} ({iteration_variable.name})",
         )
 
-        data_structure.numerics.scale[i] = 1.0 / iteration_variable_value
-        data_structure.numerics.scafc[i] = 1.0 / data_structure.numerics.scale[i]
+        data.numerics.scale[i] = 1.0 / iteration_variable_value
+        data.numerics.scafc[i] = 1.0 / data.numerics.scale[i]
 
-        data_structure.numerics.xcm[i] = (
-            iteration_variable_value * data_structure.numerics.scale[i]
-        )
+        data.numerics.xcm[i] = iteration_variable_value * data.numerics.scale[i]
 
 
 def set_scaled_iteration_variable(xc, nn: int, data: DataStructure):
@@ -344,10 +341,10 @@ def set_scaled_iteration_variable(xc, nn: int, data: DataStructure):
         # there is less error handling here than in load_iteration_variables
         # because many errors will be caught in load_iteration_variables which is
         # run first. This verifies the variables exist and the module target is correct.
-        variable_index = data_structure.numerics.ixc[i]
+        variable_index = data.numerics.ixc[i]
         iteration_variable = ITERATION_VARIABLES[variable_index]
 
-        ratio = xc[i] / data_structure.numerics.scale[i]
+        ratio = xc[i] / data.numerics.scale[i]
 
         module = (
             getattr(data, iteration_variable.module)
@@ -380,24 +377,22 @@ def set_scaled_iteration_variable(xc, nn: int, data: DataStructure):
         )
 
 
-def load_scaled_bounds():
+def load_scaled_bounds(data: DataStructure):
     """Sets the scaled bounds of the iteration variables."""
-    for i in range(data_structure.numerics.nvar):
-        variable_index = data_structure.numerics.ixc[i] - 1
-        data_structure.numerics.itv_scaled_lower_bounds[i] = (
-            data_structure.numerics.boundl[variable_index]
-            * data_structure.numerics.scale[i]
+    for i in range(data.numerics.nvar):
+        variable_index = data.numerics.ixc[i] - 1
+        data.numerics.itv_scaled_lower_bounds[i] = (
+            data.numerics.boundl[variable_index] * data.numerics.scale[i]
         )
-        data_structure.numerics.itv_scaled_upper_bounds[i] = (
-            data_structure.numerics.boundu[variable_index]
-            * data_structure.numerics.scale[i]
+        data.numerics.itv_scaled_upper_bounds[i] = (
+            data.numerics.boundu[variable_index] * data.numerics.scale[i]
         )
 
 
-def initialise_iteration_variables():
+def initialise_iteration_variables(data: DataStructure):
     """Initialise the iteration variables (label and default bounds)"""
     for itv_index, itv in ITERATION_VARIABLES.items():
-        data_structure.numerics.lablxc[itv_index - 1] = itv.name
+        data.numerics.lablxc[itv_index - 1] = itv.name
 
-        data_structure.numerics.boundl[itv_index - 1] = itv.lower_bound
-        data_structure.numerics.boundu[itv_index - 1] = itv.upper_bound
+        data.numerics.boundl[itv_index - 1] = itv.lower_bound
+        data.numerics.boundu[itv_index - 1] = itv.upper_bound
