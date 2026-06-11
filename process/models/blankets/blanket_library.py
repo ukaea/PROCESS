@@ -21,8 +21,8 @@ from process.models.engineering.ivc_functions import (
     eshellvol,
 )
 from process.models.engineering.pumping import (
-    CoolantType,
     CoolantFrictionLossParameters,
+    CoolantType,
     calculate_required_mass_flow_rate,
     calculate_reynolds_number,
     darcy_friction_haaland,
