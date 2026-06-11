@@ -1967,7 +1967,7 @@ def test_vsec(pfcoil, monkeypatch):
     assert_array_almost_equal(pfcoil.data.pf_coil.vs_cs_total_pulse, vsoh_exp)
 
 
-def test_hoop_stress(cs_coil, monkeypatch):
+def test_hoop_stress(cs_coil):
     """Test hoop_stress subroutine.
 
     calculate_cs_hoop_stress() requires specific mocked variables in order to work; these were

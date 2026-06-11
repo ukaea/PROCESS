@@ -526,19 +526,19 @@ class PFCoilData:
     """Ratio of CS coil turn conduit length to depth"""
 
     dr_cs_turn: float = 0.0
-    """Length of CS of CS coil turn conduit"""
+    """Length of CS coil turn conduit"""
 
     dr_cs_full: float = 0.0
     """Full radial thickness of the central solenoid (m)"""
 
     dz_cs_turn: float = 0.0
-    """Depth/width of CS of CS coil turn conduit"""
+    """Depth/width of CS coil turn conduit"""
 
     radius_cs_turn_corners: float = 3.0e-3
     """Radius of curvature of CS coil turn corners (m)"""
 
     radius_cs_turn_cable_space: float = 0.0
-    """Length of CS of CS coil turn conduit length"""
+    """Length of CS coil turn conduit length"""
 
     r_pf_outside_tf_midplane: float = 0.0
     """ Radial position of PF coil at the midplane."""

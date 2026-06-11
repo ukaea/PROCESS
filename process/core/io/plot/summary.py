@@ -10171,7 +10171,7 @@ def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
             edgecolor="black",
             facecolor="grey",
             lw=1.5,
-            label="CS Turn Steel conduit",
+            label="CS Turn Steel Conduit",
         )
     )
 
