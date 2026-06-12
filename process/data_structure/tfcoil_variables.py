@@ -757,7 +757,10 @@ class TFData:
     """mass of ground-wall insulation layer per coil (kg/coil)"""
 
     m_tf_coils_total: float = 0.0
-    """total mass of the TF coils (kg)"""
+    """Total mass of all TF coils (kg)"""
+
+    m_tf_coil: float = 0.0
+    """Total mass of one TF coil (kg)"""
 
     dx_tf_wp_primary_toroidal: float = 0.0
     """width of first step of winding pack (m)"""
