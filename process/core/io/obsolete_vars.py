@@ -49,7 +49,7 @@ OBS_VARS = {
     "thkwp": "dr_tf_wp_with_insulation",
     "leni": "dx_tf_turn_cable_space_average",
     "leno": "t_turn",
-    "conductor_width": "t_conductor",
+    "conductor_width": "dx_tf_turn_conduit_full_average",
     "deltf": "dr_tf_shld_gap",
     "ddwi": "dr_vv_outboard",
     "pnuccp": "pnuc_cp",
