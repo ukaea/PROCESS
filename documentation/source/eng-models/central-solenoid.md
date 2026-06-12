@@ -113,7 +113,7 @@ The turn geometry is calculated as follows:
 3. The radius of the corners of the cable space is given by:
 
     $$
-    r_{\text{CS,cable space corner}} = - \frac{dr_{\text{CS,turn}}-dz_{\text{CS,turn}}}{\pi} \\
+    r_{\text{CS,cable space corner}} = - \frac{dr_{\text{CS,turn}}-dz_{\text{CS,turn}}}{\pi}
     + \sqrt{\left(\frac{dr_{\text{CS,turn}}-dz_{\text{CS,turn}}}{\pi}\right)^2+ \frac{dr_{\text{CS,turn}}dz_{\text{CS,turn}}(4-\pi)r_{\text{CS,turn corners}}^2 - (A_{\text{CS,turn}}\times \texttt{f_a_cs_turn_steel})}{\pi}}
     $$
 
