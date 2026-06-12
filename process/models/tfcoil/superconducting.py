@@ -20,6 +20,7 @@ from process.models.superconductors import (
     CroCoCableGeometry,
     SuperconductorMaterial,
     SuperconductorModel,
+    SuperconductorShape,
     calculate_croco_cable_geometry,
 )
 from process.models.tfcoil import quench
@@ -2816,6 +2817,17 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         (i.e., the copper in the superconducting strands and any additional copper,
         such as REBCO tape support).
         """
+        if (
+            SuperconductorModel(i_tf_superconductor).sc_shape
+            != SuperconductorShape.CABLE
+        ):
+            raise ProcessValueError(
+                "Cannot calculate cable in conduit superconductor properties for "
+                "non-cable superconductors. Change `i_tf_sc_mat` to a cable "
+                "superconductor or use a different TF coil class for non-cable "
+                "superconductors."
+            )
+
         # Guard against negative conductor fraction f_a_tf_turn_cable_space_conductor
         # Kludge to allow solver to continue and hopefully be constrained away
         # from this point
@@ -3006,14 +3018,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             # = superconducting filaments jc * (1 -strand copper fraction)
             data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
                 1.0e0 - f_a_tf_turn_cable_copper
-            )
-
-        # =================================================================
-
-        # "REBCO" 2nd generation HTS superconductor in CrCo strand
-        elif i_tf_superconductor == SuperconductorModel.CROCO_REBCO:
-            raise ProcessValueError(
-                "sctfcoil.supercon has been called but data.tfcoil.i_tf_sc_mat=6"
             )
 
         # =================================================================
