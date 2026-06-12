@@ -3991,17 +3991,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 )
                 - self.data.superconducting_tfcoil.a_tf_turn_croco_copper_bar
             )
-        )
-
-        # Helium area is set by the user.
-        # conductor_helium_area = cable_helium_fraction * self.data.tfcoil.a_tf_turn_cable_space_no_void
-        self.data.superconducting_tfcoil.conductor_helium_area = (
-            np.pi / 2.0 * self.data.superconducting_tfcoil.dia_tf_turn_croco_cable**2
-        )
-        self.data.superconducting_tfcoil.conductor_helium_fraction = (
-            self.data.superconducting_tfcoil.conductor_helium_area
-            / self.data.superconducting_tfcoil.conductor_area
-        )
+        ) / self.data.tfcoil.a_tf_turn_cable_space_no_void
 
         self.data.superconducting_tfcoil.a_tf_turn_croco_hastelloy = (
             self.data.superconducting_tfcoil.a_tf_croco_strand_hastelloy
@@ -4025,7 +4015,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             self.data.superconducting_tfcoil.a_tf_croco_strand_rebco
             * N_CROCO_STRANDS_TURN
         )
-        self.data.superconducting_tfcoil.conductor_rebco_fraction = (
+        self.data.superconducting_tfcoil.f_a_tf_turn_superconductor = (
             self.data.superconducting_tfcoil.conductor_rebco_area
             / self.data.superconducting_tfcoil.conductor_area
         )
@@ -4949,13 +4939,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             "Jacket area of conductor (m²)",
             "(jacket_area)",
             self.data.superconducting_tfcoil.conductor_jacket_area,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Helium area of conductor (m²)",
-            "(helium_area)",
-            self.data.superconducting_tfcoil.conductor_helium_area,
             "OP ",
         )
 
