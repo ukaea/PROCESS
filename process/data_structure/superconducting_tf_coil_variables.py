@@ -254,22 +254,22 @@ class SuperconductingTFData:
 
     # conductor
 
-    a_tf_turn_croco_cable_space_copper: float = None
-    conductor_copper_fraction: float = None
-    a_tf_turn_croco_copper_bar: float = None
+    a_tf_turn_croco_cable_space_copper: float = 0.0
+    conductor_copper_fraction: float = 0.0
+    a_tf_turn_croco_copper_bar: float = 0.0
     """Area of the central copper strand in the CroCo TF turn [m²]"""
-    a_tf_turn_croco_hastelloy: float = None
-    conductor_hastelloy_fraction: float = None
-    conductor_helium_area: float = None
-    conductor_helium_fraction: float = None
-    conductor_solder_area: float = None
-    conductor_solder_fraction: float = None
-    conductor_jacket_area: float = None
-    conductor_jacket_fraction: float = None
-    conductor_rebco_area: float = None
-    conductor_rebco_fraction: float = None
-    conductor_critical_current: float = None
-    conductor_area: float = None
+    a_tf_turn_croco_hastelloy: float = 0.0
+    conductor_hastelloy_fraction: float = 0.0
+    conductor_helium_area: float = 0.0
+    conductor_helium_fraction: float = 0.0
+    conductor_solder_area: float = 0.0
+    conductor_solder_fraction: float = 0.0
+    conductor_jacket_area: float = 0.0
+    conductor_jacket_fraction: float = 0.0
+    conductor_rebco_area: float = 0.0
+    conductor_rebco_fraction: float = 0.0
+    conductor_critical_current: float = 0.0
+    conductor_area: float = 0.0
     """Area of cable space inside jacket"""
 
     t1: float = 0.0
