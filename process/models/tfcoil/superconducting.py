@@ -4544,22 +4544,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 b_c20max=bc20m,
                 t_c0=tc0m,
             )
-            # Scale for the copper area fraction of the cable
-            j_tape_critical = j_superconductor_critical * f_a_tf_turn_tape_superconductor
-
-            #  Critical current in turn all turn cables
-            c_turn_cables_critical = j_tape_critical * a_tf_turn_cable_space_effective
-
-            # Strand critical current calulation for costing in $ / kAm
-            # Already includes buffer and support layers so no need to include
-            # f_a_tf_turn_cable_copper here
-            self.data.tfcoil.j_crit_str_tf = j_superconductor_critical
-
-            # REBCO measurements from 2 T to 14 T, extrapolating outside this
-            if (b_tf_inboard_peak) >= 14.0:
-                logger.error(
-                    "Field on superconductor > 14 T (outside of interpolation range)"
-                )
 
         # =================================================================
 
@@ -4588,19 +4572,25 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 dx_hts_tape_rebco=dx_tf_hts_tape_rebco,
                 dx_hts_tape_total=dx_tf_hts_tape_total,
             )
-            # Scale for the copper area fraction of the cable
-            j_tape_critical = j_superconductor_critical * f_a_tf_turn_tape_superconductor
-
-            #  Critical current in turn all turn cables
-            c_turn_cables_critical = j_tape_critical * a_tf_turn_cable_space_effective
-
-            # Strand critical current calulation for costing in $ / kAm
-            # = superconducting filaments jc * (1 -strand copper fraction)
-            self.data.tfcoil.j_crit_str_tf = (
-                j_superconductor_critical * f_a_tf_turn_tape_superconductor
-            )
 
         # =================================================================
+
+        # Scale for the copper area fraction of the cable
+        j_tape_critical = j_superconductor_critical * f_a_tf_turn_tape_superconductor
+
+        #  Critical current in turn all turn cables
+        c_turn_cables_critical = j_tape_critical * a_tf_turn_cable_space_effective
+
+        # Strand critical current calulation for costing in $ / kAm
+        # Already includes buffer and support layers so no need to include
+        # f_a_tf_turn_cable_copper here
+        self.data.tfcoil.j_crit_str_tf = j_superconductor_critical
+
+        # REBCO measurements from 2 T to 14 T, extrapolating outside this
+        if (b_tf_inboard_peak) >= 14.0:
+            logger.error(
+                "Field on superconductor > 14 T (outside of interpolation range)"
+            )
 
         cur_tf_turn_croco_strand_critical = (
             j_superconductor_critical
