@@ -3049,86 +3049,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         # =================================================================
 
-        # Durham Ginzburg-Landau critical surface model for REBCO
-        elif i_tf_superconductor == SuperconductorModel.DURHAM_REBCO:
-            bc20m = 430  # [T]
-            tc0m = 185  # [K]
-
-            # If strain limit achieved, throw a warning and use the lower strain
-            if abs(strain) > 0.7e-2:
-                logger.error(
-                    f"TF strain={strain} was outside the region of applicability. "
-                    f"Used lower strain."
-                )
-                strain = np.sign(strain) * 0.7e-2
-
-            j_superconductor_critical, _, _ = superconductors.gl_rebco(
-                temp_conductor=temp_tf_coolant_peak_field,
-                b_conductor=b_tf_inboard_peak,
-                strain=strain,
-                b_c20max=bc20m,
-                t_c0=tc0m,
-            )
-            # Scale for the copper area fraction of the cable
-            j_cables_critical = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
-
-            #  Critical current in turn all turn cables
-            c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
-
-            # Strand critical current calulation for costing in $ / kAm
-            # Already includes buffer and support layers so no need to include
-            # f_a_tf_turn_cable_copper here
-            data.tfcoil.j_crit_str_tf = j_superconductor_critical
-
-            # REBCO measurements from 2 T to 14 T, extrapolating outside this
-            if (b_tf_inboard_peak) >= 14.0:
-                logger.error(
-                    "Field on superconductor > 14 T (outside of interpolation range)"
-                )
-
-        # =================================================================
-
-        # Hazelton experimental data + Zhai conceptual model for REBCO
-        elif i_tf_superconductor == SuperconductorModel.HAZELTON_ZHAI_REBCO:
-            bc20m = 138  # [T]
-            tc0m = 92  # [K]
-
-            # If strain limit achieved, throw a warning and use the lower strain
-            if abs(strain) > 0.7e-2:
-                logger.error(
-                    f"TF strain={strain} was outside the region of applicability. "
-                    f"Used lower strain."
-                )
-                strain = np.sign(strain) * 0.7e-2
-
-            # 'high current density' as per parameterisation described in Wolf,
-            #  and based on Hazelton experimental data and Zhai conceptual model;
-            #  see subroutine for full references
-            j_superconductor_critical, _, _ = superconductors.hijc_rebco(
-                temp_conductor=temp_tf_coolant_peak_field,
-                b_conductor=b_tf_inboard_peak,
-                b_c20max=bc20m,
-                t_c0=tc0m,
-                dr_hts_tape=data.superconducting_tfcoil.dr_tf_hts_tape,
-                dx_hts_tape_rebco=data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
-                dx_hts_tape_total=data.superconducting_tfcoil.dx_tf_hts_tape_total,
-            )
-            # Scale for the copper area fraction of the cable
-            j_cables_critical = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
-
-            #  Critical current in turn all turn cables
-            c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
-
-            # Strand critical current calulation for costing in $ / kAm
-            # = superconducting filaments jc * (1 -strand copper fraction)
-            data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
-
         else:
             raise ProcessValueError(
                 "Illegal value for i_tf_sc_mat", i_tf_superconductor=i_tf_superconductor
@@ -4094,44 +4014,43 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             * self.data.tfcoil.n_tf_coil_turns
         )
 
-        if (
-            SuperconductorModel(self.data.tfcoil.i_tf_sc_mat)
-            == SuperconductorModel.CROCO_REBCO
-        ):
-            superconductor_critical_properties: TFSuperconductorLimits = (
-                self.tf_croco_superconductor_properties(
-                    a_tf_turn=self.data.tfcoil.a_tf_turn,
-                    b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
-                    cur_tf_turn=self.data.tfcoil.c_tf_turn,
-                    temp_tf_peak=self.data.tfcoil.tftmp,
-                )
-            )
+        superconductor_critical_properties: TFSuperconductorLimits = self.tf_croco_superconductor_properties(
+            a_tf_turn=self.data.tfcoil.a_tf_turn,
+            b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
+            cur_tf_turn=self.data.tfcoil.c_tf_turn,
+            temp_tf_peak=self.data.tfcoil.tftmp,
+            a_tf_turn_cable_space_effective=self.data.superconducting_tfcoil.a_tf_turn_cable_space_effective,
+            i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
+            dr_tf_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
+            dx_tf_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
+            dx_tf_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
+        )
 
-            self.data.tfcoil.j_tf_wp_critical = (
-                superconductor_critical_properties.j_tf_wp_critical
-            )
-            self.data.superconducting_tfcoil.j_tf_superconductor_critical = (
-                superconductor_critical_properties.j_superconductor_critical
-            )
-            self.data.superconducting_tfcoil.f_c_tf_turn_operating_critical = (
-                superconductor_critical_properties.f_c_tf_turn_operating_critical
-            )
-            self.data.superconducting_tfcoil.j_tf_superconductor = (
-                superconductor_critical_properties.j_superconductor
-            )
-            self.data.superconducting_tfcoil.j_tf_coil_turn = (
-                superconductor_critical_properties.j_tf_coil_turn
-            )
+        self.data.tfcoil.j_tf_wp_critical = (
+            superconductor_critical_properties.j_tf_wp_critical
+        )
+        self.data.superconducting_tfcoil.j_tf_superconductor_critical = (
+            superconductor_critical_properties.j_superconductor_critical
+        )
+        self.data.superconducting_tfcoil.f_c_tf_turn_operating_critical = (
+            superconductor_critical_properties.f_c_tf_turn_operating_critical
+        )
+        self.data.superconducting_tfcoil.j_tf_superconductor = (
+            superconductor_critical_properties.j_superconductor
+        )
+        self.data.superconducting_tfcoil.j_tf_coil_turn = (
+            superconductor_critical_properties.j_tf_coil_turn
+        )
 
-            self.data.superconducting_tfcoil.b_tf_superconductor_critical_zero_temp_strain = superconductor_critical_properties.bc20m
-            self.data.superconducting_tfcoil.temp_tf_superconductor_critical_zero_field_strain = superconductor_critical_properties.tc0m
-            self.data.superconducting_tfcoil.c_tf_turn_cables_critical = (
-                superconductor_critical_properties.c_turn_cables_critical
-            )
+        self.data.superconducting_tfcoil.b_tf_superconductor_critical_zero_temp_strain = superconductor_critical_properties.bc20m
+        self.data.superconducting_tfcoil.temp_tf_superconductor_critical_zero_field_strain = superconductor_critical_properties.tc0m
+        self.data.superconducting_tfcoil.c_tf_turn_cables_critical = (
+            superconductor_critical_properties.c_turn_cables_critical
+        )
 
-            self.data.tfcoil.v_tf_coil_dump_quench_kv = (
-                self.croco_voltage() / 1.0e3
-            )  # TFC Quench voltage in kV
+        self.data.tfcoil.v_tf_coil_dump_quench_kv = (
+            self.croco_voltage() / 1.0e3
+        )  # TFC Quench voltage in kV
 
         # Negative areas or fractions error reporting
         if (
@@ -4537,34 +4456,160 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         b_tf_inboard_peak: float,
         cur_tf_turn: float,
         temp_tf_peak: float,
+        a_tf_turn_cable_space_effective: float,
+        i_tf_superconductor: int,
+        dr_tf_hts_tape: float,
+        dx_tf_hts_tape_rebco: float,
+        dx_tf_hts_tape_total: float,
     ) -> TFSuperconductorLimits:
         """TF superconducting CroCo conductor using REBCO tape
 
         Parameters
         ----------
         a_tf_turn :
-
+            Cross-sectional area of the TF turn (m²)
         b_tf_inboard_peak :
             Peak field at conductor (T)
         cur_tf_turn :
             Operating current per turn (A)
         temp_tf_peak :
-            He temperature at peak field point (K)
+            Coil temperature at peak field point (K)
+        a_tf_turn_cable_space_effective :
+            Effective cross-sectional area of the TF turn cable space (m²)
+        i_tf_superconductor :
+            Integer identifier for the superconductor material model to use.
+        dr_tf_hts_tape :
+            Thickness of the HTS tape (m)
+        dx_tf_hts_tape_rebco :
+            Width of the REBCO layer in the HTS tape (m)
+        dx_tf_hts_tape_total :
+            Total width of the HTS tape (m)
+
+        Returns
+        -------
+        TFSuperconductorLimits
+             A dataclass containing the calculated superconducting properties of the TF coil, including:
+            - j_tf_wp_critical: Critical current density in the TF winding pack (A/m²).
+            - j_superconductor_critical: Critical current density in the superconductor (A/m²).
+            - f_c_tf_turn_operating_critical: Ratio of operating current to critical current for the TF turn (dimensionless).
+            - j_tf_superconductor: Current density  in the superconductor at operating conditions (A/m²).
+            - j_tf_coil_turn: Current density in the TF coil turn at operating conditions (A/m²).
+            - bc20m: Critical magnetic field at 20 K and zero strain (T).
+            - tc0m: Critical temperature at zero magnetic field and zero strain (K).
+            - c_turn_cables_critical: Critical current in the TF turn cables (A).
 
         """
-        #  Find critical current density in superconducting cable, j_crit_cable
-        j_crit_sc, _, bc20m, tc0m = superconductors.jcrit_rebco(
-            temp_conductor=temp_tf_peak, b_conductor=b_tf_inboard_peak
-        )
+        if SuperconductorModel(i_tf_superconductor).sc_shape != SuperconductorShape.TAPE:
+            raise ProcessValueError(
+                "Cannot calculate tape superconductor properties for "
+                "non-tape superconductors. Change `i_tf_sc_mat` to a tape "
+                "superconductor or use a different TF coil class for non-tape "
+                "superconductors."
+            )
 
-        self.data.superconducting_tfcoil.cur_tf_turn_croco_strand_critical = (
-            j_crit_sc * self.data.superconducting_tfcoil.a_tf_croco_strand
+        if self.data.tfcoil.i_str_wp == 0:
+            strain = self.data.tfcoil.str_tf_con_res
+        else:
+            strain = self.data.tfcoil.str_wp
+
+        f_a_tf_turn_tape_superconductor = dx_tf_hts_tape_rebco / dx_tf_hts_tape_total
+
+        # =================================================================
+
+        if i_tf_superconductor == SuperconductorModel.CROCO_REBCO:
+            #  Find critical current density in superconducting cable, j_crit_cable
+            j_superconductor_critical, _, bc20m, tc0m = superconductors.jcrit_rebco(
+                temp_conductor=temp_tf_peak, b_conductor=b_tf_inboard_peak
+            )
+
+        # =================================================================
+
+        # Durham Ginzburg-Landau critical surface model for REBCO
+        elif i_tf_superconductor == SuperconductorModel.DURHAM_REBCO:
+            bc20m = 430  # [T]
+            tc0m = 185  # [K]
+
+            # If strain limit achieved, throw a warning and use the lower strain
+            if abs(strain) > 0.7e-2:
+                logger.error(
+                    f"TF strain={strain} was outside the region of applicability. "
+                    f"Used lower strain."
+                )
+                strain = np.sign(strain) * 0.7e-2
+
+            j_superconductor_critical, _, _ = superconductors.gl_rebco(
+                temp_conductor=temp_tf_peak,
+                b_conductor=b_tf_inboard_peak,
+                strain=strain,
+                b_c20max=bc20m,
+                t_c0=tc0m,
+            )
+            # Scale for the copper area fraction of the cable
+            j_tape_critical = j_superconductor_critical * f_a_tf_turn_tape_superconductor
+
+            #  Critical current in turn all turn cables
+            c_turn_cables_critical = j_tape_critical * a_tf_turn_cable_space_effective
+
+            # Strand critical current calulation for costing in $ / kAm
+            # Already includes buffer and support layers so no need to include
+            # f_a_tf_turn_cable_copper here
+            self.data.tfcoil.j_crit_str_tf = j_superconductor_critical
+
+            # REBCO measurements from 2 T to 14 T, extrapolating outside this
+            if (b_tf_inboard_peak) >= 14.0:
+                logger.error(
+                    "Field on superconductor > 14 T (outside of interpolation range)"
+                )
+
+        # =================================================================
+
+        # Hazelton experimental data + Zhai conceptual model for REBCO
+        elif i_tf_superconductor == SuperconductorModel.HAZELTON_ZHAI_REBCO:
+            bc20m = 138  # [T]
+            tc0m = 92  # [K]
+
+            # If strain limit achieved, throw a warning and use the lower strain
+            if abs(strain) > 0.7e-2:
+                logger.error(
+                    f"TF strain={strain} was outside the region of applicability. "
+                    f"Used lower strain."
+                )
+                strain = np.sign(strain) * 0.7e-2
+
+            # 'high current density' as per parameterisation described in Wolf,
+            #  and based on Hazelton experimental data and Zhai conceptual model;
+            #  see subroutine for full references
+            j_superconductor_critical, _, _ = superconductors.hijc_rebco(
+                temp_conductor=temp_tf_peak,
+                b_conductor=b_tf_inboard_peak,
+                b_c20max=bc20m,
+                t_c0=tc0m,
+                dr_hts_tape=dr_tf_hts_tape,
+                dx_hts_tape_rebco=dx_tf_hts_tape_rebco,
+                dx_hts_tape_total=dx_tf_hts_tape_total,
+            )
+            # Scale for the copper area fraction of the cable
+            j_tape_critical = j_superconductor_critical * f_a_tf_turn_tape_superconductor
+
+            #  Critical current in turn all turn cables
+            c_turn_cables_critical = j_tape_critical * a_tf_turn_cable_space_effective
+
+            # Strand critical current calulation for costing in $ / kAm
+            # = superconducting filaments jc * (1 -strand copper fraction)
+            self.data.tfcoil.j_crit_str_tf = (
+                j_superconductor_critical * f_a_tf_turn_tape_superconductor
+            )
+
+        # =================================================================
+
+        cur_tf_turn_croco_strand_critical = (
+            j_superconductor_critical
+            * self.data.superconducting_tfcoil.a_tf_croco_strand
         )
 
         # Conductor properties
         self.data.superconducting_tfcoil.conductor_critical_current = (
-            self.data.superconducting_tfcoil.cur_tf_turn_croco_strand_critical
-            * N_CROCO_STRANDS_TURN
+            cur_tf_turn_croco_strand_critical * N_CROCO_STRANDS_TURN
         )
 
         self.data.superconducting_tfcoil.tf_coppera_m2 = (
@@ -4577,18 +4622,22 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         # Critical current density in winding pack
         # a_tf_turn : Area per turn (i.e. entire jacketed conductor with insulation) (m2)
         j_tf_wp_critical = cur_critical / a_tf_turn
+
         #  Ratio of operating / critical current
-        iooic = cur_tf_turn / cur_critical
+        f_c_tf_turn_operating_critical = cur_tf_turn / cur_critical
+
         #  Operating current density
-        jwdgop = cur_tf_turn / a_tf_turn
+        j_tf_coil_turn = cur_tf_turn / a_tf_turn
+
         #  Actual current density in superconductor,
         # which should be equal to jcrit(thelium+tmarg)
-
         #  when we have found the desired value of tmarg
-        jsc = iooic * j_crit_sc
+        j_superconductor = f_c_tf_turn_operating_critical * j_superconductor_critical
 
         # Temperature margin
-        current_sharing_t = superconductors.current_sharing_rebco(b_tf_inboard_peak, jsc)
+        current_sharing_t = superconductors.current_sharing_rebco(
+            b_tf_inboard_peak, j_superconductor
+        )
         tmarg = current_sharing_t - temp_tf_peak
         self.data.tfcoil.temp_margin = (
             tmarg  # Only used in the availabilty routine - see comment to Issue #526
@@ -4596,13 +4645,13 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         return TFSuperconductorLimits(
             j_tf_wp_critical=j_tf_wp_critical,
-            j_superconductor_critical=j_crit_sc,
-            f_c_tf_turn_operating_critical=iooic,
-            j_superconductor=jsc,
-            j_tf_coil_turn=jwdgop,
+            j_superconductor_critical=j_superconductor_critical,
+            f_c_tf_turn_operating_critical=f_c_tf_turn_operating_critical,
+            j_superconductor=j_superconductor,
+            j_tf_coil_turn=j_tf_coil_turn,
             bc20m=bc20m,
             tc0m=tc0m,
-            c_turn_cables_critical=self.data.superconducting_tfcoil.cur_tf_turn_croco_strand_critical,
+            c_turn_cables_critical=cur_tf_turn_croco_strand_critical,
         )
 
     @staticmethod
