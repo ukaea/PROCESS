@@ -999,9 +999,9 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     dx_tf_wp_toroidal_min: Any = None
 
-    t_conductor_radial: Any = None
+    dr_tf_turn_conduit_full: Any = None
 
-    t_conductor_toroidal: Any = None
+    dx_tf_turn_conduit_full_toroidal: Any = None
 
     dr_tf_turn_cable_space: Any = None
 
@@ -1061,8 +1061,8 @@ class TfIntegerTurnGeomParam(NamedTuple):
             dx_tf_turn_general=0,
             c_tf_coil=14805350.287500001,
             dx_tf_wp_toroidal_min=1.299782604942499,
-            t_conductor_radial=0,
-            t_conductor_toroidal=0,
+            dr_tf_turn_conduit_full=0,
+            dx_tf_turn_conduit_full_toroidal=0,
             dr_tf_turn_cable_space=0,
             dx_tf_turn_cable_space=0,
             dr_tf_turn=0,
@@ -1095,8 +1095,8 @@ class TfIntegerTurnGeomParam(NamedTuple):
             dx_tf_turn_general=0.056579413904423038,
             c_tf_coil=14805350.287500001,
             dx_tf_wp_toroidal_min=1.299782604942499,
-            t_conductor_radial=0.046661087836601015,
-            t_conductor_toroidal=0.059189130247124938,
+            dr_tf_turn_conduit_full=0.046661087836601015,
+            dx_tf_turn_conduit_full_toroidal=0.059189130247124938,
             dr_tf_turn_cable_space=0.030661087836601014,
             dx_tf_turn_cable_space=0.043189130247124938,
             dr_tf_turn=0.050661087836601018,
@@ -1164,11 +1164,11 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
         tfintegerturngeomparam.expected_dx_tf_turn_general
     )
 
-    assert integer_turn_geometry.t_conductor_radial == pytest.approx(
+    assert integer_turn_geometry.dr_tf_turn_conduit_full == pytest.approx(
         tfintegerturngeomparam.expected_t_conductor_radial
     )
 
-    assert integer_turn_geometry.t_conductor_toroidal == pytest.approx(
+    assert integer_turn_geometry.dx_tf_turn_conduit_full_toroidal == pytest.approx(
         tfintegerturngeomparam.expected_t_conductor_toroidal
     )
 
