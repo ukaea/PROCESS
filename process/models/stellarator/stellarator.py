@@ -1553,57 +1553,9 @@ class Stellarator(Model):
                 )
                 po.ovarre(
                     self.outfile,
-                    "Nuclear heating on i/b coil (MW/m3)",
-                    "(pnuctfi)",
-                    self.data.fwbs.pnuctfi,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Nuclear heating on o/b coil (MW/m3)",
-                    "(pnuctfo)",
-                    self.data.fwbs.pnuctfo,
-                )
-                po.ovarre(
-                    self.outfile,
                     "Total nuclear heating on coil (MW)",
                     "(p_tf_nuclear_heat_mw)",
                     self.data.fwbs.p_tf_nuclear_heat_mw,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Fast neut. fluence on i/b coil (n/m2)",
-                    "(nflutfi)",
-                    self.data.fwbs.nflutfi * 1.0e4,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Fast neut. fluence on o/b coil (n/m2)",
-                    "(nflutfo)",
-                    self.data.fwbs.nflutfo * 1.0e4,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Minimum final He conc. in IB VV (appm)",
-                    "(vvhemini)",
-                    self.data.fwbs.vvhemini,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Minimum final He conc. in OB VV (appm)",
-                    "(vvhemino)",
-                    self.data.fwbs.vvhemino,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Maximum final He conc. in IB VV (appm)",
-                    "(vvhemaxi)",
-                    self.data.fwbs.vvhemaxi,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Maximum final He conc. in OB VV (appm)",
-                    "(vvhemaxo)",
-                    self.data.fwbs.vvhemaxo,
                 )
                 po.ovarre(
                     self.outfile,
