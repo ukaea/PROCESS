@@ -3830,15 +3830,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         # No central channel in CroCo conductor,
         self.data.tfcoil.a_tf_wp_coolant_channels = 0.0
 
-        # Total conductor cross-sectional area, taking account of void area
-        # and central helium channel [m²]
-        self.data.tfcoil.a_tf_wp_conductor = (
-            self.data.tfcoil.a_tf_turn_cable_space_no_void
-            * self.data.tfcoil.n_tf_coil_turns
-            * (1.0e0 - self.data.tfcoil.f_a_tf_turn_cable_space_extra_void)
-            - self.data.tfcoil.a_tf_wp_coolant_channels
-        )
-
         # Void area in conductor for He, not including central channel [m²]
         self.data.tfcoil.a_tf_wp_extra_void = (
             self.data.tfcoil.a_tf_turn_cable_space_no_void
@@ -3972,6 +3963,12 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             * N_CROCO_STRANDS_TURN
             + self.data.superconducting_tfcoil.a_tf_turn_croco_copper_bar
         )
+
+        # Total conductor cross-sectional area, taking account of void area
+        # and central helium channel [m²]
+        self.data.tfcoil.a_tf_wp_conductor = (
+            N_CROCO_STRANDS_TURN * self.data.superconducting_tfcoil.a_tf_croco_strand
+        ) * self.data.tfcoil.n_tf_coil_turns
 
         self.data.superconducting_tfcoil.a_tf_turn_copper_total = (
             self.data.superconducting_tfcoil.a_tf_turn_croco_cable_space_copper
