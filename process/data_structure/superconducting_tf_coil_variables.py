@@ -255,9 +255,18 @@ class SuperconductingTFData:
     # conductor
 
     a_tf_turn_croco_cable_space_copper: float = 0.0
-    conductor_copper_fraction: float = 0.0
+    """Area of the copper in the CroCo cable space of the TF turn (includes tapes,
+    outer tube and central copper) (m²)"""
+
+    a_tf_turn_copper_total: float = 0.0
+    """Area of all copper in the TF turn (m²)"""
+
+    f_a_tf_turn_copper: float = 0.0
+    """Fraction of the TF turn area that is copper (m²)"""
+
     a_tf_turn_croco_copper_bar: float = 0.0
     """Area of the central copper strand in the CroCo TF turn [m²]"""
+
     a_tf_turn_croco_hastelloy: float = 0.0
     conductor_hastelloy_fraction: float = 0.0
     conductor_helium_area: float = 0.0

@@ -3972,9 +3972,25 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             * N_CROCO_STRANDS_TURN
             + self.data.superconducting_tfcoil.a_tf_turn_croco_copper_bar
         )
-        self.data.superconducting_tfcoil.conductor_copper_fraction = (
+
+        self.data.superconducting_tfcoil.a_tf_turn_copper_total = (
             self.data.superconducting_tfcoil.a_tf_turn_croco_cable_space_copper
-            / self.data.superconducting_tfcoil.conductor_area
+        )
+
+        self.data.superconducting_tfcoil.f_a_tf_turn_copper = (
+            self.data.superconducting_tfcoil.a_tf_turn_croco_cable_space_copper
+            / self.data.tfcoil.a_tf_turn
+        )
+
+        self.data.superconducting_tfcoil.f_a_tf_turn_cable_space_cooling = (
+            self.data.tfcoil.a_tf_turn_cable_space_no_void
+            - (
+                (
+                    N_CROCO_STRANDS_TURN
+                    * self.data.superconducting_tfcoil.a_tf_croco_strand
+                )
+                - self.data.superconducting_tfcoil.a_tf_turn_croco_copper_bar
+            )
         )
 
         # Helium area is set by the user.
@@ -4031,6 +4047,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             dr_tf_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
             dx_tf_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
             dx_tf_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
+            a_tf_croco_strand=self.data.superconducting_tfcoil.a_tf_croco_strand,
         )
 
         self.data.tfcoil.j_tf_wp_critical = (
@@ -4468,6 +4485,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         dr_tf_hts_tape: float,
         dx_tf_hts_tape_rebco: float,
         dx_tf_hts_tape_total: float,
+        a_tf_croco_strand: float,
     ) -> TFSuperconductorLimits:
         """TF superconducting CroCo conductor using REBCO tape
 
@@ -4599,10 +4617,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 "Field on superconductor > 14 T (outside of interpolation range)"
             )
 
-        cur_tf_turn_croco_strand_critical = (
-            j_superconductor_critical
-            * self.data.superconducting_tfcoil.a_tf_croco_strand
-        )
+        cur_tf_turn_croco_strand_critical = j_superconductor_critical * a_tf_croco_strand
 
         # Conductor properties
         self.data.superconducting_tfcoil.conductor_critical_current = (
@@ -4858,27 +4873,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             self.data.superconducting_tfcoil.a_tf_croco_strand_solder,
             "OP ",
         )
-        po.ovarre(
-            self.outfile,
-            "Total: area of CroCo strand (m²)  ",
-            "(a_tf_croco_strand)",
-            self.data.superconducting_tfcoil.a_tf_croco_strand,
-            "OP ",
-        )
-        if (
-            abs(
-                self.data.superconducting_tfcoil.a_tf_croco_strand
-                - (
-                    self.data.superconducting_tfcoil.a_tf_croco_strand_rebco
-                    + self.data.superconducting_tfcoil.a_tf_croco_strand_copper_total
-                    + self.data.superconducting_tfcoil.a_tf_croco_strand_hastelloy
-                    + self.data.superconducting_tfcoil.a_tf_croco_strand_solder
-                )
-            )
-            > 1e-6
-        ):
-            po.ocmmnt(self.outfile, "ERROR: Areas in CroCo strand do not add up")
-            logger.error("Areas in CroCo strand do not add up - see OUT.DAT")
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "Cable information")
@@ -4911,7 +4905,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         po.ovarre(
             self.outfile,
             "Area of conductor (m²)",
-            "(area)",
+            "(conductor_area)",
             self.data.superconducting_tfcoil.conductor_area,
             "OP ",
         )
@@ -4925,21 +4919,21 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         po.ovarre(
             self.outfile,
             "Area of central copper bar (m²)",
-            "(copper_bar_area)",
+            "(a_tf_turn_croco_copper_bar)",
             self.data.superconducting_tfcoil.a_tf_turn_croco_copper_bar,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Total copper area of conductor, total (m²)",
-            "(a_tf_croco_strand_copper_total)",
+            "(a_tf_turn_croco_cable_space_copper)",
             self.data.superconducting_tfcoil.a_tf_turn_croco_cable_space_copper,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Hastelloy area of conductor (m²)",
-            "(a_tf_croco_strand_hastelloy)",
+            "(a_tf_turn_croco_hastelloy)",
             self.data.superconducting_tfcoil.a_tf_turn_croco_hastelloy,
             "OP ",
         )
