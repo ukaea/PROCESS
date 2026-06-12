@@ -113,11 +113,11 @@ class SuperconductingTFData:
     tan_theta_coil: float = 0.0
     """Tan half toroidal angular extent of a single TF coil inboard leg"""
 
-    t_conductor_radial: float = 0.0
-    """Conductor area radial and toroidal dimension (integer turn only) [m]"""
+    dr_tf_turn_conduit_full: float = 0.0
+    """Radial thickness of the full conduit around the cable space (integer turn only) [m]"""
 
-    t_conductor_toroidal: float = 0.0
-    """Conductor area radial and toroidal dimension (integer turn only) [m]"""
+    dx_tf_turn_conduit_full_toroidal: float = 0.0
+    """Toroidal thickness of the full conduit around the cable space (integer turn only) [m]"""
 
     dr_tf_turn_cable_space: float = 0.0
     """Cable area radial and toroidal dimension (integer turn only) [m]"""
