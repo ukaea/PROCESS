@@ -600,14 +600,14 @@ class SuperconductingTFCoil(TFCoil):
             )
             po.ovarre(
                 self.outfile,
-                "Width of conductor (square) (m)",
-                "(t_conductor)",
-                self.data.tfcoil.t_conductor,
+                "Width of conduit surrounding cable space (square) (m)",
+                "(dx_tf_turn_conduit_full_average)",
+                self.data.tfcoil.dx_tf_turn_conduit_full_average,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Width of space inside conductor (m)",
+                "Width of cable space inside conduit (m)",
                 "(dx_tf_turn_cable_space_average)",
                 self.data.superconducting_tfcoil.dx_tf_turn_cable_space_average,
                 "OP ",
@@ -2217,7 +2217,7 @@ class CICCAveragedTurnGeometry:
     dx_tf_turn_general: float
     dr_tf_turn: float
     dx_tf_turn: float
-    t_conductor: float
+    dx_tf_turn_conduit_full_average: float
     radius_tf_turn_cable_space_corners: float
     dx_tf_turn_cable_space_average: float
     a_tf_turn_cable_space_effective: float
@@ -2238,7 +2238,7 @@ class CICCIntegerTurnGeometry:
     n_tf_coil_turns: int
     t_conductor_radial: float
     t_conductor_toroidal: float
-    t_conductor: float
+    dx_tf_turn_conduit_full_average: float
     dr_tf_turn_cable_space: float
     dx_tf_turn_cable_space: float
     dx_tf_turn_cable_space_average: float
@@ -2289,7 +2289,9 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             self.data.tfcoil.dx_tf_turn_general = avg_turn_geometry.dx_tf_turn_general
             self.data.superconducting_tfcoil.dr_tf_turn = avg_turn_geometry.dr_tf_turn
             self.data.superconducting_tfcoil.dx_tf_turn = avg_turn_geometry.dx_tf_turn
-            self.data.tfcoil.t_conductor = avg_turn_geometry.t_conductor
+            self.data.tfcoil.dx_tf_turn_conduit_full_average = (
+                avg_turn_geometry.dx_tf_turn_conduit_full_average
+            )
             self.data.superconducting_tfcoil.radius_tf_turn_cable_space_corners = (
                 avg_turn_geometry.radius_tf_turn_cable_space_corners
             )
@@ -2338,7 +2340,9 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             self.data.superconducting_tfcoil.t_conductor_toroidal = (
                 int_turn_geometry.t_conductor_toroidal
             )
-            self.data.tfcoil.t_conductor = int_turn_geometry.t_conductor
+            self.data.tfcoil.dx_tf_turn_conduit_full_average = (
+                int_turn_geometry.dx_tf_turn_conduit_full_average
+            )
             self.data.superconducting_tfcoil.dr_tf_turn_cable_space = (
                 int_turn_geometry.dr_tf_turn_cable_space
             )
@@ -3246,7 +3250,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             - a_tf_turn: Area of the TF turn (in square meters).
             - dx_tf_turn: Dimension of the TF turn (in meters).
             - dr_tf_turn: Dimension of the TF turn (in meters).
-            - t_conductor: Thickness of the conductor in the TF turn (in meters).
+            - dx_tf_turn_conduit_full_average: Thickness of the conductor in the TF turn (in meters).
             - n_tf_coil_turns: Number of turns in the TF coil
               (not necessarily an integer).
             - a_tf_turn_insulation: Area of the insulation in the TF turn
@@ -3300,7 +3304,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # See derivation in the following document
         # k:\power plant physics and technology\process\hts\hts coil module
         # for process.docx
-        t_conductor = (
+        dx_tf_turn_conduit_full_average = (
             -layer_ins + np.sqrt(layer_ins**2 + 4.0e00 * a_tf_turn)
         ) / 2 - 2.0e0 * dx_tf_turn_insulation
 
@@ -3308,7 +3312,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         n_tf_coil_turns = a_tf_wp_no_insulation / a_tf_turn
 
         # Area of inter-turn insulation: single turn [m2]
-        a_tf_turn_insulation = a_tf_turn - t_conductor**2
+        a_tf_turn_insulation = a_tf_turn - dx_tf_turn_conduit_full_average**2
 
         # NOTE: Fortran has a_tf_turn_cable_space_no_void as an intent(out) variable
         # that was outputting into data.tfcoil.a_tf_turn_cable_space_no_void.
@@ -3323,7 +3327,9 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         radius_tf_turn_cable_space_corners = dx_tf_turn_steel * 0.75e0
 
         # Dimension of square cable space inside conduit [m]
-        dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
+        dx_tf_turn_cable_space_average = (
+            dx_tf_turn_conduit_full_average - 2.0e0 * dx_tf_turn_steel
+        )
 
         # Cross-sectional area of cable space per turn
         # taking account of rounded inside corners [m2]
@@ -3349,7 +3355,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         )
 
         if a_tf_turn_cable_space_no_void <= 0.0e0:
-            if t_conductor < 0.0e0:
+            if dx_tf_turn_conduit_full_average < 0.0e0:
                 logger.error(
                     "Negative cable space dimension. %s %s",
                     a_tf_turn_cable_space_no_void,
@@ -3366,7 +3372,9 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 a_tf_turn_cable_space_no_void = dx_tf_turn_cable_space_average**2
 
         # Cross-sectional area of conduit jacket per turn [m2]
-        a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
+        a_tf_turn_steel = (
+            dx_tf_turn_conduit_full_average**2 - a_tf_turn_cable_space_no_void
+        )
 
         return CICCAveragedTurnGeometry(
             a_tf_turn_cable_space_no_void=a_tf_turn_cable_space_no_void,
@@ -3377,7 +3385,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             dx_tf_turn_general=dx_tf_turn_general,
             dr_tf_turn=dr_tf_turn,
             dx_tf_turn=dx_tf_turn,
-            t_conductor=t_conductor,
+            dx_tf_turn_conduit_full_average=dx_tf_turn_conduit_full_average,
             radius_tf_turn_cable_space_corners=radius_tf_turn_cable_space_corners,
             dx_tf_turn_cable_space_average=dx_tf_turn_cable_space_average,
             a_tf_turn_cable_space_effective=a_tf_turn_cable_space_effective,
@@ -3439,7 +3447,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
               (in square meters).
             - n_tf_coil_turns: Number of turns in the TF coil
               (not necessarily an integer).
-            - t_conductor: Thickness of the conductor in the TF turn (in meters).
+            - dx_tf_turn_conduit_full_average: Thickness of the conductor in the TF turn (in meters).
             - dx_tf_turn_cable_space_average: Average dimension of the cable space in
               the TF turn (in meters).
             - a_tf_turn_cable_space_effective: Effective area of the cable space in the
@@ -3490,7 +3498,9 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # Radial and toroidal dimension of conductor [m]
         t_conductor_radial = dr_tf_turn - 2.0e0 * dx_tf_turn_insulation
         t_conductor_toroidal = dx_tf_turn - 2.0e0 * dx_tf_turn_insulation
-        t_conductor = np.sqrt(t_conductor_radial * t_conductor_toroidal)
+        dx_tf_turn_conduit_full_average = np.sqrt(
+            t_conductor_radial * t_conductor_toroidal
+        )
 
         # Dimension of square cable space inside conduit [m]
         dr_tf_turn_cable_space = t_conductor_radial - 2.0e0 * dx_tf_turn_steel
@@ -3566,7 +3576,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             n_tf_coil_turns=n_tf_coil_turns,
             t_conductor_radial=t_conductor_radial,
             t_conductor_toroidal=t_conductor_toroidal,
-            t_conductor=t_conductor,
+            dx_tf_turn_conduit_full_average=dx_tf_turn_conduit_full_average,
             dr_tf_turn_cable_space=dr_tf_turn_cable_space,
             dx_tf_turn_cable_space=dx_tf_turn_cable_space,
             dx_tf_turn_cable_space_average=dx_tf_turn_cable_space_average,
@@ -3756,7 +3766,7 @@ class CROCOAveragedTurnGeometry:
     dx_tf_turn_general: float
     dr_tf_turn: float
     dx_tf_turn: float
-    t_conductor: float
+    dx_tf_turn_conduit_full_average: float
     dx_tf_turn_cable_space_average: float
 
 
@@ -3814,7 +3824,9 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             self.data.tfcoil.dx_tf_turn_general = avg_turn_geometry.dx_tf_turn_general
             self.data.superconducting_tfcoil.dr_tf_turn = avg_turn_geometry.dr_tf_turn
             self.data.superconducting_tfcoil.dx_tf_turn = avg_turn_geometry.dx_tf_turn
-            self.data.tfcoil.t_conductor = avg_turn_geometry.t_conductor
+            self.data.tfcoil.dx_tf_turn_conduit_full_average = (
+                avg_turn_geometry.dx_tf_turn_conduit_full_average
+            )
             self.data.superconducting_tfcoil.dx_tf_turn_cable_space_average = (
                 avg_turn_geometry.dx_tf_turn_cable_space_average
             )
@@ -3872,11 +3884,9 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             / self.data.tfcoil.a_tf_inboard_total
         )
 
-        croco_cable_space_geometry: CroCoCableSpaceGeometry = (
-            self.tf_turn_croco_cable_space_properties(
-                t_conductor=self.data.tfcoil.t_conductor,
-                dx_tf_turn_steel=self.data.tfcoil.dx_tf_turn_steel,
-            )
+        croco_cable_space_geometry: CroCoCableSpaceGeometry = self.tf_turn_croco_cable_space_properties(
+            dx_tf_turn_conduit_full_average=self.data.tfcoil.dx_tf_turn_conduit_full_average,
+            dx_tf_turn_steel=self.data.tfcoil.dx_tf_turn_steel,
         )
 
         self.data.superconducting_tfcoil.dia_tf_turn_croco_cable = (
@@ -4379,7 +4389,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             - a_tf_turn: Area of the TF turn (in square meters).
             - dx_tf_turn: Dimension of the TF turn (in meters).
             - dr_tf_turn: Dimension of the TF turn (in meters).
-            - t_conductor: Thickness of the conductor in the TF turn (in meters).
+            - dx_tf_turn_conduit_full_average: Thickness of the conductor in the TF turn (in meters).
             - n_tf_coil_turns: Number of turns in the TF coil (not necessarily
               an integer).
             - a_tf_turn_insulation: Area of the insulation in the TF turn
@@ -4428,7 +4438,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         dr_tf_turn = dx_tf_turn_general
         dx_tf_turn = dx_tf_turn_general
 
-        t_conductor = (
+        dx_tf_turn_conduit_full_average = (
             -layer_ins + np.sqrt(layer_ins**2 + 4.0e00 * a_tf_turn)
         ) / 2 - 2.0e0 * dx_tf_turn_insulation
 
@@ -4436,17 +4446,21 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         n_tf_coil_turns = a_tf_wp_no_insulation / a_tf_turn
 
         # Area of inter-turn insulation: single turn [m²]
-        a_tf_turn_insulation = a_tf_turn - t_conductor**2
+        a_tf_turn_insulation = a_tf_turn - dx_tf_turn_conduit_full_average**2
 
         a_tf_turn_cable_space_no_void = copy.copy(
             self.data.tfcoil.a_tf_turn_cable_space_no_void
         )
 
         # Diameter of circular cable space inside conduit [m]
-        dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
+        dx_tf_turn_cable_space_average = (
+            dx_tf_turn_conduit_full_average - 2.0e0 * dx_tf_turn_steel
+        )
 
         # Cross-sectional area of conduit jacket per turn [m²]
-        a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
+        a_tf_turn_steel = (
+            dx_tf_turn_conduit_full_average**2 - a_tf_turn_cable_space_no_void
+        )
 
         return CROCOAveragedTurnGeometry(
             a_tf_turn_cable_space_no_void=a_tf_turn_cable_space_no_void,
@@ -4457,7 +4471,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             dx_tf_turn_general=dx_tf_turn_general,
             dr_tf_turn=dr_tf_turn,
             dx_tf_turn=dx_tf_turn,
-            t_conductor=t_conductor,
+            dx_tf_turn_conduit_full_average=dx_tf_turn_conduit_full_average,
             dx_tf_turn_cable_space_average=dx_tf_turn_cable_space_average,
         )
 
@@ -4655,14 +4669,14 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
     @staticmethod
     def tf_turn_croco_cable_space_properties(
-        t_conductor: float, dx_tf_turn_steel: float
+        dx_tf_turn_conduit_full_average: float, dx_tf_turn_steel: float
     ) -> CroCoCableSpaceGeometry:
         """Calculate the properties of the cable space in the TF turn for a CroCo
         conductor.
 
         Parameters
         ----------
-        t_conductor : float
+        dx_tf_turn_conduit_full_average : float
             Thickness of the conductor in the TF turn (in meters).
         dx_tf_turn_steel : float
             Thickness of the steel layer in the TF turn (in meters).
@@ -4689,8 +4703,8 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
 
         """
-        dia_tf_turn_croco_cable = t_conductor / 3.0e0 - dx_tf_turn_steel * (
-            2.0e0 / 3.0e0
+        dia_tf_turn_croco_cable = (
+            dx_tf_turn_conduit_full_average / 3.0e0 - dx_tf_turn_steel * (2.0e0 / 3.0e0)
         )
 
         # Area of the full cable circle in the turn
@@ -4703,7 +4717,9 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             a_tf_turn_cable_space_no_void - 0.25e0 * np.pi * dia_tf_turn_croco_cable**2
         )
 
-        conductor_area = t_conductor**2  # does this not assume it's a sqaure???
+        conductor_area = (
+            dx_tf_turn_conduit_full_average**2
+        )  # does this not assume it's a sqaure???
 
         conductor_jacket_area = conductor_area - a_tf_turn_cable_space_no_void
         a_tf_turn_steel = conductor_jacket_area
@@ -4885,8 +4901,8 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         po.ovarre(
             self.outfile,
             "Width of square conductor (cable + steel jacket) (m)",
-            "(t_conductor)",
-            self.data.tfcoil.t_conductor,
+            "(dx_tf_turn_conduit_full_average)",
+            self.data.tfcoil.dx_tf_turn_conduit_full_average,
             "OP ",
         )
         po.ovarre(

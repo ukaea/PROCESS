@@ -984,7 +984,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     dx_tf_wp_insertion_gap: Any = None
 
-    t_conductor: Any = None
+    dx_tf_turn_conduit_full_average: Any = None
 
     dx_tf_turn_general: Any = None
 
@@ -1050,7 +1050,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_wp_insertion_gap=0.01,
-            t_conductor=0,
+            dx_tf_turn_conduit_full_average=0,
             dx_tf_turn_general=0,
             c_tf_coil=14805350.287500001,
             dx_tf_wp_toroidal_min=1.299782604942499,
@@ -1084,7 +1084,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_wp_insertion_gap=0.01,
-            t_conductor=0.052553108427885735,
+            dx_tf_turn_conduit_full_average=0.052553108427885735,
             dx_tf_turn_general=0.056579413904423038,
             c_tf_coil=14805350.287500001,
             dx_tf_wp_toroidal_min=1.299782604942499,
@@ -1149,7 +1149,7 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
         0.75 * tfintegerturngeomparam.dx_tf_turn_steel
     )
 
-    assert integer_turn_geometry.t_conductor == pytest.approx(
+    assert integer_turn_geometry.dx_tf_turn_conduit_full_average == pytest.approx(
         tfintegerturngeomparam.expected_t_conductor
     )
 
@@ -1209,7 +1209,7 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
 class TfAveragedTurnGeomParam(NamedTuple):
     layer_ins: Any = None
 
-    t_conductor: Any = None
+    dx_tf_turn_conduit_full_average: Any = None
 
     dx_tf_turn_general: Any = None
 
@@ -1259,7 +1259,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
     [
         TfAveragedTurnGeomParam(
             layer_ins=0,
-            t_conductor=0,
+            dx_tf_turn_conduit_full_average=0,
             dx_tf_turn_general=0,
             i_dx_tf_turn_general_input=False,
             c_tf_turn=65000,
@@ -1284,7 +1284,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
         ),
         TfAveragedTurnGeomParam(
             layer_ins=0,
-            t_conductor=0.047932469413859431,
+            dx_tf_turn_conduit_full_average=0.047932469413859431,
             dx_tf_turn_general=0.049532469413859428,
             i_dx_tf_turn_general_input=False,
             c_tf_turn=65000,
@@ -1309,7 +1309,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
         ),
         TfAveragedTurnGeomParam(
             layer_ins=0,
-            t_conductor=5.712e-02,
+            dx_tf_turn_conduit_full_average=5.712e-02,
             dx_tf_turn_general=0.05872,
             i_dx_tf_turn_general_input=True,
             c_tf_turn=0,
@@ -1334,7 +1334,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
         ),
         TfAveragedTurnGeomParam(
             layer_ins=0,
-            t_conductor=0.058296,
+            dx_tf_turn_conduit_full_average=0.058296,
             dx_tf_turn_general=0,
             i_dx_tf_turn_general_input=False,
             c_tf_turn=0,
@@ -1392,7 +1392,7 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
     )
 
     # Existing checks
-    assert avg_turn_geometry.t_conductor == pytest.approx(
+    assert avg_turn_geometry.dx_tf_turn_conduit_full_average == pytest.approx(
         tfaveragedturngeomparam.expected_t_conductor
     )
     assert avg_turn_geometry.dx_tf_turn_general == pytest.approx(

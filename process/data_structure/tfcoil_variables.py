@@ -95,8 +95,8 @@ class TFData:
     tfc_sidewall_is_fraction: bool = False
     """logical switch to make dx_tf_side_case_min a fraction of TF coil thickness (`casths_fraction`)"""
 
-    t_conductor: float = 0.0
-    """Conductor (cable + steel conduit) area averaged dimension [m]"""
+    dx_tf_turn_conduit_full_average: float = 0.0
+    """Average full width of the conduit surrounding the TF turn cable space [m]"""
 
     dx_tf_turn_general: float = 0.0
     """TF coil turn edge length including turn insulation [m]
