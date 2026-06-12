@@ -684,8 +684,8 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "Mass of each TF coil (kg)",
-            "(m_tf_coils_total/n_tf_coils)",
-            self.data.tfcoil.m_tf_coils_total / self.data.tfcoil.n_tf_coils,
+            "(m_tf_coil)",
+            self.data.tfcoil.m_tf_coil,
             "OP ",
         )
         po.ovarre(
@@ -1977,11 +1977,16 @@ class SuperconductingTFCoil(TFCoil):
         # ---------------------------------
 
         # Total TF coil mass [kg] (all coils)
-        self.data.tfcoil.m_tf_coils_total = (
+        self.data.tfcoil.m_tf_coil = (
             self.data.tfcoil.m_tf_coil_case
             + self.data.tfcoil.m_tf_coil_conductor
             + self.data.tfcoil.m_tf_coil_wp_insulation
-        ) * self.data.tfcoil.n_tf_coils
+        )
+
+        # Total TF coil mass [kg] (all coils)
+        self.data.tfcoil.m_tf_coils_total = (
+            self.data.tfcoil.m_tf_coil * self.data.tfcoil.n_tf_coils
+        )
 
         # If spherical tokamak, distribute between centrepost and outboard legs
         # (in this case, total TF coil length = inboard `cplen` +
@@ -3613,47 +3618,15 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         po.ovarre(
             self.outfile,
-            "Copper fraction of conductor",
+            "Copper area fraction of cable conductor",
             "(f_a_tf_turn_cable_copper)",
             self.data.tfcoil.f_a_tf_turn_cable_copper,
         )
         po.ovarre(
             self.outfile,
-            "Superconductor fraction of conductor",
+            "Superconductor area fraction of cable conductor",
             "(1-f_a_tf_turn_cable_copper)",
             1 - self.data.tfcoil.f_a_tf_turn_cable_copper,
-        )
-        ap = (
-            self.data.tfcoil.a_tf_wp_conductor
-            + self.data.tfcoil.n_tf_coil_turns * self.data.tfcoil.a_tf_turn_steel
-            + self.data.tfcoil.a_tf_coil_wp_turn_insulation
-            + self.data.tfcoil.a_tf_wp_extra_void
-            + self.data.tfcoil.a_tf_wp_coolant_channels
-        )
-        po.ovarre(
-            self.outfile,
-            "Check total area fractions in winding pack = 1",
-            "",
-            (
-                self.data.tfcoil.a_tf_wp_conductor
-                + self.data.tfcoil.n_tf_coil_turns * self.data.tfcoil.a_tf_turn_steel
-                + self.data.tfcoil.a_tf_coil_wp_turn_insulation
-                + self.data.tfcoil.a_tf_wp_extra_void
-                + self.data.tfcoil.a_tf_wp_coolant_channels
-            )
-            / ap,
-        )
-        po.ovarre(
-            self.outfile,
-            "minimum TF conductor temperature margin  (K)",
-            "(temp_tf_superconductor_margin_min)",
-            self.data.tfcoil.temp_tf_superconductor_margin_min,
-        )
-        po.ovarre(
-            self.outfile,
-            "TF conductor temperature margin (K)",
-            "(temp_tf_superconductor_margin)",
-            self.data.tfcoil.temp_tf_superconductor_margin,
         )
 
         po.ovarre(
