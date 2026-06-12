@@ -1566,8 +1566,8 @@ class Stellarator(Model):
                 po.ovarre(
                     self.outfile,
                     "Blanket lifetime (calendar years)",
-                    "(t_bl_y)",
-                    self.data.fwbs.t_bl_y,
+                    "(life_blkt)",
+                    self.data.fwbs.life_blkt,
                 )
 
             if (self.data.heat_transport.ipowerflow == 1) and (
