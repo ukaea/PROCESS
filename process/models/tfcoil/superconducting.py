@@ -867,6 +867,13 @@ class SuperconductingTFCoil(TFCoil):
         )
         po.ovarre(
             self.outfile,
+            "Peak inboard toroidal field including ripple (T)",
+            "(b_tf_inboard_peak_with_ripple)",
+            self.data.tfcoil.b_tf_inboard_peak_with_ripple,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
             "Total cooling area fraction inside cable space",
             "(f_a_tf_turn_cable_space_cooling)",
             d_sc_tf.f_a_tf_turn_cable_space_cooling,
