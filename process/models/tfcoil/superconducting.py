@@ -3915,14 +3915,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 )
                 - self.data.superconducting_tfcoil.a_tf_turn_croco_copper_bar
             )
-        )
-
-        # Helium area is set by the user.
-        # conductor_helium_area = cable_helium_fraction * self.data.tfcoil.a_tf_turn_cable_space_no_void  # noqa: E501
-        d_sc_tf.conductor_helium_area = np.pi / 2.0 * d_sc_tf.dia_tf_turn_croco_cable**2
-        d_sc_tf.conductor_helium_fraction = (
-            d_sc_tf.conductor_helium_area / d_sc_tf.conductor_area
-        )
+        ) / self.data.tfcoil.a_tf_turn_cable_space_no_void
 
         d_sc_tf.a_tf_turn_croco_hastelloy = (
             d_sc_tf.a_tf_croco_strand_hastelloy * N_CROCO_STRANDS_TURN
@@ -3941,8 +3934,9 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         d_sc_tf.conductor_rebco_area = (
             d_sc_tf.a_tf_croco_strand_rebco * N_CROCO_STRANDS_TURN
         )
-        d_sc_tf.conductor_rebco_fraction = (
-            d_sc_tf.conductor_rebco_area / d_sc_tf.conductor_area
+        self.data.superconducting_tfcoil.f_a_tf_turn_superconductor = (
+            self.data.superconducting_tfcoil.conductor_rebco_area
+            / self.data.superconducting_tfcoil.conductor_area
         )
 
         # Cross-sectional area per turn
@@ -4809,13 +4803,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             "Jacket area of conductor (m²)",
             "(jacket_area)",
             d_sc_tf.conductor_jacket_area,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Helium area of conductor (m²)",
-            "(helium_area)",
-            d_sc_tf.conductor_helium_area,
             "OP ",
         )
 
