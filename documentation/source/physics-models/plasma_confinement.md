@@ -54,7 +54,7 @@ The loss power $P_{\text{L}}$ [$\mathtt{p\_plasma\_loss\_mw}$] is calculated fro
 Published confinement scalings are all based on low radiation pulses. A power
 plant will certainly be a high radiation machine, both in the core, due to
 bremsstrahlung and synchrotron radiation, and in the edge due to impurity
-seeding. The scaling data does not predict this radiation [^24] [^25], that needs to be
+seeding. The scaling data does not predict this radiation [^23] [^24], that needs to be
 done by the radiation model. However, if the transport is very "stiff", as
 predicted by some models, then the additional radiation causes an almost equal
 drop in power transported by ions and electrons, leaving the confinement
@@ -639,7 +639,7 @@ $$
 
 #### 50: ITPA20-IL scaling (H-mode) | `itpa20_il_confinement_time()`
 
-Is selected with `i_confinement_time = 50` [^23]
+Is selected with `i_confinement_time = 50` [^22]
 
 $$
 \tau_{\text{E}} =  0.067 I_{\text{p}}^{1.29} B_{\text{T}}^{-0.13} P_{\text{L}}^{-0.644} \overline{n}_{19}^{0.15} M^{0.3} R^{1.19} \left(1+\delta \right)^{0.56} \kappa_{\text{IPB}}^{0.67} 
@@ -729,7 +729,6 @@ The value of `f_alpha_energy_confinement_min` can be set to the desired minimum 
 [^20]: J. E. Menard, “Compact steady-state tokamak performance dependence on magnet and core physics limits,” Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440-20170440, Feb. 2019, doi: https://doi.org/10.1098/rsta.2017.0440.
 [^21]: P. F. Buxton, L. Connor, A. E. Costley, M. Gryaznevich, and S. McNamara, “On the energy confinement time in spherical tokamaks: implications for the design of pilot plants and fusion reactors,” vol. 61, no. 3, pp. 035006-035006, Jan. 2019, doi: https://doi.org/10.1088/1361-6587/aaf7e5.
 [^22]: G. Verdoolaege et al., “The updated ITPA global H-mode confinement database: description and analysis,” Nuclear Fusion, vol. 61, no. 7, pp. 076006-076006, Jan. 2021, doi: https://doi.org/10.1088/1741-4326/abdb91.
-[^23]: T. Luda et al., “Validation of a full-plasma integrated modeling approach on ASDEX Upgrade,” Nuclear Fusion, vol. 61, no. 12, pp. 126048-126048, Nov. 2021, doi: https://doi.org/10.1088/1741-4326/ac3293.
-[^24]: H. Lux, R. Kemp, E. Fable, and R. Wenninger, “Radiation and confinement in 0D fusion systems codes,” Plasma Physics and Controlled Fusion, vol. 58, no. 7, pp. 075001–075001, May 2016, doi: https://doi.org/10.1088/0741-3335/58/7/075001.
-[^25]: H. Lux, R. Kemp, D. J. Ward, and M. Sertoli, “Impurity radiation in DEMO systems modelling,” Fusion Engineering and Design, vol. 101, pp. 42–51, Dec. 2015, doi: https://doi.org/10.1016/j.fusengdes.2015.10.002.
+[^23]: H. Lux, R. Kemp, E. Fable, and R. Wenninger, “Radiation and confinement in 0D fusion systems codes,” Plasma Physics and Controlled Fusion, vol. 58, no. 7, pp. 075001–075001, May 2016, doi: https://doi.org/10.1088/0741-3335/58/7/075001.
+[^24]: H. Lux, R. Kemp, D. J. Ward, and M. Sertoli, “Impurity radiation in DEMO systems modelling,” Fusion Engineering and Design, vol. 101, pp. 42–51, Dec. 2015, doi: https://doi.org/10.1016/j.fusengdes.2015.10.002.
 ‌
