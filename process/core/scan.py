@@ -86,6 +86,9 @@ class ScanVariables(ScanVariable, Enum):
             return self._data_
         raise ValueError("Data not available")
 
+    def get_val(self, mfile, scan):
+        return mfile.get(self.name, scan=scan)
+
     aspect = (1, SVE.P)
     pflux_div_heat_load_max_mw = (2, SVE.D)
     p_plant_electric_net_required_mw = (3, SVE.C)
@@ -899,6 +902,5 @@ class Scan:
 
     def scan_select(self, nwp, swp, iscn):
         sv = ScanVariables(int(nwp))
-        sweep = swp[iscn - 1]
-        sv.set(self.data, sweep)
+        sv.set(self.data, swp[iscn - 1])
         return sv
