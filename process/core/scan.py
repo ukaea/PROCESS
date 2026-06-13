@@ -508,3 +508,4 @@ class Scan:
         """Select a scan"""
         sv = ScanVariables(nsweep)
         sv.set(self.data, sweep[iscan - 1])
+        return sv
