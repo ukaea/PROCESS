@@ -329,13 +329,13 @@ class Scan:
             pstring = (
                 f"Scan {iscan:02d}: {nsweep_var.name} = {sweep_values[iscan]} "
                 + " " * offsets[iscan]
-                + "\u001b[32m{}CONVERGED \u001b[0m"
+                + "\u001b[3{}CONVERGED \u001b[0m"
             )
             if scan_1d_ifail_dict[iscan + 1] == 1:
                 converged_count += 1
-                pstring.format("")
+                pstring.format("2m")
             else:
-                pstring.format("UN")
+                pstring.format("1mUN")
             print(pstring)
         converged_percentage = converged_count / self.data.scan.isweep * 100
         print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
@@ -369,7 +369,24 @@ class Scan:
                 scan_2d_ifail_list[iscan_1][iscan_2] = ifail
                 iscan += 1
 
-        print("Scan Convergence Summary\n")
+        self.output_2d_summary(scan_2d_ifail_list)
+
+    def scan_2d_init(self):
+        sv = self.data.scan
+        for d, n, v in (
+            ("Number of first variable scan points", "(isweep)", sv.isweep),
+            ("Number of second variable scan points", "(isweep_2)", sv.isweep_2),
+            ("Scanning first variable number", "(nsweep)", sv.nsweep),
+            ("Scanning second variable number", "(nsweep_2)", sv.nsweep_2),
+            ("Scanning second variable number", "(nsweep_2)", sv.nsweep_2),
+            ("Scanning second variable number", "(nsweep_2)", sv.nsweep_2),
+        ):
+            process_output.ovarin(constants.MFILE, d, n, v)
+
+    def output_2d_summary(self, scan_2d_ifail_list):
+        print(
+            " ****************************************** Scan Convergence Summary ****************************************** \n"
+        )
         sweep_1_values = self.data.scan.sweep[: self.data.scan.isweep]
         sweep_2_values = self.data.scan.sweep_2[: self.data.scan.isweep_2]
         nsweep_var = self.scan_select(
@@ -402,36 +419,25 @@ class Scan:
                     f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var.name} "
                     f"= {sweep_2_values[iscan_2 - 1]}) "
                     + " " * offsets[iscan_1 - 1][iscan_2 - 1]
-                    + "\u001b[32m{}CONVERGED \u001b[0m"
+                    + "\u001b[3{}CONVERGED \u001b[0m"
                 )
                 if scan_2d_ifail_list[iscan_1][iscan_2] == 1:
                     converged_count += 1
-                    print(string.format())
+                    print(string.format("2m"))
                 else:
-                    print(string.format("UN"))
+                    print(string.format("1mUN"))
                 scan_point += 1
         converged_percentage = (
             converged_count / (self.data.scan.isweep * self.data.scan.isweep_2) * 100
         )
         print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
 
-    def scan_2d_init(self):
-        sv = self.data.scan
-        for d, n, v in (
-            ("Number of first variable scan points", "(isweep)", sv.isweep),
-            ("Number of second variable scan points", "(isweep_2)", sv.isweep_2),
-            ("Scanning first variable number", "(nsweep)", sv.nsweep),
-            ("Scanning second variable number", "(nsweep_2)", sv.nsweep_2),
-            ("Scanning second variable number", "(nsweep_2)", sv.nsweep_2),
-            ("Scanning second variable number", "(nsweep_2)", sv.nsweep_2),
-        ):
-            process_output.ovarin(constants.MFILE, d, n, v)
-
     def _set_v_x_label(self, iscan, twod=False):
-        if twod:
-            sv = self.scan_select(self.data.scan.nsweep_2, self.data.scan.sweep_2, iscan)
-        else:
-            sv = self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan)
+        sv = (
+            self.scan_select(self.data.scan.nsweep_2, self.data.scan.sweep_2, iscan)
+            if twod
+            else self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan)
+        )
         self.data.globals.vlabel = sv.fname
         self.data.globals.xlabel = sv.description
 
@@ -472,11 +478,10 @@ class Scan:
 
         process_output.write(
             constants.NOUT,
-            f"***** 2D Scan point {iscan} of "
-            f"{self.data.scan.isweep * self.data.scan.isweep_2} : "
+            f"2D Scan point {iscan} of {self.data.scan.isweep * self.data.scan.isweep_2} : "
             f"{self.data.globals.vlabel} = {self.data.scan.sweep[iscan_1 - 1]} and"
             f" {self.data.globals.vlabel_2} = {self.data.scan.sweep_2[iscan_r - 1]} "
-            "*****",
+            "",
         )
         process_output.ovarin(constants.MFILE, "Scan point number", "(iscan)", iscan)
 
