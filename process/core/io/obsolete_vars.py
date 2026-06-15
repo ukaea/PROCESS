@@ -457,6 +457,7 @@ OBS_VARS = {
     "dr_hts_tape": "dr_tf_hts_tape",
     "coppera_m2_max": "tf_coppera_m2_max",
     "f_ster_div_single": None,
+    "t_conductor": "dx_tf_turn_conduit_full_average",
 }
 
 OBS_VARS_HELP = {
