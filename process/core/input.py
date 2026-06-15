@@ -1149,6 +1149,11 @@ INPUT_VARIABLES = {
 
 
 def parse_input_file(data_structure_obj: DataStructure):
+    # These get incremented when reading the file, so need
+    # to ensure they are 0 before we parse the file
+    data_structure_obj.numerics.nvar = 0
+    data_structure_obj.numerics.n_constraints = 0
+
     input_file = data_structure_obj.globals.fileprefix
 
     input_file_path = Path("IN.DAT")
