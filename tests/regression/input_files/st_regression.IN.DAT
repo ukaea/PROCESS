@@ -789,7 +789,10 @@ p_plasma_separatrix_rmajor_max_mw = 40.0
 
 n_tf_coils = 12 
 * DESCRIPTION:   Number of TF Coils 
-* JUSTIFICATION: 
+* JUSTIFICATION:
+
+i_tf_turn_type = 2
+* CroCo Turn geometry for HTS Tapes
 
 i_tf_shape = 2
 * DESCRIPTION:   Switch for TF coil toroidal shape (2: Picture frame coils)
