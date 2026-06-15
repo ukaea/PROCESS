@@ -57,7 +57,7 @@ class ScanVariables(ScanVariable, Enum):
                     return sv
         raise ProcessValueError("Illegal scan variable number", nwp=value)
 
-    def full_name(self):
+    def fname(self):
         if "__" in self.name:
             return self.name.replace("__", "(") + ")"
         return self.name
@@ -160,25 +160,23 @@ class ScanVariables(ScanVariable, Enum):
 
 
 class Scan:
-    """Perform a parameter scan using the Fortran scan module."""
+    """Perform a parameter scan
+
+    Parameters
+    ----------
+    models :
+        Physics and engineering model objects
+    solver :
+        Which solver to use, as specified in solver.py
+    data :
+        Data structure object
+    """
 
     def __init__(self, models: Model, solver: str, data: DataStructure):
-        """Immediately run the run_scan() method.
-
-        Parameters
-        ----------
-        models :
-            Physics and engineering model objects
-        solver :
-            Which solver to use, as specified in solver.py
-        data :
-            Data structure object
-        """
         self.models = models
         self.solver = solver
         self.data = data
         self.solver_handler = SolverHandler(models, solver, data)
-        self.run_scan()
 
     def run_scan(self):
         """Call a solver over a range of values of one of the variables.
@@ -188,38 +186,87 @@ class Scan:
         number of output variable values are written to the MFILE.DAT file at
         each scan point, for plotting or other post-processing purposes.
         """
-        if self.data.scan.isweep == 0:
-            # Solve single problem, rather than an array of problems (scan)
-            # doopt() can also run just an evaluation
-            start_time = time.time()
-            ifail = self.doopt()
-            write_output_files(
-                models=self.models,
-                data=self.data,
-                ifail=ifail,
-                runtime=time.time() - start_time,
-            )
-            show_errors(constants.NOUT)
-            return
-
-        if self.data.scan.isweep > IPNSCNS:
+        if self.data.scan.isweep > 0 and self.data.scan.isweep > IPNSCNS:
             raise ProcessValueError(
                 "Illegal value of isweep",
                 isweep=self.data.scan.isweep,
                 IPNSCNS=IPNSCNS,
             )
+        isw = self.data.scan.isweep or 1
+        self.scan_array = np.arange(isw * (self.data.scan.isweep_2 or 1)).reshape(
+            isw, -1
+        )
+        if self.data.scan.isweep == 0:
+            # Solve single problem, rather than an array of problems (scan)
+            # doopt() can also run just an evaluation
+            self._start_time = time.time()
+            self._ifail = self.solver_handler.run()
+            self._finish_time = time.time()
+            return
 
         if self.data.scan.scan_dim == 2:
             self.scan_2d()
         else:
             self.scan_1d()
 
-    def doopt(self):
-        """Run the optimiser or solver."""
-        ifail = self.solver_handler.run()
-        self.post_optimise(ifail)
+    def write_outputs(self):
+        write_output_files(
+            models=self.models,
+            data=self.data,
+            ifail=self._ifail,
+            runtime=self._finish_time - self._start_time,
+        )
+        show_errors(constants.NOUT)
 
-        return ifail
+    def setup_scan(self, scan_index): ...
+
+    def scan_1d(self):
+        for iscan in range(1, self.data.scan.isweep + 1):
+            self.scan_1d_write_point_header(iscan)
+            start_time = time.time()
+            ifail = self.doopt()
+            scan_1d_ifail_dict[iscan] = ifail
+            write_output_files(
+                models=self.models,
+                data=self.data,
+                ifail=ifail,
+                runtime=time.time() - start_time,
+            )
+
+            show_errors(constants.NOUT)
+            logging_model_handler.clear_logs()
+
+    def scan_2d(self):
+        iscan = 1
+
+        # initialise array which will contain ifail values for each scan point
+        scan_2d_ifail_list = np.zeros(
+            (NOUTVARS, IPNSCNS),
+            dtype=np.float64,
+            order="F",
+        )
+        for iscan_1 in range(1, self.data.scan.isweep + 1):
+            for iscan_2 in range(1, self.data.scan.isweep_2 + 1):
+                self.scan_2d_write_point_header(iscan, iscan_1, iscan_2)
+                start_time = time.time()
+                ifail = self.doopt()
+                write_output_files(
+                    models=self.models,
+                    data=self.data,
+                    ifail=ifail,
+                    runtime=time.time() - start_time,
+                )
+
+                show_errors(constants.NOUT)
+                logging_model_handler.clear_logs()
+                scan_2d_ifail_list[iscan_1][iscan_2] = ifail
+                iscan += 1
+
+
+def scan_summary(scan):
+
+    def write_outputs(self):
+        self.post_optimise(self._ifail)
 
     def post_optimise(self, ifail: int):
         """Called after calling the optimising equation solver from Python.
@@ -410,14 +457,6 @@ class Scan:
                     f" {bounds[i] * self.data.numerics.scafc[i]}",
                 )
 
-            # Write optimisation parameters to mfile
-            process_output.ovarre(
-                constants.MFILE,
-                self.data.numerics.lablxc[self.data.numerics.ixc[i] - 1],
-                f"(itvar{i + 1:03d})",
-                self.data.numerics.xcs[i],
-            )
-
             xnorm = (
                 1.0
                 if self.data.numerics.boundu[i] == self.data.numerics.boundl[i]
@@ -437,32 +476,33 @@ class Scan:
                 )
             )
 
-            process_output.ovarre(
-                constants.MFILE,
-                f"{name} (final value/initial value)",
-                f"(xcm{i + 1:03d})",
-                self.data.numerics.xcm[i],
-            )
-            process_output.ovarre(
-                constants.MFILE,
-                f"{name} (range normalised)",
-                f"(nitvar{i + 1:03d})",
-                xnorm,
-            )
-            process_output.ovarre(
-                constants.MFILE,
-                f"{name} (upper bound)",
-                f"(boundu{i + 1:03d})",
-                self.data.numerics.itv_scaled_upper_bounds[i]
-                * self.data.numerics.scafc[i],
-            )
-            process_output.ovarre(
-                constants.MFILE,
-                f"{name} (lower bound)",
-                f"(boundl{i + 1:03d})",
-                self.data.numerics.itv_scaled_lower_bounds[i]
-                * self.data.numerics.scafc[i],
-            )
+            # Write optimisation parameters to mfile
+            for d, var, v in (
+                (
+                    self.data.numerics.lablxc[self.data.numerics.ixc[i] - 1],
+                    f"(itvar{i + 1:03d})",
+                    self.data.numerics.xcs[i],
+                ),
+                (
+                    f"{name} (final value/initial value)",
+                    f"(xcm{i + 1:03d})",
+                    self.data.numerics.xcm[i],
+                ),
+                (f"{name} (range normalised)", f"(nitvar{i + 1:03d})", xnorm),
+                (
+                    f"{name} (upper bound)",
+                    f"(boundu{i + 1:03d})",
+                    self.data.numerics.itv_scaled_upper_bounds[i]
+                    * self.data.numerics.scafc[i],
+                ),
+                (
+                    f"{name} (lower bound)",
+                    f"(boundl{i + 1:03d})",
+                    self.data.numerics.itv_scaled_lower_bounds[i]
+                    * self.data.numerics.scafc[i],
+                ),
+            ):
+                process_output.ovarre(constants.MFILE, d, var, v)
 
         # Write optimisation parameter headings to output file
         process_output.osubhd(
@@ -498,32 +538,30 @@ class Scan:
                 f"{err[i]} {lab[i]}",
                 con1[i],
             ])
-            process_output.ovarre(
-                constants.MFILE,
-                f"{name:<33} normalised residue",
-                f"(eq_con{self.data.numerics.icc[i]:03d})",
-                con1[i],
-            )
 
-            process_output.ovarre(
-                constants.MFILE,
-                f"{name:<33} residual",
-                f"(res_eq_con{self.data.numerics.icc[i]:03d})",
-                err[i],
-            )
-            process_output.ovarre(
-                constants.MFILE,
-                f"{name} constraint value",
-                f"(val_eq_con{self.data.numerics.icc[i]:03d})",
-                con2[i],
-            )
-
-            process_output.ovarre(
-                constants.MFILE,
-                f"{name} units",
-                f"(eq_units_con{self.data.numerics.icc[i]:03d})",
-                f"'{lab[i]}'",
-            )
+            for d, var, v in (
+                (
+                    f"{name:<33} normalised residue",
+                    f"(eq_con{self.data.numerics.icc[i]:03d})",
+                    con1[i],
+                ),
+                (
+                    f"{name:<33} residual",
+                    f"(res_eq_con{self.data.numerics.icc[i]:03d})",
+                    err[i],
+                ),
+                (
+                    f"{name} constraint value",
+                    f"(val_eq_con{self.data.numerics.icc[i]:03d})",
+                    con2[i],
+                ),
+                (
+                    f"{name} units",
+                    f"(eq_units_con{self.data.numerics.icc[i]:03d})",
+                    f"'{lab[i]}'",
+                ),
+            ):
+                process_output.ovarre(constants.MFILE, d, var, v)
 
         # Write equality constraints to output file
         process_output.write(
@@ -573,39 +611,35 @@ class Scan:
                     f"{constraint.residual} {constraint.units}",
                     f"{constraint.normalised_residual}",
                 ])
-                process_output.ovarre(
-                    constants.MFILE,
-                    f"{name} normalised residue",
-                    f"(ineq_con{self.data.numerics.icc[i]:03d})",
-                    -constraint.normalised_residual,
-                )
-                process_output.ovarre(
-                    constants.MFILE,
-                    f"{name} physical value",
-                    f"(ineq_value_con{self.data.numerics.icc[i]:03d})",
-                    constraint.constraint_value,
-                )
 
-                process_output.ovarre(
-                    constants.MFILE,
-                    f"{name} symbol",
-                    f"(ineq_symbol_con{self.data.numerics.icc[i]:03d})",
-                    f"'{constraint.symbol}'",
-                )
-
-                process_output.ovarre(
-                    constants.MFILE,
-                    f"{name} units",
-                    f"(ineq_units_con{self.data.numerics.icc[i]:03d})",
-                    f"'{constraint.units}'",
-                )
-
-                process_output.ovarre(
-                    constants.MFILE,
-                    f"{name} physical bound",
-                    f"(ineq_bound_con{self.data.numerics.icc[i]:03d})",
-                    constraint.constraint_bound,
-                )
+                for d, var, v in (
+                    (
+                        "normalised residue",
+                        f"(ineq_con{self.data.numerics.icc[i]:03d})",
+                        -constraint.normalised_residual,
+                    ),
+                    (
+                        "physical value",
+                        f"(ineq_value_con{self.data.numerics.icc[i]:03d})",
+                        constraint.constraint_value,
+                    ),
+                    (
+                        "symbol",
+                        f"(ineq_symbol_con{self.data.numerics.icc[i]:03d})",
+                        f"'{constraint.symbol}'",
+                    ),
+                    (
+                        "units",
+                        f"(ineq_units_con{self.data.numerics.icc[i]:03d})",
+                        f"'{constraint.units}'",
+                    ),
+                    (
+                        "physical bound",
+                        f"(ineq_bound_con{self.data.numerics.icc[i]:03d})",
+                        constraint.constraint_bound,
+                    ),
+                ):
+                    process_output.ovarre(constants.MFILE, f"{name} {d}", var, v)
 
             process_output.write(
                 constants.NOUT,
@@ -693,21 +727,6 @@ class Scan:
         # initialise dict which will contain ifail values for each scan point
         scan_1d_ifail_dict = {}
 
-        for iscan in range(1, self.data.scan.isweep + 1):
-            self.scan_1d_write_point_header(iscan)
-            start_time = time.time()
-            ifail = self.doopt()
-            scan_1d_ifail_dict[iscan] = ifail
-            write_output_files(
-                models=self.models,
-                data=self.data,
-                ifail=ifail,
-                runtime=time.time() - start_time,
-            )
-
-            show_errors(constants.NOUT)
-            logging_model_handler.clear_logs()
-
         # outvar now contains results
         self.scan_1d_write_plot(self.data.scan)
         print(
@@ -726,7 +745,7 @@ class Scan:
         ]
         for iscan in range(self.data.scan.isweep):
             pstring = (
-                f"Scan {iscan:02d}: {nsweep_var.name} = {sweep_values[iscan]} "
+                f"Scan {iscan:02d}: {nsweep_var.fname} = {sweep_values[iscan]} "
                 + " " * offsets[iscan]
                 + "\u001b[3{}CONVERGED \u001b[0m"
             )
@@ -738,37 +757,6 @@ class Scan:
             print(pstring)
         converged_percentage = converged_count / self.data.scan.isweep * 100
         print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
-
-    def scan_2d(self):
-        """Run a 2-D scan."""
-        # Initialise intent(out) arrays
-        self.scan_2d_init(self.data.scan)
-        iscan = 1
-
-        # initialise array which will contain ifail values for each scan point
-        scan_2d_ifail_list = np.zeros(
-            (NOUTVARS, IPNSCNS),
-            dtype=np.float64,
-            order="F",
-        )
-        for iscan_1 in range(1, self.data.scan.isweep + 1):
-            for iscan_2 in range(1, self.data.scan.isweep_2 + 1):
-                self.scan_2d_write_point_header(iscan, iscan_1, iscan_2)
-                start_time = time.time()
-                ifail = self.doopt()
-                write_output_files(
-                    models=self.models,
-                    data=self.data,
-                    ifail=ifail,
-                    runtime=time.time() - start_time,
-                )
-
-                show_errors(constants.NOUT)
-                logging_model_handler.clear_logs()
-                scan_2d_ifail_list[iscan_1][iscan_2] = ifail
-                iscan += 1
-
-        self.output_2d_summary(scan_2d_ifail_list)
 
     def scan_2d_init(self):
         sv = self.data.scan
@@ -814,8 +802,8 @@ class Scan:
         for iscan_1 in range(1, self.data.scan.isweep + 1):
             for iscan_2 in range(1, self.data.scan.isweep_2 + 1):
                 string = (
-                    f"Scan {scan_point:02d}: ({nsweep_var.name} = {sweep_1_values[iscan_1 - 1]},"
-                    f" {nsweep_2_var.name} = {sweep_2_values[iscan_2 - 1]}) "
+                    f"Scan {scan_point:02d}: ({nsweep_var.fname} = {sweep_1_values[iscan_1 - 1]},"
+                    f" {nsweep_2_var.fname} = {sweep_2_values[iscan_2 - 1]}) "
                     + " " * offsets[iscan_1 - 1][iscan_2 - 1]
                     + "\u001b[3{}CONVERGED \u001b[0m"
                 )
@@ -836,7 +824,7 @@ class Scan:
             if twod
             else self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan)
         )
-        self.data.globals.vlabel = sv.name
+        self.data.globals.vlabel = sv.fname
         self.data.globals.xlabel = sv.data.description
 
     def scan_1d_write_point_header(self, iscan: int):
@@ -849,8 +837,7 @@ class Scan:
         process_output.write(
             constants.NOUT,
             f"Scan point {iscan} of {self.data.scan.isweep} : {self.data.globals.xlabel}"
-            f", {self.data.globals.vlabel} = {self.data.scan.sweep[iscan - 1]} "
-            "",
+            f", {self.data.globals.vlabel} = {self.data.scan.sweep[iscan - 1]} ",
         )
         process_output.ovarin(constants.MFILE, "Scan point number", "(iscan)", iscan)
 
@@ -876,8 +863,7 @@ class Scan:
             constants.NOUT,
             f"2D Scan point {iscan} of {self.data.scan.isweep * self.data.scan.isweep_2} : "
             f"{self.data.globals.vlabel} = {self.data.scan.sweep[iscan_1 - 1]} and"
-            f" {self.data.globals.vlabel_2} = {self.data.scan.sweep_2[iscan_r - 1]} "
-            "",
+            f" {self.data.globals.vlabel_2} = {self.data.scan.sweep_2[iscan_r - 1]} ",
         )
         process_output.ovarin(constants.MFILE, "Scan point number", "(iscan)", iscan)
 
