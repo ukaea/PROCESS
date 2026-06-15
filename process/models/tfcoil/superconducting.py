@@ -4045,6 +4045,23 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             superconductor_critical_properties.c_turn_cables_critical
         )
 
+        if self.data.tfcoil.i_str_wp == 0:
+            strain = self.data.tfcoil.str_tf_con_res
+        else:
+            strain = self.data.tfcoil.str_wp
+
+        self.data.tfcoil.temp_tf_superconductor_margin = self.calculate_superconductor_temperature_margin(
+            i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
+            j_superconductor=self.data.superconducting_tfcoil.j_tf_superconductor,
+            b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
+            strain=strain,
+            bc20m=self.data.superconducting_tfcoil.b_tf_superconductor_critical_zero_temp_strain,
+            tc0m=self.data.superconducting_tfcoil.temp_tf_superconductor_critical_zero_field_strain,
+            c0=1.0e10,
+            temp_tf_coolant_peak_field=self.data.tfcoil.tftmp,
+            data=self.data,
+        )
+
         self.data.tfcoil.v_tf_coil_dump_quench_kv = (
             self.croco_voltage() / 1.0e3
         )  # TFC Quench voltage in kV
