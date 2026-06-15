@@ -266,7 +266,9 @@ INPUT_VARIABLES = {
     "crane_arm_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "crane_clrnc_h": InputVariable("buildings", float, range=(0.0, 10.0)),
     "crane_clrnc_v": InputVariable("buildings", float, range=(0.0, 10.0)),
-    "dx_tf_croco_strand_copper": InputVariable("rebco", float, range=(0.001, 0.1)),
+    "dx_tf_croco_strand_copper": InputVariable(
+        "superconducting_tfcoil", float, range=(0.001, 0.1)
+    ),
     "cryomag_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "cryomag_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "cryomag_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
