@@ -268,6 +268,30 @@ class SuperconductingTFData:
     a_tf_turn_croco_hastelloy: float = 0.0
     """Area of the Hastelloy in the CroCo cable space of the TF turn (includes tapes and outer tube) (m²)"""
 
+    dx_tf_turn_tape_stack: float = 0.0
+    """Thickness of the tape stack in the TF turn [m]"""
+
+    dr_tf_turn_tape_stack: float = 0.0
+    """Radial thickness of the tape stack in the TF turn [m]"""
+
+    a_tf_turn_tape_stack: float = 0.0
+    """Cross-sectional area of the tape stack in the TF turn [m²]"""
+
+    n_tf_turn_superconducting_strands: int = 0.0
+    """Number of superconducting strands in the TF turn"""
+
+    x_tf_turn_coolant_channel_centre: float = 0.0
+    """Vertical centre position of the coolant channel in the TF turn [m]"""
+
+    dr_tf_turn_stabiliser: float = 0.0
+    """Radial thickness of the stabiliser in the TF turn [m]"""
+
+    dx_tf_turn_stabiliser: float = 0.0
+    """Toroidal thickness of the stabiliser in the TF turn [m]"""
+
+    a_tf_turn_stabiliser: float = 0.0
+    """Cross-sectional area of the stabiliser in the TF turn [m²]"""
+
     conductor_hastelloy_fraction: float = 0.0
     conductor_helium_area: float = 0.0
     conductor_helium_fraction: float = 0.0
