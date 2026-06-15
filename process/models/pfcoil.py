@@ -166,7 +166,7 @@ class PFCoil(Model):
         # Set up call to MHD scaling routine for coil currents.
         # First break up Central Solenoid solenoid into 'filaments'
 
-        cs_geometry: CSGeometry = self.cs_coil.calculate_cs_geometry(
+        cs_geometry = self.cs_coil.calculate_cs_geometry(
             z_tf_inside_half=self.data.build.z_tf_inside_half,
             f_z_cs_tf_internal=self.data.pf_coil.f_z_cs_tf_internal,
             dr_cs=self.data.build.dr_cs,
@@ -3173,7 +3173,7 @@ class CSCoil(Model):
 
     def ohcalc(self):
         """Routine to perform calculations for the Central Solenoid."""
-        cs_geometry: CSGeometry = self.calculate_cs_geometry(
+        cs_geometry = self.calculate_cs_geometry(
             z_tf_inside_half=self.data.build.z_tf_inside_half,
             f_z_cs_tf_internal=self.data.pf_coil.f_z_cs_tf_internal,
             dr_cs=self.data.build.dr_cs,

@@ -24,6 +24,7 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.build import Build
+from process.models.engineering.materials import poisson_steel
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -15242,7 +15243,7 @@ def plot_cs_radial_hoop_stress_profile(
             r_cs_outer=r_cs_outer,
             j_cs=j_cs,
             b_cs_inner=b_cs_inner,
-            f_poisson_cs_structure=0.3,  # Assume Poisson's ratio of 0.3 for steel structure
+            f_poisson_cs_structure=poisson_steel,
             f_a_cs_turn_steel=mfile.get("f_a_cs_turn_steel", scan=scan),
         )
         for radius in radii
@@ -15280,7 +15281,7 @@ def plot_cs_radial_stress_profile(
             r_cs_outer=r_cs_outer,
             j_cs=j_cs,
             b_cs_inner=b_cs_inner,
-            f_poisson_cs_structure=0.3,  # Assume Poisson's ratio of 0.3 for steel structure
+            f_poisson_cs_structure=poisson_steel,
         )
         for radius in radii
     ])
