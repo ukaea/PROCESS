@@ -4956,6 +4956,22 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         )
 
 
+@dataclass
+class STEPIntegerTurnGeometry:
+    dr_tf_turn: float
+    dx_tf_turn: float
+    c_tf_turn: float
+    n_tf_coil_turns: int
+    dr_tf_turn_stabiliser: float
+    dx_tf_turn_stabiliser: float
+    x_tf_turn_coolant_channel_centre: float
+    dr_tf_turn_tape_stack: float
+    dx_tf_turn_tape_stack: float
+    a_tf_turn_tape_stack: float
+    a_tf_turn_insulation: float
+    a_tf_turn_stabiliser: float
+
+
 class STEPSuperconductingTFCoil(SuperconductingTFCoil):
     """Cross Conductor Superconducting TF Coil class."""
 
@@ -4970,71 +4986,103 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         self.run_base_superconducting_tf()
 
         # Setting the WP turn geometry / areas
-        if self.data.tfcoil.i_tf_turns_integer == 0:
+        if self.data.tfcoil.i_tf_turns_integer == 1:
             # Non-ingeger number of turns
 
-            avg_turn_geometry: CROCOAveragedTurnGeometry = self.tf_croco_averaged_turn_geometry(
-                j_tf_wp=self.data.tfcoil.j_tf_wp,
-                dx_tf_turn_steel=self.data.tfcoil.dx_tf_turn_steel,
+            integer_turn_geometry: STEPIntegerTurnGeometry = self.tf_step_vertical_tape_integer_turn_geometry(
+                dr_tf_wp_with_insulation=self.data.tfcoil.dr_tf_wp_with_insulation,
+                dx_tf_wp_insulation=self.data.tfcoil.dx_tf_wp_insulation,
+                dx_tf_wp_insertion_gap=self.data.tfcoil.dx_tf_wp_insertion_gap,
+                n_tf_wp_layers=self.data.tfcoil.n_tf_wp_layers,
+                dx_tf_wp_toroidal_min=self.data.superconducting_tfcoil.dx_tf_wp_toroidal_min,
+                n_tf_wp_pancakes=self.data.tfcoil.n_tf_wp_pancakes,
+                c_tf_coil=self.data.superconducting_tfcoil.c_tf_coil,
                 dx_tf_turn_insulation=self.data.tfcoil.dx_tf_turn_insulation,
-                dx_tf_turn_general=self.data.tfcoil.dx_tf_turn_general,
-                c_tf_turn=self.data.tfcoil.c_tf_turn,
-                i_dx_tf_turn_general_input=self.data.tfcoil.i_dx_tf_turn_general_input,
-                i_dx_tf_turn_cable_space_general_input=self.data.tfcoil.i_dx_tf_turn_cable_space_general_input,
-                dx_tf_turn_cable_space_general=self.data.tfcoil.dx_tf_turn_cable_space_general,
-                layer_ins=self.data.tfcoil.layer_ins,
-                a_tf_wp_no_insulation=self.data.superconducting_tfcoil.a_tf_wp_no_insulation,
+                dia_tf_turn_coolant_channel=self.data.tfcoil.dia_tf_turn_coolant_channel,
             )
 
-            self.data.tfcoil.a_tf_turn_cable_space_no_void = (
-                avg_turn_geometry.a_tf_turn_cable_space_no_void
+            self.data.superconducting_tfcoil.dr_tf_turn = (
+                integer_turn_geometry.dr_tf_turn
             )
-            self.data.tfcoil.a_tf_turn_steel = avg_turn_geometry.a_tf_turn_steel
+            self.data.superconducting_tfcoil.dx_tf_turn = (
+                integer_turn_geometry.dx_tf_turn
+            )
+            self.data.tfcoil.c_tf_turn = integer_turn_geometry.c_tf_turn
+            self.data.tfcoil.n_tf_coil_turns = integer_turn_geometry.n_tf_coil_turns
+            self.data.superconducting_tfcoil.dr_tf_turn_stabiliser = (
+                integer_turn_geometry.dr_tf_turn_stabiliser
+            )
+            self.data.superconducting_tfcoil.dx_tf_turn_stabiliser = (
+                integer_turn_geometry.dx_tf_turn_stabiliser
+            )
+            self.data.superconducting_tfcoil.x_tf_turn_coolant_channel_centre = (
+                integer_turn_geometry.x_tf_turn_coolant_channel_centre
+            )
+            self.data.superconducting_tfcoil.dr_tf_turn_tape_stack = (
+                integer_turn_geometry.dr_tf_turn_tape_stack
+            )
+            self.data.superconducting_tfcoil.dx_tf_turn_tape_stack = (
+                integer_turn_geometry.dx_tf_turn_tape_stack
+            )
+            self.data.superconducting_tfcoil.a_tf_turn_tape_stack = (
+                integer_turn_geometry.a_tf_turn_tape_stack
+            )
             self.data.tfcoil.a_tf_turn_insulation = (
-                avg_turn_geometry.a_tf_turn_insulation
+                integer_turn_geometry.a_tf_turn_insulation
             )
-            self.data.tfcoil.n_tf_coil_turns = avg_turn_geometry.n_tf_coil_turns
-            self.data.tfcoil.dx_tf_turn_general = avg_turn_geometry.dx_tf_turn_general
-            self.data.tfcoil.c_tf_turn = avg_turn_geometry.c_tf_turn
-            self.data.tfcoil.dx_tf_turn_general = avg_turn_geometry.dx_tf_turn_general
-            self.data.superconducting_tfcoil.dr_tf_turn = avg_turn_geometry.dr_tf_turn
-            self.data.superconducting_tfcoil.dx_tf_turn = avg_turn_geometry.dx_tf_turn
-            self.data.tfcoil.dx_tf_turn_conduit_full_average = (
-                avg_turn_geometry.dx_tf_turn_conduit_full_average
-            )
-            self.data.superconducting_tfcoil.dx_tf_turn_cable_space_average = (
-                avg_turn_geometry.dx_tf_turn_cable_space_average
+            self.data.superconducting_tfcoil.a_tf_turn_stabiliser = (
+                integer_turn_geometry.a_tf_turn_stabiliser
             )
 
-        elif self.data.tfcoil.i_tf_turns_integer == 1:
-            raise ProcessValueError(
-                "Integer turn geometry not implemented for CroCo conductor."
+            self.data.superconducting_tfcoil.dr_tf_hts_tape = (
+                self.data.superconducting_tfcoil.dr_tf_turn_tape_stack
             )
+
+        elif self.data.tfcoil.i_tf_turns_integer == 0:
+            raise ProcessValueError(
+                "Non integer turn geometry not implemented for STEP conductor."
+            )
+
+        self.data.superconducting_tfcoil.n_tf_turn_superconducting_strands = (
+            self.calculate_stacked_tape_strand_count(
+                dr_tape_stack=self.data.superconducting_tfcoil.dx_tf_turn_tape_stack,
+                dr_hts_tape=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
+            )
+        )
 
         # Areas and fractions
         # -------------------
-        # Central helium channel down the conductor core [m²]
-        # No central channel in CroCo conductor,
-        self.data.tfcoil.a_tf_wp_coolant_channels = 0.0
-
-        # Void area in conductor for He, not including central channel [m²]
-        self.data.tfcoil.a_tf_wp_extra_void = (
-            self.data.tfcoil.a_tf_turn_cable_space_no_void
+        # Central helium channel down the conductor core [m2]
+        self.data.tfcoil.a_tf_wp_coolant_channels = (
+            0.25e0
             * self.data.tfcoil.n_tf_coil_turns
-            * self.data.tfcoil.f_a_tf_turn_cable_space_extra_void
+            * np.pi
+            * self.data.tfcoil.dia_tf_turn_coolant_channel**2
         )
 
-        # Area of inter-turn insulation: total [m²]
+        # Total conductor cross-sectional area, taking account of void area
+        # and central helium channel [m2]
+        self.data.tfcoil.a_tf_wp_conductor = (
+            self.data.superconducting_tfcoil.a_tf_turn_tape_stack
+            * self.data.tfcoil.n_tf_coil_turns
+        )
+
+        # Void area in conductor for He, not including central channel [m2]
+        self.data.tfcoil.a_tf_wp_extra_void = 0.0
+
+        # Area of inter-turn insulation: total [m2]
         self.data.tfcoil.a_tf_coil_wp_turn_insulation = (
             self.data.tfcoil.n_tf_coil_turns * self.data.tfcoil.a_tf_turn_insulation
         )
 
-        # Area of steel structure in winding pack [m²]
+        self.data.tfcoil.a_tf_turn_steel = 0.0
+
+        # Area of steel structure in winding pack [m2]
         self.data.tfcoil.a_tf_wp_steel = (
             self.data.tfcoil.n_tf_coil_turns * self.data.tfcoil.a_tf_turn_steel
         )
 
-        # Inboard coil steel area [m²]
+        # Inboard coil steel area [m2]
         self.data.superconducting_tfcoil.a_tf_coil_inboard_steel = (
             self.data.tfcoil.a_tf_coil_inboard_case + self.data.tfcoil.a_tf_wp_steel
         )
@@ -5046,7 +5094,7 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             / self.data.tfcoil.a_tf_inboard_total
         )
 
-        # Inboard coil insulation cross-section [m²]
+        # Inboard coil insulation cross-section [m2]
         self.data.superconducting_tfcoil.a_tf_coil_inboard_insulation = (
             self.data.tfcoil.a_tf_coil_wp_turn_insulation
             + self.data.superconducting_tfcoil.a_tf_wp_ground_insulation
@@ -5059,149 +5107,6 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             / self.data.tfcoil.a_tf_inboard_total
         )
 
-        croco_cable_space_geometry: CroCoCableSpaceGeometry = self.tf_turn_croco_cable_space_properties(
-            dx_tf_turn_conduit_full_average=self.data.tfcoil.dx_tf_turn_conduit_full_average,
-            dx_tf_turn_steel=self.data.tfcoil.dx_tf_turn_steel,
-        )
-
-        self.data.superconducting_tfcoil.dia_tf_turn_croco_cable = (
-            croco_cable_space_geometry.dia_tf_turn_croco_cable
-        )
-        self.data.tfcoil.a_tf_turn_cable_space_no_void = (
-            croco_cable_space_geometry.a_tf_turn_cable_space_no_void
-        )
-        self.data.superconducting_tfcoil.a_tf_turn_cable_space_effective = (
-            croco_cable_space_geometry.a_tf_turn_cable_space_effective
-        )
-        self.data.tfcoil.a_tf_turn_steel = croco_cable_space_geometry.a_tf_turn_steel
-        self.data.superconducting_tfcoil.conductor_area = (
-            croco_cable_space_geometry.conductor_area
-        )
-        self.data.superconducting_tfcoil.conductor_jacket_area = (
-            croco_cable_space_geometry.conductor_jacket_area
-        )
-        self.data.superconducting_tfcoil.conductor_jacket_fraction = (
-            croco_cable_space_geometry.conductor_jacket_fraction
-        )
-
-        croco_cable_geometry: CroCoCableGeometry = calculate_croco_cable_geometry(
-            dia_croco_strand=self.data.superconducting_tfcoil.dia_tf_turn_croco_cable,
-            dx_croco_strand_copper=self.data.superconducting_tfcoil.dx_tf_croco_strand_copper,
-            dx_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
-            dx_hts_tape_copper=self.data.superconducting_tfcoil.dx_tf_hts_tape_copper,
-            dx_hts_tape_hastelloy=self.data.superconducting_tfcoil.dx_tf_hts_tape_hastelloy,
-        )
-
-        self.data.superconducting_tfcoil.dia_tf_croco_strand_tape_region = (
-            croco_cable_geometry.dia_croco_strand_tape_region
-        )
-        self.data.superconducting_tfcoil.n_tf_croco_strand_hts_tapes = (
-            croco_cable_geometry.n_croco_strand_hts_tapes
-        )
-        self.data.superconducting_tfcoil.a_tf_croco_strand_copper_total = (
-            croco_cable_geometry.a_croco_strand_copper_total
-        )
-        self.data.superconducting_tfcoil.a_tf_croco_strand_hastelloy = (
-            croco_cable_geometry.a_croco_strand_hastelloy
-        )
-        self.data.superconducting_tfcoil.a_tf_croco_strand_solder = (
-            croco_cable_geometry.a_croco_strand_solder
-        )
-        self.data.superconducting_tfcoil.a_tf_croco_strand_rebco = (
-            croco_cable_geometry.a_croco_strand_rebco
-        )
-        self.data.superconducting_tfcoil.a_tf_croco_strand = (
-            croco_cable_geometry.a_croco_strand
-        )
-        self.data.superconducting_tfcoil.dr_tf_hts_tape = (
-            croco_cable_geometry.dr_hts_tape
-        )
-        self.data.superconducting_tfcoil.dx_tf_hts_tape_total = (
-            croco_cable_geometry.dx_hts_tape_total
-        )
-        self.data.superconducting_tfcoil.dx_tf_croco_strand_tape_stack = (
-            croco_cable_geometry.dx_croco_strand_tape_stack
-        )
-
-        self.data.superconducting_tfcoil.a_tf_croco_strand_copper_total = (
-            self.data.superconducting_tfcoil.a_tf_croco_strand_copper_total
-        )
-        self.data.superconducting_tfcoil.a_tf_croco_strand_hastelloy = (
-            self.data.superconducting_tfcoil.a_tf_croco_strand_hastelloy
-        )
-        self.data.superconducting_tfcoil.a_tf_croco_strand_solder = (
-            self.data.superconducting_tfcoil.a_tf_croco_strand_solder
-        )
-        self.data.superconducting_tfcoil.a_tf_croco_strand_rebco = (
-            self.data.superconducting_tfcoil.a_tf_croco_strand_rebco
-        )
-        self.data.superconducting_tfcoil.a_tf_croco_strand = (
-            self.data.superconducting_tfcoil.a_tf_croco_strand
-        )
-
-        # Area of core = area of strand
-        self.data.superconducting_tfcoil.a_tf_turn_croco_copper_bar = (
-            self.data.superconducting_tfcoil.a_tf_croco_strand
-        )
-        self.data.superconducting_tfcoil.a_tf_turn_croco_cable_space_copper = (
-            self.data.superconducting_tfcoil.a_tf_croco_strand_copper_total
-            * N_CROCO_STRANDS_TURN
-            + self.data.superconducting_tfcoil.a_tf_turn_croco_copper_bar
-        )
-
-        # Total conductor cross-sectional area, taking account of void area
-        # and central helium channel [m²]
-        self.data.tfcoil.a_tf_wp_conductor = (
-            N_CROCO_STRANDS_TURN * self.data.superconducting_tfcoil.a_tf_croco_strand
-        ) * self.data.tfcoil.n_tf_coil_turns
-
-        self.data.superconducting_tfcoil.a_tf_turn_copper_total = (
-            self.data.superconducting_tfcoil.a_tf_turn_croco_cable_space_copper
-        )
-
-        self.data.superconducting_tfcoil.f_a_tf_turn_copper = (
-            self.data.superconducting_tfcoil.a_tf_turn_croco_cable_space_copper
-            / self.data.tfcoil.a_tf_turn
-        )
-
-        self.data.superconducting_tfcoil.f_a_tf_turn_cable_space_cooling = (
-            self.data.tfcoil.a_tf_turn_cable_space_no_void
-            - (
-                (
-                    N_CROCO_STRANDS_TURN
-                    * self.data.superconducting_tfcoil.a_tf_croco_strand
-                )
-                - self.data.superconducting_tfcoil.a_tf_turn_croco_copper_bar
-            )
-        ) / self.data.tfcoil.a_tf_turn_cable_space_no_void
-
-        self.data.superconducting_tfcoil.a_tf_turn_croco_hastelloy = (
-            self.data.superconducting_tfcoil.a_tf_croco_strand_hastelloy
-            * N_CROCO_STRANDS_TURN
-        )
-        self.data.superconducting_tfcoil.conductor_hastelloy_fraction = (
-            self.data.superconducting_tfcoil.a_tf_turn_croco_hastelloy
-            / self.data.superconducting_tfcoil.conductor_area
-        )
-
-        self.data.superconducting_tfcoil.conductor_solder_area = (
-            self.data.superconducting_tfcoil.a_tf_croco_strand_solder
-            * N_CROCO_STRANDS_TURN
-        )
-        self.data.superconducting_tfcoil.conductor_solder_fraction = (
-            self.data.superconducting_tfcoil.conductor_solder_area
-            / self.data.superconducting_tfcoil.conductor_area
-        )
-
-        self.data.superconducting_tfcoil.conductor_rebco_area = (
-            self.data.superconducting_tfcoil.a_tf_croco_strand_rebco
-            * N_CROCO_STRANDS_TURN
-        )
-        self.data.superconducting_tfcoil.f_a_tf_turn_superconductor = (
-            self.data.superconducting_tfcoil.conductor_rebco_area
-            / self.data.superconducting_tfcoil.conductor_area
-        )
-
         # Cross-sectional area per turn
         self.data.tfcoil.a_tf_turn = self.data.tfcoil.c_tf_total / (
             self.data.tfcoil.j_tf_wp
@@ -5209,7 +5114,7 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             * self.data.tfcoil.n_tf_coil_turns
         )
 
-        superconductor_critical_properties: TFSuperconductorLimits = self.tf_croco_superconductor_properties(
+        superconductor_critical_properties: TFSuperconductorLimits = self.tf_step_superconductor_properties(
             a_tf_turn=self.data.tfcoil.a_tf_turn,
             b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
             cur_tf_turn=self.data.tfcoil.c_tf_turn,
@@ -5218,7 +5123,6 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             dr_tf_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
             dx_tf_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
             dx_tf_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
-            a_tf_croco_strand=self.data.superconducting_tfcoil.a_tf_croco_strand,
         )
 
         self.data.tfcoil.j_tf_wp_critical = (
@@ -5243,26 +5147,24 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             superconductor_critical_properties.c_turn_cables_critical
         )
 
-        if self.data.tfcoil.i_str_wp == 0:
-            strain = self.data.tfcoil.str_tf_con_res
-        else:
-            strain = self.data.tfcoil.str_wp
+        # if self.data.tfcoil.i_str_wp == 0:
+        #     strain = self.data.tfcoil.str_tf_con_res
+        # else:
+        #     strain = self.data.tfcoil.str_wp
 
-        self.data.tfcoil.temp_tf_superconductor_margin = self.calculate_superconductor_temperature_margin(
-            i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
-            j_superconductor=self.data.superconducting_tfcoil.j_tf_superconductor,
-            b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
-            strain=strain,
-            bc20m=self.data.superconducting_tfcoil.b_tf_superconductor_critical_zero_temp_strain,
-            tc0m=self.data.superconducting_tfcoil.temp_tf_superconductor_critical_zero_field_strain,
-            c0=1.0e10,
-            temp_tf_coolant_peak_field=self.data.tfcoil.tftmp,
-            data=self.data,
-        )
+        # self.data.tfcoil.temp_tf_superconductor_margin = self.calculate_superconductor_temperature_margin(
+        #     i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
+        #     j_superconductor=self.data.superconducting_tfcoil.j_tf_superconductor,
+        #     b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
+        #     strain=strain,
+        #     bc20m=self.data.superconducting_tfcoil.b_tf_superconductor_critical_zero_temp_strain,
+        #     tc0m=self.data.superconducting_tfcoil.temp_tf_superconductor_critical_zero_field_strain,
+        #     c0=1.0e10,
+        #     temp_tf_coolant_peak_field=self.data.tfcoil.tftmp,
+        #     data=self.data,
+        # )
 
-        self.data.tfcoil.v_tf_coil_dump_quench_kv = (
-            self.croco_voltage() / 1.0e3
-        )  # TFC Quench voltage in kV
+        # TFC Quench voltage in kV
 
         # Negative areas or fractions error reporting
         if (
@@ -5292,180 +5194,180 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         self.generic_tf_coil_area_and_masses()
         self.superconducting_tf_coil_areas_and_masses()
 
-        # Do stress calculations (writes the stress output)
-        if output:
-            self.data.tfcoil.n_rad_per_layer = 500
+        # # Do stress calculations (writes the stress output)
+        # if output:
+        #     self.data.tfcoil.n_rad_per_layer = 500
 
-        try:
-            (
-                sig_tf_r_max,
-                sig_tf_t_max,
-                sig_tf_z_max,
-                sig_tf_vmises_max,
-                s_shear_tf_peak,
-                deflect,
-                eyoung_axial,
-                eyoung_trans,
-                eyoung_wp_axial,
-                eyoung_wp_trans,
-                poisson_wp_trans,
-                radial_array,
-                s_shear_cea_tf_cond,
-                poisson_wp_axial,
-                sig_tf_r,
-                sig_tf_smeared_r,
-                sig_tf_smeared_t,
-                sig_tf_smeared_z,
-                sig_tf_t,
-                s_shear_tf,
-                sig_tf_vmises,
-                sig_tf_z,
-                str_tf_r,
-                str_tf_t,
-                str_tf_z,
-                n_radial_array,
-                n_tf_bucking,
-                self.data.tfcoil.sig_tf_wp,
-                sig_tf_case,
-                sig_tf_cs_bucked,
-                str_wp,
-                casestr,
-                insstrain,
-                sig_tf_wp_av_z,
-            ) = self.stresscl(
-                int(self.data.tfcoil.n_tf_stress_layers),
-                int(self.data.tfcoil.n_rad_per_layer),
-                int(self.data.tfcoil.n_tf_wp_stress_layers),
-                int(self.data.tfcoil.i_tf_bucking),
-                float(self.data.build.r_tf_inboard_in),
-                self.data.build.dr_bore,
-                self.data.build.z_tf_inside_half,
-                self.data.pf_coil.f_z_cs_tf_internal,
-                self.data.build.dr_cs,
-                self.data.build.i_tf_inside_cs,
-                self.data.build.dr_tf_inboard,
-                self.data.build.dr_cs_tf_gap,
-                self.data.pf_coil.i_pf_conductor,
-                self.data.pf_coil.j_cs_flat_top_end,
-                self.data.pf_coil.j_cs_pulse_start,
-                self.data.pf_coil.c_pf_coil_turn_peak_input,
-                self.data.pf_coil.n_pf_coils_in_group,
-                self.data.pf_coil.f_dr_dz_cs_turn,
-                self.data.pf_coil.radius_cs_turn_corners,
-                self.data.pf_coil.f_a_cs_turn_steel,
-                self.data.tfcoil.eyoung_steel,
-                self.data.tfcoil.poisson_steel,
-                self.data.tfcoil.eyoung_cond_axial,
-                self.data.tfcoil.poisson_cond_axial,
-                self.data.tfcoil.eyoung_cond_trans,
-                self.data.tfcoil.poisson_cond_trans,
-                self.data.tfcoil.eyoung_ins,
-                self.data.tfcoil.poisson_ins,
-                self.data.tfcoil.dx_tf_turn_insulation,
-                self.data.tfcoil.eyoung_copper,
-                self.data.tfcoil.poisson_copper,
-                self.data.tfcoil.i_tf_sup,
-                self.data.tfcoil.eyoung_res_tf_buck,
-                self.data.superconducting_tfcoil.r_tf_wp_inboard_inner,
-                self.data.superconducting_tfcoil.tan_theta_coil,
-                self.data.superconducting_tfcoil.rad_tf_coil_inboard_toroidal_half,
-                self.data.superconducting_tfcoil.r_tf_wp_inboard_outer,
-                self.data.superconducting_tfcoil.a_tf_coil_inboard_steel,
-                self.data.superconducting_tfcoil.a_tf_plasma_case,
-                self.data.superconducting_tfcoil.a_tf_coil_nose_case,
-                self.data.tfcoil.dx_tf_wp_insertion_gap,
-                self.data.tfcoil.dx_tf_wp_insulation,
-                self.data.tfcoil.n_tf_coil_turns,
-                int(self.data.tfcoil.i_tf_turns_integer),
-                self.data.superconducting_tfcoil.dx_tf_turn_cable_space_average,
-                self.data.superconducting_tfcoil.dr_tf_turn_cable_space,
-                self.data.tfcoil.dia_tf_turn_coolant_channel,
-                self.data.tfcoil.f_a_tf_turn_cable_copper,
-                self.data.tfcoil.dx_tf_turn_steel,
-                self.data.superconducting_tfcoil.dx_tf_side_case_average,
-                self.data.superconducting_tfcoil.dx_tf_wp_toroidal_average,
-                self.data.superconducting_tfcoil.a_tf_coil_inboard_insulation,
-                self.data.tfcoil.a_tf_wp_steel,
-                self.data.tfcoil.a_tf_wp_conductor,
-                self.data.superconducting_tfcoil.a_tf_wp_with_insulation,
-                self.data.tfcoil.eyoung_al,
-                self.data.tfcoil.poisson_al,
-                self.data.tfcoil.fcoolcp,
-                self.data.tfcoil.n_tf_graded_layers,
-                self.data.tfcoil.c_tf_total,
-                self.data.tfcoil.dr_tf_plasma_case,
-                self.data.tfcoil.i_tf_stress_model,
-                self.data.superconducting_tfcoil.vforce_inboard_tot,
-                self.data.tfcoil.i_tf_tresca,
-                self.data.tfcoil.a_tf_coil_inboard_case,
-                self.data.tfcoil.vforce,
-                self.data.tfcoil.a_tf_turn_steel,
-            )
+        # try:
+        #     (
+        #         sig_tf_r_max,
+        #         sig_tf_t_max,
+        #         sig_tf_z_max,
+        #         sig_tf_vmises_max,
+        #         s_shear_tf_peak,
+        #         deflect,
+        #         eyoung_axial,
+        #         eyoung_trans,
+        #         eyoung_wp_axial,
+        #         eyoung_wp_trans,
+        #         poisson_wp_trans,
+        #         radial_array,
+        #         s_shear_cea_tf_cond,
+        #         poisson_wp_axial,
+        #         sig_tf_r,
+        #         sig_tf_smeared_r,
+        #         sig_tf_smeared_t,
+        #         sig_tf_smeared_z,
+        #         sig_tf_t,
+        #         s_shear_tf,
+        #         sig_tf_vmises,
+        #         sig_tf_z,
+        #         str_tf_r,
+        #         str_tf_t,
+        #         str_tf_z,
+        #         n_radial_array,
+        #         n_tf_bucking,
+        #         self.data.tfcoil.sig_tf_wp,
+        #         sig_tf_case,
+        #         sig_tf_cs_bucked,
+        #         str_wp,
+        #         casestr,
+        #         insstrain,
+        #         sig_tf_wp_av_z,
+        #     ) = self.stresscl(
+        #         int(self.data.tfcoil.n_tf_stress_layers),
+        #         int(self.data.tfcoil.n_rad_per_layer),
+        #         int(self.data.tfcoil.n_tf_wp_stress_layers),
+        #         int(self.data.tfcoil.i_tf_bucking),
+        #         float(self.data.build.r_tf_inboard_in),
+        #         self.data.build.dr_bore,
+        #         self.data.build.z_tf_inside_half,
+        #         self.data.pf_coil.f_z_cs_tf_internal,
+        #         self.data.build.dr_cs,
+        #         self.data.build.i_tf_inside_cs,
+        #         self.data.build.dr_tf_inboard,
+        #         self.data.build.dr_cs_tf_gap,
+        #         self.data.pf_coil.i_pf_conductor,
+        #         self.data.pf_coil.j_cs_flat_top_end,
+        #         self.data.pf_coil.j_cs_pulse_start,
+        #         self.data.pf_coil.c_pf_coil_turn_peak_input,
+        #         self.data.pf_coil.n_pf_coils_in_group,
+        #         self.data.pf_coil.f_dr_dz_cs_turn,
+        #         self.data.pf_coil.radius_cs_turn_corners,
+        #         self.data.pf_coil.f_a_cs_turn_steel,
+        #         self.data.tfcoil.eyoung_steel,
+        #         self.data.tfcoil.poisson_steel,
+        #         self.data.tfcoil.eyoung_cond_axial,
+        #         self.data.tfcoil.poisson_cond_axial,
+        #         self.data.tfcoil.eyoung_cond_trans,
+        #         self.data.tfcoil.poisson_cond_trans,
+        #         self.data.tfcoil.eyoung_ins,
+        #         self.data.tfcoil.poisson_ins,
+        #         self.data.tfcoil.dx_tf_turn_insulation,
+        #         self.data.tfcoil.eyoung_copper,
+        #         self.data.tfcoil.poisson_copper,
+        #         self.data.tfcoil.i_tf_sup,
+        #         self.data.tfcoil.eyoung_res_tf_buck,
+        #         self.data.superconducting_tfcoil.r_tf_wp_inboard_inner,
+        #         self.data.superconducting_tfcoil.tan_theta_coil,
+        #         self.data.superconducting_tfcoil.rad_tf_coil_inboard_toroidal_half,
+        #         self.data.superconducting_tfcoil.r_tf_wp_inboard_outer,
+        #         self.data.superconducting_tfcoil.a_tf_coil_inboard_steel,
+        #         self.data.superconducting_tfcoil.a_tf_plasma_case,
+        #         self.data.superconducting_tfcoil.a_tf_coil_nose_case,
+        #         self.data.tfcoil.dx_tf_wp_insertion_gap,
+        #         self.data.tfcoil.dx_tf_wp_insulation,
+        #         self.data.tfcoil.n_tf_coil_turns,
+        #         int(self.data.tfcoil.i_tf_turns_integer),
+        #         self.data.superconducting_tfcoil.dx_tf_turn_cable_space_average,
+        #         self.data.superconducting_tfcoil.dr_tf_turn_cable_space,
+        #         self.data.tfcoil.dia_tf_turn_coolant_channel,
+        #         self.data.tfcoil.f_a_tf_turn_cable_copper,
+        #         self.data.tfcoil.dx_tf_turn_steel,
+        #         self.data.superconducting_tfcoil.dx_tf_side_case_average,
+        #         self.data.superconducting_tfcoil.dx_tf_wp_toroidal_average,
+        #         self.data.superconducting_tfcoil.a_tf_coil_inboard_insulation,
+        #         self.data.tfcoil.a_tf_wp_steel,
+        #         self.data.tfcoil.a_tf_wp_conductor,
+        #         self.data.superconducting_tfcoil.a_tf_wp_with_insulation,
+        #         self.data.tfcoil.eyoung_al,
+        #         self.data.tfcoil.poisson_al,
+        #         self.data.tfcoil.fcoolcp,
+        #         self.data.tfcoil.n_tf_graded_layers,
+        #         self.data.tfcoil.c_tf_total,
+        #         self.data.tfcoil.dr_tf_plasma_case,
+        #         self.data.tfcoil.i_tf_stress_model,
+        #         self.data.superconducting_tfcoil.vforce_inboard_tot,
+        #         self.data.tfcoil.i_tf_tresca,
+        #         self.data.tfcoil.a_tf_coil_inboard_case,
+        #         self.data.tfcoil.vforce,
+        #         self.data.tfcoil.a_tf_turn_steel,
+        #     )
 
-            self.data.tfcoil.sig_tf_case = (
-                self.data.tfcoil.sig_tf_case
-                if self.data.tfcoil.sig_tf_case is None
-                else sig_tf_case
-            )
+        #     self.data.tfcoil.sig_tf_case = (
+        #         self.data.tfcoil.sig_tf_case
+        #         if self.data.tfcoil.sig_tf_case is None
+        #         else sig_tf_case
+        #     )
 
-            self.data.tfcoil.sig_tf_cs_bucked = (
-                self.data.tfcoil.sig_tf_cs_bucked
-                if self.data.tfcoil.sig_tf_cs_bucked is None
-                else sig_tf_cs_bucked
-            )
+        #     self.data.tfcoil.sig_tf_cs_bucked = (
+        #         self.data.tfcoil.sig_tf_cs_bucked
+        #         if self.data.tfcoil.sig_tf_cs_bucked is None
+        #         else sig_tf_cs_bucked
+        #     )
 
-            self.data.tfcoil.str_wp = (
-                self.data.tfcoil.str_wp if self.data.tfcoil.str_wp is None else str_wp
-            )
+        #     self.data.tfcoil.str_wp = (
+        #         self.data.tfcoil.str_wp if self.data.tfcoil.str_wp is None else str_wp
+        #     )
 
-            self.data.tfcoil.casestr = (
-                self.data.tfcoil.casestr if self.data.tfcoil.casestr is None else casestr
-            )
+        #     self.data.tfcoil.casestr = (
+        #         self.data.tfcoil.casestr if self.data.tfcoil.casestr is None else casestr
+        #     )
 
-            self.data.tfcoil.insstrain = (
-                self.data.tfcoil.insstrain
-                if self.data.tfcoil.insstrain is None
-                else insstrain
-            )
-            if output:
-                self.out_stress(
-                    sig_tf_r_max,
-                    sig_tf_t_max,
-                    sig_tf_z_max,
-                    sig_tf_vmises_max,
-                    s_shear_tf_peak,
-                    deflect,
-                    eyoung_axial,
-                    eyoung_trans,
-                    eyoung_wp_axial,
-                    eyoung_wp_trans,
-                    poisson_wp_trans,
-                    radial_array,
-                    s_shear_cea_tf_cond,
-                    poisson_wp_axial,
-                    sig_tf_r,
-                    sig_tf_smeared_r,
-                    sig_tf_smeared_t,
-                    sig_tf_smeared_z,
-                    sig_tf_t,
-                    s_shear_tf,
-                    sig_tf_vmises,
-                    sig_tf_z,
-                    str_tf_r,
-                    str_tf_t,
-                    str_tf_z,
-                    n_radial_array,
-                    n_tf_bucking,
-                    sig_tf_wp_av_z,
-                )
-        except ValueError as e:
-            if e.args[1] == 245 and e.args[2] == 0:
-                logger.warning(
-                    "Invalid stress model (r_tf_inboard = 0), stress constraint "
-                    "switched off"
-                )
-                self.data.tfcoil.sig_tf_case = 0.0e0
-                self.data.tfcoil.sig_tf_wp = 0.0e0
+        #     self.data.tfcoil.insstrain = (
+        #         self.data.tfcoil.insstrain
+        #         if self.data.tfcoil.insstrain is None
+        #         else insstrain
+        #     )
+        #     if output:
+        #         self.out_stress(
+        #             sig_tf_r_max,
+        #             sig_tf_t_max,
+        #             sig_tf_z_max,
+        #             sig_tf_vmises_max,
+        #             s_shear_tf_peak,
+        #             deflect,
+        #             eyoung_axial,
+        #             eyoung_trans,
+        #             eyoung_wp_axial,
+        #             eyoung_wp_trans,
+        #             poisson_wp_trans,
+        #             radial_array,
+        #             s_shear_cea_tf_cond,
+        #             poisson_wp_axial,
+        #             sig_tf_r,
+        #             sig_tf_smeared_r,
+        #             sig_tf_smeared_t,
+        #             sig_tf_smeared_z,
+        #             sig_tf_t,
+        #             s_shear_tf,
+        #             sig_tf_vmises,
+        #             sig_tf_z,
+        #             str_tf_r,
+        #             str_tf_t,
+        #             str_tf_z,
+        #             n_radial_array,
+        #             n_tf_bucking,
+        #             sig_tf_wp_av_z,
+        #         )
+        # except ValueError as e:
+        #     if e.args[1] == 245 and e.args[2] == 0:
+        #         logger.warning(
+        #             "Invalid stress model (r_tf_inboard = 0), stress constraint "
+        #             "switched off"
+        #         )
+        #         self.data.tfcoil.sig_tf_case = 0.0e0
+        #         self.data.tfcoil.sig_tf_wp = 0.0e0
 
         self.vv_stress_on_quench()
 
@@ -5511,162 +5413,157 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         """Output the results of the superconducting TF coil model for a CroCo conductor."""
         self.output_general_tf_info()
         self.output_general_superconducting_tf_info()
-        self.output_croco_info()
+        self.output_step_turn_info()
         self.output_tf_superconductor_info()
-        self.run_and_output_stress()
+        # self.run_and_output_stress()
 
-    def tf_croco_averaged_turn_geometry(
-        self,
-        j_tf_wp: float,
-        dx_tf_turn_steel: float,
+    @staticmethod
+    def tf_step_vertical_tape_integer_turn_geometry(
+        dr_tf_wp_with_insulation: float,
+        dx_tf_wp_insulation: float,
+        dx_tf_wp_insertion_gap: float,
+        n_tf_wp_layers: int,
+        dx_tf_wp_toroidal_min: float,
+        n_tf_wp_pancakes: int,
+        c_tf_coil: float,
         dx_tf_turn_insulation: float,
-        dx_tf_turn_general: float,
-        c_tf_turn: float,
-        i_dx_tf_turn_general_input: bool,
-        i_dx_tf_turn_cable_space_general_input: bool,
-        dx_tf_turn_cable_space_general: float,
-        layer_ins: float,
-        a_tf_wp_no_insulation: float,
-    ) -> CROCOAveragedTurnGeometry:
+        dia_tf_turn_coolant_channel: float,
+    ) -> STEPIntegerTurnGeometry:
         """
-        Calculate the geometry of the TF turn based on the input parameters and
-        assumptions for a CroCo conductor.
+        Calculate the integer-turn geometry for TF coil turns using a vertical
+        stacked tape (REBCO-style) conductor.
 
         Parameters
         ----------
-        j_tf_wp : float
-            Current density in the TF winding pack (in A/m²).
-
-        dx_tf_turn_steel : float
-            Thickness of the steel layer in the TF turn (in meters).
-
-        dx_tf_turn_insulation : float
-            Thickness of the insulation layer in the TF turn (in meters).
-
-        i_tf_sc_mat : int
-            Identifier for the superconducting material type.
-
-        dx_tf_turn_general : float
-            General dimension of the TF turn (in meters).
-
-        c_tf_turn : float
-            Current per turn in the TF coil (in Amperes).
-
-        i_dx_tf_turn_general_input : bool
-            Flag indicating if the general turn dimension is provided as input.
-
-        i_dx_tf_turn_cable_space_general_input : bool
-            Flag indicating if the cable space dimension is provided as input.
-
-        dx_tf_turn_cable_space_general : float
-            General dimension of the cable space in the TF turn (in meters).
-
-        layer_ins : float
-            Thickness of the insulation layer in the TF turn (in meters).
-
-        a_tf_wp_no_insulation : float
-            Area of the TF winding pack without insulation (in square meters).
-
-        dia_tf_turn_coolant_channel : float
-            Diameter of the coolant channel in the TF turn (in meters).
-
-        f_a_tf_turn_cable_space_extra_void : float
-            Fraction of extra void space in the cable space of the TF turn.
+        dr_tf_wp_with_insulation:
+            Radial thickness of the winding pack including insulation (m).
+        dx_tf_wp_insulation:
+            Thickness of winding-pack insulation (m).
+        dx_tf_wp_insertion_gap:
+            Insertion gap thickness inside the winding pack (m).
+        n_tf_wp_layers:
+            Number of radial layers (turn rows).
+        dx_tf_wp_toroidal_min:
+            Minimum toroidal thickness of the winding pack (m).
+        n_tf_wp_pancakes:
+            Number of toroidal pancakes per radial layer.
+        c_tf_coil:
+            Total TF coil current (A).
+        dx_tf_turn_insulation:
+            Thickness of the turn (intra-turn) insulation (m).
+        dia_tf_turn_coolant_channel:
+            Diameter of the coolant channel inside the conductor (m).
 
         Returns
         -------
-        CROCOAveragedTurnGeometry
-             A dataclass containing the calculated geometry of the TF turn, including:
-            - a_tf_turn: Area of the TF turn (in square meters).
-            - dx_tf_turn: Dimension of the TF turn (in meters).
-            - dr_tf_turn: Dimension of the TF turn (in meters).
-            - dx_tf_turn_conduit_full_average: Thickness of the conductor in the TF turn (in meters).
-            - n_tf_coil_turns: Number of turns in the TF coil (not necessarily
-              an integer).
-            - a_tf_turn_insulation: Area of the insulation in the TF turn
-              (in square meters).
-            - a_tf_turn_cable_space_no_void: Area of the cable space in the TF turn
-              without voids (in square meters).
-            - a_tf_turn_steel: Area of the steel in the TF turn (in square meters).
-            - a_tf_turn_cable_space_effective: Effective area of the cable space in the
-              TF turn after accounting for cooling channels and voids (in square meters).
-            - f_a_tf_turn_cable_space_cooling: Fraction of the cable space used for
-              cooling.
+        STEPIntegerTurnGeometry
 
+        Notes
+        -----
+        - Assumes rectangular turns and places the coolant channel near the
+        bottom of the conductor with a small clearance from the tape stack.
+        - Basic consistency checks are emitted via logger.error() if
+        calculated dimensions are non-positive or if the coolant channel
+        conflicts with the conductor geometry.
+
+        References
+        ----------
+        [1] E. Nasr, S. C. Wimbush, P. Noonan, P. Harris, R. Gowland, and A. Petrov,
+        “The magnetic cage,” Philosophical Transactions of the Royal Society
+        A Mathematical Physical and Engineering Sciences,
+        vol. 382, no. 2280, Aug. 2024, doi: https://doi.org/10.1098/rsta.2023.0407.
+        ‌
         """
-        # Turn dimension is a an input
-        if i_dx_tf_turn_general_input:
-            # Turn area [m²]
-            a_tf_turn = dx_tf_turn_general**2
+        # Radial turn dimension [m]
+        dr_tf_turn = (
+            dr_tf_wp_with_insulation
+            - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
+        ) / n_tf_wp_layers
 
-            # Current per turn [A]
-            c_tf_turn = a_tf_turn * j_tf_wp
-
-        # Turn cable dimension is an input
-        elif i_dx_tf_turn_cable_space_general_input:
-            # Turn squared dimension [m]
-            dx_tf_turn_general = dx_tf_turn_cable_space_general + 2.0e0 * (
-                dx_tf_turn_insulation + dx_tf_turn_steel
+        if dr_tf_turn <= (2.0e0 * dx_tf_turn_insulation):
+            logger.error(
+                "Negative cable space dimension; reduce conduit thicknesses or raise c_tf_turn. "
+                f"{dr_tf_turn=} {dx_tf_turn_insulation=}"
             )
 
-            # Turn area [m²]
-            a_tf_turn = dx_tf_turn_general**2
+        # Toroidal turn dimension [m]
+        dx_tf_turn = (
+            dx_tf_wp_toroidal_min
+            - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
+        ) / n_tf_wp_pancakes
 
-            # Current per turn [A]
-            c_tf_turn = a_tf_turn * j_tf_wp
+        if dx_tf_turn <= (2.0e0 * dx_tf_turn_insulation):
+            logger.error(
+                "Negative cable space dimension; reduce conduit thicknesses or raise c_tf_turn. "
+                f"{dx_tf_turn=} {dx_tf_turn_insulation=}"
+            )
 
-        # Current per turn is an input
-        else:
-            # Turn area [m²]
-            # Allow for additional inter-layer insulation MDK 13/11/18
-            # Area of turn including conduit and inter-layer insulation
-            a_tf_turn = c_tf_turn / j_tf_wp
+        # Number of TF turns
+        n_tf_coil_turns = np.double(n_tf_wp_layers * n_tf_wp_pancakes)
 
-            # Dimension of square cross-section of each turn including inter-turn insulation [m]
-            dx_tf_turn_general = np.sqrt(a_tf_turn)
+        # Current per turn [A/turn]
+        c_tf_turn = c_tf_coil / n_tf_coil_turns
 
-        # Square turn assumption
-        dr_tf_turn = dx_tf_turn_general
-        dx_tf_turn = dx_tf_turn_general
+        # Radial and toroidal dimension of conductor region containing tape stack and cooling pipe [m]
+        dr_tf_turn_stabiliser = dr_tf_turn - 2.0e0 * dx_tf_turn_insulation
+        dx_tf_turn_stabiliser = dx_tf_turn - 2.0e0 * dx_tf_turn_insulation
 
-        dx_tf_turn_conduit_full_average = (
-            -layer_ins + np.sqrt(layer_ins**2 + 4.0e00 * a_tf_turn)
-        ) / 2 - 2.0e0 * dx_tf_turn_insulation
+        # Place coolant channel at bottom of turn with a gap equal to 10% of conductor height
+        x_tf_turn_coolant_channel_centre = (
+            dx_tf_turn_insulation
+            + (0.1 * dx_tf_turn_stabiliser)
+            + (dia_tf_turn_coolant_channel / 2)
+        )
 
-        # Total number of turns per TF coil (not required to be an integer)
-        n_tf_coil_turns = a_tf_wp_no_insulation / a_tf_turn
+        # Check to make sure coolant channel leaves some gap to the tape stack
+        if x_tf_turn_coolant_channel_centre > (dx_tf_turn_stabiliser / 2) - (
+            0.1 * dx_tf_turn_stabiliser
+        ) - (dia_tf_turn_coolant_channel / 2):
+            logger.error(
+                "Coolant channel too big for turn conductor dimension; reduce coolant "
+                "channel diameter or increase turn dimensions."
+                f"{x_tf_turn_coolant_channel_centre=} {dx_tf_turn_stabiliser=}"
+            )
+
+        # Width of the tape stack allows for 10% of copper stabiliser on each side
+        dr_tf_turn_tape_stack = dr_tf_turn_stabiliser * 0.8
+
+        # Bottom of tape stack starts at the centre of the turn and allows for 10% of conductor height above
+        dx_tf_turn_tape_stack = (dx_tf_turn / 2) - (
+            dx_tf_turn_insulation + (0.1 * dx_tf_turn_stabiliser)
+        )
+
+        # Cross-sectional area of tape stack per turn [m²]
+        a_tf_turn_tape_stack = dr_tf_turn_tape_stack * dx_tf_turn_tape_stack
 
         # Area of inter-turn insulation: single turn [m²]
-        a_tf_turn_insulation = a_tf_turn - dx_tf_turn_conduit_full_average**2
-
-        a_tf_turn_cable_space_no_void = copy.copy(
-            self.data.tfcoil.a_tf_turn_cable_space_no_void
+        a_tf_turn_insulation = (dr_tf_turn * dx_tf_turn) - (
+            dr_tf_turn_stabiliser * dx_tf_turn_stabiliser
         )
 
-        # Diameter of circular cable space inside conduit [m]
-        dx_tf_turn_cable_space_average = (
-            dx_tf_turn_conduit_full_average - 2.0e0 * dx_tf_turn_steel
+        # Area of stabiliser region per turn [m²]
+        a_tf_turn_stabiliser = (
+            dr_tf_turn_stabiliser * dx_tf_turn_stabiliser
+            - a_tf_turn_tape_stack
+            - (np.pi / 4.0e0) * dia_tf_turn_coolant_channel * dia_tf_turn_coolant_channel
         )
 
-        # Cross-sectional area of conduit jacket per turn [m²]
-        a_tf_turn_steel = (
-            dx_tf_turn_conduit_full_average**2 - a_tf_turn_cable_space_no_void
-        )
-
-        return CROCOAveragedTurnGeometry(
-            a_tf_turn_cable_space_no_void=a_tf_turn_cable_space_no_void,
-            a_tf_turn_steel=a_tf_turn_steel,
-            a_tf_turn_insulation=a_tf_turn_insulation,
-            n_tf_coil_turns=n_tf_coil_turns,
-            c_tf_turn=c_tf_turn,
-            dx_tf_turn_general=dx_tf_turn_general,
+        return STEPIntegerTurnGeometry(
             dr_tf_turn=dr_tf_turn,
             dx_tf_turn=dx_tf_turn,
-            dx_tf_turn_conduit_full_average=dx_tf_turn_conduit_full_average,
-            dx_tf_turn_cable_space_average=dx_tf_turn_cable_space_average,
+            c_tf_turn=c_tf_turn,
+            n_tf_coil_turns=n_tf_coil_turns,
+            dr_tf_turn_stabiliser=dr_tf_turn_stabiliser,
+            dx_tf_turn_stabiliser=dx_tf_turn_stabiliser,
+            x_tf_turn_coolant_channel_centre=x_tf_turn_coolant_channel_centre,
+            dr_tf_turn_tape_stack=dr_tf_turn_tape_stack,
+            dx_tf_turn_tape_stack=dx_tf_turn_tape_stack,
+            a_tf_turn_tape_stack=a_tf_turn_tape_stack,
+            a_tf_turn_insulation=a_tf_turn_insulation,
+            a_tf_turn_stabiliser=a_tf_turn_stabiliser,
         )
 
-    def tf_croco_superconductor_properties(
+    def tf_step_superconductor_properties(
         self,
         a_tf_turn: float,
         b_tf_inboard_peak: float,
@@ -5676,9 +5573,8 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
         dr_tf_hts_tape: float,
         dx_tf_hts_tape_rebco: float,
         dx_tf_hts_tape_total: float,
-        a_tf_croco_strand: float,
     ) -> TFSuperconductorLimits:
-        """TF superconducting CroCo conductor using REBCO tape
+        """TF superconducting STEP turn using REBCO tape
 
         Parameters
         ----------
@@ -5800,26 +5696,16 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
                 "Field on superconductor > 14 T (outside of interpolation range)"
             )
 
-        cur_tf_turn_croco_strand_critical = j_superconductor_critical * a_tf_croco_strand
+        a_tf_strand = dr_tf_hts_tape * dx_tf_hts_tape_total
 
-        # Conductor properties
-        self.data.superconducting_tfcoil.conductor_critical_current = (
-            cur_tf_turn_croco_strand_critical * N_CROCO_STRANDS_TURN
-        )
-
-        self.data.superconducting_tfcoil.tf_coppera_m2 = (
-            cur_tf_turn
-            / self.data.superconducting_tfcoil.a_tf_turn_croco_cable_space_copper
-        )
-
-        cur_critical = self.data.superconducting_tfcoil.conductor_critical_current
+        cur_tf_turn_strand_critical = j_superconductor_critical * a_tf_strand
 
         # Critical current density in winding pack
         # a_tf_turn : Area per turn (i.e. entire jacketed conductor with insulation) (m2)
-        j_tf_wp_critical = cur_critical / a_tf_turn
+        j_tf_wp_critical = cur_tf_turn_strand_critical / a_tf_turn
 
         #  Ratio of operating / critical current
-        f_c_tf_turn_operating_critical = cur_tf_turn / cur_critical
+        f_c_tf_turn_operating_critical = cur_tf_turn / cur_tf_turn_strand_critical
 
         #  Operating current density
         j_tf_coil_turn = cur_tf_turn / a_tf_turn
@@ -5846,113 +5732,49 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
             j_tf_coil_turn=j_tf_coil_turn,
             bc20m=bc20m,
             tc0m=tc0m,
-            c_turn_cables_critical=cur_tf_turn_croco_strand_critical,
+            c_turn_cables_critical=cur_tf_turn_strand_critical,
         )
 
     @staticmethod
-    def tf_turn_croco_cable_space_properties(
-        dx_tf_turn_conduit_full_average: float, dx_tf_turn_steel: float
-    ) -> CroCoCableSpaceGeometry:
-        """Calculate the properties of the cable space in the TF turn for a CroCo
-        conductor.
+    def calculate_stacked_tape_strand_count(
+        dr_tape_stack: float,
+        dr_hts_tape: float,
+    ) -> int:
+        """
+        Calculate how many HTS tapes can be placed in a vertical stacked tape conductor.
+
+        The function returns the maximum whole number of tapes that fit within the
+        available radial tape stack width by taking the floor of the ratio
+        dr_tape_stack / dr_hts_tape.
 
         Parameters
         ----------
-        dx_tf_turn_conduit_full_average : float
-            Thickness of the conductor in the TF turn (in meters).
-        dx_tf_turn_steel : float
-            Thickness of the steel layer in the TF turn (in meters).
+        dr_tape_stack : float
+            Available radial width for the tape stack (m). Must be >= 0.
+        dr_hts_tape : float
+            Width of a single HTS tape (m). Must be > 0.
 
         Returns
         -------
-        CroCoCableSpaceGeometry
-             A dataclass containing the calculated properties of the cable space in
-             the TF turn, including:
-            - dia_tf_turn_croco_cable: Diameter of the circular cable space in the TF
-              turn (in meters).
-            - a_tf_turn_cable_space_no_void: Area of the cable space in the TF turn
-              without voids (in square meters).
-            - a_tf_turn_cable_space_effective: Effective area of the cable space in
-              the TF turn after accounting for cooling channels and voids
-              (in square meters).
-            - a_tf_turn_steel: Area of the steel in the TF turn (in square meters).
-            - conductor_area: Total area of the conductor in the TF turn
-              (in square meters).
-            - conductor_jacket_area: Area of the conductor jacket in the TF turn
-              (in square meters).
-            - conductor_jacket_fraction: Fraction of the conductor area that is the
-              jacket (dimensionless).
+        int
+            Maximum number of tapes that fit.
 
-
+        Raises
+        ------
+        ValueError
+            If dr_hts_tape <= 0 or dr_tape_stack < 0.
         """
-        dia_tf_turn_croco_cable = (
-            dx_tf_turn_conduit_full_average / 3.0e0 - dx_tf_turn_steel * (2.0e0 / 3.0e0)
-        )
+        if dr_hts_tape <= 0:
+            raise ValueError("dr_hts_tape must be greater than 0")
+        if dr_tape_stack < 0:
+            raise ValueError("dr_tape_stack must be non-negative")
 
-        # Area of the full cable circle in the turn
-        a_tf_turn_cable_space_no_void = (
-            9.0e0 / 4.0e0 * np.pi * dia_tf_turn_croco_cable**2
-        )
+        # Use floor to get the maximum whole number of tapes that fit
+        return int(np.floor(dr_tape_stack / dr_hts_tape))
 
-        # Area of the full cable spac circle minus the central copper strand
-        a_tf_turn_cable_space_effective = (
-            a_tf_turn_cable_space_no_void - 0.25e0 * np.pi * dia_tf_turn_croco_cable**2
-        )
-
-        conductor_area = (
-            dx_tf_turn_conduit_full_average**2
-        )  # does this not assume it's a sqaure???
-
-        conductor_jacket_area = conductor_area - a_tf_turn_cable_space_no_void
-        a_tf_turn_steel = conductor_jacket_area
-
-        conductor_jacket_fraction = conductor_jacket_area / conductor_area
-
-        return CroCoCableSpaceGeometry(
-            dia_tf_turn_croco_cable=dia_tf_turn_croco_cable,
-            a_tf_turn_cable_space_no_void=a_tf_turn_cable_space_no_void,
-            a_tf_turn_cable_space_effective=a_tf_turn_cable_space_effective,
-            a_tf_turn_steel=a_tf_turn_steel,
-            conductor_area=conductor_area,
-            conductor_jacket_area=conductor_jacket_area,
-            conductor_jacket_fraction=conductor_jacket_fraction,
-        )
-
-    def croco_voltage(self) -> float:
-        if self.data.tfcoil.quench_model == "linear":
-            self.data.superconducting_tfcoil.time2 = (
-                self.data.tfcoil.t_tf_superconductor_quench
-            )
-            croco_voltage = (
-                2.0e0
-                / self.data.superconducting_tfcoil.time2
-                * (
-                    self.data.tfcoil.e_tf_magnetic_stored_total
-                    / self.data.tfcoil.n_tf_coils
-                )
-                / self.data.tfcoil.c_tf_turn
-            )
-        elif self.data.tfcoil.quench_model == "exponential":
-            self.data.superconducting_tfcoil.tau2 = (
-                self.data.tfcoil.t_tf_superconductor_quench
-            )
-            croco_voltage = (
-                2.0e0
-                / self.data.superconducting_tfcoil.tau2
-                * (
-                    self.data.tfcoil.e_tf_magnetic_stored_total
-                    / self.data.tfcoil.n_tf_coils
-                )
-                / self.data.tfcoil.c_tf_turn
-            )
-        else:
-            return 0.0
-
-        return croco_voltage
-
-    def output_croco_info(self) -> None:
-        """Output the CroCo conductor geometry and properties."""
-        po.oheadr(self.outfile, "TF CroCo Cable Space Information")
+    def output_step_turn_info(self) -> None:
+        """Output the STEP conductor geometry and properties."""
+        po.oheadr(self.outfile, "TF STEP Cable Space Information")
 
         po.ovarre(
             self.outfile,
@@ -5990,166 +5812,69 @@ class STEPSuperconductingTFCoil(SuperconductingTFCoil):
 
         po.ovarre(
             self.outfile,
-            "Diameter of a CroCo strand (m) ",
-            "(dia_tf_turn_croco_cable)",
-            self.data.superconducting_tfcoil.dia_tf_turn_croco_cable,
-            "OP ",
+            "Diameter of central helium channel in cable",
+            "(dia_tf_turn_coolant_channel)",
+            self.data.tfcoil.dia_tf_turn_coolant_channel,
         )
         po.ovarre(
             self.outfile,
-            "Inner diameter of CroCo strand tape region (m) ",
-            "(dia_tf_croco_strand_tape_region)",
-            self.data.superconducting_tfcoil.dia_tf_croco_strand_tape_region,
-            "OP ",
+            "Number of superconducting strands per turn",
+            "(n_tf_turn_superconducting_strands)",
+            self.data.superconducting_tfcoil.n_tf_turn_superconducting_strands,
         )
         po.ovarre(
             self.outfile,
-            "Side thickness of copper in CroCo strand (m) ",
-            "(dx_tf_croco_strand_copper)",
-            self.data.superconducting_tfcoil.dx_tf_croco_strand_copper,
+            "Length of superconductor in TF coil (m)",
+            "(len_tf_coil_superconductor)",
+            self.data.superconducting_tfcoil.len_tf_coil_superconductor,
         )
         po.ovarre(
             self.outfile,
-            "Total thickness of tape stack in CroCo strand (m) ",
-            "(dx_tf_croco_strand_tape_stack)",
-            self.data.superconducting_tfcoil.dx_tf_croco_strand_tape_stack,
-            "OP ",
+            "Total length of superconductor in all TF coils (m)",
+            "(len_tf_superconductor_total)",
+            self.data.superconducting_tfcoil.len_tf_superconductor_total,
         )
         po.ovarre(
             self.outfile,
-            "Number of HTS tapes in CroCo strand",
-            "(n_tf_croco_strand_hts_tapes)",
-            self.data.superconducting_tfcoil.n_tf_croco_strand_hts_tapes,
-            "OP ",
-        )
-        po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Area of total CroCo strand (m²)",
-            "(a_tf_croco_strand)",
-            self.data.superconducting_tfcoil.a_tf_croco_strand,
-            "OP ",
+            "Radial width of tape stack in TF turn (m)",
+            "(dr_tf_turn_tape_stack)",
+            self.data.superconducting_tfcoil.dr_tf_turn_tape_stack,
         )
         po.ovarre(
             self.outfile,
-            "Area of REBCO in strand (m²)",
-            "(a_tf_croco_strand_rebco)",
-            self.data.superconducting_tfcoil.a_tf_croco_strand_rebco,
-            "OP ",
+            "Vertical width of tape stack in TF turn (m)",
+            "(dx_tf_turn_tape_stack)",
+            self.data.superconducting_tfcoil.dx_tf_turn_tape_stack,
         )
         po.ovarre(
             self.outfile,
-            "Area of copper in strand (m²)",
-            "(a_tf_croco_strand_copper_total)",
-            self.data.superconducting_tfcoil.a_tf_croco_strand_copper_total,
-            "OP ",
+            "Area of tape stack in TF turn (m)",
+            "(a_tf_turn_tape_stack)",
+            self.data.superconducting_tfcoil.a_tf_turn_tape_stack,
         )
         po.ovarre(
             self.outfile,
-            "Area of hastelloy substrate in strand (m²) ",
-            "(a_tf_croco_strand_hastelloy)",
-            self.data.superconducting_tfcoil.a_tf_croco_strand_hastelloy,
-            "OP ",
+            "Vertical position of coolant channel centre in TF turn (m)",
+            "(x_tf_turn_coolant_channel_centre)",
+            self.data.superconducting_tfcoil.x_tf_turn_coolant_channel_centre,
         )
         po.ovarre(
             self.outfile,
-            "Area of solder in strand (m²)  ",
-            "(a_tf_croco_strand_solder)",
-            self.data.superconducting_tfcoil.a_tf_croco_strand_solder,
-            "OP ",
-        )
-
-        po.oblnkl(self.outfile)
-        po.ocmmnt(self.outfile, "Cable information")
-        po.ovarin(
-            self.outfile,
-            "Number of CroCo strands in the cable (fixed) ",
-            "",
-            N_CROCO_STRANDS_TURN,
+            "Radial width of stabiliser in TF turn (m)",
+            "(dr_tf_turn_stabiliser)",
+            self.data.superconducting_tfcoil.dr_tf_turn_stabiliser,
         )
         po.ovarre(
             self.outfile,
-            "Total area of circular cable space (m²)",
-            "(a_tf_turn_cable_space_no_void)",
-            self.data.tfcoil.a_tf_turn_cable_space_no_void,
-            "OP ",
-        )
-
-        po.oblnkl(self.outfile)
-        po.ocmmnt(
-            self.outfile,
-            "Conductor information (includes jacket, not including insulation)",
+            "Toroidal width of stabiliser in TF turn (m)",
+            "(dx_tf_turn_stabiliser)",
+            self.data.superconducting_tfcoil.dx_tf_turn_stabiliser,
         )
         po.ovarre(
             self.outfile,
-            "Width of square conductor (cable + steel jacket) (m)",
-            "(dx_tf_turn_conduit_full_average)",
-            self.data.tfcoil.dx_tf_turn_conduit_full_average,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Area of conductor (m²)",
-            "(conductor_area)",
-            self.data.superconducting_tfcoil.conductor_area,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "REBCO area of conductor (m²)",
-            "(a_tf_croco_strand_rebco)",
-            self.data.superconducting_tfcoil.conductor_rebco_area,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Area of central copper bar (m²)",
-            "(a_tf_turn_croco_copper_bar)",
-            self.data.superconducting_tfcoil.a_tf_turn_croco_copper_bar,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total copper area of conductor, total (m²)",
-            "(a_tf_turn_croco_cable_space_copper)",
-            self.data.superconducting_tfcoil.a_tf_turn_croco_cable_space_copper,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Hastelloy area of conductor (m²)",
-            "(a_tf_turn_croco_hastelloy)",
-            self.data.superconducting_tfcoil.a_tf_turn_croco_hastelloy,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Solder area of conductor (m²)",
-            "(a_tf_croco_strand_solder)",
-            self.data.superconducting_tfcoil.conductor_solder_area,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Jacket area of conductor (m²)",
-            "(jacket_area)",
-            self.data.superconducting_tfcoil.conductor_jacket_area,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Critical current of CroCo strand (A)",
-            "(cur_tf_turn_croco_strand_critical)",
-            self.data.superconducting_tfcoil.cur_tf_turn_croco_strand_critical,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Critical current of conductor (A) ",
-            "(conductor_critical_current)",
-            self.data.superconducting_tfcoil.conductor_critical_current,
-            "OP ",
+            "Area of stabiliser in TF turn (m)",
+            "(a_tf_turn_stabiliser)",
+            self.data.superconducting_tfcoil.a_tf_turn_stabiliser,
         )
 
 

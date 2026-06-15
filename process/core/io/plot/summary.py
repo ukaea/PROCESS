@@ -15283,6 +15283,24 @@ def plot_tf_step_vertical_tape_turn(
         ),
     )
 
+    # Slice the tape stack into layers
+    for i in range(int(mfile.get("n_tf_turn_superconducting_strands", scan=scan))):
+        y_start = (dx_tf_turn * 0.5) + i * (
+            mfile.get("dx_tf_turn_tape_stack", scan=scan)
+            / mfile.get("n_tf_turn_superconducting_strands", scan=scan)
+        )
+        plot_hts_tape_geometry(
+            axis=axis,
+            r_left=(mfile.get("dr_tf_turn", scan=scan) / 2)
+            - (mfile.get("dr_tf_hts_tape", scan=scan) / 2),
+            z_bottom=y_start,
+            dr_hts_tape=mfile.get("dr_tf_hts_tape", scan=scan),
+            dx_hts_tape_rebco=mfile.get("dx_tf_hts_tape_rebco", scan=scan),
+            dx_hts_tape_copper=mfile.get("dx_tf_hts_tape_copper", scan=scan),
+            dx_hts_tape_hastelloy=mfile.get("dx_tf_hts_tape_hastelloy", scan=scan),
+            show_legend=False,
+        )
+
     axis.set_xlim(-dr_tf_turn * 0.05, dr_tf_turn * 1.05)
     axis.set_ylim(-dx_tf_turn * 0.05, dx_tf_turn * 1.05)
 
@@ -15914,10 +15932,8 @@ def main_plot(
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.STEP_STACKED_TAPES
         ):
-            plot_205 = figs[25].add_subplot(223)
-            plot_205.set_position([0.075, 0.1, 0.3, 0.3])
             plot_tf_step_vertical_tape_turn(
-                axis=plot_205,
+                axis=figs[25].add_subplot(223, aspect="equal"),
                 fig=figs[25],
                 mfile=m_file,
                 scan=scan,
@@ -15934,17 +15950,19 @@ def main_plot(
                 ),
                 dr_tf_turn_stabiliser=m_file.get("dr_tf_turn_stabiliser", scan=scan),
             )
-            plot_hts_tape(
-                figs[25].add_subplot(339, aspect="equal"),
-                figs[25],
-                m_file,
-                scan,
-                dx_hts_tape_rebco=m_file.get("dx_hts_tape_rebco", scan=scan),
-                dx_hts_tape_copper=m_file.get("dx_hts_tape_copper", scan=scan),
-                dx_hts_tape_hastelloy=m_file.get("dx_hts_tape_hastelloy", scan=scan),
-                dx_hts_tape_total=m_file.get("dx_hts_tape_total", scan=scan),
-                dr_hts_tape=m_file.get("dr_hts_tape", scan=scan),
+            ax_hts_tape = figs[25].add_subplot(339)
+            ax_hts_tape.set_position([0.75, 0.1, 0.2, 0.2])
+            plot_hts_tape_geometry(
+                axis=ax_hts_tape,
+                r_left=0.0,
+                z_bottom=0.0,
+                dr_hts_tape=m_file.get("dr_tf_hts_tape", scan=scan),
+                dx_hts_tape_rebco=m_file.get("dx_tf_hts_tape_rebco", scan=scan),
+                dx_hts_tape_copper=m_file.get("dx_tf_hts_tape_copper", scan=scan),
+                dx_hts_tape_hastelloy=m_file.get("dx_tf_hts_tape_hastelloy", scan=scan),
+                show_legend=True,
             )
+
     else:
         ax19 = figs[24].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
