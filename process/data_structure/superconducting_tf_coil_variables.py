@@ -254,32 +254,19 @@ class SuperconductingTFData:
     outer tube and central copper) (m²)"""
 
     a_tf_turn_copper_total: float = 0.0
-    """Area of all copper in the TF turn (m²)"""
+    """Area of all copper in the TF turn [m²]"""
 
     f_a_tf_turn_copper: float = 0.0
-    """Fraction of the TF turn area that is copper (m²)"""
+    """Fraction of the TF turn area that is copper"""
 
     a_tf_turn_croco_copper_bar: float = 0.0
     """Area of the central copper strand in the CroCo TF turn [m²]"""
 
     f_a_tf_turn_superconductor: float = 0.0
-    """Fraction of the TF turn area that is superconducting material [m²]"""
+    """Fraction of the TF turn area that is superconducting material"""
 
     a_tf_turn_croco_hastelloy: float = 0.0
     """Area of the Hastelloy in the CroCo cable space of the TF turn (includes tapes and outer tube) (m²)"""
-
-    conductor_hastelloy_fraction: float = 0.0
-    conductor_helium_area: float = 0.0
-    conductor_helium_fraction: float = 0.0
-    conductor_solder_area: float = 0.0
-    conductor_solder_fraction: float = 0.0
-    conductor_jacket_area: float = 0.0
-    conductor_jacket_fraction: float = 0.0
-    conductor_rebco_area: float = 0.0
-    conductor_rebco_fraction: float = 0.0
-    conductor_critical_current: float = 0.0
-    conductor_area: float = 0.0
-    """Area of cable space inside jacket"""
 
     t1: float = 0.0
 
