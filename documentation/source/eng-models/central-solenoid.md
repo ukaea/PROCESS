@@ -3,7 +3,7 @@
 The central solenoid (CS) is a PF coil used during start-up and during the burn phase to create and 
 maintain the plasma current by electromagnetic induction. Swinging (changing) the current through 
 the central solenoid causes a change in the flux linked to the plasma region, inducing a current in 
-it. `PROCESS` calculates the amount of flux required to produce the plasma curren, and also the 
+it. `PROCESS` calculates the amount of flux required to produce the plasma current, and also the 
 amount actually available. The code measures the magnetic flux in units of Volt.seconds (= Webers).
 
 Switch `iohcl` controls whether a central solenoid is present. A value of 1 denotes that this coil 
