@@ -225,25 +225,23 @@ class ScanVariables(ScanVariable, Enum):
 
 
 class Scan:
-    """Perform a parameter scan using the Fortran scan module."""
+    """Perform a parameter scan
+
+    Parameters
+    ----------
+    models :
+        Physics and engineering model objects
+    solver :
+        Which solver to use, as specified in solver.py
+    data :
+        Data structure object
+    """
 
     def __init__(self, models: Model, solver: str, data: DataStructure):
-        """Immediately run the run_scan() method.
-
-        Parameters
-        ----------
-        models :
-            Physics and engineering model objects
-        solver :
-            Which solver to use, as specified in solver.py
-        data :
-            Data structure object
-        """
         self.models = models
         self.solver = solver
         self.data = data
         self.solver_handler = SolverHandler(models, solver, data)
-        self.run_scan()
 
     def run_scan(self):
         """Call a solver over a range of values of one of the variables.
@@ -258,44 +256,42 @@ class Scan:
         ProcessValueError
             isweep value greater than IPNSCNS
         """
-        if self.data.scan.isweep == 0:
-            # Solve single problem, rather than an array of problems (scan)
-            # doopt() can also run just an evaluation
-            start_time = time.time()
-            ifail = self.doopt()
-            write_output_files(
-                models=self.models,
-                data=self.data,
-                ifail=ifail,
-                runtime=time.time() - start_time,
-            )
-            show_errors(constants.NOUT)
-            return
-
-        if self.data.scan.isweep > IPNSCNS:
+        if self.data.scan.isweep > 0 and self.data.scan.isweep > IPNSCNS:
             raise ProcessValueError(
                 "Illegal value of isweep",
                 isweep=self.data.scan.isweep,
                 IPNSCNS=IPNSCNS,
             )
+        isw = self.data.scan.isweep or 1
+        self.scan_array = np.arange(isw * (self.data.scan.isweep_2 or 1)).reshape(
+            isw, -1
+        )
+        if self.data.scan.isweep == 0:
+            # Solve single problem, rather than an array of problems (scan)
+            # doopt() can also run just an evaluation
+            self._start_time = time.time()
+            self._ifail = self.solver_handler.run()
+            self._finish_time = time.time()
+            return
 
         if self.data.scan.scan_dim == 2:
             self.scan_2d()
         else:
             self.scan_1d()
 
-    def doopt(self):
-        """Run the optimiser or solver."""
-        ifail = self.solver_handler.run()
+    def write_outputs(self):
+        write_output_files(
+            models=self.models,
+            data=self.data,
+            ifail=self._ifail,
+            runtime=self._finish_time - self._start_time,
+        )
         constraints.constraints_output(self.data, self.solver)
+        show_errors(constants.NOUT)
 
-        return ifail
+    def setup_scan(self, scan_index): ...
 
     def scan_1d(self):
-        """Run a 1-D scan."""
-        # initialise dict which will contain ifail values for each scan point
-        scan_1d_ifail_dict = {}
-
         for iscan in range(1, self.data.scan.isweep + 1):
             self.scan_1d_write_point_header(iscan)
             start_time = time.time()
@@ -311,39 +307,7 @@ class Scan:
             show_errors(constants.NOUT)
             logging_model_handler.clear_logs()
 
-        # outvar now contains results
-        self.scan_1d_write_plot(self.data.scan)
-        print("Scan Convergence Summary \n")
-        sweep_values = self.data.scan.sweep[: self.data.scan.isweep]
-        nsweep_var = self.scan_select(
-            self.data.scan.nsweep, self.data.scan.sweep, self.data.scan.isweep
-        )
-        converged_count = 0
-        # offsets for aligning the converged/unconverged column
-        max_sweep_value_length = len(str(np.max(sweep_values)).replace(".", ""))
-        offsets = [
-            max_sweep_value_length - len(str(sweep_val).replace(".", ""))
-            for sweep_val in sweep_values
-        ]
-        for iscan in range(self.data.scan.isweep):
-            pstring = (
-                f"Scan {iscan:02d}: {nsweep_var.name} = {sweep_values[iscan]} "
-                + " " * offsets[iscan]
-                + "\u001b[3{}CONVERGED \u001b[0m"
-            )
-            if scan_1d_ifail_dict[iscan + 1] == 1:
-                converged_count += 1
-                pstring.format("2m")
-            else:
-                pstring.format("1mUN")
-            print(pstring)
-        converged_percentage = converged_count / self.data.scan.isweep * 100
-        print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
-
     def scan_2d(self):
-        """Run a 2-D scan."""
-        # Initialise intent(out) arrays
-        self.scan_2d_init(self.data.scan)
         iscan = 1
 
         # initialise array which will contain ifail values for each scan point
@@ -369,7 +333,45 @@ class Scan:
                 scan_2d_ifail_list[iscan_1][iscan_2] = ifail
                 iscan += 1
 
-        self.output_2d_summary(scan_2d_ifail_list)
+
+def scan_summary(scan):
+
+    def write_outputs(self):
+        self.post_optimise(self._ifail)
+
+    def scan_1d(self):
+        """Run a 1-D scan."""
+        # initialise dict which will contain ifail values for each scan point
+        scan_1d_ifail_dict = {}
+
+        # outvar now contains results
+        self.scan_1d_write_plot(self.data.scan)
+        print("Scan Convergence Summary \n")
+        sweep_values = self.data.scan.sweep[: self.data.scan.isweep]
+        nsweep_var = self.scan_select(
+            self.data.scan.nsweep, self.data.scan.sweep, self.data.scan.isweep
+        )
+        converged_count = 0
+        # offsets for aligning the converged/unconverged column
+        max_sweep_value_length = len(str(np.max(sweep_values)).replace(".", ""))
+        offsets = [
+            max_sweep_value_length - len(str(sweep_val).replace(".", ""))
+            for sweep_val in sweep_values
+        ]
+        for iscan in range(self.data.scan.isweep):
+            pstring = (
+                f"Scan {iscan:02d}: {nsweep_var.fname} = {sweep_values[iscan]} "
+                + " " * offsets[iscan]
+                + "\u001b[3{}CONVERGED \u001b[0m"
+            )
+            if scan_1d_ifail_dict[iscan + 1] == 1:
+                converged_count += 1
+                pstring.format("2m")
+            else:
+                pstring.format("1mUN")
+            print(pstring)
+        converged_percentage = converged_count / self.data.scan.isweep * 100
+        print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
 
     def scan_2d_init(self):
         sv = self.data.scan
@@ -384,9 +386,7 @@ class Scan:
             process_output.ovarin(constants.MFILE, d, n, v)
 
     def output_2d_summary(self, scan_2d_ifail_list):
-        print(
-            " ****************************************** Scan Convergence Summary ****************************************** \n"
-        )
+        print("Scan Convergence Summary\n")
         sweep_1_values = self.data.scan.sweep[: self.data.scan.isweep]
         sweep_2_values = self.data.scan.sweep_2[: self.data.scan.isweep_2]
         nsweep_var = self.scan_select(
@@ -415,8 +415,8 @@ class Scan:
         for iscan_1 in range(1, self.data.scan.isweep + 1):
             for iscan_2 in range(1, self.data.scan.isweep_2 + 1):
                 string = (
-                    f"Scan {scan_point:02d}: ({nsweep_var.name} = "
-                    f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var.name} "
+                    f"Scan {scan_point:02d}: ({nsweep_var.fname} = "
+                    f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var.fname} "
                     f"= {sweep_2_values[iscan_2 - 1]}) "
                     + " " * offsets[iscan_1 - 1][iscan_2 - 1]
                     + "\u001b[3{}CONVERGED \u001b[0m"
@@ -452,8 +452,7 @@ class Scan:
         process_output.write(
             constants.NOUT,
             f"Scan point {iscan} of {self.data.scan.isweep} : {self.data.globals.xlabel}"
-            f", {self.data.globals.vlabel} = {self.data.scan.sweep[iscan - 1]} "
-            "",
+            f", {self.data.globals.vlabel} = {self.data.scan.sweep[iscan - 1]} ",
         )
         process_output.ovarin(constants.MFILE, "Scan point number", "(iscan)", iscan)
 
@@ -480,8 +479,7 @@ class Scan:
             constants.NOUT,
             f"2D Scan point {iscan} of {self.data.scan.isweep * self.data.scan.isweep_2} : "
             f"{self.data.globals.vlabel} = {self.data.scan.sweep[iscan_1 - 1]} and"
-            f" {self.data.globals.vlabel_2} = {self.data.scan.sweep_2[iscan_r - 1]} "
-            "",
+            f" {self.data.globals.vlabel_2} = {self.data.scan.sweep_2[iscan_r - 1]} ",
         )
         process_output.ovarin(constants.MFILE, "Scan point number", "(iscan)", iscan)
 
