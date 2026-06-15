@@ -16,7 +16,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure, Model
-from process.data_structure import global_variables
 from process.data_structure.physics_variables import DivertorNumberModels
 
 logger = logging.getLogger(__name__)
@@ -3609,7 +3608,7 @@ class TFCoil(Model):
             for k, v in sig_file_data.items()
         }
 
-        sig_filename = global_variables.output_prefix + "SIG_TF.json"
+        sig_filename = self.data.globals.output_prefix + "SIG_TF.json"
         with open(sig_filename, "w") as f:
             json.dump(sig_file_data, f)
 

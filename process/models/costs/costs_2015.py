@@ -5,7 +5,6 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import global_variables
 
 logger = logging.getLogger(__name__)
 
@@ -147,7 +146,7 @@ class Costs2015(Model):
         tail_li6 = feed_li6 * 0.75e0
 
         # Built-in test
-        if global_variables.run_tests == 1:
+        if self.data.globals.run_tests == 1:
             product_li6 = 0.3
             feed_to_product_mass_ratio = (product_li6 - tail_li6) / (feed_li6 - tail_li6)
             tail_to_product_mass_ratio = (product_li6 - feed_li6) / (feed_li6 - tail_li6)

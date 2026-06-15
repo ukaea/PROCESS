@@ -66,7 +66,7 @@ def test_parse_real(epsvmc, expected, tmp_path, data_structure_obj):
 
     Program to get the expected value for 0.008 provided at https://github.com/ukaea/PROCESS/pull/3067
     """
-    data_structure.global_variables.fileprefix = _create_input_file(
+    data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path, f"epsvmc = {epsvmc}"
     )
     init.init_process(data_structure_obj)
@@ -91,7 +91,7 @@ def test_exact_parsing(value, tmp_path, data_structure_obj):
     These tests failed using the old input parser and serve to show that the Python parser generally
     produces more accurate floats and accumulates less error.
     """
-    data_structure.global_variables.fileprefix = _create_input_file(
+    data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path, f"epsvmc = {value}"
     )
     init.init_process(data_structure_obj)
@@ -100,20 +100,20 @@ def test_exact_parsing(value, tmp_path, data_structure_obj):
 
 
 def test_parse_input(tmp_path, data_structure_obj):
-    data_structure.global_variables.fileprefix = _create_input_file(
+    data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path,
         ("runtitle = my run title\nioptimz = -2\nepsvmc = 0.6\nboundl(1) = 0.5"),
     )
     init.init_process(data_structure_obj)
 
-    assert data_structure.global_variables.runtitle == "my run title"
+    assert data_structure_obj.globals.runtitle == "my run title"
     assert data_structure.numerics.ioptimz == PROCESSRunMode.EVALUATION
     assert pytest.approx(data_structure.numerics.epsvmc) == 0.6
     assert pytest.approx(data_structure.numerics.boundl[0]) == 0.5
 
 
 def test_input_choices(tmp_path, data_structure_obj):
-    data_structure.global_variables.fileprefix = _create_input_file(
+    data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path, ("ioptimz = -1")
     )
 
@@ -125,7 +125,7 @@ def test_input_choices(tmp_path, data_structure_obj):
     ("input_file_value"), [(-0.01,), (1.1,)], ids=("violate lower", "violate upper")
 )
 def test_input_range(tmp_path, input_file_value, data_structure_obj):
-    data_structure.global_variables.fileprefix = _create_input_file(
+    data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path, (f"epsvmc = {input_file_value}")
     )
 
@@ -137,7 +137,7 @@ def test_input_range(tmp_path, input_file_value, data_structure_obj):
 
 
 def test_input_array_when_not(tmp_path, data_structure_obj):
-    data_structure.global_variables.fileprefix = _create_input_file(
+    data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path, ("epsvmc(1) = 0.5")
     )
 
@@ -146,7 +146,7 @@ def test_input_array_when_not(tmp_path, data_structure_obj):
 
 
 def test_input_not_array_when_is(tmp_path, data_structure_obj):
-    data_structure.global_variables.fileprefix = _create_input_file(
+    data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path, ("boundl = 0.5")
     )
 
@@ -155,7 +155,7 @@ def test_input_not_array_when_is(tmp_path, data_structure_obj):
 
 
 def test_input_float_when_int(tmp_path, data_structure_obj):
-    data_structure.global_variables.fileprefix = _create_input_file(
+    data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path, ("ioptimz = 0.5")
     )
 
@@ -164,7 +164,7 @@ def test_input_float_when_int(tmp_path, data_structure_obj):
 
 
 def test_input_array(tmp_path, data_structure_obj):
-    data_structure.global_variables.fileprefix = _create_input_file(
+    data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path, ("boundl = 0.1, 0.2, 1.0, 0.0, 1.0e2")
     )
 
@@ -175,7 +175,7 @@ def test_input_array(tmp_path, data_structure_obj):
 
 
 def test_input_on_new_data_structure(tmp_path, data_structure_obj):
-    data_structure.global_variables.fileprefix = _create_input_file(
+    data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path, ("windspeed = 1.22")
     )
 

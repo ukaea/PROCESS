@@ -2,7 +2,6 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import global_variables
 from process.data_structure.build_variables import InboardBlanketConfiguration
 from process.models.engineering.pumping import CoolantType
 
@@ -339,7 +338,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
         ccfe_hcpb.data.tfcoil, "whttflgs", nuclearheatingmagnetsparam.whttflgs
     )
 
-    monkeypatch.setattr(global_variables, "verbose", nuclearheatingmagnetsparam.verbose)
+    monkeypatch.setattr(
+        ccfe_hcpb.data.globals, "verbose", nuclearheatingmagnetsparam.verbose
+    )
 
     monkeypatch.setattr(
         ccfe_hcpb.data.ccfe_hcpb,

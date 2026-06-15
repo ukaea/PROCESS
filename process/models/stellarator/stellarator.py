@@ -13,10 +13,7 @@ from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    global_variables,
-    numerics,
-)
+from process.data_structure import numerics
 from process.models.engineering.pumping import CoolantType
 from process.models.physics.physics import Physics, rether
 from process.models.power import PumpingPowerModelTypes
@@ -208,7 +205,7 @@ class Stellarator(Model):
         """
         load_stellarator_config(
             self.data.stellarator.istell,
-            Path(f"{global_variables.output_prefix}stella_conf.json"),
+            Path(f"{self.data.globals.output_prefix}stella_conf.json"),
             self.data,
         )
 

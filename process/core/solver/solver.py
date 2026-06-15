@@ -17,8 +17,9 @@ from pyvmcon import (
 from scipy.optimize import fsolve
 
 from process.core.exceptions import ProcessValueError
+from process.core.model import DataStructure
 from process.core.solver.evaluators import Evaluators
-from process.data_structure import global_variables, numerics
+from process.data_structure import numerics
 
 logger = logging.getLogger(__name__)
 
@@ -26,12 +27,14 @@ logger = logging.getLogger(__name__)
 class _Solver(ABC):
     """Base class for different solver implementations."""
 
-    def __init__(self):
+    def __init__(self, *, maxcal: int | None = None):
         """Initialise a solver."""
         # Exit code for the solver
         self.ifail = 0
         self.tolerance = numerics.epsvmc
         self.b: float | None = None
+        self.convergence_parameter: float | None = None
+        self.maxcal = maxcal
 
     def set_evaluators(self, evaluators: Evaluators):
         """Set objective and constraint functions and their gradient evaluators.
@@ -183,7 +186,7 @@ class Vmcon(_Solver):
 
         def _solver_callback(i: int, _result, _x, convergence_param: float):
             numerics.nviter = i + 1
-            global_variables.convergence_parameter = convergence_param
+            self.convergence_parameter = convergence_param
             print(
                 f"{i + 1} | Convergence Parameter: {convergence_param:.3E}",
                 end="\r",
@@ -232,7 +235,7 @@ class Vmcon(_Solver):
                 np.array(self.x_0),
                 np.array(self.bndl),
                 np.array(self.bndu),
-                max_iter=global_variables.maxcal,
+                max_iter=self.maxcal,
                 epsilon=self.tolerance,
                 qsp_options={"solver": cvxpy.CLARABEL},
                 initial_B=bb,
@@ -340,7 +343,7 @@ class FSolve(_Solver):
         return self.info
 
 
-def get_solver(solver_name: str = "vmcon") -> _Solver:
+def get_solver(data: DataStructure, solver_name: str = "vmcon") -> _Solver:
     """Return a solver instance.
 
     Parameters
@@ -356,9 +359,9 @@ def get_solver(solver_name: str = "vmcon") -> _Solver:
     solver: _Solver
 
     if solver_name == "vmcon":
-        solver = Vmcon()
+        solver = Vmcon(maxcal=data.globals.maxcal)
     elif solver_name == "vmcon_bounded":
-        solver = VmconBounded()
+        solver = VmconBounded(maxcal=data.globals.maxcal)
     elif solver_name == "fsolve":
         solver = FSolve()
     else:

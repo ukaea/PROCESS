@@ -267,7 +267,12 @@ class VaryRun:
     README.txt  - contains comments from config file
     """
 
-    def __init__(self, config_file: str, solver: str = "vmcon"):
+    def __init__(
+        self,
+        config_file: str,
+        solver: str = "vmcon",
+        data_structure: DataStructure | None = None,
+    ):
         """Initialise and perform a VaryRun.
 
         Parameters
@@ -280,7 +285,7 @@ class VaryRun:
         # Store the absolute path to the config file immediately: various
         # dir changes happen in old run_process code
         self.config = RunProcessConfig.from_file(Path(config_file).resolve(), solver)
-        self.data = DataStructure()
+        self.data = data_structure or DataStructure()
 
     @property
     def mfile_path(self):
@@ -295,7 +300,7 @@ class VaryRun:
             if input file doesn't exist
         """
         init.init_all_module_vars()
-        self.config.setup()
+        self.config.setup(self.data)
 
         setup_loggers(Path(self.config.wdir) / "process.log")
 
@@ -328,11 +333,11 @@ class SingleRun:
             which solver to use, as specified in solver.py
         """
         self.input_file = Path(input_file)
+        self.data = data_structure or DataStructure()
 
         self.validate_input(update_obsolete)
         self.init_module_vars()
         self.set_filenames(filepath_out)
-        self.data = data_structure or DataStructure()
         self.initialise()
         self.models = Models(self.data)
         self.solver = solver
@@ -368,7 +373,7 @@ class SingleRun:
             .replace("MFILE.DAT", "")
         ).strip()
         self.set_input()
-        data_structure.global_variables.output_prefix = (
+        self.data.globals.output_prefix = (
             f"{Path(self.filepath).as_posix().strip()}/"
             if not self.filename_prefix
             else Path(self.filepath, self.filename_prefix).as_posix().strip()
@@ -397,22 +402,18 @@ class SingleRun:
             )
 
         # Set the input file in the Fortran
-        data_structure.global_variables.fileprefix = self.input_path.resolve()
+        self.data.globals.fileprefix = self.input_path.resolve()
 
     def set_output(self):
         """Set the output file name.
 
         Set Path object on the Process object, and set the prefix in the Fortran.
         """
-        self.output_path = Path(
-            data_structure.global_variables.output_prefix + "OUT.DAT"
-        )
+        self.output_path = Path(self.data.globals.output_prefix + "OUT.DAT")
 
     def set_mfile(self):
         """Set the mfile filename."""
-        self.mfile_path = Path(
-            data_structure.global_variables.output_prefix + "MFILE.DAT"
-        )
+        self.mfile_path = Path(self.data.globals.output_prefix + "MFILE.DAT")
 
     def initialise(self):
         """Run the init module to call all initialisation routines."""

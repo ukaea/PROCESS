@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import global_variables
 from process.models.tfcoil import superconducting as sctf
 
 
@@ -429,7 +428,7 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
         superconparam.f_b_tf_inboard_peak_ripple_symmetric,
     )
 
-    monkeypatch.setattr(global_variables, "run_tests", superconparam.run_tests)
+    monkeypatch.setattr(cicc_sctfcoil.data.globals, "run_tests", superconparam.run_tests)
 
     tf_limits = cicc_sctfcoil.tf_cable_in_conduit_superconductor_properties(
         i_tf_superconductor=superconparam.i_tf_superconductor,

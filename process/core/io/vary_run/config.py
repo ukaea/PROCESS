@@ -13,7 +13,6 @@ from shutil import SameFileError, copy
 import click
 from numpy.random import default_rng
 
-from process import data_structure
 from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile
 from process.core.io.vary_run.tools import (
@@ -26,6 +25,7 @@ from process.core.io.vary_run.tools import (
     process_warnings,
     set_variable_in_indat,
 )
+from process.core.model import DataStructure
 
 logger = logging.getLogger(__name__)
 
@@ -261,7 +261,7 @@ iteration variables should get varied"""
     def modify_in_dat(self):
         """Modifies the original IN.DAT file"""
 
-    def setup(self):
+    def setup(self, data: DataStructure):
         """Sets up the program for running"""
         self.echo()
 
@@ -275,10 +275,8 @@ iteration variables should get varied"""
 
         self.generator = default_rng(seed=self.u_seed)
 
-        data_structure.global_variables.output_prefix = str(
-            self.wdir / self.outfile.strip("MFILE.DAT")
-        )
-        data_structure.global_variables.fileprefix = str(self.wdir / self.infile)
+        data.globals.output_prefix = str(self.wdir / self.outfile.strip("MFILE.DAT"))
+        data.globals.fileprefix = str(self.wdir / self.infile)
 
     @staticmethod
     def run_process(input_path: Path, solver: str = "vmcon"):

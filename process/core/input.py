@@ -103,15 +103,15 @@ class InputVariable:
 
 
 INPUT_VARIABLES = {
-    "runtitle": InputVariable(data_structure.global_variables, str),
-    "verbose": InputVariable(data_structure.global_variables, int, choices=[0, 1]),
-    "run_tests": InputVariable(data_structure.global_variables, int, choices=[0, 1]),
+    "runtitle": InputVariable("globals", str),
+    "verbose": InputVariable("globals", int, choices=[0, 1]),
+    "run_tests": InputVariable("globals", int, choices=[0, 1]),
     "ioptimz": InputVariable(data_structure.numerics, int, choices=[1, -2]),
     "epsvmc": InputVariable(data_structure.numerics, float, range=(0.0, 1.0)),
     "boundl": InputVariable(data_structure.numerics, float, array=True),
     "boundu": InputVariable(data_structure.numerics, float, array=True),
     "epsfcn": InputVariable(data_structure.numerics, float, range=(0.0, 1.0)),
-    "maxcal": InputVariable(data_structure.global_variables, int, range=(0, 10000)),
+    "maxcal": InputVariable("globals", int, range=(0, 10000)),
     "minmax": InputVariable(data_structure.numerics, int),
     "neqns": InputVariable(
         data_structure.numerics, int, range=(0, ConstraintManager.num_constraints())
@@ -1144,7 +1144,7 @@ INPUT_VARIABLES = {
 
 
 def parse_input_file(data_structure_obj: DataStructure):
-    input_file = data_structure.global_variables.fileprefix
+    input_file = data_structure_obj.globals.fileprefix
 
     input_file_path = Path("IN.DAT")
     if input_file != "":
