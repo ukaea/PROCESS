@@ -17522,7 +17522,7 @@ icc = 11
 *---------------------*
 icc = 5
 ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
-fdene = 1.2
+f_nd_plasma_electron_limit_max = 1.2
 nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
@@ -17667,7 +17667,7 @@ ixc = 154 *fne0
 
 icc = 68
 ixc = 117 *fpsepbqar
-psepbqarmax = 10.0
+p_div_bt_q_aspect_rmajor_max_mw = 10.0
 
 * TF coil stress limits *
 *-----------------------*

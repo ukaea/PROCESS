@@ -465,6 +465,7 @@ OBS_VARS = {
     "f_alpha_energy_confinement_min": "f_t_alpha_energy_confinement_min",
     "zeff_max": "n_charge_plasma_effective_vol_avg_max",
     "psepbqarmax": "p_div_bt_q_aspect_rmajor_max_mw",
+    "fdene": "f_nd_plasma_electron_limit_max",
 }
 
 OBS_VARS_HELP = {

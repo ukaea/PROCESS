@@ -9012,7 +9012,7 @@ ixc = 4 * temp_plasma_electron_vol_avg_keV
 boundu(4) = 150.0
 ixc = 5 * beta
 ixc = 6 * nd_plasma_electrons_vol_avg
-ixc = 9 * fdene
+ixc = 9 * f_nd_plasma_electron_limit_max
 boundu(9) = 1.2
 ixc = 13 * dr_tf_inboard
 boundl(13) = 1.4
@@ -9104,7 +9104,7 @@ dr_shld_blkt_gap  = 0.02 * gap between vacuum vessel and blanket (m)
 *---------------Constraint Variables---------------*
 
 fbeta_max = 0.4815 * F-value for beta limit
-fdene    = 1.2 * F-value for density limit
+f_nd_plasma_electron_limit_max    = 1.2 * F-value for density limit
 fp_fusion_total_max_mw  = 1 * F-value for maximum fusion power
 fjohc    = 0.25 * F-value for central solenoid current at end-of-flattop
 fjohc0   = 0.25 * F-value for central solenoid current at beginning of pulse
@@ -9118,7 +9118,7 @@ fpflux_fw_neutron_max_mw   = 0.1312 * F-value for maximum wall load
 p_plant_electric_net_required_mw = 500.0 * Required net electric power (mw)
 t_burn_min   = 7.2e3 * Minimum burn time (s)
 pflux_fw_neutron_max_mw   = 8.0 * Allowable wall-load (mw/m2)
-psepbqarmax = 9.2 * maximum ratio of Psep*Bt/qAR (MWT/m)
+p_div_bt_q_aspect_rmajor_max_mw = 9.2 * maximum ratio of Psep*Bt/qAR (MWT/m)
 
 *------------------Cost Variables------------------*
 
@@ -9316,7 +9316,7 @@ t_plant_pulse_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
                      temp_plasma_electron_vol_avg_keV             =  1.2330E+01
                      beta           =  3.1421E-02
                      nd_plasma_electrons_vol_avg           =  7.4321E+19
-                     fdene          =  1.2000E+00
+                     f_nd_plasma_electron_limit_max          =  1.2000E+00
                      oacdcp         =  8.6739E+06
                      dr_tf_inboard          =  1.2080E+00
                      fpflux_fw_neutron_max_mw         =  1.3100E-01

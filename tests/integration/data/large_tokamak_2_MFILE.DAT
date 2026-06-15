@@ -496,7 +496,7 @@
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      9.1650E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      2.2270E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.9512E+00    
- Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
+ Lower_limit_on_taup/taueff______________________________________________ (f_t_alpha_energy_confinement_min)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.8018E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.4553E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.9603E-03 OP 
@@ -1231,7 +1231,7 @@ icc = 11
 *---------------------*
 icc = 5
 ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
-fdene = 1.2
+f_nd_plasma_electron_limit_max = 1.2
 nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
@@ -1347,7 +1347,7 @@ temp_cs_superconductor_margin_min = 1.5
 *-------------------------------------------------------------------------------*
 icc = 62 
 ixc = 110 * falpha_energy_confinement
-f_alpha_energy_confinement_min = 5.0
+f_t_alpha_energy_confinement_min = 5.0
 
 * dump time constraint for VV stresses *
 *--------------------------------------*
@@ -1374,7 +1374,7 @@ ixc = 154 *fne0
 
 icc = 68
 ixc = 117 *fpsepbqar
-psepbqarmax = 10.0
+p_div_bt_q_aspect_rmajor_max_mw = 10.0
 
 * TF coil stress limits *
 *-----------------------*
