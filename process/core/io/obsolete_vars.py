@@ -473,6 +473,7 @@ OBS_VARS = {
     "i_cs_stress": None,
     "f_nd_alpha_electron": "f_nd_alpha_thermal_electron",
     "cost_model": "i_cost_model",
+    "t_conductor": "dx_tf_turn_conduit_full_average",
 }
 
 OBS_VARS_HELP = {
