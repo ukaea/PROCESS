@@ -85,7 +85,7 @@ fjohc = 0.7
 * I_op/I_Crit TF coil limit *
 *---------------------------*
 icc = 33
-fiooic = 0.70 * margin for TF coil operating current / critical current ratio
+f_j_tf_wp_critical_max = 0.70 * margin for TF coil operating current / critical current ratio
 
 * Dump voltage upper limit *
 *--------------------------*

@@ -435,7 +435,7 @@ INPUT_VARIABLES = {
     "f_nd_plasma_electron_limit_max": InputVariable(
         "constraints", float, range=(0.001, 10.0)
     ),
-    "fiooic": InputVariable("constraints", float, range=(0.001, 1.0)),
+    "f_j_tf_wp_critical_max": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fjohc": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fjohc0": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fdiva": InputVariable("divertor", float, range=(0.1, 2.0)),

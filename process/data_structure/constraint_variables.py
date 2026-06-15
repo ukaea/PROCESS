@@ -22,8 +22,8 @@ class ConstraintData:
     """Maximum allowed plasma radiation fraction at the separatrix
     (`constraint equation 17`)"""
 
-    fiooic: float = 0.7
-    """Constraint margin for TF coil operating current / critical current ratio
+    f_j_tf_wp_critical_max: float = 0.7
+    """Max allowed ratio of TF winding pack current density to critical current density
     (`constraint equation 33`)
     """
 

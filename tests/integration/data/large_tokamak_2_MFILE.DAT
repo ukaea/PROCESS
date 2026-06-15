@@ -1311,9 +1311,9 @@ f_j_cs_start_pulse_end_flat_top = 0.9
 * I_op/I_Crit TF coil limit *
 *---------------------------*
 icc = 33
-ixc = 50 * fiooic
+ixc = 50 * f_j_tf_wp_critical_max
 boundu(50) = 1.0
-fiooic = 0.65
+f_j_tf_wp_critical_max = 0.65
 
 * Dump voltage upper limit *
 *--------------------------*

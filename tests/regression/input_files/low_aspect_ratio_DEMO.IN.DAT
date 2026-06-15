@@ -241,7 +241,7 @@ f_c_plasma_non_inductive = 4.92677875380845121e-01
 * DESCRIPTION:   fraction of the plasma current produced by non-inductive means
 * JUSTIFICATION: We have a pulsed reactor so this can vary 
 
-fiooic = 1.0
+f_j_tf_wp_critical_max = 1.0
 * DESCRIPTION:   margin for TF coil operating current / critical current density ratio
 * JUSTIFICATION: Constraint equation 33 is used
 

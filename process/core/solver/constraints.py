@@ -868,16 +868,16 @@ def constraint_equation_33(constraint_registration, data):
 
     args : output structure : residual error; constraint value;
 
-    fiooic: margin for TF coil operating current / critical
+    f_j_tf_wp_critical_max: margin for TF coil operating current / critical
     j_tf_wp_critical: critical current density for winding pack (A/m²)
     j_tf_wp: winding pack current density (A/m²)
 
-    fiooic scales the constraint such that:
-    j_tf_wp / j_tf_wp_critical <= fiooic.
+    f_j_tf_wp_critical_max scales the constraint such that:
+    j_tf_wp / j_tf_wp_critical <= f_j_tf_wp_critical_max.
     """
     return leq(
         data.tfcoil.j_tf_wp,
-        (data.tfcoil.j_tf_wp_critical * data.constraints.fiooic),
+        (data.tfcoil.j_tf_wp_critical * data.constraints.f_j_tf_wp_critical_max),
         constraint_registration,
     )
 

@@ -155,7 +155,7 @@ def st_coil(stellarator, output: bool, data: DataStructure):
             coppera_m2_max=data.rebco.coppera_m2_max,
             f_a_scu_of_wp=f_a_scu_of_wp,
             f_vv_actual=f_vv_actual,
-            fiooic=data.constraints.fiooic,
+            f_j_tf_wp_critical_max=data.constraints.f_j_tf_wp_critical_max,
             inductance=inductance,
             max_force_density=data.tfcoil.max_force_density,
             max_force_density_mnm=max_force_density_mnm,
@@ -423,7 +423,7 @@ def winding_pack_total_size(
         )  # Get here a temperature margin from data.tfcoil.tmargtf.
 
     # The operation current density weighted with the global iop/icrit fraction
-    lhs[:] = data.constraints.fiooic * jcrit_vector
+    lhs[:] = data.constraints.f_j_tf_wp_critical_max * jcrit_vector
 
     # Superconductor fraction in wp
     fraction_area_superconductor_of_wp = (
