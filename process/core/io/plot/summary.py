@@ -15914,13 +15914,13 @@ def main_plot(
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.STEP_STACKED_TAPES
         ):
-            plot_205 = figs[19].add_subplot(223)
+            plot_205 = figs[25].add_subplot(223)
             plot_205.set_position([0.075, 0.1, 0.3, 0.3])
             plot_tf_step_vertical_tape_turn(
-                ax20,
-                figs[19],
-                m_file,
-                scan,
+                axis=plot_205,
+                fig=figs[25],
+                mfile=m_file,
+                scan=scan,
                 dr_tf_turn=m_file.get("dr_tf_turn", scan=scan),
                 dx_tf_turn=m_file.get("dx_tf_turn", scan=scan),
                 dia_tf_turn_coolant_channel=m_file.get(
@@ -15935,8 +15935,8 @@ def main_plot(
                 dr_tf_turn_stabiliser=m_file.get("dr_tf_turn_stabiliser", scan=scan),
             )
             plot_hts_tape(
-                plot_205,
-                figs[19],
+                figs[25].add_subplot(339, aspect="equal"),
+                figs[25],
                 m_file,
                 scan,
                 dx_hts_tape_rebco=m_file.get("dx_hts_tape_rebco", scan=scan),

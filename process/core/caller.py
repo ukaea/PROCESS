@@ -310,6 +310,13 @@ class Caller:
                 == SuperconductingTFTurnType.CROSS_CONDUCTOR
             ):
                 self.models.croco_sctfcoil.run()
+            elif (
+                SuperconductingTFTurnType(
+                    self.data.superconducting_tfcoil.i_tf_turn_type
+                )
+                == SuperconductingTFTurnType.STEP_STACKED_TAPES
+            ):
+                self.models.step_sctfcoil.run()
 
         if self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             self.models.aluminium_tf_coil.run()

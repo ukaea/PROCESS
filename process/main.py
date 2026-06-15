@@ -119,6 +119,7 @@ from process.models.tfcoil.resistive import (
 from process.models.tfcoil.superconducting import (
     CICCSuperconductingTFCoil,
     CROCOSuperconductingTFCoil,
+    STEPSuperconductingTFCoil,
     SuperconductingTFCoil,
 )
 from process.models.vacuum import Vacuum, VacuumVessel
@@ -617,6 +618,7 @@ class Models:
         self.sctfcoil = SuperconductingTFCoil()
         self.cicc_sctfcoil = CICCSuperconductingTFCoil()
         self.croco_sctfcoil = CROCOSuperconductingTFCoil()
+        self.step_sctfcoil = STEPSuperconductingTFCoil()
         self.tfcoil = TFCoil()
         self.resistive_tf_coil = ResistiveTFCoil()
         self.copper_tf_coil = CopperTFCoil()
@@ -745,6 +747,7 @@ class Models:
             self.copper_tf_coil,
             self.cicc_sctfcoil,
             self.croco_sctfcoil,
+            self.step_sctfcoil,
             self.tfcoil,
             self.build,
             self.shield,

@@ -80,6 +80,8 @@ def write(models, data, _outfile):
             models.cicc_sctfcoil.output()
         elif tf_turn_type == SuperconductingTFTurnType.CROSS_CONDUCTOR:
             models.croco_sctfcoil.output()
+        elif tf_turn_type == SuperconductingTFTurnType.STEP_STACKED_TAPES:
+            models.step_sctfcoil.output()
         else:
             raise ValueError(
                 "Unsupported superconducting TF turn type: "
