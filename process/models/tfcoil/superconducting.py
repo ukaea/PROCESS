@@ -2824,13 +2824,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         and also the protection information (for a quench).
         Not used for the CroCo conductor.
 
-        The critical current density for a superconductor
-        (``j_superconductor_critical``) is for the superconducting strands/tape,
-        not including copper. The critical current density for
-        a cable (``j_crit_cable``) accounts for both the fraction of the cable taken
-        up by helium coolant channels, and the cable conductor copper fraction
-        (i.e., the copper in the superconducting strands and any additional copper,
-        such as REBCO tape support).
         """
         if (
             SuperconductorModel(i_tf_superconductor).sc_shape
