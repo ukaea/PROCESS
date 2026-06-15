@@ -758,6 +758,13 @@ def scan_summary(scan):
         converged_percentage = converged_count / self.data.scan.isweep * 100
         print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
 
+    def scan_2d(self):
+        """Run a 2-D scan."""
+        # Initialise intent(out) arrays
+        self.scan_2d_init()
+
+        self.output_2d_summary(scan_2d_ifail_list)
+
     def scan_2d_init(self):
         sv = self.data.scan
         for d, n, v in (

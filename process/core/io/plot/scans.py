@@ -80,7 +80,12 @@ def get_list_padded(inp, names):
     return inp_array[:target_len]
 
 
-def value_checks(scan_var, scan_2_var, m_file, is_2D_scan, input_files):
+def value_checks(
+    scan_var: ScanVariables,
+    scan_2_var: ScanVariables | None,
+    m_file: MFile,
+    input_files: Sequence[Path],
+):
     ve_string = (
         "`{}` does not exist in PROCESS dicts\n"
         " The scan variable is probably an upper/lower boundary\n"
@@ -91,11 +96,12 @@ def value_checks(scan_var, scan_2_var, m_file, is_2D_scan, input_files):
         raise ValueError(ve_string.format(scan_var.name))
 
     # Check if the second scan variable is present
-    if is_2D_scan and (scan_2_var.name not in m_file.data):
-        raise ValueError(ve_string.format(scan_2_var.name))
+    if scan_2_var is not None:
+        if scan_2_var.name not in m_file.data:
+            raise ValueError(ve_string.format(scan_2_var.name))
 
-    if is_2D_scan and len(input_files) > 1:
-        raise ValueError("Only one input file can be used for 2D scans")
+        if len(input_files) > 1:
+            raise ValueError("Only one input file can be used for 2D scans")
 
 
 def array_check(output_name: str, m_file: MFile) -> bool:
@@ -170,7 +176,6 @@ def plot_scan(
     """Main plot scans script."""
     outputdir = outputdir or Path.cwd()
     input_files = mfiles if isinstance(mfiles, Iterable) else [mfiles]
-    is_2D_scan = False
 
     # If the input file is a directory, add MFILE.DAT
     for ii, if_ in enumerate(input_files):
@@ -183,11 +188,13 @@ def plot_scan(
     scan_var = ScanVariables(nsweep_ref)
 
     # Get the eventual second scan variable
-    if "nsweep_2" in m_file.data:
-        is_2D_scan = True
-        scan_2_var = ScanVariables(int(m_file.get("nsweep_2", scan=-1)))
+    scan_2_var = (
+        ScanVariables(int(m_file.get("nsweep_2", scan=-1)))
+        if "nsweep_2" in m_file.data
+        else None
+    )
 
-    value_checks(scan_var, scan_2_var, m_file, is_2D_scan, input_files)
+    value_checks(scan_var, scan_2_var, m_file, input_files)
 
     x_max = get_list_padded(x_axis_max, output_names)
     x_axis = AxisData(
@@ -198,19 +205,7 @@ def plot_scan(
     y_axis = AxisData(
         "y", y_axis_percent, y_max, y_axis_range, axis_tick_size, axis_font_size
     )
-    if is_2D_scan:
-        twod_scan(
-            input_files,
-            scan_var,
-            scan_2_var,
-            output_names,
-            outputdir,
-            save_format,
-            x_axis,
-            y_axis,
-            twod_contour=twod_contour,
-        )
-    else:
+    if scan_2_var is None:
         y_axis2 = AxisData(
             "y",
             y_axis_percent2,
@@ -248,6 +243,18 @@ def plot_scan(
             y_axis,
             y_axis2,
             stack_plots=stack_plots,
+        )
+    else:
+        twod_scan(
+            input_files,
+            scan_var,
+            scan_2_var,
+            output_names,
+            outputdir,
+            save_format,
+            x_axis,
+            y_axis,
+            twod_contour=twod_contour,
         )
 
 
