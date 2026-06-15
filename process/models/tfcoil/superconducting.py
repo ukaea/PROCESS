@@ -4016,7 +4016,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
             cur_tf_turn=self.data.tfcoil.c_tf_turn,
             temp_tf_peak=self.data.tfcoil.tftmp,
-            a_tf_turn_cable_space_effective=self.data.superconducting_tfcoil.a_tf_turn_cable_space_effective,
             i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
             dr_tf_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
             dx_tf_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
@@ -4458,7 +4457,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         b_tf_inboard_peak: float,
         cur_tf_turn: float,
         temp_tf_peak: float,
-        a_tf_turn_cable_space_effective: float,
         i_tf_superconductor: int,
         dr_tf_hts_tape: float,
         dx_tf_hts_tape_rebco: float,
@@ -4514,8 +4512,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             strain = self.data.tfcoil.str_tf_con_res
         else:
             strain = self.data.tfcoil.str_wp
-
-        f_a_tf_turn_tape_superconductor = dx_tf_hts_tape_rebco / dx_tf_hts_tape_total
 
         # =================================================================
 
@@ -4577,12 +4573,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             )
 
         # =================================================================
-
-        # Scale for the copper area fraction of the cable
-        j_tape_critical = j_superconductor_critical * f_a_tf_turn_tape_superconductor
-
-        #  Critical current in turn all turn cables
-        c_turn_cables_critical = j_tape_critical * a_tf_turn_cable_space_effective
 
         # Strand critical current calulation for costing in $ / kAm
         # Already includes buffer and support layers so no need to include
