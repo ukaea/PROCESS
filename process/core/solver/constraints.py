@@ -1272,7 +1272,7 @@ def constraint_equation_63(constraint_registration, data):
 
 @ConstraintManager.register_constraint(64, "", "<=")
 def constraint_equation_64(constraint_registration, data):
-    """Upper limit on Zeff
+    """Upper limit on volume averaged plasma effective charge Zeff
 
     n_charge_plasma_effective_vol_avg_max: maximum value for Zeff
     n_charge_plasma_effective_vol_avg: plasma effective charge

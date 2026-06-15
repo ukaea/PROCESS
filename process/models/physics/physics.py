@@ -1003,9 +1003,10 @@ class Physics(Model):
             + self.data.current_drive.p_hcd_injected_total_mw
         )
         self.data.physics.f_p_plasma_separatrix_rad = (
-            1.0e6
-            * self.data.physics.p_plasma_rad_mw
-            / self.data.physics.p_plasma_heating_total_mw
+            self.exhaust.calculate_radiation_fraction(
+                p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
+                p_plasma_heating_mw=self.data.physics.p_plasma_heating_total_mw,
+            )
         )
         self.data.physics.rad_fraction_total = (
             self.data.physics.f_p_plasma_separatrix_rad
