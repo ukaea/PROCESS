@@ -3006,18 +3006,7 @@ class CSCoil(Model):
         Returns
         -------
         CSGeometry
-            Data class containing the geometry parameters of the CS coil, including:
-            - z_cs_coil_upper: Upper Z coordinate of CS coil [m]
-            - z_cs_coil_lower: Lower Z coordinate of CS coil [m]
-            - r_cs_coil_middle: Radial coordinate of CS coil centre [m]
-            - r_cs_middle: Mean radius of CS coil [m]
-            - z_cs_coil_middle: Z coordinate of CS coil centre [m]
-            - r_cs_coil_outer: Outer radius of CS coil [m]
-            - r_cs_coil_inner: Inner radius of CS coil [m]
-            - a_cs_poloidal: Total poloidal cross-sectional area of CS coil [m²]
-            - a_cs_toroidal: Total top-down toroidal cross-sectional area of CS coil [m²]
-            - dz_cs_full: Full height of CS coil [m]
-            - dr_cs_full: Full radial thickness of CS coil [m]
+            Data class containing the geometry parameters of the CS coil
         """
         # Central Solenoid mean radius
         r_cs_middle = dr_bore + (0.5e0 * dr_cs)
@@ -3087,12 +3076,9 @@ class CSCoil(Model):
 
         Returns
         -------
-        CSEUDEMOTurnGeometry
-            - dz_cs_turn: Depth/width of CS turn conduit (m)
-            - dr_cs_turn: Length of CS turn conduit (m)
-            - radius_cs_turn_cable_space: Radius of CS turn cable space (m)
-            - dr_cs_turn_conduit: Radial thickness of steel conduit (m)
-            - dz_cs_turn_conduit: Vertical thickness of steel conduit (m)
+        CSEUDEMOTurnGeometry:
+            Data class to hold the geometry parameters of a CS turn using the EU DEMO stadium-shaped model
+
 
         Notes
         -----
@@ -3288,13 +3274,11 @@ class CSCoil(Model):
             / self.data.pf_coil.n_pf_coil_turns[self.data.pf_coil.n_cs_pf_coils - 1]
         )
 
-        eu_demo_turn_geometry: CSEUDEMOTurnGeometry = (
-            self.calculate_cs_turn_geometry_eu_demo(
-                a_cs_turn=self.data.pf_coil.a_cs_turn,
-                f_dr_dz_cs_turn=self.data.pf_coil.f_dr_dz_cs_turn,
-                radius_cs_turn_corners=self.data.pf_coil.radius_cs_turn_corners,
-                f_a_cs_turn_steel=self.data.pf_coil.f_a_cs_turn_steel,
-            )
+        eu_demo_turn_geometry = self.calculate_cs_turn_geometry_eu_demo(
+            a_cs_turn=self.data.pf_coil.a_cs_turn,
+            f_dr_dz_cs_turn=self.data.pf_coil.f_dr_dz_cs_turn,
+            radius_cs_turn_corners=self.data.pf_coil.radius_cs_turn_corners,
+            f_a_cs_turn_steel=self.data.pf_coil.f_a_cs_turn_steel,
         )
 
         self.data.pf_coil.dz_cs_turn = eu_demo_turn_geometry.dz_cs_turn

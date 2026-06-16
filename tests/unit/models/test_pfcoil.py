@@ -2097,7 +2097,7 @@ def test_brookscoil(pfcoil):
 def test_calculate_cs_geometry(
     cs_coil, z_tf_inside_half, f_z_cs_tf_internal, dr_cs, dr_bore, expected
 ):
-    result: CSGeometry = cs_coil.calculate_cs_geometry(
+    result = cs_coil.calculate_cs_geometry(
         z_tf_inside_half=z_tf_inside_half,
         f_z_cs_tf_internal=f_z_cs_tf_internal,
         dr_cs=dr_cs,
