@@ -54,7 +54,7 @@ Issues        = "https://github.com/ukaea/process/issues"
 test = [
   "pytest>=5.4.1",
   "testbook>=0.4",
-  "pytest-cov>=3.0.0",
+  "pytest-cov>=7.1.0",
   "pytest-xdist>=2.5.0",
   "platformdirs~=4.5.0",
   "filelock",
