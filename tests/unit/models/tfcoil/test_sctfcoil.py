@@ -1153,7 +1153,7 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
         tfintegerturngeomparam.expected_t_conductor
     )
 
-    assert cicc_sctfcoil.data.tfcoil.dx_tf_turn_general == pytest.approx(
+    assert integer_turn_geometry.dx_tf_turn_general == pytest.approx(
         tfintegerturngeomparam.expected_dx_tf_turn_general
     )
 
