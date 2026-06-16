@@ -69,7 +69,7 @@ docs = [
   "mkdocs-git-revision-date-localized-plugin>=1.2",
   "mkdocs-glightbox>=0.3.4",
   "pymdown-extensions>=6.3",
-  "bokeh>=3.4.0,<4",
+  "bokeh>=3.9.1,<4",
   "mkdocstrings[python]==1.0.3",
   "Jinja2>=3.0",
   "mkdocs-jupyter>=0.24,<0.26",
