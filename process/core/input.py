@@ -19,6 +19,7 @@ from process.core.solver.constraints import ConstraintManager
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.pfcoil_variables import N_PF_GROUPS_MAX
 from process.data_structure.physics_variables import N_CONFINEMENT_SCALINGS
+from process.data_structure.scan_variables import IPNSCNS, IPNSCNV
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -68,11 +69,12 @@ class InputVariable:
     been cast to the specified `type`.
     """
     additional_actions: (
-        Callable[[str, ValidInputTypes, int | None, InputVariable], None] | None
+        Callable[[str, ValidInputTypes, int | None, InputVariable, DataStructure], None]
+        | None
     ) = None
-    """A function that takes the input variable: name, value, array index, and config (this dataclass)
-    as input and performs some additional action in addition to the default actions prescribed by the variables
-    config. May raise a ProcessValidationError.
+    """A function that takes the input variable: name, value, array index, config (this dataclass), and
+    the data structure object as input and performs some additional action in addition to the default
+    actions prescribed by the variables config. May raise a ProcessValidationError.
 
     NOTE: The value passed in has already been cleaned in the default
     way and has been cast to the specified `type`.
@@ -1049,7 +1051,7 @@ INPUT_VARIABLES = {
     "output_costs": InputVariable("costs", int, choices=[0, 1]),
     "i_p_coolant_pumping": InputVariable("fwbs", int, range=(0, 3)),
     "reinke_mode": InputVariable("reinke", int, choices=[0, 1]),
-    "scan_dim": InputVariable(data_structure.scan_variables, int, range=(1, 2)),
+    "scan_dim": InputVariable("scan", int, range=(1, 2)),
     "i_thermal_electric_conversion": InputVariable("fwbs", int, range=(0, 4)),
     "secondary_cycle_liq": InputVariable("fwbs", int, range=(2, 4)),
     "supercond_cost_model": InputVariable("costs", int, choices=[0, 1]),
@@ -1091,27 +1093,27 @@ INPUT_VARIABLES = {
     "v2matf": InputVariable("ife", float, array=True),
     "v3matf": InputVariable("ife", float, array=True),
     "isweep": InputVariable(
-        data_structure.scan_variables,
+        "scan",
         int,
-        choices=range(data_structure.scan_variables.IPNSCNS + 1),
+        choices=range(IPNSCNS + 1),
     ),
     "nsweep": InputVariable(
-        data_structure.scan_variables,
+        "scan",
         int,
-        choices=range(1, data_structure.scan_variables.IPNSCNV + 1),
+        choices=range(1, IPNSCNV + 1),
     ),
     "isweep_2": InputVariable(
-        data_structure.scan_variables,
+        "scan",
         int,
-        choices=range(data_structure.scan_variables.IPNSCNS + 1),
+        choices=range(IPNSCNS + 1),
     ),
     "nsweep_2": InputVariable(
-        data_structure.scan_variables,
+        "scan",
         int,
-        choices=range(1, data_structure.scan_variables.IPNSCNV + 1),
+        choices=range(1, IPNSCNV + 1),
     ),
-    "sweep": InputVariable(data_structure.scan_variables, float, array=True),
-    "sweep_2": InputVariable(data_structure.scan_variables, float, array=True),
+    "sweep": InputVariable("scan", float, array=True),
+    "sweep_2": InputVariable("scan", float, array=True),
     "impvardiv": InputVariable(
         "reinke",
         int,

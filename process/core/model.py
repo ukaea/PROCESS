@@ -27,6 +27,7 @@ from process.data_structure.primary_pumping_variables import PrimaryPumpingData
 from process.data_structure.pulse_variables import PulseData
 from process.data_structure.rebco_variables import RebcoData
 from process.data_structure.reinke_variables import ReinkeData
+from process.data_structure.scan_variables import ScanData
 from process.data_structure.stellarator_configuration import StellaratorConfigData
 from process.data_structure.stellarator_variables import StellaratorData
 from process.data_structure.structure_variables import StructureData
@@ -77,6 +78,7 @@ class DataStructure:
     tfcoil: TFData = initialise_later
     superconducting_tfcoil: SuperconductingTFData = initialise_later
     globals: GlobalData = initialise_later
+    scan: ScanData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):
