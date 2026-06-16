@@ -95,12 +95,12 @@ jobs:
       - name: Move other files
         run: mv tests/regression/input_files/*.json tracking/
       - name: Archive tracked MFILEs
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: tracked-mfiles
           path: tracking/*_MFILE.DAT
       - name: Archive tracked SIG_TF.json
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: sig-tfs
           path: tracking/*.json
@@ -193,7 +193,7 @@ jobs:
       - name: Create the tracking dashboard
         run: hatch run python tracking/tracking_data.py plot process-tracking-data --out tracking.html
       - name: Archive tracking dashboard
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: tracking-html
           path: tracking.html
