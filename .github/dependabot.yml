@@ -2,7 +2,7 @@
 version: 2
 updates:
   - package-ecosystem: "pip"
-    target-branch: "develop_dependencies"
+    target-branch: "main"
     directory: "/"
     schedule:
       interval: "weekly"
