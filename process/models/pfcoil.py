@@ -3315,7 +3315,7 @@ class CSCoil(Model):
         )
 
         # Peak field at the End-Of-Flattop (EOF)
-        # Occurs at inner edge of coil; b_cs_self_peak_flat_top_end and bzi are of opposite sign at EOF
+        # Occurs at inner edge of coil; b_cs_self_peak_flat_top_end and b_pf_inner_vertical are of opposite sign at EOF
 
         # Peak field due to central Solenoid itself
         b_cs_self_peak_flat_top_end = self.calculate_cs_self_peak_magnetic_field(
@@ -3333,24 +3333,26 @@ class CSCoil(Model):
 
         # Peak field due to other PF coils plus plasma
         timepoint = 5
-        _, _, bzi, bzo = peak_b_field_at_pf_coil(
+        _, _, b_pf_inner_vertical, b_pf_outer_vertical = peak_b_field_at_pf_coil(
             n_coil=self.data.pf_coil.n_cs_pf_coils,
             n_coil_group=99,
             t_b_field_peak=timepoint,
             data=self.data,
         )
 
-        self.data.pf_coil.b_cs_peak_flat_top_end = abs(bzi - b_cs_self_peak_flat_top_end)
+        self.data.pf_coil.b_cs_peak_flat_top_end = abs(
+            b_pf_inner_vertical - b_cs_self_peak_flat_top_end
+        )
 
         # Peak field on outboard side of central Solenoid
         # (self-field is assumed to be zero - long solenoid approximation)
 
         self.data.pf_coil.b_cs_self_outer_midplane = 0.0
 
-        bohco = abs(bzo)
+        bohco = abs(b_pf_outer_vertical)
 
         # Peak field at the Beginning-Of-Pulse (BOP)
-        # Occurs at inner edge of coil; b_cs_peak_pulse_start and bzi are of same sign at BOP
+        # Occurs at inner edge of coil; b_cs_peak_pulse_start and b_pf_inner_vertical are of same sign at BOP
         self.data.pf_coil.b_cs_peak_pulse_start = (
             self.calculate_cs_self_peak_magnetic_field(
                 j_cs=self.data.pf_coil.j_cs_pulse_start,
@@ -3366,7 +3368,7 @@ class CSCoil(Model):
             )
         )
         timepoint = 2
-        _, _, bzi, bzo = peak_b_field_at_pf_coil(
+        _, _, b_pf_inner_vertical, b_pf_outer_vertical = peak_b_field_at_pf_coil(
             n_coil=self.data.pf_coil.n_cs_pf_coils,
             n_coil_group=99,
             t_b_field_peak=timepoint,
@@ -3374,7 +3376,7 @@ class CSCoil(Model):
         )
 
         self.data.pf_coil.b_cs_peak_pulse_start = abs(
-            self.data.pf_coil.b_cs_peak_pulse_start + bzi
+            self.data.pf_coil.b_cs_peak_pulse_start + b_pf_inner_vertical
         )
 
         # Maximum field values
@@ -3383,7 +3385,7 @@ class CSCoil(Model):
             abs(self.data.pf_coil.b_cs_peak_pulse_start),
         )
         self.data.pf_coil.bpf2[self.data.pf_coil.n_cs_pf_coils - 1] = max(
-            bohco, abs(bzo)
+            bohco, abs(b_pf_outer_vertical)
         )
 
         # Stress ==> cross-sectional area of supporting steel to use
