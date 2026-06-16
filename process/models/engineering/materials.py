@@ -4,6 +4,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+poisson_steel: float = 0.3
+"""Steel Poisson's ratio, Source : https://www.engineeringtoolbox.com/metals-poissons-ratio-d_1268.html"""
+
 
 def eurofer97_thermal_conductivity(temp: float, fw_th_conductivity: float) -> float:
     """Calculates the thermal conductivity of the first wall material (Eurofer97).

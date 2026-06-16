@@ -9,6 +9,7 @@ are also many variables that could be asserted, so a few key variables central
 to the testing of the subroutine have been chosen.
 """
 
+from dataclasses import fields
 from typing import NamedTuple
 
 import numpy as np
@@ -18,6 +19,8 @@ from numpy.testing import assert_array_almost_equal
 from process.core import constants
 from process.data_structure.pfcoil_variables import N_PF_COILS_IN_GROUP_MAX
 from process.models.pfcoil import (
+    CSEUDEMOTurnGeometry,
+    CSGeometry,
     PFCoil,
     calculate_b_field_at_point,
     fixb,
@@ -1964,85 +1967,37 @@ def test_vsec(pfcoil, monkeypatch):
     assert_array_almost_equal(pfcoil.data.pf_coil.vs_cs_total_pulse, vsoh_exp)
 
 
-def test_hoop_stress(cs_coil, monkeypatch):
+def test_hoop_stress(cs_coil):
     """Test hoop_stress subroutine.
 
-    hoop_stress() requires specific mocked variables in order to work; these were
+    calculate_cs_hoop_stress() requires specific mocked variables in order to work; these were
     discovered using gdb to break on the first subroutine call when running the
     baseline 2018 IN.DAT.
 
-    :param pfcoil: PFCoil object
-    :type pfcoil: process.pfcoil.PFCoil
+    :param cs_coil: CSCoil object
+    :type cs_coil: process.pfcoil.CSCoil
     :param monkeypatch: mocking fixture
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
     """
-    monkeypatch.setattr(cs_coil.data.pf_coil, "f_a_cs_turn_steel", 0.57874999999999999)
-    monkeypatch.setattr(
-        cs_coil.data.pf_coil, "b_cs_peak_pulse_start", 13.522197474024983
-    )
-    monkeypatch.setattr(cs_coil.data.pf_coil, "j_cs_pulse_start", 19311657.760000002)
-    monkeypatch.setattr(cs_coil.data.pf_coil, "n_cs_pf_coils", 7)
-    monkeypatch.setattr(
-        cs_coil.data.pf_coil,
-        "r_pf_coil_outer",
-        np.array([
-            6.8520884119768697,
-            6.9480065348448967,
-            18.98258241468535,
-            18.98258241468535,
-            17.22166645654087,
-            17.22166645654087,
-            2.88462,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-        ]),
-    )
-    monkeypatch.setattr(
-        cs_coil.data.pf_coil,
-        "r_pf_coil_inner",
-        np.array([
-            5.6944236847973242,
-            5.5985055619292972,
-            17.819978201682968,
-            17.819978201682968,
-            16.385123084628962,
-            16.385123084628962,
-            2.3321999999999998,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-        ]),
-    )
-    monkeypatch.setattr(cs_coil.data.tfcoil, "poisson_steel", 0.29999999999999999)
 
-    r = 2.3
+    r_stress_point = 2.3
+    r_cs_inner = 2.3321999999999998
+    r_cs_outer = 2.88462
+    j_cs = 19311657.760000002
+    b_cs_inner = 13.522197474024983
+    f_poisson_cs_structure = 0.29999999999999999
+    f_a_cs_turn_steel = 0.57874999999999999
+
     s_hoop_exp = 6.737108e8
-    s_hoop = cs_coil.hoop_stress(r)
+    s_hoop = cs_coil.calculate_cs_hoop_stress(
+        r_stress_point,
+        r_cs_inner,
+        r_cs_outer,
+        j_cs,
+        b_cs_inner,
+        f_poisson_cs_structure,
+        f_a_cs_turn_steel,
+    )
 
     assert pytest.approx(s_hoop) == s_hoop_exp
 
@@ -2090,11 +2045,53 @@ def test_brookscoil(pfcoil):
     ("z_tf_inside_half", "f_z_cs_tf_internal", "dr_cs", "dr_bore", "expected"),
     [
         # Typical values
-        (2.0, 0.5, 0.3, 0.15, (1.0, -1.0, 0.3, 0.3, 0.0, 0.45, 0.15, 0.6, 2.0, 0.9)),
+        (
+            2.0,
+            0.5,
+            0.3,
+            0.15,
+            CSGeometry(
+                1.0,
+                -1.0,
+                0.3,
+                0.3,
+                0.0,
+                0.44999999999999996,
+                0.14999999999999997,
+                0.6,
+                0.5654866776461627,
+                2.0,
+                0.8999999999999999,
+            ),
+        ),
         # Zero thickness
-        (2.0, 0.5, 0.0, 0.0, (1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0)),
+        (
+            2.0,
+            0.5,
+            0.0,
+            0.0,
+            CSGeometry(1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0.0),
+        ),
         # Zero fractional height
-        (2.0, 0.0, 0.3, 1.5, (0.0, -0.0, 1.65, 1.65, 0.0, 1.8, 1.5, 0.0, 0.0, 3.6)),
+        (
+            2.0,
+            0.0,
+            0.3,
+            1.5,
+            CSGeometry(
+                0.0,
+                -0.0,
+                1.65,
+                1.65,
+                0.0,
+                1.7999999999999998,
+                1.4999999999999998,
+                0.0,
+                3.1101767270538945,
+                0.0,
+                3.5999999999999996,
+            ),
+        ),
     ],
 )
 def test_calculate_cs_geometry(
@@ -2106,7 +2103,10 @@ def test_calculate_cs_geometry(
         dr_cs=dr_cs,
         dr_bore=dr_bore,
     )
-    assert pytest.approx(result) == expected
+    for field in fields(result):
+        assert pytest.approx(getattr(result, field.name)) == getattr(
+            expected, field.name
+        )
 
 
 @pytest.mark.parametrize(
@@ -2267,27 +2267,22 @@ def test_calculate_cs_turn_geometry_eu_demo_basic(cs_coil):
     radius_cs_turn_corners = 0.01  # m
     f_a_cs_turn_steel = 0.4
 
-    (
-        dz_cs_turn,
-        dr_cs_turn,
-        radius_cs_turn_cable_space,
-        dr_cs_turn_conduit,
-        dz_cs_turn_conduit,
-    ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
+    result = cs_coil.calculate_cs_turn_geometry_eu_demo(
         a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
     )
 
     # Check types and positivity
-    assert isinstance(dz_cs_turn, float)
-    assert isinstance(dr_cs_turn, float)
-    assert isinstance(radius_cs_turn_cable_space, float)
-    assert isinstance(dr_cs_turn_conduit, float)
-    assert isinstance(dz_cs_turn_conduit, float)
-    assert dz_cs_turn > 0
-    assert dr_cs_turn > 0
-    assert radius_cs_turn_cable_space > 0
-    assert dr_cs_turn_conduit > 0
-    assert dz_cs_turn_conduit > 0
+    assert isinstance(result, CSEUDEMOTurnGeometry)
+    assert isinstance(result.dz_cs_turn, float)
+    assert isinstance(result.dr_cs_turn, float)
+    assert isinstance(result.radius_cs_turn_cable_space, float)
+    assert isinstance(result.dr_cs_turn_conduit, float)
+    assert isinstance(result.dz_cs_turn_conduit, float)
+    assert result.dz_cs_turn > 0
+    assert result.dr_cs_turn > 0
+    assert result.radius_cs_turn_cable_space > 0
+    assert result.dr_cs_turn_conduit > 0
+    assert result.dz_cs_turn_conduit > 0
 
 
 @pytest.mark.parametrize(
@@ -2300,18 +2295,12 @@ def test_calculate_cs_turn_geometry_eu_demo_zero_corner(
     cs_coil, a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
 ):
     # Test with zero corner radius
-    (
-        dz_cs_turn,
-        dr_cs_turn,
-        radius_cs_turn_cable_space,
-        _dr_cs_turn_conduit,
-        _dz_cs_turn_conduit,
-    ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
+    result = cs_coil.calculate_cs_turn_geometry_eu_demo(
         a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
     )
-    assert dz_cs_turn > 0
-    assert dr_cs_turn > 0
-    assert radius_cs_turn_cable_space > 0
+    assert result.dz_cs_turn > 0
+    assert result.dr_cs_turn > 0
+    assert result.radius_cs_turn_cable_space > 0
 
 
 @pytest.mark.parametrize(
@@ -2324,17 +2313,11 @@ def test_calculate_cs_turn_geometry_eu_demo_high_aspect(
     cs_coil, a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
 ):
     # High aspect ratio
-    (
-        dz_cs_turn,
-        dr_cs_turn,
-        radius_cs_turn_cable_space,
-        _dr_cs_turn_conduit,
-        _dz_cs_turn_conduit,
-    ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
+    result = cs_coil.calculate_cs_turn_geometry_eu_demo(
         a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
     )
-    assert dr_cs_turn > dz_cs_turn
-    assert radius_cs_turn_cable_space > 0
+    assert result.dr_cs_turn > result.dz_cs_turn
+    assert result.radius_cs_turn_cable_space > 0
 
 
 @pytest.mark.parametrize(
@@ -2347,28 +2330,25 @@ def test_calculate_cs_turn_geometry_eu_demo_output_consistency(
     cs_coil, a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
 ):
     # Check that the sum of cable space and conduit thicknesses doesn't exceed half-width
-    (
-        dz_cs_turn,
-        _dr_cs_turn,
-        radius_cs_turn_cable_space,
-        _dr_cs_turn_conduit,
-        dz_cs_turn_conduit,
-    ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
+    result = cs_coil.calculate_cs_turn_geometry_eu_demo(
         a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
     )
     # The cable space plus conduit thickness should not exceed half the turn width
-    assert radius_cs_turn_cable_space + dz_cs_turn_conduit <= dz_cs_turn / 2 + 1e-8
+    assert (
+        result.radius_cs_turn_cable_space + result.dz_cs_turn_conduit
+        <= result.dz_cs_turn / 2 + 1e-8
+    )
 
 
 def test_calculate_cs_self_peak_midplane_axial_stress_basic(cs_coil):
     # Typical values for a CS coil
     r_cs_outer = 2.0
-    r_cs_inner = 1.5
+    a_cs_toroidal = 5.497787144
     dz_cs_half = 1.0
     c_cs_peak = 1.2e7  # 12 MA
 
     s_axial, force_axial = cs_coil.calculate_cs_self_peak_midplane_axial_stress(
-        r_cs_outer, r_cs_inner, dz_cs_half, c_cs_peak
+        r_cs_outer, dz_cs_half, c_cs_peak, a_cs_toroidal
     )
 
     # Check actual output numbers
@@ -2383,12 +2363,12 @@ def test_calculate_cs_self_peak_midplane_axial_stress_basic(cs_coil):
 def test_calculate_cs_self_peak_midplane_axial_stress_zero_current(cs_coil):
     # Zero current should yield zero force and stress
     r_cs_outer = 2.0
-    r_cs_inner = 1.5
+    a_cs_toroidal = 5.497787144
     dz_cs_half = 1.0
     c_cs_peak = 0.0
 
     s_axial, force_axial = cs_coil.calculate_cs_self_peak_midplane_axial_stress(
-        r_cs_outer, r_cs_inner, dz_cs_half, c_cs_peak
+        r_cs_outer, dz_cs_half, c_cs_peak, a_cs_toroidal
     )
 
     assert pytest.approx(s_axial) == 0.0
@@ -2398,12 +2378,12 @@ def test_calculate_cs_self_peak_midplane_axial_stress_zero_current(cs_coil):
 def test_calculate_cs_self_peak_midplane_axial_stress_extreme_geometry(cs_coil):
     # Very thin coil, large dz_cs_half
     r_cs_outer = 1.01
-    r_cs_inner = 1.0
+    a_cs_toroidal = 0.06314601234
     dz_cs_half = 10.0
     c_cs_peak = 1.0e7
 
     s_axial, force_axial = cs_coil.calculate_cs_self_peak_midplane_axial_stress(
-        r_cs_outer, r_cs_inner, dz_cs_half, c_cs_peak
+        r_cs_outer, dz_cs_half, c_cs_peak, a_cs_toroidal
     )
 
     # Check actual output numbers
@@ -2417,12 +2397,12 @@ def test_calculate_cs_self_peak_midplane_axial_stress_extreme_geometry(cs_coil):
 def test_calculate_cs_self_peak_midplane_axial_stress_invalid(cs_coil):
     # Negative dz_cs_half should still return floats, but may be positive force
     r_cs_outer = 2.0
-    r_cs_inner = 1.5
+    a_cs_toroidal = 5.497787144
     dz_cs_half = 2.0
     c_cs_peak = 1.2e7
 
     s_axial, force_axial = cs_coil.calculate_cs_self_peak_midplane_axial_stress(
-        r_cs_outer, r_cs_inner, dz_cs_half, c_cs_peak
+        r_cs_outer, dz_cs_half, c_cs_peak, a_cs_toroidal
     )
 
     # Check actual output numbers
@@ -2608,7 +2588,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     monkeypatch.setattr(cs_coil.data.pf_coil, "p_cs_resistive_flat_top", 0.0)
     monkeypatch.setattr(cs_coil.data.pf_coil, "j_cs_critical_pulse_start", 3.048e7)
     monkeypatch.setattr(cs_coil.data.pf_coil, "s_shear_cs_peak", 5.718e8)
-    monkeypatch.setattr(cs_coil.data.pf_coil, "awpoh", 4.232)
+    monkeypatch.setattr(cs_coil.data.pf_coil, "a_cs_cable_space", 4.232)
     monkeypatch.setattr(cs_coil.data.pf_coil, "f_a_cs_turn_steel", 5.926e-1)
     monkeypatch.setattr(cs_coil.data.pf_coil, "b_cs_peak_pulse_start", 1.4e1)
     monkeypatch.setattr(cs_coil.data.pf_coil, "j_cs_critical_flat_top_end", 4.070e7)

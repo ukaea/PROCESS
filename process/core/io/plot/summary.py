@@ -24,6 +24,7 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.build import Build
+from process.models.engineering.materials import poisson_steel
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -47,6 +48,7 @@ from process.models.geometry.vacuum_vessel import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )
+from process.models.pfcoil import CSCoil
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.confinement_time import (
     ConfinementTimeModel,
@@ -10050,6 +10052,7 @@ def plot_cs_coil_structure(
         f"CS full height: {mfile.get('dz_cs_full', scan=scan):.4f} m\n"
         f"CS full width: {mfile.get('dr_cs_full', scan=scan):.4f} m\n"
         f"CS poloidal area: {mfile.get('a_cs_poloidal', scan=scan):.4f} m$^2$\n"
+        f"CS top-down toroidal area: {mfile.get('a_cs_toroidal', scan=scan):.4f} m$^2$\n"
         f"$N_{{\\text{{turns}}}}:$ {mfile.get('n_pf_coil_turns[n_cs_pf_coils-1]', scan=scan):,.2f}\n"
         f"$I_{{\\text{{peak}}}}:$ {mfile.get('c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]', scan=scan):.3f}$ \\ MA$\n"
         f"$B_{{\\text{{peak}}}}:$ {mfile.get('b_pf_coil_peak[n_cs_pf_coils-1]', scan=scan):.3f}$ \\ T$\n"
@@ -10131,14 +10134,14 @@ def plot_cs_stress_time_profile(axis: plt.Axes, mfile: MFile, scan: int) -> None
         stress_z_cs_self_midplane_profile / 1e6,
         "o-",
         linewidth=2,
-        markersize=8,
-        label="Midplane Axial Stress",
+        markersize=4,
+        label="$\\sigma_{z}$,Axial Stress",
     )
     axis.set_xlabel("Pulse Time (s)")
-    axis.set_ylabel("Stress (MPa)")
+    axis.set_ylabel("Midplane Axial Stress (MPa)")
     axis.minorticks_on()
     axis.legend(loc="best")
-    axis.set_title("Central Solenoid Stress")
+    axis.set_title("CS Midplane Axial Stress Time Profile")
     axis.grid(True, alpha=0.3)
 
 
@@ -10169,7 +10172,7 @@ def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
             edgecolor="black",
             facecolor="grey",
             lw=1.5,
-            label="CS Turn Steel conduit",
+            label="CS Turn Steel Conduit",
         )
     )
 
@@ -15222,6 +15225,81 @@ def plot_pf_cs_plasma_mutual_inductance(
     axis.get_figure().colorbar(im, ax=axis, label="Mutual Inductance (H)")
 
 
+def plot_cs_radial_hoop_stress_profile(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    j_cs: float,
+    b_cs_inner: float,
+):
+    r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+    r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+
+    radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
+    stress_values = np.array([
+        CSCoil.calculate_cs_hoop_stress(
+            r_stress_point=radius,
+            r_cs_inner=r_cs_inner,
+            r_cs_outer=r_cs_outer,
+            j_cs=j_cs,
+            b_cs_inner=b_cs_inner,
+            f_poisson_cs_structure=poisson_steel,
+            f_a_cs_turn_steel=mfile.get("f_a_cs_turn_steel", scan=scan),
+        )
+        for radius in radii
+    ])
+
+    axis.plot(
+        radii,
+        stress_values / 1e6,
+        linewidth=2,
+        label="$\\sigma_{\\theta}$,Hoop Stress",
+    )
+    axis.set_xlabel("Radial Position (m)")
+    axis.set_ylabel("Hoop Stress (MPa)")
+    axis.minorticks_on()
+    axis.legend(loc="best")
+    axis.set_title("CS Hoop Stress at BOP")
+    axis.grid(True, alpha=0.3)
+
+
+def plot_cs_radial_stress_profile(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    j_cs: float,
+    b_cs_inner: float,
+):
+    r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+    r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+
+    radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
+    stress_values = np.array([
+        CSCoil.calculate_cs_radial_stress(
+            r_stress_point=radius,
+            r_cs_inner=r_cs_inner,
+            r_cs_outer=r_cs_outer,
+            j_cs=j_cs,
+            b_cs_inner=b_cs_inner,
+            f_poisson_cs_structure=poisson_steel,
+        )
+        for radius in radii
+    ])
+
+    axis.plot(
+        radii,
+        stress_values / 1e6,
+        linewidth=2,
+        label="$\\sigma_{r}$,Radial Stress",
+    )
+    axis.set_xlabel("Radial Position (m)")
+    axis.set_ylabel("Radial Stress (MPa)")
+    axis.minorticks_on()
+    axis.grid(True, alpha=0.3)
+    axis.set_title("CS Radial Stress at BOP")
+    axis.legend(loc="best")
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -15589,7 +15667,23 @@ def main_plot(
 
     plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
 
-    plot_cs_stress_time_profile(axis=figs[32].add_subplot(311), mfile=m_file, scan=scan)
+    plot_cs_stress_time_profile(axis=figs[32].add_subplot(431), mfile=m_file, scan=scan)
+
+    plot_cs_radial_hoop_stress_profile(
+        axis=figs[32].add_subplot(432),
+        mfile=m_file,
+        scan=scan,
+        j_cs=m_file.get("j_cs_pulse_start", scan=scan),
+        b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
+    )
+
+    plot_cs_radial_stress_profile(
+        axis=figs[32].add_subplot(433),
+        mfile=m_file,
+        scan=scan,
+        j_cs=m_file.get("j_cs_pulse_start", scan=scan),
+        b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
+    )
 
     plot_cs_coil_structure(
         figs[32].add_subplot(223, aspect="equal"), figs[32], m_file, scan
@@ -15597,6 +15691,7 @@ def main_plot(
     plot_cs_turn_structure(
         figs[32].add_subplot(326, aspect="equal"), figs[32], m_file, scan
     )
+    figs[32].subplots_adjust(wspace=0.3)
 
     plot_first_wall_top_down_cross_section(
         figs[33].add_subplot(221, aspect="equal"), m_file, scan

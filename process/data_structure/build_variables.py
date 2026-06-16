@@ -146,10 +146,10 @@ class BuildData:
     """
 
     dr_cs: float = 0.811
-    """Central solenoid thickness (m) (`iteration variable 16`)"""
+    """Central solenoid radial thickness (m) (`iteration variable 16`)"""
 
     dr_cs_precomp: float = 0.0
-    """CS coil precompression structure thickness (m)"""
+    """CS coil precompression structure radial thickness (m)"""
 
     rbld: float = 0.0
     """sum of thicknesses to the major radius (m)"""
