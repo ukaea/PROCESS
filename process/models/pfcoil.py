@@ -8,6 +8,7 @@ import numpy as np
 from scipy import optimize
 from scipy.linalg import svd
 from scipy.special import ellipe, ellipk
+from tabulate import tabulate
 
 from process.core import constants
 from process.core import process_output as op
@@ -2393,18 +2394,47 @@ class PFCoil(Model):
             self.data.pf_coil.nef -= 1
 
         op.osubhd(self.outfile, "Geometry of PF coils, central solenoid and plasma:")
-        op.write(
-            self.outfile,
-            "Coil\t\t\tR(m)\t\tZ(m)\t\tdR(m)\t\tdZ(m)\t\tturns",
-        )
         op.oblnkl(self.outfile)
 
         # PF coils
-        for k in range(self.data.pf_coil.nef):
-            op.write(
-                self.outfile,
-                f"PF {k}\t\t\t{self.data.pf_coil.r_pf_coil_middle[k]:.2e}\t{self.data.pf_coil.z_pf_coil_middle[k]:.2e}\t{self.data.pf_coil.r_pf_coil_outer[k] - self.data.pf_coil.r_pf_coil_inner[k]:.2e}\t{abs(self.data.pf_coil.z_pf_coil_upper[k] - self.data.pf_coil.z_pf_coil_lower[k]):.2e}\t{self.data.pf_coil.n_pf_coil_turns[k]:.2e}",
-            )
+        pf_coil_geometry_rows = [
+            [
+                f"PF {k}",
+                f"{self.data.pf_coil.r_pf_coil_middle[k]:.2e}",
+                f"{self.data.pf_coil.z_pf_coil_middle[k]:.2e}",
+                f"{self.data.pf_coil.r_pf_coil_outer[k] - self.data.pf_coil.r_pf_coil_inner[k]:.2e}",
+                f"{abs(self.data.pf_coil.z_pf_coil_upper[k] - self.data.pf_coil.z_pf_coil_lower[k]):.2e}",
+                f"{self.data.pf_coil.n_pf_coil_turns[k]:.2e}",
+            ]
+            for k in range(self.data.pf_coil.nef)
+        ]
+
+        if self.data.build.iohcl != 0:
+            cs_index = self.data.pf_coil.n_cs_pf_coils - 1
+            pf_coil_geometry_rows.append([
+                "CS",
+                f"{self.data.pf_coil.r_pf_coil_middle[cs_index]:.2e}",
+                f"{self.data.pf_coil.z_pf_coil_middle[cs_index]:.2e}",
+                f"{self.data.pf_coil.r_pf_coil_outer[cs_index] - self.data.pf_coil.r_pf_coil_inner[cs_index]:.2e}",
+                f"{abs(self.data.pf_coil.z_pf_coil_upper[cs_index] - self.data.pf_coil.z_pf_coil_lower[cs_index]):.2e}",
+                f"{self.data.pf_coil.n_pf_coil_turns[cs_index]:.2e}",
+            ])
+
+        pf_coil_geometry_rows.append([
+            "Plasma",
+            f"{self.data.physics.rmajor:.2e}",
+            "0.0e0",
+            f"{2.0e0 * self.data.physics.rminor:.2e}",
+            f"{2.0e0 * self.data.physics.rminor * self.data.physics.kappa:.2e}",
+            "1.0e0",
+        ])
+
+        for line in tabulate(
+            pf_coil_geometry_rows,
+            headers=["Coil", "R(m)", "Z(m)", "dR(m)", "dZ(m)", "turns"],
+            tablefmt="plain",
+        ).splitlines():
+            op.write(self.outfile, line)
 
         for k in range(self.data.pf_coil.nef):
             op.ovarre(
@@ -2460,12 +2490,7 @@ class PFCoil(Model):
             )
         self.tf_pf_collision_detector()
 
-        # Central Solenoid, if present
         if self.data.build.iohcl != 0:
-            op.write(
-                self.outfile,
-                f"CS\t\t\t\t{self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.z_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.r_pf_coil_outer[self.data.pf_coil.n_cs_pf_coils - 1] - self.data.pf_coil.r_pf_coil_inner[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{abs(self.data.pf_coil.z_pf_coil_upper[self.data.pf_coil.n_cs_pf_coils - 1] - self.data.pf_coil.z_pf_coil_lower[self.data.pf_coil.n_cs_pf_coils - 1]):.2e}\t{self.data.pf_coil.n_pf_coil_turns[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.pfcaseth[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}",
-            )
             op.ovarre(
                 self.mfile,
                 "Central solenoid radius (m)",
@@ -2524,81 +2549,99 @@ class PFCoil(Model):
                 self.data.pf_coil.b_pf_coil_peak[self.data.pf_coil.n_cs_pf_coils - 1],
             )
 
-        # Plasma
-        op.write(
-            self.outfile,
-            f"Plasma\t\t\t{self.data.physics.rmajor:.2e}\t0.0e0\t\t{2.0e0 * self.data.physics.rminor:.2e}\t{2.0e0 * self.data.physics.rminor * self.data.physics.kappa:.2e}\t1.0e0",
-        )
-
         op.oblnkl(self.outfile)
         op.ocmmnt(self.outfile, "----------------------------")
         op.oblnkl(self.outfile)
 
         op.osubhd(self.outfile, "PF Coil Information at Peak Current:")
 
-        op.write(
-            self.outfile,
-            r"Coil   Peak Current   Critical J  Peak J        Critical J Ratio  Cond. Mass     Steel Mass     Field",
-        )
-        op.write(
-            self.outfile,
-            "       (MA)          (A/m²)      (A/m²)          (-)            (kg)            (kg)           (T)",
-        )
-
-        op.oblnkl(self.outfile)
+        headers = [
+            "Coil",
+            "Peak Current (MA)",
+            "Critical J (A/m²)",
+            "Peak J (A/m²)",
+            "Critical J Ratio (-)",
+            "Cond. Mass (kg)",
+            "Steel Mass (kg)",
+            "Field (T)",
+        ]
+        rows = []
 
         # PF coils
         for k in range(self.data.pf_coil.nef):
             if self.data.pf_coil.i_pf_conductor == 0:
-                op.write(
-                    self.outfile,
-                    f"PF {k}   {self.data.pf_coil.c_pf_cs_coils_peak_ma[k]:{'.3e' if self.data.pf_coil.c_pf_cs_coils_peak_ma[k] >= 0 else '.2e'}}    "
-                    f"{self.data.pf_coil.j_pf_wp_critical[k]:{'.3e' if self.data.pf_coil.j_pf_wp_critical[k] >= 0 else '.2e'}}    "
-                    f"{self.data.pf_coil.j_pf_coil_wp_peak[k]:{'.3e' if self.data.pf_coil.j_pf_coil_wp_peak[k] >= 0 else '.2e'}}      "
-                    f"{self.data.pf_coil.j_pf_coil_wp_peak[k] / self.data.pf_coil.j_pf_wp_critical[k]:{'.3e' if (self.data.pf_coil.j_pf_coil_wp_peak[k] / self.data.pf_coil.j_pf_wp_critical[k]) >= 0 else '.2e'}}          "
-                    f"{self.data.pf_coil.m_pf_coil_conductor[k]:{'.3e' if self.data.pf_coil.m_pf_coil_conductor[k] >= 0 else '.2e'}}          "
-                    f"{self.data.pf_coil.m_pf_coil_structure[k]:{'.3e' if self.data.pf_coil.m_pf_coil_structure[k] >= 0 else '.2e'}}          "
-                    f"{self.data.pf_coil.b_pf_coil_peak[k]:{'.3e' if self.data.pf_coil.b_pf_coil_peak[k] >= 0 else '.2e'}}",
-                )
+                rows.append([
+                    f"PF {k}",
+                    f"{self.data.pf_coil.c_pf_cs_coils_peak_ma[k]:.3e}",
+                    f"{self.data.pf_coil.j_pf_wp_critical[k]:.3e}",
+                    f"{self.data.pf_coil.j_pf_coil_wp_peak[k]:.3e}",
+                    f"{self.data.pf_coil.j_pf_coil_wp_peak[k] / self.data.pf_coil.j_pf_wp_critical[k]:.3e}",
+                    f"{self.data.pf_coil.m_pf_coil_conductor[k]:.3e}",
+                    f"{self.data.pf_coil.m_pf_coil_structure[k]:.3e}",
+                    f"{self.data.pf_coil.b_pf_coil_peak[k]:.3e}",
+                ])
             else:
-                op.write(
-                    self.outfile,
-                    f"PF {k}   {self.data.pf_coil.c_pf_cs_coils_peak_ma[k]:.2e}\t-1.0e0\t{self.data.pf_coil.j_pf_coil_wp_peak[k]:.2e}\t1.0e0\t{self.data.pf_coil.m_pf_coil_conductor[k]:.2e}\t{self.data.pf_coil.m_pf_coil_structure[k]:.2e}\t{self.data.pf_coil.b_pf_coil_peak[k]:.2e}\t",
-                )
+                rows.append([
+                    f"PF {k}",
+                    f"{self.data.pf_coil.c_pf_cs_coils_peak_ma[k]:.3e}",
+                    "-1.0e0",
+                    f"{self.data.pf_coil.j_pf_coil_wp_peak[k]:.3e}",
+                    "1.0e0",
+                    f"{self.data.pf_coil.m_pf_coil_conductor[k]:.3e}",
+                    f"{self.data.pf_coil.m_pf_coil_structure[k]:.3e}",
+                    f"{self.data.pf_coil.b_pf_coil_peak[k]:.3e}",
+                ])
 
         # Central Solenoid, if present
         if self.data.build.iohcl != 0:
+            cs_index = self.data.pf_coil.n_cs_pf_coils - 1
+            cs_peak_j = max(
+                abs(self.data.pf_coil.j_cs_pulse_start),
+                abs(self.data.pf_coil.j_cs_flat_top_end),
+            )
             if self.data.pf_coil.i_pf_conductor == 0:
                 # Issue #328
-                op.write(
-                    self.outfile,
-                    f"CS    {self.data.pf_coil.c_pf_cs_coils_peak_ma[self.data.pf_coil.n_cs_pf_coils - 1]:{'.3e' if self.data.pf_coil.c_pf_cs_coils_peak_ma[self.data.pf_coil.n_cs_pf_coils - 1] >= 0 else '.2e'}}    "
-                    f"{self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1]:{'.3e' if self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1] >= 0 else '.2e'}}    "
-                    f"{max(abs(self.data.pf_coil.j_cs_pulse_start), abs(self.data.pf_coil.j_cs_flat_top_end)):{'.3e' if max(abs(self.data.pf_coil.j_cs_pulse_start), abs(self.data.pf_coil.j_cs_flat_top_end)) >= 0 else '.2e'}}      "
-                    f"{max(abs(self.data.pf_coil.j_cs_pulse_start), abs(self.data.pf_coil.j_cs_flat_top_end)) / self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1]:{'.3e' if (max(abs(self.data.pf_coil.j_cs_pulse_start), abs(self.data.pf_coil.j_cs_flat_top_end)) / self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1]) >= 0 else '.2e'}}          "
-                    f"{self.data.pf_coil.m_pf_coil_conductor[self.data.pf_coil.n_cs_pf_coils - 1]:{'.3e' if self.data.pf_coil.m_pf_coil_conductor[self.data.pf_coil.n_cs_pf_coils - 1] >= 0 else '.2e'}}          "
-                    f"{self.data.pf_coil.m_pf_coil_structure[self.data.pf_coil.n_cs_pf_coils - 1]:{'.3e' if self.data.pf_coil.m_pf_coil_structure[self.data.pf_coil.n_cs_pf_coils - 1] >= 0 else '.2e'}}          "
-                    f"{self.data.pf_coil.b_pf_coil_peak[self.data.pf_coil.n_cs_pf_coils - 1]:{'.3e' if self.data.pf_coil.b_pf_coil_peak[self.data.pf_coil.n_cs_pf_coils - 1] >= 0 else '.2e'}}",
-                )
+                rows.append([
+                    "CS",
+                    f"{self.data.pf_coil.c_pf_cs_coils_peak_ma[cs_index]:.3e}",
+                    f"{self.data.pf_coil.j_pf_wp_critical[cs_index]:.3e}",
+                    f"{cs_peak_j:.3e}",
+                    f"{(cs_peak_j / self.data.pf_coil.j_pf_wp_critical[cs_index]):.3e}",
+                    f"{self.data.pf_coil.m_pf_coil_conductor[cs_index]:.3e}",
+                    f"{self.data.pf_coil.m_pf_coil_structure[cs_index]:.3e}",
+                    f"{self.data.pf_coil.b_pf_coil_peak[cs_index]:.3e}",
+                ])
             else:
-                op.write(
-                    self.outfile,
-                    f"CS     {self.data.pf_coil.c_pf_cs_coils_peak_ma[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(self.data.pf_coil.j_cs_pulse_start), abs(self.data.pf_coil.j_cs_flat_top_end)):.2e}\t1.0e0\t{self.data.pf_coil.m_pf_coil_conductor[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.m_pf_coil_structure[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}\t{self.data.pf_coil.b_pf_coil_peak[self.data.pf_coil.n_cs_pf_coils - 1]:.2e}",
-                )
+                rows.append([
+                    "CS",
+                    f"{self.data.pf_coil.c_pf_cs_coils_peak_ma[cs_index]:.3e}",
+                    "-1.0e0",
+                    f"{cs_peak_j:.3e}",
+                    "1.0e0",
+                    f"{self.data.pf_coil.m_pf_coil_conductor[cs_index]:.3e}",
+                    f"{self.data.pf_coil.m_pf_coil_structure[cs_index]:.3e}",
+                    f"{self.data.pf_coil.b_pf_coil_peak[cs_index]:.3e}",
+                ])
 
-        # Miscellaneous totals
-        op.write(
-            self.outfile,
-            "\t" * 1 + "------" + "\t" * 8 + "---------" + "\t" + "---------",
-        )
+        rows.append([
+            "Total",
+            f"{self.data.pf_coil.ricpf:.3e}",
+            "",
+            "",
+            "",
+            f"{self.data.pf_coil.m_pf_coil_conductor_total:.3e}",
+            f"{self.data.pf_coil.m_pf_coil_structure_total:.3e}",
+            "",
+        ])
 
-        op.write(
-            self.outfile,
-            "\t" * 1
-            + f"{self.data.pf_coil.ricpf:.2e}"
-            + "\t" * 7
-            + f"{self.data.pf_coil.m_pf_coil_conductor_total:.2e}\t{self.data.pf_coil.m_pf_coil_structure_total:.2e}",
-        )
+        op.oblnkl(self.outfile)
+        for line in tabulate(
+            rows,
+            headers=headers,
+            tablefmt="plain",
+            disable_numparse=True,
+        ).splitlines():
+            op.write(self.outfile, line)
 
         op.oblnkl(self.outfile)
         op.ocmmnt(self.outfile, "----------------------------")
