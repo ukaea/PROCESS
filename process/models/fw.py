@@ -122,6 +122,20 @@ class FirstWall(Model):
                 self.data.physics.p_neutron_total_mw / self.data.first_wall.a_fw_total
             )
 
+        (
+            self.data.fwbs.rad_fw_inboard_plasma_centre_toroidal,
+            self.data.fwbs.f_rad_fw_inboard_plasma_centre_toroidal,
+        ) = self.calculate_fw_inboard_load_toroidal_angle(
+            rmajor=self.data.physics.rmajor,
+            dr_fw_inboard_plasma=(
+                self.data.build.dr_fw_plasma_gap_inboard + self.data.physics.rminor
+            ),
+        )
+
+        self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal = np.degrees(
+            self.data.fwbs.rad_fw_inboard_plasma_centre_toroidal
+        )
+
         # Radiation surface heat flux on first wall (MW/m²)
         # The full area is used as the radiation is assumed to be uniformly distributed
         # across the first wall, so the coverage factors are not applied here.
@@ -811,6 +825,39 @@ class FirstWall(Model):
         n_fw_outboard_channels = a_fw_outboard / (len_fw_channel * dx_fw_module)
         return int(n_fw_inboard_channels), int(n_fw_outboard_channels)
 
+    @staticmethod
+    def calculate_fw_inboard_load_toroidal_angle(
+        rmajor, dr_fw_inboard_plasma
+    ) -> tuple[float, float]:
+        """Calculate the toroidal angle subtended by the inboard first wall.
+
+        Parameters
+        ----------
+        rmajor : float
+            Plasma major radius of the tokamak (m).
+        dr_fw_inboard_plasma : float
+            Radial distance between centre of plasma and inboard first wall surface (m).
+
+
+        Returns
+        -------
+        tuple
+            Toroidal angle subtended by the inboard first wall (radians) and the fraction of total toroidal angle.
+
+        Notes
+        -----
+        This formula is used assuming an isotropic ring source at `rmajor` and finds the
+        toroidal angle of particles that will hit the inboard first wall as if the
+        emission was from a flat sheet at the midplane
+
+
+        """
+        rad_fw_inboard_toroidal = 2 * np.arcsin(
+            (rmajor - dr_fw_inboard_plasma) / (rmajor)
+        )
+        f_rad_fw_inboard_toroidal = (rad_fw_inboard_toroidal) / (2 * np.pi)
+        return rad_fw_inboard_toroidal, f_rad_fw_inboard_toroidal
+
     def output_fw_geometry(self):
         """Outputs the first wall geometry details to the output file."""
         po.oheadr(self.outfile, "First wall build")
@@ -882,6 +929,26 @@ class FirstWall(Model):
             "(n_fw_outboard_channels)",
             self.data.blanket.n_fw_outboard_channels,
             "OP ",
+        )
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Toroidal angle subtended by inboard first wall from centre of the plasma [radians]",
+            "(rad_fw_inboard_plasma_centre_toroidal)",
+            self.data.fwbs.rad_fw_inboard_plasma_centre_toroidal,
+        )
+        po.ovarre(
+            self.outfile,
+            "Toroidal angle subtended by inboard first wall from centre of the plasma [degrees]",
+            "(deg_fw_inboard_plasma_centre_toroidal)",
+            self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal,
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of total toroidal angle subtended by inboard first wall from centre of the plasma",
+            "(f_rad_fw_inboard_plasma_centre_toroidal)",
+            self.data.fwbs.f_rad_fw_inboard_plasma_centre_toroidal,
         )
 
     def output_fw_pumping(self):
