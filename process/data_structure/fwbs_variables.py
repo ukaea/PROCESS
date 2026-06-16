@@ -750,5 +750,14 @@ class FWBSData:
     dz_fw_half: float = 0.0
     """Half-height of first wall structure [m]"""
 
+    rad_fw_inboard_plasma_centre_toroidal: float = 0.0
+    """Toroidal angle taken up by the inboard first wall as seen from the toroidal centre of the plasma [rad]"""
+
+    deg_fw_inboard_plasma_centre_toroidal: float = 0.0
+    """Toroidal angle taken up by the inboard first wall as seen from the toroidal centre of the plasma [deg]"""
+
+    f_rad_fw_inboard_plasma_centre_toroidal: float = 0.0
+    """Fraction of total toroidal angle taken up by the inboard first wall as seen from the toroidal centre of the plasma"""
+
 
 CREATE_DICTS_FROM_DATACLASS = FWBSData
