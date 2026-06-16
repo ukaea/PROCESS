@@ -2518,18 +2518,6 @@ class PFCoil(Model):
             )
             op.ovarre(
                 self.mfile,
-                "Central solenoid vertical thickness (m)",
-                "(dz_cs_full)",
-                (self.data.pf_coil.dz_cs_full),
-            )
-            op.ovarre(
-                self.mfile,
-                "Central solenoid full radial width (m)",
-                "(dr_cs_full)",
-                (self.data.pf_coil.dr_cs_full),
-            )
-            op.ovarre(
-                self.mfile,
                 "Central solenoid turns",
                 "(n_pf_coil_turns[n_cs_pf_coils-1])",
                 self.data.pf_coil.n_pf_coil_turns[self.data.pf_coil.n_cs_pf_coils - 1],
