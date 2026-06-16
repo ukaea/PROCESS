@@ -24,7 +24,7 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.build import Build
-from process.models.engineering.materials import poisson_steel
+from process.models.engineering.materials import calculate_tresca_stress, poisson_steel
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -3622,8 +3622,8 @@ def toroidal_cross_section(
     ang = i * spacing
     angl = ang - spacing / 2
     angu = ang + spacing / 2
-    r1, _null = cumulative_radial_build2("dr_cs_tf_gap", mfile, scan)
-    r2, _null = cumulative_radial_build2("dr_tf_inboard", mfile, scan)
+    r1, _ = cumulative_radial_build2("dr_cs_tf_gap", mfile, scan)
+    r2, _ = cumulative_radial_build2("dr_tf_inboard", mfile, scan)
     r4, r3 = cumulative_radial_build2("dr_tf_outboard", mfile, scan)
 
     # Coil width
@@ -4448,7 +4448,8 @@ def read_imprad_data(_skiprows, data_path):
         "Xe",
         "W_",
     ]
-    lzdata = [0.0 for x in range(len(label))]
+    _ = _skiprows
+    lzdata = [0.0 for _ in range(len(label))]
 
     for i in range(len(label)):
         file_iden = data_path + label[i].ljust(3, "_")
@@ -7235,7 +7236,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
         # Pack strands if significant void fraction
         if void_fraction > 0.001:
-            _n_strands, _attempts = _pack_strands_rectangular_with_obstacles(
+            _, _ = _pack_strands_rectangular_with_obstacles(
                 cable_space_bounds=cable_bounds,
                 pipe_center=(
                     turn_width / 2,
@@ -12789,14 +12790,10 @@ def plot_fusion_rate_contours(
         for i in range(n_plasma_profile_elements)
     ]
 
-    dt_grid, _r_grid, _z_grid = interp1d_profile(fusrat_plasma_dt_profile, mfile, scan)
+    dt_grid, _, _ = interp1d_profile(fusrat_plasma_dt_profile, mfile, scan)
 
-    dd_triton_grid, _r_grid, _z_grid = interp1d_profile(
-        fusrat_plasma_dd_triton_profile, mfile, scan
-    )
-    dd_helion_grid, _r_grid, _z_grid = interp1d_profile(
-        fusrat_plasma_dd_helion_profile, mfile, scan
-    )
+    dd_triton_grid, _, _ = interp1d_profile(fusrat_plasma_dd_triton_profile, mfile, scan)
+    dd_helion_grid, _, _ = interp1d_profile(fusrat_plasma_dd_helion_profile, mfile, scan)
     dhe3_grid, r_grid, z_grid = interp1d_profile(fusrat_plasma_dhe3_profile, mfile, scan)
 
     dt_axes = fig1.add_subplot(121, aspect="equal")
@@ -15300,6 +15297,539 @@ def plot_cs_radial_stress_profile(
     axis.legend(loc="best")
 
 
+def plot_cs_hoop_stress_profile(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    j_cs: float,
+    b_cs_inner: float,
+):
+    r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+    r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+
+    radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
+    stress_values = np.array([
+        CSCoil.calculate_cs_hoop_stress(
+            r_stress_point=radius,
+            r_cs_inner=r_cs_inner,
+            r_cs_outer=r_cs_outer,
+            j_cs=j_cs,
+            b_cs_inner=b_cs_inner,
+            f_poisson_cs_structure=poisson_steel,
+            f_a_cs_turn_steel=mfile.get("f_a_cs_turn_steel", scan=scan),
+        )
+        for radius in radii
+    ])
+
+    axis.plot(
+        radii,
+        stress_values / 1e6,
+        linewidth=2,
+        label="$\\sigma_{\\theta}$,Hoop Stress",
+    )
+    max_idx = np.argmax(np.abs(stress_values))
+    max_radius = radii[max_idx]
+    max_stress = stress_values[max_idx] / 1e6
+    axis.axvline(max_radius, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
+    axis.axhline(max_stress, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
+    axis.set_xlabel("Radial Position (m)")
+    axis.set_ylabel("Hoop Stress (MPa)")
+    axis.minorticks_on()
+    axis.legend(loc="center left", bbox_to_anchor=(1.02, 0.5))
+    axis.set_title("CS Hoop Stress at BOP")
+    axis.grid(True, alpha=0.3)
+
+
+def plot_cs_radial_stress_contour_profile(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    j_cs: float,
+    b_cs_inner: float,
+    colorbar_axis: plt.Axes | None = None,
+):
+    r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+    r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+    dz_cs_full = mfile.get("dz_cs_full", scan=scan)
+
+    # Create 2D grid for contour plot: radial and vertical dimensions
+    n_radial = 50
+    radial_grid = np.linspace(r_cs_inner, r_cs_outer, n_radial)
+    height_grid = np.linspace(-dz_cs_full / 2, dz_cs_full / 2, 20)
+
+    # Create meshgrid for filled contour
+    r, z = np.meshgrid(radial_grid, height_grid)
+
+    # Calculate radial stress across the 2D grid
+    stress_data = np.zeros((len(height_grid), n_radial))
+    for i in range(len(height_grid)):
+        for j in range(n_radial):
+            stress_data[i, j] = (
+                CSCoil.calculate_cs_radial_stress(
+                    r_stress_point=radial_grid[j],
+                    r_cs_inner=r_cs_inner,
+                    r_cs_outer=r_cs_outer,
+                    j_cs=j_cs,
+                    b_cs_inner=b_cs_inner,
+                    f_poisson_cs_structure=poisson_steel,
+                )
+                / 1e6
+            )
+
+    # Plot filled contour of stress distribution
+    contour_fill = axis.contourf(r, z, stress_data, levels=15, cmap="RdYlBu_r")
+    contour_lines = axis.contour(
+        r,
+        z,
+        stress_data,
+        levels=[stress_data.max()],
+        colors="black",
+        linewidths=0.5,
+        alpha=0.4,
+    )
+    axis.clabel(contour_lines, inline=True, fontsize=8)
+
+    # Plot CS outline
+    axis.plot(
+        [r_cs_inner, r_cs_inner],
+        [-dz_cs_full / 2, dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+        label="CS Inner",
+    )
+    axis.plot(
+        [r_cs_outer, r_cs_outer],
+        [-dz_cs_full / 2, dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+        label="CS Outer",
+    )
+    axis.plot(
+        [r_cs_inner, r_cs_outer], [dz_cs_full / 2, dz_cs_full / 2], "k-", linewidth=2
+    )
+    axis.plot(
+        [r_cs_inner, r_cs_outer],
+        [-dz_cs_full / 2, -dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+    )
+
+    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
+    if colorbar_axis is None:
+        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
+    else:
+        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    cbar.set_label("Radial Stress (MPa)")
+
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.minorticks_on()
+    axis.set_xlim(r_cs_inner * 0.9, r_cs_outer * 1.1)
+    axis.set_ylim((-dz_cs_full / 2) * 1.1, (dz_cs_full / 2) * 1.1)
+    axis.grid(True, alpha=0.3)
+
+
+def plot_cs_hoop_stress_contour_profile(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    j_cs: float,
+    b_cs_inner: float,
+    colorbar_axis: plt.Axes | None = None,
+):
+    r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+    r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+    dz_cs_full = mfile.get("dz_cs_full", scan=scan)
+    f_a_cs_turn_steel = mfile.get("f_a_cs_turn_steel", scan=scan)
+
+    # Create 2D grid for contour plot: radial and vertical dimensions
+    n_radial = 50
+    radial_grid = np.linspace(r_cs_inner, r_cs_outer, n_radial)
+    height_grid = np.linspace(-dz_cs_full / 2, dz_cs_full / 2, 20)
+
+    # Create meshgrid for filled contour
+    r, z = np.meshgrid(radial_grid, height_grid)
+
+    # Calculate hoop stress across the 2D grid
+    stress_data = np.zeros((len(height_grid), n_radial))
+    for i in range(len(height_grid)):
+        for j in range(n_radial):
+            stress_data[i, j] = (
+                CSCoil.calculate_cs_hoop_stress(
+                    r_stress_point=radial_grid[j],
+                    r_cs_inner=r_cs_inner,
+                    r_cs_outer=r_cs_outer,
+                    j_cs=j_cs,
+                    b_cs_inner=b_cs_inner,
+                    f_poisson_cs_structure=poisson_steel,
+                    f_a_cs_turn_steel=f_a_cs_turn_steel,
+                )
+                / 1e6
+            )
+
+    # Plot filled contour of stress distribution
+    contour_fill = axis.contourf(r, z, stress_data, levels=15, cmap="RdYlBu_r")
+    contour_lines = axis.contour(
+        r,
+        z,
+        stress_data,
+        levels=[stress_data.max()],
+        colors="black",
+        linewidths=0.5,
+        alpha=0.4,
+    )
+    axis.clabel(contour_lines, inline=True, fontsize=8)
+
+    # Plot CS outline
+    axis.plot(
+        [r_cs_inner, r_cs_inner],
+        [-dz_cs_full / 2, dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+        label="CS Inner",
+    )
+    axis.plot(
+        [r_cs_outer, r_cs_outer],
+        [-dz_cs_full / 2, dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+        label="CS Outer",
+    )
+    axis.plot(
+        [r_cs_inner, r_cs_outer], [dz_cs_full / 2, dz_cs_full / 2], "k-", linewidth=2
+    )
+    axis.plot(
+        [r_cs_inner, r_cs_outer],
+        [-dz_cs_full / 2, -dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+    )
+
+    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
+    if colorbar_axis is None:
+        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
+    else:
+        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    cbar.set_label("Hoop Stress (MPa)")
+
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.minorticks_on()
+    axis.set_xlim(r_cs_inner * 0.9, r_cs_outer * 1.1)
+    axis.set_ylim((-dz_cs_full / 2) * 1.1, (dz_cs_full / 2) * 1.1)
+    axis.grid(True, alpha=0.3)
+
+
+def plot_stress_yield_locus(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    stress_yield: float,
+):
+    stress_z_cs_self_peak_midplane = mfile.get(
+        "stress_z_cs_self_peak_midplane", scan=scan
+    )
+    stress_hoop_cs_inner = mfile.get("stress_hoop_cs_inner", scan=scan)
+    stress_yield_mpa = stress_yield / 1e6
+    stress_mises_cs_peak = mfile.get("stress_mises_cs_peak", scan=scan) / 1e6
+    stress_shear_cs_peak = mfile.get("stress_shear_cs_peak", scan=scan) / 1e6
+    s1_boundary = [
+        stress_yield_mpa,
+        stress_yield_mpa,
+        0,
+        -stress_yield_mpa,
+        -stress_yield_mpa,
+        0,
+        stress_yield_mpa,
+    ]
+    s2_boundary = [
+        0,
+        stress_yield_mpa,
+        stress_yield_mpa,
+        0,
+        -stress_yield_mpa,
+        -stress_yield_mpa,
+        0,
+    ]
+
+    angles = np.linspace(0, 2 * np.pi, 300)
+    # Coordinate transformation to rotate the standard ellipse into the principal stress plane
+    vm_s1 = stress_yield_mpa * np.cos(angles)
+    vm_s2 = stress_yield_mpa * (np.cos(angles) / 2 + np.sin(angles) * np.sqrt(3) / 2)
+    axis.plot(
+        vm_s1,
+        vm_s2,
+        "b-",
+        linewidth=2,
+        label="von Mises Yield Locus\n(Ellipse)",
+    )
+
+    axis.plot(
+        s1_boundary,
+        s2_boundary,
+        color="red",
+        label="Tresca Limit Envelope",
+    )
+    axis.plot(
+        stress_hoop_cs_inner / 1e6,
+        stress_z_cs_self_peak_midplane / 1e6,
+        marker="o",
+        markersize=12,
+        color="blue",
+        label=(
+            f"CS Inboard Midplane Stress Point\n"
+            f"Tresca = {stress_shear_cs_peak:.1f} MPa\n"
+            f"von Mises = {stress_mises_cs_peak:.1f} MPa"
+        ),
+    )
+    axis.axhline(0, color="black", linewidth=1)
+    axis.axvline(0, color="black", linewidth=1)
+    axis.axhline(
+        stress_z_cs_self_peak_midplane / 1e6,
+        color="blue",
+        linewidth=1,
+        linestyle="--",
+        alpha=0.6,
+    )
+    axis.axvline(
+        stress_hoop_cs_inner / 1e6,
+        color="blue",
+        linewidth=1,
+        linestyle="--",
+        alpha=0.6,
+    )
+
+    axis.legend(loc="center left", bbox_to_anchor=(1.02, 0.5))
+    axis.grid(True, alpha=0.3)
+    axis.set_xlabel("Hoop Stress (MPa)")
+    axis.set_ylabel("Vertical Stress (MPa)")
+    axis.set_title("Stress Yield Locus")
+    axis.minorticks_on()
+
+
+def plot_cs_vertical_stress_profile(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+):
+    dz_cs_full = mfile.get("dz_cs_full", scan=scan)
+
+    stress_z_profile = np.array([
+        float(mfile.data[f"stress_z_cs_self_profile[{i}]"].get_scan(scan)) / 1e6
+        for i in range(20)
+    ])
+    z_positions = np.linspace(-dz_cs_full / 2, dz_cs_full / 2, len(stress_z_profile))
+
+    axis.plot(
+        stress_z_profile,
+        z_positions,
+        linewidth=2,
+        label="$\\sigma_{z}$,Vertical Stress",
+    )
+    max_idx = np.argmax(np.abs(stress_z_profile))
+    max_stress = stress_z_profile[max_idx]
+    max_z = z_positions[max_idx]
+    axis.axvline(max_stress, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
+    axis.axhline(max_z, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
+    axis.set_xlabel("Vertical Stress (MPa)")
+    axis.set_ylabel("Z [m]")
+    axis.minorticks_on()
+    axis.grid(True, alpha=0.3)
+    axis.set_title("CS Vertical Stress at BOP")
+    axis.legend(loc="center left", bbox_to_anchor=(1.02, 0.5))
+
+
+def plot_vertical_stress_contour_profile(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    colorbar_axis: plt.Axes | None = None,
+):
+    dz_cs_full = mfile.get("dz_cs_full", scan=scan)
+    r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+    r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+
+    stress_z_profile = [
+        float(mfile.data[f"stress_z_cs_self_profile[{i}]"].get_scan(scan)) / 1e6
+        for i in range(20)
+    ]
+
+    # Create 2D grid for contour plot: radial and vertical dimensions
+    n_radial = 50
+    radial_grid = np.linspace(r_cs_inner, r_cs_outer, n_radial)
+    height_grid = np.linspace(-dz_cs_full / 2, dz_cs_full / 2, len(stress_z_profile))
+
+    # Create meshgrid for filled contour
+    r, z = np.meshgrid(radial_grid, height_grid)
+
+    # Interpolate stress values across radial direction (assume linear variation)
+    stress_data = np.zeros((len(stress_z_profile), n_radial))
+    for i, stress_val in enumerate(stress_z_profile):
+        stress_data[i, :] = stress_val
+
+    # Plot filled contour of stress distribution
+    contour_fill = axis.contourf(r, z, stress_data, levels=15, cmap="RdYlBu_r")
+    contour_lines = axis.contour(
+        r,
+        z,
+        stress_data,
+        levels=[stress_data.max()],
+        colors="black",
+        linewidths=0.5,
+        alpha=0.4,
+    )
+    axis.clabel(contour_lines, inline=True, fontsize=8)
+
+    # Plot CS outline
+    axis.plot(
+        [r_cs_inner, r_cs_inner],
+        [-dz_cs_full / 2, dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+        label="CS Inner",
+    )
+    axis.plot(
+        [r_cs_outer, r_cs_outer],
+        [-dz_cs_full / 2, dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+        label="CS Outer",
+    )
+    axis.plot(
+        [r_cs_inner, r_cs_outer], [dz_cs_full / 2, dz_cs_full / 2], "k-", linewidth=2
+    )
+    axis.plot(
+        [r_cs_inner, r_cs_outer],
+        [-dz_cs_full / 2, -dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+    )
+
+    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
+    if colorbar_axis is None:
+        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
+    else:
+        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    cbar.set_label("Vertical Stress (MPa)")
+
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.minorticks_on()
+    axis.set_xlim(r_cs_inner * 0.9, r_cs_outer * 1.1)
+    axis.set_ylim((-dz_cs_full / 2) * 1.1, (dz_cs_full / 2) * 1.1)
+    axis.grid(True, alpha=0.3)
+
+
+def plot_cs_tresca_2d_contour(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    colorbar_axis: plt.Axes | None = None,
+):
+    dz_cs_full = mfile.get("dz_cs_full", scan=scan)
+    r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+    r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+    j_cs = mfile.get("j_cs_pulse_start", scan=scan)
+    b_cs_inner = mfile.get("b_cs_peak_pulse_start", scan=scan)
+    f_a_cs_turn_steel = mfile.get("f_a_cs_turn_steel", scan=scan)
+
+    stress_z_profile = np.array([
+        float(mfile.data[f"stress_z_cs_self_profile[{i}]"].get_scan(scan))
+        for i in range(20)
+    ])
+
+    # Create 2D grid for contour plot: radial and vertical dimensions
+    n_radial = 50
+    radial_grid = np.linspace(r_cs_inner, r_cs_outer, n_radial)
+    height_grid = np.linspace(-dz_cs_full / 2, dz_cs_full / 2, len(stress_z_profile))
+
+    # Create meshgrid for filled contour
+    r, z = np.meshgrid(radial_grid, height_grid)
+
+    # Calculate Tresca stress across the coil cross-section.
+    tresca_data = np.zeros((len(height_grid), n_radial))
+    for i, stress_z in enumerate(stress_z_profile):
+        for j, radius in enumerate(radial_grid):
+            stress_hoop = CSCoil.calculate_cs_hoop_stress(
+                r_stress_point=radius,
+                r_cs_inner=r_cs_inner,
+                r_cs_outer=r_cs_outer,
+                j_cs=j_cs,
+                b_cs_inner=b_cs_inner,
+                f_poisson_cs_structure=poisson_steel,
+                f_a_cs_turn_steel=f_a_cs_turn_steel,
+            )
+            stress_radial = CSCoil.calculate_cs_radial_stress(
+                r_stress_point=radius,
+                r_cs_inner=r_cs_inner,
+                r_cs_outer=r_cs_outer,
+                j_cs=j_cs,
+                b_cs_inner=b_cs_inner,
+                f_poisson_cs_structure=poisson_steel,
+            )
+            tresca_data[i, j] = (
+                calculate_tresca_stress(
+                    stress_x=stress_hoop,
+                    stress_y=stress_z,
+                    stress_z=stress_radial,
+                )
+                / 1e6
+            )
+
+    # Plot filled contour of Tresca stress distribution
+    contour_fill = axis.contourf(r, z, tresca_data, levels=15, cmap="RdYlBu_r")
+    contour_lines = axis.contour(
+        r,
+        z,
+        tresca_data,
+        levels=[tresca_data.max()],
+        colors="black",
+        linewidths=0.5,
+        alpha=0.4,
+    )
+    axis.clabel(contour_lines, inline=True, fontsize=8)
+
+    # Plot CS outline
+    axis.plot(
+        [r_cs_inner, r_cs_inner],
+        [-dz_cs_full / 2, dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+        label="CS Inner",
+    )
+    axis.plot(
+        [r_cs_outer, r_cs_outer],
+        [-dz_cs_full / 2, dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+        label="CS Outer",
+    )
+    axis.plot(
+        [r_cs_inner, r_cs_outer], [dz_cs_full / 2, dz_cs_full / 2], "k-", linewidth=2
+    )
+    axis.plot(
+        [r_cs_inner, r_cs_outer],
+        [-dz_cs_full / 2, -dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+    )
+
+    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
+    if colorbar_axis is None:
+        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
+    else:
+        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    cbar.set_label("Tresca Stress (MPa)")
+
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.minorticks_on()
+    axis.set_xlim(r_cs_inner * 0.9, r_cs_outer * 1.1)
+    axis.set_ylim((-dz_cs_full / 2) * 1.1, (dz_cs_full / 2) * 1.1)
+    axis.grid(True, alpha=0.3)
+    axis.set_title("CS Tresca Stress Contour at BOP")
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -15675,13 +16205,12 @@ def main_plot(
     )
     figs[30].subplots_adjust(wspace=0.3)
 
-    cs_coil = CSCoil(cs_fatigue=CsFatigue())
     figs[31].subplots_adjust(wspace=0.45, hspace=0.45)
 
     plot_cs_stress_time_profile(axis=figs[31].add_subplot(337), mfile=m_file, scan=scan)
 
     ax_332 = figs[31].add_subplot(332)
-    cs_coil.plot_cs_hoop_stress_profile(
+    plot_cs_hoop_stress_profile(
         axis=ax_332,
         mfile=m_file,
         scan=scan,
@@ -15690,7 +16219,7 @@ def main_plot(
     )
 
     ax_333 = figs[31].add_subplot(333)
-    cs_coil.plot_cs_radial_stress_profile(
+    plot_cs_radial_stress_profile(
         axis=ax_333,
         mfile=m_file,
         scan=scan,
@@ -15716,7 +16245,7 @@ def main_plot(
         ax_336_position.height,
     ])
 
-    cs_coil.plot_cs_radial_stress_contour_profile(
+    plot_cs_radial_stress_contour_profile(
         axis=ax_336,
         mfile=m_file,
         scan=scan,
@@ -15726,12 +16255,12 @@ def main_plot(
     )
 
     ax_331 = figs[31].add_subplot(331)
-    cs_coil.plot_cs_vertical_stress_profile(
+    plot_cs_vertical_stress_profile(
         axis=ax_331,
         mfile=m_file,
         scan=scan,
     )
-    cs_coil.plot_vertical_stress_contour_profile(
+    plot_vertical_stress_contour_profile(
         axis=ax_334,
         mfile=m_file,
         scan=scan,
@@ -15746,7 +16275,7 @@ def main_plot(
         0.012,
         ax_335_position.height,
     ])
-    cs_coil.plot_cs_hoop_stress_contour_profile(
+    plot_cs_hoop_stress_contour_profile(
         axis=ax_335,
         mfile=m_file,
         scan=scan,
@@ -15760,7 +16289,7 @@ def main_plot(
         axis.set_ylabel("")
         axis.tick_params(axis="y", labelleft=False)
 
-    cs_coil.plot_stress_yield_locus(
+    plot_stress_yield_locus(
         axis=figs[31].add_subplot(339, aspect="equal"),
         mfile=m_file,
         scan=scan,
@@ -15775,7 +16304,7 @@ def main_plot(
         0.012,
         ax_338_position.height,
     ])
-    cs_coil.plot_cs_tresca_2d_contour(
+    plot_cs_tresca_2d_contour(
         axis=ax_338,
         mfile=m_file,
         scan=scan,
@@ -15846,9 +16375,9 @@ def create_thickness_builds(m_file, scan: int):
         else:
             build = m_file.get(item, scan=scan)
 
-    radial[item] = build
-    subtotal += build
-    cumulative_radial[item] = subtotal
+        radial[item] = build
+        subtotal += build
+        cumulative_radial[item] = subtotal
 
     upper = {}
     cumulative_upper = {}
@@ -15905,7 +16434,7 @@ def plot_summary(
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(37)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for _ in range(37)]
 
     # run main_plot
     mfile_obj = MFile(mfile) if mfile != "" else MFile("MFILE.DAT")
