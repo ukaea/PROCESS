@@ -247,7 +247,7 @@ jobs:
           name: tracking-html
       - run: mv tracking.html site || cp site/404.html site/tracking.html
       - name: Upload documentation page
-        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
         with:
           path: site/
       - name: Deploy GitHub pages
