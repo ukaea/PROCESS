@@ -1541,10 +1541,10 @@ class PFCoil(Model):
                         ):
                             pf_tf_collision += 1
 
-                        if pf_tf_collision >= 1:
-                            logger.error(
-                                "One or more collision between TF and PF coils. Check PF placement."
-                            )
+            if pf_tf_collision >= 1:
+                logger.error(
+                    "One or more collision between TF and PF coils. Check PF placement."
+                )
 
     @staticmethod
     def solv(n_pf_groups_max, n_pf_coil_groups, nrws, gmat, bvec):
