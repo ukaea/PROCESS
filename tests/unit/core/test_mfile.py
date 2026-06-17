@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
+from process.core.data_structure import DataStructure
 from process.core.io.mfile import MFile, get_mfile_initial_ixc_values
-from process.core.model import DataStructure
 
 
 @pytest.fixture

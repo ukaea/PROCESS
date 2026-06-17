@@ -2,8 +2,8 @@
 
 import numpy as np
 
+from process.core.data_structure import DataStructure
 from process.core.exceptions import ProcessValueError
-from process.core.model import DataStructure
 from process.data_structure.numerics import FiguresOfMerit
 from process.models.availability import AvailabilityModel
 

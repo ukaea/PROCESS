@@ -12,7 +12,7 @@ import numpy as np
 from process.core.exceptions import ProcessValueError
 
 if TYPE_CHECKING:
-    from process.core.model import DataStructure
+    from process.core.data_structure import DataStructure
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,7 @@
 """Module containing stellarator build routines"""
 
 from process.core import process_output as po
-from process.core.model import DataStructure
+from process.core.data_structure import DataStructure
 
 
 def st_build(stellarator, f_output: bool, data: DataStructure):

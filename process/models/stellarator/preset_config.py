@@ -3,8 +3,8 @@
 import json
 from pathlib import Path
 
+from process.core.data_structure import DataStructure
 from process.core.exceptions import ProcessValueError
-from process.core.model import DataStructure
 
 HELIAS5B = {
     "name": "Helias 5b",

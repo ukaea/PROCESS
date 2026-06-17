@@ -1,7 +1,13 @@
 """Module to initialise variables relevant to stellarators."""
 
-from process.core.model import DataStructure
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from process.data_structure.stellarator_variables import StellaratorModel
+
+if TYPE_CHECKING:
+    from process.core.data_structure import DataStructure
 
 
 def st_init(data: DataStructure):

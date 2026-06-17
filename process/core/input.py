@@ -23,7 +23,7 @@ from process.data_structure.scan_variables import IPNSCNS, IPNSCNV
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from process.core.model import DataStructure
+    from process.core.data_structure import DataStructure
 
 NumberType = int | float
 ValidInputTypes = NumberType | str

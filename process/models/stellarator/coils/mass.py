@@ -1,7 +1,7 @@
 """Module for coil mass calculations in stellarators."""
 
 from process.core import constants
-from process.core.model import DataStructure
+from process.core.data_structure import DataStructure
 
 
 def calculate_coils_mass(

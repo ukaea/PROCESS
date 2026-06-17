@@ -14,8 +14,8 @@ from click.testing import CliRunner
 from system_check import system_compatible
 
 from process import main
+from process.core.data_structure import DataStructure
 from process.core.log import logging_model_handler
-from process.core.model import DataStructure
 from process.main import Models
 
 
