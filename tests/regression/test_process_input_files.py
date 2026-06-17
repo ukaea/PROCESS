@@ -21,6 +21,9 @@ from process.main import process_cli
 
 logger = logging.getLogger(__name__)
 
+PROCESS_PYTEST_LEVEL = logging.CRITICAL + 1
+logging.addLevelName(PROCESS_PYTEST_LEVEL, "\033[31m\033[1mPROCESS-PYTEST\033[0m")
+
 INPUT_FILES_FOLDER = Path(__file__).resolve().parent / "input_files"
 EXCLUSIONS = {
     "itvar",
@@ -131,14 +134,14 @@ class RegressionTestScenario:
             f"the MFILE: {key_ref_not_mfile} \033[0m"
         )
         if key_ref_not_mfile:
-            logger.warning(key_ref_not_mfile_msg)
+            logger.log(PROCESS_PYTEST_LEVEL, key_ref_not_mfile_msg)
 
         key_mfile_not_ref_msg = (
             "\033[0;35m MFile contains variables that are not present in "
             f"the reference MFILE: {key_mfile_not_ref} \033[0m"
         )
         if key_mfile_not_ref:
-            logger.warning(key_mfile_not_ref_msg)
+            logger.log(PROCESS_PYTEST_LEVEL, key_mfile_not_ref_msg)
 
         differences = self.mfile_value_changes(
             reference_mfile, mfile, tolerance, opt_params_only
@@ -148,13 +151,15 @@ class RegressionTestScenario:
                 differences, key=lambda i: abs(i.percentage_change), reverse=True
             )
 
-            logger.warning(
-                f"{'Variable':20}\t{'Ref':>10}\t{'New':>10}\t{'% Change':>10}"
+            logger.log(
+                PROCESS_PYTEST_LEVEL,
+                f"{'Variable':40}\t{'Ref':>10}\t{'New':>10}\t{'% Change':>10}",
             )
-            logger.warning("-" * 60)
+            logger.log(PROCESS_PYTEST_LEVEL, "-" * 80)
             for diff in differences:
-                logger.warning(
-                    f"{diff.name:20}\t{diff.ref:10.3g}\t{diff.new:10.3g}\t{diff.percentage_change:10.2f}"
+                logger.log(
+                    PROCESS_PYTEST_LEVEL,
+                    f"{diff.name:40}\t{diff.ref:10.3g}\t{diff.new:10.3g}\t{diff.percentage_change:10.2f}",
                 )
 
             assert len(differences) == 0, (
