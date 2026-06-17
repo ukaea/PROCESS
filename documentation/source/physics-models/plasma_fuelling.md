@@ -97,16 +97,6 @@ $$
 
 ## Key Constraints
 
-### Deuterium Flow Consistency
-
-This constraint can be activated by stating `icc = 94` in the input file.
-
-This constraint ensures that the change in deuterium particles as a function of time is zero. It ensures the output of `calculate_plasma_deuterium_flow_rate()` is zero
-
-**It is recommended to have this constraint on as it is a plasma consistency model**
-
-----------------
-
 ### Tritium Flow Consistency
 
 This constraint can be activated by stating `icc = 93` in the input file.
@@ -117,11 +107,29 @@ This constraint ensures that the change in tritium particles as a function of ti
 
 -----------------
 
+### Deuterium Flow Consistency
+
+This constraint can be activated by stating `icc = 94` in the input file.
+
+This constraint ensures that the change in deuterium particles as a function of time is zero. It ensures the output of `calculate_plasma_deuterium_flow_rate()` is zero
+
+**It is recommended to have this constraint on as it is a plasma consistency model**
+
+----------------
+
 ### Helium-3 Flow Consistency
+
+This constraint can be activated by stating `icc = 95` in the input file.
+
+This constraint ensures that the change in helium-3 particles as a function of time is zero. It ensures the output of `calculate_plasma_helium3_flow_rate()` is zero
+
+**It is recommended to have this constraint on as it is a plasma consistency model**
+
+----------------
 
 ### Alpha Particle Flow Consistency
 
-This constraint can be activated by stating `icc = 95` in the input file.
+This constraint can be activated by stating `icc = 96` in the input file.
 
 This constraint ensures that the change in alpha particles as a function of time is zero. It ensures the output of `calculate_plasma_alphas_flow_rate(()` is zero
 
@@ -131,7 +139,7 @@ This constraint ensures that the change in alpha particles as a function of time
 
 ### Fuelling Proportion Consistency
 
-This constraint can be activated by stating `icc = 96` in the input file.
+This constraint can be activated by stating `icc = 97` in the input file.
 
 This ensures that all 3 injected fuelling fractions sum up to 1:
 

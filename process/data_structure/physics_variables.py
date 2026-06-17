@@ -209,10 +209,10 @@ class PhysicsData:
     f_plasma_fuel_burnup: float = 0.0
     """Total fuel burnup fraction in plasma"""
 
-    f_plasma_tritium_burnup: float = None
+    f_plasma_tritium_burnup: float = 0.0
     """Tritium burnup fraction in plasma"""
 
-    f_plasma_deuterium_burnup: float = None
+    f_plasma_deuterium_burnup: float = 0.0
     """Deuterium burnup fraction in plasma"""
 
     burnup_in: float = 0.0
@@ -906,31 +906,31 @@ class PhysicsData:
     """
 
     f_plasma_particles_lcfs_recycled: float = 0.9
-    """fraction of plasma particles that are recycled at the LCFS. Recycling coefficent (R)"""
+    """Fraction of plasma particles that are recycled at the LCFS. Recycling coefficent (R)"""
 
     eta_plasma_fuelling: float = 0.7
-    """fuelling efficiency (fraction of fuel particles injected that become confined in the plasma)"""
+    """Fuelling efficiency (η), fraction of fuel particles injected that become confined in the plasma"""
 
     molflow_plasma_fuelling_vv_injected: float = 5e21
-    """plasma fuelling rate into the vacuum vessel (particles/s)"""
+    """Plasma fuelling rate into the vacuum vessel [particles/s]"""
 
     molflow_plasma_fuelling_vv_injected_moles: float = 0.0
-    """plasma fuelling rate into the vacuum vessel (moles/s)"""
+    """Plasma fuelling rate into the vacuum vessel [moles/s]"""
 
     molflow_plasma_fuelling_loss: float = 0.0
-    """plasma fuelling rate that dosent make it to plasma (particles/s)"""
+    """Plasma fuelling rate that doesn't make it to plasma [particles/s]"""
 
     molflow_plasma_fuelling_loss_moles: float = 0.0
-    """plasma fuelling rate that dosent make it to plasma (moles/s)"""
+    """Plasma fuelling rate that doesn't make it to plasma [moles/s]"""
 
     f_molflow_plasma_fuelling_deuterium: float = 0.5
-    """fraction of plasma fuelling that is deuterium"""
+    """Fraction of plasma fuelling that is deuterium"""
 
     f_molflow_plasma_fuelling_tritium: float = 0.5
-    """fraction of plasma fuelling that is tritium"""
+    """Fraction of plasma fuelling that is tritium"""
 
     f_molflow_plasma_fuelling_helium3: float = 0.0
-    """fraction of plasma fuelling that is helium-3"""
+    """Fraction of plasma fuelling that is helium-3"""
 
     q95_min: float = 0.0
     """lower limit for edge safety factor"""

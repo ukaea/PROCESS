@@ -102,7 +102,7 @@ class FiguresOfMerit(IntEnum):
 ipnvars: int = 183
 """total number of variables available for iteration"""
 
-ipeqns: int = 96
+ipeqns: int = 97
 """number of constraint equations available"""
 
 ipnfoms: int = 19
@@ -672,6 +672,7 @@ def init_numerics():
         "Fuel composition consistency     ",
         "Tritium particle balance consistency        ",
         "Deuterium particle balance consistency     ",
+        "Helium-3 particle balance consistency     ",
         "Alpha particle balance consistency     ",
         "Fuelling composition consistency     ",
     ]
