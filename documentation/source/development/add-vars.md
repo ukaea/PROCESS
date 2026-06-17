@@ -8,6 +8,7 @@ A guide for how to add new inputs, constraints, figures of merit, and scan varia
 All of these features rely on 'variables' which belong to a 'data structure'. All of the data structures can be found in `process/data_structure`.
 
 In general, a variable within a data structure could act as an:
+
 - Input variable: is specified by the user in an `IN.DAT`/has a default value and is not changed once PROCESS is running.
 - Iteration variable: is modified by the solver to try and optimise for some figure of merit.
 - Scan variable: is sequentially modified by the `Scan` class to some `IN.DAT`-defined values.
@@ -74,6 +75,7 @@ ITERATION_VARIABLES = {
 ```
 
 In this example:
+
 - `123` is the identifier of the iteration variable, and must be unique.
 - `"blanket"` is the data structure the variable will be set on.
 - `0.1` is the default lower bound of the variable.
