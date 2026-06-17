@@ -78,6 +78,10 @@ class ConstraintManager:
         return len(cls._constraint_registry)
 
     @classmethod
+    def maximum_constraint_id(cls):
+        return max(c for c in cls._constraint_registry)
+
+    @classmethod
     def register_constraint(
         cls, name: Hashable, units: str, symbol: ConstraintSymbolType
     ) -> Callable[[], Callable[[], ConstraintResult]]:
