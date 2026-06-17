@@ -15310,6 +15310,311 @@ def plot_cs_radial_stress_profile(
     axis.legend(loc="best")
 
 
+def plot_tritium_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot contour of tritium flow rate vs recycling and fuelling rate."""
+    recycling_range = np.linspace(0.01, 0.99, 20)
+    fuelling_range = np.linspace(0.01, 1.0, 20)
+    tritium_flow = np.zeros((len(recycling_range), len(fuelling_range)))
+
+    for i, recycling in enumerate(recycling_range):
+        for j, fuelling in enumerate(fuelling_range):
+            tritium_flow[i, j] = PlasmaFuelling.calculate_plasma_tritium_flow_rate(
+                f_molflow_plasma_fuelling_tritium=mfile.get(
+                    "f_molflow_plasma_fuelling_tritium", scan=scan
+                ),
+                eta_plasma_fuelling=fuelling,
+                molflow_plasma_fuelling_vv_injected=mfile.get(
+                    "molflow_plasma_fuelling_vv_injected", scan=scan
+                ),
+                fusrat_dt_total=mfile.get("fusrat_dt_total", scan=scan),
+                fusrat_plasma_dd_triton=mfile.get("fusrat_plasma_dd_triton", scan=scan),
+                t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
+                f_plasma_particles_lcfs_recycled=recycling,
+                nd_plasma_fuel_ions_vol_avg=mfile.get(
+                    "nd_plasma_fuel_ions_vol_avg", scan=scan
+                ),
+                vol_plasma=mfile.get("vol_plasma", scan=scan),
+                f_plasma_fuel_tritium=mfile.get("f_plasma_fuel_tritium", scan=scan),
+            )
+
+    contour = axis.contourf(
+        fuelling_range,
+        recycling_range,
+        tritium_flow,
+        levels=15,
+        cmap="seismic",
+        norm=plt.matplotlib.colors.CenteredNorm(vcenter=0),
+    )
+
+    axis.contour(
+        fuelling_range,
+        recycling_range,
+        tritium_flow,
+        levels=[0],
+        colors="black",
+        linewidths=2,
+    )
+
+    # Plot star for mfile values
+    recycling_mfile = mfile.get("f_plasma_particles_lcfs_recycled", scan=scan)
+    fuelling_mfile = mfile.get("eta_plasma_fuelling", scan=scan)
+    axis.plot(
+        fuelling_mfile,
+        recycling_mfile,
+        marker="*",
+        markersize=15,
+        color="yellow",
+        markeredgecolor="black",
+        markeredgewidth=1.5,
+    )
+
+    axis.set_xlabel("Fuelling Rate Efficiency ($\\eta_{\\text{fuelling}}$)")
+    axis.set_ylabel("Recycling Fraction [$R$]")
+    axis.set_title("Plasma Tritium Flow Rate (particles/s)", pad=20)
+    axis.minorticks_on()
+    axis.grid(True, which="major", linestyle="-", alpha=0.7)
+    axis.grid(True, which="minor", linestyle=":", alpha=0.4)
+    cbar = plt.colorbar(contour, ax=axis, label="Tritium Flow Rate")
+    cbar.ax.axhline(y=0, color="black", linewidth=2)
+
+
+def plot_deuterium_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot contour of deuterium flow rate vs recycling and fuelling rate."""
+    recycling_range = np.linspace(0.01, 0.99, 20)
+    fuelling_range = np.linspace(0.01, 1.0, 20)
+    deuterium_flow = np.zeros((len(recycling_range), len(fuelling_range)))
+
+    for i, recycling in enumerate(recycling_range):
+        for j, fuelling in enumerate(fuelling_range):
+            deuterium_flow[i, j] = PlasmaFuelling.calculate_plasma_deuterium_flow_rate(
+                f_molflow_plasma_fuelling_deuterium=mfile.get(
+                    "f_molflow_plasma_fuelling_deuterium", scan=scan
+                ),
+                eta_plasma_fuelling=fuelling,
+                molflow_plasma_fuelling_vv_injected=mfile.get(
+                    "molflow_plasma_fuelling_vv_injected", scan=scan
+                ),
+                fusrat_dt_total=mfile.get("fusrat_dt_total", scan=scan),
+                fusrat_plasma_dhe3=mfile.get("fusrat_plasma_dhe3", scan=scan),
+                fusrat_plasma_dd_total=mfile.get("fusrat_plasma_dd_total", scan=scan),
+                t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
+                f_plasma_particles_lcfs_recycled=recycling,
+                nd_plasma_fuel_ions_vol_avg=mfile.get(
+                    "nd_plasma_fuel_ions_vol_avg", scan=scan
+                ),
+                vol_plasma=mfile.get("vol_plasma", scan=scan),
+                f_plasma_fuel_deuterium=mfile.get("f_plasma_fuel_deuterium", scan=scan),
+            )
+
+    contour = axis.contourf(
+        fuelling_range,
+        recycling_range,
+        deuterium_flow,
+        levels=15,
+        cmap="seismic",
+        norm=plt.matplotlib.colors.CenteredNorm(vcenter=0),
+    )
+    axis.contour(
+        fuelling_range,
+        recycling_range,
+        deuterium_flow,
+        levels=[0],
+        colors="black",
+        linewidths=2,
+    )
+
+    # Plot star for mfile values
+    recycling_mfile = mfile.get("f_plasma_particles_lcfs_recycled", scan=scan)
+    fuelling_mfile = mfile.get("eta_plasma_fuelling", scan=scan)
+    axis.plot(
+        fuelling_mfile,
+        recycling_mfile,
+        marker="*",
+        markersize=15,
+        color="yellow",
+        markeredgecolor="black",
+        markeredgewidth=1.5,
+    )
+
+    axis.set_xlabel("Fuelling Rate Efficiency ($\\eta_{\\text{fuelling}}$)")
+    axis.set_title("Plasma Deuterium Flow Rate (particles/s)", pad=20)
+    axis.minorticks_on()
+    axis.grid(True, which="major", linestyle="-", alpha=0.7)
+    axis.grid(True, which="minor", linestyle=":", alpha=0.4)
+    cbar = plt.colorbar(contour, ax=axis, label="Deuterium Flow Rate")
+    cbar.ax.axhline(y=0, color="black", linewidth=2)
+
+
+def plot_alpha_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot contour of alpha particle flow rate vs recycling and fuelling rate."""
+    fusion_dt_range = np.linspace(1e19, 5e21, 20)
+    f_t_alpha_energy_confinement_range = np.linspace(2.0, 10.0, 20)
+    alpha_flow = np.zeros((
+        len(fusion_dt_range),
+        len(f_t_alpha_energy_confinement_range),
+    ))
+
+    for i, fusion_dt in enumerate(fusion_dt_range):
+        for j, f_t_alpha_energy_confinement in enumerate(
+            f_t_alpha_energy_confinement_range
+        ):
+            alpha_flow[i, j] = PlasmaFuelling.calculate_plasma_alphas_flow_rate(
+                fusrat_dt_total=fusion_dt,
+                fusrat_plasma_dhe3=mfile.get("fusrat_plasma_dhe3", scan=scan),
+                t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
+                nd_plasma_alphas_vol_avg=mfile.get(
+                    "nd_plasma_alphas_vol_avg", scan=scan
+                ),
+                vol_plasma=mfile.get("vol_plasma", scan=scan),
+                f_t_alpha_energy_confinement=f_t_alpha_energy_confinement,
+            )
+
+    contour = axis.contourf(
+        f_t_alpha_energy_confinement_range,
+        fusion_dt_range,
+        alpha_flow,
+        levels=15,
+        cmap="seismic",
+        norm=plt.matplotlib.colors.CenteredNorm(vcenter=0),
+    )
+    axis.contour(
+        f_t_alpha_energy_confinement_range,
+        fusion_dt_range,
+        alpha_flow,
+        levels=[0],
+        colors="black",
+        linewidths=2,
+    )
+
+    # Plot star for mfile values
+    fusion_dt_mfile = mfile.get("fusrat_dt_total", scan=scan)
+    f_t_alpha_mfile = mfile.get("f_alpha_energy_confinement", scan=scan)
+    axis.plot(
+        f_t_alpha_mfile,
+        fusion_dt_mfile,
+        marker="*",
+        markersize=15,
+        color="yellow",
+        markeredgecolor="black",
+        markeredgewidth=1.5,
+    )
+
+    axis.set_xlabel(
+        "Alpha to Energy Confinement Time Ratio ($f_{\\alpha, \\text{energy confinement}}$)"
+    )
+    axis.set_ylabel("Fusion DT Rate [$\\text{particles/s}$]")
+    axis.set_title("Plasma Alpha Particle Flow Rate (particles/s)", pad=20)
+    axis.minorticks_on()
+    axis.grid(True, which="major", linestyle="-", alpha=0.7)
+    axis.grid(True, which="minor", linestyle=":", alpha=0.4)
+    cbar = plt.colorbar(contour, ax=axis, label="Alpha Particle Flow Rate")
+    cbar.ax.axhline(y=0, color="black", linewidth=2)
+
+
+def plot_helium3_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot contour of helium-3 flow rate vs recycling and fuelling rate."""
+    recycling_range = np.linspace(0.01, 0.99, 20)
+    fuelling_range = np.linspace(0.01, 1.0, 20)
+    helium3_flow = np.zeros((len(recycling_range), len(fuelling_range)))
+
+    for i, recycling in enumerate(recycling_range):
+        for j, fuelling in enumerate(fuelling_range):
+            helium3_flow[i, j] = PlasmaFuelling.calculate_plasma_helium3_flow_rate(
+                f_molflow_plasma_fuelling_helium3=mfile.get(
+                    "f_molflow_plasma_fuelling_helium3", scan=scan
+                ),
+                eta_plasma_fuelling=fuelling,
+                molflow_plasma_fuelling_vv_injected=mfile.get(
+                    "molflow_plasma_fuelling_vv_injected", scan=scan
+                ),
+                fusrat_plasma_dhe3=mfile.get("fusrat_plasma_dhe3", scan=scan),
+                t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
+                f_plasma_particles_lcfs_recycled=recycling,
+                nd_plasma_fuel_ions_vol_avg=mfile.get(
+                    "nd_plasma_fuel_ions_vol_avg", scan=scan
+                ),
+                vol_plasma=mfile.get("vol_plasma", scan=scan),
+                f_plasma_fuel_helium3=mfile.get("f_plasma_fuel_helium3", scan=scan),
+            )
+
+    contour = axis.contourf(
+        fuelling_range,
+        recycling_range,
+        helium3_flow,
+        levels=15,
+        cmap="seismic",
+        norm=plt.matplotlib.colors.CenteredNorm(vcenter=0),
+    )
+    axis.contour(
+        fuelling_range,
+        recycling_range,
+        helium3_flow,
+        levels=[0],
+        colors="black",
+        linewidths=2,
+    )
+
+    # Plot star for mfile values
+    recycling_mfile = mfile.get("f_plasma_particles_lcfs_recycled", scan=scan)
+    fuelling_mfile = mfile.get("eta_plasma_fuelling", scan=scan)
+    axis.plot(
+        fuelling_mfile,
+        recycling_mfile,
+        marker="*",
+        markersize=15,
+        color="yellow",
+        markeredgecolor="black",
+    )
+    axis.set_xlabel("Fuelling Rate Efficiency ($\\eta_{\\text{fuelling}}$)")
+    cbar = plt.colorbar(contour, ax=axis, label="Helium-3 Flow Rate")
+    cbar.ax.axhline(y=0, color="black", linewidth=2)
+    axis.set_title("Plasma Helium-3 Flow Rate (particles/s)", pad=20)
+    axis.minorticks_on()
+    axis.grid(True, which="major", linestyle="-", alpha=0.7)
+    axis.grid(True, which="minor", linestyle=":", alpha=0.4)
+
+
+def plot_fuelling_info(fig: plt.Figure, mfile: MFile, scan: int):
+    """Plot fuelling information."""
+    msg = (
+        f"$\\mathbf{{Plasma \\ Fuelling \\ Information:}}$\n\n"
+        f"Total fuelling rate:"
+        f"{mfile.get('molflow_plasma_fuelling_vv_injected', scan=scan):.4e} particles/s\n"
+        f"Total fuelling rate: "
+        f"{mfile.get('molflow_plasma_fuelling_vv_injected_moles', scan=scan):.4e} moles/s\n"
+        f"Total fuelling loss: "
+        f"{mfile.get('molflow_plasma_fuelling_loss', scan=scan):.4e} particles/s\n"
+        f"Total fuelling loss: "
+        f"{mfile.get('molflow_plasma_fuelling_loss_moles', scan=scan):.4e} moles/s\n"
+        f"Fuelling Rate Efficiency ($\\eta_{{\\text{{fuelling}}}}$): "
+        f"{mfile.get('eta_plasma_fuelling', scan=scan):.4f}\n"
+        f"Recycling Fraction ($R$): "
+        f"{mfile.get('f_plasma_particles_lcfs_recycled', scan=scan):.4f}\n\n"
+        f"Fraction of Tritium Fuelling: "
+        f"{mfile.get('f_molflow_plasma_fuelling_tritium', scan=scan):.4f}\n"
+        f"Fraction of Deuterium Fuelling: "
+        f"{mfile.get('f_molflow_plasma_fuelling_deuterium', scan=scan):.4f}\n"
+        f"Fraction of 3-Helium Fuelling: "
+        f"{mfile.get('f_molflow_plasma_fuelling_helium3', scan=scan):.4f}\n\n"
+        f"Total Fuel Burnup Fraction: "
+        f"{mfile.get('f_plasma_fuel_burnup', scan=scan):.4f}\n"
+        f"Tritium Burnup Fraction: "
+        f"{mfile.get('f_plasma_tritium_burnup', scan=scan):.4f}\n"
+        f"Deuterium Burnup Fraction: "
+        f"{mfile.get('f_plasma_deuterium_burnup', scan=scan):.4f}"
+    )
+    fig.text(
+        0.75,
+        0.25,
+        msg,
+        ha="center",
+        va="center",
+        transform=fig.transFigure,
+        fontsize=9,
+        bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 1.0},
+    )
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -15455,20 +15760,12 @@ def main_plot(
         figs[9].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
         figs[10].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
 
-    PlasmaFuelling().plot_tritium_flow_contour(
-        axis=figs[11].add_subplot(231), mfile=m_file, scan=scan
-    )
-    PlasmaFuelling().plot_deuterium_flow_contour(
-        axis=figs[11].add_subplot(232), mfile=m_file, scan=scan
-    )
-    PlasmaFuelling().plot_helium3_flow_contour(
-        axis=figs[11].add_subplot(233), mfile=m_file, scan=scan
-    )
-    PlasmaFuelling().plot_alpha_flow_contour(
-        axis=figs[11].add_subplot(223), mfile=m_file, scan=scan
-    )
+    plot_tritium_flow_contour(axis=figs[11].add_subplot(231), mfile=m_file, scan=scan)
+    plot_deuterium_flow_contour(axis=figs[11].add_subplot(232), mfile=m_file, scan=scan)
+    plot_helium3_flow_contour(axis=figs[11].add_subplot(233), mfile=m_file, scan=scan)
+    plot_alpha_flow_contour(axis=figs[11].add_subplot(223), mfile=m_file, scan=scan)
 
-    PlasmaFuelling().plot_fuelling_info(figs[11], m_file, scan)
+    plot_fuelling_info(figs[11], m_file, scan)
 
     figs[11].subplots_adjust(wspace=0.3, hspace=0.35)
 
@@ -15692,12 +15989,12 @@ def main_plot(
 
     plot_current_profiles_over_time(figs[31].add_subplot(111), m_file, scan)
 
-    plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
+    plot_pf_cs_plasma_mutual_inductance(figs[32].add_subplot(111), m_file, scan)
 
-    plot_cs_stress_time_profile(axis=figs[32].add_subplot(431), mfile=m_file, scan=scan)
+    plot_cs_stress_time_profile(axis=figs[33].add_subplot(431), mfile=m_file, scan=scan)
 
     plot_cs_radial_hoop_stress_profile(
-        axis=figs[32].add_subplot(432),
+        axis=figs[33].add_subplot(432),
         mfile=m_file,
         scan=scan,
         j_cs=m_file.get("j_cs_pulse_start", scan=scan),
@@ -15705,7 +16002,7 @@ def main_plot(
     )
 
     plot_cs_radial_stress_profile(
-        axis=figs[32].add_subplot(433),
+        axis=figs[33].add_subplot(433),
         mfile=m_file,
         scan=scan,
         j_cs=m_file.get("j_cs_pulse_start", scan=scan),
@@ -15713,40 +16010,31 @@ def main_plot(
     )
 
     plot_cs_coil_structure(
-        figs[32].add_subplot(223, aspect="equal"), figs[32], m_file, scan
+        figs[33].add_subplot(223, aspect="equal"), figs[33], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[32].add_subplot(326, aspect="equal"), figs[32], m_file, scan
+        figs[33].add_subplot(326, aspect="equal"), figs[33], m_file, scan
     )
-    figs[32].subplots_adjust(wspace=0.3)
+    figs[33].subplots_adjust(wspace=0.3)
 
     plot_first_wall_top_down_cross_section(
-        figs[33].add_subplot(221, aspect="equal"), m_file, scan
+        figs[34].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[33].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[33].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[34].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[34].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[34], m_file, scan)
-    ax_blanket = figs[34].add_subplot(122, aspect="equal")
-    plot_blkt_structure(ax_blanket, figs[34], m_file, scan, radial_build, colour_scheme)
+    plot_blkt_pipe_bends(figs[35], m_file, scan)
+    ax_blanket = figs[35].add_subplot(122, aspect="equal")
+    plot_blkt_structure(ax_blanket, figs[35], m_file, scan, radial_build, colour_scheme)
 
     plot_main_power_flow(
-        figs[35].add_subplot(111, aspect="equal"), m_file, scan, figs[35]
+        figs[36].add_subplot(111, aspect="equal"), m_file, scan, figs[36]
     )
 
-    ax24 = figs[36].add_subplot(111)
+    ax24 = figs[37].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[36])
-
-    
-    
-    ax25 = figs[36].add_subplot(221)
-    PlasmaExhaust().plot_tritium_flow_contour(ax25, m_file, scan)
-    ax26 = figs[36].add_subplot(222)
-    PlasmaExhaust().plot_deuterium_flow_contour(ax26, m_file, scan)
-    ax27 = figs[36].add_subplot(223)
-    PlasmaExhaust().plot_alpha_flow_contour(ax27, m_file, scan)
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[37])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -15828,7 +16116,7 @@ def plot_summary(
 ):
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(37)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(38)]
 
     # run main_plot
     main_plot(

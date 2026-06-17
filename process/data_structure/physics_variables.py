@@ -911,7 +911,7 @@ class PhysicsData:
     eta_plasma_fuelling: float = 0.7
     """fuelling efficiency (fraction of fuel particles injected that become confined in the plasma)"""
 
-    molflow_plasma_fuelling_vv_injected: float = 1e21
+    molflow_plasma_fuelling_vv_injected: float = 5e21
     """plasma fuelling rate into the vacuum vessel (particles/s)"""
 
     molflow_plasma_fuelling_vv_injected_moles: float = 0.0
