@@ -16050,3 +16050,33 @@ def test_value_function(valuefunctionparam, monkeypatch, costs2015):
     v = costs2015.value_function(x=valuefunctionparam.x)
 
     assert v == pytest.approx(valuefunctionparam.expected_v)
+
+
+def test_calc_fwbs_cost(costs2015):
+    # Percentage of lithium 6 in the feed (natural abundance)
+    feed_li6 = 0.0742e0
+    # Percentage of lithium 6 in the tail (waste) (75% natural abundance)
+    tail_li6 = feed_li6 * 0.75e0
+    product_li6 = 0.3
+    feed_to_product_mass_ratio = (product_li6 - tail_li6) / (feed_li6 - tail_li6)
+    tail_to_product_mass_ratio = (product_li6 - feed_li6) / (feed_li6 - tail_li6)
+    p_v = costs2015.value_function(product_li6)
+    t_v = costs2015.value_function(tail_li6)
+    f_v = costs2015.value_function(feed_li6)
+    swu = p_v + tail_to_product_mass_ratio * t_v - feed_to_product_mass_ratio * f_v
+
+    assert swu == pytest.approx(2.66, abs=2.0e-2)
+
+    costs2015.data.costs_2015.s_label[21] = "Lithium enrichment"
+    costs2015.data.costs_2015.s_cost_factor[21] = costs2015.data.costs.cost_factor_fwbs
+    costs2015.data.costs_2015.s_cref[21] = 0.1e6
+    costs2015.data.costs_2015.s_k[21] = 64.7e0
+    costs2015.data.costs_2015.s_kref[21] = 64.7e0
+    costs2015.data.costs_2015.s_cost[21] = (
+        costs2015.data.costs_2015.s_cost_factor[21]
+        * costs2015.data.costs_2015.s_cref[21]
+        * (costs2015.data.costs_2015.s_k[21] / costs2015.data.costs_2015.s_kref[21])
+        ** costs2015.data.costs.costexp
+    )
+
+    assert costs2015.data.costs_2015.s_cost[21] == pytest.approx(0.1e6)

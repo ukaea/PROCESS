@@ -9,8 +9,6 @@ class GlobalData:
     runtitle: str = "Run Title (change this line using input variable 'runtitle')"
     """A short descriptive title for the run"""
 
-    run_tests: int = 0
-
     maxcal: int = 200
     """Maximum number of solver iterations"""
 
