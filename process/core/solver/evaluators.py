@@ -62,25 +62,23 @@ class Evaluators:
         # Evaluate machine parameters at xv
         objf, conf = self.caller.call_models(xv, m)
 
-        # Verbose diagnostics
-        if self.data.globals.verbose == 1:
-            summ = 0.0
-            for i in range(m):
-                summ += conf[i] ** 2
+        summ = 0.0
+        for i in range(m):
+            summ += conf[i] ** 2
 
-            sqsumconfsq = math.sqrt(summ)
-            logger.debug("Key evaluator values:")
-            logger.debug(f"{numerics.nviter = }")
-            logger.debug(f"{(1 - (ifail % 7)) - 1 = }")
-            logger.debug(f"{(numerics.nviter % 2) - 1 = }")
-            logger.debug(f"{self.data.physics.temp_plasma_electron_vol_avg_kev = }")
-            logger.debug(f"{self.data.costs.coe = }")
-            logger.debug(f"{self.data.physics.rmajor = }")
-            logger.debug(f"{self.data.physics.p_fusion_total_mw = }")
-            logger.debug(f"{self.data.physics.b_plasma_toroidal_on_axis = }")
-            logger.debug(f"{self.data.times.t_plant_pulse_burn = }")
-            logger.debug("%s", sqsumconfsq)
-            logger.debug("%s", xv)
+        sqsumconfsq = math.sqrt(summ)
+        logger.debug("Key evaluator values:")
+        logger.debug(f"{numerics.nviter = }")
+        logger.debug(f"{(1 - (ifail % 7)) - 1 = }")
+        logger.debug(f"{(numerics.nviter % 2) - 1 = }")
+        logger.debug(f"{self.data.physics.temp_plasma_electron_vol_avg_kev = }")
+        logger.debug(f"{self.data.costs.coe = }")
+        logger.debug(f"{self.data.physics.rmajor = }")
+        logger.debug(f"{self.data.physics.p_fusion_total_mw = }")
+        logger.debug(f"{self.data.physics.b_plasma_toroidal_on_axis = }")
+        logger.debug(f"{self.data.times.t_plant_pulse_burn = }")
+        logger.debug("%s", sqsumconfsq)
+        logger.debug("%s", xv)
 
         return objf, conf
 

@@ -11,8 +11,6 @@ class GlobalData:
 
     run_tests: int = 0
 
-    verbose: int = 0
-
     maxcal: int = 200
     """Maximum number of solver iterations"""
 
