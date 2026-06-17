@@ -1,5 +1,7 @@
 # Plasma Fuelling | `PlasmaFuelling()`
 
+## Particle balance
+
 The control of fuelling is governed by 4 key particle flux equations for each of the primary fuel species and the helium ash, $\alpha$.
 
 $$
@@ -45,6 +47,10 @@ The definition of the recycling coefficient $R = 1- \frac{\Gamma_{\text{pumps}}}
 
 Where $\tau_p$ is the particle confinement time which we can assume is approximately equal to the energy confinement time ($\tau_p = \tau_E$). 
 
+!!! warning "Relation between $\tau_p$ and $\tau_E$"
+
+    In this model the "raw" particle confinement time ($\tau_p$) is set to always match the energy confinement time ($\tau_E$). The only variation of this in terms of the "effective" particle confinement time $\tau_{p}^*$ is via the recycling coefficient ($R$). If needed new coeffcients may be added to scale ($\tau_p$) before recyling corrections if needed.
+
 !!! note "Quantifying $R$"
 
     The recycling coefficient $R$, defined as the fraction of particles crossing the LCFS that return to the plasma, can depend on numerous factors—including vessel pumping speed, neutral pressure in the private‑divertor region, impurity seeding levels, and the detailed properties of the SOL. Among these parameters, $R$ is the least certain and the most difficult to quantify. In next‑step devices, the SOL temperature is expected to be high, so particles reflected from the vessel walls are mostly ionized within the SOL and are removed by pumping before they can effectively refuel the burning plasma. As a result, the recycling coefficient is anticipated to be lower than in present‑day tokamaks, where $R$ can often approach unity. An additional uncertainty is the extent of neutral penetration at the plasma edge, which influences both the pedestal density and the density profile, and therefore also affects $R$[^1].
@@ -52,7 +58,7 @@ Where $\tau_p$ is the particle confinement time which we can assume is approxima
 
 
 
-## METIS Alpha Confinement
+### METIS Alpha Confinement
 
 $$
 \tau_{\alpha} = f_{\alpha}\tau_{\text{E}}\frac{R}{1-R}\tau_{\text{ne}}
@@ -63,7 +69,7 @@ This is the model currently in METIS[^2] and is found in [^3]
 
 --------------
 
-## Tritium Flow Rate | `calculate_plasma_tritium_flow_rate()`
+### Tritium Flow Rate | `calculate_plasma_tritium_flow_rate()`
 
 $$
 \frac{dn_{\text{T}}}{dt} = f_{\text{fuelling,T}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} + \Gamma_{\text{D+D} \rightarrow \text{T}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{T}}^*}
@@ -71,7 +77,7 @@ $$
 
 ---------------
 
-## Deuterium Flow Rate | `calculate_plasma_deuterium_flow_rate()`
+### Deuterium Flow Rate | `calculate_plasma_deuterium_flow_rate()`
 
 $$
 \frac{dn_{\text{D}}}{dt} = f_{\text{fuelling,D}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} -2 \Gamma_{\text{D+D}}- \Gamma_{\text{D+3He}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{D}}^*}
@@ -79,7 +85,7 @@ $$
 
 ---------------
 
-## Helium-3 Flow Rate | `calculate_plasma_helium3_flow_rate()`
+### Helium-3 Flow Rate | `calculate_plasma_helium3_flow_rate()`
 
 $$
 \frac{dn_{\text{3He}}}{dt} = f_{\text{fuelling,3He}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} + \Gamma_{\text{D+D} \rightarrow \text{3He}} - \frac{N_{\text{T}}}{\tau_{\text{3He}}^*}
@@ -87,13 +93,57 @@ $$
 
 ---------------
 
-## Alpha Particle Flow Rate | `calculate_plasma_alphas_flow_rate()`
+### Alpha Particle Flow Rate | `calculate_plasma_alphas_flow_rate()`
 
 $$
 \frac{dn_{\alpha}}{dt} = \Gamma_{\text{D+3He}} + \Gamma_{\text{D+T}} - \frac{N_{\alpha}}{\tau_{\alpha}^*}
 $$
 
 -----------------
+
+## Fuel Burnup Fration
+
+In a steady state tokamak, the burnup fraction ($f_b$) is explicitly defined by the following rate equation:
+
+$$
+f_b = \frac{\Gamma_{\text{fusion}}}{\Gamma_{\text{fuel}}}
+$$
+
+where $\Gamma_{\text{fusion}}$ is the fusion rate in reactions per second $[\text{s}^{-1}]$, and $\Gamma_{\text{fuel}}$ is our fuelling rate into the vessel like is shown above also in $[\text{s}^{-1}]$.
+
+-----------------
+
+### Total Fuel Burnup Fraction | `calculate_fuel_burnup_fraction()`
+
+For the total burnup fraction we state:
+
+$$
+\overbrace{f_b}^{\texttt{f_plasma_fuel_burnup}} = \frac{2\left(\Gamma_{\text{D+D}}+\Gamma_{\text{D+T}}+\Gamma_{\text{D+3He}}\right)}{\Gamma_{\text{fuel}}}
+$$
+
+Here the factor of 2 is included as each fusion reaction removes 2 particles but our fuelling rate looks at indivudal particles injected.
+
+-------------------
+
+### Tritium Burnup Fraction | `calculate_tritium_burnup_fraction()`
+
+For just the tritium burnup fraction we state:
+
+$$
+\overbrace{f_b}^{\texttt{f_plasma_tritium_burnup}} = \frac{\left(\Gamma_{\text{D+T}}\right)}{\Gamma_{\text{fuel}}f_{\text{fuelling,T}}} 
+$$
+
+------------------
+
+### Deuterium Burnup Fraction | `calculate_deuterium_burnup_fraction()`
+
+For just the deuterium burnup fraction we state:
+
+$$
+\overbrace{f_b}^{\texttt{f_plasma_deuterium_burnup}} = \frac{2\left(\Gamma_{\text{D+D}}+\Gamma_{\text{D+3He}}\right)}{\Gamma_{\text{fuel}}f_{\text{fuelling,D}}}
+$$
+
+------------------
 
 ## Key Constraints
 
