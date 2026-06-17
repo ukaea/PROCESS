@@ -103,8 +103,6 @@ class FiguresOfMerit(IntEnum):
 ```
 Here `20` will be the identifier of the figure of merit, and must be unique. 
 
-Next, increment `IPNFOMS` in `process/data_structure/numerics.py`.
-
 Finally, add the equation to `process/core/solver/objectives.py`:
 ```python
 elif figure_of_merit == FiguresOfMerit.BLANKET_FIGURE_MERIT:
