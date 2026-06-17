@@ -106,7 +106,7 @@ class FiguresOfMerit(IntEnum):
 IPNVARS = max(ITERATION_VARIABLES.keys())
 """total number of variables available for iteration"""
 
-IPEQNS = ConstraintManager.num_constraints()
+IPEQNS = ConstraintManager.maximum_constraint_id()
 """number of constraint equations available"""
 
 IPNFOMS = len(FiguresOfMerit)
