@@ -8,9 +8,11 @@ https://www.thermal-engineering.org/what-is-latent-heat-of-vaporization-definiti
 
 from dataclasses import dataclass
 
+from process.core.metadata import PROCESSModelData
+
 
 @dataclass(slots=True)
-class WaterUseData:
+class WaterUseData(PROCESSModelData):
     """Dataclass holding water use variables"""
 
     airtemp: float = 15.0
