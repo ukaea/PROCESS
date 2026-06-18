@@ -10,7 +10,8 @@ from process.core.exceptions import ProcessError, ProcessValueError
 from process.core.model import DataStructure
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.models.physics.density_limit import DensityLimitModel
-from process.models.physics.physics import BetaComponentLimits
+from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.physics import BetaComponentLimits, PlasmaBeta
 from process.models.tfcoil.base import TFConductorModel
 
 ConstraintSymbolType = Literal["=", ">=", "<="]
@@ -205,21 +206,24 @@ def constraint_equation_1(constraint_registration, data):
     T_i: density weighted average ion temperature [keV]
     B_{tot}: total toroidal + poloidal field [T]
     """
-    return eq(
-        # Density weighted temperature is used here as 〈nT〉 != 〈n〉_V * 〈T〉_V
-        (
-            data.physics.beta_fast_alpha
-            + data.physics.beta_beam
-            + 2.0e3
-            * constants.RMU0
-            * constants.ELECTRON_CHARGE
+    # Density weighted temperature is used here as 〈nT〉 != 〈n〉_V * 〈T〉_V
+    beta_thermal_total_vol_avg = PlasmaBeta.calculate_plasma_beta(
+        pres_plasma=(
+            constants.KILOELECTRON_VOLT
             * (
                 data.physics.nd_plasma_electrons_vol_avg
                 * data.physics.temp_plasma_electron_density_weighted_kev
                 + data.physics.nd_plasma_ions_total_vol_avg
                 * data.physics.temp_plasma_ion_density_weighted_kev
             )
-            / data.physics.b_plasma_total**2
+        ),
+        b_field=data.physics.b_plasma_total,
+    )
+    return eq(
+        (
+            data.physics.beta_fast_alpha
+            + data.physics.beta_beam
+            + beta_thermal_total_vol_avg
         ),
         data.physics.beta_total_vol_avg,
         constraint_registration,
@@ -1340,18 +1344,17 @@ def constraint_equation_68(constraint_registration, data):
     q95_fixed: fixed safety factor q at 95% flux surface
     """
     if data.constraints.i_q95_fixed == 1:
+        p_div_bt_q_aspect_rmajor_mw = (
+            PlasmaExhaust.calculate_eu_demo_re_attachment_metric(
+                p_plasma_separatrix_mw=data.physics.p_plasma_separatrix_mw,
+                b_plasma_toroidal_on_axis=data.physics.b_plasma_toroidal_on_axis,
+                q95=data.constraints.q95_fixed,
+                aspect=data.physics.aspect,
+                rmajor=data.physics.rmajor,
+            )
+        )
         return leq(
-            (
-                (
-                    data.physics.p_plasma_separatrix_mw
-                    * data.physics.b_plasma_toroidal_on_axis
-                )
-                / (
-                    data.constraints.q95_fixed
-                    * data.physics.aspect
-                    * data.physics.rmajor
-                )
-            ),
+            (p_div_bt_q_aspect_rmajor_mw),
             data.constraints.p_div_bt_q_aspect_rmajor_max_mw,
             constraint_registration,
         )
