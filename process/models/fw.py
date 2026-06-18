@@ -1,6 +1,7 @@
 """Module containing first wall routines"""
 
 import logging
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -29,6 +30,26 @@ N_FW_PIPE_90_DEG_BENDS = 2
 "Number of 90 degree bends in first wall coolant channels."
 N_FW_PIPE_180_DEG_BENDS = 0
 "Number of 180 degree bends in first wall coolant channels."
+
+
+N_FW_PIPE_90_DEG_BENDS = 2
+"Number of 90 degree bends in first wall coolant channels."
+N_FW_PIPE_180_DEG_BENDS = 0
+"Number of 180 degree bends in first wall coolant channels."
+
+@dataclass(slots=True)
+class InVesselSolidAngleFractions:
+    f_ster_fw_inboard_ring_source: float = 0.0
+    """Solid angle fraction of inboard FW assuming a ring source"""
+
+    f_ster_fw_outboard_ring_source: float = 0.0
+    """Solid angle fraction of outboard FW assuming a ring source"""
+
+    f_ster_div_lower_ring_source: float = 0.0
+    """Solid angle fraction of lower divertor assuming a ring source"""
+
+    f_ster_div_upper_ring_source: float = 0.0
+    """Solid angle fraction of upper divertor assuming a ring source"""
 
 
 class FirstWall(Model):
@@ -147,6 +168,15 @@ class FirstWall(Model):
 
         self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal = np.degrees(
             self.data.fwbs.rad_fw_inboard_plasma_centre_toroidal
+        )
+
+        self.calculate_component_solid_angle_components(
+            deg_fw_inboard_plasma_centre_toroidal=self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal,
+            deg_fw_outboard_plasma_centre_toroidal=self.data.fwbs.deg_fw_outboard_plasma_centre_toroidal,
+            deg_blkt_outboard_poloidal_plasma=self.data.blanket.f_deg_blkt_outboard_poloidal_plasma,
+            deg_blkt_inboard_poloidal_plasma=self.data.blanket.f_deg_blkt_inboard_poloidal_plasma,
+            deg_div_poloidal_plasma=self.data.divertor.deg_div_poloidal_plasma,
+            i_single_null=self.data.divertor.i_single_null,
         )
 
         # Radiation surface heat flux on first wall (MW/m²)
@@ -903,7 +933,7 @@ class FirstWall(Model):
         deg_blkt_inboard_poloidal_plasma: float,
         deg_div_poloidal_plasma: float,
         i_single_null: int,
-    ) -> tuple[float, float, float, float]:
+    ) -> InVesselSolidAngleFractions:
         """Calculate the solid angle subtended by the inboard and outboard first wall.
 
 
@@ -924,9 +954,8 @@ class FirstWall(Model):
 
         Returns
         -------
-        tuple
-            Weighted solid angle contributions of the inboard first wall, outboard first wall,
-            lower divertor, and upper divertor (if applicable) as fractions of the total solid angle.
+        InVesselSolidAngleFractions
+
         """
         weighted_inboard = (deg_fw_inboard_plasma_centre_toroidal / 360.0) * (
             deg_blkt_inboard_poloidal_plasma / 360.0
@@ -944,21 +973,22 @@ class FirstWall(Model):
                 weighted_div_lower,
                 weighted_div_upper,
             ])
-            return (
-                weighted_inboard / total_weighting,
-                weighted_outboard / total_weighting,
-                weighted_div_lower / total_weighting,
-                weighted_div_upper / total_weighting,
+            return InVesselSolidAngleFractions(
+                f_ster_fw_inboard_ring_source=weighted_inboard / total_weighting,
+                f_ster_fw_outboard_ring_source=weighted_outboard / total_weighting,
+                f_ster_div_lower_ring_source=weighted_div_lower / total_weighting,
+                f_ster_div_upper_ring_source=weighted_div_upper / total_weighting,
             )
         total_weighting = np.sum([
             weighted_inboard,
             weighted_outboard,
             weighted_div_lower,
         ])
-        return (
-            weighted_inboard / total_weighting,
-            weighted_outboard / total_weighting,
-            weighted_div_lower / total_weighting,
+        return InVesselSolidAngleFractions(
+            f_ster_fw_inboard_ring_source=weighted_inboard / total_weighting,
+            f_ster_fw_outboard_ring_source=weighted_outboard / total_weighting,
+            f_ster_div_lower_ring_source=weighted_div_lower / total_weighting,
+            f_ster_div_upper_ring_source=0.0,
         )
 
     def output_fw_geometry(self):
