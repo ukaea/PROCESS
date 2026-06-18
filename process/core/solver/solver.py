@@ -368,7 +368,7 @@ def get_solver(data: DataStructure, solver_name: str = "vmcon") -> _Solver:
         solver = VmconBounded(data=data, maxcal=data.globals.maxcal)
     elif solver_name == "fsolve":
         solver = FSolve(
-            data=data,
+            data=data
         )
     else:
         try:
