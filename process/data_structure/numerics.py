@@ -4,7 +4,6 @@ from types import DynamicClassAttribute
 
 import numpy as np
 
-from process.core.solver.constraints import ConstraintManager
 from process.core.solver.iteration_variables import ITERATION_VARIABLES
 
 
@@ -106,8 +105,8 @@ class FiguresOfMerit(IntEnum):
 IPNVARS = max(ITERATION_VARIABLES.keys())
 """total number of variables available for iteration"""
 
-IPEQNS = ConstraintManager.maximum_constraint_id()
-"""number of constraint equations available"""
+IPEQNS = 500
+"""maximum number of constraint equations available"""
 
 IPNFOMS = len(FiguresOfMerit)
 """number of available figures of merit"""
