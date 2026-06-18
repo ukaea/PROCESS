@@ -18,6 +18,7 @@ from process.models.engineering.pumping import (
     CoolantType,
     gnielinski_heat_transfer_coefficient,
 )
+from process.models.physics.physics import DivertorNumberModels
 
 logger = logging.getLogger(__name__)
 
@@ -857,6 +858,72 @@ class FirstWall(Model):
         )
         f_rad_fw_inboard_toroidal = (rad_fw_inboard_toroidal) / (2 * np.pi)
         return rad_fw_inboard_toroidal, f_rad_fw_inboard_toroidal
+
+    @staticmethod
+    def calculate_component_solid_angle_components(
+        deg_fw_inboard_plasma_centre_toroidal: float,
+        deg_fw_outboard_plasma_centre_toroidal: float,
+        deg_blkt_outboard_poloidal_plasma: float,
+        deg_blkt_inboard_poloidal_plasma: float,
+        deg_div_poloidal_plasma: float,
+        i_single_null: int,
+    ) -> tuple[float, float, float, float]:
+        """Calculate the solid angle subtended by the inboard and outboard first wall.
+
+
+        Parameters
+        ----------
+        deg_fw_inboard_plasma_centre_toroidal : float
+            Toroidal angle subtended by the inboard first wall from the centre of the plasma [degrees].
+        deg_fw_outboard_plasma_centre_toroidal : float
+            Toroidal angle subtended by the outboard first wall from the centre of the plasma [degrees].
+        deg_blkt_outboard_poloidal_plasma : float
+            Poloidal angle subtended by the outboard first wall from the centre of the plasma [degrees].
+        deg_blkt_inboard_poloidal_plasma : float
+            Poloidal angle subtended by the inboard first wall from the centre of the plasma [degrees].
+        deg_div_poloidal_plasma : float
+            Poloidal angle subtended by the divertor from the centre of the plasma [degrees].
+        i_single_null : int
+            Flag indicating whether the configuration is single null (1) or double null (0).
+
+        Returns
+        -------
+        tuple
+            Weighted solid angle contributions of the inboard first wall, outboard first wall,
+            lower divertor, and upper divertor (if applicable) as fractions of the total solid angle.
+        """
+        weighted_inboard = (deg_fw_inboard_plasma_centre_toroidal / 360.0) * (
+            deg_blkt_inboard_poloidal_plasma / 360.0
+        )
+        weighted_outboard = (deg_fw_outboard_plasma_centre_toroidal / 360.0) * (
+            deg_blkt_outboard_poloidal_plasma / 360.0
+        )
+        weighted_div_lower = deg_div_poloidal_plasma / 360.0
+
+        if i_single_null == DivertorNumberModels.DOUBLE_NULL:
+            weighted_div_upper = deg_div_poloidal_plasma / 360.0
+            total_weighting = np.sum([
+                weighted_inboard,
+                weighted_outboard,
+                weighted_div_lower,
+                weighted_div_upper,
+            ])
+            return (
+                weighted_inboard / total_weighting,
+                weighted_outboard / total_weighting,
+                weighted_div_lower / total_weighting,
+                weighted_div_upper / total_weighting,
+            )
+        total_weighting = np.sum([
+            weighted_inboard,
+            weighted_outboard,
+            weighted_div_lower,
+        ])
+        return (
+            weighted_inboard / total_weighting,
+            weighted_outboard / total_weighting,
+            weighted_div_lower / total_weighting,
+        )
 
     def output_fw_geometry(self):
         """Outputs the first wall geometry details to the output file."""
