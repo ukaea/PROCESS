@@ -81,5 +81,11 @@ class DivertorData:
     deg_div_poloidal_plasma: float = 0.0
     """Divertor poloidal angle subtended by plasma (degrees)"""
 
+    f_ster_div_lower_ring_source: float = 0.0
+    """Solid angle fraction of lower divertor assuming a ring source"""
+
+    f_ster_div_upper_ring_source: float = 0.0
+    """Solid angle fraction of upper divertor assuming a ring source"""
+
 
 CREATE_DICTS_FROM_DATACLASS = DivertorData
