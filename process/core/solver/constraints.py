@@ -81,8 +81,8 @@ class ConstraintManager:
         return len(cls._constraint_registry)
 
     @classmethod
-    def maximum_constraint_id(cls):
-        return max(c for c in cls._constraint_registry)
+    def constraint_ids(cls):
+        return tuple(cls._constraint_registry.keys())
 
     @classmethod
     def register_constraint(

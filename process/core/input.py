@@ -15,7 +15,7 @@ from process.core.exceptions import (
 )
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
-from process.data_structure.numerics import IPEQNS, IPNVARS
+from process.data_structure.numerics import IPNVARS
 from process.data_structure.pfcoil_variables import N_PF_GROUPS_MAX
 from process.data_structure.physics_variables import N_CONFINEMENT_SCALINGS
 from process.data_structure.scan_variables import IPNSCNS, IPNSCNV
@@ -1164,7 +1164,7 @@ INPUT_VARIABLES = {
     "icc": InputVariable(
         None,
         int,
-        range=(1, IPEQNS),
+        choices=ConstraintManager.constraint_ids(),
         additional_actions=_icc_additional_actions,
         set_variable=False,
     ),

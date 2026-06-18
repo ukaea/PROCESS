@@ -1,12 +1,16 @@
+from __future__ import annotations
+
 import logging
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
 from process.core.exceptions import ProcessValueError
-from process.core.model import DataStructure
+
+if TYPE_CHECKING:
+    from process.core.model import DataStructure
 
 logger = logging.getLogger(__name__)
 
