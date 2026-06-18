@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 class _Solver(ABC):
     """Base class for different solver implementations."""
 
-    def __init__(self, *, data: DataStructure, maxcal: int | None = None):
+    def __init__(self, *, data: DataStructure):
         """Initialise a solver."""
         # Exit code for the solver
         self.ifail = 0
@@ -34,7 +34,7 @@ class _Solver(ABC):
         self.tolerance = self.data.numerics.epsvmc
         self.b: float | None = None
         self.convergence_parameter: float | None = None
-        self.maxcal = maxcal
+        self.maxcal = self.data.globals.maxcal
 
     def set_evaluators(self, evaluators: Evaluators):
         """Set objective and constraint functions and their gradient evaluators.
@@ -363,13 +363,11 @@ def get_solver(data: DataStructure, solver_name: str = "vmcon") -> _Solver:
     solver: _Solver
 
     if solver_name == "vmcon":
-        solver = Vmcon(data=data, maxcal=data.globals.maxcal)
+        solver = Vmcon(data=data)
     elif solver_name == "vmcon_bounded":
-        solver = VmconBounded(data=data, maxcal=data.globals.maxcal)
+        solver = VmconBounded(data=data)
     elif solver_name == "fsolve":
-        solver = FSolve(
-            data=data
-        )
+        solver = FSolve(data=data)
     else:
         try:
             solver = load_external_solver(solver_name)
