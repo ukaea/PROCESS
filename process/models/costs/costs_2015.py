@@ -145,44 +145,6 @@ class Costs2015(Model):
         # Percentage of lithium 6 in the tail (waste) (75% natural abundance)
         tail_li6 = feed_li6 * 0.75e0
 
-        # Built-in test
-        if self.data.globals.run_tests == 1:
-            product_li6 = 0.3
-            feed_to_product_mass_ratio = (product_li6 - tail_li6) / (feed_li6 - tail_li6)
-            tail_to_product_mass_ratio = (product_li6 - feed_li6) / (feed_li6 - tail_li6)
-            p_v = self.value_function(product_li6)
-            t_v = self.value_function(tail_li6)
-            f_v = self.value_function(feed_li6)
-            swu = (
-                p_v + tail_to_product_mass_ratio * t_v - feed_to_product_mass_ratio * f_v
-            )
-            if abs(swu - 2.66e0) < 2.0e-2:
-                po.ocmmnt(
-                    self.outfile,
-                    "SWU for default 30% enrichment.  Should = 2.66. CORRECT",
-                )
-            else:
-                po.ocmmnt(
-                    self.outfile,
-                    "SWU for default 30% enrichment.  Should = 2.66. ERROR",
-                )
-
-            # Reference cost
-            self.data.costs_2015.s_label[21] = "Lithium enrichment"
-            self.data.costs_2015.s_cref[21] = 0.1e6
-            self.data.costs_2015.s_k[21] = 64.7e0
-            self.data.costs_2015.s_kref[21] = 64.7e0
-            self.data.costs_2015.s_cost[21] = (
-                self.data.costs_2015.s_cost_factor[21]
-                * self.data.costs_2015.s_cref[21]
-                * (self.data.costs_2015.s_k[21] / self.data.costs_2015.s_kref[21])
-                ** self.data.costs.costexp
-            )
-            if abs(self.data.costs_2015.s_cost[21] - 0.1e6) / 0.1e6 < 1.0e-3:
-                po.ocmmnt(self.outfile, "Reference cost for enrichment CORRECT")
-            else:
-                po.ocmmnt(self.outfile, "Reference cost for enrichment ERROR")
-
         # Lithium 6 enrichment cost ($)
         self.data.costs_2015.s_label[21] = "Lithium enrichment"
 

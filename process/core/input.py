@@ -106,8 +106,6 @@ class InputVariable:
 
 INPUT_VARIABLES = {
     "runtitle": InputVariable("globals", str),
-    "verbose": InputVariable("globals", int, choices=[0, 1]),
-    "run_tests": InputVariable("globals", int, choices=[0, 1]),
     "ioptimz": InputVariable(data_structure.numerics, int, choices=[1, -2]),
     "epsvmc": InputVariable(data_structure.numerics, float, range=(0.0, 1.0)),
     "boundl": InputVariable(data_structure.numerics, float, array=True),

@@ -174,8 +174,6 @@ class SuperconParam(NamedTuple):
 
     f_b_tf_inboard_peak_ripple_symmetric: Any = None
 
-    run_tests: Any = None
-
     i_tf_superconductor: Any = None
 
     iprint: Any = None
@@ -258,7 +256,6 @@ class SuperconParam(NamedTuple):
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
             f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
-            run_tests=0,
             i_tf_superconductor=5,
             iprint=0,
             outfile=11,
@@ -309,7 +306,6 @@ class SuperconParam(NamedTuple):
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
             f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
-            run_tests=0,
             i_tf_superconductor=5,
             iprint=0,
             outfile=11,
@@ -427,8 +423,6 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
         "f_b_tf_inboard_peak_ripple_symmetric",
         superconparam.f_b_tf_inboard_peak_ripple_symmetric,
     )
-
-    monkeypatch.setattr(cicc_sctfcoil.data.globals, "run_tests", superconparam.run_tests)
 
     tf_limits = cicc_sctfcoil.tf_cable_in_conduit_superconductor_properties(
         i_tf_superconductor=superconparam.i_tf_superconductor,
