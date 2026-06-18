@@ -15635,6 +15635,87 @@ def plot_cs_radial_stress_profile(
     axis.legend(loc="best")
 
 
+def plot_fw_inboard_toroidal_angle_load(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    demo_ranges: bool,
+    colour_scheme: Literal[1, 2],
+):
+
+    rad_fw_inboard_plasma_centre_toroidal = mfile.get(
+        "rad_fw_inboard_plasma_centre_toroidal", scan=scan
+    )
+    deg_fw_inboard_plasma_centre_toroidal = mfile.get(
+        "deg_fw_inboard_plasma_centre_toroidal", scan=scan
+    )
+    f_rad_fw_inboard_plasma_centre_toroidal = mfile.get(
+        "f_rad_fw_inboard_plasma_centre_toroidal", scan=scan
+    )
+
+    # Get rmajor and first wall distance
+    rmajor = mfile.get("rmajor", scan=scan)
+    rminor = mfile.get("rminor", scan=scan)
+    dr_fw_plasma_gap_inboard = mfile.get("dr_fw_plasma_gap_inboard", scan=scan)
+    a = rminor + dr_fw_plasma_gap_inboard
+
+    x_array = np.linspace(0, rmajor, 100)
+    # Calculate toroidal position: y = -(R-a)/sqrt(a*(2*R-a))*(R-x)
+    y = -(rmajor - a) / np.sqrt(a * (2 * rmajor - a)) * (rmajor - x_array)
+    axis.plot(
+        x_array,
+        y,
+        color="black",
+        linewidth=2,
+        linestyle="--",
+        label="First Wall Load Line",
+    )
+    axis.plot(
+        x_array,
+        -y,
+        color="black",
+        linewidth=2,
+        linestyle="--",
+        label="First Wall Load Line",
+    )
+    toroidal_cross_section(axis, mfile, scan, demo_ranges, colour_scheme)
+
+    angle_start = -deg_fw_inboard_plasma_centre_toroidal / 2
+    angle_end = deg_fw_inboard_plasma_centre_toroidal / 2
+
+    theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
+    arc_x = rmajor - rad_fw_inboard_plasma_centre_toroidal * np.cos(theta)
+    arc_y = rad_fw_inboard_plasma_centre_toroidal * np.sin(theta)
+
+    axis.plot(arc_x, arc_y, color="red", linewidth=2)
+
+    # Add angle label at the arc
+    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
+    label_radius = 0.5 * rmajor
+    label_x = rmajor - label_radius * np.cos(mid_angle)
+    label_y = label_radius * np.sin(mid_angle)
+
+    axis.text(
+        label_x,
+        label_y,
+        f"${deg_fw_inboard_plasma_centre_toroidal:.1f}°$\n({f_rad_fw_inboard_plasma_centre_toroidal * 100:.2f}%)",
+        fontsize=10,
+        color="red",
+        ha="center",
+        va="center",
+        weight="bold",
+        bbox={
+            "boxstyle": "round,pad=0.3",
+            "facecolor": "white",
+            "edgecolor": "red",
+            "alpha": 1.0,
+        },
+        zorder=100,
+    )
+
+    axis.set_ylim([-axis.get_ylim()[1], axis.get_ylim()[1]])
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -16034,12 +16115,19 @@ def main_plot(
     plot_first_wall_poloidal_cross_section(figs[33].add_subplot(122), m_file, scan)
     plot_fw_90_deg_pipe_bend(figs[33].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[34], m_file, scan)
     ax_blanket = figs[34].add_subplot(122, aspect="equal")
     plot_blkt_structure(ax_blanket, figs[34], m_file, scan, radial_build, colour_scheme)
+    plot_fw_inboard_toroidal_angle_load(
+        axis=figs[34].add_subplot(121, aspect="equal"),
+        mfile=m_file,
+        scan=scan,
+        demo_ranges=demo_ranges,
+        colour_scheme=colour_scheme,
+    )
 
+    plot_blkt_pipe_bends(figs[35], m_file, scan)
     plot_poloidal_power_distribution(
-        ax=figs[35].add_subplot(111, aspect="equal"),
+        ax=figs[35].add_subplot(122, aspect="equal"),
         m_file=m_file,
         scan=scan,
         radial_build=radial_build,
