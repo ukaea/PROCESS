@@ -3,8 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import numerics
-
 
 @pytest.fixture
 def power(process_models):
@@ -1846,9 +1844,11 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(power.data.physics, "rmajor", pfpwrparam.rmajor)
 
-    monkeypatch.setattr(numerics, "active_constraints", pfpwrparam.active_constraints)
+    monkeypatch.setattr(
+        power.data.numerics, "active_constraints", pfpwrparam.active_constraints
+    )
 
-    monkeypatch.setattr(numerics, "ioptimz", pfpwrparam.ioptimz)
+    monkeypatch.setattr(power.data.numerics, "ioptimz", pfpwrparam.ioptimz)
 
     monkeypatch.setattr(
         power.data.times, "t_pulse_cumulative", pfpwrparam.t_pulse_cumulative

@@ -13,7 +13,6 @@ from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import numerics
 from process.models.engineering.pumping import CoolantType
 from process.models.physics.physics import Physics, rether
 from process.models.power import PumpingPowerModelTypes
@@ -209,9 +208,9 @@ class Stellarator(Model):
             self.data,
         )
 
-        # If self.data.physics.aspect ratio is not in numerics.ixc set it to default value
+        # If self.data.physics.aspect ratio is not in self.data.numerics.ixc set it to default value
         # Or when you call it the first time
-        if 1 not in numerics.ixc:
+        if 1 not in self.data.numerics.ixc:
             self.data.physics.aspect = (
                 self.data.stellarator_config.stella_config_aspect_ref
             )
@@ -1893,7 +1892,7 @@ class Stellarator(Model):
         )
 
         # Check if self.data.physics.beta (iteration variable 5) is an iteration variable
-        if 5 in numerics.ixc:
+        if 5 in self.data.numerics.ixc:
             raise ProcessValueError(
                 "Beta should not be in ixc if istell>0. Use Constraints 24 and 84 instead"
             )

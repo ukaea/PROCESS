@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 import process.core.input as process_input
-from process import data_structure
 from process.core import init
 from process.core.exceptions import ProcessValidationError
 from process.core.model import DataStructure
@@ -71,7 +70,7 @@ def test_parse_real(epsvmc, expected, tmp_path, data_structure_obj):
     )
     init.init_process(data_structure_obj)
 
-    assert data_structure.numerics.epsvmc == expected
+    assert data_structure_obj.numerics.epsvmc == expected
 
 
 @pytest.mark.parametrize(
@@ -96,7 +95,7 @@ def test_exact_parsing(value, tmp_path, data_structure_obj):
     )
     init.init_process(data_structure_obj)
 
-    assert data_structure.numerics.epsvmc == value
+    assert data_structure_obj.numerics.epsvmc == value
 
 
 def test_parse_input(tmp_path, data_structure_obj):
@@ -107,9 +106,9 @@ def test_parse_input(tmp_path, data_structure_obj):
     init.init_process(data_structure_obj)
 
     assert data_structure_obj.globals.runtitle == "my run title"
-    assert data_structure.numerics.ioptimz == PROCESSRunMode.EVALUATION
-    assert pytest.approx(data_structure.numerics.epsvmc) == 0.6
-    assert pytest.approx(data_structure.numerics.boundl[0]) == 0.5
+    assert data_structure_obj.numerics.ioptimz == PROCESSRunMode.EVALUATION
+    assert pytest.approx(data_structure_obj.numerics.epsvmc) == 0.6
+    assert pytest.approx(data_structure_obj.numerics.boundl[0]) == 0.5
 
 
 def test_input_choices(tmp_path, data_structure_obj):
@@ -170,7 +169,7 @@ def test_input_array(tmp_path, data_structure_obj):
 
     init.init_process(data_structure_obj)
     np.testing.assert_array_equal(
-        data_structure.numerics.boundl[:6], [0.1, 0.2, 1.0, 0.0, 1.0e2, 0]
+        data_structure_obj.numerics.boundl[:6], [0.1, 0.2, 1.0, 0.0, 1.0e2, 0]
     )
 
 

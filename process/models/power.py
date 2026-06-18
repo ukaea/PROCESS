@@ -11,7 +11,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import numerics
 from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.pfcoil_variables import NGC2
 
@@ -650,7 +649,9 @@ class Power(Model):
             "OP ",
         )
 
-        if (numerics.ioptimz > 0) and (numerics.active_constraints[65]):
+        if (self.data.numerics.ioptimz > 0) and (
+            self.data.numerics.active_constraints[65]
+        ):
             po.ovarre(
                 self.outfile,
                 "Max permitted abs rate of change of stored energy in poloidal "

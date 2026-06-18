@@ -21,7 +21,6 @@ import pandas as pd
 import seaborn as sns
 
 from process.core.io.mfile import MFile
-from process.data_structure import numerics
 from process.data_structure.numerics import FiguresOfMerit
 
 # Variables of interest in mfiles and subsequent dataframes
@@ -445,7 +444,6 @@ def _plot_solutions(
     ):
         objf_list = norm_objf_df[NORM_OBJF_NAME].unique()
     else:
-        numerics.init_numerics()
         objf_list = {
             FiguresOfMerit(abs(int(minmax))).description for minmax in diffs_df["minmax"]
         }

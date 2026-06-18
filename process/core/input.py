@@ -10,13 +10,13 @@ from typing import TYPE_CHECKING, Any
 from warnings import warn
 
 import process
-from process import data_structure
 from process.core.exceptions import (
     ProcessValidationError,
     ProcessValueError,
 )
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
+from process.data_structure.numerics import IPEQNS, IPNVARS
 from process.data_structure.pfcoil_variables import N_PF_GROUPS_MAX
 from process.data_structure.physics_variables import N_CONFINEMENT_SCALINGS
 from process.data_structure.scan_variables import IPNSCNS, IPNSCNV
@@ -33,14 +33,18 @@ DataTypes = (int, float, str)
 """Valid input variable types alias"""
 
 
-def _ixc_additional_actions(_name, value: int, _array_index, _config):
-    data_structure.numerics.ixc[data_structure.numerics.nvar] = value
-    data_structure.numerics.nvar += 1
+def _ixc_additional_actions(
+    _name, value: int, _array_index, _config, data: DataStructure
+):
+    data.numerics.ixc[data.numerics.nvar] = value
+    data.numerics.nvar += 1
 
 
-def _icc_additional_actions(_name, value: int, _array_index, _config):
-    data_structure.numerics.icc[data_structure.numerics.n_constraints] = value
-    data_structure.numerics.n_constraints += 1
+def _icc_additional_actions(
+    _name, value: int, _array_index, _config, data: DataStructure
+):
+    data.numerics.icc[data.numerics.n_constraints] = value
+    data.numerics.n_constraints += 1
 
 
 @dataclass
@@ -106,18 +110,18 @@ class InputVariable:
 
 INPUT_VARIABLES = {
     "runtitle": InputVariable("globals", str),
-    "ioptimz": InputVariable(data_structure.numerics, int, choices=[1, -2]),
-    "epsvmc": InputVariable(data_structure.numerics, float, range=(0.0, 1.0)),
-    "boundl": InputVariable(data_structure.numerics, float, array=True),
-    "boundu": InputVariable(data_structure.numerics, float, array=True),
-    "epsfcn": InputVariable(data_structure.numerics, float, range=(0.0, 1.0)),
+    "ioptimz": InputVariable("numerics", int, choices=[1, -2]),
+    "epsvmc": InputVariable("numerics", float, range=(0.0, 1.0)),
+    "boundl": InputVariable("numerics", float, array=True),
+    "boundu": InputVariable("numerics", float, array=True),
+    "epsfcn": InputVariable("numerics", float, range=(0.0, 1.0)),
     "maxcal": InputVariable("globals", int, range=(0, 10000)),
-    "minmax": InputVariable(data_structure.numerics, int),
+    "minmax": InputVariable("numerics", int),
     "neqns": InputVariable(
-        data_structure.numerics, int, range=(0, ConstraintManager.num_constraints())
+        "numerics", int, range=(0, ConstraintManager.num_constraints())
     ),
     "nineqns": InputVariable(
-        data_structure.numerics, int, range=(0, ConstraintManager.num_constraints())
+        "numerics", int, range=(0, ConstraintManager.num_constraints())
     ),
     "alphaj": InputVariable("physics", float, range=(0.0, 10.0)),
     "alphan": InputVariable("physics", float, range=(0.0, 10.0)),
@@ -1122,29 +1126,34 @@ INPUT_VARIABLES = {
     "ixc": InputVariable(
         None,
         int,
-        range=(1, data_structure.numerics.ipnvars),
+        range=(1, IPNVARS),
         additional_actions=_ixc_additional_actions,
         set_variable=False,
     ),
     "icc": InputVariable(
         None,
         int,
-        range=(1, data_structure.numerics.ipeqns),
+        range=(1, IPEQNS),
         additional_actions=_icc_additional_actions,
         set_variable=False,
     ),
     "force_vmcon_inequality_satisfication": InputVariable(
-        data_structure.numerics,
+        "numerics",
         int,
         choices=(0, 1),
     ),
     "force_vmcon_inequality_tolerance": InputVariable(
-        data_structure.numerics, float, range=(0.0, 1e10)
+        "numerics", float, range=(0.0, 1e10)
     ),
 }
 
 
 def parse_input_file(data_structure_obj: DataStructure):
+    # These get incremented when reading the file, so need
+    # to ensure they are 0 before we parse the file
+    data_structure_obj.numerics.nvar = 0
+    data_structure_obj.numerics.n_constraints = 0
+
     input_file = data_structure_obj.globals.fileprefix
 
     input_file_path = Path("IN.DAT")
@@ -1256,6 +1265,7 @@ def parse_input_file(data_structure_obj: DataStructure):
                 clean_variable_value,
                 array_index_clean,
                 variable_config,
+                data_structure_obj,
             )
 
         # add the variable to a dictionary indexed by the variable name (in the input file)

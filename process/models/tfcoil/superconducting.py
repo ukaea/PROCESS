@@ -13,7 +13,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
-from process.data_structure import numerics
 from process.models import superconductors
 from process.models.superconductors import (
     N_CROCO_STRANDS_TURN,
@@ -997,7 +996,7 @@ class SuperconductingTFCoil(TFCoil):
         elif self.data.tfcoil == 6:
             po.ocmmnt(self.outfile, "CroCo cable with jacket: ")
 
-            if 75 in numerics.icc:
+            if 75 in self.data.numerics.icc:
                 po.ovarre(
                     self.outfile,
                     "Maximum permitted TF coil current / copper area (A/m2)",

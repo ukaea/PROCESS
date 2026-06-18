@@ -19,6 +19,7 @@ from process.data_structure.heat_transport_variables import HeatTransportData
 from process.data_structure.ife_variables import IFEData
 from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
 from process.data_structure.neoclassics_variables import NeoclassicsData
+from process.data_structure.numerics import NumericsData
 from process.data_structure.pf_power_variables import PFPowerData
 from process.data_structure.pfcoil_variables import PFCoilData
 from process.data_structure.physics_variables import PhysicsData
@@ -79,6 +80,7 @@ class DataStructure:
     superconducting_tfcoil: SuperconductingTFData = initialise_later
     globals: GlobalData = initialise_later
     scan: ScanData = initialise_later
+    numerics: NumericsData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):

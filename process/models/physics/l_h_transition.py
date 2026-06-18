@@ -6,7 +6,6 @@ from enum import IntEnum
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import numerics
 
 logger = logging.getLogger(__name__)
 
@@ -308,7 +307,9 @@ class PlasmaConfinementTransition(Model):
             self.outfile,
             f"{PlasmaConfinementTransitionModel(self.data.physics.i_l_h_threshold).full_name}",
         )
-        if (numerics.ioptimz > 0) and (numerics.active_constraints[14]):
+        if (self.data.numerics.ioptimz > 0) and (
+            self.data.numerics.active_constraints[14]
+        ):
             po.ovarre(
                 self.outfile,
                 "L-H threshold power (MW)",

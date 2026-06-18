@@ -4,7 +4,6 @@ from pathlib import Path
 import numpy as np
 
 from process.core import constants
-from process.data_structure import numerics
 
 
 class OutputFileManager:
@@ -183,10 +182,12 @@ def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
 
     format_value = f"{value:.17e}" if isinstance(value, float) else f"{value: >12}"
 
-    if varnam.strip("()") in numerics.name_xc:
-        # MDK add ITV label if it is an iteration variable
-        # The ITV flag overwrites the output_flag
-        output_flag = "ITV"
+    # TODO need to find a way to identify iteration variables at a higher level
+    # in the data structure
+    # if varnam.strip("()") in numerics.name_xc:
+    #     # MDK add ITV label if it is an iteration variable
+    #     # The ITV flag overwrites the output_flag
+    #     output_flag = "ITV"
 
     line = f"{description}{replacement_character} {varname}{replacement_character} {format_value} {output_flag}"
     write(file, line)

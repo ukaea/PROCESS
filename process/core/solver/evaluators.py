@@ -5,7 +5,6 @@ import numpy as np
 
 from process.core.caller import Caller
 from process.core.model import DataStructure
-from process.data_structure import numerics
 
 logger = logging.getLogger(__name__)
 
@@ -68,9 +67,9 @@ class Evaluators:
 
         sqsumconfsq = math.sqrt(summ)
         logger.debug("Key evaluator values:")
-        logger.debug(f"{numerics.nviter = }")
+        logger.debug(f"{self.data.numerics.nviter = }")
         logger.debug(f"{(1 - (ifail % 7)) - 1 = }")
-        logger.debug(f"{(numerics.nviter % 2) - 1 = }")
+        logger.debug(f"{(self.data.numerics.nviter % 2) - 1 = }")
         logger.debug(f"{self.data.physics.temp_plasma_electron_vol_avg_kev = }")
         logger.debug(f"{self.data.costs.coe = }")
         logger.debug(f"{self.data.physics.rmajor = }")
@@ -125,8 +124,8 @@ class Evaluators:
                 xfor[j] = xv[j]
                 xbac[j] = xv[j]
                 if i == j:
-                    xfor[i] = xv[j] * (1.0 + numerics.epsfcn)
-                    xbac[i] = xv[j] * (1.0 - numerics.epsfcn)
+                    xfor[i] = xv[j] * (1.0 + self.data.numerics.epsfcn)
+                    xbac[i] = xv[j] * (1.0 - self.data.numerics.epsfcn)
 
             # Evaluate at (x+dx)
             ffor, cfor = self.caller.call_models(xfor, m)
