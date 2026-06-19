@@ -16,6 +16,7 @@ from re import sub
 from process.core.exceptions import ProcessValidationError
 from process.core.io.data_structure_dicts import get_dicts
 from process.core.solver.constraints import ConstraintManager
+from process.core.solver.iteration_variables import ITERATION_VARIABLES
 from process.data_structure.numerics import PROCESSRunMode
 
 
@@ -322,10 +323,6 @@ def get_iteration_variables(data: dict):
         variable number, comment, upper and/or lower bounds if present
     """
     variables = {}
-
-    # Load dicts from dicts JSON file
-    dicts = get_dicts()
-
     # List of variable numbers in IN.DAT
     variable_numbers = data["ixc"].value
 
@@ -333,10 +330,7 @@ def get_iteration_variables(data: dict):
     for variable_number in variable_numbers:
         variable = {}
 
-        comment = dicts["DICT_IXC_SIMPLE"][
-            str(variable_number).replace(",", ";").replace(".", ";").replace(":", ";")
-        ]
-        variable["comment"] = comment
+        variable["comment"] = ITERATION_VARIABLES[int(variable_number)].name
 
         # Set bounds if there are any
         if str(variable_number) in data["bounds"].value:

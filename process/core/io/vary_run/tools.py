@@ -11,6 +11,7 @@ from process.core.io.data_structure_dicts import get_dicts
 from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile
 from process.core.model import DataStructure
+from process.core.solver.iteration_variables import ITERATION_VARIABLES
 
 logger = logging.getLogger(__name__)
 
@@ -19,8 +20,6 @@ def get_neqns_itervars(in_dat, wdir="."):
     """Returns the number of equations and a list of variable
     names of all iteration variables
     """
-    # Load dicts from dicts JSON file
-    dicts = get_dicts()
     in_dat = InDat(Path(wdir, in_dat))
 
     ixc_list = in_dat.data["ixc"].get_value
@@ -28,7 +27,7 @@ def get_neqns_itervars(in_dat, wdir="."):
     itervars = []
     for var in ixc_list:
         if var != "":
-            itervars += [dicts["DICT_IXC_SIMPLE"][str(var)]]
+            itervars += [ITERATION_VARIABLES[int(var)].name]
 
     if in_dat.number_of_itvars != len(itervars):
         raise ValueError("Number of iteration vars is not consistent")
@@ -47,7 +46,7 @@ def update_ixc_bounds(indat, wdir="."):
     bounds = in_dat.data["bounds"].get_value
 
     for key, value in bounds.items():
-        name = dicts["DICT_IXC_SIMPLE"][key]
+        name = ITERATION_VARIABLES[int(key)].name
 
         if "l" in value:
             dicts["DICT_IXC_BOUNDS"][name]["lb"] = float(value["l"])
@@ -151,7 +150,7 @@ def check_in_dat(filename):
     ixc_list = in_dat.data["ixc"].get_value
 
     for itervarno in ixc_list:
-        itervarname = dicts["DICT_IXC_SIMPLE"][str(itervarno)]
+        itervarname = ITERATION_VARIABLES[int(itervarno)].name
         try:
             lowerinputbound = dicts["DICT_INPUT_BOUNDS"][itervarname]["lb"]
         except KeyError as err:

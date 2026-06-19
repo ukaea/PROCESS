@@ -161,16 +161,6 @@ def dict_ixc_bounds():
     return ixc_bounds
 
 
-def dict_ixc_simple():
-    # Returns dictionary mapping ixc no to iteration variable name
-    ixc_simple = {}
-    ixc_full = output_dict["DICT_IXC_FULL"]
-    for key, value in ixc_full.items():
-        ixc_simple[key] = value["name"]
-
-    return ixc_simple
-
-
 # cache the output of get_dicts so that it is never re-calculated in a given
 # process run.
 @cache
@@ -195,7 +185,6 @@ def get_dicts():
         SourceDictionary("DICT_VAR_TYPE", dict_var_type),
         SourceDictionary("DICT_IXC_FULL", dict_ixc_full),
         SourceDictionary("DICT_IXC_BOUNDS", dict_ixc_bounds),
-        SourceDictionary("DICT_IXC_SIMPLE", dict_ixc_simple),
     ])
 
     # Make individual dicts within dict objects, process, then add to output_dict
