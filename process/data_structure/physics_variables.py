@@ -39,7 +39,7 @@ class PhysicsData:
     """[J]"""
 
     p_plasma_heating_total_mw: float = 0.0
-    """[W]"""
+    """Total heating power given to the plasma (Pₕₑₐₜ) [MW]"""
 
     t_energy_confinement_beta: float = 0.0
     """[s]"""

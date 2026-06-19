@@ -995,7 +995,7 @@ class Physics(Model):
             self.data.physics.plomw = self.data.physics.flo * self.data.physics.ptarmw
 
         # Calculate some derived quantities that may not have been defined earlier
-        self.data.physics.p_plasma_heating_total_mw = 1e6 * (
+        self.data.physics.p_plasma_heating_total_mw = (
             self.data.physics.f_p_alpha_plasma_deposited
             * self.data.physics.p_alpha_total_mw
             + self.data.physics.p_non_alpha_charged_mw
