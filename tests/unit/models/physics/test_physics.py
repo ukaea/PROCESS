@@ -9,6 +9,7 @@ from process.core import constants
 from process.models.physics.impurity_radiation import initialise_imprad
 from process.models.physics.physics import (
     DetailedPhysics,
+    Physics,
     PlasmaBeta,
     PlasmaInductance,
     calculate_cylindrical_safety_factor,
@@ -61,6 +62,19 @@ def test_ps_fraction_scene():
     beta = 0.15
     pscf = ps_fraction_scene(beta)
     assert pscf == pytest.approx(-0.0135, abs=0.0001)
+
+
+def test_calculate_total_plasma_heating_power():
+    """Test calculate_total_plasma_heating_power()."""
+    p_plasma_heating_total_mw = Physics.calculate_total_plasma_heating_power(
+        f_p_alpha_plasma_deposited=0.25,
+        p_alpha_total_mw=40.0,
+        p_non_alpha_charged_mw=3.0,
+        p_plasma_ohmic_mw=5.0,
+        p_hcd_injected_total_mw=7.0,
+    )
+
+    assert p_plasma_heating_total_mw == pytest.approx(25.0)
 
 
 class BootstrapFractionIter89Param(NamedTuple):

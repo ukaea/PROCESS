@@ -996,11 +996,13 @@ class Physics(Model):
 
         # Calculate some derived quantities that may not have been defined earlier
         self.data.physics.p_plasma_heating_total_mw = (
-            self.data.physics.f_p_alpha_plasma_deposited
-            * self.data.physics.p_alpha_total_mw
-            + self.data.physics.p_non_alpha_charged_mw
-            + self.data.physics.p_plasma_ohmic_mw
-            + self.data.current_drive.p_hcd_injected_total_mw
+            self.calculate_total_plasma_heating_power(
+                f_p_alpha_plasma_deposited=self.data.physics.f_p_alpha_plasma_deposited,
+                p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
+                p_non_alpha_charged_mw=self.data.physics.p_non_alpha_charged_mw,
+                p_plasma_ohmic_mw=self.data.physics.p_plasma_ohmic_mw,
+                p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
+            )
         )
         self.data.physics.f_p_plasma_separatrix_rad = (
             self.exhaust.calculate_radiation_fraction(
@@ -2202,6 +2204,13 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
+            "Total heating power given to the plasma (Pₕₑₐₜ) [MW]",
+            "(p_plasma_heating_total_mw)",
+            self.data.physics.p_plasma_heating_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Ohmic heating power (MW)",
             "(p_plasma_ohmic_mw)",
             self.data.physics.p_plasma_ohmic_mw,
@@ -2965,6 +2974,41 @@ class Physics(Model):
             m_plasma_alpha,
             m_plasma_electron,
             m_plasma,
+        )
+
+    @staticmethod
+    def calculate_total_plasma_heating_power(
+        f_p_alpha_plasma_deposited: float,
+        p_alpha_total_mw: float,
+        p_non_alpha_charged_mw: float,
+        p_plasma_ohmic_mw: float,
+        p_hcd_injected_total_mw: float,
+    ) -> float:
+        """Calculate the total plasma heating power (Pₕₑₐₜ).
+
+        Parameters
+        ----------
+        f_p_alpha_plasma_deposited : float
+            Fraction of alpha power deposited in plasma.
+        p_alpha_total_mw : float
+            Total alpha power (MW).
+        p_non_alpha_charged_mw : float
+            Non-alpha charged particle heating power (MW).
+        p_plasma_ohmic_mw : float
+            Ohmic heating power (MW).
+        p_hcd_injected_total_mw : float
+            Total heating power from HCD injection (MW).
+
+        Returns
+        -------
+        float
+            Total plasma heating power (MW).
+        """
+        return (
+            f_p_alpha_plasma_deposited * p_alpha_total_mw
+            + p_non_alpha_charged_mw
+            + p_plasma_ohmic_mw
+            + p_hcd_injected_total_mw
         )
 
 
