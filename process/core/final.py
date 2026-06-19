@@ -7,8 +7,7 @@ from process.core import output as op
 from process.core import process_output as po
 from process.core.solver import constraints
 from process.core.solver.objectives import objective_function
-from process.data_structure.numerics import PROCESSRunMode
-from process.data_structure.numerics import SolverOutputCondition
+from process.data_structure.numerics import PROCESSRunMode, SolverOutputCondition
 
 
 def finalise(models, data, ifail: int, non_idempotent_msg: str | None = None):

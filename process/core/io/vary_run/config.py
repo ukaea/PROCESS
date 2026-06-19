@@ -25,8 +25,8 @@ from process.core.io.vary_run.tools import (
     process_warnings,
     set_variable_in_indat,
 )
-from process.data_structure.numerics import SolverOutputCondition
 from process.core.model import DataStructure
+from process.data_structure.numerics import SolverOutputCondition
 
 logger = logging.getLogger(__name__)
 
