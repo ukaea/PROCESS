@@ -195,7 +195,6 @@ class NumericsData:
     )
     """Logical array showing which constraints are active"""
 
-
     lablcc: list[str] = field(
         default_factory=lambda: [
             "⟨β⟩ consistency                   ",
@@ -580,7 +579,7 @@ class NumericsData:
     * (174) NOT USED
     * (175) NOT USED
     """
-        # WARNING These labels are used as variable names by new_indat(), and possibly
+    # WARNING These labels are used as variable names by new_indat(), and possibly
     # other python utilities, so they cannot easily be changed.
 
     name_xc: list[str] = field(default_factory=lambda: [""] * N_ITERATION_VARIABLES_MAX)
