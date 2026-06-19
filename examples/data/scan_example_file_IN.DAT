@@ -138,7 +138,7 @@ icc = 81
 *------------------*
 
 icc = 68
-p_div_bt_q_aspect_rmajor_max_mwaspect_rmajor_max_mw = 10.0
+p_div_bt_q_aspect_rmajor_max_mw = 10.0
 
 * TF coil stress limits *
 *-----------------------*
