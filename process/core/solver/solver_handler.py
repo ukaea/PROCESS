@@ -83,7 +83,10 @@ class SolverHandler:
             # If VMCON has exited with error code 5 try another run using a multiple
             # of the identity matrix as input for the Hessian b(n,n)
             # Only do this if VMCON has not iterated (nviter=1)
-            if ifail == SolverOutputCondition.NO_SOLUTION and self.data.numerics.nviter < 2:
+            if (
+                ifail == SolverOutputCondition.NO_SOLUTION
+                and self.data.numerics.nviter < 2
+            ):
                 print(
                     "VMCON error code = 5.  Rerunning VMCON with a new initial "
                     "estimate of the second derivative matrix."
