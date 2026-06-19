@@ -126,7 +126,7 @@ class PhysicsData:
     """Plasma temperature profile index (⍺ₜ)"""  # noqa: RUF001
 
     aspect: float = 2.907
-    """Plasma aspect ratio (A) (`iteration variable 1`) """
+    """Plasma aspect ratio (A) (`iteration variable 1`)"""
 
     beamfus0: float = 1.0
     """multiplier for beam-background fusion calculation"""
