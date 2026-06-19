@@ -2,8 +2,6 @@ from dataclasses import dataclass, field
 from enum import IntEnum
 from types import DynamicClassAttribute
 
-from enum import IntEnum
-
 import numpy as np
 
 
@@ -13,34 +11,6 @@ class SolverOutputCondition(IntEnum):
     """
 
     USER_TERMINATED = -1
-
-    IMPROPER_INPUT = 0
-    """Solver failed due to improper input (e.g. invalid parameters, or failure to
-    satisfy solver preconditions)"""
-    CONVERGED = 1
-    """Solver converged successfully"""
-
-    MAX_ITERATIONS = 2
-    """Solver failed to converge within the maximum number of iterations"""
-
-    MAX_LINE_SEARCHES = 3
-    """Line search required 10 function calls without finding a better solution"""
-
-    UPHILL_SEARCH = 4
-    """Uphill search direction was calculated"""
-
-    NO_SOLUTION = 5
-    """No feasible solution or bad approximation of Hessian"""
-
-    SINGLE_MATRIX_OR_BOUNDS = 6
-    """Singular matrix in quadratic subproblem or restriction by artificial bounds"""
-
-
-
-class SolverOutputCondition(IntEnum):
-    """Enum for the possible conditions that can be returned by the solvers.
-    This is for the `ifail` condition
-    """
 
     IMPROPER_INPUT = 0
     """Solver failed due to improper input (e.g. invalid parameters, or failure to

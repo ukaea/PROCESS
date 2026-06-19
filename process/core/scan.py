@@ -15,9 +15,12 @@ from process.core.exceptions import ProcessValueError
 from process.core.log import logging_model_handler, show_errors
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
-from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
+from process.data_structure.numerics import (
+    FiguresOfMerit,
+    PROCESSRunMode,
+    SolverOutputCondition,
+)
 from process.data_structure.scan_variables import IPNSCNS, NOUTVARS, ScanData
-from process.data_structure.numerics import SolverOutputCondition
 
 if TYPE_CHECKING:
     from process.core.model import DataStructure, Model
