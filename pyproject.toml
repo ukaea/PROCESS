@@ -27,7 +27,7 @@ dependencies = [
     "numba>=0.57",
     "PyVMCON>=2.4.0,<2.5.0",
     "CoolProp>=6.4",
-    "matplotlib>=2.1.1",
+    "matplotlib>=3.10.9",
     "seaborn>=0.12.2",
     "tabulate",
     "pyyaml",  # just used for mfile yml outputting
