@@ -115,7 +115,7 @@ class CurrentDriveModel(IntEnum):
 
     @DynamicClassAttribute
     def method(self):
-        """Tthe current drive method type for this current drive model."""
+        """The current drive method type for this current drive model."""
         return self._method_
 
     @DynamicClassAttribute
