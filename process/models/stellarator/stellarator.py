@@ -2279,6 +2279,23 @@ class Stellarator(Model):
             + self.data.physics.p_ion_transport_loss_mw
         )
 
+        # Calculate some derived quantities that may not have been defined earlier
+        self.data.physics.p_plasma_heating_total_mw = (
+            self.physics.calculate_total_plasma_heating_power(
+                f_p_alpha_plasma_deposited=self.data.physics.f_p_alpha_plasma_deposited,
+                p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
+                p_non_alpha_charged_mw=self.data.physics.p_non_alpha_charged_mw,
+                p_plasma_ohmic_mw=self.data.physics.p_plasma_ohmic_mw,
+                p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
+            )
+        )
+        self.data.physics.f_p_plasma_separatrix_rad = (
+            self.physics.exhaust.calculate_radiation_fraction(
+                p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
+                p_plasma_heating_mw=self.data.physics.p_plasma_heating_total_mw,
+            )
+        )
+
         #  Calculate auxiliary physics related information
         #  for the rest of the code
 
