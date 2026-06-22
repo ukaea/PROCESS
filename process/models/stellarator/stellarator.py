@@ -1236,7 +1236,7 @@ class Stellarator(Model):
                 * f_a_fw_coolant_outboard
             )
 
-            #  Average first wall coolant fraction, only used by old routines
+            #  Average first wall coolant fraction
 
             self.data.fwbs.fwclfr = (
                 self.data.first_wall.a_fw_inboard
