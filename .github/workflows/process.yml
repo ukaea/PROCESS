@@ -23,7 +23,7 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
       - name: Run unit tests with coverage report
@@ -39,7 +39,7 @@ jobs:
   integration-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
         with:
@@ -50,7 +50,7 @@ jobs:
   example-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
         with:
@@ -69,7 +69,7 @@ jobs:
       matrix:
         tolerance: [0.2, 5]
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           fetch-depth: 0
       - name: Setup python and hatch
@@ -85,7 +85,7 @@ jobs:
     # only runs upon merge to main
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
         with:
@@ -108,7 +108,7 @@ jobs:
   pre-commit-quality-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
         with:
@@ -121,7 +121,7 @@ jobs:
     if: github.event_name == 'pull_request'
     needs: [pre-commit-quality-check]
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           fetch-depth: 0
       - name: Setup python and hatch
@@ -168,7 +168,7 @@ jobs:
     env:
       COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
         with:
@@ -217,7 +217,7 @@ jobs:
     needs: tracking
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           fetch-depth: 0
       - name: Setup python and hatch
