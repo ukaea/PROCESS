@@ -52,7 +52,7 @@ Issues        = "https://github.com/ukaea/process/issues"
 
 [project.optional-dependencies]
 test = [
-  "pytest>=5.4.1",
+  "pytest>=9.1.1",
   "testbook>=0.4",
   "pytest-cov>=3.0.0",
   "pytest-xdist>=2.5.0",
