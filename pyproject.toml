@@ -28,7 +28,7 @@ dependencies = [
     "PyVMCON>=2.4.0,<2.5.0",
     "CoolProp>=6.4",
     "matplotlib>=2.1.1",
-    "seaborn>=0.12.2",
+    "seaborn>=0.13.2",
     "tabulate",
     "pyyaml",  # just used for mfile yml outputting
    ]
