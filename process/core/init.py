@@ -16,7 +16,10 @@ from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.blanket_variables import BlktModelTypes
-from process.data_structure.build_variables import InboardBlanketConfiguration
+from process.data_structure.build_variables import (
+    InboardBlanketConfiguration,
+    TFCSRadialConfiguration,
+)
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
@@ -763,7 +766,10 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Ensure that the TF isnt placed against the
     # CS which is now outside it
-    if data.tfcoil.i_tf_bucking >= 2 and data.build.i_tf_inside_cs == 1:
+    if (
+        data.tfcoil.i_tf_bucking >= 2
+        and data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
+    ):
         raise ProcessValidationError(
             "Cannot have i_tf_bucking >= 2 when i_tf_inside_cs = 1"
         )

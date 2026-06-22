@@ -20,6 +20,7 @@ from scipy.interpolate import interp1d
 
 from process.core import constants
 from process.core.io.mfile import MFile, MFileErrorClass
+from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
@@ -9421,7 +9422,7 @@ def plot_radial_build(axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
         "dr_tf_shld_gap",
         "dr_tf_outboard",
     ]
-    if int(mfile.get("i_tf_inside_cs", scan=-1)) == 1:
+    if int(mfile.get("i_tf_inside_cs", scan=-1)) == TFCSRadialConfiguration.TF_INSIDE_CS:
         radial_variables[1] = "dr_tf_inboard"
         radial_variables[2] = "dr_cs_tf_gap"
         radial_variables[3] = "dr_cs"
@@ -9465,7 +9466,7 @@ def plot_radial_build(axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
         "Gap",
         "TF Coil Outboard Leg",
     ]
-    if int(mfile.get("i_tf_inside_cs", scan=-1)) == 1:
+    if int(mfile.get("i_tf_inside_cs", scan=-1)) == TFCSRadialConfiguration.TF_INSIDE_CS:
         radial_labels[1] = "TF Coil Inboard Leg"
         radial_labels[2] = "CS Coil gap"
         radial_labels[3] = "Central Solenoid"
@@ -9503,7 +9504,7 @@ def plot_radial_build(axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
         if mfile.get("i_tf_sup", scan=-1) != 0
         else "#b87333",
     ]
-    if int(mfile.get("i_tf_inside_cs", scan=-1)) == 1:
+    if int(mfile.get("i_tf_inside_cs", scan=-1)) == TFCSRadialConfiguration.TF_INSIDE_CS:
         radial_color[1] = (
             TFC_COLOUR[colour_scheme - 1]
             if mfile.get("i_tf_sup", scan=-1) != 0

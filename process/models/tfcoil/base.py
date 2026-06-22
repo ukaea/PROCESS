@@ -16,6 +16,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure, Model
+from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.physics_variables import DivertorNumberModels
 
 logger = logging.getLogger(__name__)
@@ -748,7 +749,7 @@ class TFCoil(Model):
 
         elif (
             self.data.tfcoil.i_tf_bucking in {2, 3}
-            and self.data.build.i_tf_inside_cs == 1
+            and self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
         ):
             po.ocmmnt(
                 self.outfile,
@@ -758,7 +759,7 @@ class TFCoil(Model):
 
         elif (
             self.data.tfcoil.i_tf_bucking in {2, 3}
-            and self.data.build.i_tf_inside_cs == 0
+            and self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_OUTSIDE_CS
         ):
             po.ocmmnt(
                 self.outfile, "  -> TF in contact with CS (bucked and weged design)"
@@ -2530,7 +2531,7 @@ class TFCoil(Model):
             jeff[0] = 0.0e0
 
             # Inner radius of the CS
-            if i_tf_inside_cs == 1:
+            if i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
                 # CS not used as wedge support i_tf_inside_cs = 1
                 radtf[0] = 0.001
             else:
@@ -2543,7 +2544,7 @@ class TFCoil(Model):
                 # -#
 
                 # CS vertical cross-section area [m2]
-                if i_tf_inside_cs == 1:
+                if i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
                     a_oh = (
                         2.0e0
                         * z_tf_inside_half
@@ -2661,7 +2662,7 @@ class TFCoil(Model):
             jeff[1] = 0.0e0
 
             # Outer radius of the CS
-            if i_tf_inside_cs == 1:
+            if i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
                 radtf[1] = dr_bore - dr_tf_inboard - dr_cs_tf_gap
             else:
                 radtf[1] = dr_bore + dr_cs
