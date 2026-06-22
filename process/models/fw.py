@@ -19,7 +19,7 @@ from process.models.engineering.pumping import (
     CoolantType,
     gnielinski_heat_transfer_coefficient,
 )
-from process.models.physics.physics import DivertorNumberModels
+from process.data_structure.physics_variables import DivertorNumberModels
 
 logger = logging.getLogger(__name__)
 
@@ -155,11 +155,11 @@ class FirstWall(Model):
 
         self.calculate_component_solid_angle_components(
             deg_fw_inboard_plasma_centre_toroidal=self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal,
-            deg_fw_outboard_plasma_centre_toroidal=self.data.fwbs.deg_fw_outboard_plasma_centre_toroidal,
-            deg_blkt_outboard_poloidal_plasma=self.data.blanket.f_deg_blkt_outboard_poloidal_plasma,
-            deg_blkt_inboard_poloidal_plasma=self.data.blanket.f_deg_blkt_inboard_poloidal_plasma,
+            deg_fw_outboard_plasma_centre_toroidal=1.0-self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal,
+            deg_blkt_outboard_poloidal_plasma=self.data.blanket.deg_blkt_outboard_poloidal_plasma,
+            deg_blkt_inboard_poloidal_plasma=self.data.blanket.deg_blkt_inboard_poloidal_plasma,
             deg_div_poloidal_plasma=self.data.divertor.deg_div_poloidal_plasma,
-            i_single_null=self.data.divertor.i_single_null,
+            i_single_null=self.data.physics.i_single_null,
         )
 
         # Radiation surface heat flux on first wall (MW/m²)
