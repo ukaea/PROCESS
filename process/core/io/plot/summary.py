@@ -15790,14 +15790,40 @@ def plot_summary(
     output_format: str = "pdf",
     show: bool = False,
 ):
+
+    def add_page_footer(
+        fig: plt.Figure, page_number: int, total_pages: int, run_label: str
+    ):
+        footer_text = f"{run_label}"
+        fig.text(
+            0.01,
+            0.01,
+            footer_text,
+            fontsize=7,
+            ha="left",
+            va="bottom",
+            color="dimgray",
+        )
+        fig.text(
+            0.99,
+            0.01,
+            f"Page {page_number}/{total_pages}",
+            fontsize=7,
+            ha="right",
+            va="bottom",
+            color="dimgray",
+        )
+
     # create main plot
     # Increase range when adding new page
     pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(37)]
 
     # run main_plot
+    mfile_obj = MFile(mfile) if mfile != "" else MFile("MFILE.DAT")
+    run_label = f"{mfile_obj.get('fileprefix', scan=-1)} | scan {scan or -1} | {mfile_obj.get('date', scan=-1)} {mfile_obj.get('time', scan=-1)} | {mfile_obj.get('tagno', scan=-1)} | Branch: {mfile_obj.get('branch_name', scan=-1)}  "
     main_plot(
         pages,
-        MFile(mfile) if mfile != "" else MFile("MFILE.DAT"),
+        mfile_obj,
         scan=scan or -1,
         demo_ranges=demo_ranges,
         colour_scheme=colour,
@@ -15805,12 +15831,14 @@ def plot_summary(
 
     if output_format == "pdf":
         with bpdf.PdfPages(mfile.with_name(mfile.name + "SUMMARY.pdf")) as pdf:
-            for p in pages:
+            for page_number, p in enumerate(pages, start=1):
+                add_page_footer(p, page_number, len(pages), run_label)
                 pdf.savefig(p)
     elif output_format == "png":
         folder = Path(mfile.with_name(mfile.stem + "_SUMMARY"))
         folder.mkdir(parents=True, exist_ok=True)
         for no, page in enumerate(pages):
+            add_page_footer(page, no + 1, len(pages), run_label)
             page.savefig(Path(folder, f"page{no}.png"), format="png")
 
     # show fig if option used
