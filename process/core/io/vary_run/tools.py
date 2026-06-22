@@ -11,6 +11,7 @@ from process.core.io.data_structure_dicts import get_dicts
 from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile
 from process.core.model import DataStructure
+from process.data_structure.numerics import SolverOutputCondition
 
 logger = logging.getLogger(__name__)
 
@@ -254,13 +255,13 @@ def no_unfeasible_mfile(wdir=".", mfile="MFILE.DAT"):
 
     # no scans
     if not m_file.data["isweep"].exists:
-        if m_file.get("ifail") == 1:
+        if m_file.get("ifail") == SolverOutputCondition.CONVERGED:
             return 0
         return 1
 
     ifail = m_file.data["ifail"].get_scans()
     try:
-        return len(ifail) - ifail.count(1)
+        return len(ifail) - ifail.count(SolverOutputCondition.CONVERGED)
     except TypeError:
         # This seems to occur, if ifail is not in MFILE!
         # This probably means in the mfile library a KeyError
@@ -321,7 +322,7 @@ def get_solution_from_mfile(neqns, nvars, wdir=".", mfile="MFILE.DAT"):
     table_sol = [m_file.get(f"itvar{var_no + 1:03}") for var_no in range(nvars)]
     table_res = [m_file.get(f"normres{con_no + 1:03}") for con_no in range(neqns)]
 
-    if ifail != 1:
+    if ifail != SolverOutputCondition.CONVERGED:
         return ifail, "0", "0", ["0"] * nvars, ["0"] * neqns
 
     return ifail, objective_function, constraints, table_sol, table_res

@@ -57,6 +57,7 @@ from bokeh.plotting import figure
 from bokeh.resources import CDN
 
 from process.core.io import mfile as mf
+from process.data_structure.numerics import SolverOutputCondition
 
 logging.basicConfig(level=logging.INFO, filename="tracker.log")
 logger = logging.getLogger("PROCESS Tracker")
@@ -182,7 +183,11 @@ class ProcessTracker:
         """
         self.mfile = mf.MFile(mfile)
 
-        if strict and (ifail := self.mfile.data["ifail"].get_scan(-1)) != 1:
+        if (
+            strict
+            and (ifail := self.mfile.data["ifail"].get_scan(-1))
+            != SolverOutputCondition.CONVERGED
+        ):
             raise RuntimeError(
                 f"{ifail = :.0f} indicates PROCESS has failed to converge."
             )
