@@ -66,7 +66,7 @@ docs = [
   "mkdocs>=1.1",
   "mkdocs-literate-nav",
   "mkdocs-material>=4.6.3",
-  "mkdocs-git-revision-date-localized-plugin>=1.2",
+  "mkdocs-git-revision-date-localized-plugin>=1.5.3",
   "mkdocs-glightbox>=0.3.4",
   "pymdown-extensions>=6.3",
   "bokeh>=3.4.0,<4",
