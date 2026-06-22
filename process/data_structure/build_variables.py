@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import IntEnum
+from types import DynamicClassAttribute
 
 
 class InboardBlanketConfiguration(IntEnum):
@@ -12,8 +13,33 @@ class InboardBlanketConfiguration(IntEnum):
 class TFCSRadialConfiguration(IntEnum):
     """Switch for placing the TF coil inside the CS, controlled through `BuildData.i_tf_inside_cs`"""
 
-    TF_OUTSIDE_CS = 0
-    TF_INSIDE_CS = 1
+    TF_OUTSIDE_CS = (0, "Inboard TF coil leg is outside the CS")
+    TF_INSIDE_CS = (1, "Inboard TF coil leg is inside the CS")
+
+    def __new__(cls, value: int, description: str):
+        """Create a new TFCSRadialConfiguration enum member with value and description.
+
+        Parameters
+        ----------
+        value : int
+            The numeric value of the enum member.
+        description : str
+            The description of the TFCSRadialConfiguration enum member.
+
+        Returns
+        -------
+        TFCSRadialConfiguration
+            A new enum member with the specified value and description.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._description_ = description
+        return obj
+
+    @DynamicClassAttribute
+    def description(self):
+        """Get the description of the TF coil radial configuration."""
+        return self._description_
 
 
 @dataclass(slots=True)

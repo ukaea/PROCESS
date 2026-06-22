@@ -2007,6 +2007,13 @@ class Build(Model):
                 "(i_tf_inside_cs)",
                 self.data.build.i_tf_inside_cs,
             )
+            po.ocmmnt(
+                self.outfile,
+                (
+                    f"  -> {TFCSRadialConfiguration(self.data.build.i_tf_inside_cs).description}"
+                ),
+            )
+            po.oblnkl(self.outfile)
             po.ovarrf(
                 self.outfile,
                 "Inboard build thickness (m)",
