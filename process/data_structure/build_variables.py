@@ -9,6 +9,13 @@ class InboardBlanketConfiguration(IntEnum):
     INBOARD_BLANKET_PRESENT = 1
 
 
+class TFCSRadialConfiguration(IntEnum):
+    """Switch for placing the TF coil inside the CS, controlled through `BuildData.i_tf_inside_cs`"""
+
+    TF_OUTSIDE_CS = 0
+    TF_INSIDE_CS = 1
+
+
 @dataclass(slots=True)
 class BuildData:
     aplasmin: float = 0.25
