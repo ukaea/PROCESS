@@ -55,6 +55,7 @@ from process.models.physics.confinement_time import (
     PlasmaConfinementTime,
 )
 from process.models.physics.current_drive import (
+    CurrentDriveMethodType,
     CurrentDriveModel,
     ElectronBernstein,
     ElectronCyclotron,
@@ -3572,9 +3573,19 @@ def toroidal_cross_section(
     r_cryostat_inboard = mfile.get("r_cryostat_inboard", scan=scan)
     dr_cryostat = mfile.get("dr_cryostat", scan=scan)
     n_tf_coils = mfile.get("n_tf_coils", scan=scan)
-    dx_beam_shield = mfile.get("dx_beam_shield", scan=scan)
-    dx_beam_duct = mfile.get("dx_beam_duct", scan=scan)
-    radius_beam_tangency = mfile.get("radius_beam_tangency", scan=scan)
+    if (
+        CurrentDriveModel(mfile.get("i_hcd_primary", scan=scan)).method
+        or CurrentDriveModel(mfile.get("i_hcd_secondary", scan=scan)).method
+        == CurrentDriveMethodType.NEUTRAL_BEAM
+    ):
+        dx_beam_shield = mfile.get("dx_beam_shield", scan=scan)
+        dx_beam_duct = mfile.get("dx_beam_duct", scan=scan)
+        radius_beam_tangency = mfile.get("radius_beam_tangency", scan=scan)
+    else:
+        dx_beam_shield = 0
+        dx_beam_duct = 0
+        radius_beam_tangency = 0
+
     dr_tf_outboard = mfile.get("dr_tf_outboard", scan=scan)
     arc(axis, rmajor, style="dashed")
 
@@ -16198,18 +16209,15 @@ def main_plot(
     plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
 
     plot_cs_coil_structure(
-        figs[30].add_subplot(121, aspect="equal"), figs[30], m_file, scan
+        figs[32].add_subplot(121, aspect="equal"), figs[32], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[32].add_subplot(326, aspect="equal"), figs[30], m_file, scan
+        figs[32].add_subplot(326, aspect="equal"), figs[32], m_file, scan
     )
-    figs[30].subplots_adjust(wspace=0.3)
 
-    figs[31].subplots_adjust(wspace=0.45, hspace=0.45)
+    plot_cs_stress_time_profile(axis=figs[33].add_subplot(337), mfile=m_file, scan=scan)
 
-    plot_cs_stress_time_profile(axis=figs[31].add_subplot(337), mfile=m_file, scan=scan)
-
-    ax_332 = figs[31].add_subplot(332)
+    ax_332 = figs[33].add_subplot(332)
     plot_cs_hoop_stress_profile(
         axis=ax_332,
         mfile=m_file,
@@ -16218,7 +16226,7 @@ def main_plot(
         b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
     )
 
-    ax_333 = figs[31].add_subplot(333)
+    ax_333 = figs[33].add_subplot(333)
     plot_cs_radial_stress_profile(
         axis=ax_333,
         mfile=m_file,
@@ -16227,18 +16235,18 @@ def main_plot(
         b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
     )
 
-    ax_334 = figs[31].add_subplot(334)
+    ax_334 = figs[33].add_subplot(334)
     ax_334_position = ax_334.get_position()
-    cbar_ax_334 = figs[31].add_axes([
+    cbar_ax_334 = figs[33].add_axes([
         ax_334_position.x1 + 0.01,
         ax_334_position.y0,
         0.012,
         ax_334_position.height,
     ])
 
-    ax_336 = figs[31].add_subplot(336, sharex=ax_333, sharey=ax_334)
+    ax_336 = figs[33].add_subplot(336, sharex=ax_333, sharey=ax_334)
     ax_336_position = ax_336.get_position()
-    cbar_ax_336 = figs[31].add_axes([
+    cbar_ax_336 = figs[33].add_axes([
         ax_336_position.x1 + 0.01,
         ax_336_position.y0,
         0.012,
@@ -16254,7 +16262,7 @@ def main_plot(
         colorbar_axis=cbar_ax_336,
     )
 
-    ax_331 = figs[31].add_subplot(331)
+    ax_331 = figs[33].add_subplot(331)
     plot_cs_vertical_stress_profile(
         axis=ax_331,
         mfile=m_file,
@@ -16267,9 +16275,9 @@ def main_plot(
         colorbar_axis=cbar_ax_334,
     )
 
-    ax_335 = figs[31].add_subplot(335, sharex=ax_332, sharey=ax_334)
+    ax_335 = figs[33].add_subplot(335, sharex=ax_332, sharey=ax_334)
     ax_335_position = ax_335.get_position()
-    cbar_ax_335 = figs[31].add_axes([
+    cbar_ax_335 = figs[33].add_axes([
         ax_335_position.x1 + 0.01,
         ax_335_position.y0,
         0.012,
@@ -16284,21 +16292,25 @@ def main_plot(
         colorbar_axis=cbar_ax_335,
     )
 
+    figs[33].subplots_adjust(wspace=0.3)
+
+    figs[33].subplots_adjust(wspace=0.45, hspace=0.45)
+
     # Keep y-axis labeling on the left contour only when sharing y across contour subplots.
     for axis in (ax_335, ax_336):
         axis.set_ylabel("")
         axis.tick_params(axis="y", labelleft=False)
 
     plot_stress_yield_locus(
-        axis=figs[31].add_subplot(339, aspect="equal"),
+        axis=figs[33].add_subplot(339, aspect="equal"),
         mfile=m_file,
         scan=scan,
         stress_yield=m_file.get("stress_cs_steel_max", scan=scan),
     )
 
-    ax_338 = figs[31].add_subplot(338, sharex=ax_332, sharey=ax_335)
+    ax_338 = figs[33].add_subplot(338, sharex=ax_332, sharey=ax_335)
     ax_338_position = ax_338.get_position()
-    cbar_ax_338 = figs[31].add_axes([
+    cbar_ax_338 = figs[33].add_axes([
         ax_338_position.x1 + 0.01,
         ax_338_position.y0,
         0.012,
@@ -16312,23 +16324,23 @@ def main_plot(
     )
 
     plot_first_wall_top_down_cross_section(
-        figs[32].add_subplot(221, aspect="equal"), m_file, scan
+        figs[34].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[32].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[32].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[34].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[34].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[33], m_file, scan)
-    ax_blanket = figs[33].add_subplot(122, aspect="equal")
-    plot_blkt_structure(ax_blanket, figs[33], m_file, scan, radial_build, colour_scheme)
+    plot_blkt_pipe_bends(figs[35], m_file, scan)
+    ax_blanket = figs[35].add_subplot(122, aspect="equal")
+    plot_blkt_structure(ax_blanket, figs[35], m_file, scan, radial_build, colour_scheme)
 
     plot_main_power_flow(
-        figs[34].add_subplot(111, aspect="equal"), m_file, scan, figs[34]
+        figs[36].add_subplot(111, aspect="equal"), m_file, scan, figs[36]
     )
 
-    ax24 = figs[35].add_subplot(111)
+    ax24 = figs[37].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[35])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[37])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -16434,7 +16446,7 @@ def plot_summary(
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for _ in range(37)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for _ in range(38)]
 
     # run main_plot
     mfile_obj = MFile(mfile) if mfile != "" else MFile("MFILE.DAT")
