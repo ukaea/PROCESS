@@ -7200,7 +7200,7 @@ ___CS_void_cross-sectional_area_(m2)_____________________________________ (awpoh
 CS_steel_cross-sectional_area_(m2)_______________________________________ (a_cs_poloidal-awpoh)__________ 4.82632267125448777e+00 OP 
 CS_steel_area_fraction___________________________________________________ (f_a_cs_turn_steel)____________ 5.32206960520000383e-01 
 Switch_for_CS_stress_calculation_________________________________________ (i_cs_stress)__________________            0 
-Allowable_stress_in_CS_steel_(Pa)________________________________________ (alstroh)______________________ 7.50000000000000000e+08 
+Allowable_stress_in_CS_steel_(Pa)________________________________________ (stress_cs_steel_max)______________________ 7.50000000000000000e+08 
 Hoop_stress_in_CS_steel_(Pa)_____________________________________________ (sig_hoop)_____________________ 6.36342985396654248e+08 OP 
 Axial_stress_in_CS_steel_(Pa)____________________________________________ (sig_axial)____________________ -7.37875243663206577e+08 OP 
 Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)___________ (s_shear_cs_peak)______________ 6.36342985396654248e+08 OP 
@@ -7778,7 +7778,7 @@ icc = 72
 ixc = 123 * foh_stress
 foh_stress = 1.0
 * allowable hoop stress in Central Solenoid structural material [Pa]
-alstroh = 7.5D8
+stress_cs_steel_max = 7.5D8
 
 * nd_plasma_pedestal_electron<nd_plasma_electron_on_axis *
 *------------------*
