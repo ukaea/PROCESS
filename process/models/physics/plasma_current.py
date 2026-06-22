@@ -60,7 +60,7 @@ class PlasmaCurrentModel(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
-        """Return the full name of the plasma current model."""
+        """The full name of the plasma current model."""
         return self._full_name_
 
 
@@ -307,7 +307,7 @@ class PlasmaCurrent(Model):
                 f"Triangularity is negative without i_plasma_current = 8 selected:"
                 f" {triang=}, {i_plasma_current=}"
             )
-        try:
+        try:  # noqa: PLW0717
             model = PlasmaCurrentModel(int(i_plasma_current))
             # Calculate the function Fq that scales the edge q from the
             # circular cross-section cylindrical case
@@ -1045,7 +1045,7 @@ class PlasmaDiamagneticCurrentModel(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
-        """Get the full name of the enum member.
+        """The full name of the enum member.
 
         Returns
         -------

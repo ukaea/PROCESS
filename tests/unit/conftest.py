@@ -12,7 +12,7 @@ import pytest
 from process.core.init import init_all_module_vars
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True)  # noqa: RUF076
 def reinit_fix():
     """Re-initialise the data structure before each test is run.
 

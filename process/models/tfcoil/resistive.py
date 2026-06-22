@@ -94,7 +94,7 @@ class ResistiveTFCoil(TFCoil):
         if output:
             self.data.tfcoil.n_rad_per_layer = 500
 
-        try:
+        try:  # noqa: PLW0717
             (
                 sig_tf_r_max,
                 sig_tf_t_max,

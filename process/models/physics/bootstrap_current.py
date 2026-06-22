@@ -63,7 +63,7 @@ class BootstrapCurrentFractionModel(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
-        """Return the full name of the bootstrap current model."""
+        """The full name of the bootstrap current model."""
         return self._full_name_
 
 

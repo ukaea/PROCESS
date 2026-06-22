@@ -55,12 +55,12 @@ class SuperconductingTFTurnType(IntEnum):
 
     @DynamicClassAttribute
     def abbreviation(self):
-        """Return the abbreviation for this superconductor type."""
+        """The abbreviation for this superconductor type."""
         return self._abbreviation_
 
     @DynamicClassAttribute
     def full_name(self):
-        """Return the full name for this superconductor type."""
+        """The full name for this superconductor type."""
         return self._full_name_
 
 
@@ -76,7 +76,7 @@ class SuperconductingTFWPShapeType(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
-        """Return the full name for this WP geometry type."""
+        """The full name for this WP geometry type."""
         return self.name.title().replace("_", " ")
 
 
@@ -2025,7 +2025,7 @@ class SuperconductingTFCoil(TFCoil):
         """Run the superconducting TF coil model and print the results of the stress calculations."""
         self.data.tfcoil.n_rad_per_layer = 500
 
-        try:
+        try:  # noqa: PLW0717
             (
                 sig_tf_r_max,
                 sig_tf_t_max,
@@ -2452,7 +2452,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         if output:
             self.data.tfcoil.n_rad_per_layer = 500
 
-        try:
+        try:  # noqa: PLW0717
             (
                 sig_tf_r_max,
                 sig_tf_t_max,
@@ -4161,7 +4161,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         if output:
             self.data.tfcoil.n_rad_per_layer = 500
 
-        try:
+        try:  # noqa: PLW0717
             (
                 sig_tf_r_max,
                 sig_tf_t_max,

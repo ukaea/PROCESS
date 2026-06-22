@@ -29,7 +29,7 @@ class PlasmaShapeModelType(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
-        """Get the full name of the plasma shape model."""
+        """The full name of the plasma shape model."""
         return self._full_name_
 
 
@@ -56,7 +56,7 @@ class PlasmaGeometryModels(IntEnum):
 
     @DynamicClassAttribute
     def description(self):
-        """Get the description of the plasma geometry model."""
+        """The description of the plasma geometry model."""
         return self._description_
 
 
@@ -174,22 +174,22 @@ class PlasmaGeometryModelType(IntEnum):
 
     @DynamicClassAttribute
     def kappa_model(self):
-        """Get the kappa model."""
+        """The kappa model."""
         return self._kappa_model_
 
     @DynamicClassAttribute
     def triang_model(self):
-        """Get the triangularity model."""
+        """The triangularity model."""
         return self._triang_model_
 
     @DynamicClassAttribute
     def kappa95_model(self):
-        """Get the kappa95 model."""
+        """The kappa95 model."""
         return self._kappa95_model_
 
     @DynamicClassAttribute
     def triang95_model(self):
-        """Get the triangularity95 model."""
+        """The triangularity95 model."""
         return self._triang95_model_
 
 
