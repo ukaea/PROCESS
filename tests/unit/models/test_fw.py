@@ -122,9 +122,7 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
         fw.data.fwbs, "fw_th_conductivity", fwtempparam.fw_th_conductivity
     )
 
-    # monkeypatch doesnt work for strings
-    # but helium is the default
-    # monkeypatch.setattr(fw.data.fwbs, "i_fw_coolant_type", fwtempparam.i_fw_coolant_type)
+    monkeypatch.setattr(fw.data.fwbs, "i_fw_coolant_type", fwtempparam.i_fw_coolant_type)
 
     monkeypatch.setattr(
         fw.data.fwbs, "temp_fw_coolant_in", fwtempparam.temp_fw_coolant_in

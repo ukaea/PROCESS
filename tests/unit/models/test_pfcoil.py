@@ -1970,9 +1970,9 @@ def test_vsec(pfcoil, monkeypatch):
 def test_hoop_stress(cs_coil):
     """Test hoop_stress subroutine.
 
-    calculate_cs_hoop_stress() requires specific mocked variables in order to work; these were
-    discovered using gdb to break on the first subroutine call when running the
-    baseline 2018 IN.DAT.
+    calculate_cs_hoop_stress() requires specific mocked variables in order to work;
+    these were discovered using gdb to break on the first subroutine call when running
+    the baseline 2018 IN.DAT.
 
     :param cs_coil: CSCoil object
     :type cs_coil: process.pfcoil.CSCoil
@@ -3294,8 +3294,8 @@ def test_fixb(pfcoil: PFCoil):
 def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     """Test peakb subroutine.
 
-    peak_b_field_at_pf_coil() requires specific arguments in order to work; these were discovered
-    using gdb to break on the first subroutine call when running the baseline
+    peak_b_field_at_pf_coil() requires specific arguments in order to work; these were
+    discovered using gdb to break on the first subroutine call when running the baseline
     2018 IN.DAT.
     :param monkeypatch: mocking fixture
     :type monkeypatch: MonkeyPatch

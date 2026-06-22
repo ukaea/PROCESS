@@ -2093,7 +2093,8 @@ class VoltSecondReqParam(NamedTuple):
 )
 def test_vscalc(voltsecondreqparam):
     """
-    Automatically generated Regression Unit Test for calculate_volt_second_requirements().
+    Automatically generated Regression Unit Test for
+    calculate_volt_second_requirements().
 
     This test was generated using data from
     tests/regression/input_files/large_tokamak_nof.IN.DAT.
