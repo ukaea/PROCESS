@@ -148,11 +148,11 @@ def test_primary_coolant_properties(
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    # monkeypatch doesnt work for strings
-    # but helium is the default
-    # monkeypatch.setattr(
-    #     blanket_library_fixture.data.fwbs, "i_fw_coolant_type", primarycoolantpropertiesparam.i_fw_coolant_type
-    # )
+    monkeypatch.setattr(
+        blanket_library.data.fwbs,
+        "i_fw_coolant_type",
+        primarycoolantpropertiesparam.i_fw_coolant_type,
+    )
 
     monkeypatch.setattr(
         blanket_library.data.fwbs,
@@ -509,7 +509,8 @@ def test_apply_coverage_factors(applycoveragefactorsparam, monkeypatch, blanket_
     """
     Automatically generated Regression Unit Test for apply_coverage_factors.
 
-    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
+    This test was generated using data from
+    tests/regression/input_files/large_tokamak_eval.IN.DAT.
 
     :param applycoveragefactorsparam: the data used to mock and assert in this test.
     :type applycoveragefactorsparam: applycoveragefactorsparam
@@ -855,7 +856,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
             den_liq=9500,
             specific_heat_liq=190,
             thermal_conductivity_liq=30,
-            expected_thermal_conductivity_liq=30,  # doesn't change when i_blkt_liquid_breeder_type=1
+            expected_thermal_conductivity_liq=30,
             dynamic_viscosity_liq=0,
             electrical_conductivity_liq=0,
             i_blkt_liquid_breeder_type=1,
@@ -1081,7 +1082,8 @@ def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library):
     """
     Automatically generated Regression Unit Test for pressure_drop.
 
-    This test was generated using data from blanket_files/large_tokamak_primary_pumping2.IN.DAT.
+    This test was generated using data from
+    blanket_files/large_tokamak_primary_pumping2.IN.DAT.
 
     :param pressuredropparam: the data used to mock and assert in this test.
     :type pressuredropparam: pressuredropparam
@@ -1230,7 +1232,7 @@ def test_liquid_breeder_pressure_drop_mhd(
 
     This test was generated using data from blanket_files/dcll_mms_lt_IN.DAT.
 
-    :param liquidbreederpressuredropmhdparam: the data used to mock and assert in this test.
+    :param liquidbreederpressuredropmhdparam: data used to mock and assert in this test.
     :type liquidbreederpressuredropmhdparam: liquidbreederpressuredropmhdparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
@@ -1321,7 +1323,8 @@ def test_calculate_dshaped_blkt_areas(calculatedshapedblktareasparam, blanket_li
     """
     Regression Unit Test for calculate_dshaped_blkt_areas.
 
-    This test was generated using data from tests/regression/input_files/st_regression.IN.DAT.
+    This test was generated using data from
+    tests/regression/input_files/st_regression.IN.DAT.
 
     :param calculatedshapedblktareasparam: the data used in this test.
     :type calculatedshapedblktareasparam: CalculateDshapedBlktAreasParam
@@ -1397,7 +1400,8 @@ def test_calculate_dshaped_blkt_volumes(
     """
     Regression Unit Test for calculate_dshaped_blkt_volumes.
 
-    This test was generated using data from tests/regression/input_files/st_regression.IN.DAT.
+    This test was generated using data from
+    tests/regression/input_files/st_regression.IN.DAT.
 
     :param calculatedshapedblktvolumesparam: the data used in this test.
     :type calculatedshapedblktvolumesparam: CalculateDshapedBlktVolumesParam
@@ -1473,7 +1477,8 @@ def test_calculate_elliptical_blkt_areas(
     """
     Regression Unit Test for calculate_elliptical_blkt_areas.
 
-    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
+    This test was generated using data from
+    tests/regression/input_files/large_tokamak_eval.IN.DAT.
 
     :param calculateellipticalblktareasparam: the data used in this test.
     :type calculateellipticalblktareasparam: CalculateEllipticalBlktAreasParam
@@ -1550,7 +1555,8 @@ def test_calculate_elliptical_blkt_volumes(
     """
     Regression Unit Test for calculate_elliptical_blkt_volumes.
 
-    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
+    This test was generated using data from
+    tests/regression/input_files/large_tokamak_eval.IN.DAT.
 
     :param calculateellipticalblktvolumesparam: the data used in this test.
     :type calculateellipticalblktvolumesparam: CalculateEllipticalBlktVolumesParam

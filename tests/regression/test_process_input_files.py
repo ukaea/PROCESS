@@ -50,9 +50,11 @@ class ProcessModelFilter(logging.Filter):
 def hide_model_logs():
     """Hides model logs (process.model.*) from being reported if a regression test fails.
 
-    This fixture adds a filter to all of the handlers on the root logger before the tests are run.
-    Modifying the logger handlers is crucial to avoid interfering with PROCESS model log system
-    which adds its own handers when PROCESS is run (hence why this is not done using the caplog fixture).
+    This fixture adds a filter to all of the handlers on the root logger before the tests
+    are run.
+    Modifying the logger handlers is crucial to avoid interfering with PROCESS model log
+    system which adds its own handers when PROCESS is run (hence why this is not done
+    using the caplog fixture).
     """
     filter_ = ProcessModelFilter(name="process.models")
     for handler in logging.getLogger().handlers:
@@ -73,7 +75,8 @@ class MFileVariableDifference:
 class RegressionTestScenario:
     def __init__(self, input_file: Path):
         """
-        Represents an input scenario (input file) to PROCESS that is to be regression tested.
+        Represents an input scenario (input file) to PROCESS that is to be regression
+        tested.
 
         :param input_file: absolute path of the input file (`<scenario_name>.IN.DAT`)
         :type input_file: Path
@@ -84,7 +87,8 @@ class RegressionTestScenario:
     def run(self, solver: str, cli_runner):
         """Runs the scenario input file using PROCESS"""
         logger.info(
-            f"Running regression test {self.scenario_name} using input file {self.input_file}"
+            f"Running regression test {self.scenario_name} using input file "
+            f"{self.input_file}"
         )
         cli_runner(process_cli, ["--input", str(self.input_file), "--solver", solver])
 
@@ -105,8 +109,8 @@ class RegressionTestScenario:
         mfile_location = self.input_file.parent / f"{self.scenario_name}.MFILE.DAT"
 
         assert mfile_location.exists(), (
-            f"PROCESS has not produced an MFile at the expected location {mfile_location}. "
-            "Ensure the Scenario has been run!"
+            "PROCESS has not produced an MFile at the expected location "
+            f"{mfile_location}. Ensure the Scenario has been run!"
         )
 
         with open(mfile_location) as f:
@@ -121,7 +125,8 @@ class RegressionTestScenario:
         ifail = mfile.data["ifail"].get_scan(-1)
 
         assert ifail == 1 or mfile.data["ioptimz"].get_scan(-1) == -2, (
-            f"\033[0;36m ifail of {ifail} indicates PROCESS did not solve successfully\033[0m"
+            f"\033[0;36m ifail of {ifail} indicates PROCESS did not solve "
+            "successfully\033[0m"
         )
 
         mfile_keys = set(mfile.data.keys())
@@ -163,8 +168,9 @@ class RegressionTestScenario:
                 )
 
             assert len(differences) == 0, (
-                f"\033[0;32m {len(differences)} differences: the reference MFile contains different values "
-                "for some of the variables. See the warnings for a breakdown of the differences.\033[0m"
+                f"\033[0;32m {len(differences)} differences: the reference MFile "
+                "contains different values for some of the variables. See the warnings "
+                "for a breakdown of the differences.\033[0m"
             )
 
         assert not key_ref_not_mfile, key_ref_not_mfile_msg
@@ -324,11 +330,13 @@ def test_input_file(
     scenario.run(solver_name, cli_runner)
 
     # reference MFile cannot be found?
-    # raise an error after the file is run so that any errors while running the input file
+    # raise an error after the file is run so that any errors while running the
+    # input file
     # are raised first.
     if reference_mfile is None:
         raise RuntimeError(
-            "\033[0;36m No reference input file exists (so cannot compare results). The input file ran without any exceptions.\033[0m"
+            "\033[0;36m No reference input file exists (so cannot compare results). "
+            "The input file ran without any exceptions.\033[0m"
         )
 
     scenario.compare(reference_mfile, reg_tolerance, opt_params_only)

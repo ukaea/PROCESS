@@ -99,7 +99,7 @@ class CntrpstTestAsset(NamedTuple):
     """Test asset for a test case of cntrpst"""
 
     i_tf_sup: int
-    """tfcoil.data.tfcoil.i_tf_sup value to be mocked (0=Copper, 2=Cryogenic aluminium)"""
+    """tfcoil.data.tfcoil.i_tf_sup value to be mocked"""
     temp_cp_coolant_inlet: float
     """tfcoil.data.tfcoil.temp_cp_coolant_inlet value to be mocked
     (centrepost coolant inlet temperature)"""

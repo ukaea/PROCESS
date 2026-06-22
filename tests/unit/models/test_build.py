@@ -339,7 +339,8 @@ def test_plasma_outboard_edge_toroidal_ripple_additional(param, build):
     Additional unit tests for plasma_outboard_edge_toroidal_ripple.
 
     - First case exercises the picture-frame analytical branch (i_tf_shape == 2)
-        and checks returned ripple and r_tf_outboard_midmin against the analytical formula.
+        and checks returned ripple and r_tf_outboard_midmin against the analytical
+        formula.
     - Second case forces the fitted-range diagnostic (x out of range) to ensure the
         applicability flag is set (flag == 1) and results remain finite/positive.
     - Additional cases vary coil counts (n_tf_coils) and toroidal WP thickness

@@ -1159,9 +1159,10 @@ def test_st_tf_centrepost_fast_neut_flux(
     """
     Automatically generated Regression Unit Test for st_tf_centrepost_fast_neut_flux.
 
-    This test was generated using data from tests/regression/scenarios/Menard_HTS-PP/IN.DAT.
+    This test was generated using data from
+    tests/regression/scenarios/Menard_HTS-PP/IN.DAT.
 
-    :param sttfcentrepostfastneutfluxparam: the data used to mock and assert in this test.
+    :param sttfcentrepostfastneutfluxparam: data used to mock and assert in this test.
     :type sttfcentrepostfastneutfluxparam: sttfcentrepostfastneutfluxparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
@@ -1228,9 +1229,10 @@ def test_st_centrepost_nuclear_heating(
     """
     Automatically generated Regression Unit Test for st_centrepost_nuclear_heating.
 
-    This test was generated using data from tests/regression/scenarios/Menard_HTS-PP/IN.DAT.
+    This test was generated using data from
+    tests/regression/scenarios/Menard_HTS-PP/IN.DAT.
 
-    :param stcentrepostnuclearheatingparam: the data used to mock and assert in this test.
+    :param stcentrepostnuclearheatingparam: data used to mock and assert in this test.
     :type stcentrepostnuclearheatingparam: stcentrepostnuclearheatingparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
@@ -1447,7 +1449,8 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for component_masses.
 
-    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
+    This test was generated using data from
+    tests/regression/input_files/large_tokamak_eval.IN.DAT.
 
     :param componentmassesparam: the data used to mock and assert in this test.
     :type componentmassesparam: componentmassesparam

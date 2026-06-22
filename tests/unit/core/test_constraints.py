@@ -21,8 +21,8 @@ def test_constraint_functions(constraint_registration):
 
     # Allow zero division errors because this means all of the attributes exist
     # and are initialised with a number.
-    # Allow ProcessValueError because that happens when a constraint is incompatible with the
-    # default flags (i_pulsed_plant=0 or itart=0).
+    # Allow ProcessValueError because that happens when a constraint is incompatible with
+    # the default flags (i_pulsed_plant=0 or itart=0).
     with contextlib.suppress(ZeroDivisionError, ProcessValueError):
         # call the constraint equation and check no error occurs
         constraint_registration.constraint_equation(

@@ -104,7 +104,8 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
     """
     Automatically generated Regression Unit Test for stgeom.
 
-    This test was generated using data from tests/regression/scenarios/stellarator/IN.DAT.
+    This test was generated using data from
+    tests/regression/scenarios/stellarator/IN.DAT.
 
     :param stgeomparam: the data used to mock and assert in this test.
     :type stgeomparam: stgeomparam
@@ -461,7 +462,8 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     """
     Automatically generated Regression Unit Test for stbild.
 
-    This test was generated using data from tests/regression/scenarios/stellarator/IN.DAT.
+    This test was generated using data from
+    tests/regression/scenarios/stellarator/IN.DAT.
 
     :param stbildparam: the data used to mock and assert in this test.
     :type stbildparam: stbildparam
@@ -828,7 +830,8 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
     """
     Automatically generated Regression Unit Test for ststrc.
 
-    This test was generated using data from tests/regression/scenarios/stellarator/IN.DAT.
+    This test was generated using data from
+    tests/regression/scenarios/stellarator/IN.DAT.
 
     :param ststrcparam: the data used to mock and assert in this test.
     :type ststrcparam: ststrcparam
@@ -1821,7 +1824,8 @@ def test_intersect(intersectparam):
     """
     Automatically generated Regression Unit Test for intersect.
 
-    This test was generated using data from tests/regression/scenarios/stellarator/IN.DAT.
+    This test was generated using data from
+    tests/regression/scenarios/stellarator/IN.DAT.
 
     :param intersectparam: the data used to mock and assert in this test.
     :type intersectparam: intersectparam
@@ -1889,7 +1893,8 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
     """
     Automatically generated Regression Unit Test for stdlim.
 
-    This test was generated using data from tests/regression/scenarios/stellarator/IN.DAT.
+    This test was generated using data from
+    tests/regression/scenarios/stellarator/IN.DAT.
 
     :param stdlimparam: the data used to mock and assert in this test.
     :type stdlimparam: stdlimparam
@@ -1959,7 +1964,8 @@ def test_stdlim_ecrh(stdlimecrhparam, monkeypatch, stellarator):
     """
     Automatically generated Regression Unit Test for stdlim_ecrh.
 
-    This test was generated using data from tests/regression/scenarios/stellarator_config/IN.DAT.
+    This test was generated using data from
+    tests/regression/scenarios/stellarator_config/IN.DAT.
 
     :param stdlimecrhparam: the data used to mock and assert in this test.
     :type stdlimecrhparam: stdlimecrhparam
@@ -2055,7 +2061,8 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     """
     Automatically generated Regression Unit Test for st_calc_eff_chi.
 
-    This test was generated using data from tests/regression/scenarios/stellarator_config/IN.DAT.
+    This test was generated using data from
+    tests/regression/scenarios/stellarator_config/IN.DAT.
 
     :param stcalceffchiparam: the data used to mock and assert in this test.
     :type stcalceffchiparam: stcalceffchiparam
@@ -2197,7 +2204,7 @@ def test_sctfcoil_nuclear_heating_iter90(
 
     This test was generated using data from stellarator/fwbs.IN.DAT.
 
-    :param sctfcoilnuclearheatingiter90param: the data used to mock and assert in this test.
+    :param sctfcoilnuclearheatingiter90param: data used to mock and assert in this test.
     :type sctfcoilnuclearheatingiter90param: sctfcoilnuclearheatingiter90param
 
     :param monkeypatch: pytest fixture used to mock module/class variables

@@ -87,8 +87,9 @@ def test_parse_real(epsvmc, expected, tmp_path, data_structure_obj):
 def test_exact_parsing(value, tmp_path, data_structure_obj):
     """Tests the parsing of real numbers into PROCESS.
 
-    These tests failed using the old input parser and serve to show that the Python parser generally
-    produces more accurate floats and accumulates less error.
+    These tests failed using the old input parser and serve to show that
+    the Python parser generally produces more accurate floats and accumulates
+    less error.
     """
     data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path, f"epsvmc = {value}"
