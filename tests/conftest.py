@@ -126,7 +126,7 @@ def skip_if_incompatible_system():
         )
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session", autouse=True)  # noqa: RUF076
 def running_on_compatible_system_warning():
     """Check for an outdated system
 
@@ -146,7 +146,7 @@ def running_on_compatible_system_warning():
     )
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session", autouse=True)  # noqa: RUF076
 def initialise_error_module():
     """pytest fixture to initialise the error module before tests run.
 
@@ -169,7 +169,7 @@ def reinitialise_error_module():
     logging_model_handler.clear_logs()
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True)  # noqa: RUF076
 def return_to_root():
     """Various parts of PROCESS change directories and do not always change back.
     This fixture ensures that, at the end of each test, the cwd is reset to what it
@@ -180,7 +180,7 @@ def return_to_root():
     os.chdir(cwd)
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True)  # noqa: RUF076
 def disable_package_logger(monkeypatch):
     """Various parts of PROCESS change directories and do not always change back.
     This fixture ensures that, at the end of each test, the cwd is reset to what it
@@ -189,7 +189,7 @@ def disable_package_logger(monkeypatch):
     monkeypatch.setattr(main, "PACKAGE_LOGGING", False)
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True)  # noqa: RUF076
 def _plot_show_and_close(request):
     """Fixture to show and close plots
 
@@ -215,7 +215,7 @@ def _plot_show_and_close(request):
         plt.close()
 
 
-@pytest.fixture(scope="class", autouse=True)
+@pytest.fixture(scope="class", autouse=True)  # noqa: RUF076
 def _plot_show_and_close_class(request):
     """Fixture to show and close plots for marked classes
 

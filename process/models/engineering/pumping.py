@@ -36,7 +36,7 @@ class CoolantType(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
-        """Return the full name of the coolant type."""
+        """The full name of the coolant type."""
         return self._full_name_
 
 

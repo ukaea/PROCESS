@@ -46,7 +46,7 @@ class PROCESSRunMode(IntEnum):
 
     @DynamicClassAttribute
     def description(self):
-        """Return the description for this run mode."""
+        """The description for this run mode."""
         return self._description_
 
 
@@ -96,7 +96,7 @@ class FiguresOfMerit(IntEnum):
 
     @DynamicClassAttribute
     def description(self):
-        """Return the description for this figure of merit."""
+        """The description for this figure of merit."""
         return self._description_
 
 

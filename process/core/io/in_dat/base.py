@@ -1038,7 +1038,7 @@ class INVariable:
 
     @property
     def get_value(self):
-        """Get value of variables"""
+        """The value of variables"""
         if self.v_type != "Bound":
             return parameter_type(self.name, self.value)
         return self.value
@@ -1666,14 +1666,14 @@ class InDat:
     @property
     def number_of_constraints(self):
         """
-        Return number of itvars
+        The number of constraints
         """
         return len(self.data["icc"].value)
 
     @property
     def number_of_itvars(self):
         """
-        Return number of itvars
+        The number of itvars
         """
         return len(self.data["ixc"].value)
 

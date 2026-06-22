@@ -36,7 +36,7 @@ class CurrentDriveMethodType(IntEnum):
 
     @DynamicClassAttribute
     def abbreviation(self):
-        """Return the abbreviation for this current drive method type."""
+        """The abbreviation for this current drive method type."""
         return self._abbreviation_
 
 
@@ -115,17 +115,17 @@ class CurrentDriveModel(IntEnum):
 
     @DynamicClassAttribute
     def method(self):
-        """Return the current drive method type for this current drive model."""
+        """Tthe current drive method type for this current drive model."""
         return self._method_
 
     @DynamicClassAttribute
     def abbreviation(self):
-        """Return the abbreviation for this current drive model."""
+        """The abbreviation for this current drive model."""
         return self.method.abbreviation
 
     @DynamicClassAttribute
     def full_name(self):
-        """Return the full name for this current drive model."""
+        """The full name for this current drive model."""
         return self._full_name_
 
 

@@ -33,7 +33,7 @@ class PlasmaProfileShapeType(IntEnum):
 
     @DynamicClassAttribute
     def description(self):
-        """Get the description of the plasma profile shape."""
+        """The description of the plasma profile shape."""
         return self._description_
 
 
@@ -131,7 +131,7 @@ class DensityProfilePedestalType(IntEnum):
 
     @DynamicClassAttribute
     def description(self):
-        """Get the description of the plasma profile shape."""
+        """The description of the plasma profile shape."""
         return self._description_
 
 

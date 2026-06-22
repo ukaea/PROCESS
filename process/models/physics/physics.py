@@ -19,7 +19,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.models.physics import impurity_radiation
-from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
     PlasmaProfileShapeType,
@@ -3045,7 +3044,7 @@ class BetaNormMaxModel(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
-        """Get the full name of the beta norm max model."""
+        """The full name of the beta norm max model."""
         return self._full_name_
 
 
@@ -3066,7 +3065,7 @@ class BetaComponentLimits(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
-        """Get the full name of the beta component limit."""
+        """The full name of the beta component limit."""
         return self._full_name_
 
 
@@ -4056,7 +4055,7 @@ class IndInternalNormModel(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
-        """Get the full name of the normalised internal inductance model."""
+        """The full name of the normalised internal inductance model."""
         return self._full_name_
 
 

@@ -53,7 +53,7 @@ class DensityLimitModel(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
-        """Return the full name of the density limit model."""
+        """The full name of the density limit model."""
         return self._full_name_
 
 

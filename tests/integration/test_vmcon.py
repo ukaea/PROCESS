@@ -21,7 +21,7 @@ from process.core.solver.solver import get_solver
 logger = logging.getLogger(__name__)
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True)  # noqa: RUF076
 def reinit():
     """Re-initialise Fortran module variables before each test is run."""
     init_all_module_vars()

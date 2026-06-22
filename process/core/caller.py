@@ -155,7 +155,7 @@ class Caller:
         # mfiles at this stage
         previous_mfile_data = None
 
-        try:
+        try:  # noqa: PLW0717
             # Evaluate models up to 10 times; any more implies non-converging values
             for _ in range(10):
                 # Divert OUT.DAT and MFILE.DAT output to scratch files for

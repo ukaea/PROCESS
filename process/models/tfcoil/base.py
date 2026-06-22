@@ -68,7 +68,7 @@ class TFPlasmaCaseType(IntEnum):
 
     @DynamicClassAttribute
     def description(self):
-        """Returns the description of the plasma-facing case type."""
+        """The description of the plasma-facing case type."""
         return self._description_
 
 
