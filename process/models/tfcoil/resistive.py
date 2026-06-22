@@ -36,6 +36,15 @@ class ResistiveTFCoil(TFCoil):
         # Set up TF values share by all coil types
         self.run_base_tf()
 
+        # Set the peak inboard field with ripple to be the same as the symmetric peak
+        # field as a default for resistive TF coils. The conductor segments are all
+        # parallel and there is no ripple in the field.
+        # This also allows the peak inboard field constraint to be used for resistive
+        # TF coils, which is important for the design of the coil.
+        self.data.tfcoil.b_tf_inboard_peak_with_ripple = (
+            self.data.tfcoil.b_tf_inboard_peak_symmetric
+        )
+
         self.res_tf_internal_geom()
         self.tf_res_heating()
 
