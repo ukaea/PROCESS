@@ -790,7 +790,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3516E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9362E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.5000E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5400E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.5000E+08 OP 
@@ -1953,7 +1953,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3618E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9713E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4948E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5211E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4948E+08 OP 
@@ -3116,7 +3116,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3809E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9863E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4954E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5036E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4954E+08 OP 
@@ -4279,7 +4279,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3832E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9892E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4860E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.4830E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4860E+08 OP 
@@ -5442,7 +5442,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3552E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9647E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4957E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5487E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4957E+08 OP 
@@ -6605,7 +6605,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.2955E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9529E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4964E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5903E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4964E+08 OP 
@@ -7768,7 +7768,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.2882E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9576E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4892E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5795E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4892E+08 OP 
@@ -8931,7 +8931,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3098E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9709E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4948E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5760E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4948E+08 OP 
@@ -10094,7 +10094,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3305E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9855E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4900E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5690E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4900E+08 OP 
@@ -11257,7 +11257,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3314E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9868E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4836E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5601E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4836E+08 OP 
@@ -12420,7 +12420,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3178E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9733E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4943E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5548E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4943E+08 OP 
@@ -13583,7 +13583,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3029E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9706E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4965E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5160E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4965E+08 OP 
@@ -14746,7 +14746,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3043E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9725E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4900E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5029E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4900E+08 OP 
@@ -15909,7 +15909,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3239E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9826E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4949E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5214E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4949E+08 OP 
@@ -17072,7 +17072,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3439E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9942E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4997E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -8.5338E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      7.4997E+08 OP 
@@ -17654,7 +17654,7 @@ icc = 72
 ixc = 123 * foh_stress
 foh_stress = 1.0
 * allowable hoop stress in Central Solenoid structural material [Pa]
-alstroh = 7.5D8
+stress_cs_steel_max = 7.5D8
 
 * nd_plasma_pedestal_electron<nd_plasma_electron_on_axis *
 *------------------*

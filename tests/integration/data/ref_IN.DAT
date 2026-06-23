@@ -221,7 +221,7 @@ zref(6) = 1.0
 zref(7) = 1.0
 zref(8) = 1.0
 
-alstroh = 6.6D8 * allowable hoop stress in Central Solenoid structural material (Pa)
+stress_cs_steel_max = 6.6D8 * allowable hoop stress in Central Solenoid structural material (Pa)
 fcuohsu = 0.70 * copper fraction of strand in central solenoid cable
 i_cs_superconductor = 5 * WST Nb3Sn parameterisation
 f_a_cs_turn_steel = 0.8

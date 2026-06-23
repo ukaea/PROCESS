@@ -166,7 +166,9 @@ INPUT_VARIABLES = {
     "admv": InputVariable("buildings", float, range=(1.0e4, 1.0e6)),
     "airtemp": InputVariable("water_use", float, range=(-15.0, 40.0)),
     "alfapf": InputVariable("pf_coil", float, range=(1e-12, 1.0)),
-    "alstroh": InputVariable("pf_coil", float, range=(1000000.0, 100000000000.0)),
+    "stress_cs_steel_max": InputVariable(
+        "pf_coil", float, range=(1000000.0, 100000000000.0)
+    ),
     "amortization": InputVariable("costs", float, range=(1.0, 50.0)),
     "anginc": InputVariable("divertor", float, range=(0.0, 1.5707)),
     "aplasmin": InputVariable("build", float, range=(0.01, 10.0)),
@@ -965,7 +967,6 @@ INPUT_VARIABLES = {
     "i_cp_joints": InputVariable("tfcoil", int, choices=[0, 1]),
     "i_cp_lifetime": InputVariable("costs", int, range=(0, 3)),
     "i_cs_precomp": InputVariable("build", int, choices=[0, 1]),
-    "i_cs_stress": InputVariable("pf_coil", int, choices=[0, 1]),
     "i_density_limit": InputVariable("physics", int, range=(1, 8)),
     "i_diamagnetic_current": InputVariable("physics", int, choices=[0, 1, 2]),
     "i_div_heat_load": InputVariable("divertor", int, choices=[0, 1, 2]),

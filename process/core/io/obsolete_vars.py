@@ -209,7 +209,7 @@ OBS_VARS = {
     "tfwmatmax": "temp_fw_max",
     "fw_channel_length": "len_fw_channel",
     "denw": None,
-    "s_tresca_oh": "s_shear_cs_peak",
+    "s_tresca_oh": "stress_shear_cs_peak",
     "sig_tf_tresca_max": "s_shear_tf_peak",
     "s_tresca_cond_cear": "s_shear_cea_tf_cond",
     "sig_tf_tresca": "s_shear_tf",
@@ -457,6 +457,7 @@ OBS_VARS = {
     "dr_hts_tape": "dr_tf_hts_tape",
     "coppera_m2_max": "tf_coppera_m2_max",
     "f_ster_div_single": None,
+    "alstroh": "stress_cs_steel_max",
 }
 
 OBS_VARS_HELP = {
