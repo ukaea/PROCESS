@@ -729,7 +729,7 @@ def constraint_equation_24(constraint_registration, data):
         value = data.physics.beta_thermal_vol_avg
     # Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas
     elif data.physics.i_beta_component == BetaComponentLimits.THERMAL_AND_BEAM:
-        value = data.physics.beta_total_vol_avg - data.physics.beta_fast_alpha
+        value = data.physics.beta_thermal_vol_avg + data.physics.beta_beam
     # Beta limit applies to toroidal beta
     elif data.physics.i_beta_component == BetaComponentLimits.TOROIDAL:
         value = data.physics.beta_toroidal_vol_avg
@@ -1278,7 +1278,8 @@ def constraint_equation_63(constraint_registration, data):
 def constraint_equation_64(constraint_registration, data):
     """Upper limit on volume averaged plasma effective charge Zeff
 
-    n_charge_plasma_effective_vol_avg_max: maximum value for Zeff
+    n_charge_plasma_effective_vol_avg_max: maximum value for volume averaged
+    plasma effective charge
     n_charge_plasma_effective_vol_avg: plasma effective charge
     """
     return leq(
