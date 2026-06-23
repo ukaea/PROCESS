@@ -105,11 +105,9 @@ class FiguresOfMerit(IntEnum):
 IPNVARS = max(ITERATION_VARIABLES.keys())
 """total number of variables available for iteration"""
 
+# Set to a really large number so that it should never need to be changed
 IPEQNS = 500
-"""maximum number of constraint equations available"""
-
-IPNFOMS = len(FiguresOfMerit)
-"""number of available figures of merit"""
+"""Maximum number of constraint equations available"""
 
 
 @dataclass(slots=True)

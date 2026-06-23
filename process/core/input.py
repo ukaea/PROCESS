@@ -47,7 +47,7 @@ def _icc_additional_actions(
     data.numerics.n_constraints += 1
 
 
-@dataclass
+@dataclass(slots=True)
 class InputVariable:
     """A variable to be parsed from the input file."""
 
