@@ -1193,7 +1193,7 @@ def constraint_equation_56(constraint_registration, data):
 
     p_plasma_separatrix_rmajor_max_mw: maximum ratio of power crossing the separatrix to
     plasma major radius (Pₛₑₚ / R₀) [MW/m]
-    p_plasma_separatrix_mw: power to be conducted to the divertor region (MW)
+    p_plasma_separatrix_mw: power crossing plasma separartrix (MW)
 
     """
     return leq(
