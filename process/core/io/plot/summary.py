@@ -7,14 +7,11 @@ from importlib import resources
 from pathlib import Path
 from typing import Any, Literal
 
-import CoolProp
 import matplotlib as mpl
 import matplotlib.backends.backend_pdf as bpdf
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
-from CoolProp.CoolProp import PropsSI
-from CoolProp.Plots import PropertyPlot
 from matplotlib import patches
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path as mplPath
@@ -16478,19 +16475,11 @@ def plot_blanket_coolant_channel_structure(self, m_file: MFile, scan: int):
     )
     n_blkt_outboard_module_coolant_sections_radial = max(
         1,
-        int(
-            round(
-                m_file.get("n_blkt_outboard_module_coolant_sections_radial", scan=scan)
-            )
-        ),
+        round(m_file.get("n_blkt_outboard_module_coolant_sections_radial", scan=scan)),
     )
     n_blkt_outboard_module_coolant_sections_poloidal = max(
         1,
-        int(
-            round(
-                m_file.get("n_blkt_outboard_module_coolant_sections_poloidal", scan=scan)
-            )
-        ),
+        round(m_file.get("n_blkt_outboard_module_coolant_sections_poloidal", scan=scan)),
     )
     elbow_radius_180 = max(
         float(m_file.get("radius_blkt_channel_180_bend", scan=scan)), 1e-6
