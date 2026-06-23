@@ -3511,6 +3511,9 @@ class CSCoil(Model):
                     stress_x=self.data.pf_coil.stress_hoop_cs_inner,
                     stress_y=self.data.pf_coil.stress_z_cs_self_peak_midplane,
                     stress_z=self.data.pf_coil.stress_radial_cs_peak,
+                    stress_shear_xy=0.0e0,
+                    stress_shear_yz=0.0e0,
+                    stress_shear_zx=0.0e0,
                 )
 
             else:

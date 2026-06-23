@@ -82,6 +82,9 @@ def calculate_von_mises_stress(
     stress_x: float | np.ndarray,
     stress_y: float | np.ndarray,
     stress_z: float | np.ndarray,
+    stress_shear_xy: float | np.ndarray,
+    stress_shear_yz: float | np.ndarray,
+    stress_shear_zx: float | np.ndarray,
 ) -> float | np.ndarray:
     """Calculates the von Mises stress criterion from three principal stress components.
 
@@ -93,18 +96,29 @@ def calculate_von_mises_stress(
         Second principal stress in Pa.
     stress_z:
         Third principal stress in Pa.
+    stress_shear_xy:
+        Shear stress in the xy-plane in Pa.
+    stress_shear_yz:
+        Shear stress in the yz-plane in Pa.
+    stress_shear_zx:
+        Shear stress in the zx-plane in Pa.
 
     Returns
     -------
     :
         Von Mises stress in Pa, defined as:
-        sqrt(0.5 * ((sx - sy)^2 + (sy - sz)^2 + (sx - sz)^2))
+        √(0.5 * ((sx - sy)² + (sy - sz)² + (sx - sz)²) + 6 * (τ_xy² + τ_yz² + τ_zx²))
+
+    References
+    ----------
+    [1] https://en.wikipedia.org/wiki/Von_Mises_yield_criterion
     """
     return np.sqrt(
         0.5
         * (
             (stress_x - stress_y) ** 2
             + (stress_y - stress_z) ** 2
-            + (stress_x - stress_z) ** 2
+            + (stress_z - stress_x) ** 2
+            + 6 * (stress_shear_xy**2 + stress_shear_yz**2 + stress_shear_zx**2)
         )
     )
