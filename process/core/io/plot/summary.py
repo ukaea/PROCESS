@@ -24,7 +24,11 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.build import Build
-from process.models.engineering.materials import calculate_tresca_stress, poisson_steel
+from process.models.engineering.materials import (
+    calculate_tresca_stress,
+    calculate_von_mises_stress,
+    poisson_steel,
+)
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -15723,6 +15727,118 @@ def plot_cs_tresca_2d_contour(
     axis.set_title("CS Tresca Stress Contour at BOP")
 
 
+def plot_cs_von_mises_2d_contour(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    colorbar_axis: plt.Axes | None = None,
+):
+    dz_cs_full = mfile.get("dz_cs_full", scan=scan)
+    r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+    r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+    j_cs = mfile.get("j_cs_pulse_start", scan=scan)
+    b_cs_inner = mfile.get("b_cs_peak_pulse_start", scan=scan)
+    f_a_cs_turn_steel = mfile.get("f_a_cs_turn_steel", scan=scan)
+
+    stress_z_profile = np.array([
+        float(mfile.data[f"stress_z_cs_self_profile[{i}]"].get_scan(scan))
+        for i in range(20)
+    ])
+
+    # Create 2D grid for contour plot: radial and vertical dimensions
+    n_radial = 50
+    radial_grid = np.linspace(r_cs_inner, r_cs_outer, n_radial)
+    height_grid = np.linspace(-dz_cs_full / 2, dz_cs_full / 2, len(stress_z_profile))
+
+    # Create meshgrid for filled contour
+    r, z = np.meshgrid(radial_grid, height_grid)
+
+    # Calculate Von Mises stress across the coil cross-section.
+    von_mises_data = np.zeros((len(height_grid), n_radial))
+    for i, stress_z in enumerate(stress_z_profile):
+        for j, radius in enumerate(radial_grid):
+            stress_hoop = CSCoil.calculate_cs_hoop_stress(
+                r_stress_point=radius,
+                r_cs_inner=r_cs_inner,
+                r_cs_outer=r_cs_outer,
+                j_cs=j_cs,
+                b_cs_inner=b_cs_inner,
+                f_poisson_cs_structure=poisson_steel,
+                f_a_cs_turn_steel=f_a_cs_turn_steel,
+            )
+            stress_radial = CSCoil.calculate_cs_radial_stress(
+                r_stress_point=radius,
+                r_cs_inner=r_cs_inner,
+                r_cs_outer=r_cs_outer,
+                j_cs=j_cs,
+                b_cs_inner=b_cs_inner,
+                f_poisson_cs_structure=poisson_steel,
+            )
+            von_mises_data[i, j] = (
+                calculate_von_mises_stress(
+                    stress_x=stress_hoop,
+                    stress_y=stress_z,
+                    stress_z=stress_radial,
+                    stress_shear_xy=0.0,
+                    stress_shear_yz=0.0,
+                    stress_shear_zx=0.0,
+                )
+                / 1e6
+            )
+
+    # Plot filled contour of Von Mises stress distribution
+    contour_fill = axis.contourf(r, z, von_mises_data, levels=15, cmap="RdYlBu_r")
+    contour_lines = axis.contour(
+        r,
+        z,
+        von_mises_data,
+        levels=[von_mises_data.max()],
+        colors="black",
+        linewidths=0.5,
+        alpha=0.4,
+    )
+    axis.clabel(contour_lines, inline=True, fontsize=8)
+
+    # Plot CS outline
+    axis.plot(
+        [r_cs_inner, r_cs_inner],
+        [-dz_cs_full / 2, dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+        label="CS Inner",
+    )
+    axis.plot(
+        [r_cs_outer, r_cs_outer],
+        [-dz_cs_full / 2, dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+        label="CS Outer",
+    )
+    axis.plot(
+        [r_cs_inner, r_cs_outer], [dz_cs_full / 2, dz_cs_full / 2], "k-", linewidth=2
+    )
+    axis.plot(
+        [r_cs_inner, r_cs_outer],
+        [-dz_cs_full / 2, -dz_cs_full / 2],
+        "k-",
+        linewidth=2,
+    )
+
+    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
+    if colorbar_axis is None:
+        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
+    else:
+        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    cbar.set_label("Von Mises Stress (MPa)")
+
+    axis.set_xlabel("R [m]")
+    axis.minorticks_on()
+    axis.set_xlim(r_cs_inner * 0.9, r_cs_outer * 1.1)
+    axis.set_ylim((-dz_cs_full / 2) * 1.1, (dz_cs_full / 2) * 1.1)
+    axis.grid(True, alpha=0.3)
+    axis.set_title("CS Von Mises Stress Contour at BOP")
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -16196,6 +16312,22 @@ def main_plot(
         mfile=m_file,
         scan=scan,
         colorbar_axis=cbar_ax_338,
+    )
+
+    ax_339 = figs[33].add_subplot(339, sharex=ax_332, sharey=ax_338)
+    ax_339_position = ax_339.get_position()
+    cbar_ax_339 = figs[33].add_axes([
+        ax_339_position.x1 + 0.01,
+        ax_339_position.y0,
+        0.012,
+        ax_339_position.height,
+    ])
+
+    plot_cs_von_mises_2d_contour(
+        axis=ax_339,
+        mfile=m_file,
+        scan=scan,
+        colorbar_axis=cbar_ax_339,
     )
 
     plot_first_wall_top_down_cross_section(
