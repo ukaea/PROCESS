@@ -2532,7 +2532,7 @@ class TFCoil(Model):
 
             # Inner radius of the CS
             if i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
-                # CS not used as wedge support i_tf_inside_cs = 1
+                # CS not used as wedge support i_tf_inside_cs = 1 (TF inside CS)
                 radtf[0] = 0.001
             else:
                 radtf[0] = dr_bore
