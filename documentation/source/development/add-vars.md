@@ -31,8 +31,10 @@ class BlanketData:
   <... existing variables ...>
 
   my_new_blanket_variable: float = 0.0
-  """my variable description"""
+  """my variable description [m]"""
 ```
+
+Here, `[m]` is the units and should be replaced with the appropriate units for the variable being added.
 
 This variable could then be used within a model
 
@@ -41,6 +43,8 @@ self.data.blanket.my_new_blanket_variable = 1.0
 ...
 another_variable = self.data.blanket.my_new_blanket_variable / 2.0
 ```
+
+-----------------
 
 ## Add a new input
 Adding an input in PROCESS means that some variable in a data structure can be set from the `IN.DAT`. Inputs are defined in the `process/core/input.py` file in the `INPUT_VARIABLES` dictionary. Adding a new entry to this dictionary will create a new input.
@@ -52,6 +56,8 @@ INPUT_VARIABLES = {
   "my_new_blanket_variable": InputVariable("blanket", float),
 }
 ```
+
+`InputVariable` has several additional fields to support validation and the parsing of arrays, please consult the dataclass for these additional arguments.
 
 You would replace `"blanket"` with the name of the data structure your specific variable belongs to (found by looking at `DataStructure` in `process/core/model.py`).
 
@@ -81,14 +87,16 @@ In this example:
 - `0.1` is the default lower bound of the variable.
 - `1.0` is the default upper bound of the variable.
 
-You will often want to add a variable as an input if it is an iteration variable. That way, you can specify the initial value of the iteration variable.
+You will often want to [add a variable as an input](#add-a-new-input) if it is an iteration variable. That way, you can specify the initial value of the iteration variable in the `IN.DAT`.
 
 The iteration variable can be enabled in the `IN.DAT` by:
 ```
 ixc = 123
 
-my_new_blanket_variable = 0.5 * initial value (optional)
+my_new_blanket_variable = 0.5
 ```
+
+Note you can omit the `my_new_blanket_variable = 0.5` line and the initial value would just be whatever the variables default value is (`0.0` in this example, this is the default we assigned [earlier](#add-a-new-variable)).
 
 -----------------
 
@@ -108,10 +116,10 @@ Here `20` will be the identifier of the figure of merit, and **must** be unique.
 Finally, add the equation to `process/core/solver/objectives.py`:
 ```python
 elif figure_of_merit == FiguresOfMerit.BLANKET_FIGURE_OF_MERIT:
-  objective_metric = data.blanket.my_new_blanket_variable / 10.0
+  objective_metric = data.blanket.my_new_blanket_variable
 ```
 
-Here the `10.0` is optional, but highlights that you will want to scale the figure of merit to be of order unity.
+Note that you will want to scale the `objective_metric` such that it is on the order unity if the variable is not already.
 
 The figure of merit can be selected in the `IN.DAT`:
 ```
@@ -119,7 +127,7 @@ minmax = 20
 ```
 Remember, setting `minmax = -20` would minimise instead of maximise our new variable.
 
------------
+-----------------
 
 ## Add a scan variable
 
@@ -137,7 +145,7 @@ Here, `82` is the identifier of the scan variable and must be unique.
 
 Next, increment the parameter `IPNSCNV` in `process/data_structure/scan_variables.py` and be sure to add a description of the scan variable in the docstring of the `nsweep` variable.
 
-Finally, in `process/core/scan.py`, add the scan variable to the `Scan.scan_select` method.
+Finally, in `process/core/scan.py`, add the scan variable to the `Scan.scan_select()` method.
 ```python
 match nwp:
   ...
@@ -145,13 +153,13 @@ match nwp:
     self.data.tfcoil.my_new_blanket_variable = swp[iscn - 1]
 ```
 
-Please see the scan documentation for how to setup a scan `IN.DAT`
+Please see the [scan documentation](../usage/running-process.md#running-process) for how to setup a scan `IN.DAT`
 
----------------
+-----------------
 
 ## Add a constraint equation
 
-Constraint equations are added to *PROCESS* in the `process/core/solver/constraints.py` file. They are registered with the `ConstraintManager` whenever the application is run. Each equation has a unique name that is currently an integer, however upgrades to the input file format in the future will allow arbitrary hashable constraint names. 
+Constraint equations are added to PROCESS in the `process/core/solver/constraints.py` file. They are registered with the `ConstraintManager` whenever the application is run. Each equation has a unique name that is currently an integer, however upgrades to the input file format in the future will allow arbitrary hashable constraint names.
 
 A constraint is simply added by registering the constraint to the manager using a decorator.
 
@@ -168,10 +176,10 @@ The arguments to the `register_constraint` function are:
 
 `my_constraint_function` should be named appropriately and return a `ConstraintResult` which contains the:
 
-- Normalised residual error
+- Constraint residual
+- Normalised residual
 - Constraint value
 - Constraint bound
-- Constraint residual
 
 The recommended way to do this is using one of the functions `geq`, `leq`, or `eq` depending on whether the constraint is desired to be $v\geq b$, $v\leq b$, or $v=b$, respectively.
 
