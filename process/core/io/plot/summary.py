@@ -15233,44 +15233,6 @@ def plot_pf_cs_plasma_mutual_inductance(
     axis.get_figure().colorbar(im, ax=axis, label="Mutual Inductance (H)")
 
 
-def plot_cs_radial_hoop_stress_profile(
-    axis: plt.Axes,
-    mfile: MFile,
-    scan: int,
-    j_cs: float,
-    b_cs_inner: float,
-):
-    r_cs_inner = mfile.get("r_cs_inner", scan=scan)
-    r_cs_outer = mfile.get("r_cs_outer", scan=scan)
-
-    radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
-    stress_values = np.array([
-        CSCoil.calculate_cs_hoop_stress(
-            r_stress_point=radius,
-            r_cs_inner=r_cs_inner,
-            r_cs_outer=r_cs_outer,
-            j_cs=j_cs,
-            b_cs_inner=b_cs_inner,
-            f_poisson_cs_structure=poisson_steel,
-            f_a_cs_turn_steel=mfile.get("f_a_cs_turn_steel", scan=scan),
-        )
-        for radius in radii
-    ])
-
-    axis.plot(
-        radii,
-        stress_values / 1e6,
-        linewidth=2,
-        label="$\\sigma_{\\theta}$,Hoop Stress",
-    )
-    axis.set_xlabel("Radial Position (m)")
-    axis.set_ylabel("Hoop Stress (MPa)")
-    axis.minorticks_on()
-    axis.legend(loc="best")
-    axis.set_title("CS Hoop Stress at BOP")
-    axis.grid(True, alpha=0.3)
-
-
 def plot_cs_radial_stress_profile(
     axis: plt.Axes,
     mfile: MFile,
@@ -15281,7 +15243,7 @@ def plot_cs_radial_stress_profile(
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
 
-    radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
+    radii = np.linspace(r_cs_inner, r_cs_outer, num=25)
     stress_values = np.array([
         CSCoil.calculate_cs_radial_stress(
             r_stress_point=radius,
@@ -15300,6 +15262,11 @@ def plot_cs_radial_stress_profile(
         linewidth=2,
         label="$\\sigma_{r}$,Radial Stress",
     )
+    max_idx = np.argmax(np.abs(stress_values))
+    max_radius = radii[max_idx]
+    max_stress = stress_values[max_idx] / 1e6
+    axis.axvline(max_radius, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
+    axis.axhline(max_stress, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
     axis.set_xlabel("Radial Position (m)")
     axis.set_ylabel("Radial Stress (MPa)")
     axis.minorticks_on()
@@ -15388,7 +15355,7 @@ def plot_cs_radial_stress_contour_profile(
             )
 
     # Plot filled contour of stress distribution
-    contour_fill = axis.contourf(r, z, stress_data, levels=15, cmap="RdYlBu_r")
+    contour_fill = axis.contourf(r, z, stress_data, levels=15, cmap="RdYlBu")
     contour_lines = axis.contour(
         r,
         z,
@@ -15679,7 +15646,7 @@ def plot_vertical_stress_contour_profile(
         stress_data[i, :] = stress_val
 
     # Plot filled contour of stress distribution
-    contour_fill = axis.contourf(r, z, stress_data, levels=15, cmap="RdYlBu_r")
+    contour_fill = axis.contourf(r, z, stress_data, levels=15, cmap="RdYlBu")
     contour_lines = axis.contour(
         r,
         z,

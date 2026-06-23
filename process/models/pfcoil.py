@@ -2168,7 +2168,6 @@ class PFCoil(Model):
             op.ocmmnt(self.outfile, "----------------------------")
             op.osubhd(self.outfile, "CS Stresses:")
 
-            
             op.ovarre(
                 self.outfile,
                 "Allowable stress in CS steel (Pa)",
