@@ -746,7 +746,7 @@ def constraint_equation_25(constraint_registration, data):
     """Equation for peak toroidal field upper limit
 
     b_tf_inboard_max: maximum peak toroidal field (T)
-    b_tf_inboard_peak_symmetric: mean peak field at TF coil (T)
+    b_tf_inboard_peak_with_ripple: mean peak field at TF coil with ripple (T)
     """
     return leq(
         data.tfcoil.b_tf_inboard_peak_with_ripple,
