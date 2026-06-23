@@ -8,6 +8,7 @@ import numpy as np
 from process.core import constants
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.core.model import DataStructure
+from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.models.physics.physics import BetaComponentLimits
 from process.models.tfcoil.base import TFConductorModel
 
@@ -1405,7 +1406,10 @@ def constraint_equation_72(constraint_registration, data):
     i_tf_bucking: switch for TF structure design
     """
     # bucked and wedged desing
-    if data.tfcoil.i_tf_bucking >= 2 and data.build.i_tf_inside_cs == 0:
+    if (
+        data.tfcoil.i_tf_bucking >= 2
+        and data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_OUTSIDE_CS
+    ):
         return leq(
             max(
                 data.pf_coil.s_shear_cs_peak,
