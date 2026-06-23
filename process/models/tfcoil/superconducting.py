@@ -2906,13 +2906,13 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         elif i_tf_superconductor == SuperconductorModel.OLD_LUBELL_NBTI:
             bc20m = 15.0e0  # [T]
             tc0m = 9.3e0  # [K]
-            c0 = 1.0e10  # [A/m2]
+            c0 = 1.0e10  # [A/m²]
 
             j_superconductor_critical, _ = superconductors.jcrit_nbti(
                 temp_conductor=temp_tf_coolant_peak_field,
                 b_conductor=b_tf_inboard_peak,
                 c0=c0,
-                b_c20m=bc20m,
+                b_c20max=bc20m,
                 temp_c0max=tc0m,
             )
 
