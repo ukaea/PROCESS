@@ -2168,16 +2168,7 @@ class PFCoil(Model):
             op.ocmmnt(self.outfile, "----------------------------")
             op.osubhd(self.outfile, "CS Stresses:")
 
-            op.ovarin(
-                self.outfile,
-                "Switch for CS stress calculation",
-                "(i_cs_stress)",
-                self.data.pf_coil.i_cs_stress,
-            )
-            if self.data.pf_coil.i_cs_stress == 1:
-                op.ocmmnt(self.outfile, "Hoop + axial stress considered")
-            else:
-                op.ocmmnt(self.outfile, "Only hoop stress considered")
+            
             op.ovarre(
                 self.outfile,
                 "Allowable stress in CS steel (Pa)",
@@ -3500,28 +3491,20 @@ class CSCoil(Model):
                 self.data.pf_coil.f_a_cs_turn_steel * self.data.pf_coil.a_cs_poloidal
             )
 
-            if self.data.pf_coil.i_cs_stress == 1:
-                self.data.pf_coil.stress_shear_cs_peak = calculate_tresca_stress(
-                    stress_x=self.data.pf_coil.stress_hoop_cs_inner,
-                    stress_y=self.data.pf_coil.stress_z_cs_self_peak_midplane,
-                    stress_z=self.data.pf_coil.stress_radial_cs_peak,
-                )
+            self.data.pf_coil.stress_shear_cs_peak = calculate_tresca_stress(
+                stress_x=self.data.pf_coil.stress_hoop_cs_inner,
+                stress_y=self.data.pf_coil.stress_z_cs_self_peak_midplane,
+                stress_z=self.data.pf_coil.stress_radial_cs_peak,
+            )
 
-                self.data.pf_coil.stress_mises_cs_peak = calculate_von_mises_stress(
-                    stress_x=self.data.pf_coil.stress_hoop_cs_inner,
-                    stress_y=self.data.pf_coil.stress_z_cs_self_peak_midplane,
-                    stress_z=self.data.pf_coil.stress_radial_cs_peak,
-                    stress_shear_xy=0.0e0,
-                    stress_shear_yz=0.0e0,
-                    stress_shear_zx=0.0e0,
-                )
-
-            else:
-                self.data.pf_coil.stress_shear_cs_peak = max(
-                    abs(self.data.pf_coil.stress_hoop_cs_inner - 0.0e0),
-                    abs(0.0e0 - 0.0e0),
-                    abs(0.0e0 - self.data.pf_coil.stress_hoop_cs_inner),
-                )
+            self.data.pf_coil.stress_mises_cs_peak = calculate_von_mises_stress(
+                stress_x=self.data.pf_coil.stress_hoop_cs_inner,
+                stress_y=self.data.pf_coil.stress_z_cs_self_peak_midplane,
+                stress_z=self.data.pf_coil.stress_radial_cs_peak,
+                stress_shear_xy=0.0e0,
+                stress_shear_yz=0.0e0,
+                stress_shear_zx=0.0e0,
+            )
 
             # Thickness of hypothetical steel cylinders assumed to encase the CS along
             # its inside and outside edges; in reality, the steel is distributed

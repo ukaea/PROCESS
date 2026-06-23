@@ -967,7 +967,6 @@ INPUT_VARIABLES = {
     "i_cp_joints": InputVariable("tfcoil", int, choices=[0, 1]),
     "i_cp_lifetime": InputVariable("costs", int, range=(0, 3)),
     "i_cs_precomp": InputVariable("build", int, choices=[0, 1]),
-    "i_cs_stress": InputVariable("pf_coil", int, choices=[0, 1]),
     "i_density_limit": InputVariable("physics", int, range=(1, 8)),
     "i_diamagnetic_current": InputVariable("physics", int, choices=[0, 1, 2]),
     "i_div_heat_load": InputVariable("divertor", int, choices=[0, 1, 2]),

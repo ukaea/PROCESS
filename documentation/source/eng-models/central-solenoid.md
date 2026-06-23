@@ -353,20 +353,6 @@ $$
 --------------------------
 
 
-
-
-
-The radial stress is neglected. The hoop and axial stresses are combined to give the maximum shear 
-stress, as required by the Tresca stress criterion:
-
-$$
-\sigma_{max shear} = max(|\sigma_{hoop} - \sigma_{z}| , |\sigma_z|, |\sigma_{hoop}|)
-$$
-
-However, the axial stress is only included if the switch `i_cs_stress` = 1.  The axial stress is 
-set to zero if `i_cs_stress` = 0.  This option has no physical justification but can be used if 
-there are reasons to be believe that the calculation above gives unrealistically large stresses.
-
 ## Fatigue
 
 If the the reactor is assumed to be pulsed, the CS must be assessed against fatigue. 

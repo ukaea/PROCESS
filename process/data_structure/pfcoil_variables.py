@@ -112,12 +112,6 @@ class PFCoilData:
     stress_cs_steel_max: float = 4.0e8
     """Max allowable stress in Central Solenoid structural material (Pa)"""
 
-    i_cs_stress: int = 1
-    """Switch for CS stress calculation:
-    - =0 Hoop stress only
-    - =1 Hoop + Axial stress
-    """
-
     a_cs_toroidal: float = 0.0
     """Central solenoid top-down toroidal cross-sectional area (m2)"""
 
