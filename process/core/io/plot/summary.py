@@ -10066,15 +10066,17 @@ def plot_cs_coil_structure(
         f"CS poloidal area: {mfile.get('a_cs_poloidal', scan=scan):.4f} m$^2$\n"
         f"CS top-down toroidal area: {mfile.get('a_cs_toroidal', scan=scan):.4f} m$^2$\n"
         f"$N_{{\\text{{turns}}}}:$ {mfile.get('n_pf_coil_turns[n_cs_pf_coils-1]', scan=scan):,.2f}\n"
-        f"$I_{{\\text{{peak}}}}:$ {mfile.get('c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]', scan=scan):.3f}$ \\ MA$\n"
-        f"$B_{{\\text{{peak}}}}:$ {mfile.get('b_pf_coil_peak[n_cs_pf_coils-1]', scan=scan):.3f}$ \\ T$\n"
-        f"$F_{{\\text{{z,self,peak}}}}:$ {mfile.get('forc_z_cs_self_peak_midplane', scan=scan) / 1e6:.3f}$ \\ MN$\n"
-        f"$\\sigma_{{\\text{{z,self,peak}}}}:$ {mfile.get('stress_z_cs_self_peak_midplane', scan=scan) / 1e6:.3f}$ \\ MPa$ "
+        f"$I_{{\\text{{peak}}}}:$ {mfile.get('c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]', scan=scan):.3f} MA\n"
+        f"$B_{{\\text{{peak}}}}:$ {mfile.get('b_pf_coil_peak[n_cs_pf_coils-1]', scan=scan):.3f} T\n"
+        f"$F_{{\\text{{z,self,peak}}}}:$ {mfile.get('forc_z_cs_self_peak_midplane', scan=scan) / 1e6:.3f} MN\n"
+        f"$\\sigma_{{\\text{{z,self,peak}}}}:$ {mfile.get('stress_z_cs_self_peak_midplane', scan=scan) / 1e6:.3f} MPa\n"
+        f"$\\sigma_{{\\text{{mises,peak}}}}:$ {mfile.get('stress_mises_cs_peak', scan=scan) / 1e6:.3f} MPa\n"
+        f"$\\tau_{{\\text{{shear,peak}}}}:$ {mfile.get('stress_shear_cs_peak', scan=scan) / 1e6:.3f} MPa "
     )
 
     axis.text(
-        0.45,
-        0.375,
+        0.5,
+        0.6,
         textstr_cs,
         fontsize=9,
         verticalalignment="bottom",
@@ -15498,93 +15500,6 @@ def plot_cs_hoop_stress_contour_profile(
     axis.grid(True, alpha=0.3)
 
 
-def plot_stress_yield_locus(
-    axis: plt.Axes,
-    mfile: MFile,
-    scan: int,
-    stress_yield: float,
-):
-    stress_z_cs_self_peak_midplane = mfile.get(
-        "stress_z_cs_self_peak_midplane", scan=scan
-    )
-    stress_hoop_cs_inner = mfile.get("stress_hoop_cs_inner", scan=scan)
-    stress_yield_mpa = stress_yield / 1e6
-    stress_mises_cs_peak = mfile.get("stress_mises_cs_peak", scan=scan) / 1e6
-    stress_shear_cs_peak = mfile.get("stress_shear_cs_peak", scan=scan) / 1e6
-    s1_boundary = [
-        stress_yield_mpa,
-        stress_yield_mpa,
-        0,
-        -stress_yield_mpa,
-        -stress_yield_mpa,
-        0,
-        stress_yield_mpa,
-    ]
-    s2_boundary = [
-        0,
-        stress_yield_mpa,
-        stress_yield_mpa,
-        0,
-        -stress_yield_mpa,
-        -stress_yield_mpa,
-        0,
-    ]
-
-    angles = np.linspace(0, 2 * np.pi, 300)
-    # Coordinate transformation to rotate the standard ellipse into the principal stress plane
-    vm_s1 = stress_yield_mpa * np.cos(angles)
-    vm_s2 = stress_yield_mpa * (np.cos(angles) / 2 + np.sin(angles) * np.sqrt(3) / 2)
-    axis.plot(
-        vm_s1,
-        vm_s2,
-        "b-",
-        linewidth=2,
-        label="von Mises Yield Locus\n(Ellipse)",
-    )
-
-    axis.plot(
-        s1_boundary,
-        s2_boundary,
-        color="red",
-        label="Tresca Limit Envelope",
-    )
-    axis.plot(
-        stress_hoop_cs_inner / 1e6,
-        stress_z_cs_self_peak_midplane / 1e6,
-        marker="o",
-        markersize=12,
-        color="blue",
-        label=(
-            f"CS Inboard Midplane Stress Point\n"
-            f"Tresca = {stress_shear_cs_peak:.1f} MPa\n"
-            f"von Mises = {stress_mises_cs_peak:.1f} MPa"
-        ),
-    )
-    axis.axhline(0, color="black", linewidth=1)
-    axis.axvline(0, color="black", linewidth=1)
-    axis.axhline(
-        stress_z_cs_self_peak_midplane / 1e6,
-        color="blue",
-        linewidth=1,
-        linestyle="--",
-        alpha=0.6,
-    )
-    axis.axvline(
-        stress_hoop_cs_inner / 1e6,
-        color="blue",
-        linewidth=1,
-        linestyle="--",
-        alpha=0.6,
-    )
-
-    axis.legend(loc="center left", bbox_to_anchor=(1.02, 0.5))
-    axis.grid(True, alpha=0.3)
-    axis.set_xlabel("Hoop Stress (MPa)")
-    axis.set_ylabel("Vertical Stress (MPa)")
-    axis.set_title("Stress Yield Locus")
-    axis.minorticks_on()
-
-
 def plot_cs_vertical_stress_profile(
     axis: plt.Axes,
     mfile: MFile,
@@ -16267,13 +16182,6 @@ def main_plot(
     for axis in (ax_335, ax_336):
         axis.set_ylabel("")
         axis.tick_params(axis="y", labelleft=False)
-
-    plot_stress_yield_locus(
-        axis=figs[33].add_subplot(339, aspect="equal"),
-        mfile=m_file,
-        scan=scan,
-        stress_yield=m_file.get("stress_cs_steel_max", scan=scan),
-    )
 
     ax_338 = figs[33].add_subplot(338, sharex=ax_332, sharey=ax_335)
     ax_338_position = ax_338.get_position()
