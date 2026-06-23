@@ -9,11 +9,11 @@ All of these features rely on 'variables' which belong to a 'data structure'. Al
 
 In general, a variable within a data structure could act as an:
 
-- Input variable: is specified by the user in an `IN.DAT`/has a default value and is not changed once PROCESS is running.
+- Input variable: is specified by the user in an `IN.DAT` and its value is not changed once PROCESS is running.
 - Iteration variable: is modified by the solver to try and optimise for some figure of merit.
 - Scan variable: is sequentially modified by the `Scan` class to some `IN.DAT`-defined values.
 - Intermediate variable: is calculated within a model and then used within other models.
-- Output variable: is calculated within a model and then written out the `MFILE.DAT`.
+- Output variable: is calculated within a model and then written out to the `MFILE.DAT`.
 
 It is advised that a variable is either used to define a particular PROCESS run (input variable, iteration variable, or scan variable) or mutated within a PROCESS run (output variable or intermediate variable). Mixing the two classes of variable (e.g. having a variable that can be input but is also mutated within a model) will lead to confusing, dangerous, and incorrect results.
 
@@ -21,7 +21,7 @@ It is advised that a variable is either used to define a particular PROCESS run 
 -----------------
 
 ## Add a new variable
-You may need to add a variable to PROCESS when changing or creating models. In most cases, you will want to add your variable to an existing data structure. Creating an entierly new data structure is beyond the scope of this guide, so please seek support from the PROCESS maintainers.
+You may need to add a variable to PROCESS when changing or creating models. In most cases, you will want to add your variable to an existing data structure. Creating an entirely new data structure is beyond the scope of this guide, so please seek support from the PROCESS maintainers.
 
 For example, if you are adding a new variable that relates to the blanket model, you would add the variable to `process/data_structure/blanket_variables.py` as part of the `BlanketData` dataclass. 
 
@@ -49,7 +49,7 @@ Continuing with the example from the previous section:
 ```python
 INPUT_VARIABLES = {
   ...
-  "my_new_blanket_variable": InputVariable("blanket", str),
+  "my_new_blanket_variable": InputVariable("blanket", float),
 }
 ```
 
@@ -94,20 +94,20 @@ my_new_blanket_variable = 0.5 * initial value (optional)
 
 ## Add a figure of merit
 
-A figure of merit is the scalar that the optimiser (e.g. VMCON) will try and minimise or maximise. The figures of merit are specified in `process/core/solver/objectives.py` in the `objective_function` function.
+A figure of merit is the scalar that the optimiser (e.g. VMCON) will try and minimise or maximise. The figures of merit are specified in `process/core/solver/objectives.py` in the `objective_function()` function.
 
 To add a new figure of merit, first create a new entry in the `FiguresOfMerit` enum in `process/data_structure/numerics.py`:
 
 ```python
 class FiguresOfMerit(IntEnum):
     ...
-    BLANKET_FIGURE_MERIT = (20, "my FOM description")
+    BLANKET_FIGURE_OF_MERIT = (20, "my FOM description")
 ```
-Here `20` will be the identifier of the figure of merit, and must be unique. 
+Here `20` will be the identifier of the figure of merit, and **must** be unique. 
 
 Finally, add the equation to `process/core/solver/objectives.py`:
 ```python
-elif figure_of_merit == FiguresOfMerit.BLANKET_FIGURE_MERIT:
+elif figure_of_merit == FiguresOfMerit.BLANKET_FIGURE_OF_MERIT:
   objective_metric = data.blanket.my_new_blanket_variable / 10.0
 ```
 
@@ -123,7 +123,7 @@ Remember, setting `minmax = -20` would minimise instead of maximise our new vari
 
 ## Add a scan variable
 
-After following the instruction to add an input variable, you can make then create a scan variable.
+After following the instruction to add an input variable, you can then make a scan variable.
 
 First, add the variable to the `ScanVariables` enum in `process/core/scan.py`. 
 ```python
@@ -178,5 +178,5 @@ The recommended way to do this is using one of the functions `geq`, `leq`, or `e
 ```python
 @ConstraintManager.register_constraint(1234, "m", "=")
 def my_constraint_function(constraint_registration):
-    return geq(value, bound, constraint_registration)
+    return eq(value, bound, constraint_registration)
 ```
