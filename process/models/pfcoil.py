@@ -22,7 +22,10 @@ from process.data_structure.pfcoil_variables import (
     NPTSMX,
 )
 from process.models import superconductors
-from process.models.superconductors import SuperconductorMaterial, SuperconductorModel
+from process.models.superconductors import (
+    SuperconductorMaterial,
+    SuperconductorModel,
+)
 from process.models.tfcoil.base import TFCoilShapeModel
 
 logger = logging.getLogger(__name__)
@@ -4523,7 +4526,7 @@ def superconpf(
         Temperature margin (K) (tmarg)
     """
     # Find critical current density in superconducting strand, jcritstr
-    if isumat == 1:
+    if isumat == SuperconductorModel.ITER_NB3SN:
         # ITER Nb3Sn critical surface parameterization
         bc20m = 32.97e0
         tc0m = 16.06e0
@@ -4535,7 +4538,7 @@ def superconpf(
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 2:
+    elif isumat == SuperconductorModel.BI2212:
         # Bi-2212 high temperature superconductor parameterization
 
         # Current density in a strand of Bi-2212 conductor
@@ -4551,7 +4554,7 @@ def superconpf(
         #  j_crit_cable / non-copper fraction of conductor
         j_crit_sc = j_crit_cable / (1.0e0 - fcu)
 
-    elif isumat == 3:
+    elif isumat == SuperconductorModel.OLD_LUBELL_NBTI:
         # NbTi data
         bc20m = 15.0e0
         tc0m = 9.3e0
@@ -4560,7 +4563,7 @@ def superconpf(
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 4:
+    elif isumat == SuperconductorModel.USER_DEFINED_NB3SN:
         # As (1), but user-defined parameters
         bc20m = bcritsc
         tc0m = tcritsc
@@ -4568,7 +4571,7 @@ def superconpf(
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 5:
+    elif isumat == SuperconductorModel.WST_NB3SN:
         # WST Nb3Sn parameterisation
         bc20m = 32.97e0
         tc0m = 16.06e0
@@ -4582,13 +4585,13 @@ def superconpf(
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 6:
+    elif isumat == SuperconductorModel.CROCO_REBCO:
         # "REBCO" 2nd generation HTS superconductor in CrCo strand
         j_crit_sc, _, _, _ = superconductors.jcrit_rebco(thelium, bmax)
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 7:
+    elif isumat == SuperconductorModel.DURHAM_NBTI:
         # Durham Ginzburg-Landau critical surface model for Nb-Ti
         bc20m = b_crit_upper_nbti
         tc0m = t_crit_nbti
@@ -4596,7 +4599,7 @@ def superconpf(
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 8:
+    elif isumat == SuperconductorModel.DURHAM_REBCO:
         # Durham Ginzburg-Landau critical surface model for REBCO
         bc20m = 429e0
         tc0m = 185e0
@@ -4605,7 +4608,7 @@ def superconpf(
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 9:
+    elif isumat == SuperconductorModel.HAZELTON_ZHAI_REBCO:
         # Hazelton experimental data + Zhai conceptual model for REBCO
         bc20m = 138
         tc0m = 92
