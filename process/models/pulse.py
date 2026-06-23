@@ -5,6 +5,7 @@ import logging
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
+from process.data_structure.pfcoil_variables import PFConductorModel
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +68,7 @@ class Pulse(Model):
 
         #  Central Solenoid resistance (ohms)
 
-        if self.data.pf_coil.i_pf_conductor == 0:
+        if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             r = 0.0e0
         else:
             r = (

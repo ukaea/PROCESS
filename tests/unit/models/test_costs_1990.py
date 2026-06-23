@@ -5,6 +5,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
+from process.data_structure.pfcoil_variables import PFConductorModel
 from process.models.engineering.pumping import CoolantType
 
 
@@ -2144,7 +2145,7 @@ class Acc2222Param(NamedTuple):
             supercond_cost_model=0,
             j_crit_str_cs=100.0,
             j_crit_str_pf=200.0,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_void=0.29999999999999999,
             n_cs_pf_coils=7,
             n_pf_coil_turns=np.array(
@@ -2340,7 +2341,7 @@ class Acc2222Param(NamedTuple):
             supercond_cost_model=0,
             j_crit_str_cs=100.0,
             j_crit_str_pf=200.0,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_void=0.29999999999999999,
             n_cs_pf_coils=7,
             n_pf_coil_turns=np.array(
@@ -2536,7 +2537,7 @@ class Acc2222Param(NamedTuple):
             supercond_cost_model=1,
             j_crit_str_cs=100.0,
             j_crit_str_pf=200.0,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_void=0.29999999999999999,
             n_cs_pf_coils=7,
             n_pf_coil_turns=np.array(

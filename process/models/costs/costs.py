@@ -6,6 +6,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.data_structure.pfcoil_variables import PFConductorModel
 from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
@@ -1612,7 +1613,9 @@ class Costs(Model):
         #  each superconducting cable (so is zero for resistive coils)
 
         costpfsh = (
-            0.0 if self.data.pf_coil.i_pf_conductor == 1 else self.data.costs.cconshpf
+            0.0
+            if self.data.pf_coil.i_pf_conductor == PFConductorModel.RESISTIVE
+            else self.data.costs.cconshpf
         )
 
         #  Non-Central Solenoid coils
@@ -1627,7 +1630,7 @@ class Costs(Model):
         for i in range(npf):
             #  Superconductor ($/m)
             if self.data.costs.supercond_cost_model == 0:
-                if self.data.pf_coil.i_pf_conductor == 0:
+                if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                     costpfsc = (
                         self.data.costs.ucsc[self.data.pf_coil.i_pf_superconductor - 1]
                         * (1.0e0 - self.data.pf_coil.fcupfsu)
@@ -1644,7 +1647,7 @@ class Costs(Model):
                     )
                 else:
                     costpfsc = 0.0e0
-            elif self.data.pf_coil.i_pf_conductor == 0:
+            elif self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                 costpfsc = (
                     self.data.costs.sc_mat_cost_0[
                         self.data.pf_coil.i_pf_superconductor - 1
@@ -1658,7 +1661,7 @@ class Costs(Model):
                 costpfsc = 0.0
 
             #  Copper ($/m)
-            if self.data.pf_coil.i_pf_conductor == 0:
+            if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                 costpfcu = (
                     self.data.costs.uccu
                     * self.data.pf_coil.fcupfsu
@@ -1709,7 +1712,7 @@ class Costs(Model):
             #  Superconductor ($/m)
             if self.data.costs.supercond_cost_model == 0:
                 #  Issue #328  Use CS conductor cross-sectional area (m2)
-                if self.data.pf_coil.i_pf_conductor == 0:
+                if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                     costpfsc = (
                         self.data.costs.ucsc[self.data.pf_coil.i_cs_superconductor - 1]
                         * self.data.pf_coil.a_cs_cable_space
@@ -1724,7 +1727,7 @@ class Costs(Model):
                     )
                 else:
                     costpfsc = 0.0e0
-            elif self.data.pf_coil.i_pf_conductor == 0:
+            elif self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                 costpfsc = (
                     self.data.costs.sc_mat_cost_0[
                         self.data.pf_coil.i_cs_superconductor - 1
@@ -1739,7 +1742,7 @@ class Costs(Model):
 
             #  Copper ($/m)
 
-            if self.data.pf_coil.i_pf_conductor == 0:
+            if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                 costpfcu = (
                     self.data.costs.uccu
                     * self.data.pf_coil.a_cs_cable_space

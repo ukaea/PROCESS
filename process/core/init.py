@@ -22,6 +22,7 @@ from process.data_structure.build_variables import (
 )
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
+from process.data_structure.pfcoil_variables import PFConductorModel
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.pfcoil import PFLocationTypes
 from process.models.physics.profiles import DensityProfilePedestalType
@@ -978,7 +979,7 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     # PF coil resistivity is zero if superconducting
-    if data.pf_coil.i_pf_conductor == 0:
+    if data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
         data.pf_coil.rho_pf_coil = 0.0
 
     # If there is no NBI, then hot beam density should be zero
