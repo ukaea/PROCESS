@@ -38,7 +38,7 @@ class TFCSRadialConfiguration(IntEnum):
 
     @DynamicClassAttribute
     def description(self):
-        """Returns the description of the TF coil radial configuration."""
+        """Description of the TF inboard and CS coil radial configuration."""
         return self._description_
 
 
