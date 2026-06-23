@@ -10,6 +10,7 @@ import numpy as np
 import pytest
 
 import process.models.tfcoil.base as tfcoil_module
+from process.data_structure.build_variables import TFCSRadialConfiguration
 
 
 @pytest.fixture
@@ -971,7 +972,7 @@ class StressclParam(NamedTuple):
     [
         StressclParam(
             dr_tf_inboard=1.208,
-            i_tf_inside_cs=0,
+            i_tf_inside_cs=TFCSRadialConfiguration.TF_OUTSIDE_CS,
             dr_cs_tf_gap=0.01,
             r_tf_inboard_mid=3.5979411851091103,
             dr_bore=2.3322000000000003,
@@ -1088,7 +1089,7 @@ class StressclParam(NamedTuple):
         ),
         StressclParam(
             dr_tf_inboard=1.208,
-            i_tf_inside_cs=0,
+            i_tf_inside_cs=TFCSRadialConfiguration.TF_OUTSIDE_CS,
             dr_cs_tf_gap=0.01,
             r_tf_inboard_mid=3.5979411851091103,
             dr_bore=2.3322000000000003,
