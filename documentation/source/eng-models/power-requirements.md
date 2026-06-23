@@ -214,7 +214,7 @@ $$
 
 - $P_{\text{FW, nuclear}}$ & $P_{\text{Blkt, nuclear}}$ is the nuclear heating from neutron interaction (which includes the energy multiplication (`f_p_blkt_multiplication`) for the blanket.)
 - $P_{\text{FW,}\gamma}$ is the photon radiation incident on the FW (`p_fw_rad_total_mw`).
-- $P_{\alpha,\text{loss}}$ is the plasma lost alpha power (`p_fw_alpha_mw`)
+- $P_{\alpha,\text{loss}}$ is the plasma lost alpha power (`p_fw_alpha_surface_total_mw`)
 
 8: The thermal power deposited in the shields is calculated:
 

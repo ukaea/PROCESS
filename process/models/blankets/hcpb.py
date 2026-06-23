@@ -768,13 +768,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.data.physics.p_plasma_rad_mw * self.data.fwbs.f_a_fw_outboard_hcd
         )
 
-        # Radiation power incident on first wall (MW)
-        self.data.fwbs.p_fw_rad_total_mw = (
-            self.data.physics.p_plasma_rad_mw
-            - self.data.fwbs.p_div_rad_total_mw
-            - self.data.fwbs.p_fw_hcd_rad_total_mw
-        )
-
         # If we have chosen pressurised water as the blanket coolant, set the
         # coolant outlet temperature as 20 deg C below the boiling point
         if self.data.fwbs.i_blkt_coolant_type == CoolantType.WATER:
@@ -786,19 +779,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.data.fwbs.temp_blkt_coolant_out = (
                 outlet_saturated_fluid_properties.temperature - 20.0
             )  # in K
-
-        # Surface heat flux on first wall (outboard and inboard) (MW)
-        # All of the fast particle losses go to the outer wall.
-        self.data.fwbs.psurffwo = (
-            self.data.fwbs.p_fw_rad_total_mw
-            * self.data.first_wall.a_fw_outboard
-            / self.data.first_wall.a_fw_total
-            + self.data.current_drive.p_beam_orbit_loss_mw
-            + self.data.physics.p_fw_alpha_mw
-        )
-        self.data.fwbs.psurffwi = self.data.fwbs.p_fw_rad_total_mw * (
-            1 - self.data.first_wall.a_fw_outboard / self.data.first_wall.a_fw_total
-        )
 
         i_p_coolant_pumping = PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping)
         if i_p_coolant_pumping == PumpingPowerModelTypes.FRACTION_OF_HEAT:
@@ -814,8 +794,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 f_p_shld_coolant_pump_total_heat=self.data.heat_transport.f_p_shld_coolant_pump_total_heat,
                 f_p_div_coolant_pump_total_heat=self.data.heat_transport.f_p_div_coolant_pump_total_heat,
                 p_fw_nuclear_heat_total_mw=self.data.fwbs.p_fw_nuclear_heat_total_mw,
-                psurffwi=self.data.fwbs.psurffwi,
-                psurffwo=self.data.fwbs.psurffwo,
+                p_fw_inboard_surface_heat_mw=self.data.fwbs.p_fw_inboard_surface_heat_mw,
+                p_fw_outboard_surface_heat_mw=self.data.fwbs.p_fw_outboard_surface_heat_mw,
                 p_blkt_nuclear_heat_total_mw=self.data.fwbs.p_blkt_nuclear_heat_total_mw,
                 p_shld_nuclear_heat_mw=self.data.heat_transport.p_shld_nuclear_heat_mw,
                 p_cp_shield_nuclear_heat_mw=self.data.fwbs.p_cp_shield_nuclear_heat_mw,
@@ -874,8 +854,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             fpump = t_in_compressor / (self.data.fwbs.etaiso * dt_he) * (pfactor - 1)
             p_plasma = (
                 self.data.fwbs.p_fw_nuclear_heat_total_mw
-                + self.data.fwbs.psurffwi
-                + self.data.fwbs.psurffwo
+                + self.data.fwbs.p_fw_inboard_surface_heat_mw
+                + self.data.fwbs.p_fw_outboard_surface_heat_mw
                 + self.data.fwbs.p_blkt_nuclear_heat_total_mw
             )
             self.data.primary_pumping.p_fw_blkt_coolant_pump_mw = (

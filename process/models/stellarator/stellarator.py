@@ -826,12 +826,12 @@ class Stellarator(Model):
 
                 #  Surface heat flux on first wall (MW) (sum = self.data.fwbs.p_fw_rad_total_mw)
 
-                psurffwi = (
+                p_fw_inboard_surface_heat_mw = (
                     self.data.fwbs.p_fw_rad_total_mw
                     * self.data.first_wall.a_fw_inboard
                     / self.data.first_wall.a_fw_total
                 )
-                psurffwo = (
+                p_fw_outboard_surface_heat_mw = (
                     self.data.fwbs.p_fw_rad_total_mw
                     * self.data.first_wall.a_fw_outboard
                     / self.data.first_wall.a_fw_total
@@ -891,8 +891,8 @@ class Stellarator(Model):
                         * (
                             p_fw_inboard_nuclear_heat_mw
                             + p_fw_outboard_nuclear_heat_mw
-                            + psurffwi
-                            + psurffwo
+                            + p_fw_inboard_surface_heat_mw
+                            + p_fw_outboard_surface_heat_mw
                             + self.data.current_drive.p_beam_orbit_loss_mw
                         )
                     )
@@ -2178,8 +2178,9 @@ class Stellarator(Model):
 
         #  Power transported to the first wall by escaped alpha particles
 
-        self.data.physics.p_fw_alpha_mw = self.data.physics.p_alpha_total_mw * (
-            1.0e0 - self.data.physics.f_p_alpha_plasma_deposited
+        self.data.physics.p_fw_alpha_surface_total_mw = (
+            self.data.physics.p_alpha_total_mw
+            * (1.0e0 - self.data.physics.f_p_alpha_plasma_deposited)
         )
 
         # Nominal mean photon wall load

@@ -161,3 +161,144 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
     assert rhofmean == pytest.approx(fwtempparam.expected_rhofmean, rel=1e-4)
 
     assert massrate == pytest.approx(fwtempparam.expected_massrate, rel=1e-4)
+
+
+class CalculateFwSurfaceLoadParam(NamedTuple):
+    p_plasma_source_mw: float
+    f_deg_blkt_poloidal_plasma: float
+    a_fw_full_coverage: float
+    f_a_fw_hcd_ports: float = 0.0
+    expected_p_fw_incident_mw: float = None
+    expected_pflux_fw_surface_mw_m2: float = None
+    label: str = None
+
+
+@pytest.mark.parametrize(
+    "calculatefwsurfaceloadparam",
+    [
+        CalculateFwSurfaceLoadParam(
+            p_plasma_source_mw=1000.0,
+            f_deg_blkt_poloidal_plasma=0.8,
+            a_fw_full_coverage=100.0,
+            f_a_fw_hcd_ports=0.0,
+            expected_p_fw_incident_mw=800.0,
+            expected_pflux_fw_surface_mw_m2=8.0,
+            label="No HCD ports loss",
+        ),
+        CalculateFwSurfaceLoadParam(
+            p_plasma_source_mw=1000.0,
+            f_deg_blkt_poloidal_plasma=0.8,
+            a_fw_full_coverage=100.0,
+            f_a_fw_hcd_ports=0.1,
+            expected_p_fw_incident_mw=720.0,
+            expected_pflux_fw_surface_mw_m2=7.2,
+            label="With HCD ports loss",
+        ),
+        CalculateFwSurfaceLoadParam(
+            p_plasma_source_mw=500.0,
+            f_deg_blkt_poloidal_plasma=1.0,
+            a_fw_full_coverage=50.0,
+            f_a_fw_hcd_ports=0.2,
+            expected_p_fw_incident_mw=400.0,
+            expected_pflux_fw_surface_mw_m2=8.0,
+            label="Full poloidal coverage with ports loss",
+        ),
+        CalculateFwSurfaceLoadParam(
+            p_plasma_source_mw=2000.0,
+            f_deg_blkt_poloidal_plasma=0.5,
+            a_fw_full_coverage=200.0,
+            f_a_fw_hcd_ports=0.0,
+            expected_p_fw_incident_mw=1000.0,
+            expected_pflux_fw_surface_mw_m2=5.0,
+            label="Lower poloidal coverage",
+        ),
+    ],
+)
+def test_calculate_fw_surface_load(calculatefwsurfaceloadparam, fw):
+    """
+    Unit test for calculate_fw_surface_load.
+
+    :param calculatefwsurfaceloadparam: the data used to assert in this test.
+    :type calculatefwsurfaceloadparam: CalculateFwSurfaceLoadParam
+    """
+
+    p_fw_incident_mw, pflux_fw_surface_mw_m2 = fw.calculate_fw_surface_load(
+        p_plasma_source_mw=calculatefwsurfaceloadparam.p_plasma_source_mw,
+        f_deg_blkt_poloidal_plasma=calculatefwsurfaceloadparam.f_deg_blkt_poloidal_plasma,
+        a_fw_full_coverage=calculatefwsurfaceloadparam.a_fw_full_coverage,
+        f_a_fw_hcd_ports=calculatefwsurfaceloadparam.f_a_fw_hcd_ports,
+    )
+
+    assert p_fw_incident_mw == pytest.approx(
+        calculatefwsurfaceloadparam.expected_p_fw_incident_mw
+    )
+
+    assert pflux_fw_surface_mw_m2 == pytest.approx(
+        calculatefwsurfaceloadparam.expected_pflux_fw_surface_mw_m2
+    )
+
+
+class CalculateFwOutboardSurfaceLoadsParam(NamedTuple):
+    p_fw_outboard_rad_mw: float
+    p_beam_orbit_loss_mw: float
+    p_fw_outboard_alpha_surface_mw: float
+    p_beam_shine_through_mw: float
+    expected_p_fw_outboard_surface_heat_mw: float
+    label: str = None
+
+
+@pytest.mark.parametrize(
+    "calculatefwoutboardsurfaceloadsparam",
+    [
+        CalculateFwOutboardSurfaceLoadsParam(
+            p_fw_outboard_rad_mw=100.0,
+            p_beam_orbit_loss_mw=50.0,
+            p_fw_outboard_alpha_surface_mw=75.0,
+            p_beam_shine_through_mw=25.0,
+            expected_p_fw_outboard_surface_heat_mw=250.0,
+            label="Equal power contributions",
+        ),
+        CalculateFwOutboardSurfaceLoadsParam(
+            p_fw_outboard_rad_mw=500.0,
+            p_beam_orbit_loss_mw=100.0,
+            p_fw_outboard_alpha_surface_mw=150.0,
+            p_beam_shine_through_mw=50.0,
+            expected_p_fw_outboard_surface_heat_mw=800.0,
+            label="Dominant radiation load",
+        ),
+        CalculateFwOutboardSurfaceLoadsParam(
+            p_fw_outboard_rad_mw=0.0,
+            p_beam_orbit_loss_mw=0.0,
+            p_fw_outboard_alpha_surface_mw=0.0,
+            p_beam_shine_through_mw=0.0,
+            expected_p_fw_outboard_surface_heat_mw=0.0,
+            label="Zero power contributions",
+        ),
+        CalculateFwOutboardSurfaceLoadsParam(
+            p_fw_outboard_rad_mw=200.0,
+            p_beam_orbit_loss_mw=75.0,
+            p_fw_outboard_alpha_surface_mw=100.0,
+            p_beam_shine_through_mw=25.0,
+            expected_p_fw_outboard_surface_heat_mw=400.0,
+            label="Mixed power contributions",
+        ),
+    ],
+)
+def test_calculate_fw_outboard_surface_loads(calculatefwoutboardsurfaceloadsparam, fw):
+    """
+    Unit test for calculate_fw_outboard_surface_loads.
+
+    :param calculatefwoutboardsurfaceloadsparam: the data used to assert in this test.
+    :type calculatefwoutboardsurfaceloadsparam: CalculateFwOutboardSurfaceLoadsParam
+    """
+
+    p_fw_outboard_surface_heat_mw = fw.calculate_fw_outboard_surface_loads(
+        p_fw_outboard_rad_mw=calculatefwoutboardsurfaceloadsparam.p_fw_outboard_rad_mw,
+        p_beam_orbit_loss_mw=calculatefwoutboardsurfaceloadsparam.p_beam_orbit_loss_mw,
+        p_fw_outboard_alpha_surface_mw=calculatefwoutboardsurfaceloadsparam.p_fw_outboard_alpha_surface_mw,
+        p_beam_shine_through_mw=calculatefwoutboardsurfaceloadsparam.p_beam_shine_through_mw,
+    )
+
+    assert p_fw_outboard_surface_heat_mw == pytest.approx(
+        calculatefwoutboardsurfaceloadsparam.expected_p_fw_outboard_surface_heat_mw
+    )

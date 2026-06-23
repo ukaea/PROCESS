@@ -522,7 +522,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     axis.text(
         0.22,
         0.81,
-        f"$P_{{\\alpha,{{loss}}}}$\n{mfile.get('p_fw_alpha_mw', scan=scan):,.2f} MW",
+        f"$P_{{\\alpha,{{loss}}}}$\n{mfile.get('p_fw_alpha_surface_total_mw', scan=scan):,.2f} MW",
         transform=fig.transFigure,
         horizontalalignment="left",
         verticalalignment="bottom",
@@ -1366,7 +1366,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     axis.text(
         0.46,
         0.85,
-        f"$P_{{\\text{{FW, }}\\alpha}}$:\n{mfile.get('p_fw_alpha_mw', scan=scan):.2f} MW",
+        f"$P_{{\\text{{FW, }}\\alpha}}$:\n{mfile.get('p_fw_alpha_surface_total_mw', scan=scan):.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -2872,7 +2872,7 @@ def plot_main_plasma_information(
     )
 
     textstr_alpha = (
-        f"$P_{{\\alpha,\\text{{loss}}}}$ {mfile.get('p_fw_alpha_mw', scan=scan):.2f} MW \n"
+        f"$P_{{\\alpha,\\text{{loss}}}}$ {mfile.get('p_fw_alpha_surface_total_mw', scan=scan):.2f} MW \n"
         f"$f_{{\\alpha,\\text{{coupled}}}}$ {mfile.get('f_p_alpha_plasma_deposited', scan=scan):.2f}"
     )
 
@@ -3566,6 +3566,7 @@ def toroidal_cross_section(
     axis.set_ylabel("y / m")
     axis.set_title("Toroidal cross-section")
     axis.minorticks_on()
+    axis.set_aspect("equal", adjustable="box")
 
     rmajor = mfile.get("rmajor", scan=scan)
     rminor = mfile.get("rminor", scan=scan)
@@ -3576,7 +3577,8 @@ def toroidal_cross_section(
     dx_beam_duct = mfile.get("dx_beam_duct", scan=scan)
     radius_beam_tangency = mfile.get("radius_beam_tangency", scan=scan)
     dr_tf_outboard = mfile.get("dr_tf_outboard", scan=scan)
-    arc(axis, rmajor, style="dashed")
+    full_angle = 2 * np.pi
+    arc(axis, rmajor, theta2=full_angle, style="dashed")
 
     # Colour in the main components
     for v, colours in [
@@ -3600,10 +3602,14 @@ def toroidal_cross_section(
         ("dr_shld_thermal_outboard", THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
     ]:
         r2, r1 = cumulative_radial_build2(v, mfile, scan)
-        arc_fill(axis, r1, r2, color=colours)
+        arc_fill(axis, r1, r2, color=colours, theta2=full_angle + 1)
 
     arc_fill(
-        axis, rmajor - rminor, rmajor + rminor, color=PLASMA_COLOUR[colour_scheme - 1]
+        axis,
+        rmajor - rminor,
+        rmajor + rminor,
+        color=PLASMA_COLOUR[colour_scheme - 1],
+        theta2=full_angle + 1,
     )
 
     arc_fill(
@@ -3611,35 +3617,27 @@ def toroidal_cross_section(
         r_cryostat_inboard,
         r_cryostat_inboard + dr_cryostat,
         color=CRYOSTAT_COLOUR[colour_scheme - 1],
+        theta2=full_angle + 1,
     )
 
     # Segment the TF coil inboard
     # Calculate centrelines
-    n = int(n_tf_coils / 4) + 1
     spacing = 2 * np.pi / n_tf_coils
-    i = np.arange(0, n)
-
-    ang = i * spacing
-    angl = ang - spacing / 2
-    angu = ang + spacing / 2
+    coil_indices = np.arange(int(n_tf_coils))
     r1, _null = cumulative_radial_build2("dr_cs_tf_gap", mfile, scan)
     r2, _null = cumulative_radial_build2("dr_tf_inboard", mfile, scan)
     r4, r3 = cumulative_radial_build2("dr_tf_outboard", mfile, scan)
 
     # Coil width
     w = r2 * np.tan(spacing / 2)
-    xi = r1 * np.cos(angl)
-    yi = r1 * np.sin(angl)
-    xo = r2 * np.cos(angl)
-    yo = r2 * np.sin(angl)
-    axis.plot((xi, xo), (yi, yo), color="black")
-    xi = r1 * np.cos(angu)
-    yi = r1 * np.sin(angu)
-    xo = r2 * np.cos(angu)
-    yo = r2 * np.sin(angu)
-    axis.plot((xi, xo), (yi, yo), color="black")
+    for ang in (coil_indices * spacing) - spacing / 2:
+        axis.plot(
+            [r1 * np.cos(ang), r2 * np.cos(ang)],
+            [r1 * np.sin(ang), r2 * np.sin(ang)],
+            color="black",
+        )
 
-    for item in i:
+    for item in coil_indices:
         # Neutral beam shielding
         TF_outboard(
             axis,
@@ -3724,10 +3722,10 @@ def toroidal_cross_section(
     )
     if n_blkt_inboard_modules_toroidal > 1:
         # Calculate the angular spacing for each module
-        spacing = rtangle / (n_blkt_inboard_modules_toroidal / 4)
+        spacing = full_angle / n_blkt_inboard_modules_toroidal
         r1, _ = cumulative_radial_build2("dr_shld_inboard", mfile, scan)
         r2, _ = cumulative_radial_build2("dr_blkt_inboard", mfile, scan)
-        for i in range(1, int(n_blkt_inboard_modules_toroidal / 4)):
+        for i in range(1, int(n_blkt_inboard_modules_toroidal)):
             ang = i * spacing
             # Draw a line from r1 to r2 at angle ang
             axis.plot(
@@ -3745,10 +3743,10 @@ def toroidal_cross_section(
     )
     if n_blkt_outboard_modules_toroidal > 1:
         # Calculate the angular spacing for each module
-        spacing = rtangle / (n_blkt_outboard_modules_toroidal / 4)
+        spacing = full_angle / n_blkt_outboard_modules_toroidal
         r1, _ = cumulative_radial_build2("dr_fw_outboard", mfile, scan)
         r2, _ = cumulative_radial_build2("dr_blkt_outboard", mfile, scan)
-        for i in range(1, int(n_blkt_outboard_modules_toroidal / 4)):
+        for i in range(1, int(n_blkt_outboard_modules_toroidal)):
             ang = i * spacing
             # Draw a line from r1 to r2 at angle ang
             axis.plot(
@@ -3817,7 +3815,7 @@ def arc(axis: plt.Axes, r, theta1=0, theta2=rtangle, style="solid"):
     axis.plot(xs, ys, linestyle=style, color="black", lw=0.2)
 
 
-def arc_fill(axis: plt.Axes, r1, r2, color="pink"):
+def arc_fill(axis: plt.Axes, r1, r2, color="pink", theta1=0, theta2=rtangle):
     """Fills the space between two quarter circles.
 
     Parameters
@@ -3833,16 +3831,14 @@ def arc_fill(axis: plt.Axes, r1, r2, color="pink"):
     color :
          (Default value = "pink")
     """
-    angs = np.linspace(0, rtangle, endpoint=True)
+    angs = np.linspace(theta1, theta2, endpoint=True)
     xs1 = r1 * np.cos(angs)
     ys1 = r1 * np.sin(angs)
-    angs = np.linspace(rtangle, 0, endpoint=True)
+    angs = np.linspace(theta2, theta1, endpoint=True)
     xs2 = r2 * np.cos(angs)
     ys2 = r2 * np.sin(angs)
     verts = list(zip(xs1, ys1, strict=False))
     verts.extend(list(zip(xs2, ys2, strict=False)))
-    endpoint = [(r2, 0)]
-    verts.extend(endpoint)
     path = mplPath(verts, closed=True)
     patch = patches.PathPatch(path, facecolor=color, lw=0)
     axis.add_patch(patch)
@@ -14663,6 +14659,345 @@ def plot_blkt_structure(
     )
 
 
+def plot_poloidal_power_distribution(
+    ax: plt.Axes,
+    m_file: MFile,
+    scan: int,
+    radial_build: dict[str, float],
+    colour_scheme: Literal[1, 2],
+):
+    """Plot the poloidal power distribution on the first wall and blanket and annotate relevant angles"""
+    # MFILE variables needed to plot the blkt structure and angles
+    rmajor = m_file.get("rmajor", scan=scan)
+    rminor = m_file.get("rminor", scan=scan)
+    triang = m_file.get("triang", scan=scan)
+    kappa = m_file.get("kappa", scan=scan)
+    dr_fw_plasma_gap_outboard = m_file.get("dr_fw_plasma_gap_outboard", scan=scan)
+    dr_fw_plasma_gap_inboard = m_file.get("dr_fw_plasma_gap_inboard", scan=scan)
+    dr_fw_inboard = m_file.get("dr_fw_inboard", scan=scan)
+    dr_fw_outboard = m_file.get("dr_fw_outboard", scan=scan)
+    dr_blkt_outboard = m_file.get("dr_blkt_outboard", scan=scan)
+    dr_blkt_inboard = m_file.get("dr_blkt_inboard", scan=scan)
+    dz_blkt_half = m_file.get("dz_blkt_half", scan=scan)
+    deg_blkt_outboard_poloidal_plasma = m_file.get(
+        "deg_blkt_outboard_poloidal_plasma", scan=scan
+    )
+    deg_blkt_inboard_poloidal_plasma = m_file.get(
+        "deg_blkt_inboard_poloidal_plasma", scan=scan
+    )
+    f_deg_blkt_outboard_poloidal_plasma = m_file.get(
+        "f_deg_blkt_outboard_poloidal_plasma", scan=scan
+    )
+    f_deg_blkt_inboard_poloidal_plasma = m_file.get(
+        "f_deg_blkt_inboard_poloidal_plasma", scan=scan
+    )
+    deg_div_poloidal_plasma = m_file.get("deg_div_poloidal_plasma", scan=scan)
+    f_ster_div_single = m_file.get("f_ster_div_single", scan=scan)
+    i_single_null = m_file.get("i_single_null", scan=scan)
+
+    # ======================
+
+    plot_blanket(ax, m_file, scan, radial_build, colour_scheme)
+    plot_plasma(ax, m_file, scan, colour_scheme)
+    plot_firstwall(ax, m_file, scan, radial_build, colour_scheme)
+
+    ax.set_xlabel("Radial position [m]")
+    ax.set_ylabel("Vertical position [m]")
+    ax.set_title("Blanket and First Wall Poloidal Cross-Section")
+    ax.minorticks_on()
+    ax.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
+
+    r_blkt_outboard_out = (
+        rmajor + rminor + dr_fw_outboard + dr_fw_plasma_gap_outboard + dr_blkt_outboard
+    )
+    r_blkt_inboard_in = (
+        rmajor - rminor - dr_fw_plasma_gap_inboard - dr_fw_inboard - dr_blkt_inboard
+    )
+    r_fw_outboard_in = r_blkt_outboard_out - dr_blkt_outboard - dr_fw_outboard
+    r_fw_inboard_out = r_blkt_inboard_in + dr_blkt_inboard + dr_fw_inboard
+
+    # Plot a horizontal line at dz_blkt_half (blanket half height)
+    ax.axhline(
+        dz_blkt_half,
+        color="purple",
+        linestyle="--",
+        linewidth=1.5,
+        label="Blanket Half Height",
+    )
+    ax.axhline(
+        -dz_blkt_half,
+        color="purple",
+        linestyle="--",
+        linewidth=1.5,
+        label="Blanket Half Height",
+    )
+
+    if i_single_null == 0:
+        # Plot arrows for the outboard blanket angles
+        ax.annotate(
+            "",
+            xy=(rmajor, 0),
+            xytext=(rmajor, dz_blkt_half),
+            arrowprops={"arrowstyle": "<-", "color": "purple"},
+            zorder=5,
+        )
+    # If single null then only plot the lower arrow for the outboard blanket angle
+    ax.annotate(
+        "",
+        xy=(rmajor, 0),
+        xytext=(rmajor, -dz_blkt_half),
+        arrowprops={"arrowstyle": "<-", "color": "purple"},
+        zorder=5,
+    )
+
+    # Plot arc showing the angle between the two outboard blanket arrows
+    arc_radius = 1.0
+
+    # 3 to 6 o'clock position is -90 degrees,
+    angle_start = -90.0
+    if i_single_null == 1:
+        angle_end = 90.0 + deg_div_poloidal_plasma
+    elif i_single_null == 0:
+        # 3 to 12 o'clock position is +90 degrees
+        angle_end = 90.0
+
+    theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
+    arc_x = rmajor + arc_radius * np.cos(theta)
+    arc_y = arc_radius * np.sin(theta)
+
+    ax.plot(arc_x, arc_y, color="purple", linewidth=2)
+
+    # Plot the info box for the outboard blanket
+    ax.text(
+        rmajor * 1.75,
+        0.0,
+        f"$P_{{\\gamma}}$={m_file.get('p_fw_outboard_rad_mw', scan=scan):.3f} MW\n"
+        f"$\\Gamma_{{\\gamma}}$={m_file.get('pflux_fw_outboard_rad_surface_average_mw', scan=scan):.3f} MW/m²\n\n"
+        f"$P_{{\\alpha}}$={m_file.get('p_fw_outboard_alpha_surface_mw', scan=scan):.3f} MW\n\n"
+        f"$P_n$={m_file.get('p_fw_outboard_neutron_incident_mw', scan=scan):.3f} MW\n"
+        f"$\\Gamma_{{n}}$={m_file.get('pflux_fw_outboard_neutron_surface_average_mw', scan=scan):.3f} MW/m²\n",
+        fontsize=7,
+        color="purple",
+        ha="center",
+        va="center",
+        weight="bold",
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "white",
+            "alpha": 1.0,
+            "edgecolor": "purple",
+            "linewidth": 1.5,
+        },
+    )
+
+    # Plot arrow for the outboard blanket
+    ax.annotate(
+        "",
+        xy=(rmajor, 0),
+        xytext=(rmajor + rminor, 0),
+        arrowprops={"arrowstyle": "<-", "color": "purple", "linewidth": 1.5},
+        zorder=5,
+    )
+
+    # Plot arrows for the inboard blanket angles
+    ax.annotate(
+        "",
+        xy=(rmajor, 0),
+        xytext=(r_fw_inboard_out, dz_blkt_half),
+        arrowprops={"arrowstyle": "<-", "color": "green"},
+        zorder=5,
+    )
+
+    # Plot the total loads at the centre of the plasma
+    ax.text(
+        rmajor,
+        0.0,
+        f"$P_{{\\gamma}}$={m_file.get('p_plasma_rad_mw', scan=scan):.1f}MW\n"
+        f"$P_{{\\alpha}}$={m_file.get('p_fw_outboard_alpha_surface_mw', scan=scan):.1f}MW\n"
+        f"$P_n$={m_file.get('p_neutron_total_mw', scan=scan):.1f}MW",
+        fontsize=7,
+        color="black",
+        ha="center",
+        va="center",
+        weight="bold",
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "edgecolor": "black",
+            "linewidth": 1.5,
+        },
+        zorder=20,
+    )
+
+    ax.annotate(
+        "",
+        xy=(rmajor, 0),
+        xytext=(r_fw_inboard_out, -dz_blkt_half),
+        arrowprops={"arrowstyle": "<-", "color": "green"},
+        zorder=5,
+    )
+
+    # Plot arc showing the angle between the two inboard blanket arrows
+    arc_radius = 1.0
+    angle_start = -deg_blkt_inboard_poloidal_plasma / 2
+    angle_end = deg_blkt_inboard_poloidal_plasma / 2
+
+    theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
+    arc_x = rmajor - arc_radius * np.cos(theta)
+    arc_y = arc_radius * np.sin(theta)
+
+    ax.plot(arc_x, arc_y, color="green", linewidth=2)
+
+    # Add angle label at the arc
+    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
+    label_radius = arc_radius * 1.8
+    label_x = rmajor - label_radius * np.cos(mid_angle)
+    label_y = label_radius * np.sin(mid_angle)
+
+    # Plot the info box for the inboard blanket/FW
+    ax.text(
+        rmajor / 3,
+        0.0,
+        f"$P_{{\\gamma}}$={m_file.get('p_fw_inboard_rad_mw', scan=scan):.3f} MW\n"
+        f"$\\Gamma_{{\\gamma}}$={m_file.get('pflux_fw_inboard_rad_surface_average_mw', scan=scan):.3f} MW/m²\n\n"
+        f"$P_{{\\alpha}}$={m_file.get('p_fw_inboard_alpha_surface_mw', scan=scan):.3f} MW\n\n"
+        f"$P_n$={m_file.get('p_fw_inboard_neutron_incident_mw', scan=scan):.3f} MW\n"
+        f"$\\Gamma_{{n}}$={m_file.get('pflux_fw_inboard_neutron_surface_average_mw', scan=scan):.3f} MW/m²\n\n",
+        fontsize=7,
+        color="green",
+        ha="center",
+        va="center",
+        weight="bold",
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "white",
+            "alpha": 1.0,
+            "edgecolor": "green",
+            "linewidth": 1.5,
+        },
+        zorder=5,
+    )
+
+    # Plot arrow for the inboard blanket
+    ax.annotate(
+        "",
+        xy=(rmajor, 0),
+        xytext=(rmajor - rminor, 0),
+        arrowprops={"arrowstyle": "<-", "color": "green", "linewidth": 1.5},
+        zorder=5,
+    )
+
+    # Plot arrows for the divertor angles
+    # If double null then plot the upper also
+    if i_single_null == 0:
+        # Plot arc showing the angle between the two arrows (divertor angle)
+        arc_radius = 1.5
+        # 3 to 12 o'clock position is +90 degrees,
+        angle_start = 90.0
+        angle_end = 90.0 + deg_div_poloidal_plasma
+
+        theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
+        arc_x = rmajor + arc_radius * np.cos(theta)
+        arc_y = arc_radius * np.sin(theta)
+
+        ax.plot(arc_x, arc_y, color="black", linewidth=2)
+
+        # Add angle label at the arc
+        mid_angle = np.deg2rad((angle_start + angle_end) / 2)
+        label_radius = arc_radius * 1.8
+        label_x = rmajor + label_radius * np.cos(mid_angle)
+        label_y = label_radius * np.sin(mid_angle)
+
+        ax.text(
+            label_x,
+            label_y,
+            f"{deg_div_poloidal_plasma:.1f}°\n({f_ster_div_single * 100:.1f}%)",
+            fontsize=7,
+            color="black",
+            ha="center",
+            va="center",
+            weight="bold",
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "white",
+                "alpha": 1.0,
+                "edgecolor": "black",
+                "linewidth": 1.5,
+            },
+            zorder=5,
+        )
+
+    # Plot arc showing the angle between the two arrows for the lower divertor (divertor angle)
+    arc_radius = 1.5
+    # 3 to 6 o'clock is -90 degrees
+    angle_start = -90.0
+    angle_end = -90.0 - deg_div_poloidal_plasma
+
+    theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
+    arc_x = rmajor + arc_radius * np.cos(theta)
+    arc_y = arc_radius * np.sin(theta)
+
+    ax.plot(arc_x, arc_y, color="black", linewidth=2)
+
+    # Add angle label at the arc
+    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
+    label_radius = arc_radius * 1.8
+    label_x = rmajor + label_radius * np.cos(mid_angle)
+    label_y = label_radius * np.sin(mid_angle)
+
+    # Plot the info box for the lower divertor angle
+    ax.text(
+        rmajor - (triang * rminor),
+        -(rminor * kappa),
+        f"$P_{{\\gamma}}$={m_file.get('p_div_rad_total_mw', scan=scan):.3f} MW\n\n"
+        f"$P_n$={m_file.get('p_div_nuclear_heat_total_mw', scan=scan):.3f} MW\n",
+        fontsize=7,
+        color="black",
+        ha="center",
+        va="center",
+        weight="bold",
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "white",
+            "alpha": 1.0,
+            "edgecolor": "black",
+            "linewidth": 1.5,
+        },
+        zorder=5,
+    )
+
+    # Plot vertical lines at the inner and outer radial boundaries of the blanket
+    ax.axvline(
+        r_blkt_inboard_in, color="black", linestyle="--", linewidth=1.5, zorder=10
+    )
+    ax.axvline(
+        r_blkt_outboard_out, color="black", linestyle="--", linewidth=1.5, zorder=10
+    )
+    ax.axvline(r_fw_inboard_out, color="black", linestyle="--", linewidth=1.5, zorder=10)
+
+    ax.axvline(r_fw_outboard_in, color="black", linestyle="--", linewidth=1.5, zorder=10)
+
+    ax.axvline(
+        rmajor,
+        color="black",
+        linestyle="--",
+        linewidth=1.5,
+        label="Major Radius $R_0$",
+    )
+
+    # Plot midplane line (horizontal dashed line at Z=0)
+    ax.axhline(
+        0.0,
+        color="black",
+        linestyle="--",
+        linewidth=1.5,
+        label="Midplane",
+    )
+
+    ax.set_xlim(-rmajor / 4, 2 * rmajor)
+
+
 def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int):
     """Function to plot detailed plasma parameters from physics data.
 
@@ -15300,6 +15635,87 @@ def plot_cs_radial_stress_profile(
     axis.legend(loc="best")
 
 
+def plot_fw_inboard_toroidal_angle_load(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    demo_ranges: bool,
+    colour_scheme: Literal[1, 2],
+):
+
+    rad_fw_inboard_plasma_centre_toroidal = mfile.get(
+        "rad_fw_inboard_plasma_centre_toroidal", scan=scan
+    )
+    deg_fw_inboard_plasma_centre_toroidal = mfile.get(
+        "deg_fw_inboard_plasma_centre_toroidal", scan=scan
+    )
+    f_rad_fw_inboard_plasma_centre_toroidal = mfile.get(
+        "f_rad_fw_inboard_plasma_centre_toroidal", scan=scan
+    )
+
+    # Get rmajor and first wall distance
+    rmajor = mfile.get("rmajor", scan=scan)
+    rminor = mfile.get("rminor", scan=scan)
+    dr_fw_plasma_gap_inboard = mfile.get("dr_fw_plasma_gap_inboard", scan=scan)
+    a = rminor + dr_fw_plasma_gap_inboard
+
+    x_array = np.linspace(0, rmajor, 100)
+    # Calculate toroidal position: y = -(R-a)/sqrt(a*(2*R-a))*(R-x)
+    y = -(rmajor - a) / np.sqrt(a * (2 * rmajor - a)) * (rmajor - x_array)
+    axis.plot(
+        x_array,
+        y,
+        color="black",
+        linewidth=2,
+        linestyle="--",
+        label="First Wall Load Line",
+    )
+    axis.plot(
+        x_array,
+        -y,
+        color="black",
+        linewidth=2,
+        linestyle="--",
+        label="First Wall Load Line",
+    )
+    toroidal_cross_section(axis, mfile, scan, demo_ranges, colour_scheme)
+
+    angle_start = -deg_fw_inboard_plasma_centre_toroidal / 2
+    angle_end = deg_fw_inboard_plasma_centre_toroidal / 2
+
+    theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
+    arc_x = rmajor - rad_fw_inboard_plasma_centre_toroidal * np.cos(theta)
+    arc_y = rad_fw_inboard_plasma_centre_toroidal * np.sin(theta)
+
+    axis.plot(arc_x, arc_y, color="red", linewidth=2)
+
+    # Add angle label at the arc
+    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
+    label_radius = 0.5 * rmajor
+    label_x = rmajor - label_radius * np.cos(mid_angle)
+    label_y = label_radius * np.sin(mid_angle)
+
+    axis.text(
+        label_x,
+        label_y,
+        f"${deg_fw_inboard_plasma_centre_toroidal:.1f}°$\n({f_rad_fw_inboard_plasma_centre_toroidal * 100:.2f}%)",
+        fontsize=10,
+        color="red",
+        ha="center",
+        va="center",
+        weight="bold",
+        bbox={
+            "boxstyle": "round,pad=0.3",
+            "facecolor": "white",
+            "edgecolor": "red",
+            "alpha": 1.0,
+        },
+        zorder=100,
+    )
+
+    axis.set_ylim([-axis.get_ylim()[1], axis.get_ylim()[1]])
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -15699,18 +16115,33 @@ def main_plot(
     plot_first_wall_poloidal_cross_section(figs[33].add_subplot(122), m_file, scan)
     plot_fw_90_deg_pipe_bend(figs[33].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[34], m_file, scan)
     ax_blanket = figs[34].add_subplot(122, aspect="equal")
     plot_blkt_structure(ax_blanket, figs[34], m_file, scan, radial_build, colour_scheme)
-
-    plot_main_power_flow(
-        figs[35].add_subplot(111, aspect="equal"), m_file, scan, figs[35]
+    plot_fw_inboard_toroidal_angle_load(
+        axis=figs[34].add_subplot(121, aspect="equal"),
+        mfile=m_file,
+        scan=scan,
+        demo_ranges=demo_ranges,
+        colour_scheme=colour_scheme,
     )
 
-    ax24 = figs[36].add_subplot(111)
+    plot_blkt_pipe_bends(figs[35], m_file, scan)
+    plot_poloidal_power_distribution(
+        ax=figs[35].add_subplot(122, aspect="equal"),
+        m_file=m_file,
+        scan=scan,
+        radial_build=radial_build,
+        colour_scheme=colour_scheme,
+    )
+
+    plot_main_power_flow(
+        figs[36].add_subplot(111, aspect="equal"), m_file, scan, figs[36]
+    )
+
+    ax24 = figs[37].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[36])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[37])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -15816,7 +16247,7 @@ def plot_summary(
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(37)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(38)]
 
     # run main_plot
     mfile_obj = MFile(mfile) if mfile != "" else MFile("MFILE.DAT")

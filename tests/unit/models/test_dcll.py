@@ -40,9 +40,9 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     p_fw_nuclear_heat_total_mw: Any = None
 
-    psurffwi: Any = None
+    p_fw_inboard_surface_heat_mw: Any = None
 
-    psurffwo: Any = None
+    p_fw_outboard_surface_heat_mw: Any = None
 
     p_blkt_nuclear_heat_total_mw: Any = None
 
@@ -62,9 +62,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     p_plasma_rad_mw: Any = None
 
-    p_fw_alpha_mw: Any = None
-
-    expected_p_fw_rad_total_mw: Any = None
+    p_fw_alpha_surface_total_mw: Any = None
 
     expected_p_fw_nuclear_heat_total_mw: Any = None
 
@@ -89,8 +87,8 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_shld_nuclear_heat_mw=0,
             p_fw_rad_total_mw=0,
             p_fw_nuclear_heat_total_mw=0,
-            psurffwi=0,
-            psurffwo=0,
+            p_fw_inboard_surface_heat_mw=0,
+            p_fw_outboard_surface_heat_mw=0,
             p_blkt_nuclear_heat_total_mw=0,
             pnuc_fw_ratio_dcll=0.14000000000000001,
             pnuc_blkt_ratio_dcll=0.85999999999999999,
@@ -100,8 +98,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             n_divertors=1,
             p_neutron_total_mw=1587.7386535917431,
             p_plasma_rad_mw=287.44866938104849,
-            p_fw_alpha_mw=19.835845058655043,
-            expected_p_fw_rad_total_mw=254.39207240222791,
+            p_fw_alpha_surface_total_mw=19.835845058655043,
             expected_p_fw_nuclear_heat_total_mw=196.72081918001697,
             expected_p_blkt_nuclear_heat_total_mw=1533.4949914565693,
             expected_p_blkt_multiplication_mw=325.06710220789364,
@@ -119,8 +116,8 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_shld_nuclear_heat_mw=0,
             p_fw_rad_total_mw=254.39207240222791,
             p_fw_nuclear_heat_total_mw=196.72081918001697,
-            psurffwi=97.271629070225231,
-            psurffwo=176.95628839065773,
+            p_fw_inboard_surface_heat_mw=97.271629070225231,
+            p_fw_outboard_surface_heat_mw=176.95628839065773,
             p_blkt_nuclear_heat_total_mw=1533.4949914565693,
             pnuc_fw_ratio_dcll=0.14000000000000001,
             pnuc_blkt_ratio_dcll=0.85999999999999999,
@@ -130,8 +127,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             n_divertors=1,
             p_neutron_total_mw=1587.2430556964196,
             p_plasma_rad_mw=287.44866938104849,
-            p_fw_alpha_mw=19.829653483586444,
-            expected_p_fw_rad_total_mw=254.39207240222791,
+            p_fw_alpha_surface_total_mw=19.829653483586444,
             expected_p_fw_nuclear_heat_total_mw=196.65941460078642,
             expected_p_blkt_nuclear_heat_total_mw=1533.0163252173013,
             expected_p_blkt_multiplication_mw=324.96563552675644,
@@ -219,9 +215,17 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
         dcllneutronicsandpowerparam.p_fw_nuclear_heat_total_mw,
     )
 
-    monkeypatch.setattr(dcll.data.fwbs, "psurffwi", dcllneutronicsandpowerparam.psurffwi)
+    monkeypatch.setattr(
+        dcll.data.fwbs,
+        "p_fw_inboard_surface_heat_mw",
+        dcllneutronicsandpowerparam.p_fw_inboard_surface_heat_mw,
+    )
 
-    monkeypatch.setattr(dcll.data.fwbs, "psurffwo", dcllneutronicsandpowerparam.psurffwo)
+    monkeypatch.setattr(
+        dcll.data.fwbs,
+        "p_fw_outboard_surface_heat_mw",
+        dcllneutronicsandpowerparam.p_fw_outboard_surface_heat_mw,
+    )
 
     monkeypatch.setattr(
         dcll.data.fwbs,
@@ -276,14 +280,12 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     )
 
     monkeypatch.setattr(
-        dcll.data.physics, "p_fw_alpha_mw", dcllneutronicsandpowerparam.p_fw_alpha_mw
+        dcll.data.physics,
+        "p_fw_alpha_surface_total_mw",
+        dcllneutronicsandpowerparam.p_fw_alpha_surface_total_mw,
     )
 
     dcll.dcll_neutronics_and_power(False)
-
-    assert dcll.data.fwbs.p_fw_rad_total_mw == pytest.approx(
-        dcllneutronicsandpowerparam.expected_p_fw_rad_total_mw
-    )
 
     assert dcll.data.fwbs.p_fw_nuclear_heat_total_mw == pytest.approx(
         dcllneutronicsandpowerparam.expected_p_fw_nuclear_heat_total_mw

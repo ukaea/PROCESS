@@ -2191,7 +2191,7 @@ class Power2Param(NamedTuple):
 
     p_plasma_separatrix_mw: Any = None
 
-    p_fw_alpha_mw: Any = None
+    p_fw_alpha_surface_total_mw: Any = None
 
     n_divertors: Any = None
 
@@ -2334,7 +2334,7 @@ class Power2Param(NamedTuple):
             p_plasma_rad_mw=287.99550050743289,
             itart=0,
             p_plasma_separatrix_mw=143.03180561618876,
-            p_fw_alpha_mw=19.833077403424262,
+            p_fw_alpha_surface_total_mw=19.833077403424262,
             n_divertors=1,
             p_plasma_ohmic_mw=0.61391840981850698,
             i_rad_loss=1,
@@ -2436,7 +2436,7 @@ class Power2Param(NamedTuple):
             p_plasma_rad_mw=287.99550050743289,
             itart=0,
             p_plasma_separatrix_mw=142.91368967092416,
-            p_fw_alpha_mw=19.826887164528632,
+            p_fw_alpha_surface_total_mw=19.826887164528632,
             n_divertors=1,
             p_plasma_ohmic_mw=0.61391840981850698,
             i_rad_loss=1,
@@ -2788,7 +2788,11 @@ def test_power2(power2param, monkeypatch, power):
         power.data.physics, "p_plasma_separatrix_mw", power2param.p_plasma_separatrix_mw
     )
 
-    monkeypatch.setattr(power.data.physics, "p_fw_alpha_mw", power2param.p_fw_alpha_mw)
+    monkeypatch.setattr(
+        power.data.physics,
+        "p_fw_alpha_surface_total_mw",
+        power2param.p_fw_alpha_surface_total_mw,
+    )
 
     monkeypatch.setattr(power.data.divertor, "n_divertors", power2param.n_divertors)
 
