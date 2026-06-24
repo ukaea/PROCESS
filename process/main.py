@@ -298,7 +298,7 @@ class VaryRun:
         FileNotFoundError
             if input file doesn't exist
         """
-        init.init_all_module_vars()
+        logging_model_handler.clear_logs()
         self.config.setup(self.data)
 
         setup_loggers(Path(self.config.wdir) / "process.log")
@@ -358,7 +358,7 @@ class SingleRun:
         This "resets" all module variables to their initialised values, so each
         new run doesn't have any side-effects from previous runs.
         """
-        init.init_all_module_vars()
+        logging_model_handler.clear_logs()
 
     def set_filenames(self, filepath_out):
         """Validate the input filename and create other filenames from it."""

@@ -14,8 +14,8 @@ from itertools import pairwise
 
 import numpy as np
 
-from process.core.init import init_all_module_vars
 from process.core.input import INPUT_VARIABLES
+from process.core.log import logging_model_handler
 from process.core.solver.iteration_variables import ITERATION_VARIABLES
 
 INPUT_TYPE_MAP = {int: "int", float: "real", str: "string"}
@@ -182,7 +182,7 @@ def get_dicts():
     dict_objects = []
     # Different dict objects, e.g. variable descriptions
 
-    init_all_module_vars()
+    logging_model_handler.clear_logs()
     # Make dict objects
     # Some dicts depend on other dicts already existing in output_dicts, so
     # be careful if changing the order!
