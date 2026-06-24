@@ -15788,6 +15788,7 @@ def main_plot(
     plot_system_power_profiles_over_time(
         ax24, m_file, scan, power_profile_over_time_page
     )
+    return pages
 
 
 def create_thickness_builds(m_file, scan: int):
