@@ -5776,6 +5776,61 @@ class DetailedPhysics(Model):
             / (temp_plasma_electron_kev * constants.KILOELECTRON_VOLT) ** 1.5
         )
 
+    @staticmethod
+    @nb.njit(cache=True)
+    def calculate_equilibriation_time(
+        temp_plasma_electron_kev: float | np.ndarray,
+        nd_plasma_ions: float | np.ndarray,
+        plasma_coulomb_log_electron_ion: float | np.ndarray,
+        m_ion: float,
+        n_charge_ion: float = 1.0,
+    ):
+        """
+        Calculate the equilibration time (τ_eq) between electrons and ions in a plasma.
+
+        Parameters
+        ----------
+        temp_plasma_electron_kev : float | np.ndarray
+            Electron temperature in keV.
+        nd_plasma_ions : float | np.ndarray
+            Ion density (m^-3).
+        plasma_coulomb_log_electron_ion : float | np.ndarray
+            Coulomb logarithm for electron-ion collisions.
+        m_ion : float
+            Ion mass (kg).
+        n_charge_ion : float, optional
+            Charge number (Z) of the ion. Default is 1.0.
+
+        Returns
+        -------
+        float | np.ndarray
+            Equilibration time (s).
+
+        Notes
+        -----
+        - The equilibration time is the characteristic time for energy exchange between
+        electrons and ions in a plasma, leading to thermal equilibrium.
+        - It is the characteristic timescale required for two different particle species
+        to share heat and reach thermal equilibrium.
+        """
+        return (
+            3
+            * (2 * np.pi) ** 1.5
+            * constants.EPSILON0**2
+            * m_ion
+            * (constants.ELECTRON_MASS)
+            * (
+                (temp_plasma_electron_kev * constants.KILOELECTRON_VOLT)
+                / constants.ELECTRON_MASS
+            )
+            ** 1.5
+        ) / (
+            nd_plasma_ions
+            * n_charge_ion**2
+            * plasma_coulomb_log_electron_ion
+            * constants.ELECTRON_CHARGE**4
+        )
+
     def output_detailed_physics(self):
         """Outputs detailed physics variables to file."""
         po.oheadr(self.outfile, "Detailed Plasma")
