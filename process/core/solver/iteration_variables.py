@@ -234,6 +234,7 @@ ITERATION_VARIABLES = {
     174: IterationVariable("triang", "physics", 0.00, 1.00),
     175: IterationVariable("kappa", "physics", 0.00, 10.00),
     176: IterationVariable("f_st_coil_aspect", "stellarator", 0.70, 1.30),
+    178: IterationVariable("f_temp_plasma_ion_electron", "physics", 0.0, 2.0),
 }
 
 
