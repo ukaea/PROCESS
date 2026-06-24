@@ -2090,7 +2090,7 @@ class Stellarator(Model):
 
         #  Calculate ion/electron equilibration power
 
-        self.data.physics.pden_ion_electron_equilibration_mw = (
+        self.data.physics.pden_ion_electron_equilibration_vol_avg_mw = (
             calculate_ion_electron_equilibration_power(
                 self.data.physics.alphan,
                 self.data.physics.alphat,

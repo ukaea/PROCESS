@@ -843,8 +843,8 @@ class PhysicsData:
     pflux_fw_rad_mw: float = 0.0
     """Nominal mean radiation load on inside surface of reactor (MW/m2)"""
 
-    pden_ion_electron_equilibration_mw: float = 0.0
-    """ion/electron equilibration power per volume (MW/m3)"""
+    pden_ion_electron_equilibration_vol_avg_mw: float = 0.0
+    """Ion/electron volume averaged equilibration power per unit volume [MW/m³]"""
 
     plasma_current: float = 0.0
     """Plasma current (Iₚ) [A]"""

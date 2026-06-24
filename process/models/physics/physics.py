@@ -655,7 +655,7 @@ class Physics(Model):
 
         # Calculate ion/electron equilibration power
 
-        pden_ion_electron_equilibration = calculate_ion_electron_equilibration_power(
+        pden_ion_electron_equilibration_vol_avg = calculate_ion_electron_equilibration_power(
             nd_electrons=self.data.physics.nd_plasma_electrons_vol_avg,
             temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
             temp_plasma_ion_kev=self.data.physics.temp_plasma_ion_vol_avg_kev,
@@ -664,8 +664,8 @@ class Physics(Model):
                 self.data.physics.t_plasma_electron_triton_equilibration_vol_avg,
             ]),
         )
-        self.data.physics.pden_ion_electron_equilibration_mw = (
-            pden_ion_electron_equilibration / 1.0e6
+        self.data.physics.pden_ion_electron_equilibration_vol_avg_mw = (
+            pden_ion_electron_equilibration_vol_avg / 1.0e6
         )
 
         # Calculate radiation power
