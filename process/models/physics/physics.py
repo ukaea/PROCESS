@@ -5338,7 +5338,7 @@ class DetailedPhysics(Model):
         # Ion-electron equilibration times
         # ================================
 
-        self.data.physics.t_plasma_electron_deuteron_equilbriation_vol_avg = self.calculate_equilibriation_time(
+        self.data.physics.t_plasma_electron_deuteron_equilibration_vol_avg = self.calculate_equilibriation_time(
             temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
             nd_plasma_ions=self.data.physics.nd_plasma_electrons_vol_avg
             * self.data.physics.f_plasma_fuel_deuterium
@@ -5351,7 +5351,7 @@ class DetailedPhysics(Model):
             n_charge_ion=1,
         )
 
-        self.data.physics.t_plasma_electron_deuteron_equilbriation_profile = self.calculate_equilibriation_time(
+        self.data.physics.t_plasma_electron_deuteron_equilibration_profile = self.calculate_equilibriation_time(
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
             nd_plasma_ions=(
                 self.plasma_profile.neprofile.profile_y
@@ -6427,16 +6427,16 @@ class DetailedPhysics(Model):
         po.ovarre(
             self.outfile,
             "Volume averaged electron-deuteron equilibration time (τ_eq) (s)",
-            "(t_plasma_electron_deuteron_equilbriation_vol_avg)",
-            self.data.physics.t_plasma_electron_deuteron_equilbriation_vol_avg,
+            "(t_plasma_electron_deuteron_equilibration_vol_avg)",
+            self.data.physics.t_plasma_electron_deuteron_equilibration_vol_avg,
         )
 
         for i in range(
-            len(self.data.physics.t_plasma_electron_deuteron_equilbriation_profile)
+            len(self.data.physics.t_plasma_electron_deuteron_equilibration_profile)
         ):
             po.ovarre(
                 self.mfile,
                 f"Electron-deuteron equilibration time at point {i}",
-                f"(t_plasma_electron_deuteron_equilbriation_profile{i})",
-                self.data.physics.t_plasma_electron_deuteron_equilbriation_profile[i],
+                f"(t_plasma_electron_deuteron_equilibration_profile{i})",
+                self.data.physics.t_plasma_electron_deuteron_equilibration_profile[i],
             )

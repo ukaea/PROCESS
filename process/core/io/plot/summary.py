@@ -14059,16 +14059,16 @@ def plot_plasma_equilibration_time_profile(
     axis: plt.Axes, mfile_data: MFile, scan: int
 ) -> None:
     """Plot the plasma equilibration time on the given axis."""
-    t_plasma_electron_deuteron_equilbriation_profile = [
-        mfile_data.data[f"t_plasma_electron_deuteron_equilbriation_profile{i}"].get_scan(
+    t_plasma_electron_deuteron_equilibration_profile = [
+        mfile_data.data[f"t_plasma_electron_deuteron_equilibration_profile{i}"].get_scan(
             scan
         )
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
 
     axis.plot(
-        np.linspace(0, 1, len(t_plasma_electron_deuteron_equilbriation_profile)),
-        t_plasma_electron_deuteron_equilbriation_profile,
+        np.linspace(0, 1, len(t_plasma_electron_deuteron_equilibration_profile)),
+        t_plasma_electron_deuteron_equilibration_profile,
         color="red",
         linestyle="-",
         label=r"$\tau_{e-D,eq}$",
