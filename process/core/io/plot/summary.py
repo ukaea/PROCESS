@@ -15344,43 +15344,47 @@ def main_plot(
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
 
-    pages = []
+    pages = {}
 
-    def _add_page():
-        pages.append(plt.figure(figsize=(12, 9), dpi=80))
-        return pages[-1]
+    def _add_page(name: str | None = None):
+        """Add a page to the dictionary of pages. If no name is provided, then assign the lowest unused number."""
+        if name is None:
+            prev_index = max(int(k) for k in pages if k.isnumeric())
+            name = str(prev_index + 1)
+        if name in pages:
+            raise KeyError(f"Name collision: {name} already in `pages`!")
+        pages[name] = plt.figure(figsize=(12, 9), dpi=80)
+        return pages[name]
 
     radial_build = create_thickness_builds(m_file, scan)
 
-    cover_page = _add_page()
     plot_cover_page(
-        cover_page.add_subplot(111),
+        _add_page("cover").add_subplot(111),
         m_file,
         scan,
-        cover_page,
+        pages["cover"],
         radial_build,
         colour_scheme,
     )
 
-    first_page = _add_page()
     # Plot header info
-    plot_header(first_page.add_subplot(231), m_file, scan)
+    plot_header(_add_page("first").add_subplot(231), m_file, scan)
 
     # Geometry
-    plot_geometry_info(first_page.add_subplot(232), m_file, scan)
+    plot_geometry_info(pages["first"].add_subplot(232), m_file, scan)
 
     # Physics
-    plot_physics_info(first_page.add_subplot(233), m_file, scan)
+    plot_physics_info(pages["first"].add_subplot(233), m_file, scan)
 
     # Magnetics
-    plot_magnetics_info(first_page.add_subplot(234), m_file, scan)
+    plot_magnetics_info(pages["first"].add_subplot(234), m_file, scan)
 
     # power/flow economics
-    plot_power_info(first_page.add_subplot(235), m_file, scan)
+    plot_power_info(pages["first"].add_subplot(235), m_file, scan)
 
     # Current drive
-    # plot_current_drive_info(first_page.add_subplot(236), m_file_data, scan)
-    first_page.subplots_adjust(wspace=0.25, hspace=0.25)
+    # plot_current_drive_info(pages["first"].add_subplot(236), m_file_data, scan)
+    pages["first"].subplots_adjust(wspace=0.25, hspace=0.25)
 
     ax7 = _add_page().add_subplot(111)
     ax7.set_position([0.25, 0.1, 0.7, 0.8])  # Move plot slightly to the right
@@ -15394,45 +15398,44 @@ def main_plot(
     plot_inequality_constraint_equations(ax7_6, m_file, scan)
 
     # Plot main plasma information
-    plasma_info_page = _add_page()
     plot_main_plasma_information(
-        plasma_info_page.add_subplot(111, aspect="equal"),
+        _add_page("plasma_info").add_subplot(111, aspect="equal"),
         m_file,
         scan,
         colour_scheme,
-        plasma_info_page,
+        pages["plasma_info"],
     )
 
     # Plot density profiles
-    profiles_page = _add_page()
-    plot_n_profiles(profiles_page, demo_ranges, m_file, scan)
+    plot_n_profiles(_add_page("profiles"), demo_ranges, m_file, scan)
 
     # Plot temperature profiles
-    ax10 = profiles_page.add_subplot(232)
+    ax10 = pages["profiles"].add_subplot(232)
     ax10.set_position([0.375, 0.575, 0.25, 0.375])
     plot_t_profiles(ax10, demo_ranges, m_file, scan)
 
     # Plot impurity profiles
-    ax11 = profiles_page.add_subplot(233)
+    ax11 = pages["profiles"].add_subplot(233)
     ax11.set_position([0.7, 0.45, 0.25, 0.5])
     plot_radprofile(ax11, m_file, scan, imp, demo_ranges)
 
     # Plot current density profile
-    ax12 = profiles_page.add_subplot(4, 3, 10)
+    ax12 = pages["profiles"].add_subplot(4, 3, 10)
     ax12.set_position([0.375, 0.105, 0.25, 0.15])
     plot_jprofile(ax12, m_file, scan)
 
     # Plot q profile
-    ax13 = profiles_page.add_subplot(4, 3, 12)
+    ax13 = pages["profiles"].add_subplot(4, 3, 12)
     ax13.set_position([0.7, 0.105, 0.25, 0.15])
     plot_qprofile(ax13, demo_ranges, m_file, scan)
 
-    rad_contour_page = _add_page()
-    plot_plasma_effective_charge_profile(rad_contour_page.add_subplot(221), m_file, scan)
-    plot_ion_charge_profile(rad_contour_page.add_subplot(223), m_file, scan)
+    plot_plasma_effective_charge_profile(
+        _add_page("rad_contour").add_subplot(221), m_file, scan
+    )
+    plot_ion_charge_profile(pages["rad_contour"].add_subplot(223), m_file, scan)
 
     if i_shape == 1:
-        plot_rad_contour(rad_contour_page.add_subplot(122), m_file, scan, imp)
+        plot_rad_contour(pages["rad_contour"].add_subplot(122), m_file, scan, imp)
 
     if i_shape != 1:
         msg = (
@@ -15442,18 +15445,17 @@ def main_plot(
             "see the 1D radiation plots for available information."
         )
         # Add explanatory text to both figures reserved for contour outputs
-        rad_contour_page.text(
+        pages["rad_contour"].text(
             0.75, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12
         )
 
-    fusion_rate_page = _add_page()
     plot_fusion_rate_profiles(
-        fusion_rate_page.add_subplot(122), fusion_rate_page, m_file, scan
+        _add_page("fusion_rate").add_subplot(122), pages["fusion_rate"], m_file, scan
     )
 
-    rx_1_2_page, rx_3_4_page = _add_page(), _add_page()
+    _add_page("rx_1_2"), _add_page("rx_3_4")
     if m_file.get("i_plasma_shape", scan=scan) == PlasmaShapeModelType.SAUTER:
-        plot_fusion_rate_contours(rx_1_2_page, rx_3_4_page, m_file, scan)
+        plot_fusion_rate_contours(pages["rx_1_2"], pages["rx_3_4"], m_file, scan)
 
     if i_shape != PlasmaShapeModelType.SAUTER:
         msg = (
@@ -15463,24 +15465,29 @@ def main_plot(
             "see the 1D fusion rate/profile plots for available information."
         )
         # Add explanatory text to both figures reserved for contour outputs
-        rx_1_2_page.text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
-        rx_3_4_page.text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+        pages["rx_1_2"].text(
+            0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12
+        )
+        pages["rx_3_4"].text(
+            0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12
+        )
 
-    pressure_profile_page = _add_page()
-    plot_plasma_pressure_profiles(pressure_profile_page.add_subplot(222), m_file, scan)
+    plot_plasma_pressure_profiles(
+        _add_page("pressure_profile").add_subplot(222), m_file, scan
+    )
     plot_plasma_pressure_gradient_profiles(
-        pressure_profile_page.add_subplot(224), m_file, scan
+        pages["pressure_profile"].add_subplot(224), m_file, scan
     )
     # Currently only works with Sauter geometry as plasma has a closed surface
 
     if i_shape == PlasmaShapeModelType.SAUTER:
         plot_plasma_poloidal_pressure_contours(
-            pressure_profile_page.add_subplot(121, aspect="equal"),
+            pages["pressure_profile"].add_subplot(121, aspect="equal"),
             m_file,
             scan,
         )
     else:
-        ax = pressure_profile_page.add_subplot(131, aspect="equal")
+        ax = pages["pressure_profile"].add_subplot(131, aspect="equal")
         msg = (
             "Plasma poloidal pressure contours require a closed (Sauter) plasma boundary "
             f"(i_plasma_shape == {PlasmaShapeModelType.SAUTER}). "
@@ -15499,72 +15506,71 @@ def main_plot(
         )
         ax.axis("off")
 
-    beta_page = _add_page()
-    plot_magnetic_fields_in_plasma(beta_page.add_subplot(122), m_file, scan)
-    plot_beta_profiles(beta_page.add_subplot(221), m_file, scan)
+    plot_magnetic_fields_in_plasma(_add_page("beta").add_subplot(122), m_file, scan)
+    plot_beta_profiles(pages["beta"].add_subplot(221), m_file, scan)
 
     plot_ebw_ecrh_coupling_graph(_add_page().add_subplot(111), m_file, scan)
 
-    current_page = _add_page()
-    plot_bootstrap_comparison(current_page.add_subplot(221), m_file, scan)
-    plot_plasma_current_comparison(current_page.add_subplot(224), m_file, scan)
-    plasma_compare_1_page, plasma_compare_2_page = _add_page(), _add_page()
-    plot_h_threshold_comparison(plasma_compare_1_page.add_subplot(224), m_file, scan)
-    plot_density_limit_comparison(plasma_compare_1_page.add_subplot(221), m_file, scan)
+    plot_bootstrap_comparison(_add_page("current").add_subplot(221), m_file, scan)
+    plot_plasma_current_comparison(pages["current"].add_subplot(224), m_file, scan)
+    plot_h_threshold_comparison(
+        _add_page("plasma_compare_1").add_subplot(224), m_file, scan
+    )
+    plot_density_limit_comparison(
+        pages["plasma_compare_1"].add_subplot(221), m_file, scan
+    )
 
     plot_max_normalised_beta_comparison(
-        plasma_compare_2_page.add_subplot(221), m_file, scan
+        _add_page("plasma_compare_2").add_subplot(221), m_file, scan
     )
     plot_confinement_time_comparison(
-        plasma_compare_2_page.add_subplot(224), m_file, scan
+        pages["plasma_compare_2"].add_subplot(224), m_file, scan
     )
 
-    microscopic_quantities_page = _add_page()
-    plot_debye_length_profile(microscopic_quantities_page.add_subplot(232), m_file, scan)
-    plot_velocity_profile(microscopic_quantities_page.add_subplot(233), m_file, scan)
+    plot_debye_length_profile(
+        _add_page("microscopic_quantities").add_subplot(232), m_file, scan
+    )
+    plot_velocity_profile(pages["microscopic_quantities"].add_subplot(233), m_file, scan)
     plot_plasma_coloumb_logarithms(
-        microscopic_quantities_page.add_subplot(231), m_file, scan
+        pages["microscopic_quantities"].add_subplot(231), m_file, scan
     )
     plot_collision_time_profile(
-        microscopic_quantities_page.add_subplot(234), m_file, scan
+        pages["microscopic_quantities"].add_subplot(234), m_file, scan
     )
     plot_collision_frequency_profile(
-        microscopic_quantities_page.add_subplot(235), m_file, scan
+        pages["microscopic_quantities"].add_subplot(235), m_file, scan
     )
     plot_mean_free_path_profile(
-        microscopic_quantities_page.add_subplot(236), m_file, scan
+        pages["microscopic_quantities"].add_subplot(236), m_file, scan
     )
 
-    detailed_params_page = _add_page()
     plot_ion_slowing_down_time_profile(
-        detailed_params_page.add_subplot(231), m_file, scan
+        _add_page("detailed_params").add_subplot(231), m_file, scan
     )
 
-    plot_resistivity_profile(detailed_params_page.add_subplot(232), m_file, scan)
+    plot_resistivity_profile(pages["detailed_params"].add_subplot(232), m_file, scan)
 
     plot_detailed_plasma_parameters(
-        detailed_params_page.add_subplot(233),
-        fig=detailed_params_page,
+        pages["detailed_params"].add_subplot(233),
+        fig=pages["detailed_params"],
         mfile=m_file,
         scan=scan,
     )
 
-    freq_page = _add_page()
-    ax_electron_freq = freq_page.add_subplot(211)
+    ax_electron_freq = _add_page("freq").add_subplot(211)
     plot_electron_frequency_profile(ax_electron_freq, m_file, scan)
 
-    ax_ion_freq = freq_page.add_subplot(413, sharex=ax_electron_freq)
+    ax_ion_freq = pages["freq"].add_subplot(413, sharex=ax_electron_freq)
     plot_ion_frequency_profile(ax_ion_freq, m_file, scan)
 
-    ax_larmor = freq_page.add_subplot(414, sharex=ax_electron_freq)
+    ax_larmor = pages["freq"].add_subplot(414, sharex=ax_electron_freq)
     plot_larmor_radius_profile(ax_larmor, m_file, scan)
 
-    freq_page.subplots_adjust(hspace=0.5)
+    pages["freq"].subplots_adjust(hspace=0.5)
 
-    tokamak_cross_section_page = _add_page()
     # Plot poloidal cross-section
     poloidal_cross_section(
-        tokamak_cross_section_page.add_subplot(121, aspect="equal"),
+        _add_page("tokamak_cross_section").add_subplot(121, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -15574,7 +15580,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     toroidal_cross_section(
-        tokamak_cross_section_page.add_subplot(122, aspect="equal"),
+        pages["tokamak_cross_section"].add_subplot(122, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -15582,7 +15588,7 @@ def main_plot(
     )
 
     # Plot color key
-    ax17 = tokamak_cross_section_page.add_subplot(222)
+    ax17 = pages["tokamak_cross_section"].add_subplot(222)
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file, scan, colour_scheme)
 
@@ -15599,11 +15605,10 @@ def main_plot(
     plot_radial_build(ax18, m_file, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    vertical_build_page = _add_page()
-    ax185 = vertical_build_page.add_subplot(211)
+    ax185 = _add_page("vertical_build").add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = vertical_build_page.add_subplot(212)
+    ax18b = pages["vertical_build"].add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file, colour_scheme)
@@ -15611,38 +15616,37 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file.get("i_tf_sup", scan=scan) == TFConductorModel.SUPERCONDUCTING:
         # TF coil with WP
-        tf_wp_page = _add_page()
-        ax19 = tf_wp_page.add_subplot(221, aspect="equal")
+        ax19 = _add_page("tf_wp").add_subplot(221, aspect="equal")
         ax19.set_position([
             0.025,
             0.45,
             0.5,
             0.5,
         ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file, scan, tf_wp_page)
+        plot_superconducting_tf_wp(ax19, m_file, scan, pages["tf_wp"])
 
-        cable_page = _add_page()
+        _add_page("cable")
         if (
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CROSS_CONDUCTOR
         ):
-            ax20 = cable_page.add_subplot(325, aspect="equal")
+            ax20 = pages["cable"].add_subplot(325, aspect="equal")
             ax20.set_position([0.025, 0.5, 0.4, 0.4])
-            plot_tf_croco_turn(ax20, cable_page, m_file, scan)
+            plot_tf_croco_turn(ax20, pages["cable"], m_file, scan)
         elif (
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CABLE_IN_CONDUIT
         ):
             # TF coil turn structure
-            ax20 = cable_page.add_subplot(325, aspect="equal")
+            ax20 = pages["cable"].add_subplot(325, aspect="equal")
             ax20.set_position([0.025, 0.5, 0.4, 0.4])
-            plot_tf_cable_in_conduit_turn(ax20, cable_page, m_file, scan)
+            plot_tf_cable_in_conduit_turn(ax20, pages["cable"], m_file, scan)
 
         if (
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CROSS_CONDUCTOR
         ):
-            plot_205 = cable_page.add_subplot(223, aspect="equal")
+            plot_205 = pages["cable"].add_subplot(223, aspect="equal")
             plot_205.set_position([0.075, 0.1, 0.3, 0.3])
             plot_corc_cable_geometry(
                 plot_205,
@@ -15664,8 +15668,8 @@ def main_plot(
                 dx_hts_tape_hastelloy=m_file.get("dx_tf_hts_tape_hastelloy", scan=scan),
                 show_legend=True,
             )
-            plot_tf_corc_cable_summary_box(plot_205, cable_page, m_file, scan)
-            ax_hts_tape = cable_page.add_subplot(339)
+            plot_tf_corc_cable_summary_box(plot_205, pages["cable"], m_file, scan)
+            ax_hts_tape = pages["cable"].add_subplot(339)
             ax_hts_tape.set_position([0.75, 0.1, 0.2, 0.2])
             plot_hts_tape_geometry(
                 axis=ax_hts_tape,
@@ -15681,10 +15685,9 @@ def main_plot(
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CABLE_IN_CONDUIT
         ):
-            plot_205 = cable_page.add_subplot(223, aspect="equal")
+            plot_205 = pages["cable"].add_subplot(223, aspect="equal")
             plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-            plot_cable_in_conduit_cable(plot_205, cable_page, m_file, scan)
-            quench_time_evo_page = _add_page()
+            plot_cable_in_conduit_cable(plot_205, pages["cable"], m_file, scan)
             plot_quench_time_evolution(
                 tau_discharge=m_file.get("t_tf_superconductor_quench", scan=scan),
                 b_peak=m_file.get("b_tf_inboard_peak_with_ripple", scan=scan),
@@ -15702,15 +15705,14 @@ def main_plot(
                     "a_tf_turn_cable_space_no_void", scan=scan
                 ),
                 a_tf_turn=m_file.get("a_tf_turn", scan=scan),
-                axes_1=quench_time_evo_page.add_subplot(211),
-                axes_2=quench_time_evo_page.add_subplot(212),
+                axes_1=_add_page("quench_time_evo").add_subplot(211),
+                axes_2=pages["quench_time_evo"].add_subplot(212),
             )
     else:
-        tf_wp_page = _add_page()
-        ax19 = tf_wp_page.add_subplot(211, aspect="equal")
+        ax19 = _add_page("tf_wp").add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file, scan, tf_wp_page)
-        plot_resistive_tf_info(ax19, m_file, scan, tf_wp_page)
+        plot_resistive_tf_wp(ax19, m_file, scan, pages["tf_wp"])
+        plot_resistive_tf_info(ax19, m_file, scan, pages["tf_wp"])
     plot_tf_coil_structure(
         _add_page().add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
     )
@@ -15723,13 +15725,12 @@ def main_plot(
 
     plot_pf_cs_plasma_mutual_inductance(_add_page().add_subplot(111), m_file, scan)
 
-    stress_page = _add_page()
     plot_cs_stress_time_profile(
-        axis=stress_page.add_subplot(431), mfile=m_file, scan=scan
+        axis=_add_page("stress").add_subplot(431), mfile=m_file, scan=scan
     )
 
     plot_cs_radial_hoop_stress_profile(
-        axis=stress_page.add_subplot(432),
+        axis=pages["stress"].add_subplot(432),
         mfile=m_file,
         scan=scan,
         j_cs=m_file.get("j_cs_pulse_start", scan=scan),
@@ -15737,7 +15738,7 @@ def main_plot(
     )
 
     plot_cs_radial_stress_profile(
-        axis=stress_page.add_subplot(433),
+        axis=pages["stress"].add_subplot(433),
         mfile=m_file,
         scan=scan,
         j_cs=m_file.get("j_cs_pulse_start", scan=scan),
@@ -15745,50 +15746,46 @@ def main_plot(
     )
 
     plot_cs_coil_structure(
-        stress_page.add_subplot(223, aspect="equal"), stress_page, m_file, scan
+        pages["stress"].add_subplot(223, aspect="equal"), pages["stress"], m_file, scan
     )
     plot_cs_turn_structure(
-        stress_page.add_subplot(326, aspect="equal"), stress_page, m_file, scan
+        pages["stress"].add_subplot(326, aspect="equal"), pages["stress"], m_file, scan
     )
-    stress_page.subplots_adjust(wspace=0.3)
+    pages["stress"].subplots_adjust(wspace=0.3)
 
-    fw_td_cross_section_page = _add_page()
     plot_first_wall_top_down_cross_section(
-        fw_td_cross_section_page.add_subplot(221, aspect="equal"), m_file, scan
+        _add_page("fw_td_cross_section").add_subplot(221, aspect="equal"), m_file, scan
     )
     plot_first_wall_poloidal_cross_section(
-        fw_td_cross_section_page.add_subplot(122), m_file, scan
+        pages["fw_td_cross_section"].add_subplot(122), m_file, scan
     )
-    plot_fw_90_deg_pipe_bend(fw_td_cross_section_page.add_subplot(337), m_file, scan)
+    plot_fw_90_deg_pipe_bend(pages["fw_td_cross_section"].add_subplot(337), m_file, scan)
 
-    blkt_pipe_bends_page = _add_page()
-    plot_blkt_pipe_bends(blkt_pipe_bends_page, m_file, scan)
-    ax_blanket = blkt_pipe_bends_page.add_subplot(122, aspect="equal")
+    plot_blkt_pipe_bends(_add_page("blkt_pipe_bends"), m_file, scan)
+    ax_blanket = pages["blkt_pipe_bends"].add_subplot(122, aspect="equal")
     plot_blkt_structure(
         ax_blanket,
-        blkt_pipe_bends_page,
+        pages["blkt_pipe_bends"],
         m_file,
         scan,
         radial_build,
         colour_scheme,
     )
 
-    main_power_flow_page = _add_page()
     plot_main_power_flow(
-        main_power_flow_page.add_subplot(111, aspect="equal"),
+        _add_page("main_power_flow").add_subplot(111, aspect="equal"),
         m_file,
         scan,
-        main_power_flow_page,
+        pages["main_power_flow"],
     )
 
-    power_profile_over_time_page = _add_page()
-    ax24 = power_profile_over_time_page.add_subplot(111)
+    ax24 = _add_page("power_profile_over_time").add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(
-        ax24, m_file, scan, power_profile_over_time_page
+        ax24, m_file, scan, pages["power_profile_over_time"]
     )
-    return pages
+    return list(pages.values())
 
 
 def create_thickness_builds(m_file, scan: int):
