@@ -322,6 +322,7 @@ def constraint_equation_3(constraint_registration, data):
             data.physics.pden_alpha_heating_ions_mw
             + (data.current_drive.p_hcd_injected_ions_mw / data.physics.vol_plasma)
             + data.physics.pden_ion_electron_equilibration_mw
+            + data.physics.pden_non_alpha_charged_mw
         )
 
         p_ion_loss = data.physics.pden_ion_transport_loss_mw
@@ -335,6 +336,7 @@ def constraint_equation_3(constraint_registration, data):
     p_ion_heating = (
         data.physics.pden_alpha_heating_ions_mw
         + data.physics.pden_ion_electron_equilibration_mw
+        + data.physics.pden_non_alpha_charged_mw
     )
 
     p_ion_loss = data.physics.pden_ion_transport_loss_mw
@@ -370,35 +372,34 @@ def constraint_equation_4(constraint_registration, data):
     """
     # pscaling: total transport power per volume (MW/m3)
 
-    pscaling = data.physics.pden_electron_transport_loss_mw
+    p_electron_loss = (
+        data.physics.pden_electron_transport_loss_mw
+        + data.physics.pden_ion_electron_equilibration_mw
+    )
     # Total power lost is scaling power plus radiation:
     if data.physics.i_rad_loss == 0:
-        pnumerator = pscaling + data.physics.pden_plasma_rad_mw
+        p_electron_loss += data.physics.pden_plasma_rad_mw
     elif data.physics.i_rad_loss == 1:
-        pnumerator = pscaling + data.physics.pden_plasma_core_rad_mw
-    else:
-        pnumerator = pscaling
+        p_electron_loss += data.physics.pden_plasma_core_rad_mw
 
     # if plasma not ignited include injected power
     if (
         PlasmaIgnitionModel(data.physics.i_plasma_ignited)
         == PlasmaIgnitionModel.NON_IGNITED
     ):
-        pdenom = (
-            data.physics.f_p_alpha_plasma_deposited
-            * data.physics.pden_alpha_heating_electrons_mw
-            + data.physics.pden_ion_electron_equilibration_mw
-            + data.current_drive.p_hcd_injected_electrons_mw / data.physics.vol_plasma
+        p_electron_heating = (
+            data.physics.pden_alpha_heating_electrons_mw
+            + (data.current_drive.p_hcd_injected_electrons_mw / data.physics.vol_plasma)
+            + data.physics.pden_plasma_ohmic_mw
         )
     else:
         # if plasma ignited
-        pdenom = (
-            data.physics.f_p_alpha_plasma_deposited
-            * data.physics.pden_alpha_heating_electrons_mw
-            + data.physics.pden_ion_electron_equilibration_mw
+        p_electron_heating = (
+            data.physics.pden_alpha_heating_electrons_mw
+            + data.physics.pden_plasma_ohmic_mw
         )
 
-    return eq(pnumerator, pdenom, constraint_registration)
+    return eq(p_electron_loss, p_electron_heating, constraint_registration)
 
 
 @ConstraintManager.register_constraint(5, "/m³", "<=")
