@@ -5334,6 +5334,38 @@ class DetailedPhysics(Model):
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
         )
 
+        # ================================
+        # Ion-electron equilibration times
+        # ================================
+
+        self.data.physics.t_plasma_electron_deuteron_equilbriation_vol_avg = self.calculate_equilibriation_time(
+            temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
+            nd_plasma_ions=self.data.physics.nd_plasma_electrons_vol_avg
+            * self.data.physics.f_plasma_fuel_deuterium
+            * (
+                self.data.physics.nd_plasma_fuel_ions_vol_avg
+                / self.data.physics.nd_plasma_electrons_vol_avg
+            ),
+            plasma_coulomb_log_electron_ion=self.data.physics.plasma_coulomb_log_electron_deuteron_vol_avg,
+            m_ion=constants.DEUTERON_MASS,
+            n_charge_ion=1,
+        )
+
+        self.data.physics.t_plasma_electron_deuteron_equilbriation_profile = self.calculate_equilibriation_time(
+            temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
+            nd_plasma_ions=(
+                self.plasma_profile.neprofile.profile_y
+                * self.data.physics.f_plasma_fuel_deuterium
+                * (
+                    self.data.physics.nd_plasma_fuel_ions_vol_avg
+                    / self.data.physics.nd_plasma_electrons_vol_avg
+                )
+            ),
+            plasma_coulomb_log_electron_ion=self.data.physics.plasma_coulomb_log_electron_deuteron_profile,
+            m_ion=constants.DEUTERON_MASS,
+            n_charge_ion=1,
+        )
+
     @staticmethod
     @nb.njit(cache=True)
     def calculate_debye_length(
@@ -6388,4 +6420,23 @@ class DetailedPhysics(Model):
                 f"Plasma Spitzer resistivity at point {i}",
                 f"(res_plasma_fuel_spitzer_profile{i})",
                 self.data.physics.res_plasma_fuel_spitzer_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Equilibration Times:")
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-deuteron equilibration time (τ_eq) (s)",
+            "(t_plasma_electron_deuteron_equilbriation_vol_avg)",
+            self.data.physics.t_plasma_electron_deuteron_equilbriation_vol_avg,
+        )
+
+        for i in range(
+            len(self.data.physics.t_plasma_electron_deuteron_equilbriation_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-deuteron equilibration time at point {i}",
+                f"(t_plasma_electron_deuteron_equilbriation_profile{i})",
+                self.data.physics.t_plasma_electron_deuteron_equilbriation_profile[i],
             )

@@ -14055,6 +14055,33 @@ def plot_resistivity_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> No
     axis.legend()
 
 
+def plot_plasma_equilibration_time_profile(
+    axis: plt.Axes, mfile_data: MFile, scan: int
+) -> None:
+    """Plot the plasma equilibration time on the given axis."""
+    t_plasma_electron_deuteron_equilbriation_profile = [
+        mfile_data.data[f"t_plasma_electron_deuteron_equilbriation_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(t_plasma_electron_deuteron_equilbriation_profile)),
+        t_plasma_electron_deuteron_equilbriation_profile,
+        color="red",
+        linestyle="-",
+        label=r"$\tau_{e-D,eq}$",
+    )
+
+    axis.set_yscale("log")
+    axis.set_ylabel("Equilibration Time [s]")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
 def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan: int):
     """Plot the equality constraints for a solution and their normalised residuals
 
@@ -14747,6 +14774,11 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         f"$\\langle\\eta_{{Spitzer}}\\rangle$: {mfile.get('res_plasma_fuel_spitzer_vol_avg', scan=scan):.4e} $\\Omega\\mathrm{{m}}$"
     )
 
+    textstr_equilibriation = (
+        f"$\\mathbf{{Equilibration \\ Times:}}$\n\n"
+        f"$\\langle\\tau_{{e-D,Equil}}\\rangle$: {mfile.get('t_plasma_electron_deuteron_equilibration_vol_avg', scan=scan):.4e} s\n"
+    )
+
     light_yellow_box = {
         "boxstyle": "round",
         "facecolor": "lightyellow",
@@ -14780,6 +14812,17 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         0.45,
         0.45,
         textstr_velocities,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox=light_yellow_box,
+    )
+
+    axis.text(
+        0.65,
+        0.45,
+        textstr_equilibriation,
         fontsize=9,
         verticalalignment="top",
         horizontalalignment="left",
@@ -15547,6 +15590,8 @@ def main_plot(
     )
 
     plot_resistivity_profile(pages["detailed_params"].add_subplot(232), m_file, scan)
+
+    plot_plasma_equilibration_time_profile(pages["detailed_params"].add_subplot(233), m_file, scan)
 
     plot_detailed_plasma_parameters(
         pages["detailed_params"].add_subplot(233),
