@@ -699,9 +699,10 @@ class Physics(Model):
         self.data.physics.pden_ion_electron_equilibration_vol_avg_mw = (
             pden_ion_electron_equilibration_vol_avg / 1.0e6
         )
-        
+
         self.data.physics.p_ion_electron_equilibration_vol_avg_mw = (
-            self.data.physics.pden_ion_electron_equilibration_vol_avg_mw * self.data.physics.vol_plasma
+            self.data.physics.pden_ion_electron_equilibration_vol_avg_mw
+            * self.data.physics.vol_plasma
         )
 
         # Calculate radiation power
@@ -5514,6 +5515,8 @@ class DetailedPhysics(Model):
 
         self.data.physics.t_plasma_electron_deuteron_equilibration_vol_avg = self.calculate_equilibriation_time(
             temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
+            temp_plasma_ion_kev=self.data.physics.temp_plasma_electron_vol_avg_kev
+            * self.data.physics.f_temp_plasma_ion_electron,
             nd_plasma_ions=self.data.physics.nd_plasma_electrons_vol_avg
             * self.data.physics.f_plasma_fuel_deuterium
             * (
@@ -5527,6 +5530,8 @@ class DetailedPhysics(Model):
 
         self.data.physics.t_plasma_electron_deuteron_equilibration_profile = self.calculate_equilibriation_time(
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
+            temp_plasma_ion_kev=self.plasma_profile.teprofile.profile_y
+            * self.data.physics.f_temp_plasma_ion_electron,
             nd_plasma_ions=(
                 self.plasma_profile.neprofile.profile_y
                 * self.data.physics.f_plasma_fuel_deuterium
@@ -5542,6 +5547,8 @@ class DetailedPhysics(Model):
 
         self.data.physics.t_plasma_electron_triton_equilibration_vol_avg = self.calculate_equilibriation_time(
             temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
+            temp_plasma_ion_kev=self.data.physics.temp_plasma_electron_vol_avg_kev
+            * self.data.physics.f_temp_plasma_ion_electron,
             nd_plasma_ions=self.data.physics.nd_plasma_electrons_vol_avg
             * self.data.physics.f_plasma_fuel_tritium
             * (
@@ -5555,6 +5562,8 @@ class DetailedPhysics(Model):
 
         self.data.physics.t_plasma_electron_triton_equilibration_profile = self.calculate_equilibriation_time(
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
+            temp_plasma_ion_kev=self.plasma_profile.teprofile.profile_y
+            * self.data.physics.f_temp_plasma_ion_electron,
             nd_plasma_ions=(
                 self.plasma_profile.neprofile.profile_y
                 * self.data.physics.f_plasma_fuel_tritium
@@ -6014,6 +6023,7 @@ class DetailedPhysics(Model):
     @nb.njit(cache=True)
     def calculate_equilibriation_time(
         temp_plasma_electron_kev: float | np.ndarray,
+        temp_plasma_ion_kev: float | np.ndarray,
         nd_plasma_ions: float | np.ndarray,
         plasma_coulomb_log_electron_ion: float | np.ndarray,
         m_ion: float,
@@ -6026,6 +6036,8 @@ class DetailedPhysics(Model):
         ----------
         temp_plasma_electron_kev : float | np.ndarray
             Electron temperature in keV.
+        temp_plasma_ion_kev : float | np.ndarray
+            Ion temperature in keV.
         nd_plasma_ions : float | np.ndarray
             Ion density (m^-3).
         plasma_coulomb_log_electron_ion : float | np.ndarray
@@ -6049,17 +6061,20 @@ class DetailedPhysics(Model):
         """
         return (
             3
-            * (2 * np.pi) ** 1.5
-            * constants.EPSILON0**2
+            * (4 * np.pi * constants.EPSILON0) ** 2.0
             * m_ion
             * (constants.ELECTRON_MASS)
             * (
-                (temp_plasma_electron_kev * constants.KILOELECTRON_VOLT)
-                / constants.ELECTRON_MASS
+                (
+                    (temp_plasma_electron_kev * constants.KILOELECTRON_VOLT)
+                    / constants.ELECTRON_MASS
+                )
+                + ((temp_plasma_ion_kev * constants.KILOELECTRON_VOLT) / m_ion)
             )
             ** 1.5
         ) / (
-            nd_plasma_ions
+            (8 * np.sqrt(2 * np.pi))
+            * nd_plasma_ions
             * n_charge_ion**2
             * plasma_coulomb_log_electron_ion
             * constants.ELECTRON_CHARGE**4

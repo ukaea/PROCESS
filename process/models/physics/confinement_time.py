@@ -982,13 +982,14 @@ class PlasmaConfinementTime(Model):
             eden_plasma_electrons_thermal_vol_avg / t_electron_energy_confinement
         ) / 1e6  # Convert from W/m³ to MW/m³
 
-        ratio = eden_plasma_ions_thermal_vol_avg / eden_plasma_electrons_thermal_vol_avg
+        # ratio = (nd_plasma_ions_total_vol_avg / nd_plasma_electrons_vol_avg) * (
+        #     temp_plasma_ion_density_weighted_kev
+        #     / temp_plasma_electron_density_weighted_kev
+        # )
 
         # Global energy confinement time
 
-        t_energy_confinement = (ratio + 1.0e0) / (
-            ratio / t_ion_energy_confinement + 1.0e0 / t_electron_energy_confinement
-        )
+        t_energy_confinement = t_ion_energy_confinement
 
         # For comparison directly calculate the confinement time from the stored energy
         # calculated from the total plasma beta and the loss power used above.
