@@ -184,7 +184,7 @@ class NumericsData:
             "Divertor collisionality upper limit",
             "Conducting shell radius upper limit",
             "⟨β⟩ upper limit                 ",
-            "TF peak symmetric toroidal field upper limit  ",
+            "TF peak toroidal field upper limit  ",
             "CS coil EOF current density limit",
             "CS coil BOP current density limit",
             "Fusion gain (Qₚₗₐₛₘₐ) lower limit        ",
