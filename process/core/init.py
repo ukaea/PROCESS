@@ -275,7 +275,7 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     # Deprecate constraints
-    for depcrecated_constraint in [3, 4, 10, 74, 42]:
+    for depcrecated_constraint in [10, 74, 42]:
         if (
             data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns]
             == depcrecated_constraint
