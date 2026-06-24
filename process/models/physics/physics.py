@@ -667,6 +667,10 @@ class Physics(Model):
         self.data.physics.pden_ion_electron_equilibration_vol_avg_mw = (
             pden_ion_electron_equilibration_vol_avg / 1.0e6
         )
+        
+        self.data.physics.p_ion_electron_equilibration_vol_avg_mw = (
+            self.data.physics.pden_ion_electron_equilibration_vol_avg_mw * self.data.physics.vol_plasma
+        )
 
         # Calculate radiation power
 
@@ -2365,6 +2369,13 @@ class Physics(Model):
             "Injection power to electrons (MW)",
             "(p_hcd_injected_electrons_mw)",
             self.data.current_drive.p_hcd_injected_electrons_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Ion-electron equilibration power (MW)",
+            "(p_ion_electron_equilibration_vol_avg_mw)",
+            self.data.physics.p_ion_electron_equilibration_vol_avg_mw,
             "OP ",
         )
         po.osubhd(self.outfile, "Ions power balance :")

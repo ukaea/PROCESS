@@ -845,6 +845,9 @@ class PhysicsData:
 
     pden_ion_electron_equilibration_vol_avg_mw: float = 0.0
     """Ion/electron volume averaged equilibration power per unit volume [MW/m³]"""
+    
+    p_ion_electron_equilibration_vol_avg_mw: float = 0.0
+    """Ion/electron volume averaged equilibration power [MW]"""
 
     plasma_current: float = 0.0
     """Plasma current (Iₚ) [A]"""
