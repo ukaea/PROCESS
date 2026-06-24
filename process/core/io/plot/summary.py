@@ -15349,7 +15349,7 @@ def main_plot(
     def _add_page(name: str | None = None):
         """Add a page to the dictionary of pages. If no name is provided, then assign the lowest unused number."""
         if name is None:
-            prev_index = max(int(k) for k in pages if k.isnumeric())
+            prev_index = max((int(k) for k in pages if k.isnumeric()), default=0)
             name = str(prev_index + 1)
         if name in pages:
             raise KeyError(f"Name collision: {name} already in `pages`!")
