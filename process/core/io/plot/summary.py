@@ -14073,6 +14073,13 @@ def plot_plasma_equilibration_time_profile(
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
 
+    t_plasma_electron_alpha_equilibration_profile = [
+        mfile_data.data[f"t_plasma_electron_alpha_equilibration_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
     axis.plot(
         np.linspace(0, 1, len(t_plasma_electron_deuteron_equilibration_profile)),
         t_plasma_electron_deuteron_equilibration_profile,
@@ -14087,6 +14094,14 @@ def plot_plasma_equilibration_time_profile(
         color="green",
         linestyle="-",
         label=r"$\tau_{e-T,eq}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(t_plasma_electron_alpha_equilibration_profile)),
+        t_plasma_electron_alpha_equilibration_profile,
+        color="red",
+        linestyle="-",
+        label=r"$\tau_{e-\alpha,eq}$",
     )
 
     axis.set_yscale("log")
@@ -14793,6 +14808,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         f"$\\mathbf{{Equilibration \\ Times:}}$\n\n"
         f"$\\langle\\tau_{{e-D,Equil}}\\rangle$: {mfile.get('t_plasma_electron_deuteron_equilibration_vol_avg', scan=scan):.4e} s\n"
         f"$\\langle\\tau_{{e-T,Equil}}\\rangle$: {mfile.get('t_plasma_electron_triton_equilibration_vol_avg', scan=scan):.4e} s\n"
+        f"$\\langle\\tau_{{e-\\alpha,Equil}}\\rangle$: {mfile.get('t_plasma_electron_alpha_equilibration_vol_avg', scan=scan):.4e} s"
     )
 
     light_yellow_box = {
