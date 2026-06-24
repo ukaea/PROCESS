@@ -2035,7 +2035,7 @@ class Stellarator(Model):
             self.data.physics.p_neutron_total_mw,
             self.data.physics.p_non_alpha_charged_mw,
             self.data.physics.pden_alpha_total_mw,
-            self.data.physics.f_pden_alpha_electron_mw,
+            self.data.physics.pden_alpha_heating_electrons_mw,
             self.data.physics.f_pden_alpha_ions_mw,
             self.data.physics.p_charged_particle_mw,
             self.data.physics.p_fusion_total_mw,

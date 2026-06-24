@@ -360,7 +360,7 @@ def constraint_equation_4(constraint_registration, data):
     pden_plasma_rad_mw: total radiation power per volume (MW/m3)
     pden_plasma_core_rad_mw: total core radiation power per volume (MW/m3)
     f_p_alpha_plasma_deposited: fraction of alpha power deposited in plasma
-    f_pden_alpha_electron_mw: alpha power per volume to electrons (MW/m3)
+    pden_alpha_heating_electrons_mw: alpha power per volume to electrons (MW/m3)
     pden_ion_electron_equilibration_mw: ion/electron equilibration power per volume (MW/m3)
     p_hcd_injected_electrons_mw: auxiliary injected power to electrons (MW)
     vol_plasma: plasma volume (m3)
@@ -383,7 +383,7 @@ def constraint_equation_4(constraint_registration, data):
     ):
         pdenom = (
             data.physics.f_p_alpha_plasma_deposited
-            * data.physics.f_pden_alpha_electron_mw
+            * data.physics.pden_alpha_heating_electrons_mw
             + data.physics.pden_ion_electron_equilibration_mw
             + data.current_drive.p_hcd_injected_electrons_mw / data.physics.vol_plasma
         )
@@ -391,7 +391,7 @@ def constraint_equation_4(constraint_registration, data):
         # if plasma ignited
         pdenom = (
             data.physics.f_p_alpha_plasma_deposited
-            * data.physics.f_pden_alpha_electron_mw
+            * data.physics.pden_alpha_heating_electrons_mw
             + data.physics.pden_ion_electron_equilibration_mw
         )
 
