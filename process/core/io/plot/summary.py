@@ -11777,7 +11777,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f"Total power density: {mfile.get('pden_alpha_total_mw', scan=scan):.4e} MW/m3\n"
         f"Plasma power density: {mfile.get('pden_plasma_alpha_mw', scan=scan):.4e} MW/m3\n\n"
         f"Power per unit volume transferred to electrons: {mfile.get('pden_alpha_heating_electrons_mw', scan=scan):.4e} MW/m3\n"
-        f"Power per unit volume transferred to ions: {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m3\n\n"
+        f"Power per unit volume transferred to ions: {mfile.get('pden_alpha_heating_ions_mw', scan=scan):.4e} MW/m3\n\n"
     )
 
     axis.text(

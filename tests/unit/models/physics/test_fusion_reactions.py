@@ -110,7 +110,7 @@ def test_set_fusion_powers(setfusionpowersparam):
         p_non_alpha_charged_mw,
         pden_alpha_total_mw,
         pden_alpha_heating_electrons_mw,
-        f_pden_alpha_ions_mw,
+        pden_alpha_heating_ions_mw,
         p_charged_particle_mw,
         p_fusion_total_mw,
     ) = reactions.set_fusion_powers(
@@ -142,7 +142,7 @@ def test_set_fusion_powers(setfusionpowersparam):
     assert pden_alpha_heating_electrons_mw == pytest.approx(
         setfusionpowersparam.expected_alpha_power_electron_density
     )
-    assert f_pden_alpha_ions_mw == pytest.approx(
+    assert pden_alpha_heating_ions_mw == pytest.approx(
         setfusionpowersparam.expected_alpha_power_ion_density
     )
     assert p_charged_particle_mw == pytest.approx(
