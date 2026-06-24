@@ -318,29 +318,29 @@ def constraint_equation_3(constraint_registration, data):
         PlasmaIgnitionModel(data.physics.i_plasma_ignited)
         == PlasmaIgnitionModel.NON_IGNITED
     ):
+        p_ion_heating = (
+            data.physics.pden_alpha_heating_ions_mw
+            + (data.current_drive.p_hcd_injected_ions_mw / data.physics.vol_plasma)
+            + data.physics.pden_ion_electron_equilibration_mw
+        )
+
+        p_ion_loss = data.physics.pden_ion_transport_loss_mw
         return eq(
-            (
-                data.physics.pden_ion_transport_loss_mw
-                + data.physics.pden_ion_electron_equilibration_mw
-            ),
-            (
-                data.physics.f_p_alpha_plasma_deposited
-                * data.physics.pden_alpha_heating_ions_mw
-                + data.current_drive.p_hcd_injected_ions_mw / data.physics.vol_plasma
-            ),
+            (p_ion_loss),
+            (p_ion_heating),
             constraint_registration,
         )
 
     # Plasma ignited
+    p_ion_heating = (
+        data.physics.pden_alpha_heating_ions_mw
+        + data.physics.pden_ion_electron_equilibration_mw
+    )
+
+    p_ion_loss = data.physics.pden_ion_transport_loss_mw
     return eq(
-        (
-            data.physics.pden_ion_transport_loss_mw
-            + data.physics.pden_ion_electron_equilibration_mw
-        ),
-        (
-            data.physics.f_p_alpha_plasma_deposited
-            * data.physics.pden_alpha_heating_ions_mw
-        ),
+        (p_ion_loss),
+        (p_ion_heating),
         constraint_registration,
     )
 
