@@ -689,8 +689,8 @@ class Physics(Model):
 
         pden_ion_electron_equilibration_vol_avg = calculate_ion_electron_equilibration_power(
             nd_electrons=self.data.physics.nd_plasma_electrons_vol_avg,
-            temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
-            temp_plasma_ion_kev=self.data.physics.temp_plasma_ion_vol_avg_kev,
+            temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
+            temp_plasma_ion_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
             t_plasma_ion_electron_equilibration=np.average([
                 self.data.physics.t_plasma_electron_deuteron_equilibration_vol_avg,
                 self.data.physics.t_plasma_electron_triton_equilibration_vol_avg,
