@@ -796,7 +796,7 @@ def bosch_hale_reactivity(
 
 def set_fusion_powers(
     f_alpha_electron: float,
-    f_alpha_ion: float,
+    f_p_alpha_total_ions: float,
     p_beam_alpha_mw: float,
     pden_non_alpha_charged_mw: float,
     pden_plasma_neutron_mw: float,
@@ -811,7 +811,7 @@ def set_fusion_powers(
     ----------
     f_alpha_electron :
         float
-    f_alpha_ion :
+    f_p_alpha_total_ions :
         float
     p_beam_alpha_mw :
         float
@@ -896,7 +896,9 @@ def set_fusion_powers(
     # Alpha power to electrons and ions (used with electron
     # and ion power balance equations only)
     # No consideration of pden_non_alpha_charged_mw here.
-    f_pden_alpha_ions_mw = f_p_alpha_plasma_deposited * pden_alpha_total_mw * f_alpha_ion
+    f_pden_alpha_ions_mw = (
+        f_p_alpha_plasma_deposited * pden_alpha_total_mw * f_p_alpha_total_ions
+    )
     f_pden_alpha_electron_mw = (
         f_p_alpha_plasma_deposited * pden_alpha_total_mw * f_alpha_electron
     )
