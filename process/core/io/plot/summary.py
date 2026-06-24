@@ -15301,6 +15301,314 @@ def plot_cs_radial_stress_profile(
     axis.legend(loc="best")
 
 
+def plot_blanket_coolant_channel_structure(self, m_file: MFile, scan: int):
+    """Plot a schematic of the blanket coolant channel routing."""
+    len_blkt_outboard_coolant_channel_radial = float(
+        m_file.get("len_blkt_outboard_coolant_channel_radial", scan=scan)
+    )
+    len_blkt_outboard_segment_toroidal = float(
+        m_file.get("len_blkt_outboard_segment_toroidal", scan=scan)
+    )
+    n_blkt_outboard_module_coolant_sections_radial = max(
+        1,
+        round(m_file.get("n_blkt_outboard_module_coolant_sections_radial", scan=scan)),
+    )
+    n_blkt_outboard_module_coolant_sections_poloidal = max(
+        1,
+        round(m_file.get("n_blkt_outboard_module_coolant_sections_poloidal", scan=scan)),
+    )
+    elbow_radius_180 = max(
+        float(m_file.get("radius_blkt_channel_180_bend", scan=scan)), 1e-6
+    )
+    r = max(float(m_file.get("radius_blkt_channel", scan=scan)), 1e-6)
+    elbow_radius_90 = max(
+        float(m_file.get("radius_blkt_channel_90_bend", scan=scan)), 1e-6
+    )
+
+    axis = self if isinstance(self, Axes) else getattr(self, "ax", None)
+    figure = axis.figure if isinstance(axis, Axes) else None
+
+    if not isinstance(axis, Axes):
+        figure, axis = plt.subplots(figsize=(10, 6))
+
+    def _plot_straight(
+        x0: float,
+        y0: float,
+        x1: float,
+        y1: float,
+        *,
+        label: str | None = None,
+        alpha: float = 1.0,
+    ):
+        axis.plot(
+            [x0, x1],
+            [y0, y1],
+            color="tab:blue",
+            linewidth=2.5,
+            solid_capstyle="round",
+            alpha=alpha,
+            label=label,
+        )
+
+    def _plot_bend(
+        centre_x: float,
+        centre_y: float,
+        radius: float,
+        theta_start: float,
+        theta_end: float,
+        *,
+        label: str | None = None,
+        alpha: float = 1.0,
+    ):
+        theta = np.linspace(theta_start, theta_end, 80)
+        axis.plot(
+            centre_x + radius * np.cos(theta),
+            centre_y + radius * np.sin(theta),
+            color="tab:orange",
+            linewidth=2.5,
+            solid_capstyle="round",
+            alpha=alpha,
+            label=label,
+        )
+
+    lane_pitch = 2.0 * elbow_radius_180
+    poloidal_section_length = max(4.0 * r, 1.5 * elbow_radius_90)
+
+    show_radial_label = True
+    show_poloidal_label = True
+    show_90_label = True
+
+    inlet_x = 0.0
+    x_left = elbow_radius_90
+    x_right = elbow_radius_90 + len_blkt_outboard_coolant_channel_radial
+    y_lower = 0.0
+    y_upper = y_lower + lane_pitch
+    y_inlet_lower = y_lower - elbow_radius_90 - poloidal_section_length
+    y_outlet_upper = y_upper + elbow_radius_90 + poloidal_section_length
+
+    _plot_straight(
+        inlet_x,
+        y_inlet_lower,
+        inlet_x,
+        y_lower - elbow_radius_90,
+        label="Straight poloidal section" if show_poloidal_label else None,
+    )
+    show_poloidal_label = False
+
+    _plot_bend(
+        elbow_radius_90,
+        y_lower - elbow_radius_90,
+        elbow_radius_90,
+        np.pi,
+        np.pi / 2.0,
+        label="90° bend" if show_90_label else None,
+    )
+    show_90_label = False
+
+    _plot_straight(
+        x_left,
+        y_lower,
+        x_right,
+        y_lower,
+        label="Straight radial section" if show_radial_label else None,
+    )
+    show_radial_label = False
+
+    _plot_bend(
+        x_right,
+        y_lower + elbow_radius_180,
+        elbow_radius_180,
+        -np.pi / 2.0,
+        np.pi / 2.0,
+        label="180° bend",
+    )
+
+    _plot_straight(
+        x_right,
+        y_upper,
+        x_left,
+        y_upper,
+        label="Straight radial section" if show_radial_label else None,
+    )
+
+    _plot_bend(
+        x_left,
+        y_upper + elbow_radius_90,
+        elbow_radius_90,
+        3.0 * np.pi / 2.0,
+        np.pi,
+        label="90° bend" if show_90_label else None,
+    )
+
+    _plot_straight(
+        inlet_x,
+        y_upper + elbow_radius_90,
+        inlet_x,
+        y_outlet_upper,
+        label="Straight poloidal section" if show_poloidal_label else None,
+    )
+
+    total_180_bends = 1
+    total_90_bends = 2
+    total_poloidal_sections = 2
+    length_per_90_bend = 0.5 * np.pi * elbow_radius_90
+    length_per_180_bend = np.pi * elbow_radius_180
+    length_per_poloidal_section = poloidal_section_length
+    total_radial_channel_length = (
+        n_blkt_outboard_module_coolant_sections_radial
+        * len_blkt_outboard_coolant_channel_radial
+    )
+    total_poloidal_length = total_poloidal_sections * length_per_poloidal_section
+    total_bend_length = (
+        total_90_bends * length_per_90_bend + total_180_bends * length_per_180_bend
+    )
+    total_channel_length = (
+        total_radial_channel_length + total_poloidal_length + total_bend_length
+    )
+    info = textwrap.dedent(
+        f"""
+        Representative continuous channel loop
+        Straight radial sections: {n_blkt_outboard_module_coolant_sections_radial}
+        Straight radial length per channel: {total_radial_channel_length:.2f} m
+        Straight poloidal sections per loop: {total_poloidal_sections}
+        Straight poloidal length: {length_per_poloidal_section:.2f} m each
+        90° bends per channel: {total_90_bends}
+        90° bend length: {length_per_90_bend:.2f} m each
+        180° bends per channel: {total_180_bends}
+        180° bend length: {length_per_180_bend:.2f} m each
+        Total poloidal length per channel: {total_poloidal_length:.2f} m
+        Total bend length per channel: {total_bend_length:.2f} m
+        Approx. total channel length: {total_channel_length:.2f} m
+        Poloidal sections per module: {n_blkt_outboard_module_coolant_sections_poloidal}
+        Toroidal span per segment: {len_blkt_outboard_segment_toroidal:.2f} m
+        Channel radius: {r:.3f} m
+        """
+    ).strip()
+
+    axis.text(
+        1.02,
+        0.98,
+        info,
+        transform=axis.transAxes,
+        va="top",
+        ha="left",
+        fontsize=8,
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 0.9},
+    )
+
+    axis.text(
+        0.02,
+        0.02,
+        "Continuous loop schematic with a single 180° return bend",
+        transform=axis.transAxes,
+        fontsize=8,
+        color="dimgray",
+    )
+
+    axis.set_title("Blanket coolant channel structure")
+    axis.set_xlabel("Radial direction [m]")
+    axis.set_ylabel("Channel layout [schematic m]")
+    axis.set_aspect("equal", adjustable="box")
+    axis.grid(True, alpha=0.25)
+    axis.minorticks_on()
+    axis.legend(fontsize=8, loc="upper right")
+
+    x_margin = len_blkt_outboard_coolant_channel_radial * 0.1 + 2.0 * elbow_radius_90
+    axis.set_xlim(-x_margin, x_right + x_margin)
+    axis.set_ylim(
+        y_inlet_lower - r,
+        y_outlet_upper + r,
+    )
+
+    if figure is not None:
+        figure.tight_layout()
+
+    return axis
+
+
+def plot_blanket_coolant_channel_structure_and_properties(
+    fig: plt.Figure, m_file: MFile, scan: int
+):
+    """Combined plot of blanket coolant channel structure and properties."""
+    # Add info about the Winding Pack
+    textstr_outboard_blkt = (
+        f"$\\mathbf{{Outboard \\ blanket:}}$\n \n"
+        f"Radius of blanket channel: {m_file.get('radius_blkt_channel', scan=scan):.4f} m\n"
+        f"Channel roughness ($\\epsilon$): {m_file.get('roughness_fw_channel', scan=scan):.4e} m\n\n"
+        f"Radial coolant channel length: {m_file.get('len_blkt_outboard_coolant_channel_radial', scan=scan):.4f} m\n"
+        f"Poloidal coolant channel length: {m_file.get('len_blkt_outboard_segment_poloidal', scan=scan):.4f} m\n"
+        f"Number of radial channels: {m_file.get('n_blkt_outboard_module_coolant_sections_radial', scan=scan)}\n"
+        f"Number of poloidal channels: {m_file.get('n_blkt_outboard_module_coolant_sections_poloidal', scan=scan)}\n"
+        f"Total length of coolant channel straight sections: {m_file.get('len_blkt_outboard_channel_total', scan=scan):.4f} m\n\n"
+        f"Pressure drop for straight sections: {m_file.get('dpres_blkt_outboard_coolant_channel_straight_total', scan=scan):.2e} Pa\n"
+        f"Pressure drop for 90° bends: {m_file.get('dpres_blkt_outboard_coolant_channel_90_bend', scan=scan):.2e} Pa\n"
+        f"Total pressure drop for 90° bends: {m_file.get('dpres_blkt_outboard_coolant_channel_90_bends_total', scan=scan):.2e} Pa\n"
+        f"Pressure drop for 180° bends: {m_file.get('dpres_blkt_outboard_coolant_channel_180_bend', scan=scan):.2e} Pa\n"
+        f"Total pressure drop for 180° bends: {m_file.get('dpres_blkt_outboard_coolant_channel_180_bends_total', scan=scan):.2e} Pa\n"
+        f"Total pressure drop for all bends: {m_file.get('dpres_blkt_outboard_bends_total', scan=scan):.2e} Pa\n\n"
+        f"Reynolds number ($Re$): {m_file.get('reynolds_blkt_outboard_coolant', scan=scan):.4f}\n"
+        f"Darcy Friction factor ($f$): {m_file.get('darcy_frict_blkt_outboard_coolant', scan=scan):.4f}\n\n"
+        f"Friction drop coefficient for straight sections: {m_file.get('f_straight_blkt_outboard_coolant', scan=scan):.4f}\n"
+        f"Friction drop coefficient for 90° bends: {m_file.get('f_elbow_blkt_outboard_90_bend', scan=scan):.4f}\n"
+        f"Friction drop coefficient for 180° bends: {m_file.get('f_elbow_blkt_outboard_180_bend', scan=scan):.4f}\n"
+    )
+
+    fig.text(
+        0.5,
+        0.5,
+        textstr_outboard_blkt,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add info about the Winding Pack
+    textstr_inboard_blkt = (
+        f"$\\mathbf{{Inboard \\ blanket:}}$\n \n"
+        f"Radius of blanket channel: {m_file.get('radius_blkt_channel', scan=scan):.4f} m\n"
+        f"Channel roughness ($\\epsilon$): {m_file.get('roughness_fw_channel', scan=scan):.4e} m\n\n"
+        f"Radial coolant channel length: {m_file.get('len_blkt_inboard_coolant_channel_radial', scan=scan):.4f} m\n"
+        f"Poloidal coolant channel length: {m_file.get('len_blkt_inboard_segment_poloidal', scan=scan):.4f} m\n"
+        f"Number of radial channels: {m_file.get('n_blkt_inboard_module_coolant_sections_radial', scan=scan)}\n"
+        f"Number of poloidal channels: {m_file.get('n_blkt_inboard_module_coolant_sections_poloidal', scan=scan)}\n"
+        f"Total length of coolant channel straight sections: {m_file.get('len_blkt_inboard_channel_total', scan=scan):.4f} m\n\n"
+        f"Pressure drop for straight sections: {m_file.get('dpres_blkt_inboard_coolant_channel_straight_total', scan=scan):.2e} Pa\n"
+        f"Pressure drop for 90° bends: {m_file.get('dpres_blkt_inboard_coolant_channel_90_bend', scan=scan):.2e} Pa\n"
+        f"Total pressure drop for 90° bends: {m_file.get('dpres_blkt_inboard_coolant_channel_90_bends_total', scan=scan):.2e} Pa\n"
+        f"Pressure drop for 180° bends: {m_file.get('dpres_blkt_inboard_coolant_channel_180_bend', scan=scan):.2e} Pa\n"
+        f"Total pressure drop for 180° bends: {m_file.get('dpres_blkt_inboard_coolant_channel_180_bends_total', scan=scan):.2e} Pa\n"
+        f"Total pressure drop for all bends: {m_file.get('dpres_blkt_inboard_bends_total', scan=scan):.2e} Pa\n\n"
+        f"Reynolds number ($Re$): {m_file.get('reynolds_blkt_inboard_coolant', scan=scan):.4f}\n"
+        f"Darcy Friction factor ($f$): {m_file.get('darcy_frict_blkt_inboard_coolant', scan=scan):.4f}\n\n"
+        f"Friction drop coefficient for straight sections: {m_file.get('f_straight_blkt_inboard_coolant', scan=scan):.4f}\n"
+        f"Friction drop coefficient for 90° bends: {m_file.get('f_elbow_blkt_inboard_90_bend', scan=scan):.4f}\n"
+        f"Friction drop coefficient for 180° bends: {m_file.get('f_elbow_blkt_inboard_180_bend', scan=scan):.4f}\n"
+    )
+
+    fig.text(
+        0.1,
+        0.5,
+        textstr_inboard_blkt,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -15700,18 +16008,20 @@ def main_plot(
     plot_first_wall_poloidal_cross_section(figs[33].add_subplot(122), m_file, scan)
     plot_fw_90_deg_pipe_bend(figs[33].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[34], m_file, scan)
     ax_blanket = figs[34].add_subplot(122, aspect="equal")
     plot_blkt_structure(ax_blanket, figs[34], m_file, scan, radial_build, colour_scheme)
 
+    plot_blkt_pipe_bends(figs[35], m_file, scan)
+    plot_blanket_coolant_channel_structure_and_properties(figs[35], m_file, scan)
+
     plot_main_power_flow(
-        figs[35].add_subplot(111, aspect="equal"), m_file, scan, figs[35]
+        figs[36].add_subplot(111, aspect="equal"), m_file, scan, figs[36]
     )
 
-    ax24 = figs[36].add_subplot(111)
+    ax24 = figs[37].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[36])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[37])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -15817,7 +16127,7 @@ def plot_summary(
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(37)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(38)]
 
     # run main_plot
     mfile_obj = MFile(mfile) if mfile != "" else MFile("MFILE.DAT")

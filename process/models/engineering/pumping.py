@@ -1,10 +1,15 @@
 """Engineering models for pumping system analysis."""
 
 import logging
+from dataclasses import dataclass
 from enum import IntEnum
 from types import DynamicClassAttribute
 
 import numpy as np
+
+from process.core.exceptions import ProcessValueError
+
+logger = logging.getLogger(__name__)
 
 
 class CoolantType(IntEnum):
@@ -40,7 +45,36 @@ class CoolantType(IntEnum):
         return self._full_name_
 
 
-logger = logging.getLogger(__name__)
+@dataclass
+class CoolantFrictionLossParameters:
+    """Parameters for calculating coolant friction losses."""
+
+    dpres_total: float
+    """Total pressure drop across the coolant channel (Pa)"""
+    dpres_straight: float
+    """Pressure drop due to straight length of the coolant channel (Pa)"""
+    dpres_90: float
+    """Pressure drop due to 90 degree bends in the coolant channel (Pa)"""
+    dpres_90_total: float
+    """Total pressure drop due to 90 degree bends in the coolant channel (Pa)"""
+    dpres_180: float
+    """Pressure drop due to 180 degree bends in the coolant channel (Pa)"""
+    dpres_180_total: float
+    """Total pressure drop due to 180 degree bends in the coolant channel (Pa)"""
+    dpres_bends_total: float
+    """Total pressure drop due to bends in the coolant channel (Pa)"""
+    reynolds_number: float
+    """Reynolds number of the coolant flow in the channel"""
+    darcy_friction_factor: float
+    """Darcy friction factor for the coolant flow in the channel"""
+    f_straight: float
+    """Friction factor for straight length of the coolant channel"""
+    len_straight: float
+    """Length of straight sections of the coolant channel (m)"""
+    f_elbow_90: float
+    """Friction factor for 90 degree bends in the coolant channel"""
+    f_elbow_180: float
+    """Friction factor for 180 degree bends in the coolant channel"""
 
 
 def darcy_friction_haaland(
@@ -199,3 +233,101 @@ def calculate_reynolds_number(
 
     # Calculate Reynolds number
     return den_coolant * vel_coolant * diameter / visc_coolant
+
+
+def elbow_coeff(
+    radius_pipe_elbow: float,
+    deg_pipe_elbow: float,
+    darcy_friction: float,
+    dia_pipe: float,
+) -> float:
+    """Calculates elbow bend coefficients for pressure drop calculations.
+
+    Parameters
+    ----------
+    radius_pipe_elbow : float
+        Pipe elbow radius (m)
+    deg_pipe_elbow : float
+        Pipe elbow angle (degrees)
+    darcy_friction : float
+        Darcy friction factor
+    dia_pipe : float
+        Pipe diameter (m)
+
+    Returns
+    -------
+    float
+        Elbow coefficient for pressure drop calculation
+
+    References
+    ----------
+    [1] Idel'Cik, I. E. (1969), Memento des pertes de charge,
+    Collection de la Direction des Etudes et Recherches d'Electricité de France.
+    """
+    if deg_pipe_elbow == 90:
+        a = 1.0
+    elif deg_pipe_elbow < 70:
+        a = 0.9 * np.sin(deg_pipe_elbow * np.pi / 180.0)
+    elif deg_pipe_elbow > 100:
+        a = 0.7 + (0.35 * np.sin((deg_pipe_elbow / 90.0) * (np.pi / 180.0)))
+    else:
+        raise ProcessValueError(
+            "No formula for 70 <= elbow angle(deg) <= 100, only 90 deg option available in this range."
+        )
+
+    r_ratio = radius_pipe_elbow / dia_pipe
+
+    if r_ratio > 1:
+        b = 0.21 / r_ratio**0.5
+    elif r_ratio < 1:
+        b = 0.21 / r_ratio**2.5
+    else:
+        b = 0.21
+
+    # Singularity
+    ximt = a * b
+
+    # Friction
+    xift = (
+        (np.pi / 180.0)
+        * darcy_friction
+        * (radius_pipe_elbow / dia_pipe)
+        * deg_pipe_elbow
+    )
+
+    # Elbow Coefficient
+    return ximt + xift
+
+
+def calculate_required_mass_flow_rate(
+    p_heat_total: float,
+    heatcap_coolant: float,
+    temp_in_coolant: float,
+    temp_out_coolant: float,
+) -> float:
+    """Calculate the required mass flow rate of coolant to remove the specified heat
+    load, due to the fundamental energy balance formula.
+
+    Parameters
+    ----------
+    p_heat_total:
+        Total heat load to be removed (W).
+    heatcap_coolant:
+        Specific heat capacity of the coolant (J/kg/K).
+    temp_in_coolant:
+        Inlet temperature of the coolant (K).
+    temp_out_coolant:
+        Outlet temperature of the coolant (K).
+
+    Returns
+    -------
+    float
+        Required mass flow rate of the coolant (kg/s).
+
+    Notes
+    -----
+    The heat capacity is assumed to be constant over the temperature range of the
+    coolant.
+
+    """
+    return p_heat_total / (heatcap_coolant * (temp_out_coolant - temp_in_coolant))

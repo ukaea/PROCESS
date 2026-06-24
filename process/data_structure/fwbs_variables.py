@@ -313,7 +313,7 @@ class FWBSData:
     """peak first wall temperature [K]"""
 
     roughness_fw_channel: float = 1.0e-6
-    """first wall channel roughness epsilon [m]"""
+    """First wall channel roughness (ε) [m]"""
 
     len_fw_channel: float = 4.0
     """Length of a single first wall channel (all in parallel) [m]
@@ -638,17 +638,17 @@ class FWBSData:
     visc_blkt_coolant: float = 0.0
     """Viscosity of the blanket primary coolant"""
 
-    cp_fw: float = 0.0
-    """Spesific heat for FW and blanket primary coolant(s)"""
+    heatcap_pres_fw_coolant_average: float = 0.0
+    """FW coolant average specific heat capacity at constant pressure [J/kg/K]"""
 
-    cv_fw: float = 0.0
-    """Spesific heat for FW and blanket primary coolant(s)"""
+    heatcap_vol_fw_coolant_average: float = 0.0
+    """FW coolant average specific heat capacity at constant volume [J/kg/K]"""
 
-    cp_bl: float = 0.0
-    """Spesific heat for FW and blanket primary coolant(s)"""
+    heatcap_pres_blkt_coolant_average: float = 0.0
+    """Blanket coolant average specific heat capacity at constant pressure [J/kg/K]"""
 
-    cv_bl: float = 0.0
-    """Spesific heat for FW and blanket primary coolant(s)"""
+    heatcap_vol_blkt_coolant_average: float = 0.0
+    """Blanket coolant average specific heat capacity at constant volume [J/kg/K]"""
 
     f_nuc_pow_bz_struct: float = 0.34
     """For a dual-coolant blanket, fraction of BZ power cooled by primary coolant"""

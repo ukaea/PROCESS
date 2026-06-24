@@ -62,3 +62,57 @@ where $\rho$ is the coolant density and $\mu$ is the coolant viscosity.
     $$
     h = \frac{\mathrm{Nu_D}k}{2r_{\text{channel}}}
     $$
+
+-------------------------
+
+## Pipe bend elbow coefficient | `elbow_coeff()`
+
+This function calculates the elbow bend coefficients for pressure drop calculations.
+
+$$
+a = 1.0 \quad \text{if} \ \theta = 90^{\circ} \\
+a = 0.9 \times \sin{\left(\frac{\theta \pi}{180^{\circ}}\right)} \quad \text{if} \ \theta < 70^{\circ} \\
+a = 0.7 + 0.35 \times \sin{\left(\frac{\theta}{90^{\circ}} \times \frac{\pi}{180^{\circ}}\right)} \quad \text{if} \ \theta > 90^{\circ} \\
+$$
+
+where $\theta$ is the angle of the pipe bend.
+
+$$
+b = \frac{0.21}{\sqrt{\frac{R_{\text{elbow}}}{D_{\text{pipe}}}}}\quad \text{if} \ \frac{R_{\text{elbow}}}{D_{\text{pipe}}} \ge 1 \\
+b = \frac{0.21}{\left(\frac{R_{\text{elbow}}}{D_{\text{pipe}}}\right)^{2.5}}\quad \text{if} \ \frac{R_{\text{elbow}}}{D_{\text{pipe}}} \le 1 \\
+\text{else} \quad b =0.21
+$$
+
+The elbow coefficient is given by:
+
+$$
+ab + \left( f_{\text{D}} \times \frac{R_{\text{elbow}}}{D_{\text{pipe}}}\right) \times \theta \times \left(\frac{\pi}{180^{\circ}}\right)
+$$
+
+--------------
+
+## Required mass flow rate | `calculate_required_mass_flow_rate()`
+
+The required mass flow rate of a coolant is given simply by the fundamental heat transfer equation:
+
+$$
+\dot{m} = \frac{P}{c_{\text{p}}(T)\times \Delta T}
+$$
+
+where $\dot{m}$ is the required mass flow rate in, $P$ is the heating power to be removed, $c_{\text{p}}$ is the coolant specific heat capacity for constant pressure and $\Delta T$ is the temperature change in the coolant.
+
+!!! note "Variation specific heat capacity"
+
+    The heat capacity itself is a function of temperature. Therefore it is common to use the heat capacity value at the simple average between the initial and final temperature.
+    This however assumes a linear relationship. Ideally the equation should be solves as:
+
+    $$
+    \dot{m} = \frac{P}{\int_{T_{\text{in}}}^{T_{\text{in}}}c_{\text{p}}(T) dT}
+    $$
+
+
+!!! info "Choice of specific heat capacity"
+
+    For pumping, the specific heat capacity for constant pressure $(c_{\text{p}})$ is used as cooling loops are open-flow systems where the fluid moves continuously through pipes, heat exchangers, and pumps. As the coolant heats up, it expands freely along the loop. Because it is free to expand, the local pressure remains relatively constant while the volume changes.
+
+    You would only use the specific heat capacity for constant volume $(c_{\text{v}})$ if the coolant was completely sealed inside a rigid, unyielding container with zero flow, where heating it would cause the pressure to spike but the volume to stay exactly the same.
