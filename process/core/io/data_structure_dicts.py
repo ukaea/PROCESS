@@ -8,7 +8,6 @@ the python source (e.g. docstrings) or that cannot be dynamically accessed
 import ast
 import inspect
 import logging
-import re
 from functools import cache
 from importlib import import_module
 from itertools import pairwise
@@ -82,141 +81,6 @@ class HardcodedDictionary(Dictionary):
     def make_dict(self):
         # Set the nested value to a hardcoded int, list or dict
         self.dict[self.name] = self.hardcoded_dict
-
-
-def to_type(string):
-    """Given a string, attempts to convert the string to a numerical
-    value. If the string can't be simply converted, the function
-    looks to see if it begins with a integer and returns that (since
-    some lines have clarification text after the number). If this
-    also fails, return string.strip()
-
-    Parameters
-    ----------
-    string :
-
-
-    Returns
-    -------
-    :
-        Either a float, int or string depending on input
-    """
-    try:
-        if "." in string:
-            # try a float conversion
-            string_mod = string.strip().lower().replace("d", "e")
-            return float(string_mod)
-        # try an int conversion
-        return int(string.strip())
-    except ValueError:
-        match = re.match(r"\s*(\d+)", string)
-        if match:
-            # if the string starts with an integer return that
-            return int(match.group(1))
-
-        # otherwise return the string unchanged but with whitespace removed
-        return string.strip()
-
-
-def grep(file, regexp, flags=re.UNICODE):
-    """Implements an in-python grep. Returns the lines that match
-    as a list.
-
-    Parameters
-    ----------
-    file:
-        Name of file to be read
-    regexp:
-        Regular expression to search for
-    flags:
-        re flags to use in search. Default is re.U which has
-
-    Returns
-    -------
-    lines:
-        List of matching lines
-    """
-    lines = []
-
-    try:
-        with open(file, encoding="utf-8") as file_open:
-            lines = [line for line in file_open if re.search(regexp, line, flags)]
-
-    except OSError:
-        logger.warning("File : %s not found\n", file)
-    return lines
-
-
-def slice_file(file, re1, re2):
-    """Returns a slice of a file that is bounded by lines containing a
-    substring matching the given regular expressions. The first match
-    to re1 in the file marks the start of the slice, the first match
-    to re2 after that marks the end of the slice. The list of lines
-    returned includes the two bounding lines.
-
-    Parameters
-    ----------
-    file :
-        Name of file to read through
-    re1 :
-        Starting regular expression
-    re2 :
-        Ending regular expression
-
-    Returns
-    -------
-    :
-        lines:List of lines from file between re1 and re2 inclusive
-    """
-    with open(file, encoding="utf-8") as fh:
-        filetext = fh.readlines()
-    start = None
-    for i in range(len(filetext)):
-        # look for first match
-        if re.search(re1, filetext[i]):
-            start = i
-            break
-    if start is None:
-        logger.warning("Could not match %s in file %s\n", re1, file)
-        return ""
-    end = None
-    for i in range(start, len(filetext)):
-        # look for second match
-        if re.search(re2, filetext[i]):
-            end = i
-            break
-    if end is None:
-        logger.warning("Could not match %s in file %s\n", re2, file)
-        return ""
-    # return slice
-    return filetext[start : end + 1]
-
-
-def remove_comments(line):
-    """Function to remove comments from a fortran line. Works by simply
-    removing everything after the first '!' in the line. This will
-    cause problems in the case of '!' characters contained within strings
-    so am assuming this won't happen. Need to change this.
-
-    Parameters
-    ----------
-    line:
-        Line to strip comments from
-
-    Returns
-    -------
-    modified_line:
-        Line with comments removed
-
-    """
-    if "!" in line:
-        line = line[: line.find("!")]
-    line = line.strip()
-    if line == "":
-        return line
-    if line[-1] == "&":
-        line = line[:-1]
-    return line
 
 
 def dict_var_type():
@@ -411,41 +275,30 @@ def get_dicts():
                     )
 
                 variable_types[node.target.id] = var_type
-        # get the variable descriptions
-        # need to check for pairs of ast.AnnAssign followed by an ast.Expr - this is the form of
-        # a variable being declared followed by a docstring expression. can get these var descriptions
-        # from here, and if there is no ast.Expr immediately after an ast.AnnAssign then this var does not
+
+        # Variable descriptions are found under the ast.ClassDef node
+        # within ast.ClassDef - need to check for pairs of ast.AnnAssign followed by an
+        # ast.Expr - this is the form of a variable being declared followed by a
+        # docstring expression. can get these var descriptions from here, and if there
+        # is no ast.Expr immediately after an ast.AnnAssign then this var does not
         # have a docstring and so set the description to be ""
-        for node1, node2 in pairwise(module_tree.body):
-            if isinstance(node1, ast.AnnAssign) and isinstance(node2, ast.Expr):
-                # if docstring immediately follows the variable declaration, add docstring to descriptions dict
-                var_names_and_descriptions[node1.target.id] = node2.value.value
-            if isinstance(node1, ast.AnnAssign) and not isinstance(node2, ast.Expr):
-                # if no docstring for variable, have a blank description
-                var_names_and_descriptions[node1.target.id] = ""
-        # check if last entry of ast.body is declaring a var. if it is then this var has no description and will be missing
-        # from var_names_and_descriptions. need to add to var_names_and_descriptions dict
-        lastvar = module_tree.body[-1]
-
-        if (
-            isinstance(lastvar, ast.AnnAssign)
-            and lastvar not in var_names_and_descriptions
-        ):
-            var_names_and_descriptions[lastvar.target.id] = ""
-
-        # Need to handle new dataclasses slightly differently as variable descriptions
-        # now are found under the ast.ClassDef node:
         for node in module_tree.body:
             if isinstance(node, ast.ClassDef):
                 for node1, node2 in pairwise(node.body):
                     if isinstance(node1, ast.AnnAssign) and isinstance(node2, ast.Expr):
-                        # if docstring immediately follows the variable declaration, add docstring to descriptions dict
+                        # if docstring immediately follows the variable declaration,
+                        # add docstring to descriptions dict
                         var_names_and_descriptions[node1.target.id] = node2.value.value
                     if isinstance(node1, ast.AnnAssign) and not isinstance(
                         node2, ast.Expr
                     ):
                         # if no docstring for variable, have a blank description
                         var_names_and_descriptions[node1.target.id] = ""
+
+                # check if last entry of ast.body is declaring a var. if it is then this
+                # var has no description and will be missing from
+                # var_names_and_descriptions.
+                # need to add to var_names_and_descriptions dict
                 last_var = node.body[-1]
                 if (
                     isinstance(last_var, ast.AnnAssign)
