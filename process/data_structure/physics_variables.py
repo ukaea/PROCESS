@@ -1574,18 +1574,18 @@ class PhysicsData:
     t_plasma_electron_alpha_thermal_collision_vol_avg: float = 0.0
     """Volume averaged electron-alpha collision time in plasma (s)"""
 
-    t_plasma_electron_deuteron_equilbriation_vol_avg: float = 0.0
+    t_plasma_electron_deuteron_equilibration_vol_avg: float = 0.0
     """Volume averaged electron-deuteron equilibration time in plasma (s)"""
 
-    t_plasma_electron_deuteron_equilbriation_profile: list[float] = field(
+    t_plasma_electron_deuteron_equilibration_profile: list[float] = field(
         default_factory=list
     )
     """Profile of electron-deuteron equilibration time in plasma (s)"""
 
-    t_plasma_electron_triton_equilbriation_vol_avg: float = 0.0
+    t_plasma_electron_triton_equilibration_vol_avg: float = 0.0
     """Volume averaged electron-triton equilibration time in plasma (s)"""
 
-    t_plasma_electron_triton_equilbriation_profile: list[float] = field(
+    t_plasma_electron_triton_equilibration_profile: list[float] = field(
         default_factory=list
     )
     """Profile of electron-triton equilibration time in plasma (s)"""
