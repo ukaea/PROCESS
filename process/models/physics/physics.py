@@ -5510,6 +5510,34 @@ class DetailedPhysics(Model):
             n_charge_ion=1,
         )
 
+        self.data.physics.t_plasma_electron_triton_equilibration_vol_avg = self.calculate_equilibriation_time(
+            temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
+            nd_plasma_ions=self.data.physics.nd_plasma_electrons_vol_avg
+            * self.data.physics.f_plasma_fuel_tritium
+            * (
+                self.data.physics.nd_plasma_fuel_ions_vol_avg
+                / self.data.physics.nd_plasma_electrons_vol_avg
+            ),
+            plasma_coulomb_log_electron_ion=self.data.physics.plasma_coulomb_log_electron_triton_vol_avg,
+            m_ion=constants.TRITON_MASS,
+            n_charge_ion=1,
+        )
+
+        self.data.physics.t_plasma_electron_triton_equilibration_profile = self.calculate_equilibriation_time(
+            temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
+            nd_plasma_ions=(
+                self.plasma_profile.neprofile.profile_y
+                * self.data.physics.f_plasma_fuel_tritium
+                * (
+                    self.data.physics.nd_plasma_fuel_ions_vol_avg
+                    / self.data.physics.nd_plasma_electrons_vol_avg
+                )
+            ),
+            plasma_coulomb_log_electron_ion=self.data.physics.plasma_coulomb_log_electron_triton_profile,
+            m_ion=constants.TRITON_MASS,
+            n_charge_ion=1,
+        )
+
     @staticmethod
     @nb.njit(cache=True)
     def calculate_debye_length(
@@ -6583,4 +6611,21 @@ class DetailedPhysics(Model):
                 f"Electron-deuteron equilibration time at point {i}",
                 f"(t_plasma_electron_deuteron_equilibration_profile{i})",
                 self.data.physics.t_plasma_electron_deuteron_equilibration_profile[i],
+            )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-triton equilibration time (τ_eq) (s)",
+            "(t_plasma_electron_triton_equilibration_vol_avg)",
+            self.data.physics.t_plasma_electron_triton_equilibration_vol_avg,
+        )
+
+        for i in range(
+            len(self.data.physics.t_plasma_electron_triton_equilibration_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-triton equilibration time at point {i}",
+                f"(t_plasma_electron_triton_equilibration_profile{i})",
+                self.data.physics.t_plasma_electron_triton_equilibration_profile[i],
             )
