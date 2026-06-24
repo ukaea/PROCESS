@@ -2192,69 +2192,9 @@ class Physics(Model):
                 )
 
         po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Total heating power given to the plasma (Pₕₑₐₜ) [MW]",
-            "(p_plasma_heating_total_mw)",
-            self.data.physics.p_plasma_heating_total_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Ohmic heating power (MW)",
-            "(p_plasma_ohmic_mw)",
-            self.data.physics.p_plasma_ohmic_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Fraction of alpha power deposited in plasma",
-            "(f_p_alpha_plasma_deposited)",
-            self.data.physics.f_p_alpha_plasma_deposited,
-            "IP",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Fraction of alpha power to electrons",
-            "(f_p_alpha_total_electron)",
-            self.data.physics.f_p_alpha_total_electron,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Fraction of alpha power to ions",
-            "(f_p_alpha_total_ions)",
-            self.data.physics.f_p_alpha_total_ions,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Ion transport (MW)",
-            "(p_ion_transport_loss_mw)",
-            self.data.physics.p_ion_transport_loss_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Electron transport (MW)",
-            "(p_electron_transport_loss_mw)",
-            self.data.physics.p_electron_transport_loss_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Injection power to ions (MW)",
-            "(p_hcd_injected_ions_mw)",
-            self.data.current_drive.p_hcd_injected_ions_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Injection power to electrons (MW)",
-            "(p_hcd_injected_electrons_mw)",
-            self.data.current_drive.p_hcd_injected_electrons_mw,
-            "OP ",
-        )
+
+        self.output_plasma_power_balance()
+
         if self.data.physics.i_plasma_ignited == 1:
             po.ocmmnt(self.outfile, "  (Injected power only used for start-up phase)")
 
@@ -2358,6 +2298,98 @@ class Physics(Model):
                 "(fzactual)",
                 self.data.reinke.fzactual,
             )
+
+    def output_plasma_power_balance(self) -> None:
+        """Output information about plasma power balance."""
+        po.oheadr(self.outfile, "Plasma Power Balance")
+
+        po.osubhd(self.outfile, "Global power balance :")
+
+        po.ovarre(
+            self.outfile,
+            "Ohmic heating power (MW)",
+            "(p_plasma_ohmic_mw)",
+            self.data.physics.p_plasma_ohmic_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total alpha heating power (MW)",
+            "(p_alpha_total_mw)",
+            self.data.physics.p_alpha_total_mw,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Fraction of alpha power deposited in plasma",
+            "(f_p_alpha_plasma_deposited)",
+            self.data.physics.f_p_alpha_plasma_deposited,
+            "IP",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Total power injected into the plasma (MW)",
+            "(p_hcd_injected_total_mw)",
+            self.data.current_drive.p_hcd_injected_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Non-alpha heating power (MW)",
+            "(p_non_alpha_charged_mw)",
+            self.data.physics.p_non_alpha_charged_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total heating power given to the plasma (Pₕₑₐₜ) [MW]",
+            "(p_plasma_heating_total_mw)",
+            self.data.physics.p_plasma_heating_total_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+
+        po.osubhd(self.outfile, "Electron power balance :")
+
+        po.ovarre(
+            self.outfile,
+            "Electron transport (MW)",
+            "(p_electron_transport_loss_mw)",
+            self.data.physics.p_electron_transport_loss_mw,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Injection power to electrons (MW)",
+            "(p_hcd_injected_electrons_mw)",
+            self.data.current_drive.p_hcd_injected_electrons_mw,
+            "OP ",
+        )
+        po.osubhd(self.outfile, "Ions power balance :")
+
+        po.ovarrf(
+            self.outfile,
+            "Fraction of alpha power to ions",
+            "(f_p_alpha_total_ions)",
+            self.data.physics.f_p_alpha_total_ions,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Ion transport (MW)",
+            "(p_ion_transport_loss_mw)",
+            self.data.physics.p_ion_transport_loss_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Injection power to ions (MW)",
+            "(p_hcd_injected_ions_mw)",
+            self.data.current_drive.p_hcd_injected_ions_mw,
+            "OP ",
+        )
 
     def output_temperature_density_profile_info(self) -> None:
         """Output information about plasma temperature and density profiles."""
