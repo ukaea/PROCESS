@@ -630,7 +630,7 @@ class Physics(Model):
             self.data.physics.p_fusion_total_mw,
         ) = reactions.set_fusion_powers(
             self.data.physics.f_p_alpha_total_electron,
-            self.data.physics.f_alpha_ion,
+            self.data.physics.f_p_alpha_total_ions,
             self.data.physics.p_beam_alpha_mw,
             self.data.physics.pden_non_alpha_charged_mw,
             self.data.physics.pden_plasma_neutron_mw,
@@ -1290,7 +1290,9 @@ class Physics(Model):
         self.data.physics.f_p_alpha_total_electron = 0.88155 * np.exp(
             -self.data.physics.temp_plasma_electron_vol_avg_kev * pc / 67.4036
         )
-        self.data.physics.f_alpha_ion = 1.0 - self.data.physics.f_p_alpha_total_electron
+        self.data.physics.f_p_alpha_total_ions = (
+            1.0 - self.data.physics.f_p_alpha_total_electron
+        )
 
         # ======================================================================
 
@@ -2221,8 +2223,8 @@ class Physics(Model):
         po.ovarrf(
             self.outfile,
             "Fraction of alpha power to ions",
-            "(f_alpha_ion)",
-            self.data.physics.f_alpha_ion,
+            "(f_p_alpha_total_ions)",
+            self.data.physics.f_p_alpha_total_ions,
             "OP ",
         )
         po.ovarre(
