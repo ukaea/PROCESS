@@ -411,41 +411,30 @@ def get_dicts():
                     )
 
                 variable_types[node.target.id] = var_type
-        # get the variable descriptions
-        # need to check for pairs of ast.AnnAssign followed by an ast.Expr - this is the form of
-        # a variable being declared followed by a docstring expression. can get these var descriptions
-        # from here, and if there is no ast.Expr immediately after an ast.AnnAssign then this var does not
+
+        # Variable descriptions are found under the ast.ClassDef node
+        # within ast.ClassDef - need to check for pairs of ast.AnnAssign followed by an
+        # ast.Expr - this is the form of a variable being declared followed by a
+        # docstring expression. can get these var descriptions from here, and if there
+        # is no ast.Expr immediately after an ast.AnnAssign then this var does not
         # have a docstring and so set the description to be ""
-        for node1, node2 in pairwise(module_tree.body):
-            if isinstance(node1, ast.AnnAssign) and isinstance(node2, ast.Expr):
-                # if docstring immediately follows the variable declaration, add docstring to descriptions dict
-                var_names_and_descriptions[node1.target.id] = node2.value.value
-            if isinstance(node1, ast.AnnAssign) and not isinstance(node2, ast.Expr):
-                # if no docstring for variable, have a blank description
-                var_names_and_descriptions[node1.target.id] = ""
-        # check if last entry of ast.body is declaring a var. if it is then this var has no description and will be missing
-        # from var_names_and_descriptions. need to add to var_names_and_descriptions dict
-        lastvar = module_tree.body[-1]
-
-        if (
-            isinstance(lastvar, ast.AnnAssign)
-            and lastvar not in var_names_and_descriptions
-        ):
-            var_names_and_descriptions[lastvar.target.id] = ""
-
-        # Need to handle new dataclasses slightly differently as variable descriptions
-        # now are found under the ast.ClassDef node:
         for node in module_tree.body:
             if isinstance(node, ast.ClassDef):
                 for node1, node2 in pairwise(node.body):
                     if isinstance(node1, ast.AnnAssign) and isinstance(node2, ast.Expr):
-                        # if docstring immediately follows the variable declaration, add docstring to descriptions dict
+                        # if docstring immediately follows the variable declaration,
+                        # add docstring to descriptions dict
                         var_names_and_descriptions[node1.target.id] = node2.value.value
                     if isinstance(node1, ast.AnnAssign) and not isinstance(
                         node2, ast.Expr
                     ):
                         # if no docstring for variable, have a blank description
                         var_names_and_descriptions[node1.target.id] = ""
+
+                # check if last entry of ast.body is declaring a var. if it is then this
+                # var has no description and will be missing from
+                # var_names_and_descriptions.
+                # need to add to var_names_and_descriptions dict
                 last_var = node.body[-1]
                 if (
                     isinstance(last_var, ast.AnnAssign)
