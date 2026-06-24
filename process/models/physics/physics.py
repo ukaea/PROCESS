@@ -94,7 +94,7 @@ def calculate_cylindrical_safety_factor(
 
 
 @nb.jit(nopython=True, cache=True)
-def rether(
+def calculate_ion_electron_equilibration_power(
     alphan,
     alphat,
     nd_plasma_electrons_vol_avg,
@@ -702,14 +702,16 @@ class Physics(Model):
 
         # Calculate ion/electron equilibration power
 
-        self.data.physics.pden_ion_electron_equilibration_mw = rether(
-            self.data.physics.alphan,
-            self.data.physics.alphat,
-            self.data.physics.nd_plasma_electrons_vol_avg,
-            self.data.physics.dlamie,
-            self.data.physics.temp_plasma_electron_vol_avg_kev,
-            self.data.physics.temp_plasma_ion_vol_avg_kev,
-            self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+        self.data.physics.pden_ion_electron_equilibration_mw = (
+            calculate_ion_electron_equilibration_power(
+                self.data.physics.alphan,
+                self.data.physics.alphat,
+                self.data.physics.nd_plasma_electrons_vol_avg,
+                self.data.physics.dlamie,
+                self.data.physics.temp_plasma_electron_vol_avg_kev,
+                self.data.physics.temp_plasma_ion_vol_avg_kev,
+                self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+            )
         )
 
         # Calculate radiation power
