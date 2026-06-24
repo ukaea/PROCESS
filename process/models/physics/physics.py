@@ -624,7 +624,7 @@ class Physics(Model):
             self.data.physics.p_neutron_total_mw,
             self.data.physics.p_non_alpha_charged_mw,
             self.data.physics.pden_alpha_total_mw,
-            self.data.physics.f_pden_alpha_electron_mw,
+            self.data.physics.pden_alpha_heating_electrons_mw,
             self.data.physics.f_pden_alpha_ions_mw,
             self.data.physics.p_charged_particle_mw,
             self.data.physics.p_fusion_total_mw,
@@ -1925,8 +1925,8 @@ class Physics(Model):
         po.ovarre(
             self.outfile,
             "Alpha power per unit volume transferred to electrons (MW/m³)",
-            "(f_pden_alpha_electron_mw)",
-            self.data.physics.f_pden_alpha_electron_mw,
+            "(pden_alpha_heating_electrons_mw)",
+            self.data.physics.pden_alpha_heating_electrons_mw,
             "OP ",
         )
         po.ovarre(

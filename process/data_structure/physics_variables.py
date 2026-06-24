@@ -754,19 +754,19 @@ class PhysicsData:
     """branching ratio for DD -> T"""
 
     pden_plasma_alpha_mw: float = 0.0
-    """Alpha power per volume just from plasma [MW/m3]"""
+    """Alpha power per volume just from plasma [MW/m³]"""
 
     pden_alpha_total_mw: float = 0.0
-    """Alpha power per volume from plasma and beams [MW/m3]"""
+    """Alpha power per volume from plasma and beams [MW/m³]"""
 
-    f_pden_alpha_electron_mw: float = 0.0
-    """Alpha power per volume to electrons [MW/m3]"""
+    pden_alpha_heating_electrons_mw: float = 0.0
+    """Alpha power heating per unit volume to electrons [MW/m³]"""
 
     p_fw_alpha_mw: float = 0.0
     """alpha power escaping plasma and reaching first wall (MW)"""
 
     f_pden_alpha_ions_mw: float = 0.0
-    """alpha power per volume to ions (MW/m3)"""
+    """alpha power per volume to ions [MW/m³]"""
 
     p_plasma_alpha_mw: float = 0.0
     """Alpha power from only the plasma (MW)"""
