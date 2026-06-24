@@ -2548,7 +2548,7 @@ def test_pfcoil(monkeypatch, pfcoil):
         pfcoil.data.times, "t_plant_pulse_plasma_current_ramp_down", 1.82538e2
     )
     monkeypatch.setattr(pfcoil.data.times, "t_plant_pulse_fusion_ramp", 1.0e1)
-    monkeypatch.setattr(constants, "den_copper", 8.9e3)
+    monkeypatch.setattr(constants, "DEN_COPPER", 8.9e3)
     monkeypatch.setattr(pfcoil.data.pf_coil, "first_call", True)
 
     pfcoil.pfcoil()
@@ -2635,7 +2635,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     monkeypatch.setattr(cs_coil.data.tfcoil, "bcritsc", 2.4e1)
     monkeypatch.setattr(cs_coil.data.tfcoil, "b_crit_upper_nbti", 1.486e1)
     monkeypatch.setattr(cs_coil.data.tfcoil, "t_crit_nbti", 9.04)
-    monkeypatch.setattr(constants, "den_copper", 8.9e3)
+    monkeypatch.setattr(constants, "DEN_COPPER", 8.9e3)
 
     # Mocks for peak_b_field_at_pf_coil()
     monkeypatch.setattr(cs_coil.data.build, "iohcl", 1)

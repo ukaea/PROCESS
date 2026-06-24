@@ -284,10 +284,10 @@ EPSILON0 = 8.85418781e-12
 CPH2O = 4180.0
 """specific heat capacity of water (J/kg/K)"""
 
-den_copper: float = None
+DEN_COPPER = 8900.0
 """density of copper (kg/m3)"""
 
-den_aluminium: float = None
+DEN_ALUMINIUM = 2700.0
 """density of aluminium (kg/m3)"""
 
 DENH2O = 985.0
@@ -307,10 +307,3 @@ N_DAY_YEAR = 365.2425
 
 ACCELERATION_GRAVITY = 9.81
 """Acceleration due to gravity [m/s2]"""
-
-
-def init_constants():
-    global den_copper, den_aluminium
-
-    den_copper = 8900.0
-    den_aluminium = 2700.0

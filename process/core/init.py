@@ -230,7 +230,6 @@ def init_all_module_vars():
     than a 'run-once' executable.
     """
     logging_model_handler.clear_logs()
-    constants.init_constants()
 
 
 def check_process(inputs, data):  # noqa: ARG001

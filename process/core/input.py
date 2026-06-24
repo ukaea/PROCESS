@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 from warnings import warn
 
-import process
 from process.core.exceptions import (
     ProcessValidationError,
     ProcessValueError,
@@ -281,15 +280,11 @@ INPUT_VARIABLES = {
     "cturbb": InputVariable("costs", float, range=(100.0, 1000.0)),
     "dz_vv_lower": InputVariable("build", float, range=(0.0, 10.0)),
     "dz_vv_upper": InputVariable("build", float, range=(0.0, 10.0)),
-    "den_aluminium": InputVariable(
-        process.core.constants, float, range=(2500.0, 30000.0)
-    ),
     "den_tf_coil_case": InputVariable("tfcoil", float, range=(1000.0, 100000.0)),
     "dcdrv0": InputVariable("ife", float, range=(0.0, 200.0)),
     "dcdrv1": InputVariable("ife", float, range=(0.0, 200.0)),
     "dcdrv2": InputVariable("ife", float, range=(0.0, 200.0)),
     "den_tf_wp_turn_insulation": InputVariable("tfcoil", float, range=(500.0, 10000.0)),
-    "den_copper": InputVariable(process.core.constants, float, range=(8000.0, 10000.0)),
     "declblkt": InputVariable("fwbs", float, range=(0.01, 0.2)),
     "declfw": InputVariable("fwbs", float, range=(0.01, 0.2)),
     "declshld": InputVariable("fwbs", float, range=(0.01, 0.2)),

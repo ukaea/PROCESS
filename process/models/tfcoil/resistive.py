@@ -763,7 +763,7 @@ class ResistiveTFCoil(TFCoil):
                 self.data.fwbs.den_steel * vol_case / self.data.tfcoil.n_tf_coils
             )  # Per TF leg, no casing for outer leg
             self.data.tfcoil.m_tf_coil_copper = (
-                constants.den_copper * vol_cond / self.data.tfcoil.n_tf_coils
+                constants.DEN_COPPER * vol_cond / self.data.tfcoil.n_tf_coils
             )
             self.data.tfcoil.whtconal = 0.0e0
 
@@ -771,14 +771,14 @@ class ResistiveTFCoil(TFCoil):
             if self.data.physics.itart == 1:
                 # Weight of all the TF legs
                 self.data.tfcoil.whttflgs = self.data.tfcoil.n_tf_coils * (
-                    constants.den_copper * vol_cond_leg
+                    constants.DEN_COPPER * vol_cond_leg
                     + self.data.tfcoil.den_tf_wp_turn_insulation
                     * (vol_ins_leg + vol_gr_ins_leg)
                 )
 
                 # CP weight
                 self.data.tfcoil.whtcp = (
-                    constants.den_copper * self.data.tfcoil.vol_cond_cp
+                    constants.DEN_COPPER * self.data.tfcoil.vol_cond_cp
                     + self.data.tfcoil.den_tf_wp_turn_insulation
                     * (
                         self.data.superconducting_tfcoil.vol_ins_cp
@@ -793,25 +793,25 @@ class ResistiveTFCoil(TFCoil):
         elif self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             # Casing weight (CP only if self.data.physics.itart = 1)bper leg/coil
             self.data.tfcoil.m_tf_coil_case = (
-                constants.den_aluminium * vol_case / self.data.tfcoil.n_tf_coils
+                constants.DEN_ALUMINIUM * vol_case / self.data.tfcoil.n_tf_coils
             )
             self.data.tfcoil.m_tf_coil_copper = 0.0e0
             self.data.tfcoil.whtconal = (
-                constants.den_aluminium * vol_cond / self.data.tfcoil.n_tf_coils
+                constants.DEN_ALUMINIUM * vol_cond / self.data.tfcoil.n_tf_coils
             )
 
             # Outer legs/CP weights
             if self.data.physics.itart == 1:
                 # Weight of all the TF legs
                 self.data.tfcoil.whttflgs = self.data.tfcoil.n_tf_coils * (
-                    constants.den_aluminium * vol_cond_leg
+                    constants.DEN_ALUMINIUM * vol_cond_leg
                     + self.data.tfcoil.den_tf_wp_turn_insulation
                     * (vol_ins_leg + vol_gr_ins_leg)
                 )
 
                 # CP weight
                 self.data.tfcoil.whtcp = (
-                    constants.den_aluminium * self.data.tfcoil.vol_cond_cp
+                    constants.DEN_ALUMINIUM * self.data.tfcoil.vol_cond_cp
                     + self.data.tfcoil.den_tf_wp_turn_insulation
                     * (
                         self.data.superconducting_tfcoil.vol_ins_cp
