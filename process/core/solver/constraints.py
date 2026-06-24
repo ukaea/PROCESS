@@ -307,7 +307,7 @@ def constraint_equation_3(constraint_registration, data):
     - 1 assume ignited (but include auxiliary power in costs)
 
     pden_ion_transport_loss_mw: ion transport power per volume (MW/m3)
-    pden_ion_electron_equilibration_mw: ion/electron equilibration power per volume (MW/m3)
+    pden_ion_electron_equilibration_vol_avg_mw: ion/electron equilibration power per volume (MW/m3)
     f_p_alpha_plasma_deposited: fraction of alpha power deposited in plasma
     pden_alpha_heating_ions_mw: alpha power per volume to ions (MW/m3)
     p_hcd_injected_ions_mw: auxiliary injected power to ions (MW)
@@ -321,7 +321,7 @@ def constraint_equation_3(constraint_registration, data):
         p_ion_heating = (
             data.physics.pden_alpha_heating_ions_mw
             + (data.current_drive.p_hcd_injected_ions_mw / data.physics.vol_plasma)
-            + data.physics.pden_ion_electron_equilibration_mw
+            + data.physics.pden_ion_electron_equilibration_vol_avg_mw
             + data.physics.pden_non_alpha_charged_mw
         )
 
@@ -335,7 +335,7 @@ def constraint_equation_3(constraint_registration, data):
     # Plasma ignited
     p_ion_heating = (
         data.physics.pden_alpha_heating_ions_mw
-        + data.physics.pden_ion_electron_equilibration_mw
+        + data.physics.pden_ion_electron_equilibration_vol_avg_mw
         + data.physics.pden_non_alpha_charged_mw
     )
 
@@ -366,7 +366,7 @@ def constraint_equation_4(constraint_registration, data):
     pden_plasma_core_rad_mw: total core radiation power per volume (MW/m3)
     f_p_alpha_plasma_deposited: fraction of alpha power deposited in plasma
     pden_alpha_heating_electrons_mw: alpha power per volume to electrons (MW/m3)
-    pden_ion_electron_equilibration_mw: ion/electron equilibration power per volume (MW/m3)
+    pden_ion_electron_equilibration_vol_avg_mw: ion/electron equilibration power per volume (MW/m3)
     p_hcd_injected_electrons_mw: auxiliary injected power to electrons (MW)
     vol_plasma: plasma volume (m3)
     """
@@ -374,7 +374,7 @@ def constraint_equation_4(constraint_registration, data):
 
     p_electron_loss = (
         data.physics.pden_electron_transport_loss_mw
-        + data.physics.pden_ion_electron_equilibration_mw
+        + data.physics.pden_ion_electron_equilibration_vol_avg_mw
     )
     # Total power lost is scaling power plus radiation:
     if data.physics.i_rad_loss == 0:
