@@ -13,7 +13,6 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import patches
-from matplotlib.axes import Axes
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path as mplPath
 from scipy.interpolate import interp1d
@@ -15348,6 +15347,7 @@ def main_plot(
     # figs = defaultlist(plt.figure, kwargs={"figsize":(12, 9), "dpi":80})
 
     pages = []
+
     def _add_page():
         pages.append(plt.figure(figsize=(12, 9), dpi=80))
         return pages[-1]
@@ -15356,8 +15356,12 @@ def main_plot(
 
     cover_page = _add_page()
     plot_cover_page(
-        cover_page.add_subplot(111), m_file, scan, cover_page,
-        radial_build, colour_scheme
+        cover_page.add_subplot(111),
+        m_file,
+        scan,
+        cover_page,
+        radial_build,
+        colour_scheme,
     )
 
     first_page = _add_page()
@@ -15426,9 +15430,7 @@ def main_plot(
     plot_qprofile(ax13, demo_ranges, m_file, scan)
 
     rad_contour_page = _add_page()
-    plot_plasma_effective_charge_profile(
-        rad_contour_page.add_subplot(221), m_file, scan
-    )
+    plot_plasma_effective_charge_profile(rad_contour_page.add_subplot(221), m_file, scan)
     plot_ion_charge_profile(rad_contour_page.add_subplot(223), m_file, scan)
 
     if i_shape == 1:
@@ -15463,17 +15465,11 @@ def main_plot(
             "see the 1D fusion rate/profile plots for available information."
         )
         # Add explanatory text to both figures reserved for contour outputs
-        rx_1_2_page.text(
-            0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12
-        )
-        rx_3_4_page.text(
-            0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12
-        )
+        rx_1_2_page.text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+        rx_3_4_page.text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
 
     pressure_profile_page = _add_page()
-    plot_plasma_pressure_profiles(
-        pressure_profile_page.add_subplot(222), m_file, scan
-    )
+    plot_plasma_pressure_profiles(pressure_profile_page.add_subplot(222), m_file, scan)
     plot_plasma_pressure_gradient_profiles(
         pressure_profile_page.add_subplot(224), m_file, scan
     )
@@ -15515,26 +15511,19 @@ def main_plot(
     plot_bootstrap_comparison(current_page.add_subplot(221), m_file, scan)
     plot_plasma_current_comparison(current_page.add_subplot(224), m_file, scan)
     plasma_compare_1_page, plasma_compare_2_page = _add_page(), _add_page()
-    plot_h_threshold_comparison(
-        plasma_compare_1_page.add_subplot(224), m_file, scan
-    )
-    plot_density_limit_comparison(
-        plasma_compare_1_page.add_subplot(221), m_file, scan
-    )
-    
+    plot_h_threshold_comparison(plasma_compare_1_page.add_subplot(224), m_file, scan)
+    plot_density_limit_comparison(plasma_compare_1_page.add_subplot(221), m_file, scan)
+
     plot_max_normalised_beta_comparison(
-        plasma_compare_2_page.add_subplot(221), m_file, scan)
+        plasma_compare_2_page.add_subplot(221), m_file, scan
+    )
     plot_confinement_time_comparison(
         plasma_compare_2_page.add_subplot(224), m_file, scan
     )
 
     microscopic_quantities_page = _add_page()
-    plot_debye_length_profile(
-        microscopic_quantities_page.add_subplot(232), m_file, scan
-    )
-    plot_velocity_profile(
-        microscopic_quantities_page.add_subplot(233), m_file, scan
-    )
+    plot_debye_length_profile(microscopic_quantities_page.add_subplot(232), m_file, scan)
+    plot_velocity_profile(microscopic_quantities_page.add_subplot(233), m_file, scan)
     plot_plasma_coloumb_logarithms(
         microscopic_quantities_page.add_subplot(231), m_file, scan
     )
@@ -15553,13 +15542,13 @@ def main_plot(
         detailed_params_page.add_subplot(231), m_file, scan
     )
 
-    plot_resistivity_profile(
-        detailed_params_page.add_subplot(232), m_file, scan
-    )
+    plot_resistivity_profile(detailed_params_page.add_subplot(232), m_file, scan)
 
     plot_detailed_plasma_parameters(
         detailed_params_page.add_subplot(233),
-        fig=detailed_params_page, mfile=m_file, scan=scan
+        fig=detailed_params_page,
+        mfile=m_file,
+        scan=scan,
     )
 
     freq_page = _add_page()
@@ -15737,7 +15726,9 @@ def main_plot(
     plot_pf_cs_plasma_mutual_inductance(_add_page().add_subplot(111), m_file, scan)
 
     stress_page = _add_page()
-    plot_cs_stress_time_profile(axis=stress_page.add_subplot(431), mfile=m_file, scan=scan)
+    plot_cs_stress_time_profile(
+        axis=stress_page.add_subplot(431), mfile=m_file, scan=scan
+    )
 
     plot_cs_radial_hoop_stress_profile(
         axis=stress_page.add_subplot(432),
@@ -15770,21 +15761,25 @@ def main_plot(
     plot_first_wall_poloidal_cross_section(
         fw_td_cross_section_page.add_subplot(122), m_file, scan
     )
-    plot_fw_90_deg_pipe_bend(
-        fw_td_cross_section_page.add_subplot(337), m_file, scan
-    )
+    plot_fw_90_deg_pipe_bend(fw_td_cross_section_page.add_subplot(337), m_file, scan)
 
     blkt_pipe_bends_page = _add_page()
     plot_blkt_pipe_bends(blkt_pipe_bends_page, m_file, scan)
     ax_blanket = blkt_pipe_bends_page.add_subplot(122, aspect="equal")
     plot_blkt_structure(
-        ax_blanket, blkt_pipe_bends_page, m_file, scan, radial_build,
+        ax_blanket,
+        blkt_pipe_bends_page,
+        m_file,
+        scan,
+        radial_build,
         colour_scheme,
     )
 
     main_power_flow_page = _add_page()
     plot_main_power_flow(
-        main_power_flow_page.add_subplot(111, aspect="equal"), m_file, scan,
+        main_power_flow_page.add_subplot(111, aspect="equal"),
+        m_file,
+        scan,
         main_power_flow_page,
     )
 
