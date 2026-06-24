@@ -12,7 +12,7 @@ from process.models.physics import fusion_reactions as reactions
 class SetFusionPowersParam(NamedTuple):
     f_p_alpha_plasma_deposited: Any = None
 
-    f_alpha_electron: Any = None
+    f_p_alpha_total_electron: Any = None
 
     f_alpha_ion: Any = None
 
@@ -50,7 +50,7 @@ class SetFusionPowersParam(NamedTuple):
     [
         SetFusionPowersParam(
             f_p_alpha_plasma_deposited=0.95,
-            f_alpha_electron=0.68,
+            f_p_alpha_total_electron=0.68,
             f_alpha_ion=0.32,
             p_beam_alpha_mw=0,
             pden_non_alpha_charged_mw=0.00066,
@@ -69,7 +69,7 @@ class SetFusionPowersParam(NamedTuple):
         ),
         SetFusionPowersParam(
             f_p_alpha_plasma_deposited=0.95,
-            f_alpha_electron=0.68,
+            f_p_alpha_total_electron=0.68,
             f_alpha_ion=0.32,
             p_beam_alpha_mw=100.5,
             pden_non_alpha_charged_mw=0.00066,
@@ -114,7 +114,7 @@ def test_set_fusion_powers(setfusionpowersparam):
         p_charged_particle_mw,
         p_fusion_total_mw,
     ) = reactions.set_fusion_powers(
-        f_alpha_electron=setfusionpowersparam.f_alpha_electron,
+        f_p_alpha_total_electron=setfusionpowersparam.f_p_alpha_total_electron,
         f_alpha_ion=setfusionpowersparam.f_alpha_ion,
         p_beam_alpha_mw=setfusionpowersparam.p_beam_alpha_mw,
         pden_non_alpha_charged_mw=setfusionpowersparam.pden_non_alpha_charged_mw,

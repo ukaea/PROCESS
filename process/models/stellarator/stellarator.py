@@ -2038,7 +2038,7 @@ class Stellarator(Model):
             self.data.physics.p_charged_particle_mw,
             self.data.physics.p_fusion_total_mw,
         ) = reactions.set_fusion_powers(
-            self.data.physics.f_alpha_electron,
+            self.data.physics.f_p_alpha_total_electron,
             self.data.physics.f_alpha_ion,
             self.data.physics.p_beam_alpha_mw,
             self.data.physics.pden_non_alpha_charged_mw,

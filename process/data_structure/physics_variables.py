@@ -418,8 +418,8 @@ class PhysicsData:
     f_c_plasma_inductive: float = 0.0
     """fraction of plasma current produced inductively"""
 
-    f_alpha_electron: float = 0.0
-    """fraction of alpha energy to electrons"""
+    f_p_alpha_total_electron: float = 0.0
+    """Fraction of total alpha power used to heat the electrons"""
 
     f_p_alpha_plasma_deposited: float = 0.95
     """Fraction of alpha power deposited in plasma. Default of 0.95 taken from https://doi.org/10.1088/0029-5515/39/12/305."""
