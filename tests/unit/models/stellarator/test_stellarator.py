@@ -179,36 +179,14 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
     )
 
 
-class StbildParam(NamedTuple):
-    blbmith: Any = None
-
-    blbmoth: Any = None
-
-    blbpith: Any = None
-
-    blbpoth: Any = None
-
-    blbuith: Any = None
-
-    blbuoth: Any = None
-
+class StbuildParam(NamedTuple):
     dr_blkt_inboard: Any = None
 
     dr_blkt_outboard: Any = None
 
-    dz_blkt_upper: Any = None
-
-    dr_bore: Any = None
-
     dr_vv_inboard: Any = None
 
     dr_vv_outboard: Any = None
-
-    a_fw_total: Any = None
-
-    dr_fw_inboard: Any = None
-
-    dr_fw_outboard: Any = None
 
     dr_shld_vv_gap_inboard: Any = None
 
@@ -216,21 +194,7 @@ class StbildParam(NamedTuple):
 
     gapomin: Any = None
 
-    dr_shld_vv_gap_outboard: Any = None
-
-    z_tf_inside_half: Any = None
-
     dr_cs: Any = None
-
-    r_tf_outboard_mid: Any = None
-
-    rbld: Any = None
-
-    r_shld_inboard_inner: Any = None
-
-    r_shld_outboard_outer: Any = None
-
-    rspo: Any = None
 
     dr_fw_plasma_gap_inboard: Any = None
 
@@ -240,15 +204,7 @@ class StbildParam(NamedTuple):
 
     dr_shld_outboard: Any = None
 
-    dz_shld_upper: Any = None
-
     dr_tf_inboard: Any = None
-
-    dr_tf_outboard: Any = None
-
-    available_radial_space: Any = None
-
-    required_radial_space: Any = None
 
     radius_fw_channel: Any = None
 
@@ -261,8 +217,6 @@ class StbildParam(NamedTuple):
     fhole: Any = None
 
     dr_fw_wall: Any = None
-
-    ipowerflow: Any = None
 
     rmajor: Any = None
 
@@ -278,13 +232,9 @@ class StbildParam(NamedTuple):
 
     f_st_rmajor: Any = None
 
-    f_st_aspect: Any = None
-
     f_st_rminor: Any = None
 
-    iprint: Any = None
-
-    outfile: Any = None
+    f_coil_shape: Any = None
 
     expected_dz_blkt_upper: Any = None
 
@@ -316,51 +266,28 @@ class StbildParam(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "stbildparam",
+    "stbuildparam",
     [
-        StbildParam(
-            blbmith=0.17000000000000001,
-            blbmoth=0.27000000000000002,
-            blbpith=0.29999999999999999,
-            blbpoth=0.34999999999999998,
-            blbuith=0.36499999999999999,
-            blbuoth=0.46500000000000002,
+        StbuildParam(
             dr_blkt_inboard=0.70000000000000007,
             dr_blkt_outboard=0.80000000000000004,
-            dz_blkt_upper=0,
-            dr_bore=1.4199999999999999,
             dr_vv_inboard=0.35000000000000003,
             dr_vv_outboard=0.35000000000000003,
-            a_fw_total=0,
-            dr_fw_inboard=0,
-            dr_fw_outboard=0,
             dr_shld_vv_gap_inboard=0.025000000000000005,
             dr_cs_tf_gap=0,
             gapomin=0.025000000000000005,
-            dr_shld_vv_gap_outboard=0,
-            z_tf_inside_half=6.2927927927927927,
             dr_cs=0,
-            r_tf_outboard_mid=0,
-            rbld=0,
-            r_shld_inboard_inner=0,
-            r_shld_outboard_outer=0,
-            rspo=0,
             dr_fw_plasma_gap_inboard=0.15000000000000002,
             dr_fw_plasma_gap_outboard=0.30000000000000004,
             dr_shld_inboard=0.40000000000000002,
             dr_shld_outboard=0.70000000000000007,
-            dz_shld_upper=0.70000000000000007,
             dr_tf_inboard=0.78058448071757114,
-            dr_tf_outboard=0.78058448071757114,
-            available_radial_space=0,
-            required_radial_space=0,
             radius_fw_channel=0.0060000000000000001,
             blktmodel=0,
             f_ster_div_single=0.115,
             f_a_fw_outboard_hcd=0,
             fhole=0,
             dr_fw_wall=0.0030000000000000001,
-            ipowerflow=1,
             rmajor=22,
             rminor=1.783783784,
             a_plasma_surface=1925.3641313657533,
@@ -368,10 +295,8 @@ class StbildParam(NamedTuple):
             stella_config_rminor_ref=1.8,
             stella_config_min_plasma_coil_distance=1.8999999999999999,
             f_st_rmajor=0.99099099099099097,
-            f_st_aspect=1,
             f_st_rminor=0.99099099099099097,
-            iprint=0,
-            outfile=11,
+            f_coil_shape=1.0,
             expected_dz_blkt_upper=0.75,
             expected_bore=17.792631735282427,
             expected_a_fw_total=1918.87696696527,
@@ -387,49 +312,26 @@ class StbildParam(NamedTuple):
             expected_available_radial_space=1.8828828828828827,
             expected_required_radial_space=2.0332922403587861,
         ),
-        StbildParam(
-            blbmith=0.17000000000000001,
-            blbmoth=0.27000000000000002,
-            blbpith=0.29999999999999999,
-            blbpoth=0.34999999999999998,
-            blbuith=0.36499999999999999,
-            blbuoth=0.46500000000000002,
+        StbuildParam(
             dr_blkt_inboard=0.70000000000000007,
             dr_blkt_outboard=0.80000000000000004,
-            dz_blkt_upper=0.75,
-            dr_bore=17.79214950143977,
             dr_vv_inboard=0.35000000000000003,
             dr_vv_outboard=0.35000000000000003,
-            a_fw_total=1918.8188778803135,
-            dr_fw_inboard=0.018000000000000002,
-            dr_fw_outboard=0.018000000000000002,
             dr_shld_vv_gap_inboard=0.025000000000000005,
             dr_cs_tf_gap=0,
             gapomin=0.025000000000000005,
-            dr_shld_vv_gap_outboard=0.025000000000000005,
-            z_tf_inside_half=6.2927927927927927,
             dr_cs=0,
-            r_tf_outboard_mid=26.367076024358788,
-            rbld=22,
-            r_shld_inboard_inner=18.948216216000002,
-            r_shld_outboard_outer=25.601783784000002,
-            rspo=22,
             dr_fw_plasma_gap_inboard=0.15000000000000002,
             dr_fw_plasma_gap_outboard=0.30000000000000004,
             dr_shld_inboard=0.40000000000000002,
             dr_shld_outboard=0.70000000000000007,
-            dz_shld_upper=0.70000000000000007,
             dr_tf_inboard=0.78058448071757114,
-            dr_tf_outboard=0.78058448071757114,
-            available_radial_space=1.8828828828828827,
-            required_radial_space=2.0332922403587861,
             radius_fw_channel=0.0060000000000000001,
             blktmodel=0,
             f_ster_div_single=0.021924555536480182,
             f_a_fw_outboard_hcd=0,
             fhole=0,
             dr_fw_wall=0.0030000000000000001,
-            ipowerflow=1,
             rmajor=22,
             rminor=1.783783784,
             a_plasma_surface=1925.3641313657533,
@@ -437,10 +339,8 @@ class StbildParam(NamedTuple):
             stella_config_rminor_ref=1.8,
             stella_config_min_plasma_coil_distance=1.8999999999999999,
             f_st_rmajor=0.99099099099099097,
-            f_st_aspect=1,
             f_st_rminor=0.99099099099099097,
-            iprint=0,
-            outfile=11,
+            f_coil_shape=1.0,
             expected_dz_blkt_upper=0.75,
             expected_bore=17.792631735282427,
             expected_a_fw_total=2120.685245576686,
@@ -458,272 +358,135 @@ class StbildParam(NamedTuple):
         ),
     ],
 )
-def test_stbild(stbildparam, monkeypatch, stellarator):
+def test_stbuild(stbuildparam, monkeypatch, stellarator):
     """
-    Automatically generated Regression Unit Test for stbild.
+    Automatically generated Regression Unit Test for st_build.
 
     This test was generated using data from
     tests/regression/scenarios/stellarator/IN.DAT.
 
-    :param stbildparam: the data used to mock and assert in this test.
-    :type stbildparam: stbildparam
+    :param stbuildparam: the data used to mock and assert in this test.
+    :type stbuildparam: stbuildparam
 
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-
-    monkeypatch.setattr(stellarator.data.build, "blbmith", stbildparam.blbmith)
-
-    monkeypatch.setattr(stellarator.data.build, "blbmoth", stbildparam.blbmoth)
-
-    monkeypatch.setattr(stellarator.data.build, "blbpith", stbildparam.blbpith)
-
-    monkeypatch.setattr(stellarator.data.build, "blbpoth", stbildparam.blbpoth)
-
-    monkeypatch.setattr(stellarator.data.build, "blbuith", stbildparam.blbuith)
-
-    monkeypatch.setattr(stellarator.data.build, "blbuoth", stbildparam.blbuoth)
-
-    monkeypatch.setattr(
-        stellarator.data.build, "dr_blkt_inboard", stbildparam.dr_blkt_inboard
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.build, "dr_blkt_outboard", stbildparam.dr_blkt_outboard
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.build, "dz_blkt_upper", stbildparam.dz_blkt_upper
-    )
-
-    monkeypatch.setattr(stellarator.data.build, "dr_bore", stbildparam.dr_bore)
-
-    monkeypatch.setattr(
-        stellarator.data.build, "dr_vv_inboard", stbildparam.dr_vv_inboard
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.build, "dr_vv_outboard", stbildparam.dr_vv_outboard
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.first_wall, "a_fw_total", stbildparam.a_fw_total
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.build, "dr_fw_inboard", stbildparam.dr_fw_inboard
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.build, "dr_fw_outboard", stbildparam.dr_fw_outboard
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.build,
+    for field in [
+        "dr_blkt_inboard",
+        "dr_blkt_outboard",
+        "dr_vv_inboard",
+        "dr_vv_outboard",
         "dr_shld_vv_gap_inboard",
-        stbildparam.dr_shld_vv_gap_inboard,
-    )
-
-    monkeypatch.setattr(stellarator.data.build, "dr_cs_tf_gap", stbildparam.dr_cs_tf_gap)
-
-    monkeypatch.setattr(stellarator.data.build, "gapomin", stbildparam.gapomin)
-
-    monkeypatch.setattr(
-        stellarator.data.build,
-        "dr_shld_vv_gap_outboard",
-        stbildparam.dr_shld_vv_gap_outboard,
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.build, "z_tf_inside_half", stbildparam.z_tf_inside_half
-    )
-
-    monkeypatch.setattr(stellarator.data.build, "dr_cs", stbildparam.dr_cs)
-
-    monkeypatch.setattr(
-        stellarator.data.build, "r_tf_outboard_mid", stbildparam.r_tf_outboard_mid
-    )
-
-    monkeypatch.setattr(stellarator.data.build, "rbld", stbildparam.rbld)
-
-    monkeypatch.setattr(
-        stellarator.data.build, "r_shld_inboard_inner", stbildparam.r_shld_inboard_inner
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.build,
-        "r_shld_outboard_outer",
-        stbildparam.r_shld_outboard_outer,
-    )
-
-    monkeypatch.setattr(stellarator.data.build, "rspo", stbildparam.rspo)
-
-    monkeypatch.setattr(
-        stellarator.data.build,
+        "dr_cs_tf_gap",
+        "gapomin",
+        "dr_cs",
         "dr_fw_plasma_gap_inboard",
-        stbildparam.dr_fw_plasma_gap_inboard,
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.build,
         "dr_fw_plasma_gap_outboard",
-        stbildparam.dr_fw_plasma_gap_outboard,
-    )
+        "dr_shld_inboard",
+        "dr_shld_outboard",
+        "dr_tf_inboard",
+    ]:
+        monkeypatch.setattr(stellarator.data.build, field, getattr(stbuildparam, field))
 
-    monkeypatch.setattr(
-        stellarator.data.build, "dr_shld_inboard", stbildparam.dr_shld_inboard
-    )
+    for field in [
+        "radius_fw_channel",
+        "blktmodel",
+        "f_ster_div_single",
+        "f_a_fw_outboard_hcd",
+        "fhole",
+        "dr_fw_wall",
+    ]:
+        monkeypatch.setattr(stellarator.data.fwbs, field, getattr(stbuildparam, field))
 
-    monkeypatch.setattr(
-        stellarator.data.build, "dr_shld_outboard", stbildparam.dr_shld_outboard
-    )
+    for field in [
+        "rmajor",
+        "rminor",
+        "a_plasma_surface",
+    ]:
+        monkeypatch.setattr(
+            stellarator.data.physics, field, getattr(stbuildparam, field)
+        )
 
-    monkeypatch.setattr(
-        stellarator.data.build, "dz_shld_upper", stbildparam.dz_shld_upper
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.build, "dr_tf_inboard", stbildparam.dr_tf_inboard
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.build, "dr_tf_outboard", stbildparam.dr_tf_outboard
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.build,
-        "available_radial_space",
-        stbildparam.available_radial_space,
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.build,
-        "required_radial_space",
-        stbildparam.required_radial_space,
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.fwbs, "radius_fw_channel", stbildparam.radius_fw_channel
-    )
-
-    monkeypatch.setattr(stellarator.data.fwbs, "blktmodel", stbildparam.blktmodel)
-
-    monkeypatch.setattr(
-        stellarator.data.fwbs, "f_ster_div_single", stbildparam.f_ster_div_single
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.fwbs, "f_a_fw_outboard_hcd", stbildparam.f_a_fw_outboard_hcd
-    )
-
-    monkeypatch.setattr(stellarator.data.fwbs, "fhole", stbildparam.fhole)
-
-    monkeypatch.setattr(stellarator.data.fwbs, "dr_fw_wall", stbildparam.dr_fw_wall)
-
-    monkeypatch.setattr(
-        stellarator.data.heat_transport, "ipowerflow", stbildparam.ipowerflow
-    )
-
-    monkeypatch.setattr(stellarator.data.physics, "rmajor", stbildparam.rmajor)
-
-    monkeypatch.setattr(stellarator.data.physics, "rminor", stbildparam.rminor)
-
-    monkeypatch.setattr(
-        stellarator.data.physics, "a_plasma_surface", stbildparam.a_plasma_surface
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.stellarator_config,
+    for field in [
         "stella_config_derivative_min_lcfs_coils_dist",
-        stbildparam.stella_config_derivative_min_lcfs_coils_dist,
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.stellarator_config,
         "stella_config_rminor_ref",
-        stbildparam.stella_config_rminor_ref,
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.stellarator_config,
-        "stella_config_min_plasma_coil_distance",
-        stbildparam.stella_config_min_plasma_coil_distance,
-    )
+    ]:
+        monkeypatch.setattr(
+            stellarator.data.stellarator_config,
+            field,
+            getattr(stbuildparam, field),
+        )
 
     monkeypatch.setattr(
         stellarator.data.stellarator,
         "r_coil_minor",
         (
-            stbildparam.stella_config_min_plasma_coil_distance
-            + stbildparam.stella_config_rminor_ref
+            stbuildparam.stella_config_min_plasma_coil_distance
+            + stbuildparam.stella_config_rminor_ref
         )
-        * stbildparam.f_st_rminor,
+        * stbuildparam.f_st_rminor,
     )
 
-    monkeypatch.setattr(
-        stellarator.data.stellarator, "f_st_rmajor", stbildparam.f_st_rmajor
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.stellarator, "f_st_aspect", stbildparam.f_st_aspect
-    )
-
-    monkeypatch.setattr(
-        stellarator.data.stellarator, "f_st_rminor", stbildparam.f_st_rminor
-    )
+    for field in [
+        "f_st_rmajor",
+        "f_coil_shape",
+    ]:
+        monkeypatch.setattr(
+            stellarator.data.stellarator, field, getattr(stbuildparam, field)
+        )
 
     monkeypatch.setattr(stellarator.data.stellarator, "f_coil_shape", 1.0)
 
     st_build(stellarator, False, stellarator.data)
 
     assert stellarator.data.build.dz_blkt_upper == pytest.approx(
-        stbildparam.expected_dz_blkt_upper
+        stbuildparam.expected_dz_blkt_upper
     )
 
-    assert stellarator.data.build.dr_bore == pytest.approx(stbildparam.expected_bore)
+    assert stellarator.data.build.dr_bore == pytest.approx(stbuildparam.expected_bore)
 
     assert stellarator.data.first_wall.a_fw_total == pytest.approx(
-        stbildparam.expected_a_fw_total
+        stbuildparam.expected_a_fw_total
     )
 
     assert stellarator.data.build.dr_fw_inboard == pytest.approx(
-        stbildparam.expected_dr_fw_inboard
+        stbuildparam.expected_dr_fw_inboard
     )
 
     assert stellarator.data.build.dr_fw_outboard == pytest.approx(
-        stbildparam.expected_dr_fw_outboard
+        stbuildparam.expected_dr_fw_outboard
     )
 
     assert stellarator.data.build.dr_shld_vv_gap_outboard == pytest.approx(
-        stbildparam.expected_dr_shld_vv_gap_outboard
+        stbuildparam.expected_dr_shld_vv_gap_outboard
     )
 
     assert stellarator.data.build.z_tf_inside_half == pytest.approx(
-        stbildparam.expected_hmax
+        stbuildparam.expected_hmax
     )
 
     assert stellarator.data.build.r_tf_outboard_mid == pytest.approx(
-        stbildparam.expected_r_tf_outboard_mid
+        stbuildparam.expected_r_tf_outboard_mid
     )
 
-    assert stellarator.data.build.rbld == pytest.approx(stbildparam.expected_rbld)
+    assert stellarator.data.build.rbld == pytest.approx(stbuildparam.expected_rbld)
 
     assert stellarator.data.build.r_shld_inboard_inner == pytest.approx(
-        stbildparam.expected_rsldi
+        stbuildparam.expected_rsldi
     )
 
     assert stellarator.data.build.r_shld_outboard_outer == pytest.approx(
-        stbildparam.expected_rsldo
+        stbuildparam.expected_rsldo
     )
 
-    assert stellarator.data.build.rspo == pytest.approx(stbildparam.expected_rspo)
+    assert stellarator.data.build.rspo == pytest.approx(stbuildparam.expected_rspo)
 
     assert stellarator.data.build.available_radial_space == pytest.approx(
-        stbildparam.expected_available_radial_space
+        stbuildparam.expected_available_radial_space
     )
 
     assert stellarator.data.build.required_radial_space == pytest.approx(
-        stbildparam.expected_required_radial_space
+        stbuildparam.expected_required_radial_space
     )
 
 
