@@ -106,35 +106,6 @@ def dict_var_type():
     return di
 
 
-def dict_input_bounds():
-    """Returns a dictionary matching variable names to dictionary containing
-    upper and lower bounds that PROCESS checks variable lies between when
-    reading IN.DAT. Looks in input.f90 for parse_real_variable and
-    parse_int_variable.
-
-    Example of a line we are looking for:
-         call parse_real_variable('BETA', beta, 0.0D0, 1.0D0, &
-
-    Example dictionary entry:
-         DICT_INPUT_BOUNDS['beta'] = {'lb' : 0.0, 'ub' : 1.0}
-    """
-    di = {}
-
-    for var_name, config in INPUT_VARIABLES.items():
-        lb, ub = None, None
-        if config.range is not None:
-            lb, ub = config.range
-
-        elif config.choices is not None and config.type in {int, float}:
-            lb = min(config.choices)
-            ub = max(config.choices)
-
-        if lb is not None:
-            di[var_name] = {"lb": lb, "ub": ub}
-
-    return di
-
-
 def dict_ixc_full():
     """Function to return a dictionary matching str(ixc_no) to a dictionary
     containing the name, lower and upper bounds of that variable.
@@ -181,7 +152,6 @@ def get_dicts():
         HardcodedDictionary("DICT_DEFAULT", {}),
         HardcodedDictionary("DICT_MODULE", {}),
         HardcodedDictionary("DICT_DESCRIPTIONS", {}),
-        SourceDictionary("DICT_INPUT_BOUNDS", dict_input_bounds),
         SourceDictionary("DICT_VAR_TYPE", dict_var_type),
         SourceDictionary("DICT_IXC_FULL", dict_ixc_full),
         SourceDictionary("DICT_IXC_BOUNDS", dict_ixc_bounds),

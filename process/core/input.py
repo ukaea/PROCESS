@@ -107,6 +107,30 @@ class InputVariable:
                 stacklevel=2,
             )
 
+    def bounds(self) -> tuple[NumberType | None, NumberType | None]:
+        """Returns the upper and lower bounds of the input.
+
+        Returns
+        -------
+        lb:
+            The lower bound or None if no bound is available.
+        ub:
+            The upper bound or None if no bound is available/
+
+        Notes
+        -----
+        Precedence is given to the `range` if both it and `choices` are specified.
+        """
+        lb, ub = None, None
+        if self.range is not None:
+            lb, ub = self.range
+
+        elif self.choices is not None and self.type in {int, float}:
+            lb = min(self.choices)
+            ub = max(self.choices)
+
+        return lb, ub
+
 
 INPUT_VARIABLES = {
     "runtitle": InputVariable("globals", str),

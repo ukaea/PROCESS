@@ -5,8 +5,8 @@ A selection of functions for using the PROCESS code
 import logging
 import sys
 from pathlib import Path
-from time import sleep
 
+from process.core.input import INPUT_VARIABLES
 from process.core.io.data_structure_dicts import get_dicts
 from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile
@@ -150,52 +150,44 @@ def check_in_dat(filename):
     ixc_list = in_dat.data["ixc"].get_value
 
     for itervarno in ixc_list:
-        itervarname = ITERATION_VARIABLES[int(itervarno)].name
-        try:
-            lowerinputbound = dicts["DICT_INPUT_BOUNDS"][itervarname]["lb"]
-        except KeyError as err:
-            # arrays do not have input bound checks
-            if "(" in itervarname:
-                continue
+        itvar = ITERATION_VARIABLES[int(itervarno)]
 
-            print("Error in check_in_dat():")
-            print("There seems to be some information missing from the dicts.")
-            print("Please flag this up for a developer to investigate!")
-            print(itervarname, err)
-            print(dicts["DICT_INPUT_BOUNDS"][itervarname])
-            sys.exit()
+        # array variables do not support bounds
+        if "(" in itvar.name:
+            continue
 
-        if dicts["DICT_IXC_BOUNDS"][itervarname]["lb"] < lowerinputbound:
+        if itvar.name not in INPUT_VARIABLES:
+            error_msg = f"{itvar.name} does not have a corresponding input variable."
+            raise RuntimeError(error_msg)
+
+        lowerinputbound, upperinputbound = INPUT_VARIABLES[itvar.name].bounds()
+        if dicts["DICT_IXC_BOUNDS"][itvar.name]["lb"] < lowerinputbound:
             print(
                 "Warning: boundl for ",
-                itervarname,
+                itvar.name,
                 " lies out of allowed input range!\n Reset boundl(",
                 itervarno,
                 ") to ",
                 lowerinputbound,
                 file=sys.stderr,
             )
-            dicts["DICT_IXC_BOUNDS"][itervarname]["lb"] = lowerinputbound
+            dicts["DICT_IXC_BOUNDS"][itvar.name]["lb"] = lowerinputbound
             set_variable_in_indat(
                 in_dat, "boundl(" + str(itervarno) + ")", lowerinputbound
             )
-            sleep(1)
 
-        upperinputbound = dicts["DICT_INPUT_BOUNDS"][itervarname]["ub"]
-
-        if dicts["DICT_IXC_BOUNDS"][itervarname]["ub"] > upperinputbound:
+        if dicts["DICT_IXC_BOUNDS"][itvar.name]["ub"] > upperinputbound:
             print(
                 "Warning: boundu for",
-                itervarname,
+                itvar.name,
                 f"lies out of allowed input range!\n Reset boundu({itervarno}) to",
                 upperinputbound,
                 file=sys.stderr,
             )
-            dicts["DICT_IXC_BOUNDS"][itervarname]["ub"] = upperinputbound
+            dicts["DICT_IXC_BOUNDS"][itvar.name]["ub"] = upperinputbound
             set_variable_in_indat(
                 in_dat, "boundu(" + str(itervarno) + ")", upperinputbound
             )
-            sleep(1)
 
     in_dat.write_in_dat(output_filename=filename)
 
