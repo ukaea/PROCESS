@@ -1024,8 +1024,8 @@ class PhysicsData:
     p_fw_alpha_mw: float = 0.0
     """alpha power escaping plasma and reaching first wall (MW)"""
 
-    f_pden_alpha_ions_mw: float = 0.0
-    """alpha power per volume to ions [MW/m³]"""
+    pden_alpha_heating_ions_mw: float = 0.0
+    """Alpha power heating per unit volume to ions [MW/m³]"""
 
     p_plasma_alpha_mw: float = 0.0
     """Alpha power from only the plasma (MW)"""

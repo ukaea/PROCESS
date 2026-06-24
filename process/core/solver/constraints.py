@@ -309,7 +309,7 @@ def constraint_equation_3(constraint_registration, data):
     pden_ion_transport_loss_mw: ion transport power per volume (MW/m3)
     pden_ion_electron_equilibration_mw: ion/electron equilibration power per volume (MW/m3)
     f_p_alpha_plasma_deposited: fraction of alpha power deposited in plasma
-    f_pden_alpha_ions_mw: alpha power per volume to ions (MW/m3)
+    pden_alpha_heating_ions_mw: alpha power per volume to ions (MW/m3)
     p_hcd_injected_ions_mw: auxiliary injected power to ions (MW)
     vol_plasma: plasma volume (m3)
     """
@@ -325,7 +325,7 @@ def constraint_equation_3(constraint_registration, data):
             ),
             (
                 data.physics.f_p_alpha_plasma_deposited
-                * data.physics.f_pden_alpha_ions_mw
+                * data.physics.pden_alpha_heating_ions_mw
                 + data.current_drive.p_hcd_injected_ions_mw / data.physics.vol_plasma
             ),
             constraint_registration,
@@ -337,7 +337,10 @@ def constraint_equation_3(constraint_registration, data):
             data.physics.pden_ion_transport_loss_mw
             + data.physics.pden_ion_electron_equilibration_mw
         ),
-        (data.physics.f_p_alpha_plasma_deposited * data.physics.f_pden_alpha_ions_mw),
+        (
+            data.physics.f_p_alpha_plasma_deposited
+            * data.physics.pden_alpha_heating_ions_mw
+        ),
         constraint_registration,
     )
 
