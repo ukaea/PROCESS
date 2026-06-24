@@ -15344,8 +15344,6 @@ def main_plot(
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
 
-    # figs = defaultlist(plt.figure, kwargs={"figsize":(12, 9), "dpi":80})
-
     pages = []
 
     def _add_page():
