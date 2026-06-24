@@ -181,10 +181,10 @@ beta_total_vol_avg = 3.71965626913446160e-02
 ixc = 6
 nd_plasma_electrons_vol_avg = 6.88360041658364314e+19
 * DESCRIPTION:   Electron density (/m3)
-* JUSTIFICATION: Density is constrained by fdene
+* JUSTIFICATION: Density is constrained by f_nd_plasma_electron_limit_max
 
 *ixc = 9
-fdene = 1.2
+f_nd_plasma_electron_limit_max = 1.2
 *boundu(9) = 1.2
 * DESCRIPTION:   margin for density limit (used to set max greenwald fraction)
 * JUSTIFICATION: Used with icc=5 to enforce density limit
@@ -241,7 +241,7 @@ f_c_plasma_non_inductive = 4.92677875380845121e-01
 * DESCRIPTION:   fraction of the plasma current produced by non-inductive means
 * JUSTIFICATION: We have a pulsed reactor so this can vary 
 
-fiooic = 1.0
+f_j_tf_wp_critical_max = 1.0
 * DESCRIPTION:   margin for TF coil operating current / critical current density ratio
 * JUSTIFICATION: Constraint equation 33 is used
 
@@ -464,7 +464,7 @@ pflux_fw_neutron_max_mw = 8.0
 * DESCRIPTION:   Allowable wall-load (mw/m2) (icc=8)
 * JUSTIFICATION: Used with icc=8 to set the enforced max allowable wall load
 
-psepbqarmax = 6.0
+p_div_bt_q_aspect_rmajor_max_mw = 6.0
 * DESCRIPTION:   maximum ratio of Psep*Bt/qAR (MWT/m) (icc=68)
 * JUSTIFICATION: 
 
@@ -635,7 +635,7 @@ bkt_life_csf = 1
 * DESCRIPTION:   Switch for whether blanket model feeds n_cycle_min
 * JUSTIFICATION: choose to make the constraint on blanket and CS the same 
 
-nflutfmax = 0.0
+flu_tf_neutron_fast_max = 0.0
 * DESCRIPTION:   max fast neutron fluence on TF coil (n/m2) used in quench protection
 * JUSTIFICATION: zero to align with older quench protection model 
 

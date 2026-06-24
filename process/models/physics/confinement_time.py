@@ -1379,15 +1379,15 @@ class PlasmaConfinementTime(Model):
         po.ovarrf(
             self.outfile,
             "Alpha particle to energy confinement time ratio (τ_α/τₑ)",  # noqa: RUF001
-            "(f_alpha_energy_confinement)",
-            self.data.physics.f_alpha_energy_confinement,
+            "(f_t_alpha_energy_confinement)",
+            self.data.physics.f_t_alpha_energy_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Lower limit on f_alpha_energy_confinement ((τ_α/τₑ)>)",  # noqa: RUF001
-            "(f_alpha_energy_confinement_min)",
-            self.data.constraints.f_alpha_energy_confinement_min,
+            "Lower limit on f_t_alpha_energy_confinement ((τ_α/τₑ)>)",  # noqa: RUF001
+            "(f_t_alpha_energy_confinement_min)",
+            self.data.constraints.f_t_alpha_energy_confinement_min,
         )
         po.oblnkl(self.outfile)
 

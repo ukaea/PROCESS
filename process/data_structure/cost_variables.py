@@ -406,8 +406,8 @@ class CostData:
     bktcycles: float = 1.0e3
     """Number of fusion cycles to reach allowable DPA from DEMO fw/blanket lifetime calculation"""
 
-    avail_min: float = 0.75
-    """Minimum availability (`constraint equation 61`)"""
+    f_t_plant_available_min: float = 0.75
+    """Minimum allowed plant availability (`constraint equation 61`)"""
 
     tok_build_cost_per_vol: float = 1283.0
     """Unit cost for tokamak complex buildings, including building and site services ($/m3)"""

@@ -12,7 +12,7 @@ def write(
     coppera_m2_max,
     f_a_scu_of_wp,
     f_vv_actual,
-    fiooic,
+    f_j_tf_wp_critical_max,
     inductance,
     max_force_density,
     max_force_density_mnm,
@@ -56,7 +56,7 @@ def write(
 
     f_vv_actual :
 
-    fiooic :
+    f_j_tf_wp_critical_max :
 
     inductance :
 
@@ -352,7 +352,12 @@ def write(
         "(c_tf_turn)",
         data.tfcoil.c_tf_turn,
     )
-    po.ovarre(stellarator.outfile, "jop/jcrit", "(fiooic)", fiooic)
+    po.ovarre(
+        stellarator.outfile,
+        "jop/jcrit",
+        "(f_j_tf_wp_critical_max)",
+        f_j_tf_wp_critical_max,
+    )
     po.ovarre(
         stellarator.outfile,
         "Current density in conductor area (A/m2)",

@@ -44,8 +44,8 @@ class TFCSRadialConfiguration(IntEnum):
 
 @dataclass(slots=True)
 class BuildData:
-    aplasmin: float = 0.25
-    """minimum minor radius (m)"""
+    rminor_min: float = 0.25
+    """Minimum allowed minor radius (m)"""
 
     available_radial_space: float = 0.0
     """Minimal radial space between plasma and coils (m)"""

@@ -2819,7 +2819,7 @@ def plot_main_plasma_information(
         f"Lawson Triple product: {mfile.get('nttau', scan=scan):.4e} keV·s/m³\n"
         f"Transport loss power assumed in scaling law: {mfile.get('p_plasma_loss_mw', scan=scan):.4f} MW\n"
         f"Plasma thermal energy (inc. $\\alpha$), $W$: {mfile.get('e_plasma_beta', scan=scan) / 1e9:.4f} GJ\n"
-        f"Alpha particle confinement time: {mfile.get('t_alpha_confinement', scan=scan):.4f} s | $\\tau_{{\\alpha}}/\\tau_{{e}}$: {mfile.get('f_alpha_energy_confinement', scan=scan):.4f}"
+        f"Alpha particle confinement time: {mfile.get('t_alpha_confinement', scan=scan):.4f} s | $\\tau_{{\\alpha}}/\\tau_{{e}}$: {mfile.get('f_t_alpha_energy_confinement', scan=scan):.4f}"
     )
 
     axis.text(
@@ -15699,7 +15699,7 @@ def main_plot(
                 temp_quench_max=m_file.get("temp_tf_conductor_quench_max", scan=scan),
                 cu_rrr=m_file.get("rrr_tf_cu", scan=scan),
                 t_quench_detection=m_file.get("t_tf_quench_detection", scan=scan),
-                fluence=m_file.get("nflutfmax", scan=scan),
+                fluence=m_file.get("flu_tf_neutron_fast_max", scan=scan),
                 j_operating=m_file.get("j_tf_wp", scan=scan),
                 a_tf_turn_cable_space=m_file.get(
                     "a_tf_turn_cable_space_no_void", scan=scan

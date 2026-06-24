@@ -1337,9 +1337,9 @@ class Availability(Model):
             if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
                 po.ovarre(
                     self.outfile,
-                    "Max fast neutron fluence on TF coil (n/m2)",
-                    "(nflutfmax)",
-                    self.data.constraints.nflutfmax,
+                    "Max allowed fast neutron fluence on TF coil (n/m²)",
+                    "(flu_tf_neutron_fast_max)",
+                    self.data.constraints.flu_tf_neutron_fast_max,
                     "OP ",
                 )
                 po.ovarre(
@@ -1463,7 +1463,7 @@ class Availability(Model):
                 if self.data.fwbs.neut_flux_cp <= 0.0
                 else min(
                     (
-                        self.data.constraints.nflutfmax
+                        self.data.constraints.flu_tf_neutron_fast_max
                         / (self.data.fwbs.neut_flux_cp * YEAR_SECONDS)
                     ),
                     self.data.costs.life_plant,

@@ -2284,7 +2284,7 @@ def test_sctfcoil_nuclear_heating_iter90(
         coilhtmx,
         dpacop,
         htheci,
-        nflutf,
+        flu_tf_neutron_fast_peak,
         pheci,
         pheco,
         ptfiwp,
@@ -2296,7 +2296,9 @@ def test_sctfcoil_nuclear_heating_iter90(
     assert coilhtmx == pytest.approx(sctfcoilnuclearheatingiter90param.expected_coilhtmx)
     assert dpacop == pytest.approx(sctfcoilnuclearheatingiter90param.expected_dpacop)
     assert htheci == pytest.approx(sctfcoilnuclearheatingiter90param.expected_htheci)
-    assert nflutf == pytest.approx(sctfcoilnuclearheatingiter90param.expected_nflutf)
+    assert flu_tf_neutron_fast_peak == pytest.approx(
+        sctfcoilnuclearheatingiter90param.expected_nflutf
+    )
     assert pheci == pytest.approx(sctfcoilnuclearheatingiter90param.expected_pheci)
     assert pheco == pytest.approx(sctfcoilnuclearheatingiter90param.expected_pheco)
     assert ptfiwp == pytest.approx(sctfcoilnuclearheatingiter90param.expected_ptfiwp)

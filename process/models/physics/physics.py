@@ -894,7 +894,7 @@ class Physics(Model):
             self.data.physics.molflow_plasma_fuelling_required,
             self.data.physics.rndfuel,
             self.data.physics.t_alpha_confinement,
-            self.data.physics.f_alpha_energy_confinement,
+            self.data.physics.f_t_alpha_energy_confinement,
         ) = self.phyaux(
             self.data.physics.aspect,
             self.data.physics.nd_plasma_fuel_ions_vol_avg,
@@ -995,17 +995,20 @@ class Physics(Model):
             self.data.physics.plomw = self.data.physics.flo * self.data.physics.ptarmw
 
         # Calculate some derived quantities that may not have been defined earlier
-        self.data.physics.p_plasma_heating_total_mw = 1e6 * (
-            self.data.physics.f_p_alpha_plasma_deposited
-            * self.data.physics.p_alpha_total_mw
-            + self.data.physics.p_non_alpha_charged_mw
-            + self.data.physics.p_plasma_ohmic_mw
-            + self.data.current_drive.p_hcd_injected_total_mw
+        self.data.physics.p_plasma_heating_total_mw = (
+            self.calculate_total_plasma_heating_power(
+                f_p_alpha_plasma_deposited=self.data.physics.f_p_alpha_plasma_deposited,
+                p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
+                p_non_alpha_charged_mw=self.data.physics.p_non_alpha_charged_mw,
+                p_plasma_ohmic_mw=self.data.physics.p_plasma_ohmic_mw,
+                p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
+            )
         )
         self.data.physics.f_p_plasma_separatrix_rad = (
-            1.0e6
-            * self.data.physics.p_plasma_rad_mw
-            / self.data.physics.p_plasma_heating_total_mw
+            self.exhaust.calculate_radiation_fraction(
+                p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
+                p_plasma_heating_mw=self.data.physics.p_plasma_heating_total_mw,
+            )
         )
         self.data.physics.rad_fraction_total = (
             self.data.physics.f_p_plasma_separatrix_rad
@@ -1444,7 +1447,7 @@ class Physics(Model):
               (nucleus-pairs/sec).
             - rndfuel (float): Fuel burnup rate (reactions/s).
             - t_alpha_confinement (float): Alpha particle confinement time (s).
-            - f_alpha_energy_confinement (float): Fraction of alpha energy confinement.
+            - f_t_alpha_energy_confinement (float): Fraction of alpha energy confinement.
             This subroutine calculates extra physics related items needed by other
             parts of the code.
 
@@ -1490,7 +1493,7 @@ class Physics(Model):
         # Required fuelling rate (fuel ion pairs/second) (previously Amps)
         molflow_plasma_fuelling_required = rndfuel / burnup
 
-        f_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
+        f_t_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
 
         return (
             burnup,
@@ -1499,7 +1502,7 @@ class Physics(Model):
             molflow_plasma_fuelling_required,
             rndfuel,
             t_alpha_confinement,
-            f_alpha_energy_confinement,
+            f_t_alpha_energy_confinement,
         )
 
     @staticmethod
@@ -2199,6 +2202,13 @@ class Physics(Model):
                 )
 
         po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total heating power given to the plasma (Pₕₑₐₜ) [MW]",
+            "(p_plasma_heating_total_mw)",
+            self.data.physics.p_plasma_heating_total_mw,
+            "OP ",
+        )
         po.ovarre(
             self.outfile,
             "Ohmic heating power (MW)",
@@ -2964,6 +2974,41 @@ class Physics(Model):
             m_plasma_alpha,
             m_plasma_electron,
             m_plasma,
+        )
+
+    @staticmethod
+    def calculate_total_plasma_heating_power(
+        f_p_alpha_plasma_deposited: float,
+        p_alpha_total_mw: float,
+        p_non_alpha_charged_mw: float,
+        p_plasma_ohmic_mw: float,
+        p_hcd_injected_total_mw: float,
+    ) -> float:
+        """Calculate the total plasma heating power (Pₕₑₐₜ).
+
+        Parameters
+        ----------
+        f_p_alpha_plasma_deposited : float
+            Fraction of alpha power deposited in plasma.
+        p_alpha_total_mw : float
+            Total alpha power (MW).
+        p_non_alpha_charged_mw : float
+            Non-alpha charged particle heating power (MW).
+        p_plasma_ohmic_mw : float
+            Ohmic heating power (MW).
+        p_hcd_injected_total_mw : float
+            Total heating power from HCD injection (MW).
+
+        Returns
+        -------
+        float
+            Total plasma heating power (MW).
+        """
+        return (
+            f_p_alpha_plasma_deposited * p_alpha_total_mw
+            + p_non_alpha_charged_mw
+            + p_plasma_ohmic_mw
+            + p_hcd_injected_total_mw
         )
 
 

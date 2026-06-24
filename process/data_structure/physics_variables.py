@@ -39,7 +39,7 @@ class PhysicsData:
     """[J]"""
 
     p_plasma_heating_total_mw: float = 0.0
-    """[W]"""
+    """Total heating power given to the plasma (Pₕₑₐₜ) [MW]"""
 
     t_energy_confinement_beta: float = 0.0
     """[s]"""
@@ -105,79 +105,79 @@ class PhysicsData:
     """Total mass of the plasma (kg)"""
 
     alphaj: float = 1.0
-    """current profile index"""
+    """Plasma current profile index (⍺ⱼ)"""  # noqa: RUF001
 
     alphaj_wesson: float = None
     """Wesson-like current profile index"""
 
     alphan: float = 0.25
-    """density profile index"""
+    """Plasma density profile index (⍺ₙ)"""  # noqa: RUF001
 
     alphap: float = 0.0
-    """pressure profile index"""
+    """Plasma pressure profile index (⍺ₚ)"""  # noqa: RUF001
 
     fusden_alpha_total: float = 0.0
-    """Alpha particle production rate per unit volume, from plasma and beams [particles/m3/sec]"""
+    """Alpha particle production rate per unit volume, from plasma and beams [particles/m³/sec]"""
 
     fusden_plasma_alpha: float = 0.0
-    """Alpha particle production rate per unit volume, just from plasma [particles/m3/sec]"""
+    """Alpha particle production rate per unit volume, just from plasma [particles/m³/sec]"""
 
     alphat: float = 0.5
-    """temperature profile index"""
+    """Plasma temperature profile index (⍺ₜ)"""  # noqa: RUF001
 
     aspect: float = 2.907
-    """aspect ratio (`iteration variable 1`)"""
+    """Plasma aspect ratio (A) (`iteration variable 1`)"""
 
     beamfus0: float = 1.0
     """multiplier for beam-background fusion calculation"""
 
     beta_total_vol_avg: float = 0.042
-    """Volume averaged total plasma beta (`iteration variable 5`) (calculated if stellarator)"""
+    """Volume averaged total plasma beta (⟨β⟩) (`iteration variable 5`) (calculated if stellarator)"""
 
     beta_fast_alpha: float = 0.0
-    """fast alpha beta component"""
+    """Fast alpha beta component (β_alpha)"""
 
     beta_vol_avg_max: float = 0.0
-    """Max allowable volume averaged beta"""
+    """Max allowable volume averaged beta (⟨β⟩<)"""
 
     beta_vol_avg_min: float = 0.0
-    """Minimum allowable volume averaged beta"""
+    """Minimum allowable volume averaged beta (⟨β⟩>)"""
 
     beta_beam: float = 0.0
-    """neutral beam beta component"""
+    """Neutral beam beta component (β_beam)"""
 
     beta_poloidal_vol_avg: float = 0.0
-    """poloidal beta"""
+    """Volume averaged poloidal beta (⟨βₚ⟩)"""
 
     beta_poloidal_eps: float = 0.0
-    """Poloidal beta and inverse aspcet ratio product"""
+    """Poloidal beta and inverse aspcet ratio product (⟨βₚ⟩*ε)"""
 
     beta_toroidal_vol_avg: float = 0.0
-    """Plasma volume averaged toroidal beta"""
+    """Volume averaged toroidal beta (⟨βₜ⟩)"""
 
     beta_thermal_toroidal_profile: list[float] = field(default_factory=list)
-    """toroidal beta profile"""
+    """Toroidal beta profile"""
 
     beta_thermal_vol_avg: float = 0.0
-    """Plasma volume averaged thermal beta"""
+    """Volume averaged thermal beta (⟨βₜₕ⟩)"""
 
     beta_thermal_poloidal_vol_avg: float = 0.0
-    """Plasma volume averaged poloidal thermal beta"""
+    """Volume averaged poloidal thermal beta (⟨βₚₜₕ⟩)"""
 
     beta_thermal_toroidal_vol_avg: float = 0.0
-    """Plasma volume averaged toloidal thermal beta"""
+    """Volume averaged toroidal thermal beta (⟨βₜₕ⟩)"""
 
     beta_norm_total: float = 0.0
-    """normaised total beta"""
+    """Normalised total beta (βₙ)"""
 
     beta_norm_thermal: float = 0.0
-    """normaised thermal beta"""
+    """Normalised thermal beta (βₙₜₕ)"""
 
     beta_norm_toroidal: float = 0.0
-    """normaised toroidal beta"""
+    """Normalised toroidal beta (βₙₜ)"""
 
     beta_norm_poloidal: float = 0.0
-    """normaised poloidal beta"""
+    """Normalised poloidal beta (βₙₚ)"""
 
     e_plasma_beta_thermal: float = 0.0
     """Plasma thermal energy derived from thermal beta"""
@@ -189,22 +189,22 @@ class PhysicsData:
     """Plasma surface average poloidal field (T)"""
 
     b_plasma_toroidal_on_axis: float = 5.68
-    """Plasma toroidal field on axis (T) (`iteration variable 2`)"""
+    """Plasma toroidal field on axis (Bᴛ(R₀)) [T] (`iteration variable 2`)"""
 
     b_plasma_inboard_toroidal: float = 0.0
-    """Plasma inboard toroidal field (T)"""
+    """Plasma inboard toroidal field (Bᴛ(R₀-a)) [T]"""
 
     b_plasma_outboard_toroidal: float = 0.0
-    """Plasma outboard toroidal field (T)"""
+    """Plasma outboard toroidal field (Bᴛ(R₀+a)) [T]"""
 
     b_plasma_toroidal_profile: list[float] = field(default_factory=list)
-    """toroidal field profile in plasma (T)"""
+    """Plasma toroidal field profile (Bᴛ(r)) [T]"""
 
     b_plasma_total: float = 0.0
-    """Sum of plasma total toroidal + poloidal field (T)"""
+    """Sum of plasma total toroidal + poloidal field (Bₜₒₜ) [T]"""
 
     e_plasma_magnetic_stored: float = 0.0
-    """Plasma stored magnetic energy (J)"""
+    """Plasma stored magnetic energy [J]"""
 
     burnup: float = 0.0
     """fractional plasma burnup"""
@@ -213,7 +213,7 @@ class PhysicsData:
     """fractional plasma burnup user input"""
 
     b_plasma_vertical_required: float = 0.0
-    """Vertical field needed for plasma equilibrium (T)"""
+    """Vertical field needed for plasma equilibrium (Bᵥ) [T]"""
 
     c_beta: float = 0.5
     """Destabalisation parameter for i_beta_norm_max=4 beta limit"""
@@ -230,10 +230,10 @@ class PhysicsData:
     """
 
     nd_plasma_electrons_vol_avg: float = 9.8e19
-    """Plasma volume averaged electron density (/m3) (`iteration variable 6`)"""
+    """Plasma volume averaged electron density (⟨nₑ⟩) [/m³] (`iteration variable 6`)"""
 
     nd_plasma_fuel_ions_vol_avg: float = 0.0
-    """Plasma volume averaged fuel ion density (/m3)"""
+    """Plasma volume averaged fuel ion density (⟨n_fuel⟩) [/m³]"""
 
     dlamee: float = 0.0
     """electron-electron coulomb logarithm"""
@@ -244,16 +244,16 @@ class PhysicsData:
     nd_plasma_electron_max_array: list[float] = field(
         default_factory=lambda: np.zeros(8, dtype=np.float64)
     )
-    """Array of plasma electron density upper limits values (/m3)"""
+    """Array of plasma electron density upper limits values (nₑ,max) [/m³]"""
 
     nd_plasma_alphas_vol_avg: float = 0.0
-    """Plasma volume averaged thermal alpha density (/m3)"""
+    """Plasma volume averaged thermal alpha density (⟨n_α⟩) [/m³]"""  # noqa: RUF001
 
     nd_beam_ions: float = 0.0
-    """hot beam ion density, variable (/m3)"""
+    """Hot beam ion density, variable (⟨n_beam⟩) [/m³]"""
 
     nd_beam_ions_out: float = 0.0
-    """hot beam ion density from calculation (/m3)"""
+    """Hot beam ion density from calculation [/m³]"""
 
     beta_norm_max: float = 3.5
     """Troyon-like coefficient for beta scaling"""
@@ -274,25 +274,25 @@ class PhysicsData:
     """Stambaugh-like coefficient for beta scaling"""
 
     nd_plasma_electrons_max: float = 0.0
-    """Plasma electron max density limit (/m3)"""
+    """Plasma electron max density limit (nₑ,max) [/m³]"""
 
     nd_plasma_ions_total_vol_avg: float = 0.0
-    """Plasma volume averaged total ion density (/m3)"""
+    """Plasma volume averaged total ion density (⟨n_i⟩) [/m³]"""
 
     nd_plasma_electron_line: float = 0.0
-    """Plasma line averaged electron density (/m3)"""
+    """Plasma line averaged electron density (⟨nₑ⟩_line) [/m³]"""
 
     nd_plasma_protons_vol_avg: float = 0.0
-    """Plasma volume averaged proton ash density (/m3)"""
+    """Plasma volume averaged proton ash density (⟨n_p⟩) [/m³]"""
 
     ntau: float = 0.0
-    """Fusion double product (s/m3)"""
+    """Fusion double product [s/m³]"""
 
     nTtau: float = 0.0
-    """Lawson triple product [keV s / m3]"""
+    """Lawson triple product [keV s / m³]"""
 
     nd_plasma_impurities_vol_avg: float = 0.0
-    """Plasma volume averaged impurity (Z > 2) ion density (/m3)"""
+    """Plasma volume averaged impurity (Z > 2) ion density (⟨n_imp⟩) [/m³]"""
 
     gradient_length_ne: float = None
     """Max. normalised gradient length in el. density (i_plasma_pedestal==0 only)"""
@@ -306,7 +306,7 @@ class PhysicsData:
     """
 
     eps: float = 0.34399724802
-    """inverse aspect ratio"""
+    """Plasma inverse aspect ratio (ε)"""
 
     f_c_plasma_auxiliary: float = 0.0
     """fraction of plasma current produced by auxiliary current drive"""
@@ -488,10 +488,10 @@ class PhysicsData:
     """
 
     nd_plasma_pedestal_electron: float = 4.0e19
-    """electron density of pedestal [m⁻³] (`i_plasma_pedestal==1)"""
+    """Plasma electron density at pedestal (nₑ,pedestal) [/m³] (`i_plasma_pedestal==1)"""
 
     nd_plasma_separatrix_electron: float = 3.0e19
-    """electron density at separatrix [m⁻³] (`i_plasma_pedestal==1)"""
+    """Plasma electron density at separatrix (nₑ,sep) [/m³] (`i_plasma_pedestal==1)"""
 
     i_nd_plasma_pedestal_separatrix: int = 1
     """switch for pedestal and separatrix density calculation:
@@ -503,16 +503,16 @@ class PhysicsData:
     """critical ballooning parameter value"""
 
     nd_plasma_separatrix_electron_eich_max: float = 0.0
-    """Eich critical electron density at separatrix [m⁻³]"""
+    """Eich critical electron density at separatrix [/m³]"""
 
     plasma_res_factor: float = 1.0
     """plasma resistivity pre-factor"""
 
     radius_plasma_pedestal_density_norm: float = 1.0
-    """Normalised radius of density pedestal (`i_plasma_pedestal==1`)"""
+    """PPlasma normalised radius of density pedestal (ρₙ,pedestal)  (`i_plasma_pedestal==1`)"""
 
     radius_plasma_pedestal_temp_norm: float = 1.0
-    """Normalised radius of temperature pedestal (`i_plasma_pedestal==1`)"""
+    """Plasma normalised radius of temperature pedestal (ρₜ,pedestal) (`i_plasma_pedestal==1`)"""
 
     rho_te_max: float = 0.0
     """r/a where the temperature gradient is largest (`i_plasma_pedestal==0`)"""
@@ -521,24 +521,24 @@ class PhysicsData:
     """r/a where the density gradient is largest (`i_plasma_pedestal==0`)"""
 
     tbeta: float = 2.0
-    """temperature profile index beta  (`i_plasma_pedestal==1)"""
+    """Plasma temperature profile index beta (βₜ)  (`i_plasma_pedestal==1)"""
 
     temp_plasma_pedestal_kev: float = 1.0
-    """Plasma electron temperature of pedestal (keV) (`i_plasma_pedestal==1`)"""
+    """Plasma electron temperature of pedestal (Tₑ,pedestal) [keV] (`i_plasma_pedestal==1`)"""
 
     temp_plasma_separatrix_kev: float = 0.1
-    """Plasma electron temperature at separatrix (keV) (`i_plasma_pedestal==1`) calculated if reinke
+    """Plasma electron temperature at separatrix (Tₑ,ₛₑₚ) [keV] (`i_plasma_pedestal==1`) calculated if reinke
     criterion is used (`icc=78`)
     """
 
     i_beta_norm_max: int = 1
-    """Switch for maximum normalised beta scaling:"""
+    """Switch for maximum normalised beta scaling (βₙ)"""
 
     i_ind_plasma_internal_norm: int = 0
-    """Switch for plasma normalised internal inductance scaling:"""
+    """Switch for plasma normalised internal inductance scaling (lᵢ)"""
 
     i_alphaj: int = 0
-    """Switch for current profile index scaling:"""
+    """Switch for plasma current profile index scaling (αⱼ) """
 
     i_rad_loss: int = 1
     """switch for radiation loss term usage in power balance (see User Guide):
@@ -549,7 +549,7 @@ class PhysicsData:
     """
 
     i_confinement_time: int = 34
-    """switch for energy confinement time scaling law"""
+    """Switch for plasma energy confinement time scaling law (τₑ)"""
 
     i_plasma_wall_gap: int = 1
     """Switch for plasma-first wall clearances at the mid-plane:
@@ -599,13 +599,13 @@ class PhysicsData:
     """
 
     plasma_square: float = 0.0
-    """plasma squareness used by Sauter plasma shape"""
+    """Plasma squareness (ζ)"""
 
     kappa: float = 1.792
-    """plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5, 7 or 9-10`)"""
+    """Plasma separatrix elongation (κₐ)  (calculated if `i_plasma_geometry = 1-5, 7 or 9-10`)"""
 
     kappa95: float = 1.6
-    """plasma elongation at 95% surface (calculated if `i_plasma_geometry = 0-3, 6, or 8-10`)"""
+    """Plasma elongation at 95% surface (κ₉₅) (calculated if `i_plasma_geometry = 0-3, 6, or 8-10`)"""
 
     kappa_ipb: float = 0.0
     """Separatrix elongation calculated for IPB scalings"""
@@ -620,31 +620,31 @@ class PhysicsData:
     """margin to vertical stability"""
 
     pres_plasma_thermal_on_axis: float = 0.0
-    """Plasma central thermal pressure (no fast ions or beam pressure) (Pa)"""
+    """Plasma central thermal pressure (p₀) (no fast ions or beam pressure) [Pa]"""
 
     pres_plasma_thermal_total_profile: list[float] = field(default_factory=list)
-    """Profile of total pressure in plasma (Pa)"""
+    """Profile of total pressure in plasma [Pa]"""
 
     pres_plasma_electron_profile: list[float] = field(default_factory=list)
-    """Profile of electron pressure in plasma (Pa)"""
+    """Profile of electron pressure in plasma [Pa]"""
 
     pres_plasma_ion_total_profile: list[float] = field(default_factory=list)
-    """Profile of ion pressure in plasma (Pa)"""
+    """Profile of ion pressure in plasma [Pa]"""
 
     pres_plasma_fuel_profile: list[float] = field(default_factory=list)
-    """Profile of fuel pressure in plasma (Pa)"""
+    """Profile of fuel pressure in plasma [Pa]"""
 
     j_plasma_on_axis: float = 0.0
-    """Central plasma current density (A/m2)"""
+    """Central plasma current density (j₀) [A/m²]"""
 
     j_plasma_bootstrap_sauter_profile: list[float] = field(default_factory=list)
-    """Profile of bootstrap current density in plasma using Sauter et al scaling (A/m2)"""
+    """Profile of bootstrap current density in plasma using Sauter et al scaling [A/m²]"""
 
     n_plasma_profile_elements: int = 501
     """Number of elements in plasma profile"""
 
     pres_plasma_thermal_vol_avg: float = None
-    """Volume averaged thermal plasma pressure (no fast ions or beam pressure) (Pa)"""
+    """Volume averaged thermal plasma pressure (⟨p⟩)  (no fast ions or beam pressure) [Pa]"""
 
     f_dd_branching_trit: float = 0.0
     """branching ratio for DD -> T"""
@@ -710,7 +710,7 @@ class PhysicsData:
     """Power to conducted to the divertor region per major radius (MW/m)"""
 
     p_div_bt_q_aspect_rmajor_mw: float = 0.0
-    """EU DEMO divertor protection parameter (MW/T/m)"""
+    """EU DEMO divertor protection parameter (PₛₑₚBₜ / q₉₅AR₀)  [MWT/m]"""
 
     p_div_lower_separatrix_mw: float = 0.0
     """Separatrix power conducted to the lower divertor region (calculated if `i_single_null = 0`) (MW)"""
@@ -743,7 +743,7 @@ class PhysicsData:
     """ion/electron equilibration power per volume (MW/m3)"""
 
     plasma_current: float = 0.0
-    """plasma current (A)"""
+    """Plasma current (Iₚ) [A]"""
 
     c_plasma_peng_analytic: float = 0.0
     """Peng analytic plasma current (A)"""
@@ -815,10 +815,10 @@ class PhysicsData:
     """SOL radiation power (MW) (`stellarator only`)"""
 
     pden_plasma_sync_mw: float = 0.0
-    """synchrotron radiation power per volume (MW/m3)"""
+    """Plasma synchrotron radiation power per unit volume [MW/m³]"""
 
     p_plasma_sync_mw: float = 0.0
-    """Total synchrotron radiation power from plasma (MW)"""
+    """Total synchrotron radiation power from plasma (Pₛₙ) [MW]"""
 
     i_l_h_threshold: int = 19
     """switch for L-H mode power threshold scaling to use (see l_h_threshold_powers for list)"""
@@ -871,11 +871,10 @@ class PhysicsData:
     """ion transport power per volume (MW/m3)"""
 
     q0: float = 1.0
-    """Safety factor on axis"""
+    """Plasma safety factor on axis (q₀)"""
 
     q95: float = 0.0
-    """Safety factor at 95% flux surface (iteration variable 18) (unless icurr=2 (ST current scaling),
-    in which case q95 = mean edge safety factor qbar)
+    """Plasma safety factor at 95% flux surface (q₉₅) (`iteration variable 18`)
     """
 
     molflow_plasma_fuelling_required: float = 0.0
@@ -885,10 +884,10 @@ class PhysicsData:
     """tauratio /1.0/ : ratio of He and pellet particle confinement times"""
 
     q95_min: float = 0.0
-    """lower limit for edge safety factor"""
+    """Plasmalower limit for edge safety factor"""
 
     qstar: float = 0.0
-    """cylindrical safety factor"""
+    """Plasma cylindrical safety factor (qcyl)"""
 
     rad_fraction_sol: float = 0.8
     """SoL radiation fraction"""
@@ -918,10 +917,10 @@ class PhysicsData:
     """plasma inductance (H)"""
 
     rmajor: float = 8.14
-    """plasma major radius (m) (`iteration variable 3`)"""
+    """Plasma major radius (R₀) [m] (`iteration variable 3`)"""
 
     rminor: float = 0.0
-    """plasma minor radius (m)"""
+    """Plasma minor radius (a) [m]"""
 
     f_nd_beam_electron: float = 0.005
     """hot beam density / n_e (`iteration variable 7`)"""
@@ -977,41 +976,41 @@ class PhysicsData:
     t_alpha_confinement: float = 0.0
     """alpha particle confinement time (sec)"""
 
-    f_alpha_energy_confinement: float = 0.0
-    """alpha particle to energy confinement time ratio"""
+    f_t_alpha_energy_confinement: float = 0.0
+    """Alpha particle to energy confinement time ratio"""
 
     temp_plasma_electron_vol_avg_kev: float = 12.9
-    """volume averaged electron temperature (keV) (`iteration variable 4`)"""
+    """Plasma volume averaged electron temperature (⟨Tₑ⟩) [keV] (`iteration variable 4`)"""
 
     temp_plasma_electron_on_axis_kev: float = 0.0
-    """central electron temperature (keV)"""
+    """Plasma central electron temperature (Tₑ₀) [keV]"""
 
     temp_plasma_electron_density_weighted_kev: float = 0.0
-    """density weighted average electron temperature (keV)"""
+    """Density weighted average electron temperature (⟨Tₑ⟩_n) [keV]"""
 
     temp_plasma_electron_line_avg_kev: float = None
     """Line averaged electron temperature (keV)"""
 
     temp_plasma_ion_vol_avg_kev: float = 12.9
-    """volume averaged ion temperature (keV). N.B. calculated from temp_plasma_electron_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`"""
+    """Volume averaged ion temperature (⟨Tᵢ⟩) [keV]. N.B. calculated from temp_plasma_electron_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`"""
 
     temp_plasma_ion_on_axis_kev: float = 0.0
-    """central ion temperature (keV)"""
+    """Plasma central ion temperature (Tᵢ₀) [keV]"""
 
     temp_plasma_ion_density_weighted_kev: float = 0.0
-    """density weighted average ion temperature (keV)"""
+    """Plasma density weighted average ion temperature (⟨Tᵢ⟩_n) [keV]"""
 
     f_temp_plasma_ion_electron: float = 1.0
-    """ion temperature / electron temperature(used to calculate temp_plasma_ion_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`"""
+    """Plasma ratio of ion temperature to electron temperature (used to calculate temp_plasma_ion_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`)"""
 
     triang: float = 0.36
-    """plasma separatrix triangularity (calculated if `i_plasma_geometry = 1, 3-5 or 7`)"""
+    """Plasma separatrix triangularity (δₐ) (calculated if `i_plasma_geometry = 1, 3-5 or 7`)"""
 
     triang95: float = 0.24
-    """plasma triangularity at 95% surface (calculated if `i_plasma_geometry = 0-2, 6, 8 or 9`)"""
+    """Plasma triangularity at 95% surface (δ₉₅) (calculated if `i_plasma_geometry = 0-2, 6, 8 or 9`)"""
 
     vol_plasma: float = 0.0
-    """plasma volume (m3)"""
+    """Plasma volume [m³]"""
 
     vs_plasma_burn_required: float = 0.0
     """V-s needed during flat-top (heat + burn times) (Wb)"""
@@ -1029,28 +1028,28 @@ class PhysicsData:
     """Plasma resistive flux consumption for plasma current ramp-up (Vs)(Wb)"""
 
     vs_plasma_total_required: float = 0.0
-    """total V-s needed (Wb)"""
+    """Total V-s needed for full plasma pulse [Wb]"""
 
     pflux_fw_neutron_mw: float = 0.0
-    """average neutron wall load (MW/m2)"""
+    """Average FW neutron wall load [MW/m²]"""
 
     pflux_plasma_surface_neutron_avg_mw: float = 0.0
-    """Average neutron flux at plasma surface (MW/m2)"""
+    """Average neutron flux at plasma surface [MW/m²]"""
 
     wtgpd: float = 0.0
-    """mass of fuel used per day (g)"""
+    """Mass of fuel used per day [g]"""
 
     a_plasma_poloidal: float = 0.0
-    """plasma poloidal cross-sectional area [m^2]"""
+    """Plasma poloidal cross-sectional area [m²]"""
 
     n_charge_plasma_effective_vol_avg: float = 0.0
-    """Volume averaged plasma effective charge"""
+    """Volume averaged plasma effective charge (⟨Zₑ⟩)"""
 
     n_charge_plasma_effective_profile: list[float] = field(default_factory=list)
     """Profile of plasma effective charge"""
 
     n_charge_plasma_effective_mass_weighted_vol_avg: float = 0.0
-    """Plasma mass-weighted volume averaged plasma effective charge"""
+    """Plasma mass-weighted volume averaged plasma effective charge (⟨Zₑ⟩ₘ)"""
 
     len_plasma_debye_electron_profile: list[float] = field(default_factory=list)
     """Profile of electron Debye length in plasma (m)"""
