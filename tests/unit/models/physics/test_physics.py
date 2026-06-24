@@ -13,9 +13,9 @@ from process.models.physics.physics import (
     PlasmaBeta,
     PlasmaInductance,
     calculate_cylindrical_safety_factor,
+    calculate_ion_electron_equilibration_power,
     ps_fraction_scene,
     res_diff_time,
-    rether,
 )
 
 
@@ -1965,8 +1965,8 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     assert t_alpha_confinement == pytest.approx(phyauxparam.expected_t_alpha_confinement)
 
 
-def test_rether():
-    assert rether(
+def test_calculate_ion_electron_equilibration_power():
+    assert calculate_ion_electron_equilibration_power(
         1.0, 1.45, 7.5e19, 17.81065204, 12.0, 13.0, 0.43258985
     ) == pytest.approx(0.028360489673597476)
 

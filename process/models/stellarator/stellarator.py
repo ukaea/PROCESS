@@ -14,7 +14,10 @@ from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.models.engineering.pumping import CoolantType
-from process.models.physics.physics import Physics, rether
+from process.models.physics.physics import (
+    Physics,
+    calculate_ion_electron_equilibration_power,
+)
 from process.models.power import PumpingPowerModelTypes
 from process.models.stellarator.build import st_build
 from process.models.stellarator.coils.calculate import st_coil
@@ -2087,14 +2090,16 @@ class Stellarator(Model):
 
         #  Calculate ion/electron equilibration power
 
-        self.data.physics.pden_ion_electron_equilibration_mw = rether(
-            self.data.physics.alphan,
-            self.data.physics.alphat,
-            self.data.physics.nd_plasma_electrons_vol_avg,
-            self.data.physics.dlamie,
-            self.data.physics.temp_plasma_electron_vol_avg_kev,
-            self.data.physics.temp_plasma_ion_vol_avg_kev,
-            self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+        self.data.physics.pden_ion_electron_equilibration_mw = (
+            calculate_ion_electron_equilibration_power(
+                self.data.physics.alphan,
+                self.data.physics.alphat,
+                self.data.physics.nd_plasma_electrons_vol_avg,
+                self.data.physics.dlamie,
+                self.data.physics.temp_plasma_electron_vol_avg_kev,
+                self.data.physics.temp_plasma_ion_vol_avg_kev,
+                self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+            )
         )
 
         #  Calculate radiation power
