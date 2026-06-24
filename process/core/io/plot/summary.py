@@ -16172,7 +16172,9 @@ def main_plot(
 
     plot_resistivity_profile(pages["detailed_params"].add_subplot(232), m_file, scan)
 
-    plot_plasma_equilibration_time_profile(pages["detailed_params"].add_subplot(233), m_file, scan)
+    plot_plasma_equilibration_time_profile(
+        pages["detailed_params"].add_subplot(233), m_file, scan
+    )
 
     plot_detailed_plasma_parameters(
         pages["detailed_params"].add_subplot(233),
