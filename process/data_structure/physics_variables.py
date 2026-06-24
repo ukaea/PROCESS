@@ -683,8 +683,8 @@ class PhysicsData:
     f_p_alpha_plasma_deposited: float = 0.95
     """Fraction of alpha power deposited in plasma. Default of 0.95 taken from https://doi.org/10.1088/0029-5515/39/12/305."""
 
-    f_alpha_ion: float = 0.0
-    """fraction of alpha power to ions"""
+    f_p_alpha_total_ions: float = 0.0
+    """Fraction of total alpha power used to heat the ions"""
 
     f_plasma_fuel_deuterium: float = 0.5
     """Plasma deuterium fuel fraction"""
