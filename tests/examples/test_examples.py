@@ -18,6 +18,12 @@ def examples_temp_data(tmp_path_factory):
     :type tmp_path: Path
     :return: temporary path containing examples files
     :rtype: Path
+
+    Yields:
+    -------
+      the temp dir
+
+    Changes back to the cwd afterwards
     """
     data_path = Path(__file__).parent.parent.parent / "examples"
     tmp_path = tmp_path_factory.mktemp("examples")
@@ -27,12 +33,15 @@ def examples_temp_data(tmp_path_factory):
         ignore=ignore_patterns("*.md", "*log", "__pycache__", "*.ipynb*"),
     )
 
+    cwd = Path.cwd()
     # This change of directory is undone by the return_to_root fixture, hence we do not
     # need to change back directories here
     os.chdir(tmp_path / "examples")
 
-    # Return tmp_path/examples, now containing files copied from examples dir
-    return tmp_path / "examples"
+    # yield tmp_path/examples, now containing files copied from examples dir
+    yield tmp_path / "examples"
+
+    os.chdir(cwd)
 
 
 def _get_location(loc, name):
