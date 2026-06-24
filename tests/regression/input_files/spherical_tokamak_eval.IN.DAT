@@ -69,6 +69,11 @@ gapomin  = 0.0 * minimum gap between outboard vacuum vessel and TF coil (m) (`it
 iohcl    = 0 * Switch for existence of central solenoid;
 i_cs_precomp = 0 * Switch for existence of central solenoid pre-compression structure;
 i_tf_inside_cs = 0 * Switch for placing the TF coil inside the CS
+i_tf_turn_type = 2 * CroCo Turn geometry for HTS Tapes
+dx_tf_hts_tape_rebco = 1.0e-6
+dx_tf_croco_strand_copper = 2.0e-3
+dx_tf_hts_tape_copper = 2.0e-4
+dx_tf_hts_tape_hastelloy = 1e-5
 dr_cs    = 0.20016400484967947 * Central solenoid thickness (m) (`iteration variable 16`)
 i_r_cp_top = 2 * Switch selecting the he parametrization of the outer radius of the top of the CP part of the TF coil
 dr_fw_plasma_gap_inboard  = 0.1 * Gap between plasma and first wall; inboard side (m) (if `i_plasma_wall_gap=1`)

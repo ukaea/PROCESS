@@ -48,7 +48,7 @@ OBS_VARS = {
     "thkwp": "dr_tf_wp_with_insulation",
     "leni": "dx_tf_turn_cable_space_average",
     "leno": "t_turn",
-    "conductor_width": "t_conductor",
+    "conductor_width": "dx_tf_turn_conduit_full_average",
     "deltf": "dr_tf_shld_gap",
     "ddwi": "dr_vv_outboard",
     "pnuccp": "pnuc_cp",
@@ -457,6 +457,7 @@ OBS_VARS = {
     "dr_hts_tape": "dr_tf_hts_tape",
     "coppera_m2_max": "tf_coppera_m2_max",
     "f_ster_div_single": None,
+    "t_conductor": "dx_tf_turn_conduit_full_average",
 }
 
 OBS_VARS_HELP = {
