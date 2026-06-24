@@ -1968,8 +1968,11 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
 def test_calculate_ion_electron_equilibration_power():
     assert calculate_ion_electron_equilibration_power(
-        1.0, 1.45, 7.5e19, 17.81065204, 12.0, 13.0, 0.43258985
-    ) == pytest.approx(0.028360489673597476)
+        nd_electrons=7.5e19,
+        temp_plasma_electron_kev=17.81065204,
+        temp_plasma_ion_kev=12.0,
+        t_plasma_ion_electron_equilibration=0.43258985,
+    ) == pytest.approx(242109.29342520377)
 
 
 class PohmParam(NamedTuple):

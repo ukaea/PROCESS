@@ -95,55 +95,40 @@ def calculate_cylindrical_safety_factor(
 
 @nb.jit(nopython=True, cache=True)
 def calculate_ion_electron_equilibration_power(
-    alphan,
-    alphat,
-    nd_plasma_electrons_vol_avg,
-    dlamie,
-    te,
-    temp_plasma_ion_vol_avg_kev,
-    n_charge_plasma_effective_mass_weighted_vol_avg,
-):
+    nd_electrons: float | np.ndarray,
+    temp_plasma_electron_kev: float | np.ndarray,
+    temp_plasma_ion_kev: float | np.ndarray,
+    t_plasma_ion_electron_equilibration: float | np.ndarray,
+) -> float | np.ndarray:
     """Routine to find the equilibration power between the
-    ions and electrons
-    This routine calculates the equilibration power between the
-    ions and electrons.
-    Unknown origin
+    ions and electrons (Pₑᵢ) in the plasma.
 
     Parameters
     ----------
-    alphan :
-        density profile index
-    alphat :
-        temperature profile index
-    nd_plasma_electrons_vol_avg :
-        electron density (/m3)
-    dlamie :
-        ion-electron coulomb logarithm
-    te :
-        electron temperature (keV)
-    temp_plasma_ion_vol_avg_kev :
-        ion temperature (keV)
-    n_charge_plasma_effective_mass_weighted_vol_avg :
-        mass weighted plasma effective charge
+    nd_electrons : float | np.ndarray
+        Electron density [/m³]
+    temp_plasma_electron_kev : float | np.ndarray
+        Electron temperature [keV]
+    temp_plasma_ion_kev : float | np.ndarray
+        Ion temperature [keV]
+    t_plasma_ion_electron_equilibration : float | np.ndarray
+        Ion-electron equilibration time [s]
 
     Returns
     -------
-    pden_ion_electron_equilibration_mw  :
-        ion/electron equilibration power (MW/m3)
+    pden_ion_electron_equilibration  :
+        ion/electron equilibration power (Pₑᵢ) [W/m³]
 
     """
-    profie = (1.0 + alphan) ** 2 / (
-        (2.0 * alphan - 0.5 * alphat + 1.0) * np.sqrt(1.0 + alphat)
+    return (
+        (3 / 2)
+        * nd_electrons
+        * constants.KILOELECTRON_VOLT
+        * (
+            (temp_plasma_electron_kev - temp_plasma_ion_kev)
+            / t_plasma_ion_electron_equilibration
+        )
     )
-    conie = (
-        2.42165e-41
-        * dlamie
-        * nd_plasma_electrons_vol_avg**2
-        * n_charge_plasma_effective_mass_weighted_vol_avg
-        * profie
-    )
-
-    return conie * (temp_plasma_ion_vol_avg_kev - te) / (te**1.5)
 
 
 # -----------------------------------------------------
@@ -702,16 +687,17 @@ class Physics(Model):
 
         # Calculate ion/electron equilibration power
 
+        pden_ion_electron_equilibration = calculate_ion_electron_equilibration_power(
+            nd_electrons=self.data.physics.nd_plasma_electrons_vol_avg,
+            temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
+            temp_plasma_ion_kev=self.data.physics.temp_plasma_ion_vol_avg_kev,
+            t_plasma_ion_electron_equilibration=np.average([
+                self.data.physics.t_plasma_electron_deuteron_equilibration_vol_avg,
+                self.data.physics.t_plasma_electron_triton_equilibration_vol_avg,
+            ]),
+        )
         self.data.physics.pden_ion_electron_equilibration_mw = (
-            calculate_ion_electron_equilibration_power(
-                self.data.physics.alphan,
-                self.data.physics.alphat,
-                self.data.physics.nd_plasma_electrons_vol_avg,
-                self.data.physics.dlamie,
-                self.data.physics.temp_plasma_electron_vol_avg_kev,
-                self.data.physics.temp_plasma_ion_vol_avg_kev,
-                self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
-            )
+            pden_ion_electron_equilibration / 1.0e6
         )
 
         # Calculate radiation power
