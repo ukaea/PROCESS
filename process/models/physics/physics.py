@@ -659,10 +659,12 @@ class Physics(Model):
             nd_electrons=self.data.physics.nd_plasma_electrons_vol_avg,
             temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
             temp_plasma_ion_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
-            t_plasma_ion_electron_equilibration=np.average([
-                self.data.physics.t_plasma_electron_deuteron_equilibration_vol_avg,
-                self.data.physics.t_plasma_electron_triton_equilibration_vol_avg,
-            ]),
+            t_plasma_ion_electron_equilibration=1.0
+            / (
+                1.0 / self.data.physics.t_plasma_electron_deuteron_equilibration_vol_avg
+                + 1.0 / self.data.physics.t_plasma_electron_triton_equilibration_vol_avg
+                + 1.0 / self.data.physics.t_plasma_electron_alpha_equilibration_vol_avg
+            ),
         )
         self.data.physics.pden_ion_electron_equilibration_vol_avg_mw = (
             pden_ion_electron_equilibration_vol_avg / 1.0e6
