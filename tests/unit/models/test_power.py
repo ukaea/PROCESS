@@ -19,14 +19,6 @@ class CryoParam(NamedTuple):
 
     inuclear: Any = None
 
-    qss: Any = None
-
-    qac: Any = None
-
-    qcl: Any = None
-
-    qmisc: Any = None
-
     i_tf_sup: Any = None
 
     coldmass: Any = None
@@ -60,10 +52,6 @@ class CryoParam(NamedTuple):
         CryoParam(
             qnuc=12920,
             inuclear=1,
-            qss=0,
-            qac=0,
-            qcl=0,
-            qmisc=0,
             i_tf_sup=1,
             coldmass=47352637.039762333,
             c_tf_turn=74026.751437500003,
@@ -81,10 +69,6 @@ class CryoParam(NamedTuple):
         CryoParam(
             qnuc=12920,
             inuclear=1,
-            qss=20361.633927097802,
-            qac=3611.3456752656607,
-            qcl=16108.2211128,
-            qmisc=23850.540321823562,
             i_tf_sup=1,
             coldmass=47308985.527808741,
             c_tf_turn=74026.751437500003,
@@ -118,14 +102,6 @@ def test_cryo(cryoparam, monkeypatch, power):
 
     monkeypatch.setattr(power.data.fwbs, "inuclear", cryoparam.inuclear)
 
-    monkeypatch.setattr(power.data.power, "qss", cryoparam.qss)
-
-    monkeypatch.setattr(power.data.power, "qac", cryoparam.qac)
-
-    monkeypatch.setattr(power.data.power, "qcl", cryoparam.qcl)
-
-    monkeypatch.setattr(power.data.power, "qmisc", cryoparam.qmisc)
-
     helpow = power.cryo(
         i_tf_sup=cryoparam.i_tf_sup,
         coldmass=cryoparam.coldmass,
@@ -151,33 +127,11 @@ def test_cryo(cryoparam, monkeypatch, power):
 class PfpwrParam(NamedTuple):
     iohcl: Any = None
 
-    peakmva: Any = None
-
-    pfckts: Any = None
-
-    maxpoloidalpower: Any = None
-
-    peakpoloidalpower: Any = None
-
-    spfbusl: Any = None
-
     poloidalpower: Any = None
-
-    spsmva: Any = None
-
-    vpfskv: Any = None
-
-    ensxpfm: Any = None
-
-    acptmax: Any = None
-
-    srcktpm: Any = None
 
     n_pf_coil_groups: Any = None
 
     c_pf_coil_turn: Any = None
-
-    p_pf_electric_supplies_mw: Any = None
 
     rho_pf_coil: Any = None
 
@@ -219,10 +173,6 @@ class PfpwrParam(NamedTuple):
 
     t_plant_pulse_plasma_current_ramp_up: Any = None
 
-    outfile: Any = None
-
-    iprint: Any = None
-
     expected_peakmva: Any = None
 
     expected_pfckts: Any = None
@@ -249,46 +199,11 @@ class PfpwrParam(NamedTuple):
     [
         PfpwrParam(
             iohcl=1,
-            peakmva=0,
-            pfckts=0,
-            maxpoloidalpower=1000,
-            peakpoloidalpower=0,
-            spfbusl=0,
-            poloidalpower=np.array(
-                np.array((0, 0, 0, 0, 0), order="F"), order="F"
-            ).transpose(),
-            spsmva=0,
-            vpfskv=0,
-            ensxpfm=0,
-            acptmax=0,
-            srcktpm=0,
+            poloidalpower=np.zeros(5),
             n_pf_coil_groups=4,
             c_pf_coil_turn=np.array(
                 (
-                    (
-                        0,
-                        0,
-                        -0,
-                        -0,
-                        -0,
-                        -0,
-                        -0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ),
+                    np.zeros(22),
                     (
                         42200,
                         42200,
@@ -385,34 +300,10 @@ class PfpwrParam(NamedTuple):
                         0,
                         0,
                     ),
-                    (
-                        0,
-                        0,
-                        -0,
-                        -0,
-                        -0,
-                        -0,
-                        -0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ),
+                    np.zeros(22),
                 ),
                 order="F",
             ).transpose(),
-            p_pf_electric_supplies_mw=0,
             rho_pf_coil=0,
             n_pf_cs_plasma_circuits=8,
             n_pf_coils_in_group=np.array(
@@ -703,20 +594,20 @@ class PfpwrParam(NamedTuple):
                         0,
                         0,
                     ),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
                 ),
                 order="F",
             ).transpose(),
@@ -750,36 +641,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            f_a_pf_coil_void=np.array(
-                np.array(
-                    (
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                    ),
-                    order="F",
-                ),
-                order="F",
-            ).transpose(),
+            f_a_pf_coil_void=np.full(22, 0.29999999999999999),
             j_pf_coil_wp_peak=np.array(
                 np.array(
                     (
@@ -967,8 +829,6 @@ class PfpwrParam(NamedTuple):
                 "EOP        ",
             ),
             t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
-            outfile=11,
-            iprint=0,
             expected_peakmva=736.39062584245937,
             expected_pfckts=12,
             expected_peakpoloidalpower=211.21199231967319,
@@ -988,11 +848,6 @@ class PfpwrParam(NamedTuple):
         ),
         PfpwrParam(
             iohcl=1,
-            peakmva=736.39062584245937,
-            pfckts=12,
-            maxpoloidalpower=1000,
-            peakpoloidalpower=211.21199231967319,
-            spfbusl=2533.4495999999999,
             poloidalpower=np.array(
                 np.array(
                     (59332953.082890816, 43806300.444207191, 0, 0, -211211992.31967318),
@@ -1000,38 +855,10 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            spsmva=845.66824574150155,
-            vpfskv=20,
-            ensxpfm=37429.525515086898,
-            acptmax=24.816666666666666,
-            srcktpm=1071.1112934857531,
             n_pf_coil_groups=4,
             c_pf_coil_turn=np.array(
                 (
-                    (
-                        0,
-                        0,
-                        -0,
-                        -0,
-                        -0,
-                        -0,
-                        -0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ),
+                    np.zeros(22),
                     (
                         33663.946773824558,
                         38185.429487079651,
@@ -1128,34 +955,10 @@ class PfpwrParam(NamedTuple):
                         0,
                         0,
                     ),
-                    (
-                        0,
-                        0,
-                        -0,
-                        -0,
-                        -0,
-                        -0,
-                        -0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ),
+                    np.zeros(22),
                 ),
                 order="F",
             ).transpose(),
-            p_pf_electric_supplies_mw=0.89998039031509891,
             rho_pf_coil=0,
             n_pf_cs_plasma_circuits=8,
             n_pf_coils_in_group=np.array(
@@ -1446,20 +1249,20 @@ class PfpwrParam(NamedTuple):
                         0,
                         0,
                     ),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
+                    np.zeros(22),
                 ),
                 order="F",
             ).transpose(),
@@ -1493,36 +1296,7 @@ class PfpwrParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            f_a_pf_coil_void=np.array(
-                np.array(
-                    (
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                        0.29999999999999999,
-                    ),
-                    order="F",
-                ),
-                order="F",
-            ).transpose(),
+            f_a_pf_coil_void=np.full(22, 0.29999999999999999),
             j_pf_coil_wp_peak=np.array(
                 np.array(
                     (
@@ -1710,8 +1484,6 @@ class PfpwrParam(NamedTuple):
                 "EOP        ",
             ),
             t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
-            outfile=11,
-            iprint=0,
             expected_peakmva=90.673341440806112,
             expected_pfckts=12,
             expected_peakpoloidalpower=9900,
@@ -1752,91 +1524,25 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(power.data.build, "iohcl", pfpwrparam.iohcl)
 
-    monkeypatch.setattr(power.data.heat_transport, "peakmva", pfpwrparam.peakmva)
-
-    monkeypatch.setattr(power.data.pf_power, "pfckts", pfpwrparam.pfckts)
-
-    monkeypatch.setattr(
-        power.data.pf_power, "maxpoloidalpower", pfpwrparam.maxpoloidalpower
-    )
-
-    monkeypatch.setattr(
-        power.data.pf_power, "peakpoloidalpower", pfpwrparam.peakpoloidalpower
-    )
-
-    monkeypatch.setattr(power.data.pf_power, "spfbusl", pfpwrparam.spfbusl)
-
     monkeypatch.setattr(power.data.pf_power, "poloidalpower", pfpwrparam.poloidalpower)
 
-    monkeypatch.setattr(power.data.pf_power, "spsmva", pfpwrparam.spsmva)
-
-    monkeypatch.setattr(power.data.pf_power, "vpfskv", pfpwrparam.vpfskv)
-
-    monkeypatch.setattr(power.data.pf_power, "ensxpfm", pfpwrparam.ensxpfm)
-
-    monkeypatch.setattr(power.data.pf_power, "acptmax", pfpwrparam.acptmax)
-
-    monkeypatch.setattr(power.data.pf_power, "srcktpm", pfpwrparam.srcktpm)
-
-    monkeypatch.setattr(
-        power.data.pf_coil, "n_pf_coil_groups", pfpwrparam.n_pf_coil_groups
-    )
-
-    monkeypatch.setattr(power.data.pf_coil, "c_pf_coil_turn", pfpwrparam.c_pf_coil_turn)
-
-    monkeypatch.setattr(
-        power.data.pf_coil,
-        "p_pf_electric_supplies_mw",
-        pfpwrparam.p_pf_electric_supplies_mw,
-    )
-
-    monkeypatch.setattr(power.data.pf_coil, "rho_pf_coil", pfpwrparam.rho_pf_coil)
-
-    monkeypatch.setattr(
-        power.data.pf_coil, "n_pf_cs_plasma_circuits", pfpwrparam.n_pf_cs_plasma_circuits
-    )
-
-    monkeypatch.setattr(
-        power.data.pf_coil, "n_pf_coils_in_group", pfpwrparam.n_pf_coils_in_group
-    )
-
-    monkeypatch.setattr(
-        power.data.pf_coil, "c_pf_cs_coils_peak_ma", pfpwrparam.c_pf_cs_coils_peak_ma
-    )
-
-    monkeypatch.setattr(power.data.pf_coil, "etapsu", pfpwrparam.etapsu)
-
-    monkeypatch.setattr(
-        power.data.pf_coil,
+    for field in [
+        "n_pf_coil_groups",
+        "c_pf_coil_turn",
+        "rho_pf_coil",
+        "n_pf_cs_plasma_circuits",
+        "n_pf_coils_in_group",
+        "c_pf_cs_coils_peak_ma",
+        "etapsu",
         "c_pf_coil_turn_peak_input",
-        pfpwrparam.c_pf_coil_turn_peak_input,
-    )
-
-    monkeypatch.setattr(
-        power.data.pf_coil,
         "c_pf_cs_coil_pulse_end_ma",
-        pfpwrparam.c_pf_cs_coil_pulse_end_ma,
-    )
-
-    monkeypatch.setattr(
-        power.data.pf_coil, "ind_pf_cs_plasma_mutual", pfpwrparam.ind_pf_cs_plasma_mutual
-    )
-
-    monkeypatch.setattr(
-        power.data.pf_coil, "n_pf_coil_turns", pfpwrparam.n_pf_coil_turns
-    )
-
-    monkeypatch.setattr(
-        power.data.pf_coil, "f_a_pf_coil_void", pfpwrparam.f_a_pf_coil_void
-    )
-
-    monkeypatch.setattr(
-        power.data.pf_coil, "j_pf_coil_wp_peak", pfpwrparam.j_pf_coil_wp_peak
-    )
-
-    monkeypatch.setattr(
-        power.data.pf_coil, "r_pf_coil_middle", pfpwrparam.r_pf_coil_middle
-    )
+        "ind_pf_cs_plasma_mutual",
+        "n_pf_coil_turns",
+        "f_a_pf_coil_void",
+        "j_pf_coil_wp_peak",
+        "r_pf_coil_middle",
+    ]:
+        monkeypatch.setattr(power.data.pf_coil, field, getattr(pfpwrparam, field))
 
     monkeypatch.setattr(
         power.data.physics, "p_plasma_ohmic_mw", pfpwrparam.p_plasma_ohmic_mw
@@ -1890,10 +1596,6 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
 
 class AcpowParam(NamedTuple):
-    a_plant_floor_effective: Any = None
-
-    p_plant_electric_base: Any = None
-
     p_cryo_plant_electric_mw: Any = None
 
     vachtmw: Any = None
@@ -1904,27 +1606,17 @@ class AcpowParam(NamedTuple):
 
     p_hcd_electric_total_mw: Any = None
 
-    tlvpmw: Any = None
-
     peakmva: Any = None
 
     p_plant_electric_base_total_mw: Any = None
 
     fmgdmw: Any = None
 
-    pflux_plant_floor_electric: Any = None
-
     p_coolant_pump_elec_total_mw: Any = None
-
-    pacpmw: Any = None
 
     i_pf_energy_storage_source: Any = None
 
     srcktpm: Any = None
-
-    iprint: Any = None
-
-    outfile: Any = None
 
     expected_pacpmw: Any = None
 
@@ -1933,45 +1625,31 @@ class AcpowParam(NamedTuple):
     "acpowparam",
     [
         AcpowParam(
-            a_plant_floor_effective=379218.8908858358,
-            p_plant_electric_base=5000000,
             p_cryo_plant_electric_mw=37.900388528497025,
             vachtmw=0.5,
             p_tf_electric_supplies_mw=9.1507079104675704,
             p_tritium_plant_electric_mw=15,
             p_hcd_electric_total_mw=129.94611930107126,
-            tlvpmw=0,
             peakmva=736.39062584245937,
             p_plant_electric_base_total_mw=0,
             fmgdmw=0,
-            pflux_plant_floor_electric=150,
             p_coolant_pump_elec_total_mw=234.28554165620102,
-            pacpmw=0,
             i_pf_energy_storage_source=2,
             srcktpm=1071.1112934857531,
-            iprint=0,
-            outfile=11,
             expected_pacpmw=1164.244494532182,
         ),
         AcpowParam(
-            a_plant_floor_effective=381580.9594357388,
-            p_plant_electric_base=5000000,
             p_cryo_plant_electric_mw=108.74512702403499,
             vachtmw=0.5,
             p_tf_electric_supplies_mw=9.1507079104675704,
             p_tritium_plant_electric_mw=15,
             p_hcd_electric_total_mw=129.94611930107126,
-            tlvpmw=699.34943812129745,
             peakmva=90.673341440806112,
             p_plant_electric_base_total_mw=62.23714391536082,
             fmgdmw=0,
-            pflux_plant_floor_electric=150,
             p_coolant_pump_elec_total_mw=234.2162627659944,
-            pacpmw=1226.1273281650574,
             i_pf_energy_storage_source=2,
             srcktpm=1069.8879533693198,
-            iprint=0,
-            outfile=11,
             expected_pacpmw=589.3014463957436,
         ),
     ],
@@ -1989,77 +1667,32 @@ def test_acpow(acpowparam, monkeypatch, power):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        power.data.buildings,
-        "a_plant_floor_effective",
-        acpowparam.a_plant_floor_effective,
-    )
-
-    monkeypatch.setattr(
-        power.data.heat_transport,
-        "p_plant_electric_base",
-        acpowparam.p_plant_electric_base,
-    )
-
-    monkeypatch.setattr(
-        power.data.heat_transport,
+    for field in [
         "p_cryo_plant_electric_mw",
-        acpowparam.p_cryo_plant_electric_mw,
-    )
-
-    monkeypatch.setattr(power.data.heat_transport, "vachtmw", acpowparam.vachtmw)
-
-    monkeypatch.setattr(
-        power.data.heat_transport,
+        "vachtmw",
         "p_tf_electric_supplies_mw",
-        acpowparam.p_tf_electric_supplies_mw,
-    )
-
-    monkeypatch.setattr(
-        power.data.heat_transport,
         "p_tritium_plant_electric_mw",
-        acpowparam.p_tritium_plant_electric_mw,
-    )
-
-    monkeypatch.setattr(
-        power.data.heat_transport,
         "p_hcd_electric_total_mw",
-        acpowparam.p_hcd_electric_total_mw,
-    )
-
-    monkeypatch.setattr(power.data.heat_transport, "tlvpmw", acpowparam.tlvpmw)
-
-    monkeypatch.setattr(power.data.heat_transport, "peakmva", acpowparam.peakmva)
-
-    monkeypatch.setattr(
-        power.data.heat_transport,
+        "peakmva",
         "p_plant_electric_base_total_mw",
-        acpowparam.p_plant_electric_base_total_mw,
-    )
-
-    monkeypatch.setattr(power.data.heat_transport, "fmgdmw", acpowparam.fmgdmw)
-
-    monkeypatch.setattr(
-        power.data.heat_transport,
-        "pflux_plant_floor_electric",
-        acpowparam.pflux_plant_floor_electric,
-    )
-
-    monkeypatch.setattr(
-        power.data.heat_transport,
+        "fmgdmw",
         "p_coolant_pump_elec_total_mw",
-        acpowparam.p_coolant_pump_elec_total_mw,
-    )
+    ]:
+        monkeypatch.setattr(
+            power.data.heat_transport,
+            field,
+            getattr(acpowparam, field),
+        )
 
-    monkeypatch.setattr(power.data.heat_transport, "pacpmw", acpowparam.pacpmw)
-
-    monkeypatch.setattr(
-        power.data.pf_power,
+    for field in [
         "i_pf_energy_storage_source",
-        acpowparam.i_pf_energy_storage_source,
-    )
-
-    monkeypatch.setattr(power.data.pf_power, "srcktpm", acpowparam.srcktpm)
+        "srcktpm",
+    ]:
+        monkeypatch.setattr(
+            power.data.pf_power,
+            field,
+            getattr(acpowparam, field),
+        )
 
     power.acpow(output=False)
 
