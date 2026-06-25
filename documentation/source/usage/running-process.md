@@ -14,12 +14,7 @@ A SCAN is available in any of these modes.  One input variable can be scanned (`
 
 ## To run PROCESS
 
-The default PROCESS input file name is IN.DAT. If no input file name is given as an argument in the command line, it assumes an IN.DAT file is present in the current directory:
-```bash
-# Use an IN.DAT file in the current directory
-process
-```
-In this case the output files will be `OUT.DAT` and `MFILE.DAT`.
+PROCESS input file names end in IN.DAT. If no input file name is given as an argument in the command line, PROCESS will run `process --help`. 
 
 The user can provide a named input file, provided the last 6 characters of the input file name are IN.DAT.
 ```bash
@@ -29,6 +24,8 @@ will produce the following output files in the same directory as the input file:
 ```
     my_file_name_OUT.DAT
     my_file_name_MFILE.DAT
+    my_file_name_SIG_TF.json
+    my_file_name_process.log
 ```
 
 It may be convenient to automatically generate the summary plots after the `PROCESS` run has finished.
@@ -41,12 +38,15 @@ process -i path/to/my_file_name_IN.DAT --full-output
 will produce the following output files in the same directory as the input file:
 
 ```
-    my_file_name_OUT.DAT
-    my_file_name_MFILE.DAT
-    SankeyPowerFlow.pdf
-    my_file_name.MFILE.DATSUMMARY.pdf
-    my_file_name.MFILE_radial_build.pdf
+    large_tokamak_MFILE.DAT
+    large_tokamak_MFILE.DATSUMMARY.pdf
+    large_tokamak_OUT.DAT
+    large_tokamak_SIG_TF.json
+    large_tokamak_plotly_sankey.html
+    large_tokamak_process.log
 ```
+
+The `examples/data` folder in the repository has the commonly used `large_tokamak_IN.DAT` input file, which can be a useful starting point for new users.
 
 ---------------
 
@@ -80,6 +80,12 @@ The full set of command line arguments is available with:
 
 ```bash
 process --help
+```
+
+or
+
+```bash
+process
 ```
 
 ------------

@@ -13,9 +13,8 @@ indication of where in the input file the problem lies.
 
 ## File Naming Convention
 
-The default PROCESS input file name is `IN.DAT`. The user can provide a named 
-input file, that will produce named output files, provided the last 6 characters 
-of the input file name are `IN.DAT`.
+The user can provide a named input file, that will produce named output files, 
+provided the last 6 characters of the input file name are `IN.DAT`.
 
 ```bash
 process -i [path-to-file]/my_file_name_IN.DAT
