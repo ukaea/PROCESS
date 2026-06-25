@@ -657,6 +657,15 @@ $$
 
 -------------------------
 
+#### 52: Paz-Soldan negative triangularity scaling (L-mode) | `paz_soldan_nt_confinement_time()`
+
+Is selected with `i_confinement_time = 52` [^23]
+
+$$
+\tau_{\text{E}} =  0.0821 I_{\text{p}}^{1.02} B_{\text{T}}^{0.11} P_{\text{L}}^{-0.91} \overline{n}_{19}^{0.51} 
+$$
+
+-------------------------
 ### Transport Powers
 
 After the confinement time scaling with $H$-factor correction has been calculated, the ion and electron transport power densities are found. `PROCESS` assumes the scaling confinement time to be equal to the ion and electron energy confinement time.
@@ -740,6 +749,7 @@ The value of `f_t_alpha_energy_confinement_min` can be set to the desired minimu
 [^21]: P. F. Buxton, L. Connor, A. E. Costley, M. Gryaznevich, and S. McNamara, “On the energy confinement time in spherical tokamaks: implications for the design of pilot plants and fusion reactors,” vol. 61, no. 3, pp. 035006-035006, Jan. 2019, doi: https://doi.org/10.1088/1361-6587/aaf7e5.
 [^22]: G. Verdoolaege et al., “The updated ITPA global H-mode confinement database: description and analysis,” Nuclear Fusion, vol. 61, no. 7, pp. 076006-076006, Jan. 2021, doi: https://doi.org/10.1088/1741-4326/abdb91.
 [^23]: Y. Chen, X. C. Chen, X. F. Wu, and S. Q. Liu, “Energy confinement scaling in the NCST spherical tokamak,” AIP Advances, vol. 16, no. 3, pp. 035043-035043, Mar. 2026, doi: https://doi.org/10.1063/5.0311657.
+[^23]: P. Lunia, A.O. Nelson, and C. Paz-Soldan, "Energy Confinement Time Scaling Law Derived from Paz-Soldan NF 2024", doi: https://arxiv.org/abs/2509.04279v2
 [^24]: H. Lux, R. Kemp, E. Fable, and R. Wenninger, “Radiation and confinement in 0D fusion systems codes,” Plasma Physics and Controlled Fusion, vol. 58, no. 7, pp. 075001–075001, May 2016, doi: https://doi.org/10.1088/0741-3335/58/7/075001.
 [^25]: H. Lux, R. Kemp, D. J. Ward, and M. Sertoli, “Impurity radiation in DEMO systems modelling,” Fusion Engineering and Design, vol. 101, pp. 42–51, Dec. 2015, doi: https://doi.org/10.1016/j.fusengdes.2015.10.002.
 ‌
