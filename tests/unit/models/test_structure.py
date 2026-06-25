@@ -2,6 +2,7 @@
 
 import pytest
 
+from process.data_structure.pfcoil_variables import PFConductorModel
 from process.models.structure import Structure
 
 
@@ -33,7 +34,7 @@ class TestStructure:
             akappa=1.848,
             b0=5.3292,
             i_tf_sup=1,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             tf_h_width=15.337464674334223,
             tfhmax=9.0730900215620327,
             shldmass=2294873.8131476026,

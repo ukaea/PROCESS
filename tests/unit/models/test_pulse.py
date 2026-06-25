@@ -3,6 +3,8 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
+from process.data_structure.pfcoil_variables import PFConductorModel
+
 
 @pytest.fixture
 def pulse(process_models):
@@ -59,7 +61,7 @@ class TohswgParam(NamedTuple):
             t_current_ramp_up_min=0,
             vpfskv=0,
             n_pf_cs_plasma_circuits=8,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             n_cs_pf_coils=7,
             p_cs_resistive_flat_top=0,
             ind_pf_cs_plasma_mutual=np.array(
@@ -617,7 +619,7 @@ class TohswgParam(NamedTuple):
             t_current_ramp_up_min=-526.67247746645455,
             vpfskv=20,
             n_pf_cs_plasma_circuits=8,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             n_cs_pf_coils=7,
             p_cs_resistive_flat_top=0,
             ind_pf_cs_plasma_mutual=np.array(

@@ -17,6 +17,7 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure, Model
 from process.data_structure.build_variables import TFCSRadialConfiguration
+from process.data_structure.pfcoil_variables import PFConductorModel
 from process.data_structure.physics_variables import DivertorNumberModels
 
 logger = logging.getLogger(__name__)
@@ -2538,7 +2539,7 @@ class TFCoil(Model):
                 radtf[0] = dr_bore
 
             # Superconducting CS
-            if i_pf_conductor == 0:
+            if i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                 # Getting the turn dimention from scratch
                 # as the TF is called before CS in caller.f90
                 # -#
@@ -3049,7 +3050,7 @@ class TFCoil(Model):
         # --------------------------------
         # SC central solenoid coil stress unsmearing (bucked and wedged only)
         # ---
-        if i_tf_bucking >= 2 and i_pf_conductor == 0:
+        if i_tf_bucking >= 2 and i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             # Central Solenoid (OH) steel conduit stress unsmearing factors
             for ii in range(n_radial_array):
                 sig_tf_r[ii] = sig_tf_r[ii] * eyoung_cs_stiffest_leg / eyoung_axial[0]

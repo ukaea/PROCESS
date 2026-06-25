@@ -11,6 +11,7 @@ import pytest
 
 import process.models.tfcoil.base as tfcoil_module
 from process.data_structure.build_variables import TFCSRadialConfiguration
+from process.data_structure.pfcoil_variables import PFConductorModel
 
 
 @pytest.fixture
@@ -1030,7 +1031,7 @@ class StressclParam(NamedTuple):
             f_a_tf_turn_cable_copper=0.80884,
             str_wp=0,
             n_tf_wp_stress_layers=5,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_turn_steel=0.57874999999999999,
             f_z_cs_tf_internal=0.90000000000000002,
             j_cs_flat_top_end=20726000,
@@ -1147,7 +1148,7 @@ class StressclParam(NamedTuple):
             f_a_tf_turn_cable_copper=0.80884,
             str_wp=0.0015619754370069119,
             n_tf_wp_stress_layers=5,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_turn_steel=0.57874999999999999,
             f_z_cs_tf_internal=0.90000000000000002,
             j_cs_flat_top_end=20726000,
