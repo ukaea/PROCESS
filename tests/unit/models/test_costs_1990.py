@@ -5555,14 +5555,6 @@ class CoelcParam(NamedTuple):
 
     cpstcst: Any = None
 
-    coeoam: Any = None
-
-    coecap: Any = None
-
-    output_costs: Any = None
-
-    coe: Any = None
-
     lsa: Any = None
 
     f_t_plant_available: Any = None
@@ -5575,15 +5567,7 @@ class CoelcParam(NamedTuple):
 
     life_div: Any = None
 
-    coefuelt: Any = None
-
-    moneyint: Any = None
-
-    life_hcd_fpy: Any = None
-
     cdrlife_cal: Any = None
-
-    capcost: Any = None
 
     cplife: Any = None
 
@@ -5663,21 +5647,13 @@ class CoelcParam(NamedTuple):
             life_plant=40,
             ifueltyp=1,
             cpstcst=0,
-            coeoam=0,
-            coecap=0,
-            output_costs=0,
-            coe=0,
             lsa=2,
             f_t_plant_available=0.75000000000000011,
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
             life_div_fpy=6.1337250397740126,
             life_div=6.1337250397740126,
-            coefuelt=0,
-            moneyint=0,
-            life_hcd_fpy=19.216116010620578,
             cdrlife_cal=19.216116010620578,
-            capcost=0,
             cplife=0,
             cplife_cal=0,
             fwallcst=143.19827300247195,
@@ -5747,21 +5723,13 @@ class CoelcParam(NamedTuple):
             life_plant=40,
             ifueltyp=1,
             cpstcst=0,
-            coeoam=4.4099029328740929e20,
-            coecap=4.9891775218979061e21,
-            output_costs=0,
-            coe=6.9525339143363677e21,
             lsa=2,
             f_t_plant_available=0.75000000000000011,
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
             life_div_fpy=6.145510750914414,
             life_div=6.145510750914414,
-            coefuelt=1.4801870771036603e21,
-            moneyint=1001.1727468691442,
-            life_hcd_fpy=19.222115557991025,
             cdrlife_cal=19.222115557991025,
-            capcost=7675.6577259967762,
             cplife=0,
             cplife_cal=0,
             fwallcst=167.7865317453867,
@@ -5839,90 +5807,41 @@ def test_coelc(coelcparam, monkeypatch, costs):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-
-    monkeypatch.setattr(costs.data.costs, "fcdfuel", coelcparam.fcdfuel)
-
-    monkeypatch.setattr(costs.data.costs, "uche3", coelcparam.uche3)
-
-    monkeypatch.setattr(costs.data.costs, "life_plant", coelcparam.life_plant)
-
-    monkeypatch.setattr(costs.data.costs, "ifueltyp", coelcparam.ifueltyp)
-
-    monkeypatch.setattr(costs.data.costs, "cpstcst", coelcparam.cpstcst)
-
-    monkeypatch.setattr(costs.data.costs, "coeoam", coelcparam.coeoam)
-
-    monkeypatch.setattr(costs.data.costs, "coecap", coelcparam.coecap)
-
-    monkeypatch.setattr(costs.data.costs, "output_costs", coelcparam.output_costs)
-
-    monkeypatch.setattr(costs.data.costs, "coe", coelcparam.coe)
-
-    monkeypatch.setattr(costs.data.costs, "lsa", coelcparam.lsa)
-
-    monkeypatch.setattr(
-        costs.data.costs, "f_t_plant_available", coelcparam.f_t_plant_available
-    )
-
-    monkeypatch.setattr(costs.data.costs, "divcst", coelcparam.divcst)
-
-    monkeypatch.setattr(costs.data.costs, "ucfuel", coelcparam.ucfuel)
-
-    monkeypatch.setattr(costs.data.costs, "life_div_fpy", coelcparam.life_div_fpy)
-
-    monkeypatch.setattr(costs.data.costs, "life_div", coelcparam.life_div)
-
-    monkeypatch.setattr(costs.data.costs, "coefuelt", coelcparam.coefuelt)
-
-    monkeypatch.setattr(costs.data.costs, "moneyint", coelcparam.moneyint)
-
-    monkeypatch.setattr(costs.data.costs, "life_hcd_fpy", coelcparam.life_hcd_fpy)
-
-    monkeypatch.setattr(costs.data.costs, "cdrlife_cal", coelcparam.cdrlife_cal)
-
-    monkeypatch.setattr(costs.data.costs, "capcost", coelcparam.capcost)
-
-    monkeypatch.setattr(costs.data.costs, "cplife", coelcparam.cplife)
-
-    monkeypatch.setattr(costs.data.costs, "cplife_cal", coelcparam.cplife_cal)
-
-    monkeypatch.setattr(costs.data.costs, "fwallcst", coelcparam.fwallcst)
-
-    monkeypatch.setattr(costs.data.costs, "fcr0", coelcparam.fcr0)
-
-    monkeypatch.setattr(costs.data.costs, "discount_rate", coelcparam.discount_rate)
-
-    monkeypatch.setattr(costs.data.costs, "decomf", coelcparam.decomf)
-
-    monkeypatch.setattr(costs.data.costs, "cdcost", coelcparam.cdcost)
-
-    monkeypatch.setattr(costs.data.costs, "fcap0", coelcparam.fcap0)
-
-    monkeypatch.setattr(costs.data.costs, "fcap0cp", coelcparam.fcap0cp)
-
-    monkeypatch.setattr(costs.data.costs, "ucwst", coelcparam.ucwst)
-
-    monkeypatch.setattr(costs.data.costs, "ucoam", coelcparam.ucoam)
-
-    monkeypatch.setattr(costs.data.costs, "dtlife", coelcparam.dtlife)
-
-    monkeypatch.setattr(costs.data.costs, "blkcst", coelcparam.blkcst)
-
-    monkeypatch.setattr(costs.data.costs, "dintrt", coelcparam.dintrt)
-
-    monkeypatch.setattr(costs.data.costs, "concost", coelcparam.concost)
-
-    monkeypatch.setattr(costs.data.costs, "cfind", coelcparam.cfind)
+    for field in [
+        "fcdfuel",
+        "uche3",
+        "life_plant",
+        "ifueltyp",
+        "cpstcst",
+        "lsa",
+        "f_t_plant_available",
+        "divcst",
+        "ucfuel",
+        "life_div_fpy",
+        "life_div",
+        "cdrlife_cal",
+        "cplife",
+        "cplife_cal",
+        "fwallcst",
+        "fcr0",
+        "discount_rate",
+        "decomf",
+        "cdcost",
+        "fcap0",
+        "fcap0cp",
+        "ucwst",
+        "ucoam",
+        "dtlife",
+        "blkcst",
+        "dintrt",
+        "concost",
+        "cfind",
+    ]:
+        monkeypatch.setattr(costs.data.costs, field, getattr(coelcparam, field))
 
     monkeypatch.setattr(costs.data.fwbs, "life_blkt_fpy", coelcparam.life_blkt_fpy)
 
     monkeypatch.setattr(costs.data.fwbs, "life_blkt", coelcparam.life_blkt)
-
-    monkeypatch.setattr(costs.data.ife, "uctarg", coelcparam.uctarg)
-
-    monkeypatch.setattr(costs.data.ife, "ife", coelcparam.ife)
-
-    monkeypatch.setattr(costs.data.ife, "reprat", coelcparam.reprat)
 
     monkeypatch.setattr(
         costs.data.heat_transport,
