@@ -3,6 +3,7 @@ A selection of functions for using the PROCESS code
 """
 
 import logging
+import re
 import sys
 from pathlib import Path
 
@@ -77,7 +78,6 @@ def get_variable_range(itervars, factor, indat, data: DataStructure, wdir="."):
          (Default value = ".")
     """
     # Load dicts from dicts JSON file
-    dicts = get_dicts()
     in_dat = InDat(Path(wdir, indat))
 
     lbs = []
@@ -89,35 +89,29 @@ def get_variable_range(itervars, factor, indat, data: DataStructure, wdir="."):
         iteration_variable_index = iteration_variables.index(varname)
         lb = data.numerics.boundl[iteration_variable_index]
         ub = data.numerics.boundu[iteration_variable_index]
-        # for f-values we set the same range as in process
-        if varname[0] == "f" and (varname not in dicts["NON_F_VALUES"]):
-            lbs += [lb]
-            ubs += [ub]
 
-        # for non-f-values we modify the range with the factor
+        value = get_from_indat_or_default(in_dat, varname)
+
+        if value is None:
+            print(f"Error: Iteration variable {varname} has None value!")
+            sys.exit()
+
+        # to allow the factor to have some influence
+        if value == 0.0:  # noqa: RUF069
+            value = 1.0
+
+        # assure value is within bounds!
+        if value < lb:
+            value = lb
+        elif value > ub:
+            value = ub
+
+        if value > 0:
+            lbs += [max(value / factor, lb)]
+            ubs += [min(value * factor, ub)]
         else:
-            value = get_from_indat_or_default(in_dat, varname)
-
-            if value is None:
-                print(f"Error: Iteration variable {varname} has None value!")
-                sys.exit()
-
-            # to allow the factor to have some influence
-            if value == 0.0:  # noqa: RUF069
-                value = 1.0
-
-            # assure value is within bounds!
-            if value < lb:
-                value = lb
-            elif value > ub:
-                value = ub
-
-            if value > 0:
-                lbs += [max(value / factor, lb)]
-                ubs += [min(value * factor, ub)]
-            else:
-                lbs += [min(value / factor, lb)]
-                ubs += [max(value * factor, ub)]
+            lbs += [min(value / factor, lb)]
+            ubs += [max(value * factor, ub)]
 
         if lbs[-1] > ubs[-1]:
             print(
@@ -323,10 +317,16 @@ def get_from_indat_or_default(in_dat, varname):
     or PROCESS default value
     """
     dicts = get_dicts()
+    if "(" in varname:
+        name, index = re.match(r"([a-zA-Z0-9_]+)\(([0-9]+)\)", varname.strip()).groups()
+
+        if varname in in_dat.data:
+            return in_dat.data[name].get_value[int(index) - 1]
+
+        return dicts["DICT_DEFAULT"][name][int(index) - 1]
+
     if varname in in_dat.data:
         return in_dat.data[varname].get_value
-    # Load dicts from dicts JSON file
-    dicts = get_dicts()
 
     return dicts["DICT_DEFAULT"][varname]
 

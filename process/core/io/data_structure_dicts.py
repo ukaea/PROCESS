@@ -20,13 +20,6 @@ from process.core.solver.iteration_variables import ITERATION_VARIABLES
 
 INPUT_TYPE_MAP = {int: "int", float: "real", str: "string"}
 
-NON_F_VALUES = [
-    "f_j_cs_start_pulse_end_flat_top",
-    "f_c_plasma_non_inductive",
-    "feffcd",
-    "f_a_tf_turn_cable_copper",
-]
-
 logger = logging.getLogger(__name__)
 
 output_dict = {}
@@ -148,7 +141,6 @@ def get_dicts():
     # Some dicts depend on other dicts already existing in output_dicts, so
     # be careful if changing the order!
     dict_objects.extend([
-        HardcodedDictionary("NON_F_VALUES", NON_F_VALUES),
         HardcodedDictionary("DICT_DEFAULT", {}),
         HardcodedDictionary("DICT_MODULE", {}),
         HardcodedDictionary("DICT_DESCRIPTIONS", {}),
