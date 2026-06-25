@@ -908,6 +908,17 @@ class PlasmaConfinementTime(Model):
 
         # ==========================================================================
 
+        # Paz-Soldan negative triangularity confinement time scaling
+        elif model == ConfinementTimeModel.PAZ_SOLDAN_NT:
+            t_electron_confinement = self.paz_soldan_nt_confinement_time(
+                pcur,
+                b_plasma_toroidal_on_axis,
+                p_plasma_loss_mw,
+                dnla19,
+            )
+
+        # ==========================================================================
+
         else:
             raise ProcessValueError(
                 "Illegal value for i_confinement_time",
@@ -4044,4 +4055,42 @@ class PlasmaConfinementTime(Model):
             * (1 + triang) ** 0.560
             * kappa_ipb**0.673
             * aion**0.302
+        )
+
+    @staticmethod
+    def paz_soldan_nt_confinement_time(
+        pcur: float,
+        b_plasma_toroidal_on_axis: float,
+        p_plasma_loss_mw: float,
+        dnla19: float,
+    ) -> float:
+        """Calculate the Paz-Soldan negative triangularity confinement time
+
+        Parameters
+        ----------
+        pcur :
+            Plasma current [MA]
+        b_plasma_toroidal_on_axis :
+            Toroidal magnetic field [T]
+        p_plasma_loss_mw :
+            Thermal power lost due to transport through the LCFS [MW]
+        dnla19 :
+            Central line-averaged electron density in units of 10**19 m**-3
+
+        Returns
+        -------
+        :
+            float: Paz-Soldan negative triangularity confinement time [s]
+
+        References
+        ----------
+            - Priyansh Lunia, A.O. Nelson, and C. Paz-Soldan, "Energy Confinement Time
+            Scaling Law Derived from Paz-Soldan NF 2024", doi: https://arxiv.org/abs/2509.04279v2
+        """
+        return (
+            0.0821
+            * pcur**1.02
+            * b_plasma_toroidal_on_axis**0.11
+            * dnla19**0.51
+            * p_plasma_loss_mw ** (-0.91)
         )

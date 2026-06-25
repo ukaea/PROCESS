@@ -242,6 +242,11 @@ from process.models.physics.confinement_time import PlasmaConfinementTime
             (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),
             0.09877603755850378,
         ),
+        (
+            PlasmaConfinementTime.paz_soldan_nt_confinement_time,
+            (1.0, 1.0, 1.0, 1.0),
+            0.0821,
+        ),
     ],
 )
 def test_confinement_time(func, args, expected):
