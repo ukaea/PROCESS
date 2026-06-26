@@ -266,7 +266,7 @@ Roughly 79.889% of the energy is carried by the proton
 """
 
 DEN_TUNGSTEN = 19250.0
-"""Density of Tungsten [kg/m3]"""
+"""Density of Tungsten [kg/m³]"""
 
 TEMP_ROOM = 293.15
 """ Room temperature in Kelvin. Assuming the room is at 20 degrees Celsius
@@ -282,7 +282,7 @@ EPSILON0 = 8.85418781e-12
 """permittivity of free space [Farad/m]"""
 
 CPH2O = 4180.0
-"""specific heat capacity of water (J/kg/K)"""
+"""specific heat capacity of water [J/kg/K]"""
 
 den_copper: float = None
 """density of copper (kg/m3)"""
@@ -291,16 +291,16 @@ den_aluminium: float = None
 """density of aluminium (kg/m3)"""
 
 DENH2O = 985.0
-"""density of water (kg/m3)"""
+"""Density of water [kg/m³]"""
 
 K_COPPER = 330.0
-"""Copper thermal conductivity (W/m/K)"""
+"""Copper thermal conductivity [W/m/K]"""
 
 KH2O = 0.651
-"""thermal conductivity of water (W/m/K)"""
+"""thermal conductivity of water [W/m/K]"""
 
 MUH2O = 4.71e-4
-"""water dynamic viscosity (kg/m/s)"""
+"""water dynamic viscosity [kg/m/s]"""
 
 N_DAY_YEAR = 365.2425
 """Average number of days in a year"""
