@@ -314,7 +314,7 @@ N_DAY_YEAR = 365.2425
 """Average number of days in a year"""
 
 ACCELERATION_GRAVITY = 9.81
-"""Acceleration due to gravity [m/s2]"""
+"""Acceleration due to gravity on Earth's surface [m/s²]"""
 
 
 def init_constants():
