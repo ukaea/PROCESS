@@ -466,6 +466,7 @@ OBS_VARS = {
     "zeff_max": "n_charge_plasma_effective_vol_avg_max",
     "psepbqarmax": "p_div_bt_q_aspect_rmajor_max_mw",
     "fdene": "f_nd_plasma_electron_limit_max",
+    "fiooic": "f_j_tf_wp_critical_max",
 }
 
 OBS_VARS_HELP = {
