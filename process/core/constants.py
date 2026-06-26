@@ -20,7 +20,7 @@ https://physics.nist.gov/cgi-bin/cuu/Value?evj|search_for=electron+volt
 """
 
 KILOELECTRON_VOLT = ELECTRON_VOLT * 1e3
-"""Kiloelectron volt [kJ]
+"""Kiloelectron volt [J]
 Reference: National Institute of Standards and Technology (NIST)
 https://physics.nist.gov/cgi-bin/cuu/Value?evj|search_for=electron+volt
 """
@@ -192,11 +192,13 @@ https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=W
 SPEED_LIGHT = 299792458.0
 """Speed of light in vacuum (c) [m/s]
 Reference: National Institute of Standards and Technology (NIST)
-https://physics.nist.gov/cgi-bin/cuu/Value?c|search_for=light
+https://physics.nist.gov/cgi-bin/cuu/Value?c
 """
 
 PLANCK_CONSTANT = 6.62607015e-34
-"""Planck's constant [J.s]"""
+"""Planck's constant [J Hz⁻¹]
+Reference: National Institute of Standards and Technology (NIST)
+https://physics.nist.gov/cgi-bin/cuu/Value?h"""
 
 D_T_ENERGY = (
     (DEUTERON_MASS + TRITON_MASS) - (ALPHA_MASS + NEUTRON_MASS)
@@ -272,14 +274,20 @@ TEMP_ROOM = 293.15
 """ Room temperature in Kelvin. Assuming the room is at 20 degrees Celsius
 """
 
-RMU0 = 1.256637062e-6
-"""permeability of free space  [H/m]"""
+RMU0 = 1.25663706127e-6
+"""Vacuum magnetic permeability [N/A²]
+Reference: National Institute of Standards and Technology (NIST)
+https://physics.nist.gov/cgi-bin/cuu/Value?mu0"""
 
-UMASS = 1.660538921e-27
-"""unified atomic mass unit [kg]"""
+UMASS = 1.66053906892e-27
+"""Unified atomic mass unit [kg]
+Reference: National Institute of Standards and Technology (NIST)
+https://physics.nist.gov/cgi-bin/cuu/Value?ukg"""
 
-EPSILON0 = 8.85418781e-12
-"""permittivity of free space [Farad/m]"""
+EPSILON0 = 8.8541878188e-12
+"""Vacuum electric permittivity [Farad/m]
+Reference: National Institute of Standards and Technology (NIST)
+https://physics.nist.gov/cgi-bin/cuu/Value?ep0"""
 
 CPH2O = 4180.0
 """specific heat capacity of water [J/kg/K]"""
