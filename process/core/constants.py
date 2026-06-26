@@ -285,10 +285,10 @@ CPH2O = 4180.0
 """specific heat capacity of water (J/kg/K)"""
 
 DEN_COPPER = 8900.0
-"""density of copper (kg/m3)"""
+"""Density of copper [kg/m³]"""
 
 DEN_ALUMINIUM = 2700.0
-"""density of aluminium (kg/m3)"""
+"""Density of aluminium [kg/m³]"""
 
 DENH2O = 985.0
 """density of water (kg/m3)"""
