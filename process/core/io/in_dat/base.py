@@ -1152,11 +1152,6 @@ class InDat:
             line_commentless = line.split("*")[0]
             array_name = line_commentless.split("(")[0]
             empty_array = dicts["DICT_DEFAULT"][array_name]
-            # empty_array is what the array is initialised to when it is
-            # declared in the Fortran. If the array is declared but not
-            # initialised until later in a separate "init" subroutine, then
-            # empty_array will be None. This is a side-effect of the need to
-            # re-initialise Fortran arrays in a separate subroutine.
 
             if empty_array is None:
                 # Array is declared but not initialised at the same time;
@@ -1405,61 +1400,25 @@ class InDat:
         empty_array:
             Default array for this array name
         """
-        # TODO This is a mess after the Fortran module variable
-        # re-initialisation work. It is hard to see how this can be improved
-        # as the regex method of Fortran inspection (i.e. Python-Fortran
-        # dictionaries) is increasingly untenable. An attempt is made here,
-        # but with a view to the dictionaries method being dropped in future
-        # in light of increasing Python f2py conversion.
-
         line_commentless = line.split("*")[0] if "*" in line else line
 
         name = line_commentless.split("(")[0]
         index = int(line_commentless.split("(")[1].split(")")[0]) - 1
-        # The -1 assumes all Fortran arrays begin at 1: they don't in Process!
-        # This bug would cause a Fortran index of 0 to be interpreted as a
-        # Python index of -1 (last element). This didn't cause any exceptions,
-        # but would obviously set the wrong list index. This now throws
-        # exceptions when trying to access [-1] of an empty list []. Hence it
-        # must be guarded against with the following:
+
         if index == -1:
             index = 0
-        # This will cause Fortran index 0 and 1 to overwrite the same Python
-        # index of 0, which is clearly awful. However, it is equally bad to the
-        # previous case above, where Fortran [0] would overwrite Python [-1].
-        # There isn't a way of reconciling this without knowing whether the
-        # Fortran array begins at 0 or 1.
-        # TODO Either enforce Fortran arrays that start at 1 throughout, or
-        # find a way of determining the starting index of the array
 
         value = line_commentless.split("=")[-1].replace(",", "")
-
-        # Many arrays are now declared but not initialised until the "init"
-        # subroutine is run in each Fortran module, to allow re-initialisation
-        # on demand for a new run etc.
-        # In Fortran, we have a declared but uninitialised array of a given
-        # length. This results in an empty list in the value attribute here.
-        # However, we need to set the value for a given index. Therefore
-        # make a list of Nones, so that we can set the value for a given
-        # index. We don't know the length of the Fortran array (its value is
-        # []), so we have to make the Python list as long as this Fortran index.
-        # This way, at least the list is long enough for this Fortran index.
-        # TODO Again, this requires a more robust solution
 
         list_len = len(self.data[name].value)
         # Length of Python list in self.data
         max_list_index = list_len - 1
         # The greatest index in that Python list
         array_len = index + 1
-        # The Fortran array must be at least this long
 
-        # If the default array is an empty list, make a list of Nones of
-        # matching length to the Fortran array
         if len(empty_array) == 0:
             empty_array = [None] * array_len
 
-        # If the Pyhton list is an empty list, make a list of Nones of
-        # matching length to the Fortran array
         if list_len == 0:
             self.data[name].value = [None] * array_len
         # Check the Python list is long enough to store the new index

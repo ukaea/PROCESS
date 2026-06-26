@@ -3379,11 +3379,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # Area of inter-turn insulation: single turn [m2]
         a_tf_turn_insulation = a_tf_turn - t_conductor**2
 
-        # NOTE: Fortran has a_tf_turn_cable_space_no_void as an intent(out) variable
-        # that was outputting into data.tfcoil.a_tf_turn_cable_space_no_void.
-        # The local variable, however, appears to initially hold the value of
-        # data.tfcoil.a_tf_turn_cable_space_no_void despite not being intent(in).
-        # I have replicated this behaviour in Python for now.
         a_tf_turn_cable_space_no_void = copy.copy(
             data.tfcoil.a_tf_turn_cable_space_no_void
         )

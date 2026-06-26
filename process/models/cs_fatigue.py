@@ -100,7 +100,7 @@ class CsFatigue(Model):
             # run euler_method and find number of cycles needed to give crack increase
             delta_n = delta / (cr * (k_max**self.data.cs_fatigue.paris_power_law))
 
-            # update a and c, N (+= doesnt work for fortran (?) reasons)
+            # update a and c, N
             a += delta * (k_a / k_max) ** self.data.cs_fatigue.paris_power_law
             c += delta * (k_c / k_max) ** self.data.cs_fatigue.paris_power_law
             n_pulse += delta_n

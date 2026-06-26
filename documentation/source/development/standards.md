@@ -37,7 +37,7 @@ Switches should start with the `i_` prefix in their name, be of integer type and
 
 Use an uppercase single letter, word, or words. Separate words with underscores to improve readability.
 
-Refrain from declaring or typing known numerical constants directly in the code. Instead call the value from `constants.f90`
+Refrain from declaring or typing known numerical constants directly in the code. Instead call the value from `constants.py`
 If the constants doesn't exist then add it with a source link and uncertainty value.
 
 ---------------------
@@ -524,13 +524,13 @@ Try to keep names to a sensible length while also keeping the name explicit and 
 
 The physical type of the variable should form the first part of the variable name, e.g. for plasma resistance the variable should be named:
 
-```fortran
+```python
 res_plasma = 1.0
 ```
 
 Another example would be pulse length
 
-```fortran
+```python
 time_pulse_length = 7200.0
 ```
 
@@ -540,17 +540,17 @@ time_pulse_length = 7200.0
 
 Inside PROCESS all variables should be in SI units unless otherwise stated. For example:
 
-```fortran
-! Fusion power [W]
-p_fusion_total = 1000.0d6
+```python
+p_fusion_total = 1e6
+"""Fusion power [W]"""
 ```
 
 If a variable is not in SI units then its units should be put at the end of of the variable name.
 Example:
 
-```fortran
-! Fusion power [MW]
-p_fusion_total_mw = 1000.0d0
+```python
+p_fusion_total_mw = 1000.0
+"""Fusion power [MW]"""
 ```
 
 ---------------------
@@ -559,22 +559,21 @@ p_fusion_total_mw = 1000.0d0
 
 Coordinates should be defined as
 
-```fortran
-r_plasma_centre = 9.0d0
+```python
+r_plasma_centre = 9.0
 
-z_plasma_centre = 0.0d0
+z_plasma_centre = 0.0
 
-theta_ = 
+theta_ = ...
 ```
 
 For dimensions
 
-```fortran
-dr_cs = 
+```python
+dr_cs = ...
 
-dz_cs = 
+dz_cs = ...
 
-dtheta_description =
 ```
 
 ---------------------

@@ -928,7 +928,7 @@ class Power(Model):
             + self.data.heat_transport.p_div_coolant_pump_mw
         )
 
-        #  Heat removal from first wall and divertor (MW) (only used in costs.f90)
+        #  Heat removal from first wall and divertor (MW)
         i_p_coolant_pumping = PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping)
         if i_p_coolant_pumping != PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP:
             self.data.heat_transport.p_fw_div_heat_deposited_mw = (

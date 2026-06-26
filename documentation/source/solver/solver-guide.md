@@ -94,7 +94,7 @@ variable values that maximises or minimises a certain function of them,
 known as the figure of merit. 
 
 Several possible figures of merit are available, all of which are in the 
-source file `evaluators.f90`. 
+source file `evaluators.py`. 
 
 Switch `minmax` is used to control which figure of merit is to be used. If the 
 figure of merit is to be minimised, `minmax` should be **positive**, and if a 

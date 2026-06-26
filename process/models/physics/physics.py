@@ -443,10 +443,6 @@ class Physics(Model):
                 self.data.times.t_plant_pulse_plasma_current_ramp_up
             )
 
-        # Reset second self.data.times.t_plant_pulse_burn value
-        # (self.data.times.t_burn_0).
-        # This is used to ensure that the burn time is used consistently;
-        # see convergence loop in fcnvmc1, evaluators.f90
         self.data.times.t_burn_0 = self.data.times.t_plant_pulse_burn
 
         # Time during the pulse in which a plasma is present
@@ -1684,7 +1680,7 @@ class Physics(Model):
 
     def outplas(self):
         """Subroutine to output the plasma physics information
-        self.outfile : input integer : Fortran output unit identifier
+        self.outfile : file to write to
         This routine writes the plasma physics information
         to a file, in a tidy format.
         """

@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 @pytest.fixture(autouse=True)  # noqa: RUF076
 def reinit():
-    """Re-initialise Fortran module variables before each test is run."""
+    """Re-initialise module variables before each test is run."""
     init_all_module_vars()
 
 

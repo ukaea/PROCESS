@@ -27,8 +27,6 @@ that all come from the same run title
 To add a variable to track:
 
 Add the variable to ProcessTracker.tracking_variables (in this file).
-If the variable is not a fortran module variable, ensure to override its parent module name
-e.g. FOO.bar says `bar`'s parent module is `FOO`.
 """
 
 import argparse
@@ -243,8 +241,6 @@ class ProcessTracker:
         # tracking data
         for var in self.tracking_variables:
             if "." in var:
-                # a dotted variable is for variables that no longer exist in Fortran module variables
-                # see tracking_variables docstring
                 try:
                     _, var = var.split(".")  # noqa: PLW2901
                 except (AttributeError, ValueError):

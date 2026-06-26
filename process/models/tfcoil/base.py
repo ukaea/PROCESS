@@ -109,7 +109,7 @@ class TFCoil(Model):
     """
 
     def __init__(self):
-        """Initialise Fortran module variables."""
+        """Initialise the TF coil model."""
         self.outfile = constants.NOUT  # output file unit
 
     def run(self):
@@ -2541,8 +2541,6 @@ class TFCoil(Model):
             # Superconducting CS
             if i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                 # Getting the turn dimention from scratch
-                # as the TF is called before CS in caller.f90
-                # -#
 
                 # CS vertical cross-section area [m2]
                 if i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:

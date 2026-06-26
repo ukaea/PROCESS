@@ -56,7 +56,7 @@ def cs_coil(process_models):
 
 
 def test_init_pfcoil(pfcoil):
-    """Test initialisation of Fortran module variables.
+    """Test initialisation of module variables.
 
     :param pfcoil: PFCoil object
     :type pfcoil: process.pfcoil.PFCoil
@@ -2760,9 +2760,6 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     n_pf_coil_groups = 4
     n_pf_coils_in_group = np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
-    # This 2D array argument discovered via gdb prints as a 1D array, therefore
-    # needs to be reshaped into its original 2D. Fortran ordering is essential
-    # when passing greater-than-1D arrays from Python to Fortran
     r_pf_coil_middle_group_array = np.reshape(
         [
             6.7651653417201345,

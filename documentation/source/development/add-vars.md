@@ -5,9 +5,6 @@ optimisation figure of merit and constraints to the `PROCESS` code.
 
   **At all times the [`PROCESS` style guide](../development/standards.md) must be used.**
 
-!!! note
-
-    As the code is quickly converging towards a wholly Python codebase the respective files may change in type from `.f90` to `.py`.
 
 -----------------
 
@@ -15,29 +12,21 @@ optimisation figure of merit and constraints to the `PROCESS` code.
 
 To add a `PROCESS` input, please follow below:
 
-1. Choose the most relevant module `XX` and add the variable in the `XX_variables` defined in `XX_variables.f90`.
+1. Choose the most relevant module `XX` and add the variable in the `XX_variables` defined in `XX_variables.py`.
  
-2. Add a description of the input variable below the declaration, using the FORD      formatting described in the standards section specifying the units.
-  
-3. Specify a sensible default value in the `init_XX_variables()` function within the corresponding model `.py` main file
+2. Add a description of the input variable below the declaration, using the formatting described in the standards section specifying the units.
+
+3. Assign a sensible default initial value, and a type.
   
 4. Add the parameter to the `INPUT_VARIABLES` dictionary in `input.py`.  
 
 Here is an example of the code to add:
   
 
-Variable definition example in `tfcoil_variables.f90`:
-```fortran
-  real(dp) :: rho_tf_joints
-  !! TF joints surfacic resistivity [ohm.m]
-  !! Feldmetal joints assumed.
-```
-
-Variable initialization example in `tf_coil.py`:
+Variable definition and initial value setting example in `tfcoil_variables.py`:
 ```python
-    def init_tfcoil_variables():
-    ...
-      tfv.rho_tf_joints = 2.5e-10
+  e_tf_coil_magnetic_stored: float = 0.0
+  """Stored magnetic energy in a single TF coil (J)"""
 ```
 
 Code example in the `input.py` file:
@@ -55,10 +44,10 @@ Code example in the `input.py` file:
 To add a `PROCESS` iteration variable please follow the steps below, in addition to the instructions for adding an input variable:
 
 
-1. The parameter `IPNVARS` in module `numerics` of `numerics.f90` will normally be greater than the actual number of iteration variables, and does not need to be changed.
+1. The parameter `IPNVARS` in module `numerics` of `numerics.py` will normally be greater than the actual number of iteration variables, and does not need to be changed.
 2. Append a new iteration number key to the end of the `ITERATION_VARIABLES` dictionary  in `iteration_variables.py`. The associated variable is the corresponding key value.
 3. Set the variable origin file and then the associated lower and upper bounds
-4. Update the `lablxc` description in `numerics.f90`.
+4. Update the `lablxc` description in `numerics.py`.
   
 It should be noted that iteration variables must not be reset elsewhere in the
 code. That is, they may only be assigned new values when originally
@@ -115,27 +104,44 @@ After following the instruction to add an input variable, you can make the varia
   
 
 `nsweep` comment example:
-```fortran
-
-  integer :: nsweep = 1
-  !! nsweep /1/ : switch denoting quantity to scan:<UL>
-  !!         <LI> 1  aspect
-  !!         <LI> 2  pflux_div_heat_load_max_mw
-  ...
-  !!         <LI> 54 GL_nbti upper critical field at 0 Kelvin
-  !!         <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness </UL>
+```python
+  nsweep: int = None
+  """Switch denoting quantity to scan:<UL>
+  <LI> 1  aspect
+  <LI> 2  pflux_div_heat_load_max_mw
+  <LI> 3  p_plant_electric_net_required_mw
+  <LI> 4  hfact
 ```
 
-`SCAN_VARIABLES` case example:
+`nsweep_dict` example in `scans.py`
+```python
+nsweep_dict = {
+        1: "aspect",
+        2: "pflux_div_heat_load_max_mw",
+        3: "p_plant_electric_net_mw",
+        4: "hfact",
+        ...
+}
+```
+
+
+`ScanVariables` case example:
 
 ```python
   class ScanVariables(Enum):
-    aspect: ScanVariable("aspect", "Aspect_ratio", 1),
-    pflux_div_heat_load_max_mw: ScanVariable("pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)", 2),
+    
     ...
-    Bc2_0K: ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)", 54),
-    dr_shld_inboard : ScanVariable("dr_shld_inboard", "Inboard neutronic shield", 55),
+
+    aspect = ScanVariable("aspect", "Aspect_ratio", 1)
+    pflux_div_heat_load_max_mw = ScanVariable(
+        "pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)", 2
+    )
+    p_plant_electric_net_required_mw = ScanVariable(
+        "p_plant_electric_net_required_mw", "Net_electric_power_(MW)", 3
+    )
 ```
+
+
 
 ---------------
 

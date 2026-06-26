@@ -155,9 +155,6 @@ class NumericsData:
     active_constraints: list[bool] = field(default_factory=lambda: [False] * IPEQNS)
     """Logical array showing which constraints are active"""
 
-    # TODO Do not change the comments for lablcc: they are used to create the
-    # Python-Fortran dictionaries. This must be improved on.
-
     lablcc: list[str] = field(
         default_factory=lambda: [
             "⟨β⟩ consistency                   ",
@@ -538,7 +535,6 @@ class NumericsData:
     * (174) NOT USED
     * (175) NOT USED
     """
-    # Issue 287 iteration variables are now defined in module define_iteration_variables in iteration variables.f90
     # WARNING These labels are used as variable names by new_indat(), and possibly
     # other python utilities, so they cannot easily be changed.
 

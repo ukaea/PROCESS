@@ -58,7 +58,6 @@ class Dictionary:
 
 
 class SourceDictionary(Dictionary):
-    # Dictionary created from Fortran source
     def __init__(self, name, dict_creator_func):
         Dictionary.__init__(self, name)
         # Function that creates the dict
@@ -85,11 +84,8 @@ class HardcodedDictionary(Dictionary):
 
 def dict_var_type():
     """Function to return a dictionary mapping variable name to variable type
-    eg. 'real_variable' or 'int_array'. Looks in input.f90 at the process
-    functions that read in variables from IN.DAT.
-
-    Example of line we are looking for:
-        call parse_real_variable('BETA', beta, 0.0D0, 1.0D0, &
+    eg. 'real_variable' or 'int_array'. Iterates over INPUT_VARIABLES to build
+    the mapping using the type and array properties of each variable config.
 
     Example dictionary entry:
         DICT_VAR_TYPE['beta'] = 'real_variable'
@@ -108,12 +104,9 @@ def dict_var_type():
 
 def dict_input_bounds():
     """Returns a dictionary matching variable names to dictionary containing
-    upper and lower bounds that PROCESS checks variable lies between when
-    reading IN.DAT. Looks in input.f90 for parse_real_variable and
-    parse_int_variable.
-
-    Example of a line we are looking for:
-         call parse_real_variable('BETA', beta, 0.0D0, 1.0D0, &
+    upper and lower bounds. Bounds are derived from the INPUT_VARIABLES config
+    objects, using either the explicit range property or min/max of choices
+    for numeric types.
 
     Example dictionary entry:
          DICT_INPUT_BOUNDS['beta'] = {'lb' : 0.0, 'ub' : 1.0}

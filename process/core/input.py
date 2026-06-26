@@ -52,7 +52,7 @@ class InputVariable:
     """A variable to be parsed from the input file."""
 
     module: Any
-    """The Fortran module that this variable should be set on."""
+    """The module that this variable should be set on."""
     type: type
     """The expected type of the variable"""
     range: tuple[NumberType, NumberType] | None = None
@@ -1184,7 +1184,6 @@ def parse_input_file(data_structure_obj: DataStructure):
             continue
 
         # matches (variable name, array index, value)
-        # NOTE: array index is Fortran-based hence starts at 1.
         line_match = re.match(
             r"([a-zA-Z0-9_]+)(?:\(([0-9]+)\))?[ ]*=[ ]*([ +\-a-zA-Z0-9.,]+).*",
             stripped_line,
@@ -1371,12 +1370,9 @@ def set_scalar_variable(name: str, value: ValidInputTypes, config: InputVariable
     """
     current_value = getattr(config.module, name, ...)
 
-    # use ... sentinel because None is probably a valid return from Fortran
-    # and definately will be when moving to a Python data structure
+    # use ... sentinel because None is a valid initial/default value for variables
     if current_value is ...:
-        error_msg = (
-            f"Fortran module '{config.module}' does not have a variable '{name}'."
-        )
+        error_msg = f"Module '{config.module}' does not have a variable '{name}'."
         raise ProcessValueError(error_msg)
 
     setattr(config.module, name, value)
@@ -1384,9 +1380,6 @@ def set_scalar_variable(name: str, value: ValidInputTypes, config: InputVariable
 
 def set_array_variable(name: str, value: str, array_index: int, config: InputVariable):
     """Set an array variable in the `config.module`.
-
-    The way PROCESS input files are structured, each element of the array is provided on one line
-    so this function just needs to set the `value` at `array_index` (-1) because of Fortran-based indexing.
 
     Parameters
     ----------
