@@ -200,29 +200,6 @@ def find_line_type(line):
     return "Parameter"
 
 
-def find_parameter_group(name):
-    """Function to find the module which the parameter belongs to.
-
-    Parameters
-    ----------
-     name:
-         Parameter name
-
-    Returns
-    -------
-    :
-         Return the module the parameter belongs to
-    """
-    # Load dicts from dicts JSON file
-    dicts = get_dicts()
-
-    # Search DICT_MODULES for parameter
-    for key in dicts["DICT_MODULE"]:
-        if name in dicts["DICT_MODULE"][key]:
-            return key
-    return None  # Explicit return
-
-
 def write_title(title, out_file):
     """Function to write title line to file with fixed width
 
@@ -646,7 +623,6 @@ def add_parameter(data, parameter_name, parameter_value):
 
     # Check that the parameter is not already in the dictionary
     if parameter_name not in data:
-        parameter_group = find_parameter_group(parameter_name)
         if "f_nd_impurity_electrons" in parameter_name:
             comment = dicts["DICT_DESCRIPTIONS"]["f_nd_impurity_electrons"]
         else:
@@ -661,9 +637,7 @@ def add_parameter(data, parameter_name, parameter_value):
                 )
                 comment = ""
 
-        param_data = INVariable(
-            parameter_name, parameter_value, "Parameter", parameter_group, comment
-        )
+        param_data = INVariable(parameter_name, parameter_value, "Parameter", comment)
 
         data[parameter_name] = param_data
 
@@ -989,7 +963,7 @@ def variable_bound_check(bound_number, bound_type):
 
 class INVariable:
     """Class to stores the information of a single variable from the
-        IN.DAT file
+    IN.DAT file.
 
     Parameters
     ----------
@@ -999,17 +973,14 @@ class INVariable:
         Item value
     v_type:
         Type of item
-    parameter_group:
-        PROCESS variable group item belongs to
     comment:
         Comment for item
     """
 
-    def __init__(self, name, value, v_type, parameter_group, comment):
+    def __init__(self, name, value, v_type, comment):
         self.name = name
         self.value = value
         self.v_type = v_type
-        self.parameter_group = parameter_group
         self.comment = comment
 
     def __eq__(self, value):
@@ -1018,16 +989,15 @@ class INVariable:
             self.name == value.name
             and self.value == value.value
             and self.v_type == value.v_type
-            and self.parameter_group == value.parameter_group
         )
 
     def __hash__(self):
-        return hash((self.name, self.value, self.v_type, self.parameter_group))
+        return hash((self.name, self.value, self.v_type))
 
     def __repr__(self):
         return (
             f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, v_type={self.v_type!r}, "
-            f"parameter_group={self.parameter_group!r}, comment={self.comment!r})"
+            f"comment={self.comment!r})"
         )
 
     @property
@@ -1125,7 +1095,7 @@ class InDat:
         # Create bound variable class using INVariable class if the bounds entry
         # doesn't exist
         if "bounds" not in self.data:
-            self.data["bounds"] = INVariable("bounds", {}, "Bound", "Bound", "Bounds")
+            self.data["bounds"] = INVariable("bounds", {}, "Bound", "Bounds")
 
         # Constraint equations
         if line_type == "Constraint Equation":
@@ -1159,8 +1129,6 @@ class InDat:
                 empty_array = []
 
             if array_name not in self.data:
-                parameter_group = find_parameter_group(array_name)
-
                 # Get parameter comment/description from dictionary
                 comment = (
                     dicts["DICT_DESCRIPTIONS"][array_name]
@@ -1175,7 +1143,7 @@ class InDat:
                 # DICT_DEFAULT; don't want changes to data to change the
                 # defaults
                 self.data[array_name] = INVariable(
-                    array_name, empty_array_copy, array_name, parameter_group, comment
+                    array_name, empty_array_copy, array_name, comment
                 )
 
             self.process_array(line, empty_array)
@@ -1228,9 +1196,6 @@ class InDat:
                 )
                 sys.exit()
 
-        # Find group of variables the parameter belongs to
-        parameter_group = find_parameter_group(name)
-
         # Get parameter comment/description from dictionary
         comment = (
             dicts["DICT_DESCRIPTIONS"][name]
@@ -1245,7 +1210,7 @@ class InDat:
             self.add_duplicate_variable(name)
 
         # Populate the IN.DAT dictionary with the information
-        self.data[name] = INVariable(name, value, "Parameter", parameter_group, comment)
+        self.data[name] = INVariable(name, value, "Parameter", comment)
 
     def process_constraint_equation(self, line):
         """Function to process constraint equation entry in IN.DAT
@@ -1279,7 +1244,6 @@ class InDat:
             self.data["icc"] = INVariable(
                 "icc",
                 value,
-                "Constraint Equation",
                 "Constraint Equation",
                 "Constraint Equations",
             )
@@ -1328,7 +1292,6 @@ class InDat:
             self.data["ixc"] = INVariable(
                 "ixc",
                 value,
-                "Iteration Variable",
                 "Iteration Variable",
                 "Iteration Variables",
             )
