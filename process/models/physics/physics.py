@@ -1719,6 +1719,77 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
+            "D-T Fusion rate: total (reactions/sec)",
+            "(fusrat_dt_total)",
+            self.data.physics.fusrat_dt_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-T Fusion rate: plasma (reactions/sec)",
+            "(fusrat_plasma_dt)",
+            self.data.physics.fusrat_plasma_dt,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "D-D -> 3He Fusion rate: plasma (reactions/sec)",
+            "(fusrat_plasma_dd_helion)",
+            self.data.physics.fusrat_plasma_dd_helion,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-D -> T Fusion rate: plasma (reactions/sec)",
+            "(fusrat_plasma_dd_triton)",
+            self.data.physics.fusrat_plasma_dd_triton,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-D Fusion rate: total (reactions/sec)",
+            "(fusrat_plasma_dd_total)",
+            self.data.physics.fusrat_plasma_dd_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-3He Fusion rate: total (reactions/sec)",
+            "(fusrat_plasma_dhe3)",
+            self.data.physics.fusrat_plasma_dhe3,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutron production rate: total (particles/sec)",
+            "(fusrat_neutron_production_total)",
+            self.data.physics.fusrat_neutron_production_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-3He Fusion rate: total (reactions/sec)",
+            "(fusrat_plasma_dhe3)",
+            self.data.physics.fusrat_plasma_dhe3,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutron production rate: total (particles/sec)",
+            "(fusrat_neutron_production_total)",
+            self.data.physics.fusrat_neutron_production_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-D Fusion rate: total (reactions/sec)",
+            "(fusrat_plasma_dd_total)",
+            self.data.physics.fusrat_plasma_dd_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Fusion rate density: total (reactions/m³/sec)",
             "(fusden_total)",
             self.data.physics.fusden_total,
@@ -2258,56 +2329,7 @@ class Physics(Model):
             self.plasma_bootstrap_current.output()
             self.dia_current.output()
 
-        po.oheadr(self.outfile, "Plasma Fuelling")
-        po.ovarre(
-            self.outfile,
-            "Ratio of He and pellet particle confinement times",
-            "(tauratio)",
-            self.data.physics.tauratio,
-        )
-        po.ovarre(
-            self.outfile,
-            "Fuelling rate (nucleus-pairs/s)",
-            "(molflow_plasma_fuelling_required)",
-            self.data.physics.molflow_plasma_fuelling_required,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Fuel burn-up rate (reactions/s)",
-            "(rndfuel)",
-            self.data.physics.rndfuel,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Burn-up fraction",
-            "(burnup)",
-            self.data.physics.burnup,
-            "OP ",
-        )
-
-        if 78 in self.data.numerics.icc:
-            po.osubhd(self.outfile, "Reinke Criterion :")
-            po.ovarin(
-                self.outfile,
-                "index of impurity to be iterated for divertor detachment",
-                "(impvardiv)",
-                self.data.reinke.impvardiv,
-            )
-            po.ovarre(
-                self.outfile,
-                "Minimum Impurity fraction from Reinke",
-                "(fzmin)",
-                self.data.reinke.fzmin,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Actual Impurity fraction",
-                "(fzactual)",
-                self.data.reinke.fzactual,
-            )
+        self.fuelling.output_fuelling_info()
 
     def output_temperature_density_profile_info(self) -> None:
         """Output information about plasma temperature and density profiles."""
