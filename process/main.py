@@ -792,7 +792,7 @@ class Models:
             self.plasma_fields,
             self.sauter_bootstrap_current,
             self.plasma_transition,
-            self.self.plasma_fuelling,
+            self.plasma_fuelling,
             self.physics_detailed,
             self.electron_cyclotron,
             self.lower_hybrid,
