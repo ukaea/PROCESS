@@ -928,6 +928,8 @@ class Physics(Model):
             self.data.physics.tauratio,
         )
 
+        self.fuelling.run()
+
         self.data.physics.ntau, self.data.physics.nTtau = (
             self.confinement.calculate_double_and_triple_product(
                 nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
