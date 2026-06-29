@@ -706,6 +706,7 @@ class Physics(Model):
             self.data.physics.pden_ion_electron_equilibration_vol_avg_mw
             * self.data.physics.vol_plasma
         )
+        print(self.data.physics.f_t_fuel_ion_electron_energy_confinement)
 
         # Calculate radiation power
 
@@ -2431,6 +2432,13 @@ class Physics(Model):
             "Ion-electron equilibration power (MW)",
             "(p_ion_electron_equilibration_vol_avg_mw)",
             self.data.physics.p_ion_electron_equilibration_vol_avg_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Ratio of fuel ion to electron energy confinement times",
+            "(f_t_fuel_ion_electron_energy_confinement)",
+            self.data.physics.f_t_fuel_ion_electron_energy_confinement,
             "OP ",
         )
         po.osubhd(self.outfile, "Ions power balance :")
