@@ -2025,7 +2025,7 @@ def constraint_equation_96(constraint_registration, data):
     # Alpha particle balance
     numerator = data.physics.fusrat_dt_total + data.physics.fusrat_plasma_dhe3
     denominator = (data.physics.nd_plasma_alphas_vol_avg * data.physics.vol_plasma) / (
-        data.physics.t_energy_confinement * data.physics.f_alpha_energy_confinement
+        data.physics.t_energy_confinement * data.physics.f_t_alpha_energy_confinement
     )
 
     return eq(numerator, denominator, constraint_registration)
