@@ -150,7 +150,7 @@ def test_acc2272(monkeypatch, costs):
     :param monkeypatch: Mock fixture
     :type monkeypatch: object
     """
-    monkeypatch.setattr(costs.data.physics, "rndfuel", 7.158e20)
+    monkeypatch.setattr(costs.data.physics, "fusrat_total", 7.158e20)
     monkeypatch.setattr(costs.data.physics, "m_fuel_amu", 2.5)
     monkeypatch.setattr(costs.data.costs, "fkind", 1)
     monkeypatch.setattr(costs.data.costs, "c2271", 0)
@@ -4397,7 +4397,7 @@ class Acc2272Param(NamedTuple):
 
     wtgpd: Any = None
 
-    rndfuel: Any = None
+    fusrat_total: Any = None
 
     m_fuel_amu: Any = None
 
@@ -4423,7 +4423,7 @@ class Acc2272Param(NamedTuple):
             gain=0,
             edrive=5000000,
             wtgpd=0,
-            rndfuel=7.0799717510383796e20,
+            fusrat_total=7.0799717510383796e20,
             m_fuel_amu=2.5,
             c227=0,
             c2272=0,
@@ -4439,7 +4439,7 @@ class Acc2272Param(NamedTuple):
             gain=0,
             edrive=5000000,
             wtgpd=507.88376577416528,
-            rndfuel=7.0777619721108953e20,
+            fusrat_total=7.0777619721108953e20,
             m_fuel_amu=2.5,
             c227=284.96904049038437,
             c2272=114.02873340990777,
@@ -4476,7 +4476,7 @@ def test_acc2272_rut(acc2272param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.physics, "wtgpd", acc2272param.wtgpd)
 
-    monkeypatch.setattr(costs.data.physics, "rndfuel", acc2272param.rndfuel)
+    monkeypatch.setattr(costs.data.physics, "fusrat_total", acc2272param.fusrat_total)
 
     monkeypatch.setattr(costs.data.physics, "m_fuel_amu", acc2272param.m_fuel_amu)
 
