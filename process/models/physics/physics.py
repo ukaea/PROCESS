@@ -706,7 +706,6 @@ class Physics(Model):
             self.data.physics.pden_ion_electron_equilibration_vol_avg_mw
             * self.data.physics.vol_plasma
         )
-        print(self.data.physics.f_t_fuel_ion_electron_energy_confinement)
 
         # Calculate radiation power
 
