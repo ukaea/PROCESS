@@ -3026,7 +3026,7 @@ class Physics(Model):
         vol_plasma: float,
         nd_plasma_vol_avg: float,
         temp_plasma_density_weighted_vol_avg_kev: float,
-    ) -> float:
+    ) -> tuple[float, float]:
         """Calculate the stored thermal energy in the (W) plasma.
 
         Parameters
@@ -3040,17 +3040,22 @@ class Physics(Model):
 
         Returns
         -------
-        float
-            Stored thermal energy in the plasma (W).
+        tuple[float, float]
+            A tuple containing:
+            - Volume averaged thermal energy density (J/m³).
+            - Total stored thermal energy in the plasma (J).
 
         """
-        return (
+        eden_plasma_thermal_vol_avg = (
             1.5
             * constants.KILOELECTRON_VOLT
             * nd_plasma_vol_avg
             * temp_plasma_density_weighted_vol_avg_kev
-            * vol_plasma
         )
+
+        e_plasma_thermal = eden_plasma_thermal_vol_avg * vol_plasma
+
+        return eden_plasma_thermal_vol_avg, e_plasma_thermal
 
 
 def res_diff_time(rmajor, res_plasma, kappa95):
