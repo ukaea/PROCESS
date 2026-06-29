@@ -11769,7 +11769,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
     axis.text(
         0.285,
-        0.56,
+        0.58,
         "$\\text{D - 3He}$",
         fontsize=20,
         verticalalignment="top",
@@ -15487,7 +15487,7 @@ def plot_alpha_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
 
     # Plot star for mfile values
     fusion_dt_mfile = mfile.get("fusrat_dt_total", scan=scan)
-    f_t_alpha_mfile = mfile.get("f_alpha_energy_confinement", scan=scan)
+    f_t_alpha_mfile = mfile.get("f_t_alpha_energy_confinement", scan=scan)
     axis.plot(
         f_t_alpha_mfile,
         fusion_dt_mfile,

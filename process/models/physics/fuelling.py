@@ -2,7 +2,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    numerics,
     reinke_variables,
 )
 
@@ -459,7 +458,7 @@ class PlasmaFuelling(Model):
             "OP ",
         )
 
-        if 78 in numerics.icc:
+        if 78 in self.data.numerics.icc:
             po.osubhd(self.outfile, "Reinke Criterion :")
             po.ovarin(
                 self.outfile,
