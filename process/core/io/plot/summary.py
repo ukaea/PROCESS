@@ -60,6 +60,7 @@ from process.models.physics.current_drive import (
     ElectronCyclotron,
 )
 from process.models.physics.density_limit import DensityLimitModel
+from process.models.physics.fuelling import PlasmaFuelling
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.physics import (
@@ -2929,7 +2930,7 @@ def plot_main_plasma_information(
         f"|  D: {mfile.get('f_plasma_fuel_deuterium', scan=scan):.2f}  |  T: {mfile.get('f_plasma_fuel_tritium', scan=scan):.2f}  |  3He: {mfile.get('f_plasma_fuel_helium3', scan=scan):.2f}  |\n\n"
         f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile.get('p_fusion_total_mw', scan=scan):,.2f} MW\n"
         f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile.get('p_dt_total_mw', scan=scan):,.2f} MW\n"
-        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile.get('p_dd_total_mw', scan=scan):,.2f} MW\n"
+        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile.get('p_dd_total_mw', scan=scan):,.4f} MW\n"
         f"D-3He Power, $P_{{\\text{{fus,D3He}}}}:$ {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW\n"
         f"Alpha Power, $P_{{\\alpha}}:$ {mfile.get('p_alpha_total_mw', scan=scan):,.2f} MW"
     )
@@ -2953,9 +2954,9 @@ def plot_main_plasma_information(
         f"   - Average mass of all plasma ions: {mfile.get('m_ions_total_amu', scan=scan):.3f} amu\n"
         f"Fuel mass: {mfile.get('m_plasma_fuel_ions', scan=scan) * 1000:.4f} g\n"
         f"   - Average mass of all fuel ions: {mfile.get('m_fuel_amu', scan=scan):.3f} amu\n\n"
-        f"Fueling rate: {mfile.get('molflow_plasma_fuelling_required', scan=scan):.3e} nucleus-pairs/s\n"
-        f"Fuel burn-up rate: {mfile.get('rndfuel', scan=scan):.3e} reactions/s \n"
-        f"Burn-up fraction: {mfile.get('burnup', scan=scan):.4f} \n"
+        f"Fueling rate: {mfile.get('molflow_plasma_fuelling_vv_injected', scan=scan):.3e} nucleus-pairs/s\n"
+        f"Fuel burn-up rate: {mfile.get('fusrat_total', scan=scan):.3e} reactions/s \n"
+        f"Burn-up fraction: {mfile.get('f_plasma_fuel_burnup', scan=scan):.4f} \n"
     )
 
     axis.text(
@@ -11654,8 +11655,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     # Add plasma volume, areas and shaping information
     textstr_general = (
         f"Total fusion rate: {mfile.get('fusrat_total', scan=scan):.4e} reactions/s\n"
-        f"Total fusion rate density: {mfile.get('fusden_total', scan=scan):.4e} reactions/m3/s\n"
-        f"Plasma fusion rate density: {mfile.get('fusden_plasma', scan=scan):.4e} reactions/m3/s\n"
+        f"Total fusion rate density: {mfile.get('fusden_total', scan=scan):.4e} reactions/m$^3$/s\n"
+        f"Plasma fusion rate density: {mfile.get('fusden_plasma', scan=scan):.4e} reactions/m$^3$/s"
     )
 
     axis.text(
@@ -11677,9 +11678,11 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     # ============================================================================
 
     textstr_dt = (
-        f"Total fusion power: {mfile.get('p_dt_total_mw', scan=scan):,.2f} MW\n"
-        f"Plasma fusion power: {mfile.get('p_plasma_dt_mw', scan=scan):,.2f} MW                     \n"
-        f"Beam fusion power: {mfile.get('p_beam_dt_mw', scan=scan):,.2f} MW\n"
+        f"Total fusion power: {mfile.get('p_dt_total_mw', scan=scan):,.4f} MW\n"
+        f"Total fusion rate: {mfile.get('fusrat_dt_total', scan=scan):.4e} reactions/s\n"
+        f"Plasma fusion power: {mfile.get('p_plasma_dt_mw', scan=scan):,.4f} MW                              \n"
+        f"Plasma fusion rate: {mfile.get('fusrat_plasma_dt', scan=scan):.4e} reactions/s\n"
+        f"Beam fusion power: {mfile.get('p_beam_dt_mw', scan=scan):,.4f} MW"
     )
 
     axis.text(
@@ -11699,7 +11702,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
 
     axis.text(
-        0.24,
+        0.285,
         0.8,
         "$\\text{D - T}$",
         fontsize=20,
@@ -11710,13 +11713,16 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     # =================================================
 
     textstr_dd = (
-        f"Total fusion power: {mfile.get('p_dd_total_mw', scan=scan):,.2f} MW\n"
-        f"Tritium branching ratio: {mfile.get('f_dd_branching_trit', scan=scan):.4f}                      \n"
+        f"Total fusion power: {mfile.get('p_dd_total_mw', scan=scan):,.4f} MW\n"
+        f"Tritium branching ratio: {mfile.get('f_dd_branching_trit', scan=scan):.4f}                                  \n\n"
+        f"D+D -> T fusion rate: {mfile.get('fusrat_plasma_dd_triton', scan=scan):.4e} reactions/s                       \n"
+        f"D+D -> 3He fusion rate: {mfile.get('fusrat_plasma_dd_helion', scan=scan):.4e} reactions/s                     \n"
+        f"Total D-D fusion rate: {mfile.get('fusrat_plasma_dd_total', scan=scan):.4e} reactions/s"
     )
 
     axis.text(
         0.05,
-        0.65,
+        0.625,
         textstr_dd,
         fontsize=9,
         verticalalignment="bottom",
@@ -11731,8 +11737,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
 
     axis.text(
-        0.22,
-        0.685,
+        0.31,
+        0.69,
         "$\\text{D - D}$",
         fontsize=20,
         verticalalignment="top",
@@ -11741,8 +11747,10 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
     # =================================================
 
-    textstr_dhe3 = f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW                                 \n\n"
-
+    textstr_dhe3 = (
+        f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.4f} MW                                         \n"
+        f"D+3He fusion rate: {mfile.get('fusrat_plasma_dhe3', scan=scan):.4e} reactions/s                               \n"
+    )
     axis.text(
         0.05,
         0.55,
@@ -11760,8 +11768,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
 
     axis.text(
-        0.21,
-        0.59,
+        0.285,
+        0.56,
         "$\\text{D - 3He}$",
         fontsize=20,
         verticalalignment="top",
@@ -11771,15 +11779,15 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     # =================================================
 
     textstr_alpha = (
-        f"Total power: {mfile.get('p_alpha_total_mw', scan=scan):.2f} MW\n"
-        f"Plasma power: {mfile.get('p_plasma_alpha_mw', scan=scan):.2f} MW\n"
-        f"Beam power: {mfile.get('p_beam_alpha_mw', scan=scan):.2f} MW\n\n"
-        f"Rate density total: {mfile.get('fusden_alpha_total', scan=scan):.4e} particles/m3/sec\n"
-        f"Rate density, plasma: {mfile.get('fusden_plasma_alpha', scan=scan):.4e} particles/m3/sec\n\n"
-        f"Total power density: {mfile.get('pden_alpha_total_mw', scan=scan):.4e} MW/m3\n"
-        f"Plasma power density: {mfile.get('pden_plasma_alpha_mw', scan=scan):.4e} MW/m3\n\n"
-        f"Power per unit volume transferred to electrons: {mfile.get('f_pden_alpha_electron_mw', scan=scan):.4e} MW/m3\n"
-        f"Power per unit volume transferred to ions: {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m3\n\n"
+        f"Total power: {mfile.get('p_alpha_total_mw', scan=scan):.4f} MW\n"
+        f"Plasma power: {mfile.get('p_plasma_alpha_mw', scan=scan):.4f} MW\n"
+        f"Beam power: {mfile.get('p_beam_alpha_mw', scan=scan):.4f} MW\n\n"
+        f"Rate density total: {mfile.get('fusden_alpha_total', scan=scan):.4e} particles/m$^3$/sec\n"
+        f"Rate density, plasma: {mfile.get('fusden_plasma_alpha', scan=scan):.4e} particles/m$^3$/sec\n\n"
+        f"Total power density: {mfile.get('pden_alpha_total_mw', scan=scan):.4e} MW/m$^3$\n"
+        f"Plasma power density: {mfile.get('pden_plasma_alpha_mw', scan=scan):.4e} MW/m$^3$\n\n"
+        f"Power per unit volume transferred to electrons: {mfile.get('f_pden_alpha_electron_mw', scan=scan):.4e} MW/m$^3$\n"
+        f"Power per unit volume transferred to ions: {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m$^3$"
     )
 
     axis.text(
@@ -11810,11 +11818,12 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     # =================================================
 
     textstr_neutron = (
-        f"Total power: {mfile.get('p_neutron_total_mw', scan=scan):,.2f} MW\n"
-        f"Plasma power: {mfile.get('p_plasma_neutron_mw', scan=scan):,.2f} MW\n"
-        f"Beam power: {mfile.get('p_beam_neutron_mw', scan=scan):,.2f} MW\n\n"
-        f"Total power density: {mfile.get('pden_neutron_total_mw', scan=scan):,.4e} MW/m3\n"
-        f"Plasma power density: {mfile.get('pden_plasma_neutron_mw', scan=scan):,.4e} MW/m3\n"
+        f"Total power: {mfile.get('p_neutron_total_mw', scan=scan):,.4f} MW\n"
+        f"Plasma power: {mfile.get('p_plasma_neutron_mw', scan=scan):,.4f} MW\n"
+        f"Beam power: {mfile.get('p_beam_neutron_mw', scan=scan):,.4f} MW\n\n"
+        f"Total power density: {mfile.get('pden_neutron_total_mw', scan=scan):,.4e} MW/m$^3$\n"
+        f"Plasma power density: {mfile.get('pden_plasma_neutron_mw', scan=scan):,.4e} MW/m$^3$\n\n"
+        f"Neutron production rate: {mfile.get('fusrat_neutron_production_total', scan=scan):.4e} particles/s"
     )
 
     axis.text(
@@ -11834,8 +11843,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
 
     axis.text(
-        0.25,
-        0.2,
+        0.26,
+        0.21,
         "$n$",
         fontsize=20,
         verticalalignment="top",
@@ -15300,6 +15309,311 @@ def plot_cs_radial_stress_profile(
     axis.legend(loc="best")
 
 
+def plot_tritium_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot contour of tritium flow rate vs recycling and fuelling rate."""
+    recycling_range = np.linspace(0.01, 0.99, 20)
+    fuelling_range = np.linspace(0.01, 1.0, 20)
+    tritium_flow = np.zeros((len(recycling_range), len(fuelling_range)))
+
+    for i, recycling in enumerate(recycling_range):
+        for j, fuelling in enumerate(fuelling_range):
+            tritium_flow[i, j] = PlasmaFuelling.calculate_plasma_tritium_flow_rate(
+                f_molflow_plasma_fuelling_tritium=mfile.get(
+                    "f_molflow_plasma_fuelling_tritium", scan=scan
+                ),
+                eta_plasma_fuelling=fuelling,
+                molflow_plasma_fuelling_vv_injected=mfile.get(
+                    "molflow_plasma_fuelling_vv_injected", scan=scan
+                ),
+                fusrat_dt_total=mfile.get("fusrat_dt_total", scan=scan),
+                fusrat_plasma_dd_triton=mfile.get("fusrat_plasma_dd_triton", scan=scan),
+                t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
+                f_plasma_particles_lcfs_recycled=recycling,
+                nd_plasma_fuel_ions_vol_avg=mfile.get(
+                    "nd_plasma_fuel_ions_vol_avg", scan=scan
+                ),
+                vol_plasma=mfile.get("vol_plasma", scan=scan),
+                f_plasma_fuel_tritium=mfile.get("f_plasma_fuel_tritium", scan=scan),
+            )
+
+    contour = axis.contourf(
+        fuelling_range,
+        recycling_range,
+        tritium_flow,
+        levels=15,
+        cmap="seismic",
+        norm=plt.matplotlib.colors.CenteredNorm(vcenter=0),
+    )
+
+    axis.contour(
+        fuelling_range,
+        recycling_range,
+        tritium_flow,
+        levels=[0],
+        colors="black",
+        linewidths=2,
+    )
+
+    # Plot star for mfile values
+    recycling_mfile = mfile.get("f_plasma_particles_lcfs_recycled", scan=scan)
+    fuelling_mfile = mfile.get("eta_plasma_fuelling", scan=scan)
+    axis.plot(
+        fuelling_mfile,
+        recycling_mfile,
+        marker="*",
+        markersize=15,
+        color="yellow",
+        markeredgecolor="black",
+        markeredgewidth=1.5,
+    )
+
+    axis.set_xlabel("Fuelling Rate Efficiency ($\\eta_{\\text{fuelling}}$)")
+    axis.set_ylabel("Recycling Fraction [$R$]")
+    axis.set_title("Plasma Tritium Flow Rate (particles/s)", pad=20)
+    axis.minorticks_on()
+    axis.grid(True, which="major", linestyle="-", alpha=0.7)
+    axis.grid(True, which="minor", linestyle=":", alpha=0.4)
+    cbar = plt.colorbar(contour, ax=axis, label="Tritium Flow Rate")
+    cbar.ax.axhline(y=0, color="black", linewidth=2)
+
+
+def plot_deuterium_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot contour of deuterium flow rate vs recycling and fuelling rate."""
+    recycling_range = np.linspace(0.01, 0.99, 20)
+    fuelling_range = np.linspace(0.01, 1.0, 20)
+    deuterium_flow = np.zeros((len(recycling_range), len(fuelling_range)))
+
+    for i, recycling in enumerate(recycling_range):
+        for j, fuelling in enumerate(fuelling_range):
+            deuterium_flow[i, j] = PlasmaFuelling.calculate_plasma_deuterium_flow_rate(
+                f_molflow_plasma_fuelling_deuterium=mfile.get(
+                    "f_molflow_plasma_fuelling_deuterium", scan=scan
+                ),
+                eta_plasma_fuelling=fuelling,
+                molflow_plasma_fuelling_vv_injected=mfile.get(
+                    "molflow_plasma_fuelling_vv_injected", scan=scan
+                ),
+                fusrat_dt_total=mfile.get("fusrat_dt_total", scan=scan),
+                fusrat_plasma_dhe3=mfile.get("fusrat_plasma_dhe3", scan=scan),
+                fusrat_plasma_dd_total=mfile.get("fusrat_plasma_dd_total", scan=scan),
+                t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
+                f_plasma_particles_lcfs_recycled=recycling,
+                nd_plasma_fuel_ions_vol_avg=mfile.get(
+                    "nd_plasma_fuel_ions_vol_avg", scan=scan
+                ),
+                vol_plasma=mfile.get("vol_plasma", scan=scan),
+                f_plasma_fuel_deuterium=mfile.get("f_plasma_fuel_deuterium", scan=scan),
+            )
+
+    contour = axis.contourf(
+        fuelling_range,
+        recycling_range,
+        deuterium_flow,
+        levels=15,
+        cmap="seismic",
+        norm=plt.matplotlib.colors.CenteredNorm(vcenter=0),
+    )
+    axis.contour(
+        fuelling_range,
+        recycling_range,
+        deuterium_flow,
+        levels=[0],
+        colors="black",
+        linewidths=2,
+    )
+
+    # Plot star for mfile values
+    recycling_mfile = mfile.get("f_plasma_particles_lcfs_recycled", scan=scan)
+    fuelling_mfile = mfile.get("eta_plasma_fuelling", scan=scan)
+    axis.plot(
+        fuelling_mfile,
+        recycling_mfile,
+        marker="*",
+        markersize=15,
+        color="yellow",
+        markeredgecolor="black",
+        markeredgewidth=1.5,
+    )
+
+    axis.set_xlabel("Fuelling Rate Efficiency ($\\eta_{\\text{fuelling}}$)")
+    axis.set_title("Plasma Deuterium Flow Rate (particles/s)", pad=20)
+    axis.minorticks_on()
+    axis.grid(True, which="major", linestyle="-", alpha=0.7)
+    axis.grid(True, which="minor", linestyle=":", alpha=0.4)
+    cbar = plt.colorbar(contour, ax=axis, label="Deuterium Flow Rate")
+    cbar.ax.axhline(y=0, color="black", linewidth=2)
+
+
+def plot_alpha_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot contour of alpha particle flow rate vs recycling and fuelling rate."""
+    fusion_dt_range = np.linspace(1e19, 5e21, 20)
+    f_t_alpha_energy_confinement_range = np.linspace(2.0, 10.0, 20)
+    alpha_flow = np.zeros((
+        len(fusion_dt_range),
+        len(f_t_alpha_energy_confinement_range),
+    ))
+
+    for i, fusion_dt in enumerate(fusion_dt_range):
+        for j, f_t_alpha_energy_confinement in enumerate(
+            f_t_alpha_energy_confinement_range
+        ):
+            alpha_flow[i, j] = PlasmaFuelling.calculate_plasma_alphas_flow_rate(
+                fusrat_dt_total=fusion_dt,
+                fusrat_plasma_dhe3=mfile.get("fusrat_plasma_dhe3", scan=scan),
+                t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
+                nd_plasma_alphas_vol_avg=mfile.get(
+                    "nd_plasma_alphas_vol_avg", scan=scan
+                ),
+                vol_plasma=mfile.get("vol_plasma", scan=scan),
+                f_t_alpha_energy_confinement=f_t_alpha_energy_confinement,
+            )
+
+    contour = axis.contourf(
+        f_t_alpha_energy_confinement_range,
+        fusion_dt_range,
+        alpha_flow,
+        levels=15,
+        cmap="seismic",
+        norm=plt.matplotlib.colors.CenteredNorm(vcenter=0),
+    )
+    axis.contour(
+        f_t_alpha_energy_confinement_range,
+        fusion_dt_range,
+        alpha_flow,
+        levels=[0],
+        colors="black",
+        linewidths=2,
+    )
+
+    # Plot star for mfile values
+    fusion_dt_mfile = mfile.get("fusrat_dt_total", scan=scan)
+    f_t_alpha_mfile = mfile.get("f_alpha_energy_confinement", scan=scan)
+    axis.plot(
+        f_t_alpha_mfile,
+        fusion_dt_mfile,
+        marker="*",
+        markersize=15,
+        color="yellow",
+        markeredgecolor="black",
+        markeredgewidth=1.5,
+    )
+
+    axis.set_xlabel(
+        "Alpha to Energy Confinement Time Ratio ($f_{\\alpha, \\text{energy confinement}}$)"
+    )
+    axis.set_ylabel("Fusion DT Rate [$\\text{particles/s}$]")
+    axis.set_title("Plasma Alpha Particle Flow Rate (particles/s)", pad=20)
+    axis.minorticks_on()
+    axis.grid(True, which="major", linestyle="-", alpha=0.7)
+    axis.grid(True, which="minor", linestyle=":", alpha=0.4)
+    cbar = plt.colorbar(contour, ax=axis, label="Alpha Particle Flow Rate")
+    cbar.ax.axhline(y=0, color="black", linewidth=2)
+
+
+def plot_helium3_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot contour of helium-3 flow rate vs recycling and fuelling rate."""
+    recycling_range = np.linspace(0.01, 0.99, 20)
+    fuelling_range = np.linspace(0.01, 1.0, 20)
+    helium3_flow = np.zeros((len(recycling_range), len(fuelling_range)))
+
+    for i, recycling in enumerate(recycling_range):
+        for j, fuelling in enumerate(fuelling_range):
+            helium3_flow[i, j] = PlasmaFuelling.calculate_plasma_helium3_flow_rate(
+                f_molflow_plasma_fuelling_helium3=mfile.get(
+                    "f_molflow_plasma_fuelling_helium3", scan=scan
+                ),
+                eta_plasma_fuelling=fuelling,
+                molflow_plasma_fuelling_vv_injected=mfile.get(
+                    "molflow_plasma_fuelling_vv_injected", scan=scan
+                ),
+                fusrat_plasma_dhe3=mfile.get("fusrat_plasma_dhe3", scan=scan),
+                t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
+                f_plasma_particles_lcfs_recycled=recycling,
+                nd_plasma_fuel_ions_vol_avg=mfile.get(
+                    "nd_plasma_fuel_ions_vol_avg", scan=scan
+                ),
+                vol_plasma=mfile.get("vol_plasma", scan=scan),
+                f_plasma_fuel_helium3=mfile.get("f_plasma_fuel_helium3", scan=scan),
+            )
+
+    contour = axis.contourf(
+        fuelling_range,
+        recycling_range,
+        helium3_flow,
+        levels=15,
+        cmap="seismic",
+        norm=plt.matplotlib.colors.CenteredNorm(vcenter=0),
+    )
+    axis.contour(
+        fuelling_range,
+        recycling_range,
+        helium3_flow,
+        levels=[0],
+        colors="black",
+        linewidths=2,
+    )
+
+    # Plot star for mfile values
+    recycling_mfile = mfile.get("f_plasma_particles_lcfs_recycled", scan=scan)
+    fuelling_mfile = mfile.get("eta_plasma_fuelling", scan=scan)
+    axis.plot(
+        fuelling_mfile,
+        recycling_mfile,
+        marker="*",
+        markersize=15,
+        color="yellow",
+        markeredgecolor="black",
+    )
+    axis.set_xlabel("Fuelling Rate Efficiency ($\\eta_{\\text{fuelling}}$)")
+    cbar = plt.colorbar(contour, ax=axis, label="Helium-3 Flow Rate")
+    cbar.ax.axhline(y=0, color="black", linewidth=2)
+    axis.set_title("Plasma Helium-3 Flow Rate (particles/s)", pad=20)
+    axis.minorticks_on()
+    axis.grid(True, which="major", linestyle="-", alpha=0.7)
+    axis.grid(True, which="minor", linestyle=":", alpha=0.4)
+
+
+def plot_fuelling_info(fig: plt.Figure, mfile: MFile, scan: int):
+    """Plot fuelling information."""
+    msg = (
+        f"$\\mathbf{{Plasma \\ Fuelling \\ Information:}}$\n\n"
+        f"Total fuelling rate:"
+        f"{mfile.get('molflow_plasma_fuelling_vv_injected', scan=scan):.4e} particles/s\n"
+        f"Total fuelling rate: "
+        f"{mfile.get('molflow_plasma_fuelling_vv_injected_moles', scan=scan):.4e} moles/s\n"
+        f"Total fuelling loss: "
+        f"{mfile.get('molflow_plasma_fuelling_loss', scan=scan):.4e} particles/s\n"
+        f"Total fuelling loss: "
+        f"{mfile.get('molflow_plasma_fuelling_loss_moles', scan=scan):.4e} moles/s\n"
+        f"Fuelling Rate Efficiency ($\\eta_{{\\text{{fuelling}}}}$): "
+        f"{mfile.get('eta_plasma_fuelling', scan=scan):.4f}\n"
+        f"Recycling Fraction ($R$): "
+        f"{mfile.get('f_plasma_particles_lcfs_recycled', scan=scan):.4f}\n\n"
+        f"Fraction of Tritium Fuelling: "
+        f"{mfile.get('f_molflow_plasma_fuelling_tritium', scan=scan):.4f}\n"
+        f"Fraction of Deuterium Fuelling: "
+        f"{mfile.get('f_molflow_plasma_fuelling_deuterium', scan=scan):.4f}\n"
+        f"Fraction of 3-Helium Fuelling: "
+        f"{mfile.get('f_molflow_plasma_fuelling_helium3', scan=scan):.4f}\n\n"
+        f"Total Fuel Burnup Fraction: "
+        f"{mfile.get('f_plasma_fuel_burnup', scan=scan):.4f}\n"
+        f"Tritium Burnup Fraction: "
+        f"{mfile.get('f_plasma_tritium_burnup', scan=scan):.4f}\n"
+        f"Deuterium Burnup Fraction: "
+        f"{mfile.get('f_plasma_deuterium_burnup', scan=scan):.4f}"
+    )
+    fig.text(
+        0.75,
+        0.25,
+        msg,
+        ha="center",
+        va="center",
+        transform=fig.transFigure,
+        fontsize=9,
+        bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 1.0},
+    )
+
+
 def main_plot(
     m_file: MFile,
     scan: int,
@@ -15456,6 +15770,21 @@ def main_plot(
     _add_page("rx_1_2"), _add_page("rx_3_4")
     if m_file.get("i_plasma_shape", scan=scan) == PlasmaShapeModelType.SAUTER:
         plot_fusion_rate_contours(pages["rx_1_2"], pages["rx_3_4"], m_file, scan)
+
+    plot_tritium_flow_contour(
+        axis=_add_page("fuelling").add_subplot(231), mfile=m_file, scan=scan
+    )
+    plot_deuterium_flow_contour(
+        axis=pages["fuelling"].add_subplot(232), mfile=m_file, scan=scan
+    )
+    plot_helium3_flow_contour(
+        axis=pages["fuelling"].add_subplot(233), mfile=m_file, scan=scan
+    )
+    plot_alpha_flow_contour(
+        axis=pages["fuelling"].add_subplot(223), mfile=m_file, scan=scan
+    )
+
+    plot_fuelling_info(pages["fuelling"], m_file, scan)
 
     if i_shape != PlasmaShapeModelType.SAUTER:
         msg = (
