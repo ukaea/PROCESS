@@ -881,7 +881,7 @@ class Physics(Model):
             confinement_time_data.t_electron_energy_confinement
         )
         self.data.physics.t_energy_confinement = (
-            confinement_time_data.t_energy_confinement
+            confinement_time_data.t_plasma_energy_confinement
         )
         self.data.physics.t_ion_energy_confinement = (
             confinement_time_data.t_ion_energy_confinement

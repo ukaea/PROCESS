@@ -2252,13 +2252,35 @@ class Stellarator(Model):
         )
 
         (
-            self.data.physics.pden_electron_transport_loss_mw,
-            self.data.physics.pden_ion_transport_loss_mw,
-            self.data.physics.t_electron_energy_confinement,
-            self.data.physics.t_ion_energy_confinement,
-            self.data.physics.t_energy_confinement,
-            self.data.physics.p_plasma_loss_mw,
-        ) = self.physics.confinement.calculate_confinement_time(
+            self.data.physics.eden_plasma_electrons_thermal_vol_avg,
+            self.data.physics.e_plasma_electrons_thermal,
+        ) = self.physics.calaculate_stored_thermal_energy(
+            vol_plasma=self.data.physics.vol_plasma,
+            nd_plasma_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+            temp_plasma_density_weighted_vol_avg_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
+        )
+
+        (
+            self.data.physics.eden_plasma_ions_thermal_vol_avg,
+            self.data.physics.e_plasma_ions_thermal,
+        ) = self.physics.calaculate_stored_thermal_energy(
+            vol_plasma=self.data.physics.vol_plasma,
+            nd_plasma_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
+            temp_plasma_density_weighted_vol_avg_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
+        )
+
+        self.data.physics.eden_plasma_thermal_vol_avg = (
+            self.data.physics.eden_plasma_electrons_thermal_vol_avg
+            + self.data.physics.eden_plasma_ions_thermal_vol_avg
+        )
+
+        self.data.physics.e_plasma_thermal_total = (
+            self.data.physics.e_plasma_electrons_thermal
+            + self.data.physics.e_plasma_ions_thermal
+        )
+
+
+        confinement_time_data = self.physics.confinement.calculate_confinement_time(
             self.data.physics.m_fuel_amu,
             self.data.physics.p_alpha_total_mw,
             self.data.physics.aspect,
@@ -2285,6 +2307,23 @@ class Stellarator(Model):
             eden_plasma_electrons_thermal_vol_avg=self.data.physics.eden_plasma_electrons_thermal_vol_avg,
             eden_plasma_ions_thermal_vol_avg=self.data.physics.eden_plasma_ions_thermal_vol_avg,
         )
+
+        self.data.physics.pden_electron_transport_loss_mw = (
+            confinement_time_data.pden_electron_transport_loss_mw
+        )
+        self.data.physics.pden_ion_transport_loss_mw = (
+            confinement_time_data.pden_ion_transport_loss_mw
+        )
+        self.data.physics.t_electron_energy_confinement = (
+            confinement_time_data.t_electron_energy_confinement
+        )
+        self.data.physics.t_energy_confinement = (
+            confinement_time_data.t_plasma_energy_confinement
+        )
+        self.data.physics.t_ion_energy_confinement = (
+            confinement_time_data.t_ion_energy_confinement
+        )
+        self.data.physics.p_plasma_loss_mw = confinement_time_data.p_plasma_loss_mw
 
         self.data.physics.ntau, self.data.physics.nTtau = (
             self.physics.confinement.calculate_double_and_triple_product(
