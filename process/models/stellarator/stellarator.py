@@ -2299,27 +2299,13 @@ class Stellarator(Model):
         #  Calculate auxiliary physics related information
         #  for the rest of the code
 
-        sbar = 1.0e0
         (
-            self.data.physics.burnup,
-            self.data.physics.figmer,
-            _fusrat,
-            self.data.physics.molflow_plasma_fuelling_required,
-            self.data.physics.rndfuel,
             self.data.physics.t_alpha_confinement,
             self.data.physics.f_t_alpha_energy_confinement,
         ) = self.physics.phyaux(
-            self.data.physics.aspect,
-            self.data.physics.nd_plasma_fuel_ions_vol_avg,
-            self.data.physics.fusden_total,
             self.data.physics.fusden_alpha_total,
-            self.data.physics.plasma_current,
-            sbar,
             self.data.physics.nd_plasma_alphas_vol_avg,
             self.data.physics.t_energy_confinement,
-            self.data.physics.vol_plasma,
-            self.data.physics.burnup_in,
-            self.data.physics.tauratio,
         )
 
         # Calculate the neoclassical sanity check with PROCESS parameters
