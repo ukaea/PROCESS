@@ -1184,6 +1184,22 @@ INPUT_VARIABLES = {
     "force_vmcon_inequality_tolerance": InputVariable(
         "numerics", float, range=(0.0, 1e10)
     ),
+    "f_plasma_particles_lcfs_recycled": InputVariable(
+        "physics", float, range=(0.0, 1.0)
+    ),
+    "eta_plasma_fuelling": InputVariable("physics", float, range=(0.0, 1.0)),
+    "molflow_plasma_fuelling_vv_injected": InputVariable(
+        "physics", float, range=(1e18, 1e24)
+    ),
+    "f_molflow_plasma_fuelling_deuterium": InputVariable(
+        "physics", float, range=(0.0, 1.0)
+    ),
+    "f_molflow_plasma_fuelling_tritium": InputVariable(
+        "physics", float, range=(0.0, 1.0)
+    ),
+    "f_molflow_plasma_fuelling_helium3": InputVariable(
+        "physics", float, range=(0.0, 1.0)
+    ),
 }
 
 
