@@ -1099,24 +1099,15 @@ INPUT_VARIABLES = {
         "scan",
         int,
         choices=range(IPNSCNS + 1),
+        array=True,
     ),
     "nsweep": InputVariable(
         "scan",
         int,
         choices=range(1, IPNSCNV + 1),
-    ),
-    "isweep_2": InputVariable(
-        "scan",
-        int,
-        choices=range(IPNSCNS + 1),
-    ),
-    "nsweep_2": InputVariable(
-        "scan",
-        int,
-        choices=range(1, IPNSCNV + 1),
+        array=True,
     ),
     "sweep": InputVariable("scan", float, array=True),
-    "sweep_2": InputVariable("scan", float, array=True),
     "impvardiv": InputVariable(
         "reinke",
         int,

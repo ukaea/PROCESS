@@ -55,6 +55,7 @@ from process.core.log import logging_model_handler, show_errors
 from process.core.model import DataStructure, Model
 from process.core.process_output import OutputFileManager, oheadr
 from process.core.scan import Scan
+from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.numerics import PROCESSRunMode
 from process.models.availability import Availability
 from process.models.blankets.blanket_library import BlanketLibrary
@@ -109,7 +110,7 @@ from process.models.shield import Shield
 from process.models.stellarator.neoclassics import Neoclassics
 from process.models.stellarator.stellarator import Stellarator
 from process.models.structure import Structure
-from process.models.tfcoil.base import TFCoil
+from process.models.tfcoil.base import TFCoil, TFConductorModel
 from process.models.tfcoil.resistive import (
     AluminiumTFCoil,
     CopperTFCoil,
@@ -119,6 +120,7 @@ from process.models.tfcoil.superconducting import (
     CICCSuperconductingTFCoil,
     CROCOSuperconductingTFCoil,
     SuperconductingTFCoil,
+    SuperconductingTFTurnType,
 )
 from process.models.vacuum import Vacuum, VacuumVessel
 from process.models.water_use import WaterUse
@@ -432,11 +434,8 @@ class SingleRun:
 
     def run_scan(self):
         """Create scan object if required."""
-        # TODO Move this solver logic up to init?
-        # ioptimz == 1: optimisation
         if self.data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
             pass
-        # ioptimz == -2: evaluation
         elif self.data.numerics.ioptimz == PROCESSRunMode.EVALUATION:
             # No optimisation: solve equality (consistency) constraints only using fsolve (HYBRD)
             self.solver = "fsolve"
@@ -446,6 +445,7 @@ class SingleRun:
                 "select either 1 (optimise) or -2 (no optimisation)."
             )
         self.scan = Scan(self.models, self.solver, self.data)
+        self.scan.run()
 
     @staticmethod
     def show_errors():
@@ -782,6 +782,145 @@ class Models:
         # This can be a disgusting temporary measure :(
         for model in self.models:
             model.data = self.data
+
+    def write(self, data, _outfile):
+        """Write the results to the main output file (OUT.DAT).
+
+        Write the program results to a file, in a tidy format.
+
+        Parameters
+        ----------
+        self : process.main.Models
+            physics and engineering model objects
+        _outfile : int
+            Fortran output unit identifier
+
+        """
+        # ensure we are capturing warnings that occur in the 'output' stage as these are warnings
+        # that occur at our solution point. So we clear existing warnings
+        logging_model_handler.start_capturing()
+        logging_model_handler.clear_logs()
+
+        # Call stellarator output routine instead if relevant
+        if data.stellarator.istell != 0:
+            self.stellarator.output()
+            return
+
+        #  Call IFE output routine instead if relevant
+        if data.ife.ife != 0:
+            self.ife.output()
+            return
+
+        # Costs model
+        # Cost switch values
+        # No.  |  model
+        # ---- | ------
+        # 0    |  1990 costs model
+        # 1    |  2015 Kovari model
+        # 2    |  Custom model
+        self.costs.output()
+
+        # Availability model
+        self.availability.output()
+
+        # Physics model
+        self.physics.output()
+
+        # Detailed physics, currently only done at final point as values are not used
+        # by any other functions
+        self.physics_detailed.output()
+
+        # TODO what is this? Not in caller.py?
+        self.current_drive.output()
+
+        # Pulsed reactor model
+        self.pulse.output()
+
+        self.divertor.output()
+
+        # Machine Build Model
+        self.build.output()
+
+        # Cryostat build
+        self.cryostat.output()
+
+        # Toroidal field coil copper model
+        if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+            self.copper_tf_coil.output()
+
+        # Toroidal field coil superconductor model
+        if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+            tf_turn_type = SuperconductingTFTurnType(
+                data.superconducting_tfcoil.i_tf_turn_type
+            )
+            if tf_turn_type == SuperconductingTFTurnType.CABLE_IN_CONDUIT:
+                self.cicc_sctfcoil.output()
+            elif tf_turn_type == SuperconductingTFTurnType.CROSS_CONDUCTOR:
+                self.croco_sctfcoil.output()
+            else:
+                raise ValueError(
+                    "Unsupported superconducting TF turn type: "
+                    f"{data.superconducting_tfcoil.i_tf_turn_type}"
+                )
+
+        # Toroidal field coil aluminium model
+        if data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+            self.aluminium_tf_coil.output()
+
+        # Tight aspect ratio machine model
+        if (
+            data.physics.itart == 1
+            and data.tfcoil.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+        ):
+            self.tfcoil.output()
+
+        # Poloidal field coil model
+        self.pfcoil.output()
+
+        # Structure Model
+        self.structure.output()
+
+        # Blanket model
+        # Blanket switch values
+        # No.  |  model
+        # ---- | ------
+        # 1    |  CCFE HCPB model
+        # 2    |  KIT HCPB model
+        # 3    |  CCFE HCPB model with Tritium Breeding Ratio calculation
+        # 4    |  KIT HCLL model
+        # 5    |  DCLL model
+
+        self.shield.output()
+        self.vacuum_vessel.output()
+
+        # First wall geometry
+        self.fw.output()
+
+        if data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
+            # CCFE HCPB model
+            self.ccfe_hcpb.output()
+
+        elif data.fwbs.i_blanket_type == BlktModelTypes.DCLL:
+            # DCLL model
+            self.dcll.output()
+
+        # FISPACT and LOCA model (not used)- removed
+
+        # Power model
+        self.power.output()
+
+        # Vacuum model
+        self.vacuum.output()
+
+        # Buildings model
+        self.buildings.output()
+
+        # Water usage in secondary cooling system
+        self.water_use.output()
+
+        # stop capturing warnings so that Outfile does not end up with
+        # a lot of non-model logs
+        logging_model_handler.stop_capturing()
 
 
 # setup handlers for writing to terminal (on warnings+)

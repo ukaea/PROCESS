@@ -105,36 +105,19 @@ objective_function():
 
 After following the instruction to add an input variable, you can make the variable a scan variable by following these steps:
 
-1. Increment the parameter `IPNSCNV` defined in `scan_variables.py` in the data_structure directory, to accommodate the new scanning variable. The incremented value will identify your scan variable.
+1. Update the `ScanVariables` enum in the `scan.py` file by adding a new case statement connecting the variable to the scan integer switch, the variable name and a short description.
   
-2. Add a short description of the new scanning variable in the `nsweep` comment in `scan_variables.py`, alongside its identification number.
-  
-3. Update the `ScanVariables` enum in the `scan.py` file by adding a new case statement connecting the variable to the scan integer switch, the variable name and a short description.
-  
-4. Add a comment in the corresponding variable file in the data_structure directory, eg, `data_structure/[XX]_variables.py`, to add the variable description indicating the scan switch number.
-  
-
-`nsweep` comment example:
-```fortran
-
-  integer :: nsweep = 1
-  !! nsweep /1/ : switch denoting quantity to scan:<UL>
-  !!         <LI> 1  aspect
-  !!         <LI> 2  pflux_div_heat_load_max_mw
-  ...
-  !!         <LI> 54 GL_nbti upper critical field at 0 Kelvin
-  !!         <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness </UL>
-```
+2. Add a comment in the corresponding variable file in the data_structure directory, eg, `data_structure/[XX]_variables.py`, to add the variable description indicating the scan switch number.
 
 `SCAN_VARIABLES` case example:
 
 ```python
-  class ScanVariables(Enum):
-    aspect: ScanVariable("aspect", "Aspect_ratio", 1),
-    pflux_div_heat_load_max_mw: ScanVariable("pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)", 2),
+  class ScanVariables(ScanVariable, Enum):
+    aspect = (1, SVE.P),
+    pflux_div_heat_load_max_mw = (2, SVE.D)
     ...
-    Bc2_0K: ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)", 54),
-    dr_shld_inboard : ScanVariable("dr_shld_inboard", "Inboard neutronic shield", 55),
+    b_crit_upper_nbti =  (54, SVE.T)
+    dr_shld_inboard = (55, SVE.B),
 ```
 
 ---------------

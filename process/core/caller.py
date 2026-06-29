@@ -8,13 +8,14 @@ import numpy as np
 from tabulate import tabulate
 
 from process.core import constants
-from process.core.final import finalise
+from process.core import process_output as po
 from process.core.io.mfile import MFile
 from process.core.process_output import OutputFileManager, ovarre
 from process.core.solver import constraints
 from process.core.solver.iteration_variables import set_scaled_iteration_variable
 from process.core.solver.objectives import objective_function
 from process.data_structure.blanket_variables import BlktModelTypes
+from process.data_structure.numerics import PROCESSRunMode
 from process.models.tfcoil.base import TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
@@ -392,6 +393,103 @@ class Caller:
         self.models.costs.run()
 
         # FISPACT and LOCA model (not used)- removed
+
+
+def finalise(models, data, ifail: int, non_idempotent_msg: str | None = None):
+    """Routine to print out the final point in the scan.
+
+    Writes to OUT.DAT and MFILE.DAT.
+
+    Parameters
+    ----------
+    models : process.main.Models
+        physics and engineering model objects
+    data: DataStructure
+        data structure object to provide data to evaluate the constraints
+    ifail : int
+        error flag
+    non_idempotent_msg : None | str, optional
+        warning about non-idempotent variables, defaults to None
+    """
+    if ifail == 1:
+        po.oheadr(constants.NOUT, "Final Feasible Point")
+    else:
+        po.oheadr(constants.NOUT, "Final UNFEASIBLE Point")
+
+    # Output relevant to no optimisation
+    if data.numerics.ioptimz == PROCESSRunMode.EVALUATION:
+        output_evaluation(data)
+
+    # Print non-idempotence warning to OUT.DAT only
+    if non_idempotent_msg:
+        po.oheadr(constants.NOUT, "NON-IDEMPOTENT VARIABLES")
+        po.ocmmnt(constants.NOUT, non_idempotent_msg)
+
+    # Write output to OUT.DAT and MFILE.DAT
+    models.write(data, constants.NOUT)
+
+
+def output_evaluation(data):
+    """Write output for an evaluation run of PROCESS
+
+    Parameters
+    ----------
+    data: DataStructure
+        data structure object to provide data to evaluate the constraints
+    """
+    po.oheadr(constants.NOUT, "Numerics")
+    po.ocmmnt(constants.NOUT, "PROCESS has performed an evaluation run.")
+    po.oblnkl(constants.NOUT)
+
+    # Evaluate objective function
+    norm_objf = objective_function(data.numerics.minmax, data)
+    po.ovarre(constants.MFILE, "Normalised objective function", "(norm_objf)", norm_objf)
+
+    # Print the residuals of the constraint equations
+
+    residual_error, value, residual, symbols, units = constraints.constraint_eqns(
+        data.numerics.neqns + data.numerics.nineqns, -1, data
+    )
+
+    labels = [
+        data.numerics.lablcc[j - 1]
+        for j in data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns]
+    ]
+
+    def _fmt(a, units):
+        return [f"{c} {u}" for c, u in zip(a, units, strict=False)]
+
+    po.write(
+        constants.NOUT,
+        tabulate(
+            {
+                "Constraint Name": labels,
+                "Constraint Type": symbols,
+                "Physical constraint": _fmt(value, units),
+                "Constraint residual": _fmt(residual, units),
+                "Normalised residual": residual_error,
+            },
+            headers="keys",
+        ),
+    )
+
+    for i in range(data.numerics.neqns):
+        constraint_id = data.numerics.icc[i]
+        po.ovarre(
+            constants.MFILE,
+            f"{labels[i]} normalised residue",
+            f"(eq_con{constraint_id:03d})",
+            residual_error[i],
+        )
+
+    for i in range(data.numerics.nineqns):
+        constraint_id = data.numerics.icc[data.numerics.neqns + i]
+        po.ovarre(
+            constants.MFILE,
+            f"{labels[data.numerics.neqns + i]}",
+            f"(ineq_con{constraint_id:03d})",
+            residual_error[data.numerics.neqns + i],
+        )
 
 
 def write_output_files(

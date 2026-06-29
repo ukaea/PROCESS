@@ -300,10 +300,7 @@ def load_iteration_variables(data):
 
         # warn of the iteration variable is also a scan variable because this will cause
         # the optimiser and scan to overwrite the same variable and conflict
-        if iteration_variable.name in {
-            data.globals.vlabel,
-            data.globals.vlabel_2,
-        }:
+        if iteration_variable.name in data.globals.vlabel:
             warn(
                 (
                     "The sweep variable is also an iteration variable and will be "

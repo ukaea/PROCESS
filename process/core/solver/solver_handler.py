@@ -1,11 +1,16 @@
+import logging
 from contextlib import contextmanager
 
+from process.core import constants, process_output
 from process.core.solver.evaluators import Evaluators
 from process.core.solver.iteration_variables import (
     load_iteration_variables,
     load_scaled_bounds,
 )
 from process.core.solver.solver import get_solver
+from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
+
+logger = logging.getLogger(__name__)
 
 
 class SolverHandler:
@@ -53,7 +58,8 @@ class SolverHandler:
         self.solver.set_opt_params(x)
         # Define total number of constraints and equality constraints
         self.solver.set_constraints(
-            m=self.data.numerics.neqns + self.data.numerics.nineqns, meq=self.data.numerics.neqns
+            m=self.data.numerics.neqns + self.data.numerics.nineqns,
+            meq=self.data.numerics.neqns,
         )
         ifail = self.solver.solve()
 
@@ -88,6 +94,124 @@ class SolverHandler:
         # than required, size
         self.data.numerics.xcm[: self.solver.x.shape[0]] = self.solver.x
         self.data.numerics.rcm[: self.solver.conf.shape[0]] = self.solver.conf
+
+        nums = self.data.numerics
+
+        process_output.oheadr(constants.NOUT, "Numerics")
+        process_output.ocmmnt(
+            constants.NOUT,
+            f"PROCESS has performed a {'fsolve' if self.solver == 'fsolve' else 'VMCON'} (optimisation) run.",
+        )
+        ifail = self.solver.info
+        if ifail != 1:
+            process_output.ovarin(constants.NOUT, "Error flag", "(ifail)", ifail)
+            process_output.oheadr(
+                constants.IOTTY, "PROCESS COULD NOT FIND A FEASIBLE SOLUTION"
+            )
+            print()
+
+            logger.critical("Solver returns with ifail /= 1. %s", ifail)
+
+            if self.solver_name == "vmcon":
+                self.solver.verror()
+
+            process_output.oblnkl(constants.NOUT)
+            print()
+        else:
+            # Solution found
+            descr = "consistent" if self.solver == "fsolve" else "feasible"
+            process_output.ocmmnt(
+                constants.NOUT, f"and found a {descr} set of parameters."
+            )
+            process_output.oheadr(constants.IOTTY, f"PROCESS found a {descr} solution")
+            process_output.oblnkl(constants.NOUT)
+            process_output.ovarin(constants.NOUT, "Error flag", "(ifail)", ifail)
+
+            if nums.sqsumsq >= 1.0e-2:
+                string = (
+                    "WARNING: Constraint residues are HIGH; consider re-running\n"
+                    "   with lower values of EPSVMC to confirm convergence...\n"
+                    "   (should be able to get down to about 1.0E-8 okay)\n"
+                )
+                process_output.ocmmnt(constants.NOUT, ("\n" + string))
+                print(string)
+
+                logger.warning(f"High final constraint residues. {nums.sqsumsq=}")
+
+        for d, var, v in (
+            ("Number of iteration variables", "(nvar)", nums.nvar),
+            (
+                "Number of constraints (total)",
+                "(neqns+nineqns)",
+                nums.neqns + nums.nineqns,
+            ),
+            ("Optimisation switch", "(ioptimz)", nums.ioptimz),
+        ):
+            process_output.ovarin(constants.NOUT, d, var, v)
+
+        process_output.ocmmnt(
+            constants.NOUT,
+            f"     {PROCESSRunMode(nums.ioptimz).description}",
+        )
+
+        # Objective function output: none for fsolve
+        if self.solver_name != "fsolve":
+            process_output.ovarin(
+                constants.NOUT,
+                "Figure of merit switch",
+                "(minmax)",
+                nums.minmax,
+            )
+
+            nums.objf_name = f'"{FiguresOfMerit(abs(nums.minmax)).description}"'
+
+            for d, var, v, o in (
+                ("Objective function name", "(objf_name)", nums.objf_name, ""),
+                ("Normalised objective function", "(norm_objf)", nums.norm_objf, "OP "),
+                (
+                    "VMCON convergence parameter",
+                    "(convergence_parameter)",
+                    self.data.globals.convergence_parameter,
+                    "OP ",
+                ),
+                (
+                    "Number of optimising solver iterations",
+                    "(nviter)",
+                    nums.nviter,
+                    "OP ",
+                ),
+                (
+                    "Square root of the sum of squares of the constraint residuals",
+                    "(sqsumsq)",
+                    nums.sqsumsq,
+                    "OP ",
+                ),
+            ):
+                process_output.ovarre(constants.NOUT, d, var, v, o)
+
+        process_output.oblnkl(constants.NOUT)
+
+        if self.solver_name == "fsolve":
+            process_output.write(
+                constants.NOUT,
+                "PROCESS has solved using fsolve.\n"
+                if ifail == 1
+                else "PROCESS failed to solve using fsolve.\n",
+            )
+        else:
+            process_output.write(
+                constants.NOUT,
+                (
+                    (
+                        "PROCESS has successfully optimised"
+                        if ifail == 1
+                        else "PROCESS has failed to optimise"
+                    )
+                    + " the optimisation parameters to"
+                    + ("minimise" if nums.minmax > 0 else "maximise")
+                    + f" the objective function: {nums.objf_name}\n"
+                ),
+            )
 
 
 @contextmanager

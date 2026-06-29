@@ -4,8 +4,9 @@ from dataclasses import asdict, dataclass
 from typing import ClassVar, Literal
 
 import numpy as np
+from tabulate import tabulate
 
-from process.core import constants
+from process.core import constants, process_output
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.core.model import DataStructure
 from process.data_structure.build_variables import TFCSRadialConfiguration
@@ -1831,3 +1832,123 @@ def constraint_eqns(m: int, ieqn: int, data: DataStructure):
         units.append(tmp_units)
 
     return np.array(cc), np.array(con), np.array(err), symbol, units
+
+
+def constraints_output(data: DataStructure, solver_name: str):
+    nums = data.numerics
+
+    process_output.osubhd(
+        constants.NOUT,
+        "The following equality constraint residues should be close to zero:",
+    )
+
+    con1, con2, err, _, lab = constraint_eqns(nums.neqns + nums.nineqns, -1, data)
+
+    # Write equality constraints to mfile
+    equality_constraint_table = []
+    for i in range(nums.neqns):
+        name = nums.lablcc[nums.icc[i] - 1]
+
+        equality_constraint_table.append([
+            name,
+            "=",
+            f"{con2[i]} {lab[i]}",
+            f"{err[i]} {lab[i]}",
+            con1[i],
+        ])
+
+        for d, var, v in (
+            (f"{name:<33} normalised residue", f"(eq_con{nums.icc[i]:03d})", con1[i]),
+            (f"{name:<33} residual", f"(res_eq_con{nums.icc[i]:03d})", err[i]),
+            (f"{name} constraint value", f"(val_eq_con{nums.icc[i]:03d})", con2[i]),
+            (f"{name} units", f"(eq_units_con{nums.icc[i]:03d})", f"'{lab[i]}'"),
+        ):
+            process_output.ovarre(constants.MFILE, d, var, v)
+
+    # Write equality constraints to output file
+    process_output.write(
+        constants.NOUT,
+        tabulate(
+            equality_constraint_table,
+            headers=[
+                "",
+                "",
+                "Physical constraint",
+                "Constraint residue",
+                "Normalised residue",
+            ],
+            numalign="left",
+        ),
+    )
+
+    # Write inequality constraints
+    if nums.nineqns > 0:
+        inequality_constraint_table = []
+        # Inequalities not necessarily satisfied when evaluating
+        process_output.osubhd(
+            constants.NOUT,
+            "Negative inequality constraint (normalised) residuals indicate a constraint is satisfied.",
+        )
+        if solver_name == "fsolve":
+            process_output.osubhd(
+                constants.NOUT,
+                "This MFile was produced via an evaluation, not an optimisation, and so the constraints "
+                "might be violated.",
+            )
+
+        for i in range(
+            nums.neqns,
+            nums.neqns + nums.nineqns,
+        ):
+            name = nums.lablcc[nums.icc[i] - 1]
+            constraint = ConstraintManager.evaluate_constraint(int(nums.icc[i]), data)
+
+            inequality_constraint_table.append([
+                name,
+                f"{constraint.constraint_value} {constraint.units}",
+                constraint.symbol,
+                f"{constraint.constraint_bound} {constraint.units}",
+                f"{constraint.residual} {constraint.units}",
+                f"{constraint.normalised_residual}",
+            ])
+
+            for d, var, v in (
+                (
+                    "normalised residue",
+                    f"(ineq_con{nums.icc[i]:03d})",
+                    -constraint.normalised_residual,
+                ),
+                (
+                    "physical value",
+                    f"(ineq_value_con{nums.icc[i]:03d})",
+                    constraint.constraint_value,
+                ),
+                (
+                    "symbol",
+                    f"(ineq_symbol_con{nums.icc[i]:03d})",
+                    f"'{constraint.symbol}'",
+                ),
+                ("units", f"(ineq_units_con{nums.icc[i]:03d})", f"'{constraint.units}'"),
+                (
+                    "physical bound",
+                    f"(ineq_bound_con{nums.icc[i]:03d})",
+                    constraint.constraint_bound,
+                ),
+            ):
+                process_output.ovarre(constants.MFILE, f"{name} {d}", var, v)
+
+        process_output.write(
+            constants.NOUT,
+            tabulate(
+                inequality_constraint_table,
+                headers=[
+                    "",
+                    "Physical constraint",
+                    "",
+                    "Physical constraint bound",
+                    "Constraint residue",
+                    "Normalised residue",
+                ],
+                numalign="left",
+            ),
+        )

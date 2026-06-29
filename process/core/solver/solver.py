@@ -16,6 +16,7 @@ from pyvmcon import (
 )
 from scipy.optimize import fsolve
 
+from process.core import constants, process_output
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 from process.core.solver.evaluators import Evaluators
@@ -282,6 +283,65 @@ class Vmcon(_Solver):
         self.conf = np.hstack((res.eq, res.ie))
 
         return self.info
+
+    def verror(self):
+        """Routine to print out relevant messages in the case of an
+        unfeasible result from a VMCON (optimisation) run
+
+        This routine prints out relevant messages in the case of
+        an unfeasible result from a VMCON (optimisation) run.
+
+        Parameters
+        ----------
+        ifail: int :
+
+        """
+        strings = "\n".join(
+            {
+                -1: ("User-terminated execution of VMCON.",),
+                0: (
+                    "Improper input parameters to the VMCON routine.",
+                    "PROCESS coding must be checked.",
+                ),
+                2: (
+                    "The maximum number of calls has been reached without solution.",
+                    (
+                        "The code may be stuck in a minimum in the residual space that"
+                        " is significantly above zero.\n"
+                    ),
+                    "There is either no solution possible, or the code",
+                    "is failing to escape from a deep local minimum.",
+                    "Try changing the variables in IXC, or modify their initial values.",
+                ),
+                3: (
+                    "The line search required the maximum of 10 calls.",
+                    "A feasible solution may be difficult to achieve.",
+                    "Try changing or adding variables to IXC.",
+                ),
+                4: (
+                    "An uphill search direction was found.",
+                    "Try changing the equations in ICC, or",
+                    "adding new variables to IXC.",
+                ),
+                5: (
+                    "The quadratic programming technique was unable to",
+                    "find a feasible point.\n",
+                    "Try changing or adding variables to IXC, or modify",
+                    "their initial values (especially if only 1 optimisation",
+                    "iteration was performed).",
+                ),
+                6: (
+                    "The quadratic programming technique was restricted",
+                    "by an artificial bound, or failed due to a singular",
+                    "matrix.",
+                    "Try changing the equations in ICC, or",
+                    "adding new variables to IXC.",
+                ),
+            }.get(self.info, "Unknown Error code")
+        )
+
+        process_output.ocmmnt(constants.NOUT, strings)
+        print(strings)
 
 
 class VmconBounded(Vmcon):
