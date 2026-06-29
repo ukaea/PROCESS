@@ -633,6 +633,22 @@ class Physics(Model):
             self.data.physics.fusden_total * self.data.physics.vol_plasma
         )
 
+        self.data.physics.fusrat_plasma_dt = (self.data.physics.p_plasma_dt_mw * 1e6) / (
+            constants.D_T_ENERGY
+        )
+        self.data.physics.fusrat_plasma_dd_total = (
+            self.data.physics.fusrat_plasma_dd_helion
+            + self.data.physics.fusrat_plasma_dd_triton
+        )
+
+        self.data.physics.fusrat_neutron_production_total = (
+            self.data.physics.fusrat_plasma_dd_helion + self.data.physics.fusrat_dt_total
+        )
+
+        self.data.physics.fusrat_dt_total = (
+            self.data.physics.p_dt_total_mw * 1e6 / (constants.D_T_ENERGY)
+        )
+
         # Create some derived values and add beam contribution to fusion power
         (
             self.data.physics.pden_neutron_total_mw,
