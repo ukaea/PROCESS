@@ -4,15 +4,10 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+from process.core.exceptions import ProcessValueError
+
 IPNSCNS = 1000
 """Maximum number of scan points"""
-
-
-IPNSCNV = 81
-"""Number of available scan variables"""
-
-
-NOUTVARS = 84
 
 
 @dataclass(slots=True)
@@ -22,35 +17,45 @@ class ScanData:
     scan_dim: int = 1
     """1-D or 2-D scan switch (1=1D, 2=2D)"""
 
-    isweep: int = 0
+    isweep: list[int] | int = 1
     """Number of scan points to calculate"""
 
-    isweep_2: int = 0
-    """Number of 2D scan points to calculate"""
-
-    nsweep: int = 1
+    nsweep: list[int] | int | None = None
     """Switch denoting quantity to scan
+    see `process.core.scan.ScanVariables` for available options
     """
 
-    nsweep_2: int = 3
-    """nsweep_2 /3/ : switch denoting quantity to scan for 2D scan:"""
+    sweep: np.ndarray = field(default_factory=lambda: np.zeros(1, dtype=np.float64))
+    """Actual values to use in scan"""
 
-    sweep: list[float] = field(
-        default_factory=lambda: np.zeros(IPNSCNS, dtype=np.float64)
-    )
-    """sweep(IPNSCNS) /../: actual values to use in scan"""
+    def __post_init__(self):
+        if isinstance(self.isweep, int):
+            # avoid old 0 default
+            self.isweep = [self.isweep or 1]
 
-    sweep_2: list[float] = field(
-        default_factory=lambda: np.zeros(IPNSCNS, dtype=np.float64)
-    )
-    """sweep_2(IPNSCNS) /../: actual values to use in 2D scan"""
+        if len(self.isweep) > 2 or len(self.sweep.shape) > 2:
+            raise NotImplementedError("N-D Scans not currently supported")
 
-    # Vars in subroutines scan_1d and scan_2d requiring re-initialising before
-    # each new run
+        if max(self.isweep) > IPNSCNS:
+            raise ProcessValueError(
+                "Illegal value of isweep",
+                isweep=self.isweep,
+                IPNSCNS=IPNSCNS,
+            )
+        if self.nsweep != len(self.isweep):
+            raise ValueError(
+                "Number of sweep variables not equal to scan point dimensions"
+            )
+        if self.sweep.shape != self.isweep:
+            if self.isweep != 1:
+                self.isweep = list(self.sweep.shape)
+            else:
+                print("Unset sweep values set to zero")
+                # TODO append to size instead of resetting
+                self.sweep = np.zeros(self.isweep, dtype=np.float64)
 
-    first_call_1d: bool = True
-
-    first_call_2d: bool = True
+        self.nsweep = np.asarray(self.nsweep, dtype=int)
+        self.isweep = np.asarray(self.isweep, dtype=int)
 
 
 CREATE_DICTS_FROM_DATACLASS = ScanData

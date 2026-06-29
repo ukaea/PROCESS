@@ -36,7 +36,6 @@ import numpy as np
 from matplotlib.ticker import MultipleLocator, PercentFormatter
 
 from process.core.io.mfile import MFile
-from process.core.io.mfile.cli import mfile
 from process.core.io.variable_metadata import var_dicts as meta
 from process.core.scan import ScanVariables
 from process.data_structure.numerics import SolverOutputCondition
