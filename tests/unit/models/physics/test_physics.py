@@ -2962,6 +2962,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         t_ion_energy_confinement,
         t_energy_confinement,
         p_plasma_loss_mw,
+        _hstar,
     ) = physics.confinement.calculate_confinement_time(
         i_confinement_time=confinementtimeparam.i_confinement_time,
         i_plasma_ignited=confinementtimeparam.i_plasma_ignited,
