@@ -39,6 +39,7 @@ if TYPE_CHECKING:
     )
     from process.models.physics.density_limit import PlasmaDensityLimit
     from process.models.physics.exhaust import PlasmaExhaust
+    from process.models.physics.fuelling import PlasmaFuelling
     from process.models.physics.l_h_transition import PlasmaConfinementTransition
     from process.models.physics.plasma_current import (
         PlasmaCurrent,
@@ -199,6 +200,7 @@ class Physics(Model):
         plasma_dia_current: PlasmaDiamagneticCurrent,
         plasma_geometry: PlasmaGeom,
         scrape_off_layer: ScrapeOffLayer,
+        plasma_fuelling: PlasmaFuelling,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -216,6 +218,7 @@ class Physics(Model):
         self.dia_current = plasma_dia_current
         self.geometry = plasma_geometry
         self.scrape_off_layer = scrape_off_layer
+        self.fuelling = plasma_fuelling
 
     def output(self) -> None:
         """Output plasma physics information."""
