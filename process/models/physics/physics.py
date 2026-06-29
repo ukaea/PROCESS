@@ -28,6 +28,7 @@ if TYPE_CHECKING:
     from process.data_structure.physics_variables import PhysicsData
     from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
     from process.models.physics.confinement_time import (
+        ConfinementTimeData,
         PlasmaConfinementTime,
     )
     from process.models.physics.density_limit import PlasmaDensityLimit
@@ -813,14 +814,7 @@ class Physics(Model):
 
         # Calculate transport losses and energy confinement time using the
         # chosen scaling law
-        (
-            self.data.physics.pden_electron_transport_loss_mw,
-            self.data.physics.pden_ion_transport_loss_mw,
-            self.data.physics.t_electron_energy_confinement,
-            self.data.physics.t_energy_confinement,
-            self.data.physics.t_ion_energy_confinement,
-            self.data.physics.p_plasma_loss_mw,
-        ) = self.confinement.calculate_confinement_time(
+        confinement_time_data: ConfinementTimeData = self.confinement.calculate_confinement_time(
             m_fuel_amu=self.data.physics.m_fuel_amu,
             p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
             aspect=self.data.physics.aspect,
@@ -847,6 +841,22 @@ class Physics(Model):
             vol_plasma=self.data.physics.vol_plasma,
             zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
         )
+        self.data.physics.pden_electron_transport_loss_mw = (
+            confinement_time_data.pden_electron_transport_loss_mw
+        )
+        self.data.physics.pden_ion_transport_loss_mw = (
+            confinement_time_data.pden_ion_transport_loss_mw
+        )
+        self.data.physics.t_electron_energy_confinement = (
+            confinement_time_data.t_electron_energy_confinement
+        )
+        self.data.physics.t_energy_confinement = (
+            confinement_time_data.t_energy_confinement
+        )
+        self.data.physics.t_ion_energy_confinement = (
+            confinement_time_data.t_ion_energy_confinement
+        )
+        self.data.physics.p_plasma_loss_mw = confinement_time_data.p_plasma_loss_mw
 
         # Total transport power from scaling law (MW)
         self.data.physics.p_electron_transport_loss_mw = (
@@ -3009,6 +3019,37 @@ class Physics(Model):
             + p_non_alpha_charged_mw
             + p_plasma_ohmic_mw
             + p_hcd_injected_total_mw
+        )
+
+    @staticmethod
+    def calaculate_stored_thermal_energy(
+        vol_plasma: float,
+        nd_plasma_vol_avg: float,
+        temp_plasma_density_weighted_vol_avg_kev: float,
+    ) -> float:
+        """Calculate the stored thermal energy in the (W) plasma.
+
+        Parameters
+        ----------
+        vol_plasma : float
+            Plasma volume [m³].
+        nd_plasma_vol_avg : float
+            Volume averaged plasma density (⟨n⟩) [/m³].
+        temp_plasma_density_weighted_vol_avg_kev : float
+            Volume averaged density weighted plasma temperature (⟨T⟩ₙ) [keV].
+
+        Returns
+        -------
+        float
+            Stored thermal energy in the plasma (W).
+
+        """
+        return (
+            1.5
+            * constants.KILOELECTRON_VOLT
+            * nd_plasma_vol_avg
+            * temp_plasma_density_weighted_vol_avg_kev
+            * vol_plasma
         )
 
 
