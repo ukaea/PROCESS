@@ -2345,7 +2345,7 @@ class Costs(Model):
             #  New calculation: 2 nuclei * reactions/sec * kg/nucleus * g/kg * sec/day
             self.data.physics.wtgpd = (
                 2.0e0
-                * self.data.physics.rndfuel
+                * self.data.physics.fusrat_total
                 * self.data.physics.m_fuel_amu
                 * constants.UMASS
                 * 1000.0e0

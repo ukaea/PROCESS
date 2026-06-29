@@ -576,9 +576,6 @@ class PhysicsData:
     e_plasma_magnetic_stored: float = 0.0
     """Plasma stored magnetic energy [J]"""
 
-    burnup: float = 0.0
-    """fractional plasma burnup"""
-
     f_plasma_fuel_burnup: float = 0.0
     """Total fuel burnup fraction in plasma"""
 
@@ -1277,9 +1274,6 @@ class PhysicsData:
     """Plasma safety factor at 95% flux surface (q₉₅) (`iteration variable 18`)
     """
 
-    molflow_plasma_fuelling_required: float = 0.0
-    """plasma fuelling rate (nucleus-pairs/s)"""
-
     f_plasma_particles_lcfs_recycled: float = 0.9
     """Fraction of plasma particles that are recycled at the LCFS. Recycling coefficent (R)"""
 
@@ -1306,9 +1300,6 @@ class PhysicsData:
 
     f_molflow_plasma_fuelling_helium3: float = 0.0
     """Fraction of plasma fuelling that is helium-3"""
-
-    tauratio: float = 1.0
-    """tauratio /1.0/ : ratio of He and pellet particle confinement times"""
 
     q95_min: float = 0.0
     """Plasmalower limit for edge safety factor"""
@@ -1354,9 +1345,6 @@ class PhysicsData:
 
     f_nd_plasma_carbon_electron: float = 0.0
     """n_carbon / n_e"""
-
-    rndfuel: float = 0.0
-    """fuel burnup rate (reactions/second)"""
 
     f_nd_plasma_iron_argon_electron: float = 0.0
     """n_highZ / n_e"""
