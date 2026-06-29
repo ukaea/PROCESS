@@ -14,9 +14,6 @@ def buildings(process_models):
 
 
 class BldgsSizesParam(NamedTuple):
-    i_bldgs_v: Any
-    a_plant_floor_effective: Any
-    volnucb: Any
     bioshld_thk: Any
     reactor_wall_thk: Any
     reactor_roof_thk: Any
@@ -27,9 +24,6 @@ class BldgsSizesParam(NamedTuple):
     ground_clrnc: Any
     crane_clrnc_h: Any
     crane_arm_h: Any
-    reactor_hall_l: Any
-    reactor_hall_w: Any
-    reactor_hall_h: Any
     nbi_sys_l: Any
     nbi_sys_w: Any
     fc_building_l: Any
@@ -125,12 +119,9 @@ class BldgsSizesParam(NamedTuple):
     cplife: Any
     life_div_fpy: Any
     r_cryostat_inboard: Any
-    life_blkt_fpy: Any
     z_tf_inside_half: Any
     dr_tf_inboard: Any
     dr_tf_shld_gap: Any
-    dr_shld_thermal_inboard: Any
-    dr_shld_thermal_outboard: Any
     dz_shld_thermal: Any
     dr_shld_inboard: Any
     dr_shld_outboard: Any
@@ -146,8 +137,6 @@ class BldgsSizesParam(NamedTuple):
     rminor: Any
     tf_radial_dim: Any
     tf_vertical_dim: Any
-    outfile: Any
-    iprint: Any
     expected_reactor_hall_l: Any
     expected_reactor_hall_w: Any
     expected_reactor_hall_h: Any
@@ -157,9 +146,6 @@ class BldgsSizesParam(NamedTuple):
     "bldgssizesparam",
     [
         BldgsSizesParam(
-            i_bldgs_v=0,
-            a_plant_floor_effective=0,
-            volnucb=0,
             bioshld_thk=2.5,
             reactor_wall_thk=2,
             reactor_roof_thk=1,
@@ -170,9 +156,6 @@ class BldgsSizesParam(NamedTuple):
             ground_clrnc=5,
             crane_clrnc_h=4,
             crane_arm_h=10,
-            reactor_hall_l=0,
-            reactor_hall_w=0,
-            reactor_hall_h=0,
             nbi_sys_l=225,
             nbi_sys_w=185,
             fc_building_l=60,
@@ -268,12 +251,9 @@ class BldgsSizesParam(NamedTuple):
             cplife=0,
             life_div_fpy=0,
             r_cryostat_inboard=19.48258241468535,
-            life_blkt_fpy=0,
             z_tf_inside_half=9.0730900215620327,
             dr_tf_inboard=1.208,
             dr_tf_shld_gap=0.05000000000000001,
-            dr_shld_thermal_inboard=0.050000000000000003,
-            dr_shld_thermal_outboard=0.050000000000000003,
             dz_shld_thermal=0.050000000000000003,
             dr_shld_inboard=0.30000000000000004,
             dr_shld_outboard=0.80000000000000004,
@@ -289,16 +269,11 @@ class BldgsSizesParam(NamedTuple):
             rminor=2.8677741935483869,
             tf_radial_dim=14.129464674334221,
             tf_vertical_dim=20.562180043124066,
-            outfile=11,
-            iprint=0,
             expected_reactor_hall_l=218.89549448811209,
             expected_reactor_hall_w=218.89549448811209,
             expected_reactor_hall_h=67.624360086248132,
         ),
         BldgsSizesParam(
-            i_bldgs_v=0,
-            a_plant_floor_effective=1539392.0963074313,
-            volnucb=5212998.1139194397,
             bioshld_thk=2.5,
             reactor_wall_thk=2,
             reactor_roof_thk=1,
@@ -309,9 +284,6 @@ class BldgsSizesParam(NamedTuple):
             ground_clrnc=5,
             crane_clrnc_h=4,
             crane_arm_h=10,
-            reactor_hall_l=218.89549448811209,
-            reactor_hall_w=218.89549448811209,
-            reactor_hall_h=67.624360086248132,
             nbi_sys_l=225,
             nbi_sys_w=185,
             fc_building_l=60,
@@ -407,12 +379,9 @@ class BldgsSizesParam(NamedTuple):
             cplife=0,
             life_div_fpy=6.1337250397740126,
             r_cryostat_inboard=19.482980877139834,
-            life_blkt_fpy=19.216116010620578,
             z_tf_inside_half=9.0730900215620327,
             dr_tf_inboard=1.208,
             dr_tf_shld_gap=0.05000000000000001,
-            dr_shld_thermal_inboard=0.050000000000000003,
-            dr_shld_thermal_outboard=0.050000000000000003,
             dz_shld_thermal=0.050000000000000003,
             dr_shld_inboard=0.30000000000000004,
             dr_shld_outboard=0.80000000000000004,
@@ -428,8 +397,6 @@ class BldgsSizesParam(NamedTuple):
             rminor=2.8677741935483869,
             tf_radial_dim=14.129464674334221,
             tf_vertical_dim=20.562180043124066,
-            outfile=11,
-            iprint=0,
             expected_reactor_hall_l=218.897885262839,
             expected_reactor_hall_w=218.897885262839,
             expected_reactor_hall_h=67.624360086248132,
@@ -437,297 +404,109 @@ class BldgsSizesParam(NamedTuple):
     ],
 )
 def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
-    monkeypatch.setattr(buildings.data.buildings, "i_bldgs_v", bldgssizesparam.i_bldgs_v)
-    monkeypatch.setattr(
-        buildings.data.buildings,
-        "a_plant_floor_effective",
-        bldgssizesparam.a_plant_floor_effective,
-    )
-    monkeypatch.setattr(buildings.data.buildings, "volnucb", bldgssizesparam.volnucb)
-    monkeypatch.setattr(
-        buildings.data.buildings, "bioshld_thk", bldgssizesparam.bioshld_thk
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "reactor_wall_thk", bldgssizesparam.reactor_wall_thk
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "reactor_roof_thk", bldgssizesparam.reactor_roof_thk
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "reactor_fndtn_thk", bldgssizesparam.reactor_fndtn_thk
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "reactor_clrnc", bldgssizesparam.reactor_clrnc
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "transp_clrnc", bldgssizesparam.transp_clrnc
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "cryostat_clrnc", bldgssizesparam.cryostat_clrnc
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "ground_clrnc", bldgssizesparam.ground_clrnc
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "crane_clrnc_h", bldgssizesparam.crane_clrnc_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "crane_arm_h", bldgssizesparam.crane_arm_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "reactor_hall_l", bldgssizesparam.reactor_hall_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "reactor_hall_w", bldgssizesparam.reactor_hall_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "reactor_hall_h", bldgssizesparam.reactor_hall_h
-    )
-    monkeypatch.setattr(buildings.data.buildings, "nbi_sys_l", bldgssizesparam.nbi_sys_l)
-    monkeypatch.setattr(buildings.data.buildings, "nbi_sys_w", bldgssizesparam.nbi_sys_w)
-    monkeypatch.setattr(
-        buildings.data.buildings, "fc_building_l", bldgssizesparam.fc_building_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "fc_building_w", bldgssizesparam.fc_building_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "warm_shop_l", bldgssizesparam.warm_shop_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "warm_shop_w", bldgssizesparam.warm_shop_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "warm_shop_h", bldgssizesparam.warm_shop_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "workshop_l", bldgssizesparam.workshop_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "workshop_w", bldgssizesparam.workshop_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "workshop_h", bldgssizesparam.workshop_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "robotics_l", bldgssizesparam.robotics_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "robotics_w", bldgssizesparam.robotics_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "robotics_h", bldgssizesparam.robotics_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "maint_cont_l", bldgssizesparam.maint_cont_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "maint_cont_w", bldgssizesparam.maint_cont_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "maint_cont_h", bldgssizesparam.maint_cont_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "turbine_hall_l", bldgssizesparam.turbine_hall_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "turbine_hall_w", bldgssizesparam.turbine_hall_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "turbine_hall_h", bldgssizesparam.turbine_hall_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "gas_buildings_l", bldgssizesparam.gas_buildings_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "gas_buildings_w", bldgssizesparam.gas_buildings_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "gas_buildings_h", bldgssizesparam.gas_buildings_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "water_buildings_l", bldgssizesparam.water_buildings_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "water_buildings_w", bldgssizesparam.water_buildings_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "water_buildings_h", bldgssizesparam.water_buildings_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "sec_buildings_l", bldgssizesparam.sec_buildings_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "sec_buildings_w", bldgssizesparam.sec_buildings_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "sec_buildings_h", bldgssizesparam.sec_buildings_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings,
+    for field in [
+        "bioshld_thk",
+        "reactor_wall_thk",
+        "reactor_roof_thk",
+        "reactor_fndtn_thk",
+        "reactor_clrnc",
+        "transp_clrnc",
+        "cryostat_clrnc",
+        "ground_clrnc",
+        "crane_clrnc_h",
+        "crane_arm_h",
+        "nbi_sys_l",
+        "nbi_sys_w",
+        "fc_building_l",
+        "fc_building_w",
+        "warm_shop_l",
+        "warm_shop_w",
+        "warm_shop_h",
+        "workshop_l",
+        "workshop_w",
+        "workshop_h",
+        "robotics_l",
+        "robotics_w",
+        "robotics_h",
+        "maint_cont_l",
+        "maint_cont_w",
+        "maint_cont_h",
+        "turbine_hall_l",
+        "turbine_hall_w",
+        "turbine_hall_h",
+        "gas_buildings_l",
+        "gas_buildings_w",
+        "gas_buildings_h",
+        "water_buildings_l",
+        "water_buildings_w",
+        "water_buildings_h",
+        "sec_buildings_l",
+        "sec_buildings_w",
+        "sec_buildings_h",
         "staff_buildings_area",
-        bldgssizesparam.staff_buildings_area,
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "staff_buildings_h", bldgssizesparam.staff_buildings_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "hcd_building_l", bldgssizesparam.hcd_building_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "hcd_building_w", bldgssizesparam.hcd_building_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "hcd_building_h", bldgssizesparam.hcd_building_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "magnet_pulse_l", bldgssizesparam.magnet_pulse_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "magnet_pulse_w", bldgssizesparam.magnet_pulse_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "magnet_pulse_h", bldgssizesparam.magnet_pulse_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "magnet_trains_l", bldgssizesparam.magnet_trains_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "magnet_trains_w", bldgssizesparam.magnet_trains_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "magnet_trains_h", bldgssizesparam.magnet_trains_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings,
+        "staff_buildings_h",
+        "hcd_building_l",
+        "hcd_building_w",
+        "hcd_building_h",
+        "magnet_pulse_l",
+        "magnet_pulse_w",
+        "magnet_pulse_h",
+        "magnet_trains_l",
+        "magnet_trains_w",
+        "magnet_trains_h",
         "control_buildings_l",
-        bldgssizesparam.control_buildings_l,
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings,
         "control_buildings_w",
-        bldgssizesparam.control_buildings_w,
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings,
         "control_buildings_h",
-        bldgssizesparam.control_buildings_h,
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "ilw_smelter_l", bldgssizesparam.ilw_smelter_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "ilw_smelter_w", bldgssizesparam.ilw_smelter_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "ilw_smelter_h", bldgssizesparam.ilw_smelter_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "ilw_storage_l", bldgssizesparam.ilw_storage_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "ilw_storage_w", bldgssizesparam.ilw_storage_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "ilw_storage_h", bldgssizesparam.ilw_storage_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "llw_storage_l", bldgssizesparam.llw_storage_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "llw_storage_w", bldgssizesparam.llw_storage_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "llw_storage_h", bldgssizesparam.llw_storage_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "hw_storage_l", bldgssizesparam.hw_storage_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "hw_storage_w", bldgssizesparam.hw_storage_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "hw_storage_h", bldgssizesparam.hw_storage_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "tw_storage_l", bldgssizesparam.tw_storage_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "tw_storage_w", bldgssizesparam.tw_storage_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "tw_storage_h", bldgssizesparam.tw_storage_h
-    )
-    monkeypatch.setattr(buildings.data.buildings, "auxcool_l", bldgssizesparam.auxcool_l)
-    monkeypatch.setattr(buildings.data.buildings, "auxcool_w", bldgssizesparam.auxcool_w)
-    monkeypatch.setattr(buildings.data.buildings, "auxcool_h", bldgssizesparam.auxcool_h)
-    monkeypatch.setattr(buildings.data.buildings, "cryomag_l", bldgssizesparam.cryomag_l)
-    monkeypatch.setattr(buildings.data.buildings, "cryomag_w", bldgssizesparam.cryomag_w)
-    monkeypatch.setattr(buildings.data.buildings, "cryomag_h", bldgssizesparam.cryomag_h)
-    monkeypatch.setattr(
-        buildings.data.buildings, "cryostore_l", bldgssizesparam.cryostore_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "cryostore_w", bldgssizesparam.cryostore_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "cryostore_h", bldgssizesparam.cryostore_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "elecdist_l", bldgssizesparam.elecdist_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "elecdist_w", bldgssizesparam.elecdist_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "elecdist_h", bldgssizesparam.elecdist_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "elecstore_l", bldgssizesparam.elecstore_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "elecstore_w", bldgssizesparam.elecstore_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "elecstore_h", bldgssizesparam.elecstore_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "elecload_l", bldgssizesparam.elecload_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "elecload_w", bldgssizesparam.elecload_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "elecload_h", bldgssizesparam.elecload_h
-    )
-    monkeypatch.setattr(buildings.data.buildings, "chemlab_l", bldgssizesparam.chemlab_l)
-    monkeypatch.setattr(buildings.data.buildings, "chemlab_w", bldgssizesparam.chemlab_w)
-    monkeypatch.setattr(buildings.data.buildings, "chemlab_h", bldgssizesparam.chemlab_h)
-    monkeypatch.setattr(
-        buildings.data.buildings, "heat_sink_l", bldgssizesparam.heat_sink_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "heat_sink_w", bldgssizesparam.heat_sink_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "heat_sink_h", bldgssizesparam.heat_sink_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "aux_build_l", bldgssizesparam.aux_build_l
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "aux_build_w", bldgssizesparam.aux_build_w
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "aux_build_h", bldgssizesparam.aux_build_h
-    )
-    monkeypatch.setattr(
-        buildings.data.buildings, "qnty_sfty_fac", bldgssizesparam.qnty_sfty_fac
-    )
-    monkeypatch.setattr(buildings.data.buildings, "hotcell_h", bldgssizesparam.hotcell_h)
-    monkeypatch.setattr(
-        buildings.data.buildings, "hot_sepdist", bldgssizesparam.hot_sepdist
-    )
+        "ilw_smelter_l",
+        "ilw_smelter_w",
+        "ilw_smelter_h",
+        "ilw_storage_l",
+        "ilw_storage_w",
+        "ilw_storage_h",
+        "llw_storage_l",
+        "llw_storage_w",
+        "llw_storage_h",
+        "hw_storage_l",
+        "hw_storage_w",
+        "hw_storage_h",
+        "tw_storage_l",
+        "tw_storage_w",
+        "tw_storage_h",
+        "auxcool_l",
+        "auxcool_w",
+        "auxcool_h",
+        "cryomag_l",
+        "cryomag_w",
+        "cryomag_h",
+        "cryostore_l",
+        "cryostore_w",
+        "cryostore_h",
+        "elecdist_l",
+        "elecdist_w",
+        "elecdist_h",
+        "elecstore_l",
+        "elecstore_w",
+        "elecstore_h",
+        "elecload_l",
+        "elecload_w",
+        "elecload_h",
+        "chemlab_l",
+        "chemlab_w",
+        "chemlab_h",
+        "heat_sink_l",
+        "heat_sink_w",
+        "heat_sink_h",
+        "aux_build_l",
+        "aux_build_w",
+        "aux_build_h",
+        "qnty_sfty_fac",
+        "hotcell_h",
+        "hot_sepdist",
+    ]:
+        monkeypatch.setattr(
+            buildings.data.buildings, field, getattr(bldgssizesparam, field)
+        )
+
     monkeypatch.setattr(
         buildings.data.current_drive, "i_hcd_primary", bldgssizesparam.i_hcd_primary
     )
@@ -746,60 +525,23 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(
         buildings.data.fwbs, "r_cryostat_inboard", bldgssizesparam.r_cryostat_inboard
     )
-    monkeypatch.setattr(
-        buildings.data.fwbs, "life_blkt_fpy", bldgssizesparam.life_blkt_fpy
-    )
-    monkeypatch.setattr(
-        buildings.data.build, "z_tf_inside_half", bldgssizesparam.z_tf_inside_half
-    )
-    monkeypatch.setattr(
-        buildings.data.build, "dr_tf_inboard", bldgssizesparam.dr_tf_inboard
-    )
-    monkeypatch.setattr(
-        buildings.data.build, "dr_tf_shld_gap", bldgssizesparam.dr_tf_shld_gap
-    )
-    monkeypatch.setattr(
-        buildings.data.build,
-        "dr_shld_thermal_inboard",
-        bldgssizesparam.dr_shld_thermal_inboard,
-    )
-    monkeypatch.setattr(
-        buildings.data.build,
-        "dr_shld_thermal_outboard",
-        bldgssizesparam.dr_shld_thermal_outboard,
-    )
-    monkeypatch.setattr(
-        buildings.data.build, "dz_shld_thermal", bldgssizesparam.dz_shld_thermal
-    )
-    monkeypatch.setattr(
-        buildings.data.build, "dr_shld_inboard", bldgssizesparam.dr_shld_inboard
-    )
-    monkeypatch.setattr(
-        buildings.data.build, "dr_shld_outboard", bldgssizesparam.dr_shld_outboard
-    )
-    monkeypatch.setattr(
-        buildings.data.build,
+
+    for field in [
+        "z_tf_inside_half",
+        "dr_tf_inboard",
+        "dr_tf_shld_gap",
+        "dz_shld_thermal",
+        "dr_shld_inboard",
+        "dr_shld_outboard",
         "dr_fw_plasma_gap_inboard",
-        bldgssizesparam.dr_fw_plasma_gap_inboard,
-    )
-    monkeypatch.setattr(
-        buildings.data.build,
         "dr_fw_plasma_gap_outboard",
-        bldgssizesparam.dr_fw_plasma_gap_outboard,
-    )
-    monkeypatch.setattr(
-        buildings.data.build, "dr_fw_inboard", bldgssizesparam.dr_fw_inboard
-    )
-    monkeypatch.setattr(
-        buildings.data.build, "dr_fw_outboard", bldgssizesparam.dr_fw_outboard
-    )
-    monkeypatch.setattr(
-        buildings.data.build, "dr_blkt_inboard", bldgssizesparam.dr_blkt_inboard
-    )
-    monkeypatch.setattr(
-        buildings.data.build, "dr_blkt_outboard", bldgssizesparam.dr_blkt_outboard
-    )
-    monkeypatch.setattr(buildings.data.build, "r_cp_top", bldgssizesparam.r_cp_top)
+        "dr_fw_inboard",
+        "dr_fw_outboard",
+        "dr_blkt_inboard",
+        "dr_blkt_outboard",
+        "r_cp_top",
+    ]:
+        monkeypatch.setattr(buildings.data.build, field, getattr(bldgssizesparam, field))
     monkeypatch.setattr(
         buildings.data.divertor, "dz_divertor", bldgssizesparam.dz_divertor
     )
@@ -824,7 +566,6 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
 
 
 class BldgsParam(NamedTuple):
-    wrbi: Any
     rxcl: Any
     trcl: Any
     row: Any
@@ -846,17 +587,10 @@ class BldgsParam(NamedTuple):
     pfbldgm3: Any
     esbldgm3: Any
     pibv: Any
-    a_plant_floor_effective: Any
-    admvol: Any
     triv: Any
     conv: Any
     admv: Any
     shov: Any
-    shovol: Any
-    convol: Any
-    volnucb: Any
-    iprint: Any
-    outfile: Any
     pfr: Any
     pfm: Any
     tfro: Any
@@ -888,7 +622,6 @@ class BldgsParam(NamedTuple):
     "bldgsparam",
     [
         BldgsParam(
-            wrbi=0,
             rxcl=4,
             trcl=1,
             row=4,
@@ -910,17 +643,10 @@ class BldgsParam(NamedTuple):
             pfbldgm3=20000,
             esbldgm3=1000,
             pibv=20000,
-            a_plant_floor_effective=0,
-            admvol=0,
             triv=40000,
             conv=60000,
             admv=100000,
             shov=100000,
-            shovol=0,
-            convol=0,
-            volnucb=0,
-            iprint=0,
-            outfile=11,
             pfr=18.98258241468535,
             pfm=1071.5897090529959,
             tfro=17.123405859443331,
@@ -948,7 +674,6 @@ class BldgsParam(NamedTuple):
             expected_elev=51601.097615432001,
         ),
         BldgsParam(
-            wrbi=42.612047089019569,
             rxcl=4,
             trcl=1,
             row=4,
@@ -970,17 +695,10 @@ class BldgsParam(NamedTuple):
             pfbldgm3=20000,
             esbldgm3=1000,
             pibv=20000,
-            a_plant_floor_effective=379235.17804514873,
-            admvol=100000,
             triv=40000,
             conv=60000,
             admv=100000,
             shov=100000,
-            shovol=100000,
-            convol=60000,
-            volnucb=1812276.5359386117,
-            iprint=0,
-            outfile=11,
             pfr=18.982980877139834,
             pfm=1073.3372194668184,
             tfro=17.123405859443331,
@@ -1010,43 +728,34 @@ class BldgsParam(NamedTuple):
     ],
 )
 def test_bldgs(buildings, bldgsparam, monkeypatch):
-    monkeypatch.setattr(buildings.data.buildings, "wrbi", bldgsparam.wrbi)
-    monkeypatch.setattr(buildings.data.buildings, "rxcl", bldgsparam.rxcl)
-    monkeypatch.setattr(buildings.data.buildings, "trcl", bldgsparam.trcl)
-    monkeypatch.setattr(buildings.data.buildings, "row", bldgsparam.row)
-    monkeypatch.setattr(buildings.data.buildings, "wgt", bldgsparam.wgt)
-    monkeypatch.setattr(buildings.data.buildings, "shmf", bldgsparam.shmf)
-    monkeypatch.setattr(buildings.data.buildings, "clh2", bldgsparam.clh2)
-    monkeypatch.setattr(
-        buildings.data.buildings, "dz_tf_cryostat", bldgsparam.dz_tf_cryostat
-    )
-    monkeypatch.setattr(buildings.data.buildings, "stcl", bldgsparam.stcl)
-    monkeypatch.setattr(buildings.data.buildings, "rbvfac", bldgsparam.rbvfac)
-    monkeypatch.setattr(buildings.data.buildings, "rbwt", bldgsparam.rbwt)
-    monkeypatch.setattr(buildings.data.buildings, "rbrt", bldgsparam.rbrt)
-    monkeypatch.setattr(buildings.data.buildings, "fndt", bldgsparam.fndt)
-    monkeypatch.setattr(buildings.data.buildings, "hcwt", bldgsparam.hcwt)
-    monkeypatch.setattr(buildings.data.buildings, "hccl", bldgsparam.hccl)
-    monkeypatch.setattr(buildings.data.buildings, "wgt2", bldgsparam.wgt2)
-    monkeypatch.setattr(buildings.data.buildings, "mbvfac", bldgsparam.mbvfac)
-    monkeypatch.setattr(buildings.data.buildings, "wsvfac", bldgsparam.wsvfac)
-    monkeypatch.setattr(buildings.data.buildings, "tfcbv", bldgsparam.tfcbv)
-    monkeypatch.setattr(buildings.data.buildings, "pfbldgm3", bldgsparam.pfbldgm3)
-    monkeypatch.setattr(buildings.data.buildings, "esbldgm3", bldgsparam.esbldgm3)
-    monkeypatch.setattr(buildings.data.buildings, "pibv", bldgsparam.pibv)
-    monkeypatch.setattr(
-        buildings.data.buildings,
-        "a_plant_floor_effective",
-        bldgsparam.a_plant_floor_effective,
-    )
-    monkeypatch.setattr(buildings.data.buildings, "admvol", bldgsparam.admvol)
-    monkeypatch.setattr(buildings.data.buildings, "triv", bldgsparam.triv)
-    monkeypatch.setattr(buildings.data.buildings, "conv", bldgsparam.conv)
-    monkeypatch.setattr(buildings.data.buildings, "admv", bldgsparam.admv)
-    monkeypatch.setattr(buildings.data.buildings, "shov", bldgsparam.shov)
-    monkeypatch.setattr(buildings.data.buildings, "shovol", bldgsparam.shovol)
-    monkeypatch.setattr(buildings.data.buildings, "convol", bldgsparam.convol)
-    monkeypatch.setattr(buildings.data.buildings, "volnucb", bldgsparam.volnucb)
+    for field in [
+        "rxcl",
+        "trcl",
+        "row",
+        "wgt",
+        "shmf",
+        "clh2",
+        "dz_tf_cryostat",
+        "stcl",
+        "rbvfac",
+        "rbwt",
+        "rbrt",
+        "fndt",
+        "hcwt",
+        "hccl",
+        "wgt2",
+        "mbvfac",
+        "wsvfac",
+        "tfcbv",
+        "pfbldgm3",
+        "esbldgm3",
+        "pibv",
+        "triv",
+        "conv",
+        "admv",
+        "shov",
+    ]:
+        monkeypatch.setattr(buildings.data.buildings, field, getattr(bldgsparam, field))
 
     cryv, vrci, rbv, rmbv, wsv, elev = buildings.bldgs(
         output=False,
