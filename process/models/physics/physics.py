@@ -812,8 +812,8 @@ class Physics(Model):
             self.data.physics.pden_electron_transport_loss_mw,
             self.data.physics.pden_ion_transport_loss_mw,
             self.data.physics.t_electron_energy_confinement,
-            self.data.physics.t_energy_confinement,
             self.data.physics.t_ion_energy_confinement,
+            self.data.physics.t_energy_confinement,
             self.data.physics.p_plasma_loss_mw,
         ) = self.confinement.calculate_confinement_time(
             m_fuel_amu=self.data.physics.m_fuel_amu,
