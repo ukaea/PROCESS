@@ -2223,14 +2223,7 @@ class Stellarator(Model):
         #  chosen scaling law
         #  N.B. self.data.stellarator.iotabar replaces tokamak self.data.physics.q95 in argument list
 
-        (
-            self.data.physics.pden_electron_transport_loss_mw,
-            self.data.physics.pden_ion_transport_loss_mw,
-            self.data.physics.t_electron_energy_confinement,
-            self.data.physics.t_ion_energy_confinement,
-            self.data.physics.t_energy_confinement,
-            self.data.physics.p_plasma_loss_mw,
-        ) = self.physics.confinement.calculate_confinement_time(
+        confinement_time_data = self.physics.confinement.calculate_confinement_time(
             self.data.physics.m_fuel_amu,
             self.data.physics.p_alpha_total_mw,
             self.data.physics.aspect,
@@ -2257,6 +2250,23 @@ class Stellarator(Model):
             self.data.physics.vol_plasma,
             self.data.physics.n_charge_plasma_effective_vol_avg,
         )
+
+        self.data.physics.pden_electron_transport_loss_mw = (
+            confinement_time_data.pden_electron_transport_loss_mw
+        )
+        self.data.physics.pden_ion_transport_loss_mw = (
+            confinement_time_data.pden_ion_transport_loss_mw
+        )
+        self.data.physics.t_electron_energy_confinement = (
+            confinement_time_data.t_electron_energy_confinement
+        )
+        self.data.physics.t_energy_confinement = (
+            confinement_time_data.t_plasma_energy_confinement
+        )
+        self.data.physics.t_ion_energy_confinement = (
+            confinement_time_data.t_ion_energy_confinement
+        )
+        self.data.physics.p_plasma_loss_mw = confinement_time_data.p_plasma_loss_mw
 
         self.data.physics.ntau, self.data.physics.nTtau = (
             self.physics.confinement.calculate_double_and_triple_product(
