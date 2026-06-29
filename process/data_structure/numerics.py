@@ -100,7 +100,7 @@ class FiguresOfMerit(IntEnum):
         return self._description_
 
 
-IPNVARS = 177
+IPNVARS = 178
 """total number of variables available for iteration"""
 
 IPEQNS = 92

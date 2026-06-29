@@ -843,10 +843,10 @@ class PhysicsData:
     pflux_fw_rad_mw: float = 0.0
     """Nominal mean radiation load on inside surface of reactor (MW/m2)"""
 
-    pden_ion_electron_equilibration_vol_avg_mw: float = 0.0
+    pden_ion_electron_equilibration_vol_avg_mw: float = 0.5
     """Ion/electron volume averaged equilibration power per unit volume [MW/m³]"""
 
-    p_ion_electron_equilibration_vol_avg_mw: float = 0.0
+    p_ion_electron_equilibration_vol_avg_mw: float = 80.0
     """Ion/electron volume averaged equilibration power [MW]"""
 
     plasma_current: float = 0.0
@@ -1085,8 +1085,8 @@ class PhysicsData:
 
     f_t_alpha_energy_confinement: float = 0.0
     """Alpha particle to energy confinement time ratio"""
-    
-    f_t_fuel_ion_electron_energy_confinement: float = 0.0
+
+    f_t_fuel_ion_electron_energy_confinement: float = 1.0
     """Fuel ion to electron energy confinement time ratio"""
 
     temp_plasma_electron_vol_avg_kev: float = 12.9

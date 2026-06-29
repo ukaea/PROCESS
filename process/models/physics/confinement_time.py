@@ -914,12 +914,6 @@ class PlasmaConfinementTime(Model):
                 i_confinement_time=i_confinement_time,
             )
 
-        # Apply H-factor correction to chosen scaling
-        t_electron_energy_confinement = hfact * t_electron_confinement
-
-        # Ion energy confinement time
-        t_ion_energy_confinement = t_electron_energy_confinement
-
         # Calculate H* non-radiation corrected H factor
         # Note: we will assume the IPB-98y2 scaling.
         if self.data.physics.i_rad_loss == 1:
@@ -956,21 +950,46 @@ class PlasmaConfinementTime(Model):
         # temp_plasma_electron_density_weighted_kev are in keV, and
         # pden_electron_transport_loss_mw and pden_ion_transport_loss_mw are in MW/m3)
 
-        # The transport losses is just the electron and ion thermal energies divided by
-        # the confinement time.
-        pden_ion_transport_loss_mw = (
+        e_ions_stored_thermal = (
             (3 / 2)
             * (constants.ELECTRON_CHARGE / 1e3)
             * nd_plasma_ions_total_vol_avg
             * temp_plasma_ion_density_weighted_kev
-            / t_ion_energy_confinement
         )
-        pden_electron_transport_loss_mw = (
+
+        e_electrons_stored_thermal = (
             (3 / 2)
             * (constants.ELECTRON_CHARGE / 1e3)
             * nd_plasma_electrons_vol_avg
             * temp_plasma_electron_density_weighted_kev
-            / t_electron_energy_confinement
+        )
+        
+        t_energy_confinement = t_electron_confinement
+
+        # Apply H-factor correction to chosen scaling
+        t_electron_energy_confinement = (
+            hfact
+            * t_energy_confinement
+            * (
+                (
+                    e_electrons_stored_thermal
+                    + (
+                        e_ions_stored_thermal
+                        / self.data.physics.f_t_fuel_ion_electron_energy_confinement
+                    )
+                )
+                / (e_electrons_stored_thermal + e_ions_stored_thermal)
+            )
+        )
+
+        # Ion energy confinement time
+        t_ion_energy_confinement = t_electron_energy_confinement*self.data.physics.f_t_fuel_ion_electron_energy_confinement
+
+        # The transport losses is just the electron and ion thermal energies divided by
+        # the confinement time.
+        pden_ion_transport_loss_mw = e_ions_stored_thermal / t_ion_energy_confinement
+        pden_electron_transport_loss_mw = (
+            e_electrons_stored_thermal / t_electron_energy_confinement
         )
 
         # ratio = (nd_plasma_ions_total_vol_avg / nd_plasma_electrons_vol_avg) * (
@@ -980,7 +999,7 @@ class PlasmaConfinementTime(Model):
 
         # Global energy confinement time
 
-        t_energy_confinement = t_ion_energy_confinement
+        #t_energy_confinement = t_ion_energy_confinement
 
         # For comparison directly calculate the confinement time from the stored energy
         # calculated from the total plasma beta and the loss power used above.
