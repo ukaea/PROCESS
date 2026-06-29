@@ -37,6 +37,8 @@ class ConfinementTimeData:
     """Plasma energy confinement time in seconds."""
     p_plasma_loss_mw: float
     """Total plasma loss power in MW."""
+    hstar: float
+    """Non-radiation corrected H factor on energy confinement times"""
 
 
 class PlasmaConfinementTime(Model):
@@ -936,8 +938,11 @@ class PlasmaConfinementTime(Model):
 
         # Calculate H* non-radiation corrected H factor
         # Note: we will assume the IPB-98y2 scaling.
-        if self.data.physics.i_rad_loss == ConfinementRadiationLossModel.CORE_ONLY:
-            self.data.physics.hstar = (
+        if (
+            ConfinementRadiationLossModel(self.data.physics.i_rad_loss)
+            == ConfinementRadiationLossModel.CORE_ONLY
+        ):
+            hstar = (
                 hfact
                 * (
                     p_plasma_loss_mw
@@ -952,7 +957,7 @@ class PlasmaConfinementTime(Model):
         elif (
             self.data.physics.i_rad_loss == ConfinementRadiationLossModel.FULL_RADIATION
         ):
-            self.data.physics.hstar = (
+            hstar = (
                 hfact
                 * (
                     p_plasma_loss_mw
@@ -964,7 +969,7 @@ class PlasmaConfinementTime(Model):
                 ** 0.31
             )
         elif self.data.physics.i_rad_loss == ConfinementRadiationLossModel.NO_RADIATION:
-            self.data.physics.hstar = hfact
+            hstar = hfact
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
@@ -1002,6 +1007,7 @@ class PlasmaConfinementTime(Model):
             t_ion_energy_confinement=t_ion_energy_confinement,
             t_plasma_energy_confinement=t_energy_confinement,
             p_plasma_loss_mw=p_plasma_loss_mw,
+            hstar=hstar,
         )
 
     @staticmethod
