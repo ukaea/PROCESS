@@ -38,7 +38,7 @@ class TestVacuum:
         """
         monkeypatch.setattr(
             vacuum.data.physics,
-            "molflow_plasma_fuelling_required",
+            "molflow_plasma_fuelling_vv_injected",
             7.5745668997694112e22,
         )
         monkeypatch.setattr(vacuum.data.physics, "a_plasma_surface", 1500.3146527709359)
