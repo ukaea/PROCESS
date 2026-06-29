@@ -80,6 +80,7 @@ from process.models.physics.current_drive import (
 )
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.fuelling import PlasmaFuelling
 from process.models.physics.impurity_radiation import (
     initialise_imprad,
 )
@@ -693,6 +694,7 @@ class Models:
         self.plasma_density_limit = PlasmaDensityLimit()
         self.plasma_exhaust = PlasmaExhaust()
         self.sauter_bootstrap_current = SauterBootstrapCurrent()
+        self.plasma_fuelling = PlasmaFuelling()
         self.plasma_bootstrap_current = PlasmaBootstrapCurrent(
             plasma_profile=self.plasma_profile,
             sauter_bootstrap=self.sauter_bootstrap_current,
@@ -718,6 +720,7 @@ class Models:
             plasma_dia_current=self.plasma_dia_current,
             plasma_geometry=self.plasma_geom,
             scrape_off_layer=self.scrape_off_layer,
+            plasma_fuelling=self.plasma_fuelling,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
@@ -824,6 +827,7 @@ class Models:
             self.plasma_fields,
             self.sauter_bootstrap_current,
             self.plasma_transition,
+            self.self.plasma_fuelling,
             self.physics_detailed,
             self.electron_cyclotron,
             self.lower_hybrid,
