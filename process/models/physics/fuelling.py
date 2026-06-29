@@ -14,6 +14,38 @@ class PlasmaFuelling(Model):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
 
+    def run(self):
+        self.data.physics.molflow_plasma_fuelling_vv_injected_moles = (
+            self.data.physics.molflow_plasma_fuelling_vv_injected
+            / constants.AVOGADRO_NUMBER
+        )
+
+        self.data.physics.molflow_plasma_fuelling_loss = (
+            self.data.physics.molflow_plasma_fuelling_vv_injected
+            * (1 - self.data.physics.eta_plasma_fuelling)
+        )
+        self.data.physics.molflow_plasma_fuelling_loss_moles = (
+            self.data.physics.molflow_plasma_fuelling_loss / constants.AVOGADRO_NUMBER
+        )
+
+        self.data.physics.f_plasma_fuel_burnup = self.calculate_fuel_burnup_fraction(
+            fusrat_total=self.data.physics.fusrat_total,
+            molflow_plasma_fuelling_vv_injected=self.data.physics.molflow_plasma_fuelling_vv_injected,
+        )
+        self.data.physics.f_plasma_tritium_burnup = self.calculate_tritium_burnup_fraction(
+            fusrat_dt_total=self.data.physics.fusrat_dt_total,
+            molflow_plasma_fuelling_vv_injected=self.data.physics.molflow_plasma_fuelling_vv_injected,
+            f_molflow_plasma_fuelling_tritium=self.data.physics.f_molflow_plasma_fuelling_tritium,
+        )
+
+        self.data.physics.f_plasma_deuterium_burnup = self.calculate_deuterium_burnup_fraction(
+            fusrat_plasma_dd_total=self.data.physics.fusrat_plasma_dd_total,
+            molflow_plasma_fuelling_vv_injected=self.data.physics.molflow_plasma_fuelling_vv_injected,
+            f_molflow_plasma_fuelling_deuterium=self.data.physics.f_molflow_plasma_fuelling_deuterium,
+            fusrat_dt_total=self.data.physics.fusrat_dt_total,
+            fusrat_plasma_dhe3=self.data.physics.fusrat_plasma_dhe3,
+        )
+
     def output(self):
         """This model doesn't output to the output file, but it does generate contour
         plots of plasma fuel flow rates vs recycling and fuelling efficiency.
