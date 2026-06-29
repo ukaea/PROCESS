@@ -182,6 +182,24 @@ class PhysicsData:
     e_plasma_beta_thermal: float = 0.0
     """Plasma thermal energy derived from thermal beta"""
 
+    e_plasma_thermal_total: float = 0.0
+    """Plasma total stored thermal energy (J)"""
+
+    eden_plasma_thermal_vol_avg: float = 0.0
+    """Plasma volume averaged thermal energy density (J/m³)"""
+
+    e_plasma_electrons_thermal: float = 0.0
+    """Plasma thermal energy in electrons (J)"""
+
+    eden_plasma_electrons_thermal_vol_avg: float = 0.0
+    """Plasma volume averaged thermal energy density in electrons (J/m³)"""
+
+    e_plasma_ions_thermal: float = 0.0
+    """Plasma thermal energy in ions (J)"""
+
+    eden_plasma_ions_thermal_vol_avg: float = 0.0
+    """Plasma volume averaged thermal energy density in ions (J/m³)"""
+
     betbm0: float = 1.5
     """leading coefficient for NB beta fraction"""
 
