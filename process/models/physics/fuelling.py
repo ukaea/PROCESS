@@ -1,9 +1,10 @@
-import logging
-
 from process.core import constants
+from process.core import process_output as po
 from process.core.model import Model
-
-logger = logging.getLogger(__name__)
+from process.data_structure import (
+    numerics,
+    reinke_variables,
+)
 
 
 class PlasmaFuelling(Model):
@@ -359,3 +360,123 @@ class PlasmaFuelling(Model):
             - (nd_plasma_alphas_vol_avg * vol_plasma)
             / (t_energy_confinement * f_t_alpha_energy_confinement)
         )
+
+    def output_fuelling_info(self):
+        """Output fuelling information to mfile."""
+        po.oheadr(self.outfile, "Plasma Fuelling")
+        po.ovarre(
+            self.outfile,
+            "Fuelling rate (nucleus-pairs/s)",
+            "(molflow_plasma_fuelling_vv_injected)",
+            self.data.physics.molflow_plasma_fuelling_vv_injected,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fuelling rate (moles/s)",
+            "(molflow_plasma_fuelling_vv_injected_moles)",
+            self.data.physics.molflow_plasma_fuelling_vv_injected_moles,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fuelling loss (nucleus-pairs/s)",
+            "(molflow_plasma_fuelling_loss)",
+            self.data.physics.molflow_plasma_fuelling_loss,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fuelling loss (moles/s)",
+            "(molflow_plasma_fuelling_loss_moles)",
+            self.data.physics.molflow_plasma_fuelling_loss_moles,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma fuelling that is deuterium",
+            "(f_molflow_plasma_fuelling_deuterium)",
+            self.data.physics.f_molflow_plasma_fuelling_deuterium,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma fuelling that is tritium",
+            "(f_molflow_plasma_fuelling_tritium)",
+            self.data.physics.f_molflow_plasma_fuelling_tritium,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma fuelling that is helium-3",
+            "(f_molflow_plasma_fuelling_helium3)",
+            self.data.physics.f_molflow_plasma_fuelling_helium3,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Fuelling efficiency",
+            "(eta_plasma_fuelling)",
+            self.data.physics.eta_plasma_fuelling,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma particles recycled at the LCFS",
+            "(f_plasma_particles_lcfs_recycled)",
+            self.data.physics.f_plasma_particles_lcfs_recycled,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fuel burn-up rate (reactions/s)",
+            "(fusrat_total)",
+            self.data.physics.fusrat_total,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarrf(
+            self.outfile,
+            "Total fuel burn-up fraction",
+            "(f_plasma_fuel_burnup)",
+            self.data.physics.f_plasma_fuel_burnup,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Tritium burn-up fraction",
+            "(f_plasma_tritium_burnup)",
+            self.data.physics.f_plasma_tritium_burnup,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Deuterium burn-up fraction",
+            "(f_plasma_deuterium_burnup)",
+            self.data.physics.f_plasma_deuterium_burnup,
+            "OP ",
+        )
+
+        if 78 in numerics.icc:
+            po.osubhd(self.outfile, "Reinke Criterion :")
+            po.ovarin(
+                self.outfile,
+                "index of impurity to be iterated for divertor detachment",
+                "(impvardiv)",
+                reinke_variables.impvardiv,
+            )
+            po.ovarre(
+                self.outfile,
+                "Minimum Impurity fraction from Reinke",
+                "(fzmin)",
+                reinke_variables.fzmin,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Actual Impurity fraction",
+                "(fzactual)",
+                reinke_variables.fzactual,
+            )
