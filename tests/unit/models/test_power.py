@@ -594,7 +594,7 @@ class PfpwrParam(NamedTuple):
                         0,
                         0,
                     ),
-                    *np.zeros((14, 22))       
+                    *np.zeros((14, 22)),
                 ),
                 order="F",
             ).transpose(),
@@ -1236,7 +1236,7 @@ class PfpwrParam(NamedTuple):
                         0,
                         0,
                     ),
-                    *np.zeros((14, 22))       
+                    *np.zeros((14, 22)),
                 ),
                 order="F",
             ).transpose(),
