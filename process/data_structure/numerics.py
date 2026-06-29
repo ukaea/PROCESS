@@ -252,6 +252,11 @@ class NumericsData:
             "CS achievable stress load cycles lower limit           ",
             "ECRH ignitability                ",  # Stellarator constraint
             "Fuel composition consistency     ",
+            "Tritium particle balance consistency        ",
+            "Deuterium particle balance consistency     ",
+            "Helium-3 particle balance consistency     ",
+            "Alpha particle balance consistency     ",
+            "Fuelling composition consistency     ",
         ]
     )
     """Labels describing constraint equations (corresponding itvs)<UL>
