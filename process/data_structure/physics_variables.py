@@ -1344,6 +1344,9 @@ class PhysicsData:
 
     f_t_alpha_energy_confinement: float = 0.0
     """Alpha particle to energy confinement time ratio"""
+    
+    f_t_fuel_ion_electron_energy_confinement: float = 0.0
+    """Fuel ion to electron energy confinement time ratio"""
 
     temp_plasma_electron_vol_avg_kev: float = 12.9
     """Plasma volume averaged electron temperature (⟨Tₑ⟩) [keV] (`iteration variable 4`)"""
