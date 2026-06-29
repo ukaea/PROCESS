@@ -28,7 +28,6 @@ if TYPE_CHECKING:
     from process.data_structure.physics_variables import PhysicsData
     from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
     from process.models.physics.confinement_time import (
-        ConfinementTimeData,
         PlasmaConfinementTime,
     )
     from process.models.physics.density_limit import PlasmaDensityLimit
@@ -404,6 +403,36 @@ class Physics(Model):
         # -----------------------------------------------------
 
         self.beta.run()
+
+        # Stored thermal energies in the plasma
+
+        (
+            self.data.physics.eden_plasma_electrons_thermal_vol_avg,
+            self.data.physics.e_plasma_electrons_thermal,
+        ) = self.calaculate_stored_thermal_energy(
+            vol_plasma=self.data.physics.vol_plasma,
+            nd_plasma_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+            temp_plasma_density_weighted_vol_avg_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
+        )
+
+        (
+            self.data.physics.eden_plasma_ions_thermal_vol_avg,
+            self.data.physics.e_plasma_ions_thermal,
+        ) = self.calaculate_stored_thermal_energy(
+            vol_plasma=self.data.physics.vol_plasma,
+            nd_plasma_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
+            temp_plasma_density_weighted_vol_avg_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
+        )
+
+        self.data.physics.eden_plasma_thermal_vol_avg = (
+            self.data.physics.eden_plasma_electrons_thermal_vol_avg
+            + self.data.physics.eden_plasma_ions_thermal_vol_avg
+        )
+
+        self.data.physics.e_plasma_thermal_total = (
+            self.data.physics.e_plasma_electrons_thermal
+            + self.data.physics.e_plasma_ions_thermal
+        )
 
         # =======================================================
 
@@ -814,7 +843,14 @@ class Physics(Model):
 
         # Calculate transport losses and energy confinement time using the
         # chosen scaling law
-        confinement_time_data: ConfinementTimeData = self.confinement.calculate_confinement_time(
+        (
+            self.data.physics.pden_electron_transport_loss_mw,
+            self.data.physics.pden_ion_transport_loss_mw,
+            self.data.physics.t_electron_energy_confinement,
+            self.data.physics.t_energy_confinement,
+            self.data.physics.t_ion_energy_confinement,
+            self.data.physics.p_plasma_loss_mw,
+        ) = self.confinement.calculate_confinement_time(
             m_fuel_amu=self.data.physics.m_fuel_amu,
             p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
             aspect=self.data.physics.aspect,
@@ -841,22 +877,6 @@ class Physics(Model):
             vol_plasma=self.data.physics.vol_plasma,
             zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
         )
-        self.data.physics.pden_electron_transport_loss_mw = (
-            confinement_time_data.pden_electron_transport_loss_mw
-        )
-        self.data.physics.pden_ion_transport_loss_mw = (
-            confinement_time_data.pden_ion_transport_loss_mw
-        )
-        self.data.physics.t_electron_energy_confinement = (
-            confinement_time_data.t_electron_energy_confinement
-        )
-        self.data.physics.t_energy_confinement = (
-            confinement_time_data.t_energy_confinement
-        )
-        self.data.physics.t_ion_energy_confinement = (
-            confinement_time_data.t_ion_energy_confinement
-        )
-        self.data.physics.p_plasma_loss_mw = confinement_time_data.p_plasma_loss_mw
 
         # Total transport power from scaling law (MW)
         self.data.physics.p_electron_transport_loss_mw = (
@@ -2761,6 +2781,57 @@ class Physics(Model):
                 f"(pres_plasma_fuel_profile{i})",
                 self.data.physics.pres_plasma_fuel_profile[i],
             )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
+        po.osubhd(self.outfile, "Stored thermal energies (Wₜₕ):")
+
+        po.ovarre(
+            self.outfile,
+            "Total plasma thermal energy [W]",
+            "(e_plasma_thermal_total)",
+            self.data.physics.e_plasma_thermal_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma thermal energy in electrons [W]",
+            "(e_plasma_electrons_thermal)",
+            self.data.physics.e_plasma_electrons_thermal,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma thermal energy in ions [W]",
+            "(e_plasma_ions_thermal)",
+            self.data.physics.e_plasma_ions_thermal,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged plasma thermal energy density [J/m³]",
+            "(eden_plasma_thermal_vol_avg)",
+            self.data.physics.eden_plasma_thermal_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume averaged plasma thermal energy density in electrons [J/m³]",
+            "(eden_plasma_electrons_thermal_vol_avg)",
+            self.data.physics.eden_plasma_electrons_thermal_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume averaged plasma thermal energy density in ions [J/m³]",
+            "(eden_plasma_ions_thermal_vol_avg)",
+            self.data.physics.eden_plasma_ions_thermal_vol_avg,
+            "OP ",
+        )
+
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
         po.oblnkl(self.outfile)

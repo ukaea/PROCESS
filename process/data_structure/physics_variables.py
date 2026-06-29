@@ -1016,7 +1016,7 @@ class PhysicsData:
     """Plasma central ion temperature (Tᵢ₀) [keV]"""
 
     temp_plasma_ion_density_weighted_kev: float = 0.0
-    """Plasma density weighted average ion temperature (⟨Tᵢ⟩_n) [keV]"""
+    """Plasma density weighted average ion temperature (⟨Tᵢ⟩ₙ) [keV]"""
 
     f_temp_plasma_ion_electron: float = 1.0
     """Plasma ratio of ion temperature to electron temperature (used to calculate temp_plasma_ion_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`)"""
