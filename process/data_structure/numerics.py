@@ -103,7 +103,7 @@ class FiguresOfMerit(IntEnum):
 IPNVARS = 183
 """total number of variables available for iteration"""
 
-IPEQNS = 92
+IPEQNS = 97
 """number of constraint equations available"""
 
 IPNFOMS = 19
@@ -252,6 +252,11 @@ class NumericsData:
             "CS achievable stress load cycles lower limit           ",
             "ECRH ignitability                ",  # Stellarator constraint
             "Fuel composition consistency     ",
+            "Tritium particle balance consistency        ",
+            "Deuterium particle balance consistency     ",
+            "Helium-3 particle balance consistency     ",
+            "Alpha particle balance consistency     ",
+            "Fuelling composition consistency     ",
         ]
     )
     """Labels describing constraint equations (corresponding itvs)<UL>
