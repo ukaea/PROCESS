@@ -265,10 +265,22 @@ def constraint_equation_2(constraint_registration, data):
     """
     # pscaling: total transport power per volume (MW/m3)
 
-    pscaling = (
-        data.physics.pden_electron_transport_loss_mw
-        + data.physics.pden_ion_transport_loss_mw
+    e_ions_stored_thermal = (
+        (3 / 2)
+        * (constants.ELECTRON_CHARGE / 1e3)
+        * data.physics.nd_plasma_ions_total_vol_avg
+        * data.physics.temp_plasma_ion_density_weighted_kev
     )
+
+    e_electrons_stored_thermal = (
+        (3 / 2)
+        * (constants.ELECTRON_CHARGE / 1e3)
+        * data.physics.nd_plasma_electrons_vol_avg
+        * data.physics.temp_plasma_electron_density_weighted_kev
+    )
+    pscaling = (
+        e_ions_stored_thermal + e_electrons_stored_thermal
+    ) / data.physics.t_energy_confinement
     # Total power lost is scaling power plus radiation:
     if data.physics.i_rad_loss == 0:
         pnumerator = pscaling + data.physics.pden_plasma_rad_mw
