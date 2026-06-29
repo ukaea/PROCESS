@@ -2118,7 +2118,7 @@ class Power(Model):
 
             #  Bus mass (kg)
             self.data.tfcoil.m_tf_bus = (
-                self.data.tfcoil.len_tf_bus * a_tf_bus * constants.den_copper
+                self.data.tfcoil.len_tf_bus * a_tf_bus * constants.DEN_COPPER
             )
 
             #  Total maximum impedance MDK actually just fixed resistance

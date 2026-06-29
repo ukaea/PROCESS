@@ -1973,7 +1973,7 @@ class SuperconductingTFCoil(TFCoil):
             * (1.0e0 - self.data.tfcoil.f_a_tf_turn_cable_space_extra_void)
             * self.data.tfcoil.f_a_tf_turn_cable_copper
             - self.data.tfcoil.len_tf_coil * self.data.tfcoil.a_tf_wp_coolant_channels
-        ) * constants.den_copper
+        ) * constants.DEN_COPPER
         self.data.tfcoil.m_tf_coil_copper = max(0.0e0, self.data.tfcoil.m_tf_coil_copper)
 
         # Steel conduit (sheath) mass [kg]

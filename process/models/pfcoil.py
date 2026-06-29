@@ -949,7 +949,7 @@ class PFCoil(Model):
                 else:
                     self.data.pf_coil.m_pf_coil_conductor[i] = (
                         volpf
-                        * constants.den_copper
+                        * constants.DEN_COPPER
                         * (1.0e0 - self.data.pf_coil.f_a_pf_coil_void[i])
                     )
 
@@ -3498,7 +3498,7 @@ class CSCoil(Model):
                 * 2.0e0
                 * np.pi
                 * self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1]
-                * constants.den_copper
+                * constants.DEN_COPPER
             )
 
         if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:

@@ -12,7 +12,6 @@ import process
 from process.core import constants, process_output
 from process.core.exceptions import ProcessValidationError
 from process.core.input import parse_input_file
-from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.blanket_variables import BlktModelTypes
@@ -220,17 +219,6 @@ def run_summary(data: DataStructure):
         process_output.ovarin(
             mfile, "Figure of merit switch", "(minmax)", data.numerics.minmax
         )
-
-
-def init_all_module_vars():
-    """Initialise all module variables
-    This is vital to ensure a 'clean' state of Process before a new run starts,
-    otherwise components of the previous run's state can persist into the new
-    run. This matters ever since Process is used as a shared library, rather
-    than a 'run-once' executable.
-    """
-    logging_model_handler.clear_logs()
-    constants.init_constants()
 
 
 def check_process(inputs, data):  # noqa: ARG001

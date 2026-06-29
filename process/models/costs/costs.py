@@ -1672,7 +1672,7 @@ class Costs(Model):
                     )
                     * 1.0e6
                     / self.data.pf_coil.j_pf_coil_wp_peak[i]
-                    * constants.den_copper
+                    * constants.DEN_COPPER
                 )
             else:
                 costpfcu = (
@@ -1684,7 +1684,7 @@ class Costs(Model):
                     )
                     * 1.0e6
                     / self.data.pf_coil.j_pf_coil_wp_peak[i]
-                    * constants.den_copper
+                    * constants.DEN_COPPER
                 )
 
             #  Total cost/metre of superconductor and copper wire
@@ -1751,7 +1751,7 @@ class Costs(Model):
                     / self.data.pf_coil.n_pf_coil_turns[
                         self.data.pf_coil.n_cs_pf_coils - 1
                     ]
-                    * constants.den_copper
+                    * constants.DEN_COPPER
                 )
             else:
                 # MDK I don't know if this is ccorrect as we never use the resistive model
@@ -1762,7 +1762,7 @@ class Costs(Model):
                     / self.data.pf_coil.n_pf_coil_turns[
                         self.data.pf_coil.n_cs_pf_coils - 1
                     ]
-                    * constants.den_copper
+                    * constants.DEN_COPPER
                 )
 
             #  Total cost/metre of superconductor and copper wire (Central Solenoid)

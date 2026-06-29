@@ -2,8 +2,6 @@
 
 import pytest
 
-from process.core.init import init_all_module_vars
-
 
 @pytest.fixture
 def availability(process_models):
@@ -71,8 +69,6 @@ def test_avail_1(monkeypatch, availability):
     :param availability: fixture containing an initialised `Availability` object
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
-    # Initialise fortran variables to keep test isolated from others
-    init_all_module_vars()
 
     # Mock module vars
     monkeypatch.setattr(availability.data.costs, "i_plant_availability", 1)
@@ -94,9 +90,6 @@ def test_avail_1(monkeypatch, availability):
     cfactr_obs = availability.data.costs.f_t_plant_available
     cfactr_exp = 0.0006344554455445239
     assert pytest.approx(cfactr_exp) == cfactr_obs
-
-    # Initialise fortran variables again to reset for other tests
-    init_all_module_vars()
 
 
 def test_calc_u_unplanned_hcd(availability):
@@ -589,8 +582,7 @@ def test_avail_st(monkeypatch, availability):
     :param availability: fixture containing an initialised `Availability` object
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
-    # Initialise fortran variables to keep test isolated from others
-    init_all_module_vars()
+
     monkeypatch.setattr(availability.data.costs, "tmain", 1.0)
     monkeypatch.setattr(availability.data.costs, "life_plant", 30.0)
     monkeypatch.setattr(availability.data.costs, "u_unplanned_cp", 0.05)
