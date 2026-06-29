@@ -20,6 +20,99 @@ class PlasmaFuelling(Model):
         """
 
     @staticmethod
+    def calculate_fuel_burnup_fraction(
+        fusrat_total: float, molflow_plasma_fuelling_vv_injected: float
+    ) -> float:
+        """Calculate the fuel burnup fraction
+
+        Parameters
+        ----------
+        fusrat_total : float
+            Total fusion rate (particles/s).
+        molflow_plasma_fuelling_vv_injected : float
+            Total fuelling rate into vacuum vessel (particles/s).
+
+        Returns
+        -------
+        Fuel burnup fraction (dimensionless).
+
+        Notes
+        -----
+        The fusion rate is multiplied by two to convert from nucleus pairs to particles,
+        as the fuelling rate is in particles/s.
+
+        """
+        return 2 * fusrat_total / molflow_plasma_fuelling_vv_injected
+
+    @staticmethod
+    def calculate_tritium_burnup_fraction(
+        fusrat_dt_total: float,
+        molflow_plasma_fuelling_vv_injected: float,
+        f_molflow_plasma_fuelling_tritium: float,
+    ) -> float:
+        """Calculate the tritium burnup fraction
+
+        Parameters
+        ----------
+        fusrat_dt_total : float
+            Total DT fusion rate (particles/s).
+        molflow_plasma_fuelling_vv_injected : float
+            Total fuelling rate into vacuum vessel (particles/s).
+        f_molflow_plasma_fuelling_tritium : float
+            Fraction of tritium in the plasma fuelling.
+
+        Returns
+        -------
+        Tritium burnup fraction (dimensionless).
+
+        Notes
+        -----
+        The fusion rate is multiplied by two to convert from nucleus pairs to particles,
+        as the fuelling rate is in particles/s.
+
+        """
+        return fusrat_dt_total / (
+            molflow_plasma_fuelling_vv_injected * f_molflow_plasma_fuelling_tritium
+        )
+
+    @staticmethod
+    def calculate_deuterium_burnup_fraction(
+        fusrat_dt_total: float,
+        molflow_plasma_fuelling_vv_injected: float,
+        f_molflow_plasma_fuelling_deuterium: float,
+        fusrat_plasma_dd_total: float,
+        fusrat_plasma_dhe3: float,
+    ) -> float:
+        """Calculate the deuterium burnup fraction
+
+        Parameters
+        ----------
+        fusrat_dt_total : float
+            Total DT fusion rate (particles/s).
+        molflow_plasma_fuelling_vv_injected : float
+            Total fuelling rate into vacuum vessel (particles/s).
+        f_molflow_plasma_fuelling_deuterium : float
+            Fraction of deuterium in the plasma fuelling.
+        fusrat_plasma_dd_total : float
+            Total deuterium consumption rate from DD fusion (particles/s).
+        fusrat_plasma_dhe3 : float
+            Deuterium consumption rate from D-He3 fusion (particles/s).
+
+        Returns
+        -------
+        Deuterium burnup fraction (dimensionless).
+
+        Notes
+        -----
+        The fusion rate is multiplied by two to convert from nucleus pairs to particles,
+        as the fuelling rate is in particles/s.
+
+        """
+        return (fusrat_dt_total + 2 * fusrat_plasma_dd_total + fusrat_plasma_dhe3) / (
+            molflow_plasma_fuelling_vv_injected * f_molflow_plasma_fuelling_deuterium
+        )
+
+    @staticmethod
     def calculate_plasma_tritium_flow_rate(
         f_molflow_plasma_fuelling_tritium: float,
         eta_plasma_fuelling: float,
