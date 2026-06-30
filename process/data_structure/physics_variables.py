@@ -74,6 +74,7 @@ class ConfinementTimeModel(IntEnum):
     NSTX_GYRO_BOHM = (48, "Buxton NSTX gyro-Bohm      (ST)(H)")
     ITPA20 = (49, "ITPA20                         (H)")
     ITPA20_IL = (50, "ITPA20-IL                      (H)")
+    PAZ_SOLDAN_NT = (51, "Paz-Soldan Neg Triang         (L)")
 
     def __new__(cls, value: int, full_name: str):
         """Create a new instance of ConfinementTimeModel.
