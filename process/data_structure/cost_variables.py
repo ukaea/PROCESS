@@ -4,201 +4,289 @@ from dataclasses import dataclass, field
 @dataclass(slots=True)
 class CostData:
     c228: float = 0.0
-    """c228 account cost"""
+    """c228 account cost - Instrumentation and control cost (M$)"""
 
     c229: float = 0.0
-    """c229 account cost"""
+    """c229 account cost - Maintenance equipment cost (M$)"""
 
     c23: float = 0.0
-    """c23 account cost"""
+    """c23 account cost - Turbine plant equipment cost (M$)"""
 
     c25: float = 0.0
-    """c25 account cost"""
+    """c25 account cost - Miscellaneous plant equipment cost (M$)"""
 
     c26: float = 0.0
-    """c26 account cost"""
+    """c26 account cost - Heat rejection system cost (M$)"""
 
     cindrt: float = 0.0
-    """cindrt account cost"""
+    """Indirect cost (M$)"""
 
     ccont: float = 0.0
-    """ccont account cost"""
+    """Total contingency (M$)"""
 
     c226: float = 0.0
+    """c226 account cost - Heat transport system (M$)"""
 
     c2261: float = 0.0
+    """c2261 account cost - Reactor cooling system (M$)"""
 
     c2262: float = 0.0
+    """c2262 account cost - Auxiliary component cooling (M$)"""
 
     c2263: float = 0.0
+    """c2263 account cost - Cryogenic system (M$)"""
 
     c227: float = 0.0
+    """c227 account cost - Fuel handling (M$)"""
 
     c2271: float = 0.0
+    """c2271 account cost - Fuelling system (M$)"""
 
     c2272: float = 0.0
+    """c2272 account cost - Fuel processing and purification (M$)"""
 
     c2273: float = 0.0
+    """c2273 account cost - Atmospheric recovery systems (M$)"""
 
     c2274: float = 0.0
+    """c2274 account cost - Nuclear building ventilation (M$)"""
 
     c24: float = 0.0
+    """c24 account cost - Electric plant equipment (M$)"""
 
     c241: float = 0.0
+    """c241 account cost - Electric plant equipment - switchyard (M$)"""
 
     c242: float = 0.0
+    """c242 account cost - Electric plant equipment - Transformers (M$)"""
 
     c243: float = 0.0
+    """c243 account cost - Electric plant equipment - Low voltage (M$)"""
 
     c244: float = 0.0
+    """c244 account cost - Electric plant equipment - Diesel generators (M$)"""
 
     c245: float = 0.0
+    """c245 account cost - Electric plant equipment - Aux facility power (M$)"""
 
     c21: float = 0.0
+    """c21 account cost - Structures and site facilities (M$)"""
 
     c211: float = 0.0
+    """c211 account cost - Site improvements, facilities and land (M$)"""
 
     c212: float = 0.0
+    """c212 account cost - Reactor building (M$)"""
 
     c213: float = 0.0
+    """c213 account cost - Turbine building (M$)"""
 
     c214: float = 0.0
+    """c214 account cost - Reactor maintenance and warm shops buildings (M$)"""
 
     c2141: float = 0.0
+    """c2141 account cost - Reactor maintenance building cost (M$)"""
 
     c2142: float = 0.0
+    """c2142 account cost - Warm shop cost (M$) (M$)"""
 
     c215: float = 0.0
+    """c215 account cost - Tritium building cost (M$)"""
 
     c216: float = 0.0
+    """c216 account cost - Electrical equipment building cost (M$)"""
 
     c217: float = 0.0
+    """c217 account cost - Other buildings (M$)"""
 
     c2171: float = 0.0
+    """c2171 account cost - Additional buildings cost (M$)"""
 
     c2172: float = 0.0
+    """c2172 account cost - Control room buildings cost (M$)"""
 
     c2173: float = 0.0
+    """c2173 account cost - Shop and warehouses cost (M$)"""
 
     c2174: float = 0.0
+    """c2174 account cost - Cryogenic building cost (M$)"""
 
     c22: float = 0.0
+    """c22 account cost - Fusion power island (M$)"""
 
     c2211: float = 0.0
+    """c2211 account cost - First wall (M$)"""
 
     c2212: float = 0.0
+    """c2212 account cost - Blanket (M$)"""
 
     c22121: float = 0.0
+    """c22121 account cost - Blanket beryllium cost (M$)"""
 
     c22122: float = 0.0
+    """c22122 account cost - Blanket breeder material cost (M$)"""
 
     c22123: float = 0.0
+    """c22123 account cost - Blanket stainless steel cost (M$)"""
 
     c22124: float = 0.0
+    """c22124 account cost - Blanket vanadium cost (M$)"""
 
     c22125: float = 0.0
+    """c22125 account cost - Blanket carbon cloth cost (M$)"""
 
     c22126: float = 0.0
+    """c22126 account cost - Blanket concrete cost (M$)"""
 
     c22127: float = 0.0
-
-    c2213: float = 0.0
-
-    c22131: float = 0.0
-
-    c22132: float = 0.0
-
-    c2214: float = 0.0
-
-    c2215: float = 0.0
-
-    c2221: float = 0.0
-
-    c22211: float = 0.0
-
-    c22212: float = 0.0
-
-    c22213: float = 0.0
-
-    c22214: float = 0.0
-
-    c22215: float = 0.0
-
-    c2222: float = 0.0
-
-    c22221: float = 0.0
-
-    c22222: float = 0.0
-
-    c22223: float = 0.0
-
-    c22224: float = 0.0
-
-    c2223: float = 0.0
-
-    c223: float = 0.0
-
-    c2231: float = 0.0
-
-    c2232: float = 0.0
-
-    c2233: float = 0.0
-
-    c2234: float = 0.0
-
-    c224: float = 0.0
-
-    c2241: float = 0.0
-
-    c2242: float = 0.0
-
-    c2243: float = 0.0
-
-    c2244: float = 0.0
-
-    c2245: float = 0.0
-
-    c2246: float = 0.0
-
-    c225: float = 0.0
-
-    c2251: float = 0.0
-
-    c22511: float = 0.0
-
-    c22512: float = 0.0
-
-    c22513: float = 0.0
-
-    c22514: float = 0.0
-
-    c22515: float = 0.0
-
-    c2252: float = 0.0
-
-    c22521: float = 0.0
-
-    c22522: float = 0.0
-
-    c22523: float = 0.0
-
-    c22524: float = 0.0
-
-    c22525: float = 0.0
-
-    c22526: float = 0.0
-
-    c22527: float = 0.0
-
-    c2253: float = 0.0
-
-    chx: float = 0.0
-
-    cpp: float = 0.0
-
-    cppa: float = 0.0
+    """c22127 account cost - Blanket FLiBe cost (M$)"""
 
     c22128: float = 0.0
+    """c22128 account cost - Blanket lithium cost (M$)"""
+
+    c2213: float = 0.0
+    """c2213 account cost - Shield (M$)"""
+
+    c22131: float = 0.0
+    """c22131 account cost - Bulk shield cost (M$)"""
+
+    c22132: float = 0.0
+    """c22132 account cost - Penetration shielding cost (M$)"""
+
+    c2214: float = 0.0
+    """c2214 account cost - Total support structure cost (M$)"""
+
+    c2215: float = 0.0
+    """c2215 account cost - TF coil gravity support structure (M$)"""
+
+    c2221: float = 0.0
+    """c2221 account cost - TF magnet assemblies cost (M$)"""
+
+    c22211: float = 0.0
+    """c22211 account cost - TF coil conductor cost (M$)"""
+
+    c22212: float = 0.0
+    """c22212 account cost - TF coil winding cost (M$)"""
+
+    c22213: float = 0.0
+    """c22213 account cost - TF coil case cost (M$)"""
+
+    c22214: float = 0.0
+    """c22214 account cost - TF intercoil structure cost (M$)"""
+
+    c22215: float = 0.0
+    """c22215 account cost - TF coil gravity support structure (M$)"""
+
+    c2222: float = 0.0
+    """c2222 account cost - PF magnet assemblies (M$)"""
+
+    c22221: float = 0.0
+    """c22221 account cost - PF coil conductor cost (M$)"""
+
+    c22222: float = 0.0
+    """c22222 account cost - PF coil winding cost (M$)"""
+
+    c22223: float = 0.0
+    """c22223 account cost - PF coil case cost (M$)"""
+
+    c22224: float = 0.0
+    """c22224 account cost - PF coil support structure cost (M$)"""
+
+    c2223: float = 0.0
+    """c2223 account cost - Vacuum vessel assembly cost (M$)"""
+
+    c223: float = 0.0
+    """c223 account cost - Power injection (M$)"""
+
+    c2231: float = 0.0
+    """c2231 account cost - ECH system cost (M$)"""
+
+    c2232: float = 0.0
+    """c2232 account cost - Lower hybrid system cost (M$)"""
+
+    c2233: float = 0.0
+    """c2233 account cost - Neutral beam system cost (M$)"""
+
+    c2234: float = 0.0
+    """c2234 account cost - ? (M$)"""
+
+    c224: float = 0.0
+    """c224 account cost - Vacuum system (M$)"""
+
+    c2241: float = 0.0
+    """c2241 account cost - High vacuum pumps cost (M$)"""
+
+    c2242: float = 0.0
+    """c2242 account cost - Backing pumps cost (M$)"""
+
+    c2243: float = 0.0
+    """c2243 account cost - Vacuum duct cost (M$)"""
+
+    c2244: float = 0.0
+    """c2244 account cost - Valves cost (M$)"""
+
+    c2245: float = 0.0
+    """c2245 account cost - Duct shielding cost (M$)"""
+
+    c2246: float = 0.0
+    """c2246 account cost - Instrumentation cost (M$)"""
+
+    c225: float = 0.0
+    """c225 account cost - Power conditioning (M$)"""
+
+    c2251: float = 0.0
+    """c2251 account cost - TF coil power conditioning (M$)"""
+
+    c22511: float = 0.0
+    """c22511 account cost - TF coil power supplies cost (M$)"""
+
+    c22512: float = 0.0
+    """c22512 account cost - TF coil breakers cost (M$)"""
+
+    c22513: float = 0.0
+    """c22513 account cost - TF coil dump resistors cost (M$)"""
+
+    c22514: float = 0.0
+    """c22514 account cost - TF coil instrumentation and control (M$)"""
+
+    c22515: float = 0.0
+    """c22515 account cost - TF coil bussing cost (M$)"""
+
+    c2252: float = 0.0
+    """c2252 account cost - PF coil power costs (M$)"""
+
+    c22521: float = 0.0
+    """c22521 account cost - PF coil power supplies cost (M$)"""
+
+    c22522: float = 0.0
+    """c22522 account cost - PF coil instrumentation and control (M$)"""
+
+    c22523: float = 0.0
+    """c22523 account cost - PF coil bussing cost (M$)"""
+
+    c22524: float = 0.0
+    """c22524 account cost - PF coil burn power supplies cost (M$)"""
+
+    c22525: float = 0.0
+    """c22525 account cost - PF coil breakers cost (M$)"""
+
+    c22526: float = 0.0
+    """c22526 account cost - PF coil dump resistors cost (M$)"""
+
+    c22527: float = 0.0
+    """c account cost - PF coil ac breakers cost (M$)"""
+
+    c2253: float = 0.0
+    """c2253 account cost - Energy storage cost (M$)"""
+
+    chx: float = 0.0
+    """Primary heat exchanger cost (M$)"""
+
+    cpp: float = 0.0
+    """Pumps and piping system cost (M$)"""
+
+    cppa: float = 0.0
+    """Pumps, piping cost (M$)"""
 
     abktflnc: float = 5.0
     """allowable first wall/blanket neutron fluence (MW-yr/m2) (`blktmodel=0`)"""

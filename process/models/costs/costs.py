@@ -891,7 +891,7 @@ class Costs(Model):
 
         #  Account 226 : Heat transport system
         self.acc2261()  # Account 2261 : Reactor cooling system
-        self.acc2262()  # Account 2262 : Auxiliary component coolin
+        self.acc2262()  # Account 2262 : Auxiliary component cooling
         self.acc2263()  # Account 2263 : Cryogenic system
         self.acc226()  # ccount 226  : Total
 
