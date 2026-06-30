@@ -4632,8 +4632,8 @@ def superconpf(
 
     elif isumat == SuperconductorModel.DURHAM_NBTI:
         # Durham Ginzburg-Landau critical surface model for Nb-Ti
-        bc20m = b_crit_upper_nbti
-        tc0m = t_crit_nbti
+bc20m = b_crit_upper_nbti # [T]
+tc0m = t_crit_nbti # [K]
         j_crit_sc, _, _ = superconductors.gl_nbti(
             temp_conductor=temp_pf_peak_field,
             b_conductor=b_pf_peak,
@@ -4648,8 +4648,8 @@ def superconpf(
 
     elif isumat == SuperconductorModel.DURHAM_REBCO:
         # Durham Ginzburg-Landau critical surface model for REBCO
-        bc20m = 429e0
-        tc0m = 185e0
+bc20m = 429e0 # [T]
+tc0m = 185e0 # [K]
         j_crit_sc, _, _ = superconductors.gl_rebco(
             temp_conductor=temp_pf_peak_field,
             b_conductor=b_pf_peak,
