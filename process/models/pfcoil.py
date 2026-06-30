@@ -4634,8 +4634,8 @@ def superconpf(
 
     elif isumat == SuperconductorModel.DURHAM_NBTI:
         # Durham Ginzburg-Landau critical surface model for Nb-Ti
-        bc20m = b_crit_upper_nbti  # [T]
-        tc0m = t_crit_nbti  # [K]
+        bc20m = b_crit_upper_nbti  # [T] critical field at 0 K and 0 strain
+        tc0m = t_crit_nbti  # [K] critical temperature at 0 T and 0 strain
         j_crit_sc, _, _ = superconductors.gl_nbti(
             temp_conductor=temp_pf_peak_field,
             b_conductor=b_pf_peak,
