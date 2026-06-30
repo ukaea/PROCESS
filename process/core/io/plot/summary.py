@@ -23,6 +23,7 @@ from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
+from process.data_structure.physics_variables import ConfinementTimeModel
 from process.models.build import Build
 from process.models.engineering.materials import poisson_steel
 from process.models.geometry.blanket import (
@@ -50,10 +51,7 @@ from process.models.geometry.vacuum_vessel import (
 )
 from process.models.pfcoil import CSCoil
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
-from process.models.physics.confinement_time import (
-    ConfinementTimeModel,
-    PlasmaConfinementTime,
-)
+from process.models.physics.confinement_time import PlasmaConfinementTime
 from process.models.physics.current_drive import (
     CurrentDriveModel,
     ElectronBernstein,
