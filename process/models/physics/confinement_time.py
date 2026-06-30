@@ -922,7 +922,7 @@ class PlasmaConfinementTime(Model):
 
         # Calculate H* non-radiation corrected H factor
         # Note: we will assume the IPB-98y2 scaling.
-        if self.data.physics.i_rad_loss == 1:
+        if self.data.physics.i_rad_loss == ConfinementRadiationLossModel.CORE_ONLY:
             self.data.physics.hstar = (
                 hfact
                 * (
@@ -935,7 +935,9 @@ class PlasmaConfinementTime(Model):
                 )
                 ** 0.31
             )
-        elif self.data.physics.i_rad_loss == 0:
+        elif (
+            self.data.physics.i_rad_loss == ConfinementRadiationLossModel.FULL_RADIATION
+        ):
             self.data.physics.hstar = (
                 hfact
                 * (
@@ -947,7 +949,7 @@ class PlasmaConfinementTime(Model):
                 )
                 ** 0.31
             )
-        elif self.data.physics.i_rad_loss == 2:
+        elif self.data.physics.i_rad_loss == ConfinementRadiationLossModel.NO_RADIATION:
             self.data.physics.hstar = hfact
 
         # Calculation of the transport power loss terms
@@ -1116,9 +1118,12 @@ class PlasmaConfinementTime(Model):
                 )
 
             # Include the radiation power if requested
-            if self.data.physics.i_rad_loss == 0:
+            if (
+                self.data.physics.i_rad_loss
+                == ConfinementRadiationLossModel.FULL_RADIATION
+            ):
                 fhz_value += self.data.physics.pden_plasma_rad_mw
-            elif self.data.physics.i_rad_loss == 1:
+            elif self.data.physics.i_rad_loss == ConfinementRadiationLossModel.CORE_ONLY:
                 fhz_value += self.data.physics.pden_plasma_core_rad_mw
 
             return fhz_value
