@@ -4480,13 +4480,13 @@ def superconpf(
     Parameters
     ----------
     b_pf_peak : float
-        peak field at conductor (T)
+        peak field at conductor [T]
     fhe : float
         fraction of cable space that is for He cooling
     fcu : float
         fraction of cable conductor that is copper
     j_pf_wp : float
-        actual winding pack current density (A/m2)
+        actual winding pack current density [A/m²]
     isumat : int
         switch for conductor type
         1 = ITER Nb3Sn, standard parameters,
@@ -4501,29 +4501,29 @@ def superconpf(
     strain : float
         Strain on superconductor at operation conditions
     temp_pf_peak_field : float
-        He temperature at peak field point (K)
+        He temperature at peak field point [K]
     bcritsc : float
-        Critical field at zero temperature and strain (T) (isumat=4 only)
+        Critical field at zero temperature and strain [T] (isumat=4 only)
     tcritsc : float
-        Critical temperature at zero field and strain (K) (isumat=4 only)
+        Critical temperature at zero field and strain [K] (isumat=4 only)
     b_crit_upper_nbti: float
-        upper critical field of GL_nbti
+        upper critical field of GL_nbti [T]
     t_crit_nbti: float
-        critical temperature of GL_nbti
+        critical temperature of GL_nbti [K]
     dr_hts_tape: float
-        Mean width of tape (m)
+        Mean width of tape [m]
     dx_hts_tape_rebco: float
-        thickness of REBCO layer in tape (m)
+        thickness of REBCO layer in tape [m]
     dx_hts_tape_total: float
-        thickness of tape, inc. all layers (hts, copper, substrate, etc.) (m)
+        thickness of tape, inc. all layers (hts, copper, substrate, etc.) [m]
 
     Returns
     -------
     tuple[float, float, float, float]
-        Critical winding pack current density (A/m2) (j_crit_wp),
-        Critical cable current density (A/m2) (j_crit_cable)
-        Superconducting strand non-copper critical current density (A/m2) (j_crit_sc)
-        Temperature margin (K) (tmarg)
+        Critical winding pack current density [A/m²] (j_crit_wp),
+        Critical cable current density [A/m²] (j_crit_cable)
+        Superconducting strand non-copper critical current density [A/m²] (j_crit_sc)
+        Temperature margin [K] (tmarg)
     """
     # Find critical current density in superconducting strand, jcritstr
     if isumat == SuperconductorModel.ITER_NB3SN:
@@ -4571,8 +4571,8 @@ def superconpf(
 
     elif isumat == SuperconductorModel.OLD_LUBELL_NBTI:
         # NbTi data
-        bc20m = 15.0e0  # [T]
-        tc0m = 9.3e0  # [K]
+        bc20m = 15.0e0  # [T] critical field at 0 K and 0 strain
+        tc0m = 9.3e0  # [K] critical temperature at 0 T and 0 strain
         c0 = 1.0e10  # # [A/m²]
         j_crit_sc, _ = superconductors.jcrit_nbti(
             temp_conductor=temp_pf_peak_field,
@@ -4604,8 +4604,8 @@ def superconpf(
 
     elif isumat == SuperconductorModel.WST_NB3SN:
         # WST Nb3Sn parameterisation
-        bc20m = 32.97e0  # [T]
-        tc0m = 16.06e0  # [K]
+        bc20m = 32.97e0  # [T] critical field at 0 K and 0 strain
+        tc0m = 16.06e0  # [K] critical temperature at 0 T and 0 strain
 
         # j_crit_sc returned by superconductors.itersc is the critical current density in the
         # superconductor - not the whole strand, which contains copper
@@ -4624,7 +4624,9 @@ def superconpf(
 
     elif isumat == SuperconductorModel.CROCO_REBCO:
         # "REBCO" 2nd generation HTS superconductor in CrCo strand
-        j_crit_sc, _, _, _ = superconductors.jcrit_rebco(temp_pf_peak_field, b_pf_peak)
+        j_crit_sc, _, _, _ = superconductors.jcrit_rebco(
+            temp_conductor=temp_pf_peak_field, b_conductor=b_pf_peak
+        )
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
@@ -4632,8 +4634,8 @@ def superconpf(
 
     elif isumat == SuperconductorModel.DURHAM_NBTI:
         # Durham Ginzburg-Landau critical surface model for Nb-Ti
-bc20m = b_crit_upper_nbti # [T]
-tc0m = t_crit_nbti # [K]
+        bc20m = b_crit_upper_nbti  # [T]
+        tc0m = t_crit_nbti  # [K]
         j_crit_sc, _, _ = superconductors.gl_nbti(
             temp_conductor=temp_pf_peak_field,
             b_conductor=b_pf_peak,
@@ -4648,8 +4650,8 @@ tc0m = t_crit_nbti # [K]
 
     elif isumat == SuperconductorModel.DURHAM_REBCO:
         # Durham Ginzburg-Landau critical surface model for REBCO
-bc20m = 429e0 # [T]
-tc0m = 185e0 # [K]
+        bc20m = 429e0  # [T] critical field at 0 K and 0 strain
+        tc0m = 185e0  # [K] critical temperature at 0 T and 0 strain
         j_crit_sc, _, _ = superconductors.gl_rebco(
             temp_conductor=temp_pf_peak_field,
             b_conductor=b_pf_peak,
@@ -4665,8 +4667,8 @@ tc0m = 185e0 # [K]
 
     elif isumat == SuperconductorModel.HAZELTON_ZHAI_REBCO:
         # Hazelton experimental data + Zhai conceptual model for REBCO
-        bc20m = 138  # [T]
-        tc0m = 92  # [K]
+        bc20m = 138  # [T] critical field at 0 K and 0 strain
+        tc0m = 92  # [K] critical temperature at 0 T and 0 strain
         j_crit_sc, _, _ = superconductors.hijc_rebco(
             temp_conductor=temp_pf_peak_field,
             b_conductor=b_pf_peak,
@@ -4722,8 +4724,8 @@ tc0m = 185e0 # [K]
 
         another_estimate = 2 * temp_pf_peak_field
         t_zero_margin, _root_result = optimize.newton(
-            superconductors.superconductor_current_density_margin,
-            temp_pf_peak_field,
+            func=superconductors.superconductor_current_density_margin,
+            x0=temp_pf_peak_field,
             fprime=None,
             args=arguments,
             tol=1.0e-06,
