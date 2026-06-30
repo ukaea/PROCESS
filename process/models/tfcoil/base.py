@@ -2415,7 +2415,7 @@ class TFCoil(Model):
         vforce :
 
         a_tf_turn_steel :
-        
+
         a_cs_poloidal : float
             Area of the CS poloidal cross-section [m²]
 
