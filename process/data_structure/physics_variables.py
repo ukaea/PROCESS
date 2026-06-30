@@ -305,6 +305,11 @@ class ConfinementTimeModel(IntEnum):
         f"ITPA20-IL                      ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
     )
+    PAZ_SOLDAN_NT = (
+        51,
+        f"Paz-Soldan Neg Triang          ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
 
     def __new__(cls, value: int, full_name: str, mode: ConfinementMode = None):
         """Create a new instance of ConfinementTimeModel.
