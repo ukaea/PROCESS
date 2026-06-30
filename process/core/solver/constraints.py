@@ -81,6 +81,10 @@ class ConstraintManager:
         return len(cls._constraint_registry)
 
     @classmethod
+    def constraint_ids(cls):
+        return tuple(cls._constraint_registry.keys())
+
+    @classmethod
     def register_constraint(
         cls, name: Hashable, units: str, symbol: ConstraintSymbolType
     ) -> Callable[[], Callable[[], ConstraintResult]]:

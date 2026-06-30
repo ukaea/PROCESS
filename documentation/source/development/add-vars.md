@@ -1,147 +1,165 @@
-# Guide for adding Variables & Constraints 
+# Guide for adding variables and constraints
 
-Specific instructions must be followed to add an input, iteration variable,
-optimisation figure of merit and constraints to the `PROCESS` code.
+A guide for how to add new inputs, constraints, figures of merit, and scan variables. 
 
-  **At all times the [`PROCESS` style guide](../development/standards.md) must be used.**
+**At all times ensure new variables and functions adhere to the [`PROCESS` style guide](../development/standards.md).**
 
-!!! note
 
-    As the code is quickly converging towards a wholly Python codebase the respective files may change in type from `.f90` to `.py`.
+All of these features rely on 'variables' which belong to a 'data structure'. All of the data structures can be found in `process/data_structure`.
+
+In general, a variable within a data structure could act as an:
+
+- Input variable: is specified by the user in an `IN.DAT` and its value is not changed once PROCESS is running.
+- Iteration variable: is modified by the solver to try and optimise for some figure of merit.
+- Scan variable: is sequentially modified by the `Scan` class to some `IN.DAT`-defined values.
+- Intermediate variable: is calculated within a model and then used within other models.
+- Output variable: is calculated within a model and then written out to the `MFILE.DAT`.
+
+It is advised that a variable is either used to define a particular PROCESS run (input variable, iteration variable, or scan variable) or mutated within a PROCESS run (output variable or intermediate variable). Mixing the two classes of variable (e.g. having a variable that can be input but is also mutated within a model) will lead to confusing, dangerous, and incorrect results.
+
 
 -----------------
 
-## Add an input
+## Add a new variable
+You may need to add a variable to PROCESS when changing or creating models. In most cases, you will want to add your variable to an existing data structure. Creating an entirely new data structure is beyond the scope of this guide, so please seek support from the PROCESS maintainers.
 
-To add a `PROCESS` input, please follow below:
-
-1. Choose the most relevant module `XX` and add the variable in the `XX_variables` defined in `XX_variables.f90`.
- 
-2. Add a description of the input variable below the declaration, using the FORD      formatting described in the standards section specifying the units.
-  
-3. Specify a sensible default value in the `init_XX_variables()` function within the corresponding model `.py` main file
-  
-4. Add the parameter to the `INPUT_VARIABLES` dictionary in `input.py`.  
-
-Here is an example of the code to add:
-  
-
-Variable definition example in `tfcoil_variables.f90`:
-```fortran
-  real(dp) :: rho_tf_joints
-  !! TF joints surfacic resistivity [ohm.m]
-  !! Feldmetal joints assumed.
-```
-
-Variable initialization example in `tf_coil.py`:
-```python
-    def init_tfcoil_variables():
-    ...
-      tfv.rho_tf_joints = 2.5e-10
-```
-
-Code example in the `input.py` file:
+For example, if you are adding a new variable that relates to the blanket model, you would add the variable to `process/data_structure/blanket_variables.py` as part of the `BlanketData` dataclass. 
 
 ```python
-  INPUT_VARIABLES = {
+@dataclass(slots=True)
+class BlanketData:
+  <... existing variables ...>
+
+  my_new_blanket_variable: float = 0.0
+  """my variable description [m]"""
+```
+
+Here, `[m]` is the units and should be replaced with the appropriate units for the variable being added.
+
+This variable could then be used within a model
+
+```python
+self.data.blanket.my_new_blanket_variable = 1.0
+...
+another_variable = self.data.blanket.my_new_blanket_variable / 2.0
+```
+
+-----------------
+
+## Add a new input
+Adding an input in PROCESS means that some variable in a data structure can be set from the `IN.DAT`. Inputs are defined in the `process/core/input.py` file in the `INPUT_VARIABLES` dictionary. Adding a new entry to this dictionary will create a new input.
+
+Continuing with the example from the previous section:
+```python
+INPUT_VARIABLES = {
   ...
-    "rho_tf_joints": InputVariable("tfcoil", float, range=(0.0, 0.01)),
+  "my_new_blanket_variable": InputVariable("blanket", float),
+}
+```
+
+`InputVariable` has several additional fields to support validation and the parsing of arrays, please consult the dataclass for these additional arguments.
+
+You would replace `"blanket"` with the name of the data structure your specific variable belongs to (found by looking at `DataStructure` in `process/core/model.py`).
+
+Now, in the `IN.DAT`, you could set `my_new_blanket_variable` by writing:
+
+```
+my_new_blanket_variable = 1.0
 ```
 
 -----------------
 
 ## Add an iteration variable
 
-To add a `PROCESS` iteration variable please follow the steps below, in addition to the instructions for adding an input variable:
+Adding an iteration variable allows the PROCESS solver to change the variable as part of the optimisation/solving loop. Iteration variables are defined in `process/core/solver/iteration_variables.py` in the `ITERATION_VARIABLES` dictionary. You would add a new entry to this dictionary to create a new iteration variable:
 
-
-1. The parameter `IPNVARS` in module `numerics` of `numerics.f90` will normally be greater than the actual number of iteration variables, and does not need to be changed.
-2. Append a new iteration number key to the end of the `ITERATION_VARIABLES` dictionary  in `iteration_variables.py`. The associated variable is the corresponding key value.
-3. Set the variable origin file and then the associated lower and upper bounds
-4. Update the `lablxc` description in `numerics.f90`.
-  
-It should be noted that iteration variables must not be reset elsewhere in the
-code. That is, they may only be assigned new values when originally
-initialised (in the relevant module, or in the input file if required).
-Otherwise, the numerical procedure cannot adjust the value as it requires, and
-the program will fail.
-
-Here is a code snippet showing how `rmajor` is defined in `iteration_variables.py`
 
 ```python
 ITERATION_VARIABLES = {
-  ...
-  3: IterationVariable("rmajor", "physics", 0.1, 50.00),
+    123: IterationVariable("my_new_blanket_variable", "blanket", 0.1, 1.0),
+}
 ```
+
+In this example:
+
+- `123` is the identifier of the iteration variable, and must be unique.
+- `"blanket"` is the data structure the variable will be set on.
+- `0.1` is the default lower bound of the variable.
+- `1.0` is the default upper bound of the variable.
+
+You will often want to [add a variable as an input](#add-a-new-input) if it is an iteration variable. That way, you can specify the initial value of the iteration variable in the `IN.DAT`.
+
+The iteration variable can be enabled in the `IN.DAT` by:
+```
+ixc = 123
+
+my_new_blanket_variable = 0.5
+```
+
+Note you can omit the `my_new_blanket_variable = 0.5` line and the initial value would just be whatever the variables default value is (`0.0` in this example, this is the default we assigned [earlier](#add-a-new-variable)).
 
 -----------------
 
 ## Add a figure of merit
 
-New figures of merit are added to `PROCESS` in the following way:
+A figure of merit is the scalar that the optimiser (e.g. VMCON) will try and minimise or maximise. The figures of merit are specified in `process/core/solver/objectives.py` in the `objective_function()` function.
 
-1. Increment the parameter `IPNFOMS` in module `numerics` in source file `numerics.py` to accommodate the new figure of merit.
-  
-2. Assign the new integer value and description string of the new figure of merit to the `FiguresOfMerit` enumerator in `numerics.py`.
-  
-3. Add the new figure of merit equation to `objective_function()` in `objectives.py`, following the method used in the existing examples. The value of figure of merit case should be of order unity, so select a reasonable scaling factor if necessary. 
-  
-An example can be found below:
-
+To add a new figure of merit, first create a new entry in the `FiguresOfMerit` enum in `process/data_structure/numerics.py`:
 
 ```python
-objective_function():
-  ...
-  try:
-      figure_of_merit = FiguresOfMerit(abs(minmax))
-  ...  
-  if figure_of_merit == FiguresOfMerit.MAJOR_RADIUS:
-        objective_metric = 0.2 * data.physics.rmajor
+class FiguresOfMerit(IntEnum):
+    ...
+    BLANKET_FIGURE_OF_MERIT = (20, "my FOM description")
+```
+Here `20` will be the identifier of the figure of merit, and **must** be unique. 
+
+Finally, add the equation to `process/core/solver/objectives.py`:
+```python
+elif figure_of_merit == FiguresOfMerit.BLANKET_FIGURE_OF_MERIT:
+  objective_metric = data.blanket.my_new_blanket_variable
 ```
 
------------
+Note that you will want to scale the `objective_metric` such that it is on the order unity if the variable is not already.
+
+The figure of merit can be selected in the `IN.DAT`:
+```
+minmax = 20
+```
+Remember, setting `minmax = -20` would minimise instead of maximise our new variable.
+
+-----------------
 
 ## Add a scan variable
 
-After following the instruction to add an input variable, you can make the variable a scan variable by following these steps:
+After following the instruction to add an input variable, you can then make a scan variable.
 
-1. Increment the parameter `IPNSCNV` defined in `scan_variables.py` in the data_structure directory, to accommodate the new scanning variable. The incremented value will identify your scan variable.
-  
-2. Add a short description of the new scanning variable in the `nsweep` comment in `scan_variables.py`, alongside its identification number.
-  
-3. Update the `ScanVariables` enum in the `scan.py` file by adding a new case statement connecting the variable to the scan integer switch, the variable name and a short description.
-  
-4. Add a comment in the corresponding variable file in the data_structure directory, eg, `data_structure/[XX]_variables.py`, to add the variable description indicating the scan switch number.
-  
-
-`nsweep` comment example:
-```fortran
-
-  integer :: nsweep = 1
-  !! nsweep /1/ : switch denoting quantity to scan:<UL>
-  !!         <LI> 1  aspect
-  !!         <LI> 2  pflux_div_heat_load_max_mw
-  ...
-  !!         <LI> 54 GL_nbti upper critical field at 0 Kelvin
-  !!         <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness </UL>
-```
-
-`SCAN_VARIABLES` case example:
-
+First, add the variable to the `ScanVariables` enum in `process/core/scan.py`. 
 ```python
-  class ScanVariables(Enum):
-    aspect: ScanVariable("aspect", "Aspect_ratio", 1),
-    pflux_div_heat_load_max_mw: ScanVariable("pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)", 2),
+class ScanVariables(Enum):
     ...
-    Bc2_0K: ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)", 54),
-    dr_shld_inboard : ScanVariable("dr_shld_inboard", "Inboard neutronic shield", 55),
+    blanket_scan_variable = ScanVariable(
+        "my_new_blanket_variable", "A blanket variable", 82
+    )
+```
+Here, `82` is the identifier of the scan variable and must be unique. 
+
+Next, increment the parameter `IPNSCNV` in `process/data_structure/scan_variables.py` and be sure to add a description of the scan variable in the docstring of the `nsweep` variable.
+
+Finally, in `process/core/scan.py`, add the scan variable to the `Scan.scan_select()` method.
+```python
+match nwp:
+  ...
+  case 82:
+    self.data.tfcoil.my_new_blanket_variable = swp[iscn - 1]
 ```
 
----------------
+Please see the [scan documentation](../usage/running-process.md#running-process) for how to setup a scan `IN.DAT`
+
+-----------------
 
 ## Add a constraint equation
 
-Constraint equations are added to *PROCESS* in the `process/core/solver/constraints.py` file. They are registered with the `ConstraintManager` whenever the application is run. Each equation has a unique name that is currently an integer, however upgrades to the input file format in the future will allow arbitrary hashable constraint names. 
+Constraint equations are added to PROCESS in the `process/core/solver/constraints.py` file. They are registered with the `ConstraintManager` whenever the application is run. Each equation has a unique name that is currently an integer, however upgrades to the input file format in the future will allow arbitrary hashable constraint names.
 
 A constraint is simply added by registering the constraint to the manager using a decorator.
 
@@ -153,20 +171,20 @@ The arguments to the `register_constraint` function are:
 
 - Name (again, currently an integer)
 - Unit (for output reporting purposes)
-- Symbol (e.g. =, >=, <=. Again, for output reporting purposes)
+- Symbol (e.g. `=`, `>=`, `<=`. Again, for output reporting purposes)
 
 
 `my_constraint_function` should be named appropriately and return a `ConstraintResult` which contains the:
 
-- Normalised residual error
+- Constraint residual
+- Normalised residual
 - Constraint value
 - Constraint bound
-- Constraint residual
 
 The recommended way to do this is using one of the functions `geq`, `leq`, or `eq` depending on whether the constraint is desired to be $v\geq b$, $v\leq b$, or $v=b$, respectively.
 
 ```python
 @ConstraintManager.register_constraint(1234, "m", "=")
 def my_constraint_function(constraint_registration):
-  return geq(value, bound, constraint_registration)
+    return eq(value, bound, constraint_registration)
 ```

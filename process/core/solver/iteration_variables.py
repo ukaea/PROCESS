@@ -1,12 +1,16 @@
+from __future__ import annotations
+
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from warnings import warn
 
 import numpy as np
 
 from process.core.exceptions import ProcessValueError
-from process.core.model import DataStructure
+
+if TYPE_CHECKING:
+    from process.core.model import DataStructure
 
 
 @dataclass
