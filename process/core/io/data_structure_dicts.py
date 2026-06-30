@@ -20,13 +20,6 @@ from process.core.solver.iteration_variables import ITERATION_VARIABLES
 
 INPUT_TYPE_MAP = {int: "int", float: "real", str: "string"}
 
-NON_F_VALUES = [
-    "f_j_cs_start_pulse_end_flat_top",
-    "f_c_plasma_non_inductive",
-    "feffcd",
-    "f_a_tf_turn_cable_copper",
-]
-
 logger = logging.getLogger(__name__)
 
 output_dict = {}
@@ -106,35 +99,6 @@ def dict_var_type():
     return di
 
 
-def dict_input_bounds():
-    """Returns a dictionary matching variable names to dictionary containing
-    upper and lower bounds that PROCESS checks variable lies between when
-    reading IN.DAT. Looks in input.f90 for parse_real_variable and
-    parse_int_variable.
-
-    Example of a line we are looking for:
-         call parse_real_variable('BETA', beta, 0.0D0, 1.0D0, &
-
-    Example dictionary entry:
-         DICT_INPUT_BOUNDS['beta'] = {'lb' : 0.0, 'ub' : 1.0}
-    """
-    di = {}
-
-    for var_name, config in INPUT_VARIABLES.items():
-        lb, ub = None, None
-        if config.range is not None:
-            lb, ub = config.range
-
-        elif config.choices is not None and config.type in {int, float}:
-            lb = min(config.choices)
-            ub = max(config.choices)
-
-        if lb is not None:
-            di[var_name] = {"lb": lb, "ub": ub}
-
-    return di
-
-
 def dict_ixc_full():
     """Function to return a dictionary matching str(ixc_no) to a dictionary
     containing the name, lower and upper bounds of that variable.
@@ -161,16 +125,6 @@ def dict_ixc_bounds():
     return ixc_bounds
 
 
-def dict_ixc_simple():
-    # Returns dictionary mapping ixc no to iteration variable name
-    ixc_simple = {}
-    ixc_full = output_dict["DICT_IXC_FULL"]
-    for key, value in ixc_full.items():
-        ixc_simple[key] = value["name"]
-
-    return ixc_simple
-
-
 # cache the output of get_dicts so that it is never re-calculated in a given
 # process run.
 @cache
@@ -187,15 +141,12 @@ def get_dicts():
     # Some dicts depend on other dicts already existing in output_dicts, so
     # be careful if changing the order!
     dict_objects.extend([
-        HardcodedDictionary("NON_F_VALUES", NON_F_VALUES),
         HardcodedDictionary("DICT_DEFAULT", {}),
         HardcodedDictionary("DICT_MODULE", {}),
         HardcodedDictionary("DICT_DESCRIPTIONS", {}),
-        SourceDictionary("DICT_INPUT_BOUNDS", dict_input_bounds),
         SourceDictionary("DICT_VAR_TYPE", dict_var_type),
         SourceDictionary("DICT_IXC_FULL", dict_ixc_full),
         SourceDictionary("DICT_IXC_BOUNDS", dict_ixc_bounds),
-        SourceDictionary("DICT_IXC_SIMPLE", dict_ixc_simple),
     ])
 
     # Make individual dicts within dict objects, process, then add to output_dict
