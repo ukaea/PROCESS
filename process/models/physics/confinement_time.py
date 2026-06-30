@@ -139,7 +139,6 @@ class PlasmaConfinementTime(Model):
         p_alpha_total_mw: float,
         aspect: float,
         b_plasma_toroidal_on_axis: float,
-        nd_plasma_ions_total_vol_avg: float,
         nd_plasma_electrons_vol_avg: float,
         nd_plasma_electron_line: float,
         eps: float,
@@ -155,11 +154,12 @@ class PlasmaConfinementTime(Model):
         rmajor: float,
         rminor: float,
         temp_plasma_electron_density_weighted_kev: float,
-        temp_plasma_ion_density_weighted_kev: float,
         q95: float,
         qstar: float,
         vol_plasma: float,
         zeff: float,
+        eden_plasma_electrons_thermal_vol_avg: float,
+        eden_plasma_ions_thermal_vol_avg: float,
     ) -> tuple[float, float, float, float, float, float, float]:
         """Calculate the confinement times and the transport power loss terms.
 
@@ -173,8 +173,6 @@ class PlasmaConfinementTime(Model):
             Aspect ratio
         b_plasma_toroidal_on_axis :
             Toroidal field on axis (T)
-        nd_plasma_ions_total_vol_avg :
-            Total ion density (/m3)
         nd_plasma_electrons_vol_avg :
             Volume averaged electron density (/m3)
         nd_plasma_electron_line :
@@ -209,19 +207,21 @@ class PlasmaConfinementTime(Model):
             Plasma minor radius (m)
         temp_plasma_electron_density_weighted_kev :
             Density weighted average electron temperature (keV)
-        temp_plasma_ion_density_weighted_kev :
-            Density weighted average ion temperature (keV)
         vol_plasma :
             Plasma volume (m3)
         zeff :
             Plasma effective charge
+        eden_plasma_electrons_thermal_vol_avg :
+            Volume averaged electron thermal energy density [J/m³]
+        eden_plasma_ions_thermal_vol_avg :
+            Volume averaged ion thermal energy density [J/m³]
 
         Returns
         -------
         type
             Tuple containing:
-            - pden_electron_transport_loss_mw (float): Electron transport power (MW/m3)
-            - pden_ion_transport_loss_mw (float): Ion transport power (MW/m3)
+            - pden_electron_transport_loss_mw (float): Electron transport power (MW/m³)
+            - pden_ion_transport_loss_mw (float): Ion transport power (MW/m³)
             - t_electron_energy_confinement (float): Electron energy confinement time (s)
             - t_ion_energy_confinement (float): Ion energy confinement time (s)
             - t_energy_confinement (float): Global energy confinement time (s)
@@ -1060,24 +1060,13 @@ class PlasmaConfinementTime(Model):
         # The transport losses is just the electron and ion thermal energies divided by
         # the confinement time.
         pden_ion_transport_loss_mw = (
-            (3 / 2)
-            * (constants.ELECTRON_CHARGE / 1e3)
-            * nd_plasma_ions_total_vol_avg
-            * temp_plasma_ion_density_weighted_kev
-            / t_ion_energy_confinement
-        )
+            eden_plasma_ions_thermal_vol_avg / t_ion_energy_confinement
+        ) / 1e6  # Convert from W/m³ to MW/m³
         pden_electron_transport_loss_mw = (
-            (3 / 2)
-            * (constants.ELECTRON_CHARGE / 1e3)
-            * nd_plasma_electrons_vol_avg
-            * temp_plasma_electron_density_weighted_kev
-            / t_electron_energy_confinement
-        )
+            eden_plasma_electrons_thermal_vol_avg / t_electron_energy_confinement
+        ) / 1e6  # Convert from W/m³ to MW/m³
 
-        ratio = (nd_plasma_ions_total_vol_avg / nd_plasma_electrons_vol_avg) * (
-            temp_plasma_ion_density_weighted_kev
-            / temp_plasma_electron_density_weighted_kev
-        )
+        ratio = eden_plasma_ions_thermal_vol_avg / eden_plasma_electrons_thermal_vol_avg
 
         # Global energy confinement time
 
@@ -1175,7 +1164,6 @@ class PlasmaConfinementTime(Model):
                 p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
                 aspect=self.data.physics.aspect,
                 b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
-                nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
                 nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
                 nd_plasma_electron_line=self.data.physics.nd_plasma_electron_line,
                 eps=self.data.physics.eps,
@@ -1191,11 +1179,12 @@ class PlasmaConfinementTime(Model):
                 rmajor=self.data.physics.rmajor,
                 rminor=self.data.physics.rminor,
                 temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
-                temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
                 q95=self.data.physics.q95,
                 qstar=self.data.physics.qstar,
                 vol_plasma=self.data.physics.vol_plasma,
                 zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                eden_plasma_electrons_thermal_vol_avg=self.data.physics.eden_plasma_electrons_thermal_vol_avg,
+                eden_plasma_ions_thermal_vol_avg=self.data.physics.eden_plasma_ions_thermal_vol_avg,
             )
 
             # At power balance, fhz is zero.
@@ -1461,7 +1450,6 @@ class PlasmaConfinementTime(Model):
                 p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
                 aspect=self.data.physics.aspect,
                 b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
-                nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
                 nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
                 nd_plasma_electron_line=self.data.physics.nd_plasma_electron_line,
                 eps=self.data.physics.eps,
@@ -1477,11 +1465,12 @@ class PlasmaConfinementTime(Model):
                 rmajor=self.data.physics.rmajor,
                 rminor=self.data.physics.rminor,
                 temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
-                temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
                 q95=self.data.physics.q95,
                 qstar=self.data.physics.qstar,
                 vol_plasma=self.data.physics.vol_plasma,
                 zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                eden_plasma_electrons_thermal_vol_avg=self.data.physics.eden_plasma_electrons_thermal_vol_avg,
+                eden_plasma_ions_thermal_vol_avg=self.data.physics.eden_plasma_ions_thermal_vol_avg,
             )
 
             try:

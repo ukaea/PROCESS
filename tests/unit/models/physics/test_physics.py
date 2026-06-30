@@ -2236,6 +2236,10 @@ class ConfinementTimeParam(NamedTuple):
 
     zeff: Any = None
 
+    eden_plasma_electrons_thermal_vol_avg: Any = None
+
+    eden_plasma_ions_thermal_vol_avg: Any = None
+
     expected_kappa_ipb: Any = None
 
     expected_kappaa: Any = None
@@ -2270,7 +2274,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=6.1946504123280199,
@@ -2286,10 +2289,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.012572050692511346,
             expected_pden_ion_transport_loss_mw=0.011158066358576262,
@@ -2312,7 +2326,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.96163409847948844,
@@ -2328,10 +2341,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.08146744024696746,
             expected_pden_ion_transport_loss_mw=0.07230475970642361,
@@ -2354,7 +2378,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.1960655150953154,
@@ -2370,10 +2393,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.0813367174682195,
             expected_pden_ion_transport_loss_mw=0.07218873937883169,
@@ -2396,7 +2430,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.78453691772934719,
@@ -2412,10 +2445,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.12079262973297819,
             expected_pden_ion_transport_loss_mw=0.10720702701193681,
@@ -2438,7 +2482,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.1619079679077555,
@@ -2454,10 +2497,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.08131814759597392,
             expected_pden_ion_transport_loss_mw=0.07217225806867361,
@@ -2480,7 +2534,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.7340642483550435,
@@ -2496,10 +2549,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.08143510701705373,
             expected_pden_ion_transport_loss_mw=0.07227606300977574,
@@ -2522,7 +2586,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.1117392853827024,
@@ -2538,10 +2601,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.07271716311087716,
             expected_pden_ion_transport_loss_mw=0.06453863027150285,
@@ -2564,7 +2638,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.84477227311274361,
@@ -2580,10 +2653,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.07853774801394538,
             expected_pden_ion_transport_loss_mw=0.06970457130869961,
@@ -2606,7 +2690,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.6096667103064701,
@@ -2622,10 +2705,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.0840021318362596,
             expected_pden_ion_transport_loss_mw=0.07455437336481374,
@@ -2648,7 +2742,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.67053301699102119,
@@ -2664,10 +2757,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.08311313602000579,
             expected_pden_ion_transport_loss_mw=0.07376536331761714,
@@ -2690,7 +2794,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=2.1212580310552207,
@@ -2706,10 +2809,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.07310605194452542,
             expected_pden_ion_transport_loss_mw=0.0648837805988509,
@@ -2732,7 +2846,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=50.095480115636271,
@@ -2748,10 +2861,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.08143238415417252,
             expected_pden_ion_transport_loss_mw=0.07227364638853734,
@@ -2774,7 +2898,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=87.869318916638761,
@@ -2790,10 +2913,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.08142885867164847,
             expected_pden_ion_transport_loss_mw=0.07227051741865713,
@@ -2816,7 +2950,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=28.562137619592285,
@@ -2832,10 +2965,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.08143011939694184,
             expected_pden_ion_transport_loss_mw=0.07227163634959588,
@@ -2858,7 +3002,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.50082256309019457,
@@ -2874,10 +3017,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.07960828601702878,
             expected_pden_ion_transport_loss_mw=0.07065470540932789,
@@ -2900,7 +3054,6 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_plasma_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.77961193402355955,
@@ -2916,10 +3069,21 @@ class ConfinementTimeParam(NamedTuple):
             rminor=2.6666666666666665,
             te=12.437097421317889,
             temp_plasma_electron_density_weighted_kev=13.745148298980761,
-            temp_plasma_ion_density_weighted_kev=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
             zeff=2.4987360098030775,
+            eden_plasma_electrons_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 8.0593948787884524e19
+                * 13.745148298980761
+            ),
+            eden_plasma_ions_thermal_vol_avg=(
+                constants.KILOELECTRON_VOLT
+                * 1.5
+                * 7.1529510234203251e19
+                * 13.745148298980761
+            ),
             expected_kappa_ipb=1.68145080681586,
             expected_pden_electron_transport_loss_mw=0.07148441348179191,
             expected_pden_ion_transport_loss_mw=0.06344452856118785,
@@ -2970,7 +3134,6 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         aspect=confinementtimeparam.aspect,
         b_plasma_toroidal_on_axis=confinementtimeparam.b_plasma_toroidal_on_axis,
         nd_plasma_electrons_vol_avg=confinementtimeparam.nd_plasma_electrons_vol_avg,
-        nd_plasma_ions_total_vol_avg=confinementtimeparam.nd_plasma_ions_total_vol_avg,
         nd_plasma_electron_line=confinementtimeparam.nd_plasma_electron_line,
         eps=confinementtimeparam.eps,
         hfact=confinementtimeparam.hfact,
@@ -2985,9 +3148,10 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         rmajor=confinementtimeparam.rmajor,
         rminor=confinementtimeparam.rminor,
         temp_plasma_electron_density_weighted_kev=confinementtimeparam.temp_plasma_electron_density_weighted_kev,
-        temp_plasma_ion_density_weighted_kev=confinementtimeparam.temp_plasma_ion_density_weighted_kev,
         vol_plasma=confinementtimeparam.vol_plasma,
         zeff=confinementtimeparam.zeff,
+        eden_plasma_electrons_thermal_vol_avg=confinementtimeparam.eden_plasma_electrons_thermal_vol_avg,
+        eden_plasma_ions_thermal_vol_avg=confinementtimeparam.eden_plasma_ions_thermal_vol_avg,
     )
 
     assert physics.data.physics.kappa_ipb == pytest.approx(

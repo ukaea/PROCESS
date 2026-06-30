@@ -2235,7 +2235,6 @@ class Stellarator(Model):
             self.data.physics.p_alpha_total_mw,
             self.data.physics.aspect,
             self.data.physics.b_plasma_toroidal_on_axis,
-            self.data.physics.nd_plasma_ions_total_vol_avg,
             self.data.physics.nd_plasma_electrons_vol_avg,
             self.data.physics.nd_plasma_electron_line,
             self.data.physics.eps,
@@ -2251,11 +2250,12 @@ class Stellarator(Model):
             self.data.physics.rmajor,
             self.data.physics.rminor,
             self.data.physics.temp_plasma_electron_density_weighted_kev,
-            self.data.physics.temp_plasma_ion_density_weighted_kev,
             self.data.stellarator.iotabar,
             self.data.physics.qstar,
             self.data.physics.vol_plasma,
             self.data.physics.n_charge_plasma_effective_vol_avg,
+            eden_plasma_electrons_thermal_vol_avg=self.data.physics.eden_plasma_electrons_thermal_vol_avg,
+            eden_plasma_ions_thermal_vol_avg=self.data.physics.eden_plasma_ions_thermal_vol_avg,
         )
 
         self.data.physics.ntau, self.data.physics.nTtau = (

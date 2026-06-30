@@ -855,7 +855,6 @@ class Physics(Model):
             p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
             aspect=self.data.physics.aspect,
             b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
-            nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
             nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
             nd_plasma_electron_line=self.data.physics.nd_plasma_electron_line,
             eps=self.data.physics.eps,
@@ -871,11 +870,12 @@ class Physics(Model):
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
-            temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
             q95=self.data.physics.q95,
             qstar=self.data.physics.qstar,
             vol_plasma=self.data.physics.vol_plasma,
             zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+            eden_plasma_electrons_thermal_vol_avg=self.data.physics.eden_plasma_electrons_thermal_vol_avg,
+            eden_plasma_ions_thermal_vol_avg=self.data.physics.eden_plasma_ions_thermal_vol_avg,
         )
 
         # Total transport power from scaling law (MW)
