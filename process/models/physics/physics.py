@@ -820,6 +820,7 @@ class Physics(Model):
             self.data.physics.t_energy_confinement,
             self.data.physics.t_ion_energy_confinement,
             self.data.physics.p_plasma_loss_mw,
+            self.data.physics.hstar,
         ) = self.confinement.calculate_confinement_time(
             m_fuel_amu=self.data.physics.m_fuel_amu,
             p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
