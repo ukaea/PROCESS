@@ -177,8 +177,8 @@ class ConfinementTimeModel(IntEnum):
     )
     TITAN_REMOVED = (
         25,
-        f"TITAN RFP OBSOLETE                ({ConfinementMode.UNKNOWN.abbreviation})",
-        ConfinementMode.UNKNOWN,
+        "TITAN RFP OBSOLETE                (N/A)",
+        None,
     )
     ITER_H97P = (
         26,
@@ -257,7 +257,7 @@ class ConfinementTimeModel(IntEnum):
     )
     PETTY08 = (
         41,
-        f"Petty 2008                 ({ConfinementMode.H_MODE.abbreviation})",
+        f"Petty 2008                     ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
     )
     LANG_HIGH_DENSITY = (
@@ -282,17 +282,17 @@ class ConfinementTimeModel(IntEnum):
     )
     MENARD_NSTX = (
         46,
-        f"Menard NSTX                ({ConfinementMode.H_MODE.abbreviation})",
+        f"Menard NSTX                    ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
     )
     MENARD_NSTX_PETTY08_HYBRID = (
         47,
-        f"Menard NSTX-Petty08 hybrid ({ConfinementMode.STELLARATOR.abbreviation})({ConfinementMode.H_MODE.abbreviation})",
+        f"Menard NSTX-Petty08 hybrid     ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
     )
     NSTX_GYRO_BOHM = (
         48,
-        f"Buxton NSTX gyro-Bohm      ({ConfinementMode.STELLARATOR.abbreviation})({ConfinementMode.H_MODE.abbreviation})",
+        f"Buxton NSTX gyro-Bohm          ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
     )
     ITPA20 = (
