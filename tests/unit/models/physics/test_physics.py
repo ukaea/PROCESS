@@ -3052,6 +3052,24 @@ def test_calculate_plasma_masses(physics):
     assert m_plasma == pytest.approx(4.982528145131389e-05, abs=1e-30)
 
 
+def test_calaculate_stored_thermal_energy(physics):
+    """Test calaculate_stored_thermal_energy()"""
+
+    (
+        eden_plasma_electrons_thermal_vol_avg,
+        e_plasma_electrons_thermal,
+    ) = physics.calaculate_stored_thermal_energy(
+        vol_plasma=100.0,
+        nd_plasma_vol_avg=1e20,
+        temp_plasma_density_weighted_vol_avg_kev=13.745148298980761,
+    )
+
+    assert eden_plasma_electrons_thermal_vol_avg == pytest.approx(
+        330332.3315323773, abs=1e-30
+    )
+    assert e_plasma_electrons_thermal == pytest.approx(33033233.15323773, abs=1e-30)
+
+
 def test_calculate_current_profile_index_wesson(physics):
     """Test calculate_current_profile_index_wesson()."""
     qstar = 3.5
