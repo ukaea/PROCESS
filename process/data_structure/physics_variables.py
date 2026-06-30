@@ -20,6 +20,16 @@ class DivertorNumberModels(IntEnum):
     SINGLE_NULL = 1
 
 
+class ConfinementMode(IntEnum):
+    """Enum for plasma confinement mode"""
+
+    L_MODE = 0
+    H_MODE = 1
+    I_MODE = 2
+    STELLARATOR = 3
+    OHMIC = 4
+
+
 class ConfinementTimeModel(IntEnum):
     """Confinement time (τ_E) model types"""
 
