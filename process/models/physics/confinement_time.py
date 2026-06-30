@@ -11,6 +11,7 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.physics_variables import (
     N_CONFINEMENT_SCALINGS,
+    ConfinementMode,
     ConfinementRadiationLossModel,
     ConfinementTimeModel,
 )
@@ -1343,7 +1344,11 @@ class PlasmaConfinementTime(Model):
         po.oblnkl(self.outfile)
 
         # List of key values for stellarator scalings
-        stellarator_scalings = [21, 22, 23, 37, 38]
+        stellarator_scalings = [
+            scaling.value
+            for scaling in ConfinementTimeModel
+            if ConfinementTimeModel(scaling) == ConfinementMode.STELLARATOR
+        ]
 
         # Plot all of the confinement scalings for comparison when H = 1
         # Start from range 1 as the first i_confinement_time is a user input
