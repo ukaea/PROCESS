@@ -4,7 +4,6 @@ Defines fixtures that will be shared across all test modules.
 """
 
 import os
-import pathlib
 import traceback
 import warnings
 
@@ -172,14 +171,13 @@ def reinitialise_error_module():
 
 
 @pytest.fixture(autouse=True)  # noqa: RUF076
-def return_to_root():
+def return_to_root(request):
     """Various parts of PROCESS change directories and do not always change back.
     This fixture ensures that, at the end of each test, the cwd is reset to what it
     was at the beginning of the test.
     """
-    cwd = pathlib.Path.cwd()
     yield
-    os.chdir(cwd)
+    os.chdir(request.config.invocation_dir)
 
 
 @pytest.fixture(autouse=True)  # noqa: RUF076
