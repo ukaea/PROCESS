@@ -1,6 +1,7 @@
 """Confinement time model calculations and definitions."""
 
 import logging
+from dataclasses import dataclass
 
 import numpy as np
 from scipy.optimize import root_scalar
@@ -18,6 +19,24 @@ from process.data_structure.physics_variables import (
 from process.models.physics.plasma_geometry import PlasmaGeom
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass(slots=True, frozen=True)
+class ConfinementTimeData:
+    """Data structure for confinement time model calculations."""
+
+    pden_electron_transport_loss_mw: float
+    """Electron transport loss power density in MW."""
+    pden_ion_transport_loss_mw: float
+    """Ion transport loss power density in MW."""
+    t_electron_energy_confinement: float
+    """Electron energy confinement time in seconds."""
+    t_ion_energy_confinement: float
+    """Ion energy confinement time in seconds."""
+    t_plasma_energy_confinement: float
+    """Plasma energy confinement time in seconds."""
+    p_plasma_loss_mw: float
+    """Total plasma loss power in MW."""
 
 
 class PlasmaConfinementTime(Model):
@@ -60,7 +79,7 @@ class PlasmaConfinementTime(Model):
         qstar: float,
         vol_plasma: float,
         zeff: float,
-    ) -> tuple[float, float, float, float, float, float, float]:
+    ) -> ConfinementTimeData:
         """Calculate the confinement times and the transport power loss terms.
 
         Parameters
@@ -118,14 +137,7 @@ class PlasmaConfinementTime(Model):
 
         Returns
         -------
-        type
-            Tuple containing:
-            - pden_electron_transport_loss_mw (float): Electron transport power (MW/m3)
-            - pden_ion_transport_loss_mw (float): Ion transport power (MW/m3)
-            - t_electron_energy_confinement (float): Electron energy confinement time (s)
-            - t_ion_energy_confinement (float): Ion energy confinement time (s)
-            - t_energy_confinement (float): Global energy confinement time (s)
-            - p_plasma_loss_mw (float): Heating power (MW) assumed in calculation
+        ConfinementTimeData
 
         Raises
         ------
@@ -993,13 +1005,13 @@ class PlasmaConfinementTime(Model):
             self.data.physics.e_plasma_beta / 1e6
         ) / p_plasma_loss_mw
 
-        return (
-            pden_electron_transport_loss_mw,
-            pden_ion_transport_loss_mw,
-            t_electron_energy_confinement,
-            t_ion_energy_confinement,
-            t_energy_confinement,
-            p_plasma_loss_mw,
+        return ConfinementTimeData(
+            pden_electron_transport_loss_mw=pden_electron_transport_loss_mw,
+            pden_ion_transport_loss_mw=pden_ion_transport_loss_mw,
+            t_electron_energy_confinement=t_electron_energy_confinement,
+            t_ion_energy_confinement=t_ion_energy_confinement,
+            t_plasma_energy_confinement=t_energy_confinement,
+            p_plasma_loss_mw=p_plasma_loss_mw,
         )
 
     @staticmethod
@@ -1065,14 +1077,7 @@ class PlasmaConfinementTime(Model):
                 balance.
 
             """
-            (
-                ptrez,
-                ptriz,
-                _,
-                _,
-                _,
-                _,
-            ) = self.calculate_confinement_time(
+            confinement_time_data: ConfinementTimeData = self.calculate_confinement_time(
                 m_fuel_amu=self.data.physics.m_fuel_amu,
                 p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
                 aspect=self.data.physics.aspect,
@@ -1102,8 +1107,8 @@ class PlasmaConfinementTime(Model):
 
             # At power balance, fhz is zero.
             fhz_value = (
-                ptrez
-                + ptriz
+                confinement_time_data.pden_electron_transport_loss_mw
+                + confinement_time_data.pden_ion_transport_loss_mw
                 - self.data.physics.f_p_alpha_plasma_deposited
                 * self.data.physics.pden_alpha_total_mw
                 - self.data.physics.pden_non_alpha_charged_mw
@@ -1358,14 +1363,8 @@ class PlasmaConfinementTime(Model):
         ):
             if i_confinement_time == 25:
                 continue
-            (
-                _,
-                _,
-                taueez,
-                _,
-                _,
-                _,
-            ) = self.calculate_confinement_time(
+
+            confinement_time_data: ConfinementTimeData = self.calculate_confinement_time(
                 m_fuel_amu=self.data.physics.m_fuel_amu,
                 p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
                 aspect=self.data.physics.aspect,
@@ -1408,7 +1407,7 @@ class PlasmaConfinementTime(Model):
             po.ocmmnt(
                 self.outfile,
                 f"{'':>2}{scaling_name:<38}"
-                f"{taueez:<28.3f}{self.data.physics.hfac[i_confinement_time - 1]:.3f}",
+                f"{confinement_time_data.t_plasma_energy_confinement:<28.3f}{self.data.physics.hfac[i_confinement_time - 1]:.3f}",
             )
 
         po.oblnkl(self.outfile)
