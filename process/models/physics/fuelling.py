@@ -144,8 +144,8 @@ class PlasmaFuelling(Model):
             molflow_plasma_fuelling_vv_injected * f_molflow_plasma_fuelling_deuterium
         )
 
-    @staticmethod
     def calculate_plasma_tritium_flow_rate(
+        self,
         f_molflow_plasma_fuelling_tritium: float,
         eta_plasma_fuelling: float,
         molflow_plasma_fuelling_vv_injected: float,
@@ -193,18 +193,89 @@ class PlasmaFuelling(Model):
         while a negative value indicates a net loss of tritium from the plasma.
 
         """
+        return self.calculate_plasma_tritium_source_rate(
+            f_molflow_plasma_fuelling_tritium=f_molflow_plasma_fuelling_tritium,
+            eta_plasma_fuelling=eta_plasma_fuelling,
+            molflow_plasma_fuelling_vv_injected=molflow_plasma_fuelling_vv_injected,
+            fusrat_plasma_dd_triton=fusrat_plasma_dd_triton,
+        ) + self.calculate_plasma_tritium_loss_rate(
+            fusrat_dt_total=fusrat_dt_total,
+            t_energy_confinement=t_energy_confinement,
+            f_plasma_particles_lcfs_recycled=f_plasma_particles_lcfs_recycled,
+            nd_plasma_fuel_ions_vol_avg=nd_plasma_fuel_ions_vol_avg,
+            vol_plasma=vol_plasma,
+            f_plasma_fuel_tritium=f_plasma_fuel_tritium,
+        )
+
+    @staticmethod
+    def calculate_plasma_tritium_source_rate(
+        f_molflow_plasma_fuelling_tritium: float,
+        eta_plasma_fuelling: float,
+        molflow_plasma_fuelling_vv_injected: float,
+        fusrat_plasma_dd_triton: float,
+    ) -> float:
+        """Calculate the tritium source rate in the plasma.
+
+        Parameters
+        ----------
+        f_molflow_plasma_fuelling_tritium : float
+            Fraction of tritium in the plasma fuelling.
+        eta_plasma_fuelling : float
+            Fuelling rate efficiency.
+        molflow_plasma_fuelling_vv_injected : float
+            Total fuelling rate (particles/s).
+        fusrat_plasma_dd_triton : float
+            Tritium production rate from D-D fusion (particles/s).
+        t_energy_confinement : float
+            Energy confinement time (s).
+
+        Returns
+        -------
+        float
+            Tritium source rate in the plasma (particles/s).
+
+        """
         return (
-            (
-                f_molflow_plasma_fuelling_tritium
-                * eta_plasma_fuelling
-                * molflow_plasma_fuelling_vv_injected
-            )
-            - fusrat_dt_total
-            + fusrat_plasma_dd_triton
-            - (
-                (nd_plasma_fuel_ions_vol_avg * vol_plasma * f_plasma_fuel_tritium)
-                / (t_energy_confinement / (1 - f_plasma_particles_lcfs_recycled))
-            )
+            f_molflow_plasma_fuelling_tritium
+            * eta_plasma_fuelling
+            * molflow_plasma_fuelling_vv_injected
+        ) + fusrat_plasma_dd_triton
+
+    @staticmethod
+    def calculate_plasma_tritium_loss_rate(
+        fusrat_dt_total: float,
+        t_energy_confinement: float,
+        f_plasma_particles_lcfs_recycled: float,
+        nd_plasma_fuel_ions_vol_avg: float,
+        vol_plasma: float,
+        f_plasma_fuel_tritium: float,
+    ) -> float:
+        """Calculate the tritium loss rate from the plasma.
+
+        Parameters
+        ----------
+        fusrat_dt_total : float
+            Total DT fusion rate (particles/s).
+        t_energy_confinement : float
+            Energy confinement time (s).
+        f_plasma_particles_lcfs_recycled : float
+            Fraction of plasma particles recycled at the LCFS.
+        nd_plasma_fuel_ions_vol_avg : float
+            Volume-averaged density of fuel ions in the plasma (particles/m³).
+        vol_plasma : float
+            Plasma volume (m³).
+        f_plasma_fuel_tritium : float
+            Fraction of tritium in the plasma fuel.
+
+        Returns
+        -------
+        float
+            Tritium loss rate from the plasma (particles/s).
+
+        """
+        return -fusrat_dt_total - (
+            (nd_plasma_fuel_ions_vol_avg * vol_plasma * f_plasma_fuel_tritium)
+            / (t_energy_confinement / (1 - f_plasma_particles_lcfs_recycled))
         )
 
     @staticmethod
