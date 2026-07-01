@@ -2068,8 +2068,6 @@ class SuperconductingTFCoil(TFCoil):
                 int(self.data.tfcoil.i_tf_bucking),
                 float(self.data.build.r_tf_inboard_in),
                 self.data.build.dr_bore,
-                self.data.build.z_tf_inside_half,
-                self.data.pf_coil.f_z_cs_tf_internal,
                 self.data.build.dr_cs,
                 self.data.build.i_tf_inside_cs,
                 self.data.build.dr_tf_inboard,
@@ -2129,6 +2127,7 @@ class SuperconductingTFCoil(TFCoil):
                 self.data.tfcoil.a_tf_coil_inboard_case,
                 self.data.tfcoil.vforce,
                 self.data.tfcoil.a_tf_turn_steel,
+                a_cs_poloidal=self.data.pf_coil.a_cs_poloidal,
             )
 
             self.data.tfcoil.sig_tf_case = (
@@ -2495,8 +2494,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 int(self.data.tfcoil.i_tf_bucking),
                 float(self.data.build.r_tf_inboard_in),
                 self.data.build.dr_bore,
-                self.data.build.z_tf_inside_half,
-                self.data.pf_coil.f_z_cs_tf_internal,
                 self.data.build.dr_cs,
                 self.data.build.i_tf_inside_cs,
                 self.data.build.dr_tf_inboard,
@@ -2556,6 +2553,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 self.data.tfcoil.a_tf_coil_inboard_case,
                 self.data.tfcoil.vforce,
                 self.data.tfcoil.a_tf_turn_steel,
+                a_cs_poloidal=self.data.pf_coil.a_cs_poloidal,
             )
 
             self.data.tfcoil.sig_tf_case = (
@@ -4204,8 +4202,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 int(self.data.tfcoil.i_tf_bucking),
                 float(self.data.build.r_tf_inboard_in),
                 self.data.build.dr_bore,
-                self.data.build.z_tf_inside_half,
-                self.data.pf_coil.f_z_cs_tf_internal,
                 self.data.build.dr_cs,
                 self.data.build.i_tf_inside_cs,
                 self.data.build.dr_tf_inboard,
@@ -4265,6 +4261,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 self.data.tfcoil.a_tf_coil_inboard_case,
                 self.data.tfcoil.vforce,
                 self.data.tfcoil.a_tf_turn_steel,
+                a_cs_poloidal=self.data.pf_coil.a_cs_poloidal,
             )
 
             self.data.tfcoil.sig_tf_case = (

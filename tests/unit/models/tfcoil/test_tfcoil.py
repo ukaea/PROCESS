@@ -799,8 +799,6 @@ class StressclParam(NamedTuple):
 
     dr_cs_tf_gap: Any = None
 
-    z_tf_inside_half: Any = None
-
     r_tf_inboard_in: Any = None
 
     casestr: Any = None
@@ -909,8 +907,6 @@ class StressclParam(NamedTuple):
 
     f_a_cs_turn_steel: Any = None
 
-    f_z_cs_tf_internal: Any = None
-
     j_cs_flat_top_end: Any = None
 
     j_cs_pulse_start: Any = None
@@ -949,6 +945,8 @@ class StressclParam(NamedTuple):
 
     vforce_inboard_tot: Any = None
 
+    a_cs_poloidal: Any = None
+
     iprint: Any = None
 
     outfile: Any = None
@@ -978,7 +976,7 @@ class StressclParam(NamedTuple):
             r_tf_inboard_mid=3.5979411851091103,
             dr_bore=2.3322000000000003,
             dr_cs=0.55242000000000002,
-            z_tf_inside_half=9.0730900215620327,
+            a_cs_poloidal=9.021881501,
             r_tf_inboard_in=2.9939411851091102,
             casestr=0,
             n_tf_coil_turns=200,
@@ -1033,7 +1031,6 @@ class StressclParam(NamedTuple):
             n_tf_wp_stress_layers=5,
             i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_turn_steel=0.57874999999999999,
-            f_z_cs_tf_internal=0.90000000000000002,
             j_cs_flat_top_end=20726000,
             j_cs_pulse_start=0,
             n_pf_coils_in_group=np.array((1, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0)),
@@ -1095,7 +1092,7 @@ class StressclParam(NamedTuple):
             r_tf_inboard_mid=3.5979411851091103,
             dr_bore=2.3322000000000003,
             dr_cs=0.55242000000000002,
-            z_tf_inside_half=9.0730900215620327,
+            a_cs_poloidal=9.021881501,
             r_tf_inboard_in=2.9939411851091102,
             casestr=0.00094360452596334093,
             n_tf_coil_turns=200,
@@ -1150,7 +1147,6 @@ class StressclParam(NamedTuple):
             n_tf_wp_stress_layers=5,
             i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_turn_steel=0.57874999999999999,
-            f_z_cs_tf_internal=0.90000000000000002,
             j_cs_flat_top_end=20726000,
             j_cs_pulse_start=19311657.760000002,
             n_pf_coils_in_group=np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0)),
@@ -1260,8 +1256,6 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.i_tf_bucking,
         stressclparam.r_tf_inboard_in,
         stressclparam.dr_bore,
-        stressclparam.z_tf_inside_half,
-        stressclparam.f_z_cs_tf_internal,
         stressclparam.dr_cs,
         stressclparam.i_tf_inside_cs,
         stressclparam.dr_tf_inboard,
@@ -1321,6 +1315,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.a_tf_coil_inboard_case,
         stressclparam.vforce,
         stressclparam.a_tf_turn_steel,
+        a_cs_poloidal=stressclparam.a_cs_poloidal,
     )
 
     assert casestr == pytest.approx(stressclparam.expected_casestr, rel=0.01)
