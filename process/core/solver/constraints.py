@@ -11,6 +11,7 @@ from process.core.model import DataStructure
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.fuelling import PlasmaFuelling
 from process.models.physics.physics import (
     BetaComponentLimits,
     PlasmaBeta,
@@ -1916,25 +1917,22 @@ def constraint_equation_93(constraint_registration, data):
     The equation ensures that the rate of tritium production equals the rate of tritium
     loss, maintaining a steady-state condition for tritium in the plasma.
     """
-    numerator = (
-        (
-            data.physics.eta_plasma_fuelling
-            * data.physics.molflow_plasma_fuelling_vv_injected
-            * data.physics.f_molflow_plasma_fuelling_tritium
-        )
-        + data.physics.fusrat_plasma_dd_triton
-        - data.physics.fusrat_dt_total
+    source = PlasmaFuelling.calculate_plasma_tritium_source_rate(
+        f_molflow_plasma_fuelling_tritium=data.physics.f_molflow_plasma_fuelling_tritium,
+        eta_plasma_fuelling=data.physics.eta_plasma_fuelling,
+        molflow_plasma_fuelling_vv_injected=data.physics.molflow_plasma_fuelling_vv_injected,
+        fusrat_plasma_dd_triton=data.physics.fusrat_plasma_dd_triton,
     )
-    denominator = (
-        data.physics.nd_plasma_fuel_ions_vol_avg
-        * data.physics.vol_plasma
-        * data.physics.f_plasma_fuel_tritium
-    ) / (
-        data.physics.t_energy_confinement
-        / (1 - data.physics.f_plasma_particles_lcfs_recycled)
+    sink = PlasmaFuelling.calculate_plasma_tritium_loss_rate(
+        fusrat_dt_total=data.physics.fusrat_dt_total,
+        t_energy_confinement=data.physics.t_energy_confinement,
+        f_plasma_particles_lcfs_recycled=data.physics.f_plasma_particles_lcfs_recycled,
+        nd_plasma_fuel_ions_vol_avg=data.physics.nd_plasma_fuel_ions_vol_avg,
+        vol_plasma=data.physics.vol_plasma,
+        f_plasma_fuel_tritium=data.physics.f_plasma_fuel_tritium,
     )
 
-    return eq(numerator, denominator, constraint_registration)
+    return eq(source, -sink, constraint_registration)
 
 
 @ConstraintManager.register_constraint(94, "particles/s", "=")
