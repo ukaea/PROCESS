@@ -1060,7 +1060,7 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         data.physics.i_plasma_pedestal == PlasmaProfileShapeType.PEDESTAL_PROFILE
         and ConfinementTimeModel(data.physics.i_confinement_time).mode
-        not in [ConfinementMode.H_MODE, ConfinementMode.I_MODE]
+        not in {ConfinementMode.H_MODE, ConfinementMode.I_MODE}
     ):
         logger.warning(
             "Non H-mode or I-mode confinement time scaling should not be used with a pedestal profile"
