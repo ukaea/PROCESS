@@ -520,6 +520,24 @@ class PhysicsData:
     e_plasma_beta_thermal: float = 0.0
     """Plasma thermal energy derived from thermal beta"""
 
+    e_plasma_thermal_total: float = 0.0
+    """Plasma total stored thermal energy (J)"""
+
+    eden_plasma_thermal_vol_avg: float = 0.0
+    """Plasma volume averaged thermal energy density (J/m³)"""
+
+    e_plasma_electrons_thermal: float = 0.0
+    """Plasma thermal energy in electrons (J)"""
+
+    eden_plasma_electrons_thermal_vol_avg: float = 0.0
+    """Plasma volume averaged thermal energy density in electrons (J/m³)"""
+
+    e_plasma_ions_thermal: float = 0.0
+    """Plasma thermal energy in ions (J)"""
+
+    eden_plasma_ions_thermal_vol_avg: float = 0.0
+    """Plasma volume averaged thermal energy density in ions (J/m³)"""
+
     betbm0: float = 1.5
     """leading coefficient for NB beta fraction"""
 
@@ -1336,7 +1354,7 @@ class PhysicsData:
     """Plasma central ion temperature (Tᵢ₀) [keV]"""
 
     temp_plasma_ion_density_weighted_kev: float = 0.0
-    """Plasma density weighted average ion temperature (⟨Tᵢ⟩_n) [keV]"""
+    """Plasma density weighted average ion temperature (⟨Tᵢ⟩ₙ) [keV]"""
 
     f_temp_plasma_ion_electron: float = 1.0
     """Plasma ratio of ion temperature to electron temperature (used to calculate temp_plasma_ion_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`)"""
