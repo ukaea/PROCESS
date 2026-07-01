@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime
 import getpass
+import logging
 import socket
 import subprocess  # noqa: S404
 from pathlib import Path
@@ -41,6 +42,7 @@ from process.models.superconductors import (
 from process.models.tfcoil.base import TFCoilShapeModel, TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
 
+logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from process.core.model import DataStructure
 
@@ -1060,9 +1062,8 @@ def check_process(inputs, data):  # noqa: ARG001
         and ConfinementTimeModel(data.physics.i_confinement_time).mode
         not in [ConfinementMode.H_MODE, ConfinementMode.I_MODE]
     ):
-        warn(
-            "Non H-mode or I-mode confinement time scaling should not be used with a pedestal profile",
-            stacklevel=2,
+        logger.warning(
+            "Non H-mode or I-mode confinement time scaling should not be used with a pedestal profile"
         )
 
     # Cannot use temperature margin constraint with REBCO TF coils
