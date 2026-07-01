@@ -145,9 +145,10 @@ iteration variables should get varied"""
         return self
 
     def __next__(self):
-        _neqns, itervars = get_neqns_itervars(in_dat=self.infile, wdir=self.wdir)
+        _neqns, itervars = get_neqns_itervars(in_dat=self.initial_infile, wdir=self.wdir)
+
         lbs, ubs = get_variable_range(
-            itervars, self.factor, self.infile, self.data, self.wdir
+            itervars, self.factor, self.initial_infile, self.data, self.wdir
         )
         self.run_process(self.wdir / self.infile, self.solver)
         check_input_error(mfile=self.outfile, wdir=self.wdir)

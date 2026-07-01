@@ -59,8 +59,6 @@ def get_variable_range(itervars, factor, indat, data: DataStructure, wdir="."):
     """Returns the lower and upper bounds of the variable range
     for each iteration variable.
 
-    For f-values the allowed range is equal to their process bounds.
-
     Parameters
     ----------
     itervars :
@@ -320,7 +318,7 @@ def get_from_indat_or_default(in_dat, varname):
     if "(" in varname:
         name, index = re.match(r"([a-zA-Z0-9_]+)\(([0-9]+)\)", varname.strip()).groups()
 
-        if varname in in_dat.data:
+        if name in in_dat.data:
             return in_dat.data[name].get_value[int(index) - 1]
 
         return dicts["DICT_DEFAULT"][name][int(index) - 1]
