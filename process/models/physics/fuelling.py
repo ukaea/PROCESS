@@ -7,7 +7,7 @@ from process.data_structure import (
 
 
 class PlasmaFuelling(Model):
-    """Class to hold plasma fuelling calculations for plasma processing."""
+    """Class to hold plasma fuelling calculations and output."""
 
     def __init__(self):
 
@@ -157,7 +157,7 @@ class PlasmaFuelling(Model):
         vol_plasma: float,
         f_plasma_fuel_tritium: float,
     ) -> float:
-        """Calculate the tritium flow rate in the plasma exhaust.
+        """Calculate the tritium flow rate into the plasma.
 
         Parameters
         ----------
@@ -176,16 +176,21 @@ class PlasmaFuelling(Model):
         f_plasma_particles_lcfs_recycled : float
             Fraction of plasma particles recycled at the LCFS.
         nd_plasma_fuel_ions_vol_avg : float
-            Volume-averaged density of fuel ions in the plasma (particles/m^3).
+            Volume-averaged density of fuel ions in the plasma (particles/m³).
         vol_plasma : float
-            Plasma volume (m^3).
+            Plasma volume (m³).
         f_plasma_fuel_tritium : float
             Fraction of tritium in the plasma fuel.
 
         Returns
         -------
         float
-            Tritium flow rate in the plasma exhaust (particles/s).
+            Tritium flow rate into the plasma (particles/s).
+
+        Notes
+        -----
+        - A positive value indicates a net flow of tritium into the plasma,
+        while a negative value indicates a net loss of tritium from the plasma.
 
         """
         return (
@@ -216,7 +221,7 @@ class PlasmaFuelling(Model):
         vol_plasma: float,
         f_plasma_fuel_deuterium: float,
     ) -> float:
-        """Calculate the deuterium flow rate in the plasma exhaust.
+        """Calculate the deuterium flow rate into the plasma.
 
         Parameters
         ----------
@@ -237,16 +242,21 @@ class PlasmaFuelling(Model):
         f_plasma_particles_lcfs_recycled : float
             Fraction of plasma particles recycled at the LCFS.
         nd_plasma_fuel_ions_vol_avg : float
-            Volume-averaged density of fuel ions in the plasma (particles/m^3).
+            Volume-averaged density of fuel ions in the plasma (particles/m³).
         vol_plasma : float
-            Plasma volume (m^3).
+            Plasma volume (m³).
         f_plasma_fuel_deuterium : float
             Fraction of deuterium in the plasma fuel.
 
         Returns
         -------
         float
-            Deuterium flow rate in the plasma exhaust (particles/s).
+            Deuterium flow rate into the plasma (particles/s).
+
+        Notes
+        -----
+        - A positive value indicates a net flow of deuterium into the plasma,
+        while a negative value indicates a net loss of deuterium from the plasma.
 
 
         """
@@ -277,7 +287,7 @@ class PlasmaFuelling(Model):
         vol_plasma: float,
         f_plasma_fuel_helium3: float,
     ) -> float:
-        """Calculate the helium-3 flow rate in the plasma exhaust.
+        """Calculate the helium-3 flow rate into the plasma.
 
         Parameters
         ----------
@@ -294,16 +304,21 @@ class PlasmaFuelling(Model):
         f_plasma_particles_lcfs_recycled : float
             Fraction of plasma particles recycled at the LCFS.
         nd_plasma_fuel_ions_vol_avg : float
-            Volume-averaged density of fuel ions in the plasma (particles/m^3).
+            Volume-averaged density of fuel ions in the plasma (particles/m³).
         vol_plasma : float
-            Plasma volume (m^3).
+            Plasma volume (m³).
         f_plasma_fuel_helium3 : float
             Fraction of helium-3 in the plasma fuel.
 
         Returns
         -------
         float
-            Helium-3 flow rate in the plasma exhaust (particles/s).
+            Helium-3 flow rate into the plasma (particles/s).
+
+        Notes
+        -----
+        - A positive value indicates a net flow of helium-3 into the plasma,
+        while a negative value indicates a net loss of helium-3 from the plasma.
 
         """
         return (
@@ -328,7 +343,7 @@ class PlasmaFuelling(Model):
         nd_plasma_alphas_vol_avg: float,
         vol_plasma: float,
     ) -> float:
-        """Calculate the alpha particle flow rate in the plasma exhaust.
+        """Calculate the net alpha particle flow rate into the plasma.
 
         Parameters
         ----------
@@ -341,14 +356,19 @@ class PlasmaFuelling(Model):
         f_t_alpha_energy_confinement : float
             Ratio of alpha particle confinement time to energy confinement time (dimensionless).
         nd_plasma_alphas_vol_avg : float
-            Volume-averaged density of alpha particles in the plasma (particles/m^3).
+            Volume-averaged density of alpha particles in the plasma (particles/m³).
         vol_plasma : float
-            Plasma volume (m^3).
+            Plasma volume (m³).
 
         Returns
         -------
         float
-            Alpha particle flow rate in the plasma exhaust (particles/s).
+            Alpha particle flow rate into the plasma (particles/s).
+
+        Notes
+        -----
+        - A positive value indicates a net flow of alpha particles into the plasma,
+        while a negative value indicates a net loss of alpha particles from the plasma.
 
         """
         # Alpha particle balance
