@@ -414,10 +414,11 @@ def get_parameters(data, use_string_values=True):
                 if item == "f_nd_impurity_electrons":
                     for k in range(len(data["f_nd_impurity_electrons"].get_value)):
                         name = f"f_nd_impurity_electrons({str(k + 1).zfill(1)})"
-                        # if the variable appears elsewhere in data - it is being
+                        # if the variable appears elsewhere in data, it is being
                         # used as an iteration variable. need to add to
                         # parameters separately otherwise its value in a
-                        # varyrun remains the same
+                        # varyrun remains the same as it is taken from the
+                        # default values
                         if name in data:
                             value = data[name].value
                             parameters[module][name] = value
