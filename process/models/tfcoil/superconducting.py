@@ -2831,7 +2831,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # ITER Nb3Sn critical surface parameterization
-        if i_tf_superconductor == 1:
+        if i_tf_superconductor == SuperconductorModel.ITER_NB3SN:
             # Peak field and temperature at zero strain
             bc20m = 32.97e0  # [T]
             tc0m = 16.06e0  # [K]
@@ -2872,7 +2872,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # Bi-2212 high temperature superconductor parameterization
-        elif i_tf_superconductor == 2:
+        elif i_tf_superconductor == SuperconductorModel.BI2212:
             #  Current density in a strand of Bi-2212 conductor
             #  N.B. jcrit returned by superconductors.bi2212 is the critical
             # current density in the strand, not just the superconducting portion.
@@ -2903,16 +2903,16 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # NbTi data
-        elif i_tf_superconductor == 3:
+        elif i_tf_superconductor == SuperconductorModel.OLD_LUBELL_NBTI:
             bc20m = 15.0e0  # [T]
             tc0m = 9.3e0  # [K]
-            c0 = 1.0e10  # [A/m2]
+            c0 = 1.0e10  # [A/m²]
 
             j_superconductor_critical, _ = superconductors.jcrit_nbti(
                 temp_conductor=temp_tf_coolant_peak_field,
                 b_conductor=b_tf_inboard_peak,
                 c0=c0,
-                b_c20m=bc20m,
+                b_c20max=bc20m,
                 temp_c0max=tc0m,
             )
 
@@ -2933,7 +2933,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # ITER Nb3Sn parameterization, but user-defined parameters
-        elif i_tf_superconductor == 4:
+        elif i_tf_superconductor == SuperconductorModel.USER_DEFINED_NB3SN:
             bc20m = bcritsc  # [T]
             tc0m = tcritsc  # [K]
 
@@ -2969,7 +2969,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # WST Nb3Sn parameterisation
-        elif i_tf_superconductor == 5:
+        elif i_tf_superconductor == SuperconductorModel.WST_NB3SN:
             bc20m = 32.97e0  # [T]
             tc0m = 16.06e0  # [K]
 
@@ -3010,7 +3010,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # "REBCO" 2nd generation HTS superconductor in CrCo strand
-        elif i_tf_superconductor == 6:
+        elif i_tf_superconductor == SuperconductorModel.CROCO_REBCO:
             raise ProcessValueError(
                 "sctfcoil.supercon has been called but data.tfcoil.i_tf_sc_mat=6"
             )
@@ -3018,7 +3018,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # Durham Ginzburg-Landau Nb-Ti parameterisation
-        elif i_tf_superconductor == 7:
+        elif i_tf_superconductor == SuperconductorModel.DURHAM_NBTI:
             bc20m = data.tfcoil.b_crit_upper_nbti  # [T]
             tc0m = data.tfcoil.t_crit_nbti  # [K]
 
@@ -3046,7 +3046,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # Durham Ginzburg-Landau critical surface model for REBCO
-        elif i_tf_superconductor == 8:
+        elif i_tf_superconductor == SuperconductorModel.DURHAM_REBCO:
             bc20m = 430  # [T]
             tc0m = 185  # [K]
 
@@ -3087,7 +3087,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # Hazelton experimental data + Zhai conceptual model for REBCO
-        elif i_tf_superconductor == 9:
+        elif i_tf_superconductor == SuperconductorModel.HAZELTON_ZHAI_REBCO:
             bc20m = 138  # [T]
             tc0m = 92  # [K]
 
