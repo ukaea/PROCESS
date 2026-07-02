@@ -20,6 +20,7 @@ from process.data_structure.pfcoil_variables import (
     NFIXMX,
     NGC2,
     NPTSMX,
+    PFConductorModel,
 )
 from process.models import superconductors
 from process.models.superconductors import SuperconductorMaterial, SuperconductorModel
@@ -864,7 +865,7 @@ class PFCoil(Model):
 
                 # Issue 1871.  MDK
                 # Allowable current density (for superconducting coils) for each coil, index i
-                if self.data.pf_coil.i_pf_conductor == 0:
+                if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                     bmax = max(
                         abs(self.data.pf_coil.b_pf_coil_peak[i]),
                         abs(self.data.pf_coil.bpf2[i]),
@@ -910,7 +911,7 @@ class PFCoil(Model):
 
                 # Resistive coils
 
-                if self.data.pf_coil.i_pf_conductor == 1:
+                if self.data.pf_coil.i_pf_conductor == PFConductorModel.RESISTIVE:
                     # Coil resistance (f_a_pf_coil_void is the void fraction)
 
                     respf = (
@@ -937,7 +938,7 @@ class PFCoil(Model):
 
                 # Conductor weight (f_a_pf_coil_void is the void fraction)
 
-                if self.data.pf_coil.i_pf_conductor == 0:
+                if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                     self.data.pf_coil.m_pf_coil_conductor[i] = (
                         volpf
                         * self.data.tfcoil.dcond[
@@ -948,7 +949,7 @@ class PFCoil(Model):
                 else:
                     self.data.pf_coil.m_pf_coil_conductor[i] = (
                         volpf
-                        * constants.den_copper
+                        * constants.DEN_COPPER
                         * (1.0e0 - self.data.pf_coil.f_a_pf_coil_void[i])
                     )
 
@@ -963,7 +964,7 @@ class PFCoil(Model):
 
                 # Stress ==> cross-sectional area of supporting steel to use
 
-                if self.data.pf_coil.i_pf_conductor == 0:
+                if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                     # Superconducting coil
                     # Updated assumptions: 500 MPa stress limit with all of the force
                     # supported in the conduit (steel) case.
@@ -2035,7 +2036,7 @@ class PFCoil(Model):
         if self.data.build.iohcl == 0:
             op.ocmmnt(self.outfile, "No central solenoid included")
             op.oblnkl(self.outfile)
-        elif self.data.pf_coil.i_pf_conductor == 0:
+        elif self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             op.ocmmnt(self.outfile, "Superconducting central solenoid")
 
             op.ovarin(
@@ -2330,7 +2331,7 @@ class PFCoil(Model):
         op.ocmmnt(self.outfile, "----------------------------")
         op.oblnkl(self.outfile)
 
-        if self.data.pf_coil.i_pf_conductor == 0:
+        if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             op.oblnkl(self.outfile)
             op.ocmmnt(self.outfile, "Superconducting PF coils")
 
@@ -2557,7 +2558,7 @@ class PFCoil(Model):
 
         # PF coils
         for k in range(self.data.pf_coil.nef):
-            if self.data.pf_coil.i_pf_conductor == 0:
+            if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                 rows.append([
                     f"PF {k}",
                     f"{self.data.pf_coil.c_pf_cs_coils_peak_ma[k]:.3e}",
@@ -2587,7 +2588,7 @@ class PFCoil(Model):
                 abs(self.data.pf_coil.j_cs_pulse_start),
                 abs(self.data.pf_coil.j_cs_flat_top_end),
             )
-            if self.data.pf_coil.i_pf_conductor == 0:
+            if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                 # Issue #328
                 rows.append([
                     "CS",
@@ -3361,7 +3362,7 @@ class CSCoil(Model):
         )
 
         # Stress ==> cross-sectional area of supporting steel to use
-        if self.data.pf_coil.i_pf_conductor == 0:
+        if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             # Superconducting coil
 
             # New calculation from M. N. Wilson for hoop stress
@@ -3477,7 +3478,7 @@ class CSCoil(Model):
             )
 
         # Weight of conductor in central Solenoid
-        if self.data.pf_coil.i_pf_conductor == 0:
+        if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             self.data.pf_coil.m_pf_coil_conductor[
                 self.data.pf_coil.n_cs_pf_coils - 1
             ] = (
@@ -3497,10 +3498,10 @@ class CSCoil(Model):
                 * 2.0e0
                 * np.pi
                 * self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1]
-                * constants.den_copper
+                * constants.DEN_COPPER
             )
 
-        if self.data.pf_coil.i_pf_conductor == 0:
+        if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             # Allowable coil overall current density at EOF
             # (superconducting coils only)
 

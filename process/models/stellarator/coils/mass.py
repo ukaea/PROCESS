@@ -93,7 +93,7 @@ def copper(data: DataStructure):
         * (1.0e0 - data.tfcoil.f_a_tf_turn_cable_space_extra_void)
         * data.tfcoil.f_a_tf_turn_cable_copper
         - data.tfcoil.len_tf_coil * data.tfcoil.a_tf_wp_coolant_channels
-    ) * constants.den_copper
+    ) * constants.DEN_COPPER
 
 
 def conduit_steel(data):

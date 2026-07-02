@@ -95,7 +95,7 @@ class PlasmaExhaust(Model):
         p_plasma_rad_mw: float,
     ) -> float:
         """
-        Calculate the power crossing the separatrix (P_sep).
+        Calculate the power crossing the separatrix (Pₛₑₚ).
 
         Parameters
         ----------
@@ -130,19 +130,19 @@ class PlasmaExhaust(Model):
         p_plasma_separatrix_mw: float, rmajor: float
     ) -> float:
         """
-        Calculate the power crossing the separatrix per unit major radius (P_sep/R).
+        Calculate the power crossing the separatrix per unit major radius (Pₛₑₚ / R₀).
 
         Parameters
         ----------
         p_plasma_separatrix_mw : float
-            Power crossing the separatrix (MW).
+            Power crossing the separatrix (Pₛₑₚ) [MW].
         rmajor : float
-            Plasma major radius (m).
+            Plasma major radius (R₀) [m].
 
         Returns
         -------
         float
-            Power crossing the separatrix per unit major radius (MW/m).
+            Power crossing the separatrix per unit major radius (Pₛₑₚ / R₀) [MW/m].
         """
         return p_plasma_separatrix_mw / rmajor
 
@@ -155,38 +155,66 @@ class PlasmaExhaust(Model):
         rmajor: float,
     ) -> float:
         """Calculate the EU DEMO divertor protection re-attachment metric for plasma
-        exhaust.
+        exhaust (PₛₑₚBₜ / q₉₅AR₀).
 
         Parameters
         ----------
         p_plasma_separatrix_mw : float
-            Power crossing the separatrix (MW).
+            Power crossing the separatrix (Pₛₑₚ) [MW].
         b_plasma_toroidal_on_axis : float
-            Toroidal magnetic field on axis (T).
+            Toroidal magnetic field on axis (Bₜ) [T].
         q95 : float
-            Safety factor at 95% flux surface.
+            Safety factor at 95% flux surface (q₉₅).
         aspect : float
-            Aspect ratio of the plasma.
+            Aspect ratio of the plasma (A).
         rmajor : float
-            Plasma major radius (m).
+            Plasma major radius (R₀) [m].
 
         Returns
         -------
         float
-            EU DEMO re-attachment metric (MW T /m).
+            EU DEMO re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) [MW T /m].
 
         References
         ----------
-        - M. Siccinio, G. Federici, R. Kembleton, H. Lux, F. Maviglia, and J. Morris,
-          "Figure of merit for divertor protection in the preliminary design of the
-          EU-DEMO reactor," Nuclear Fusion, vol. 59, no. 10, pp. 106026-106026,
-          Jul. 2019, doi: https://doi.org/10.1088/1741-4326/ab3153.
+        [1] M. Siccinio, G. Federici, R. Kembleton, H. Lux, F. Maviglia, and J. Morris,
+        "Figure of merit for divertor protection in the preliminary design of the
+        EU-DEMO reactor," Nuclear Fusion, vol. 59, no. 10, pp. 106026-106026,
+        Jul. 2019, doi: https://doi.org/10.1088/1741-4326/ab3153.
 
-        - H. Zohm et al.,
-          "A stepladder approach to a tokamak fusion power plant,"
-          Nuclear Fusion, vol. 57, no. 8, pp. 086002-086002, May 2017,
-          doi: https://doi.org/10.1088/1741-4326/aa739e.
+        [2] H. Zohm et al.,
+        "A stepladder approach to a tokamak fusion power plant,"
+        Nuclear Fusion, vol. 57, no. 8, pp. 086002-086002, May 2017,
+        doi: https://doi.org/10.1088/1741-4326/aa739e.
         """
         return (p_plasma_separatrix_mw * b_plasma_toroidal_on_axis) / (
             q95 * aspect * rmajor
         )
+
+    @staticmethod
+    def calculate_radiation_fraction(
+        p_plasma_rad_mw: float, p_plasma_heating_mw: float
+    ) -> float:
+        """
+        Calculate the radiation fraction of the plasma.
+
+        Parameters
+        ----------
+        p_plasma_rad_mw : float
+            Radiated power from plasma (MW).
+        p_plasma_heating_mw : float
+            Total plasma heating power (MW).
+
+        Returns
+        -------
+        float
+            Radiation fraction of the plasma.
+        """
+        if p_plasma_heating_mw == 0:
+            logger.warning(
+                "Total plasma heating power is zero, "
+                "cannot calculate radiation fraction."
+            )
+            return 0.0
+
+        return p_plasma_rad_mw / p_plasma_heating_mw

@@ -1,7 +1,6 @@
 """Confinement time model calculations and definitions."""
 
 import logging
-from enum import IntEnum
 
 import numpy as np
 from scipy.optimize import root_scalar
@@ -10,114 +9,15 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure.physics_variables import N_CONFINEMENT_SCALINGS
+from process.data_structure.physics_variables import (
+    N_CONFINEMENT_SCALINGS,
+    ConfinementMode,
+    ConfinementRadiationLossModel,
+    ConfinementTimeModel,
+)
 from process.models.physics.plasma_geometry import PlasmaGeom
 
 logger = logging.getLogger(__name__)
-
-
-class ConfinementTimeModel(IntEnum):
-    """Confinement time (τ_E) model types"""
-
-    USER_INPUT = (0, "User input electron confinement   ")
-    NEO_ALCATOR = (1, "Neo-Alcator                (Ohmic)")
-    MIRNOV = (2, "Mirnov                         (H)")
-    MEREZHKIN_MUHKOVATOV = (3, "Merezkhin-Muhkovatov    (Ohmic)(L)")
-    SHIMOMURA = (4, "Shimomura                      (H)")
-    KAYE_GOLDSTON = (5, "Kaye-Goldston                  (L)")
-    ITER_89P = (6, "ITER 89-P                      (L)")
-    ITER_89_0 = (7, "ITER 89-O                      (L)")
-    REBUT_LALLIA = (8, "Rebut-Lallia                   (L)")
-    GOLDSTON = (9, "Goldston                       (L)")
-    T_10 = (10, "T10                            (L)")
-    JAERI = (11, "JAERI / Odajima-Shimomura      (L)")
-    KAYE_BIG = (12, "Kaye-Big Complex               (L)")
-    ITER_H90_P = (13, "ITER H90-P                     (H)")
-    MINIMUM_OF_ITER_89P_AND_ITER_89_0 = (14, "ITER 89-P & 89-O min           (L)")
-    RIEDEL_L = (15, "Riedel                         (L)")
-    CHRISTIANSEN = (16, "Christiansen                   (L)")
-    LACKNER_GOTTARDI = (17, "Lackner-Gottardi               (L)")
-    NEO_KAYE = (18, "Neo-Kaye                       (L)")
-    RIEDEL_H = (19, "Riedel                         (H)")
-    ITER_H90_P_AMENDED = (20, "ITER H90-P amended             (H)")
-    SUDO_ET_AL = (21, "LHD                        (Stell)")
-    GYRO_REDUCED_BOHM = (22, "Gyro-reduced Bohm          (Stell)")
-    LACKNER_GOTTARDI_STELLARATOR = (23, "Lackner-Gottardi           (Stell)")
-    ITER_93H = (24, "ITER-93H  ELM-free             (H)")
-    TITAN_REMOVED = (25, "TITAN RFP OBSOLETE                ")
-    ITER_H97P = (26, "ITER H-97P ELM-free            (H)")
-    ITER_H97P_ELMY = (27, "ITER H-97P ELMy                (H)")
-    ITER_96P = (28, "ITER-96P (ITER-97L)            (L)")
-    VALOVIC_ELMY = (29, "Valovic modified ELMy          (H)")
-    KAYE = (30, "Kaye 98 modified               (L)")
-    ITER_PB98P_Y = (31, "ITERH-PB98P(y)                 (H)")
-    IPB98_Y = (32, "IPB98(y)                       (H)")
-    ITER_IPB98Y1 = (33, "IPB98(y,1)                     (H)")
-    ITER_IPB98Y2 = (34, "IPB98(y,2)                     (H)")
-    ITER_IPB98Y3 = (35, "IPB98(y,3)                     (H)")
-    ITER_IPB98Y4 = (36, "IPB98(y,4)                     (H)")
-    ISS95_STELLARATOR = (37, "ISS95                      (Stell)")
-    ISS04_STELLARATOR = (38, "ISS04                      (Stell)")
-    DS03 = (39, "DS03 beta-independent          (H)")
-    MURARI = (40, 'Murari "Non-power law"         (H)')
-    PETTY08 = (41, "Petty 2008                 (ST)(H)")
-    LANG_HIGH_DENSITY = (42, "Lang high density              (H)")
-    HUBBARD_NOMINAL = (43, "Hubbard 2017 - nominal         (I)")
-    HUBBARD_LOWER = (44, "Hubbard 2017 - lower           (I)")
-    HUBBARD_UPPER = (45, "Hubbard 2017 - upper           (I)")
-    MENARD_NSTX = (46, "Menard NSTX                (ST)(H)")
-    MENARD_NSTX_PETTY08_HYBRID = (47, "Menard NSTX-Petty08 hybrid (ST)(H)")
-    NSTX_GYRO_BOHM = (48, "Buxton NSTX gyro-Bohm      (ST)(H)")
-    ITPA20 = (49, "ITPA20                         (H)")
-    ITPA20_IL = (50, "ITPA20-IL                      (H)")
-
-    def __new__(cls, value: int, full_name: str):
-        """Create a new instance of ConfinementTimeModel.
-
-        Parameters
-        ----------
-        value : int
-            The enum value
-        full_name : str
-            The full name of the confinement time model
-
-        Returns
-        -------
-        ConfinementTimeModel
-            A new enum instance with the given value and full name
-        """
-        obj = int.__new__(cls, value)
-        obj._value_ = value
-        obj.full_name = full_name
-        return obj
-
-
-class ConfinementRadiationLossModel(IntEnum):
-    """Confinement radiation loss model types"""
-
-    FULL_RADIATION = (0, "All radiation included in loss power term")
-    CORE_ONLY = (1, "Only core radiation included in loss power term")
-    NO_RADIATION = (2, "No radiation included in loss power term")
-
-    def __new__(cls, value: int, description: str):
-        """Create a new instance of ConfinementRadiationLossModel.
-
-        Parameters
-        ----------
-        value : int
-            The enum value
-        description : str
-            The description of the radiation loss model
-
-        Returns
-        -------
-        ConfinementRadiationLossModel
-            A new enum instance with the given value and description
-        """
-        obj = int.__new__(cls, value)
-        obj._value_ = value
-        obj.description = description
-        return obj
 
 
 class PlasmaConfinementTime(Model):
@@ -139,7 +39,6 @@ class PlasmaConfinementTime(Model):
         p_alpha_total_mw: float,
         aspect: float,
         b_plasma_toroidal_on_axis: float,
-        nd_plasma_ions_total_vol_avg: float,
         nd_plasma_electrons_vol_avg: float,
         nd_plasma_electron_line: float,
         eps: float,
@@ -155,11 +54,12 @@ class PlasmaConfinementTime(Model):
         rmajor: float,
         rminor: float,
         temp_plasma_electron_density_weighted_kev: float,
-        temp_plasma_ion_density_weighted_kev: float,
         q95: float,
         qstar: float,
         vol_plasma: float,
         zeff: float,
+        eden_plasma_electrons_thermal_vol_avg: float,
+        eden_plasma_ions_thermal_vol_avg: float,
     ) -> tuple[float, float, float, float, float, float, float]:
         """Calculate the confinement times and the transport power loss terms.
 
@@ -173,8 +73,6 @@ class PlasmaConfinementTime(Model):
             Aspect ratio
         b_plasma_toroidal_on_axis :
             Toroidal field on axis (T)
-        nd_plasma_ions_total_vol_avg :
-            Total ion density (/m3)
         nd_plasma_electrons_vol_avg :
             Volume averaged electron density (/m3)
         nd_plasma_electron_line :
@@ -209,19 +107,21 @@ class PlasmaConfinementTime(Model):
             Plasma minor radius (m)
         temp_plasma_electron_density_weighted_kev :
             Density weighted average electron temperature (keV)
-        temp_plasma_ion_density_weighted_kev :
-            Density weighted average ion temperature (keV)
         vol_plasma :
             Plasma volume (m3)
         zeff :
             Plasma effective charge
+        eden_plasma_electrons_thermal_vol_avg :
+            Volume averaged electron thermal energy density [J/m³]
+        eden_plasma_ions_thermal_vol_avg :
+            Volume averaged ion thermal energy density [J/m³]
 
         Returns
         -------
         type
             Tuple containing:
-            - pden_electron_transport_loss_mw (float): Electron transport power (MW/m3)
-            - pden_ion_transport_loss_mw (float): Ion transport power (MW/m3)
+            - pden_electron_transport_loss_mw (float): Electron transport power (MW/m³)
+            - pden_ion_transport_loss_mw (float): Ion transport power (MW/m³)
             - t_electron_energy_confinement (float): Electron energy confinement time (s)
             - t_ion_energy_confinement (float): Ion energy confinement time (s)
             - t_energy_confinement (float): Global energy confinement time (s)
@@ -1023,7 +923,7 @@ class PlasmaConfinementTime(Model):
 
         # Calculate H* non-radiation corrected H factor
         # Note: we will assume the IPB-98y2 scaling.
-        if self.data.physics.i_rad_loss == 1:
+        if self.data.physics.i_rad_loss == ConfinementRadiationLossModel.CORE_ONLY:
             self.data.physics.hstar = (
                 hfact
                 * (
@@ -1036,7 +936,9 @@ class PlasmaConfinementTime(Model):
                 )
                 ** 0.31
             )
-        elif self.data.physics.i_rad_loss == 0:
+        elif (
+            self.data.physics.i_rad_loss == ConfinementRadiationLossModel.FULL_RADIATION
+        ):
             self.data.physics.hstar = (
                 hfact
                 * (
@@ -1048,7 +950,7 @@ class PlasmaConfinementTime(Model):
                 )
                 ** 0.31
             )
-        elif self.data.physics.i_rad_loss == 2:
+        elif self.data.physics.i_rad_loss == ConfinementRadiationLossModel.NO_RADIATION:
             self.data.physics.hstar = hfact
 
         # Calculation of the transport power loss terms
@@ -1060,24 +962,13 @@ class PlasmaConfinementTime(Model):
         # The transport losses is just the electron and ion thermal energies divided by
         # the confinement time.
         pden_ion_transport_loss_mw = (
-            (3 / 2)
-            * (constants.ELECTRON_CHARGE / 1e3)
-            * nd_plasma_ions_total_vol_avg
-            * temp_plasma_ion_density_weighted_kev
-            / t_ion_energy_confinement
-        )
+            eden_plasma_ions_thermal_vol_avg / t_ion_energy_confinement
+        ) / 1e6  # Convert from W/m³ to MW/m³
         pden_electron_transport_loss_mw = (
-            (3 / 2)
-            * (constants.ELECTRON_CHARGE / 1e3)
-            * nd_plasma_electrons_vol_avg
-            * temp_plasma_electron_density_weighted_kev
-            / t_electron_energy_confinement
-        )
+            eden_plasma_electrons_thermal_vol_avg / t_electron_energy_confinement
+        ) / 1e6  # Convert from W/m³ to MW/m³
 
-        ratio = (nd_plasma_ions_total_vol_avg / nd_plasma_electrons_vol_avg) * (
-            temp_plasma_ion_density_weighted_kev
-            / temp_plasma_electron_density_weighted_kev
-        )
+        ratio = eden_plasma_ions_thermal_vol_avg / eden_plasma_electrons_thermal_vol_avg
 
         # Global energy confinement time
 
@@ -1175,7 +1066,6 @@ class PlasmaConfinementTime(Model):
                 p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
                 aspect=self.data.physics.aspect,
                 b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
-                nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
                 nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
                 nd_plasma_electron_line=self.data.physics.nd_plasma_electron_line,
                 eps=self.data.physics.eps,
@@ -1191,11 +1081,12 @@ class PlasmaConfinementTime(Model):
                 rmajor=self.data.physics.rmajor,
                 rminor=self.data.physics.rminor,
                 temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
-                temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
                 q95=self.data.physics.q95,
                 qstar=self.data.physics.qstar,
                 vol_plasma=self.data.physics.vol_plasma,
                 zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                eden_plasma_electrons_thermal_vol_avg=self.data.physics.eden_plasma_electrons_thermal_vol_avg,
+                eden_plasma_ions_thermal_vol_avg=self.data.physics.eden_plasma_ions_thermal_vol_avg,
             )
 
             # At power balance, fhz is zero.
@@ -1217,9 +1108,12 @@ class PlasmaConfinementTime(Model):
                 )
 
             # Include the radiation power if requested
-            if self.data.physics.i_rad_loss == 0:
+            if (
+                self.data.physics.i_rad_loss
+                == ConfinementRadiationLossModel.FULL_RADIATION
+            ):
                 fhz_value += self.data.physics.pden_plasma_rad_mw
-            elif self.data.physics.i_rad_loss == 1:
+            elif self.data.physics.i_rad_loss == ConfinementRadiationLossModel.CORE_ONLY:
                 fhz_value += self.data.physics.pden_plasma_core_rad_mw
 
             return fhz_value
@@ -1379,15 +1273,15 @@ class PlasmaConfinementTime(Model):
         po.ovarrf(
             self.outfile,
             "Alpha particle to energy confinement time ratio (τ_α/τₑ)",  # noqa: RUF001
-            "(f_alpha_energy_confinement)",
-            self.data.physics.f_alpha_energy_confinement,
+            "(f_t_alpha_energy_confinement)",
+            self.data.physics.f_t_alpha_energy_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Lower limit on f_alpha_energy_confinement ((τ_α/τₑ)>)",  # noqa: RUF001
-            "(f_alpha_energy_confinement_min)",
-            self.data.constraints.f_alpha_energy_confinement_min,
+            "Lower limit on f_t_alpha_energy_confinement ((τ_α/τₑ)>)",  # noqa: RUF001
+            "(f_t_alpha_energy_confinement_min)",
+            self.data.constraints.f_t_alpha_energy_confinement_min,
         )
         po.oblnkl(self.outfile)
 
@@ -1439,7 +1333,11 @@ class PlasmaConfinementTime(Model):
         po.oblnkl(self.outfile)
 
         # List of key values for stellarator scalings
-        stellarator_scalings = [21, 22, 23, 37, 38]
+        stellarator_scalings = [
+            scaling.value
+            for scaling in ConfinementTimeModel
+            if ConfinementTimeModel(scaling) == ConfinementMode.STELLARATOR
+        ]
 
         # Plot all of the confinement scalings for comparison when H = 1
         # Start from range 1 as the first i_confinement_time is a user input
@@ -1461,7 +1359,6 @@ class PlasmaConfinementTime(Model):
                 p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
                 aspect=self.data.physics.aspect,
                 b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
-                nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
                 nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
                 nd_plasma_electron_line=self.data.physics.nd_plasma_electron_line,
                 eps=self.data.physics.eps,
@@ -1477,11 +1374,12 @@ class PlasmaConfinementTime(Model):
                 rmajor=self.data.physics.rmajor,
                 rminor=self.data.physics.rminor,
                 temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
-                temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
                 q95=self.data.physics.q95,
                 qstar=self.data.physics.qstar,
                 vol_plasma=self.data.physics.vol_plasma,
                 zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                eden_plasma_electrons_thermal_vol_avg=self.data.physics.eden_plasma_electrons_thermal_vol_avg,
+                eden_plasma_ions_thermal_vol_avg=self.data.physics.eden_plasma_ions_thermal_vol_avg,
             )
 
             try:

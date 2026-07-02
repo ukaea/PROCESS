@@ -358,6 +358,12 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Energy densities
+
+- Energy densities should start with the `eden_` prefix
+
+---------------------
+
 ##### Particle fluence
 
 - Fluences should start with the `flu_` prefix

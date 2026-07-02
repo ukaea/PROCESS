@@ -222,7 +222,7 @@ class FWBSData:
     - =2 'large'
     """
 
-    nflutf: float = 0.0
+    flu_tf_neutron_fast_peak: float = 0.0
     """peak fast neutron fluence on TF coil superconductor [n m^-2] """
 
     npdiv: int = 2

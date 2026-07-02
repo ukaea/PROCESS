@@ -17,7 +17,10 @@ import pytest
 from numpy.testing import assert_array_almost_equal
 
 from process.core import constants
-from process.data_structure.pfcoil_variables import N_PF_COILS_IN_GROUP_MAX
+from process.data_structure.pfcoil_variables import (
+    N_PF_COILS_IN_GROUP_MAX,
+    PFConductorModel,
+)
 from process.models.pfcoil import (
     CSEUDEMOTurnGeometry,
     CSGeometry,
@@ -2483,7 +2486,9 @@ def test_pfcoil(monkeypatch, pfcoil):
         pfcoil.data.pf_coil, "zref", [3.6, 1.2, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
     )
     monkeypatch.setattr(pfcoil.data.pf_coil, "m_pf_coil_max", 0.0)
-    monkeypatch.setattr(pfcoil.data.pf_coil, "i_pf_conductor", 0)
+    monkeypatch.setattr(
+        pfcoil.data.pf_coil, "i_pf_conductor", PFConductorModel.SUPERCONDUCTING
+    )
     monkeypatch.setattr(pfcoil.data.pf_coil, "alfapf", 5.0e-10)
     monkeypatch.setattr(pfcoil.data.pf_coil, "n_pf_cs_plasma_circuits", 8)
     monkeypatch.setattr(pfcoil.data.pf_coil, "rho_pf_coil", 2.5e-8)
@@ -2543,7 +2548,7 @@ def test_pfcoil(monkeypatch, pfcoil):
         pfcoil.data.times, "t_plant_pulse_plasma_current_ramp_down", 1.82538e2
     )
     monkeypatch.setattr(pfcoil.data.times, "t_plant_pulse_fusion_ramp", 1.0e1)
-    monkeypatch.setattr(constants, "den_copper", 8.9e3)
+    monkeypatch.setattr(constants, "DEN_COPPER", 8.9e3)
     monkeypatch.setattr(pfcoil.data.pf_coil, "first_call", True)
 
     pfcoil.pfcoil()
@@ -2593,7 +2598,9 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     monkeypatch.setattr(cs_coil.data.pf_coil, "b_cs_peak_pulse_start", 1.4e1)
     monkeypatch.setattr(cs_coil.data.pf_coil, "j_cs_critical_flat_top_end", 4.070e7)
     monkeypatch.setattr(cs_coil.data.pf_coil, "temp_cs_superconductor_margin", 1.5)
-    monkeypatch.setattr(cs_coil.data.pf_coil, "i_pf_conductor", 0)
+    monkeypatch.setattr(
+        cs_coil.data.pf_coil, "i_pf_conductor", PFConductorModel.SUPERCONDUCTING
+    )
     monkeypatch.setattr(cs_coil.data.pf_coil, "j_pf_wp_critical", np.full(22, 0.0))
     monkeypatch.setattr(cs_coil.data.pf_coil, "rho_pf_coil", 2.8e-8)
     monkeypatch.setattr(cs_coil.data.pf_coil, "f_a_pf_coil_void", np.full(22, 0.3))
@@ -2628,7 +2635,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     monkeypatch.setattr(cs_coil.data.tfcoil, "bcritsc", 2.4e1)
     monkeypatch.setattr(cs_coil.data.tfcoil, "b_crit_upper_nbti", 1.486e1)
     monkeypatch.setattr(cs_coil.data.tfcoil, "t_crit_nbti", 9.04)
-    monkeypatch.setattr(constants, "den_copper", 8.9e3)
+    monkeypatch.setattr(constants, "DEN_COPPER", 8.9e3)
 
     # Mocks for peak_b_field_at_pf_coil()
     monkeypatch.setattr(cs_coil.data.build, "iohcl", 1)

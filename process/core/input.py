@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 from warnings import warn
 
-import process
 from process.core.exceptions import (
     ProcessValidationError,
     ProcessValueError,
@@ -107,6 +106,30 @@ class InputVariable:
                 stacklevel=2,
             )
 
+    def bounds(self) -> tuple[NumberType | None, NumberType | None]:
+        """Returns the upper and lower bounds of the input.
+
+        Returns
+        -------
+        lb:
+            The lower bound or None if no bound is available.
+        ub:
+            The upper bound or None if no bound is available/
+
+        Notes
+        -----
+        Precedence is given to the `range` if both it and `choices` are specified.
+        """
+        lb, ub = None, None
+        if self.range is not None:
+            lb, ub = self.range
+
+        elif self.choices is not None and self.type in {int, float}:
+            lb = min(self.choices)
+            ub = max(self.choices)
+
+        return lb, ub
+
 
 INPUT_VARIABLES = {
     "runtitle": InputVariable("globals", str),
@@ -169,7 +192,7 @@ INPUT_VARIABLES = {
     "alstroh": InputVariable("pf_coil", float, range=(1000000.0, 100000000000.0)),
     "amortization": InputVariable("costs", float, range=(1.0, 50.0)),
     "anginc": InputVariable("divertor", float, range=(0.0, 1.5707)),
-    "aplasmin": InputVariable("build", float, range=(0.01, 10.0)),
+    "rminor_min": InputVariable("build", float, range=(0.01, 10.0)),
     "aux_build_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "aux_build_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "aux_build_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
@@ -177,7 +200,7 @@ INPUT_VARIABLES = {
     "auxcool_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "auxcool_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "p_hcd_injected_min_mw": InputVariable("constraints", float, range=(0.01, 100.0)),
-    "avail_min": InputVariable("costs", float, range=(0.0, 1.0)),
+    "f_t_plant_available_min": InputVariable("costs", float, range=(0.0, 1.0)),
     "b_crit_upper_nbti": InputVariable("tfcoil", float, range=(0.0, 30.0)),
     "p_plant_electric_base": InputVariable(
         "heat_transport", float, range=(1000000.0, 10000000000.0)
@@ -281,15 +304,11 @@ INPUT_VARIABLES = {
     "cturbb": InputVariable("costs", float, range=(100.0, 1000.0)),
     "dz_vv_lower": InputVariable("build", float, range=(0.0, 10.0)),
     "dz_vv_upper": InputVariable("build", float, range=(0.0, 10.0)),
-    "den_aluminium": InputVariable(
-        process.core.constants, float, range=(2500.0, 30000.0)
-    ),
     "den_tf_coil_case": InputVariable("tfcoil", float, range=(1000.0, 100000.0)),
     "dcdrv0": InputVariable("ife", float, range=(0.0, 200.0)),
     "dcdrv1": InputVariable("ife", float, range=(0.0, 200.0)),
     "dcdrv2": InputVariable("ife", float, range=(0.0, 200.0)),
     "den_tf_wp_turn_insulation": InputVariable("tfcoil", float, range=(500.0, 10000.0)),
-    "den_copper": InputVariable(process.core.constants, float, range=(8000.0, 10000.0)),
     "declblkt": InputVariable("fwbs", float, range=(0.01, 0.2)),
     "declfw": InputVariable("fwbs", float, range=(0.01, 0.2)),
     "declshld": InputVariable("fwbs", float, range=(0.01, 0.2)),
@@ -385,7 +404,7 @@ INPUT_VARIABLES = {
         "tfcoil", float, range=(100000000.0, 10000000000000.0)
     ),
     "f_a_tf_cool_outboard": InputVariable("tfcoil", float, range=(0.0, 1.0)),
-    "f_alpha_energy_confinement_min": InputVariable(
+    "f_t_alpha_energy_confinement_min": InputVariable(
         "constraints", float, range=(1.0, 100.0)
     ),
     "f_asym": InputVariable("stellarator", float, range=(0.9, 2.0)),
@@ -432,8 +451,10 @@ INPUT_VARIABLES = {
     "fcuohsu": InputVariable("pf_coil", float, range=(0.0, 1.0)),
     "fcupfsu": InputVariable("pf_coil", float, range=(0.0, 1.0)),
     "f_a_tf_turn_cable_copper": InputVariable("tfcoil", float, range=(0.0, 1.0)),
-    "fdene": InputVariable("constraints", float, range=(0.001, 10.0)),
-    "fiooic": InputVariable("constraints", float, range=(0.001, 1.0)),
+    "f_nd_plasma_electron_limit_max": InputVariable(
+        "constraints", float, range=(0.001, 10.0)
+    ),
+    "f_j_tf_wp_critical_max": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fjohc": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fjohc0": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fdiva": InputVariable("divertor", float, range=(0.1, 2.0)),
@@ -464,7 +485,9 @@ INPUT_VARIABLES = {
         "heat_transport", float, range=(0.0, 0.2)
     ),
     "fracture_toughness": InputVariable("cs_fatigue", float, range=(0.1, 100000000.0)),
-    "fradpwr": InputVariable("constraints", float, range=(0.0, 1.0)),
+    "f_p_plasma_separatrix_rad_max": InputVariable(
+        "constraints", float, range=(0.0, 1.0)
+    ),
     "f_radius_beam_tangency_rmajor": InputVariable(
         "current_drive", float, range=(0.5, 2.0)
     ),
@@ -586,7 +609,7 @@ INPUT_VARIABLES = {
     "nd_plasma_pedestal_electron": InputVariable("physics", float, range=(0.0, 1e21)),
     "nd_plasma_separatrix_electron": InputVariable("physics", float, range=(0.0, 1e21)),
     "i_nd_plasma_pedestal_separatrix": InputVariable("physics", int, choices=[0, 1]),
-    "nflutfmax": InputVariable("constraints", float, range=(0.0, 1e24)),
+    "flu_tf_neutron_fast_max": InputVariable("constraints", float, range=(0.0, 1e24)),
     "j_tf_coil_full_area": InputVariable("tfcoil", float, range=(10000.0, 1000000000.0)),
     "f_a_cs_turn_steel": InputVariable("pf_coil", float, range=(0.001, 0.999)),
     "f_z_cs_tf_internal": InputVariable("pf_coil", float, range=(0.0, 2.0)),
@@ -634,8 +657,12 @@ INPUT_VARIABLES = {
     "pres_div_chamber_burn": InputVariable("vacuum", float, range=(0.0, 10.0)),
     "pres_fw_coolant": InputVariable("fwbs", float, range=(100000.0, 100000000.0)),
     "prn1": InputVariable("divertor", float, range=(0.0, 1.0)),
-    "psepbqarmax": InputVariable("constraints", float, range=(1.0, 50.0)),
-    "pseprmax": InputVariable("constraints", float, range=(1.0, 60.0)),
+    "p_div_bt_q_aspect_rmajor_max_mw": InputVariable(
+        "constraints", float, range=(1.0, 50.0)
+    ),
+    "p_plasma_separatrix_rmajor_max_mw": InputVariable(
+        "constraints", float, range=(1.0, 60.0)
+    ),
     "ptargf": InputVariable("ife", float, range=(0.1, 100.0)),
     "temp_cp_max": InputVariable("tfcoil", float, range=(4.0, 573.15)),
     "ptfnucmax": InputVariable("constraints", float, range=(1e-06, 1.0)),
@@ -939,7 +966,9 @@ INPUT_VARIABLES = {
     "wsvfac": InputVariable("buildings", float, range=(0.9, 3.0)),
     "xi_ebw": InputVariable("current_drive", float, range=(0.0, 1.0)),
     "xpertin": InputVariable("divertor", float, range=(0.0, 10.0)),
-    "zeff_max": InputVariable("constraints", float, range=(1.0, 10.0)),
+    "n_charge_plasma_effective_vol_avg_max": InputVariable(
+        "constraints", float, range=(1.0, 10.0)
+    ),
     "blktmodel": InputVariable("fwbs", int, choices=[0, 1]),
     "blkttype": InputVariable("fwbs", int, choices=[1, 2, 3]),
     "breedmat": InputVariable("fwbs", int, choices=[1, 2, 3]),

@@ -404,6 +404,36 @@ class Physics(Model):
 
         self.beta.run()
 
+        # Stored thermal energies in the plasma
+
+        (
+            self.data.physics.eden_plasma_electrons_thermal_vol_avg,
+            self.data.physics.e_plasma_electrons_thermal,
+        ) = self.calaculate_stored_thermal_energy(
+            vol_plasma=self.data.physics.vol_plasma,
+            nd_plasma_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+            temp_plasma_density_weighted_vol_avg_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
+        )
+
+        (
+            self.data.physics.eden_plasma_ions_thermal_vol_avg,
+            self.data.physics.e_plasma_ions_thermal,
+        ) = self.calaculate_stored_thermal_energy(
+            vol_plasma=self.data.physics.vol_plasma,
+            nd_plasma_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
+            temp_plasma_density_weighted_vol_avg_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
+        )
+
+        self.data.physics.eden_plasma_thermal_vol_avg = (
+            self.data.physics.eden_plasma_electrons_thermal_vol_avg
+            + self.data.physics.eden_plasma_ions_thermal_vol_avg
+        )
+
+        self.data.physics.e_plasma_thermal_total = (
+            self.data.physics.e_plasma_electrons_thermal
+            + self.data.physics.e_plasma_ions_thermal
+        )
+
         # =======================================================
 
         # Set PF coil ramp times
@@ -825,7 +855,6 @@ class Physics(Model):
             p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
             aspect=self.data.physics.aspect,
             b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
-            nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
             nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
             nd_plasma_electron_line=self.data.physics.nd_plasma_electron_line,
             eps=self.data.physics.eps,
@@ -841,11 +870,12 @@ class Physics(Model):
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
-            temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
             q95=self.data.physics.q95,
             qstar=self.data.physics.qstar,
             vol_plasma=self.data.physics.vol_plasma,
             zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+            eden_plasma_electrons_thermal_vol_avg=self.data.physics.eden_plasma_electrons_thermal_vol_avg,
+            eden_plasma_ions_thermal_vol_avg=self.data.physics.eden_plasma_ions_thermal_vol_avg,
         )
 
         # Total transport power from scaling law (MW)
@@ -894,7 +924,7 @@ class Physics(Model):
             self.data.physics.molflow_plasma_fuelling_required,
             self.data.physics.rndfuel,
             self.data.physics.t_alpha_confinement,
-            self.data.physics.f_alpha_energy_confinement,
+            self.data.physics.f_t_alpha_energy_confinement,
         ) = self.phyaux(
             self.data.physics.aspect,
             self.data.physics.nd_plasma_fuel_ions_vol_avg,
@@ -995,17 +1025,20 @@ class Physics(Model):
             self.data.physics.plomw = self.data.physics.flo * self.data.physics.ptarmw
 
         # Calculate some derived quantities that may not have been defined earlier
-        self.data.physics.p_plasma_heating_total_mw = 1e6 * (
-            self.data.physics.f_p_alpha_plasma_deposited
-            * self.data.physics.p_alpha_total_mw
-            + self.data.physics.p_non_alpha_charged_mw
-            + self.data.physics.p_plasma_ohmic_mw
-            + self.data.current_drive.p_hcd_injected_total_mw
+        self.data.physics.p_plasma_heating_total_mw = (
+            self.calculate_total_plasma_heating_power(
+                f_p_alpha_plasma_deposited=self.data.physics.f_p_alpha_plasma_deposited,
+                p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
+                p_non_alpha_charged_mw=self.data.physics.p_non_alpha_charged_mw,
+                p_plasma_ohmic_mw=self.data.physics.p_plasma_ohmic_mw,
+                p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
+            )
         )
         self.data.physics.f_p_plasma_separatrix_rad = (
-            1.0e6
-            * self.data.physics.p_plasma_rad_mw
-            / self.data.physics.p_plasma_heating_total_mw
+            self.exhaust.calculate_radiation_fraction(
+                p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
+                p_plasma_heating_mw=self.data.physics.p_plasma_heating_total_mw,
+            )
         )
         self.data.physics.rad_fraction_total = (
             self.data.physics.f_p_plasma_separatrix_rad
@@ -1444,7 +1477,7 @@ class Physics(Model):
               (nucleus-pairs/sec).
             - rndfuel (float): Fuel burnup rate (reactions/s).
             - t_alpha_confinement (float): Alpha particle confinement time (s).
-            - f_alpha_energy_confinement (float): Fraction of alpha energy confinement.
+            - f_t_alpha_energy_confinement (float): Fraction of alpha energy confinement.
             This subroutine calculates extra physics related items needed by other
             parts of the code.
 
@@ -1490,7 +1523,7 @@ class Physics(Model):
         # Required fuelling rate (fuel ion pairs/second) (previously Amps)
         molflow_plasma_fuelling_required = rndfuel / burnup
 
-        f_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
+        f_t_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
 
         return (
             burnup,
@@ -1499,7 +1532,7 @@ class Physics(Model):
             molflow_plasma_fuelling_required,
             rndfuel,
             t_alpha_confinement,
-            f_alpha_energy_confinement,
+            f_t_alpha_energy_confinement,
         )
 
     @staticmethod
@@ -2201,6 +2234,13 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
+            "Total heating power given to the plasma (Pₕₑₐₜ) [MW]",
+            "(p_plasma_heating_total_mw)",
+            self.data.physics.p_plasma_heating_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Ohmic heating power (MW)",
             "(p_plasma_ohmic_mw)",
             self.data.physics.p_plasma_ohmic_mw,
@@ -2741,6 +2781,57 @@ class Physics(Model):
                 f"(pres_plasma_fuel_profile{i})",
                 self.data.physics.pres_plasma_fuel_profile[i],
             )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
+        po.osubhd(self.outfile, "Stored thermal energies (Wₜₕ):")
+
+        po.ovarre(
+            self.outfile,
+            "Total plasma thermal energy [W]",
+            "(e_plasma_thermal_total)",
+            self.data.physics.e_plasma_thermal_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma thermal energy in electrons [W]",
+            "(e_plasma_electrons_thermal)",
+            self.data.physics.e_plasma_electrons_thermal,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma thermal energy in ions [W]",
+            "(e_plasma_ions_thermal)",
+            self.data.physics.e_plasma_ions_thermal,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged plasma thermal energy density [J/m³]",
+            "(eden_plasma_thermal_vol_avg)",
+            self.data.physics.eden_plasma_thermal_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume averaged plasma thermal energy density in electrons [J/m³]",
+            "(eden_plasma_electrons_thermal_vol_avg)",
+            self.data.physics.eden_plasma_electrons_thermal_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume averaged plasma thermal energy density in ions [J/m³]",
+            "(eden_plasma_ions_thermal_vol_avg)",
+            self.data.physics.eden_plasma_ions_thermal_vol_avg,
+            "OP ",
+        )
+
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
         po.oblnkl(self.outfile)
@@ -2965,6 +3056,77 @@ class Physics(Model):
             m_plasma_electron,
             m_plasma,
         )
+
+    @staticmethod
+    def calculate_total_plasma_heating_power(
+        f_p_alpha_plasma_deposited: float,
+        p_alpha_total_mw: float,
+        p_non_alpha_charged_mw: float,
+        p_plasma_ohmic_mw: float,
+        p_hcd_injected_total_mw: float,
+    ) -> float:
+        """Calculate the total plasma heating power (Pₕₑₐₜ).
+
+        Parameters
+        ----------
+        f_p_alpha_plasma_deposited : float
+            Fraction of alpha power deposited in plasma.
+        p_alpha_total_mw : float
+            Total alpha power (MW).
+        p_non_alpha_charged_mw : float
+            Non-alpha charged particle heating power (MW).
+        p_plasma_ohmic_mw : float
+            Ohmic heating power (MW).
+        p_hcd_injected_total_mw : float
+            Total heating power from HCD injection (MW).
+
+        Returns
+        -------
+        float
+            Total plasma heating power (MW).
+        """
+        return (
+            f_p_alpha_plasma_deposited * p_alpha_total_mw
+            + p_non_alpha_charged_mw
+            + p_plasma_ohmic_mw
+            + p_hcd_injected_total_mw
+        )
+
+    @staticmethod
+    def calaculate_stored_thermal_energy(
+        vol_plasma: float,
+        nd_plasma_vol_avg: float,
+        temp_plasma_density_weighted_vol_avg_kev: float,
+    ) -> tuple[float, float]:
+        """Calculate the stored thermal energy in the (W) plasma.
+
+        Parameters
+        ----------
+        vol_plasma : float
+            Plasma volume [m³].
+        nd_plasma_vol_avg : float
+            Volume averaged plasma density (⟨n⟩) [/m³].
+        temp_plasma_density_weighted_vol_avg_kev : float
+            Volume averaged density weighted plasma temperature (⟨T⟩ₙ) [keV].
+
+        Returns
+        -------
+        tuple[float, float]
+            A tuple containing:
+            - Volume averaged thermal energy density (J/m³).
+            - Total stored thermal energy in the plasma (J).
+
+        """
+        eden_plasma_thermal_vol_avg = (
+            1.5
+            * constants.KILOELECTRON_VOLT
+            * nd_plasma_vol_avg
+            * temp_plasma_density_weighted_vol_avg_kev
+        )
+
+        e_plasma_thermal = eden_plasma_thermal_vol_avg * vol_plasma
+
+        return eden_plasma_thermal_vol_avg, e_plasma_thermal
 
 
 def res_diff_time(rmajor, res_plasma, kappa95):

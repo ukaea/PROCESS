@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime
 import getpass
+import logging
 import socket
 import subprocess  # noqa: S404
 from pathlib import Path
@@ -12,7 +13,6 @@ import process
 from process.core import constants, process_output
 from process.core.exceptions import ProcessValidationError
 from process.core.input import parse_input_file
-from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.blanket_variables import BlktModelTypes
@@ -22,9 +22,17 @@ from process.data_structure.build_variables import (
 )
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
-from process.data_structure.physics_variables import DivertorNumberModels
+from process.data_structure.pfcoil_variables import PFConductorModel
+from process.data_structure.physics_variables import (
+    ConfinementMode,
+    ConfinementTimeModel,
+    DivertorNumberModels,
+)
 from process.models.pfcoil import PFLocationTypes
-from process.models.physics.profiles import DensityProfilePedestalType
+from process.models.physics.profiles import (
+    DensityProfilePedestalType,
+    PlasmaProfileShapeType,
+)
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
@@ -34,6 +42,7 @@ from process.models.superconductors import (
 from process.models.tfcoil.base import TFCoilShapeModel, TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
 
+logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from process.core.model import DataStructure
 
@@ -219,17 +228,6 @@ def run_summary(data: DataStructure):
         process_output.ovarin(
             mfile, "Figure of merit switch", "(minmax)", data.numerics.minmax
         )
-
-
-def init_all_module_vars():
-    """Initialise all module variables
-    This is vital to ensure a 'clean' state of Process before a new run starts,
-    otherwise components of the previous run's state can persist into the new
-    run. This matters ever since Process is used as a shared library, rather
-    than a 'run-once' executable.
-    """
-    logging_model_handler.clear_logs()
-    constants.init_constants()
 
 
 def check_process(inputs, data):  # noqa: ARG001
@@ -978,7 +976,7 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     # PF coil resistivity is zero if superconducting
-    if data.pf_coil.i_pf_conductor == 0:
+    if data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
         data.pf_coil.rho_pf_coil = 0.0
 
     # If there is no NBI, then hot beam density should be zero
@@ -1029,18 +1027,43 @@ def check_process(inputs, data):  # noqa: ARG001
         data.tfcoil.temp_tf_superconductor_margin_min = data.tfcoil.tmargmin
         data.tfcoil.temp_cs_superconductor_margin_min = data.tfcoil.tmargmin
 
-    if data.physics.tauee_in > 1e-10 and data.physics.i_confinement_time != 48:
+    if (
+        data.physics.tauee_in > 1e-10
+        and data.physics.i_confinement_time != ConfinementTimeModel.NSTX_GYRO_BOHM
+    ):
         # Report error if confinement time is in the input
         # but the scaling to use it is not selected.
         warn("tauee_in is for use with i_confinement_time=48 only", stacklevel=2)
 
-    if data.physics.aspect > 1.7 and data.physics.i_confinement_time == 46:
+    if (
+        data.physics.aspect > 1.7
+        and data.physics.i_confinement_time == ConfinementTimeModel.MENARD_NSTX
+    ):
         # NSTX scaling is for A<1.7
         warn("NSTX scaling is for A<1.7", stacklevel=2)
 
-    if data.physics.i_plasma_current == 2 and data.physics.i_confinement_time == 42:
+    if (
+        data.physics.i_plasma_current == 2
+        and data.physics.i_confinement_time == ConfinementTimeModel.LANG_HIGH_DENSITY
+    ):
         raise ProcessValidationError(
             "Lang 2012 confinement scaling cannot be used for i_plasma_current=2 due to wrong q"
+        )
+    if (
+        data.stellarator.istell == 0
+        and ConfinementTimeModel(data.physics.i_confinement_time).mode
+        == ConfinementMode.STELLARATOR
+    ):
+        raise ProcessValidationError(
+            "Stellarator confinement time scaling cannot be used for a tokamak"
+        )
+    if (
+        data.physics.i_plasma_pedestal == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        and ConfinementTimeModel(data.physics.i_confinement_time).mode
+        not in {ConfinementMode.H_MODE, ConfinementMode.I_MODE}
+    ):
+        logger.warning(
+            "Non H-mode or I-mode confinement time scaling should not be used with a pedestal profile"
         )
 
     # Cannot use temperature margin constraint with REBCO TF coils

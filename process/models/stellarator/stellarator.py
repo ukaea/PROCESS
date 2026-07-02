@@ -455,7 +455,7 @@ class Stellarator(Model):
             _,
             _,
             _,
-            self.data.fwbs.nflutf,
+            self.data.fwbs.flu_tf_neutron_fast_peak,
             _,
             _,
             _,
@@ -701,7 +701,7 @@ class Stellarator(Model):
                     coilhtmx,
                     dpacop,
                     htheci,
-                    self.data.fwbs.nflutf,
+                    self.data.fwbs.flu_tf_neutron_fast_peak,
                     pheci,
                     pheco,
                     ptfiwp,
@@ -1441,8 +1441,8 @@ class Stellarator(Model):
                 po.ovarre(
                     self.outfile,
                     "Maximum neutron fluence (n/m2)",
-                    "(nflutf)",
-                    self.data.fwbs.nflutf,
+                    "(flu_tf_neutron_fast_peak)",
+                    self.data.fwbs.flu_tf_neutron_fast_peak,
                 )
                 po.ovarre(
                     self.outfile,
@@ -1681,7 +1681,7 @@ class Stellarator(Model):
              copper stabiliser displacements/atom
         htheci :
              peak TF coil case heating (MW/m3)
-        nflutf :
+        flu_tf_neutron_fast_peak :
              maximum neutron fluence (n/m2)
         pheci :
              inboard coil case heating (MW)
@@ -1708,7 +1708,7 @@ class Stellarator(Model):
             pheci = 0.0
             pheco = 0.0
             raddose = 0.0
-            nflutf = 0.0
+            flu_tf_neutron_fast_peak = 0.0
             dpacop = 0.0
             p_tf_nuclear_heat_mw = 0.0
 
@@ -1826,7 +1826,7 @@ class Stellarator(Model):
 
             # Maximum neutron fluence in superconductor (n/m**2)
 
-            nflutf = (
+            flu_tf_neutron_fast_peak = (
                 fpsdt
                 * fact[3]
                 * self.data.physics.pflux_fw_neutron_mw
@@ -1852,7 +1852,7 @@ class Stellarator(Model):
             coilhtmx,
             dpacop,
             htheci,
-            nflutf,
+            flu_tf_neutron_fast_peak,
             pheci,
             pheco,
             ptfiwp,
@@ -2235,7 +2235,6 @@ class Stellarator(Model):
             self.data.physics.p_alpha_total_mw,
             self.data.physics.aspect,
             self.data.physics.b_plasma_toroidal_on_axis,
-            self.data.physics.nd_plasma_ions_total_vol_avg,
             self.data.physics.nd_plasma_electrons_vol_avg,
             self.data.physics.nd_plasma_electron_line,
             self.data.physics.eps,
@@ -2251,11 +2250,12 @@ class Stellarator(Model):
             self.data.physics.rmajor,
             self.data.physics.rminor,
             self.data.physics.temp_plasma_electron_density_weighted_kev,
-            self.data.physics.temp_plasma_ion_density_weighted_kev,
             self.data.stellarator.iotabar,
             self.data.physics.qstar,
             self.data.physics.vol_plasma,
             self.data.physics.n_charge_plasma_effective_vol_avg,
+            eden_plasma_electrons_thermal_vol_avg=self.data.physics.eden_plasma_electrons_thermal_vol_avg,
+            eden_plasma_ions_thermal_vol_avg=self.data.physics.eden_plasma_ions_thermal_vol_avg,
         )
 
         self.data.physics.ntau, self.data.physics.nTtau = (
@@ -2279,6 +2279,23 @@ class Stellarator(Model):
             + self.data.physics.p_ion_transport_loss_mw
         )
 
+        # Calculate some derived quantities that may not have been defined earlier
+        self.data.physics.p_plasma_heating_total_mw = (
+            self.physics.calculate_total_plasma_heating_power(
+                f_p_alpha_plasma_deposited=self.data.physics.f_p_alpha_plasma_deposited,
+                p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
+                p_non_alpha_charged_mw=self.data.physics.p_non_alpha_charged_mw,
+                p_plasma_ohmic_mw=self.data.physics.p_plasma_ohmic_mw,
+                p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
+            )
+        )
+        self.data.physics.f_p_plasma_separatrix_rad = (
+            self.physics.exhaust.calculate_radiation_fraction(
+                p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
+                p_plasma_heating_mw=self.data.physics.p_plasma_heating_total_mw,
+            )
+        )
+
         #  Calculate auxiliary physics related information
         #  for the rest of the code
 
@@ -2290,7 +2307,7 @@ class Stellarator(Model):
             self.data.physics.molflow_plasma_fuelling_required,
             self.data.physics.rndfuel,
             self.data.physics.t_alpha_confinement,
-            self.data.physics.f_alpha_energy_confinement,
+            self.data.physics.f_t_alpha_energy_confinement,
         ) = self.physics.phyaux(
             self.data.physics.aspect,
             self.data.physics.nd_plasma_fuel_ions_vol_avg,
