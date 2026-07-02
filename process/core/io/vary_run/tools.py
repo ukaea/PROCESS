@@ -2,18 +2,23 @@
 A selection of functions for using the PROCESS code
 """
 
+from __future__ import annotations
+
 import logging
 import re
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from process.core.input import INPUT_VARIABLES
 from process.core.io.data_structure_dicts import get_dicts
 from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile
-from process.core.io.vary_run import RunProcessConfig
-from process.core.model import DataStructure
 from process.core.solver.iteration_variables import ITERATION_VARIABLES
+
+if TYPE_CHECKING:
+    from process.core.io.vary_run import RunProcessConfig
+    from process.core.model import DataStructure
 
 logger = logging.getLogger(__name__)
 
