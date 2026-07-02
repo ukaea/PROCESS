@@ -135,7 +135,7 @@ def shield_geometry_double_null(
 
     Parameters
     ----------
-    cumulative_lowe:
+    cumulative_lower:
         cumulative vertical thicknesses of components below the midplane
     radx_far:
         outboard radius of outer surface of shield

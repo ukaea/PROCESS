@@ -396,6 +396,8 @@ class MFile:
 
         Parameters
         ----------
+        filename:
+            file name
         keys_to_write :
              keys to select
         scan :
@@ -419,12 +421,14 @@ class MFile:
 
         Parameters
         ----------
-        args : string, list of tuples
-            input filename, variable data
-        csv_outfile :
-
-        output_data :
-             (Default value = None)
+        filename:
+            file name
+        keys_to_write :
+             keys to select
+        scan :
+             scan to select
+        verbose :
+             verbosity of output
         """
         columns = (
             ("Description", "Varname", "Value") if verbose else ("Varname", "Value")
@@ -555,8 +559,8 @@ def search_des(dictionary, description):
     ----------
     dictionary :
         dictionary to search in
-    variable :
-        variable name to search for
+    description :
+        variable description to search for
 
     Returns
     -------

@@ -4423,11 +4423,10 @@ def read_imprad_data(_skiprows, data_path):
 
     Parameters
     ----------
-    skiprows :
+    _skiprows :
         number of rows to skip when reading impurity data files
     data_path :
         path to impurity data
-    _skiprows :
 
     """
     label = [
@@ -9902,8 +9901,6 @@ def plot_cs_coil_structure(
         MFILE
     scan :
         scan number to use
-    demo_ranges :
-        whether to use demo ranges for the plot
     colour_scheme :
         colour scheme to use for the plot (Default value = 1)
 
@@ -15309,8 +15306,6 @@ def main_plot(
 
     Parameters
     ----------
-    figs :
-        figure object to add plot to
     m_file :
         MFILE
     scan :

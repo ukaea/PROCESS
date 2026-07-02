@@ -228,14 +228,13 @@ def get_constraint_equations(data):
 
     Parameters
     ----------
-    dict:
-        data: Data dictionary for the IN.DAT information
-    data :
+    data:
+        Data dictionary for the IN.DAT information
 
 
     Returns
     -------
-    dict
+    :
         dict of the constraint numbers and their comments
     """
     constraints = {}

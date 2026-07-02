@@ -11,6 +11,7 @@ from process.core.input import INPUT_VARIABLES
 from process.core.io.data_structure_dicts import get_dicts
 from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile
+from process.core.io.vary_run import RunProcessConfig
 from process.core.model import DataStructure
 from process.core.solver.iteration_variables import ITERATION_VARIABLES
 
@@ -253,7 +254,7 @@ def no_unfeasible_mfile(wdir=".", mfile="MFILE.DAT"):
         return 100000
 
 
-def vary_iteration_variables(itervars, lbs, ubs, config):
+def vary_iteration_variables(itervars, lbs, ubs, config: RunProcessConfig):
     """Routine to change the iteration variables in the initial IN.DAT
     within given bounds.
 
@@ -265,8 +266,8 @@ def vary_iteration_variables(itervars, lbs, ubs, config):
         float list of lower bounds for variables
     ubs :
         float list of upper bounds for variables
-    generator :
-        Generator numpy generator to create random numbers
+    config :
+        vary run configuration
     """
     in_dat = InDat(config.initial_infile)
 
