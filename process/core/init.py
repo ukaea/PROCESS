@@ -7,7 +7,6 @@ import socket
 import subprocess  # noqa: S404
 from pathlib import Path
 from typing import TYPE_CHECKING
-from warnings import warn
 
 import process
 from process.core import constants, process_output
@@ -324,8 +323,10 @@ def check_process(inputs, data):  # noqa: ARG001
 
     if data.impurity_radiation.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069
         raise ProcessValidationError(
-            "The thermal alpha/electron density ratio should be controlled using f_nd_alpha_electron (itv 109) and not f_nd_impurity_electrons(2)."
-            "f_nd_impurity_electrons(2) should be removed from the input file, or set to the default value 0.1D0."
+            "The thermal alpha/electron density ratio should be controlled using"
+            " f_nd_alpha_electron (itv 109) and not f_nd_impurity_electrons(2)."
+            "f_nd_impurity_electrons(2) should be removed from the input file,"
+            " or set to the default value 0.1D0."
         )
 
     # Impurity fractions
@@ -362,7 +363,7 @@ def check_process(inputs, data):  # noqa: ARG001
             )
             >= 1e-7
         ):
-            warn(
+            logger.warning(
                 f"Temperature pedestal is at plasma edge, but temp_plasma_pedestal_kev "
                 f"({data.physics.temp_plasma_pedestal_kev}) differs from temp_plasma_separatrix_kev "
                 f"({data.physics.temp_plasma_separatrix_kev})",
@@ -378,7 +379,7 @@ def check_process(inputs, data):  # noqa: ARG001
             data.physics.temp_plasma_electron_vol_avg_kev
             <= data.physics.temp_plasma_pedestal_kev
         ):
-            warn(
+            logger.warning(
                 f"Volume-averaged temperature ({data.physics.te}) has been "
                 f"forced to exceed input pedestal height ({data.physics.temp_plasma_pedestal_kev}). "
                 "Changing to te = temp_plasma_pedestal_kev*1.001",
@@ -393,8 +394,9 @@ def check_process(inputs, data):  # noqa: ARG001
             and (data.numerics.ixc[: data.numerics.nvar] == 4).any()
             and data.numerics.boundl[3] < data.physics.temp_plasma_pedestal_kev * 1.001
         ):
-            warn(
-                "Lower limit of volume averaged electron temperature (temp_plasma_electron_vol_avg_kev) has been raised to ensure temp_plasma_electron_vol_avg_kev > temp_plasma_pedestal_kev",
+            logger.warning(
+                "Lower limit of volume averaged electron temperature (temp_plasma_electron_vol_avg_kev)"
+                " has been raised to ensure temp_plasma_electron_vol_avg_kev > temp_plasma_pedestal_kev",
                 stacklevel=2,
             )
             data.numerics.boundl[3] = data.physics.temp_plasma_pedestal_kev * 1.001
@@ -439,7 +441,7 @@ def check_process(inputs, data):  # noqa: ARG001
             )
             >= 1e-7
         ):
-            warn(
+            logger.warning(
                 "Density pedestal is at plasma edge "
                 f"({data.physics.radius_plasma_pedestal_density_norm = }), but nd_plasma_pedestal_electron "
                 f"({data.physics.nd_plasma_pedestal_electron}) differs from "
@@ -456,12 +458,12 @@ def check_process(inputs, data):  # noqa: ARG001
             ).any()
         ):
             if (data.numerics.ixc[: data.numerics.nvar] == 145).any():
-                warn(
+                logger.warning(
                     "nd_plasma_pedestal_electron set with f_nd_plasma_pedestal_greenwald without constraint eq 81 (nd_plasma_pedestal_electron<nd_plasma_electron_on_axis)",
                     stacklevel=2,
                 )
             if (data.numerics.ixc[: data.numerics.nvar] == 6).any():
-                warn(
+                logger.warning(
                     "nd_plasma_electrons_vol_avg used as iteration variable without constraint 81 (nd_plasma_pedestal_electron<nd_plasma_electron_on_axis)",
                     stacklevel=2,
                 )
@@ -503,7 +505,7 @@ def check_process(inputs, data):  # noqa: ARG001
             ).any()
             and data.physics.i_plasma_pedestal
         ):
-            warn(
+            logger.warning(
                 "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommended for the Reinke model",
                 stacklevel=2,
             )
@@ -513,7 +515,9 @@ def check_process(inputs, data):  # noqa: ARG001
         data.build.dz_fw_plasma_gap = data.build.dz_xpoint_divertor
         data.build.dz_shld_upper = data.build.dz_shld_lower
         data.build.dz_vv_upper = data.build.dz_vv_lower
-        warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
+        logger.warning(
+            "Double-null: Upper vertical build forced to match lower", stacklevel=2
+        )
     else:  # i_single_null == DivertorNumberModels.SINGLE_NULL
         data.divertor.n_divertors = 1
 
@@ -528,7 +532,7 @@ def check_process(inputs, data):  # noqa: ARG001
         # 2 : Peng Ip scaling (See STAR code documentation)
         # 9 : Fiesta Ip scaling
         if data.physics.i_plasma_current not in {2, 9}:
-            warn(
+            logger.warning(
                 "Usual current scaling for TARTs (i_plasma_current=2 or 9) is not being used",
                 stacklevel=2,
             )
@@ -570,7 +574,7 @@ def check_process(inputs, data):  # noqa: ARG001
 
         # Call a lvl 3 error if superconductor magnets are used
         elif data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            warn(
+            logger.warning(
                 "Joints res not cal. for SC (itart = 1) TF (data.tfcoil.i_tf_sup = 1)",
                 stacklevel=2,
             )
@@ -612,7 +616,9 @@ def check_process(inputs, data):  # noqa: ARG001
         if i_single_null == DivertorNumberModels.DOUBLE_NULL and (
             data.physics.f_p_div_lower in {1.0, 0.0}
         ):
-            warn("Operating with a single null in a double null machine", stacklevel=2)
+            logger.warning(
+                "Operating with a single null in a double null machine", stacklevel=2
+            )
 
         # Set the TF coil shape to picture frame (if default value)
         if data.tfcoil.i_tf_shape == TFCoilShapeModel.DEFAULT:
@@ -1012,13 +1018,13 @@ def check_process(inputs, data):  # noqa: ARG001
     if data.tfcoil.tmargmin > 0.0001:
         # This limit has been input and will be applied to both TFC and CS
         if data.tfcoil.temp_tf_superconductor_margin_min > 0.0001:
-            warn(
+            logger.warning(
                 "temp_tf_superconductor_margin_min and tmargmin should not both be specified in IN.DAT "
                 "temp_tf_superconductor_margin_min has been ignored",
                 stacklevel=2,
             )
         if data.tfcoil.temp_cs_superconductor_margin_min > 0.0001:
-            warn(
+            logger.warning(
                 "temp_cs_superconductor_margin_min and tmargmin should not both be specified in IN.DAT "
                 "temp_cs_superconductor_margin_min has been ignored",
                 stacklevel=2,
@@ -1033,14 +1039,16 @@ def check_process(inputs, data):  # noqa: ARG001
     ):
         # Report error if confinement time is in the input
         # but the scaling to use it is not selected.
-        warn("tauee_in is for use with i_confinement_time=48 only", stacklevel=2)
+        logger.warning(
+            "tauee_in is for use with i_confinement_time=48 only", stacklevel=2
+        )
 
     if (
         data.physics.aspect > 1.7
         and data.physics.i_confinement_time == ConfinementTimeModel.MENARD_NSTX
     ):
         # NSTX scaling is for A<1.7
-        warn("NSTX scaling is for A<1.7", stacklevel=2)
+        logger.warning("NSTX scaling is for A<1.7", stacklevel=2)
 
     if (
         data.physics.i_plasma_current == 2

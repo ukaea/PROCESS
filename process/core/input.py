@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import copy
+import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
-from warnings import warn
 
 from process.core.exceptions import (
     ProcessValidationError,
@@ -30,6 +30,8 @@ ValidInputTypes = NumberType | str
 
 DataTypes = (int, float, str)
 """Valid input variable types alias"""
+
+logger = logging.getLogger(__name__)
 
 
 def _ixc_additional_actions(
@@ -101,7 +103,7 @@ class InputVariable:
             raise ProcessValueError(error_msg)
 
         if not self.set_variable and self.additional_actions is None:
-            warn(
+            logger.warning(
                 "Not setting variable or performing an additional action. Why are you parsing this variable?",
                 stacklevel=2,
             )
@@ -702,7 +704,7 @@ INPUT_VARIABLES = {
         range=(1e-08, 0.0001),
         additional_actions=lambda _n, rt, _i, _c: (
             rt <= 1e-6
-            or warn(
+            or logger.warning(
                 (
                     "the relationship between REBCO layer thickness and current density is not linear."
                     "REBCO layer thicknesses > 1um should be considered an aggressive extrapolation of"

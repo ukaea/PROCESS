@@ -12,7 +12,6 @@ import logging
 from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from warnings import warn
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -113,7 +112,7 @@ def plot_mfile_solutions(
         figure and dataframe of solutions
     """
     if normalisation_type is not None and normalising_tag is not None:
-        warn(
+        logger.warning(
             "Double-normalising: using opt params normalised to each solution "
             "and normalising again to another solution. Are you sure?",
             stacklevel=1,

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-import warnings
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -223,7 +222,7 @@ class Caller:
                 headers=["Variable", "Previous value", "Current value"],
             )
 
-            warnings.warn(
+            logger.warning(
                 f"\033[93m{non_idempotent_warning}\n{non_idempotent_table}\033[0m",
                 stacklevel=2,
             )
