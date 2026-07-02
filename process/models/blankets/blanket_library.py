@@ -24,9 +24,7 @@ from process.models.engineering.pumping import (
     CoolantFrictionLossParameters,
     CoolantType,
     calculate_required_mass_flow_rate,
-    calculate_reynolds_number,
-    darcy_friction_haaland,
-    elbow_coeff,
+    coolant_friction_pressure_drop,
 )
 from process.models.fw import N_FW_PIPE_90_DEG_BENDS, N_FW_PIPE_180_DEG_BENDS
 from process.models.power import PumpingPowerModelTypes
@@ -2634,7 +2632,6 @@ class BlanketLibrary(Model):
 
             # Mechanical pumping power for the first wall (MW)
             self.data.heat_transport.p_fw_coolant_pump_mw = self.coolant_pumping_power(
-                output=output,
                 i_liquid_breeder=1,
                 temp_coolant_pump_outlet=self.data.fwbs.temp_fw_coolant_in,
                 temp_coolant_pump_inlet=self.data.fwbs.temp_fw_coolant_out,
@@ -2643,12 +2640,12 @@ class BlanketLibrary(Model):
                 mflow_coolant_total=self.data.blanket.mflow_fw_coolant_total,
                 i_coolant_type=self.data.fwbs.i_fw_coolant_type,
                 den_coolant=self.data.fwbs.den_fw_coolant,
-                label="First Wall",
+                etaiso=self.data.fwbs.etaiso,
+                etaiso_liq=self.data.fwbs.etaiso_liq,
             )
 
             # Mechanical pumping power for the blanket (MW)
             self.data.heat_transport.p_blkt_coolant_pump_mw = self.coolant_pumping_power(
-                output=output,
                 i_liquid_breeder=1,
                 temp_coolant_pump_outlet=self.data.fwbs.temp_blkt_coolant_in,
                 temp_coolant_pump_inlet=self.data.fwbs.temp_blkt_coolant_out,
@@ -2657,7 +2654,8 @@ class BlanketLibrary(Model):
                 mflow_coolant_total=self.data.blanket.mflow_blkt_coolant_total,
                 i_coolant_type=(self.data.fwbs.i_blkt_coolant_type),
                 den_coolant=self.data.fwbs.den_blkt_coolant,
-                label="Blanket",
+                etaiso=self.data.fwbs.etaiso,
+                etaiso_liq=self.data.fwbs.etaiso_liq,
             )
 
             # Total mechanical pumping power (MW)
@@ -2692,7 +2690,6 @@ class BlanketLibrary(Model):
 
             # Mechanical pumping power for the blanket (MW)
             self.data.heat_transport.p_blkt_breeder_pump_mw = self.coolant_pumping_power(
-                output=output,
                 i_liquid_breeder=2,
                 temp_coolant_pump_outlet=self.data.fwbs.inlet_temp_liq,
                 temp_coolant_pump_inlet=self.data.fwbs.outlet_temp_liq,
@@ -2701,7 +2698,8 @@ class BlanketLibrary(Model):
                 mflow_coolant_total=self.data.blanket.mfblkt_liq,
                 i_coolant_type=(self.data.fwbs.i_blkt_coolant_type),
                 den_coolant=self.data.fwbs.den_liq,
-                label="Liquid Metal Breeder/Coolant",
+                etaiso=self.data.fwbs.etaiso,
+                etaiso_liq=self.data.fwbs.etaiso_liq,
             )
 
             self.data.heat_transport.htpmw_blkt_tot = (
@@ -3006,20 +3004,20 @@ class BlanketLibrary(Model):
         )
 
         # Friction - for all coolants
-        friction_params: CoolantFrictionLossParameters = (
-            self.coolant_friction_pressure_drop(
-                i_ps=icoolpump,
-                radius_pipe_90_deg_bend=radius_pipe_90_deg_bend,
-                radius_pipe_180_deg_bend=radius_pipe_180_deg_bend,
-                n_pipe_90_deg_bends=n_pipe_90_deg_bends,
-                n_pipe_180_deg_bends=n_pipe_180_deg_bends,
-                len_pipe=len_pipe,
-                den_coolant=den_coolant,
-                visc_coolant=visc_coolant_dynamic,
-                vel_coolant=vel_coolant,
-                roughness_channel=self.data.fwbs.roughness_fw_channel,
-                radius_channel=self.data.fwbs.radius_fw_channel,
-            )
+        friction_params: CoolantFrictionLossParameters = coolant_friction_pressure_drop(
+            i_ps=icoolpump,
+            radius_pipe_90_deg_bend=radius_pipe_90_deg_bend,
+            radius_pipe_180_deg_bend=radius_pipe_180_deg_bend,
+            n_pipe_90_deg_bends=n_pipe_90_deg_bends,
+            n_pipe_180_deg_bends=n_pipe_180_deg_bends,
+            len_pipe=len_pipe,
+            den_coolant=den_coolant,
+            visc_coolant=visc_coolant_dynamic,
+            vel_coolant=vel_coolant,
+            roughness_channel=self.data.fwbs.roughness_fw_channel,
+            radius_channel=self.data.fwbs.radius_fw_channel,
+            a_bz_liq=self.data.fwbs.a_bz_liq,
+            b_bz_liq=self.data.fwbs.b_bz_liq,
         )
         dpres_friction = friction_params.dpres_total
 
@@ -3194,351 +3192,6 @@ class BlanketLibrary(Model):
             )
 
         return liquid_breeder_pressure_drop_mhd
-
-    def coolant_friction_pressure_drop(
-        self,
-        i_ps: int,
-        radius_pipe_90_deg_bend: float,
-        radius_pipe_180_deg_bend: float,
-        n_pipe_90_deg_bends: float,
-        n_pipe_180_deg_bends: float,
-        len_pipe: float,
-        den_coolant: float,
-        visc_coolant: float,
-        vel_coolant: float,
-        roughness_channel: float,
-        radius_channel: float,
-    ) -> CoolantFrictionLossParameters:
-        """Pressure drops are calculated for a pipe with a number of 90
-        and 180 degree bends. The pressure drop due to frictional forces along
-        the total straight length of the pipe is calculated, then the pressure
-        drop due to the bends is calculated. The total pressure drop is the sum
-        of all contributions.
-
-        Parameters
-        ----------
-        i_ps :
-            switch for primary or secondary coolant
-        radius_pipe_90_deg_bend :
-            radius of 90 degree bend in pipe [m]
-        radius_pipe_180_deg_bend :
-            radius of 180 degree bend in pipe [m]
-        n_pipe_90_deg_bends :
-            number of 90 degree bends in the pipe
-        n_pipe_180_deg_bends :
-            number of 180 degree bends in the pipe
-        len_pipe :
-            total flow length along pipe [m]
-        den_coolant :
-            coolant density [kg/m³]
-        visc_coolant :
-            coolant viscosity [Pa s]
-        vel_coolant :
-            coolant flow velocity [m/s]
-        roughness_channel :
-            roughness of the channel wall (ε) [m]
-        radius_channel :
-            radius of the channel [m]
-
-        Returns
-        -------
-        :
-            `CoolantFrictionLossParameters` dataclass containing:
-            - Total pressure drop due to friction (Pa)
-            - Pressure drop due to straight sections (Pa)
-            - Pressure drop due to 90 degree bends (Pa)
-            - Pressure drop due to 180 degree bends (Pa)
-            - Reynolds number
-            - Darcy friction factor
-            - Pressure drop coefficient for straight sections
-            - Pressure drop coefficient for 90 degree bends
-            - Pressure drop coefficient for 180 degree bends
-
-        Notes
-        -----
-            Darcy-Weisbach Equation (straight pipe):
-
-            ΔP = λ * L/D * (p 〈v〉²) / 2
-
-            λ - Darcy friction factor, L - pipe length, D - hydraulic diameter,
-            p - fluid density, 〈v〉 - fluid flow average velocity
-
-            This function also calculates pressure drop equations for elbow bends,
-            with modified coefficients.
-
-            N.B. Darcy friction factor is estimated from the Haaland approximation.
-        """
-        # Calculate hydraulic dimater for round or retancular pipe (m)
-        dia_pipe = self.pipe_hydraulic_diameter(i_channel_shape=i_ps)
-
-        # Reynolds number
-        reynolds_number = calculate_reynolds_number(
-            den_coolant=den_coolant,
-            vel_coolant=vel_coolant,
-            radius_channel=dia_pipe / 2,
-            visc_coolant=visc_coolant,
-        )
-
-        # Calculate Darcy friction factor
-        # N.B. friction function Uses Haaland approx. which assumes a filled
-        # circular pipe.
-        # Use dh which allows us to do fluid calculations for non-circular tubes
-        # (dh is estimate appropriate for fully developed flow).
-
-        darcy_friction_factor = darcy_friction_haaland(
-            reynolds=reynolds_number,
-            roughness_channel=roughness_channel,
-            radius_channel=radius_channel,
-        )
-
-        # Pressure drop coefficient
-
-        # Straight section
-        f_straight = darcy_friction_factor * len_pipe / dia_pipe
-
-        # 90 degree elbow pressure drop coefficient
-        f_elbow_90 = elbow_coeff(
-            radius_pipe_elbow=radius_pipe_90_deg_bend,
-            deg_pipe_elbow=90.0,
-            darcy_friction=darcy_friction_factor,
-            dia_pipe=dia_pipe,
-        )
-
-        # 180 degree elbow pressure drop coefficient
-        f_elbow_180 = elbow_coeff(
-            radius_pipe_elbow=radius_pipe_180_deg_bend,
-            deg_pipe_elbow=180.0,
-            darcy_friction=darcy_friction_factor,
-            dia_pipe=dia_pipe,
-        )
-
-        # Pressure drop due to friction in straight sections
-        dpres_straight = f_straight * 0.5 * den_coolant * vel_coolant**2
-
-        # Pressure drop due to 90 and 180 degree bends
-        dpres_90 = f_elbow_90 * 0.5 * den_coolant * vel_coolant**2
-        dpres_90_total = n_pipe_90_deg_bends * dpres_90
-        dpres_180 = f_elbow_180 * 0.5 * den_coolant * vel_coolant**2
-        dpres_180_total = n_pipe_180_deg_bends * dpres_180
-
-        dpres_bends_total = dpres_90_total + dpres_180_total
-
-        # Total pressure drop (Pa)
-        dpres_total = dpres_straight + dpres_bends_total
-
-        return CoolantFrictionLossParameters(
-            dpres_total=dpres_total,
-            dpres_straight=dpres_straight,
-            dpres_90=dpres_90,
-            dpres_90_total=dpres_90_total,
-            dpres_180=dpres_180,
-            dpres_180_total=dpres_180_total,
-            dpres_bends_total=dpres_bends_total,
-            reynolds_number=reynolds_number,
-            darcy_friction_factor=darcy_friction_factor,
-            f_straight=f_straight,
-            len_straight=len_pipe,
-            f_elbow_90=f_elbow_90,
-            f_elbow_180=f_elbow_180,
-        )
-
-    def pipe_hydraulic_diameter(self, i_channel_shape):
-        """Caculate the hydraulic diameter (m) for a given coolant pipe size/shape.
-
-
-        Parameters
-        ----------
-        i_channel_shape :
-            switch for circular or rectangular channel crossection.
-            Shape depends on whether primary or secondary coolant
-        """
-        # If primary coolant then circular channels assumed
-        if i_channel_shape == 1:
-            return 2.0 * self.data.fwbs.radius_fw_channel
-
-        # If secondary coolant then rectangular channels assumed
-        if i_channel_shape == 2:
-            return (
-                2
-                * self.data.fwbs.a_bz_liq
-                * self.data.fwbs.b_bz_liq
-                / (self.data.fwbs.a_bz_liq + self.data.fwbs.b_bz_liq)
-            )
-
-        raise ProcessValueError(
-            f"i_channel_shape ={i_channel_shape} is an invalid option."
-        )
-
-    def coolant_pumping_power(
-        self,
-        output: bool,
-        i_liquid_breeder: int,
-        temp_coolant_pump_outlet: float,
-        temp_coolant_pump_inlet: float,
-        pres_coolant_pump_inlet: float,
-        dpres_coolant: float,
-        mflow_coolant_total: float,
-        i_coolant_type: int,
-        den_coolant: float,
-        label: str,
-    ) -> float:
-        """Calculate the coolant pumping power in MW for the first wall (FW) or breeding blanket (BZ) coolant.
-
-        Parameters
-        ----------
-        output : bool
-            Whether to write data to output file.
-        i_liquid_breeder : int
-            Switch for primary coolant or secondary coolant/breeder (1=primary He/H2O, 2=secondary PbLi/Li).
-        temp_coolant_pump_outlet : float
-            Pump outlet temperature (K).
-        temp_coolant_pump_inlet : float
-            Pump inlet temperature (K).
-        pressure : float
-            Outlet (pump inlet) coolant pressure (Pa).
-        dpres_coolant : float
-            Coolant pressure drop (Pa).
-        mflow_coolant_total : float
-            Total coolant mass flow rate in (kg/s).
-        i_coolant_type : int
-            Type of FW/blanket coolant (e.g., 1=Helium, 2=Water)
-        den_coolant : float
-            Density of coolant or liquid breeder (kg/m³).
-        label : str
-            Description label for output.
-
-        Returns
-        -------
-        float
-            Pumping power in MW.
-
-        References
-        ----------
-            - Idel'Cik, I. E. (1969), Memento des pertes de charge
-            - S.P. Sukhatme (2005), A Textbook on Heat Transfer
-        """
-        # Pump outlet pressure (Pa)
-        # The pump adds the pressure lost going through the coolant channels back
-        pres_coolant_pump_outlet = pres_coolant_pump_inlet + dpres_coolant
-
-        # Adiabatic index for helium or water
-        gamma = (5 / 3) if i_coolant_type == CoolantType.HELIUM else (4 / 3)
-
-        # If calculating for primary coolant
-        if i_liquid_breeder == 1:
-            # The pumping power is be calculated in the most general way,
-            # using enthalpies before and after the pump.
-
-            pump_outlet_fluid_properties = FluidProperties.of(
-                fluid_name=CoolantType(i_coolant_type).full_name,
-                temperature=temp_coolant_pump_outlet,
-                pressure=pres_coolant_pump_outlet,
-            )
-
-            # Assume isentropic pump so that s1 = s2
-            s1 = pump_outlet_fluid_properties.entropy
-
-            # Get specific enthalpy at the outlet (J/kg) before pump using pressure and entropy s1
-            pump_inlet_fluid_properties = FluidProperties.of(
-                fluid_name=CoolantType(i_coolant_type).full_name,
-                pressure=pres_coolant_pump_inlet,
-                entropy=s1,
-            )
-
-            # Pumping power (MW) is given by enthalpy change, with a correction for
-            # the isentropic efficiency of the pump.
-            fp = (
-                temp_coolant_pump_outlet
-                * (
-                    1
-                    - (pres_coolant_pump_outlet / pres_coolant_pump_inlet)
-                    ** -((gamma - 1) / gamma)
-                )
-                / (
-                    self.data.fwbs.etaiso
-                    * (temp_coolant_pump_inlet - temp_coolant_pump_outlet)
-                )
-            )
-            pumppower = (
-                1e-6
-                * mflow_coolant_total
-                * (
-                    pump_outlet_fluid_properties.enthalpy
-                    - pump_inlet_fluid_properties.enthalpy
-                )
-                / self.data.fwbs.etaiso
-            ) / (1 - fp)
-
-        # If calculating for secondary coolant/breeder...
-        else:
-            # Calculate specific volume
-            spec_vol = 1 / den_coolant
-
-            # Pumping power (MW) is given by pressure change, with a correction for
-            # the isentropic efficiency of the pump.
-            fp = (
-                temp_coolant_pump_outlet
-                * (
-                    1
-                    - (pres_coolant_pump_outlet / pres_coolant_pump_inlet)
-                    ** -((gamma - 1) / gamma)
-                )
-                / (
-                    self.data.fwbs.etaiso_liq
-                    * (temp_coolant_pump_inlet - temp_coolant_pump_outlet)
-                )
-            )
-            pumppower = (
-                1e-6
-                * mflow_coolant_total
-                * spec_vol
-                * dpres_coolant
-                / self.data.fwbs.etaiso_liq
-            ) / (1 - fp)
-
-        # Error for dpres_coolant too large
-        if fp >= 1:
-            raise ProcessValueError(
-                "Pressure drops in coolant are too large to be feasible"
-            )
-
-        if output:
-            po.oheadr(self.outfile, "Mechanical Pumping Power for " + label)
-            po.osubhd(self.outfile, "Pumping power for " + label)
-
-            po.ovarre(
-                self.outfile, "Pumping power (MW)", "(pumppower)", pumppower, "OP "
-            )
-            po.ovarre(
-                self.outfile,
-                "FW or Blanket inlet (pump oulet) pressure (Pa)",
-                "(coolpin)",
-                pres_coolant_pump_outlet,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "FW or Blanket oulet (pump inlet) pressure (Pa)",
-                "(pres_coolant_pump_inlet)",
-                pres_coolant_pump_inlet,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "FW or Blanket total pressure drop (Pa)",
-                "(dpres_coolant)",
-                dpres_coolant,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Mass flow rate in (kg/s) = ",
-                "(mf)",
-                mflow_coolant_total,
-                "OP ",
-            )
-
-        return pumppower
 
     def output_blkt_pumping_variables(self):
 
@@ -3827,7 +3480,12 @@ class OutboardBlanket(BlanketLibrary):
     def calculate_basic_geometry(self):
         self.component_volumes()
 
-        dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)
+        dia_blkt_channel = self.pipe_hydraulic_diameter(
+            i_channel_shape=1,
+            radius_fw_channel=self.data.fwbs.radius_fw_channel,
+            a_bz_liq=self.data.fwbs.a_bz_liq,
+            b_bz_liq=self.data.fwbs.b_bz_liq,
+        )
         self.data.fwbs.radius_blkt_channel = dia_blkt_channel / 2
         (
             self.data.fwbs.radius_blkt_channel_90_bend,
@@ -3955,7 +3613,12 @@ class InboardBlanket(BlanketLibrary):
     def calculate_basic_geometry(self):
         self.component_volumes()
 
-        dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)
+        dia_blkt_channel = self.pipe_hydraulic_diameter(
+            i_channel_shape=1,
+            radius_fw_channel=self.data.fwbs.radius_fw_channel,
+            a_bz_liq=self.data.fwbs.a_bz_liq,
+            b_bz_liq=self.data.fwbs.b_bz_liq,
+        )
         self.data.fwbs.radius_blkt_channel = dia_blkt_channel / 2
         (
             self.data.fwbs.radius_blkt_channel_90_bend,
