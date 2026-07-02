@@ -592,8 +592,17 @@ def constraint_equation_17(constraint_registration, data):
     f_p_plasma_separatrix_rad_max: maximum allowed plasma radiation fraction at the
     separatrix
     """
+    if data.stellarator.istell != 0:
+        # Remove the contribution of psolradmw from f_p_plasma_separatrix_rad
+        # TODO: this is replicating behaviour before #4299
+        # is this really what should happen?
+        f_rad_sol = data.physics.psolradmw / data.physics.p_plasma_heating_total_mw
+        f_p_plasma_separatrix_rad = data.physics.f_p_plasma_separatrix_rad - f_rad_sol
+    else:
+        f_p_plasma_separatrix_rad = data.physics.f_p_plasma_separatrix_rad
+
     return leq(
-        data.physics.f_p_plasma_separatrix_rad,
+        f_p_plasma_separatrix_rad,
         data.constraints.f_p_plasma_separatrix_rad_max,
         constraint_registration,
     )
