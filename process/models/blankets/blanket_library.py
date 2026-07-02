@@ -581,76 +581,76 @@ class BlanketLibrary(Model):
         """Outputs blanket volumes and areas to the output file"""
         po.oheadr(self.outfile, "Blanket Volumes and Surface Areas")
 
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "Inboard Blanket Volume with gaps and holes (m3)",
             "(vol_blkt_inboard)",
             self.data.fwbs.vol_blkt_inboard,
         )
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "Outboard Blanket Volume with gaps and holes (m3)",
             "(vol_blkt_outboard)",
             self.data.fwbs.vol_blkt_outboard,
         )
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "Total Blanket Volume with gaps and holes (m3)",
             "(vol_blkt_total)",
             self.data.fwbs.vol_blkt_total,
         )
 
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "Inboard Blanket Volume if toridally continuous (m3)",
             "(vol_blkt_inboard_full_coverage)",
             self.data.fwbs.vol_blkt_inboard_full_coverage,
         )
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "Outboard Blanket Volume if toridally continuous (m3)",
             "(vol_blkt_outboard_full_coverage)",
             self.data.fwbs.vol_blkt_outboard_full_coverage,
         )
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "Total Blanket Volume if toridally continuous (m3)",
             "(vol_blkt_total_full_coverage)",
             self.data.fwbs.vol_blkt_total_full_coverage,
         )
 
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "Inboard Blanket Surface Area with gaps and holes (m2)",
             "(a_blkt_inboard_surface)",
             self.data.build.a_blkt_inboard_surface,
         )
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "Outboard Blanket Surface Area with gaps and holes (m2)",
             "(a_blkt_outboard_surface)",
             self.data.build.a_blkt_outboard_surface,
         )
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "Total Blanket Surface Area with gaps and holes (m2)",
             "(a_blkt_total_surface)",
             self.data.build.a_blkt_total_surface,
         )
 
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "Inboard blanket surface area if toridally continuous (m2)",
             "(a_blkt_inboard_surface_full_coverage)",
             self.data.build.a_blkt_inboard_surface_full_coverage,
         )
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "Outboard blanket surface area if toridally continuous (m2)",
             "(a_blkt_outboard_surface_full_coverage)",
             self.data.build.a_blkt_outboard_surface_full_coverage,
         )
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "Total blanket surface area if toridally continuous (m2)",
             "(a_blkt_total_surface_full_coverage)",
@@ -792,20 +792,20 @@ class BlanketLibrary(Model):
             ):
                 po.osubhd(self.outfile, "First Wall :")
 
-            po.ovarst(
+            po.ovarre(
                 self.outfile,
                 "Coolant type",
                 "(i_fw_coolant_type)",
                 CoolantType(self.data.fwbs.i_fw_coolant_type).full_name,
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Density (kg m-3)",
                 "(den_fw_coolant)",
                 self.data.fwbs.den_fw_coolant,
                 "OP ",
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Viscosity (Pa s)",
                 "(visc_fw_coolant)",
@@ -857,14 +857,14 @@ class BlanketLibrary(Model):
                     po.ocmmnt(
                         self.outfile, "Coolant type (i_blkt_coolant_type=2), Water"
                     )
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Density (kg m-3)",
                     "(den_blkt_coolant)",
                     self.data.fwbs.den_blkt_coolant,
                     "OP ",
                 )
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Viscosity (Pa s)",
                     "(visc_blkt_coolant)",
@@ -1933,7 +1933,7 @@ class BlanketLibrary(Model):
                     self.outfile,
                     "Outside temperature limit for one or more liquid metal breeder properties.",
                 )
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Liquid metal temperature (K)",
                     "(mid_temp_liq)",
@@ -1976,31 +1976,31 @@ class BlanketLibrary(Model):
                 self.outfile, "Blanket breeder type (i_blkt_liquid_breeder_type=1), Li"
             )
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile, "Density (kg m-3)", "(den_liq)", self.data.fwbs.den_liq, "OP "
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Viscosity (Pa s)",
             "(dynamic_viscosity_liq)",
             self.data.fwbs.dynamic_viscosity_liq,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Electrical Conductivity (A V-1 m-1)",
             "(electrical_conductivity_liq)",
             self.data.fwbs.electrical_conductivity_liq,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Hartmann Number IB",
             "(hartmann_liq)",
             self.data.fwbs.hartmann_liq[0],
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Hartmann Number OB",
             "(hartmann_liq)",
@@ -2593,7 +2593,7 @@ class BlanketLibrary(Model):
             # FW
             po.osubhd(self.outfile, "First wall: ")
 
-            po.ovarst(
+            po.ovarre(
                 self.outfile,
                 "First wall coolant type",
                 "(i_fw_coolant_type)",
@@ -2623,13 +2623,13 @@ class BlanketLibrary(Model):
                 "(roughness_fw_channel)",
                 self.data.fwbs.roughness_fw_channel,
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Inlet temperature of first wall coolant (K)",
                 "(temp_fw_coolant_in)",
                 self.data.fwbs.temp_fw_coolant_in,
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Outlet temperature of first wall coolant (K)",
                 "(temp_fw_coolant_out)",
@@ -2652,13 +2652,13 @@ class BlanketLibrary(Model):
                     self.data.blanket.mflow_fw_coolant_total,
                     "OP ",
                 )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Allowable temperature of first wall material, excluding armour (K)",
                 "(temp_fw_max)",
                 self.data.fwbs.temp_fw_max,
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Actual peak temperature of first wall material (K)",
                 "(temp_fw_peak)",
@@ -2674,19 +2674,19 @@ class BlanketLibrary(Model):
                 "(dz_blkt_half)",
                 self.data.blanket.dz_blkt_half,
             )
-            po.ovarin(
+            po.ovarre(
                 self.outfile,
                 "Blanket coolant type (1=He, 2=H20)",
                 "(i_blkt_coolant_type)",
                 self.data.fwbs.i_blkt_coolant_type,
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Inlet temperature of blanket coolant (K)",
                 "(temp_blkt_coolant_in)",
                 self.data.fwbs.temp_blkt_coolant_in,
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Outlet temperature of blanket coolant (K)",
                 "(temp_blkt_coolant_out)",
@@ -2727,7 +2727,7 @@ class BlanketLibrary(Model):
             if self.data.fwbs.i_blkt_dual_coolant > 0:
                 po.osubhd(self.outfile, "Breeding Blanket (breeder): ")
 
-                po.ovarin(
+                po.ovarre(
                     self.outfile,
                     "Blanket liquid breeder type (0=PbLi, 1=Li)",
                     "(i_blkt_liquid_breeder_type)",
@@ -2735,13 +2735,13 @@ class BlanketLibrary(Model):
                 )
                 if self.data.fwbs.i_blkt_dual_coolant == 2:
                     po.ocmmnt(self.outfile, "Dual-coolant BB, i.e. self-cooled breeder.")
-                    po.ovarrf(
+                    po.ovarre(
                         self.outfile,
                         "Inlet temperature of blanket liquid breeder (K)",
                         "(inlet_temp_liq)",
                         self.data.fwbs.inlet_temp_liq,
                     )
-                    po.ovarrf(
+                    po.ovarre(
                         self.outfile,
                         "Outlet temperature of blanket liquid breeder (K)",
                         "(outlet_temp_liq)",
@@ -3068,7 +3068,7 @@ class BlanketLibrary(Model):
                 l_channel,
                 "OP ",
             )
-            po.ovarin(
+            po.ovarre(
                 self.outfile,
                 "Number of long poloidal secions of channel",
                 "(num_pol)",

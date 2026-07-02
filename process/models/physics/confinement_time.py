@@ -1156,24 +1156,24 @@ class PlasmaConfinementTime(Model):
             f"Confinement scaling law: {tauelaw}",
         )
 
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "Confinement scaling law",
             "(tauelaw)",
             f'"{tauelaw.strip().split(" ")[0]}"',
         )
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile, "Confinement H factor", "(hfact)", self.data.physics.hfact
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Global thermal energy confinement time, from scaling (τₑ) (s)",
             "(t_energy_confinement)",
             self.data.physics.t_energy_confinement,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Directly calculated total energy confinement time (τₑᵦ) (s)",
             "(t_energy_confinement_beta)",
@@ -1188,14 +1188,14 @@ class PlasmaConfinementTime(Model):
         po.ocmmnt(self.outfile, "----------------------------")
         po.oblnkl(self.outfile)
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Ion energy confinement time, from scaling (s)",
             "(t_ion_energy_confinement)",
             self.data.physics.t_ion_energy_confinement,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Electron energy confinement time, from scaling (s)",
             "(t_electron_energy_confinement)",
@@ -1229,7 +1229,7 @@ class PlasmaConfinementTime(Model):
             self.data.physics.p_plasma_loss_mw,
             "OP ",
         )
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Switch for radiation loss term usage in power balance",
             "(i_rad_loss)",
@@ -1262,7 +1262,7 @@ class PlasmaConfinementTime(Model):
             )
 
         po.ocmmnt(self.outfile, f"  (Radiation correction: {model.description})")
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "H* non-radiation corrected",
             "(hstar)",
@@ -1274,7 +1274,7 @@ class PlasmaConfinementTime(Model):
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
         po.oblnkl(self.outfile)
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Alpha particle confinement time (τ_α) (s)",  # noqa: RUF001
             "(t_alpha_confinement)",
@@ -1283,14 +1283,14 @@ class PlasmaConfinementTime(Model):
         )
         # Note alpha confinement time is no longer equal to fuel particle
         # confinement time.
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Alpha particle to energy confinement time ratio (τ_α/τₑ)",  # noqa: RUF001
             "(f_t_alpha_energy_confinement)",
             self.data.physics.f_t_alpha_energy_confinement,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Lower limit on f_t_alpha_energy_confinement ((τ_α/τₑ)>)",  # noqa: RUF001
             "(f_t_alpha_energy_confinement_min)",

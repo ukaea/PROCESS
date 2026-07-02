@@ -2037,7 +2037,7 @@ class PFCoil(Model):
         """
         op.oheadr(self.outfile, "Central Solenoid and PF Coils")
 
-        op.ovarin(
+        op.ovarre(
             self.mfile,
             "Existence_of_central_solenoid",
             "(iohcl)",
@@ -2049,7 +2049,7 @@ class PFCoil(Model):
         elif self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             op.ocmmnt(self.outfile, "Superconducting central solenoid")
 
-            op.ovarin(
+            op.ovarre(
                 self.outfile,
                 "Central solenoid superconductor material",
                 "(i_cs_superconductor)",
@@ -2356,7 +2356,7 @@ class PFCoil(Model):
             op.oblnkl(self.outfile)
             op.ocmmnt(self.outfile, "Superconducting PF coils")
 
-            op.ovarin(
+            op.ovarre(
                 self.outfile,
                 "PF coil superconductor material",
                 "(i_pf_superconductor)",
@@ -2812,7 +2812,7 @@ class PFCoil(Model):
         )
 
         op.oshead(self.outfile, "PF Circuit Waveform Data")
-        op.ovarin(
+        op.ovarre(
             self.outfile,
             "Number of PF circuits including CS and plasma",
             "(n_pf_cs_plasma_circuits)",

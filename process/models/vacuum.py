@@ -147,7 +147,7 @@ class Vacuum(Model):
         #  Output section
         if output:
             process_output.oheadr(self.outfile, "Vacuum System")
-            process_output.ovarst(
+            process_output.ovarre(
                 self.outfile,
                 "Switch for vacuum pumping model",
                 "(i_vacuum_pumping)",
@@ -571,7 +571,7 @@ class Vacuum(Model):
             process_output.ovarre(
                 self.outfile, "Chamber pressure before burn (Pa)", "(pstart)", pstart
             )
-            process_output.ovarin(
+            process_output.ovarre(
                 self.outfile,
                 "Allowable pumping time switch",
                 "(i_vac_pump_dwell)",
@@ -684,7 +684,7 @@ class Vacuum(Model):
                 )
 
             process_output.oblnkl(self.outfile)
-            process_output.ovarin(
+            process_output.ovarre(
                 self.outfile, "Number of large pump ducts", "(nduct)", nduct
             )
             process_output.ovarre(
@@ -955,21 +955,21 @@ class VacuumVessel(Model):
         """Output shield areas and volumes to log."""
         po.oheadr(self.outfile, "Vacuum Vessel Areas and Volumes")
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Volume of inboard vacuum vessel (m^3)",
             "(vol_vv_inboard)",
             self.data.blanket.vol_vv_inboard,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Volume of outboard vacuum vessel (m^3)",
             "(vol_vv_outboard)",
             self.data.blanket.vol_vv_outboard,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Total volume of vacuum vessel (m^3)",
             "(vol_vv)",

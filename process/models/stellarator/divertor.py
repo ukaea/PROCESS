@@ -168,13 +168,13 @@ def output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta, data: DataStructu
         "(f_asym)",
         data.stellarator.f_asym,
     )
-    po.ovarin(
+    po.ovarre(
         stellarator.outfile,
         "Poloidal resonance number",
         "(m_res)",
         data.stellarator.m_res,
     )
-    po.ovarin(
+    po.ovarre(
         stellarator.outfile,
         "Toroidal resonance number",
         "(n_res)",

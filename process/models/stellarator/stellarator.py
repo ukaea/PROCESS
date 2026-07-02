@@ -1492,19 +1492,19 @@ class Stellarator(Model):
                     "(f_p_blkt_multiplication)",
                     self.data.fwbs.f_p_blkt_multiplication,
                 )
-                po.ovarin(
+                po.ovarre(
                     self.outfile,
                     "Number of divertor ports assumed",
                     "(npdiv)",
                     self.data.fwbs.npdiv,
                 )
-                po.ovarin(
+                po.ovarre(
                     self.outfile,
                     "Number of inboard H/CD ports assumed",
                     "(nphcdin)",
                     self.data.fwbs.nphcdin,
                 )
-                po.ovarin(
+                po.ovarre(
                     self.outfile,
                     "Number of outboard H/CD ports assumed",
                     "(nphcdout)",
@@ -1571,7 +1571,7 @@ class Stellarator(Model):
                 self.data.fwbs.blktmodel == 0
             ):
                 po.oblnkl(self.outfile)
-                po.ovarin(
+                po.ovarre(
                     self.outfile,
                     "First wall / blanket thermodynamic model",
                     "(i_thermal_electric_conversion)",

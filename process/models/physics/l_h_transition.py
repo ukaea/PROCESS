@@ -297,7 +297,7 @@ class PlasmaConfinementTransition(Model):
         """Output L-H transition power thresholds to file."""
         po.oheadr(self.outfile, "H-mode Power Threshold Scalings :")
 
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "L-H threshold scaling switch",
             "(i_l_h_threshold)",

@@ -634,7 +634,7 @@ class TFCoil(Model):
         """
         # General coil parameters
         po.oheadr(self.outfile, "General TF Coil Parameters")
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "TF conductor technology",
             "(i_tf_sup)",
@@ -649,7 +649,7 @@ class TFCoil(Model):
         po.oblnkl(self.outfile)
 
         # Coil shape
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "TF coil shape model used",
             "(i_tf_shape)",
@@ -693,7 +693,7 @@ class TFCoil(Model):
         po.ocmmnt(self.outfile, "----------------------------")
         po.oblnkl(self.outfile)
 
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "TF plasma-facing case geometry type switch",
             "(i_tf_case_geom)",
@@ -709,7 +709,7 @@ class TFCoil(Model):
         po.oblnkl(self.outfile)
 
         # Joints strategy
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Presence of TF demountable joints",
             "(itart)",
@@ -728,7 +728,7 @@ class TFCoil(Model):
         po.oblnkl(self.outfile)
 
         # Centring forces support strategy
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "TF inboard leg support strategy model switch",
             "(i_tf_bucking)",
@@ -771,7 +771,7 @@ class TFCoil(Model):
 
         # TF coil geometry
         po.osubhd(self.outfile, "TF coil Geometry :")
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Number of TF coils",
             "(n_tf_coils)",

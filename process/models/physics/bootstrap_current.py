@@ -1269,7 +1269,7 @@ class PlasmaBootstrapCurrent(Model):
     def output(self):
         """Output the calculated bootstrap current information to the output file."""
         po.oheadr(self.outfile, "Plasma Bootstrap Current Fraction")
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Plasma bootstrap current fraction scaling used",
             "(i_bootstrap_current)",
@@ -1281,27 +1281,27 @@ class PlasmaBootstrapCurrent(Model):
         )
         po.oblnkl(self.outfile)
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Bootstrap current fraction multiplier",
             "(cboot)",
             self.data.current_drive.cboot,
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             f"Bootstrap fraction ({BootstrapCurrentFractionModel.ITER_89.full_name})",
             "(f_c_plasma_bootstrap_iter89)",
             self.data.current_drive.f_c_plasma_bootstrap_iter89,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             f"Bootstrap fraction ({BootstrapCurrentFractionModel.NEVINS.full_name})",
             "(f_c_plasma_bootstrap_nevins)",
             self.data.current_drive.f_c_plasma_bootstrap_nevins,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             f"Bootstrap fraction ({BootstrapCurrentFractionModel.WILSON.full_name})",
             "(f_c_plasma_bootstrap_wilson)",
@@ -1309,7 +1309,7 @@ class PlasmaBootstrapCurrent(Model):
             "OP ",
         )
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             f"Bootstrap fraction ({BootstrapCurrentFractionModel.SAUTER.full_name})",
             "(f_c_plasma_bootstrap_sauter)",
@@ -1317,7 +1317,7 @@ class PlasmaBootstrapCurrent(Model):
             "OP ",
         )
         for point in range(len(self.data.physics.j_plasma_bootstrap_sauter_profile)):
-            po.ovarrf(
+            po.ovarre(
                 self.mfile,
                 f"Sauter et al bootstrap current density profile at point {point}",
                 f"(j_plasma_bootstrap_sauter_profile{point})",
@@ -1325,56 +1325,56 @@ class PlasmaBootstrapCurrent(Model):
                 "OP ",
             )
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             f"Bootstrap fraction ({BootstrapCurrentFractionModel.SAKAI.full_name})",
             "(f_c_plasma_bootstrap_sakai)",
             self.data.current_drive.f_c_plasma_bootstrap_sakai,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             f"Bootstrap fraction ({BootstrapCurrentFractionModel.ARIES.full_name})",
             "(f_c_plasma_bootstrap_aries)",
             self.data.current_drive.f_c_plasma_bootstrap_aries,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             f"Bootstrap fraction ({BootstrapCurrentFractionModel.ANDRADE.full_name})",
             "(f_c_plasma_bootstrap_andrade)",
             self.data.current_drive.f_c_plasma_bootstrap_andrade,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             f"Bootstrap fraction ({BootstrapCurrentFractionModel.HOANG.full_name})",
             "(f_c_plasma_bootstrap_hoang)",
             self.data.current_drive.f_c_plasma_bootstrap_hoang,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             f"Bootstrap fraction ({BootstrapCurrentFractionModel.WONG.full_name})",
             "(f_c_plasma_bootstrap_wong)",
             self.data.current_drive.f_c_plasma_bootstrap_wong,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             f"Bootstrap fraction ({BootstrapCurrentFractionModel.GI_1.full_name})",
             "(bscf_gi_i)",
             self.data.current_drive.bscf_gi_i,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             f"Bootstrap fraction ({BootstrapCurrentFractionModel.GI_2.full_name})",
             "(bscf_gi_ii)",
             self.data.current_drive.bscf_gi_ii,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             f"Bootstrap fraction"
             f" ({BootstrapCurrentFractionModel.SUGIYAMA_L_MODE.full_name})",
@@ -1382,7 +1382,7 @@ class PlasmaBootstrapCurrent(Model):
             self.data.current_drive.f_c_plasma_bootstrap_sugiyama_l,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             f"Bootstrap fraction"
             f" ({BootstrapCurrentFractionModel.SUGIYAMA_H_MODE.full_name})",
@@ -1392,7 +1392,7 @@ class PlasmaBootstrapCurrent(Model):
         )
 
         po.oblnkl(self.outfile)
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Pfirsch-Schlueter fraction (SCENE)",
             "(f_c_plasma_pfirsch_schluter_scene)",
@@ -1418,21 +1418,21 @@ class PlasmaBootstrapCurrent(Model):
                 "  (SCENE Pfirsch-Schluter current fraction scaling used)",
             )
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Bootstrap fraction (enforced)",
             "(f_c_plasma_bootstrap.)",
             self.data.current_drive.f_c_plasma_bootstrap,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Diamagnetic fraction (enforced)",
             "(f_c_plasma_diamagnetic.)",
             self.data.current_drive.f_c_plasma_diamagnetic,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Pfirsch-Schlueter fraction (enforced)",
             "(f_c_plasma_pfirsch_schluter.)",

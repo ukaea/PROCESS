@@ -211,23 +211,23 @@ def run_summary(data: DataStructure):
     # MFile #
     mfile = constants.MFILE
 
-    process_output.ovarst(mfile, "PROCESS version", "(procver)", f'"{version}"')
-    process_output.ovarst(mfile, "Date of run", "(date)", f'"{date_string}"')
-    process_output.ovarst(mfile, "Time of run", "(time)", f'"{time_string}"')
-    process_output.ovarst(mfile, "User", "(username)", f'"{user}"')
-    process_output.ovarst(mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"')
-    process_output.ovarst(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
-    process_output.ovarst(
+    process_output.ovarre(mfile, "PROCESS version", "(procver)", f'"{version}"')
+    process_output.ovarre(mfile, "Date of run", "(date)", f'"{date_string}"')
+    process_output.ovarre(mfile, "Time of run", "(time)", f'"{time_string}"')
+    process_output.ovarre(mfile, "User", "(username)", f'"{user}"')
+    process_output.ovarre(mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"')
+    process_output.ovarre(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
+    process_output.ovarre(
         mfile, "PROCESS git branch", "(branch_name)", f'"{git_branch}"'
     )
-    process_output.ovarst(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
+    process_output.ovarre(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
 
-    process_output.ovarin(
+    process_output.ovarre(
         mfile, "Optimisation switch", "(ioptimz)", data.numerics.ioptimz
     )
     # If optimising, write figure of merit switch
     if data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
-        process_output.ovarin(
+        process_output.ovarre(
             mfile, "Figure of merit switch", "(minmax)", data.numerics.minmax
         )
 

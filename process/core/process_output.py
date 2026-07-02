@@ -1,14 +1,20 @@
+"""Handles writing output to PROCESS MFile/OUTFile."""
+
 from contextlib import suppress
 from pathlib import Path
 
 import numpy as np
 
 from process.core import constants
+from process.core.exceptions import ProcessValueError
 
 
 class OutputFileManager:
+    """Manages the opening of regular/idempotence output files."""
+
     @classmethod
     def open_files(cls, output_prefix: str, *, mode="w"):
+        """Setup the handlers for MFile and OUTFile for writing."""
         cls._outfile = open(  # noqa: SIM115
             Path(output_prefix + "OUT.DAT"), mode
         )
@@ -18,6 +24,7 @@ class OutputFileManager:
 
     @classmethod
     def open_idempotence_files(cls, output_prefix: str):
+        """Setup the handlers for idempotence MFile and OUTFile for writing."""
         cls._outfile.close()
         cls._mfile.close()
 
@@ -30,6 +37,9 @@ class OutputFileManager:
 
     @classmethod
     def close_idempotence_files(cls, output_prefix: str):
+        """Removes idempotence output files, closes the handler,
+        and opens the main output files.
+        """
         Path(cls._outfile.name).unlink()
         Path(cls._mfile.name).unlink()
         cls._outfile.close()
@@ -38,17 +48,28 @@ class OutputFileManager:
 
     @classmethod
     def finish(cls):
+        """Closes the file handlers."""
         cls._outfile.close()
         cls._mfile.close()
 
 
 def write(file, string: str):
+    """Writes a string to the given file identifier.
+
+    Raises
+    ------
+    ProcessValueError
+        The file is not recognised as an MFile, OUTFile, or terminal.
+    """
     if file == constants.MFILE:
         OutputFileManager._mfile.write(f"{string}\n")
     elif file == constants.NOUT:
         OutputFileManager._outfile.write(f"{string}\n")
     elif file == constants.IOTTY:
         print(string)
+    else:
+        error_msg = f"Unknown file identifier {file}."
+        raise ProcessValueError(error_msg)
 
 
 def ocentr(file, string: str, width: int, *, character="*"):
@@ -162,6 +183,7 @@ def ocmmnt(file, string: str):
 
 
 def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
+    """Write out a variable to a file via its identifier."""
     replacement_character = "_"
     if file != constants.MFILE:
         replacement_character = " "
@@ -197,14 +219,6 @@ def ocosts(file, varnam: str, descr: str, value):
 
 
 def ovarrf(file, descr: str, varnam: str, value, output_flag: str = ""):
-    ovarre(file, descr, varnam, value, output_flag)
-
-
-def ovarin(file, descr: str, varnam: str, value, output_flag: str = ""):
-    ovarre(file, descr, varnam, value, output_flag)
-
-
-def ovarst(file, descr: str, varnam: str, value, output_flag: str = ""):
     ovarre(file, descr, varnam, value, output_flag)
 
 
