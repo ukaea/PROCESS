@@ -306,7 +306,7 @@ def load_iteration_variables(data):
             data.globals.vlabel,
             data.globals.vlabel_2,
         }:
-            logger.warning(
+            logger.critical(
                 (
                     "The sweep variable is also an iteration variable and will be "
                     "overwritten by the optimiser"

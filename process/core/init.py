@@ -651,7 +651,7 @@ def check_process(inputs, data):  # noqa: ARG001
         if i_single_null == DivertorNumberModels.DOUBLE_NULL and (
             data.physics.f_p_div_lower in {1.0, 0.0}
         ):
-            logger.warning(
+            logger.error(
                 "Operating with a single null in a double null machine", stacklevel=2
             )
 
@@ -1070,14 +1070,14 @@ def check_process(inputs, data):  # noqa: ARG001
     if data.tfcoil.tmargmin > 0.0001:
         # This limit has been input and will be applied to both TFC and CS
         if data.tfcoil.temp_tf_superconductor_margin_min > 0.0001:
-            logger.warning(
+            logger.error(
                 "temp_tf_superconductor_margin_min and tmargmin should not both"
                 " be specified in IN.DAT"
                 " temp_tf_superconductor_margin_min has been ignored",
                 stacklevel=2,
             )
         if data.tfcoil.temp_cs_superconductor_margin_min > 0.0001:
-            logger.warning(
+            logger.error(
                 "temp_cs_superconductor_margin_min and tmargmin should not both"
                 " be specified in IN.DAT"
                 " temp_cs_superconductor_margin_min has been ignored",
