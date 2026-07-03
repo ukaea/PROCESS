@@ -32,6 +32,9 @@ from process.models.pfcoil import (
     rsid,
     superconpf,
 )
+from process.models.superconductors import (
+    SuperconductorModel,
+)
 
 
 @pytest.fixture
@@ -2505,8 +2508,12 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfcoil.data.pf_coil, "f_j_cs_start_end_flat_top", 2.654e-1)
     monkeypatch.setattr(pfcoil.data.pf_coil, "r_pf_coil_inner", np.full(22, 0.0))
     monkeypatch.setattr(pfcoil.data.pf_coil, "r_pf_coil_outer", np.full(22, 0.0))
-    monkeypatch.setattr(pfcoil.data.pf_coil, "i_pf_superconductor", 3)
-    monkeypatch.setattr(pfcoil.data.pf_coil, "i_cs_superconductor", 1)
+    monkeypatch.setattr(
+        pfcoil.data.pf_coil, "i_pf_superconductor", SuperconductorModel.OLD_LUBELL_NBTI
+    )
+    monkeypatch.setattr(
+        pfcoil.data.pf_coil, "i_cs_superconductor", SuperconductorModel.ITER_NB3SN
+    )
     monkeypatch.setattr(pfcoil.data.pf_coil, "m_pf_coil_conductor_total", 0.0)
     monkeypatch.setattr(pfcoil.data.pf_coil, "fcupfsu", 6.900e-1)
     monkeypatch.setattr(pfcoil.data.pf_coil, "j_cs_pulse_start", 1.693e7)
@@ -2585,7 +2592,9 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     monkeypatch.setattr(cs_coil.data.pf_coil, "f_a_cs_void", 3.0e-1)
     monkeypatch.setattr(cs_coil.data.pf_coil, "jcableoh_bop", 1.069e8)
     monkeypatch.setattr(cs_coil.data.pf_coil, "fcuohsu", 7.000e-1)
-    monkeypatch.setattr(cs_coil.data.pf_coil, "i_cs_superconductor", 5)
+    monkeypatch.setattr(
+        cs_coil.data.pf_coil, "i_cs_superconductor", SuperconductorModel.WST_NB3SN
+    )
     monkeypatch.setattr(cs_coil.data.pf_coil, "f_z_cs_tf_internal", 0.9)
     monkeypatch.setattr(cs_coil.data.pf_coil, "a_cs_poloidal", 1.039e1)
     monkeypatch.setattr(cs_coil.data.pf_coil, "p_pf_coil_resistive_total_flat_top", 0.0)

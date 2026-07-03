@@ -7,6 +7,9 @@ import pytest
 
 from process.data_structure.pfcoil_variables import PFConductorModel
 from process.models.engineering.pumping import CoolantType
+from process.models.superconductors import (
+    SuperconductorModel,
+)
 
 
 @pytest.fixture
@@ -1995,7 +1998,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            i_pf_superconductor=3,
+            i_pf_superconductor=SuperconductorModel.OLD_LUBELL_NBTI,
             m_pf_coil_structure_total=2695737.563343476,
             c_pf_cs_coils_peak_ma=np.array(
                 np.array(
@@ -2057,7 +2060,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            i_cs_superconductor=5,
+            i_cs_superconductor=SuperconductorModel.WST_NB3SN,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
             f_a_pf_coil_void=np.array(
@@ -2186,7 +2189,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            i_pf_superconductor=3,
+            i_pf_superconductor=SuperconductorModel.OLD_LUBELL_NBTI,
             m_pf_coil_structure_total=2510424.9065680322,
             c_pf_cs_coils_peak_ma=np.array(
                 np.array(
@@ -2248,7 +2251,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            i_cs_superconductor=5,
+            i_cs_superconductor=SuperconductorModel.WST_NB3SN,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
             f_a_pf_coil_void=np.array(
@@ -2377,7 +2380,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            i_pf_superconductor=3,
+            i_pf_superconductor=SuperconductorModel.OLD_LUBELL_NBTI,
             m_pf_coil_structure_total=2510424.9065680322,
             c_pf_cs_coils_peak_ma=np.array(
                 np.array(
@@ -2439,7 +2442,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            i_cs_superconductor=5,
+            i_cs_superconductor=SuperconductorModel.WST_NB3SN,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
             f_a_pf_coil_void=np.array(
