@@ -4399,65 +4399,31 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         Parameters
         ----------
-        j_tf_wp : float
+        j_tf_wp:
             Current density in the TF winding pack (in A/m²).
-
-        dx_tf_turn_steel : float
+        dx_tf_turn_steel:
             Thickness of the steel layer in the TF turn (in meters).
-
-        dx_tf_turn_insulation : float
+        dx_tf_turn_insulation:
             Thickness of the insulation layer in the TF turn (in meters).
-
-        i_tf_sc_mat : int
-            Identifier for the superconducting material type.
-
-        dx_tf_turn_general : float
+        dx_tf_turn_general :
             General dimension of the TF turn (in meters).
-
-        c_tf_turn : float
+        c_tf_turn:
             Current per turn in the TF coil (in Amperes).
-
-        i_dx_tf_turn_general_input : bool
+        i_dx_tf_turn_general_input:
             Flag indicating if the general turn dimension is provided as input.
-
-        i_dx_tf_turn_cable_space_general_input : bool
+        i_dx_tf_turn_cable_space_general_input:
             Flag indicating if the cable space dimension is provided as input.
-
-        dx_tf_turn_cable_space_general : float
+        dx_tf_turn_cable_space_general:
             General dimension of the cable space in the TF turn (in meters).
-
-        layer_ins : float
+        layer_ins:
             Thickness of the insulation layer in the TF turn (in meters).
-
-        a_tf_wp_no_insulation : float
+        a_tf_wp_no_insulation:
             Area of the TF winding pack without insulation (in square meters).
-
-        dia_tf_turn_coolant_channel : float
-            Diameter of the coolant channel in the TF turn (in meters).
-
-        f_a_tf_turn_cable_space_extra_void : float
-            Fraction of extra void space in the cable space of the TF turn.
 
         Returns
         -------
-        CROCOAveragedTurnGeometry
-             A dataclass containing the calculated geometry of the TF turn, including:
-            - a_tf_turn: Area of the TF turn (in square meters).
-            - dx_tf_turn: Dimension of the TF turn (in meters).
-            - dr_tf_turn: Dimension of the TF turn (in meters).
-            - t_conductor: Thickness of the conductor in the TF turn (in meters).
-            - n_tf_coil_turns: Number of turns in the TF coil (not necessarily
-              an integer).
-            - a_tf_turn_insulation: Area of the insulation in the TF turn
-              (in square meters).
-            - a_tf_turn_cable_space_no_void: Area of the cable space in the TF turn
-              without voids (in square meters).
-            - a_tf_turn_steel: Area of the steel in the TF turn (in square meters).
-            - a_tf_turn_cable_space_effective: Effective area of the cable space in the
-              TF turn after accounting for cooling channels and voids (in square meters).
-            - f_a_tf_turn_cable_space_cooling: Fraction of the cable space used for
-              cooling.
-
+        :
+             A dataclass containing the calculated geometry of the TF turn
         """
         # Turn dimension is a an input
         if i_dx_tf_turn_general_input:

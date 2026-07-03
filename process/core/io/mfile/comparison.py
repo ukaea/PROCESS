@@ -290,8 +290,16 @@ def compare_mfiles(
 
     Parameters
     ----------
-    arg :
-        List of arguments
+    files:
+        file paths
+    comparison:
+        comparison type
+    acc:
+        percentage tolerance
+    save:
+        save flag
+    verbose:
+        verbosity flag
     """
     print_counter = 0
     n = 2
