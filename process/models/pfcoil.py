@@ -2507,12 +2507,12 @@ class PFCoil(Model):
                 f"(stress_z_cs_self_midplane_profile[{time}])",
                 self.data.pf_coil.stress_z_cs_self_midplane_profile[time],
             )
-        for position in range(20):
+        for position, stress in enumerate(self.data.pf_coil.stress_z_cs_self_profile.tolist()):
             op.ovarre(
                 self.mfile,
                 f"CS coil axial stress at position {position} (MPa)",
                 f"(stress_z_cs_self_profile[{position}])",
-                self.data.pf_coil.stress_z_cs_self_profile[position],
+                stress,
             )
         self.tf_pf_collision_detector()
 
