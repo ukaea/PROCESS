@@ -1,12 +1,14 @@
+import logging
 from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any
-from warnings import warn
 
 import numpy as np
 
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -304,7 +306,7 @@ def load_iteration_variables(data):
             data.globals.vlabel,
             data.globals.vlabel_2,
         }:
-            warn(
+            logger.critical(
                 (
                     "The sweep variable is also an iteration variable and will be "
                     "overwritten by the optimiser"
