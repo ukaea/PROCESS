@@ -3464,10 +3464,6 @@ class CSCoil(Model):
                 f_poisson_cs_structure=self.data.tfcoil.poisson_steel,
             )
 
-            # Allowable (hoop) stress (Pa) stress_cs_steel_max
-            # Now a user input
-            # stress_cs_steel_max = min( (2.0e0*csytf/3.0e0), (0.5e0*csutf) )
-
             # Calculation of CS fatigue
             # this is only valid for pulsed reactor design
             if self.data.physics.f_c_plasma_inductive > 0.0e-4:
