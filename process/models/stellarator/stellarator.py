@@ -2252,32 +2252,6 @@ class Stellarator(Model):
         )
 
         (
-            self.data.physics.eden_plasma_electrons_thermal_vol_avg,
-            self.data.physics.e_plasma_electrons_thermal,
-        ) = self.physics.calaculate_stored_thermal_energy(
-            vol_plasma=self.data.physics.vol_plasma,
-            nd_plasma_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
-            temp_plasma_density_weighted_vol_avg_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
-        )
-
-        (
-            self.data.physics.eden_plasma_ions_thermal_vol_avg,
-            self.data.physics.e_plasma_ions_thermal,
-        ) = self.physics.calaculate_stored_thermal_energy(
-            vol_plasma=self.data.physics.vol_plasma,
-            nd_plasma_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
-            temp_plasma_density_weighted_vol_avg_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
-        )
-
-        self.data.physics.eden_plasma_thermal_vol_avg = (
-            self.data.physics.eden_plasma_electrons_thermal_vol_avg
-            + self.data.physics.eden_plasma_ions_thermal_vol_avg
-        )
-
-        self.data.physics.e_plasma_thermal_total = (
-            self.data.physics.e_plasma_electrons_thermal
-            + self.data.physics.e_plasma_ions_thermal
-        )
 
         confinement_time_data = self.physics.confinement.calculate_confinement_time(
             self.data.physics.m_fuel_amu,
