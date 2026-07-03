@@ -1066,7 +1066,7 @@ class PlasmaConfinementTime(Model):
                 balance.
 
             """
-            confinement_time_data: ConfinementTimeData = self.calculate_confinement_time(
+            confinement_time_data = self.calculate_confinement_time(
                 m_fuel_amu=self.data.physics.m_fuel_amu,
                 p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
                 aspect=self.data.physics.aspect,
