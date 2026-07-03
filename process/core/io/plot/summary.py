@@ -3578,7 +3578,7 @@ def toroidal_cross_section(
     dr_cryostat = mfile.get("dr_cryostat", scan=scan)
     n_tf_coils = mfile.get("n_tf_coils", scan=scan)
     if (
-        CurrentDriveModel(mfile.get("i_hcd_primary", scan=scan)).method
+        CurrentDriveModel(mfile.get("i_hcd_primary", scan=scan)).method == CurrentDriveMethodType.NEUTRAL_BEAM
         or CurrentDriveModel(mfile.get("i_hcd_secondary", scan=scan)).method
         == CurrentDriveMethodType.NEUTRAL_BEAM
     ):
