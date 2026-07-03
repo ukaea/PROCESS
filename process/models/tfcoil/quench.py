@@ -1,7 +1,7 @@
 """Module for quench protection calculations and material properties for TF coils."""
 
+import logging
 from typing import Final
-from warnings import warn
 
 import numpy as np
 
@@ -9,6 +9,9 @@ import numpy as np
 from process.core.coolprop_interface import FluidProperties
 
 __all__ = ["calculate_quench_protection_current_density"]
+
+
+logger = logging.getLogger(__name__)
 
 # Material property parameterisations
 
@@ -528,7 +531,9 @@ def calculate_quench_protection_current_density(
     """
     # Default fluence is too high for this model
     if (fluence < 0.0) | (fluence > 1.5e23):
-        warn("Fluence values out of range [0.0, 1.5e23]; kludging.", stacklevel=2)
+        logger.warning(
+            "Fluence values out of range [0.0, 1.5e23]; kludging.", stacklevel=2
+        )
         fluence = np.clip(fluence, 0.0, 1.5e23)
 
     i_he, i_cu, i_sc = _quench_integrals(

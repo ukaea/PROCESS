@@ -6,6 +6,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
+from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.physics.current_drive import (
     CurrentDriveMethodType,
@@ -1659,7 +1660,10 @@ class Build(Model):
             )
 
         # Calculate pre-compression structure thickness is self.data.build.i_cs_precomp=1
-        if self.data.build.i_cs_precomp == 1 and self.data.build.i_tf_inside_cs == 0:
+        if (
+            self.data.build.i_cs_precomp == 1
+            and self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_OUTSIDE_CS
+        ):
             self.data.build.dr_cs_precomp = self.data.build.fseppc / (
                 2.0e0
                 * np.pi
@@ -1671,7 +1675,10 @@ class Build(Model):
                     + self.data.build.dr_cs
                 )
             )
-        elif self.data.build.i_cs_precomp == 1 and self.data.build.i_tf_inside_cs == 1:
+        elif (
+            self.data.build.i_cs_precomp == 1
+            and self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
+        ):
             self.data.build.dr_cs_precomp = self.data.build.fseppc / (
                 2.0e0
                 * np.pi
@@ -1696,7 +1703,7 @@ class Build(Model):
                 + self.data.tfcoil.dr_tf_nose_case
             )
 
-        if self.data.build.i_tf_inside_cs == 1:
+        if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
             self.data.build.r_tf_inboard_in = (
                 self.data.build.dr_bore
                 # NOTE: dr_bore is just the hollow space, the
@@ -1809,7 +1816,7 @@ class Build(Model):
             logger.error(
                 f"Top CP radius larger that its value determined with plasma shape {self.data.build.r_cp_top=}"
             )
-        if self.data.build.i_tf_inside_cs == 1:
+        if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
             #  Radial position of vacuum vessel [m]
             self.data.build.r_vv_inboard_out = (
                 self.data.build.r_tf_inboard_out
@@ -2000,6 +2007,13 @@ class Build(Model):
                 "(i_tf_inside_cs)",
                 self.data.build.i_tf_inside_cs,
             )
+            po.ocmmnt(
+                self.outfile,
+                (
+                    f"  -> {TFCSRadialConfiguration(self.data.build.i_tf_inside_cs).description}"
+                ),
+            )
+            po.oblnkl(self.outfile)
             po.ovarrf(
                 self.outfile,
                 "Inboard build thickness (m)",
@@ -2008,7 +2022,7 @@ class Build(Model):
                 "OP ",
             )
 
-            if self.data.build.i_tf_inside_cs == 1:
+            if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
                 po.ocmmnt(
                     self.outfile,
                     (
@@ -2022,7 +2036,7 @@ class Build(Model):
                     ),
                 )
             if (
-                self.data.build.i_tf_inside_cs == 1
+                self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
                 and self.data.tfcoil.i_tf_bucking >= 2
             ):
                 po.ocmmnt(
@@ -2037,7 +2051,7 @@ class Build(Model):
             radius = 0.0e0
             radial_build_data.append(["Device centreline", None, 0.0, radius])
             if (
-                self.data.build.i_tf_inside_cs == 1
+                self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
                 and self.data.tfcoil.i_tf_bucking >= 2
             ):
                 radius += self.data.build.dr_bore
@@ -2049,7 +2063,8 @@ class Build(Model):
                     radius,
                 ])
             elif (
-                self.data.build.i_tf_inside_cs == 1 and self.data.tfcoil.i_tf_bucking < 2
+                self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
+                and self.data.tfcoil.i_tf_bucking < 2
             ):
                 radius += self.data.build.dr_bore
                 radial_build_data.append([
@@ -2066,7 +2081,7 @@ class Build(Model):
                     self.data.build.dr_bore,
                     radius,
                 ])
-            if self.data.build.i_tf_inside_cs == 1:
+            if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
                 radius += self.data.build.dr_tf_inboard
                 radial_build_data.append([
                     "TF coil inboard leg (in dr_bore)",
@@ -2098,7 +2113,7 @@ class Build(Model):
                 self.data.build.dr_cs_precomp,
                 radius,
             ])
-            if self.data.build.i_tf_inside_cs == 0:
+            if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_OUTSIDE_CS:
                 radius += self.data.build.dr_cs_tf_gap
                 radial_build_data.append([
                     "CS precompresion to TF coil radial gap",

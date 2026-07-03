@@ -8,6 +8,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
+from process.data_structure.pfcoil_variables import PFConductorModel
 
 logger = logging.getLogger(__name__)
 
@@ -163,7 +164,7 @@ class Structure(Model):
         coldmass = 0.0e0
         if i_tf_sup == 1:
             coldmass = coldmass + tfmass + aintmass + dewmass
-        if i_pf_conductor != 1:
+        if i_pf_conductor != PFConductorModel.RESISTIVE:
             coldmass += pfmass
 
         #  Coil gravity support mass

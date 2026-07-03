@@ -46,7 +46,7 @@ class ScanData:
     <LI> 11 beta_norm_max
     <LI> 12 f_c_plasma_bootstrap_max
     <LI> 13 boundu(10: hfact)
-    <LI> 14 fiooic
+    <LI> 14 f_j_tf_wp_critical_max
     <LI> 16 rmajor
     <LI> 15 NOT USED
     <LI> 17 b_tf_inboard_max
@@ -63,7 +63,7 @@ class ScanData:
     <LI> 28 b_plasma_toroidal_on_axis
     <LI> 29 radius_plasma_core_norm
     <LI> 30 fimpvar # OBSOLETE
-    <LI> 31 f_alpha_energy_confinement_min
+    <LI> 31 f_t_alpha_energy_confinement_min
     <LI> 32 epsvmc
     <LI> 33 ttarget
     <LI> 34 qtargettotal

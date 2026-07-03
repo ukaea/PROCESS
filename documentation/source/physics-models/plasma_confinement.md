@@ -705,7 +705,7 @@ The constraint uses the loss power and thermal densities hence the inclusion of 
 
 This constraint can be activated by stating `icc = 62` in the input file.
 
-The value of `f_alpha_energy_confinement_min` can be set to the desired minimum total ratio between the alpha confinement and energy confinement times.
+The value of `f_t_alpha_energy_confinement_min` can be set to the desired minimum total ratio between the alpha confinement and energy confinement times.
 
 [^1]: N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
 [^2]: T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.

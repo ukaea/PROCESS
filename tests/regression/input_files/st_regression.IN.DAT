@@ -166,9 +166,9 @@ aspect = 1.8
 *icc = 21
 * DESCRIPTION:   Constraint equation for plasma minor radius lower limit 
 * JUSTIFICATION: Turned off, dont care about lower limit
-* VARIABLES:     aplasmin (minimum minor radius (m)), rminor calculated in-situ
+* VARIABLES:     rminor_min (minimum minor radius (m)), rminor calculated in-situ
 
-*aplasmin = 0 
+*rminor_min = 0 
 * DESCRIPTION:   Minimum minor radius (m) (icc=21)
 * JUSTIFICATION: Not used, using a defined minor radius
 
@@ -412,11 +412,11 @@ icc = 15
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 icc = 62
-* DESCRIPTION:   f_alpha_energy_confinement ratio of particle to energy confinement times
+* DESCRIPTION:   f_t_alpha_energy_confinement ratio of particle to energy confinement times
 * JUSTIFICATION: Used to constrain helium fraction
 * VARIABLES:     t_energy_confinement,t_alpha_confinement calculated in-situ
 
-f_alpha_energy_confinement_min = 5.0 
+f_t_alpha_energy_confinement_min = 5.0 
 * DESCRIPTION:   Ratio of Alpha Particle to Energy Confinement times (icc=62)
 * JUSTIFICATION: Default based on JET
 
@@ -562,7 +562,7 @@ icc = 17
 * JUSTIFICATION: Limit for plasma stability
 * VARIABLES:     Rest calculated in-situ
 
-fradpwr  = 0.64 
+f_p_plasma_separatrix_rad_max  = 0.64 
 * DESCRIPTION:   Radiation power upper limit constraint scale (constraint equation 17)
 * JUSTIFICATION: Scales the bound of constraint equation 17
 
@@ -621,9 +621,9 @@ f_nd_impurity_electrons(14) = 5e-05    *Tungsten
 *icc = 64
 * DESCRIPTION:   Upper limit on Zeff
 * JUSTIFICATION: Turned off, dont care about maximum effective charge
-* VARIABLES:     zeff_max (maximum value for Zeff), zeff calculated in-situ
+* VARIABLES:     n_charge_plasma_effective_vol_avg_max (maximum value for Zeff), zeff calculated in-situ
 
-*zeff_max = 
+*n_charge_plasma_effective_vol_avg_max = 
 * DESCRIPTION:   Maximum value for Zeff (`constraint equation 64`)
 * JUSTIFICATION: Not set, not using icc = 64
 
@@ -678,7 +678,7 @@ i_single_null = 0
 *icc = 68
 * DESCRIPTION:   Upper limit on  Psep scaling (PsepB/qAR)
 * JUSTIFICATION: Turned off, just using Psep/R constraint
-* VARIABLES:     psepbqarmax (maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)). Rest calculated in-situ 
+* VARIABLES:     p_div_bt_q_aspect_rmajor_max_mw (maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)). Rest calculated in-situ 
 
 *psepbqarmaX
 * DESCRIPTION:   maximum ratio of Psep*Bt/qAR (MWT/m) (`constraint equation 68`)
@@ -691,7 +691,7 @@ icc = 56
 * JUSTIFICATION: Divertor protection
 * VARIABLES:     rmajor. p_plasma_separatrix_mw calculated in situ
 
-pseprmax = 40.0 
+p_plasma_separatrix_rmajor_max_mw = 40.0 
 * DESCRIPTION:   Maximum ratio of Psep/R (MW/m) (icc=56)
 * JUSTIFICATION: 
 
@@ -893,7 +893,7 @@ icc = 33
 * JUSTIFICATION: A quench must be avoided
 * VARIABLES:     j_tf_wp & j_tf_wp_critical (critical current) calculated in-situ
 
-fiooic = 0.7
+f_j_tf_wp_critical_max = 0.7
 * DESCRIPTION:   Constraint margin for TF superconductor operating current / critical current density
 * JUSTIFICATION: Margin of 0.7 for engineering reliability
 
@@ -1451,9 +1451,9 @@ tftmp = 20.0
 *icc = 53
 * DESCRIPTION:   Constraint equation for fast neutron fluence on TF coil upper limit
 * JUSTIFICATION: Turned off, do not care about TF coil fluence.
-* VARIABLES:     nflutfmax(max fast neutron fluence on TF coil (n/m2)),nflutf calculated in situ
+* VARIABLES:     flu_tf_neutron_fast_max(max fast neutron fluence on TF coil (n/m2)),flu_tf_neutron_fast_peak calculated in situ
 
-* nflutfmax = 
+* flu_tf_neutron_fast_max = 
 * DESCRIPTION:   max fast neutron fluence on TF coil (n/m2) (`blktmodel>0`) (`constraint equation 53`)
 * Also used for demontable magnets (itart = 1) and superconducting coils (i_tf_sup = 1)
 * To set the CP lifetime (`constraint equation 85`) 
@@ -1638,7 +1638,7 @@ i_pf_conductor = 0
 *icc = 60
 * DESCRIPTION:   Constraint equation for Central Solenoid s/c temperature margin lower limit
 * JUSTIFICATION: Turned off, do not care about temp lower limit 
-* VARIABLES:     avail_min (Minimum availability), f_t_plant_available calculated in-situ
+* VARIABLES:     f_t_plant_available_min (Minimum availability), f_t_plant_available calculated in-situ
 
 *temp_cs_superconductor_margin_min = 
 * DESCRIPTION:   Minimum allowable temp margin: CS (K) (icc = 60)
@@ -3166,7 +3166,7 @@ i_plant_availability = 0
 * JUSTIFICATION: Turned off, do not care about availability limit 
 * VARIABLES:     temp_cs_superconductor_margin_min (Minimum allowable temperature margin in CS (K)), temp_cs_superconductor_margin calculated in-situ
 
-*avail_min = 
+*f_t_plant_available_min = 
 * DESCRIPTION: Minimum availability (`constraint equation 61`)
 * JUSTIFICATION: testing
 

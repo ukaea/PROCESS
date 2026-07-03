@@ -9,20 +9,6 @@ from shutil import copy
 
 import pytest
 
-from process.core.init import init_all_module_vars
-
-
-@pytest.fixture(autouse=True)  # noqa: RUF076
-def reinit_fix():
-    """Re-initialise the data structure before each test is run.
-
-    This is run once before each unit test (function scope),
-    ensuring that all of the module variables are set to their initial values.
-    'autouse' ensures that this fixture is used automatically by any test
-    function in the unit directory.
-    """
-    init_all_module_vars()
-
 
 @pytest.fixture
 def input_file():

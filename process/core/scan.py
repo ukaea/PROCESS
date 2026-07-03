@@ -67,7 +67,9 @@ class ScanVariables(Enum):
         "f_c_plasma_bootstrap_max", "Bootstrap_fraction", 12
     )
     boundu10 = ScanVariable("boundu(10)", "H_factor_upper_bound", 13)
-    fiooic = ScanVariable("fiooic", "TFC_Iop_/_Icrit_margin", 14)
+    f_j_tf_wp_critical_max = ScanVariable(
+        "f_j_tf_wp_critical_max", "TFC_Iop_/_Icrit_margin", 14
+    )
     rmajor = ScanVariable("rmajor", "Plasma_major_radius_(m)", 16)
     b_tf_inboard_max = ScanVariable("b_tf_inboard_max", "Max_toroidal_field_(T)", 17)
     eta_cd_norm_hcd_primary_max = ScanVariable(
@@ -88,8 +90,8 @@ class ScanVariables(Enum):
         "b_plasma_toroidal_on_axis", "Tor._field_on_axis_(T)", 28
     )
     coreradius = ScanVariable("coreradius", "Core_radius", 29)
-    f_alpha_energy_confinement_min = ScanVariable(
-        "f_alpha_energy_confinement_min", "t_alpha_confinement/taueff_lower_limit", 31
+    f_t_alpha_energy_confinement_min = ScanVariable(
+        "f_t_alpha_energy_confinement_min", "t_alpha_confinement/taueff_lower_limit", 31
     )
     epsvmc = ScanVariable("epsvmc", "VMCON error tolerance", 32)
     boundu129 = ScanVariable("boundu(129)", " Neon upper limit", 38)
@@ -1150,7 +1152,7 @@ class Scan:
             case 29:
                 self.data.impurity_radiation.radius_plasma_core_norm = swp[iscn - 1]
             case 31:
-                self.data.constraints.f_alpha_energy_confinement_min = swp[iscn - 1]
+                self.data.constraints.f_t_alpha_energy_confinement_min = swp[iscn - 1]
             case 32:
                 self.data.numerics.epsvmc = swp[iscn - 1]
             case 38:

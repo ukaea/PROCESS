@@ -1,6 +1,18 @@
 from dataclasses import dataclass, field
+from enum import IntEnum
 
 import numpy as np
+
+
+class PFConductorModel(IntEnum):
+    """Enumeration for PF conductor models.
+    Controlled via `i_pf_conductor`
+
+    """
+
+    SUPERCONDUCTING = 0
+    RESISTIVE = 1
+
 
 N_PF_GROUPS_MAX = 10
 """maximum number of groups of PF coils"""
@@ -323,7 +335,7 @@ class PFCoilData:
     """steel case thickness for PF coil i (m)"""
 
     rho_pf_coil: float = 2.5e-8
-    """PF coil resistivity (if i_pf_conductor=1) (Ohm-m)"""
+    """PF coil resistivity (if i_pf_conductor=1/RESISTIVE) (Ohm-m)"""
 
     rhopfbus: float = 3.93e-8
     """Resistivity of CS and PF coil bus bars (irrespective of

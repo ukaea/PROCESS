@@ -135,7 +135,7 @@ def test_protect(protectparam, sctfcoil):
         b_tf_inboard_peak=protectparam.peak_field,
         cu_rrr=protectparam.cu_rrr,
         t_tf_quench_detection=protectparam.detection_time,
-        nflutfmax=protectparam.fluence,
+        flu_tf_neutron_fast_max=protectparam.fluence,
     )
 
     assert ajwpro == pytest.approx(protectparam.expected_ajwpro)
@@ -377,7 +377,7 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
     )
 
     monkeypatch.setattr(
-        cicc_sctfcoil.data.constraints, "nflutfmax", superconparam.fluence
+        cicc_sctfcoil.data.constraints, "flu_tf_neutron_fast_max", superconparam.fluence
     )
 
     monkeypatch.setattr(

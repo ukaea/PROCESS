@@ -42,3 +42,28 @@ Don't forget to add a comma before to separate it from already present key value
 
 Now, close your terminal and close VS Code. Reopen and open a new terminal which should now 
 automatically point to the virtual environment signalled by an `(.venv)` in front of your user.
+
+## Debugging with VSCode
+
+To use the debugging tools built into VSCode you need to create a launch.json file which sets up
+the debugger. Below is example contents of a launch.json that calls help on the `indat` subcommand.
+
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "process-cli",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${command:python.interpreterPath}/../process",
+            "console": "integratedTerminal",
+            "args": [
+                "indat",
+                "--help",
+            ],
+        }
+    ]
+}
+
+```

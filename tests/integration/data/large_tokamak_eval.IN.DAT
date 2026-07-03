@@ -92,16 +92,16 @@ dr_shld_blkt_gap  = 0.02 * gap between vacuum vessel and blanket (m)
 *---------------Constraint Variables---------------*
 
 b_tf_inboard_max   = 14.0 * maximum peak toroidal field (T) (`constraint equation 25`)
-fdene    = 1.2 * density limit constraint scale (constraint equation 5)
-fiooic   = 0.65
+f_nd_plasma_electron_limit_max    = 1.2 * density limit constraint scale (constraint equation 5)
+f_j_tf_wp_critical_max   = 0.65
 fjohc    = 0.6
 fjohc0   = 0.6
 p_plant_electric_net_required_mw = 400.0 * required net electric power (MW) (`constraint equation 16`)
 p_fusion_total_max_mw  = 3000 * maximum fusion power (MW) (`constraint equation 9`)
-psepbqarmax = 10.0 * maximum ratio of Psep*Bt/qAR (MWT/m) (`constraint equation 68`)
+p_div_bt_q_aspect_rmajor_max_mw = 10.0 * maximum ratio of Psep*Bt/qAR (MWT/m) (`constraint equation 68`)
 t_burn_min   = 7200.0 * minimum burn time (s) (KE - no longer itv;; see issue #706)
 pflux_fw_neutron_max_mw   = 2.0 * allowable neutron wall-load (MW/m2) (`constraint equation 8`)
-f_alpha_energy_confinement_min = 5.0 * Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement
+f_t_alpha_energy_confinement_min = 5.0 * Lower limit on f_t_alpha_energy_confinement the ratio of alpha particle to energy confinement
 
 *-------------------Constraints--------------------*
 
@@ -382,7 +382,7 @@ temp_cs_superconductor_margin_min = 1.5 * minimum allowable temperature margin ;
 tmargmin = 1.5 * minimum allowable temperature margin ; TFC AND CS (K)
 v_tf_coil_dump_quench_max_kv    = 10.0 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
 f_a_tf_turn_cable_space_extra_void     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
-nflutfmax = 1e22 * max fluence in the TF coil
+flu_tf_neutron_fast_max = 1e22 * max fluence in the TF coil
 
 *-----------------Times Variables------------------*
 
