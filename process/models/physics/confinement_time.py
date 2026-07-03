@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass(slots=True, frozen=True)
 class ConfinementTimeData:
-    """Data structure for confinement time model calculations."""
+    """Dataclass to hold confinement time model calculation parameters."""
 
     pden_electron_transport_loss_mw: float
     """Electron transport loss power density in MW."""
