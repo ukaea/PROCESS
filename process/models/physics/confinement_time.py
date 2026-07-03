@@ -138,6 +138,7 @@ class PlasmaConfinementTime(Model):
         Returns
         -------
         ConfinementTimeData
+            Dataclass containing confinement time model calculation parameters
 
         Raises
         ------
