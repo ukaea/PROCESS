@@ -3197,7 +3197,7 @@ class BlanketLibrary(Model):
 
         po.oheadr(self.outfile, "Blanket pumping variables")
 
-        po.osubhd(self.outfile, "Inboard Blanket")
+        po.osubhd(self.outfile, "Inboard Blanket:")
 
         po.ovarre(
             self.outfile,
@@ -3238,7 +3238,7 @@ class BlanketLibrary(Model):
         )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
-
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Pressure drop for straight sections of inboard blanket (Pa)",
@@ -3335,8 +3335,10 @@ class BlanketLibrary(Model):
             self.data.blanket.f_elbow_blkt_inboard_180_bend,
             "OP ",
         )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
 
-        po.osubhd(self.outfile, "Outboard Blanket")
+        po.osubhd(self.outfile, "Outboard Blanket:")
 
         po.ovarre(
             self.outfile,
@@ -3377,7 +3379,7 @@ class BlanketLibrary(Model):
         )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
-
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Pressure drop for straight sections of outboard blanket (Pa)",
