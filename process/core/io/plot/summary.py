@@ -3576,7 +3576,8 @@ def toroidal_cross_section(
     dr_cryostat = mfile.get("dr_cryostat", scan=scan)
     n_tf_coils = mfile.get("n_tf_coils", scan=scan)
     if (
-        CurrentDriveModel(mfile.get("i_hcd_primary", scan=scan)).method == CurrentDriveMethodType.NEUTRAL_BEAM
+        CurrentDriveModel(mfile.get("i_hcd_primary", scan=scan)).method
+        == CurrentDriveMethodType.NEUTRAL_BEAM
         or CurrentDriveModel(mfile.get("i_hcd_secondary", scan=scan)).method
         == CurrentDriveMethodType.NEUTRAL_BEAM
     ):
@@ -16263,15 +16264,23 @@ def main_plot(
     plot_pf_cs_plasma_mutual_inductance(_add_page().add_subplot(111), m_file, scan)
 
     plot_cs_coil_structure(
-        figs[32].add_subplot(121, aspect="equal"), figs[32], m_file, scan
+        _add_page("cs_structure").add_subplot(121, aspect="equal"),
+        pages["cs_structure"],
+        m_file,
+        scan,
     )
     plot_cs_turn_structure(
-        figs[32].add_subplot(326, aspect="equal"), figs[32], m_file, scan
+        pages["cs_structure"].add_subplot(326, aspect="equal"),
+        pages["cs_structure"],
+        m_file,
+        scan,
     )
 
-    plot_cs_stress_time_profile(axis=figs[33].add_subplot(337), mfile=m_file, scan=scan)
+    plot_cs_stress_time_profile(
+        axis=_add_page("cs_stress").add_subplot(337), mfile=m_file, scan=scan
+    )
 
-    ax_332 = figs[33].add_subplot(332)
+    ax_332 = pages["cs_stress"].add_subplot(332)
     plot_cs_hoop_stress_profile(
         axis=ax_332,
         mfile=m_file,
@@ -16280,7 +16289,7 @@ def main_plot(
         b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
     )
 
-    ax_333 = figs[33].add_subplot(333)
+    ax_333 = pages["cs_stress"].add_subplot(333)
     plot_cs_radial_stress_profile(
         axis=ax_333,
         mfile=m_file,
@@ -16289,18 +16298,18 @@ def main_plot(
         b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
     )
 
-    ax_334 = figs[33].add_subplot(334)
+    ax_334 = pages["cs_stress"].add_subplot(334)
     ax_334_position = ax_334.get_position()
-    cbar_ax_334 = figs[33].add_axes([
+    cbar_ax_334 = pages["cs_stress"].add_axes([
         ax_334_position.x1 + 0.01,
         ax_334_position.y0,
         0.012,
         ax_334_position.height,
     ])
 
-    ax_336 = figs[33].add_subplot(336, sharex=ax_333, sharey=ax_334)
+    ax_336 = pages["cs_stress"].add_subplot(336, sharex=ax_333, sharey=ax_334)
     ax_336_position = ax_336.get_position()
-    cbar_ax_336 = figs[33].add_axes([
+    cbar_ax_336 = pages["cs_stress"].add_axes([
         ax_336_position.x1 + 0.01,
         ax_336_position.y0,
         0.012,
@@ -16316,7 +16325,7 @@ def main_plot(
         colorbar_axis=cbar_ax_336,
     )
 
-    ax_331 = figs[33].add_subplot(331)
+    ax_331 = pages["cs_stress"].add_subplot(331)
     plot_cs_vertical_stress_profile(
         axis=ax_331,
         mfile=m_file,
@@ -16329,9 +16338,9 @@ def main_plot(
         colorbar_axis=cbar_ax_334,
     )
 
-    ax_335 = figs[33].add_subplot(335, sharex=ax_332, sharey=ax_334)
+    ax_335 = pages["cs_stress"].add_subplot(335, sharex=ax_332, sharey=ax_334)
     ax_335_position = ax_335.get_position()
-    cbar_ax_335 = figs[33].add_axes([
+    cbar_ax_335 = pages["cs_stress"].add_axes([
         ax_335_position.x1 + 0.01,
         ax_335_position.y0,
         0.012,
@@ -16346,18 +16355,16 @@ def main_plot(
         colorbar_axis=cbar_ax_335,
     )
 
-    figs[33].subplots_adjust(wspace=0.3)
-
-    figs[33].subplots_adjust(wspace=0.45, hspace=0.45)
+    pages["cs_stress"].subplots_adjust(wspace=0.45, hspace=0.45)
 
     # Keep y-axis labeling on the left contour only when sharing y across contour subplots.
     for axis in (ax_335, ax_336):
         axis.set_ylabel("")
         axis.tick_params(axis="y", labelleft=False)
 
-    ax_338 = figs[33].add_subplot(338, sharex=ax_332, sharey=ax_335)
+    ax_338 = pages["cs_stress"].add_subplot(338, sharex=ax_332, sharey=ax_335)
     ax_338_position = ax_338.get_position()
-    cbar_ax_338 = figs[33].add_axes([
+    cbar_ax_338 = pages["cs_stress"].add_axes([
         ax_338_position.x1 + 0.01,
         ax_338_position.y0,
         0.012,
@@ -16370,9 +16377,9 @@ def main_plot(
         colorbar_axis=cbar_ax_338,
     )
 
-    ax_339 = figs[33].add_subplot(339, sharex=ax_332, sharey=ax_338)
+    ax_339 = pages["cs_stress"].add_subplot(339, sharex=ax_332, sharey=ax_338)
     ax_339_position = ax_339.get_position()
-    cbar_ax_339 = figs[33].add_axes([
+    cbar_ax_339 = pages["cs_stress"].add_axes([
         ax_339_position.x1 + 0.01,
         ax_339_position.y0,
         0.012,
