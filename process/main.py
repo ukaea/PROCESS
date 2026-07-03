@@ -49,6 +49,7 @@ from process.core.model import DataStructure, Model
 from process.core.process_output import OutputFileManager, oheadr
 from process.core.scan import Scan
 from process.data_structure.blanket_variables import BlktModelTypes
+from process.data_structure.build_variables import InboardBlanketConfiguration
 from process.data_structure.cost_variables import CostModels
 from process.data_structure.numerics import PROCESSRunMode
 from process.models.availability import Availability
@@ -950,7 +951,13 @@ class Models:
             # DCLL model
             self.dcll.output()
 
-        self.blanket_library.output_blkt_pumping_variables()
+        if (
+            data.build.i_blkt_inboard
+            == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
+        ):
+            self.blanket_library.output_inboard_blkt_pumping_variables()
+
+        self.blanket_library.output_outboard_blkt_pumping_variables()
 
         # FISPACT and LOCA model (not used)- removed
 
