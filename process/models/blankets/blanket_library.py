@@ -2574,19 +2574,17 @@ class BlanketLibrary(Model):
             )
 
             # Total mechanical pumping power (MW)
-            self.data.primary_pumping.p_fw_blkt_coolant_pump_mw = (
-                coolant_pumping_power(
-                    i_liquid_breeder=1,
-                    temp_coolant_pump_outlet=self.data.fwbs.temp_fw_coolant_in,
-                    temp_coolant_pump_inlet=self.data.fwbs.temp_blkt_coolant_out,
-                    pres_coolant_pump_inlet=self.data.fwbs.pres_fw_coolant,
-                    dpres_coolant=deltap_fw_blkt,
-                    mflow_coolant_total=self.data.blanket.mftotal,
-                    i_coolant_type=self.data.fwbs.i_fw_coolant_type,
-                    den_coolant=self.data.fwbs.den_fw_coolant,
-                    etaiso=self.data.fwbs.etaiso,
-                    etaiso_liq=self.data.fwbs.etaiso_liq
-                )
+            self.data.primary_pumping.p_fw_blkt_coolant_pump_mw = coolant_pumping_power(
+                i_liquid_breeder=1,
+                temp_coolant_pump_outlet=self.data.fwbs.temp_fw_coolant_in,
+                temp_coolant_pump_inlet=self.data.fwbs.temp_blkt_coolant_out,
+                pres_coolant_pump_inlet=self.data.fwbs.pres_fw_coolant,
+                dpres_coolant=deltap_fw_blkt,
+                mflow_coolant_total=self.data.blanket.mftotal,
+                i_coolant_type=self.data.fwbs.i_fw_coolant_type,
+                den_coolant=self.data.fwbs.den_fw_coolant,
+                etaiso=self.data.fwbs.etaiso,
+                etaiso_liq=self.data.fwbs.etaiso_liq,
             )
 
         # If FW and BB have different coolants...
@@ -3194,11 +3192,161 @@ class BlanketLibrary(Model):
 
         return liquid_breeder_pressure_drop_mhd
 
-    def output_blkt_pumping_variables(self):
+    def output_outboard_blkt_pumping_variables(self):
 
-        po.oheadr(self.outfile, "Blanket pumping variables")
+        po.oheadr(self.outfile, "Outboard Blanket pumping variables")
 
-        po.osubhd(self.outfile, "Inboard Blanket:")
+        po.ovarre(
+            self.outfile,
+            "Outboard blanket coolant channel length (radial direction) (m)",
+            "(len_blkt_outboard_coolant_channel_radial)",
+            self.data.blanket.len_blkt_outboard_coolant_channel_radial,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Outboard blanket coolant channel length (poloidal direction) (m)",
+            "(len_blkt_outboard_segment_poloidal)",
+            self.data.blanket.len_blkt_outboard_segment_poloidal,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Number of outboard blanket coolant sections in the radial direction",
+            "(n_blkt_outboard_module_coolant_sections_radial)",
+            self.data.fwbs.n_blkt_outboard_module_coolant_sections_radial,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Number of outboard blanket coolant sections in the poloidal direction",
+            "(n_blkt_outboard_module_coolant_sections_poloidal)",
+            self.data.fwbs.n_blkt_outboard_module_coolant_sections_poloidal,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total length of outboard blanket coolant channel straight sections (m)",
+            "(len_blkt_outboard_channel_total)",
+            self.data.blanket.len_blkt_outboard_channel_total,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Pressure drop for straight sections of outboard blanket (Pa)",
+            "(dpres_blkt_outboard_coolant_channel_straight_total)",
+            self.data.blanket.dpres_blkt_outboard_coolant_channel_straight_total,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Pressure drop for 90° bends of outboard blanket (Pa)",
+            "(dpres_blkt_outboard_coolant_channel_90_bend)",
+            self.data.blanket.dpres_blkt_outboard_coolant_channel_90_bend,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total pressure drop for 90° bends of outboard blanket (Pa)",
+            "(dpres_blkt_outboard_coolant_channel_90_bends_total)",
+            self.data.blanket.dpres_blkt_outboard_coolant_channel_90_bends_total,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Pressure drop for 180° bends of outboard blanket (Pa)",
+            "(dpres_blkt_outboard_coolant_channel_180_bend)",
+            self.data.blanket.dpres_blkt_outboard_coolant_channel_180_bend,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total pressure drop for 180° bends of outboard blanket (Pa)",
+            "(dpres_blkt_outboard_coolant_channel_180_bends_total)",
+            self.data.blanket.dpres_blkt_outboard_coolant_channel_180_bends_total,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total pressure drop for all bends (Pa)",
+            "(dpres_blkt_outboard_bends_total)",
+            self.data.blanket.dpres_blkt_outboard_bends_total,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Reynolds number of outboard blanket coolant",
+            "(reynolds_blkt_outboard_coolant)",
+            self.data.blanket.reynolds_blkt_outboard_coolant,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Darcy friction factor of outboard blanket coolant",
+            "(darcy_frict_blkt_outboard_coolant)",
+            self.data.blanket.darcy_frict_blkt_outboard_coolant,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Pressure drop coefficient for straight sections of outboard blanket",
+            "(f_straight_blkt_outboard_coolant)",
+            self.data.blanket.f_straight_blkt_outboard_coolant,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Total length of straight sections of outboard blanket coolant channels (m)",
+            "(len_blkt_outboard_coolant_channel_straight_total)",
+            self.data.blanket.len_blkt_outboard_coolant_channel_straight_total,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Pressure drop coefficient for 90° bends in outboard blanket",
+            "(f_elbow_blkt_outboard_90_bend)",
+            self.data.blanket.f_elbow_blkt_outboard_90_bend,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Pressure drop coefficient for 180° bends in outboard blanket",
+            "(f_elbow_blkt_outboard_180_bend)",
+            self.data.blanket.f_elbow_blkt_outboard_180_bend,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Mass flow rate of outboard blanket coolant (kg/s)",
+            "(mflow_blkt_outboard_coolant)",
+            self.data.blanket.mflow_blkt_outboard_coolant,
+            "OP ",
+        )
+
+    def output_inboard_blkt_pumping_variables(self):
+
+        po.oheadr(self.outfile, "Inboard Blanket pumping variables")
 
         po.ovarre(
             self.outfile,
@@ -3336,145 +3484,16 @@ class BlanketLibrary(Model):
             self.data.blanket.f_elbow_blkt_inboard_180_bend,
             "OP ",
         )
-        po.oblnkl(self.outfile)
-        po.ocmmnt(self.outfile, "----------------------------")
 
-        po.osubhd(self.outfile, "Outboard Blanket:")
-
-        po.ovarre(
-            self.outfile,
-            "Outboard blanket coolant channel length (radial direction) (m)",
-            "(len_blkt_outboard_coolant_channel_radial)",
-            self.data.blanket.len_blkt_outboard_coolant_channel_radial,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Outboard blanket coolant channel length (poloidal direction) (m)",
-            "(len_blkt_outboard_segment_poloidal)",
-            self.data.blanket.len_blkt_outboard_segment_poloidal,
-            "OP ",
-        )
-        po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Number of outboard blanket coolant sections in the radial direction",
-            "(n_blkt_outboard_module_coolant_sections_radial)",
-            self.data.fwbs.n_blkt_outboard_module_coolant_sections_radial,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Number of outboard blanket coolant sections in the poloidal direction",
-            "(n_blkt_outboard_module_coolant_sections_poloidal)",
-            self.data.fwbs.n_blkt_outboard_module_coolant_sections_poloidal,
-            "OP ",
-        )
-        po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Total length of outboard blanket coolant channel straight sections (m)",
-            "(len_blkt_outboard_channel_total)",
-            self.data.blanket.len_blkt_outboard_channel_total,
-            "OP ",
-        )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
         po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Pressure drop for straight sections of outboard blanket (Pa)",
-            "(dpres_blkt_outboard_coolant_channel_straight_total)",
-            self.data.blanket.dpres_blkt_outboard_coolant_channel_straight_total,
-            "OP ",
-        )
-        po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Pressure drop for 90° bends of outboard blanket (Pa)",
-            "(dpres_blkt_outboard_coolant_channel_90_bend)",
-            self.data.blanket.dpres_blkt_outboard_coolant_channel_90_bend,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total pressure drop for 90° bends of outboard blanket (Pa)",
-            "(dpres_blkt_outboard_coolant_channel_90_bends_total)",
-            self.data.blanket.dpres_blkt_outboard_coolant_channel_90_bends_total,
-            "OP ",
-        )
-        po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Pressure drop for 180° bends of outboard blanket (Pa)",
-            "(dpres_blkt_outboard_coolant_channel_180_bend)",
-            self.data.blanket.dpres_blkt_outboard_coolant_channel_180_bend,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total pressure drop for 180° bends of outboard blanket (Pa)",
-            "(dpres_blkt_outboard_coolant_channel_180_bends_total)",
-            self.data.blanket.dpres_blkt_outboard_coolant_channel_180_bends_total,
-            "OP ",
-        )
-
-        po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Total pressure drop for all bends (Pa)",
-            "(dpres_blkt_outboard_bends_total)",
-            self.data.blanket.dpres_blkt_outboard_bends_total,
-            "OP ",
-        )
-
-        po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Reynolds number of outboard blanket coolant",
-            "(reynolds_blkt_outboard_coolant)",
-            self.data.blanket.reynolds_blkt_outboard_coolant,
-            "OP ",
-        )
 
         po.ovarre(
             self.outfile,
-            "Darcy friction factor of outboard blanket coolant",
-            "(darcy_frict_blkt_outboard_coolant)",
-            self.data.blanket.darcy_frict_blkt_outboard_coolant,
-            "OP ",
-        )
-        po.oblnkl(self.outfile)
-
-        po.ovarre(
-            self.outfile,
-            "Pressure drop coefficient for straight sections of outboard blanket",
-            "(f_straight_blkt_outboard_coolant)",
-            self.data.blanket.f_straight_blkt_outboard_coolant,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Total length of straight sections of outboard blanket coolant channels (m)",
-            "(len_blkt_outboard_coolant_channel_straight_total)",
-            self.data.blanket.len_blkt_outboard_coolant_channel_straight_total,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Pressure drop coefficient for 90° bends in outboard blanket",
-            "(f_elbow_blkt_outboard_90_bend)",
-            self.data.blanket.f_elbow_blkt_outboard_90_bend,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Pressure drop coefficient for 180° bends in outboard blanket",
-            "(f_elbow_blkt_outboard_180_bend)",
-            self.data.blanket.f_elbow_blkt_outboard_180_bend,
+            "Mass flow rate of inboard blanket coolant (kg/s)",
+            "(mflow_blkt_inboard_coolant)",
+            self.data.blanket.mflow_blkt_inboard_coolant,
             "OP ",
         )
 
