@@ -172,32 +172,21 @@ def find_line_type(line):
     # Split variable name from line
     name = line.split("=")[0].strip("")
 
-    # If the line is just the title for a section
+    line_type = "Parameter"
     if is_title(line):
-        return "Title"
+        line_type = "Title"
+    elif is_comment(line):
+        line_type = "Comment"
+    elif is_constraint_equation(name):
+        line_type = "Constraint Equation"
+    elif is_iteration_variable(name):
+        line_type = "Iteration Variable"
+    elif is_bound(name):
+        line_type = "Bound"
+    elif is_array(name):
+        line_type = "Array"
 
-    # If the line is a commented line
-    if is_comment(line):
-        return "Comment"
-
-    # Else if the line contains a constraint equation
-    if is_constraint_equation(name):
-        return "Constraint Equation"
-
-    # Else if the line contains an iteration variable
-    if is_iteration_variable(name):
-        return "Iteration Variable"
-
-    # Else if the line contains a bound statement
-    if is_bound(name):
-        return "Bound"
-
-    # Else all other arrays
-    if is_array(name):
-        return "Array"
-
-    # Else the line contains an regular parameter
-    return "Parameter"
+    return line_type
 
 
 def write_title(title, out_file):
@@ -788,61 +777,54 @@ def parameter_type(name, value):
     # Find parameter type from PROCESS dictionary
     param_type = dicts["DICT_VAR_TYPE"][name]
 
-    # Check if parameter is a list
     if isinstance(value, list):
-        if value[-1] == "":
-            value = value[:-1]
-
-        # Real array parameter
         if "real_array" in param_type:
             return [
-                item if item is None else float(fortran_float_to_py(item))
+                item
+                if item is None
+                else _convert_parameter_python("real_variable", item)
                 for item in value
             ]
-            # Convert list to floats, but not if the value is None
 
-        # Integer array parameter
         if "int_array" in param_type:
-            return [item if item is None else int(item) for item in value]
-            # Convert list to ints, but not if the value is None
+            return [
+                item if item is None else _convert_parameter_python("int_variable", item)
+                for item in value
+            ]
+    elif isinstance(value, str):
+        return _convert_parameter_python(param_type, value)
 
-        # otherwise, return value
-        return value
+    return value
 
-    # Check if parameter is a string
-    if isinstance(value, str):
-        # If a real variable just convert to float
-        if "real_variable" in param_type:
-            # Prepare so float conversion succeeds
-            value = value.lower()
-            value = value.replace("d", "e")
-            return float(value)
 
-        # If a real array split and make a float list
-        if "real_array" in param_type:
-            # Prepare so float conversion succeeds
-            value = value.lower()
-            value = value.replace("d", "e")
-            value = value.split(",")
-            if value[-1] == "":
-                value = value[:-1]
-            return [float(item) for item in value]
+def _convert_parameter_python(param_type, value):
+    """Converts an IN.DAT parameter into its Python representation."""
+    # If a real variable just convert to float
+    if "real_variable" in param_type:
+        # Prepare so float conversion succeeds
+        return float(fortran_float_to_py(value))
 
-        # If an integer variable convert to integer
-        if "int_variable" in param_type:
-            return int(value)
+    # If a real array split and make a float list
+    if "real_array" in param_type:
+        # Prepare so float conversion succeeds
+        value = value.lower()
+        value = value.split(",")
+        if value[-1] == "":
+            value = value[:-1]
+        return [float(fortran_float_to_py(item)) for item in value]
 
-        # If an integer array split and make an integer list
-        if "int_array" in param_type:
-            value = value.split(",")
-            if value[-1] == "":
-                value = value[:-1]
-            return [int(item) for item in value]
+    # If an integer variable convert to integer
+    if "int_variable" in param_type:
+        return int(value)
 
-        # If type unknown return original value
-        return value
+    # If an integer array split and make an integer list
+    if "int_array" in param_type:
+        value = value.split(",")
+        if value[-1] == "":
+            value = value[:-1]
+        return [int(item) for item in value]
 
-    # If type is other return original value
+    # If type unknown return original value
     return value
 
 
