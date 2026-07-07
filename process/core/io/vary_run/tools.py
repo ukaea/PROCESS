@@ -33,7 +33,7 @@ def get_neqns_itervars(in_dat, wdir="."):
 
     itervars = []
     for var in ixc_list:
-        if var != "":
+        if var:
             itervars += [ITERATION_VARIABLES[int(var)].name]
 
     if in_dat.number_of_itvars != len(itervars):

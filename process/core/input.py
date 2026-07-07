@@ -1185,11 +1185,11 @@ def parse_input_file(data_structure_obj: DataStructure):
     data_structure_obj.numerics.nvar = 0
     data_structure_obj.numerics.n_constraints = 0
 
-    input_file = data_structure_obj.globals.fileprefix
-
-    input_file_path = Path("IN.DAT")
-    if input_file != "":
-        input_file_path = Path(input_file)
+    input_file_path = (
+        Path(input_file)
+        if (input_file := data_structure_obj.globals.fileprefix)
+        else Path("IN.DAT")
+    )
 
     with input_file_path.open("r") as f:
         lines = f.readlines()
@@ -1201,7 +1201,7 @@ def parse_input_file(data_structure_obj: DataStructure):
 
         # don't bother trying to process blank lines
         # or comment lines
-        if stripped_line == "" or stripped_line[0] == "*":
+        if not stripped_line or stripped_line[0] == "*":
             continue
 
         # matches (variable name, array index, value)
