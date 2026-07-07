@@ -2298,6 +2298,423 @@ class Physics(Model):
         if self.data.physics.i_plasma_ignited == 1:
             po.ocmmnt(self.outfile, "  (Injected power only used for start-up phase)")
 
+        # Global power imbalance output #4233  ########################################
+        po.oheadr(self.outfile, "Power accounting")
+        p_loss_mw = (
+            self.data.current_drive.f_p_beam_orbit_loss
+            + self.data.current_drive.p_beam_shine_through_mw
+            + self.data.physics.p_fw_alpha_mw
+        )
+        p_impurity_mw = (
+            self.data.physics.p_plasma_inner_rad_mw
+            + self.data.physics.p_plasma_outer_rad_mw
+        )
+        po.ocmmnt(
+            self.outfile,
+            "See Figure in https://ukaea.github.io/PROCESS/physics-models/plasma_power_balance",
+        )
+        p_plasma_out = (
+            self.data.physics.p_electron_transport_loss_mw
+            + self.data.physics.p_ion_transport_loss_mw
+            + p_loss_mw
+            + self.data.physics.p_plasma_sync_mw
+            + p_impurity_mw
+        )
+
+        p_plasma_in = (
+            self.data.physics.p_alpha_total_mw
+            + self.data.physics.p_non_alpha_charged_mw
+            + self.data.current_drive.p_hcd_injected_total_mw
+            + self.data.physics.p_plasma_ohmic_mw
+        )
+        po.oshead(self.outfile, "Plasma power balance across separatrix")
+        po.ovarre(
+            self.outfile,
+            "Net power transported by electrons (MW)",
+            "(p_electron_transport_loss_mw)",
+            self.data.physics.p_electron_transport_loss_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Net power transported by ions (MW)",
+            "(p_ion_transport_loss_mw)",
+            self.data.physics.p_ion_transport_loss_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Power lost by beam ions and unthermalised alphas (MW)",
+            "(p_loss_mw)",
+            p_loss_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Net loss by synchrotron radiation (MW)",
+            "(p_plasma_sync_mw)",
+            self.data.physics.p_plasma_sync_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Power lost by line radiation and bremsstrahlung (MW)",
+            "(p_impurity_mw)",
+            p_impurity_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total (MW)",
+            "(p_plasma_out)",
+            p_plasma_out,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Alpha power (MW)",
+            "(p_alpha_total_mw)",
+            self.data.physics.p_alpha_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Power from p, 3He, T products of DD and/or D-He3 fusion (MW)",
+            "(p_non_alpha_charged_mw)",
+            self.data.physics.p_non_alpha_charged_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Injected power (MW)",
+            "(p_hcd_injected_total_mw)",
+            self.data.current_drive.p_hcd_injected_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Ohmic heating (MW)",
+            "(p_plasma_ohmic_mw)",
+            self.data.physics.p_plasma_ohmic_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total (MW)",
+            "(p_plasma_in)",
+            p_plasma_in,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma power imbalance (MW)",
+            "(p_plasma_out - p_plasma_in)",
+            p_plasma_out - p_plasma_in,
+            "OP ",
+        )
+        if abs(p_plasma_out - p_plasma_in) > 0.1:
+            logger.error("Plasma power imbalance > 0.1 MW")
+
+        ####################################################
+        p_reactor_in = (
+            self.data.physics.p_fusion_total_mw
+            + self.data.fwbs.p_blkt_multiplication_mw
+            + self.data.current_drive.p_hcd_injected_total_mw
+            + self.data.physics.p_plasma_ohmic_mw
+            + self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
+            + self.data.heat_transport.p_div_coolant_pump_mw
+        )
+        p_reactor_out = (
+            self.data.heat_transport.p_plant_primary_heat_mw
+            + self.data.heat_transport.p_div_secondary_heat_mw
+            + self.data.heat_transport.p_shld_secondary_heat_mw
+            + self.data.fwbs.p_tf_nuclear_heat_mw
+            + self.data.fwbs.p_fw_hcd_nuclear_heat_mw
+            + self.data.fwbs.p_fw_hcd_rad_total_mw
+        )
+        po.oshead(self.outfile, "Power balance for reactor")
+        po.ovarre(
+            self.outfile,
+            "Fusion power (MW)",
+            "(p_fusion_total_mw)",
+            self.data.physics.p_fusion_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Energy multiplication in blanket and shield (MW)",
+            "(p_blkt_multiplication_mw)",
+            self.data.fwbs.p_blkt_multiplication_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Injected power (MW)",
+            "(p_hcd_injected_total_mw)",
+            self.data.current_drive.p_hcd_injected_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Ohmic heating (MW)",
+            "(p_plasma_ohmic_mw)",
+            self.data.physics.p_plasma_ohmic_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Power deposited by pump in coolant for FW and blanket circuit (MW)",
+            "(p_fw_blkt_coolant_pump_mw)",
+            self.data.primary_pumping.p_fw_blkt_coolant_pump_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Power deposited by pump in coolant for divertor circuit (MW)",
+            "(p_div_coolant_pump_mw)",
+            self.data.heat_transport.p_div_coolant_pump_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total (MW)",
+            "(p_reactor_in)",
+            p_reactor_in,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total primary thermal power used for electricity production (MW)",
+            "(p_plant_primary_heat_mw)",
+            self.data.heat_transport.p_plant_primary_heat_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Divertor thermal power not used for electricity production (MW)",
+            "(p_div_secondary_heat_mw)",
+            self.data.heat_transport.p_div_secondary_heat_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Shield thermal power not used for electricity production (MW)",
+            "(p_shld_secondary_heat_mw)",
+            self.data.heat_transport.p_shld_secondary_heat_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Nuclear heating in TF coils (MW)",
+            "(p_tf_nuclear_heat_mw)",
+            self.data.fwbs.p_tf_nuclear_heat_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Nuclear heating in H&CD systems and diagnostics (MW)",
+            "(p_fw_hcd_nuclear_heat_mw)",
+            self.data.fwbs.p_fw_hcd_nuclear_heat_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Radiation heat deposited in H&CD systems and diagnostics  (MW)",
+            "(p_fw_hcd_rad_total_mw)",
+            self.data.fwbs.p_fw_hcd_rad_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total (MW)",
+            "(p_reactor_out)",
+            p_reactor_out,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Reactor power imbalance (MW)",
+            "(reactor_in - reactor_out)",
+            p_reactor_in - p_reactor_out,
+            "OP ",
+        )
+        if abs(p_reactor_in - p_reactor_out) > 0.1:
+            logger.error("Reactor power imbalance > 0.1 MW")
+        ######################################################
+        po.oshead(self.outfile, "Electrical power balance")
+        p_electric_demand = (
+            self.data.heat_transport.p_plant_electric_net_mw
+            + self.data.heat_transport.p_tf_electric_supplies_mw
+            + self.data.pf_coil.p_pf_electric_supplies_mw
+            + self.data.heat_transport.p_hcd_electric_total_mw
+            + self.data.heat_transport.p_coolant_pump_elec_total_mw
+            + self.data.heat_transport.vachtmw
+            + self.data.heat_transport.p_cryo_plant_electric_mw
+            + self.data.heat_transport.p_tritium_plant_electric_mw
+            + self.data.heat_transport.fachtmw
+        )
+        po.ovarre(
+            self.outfile,
+            "Net electric (MW)",
+            "(p_plant_electric_net_mw)",
+            self.data.heat_transport.p_plant_electric_net_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "TF coils electric power (MW)",
+            "(p_tf_electric_supplies_mw)",
+            self.data.heat_transport.p_tf_electric_supplies_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "PF coils electric power (MW)",
+            "(p_pf_electric_supplies_mw)",
+            self.data.pf_coil.p_pf_electric_supplies_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Heating and current drive electric power  (MW)",
+            "(p_hcd_electric_total_mw)",
+            self.data.heat_transport.p_hcd_electric_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Primary coolant pump electric power (MW)",
+            "(p_coolant_pump_elec_total_mw)",
+            self.data.heat_transport.p_coolant_pump_elec_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Vacuum pumps electric power (MW)",
+            "(vachtmw)",
+            self.data.heat_transport.vachtmw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Cryoplant electric power (MW)",
+            "(p_cryo_plant_electric_mw)",
+            self.data.heat_transport.p_cryo_plant_electric_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Tritium plant electric power (MW)",
+            "(p_tritium_plant_elec_mw)",
+            self.data.heat_transport.p_tritium_plant_electric_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "All other internal electric power requirements (MW)",
+            "(fachtmw)",
+            self.data.heat_transport.fachtmw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total (MW)",
+            "(p_electric_demand)",
+            p_electric_demand,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Gross electric output (MW)",
+            "(p_plant_electric_gross_mw)",
+            self.data.heat_transport.p_plant_electric_gross_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power imbalance (MW)",
+            "()",
+            p_electric_demand - self.data.heat_transport.p_plant_electric_gross_mw,
+            "OP ",
+        )
+        if (
+            abs(p_electric_demand - self.data.heat_transport.p_plant_electric_gross_mw)
+            > 0.1
+        ):
+            logger.error("Electric power imbalance > 0.1 MW")
+        ########################################################
+        po.oshead(self.outfile, "Power balance for power plant")
+        p_plant_in_mw = (
+            self.data.physics.p_fusion_total_mw + self.data.fwbs.p_blkt_multiplication_mw
+        )
+        p_plant_out_mw = (
+            self.data.heat_transport.p_plant_electric_net_mw
+            + self.data.power.p_turbine_loss_mw
+            + self.data.heat_transport.p_plant_secondary_heat_mw
+        )
+        po.ovarre(
+            self.outfile,
+            "Fusion power (MW)",
+            "(p_fusion_total_mw)",
+            self.data.physics.p_fusion_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Energy multiplication in blanket and shield (MW)",
+            "(p_blkt_multiplication_mw)",
+            self.data.fwbs.p_blkt_multiplication_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total (MW)",
+            "(p_nuclear_total_mw)",
+            p_plant_in_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Net electric (MW)",
+            "(p_plant_electric_net_mw)",
+            self.data.heat_transport.p_plant_electric_net_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Heat rejected by main power conversion circuit (MW)",
+            "(p_turbine_loss_mw)",
+            self.data.power.p_turbine_loss_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Heat rejected by other circuits (secondary heat) (MW)",
+            "(p_plant_secondary_heat_mw)",
+            self.data.heat_transport.p_plant_secondary_heat_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total (MW)",
+            "(p_plant_out_mw)",
+            p_plant_out_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Power plant overall imbalance (MW)",
+            "(p_plant_in_mw - p_plant_out_mw)",
+            p_plant_in_mw - p_plant_out_mw,
+            "OP ",
+        )
+        if abs(p_plant_in_mw - p_plant_out_mw) > 0.1:
+            logger.error("Power plant overall imbalance > 0.1 MW")
+
         self.exhaust.output()
 
         if self.data.stellarator.istell == 0:
