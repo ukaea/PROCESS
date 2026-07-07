@@ -2327,6 +2327,7 @@ class Physics(Model):
             + self.data.current_drive.p_hcd_injected_total_mw
             + self.data.physics.p_plasma_ohmic_mw
         )
+        p_plasma_imbalance_mw = p_plasma_out - p_plasma_in
         po.oshead(self.outfile, "Plasma power balance across separatrix")
         po.ovarre(
             self.outfile,
@@ -2409,11 +2410,11 @@ class Physics(Model):
         po.ovarre(
             self.outfile,
             "Plasma power imbalance (MW)",
-            "(p_plasma_out - p_plasma_in)",
-            p_plasma_out - p_plasma_in,
+            "(p_plasma_imbalance_mw)",
+            p_plasma_imbalance_mw,
             "OP ",
         )
-        if abs(p_plasma_out - p_plasma_in) > 0.1:
+        if abs(p_plasma_imbalance_mw) > 0.1:
             logger.error("Plasma power imbalance > 0.1 MW")
 
         ####################################################
@@ -2433,6 +2434,7 @@ class Physics(Model):
             + self.data.fwbs.p_fw_hcd_nuclear_heat_mw
             + self.data.fwbs.p_fw_hcd_rad_total_mw
         )
+        p_reactor_imbalance_mw = p_reactor_in - p_reactor_out
         po.oshead(self.outfile, "Power balance for reactor")
         po.ovarre(
             self.outfile,
@@ -2536,11 +2538,11 @@ class Physics(Model):
         po.ovarre(
             self.outfile,
             "Reactor power imbalance (MW)",
-            "(reactor_in - reactor_out)",
-            p_reactor_in - p_reactor_out,
+            "(p_reactor_imbalance_mw)",
+            p_reactor_imbalance_mw,
             "OP ",
         )
-        if abs(p_reactor_in - p_reactor_out) > 0.1:
+        if abs(p_reactor_imbalance_mw) > 0.1:
             logger.error("Reactor power imbalance > 0.1 MW")
         ######################################################
         po.oshead(self.outfile, "Electrical power balance")
@@ -2554,6 +2556,9 @@ class Physics(Model):
             + self.data.heat_transport.p_cryo_plant_electric_mw
             + self.data.heat_transport.p_tritium_plant_electric_mw
             + self.data.heat_transport.fachtmw
+        )
+        p_electric_imbalance = (
+            p_electric_demand - self.data.heat_transport.p_plant_electric_gross_mw
         )
         po.ovarre(
             self.outfile,
@@ -2636,14 +2641,11 @@ class Physics(Model):
         po.ovarre(
             self.outfile,
             "Electric power imbalance (MW)",
-            "()",
-            p_electric_demand - self.data.heat_transport.p_plant_electric_gross_mw,
+            "(p_electric_imbalance)",
+            p_electric_imbalance,
             "OP ",
         )
-        if (
-            abs(p_electric_demand - self.data.heat_transport.p_plant_electric_gross_mw)
-            > 0.1
-        ):
+        if abs(p_electric_imbalance) > 0.1:
             logger.error("Electric power imbalance > 0.1 MW")
         ########################################################
         po.oshead(self.outfile, "Power balance for power plant")
@@ -2655,6 +2657,7 @@ class Physics(Model):
             + self.data.power.p_turbine_loss_mw
             + self.data.heat_transport.p_plant_secondary_heat_mw
         )
+        p_plant_imbalance_mw = p_plant_in_mw - p_plant_out_mw
         po.ovarre(
             self.outfile,
             "Fusion power (MW)",
@@ -2708,11 +2711,11 @@ class Physics(Model):
         po.ovarre(
             self.outfile,
             "Power plant overall imbalance (MW)",
-            "(p_plant_in_mw - p_plant_out_mw)",
-            p_plant_in_mw - p_plant_out_mw,
+            "(p_plant_imbalance_mw)",
+            p_plant_imbalance_mw,
             "OP ",
         )
-        if abs(p_plant_in_mw - p_plant_out_mw) > 0.1:
+        if abs(p_plant_imbalance_mw) > 0.1:
             logger.error("Power plant overall imbalance > 0.1 MW")
 
         self.exhaust.output()
