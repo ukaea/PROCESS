@@ -809,7 +809,7 @@ def _convert_parameter_python(param_type, value):
         # Prepare so float conversion succeeds
         return [
             float(fortran_float_to_py(item))
-            for item in list(filter(None, value.lower().split(",")))
+            for item in filter(None, value.lower().split(","))
         ]
 
     # If an integer variable convert to integer
@@ -818,7 +818,7 @@ def _convert_parameter_python(param_type, value):
 
     # If an integer array split and make an integer list
     if "int_array" in param_type:
-        return [int(item) for item in list(filter(None, value.split(",")))]
+        return [int(item) for item in filter(None, value.split(","))]
 
     # If type unknown return original value
     return value
