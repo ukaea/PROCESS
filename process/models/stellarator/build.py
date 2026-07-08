@@ -87,8 +87,7 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
     data.build.available_radial_space = (
         data.stellarator.r_coil_minor * data.stellarator.f_coil_shape
         - data.physics.rminor
-    )
-    +data.stellarator_config.stella_config_derivative_min_lcfs_coils_dist * (
+    ) + data.stellarator_config.stella_config_derivative_min_lcfs_coils_dist * (
         data.physics.rminor
         - data.stellarator.f_st_rmajor * data.stellarator_config.stella_config_rminor_ref
     )
