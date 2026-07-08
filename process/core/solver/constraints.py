@@ -1772,7 +1772,7 @@ def constraint_equation_92(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(93, "GJ/m3", ">=")
-def constraint_equation_93(constraint_registration, _data):
+def constraint_equation_93(constraint_registration, data):
     """Lower limit of the copper in TF coil needed for quench protection
 
     f_a_tf_turn_cable_copper: copper fraction of cable conductor TF coils
@@ -1783,25 +1783,22 @@ def constraint_equation_93(constraint_registration, _data):
     e_tf_magnetic_stored_total_gj: Total stored energy in TF coils (GJ)
     """
     vol_tf_copper = (
-        data_structure.tfcoil_variables.f_a_tf_turn_cable_copper
-        # * data_structure.tfcoil_variables.a_tf_wp_conductor
-        * data_structure.superconducting_tf_coil_variables.dr_tf_turn
-        * data_structure.superconducting_tf_coil_variables.dx_tf_turn
-        * data_structure.tfcoil_variables.n_tf_coil_turns
-        * (
-            data_structure.tfcoil_variables.len_tf_coil
-            + data_structure.tfcoil_variables.cplen
-        )
-        # * data_structure.tfcoil_variables.n_tf_coils
+        data.tfcoil_variables.f_a_tf_turn_cable_copper
+        # * data.tfcoil_variables.a_tf_wp_conductor
+        * data.superconducting_tf_coil_variables.dr_tf_turn
+        * data.superconducting_tf_coil_variables.dx_tf_turn
+        * data.tfcoil_variables.n_tf_coil_turns
+        * (data.tfcoil_variables.len_tf_coil + data.tfcoil_variables.cplen)
+        # * data.tfcoil_variables.n_tf_coils
     )
     # print("vol_tf_copper =", vol_tf_copper)
-    # area_tf_turn_copper = ( data_structure.tfcoil_variables.f_a_tf_turn_cable_copper
-    #                       * data_structure.tfcoil_variables.a_tf_wp_conductor )
+    # area_tf_turn_copper = ( data.tfcoil_variables.f_a_tf_turn_cable_copper
+    #                       * data.tfcoil_variables.a_tf_wp_conductor )
     energy_per_vol_tf_copper_min = (
-        0.1952 * data_structure.tfcoil_variables.e_tf_magnetic_stored_total_gj
+        0.1952 * data.tfcoil_variables.e_tf_magnetic_stored_total_gj
     )
     # energy_per_area_tf_turn_copper_min = (
-    #    1.0e-6 * 44.2 * data_structure.tfcoil_variables.e_tf_magnetic_stored_total_gj
+    #    1.0e-6 * 44.2 * data.tfcoil_variables.e_tf_magnetic_stored_total_gj
     # )
     # print("energy_per_vol_tf_copper_min =", energy_per_vol_tf_copper_min)
     return geq(vol_tf_copper, energy_per_vol_tf_copper_min, constraint_registration)

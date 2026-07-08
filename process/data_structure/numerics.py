@@ -103,7 +103,7 @@ class FiguresOfMerit(IntEnum):
 IPNVARS = 177
 """total number of variables available for iteration"""
 
-IPEQNS = 92
+IPEQNS = 93
 """number of constraint equations available"""
 
 IPNFOMS = 19
@@ -252,6 +252,7 @@ class NumericsData:
             "CS achievable stress load cycles lower limit           ",
             "ECRH ignitability                ",  # Stellarator constraint
             "Fuel composition consistency     ",
+            "TF coil stored energy < copper in TF coil          ",
         ]
     )
     """Labels describing constraint equations (corresponding itvs)<UL>
@@ -354,6 +355,7 @@ class NumericsData:
     * (90) Lower Limit on number of stress load cycles for CS
     * (91) Checking if the design point is ECRH ignitable
     * (92) D/T/He3 ratio in fuel sums to 1
+    * (93) Lower limit of the copper in TF coil needed for quench protection
     """
 
     ixc: list[int] = field(default_factory=lambda: np.array([0] * IPNVARS))
