@@ -69,7 +69,7 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
     Automatically generated Regression Unit Test for stgeom.
 
     This test was generated using data from
-    tests/regression/scenarios/stellarator/IN.DAT.
+    tests/regression/input_files/helias_5b.IN.DAT.
 
     :param stgeomparam: the data used to mock and assert in this test.
     :type stgeomparam: stgeomparam
@@ -302,7 +302,7 @@ def test_stbuild(stbuildparam, monkeypatch, stellarator):
     Automatically generated Regression Unit Test for st_build.
 
     This test was generated using data from
-    tests/regression/scenarios/stellarator/IN.DAT.
+    tests/regression/input_files/helias_5b.IN.DAT.
 
     :param stbuildparam: the data used to mock and assert in this test.
     :type stbuildparam: stbuildparam
@@ -499,7 +499,7 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
     Automatically generated Regression Unit Test for ststrc.
 
     This test was generated using data from
-    tests/regression/scenarios/stellarator/IN.DAT.
+    tests/regression/input_files/helias_5b.IN.DAT.
 
     :param ststrcparam: the data used to mock and assert in this test.
     :type ststrcparam: ststrcparam
@@ -1443,7 +1443,7 @@ def test_intersect(intersectparam):
     Automatically generated Regression Unit Test for intersect.
 
     This test was generated using data from
-    tests/regression/scenarios/stellarator/IN.DAT.
+    tests/regression/input_files/helias_5b.IN.DAT.
 
     :param intersectparam: the data used to mock and assert in this test.
     :type intersectparam: intersectparam
@@ -1508,7 +1508,7 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
     Automatically generated Regression Unit Test for stdlim.
 
     This test was generated using data from
-    tests/regression/scenarios/stellarator/IN.DAT.
+    tests/regression/input_files/helias_5b.IN.DAT.
 
     :param stdlimparam: the data used to mock and assert in this test.
     :type stdlimparam: stdlimparam
@@ -1570,7 +1570,7 @@ def test_stdlim_ecrh(stdlimecrhparam, monkeypatch, stellarator):
     Automatically generated Regression Unit Test for stdlim_ecrh.
 
     This test was generated using data from
-    tests/regression/scenarios/stellarator_config/IN.DAT.
+    tests/regression/input_files/stellarator_helias.IN.DAT.
 
     :param stdlimecrhparam: the data used to mock and assert in this test.
     :type stdlimecrhparam: stdlimecrhparam
@@ -1665,7 +1665,7 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     Automatically generated Regression Unit Test for st_calc_eff_chi.
 
     This test was generated using data from
-    tests/regression/scenarios/stellarator_config/IN.DAT.
+    tests/regression/input_files/stellarator_helias.IN.DAT.
 
     :param stcalceffchiparam: the data used to mock and assert in this test.
     :type stcalceffchiparam: stcalceffchiparam
