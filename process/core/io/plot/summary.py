@@ -8033,7 +8033,7 @@ def plot_info(axis: plt.Axes, data, mfile: MFile, scan: int):
                 colorflag = "blue"
         axis.text(0, -i, data[i][1], color=colorflag, ha="left", va="center")
         if isinstance(data[i][0], str):
-            if data[i][0] == "":
+            if not data[i][0]:
                 axis.text(eqpos, -i, "\n", ha="left", va="center")
             elif data[i][0][0] == "#":
                 axis.text(-0.05, -i, f"{data[i][0][1:]}\n", ha="left", va="center")
@@ -15885,7 +15885,7 @@ def plot_summary(
     # create main plot
     # Increase range when adding new page
     # run main_plot
-    mfile_obj = MFile(mfile) if mfile != "" else MFile("MFILE.DAT")
+    mfile_obj = MFile(mfile) if mfile else MFile("MFILE.DAT")
     run_label = f"{mfile_obj.get('fileprefix', scan=-1)} | scan {scan or -1} | {mfile_obj.get('date', scan=-1)} {mfile_obj.get('time', scan=-1)} | {mfile_obj.get('tagno', scan=-1)} | Branch: {mfile_obj.get('branch_name', scan=-1)}  "
     pages_of_plots = main_plot(
         mfile_obj,
