@@ -588,12 +588,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             )
             po.ovarre(
                 self.outfile,
-                "p_fusion_total_mw",
-                "(p_fusion_total_mw.)",
-                self.data.physics.p_fusion_total_mw,
-            )
-            po.ovarre(
-                self.outfile,
                 "total mass of the TF coils (kg)",
                 "(m_tf_coils_total)",
                 self.data.tfcoil.m_tf_coils_total,

@@ -2267,20 +2267,7 @@ class Physics(Model):
             self.data.physics.f_alpha_ion,
             "OP ",
         )
-        po.ovarre(
-            self.outfile,
-            "Ion transport (MW)",
-            "(p_ion_transport_loss_mw)",
-            self.data.physics.p_ion_transport_loss_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Electron transport (MW)",
-            "(p_electron_transport_loss_mw)",
-            self.data.physics.p_electron_transport_loss_mw,
-            "OP ",
-        )
+        # Ion and electron transpor are now output belowin power accounting
         po.ovarre(
             self.outfile,
             "Injection power to ions (MW)",
@@ -2298,7 +2285,7 @@ class Physics(Model):
         if self.data.physics.i_plasma_ignited == 1:
             po.ocmmnt(self.outfile, "  (Injected power only used for start-up phase)")
 
-        # Global power imbalance output #4233  ########################################
+        # Global power imbalance output #4233
         po.oheadr(self.outfile, "Power accounting")
         p_loss_mw = (
             self.data.current_drive.f_p_beam_orbit_loss
@@ -2417,7 +2404,7 @@ class Physics(Model):
         if abs(p_plasma_imbalance_mw) > 0.1:
             logger.error("Plasma power imbalance > 0.1 MW")
 
-        ####################################################
+        po.oshead(self.outfile, "Power balance for reactor")
         p_reactor_in = (
             self.data.physics.p_fusion_total_mw
             + self.data.fwbs.p_blkt_multiplication_mw
@@ -2435,7 +2422,6 @@ class Physics(Model):
             + self.data.fwbs.p_fw_hcd_rad_total_mw
         )
         p_reactor_imbalance_mw = p_reactor_in - p_reactor_out
-        po.oshead(self.outfile, "Power balance for reactor")
         po.ovarre(
             self.outfile,
             "Fusion power (MW)",
@@ -2544,7 +2530,7 @@ class Physics(Model):
         )
         if abs(p_reactor_imbalance_mw) > 0.1:
             logger.error("Reactor power imbalance > 0.1 MW")
-        ######################################################
+
         po.oshead(self.outfile, "Electrical power balance")
         p_electric_demand = (
             self.data.heat_transport.p_plant_electric_net_mw
@@ -2647,7 +2633,7 @@ class Physics(Model):
         )
         if abs(p_electric_imbalance) > 0.1:
             logger.error("Electric power imbalance > 0.1 MW")
-        ########################################################
+
         po.oshead(self.outfile, "Power balance for power plant")
         p_plant_in_mw = (
             self.data.physics.p_fusion_total_mw + self.data.fwbs.p_blkt_multiplication_mw
