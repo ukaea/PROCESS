@@ -3119,14 +3119,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
             physics.data.physics, field, getattr(confinementtimeparam, field)
         )
 
-    (
-        pden_electron_transport_loss_mw,
-        pden_ion_transport_loss_mw,
-        t_electron_energy_confinement,
-        t_ion_energy_confinement,
-        t_energy_confinement,
-        p_plasma_loss_mw,
-    ) = physics.confinement.calculate_confinement_time(
+    confinement_time_data = physics.confinement.calculate_confinement_time(
         i_confinement_time=confinementtimeparam.i_confinement_time,
         i_plasma_ignited=confinementtimeparam.i_plasma_ignited,
         m_fuel_amu=confinementtimeparam.m_fuel_amu,
@@ -3158,27 +3151,27 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         confinementtimeparam.expected_kappa_ipb
     )
 
-    assert p_plasma_loss_mw == pytest.approx(
+    assert confinement_time_data.p_plasma_loss_mw == pytest.approx(
         confinementtimeparam.expected_p_plasma_loss_mw
     )
 
-    assert pden_electron_transport_loss_mw == pytest.approx(
+    assert confinement_time_data.pden_electron_transport_loss_mw == pytest.approx(
         confinementtimeparam.expected_pden_electron_transport_loss_mw
     )
 
-    assert pden_ion_transport_loss_mw == pytest.approx(
+    assert confinement_time_data.pden_ion_transport_loss_mw == pytest.approx(
         confinementtimeparam.expected_pden_ion_transport_loss_mw
     )
 
-    assert t_electron_energy_confinement == pytest.approx(
+    assert confinement_time_data.t_electron_energy_confinement == pytest.approx(
         confinementtimeparam.expected_tauee
     )
 
-    assert t_energy_confinement == pytest.approx(
+    assert confinement_time_data.t_plasma_energy_confinement == pytest.approx(
         confinementtimeparam.expected_t_energy_confinement
     )
 
-    assert t_ion_energy_confinement == pytest.approx(
+    assert confinement_time_data.t_ion_energy_confinement == pytest.approx(
         confinementtimeparam.expected_t_ion_energy_confinement
     )
 
