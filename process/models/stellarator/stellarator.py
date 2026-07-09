@@ -2251,8 +2251,6 @@ class Stellarator(Model):
             + self.data.physics.e_plasma_ions_thermal
         )
 
-        
-
         confinement_time_data = self.physics.confinement.calculate_confinement_time(
             self.data.physics.m_fuel_amu,
             self.data.physics.p_alpha_total_mw,

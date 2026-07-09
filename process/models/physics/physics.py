@@ -28,7 +28,6 @@ if TYPE_CHECKING:
     from process.data_structure.physics_variables import PhysicsData
     from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
     from process.models.physics.confinement_time import (
-        ConfinementTimeData,
         PlasmaConfinementTime,
     )
     from process.models.physics.density_limit import PlasmaDensityLimit
