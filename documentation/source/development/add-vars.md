@@ -13,7 +13,7 @@ In general, a variable within a data structure could act as an:
 - Iteration variable: is modified by the solver to try and optimise for some figure of merit.
 - Scan variable: is sequentially modified by the `Scan` class to some `IN.DAT`-defined values.
 - Intermediate variable: is calculated within a model and then used within other models.
-- Output variable: is calculated within a model and then written out to the `MFILE.DAT`.
+- Output variable: is calculated within a model and then written out to the `MFILE.DAT` and `OUT.DAT`.
 
 It is advised that a variable is either used to define a particular PROCESS run (input variable, iteration variable, or scan variable) or mutated within a PROCESS run (output variable or intermediate variable). Mixing the two classes of variable (e.g. having a variable that can be input but is also mutated within a model) will lead to confusing, dangerous, and incorrect results.
 
@@ -57,11 +57,11 @@ INPUT_VARIABLES = {
 }
 ```
 
-`InputVariable` has several additional fields to support validation and the parsing of arrays, please consult the dataclass for these additional arguments.
+`InputVariable` has several additional fields to support validation and the parsing of arrays; please consult the dataclass for these additional arguments.
 
 You would replace `"blanket"` with the name of the data structure your specific variable belongs to (found by looking at `DataStructure` in `process/core/model.py`).
 
-Now, in the `IN.DAT`, you could set `my_new_blanket_variable` by writing:
+Now, in the `IN.DAT`, you could set an initial value for `my_new_blanket_variable` by writing:
 
 ```
 my_new_blanket_variable = 1.0
@@ -88,6 +88,9 @@ In this example:
 - `1.0` is the default upper bound of the variable.
 
 You will often want to [add a variable to the input file](#add-a-new-input) if it is an iteration variable. That way, you can specify the initial value of the iteration variable in the `IN.DAT`.
+
+!!! note
+    Iteration variables are the exception to the best-practice of not allowing inputs to be mutated. The solver will obviously need to modify iteration variables away from their default value, however it remains true that _models_ should not mutate inputs. Furthermore, models should not change the values of iteration variables set by the solver.
 
 The iteration variable can be enabled in the `IN.DAT` by:
 ```
@@ -119,7 +122,7 @@ elif figure_of_merit == FiguresOfMerit.BLANKET_FIGURE_OF_MERIT:
   objective_metric = data.blanket.my_new_blanket_variable
 ```
 
-Note that you will want to scale the `objective_metric` such that it is of the order unity if the variable is not already.
+Note that you will want to scale the `objective_metric` such that it is of the order unity if the variable is not already. This is recommended (but not necessary) because most optimisers are tuned to work well on data of this scale.
 
 The figure of merit can be selected in the `IN.DAT`:
 ```
@@ -159,7 +162,7 @@ Please see the [scan documentation](../io/input-guide.md#input-guide) for how to
 
 ## Add a constraint equation
 
-Constraint equations are added to PROCESS in the `process/core/solver/constraints.py` file. They are registered with the `ConstraintManager` whenever the application is run. Each equation has a unique name that is currently an integer, however upgrades to the input file format in the future will allow arbitrary hashable constraint names.
+Constraint equations are added to PROCESS in the `process/core/solver/constraints.py` file. They are registered with the `ConstraintManager` whenever the application is run. Each equation has a unique name that is currently an integer.
 
 A constraint is simply added by registering the constraint to the manager using a decorator.
 
@@ -187,7 +190,7 @@ The arguments to the `register_constraint()` function are:
 - Constraint value
 - Constraint bound
 
-The recommended way to do this is using one of the functions `geq`, `leq`, or `eq` depending on whether the constraint is desired to be $v\geq b$, $v\leq b$, or $v=b$, respectively.
+The recommended way to do this is using one of the functions `geq`, `leq`, or `eq` depending on whether the constraint is desired to be $v\geq b$, $v\leq b$, or $v=b$, respectively, where $v$ is the value (something that PROCESS calculates) and $b$ is the bound (the limit set by the user in the `IN.DAT`).
 
 ```python
 @ConstraintManager.register_constraint(1234, "m", "=")
