@@ -185,7 +185,7 @@ def plot_plasma(
     mirror_negative_x :
         if True, mirror the plot to the negative x-axis (Default value = False)
     """
-    (r_0, a, triang, kappa, i_single_null, i_plasma_shape, plasma_square) = (
+    r_0, a, triang, kappa, i_single_null, i_plasma_shape, plasma_square = (
         mfile.get_variables(
             "rmajor",
             "rminor",
@@ -3503,9 +3503,11 @@ def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1,
         ("CS comp", CSCOMPRESSION_COLOUR[colour_scheme - 1]),
         (
             "TF coil",
-            TFC_COLOUR[colour_scheme - 1]
-            if mfile.get("i_tf_sup", scan=scan) != 0
-            else "#b87333",
+            (
+                TFC_COLOUR[colour_scheme - 1]
+                if mfile.get("i_tf_sup", scan=scan) != 0
+                else "#b87333"
+            ),
         ),
         ("Thermal shield", THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
         ("VV & shield", VESSEL_COLOUR[colour_scheme - 1]),
@@ -3582,9 +3584,11 @@ def toroidal_cross_section(
         ("dr_cs_precomp", CSCOMPRESSION_COLOUR[colour_scheme - 1]),
         (
             "dr_tf_inboard",
-            TFC_COLOUR[colour_scheme - 1]
-            if mfile.get("i_tf_sup", scan=scan) != 0
-            else "#b87333",
+            (
+                TFC_COLOUR[colour_scheme - 1]
+                if mfile.get("i_tf_sup", scan=scan) != 0
+                else "#b87333"
+            ),
         ),
         ("dr_shld_thermal_inboard", THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
         ("dr_vv_inboard", VESSEL_COLOUR[colour_scheme - 1]),
@@ -3656,9 +3660,11 @@ def toroidal_cross_section(
             r3=r3,
             r4=r4,
             w=w,
-            facecolor=TFC_COLOUR[colour_scheme - 1]
-            if mfile.get("i_tf_sup", scan=scan) != 0
-            else "#b87333",
+            facecolor=(
+                TFC_COLOUR[colour_scheme - 1]
+                if mfile.get("i_tf_sup", scan=scan) != 0
+                else "#b87333"
+            ),
         )
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
@@ -5671,9 +5677,11 @@ def plot_tf_coils(
         (dr_tf_shld_gap, "white"),
         (
             0.0,
-            TFC_COLOUR[colour_scheme - 1]
-            if mfile.get("i_tf_sup", scan=scan) != 0
-            else "#b87333",
+            (
+                TFC_COLOUR[colour_scheme - 1]
+                if mfile.get("i_tf_sup", scan=scan) != 0
+                else "#b87333"
+            ),
         ),
     ):
         # Check for TF coil shape
@@ -8114,12 +8122,14 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
         (f"!{mfile.get('date', scan=-1)}", "Date:", ""),
         (f"!{mfile.get('time', scan=-1)}", "Time:", ""),
         (f"!{mfile.get('username', scan=-1)}", "User:", ""),
-        ("!Evaluation", "Run type", "")
-        if isinstance(mfile.data["minmax"], MFileErrorClass)
-        else (
-            f"!{FiguresOfMerit(abs(int(mfile.get('minmax', scan=-1)))).description}",
-            "Optimising:",
-            "",
+        (
+            ("!Evaluation", "Run type", "")
+            if isinstance(mfile.data["minmax"], MFileErrorClass)
+            else (
+                f"!{FiguresOfMerit(abs(int(mfile.get('minmax', scan=-1)))).description}",
+                "Optimising:",
+                "",
+            )
         ),
     ]
 
@@ -9474,9 +9484,11 @@ def plot_radial_build(axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
         SOLENOID_COLOUR[colour_scheme - 1],
         CSCOMPRESSION_COLOUR[colour_scheme - 1],
         "white",
-        TFC_COLOUR[colour_scheme - 1]
-        if mfile.get("i_tf_sup", scan=-1) != 0
-        else "#b87333",
+        (
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=-1) != 0
+            else "#b87333"
+        ),
         "white",
         THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
@@ -9496,9 +9508,11 @@ def plot_radial_build(axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
         "white",
         THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
-        TFC_COLOUR[colour_scheme - 1]
-        if mfile.get("i_tf_sup", scan=-1) != 0
-        else "#b87333",
+        (
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=-1) != 0
+            else "#b87333"
+        ),
     ]
     if int(mfile.get("i_tf_inside_cs", scan=-1)) == TFCSRadialConfiguration.TF_INSIDE_CS:
         radial_color[1] = (
@@ -9612,9 +9626,11 @@ def plot_lower_vertical_build(
         "white",
         THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
-        TFC_COLOUR[colour_scheme - 1]
-        if mfile.get("i_tf_sup", scan=-1) != 0
-        else "#b87333",
+        (
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=-1) != 0
+            else "#b87333"
+        ),
         "white",
     ]
 
@@ -9715,9 +9731,11 @@ def plot_upper_vertical_build(
             "white",
             THERMAL_SHIELD_COLOUR[colour_scheme - 1],
             "white",
-            TFC_COLOUR[colour_scheme - 1]
-            if mfile.get("i_tf_sup", scan=-1) != 0
-            else "#b87333",
+            (
+                TFC_COLOUR[colour_scheme - 1]
+                if mfile.get("i_tf_sup", scan=-1) != 0
+                else "#b87333"
+            ),
             "white",
         ]
     # Double null case
@@ -9755,9 +9773,11 @@ def plot_upper_vertical_build(
             "white",
             THERMAL_SHIELD_COLOUR[colour_scheme - 1],
             "white",
-            TFC_COLOUR[colour_scheme - 1]
-            if mfile.get("i_tf_sup", scan=-1) != 0
-            else "#b87333",
+            (
+                TFC_COLOUR[colour_scheme - 1]
+                if mfile.get("i_tf_sup", scan=-1) != 0
+                else "#b87333"
+            ),
             "white",
         ]
 
@@ -10241,7 +10261,8 @@ def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
     axis.set_xlabel("Length [m]")
     axis.set_ylabel("Height [m]")
     axis.set_title("CS Turn Conductor Cross-Section")
-    axis.legend()
+    cs_legend = axis.legend(loc="upper right", bbox_to_anchor=(0.7, -0.25))
+    cs_legend.get_frame().set_edgecolor("black")
     axis.grid(True, linestyle="--", alpha=0.3)
 
 
@@ -15116,7 +15137,11 @@ def plot_quench_time_evolution(
 
     for ax, val, label in [
         (axes_1, tau_j, f"$J$ at $\\tau_{{\\text{{discharge}}}}$ ({tau_j:.2e} A/m²)"),
-        (axes_2, tau_temp, f"$T$ at $\\tau_{{\\text{{discharge}}}}$ ({tau_temp:.1f} K)"),
+        (
+            axes_2,
+            tau_temp,
+            f"$T$ at $\\tau_{{\\text{{discharge}}}}$ ({tau_temp:.1f} K)",
+        ),
     ]:
         ax.axvline(
             tau_time,
