@@ -74,7 +74,7 @@ ixc = 10 * "ISS04 Renormalization Factor" (can also be fixed)
 ixc = 50 * Coil current density, aka winding pack thickness (required!) 
 ixc = 59 * Winding Pack copper fraction
 ixc = 56 * Exponential Quench Dumping Time
-ixc = 109 * Thermal alpha particle pressure (iterated to consistency, use together with `f_alpha_energy_confinement_min`)
+ixc = 109 * Thermal alpha particle pressure (iterated to consistency, use together with `f_t_alpha_energy_confinement_min`)
 ixc = 169 * Achievable Temperature of the ECRH at the ignition point
 ```
 
@@ -131,7 +131,7 @@ The density limit relevant to certain stellarators experiments has been proposed
 
 $n_{max} = 0.25(PB_0/R_0a^2_p)^{1/2}$
 
-where $n$ is the line-averaged electron density in units of $10^{20} m^{-3}$, $p$ is the absorbed heating power (MW), $B_0$ is the on-axis field (t), $R_0$ is the major radius (m), and $a_p$ is the plasma minor radius (m). To enforce the Sudo density limit, turn on constraint equation no. 5 (`fdene != 1` can be used to scale the constraint bound).
+where $n$ is the line-averaged electron density in units of $10^{20} m^{-3}$, $p$ is the absorbed heating power (MW), $B_0$ is the on-axis field (t), $R_0$ is the major radius (m), and $a_p$ is the plasma minor radius (m). To enforce the Sudo density limit, turn on constraint equation no. 5 (`f_nd_plasma_electron_limit_max != 1` can be used to scale the constraint bound).
 
 Note that the Sudo limit is a radiation based density limit and it is unclear how well this limit extrapolates to reactor parameters, especially as no impurity dependence e.g. is present in the Sudo model.
 PROCESS features an impurity dependent radiation module already which can be used with `icc=17` and by setting the `f_nd_impurity_electrons` vector.
@@ -226,7 +226,7 @@ f_a_tf_turn_cable_copper = 0.7 *Copper fraction of cable conductor (TF coils), S
 tftmp = 4.75 *Peak helium coolant temperature in TF coils and PF coils (K)
 temp_tf_cryo = 4.75 * Temperature in TF coils, required for plant efficiency (K)
 f_a_tf_turn_cable_space_extra_void = 0.3 *Coolant fraction of TF coil leg (itfsup=0) this is the same for conductor and strand!
-fiooic = 0.78 * Fraction TF coil critical current to operation current (constraint margin)
+f_j_tf_wp_critical_max = 0.78 * Fraction TF coil critical current to operation current (constraint margin)
 v_tf_coil_dump_quench_max_kv = 12.64 * Max voltage across tf coil during quench (kV)
 t_tf_superconductor_quench = 20 * Dump time (should be iteration variable)
 dr_tf_nose_case = 0.1 * Thickness TF Coil case (for stellarators: Also for toroidal direction)

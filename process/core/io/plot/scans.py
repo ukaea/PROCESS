@@ -91,7 +91,7 @@ def plot_scan(
         11: "beta_norm_max",
         12: "f_c_plasma_bootstrap_max",
         13: "boundu(10)",
-        14: "fiooic",
+        14: "f_j_tf_wp_critical_max",
         16: "rmajor",
         17: "b_tf_inboard_peak_symmetric",  # b_tf_inboard_max the maximum T field upper limit is the scan variable
         18: "eta_cd_norm_hcd_primary_max",
@@ -107,7 +107,7 @@ def plot_scan(
         28: "b_plasma_toroidal_on_axis",
         29: "radius_plasma_core_norm",
         30: "",  # OBSOLETE
-        31: "f_alpha_energy_confinement_min",
+        31: "f_t_alpha_energy_confinement_min",
         32: "epsvmc",
         33: "ttarget",
         34: "qtargettotal",

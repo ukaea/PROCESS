@@ -20,9 +20,13 @@ from process.data_structure.pfcoil_variables import (
     NFIXMX,
     NGC2,
     NPTSMX,
+    PFConductorModel,
 )
 from process.models import superconductors
-from process.models.superconductors import SuperconductorMaterial, SuperconductorModel
+from process.models.superconductors import (
+    SuperconductorMaterial,
+    SuperconductorModel,
+)
 from process.models.tfcoil.base import TFCoilShapeModel
 
 logger = logging.getLogger(__name__)
@@ -864,7 +868,7 @@ class PFCoil(Model):
 
                 # Issue 1871.  MDK
                 # Allowable current density (for superconducting coils) for each coil, index i
-                if self.data.pf_coil.i_pf_conductor == 0:
+                if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                     bmax = max(
                         abs(self.data.pf_coil.b_pf_coil_peak[i]),
                         abs(self.data.pf_coil.bpf2[i]),
@@ -872,21 +876,21 @@ class PFCoil(Model):
 
                     self.data.pf_coil.j_pf_wp_critical[i], _jstrand, jsc, _tmarg = (
                         superconpf(
-                            bmax,
-                            self.data.pf_coil.f_a_pf_coil_void[i],
-                            self.data.pf_coil.fcupfsu,
-                            self.data.pf_coil.j_pf_coil_wp_peak[i],
-                            self.data.pf_coil.i_pf_superconductor,
-                            self.data.tfcoil.fhts,
-                            self.data.tfcoil.str_pf_con_res,
-                            self.data.tfcoil.tftmp,
-                            self.data.tfcoil.bcritsc,
-                            self.data.tfcoil.tcritsc,
-                            self.data.tfcoil.b_crit_upper_nbti,
-                            self.data.tfcoil.t_crit_nbti,
-                            self.data.superconducting_tfcoil.dr_tf_hts_tape,
-                            self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
-                            self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
+                            b_pf_peak=bmax,
+                            fhe=self.data.pf_coil.f_a_pf_coil_void[i],
+                            fcu=self.data.pf_coil.fcupfsu,
+                            j_pf_wp=self.data.pf_coil.j_pf_coil_wp_peak[i],
+                            isumat=self.data.pf_coil.i_pf_superconductor,
+                            fhts=self.data.tfcoil.fhts,
+                            strain=self.data.tfcoil.str_pf_con_res,
+                            temp_pf_peak_field=self.data.tfcoil.tftmp,
+                            bcritsc=self.data.tfcoil.bcritsc,
+                            tcritsc=self.data.tfcoil.tcritsc,
+                            b_crit_upper_nbti=self.data.tfcoil.b_crit_upper_nbti,
+                            t_crit_nbti=self.data.tfcoil.t_crit_nbti,
+                            dr_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
+                            dx_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
+                            dx_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
                         )
                     )
 
@@ -910,7 +914,7 @@ class PFCoil(Model):
 
                 # Resistive coils
 
-                if self.data.pf_coil.i_pf_conductor == 1:
+                if self.data.pf_coil.i_pf_conductor == PFConductorModel.RESISTIVE:
                     # Coil resistance (f_a_pf_coil_void is the void fraction)
 
                     respf = (
@@ -937,7 +941,7 @@ class PFCoil(Model):
 
                 # Conductor weight (f_a_pf_coil_void is the void fraction)
 
-                if self.data.pf_coil.i_pf_conductor == 0:
+                if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                     self.data.pf_coil.m_pf_coil_conductor[i] = (
                         volpf
                         * self.data.tfcoil.dcond[
@@ -948,7 +952,7 @@ class PFCoil(Model):
                 else:
                     self.data.pf_coil.m_pf_coil_conductor[i] = (
                         volpf
-                        * constants.den_copper
+                        * constants.DEN_COPPER
                         * (1.0e0 - self.data.pf_coil.f_a_pf_coil_void[i])
                     )
 
@@ -963,7 +967,7 @@ class PFCoil(Model):
 
                 # Stress ==> cross-sectional area of supporting steel to use
 
-                if self.data.pf_coil.i_pf_conductor == 0:
+                if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                     # Superconducting coil
                     # Updated assumptions: 500 MPa stress limit with all of the force
                     # supported in the conduit (steel) case.
@@ -2035,7 +2039,7 @@ class PFCoil(Model):
         if self.data.build.iohcl == 0:
             op.ocmmnt(self.outfile, "No central solenoid included")
             op.oblnkl(self.outfile)
-        elif self.data.pf_coil.i_pf_conductor == 0:
+        elif self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             op.ocmmnt(self.outfile, "Superconducting central solenoid")
 
             op.ovarin(
@@ -2330,7 +2334,7 @@ class PFCoil(Model):
         op.ocmmnt(self.outfile, "----------------------------")
         op.oblnkl(self.outfile)
 
-        if self.data.pf_coil.i_pf_conductor == 0:
+        if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             op.oblnkl(self.outfile)
             op.ocmmnt(self.outfile, "Superconducting PF coils")
 
@@ -2557,7 +2561,7 @@ class PFCoil(Model):
 
         # PF coils
         for k in range(self.data.pf_coil.nef):
-            if self.data.pf_coil.i_pf_conductor == 0:
+            if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                 rows.append([
                     f"PF {k}",
                     f"{self.data.pf_coil.c_pf_cs_coils_peak_ma[k]:.3e}",
@@ -2587,7 +2591,7 @@ class PFCoil(Model):
                 abs(self.data.pf_coil.j_cs_pulse_start),
                 abs(self.data.pf_coil.j_cs_flat_top_end),
             )
-            if self.data.pf_coil.i_pf_conductor == 0:
+            if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                 # Issue #328
                 rows.append([
                     "CS",
@@ -3361,7 +3365,7 @@ class CSCoil(Model):
         )
 
         # Stress ==> cross-sectional area of supporting steel to use
-        if self.data.pf_coil.i_pf_conductor == 0:
+        if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             # Superconducting coil
 
             # New calculation from M. N. Wilson for hoop stress
@@ -3477,7 +3481,7 @@ class CSCoil(Model):
             )
 
         # Weight of conductor in central Solenoid
-        if self.data.pf_coil.i_pf_conductor == 0:
+        if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             self.data.pf_coil.m_pf_coil_conductor[
                 self.data.pf_coil.n_cs_pf_coils - 1
             ] = (
@@ -3497,10 +3501,10 @@ class CSCoil(Model):
                 * 2.0e0
                 * np.pi
                 * self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1]
-                * constants.den_copper
+                * constants.DEN_COPPER
             )
 
-        if self.data.pf_coil.i_pf_conductor == 0:
+        if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             # Allowable coil overall current density at EOF
             # (superconducting coils only)
 
@@ -3510,10 +3514,10 @@ class CSCoil(Model):
                 self.data.pf_coil.j_cs_conductor_critical_flat_top_end,
                 tmarg1,
             ) = superconpf(
-                self.data.pf_coil.b_cs_peak_flat_top_end,
-                self.data.pf_coil.f_a_cs_void,
-                self.data.pf_coil.fcuohsu,
-                (
+                b_pf_peak=self.data.pf_coil.b_cs_peak_flat_top_end,
+                fhe=self.data.pf_coil.f_a_cs_void,
+                fcu=self.data.pf_coil.fcuohsu,
+                j_pf_wp=(
                     abs(
                         self.data.pf_coil.c_pf_cs_coils_peak_ma[
                             self.data.pf_coil.n_cs_pf_coils - 1
@@ -3522,17 +3526,17 @@ class CSCoil(Model):
                     / self.data.pf_coil.a_cs_cable_space
                 )
                 * 1.0e6,
-                self.data.pf_coil.i_cs_superconductor,
-                self.data.tfcoil.fhts,
-                self.data.tfcoil.str_cs_con_res,
-                self.data.pf_coil.temp_cs_superconductor_operating,
-                self.data.tfcoil.bcritsc,
-                self.data.tfcoil.tcritsc,
-                self.data.tfcoil.b_crit_upper_nbti,
-                self.data.tfcoil.t_crit_nbti,
-                self.data.superconducting_tfcoil.dr_tf_hts_tape,
-                self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
-                self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
+                isumat=self.data.pf_coil.i_cs_superconductor,
+                fhts=self.data.tfcoil.fhts,
+                strain=self.data.tfcoil.str_cs_con_res,
+                temp_pf_peak_field=self.data.pf_coil.temp_cs_superconductor_operating,
+                bcritsc=self.data.tfcoil.bcritsc,
+                tcritsc=self.data.tfcoil.tcritsc,
+                b_crit_upper_nbti=self.data.tfcoil.b_crit_upper_nbti,
+                t_crit_nbti=self.data.tfcoil.t_crit_nbti,
+                dr_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
+                dx_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
+                dx_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
             )
             # Strand critical current calculation for costing in $/kAm
             # = superconducting filaments jc * (1 - strand copper fraction)
@@ -3560,10 +3564,10 @@ class CSCoil(Model):
                 self.data.pf_coil.j_cs_conductor_critical_pulse_start,
                 tmarg2,
             ) = superconpf(
-                self.data.pf_coil.b_cs_peak_pulse_start,
-                self.data.pf_coil.f_a_cs_void,
-                self.data.pf_coil.fcuohsu,
-                (
+                b_pf_peak=self.data.pf_coil.b_cs_peak_pulse_start,
+                fhe=self.data.pf_coil.f_a_cs_void,
+                fcu=self.data.pf_coil.fcuohsu,
+                j_pf_wp=(
                     abs(
                         self.data.pf_coil.c_pf_cs_coils_peak_ma[
                             self.data.pf_coil.n_cs_pf_coils - 1
@@ -3572,17 +3576,17 @@ class CSCoil(Model):
                     / self.data.pf_coil.a_cs_cable_space
                 )
                 * 1.0e6,
-                self.data.pf_coil.i_cs_superconductor,
-                self.data.tfcoil.fhts,
-                self.data.tfcoil.str_cs_con_res,
-                self.data.pf_coil.temp_cs_superconductor_operating,
-                self.data.tfcoil.bcritsc,
-                self.data.tfcoil.tcritsc,
-                self.data.tfcoil.b_crit_upper_nbti,
-                self.data.tfcoil.t_crit_nbti,
-                self.data.superconducting_tfcoil.dr_tf_hts_tape,
-                self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
-                self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
+                isumat=self.data.pf_coil.i_cs_superconductor,
+                fhts=self.data.tfcoil.fhts,
+                strain=self.data.tfcoil.str_cs_con_res,
+                temp_pf_peak_field=self.data.pf_coil.temp_cs_superconductor_operating,
+                bcritsc=self.data.tfcoil.bcritsc,
+                tcritsc=self.data.tfcoil.tcritsc,
+                b_crit_upper_nbti=self.data.tfcoil.b_crit_upper_nbti,
+                t_crit_nbti=self.data.tfcoil.t_crit_nbti,
+                dr_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
+                dx_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
+                dx_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
             )
 
             self.data.pf_coil.j_pf_wp_critical[self.data.pf_coil.n_cs_pf_coils - 1] = (
@@ -4444,21 +4448,21 @@ def peak_b_field_at_pf_coil(
 
 
 def superconpf(
-    bmax,
-    fhe,
-    fcu,
-    jwp,
-    isumat,
-    fhts,
-    strain,
-    thelium,
-    bcritsc,
-    tcritsc,
-    b_crit_upper_nbti,
-    t_crit_nbti,
-    dr_tf_hts_tape,
-    dx_tf_hts_tape_rebco,
-    dx_tf_hts_tape_total,
+    b_pf_peak: float,
+    fhe: float,
+    fcu: float,
+    j_pf_wp: float,
+    isumat: int,
+    fhts: float,
+    strain: float,
+    temp_pf_peak_field: float,
+    bcritsc: float,
+    tcritsc: float,
+    b_crit_upper_nbti: float,
+    t_crit_nbti: float,
+    dr_hts_tape: float,
+    dx_hts_tape_rebco: float,
+    dx_hts_tape_total: float,
 ):
     """Routine to calculate the PF coil superconductor properties.
 
@@ -4476,14 +4480,14 @@ def superconpf(
 
     Parameters
     ----------
-    bmax : float
-        peak field at conductor (T)
+    b_pf_peak : float
+        peak field at conductor [T]
     fhe : float
         fraction of cable space that is for He cooling
     fcu : float
         fraction of cable conductor that is copper
-    jwp : float
-        actual winding pack current density (A/m2)
+    j_pf_wp : float
+        actual winding pack current density [A/m²]
     isumat : int
         switch for conductor type
         1 = ITER Nb3Sn, standard parameters,
@@ -4497,45 +4501,53 @@ def superconpf(
         radiation damage, fatigue or AC losses
     strain : float
         Strain on superconductor at operation conditions
-    thelium : float
-        He temperature at peak field point (K)
+    temp_pf_peak_field : float
+        He temperature at peak field point [K]
     bcritsc : float
-        Critical field at zero temperature and strain (T) (isumat=4 only)
+        Critical field at zero temperature and strain [T] (isumat=4 only)
     tcritsc : float
-        Critical temperature at zero field and strain (K) (isumat=4 only)
+        Critical temperature at zero field and strain [K] (isumat=4 only)
     b_crit_upper_nbti: float
-        upper critical field of GL_nbti
+        upper critical field of GL_nbti [T]
     t_crit_nbti: float
-        critical temperature of GL_nbti
-    dr_tf_hts_tape: float
-        Mean width of tape (m)
-    dx_tf_hts_tape_rebco: float
-        thickness of REBCO layer in tape (m)
-    dx_tf_hts_tape_total: float
-        thickness of tape, inc. all layers (hts, copper, substrate, etc.) (m)
+        critical temperature of GL_nbti [K]
+    dr_hts_tape: float
+        Mean width of tape [m]
+    dx_hts_tape_rebco: float
+        thickness of REBCO layer in tape [m]
+    dx_hts_tape_total: float
+        thickness of tape, inc. all layers (hts, copper, substrate, etc.) [m]
 
     Returns
     -------
     tuple[float, float, float, float]
-        Critical winding pack current density (A/m2) (j_crit_wp),
-        Critical cable current density (A/m2) (j_crit_cable)
-        Superconducting strand non-copper critical current density (A/m2) (j_crit_sc)
-        Temperature margin (K) (tmarg)
+        Critical winding pack current density [A/m²] (j_crit_wp),
+        Critical cable current density [A/m²] (j_crit_cable)
+        Superconducting strand non-copper critical current density [A/m²] (j_crit_sc)
+        Temperature margin [K] (tmarg)
     """
     # Find critical current density in superconducting strand, jcritstr
-    if isumat == 1:
+    if isumat == SuperconductorModel.ITER_NB3SN:
         # ITER Nb3Sn critical surface parameterization
-        bc20m = 32.97e0
-        tc0m = 16.06e0
+        bc20m = 32.97e0  # [T] critical field at 0 K and 0 strain
+        tc0m = 16.06e0  # [K] critical temperature at 0 T and 0 strain
 
         # j_crit_sc returned by superconductors.itersc is the critical current density in the
         # superconductor - not the whole strand, which contains copper
 
-        j_crit_sc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
+        j_crit_sc, _, _ = superconductors.itersc(
+            temp_conductor=temp_pf_peak_field,
+            b_conductor=b_pf_peak,
+            strain=strain,
+            b_c20max=bc20m,
+            temp_c0max=tc0m,
+        )
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 2:
+    # =================================================================
+
+    elif isumat == SuperconductorModel.BI2212:
         # Bi-2212 high temperature superconductor parameterization
 
         # Current density in a strand of Bi-2212 conductor
@@ -4545,78 +4557,127 @@ def superconpf(
         # composition that does not require a user-defined copper fraction,
         # so this is irrelevant in this model
 
-        #  jwp / conductor fraction of cable
-        jstrand = jwp / (1.0e0 - fhe)
-        j_crit_cable, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
+        #  j_pf_wp / conductor fraction of cable
+        jstrand = j_pf_wp / (1.0e0 - fhe)
+        j_crit_cable, tmarg = superconductors.bi2212(
+            b_conductor=b_pf_peak,
+            jstrand=jstrand,
+            temp_conductor=temp_pf_peak_field,
+            f_strain=fhts,
+        )
         #  j_crit_cable / non-copper fraction of conductor
         j_crit_sc = j_crit_cable / (1.0e0 - fcu)
 
-    elif isumat == 3:
+    # =================================================================
+
+    elif isumat == SuperconductorModel.OLD_LUBELL_NBTI:
         # NbTi data
-        bc20m = 15.0e0
-        tc0m = 9.3e0
-        c0 = 1.0e10
-        j_crit_sc, _ = superconductors.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
+        bc20m = 15.0e0  # [T] critical field at 0 K and 0 strain
+        tc0m = 9.3e0  # [K] critical temperature at 0 T and 0 strain
+        c0 = 1.0e10  # # [A/m²]
+        j_crit_sc, _ = superconductors.jcrit_nbti(
+            temp_conductor=temp_pf_peak_field,
+            b_conductor=b_pf_peak,
+            c0=c0,
+            b_c20max=bc20m,
+            temp_c0max=tc0m,
+        )
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 4:
+    # =================================================================
+
+    elif isumat == SuperconductorModel.USER_DEFINED_NB3SN:
         # As (1), but user-defined parameters
         bc20m = bcritsc
         tc0m = tcritsc
-        j_crit_sc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
+        j_crit_sc, _, _ = superconductors.itersc(
+            temp_conductor=temp_pf_peak_field,
+            b_conductor=b_pf_peak,
+            strain=strain,
+            b_c20max=bc20m,
+            temp_c0max=tc0m,
+        )
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 5:
+    # =================================================================
+
+    elif isumat == SuperconductorModel.WST_NB3SN:
         # WST Nb3Sn parameterisation
-        bc20m = 32.97e0
-        tc0m = 16.06e0
+        bc20m = 32.97e0  # [T] critical field at 0 K and 0 strain
+        tc0m = 16.06e0  # [K] critical temperature at 0 T and 0 strain
 
         # j_crit_sc returned by superconductors.itersc is the critical current density in the
         # superconductor - not the whole strand, which contains copper
 
         j_crit_sc, _, _ = superconductors.western_superconducting_nb3sn(
-            thelium, bmax, strain, bc20m, tc0m
+            temp_conductor=temp_pf_peak_field,
+            b_conductor=b_pf_peak,
+            strain=strain,
+            b_c20max=bc20m,
+            temp_c0max=tc0m,
         )
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 6:
+    # =================================================================
+
+    elif isumat == SuperconductorModel.CROCO_REBCO:
         # "REBCO" 2nd generation HTS superconductor in CrCo strand
-        j_crit_sc, _, _, _ = superconductors.jcrit_rebco(thelium, bmax)
+        j_crit_sc, _, _, _ = superconductors.jcrit_rebco(
+            temp_conductor=temp_pf_peak_field, b_conductor=b_pf_peak
+        )
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 7:
+    # =================================================================
+
+    elif isumat == SuperconductorModel.DURHAM_NBTI:
         # Durham Ginzburg-Landau critical surface model for Nb-Ti
-        bc20m = b_crit_upper_nbti
-        tc0m = t_crit_nbti
-        j_crit_sc, _, _ = superconductors.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
+        bc20m = b_crit_upper_nbti  # [T] critical field at 0 K and 0 strain
+        tc0m = t_crit_nbti  # [K] critical temperature at 0 T and 0 strain
+        j_crit_sc, _, _ = superconductors.gl_nbti(
+            temp_conductor=temp_pf_peak_field,
+            b_conductor=b_pf_peak,
+            strain=strain,
+            b_c20max=bc20m,
+            t_c0=tc0m,
+        )
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 8:
+    # =================================================================
+
+    elif isumat == SuperconductorModel.DURHAM_REBCO:
         # Durham Ginzburg-Landau critical surface model for REBCO
-        bc20m = 429e0
-        tc0m = 185e0
-        j_crit_sc, _, _ = superconductors.gl_rebco(thelium, bmax, strain, bc20m, tc0m)
+        bc20m = 429e0  # [T] critical field at 0 K and 0 strain
+        tc0m = 185e0  # [K] critical temperature at 0 T and 0 strain
+        j_crit_sc, _, _ = superconductors.gl_rebco(
+            temp_conductor=temp_pf_peak_field,
+            b_conductor=b_pf_peak,
+            strain=strain,
+            b_c20max=bc20m,
+            t_c0=tc0m,
+        )
         # A0 calculated for tape cross section already
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    elif isumat == 9:
+    # =================================================================
+
+    elif isumat == SuperconductorModel.HAZELTON_ZHAI_REBCO:
         # Hazelton experimental data + Zhai conceptual model for REBCO
-        bc20m = 138
-        tc0m = 92
+        bc20m = 138  # [T] critical field at 0 K and 0 strain
+        tc0m = 92  # [K] critical temperature at 0 T and 0 strain
         j_crit_sc, _, _ = superconductors.hijc_rebco(
-            thelium,
-            bmax,
-            bc20m,
-            tc0m,
-            dr_tf_hts_tape,
-            dx_tf_hts_tape_rebco,
-            dx_tf_hts_tape_total,
+            temp_conductor=temp_pf_peak_field,
+            b_conductor=b_pf_peak,
+            b_c20max=bc20m,
+            t_c0=tc0m,
+            dr_hts_tape=dr_hts_tape,
+            dx_hts_tape_rebco=dx_hts_tape_rebco,
+            dx_hts_tape_total=dx_hts_tape_total,
         )
         # A0 calculated for tape cross section already
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
@@ -4628,44 +4689,44 @@ def superconpf(
 
     #  Critical current density in winding pack
     jcritwp = j_crit_cable
-    #  jwp / conductor fraction of cable
-    jstrand = jwp / (1.0e0 - fhe)
+    #  j_pf_wp / conductor fraction of cable
+    jstrand = j_pf_wp / (1.0e0 - fhe)
     #  jstrand / non-copper fraction of conductor
     jsc = jstrand / (1.0e0 - fcu)
 
     # Temperature margin (already calculated in superconductors.bi2212 for isumat=2)
     # Find temperature at which current density margin = 0
-    if isumat in {1, 3, 4, 5, 7, 8, 9}:
-        if isumat == 3:
+    if isumat != SuperconductorModel.BI2212 or SuperconductorModel.CROCO_REBCO:
+        if isumat == SuperconductorModel.OLD_LUBELL_NBTI:
             arguments = (
                 isumat,
                 jsc,
-                bmax,
+                b_pf_peak,
                 strain,
                 bc20m,
                 tc0m,
-                dr_tf_hts_tape,
-                dx_tf_hts_tape_rebco,
-                dx_tf_hts_tape_total,
+                dr_hts_tape,
+                dx_hts_tape_rebco,
+                dx_hts_tape_total,
                 c0,
             )
         else:
             arguments = (
                 isumat,
                 jsc,
-                bmax,
+                b_pf_peak,
                 strain,
                 bc20m,
                 tc0m,
-                dr_tf_hts_tape,
-                dx_tf_hts_tape_rebco,
-                dx_tf_hts_tape_total,
+                dr_hts_tape,
+                dx_hts_tape_rebco,
+                dx_hts_tape_total,
             )
 
-        another_estimate = 2 * thelium
+        another_estimate = 2 * temp_pf_peak_field
         t_zero_margin, _root_result = optimize.newton(
-            superconductors.superconductor_current_density_margin,
-            thelium,
+            func=superconductors.superconductor_current_density_margin,
+            x0=temp_pf_peak_field,
             fprime=None,
             args=arguments,
             tol=1.0e-06,
@@ -4676,7 +4737,7 @@ def superconpf(
             full_output=True,
             disp=False,
         )
-        tmarg = t_zero_margin - thelium
+        tmarg = t_zero_margin - temp_pf_peak_field
 
     return jcritwp, j_crit_cable, j_crit_sc, tmarg
 

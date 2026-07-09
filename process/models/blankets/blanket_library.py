@@ -2857,7 +2857,7 @@ class BlanketLibrary(Model):
             Whether to write output to file.
         icoolpump : int
             Switch for coolant type (1=primary He/H2O, 2=secondary PbLi/Li).
-        flow_velocity : float
+        vel_coolant : float
             Coolant flow velocity (m/s).
         len_pipe : float
             Total flow length along pipe (m).
@@ -3385,7 +3385,7 @@ class BlanketLibrary(Model):
             Pump outlet temperature (K).
         temp_coolant_pump_inlet : float
             Pump inlet temperature (K).
-        pressure : float
+        pres_coolant_pump_inlet : float
             Outlet (pump inlet) coolant pressure (Pa).
         dpres_coolant : float
             Coolant pressure drop (Pa).

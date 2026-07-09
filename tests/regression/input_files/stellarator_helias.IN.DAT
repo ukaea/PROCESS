@@ -44,9 +44,9 @@ icc = 82 * icc_toroidalbuild
 * Radial build consistency for stellarators (itv 172 f_avspace)
 icc = 83 * icc_placeforblanket
 
-* f_alpha_energy_confinement the ratio of particle to energy confinement times (itv 110)
+* f_t_alpha_energy_confinement the ratio of particle to energy confinement times (itv 110)
 icc = 62 * icc_thermalHe
-f_alpha_energy_confinement_min = 4     * tau_He/tau_E
+f_t_alpha_energy_confinement_min = 4     * tau_He/tau_E
 
 *** QUENCH LIMITS *** 
 
@@ -98,7 +98,7 @@ hfact = 1.0             *H-factor on energy confinement times
 boundu(10) = 1.2
 
 * ixc = 50                * itv_fiooic
-fiooic = 0.8
+f_j_tf_wp_critical_max = 0.8
 
 ixc = 109 * f_nd_alpha_electron: thermal alpha density / electron density
 boundl(109) = 0.0001
@@ -130,7 +130,7 @@ i_confinement_time = 38 *Switch for energy confinement time scaling law (38: ISS
 f_sync_reflect = 0.6    *Synchrotron wall reflectivity factor
 f_temp_plasma_ion_electron  = 0.95         *Ion temperature / electron temperature
 
-fradpwr = 1.
+f_p_plasma_separatrix_rad_max = 1.
 
 *--------------Stellarator Variables---------------*
 

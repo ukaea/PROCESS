@@ -8,7 +8,7 @@ import pytest
 from process.models.physics import impurity_radiation
 
 
-@pytest.fixture(autouse=True)  # noqa: RUF076
+@pytest.fixture(autouse=True)
 def initialise_impurity_radiation(process_models):
     impurity_radiation.initialise_imprad(process_models.physics.data)
 

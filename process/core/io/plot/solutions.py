@@ -12,7 +12,6 @@ import logging
 from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from warnings import warn
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -95,25 +94,30 @@ def plot_mfile_solutions(
 
     Parameters
     ----------
-    runs_metadata : Sequence[RunMetadata]
+    runs_metadata :
         list of RunMetadata objects
-    plot_title : str
+    plot_title :
         title of plot
-    normalising_tag : str, optional
+    normalising_tag :
         tag for solution to normalise with. If provided,
-        normalise, otherwise don't, defaults to None
-    rmse : bool, optional
-        plot RMS errors relative to reference solution, defaults to False
-    normalisation_type : str, optional
-        opt param normalisation to use: one of ["init", "range", None], defaults to "init"
+        normalise, otherwise don't
+    rmse :
+        plot RMS errors relative to reference solution
+    normalisation_type :
+        opt param normalisation to use: one of ["init", "range", None]
 
     Returns
     -------
     Tuple[mpl.figure.Figure, pd.DataFrame]
         figure and dataframe of solutions
+
+    Raises
+    ------
+    ValueError
+        if rmse is required and normalisation_type is None
     """
     if normalisation_type is not None and normalising_tag is not None:
-        warn(
+        logger.warning(
             "Double-normalising: using opt params normalised to each solution "
             "and normalising again to another solution. Are you sure?",
             stacklevel=1,
@@ -218,13 +222,18 @@ def _create_df_from_run_metadata(runs_metadata: Sequence[RunMetadata]) -> pd.Dat
 
     Parameters
     ----------
-    runs_metadata
+    runs_metadata:
         scenarios and solvers that have been run
 
     Returns
     -------
-    pandas.DataFrame
+    :
         dataframe of all results
+
+    Raises
+    ------
+    FileNotFoundError
+        if the Mfile is not found
     """
     results = []
     for run_metadata in runs_metadata:
@@ -312,6 +321,11 @@ def _normalise_diffs(
     -------
     pandas.DataFrame
         normalised differences
+
+    Raises
+    ------
+    ValueError
+        Unable to normalise
     """
     normalising_soln, non_normalising_solns = _separate_norm_solution(
         results_df, normalising_tag
@@ -331,7 +345,8 @@ def _normalise_diffs(
     if (normalising_soln_opt_params_np == 0).any():
         zero_indexes = np.nonzero(normalising_soln_opt_params_np == 0)[0]
         raise ValueError(
-            f"Can't normalise with 0-valued optimisation parameter at index {zero_indexes!s}."
+            "Can't normalise with 0-valued optimisation parameter at index"
+            f" {zero_indexes!s}."
         )
 
     normalised_solns_opt_params = (
@@ -423,6 +438,11 @@ def _plot_solutions(
     -------
     mpl.figure.Figure
         figure containing varying numbers of axes
+
+    Raises
+    ------
+    ValueError
+        Attempts to plot multiple objective functions on the same plot
     """
     # Separate optimisation parameters and objective dfs
     opt_params_df = diffs_df.filter(

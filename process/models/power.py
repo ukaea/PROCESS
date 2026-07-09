@@ -12,7 +12,7 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.blanket_variables import BlktModelTypes
-from process.data_structure.pfcoil_variables import NGC2
+from process.data_structure.pfcoil_variables import NGC2, PFConductorModel
 
 
 class PumpingPowerModelTypes(IntEnum):
@@ -1028,7 +1028,10 @@ class Power(Model):
         self.data.tfcoil.cryo_cool_req = 0.0e0
 
         # Superconductors TF/PF cryogenic cooling
-        if self.data.tfcoil.i_tf_sup == 1 or self.data.pf_coil.i_pf_conductor == 0:
+        if (
+            self.data.tfcoil.i_tf_sup == 1
+            or self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING
+        ):
             # self.data.heat_transport.helpow calculation
             self.data.heat_transport.helpow = self.cryo(
                 self.data.tfcoil.i_tf_sup,
@@ -2115,7 +2118,7 @@ class Power(Model):
 
             #  Bus mass (kg)
             self.data.tfcoil.m_tf_bus = (
-                self.data.tfcoil.len_tf_bus * a_tf_bus * constants.den_copper
+                self.data.tfcoil.len_tf_bus * a_tf_bus * constants.DEN_COPPER
             )
 
             #  Total maximum impedance MDK actually just fixed resistance

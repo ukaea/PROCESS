@@ -10,7 +10,7 @@ def objective_function(minmax: int, data: DataStructure) -> float:
 
     Parameters
     ----------
-    minimax : int
+    minmax : int
         the ID and sign of the figure of merit to evaluate.
         A negative value indicates maximisation.
         A positive value indicates minimisation.

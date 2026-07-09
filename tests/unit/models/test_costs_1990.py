@@ -5,7 +5,11 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
+from process.data_structure.pfcoil_variables import PFConductorModel
 from process.models.engineering.pumping import CoolantType
+from process.models.superconductors import (
+    SuperconductorModel,
+)
 
 
 @pytest.fixture
@@ -73,7 +77,6 @@ def acc2261_fix(costs, request, monkeypatch):
     monkeypatch.setattr(costs.data.fwbs, "p_shld_nuclear_heat_mw", 1.478)
     monkeypatch.setattr(costs.data.heat_transport, "p_plant_primary_heat_mw", 2647.0)
     monkeypatch.setattr(costs.data.heat_transport, "n_primary_heat_exchangers", 3)
-    monkeypatch.setattr(costs.data.costs, "c2261", 0)
 
     # Parameterised mocks
     monkeypatch.setattr(
@@ -106,7 +109,6 @@ def test_acc2262(monkeypatch, costs):
     monkeypatch.setattr(costs.data.heat_transport, "vachtmw", 0.5)
     monkeypatch.setattr(costs.data.heat_transport, "p_tritium_plant_electric_mw", 15.0)
     monkeypatch.setattr(costs.data.heat_transport, "fachtmw", 64.835)
-    monkeypatch.setattr(costs.data.costs, "c2262", 0)
 
     costs.acc2262()
     assert costs.data.costs.c2262 == pytest.approx(29.408, abs=0.01)
@@ -123,7 +125,6 @@ def test_acc2263(monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "uccry", 9.3e4)
     monkeypatch.setattr(costs.data.tfcoil, "tftmp", 4.5)
     monkeypatch.setattr(costs.data.heat_transport, "helpow", 80.980e3)
-    monkeypatch.setattr(costs.data.costs, "c2263", 0)
 
     costs.acc2263()
     assert costs.data.costs.c2263 == pytest.approx(180.76, abs=0.01)
@@ -246,7 +247,6 @@ def test_acc2274(monkeypatch, costs):
     monkeypatch.setattr(costs.data.buildings, "wsvol", 132304.1)
     monkeypatch.setattr(costs.data.buildings, "volrci", 1299783.4)
     monkeypatch.setattr(costs.data.costs, "fkind", 1)
-    monkeypatch.setattr(costs.data.costs, "c2274", 0)
 
     costs.acc2274()
     assert costs.data.costs.c2274 == pytest.approx(84.10, abs=0.01)
@@ -296,7 +296,6 @@ def acc228_fix(request, monkeypatch, costs):
     # Mock variables used by acc228()
     # Some may be parameterised
     monkeypatch.setattr(costs.data.costs, "fkind", param["fkind"])
-    monkeypatch.setattr(costs.data.costs, "c228", 0)
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -358,7 +357,6 @@ def acc229_fix(request, monkeypatch, costs):
     # Mock variables used by acc229()
     # Some may be parameterised
     monkeypatch.setattr(costs.data.costs, "fkind", param["fkind"])
-    monkeypatch.setattr(costs.data.costs, "c229", 0)
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -428,7 +426,6 @@ def acc23_fix(request, monkeypatch, costs):
         costs.data.fwbs, "i_blkt_coolant_type", param["i_blkt_coolant_type"]
     )
     monkeypatch.setattr(costs.data.heat_transport, "p_plant_electric_gross_mw", 1200.0)
-    monkeypatch.setattr(costs.data.costs, "c23", 0)
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -453,7 +450,6 @@ def test_acc241(monkeypatch, costs):
     :type monkeypatch: object
     """
     monkeypatch.setattr(costs.data.costs, "lsa", 4)
-    monkeypatch.setattr(costs.data.costs, "c241", 0)
 
     costs.acc241()
     assert costs.data.costs.c241 == pytest.approx(18.4, abs=0.01)
@@ -470,7 +466,6 @@ def test_acc242(monkeypatch, costs):
     monkeypatch.setattr(
         costs.data.heat_transport, "p_plant_electric_base_total_mw", 65.0
     )
-    monkeypatch.setattr(costs.data.costs, "c242", 0)
 
     costs.acc242()
     assert costs.data.costs.c242 == pytest.approx(9.06, abs=0.01)
@@ -484,7 +479,6 @@ def test_acc243(monkeypatch, costs):
     """
     monkeypatch.setattr(costs.data.costs, "lsa", 4)
     monkeypatch.setattr(costs.data.heat_transport, "tlvpmw", 403.8)
-    monkeypatch.setattr(costs.data.costs, "c243", 0)
 
     costs.acc243()
     assert costs.data.costs.c243 == pytest.approx(8.08, abs=0.01)
@@ -497,7 +491,6 @@ def test_acc244(monkeypatch, costs):
     :type monkeypatch: object
     """
     monkeypatch.setattr(costs.data.costs, "lsa", 4)
-    monkeypatch.setattr(costs.data.costs, "c244", 0)
 
     costs.acc244()
     assert costs.data.costs.c244 == pytest.approx(6.80, abs=0.01)
@@ -510,7 +503,6 @@ def test_acc245(monkeypatch, costs):
     :type monkeypatch: object
     """
     monkeypatch.setattr(costs.data.costs, "lsa", 4)
-    monkeypatch.setattr(costs.data.costs, "c245", 0)
 
     costs.acc245()
     assert costs.data.costs.c245 == pytest.approx(1.5, abs=0.01)
@@ -558,7 +550,6 @@ def acc25_fix(request, monkeypatch, costs):
     # Some may be parameterised
     monkeypatch.setattr(costs.data.costs, "ucmisc", 2.5e7)
     monkeypatch.setattr(costs.data.costs, "lsa", param["lsa"])
-    monkeypatch.setattr(costs.data.costs, "c25", 0)
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -657,7 +648,6 @@ def acc26_fix(request, monkeypatch, costs):
         "p_plant_electric_gross_mw",
         param["p_plant_electric_gross_mw"],
     )
-    monkeypatch.setattr(costs.data.costs, "c26", 0)
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -685,7 +675,6 @@ def test_acc9(monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "cdirt", 30e3)
     monkeypatch.setattr(costs.data.costs, "cowner", 0.15)
     monkeypatch.setattr(costs.data.costs, "fcontng", 0.195)
-    monkeypatch.setattr(costs.data.costs, "cindrt", 0)
 
     costs.acc9()
     assert costs.data.costs.cindrt == pytest.approx(10005.0, abs=0.1)
@@ -722,34 +711,6 @@ class Acc21Param(NamedTuple):
     csi: Any = None
 
     cland: Any = None
-
-    c21: Any = None
-
-    c211: Any = None
-
-    c212: Any = None
-
-    c213: Any = None
-
-    c214: Any = None
-
-    c2141: Any = None
-
-    c2142: Any = None
-
-    c215: Any = None
-
-    c216: Any = None
-
-    c217: Any = None
-
-    c2171: Any = None
-
-    c2172: Any = None
-
-    c2173: Any = None
-
-    c2174: Any = None
 
     expected_c21: Any = None
 
@@ -799,20 +760,6 @@ class Acc21Param(NamedTuple):
             lsa=2,
             csi=16,
             cland=19.199999999999999,
-            c21=0,
-            c211=0,
-            c212=0,
-            c213=0,
-            c214=0,
-            c2141=0,
-            c2142=0,
-            c215=0,
-            c216=0,
-            c217=0,
-            c2171=0,
-            c2172=0,
-            c2173=0,
-            c2174=0,
             expected_c21=740.00647752036286,
             expected_c211=32.640000000000001,
             expected_c212=455.94302513968393,
@@ -844,20 +791,6 @@ class Acc21Param(NamedTuple):
             lsa=2,
             csi=16,
             cland=19.199999999999999,
-            c21=740.00647752036286,
-            c211=32.640000000000001,
-            c212=455.94302513968393,
-            c213=31.919999999999998,
-            c214=142.28887143307821,
-            c2141=92.049817052244123,
-            c2142=50.239054380834098,
-            c215=12.431999999999999,
-            c216=16.471070358845893,
-            c217=48.311510588754764,
-            c2171=15.119999999999999,
-            c2172=17.640000000000001,
-            c2173=9.6599999999999984,
-            c2174=5.8915105887547687,
             expected_c21=745.10420837411039,
             expected_c211=32.640000000000001,
             expected_c212=456.46967079521778,
@@ -918,34 +851,6 @@ def test_acc21(acc21param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "cland", acc21param.cland)
 
-    monkeypatch.setattr(costs.data.costs, "c21", acc21param.c21)
-
-    monkeypatch.setattr(costs.data.costs, "c211", acc21param.c211)
-
-    monkeypatch.setattr(costs.data.costs, "c212", acc21param.c212)
-
-    monkeypatch.setattr(costs.data.costs, "c213", acc21param.c213)
-
-    monkeypatch.setattr(costs.data.costs, "c214", acc21param.c214)
-
-    monkeypatch.setattr(costs.data.costs, "c2141", acc21param.c2141)
-
-    monkeypatch.setattr(costs.data.costs, "c2142", acc21param.c2142)
-
-    monkeypatch.setattr(costs.data.costs, "c215", acc21param.c215)
-
-    monkeypatch.setattr(costs.data.costs, "c216", acc21param.c216)
-
-    monkeypatch.setattr(costs.data.costs, "c217", acc21param.c217)
-
-    monkeypatch.setattr(costs.data.costs, "c2171", acc21param.c2171)
-
-    monkeypatch.setattr(costs.data.costs, "c2172", acc21param.c2172)
-
-    monkeypatch.setattr(costs.data.costs, "c2173", acc21param.c2173)
-
-    monkeypatch.setattr(costs.data.costs, "c2174", acc21param.c2174)
-
     costs.acc21()
 
     assert costs.data.costs.c21 == pytest.approx(acc21param.expected_c21)
@@ -984,8 +889,6 @@ class Acc2211Param(NamedTuple):
 
     fkind: Any = None
 
-    fwallcst: Any = None
-
     ucblli2o: Any = None
 
     ifueltyp: Any = None
@@ -1014,7 +917,6 @@ class Acc2211Param(NamedTuple):
             a_fw_total=1601.1595634509963,
             ucblss=90,
             fkind=1,
-            fwallcst=0,
             ucblli2o=600,
             ifueltyp=1,
             lsa=2,
@@ -1043,7 +945,6 @@ class Acc2211Param(NamedTuple):
             a_fw_total=1891.2865102700493,
             ucblss=90,
             fkind=1,
-            fwallcst=143.19827300247195,
             ucblli2o=600,
             ifueltyp=1,
             lsa=2,
@@ -1089,8 +990,6 @@ def test_acc2211(acc2211param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "fkind", acc2211param.fkind)
 
-    monkeypatch.setattr(costs.data.costs, "fwallcst", acc2211param.fwallcst)
-
     monkeypatch.setattr(costs.data.costs, "ucblli2o", acc2211param.ucblli2o)
 
     monkeypatch.setattr(costs.data.costs, "ifueltyp", acc2211param.ifueltyp)
@@ -1126,8 +1025,6 @@ class Acc2212Param(NamedTuple):
     ucblvd: Any = None
 
     ucblli2o: Any = None
-
-    blkcst: Any = None
 
     ucbllipb: Any = None
 
@@ -1169,12 +1066,6 @@ class Acc2212Param(NamedTuple):
 
     c2212: Any = None
 
-    c22121: Any = None
-
-    c22122: Any = None
-
-    c22123: Any = None
-
     c22124: Any = None
 
     c22125: Any = None
@@ -1204,7 +1095,6 @@ class Acc2212Param(NamedTuple):
             ucblli=875,
             ucblvd=280,
             ucblli2o=600,
-            blkcst=0,
             ucbllipb=10.300000000000001,
             ifueltyp=1,
             lsa=2,
@@ -1238,9 +1128,6 @@ class Acc2212Param(NamedTuple):
             uccarb=50,
             c22=0,
             c2212=0,
-            c22121=0,
-            c22122=0,
-            c22123=0,
             c22124=0,
             c22125=0,
             c22126=0,
@@ -1258,7 +1145,6 @@ class Acc2212Param(NamedTuple):
             ucblli=875,
             ucblvd=280,
             ucblli2o=600,
-            blkcst=868.59838754004318,
             ucbllipb=10.300000000000001,
             ifueltyp=1,
             lsa=2,
@@ -1292,9 +1178,6 @@ class Acc2212Param(NamedTuple):
             uccarb=50,
             c22=3474.7391916096453,
             c2212=0,
-            c22121=231.02049851885039,
-            c22122=566.14962196586885,
-            c22123=71.428267055323843,
             c22124=0,
             c22125=0,
             c22126=0,
@@ -1331,8 +1214,6 @@ def test_acc2212(acc2212param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "ucblvd", acc2212param.ucblvd)
 
     monkeypatch.setattr(costs.data.costs, "ucblli2o", acc2212param.ucblli2o)
-
-    monkeypatch.setattr(costs.data.costs, "blkcst", acc2212param.blkcst)
 
     monkeypatch.setattr(costs.data.costs, "ucbllipb", acc2212param.ucbllipb)
 
@@ -1377,12 +1258,6 @@ def test_acc2212(acc2212param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "c22", acc2212param.c22)
 
     monkeypatch.setattr(costs.data.costs, "c2212", acc2212param.c2212)
-
-    monkeypatch.setattr(costs.data.costs, "c22121", acc2212param.c22121)
-
-    monkeypatch.setattr(costs.data.costs, "c22122", acc2212param.c22122)
-
-    monkeypatch.setattr(costs.data.costs, "c22123", acc2212param.c22123)
 
     monkeypatch.setattr(costs.data.costs, "c22124", acc2212param.c22124)
 
@@ -1430,12 +1305,6 @@ class Acc2213Param(NamedTuple):
 
     c22: Any = None
 
-    c2213: Any = None
-
-    c22131: Any = None
-
-    c22132: Any = None
-
     expected_c2213: Any = None
 
     expected_c22131: Any = None
@@ -1472,9 +1341,6 @@ class Acc2213Param(NamedTuple):
             ife=0,
             ucconc=0.10000000000000001,
             c22=0,
-            c2213=0,
-            c22131=0,
-            c22132=0,
             expected_c2213=110.15394303108492,
             expected_c22131=55.076971515542461,
             expected_c22132=55.076971515542461,
@@ -1505,9 +1371,6 @@ class Acc2213Param(NamedTuple):
             ife=0,
             ucconc=0.10000000000000001,
             c22=3474.7391916096453,
-            c2213=110.15394303108492,
-            c22131=55.076971515542461,
-            c22132=55.076971515542461,
             expected_c2213=110.29480288883934,
             expected_c22131=55.147401444419671,
             expected_c22132=55.147401444419671,
@@ -1551,12 +1414,6 @@ def test_acc2213(acc2213param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2213param.c22)
 
-    monkeypatch.setattr(costs.data.costs, "c2213", acc2213param.c2213)
-
-    monkeypatch.setattr(costs.data.costs, "c22131", acc2213param.c22131)
-
-    monkeypatch.setattr(costs.data.costs, "c22132", acc2213param.c22132)
-
     costs.acc2213()
 
     assert costs.data.costs.c2213 == pytest.approx(acc2213param.expected_c2213)
@@ -1575,8 +1432,6 @@ class Acc2214Param(NamedTuple):
 
     c22: Any = None
 
-    c2214: Any = None
-
     expected_c2214: Any = None
 
 
@@ -1588,7 +1443,6 @@ class Acc2214Param(NamedTuple):
             lsa=2,
             gsmass=1631228.030796848,
             c22=0,
-            c2214=0,
             expected_c2214=47.672639200037878,
         ),
         Acc2214Param(
@@ -1596,7 +1450,6 @@ class Acc2214Param(NamedTuple):
             lsa=2,
             gsmass=1626877.8363395864,
             c22=3474.7391916096453,
-            c2214=47.672639200037878,
             expected_c2214=47.545504767024411,
         ),
     ],
@@ -1622,8 +1475,6 @@ def test_acc2214(acc2214param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2214param.c22)
 
-    monkeypatch.setattr(costs.data.costs, "c2214", acc2214param.c2214)
-
     costs.acc2214()
 
     assert costs.data.costs.c2214 == pytest.approx(acc2214param.expected_c2214)
@@ -1631,8 +1482,6 @@ def test_acc2214(acc2214param, monkeypatch, costs):
 
 class Acc2215Param(NamedTuple):
     ifueltyp: Any = None
-
-    divcst: Any = None
 
     fkind: Any = None
 
@@ -1654,7 +1503,6 @@ class Acc2215Param(NamedTuple):
     [
         Acc2215Param(
             ifueltyp=1,
-            divcst=0,
             fkind=1,
             ucdiv=500000,
             a_div_surface_total=177.80928909705162,
@@ -1665,7 +1513,6 @@ class Acc2215Param(NamedTuple):
         ),
         Acc2215Param(
             ifueltyp=1,
-            divcst=88.904644548525795,
             fkind=1,
             ucdiv=500000,
             a_div_surface_total=177.80928909705162,
@@ -1690,8 +1537,6 @@ def test_acc2215(acc2215param, monkeypatch, costs):
     """
 
     monkeypatch.setattr(costs.data.costs, "ifueltyp", acc2215param.ifueltyp)
-
-    monkeypatch.setattr(costs.data.costs, "divcst", acc2215param.divcst)
 
     monkeypatch.setattr(costs.data.costs, "fkind", acc2215param.fkind)
 
@@ -1771,10 +1616,6 @@ class Acc2221Param(NamedTuple):
 
     c2221: Any = None
 
-    c22211: Any = None
-
-    c22212: Any = None
-
     c22213: Any = None
 
     c22214: Any = None
@@ -1822,8 +1663,6 @@ class Acc2221Param(NamedTuple):
             i_tf_sc_mat=5,
             c22=0,
             c2221=0,
-            c22211=0,
-            c22212=0,
             c22213=0,
             c22214=0,
             c22215=0,
@@ -1863,8 +1702,6 @@ class Acc2221Param(NamedTuple):
             i_tf_sc_mat=5,
             c22=3474.7391916096453,
             c2221=1122.5144544988982,
-            c22211=127.79612438919186,
-            c22212=65.523989541865234,
             c22213=698.99887174799562,
             c22214=172.4182702723208,
             c22215=57.77719854752457,
@@ -1904,8 +1741,6 @@ class Acc2221Param(NamedTuple):
             i_tf_sc_mat=5,
             c22=3474.7391916096453,
             c2221=1122.5144544988982,
-            c22211=127.79612438919186,
-            c22212=65.523989541865234,
             c22213=698.99887174799562,
             c22214=172.4182702723208,
             c22215=57.77719854752457,
@@ -1995,10 +1830,6 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c2221", acc2221param.c2221)
 
-    monkeypatch.setattr(costs.data.costs, "c22211", acc2221param.c22211)
-
-    monkeypatch.setattr(costs.data.costs, "c22212", acc2221param.c22212)
-
     monkeypatch.setattr(costs.data.costs, "c22213", acc2221param.c22213)
 
     monkeypatch.setattr(costs.data.costs, "c22214", acc2221param.c22214)
@@ -2073,16 +1904,6 @@ class Acc2222Param(NamedTuple):
 
     c22: Any = None
 
-    c2222: Any = None
-
-    c22221: Any = None
-
-    c22222: Any = None
-
-    c22223: Any = None
-
-    c22224: Any = None
-
     expected_c2222: Any = None
 
     expected_c22221: Any = None
@@ -2144,7 +1965,7 @@ class Acc2222Param(NamedTuple):
             supercond_cost_model=0,
             j_crit_str_cs=100.0,
             j_crit_str_pf=200.0,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_void=0.29999999999999999,
             n_cs_pf_coils=7,
             n_pf_coil_turns=np.array(
@@ -2177,7 +1998,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            i_pf_superconductor=3,
+            i_pf_superconductor=SuperconductorModel.OLD_LUBELL_NBTI,
             m_pf_coil_structure_total=2695737.563343476,
             c_pf_cs_coils_peak_ma=np.array(
                 np.array(
@@ -2239,7 +2060,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            i_cs_superconductor=5,
+            i_cs_superconductor=SuperconductorModel.WST_NB3SN,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
             f_a_pf_coil_void=np.array(
@@ -2282,11 +2103,6 @@ class Acc2222Param(NamedTuple):
                 order="F",
             ).transpose(),
             c22=0,
-            c2222=0,
-            c22221=0,
-            c22222=0,
-            c22223=0,
-            c22224=0,
             expected_c2222=626.57984594974835,
             expected_c22221=434.46640986938519,
             expected_c22222=69.02908267696219,
@@ -2340,7 +2156,7 @@ class Acc2222Param(NamedTuple):
             supercond_cost_model=0,
             j_crit_str_cs=100.0,
             j_crit_str_pf=200.0,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_void=0.29999999999999999,
             n_cs_pf_coils=7,
             n_pf_coil_turns=np.array(
@@ -2373,7 +2189,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            i_pf_superconductor=3,
+            i_pf_superconductor=SuperconductorModel.OLD_LUBELL_NBTI,
             m_pf_coil_structure_total=2510424.9065680322,
             c_pf_cs_coils_peak_ma=np.array(
                 np.array(
@@ -2435,7 +2251,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            i_cs_superconductor=5,
+            i_cs_superconductor=SuperconductorModel.WST_NB3SN,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
             f_a_pf_coil_void=np.array(
@@ -2478,11 +2294,6 @@ class Acc2222Param(NamedTuple):
                 order="F",
             ).transpose(),
             c22=3474.7391916096453,
-            c2222=626.57984594974835,
-            c22221=434.46640986938519,
-            c22222=69.02908267696219,
-            c22223=113.89491205126185,
-            c22224=9.1894413521392071,
             expected_c2222=634.503192513881,
             expected_c22221=448.04573758127646,
             expected_c22222=71.202561277966055,
@@ -2536,7 +2347,7 @@ class Acc2222Param(NamedTuple):
             supercond_cost_model=1,
             j_crit_str_cs=100.0,
             j_crit_str_pf=200.0,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_void=0.29999999999999999,
             n_cs_pf_coils=7,
             n_pf_coil_turns=np.array(
@@ -2569,7 +2380,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            i_pf_superconductor=3,
+            i_pf_superconductor=SuperconductorModel.OLD_LUBELL_NBTI,
             m_pf_coil_structure_total=2510424.9065680322,
             c_pf_cs_coils_peak_ma=np.array(
                 np.array(
@@ -2631,7 +2442,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            i_cs_superconductor=5,
+            i_cs_superconductor=SuperconductorModel.WST_NB3SN,
             fcupfsu=0.68999999999999995,
             fcuohsu=0.70000000000000007,
             f_a_pf_coil_void=np.array(
@@ -2674,11 +2485,6 @@ class Acc2222Param(NamedTuple):
                 order="F",
             ).transpose(),
             c22=3474.7391916096453,
-            c2222=626.57984594974835,
-            c22221=434.46640986938519,
-            c22222=69.02908267696219,
-            c22223=113.89491205126185,
-            c22224=9.1894413521392071,
             expected_c2222=2271626.1414324627,
             expected_c22221=2271439.6839775303,
             expected_c22222=71.202561277966055,
@@ -2784,16 +2590,6 @@ def test_acc2222(acc2222param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2222param.c22)
 
-    monkeypatch.setattr(costs.data.costs, "c2222", acc2222param.c2222)
-
-    monkeypatch.setattr(costs.data.costs, "c22221", acc2222param.c22221)
-
-    monkeypatch.setattr(costs.data.costs, "c22222", acc2222param.c22222)
-
-    monkeypatch.setattr(costs.data.costs, "c22223", acc2222param.c22223)
-
-    monkeypatch.setattr(costs.data.costs, "c22224", acc2222param.c22224)
-
     costs.acc2222()
 
     assert costs.data.costs.c2222 == pytest.approx(acc2222param.expected_c2222)
@@ -2818,8 +2614,6 @@ class Acc2223Param(NamedTuple):
 
     c22: Any = None
 
-    c2223: Any = None
-
     expected_c2223: Any = None
 
 
@@ -2832,7 +2626,6 @@ class Acc2223Param(NamedTuple):
             fkind=1,
             m_vv=9043937.8018644415,
             c22=0,
-            c2223=0,
             expected_c2223=244.54807816241447,
         ),
         Acc2223Param(
@@ -2841,7 +2634,6 @@ class Acc2223Param(NamedTuple):
             fkind=1,
             m_vv=9056931.558219457,
             c22=3474.7391916096453,
-            c2223=244.54807816241447,
             expected_c2223=244.89942933425411,
         ),
     ],
@@ -2869,8 +2661,6 @@ def test_acc2223(acc2223param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2223param.c22)
 
-    monkeypatch.setattr(costs.data.costs, "c2223", acc2223param.c2223)
-
     costs.acc2223()
 
     assert costs.data.costs.c2223 == pytest.approx(acc2223param.expected_c2223)
@@ -2888,8 +2678,6 @@ class Acc223Param(NamedTuple):
     uclh: Any = None
 
     ifueltyp: Any = None
-
-    cdcost: Any = None
 
     fcdfuel: Any = None
 
@@ -2927,10 +2715,6 @@ class Acc223Param(NamedTuple):
 
     c22: Any = None
 
-    c223: Any = None
-
-    c2231: Any = None
-
     c2232: Any = None
 
     c2233: Any = None
@@ -2954,7 +2738,6 @@ class Acc223Param(NamedTuple):
             ucech=3,
             uclh=3.2999999999999998,
             ifueltyp=1,
-            cdcost=0,
             fcdfuel=0.10000000000000001,
             p_hcd_lowhyb_injected_total_mw=0,
             i_hcd_primary=10,
@@ -2973,8 +2756,6 @@ class Acc223Param(NamedTuple):
             cdriv3=1.4630000000000001,
             cdriv0=154.30000000000001,
             c22=0,
-            c223=0,
-            c2231=0,
             c2232=0,
             c2233=0,
             c2234=0,
@@ -2989,7 +2770,6 @@ class Acc223Param(NamedTuple):
             ucech=3,
             uclh=3.2999999999999998,
             ifueltyp=1,
-            cdcost=140.341808845157,
             fcdfuel=0.10000000000000001,
             p_hcd_lowhyb_injected_total_mw=0,
             i_hcd_primary=10,
@@ -3008,8 +2788,6 @@ class Acc223Param(NamedTuple):
             cdriv3=1.4630000000000001,
             cdriv0=154.30000000000001,
             c22=3474.7391916096453,
-            c223=140.341808845157,
-            c2231=140.341808845157,
             c2232=0,
             c2233=0,
             c2234=0,
@@ -3043,8 +2821,6 @@ def test_acc223(acc223param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "uclh", acc223param.uclh)
 
     monkeypatch.setattr(costs.data.costs, "ifueltyp", acc223param.ifueltyp)
-
-    monkeypatch.setattr(costs.data.costs, "cdcost", acc223param.cdcost)
 
     monkeypatch.setattr(costs.data.costs, "fcdfuel", acc223param.fcdfuel)
 
@@ -3094,10 +2870,6 @@ def test_acc223(acc223param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c22", acc223param.c22)
 
-    monkeypatch.setattr(costs.data.costs, "c223", acc223param.c223)
-
-    monkeypatch.setattr(costs.data.costs, "c2231", acc223param.c2231)
-
     monkeypatch.setattr(costs.data.costs, "c2232", acc223param.c2232)
 
     monkeypatch.setattr(costs.data.costs, "c2233", acc223param.c2233)
@@ -3130,19 +2902,7 @@ class Acc224Param(NamedTuple):
 
     c22: Any = None
 
-    c224: Any = None
-
-    c2241: Any = None
-
-    c2242: Any = None
-
-    c2243: Any = None
-
-    c2244: Any = None
-
     c2245: Any = None
-
-    c2246: Any = None
 
     expected_c224: Any = None
 
@@ -3169,13 +2929,7 @@ class Acc224Param(NamedTuple):
             i_vacuum_pump_type=1,
             n_vv_vacuum_ducts=16,
             c22=0,
-            c224=0,
-            c2241=0,
-            c2242=0,
-            c2243=0,
-            c2244=0,
             c2245=0,
-            c2246=0,
             expected_c224=34.593599813216727,
             expected_c2241=17.940000000000001,
             expected_c2242=4.6799999999999997,
@@ -3192,13 +2946,7 @@ class Acc224Param(NamedTuple):
             i_vacuum_pump_type=1,
             n_vv_vacuum_ducts=16,
             c22=3474.7391916096453,
-            c224=34.593599813216727,
-            c2241=17.940000000000001,
-            c2242=4.6799999999999997,
-            c2243=3.3256586023918255,
-            c2244=7.3479412108249003,
             c2245=0,
-            c2246=1.3,
             expected_c224=34.591105904913036,
             expected_c2241=17.940000000000001,
             expected_c2242=4.6799999999999997,
@@ -3261,19 +3009,7 @@ def test_acc224(acc224param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c22", acc224param.c22)
 
-    monkeypatch.setattr(costs.data.costs, "c224", acc224param.c224)
-
-    monkeypatch.setattr(costs.data.costs, "c2241", acc224param.c2241)
-
-    monkeypatch.setattr(costs.data.costs, "c2242", acc224param.c2242)
-
-    monkeypatch.setattr(costs.data.costs, "c2243", acc224param.c2243)
-
-    monkeypatch.setattr(costs.data.costs, "c2244", acc224param.c2244)
-
     monkeypatch.setattr(costs.data.costs, "c2245", acc224param.c2245)
-
-    monkeypatch.setattr(costs.data.costs, "c2246", acc224param.c2246)
 
     costs.acc224()
 
@@ -3325,18 +3061,6 @@ class Acc2251Param(NamedTuple):
 
     c225: Any = None
 
-    c2251: Any = None
-
-    c22511: Any = None
-
-    c22512: Any = None
-
-    c22513: Any = None
-
-    c22514: Any = None
-
-    c22515: Any = None
-
     expected_c2251: Any = None
 
     expected_c22511: Any = None
@@ -3371,12 +3095,6 @@ class Acc2251Param(NamedTuple):
             c_tf_turn=74026.751437500003,
             c22=0,
             c225=0,
-            c2251=0,
-            c22511=0,
-            c22512=0,
-            c22513=0,
-            c22514=0,
-            c22515=0,
             expected_c2251=98.457845594540643,
             expected_c22511=4.3480381629432125,
             expected_c22512=31.601916254373826,
@@ -3402,12 +3120,6 @@ class Acc2251Param(NamedTuple):
             c_tf_turn=74026.751437500003,
             c22=3474.7391916096453,
             c225=185.05656643685359,
-            c2251=98.457845594540643,
-            c22511=4.3480381629432125,
-            c22512=31.601916254373826,
-            c22513=26.777101385200407,
-            c22514=4.7999999999999998,
-            c22515=30.930789792023205,
             expected_c2251=98.524335872804144,
             expected_c22511=4.3508966768725132,
             expected_c22512=31.630686371167478,
@@ -3472,18 +3184,6 @@ def test_acc2251(acc2251param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c225", acc2251param.c225)
 
-    monkeypatch.setattr(costs.data.costs, "c2251", acc2251param.c2251)
-
-    monkeypatch.setattr(costs.data.costs, "c22511", acc2251param.c22511)
-
-    monkeypatch.setattr(costs.data.costs, "c22512", acc2251param.c22512)
-
-    monkeypatch.setattr(costs.data.costs, "c22513", acc2251param.c22513)
-
-    monkeypatch.setattr(costs.data.costs, "c22514", acc2251param.c22514)
-
-    monkeypatch.setattr(costs.data.costs, "c22515", acc2251param.c22515)
-
     costs.acc2251()
 
     assert costs.data.costs.c2251 == pytest.approx(acc2251param.expected_c2251)
@@ -3536,14 +3236,6 @@ class Acc2252Param(NamedTuple):
 
     c2252: Any = None
 
-    c22521: Any = None
-
-    c22522: Any = None
-
-    c22523: Any = None
-
-    c22524: Any = None
-
     c22525: Any = None
 
     c22526: Any = None
@@ -3581,10 +3273,6 @@ class Acc2252Param(NamedTuple):
             c22=0,
             c225=0,
             c2252=0,
-            c22521=0,
-            c22522=0,
-            c22523=0,
-            c22524=0,
             c22525=0,
             c22526=0,
             c22527=0,
@@ -3612,10 +3300,6 @@ class Acc2252Param(NamedTuple):
             c22=3474.7391916096453,
             c225=185.05656643685359,
             c2252=65.813098499070378,
-            c22521=25.773671904486076,
-            c22522=3.5999999999999996,
-            c22523=13.203072590399998,
-            c22524=1.36406376579542,
             c22525=15.357861411125848,
             c22526=5.6144288272630343,
             c22527=0.89999999999999991,
@@ -3675,14 +3359,6 @@ def test_acc2252(acc2252param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c2252", acc2252param.c2252)
 
-    monkeypatch.setattr(costs.data.costs, "c22521", acc2252param.c22521)
-
-    monkeypatch.setattr(costs.data.costs, "c22522", acc2252param.c22522)
-
-    monkeypatch.setattr(costs.data.costs, "c22523", acc2252param.c22523)
-
-    monkeypatch.setattr(costs.data.costs, "c22524", acc2252param.c22524)
-
     monkeypatch.setattr(costs.data.costs, "c22525", acc2252param.c22525)
 
     monkeypatch.setattr(costs.data.costs, "c22526", acc2252param.c22526)
@@ -3721,8 +3397,6 @@ class Acc2253Param(NamedTuple):
 
     c225: Any = None
 
-    c2253: Any = None
-
     expected_c2253: Any = None
 
 
@@ -3740,7 +3414,6 @@ class Acc2253Param(NamedTuple):
             t_plant_pulse_no_burn=854.42613938735622,
             c22=0,
             c225=0,
-            c2253=0,
             expected_c2253=20.785622343242554,
         ),
         Acc2253Param(
@@ -3754,7 +3427,6 @@ class Acc2253Param(NamedTuple):
             t_plant_pulse_no_burn=854.42613938735622,
             c22=3474.7391916096453,
             c225=185.05656643685359,
-            c2253=20.785622343242554,
             expected_c2253=17.809219633598371,
         ),
     ],
@@ -3802,16 +3474,12 @@ def test_acc2253(acc2253param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c225", acc2253param.c225)
 
-    monkeypatch.setattr(costs.data.costs, "c2253", acc2253param.c2253)
-
     costs.acc2253()
 
     assert costs.data.costs.c2253 == pytest.approx(acc2253param.expected_c2253)
 
 
 class Acc226Param(NamedTuple):
-    c226: Any = None
-
     c2261: Any = None
 
     c2262: Any = None
@@ -3827,7 +3495,6 @@ class Acc226Param(NamedTuple):
     "acc226param",
     [
         Acc226Param(
-            c226=0,
             c2261=85.82488824875719,
             c2262=20.313088941037051,
             c2263=122.17123799205466,
@@ -3835,7 +3502,6 @@ class Acc226Param(NamedTuple):
             expected_c226=228.30921518184891,
         ),
         Acc226Param(
-            c226=228.30921518184891,
             c2261=86.412964519098367,
             c2262=25.118525150548585,
             c2263=247.55533515524576,
@@ -3856,8 +3522,6 @@ def test_acc226(acc226param, monkeypatch, costs):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-
-    monkeypatch.setattr(costs.data.costs, "c226", acc226param.c226)
 
     monkeypatch.setattr(costs.data.costs, "c2261", acc226param.c2261)
 
@@ -3893,13 +3557,7 @@ class Acc2261Param(NamedTuple):
 
     c226: Any = None
 
-    c2261: Any = None
-
     c22: Any = None
-
-    chx: Any = None
-
-    cpp: Any = None
 
     expected_c2261: Any = None
 
@@ -3925,10 +3583,7 @@ class Acc2261Param(NamedTuple):
             p_fw_div_heat_deposited_mw=0,
             n_primary_heat_exchangers=3,
             c226=0,
-            c2261=0,
             c22=0,
-            chx=0,
-            cpp=0,
             expected_c2261=85.82488824875719,
             expected_chx=57.169226428813381,
             expected_cpp=28.655661819943806,
@@ -3947,10 +3602,7 @@ class Acc2261Param(NamedTuple):
             p_fw_div_heat_deposited_mw=0,
             n_primary_heat_exchangers=3,
             c226=228.30921518184891,
-            c2261=85.82488824875719,
             c22=3474.7391916096453,
-            chx=57.169226428813381,
-            cpp=28.655661819943806,
             expected_c2261=86.412964519098367,
             expected_chx=57.157016301470911,
             expected_cpp=29.255948217627452,
@@ -4010,13 +3662,7 @@ def test_acc2261_rut(acc2261param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c226", acc2261param.c226)
 
-    monkeypatch.setattr(costs.data.costs, "c2261", acc2261param.c2261)
-
     monkeypatch.setattr(costs.data.costs, "c22", acc2261param.c22)
-
-    monkeypatch.setattr(costs.data.costs, "chx", acc2261param.chx)
-
-    monkeypatch.setattr(costs.data.costs, "cpp", acc2261param.cpp)
 
     costs.acc2261()
 
@@ -4050,13 +3696,9 @@ class Acc2262Param(NamedTuple):
 
     c226: Any = None
 
-    c2262: Any = None
-
     c22: Any = None
 
     cpp: Any = None
-
-    cppa: Any = None
 
     expected_c2262: Any = None
 
@@ -4078,10 +3720,8 @@ class Acc2262Param(NamedTuple):
             fachtmw=61.882833632875375,
             p_cryo_plant_electric_mw=37.900388528497025,
             c226=0,
-            c2262=0,
             c22=0,
             cpp=28.655661819943806,
-            cppa=0,
             expected_c2262=20.313088941037051,
             expected_cppa=20.313088941037051,
         ),
@@ -4097,10 +3737,8 @@ class Acc2262Param(NamedTuple):
             fachtmw=62.237143915360818,
             p_cryo_plant_electric_mw=108.74512702403499,
             c226=228.30921518184891,
-            c2262=20.313088941037051,
             c22=3474.7391916096453,
             cpp=29.255948217627452,
-            cppa=20.313088941037051,
             expected_c2262=25.118525150548585,
             expected_cppa=25.118525150548585,
         ),
@@ -4153,13 +3791,9 @@ def test_acc2262_rut(acc2262param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c226", acc2262param.c226)
 
-    monkeypatch.setattr(costs.data.costs, "c2262", acc2262param.c2262)
-
     monkeypatch.setattr(costs.data.costs, "c22", acc2262param.c22)
 
     monkeypatch.setattr(costs.data.costs, "cpp", acc2262param.cpp)
-
-    monkeypatch.setattr(costs.data.costs, "cppa", acc2262param.cppa)
 
     costs.acc2262()
 
@@ -4181,8 +3815,6 @@ class Acc2263Param(NamedTuple):
 
     c226: Any = None
 
-    c2263: Any = None
-
     c22: Any = None
 
     expected_c2263: Any = None
@@ -4198,7 +3830,6 @@ class Acc2263Param(NamedTuple):
             helpow=76851.741036987034,
             temp_tf_cryo=4.5,
             c226=0,
-            c2263=0,
             c22=0,
             expected_c2263=122.17123799205466,
         ),
@@ -4209,7 +3840,6 @@ class Acc2263Param(NamedTuple):
             helpow=220505.71684249729,
             temp_tf_cryo=4.5,
             c226=228.30921518184891,
-            c2263=122.17123799205466,
             c22=3474.7391916096453,
             expected_c2263=247.55533515524576,
         ),
@@ -4240,8 +3870,6 @@ def test_acc2263_rut(acc2263param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c226", acc2263param.c226)
 
-    monkeypatch.setattr(costs.data.costs, "c2263", acc2263param.c2263)
-
     monkeypatch.setattr(costs.data.costs, "c22", acc2263param.c22)
 
     costs.acc2263()
@@ -4250,8 +3878,6 @@ def test_acc2263_rut(acc2263param, monkeypatch, costs):
 
 
 class Acc227Param(NamedTuple):
-    c227: Any = None
-
     c2271: Any = None
 
     c2272: Any = None
@@ -4269,7 +3895,6 @@ class Acc227Param(NamedTuple):
     "acc227param",
     [
         Acc227Param(
-            c227=0,
             c2271=22.300000000000001,
             c2272=114.02873340990777,
             c2273=69.115208498727412,
@@ -4278,7 +3903,6 @@ class Acc227Param(NamedTuple):
             expected_c227=284.96904049038437,
         ),
         Acc227Param(
-            c227=284.96904049038437,
             c2271=22.300000000000001,
             c2272=114.00948752346841,
             c2273=69.202425860597359,
@@ -4300,8 +3924,6 @@ def test_acc227(acc227param, monkeypatch, costs):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-
-    monkeypatch.setattr(costs.data.costs, "c227", acc227param.c227)
 
     monkeypatch.setattr(costs.data.costs, "c2271", acc227param.c2271)
 
@@ -4325,8 +3947,6 @@ class Acc2271Param(NamedTuple):
 
     c227: Any = None
 
-    c2271: Any = None
-
     c22: Any = None
 
     expected_c2271: Any = None
@@ -4339,7 +3959,6 @@ class Acc2271Param(NamedTuple):
             ucf1=22300000,
             fkind=1,
             c227=0,
-            c2271=0,
             c22=0,
             expected_c2271=22.300000000000001,
         ),
@@ -4347,7 +3966,6 @@ class Acc2271Param(NamedTuple):
             ucf1=22300000,
             fkind=1,
             c227=284.96904049038437,
-            c2271=22.300000000000001,
             c22=3474.7391916096453,
             expected_c2271=22.300000000000001,
         ),
@@ -4372,8 +3990,6 @@ def test_acc2271_rut(acc2271param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c227", acc2271param.c227)
 
-    monkeypatch.setattr(costs.data.costs, "c2271", acc2271param.c2271)
-
     monkeypatch.setattr(costs.data.costs, "c22", acc2271param.c22)
 
     costs.acc2271()
@@ -4394,15 +4010,11 @@ class Acc2272Param(NamedTuple):
 
     edrive: Any = None
 
-    wtgpd: Any = None
-
     rndfuel: Any = None
 
     m_fuel_amu: Any = None
 
     c227: Any = None
-
-    c2272: Any = None
 
     c22: Any = None
 
@@ -4421,11 +4033,9 @@ class Acc2272Param(NamedTuple):
             ife=0,
             gain=0,
             edrive=5000000,
-            wtgpd=0,
             rndfuel=7.0799717510383796e20,
             m_fuel_amu=2.5,
             c227=0,
-            c2272=0,
             c22=0,
             expected_wtgpd=507.88376577416528,
             expected_c2272=114.02873340990777,
@@ -4437,11 +4047,9 @@ class Acc2272Param(NamedTuple):
             ife=0,
             gain=0,
             edrive=5000000,
-            wtgpd=507.88376577416528,
             rndfuel=7.0777619721108953e20,
             m_fuel_amu=2.5,
             c227=284.96904049038437,
-            c2272=114.02873340990777,
             c22=3474.7391916096453,
             expected_wtgpd=507.72524666099866,
             expected_c2272=114.00948752346841,
@@ -4473,15 +4081,11 @@ def test_acc2272_rut(acc2272param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.ife, "edrive", acc2272param.edrive)
 
-    monkeypatch.setattr(costs.data.physics, "wtgpd", acc2272param.wtgpd)
-
     monkeypatch.setattr(costs.data.physics, "rndfuel", acc2272param.rndfuel)
 
     monkeypatch.setattr(costs.data.physics, "m_fuel_amu", acc2272param.m_fuel_amu)
 
     monkeypatch.setattr(costs.data.costs, "c227", acc2272param.c227)
-
-    monkeypatch.setattr(costs.data.costs, "c2272", acc2272param.c2272)
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2272param.c22)
 
@@ -4503,8 +4107,6 @@ class Acc2273Param(NamedTuple):
 
     c227: Any = None
 
-    c2273: Any = None
-
     c22: Any = None
 
     expected_c2273: Any = None
@@ -4519,7 +4121,6 @@ class Acc2273Param(NamedTuple):
             fkind=1,
             f_plasma_fuel_tritium=0.5,
             c227=0,
-            c2273=0,
             c22=0,
             expected_c2273=69.115208498727412,
         ),
@@ -4529,7 +4130,6 @@ class Acc2273Param(NamedTuple):
             fkind=1,
             f_plasma_fuel_tritium=0.5,
             c227=284.96904049038437,
-            c2273=69.115208498727412,
             c22=3474.7391916096453,
             expected_c2273=69.202425860597359,
         ),
@@ -4560,8 +4160,6 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c227", acc2273param.c227)
 
-    monkeypatch.setattr(costs.data.costs, "c2273", acc2273param.c2273)
-
     monkeypatch.setattr(costs.data.costs, "c22", acc2273param.c22)
 
     costs.acc2273()
@@ -4578,8 +4176,6 @@ class Acc2274Param(NamedTuple):
 
     c227: Any = None
 
-    c2274: Any = None
-
     c22: Any = None
 
     expected_c2274: Any = None
@@ -4593,7 +4189,6 @@ class Acc2274Param(NamedTuple):
             volrci=1205439.8543893537,
             fkind=1,
             c227=0,
-            c2274=0,
             c22=0,
             expected_c2274=79.525098581749191,
         ),
@@ -4602,7 +4197,6 @@ class Acc2274Param(NamedTuple):
             volrci=1206887.4047542624,
             fkind=1,
             c227=284.96904049038437,
-            c2274=79.525098581749191,
             c22=3474.7391916096453,
             expected_c2274=79.60537144364551,
         ),
@@ -4629,8 +4223,6 @@ def test_acc2274_rut(acc2274param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c227", acc2274param.c227)
 
-    monkeypatch.setattr(costs.data.costs, "c2274", acc2274param.c2274)
-
     monkeypatch.setattr(costs.data.costs, "c22", acc2274param.c22)
 
     costs.acc2274()
@@ -4643,8 +4235,6 @@ class Acc228Param(NamedTuple):
 
     fkind: Any = None
 
-    c228: Any = None
-
     c22: Any = None
 
     expected_c228: Any = None
@@ -4656,14 +4246,12 @@ class Acc228Param(NamedTuple):
         Acc228Param(
             uciac=150000000,
             fkind=1,
-            c228=0,
             c22=0,
             expected_c228=150,
         ),
         Acc228Param(
             uciac=150000000,
             fkind=1,
-            c228=150,
             c22=3474.7391916096453,
             expected_c228=150,
         ),
@@ -4686,8 +4274,6 @@ def test_acc228_rut(acc228param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "fkind", acc228param.fkind)
 
-    monkeypatch.setattr(costs.data.costs, "c228", acc228param.c228)
-
     monkeypatch.setattr(costs.data.costs, "c22", acc228param.c22)
 
     costs.acc228()
@@ -4700,8 +4286,6 @@ class Acc229Param(NamedTuple):
 
     fkind: Any = None
 
-    c229: Any = None
-
     c22: Any = None
 
     expected_c229: Any = None
@@ -4713,14 +4297,12 @@ class Acc229Param(NamedTuple):
         Acc229Param(
             ucme=300000000,
             fkind=1,
-            c229=0,
             c22=0,
             expected_c229=300,
         ),
         Acc229Param(
             ucme=300000000,
             fkind=1,
-            c229=300,
             c22=3474.7391916096453,
             expected_c229=300,
         ),
@@ -4743,8 +4325,6 @@ def test_acc229_rut(acc229param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "fkind", acc229param.fkind)
 
-    monkeypatch.setattr(costs.data.costs, "c229", acc229param.c229)
-
     monkeypatch.setattr(costs.data.costs, "c22", acc229param.c22)
 
     costs.acc229()
@@ -4761,8 +4341,6 @@ class Acc23Param(NamedTuple):
 
     p_plant_electric_gross_mw: Any = None
 
-    c23: Any = None
-
     expected_c23: Any = None
 
 
@@ -4776,7 +4354,6 @@ class Acc23Param(NamedTuple):
             ireactor=1,
             i_blkt_coolant_type=CoolantType.HELIUM,
             p_plant_electric_gross_mw=982.58317918134742,
-            c23=0,
             expected_c23=194.83812507173698,
         ),
         Acc23Param(
@@ -4786,7 +4363,6 @@ class Acc23Param(NamedTuple):
             ireactor=1,
             i_blkt_coolant_type=CoolantType.HELIUM,
             p_plant_electric_gross_mw=982.28339460484608,
-            c23=194.83812507173698,
             expected_c23=194.78878460447092,
         ),
     ],
@@ -4818,16 +4394,12 @@ def test_acc23_rut(acc23param, monkeypatch, costs):
         acc23param.p_plant_electric_gross_mw,
     )
 
-    monkeypatch.setattr(costs.data.costs, "c23", acc23param.c23)
-
     costs.acc23()
 
     assert costs.data.costs.c23 == pytest.approx(acc23param.expected_c23)
 
 
 class Acc24Param(NamedTuple):
-    c24: Any = None
-
     c241: Any = None
 
     c242: Any = None
@@ -4845,7 +4417,6 @@ class Acc24Param(NamedTuple):
     "acc24param",
     [
         Acc24Param(
-            c24=0,
             c241=14.443999999999999,
             c242=12.196675853540341,
             c243=10.979786178504369,
@@ -4854,7 +4425,6 @@ class Acc24Param(NamedTuple):
             expected_c24=44.135962032044716,
         ),
         Acc24Param(
-            c24=44.135962032044716,
             c241=14.443999999999999,
             c242=7.2671621358073066,
             c243=6.4715020827802281,
@@ -4877,8 +4447,6 @@ def test_acc24(acc24param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(costs.data.costs, "c24", acc24param.c24)
-
     monkeypatch.setattr(costs.data.costs, "c241", acc24param.c241)
 
     monkeypatch.setattr(costs.data.costs, "c242", acc24param.c242)
@@ -4899,8 +4467,6 @@ class Acc241Param(NamedTuple):
 
     c24: Any = None
 
-    c241: Any = None
-
     expected_c241: Any = None
 
 
@@ -4910,13 +4476,11 @@ class Acc241Param(NamedTuple):
         Acc241Param(
             lsa=2,
             c24=0,
-            c241=0,
             expected_c241=14.443999999999999,
         ),
         Acc241Param(
             lsa=2,
             c24=44.135962032044716,
-            c241=14.443999999999999,
             expected_c241=14.443999999999999,
         ),
     ],
@@ -4938,8 +4502,6 @@ def test_acc241_rut(acc241param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c24", acc241param.c24)
 
-    monkeypatch.setattr(costs.data.costs, "c241", acc241param.c241)
-
     costs.acc241()
 
     assert costs.data.costs.c241 == pytest.approx(acc241param.expected_c241)
@@ -4954,8 +4516,6 @@ class Acc242Param(NamedTuple):
 
     c24: Any = None
 
-    c242: Any = None
-
     cpp: Any = None
 
     expected_c242: Any = None
@@ -4969,7 +4529,6 @@ class Acc242Param(NamedTuple):
             pacpmw=1226.1273281650574,
             p_plant_electric_base_total_mw=61.882833632875375,
             c24=0,
-            c242=0,
             cpp=28.655661819943806,
             expected_c242=12.196675853540341,
         ),
@@ -4978,7 +4537,6 @@ class Acc242Param(NamedTuple):
             pacpmw=651.53859031110449,
             p_plant_electric_base_total_mw=62.237143915360818,
             c24=44.135962032044716,
-            c242=12.196675853540341,
             cpp=29.255948217627452,
             expected_c242=7.2671621358073075,
         ),
@@ -5009,8 +4567,6 @@ def test_acc242_rut(acc242param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c24", acc242param.c24)
 
-    monkeypatch.setattr(costs.data.costs, "c242", acc242param.c242)
-
     monkeypatch.setattr(costs.data.costs, "cpp", acc242param.cpp)
 
     costs.acc242()
@@ -5025,8 +4581,6 @@ class Acc243Param(NamedTuple):
 
     c24: Any = None
 
-    c243: Any = None
-
     expected_c243: Any = None
 
 
@@ -5037,14 +4591,12 @@ class Acc243Param(NamedTuple):
             lsa=2,
             tlvpmw=699.34943812129745,
             c24=0,
-            c243=0,
             expected_c243=10.979786178504369,
         ),
         Acc243Param(
             lsa=2,
             tlvpmw=412.19758489046046,
             c24=44.135962032044716,
-            c243=10.979786178504369,
             expected_c243=6.471502082780229,
         ),
     ],
@@ -5068,8 +4620,6 @@ def test_acc243_rut(acc243param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c24", acc243param.c24)
 
-    monkeypatch.setattr(costs.data.costs, "c243", acc243param.c243)
-
     costs.acc243()
 
     assert costs.data.costs.c243 == pytest.approx(acc243param.expected_c243)
@@ -5080,8 +4630,6 @@ class Acc244Param(NamedTuple):
 
     c24: Any = None
 
-    c244: Any = None
-
     expected_c244: Any = None
 
 
@@ -5091,13 +4639,11 @@ class Acc244Param(NamedTuple):
         Acc244Param(
             lsa=2,
             c24=0,
-            c244=0,
             expected_c244=5.3380000000000001,
         ),
         Acc244Param(
             lsa=2,
             c24=44.135962032044716,
-            c244=5.3380000000000001,
             expected_c244=5.3380000000000001,
         ),
     ],
@@ -5118,8 +4664,6 @@ def test_acc244_rut(acc244param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "lsa", acc244param.lsa)
 
     monkeypatch.setattr(costs.data.costs, "c24", acc244param.c24)
-
-    monkeypatch.setattr(costs.data.costs, "c244", acc244param.c244)
 
     costs.acc244()
 
@@ -5142,13 +4686,11 @@ class Acc245Param(NamedTuple):
         Acc245Param(
             lsa=2,
             c24=0,
-            c245=0,
             expected_c245=1.1775,
         ),
         Acc245Param(
             lsa=2,
             c24=44.135962032044716,
-            c245=1.1775,
             expected_c245=1.1775,
         ),
     ],
@@ -5170,8 +4712,6 @@ def test_acc245_rut(acc245param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "c24", acc245param.c24)
 
-    monkeypatch.setattr(costs.data.costs, "c245", acc245param.c245)
-
     costs.acc245()
 
     assert costs.data.costs.c245 == pytest.approx(acc245param.expected_c245)
@@ -5182,8 +4722,6 @@ class Acc25Param(NamedTuple):
 
     lsa: Any = None
 
-    c25: Any = None
-
     expected_c25: Any = None
 
 
@@ -5193,13 +4731,6 @@ class Acc25Param(NamedTuple):
         Acc25Param(
             ucmisc=25000000,
             lsa=2,
-            c25=0,
-            expected_c25=22.125,
-        ),
-        Acc25Param(
-            ucmisc=25000000,
-            lsa=2,
-            c25=22.125,
             expected_c25=22.125,
         ),
     ],
@@ -5220,8 +4751,6 @@ def test_acc25_rut(acc25param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "ucmisc", acc25param.ucmisc)
 
     monkeypatch.setattr(costs.data.costs, "lsa", acc25param.lsa)
-
-    monkeypatch.setattr(costs.data.costs, "c25", acc25param.c25)
 
     costs.acc25()
 
@@ -5245,8 +4774,6 @@ class Acc26Param(NamedTuple):
 
     tfcmw: Any = None
 
-    c26: Any = None
-
     expected_c26: Any = None
 
 
@@ -5262,7 +4789,6 @@ class Acc26Param(NamedTuple):
             p_plant_electric_gross_mw=982.58317918134742,
             p_fusion_total_mw=1985.785106643267,
             tfcmw=0,
-            c26=0,
             expected_c26=56.327648771765475,
         ),
         Acc26Param(
@@ -5274,7 +4800,6 @@ class Acc26Param(NamedTuple):
             p_plant_electric_gross_mw=982.28339460484608,
             p_fusion_total_mw=1985.1653095257811,
             tfcmw=0,
-            c26=56.327648771765475,
             expected_c26=56.310463295064743,
         ),
     ],
@@ -5324,8 +4849,6 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.tfcoil, "tfcmw", acc26param.tfcmw)
 
-    monkeypatch.setattr(costs.data.costs, "c26", acc26param.c26)
-
     costs.acc26()
 
     assert costs.data.costs.c26 == pytest.approx(acc26param.expected_c26)
@@ -5341,10 +4864,6 @@ class Acc9Param(NamedTuple):
     cdirt: Any = None
 
     cfind: Any = None
-
-    cindrt: Any = None
-
-    ccont: Any = None
 
     expected_cindrt: Any = None
 
@@ -5371,8 +4890,6 @@ class Acc9Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cindrt=0,
-            ccont=0,
             expected_cindrt=1271.7275768445588,
             expected_ccont=870.58499727751723,
         ),
@@ -5393,8 +4910,6 @@ class Acc9Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cindrt=1271.7275768445588,
-            ccont=870.58499727751723,
             expected_cindrt=1302.5413344371934,
             expected_ccont=891.67913375638113,
         ),
@@ -5423,124 +4938,11 @@ def test_acc9_rut(acc9param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "cfind", acc9param.cfind)
 
-    monkeypatch.setattr(costs.data.costs, "cindrt", acc9param.cindrt)
-
-    monkeypatch.setattr(costs.data.costs, "ccont", acc9param.ccont)
-
     costs.acc9()
 
     assert costs.data.costs.cindrt == pytest.approx(acc9param.expected_cindrt)
 
     assert costs.data.costs.ccont == pytest.approx(acc9param.expected_ccont)
-
-
-class Acc2253Param(NamedTuple):
-    ucblss: Any = None
-
-    fkind: Any = None
-
-    p_plant_primary_heat_mw: Any = None
-
-    p_plant_electric_net_mw: Any = None
-
-    i_pulsed_plant: Any = None
-
-    dtstor: Any = None
-
-    istore: Any = None
-
-    t_plant_pulse_no_burn: Any = None
-
-    c22: Any = None
-
-    c225: Any = None
-
-    c2253: Any = None
-
-    expected_c2253: Any = None
-
-
-@pytest.mark.parametrize(
-    "acc2253param",
-    [
-        Acc2253Param(
-            ucblss=90,
-            fkind=1,
-            p_plant_primary_heat_mw=2620.2218111502593,
-            p_plant_electric_net_mw=493.01760776192009,
-            i_pulsed_plant=1,
-            dtstor=300,
-            istore=1,
-            t_plant_pulse_no_burn=854.42613938735622,
-            c22=0,
-            c225=0,
-            c2253=0,
-            expected_c2253=20.785622343242554,
-        ),
-        Acc2253Param(
-            ucblss=90,
-            fkind=1,
-            p_plant_primary_heat_mw=2619.4223856129224,
-            p_plant_electric_net_mw=422.4198205312706,
-            i_pulsed_plant=1,
-            dtstor=300,
-            istore=1,
-            t_plant_pulse_no_burn=854.42613938735622,
-            c22=3474.7391916096453,
-            c225=185.05656643685359,
-            c2253=20.785622343242554,
-            expected_c2253=17.809219633598371,
-        ),
-    ],
-)
-def test_acc2253_urt(acc2253param, monkeypatch, costs):
-    """
-    Automatically generated Regression Unit Test for acc2253.
-
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
-
-    :param acc2253param: the data used to mock and assert in this test.
-    :type acc2253param: acc2253param
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-    """
-
-    monkeypatch.setattr(costs.data.costs, "ucblss", acc2253param.ucblss)
-
-    monkeypatch.setattr(costs.data.costs, "fkind", acc2253param.fkind)
-
-    monkeypatch.setattr(
-        costs.data.heat_transport,
-        "p_plant_primary_heat_mw",
-        acc2253param.p_plant_primary_heat_mw,
-    )
-
-    monkeypatch.setattr(
-        costs.data.heat_transport,
-        "p_plant_electric_net_mw",
-        acc2253param.p_plant_electric_net_mw,
-    )
-
-    monkeypatch.setattr(costs.data.pulse, "i_pulsed_plant", acc2253param.i_pulsed_plant)
-
-    monkeypatch.setattr(costs.data.pulse, "dtstor", acc2253param.dtstor)
-
-    monkeypatch.setattr(costs.data.pulse, "istore", acc2253param.istore)
-
-    monkeypatch.setattr(
-        costs.data.times, "t_plant_pulse_no_burn", acc2253param.t_plant_pulse_no_burn
-    )
-
-    monkeypatch.setattr(costs.data.costs, "c22", acc2253param.c22)
-
-    monkeypatch.setattr(costs.data.costs, "c225", acc2253param.c225)
-
-    monkeypatch.setattr(costs.data.costs, "c2253", acc2253param.c2253)
-
-    costs.acc2253()
-
-    assert costs.data.costs.c2253 == pytest.approx(acc2253param.expected_c2253)
 
 
 class CoelcParam(NamedTuple):
@@ -5554,14 +4956,6 @@ class CoelcParam(NamedTuple):
 
     cpstcst: Any = None
 
-    coeoam: Any = None
-
-    coecap: Any = None
-
-    output_costs: Any = None
-
-    coe: Any = None
-
     lsa: Any = None
 
     f_t_plant_available: Any = None
@@ -5574,15 +4968,7 @@ class CoelcParam(NamedTuple):
 
     life_div: Any = None
 
-    coefuelt: Any = None
-
-    moneyint: Any = None
-
-    life_hcd_fpy: Any = None
-
     cdrlife_cal: Any = None
-
-    capcost: Any = None
 
     cplife: Any = None
 
@@ -5662,21 +5048,13 @@ class CoelcParam(NamedTuple):
             life_plant=40,
             ifueltyp=1,
             cpstcst=0,
-            coeoam=0,
-            coecap=0,
-            output_costs=0,
-            coe=0,
             lsa=2,
             f_t_plant_available=0.75000000000000011,
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
             life_div_fpy=6.1337250397740126,
             life_div=6.1337250397740126,
-            coefuelt=0,
-            moneyint=0,
-            life_hcd_fpy=19.216116010620578,
             cdrlife_cal=19.216116010620578,
-            capcost=0,
             cplife=0,
             cplife_cal=0,
             fwallcst=143.19827300247195,
@@ -5746,21 +5124,13 @@ class CoelcParam(NamedTuple):
             life_plant=40,
             ifueltyp=1,
             cpstcst=0,
-            coeoam=4.4099029328740929e20,
-            coecap=4.9891775218979061e21,
-            output_costs=0,
-            coe=6.9525339143363677e21,
             lsa=2,
             f_t_plant_available=0.75000000000000011,
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
             life_div_fpy=6.145510750914414,
             life_div=6.145510750914414,
-            coefuelt=1.4801870771036603e21,
-            moneyint=1001.1727468691442,
-            life_hcd_fpy=19.222115557991025,
             cdrlife_cal=19.222115557991025,
-            capcost=7675.6577259967762,
             cplife=0,
             cplife_cal=0,
             fwallcst=167.7865317453867,
@@ -5838,90 +5208,41 @@ def test_coelc(coelcparam, monkeypatch, costs):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-
-    monkeypatch.setattr(costs.data.costs, "fcdfuel", coelcparam.fcdfuel)
-
-    monkeypatch.setattr(costs.data.costs, "uche3", coelcparam.uche3)
-
-    monkeypatch.setattr(costs.data.costs, "life_plant", coelcparam.life_plant)
-
-    monkeypatch.setattr(costs.data.costs, "ifueltyp", coelcparam.ifueltyp)
-
-    monkeypatch.setattr(costs.data.costs, "cpstcst", coelcparam.cpstcst)
-
-    monkeypatch.setattr(costs.data.costs, "coeoam", coelcparam.coeoam)
-
-    monkeypatch.setattr(costs.data.costs, "coecap", coelcparam.coecap)
-
-    monkeypatch.setattr(costs.data.costs, "output_costs", coelcparam.output_costs)
-
-    monkeypatch.setattr(costs.data.costs, "coe", coelcparam.coe)
-
-    monkeypatch.setattr(costs.data.costs, "lsa", coelcparam.lsa)
-
-    monkeypatch.setattr(
-        costs.data.costs, "f_t_plant_available", coelcparam.f_t_plant_available
-    )
-
-    monkeypatch.setattr(costs.data.costs, "divcst", coelcparam.divcst)
-
-    monkeypatch.setattr(costs.data.costs, "ucfuel", coelcparam.ucfuel)
-
-    monkeypatch.setattr(costs.data.costs, "life_div_fpy", coelcparam.life_div_fpy)
-
-    monkeypatch.setattr(costs.data.costs, "life_div", coelcparam.life_div)
-
-    monkeypatch.setattr(costs.data.costs, "coefuelt", coelcparam.coefuelt)
-
-    monkeypatch.setattr(costs.data.costs, "moneyint", coelcparam.moneyint)
-
-    monkeypatch.setattr(costs.data.costs, "life_hcd_fpy", coelcparam.life_hcd_fpy)
-
-    monkeypatch.setattr(costs.data.costs, "cdrlife_cal", coelcparam.cdrlife_cal)
-
-    monkeypatch.setattr(costs.data.costs, "capcost", coelcparam.capcost)
-
-    monkeypatch.setattr(costs.data.costs, "cplife", coelcparam.cplife)
-
-    monkeypatch.setattr(costs.data.costs, "cplife_cal", coelcparam.cplife_cal)
-
-    monkeypatch.setattr(costs.data.costs, "fwallcst", coelcparam.fwallcst)
-
-    monkeypatch.setattr(costs.data.costs, "fcr0", coelcparam.fcr0)
-
-    monkeypatch.setattr(costs.data.costs, "discount_rate", coelcparam.discount_rate)
-
-    monkeypatch.setattr(costs.data.costs, "decomf", coelcparam.decomf)
-
-    monkeypatch.setattr(costs.data.costs, "cdcost", coelcparam.cdcost)
-
-    monkeypatch.setattr(costs.data.costs, "fcap0", coelcparam.fcap0)
-
-    monkeypatch.setattr(costs.data.costs, "fcap0cp", coelcparam.fcap0cp)
-
-    monkeypatch.setattr(costs.data.costs, "ucwst", coelcparam.ucwst)
-
-    monkeypatch.setattr(costs.data.costs, "ucoam", coelcparam.ucoam)
-
-    monkeypatch.setattr(costs.data.costs, "dtlife", coelcparam.dtlife)
-
-    monkeypatch.setattr(costs.data.costs, "blkcst", coelcparam.blkcst)
-
-    monkeypatch.setattr(costs.data.costs, "dintrt", coelcparam.dintrt)
-
-    monkeypatch.setattr(costs.data.costs, "concost", coelcparam.concost)
-
-    monkeypatch.setattr(costs.data.costs, "cfind", coelcparam.cfind)
+    for field in [
+        "fcdfuel",
+        "uche3",
+        "life_plant",
+        "ifueltyp",
+        "cpstcst",
+        "lsa",
+        "f_t_plant_available",
+        "divcst",
+        "ucfuel",
+        "life_div_fpy",
+        "life_div",
+        "cdrlife_cal",
+        "cplife",
+        "cplife_cal",
+        "fwallcst",
+        "fcr0",
+        "discount_rate",
+        "decomf",
+        "cdcost",
+        "fcap0",
+        "fcap0cp",
+        "ucwst",
+        "ucoam",
+        "dtlife",
+        "blkcst",
+        "dintrt",
+        "concost",
+        "cfind",
+    ]:
+        monkeypatch.setattr(costs.data.costs, field, getattr(coelcparam, field))
 
     monkeypatch.setattr(costs.data.fwbs, "life_blkt_fpy", coelcparam.life_blkt_fpy)
 
     monkeypatch.setattr(costs.data.fwbs, "life_blkt", coelcparam.life_blkt)
-
-    monkeypatch.setattr(costs.data.ife, "uctarg", coelcparam.uctarg)
-
-    monkeypatch.setattr(costs.data.ife, "ife", coelcparam.ife)
-
-    monkeypatch.setattr(costs.data.ife, "reprat", coelcparam.reprat)
 
     monkeypatch.setattr(
         costs.data.heat_transport,

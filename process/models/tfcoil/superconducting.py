@@ -1054,8 +1054,8 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "Max allowed fast neutron fluence on TF coil (n/m²)",
-            "(nflutfmax)",
-            self.data.constraints.nflutfmax,
+            "(flu_tf_neutron_fast_max)",
+            self.data.constraints.flu_tf_neutron_fast_max,
             "OP ",
         )
         po.ovarre(
@@ -1211,7 +1211,7 @@ class SuperconductingTFCoil(TFCoil):
         b_tf_inboard_peak: float,
         cu_rrr: float,
         t_tf_quench_detection: float,
-        nflutfmax: float,
+        flu_tf_neutron_fast_max: float,
     ) -> tuple[float, float]:
         """Calculates the maximum conductor current density limited by the protection
         limit, and the discharge voltage for a TF coil.
@@ -1242,7 +1242,7 @@ class SuperconductingTFCoil(TFCoil):
             Copper residual-resistance-ratio
         t_tf_quench_detection : float
             Quench detection time (s)
-        nflutfmax : float
+        flu_tf_neutron_fast_max : float
             End-of-life neutron fluence in the copper (1/m²)
 
         Returns
@@ -1275,7 +1275,7 @@ class SuperconductingTFCoil(TFCoil):
                 temp_quench_max=temp_tf_conductor_quench_max,
                 cu_rrr=cu_rrr,
                 t_quench_detection=t_tf_quench_detection,
-                fluence=nflutfmax,
+                fluence=flu_tf_neutron_fast_max,
             )
         )
 
@@ -1973,7 +1973,7 @@ class SuperconductingTFCoil(TFCoil):
             * (1.0e0 - self.data.tfcoil.f_a_tf_turn_cable_space_extra_void)
             * self.data.tfcoil.f_a_tf_turn_cable_copper
             - self.data.tfcoil.len_tf_coil * self.data.tfcoil.a_tf_wp_coolant_channels
-        ) * constants.den_copper
+        ) * constants.DEN_COPPER
         self.data.tfcoil.m_tf_coil_copper = max(0.0e0, self.data.tfcoil.m_tf_coil_copper)
 
         # Steel conduit (sheath) mass [kg]
@@ -2712,7 +2712,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
                 cu_rrr=self.data.tfcoil.rrr_tf_cu,
                 t_tf_quench_detection=self.data.tfcoil.t_tf_quench_detection,
-                nflutfmax=self.data.constraints.nflutfmax,
+                flu_tf_neutron_fast_max=self.data.constraints.flu_tf_neutron_fast_max,
             )
         )
 
@@ -2831,7 +2831,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # ITER Nb3Sn critical surface parameterization
-        if i_tf_superconductor == 1:
+        if i_tf_superconductor == SuperconductorModel.ITER_NB3SN:
             # Peak field and temperature at zero strain
             bc20m = 32.97e0  # [T]
             tc0m = 16.06e0  # [K]
@@ -2872,7 +2872,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # Bi-2212 high temperature superconductor parameterization
-        elif i_tf_superconductor == 2:
+        elif i_tf_superconductor == SuperconductorModel.BI2212:
             #  Current density in a strand of Bi-2212 conductor
             #  N.B. jcrit returned by superconductors.bi2212 is the critical
             # current density in the strand, not just the superconducting portion.
@@ -2903,16 +2903,16 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # NbTi data
-        elif i_tf_superconductor == 3:
+        elif i_tf_superconductor == SuperconductorModel.OLD_LUBELL_NBTI:
             bc20m = 15.0e0  # [T]
             tc0m = 9.3e0  # [K]
-            c0 = 1.0e10  # [A/m2]
+            c0 = 1.0e10  # [A/m²]
 
             j_superconductor_critical, _ = superconductors.jcrit_nbti(
                 temp_conductor=temp_tf_coolant_peak_field,
                 b_conductor=b_tf_inboard_peak,
                 c0=c0,
-                b_c20m=bc20m,
+                b_c20max=bc20m,
                 temp_c0max=tc0m,
             )
 
@@ -2933,7 +2933,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # ITER Nb3Sn parameterization, but user-defined parameters
-        elif i_tf_superconductor == 4:
+        elif i_tf_superconductor == SuperconductorModel.USER_DEFINED_NB3SN:
             bc20m = bcritsc  # [T]
             tc0m = tcritsc  # [K]
 
@@ -2969,7 +2969,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # WST Nb3Sn parameterisation
-        elif i_tf_superconductor == 5:
+        elif i_tf_superconductor == SuperconductorModel.WST_NB3SN:
             bc20m = 32.97e0  # [T]
             tc0m = 16.06e0  # [K]
 
@@ -3010,7 +3010,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # "REBCO" 2nd generation HTS superconductor in CrCo strand
-        elif i_tf_superconductor == 6:
+        elif i_tf_superconductor == SuperconductorModel.CROCO_REBCO:
             raise ProcessValueError(
                 "sctfcoil.supercon has been called but data.tfcoil.i_tf_sc_mat=6"
             )
@@ -3018,7 +3018,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # Durham Ginzburg-Landau Nb-Ti parameterisation
-        elif i_tf_superconductor == 7:
+        elif i_tf_superconductor == SuperconductorModel.DURHAM_NBTI:
             bc20m = data.tfcoil.b_crit_upper_nbti  # [T]
             tc0m = data.tfcoil.t_crit_nbti  # [K]
 
@@ -3046,7 +3046,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # Durham Ginzburg-Landau critical surface model for REBCO
-        elif i_tf_superconductor == 8:
+        elif i_tf_superconductor == SuperconductorModel.DURHAM_REBCO:
             bc20m = 430  # [T]
             tc0m = 185  # [K]
 
@@ -3087,7 +3087,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         # Hazelton experimental data + Zhai conceptual model for REBCO
-        elif i_tf_superconductor == 9:
+        elif i_tf_superconductor == SuperconductorModel.HAZELTON_ZHAI_REBCO:
             bc20m = 138  # [T]
             tc0m = 92  # [K]
 
@@ -4360,7 +4360,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
                 cu_rrr=self.data.tfcoil.rrr_tf_cu,
                 t_tf_quench_detection=self.data.tfcoil.t_tf_quench_detection,
-                nflutfmax=self.data.constraints.nflutfmax,
+                flu_tf_neutron_fast_max=self.data.constraints.flu_tf_neutron_fast_max,
             )
         )
 
@@ -4399,65 +4399,31 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         Parameters
         ----------
-        j_tf_wp : float
+        j_tf_wp:
             Current density in the TF winding pack (in A/m²).
-
-        dx_tf_turn_steel : float
+        dx_tf_turn_steel:
             Thickness of the steel layer in the TF turn (in meters).
-
-        dx_tf_turn_insulation : float
+        dx_tf_turn_insulation:
             Thickness of the insulation layer in the TF turn (in meters).
-
-        i_tf_sc_mat : int
-            Identifier for the superconducting material type.
-
-        dx_tf_turn_general : float
+        dx_tf_turn_general :
             General dimension of the TF turn (in meters).
-
-        c_tf_turn : float
+        c_tf_turn:
             Current per turn in the TF coil (in Amperes).
-
-        i_dx_tf_turn_general_input : bool
+        i_dx_tf_turn_general_input:
             Flag indicating if the general turn dimension is provided as input.
-
-        i_dx_tf_turn_cable_space_general_input : bool
+        i_dx_tf_turn_cable_space_general_input:
             Flag indicating if the cable space dimension is provided as input.
-
-        dx_tf_turn_cable_space_general : float
+        dx_tf_turn_cable_space_general:
             General dimension of the cable space in the TF turn (in meters).
-
-        layer_ins : float
+        layer_ins:
             Thickness of the insulation layer in the TF turn (in meters).
-
-        a_tf_wp_no_insulation : float
+        a_tf_wp_no_insulation:
             Area of the TF winding pack without insulation (in square meters).
-
-        dia_tf_turn_coolant_channel : float
-            Diameter of the coolant channel in the TF turn (in meters).
-
-        f_a_tf_turn_cable_space_extra_void : float
-            Fraction of extra void space in the cable space of the TF turn.
 
         Returns
         -------
-        CROCOAveragedTurnGeometry
-             A dataclass containing the calculated geometry of the TF turn, including:
-            - a_tf_turn: Area of the TF turn (in square meters).
-            - dx_tf_turn: Dimension of the TF turn (in meters).
-            - dr_tf_turn: Dimension of the TF turn (in meters).
-            - t_conductor: Thickness of the conductor in the TF turn (in meters).
-            - n_tf_coil_turns: Number of turns in the TF coil (not necessarily
-              an integer).
-            - a_tf_turn_insulation: Area of the insulation in the TF turn
-              (in square meters).
-            - a_tf_turn_cable_space_no_void: Area of the cable space in the TF turn
-              without voids (in square meters).
-            - a_tf_turn_steel: Area of the steel in the TF turn (in square meters).
-            - a_tf_turn_cable_space_effective: Effective area of the cable space in the
-              TF turn after accounting for cooling channels and voids (in square meters).
-            - f_a_tf_turn_cable_space_cooling: Fraction of the cable space used for
-              cooling.
-
+        :
+             A dataclass containing the calculated geometry of the TF turn
         """
         # Turn dimension is a an input
         if i_dx_tf_turn_general_input:
