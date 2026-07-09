@@ -216,7 +216,7 @@ $$
 \end{equation}
 $$
 
-In case the derivative is positive (`dflsa` $\geq$ 0), an uphill search direction has been determined and the code stops with `ifail = 4`. This typically only happens, if the objective function or constraints are inconsistent with their own derivatives.
+In case the derivative is positive (`dflsa` $\geq$ 0), an uphill search direction has been determined and the code stops with `ifail = 4/SolverOutputCondition.UPHILL_SEARCH`. This typically only happens, if the objective function or constraints are inconsistent with their own derivatives.
 
 As the line search tries to determine the optimum of a one dimensional, but fully non-linear function $\Phi(\alpha)$, it creates a series of $\alpha_l$ values (In the actual code $\alpha =$ `calpha` and $\alpha_l =$ `alpha` $*\alpha_{l-1}$). At each iteration $l$, a quadratic local function $\Phi_l(\alpha)$ fulfilling the boundary conditions $\Phi_l(0) = \Phi(0)$, $\Phi'_l(0) = \Delta$ and $\Phi_l(\alpha_{l-1}) = \Phi(\alpha_{l-1})$ is minimised, where typically $\Delta = \Phi'(0)$. This leads to
 
@@ -262,9 +262,9 @@ $$
 
 This has been added as experience have shown that `VMCON` typically does not converge in these situations, but if it is forced to calculate a new search direction in this way, it sometimes successfully finishes. Note, that this cannot force `VMCON` to converge on any false solutions, as it only exits positively when the convergence criterion (eqn \ref{eqn:equation-5}) is fulfilled.
 
-Typically, the line search already converges after one iteration and, therefore, $\alpha = 1$. Hence, the `VMCON` line search has an upper limit of maximally 10 iterations before it terminates with `ifail = 3` (c.f. [table 1](#table-1)). This is higher than Powell's original limit of 5 to avoid a few cases of early termination without a major effect on efficiency.
+Typically, the line search already converges after one iteration and, therefore, $\alpha = 1$. Hence, the `VMCON` line search has an upper limit of maximally 10 iterations before it terminates with `ifail = 3/SolverOutputCondition.MAX_LINE_SEARCHES` (c.f. [table 1](#table-1)). This is higher than Powell's original limit of 5 to avoid a few cases of early termination without a major effect on efficiency.
 
-Within the line search `VMCON` also checks that the total number of function calls has not exceeded `maxfev = 100`. If this is the case, it exits with error code `ifail = 2`. Both checks assure that the routine stops, if it does not seem to be able to fund a solution.
+Within the line search `VMCON` also checks that the total number of function calls has not exceeded `maxfev = 100`. If this is the case, it exits with error code `ifail = 2/SolverOutputCondition.MAX_ITERATIONS`. Both checks assure that the routine stops, if it does not seem to be able to fund a solution.
 
 <a name="section-7"></a>
 
