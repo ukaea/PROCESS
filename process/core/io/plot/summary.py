@@ -10101,8 +10101,6 @@ def plot_cs_coil_structure(
         label="CS, PF and Plasma Current Filaments",
     )
 
-    axis.plot(0, 0, marker="o", color="red", markersize=8)
-
     axis.set_xlabel("R [m]")
     axis.set_ylabel("Z [m]")
     axis.set_title("Central Solenoid Poloidal Cross-Section")
