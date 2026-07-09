@@ -12,6 +12,7 @@ from process.core import (
 )
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.core.model import Model
+from process.data_structure.physics_variables import PlasmaIgnitionModel
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
@@ -2290,7 +2291,7 @@ class CurrentDrive(Model):
             )
 
             # Reset injected power to zero for ignited plasma (fudge)
-            if self.data.physics.i_plasma_ignited == 1:
+            if self.data.physics.i_plasma_ignited == PlasmaIgnitionModel.IGNITED:
                 self.data.heat_transport.p_hcd_electric_total_mw = 0.0e0
 
             # Ratio of fusion to input (injection+ohmic) power
@@ -2394,7 +2395,7 @@ class CurrentDrive(Model):
             "(i_plasma_ignited)",
             self.data.physics.i_plasma_ignited,
         )
-        if self.data.physics.i_plasma_ignited == 1:
+        if self.data.physics.i_plasma_ignited == PlasmaIgnitionModel.IGNITED:
             po.ocmmnt(
                 self.outfile,
                 "Ignited plasma; injected power only used for start-up phase",
