@@ -87,7 +87,7 @@ In this example:
 - `0.1` is the default lower bound of the variable.
 - `1.0` is the default upper bound of the variable.
 
-You will often want to [add a variable as an input](#add-a-new-input) if it is an iteration variable. That way, you can specify the initial value of the iteration variable in the `IN.DAT`.
+You will often want to [add a variable to the input file](#add-a-new-input) if it is an iteration variable. That way, you can specify the initial value of the iteration variable in the `IN.DAT`.
 
 The iteration variable can be enabled in the `IN.DAT` by:
 ```
@@ -96,7 +96,7 @@ ixc = 123
 my_new_blanket_variable = 0.5
 ```
 
-Note you can omit the `my_new_blanket_variable = 0.5` line and the initial value would just be whatever the variables default value is (`0.0` in this example, this is the default we assigned [earlier](#add-a-new-variable)).
+Note you can omit the line specifying the initial value for an iteration variable, and then the initial value would just be whatever that variable's default value is: in this example we could omit the `my_new_blanket_variable = 0.5` line, and `my_new_blanket_variable` would take its initial value as the default of `0.0` that we assigned [earlier](#add-a-new-variable).
 
 -----------------
 
@@ -119,7 +119,7 @@ elif figure_of_merit == FiguresOfMerit.BLANKET_FIGURE_OF_MERIT:
   objective_metric = data.blanket.my_new_blanket_variable
 ```
 
-Note that you will want to scale the `objective_metric` such that it is on the order unity if the variable is not already.
+Note that you will want to scale the `objective_metric` such that it is of the order unity if the variable is not already.
 
 The figure of merit can be selected in the `IN.DAT`:
 ```
@@ -131,7 +131,7 @@ Remember, setting `minmax = -20` would minimise instead of maximise our new vari
 
 ## Add a scan variable
 
-After following the instruction to add an input variable, you can then make a scan variable.
+After following the instructions to add an input variable, you can then make a scan variable.
 
 First, add the variable to the `ScanVariables` enum in `process/core/scan.py`. 
 ```python
@@ -153,7 +153,7 @@ match nwp:
     self.data.tfcoil.my_new_blanket_variable = swp[iscn - 1]
 ```
 
-Please see the [scan documentation](../usage/running-process.md#running-process) for how to setup a scan `IN.DAT`
+Please see the [scan documentation](../io/input-guide.md#input-guide) for how to set up a scan `IN.DAT`
 
 -----------------
 
@@ -172,9 +172,15 @@ The arguments to the `register_constraint` function are:
 - Name (again, currently an integer)
 - Unit (for output reporting purposes)
 - Symbol (e.g. `=`, `>=`, `<=`. Again, for output reporting purposes)
+The arguments to the `register_constraint()` function are:
+
+- Name (again, currently an integer): in the example above it is `1234`
+- Unit (for output reporting purposes): in the example above it is `m`
+- Symbol (e.g. `=`, `>=`, `<=`. Again, for output reporting purposes): in the example above it is `=`
+- 
 
 
-`my_constraint_function` should be named appropriately and return a `ConstraintResult` which contains the:
+`my_constraint_function()` should be named appropriately and return a `ConstraintResult` which contains the:
 
 - Constraint residual
 - Normalised residual
