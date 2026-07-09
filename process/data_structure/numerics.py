@@ -17,6 +17,7 @@ class SolverOutputCondition(IntEnum):
     IMPROPER_INPUT = 0
     """Solver failed due to improper input (e.g. invalid parameters, or failure to
     satisfy solver preconditions)"""
+    
     CONVERGED = 1
     """Solver converged successfully"""
 
