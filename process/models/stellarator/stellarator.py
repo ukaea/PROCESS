@@ -13,6 +13,7 @@ from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.data_structure.physics_variables import PlasmaIgnitionModel
 from process.models.engineering.pumping import CoolantType
 from process.models.physics.physics import Physics, rether
 from process.models.power import PumpingPowerModelTypes
@@ -1975,7 +1976,8 @@ class Stellarator(Model):
         #  If ignited, then ignore beam fusion effects
 
         if (self.data.current_drive.p_hcd_beam_injected_total_mw != 0.0e0) and (  # noqa: RUF069
-            self.data.physics.i_plasma_ignited == 0
+            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.NON_IGNITED
         ):
             (
                 self.data.physics.beta_beam,
@@ -2152,7 +2154,10 @@ class Stellarator(Model):
             0.00001e0, powht
         )  # To avoid negative heating power. This line is VERY important
 
-        if self.data.physics.i_plasma_ignited == 0:
+        if (
+            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.NON_IGNITED
+        ):
             # if not ignited add the auxiliary power
             powht += self.data.current_drive.p_hcd_injected_total_mw
 

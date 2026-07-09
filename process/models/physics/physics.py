@@ -18,6 +18,7 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
+from process.data_structure.physics_variables import PlasmaIgnitionModel
 from process.models.physics import impurity_radiation
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
@@ -601,7 +602,8 @@ class Physics(Model):
         # Calculate neutral beam slowing down effects
         # If ignited, then ignore beam fusion effects
         if (self.data.current_drive.c_beam_total != 0.0e0) and (  # noqa: RUF069
-            self.data.physics.i_plasma_ignited == 0
+            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.NON_IGNITED
         ):
             (
                 self.data.physics.beta_beam,
@@ -773,7 +775,8 @@ class Physics(Model):
         # which is assumed to be absorbed by the first wall
         pinj = (
             self.data.current_drive.p_hcd_injected_total_mw
-            if self.data.physics.i_plasma_ignited == 0
+            if PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.NON_IGNITED
             else 0.0
         )
 
@@ -1185,7 +1188,10 @@ class Physics(Model):
 
         # Beam hot ion component
         # If ignited, prevent beam fusion effects
-        if self.data.physics.i_plasma_ignited == 0:
+        if (
+            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.NON_IGNITED
+        ):
             self.data.physics.nd_beam_ions = (
                 self.data.physics.nd_plasma_electrons_vol_avg
                 * self.data.physics.f_nd_beam_electron
@@ -2304,7 +2310,10 @@ class Physics(Model):
             self.data.current_drive.p_hcd_injected_electrons_mw,
             "OP ",
         )
-        if self.data.physics.i_plasma_ignited == 1:
+        if (
+            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.IGNITED
+        ):
             po.ocmmnt(self.outfile, "  (Injected power only used for start-up phase)")
 
         self.exhaust.output()

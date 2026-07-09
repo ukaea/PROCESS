@@ -15,6 +15,7 @@ from process.data_structure.physics_variables import (
     ConfinementMode,
     ConfinementRadiationLossModel,
     ConfinementTimeModel,
+    PlasmaIgnitionModel,
 )
 from process.models.physics.plasma_geometry import PlasmaGeom
 
@@ -156,7 +157,7 @@ class PlasmaConfinementTime(Model):
         )
 
         # If the device is not ignited, add the injected auxiliary power
-        if i_plasma_ignited == 0:
+        if PlasmaIgnitionModel(i_plasma_ignited) == PlasmaIgnitionModel.NON_IGNITED:
             p_plasma_loss_mw += p_hcd_injected_total_mw
 
         # Include the radiation as a loss term based on radiation model
@@ -1107,7 +1108,10 @@ class PlasmaConfinementTime(Model):
 
             # Take into account whether injected power is included in tau_e calculation
             # (i.e. whether device is ignited)
-            if self.data.physics.i_plasma_ignited == 0:
+            if (
+                PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+                == PlasmaIgnitionModel.NON_IGNITED
+            ):
                 fhz_value -= (
                     self.data.current_drive.p_hcd_injected_total_mw
                     / self.data.physics.vol_plasma
@@ -1134,7 +1138,10 @@ class PlasmaConfinementTime(Model):
         """
         po.oheadr(self.outfile, "Plasma Energy Confinement")
 
-        if self.data.physics.i_plasma_ignited == 1:
+        if (
+            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.IGNITED
+        ):
             po.ocmmnt(
                 self.outfile,
                 "Device is assumed to be ignited for the calculation of confinement "
