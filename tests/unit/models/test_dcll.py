@@ -149,59 +149,6 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
         "f_ster_div_single",
         "p_div_rad_total_mw",
         "f_a_fw_outboard_hcd",
-        dcllneutronicsandpowerparam.f_a_fw_outboard_hcd,
-    )
-
-    monkeypatch.setattr(
-        dcll.data.fwbs,
-        "p_fw_hcd_rad_total_mw",
-        dcllneutronicsandpowerparam.p_fw_hcd_rad_total_mw,
-    )
-
-    monkeypatch.setattr(
-        dcll.data.fwbs,
-        "p_fw_hcd_nuclear_heat_mw",
-        dcllneutronicsandpowerparam.p_fw_hcd_nuclear_heat_mw,
-    )
-
-    monkeypatch.setattr(
-        dcll.data.fwbs,
-        "p_shld_nuclear_heat_mw",
-        dcllneutronicsandpowerparam.p_shld_nuclear_heat_mw,
-    )
-
-    monkeypatch.setattr(
-        dcll.data.fwbs,
-        "p_fw_rad_total_mw",
-        dcllneutronicsandpowerparam.p_fw_rad_total_mw,
-    )
-
-    monkeypatch.setattr(
-        dcll.data.fwbs,
-        "p_fw_nuclear_heat_total_mw",
-        dcllneutronicsandpowerparam.p_fw_nuclear_heat_total_mw,
-    )
-
-    monkeypatch.setattr(
-        dcll.data.fwbs,
-        "p_fw_inboard_surface_heat_mw",
-        dcllneutronicsandpowerparam.p_fw_inboard_surface_heat_mw,
-    )
-
-    monkeypatch.setattr(
-        dcll.data.fwbs,
-        "p_fw_outboard_surface_heat_mw",
-        dcllneutronicsandpowerparam.p_fw_outboard_surface_heat_mw,
-    )
-
-    monkeypatch.setattr(
-        dcll.data.fwbs,
-        "p_blkt_nuclear_heat_total_mw",
-        dcllneutronicsandpowerparam.p_blkt_nuclear_heat_total_mw,
-    )
-
-    monkeypatch.setattr(
-        dcll.data.fwbs,
         "pnuc_fw_ratio_dcll",
         "f_p_blkt_multiplication",
     ]:
@@ -217,20 +164,14 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
 
     for field in [
         "p_neutron_total_mw",
-        dcllneutronicsandpowerparam.p_neutron_total_mw,
-    )
-
-    monkeypatch.setattr(
-        dcll.data.physics,
         "p_plasma_rad_mw",
-        dcllneutronicsandpowerparam.p_plasma_rad_mw,
-    )
-
-    monkeypatch.setattr(
-        dcll.data.physics,
         "p_fw_alpha_surface_total_mw",
-        dcllneutronicsandpowerparam.p_fw_alpha_surface_total_mw,
-    )
+    ]:
+        monkeypatch.setattr(
+            dcll.data.physics,
+            field,
+            getattr(dcllneutronicsandpowerparam, field),
+        )
 
     dcll.dcll_neutronics_and_power(False)
 

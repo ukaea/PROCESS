@@ -751,26 +751,12 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         "p_shld_nuclear_heat_mw",
         "etaiso",
         "p_cp_shield_nuclear_heat_mw",
-        powerflowcalcparam.p_cp_shield_nuclear_heat_mw,
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb.data.fwbs,
         "p_fw_inboard_surface_heat_mw",
-        powerflowcalcparam.p_fw_inboard_surface_heat_mw,
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb.data.fwbs,
         "p_fw_outboard_surface_heat_mw",
-        powerflowcalcparam.p_fw_outboard_surface_heat_mw,
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb.data.heat_transport,
-        "p_fw_coolant_pump_mw",
-        powerflowcalcparam.p_fw_coolant_pump_mw,
-    )
+    ]:
+        monkeypatch.setattr(
+            ccfe_hcpb.data.fwbs, field, getattr(powerflowcalcparam, field)
+        )
 
     for field in [
         "p_fw_coolant_pump_mw",
@@ -788,18 +774,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
             getattr(powerflowcalcparam, field),
         )
 
-    monkeypatch.setattr(
-        ccfe_hcpb.data.physics, "p_plasma_rad_mw", powerflowcalcparam.p_plasma_rad_mw
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb.data.physics,
+    for field in [
+        "p_plasma_rad_mw",
         "p_fw_alpha_surface_total_mw",
-        powerflowcalcparam.p_fw_alpha_surface_total_mw,
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb.data.physics,
         "p_plasma_separatrix_mw",
     ]:
         monkeypatch.setattr(

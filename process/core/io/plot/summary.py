@@ -16170,19 +16170,27 @@ def main_plot(
     )
     plot_fw_90_deg_pipe_bend(pages["fw_td_cross_section"].add_subplot(337), m_file, scan)
 
-    ax_blanket = figs[34].add_subplot(122, aspect="equal")
-    plot_blkt_structure(ax_blanket, figs[34], m_file, scan, radial_build, colour_scheme)
+    ax_blanket = _add_page("vessel_cross_section").add_subplot(122, aspect="equal")
+    plot_blkt_structure(
+        ax_blanket,
+        pages["vessel_cross_section"],
+        m_file,
+        scan,
+        radial_build,
+        colour_scheme,
+    )
     plot_fw_inboard_toroidal_angle_load(
-        axis=figs[34].add_subplot(121, aspect="equal"),
+        axis=pages["vessel_cross_section"].add_subplot(121, aspect="equal"),
         mfile=m_file,
         scan=scan,
         demo_ranges=demo_ranges,
         colour_scheme=colour_scheme,
     )
 
-    plot_blkt_pipe_bends(figs[35], m_file, scan)
+    ax_blanket_bends = _add_page("vessel_power_distribution")
+    plot_blkt_pipe_bends(pages["vessel_power_distribution"], m_file, scan)
     plot_poloidal_power_distribution(
-        ax=figs[35].add_subplot(122, aspect="equal"),
+        ax=pages["vessel_power_distribution"].add_subplot(122, aspect="equal"),
         m_file=m_file,
         scan=scan,
         radial_build=radial_build,

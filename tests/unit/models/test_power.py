@@ -1866,139 +1866,15 @@ def test_plant_electric_production(plantelecprodparam, monkeypatch, power):
         power.data.physics, "p_fusion_total_mw", plantelecprodparam.p_fusion_total_mw
     )
 
-    monkeypatch.setattr(
-        power.data.physics, "p_plasma_inner_rad_mw", power2param.p_plasma_inner_rad_mw
-    )
-
-    monkeypatch.setattr(
-        power.data.physics, "p_plasma_rad_mw", power2param.p_plasma_rad_mw
-    )
-
-    monkeypatch.setattr(power.data.physics, "itart", power2param.itart)
-
-    monkeypatch.setattr(
-        power.data.physics, "p_plasma_separatrix_mw", power2param.p_plasma_separatrix_mw
-    )
-
-    monkeypatch.setattr(
-        power.data.physics,
-        "p_fw_alpha_surface_total_mw",
-        power2param.p_fw_alpha_surface_total_mw,
-    )
-
-    monkeypatch.setattr(power.data.divertor, "n_divertors", power2param.n_divertors)
-
-    monkeypatch.setattr(
-        power.data.physics, "p_plasma_ohmic_mw", power2param.p_plasma_ohmic_mw
-    )
-
-    monkeypatch.setattr(power.data.physics, "i_rad_loss", power2param.i_rad_loss)
-
-    monkeypatch.setattr(
-        power.data.physics, "p_fusion_total_mw", power2param.p_fusion_total_mw
-    )
-
-    monkeypatch.setattr(
-        power.data.physics,
-        "p_non_alpha_charged_mw",
-        power2param.p_non_alpha_charged_mw,
-    )
-
-    monkeypatch.setattr(power.data.physics, "pscalingmw", power2param.pscalingmw)
-
-    monkeypatch.setattr(
-        power.data.physics,
-        "f_p_alpha_plasma_deposited",
-        power2param.f_p_alpha_plasma_deposited,
-    )
-
-    monkeypatch.setattr(
-        power.data.tfcoil, "p_cp_coolant_pump_elec", power2param.p_cp_coolant_pump_elec
-    )
-
-    monkeypatch.setattr(power.data.tfcoil, "i_tf_sup", power2param.i_tf_sup)
-
-    monkeypatch.setattr(power.data.tfcoil, "tfcmw", power2param.tfcmw)
-
-    monkeypatch.setattr(power.data.tfcoil, "temp_tf_cryo", power2param.temp_tf_cryo)
-
-    monkeypatch.setattr(
-        power.data.tfcoil, "temp_cp_coolant_inlet", power2param.temp_cp_coolant_inlet
-    )
-
-    monkeypatch.setattr(power.data.tfcoil, "eff_tf_cryo", power2param.eff_tf_cryo)
-
-    monkeypatch.setattr(
-        power.data.primary_pumping,
-        "p_fw_blkt_coolant_pump_mw",
-        power2param.p_fw_blkt_coolant_pump_mw,
-    )
-
-    monkeypatch.setattr(
-        power.data.power,
-        "p_shld_coolant_pump_elec_mw",
-        power2param.p_shld_coolant_pump_elec_mw,
-    )
-
-    monkeypatch.setattr(
-        power.data.power,
-        "p_div_coolant_pump_elec_mw",
-        power2param.p_div_coolant_pump_elec_mw,
-    )
-
-    monkeypatch.setattr(
-        power.data.power, "p_coolant_pump_total_mw", power2param.p_coolant_pump_total_mw
-    )
-
-    monkeypatch.setattr(
-        power.data.power,
-        "p_fw_blkt_heat_deposited_mw",
-        power2param.p_fw_blkt_heat_deposited_mw,
-    )
-
-    monkeypatch.setattr(
-        power.data.power,
-        "p_fw_blkt_coolant_pump_elec_mw",
-        power2param.p_fw_blkt_coolant_pump_elec_mw,
-    )
-
-    monkeypatch.setattr(
-        power.data.power, "p_div_heat_deposited_mw", power2param.p_div_heat_deposited_mw
-    )
-
-    monkeypatch.setattr(
-        power.data.power, "p_fw_heat_deposited_mw", power2param.p_fw_heat_deposited_mw
-    )
-
-    monkeypatch.setattr(
-        power.data.power,
-        "p_shld_heat_deposited_mw",
-        power2param.p_shld_heat_deposited_mw,
-    )
-
-    monkeypatch.setattr(
-        power.data.power,
-        "p_cp_coolant_pump_elec_mw",
-        power2param.p_cp_coolant_pump_elec_mw,
-    )
-
-    monkeypatch.setattr(
-        power.data.power,
-        "p_plant_core_systems_elec_mw",
-        power2param.p_plant_core_systems_elec_mw,
-    )
-
-    monkeypatch.setattr(
-        power.data.power, "f_p_div_primary_heat", power2param.f_p_div_primary_heat
-    )
-
-    monkeypatch.setattr(power.data.power, "qss", power2param.qss)
-
-    monkeypatch.setattr(power.data.power, "qac", power2param.qac)
-
-    monkeypatch.setattr(power.data.power, "qcl", power2param.qcl)
-
-    monkeypatch.setattr(power.data.power, "qmisc", power2param.qmisc)
+    for field in [
+        "p_cp_coolant_pump_elec",
+        "i_tf_sup",
+    ]:
+        monkeypatch.setattr(
+            power.data.tfcoil,
+            field,
+            getattr(plantelecprodparam, field),
+        )
 
     power.plant_electric_production()
 

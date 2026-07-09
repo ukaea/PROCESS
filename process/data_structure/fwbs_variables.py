@@ -758,10 +758,10 @@ class FWBSData:
 
     f_rad_fw_inboard_plasma_centre_toroidal: float = 0.0
     """Fraction of total toroidal angle taken up by the inboard first wall as seen from the toroidal centre of the plasma"""
-    
+
     f_ster_fw_inboard_ring_source: float = 0.0
     """Solid angle fraction of inboard FW assuming a ring source"""
-    
+
     f_ster_fw_outboard_ring_source: float = 0.0
     """Solid angle fraction of outboard FW assuming a ring source"""
 

@@ -8,6 +8,7 @@ from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
@@ -19,7 +20,6 @@ from process.models.engineering.pumping import (
     CoolantType,
     gnielinski_heat_transfer_coefficient,
 )
-from process.data_structure.physics_variables import DivertorNumberModels
 
 logger = logging.getLogger(__name__)
 
@@ -155,19 +155,27 @@ class FirstWall(Model):
 
         in_vessel_solid_angle_fractions = self.calculate_component_solid_angle_components(
             deg_fw_inboard_plasma_centre_toroidal=self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal,
-            deg_fw_outboard_plasma_centre_toroidal=360.0-self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal,
+            deg_fw_outboard_plasma_centre_toroidal=360.0
+            - self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal,
             deg_blkt_outboard_poloidal_plasma=self.data.blanket.deg_blkt_outboard_poloidal_plasma,
             deg_blkt_inboard_poloidal_plasma=self.data.blanket.deg_blkt_inboard_poloidal_plasma,
             deg_div_poloidal_plasma=self.data.divertor.deg_div_poloidal_plasma,
             i_single_null=self.data.physics.i_single_null,
         )
-        
-        self.data.fwbs.f_ster_fw_inboard_ring_source = in_vessel_solid_angle_fractions.f_ster_fw_inboard_ring_source
-        self.data.fwbs.f_ster_fw_outboard_ring_source = in_vessel_solid_angle_fractions.f_ster_fw_outboard_ring_source
-        self.data.divertor.f_ster_div_lower_ring_source = in_vessel_solid_angle_fractions.f_ster_div_lower_ring_source
-        self.data.divertor.f_ster_div_upper_ring_source = in_vessel_solid_angle_fractions.f_ster_div_upper_ring_source
 
-        
+        self.data.fwbs.f_ster_fw_inboard_ring_source = (
+            in_vessel_solid_angle_fractions.f_ster_fw_inboard_ring_source
+        )
+        self.data.fwbs.f_ster_fw_outboard_ring_source = (
+            in_vessel_solid_angle_fractions.f_ster_fw_outboard_ring_source
+        )
+        self.data.divertor.f_ster_div_lower_ring_source = (
+            in_vessel_solid_angle_fractions.f_ster_div_lower_ring_source
+        )
+        self.data.divertor.f_ster_div_upper_ring_source = (
+            in_vessel_solid_angle_fractions.f_ster_div_upper_ring_source
+        )
+
         # Radiation surface heat flux on first wall (MW/m²)
         # The full area is used as the radiation is assumed to be uniformly distributed
         # across the first wall, so the coverage factors are not applied here.
@@ -1074,7 +1082,6 @@ class FirstWall(Model):
             "(f_ster_div_upper_ring_source)",
             self.data.divertor.f_ster_div_upper_ring_source,
         )
-        
 
     def output_fw_pumping(self):
         """Outputs the first wall pumping details to the output file."""
