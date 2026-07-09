@@ -69,7 +69,7 @@ class SolverHandler:
                 print("new epsfcn = ", self.data.numerics.epsfcn)
 
                 ifail = self.solver.solve()
-                # First solution attempt failed (ifail != 1): supply ifail value
+                # First solution attempt failed (ifail != SolverOutputCondition.CONVERGED): supply ifail value
                 # to next attempt
                 self.data.numerics.epsfcn /= 10  # reset value
 
