@@ -7250,7 +7250,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
         # Pack strands if significant void fraction
         if void_fraction > 0.001:
-            _, _ = _pack_strands_rectangular_with_obstacles(
+            _n_strands, _attempts = _pack_strands_rectangular_with_obstacles(
                 cable_space_bounds=cable_bounds,
                 pipe_center=(
                     turn_width / 2,
