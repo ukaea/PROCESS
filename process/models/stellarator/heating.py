@@ -143,7 +143,7 @@ def output(stellarator, data: DataStructure, f_p_beam_injected_ions=None):
     elif data.stellarator.isthtr == 3:
         po.ocmmnt(stellarator.outfile, "Neutral Beam Injection Heating")
 
-    if data.physics.i_plasma_ignited == PlasmaIgnitionModel.IGNITED:
+    if PlasmaIgnitionModel(data.physics.i_plasma_ignited) == PlasmaIgnitionModel.IGNITED:
         po.ocmmnt(
             stellarator.outfile,
             "Ignited plasma; injected power only used for start-up phase",

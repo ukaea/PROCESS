@@ -274,14 +274,17 @@ def constraint_equation_2(constraint_registration, data):
         pnumerator = pscaling
 
     # if plasma not ignited include injected power
-    if data.physics.i_plasma_ignited == PlasmaIgnitionModel.NON_IGNITED:
+    if (
+        PlasmaIgnitionModel(data.physics.i_plasma_ignited)
+        == PlasmaIgnitionModel.NON_IGNITED
+    ):
         pdenom = (
             data.physics.f_p_alpha_plasma_deposited * data.physics.pden_alpha_total_mw
             + data.physics.pden_non_alpha_charged_mw
             + data.physics.pden_plasma_ohmic_mw
             + data.current_drive.p_hcd_injected_total_mw / data.physics.vol_plasma
         )
-    elif data.physics.i_plasma_ignited == PlasmaIgnitionModel.IGNITED:
+    else:
         # if plasma ignited
         pdenom = (
             data.physics.f_p_alpha_plasma_deposited * data.physics.pden_alpha_total_mw
@@ -307,7 +310,10 @@ def constraint_equation_3(constraint_registration, data):
     vol_plasma: plasma volume (m3)
     """
     # No assume plasma ignition:
-    if data.physics.i_plasma_ignited == PlasmaIgnitionModel.NON_IGNITED:
+    if (
+        PlasmaIgnitionModel(data.physics.i_plasma_ignited)
+        == PlasmaIgnitionModel.NON_IGNITED
+    ):
         return eq(
             (
                 data.physics.pden_ion_transport_loss_mw
@@ -367,14 +373,17 @@ def constraint_equation_4(constraint_registration, data):
         pnumerator = pscaling
 
     # if plasma not ignited include injected power
-    if data.physics.i_plasma_ignited == PlasmaIgnitionModel.NON_IGNITED:
+    if (
+        PlasmaIgnitionModel(data.physics.i_plasma_ignited)
+        == PlasmaIgnitionModel.NON_IGNITED
+    ):
         pdenom = (
             data.physics.f_p_alpha_plasma_deposited
             * data.physics.f_pden_alpha_electron_mw
             + data.physics.pden_ion_electron_equilibration_mw
             + data.current_drive.p_hcd_injected_electrons_mw / data.physics.vol_plasma
         )
-    elif data.physics.i_plasma_ignited == PlasmaIgnitionModel.IGNITED:
+    else:
         # if plasma ignited
         pdenom = (
             data.physics.f_p_alpha_plasma_deposited
@@ -457,7 +466,7 @@ def constraint_equation_7(constraint_registration, data):
     nd_beam_ions_out: hot beam ion density from calculation (/m³)
     nd_beam_ions: hot beam ion density, variable (/m³)
     """
-    if data.physics.i_plasma_ignited == PlasmaIgnitionModel.IGNITED:
+    if PlasmaIgnitionModel(data.physics.i_plasma_ignited) == PlasmaIgnitionModel.IGNITED:
         raise ProcessValueError("Do not use constraint equation 7 if i_plasma_ignited=1")
 
     return eq(
@@ -812,7 +821,10 @@ def constraint_equation_28(constraint_registration, data):
     during plasma start-up, and is excluded from all steady-state
     power balance calculations.
     """
-    if data.physics.i_plasma_ignited != 0:
+    if (
+        PlasmaIgnitionModel(data.physics.i_plasma_ignited)
+        != PlasmaIgnitionModel.NON_IGNITED
+    ):
         raise ProcessValueError("Do not use constraint 28 if i_plasma_ignited=1")
 
     return geq(
@@ -1743,12 +1755,15 @@ def constraint_equation_91(constraint_registration, data):
     te0_ecrh_achievable: Max. achievable electron temperature at ignition point
     """
     # Achievable ECRH te needs to be larger than needed te for igntion
-    if data.physics.i_plasma_ignited == PlasmaIgnitionModel.NON_IGNITED:
+    if (
+        PlasmaIgnitionModel(data.physics.i_plasma_ignited)
+        == PlasmaIgnitionModel.NON_IGNITED
+    ):
         value = (
             data.stellarator.powerht_constraint
             + data.current_drive.p_hcd_primary_extra_heat_mw
         )
-    elif data.physics.i_plasma_ignited == PlasmaIgnitionModel.IGNITED:
+    else:
         value = data.stellarator.powerht_constraint
 
     return geq(
