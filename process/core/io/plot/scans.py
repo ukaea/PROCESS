@@ -34,7 +34,7 @@ from typing import TYPE_CHECKING
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import MultipleLocator, PercentFormatter
-
+from process.data_structure.numerics import SolverOutputCondition
 from process.core.io.mfile import MFile
 from process.core.io.variable_metadata import var_dicts as meta
 from process.core.scan import ScanVariables
@@ -318,7 +318,7 @@ def oned_scan(
         conv_i = []
         for ii in range(n_scan):
             ifail = m_file.get("ifail", scan=ii + 1)
-            if ifail == 1:
+            if ifail == SolverOutputCondition.CONVERGED:
                 conv_i.append(ii + 1)
             else:
                 failed_value = scan_var.get_val(m_file, scan=ii + 1)
@@ -576,7 +576,7 @@ def twod_scan(
         for _jj in range(n_scan_2):
             ii_jj += 1  # Represents the scan point number in the MFILE
             ifail = m_file.get("ifail", scan=ii_jj)
-            if ifail == 1:
+            if ifail == SolverOutputCondition.CONVERGED:
                 conv_ij[ii].append(ii_jj)  # Only appends scan number if scan converged
                 contour_conv_ij.append(ii_jj)
             else:

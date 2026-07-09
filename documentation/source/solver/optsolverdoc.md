@@ -118,21 +118,21 @@ where `epsvmc` is a user specific error tolerance, $\vec{\delta}^j$ is the vecto
 
 ![alt text](../images/VMCON_flow_chart.svg "VMCON optimisation solver flow chart")
 
-Figure 2: *This is the flow chart of the `VMCON` optimisation solver. The criteria for and the interpretation of the successful (`ifail = 1`) and unsuccessful (`ifail` $\neq$ = 1) return parameters are described in [Table 1](#table-1)* 
+Figure 2: *This is the flow chart of the `VMCON` optimisation solver. The criteria for and the interpretation of the successful (`ifail = 1 / SolverOutputCondition.CONVERGED`) and unsuccessful (`ifail` $\neq$ = 1) return parameters are described in [Table 1](#table-1)* 
 
 <a name="table-1"></a>
 
 |  `ifail`  |  Description  |  Meaning  | Recommendation  |
 | ------------- | ------------- | ------------- | ------------- |
-|  0  |  `VMCON`: Improper input parameters  |  The input parameters to the solver are wrong, e.g. negative number of iteration variables.  |  This needs to be fixed on the developer side and should only occur in the test phase of the new modules.  |
-|  1  |  `VMCON`: Normal return  |  `VMCON` has found a solution that fulfills the necessary conditions within the specified error tolerances (c.f eq. \ref{eqn:equation-5})  |  Test whether the solution is a global solution by using different starting parameters.  |
-|  2  |  Too many function calls  |  During the line search`VMCON` has reached the maximum number of total function calls (`maxfev=100`)  |  `VMCON` struggles to find a solution. Retry with different start parameters.  |
-|  3  |  Line search required 10 function calls  |  The results produced by input objective function/constraints and their gradients are inconsistent. This can be due to numerical noise in the input functions.  |  The developer needs to check the consistency and numerical robustness of the objective function, constraints and their derivatives. Perhaps the accuracy in numerical integrations/differentiations needs to be higher. As a user, try changing the iteration bounds or adding other iteration variables.  |
-|  4  |  Uphill search direction was calculated  |  The quadratic subproblem has suggested a search direction in which the objective function only increases.  |  This happens if an inconsistency between the objective function, the constraints and their respective derivatives occurs (c.f. `ifail=3`)  |
-|  5  |  `qpsub`: no feasible solution or bad approximation of Hessian  |  Either no optimum lies within the space allowed by constraints and variable bounds or the identity matrix is not a good first approximation of the Hessian.  |  As a user, add a new iteration variable, as developer, try using a multiple of the identity matrix as initial Hessian instead.  |
-|  6  |  `qpsub`: Singular matrix in quadratic subproblem or restriction by artificial bounds  |  This is fairly self-explanatory.  |  If this is meaningful, widen the boundaries of the iteration variables.  |
+|  0 / `SolverOutputCondition.IMPROPER_INPUT`  |  `VMCON`: Improper input parameters  |  The input parameters to the solver are wrong, e.g. negative number of iteration variables.  |  This needs to be fixed on the developer side and should only occur in the test phase of the new modules.  |
+|  1 / `SolverOutputCondition.CONVERGED`  |  `VMCON`: Normal return  |  `VMCON` has found a solution that fulfills the necessary conditions within the specified error tolerances (c.f eq. \ref{eqn:equation-5})  |  Test whether the solution is a global solution by using different starting parameters.  |
+|  2 / `SolverOutputCondition.MAX_ITERATIONS`  |  Too many function calls  |  During the line search`VMCON` has reached the maximum number of total function calls (`maxfev=100`)  |  `VMCON` struggles to find a solution. Retry with different start parameters.  |
+|  3 / `SolverOutputCondition.MAX_LINE_SEARCHES`  |  Line search required 10 function calls  |  The results produced by input objective function/constraints and their gradients are inconsistent. This can be due to numerical noise in the input functions.  |  The developer needs to check the consistency and numerical robustness of the objective function, constraints and their derivatives. Perhaps the accuracy in numerical integrations/differentiations needs to be higher. As a user, try changing the iteration bounds or adding other iteration variables.  |
+|  4 / `SolverOutputCondition.UPHILL_SEARCH`  |  Uphill search direction was calculated  |  The quadratic subproblem has suggested a search direction in which the objective function only increases.  |  This happens if an inconsistency between the objective function, the constraints and their respective derivatives occurs (c.f. `ifail=3`)  |
+|  5 / `SolverOutputCondition.NO_SOLUTION`  |  `qpsub`: no feasible solution or bad approximation of Hessian  |  Either no optimum lies within the space allowed by constraints and variable bounds or the identity matrix is not a good first approximation of the Hessian.  |  As a user, add a new iteration variable, as developer, try using a multiple of the identity matrix as initial Hessian instead.  |
+|  6 / `SolverOutputCondition.SINGULAR_MATRIX_OR_BOUNDS`  |  `qpsub`: Singular matrix in quadratic subproblem or restriction by artificial bounds  |  This is fairly self-explanatory.  |  If this is meaningful, widen the boundaries of the iteration variables.  |
 
-Table 1: Summary of the description and meaning of the `VMCON` return parameters `ifail`.
+Table 1: Summary of the description and meaning of the `VMCON` return parameters `ifail`. This logic is contained within the `SolverOutputCondition` `enum`
 
 <a name="section-5"></a>
 
@@ -164,9 +164,9 @@ To allow the applicability of the solver to more general problems, Powell[^5] su
 
 To solve the QSP `VMCON` uses `harwqp` a modification of the Harwell library routine `VE02AD`, which in itself uses the subroutine `harwfp/LA02AD` to find a feasible point within the variable bounds and linearised constraints. Both routines go back to a method by Fletcher[^8] [^9] [^10]. The Lagrange multipliers are also determined from results of the `harwqp` routine.
 
-If the routine cannot fund a feasible point it fails with `ifail = 5` (c.f. [Table 1](#table-1)). As the routine is only checking the local linear approximation of the constraints rather than the full non-linear constraints, there is a chance that a feasible point exists even though the routine fails with `ifail = 5`. In these cases, it is possible that the first approximation of the Hessian has not been good and the algorithm has, therefore, taken an inappropriately large step. Then using a multiple of the identity matrix will convergence of the algorithm.
+If the routine cannot fund a feasible point it fails with `ifail = 5/SolverOutputCondition.NO_SOLUTION` (c.f. [Table 1](#table-1)). As the routine is only checking the local linear approximation of the constraints rather than the full non-linear constraints, there is a chance that a feasible point exists even though the routine fails with `ifail = 5/SolverOutputCondition.NO_SOLUTION`. In these cases, it is possible that the first approximation of the Hessian has not been good and the algorithm has, therefore, taken an inappropriately large step. Then using a multiple of the identity matrix will convergence of the algorithm.
 
-If a singular matrix is encountered with the QSP solver or the solution is restricted by the artificial bounds, `VMCON` fails with `ifail = 6`. In this case it can be helpful to widen the boundaries of the iteration variable.
+If a singular matrix is encountered with the QSP solver or the solution is restricted by the artificial bounds, `VMCON` fails with `ifail = 6/SolverOutputCondition.SINGULAR_MATRIX_OR_BOUNDS`. In this case it can be helpful to widen the boundaries of the iteration variable.
 
 <a name="section-6"></a>
 
