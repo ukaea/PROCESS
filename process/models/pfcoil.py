@@ -2511,7 +2511,7 @@ class PFCoil(Model):
             op.ovarre(
                 self.mfile,
                 f"CS coil axial stress at position {position} (MPa)",
-                f"(stress_z_cs_self_profile[{position}])",
+                f"(stress_z_cs_self_profile_{position})",
                 stress,
             )
         self.tf_pf_collision_detector()
