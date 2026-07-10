@@ -9,7 +9,7 @@ import pytest
 from testbook import testbook
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def examples_temp_data(tmp_path_factory):
     """Copy examples dir contents into temp dir for testing.
 

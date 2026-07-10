@@ -18,6 +18,7 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
+from process.data_structure.physics_variables import PlasmaIgnitionModel
 from process.models.physics import impurity_radiation
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
@@ -601,7 +602,8 @@ class Physics(Model):
         # Calculate neutral beam slowing down effects
         # If ignited, then ignore beam fusion effects
         if (self.data.current_drive.c_beam_total != 0.0e0) and (  # noqa: RUF069
-            self.data.physics.i_plasma_ignited == 0
+            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.NON_IGNITED
         ):
             (
                 self.data.physics.beta_beam,
@@ -773,7 +775,8 @@ class Physics(Model):
         # which is assumed to be absorbed by the first wall
         pinj = (
             self.data.current_drive.p_hcd_injected_total_mw
-            if self.data.physics.i_plasma_ignited == 0
+            if PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.NON_IGNITED
             else 0.0
         )
 
@@ -843,14 +846,7 @@ class Physics(Model):
 
         # Calculate transport losses and energy confinement time using the
         # chosen scaling law
-        (
-            self.data.physics.pden_electron_transport_loss_mw,
-            self.data.physics.pden_ion_transport_loss_mw,
-            self.data.physics.t_electron_energy_confinement,
-            self.data.physics.t_energy_confinement,
-            self.data.physics.t_ion_energy_confinement,
-            self.data.physics.p_plasma_loss_mw,
-        ) = self.confinement.calculate_confinement_time(
+        confinement_time_data = self.confinement.calculate_confinement_time(
             m_fuel_amu=self.data.physics.m_fuel_amu,
             p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
             aspect=self.data.physics.aspect,
@@ -877,6 +873,22 @@ class Physics(Model):
             eden_plasma_electrons_thermal_vol_avg=self.data.physics.eden_plasma_electrons_thermal_vol_avg,
             eden_plasma_ions_thermal_vol_avg=self.data.physics.eden_plasma_ions_thermal_vol_avg,
         )
+        self.data.physics.pden_electron_transport_loss_mw = (
+            confinement_time_data.pden_electron_transport_loss_mw
+        )
+        self.data.physics.pden_ion_transport_loss_mw = (
+            confinement_time_data.pden_ion_transport_loss_mw
+        )
+        self.data.physics.t_electron_energy_confinement = (
+            confinement_time_data.t_electron_energy_confinement
+        )
+        self.data.physics.t_energy_confinement = (
+            confinement_time_data.t_plasma_energy_confinement
+        )
+        self.data.physics.t_ion_energy_confinement = (
+            confinement_time_data.t_ion_energy_confinement
+        )
+        self.data.physics.p_plasma_loss_mw = confinement_time_data.p_plasma_loss_mw
 
         # Total transport power from scaling law (MW)
         self.data.physics.p_electron_transport_loss_mw = (
@@ -1176,7 +1188,10 @@ class Physics(Model):
 
         # Beam hot ion component
         # If ignited, prevent beam fusion effects
-        if self.data.physics.i_plasma_ignited == 0:
+        if (
+            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.NON_IGNITED
+        ):
             self.data.physics.nd_beam_ions = (
                 self.data.physics.nd_plasma_electrons_vol_avg
                 * self.data.physics.f_nd_beam_electron
@@ -2282,7 +2297,10 @@ class Physics(Model):
             self.data.current_drive.p_hcd_injected_electrons_mw,
             "OP ",
         )
-        if self.data.physics.i_plasma_ignited == 1:
+        if (
+            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.IGNITED
+        ):
             po.ocmmnt(self.outfile, "  (Injected power only used for start-up phase)")
 
         # Global power imbalance output #4233
