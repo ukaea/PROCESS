@@ -1157,7 +1157,7 @@ class Physics(Model):
         # Alpha ash portion
         self.data.physics.nd_plasma_alphas_thermal_vol_avg = (
             self.data.physics.nd_plasma_electrons_vol_avg
-            * self.data.physics.f_nd_alpha_electron
+            * self.data.physics.f_nd_alpha_thermal_electron
         )
 
         # ======================================================================
@@ -1259,7 +1259,7 @@ class Physics(Model):
             self.data.physics.f_plasma_fuel_helium3
             * self.data.physics.nd_plasma_fuel_ions_vol_avg
             / self.data.physics.nd_plasma_electrons_vol_avg
-            + self.data.physics.f_nd_alpha_electron
+            + self.data.physics.f_nd_alpha_thermal_electron
         )
 
         # ======================================================================
@@ -2717,8 +2717,8 @@ class Physics(Model):
         po.ovarre(
             self.outfile,
             "Thermalised alpha to electron number density ratio (⟨n_αₜₕ⟩/⟨nₑ⟩)",
-            "(f_nd_alpha_electron)",
-            self.data.physics.f_nd_alpha_electron,
+            "(f_nd_alpha_thermal_electron)",
+            self.data.physics.f_nd_alpha_thermal_electron,
         )
         po.ovarre(
             self.outfile,

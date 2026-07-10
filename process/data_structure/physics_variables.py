@@ -1258,8 +1258,8 @@ class PhysicsData:
     rad_fraction_total: float = 0.0
     """Radiation fraction total = SoL + LCFS radiation / total power deposited in plasma"""
 
-    f_nd_alpha_electron: float = 0.1
-    """thermal alpha density/electron density (`iteration variable 109`)"""
+    f_nd_alpha_thermal_electron: float = 0.1
+    """Thermal alpha density/electron density (⟨n_αₜₕ⟩/⟨nₑ⟩)"""
 
     f_nd_protium_electrons: float = 0.0
     """Seeded f_nd_protium_electrons density / electron density."""

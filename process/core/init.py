@@ -334,7 +334,7 @@ def check_process(inputs, data):  # noqa: ARG001
     if data.impurity_radiation.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069
         raise ProcessValidationError(
             "The thermal alpha/electron density ratio should be controlled using"
-            " f_nd_alpha_electron (itv 109) and not f_nd_impurity_electrons(2)."
+            " f_nd_alpha_thermal_electron (itv 109) and not f_nd_impurity_electrons(2)."
             "f_nd_impurity_electrons(2) should be removed from the input file,"
             " or set to the default value 0.1D0."
         )

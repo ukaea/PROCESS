@@ -286,7 +286,7 @@ f_h_mode_margin = 1.1
 * JUSTIFICATION: Used with icc=15 to enforce H-mode
 
 ixc = 109
-f_nd_alpha_electron = 6.14955494147856815e-02
+f_nd_alpha_thermal_electron = 6.14955494147856815e-02
 * DESCRIPTION:   Thermal alpha density / electron density
 * JUSTIFICATION: Calculate He fraction consistent with tau ratio
 

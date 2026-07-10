@@ -230,7 +230,7 @@ boundl(60) = 65000.0
 boundu(60) = 90000.0
 c_tf_turn = 65000.0
 
-* Helium fraction (f_nd_alpha_electron)
+* Helium fraction (f_nd_alpha_thermal_electron)
 ixc = 109
 boundu(109) = 0.1
 

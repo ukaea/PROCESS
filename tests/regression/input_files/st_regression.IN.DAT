@@ -252,7 +252,7 @@ boundu(6) = 5.0E+20
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ixc = 109
-f_nd_alpha_electron = 0.2
+f_nd_alpha_thermal_electron = 0.2
 boundl(109) = 0.001
 boundu(109) = 1.0
 * DESCRIPTION:   Thermal alpha density / electron density

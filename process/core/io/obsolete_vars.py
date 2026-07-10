@@ -155,7 +155,7 @@ OBS_VARS = {
     "nimp": "n_impurities",
     "ssync": "f_sync_reflect",
     "rnbeam": "f_nd_beam_electron",
-    "ralpne": "f_nd_alpha_electron",
+    "ralpne": "f_nd_alpha_thermal_electron",
     "protium": "f_nd_protium_electrons",
     "clhsf": "f_z_cryostat",
     "ddwex": "dr_cryostat",
@@ -470,6 +470,7 @@ OBS_VARS = {
     "fiooic": "f_j_tf_wp_critical_max",
     "alstroh": "stress_cs_steel_max",
     "i_cs_stress": None,
+    "f_nd_alpha_electron": "f_nd_alpha_thermal_electron",
 }
 
 OBS_VARS_HELP = {

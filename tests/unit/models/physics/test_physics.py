@@ -1253,7 +1253,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     f_alpha_ion: Any = None
 
-    f_nd_alpha_electron: Any = None
+    f_nd_alpha_thermal_electron: Any = None
 
     f_nd_beam_electron: Any = None
 
@@ -1386,7 +1386,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_nd_plasma_carbon_electron=0,
             f_nd_plasma_oxygen_electron=0,
             f_alpha_ion=0,
-            f_nd_alpha_electron=0.10000000000000001,
+            f_nd_alpha_thermal_electron=0.10000000000000001,
             f_nd_beam_electron=0,
             n_charge_plasma_effective_vol_avg=0,
             nd_plasma_impurities_vol_avg=0,
@@ -1492,7 +1492,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_nd_plasma_carbon_electron=0,
             f_nd_plasma_oxygen_electron=0,
             f_alpha_ion=0.3154069116809366,
-            f_nd_alpha_electron=0.10000000000000001,
+            f_nd_alpha_thermal_electron=0.10000000000000001,
             f_nd_beam_electron=0,
             n_charge_plasma_effective_vol_avg=2.0909945616489103,
             nd_plasma_impurities_vol_avg=28875000000000004,
@@ -1588,7 +1588,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         "f_nd_plasma_carbon_electron",
         "f_nd_plasma_oxygen_electron",
         "f_alpha_ion",
-        "f_nd_alpha_electron",
+        "f_nd_alpha_thermal_electron",
         "f_nd_beam_electron",
         "n_charge_plasma_effective_vol_avg",
         "nd_plasma_impurities_vol_avg",
