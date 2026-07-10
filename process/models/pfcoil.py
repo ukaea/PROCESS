@@ -36,6 +36,9 @@ from process.models.tfcoil.base import TFCoilShapeModel
 logger = logging.getLogger(__name__)
 
 
+N_CS_STRESS_PROFILE_POINTS = 20
+
+
 class PFLocationTypes(IntEnum):
     """Enum for PF coil location types."""
 
@@ -2507,7 +2510,9 @@ class PFCoil(Model):
                 f"(stress_z_cs_self_midplane_profile[{time}])",
                 self.data.pf_coil.stress_z_cs_self_midplane_profile[time],
             )
-        for position, stress in enumerate(self.data.pf_coil.stress_z_cs_self_profile.tolist()):
+        for position, stress in enumerate(
+            self.data.pf_coil.stress_z_cs_self_profile.tolist()
+        ):
             op.ovarre(
                 self.mfile,
                 f"CS coil axial stress at position {position} (MPa)",
@@ -3427,7 +3432,7 @@ class CSCoil(Model):
                 np.linspace(
                     -self.data.pf_coil.z_cs_upper,
                     self.data.pf_coil.z_cs_upper,
-                    num=20,
+                    num=N_CS_STRESS_PROFILE_POINTS,
                     endpoint=True,
                 )
             ):

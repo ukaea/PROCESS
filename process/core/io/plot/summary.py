@@ -53,7 +53,7 @@ from process.models.geometry.vacuum_vessel import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )
-from process.models.pfcoil import CSCoil
+from process.models.pfcoil import N_CS_STRESS_PROFILE_POINTS, CSCoil
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.confinement_time import PlasmaConfinementTime
 from process.models.physics.current_drive import (
@@ -4462,8 +4462,7 @@ def read_imprad_data(_skiprows, data_path):
         "Xe",
         "W_",
     ]
-    _ = _skiprows
-    lzdata = [0.0 for _ in range(len(label))]
+    lzdata = [0.0 for x in range(len(label))]
 
     for i in range(len(label)):
         file_iden = data_path + label[i].ljust(3, "_")
@@ -15277,7 +15276,6 @@ def plot_cs_radial_stress_profile(
     axis.minorticks_on()
     axis.grid(True, alpha=0.3)
     axis.set_title("CS Radial Stress at BOP")
-    axis.legend(loc="best")
 
 
 def plot_cs_hoop_stress_profile(
@@ -15318,7 +15316,6 @@ def plot_cs_hoop_stress_profile(
     axis.set_xlabel("Radial Position (m)")
     axis.set_ylabel("Hoop Stress (MPa)")
     axis.minorticks_on()
-    axis.legend(loc="center left", bbox_to_anchor=(1.02, 0.5))
     axis.set_title("CS Hoop Stress at BOP")
     axis.grid(True, alpha=0.3)
 
@@ -15338,7 +15335,9 @@ def plot_cs_radial_stress_contour_profile(
     # Create 2D grid for contour plot: radial and vertical dimensions
     n_radial = 50
     radial_grid = np.linspace(r_cs_inner, r_cs_outer, n_radial)
-    height_grid = np.linspace(-dz_cs_full / 2, dz_cs_full / 2, 20)
+    height_grid = np.linspace(
+        -dz_cs_full / 2, dz_cs_full / 2, N_CS_STRESS_PROFILE_POINTS
+    )
 
     # Create meshgrid for filled contour
     r, z = np.meshgrid(radial_grid, height_grid)
@@ -15428,7 +15427,9 @@ def plot_cs_hoop_stress_contour_profile(
     # Create 2D grid for contour plot: radial and vertical dimensions
     n_radial = 50
     radial_grid = np.linspace(r_cs_inner, r_cs_outer, n_radial)
-    height_grid = np.linspace(-dz_cs_full / 2, dz_cs_full / 2, 20)
+    height_grid = np.linspace(
+        -dz_cs_full / 2, dz_cs_full / 2, N_CS_STRESS_PROFILE_POINTS
+    )
 
     # Create meshgrid for filled contour
     r, z = np.meshgrid(radial_grid, height_grid)
@@ -15511,8 +15512,8 @@ def plot_cs_vertical_stress_profile(
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
 
     stress_z_profile = np.array([
-        float(mfile.data[f"stress_z_cs_self_profile[{i}]"].get_scan(scan)) / 1e6
-        for i in range(20)
+        float(mfile.data[f"stress_z_cs_self_profile_{i}"].get_scan(scan)) / 1e6
+        for i in range(N_CS_STRESS_PROFILE_POINTS)
     ])
     z_positions = np.linspace(-dz_cs_full / 2, dz_cs_full / 2, len(stress_z_profile))
 
@@ -15532,7 +15533,6 @@ def plot_cs_vertical_stress_profile(
     axis.minorticks_on()
     axis.grid(True, alpha=0.3)
     axis.set_title("CS Vertical Stress at BOP")
-    axis.legend(loc="center left", bbox_to_anchor=(1.02, 0.5))
 
 
 def plot_vertical_stress_contour_profile(
@@ -15546,8 +15546,8 @@ def plot_vertical_stress_contour_profile(
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
 
     stress_z_profile = [
-        float(mfile.data[f"stress_z_cs_self_profile[{i}]"].get_scan(scan)) / 1e6
-        for i in range(20)
+        float(mfile.data[f"stress_z_cs_self_profile_{i}"].get_scan(scan)) / 1e6
+        for i in range(N_CS_STRESS_PROFILE_POINTS)
     ]
 
     # Create 2D grid for contour plot: radial and vertical dimensions
@@ -15630,8 +15630,8 @@ def plot_cs_tresca_2d_contour(
     f_a_cs_turn_steel = mfile.get("f_a_cs_turn_steel", scan=scan)
 
     stress_z_profile = np.array([
-        float(mfile.data[f"stress_z_cs_self_profile[{i}]"].get_scan(scan))
-        for i in range(20)
+        float(mfile.data[f"stress_z_cs_self_profile_{i}"].get_scan(scan))
+        for i in range(N_CS_STRESS_PROFILE_POINTS)
     ])
 
     # Create 2D grid for contour plot: radial and vertical dimensions
@@ -15740,8 +15740,8 @@ def plot_cs_von_mises_2d_contour(
     f_a_cs_turn_steel = mfile.get("f_a_cs_turn_steel", scan=scan)
 
     stress_z_profile = np.array([
-        float(mfile.data[f"stress_z_cs_self_profile[{i}]"].get_scan(scan))
-        for i in range(20)
+        float(mfile.data[f"stress_z_cs_self_profile_{i}"].get_scan(scan))
+        for i in range(N_CS_STRESS_PROFILE_POINTS)
     ])
 
     # Create 2D grid for contour plot: radial and vertical dimensions
