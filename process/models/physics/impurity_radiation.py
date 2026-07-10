@@ -650,7 +650,9 @@ class ImpurityRadiation:
             self.data.impurity_radiation.f_nd_impurity_electron_array > 1.0e-30
         )[0]
 
-        self.pimp_profile = np.zeros(self.data.physics.n_plasma_profile_elements)
+        self.pden_impurity_radiation_profile = np.zeros(
+            self.data.physics.n_plasma_profile_elements
+        )
         self.pden_impurity_rad_profile = np.zeros(
             self.data.physics.n_plasma_profile_elements
         )
@@ -692,7 +694,9 @@ class ImpurityRadiation:
             data=self.data,
         )
 
-        self.pimp_profile = np.add(self.pimp_profile, pden_impurity_radiation_profile)
+        self.pden_impurity_radiation_profile = np.add(
+            self.pden_impurity_radiation_profile, pden_impurity_radiation_profile
+        )
 
     def calculate_radiation_loss_profiles(self):
         """Calculate the Bremsstrahlung (radb), line radiation (radl), total impurity
@@ -701,9 +705,10 @@ class ImpurityRadiation:
         values.
         """
         pden_impurity_rad_total = (
-            self.pimp_profile * self.plasma_profile.neprofile.profile_x
+            self.pden_impurity_radiation_profile
+            * self.plasma_profile.neprofile.profile_x
         )
-        pden_impurity_core_rad_total = self.pimp_profile * (
+        pden_impurity_core_rad_total = self.pden_impurity_radiation_profile * (
             self.plasma_profile.neprofile.profile_x
             * create_f_rad_core_profile(
                 rho=self.plasma_profile.neprofile.profile_x,
