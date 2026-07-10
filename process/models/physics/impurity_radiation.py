@@ -435,7 +435,7 @@ def calculate_average_charge_at_temp(
     numpy.array
         zav_of_te - electron temperature dependent average atomic charge
     """
-    return calculate_average_charge_at_temp_compiled(
+    return _calculate_average_charge_at_temp_compiled(
         imp_element_index=imp_element_index,
         temp_electron_kev=temp_electron_kev,
         temp_impurity_keV_array=data.impurity_radiation.temp_impurity_keV_array,
@@ -445,13 +445,13 @@ def calculate_average_charge_at_temp(
 
 
 @njit(cache=True)
-def calculate_average_charge_at_temp_compiled(
+def _calculate_average_charge_at_temp_compiled(
     imp_element_index: int,
-    temp_electron_kev: np.array | float,
+    temp_electron_kev: np.array,
     temp_impurity_keV_array: np.array,
     impurity_arr_zav: np.array,
     impurity_arr_len_tab: np.array,
-) -> np.array | float:
+) -> np.array:
     """Calculates electron temperature dependent average atomic charge (Z) for a given impurity element.
 
     Parameters
@@ -514,12 +514,12 @@ def calculate_average_charge_at_temp_compiled(
 
 def calculate_impurity_radiation_power_density(
     imp_element_index: int,
-    nd_electron_profile: np.array | float,
-    temp_electron_profile_kev: np.array | float,
+    nd_electron_profile: np.array,
+    temp_electron_profile_kev: np.array,
     data: DataStructure,
-) -> np.array | float:
+) -> np.array:
     """
-    Calculates the impurity radiation density (W/m³) based on the electron density and temperature profiles.
+    Calculates the impurity radiation density [W/m³] based on the electron density and temperature profiles.
 
     Parameters
     ----------
@@ -532,7 +532,7 @@ def calculate_impurity_radiation_power_density(
 
     Returns
     -------
-    pden_impurity_profile - total impurity radiation density (W/m³)
+    pden_impurity_profile - total impurity radiation density [W/m³]
 
     Notes
     -----
