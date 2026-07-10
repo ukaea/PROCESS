@@ -2287,25 +2287,20 @@ class Physics(Model):
 
         # Global power imbalance output #4233
         po.oheadr(self.outfile, "Power accounting")
+        po.ocmmnt(
+            self.outfile,
+            "See Figure in https://ukaea.github.io/PROCESS/physics-models/plasma_power_balance",
+        )
         p_loss_mw = (
             self.data.current_drive.f_p_beam_orbit_loss
             + self.data.current_drive.p_beam_shine_through_mw
             + self.data.physics.p_fw_alpha_mw
         )
-        p_impurity_mw = (
-            self.data.physics.p_plasma_inner_rad_mw
-            + self.data.physics.p_plasma_outer_rad_mw
-        )
-        po.ocmmnt(
-            self.outfile,
-            "See Figure in https://ukaea.github.io/PROCESS/physics-models/plasma_power_balance",
-        )
         p_plasma_out = (
             self.data.physics.p_electron_transport_loss_mw
             + self.data.physics.p_ion_transport_loss_mw
             + p_loss_mw
-            + self.data.physics.p_plasma_sync_mw
-            + p_impurity_mw
+            + self.data.physics.p_plasma_rad_mw
         )
 
         p_plasma_in = (
@@ -2314,8 +2309,9 @@ class Physics(Model):
             + self.data.current_drive.p_hcd_injected_total_mw
             + self.data.physics.p_plasma_ohmic_mw
         )
-        p_plasma_imbalance_mw = p_plasma_out - p_plasma_in
+        p_plasma_imbalance_mw = p_plasma_in - p_plasma_out
         po.oshead(self.outfile, "Plasma power balance across separatrix")
+        po.ocmmnt(self.outfile, "IN")
         po.ovarre(
             self.outfile,
             "Net power transported by electrons (MW)",
@@ -2339,26 +2335,20 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Net loss by synchrotron radiation (MW)",
-            "(p_plasma_sync_mw)",
-            self.data.physics.p_plasma_sync_mw,
+            "Total radiation loss, including net loss by synchrotron radiation (MW)",
+            "(p_plasma_rad_mw)",
+            self.data.physics.p_plasma_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Power lost by line radiation and bremsstrahlung (MW)",
-            "(p_impurity_mw)",
-            p_impurity_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total (MW)",
+            "TOTAL (MW)",
             "(p_plasma_out)",
             p_plasma_out,
             "OP ",
         )
         po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "OUT")
         po.ovarre(
             self.outfile,
             "Alpha power (MW)",
@@ -2389,7 +2379,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Total (MW)",
+            "TOTAL (MW)",
             "(p_plasma_in)",
             p_plasma_in,
             "OP ",
@@ -2422,6 +2412,7 @@ class Physics(Model):
             + self.data.fwbs.p_fw_hcd_rad_total_mw
         )
         p_reactor_imbalance_mw = p_reactor_in - p_reactor_out
+        po.ocmmnt(self.outfile, "IN")
         po.ovarre(
             self.outfile,
             "Fusion power (MW)",
@@ -2466,12 +2457,13 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Total (MW)",
+            "TOTAL (MW)",
             "(p_reactor_in)",
             p_reactor_in,
             "OP ",
         )
         po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "OUT")
         po.ovarre(
             self.outfile,
             "Total primary thermal power used for electricity production (MW)",
@@ -2516,7 +2508,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Total (MW)",
+            "TOTAL (MW)",
             "(p_reactor_out)",
             p_reactor_out,
             "OP ",
@@ -2544,11 +2536,21 @@ class Physics(Model):
             + self.data.heat_transport.fachtmw
         )
         p_electric_imbalance = (
-            p_electric_demand - self.data.heat_transport.p_plant_electric_gross_mw
+            self.data.heat_transport.p_plant_electric_gross_mw - p_electric_demand
         )
+        po.ocmmnt(self.outfile, "GENERATION")
         po.ovarre(
             self.outfile,
-            "Net electric (MW)",
+            "Gross electric output (MW)",
+            "(p_plant_electric_gross_mw)",
+            self.data.heat_transport.p_plant_electric_gross_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "PURPOSE")
+        po.ovarre(
+            self.outfile,
+            "Net electric exported (MW)",
             "(p_plant_electric_net_mw)",
             self.data.heat_transport.p_plant_electric_net_mw,
             "OP ",
@@ -2611,19 +2613,12 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Total (MW)",
+            "TOTAL (MW)",
             "(p_electric_demand)",
             p_electric_demand,
             "OP ",
         )
         po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Gross electric output (MW)",
-            "(p_plant_electric_gross_mw)",
-            self.data.heat_transport.p_plant_electric_gross_mw,
-            "OP ",
-        )
         po.ovarre(
             self.outfile,
             "Electric power imbalance (MW)",
@@ -2635,6 +2630,7 @@ class Physics(Model):
             logger.error("Electric power imbalance > 0.1 MW")
 
         po.oshead(self.outfile, "Power balance for power plant")
+        po.ocmmnt(self.outfile, "IN")
         p_plant_in_mw = (
             self.data.physics.p_fusion_total_mw + self.data.fwbs.p_blkt_multiplication_mw
         )
@@ -2660,12 +2656,13 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Total (MW)",
+            "TOTAL (MW)",
             "(p_nuclear_total_mw)",
             p_plant_in_mw,
             "OP ",
         )
         po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "OUT")
         po.ovarre(
             self.outfile,
             "Net electric (MW)",
@@ -2689,7 +2686,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Total (MW)",
+            "TOTAL (MW)",
             "(p_plant_out_mw)",
             p_plant_out_mw,
             "OP ",
