@@ -12805,10 +12805,14 @@ def plot_fusion_rate_contours(
         for i in range(n_plasma_profile_elements)
     ]
 
-    dt_grid, _, _ = interp1d_profile(fusrat_plasma_dt_profile, mfile, scan)
+    dt_grid, _r_grid, _z_grid = interp1d_profile(fusrat_plasma_dt_profile, mfile, scan)
 
-    dd_triton_grid, _, _ = interp1d_profile(fusrat_plasma_dd_triton_profile, mfile, scan)
-    dd_helion_grid, _, _ = interp1d_profile(fusrat_plasma_dd_helion_profile, mfile, scan)
+    dd_triton_grid, _r_grid, _z_grid = interp1d_profile(
+        fusrat_plasma_dd_triton_profile, mfile, scan
+    )
+    dd_helion_grid, _r_grid, _z_grid = interp1d_profile(
+        fusrat_plasma_dd_helion_profile, mfile, scan
+    )
     dhe3_grid, r_grid, z_grid = interp1d_profile(fusrat_plasma_dhe3_profile, mfile, scan)
 
     dt_axes = fig1.add_subplot(121, aspect="equal")
@@ -16301,7 +16305,7 @@ def main_plot(
     ax_334 = pages["cs_stress"].add_subplot(334)
     ax_334_position = ax_334.get_position()
     cbar_ax_334 = pages["cs_stress"].add_axes([
-        ax_334_position.x1 + 0.01,
+        ax_334_position.x1 - 0.01,
         ax_334_position.y0,
         0.012,
         ax_334_position.height,
