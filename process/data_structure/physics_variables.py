@@ -609,8 +609,8 @@ class PhysicsData:
     )
     """Array of plasma electron density upper limits values (nₑ,max) [/m³]"""
 
-    nd_plasma_alphas_vol_avg: float = 0.0
-    """Plasma volume averaged thermal alpha density (⟨n_α⟩) [/m³]"""  # noqa: RUF001
+    nd_plasma_alphas_thermal_vol_avg: float = 0.0
+    """Plasma volume averaged thermal alpha density (⟨n_αₜₕ⟩) [/m³]"""
 
     nd_beam_ions: float = 0.0
     """Hot beam ion density, variable (⟨n_beam⟩) [/m³]"""

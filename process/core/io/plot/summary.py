@@ -3876,7 +3876,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     scan: int :
 
     """
-    nd_alphas = mfile.get("nd_plasma_alphas_vol_avg", scan=scan)
+    nd_alphas = mfile.get("nd_plasma_alphas_thermal_vol_avg", scan=scan)
     nd_protons = mfile.get("nd_plasma_protons_vol_avg", scan=scan)
     nd_impurities = mfile.get("nd_plasma_impurities_vol_avg", scan=scan)
     nd_ions_total = mfile.get("nd_plasma_ions_total_vol_avg", scan=scan)
@@ -4125,8 +4125,8 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
             f"{mfile.get('nd_plasma_fuel_ions_vol_avg', scan=scan):.3e} m$^{{-3}}$"
         ),
         (
-            r"$\langle n_{\text{alpha}} \rangle $: "
-            f"{mfile.get('nd_plasma_alphas_vol_avg', scan=scan):.3e} m$^{{-3}}$"
+            r"$\langle n_{\alpha,\text{thermal}} \rangle $: "
+            f"{mfile.get('nd_plasma_alphas_thermal_vol_avg', scan=scan):.3e} m$^{{-3}}$"
         ),
         (
             r"$\langle n_{\text{impurities}} \rangle $: "

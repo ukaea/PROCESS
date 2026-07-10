@@ -1281,7 +1281,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     f_plasma_fuel_helium3: Any = None
 
-    nd_plasma_alphas_vol_avg: Any = None
+    nd_plasma_alphas_thermal_vol_avg: Any = None
 
     nd_plasma_electrons_vol_avg: Any = None
 
@@ -1400,7 +1400,7 @@ class PlasmaCompositionParam(NamedTuple):
             alphan=1,
             nd_beam_ions=0,
             f_plasma_fuel_helium3=0,
-            nd_plasma_alphas_vol_avg=0,
+            nd_plasma_alphas_thermal_vol_avg=0,
             nd_plasma_electrons_vol_avg=7.5e19,
             nd_plasma_protons_vol_avg=0,
             first_call=1,
@@ -1506,7 +1506,7 @@ class PlasmaCompositionParam(NamedTuple):
             alphan=1,
             nd_beam_ions=0,
             f_plasma_fuel_helium3=0,
-            nd_plasma_alphas_vol_avg=7.5e18,
+            nd_plasma_alphas_thermal_vol_avg=7.5e18,
             nd_plasma_electrons_vol_avg=7.5e19,
             nd_plasma_protons_vol_avg=7500000000000000,
             first_call=0,
@@ -1602,7 +1602,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         "alphan",
         "nd_beam_ions",
         "f_plasma_fuel_helium3",
-        "nd_plasma_alphas_vol_avg",
+        "nd_plasma_alphas_thermal_vol_avg",
         "nd_plasma_electrons_vol_avg",
         "nd_plasma_protons_vol_avg",
         "first_call",
@@ -1658,7 +1658,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_m_beam_amu
     )
 
-    assert physics.data.physics.nd_plasma_alphas_vol_avg == pytest.approx(
+    assert physics.data.physics.nd_plasma_alphas_thermal_vol_avg == pytest.approx(
         plasmacompositionparam.expected_nd_alphas
     )
 
@@ -1837,7 +1837,7 @@ class PhyauxParam(NamedTuple):
 
     nd_plasma_fuel_ions_vol_avg: Any = None
 
-    nd_plasma_alphas_vol_avg: Any = None
+    nd_plasma_alphas_thermal_vol_avg: Any = None
 
     fusden_total: Any = None
 
@@ -1876,7 +1876,7 @@ class PhyauxParam(NamedTuple):
             burnup_in=0,
             aspect=3,
             nd_plasma_fuel_ions_vol_avg=5.8589175702454272e19,
-            nd_plasma_alphas_vol_avg=7.5e18,
+            nd_plasma_alphas_thermal_vol_avg=7.5e18,
             fusden_total=1.9852091609123786e17,
             fusden_alpha_total=1.973996644759543e17,
             plasma_current=18398455.678867526,
@@ -1895,7 +1895,7 @@ class PhyauxParam(NamedTuple):
             burnup_in=0,
             aspect=3,
             nd_plasma_fuel_ions_vol_avg=5.8576156204039725e19,
-            nd_plasma_alphas_vol_avg=7.5e18,
+            nd_plasma_alphas_thermal_vol_avg=7.5e18,
             fusden_total=1.9843269653375773e17,
             fusden_alpha_total=1.9731194318497056e17,
             plasma_current=18398455.678867526,
@@ -1940,7 +1940,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     ) = physics.phyaux(
         aspect=phyauxparam.aspect,
         nd_plasma_fuel_ions_vol_avg=phyauxparam.nd_plasma_fuel_ions_vol_avg,
-        nd_plasma_alphas_vol_avg=phyauxparam.nd_plasma_alphas_vol_avg,
+        nd_plasma_alphas_thermal_vol_avg=phyauxparam.nd_plasma_alphas_thermal_vol_avg,
         fusden_total=phyauxparam.fusden_total,
         fusden_alpha_total=phyauxparam.fusden_alpha_total,
         plasma_current=phyauxparam.plasma_current,
@@ -3183,7 +3183,7 @@ def test_calculate_plasma_masses(physics):
     m_ions_total_amu = 3.0
     nd_plasma_ions_total_vol_avg = 1.0e20
     nd_plasma_fuel_ions_vol_avg = 0.8e20
-    nd_plasma_alphas_vol_avg = 0.1e20
+    nd_plasma_alphas_thermal_vol_avg = 0.1e20
     vol_plasma = 100.0
     nd_plasma_electrons_vol_avg = 1.0e20
 
@@ -3198,7 +3198,7 @@ def test_calculate_plasma_masses(physics):
         m_ions_total_amu=m_ions_total_amu,
         nd_plasma_ions_total_vol_avg=nd_plasma_ions_total_vol_avg,
         nd_plasma_fuel_ions_vol_avg=nd_plasma_fuel_ions_vol_avg,
-        nd_plasma_alphas_vol_avg=nd_plasma_alphas_vol_avg,
+        nd_plasma_alphas_thermal_vol_avg=nd_plasma_alphas_thermal_vol_avg,
         vol_plasma=vol_plasma,
         nd_plasma_electrons_vol_avg=nd_plasma_electrons_vol_avg,
     )
@@ -3489,7 +3489,7 @@ def test_detailed_physics_run_computes_profiles(monkeypatch, physics, process_mo
     )
     monkeypatch.setattr(
         physics.data.physics,
-        "nd_plasma_alphas_vol_avg",
+        "nd_plasma_alphas_thermal_vol_avg",
         np.mean(plasma.neprofile.profile_y) * 0.1,
     )
 

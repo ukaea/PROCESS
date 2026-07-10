@@ -256,7 +256,7 @@ class Physics(Model):
             self.data.physics.m_ions_total_amu,
             self.data.physics.nd_plasma_ions_total_vol_avg,
             self.data.physics.nd_plasma_fuel_ions_vol_avg,
-            self.data.physics.nd_plasma_alphas_vol_avg,
+            self.data.physics.nd_plasma_alphas_thermal_vol_avg,
             self.data.physics.vol_plasma,
             self.data.physics.nd_plasma_electrons_vol_avg,
         )
@@ -944,7 +944,7 @@ class Physics(Model):
             self.data.physics.fusden_alpha_total,
             self.data.physics.plasma_current,
             sbar,
-            self.data.physics.nd_plasma_alphas_vol_avg,
+            self.data.physics.nd_plasma_alphas_thermal_vol_avg,
             self.data.physics.t_energy_confinement,
             self.data.physics.vol_plasma,
             self.data.physics.burnup_in,
@@ -1155,7 +1155,7 @@ class Physics(Model):
           charge.
         """
         # Alpha ash portion
-        self.data.physics.nd_plasma_alphas_vol_avg = (
+        self.data.physics.nd_plasma_alphas_thermal_vol_avg = (
             self.data.physics.nd_plasma_electrons_vol_avg
             * self.data.physics.f_nd_alpha_electron
         )
@@ -1172,14 +1172,14 @@ class Physics(Model):
             self.data.physics.nd_plasma_protons_vol_avg = max(
                 self.data.physics.f_nd_protium_electrons
                 * self.data.physics.nd_plasma_electrons_vol_avg,
-                self.data.physics.nd_plasma_alphas_vol_avg
+                self.data.physics.nd_plasma_alphas_thermal_vol_avg
                 * (self.data.physics.f_plasma_fuel_helium3 + 1.0e-3),
             )  # rough estimate
         else:
             self.data.physics.nd_plasma_protons_vol_avg = max(
                 self.data.physics.f_nd_protium_electrons
                 * self.data.physics.nd_plasma_electrons_vol_avg,
-                self.data.physics.nd_plasma_alphas_vol_avg
+                self.data.physics.nd_plasma_alphas_thermal_vol_avg
                 * self.data.physics.proton_rate_density
                 / self.data.physics.fusden_alpha_total,
             )
@@ -1220,7 +1220,7 @@ class Physics(Model):
         # znfuel is the sum of Zi.ni for the three fuel ions
         znfuel = (
             self.data.physics.nd_plasma_electrons_vol_avg
-            - 2.0 * self.data.physics.nd_plasma_alphas_vol_avg
+            - 2.0 * self.data.physics.nd_plasma_alphas_thermal_vol_avg
             - self.data.physics.nd_plasma_protons_vol_avg
             - self.data.physics.nd_beam_ions
             - znimp
@@ -1278,7 +1278,7 @@ class Physics(Model):
         # Total ion density
         self.data.physics.nd_plasma_ions_total_vol_avg = (
             self.data.physics.nd_plasma_fuel_ions_vol_avg
-            + self.data.physics.nd_plasma_alphas_vol_avg
+            + self.data.physics.nd_plasma_alphas_thermal_vol_avg
             + self.data.physics.nd_plasma_protons_vol_avg
             + self.data.physics.nd_beam_ions
             + self.data.physics.nd_plasma_impurities_vol_avg
@@ -1374,7 +1374,10 @@ class Physics(Model):
                 self.data.physics.m_fuel_amu
                 * self.data.physics.nd_plasma_fuel_ions_vol_avg
             )
-            + (constants.M_ALPHA_AMU * self.data.physics.nd_plasma_alphas_vol_avg)
+            + (
+                constants.M_ALPHA_AMU
+                * self.data.physics.nd_plasma_alphas_thermal_vol_avg
+            )
             + (self.data.physics.nd_plasma_protons_vol_avg * constants.M_PROTON_AMU)
             + (self.data.physics.m_beam_amu * self.data.physics.nd_beam_ions)
         )
@@ -1411,7 +1414,11 @@ class Physics(Model):
                 * self.data.physics.nd_plasma_fuel_ions_vol_avg
                 / constants.M_HELION_AMU
             )
-            + (4.0 * self.data.physics.nd_plasma_alphas_vol_avg / constants.M_ALPHA_AMU)
+            + (
+                4.0
+                * self.data.physics.nd_plasma_alphas_thermal_vol_avg
+                / constants.M_ALPHA_AMU
+            )
             + (self.data.physics.nd_plasma_protons_vol_avg / constants.M_PROTON_AMU)
             + (
                 (1.0 - self.data.current_drive.f_beam_tritium)
@@ -1448,7 +1455,7 @@ class Physics(Model):
         fusden_alpha_total: float,
         plasma_current: float,
         sbar: float,
-        nd_plasma_alphas_vol_avg: float,
+        nd_plasma_alphas_thermal_vol_avg: float,
         t_energy_confinement: float,
         vol_plasma: float,
         burnup_in: float,
@@ -1470,7 +1477,7 @@ class Physics(Model):
             Plasma current (A).
         sbar : float
             Exponent for aspect ratio (normally 1).
-        nd_plasma_alphas_vol_avg : float
+        nd_plasma_alphas_thermal_vol_avg : float
             Alpha ash density (/m3).
         t_energy_confinement : float
             Global energy confinement time (s).
@@ -1508,7 +1515,7 @@ class Physics(Model):
         t_alpha_confinement = (
             0.0
             if fusden_alpha_total == 0.0  # noqa: RUF069
-            else nd_plasma_alphas_vol_avg / fusden_alpha_total
+            else nd_plasma_alphas_thermal_vol_avg / fusden_alpha_total
         )
 
         # Fractional burnup
@@ -1525,8 +1532,8 @@ class Physics(Model):
         # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
         if burnup_in <= 1.0e-9:
             burnup = (
-                nd_plasma_alphas_vol_avg
-                / (nd_plasma_alphas_vol_avg + 0.5 * nd_plasma_fuel_ions_vol_avg)
+                nd_plasma_alphas_thermal_vol_avg
+                / (nd_plasma_alphas_thermal_vol_avg + 0.5 * nd_plasma_fuel_ions_vol_avg)
                 / tauratio
             )
         else:
@@ -2702,14 +2709,14 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Thermalised alpha volume averaged number density (⟨n_alpha⟩) (/m³)",
-            "(nd_plasma_alphas_vol_avg)",
-            self.data.physics.nd_plasma_alphas_vol_avg,
+            "Thermalised alpha volume averaged number density (⟨n_αₜₕ⟩) (/m³)",
+            "(nd_plasma_alphas_thermal_vol_avg)",
+            self.data.physics.nd_plasma_alphas_thermal_vol_avg,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Thermalised alpha to electron number density ratio (⟨n_alpha⟩/⟨nₑ⟩)",
+            "Thermalised alpha to electron number density ratio (⟨n_αₜₕ⟩/⟨nₑ⟩)",
             "(f_nd_alpha_electron)",
             self.data.physics.f_nd_alpha_electron,
         )
@@ -3021,7 +3028,7 @@ class Physics(Model):
         m_ions_total_amu: float,
         nd_plasma_ions_total_vol_avg: float,
         nd_plasma_fuel_ions_vol_avg: float,
-        nd_plasma_alphas_vol_avg: float,
+        nd_plasma_alphas_thermal_vol_avg: float,
         vol_plasma: float,
         nd_plasma_electrons_vol_avg: float,
     ) -> tuple[float, float, float, float, float]:
@@ -3037,7 +3044,7 @@ class Physics(Model):
             Total ion density (/m3).
         nd_plasma_fuel_ions_vol_avg : float
             Fuel ion density (/m3).
-        nd_plasma_alphas_vol_avg : float
+        nd_plasma_alphas_thermal_vol_avg : float
             Alpha ash density (/m3).
         vol_plasma : float
             Plasma volume (m3).
@@ -3059,7 +3066,9 @@ class Physics(Model):
             nd_plasma_ions_total_vol_avg * vol_plasma
         )
 
-        m_plasma_alpha = (nd_plasma_alphas_vol_avg * vol_plasma) * constants.ALPHA_MASS
+        m_plasma_alpha = (
+            nd_plasma_alphas_thermal_vol_avg * vol_plasma
+        ) * constants.ALPHA_MASS
 
         m_plasma_electron = constants.ELECTRON_MASS * (
             nd_plasma_electrons_vol_avg * vol_plasma
@@ -5332,7 +5341,7 @@ class DetailedPhysics(Model):
             nd_plasma_ions=(
                 self.data.physics.nd_plasma_electrons_vol_avg
                 * (
-                    self.data.physics.nd_plasma_alphas_vol_avg
+                    self.data.physics.nd_plasma_alphas_thermal_vol_avg
                     / self.data.physics.nd_plasma_electrons_vol_avg
                 )
             ),
@@ -5345,7 +5354,7 @@ class DetailedPhysics(Model):
             nd_plasma_ions=(
                 self.plasma_profile.neprofile.profile_y
                 * (
-                    self.data.physics.nd_plasma_alphas_vol_avg
+                    self.data.physics.nd_plasma_alphas_thermal_vol_avg
                     / self.data.physics.nd_plasma_electrons_vol_avg
                 )
             ),
