@@ -1783,20 +1783,18 @@ def constraint_equation_93(constraint_registration, data):
     e_tf_magnetic_stored_total_gj: Total stored energy in TF coils (GJ)
     """
     vol_tf_copper = (
-        data.tfcoil_variables.f_a_tf_turn_cable_copper
-        # * data.tfcoil_variables.a_tf_wp_conductor
-        * data.superconducting_tf_coil_variables.dr_tf_turn
-        * data.superconducting_tf_coil_variables.dx_tf_turn
-        * data.tfcoil_variables.n_tf_coil_turns
-        * (data.tfcoil_variables.len_tf_coil + data.tfcoil_variables.cplen)
+        data.tfcoil.f_a_tf_turn_cable_copper
+        # * data.tfcoil.a_tf_wp_conductor
+        * data.superconducting_tfcoil.dr_tf_turn
+        * data.superconducting_tfcoil.dx_tf_turn
+        * data.tfcoil.n_tf_coil_turns
+        * (data.tfcoil.len_tf_coil + data.tfcoil.cplen)
         # * data.tfcoil_variables.n_tf_coils
     )
     # print("vol_tf_copper =", vol_tf_copper)
-    # area_tf_turn_copper = ( data.tfcoil_variables.f_a_tf_turn_cable_copper
-    #                       * data.tfcoil_variables.a_tf_wp_conductor )
-    energy_per_vol_tf_copper_min = (
-        0.1952 * data.tfcoil_variables.e_tf_magnetic_stored_total_gj
-    )
+    # area_tf_turn_copper = ( data.tfcoil.f_a_tf_turn_cable_copper
+    #                       * data.tfcoil.a_tf_wp_conductor )
+    energy_per_vol_tf_copper_min = 0.1952 * data.tfcoil.e_tf_magnetic_stored_total_gj
     # energy_per_area_tf_turn_copper_min = (
     #    1.0e-6 * 44.2 * data.tfcoil_variables.e_tf_magnetic_stored_total_gj
     # )
