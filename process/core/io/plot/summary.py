@@ -3973,7 +3973,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     ax_main.plot(
         rho,
         density_profiles_plotting[1],
-        label=r"$n_{\alpha}$",
+        label=r"$n_{\alpha,\text{thermal}}$",
         color="#d62728",
         linewidth=1.5,
     )
