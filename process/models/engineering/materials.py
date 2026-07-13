@@ -3,7 +3,7 @@
 import logging
 
 import numpy as np
-
+import numba
 logger = logging.getLogger(__name__)
 
 poisson_steel: float = 0.3
@@ -47,7 +47,7 @@ def eurofer97_thermal_conductivity(temp: float, fw_th_conductivity: float) -> fl
         / 28.34
     )
 
-
+@numba.njit(cache=True)
 def calculate_tresca_stress(
     stress_x: float | np.ndarray,
     stress_y: float | np.ndarray,
@@ -71,10 +71,12 @@ def calculate_tresca_stress(
         Tresca stress (maximum shear stress criterion) in Pa, defined as the
         maximum of |stress_x - stress_y|, |stress_y - stress_z|, |stress_x - stress_z|.
     """
-    return max(
-        abs(stress_x - stress_y),
-        abs(stress_y - stress_z),
-        abs(stress_x - stress_z),
+    return np.maximum(
+        np.maximum(
+            np.abs(stress_x - stress_y),
+            np.abs(stress_y - stress_z),
+        ),
+        np.abs(stress_x - stress_z),
     )
 
 
