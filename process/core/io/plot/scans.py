@@ -34,7 +34,7 @@ from typing import TYPE_CHECKING
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import MultipleLocator, PercentFormatter
-from process.data_structure.numerics import SolverOutputCondition
+
 from process.core.io.mfile import MFile
 from process.core.io.variable_metadata import var_dicts as meta
 from process.core.scan import ScanVariables
@@ -166,6 +166,7 @@ def axis_manipulation(ax: Axes, axis: AxisData, index: int, contour: np.ndarray)
 
     ax.figure.tight_layout()
     ax.tick_params(axis=an.name.lower(), labelsize=axis.tick_size)
+from process.data_structure.numerics import SolverOutputCondition
 
 
 def plot_scan(
