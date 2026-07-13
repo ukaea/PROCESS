@@ -1672,39 +1672,14 @@ class Build(Model):
                 self.data.build.dz_fw_plasma_gap,
             )
 
-        # Calculate pre-compression structure thickness
-        if (
-            CSPrecompressionConfiguration(self.data.build.i_cs_precomp)
-            == CSPrecompressionConfiguration.CS_PRECOMPRESSION_STRUCTURE_PRESENT
-            and self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_OUTSIDE_CS
-        ):
+        # Calculate pre-compression structure thickness is self.data.build.i_cs_precomp=1
+        if CSPrecompressionConfiguration(self.data.build.i_cs_precomp)== CSPrecompressionConfiguration.CS_PRECOMPRESSION_STRUCTURE_PRESENT:
             self.data.build.dr_cs_precomp = self.data.build.fseppc / (
                 2.0e0
                 * np.pi
                 * self.data.build.fcspc
                 * self.data.build.sigallpc
-                * (
-                    self.data.build.dr_bore
-                    + self.data.build.dr_bore
-                    + self.data.build.dr_cs
-                )
-            )
-        elif (
-            CSPrecompressionConfiguration(self.data.build.i_cs_precomp)
-            == CSPrecompressionConfiguration.CS_PRECOMPRESSION_STRUCTURE_PRESENT
-            and self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
-        ):
-            self.data.build.dr_cs_precomp = self.data.build.fseppc / (
-                2.0e0
-                * np.pi
-                * self.data.build.fcspc
-                * self.data.build.sigallpc
-                * (
-                    2.0 * self.data.build.dr_bore
-                    + 2.0 * self.data.build.dr_tf_inboard
-                    + 2.0 * self.data.build.dr_cs_tf_gap
-                    + self.data.build.dr_cs
-                )
+                * (2.0 * self.data.build.dr_cs_bore + self.data.build.dr_cs)
             )
         else:
             self.data.build.dr_cs_precomp = 0.0e0
