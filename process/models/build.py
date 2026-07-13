@@ -1720,11 +1720,12 @@ class Build(Model):
             )
 
         if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
-            self.data.build.r_tf_inboard_in = (
+            self.data.build.r_tf_inboard_in = self.data.build.dr_bore
+            # CS bore radius [m]
+            self.data.build.dr_cs_bore = (
                 self.data.build.dr_bore
-                # NOTE: dr_bore is just the hollow space, the
-                # true dr_bore size used for flux calculations
-                # is dr_bore + dr_tf_inboard + dr_cs_tf_gap
+                + self.data.build.dr_tf_inboard
+                + self.data.build.dr_cs_tf_gap
             )
         else:
             # Inboard side inner radius [m]
@@ -1734,6 +1735,7 @@ class Build(Model):
                 + self.data.build.dr_cs_precomp
                 + self.data.build.dr_cs_tf_gap
             )
+            self.data.build.dr_cs_bore = self.data.build.dr_bore
 
         # Radial build to tfcoil middle [m]
         self.data.build.r_tf_inboard_mid = (
@@ -1916,7 +1918,7 @@ class Build(Model):
             + 0.5e0 * self.data.build.dr_tf_outboard
         )
 
-        # TF coil horizontal self.data.build.dr_bore [m]
+        # TF coil horizontal bore at mid-plane [m]
         self.data.build.dr_tf_inner_bore = (
             self.data.build.r_tf_outboard_mid - 0.5e0 * self.data.build.dr_tf_outboard
         ) - (self.data.build.r_tf_inboard_mid - 0.5e0 * self.data.build.dr_tf_inboard)
@@ -2050,21 +2052,6 @@ class Build(Model):
                 "OP ",
             )
 
-            if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
-                po.ocmmnt(
-                    self.outfile,
-                    (
-                        "\n "
-                        "(The stated machine dr_bore size is just for the hollow space, "
-                    ),
-                )
-                po.ocmmnt(
-                    self.outfile,
-                    (
-                        "the true dr_bore size used for calculations is "
-                        "dr_bore + dr_tf_inboard + dr_cs_tf_gap)\n"
-                    ),
-                )
             if (
                 self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
                 and self.data.tfcoil.i_tf_bucking >= 2
