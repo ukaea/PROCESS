@@ -19,6 +19,10 @@ from process.core.model import DataStructure, Model
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.pfcoil_variables import PFConductorModel
 from process.data_structure.physics_variables import DivertorNumberModels
+from process.models.engineering.materials import (
+    calculate_tresca_stress,
+    calculate_von_mises_stress,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -3135,19 +3139,20 @@ class TFCoil(Model):
         # Tresca / Von Mises yield criteria calculations
         # -----------------------------
         # Array equation
-        s_shear_tf = np.maximum(
-            np.absolute(sig_tf_r - sig_tf_z), np.absolute(sig_tf_z - sig_tf_t)
+
+        s_shear_tf = calculate_tresca_stress(
+            stress_x=sig_tf_r, stress_y=sig_tf_t, stress_z=sig_tf_z
         )
 
         # Array equation
 
-        sig_tf_vmises = np.sqrt(
-            0.5e0
-            * (
-                (sig_tf_r - sig_tf_t) ** 2
-                + (sig_tf_r - sig_tf_z) ** 2
-                + (sig_tf_z - sig_tf_t) ** 2
-            )
+        sig_tf_vmises = calculate_von_mises_stress(
+            stress_x=sig_tf_r,
+            stress_y=sig_tf_t,
+            stress_z=sig_tf_z,
+            stress_shear_xy=0.0,
+            stress_shear_yz=0.0,
+            stress_shear_zx=0.0,
         )
 
         # Array equation
