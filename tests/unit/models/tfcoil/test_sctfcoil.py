@@ -1388,7 +1388,6 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
         a_tf_wp_no_insulation=tfaveragedturngeomparam.a_tf_wp_no_insulation,
         dia_tf_turn_coolant_channel=0.004,
         f_a_tf_turn_cable_space_extra_void=0.3,
-        data=cicc_sctfcoil.data,
     )
 
     # Existing checks
