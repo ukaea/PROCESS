@@ -7948,7 +7948,7 @@ def plot_pf_coils(
     coils_dz = []
     coil_text = []
 
-    dr_bore = mfile.get("dr_bore", scan=scan)
+    dr_cs_bore = mfile.get("dr_cs_bore", scan=scan)
     dr_cs = mfile.get("dr_cs", scan=scan)
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
 
@@ -7977,7 +7977,7 @@ def plot_pf_coils(
         coils_z=coils_z,
         coils_dr=coils_dr,
         coils_dz=coils_dz,
-        dr_bore=dr_bore,
+        dr_cs_bore=dr_cs_bore,
         dr_cs=dr_cs,
         ohdz=dz_cs_full,
     )
@@ -9946,7 +9946,7 @@ def plot_cs_coil_structure(
     dr_cs_full = mfile.get("dr_cs_full", scan=scan)
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
     dz_cs = mfile.get("dz_cs_full", scan=scan)
-    dr_bore = mfile.get("dr_bore", scan=scan)
+    dr_cs_bore = mfile.get("dr_cs_bore", scan=scan)
     r_cs_current_filaments_array = [
         mfile.get(f"r_pf_cs_current_filaments{i}", scan=scan) for i in range(NFIXMX)
     ]
@@ -9956,7 +9956,7 @@ def plot_cs_coil_structure(
 
     # Plot the right side of the CS
     right_cs = patches.Rectangle(
-        (dr_bore, -dz_cs / 2),
+        (dr_cs_bore, -dz_cs / 2),
         dr_cs,
         dz_cs,
         edgecolor="black",
@@ -9967,8 +9967,8 @@ def plot_cs_coil_structure(
 
     # Plot the bore of the machine
     bore_rect = patches.Rectangle(
-        (-dr_bore, -dz_cs / 2),
-        dr_bore * 2,
+        (-dr_cs_bore, -dz_cs / 2),
+        dr_cs_bore * 2,
         dz_cs,
         edgecolor="black",
         facecolor="lightgrey",
@@ -9977,7 +9977,7 @@ def plot_cs_coil_structure(
     axis.add_patch(bore_rect)
 
     left_cs = patches.Rectangle(
-        (-dr_bore - dr_cs, -dz_cs / 2),
+        (-dr_cs_bore - dr_cs, -dz_cs / 2),
         dr_cs,
         dz_cs,
         edgecolor="black",
@@ -9995,9 +9995,9 @@ def plot_cs_coil_structure(
     if dr_cs_turn > 0:
         n_lines = int(dr_cs / dr_cs_turn)
         for i in range(1, n_lines):
-            x = dr_bore + i * dr_cs_turn
+            x = dr_cs_bore + i * dr_cs_turn
             axis.plot([x, x], [-dz_cs / 2, dz_cs / 2], **t_kwargs)
-            x_left = -dr_bore - dr_cs + i * dr_cs_turn
+            x_left = -dr_cs_bore - dr_cs + i * dr_cs_turn
             axis.plot([x_left, x_left], [-dz_cs / 2, dz_cs / 2], **t_kwargs)
     # Plot horizontal lines (along Z) for each turn
     if dz_cs_turn > 0:
@@ -10005,9 +10005,9 @@ def plot_cs_coil_structure(
         for j in range(1, n_hlines):
             y = -dz_cs / 2 + j * dz_cs_turn
             # Right CS
-            axis.plot([dr_bore, dr_bore + dr_cs], [y, y], **t_kwargs)
+            axis.plot([dr_cs_bore, dr_cs_bore + dr_cs], [y, y], **t_kwargs)
             # Left CS
-            axis.plot([-dr_bore - dr_cs, -dr_bore], [y, y], **t_kwargs)
+            axis.plot([-dr_cs_bore - dr_cs, -dr_cs_bore], [y, y], **t_kwargs)
 
         l_kwargs = {"color": "black", "linestyle": "--", "linewidth": 0.6, "alpha": 0.5}
 
@@ -10015,14 +10015,14 @@ def plot_cs_coil_structure(
         axis.axhline(y=0.0, **l_kwargs)
         # Plot a vertical line at x = 0.0
         axis.axvline(x=0.0, **l_kwargs)
-        # Plot a vertical line at x = dr_bore
-        axis.axvline(x=dr_bore, **l_kwargs)
-        # Plot a vertical line at x = -dr_bore
-        axis.axvline(x=-dr_bore, **l_kwargs)
-        # Plot a vertical line at x = dr_bore + dr_cs
-        axis.axvline(x=(dr_bore + dr_cs), **l_kwargs)
-        # Plot a vertical line at x = -dr_bore - dr_cs
-        axis.axvline(x=-(dr_bore + dr_cs), **l_kwargs)
+        # Plot a vertical line at x = dr_cs_bore
+        axis.axvline(x=dr_cs_bore, **l_kwargs)
+        # Plot a vertical line at x = -dr_cs_bore
+        axis.axvline(x=-dr_cs_bore, **l_kwargs)
+        # Plot a vertical line at x = dr_cs_bore + dr_cs
+        axis.axvline(x=(dr_cs_bore + dr_cs), **l_kwargs)
+        # Plot a vertical line at x = -dr_cs_bore - dr_cs
+        axis.axvline(x=-(dr_cs_bore + dr_cs), **l_kwargs)
         # Plot a vertical line at y= dz_cs / 2
         axis.axhline(y=(dz_cs / 2), **l_kwargs)
         # Plot a vertical line at y= -dz_cs / 2
