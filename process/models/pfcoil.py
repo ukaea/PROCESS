@@ -4378,12 +4378,20 @@ class CSCoil(Model):
         hp_term_1 = k * ((2.0e0 + f_poisson_cs_structure) / (3.0e0 * (alpha + 1.0e0)))
 
         hp_term_2 = (
-            alpha**2 + alpha + 1.0e0 - alpha**2 / epsilon**2 - epsilon * (alpha + 1.0e0)
+            alpha**2
+            + alpha
+            + 1.0e0
+            - (alpha**2 / epsilon**2)
+            - epsilon * (alpha + 1.0e0)
         )
+        if np.isclose(hp_term_2, 0.0):
+            hp_term_2 = 0.0
 
         hp_term_3 = m * ((3.0e0 + f_poisson_cs_structure) / (8.0e0))
 
         hp_term_4 = alpha**2 + 1.0e0 - alpha**2 / epsilon**2 - epsilon**2
+        if np.isclose(hp_term_4, 0.0):
+            hp_term_4 = 0.0
 
         return hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
