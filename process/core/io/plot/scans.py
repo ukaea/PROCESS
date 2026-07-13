@@ -30,9 +30,10 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import numpy as np
-from process.data_structure.numerics import SolverOutputCondition
+
 from process.core.io.mfile import MFile
 from process.core.io.variable_metadata import var_dicts as meta
+from process.data_structure.numerics import SolverOutputCondition
 
 
 def plot_scan(

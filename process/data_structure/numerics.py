@@ -10,10 +10,10 @@ from process.core.solver.iteration_variables import ITERATION_VARIABLES
 class SolverOutputCondition(IntEnum):
     """Enum for the possible conditions that can be returned by the solvers.
     This is for the `ifail` condition.
-    
+
     Notes
     -----
-    - These outputs can be solver specific, but the ones defined here are common to 
+    - These outputs can be solver specific, but the ones defined here are common to
     all solvers used in PROCESS.
     """
 
@@ -23,7 +23,7 @@ class SolverOutputCondition(IntEnum):
     IMPROPER_INPUT = 0
     # Solver failed due to improper input (e.g. invalid parameters, or failure to
     # satisfy solver preconditions)
-    
+
     CONVERGED = 1
     # Solver converged successfully
 
