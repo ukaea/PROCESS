@@ -70,7 +70,7 @@ docs = [
   "mkdocs-glightbox>=0.3.4",
   "pymdown-extensions>=6.3",
   "bokeh>=3.4.0,<4",
-  "mkdocstrings[python]==1.0.4",
+  "mkdocstrings[python]==1.0.6",
   "Jinja2>=3.0",
   "mkdocs-jupyter>=0.24,<0.27",
   "mkdocs-gen-files",
