@@ -16,6 +16,7 @@ from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.build_variables import (
+    CSPrecompressionConfiguration,
     InboardBlanketConfiguration,
     TFCSRadialConfiguration,
 )
@@ -821,7 +822,11 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Ensure that no pre-compression structure
     # is used for bucked and wedged design
-    if data.tfcoil.i_tf_bucking >= 2 and data.build.i_cs_precomp == 1:
+    if (
+        data.tfcoil.i_tf_bucking >= 2
+        and CSPrecompressionConfiguration(data.build.i_cs_precomp)
+        == CSPrecompressionConfiguration.CS_PRECOMPRESSION_STRUCTURE_PRESENT
+    ):
         raise ProcessValidationError(
             "No CS precompression structure for bucked and wedged, use i_cs_precomp = 0"
         )

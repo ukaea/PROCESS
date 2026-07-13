@@ -6,7 +6,10 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure.build_variables import TFCSRadialConfiguration
+from process.data_structure.build_variables import (
+    CSPrecompressionConfiguration,
+    TFCSRadialConfiguration,
+)
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.physics.current_drive import (
     CurrentDriveMethodType,
@@ -1659,9 +1662,10 @@ class Build(Model):
                 self.data.build.dz_fw_plasma_gap,
             )
 
-        # Calculate pre-compression structure thickness is self.data.build.i_cs_precomp=1
+        # Calculate pre-compression structure thickness
         if (
-            self.data.build.i_cs_precomp == 1
+            CSPrecompressionConfiguration(self.data.build.i_cs_precomp)
+            == CSPrecompressionConfiguration.CS_PRECOMPRESSION_STRUCTURE_PRESENT
             and self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_OUTSIDE_CS
         ):
             self.data.build.dr_cs_precomp = self.data.build.fseppc / (
@@ -1676,7 +1680,8 @@ class Build(Model):
                 )
             )
         elif (
-            self.data.build.i_cs_precomp == 1
+            CSPrecompressionConfiguration(self.data.build.i_cs_precomp)
+            == CSPrecompressionConfiguration.CS_PRECOMPRESSION_STRUCTURE_PRESENT
             and self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
         ):
             self.data.build.dr_cs_precomp = self.data.build.fseppc / (
