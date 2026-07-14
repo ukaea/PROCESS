@@ -618,7 +618,7 @@ class PlasmaDensityLimit(Model):
     def output(self):
         """Output density limit information to file."""
         po.oheadr(self.outfile, "Plasma density limits")
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Plasma density limit model used",
             "(i_density_limit)",

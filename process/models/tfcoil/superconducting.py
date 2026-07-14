@@ -278,7 +278,7 @@ class SuperconductingTFCoil(TFCoil):
         po.oheadr(self.outfile, "General Superconducting TF Coil Parameters ")
         # Turn/WP geometry
 
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Superconducting TF coil turn type",
             "(i_tf_turn_type)",
@@ -375,7 +375,7 @@ class SuperconductingTFCoil(TFCoil):
         # Winding pack structure
         po.osubhd(self.outfile, "TF winding pack (WP) geometry:")
 
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Winding pack shape selection switch",
             "(i_tf_wp_geom)",
@@ -509,7 +509,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Number of turns
         po.osubhd(self.outfile, "WP turn information:")
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Turn parameterisation",
             "(i_tf_turns_integer)",
@@ -528,13 +528,13 @@ class SuperconductingTFCoil(TFCoil):
             "OP ",
         )
         if self.data.tfcoil.i_tf_turns_integer == 1:
-            po.ovarin(
+            po.ovarre(
                 self.outfile,
                 "Number of TF pancakes",
                 "(n_tf_wp_pancakes)",
                 self.data.tfcoil.n_tf_wp_pancakes,
             )
-            po.ovarin(
+            po.ovarre(
                 self.outfile,
                 "Number of TF layers",
                 "(n_tf_wp_layers)",
@@ -841,7 +841,7 @@ class SuperconductingTFCoil(TFCoil):
     def output_tf_superconductor_info(self):
         """Output TF superconductor information"""
         po.oheadr(self.outfile, "TF Coils Superconductor Information")
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "TF superconductor switch",
             "(i_tf_sc_mat)",
@@ -3747,7 +3747,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             + self.data.tfcoil.a_tf_wp_extra_void
             + self.data.tfcoil.a_tf_wp_coolant_channels
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Check total area fractions in winding pack = 1",
             "",
@@ -3760,20 +3760,20 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             )
             / ap,
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "minimum TF conductor temperature margin  (K)",
             "(temp_tf_superconductor_margin_min)",
             self.data.tfcoil.temp_tf_superconductor_margin_min,
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "TF conductor temperature margin (K)",
             "(temp_tf_superconductor_margin)",
             self.data.tfcoil.temp_tf_superconductor_margin,
         )
 
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Elastic properties behavior",
             "(i_tf_cond_eyoung_axial)",
@@ -4782,7 +4782,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "Cable information")
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Number of CroCo strands in the cable (fixed) ",
             "",

@@ -365,24 +365,24 @@ class Costs2015(Model):
             self.data.costs_2015.maintenance / 1.0e6,
         )
         po.oblnkl(self.outfile)
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Net electric output (MW)",
             "(p_plant_electric_net_mw)",
             self.data.heat_transport.p_plant_electric_net_mw,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile, "Capacity factor", "(cpfact)", self.data.costs.cpfact, "OP "
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Mean electric output (MW)",
             "(mean_electric_output)",
             self.data.costs_2015.mean_electric_output,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Capital cost / mean electric output ($/W)",
             "",
@@ -391,7 +391,7 @@ class Costs2015(Model):
             / 1.0e6,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Levelized cost of electricity ($/MWh)",
             "(coe)",
@@ -1215,4 +1215,4 @@ class Costs2015(Model):
         if descr == "not used":
             return
 
-        po.ovarrf(file, descr, str(vname), value)
+        po.ovarre(file, descr, str(vname), value)

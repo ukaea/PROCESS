@@ -304,14 +304,14 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
             po.osubhd(self.outfile, "Radiation heating :")
 
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Radiation heating power into the divertor (MW)",
                 "(p_div_rad_total_mw)",
                 self.data.fwbs.p_div_rad_total_mw,
                 "OP ",
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Radiation heating power into the first wall (MW)",
                 "(p_fw_rad_total_mw)",
@@ -424,13 +424,13 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 "OP ",
             )
 
-            po.ovarin(
+            po.ovarre(
                 self.outfile,
                 "Switch for plant secondary cycle ",
                 "(i_thermal_electric_conversion)",
                 self.data.fwbs.i_thermal_electric_conversion,
             )
-            po.ovarin(
+            po.ovarre(
                 self.outfile,
                 "Switch for plant secondary cycle (liquid metal breeder) ",
                 "(secondary_cycle_liq)",
@@ -928,25 +928,25 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
             po.osubhd(self.outfile, "Radial Thickness: ")
 
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Inboard radial first wall thickness (m)",
                 "(dr_fw_inboard)",
                 self.data.build.dr_fw_inboard,
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Outboard radial first wall thickness (m)",
                 "(dr_fw_outboard)",
                 self.data.build.dr_fw_outboard,
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Inboard radial breeder zone thickness (m)",
                 "(blbuith)",
                 self.data.build.blbuith,
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Outboard radial breeder zone thickness (m)",
                 "(blbuoth)",
@@ -959,35 +959,35 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         self.output_blkt_volumes_and_areas()
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "First Wall Armour Volume (m3)",
             "(fw_armour_vol)",
             self.data.fwbs.fw_armour_vol,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "First Wall Volume (m3)",
             "(vol_fw_total)",
             self.data.fwbs.vol_fw_total,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Blanket Volume (m3)",
             "(vol_blkt_total)",
             self.data.fwbs.vol_blkt_total,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Shield Volume (m3)",
             "(vol_shld_total)",
             self.data.fwbs.vol_shld_total,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Vacuum vessel volume (m3)",
             "(vol_vv)",

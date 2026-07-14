@@ -538,7 +538,7 @@ class PlasmaGeom(Model):
         if self.data.stellarator.istell == 0:
             if self.data.physics.itart == 0:
                 self.data.physics.itart_r = self.data.physics.itart
-                po.ovarin(
+                po.ovarre(
                     self.outfile,
                     "Tokamak aspect ratio = Conventional, itart = 0",
                     "(itart)",
@@ -546,14 +546,14 @@ class PlasmaGeom(Model):
                 )
             elif self.data.physics.itart == 1:
                 self.data.physics.itart_r = self.data.physics.itart
-                po.ovarin(
+                po.ovarre(
                     self.outfile,
                     "Tokamak aspect ratio = Spherical, itart = 1",
                     "(itart)",
                     self.data.physics.itart_r,
                 )
 
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Plasma shaping model",
             "(i_plasma_shape)",
@@ -566,18 +566,18 @@ class PlasmaGeom(Model):
             "plasma shape model is used :",
         )
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile, "Major radius (R₀) (m)", "(rmajor)", self.data.physics.rmajor
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Minor radius (a) (m)",
             "(rminor)",
             self.data.physics.rminor,
             "OP ",
         )
-        po.ovarrf(self.outfile, "Aspect ratio (A)", "(aspect)", self.data.physics.aspect)
-        po.ovarrf(
+        po.ovarre(self.outfile, "Aspect ratio (A)", "(aspect)", self.data.physics.aspect)
+        po.ovarre(
             self.outfile,
             "Plasma squareness (ζ)",
             "(plasma_square)",
@@ -586,7 +586,7 @@ class PlasmaGeom(Model):
         )
         po.oblnkl(self.outfile)
 
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Plasma geometry model",
             "(i_plasma_geometry)",
@@ -609,7 +609,7 @@ class PlasmaGeom(Model):
                 f"X-Point Elongation set from: {geom_type.kappa_model.description}",
             )
 
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Elongation, X-point (κₐ)",
                 "(kappa)",
@@ -619,7 +619,7 @@ class PlasmaGeom(Model):
                 else "OP",
             )
             if geom_type.kappa_model == PlasmaGeometryModels.ZOHM_ITER:
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Zohm scaling adjustment factor",
                     "(fkzohm)",
@@ -632,7 +632,7 @@ class PlasmaGeom(Model):
                 self.outfile,
                 f"95% Elongation set from: {geom_type.kappa95_model.description}",
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Elongation, 95% surface (κ₉₅)",
                 "(kappa95)",
@@ -649,7 +649,7 @@ class PlasmaGeom(Model):
                 f"X-Point Triangularity set from: {geom_type.triang_model.description}",
             )
 
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Triangularity, X-point (δ)",
                 "(triang)",
@@ -664,7 +664,7 @@ class PlasmaGeom(Model):
                 f"95% Triangularity set from: {geom_type.triang95_model.description}",
             )
 
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Triangularity, 95% surface (δ₉₅)",
                 "(triang95)",
@@ -676,7 +676,7 @@ class PlasmaGeom(Model):
 
             po.oblnkl(self.outfile)
 
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Plasma poloidal perimeter (m)",
                 "(len_plasma_poloidal)",
