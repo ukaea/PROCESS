@@ -1672,18 +1672,6 @@ class Build(Model):
                 self.data.build.dz_fw_plasma_gap,
             )
 
-        # Calculate pre-compression structure thickness is self.data.build.i_cs_precomp=1
-        if CSPrecompressionConfiguration(self.data.build.i_cs_precomp)== CSPrecompressionConfiguration.CS_PRECOMPRESSION_STRUCTURE_PRESENT:
-            self.data.build.dr_cs_precomp = self.data.build.fseppc / (
-                2.0e0
-                * np.pi
-                * self.data.build.fcspc
-                * self.data.build.sigallpc
-                * (2.0 * self.data.build.dr_cs_bore + self.data.build.dr_cs)
-            )
-        else:
-            self.data.build.dr_cs_precomp = 0.0e0
-
         # Issue #514 Radial dimensions of inboard leg
         # Calculate self.data.build.dr_tf_inboard if
         # self.data.tfcoil.dr_tf_wp_with_insulation is an iteration variable (140)
@@ -1711,6 +1699,21 @@ class Build(Model):
                 + self.data.build.dr_cs_tf_gap
             )
             self.data.build.dr_cs_bore = self.data.build.dr_bore
+
+        # Calculate pre-compression structure thickness
+        if (
+            CSPrecompressionConfiguration(self.data.build.i_cs_precomp)
+            == CSPrecompressionConfiguration.CS_PRECOMPRESSION_STRUCTURE_PRESENT
+        ):
+            self.data.build.dr_cs_precomp = self.data.build.fseppc / (
+                2.0e0
+                * np.pi
+                * self.data.build.fcspc
+                * self.data.build.sigallpc
+                * (2.0 * self.data.build.dr_cs_bore + self.data.build.dr_cs)
+            )
+        else:
+            self.data.build.dr_cs_precomp = 0.0e0
 
         # Radial build to tfcoil middle [m]
         self.data.build.r_tf_inboard_mid = (
