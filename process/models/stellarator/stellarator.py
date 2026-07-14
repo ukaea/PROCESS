@@ -2358,7 +2358,7 @@ class Stellarator(Model):
             self.data.physics.fusden_alpha_total,
             self.data.physics.plasma_current,
             sbar,
-            self.data.physics.nd_plasma_alphas_vol_avg,
+            self.data.physics.nd_plasma_alphas_thermal_vol_avg,
             self.data.physics.t_energy_confinement,
             self.data.physics.vol_plasma,
             self.data.physics.burnup_in,

@@ -100,7 +100,7 @@ boundu(10) = 1.2
 * ixc = 50                * itv_fiooic
 f_j_tf_wp_critical_max = 0.8
 
-ixc = 109 * f_nd_alpha_electron: thermal alpha density / electron density
+ixc = 109 * f_nd_alpha_thermal_electron: thermal alpha density / electron density
 boundl(109) = 0.0001
 boundu(109) = 0.4
 
