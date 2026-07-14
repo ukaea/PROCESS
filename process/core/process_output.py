@@ -68,7 +68,7 @@ def write(file, string: str):
     elif file == constants.IOTTY:
         print(string)
     else:
-        error_msg = f"Unknown file identifier {file}."
+        error_msg = f"Unknown file identifier {file}, it is not recognised as either an MFile, OUTFile, or terminal."
         raise ProcessValueError(error_msg)
 
 
