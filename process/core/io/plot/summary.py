@@ -14237,7 +14237,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: MFile, scan: in
             # For a lower limit, the normalised value is the residual itself
             normalised_value = con_residual_norm
             bar_left = 0
-            # Set the bar width to be 10 times the normalised value,
+            # Set the bar width to be 1/10 times the normalised value,
             # but cap it at 1.0 to avoid overly long bars
             bar_width = min(normalised_value * 0.1, 1.0)
 
