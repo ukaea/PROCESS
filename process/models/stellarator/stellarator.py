@@ -13,6 +13,7 @@ from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.data_structure.physics_variables import PlasmaIgnitionModel
 from process.models.engineering.pumping import CoolantType
 from process.models.physics.physics import Physics, rether
 from process.models.power import PumpingPowerModelTypes
@@ -1975,7 +1976,8 @@ class Stellarator(Model):
         #  If ignited, then ignore beam fusion effects
 
         if (self.data.current_drive.p_hcd_beam_injected_total_mw != 0.0e0) and (  # noqa: RUF069
-            self.data.physics.i_plasma_ignited == 0
+            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.NON_IGNITED
         ):
             (
                 self.data.physics.beta_beam,
@@ -2152,7 +2154,10 @@ class Stellarator(Model):
             0.00001e0, powht
         )  # To avoid negative heating power. This line is VERY important
 
-        if self.data.physics.i_plasma_ignited == 0:
+        if (
+            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.NON_IGNITED
+        ):
             # if not ignited add the auxiliary power
             powht += self.data.current_drive.p_hcd_injected_total_mw
 
@@ -2252,14 +2257,7 @@ class Stellarator(Model):
             + self.data.physics.e_plasma_ions_thermal
         )
 
-        (
-            self.data.physics.pden_electron_transport_loss_mw,
-            self.data.physics.pden_ion_transport_loss_mw,
-            self.data.physics.t_electron_energy_confinement,
-            self.data.physics.t_ion_energy_confinement,
-            self.data.physics.t_energy_confinement,
-            self.data.physics.p_plasma_loss_mw,
-        ) = self.physics.confinement.calculate_confinement_time(
+        confinement_time_data = self.physics.confinement.calculate_confinement_time(
             self.data.physics.m_fuel_amu,
             self.data.physics.p_alpha_total_mw,
             self.data.physics.aspect,
@@ -2286,6 +2284,23 @@ class Stellarator(Model):
             eden_plasma_electrons_thermal_vol_avg=self.data.physics.eden_plasma_electrons_thermal_vol_avg,
             eden_plasma_ions_thermal_vol_avg=self.data.physics.eden_plasma_ions_thermal_vol_avg,
         )
+
+        self.data.physics.pden_electron_transport_loss_mw = (
+            confinement_time_data.pden_electron_transport_loss_mw
+        )
+        self.data.physics.pden_ion_transport_loss_mw = (
+            confinement_time_data.pden_ion_transport_loss_mw
+        )
+        self.data.physics.t_electron_energy_confinement = (
+            confinement_time_data.t_electron_energy_confinement
+        )
+        self.data.physics.t_energy_confinement = (
+            confinement_time_data.t_plasma_energy_confinement
+        )
+        self.data.physics.t_ion_energy_confinement = (
+            confinement_time_data.t_ion_energy_confinement
+        )
+        self.data.physics.p_plasma_loss_mw = confinement_time_data.p_plasma_loss_mw
 
         self.data.physics.ntau, self.data.physics.nTtau = (
             self.physics.confinement.calculate_double_and_triple_product(

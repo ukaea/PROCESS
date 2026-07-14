@@ -13,6 +13,13 @@ from enum import IntEnum
 import numpy as np
 
 
+class PlasmaIgnitionModel(IntEnum):
+    """Enum for plasma ignition models."""
+
+    NON_IGNITED = 0
+    IGNITED = 1
+
+
 class DivertorNumberModels(IntEnum):
     """Enum for divertor number models. `i_single_null` is the index for this enum."""
 

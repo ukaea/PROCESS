@@ -11,7 +11,11 @@ from process.core.model import DataStructure
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.exhaust import PlasmaExhaust
-from process.models.physics.physics import BetaComponentLimits, PlasmaBeta
+from process.models.physics.physics import (
+    BetaComponentLimits,
+    PlasmaBeta,
+    PlasmaIgnitionModel,
+)
 from process.models.tfcoil.base import TFConductorModel
 
 ConstraintSymbolType = Literal["=", ">=", "<="]
@@ -270,7 +274,10 @@ def constraint_equation_2(constraint_registration, data):
         pnumerator = pscaling
 
     # if plasma not ignited include injected power
-    if data.physics.i_plasma_ignited == 0:
+    if (
+        PlasmaIgnitionModel(data.physics.i_plasma_ignited)
+        == PlasmaIgnitionModel.NON_IGNITED
+    ):
         pdenom = (
             data.physics.f_p_alpha_plasma_deposited * data.physics.pden_alpha_total_mw
             + data.physics.pden_non_alpha_charged_mw
@@ -303,7 +310,10 @@ def constraint_equation_3(constraint_registration, data):
     vol_plasma: plasma volume (m3)
     """
     # No assume plasma ignition:
-    if data.physics.i_plasma_ignited == 0:
+    if (
+        PlasmaIgnitionModel(data.physics.i_plasma_ignited)
+        == PlasmaIgnitionModel.NON_IGNITED
+    ):
         return eq(
             (
                 data.physics.pden_ion_transport_loss_mw
@@ -363,7 +373,10 @@ def constraint_equation_4(constraint_registration, data):
         pnumerator = pscaling
 
     # if plasma not ignited include injected power
-    if data.physics.i_plasma_ignited == 0:
+    if (
+        PlasmaIgnitionModel(data.physics.i_plasma_ignited)
+        == PlasmaIgnitionModel.NON_IGNITED
+    ):
         pdenom = (
             data.physics.f_p_alpha_plasma_deposited
             * data.physics.f_pden_alpha_electron_mw
@@ -453,7 +466,7 @@ def constraint_equation_7(constraint_registration, data):
     nd_beam_ions_out: hot beam ion density from calculation (/m³)
     nd_beam_ions: hot beam ion density, variable (/m³)
     """
-    if data.physics.i_plasma_ignited == 1:
+    if PlasmaIgnitionModel(data.physics.i_plasma_ignited) == PlasmaIgnitionModel.IGNITED:
         raise ProcessValueError("Do not use constraint equation 7 if i_plasma_ignited=1")
 
     return eq(
@@ -808,7 +821,10 @@ def constraint_equation_28(constraint_registration, data):
     during plasma start-up, and is excluded from all steady-state
     power balance calculations.
     """
-    if data.physics.i_plasma_ignited != 0:
+    if (
+        PlasmaIgnitionModel(data.physics.i_plasma_ignited)
+        != PlasmaIgnitionModel.NON_IGNITED
+    ):
         raise ProcessValueError("Do not use constraint 28 if i_plasma_ignited=1")
 
     return geq(
@@ -1390,8 +1406,8 @@ def constraint_equation_72(constraint_registration, data):
     Reverse the sign so it works as an inequality constraint (tmp_cc > 0)
     This will have no effect if it is used as an equality constraint because it will be squared.
 
-    alstroh: allowable hoop stress in Central Solenoid structural material (Pa)
-    s_shear_cs_peak: Maximum shear stress coils/central solenoid (Pa)
+    stress_cs_steel_max: allowable stress in Central Solenoid structural material (Pa)
+    stress_shear_cs_peak: Maximum shear stress coils/central solenoid (Pa)
     sig_tf_cs_bucked: Maximum shear stress in CS case at flux swing (no current in CS)
                           can be significant for the bucked and weged design
     i_tf_bucking: switch for TF structure design
@@ -1403,16 +1419,16 @@ def constraint_equation_72(constraint_registration, data):
     ):
         return leq(
             max(
-                data.pf_coil.s_shear_cs_peak,
+                data.pf_coil.stress_shear_cs_peak,
                 data.tfcoil.sig_tf_cs_bucked,
             ),
-            data.pf_coil.alstroh,
+            data.pf_coil.stress_cs_steel_max,
             constraint_registration,
         )
     # Free standing CS
     return leq(
-        data.pf_coil.s_shear_cs_peak,
-        data.pf_coil.alstroh,
+        data.pf_coil.stress_shear_cs_peak,
+        data.pf_coil.stress_cs_steel_max,
         constraint_registration,
     )
 
@@ -1739,7 +1755,10 @@ def constraint_equation_91(constraint_registration, data):
     te0_ecrh_achievable: Max. achievable electron temperature at ignition point
     """
     # Achievable ECRH te needs to be larger than needed te for igntion
-    if data.physics.i_plasma_ignited == 0:
+    if (
+        PlasmaIgnitionModel(data.physics.i_plasma_ignited)
+        == PlasmaIgnitionModel.NON_IGNITED
+    ):
         value = (
             data.stellarator.powerht_constraint
             + data.current_drive.p_hcd_primary_extra_heat_mw

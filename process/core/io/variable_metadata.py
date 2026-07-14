@@ -167,7 +167,7 @@ var_dicts = {
         description="Number of cycles",
         units="",
     ),
-    "alstroh": VariableMetadata(
+    "stress_cs_steel_max": VariableMetadata(
         latex=r"$\sigma_{\mathrm{oh}}^{\mathrm{max}}$[$Pa$]",
         description="Maximum allowable stress",
         units="Pa",

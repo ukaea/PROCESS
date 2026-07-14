@@ -3,6 +3,7 @@ import logging
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
+from process.data_structure.physics_variables import PlasmaIgnitionModel
 
 logger = logging.getLogger(__name__)
 
@@ -142,7 +143,7 @@ def output(stellarator, data: DataStructure, f_p_beam_injected_ions=None):
     elif data.stellarator.isthtr == 3:
         po.ocmmnt(stellarator.outfile, "Neutral Beam Injection Heating")
 
-    if data.physics.i_plasma_ignited == 1:
+    if PlasmaIgnitionModel(data.physics.i_plasma_ignited) == PlasmaIgnitionModel.IGNITED:
         po.ocmmnt(
             stellarator.outfile,
             "Ignited plasma; injected power only used for start-up phase",
