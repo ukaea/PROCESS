@@ -155,10 +155,10 @@ class BlanketData:
     n_blkt_outboard_channels: float = 0.0
     """Outboard total number of blanket coolant pipes"""
 
-    mfblktpi: float = 0.0
+    mflow_blkt_inboard_coolant_channel: float = 0.0
     """Inboard mass flow rate per coolant pipe (kg/s)"""
 
-    mfblktpo: float = 0.0
+    mflow_blkt_outboard_coolant_channel: float = 0.0
     """Outboard mass flow rate per coolant pipe (kg/s)"""
 
     vel_blkt_inboard_coolant: float = 0.0
