@@ -1778,7 +1778,7 @@ def test_sctfcoil_nuclear_heating_iter90(
     """
     Automatically generated Regression Unit Test for sctfcoil_nuclear_heating_iter90.
 
-    This test was generated using data from stellarator/fwbs.IN.DAT.
+    This test was generated using data from a modified tests/regression/input_files/stellarator_helias.IN.DAT.
 
     :param sctfcoilnuclearheatingiter90param: data used to mock and assert in this test.
     :type sctfcoilnuclearheatingiter90param: sctfcoilnuclearheatingiter90param

@@ -812,7 +812,7 @@ def test_acc21(acc21param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc21.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc21param: the data used to mock and assert in this test.
     :type acc21param: acc21param
@@ -975,7 +975,7 @@ def test_acc2211(acc2211param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2211.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2211param: the data used to mock and assert in this test.
     :type acc2211param: acc2211param
@@ -1194,7 +1194,7 @@ def test_acc2212(acc2212param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2212.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2212param: the data used to mock and assert in this test.
     :type acc2212param: acc2212param
@@ -1381,7 +1381,7 @@ def test_acc2213(acc2213param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2213.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2213param: the data used to mock and assert in this test.
     :type acc2213param: acc2213param
@@ -1458,7 +1458,7 @@ def test_acc2214(acc2214param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2214.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2214param: the data used to mock and assert in this test.
     :type acc2214param: acc2214param
@@ -1527,7 +1527,7 @@ def test_acc2215(acc2215param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2215.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2215param: the data used to mock and assert in this test.
     :type acc2215param: acc2215param
@@ -1753,7 +1753,7 @@ def test_acc2221(acc2221param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2221.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2221param: the data used to mock and assert in this test.
     :type acc2221param: acc2221param
@@ -2497,7 +2497,7 @@ def test_acc2222(acc2222param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2222.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2222param: the data used to mock and assert in this test.
     :type acc2222param: acc2222param
@@ -2642,7 +2642,7 @@ def test_acc2223(acc2223param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2223.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2223param: the data used to mock and assert in this test.
     :type acc2223param: acc2223param
@@ -2801,7 +2801,7 @@ def test_acc223(acc223param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc223.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc223param: the data used to mock and assert in this test.
     :type acc223param: acc223param
@@ -2960,7 +2960,7 @@ def test_acc224(acc224param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc224.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc224param: the data used to mock and assert in this test.
     :type acc224param: acc224param
@@ -3133,7 +3133,7 @@ def test_acc2251(acc2251param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2251.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2251param: the data used to mock and assert in this test.
     :type acc2251param: acc2251param
@@ -3314,7 +3314,7 @@ def test_acc2252(acc2252param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2252.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2252param: the data used to mock and assert in this test.
     :type acc2252param: acc2252param
@@ -3435,7 +3435,7 @@ def test_acc2253(acc2253param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2253.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2253param: the data used to mock and assert in this test.
     :type acc2253param: acc2253param
@@ -3514,7 +3514,7 @@ def test_acc226(acc226param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc226.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc226param: the data used to mock and assert in this test.
     :type acc226param: acc226param
@@ -3613,7 +3613,7 @@ def test_acc2261_rut(acc2261param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2261.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2261param: the data used to mock and assert in this test.
     :type acc2261param: acc2261param
@@ -3748,7 +3748,7 @@ def test_acc2262_rut(acc2262param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2262.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2262param: the data used to mock and assert in this test.
     :type acc2262param: acc2262param
@@ -3849,7 +3849,7 @@ def test_acc2263_rut(acc2263param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2263.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2263param: the data used to mock and assert in this test.
     :type acc2263param: acc2263param
@@ -3916,7 +3916,7 @@ def test_acc227(acc227param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc227.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc227param: the data used to mock and assert in this test.
     :type acc227param: acc227param
@@ -3975,7 +3975,7 @@ def test_acc2271_rut(acc2271param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2271.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2271param: the data used to mock and assert in this test.
     :type acc2271param: acc2271param
@@ -4060,7 +4060,7 @@ def test_acc2272_rut(acc2272param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2272.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2272param: the data used to mock and assert in this test.
     :type acc2272param: acc2272param
@@ -4139,7 +4139,7 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2273.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2273param: the data used to mock and assert in this test.
     :type acc2273param: acc2273param
@@ -4206,7 +4206,7 @@ def test_acc2274_rut(acc2274param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2274.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc2274param: the data used to mock and assert in this test.
     :type acc2274param: acc2274param
@@ -4261,7 +4261,7 @@ def test_acc228_rut(acc228param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc228.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc228param: the data used to mock and assert in this test.
     :type acc228param: acc228param
@@ -4312,7 +4312,7 @@ def test_acc229_rut(acc229param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc229.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc229param: the data used to mock and assert in this test.
     :type acc229param: acc229param
@@ -4371,7 +4371,7 @@ def test_acc23_rut(acc23param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc23.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc23param: the data used to mock and assert in this test.
     :type acc23param: acc23param
@@ -4438,7 +4438,7 @@ def test_acc24(acc24param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc24.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc24param: the data used to mock and assert in this test.
     :type acc24param: acc24param
@@ -4489,7 +4489,7 @@ def test_acc241_rut(acc241param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc241.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc241param: the data used to mock and assert in this test.
     :type acc241param: acc241param
@@ -4546,7 +4546,7 @@ def test_acc242_rut(acc242param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc242.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc242param: the data used to mock and assert in this test.
     :type acc242param: acc242param
@@ -4605,7 +4605,7 @@ def test_acc243_rut(acc243param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc243.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc243param: the data used to mock and assert in this test.
     :type acc243param: acc243param
@@ -4652,7 +4652,7 @@ def test_acc244_rut(acc244param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc244.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc244param: the data used to mock and assert in this test.
     :type acc244param: acc244param
@@ -4699,7 +4699,7 @@ def test_acc245_rut(acc245param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc245.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc245param: the data used to mock and assert in this test.
     :type acc245param: acc245param
@@ -4739,7 +4739,7 @@ def test_acc25_rut(acc25param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc25.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc25param: the data used to mock and assert in this test.
     :type acc25param: acc25param
@@ -4808,7 +4808,7 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc26.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc26param: the data used to mock and assert in this test.
     :type acc26param: acc26param
@@ -4919,7 +4919,7 @@ def test_acc9_rut(acc9param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc9.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acc9param: the data used to mock and assert in this test.
     :type acc9param: acc9param
@@ -5200,7 +5200,7 @@ def test_coelc(coelcparam, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for coelc.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param coelcparam: the data used to mock and assert in this test.
     :type coelcparam: coelcparam

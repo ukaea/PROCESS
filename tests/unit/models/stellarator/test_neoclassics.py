@@ -960,7 +960,7 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
     """
     Automatically generated Regression Unit Test for init_neoclassics.
 
-    This test was generated using data from stellarator/stellarator.IN.DAT.
+    This test was generated using data from helias5b.IN.DAT.
 
     :param initneoclassicsparam: the data used to mock and assert in this test.
     :type initneoclassicsparam: initneoclassicsparam

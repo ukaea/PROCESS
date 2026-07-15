@@ -89,7 +89,7 @@ def test_cryo(cryoparam, monkeypatch, power):
     """
     Automatically generated Regression Unit Test for cryo.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param cryoparam: the data used to mock and assert in this test.
     :type cryoparam: cryoparam
@@ -1487,7 +1487,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
     """
     Automatically generated Regression Unit Test for pfpwr.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param pfpwrparam: the data used to mock and assert in this test.
     :type pfpwrparam: pfpwrparam
@@ -1632,7 +1632,7 @@ def test_acpow(acpowparam, monkeypatch, power):
     """
     Automatically generated Regression Unit Test for acpow.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param acpowparam: the data used to mock and assert in this test.
     :type acpowparam: acpowparam
@@ -1796,7 +1796,7 @@ def test_plant_electric_production(plantelecprodparam, monkeypatch, power):
     """
     Automatically generated Regression Unit Test for plant_electric_production.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param power2param: the data used to mock and assert in this test.
     :type power2param: power2param

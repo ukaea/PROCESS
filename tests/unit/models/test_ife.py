@@ -529,7 +529,7 @@ def test_sombld(sombldparam, monkeypatch, ife):
     """
     Automatically generated Regression Unit Test for sombld.
 
-    This test was generated using data from IFE/new_IFE2.IN.DAT.
+    This test was generated using data from the IFE.IN.DAT.
 
     :param sombldparam: the data used to mock and assert in this test.
     :type sombldparam: sombldparam
@@ -690,7 +690,7 @@ def test_driver(driverparam, ife):
     """
     Automatically generated Regression Unit Test for driver.
 
-    This test was generated using data from ife/normal_driver.IN.DAT.
+    This test was generated using data from a modified IFE.IN.DAT.
 
     :param driverparam: the data used to mock and assert in this test.
     :type driverparam: driverparam
@@ -724,7 +724,7 @@ def test_lasdrv(lasdrvparam, ife):
     """
     Automatically generated Regression Unit Test for lasdrv.
 
-    This test was generated using data from ife/laser_drive.IN.DAT.
+    This test was generated using data from a modified IFE.IN.DAT.
 
     :param lasdrvparam: the data used to mock and assert in this test.
     :type lasdrvparam: lasdrvparam
@@ -1120,7 +1120,7 @@ def test_hylbld(hylbldparam, monkeypatch, ife):
     """
     Automatically generated Regression Unit Test for hylbld.
 
-    This test was generated using data from ife/hylbld.IN.DAT.
+    This test was generated using data from a modified IFE.IN.DAT.
 
     :param hylbldparam: the data used to mock and assert in this test.
     :type hylbldparam: hylbldparam
@@ -1238,7 +1238,7 @@ def test_iondrv(iondrvparam, ife):
     """
     Automatically generated Regression Unit Test for iondrv.
 
-    This test was generated using data from ife/IFE.IN.DAT.
+    This test was generated using data from a modified IFE.IN.DAT.
 
     :param iondrvparam: the data used to mock and assert in this test.
     :type iondrvparam: iondrvparam
@@ -1560,7 +1560,7 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     """
     Automatically generated Regression Unit Test for ifefbs.
 
-    This test was generated using data from ife/IFE.IN.DAT.
+    This test was generated using data from a modified IFE.IN.DAT.
 
     :param ifefbsparam: the data used to mock and assert in this test.
     :type ifefbsparam: ifefbsparam
@@ -2011,7 +2011,7 @@ def test_genbld(genbldparam, monkeypatch, ife):
     """
     Automatically generated Regression Unit Test for genbld.
 
-    This test was generated using data from ife/generic.IN.DAT.
+    This test was generated using data from a modified IFE.IN.DAT.
 
     :param genbldparam: the data used to mock and assert in this test.
     :type genbldparam: genbldparam
@@ -2177,7 +2177,7 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     """
     Automatically generated Regression Unit Test for ifepw1.
 
-    This test was generated using data from ife/IFE.IN.DAT.
+    This test was generated using data from a modified IFE.IN.DAT.
 
     :param ifepw1param: the data used to mock and assert in this test.
     :type ifepw1param: ifepw1param
@@ -2631,7 +2631,7 @@ def test_bld2019(bld2019param, monkeypatch, ife):
     """
     Automatically generated Regression Unit Test for bld2019.
 
-    This test was generated using data from ife/2019.IN.DAT.
+    This test was generated using data from a modified IFE.IN.DAT.
 
     :param bld2019param: the data used to mock and assert in this test.
     :type bld2019param: bld2019param
