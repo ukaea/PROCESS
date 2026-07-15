@@ -6068,6 +6068,82 @@ class DetailedPhysics(Model):
             1 + (e_fast_ion_initial / e_fast_ion_critical) ** (3 / 2)
         )
 
+    @staticmethod
+    @nb.njit(cache=True)
+    def calculate_fast_ion_energy_to_ion_fraction(
+        e_fast_ion_initial: float,
+        e_fast_ion_critical: float | np.ndarray,
+        n_points: int = 100,
+    ) -> float | np.ndarray:
+        """
+        Fraction of fast-ion energy transferred to ions:
+
+            f_ai = (1/E0) * ∫[0..E0] dE / (1 + (Ecrit/E)^(3/2))
+
+        Parameters
+        ----------
+        e_fast_ion_initial : float
+            Initial fast-ion energy E0 (J).
+        e_fast_ion_critical : float | np.ndarray
+            Critical energy Ecrit (J), scalar or profile array.
+        n_points : int
+            Integration points for trapezoidal rule.
+
+        Returns
+        -------
+        float | np.ndarray
+            Energy fraction to ions (0..1).
+        """
+        if e_fast_ion_initial <= 0.0:
+            if np.ndim(e_fast_ion_critical) == 0:
+                return 0.0
+            return np.zeros_like(e_fast_ion_critical)
+
+        n_points = max(n_points, 2)
+
+        # Scalar case
+        if np.ndim(e_fast_ion_critical) == 0:
+            ecrit = float(e_fast_ion_critical)
+            if ecrit <= 0.0:
+                return 1.0
+
+            h = 1.0 / (n_points - 1)
+            prev = 0.0  # u->0 limit of integrand is 0
+            integral = 0.0
+
+            for i in range(1, n_points):
+                u = i * h
+                denom = 1.0 + (ecrit / (e_fast_ion_initial * u)) ** 1.5
+                cur = 1.0 / denom
+                integral += 0.5 * (prev + cur) * h
+                prev = cur
+
+            return integral
+
+        # 1D profile case
+        out = np.empty_like(e_fast_ion_critical)
+        h = 1.0 / (n_points - 1)
+
+        for j in range(e_fast_ion_critical.shape[0]):
+            ecrit = e_fast_ion_critical[j]
+            if ecrit <= 0.0:
+                out[j] = 1.0
+                continue
+
+            prev = 0.0
+            integral = 0.0
+
+            for i in range(1, n_points):
+                u = i * h
+                denom = 1.0 + (ecrit / (e_fast_ion_initial * u)) ** 1.5
+                cur = 1.0 / denom
+                integral += 0.5 * (prev + cur) * h
+                prev = cur
+
+            out[j] = integral
+
+        return out
+
     def output_detailed_physics(self):
         """Outputs detailed physics variables to file."""
         po.oheadr(self.outfile, "Detailed Plasma")
