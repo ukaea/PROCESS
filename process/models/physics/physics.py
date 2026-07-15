@@ -5480,7 +5480,7 @@ class DetailedPhysics(Model):
         )
 
         # ==================================
-        # Ion slwoing down critical energies
+        # Ion slowing down critical energies
         # ==================================
 
         e_crit_vol_avg = self.calculate_simple_ion_slowing_critical_energy(
@@ -5536,6 +5536,16 @@ class DetailedPhysics(Model):
                     ],
                 ),
             )
+        )
+
+        # ==================================
+        # Alpha particle thermalisation time
+        # ==================================
+
+        self.data.physics.t_plasma_fast_alpha_thermalisation_profile = self.calculate_fast_ion_thermalisation_time(
+            e_fast_ion_initial=constants.DT_ALPHA_ENERGY,
+            e_fast_ion_critical=self.data.physics.e_plasma_alpha_fast_critical_profile,
+            t_ion_spitzer_slowing_down=self.data.physics.t_plasma_electron_alpha_spitzer_slow_profile,
         )
 
     @staticmethod
@@ -6034,9 +6044,9 @@ class DetailedPhysics(Model):
     @nb.njit(cache=True)
     def calculate_fast_ion_thermalisation_time(
         e_fast_ion_initial: float,
-        e_fast_ion_critical: float,
-        t_ion_spitzer_slowing_down: float,
-    ) -> float:
+        e_fast_ion_critical: float | np.ndarray,
+        t_ion_spitzer_slowing_down: float | np.ndarray,
+    ) -> float | np.ndarray:
         """
         Calculate the fast ion thermalisation time.
 
@@ -6044,14 +6054,14 @@ class DetailedPhysics(Model):
         ----------
         e_fast_ion_initial : float
             Initial energy of the fast ion.
-        e_fast_ion_critical : float
+        e_fast_ion_critical : float | np.ndarray
             Critical energy of the fast ion.
-        t_ion_spitzer_slowing_down : float
+        t_ion_spitzer_slowing_down : float | np.ndarray
             Ion Spitzer slowing down time.
 
         Returns
         -------
-        float
+        float | np.ndarray
             Average time for fast ion to thermalise.
         """
         return (t_ion_spitzer_slowing_down / 3) * np.log(
@@ -6625,4 +6635,16 @@ class DetailedPhysics(Model):
                 f"Critical energy for fast alpha particles at point {i}",
                 f"(e_plasma_alpha_fast_critical_profile{i})",
                 self.data.physics.e_plasma_alpha_fast_critical_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Thermalisation Times:")
+
+        for i in range(
+            len(self.data.physics.t_plasma_fast_alpha_thermalisation_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Thermalisation time for fast alpha particles at point {i}",
+                f"(t_plasma_fast_alpha_thermalisation_profile{i})",
+                self.data.physics.t_plasma_fast_alpha_thermalisation_profile[i],
             )

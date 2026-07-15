@@ -14042,11 +14042,16 @@ def plot_mean_free_path_profile(axis: plt.Axes, mfile_data: MFile, scan: int) ->
 def plot_ion_slowing_down_time_profile(
     axis: plt.Axes, mfile_data: MFile, scan: int
 ) -> None:
-    """Plot the plasma Spitzer slowing down time on the given axis."""
+    """Plot the plasma fast ion slowing down times on the given axis."""
     t_plasma_electron_alpha_spitzer_slow_profile = [
         mfile_data.data[f"t_plasma_electron_alpha_spitzer_slow_profile{i}"].get_scan(
             scan
         )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    t_plasma_fast_alpha_thermalisation_profile = [
+        mfile_data.data[f"t_plasma_fast_alpha_thermalisation_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
 
@@ -14058,8 +14063,16 @@ def plot_ion_slowing_down_time_profile(
         label=r"$\tau_{e-\alpha,Spitzer}$",
     )
 
+    axis.plot(
+        np.linspace(0, 1, len(t_plasma_fast_alpha_thermalisation_profile)),
+        t_plasma_fast_alpha_thermalisation_profile,
+        color="red",
+        linestyle="--",
+        label=r"$\tau_{fast-\alpha,thermalisation}$",
+    )
+
     axis.set_yscale("log")
-    axis.set_ylabel("Spitzer Slowing Down Time [s]")
+    axis.set_ylabel("Slowing Down Times [s]")
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
     axis.minorticks_on()
