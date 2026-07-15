@@ -5548,6 +5548,19 @@ class DetailedPhysics(Model):
             t_ion_spitzer_slowing_down=self.data.physics.t_plasma_electron_alpha_spitzer_slow_profile,
         )
 
+        # =============================
+        # Alpha particle energy fraction transferred to ions and electrons
+        # =============================
+
+        self.data.physics.f_p_plasma_alpha_fast_ions_profile = self.calculate_fast_ion_energy_to_ion_fraction(
+            e_fast_ion_initial=constants.DT_ALPHA_ENERGY,
+            e_fast_ion_critical=self.data.physics.e_plasma_alpha_fast_critical_profile,
+        )
+
+        self.data.physics.f_p_plasma_alpha_fast_electrons_profile = (
+            1 - self.data.physics.f_p_plasma_alpha_fast_ions_profile
+        )
+
     @staticmethod
     @nb.njit(cache=True)
     def calculate_debye_length(
@@ -6069,11 +6082,10 @@ class DetailedPhysics(Model):
         )
 
     @staticmethod
-    @nb.njit(cache=True)
     def calculate_fast_ion_energy_to_ion_fraction(
         e_fast_ion_initial: float,
         e_fast_ion_critical: float | np.ndarray,
-        n_points: int = 100,
+        n_points: int = 1000,
     ) -> float | np.ndarray:
         """
         Fraction of fast-ion energy transferred to ions:
@@ -6723,4 +6735,22 @@ class DetailedPhysics(Model):
                 f"Thermalisation time for fast alpha particles at point {i}",
                 f"(t_plasma_fast_alpha_thermalisation_profile{i})",
                 self.data.physics.t_plasma_fast_alpha_thermalisation_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Alpha Power Split Fractions:")
+
+        for i in range(len(self.data.physics.f_p_plasma_alpha_fast_ions_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Fraction of fast alpha particle energy transferred to ions at point {i}",
+                f"(f_p_plasma_alpha_fast_ions_profile{i})",
+                self.data.physics.f_p_plasma_alpha_fast_ions_profile[i],
+            )
+
+        for i in range(len(self.data.physics.f_p_plasma_alpha_fast_electrons_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Fraction of fast alpha particle energy transferred to electrons at point {i}",
+                f"(f_p_plasma_alpha_fast_electrons_profile{i})",
+                self.data.physics.f_p_plasma_alpha_fast_electrons_profile[i],
             )

@@ -14127,6 +14127,43 @@ def plot_resistivity_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> No
     axis.legend()
 
 
+def plot_alpha_heating_power_split_profile(
+    axis: plt.Axes, mfile_data: MFile, scan: int
+) -> None:
+    """Plot the plasma alpha heating power split on the given axis."""
+    f_p_plasma_alpha_fast_ions_profile = [
+        mfile_data.data[f"f_p_plasma_alpha_fast_ions_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    f_p_plasma_alpha_fast_electrons_profile = [
+        mfile_data.data[f"f_p_plasma_alpha_fast_electrons_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(f_p_plasma_alpha_fast_ions_profile)),
+        f_p_plasma_alpha_fast_ions_profile,
+        color="red",
+        linestyle="-",
+        label=r"$f_{p,\alpha-fast-ions}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(f_p_plasma_alpha_fast_electrons_profile)),
+        f_p_plasma_alpha_fast_electrons_profile,
+        color="blue",
+        linestyle="-",
+        label=r"$f_{p,\alpha-fast-electrons}$",
+    )
+
+    axis.set_ylabel("Alpha Heating Power Split")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
 def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan: int):
     """Plot the equality constraints for a solution and their normalised residuals
 
@@ -16153,7 +16190,13 @@ def main_plot(
         pages["detailed_params"].add_subplot(242), m_file, scan
     )
 
-    plot_resistivity_profile(pages["detailed_params"].add_subplot(243), m_file, scan)
+    plot_alpha_heating_power_split_profile(
+        pages["detailed_params"].add_subplot(243), m_file, scan
+    )
+
+    plot_resistivity_profile(pages["detailed_params"].add_subplot(244), m_file, scan)
+
+    pages["detailed_params"].subplots_adjust(wspace=0.4)
 
     plot_detailed_plasma_parameters(
         pages["detailed_params"].add_subplot(233),
