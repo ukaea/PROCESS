@@ -2061,7 +2061,7 @@ class IFE(Model):
                 "(fachtmw)",
                 self.data.heat_transport.fachtmw,
             )
-            process_output.ovarin(
+            process_output.ovarre(
                 self.outfile,
                 "Number of primary heat exchangers",
                 "(n_primary_heat_exchangers)",

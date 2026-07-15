@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from process.core import constants
+from process.data_structure.physics_variables import PlasmaIgnitionModel
 from process.models.physics.impurity_radiation import initialise_imprad
 from process.models.physics.physics import (
     DetailedPhysics,
@@ -1252,7 +1253,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     f_alpha_ion: Any = None
 
-    f_nd_alpha_electron: Any = None
+    f_nd_alpha_thermal_electron: Any = None
 
     f_nd_beam_electron: Any = None
 
@@ -1280,7 +1281,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     f_plasma_fuel_helium3: Any = None
 
-    nd_plasma_alphas_vol_avg: Any = None
+    nd_plasma_alphas_thermal_vol_avg: Any = None
 
     nd_plasma_electrons_vol_avg: Any = None
 
@@ -1373,7 +1374,7 @@ class PlasmaCompositionParam(NamedTuple):
                 183.84999999999999,
             ]),
             alphat=1.45,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             f_alpha_electron=0,
             m_fuel_amu=0,
             f_plasma_fuel_tritium=0.5,
@@ -1385,7 +1386,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_nd_plasma_carbon_electron=0,
             f_nd_plasma_oxygen_electron=0,
             f_alpha_ion=0,
-            f_nd_alpha_electron=0.10000000000000001,
+            f_nd_alpha_thermal_electron=0.10000000000000001,
             f_nd_beam_electron=0,
             n_charge_plasma_effective_vol_avg=0,
             nd_plasma_impurities_vol_avg=0,
@@ -1399,7 +1400,7 @@ class PlasmaCompositionParam(NamedTuple):
             alphan=1,
             nd_beam_ions=0,
             f_plasma_fuel_helium3=0,
-            nd_plasma_alphas_vol_avg=0,
+            nd_plasma_alphas_thermal_vol_avg=0,
             nd_plasma_electrons_vol_avg=7.5e19,
             nd_plasma_protons_vol_avg=0,
             first_call=1,
@@ -1479,7 +1480,7 @@ class PlasmaCompositionParam(NamedTuple):
                 order="F",
             ).transpose(),
             alphat=1.45,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             f_alpha_electron=0.6845930883190634,
             m_fuel_amu=2.5,
             f_plasma_fuel_tritium=0.5,
@@ -1491,7 +1492,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_nd_plasma_carbon_electron=0,
             f_nd_plasma_oxygen_electron=0,
             f_alpha_ion=0.3154069116809366,
-            f_nd_alpha_electron=0.10000000000000001,
+            f_nd_alpha_thermal_electron=0.10000000000000001,
             f_nd_beam_electron=0,
             n_charge_plasma_effective_vol_avg=2.0909945616489103,
             nd_plasma_impurities_vol_avg=28875000000000004,
@@ -1505,7 +1506,7 @@ class PlasmaCompositionParam(NamedTuple):
             alphan=1,
             nd_beam_ions=0,
             f_plasma_fuel_helium3=0,
-            nd_plasma_alphas_vol_avg=7.5e18,
+            nd_plasma_alphas_thermal_vol_avg=7.5e18,
             nd_plasma_electrons_vol_avg=7.5e19,
             nd_plasma_protons_vol_avg=7500000000000000,
             first_call=0,
@@ -1587,7 +1588,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         "f_nd_plasma_carbon_electron",
         "f_nd_plasma_oxygen_electron",
         "f_alpha_ion",
-        "f_nd_alpha_electron",
+        "f_nd_alpha_thermal_electron",
         "f_nd_beam_electron",
         "n_charge_plasma_effective_vol_avg",
         "nd_plasma_impurities_vol_avg",
@@ -1601,7 +1602,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         "alphan",
         "nd_beam_ions",
         "f_plasma_fuel_helium3",
-        "nd_plasma_alphas_vol_avg",
+        "nd_plasma_alphas_thermal_vol_avg",
         "nd_plasma_electrons_vol_avg",
         "nd_plasma_protons_vol_avg",
         "first_call",
@@ -1657,7 +1658,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_m_beam_amu
     )
 
-    assert physics.data.physics.nd_plasma_alphas_vol_avg == pytest.approx(
+    assert physics.data.physics.nd_plasma_alphas_thermal_vol_avg == pytest.approx(
         plasmacompositionparam.expected_nd_alphas
     )
 
@@ -1836,7 +1837,7 @@ class PhyauxParam(NamedTuple):
 
     nd_plasma_fuel_ions_vol_avg: Any = None
 
-    nd_plasma_alphas_vol_avg: Any = None
+    nd_plasma_alphas_thermal_vol_avg: Any = None
 
     fusden_total: Any = None
 
@@ -1875,7 +1876,7 @@ class PhyauxParam(NamedTuple):
             burnup_in=0,
             aspect=3,
             nd_plasma_fuel_ions_vol_avg=5.8589175702454272e19,
-            nd_plasma_alphas_vol_avg=7.5e18,
+            nd_plasma_alphas_thermal_vol_avg=7.5e18,
             fusden_total=1.9852091609123786e17,
             fusden_alpha_total=1.973996644759543e17,
             plasma_current=18398455.678867526,
@@ -1894,7 +1895,7 @@ class PhyauxParam(NamedTuple):
             burnup_in=0,
             aspect=3,
             nd_plasma_fuel_ions_vol_avg=5.8576156204039725e19,
-            nd_plasma_alphas_vol_avg=7.5e18,
+            nd_plasma_alphas_thermal_vol_avg=7.5e18,
             fusden_total=1.9843269653375773e17,
             fusden_alpha_total=1.9731194318497056e17,
             plasma_current=18398455.678867526,
@@ -1939,7 +1940,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     ) = physics.phyaux(
         aspect=phyauxparam.aspect,
         nd_plasma_fuel_ions_vol_avg=phyauxparam.nd_plasma_fuel_ions_vol_avg,
-        nd_plasma_alphas_vol_avg=phyauxparam.nd_plasma_alphas_vol_avg,
+        nd_plasma_alphas_thermal_vol_avg=phyauxparam.nd_plasma_alphas_thermal_vol_avg,
         fusden_total=phyauxparam.fusden_total,
         fusden_alpha_total=phyauxparam.fusden_alpha_total,
         plasma_current=phyauxparam.plasma_current,
@@ -2268,7 +2269,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=32,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2320,7 +2321,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=33,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2372,7 +2373,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=34,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2424,7 +2425,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=35,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2476,7 +2477,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=36,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2528,7 +2529,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=37,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2580,7 +2581,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=38,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2632,7 +2633,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=39,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2684,7 +2685,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=40,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2736,7 +2737,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=41,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2788,7 +2789,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=42,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2840,7 +2841,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=43,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2892,7 +2893,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=44,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2944,7 +2945,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=45,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -2996,7 +2997,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=46,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -3048,7 +3049,7 @@ class ConfinementTimeParam(NamedTuple):
             p_plasma_ohmic_mw=0.63634001890069991,
             f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=47,
-            i_plasma_ignited=0,
+            i_plasma_ignited=PlasmaIgnitionModel.NON_IGNITED,
             m_fuel_amu=2.5,
             p_alpha_total_mw=319.03020327154269,
             aspect=3,
@@ -3119,14 +3120,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
             physics.data.physics, field, getattr(confinementtimeparam, field)
         )
 
-    (
-        pden_electron_transport_loss_mw,
-        pden_ion_transport_loss_mw,
-        t_electron_energy_confinement,
-        t_ion_energy_confinement,
-        t_energy_confinement,
-        p_plasma_loss_mw,
-    ) = physics.confinement.calculate_confinement_time(
+    confinement_time_data = physics.confinement.calculate_confinement_time(
         i_confinement_time=confinementtimeparam.i_confinement_time,
         i_plasma_ignited=confinementtimeparam.i_plasma_ignited,
         m_fuel_amu=confinementtimeparam.m_fuel_amu,
@@ -3158,27 +3152,27 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         confinementtimeparam.expected_kappa_ipb
     )
 
-    assert p_plasma_loss_mw == pytest.approx(
+    assert confinement_time_data.p_plasma_loss_mw == pytest.approx(
         confinementtimeparam.expected_p_plasma_loss_mw
     )
 
-    assert pden_electron_transport_loss_mw == pytest.approx(
+    assert confinement_time_data.pden_electron_transport_loss_mw == pytest.approx(
         confinementtimeparam.expected_pden_electron_transport_loss_mw
     )
 
-    assert pden_ion_transport_loss_mw == pytest.approx(
+    assert confinement_time_data.pden_ion_transport_loss_mw == pytest.approx(
         confinementtimeparam.expected_pden_ion_transport_loss_mw
     )
 
-    assert t_electron_energy_confinement == pytest.approx(
+    assert confinement_time_data.t_electron_energy_confinement == pytest.approx(
         confinementtimeparam.expected_tauee
     )
 
-    assert t_energy_confinement == pytest.approx(
+    assert confinement_time_data.t_plasma_energy_confinement == pytest.approx(
         confinementtimeparam.expected_t_energy_confinement
     )
 
-    assert t_ion_energy_confinement == pytest.approx(
+    assert confinement_time_data.t_ion_energy_confinement == pytest.approx(
         confinementtimeparam.expected_t_ion_energy_confinement
     )
 
@@ -3189,7 +3183,7 @@ def test_calculate_plasma_masses(physics):
     m_ions_total_amu = 3.0
     nd_plasma_ions_total_vol_avg = 1.0e20
     nd_plasma_fuel_ions_vol_avg = 0.8e20
-    nd_plasma_alphas_vol_avg = 0.1e20
+    nd_plasma_alphas_thermal_vol_avg = 0.1e20
     vol_plasma = 100.0
     nd_plasma_electrons_vol_avg = 1.0e20
 
@@ -3204,7 +3198,7 @@ def test_calculate_plasma_masses(physics):
         m_ions_total_amu=m_ions_total_amu,
         nd_plasma_ions_total_vol_avg=nd_plasma_ions_total_vol_avg,
         nd_plasma_fuel_ions_vol_avg=nd_plasma_fuel_ions_vol_avg,
-        nd_plasma_alphas_vol_avg=nd_plasma_alphas_vol_avg,
+        nd_plasma_alphas_thermal_vol_avg=nd_plasma_alphas_thermal_vol_avg,
         vol_plasma=vol_plasma,
         nd_plasma_electrons_vol_avg=nd_plasma_electrons_vol_avg,
     )
@@ -3495,7 +3489,7 @@ def test_detailed_physics_run_computes_profiles(monkeypatch, physics, process_mo
     )
     monkeypatch.setattr(
         physics.data.physics,
-        "nd_plasma_alphas_vol_avg",
+        "nd_plasma_alphas_thermal_vol_avg",
         np.mean(plasma.neprofile.profile_y) * 0.1,
     )
 

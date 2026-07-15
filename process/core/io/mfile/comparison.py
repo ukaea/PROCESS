@@ -72,7 +72,7 @@ DEFAULT_COMPARE_PARAMS = [
     "p_coolant_pump_elec_total_mw",
     "p_plant_electric_net_mw",
     "pflux_fw_neutron_mw",
-    "f_nd_alpha_electron",
+    "f_nd_alpha_thermal_electron",
     "p_plasma_inner_rad_mw",
     "p_plasma_rad_mw",
     "p_blkt_nuclear_heat_total_mw",
@@ -127,7 +127,7 @@ BASELINE_LIST = [
     "t_energy_confinement",
     "hfact",
     "tauelaw",
-    "f_nd_alpha_electron",
+    "f_nd_alpha_thermal_electron",
     "pflux_fw_neutron_mw",
     "p_plasma_inner_rad_mw",
     "p_plasma_sync_mw",
@@ -221,7 +221,7 @@ GENERIC_LIST = [
     "p_plant_electric_net_mw",
     "pflux_fw_neutron_mw",
     "pflux_fw_rad_mw",
-    "f_nd_alpha_electron",
+    "f_nd_alpha_thermal_electron",
     "p_plasma_inner_rad_mw",
     "p_plasma_rad_mw",
     "f_c_plasma_bootstrap",
@@ -290,8 +290,16 @@ def compare_mfiles(
 
     Parameters
     ----------
-    arg :
-        List of arguments
+    files:
+        file paths
+    comparison:
+        comparison type
+    acc:
+        percentage tolerance
+    save:
+        save flag
+    verbose:
+        verbosity flag
     """
     print_counter = 0
     n = 2

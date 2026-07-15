@@ -1417,7 +1417,7 @@ class Power(Model):
             self.data.heat_transport.p_plant_primary_heat_mw,
         )
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Thermal to electric conversion efficiency of the turbine",
             "(eta_turbine)",

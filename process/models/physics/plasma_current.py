@@ -81,7 +81,7 @@ class PlasmaCurrent(Model):
 
         if self.data.stellarator.istell == 0:
             po.oblnkl(self.outfile)
-            po.ovarin(
+            po.ovarre(
                 self.outfile,
                 "Plasma current scaling law used",
                 "(i_plasma_current)",
@@ -95,14 +95,14 @@ class PlasmaCurrent(Model):
                 f"Plasma current model selected: {full_model_name} ",
             )
 
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Plasma current (Iₚ) (MA)",
                 "(plasma_current_MA)",
                 self.data.physics.plasma_current / 1.0e6,
                 "OP ",
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Plasma current (Iₚ) (A)",
                 "(plasma_current)",
@@ -114,7 +114,7 @@ class PlasmaCurrent(Model):
             po.oblnkl(self.outfile)
 
             if self.data.physics.i_alphaj == 1:
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Current density profile factor (αⱼ)",
                     "(alphaj)",
@@ -122,7 +122,7 @@ class PlasmaCurrent(Model):
                     "OP ",
                 )
             else:
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Current density profile factor (αⱼ)",
                     "(alphaj)",
@@ -131,7 +131,7 @@ class PlasmaCurrent(Model):
             po.ocmmnt(self.outfile, "Current profile index scalings:")
             po.oblnkl(self.outfile)
 
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "J. Wesson plasma current profile index",
                 "(alphaj_wesson)",
@@ -139,7 +139,7 @@ class PlasmaCurrent(Model):
                 "OP ",
             )
             po.oblnkl(self.outfile)
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "On-axis plasma current density (j₀) (A/m²)",
                 "(j_plasma_on_axis)",
@@ -148,26 +148,26 @@ class PlasmaCurrent(Model):
             )
 
         if self.data.stellarator.istell == 0:
-            po.ovarrf(
+            po.ovarre(
                 self.outfile, "Safety factor on axis (q₀)", "(q0)", self.data.physics.q0
             )
 
             if self.data.physics.i_plasma_current == 2:
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Mean edge safety factor (q₉₅)",
                     "(q95)",
                     self.data.physics.q95,
                 )
 
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Safety factor at 95% flux surface (q₉₅)",
                 "(q95)",
                 self.data.physics.q95,
             )
 
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Cylindrical safety factor (qcyl)",
                 "(qstar)",
@@ -179,7 +179,7 @@ class PlasmaCurrent(Model):
                 self.data.physics.i_plasma_geometry
                 == PlasmaGeometryModelType.STAR_FIESTA
             ):
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Lower limit for edge safety factor q95",
                     "(q95_min)",
@@ -189,7 +189,7 @@ class PlasmaCurrent(Model):
             po.oblnkl(self.outfile)
 
         else:
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Rotational transform",
                 "(iotabar)",
@@ -1096,7 +1096,7 @@ class PlasmaDiamagneticCurrent(Model):
     def output(self):
         """Output the plasma diamagnetic current model results."""
         po.oblnkl(self.outfile)
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Plasma diamagnetic current fraction scaling law used",
             "(i_diamagnetic_current)",
@@ -1110,14 +1110,14 @@ class PlasmaDiamagneticCurrent(Model):
             f"Diamagnetic current fraction model selected: {full_model_name} ",
         )
         po.oblnkl(self.outfile)
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Diamagnetic fraction (Hender)",
             "(f_c_plasma_diamagnetic_hender)",
             self.data.current_drive.f_c_plasma_diamagnetic_hender,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Diamagnetic fraction (SCENE)",
             "(f_c_plasma_diamagnetic_scene)",

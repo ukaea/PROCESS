@@ -155,7 +155,7 @@ OBS_VARS = {
     "nimp": "n_impurities",
     "ssync": "f_sync_reflect",
     "rnbeam": "f_nd_beam_electron",
-    "ralpne": "f_nd_alpha_electron",
+    "ralpne": "f_nd_alpha_thermal_electron",
     "protium": "f_nd_protium_electrons",
     "clhsf": "f_z_cryostat",
     "ddwex": "dr_cryostat",
@@ -209,7 +209,6 @@ OBS_VARS = {
     "tfwmatmax": "temp_fw_max",
     "fw_channel_length": "len_fw_channel",
     "denw": None,
-    "s_tresca_oh": "s_shear_cs_peak",
     "sig_tf_tresca_max": "s_shear_tf_peak",
     "s_tresca_cond_cear": "s_shear_cea_tf_cond",
     "sig_tf_tresca": "s_shear_tf",
@@ -469,6 +468,9 @@ OBS_VARS = {
     "psepbqarmax": "p_div_bt_q_aspect_rmajor_max_mw",
     "fdene": "f_nd_plasma_electron_limit_max",
     "fiooic": "f_j_tf_wp_critical_max",
+    "alstroh": "stress_cs_steel_max",
+    "i_cs_stress": None,
+    "f_nd_alpha_electron": "f_nd_alpha_thermal_electron",
 }
 
 OBS_VARS_HELP = {

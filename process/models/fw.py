@@ -686,7 +686,7 @@ class FirstWall(Model):
         """Outputs the first wall geometry details to the output file."""
         po.oheadr(self.outfile, "First wall build")
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Radius of first wall cooling channels (m)",
             "(radius_fw_channel)",
@@ -705,49 +705,49 @@ class FirstWall(Model):
             "(radius_fw_channel_180_bend)",
             self.data.fwbs.radius_fw_channel_180_bend,
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Radial wall thickness surrounding first wall coolant channel (m)",
             "(dr_fw_wall)",
             self.data.fwbs.dr_fw_wall,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Toroidal width of each first wall module (m)",
             "(dx_fw_module)",
             self.data.fwbs.dx_fw_module,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Length of each first wall channel (m)",
             "(len_fw_channel)",
             self.data.fwbs.len_fw_channel,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Radial thickness off inboard first wall (m)",
             "(dr_fw_inboard)",
             self.data.build.dr_fw_inboard,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Radial thickness off outboard first wall (m)",
             "(dr_fw_outboard)",
             self.data.build.dr_fw_outboard,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Number of inboard first wall cooling channels",
             "(n_fw_inboard_channels)",
             self.data.blanket.n_fw_inboard_channels,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Number of outboard first wall cooling channels",
             "(n_fw_outboard_channels)",
@@ -759,34 +759,34 @@ class FirstWall(Model):
         """Outputs the first wall pumping details to the output file."""
         po.oheadr(self.outfile, "First wall pumping")
 
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "First wall coolant type",
             "(i_fw_coolant_type)",
             CoolantType(self.data.fwbs.i_fw_coolant_type).full_name,
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Outlet temperature of first wall coolant [K]",
             "(temp_fw_coolant_out)",
             self.data.fwbs.temp_fw_coolant_out,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Inlet temperature of first wall coolant [K]",
             "(temp_fw_coolant_in)",
             self.data.fwbs.temp_fw_coolant_in,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Pressure of first wall coolant [Pa]",
             "(pres_fw_coolant)",
             self.data.fwbs.pres_fw_coolant,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Peak temperature of first wall [K]",
             "(temp_fw_peak)",

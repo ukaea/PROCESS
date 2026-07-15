@@ -252,7 +252,7 @@ boundu(6) = 5.0E+20
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ixc = 109
-f_nd_alpha_electron = 0.2
+f_nd_alpha_thermal_electron = 0.2
 boundl(109) = 0.001
 boundu(109) = 1.0
 * DESCRIPTION:   Thermal alpha density / electron density
@@ -1529,7 +1529,7 @@ i_pf_conductor = 0
 * DESCRIPTION:   Switch for CS stress calculation
 * JUSTIFICATION: Not used. Using default
 
-*alstroh =  
+*stress_cs_steel_max =  
 * DESCRIPTION:   Allowable hoop stress in Central Solenoid structural material (Pa) (icc=72)
 * JUSTIFICATION: Not used. Using default
 

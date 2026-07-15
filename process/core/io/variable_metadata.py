@@ -44,7 +44,7 @@ var_dicts = {
         description="Effective energy confinement time",
         units="s",
     ),
-    "f_nd_alpha_electron": VariableMetadata(
+    "f_nd_alpha_thermal_electron": VariableMetadata(
         latex=r"$f_\mathrm{\alpha}$",
         description="Alpha particle heating fraction",
         units="",
@@ -167,7 +167,7 @@ var_dicts = {
         description="Number of cycles",
         units="",
     ),
-    "alstroh": VariableMetadata(
+    "stress_cs_steel_max": VariableMetadata(
         latex=r"$\sigma_{\mathrm{oh}}^{\mathrm{max}}$[$Pa$]",
         description="Maximum allowable stress",
         units="Pa",

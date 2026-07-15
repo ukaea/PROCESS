@@ -3,6 +3,13 @@ from enum import IntEnum
 from types import DynamicClassAttribute
 
 
+class CSPrecompressionConfiguration(IntEnum):
+    """Switch for CS pre-compression structure, controlled through `BuildData.i_cs_precomp`"""
+
+    NO_CS_PRECOMPRESSION_STRUCTURE = 0
+    CS_PRECOMPRESSION_STRUCTURE_PRESENT = 1
+
+
 class InboardBlanketConfiguration(IntEnum):
     """Switch for inboard blanket, controlled through `BuildData.i_blkt_inboard`"""
 

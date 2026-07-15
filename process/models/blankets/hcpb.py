@@ -1330,63 +1330,63 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         po.osubhd(self.outfile, "Blanket Composition by volume :")
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Titanium beryllide fraction",
             "(f_vol_blkt_tibe12)",
             self.data.fwbs.f_vol_blkt_tibe12,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Lithium orthosilicate fraction",
             "(f_vol_blkt_li4sio4)",
             self.data.fwbs.f_vol_blkt_li4sio4,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Steel fraction",
             "(f_vol_blkt_steel)",
             self.data.fwbs.f_vol_blkt_steel,
             "OP ",
         )
-        po.ovarrf(self.outfile, "Coolant fraction", "(vfcblkt)", self.data.fwbs.vfcblkt)
-        po.ovarrf(
+        po.ovarre(self.outfile, "Coolant fraction", "(vfcblkt)", self.data.fwbs.vfcblkt)
+        po.ovarre(
             self.outfile, "Purge gas fraction", "(vfpblkt)", self.data.fwbs.vfpblkt
         )
 
         po.osubhd(self.outfile, "Component Volumes :")
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "First Wall Armour Volume (m3)",
             "(fw_armour_vol)",
             self.data.fwbs.fw_armour_vol,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "First Wall Volume (m3)",
             "(vol_fw_total)",
             self.data.fwbs.vol_fw_total,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Blanket Volume (m3)",
             "(vol_blkt_total)",
             self.data.fwbs.vol_blkt_total,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Shield Volume (m3)",
             "(vol_shld_total)",
             self.data.fwbs.vol_shld_total,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Vacuum vessel volume (m3)",
             "(vol_vv)",
@@ -1570,7 +1570,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             "(f_a_fw_outboard_hcd)",
             self.data.fwbs.f_a_fw_outboard_hcd,
         )
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Switch for plant secondary cycle ",
             "(i_thermal_electric_conversion)",

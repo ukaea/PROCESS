@@ -112,10 +112,8 @@ iteration variables should get varied"""
                     auxvar = line[line.find("=") + 1 :]
                     auxvar = auxvar.replace(" ", "")
                     auxvar = auxvar.rstrip()
-                    if varname == attributename.upper() and auxvar == "":
-                        return None
-                    if varname == attributename.upper() and auxvar != "":
-                        return auxvar
+                    if varname == attributename.upper():
+                        return auxvar or None
 
         return None
 
@@ -202,7 +200,7 @@ iteration variables should get varied"""
         print(f"variable range factor {self.factor}")
         if self._filename is not None:
             print(f"Config file          {self._filename}")
-        if self.comment != "":
+        if self.comment:
             print(f"Comment  {self.comment}")
 
     def prepare_wdir(self):
@@ -230,7 +228,7 @@ iteration variables should get varied"""
 
     def create_readme(self):
         """Creates README.txt containing comment"""
-        if self.comment != "":
+        if self.comment:
             Path(self.wdir, "README.txt").write_text(self.comment)
 
     def error_status2readme(self, mfile):
@@ -251,7 +249,7 @@ iteration variables should get varied"""
         else:
             ifail_msg = f"PROCESS found a converged solution using VaryRun. The converging input file is {self._current_iteration - 1}_IN.DAT"
 
-        if self.comment != "":
+        if self.comment:
             with open(Path(self.wdir, "README.txt"), "a") as readme:
                 readme.write(error_status)
                 readme.write(ifail_msg)
@@ -405,10 +403,9 @@ class RunProcessConfig(ProcessConfig):
                     and (condense[0] != "*")
                     and (attributename == lcase[: len(attributename)])
                 ):
-                    buf = condense[condense.find("=") + 1 :].split(",")
-                    if buf[-1] == "":  # if last value has ended on comma
-                        buf = buf[:-1]
-                    attribute_list += buf
+                    attribute_list += list(
+                        filter(None, condense[condense.find("=") + 1 :].split(","))
+                    )
         return attribute_list
 
     @staticmethod
@@ -441,7 +438,7 @@ class RunProcessConfig(ProcessConfig):
                 if len(condense) > 0 and (condense[0] != "*") and "=" in lcase:
                     varname = lcase[: lcase.find("=")]
                     auxvar = condense[condense.find("=") + 1 :]
-                    if varname[:4] == "var_" and auxvar != "":
+                    if varname[:4] == "var_" and auxvar:
                         dictvar[varname[4:]] = auxvar
         return dictvar
 

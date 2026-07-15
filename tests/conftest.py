@@ -4,7 +4,6 @@ Defines fixtures that will be shared across all test modules.
 """
 
 import os
-import pathlib
 import traceback
 import warnings
 
@@ -127,7 +126,7 @@ def skip_if_incompatible_system():
         )
 
 
-@pytest.fixture(scope="session", autouse=True)  # noqa: RUF076
+@pytest.fixture(scope="session", autouse=True)
 def running_on_compatible_system_warning():
     """Check for an outdated system
 
@@ -148,7 +147,7 @@ def running_on_compatible_system_warning():
     )
 
 
-@pytest.fixture(scope="session", autouse=True)  # noqa: RUF076
+@pytest.fixture(scope="session", autouse=True)
 def initialise_error_module():
     """pytest fixture to initialise the error module before tests run.
 
@@ -171,18 +170,17 @@ def reinitialise_error_module():
     logging_model_handler.clear_logs()
 
 
-@pytest.fixture(autouse=True)  # noqa: RUF076
-def return_to_root():
+@pytest.fixture(autouse=True)
+def return_to_root(request):
     """Various parts of PROCESS change directories and do not always change back.
     This fixture ensures that, at the end of each test, the cwd is reset to what it
     was at the beginning of the test.
     """
-    cwd = pathlib.Path.cwd()
     yield
-    os.chdir(cwd)
+    os.chdir(request.config.invocation_dir)
 
 
-@pytest.fixture(autouse=True)  # noqa: RUF076
+@pytest.fixture(autouse=True)
 def disable_package_logger(monkeypatch):
     """Various parts of PROCESS change directories and do not always change back.
     This fixture ensures that, at the end of each test, the cwd is reset to what it
@@ -191,7 +189,7 @@ def disable_package_logger(monkeypatch):
     monkeypatch.setattr(main, "PACKAGE_LOGGING", False)
 
 
-@pytest.fixture(autouse=True)  # noqa: RUF076
+@pytest.fixture(autouse=True)
 def _plot_show_and_close(request):
     """Fixture to show and close plots
 
@@ -217,7 +215,7 @@ def _plot_show_and_close(request):
         plt.close()
 
 
-@pytest.fixture(scope="class", autouse=True)  # noqa: RUF076
+@pytest.fixture(scope="class", autouse=True)
 def _plot_show_and_close_class(request):
     """Fixture to show and close plots for marked classes
 

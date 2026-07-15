@@ -23,6 +23,10 @@ from process.data_structure.pfcoil_variables import (
     PFConductorModel,
 )
 from process.models import superconductors
+from process.models.engineering.materials import (
+    calculate_tresca_stress,
+    calculate_von_mises_stress,
+)
 from process.models.superconductors import (
     SuperconductorMaterial,
     SuperconductorModel,
@@ -30,6 +34,9 @@ from process.models.superconductors import (
 from process.models.tfcoil.base import TFCoilShapeModel
 
 logger = logging.getLogger(__name__)
+
+
+N_CS_STRESS_PROFILE_POINTS = 20
 
 
 class PFLocationTypes(IntEnum):
@@ -2030,7 +2037,7 @@ class PFCoil(Model):
         """
         op.oheadr(self.outfile, "Central Solenoid and PF Coils")
 
-        op.ovarin(
+        op.ovarre(
             self.mfile,
             "Existence_of_central_solenoid",
             "(iohcl)",
@@ -2042,7 +2049,7 @@ class PFCoil(Model):
         elif self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             op.ocmmnt(self.outfile, "Superconducting central solenoid")
 
-            op.ovarin(
+            op.ovarre(
                 self.outfile,
                 "Central solenoid superconductor material",
                 "(i_cs_superconductor)",
@@ -2168,21 +2175,11 @@ class PFCoil(Model):
             op.ocmmnt(self.outfile, "----------------------------")
             op.osubhd(self.outfile, "CS Stresses:")
 
-            op.ovarin(
-                self.outfile,
-                "Switch for CS stress calculation",
-                "(i_cs_stress)",
-                self.data.pf_coil.i_cs_stress,
-            )
-            if self.data.pf_coil.i_cs_stress == 1:
-                op.ocmmnt(self.outfile, "Hoop + axial stress considered")
-            else:
-                op.ocmmnt(self.outfile, "Only hoop stress considered")
             op.ovarre(
                 self.outfile,
                 "Allowable stress in CS steel (Pa)",
-                "(alstroh)",
-                self.data.pf_coil.alstroh,
+                "(stress_cs_steel_max)",
+                self.data.pf_coil.stress_cs_steel_max,
             )
             op.ovarre(
                 self.outfile,
@@ -2200,9 +2197,30 @@ class PFCoil(Model):
             )
             op.ovarre(
                 self.outfile,
+                "Radial stress in CS steel at midplane at coil centre (Pa)",
+                "(stress_radial_cs_peak)",
+                self.data.pf_coil.stress_radial_cs_peak,
+                "OP ",
+            )
+            op.ovarre(
+                self.outfile,
+                "Radial stress in CS steel at inboard edge (Pa)",
+                "(stress_radial_cs_inner)",
+                self.data.pf_coil.stress_radial_cs_inner,
+                "OP ",
+            )
+            op.ovarre(
+                self.outfile,
                 "Maximum shear stress in CS steel for the Tresca criterion (Pa)",
-                "(s_shear_cs_peak)",
-                self.data.pf_coil.s_shear_cs_peak,
+                "(stress_shear_cs_peak)",
+                self.data.pf_coil.stress_shear_cs_peak,
+                "OP ",
+            )
+            op.ovarre(
+                self.outfile,
+                "Maximum von Mises stress in CS steel (Pa)",
+                "(stress_mises_cs_peak)",
+                self.data.pf_coil.stress_mises_cs_peak,
                 "OP ",
             )
             op.ovarre(
@@ -2338,7 +2356,7 @@ class PFCoil(Model):
             op.oblnkl(self.outfile)
             op.ocmmnt(self.outfile, "Superconducting PF coils")
 
-            op.ovarin(
+            op.ovarre(
                 self.outfile,
                 "PF coil superconductor material",
                 "(i_pf_superconductor)",
@@ -2491,6 +2509,15 @@ class PFCoil(Model):
                 f"CS coil midplane axial stress at time point {time} (MPa)",
                 f"(stress_z_cs_self_midplane_profile[{time}])",
                 self.data.pf_coil.stress_z_cs_self_midplane_profile[time],
+            )
+        for position, stress in enumerate(
+            self.data.pf_coil.stress_z_cs_self_profile.tolist()
+        ):
+            op.ovarre(
+                self.mfile,
+                f"CS coil axial stress at position {position} (MPa)",
+                f"(stress_z_cs_self_profile_{position})",
+                stress,
             )
         self.tf_pf_collision_detector()
 
@@ -2785,7 +2812,7 @@ class PFCoil(Model):
         )
 
         op.oshead(self.outfile, "PF Circuit Waveform Data")
-        op.ovarin(
+        op.ovarre(
             self.outfile,
             "Number of PF circuits including CS and plasma",
             "(n_pf_cs_plasma_circuits)",
@@ -3400,9 +3427,51 @@ class CSCoil(Model):
                 a_cs_toroidal=self.data.pf_coil.a_cs_toroidal,
             )
 
-            # Allowable (hoop) stress (Pa) alstroh
-            # Now a user input
-            # alstroh = min( (2.0e0*csytf/3.0e0), (0.5e0*csutf) )
+            # Create vertical profile of the self-axial stress in the CS coil, for fatigue calculations
+            for i, position in enumerate(
+                np.linspace(
+                    -self.data.pf_coil.z_cs_upper,
+                    self.data.pf_coil.z_cs_upper,
+                    num=N_CS_STRESS_PROFILE_POINTS,
+                    endpoint=True,
+                )
+            ):
+                stress_value, _ = self.calculate_cs_self_axial_stress(
+                    z_stress_point=position,
+                    r_cs_outer=self.data.pf_coil.r_pf_coil_outer[
+                        self.data.pf_coil.n_cs_pf_coils - 1
+                    ],
+                    dz_cs_half=self.data.pf_coil.dz_cs_full / 2.0,
+                    cur_cs=self.data.pf_coil.c_pf_cs_coils_peak_ma[
+                        self.data.pf_coil.n_cs_pf_coils - 1
+                    ]
+                    * 1.0e6,
+                    a_cs_toroidal=self.data.pf_coil.a_cs_toroidal,
+                )
+                # If the stress value is NaN (e.g., due to a division by zero or other numerical issue), set it to 0.0
+                # The value will always be NaN at the top and bottom of the coil
+                self.data.pf_coil.stress_z_cs_self_profile[i] = (
+                    0.0 if np.isnan(stress_value) else stress_value
+                )
+
+            self.data.pf_coil.stress_radial_cs_peak = self.calculate_cs_radial_stress(
+                r_stress_point=self.data.pf_coil.r_cs_middle,
+                r_cs_inner=self.data.pf_coil.r_cs_inner,
+                r_cs_outer=self.data.pf_coil.r_cs_outer,
+                j_cs=self.data.pf_coil.j_cs_pulse_start,
+                b_cs_inner=self.data.pf_coil.b_cs_peak_pulse_start,
+                f_poisson_cs_structure=self.data.tfcoil.poisson_steel,
+            )
+
+            # In reality this is practially 0
+            self.data.pf_coil.stress_radial_cs_inner = self.calculate_cs_radial_stress(
+                r_stress_point=self.data.pf_coil.r_cs_inner,
+                r_cs_inner=self.data.pf_coil.r_cs_inner,
+                r_cs_outer=self.data.pf_coil.r_cs_outer,
+                j_cs=self.data.pf_coil.j_cs_pulse_start,
+                b_cs_inner=self.data.pf_coil.b_cs_peak_pulse_start,
+                f_poisson_cs_structure=self.data.tfcoil.poisson_steel,
+            )
 
             # Calculation of CS fatigue
             # this is only valid for pulsed reactor design
@@ -3426,21 +3495,20 @@ class CSCoil(Model):
                 self.data.pf_coil.f_a_cs_turn_steel * self.data.pf_coil.a_cs_poloidal
             )
 
-            if self.data.pf_coil.i_cs_stress == 1:
-                self.data.pf_coil.s_shear_cs_peak = max(
-                    abs(
-                        self.data.pf_coil.stress_hoop_cs_inner
-                        - self.data.pf_coil.stress_z_cs_self_peak_midplane
-                    ),
-                    abs(self.data.pf_coil.stress_z_cs_self_peak_midplane - 0.0e0),
-                    abs(0.0e0 - self.data.pf_coil.stress_hoop_cs_inner),
-                )
-            else:
-                self.data.pf_coil.s_shear_cs_peak = max(
-                    abs(self.data.pf_coil.stress_hoop_cs_inner - 0.0e0),
-                    abs(0.0e0 - 0.0e0),
-                    abs(0.0e0 - self.data.pf_coil.stress_hoop_cs_inner),
-                )
+            self.data.pf_coil.stress_shear_cs_peak = calculate_tresca_stress(
+                stress_x=self.data.pf_coil.stress_hoop_cs_inner,
+                stress_y=self.data.pf_coil.stress_z_cs_self_peak_midplane,
+                stress_z=self.data.pf_coil.stress_radial_cs_peak,
+            )
+
+            self.data.pf_coil.stress_mises_cs_peak = calculate_von_mises_stress(
+                stress_x=self.data.pf_coil.stress_hoop_cs_inner,
+                stress_y=self.data.pf_coil.stress_z_cs_self_peak_midplane,
+                stress_z=self.data.pf_coil.stress_radial_cs_peak,
+                stress_shear_xy=0.0e0,
+                stress_shear_yz=0.0e0,
+                stress_shear_zx=0.0e0,
+            )
 
             # Thickness of hypothetical steel cylinders assumed to encase the CS along
             # its inside and outside edges; in reality, the steel is distributed
@@ -4046,6 +4114,98 @@ class CSCoil(Model):
         s_axial = forc_z_cs_self_peak_midplane / (0.5 * a_cs_toroidal)
 
         return s_axial, forc_z_cs_self_peak_midplane
+
+    @staticmethod
+    def calculate_cs_self_axial_stress(
+        z_stress_point: float,
+        r_cs_outer: float,
+        dz_cs_half: float,
+        cur_cs: float,
+        a_cs_toroidal: float,
+    ) -> tuple[float, float]:
+        """Calculate axial stress and axial force for the central solenoid.
+
+        Parameters
+        ----------
+        z_stress_point:
+            Vertical position where the stress is evaluated [m].
+        r_cs_outer:
+            Outer radius of the central solenoid [m].
+        dz_cs_half:
+            Half-height of the central solenoid [m].
+        cur_cs:
+            CS coil current [A].
+        a_cs_toroidal:
+            Total top-down toroidal area of the CS [m²].
+
+        Returns
+        -------
+        tuple(float, float)
+            A tuple containing the unsmeared axial stress and the axial force.
+                The first element is the unsmeared axial stress in MPa.
+                The second element is the axial force in newtons (N).
+
+        Notes
+        -----
+        The axial force is computed using elliptic-integral based terms and the
+        unsmeared axial stress is obtained by dividing the axial force by
+        the effective steel area associated with the CS turns.
+
+        References
+        ----------
+        [1] Case Studies in Superconducting Magnets. Boston, MA: Springer US, 2009.
+            doi: https://doi.org/10.1007/b112047.
+        """
+        # k2b term for elliptical integrals
+        # k2b2 = SQRT((4.0e0*b**2)/(4.0e0*b**2 + 4.0e0*hl**2))
+        k2b2 = (4.0e0 * r_cs_outer**2) / (4.0e0 * r_cs_outer**2 + 4.0e0 * dz_cs_half**2)
+
+        # k
+        kb_minus_2 = (4.0e0 * r_cs_outer**2) / (
+            4.0e0 * r_cs_outer**2 + (dz_cs_half - z_stress_point) ** 2
+        )
+        kb_plus_2 = (4.0e0 * r_cs_outer**2) / (
+            4.0e0 * r_cs_outer**2 + (dz_cs_half + z_stress_point) ** 2
+        )
+
+        # term 1
+        axial_term_1 = -(constants.RMU0 / 2.0e0) * (cur_cs / (2.0e0 * dz_cs_half)) ** 2
+
+        # term 2
+        ekb2_1 = ellipk(kb_minus_2)
+        ekb2_2 = ellipe(kb_minus_2)
+        axial_term_2 = (
+            (dz_cs_half - z_stress_point)
+            * (math.sqrt(4.0e0 * r_cs_outer**2 + (dz_cs_half - z_stress_point) ** 2))
+            * (ekb2_1 - ekb2_2)
+        )
+
+        # term 3
+        ek2b2_1 = ellipk(kb_plus_2)
+        ek2b2_2 = ellipe(kb_plus_2)
+        axial_term_3 = (
+            (dz_cs_half + z_stress_point)
+            * (math.sqrt(4.0e0 * r_cs_outer**2 + (dz_cs_half + z_stress_point) ** 2))
+            * (ek2b2_1 - ek2b2_2)
+        )
+
+        # Term 4
+        ek2b2_1 = ellipk(k2b2)
+        ek2b2_2 = ellipe(k2b2)
+        axial_term_4 = (
+            (2 * dz_cs_half)
+            * (math.sqrt(4.0e0 * r_cs_outer**2 + 4.0e0 * dz_cs_half**2))
+            * (ek2b2_1 - ek2b2_2)
+        )
+
+        # calculate axial force [N]
+        forc_z_cs_self = axial_term_1 * (axial_term_2 + axial_term_3 - axial_term_4)
+
+        # Calculate unsmeared axial stress
+        # Average axial stress at the interface of each half of the coil
+        s_axial = forc_z_cs_self / (0.5 * a_cs_toroidal)
+
+        return s_axial, forc_z_cs_self
 
     def calculate_cs_self_midplane_axial_stress_time_profile(
         self,
