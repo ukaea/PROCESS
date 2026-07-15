@@ -180,7 +180,6 @@ The arguments to the `register_constraint()` function are:
 - Name (again, currently an integer): in the example above it is `1234`
 - Unit (for output reporting purposes): in the example above it is `m`
 - Symbol (e.g. `=`, `>=`, `<=`. Again, for output reporting purposes): in the example above it is `=`
-- 
 
 
 `my_constraint_function()` should be named appropriately and return a `ConstraintResult` which contains the:
