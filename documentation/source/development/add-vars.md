@@ -170,11 +170,7 @@ A constraint is simply added by registering the constraint to the manager using 
 @ConstraintManager.register_constraint(1234, "m", "=")
 def my_constraint_function(constraint_registration): ...
 ```
-The arguments to the `register_constraint` function are:
 
-- Name (again, currently an integer)
-- Unit (for output reporting purposes)
-- Symbol (e.g. `=`, `>=`, `<=`. Again, for output reporting purposes)
 The arguments to the `register_constraint()` function are:
 
 - Name (again, currently an integer): in the example above it is `1234`
