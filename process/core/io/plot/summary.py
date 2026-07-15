@@ -3902,6 +3902,16 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
 
     nd_plasma_separatrix_electron = mfile.get("nd_plasma_separatrix_electron", scan=scan)
 
+    fusrat_plasma_dt_profile = [
+        mfile.get(f"fusrat_plasma_dt_profile{i}", scan=scan)
+        for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+    ]
+
+    t_plasma_fast_alpha_thermalisation_profile = [
+        mfile.get(f"t_plasma_fast_alpha_thermalisation_profile{i}", scan=scan)
+        for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+    ]
+
     ax_main = prof.add_subplot(631)
     ax_main.set_position([0.075, 0.625, 0.25, 0.325])
     ax_impurity = prof.add_subplot(634, sharex=ax_main)
@@ -3983,6 +3993,19 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         color="#d62728",
         linewidth=1.5,
     )
+    ax_impurity.plot(
+        rho,
+        np.multiply(
+            np.asarray(fusrat_plasma_dt_profile),
+            np.asarray(t_plasma_fast_alpha_thermalisation_profile),
+        )
+        / 1e16,
+        label=r"$n_{\alpha,\text{fast}}$",
+        color="#d62728",
+        linestyle="--",
+        linewidth=1.5,
+    )
+
     ax_impurity.plot(
         rho,
         density_profiles_plotting[2] * 1e3,
