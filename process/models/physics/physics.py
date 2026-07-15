@@ -5504,6 +5504,40 @@ class DetailedPhysics(Model):
         )
         print(f"e_crit_vol_avg: {e_crit_vol_avg / constants.KILOELECTRON_VOLT} keV")
 
+        self.data.physics.e_plasma_alpha_fast_critical_profile = (
+            self.calculate_simple_ion_slowing_critical_energy(
+                temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
+                nd_plasma_electrons=self.plasma_profile.neprofile.profile_y,
+                nd_plasma_ions=np.array([
+                    (
+                        self.data.physics.nd_plasma_fuel_ions_vol_avg
+                        / self.data.physics.nd_plasma_electrons_vol_avg
+                    )
+                    * self.plasma_profile.neprofile.profile_y
+                    * self.data.physics.f_plasma_fuel_deuterium,
+                    (
+                        self.data.physics.nd_plasma_fuel_ions_vol_avg
+                        / self.data.physics.nd_plasma_electrons_vol_avg
+                    )
+                    * self.plasma_profile.neprofile.profile_y
+                    * self.data.physics.f_plasma_fuel_tritium,
+                    (
+                        self.data.physics.nd_plasma_alphas_thermal_vol_avg
+                        / self.data.physics.nd_plasma_electrons_vol_avg
+                    )
+                    * self.plasma_profile.neprofile.profile_y,
+                ]),
+                n_charge_ion=np.array([1, 1, 2]),
+                m_ion_amu=np.array(
+                    [
+                        constants.M_DEUTERON_AMU,
+                        constants.M_TRITON_AMU,
+                        constants.M_ALPHA_AMU,
+                    ],
+                ),
+            )
+        )
+
     @staticmethod
     @nb.njit(cache=True)
     def calculate_debye_length(
@@ -5976,16 +6010,24 @@ class DetailedPhysics(Model):
             Mass of the fast ion in atomic mass units (amu). Default is the mass of an alpha particle.
 
         """
+        # Species weights: Z_i^2 / m_i
+        weights = (n_charge_ion**2) / m_ion_amu
+
+        # Support both:
+        # - nd_plasma_ions shape (n_species,)
+        # - nd_plasma_ions shape (n_species, n_points), e.g. (3, 500)
+        #   In the profile case, sum over species and return one value per radial point.
+        if nd_plasma_ions.ndim == 1:
+            ion_sum_term = np.sum(nd_plasma_ions * weights)
+        else:
+            ion_sum_term = np.sum(nd_plasma_ions * weights[:, np.newaxis], axis=0)
+
         return (
             14.8
             * temp_plasma_electron_kev
             * constants.KILOELECTRON_VOLT
             * m_fast_ion_amu
-            * (
-                (1 / nd_plasma_electrons)
-                * np.sum(nd_plasma_ions[:] * n_charge_ion[:] ** 2 / m_ion_amu[:])
-            )
-            ** (2 / 3)
+            * ((1.0 / nd_plasma_electrons) * ion_sum_term) ** (2.0 / 3.0)
         )
 
     def output_detailed_physics(self):
@@ -6545,4 +6587,14 @@ class DetailedPhysics(Model):
                 f"Plasma Spitzer resistivity at point {i}",
                 f"(res_plasma_fuel_spitzer_profile{i})",
                 self.data.physics.res_plasma_fuel_spitzer_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Critical Energies:")
+
+        for i in range(len(self.data.physics.e_plasma_alpha_fast_critical_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Critical energy for fast alpha particles at point {i}",
+                f"(e_plasma_alpha_fast_critical_profile{i})",
+                self.data.physics.e_plasma_alpha_fast_critical_profile[i],
             )

@@ -14066,6 +14066,31 @@ def plot_ion_slowing_down_time_profile(
     axis.legend()
 
 
+def plot_ion_slowing_down_critical_energy_profile(
+    axis: plt.Axes, mfile_data: MFile, scan: int
+) -> None:
+    """Plot the plasma Spitzer slowing down critical energy on the given axis."""
+    e_plasma_alpha_fast_critical_profile = [
+        mfile_data.data[f"e_plasma_alpha_fast_critical_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(e_plasma_alpha_fast_critical_profile)),
+        np.array(e_plasma_alpha_fast_critical_profile) / constants.KILOELECTRON_VOLT,
+        color="red",
+        linestyle="-",
+        label=r"$E_{crit,e-\alpha-fast}$",
+    )
+
+    axis.set_yscale("log")
+    axis.set_ylabel("Critical Energy [keV]")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
 def plot_resistivity_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
     """Plot the plasma resistivity on the given axis."""
     res_plasma_fuel_spitzer_profile = [
@@ -16108,10 +16133,14 @@ def main_plot(
     )
 
     plot_ion_slowing_down_time_profile(
-        _add_page("detailed_params").add_subplot(231), m_file, scan
+        _add_page("detailed_params").add_subplot(241), m_file, scan
     )
 
-    plot_resistivity_profile(pages["detailed_params"].add_subplot(232), m_file, scan)
+    plot_ion_slowing_down_critical_energy_profile(
+        pages["detailed_params"].add_subplot(242), m_file, scan
+    )
+
+    plot_resistivity_profile(pages["detailed_params"].add_subplot(243), m_file, scan)
 
     plot_detailed_plasma_parameters(
         pages["detailed_params"].add_subplot(233),
