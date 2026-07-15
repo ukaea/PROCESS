@@ -355,8 +355,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
             )
 
         elif i_p_coolant_pumping in {
-            PumpingPowerModelTypes.MECHANICAL,
-            PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP,
+            PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP,
+            PumpingPowerModelTypes.INPUT_PRESSURE_DROP,
         }:
             # Mechanical pumping power is calculated for first wall and blanket
             self.thermo_hydraulic_model(output=output)
@@ -379,8 +379,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
             po.osubhd(self.outfile, "DCLL model: Thermal-hydraulics Component Totals")
 
             if self.data.fwbs.i_p_coolant_pumping not in {
-                PumpingPowerModelTypes.MECHANICAL,
-                PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP,
+                PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP,
+                PumpingPowerModelTypes.INPUT_PRESSURE_DROP,
             }:
                 po.ovarre(
                     self.outfile,

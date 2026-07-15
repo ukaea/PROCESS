@@ -20,8 +20,8 @@ class PumpingPowerModelTypes(IntEnum):
 
     USER_INPUT = 0
     FRACTION_OF_HEAT = 1
-    MECHANICAL = 2
-    MECHANICAL_WITH_PRESSURE_DROP = 3
+    CALCULATE_PRESSURE_DROP = 2
+    INPUT_PRESSURE_DROP = 3
 
 
 logger = logging.getLogger(__name__)
@@ -796,8 +796,8 @@ class Power(Model):
         """
         i_p_coolant_pumping = PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping)
         if i_p_coolant_pumping not in {
-            PumpingPowerModelTypes.MECHANICAL,
-            PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP,
+            PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP,
+            PumpingPowerModelTypes.INPUT_PRESSURE_DROP,
         }:
             self.data.primary_pumping.p_fw_blkt_coolant_pump_mw = (
                 self.data.heat_transport.p_fw_coolant_pump_mw
@@ -930,7 +930,7 @@ class Power(Model):
 
         #  Heat removal from first wall and divertor (MW) (only used in costs.f90)
         i_p_coolant_pumping = PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping)
-        if i_p_coolant_pumping != PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP:
+        if i_p_coolant_pumping != PumpingPowerModelTypes.INPUT_PRESSURE_DROP:
             self.data.heat_transport.p_fw_div_heat_deposited_mw = (
                 self.data.power.p_fw_heat_deposited_mw
                 + self.data.power.p_div_heat_deposited_mw
@@ -1668,7 +1668,7 @@ class Power(Model):
             )
             if (
                 self.data.fwbs.i_blkt_dual_coolant > 0
-                and i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL
+                and i_p_coolant_pumping == PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP
             ):
                 self.data.heat_transport.p_plant_electric_gross_mw = (
                     (
