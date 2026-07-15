@@ -5486,24 +5486,23 @@ class DetailedPhysics(Model):
         e_crit_vol_avg = self.calculate_simple_ion_slowing_critical_energy(
             temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
             nd_plasma_electrons=self.data.physics.nd_plasma_electrons_vol_avg,
-            nd_plasma_ions=np.array(
-                [
-                    self.data.physics.nd_plasma_fuel_ions_vol_avg
-                    * self.data.physics.f_plasma_fuel_deuterium,
-                    self.data.physics.nd_plasma_fuel_ions_vol_avg
-                    * self.data.physics.f_plasma_fuel_tritium,
-                    self.data.physics.nd_plasma_alphas_thermal_vol_avg,
-                ]
-            ),
+            nd_plasma_ions=np.array([
+                self.data.physics.nd_plasma_fuel_ions_vol_avg
+                * self.data.physics.f_plasma_fuel_deuterium,
+                self.data.physics.nd_plasma_fuel_ions_vol_avg
+                * self.data.physics.f_plasma_fuel_tritium,
+                self.data.physics.nd_plasma_alphas_thermal_vol_avg,
+            ]),
             n_charge_ion=np.array([1, 1, 2]),
             m_ion_amu=np.array(
-                [constants.M_DEUTERON_AMU,
-                constants.M_TRITON_AMU,
-                constants.M_ALPHA_AMU,
+                [
+                    constants.M_DEUTERON_AMU,
+                    constants.M_TRITON_AMU,
+                    constants.M_ALPHA_AMU,
                 ],
             ),
         )
-        print(f"e_crit_vol_avg: {e_crit_vol_avg/constants.KILOELECTRON_VOLT} keV")
+        print(f"e_crit_vol_avg: {e_crit_vol_avg / constants.KILOELECTRON_VOLT} keV")
 
     @staticmethod
     @nb.njit(cache=True)
@@ -5957,11 +5956,10 @@ class DetailedPhysics(Model):
         m_ion_amu: np.ndarray,
         m_fast_ion_amu: float = constants.M_ALPHA_AMU,
     ) -> float | np.ndarray:
-        
         """
         Calculate the simple ion slowing down critical energy (E_crit) for a plasma.
-        
-        
+
+
         Parameters
         ----------
         temp_plasma_electron_kev : float | np.ndarray
@@ -5976,9 +5974,8 @@ class DetailedPhysics(Model):
             Masses of the ions in atomic mass units (amu).
         m_fast_ion_amu : float
             Mass of the fast ion in atomic mass units (amu). Default is the mass of an alpha particle.
-        
-        """
 
+        """
         return (
             14.8
             * temp_plasma_electron_kev

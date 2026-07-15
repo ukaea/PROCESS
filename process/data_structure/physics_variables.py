@@ -1644,6 +1644,9 @@ class PhysicsData:
     res_plasma_fuel_spitzer_vol_avg: float = 0.0
     """Volume averaged plasma Spitzer resistivity due to fuel ions (ohm m)"""
 
+    e_plasma_alpha_fast_critical_profile: list[float] = field(default_factory=list)
+    """Profile of critical energy for fast alpha particles slowing down in plasma [J]"""
+
     dt_power_density_plasma: float = 0.0
     sigmav_dt_average: float = 0.0
     dhe3_power_density: float = 0.0
