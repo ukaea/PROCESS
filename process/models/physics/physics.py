@@ -6030,6 +6030,34 @@ class DetailedPhysics(Model):
             * ((1.0 / nd_plasma_electrons) * ion_sum_term) ** (2.0 / 3.0)
         )
 
+    @staticmethod
+    @nb.njit(cache=True)
+    def calculate_fast_ion_thermalisation_time(
+        e_fast_ion_initial: float,
+        e_fast_ion_critical: float,
+        t_ion_spitzer_slowing_down: float,
+    ) -> float:
+        """
+        Calculate the fast ion thermalisation time.
+
+        Parameters
+        ----------
+        e_fast_ion_initial : float
+            Initial energy of the fast ion.
+        e_fast_ion_critical : float
+            Critical energy of the fast ion.
+        t_ion_spitzer_slowing_down : float
+            Ion Spitzer slowing down time.
+
+        Returns
+        -------
+        float
+            Average time for fast ion to thermalise.
+        """
+        return (t_ion_spitzer_slowing_down / 3) * np.log(
+            1 + (e_fast_ion_initial / e_fast_ion_critical) ** (3 / 2)
+        )
+
     def output_detailed_physics(self):
         """Outputs detailed physics variables to file."""
         po.oheadr(self.outfile, "Detailed Plasma")
