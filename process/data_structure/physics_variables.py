@@ -1650,6 +1650,12 @@ class PhysicsData:
     t_plasma_fast_alpha_thermalisation_profile: list[float] = field(default_factory=list)
     """Profile of fast alpha particle average thermalisation time in plasma [s]"""
 
+    f_p_plasma_alpha_fast_ions_profile: list[float] = field(default_factory=list)
+    """Profile of fast alpha particle energy fraction transferred to ions in plasma (0..1)"""
+
+    f_p_plasma_alpha_fast_electrons_profile: list[float] = field(default_factory=list)
+    """Profile of fast alpha particle energy fraction transferred to electrons in plasma (0..1)"""
+
     dt_power_density_plasma: float = 0.0
     sigmav_dt_average: float = 0.0
     dhe3_power_density: float = 0.0
