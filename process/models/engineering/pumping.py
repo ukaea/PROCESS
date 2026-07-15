@@ -312,16 +312,14 @@ def coolant_pumping_power(
 
     Parameters
     ----------
-    output : bool
-        Whether to write data to output file.
     i_liquid_breeder : int
         Switch for primary coolant or secondary coolant/breeder (1=primary He/H2O, 2=secondary PbLi/Li).
     temp_coolant_pump_outlet : float
         Pump outlet temperature (K).
     temp_coolant_pump_inlet : float
         Pump inlet temperature (K).
-    pressure : float
-        Outlet (pump inlet) coolant pressure (Pa).
+    pres_coolant_pump_inlet : float
+        Pump inlet pressure (Pa).
     dpres_coolant : float
         Coolant pressure drop (Pa).
     mflow_coolant_total : float

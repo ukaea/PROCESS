@@ -15863,7 +15863,8 @@ def plot_blanket_coolant_channel_structure_and_properties(
         f"Darcy Friction factor ($f$): {m_file.get('darcy_frict_blkt_outboard_coolant', scan=scan):.4f}\n\n"
         f"Friction drop coefficient for straight sections: {m_file.get('f_straight_blkt_outboard_coolant', scan=scan):.4f}\n"
         f"Friction drop coefficient for 90° bends: {m_file.get('f_elbow_blkt_outboard_90_bend', scan=scan):.4f}\n"
-        f"Friction drop coefficient for 180° bends: {m_file.get('f_elbow_blkt_outboard_180_bend', scan=scan):.4f}\n"
+        f"Friction drop coefficient for 180° bends: {m_file.get('f_elbow_blkt_outboard_180_bend', scan=scan):.4f}\n\n"
+        f"Total coolant mass flow rate: {m_file.get('mflow_blkt_outboard_coolant', scan=scan):.4f} kg/s\n"
     )
 
     fig.text(
@@ -15902,7 +15903,8 @@ def plot_blanket_coolant_channel_structure_and_properties(
         f"Darcy Friction factor ($f$): {m_file.get('darcy_frict_blkt_inboard_coolant', scan=scan):.4f}\n\n"
         f"Friction drop coefficient for straight sections: {m_file.get('f_straight_blkt_inboard_coolant', scan=scan):.4f}\n"
         f"Friction drop coefficient for 90° bends: {m_file.get('f_elbow_blkt_inboard_90_bend', scan=scan):.4f}\n"
-        f"Friction drop coefficient for 180° bends: {m_file.get('f_elbow_blkt_inboard_180_bend', scan=scan):.4f}\n"
+        f"Friction drop coefficient for 180° bends: {m_file.get('f_elbow_blkt_inboard_180_bend', scan=scan):.4f}\n\n"
+        f"Total coolant mass flow rate: {m_file.get('mflow_blkt_inboard_coolant', scan=scan):.4f} kg/s\n"
     )
 
     fig.text(
