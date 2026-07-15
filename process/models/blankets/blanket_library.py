@@ -3334,6 +3334,20 @@ class BlanketLibrary(Model):
             self.data.blanket.mflow_blkt_outboard_coolant,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Mass flow rate of outboard blanket coolant in single channel (kg/s)",
+            "(mflow_blkt_outboard_coolant_channel)",
+            self.data.blanket.mflow_blkt_outboard_coolant_channel,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Velocity of outboard blanket coolant in single channel (m/s)",
+            "(vel_blkt_outboard_coolant)",
+            self.data.blanket.vel_blkt_outboard_coolant,
+            "OP ",
+        )
 
     def output_inboard_blkt_pumping_variables(self):
 
@@ -3485,6 +3499,20 @@ class BlanketLibrary(Model):
             "Mass flow rate of inboard blanket coolant (kg/s)",
             "(mflow_blkt_inboard_coolant)",
             self.data.blanket.mflow_blkt_inboard_coolant,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Mass flow rate of inboard blanket coolant in single channel (kg/s)",
+            "(mflow_blkt_inboard_coolant_channel)",
+            self.data.blanket.mflow_blkt_inboard_coolant_channel,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Velocity of inboard blanket coolant in single channel (m/s)",
+            "(vel_blkt_inboard_coolant)",
+            self.data.blanket.vel_blkt_inboard_coolant,
             "OP ",
         )
 
