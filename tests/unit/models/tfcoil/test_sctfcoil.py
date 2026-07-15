@@ -113,7 +113,7 @@ def test_protect(protectparam, sctfcoil):
     """
     Automatically generated Regression Unit Test for protect.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
 
     :param protectparam: the data used to mock and assert in this test.
     :type protectparam: protectparam
@@ -344,7 +344,7 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
     """
     Automatically generated Regression Unit Test for supercon.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
 
     :param superconparam: the data used to mock and assert in this test.
     :type superconparam: superconparam
@@ -533,7 +533,7 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     """
     Automatically generated Regression Unit Test for peak_tf_with_ripple.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
 
     :param peaktfwithrippleparam: the data used to mock and assert in this test.
     :type peaktfwithrippleparam: peaktfwithrippleparam
@@ -786,7 +786,7 @@ def test_superconducting_tf_wp_geometry(tfwpgeomparam, sctfcoil):
     Automatically generated Regression Unit Test for superconducting_tf_wp_geometry.
 
     This test was generated using data from
-    tracking/baseline_2018/baseline_2018_IN.DAT.
+    tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
 
     :param tfwpgeomparam: the data used to mock and assert in this test.
     :type tfwpgeomparam: tfwpgeomparam
@@ -924,7 +924,7 @@ def test_superconducting_tf_case_geometry(tfcasegeomparam, sctfcoil):
     """
     Automatically generated Regression Unit Test for superconducting_tf_case_geometry.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
 
     :param tfcasegeomparam: the data used to mock and assert in this test.
     :type tfcasegeomparam: tfcasegeomparam
@@ -1123,7 +1123,7 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
     Automatically generated Regression Unit Test for
     tf_cable_in_conduit_integer_turn_geometry.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
 
     :param tfintegerturngeomparam: the data used to mock and assert in this test.
     :type tfintegerturngeomparam: tfintegerturngeomparam
@@ -1540,7 +1540,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     values they use to test the model for JA DEMO concept. Includes the assumptions
     and approximations in the models integration with PROCESS.
     """
-    monkeypatch.setattr(sctfcoil.data.build, "dr_tf_inboard", 1.4)  # Baseline 2018 value
+    monkeypatch.setattr(sctfcoil.data.build, "dr_tf_inboard", 1.4)
     monkeypatch.setattr(sctfcoil.data.build, "z_tf_inside_half", 8.8)  # Table 2
     monkeypatch.setattr(sctfcoil.data.build, "r_tf_inboard_mid", 3.55)  # Table 2
     monkeypatch.setattr(sctfcoil.data.build, "r_tf_outboard_mid", 15.62)  # Table 2
@@ -1553,9 +1553,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     )
     monkeypatch.setattr(sctfcoil.data.build, "dr_tf_outboard", 0)  # simplifies
 
-    monkeypatch.setattr(
-        sctfcoil.data.build, "z_plasma_xpoint_upper", 5.47008
-    )  # Baseline 2018
+    monkeypatch.setattr(sctfcoil.data.build, "z_plasma_xpoint_upper", 5.47008)
 
     monkeypatch.setattr(
         sctfcoil.data.superconducting_tfcoil, "a_tf_coil_inboard_steel", 0.55
@@ -1570,17 +1568,15 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
         sctfcoil.data.superconducting_tfcoil, "dx_tf_side_case_average", 0.05
     )
 
-    monkeypatch.setattr(sctfcoil.data.build, "dz_xpoint_divertor", 0.05)  # Baseline 2018
-    monkeypatch.setattr(sctfcoil.data.build, "dz_shld_upper", 0.3)  # Baseline 2018
+    monkeypatch.setattr(sctfcoil.data.build, "dz_xpoint_divertor", 0.05)
+    monkeypatch.setattr(sctfcoil.data.build, "dz_shld_upper", 0.3)
     monkeypatch.setattr(
         sctfcoil.data.divertor, "dz_divertor", 2.05
     )  # chosen to achieve H_vv in Table 2
 
-    monkeypatch.setattr(sctfcoil.data.build, "dr_tf_shld_gap", 0.05)  # Baseline 2018
-    monkeypatch.setattr(
-        sctfcoil.data.build, "dr_shld_thermal_outboard", 0.05
-    )  # Baseline 2018
-    monkeypatch.setattr(sctfcoil.data.build, "dr_tf_outboard", 1.4)  # Baseline 2018
+    monkeypatch.setattr(sctfcoil.data.build, "dr_tf_shld_gap", 0.05)
+    monkeypatch.setattr(sctfcoil.data.build, "dr_shld_thermal_outboard", 0.05)
+    monkeypatch.setattr(sctfcoil.data.build, "dr_tf_outboard", 1.4)
     monkeypatch.setattr(
         sctfcoil.data.build, "dr_shld_vv_gap_outboard", 1.7
     )  # chosen to achieve Ro_vv in Table 2
@@ -1907,7 +1903,7 @@ def test_superconducting_tf_coil_area_and_masses(
     """
     Automatically generated Regression Unit Test for tf_coil_area_and_masses.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
 
     :param tfcoilareaandmassesparam: the data used to mock and assert in this test.
     :type tfcoilareaandmassesparam: tfcoilareaandmassesparam

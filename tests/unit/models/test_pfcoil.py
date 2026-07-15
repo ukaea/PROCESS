@@ -1062,7 +1062,7 @@ def test_waveform(monkeypatch, pfcoil):
 
     waveform() requires specific mocked variables in order to work; these were
     discovered using gdb to break on the first subroutine call when running the
-    baseline 2018 IN.DAT.
+    baseline 2018 IN.DAT (no longer a part of the PROCESS repository).
 
     waveform() alters both c_pf_cs_coils_peak_ma and f_c_pf_cs_peak_time_array
     in the pfcoil.data.pf_coil module, so these are asserted on.
@@ -1225,7 +1225,7 @@ def test_vsec(pfcoil, monkeypatch):
 
     vsec() requires specific mocked variables in order to work; these were
     discovered using gdb to break on the first subroutine call when running the
-    baseline 2018 IN.DAT.
+    baseline 2018 IN.DAT (no longer a part of the PROCESS repository).
 
     vsec() modifies many vars, so only a couple are asserted on.
     :param pfcoil: PFCoil object
@@ -1982,7 +1982,7 @@ def test_hoop_stress(cs_coil):
 
     calculate_cs_hoop_stress() requires specific mocked variables in order to work;
     these were discovered using gdb to break on the first subroutine call when running
-    the baseline 2018 IN.DAT.
+    the baseline 2018 IN.DAT (no longer a part of the PROCESS repository).
 
     :param cs_coil: CSCoil object
     :type cs_coil: process.pfcoil.CSCoil
@@ -2014,7 +2014,7 @@ def test_selfinductance(pfcoil):
     """Test selfinductance function.
 
     selfinductance() uses values discovered using gdb to break on the first
-    function call when running the baseline 2018 IN.DAT.
+    function call when running the baseline 2018 IN.DAT (no longer a part of the PROCESS repository).
 
     :param pfcoil: PFCoil object
     :type pfcoil: process.pfcoil.PFCoil
@@ -3851,7 +3851,7 @@ def test_superconpf(superconpfparam):
 
     superconpf() requires specific arguments in order to work; these were
     discovered using gdb to break on the first subroutine call when running the
-    baseline 2018 IN.DAT.
+    baseline 2018 IN.DAT (no longer a part of the PROCESS repository).
 
     :param superconpfparam: the data used to mock and assert in this test.
     :type superconpfparam: superconpfparam
@@ -3893,7 +3893,7 @@ def test_induct(pfcoil, monkeypatch):
 
     induct() requires specific mocked vars in order to work; these were
     discovered using gdb to break on the first subroutine call when running the
-    baseline 2018 IN.DAT.
+    baseline 2018 IN.DAT (no longer a part of the PROCESS repository).
 
     :param pfcoil: a PFCoil instance
     :type pfcoil: process.pfcoil.PFCoil

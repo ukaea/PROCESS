@@ -43,7 +43,7 @@ def test_ncycle(ncycleparam, monkeypatch, cs_fatigue_python):
     """
     Automatically generated Regression Unit Test for ncycle.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository)..
 
     :param ncycleparam: the data used to mock and assert in this test.
     :type ncycleparam: ncycleparam
