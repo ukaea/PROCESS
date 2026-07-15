@@ -1647,6 +1647,9 @@ class PhysicsData:
     e_plasma_alpha_fast_critical_profile: list[float] = field(default_factory=list)
     """Profile of critical energy for fast alpha particles slowing down in plasma [J]"""
 
+    t_plasma_fast_alpha_thermalisation_profile: list[float] = field(default_factory=list)
+    """Profile of fast alpha particle average thermalisation time in plasma [s]"""
+
     dt_power_density_plasma: float = 0.0
     sigmav_dt_average: float = 0.0
     dhe3_power_density: float = 0.0
