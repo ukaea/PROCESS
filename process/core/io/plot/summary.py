@@ -16240,6 +16240,8 @@ def plot_blanket_coolant_channel_structure_and_properties(
         f"Friction drop coefficient for 90° bends: {m_file.get('f_elbow_blkt_outboard_90_bend', scan=scan):.4f}\n"
         f"Friction drop coefficient for 180° bends: {m_file.get('f_elbow_blkt_outboard_180_bend', scan=scan):.4f}\n\n"
         f"Total coolant mass flow rate: {m_file.get('mflow_blkt_outboard_coolant', scan=scan):.4f} kg/s\n"
+        f"Coolant mass flow rate in single channel: {m_file.get('mflow_blkt_outboard_coolant_channel', scan=scan):.4f} kg/s\n"
+        f"Coolant velocity in single channel: {m_file.get('vel_blkt_outboard_coolant', scan=scan):.4f} m/s"
     )
 
     fig.text(
@@ -16280,6 +16282,8 @@ def plot_blanket_coolant_channel_structure_and_properties(
         f"Friction drop coefficient for 90° bends: {m_file.get('f_elbow_blkt_inboard_90_bend', scan=scan):.4f}\n"
         f"Friction drop coefficient for 180° bends: {m_file.get('f_elbow_blkt_inboard_180_bend', scan=scan):.4f}\n\n"
         f"Total coolant mass flow rate: {m_file.get('mflow_blkt_inboard_coolant', scan=scan):.4f} kg/s\n"
+        f"Coolant mass flow rate in single channel: {m_file.get('mflow_blkt_inboard_coolant_channel', scan=scan):.4f} kg/s\n"
+        f"Velocity of inboard blanket coolant in single channel: {m_file.get('vel_blkt_inboard_coolant', scan=scan):.4f} m/s"
     )
 
     fig.text(
