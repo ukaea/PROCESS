@@ -4,6 +4,8 @@ from types import DynamicClassAttribute
 
 import numpy as np
 
+from process.core.solver.iteration_variables import ITERATION_VARIABLES
+
 
 class PROCESSRunMode(IntEnum):
     """Enumeration of the available PROCESS run modes, which determine the behaviour
@@ -100,14 +102,12 @@ class FiguresOfMerit(IntEnum):
         return self._description_
 
 
-IPNVARS = 177
+IPNVARS = max(ITERATION_VARIABLES.keys())
 """total number of variables available for iteration"""
 
-IPEQNS = 92
-"""number of constraint equations available"""
-
-IPNFOMS = 19
-"""number of available figures of merit"""
+# Set to a really large number so that it should never need to be changed
+IPEQNS = 500
+"""Maximum number of constraint equations available"""
 
 
 @dataclass(slots=True)
