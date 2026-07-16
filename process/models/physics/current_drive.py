@@ -191,7 +191,7 @@ class NeutralBeam(Model):
             self.data.current_drive.e_beam_kev / self.data.physics.m_beam_amu,
             self.data.physics.temp_plasma_electron_vol_avg_kev,
             self.data.physics.nd_plasma_electrons_vol_avg,
-            self.data.physics.f_nd_alpha_electron,
+            self.data.physics.f_nd_alpha_thermal_electron,
             self.data.physics.f_nd_plasma_carbon_electron,
             self.data.physics.f_nd_plasma_oxygen_electron,
             self.data.physics.f_nd_plasma_iron_argon_electron,
@@ -283,7 +283,7 @@ class NeutralBeam(Model):
             self.data.current_drive.e_beam_kev / self.data.physics.m_beam_amu,
             self.data.physics.temp_plasma_electron_vol_avg_kev,
             self.data.physics.nd_plasma_electrons_vol_avg,
-            self.data.physics.f_nd_alpha_electron,
+            self.data.physics.f_nd_alpha_thermal_electron,
             self.data.physics.f_nd_plasma_carbon_electron,
             self.data.physics.f_nd_plasma_oxygen_electron,
             self.data.physics.f_nd_plasma_iron_argon_electron,
@@ -2392,7 +2392,7 @@ class CurrentDrive(Model):
         """
         po.oheadr(self.outfile, "Heating & Current Drive System")
 
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Ignited plasma switch (0=not ignited, 1=ignited)",
             "(i_plasma_ignited)",
@@ -2428,7 +2428,7 @@ class CurrentDrive(Model):
             po.oblnkl(self.outfile)
             return
 
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Primary current drive efficiency model",
             "(i_hcd_primary)",
@@ -2534,7 +2534,7 @@ class CurrentDrive(Model):
                 self.data.current_drive.xi_ebw,
             )
         if self.data.current_drive.i_hcd_primary == 13:
-            po.ovarin(
+            po.ovarre(
                 self.outfile,
                 "Electron cyclotron cutoff wave mode switch",
                 "(i_ecrh_wave_mode)",
@@ -2594,28 +2594,28 @@ class CurrentDrive(Model):
                 CurrentDriveModel(self.data.current_drive.i_hcd_primary).method
                 == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Beam first orbit loss power (MW)",
                     "(p_beam_orbit_loss_mw)",
                     self.data.current_drive.p_beam_orbit_loss_mw,
                     "OP ",
                 )
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Beam shine-through power [MW]",
                     "(p_beam_shine_through_mw)",
                     self.data.current_drive.p_beam_shine_through_mw,
                     "OP ",
                 )
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Maximum allowable beam power (MW)",
                     "(p_hcd_injected_max)",
                     self.data.current_drive.p_hcd_injected_max,
                 )
                 po.oblnkl(self.outfile)
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Beam power entering vacuum vessel (MW)",
                     "(p_beam_injected_mw)",
@@ -2658,7 +2658,7 @@ class CurrentDrive(Model):
 
         po.ocmmnt(self.outfile, "----------------------------")
         po.oblnkl(self.outfile)
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "Secondary current drive efficiency model",
             "(i_hcd_secondary)",
@@ -2796,28 +2796,28 @@ class CurrentDrive(Model):
                 CurrentDriveModel(self.data.current_drive.i_hcd_primary).method
                 == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Beam first orbit loss power (MW)",
                     "(p_beam_orbit_loss_mw)",
                     self.data.current_drive.p_beam_orbit_loss_mw,
                     "OP ",
                 )
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Beam shine-through power [MW]",
                     "(p_beam_shine_through_mw)",
                     self.data.current_drive.p_beam_shine_through_mw,
                     "OP ",
                 )
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Maximum allowable beam power (MW)",
                     "(p_hcd_injected_max)",
                     self.data.current_drive.p_hcd_injected_max,
                 )
                 po.oblnkl(self.outfile)
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Beam power entering vacuum vessel (MW)",
                     "(p_beam_injected_mw)",
@@ -2937,35 +2937,35 @@ class CurrentDrive(Model):
         )
 
         po.osubhd(self.outfile, "Fractions of current drive :")
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Bootstrap fraction",
             "(f_c_plasma_bootstrap)",
             self.data.current_drive.f_c_plasma_bootstrap,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Diamagnetic fraction",
             "(f_c_plasma_diamagnetic)",
             self.data.current_drive.f_c_plasma_diamagnetic,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Pfirsch-Schlueter fraction",
             "(f_c_plasma_pfirsch_schluter)",
             self.data.current_drive.f_c_plasma_pfirsch_schluter,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Auxiliary current drive fraction",
             "(f_c_plasma_auxiliary)",
             self.data.physics.f_c_plasma_auxiliary,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Inductive fraction",
             "(f_c_plasma_inductive)",
@@ -2975,7 +2975,7 @@ class CurrentDrive(Model):
 
         # MDK Add self.data.physics.f_c_plasma_non_inductive as it can be an iteration
         # variable
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Fraction of the plasma current produced by non-inductive means",
             "(f_c_plasma_non_inductive)",

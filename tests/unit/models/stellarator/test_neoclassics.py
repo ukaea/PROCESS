@@ -22,7 +22,7 @@ class InitNeoclassicsParam(NamedTuple):
     temp_plasma_ion_on_axis_kev: Any = None
     nd_plasma_ions_on_axis: Any = None
     f_plasma_fuel_deuterium: Any = None
-    nd_plasma_alphas_vol_avg: Any = None
+    nd_plasma_alphas_thermal_vol_avg: Any = None
     rminor: Any = None
     rmajor: Any = None
     b_plasma_toroidal_on_axis: Any = None
@@ -71,7 +71,7 @@ class InitNeoclassicsParam(NamedTuple):
             temp_plasma_ion_on_axis_kev=12.579710000000002,
             nd_plasma_ions_on_axis=2.3930858160000005e20,
             f_plasma_fuel_deuterium=0.5,
-            nd_plasma_alphas_vol_avg=2.9820384000000004e19,
+            nd_plasma_alphas_thermal_vol_avg=2.9820384000000004e19,
             rminor=1.7993820274145451,
             rmajor=22.16,
             b_plasma_toroidal_on_axis=5.2400000000000002,
@@ -997,8 +997,8 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
     )
     monkeypatch.setattr(
         neoclassics.data.physics,
-        "nd_plasma_alphas_vol_avg",
-        initneoclassicsparam.nd_plasma_alphas_vol_avg,
+        "nd_plasma_alphas_thermal_vol_avg",
+        initneoclassicsparam.nd_plasma_alphas_thermal_vol_avg,
     )
     monkeypatch.setattr(neoclassics.data.physics, "rminor", initneoclassicsparam.rminor)
     monkeypatch.setattr(neoclassics.data.physics, "rmajor", initneoclassicsparam.rmajor)

@@ -128,7 +128,7 @@ icc = 65
 *-----------------*
 icc = 72
 * allowable hoop stress in Central Solenoid structural material [Pa]
-alstroh = 7.5D8
+stress_cs_steel_max = 7.5D8
 
 * nd_plasma_pedestal_electron<ne0 *
 *------------------*

@@ -1410,7 +1410,14 @@ class Power(Model):
         po.ocmmnt(self.outfile, "Turbine conversion : ")
         po.oblnkl(self.outfile)
 
-        po.ovarrf(
+        po.ovarre(
+            self.outfile,
+            "Total high grade thermal power used for electricity production [MWth]",
+            "(p_plant_primary_heat_mw)",
+            self.data.heat_transport.p_plant_primary_heat_mw,
+        )
+
+        po.ovarre(
             self.outfile,
             "Thermal to electric conversion efficiency of the turbine",
             "(eta_turbine)",

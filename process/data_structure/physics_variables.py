@@ -609,8 +609,8 @@ class PhysicsData:
     )
     """Array of plasma electron density upper limits values (nₑ,max) [/m³]"""
 
-    nd_plasma_alphas_vol_avg: float = 0.0
-    """Plasma volume averaged thermal alpha density (⟨n_α⟩) [/m³]"""  # noqa: RUF001
+    nd_plasma_alphas_thermal_vol_avg: float = 0.0
+    """Plasma volume averaged thermal alpha density (⟨n_αₜₕ⟩) [/m³]"""
 
     nd_beam_ions: float = 0.0
     """Hot beam ion density, variable (⟨n_beam⟩) [/m³]"""
@@ -1258,8 +1258,8 @@ class PhysicsData:
     rad_fraction_total: float = 0.0
     """Radiation fraction total = SoL + LCFS radiation / total power deposited in plasma"""
 
-    f_nd_alpha_electron: float = 0.1
-    """thermal alpha density/electron density (`iteration variable 109`)"""
+    f_nd_alpha_thermal_electron: float = 0.1
+    """Thermal alpha density/electron density (⟨n_αₜₕ⟩/⟨nₑ⟩)"""
 
     f_nd_protium_electrons: float = 0.0
     """Seeded f_nd_protium_electrons density / electron density."""

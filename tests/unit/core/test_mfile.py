@@ -32,7 +32,7 @@ def test_get_mfile_initial_ixc_values(input_file, tmp_path, data_structure_obj):
     assert iteration_variable_values[-1] == pytest.approx(0.5)
 
     # A default not provided in the MFile
-    assert iteration_variable_names[-4] == "f_nd_alpha_electron"
+    assert iteration_variable_names[-4] == "f_nd_alpha_thermal_electron"
     assert iteration_variable_values[-4] == pytest.approx(0.1)
 
 

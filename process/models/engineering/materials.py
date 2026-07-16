@@ -2,6 +2,8 @@
 
 import logging
 
+import numpy as np
+
 logger = logging.getLogger(__name__)
 
 poisson_steel: float = 0.3
@@ -43,4 +45,80 @@ def eurofer97_thermal_conductivity(temp: float, fw_th_conductivity: float) -> fl
         (5.4308 + 0.13565 * temp - 0.00023862 * temp**2 + 1.3393e-7 * temp**3)
         * fw_th_conductivity
         / 28.34
+    )
+
+
+def calculate_tresca_stress(
+    stress_x: float | np.ndarray,
+    stress_y: float | np.ndarray,
+    stress_z: float | np.ndarray,
+) -> float | np.ndarray:
+    """Calculates the Tresca (maximum shear stress) criterion from three principal
+    stress components.
+
+    Parameters
+    ----------
+    stress_x:
+        First principal stress in Pa.
+    stress_y:
+        Second principal stress in Pa.
+    stress_z:
+        Third principal stress in Pa.
+
+    Returns
+    -------
+    :
+        Tresca stress (maximum shear stress criterion) in Pa, defined as the
+        maximum of |stress_x - stress_y|, |stress_y - stress_z|, |stress_x - stress_z|.
+    """
+    return max(
+        abs(stress_x - stress_y),
+        abs(stress_y - stress_z),
+        abs(stress_x - stress_z),
+    )
+
+
+def calculate_von_mises_stress(
+    stress_x: float | np.ndarray,
+    stress_y: float | np.ndarray,
+    stress_z: float | np.ndarray,
+    stress_shear_xy: float | np.ndarray,
+    stress_shear_yz: float | np.ndarray,
+    stress_shear_zx: float | np.ndarray,
+) -> float | np.ndarray:
+    """Calculates the von Mises stress criterion from three principal stress components.
+
+    Parameters
+    ----------
+    stress_x:
+        First principal stress in Pa.
+    stress_y:
+        Second principal stress in Pa.
+    stress_z:
+        Third principal stress in Pa.
+    stress_shear_xy:
+        Shear stress in the xy-plane in Pa.
+    stress_shear_yz:
+        Shear stress in the yz-plane in Pa.
+    stress_shear_zx:
+        Shear stress in the zx-plane in Pa.
+
+    Returns
+    -------
+    :
+        Von Mises stress in Pa, defined as:
+        √(0.5 * ((sx - sy)² + (sy - sz)² + (sx - sz)²) + 6 * (τ_xy² + τ_yz² + τ_zx²))
+
+    References
+    ----------
+    [1] https://en.wikipedia.org/wiki/Von_Mises_yield_criterion
+    """
+    return np.sqrt(
+        0.5
+        * (
+            (stress_x - stress_y) ** 2
+            + (stress_y - stress_z) ** 2
+            + (stress_z - stress_x) ** 2
+            + 6 * (stress_shear_xy**2 + stress_shear_yz**2 + stress_shear_zx**2)
+        )
     )

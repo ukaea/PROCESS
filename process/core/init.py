@@ -16,6 +16,7 @@ from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.build_variables import (
+    CSPrecompressionConfiguration,
     InboardBlanketConfiguration,
     TFCSRadialConfiguration,
 )
@@ -210,23 +211,23 @@ def run_summary(data: DataStructure):
     # MFile #
     mfile = constants.MFILE
 
-    process_output.ovarst(mfile, "PROCESS version", "(procver)", f'"{version}"')
-    process_output.ovarst(mfile, "Date of run", "(date)", f'"{date_string}"')
-    process_output.ovarst(mfile, "Time of run", "(time)", f'"{time_string}"')
-    process_output.ovarst(mfile, "User", "(username)", f'"{user}"')
-    process_output.ovarst(mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"')
-    process_output.ovarst(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
-    process_output.ovarst(
+    process_output.ovarre(mfile, "PROCESS version", "(procver)", f'"{version}"')
+    process_output.ovarre(mfile, "Date of run", "(date)", f'"{date_string}"')
+    process_output.ovarre(mfile, "Time of run", "(time)", f'"{time_string}"')
+    process_output.ovarre(mfile, "User", "(username)", f'"{user}"')
+    process_output.ovarre(mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"')
+    process_output.ovarre(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
+    process_output.ovarre(
         mfile, "PROCESS git branch", "(branch_name)", f'"{git_branch}"'
     )
-    process_output.ovarst(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
+    process_output.ovarre(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
 
-    process_output.ovarin(
+    process_output.ovarre(
         mfile, "Optimisation switch", "(ioptimz)", data.numerics.ioptimz
     )
     # If optimising, write figure of merit switch
     if data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
-        process_output.ovarin(
+        process_output.ovarre(
             mfile, "Figure of merit switch", "(minmax)", data.numerics.minmax
         )
 
@@ -334,7 +335,7 @@ def check_process(inputs, data):  # noqa: ARG001
     if data.impurity_radiation.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069
         raise ProcessValidationError(
             "The thermal alpha/electron density ratio should be controlled using"
-            " f_nd_alpha_electron (itv 109) and not f_nd_impurity_electrons(2)."
+            " f_nd_alpha_thermal_electron (itv 109) and not f_nd_impurity_electrons(2)."
             "f_nd_impurity_electrons(2) should be removed from the input file,"
             " or set to the default value 0.1D0."
         )
@@ -821,7 +822,11 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Ensure that no pre-compression structure
     # is used for bucked and wedged design
-    if data.tfcoil.i_tf_bucking >= 2 and data.build.i_cs_precomp == 1:
+    if (
+        data.tfcoil.i_tf_bucking >= 2
+        and CSPrecompressionConfiguration(data.build.i_cs_precomp)
+        == CSPrecompressionConfiguration.CS_PRECOMPRESSION_STRUCTURE_PRESENT
+    ):
         raise ProcessValidationError(
             "No CS precompression structure for bucked and wedged, use i_cs_precomp = 0"
         )

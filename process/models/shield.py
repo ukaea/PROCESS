@@ -438,42 +438,42 @@ class Shield(Model):
         """Output shield areas and volumes to log."""
         po.oheadr(self.outfile, "Shield Areas and Volumes")
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Area of inboard shield surface (m^2)",
             "(a_shld_inboard_surface)",
             self.data.build.a_shld_inboard_surface,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Area of outboard shield surface (m^2)",
             "(a_shld_outboard_surface)",
             self.data.build.a_shld_outboard_surface,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Total area of shield surface (m^2)",
             "(a_shld_total_surface)",
             self.data.build.a_shld_total_surface,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Volume of inboard shield (m^3)",
             "(vol_shld_inboard)",
             self.data.blanket.vol_shld_inboard,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Volume of outboard shield (m^3)",
             "(vol_shld_outboard)",
             self.data.blanket.vol_shld_outboard,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Total volume of shield (m^3)",
             "(vol_shld_total)",

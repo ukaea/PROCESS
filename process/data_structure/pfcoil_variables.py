@@ -54,6 +54,9 @@ class PFCoilData:
     )
     """Axial stress (z) in central solenoid at midplane due to its own field at each time point (Pa)"""
 
+    stress_z_cs_self_profile: list[float] = field(default_factory=lambda: np.zeros(20))
+    """Vertical profile of axial stress (z) in central solenoid at midplane due to its own field at each time point (Pa)"""
+
     stress_hoop_cs_inner: float = 0.0
     """Hoop stress in central solenoid at inboard edge due to its own field (when at peak current) (Pa)"""
 
@@ -61,6 +64,15 @@ class PFCoilData:
         default_factory=lambda: np.zeros(6)
     )
     """Hoop stress in central solenoid at inboard edge due to its own field at each time point (Pa)"""
+
+    stress_radial_cs_peak: float = 0.0
+    """Radial stress in central solenoid at midplane due to its own field (when at peak current) (Pa)"""
+
+    stress_radial_cs_inner: float = 0.0
+    """Radial stress in central solenoid at inboard edge due to its own field (when at peak current) (Pa)"""
+
+    stress_mises_cs_peak: float = 0.0
+    """Von Mises stress in central solenoid at midplane due to its own field (when at peak current) (Pa)"""
 
     forc_z_cs_self_peak_midplane: float = 0.0
     """Axial force (z) on central solenoid at midplane due to its own field (when at peak current) (N)"""
@@ -109,14 +121,8 @@ class PFCoilData:
     alfapf: float = 5e-10
     """smoothing parameter used in PF coil current calculation at the beginning of pulse (BoP)"""
 
-    alstroh: float = 4.0e8
-    """allowable hoop stress in Central Solenoid structural material (Pa)"""
-
-    i_cs_stress: int = 1
-    """Switch for CS stress calculation:
-    - =0 Hoop stress only
-    - =1 Hoop + Axial stress
-    """
+    stress_cs_steel_max: float = 4.0e8
+    """Max allowable stress in Central Solenoid structural material (Pa)"""
 
     a_cs_toroidal: float = 0.0
     """Central solenoid top-down toroidal cross-sectional area (m2)"""
@@ -421,8 +427,8 @@ class PFCoilData:
     (r = rmajor + rref*rminor)
     """
 
-    s_shear_cs_peak: float = 0.0
-    """Maximum shear stress (Tresca criterion) coils/central solenoid [MPa]"""
+    stress_shear_cs_peak: float = 0.0
+    """Peak achieved shear stress (Tresca criterion) in central solenoid [MPa]"""
 
     sigpfcalw: float = 500.0
     """maximum permissible tensile stress (MPa) in steel coil cases for superconducting

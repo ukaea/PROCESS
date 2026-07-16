@@ -471,7 +471,7 @@ class NumericsData:
     * (106) NOT USED
     * (107) NOT USED
     * (108) breeder_f: Volume of Li4SiO4 / (Volume of Be12Ti + Li4SiO4)
-    * (109) f_nd_alpha_electron: thermal alpha density / electron density
+    * (109) f_nd_alpha_thermal_electron: thermal alpha density / electron density
     * (110) NOT USED
     * (111) NOT USED
     * (112) NOT USED

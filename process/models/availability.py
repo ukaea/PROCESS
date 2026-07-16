@@ -623,7 +623,7 @@ class Availability(Model):
                 "(adivflnc)",
                 self.data.costs.adivflnc,
             )
-            po.ovarin(
+            po.ovarre(
                 self.outfile,
                 "Number of remote handling systems",
                 "(num_rh_systems)",
@@ -1006,7 +1006,7 @@ class Availability(Model):
             po.ovarre(
                 self.outfile, "Failure rate (1/h)", "(bop_fail_rate)", bop_fail_rate
             )
-            po.ovarin(
+            po.ovarre(
                 self.outfile,
                 "Number of failures in lifetime",
                 "(bop_num_failures)",
@@ -1115,14 +1115,14 @@ class Availability(Model):
         if output:
             po.ocmmnt(self.outfile, "Vacuum:")
             po.oblnkl(self.outfile)
-            po.ovarin(
+            po.ovarre(
                 self.outfile,
                 "Number of pumps (excluding redundant pumps)",
                 "(n_vac_pumps_high)",
                 self.data.vacuum.n_vac_pumps_high,
                 "OP ",
             )
-            po.ovarin(
+            po.ovarre(
                 self.outfile,
                 "Number of redundant pumps",
                 "(redun_vac)",

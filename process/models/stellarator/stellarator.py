@@ -1492,19 +1492,19 @@ class Stellarator(Model):
                     "(f_p_blkt_multiplication)",
                     self.data.fwbs.f_p_blkt_multiplication,
                 )
-                po.ovarin(
+                po.ovarre(
                     self.outfile,
                     "Number of divertor ports assumed",
                     "(npdiv)",
                     self.data.fwbs.npdiv,
                 )
-                po.ovarin(
+                po.ovarre(
                     self.outfile,
                     "Number of inboard H/CD ports assumed",
                     "(nphcdin)",
                     self.data.fwbs.nphcdin,
                 )
-                po.ovarin(
+                po.ovarre(
                     self.outfile,
                     "Number of outboard H/CD ports assumed",
                     "(nphcdout)",
@@ -1571,7 +1571,7 @@ class Stellarator(Model):
                 self.data.fwbs.blktmodel == 0
             ):
                 po.oblnkl(self.outfile)
-                po.ovarin(
+                po.ovarre(
                     self.outfile,
                     "First wall / blanket thermodynamic model",
                     "(i_thermal_electric_conversion)",
@@ -2358,7 +2358,7 @@ class Stellarator(Model):
             self.data.physics.fusden_alpha_total,
             self.data.physics.plasma_current,
             sbar,
-            self.data.physics.nd_plasma_alphas_vol_avg,
+            self.data.physics.nd_plasma_alphas_thermal_vol_avg,
             self.data.physics.t_energy_confinement,
             self.data.physics.vol_plasma,
             self.data.physics.burnup_in,

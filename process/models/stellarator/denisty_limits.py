@@ -271,10 +271,10 @@ def output(stellarator, bt_ecrh, ne0_max_ECRH, data):
     )
 
     if powerht_local >= pscalingmw_local:
-        po.ovarin(
+        po.ovarre(
             stellarator.outfile, "Operation point ECRH ignitable?", "(ecrh_bool)", 1
         )
     else:
-        po.ovarin(
+        po.ovarre(
             stellarator.outfile, "Operation point ECRH ignitable?", "(ecrh_bool)", 0
         )

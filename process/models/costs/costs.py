@@ -84,7 +84,7 @@ class Costs(Model):
 
         po.oheadr(self.outfile, "Power Reactor Costs (1990 US$)")
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "First wall / blanket life (years)",
             "(life_blkt)",
@@ -92,55 +92,55 @@ class Costs(Model):
         )
 
         if self.data.ife.ife != 1:
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Divertor life (years)",
                 "(life_div)",
                 self.data.costs.life_div,
             )
             if self.data.physics.itart == 1:
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Centrepost life (years)",
                     "(cplife_cal)",
                     self.data.costs.cplife_cal,
                 )
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile, "Cost of electricity (m$/kWh)", "(coe)", self.data.costs.coe
         )
 
         po.osubhd(self.outfile, "Power Generation Costs :")
         if self.data.costs.ifueltyp == 1:
             po.oshead(self.outfile, "Replaceable Components Direct Capital Cost")
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "First wall direct capital cost (M$)",
                 "(fwallcst)",
                 self.data.costs.fwallcst,
             )
-            po.ovarrf(
+            po.ovarre(
                 self.outfile,
                 "Blanket direct capital cost (M$)",
                 "(blkcst)",
                 self.data.costs.blkcst,
             )
             if self.data.ife.ife != 1:
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Divertor direct capital cost (M$)",
                     "(divcst)",
                     self.data.costs.divcst,
                 )
                 if self.data.physics.itart == 1:
-                    po.ovarrf(
+                    po.ovarre(
                         self.outfile,
                         "Centrepost direct capital cost (M$)",
                         "(cpstcst)",
                         self.data.costs.cpstcst,
                     )
 
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Plasma heating/CD system cap cost (M$)",
                     "",
@@ -148,14 +148,14 @@ class Costs(Model):
                     * self.data.costs.fcdfuel
                     / (1.0e0 - self.data.costs.fcdfuel),
                 )
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Fraction of CD cost --> fuel cost",
                     "(fcdfuel)",
                     self.data.costs.fcdfuel,
                 )
             else:
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "IFE driver system direct cap cost (M$)",
                     "",
@@ -163,7 +163,7 @@ class Costs(Model):
                     * self.data.costs.fcdfuel
                     / (1.0e0 - self.data.costs.fcdfuel),
                 )
-                po.ovarrf(
+                po.ovarre(
                     self.outfile,
                     "Fraction of driver cost --> fuel cost",
                     "(fcdfuel)",
@@ -177,7 +177,7 @@ class Costs(Model):
             "(fkind)",
             self.data.costs.fkind,
         )
-        po.ovarin(
+        po.ovarre(
             self.outfile, "Level of Safety Assurance", "(lsa)", self.data.costs.lsa
         )
         po.oblnkl(self.outfile)

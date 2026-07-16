@@ -180,7 +180,7 @@ class Neoclassics(Model):
             * (1 - rho**2) ** self.data.physics.alphan
         )
         densa = (
-            self.data.physics.nd_plasma_alphas_vol_avg
+            self.data.physics.nd_plasma_alphas_thermal_vol_avg
             * (1 + self.data.physics.alphan)
             * (1 - rho**2) ** self.data.physics.alphan
         )
@@ -261,7 +261,7 @@ class Neoclassics(Model):
             * 1.0
             / self.data.physics.rminor
             * rho
-            * self.data.physics.nd_plasma_alphas_vol_avg
+            * self.data.physics.nd_plasma_alphas_thermal_vol_avg
             * (1 + self.data.physics.alphan)
             * (1.0 - rho**2) ** (self.data.physics.alphan - 1.0)
             * self.data.physics.alphan
@@ -550,7 +550,7 @@ class Neoclassics(Model):
             * self.data.physics.f_plasma_fuel_deuterium,
             self.data.physics.nd_plasma_fuel_ions_vol_avg
             * (1 - self.data.physics.f_plasma_fuel_deuterium),
-            self.data.physics.nd_plasma_alphas_vol_avg,
+            self.data.physics.nd_plasma_alphas_thermal_vol_avg,
         ])
 
         mass = np.array([

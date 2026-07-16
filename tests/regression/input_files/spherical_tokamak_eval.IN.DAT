@@ -280,7 +280,7 @@ itartpf  = 1 * switch for Spherical Tokamak PF models;
 kappa    = 2.8 * plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5; 7 or 9-10`)
 q95        = 5.835830999686161 * Safety factor 'near' plasma edge (`iteration variable 18`) equal to q95
 q0       = 2.0 * safety factor on axis
-f_nd_alpha_electron = 0.08870796537675113 * thermal alpha density/electron density (`iteration variable 109`)
+f_nd_alpha_thermal_electron = 0.08870796537675113 * thermal alpha density/electron density (`iteration variable 109`)
 ind_plasma_internal_norm      = 0.3 * plasma normalised internal inductance
 i_ind_plasma_internal_norm = 0 * Normalised plasma intenral induction selection switch (0 = user input) 
 rmajor   = 4.5 * plasma major radius (m) (`iteration variable 3`)
