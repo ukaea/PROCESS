@@ -967,20 +967,6 @@ class PlasmaConfinementTime(Model):
         # temp_plasma_electron_density_weighted_kev are in keV, and
         # pden_electron_transport_loss_mw and pden_ion_transport_loss_mw are in MW/m3)
 
-        e_ions_stored_thermal = (
-            (3 / 2)
-            * (constants.ELECTRON_CHARGE / 1e3)
-            * nd_plasma_ions_total_vol_avg
-            * temp_plasma_ion_density_weighted_kev
-        )
-
-        e_electrons_stored_thermal = (
-            (3 / 2)
-            * (constants.ELECTRON_CHARGE / 1e3)
-            * nd_plasma_electrons_vol_avg
-            * temp_plasma_electron_density_weighted_kev
-        )
-
         t_energy_confinement = t_electron_confinement * hfact
 
         # Apply H-factor correction to chosen scaling
@@ -989,13 +975,16 @@ class PlasmaConfinementTime(Model):
             * t_energy_confinement
             * (
                 (
-                    e_electrons_stored_thermal
+                    eden_plasma_electrons_thermal_vol_avg
                     + (
-                        e_ions_stored_thermal
+                        eden_plasma_ions_thermal_vol_avg
                         / self.data.physics.f_t_fuel_ion_electron_energy_confinement
                     )
                 )
-                / (e_electrons_stored_thermal + e_ions_stored_thermal)
+                / (
+                    eden_plasma_electrons_thermal_vol_avg
+                    + eden_plasma_ions_thermal_vol_avg
+                )
             )
         )
 
@@ -1007,10 +996,12 @@ class PlasmaConfinementTime(Model):
 
         # The transport losses is just the electron and ion thermal energies divided by
         # the confinement time.
-        pden_ion_transport_loss_mw = e_ions_stored_thermal / t_ion_energy_confinement
+        pden_ion_transport_loss_mw = (
+            eden_plasma_ions_thermal_vol_avg / t_ion_energy_confinement
+        ) / 1e6  # Convert from W/m³ to MW/m³
         pden_electron_transport_loss_mw = (
-            e_electrons_stored_thermal / t_electron_energy_confinement
-        )
+            eden_plasma_electrons_thermal_vol_avg / t_electron_energy_confinement
+        ) / 1e6  # Convert from W/m³ to MW/m³
 
         # ratio = (nd_plasma_ions_total_vol_avg / nd_plasma_electrons_vol_avg) * (
         #     temp_plasma_ion_density_weighted_kev

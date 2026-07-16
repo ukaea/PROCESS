@@ -5590,7 +5590,7 @@ class DetailedPhysics(Model):
             temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
             temp_plasma_ion_kev=self.data.physics.temp_plasma_electron_vol_avg_kev
             * self.data.physics.f_temp_plasma_ion_electron,
-            nd_plasma_ions=self.data.physics.nd_plasma_alphas_vol_avg,
+            nd_plasma_ions=self.data.physics.nd_plasma_alphas_thermal_vol_avg,
             plasma_coulomb_log_electron_ion=self.data.physics.plasma_coulomb_log_electron_alpha_thermal_vol_avg,
             m_ion=constants.ALPHA_MASS,
             n_charge_ion=2,
@@ -5603,7 +5603,7 @@ class DetailedPhysics(Model):
             nd_plasma_ions=(
                 self.plasma_profile.neprofile.profile_y
                 * (
-                    self.data.physics.nd_plasma_alphas_vol_avg
+                    self.data.physics.nd_plasma_alphas_thermal_vol_avg
                     / self.data.physics.nd_plasma_electrons_vol_avg
                 )
             ),
