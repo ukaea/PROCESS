@@ -55,7 +55,7 @@ def test_plasma_angles_arcs(
     """
     Automatically generated Regression Unit Test for plasma_angles_arcs().
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
+    This test was generated using data from baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     Parameters
     ----------
@@ -299,7 +299,7 @@ def test_plasma_surface_area(surfaceareaparam: SurfaceAreaParam, monkeypatch, pl
     """
     Automatically generated Regression Unit Test for plasma_surface_area().
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
+    This test was generated using data from baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     Parameters
     ----------
@@ -354,7 +354,7 @@ def test_surfa(surfaparam: SurfaParam, monkeypatch):
     """
     Automatically generated Regression Unit Test for surfa.
 
-    This test was generated using data from tests/regression/scenarios/FNSF/IN.DAT.
+    This test was generated using data from the FNSF IN.DAT (no longer in repository).
 
     Parameters
     ----------

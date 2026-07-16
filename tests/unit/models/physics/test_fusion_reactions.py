@@ -92,7 +92,7 @@ def test_set_fusion_powers(setfusionpowersparam):
     """
     Automatically generated Regression Unit Test for set_fusion_powers().
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
+    This test was generated using data from baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
 
     :param setfusionpowersparam: the data used to mock and assert in this test.
     :type setfusionpowersparam: setfusionpowersparam

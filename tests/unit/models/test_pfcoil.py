@@ -2984,7 +2984,7 @@ def test_efc(pfcoil, efcparam):
 
     efc() requires specific arguments in order to work; these were discovered
     using gdb to break on the first call of efc() when running the baseline 2019
-    IN.DAT.
+    IN.DAT (no longer in the PROCESS repository).
 
     :param pfcoil: a PFCoil instance
     :type pfcoil: process.pfcoil.PFCoil
@@ -3213,7 +3213,7 @@ def test_mtrx(mtrxparam):
 
     mtrx() requires specific arguments in order to work; these were discovered
     using gdb to break on the first call of mtrx() when running the baseline 2019
-    IN.DAT.
+    IN.DAT (no longer in the PROCESS repository).
 
     :param mtrxparam: the data used to mock and assert in this test.
     :type mtrxparam: mtrxparam

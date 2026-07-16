@@ -2791,7 +2791,7 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
     """
     Automatically generated Regression Unit Test for ifeacp.
 
-    This test was generated using data from tests/regression/input_files/IFE.IN.DAT.
+    This test was generated using data from IFE.IN.DAT.
 
     :param ifeacpparam: the data used to mock and assert in this test.
     :type ifeacpparam: ifeacpparam
@@ -2953,7 +2953,7 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     """
     Automatically generated Regression Unit Test for ifebdg.
 
-    This test was generated using data from tests/regression/input_files/IFE.IN.DAT.
+    This test was generated using data from IFE.IN.DAT.
 
     :param ifebdgparam: the data used to mock and assert in this test.
     :type ifebdgparam: ifebdgparam
@@ -3095,7 +3095,7 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     """
     Automatically generated Regression Unit Test for ifepw2.
 
-    This test was generated using data from tests/regression/input_files/IFE.IN.DAT.
+    This test was generated using data from IFE.IN.DAT.
 
     :param ifepw2param: the data used to mock and assert in this test.
     :type ifepw2param: ifepw2param

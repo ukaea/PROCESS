@@ -668,7 +668,7 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     Automatically generated Regression Unit Test for calc_building_costs.
 
     This test was generated using data from
-    tests/regression/scenarios/costs_paper/IN.DAT.
+    the costs paper IN.DAT (no longer in repository)
 
     :param calcbuildingcostsparam: the data used to mock and assert in this test.
     :type calcbuildingcostsparam: calcbuildingcostsparam
@@ -1446,7 +1446,7 @@ def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
     Automatically generated Regression Unit Test for calc_land_costs.
 
     This test was generated using data from
-    tests/regression/scenarios/costs_paper/IN.DAT.
+    the costs paper IN.DAT (no longer in repository)
 
     :param calclandcostsparam: the data used to mock and assert in this test.
     :type calclandcostsparam: calclandcostsparam
@@ -2225,7 +2225,7 @@ def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
     Automatically generated Regression Unit Test for calc_tf_coil_costs.
 
     This test was generated using data from
-    tests/regression/scenarios/costs_paper/IN.DAT.
+    the costs paper IN.DAT (no longer in repository)
 
     :param calctfcoilcostsparam: the data used to mock and assert in this test.
     :type calctfcoilcostsparam: calctfcoilcostsparam
@@ -3099,7 +3099,7 @@ def test_calc_remote_handling_costs(
     Automatically generated Regression Unit Test for calc_remote_handling_costs.
 
     This test was generated using data from
-    tests/regression/scenarios/costs_paper/IN.DAT.
+    the costs paper IN.DAT (no longer in repository)
 
     :param calcremotehandlingcostsparam: the data used to mock and assert in this test.
     :type calcremotehandlingcostsparam: calcremotehandlingcostsparam
@@ -3995,7 +3995,7 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
     Automatically generated Regression Unit Test for calc_n_plant_and_vv_costs.
 
     This test was generated using data from
-    tests/regression/scenarios/costs_paper/IN.DAT.
+    the costs paper IN.DAT (no longer in repository)
 
     :param calcnplantandvvcostsparam: the data used to mock and assert in this test.
     :type calcnplantandvvcostsparam: calcnplantandvvcostsparam
@@ -4912,7 +4912,7 @@ def test_calc_energy_conversion_system(
     Automatically generated Regression Unit Test for calc_energy_conversion_system.
 
     This test was generated using data from
-    tests/regression/scenarios/costs_paper/IN.DAT.
+    the costs paper IN.DAT (no longer in repository)
 
     :param calcenergyconversionsystemparam: data used to mock and assert in this test.
     :type calcenergyconversionsystemparam: calcenergyconversionsystemparam
@@ -5961,7 +5961,7 @@ def test_calc_remaining_subsystems(calcremainingsubsystemsparam, monkeypatch, co
     Automatically generated Regression Unit Test for calc_remaining_subsystems.
 
     This test was generated using data from
-    tests/regression/scenarios/costs_paper/IN.DAT.
+    the costs paper IN.DAT (no longer in repository)
 
     :param calcremainingsubsystemsparam: the data used to mock and assert in this test.
     :type calcremainingsubsystemsparam: calcremainingsubsystemsparam
@@ -6098,7 +6098,7 @@ def test_value_function(valuefunctionparam, monkeypatch, costs2015):
     Automatically generated Regression Unit Test for value_function.
 
     This test was generated using data from
-    tests/regression/scenarios/costs_paper/IN.DAT.
+    the costs paper IN.DAT (no longer in repository)
 
     :param valuefunctionparam: the data used to mock and assert in this test.
     :type valuefunctionparam: valuefunctionparam
