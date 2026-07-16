@@ -961,33 +961,17 @@ class PlasmaConfinementTime(Model):
         elif self.data.physics.i_rad_loss == ConfinementRadiationLossModel.NO_RADIATION:
             self.data.physics.hstar = hfact
 
-        # Calculation of the transport power loss terms
-        # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
-        # (here, temp_plasma_ion_density_weighted_kev and
-        # temp_plasma_electron_density_weighted_kev are in keV, and
-        # pden_electron_transport_loss_mw and pden_ion_transport_loss_mw are in MW/m3)
-
         t_energy_confinement = t_electron_confinement * hfact
 
         # Apply H-factor correction to chosen scaling
         t_electron_energy_confinement = (
-            hfact
-            * t_energy_confinement
-            * (
-                (
-                    eden_plasma_electrons_thermal_vol_avg
-                    + (
-                        eden_plasma_ions_thermal_vol_avg
-                        / self.data.physics.f_t_fuel_ion_electron_energy_confinement
-                    )
-                )
-                / (
-                    eden_plasma_electrons_thermal_vol_avg
-                    + eden_plasma_ions_thermal_vol_avg
-                )
+            self.calculate_electron_species_consistent_energy_confinement_time(
+                self.data.physics.f_t_fuel_ion_electron_energy_confinement,
+                eden_plasma_ions_thermal_vol_avg,
+                eden_plasma_electrons_thermal_vol_avg,
+                t_energy_confinement,
             )
         )
-
         # Ion energy confinement time
         t_ion_energy_confinement = (
             t_electron_energy_confinement
@@ -1002,15 +986,6 @@ class PlasmaConfinementTime(Model):
         pden_electron_transport_loss_mw = (
             eden_plasma_electrons_thermal_vol_avg / t_electron_energy_confinement
         ) / 1e6  # Convert from W/m³ to MW/m³
-
-        # ratio = (nd_plasma_ions_total_vol_avg / nd_plasma_electrons_vol_avg) * (
-        #     temp_plasma_ion_density_weighted_kev
-        #     / temp_plasma_electron_density_weighted_kev
-        # )
-
-        # Global energy confinement time
-
-        # t_energy_confinement = t_ion_energy_confinement
 
         # For comparison directly calculate the confinement time from the stored energy
         # calculated from the total plasma beta and the loss power used above.
@@ -1056,6 +1031,48 @@ class PlasmaConfinementTime(Model):
         nTtau = ntau * temp_plasma_electrons_vol_avg_kev
 
         return ntau, nTtau
+
+    @staticmethod
+    def calculate_electron_species_consistent_energy_confinement_time(
+        f_t_fuel_ion_electron_energy_confinement: float,
+        eden_plasma_ions_thermal_vol_avg: float,
+        eden_plasma_electrons_thermal_vol_avg: float,
+        t_plasma_global_energy_confinement: float,
+    ) -> float:
+        """Calculate the electron energy confinement time based on the global plasma
+        energy confinement time and the species ratio.
+
+        Parameters
+        ----------
+        f_t_fuel_ion_electron_energy_confinement : float
+            Ratio of fuel ion to electron energy confinement times.
+        eden_plasma_ions_thermal_vol_avg : float
+            Volume averaged thermal energy density of ions [J/m³].
+        eden_plasma_electrons_thermal_vol_avg : float
+            Volume averaged thermal energy density of electrons [J/m³].
+        t_plasma_global_energy_confinement : float
+            Global plasma energy confinement time [s].
+
+        Returns
+        -------
+        float
+            Electron energy confinement time [s].
+
+        Notes
+        -----
+        - The variable `f_t_fuel_ion_electron_energy_confinement` is used to relate
+        the energy confinement times of fuel ions and electrons. R = τ_i / τ_e.
+        """
+        return t_plasma_global_energy_confinement * (
+            (
+                eden_plasma_electrons_thermal_vol_avg
+                + (
+                    eden_plasma_ions_thermal_vol_avg
+                    / f_t_fuel_ion_electron_energy_confinement
+                )
+            )
+            / (eden_plasma_electrons_thermal_vol_avg + eden_plasma_ions_thermal_vol_avg)
+        )
 
     def find_other_h_factors(self, i_confinement_time: int) -> float:
         """Function to find H-factor for the equivalent confinement time in other
