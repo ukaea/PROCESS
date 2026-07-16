@@ -3,10 +3,6 @@
 There are several equations that need to be satisfied in order to ensure that the plasma is in 
 power equilibrium. This includes the total energy and power leaving the plasma as a whole and then also the rate of energy transfer between the ion and electron species themselves.
 
-!!! warning "Treatment of particle energy confinement"
-
-    Currently the electrons and ions in `PROCESS` are assumed to have the same energy confinement time and which is equal to the calculated global energy confinement time, $\tau_{e} = \tau_{i} = \tau_{E}$.
-
 ## Global plasma power balance
 
 This constraint can be activated by stating `icc = 2` in the input file.
