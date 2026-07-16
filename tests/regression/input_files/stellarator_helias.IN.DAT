@@ -227,7 +227,7 @@ f_nd_impurity_electrons(14) = 1.0E-5       *Tungsten
 ioptimz  = 1            *Code operation switch (1: Optimisation, VMCON only)
 maxcal   = 100          *Maximum number of VMCON iterations
 minmax   = 6            *Switch for figure-of-merit (7: Min Capital Cost)
-epsfcn   = 0.01
+epsfcn   = 0.01         *Default for this parameter is 1e-3 however this specific IN.DAT and starting point benefit from a larger step length
 runtitle = SQuID
 
 *-----------------Tfcoil Variables-----------------*
