@@ -1951,21 +1951,6 @@ def test_eyoung_parallel_array(eyoungparallelarrayparam, monkeypatch):
 
 
 @pytest.mark.parametrize(
-    ("sx", "sy", "sz", "expected"),
-    [
-        (0, -3.2e8, 2.4e8, 486621002.42385757),
-        (-2.8e8, 0, 2.4e8, 450777106.7833858),
-    ],
-)
-def test_sigvm(sx, sy, sz, expected):
-    # could not find an example of a use in PROCESS where
-    # tx, ty, or tz were anything other than 0
-    ret = tfcoil_module.sigvm(sx, sy, sz, 0, 0, 0)
-
-    assert ret == pytest.approx(expected)
-
-
-@pytest.mark.parametrize(
     (
         "ind_tf_coil",
         "c_tf_total",

@@ -19,6 +19,10 @@ from process.core.model import DataStructure, Model
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.pfcoil_variables import PFConductorModel
 from process.data_structure.physics_variables import DivertorNumberModels
+from process.models.engineering.materials import (
+    calculate_tresca_stress,
+    calculate_von_mises_stress,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -3135,19 +3139,20 @@ class TFCoil(Model):
         # Tresca / Von Mises yield criteria calculations
         # -----------------------------
         # Array equation
-        s_shear_tf = np.maximum(
-            np.absolute(sig_tf_r - sig_tf_z), np.absolute(sig_tf_z - sig_tf_t)
+
+        s_shear_tf = calculate_tresca_stress(
+            stress_x=sig_tf_r, stress_y=sig_tf_t, stress_z=sig_tf_z
         )
 
         # Array equation
 
-        sig_tf_vmises = np.sqrt(
-            0.5e0
-            * (
-                (sig_tf_r - sig_tf_t) ** 2
-                + (sig_tf_r - sig_tf_z) ** 2
-                + (sig_tf_z - sig_tf_t) ** 2
-            )
+        sig_tf_vmises = calculate_von_mises_stress(
+            stress_x=sig_tf_r,
+            stress_y=sig_tf_t,
+            stress_z=sig_tf_z,
+            stress_shear_xy=0.0,
+            stress_shear_yz=0.0,
+            stress_shear_zx=0.0,
         )
 
         # Array equation
@@ -3163,9 +3168,23 @@ class TFCoil(Model):
             ):
                 # Addaped Von-mises stress calculation to WP strucure [Pa]
 
-                svmxz = sigvm(0.0e0, sig_tf_t[ii], sig_tf_z[ii], 0.0e0, 0.0e0, 0.0e0)
+                svmxz = calculate_von_mises_stress(
+                    stress_x=0.0e0,
+                    stress_y=sig_tf_t[ii],
+                    stress_z=sig_tf_z[ii],
+                    stress_shear_xy=0.0e0,
+                    stress_shear_yz=0.0e0,
+                    stress_shear_zx=0.0e0,
+                )
 
-                svmyz = sigvm(sig_tf_r[ii], 0.0e0, sig_tf_z[ii], 0.0e0, 0.0e0, 0.0e0)
+                svmyz = calculate_von_mises_stress(
+                    stress_x=sig_tf_r[ii],
+                    stress_y=0.0e0,
+                    stress_z=sig_tf_z[ii],
+                    stress_shear_xy=0.0e0,
+                    stress_shear_yz=0.0e0,
+                    stress_shear_zx=0.0e0,
+                )
                 sig_tf_vmises[ii] = max(svmxz, svmyz)
 
                 # Maximum shear stress for the Tresca yield criterion using CEA
@@ -3700,44 +3719,6 @@ def eyoung_parallel(
     a_3 = a_1 + a_2
 
     return eyoung_j_3, a_3, poisson_j_perp_3
-
-
-@numba.njit(cache=True)
-def sigvm(sx: float, sy: float, sz: float, txy: float, txz: float, tyz: float) -> float:
-    """Calculates Von Mises stress in a TF coil
-
-    This routine calculates the Von Mises combination of
-    stresses (Pa) in a TF coil.
-
-    Parameters
-    ----------
-    sx :
-        In-plane stress in X direction [Pa]
-    sy :
-        In-plane stress in Y direction [Pa]
-    sz :
-        In-plane stress in Z direction [Pa]
-    txy :
-        Out-of-plane stress in X-Y plane [Pa]
-    txz :
-        Out-of-plane stress in X-Z plane [Pa]
-    tyz :
-        Out-of-plane stress in Y-Z plane [Pa]
-
-    Returns
-    -------
-    :
-        Von Mises combination of stresses (Pa) in a TF coil.
-    """
-    return np.sqrt(
-        0.5
-        * (
-            (sx - sy) ** 2
-            + (sx - sz) ** 2
-            + (sz - sy) ** 2
-            + 6 * (txy**2 + txz**2 + tyz**2)
-        )
-    )
 
 
 @numba.njit(cache=True, error_model="numpy")
