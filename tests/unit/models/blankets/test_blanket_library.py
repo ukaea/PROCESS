@@ -18,6 +18,16 @@ def blanket_library(process_models):
     return process_models.blanket_library
 
 
+@pytest.fixture
+def pumping(process_models):
+    """Fixture to get the Physics instance from process_models.
+
+    :returns: initialised Physics object
+    :rtype: process.physics.Physics
+    """
+    return process_models.pumping
+
+
 class PrimaryCoolantPropertiesParam(NamedTuple):
     i_fw_coolant_type: Any = None
 
@@ -29,9 +39,9 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     den_fw_coolant: Any = None
 
-    cp_fw: Any = None
+    heatcap_pres_fw_coolant_average: Any = None
 
-    cv_fw: Any = None
+    heatcap_vol_fw_coolant_average: Any = None
 
     i_blkt_coolant_type: Any = None
 
@@ -47,9 +57,9 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     visc_blkt_coolant: Any = None
 
-    cp_bl: Any = None
+    heatcap_pres_blkt_coolant_average: Any = None
 
-    cv_bl: Any = None
+    heatcap_vol_blkt_coolant_average: Any = None
 
     visc_fw_coolant: Any = None
 
@@ -81,8 +91,8 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             temp_fw_coolant_out=773,
             pres_fw_coolant=8000000,
             den_fw_coolant=0,
-            cp_fw=0,
-            cv_fw=0,
+            heatcap_pres_fw_coolant_average=0,
+            heatcap_vol_fw_coolant_average=0,
             i_blkt_coolant_type=CoolantType.HELIUM,
             temp_blkt_coolant_in=573,
             temp_blkt_coolant_out=773,
@@ -90,8 +100,8 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             den_blkt_coolant=0,
             i_blkt_dual_coolant=2,
             visc_blkt_coolant=0,
-            cp_bl=0,
-            cv_bl=0,
+            heatcap_pres_blkt_coolant_average=0,
+            heatcap_vol_blkt_coolant_average=0,
             visc_fw_coolant=0,
             i_fw_blkt_shared_coolant=0,
             expected_den_fw_coolant=5.6389735407435868,
@@ -109,8 +119,8 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             temp_fw_coolant_out=773,
             pres_fw_coolant=8000000,
             den_fw_coolant=5.6389735407435868,
-            cp_fw=5188.5588430173211,
-            cv_fw=3123.5687263525392,
+            heatcap_pres_fw_coolant_average=5188.5588430173211,
+            heatcap_vol_fw_coolant_average=3123.5687263525392,
             i_blkt_coolant_type=CoolantType.HELIUM,
             temp_blkt_coolant_in=573,
             temp_blkt_coolant_out=773,
@@ -118,8 +128,8 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             den_blkt_coolant=5.6389735407435868,
             i_blkt_dual_coolant=2,
             visc_blkt_coolant=3.5036293160410249e-05,
-            cp_bl=5188.5588430173211,
-            cv_bl=3123.5687263525392,
+            heatcap_pres_blkt_coolant_average=5188.5588430173211,
+            heatcap_vol_blkt_coolant_average=3123.5687263525392,
             visc_fw_coolant=3.5036293160410249e-05,
             i_fw_blkt_shared_coolant=0,
             expected_den_fw_coolant=5.6389735407435868,
@@ -179,11 +189,15 @@ def test_primary_coolant_properties(
     )
 
     monkeypatch.setattr(
-        blanket_library.data.fwbs, "cp_fw", primarycoolantpropertiesparam.cp_fw
+        blanket_library.data.fwbs,
+        "heatcap_pres_fw_coolant_average",
+        primarycoolantpropertiesparam.heatcap_pres_fw_coolant_average,
     )
 
     monkeypatch.setattr(
-        blanket_library.data.fwbs, "cv_fw", primarycoolantpropertiesparam.cv_fw
+        blanket_library.data.fwbs,
+        "heatcap_vol_fw_coolant_average",
+        primarycoolantpropertiesparam.heatcap_vol_fw_coolant_average,
     )
 
     monkeypatch.setattr(
@@ -229,11 +243,15 @@ def test_primary_coolant_properties(
     )
 
     monkeypatch.setattr(
-        blanket_library.data.fwbs, "cp_bl", primarycoolantpropertiesparam.cp_bl
+        blanket_library.data.fwbs,
+        "heatcap_pres_blkt_coolant_average",
+        primarycoolantpropertiesparam.heatcap_pres_blkt_coolant_average,
     )
 
     monkeypatch.setattr(
-        blanket_library.data.fwbs, "cv_bl", primarycoolantpropertiesparam.cv_bl
+        blanket_library.data.fwbs,
+        "heatcap_vol_blkt_coolant_average",
+        primarycoolantpropertiesparam.heatcap_vol_blkt_coolant_average,
     )
 
     monkeypatch.setattr(
@@ -254,11 +272,11 @@ def test_primary_coolant_properties(
         primarycoolantpropertiesparam.expected_den_fw_coolant, rel=1e-4
     )
 
-    assert blanket_library.data.fwbs.cp_fw == pytest.approx(
+    assert blanket_library.data.fwbs.heatcap_pres_fw_coolant_average == pytest.approx(
         primarycoolantpropertiesparam.expected_cp_fw, rel=1e-4
     )
 
-    assert blanket_library.data.fwbs.cv_fw == pytest.approx(
+    assert blanket_library.data.fwbs.heatcap_vol_fw_coolant_average == pytest.approx(
         primarycoolantpropertiesparam.expected_cv_fw, rel=1e-4
     )
 
@@ -270,11 +288,11 @@ def test_primary_coolant_properties(
         primarycoolantpropertiesparam.expected_visc_blkt_coolant, rel=1e-4
     )
 
-    assert blanket_library.data.fwbs.cp_bl == pytest.approx(
+    assert blanket_library.data.fwbs.heatcap_pres_blkt_coolant_average == pytest.approx(
         primarycoolantpropertiesparam.expected_cp_bl, rel=1e-4
     )
 
-    assert blanket_library.data.fwbs.cv_bl == pytest.approx(
+    assert blanket_library.data.fwbs.heatcap_vol_blkt_coolant_average == pytest.approx(
         primarycoolantpropertiesparam.expected_cv_bl, rel=1e-4
     )
 
@@ -301,10 +319,8 @@ def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library):
         "label": "Inboard first wall",
     }
 
-    assert (
-        pytest.approx(blanket_library.total_pressure_drop(False, **data))
-        == 5884.982168510442
-    )
+    dpres_total, _ = blanket_library.total_pressure_drop(False, **data)
+    assert dpres_total == pytest.approx(5884.982168510442)
 
 
 def test_deltap_tot_outboard_blanket_breeder_liquid(monkeypatch, blanket_library):
@@ -332,54 +348,8 @@ def test_deltap_tot_outboard_blanket_breeder_liquid(monkeypatch, blanket_library
         "label": "Outboard blanket breeder liquid",
     }
 
-    assert (
-        pytest.approx(blanket_library.total_pressure_drop(False, **data))
-        == 56.95922064419226
-    )
-
-
-def test_pumppower_primary_helium(monkeypatch, blanket_library):
-    monkeypatch.setattr(blanket_library.data.fwbs, "etaiso", 0.9)
-    monkeypatch.setattr(blanket_library.data.fwbs, "etaiso_liq", 0.85)
-
-    data = {
-        "i_liquid_breeder": 2,
-        "temp_coolant_pump_outlet": 570,
-        "temp_coolant_pump_inlet": 720,
-        "pres_coolant_pump_inlet": 1700000,
-        "dpres_coolant": 303517.3,
-        "mflow_coolant_total": 35677.7,
-        "i_coolant_type": 1,
-        "den_coolant": 9753.25,
-        "label": "Liquid Metal Breeder/Coolant",
-    }
-
-    assert (
-        pytest.approx(blanket_library.coolant_pumping_power(False, **data))
-        == 1.8251284651310427
-    )
-
-
-def test_pumppower_secondary_pb_li(monkeypatch, blanket_library):
-    monkeypatch.setattr(blanket_library.data.fwbs, "etaiso", 0.9)
-    monkeypatch.setattr(blanket_library.data.fwbs, "etaiso_liq", 0.85)
-
-    data = {
-        "i_liquid_breeder": 1,
-        "temp_coolant_pump_outlet": 573,
-        "temp_coolant_pump_inlet": 773,
-        "pres_coolant_pump_inlet": 8000000,
-        "dpres_coolant": 20088.23,
-        "mflow_coolant_total": 956.3,
-        "i_coolant_type": CoolantType.HELIUM,
-        "den_coolant": 5.64,
-        "label": "First Wall and Blanket",
-    }
-
-    assert (
-        pytest.approx(blanket_library.coolant_pumping_power(False, **data), rel=1e-4)
-        == 3.2374845432302464
-    )
+    dpres_total, _ = blanket_library.total_pressure_drop(False, **data)
+    assert dpres_total == pytest.approx(56.95922064419226)
 
 
 class ComponentHalfHeightParam(NamedTuple):
@@ -1018,114 +988,6 @@ def test_liquid_breeder_properties(
     )
 
 
-class PressureDropParam(NamedTuple):
-    radius_fw_channel: Any = None
-    radius_pipe_90_deg_bend: Any = None
-    radius_pipe_180_deg_bend: Any = None
-    a_bz_liq: Any = None
-    b_bz_liq: Any = None
-    roughness_fw_channel: Any = None
-    ip: Any = None
-    i_ps: Any = None
-    num_90: Any = None
-    num_180: Any = None
-    l_pipe: Any = None
-    den: Any = None
-    vsc: Any = None
-    vv: Any = None
-    label: Any = None
-    expected_pressure_drop_out: Any = None
-
-
-@pytest.mark.parametrize(
-    "pressuredropparam",
-    [
-        PressureDropParam(
-            radius_fw_channel=0.0060000000000000001,
-            radius_pipe_90_deg_bend=0.018,
-            radius_pipe_180_deg_bend=0.09,
-            a_bz_liq=0.20000000000000001,
-            b_bz_liq=0.20000000000000001,
-            roughness_fw_channel=9.9999999999999995e-07,
-            ip=0,
-            i_ps=1,
-            num_90=2,
-            num_180=0,
-            l_pipe=4,
-            den=10.405276820718059,
-            vsc=3.604452999475736e-05,
-            vv=32.753134225223164,
-            label="Inboard first wall",
-            expected_pressure_drop_out=36213.58989742931,
-        ),
-        PressureDropParam(
-            radius_fw_channel=1.0,
-            radius_pipe_90_deg_bend=1.0,
-            radius_pipe_180_deg_bend=1.0,
-            a_bz_liq=1.0,
-            b_bz_liq=1.0,
-            roughness_fw_channel=1e-6,
-            ip=0,
-            i_ps=2,
-            num_90=1.0,
-            num_180=1.0,
-            l_pipe=1.0,
-            den=1.0,
-            vsc=1.0,
-            vv=1.0,
-            label="label",
-            expected_pressure_drop_out=1.4325633520224854,
-        ),
-    ],
-)
-def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library):
-    """
-    Automatically generated Regression Unit Test for pressure_drop.
-
-    This test was generated using data from
-    blanket_files/large_tokamak_primary_pumping2.IN.DAT.
-
-    :param pressuredropparam: the data used to mock and assert in this test.
-    :type pressuredropparam: pressuredropparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-    """
-    monkeypatch.setattr(
-        blanket_library.data.fwbs,
-        "radius_fw_channel",
-        pressuredropparam.radius_fw_channel,
-    )
-    monkeypatch.setattr(
-        blanket_library.data.fwbs, "a_bz_liq", pressuredropparam.a_bz_liq
-    )
-    monkeypatch.setattr(
-        blanket_library.data.fwbs, "b_bz_liq", pressuredropparam.b_bz_liq
-    )
-    monkeypatch.setattr(
-        blanket_library.data.fwbs,
-        "roughness_fw_channel",
-        pressuredropparam.roughness_fw_channel,
-    )
-
-    pressure_drop_out = blanket_library.coolant_friction_pressure_drop(
-        i_ps=pressuredropparam.i_ps,
-        radius_pipe_90_deg_bend=pressuredropparam.radius_pipe_90_deg_bend,
-        radius_pipe_180_deg_bend=pressuredropparam.radius_pipe_180_deg_bend,
-        n_pipe_90_deg_bends=pressuredropparam.num_90,
-        n_pipe_180_deg_bends=pressuredropparam.num_180,
-        len_pipe=pressuredropparam.l_pipe,
-        den_coolant=pressuredropparam.den,
-        visc_coolant=pressuredropparam.vsc,
-        vel_coolant=pressuredropparam.vv,
-        label=pressuredropparam.label,
-    )
-
-    assert pressure_drop_out == pytest.approx(
-        pressuredropparam.expected_pressure_drop_out
-    )
-
-
 class LiquidBreederPressureDropMhdParam(NamedTuple):
     i_blkt_liquid_breeder_channel_type: Any = None
     a_bz_liq: Any = None
@@ -1587,43 +1449,6 @@ def test_calculate_elliptical_blkt_volumes(
     )
     assert vol_blkt_total == pytest.approx(
         calculateellipticalblktvolumesparam.expected_vol_blkt_total
-    )
-
-
-def test_hydraulic_diameter(monkeypatch, blanket_library):
-    """
-    Test for hydraulic_diameter function.
-    """
-    # Set var values
-    monkeypatch.setattr(blanket_library.data.fwbs, "radius_fw_channel", 1.0)
-    monkeypatch.setattr(blanket_library.data.fwbs, "a_bz_liq", 1.0)
-    monkeypatch.setattr(blanket_library.data.fwbs, "b_bz_liq", 1.0)
-
-    # hydraulic_diameter input = i_channel_shape: 1 = circle, 2 = rectangle
-    # 2.0D0*radius_fw_channel
-    assert blanket_library.pipe_hydraulic_diameter(1) == pytest.approx(2.0)
-    # 2*a_bz_liq*b_bz_liq/(a_bz_liq+b_bz_liq)
-    assert blanket_library.pipe_hydraulic_diameter(2) == pytest.approx(1.0)
-
-
-def test_elbow_coeff(blanket_library):
-    """
-    Test for elbow_coeff function.
-    """
-    # input = r_elbow, ang_elbow, lambda, dh
-    assert blanket_library.elbow_coeff(1, 0, 1, 1) == pytest.approx(0.0, rel=1e-3)
-    assert blanket_library.elbow_coeff(1, 90, 1, 1) == pytest.approx(
-        1.7807963267948965, rel=1e-3
-    )
-    assert blanket_library.elbow_coeff(1, 180, 1, 1) == pytest.approx(
-        3.291157766597427, rel=1e-3
-    )
-    assert blanket_library.elbow_coeff(1, 90, 1, 0.1) == pytest.approx(
-        15.774371098812502, rel=1e-3
-    )
-    assert blanket_library.elbow_coeff(0.1, 90, 1, 1) == pytest.approx(66.57, rel=1e-3)
-    assert blanket_library.elbow_coeff(1, 90, 0.1, 1) == pytest.approx(
-        0.3670796326794896, rel=1e-3
     )
 
 

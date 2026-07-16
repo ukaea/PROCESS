@@ -112,7 +112,12 @@ class DCLL(InboardBlanket, OutboardBlanket):
             self.data.blanket.deg_blkt_inboard_poloidal_plasma / 360.0
         )
 
-        dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)
+        dia_blkt_channel = self.pipe_hydraulic_diameter(
+            i_channel_shape=1,
+            radius_fw_channel=self.data.fwbs.radius_fw_channel,
+            a_bz_liq=self.data.fwbs.a_bz_liq,
+            b_bz_liq=self.data.fwbs.b_bz_liq,
+        )
         self.data.fwbs.radius_blkt_channel = dia_blkt_channel / 2
         (
             self.data.fwbs.radius_blkt_channel_90_bend,
@@ -350,8 +355,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
             )
 
         elif i_p_coolant_pumping in {
-            PumpingPowerModelTypes.MECHANICAL,
-            PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP,
+            PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP,
+            PumpingPowerModelTypes.INPUT_PRESSURE_DROP,
         }:
             # Mechanical pumping power is calculated for first wall and blanket
             self.thermo_hydraulic_model(output=output)
@@ -374,8 +379,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
             po.osubhd(self.outfile, "DCLL model: Thermal-hydraulics Component Totals")
 
             if self.data.fwbs.i_p_coolant_pumping not in {
-                PumpingPowerModelTypes.MECHANICAL,
-                PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP,
+                PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP,
+                PumpingPowerModelTypes.INPUT_PRESSURE_DROP,
             }:
                 po.ovarre(
                     self.outfile,

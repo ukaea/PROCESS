@@ -13,7 +13,10 @@ from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
     pumping_powers_as_fractions,
 )
-from process.models.engineering.pumping import CoolantType
+from process.models.engineering.pumping import (
+    CoolantType,
+    pipe_hydraulic_diameter,
+)
 from process.models.power import PumpingPowerModelTypes
 from process.models.tfcoil.base import TFConductorModel
 
@@ -66,7 +69,12 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.data.blanket.deg_blkt_inboard_poloidal_plasma / 360.0
         )
 
-        dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)
+        dia_blkt_channel = pipe_hydraulic_diameter(
+            i_channel_shape=1,
+            radius_fw_channel=self.data.fwbs.radius_fw_channel,
+            a_bz_liq=self.data.fwbs.a_bz_liq,
+            b_bz_liq=self.data.fwbs.b_bz_liq,
+        )
         self.data.fwbs.radius_blkt_channel = dia_blkt_channel / 2
         (
             self.data.fwbs.radius_blkt_channel_90_bend,
@@ -824,7 +832,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 p_div_rad_total_mw=self.data.fwbs.p_div_rad_total_mw,
             )
 
-        elif i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL:
+        elif i_p_coolant_pumping == PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP:
             # Calculate the required material properties of the FW and BB coolant.
             self.primary_coolant_properties(output=output)
             # Mechanical pumping power is calculated for first wall and blanket
@@ -847,8 +855,55 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     + self.data.fwbs.p_div_rad_total_mw
                 )
             )
+            if output:
+                po.ovarre(
+                    self.outfile,
+                    "Mechanical pumping power for FW and blanket cooling loop including heat exchanger (MW)",
+                    "(p_fw_blkt_coolant_pump_mw)",
+                    self.data.primary_pumping.p_fw_blkt_coolant_pump_mw,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Pumping power for FW and Blanket multiplier factor",
+                    "(f_p_fw_blkt_pump)",
+                    self.data.primary_pumping.f_p_fw_blkt_pump,
+                    "IP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Mechanical pumping power for divertor (MW)",
+                    "(p_div_coolant_pump_mw)",
+                    self.data.heat_transport.p_div_coolant_pump_mw,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Mechanical pumping power for shield and vacuum vessel (MW)",
+                    "(p_shld_coolant_pump_mw)",
+                    self.data.heat_transport.p_shld_coolant_pump_mw,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of blanket cooling channels (m)",
+                    "(radius_blkt_channel)",
+                    self.data.fwbs.radius_blkt_channel,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of 90 degree coolant channel bend (m)",
+                    "(radius_blkt_channel_90_bend)",
+                    self.data.fwbs.radius_blkt_channel_90_bend,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of 180 degree coolant channel bend (m)",
+                    "(radius_blkt_channel_180_bend)",
+                    self.data.fwbs.radius_blkt_channel_180_bend,
+                )
 
-        elif i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP:
+        elif i_p_coolant_pumping == PumpingPowerModelTypes.INPUT_PRESSURE_DROP:
             # Issue #503
             # Mechanical pumping power is calculated using specified pressure drop for
             # first wall and blanket circuit, including heat exchanger and pipes
@@ -1536,7 +1591,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         if (
             self.data.fwbs.i_p_coolant_pumping
-            != PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP
+            != PumpingPowerModelTypes.INPUT_PRESSURE_DROP
         ):
             po.ovarre(
                 self.outfile,

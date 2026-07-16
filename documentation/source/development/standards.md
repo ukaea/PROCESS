@@ -259,6 +259,14 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Specific Heat Capacities
+
+- Specific heat capacities for materials $[\text{J/kg/K}]$ should start with the `heatcap_` prefix
+- Specific heat capacities at constant volume should start with the `heatcap_vol_` pefix
+- Specific heat capacities at constant pressure should start with the `heatcap_pres_` pefix
+
+---------------------
+
 ##### Pressures
 
 - Pressures should start with the `pres_` prefix

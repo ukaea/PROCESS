@@ -22,6 +22,12 @@ from process.models.engineering.pumping import (
 logger = logging.getLogger(__name__)
 
 
+N_FW_PIPE_90_DEG_BENDS = 2
+"Number of 90 degree bends in first wall coolant channels."
+N_FW_PIPE_180_DEG_BENDS = 0
+"Number of 180 degree bends in first wall coolant channels."
+
+
 class FirstWall(Model):
     def __init__(self):
         self.outfile = constants.NOUT
