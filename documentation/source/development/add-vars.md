@@ -67,7 +67,7 @@ Now, in the `IN.DAT`, you could set an initial value for `my_new_blanket_variabl
 my_new_blanket_variable = 1.0
 ```
 
-Equally, you could choose not to specify the variable in the `IN.DAT` and the value would be intialised to its default value (`0.0` in this example, as we specified [earlier](#add-a-new-variable)).
+Equally, you could choose not to specify the variable in the `IN.DAT` and the value would be initialised to its default value (`0.0` in this example, as we specified [earlier](#add-a-new-variable)).
 
 -----------------
 
