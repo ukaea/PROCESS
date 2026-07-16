@@ -5473,7 +5473,7 @@ def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: i
     )
 
     textstr_fw = "\n".join((
-        rf"Coolant type: {i_fw_coolant_type.strip()}",
+        rf"Coolant type: {i_fw_coolant_type}",
         rf"$T_{{FW,peak}}$: {temp_fw_peak:,.3f} K",
         rf"$P_{{FW}}$: {pres_fw_coolant / 1e3:,.3f} kPa",
         rf"$P_{{FW}}$: {pres_fw_coolant / 1e5:,.3f} bar",
