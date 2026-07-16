@@ -1691,13 +1691,6 @@ class Build(Model):
                 + self.data.build.dr_cs_tf_gap
             )
         else:
-            # Inboard side inner radius [m]
-            self.data.build.r_tf_inboard_in = (
-                self.data.build.dr_bore
-                + self.data.build.dr_cs
-                + self.data.build.dr_cs_precomp
-                + self.data.build.dr_cs_tf_gap
-            )
             self.data.build.dr_cs_bore = self.data.build.dr_bore
 
         # Calculate pre-compression structure thickness
@@ -1714,6 +1707,16 @@ class Build(Model):
             )
         else:
             self.data.build.dr_cs_precomp = 0.0e0
+
+        if self.data.build.i_tf_inside_cs != TFCSRadialConfiguration.TF_INSIDE_CS:
+            # Inboard side inner radius [m]
+            # This is not calculated above because it requires the dr_cs_precomp
+            self.data.build.r_tf_inboard_in = (
+                self.data.build.dr_bore
+                + self.data.build.dr_cs
+                + self.data.build.dr_cs_precomp
+                + self.data.build.dr_cs_tf_gap
+            )
 
         # Radial build to tfcoil middle [m]
         self.data.build.r_tf_inboard_mid = (
