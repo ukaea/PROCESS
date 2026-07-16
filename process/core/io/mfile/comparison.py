@@ -1,7 +1,7 @@
 """
 Python tool for comparing MFILE and outputting differences.
 The tool does not work for MFiles that are not the result of
-a full PROCESS run (ie if an error or exception occured).
+a full PROCESS run (ie if an error or exception occurred).
 """
 
 from __future__ import annotations

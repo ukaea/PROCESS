@@ -32,7 +32,7 @@ class ConstraintRegistration:
     The name (often a number) of the constraint. It can be any hashable e.g. a string.
     """
     constraint_equation: Callable[["ConstraintRegistration"], "ConstraintResult"]
-    """The constraint equation that, when called, returns the normalised resiudal,
+    """The constraint equation that, when called, returns the normalised residual,
     constraint value, and constraint error.
     """
     units: str
@@ -142,7 +142,7 @@ class ConstraintManager:
 
     @classmethod
     def evaluate_constraint(cls, name: Hashable, data: DataStructure):
-        """Evalutes a constraint with a given name.
+        """Evaluates a constraint with a given name.
 
         Parameters
         ----------

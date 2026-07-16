@@ -102,7 +102,7 @@ class RadialBuild:
     cumulative_radial: dict[str, float]
 
 
-# Colours are PROCESS defualt, BLUEMIRA
+# Colours are PROCESS default, BLUEMIRA
 SOLENOID_COLOUR = ["pink", "#1764ab"]
 CSCOMPRESSION_COLOUR = ["maroon", "#33CCCC"]
 TFC_COLOUR = ["cyan", "#084a91"]

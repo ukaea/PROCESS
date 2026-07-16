@@ -1104,7 +1104,7 @@ class InDat:
 
         # Arrays
         elif line_type == "Array":
-            # Create geneneric array variable class using INVariable class,
+            # Create generic array variable class using INVariable class,
             # if it does not yet exist
             line_commentless = line.split("*")[0]
             array_name = line_commentless.split("(")[0]
@@ -1408,7 +1408,7 @@ class InDat:
         if len(empty_array) == 0:
             empty_array = [None] * array_len
 
-        # If the Pyhton list is an empty list, make a list of Nones of
+        # If the Python list is an empty list, make a list of Nones of
         # matching length to the Fortran array
         if list_len == 0:
             self.data[name].value = [None] * array_len

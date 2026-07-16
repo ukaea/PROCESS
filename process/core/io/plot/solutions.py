@@ -162,7 +162,7 @@ def plot_mfile_solutions(
                 "solution are the errors relative to?"
             )
 
-        # Calcualte RMS errors relative to normalising tag solution
+        # Calculate RMS errors relative to normalising tag solution
         rmse_df = _rms_errors(
             results_df=results_df,
             opt_param_value_pattern=opt_param_value_pattern,
