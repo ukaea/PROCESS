@@ -14163,9 +14163,17 @@ def plot_alpha_heating_power_split_profile(
         mfile_data.data[f"f_p_plasma_alpha_fast_electrons_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
+    
+    fusrat_plasma_dt_profile = [
+        mfile_data.data[f"fusrat_plasma_dt_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    rho = np.linspace(0, 1, len(f_p_plasma_alpha_fast_ions_profile))
+    right_axis = axis.twinx()
 
     axis.plot(
-        np.linspace(0, 1, len(f_p_plasma_alpha_fast_ions_profile)),
+        rho,
         f_p_plasma_alpha_fast_ions_profile,
         color="red",
         linestyle="-",
@@ -14173,18 +14181,39 @@ def plot_alpha_heating_power_split_profile(
     )
 
     axis.plot(
-        np.linspace(0, 1, len(f_p_plasma_alpha_fast_electrons_profile)),
+        rho,
         f_p_plasma_alpha_fast_electrons_profile,
         color="blue",
         linestyle="-",
         label=r"$f_{p,\alpha-fast-electrons}$",
     )
+    
+    right_axis.plot(
+        rho,
+        np.array(fusrat_plasma_dt_profile)*np.array(f_p_plasma_alpha_fast_ions_profile)*constants.DT_ALPHA_ENERGY/1e6,
+        color="green",
+        linestyle="-",
+        label=r"$f_{p,fusion-ratio}$",
+    )
+    
+    right_axis.plot(
+        rho,
+        np.array(fusrat_plasma_dt_profile)*np.array(f_p_plasma_alpha_fast_electrons_profile)*constants.DT_ALPHA_ENERGY/1e6,
+        color="green",
+        linestyle="-",
+        label=r"$f_{p,fusion-ratio}$",
+    )
 
-    axis.set_ylabel("Alpha Heating Power Split")
+    axis.set_ylabel("Alpha Heating Power Split (Fast Ions)")
+    right_axis.set_ylabel("Alpha Heating [MW]")
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
     axis.minorticks_on()
-    axis.legend()
+    right_axis.minorticks_on()
+
+    left_handles, left_labels = axis.get_legend_handles_labels()
+    right_handles, right_labels = right_axis.get_legend_handles_labels()
+    axis.legend(left_handles + right_handles, left_labels + right_labels)
 
 
 def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan: int):
