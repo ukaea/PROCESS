@@ -12,12 +12,12 @@
 neqns = 2               *number of equalities
 
 
-*--------------- equaltities
+*--------------- equalities
 icc = 2                 *Global power balance (consistency equation)
 icc = 16                *Net electric power lower limit
 p_plant_electric_net_required_mw = 1000         * Required net electric power (MW)
 
-*-------------- inequaltities
+*-------------- inequalities
 
 * Beta limit
 icc = 24                *Upper beta limit
