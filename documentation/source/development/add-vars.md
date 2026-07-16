@@ -67,6 +67,8 @@ Now, in the `IN.DAT`, you could set an initial value for `my_new_blanket_variabl
 my_new_blanket_variable = 1.0
 ```
 
+Equally, you could choose not to specify the variable in the `IN.DAT` and the value would be intialised to its default value (`0.0` in this example, as we specified [earlier](#add-a-new-variable)).
+
 -----------------
 
 ## Add an iteration variable
@@ -99,7 +101,7 @@ ixc = 123
 my_new_blanket_variable = 0.5
 ```
 
-Note you can omit the line specifying the initial value for an iteration variable, and then the initial value would just be whatever that variable's default value is: in this example we could omit the `my_new_blanket_variable = 0.5` line, and `my_new_blanket_variable` would take its initial value as the default of `0.0` that we assigned [earlier](#add-a-new-variable).
+Again, note that omitting the line specifying the initial value for an iteration variable means the initial value would be set to that variable's default value that we specified [earlier](#add-a-new-variable).
 
 -----------------
 
