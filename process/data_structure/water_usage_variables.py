@@ -8,6 +8,8 @@ https://www.thermal-engineering.org/what-is-latent-heat-of-vaporization-definiti
 
 from dataclasses import dataclass
 
+from parameter_frame import Parameter
+
 from process.core.metadata import PROCESSModelData
 
 
@@ -45,7 +47,7 @@ class WaterUseData(PROCESSModelData):
     volperenergy: float = 0.0
     """volume evaporated by units of heat energy (m3/MJ)"""
 
-    waterusetower: float = 0.0
+    waterusetower: Parameter[float] = 0.0
     """total volume of water used in cooling tower (m3/day)"""
 
     wateruserecirc: float = 0.0
