@@ -2339,43 +2339,6 @@ class Physics(Model):
         po.ocmmnt(self.outfile, "IN")
         po.ovarre(
             self.outfile,
-            "Net power transported by electrons (MW)",
-            "(p_electron_transport_loss_mw)",
-            self.data.physics.p_electron_transport_loss_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Net power transported by ions (MW)",
-            "(p_ion_transport_loss_mw)",
-            self.data.physics.p_ion_transport_loss_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Power lost by beam ions and unthermalised alphas (MW)",
-            "(p_loss_mw)",
-            p_loss_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total radiation loss, including net loss by synchrotron radiation (MW)",
-            "(p_plasma_rad_mw)",
-            self.data.physics.p_plasma_rad_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "TOTAL (MW)",
-            "(p_plasma_out)",
-            p_plasma_out,
-            "OP ",
-        )
-        po.oblnkl(self.outfile)
-        po.ocmmnt(self.outfile, "OUT")
-        po.ovarre(
-            self.outfile,
             "Alpha power (MW)",
             "(p_alpha_total_mw)",
             self.data.physics.p_alpha_total_mw,
@@ -2407,6 +2370,43 @@ class Physics(Model):
             "TOTAL (MW)",
             "(p_plasma_in)",
             p_plasma_in,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "OUT")
+        po.ovarre(
+            self.outfile,
+            "Net power transported by electrons (MW)",
+            "(p_electron_transport_loss_mw)",
+            self.data.physics.p_electron_transport_loss_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Net power transported by ions (MW)",
+            "(p_ion_transport_loss_mw)",
+            self.data.physics.p_ion_transport_loss_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Power lost by beam ions and unthermalised alphas (MW)",
+            "(p_loss_mw)",
+            p_loss_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total radiation loss, including net loss by synchrotron radiation (MW)",
+            "(p_plasma_rad_mw)",
+            self.data.physics.p_plasma_rad_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "TOTAL (MW)",
+            "(p_plasma_out)",
+            p_plasma_out,
             "OP ",
         )
         po.ovarre(
