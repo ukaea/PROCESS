@@ -3605,7 +3605,8 @@ def toroidal_cross_section(
             "dr_tf_inboard",
             (
                 TFC_COLOUR[colour_scheme - 1]
-                if mfile.get("i_tf_sup", scan=scan) != 0
+                if TFConductorModel(mfile.get("i_tf_sup", scan=scan))
+                != TFConductorModel.WATER_COOLED_COPPER
                 else "#b87333"
             ),
         ),
@@ -3678,13 +3679,14 @@ def toroidal_cross_section(
             w=w,
             facecolor=(
                 TFC_COLOUR[colour_scheme - 1]
-                if mfile.get("i_tf_sup", scan=scan) != 0
+                if TFConductorModel(mfile.get("i_tf_sup", scan=scan))
+                != TFConductorModel.WATER_COOLED_COPPER
                 else "#b87333"
             ),
         )
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
-    if i_hcd_primary in {5, 8}:
+    if CurrentDriveModel(i_hcd_primary).method == CurrentDriveMethodType.NEUTRAL_BEAM:
         # Neutral beam geometry. See docs for diagram.
         a = w + dx_beam_shield
         b = dr_tf_outboard
