@@ -2221,8 +2221,6 @@ class TFCoil(Model):
         i_tf_bucking,
         r_tf_inboard_in,
         dr_bore,
-        z_tf_inside_half,
-        f_z_cs_tf_internal,
         dr_cs,
         i_tf_inside_cs,
         dr_tf_inboard,
@@ -2282,6 +2280,7 @@ class TFCoil(Model):
         a_tf_coil_inboard_case,
         vforce,
         a_tf_turn_steel,
+        a_cs_poloidal: float,
     ):
         """TF coil stress routine
 
@@ -2302,10 +2301,6 @@ class TFCoil(Model):
         r_tf_inboard_in :
 
         dr_bore :
-
-        z_tf_inside_half :
-
-        f_z_cs_tf_internal :
 
         dr_cs :
 
@@ -2424,6 +2419,9 @@ class TFCoil(Model):
         vforce :
 
         a_tf_turn_steel :
+
+        a_cs_poloidal : float
+            Area of the CS poloidal cross-section [m²]
 
         Raises
         ------
@@ -2548,21 +2546,12 @@ class TFCoil(Model):
                 # as the TF is called before CS in caller.f90
                 # -#
 
-                # CS vertical cross-section area [m2]
-                if i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
-                    a_oh = (
-                        2.0e0
-                        * z_tf_inside_half
-                        * f_z_cs_tf_internal
-                        * (dr_bore - dr_tf_inboard)
-                    )
-                else:
-                    a_oh = 2.0e0 * z_tf_inside_half * f_z_cs_tf_internal * dr_cs
-
                 # Maximum current in Central Solenoid, at either BOP or EOF [MA-turns]
                 # Absolute value
                 curr_oh_max = (
-                    1.0e-6 * np.maximum(j_cs_flat_top_end, j_cs_pulse_start) * a_oh
+                    1.0e-6
+                    * np.maximum(j_cs_flat_top_end, j_cs_pulse_start)
+                    * a_cs_poloidal
                 )
 
                 #  Number of turns
@@ -2573,7 +2562,7 @@ class TFCoil(Model):
                 )
 
                 # CS Turn vertical cross-sectionnal area
-                a_cs_turn = a_oh / n_oh_turns
+                a_cs_turn = a_cs_poloidal / n_oh_turns
 
                 # CS coil turn geometry calculation - stadium shape
                 # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
