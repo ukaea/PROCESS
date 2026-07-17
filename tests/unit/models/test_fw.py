@@ -108,15 +108,15 @@ class FwTempParam(NamedTuple):
 )
 def test_fw_temp(fwtempparam, monkeypatch, fw):
     """
-     Automatically generated Regression Unit Test for fw_temp.
+    Automatically generated Regression Unit Test for fw_temp.
 
     This test was generated using data from large_tokamak_nof.DAT with the DCLL model enabled.
 
-     :param fwtempparam: the data used to mock and assert in this test.
-     :type fwtempparam: fwtempparam
+    :param fwtempparam: the data used to mock and assert in this test.
+    :type fwtempparam: fwtempparam
 
-     :param monkeypatch: pytest fixture used to mock module/class variables
-     :type monkeypatch: _pytest.monkeypatch.monkeypatch
+    :param monkeypatch: pytest fixture used to mock module/class variables
+    :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(
         fw.data.fwbs, "fw_th_conductivity", fwtempparam.fw_th_conductivity

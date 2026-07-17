@@ -354,7 +354,7 @@ def test_surfa(surfaparam: SurfaParam, monkeypatch):
     """
     Automatically generated Regression Unit Test for surfa.
 
-    This test was generated using data from the FNSF IN.DAT (no longer in repository).
+    This test was generated using data from the FNSF IN.DAT (no longer exists in the PROCESS repository).
 
     Parameters
     ----------

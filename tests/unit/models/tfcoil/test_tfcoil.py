@@ -356,7 +356,7 @@ def test_circumference(a: float, b: float, expected_circumference, tfcoil):
     This unit test uses values from an external blog referenced in the
     routine header
     (https://www.johndcook.com/blog/2013/05/05/ramanujan-circumference-ellipse/)
-    as well as results obtained from baseline 2018 (no longer a part of the PROCESS repository).
+    as well as results obtained from baseline 2018 (no longer exists in the PROCESS repository).
 
     Parameters
     ----------
@@ -519,7 +519,7 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
     """
     Automatically generated Regression Unit Test for tf_field_and_force.
 
-    This test was generated using data from the FNSF IN.DAT (no longer in repository).
+    This test was generated using data from the FNSF IN.DAT (no longer exists in the PROCESS repository).
 
     :param tffieldandforceparam: the data used to mock and assert in this test.
     :type tffieldandforceparam: tffieldandforceparam
@@ -1578,7 +1578,7 @@ def test_extended_plane_strain(extendedplanestrainparam):
     """
     Automatically generated Regression Unit Test for extended_plane_strain.
 
-    This test was generated using data from the FNSF IN.DAT (no longer in repository).
+    This test was generated using data from the FNSF IN.DAT (no longer exists in the PROCESS repository).
 
     :param extendedplanestrainparam: the data used to mock and assert in this test.
     :type extendedplanestrainparam: extendedplanestrainparam

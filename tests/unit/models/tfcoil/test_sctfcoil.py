@@ -1366,7 +1366,7 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
     Automatically generated Regression Unit Test for
     tf_cable_in_conduit_averaged_turn_geometry.
 
-    This test was generated using data from I-mode IN.DAT (no longer in repository)
+    This test was generated using data from I-mode IN.DAT (no longer exists in the PROCESS repository)
 
     :param tfaveragedturngeomparam: the data used to mock and assert in this test.
     :type tfaveragedturngeomparam: tfaveragedturngeomparam
@@ -1472,7 +1472,7 @@ def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
     """
     Automatically generated Regression Unit Test for tf_wp_currents.
 
-    This test was generated using data from I-mode IN.DAT (no longer in repository).
+    This test was generated using data from I-mode IN.DAT (no longer exists in the PROCESS repository).
 
     :param tfwpcurrentsparam: the data used to mock and assert in this test.
     :type tfwpcurrentsparam: tfwpcurrentsparam

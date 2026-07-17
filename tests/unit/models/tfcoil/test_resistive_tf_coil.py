@@ -128,7 +128,7 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
     """
     Automatically generated Regression Unit Test for res_tf_internal_geom.
 
-    This test was generated using data from the FNSF IN.DAT (no longer in repository).
+    This test was generated using data from the FNSF IN.DAT (no longer exists in the PROCESS repository).
 
     :param restfinternalgeomparam: the data used to mock and assert in this test.
     :type restfinternalgeomparam: restfinternalgeomparam
@@ -449,7 +449,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
     """
     Automatically generated Regression Unit Test for tf_res_heating.
 
-    This test was generated using data from the FNSF IN.DAT (no longer in repository).
+    This test was generated using data from the FNSF IN.DAT (no longer exists in the PROCESS repository).
 
     :param tfresheatingparam: the data used to mock and assert in this test.
     :type tfresheatingparam: tfresheatingparam
@@ -789,7 +789,7 @@ def test_cpost(cpostparam, monkeypatch, resistive_tf_coil):
     """
     Automatically generated Regression Unit Test for cpost.
 
-    This test was generated using data from the FNSF IN.DAT (no longer in repository).
+    This test was generated using data from the FNSF IN.DAT (no longer exists in the PROCESS repository).
 
     :param cpostparam: the data used to mock and assert in this test.
     :type cpostparam: cpostparam

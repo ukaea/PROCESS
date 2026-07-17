@@ -862,7 +862,7 @@ def test_st_cp_angle_fraction(stcpanglefractionparam, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for st_cp_angle_fraction.
 
-    This test was generated using data from the FNSF IN.DAT (no longer in repository).
+    This test was generated using data from the FNSF IN.DAT (no longer exists in the PROCESS repository).
 
     :param stcpanglefractionparam: the data used to mock and assert in this test.
     :type stcpanglefractionparam: stcpanglefractionparam
@@ -915,7 +915,7 @@ def test_st_tf_centrepost_fast_neut_flux(
     """
     Automatically generated Regression Unit Test for st_tf_centrepost_fast_neut_flux.
 
-    This test was generated using data from the Menard_HTS-PP IN.DAT (no longer in repository)
+    This test was generated using data from the Menard_HTS-PP IN.DAT (no longer exists in the PROCESS repository)
 
     :param sttfcentrepostfastneutfluxparam: data used to mock and assert in this test.
     :type sttfcentrepostfastneutfluxparam: sttfcentrepostfastneutfluxparam
@@ -984,7 +984,7 @@ def test_st_centrepost_nuclear_heating(
     """
     Automatically generated Regression Unit Test for st_centrepost_nuclear_heating.
 
-    This test was generated using data from Menard_HTS-PP IN.DAT (no longer in repository)
+    This test was generated using data from Menard_HTS-PP IN.DAT (no longer exists in the PROCESS repository)
 
     :param stcentrepostnuclearheatingparam: data used to mock and assert in this test.
     :type stcentrepostnuclearheatingparam: stcentrepostnuclearheatingparam
