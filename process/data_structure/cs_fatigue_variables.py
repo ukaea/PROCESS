@@ -4,7 +4,7 @@ from dataclasses import dataclass
 @dataclass(slots=True)
 class CSFatigueData:
     residual_sig_hoop: float = 2.4e8
-    """residual hoop stress in strucutal material (Pa)"""
+    """residual hoop stress in structural material (Pa)"""
 
     n_cycle: float = 0.0
     """Allowable number of cycles for CS stress model"""
@@ -16,7 +16,7 @@ class CSFatigueData:
     """Initial depth of crack in thickness of conduit (m)"""
 
     t_crack_vertical: float = 0.89e-3
-    """Inital vertical crack size (m)"""
+    """Initial vertical crack size (m)"""
 
     dr_cs_turn_conduit: float = 0.07
     """Thickness of CS conductor conduit (m)"""
@@ -43,7 +43,7 @@ class CSFatigueData:
     """Paris equation material power law (-)"""
 
     walker_coefficient: float = 0.436
-    """walker coefficent (-)"""
+    """walker coefficient (-)"""
 
     fracture_toughness: float = 2.0e2
     """fracture toughness (MPa m^1/2)"""

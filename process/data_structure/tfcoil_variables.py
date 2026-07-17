@@ -8,7 +8,7 @@ import numpy as np
 
 N_RADIAL_ARRAY = 50
 """Size of the radial distribution arrays per layers
-used for stress, strain and displacement distibution
+used for stress, strain and displacement distribution
 """
 
 
@@ -286,7 +286,7 @@ class TFData:
 
     i_tf_cond_eyoung_trans: int = 1
     """Switch for the behavior of the elastic properties of the TF coil
-    conductorin the transverse direction. Only active if
+    conductor in the transverse direction. Only active if
     `i_tf_cond_eyoung_axial == 2`
     - =0  Cable not potted in solder. Transverse Young's modulus set to zero.
     - =1  Cable potted in solder. If `i_tf_cond_eyoung_axial == 2`, the
@@ -312,7 +312,7 @@ class TFData:
     - if Superconducting TF  (i_tf_sup = 1) : Free standing TF with a steel casing
     - if aluminium  TF       (i_tf_sup = 2) : Free standing TF with a bucking structure
     Rem : the case is a bucking structure
-    - =0 : Free standing TF without case/bucking cyliner (only a conductor layer)
+    - =0 : Free standing TF without case/bucking cylinder (only a conductor layer)
     - =1 : Free standing TF with a case/bucking cylinder made of
     - if copper resistive     TF (i_tf_sup = 0) : used defined bucking cylinder
     - if Superconducting      TF (i_tf_sup = 1) : Steel casing
@@ -328,7 +328,7 @@ class TFData:
 
     n_tf_graded_layers: int = 1
     """Number of layers of different stress properties in the WP. If `n_tf_graded_layers > 1`,
-    a graded coil is condidered
+    a graded coil is considered
     """
 
     n_tf_stress_layers: int = 0
@@ -587,12 +587,12 @@ class TFData:
     """Outboard legs resistivity enhancement factor. Only used for `itart=1`."""
 
     i_cp_joints: int = -1
-    """Switch for CP demoutable joints type
-    -= 0 : Clampled joints
+    """Switch for CP demountable joints type
+    -= 0 : Clamped joints
     -= 1 : Sliding joints
     Default value (-1) choses :
     Sliding joints for resistive magnets (i_tf_sup = 0, 2)
-    Clampled joints for superconducting magnets (i_tf_sup = 1)
+    Clamped joints for superconducting magnets (i_tf_sup = 1)
     """
 
     rho_tf_joints: float = 2.5e-10
@@ -616,7 +616,7 @@ class TFData:
     """TF coil circumference (m)"""
 
     eff_tf_cryo: float = -1.0
-    """TF cryoplant efficiency (compared to pefect Carnot cycle).
+    """TF cryoplant efficiency (compared to perfect Carnot cycle).
     Using -1 set the default value depending on magnet technology:
     - i_tf_sup = 1 : SC magnet, eff_tf_cryo = 0.13 (ITER design)
     - i_tf_sup = 2 : Cryo-aluminium, eff_tf_cryo = 0.4

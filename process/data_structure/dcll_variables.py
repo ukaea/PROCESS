@@ -1,4 +1,4 @@
-"""This module contains the Dual Coolant Lead Lithium (DCLL) specific submods of PROCESSS.
+"""This module contains the Dual Coolant Lead Lithium (DCLL) specific submods of PROCESS.
 
 
 
@@ -78,7 +78,7 @@ class DCLLData:
     """Radial thickness of FCIs [m]"""
 
     r_backwall: float = 0.0
-    """Radial thickness of backwall [m]"""
+    """Radial thickness of back wall [m]"""
 
     bz_r_ib: float = 0.0
     """Radial BZ thickness [m]"""
@@ -123,7 +123,7 @@ class DCLLData:
     """Volume of liquid channels [m^3]"""
 
     vol_bw: float = 0.0
-    """Volume of backwall [m^3]"""
+    """Volume of back wall [m^3]"""
 
     vol_bss: float = 0.0
     """Volume of MF/BSS [m^3]"""

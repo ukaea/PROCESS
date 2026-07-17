@@ -134,7 +134,7 @@ class PFCoilData:
     """Central solenoid vertical cross-sectional area of steel (m2)"""
 
     a_cs_turn: float = 0.0
-    """Central solenoid (OH) trun cross-sectional area (m2)"""
+    """Central solenoid (OH) turn cross-sectional area (m2)"""
 
     a_cs_cable_space: float = 0.0
     """central solenoid conductor+void area with area of steel subtracted (m2)"""
