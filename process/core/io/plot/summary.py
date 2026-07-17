@@ -3745,7 +3745,7 @@ def toroidal_cross_section(
         spacing = full_angle / (n_blkt_inboard_modules_toroidal)
         r1, _ = cumulative_radial_build2("dr_shld_inboard", mfile, scan)
         r2, _ = cumulative_radial_build2("dr_blkt_inboard", mfile, scan)
-        for i in range(1, int(n_blkt_inboard_modules_toroidal)):
+        for i in range(int(n_blkt_inboard_modules_toroidal)):
             ang = i * spacing
             # Draw a line from r1 to r2 at angle ang
             axis.plot(
@@ -3766,7 +3766,7 @@ def toroidal_cross_section(
         spacing = full_angle / (n_blkt_outboard_modules_toroidal)
         r1, _ = cumulative_radial_build2("dr_fw_outboard", mfile, scan)
         r2, _ = cumulative_radial_build2("dr_blkt_outboard", mfile, scan)
-        for i in range(1, int(n_blkt_outboard_modules_toroidal)):
+        for i in range(int(n_blkt_outboard_modules_toroidal)):
             ang = i * spacing
             # Draw a line from r1 to r2 at angle ang
             axis.plot(
