@@ -16159,6 +16159,25 @@ def main_plot(
         colour_scheme,
     )
 
+    ax_full_toroidal = _add_page("full_machine_toroidal").add_subplot(
+        111, aspect="equal"
+    )
+    toroidal_cross_section(
+        ax_full_toroidal,
+        m_file,
+        scan,
+        demo_ranges,
+        colour_scheme,
+    )
+    ax_full_toroidal.set_ylim([
+        -ax_full_toroidal.get_ylim()[1],
+        ax_full_toroidal.get_ylim()[1],
+    ])
+    ax_full_toroidal.set_xlim([
+        -ax_full_toroidal.get_xlim()[1],
+        ax_full_toroidal.get_xlim()[1],
+    ])
+
     ax18 = _add_page().add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file, colour_scheme)
