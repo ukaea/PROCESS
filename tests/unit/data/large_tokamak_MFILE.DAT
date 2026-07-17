@@ -7356,7 +7356,7 @@ Radial_thickness_off_outboard_first_wall_(m)_____________________________ (dr_fw
 Number_of_inboard_first_wall_cooling_channels____________________________ (n_fw_inboard_channels)________         7550 OP 
 Number_of_outboard_first_wall_cooling_channels___________________________ (n_fw_outboard_channels)_______        12505 OP 
 # First wall pumping #
-First_wall_coolant_type__________________________________________________ (i_fw_coolant_type)____________     'helium' 
+First_wall_coolant_type__________________________________________________ (i_fw_coolant_type)____________     'Helium' 
 Outlet_temperature_of_first_wall_coolant_[K]_____________________________ (temp_fw_coolant_out)__________ 8.23000000000000000e+02 OP 
 Inlet_temperature_of_first_wall_coolant_[K]______________________________ (temp_fw_coolant_in)___________ 5.73000000000000000e+02 OP 
 Pressure_of_first_wall_coolant_[Pa]______________________________________ (pres_fw_coolant)______________ 1.55000000000000000e+07 OP 

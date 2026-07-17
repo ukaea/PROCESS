@@ -5386,7 +5386,7 @@ def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: i
     len_fw_channel = mfile.get("len_fw_channel", scan=scan)
     temp_fw_coolant_in = mfile.get("temp_fw_coolant_in", scan=scan)
     temp_fw_coolant_out = mfile.get("temp_fw_coolant_out", scan=scan)
-    i_fw_coolant_type = mfile.get("i_fw_coolant_type", scan=scan)
+    i_fw_coolant_type = mfile.get("i_fw_coolant_type", scan=scan).strip("'\"")
     temp_fw_peak = mfile.get("temp_fw_peak", scan=scan)
     pres_fw_coolant = mfile.get("pres_fw_coolant", scan=scan)
     n_fw_outboard_channels = mfile.get("n_fw_outboard_channels", scan=scan)
