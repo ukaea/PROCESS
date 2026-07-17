@@ -375,10 +375,11 @@ def poloidal_cross_section(
     colour_scheme :
         colour scheme to use for plots
     """
-    axis.set_xlabel("R / m")
-    axis.set_ylabel("Z / m")
-    axis.set_title("Poloidal cross-section")
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.set_title("Poloidal Cross-Section")
     axis.minorticks_on()
+    axis.grid(which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
     plot_vacuum_vessel_and_divertor(axis, mfile, scan, radial_build, colour_scheme)
     plot_shield(axis, mfile, scan, radial_build, colour_scheme)
@@ -451,8 +452,8 @@ def plot_full_machine_poloidal_cross_section(
     plot_pf_coils(axis, mfile, scan, colour_scheme)
     plot_pf_coils(axis, mfile, scan, colour_scheme, mirror_negative_x=True)
 
-    axis.set_xlabel("Radial position [m]")
-    axis.set_ylabel("Vertical position [m]")
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
     axis.set_aspect("equal")
     axis.minorticks_on()
     axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
@@ -3567,10 +3568,11 @@ def toroidal_cross_section(
     colour_scheme: Literal[1, 2],
 ):
     """Function to plot toroidal cross-section"""
-    axis.set_xlabel("x / m")
-    axis.set_ylabel("y / m")
-    axis.set_title("Toroidal cross-section")
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("X [m]")
+    axis.set_title("Toroidal Cross-Section")
     axis.minorticks_on()
+    axis.grid(which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
     rmajor = mfile.get("rmajor", scan=scan)
     rminor = mfile.get("rminor", scan=scan)
