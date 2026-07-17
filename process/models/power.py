@@ -880,7 +880,7 @@ class Power(Model):
                 + self.data.heat_transport.p_blkt_breeder_pump_mw
                 + self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
                 + self.data.current_drive.p_beam_orbit_loss_mw
-                + self.data.physics.p_fw_alpha_mw
+                + self.data.physics.p_fw_alpha_surface_total_mw
                 + self.data.current_drive.p_beam_shine_through_mw
             )
         else:
@@ -891,7 +891,7 @@ class Power(Model):
                 + self.data.fwbs.p_blkt_nuclear_heat_total_mw
                 + self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
                 + self.data.current_drive.p_beam_orbit_loss_mw
-                + self.data.physics.p_fw_alpha_mw
+                + self.data.physics.p_fw_alpha_surface_total_mw
                 + self.data.current_drive.p_beam_shine_through_mw
             )
 
@@ -901,7 +901,7 @@ class Power(Model):
             + self.data.fwbs.p_fw_rad_total_mw
             + self.data.heat_transport.p_fw_coolant_pump_mw
             + self.data.current_drive.p_beam_orbit_loss_mw
-            + self.data.physics.p_fw_alpha_mw
+            + self.data.physics.p_fw_alpha_surface_total_mw
             + self.data.current_drive.p_beam_shine_through_mw
         )
 
@@ -1114,8 +1114,8 @@ class Power(Model):
         po.ovarre(
             self.outfile,
             "Lost alpha-particle heat deposited in FW [MW]",
-            "(p_fw_alpha_mw)",
-            self.data.physics.p_fw_alpha_mw,
+            "(p_fw_alpha_surface_total_mw)",
+            self.data.physics.p_fw_alpha_surface_total_mw,
         )
         po.ovarre(
             self.outfile,

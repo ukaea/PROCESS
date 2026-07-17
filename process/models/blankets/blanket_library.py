@@ -2180,35 +2180,35 @@ class BlanketLibrary(Model):
             if self.data.fwbs.i_blkt_dual_coolant == 2:
                 f_nuc_fwi = (
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                 ) / (
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                     + pnucblkti_struct
                 )
                 f_nuc_fwo = (
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                 ) / (
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                     + pnucblkto_struct
                 )
             else:
                 f_nuc_fwi = (
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                 ) / (
                     self.data.blanket.p_fw_inboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.p_fw_inboard_surface_heat_mw
                     + self.data.blanket.p_blkt_nuclear_heat_inboard_mw
                 )
                 f_nuc_fwo = (
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                 ) / (
                     self.data.blanket.p_fw_outboard_nuclear_heat_mw
-                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_fw_outboard_surface_heat_mw
                     + self.data.blanket.p_blkt_nuclear_heat_outboard_mw
                 )
 
@@ -2252,7 +2252,7 @@ class BlanketLibrary(Model):
             self.data.fwbs.radius_fw_channel,
             self.data.build.dr_fw_inboard,
             self.data.first_wall.a_fw_inboard,
-            self.data.fwbs.psurffwi,
+            self.data.fwbs.p_fw_inboard_surface_heat_mw,
             self.data.blanket.p_fw_inboard_nuclear_heat_mw,
             "Inboard first wall",
         )
@@ -2266,7 +2266,7 @@ class BlanketLibrary(Model):
             self.data.fwbs.radius_fw_channel,
             self.data.build.dr_fw_outboard,
             self.data.first_wall.a_fw_outboard,
-            self.data.fwbs.psurffwo,
+            self.data.fwbs.p_fw_outboard_surface_heat_mw,
             self.data.blanket.p_fw_outboard_nuclear_heat_mw,
             "Outboard first wall",
         )
@@ -2280,13 +2280,19 @@ class BlanketLibrary(Model):
         # Total mass flow rate to remove inboard FW power (kg/s)
         self.data.blanket.mflow_fw_inboard_coolant_total = (
             1.0e6
-            * (self.data.blanket.p_fw_inboard_nuclear_heat_mw + self.data.fwbs.psurffwi)
+            * (
+                self.data.blanket.p_fw_inboard_nuclear_heat_mw
+                + self.data.fwbs.p_fw_inboard_surface_heat_mw
+            )
             / (self.data.fwbs.cp_fw * (fwoutleti - self.data.fwbs.temp_fw_coolant_in))
         )
         # Total mass flow rate to remove outboard FW power (kg/s)
         self.data.blanket.mflow_fw_outboard_coolant_total = (
             1.0e6
-            * (self.data.blanket.p_fw_outboard_nuclear_heat_mw + self.data.fwbs.psurffwo)
+            * (
+                self.data.blanket.p_fw_outboard_nuclear_heat_mw
+                + self.data.fwbs.p_fw_outboard_surface_heat_mw
+            )
             / (self.data.fwbs.cp_fw * (fwoutleto - self.data.fwbs.temp_fw_coolant_in))
         )
 
@@ -2466,7 +2472,7 @@ class BlanketLibrary(Model):
                     pres_coolant_pump_inlet=self.data.fwbs.pres_fw_coolant,
                     dpres_coolant=deltap_fw_blkt,
                     mflow_coolant_total=self.data.blanket.mftotal,
-                    primary_coolant_switch=self.data.fwbs.i_fw_coolant_type,
+                    i_coolant_type=self.data.fwbs.i_fw_coolant_type,
                     den_coolant=self.data.fwbs.den_fw_coolant,
                     label="First Wall and Blanket",
                 )

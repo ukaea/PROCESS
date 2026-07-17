@@ -212,26 +212,6 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         # FW
 
-        # Radiation power incident on first wall (MW)
-        self.data.fwbs.p_fw_rad_total_mw = (
-            self.data.physics.p_plasma_rad_mw
-            - self.data.fwbs.p_div_rad_total_mw
-            - self.data.fwbs.p_fw_hcd_rad_total_mw
-        )
-
-        # Surface heat flux on first wall (MW)
-        # All of the fast particle losses go to the outer wall.
-        self.data.fwbs.psurffwo = (
-            self.data.fwbs.p_fw_rad_total_mw
-            * self.data.first_wall.a_fw_outboard
-            / self.data.first_wall.a_fw_total
-            + self.data.current_drive.p_beam_orbit_loss_mw
-            + self.data.physics.p_fw_alpha_mw
-        )
-        self.data.fwbs.psurffwi = self.data.fwbs.p_fw_rad_total_mw * (
-            1 - self.data.first_wall.a_fw_outboard / self.data.first_wall.a_fw_total
-        )
-
         if output:
             po.osubhd(
                 self.outfile, "DCLL model: Nuclear and Radiation Heating of Components"
@@ -339,8 +319,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 f_p_shld_coolant_pump_total_heat=self.data.heat_transport.f_p_shld_coolant_pump_total_heat,
                 f_p_div_coolant_pump_total_heat=self.data.heat_transport.f_p_div_coolant_pump_total_heat,
                 p_fw_nuclear_heat_total_mw=self.data.fwbs.p_fw_nuclear_heat_total_mw,
-                psurffwi=self.data.fwbs.psurffwi,
-                psurffwo=self.data.fwbs.psurffwo,
+                p_fw_inboard_surface_heat_mw=self.data.fwbs.p_fw_inboard_surface_heat_mw,
+                p_fw_outboard_surface_heat_mw=self.data.fwbs.p_fw_outboard_surface_heat_mw,
                 p_blkt_nuclear_heat_total_mw=self.data.fwbs.p_blkt_nuclear_heat_total_mw,
                 p_shld_nuclear_heat_mw=self.data.fwbs.p_shld_nuclear_heat_mw,
                 p_cp_shield_nuclear_heat_mw=self.data.fwbs.p_cp_shield_nuclear_heat_mw,

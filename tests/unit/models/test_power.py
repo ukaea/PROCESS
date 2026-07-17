@@ -1710,6 +1710,16 @@ class PlantElectricProductionParam(NamedTuple):
 
     itart: Any = None
 
+    p_plasma_separatrix_mw: Any = None
+
+    p_fw_alpha_surface_total_mw: Any = None
+
+    n_divertors: Any = None
+
+    p_plasma_ohmic_mw: Any = None
+
+    i_rad_loss: Any = None
+
     p_fusion_total_mw: Any = None
 
     p_cp_coolant_pump_elec: Any = None
@@ -1751,6 +1761,11 @@ class PlantElectricProductionParam(NamedTuple):
             p_coolant_pump_loss_total_mw=30.457120415306122,
             p_pf_electric_supplies_mw=0.89998039031509891,
             itart=0,
+            p_plasma_separatrix_mw=143.03180561618876,
+            p_fw_alpha_surface_total_mw=19.833077403424262,
+            n_divertors=1,
+            p_plasma_ohmic_mw=0.61391840981850698,
+            i_rad_loss=1,
             p_fusion_total_mw=1985.785106643267,
             p_cp_coolant_pump_elec=0,
             i_tf_sup=1,
@@ -1780,6 +1795,11 @@ class PlantElectricProductionParam(NamedTuple):
             p_coolant_pump_loss_total_mw=30.448114159579291,
             p_pf_electric_supplies_mw=0.068213156646500808,
             itart=0,
+            p_plasma_separatrix_mw=142.91368967092416,
+            p_fw_alpha_surface_total_mw=19.826887164528632,
+            n_divertors=1,
+            p_plasma_ohmic_mw=0.61391840981850698,
+            i_rad_loss=1,
             p_fusion_total_mw=1985.1653095257811,
             p_cp_coolant_pump_elec=0,
             i_tf_sup=1,
