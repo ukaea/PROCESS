@@ -72,7 +72,7 @@ def show_errors(file_unit: int):
 
     """
     warning_string = (
-        "******************************************** Errors and Warnings *********************************************"
+        "******************************************** Errors and Warnings *********************************************"  # noqa: E501
         f"\n{logging_model_handler.render_warnings()}"
     )
     print(warning_string)

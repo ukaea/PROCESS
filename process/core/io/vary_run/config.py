@@ -136,7 +136,8 @@ iteration variables should get varied"""
 
         if not isinstance(self.or_in_dat, Path) or not self.or_in_dat.is_file():
             raise FileNotFoundError(
-                f"Error: {self.or_in_dat} does not exist! Create file or modify config file!",
+                f"Error: {self.or_in_dat} does not exist! "
+                "Create file or modify config file!",
             )
 
     def __iter__(self):
@@ -161,7 +162,8 @@ iteration variables should get varied"""
             print(f"VaryRun iteration {self._current_iteration} did not converge.\n")
         else:
             print(
-                f"PROCESS found a converged solution using VaryRun. The converging input file is {self._current_iteration}_IN.DAT\n"
+                "PROCESS found a converged solution using VaryRun. "
+                f"The converging input file is {self._current_iteration}_IN.DAT\n"
             )
 
         self._current_iteration += 1
@@ -245,9 +247,19 @@ iteration variables should get varied"""
 
         ifail = m_file.data["ifail"].get_scan(-1)
         if ifail != 1:
-            ifail_msg = f"PROCESS has been unable to find a converging input file within the chosen maximum number of iterations.\nYou could try increasing the maximum number of iterations (which is currently set to {self.niter}),\nchanging the factor within which the iteration variables are changed,\nor by changing the initial values of the iteration variables."
+            ifail_msg = (
+                "PROCESS has been unable to find a converging input file "
+                "within the chosen maximum number of iterations.\n"
+                "You could try increasing the maximum number of iterations "
+                f"(which is currently set to {self.niter}),\n"
+                "changing the factor within which the iteration variables are changed,\n"
+                "or by changing the initial values of the iteration variables."
+            )
         else:
-            ifail_msg = f"PROCESS found a converged solution using VaryRun. The converging input file is {self._current_iteration - 1}_IN.DAT"
+            ifail_msg = (
+                "PROCESS found a converged solution using VaryRun. "
+                f"The converging input file is {self._current_iteration - 1}_IN.DAT"
+            )
 
         if self.comment:
             with open(Path(self.wdir, "README.txt"), "a") as readme:
@@ -327,7 +339,8 @@ class RunProcessConfig(ProcessConfig):
     no_allowed_unfeasible: int = 0
     """the number of allowed unfeasible points in a sweep"""
     create_itervar_diff: bool = False
-    """boolean to indicate the creation of a summary file of the iteration variable values at each stage"""
+    """boolean to indicate the creation of a summary file of the iteration variable
+    values at each stage"""
     dictvar: dict[str, str] = field(default_factory=dict)
     """Dictionary mapping variable name to new value"""
     del_var: list[str] = field(default_factory=list)

@@ -129,9 +129,11 @@ def dict_ixc_bounds():
 # process run.
 @cache
 def get_dicts():
-    """Constructs the dictionaries which contain information about every PROCESS variable.
+    """Constructs the dictionaries which contain information about every
+    PROCESS variable.
 
-    WARNING: this function must be used carefully because it re-initialises the PROCESS state
+    WARNING: this function must be used carefully because it
+    re-initialises the PROCESS state
     """
     dict_objects = []
     # Different dict objects, e.g. variable descriptions
@@ -181,7 +183,8 @@ def get_dicts():
                 # for each variable in the file, get the initial value
                 # (either is None, or value initialised in init_variables fn)
                 # set default to be None if variable is not being initialised eg if you
-                # just have `example_double: float` instead of `example_double: float = None`
+                # just have `example_double: float`
+                # instead of `example_double: float = None`
                 initial_value = getattr(object_containing_initial_values, node.target.id)
                 # JSON doesn't like np arrays
                 if type(initial_value) is np.ndarray:
@@ -204,9 +207,10 @@ def get_dicts():
                         else:
                             raise TypeError(
                                 f"The type annotation of variable {node.target.id} is "
-                                f"{node.annotation.value.id}[{node.annotation.slice.id}], and "
-                                "this is not recognised. Please change your type annotation for "
-                                "this variable. PROCESS recognises the following type annotations: "
+                                f"{node.annotation.value.id}[{node.annotation.slice.id}],"
+                                " and this is not recognised. "
+                                "Please change your type annotation for this variable. "
+                                "PROCESS recognises the following type annotations: "
                                 "list[float], list[int], list[str], list[bool]."
                             )
                 elif node.annotation.id == "float":
@@ -220,8 +224,9 @@ def get_dicts():
                 else:
                     raise TypeError(
                         f"The type annotation of variable {node.target.id} is "
-                        f"{node.annotation.id}, and this is not recognised. Please change your "
-                        "type annotation for this variable. PROCESS recognises the following "
+                        f"{node.annotation.id}, and this is not recognised. "
+                        "Please change your type annotation for this variable. "
+                        "PROCESS recognises the following "
                         "type annotations: float, int, str, bool."
                     )
 

@@ -429,7 +429,8 @@ class Scan:
 
             process_output.write(
                 constants.NOUT,
-                f"{string1} the optimisation parameters to {string2} the objective function: {objf_name}\n",
+                f"{string1} the optimisation parameters to {string2} "
+                f"the objective function: {objf_name}\n",
             )
 
         written_warning = False
@@ -459,7 +460,8 @@ class Scan:
                         constants.NOUT,
                         (
                             "Certain operating limits have been reached,"
-                            "\n as shown by the following optimisation parameters that are"
+                            "\n as shown by the following optimisation parameters"
+                            " that are"
                             "\n at or near to the edge of their prescribed range :\n"
                         ),
                     )
@@ -614,13 +616,14 @@ class Scan:
             # Inequalities not necessarily satisfied when evaluating
             process_output.osubhd(
                 constants.NOUT,
-                "Negative inequality constraint (normalised) residuals indicate a constraint is satisfied.",
+                "Negative inequality constraint (normalised) residuals "
+                "indicate a constraint is satisfied.",
             )
             if self.solver == "fsolve":
                 process_output.osubhd(
                     constants.NOUT,
-                    "This MFile was produced via an evaluation, not an optimisation, and so the constraints "
-                    "might be violated.",
+                    "This MFile was produced via an evaluation, not an optimisation, "
+                    "and so the constraints might be violated.",
                 )
 
             for i in range(
@@ -724,7 +727,8 @@ class Scan:
             )
             process_output.ocmmnt(
                 constants.NOUT,
-                "The code may be stuck in a minimum in the residual space that is significantly above zero.",
+                "The code may be stuck in a minimum in the residual space that is "
+                "significantly above zero.",
             )
             process_output.oblnkl(constants.NOUT)
             process_output.ocmmnt(
@@ -744,7 +748,8 @@ class Scan:
             )
             process_output.ocmmnt(
                 constants.IOTTY,
-                "The code may be stuck in a minimum in the residual space that is significantly above zero.",
+                "The code may be stuck in a minimum in the residual space that is "
+                "significantly above zero.",
             )
             process_output.oblnkl(constants.NOUT)
             process_output.oblnkl(constants.IOTTY)
@@ -869,9 +874,7 @@ class Scan:
 
         # outvar now contains results
         self.scan_1d_write_plot(self.data.scan)
-        print(
-            " ****************************************** Scan Convergence Summary ****************************************** \n"
-        )
+        print("Scan Convergence Summary \n")
         sweep_values = self.data.scan.sweep[: self.data.scan.isweep]
         nsweep_var_name, _ = self.scan_select(
             self.data.scan.nsweep, self.data.scan.sweep, self.data.scan.isweep
@@ -929,9 +932,7 @@ class Scan:
                 scan_2d_ifail_list[iscan_1][iscan_2] = ifail
                 iscan += 1
 
-        print(
-            " ****************************************** Scan Convergence Summary ****************************************** \n"
-        )
+        print("Scan Convergence Summary\n")
         sweep_1_values = self.data.scan.sweep[: self.data.scan.isweep]
         sweep_2_values = self.data.scan.sweep_2[: self.data.scan.isweep_2]
         nsweep_var_name, _ = self.scan_select(
@@ -962,14 +963,22 @@ class Scan:
                 if scan_2d_ifail_list[iscan_1][iscan_2] == 1:
                     converged_count += 1
                     print(
-                        f"Scan {scan_point:02d}: ({nsweep_var_name} = {sweep_1_values[iscan_1 - 1]}, {nsweep_2_var_name} = {sweep_2_values[iscan_2 - 1]}) "
+                        (
+                            f"Scan {scan_point:02d}: ({nsweep_var_name} = "
+                            f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var_name} "
+                            f"= {sweep_2_values[iscan_2 - 1]}) "
+                        )
                         + " " * offsets[iscan_1 - 1][iscan_2 - 1]
                         + "\u001b[32mCONVERGED \u001b[0m"
                     )
                     scan_point += 1
                 else:
                     print(
-                        f"Scan {scan_point:02d}: ({nsweep_var_name} = {sweep_1_values[iscan_1 - 1]}, {nsweep_2_var_name} = {sweep_2_values[iscan_2 - 1]}) "
+                        (
+                            f"Scan {scan_point:02d}: ({nsweep_var_name} = "
+                            f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var_name} = "
+                            f"{sweep_2_values[iscan_2 - 1]}) "
+                        )
                         + " " * offsets[iscan_1 - 1][iscan_2 - 1]
                         + "\u001b[31mUNCONVERGED \u001b[0m"
                     )
@@ -1029,7 +1038,8 @@ class Scan:
 
         process_output.write(
             constants.NOUT,
-            f"***** Scan point {iscan} of {self.data.scan.isweep} : {self.data.globals.xlabel}"
+            f"***** Scan point {iscan} of {self.data.scan.isweep} : "
+            f"{self.data.globals.xlabel}"
             f", {self.data.globals.vlabel} = {self.data.scan.sweep[iscan - 1]} "
             "*****",
         )
@@ -1061,7 +1071,8 @@ class Scan:
 
         process_output.write(
             constants.NOUT,
-            f"***** 2D Scan point {iscan} of {self.data.scan.isweep * self.data.scan.isweep_2} : "
+            f"***** 2D Scan point {iscan} of "
+            f"{self.data.scan.isweep * self.data.scan.isweep_2} : "
             f"{self.data.globals.vlabel} = {self.data.scan.sweep[iscan_1 - 1]} and"
             f" {self.data.globals.vlabel_2} = {self.data.scan.sweep_2[iscan_r - 1]} "
             "*****",

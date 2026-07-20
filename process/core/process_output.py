@@ -68,7 +68,10 @@ def write(file, string: str):
     elif file == constants.IOTTY:
         print(string)
     else:
-        error_msg = f"Unknown file identifier {file}, it is not recognised as either an MFile, OUTFile, or terminal."
+        error_msg = (
+            f"Unknown file identifier {file}, "
+            "it is not recognised as either an MFile, OUTFile, or terminal."
+        )
         raise ProcessValueError(error_msg)
 
 
@@ -208,7 +211,10 @@ def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
     #     # The ITV flag overwrites the output_flag
     #     output_flag = "ITV"
 
-    line = f"{description}{replacement_character} {varname}{replacement_character} {format_value} {output_flag}"
+    line = (
+        f"{description}{replacement_character} {varname}{replacement_character} "
+        f"{format_value} {output_flag}"
+    )
     write(file, line)
     if file != constants.MFILE:
         ovarre(constants.MFILE, descr, varnam, value, output_flag)

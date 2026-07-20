@@ -438,13 +438,19 @@ def check_process(inputs, data):  # noqa: ARG001
                 "Density pedestal is lower than separatrix density",
                 **(
                     {
-                        "nd_plasma_pedestal_electron": data.physics.nd_plasma_pedestal_electron,
-                        "nd_plasma_separatrix_electron": data.physics.nd_plasma_separatrix_electron,
+                        k: getattr(data.physics, k)
+                        for k in (
+                            "nd_plasma_pedestal_electron",
+                            "nd_plasma_separatrix_electron",
+                        )
                     }
                     if pedestal_type == DensityProfilePedestalType.USER_INPUT
                     else {
-                        "f_nd_plasma_pedestal_greenwald": data.physics.f_nd_plasma_pedestal_greenwald,
-                        "f_nd_plasma_separatrix_greenwald": data.physics.f_nd_plasma_separatrix_greenwald,
+                        k: getattr(data.physics, k)
+                        for k in (
+                            "f_nd_plasma_pedestal_greenwald",
+                            "f_nd_plasma_separatrix_greenwald",
+                        )
                     }
                 ),
             )

@@ -66,8 +66,8 @@ class InputVariable:
         Callable[[str, ValidInputTypes, int | None, InputVariable], ValidInputTypes]
         | None
     ) = None
-    """A function that takes the input variable: name, value, array index, and config (this dataclass)
-    as input and returns a cleaned version of the input value. May raise
+    """A function that takes the input variable: name, value, array index, and config
+    (this dataclass) as input and returns a cleaned version of the input value. May raise
     a ProcessValidationError.
 
     NOTE: The value passed in has already been cleaned in the default way and has
@@ -77,19 +77,22 @@ class InputVariable:
         Callable[[str, ValidInputTypes, int | None, InputVariable, DataStructure], None]
         | None
     ) = None
-    """A function that takes the input variable: name, value, array index, config (this dataclass), and
-    the data structure object as input and performs some additional action in addition to the default
+    """A function that takes the input variable: name, value, array index, config
+    (this dataclass), and the data structure object as input and performs some additional
+    action in addition to the default
     actions prescribed by the variables config. May raise a ProcessValidationError.
 
     NOTE: The value passed in has already been cleaned in the default
     way and has been cast to the specified `type`.
 
-    NOTE: the input name is the cleaned name as in the input file NOT the `target_variable`.
+    NOTE:
+    the input name is the cleaned name as in the input file NOT the `target_variable`.
     """
     target_name: str | None = None
     """Indicates the parsed variable name is different to its target on the `module`."""
     set_variable: bool = True
-    """Do not attempt to set the variable on the module. Instead only do any `additional_actions`."""
+    """Do not attempt to set the variable on the module.
+    Instead only do any `additional_actions`."""
 
     def __post_init__(self):
         if self.type not in DataTypes:
@@ -104,7 +107,8 @@ class InputVariable:
 
         if not self.set_variable and self.additional_actions is None:
             logger.warning(
-                "Not setting variable or performing an additional action. Why are you parsing this variable?",
+                "Not setting variable or performing an additional action. "
+                "Why are you parsing this variable?",
                 stacklevel=2,
             )
 
@@ -708,9 +712,12 @@ INPUT_VARIABLES = {
             rt <= 1e-6
             or logger.warning(
                 (
-                    "the relationship between REBCO layer thickness and current density is not linear."
-                    "REBCO layer thicknesses > 1um should be considered an aggressive extrapolation of"
-                    "current HTS technology and any results must be considered speculative."
+                    "the relationship between REBCO layer thickness "
+                    "and current density is not linear."
+                    "REBCO layer thicknesses > 1um should be considered "
+                    "an aggressive extrapolation of"
+                    "current HTS technology and any results "
+                    "must be considered speculative."
                 ),
                 stacklevel=1,
             )
@@ -1300,7 +1307,8 @@ def parse_input_file(data_structure_obj: DataStructure):
                 data_structure_obj,
             )
 
-        # add the variable to a dictionary indexed by the variable name (in the input file)
+        # add the variable to a dictionary indexed by the variable name
+        # (in the input file)
         variables[variable_name] = {
             "value": clean_variable_value,
             "index": array_index_clean,
@@ -1354,7 +1362,10 @@ def validate_variable(
     try:
         clean_value = config.type(value)
     except ValueError as e:
-        error_msg = f"Cannot cast variable name '{name}' at line {line_number} to a {config.type} (value = {value})"
+        error_msg = (
+            f"Cannot cast variable name '{name}' at line {line_number}"
+            f" to a {config.type} (value = {value})"
+        )
         raise ProcessValidationError(error_msg) from e
 
     if (
@@ -1368,7 +1379,10 @@ def validate_variable(
         raise ProcessValidationError(error_msg)
 
     if config.choices is not None and clean_value not in config.choices:
-        error_msg = f"Variable '{name}' at line {line_number} is not one of {config.choices} (value = {value})"
+        error_msg = (
+            f"Variable '{name}' at line {line_number} is not one of {config.choices}"
+            f" (value = {value})"
+        )
         raise ProcessValidationError(error_msg)
 
     if config.additional_validation is not None:
@@ -1407,8 +1421,10 @@ def set_scalar_variable(name: str, value: ValidInputTypes, config: InputVariable
 def set_array_variable(name: str, value: str, array_index: int, config: InputVariable):
     """Set an array variable in the `config.module`.
 
-    The way PROCESS input files are structured, each element of the array is provided on one line
-    so this function just needs to set the `value` at `array_index` (-1) because of Fortran-based indexing.
+    The way PROCESS input files are structured, each element of the array is provided on
+    one line
+    so this function just needs to set the `value` at `array_index` (-1)
+    because of Fortran-based indexing.
 
     Parameters
     ----------

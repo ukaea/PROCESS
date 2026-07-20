@@ -237,10 +237,12 @@ def get_constraint_equations(data):
 
         if constraint is None:
             raise ProcessValidationError(
-                f"Constraint equation {constraint_number} requested but has not been registered"
+                f"Constraint equation {constraint_number} requested "
+                "but has not been registered"
             )
 
-        # TODO: we should store a short description of each constraint that we can use here.
+        # TODO: we should store a short description of each constraint
+        # that we can use here.
         # Currently, no such information exists.
         constraints[constraint_number] = ""
 
@@ -857,7 +859,8 @@ def variable_constraint_type_check(item_number, var_type):
 
             # rounded float number with warning
             print(
-                f"Value {item_number} for {var_type} not an integer. Value rounded to {int(item_number)}."
+                f"Value {item_number} for {var_type} not an integer. "
+                f"Value rounded to {int(item_number)}."
                 " Check!"
             )
             return int(item_number)
@@ -876,7 +879,8 @@ def variable_constraint_type_check(item_number, var_type):
 
         # If not an integer warn of rounding and return rounded integer
         print(
-            f"Value {item_number} for {var_type} not an integer. Value rounded to {int(item_number)}. Check!"
+            f"Value {item_number} for {var_type} not an integer. "
+            f"Value rounded to {int(item_number)}. Check!"
         )
         return int(item_number)
 
@@ -940,7 +944,8 @@ def variable_bound_check(bound_number, bound_type):
             return int(bound_number), bound_type
         bound_number = int(bound_number)
         print(
-            f"Bound number {bound_number} not an integer. Value rounded to {int(bound_number)}"
+            f"Bound number {bound_number} not an integer. "
+            f"Value rounded to {int(bound_number)}"
         )
         return bound_number, bound_type
 
@@ -970,7 +975,8 @@ class INVariable:
         self.comment = comment
 
     def __eq__(self, value):
-        # intentionally missing .comment, this is not necessary for the variables to be equal
+        # intentionally missing .comment,
+        # this is not necessary for the variables to be equal
         return (
             self.name == value.name
             and self.value == value.value
@@ -982,7 +988,8 @@ class INVariable:
 
     def __repr__(self):
         return (
-            f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, v_type={self.v_type!r}, "
+            f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, "
+            f"v_type={self.v_type!r}, "
             f"comment={self.comment!r})"
         )
 

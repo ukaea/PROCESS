@@ -95,14 +95,14 @@ class Model(abc.ABC):
     def run(self) -> None:
         """Run the model.
 
-        The run method is responsible for 'running' the model, ensuring it updates the data
-        structure with variables that subsequent models will require.
+        The run method is responsible for 'running' the model, ensuring it updates
+        the data structure with variables that subsequent models will require.
         """
 
     @abc.abstractmethod
     def output(self) -> None:
         """Output model data.
 
-        This method will always be called after run method and should output the model data to the
-        output files.
+        This method will always be called after run method and should output the model
+        data to the output files.
         """

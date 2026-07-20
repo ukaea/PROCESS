@@ -134,7 +134,8 @@ def sankey(mfile, format_):
     "y_axis_percent2",
     is_flag=True,
     help=(
-        "Used to set the y axis ticks to percentages in place of absolute \nvalues. For the twinned axis if present."
+        "Used to set the y axis ticks to percentages in place of absolute \nvalues. "
+        "For the twinned axis if present."
     ),
 )
 @click.option(
@@ -143,7 +144,8 @@ def sankey(mfile, format_):
     callback=split_callback,
     default="",
     help=(
-        "Used to set the y value corresponding to 100 percent when \nconverting from absolute to percent values."
+        "Used to set the y value corresponding to 100 percent when \n"
+        "converting from absolute to percent values."
     ),
 )
 @click.option(
@@ -152,7 +154,8 @@ def sankey(mfile, format_):
     callback=split_callback,
     default="",
     help=(
-        "Used to set the y value corresponding to 100 percent when \nconverting from absolute to percent values."
+        "Used to set the y value corresponding to 100 percent when \n"
+        "converting from absolute to percent values."
         "For the twinned axis if present."
     ),
 )
@@ -321,7 +324,8 @@ def plot_tf_stress(plot_selec, save_format, axis_font_size, term_output, input_f
     "-o",
     "--output-format",
     help=(
-        "Output file format\npdf: pdf output (default)\npng: png output\nnone: no output file written"
+        "Output file format\npdf: pdf output (default)\npng: png output\n"
+        "none: no output file written"
     ),
     default="pdf",
     type=click.Choice(["pdf", "png", "none"]),

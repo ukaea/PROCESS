@@ -93,7 +93,8 @@ def plot_scan(
         13: "boundu(10)",
         14: "f_j_tf_wp_critical_max",
         16: "rmajor",
-        17: "b_tf_inboard_peak_symmetric",  # b_tf_inboard_max the maximum T field upper limit is the scan variable
+        # b_tf_inboard_max the maximum T field upper limit is the scan variable
+        17: "b_tf_inboard_peak_symmetric",
         18: "eta_cd_norm_hcd_primary_max",
         19: "boundl(16)",
         20: "cnstv.t_burn_min",
@@ -133,7 +134,8 @@ def plot_scan(
         54: "b_crit_upper_nbti",
         55: "dr_shld_inboard",
         56: "p_cryo_plant_electric_max_mw",
-        57: "b_plasma_toroidal_on_axis",  # Genuinly b_plasma_toroidal_on_axis lower bound
+        # Genuinly b_plasma_toroidal_on_axis lower bound
+        57: "b_plasma_toroidal_on_axis",
         58: "dr_fw_plasma_gap_inboard",
         59: "dr_fw_plasma_gap_outboard",
         60: "sig_tf_wp_max",
@@ -248,7 +250,6 @@ def plot_scan(
     # -------------
 
     # Case of a set of 1D scans
-    # ----------------------------------------------------------------------------------------------
     if not is_2D_scan:
         # Loop over the MFILEs
         output_arrays = {}
@@ -289,7 +290,8 @@ def plot_scan(
                 else:
                     failed_value = m_file.data[scan_var_name].get_scan(ii + 1)
                     print(
-                        f"Warning : Non-convergent scan point : {scan_var_name} = {failed_value}\n"
+                        "Warning : Non-convergent scan point : "
+                        f"{scan_var_name} = {failed_value}\n"
                         "Warning : This point will not be shown."
                     )
 
@@ -351,7 +353,8 @@ def plot_scan(
                 print()
                 if len(output_names2) > 0:
                     print(
-                        f"Y2-Axis\n  {output_name2} : {output_arrays2[input_file][output_name2]}\n"
+                        f"Y2-Axis\n  {output_name2} : "
+                        f"{output_arrays2[input_file][output_name2]}\n"
                     )
         # Plot section
         # -----------
@@ -689,8 +692,8 @@ def plot_scan(
                 plt.rc("xtick", labelsize=axis_tick_size)
                 plt.rc("ytick", labelsize=axis_tick_size)
                 plt.title(
-                    f"{meta[output_name].latex if output_name in meta else {output_name}} vs "
-                    f"{meta[scan_var_name].latex if scan_var_name in meta else {scan_var_name}}",
+                    f"{meta[output_name].latex if output_name in meta else {output_name}} vs "  # noqa: E501
+                    f"{meta[scan_var_name].latex if scan_var_name in meta else {scan_var_name}}",  # noqa: E501
                     fontsize=axis_font_size,
                 )
                 plt.tight_layout()
@@ -700,11 +703,11 @@ def plot_scan(
 
             # Output file naming
             if output_name == "plasma_current_MA":
-                extra_str = f"plasma_current{f'_vs_{output_name2}' if len(output_names2) > 0 else ''}"
+                extra_str = f"plasma_current{f'_vs_{output_name2}' if len(output_names2) > 0 else ''}"  # noqa: E501
             elif stack_plots and output_names[-1] == output_name:
-                extra_str = f"{output_name}{f'_vs_{output_name2}' if len(output_names2) > 0 else '_vs_'.join(output_names)}"
+                extra_str = f"{output_name}{f'_vs_{output_name2}' if len(output_names2) > 0 else '_vs_'.join(output_names)}"  # noqa: E501
             else:
-                extra_str = f"{output_name}{f'_vs_{output_name2}' if len(output_names2) > 0 else ''}"
+                extra_str = f"{output_name}{f'_vs_{output_name2}' if len(output_names2) > 0 else ''}"  # noqa: E501
 
             if (not stack_plots) or (stack_plots and output_names[-1] == output_name):
                 plt.savefig(
@@ -717,7 +720,6 @@ def plot_scan(
         # ------------
 
     # In case of a 2D scan
-    # ----------------------------------------------------------------------------------------------
     else:
         # Opening the MFILE.DAT
         m_file = MFile(filename=input_files[0])
@@ -727,7 +729,8 @@ def plot_scan(
         n_scan_2 = int(m_file.data["isweep_2"].get_scan(-1))
         # Selecting the converged runs only
         contour_conv_ij = []  # List of non-converged scan point numbers
-        conv_ij = []  # 2D array of converged scan point numbers (sweep = rows, sweep_2 = columns)
+        # 2D array of converged scan point numbers (sweep = rows, sweep_2 = columns)
+        conv_ij = []
         ii_jj = 0
         for ii in range(n_scan_1):
             conv_ij.append([])
@@ -743,7 +746,8 @@ def plot_scan(
                     failed_value_1 = m_file.data[scan_var_name].get_scan(ii_jj)
                     failed_value_2 = m_file.data[scan_2_var_name].get_scan(ii_jj)
                     print(
-                        f"Warning : Non-convergent scan point : ({scan_var_name},{scan_2_var_name}) "
+                        "Warning : Non-convergent scan point : "
+                        f"({scan_var_name},{scan_2_var_name}) "
                         f"= ({failed_value_1},{failed_value_2})\n"
                         "Warning : This point will not be shown."
                     )
@@ -859,7 +863,7 @@ def plot_scan(
                 plt.tight_layout()
                 plt.savefig(
                     outputdir
-                    / f"scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
+                    / f"scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"  # noqa: E501
                 )
                 plt.grid(True)
                 plt.show()
@@ -885,7 +889,7 @@ def plot_scan(
                         output_array[jj] = m_file.data[output_name].get_scan(conv_j[jj])
 
                     # Label formating
-                    labl = f"{meta[scan_var_name].latex if scan_var_name in meta else {scan_var_name}} = {scan_1_var_array[0]}"
+                    labl = f"{meta[scan_var_name].latex if scan_var_name in meta else {scan_var_name}} = {scan_1_var_array[0]}"  # noqa: E501
 
                     # Plot the graph
                     ax.plot(scan_2_var_array, output_array, "--o", label=labl)
@@ -955,7 +959,7 @@ def plot_scan(
                 plt.tight_layout()
                 plt.savefig(
                     outputdir
-                    / f"scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
+                    / f"scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"  # noqa: E501
                 )
 
                 # Display plot (used in Jupyter notebooks)

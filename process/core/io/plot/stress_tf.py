@@ -51,7 +51,7 @@ def plot_stress(
     plot_sm_sig = ("sm_sig" in plot_selection) or ("all" in plot_selection)
 
     # Step 1 : Data extraction
-    # ----------------------------------------------------------------------------------------------
+
     # Number of physical quantity value per coil layer
     n_radial_array_layer = 0
 
