@@ -796,7 +796,7 @@ def bosch_hale_reactivity(
 
 def set_fusion_powers(
     f_alpha_electron: float,
-    f_alpha_ion: float,
+    f_p_alpha_total_ions: float,
     p_beam_alpha_mw: float,
     pden_non_alpha_charged_mw: float,
     pden_plasma_neutron_mw: float,
@@ -811,7 +811,7 @@ def set_fusion_powers(
     ----------
     f_alpha_electron :
         float
-    f_alpha_ion :
+    f_p_alpha_total_ions :
         float
     p_beam_alpha_mw :
         float
@@ -840,9 +840,9 @@ def set_fusion_powers(
         - p_non_alpha_charged_mw (float): Other total charged particle fusion power [MW].
         - pden_alpha_total_mw (float): Alpha power per unit volume, from beams and
           plasma [MW/m³].
-        - f_pden_alpha_electron_mw (float): Alpha power per unit volume to
+        - pden_alpha_heating_electrons_mw (float): Alpha power per unit volume to
           electrons [MW/m³].
-        - f_pden_alpha_ions_mw (float): Alpha power per unit volume to ions [MW/m³].
+        - pden_alpha_heating_ions_mw (float): Alpha power per unit volume to ions [MW/m³].
         - p_charged_particle_mw (float): Charged particle fusion power [MW].
         - p_fusion_total_mw (float): Total fusion power [MW].
 
@@ -896,8 +896,10 @@ def set_fusion_powers(
     # Alpha power to electrons and ions (used with electron
     # and ion power balance equations only)
     # No consideration of pden_non_alpha_charged_mw here.
-    f_pden_alpha_ions_mw = f_p_alpha_plasma_deposited * pden_alpha_total_mw * f_alpha_ion
-    f_pden_alpha_electron_mw = (
+    pden_alpha_heating_ions_mw = (
+        f_p_alpha_plasma_deposited * pden_alpha_total_mw * f_p_alpha_total_ions
+    )
+    pden_alpha_heating_electrons_mw = (
         f_p_alpha_plasma_deposited * pden_alpha_total_mw * f_alpha_electron
     )
 
@@ -909,8 +911,8 @@ def set_fusion_powers(
         p_neutron_total_mw,
         p_non_alpha_charged_mw,
         pden_alpha_total_mw,
-        f_pden_alpha_electron_mw,
-        f_pden_alpha_ions_mw,
+        pden_alpha_heating_electrons_mw,
+        pden_alpha_heating_ions_mw,
         p_charged_particle_mw,
         p_fusion_total_mw,
     )

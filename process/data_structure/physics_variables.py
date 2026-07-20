@@ -677,14 +677,14 @@ class PhysicsData:
     f_c_plasma_inductive: float = 0.0
     """fraction of plasma current produced inductively"""
 
-    f_alpha_electron: float = 0.0
-    """fraction of alpha energy to electrons"""
+    f_p_alpha_total_electron: float = 0.0
+    """Fraction of total alpha power used to heat the electrons"""
 
     f_p_alpha_plasma_deposited: float = 0.95
     """Fraction of alpha power deposited in plasma. Default of 0.95 taken from https://doi.org/10.1088/0029-5515/39/12/305."""
 
-    f_alpha_ion: float = 0.0
-    """fraction of alpha power to ions"""
+    f_p_alpha_total_ions: float = 0.0
+    """Fraction of total alpha power used to heat the ions"""
 
     f_plasma_fuel_deuterium: float = 0.5
     """Plasma deuterium fuel fraction"""
@@ -1013,19 +1013,25 @@ class PhysicsData:
     """branching ratio for DD -> T"""
 
     pden_plasma_alpha_mw: float = 0.0
-    """Alpha power per volume just from plasma [MW/m3]"""
+    """Alpha power per volume just from plasma [MW/m³]"""
 
     pden_alpha_total_mw: float = 0.0
-    """Alpha power per volume from plasma and beams [MW/m3]"""
+    """Alpha power per volume from plasma and beams [MW/m³]"""
 
-    f_pden_alpha_electron_mw: float = 0.0
-    """Alpha power per volume to electrons [MW/m3]"""
+    pden_alpha_heating_electrons_mw: float = 0.0
+    """Alpha power heating per unit volume to electrons [MW/m³]"""
+
+    p_alpha_heating_electrons_mw: float = 0.0
+    """Alpha power heating to electrons [MW]"""
 
     p_fw_alpha_mw: float = 0.0
     """alpha power escaping plasma and reaching first wall (MW)"""
 
-    f_pden_alpha_ions_mw: float = 0.0
-    """alpha power per volume to ions (MW/m3)"""
+    pden_alpha_heating_ions_mw: float = 0.0
+    """Alpha power heating per unit volume to ions [MW/m³]"""
+
+    p_alpha_heating_ions_mw: float = 0.0
+    """Alpha power heating to ions [MW]"""
 
     p_plasma_alpha_mw: float = 0.0
     """Alpha power from only the plasma (MW)"""
@@ -1102,8 +1108,11 @@ class PhysicsData:
     pflux_fw_rad_mw: float = 0.0
     """Nominal mean radiation load on inside surface of reactor (MW/m2)"""
 
-    pden_ion_electron_equilibration_mw: float = 0.0
-    """ion/electron equilibration power per volume (MW/m3)"""
+    pden_ion_electron_equilibration_vol_avg_mw: float = 0.5
+    """Ion/electron volume averaged equilibration power per unit volume [MW/m³]"""
+
+    p_ion_electron_equilibration_vol_avg_mw: float = 80.0
+    """Ion/electron volume averaged equilibration power [MW]"""
 
     plasma_current: float = 0.0
     """Plasma current (Iₚ) [A]"""
@@ -1342,6 +1351,9 @@ class PhysicsData:
     f_t_alpha_energy_confinement: float = 0.0
     """Alpha particle to energy confinement time ratio"""
 
+    f_t_fuel_ion_electron_energy_confinement: float = 1.0
+    """Fuel ion to electron energy confinement time ratio"""
+
     temp_plasma_electron_vol_avg_kev: float = 12.9
     """Plasma volume averaged electron temperature (⟨Tₑ⟩) [keV] (`iteration variable 4`)"""
 
@@ -1573,6 +1585,30 @@ class PhysicsData:
 
     t_plasma_electron_alpha_thermal_collision_vol_avg: float = 0.0
     """Volume averaged electron-alpha collision time in plasma (s)"""
+
+    t_plasma_electron_deuteron_equilibration_vol_avg: float = 3.0
+    """Volume averaged electron-deuteron equilibration time in plasma (s)"""
+
+    t_plasma_electron_deuteron_equilibration_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-deuteron equilibration time in plasma (s)"""
+
+    t_plasma_electron_triton_equilibration_vol_avg: float = 4.5
+    """Volume averaged electron-triton equilibration time in plasma (s)"""
+
+    t_plasma_electron_triton_equilibration_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-triton equilibration time in plasma (s)"""
+
+    t_plasma_electron_alpha_thermal_equilibration_vol_avg: float = 4.5
+    """Volume averaged electron-thermal alphas equilibration time in plasma (s)"""
+
+    t_plasma_electron_alpha_thermal_equilibration_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-thermal alphas equilibration time in plasma (s)"""
 
     freq_plasma_electron_electron_collision_profile: list[float] = field(
         default_factory=list

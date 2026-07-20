@@ -12,9 +12,9 @@ from process.models.physics import fusion_reactions as reactions
 class SetFusionPowersParam(NamedTuple):
     f_p_alpha_plasma_deposited: Any = None
 
-    f_alpha_electron: Any = None
+    f_p_alpha_total_electron: Any = None
 
-    f_alpha_ion: Any = None
+    f_p_alpha_total_ions: Any = None
 
     p_beam_alpha_mw: Any = None
 
@@ -50,8 +50,8 @@ class SetFusionPowersParam(NamedTuple):
     [
         SetFusionPowersParam(
             f_p_alpha_plasma_deposited=0.95,
-            f_alpha_electron=0.68,
-            f_alpha_ion=0.32,
+            f_p_alpha_total_electron=0.68,
+            f_p_alpha_total_ions=0.32,
             p_beam_alpha_mw=0,
             pden_non_alpha_charged_mw=0.00066,
             vol_plasma=2426.25,
@@ -69,8 +69,8 @@ class SetFusionPowersParam(NamedTuple):
         ),
         SetFusionPowersParam(
             f_p_alpha_plasma_deposited=0.95,
-            f_alpha_electron=0.68,
-            f_alpha_ion=0.32,
+            f_p_alpha_total_electron=0.68,
+            f_p_alpha_total_ions=0.32,
             p_beam_alpha_mw=100.5,
             pden_non_alpha_charged_mw=0.00066,
             vol_plasma=2426.25,
@@ -109,13 +109,13 @@ def test_set_fusion_powers(setfusionpowersparam):
         p_neutron_total_mw,
         p_non_alpha_charged_mw,
         pden_alpha_total_mw,
-        f_pden_alpha_electron_mw,
-        f_pden_alpha_ions_mw,
+        pden_alpha_heating_electrons_mw,
+        pden_alpha_heating_ions_mw,
         p_charged_particle_mw,
         p_fusion_total_mw,
     ) = reactions.set_fusion_powers(
-        f_alpha_electron=setfusionpowersparam.f_alpha_electron,
-        f_alpha_ion=setfusionpowersparam.f_alpha_ion,
+        f_p_alpha_total_electron=setfusionpowersparam.f_p_alpha_total_electron,
+        f_p_alpha_total_ions=setfusionpowersparam.f_p_alpha_total_ions,
         p_beam_alpha_mw=setfusionpowersparam.p_beam_alpha_mw,
         pden_non_alpha_charged_mw=setfusionpowersparam.pden_non_alpha_charged_mw,
         pden_plasma_neutron_mw=setfusionpowersparam.pden_plasma_neutron_mw,
@@ -139,10 +139,10 @@ def test_set_fusion_powers(setfusionpowersparam):
     assert p_non_alpha_charged_mw == pytest.approx(
         setfusionpowersparam.expected_non_alpha_charged_power
     )
-    assert f_pden_alpha_electron_mw == pytest.approx(
+    assert pden_alpha_heating_electrons_mw == pytest.approx(
         setfusionpowersparam.expected_alpha_power_electron_density
     )
-    assert f_pden_alpha_ions_mw == pytest.approx(
+    assert pden_alpha_heating_ions_mw == pytest.approx(
         setfusionpowersparam.expected_alpha_power_ion_density
     )
     assert p_charged_particle_mw == pytest.approx(

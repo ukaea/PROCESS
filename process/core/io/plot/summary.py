@@ -2817,17 +2817,17 @@ def plot_main_plasma_information(
         f"$\\mathbf{{Confinement:}}$\n \n"
         f"Confinement scaling law: {mfile.get('tauelaw', scan=scan)}\n"
         f"Confinement $H$ factor: {mfile.get('hfact', scan=scan):.4f}\n"
-        f"Energy confinement time from scaling: {mfile.get('t_energy_confinement', scan=scan):.4f} s\n"
+        f"$\\tau_{{\\text{{E}}}}$: {mfile.get('t_energy_confinement', scan=scan):.4f} s | $\\tau_{{\\text{{e}}}}$: {mfile.get('t_electron_energy_confinement', scan=scan):.4f} s | $\\tau_{{\\text{{i}}}}$: {mfile.get('t_ion_energy_confinement', scan=scan):.4f} s | $\\tau_{{\\text{{i}}}}/\\tau_{{\\text{{e}}}}$: {mfile.get('f_t_fuel_ion_electron_energy_confinement', scan=scan):.4f} \n"
         f"Fusion double product: {mfile.get('ntau', scan=scan):.4e} s/m³\n"
         f"Lawson Triple product: {mfile.get('nttau', scan=scan):.4e} keV·s/m³\n"
         f"Transport loss power assumed in scaling law: {mfile.get('p_plasma_loss_mw', scan=scan):.4f} MW\n"
-        f"Plasma thermal energy (inc. $\\alpha$), $W$: {mfile.get('e_plasma_beta', scan=scan) / 1e9:.4f} GJ\n"
-        f"Alpha particle confinement time: {mfile.get('t_alpha_confinement', scan=scan):.4f} s | $\\tau_{{\\alpha}}/\\tau_{{e}}$: {mfile.get('f_t_alpha_energy_confinement', scan=scan):.4f}"
+        f"$W_{{\\beta}}$: {mfile.get('e_plasma_beta', scan=scan) / 1e9:.4f} GJ | $W_{{th}}$: {mfile.get('e_plasma_thermal_total', scan=scan) / 1e9:.4f} GJ | $W_{{e}}$: {mfile.get('e_plasma_electrons_thermal', scan=scan) / 1e9:.4f} GJ | $W_{{i}}$: {mfile.get('e_plasma_ions_thermal', scan=scan) / 1e9:.4f} GJ\n"
+        f"Particle confinement: $\\tau_{{\\alpha}}$: {mfile.get('t_alpha_confinement', scan=scan):.4f} s | $\\tau_{{\\alpha}}/\\tau_{{e}}$: {mfile.get('f_t_alpha_energy_confinement', scan=scan):.4f}"
     )
 
     axis.text(
         0.025,
-        0.57,
+        0.575,
         textstr_confinement,
         fontsize=9,
         verticalalignment="top",
@@ -11810,8 +11810,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f"Rate density, plasma: {mfile.get('fusden_plasma_alpha', scan=scan):.4e} particles/m3/sec\n\n"
         f"Total power density: {mfile.get('pden_alpha_total_mw', scan=scan):.4e} MW/m3\n"
         f"Plasma power density: {mfile.get('pden_plasma_alpha_mw', scan=scan):.4e} MW/m3\n\n"
-        f"Power per unit volume transferred to electrons: {mfile.get('f_pden_alpha_electron_mw', scan=scan):.4e} MW/m3\n"
-        f"Power per unit volume transferred to ions: {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m3\n\n"
+        f"Power per unit volume transferred to electrons: {mfile.get('pden_alpha_heating_electrons_mw', scan=scan):.4e} MW/m3\n"
+        f"Power per unit volume transferred to ions: {mfile.get('pden_alpha_heating_ions_mw', scan=scan):.4e} MW/m3\n\n"
     )
 
     axis.text(
@@ -14089,6 +14089,63 @@ def plot_resistivity_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> No
     axis.legend()
 
 
+def plot_plasma_equilibration_time_profile(
+    axis: plt.Axes, mfile_data: MFile, scan: int
+) -> None:
+    """Plot the plasma equilibration time on the given axis."""
+    t_plasma_electron_deuteron_equilibration_profile = [
+        mfile_data.data[f"t_plasma_electron_deuteron_equilibration_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    t_plasma_electron_triton_equilibration_profile = [
+        mfile_data.data[f"t_plasma_electron_triton_equilibration_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    t_plasma_electron_alpha_thermal_equilibration_profile = [
+        mfile_data.data[
+            f"t_plasma_electron_alpha_thermal_equilibration_profile{i}"
+        ].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(t_plasma_electron_deuteron_equilibration_profile)),
+        t_plasma_electron_deuteron_equilibration_profile,
+        color="pink",
+        linestyle="-",
+        label=r"$\tau_{e-D,eq}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(t_plasma_electron_triton_equilibration_profile)),
+        t_plasma_electron_triton_equilibration_profile,
+        color="green",
+        linestyle="-",
+        label=r"$\tau_{e-T,eq}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(t_plasma_electron_alpha_thermal_equilibration_profile)),
+        t_plasma_electron_alpha_thermal_equilibration_profile,
+        color="red",
+        linestyle="-",
+        label=r"$\tau_{e-\alpha,thermal,eq}$",
+    )
+
+    axis.set_yscale("log")
+    axis.set_ylabel("Equilibration Time [s]")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
 def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan: int):
     """Plot the equality constraints for a solution and their normalised residuals
 
@@ -14784,6 +14841,13 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         f"$\\langle\\eta_{{Spitzer}}\\rangle$: {mfile.get('res_plasma_fuel_spitzer_vol_avg', scan=scan):.4e} $\\Omega\\mathrm{{m}}$"
     )
 
+    textstr_equilibriation = (
+        f"$\\mathbf{{Equilibration \\ Times:}}$\n\n"
+        f"$\\langle\\tau_{{e-D,Equil}}\\rangle$: {mfile.get('t_plasma_electron_deuteron_equilibration_vol_avg', scan=scan):.4e} s\n"
+        f"$\\langle\\tau_{{e-T,Equil}}\\rangle$: {mfile.get('t_plasma_electron_triton_equilibration_vol_avg', scan=scan):.4e} s\n"
+        f"$\\langle\\tau_{{e-\\alpha,Equil}}\\rangle$: {mfile.get('t_plasma_electron_alpha_thermal_equilibration_vol_avg', scan=scan):.4e} s"
+    )
+
     light_yellow_box = {
         "boxstyle": "round",
         "facecolor": "lightyellow",
@@ -14817,6 +14881,17 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         0.45,
         0.45,
         textstr_velocities,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox=light_yellow_box,
+    )
+
+    axis.text(
+        0.65,
+        0.45,
+        textstr_equilibriation,
         fontsize=9,
         verticalalignment="top",
         horizontalalignment="left",
@@ -16112,6 +16187,10 @@ def main_plot(
     )
 
     plot_resistivity_profile(pages["detailed_params"].add_subplot(232), m_file, scan)
+
+    plot_plasma_equilibration_time_profile(
+        pages["detailed_params"].add_subplot(233), m_file, scan
+    )
 
     plot_detailed_plasma_parameters(
         pages["detailed_params"].add_subplot(233),

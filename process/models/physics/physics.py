@@ -94,56 +94,41 @@ def calculate_cylindrical_safety_factor(
 
 
 @nb.jit(nopython=True, cache=True)
-def rether(
-    alphan,
-    alphat,
-    nd_plasma_electrons_vol_avg,
-    dlamie,
-    te,
-    temp_plasma_ion_vol_avg_kev,
-    n_charge_plasma_effective_mass_weighted_vol_avg,
-):
+def calculate_ion_electron_equilibration_power(
+    nd_electrons: float | np.ndarray,
+    temp_plasma_electron_kev: float | np.ndarray,
+    temp_plasma_ion_kev: float | np.ndarray,
+    t_plasma_ion_electron_equilibration: float | np.ndarray,
+) -> float | np.ndarray:
     """Routine to find the equilibration power between the
-    ions and electrons
-    This routine calculates the equilibration power between the
-    ions and electrons.
-    Unknown origin
+    ions and electrons (Pₑᵢ) in the plasma.
 
     Parameters
     ----------
-    alphan :
-        density profile index
-    alphat :
-        temperature profile index
-    nd_plasma_electrons_vol_avg :
-        electron density (/m3)
-    dlamie :
-        ion-electron coulomb logarithm
-    te :
-        electron temperature (keV)
-    temp_plasma_ion_vol_avg_kev :
-        ion temperature (keV)
-    n_charge_plasma_effective_mass_weighted_vol_avg :
-        mass weighted plasma effective charge
+    nd_electrons : float | np.ndarray
+        Electron density [/m³]
+    temp_plasma_electron_kev : float | np.ndarray
+        Electron temperature [keV]
+    temp_plasma_ion_kev : float | np.ndarray
+        Ion temperature [keV]
+    t_plasma_ion_electron_equilibration : float | np.ndarray
+        Ion-electron equilibration time [s]
 
     Returns
     -------
-    pden_ion_electron_equilibration_mw  :
-        ion/electron equilibration power (MW/m3)
+    pden_ion_electron_equilibration  :
+        ion/electron equilibration power (Pₑᵢ) [W/m³]
 
     """
-    profie = (1.0 + alphan) ** 2 / (
-        (2.0 * alphan - 0.5 * alphat + 1.0) * np.sqrt(1.0 + alphat)
+    return (
+        (3 / 2)
+        * nd_electrons
+        * constants.KILOELECTRON_VOLT
+        * (
+            (temp_plasma_electron_kev - temp_plasma_ion_kev)
+            / t_plasma_ion_electron_equilibration
+        )
     )
-    conie = (
-        2.42165e-41
-        * dlamie
-        * nd_plasma_electrons_vol_avg**2
-        * n_charge_plasma_effective_mass_weighted_vol_avg
-        * profie
-    )
-
-    return conie * (temp_plasma_ion_vol_avg_kev - te) / (te**1.5)
 
 
 # -----------------------------------------------------
@@ -671,19 +656,28 @@ class Physics(Model):
             self.data.physics.p_neutron_total_mw,
             self.data.physics.p_non_alpha_charged_mw,
             self.data.physics.pden_alpha_total_mw,
-            self.data.physics.f_pden_alpha_electron_mw,
-            self.data.physics.f_pden_alpha_ions_mw,
+            self.data.physics.pden_alpha_heating_electrons_mw,
+            self.data.physics.pden_alpha_heating_ions_mw,
             self.data.physics.p_charged_particle_mw,
             self.data.physics.p_fusion_total_mw,
         ) = reactions.set_fusion_powers(
-            self.data.physics.f_alpha_electron,
-            self.data.physics.f_alpha_ion,
+            self.data.physics.f_p_alpha_total_electron,
+            self.data.physics.f_p_alpha_total_ions,
             self.data.physics.p_beam_alpha_mw,
             self.data.physics.pden_non_alpha_charged_mw,
             self.data.physics.pden_plasma_neutron_mw,
             self.data.physics.vol_plasma,
             self.data.physics.pden_plasma_alpha_mw,
             self.data.physics.f_p_alpha_plasma_deposited,
+        )
+
+        self.data.physics.p_alpha_heating_electrons_mw = (
+            self.data.physics.pden_alpha_heating_electrons_mw
+            * self.data.physics.vol_plasma
+        )
+
+        self.data.physics.p_alpha_heating_ions_mw = (
+            self.data.physics.pden_alpha_heating_ions_mw * self.data.physics.vol_plasma
         )
 
         self.data.physics.beta_fast_alpha = self.beta.fast_alpha_beta(
@@ -702,14 +696,25 @@ class Physics(Model):
 
         # Calculate ion/electron equilibration power
 
-        self.data.physics.pden_ion_electron_equilibration_mw = rether(
-            self.data.physics.alphan,
-            self.data.physics.alphat,
-            self.data.physics.nd_plasma_electrons_vol_avg,
-            self.data.physics.dlamie,
-            self.data.physics.temp_plasma_electron_vol_avg_kev,
-            self.data.physics.temp_plasma_ion_vol_avg_kev,
-            self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+        pden_ion_electron_equilibration_vol_avg = calculate_ion_electron_equilibration_power(
+            nd_electrons=self.data.physics.nd_plasma_electrons_vol_avg,
+            temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
+            temp_plasma_ion_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
+            t_plasma_ion_electron_equilibration=1.0
+            / (
+                1.0 / self.data.physics.t_plasma_electron_deuteron_equilibration_vol_avg
+                + 1.0 / self.data.physics.t_plasma_electron_triton_equilibration_vol_avg
+                + 1.0
+                / self.data.physics.t_plasma_electron_alpha_thermal_equilibration_vol_avg
+            ),
+        )
+        self.data.physics.pden_ion_electron_equilibration_vol_avg_mw = (
+            pden_ion_electron_equilibration_vol_avg / 1.0e6
+        )
+
+        self.data.physics.p_ion_electron_equilibration_vol_avg_mw = (
+            self.data.physics.pden_ion_electron_equilibration_vol_avg_mw
+            * self.data.physics.vol_plasma
         )
 
         # Calculate radiation power
@@ -1345,10 +1350,12 @@ class Physics(Model):
         else:
             pc = self.data.physics.f_temp_plasma_electron_density_vol_avg
 
-        self.data.physics.f_alpha_electron = 0.88155 * np.exp(
+        self.data.physics.f_p_alpha_total_electron = 0.88155 * np.exp(
             -self.data.physics.temp_plasma_electron_vol_avg_kev * pc / 67.4036
         )
-        self.data.physics.f_alpha_ion = 1.0 - self.data.physics.f_alpha_electron
+        self.data.physics.f_p_alpha_total_ions = (
+            1.0 - self.data.physics.f_p_alpha_total_electron
+        )
 
         # ======================================================================
 
@@ -1988,15 +1995,29 @@ class Physics(Model):
         po.ovarre(
             self.outfile,
             "Alpha power per unit volume transferred to electrons (MW/m³)",
-            "(f_pden_alpha_electron_mw)",
-            self.data.physics.f_pden_alpha_electron_mw,
+            "(pden_alpha_heating_electrons_mw)",
+            self.data.physics.pden_alpha_heating_electrons_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Alpha power transferred to electrons [MW]",
+            "(p_alpha_heating_electrons_mw)",
+            self.data.physics.p_alpha_heating_electrons_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Alpha power per unit volume transferred to ions (MW/m³)",
-            "(f_pden_alpha_ions_mw)",
-            self.data.physics.f_pden_alpha_ions_mw,
+            "(pden_alpha_heating_ions_mw)",
+            self.data.physics.pden_alpha_heating_ions_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Alpha power transferred to ions [MW]",
+            "(p_alpha_heating_ions_mw)",
+            self.data.physics.p_alpha_heating_ions_mw,
             "OP ",
         )
 
@@ -2255,73 +2276,10 @@ class Physics(Model):
                 )
 
         po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Total heating power given to the plasma (Pₕₑₐₜ) [MW]",
-            "(p_plasma_heating_total_mw)",
-            self.data.physics.p_plasma_heating_total_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Ohmic heating power (MW)",
-            "(p_plasma_ohmic_mw)",
-            self.data.physics.p_plasma_ohmic_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Fraction of alpha power deposited in plasma",
-            "(f_p_alpha_plasma_deposited)",
-            self.data.physics.f_p_alpha_plasma_deposited,
-            "IP",
-        )
-        po.ovarre(
-            self.outfile,
-            "Fraction of alpha power to electrons",
-            "(f_alpha_electron)",
-            self.data.physics.f_alpha_electron,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Fraction of alpha power to ions",
-            "(f_alpha_ion)",
-            self.data.physics.f_alpha_ion,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Ion transport (MW)",
-            "(p_ion_transport_loss_mw)",
-            self.data.physics.p_ion_transport_loss_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Electron transport (MW)",
-            "(p_electron_transport_loss_mw)",
-            self.data.physics.p_electron_transport_loss_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Injection power to ions (MW)",
-            "(p_hcd_injected_ions_mw)",
-            self.data.current_drive.p_hcd_injected_ions_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Injection power to electrons (MW)",
-            "(p_hcd_injected_electrons_mw)",
-            self.data.current_drive.p_hcd_injected_electrons_mw,
-            "OP ",
-        )
-        if (
-            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
-            == PlasmaIgnitionModel.IGNITED
-        ):
+
+        self.output_plasma_power_balance()
+
+        if self.data.physics.i_plasma_ignited == 1:
             po.ocmmnt(self.outfile, "  (Injected power only used for start-up phase)")
 
         self.exhaust.output()
@@ -2424,6 +2382,203 @@ class Physics(Model):
                 "(fzactual)",
                 self.data.reinke.fzactual,
             )
+
+    def output_plasma_power_balance(self) -> None:
+        """Output information about plasma power balance."""
+        po.oheadr(self.outfile, "Plasma Power Balance")
+
+        po.ocmmnt(self.outfile, "Global power balance")
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+
+        po.ocmmnt(self.outfile, "Heating powers:")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Ohmic heating power (MW)",
+            "(p_plasma_ohmic_mw)",
+            self.data.physics.p_plasma_ohmic_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total alpha heating power (MW)",
+            "(p_alpha_total_mw)",
+            self.data.physics.p_alpha_total_mw,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Fraction of alpha power deposited in plasma",
+            "(f_p_alpha_plasma_deposited)",
+            self.data.physics.f_p_alpha_plasma_deposited,
+            "IP",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Total power injected into the plasma (MW)",
+            "(p_hcd_injected_total_mw)",
+            self.data.current_drive.p_hcd_injected_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Non-alpha heating power (MW)",
+            "(p_non_alpha_charged_mw)",
+            self.data.physics.p_non_alpha_charged_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total heating power given to the plasma (Pₕₑₐₜ) [MW]",
+            "(p_plasma_heating_total_mw)",
+            self.data.physics.p_plasma_heating_total_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Loss powers:")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Total transport loss power (Pₗ) [MW]",
+            "(p_plasma_loss_mw)",
+            self.data.physics.p_plasma_loss_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total radiated power from the plasma (Pᵧ) [MW]",
+            "(p_plasma_rad_mw)",
+            self.data.physics.p_plasma_rad_mw,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Electron power balance :")
+        po.ocmmnt(self.outfile, "Heating powers:")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Ohmic heating power to electrons (MW)",
+            "(p_plasma_ohmic_mw)",
+            self.data.physics.p_plasma_ohmic_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Alpha heating power to electrons (MW)",
+            "(p_alpha_heating_electrons_mw)",
+            self.data.physics.p_alpha_heating_electrons_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Injection power to electrons (MW)",
+            "(p_hcd_injected_electrons_mw)",
+            self.data.current_drive.p_hcd_injected_electrons_mw,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Loss powers:")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Electron transport (MW)",
+            "(p_electron_transport_loss_mw)",
+            self.data.physics.p_electron_transport_loss_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Ion-electron equilibration power (MW)",
+            "(p_ion_electron_equilibration_vol_avg_mw)",
+            self.data.physics.p_ion_electron_equilibration_vol_avg_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma radiation power (MW)",
+            "(p_plasma_rad_mw)",
+            self.data.physics.p_plasma_rad_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        p_electron_balance = (
+            self.data.physics.p_plasma_ohmic_mw
+            + self.data.physics.p_alpha_heating_electrons_mw
+            + self.data.current_drive.p_hcd_injected_electrons_mw
+            - self.data.physics.p_electron_transport_loss_mw
+            - self.data.physics.p_ion_electron_equilibration_vol_avg_mw
+            - self.data.physics.p_plasma_rad_mw
+        )
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Electron power balance (MW)",
+            "(p_electron_balance_mw)",
+            p_electron_balance,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Ions power balance :")
+
+        po.ocmmnt(self.outfile, "Heating powers:")
+        po.oblnkl(self.outfile)
+        po.ovarrf(
+            self.outfile,
+            "Fraction of alpha power to ions",
+            "(f_p_alpha_total_ions)",
+            self.data.physics.f_p_alpha_total_ions,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Alpha heating power to ions (MW)",
+            "(p_alpha_heating_ions_mw)",
+            self.data.physics.p_alpha_heating_ions_mw,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Injection power to ions (MW)",
+            "(p_hcd_injected_ions_mw)",
+            self.data.current_drive.p_hcd_injected_ions_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Loss powers:")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Ion transport (MW)",
+            "(p_ion_transport_loss_mw)",
+            self.data.physics.p_ion_transport_loss_mw,
+            "OP ",
+        )
+        p_ion_balance = (
+            self.data.physics.p_alpha_heating_ions_mw
+            + self.data.current_drive.p_hcd_injected_ions_mw
+            - self.data.physics.p_ion_transport_loss_mw
+            - self.data.physics.p_ion_electron_equilibration_vol_avg_mw
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.ovarre(
+            self.outfile,
+            "Ion power balance (MW)",
+            "(p_ion_balance_mw)",
+            p_ion_balance,
+            "OP ",
+        )
 
     def output_temperature_density_profile_info(self) -> None:
         """Output information about plasma temperature and density profiles."""
@@ -5479,6 +5634,100 @@ class DetailedPhysics(Model):
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
         )
 
+        # ================================
+        # Ion-electron equilibration times
+        # ================================
+
+        self.data.physics.t_plasma_electron_deuteron_equilibration_vol_avg = self.calculate_equilibriation_time(
+            temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
+            temp_plasma_ion_kev=self.data.physics.temp_plasma_electron_vol_avg_kev
+            * self.data.physics.f_temp_plasma_ion_electron,
+            nd_plasma_ions=self.data.physics.nd_plasma_electrons_vol_avg
+            * self.data.physics.f_plasma_fuel_deuterium
+            * (
+                self.data.physics.nd_plasma_fuel_ions_vol_avg
+                / self.data.physics.nd_plasma_electrons_vol_avg
+            ),
+            plasma_coulomb_log_electron_ion=self.data.physics.plasma_coulomb_log_electron_deuteron_vol_avg,
+            m_ion=constants.DEUTERON_MASS,
+            n_charge_ion=1,
+        )
+
+        self.data.physics.t_plasma_electron_deuteron_equilibration_profile = self.calculate_equilibriation_time(
+            temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
+            temp_plasma_ion_kev=self.plasma_profile.teprofile.profile_y
+            * self.data.physics.f_temp_plasma_ion_electron,
+            nd_plasma_ions=(
+                self.plasma_profile.neprofile.profile_y
+                * self.data.physics.f_plasma_fuel_deuterium
+                * (
+                    self.data.physics.nd_plasma_fuel_ions_vol_avg
+                    / self.data.physics.nd_plasma_electrons_vol_avg
+                )
+            ),
+            plasma_coulomb_log_electron_ion=self.data.physics.plasma_coulomb_log_electron_deuteron_profile,
+            m_ion=constants.DEUTERON_MASS,
+            n_charge_ion=1,
+        )
+
+        self.data.physics.t_plasma_electron_triton_equilibration_vol_avg = self.calculate_equilibriation_time(
+            temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
+            temp_plasma_ion_kev=self.data.physics.temp_plasma_electron_vol_avg_kev
+            * self.data.physics.f_temp_plasma_ion_electron,
+            nd_plasma_ions=self.data.physics.nd_plasma_electrons_vol_avg
+            * self.data.physics.f_plasma_fuel_tritium
+            * (
+                self.data.physics.nd_plasma_fuel_ions_vol_avg
+                / self.data.physics.nd_plasma_electrons_vol_avg
+            ),
+            plasma_coulomb_log_electron_ion=self.data.physics.plasma_coulomb_log_electron_triton_vol_avg,
+            m_ion=constants.TRITON_MASS,
+            n_charge_ion=1,
+        )
+
+        self.data.physics.t_plasma_electron_triton_equilibration_profile = self.calculate_equilibriation_time(
+            temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
+            temp_plasma_ion_kev=self.plasma_profile.teprofile.profile_y
+            * self.data.physics.f_temp_plasma_ion_electron,
+            nd_plasma_ions=(
+                self.plasma_profile.neprofile.profile_y
+                * self.data.physics.f_plasma_fuel_tritium
+                * (
+                    self.data.physics.nd_plasma_fuel_ions_vol_avg
+                    / self.data.physics.nd_plasma_electrons_vol_avg
+                )
+            ),
+            plasma_coulomb_log_electron_ion=self.data.physics.plasma_coulomb_log_electron_triton_profile,
+            m_ion=constants.TRITON_MASS,
+            n_charge_ion=1,
+        )
+
+        self.data.physics.t_plasma_electron_alpha_thermal_equilibration_vol_avg = self.calculate_equilibriation_time(
+            temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
+            temp_plasma_ion_kev=self.data.physics.temp_plasma_electron_vol_avg_kev
+            * self.data.physics.f_temp_plasma_ion_electron,
+            nd_plasma_ions=self.data.physics.nd_plasma_alphas_thermal_vol_avg,
+            plasma_coulomb_log_electron_ion=self.data.physics.plasma_coulomb_log_electron_alpha_thermal_vol_avg,
+            m_ion=constants.ALPHA_MASS,
+            n_charge_ion=2,
+        )
+
+        self.data.physics.t_plasma_electron_alpha_thermal_equilibration_profile = self.calculate_equilibriation_time(
+            temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
+            temp_plasma_ion_kev=self.plasma_profile.teprofile.profile_y
+            * self.data.physics.f_temp_plasma_ion_electron,
+            nd_plasma_ions=(
+                self.plasma_profile.neprofile.profile_y
+                * (
+                    self.data.physics.nd_plasma_alphas_thermal_vol_avg
+                    / self.data.physics.nd_plasma_electrons_vol_avg
+                )
+            ),
+            plasma_coulomb_log_electron_ion=self.data.physics.plasma_coulomb_log_electron_alpha_thermal_profile,
+            m_ion=constants.ALPHA_MASS,
+            n_charge_ion=2,
+        )
+
     @staticmethod
     @nb.njit(cache=True)
     def calculate_debye_length(
@@ -5919,6 +6168,67 @@ class DetailedPhysics(Model):
                 * electron_ion_coulomb_log
             )
             / (temp_plasma_electron_kev * constants.KILOELECTRON_VOLT) ** 1.5
+        )
+
+    @staticmethod
+    @nb.njit(cache=True)
+    def calculate_equilibriation_time(
+        temp_plasma_electron_kev: float | np.ndarray,
+        temp_plasma_ion_kev: float | np.ndarray,
+        nd_plasma_ions: float | np.ndarray,
+        plasma_coulomb_log_electron_ion: float | np.ndarray,
+        m_ion: float,
+        n_charge_ion: float = 1.0,
+    ):
+        """
+        Calculate the equilibration time (τ_eq) between electrons and ions in a plasma.
+
+        Parameters
+        ----------
+        temp_plasma_electron_kev : float | np.ndarray
+            Electron temperature in keV.
+        temp_plasma_ion_kev : float | np.ndarray
+            Ion temperature in keV.
+        nd_plasma_ions : float | np.ndarray
+            Ion density (m^-3).
+        plasma_coulomb_log_electron_ion : float | np.ndarray
+            Coulomb logarithm for electron-ion collisions.
+        m_ion : float
+            Ion mass (kg).
+        n_charge_ion : float, optional
+            Charge number (Z) of the ion. Default is 1.0.
+
+        Returns
+        -------
+        float | np.ndarray
+            Equilibration time (s).
+
+        Notes
+        -----
+        - The equilibration time is the characteristic time for energy exchange between
+        electrons and ions in a plasma, leading to thermal equilibrium.
+        - It is the characteristic timescale required for two different particle species
+        to share heat and reach thermal equilibrium.
+        """
+        return (
+            3
+            * (4 * np.pi * constants.EPSILON0) ** 2.0
+            * m_ion
+            * (constants.ELECTRON_MASS)
+            * (
+                (
+                    (temp_plasma_electron_kev * constants.KILOELECTRON_VOLT)
+                    / constants.ELECTRON_MASS
+                )
+                + ((temp_plasma_ion_kev * constants.KILOELECTRON_VOLT) / m_ion)
+            )
+            ** 1.5
+        ) / (
+            (8 * np.sqrt(2 * np.pi))
+            * nd_plasma_ions
+            * n_charge_ion**2
+            * plasma_coulomb_log_electron_ion
+            * constants.ELECTRON_CHARGE**4
         )
 
     def output_detailed_physics(self):
@@ -6478,4 +6788,59 @@ class DetailedPhysics(Model):
                 f"Plasma Spitzer resistivity at point {i}",
                 f"(res_plasma_fuel_spitzer_profile{i})",
                 self.data.physics.res_plasma_fuel_spitzer_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Equilibration Times:")
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-deuteron equilibration time (τ_eq) (s)",
+            "(t_plasma_electron_deuteron_equilibration_vol_avg)",
+            self.data.physics.t_plasma_electron_deuteron_equilibration_vol_avg,
+        )
+
+        for i in range(
+            len(self.data.physics.t_plasma_electron_deuteron_equilibration_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-deuteron equilibration time at point {i}",
+                f"(t_plasma_electron_deuteron_equilibration_profile{i})",
+                self.data.physics.t_plasma_electron_deuteron_equilibration_profile[i],
+            )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-triton equilibration time (τ_eq) (s)",
+            "(t_plasma_electron_triton_equilibration_vol_avg)",
+            self.data.physics.t_plasma_electron_triton_equilibration_vol_avg,
+        )
+
+        for i in range(
+            len(self.data.physics.t_plasma_electron_triton_equilibration_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-triton equilibration time at point {i}",
+                f"(t_plasma_electron_triton_equilibration_profile{i})",
+                self.data.physics.t_plasma_electron_triton_equilibration_profile[i],
+            )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-alpha equilibration time (τ_eq) (s)",
+            "(t_plasma_electron_alpha_thermal_equilibration_vol_avg)",
+            self.data.physics.t_plasma_electron_alpha_thermal_equilibration_vol_avg,
+        )
+
+        for i in range(
+            len(self.data.physics.t_plasma_electron_alpha_thermal_equilibration_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-alpha equilibration time at point {i}",
+                f"(t_plasma_electron_alpha_thermal_equilibration_profile{i})",
+                self.data.physics.t_plasma_electron_alpha_thermal_equilibration_profile[
+                    i
+                ],
             )

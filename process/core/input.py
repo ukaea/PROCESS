@@ -1177,6 +1177,9 @@ INPUT_VARIABLES = {
     "force_vmcon_inequality_tolerance": InputVariable(
         "numerics", float, range=(0.0, 1e10)
     ),
+    "f_t_fuel_ion_electron_energy_confinement": InputVariable(
+        "physics", float, range=(0.1, 5.0)
+    ),
 }
 
 
