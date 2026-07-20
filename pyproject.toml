@@ -256,6 +256,10 @@ ignore =  [
     "D105",    # undocumented-magic-method
     "S307",
 
+    "RUF105",  # noqa-comments
+    "RUF106",  # rule-codes-in-suppression-comments
+    "RUF201",  # rule-codes-in-selectors
+
 ]
 
 [tool.ruff.lint.pep8-naming]
