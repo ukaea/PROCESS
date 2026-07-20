@@ -2362,8 +2362,12 @@ class Physics(Model):
         """Output information about plasma power balance."""
         po.oheadr(self.outfile, "Plasma Power Balance")
 
-        po.osubhd(self.outfile, "Global power balance :")
+        po.ocmmnt(self.outfile, "Global power balance")
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
 
+        po.ocmmnt(self.outfile, "Heating powers:")
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Ohmic heating power (MW)",
@@ -2408,22 +2412,61 @@ class Physics(Model):
             "OP ",
         )
         po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Loss powers:")
+        po.oblnkl(self.outfile)
 
+        po.ovarre(
+            self.outfile,
+            "Total transport loss power (Pₗ) [MW]",
+            "(p_plasma_loss_mw)",
+            self.data.physics.p_plasma_loss_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total radiated power from the plasma (Pᵧ) [MW]",
+            "(p_plasma_rad_mw)",
+            self.data.physics.p_plasma_rad_mw,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
         po.osubhd(self.outfile, "Electron power balance :")
+        po.ocmmnt(self.outfile, "Heating powers:")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Ohmic heating power to electrons (MW)",
+            "(p_plasma_ohmic_mw)",
+            self.data.physics.p_plasma_ohmic_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Alpha heating power to electrons (MW)",
+            "(pden_alpha_heating_electrons_mw)",
+            self.data.physics.pden_alpha_heating_electrons_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Injection power to electrons (MW)",
+            "(p_hcd_injected_electrons_mw)",
+            self.data.current_drive.p_hcd_injected_electrons_mw,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Loss powers:")
+        po.oblnkl(self.outfile)
 
         po.ovarre(
             self.outfile,
             "Electron transport (MW)",
             "(p_electron_transport_loss_mw)",
             self.data.physics.p_electron_transport_loss_mw,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Injection power to electrons (MW)",
-            "(p_hcd_injected_electrons_mw)",
-            self.data.current_drive.p_hcd_injected_electrons_mw,
             "OP ",
         )
         po.ovarre(
@@ -2433,15 +2476,30 @@ class Physics(Model):
             self.data.physics.p_ion_electron_equilibration_vol_avg_mw,
             "OP ",
         )
+        po.oblnkl(self.outfile)
+        p_electron_balance = (
+            self.data.physics.p_plasma_ohmic_mw
+            + self.data.physics.pden_alpha_heating_electrons_mw
+            + self.data.current_drive.p_hcd_injected_electrons_mw
+            - self.data.physics.p_electron_transport_loss_mw
+            - self.data.physics.p_ion_electron_equilibration_vol_avg_mw
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Ratio of fuel ion to electron energy confinement times",
-            "(f_t_fuel_ion_electron_energy_confinement)",
-            self.data.physics.f_t_fuel_ion_electron_energy_confinement,
+            "Electron power balance (MW)",
+            "(p_electron_balance_mw)",
+            p_electron_balance,
             "OP ",
         )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
         po.osubhd(self.outfile, "Ions power balance :")
 
+        po.ocmmnt(self.outfile, "Heating powers:")
+        po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile,
             "Fraction of alpha power to ions",
@@ -2451,16 +2509,42 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Ion transport (MW)",
-            "(p_ion_transport_loss_mw)",
-            self.data.physics.p_ion_transport_loss_mw,
+            "Alpha heating power to ions (MW)",
+            "(pden_alpha_heating_ions_mw)",
+            self.data.physics.pden_alpha_heating_ions_mw,
             "OP ",
         )
+
         po.ovarre(
             self.outfile,
             "Injection power to ions (MW)",
             "(p_hcd_injected_ions_mw)",
             self.data.current_drive.p_hcd_injected_ions_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Loss powers:")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Ion transport (MW)",
+            "(p_ion_transport_loss_mw)",
+            self.data.physics.p_ion_transport_loss_mw,
+            "OP ",
+        )
+        p_ion_balance = (
+            self.data.physics.pden_alpha_heating_ions_mw
+            + self.data.current_drive.p_hcd_injected_ions_mw
+            - self.data.physics.p_ion_transport_loss_mw
+            - self.data.physics.p_ion_electron_equilibration_vol_avg_mw
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.ovarre(
+            self.outfile,
+            "Ion power balance (MW)",
+            "(p_ion_balance_mw)",
+            p_ion_balance,
             "OP ",
         )
 

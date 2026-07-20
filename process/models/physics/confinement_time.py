@@ -1235,6 +1235,13 @@ class PlasmaConfinementTime(Model):
 
         po.ovarre(
             self.outfile,
+            "Ratio of fuel ion to electron energy confinement times",
+            "(f_t_fuel_ion_electron_energy_confinement)",
+            self.data.physics.f_t_fuel_ion_electron_energy_confinement,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Ion energy confinement time, from scaling (s)",
             "(t_ion_energy_confinement)",
             self.data.physics.t_ion_energy_confinement,
