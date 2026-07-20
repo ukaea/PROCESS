@@ -1154,6 +1154,17 @@ def check_process(inputs, data):  # noqa: ARG001
             "turn off CS temperature margin constraint icc = 60 when using REBCO"
         )
 
+    # Cannot use temperature margin constraint with REBCO CS coils
+    if (
+        (data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 2).any()
+        and (data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 3).any()
+        and (data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 4).any()
+    ):
+        raise ProcessValidationError(
+            "Cannot have global power balance on as well as individual particle power "
+            "balance, this will cause a solver error. Either use icc = 2 alone or icc = 3 and 4 alone"
+        )
+
     # Cold end of the cryocooler should be colder than the TF
     if data.tfcoil.temp_tf_cryo > data.tfcoil.tftmp:
         raise ProcessValidationError("temp_tf_cryo should be lower than tftmp")
