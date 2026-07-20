@@ -2300,6 +2300,7 @@ class Stellarator(Model):
             confinement_time_data.t_ion_energy_confinement
         )
         self.data.physics.p_plasma_loss_mw = confinement_time_data.p_plasma_loss_mw
+        self.data.physics.hstar = confinement_time_data.hstar
 
         self.data.physics.ntau, self.data.physics.nTtau = (
             self.physics.confinement.calculate_double_and_triple_product(

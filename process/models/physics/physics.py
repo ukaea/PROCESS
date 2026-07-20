@@ -889,6 +889,7 @@ class Physics(Model):
             confinement_time_data.t_ion_energy_confinement
         )
         self.data.physics.p_plasma_loss_mw = confinement_time_data.p_plasma_loss_mw
+        self.data.physics.hstar = confinement_time_data.hstar
 
         # Total transport power from scaling law (MW)
         self.data.physics.p_electron_transport_loss_mw = (
