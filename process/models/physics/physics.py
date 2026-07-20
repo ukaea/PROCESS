@@ -690,6 +690,15 @@ class Physics(Model):
             self.data.physics.f_p_alpha_plasma_deposited,
         )
 
+        self.data.physics.p_alpha_heating_electrons_mw = (
+            self.data.physics.pden_alpha_heating_electrons_mw
+            * self.data.physics.vol_plasma
+        )
+
+        self.data.physics.p_alpha_heating_ions_mw = (
+            self.data.physics.pden_alpha_heating_ions_mw * self.data.physics.vol_plasma
+        )
+
         self.data.physics.beta_fast_alpha = self.beta.fast_alpha_beta(
             b_plasma_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
             b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
@@ -2027,9 +2036,23 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
+            "Alpha power transferred to electrons [MW]",
+            "(p_alpha_heating_electrons_mw)",
+            self.data.physics.p_alpha_heating_electrons_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Alpha power per unit volume transferred to ions (MW/m³)",
             "(pden_alpha_heating_ions_mw)",
             self.data.physics.pden_alpha_heating_ions_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Alpha power transferred to ions [MW]",
+            "(p_alpha_heating_ions_mw)",
+            self.data.physics.p_alpha_heating_ions_mw,
             "OP ",
         )
 
@@ -2848,8 +2871,8 @@ class Physics(Model):
         po.ovarre(
             self.outfile,
             "Alpha heating power to electrons (MW)",
-            "(pden_alpha_heating_electrons_mw)",
-            self.data.physics.pden_alpha_heating_electrons_mw,
+            "(p_alpha_heating_electrons_mw)",
+            self.data.physics.p_alpha_heating_electrons_mw,
             "OP ",
         )
         po.ovarre(
@@ -2878,15 +2901,22 @@ class Physics(Model):
             self.data.physics.p_ion_electron_equilibration_vol_avg_mw,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Plasma radiation power (MW)",
+            "(p_plasma_rad_mw)",
+            self.data.physics.p_plasma_rad_mw,
+            "OP ",
+        )
         po.oblnkl(self.outfile)
         p_electron_balance = (
             self.data.physics.p_plasma_ohmic_mw
-            + self.data.physics.pden_alpha_heating_electrons_mw
+            + self.data.physics.p_alpha_heating_electrons_mw
             + self.data.current_drive.p_hcd_injected_electrons_mw
             - self.data.physics.p_electron_transport_loss_mw
             - self.data.physics.p_ion_electron_equilibration_vol_avg_mw
+            - self.data.physics.p_plasma_rad_mw
         )
-        po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
         po.oblnkl(self.outfile)
         po.ovarre(
@@ -2912,8 +2942,8 @@ class Physics(Model):
         po.ovarre(
             self.outfile,
             "Alpha heating power to ions (MW)",
-            "(pden_alpha_heating_ions_mw)",
-            self.data.physics.pden_alpha_heating_ions_mw,
+            "(p_alpha_heating_ions_mw)",
+            self.data.physics.p_alpha_heating_ions_mw,
             "OP ",
         )
 
@@ -2935,7 +2965,7 @@ class Physics(Model):
             "OP ",
         )
         p_ion_balance = (
-            self.data.physics.pden_alpha_heating_ions_mw
+            self.data.physics.p_alpha_heating_ions_mw
             + self.data.current_drive.p_hcd_injected_ions_mw
             - self.data.physics.p_ion_transport_loss_mw
             - self.data.physics.p_ion_electron_equilibration_vol_avg_mw
