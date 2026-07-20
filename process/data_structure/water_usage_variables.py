@@ -17,43 +17,43 @@ from process.core.metadata import PROCESSModelData
 class WaterUseData(PROCESSModelData):
     """Dataclass holding water use variables"""
 
-    airtemp: float = 15.0
+    airtemp: Parameter[float] = 15.0
     """ambient air temperature (degrees Celsius)"""
-    watertemp: float = 5.0
+    watertemp: Parameter[float] = 5.0
     """water temperature (degrees Celsius)"""
-    windspeed: float = 4.0
+    windspeed: Parameter[float] = 4.0
     """wind speed (m/s)"""
-    waterdens: float = 998.02
+    waterdens: Parameter[float] = 998.02
     """density of water (kg/m3)
     for simplicity, set to static value applicable to water at 21 degC
     """
-    latentheat: float = 2257000.0
+    latentheat: Parameter[float] = 2257000.0
     """latent heat of vaporization (J/kg)
     for simplicity, set to static value applicable at 1 atm (100 kPa) air pressure
     """
-    volheat: float = 0.0
+    volheat: Parameter[float] = 0.0
     """volumetric heat of vaporization (J/m3)"""
-    evapratio: float = 0.0
+    evapratio: Parameter[float] = 0.0
     """evaporation ratio: ratio of the heat used to evaporate water
     to the total heat discharged through the tower
     """
 
-    evapvol: float = 0.0
+    evapvol: Parameter[float] = 0.0
     """evaporated volume of water (m3/day)"""
 
-    energypervol: float = 0.0
+    energypervol: Parameter[float] = 0.0
     """input waste (heat) energy cooled per evaporated volume (J/m3)"""
 
-    volperenergy: float = 0.0
+    volperenergy: Parameter[float] = 0.0
     """volume evaporated by units of heat energy (m3/MJ)"""
 
     waterusetower: Parameter[float] = 0.0
     """total volume of water used in cooling tower (m3/day)"""
 
-    wateruserecirc: float = 0.0
+    wateruserecirc: Parameter[float] = 0.0
     """total volume of water used in recirculating system (m3/day)"""
 
-    wateruseonethru: float = 0.0
+    wateruseonethru: Parameter[float] = 0.0
     """total volume of water used in once-through system (m3/day)"""
 
 

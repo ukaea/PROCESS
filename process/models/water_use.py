@@ -113,12 +113,10 @@ class WaterUse(Model):
 
         #  Output section
         if output:
-            print(f"{self.data.water_use.waterusetower = }")
-            print(f"{type(self.data.water_use.waterusetower) = }")
             po.ovarre(
                 self.outfile,
-                "Volume used in cooling tower (m3/day)",
-                "(waterusetower)",
+                self.data.water_use.waterusetower.description,
+                f"({self.data.water_use.waterusetower.name})",
                 self.data.water_use.waterusetower,
                 "OP ",
             )
