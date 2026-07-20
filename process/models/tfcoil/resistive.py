@@ -1043,7 +1043,8 @@ class ResistiveTFCoil(TFCoil):
             < 10.0e0 * np.finfo(float(radius)).eps
         ):
             logger.error(
-                "TF coil dimensions are not consistent. Radius of plasma-facing side of inner leg should be "
+                "TF coil dimensions are not consistent. "
+                "Radius of plasma-facing side of inner leg should be "
                 f"{self.data.build.r_tf_inboard_in + self.data.build.dr_tf_inboard}m"
             )
 
