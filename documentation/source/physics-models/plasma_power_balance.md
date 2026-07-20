@@ -3,6 +3,12 @@
 There are several equations that need to be satisfied in order to ensure that the plasma is in 
 power equilibrium. This includes the total energy and power leaving the plasma as a whole and then also the rate of energy transfer between the ion and electron species themselves.
 
+!!! warning "Global and species power balance"
+
+    It is not possible to have `icc = 2` for the global plasma power balance on at the same time as the ion `icc = 3` and electron `icc = 4` power balance. This is due to a solver error where the close to convergence the equality Jacobian loses rank. This is because the solver sees only two independant equality conditions but is asked to enforce three.
+
+    Using the ion and electron power balance constraints is preffered and still enforces the global power balance consistency. 
+
 ## Global plasma power balance
 
 This constraint can be activated by stating `icc = 2` in the input file.
