@@ -115,7 +115,7 @@ class PlasmaProfile(Model):
             self.data.physics.nd_plasma_separatrix_electron = 0.0e0
             self.data.physics.tbeta = 2.0e0
         # ruff: enable[RUF069]
-        # Re-caluclate core and profile values
+        # Re-calculate core and profile values
         self.teprofile.run()
         self.neprofile.run()
 
@@ -190,7 +190,7 @@ class PlasmaProfile(Model):
         `temp_plasma_ion_density_weighted_kev`.
         """
         #  Run TeProfile and NeProfile class methods:
-        #  Re-caluclate core and profile values
+        #  Re-calculate core and profile values
 
         self.teprofile.run()
         self.neprofile.run()

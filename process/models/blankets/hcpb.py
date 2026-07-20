@@ -44,7 +44,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Calculate blanket, shield, vacuum vessel and cryostat volumes
         self.component_volumes()
 
-        # If Shfranov shift is added, the angle formula can be used where the shift is
+        # If Shafranov shift is added, the angle formula can be used where the shift is
         # added to the minor radius. For now, the shift is neglected and
         # the angle is calculated using the minor radius only.
         self.data.blanket.deg_blkt_outboard_poloidal_plasma = (
@@ -97,7 +97,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         # Centrepost neutronics
         if self.data.physics.itart == 1:
-            # CP radius at the point of maximum sield radius [m]
+            # CP radius at the point of maximum shield radius [m]
             # The maximum shield radius is assumed to be at the X-point
             r_sh_inboard_out_top = (
                 self.data.physics.rmajor

@@ -25,7 +25,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
          LT          Low Temperature
          HT          High Temperature
          MMS         Multi Module Segment
-         SMS         Single Modle Segment
+         SMS         Single Module Segment
          IB          Inboard
          OB          Outboard
          HCD         Heating & Current Drive
@@ -40,7 +40,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
              i_blkt_liquid_breeder_type = 0 * Liquid Metal Breeder Material = PbLi
 
          Specify dual-coolant i.e., get mass flow required from heat extracted
-         from liqid metal breeder
+         from liquid metal breeder
              i_blkt_dual_coolant = 2
 
          FIC switch: 0 = no FIC, Eurofer; 1 = FCIs, perfect electrical insulator,
@@ -53,7 +53,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
              (bz_channel_conduct_liq)
 
          Choose if FW and BB structure are on the same pumping system
-         (unless have diffent coolants), default is same coolant with
+         (unless have different coolants), default is same coolant with
          flow IN->FW->BB->OUT
              (i_fw_blkt_shared_coolant)
 
@@ -97,7 +97,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
     def run(self, output: bool = False):
         self.component_volumes()
 
-        # If Shfranov shift is added, the angle formula can be used where the shift is
+        # If Shafranov shift is added, the angle formula can be used where the shift is
         # added to the minor radius. For now, the shift is neglected
         # and the angle is calculated using the minor radius only.
         self.data.blanket.deg_blkt_outboard_poloidal_plasma = (
@@ -159,13 +159,13 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
     def dcll_neutronics_and_power(self, output: bool):
         """This is a temporary module that will use results from
-        CCFE Bluemira nutronics work (once completed).
+        CCFE Bluemira neutronics work (once completed).
         Database will provide values for power deposition in FW & BB, BB TBR,
-        and nuron fluence at TF coil for different thicknesses of BB
-        and meterial fractions.
+        and neutron fluence at TF coil for different thicknesses of BB
+        and material fractions.
 
         For now we use the same method as KIT HCLL and the user can select
-        appropriate fractional values from DCLL nutronics studies as inputs.
+        appropriate fractional values from DCLL neutronics studies as inputs.
         See fwbs_variables:
              - pnuc_fw_ratio_dcll
              - pnuc_blkt_ratio_dcll
