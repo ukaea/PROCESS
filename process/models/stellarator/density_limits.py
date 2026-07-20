@@ -9,7 +9,7 @@ from process.core.exceptions import ProcessValueError
 logger = logging.getLogger(__name__)
 
 
-def st_denisty_limits(stellarator, f_output, data):
+def st_density_limits(stellarator, f_output, data):
     """Routine to reiterate the physics loop
 
     This routine reiterates some physics modules.

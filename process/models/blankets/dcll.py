@@ -482,7 +482,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
              - Use den_tungsten form constants.f90
         FW and BB Structure Coolant
              - Helium
-             - See primary_coolant_properties for denisty etc.
+             - See primary_coolant_properties for density etc.
         BB Breeder
              - PbLi
              - See submodule liquid_breeder_properties for density etc.

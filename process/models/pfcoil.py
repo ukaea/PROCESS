@@ -224,7 +224,7 @@ class PFCoil(Model):
 
             if self.data.pf_coil.nfxf > NFIXMX:
                 raise ProcessValueError(
-                    "Too many filaments nfxf repesenting the OH coil",
+                    "Too many filaments nfxf representing the OH coil",
                     nfxf=self.data.pf_coil.nfxf,
                     nfixmx=NFIXMX,
                 )

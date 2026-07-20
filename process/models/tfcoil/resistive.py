@@ -407,7 +407,7 @@ class ResistiveTFCoil(TFCoil):
             / self.data.tfcoil.a_tf_inboard_total
         )
 
-        # Total cross-sectional area of the bucking cylindre and the outer support
+        # Total cross-sectional area of the bucking cylinder and the outer support
         # support structure per coil [m2]
         # self.data.physics.itart = 1 : Only valid at mid-plane
         self.data.tfcoil.a_tf_coil_inboard_case = (
@@ -419,7 +419,7 @@ class ResistiveTFCoil(TFCoil):
             self.data.tfcoil.n_tf_coil_turns * self.data.tfcoil.n_tf_coils
         )
 
-        # Exact current density on TF oubard legs
+        # Exact current density on TF outboard legs
         self.data.tfcoil.cdtfleg = self.data.tfcoil.c_tf_total / (
             (1.0e0 - self.data.tfcoil.fcoolcp)
             * (
@@ -496,7 +496,7 @@ class ResistiveTFCoil(TFCoil):
 
         # Calculations dedicated for configurations with CP
         if self.data.physics.itart == 1:
-            # Tricky trick to make the leg / CP tempearture the same
+            # Tricky trick to make the leg / CP temperatures the same
             if (
                 abs(self.data.tfcoil.temp_tf_legs_outboard + 1.0e0)
                 < np.finfo(float(self.data.tfcoil.temp_tf_legs_outboard)).eps
@@ -521,7 +521,7 @@ class ResistiveTFCoil(TFCoil):
                     + 8.89159e-12 * self.data.tfcoil.temp_tf_legs_outboard
                 )
 
-            # Tricky trick to make the leg / CP tempearture the same
+            # Tricky trick to make the leg / CP temperatures the same
             if self.data.superconducting_tfcoil.is_leg_cp_temp_same == 1:
                 self.data.tfcoil.temp_tf_legs_outboard = -1.0e0
 
@@ -552,7 +552,7 @@ class ResistiveTFCoil(TFCoil):
             )
 
         # Leg cross-section areas
-        # Rem : For self.data.physics.itart = 1, these quantitire corresponds to
+        # Rem : For self.data.physics.itart = 1, these quantities corresponds to
         # the outer leg only
         # ---
         # Leg ground insulation area per coil [m2]
@@ -660,7 +660,7 @@ class ResistiveTFCoil(TFCoil):
                 )
             )
 
-            # self.data.tfcoil.p_cp_resistive containts the the total resistive
+            # self.data.tfcoil.p_cp_resistive contains the the total resistive
             # power losses
             self.data.tfcoil.p_tf_leg_resistive = 0.0e0
 
@@ -673,7 +673,7 @@ class ResistiveTFCoil(TFCoil):
         vol_ins = 0.0e0  # Total leg turn insulation volume [m3]
         vol_gr_ins = 0.0e0  # Total leg turn insulation volume [m3]
         vol_cond = 0.0e0  # Total conductor insulator volume [m3]
-        vol_ins_leg = 0.0e0  # Outboard leg turn isulation volume [m3]
+        vol_ins_leg = 0.0e0  # Outboard leg turn insulation volume [m3]
         vol_gr_ins_leg = 0.0e0  # Outboard leg turn insulation volume [m3]
         vol_cond_leg = 0.0e0  # Outboard leg conductor insulator volume [m3]
 

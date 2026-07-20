@@ -441,7 +441,7 @@ def write(
     )
     po.ovarre(
         stellarator.outfile,
-        "Actual quench vaccuum vessel force density (MN/m^3)",
+        "Actual quench vacuum vessel force density (MN/m^3)",
         "(f_vv_actual)",
         f_vv_actual,
     )

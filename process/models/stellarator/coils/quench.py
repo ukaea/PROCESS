@@ -6,7 +6,7 @@ from process.core.model import DataStructure
 
 
 def calculate_quench_protection(coilcurrent, data: DataStructure):
-    """Calculate quench protecion limits for stellarator coils
+    """Calculate quench protection limits for stellarator coils
     Includes calculation of the vacuum vessel force density,
     quench protection current density and max dump voltage during quench
 
@@ -73,7 +73,7 @@ def calculate_quench_protection(coilcurrent, data: DataStructure):
         / (data.tfcoil.a_tf_wp_conductor * data.tfcoil.f_a_tf_turn_cable_copper)
     )
 
-    # Max volatage during fast discharge of TF coil (V)
+    # Max voltage during fast discharge of TF coil (V)
     # (note that tf_coil_variable is in kV, while calculation is in V)
     data.tfcoil.v_tf_coil_dump_quench_kv = (
         max_dump_voltage(
@@ -140,7 +140,7 @@ def calculate_vv_max_force_density_from_W7X_scaling(
 
 
 def max_dump_voltage(tf_energy_stored: float, t_dump: float, current: float) -> float:
-    """Max volatage during fast discharge of TF coil (V)
+    """Max voltage during fast discharge of TF coil (V)
 
     Parameters
     ----------
@@ -162,9 +162,9 @@ def calculate_quench_protection_current_density(
 
     Simplified 0-D adiabatic heat balance "hotspot criterion" model.
 
-    This is slightly diffrent that tokamak version
-    (also diffrent from the stellarator paper).
-    We skip the superconduc6tor contribution
+    This is slightly different that tokamak version
+    (also different from the stellarator paper).
+    We skip the superconductor contribution
     (this should be more conservative in theory).
 
     Parameters
