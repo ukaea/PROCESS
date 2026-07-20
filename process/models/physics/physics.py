@@ -704,7 +704,8 @@ class Physics(Model):
             / (
                 1.0 / self.data.physics.t_plasma_electron_deuteron_equilibration_vol_avg
                 + 1.0 / self.data.physics.t_plasma_electron_triton_equilibration_vol_avg
-                + 1.0 / self.data.physics.t_plasma_electron_alpha_equilibration_vol_avg
+                + 1.0
+                / self.data.physics.t_plasma_electron_alpha_thermal_equilibration_vol_avg
             ),
         )
         self.data.physics.pden_ion_electron_equilibration_vol_avg_mw = (
@@ -5700,7 +5701,7 @@ class DetailedPhysics(Model):
             n_charge_ion=1,
         )
 
-        self.data.physics.t_plasma_electron_alpha_equilibration_vol_avg = self.calculate_equilibriation_time(
+        self.data.physics.t_plasma_electron_alpha_thermal_equilibration_vol_avg = self.calculate_equilibriation_time(
             temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
             temp_plasma_ion_kev=self.data.physics.temp_plasma_electron_vol_avg_kev
             * self.data.physics.f_temp_plasma_ion_electron,
@@ -5710,7 +5711,7 @@ class DetailedPhysics(Model):
             n_charge_ion=2,
         )
 
-        self.data.physics.t_plasma_electron_alpha_equilibration_profile = self.calculate_equilibriation_time(
+        self.data.physics.t_plasma_electron_alpha_thermal_equilibration_profile = self.calculate_equilibriation_time(
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
             temp_plasma_ion_kev=self.plasma_profile.teprofile.profile_y
             * self.data.physics.f_temp_plasma_ion_electron,
@@ -6827,16 +6828,18 @@ class DetailedPhysics(Model):
         po.ovarre(
             self.outfile,
             "Volume averaged electron-alpha equilibration time (τ_eq) (s)",
-            "(t_plasma_electron_alpha_equilibration_vol_avg)",
-            self.data.physics.t_plasma_electron_alpha_equilibration_vol_avg,
+            "(t_plasma_electron_alpha_thermal_equilibration_vol_avg)",
+            self.data.physics.t_plasma_electron_alpha_thermal_equilibration_vol_avg,
         )
 
         for i in range(
-            len(self.data.physics.t_plasma_electron_alpha_equilibration_profile)
+            len(self.data.physics.t_plasma_electron_alpha_thermal_equilibration_profile)
         ):
             po.ovarre(
                 self.mfile,
                 f"Electron-alpha equilibration time at point {i}",
-                f"(t_plasma_electron_alpha_equilibration_profile{i})",
-                self.data.physics.t_plasma_electron_alpha_equilibration_profile[i],
+                f"(t_plasma_electron_alpha_thermal_equilibration_profile{i})",
+                self.data.physics.t_plasma_electron_alpha_thermal_equilibration_profile[
+                    i
+                ],
             )

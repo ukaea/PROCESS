@@ -1602,13 +1602,13 @@ class PhysicsData:
     )
     """Profile of electron-triton equilibration time in plasma (s)"""
 
-    t_plasma_electron_alpha_equilibration_vol_avg: float = 4.5
-    """Volume averaged electron-alpha equilibration time in plasma (s)"""
+    t_plasma_electron_alpha_thermal_equilibration_vol_avg: float = 4.5
+    """Volume averaged electron-thermal alphas equilibration time in plasma (s)"""
 
-    t_plasma_electron_alpha_equilibration_profile: list[float] = field(
+    t_plasma_electron_alpha_thermal_equilibration_profile: list[float] = field(
         default_factory=list
     )
-    """Profile of electron-alpha equilibration time in plasma (s)"""
+    """Profile of electron-thermal alphas equilibration time in plasma (s)"""
 
     freq_plasma_electron_electron_collision_profile: list[float] = field(
         default_factory=list
