@@ -399,7 +399,6 @@ def constraint_equation_4(constraint_registration, data):
             data.physics.pden_alpha_heating_electrons_mw
             + data.physics.pden_plasma_ohmic_mw
         )
-
     return eq(p_electron_loss, p_electron_heating, constraint_registration)
 
 

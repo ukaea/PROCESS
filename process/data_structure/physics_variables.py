@@ -1021,11 +1021,17 @@ class PhysicsData:
     pden_alpha_heating_electrons_mw: float = 0.0
     """Alpha power heating per unit volume to electrons [MW/m³]"""
 
+    p_alpha_heating_electrons_mw: float = 0.0
+    """Alpha power heating to electrons [MW]"""
+
     p_fw_alpha_mw: float = 0.0
     """alpha power escaping plasma and reaching first wall (MW)"""
 
     pden_alpha_heating_ions_mw: float = 0.0
     """Alpha power heating per unit volume to ions [MW/m³]"""
+
+    p_alpha_heating_ions_mw: float = 0.0
+    """Alpha power heating to ions [MW]"""
 
     p_plasma_alpha_mw: float = 0.0
     """Alpha power from only the plasma (MW)"""
