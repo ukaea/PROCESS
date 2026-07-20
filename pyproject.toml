@@ -55,7 +55,7 @@ test = [
   "testbook>=0.4",
   "pytest-cov>=3.0.0",
   "pytest-xdist>=2.5.0",
-  "platformdirs~=4.10.0",
+  "platformdirs~=4.10.1",
   "filelock",
   "process[examples]"
 ]
