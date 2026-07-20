@@ -1,10 +1,12 @@
 """Module for impurity radiation calculations and data handling."""
 
+from __future__ import annotations
+
 import dataclasses
 import logging
 import re
 from importlib import resources
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 from numba import njit
@@ -12,8 +14,13 @@ from scipy import integrate
 
 from process.core import constants
 from process.core.exceptions import ProcessError, ProcessValueError
-from process.core.model import DataStructure
 from process.models.physics.plasma_profiles import PlasmaProfile
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from process.core.model import DataStructure
+    from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 
@@ -370,122 +377,178 @@ def init_imp_element(
     data.impurity_radiation.impurity_arr_zav[n_species_index - 1, :] = zav
 
 
-def fradcore(rho, radius_plasma_core_norm, f_p_plasma_core_rad_reduction):
-    """Finds the fraction of radiation from the core that is subtracted in impurity
-    radiation model.
+def z2index(zimp, data: DataStructure) -> int:
+    for i in range(len(data.impurity_radiation.impurity_arr_label)):
+        if zimp == data.impurity_radiation.impurity_arr_z[i]:
+            return i
+
+    # Should only get here if there is a problem
+    raise ProcessValueError(
+        "Element with the given charge is not in the impurity array", zimp=zimp
+    )
+
+
+def create_f_rad_core_profile(
+    rho: np.array, radius_plasma_core_norm: float, f_p_plasma_core_rad_reduction: float
+) -> np.array:
+    """
+    Creates an array of the same length as `rho` filled with the value of `f_p_plasma_core_rad_reduction`
+    for values of `rho` less than `radius_plasma_core_norm` and 0 for values of `rho`
+    greater than or equal to `radius_plasma_core_norm`.
 
     Parameters
     ----------
-    rho : numpy.array
+    rho
         normalised minor radius
-    radius_plasma_core_norm : float
+    radius_plasma_core_norm
         normalised radius defining the 'core' region
-    f_p_plasma_core_rad_reduction : float
+    f_p_plasma_core_rad_reduction
         fraction of radiation from the core region
 
     Returns
     -------
-    numpy.array
-        fradcore - array filled with the f_p_plasma_core_rad_reduction
+        f_rad_core_profile - array filled with the f_p_plasma_core_rad_reduction
     """
-    fradcore = np.zeros(len(rho))
+    f_rad_core_profile = np.zeros(len(rho))
     rho_mask = rho < radius_plasma_core_norm
-    fradcore[rho_mask] = f_p_plasma_core_rad_reduction
+    f_rad_core_profile[rho_mask] = f_p_plasma_core_rad_reduction
 
-    return fradcore
+    return f_rad_core_profile
 
 
-def zav_of_te(imp_element_index, teprofile, data: DataStructure):
-    """Calculates electron temperature dependent average atomic number
+def calculate_average_charge_at_temp(
+    imp_element_index: int, temp_electron_kev: np.array | float, data: DataStructure
+) -> np.array | float:
+    """Calculates electron temperature dependent average atomic charge (Z) for a given impurity element.
 
     Parameters
     ----------
-    imp_element_index : int
+    imp_element_index
         Impurity element index
-    teprofile : numpy.array
-        temperature profile
+    temp_electron_kev
+        electron temperature in keV
+    data
+        DataStructure containing impurity radiation data
 
     Returns
     -------
     numpy.array
-        zav_of_te - electron temperature dependent average atomic number
+        zav_of_te - electron temperature dependent average atomic charge
     """
-    # less_than_imp_temp_mask = teprofile values less than impurity temperature.
-    # greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
-    return _zav_of_te_compiled(
-        imp_element_index,
-        teprofile,
-        data.impurity_radiation.temp_impurity_keV_array,
-        data.impurity_radiation.impurity_arr_zav,
-        data.impurity_radiation.impurity_arr_len_tab,
+    return _calculate_average_charge_at_temp_compiled(
+        imp_element_index=imp_element_index,
+        temp_electron_kev=temp_electron_kev,
+        temp_impurity_keV_array=data.impurity_radiation.temp_impurity_keV_array,
+        impurity_arr_zav=data.impurity_radiation.impurity_arr_zav,
+        impurity_arr_len_tab=data.impurity_radiation.impurity_arr_len_tab,
     )
 
 
 @njit(cache=True)
-def _zav_of_te_compiled(
+def _calculate_average_charge_at_temp_compiled(
     imp_element_index: int,
-    teprofile: np.array,
+    temp_electron_kev: np.array,
     temp_impurity_keV_array: np.array,
     impurity_arr_zav: np.array,
     impurity_arr_len_tab: np.array,
-):
+) -> np.array:
+    """Calculates electron temperature dependent average atomic charge (Z) for a given impurity element.
+
+    Parameters
+    ----------
+    imp_element_index
+        Impurity element index
+    temp_electron_kev
+        electron temperature in keV
+    temp_impurity_keV_array
+        2D array of impurity temperatures in keV for each impurity element
+    impurity_arr_zav
+        2D array of average charge values for each impurity element at the corresponding temperatures in temp_impurity_keV_array
+    impurity_arr_len_tab
+        1D array of the length of the temperature and average charge tables for each impurity element
+
+    Returns
+    -------
+    n_charge_impurity_average
+        electron temperature dependent average atomic charge of impurity element at the given temperature(s)
+
+    """
     bins = temp_impurity_keV_array[imp_element_index]
-    indices = np.digitize(teprofile, bins)
+    indices = np.digitize(temp_electron_kev, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
     # Use numpy.interp for linear interpolation in log space
-    zav_of_te = np.interp(
-        np.log(teprofile),
+    n_charge_impurity_average = np.interp(
+        np.log(temp_electron_kev),
         np.log(temp_impurity_keV_array[imp_element_index, :]),
         impurity_arr_zav[imp_element_index, :],
     )
 
-    less_than_imp_temp_mask = teprofile <= temp_impurity_keV_array[imp_element_index, 0]
+    # less_than_imp_temp_mask = temp_electron_profile_kev values less than impurity temperature
+    less_than_imp_temp_mask = (
+        temp_electron_kev <= temp_impurity_keV_array[imp_element_index, 0]
+    )
 
-    zav_of_te[less_than_imp_temp_mask] = impurity_arr_zav[imp_element_index, 0]
+    # Sets n_charge_impurity_average to the value at the lowest temperature in the table for temperatures below the lowest temperature in the table.
+    n_charge_impurity_average[less_than_imp_temp_mask] = impurity_arr_zav[
+        imp_element_index, 0
+    ]
+
+    # greater_than_imp_temp_mask = temp_electron_profile_kev values higher than impurity temperature.
     greater_than_imp_temp_mask = (
-        teprofile
+        temp_electron_kev
         >= temp_impurity_keV_array[
             imp_element_index,
             (impurity_arr_len_tab[imp_element_index]) - 1,
         ]
     )
-    zav_of_te[greater_than_imp_temp_mask] = impurity_arr_zav[
+
+    # Sets n_charge_impurity_average to the value at the highest temperature in the table for temperatures above the highest temperature in the table.
+    n_charge_impurity_average[greater_than_imp_temp_mask] = impurity_arr_zav[
         imp_element_index,
         impurity_arr_len_tab[imp_element_index] - 1,
     ]
 
-    return zav_of_te
+    return n_charge_impurity_average
 
 
-def pimpden(imp_element_index, neprofile, teprofile, data: DataStructure):
-    """Calculates the impurity radiation density (W/m3)
+def calculate_impurity_radiation_power_density(
+    imp_element_index: int,
+    nd_electron_profile: np.array,
+    temp_electron_profile_kev: np.array,
+    data: DataStructure,
+) -> np.array:
+    """
+    Calculates the impurity radiation density [W/m³] based on the electron density and temperature profiles.
 
     Parameters
     ----------
-    imp_element_index : int
+    imp_element_index
         Impurity element index
-    neprofile : numpy.array
-        electron density profile
-    teprofile : numpy.array
-        electron temperature profile
+    nd_electron_profile
+        electron density profile [m⁻³]
+    temp_electron_profile_kev
+        electron temperature profile [keV]
 
     Returns
     -------
-    numpy.array
-        pimpden - total impurity radiation density (W/m3)
+    pden_impurity_profile - total impurity radiation density [W/m³]
+
+    Notes
+    -----
+     -Temperatures outside the range of the L(Z,Tₑ) table are handled by using the L(Z,Tₑ)
+      value at the closest temperature in the table,
     """
-    # less_than_imp_temp_mask = teprofile values less than impurity temperature.
-    # greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
     bins = data.impurity_radiation.temp_impurity_keV_array[imp_element_index]
-    indices = np.digitize(teprofile, bins)
+    indices = np.digitize(temp_electron_profile_kev, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
 
-    # Use numpy.interp for linear interpolation in log-log space
-    pimpden = np.exp(
+    # Use numpy.interp for linear interpolation in log-log space to find the
+    # loss function values for the given temperature profile L(Z, Tₑ).
+    power_loss_function = np.exp(
         np.interp(
-            np.log(teprofile),
+            np.log(temp_electron_profile_kev),
             np.log(
                 data.impurity_radiation.temp_impurity_keV_array[imp_element_index, :]
             ),
@@ -497,37 +560,45 @@ def pimpden(imp_element_index, neprofile, teprofile, data: DataStructure):
         )
     )
 
-    pimpden = (
+    # W/m³ = nᵢ * nₑ * L(Z, Tₑ)
+    # nᵢ = f_nd_species_electron * nₑ
+    pden_impurity_profile = (
         data.impurity_radiation.f_nd_impurity_electron_array[imp_element_index]
-        * neprofile
-        * neprofile
-        * pimpden
+        * nd_electron_profile
+        * nd_electron_profile
+        * power_loss_function
     )
 
+    # less_than_imp_temp_mask = temp_electron_profile_kev values less than impurity temperature.
+
     less_than_imp_temp_mask = (
-        teprofile
+        temp_electron_profile_kev
         <= data.impurity_radiation.temp_impurity_keV_array[imp_element_index, 0]
     )
-    pimpden[less_than_imp_temp_mask] = (
+    # This is okay because line radiation will dominate at lower temp, and the L(Z,Tₑ)
+    # value at the lowest temperature in the table is likely to be an overestimate of the
+    # radiation loss at lower temperatures, so this is a conservative approach.
+    pden_impurity_profile[less_than_imp_temp_mask] = (
         data.impurity_radiation.pden_impurity_lz_nd_temp_array[imp_element_index, 0]
     )
 
+    # greater_than_imp_temp_mask = temp_electron_profile_kev values higher than impurity temperature.
     greater_than_imp_temp_mask = (
-        teprofile
+        temp_electron_profile_kev
         >= data.impurity_radiation.temp_impurity_keV_array[
             imp_element_index,
             data.impurity_radiation.impurity_arr_len_tab[imp_element_index] - 1,
         ]
     )
     #  This is okay because Bremsstrahlung will dominate at higher temp.
-    pimpden[greater_than_imp_temp_mask] = (
+    pden_impurity_profile[greater_than_imp_temp_mask] = (
         data.impurity_radiation.pden_impurity_lz_nd_temp_array[
             imp_element_index,
             data.impurity_radiation.impurity_arr_len_tab[imp_element_index] - 1,
         ]
     )
 
-    return pimpden
+    return pden_impurity_profile
 
 
 def element2index(element: str, data: DataStructure):
@@ -561,7 +632,7 @@ class ImpurityRadiation:
     """Calculates the impurity radiation losses for given temperature and
     density profiles. The considers the  total impurity radiation from the core
     (pden_impurity_core_rad_total_mw) and total impurity radiation
-    (pden_impurity_rad_total_mw) [MW/(m^3)]. The class is used to sum the impurity
+    (pden_impurity_rad_total_mw) [MW/(m³)]. The class is used to sum the impurity
     radiation loss from each impurity element to find the total impurity radiation loss.
     """
 
@@ -579,16 +650,22 @@ class ImpurityRadiation:
             self.data.impurity_radiation.f_nd_impurity_electron_array > 1.0e-30
         )[0]
 
-        self.pimp_profile = np.zeros(self.data.physics.n_plasma_profile_elements)
+        self.pden_impurity_radiation_profile = np.zeros(
+            self.data.physics.n_plasma_profile_elements
+        )
         self.pden_impurity_rad_profile = np.zeros(
             self.data.physics.n_plasma_profile_elements
         )
         self.pden_impurity_core_rad_profile = np.zeros(
             self.data.physics.n_plasma_profile_elements
         )
+        self.pden_impurity_rad_edge_profile = np.zeros(
+            self.data.physics.n_plasma_profile_elements
+        )
 
         self.pden_impurity_rad_total_mw = 0.0
         self.pden_impurity_core_rad_total_mw = 0.0
+        self.pden_impurity_rad_edge_total_mw = 0.0
 
     def run(self):
         """This model isn't run"""
@@ -600,31 +677,26 @@ class ImpurityRadiation:
         """Map imprad_profile() over each impurity element index."""
         list(map(self.imprad_profile, self.imp))
 
-    def imprad_profile(self, imp_element_index):
+    def imprad_profile(self, imp_element_index: int) -> None:
         """Calculates the impurity radiation losses for given temperature
         and density profiles.
 
         Parameters
         ----------
-        imp_element_index : Int
+        imp_element_index
             Index used to access different impurity radiation elements
 
-        References
-        ----------
-            Bremsstrahlung equation from Johner, L(z) data (coronal equilibrium)
-            from Marco Sertoli, Asdex-U, ref. Kallenbach et al.
-            Johner, Fusion Science and Technology 59 (2011), pp 308-349
-            Sertoli, private communication
-            Kallenbach et al., Plasma Phys. Control. Fus. 55(2013) 124041
         """
-        pimp = pimpden(
-            imp_element_index,
-            self.plasma_profile.neprofile.profile_y,
-            self.plasma_profile.teprofile.profile_y,
-            self.data,
+        pden_impurity_radiation_profile = calculate_impurity_radiation_power_density(
+            imp_element_index=imp_element_index,
+            nd_electron_profile=self.plasma_profile.neprofile.profile_y,
+            temp_electron_profile_kev=self.plasma_profile.teprofile.profile_y,
+            data=self.data,
         )
 
-        self.pimp_profile = np.add(self.pimp_profile, pimp)
+        self.pden_impurity_radiation_profile = np.add(
+            self.pden_impurity_radiation_profile, pden_impurity_radiation_profile
+        )
 
     def calculate_radiation_loss_profiles(self):
         """Calculate the Bremsstrahlung (radb), line radiation (radl), total impurity
@@ -633,14 +705,15 @@ class ImpurityRadiation:
         values.
         """
         pden_impurity_rad_total = (
-            self.pimp_profile * self.plasma_profile.neprofile.profile_x
+            self.pden_impurity_radiation_profile
+            * self.plasma_profile.neprofile.profile_x
         )
-        pden_impurity_core_rad_total = self.pimp_profile * (
+        pden_impurity_core_rad_total = self.pden_impurity_radiation_profile * (
             self.plasma_profile.neprofile.profile_x
-            * fradcore(
-                self.plasma_profile.neprofile.profile_x,
-                self.data.impurity_radiation.radius_plasma_core_norm,
-                self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
+            * create_f_rad_core_profile(
+                rho=self.plasma_profile.neprofile.profile_x,
+                radius_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
+                f_p_plasma_core_rad_reduction=self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
             )
         )
 
@@ -655,7 +728,7 @@ class ImpurityRadiation:
         """Integrate the radiation loss profiles using the Simpson rule.
         Store the total values for each aspect of impurity radiation loss.
         """
-        # 2.0e-6 converts from W/m^3 to MW/m^3 and also accounts for both sides of the
+        # 2.0e-6 converts from W/m³ to MW/m³ and also accounts for both sides of the
         # plasma
         self.pden_impurity_rad_total_mw = 2.0e-6 * integrate.simpson(
             self.pden_impurity_rad_profile,
