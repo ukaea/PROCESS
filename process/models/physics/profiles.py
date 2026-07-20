@@ -282,7 +282,9 @@ class NeProfile(Profile):
         return ncore
 
     def set_pedestal_and_separatrix_values(self):
-        """Sets the pedestal and separatrix density values based on the user input or greenwald fraction method."""
+        """Sets the pedestal and separatrix density values based on the user input
+        or greenwald fraction method.
+        """
         i_nd_plasma_pedestal_separatrix = DensityProfilePedestalType(
             self.data.physics.i_nd_plasma_pedestal_separatrix
         )

@@ -812,8 +812,9 @@ class Physics(Model):
             self.data.physics.p_neutron_total_mw / self.data.physics.a_plasma_surface
         )
 
-        # KLUDGE: Ensure p_plasma_separatrix_mw is continuously positive (physical, rather than
-        # negative potential power), as required by other models (e.g.
+        # KLUDGE: Ensure p_plasma_separatrix_mw is continuously positive
+        # (physical, rather than negative potential power),
+        # as required by other models (e.g.
         # Physics.calculate_density_limit())
         self.data.physics.p_plasma_separatrix_mw /= 1 - np.exp(
             -self.data.physics.p_plasma_separatrix_mw
@@ -1065,7 +1066,9 @@ class Physics(Model):
             po.write(
                 self.outfile,
                 (
-                    f"reinke t and fz, physics = {self.data.physics.temp_plasma_separatrix_kev} , {self.data.reinke.fzmin}"
+                    "reinke t and fz, physics = "
+                    f"{self.data.physics.temp_plasma_separatrix_kev} , "
+                    f"{self.data.reinke.fzmin}"
                 ),
             )
             fgw = (
@@ -1095,7 +1098,7 @@ class Physics(Model):
                 self.outfile,
                 (
                     f" 'fzactual, frac, impvardiv = {self.data.reinke.fzactual},"
-                    f" {self.data.impurity_radiation.f_nd_impurity_electron_array(self.data.reinke.impvardiv)},"
+                    f" {self.data.impurity_radiation.f_nd_impurity_electron_array(self.data.reinke.impvardiv)},"  # noqa: E501
                     f" {self.data.reinke.impvardiv}"
                 ),
             )
@@ -3284,7 +3287,7 @@ class PlasmaBeta(Model):
         model_map = {
             BetaNormMaxModel.USER_INPUT: physics_data.beta_norm_max,
             BetaNormMaxModel.WESSON: physics_data.beta_norm_max_wesson,
-            BetaNormMaxModel.ORIGINAL_SCALING: physics_data.beta_norm_max_original_scaling,
+            BetaNormMaxModel.ORIGINAL_SCALING: physics_data.beta_norm_max_original_scaling,  # noqa: E501
             BetaNormMaxModel.MENARD: physics_data.beta_norm_max_menard,
             BetaNormMaxModel.THOLERUS: physics_data.beta_norm_max_tholerus,
             BetaNormMaxModel.STAMBAUGH: physics_data.beta_norm_max_stambaugh,
@@ -4277,7 +4280,7 @@ class PlasmaInductance(Model):
             self.calculate_internal_inductance_menard(kappa=self.data.physics.kappa)
         )
 
-        self.data.physics.ind_plasma_internal_norm_iter_3 = self.calculate_normalised_internal_inductance_iter_3(
+        self.data.physics.ind_plasma_internal_norm_iter_3 = self.calculate_normalised_internal_inductance_iter_3(  # noqa: E501
             b_plasma_poloidal_vol_avg=self.data.physics.b_plasma_surface_poloidal_average,
             c_plasma=self.data.physics.plasma_current,
             vol_plasma=self.data.physics.vol_plasma,
@@ -4307,8 +4310,8 @@ class PlasmaInductance(Model):
         """
         model_map = {
             IndInternalNormModel.USER_INPUT: self.data.physics.ind_plasma_internal_norm,
-            IndInternalNormModel.WESSON: self.data.physics.ind_plasma_internal_norm_wesson,
-            IndInternalNormModel.MENARD: self.data.physics.ind_plasma_internal_norm_menard,
+            IndInternalNormModel.WESSON: self.data.physics.ind_plasma_internal_norm_wesson,  # noqa: E501
+            IndInternalNormModel.MENARD: self.data.physics.ind_plasma_internal_norm_menard,  # noqa: E501
         }
         return model_map[model]
 
@@ -4661,7 +4664,7 @@ class PlasmaInductance(Model):
         po.ocmmnt(
             self.outfile,
             f"Normalised internal inductance model selected: "
-            f"{IndInternalNormModel(self.data.physics.i_ind_plasma_internal_norm).full_name} ",
+            f"{IndInternalNormModel(self.data.physics.i_ind_plasma_internal_norm).full_name} ",  # noqa: E501
         )
         po.ovarre(
             self.outfile,
@@ -4717,7 +4720,7 @@ class DetailedPhysics(Model):
         #  Debye length calculation
         # ---------------------------
 
-        self.data.physics.len_plasma_debye_electron_vol_avg = self.calculate_debye_length(
+        self.data.physics.len_plasma_debye_electron_vol_avg = self.calculate_debye_length(  # noqa: E501
             temp_plasma_species_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
             nd_plasma_species=self.data.physics.nd_plasma_electrons_vol_avg,
         )
@@ -4882,12 +4885,12 @@ class DetailedPhysics(Model):
         # Upper hybrid frequencies
         # ============================
 
-        self.data.physics.freq_plasma_upper_hybrid_vol_avg = self.calculate_upper_hybrid_frequency(
+        self.data.physics.freq_plasma_upper_hybrid_vol_avg = self.calculate_upper_hybrid_frequency(  # noqa: E501
             freq_plasma=self.data.physics.freq_plasma_electron_vol_avg,
             freq_larmor=self.data.physics.freq_plasma_larmor_toroidal_electron_vol_avg,
         )
 
-        self.data.physics.freq_plasma_upper_hybrid_profile = self.calculate_upper_hybrid_frequency(
+        self.data.physics.freq_plasma_upper_hybrid_profile = self.calculate_upper_hybrid_frequency(  # noqa: E501
             freq_plasma=np.concatenate([
                 self.data.physics.freq_plasma_electron_profile[::-1],
                 self.data.physics.freq_plasma_electron_profile,
@@ -4902,7 +4905,7 @@ class DetailedPhysics(Model):
         # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
         # we can use the total velocity to calculate the Larmor radius for an isotropic
         # profile
-        self.data.physics.radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg = self.calculate_larmor_radius(
+        self.data.physics.radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg = self.calculate_larmor_radius(  # noqa: E501
             vel_perp=np.sqrt(2 * self.data.physics.vel_plasma_deuteron_vol_avg**2),
             freq_larmor=self.data.physics.freq_plasma_larmor_toroidal_deuteron_vol_avg
             * (2 * np.pi),
@@ -4911,7 +4914,7 @@ class DetailedPhysics(Model):
         # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
         # we can use the total velocity to calculate the Larmor radius for an isotropic
         # profile
-        self.data.physics.radius_plasma_deuteron_toroidal_larmor_isotropic_profile = self.calculate_larmor_radius(
+        self.data.physics.radius_plasma_deuteron_toroidal_larmor_isotropic_profile = self.calculate_larmor_radius(  # noqa: E501
             vel_perp=np.sqrt(
                 2
                 * np.concatenate([
@@ -5201,7 +5204,7 @@ class DetailedPhysics(Model):
             for i in range(len(self.data.physics.len_plasma_debye_electron_profile))
         ])
 
-        self.data.physics.plasma_coulomb_log_electron_alpha_thermal_vol_avg = self.calculate_coulomb_log_from_impact(
+        self.data.physics.plasma_coulomb_log_electron_alpha_thermal_vol_avg = self.calculate_coulomb_log_from_impact(  # noqa: E501
             impact_param_max=self.data.physics.len_plasma_debye_electron_vol_avg,
             impact_param_min=max(
                 self.calculate_classical_distance_of_closest_approach(
@@ -5268,19 +5271,19 @@ class DetailedPhysics(Model):
         # Collision times
         # ============================
 
-        self.data.physics.t_plasma_electron_electron_collision_vol_avg = self.calculate_electron_electron_collision_time(
+        self.data.physics.t_plasma_electron_electron_collision_vol_avg = self.calculate_electron_electron_collision_time(  # noqa: E501
             temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
             nd_plasma_electrons=self.data.physics.nd_plasma_electrons_vol_avg,
             plasma_coulomb_log_electron_electron=self.data.physics.plasma_coulomb_log_electron_electron_vol_avg,
         )
 
-        self.data.physics.t_plasma_electron_electron_collision_profile = self.calculate_electron_electron_collision_time(
+        self.data.physics.t_plasma_electron_electron_collision_profile = self.calculate_electron_electron_collision_time(  # noqa: E501
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
             nd_plasma_electrons=self.plasma_profile.neprofile.profile_y,
             plasma_coulomb_log_electron_electron=self.data.physics.plasma_coulomb_log_electron_electron_profile,
         )
 
-        self.data.physics.t_plasma_electron_deuteron_collision_vol_avg = self.calculate_electron_ion_collision_time(
+        self.data.physics.t_plasma_electron_deuteron_collision_vol_avg = self.calculate_electron_ion_collision_time(  # noqa: E501
             temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
             nd_plasma_ions=(
                 self.data.physics.nd_plasma_electrons_vol_avg
@@ -5294,7 +5297,7 @@ class DetailedPhysics(Model):
             n_charge_ion=1,
         )
 
-        self.data.physics.t_plasma_electron_deuteron_collision_profile = self.calculate_electron_ion_collision_time(
+        self.data.physics.t_plasma_electron_deuteron_collision_profile = self.calculate_electron_ion_collision_time(  # noqa: E501
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
             nd_plasma_ions=(
                 self.plasma_profile.neprofile.profile_y
@@ -5308,7 +5311,7 @@ class DetailedPhysics(Model):
             n_charge_ion=1,
         )
 
-        self.data.physics.t_plasma_electron_triton_collision_vol_avg = self.calculate_electron_ion_collision_time(
+        self.data.physics.t_plasma_electron_triton_collision_vol_avg = self.calculate_electron_ion_collision_time(  # noqa: E501
             temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
             nd_plasma_ions=(
                 self.data.physics.nd_plasma_electrons_vol_avg
@@ -5322,7 +5325,7 @@ class DetailedPhysics(Model):
             n_charge_ion=1,
         )
 
-        self.data.physics.t_plasma_electron_triton_collision_profile = self.calculate_electron_ion_collision_time(
+        self.data.physics.t_plasma_electron_triton_collision_profile = self.calculate_electron_ion_collision_time(  # noqa: E501
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
             nd_plasma_ions=(
                 self.plasma_profile.neprofile.profile_y
@@ -5336,7 +5339,7 @@ class DetailedPhysics(Model):
             n_charge_ion=1,
         )
 
-        self.data.physics.t_plasma_electron_alpha_thermal_collision_vol_avg = self.calculate_electron_ion_collision_time(
+        self.data.physics.t_plasma_electron_alpha_thermal_collision_vol_avg = self.calculate_electron_ion_collision_time(  # noqa: E501
             temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
             nd_plasma_ions=(
                 self.data.physics.nd_plasma_electrons_vol_avg
@@ -5349,7 +5352,7 @@ class DetailedPhysics(Model):
             n_charge_ion=2,
         )
 
-        self.data.physics.t_plasma_electron_alpha_thermal_collision_profile = self.calculate_electron_ion_collision_time(
+        self.data.physics.t_plasma_electron_alpha_thermal_collision_profile = self.calculate_electron_ion_collision_time(  # noqa: E501
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
             nd_plasma_ions=(
                 self.plasma_profile.neprofile.profile_y
@@ -5446,7 +5449,7 @@ class DetailedPhysics(Model):
         # Spitzer slow down time
         # ============================
 
-        self.data.physics.t_plasma_electron_alpha_spitzer_slow_vol_avg = self.calculate_spitzer_ion_slowing_down_time(
+        self.data.physics.t_plasma_electron_alpha_spitzer_slow_vol_avg = self.calculate_spitzer_ion_slowing_down_time(  # noqa: E501
             m_ion=constants.ALPHA_MASS,
             plasma_coulomb_log_electron_ion=self.data.physics.plasma_coulomb_log_electron_alpha_thermal_vol_avg,
             temp_plasma_electrons_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
@@ -5454,7 +5457,7 @@ class DetailedPhysics(Model):
             n_charge_ion=2,
         )
 
-        self.data.physics.t_plasma_electron_alpha_spitzer_slow_profile = self.calculate_spitzer_ion_slowing_down_time(
+        self.data.physics.t_plasma_electron_alpha_spitzer_slow_profile = self.calculate_spitzer_ion_slowing_down_time(  # noqa: E501
             m_ion=constants.ALPHA_MASS,
             plasma_coulomb_log_electron_ion=self.data.physics.plasma_coulomb_log_electron_alpha_thermal_profile,
             temp_plasma_electrons_kev=self.plasma_profile.teprofile.profile_y,
@@ -5466,13 +5469,13 @@ class DetailedPhysics(Model):
         # Resistivites
         # ============================
 
-        self.data.physics.res_plasma_fuel_spitzer_vol_avg = self.calculate_spitzer_resistivity(
+        self.data.physics.res_plasma_fuel_spitzer_vol_avg = self.calculate_spitzer_resistivity(  # noqa: E501
             n_charge=1,
             electron_ion_coulomb_log=self.data.physics.plasma_coulomb_log_electron_deuteron_vol_avg,
             temp_plasma_electron_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
         )
 
-        self.data.physics.res_plasma_fuel_spitzer_profile = self.calculate_spitzer_resistivity(
+        self.data.physics.res_plasma_fuel_spitzer_profile = self.calculate_spitzer_resistivity(  # noqa: E501
             n_charge=1,
             electron_ion_coulomb_log=self.data.physics.plasma_coulomb_log_electron_deuteron_profile,
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,

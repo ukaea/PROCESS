@@ -421,9 +421,9 @@ class PlasmaGeom(Model):
             == PlasmaGeometryModelType.MENARD_1997_X_POINT
         ):
             # self.data.physics.triang is an input
-            # self.data.physics.kappa found from self.data.physics.aspect ratio scaling from
-            # J.E. Menard et al 1997 Nucl. Fusion 37 595 and assume max controllable kappa
-            # and assume lᵢ(3) is held constant
+            # self.data.physics.kappa found from self.data.physics.aspect ratio scaling
+            # from J.E. Menard et al 1997 Nucl. Fusion 37 595 and
+            # assume max controllable kappa and assume lᵢ(3) is held constant
 
             self.data.physics.kappa = (
                 2.93e0 * (1.8e0 / self.data.physics.aspect) ** 0.4e0
