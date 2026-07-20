@@ -2817,17 +2817,17 @@ def plot_main_plasma_information(
         f"$\\mathbf{{Confinement:}}$\n \n"
         f"Confinement scaling law: {mfile.get('tauelaw', scan=scan)}\n"
         f"Confinement $H$ factor: {mfile.get('hfact', scan=scan):.4f}\n"
-        f"Energy confinement time from scaling: {mfile.get('t_energy_confinement', scan=scan):.4f} s\n"
+        f"$\\tau_{{\\text{{E}}}}$: {mfile.get('t_energy_confinement', scan=scan):.4f} s | $\\tau_{{\\text{{e}}}}$: {mfile.get('t_electron_energy_confinement', scan=scan):.4f} s | $\\tau_{{\\text{{i}}}}$: {mfile.get('t_ion_energy_confinement', scan=scan):.4f} s | $\\tau_{{\\text{{i}}}}/\\tau_{{\\text{{e}}}}$: {mfile.get('f_t_fuel_ion_electron_energy_confinement', scan=scan):.4f} \n"
         f"Fusion double product: {mfile.get('ntau', scan=scan):.4e} s/m³\n"
         f"Lawson Triple product: {mfile.get('nttau', scan=scan):.4e} keV·s/m³\n"
         f"Transport loss power assumed in scaling law: {mfile.get('p_plasma_loss_mw', scan=scan):.4f} MW\n"
-        f"Plasma thermal energy (inc. $\\alpha$), $W$: {mfile.get('e_plasma_beta', scan=scan) / 1e9:.4f} GJ\n"
-        f"Alpha particle confinement time: {mfile.get('t_alpha_confinement', scan=scan):.4f} s | $\\tau_{{\\alpha}}/\\tau_{{e}}$: {mfile.get('f_t_alpha_energy_confinement', scan=scan):.4f}"
+        f"$W_{{\\beta}}$: {mfile.get('e_plasma_beta', scan=scan) / 1e9:.4f} GJ | $W_{{th}}$: {mfile.get('e_plasma_thermal_total', scan=scan) / 1e9:.4f} GJ | $W_{{e}}$: {mfile.get('e_plasma_electrons_thermal', scan=scan) / 1e9:.4f} GJ | $W_{{i}}$: {mfile.get('e_plasma_ions_thermal', scan=scan) / 1e9:.4f} GJ\n"
+        f"Particle confinement: $\\tau_{{\\alpha}}$: {mfile.get('t_alpha_confinement', scan=scan):.4f} s | $\\tau_{{\\alpha}}/\\tau_{{e}}$: {mfile.get('f_t_alpha_energy_confinement', scan=scan):.4f}"
     )
 
     axis.text(
         0.025,
-        0.57,
+        0.575,
         textstr_confinement,
         fontsize=9,
         verticalalignment="top",
