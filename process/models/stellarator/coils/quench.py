@@ -7,8 +7,8 @@ from process.core.model import DataStructure
 
 def calculate_quench_protection(coilcurrent, data: DataStructure):
     """Calculate quench protecion limits for stellarator coils
-    Includes calculation of the vacuum vessel force density, quench protection current density
-    and max dump voltage during quench
+    Includes calculation of the vacuum vessel force density,
+    quench protection current density and max dump voltage during quench
 
     Parameters
     ----------
@@ -38,15 +38,17 @@ def calculate_quench_protection(coilcurrent, data: DataStructure):
         + data.build.dr_shld_outboard
     )
 
-    # Stellarator version is working on the W7-X scaling, so we should actual use vv r_major
-    # plasma r_major is just an approximation, but exact calculations require 3D geometry
+    # Stellarator version is working on the W7-X scaling, so we should actual use vv
+    # r_major, plasma r_major is just an approximation,
+    # but exact calculations require 3D geometry
     # Maybe it can be added to the stella_config file in the future
     rad_vv = data.physics.rmajor
 
     # MN/m^3
     f_vv_actual = calculate_vv_max_force_density_from_W7X_scaling(rad_vv, data)
 
-    # This approach merge stress model from tokamaks with induced force calculated from W7-X scaling
+    # This approach merge stress model from tokamaks with induced force calculated
+    # from W7-X scaling
     a_vv = (rad_vv_out + rad_vv_in) / (rad_vv_out - rad_vv_in)
     zeta = 1 + ((a_vv - 1) * np.log((a_vv + 1) / (a_vv - 1)) / (2 * a_vv))
 
@@ -160,8 +162,10 @@ def calculate_quench_protection_current_density(
 
     Simplified 0-D adiabatic heat balance "hotspot criterion" model.
 
-    This is slightly diffrent that tokamak version (also diffrent from the stellarator paper).
-    We skip the superconduc6tor contribution (this should be more conservative in theory).
+    This is slightly diffrent that tokamak version
+    (also diffrent from the stellarator paper).
+    We skip the superconduc6tor contribution
+    (this should be more conservative in theory).
 
     Parameters
     ----------
@@ -176,7 +180,8 @@ def calculate_quench_protection_current_density(
     temp :
         peak helium coolant temperature in TF coils and PF coils (K)
     a_cable :
-        Cable space area (per turn)  [m2] (Includes the area of voids and central helium channel)
+        Cable space area (per turn)  [m2]
+        (Includes the area of voids and central helium channel)
     a_turn :
         TF coil turn cross section area [m2]
     """

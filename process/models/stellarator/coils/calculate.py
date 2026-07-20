@@ -38,7 +38,6 @@ def st_coil(stellarator, output: bool, data: DataStructure):
     r_coil_major = data.stellarator.r_coil_major
     r_coil_minor = data.stellarator.r_coil_minor
 
-    #######################################################################################
     calculate_winding_pack_geometry(data)
 
     # Total coil current (MA)
@@ -48,17 +47,14 @@ def st_coil(stellarator, output: bool, data: DataStructure):
         winding_pack_total_size(r_coil_major, r_coil_minor, coilcurrent, data)
     )
 
-    #######################################################################################
-    #  Casing calculations
+    # Casing calculations
     calculate_casing(data)
 
-    #######################################################################################
-    #  Port calculations
+    # Port calculations
     calculate_vertical_ports(data)
     calculate_horizontal_ports(data)
 
-    #######################################################################################
-    #  General Coil Geometry values
+    # General Coil Geometry values
     #
     calculate_coil_toroidal_thickness(data)
     calculate_coil_radial_thickness(data)
@@ -78,7 +74,7 @@ def st_coil(stellarator, output: bool, data: DataStructure):
     inductance = calculate_inductance(r_coil_minor, data)
     calculate_stored_magnetic_energy(r_coil_minor, data)
 
-    #  Coil dimensions
+    # Coil dimensions
     data.build.z_tf_inside_half = (
         0.5e0
         * data.stellarator_config.stella_config_maximal_coil_height
@@ -113,16 +109,13 @@ def st_coil(stellarator, output: bool, data: DataStructure):
 
     # End of general coil geometry values
 
-    #######################################################################################
-    #  Coil_mases calculations
+    # Coil_mases calculations
     calculate_coils_mass(a_tf_wp_with_insulation, a_tf_wp_no_insulation, data)
 
-    #######################################################################################
     # Quench protection:
     f_vv_actual = calculate_quench_protection(coilcurrent, data)
 
     #
-    #######################################################################################
     # Forces scaling #
     forces.calculate_max_force_density(a_tf_wp_no_insulation, data)
     forces.calculate_maximum_stress(data)
@@ -140,8 +133,6 @@ def st_coil(stellarator, output: bool, data: DataStructure):
     centering_force_max_mn = forces.calculate_centering_force_max_mn(data)
     centering_force_min_mn = forces.calculate_centering_force_min_mn(data)
     centering_force_avg_mn = forces.calculate_centering_force_avg_mn(data)
-    #
-    ####################################
 
     if output:
         write(
@@ -222,7 +213,8 @@ def calculate_plasma_facing_coil_area(data: DataStructure):
         * 0.5e0
         * data.tfcoil.len_tf_coil
     )
-    # [m^2] Total surface area of coil side facing plasma: outboard region (same as inboard)
+    # [m^2] Total surface area of coil side facing plasma: outboard region
+    # (same as inboard)
     data.tfcoil.tfsao = data.tfcoil.tfsai
 
 
@@ -287,7 +279,8 @@ def calculate_coils_summary_variables(
 
 
 def calculate_inductance(r_coil_minor, data: DataStructure):
-    """This uses the reference value for the inductance and scales it with a^2/R (toroid inductance scaling)
+    """This uses the reference value for the inductance and scales it with a^2/R
+    (toroid inductance scaling)
 
     Parameters
     ----------
@@ -333,21 +326,26 @@ def calculate_winding_pack_geometry(data: DataStructure):
 
     """
     # [m] Dimension of square cable space inside insulation
-    #     and case of the conduit of each turn
+    #    and case of the conduit of each turn
     dx_tf_turn_cable_space_average = data.tfcoil.dx_tf_turn_general - 2.0e0 * (
         data.tfcoil.dx_tf_turn_steel + data.tfcoil.dx_tf_turn_insulation
     )  # dx_tf_turn_cable_space_average = t_w
     if dx_tf_turn_cable_space_average < 0:
         logger.warning(
-            "Warning: Negative cable space dimension in TF coil winding pack. Check input parameters."
+            "Warning: Negative cable space dimension in TF coil winding pack. "
+            "Check input parameters."
         )
         logger.info(
-            "dx_tf_turn_cable_space_average is negative. Check t_turn, data.tfcoil.dx_tf_turn_steel and dx_tf_turn_insulation."
+            "dx_tf_turn_cable_space_average is negative. "
+            "Check t_turn, data.tfcoil.dx_tf_turn_steel and dx_tf_turn_insulation."
         )
     # [m^2] Cross-sectional area of cable space per turn
-    data.tfcoil.a_tf_turn_cable_space_no_void = (
-        0.9e0 * dx_tf_turn_cable_space_average**2
-    )  # 0.9 to include some rounded corners. (data.tfcoil.a_tf_turn_cable_space_no_void = pi (dx_tf_turn_cable_space_average/2)**2 = pi/4 *dx_tf_turn_cable_space_average**2 for perfect round conductor). This factor depends on how round the corners are.
+    # 0.9 to include some rounded corners.
+    # (data.tfcoil.a_tf_turn_cable_space_no_void =
+    # pi (dx_tf_turn_cable_space_average/2)**2 =
+    # pi/4 *dx_tf_turn_cable_space_average**2 for perfect round conductor).
+    # This factor depends on how round the corners are.
+    data.tfcoil.a_tf_turn_cable_space_no_void = 0.9e0 * dx_tf_turn_cable_space_average**2
     # [m^2] Cross-sectional area of conduit case per turn
     data.tfcoil.a_tf_turn_steel = (
         dx_tf_turn_cable_space_average + 2.0e0 * data.tfcoil.dx_tf_turn_steel
@@ -395,7 +393,7 @@ def winding_pack_total_size(
                 r_coil_minor / 1.0e0 - r_coil_minor / 150.0e0
             )
 
-        #  B-field calculation
+        # B-field calculation
         b_max_k[k] = bmax_from_awp(
             wp_width_r[k],
             coilcurrent,
@@ -450,7 +448,8 @@ def winding_pack_total_size(
             r_coil_minor / 20.0e0
         ) ** 2  # If REBCO, : start at smaller winding pack ratios
 
-    # Find the intersection between LHS and RHS (or: how much awp do I need to get to the desired coil current)
+    # Find the intersection between LHS and RHS
+    # (or: how much awp do I need to get to the desired coil current)
     wp_width_r_min = intersect(wp_width_r, lhs, wp_width_r, rhs, wp_width_r_min)
 
     # Maximum field at superconductor surface (T)
@@ -482,7 +481,7 @@ def winding_pack_total_size(
         awp_rad  # [m] radial thickness of winding pack
     )
 
-    #  [m^2] winding-pack cross sectional area including insulation (not global)
+    # [m^2] winding-pack cross sectional area including insulation (not global)
     a_tf_wp_with_insulation = (
         data.tfcoil.dr_tf_wp_with_insulation + 2.0e0 * data.tfcoil.dx_tf_wp_insulation
     ) * (data.tfcoil.dx_tf_wp_primary_toroidal + 2.0e0 * data.tfcoil.dx_tf_wp_insulation)
@@ -547,9 +546,10 @@ def calculate_casing(data: DataStructure):
 
 
 def calculate_vertical_ports(data: DataStructure):
-    #  Maximal toroidal port size (vertical ports) (m)
-    #  The maximal distance is correct but the vertical extension of this port is not clear#
-    #  This is simplified for now and can be made more accurate in the future#
+    # Maximal toroidal port size (vertical ports) (m)
+    # The maximal distance is correct
+    # but the vertical extension of this port is not clear
+    # This is simplified for now and can be made more accurate in the future#
     data.stellarator.vporttmax = (
         0.4e0
         * data.stellarator_config.stella_config_max_portsize_width
@@ -557,15 +557,15 @@ def calculate_vertical_ports(data: DataStructure):
         / data.stellarator.f_st_n_coils
     )  # This is not accurate yet. Needs more insight#
 
-    #  Maximal poloidal port size (vertical ports) (m)
+    # Maximal poloidal port size (vertical ports) (m)
     data.stellarator.vportpmax = 2.0 * data.stellarator.vporttmax  # Simple approximation
 
-    #  Maximal vertical port clearance area (m2)
+    # Maximal vertical port clearance area (m2)
     data.stellarator.vportamax = data.stellarator.vporttmax * data.stellarator.vportpmax
 
 
 def calculate_horizontal_ports(data: DataStructure):
-    #  Maximal toroidal port size (horizontal ports) (m)
+    # Maximal toroidal port size (horizontal ports) (m)
     data.stellarator.hporttmax = (
         0.8e0
         * data.stellarator_config.stella_config_max_portsize_width
@@ -573,10 +573,10 @@ def calculate_horizontal_ports(data: DataStructure):
         / data.stellarator.f_st_n_coils
     )  # Factor 0.8 to take the variation with height into account
 
-    #  Maximal poloidal port size (horizontal ports) (m)
+    # Maximal poloidal port size (horizontal ports) (m)
     data.stellarator.hportpmax = (
         2.0e0 * data.stellarator.hporttmax
     )  # Simple approximation
 
-    #  Maximal horizontal port clearance area (m2)
+    # Maximal horizontal port clearance area (m2)
     data.stellarator.hportamax = data.stellarator.hporttmax * data.stellarator.hportpmax
