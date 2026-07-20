@@ -265,36 +265,25 @@ def constraint_equation_2(constraint_registration, data):
     """
     # pscaling: total transport power per volume (MW/m3)
 
-    e_ions_stored_thermal = (
-        (3 / 2)
-        * (constants.ELECTRON_CHARGE / 1e3)
-        * data.physics.nd_plasma_ions_total_vol_avg
-        * data.physics.temp_plasma_ion_density_weighted_kev
-    )
-
-    e_electrons_stored_thermal = (
-        (3 / 2)
-        * (constants.ELECTRON_CHARGE / 1e3)
-        * data.physics.nd_plasma_electrons_vol_avg
-        * data.physics.temp_plasma_electron_density_weighted_kev
-    )
-    pscaling = (
-        e_ions_stored_thermal + e_electrons_stored_thermal
+    p_plasma_loss = (
+        (
+            data.physics.eden_plasma_electrons_thermal_vol_avg
+            + data.physics.eden_plasma_ions_thermal_vol_avg
+        )
+        / 1e6
     ) / data.physics.t_energy_confinement
     # Total power lost is scaling power plus radiation:
     if data.physics.i_rad_loss == 0:
-        pnumerator = pscaling + data.physics.pden_plasma_rad_mw
+        p_plasma_loss += data.physics.pden_plasma_rad_mw
     elif data.physics.i_rad_loss == 1:
-        pnumerator = pscaling + data.physics.pden_plasma_core_rad_mw
-    else:
-        pnumerator = pscaling
+        p_plasma_loss += data.physics.pden_plasma_core_rad_mw
 
     # if plasma not ignited include injected power
     if (
         PlasmaIgnitionModel(data.physics.i_plasma_ignited)
         == PlasmaIgnitionModel.NON_IGNITED
     ):
-        pdenom = (
+        p_plasma_heating = (
             data.physics.f_p_alpha_plasma_deposited * data.physics.pden_alpha_total_mw
             + data.physics.pden_non_alpha_charged_mw
             + data.physics.pden_plasma_ohmic_mw
@@ -302,13 +291,13 @@ def constraint_equation_2(constraint_registration, data):
         )
     else:
         # if plasma ignited
-        pdenom = (
+        p_plasma_heating = (
             data.physics.f_p_alpha_plasma_deposited * data.physics.pden_alpha_total_mw
             + data.physics.pden_non_alpha_charged_mw
             + data.physics.pden_plasma_ohmic_mw
         )
 
-    return eq(pnumerator, pdenom, constraint_registration)
+    return eq(p_plasma_loss, p_plasma_heating, constraint_registration)
 
 
 @ConstraintManager.register_constraint(3, "MW/m³", "=")
