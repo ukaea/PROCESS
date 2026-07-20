@@ -322,7 +322,7 @@ class TFData:
     The CS is frictionally decoupled from the TF, does not carry axial tension
     - =3 : The TF is in contact with the CS : "bucked and wedged design"
     Full version : thin TF-CS Kapton interface introduced in the stress calculations (4 layers)
-    The CS and kaptop are frictionally decoupled from the TF, do not carry
+    The CS and Kapton are frictionally decoupled from the TF, do not carry
     axial tension
     """
 
