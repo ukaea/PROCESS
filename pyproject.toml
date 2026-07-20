@@ -75,7 +75,7 @@ docs = [
   "mkdocs-gen-files",
   "mkdocs-literate-nav",
 ]
-lint = ["pre-commit>=2.16.0", "ruff==0.15.21", "ty"]
+lint = ["pre-commit>=2.16.0", "ruff==0.15.22", "ty"]
 all = ["process[test,docs,lint,examples,plotly]", "toml"]
 
 [project.scripts]
@@ -255,6 +255,10 @@ ignore =  [
     "D104",    # undocumented-public-package
     "D105",    # undocumented-magic-method
     "S307",
+
+    "RUF105",  # noqa-comments
+    "RUF106",  # rule-codes-in-suppression-comments
+    "RUF201",  # rule-codes-in-selectors
 
 ]
 
