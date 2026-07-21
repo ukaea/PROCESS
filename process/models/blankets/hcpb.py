@@ -27,9 +27,10 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
     References
     ----------
-        - M. Kovari et al., “PROCESS: A systems code for fusion power plants - Part 2: Engineering,”
-        Fusion Engineering and Design, vol. 104, pp. 9-20, Mar. 2016,
-        doi: https://doi.org/10.1016/j.fusengdes.2016.01.007.
+    - M. Kovari et al., “PROCESS: A systems code for fusion power plants -
+    Part 2: Engineering,”
+    Fusion Engineering and Design, vol. 104, pp. 9-20, Mar. 2016,
+    doi: https://doi.org/10.1016/j.fusengdes.2016.01.007.
     """
 
     def output(self):
@@ -43,7 +44,9 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Calculate blanket, shield, vacuum vessel and cryostat volumes
         self.component_volumes()
 
-        # If Shfranov shift is added, the angle formula can be used where the shift is added to the minor radius. For now, the shift is neglected and the angle is calculated using the minor radius only.
+        # If Shfranov shift is added, the angle formula can be used where the shift is
+        # added to the minor radius. For now, the shift is neglected and
+        # the angle is calculated using the minor radius only.
         self.data.blanket.deg_blkt_outboard_poloidal_plasma = (
             self.blkt_outboard_poloidal_plasma_angle(
                 n_divertors=self.data.divertor.n_divertors,
@@ -79,13 +82,13 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         self.set_blanket_module_geometry()
 
-        self.data.blanket.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
+        self.data.blanket.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(  # noqa: E501
             n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
         )
-        self.data.blanket.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
+        self.data.blanket.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(  # noqa: E501
             n_blkt_outboard_modules_toroidal=self.data.fwbs.n_blkt_outboard_modules_toroidal,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
@@ -177,7 +180,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Normalisation of the nuclear heating
         # The nuclear heating are normalised assuming no energy multiplication
         # in the divertor and the centrepost
-        # Assume that all the neutrons are absorbed. (Not applicable for very thin blankets)
+        # Assume that all the neutrons are absorbed.
+        # (Not applicable for very thin blankets)
         # Rem SK : This calculation effectively only uses the angular fractions to get
         #          the energy multiplication and hence the power balance ...
 
@@ -192,10 +196,13 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         )
 
         # Total nuclear power deposited in the
-        # if ( pnuc_tot_blk_sector < 1.0d0 .or. pnuc_tot_blk_sector /= pnuc_tot_blk_sector ) then
+        # if ( pnuc_tot_blk_sector < 1.0d0 .or.
+        # pnuc_tot_blk_sector /= pnuc_tot_blk_sector ) then
         # #TODO This can flood the terminal, and should be logged once in Python
-        # write(*,*)'p_fw_nuclear_heat_total_mw =', p_fw_nuclear_heat_total_mw, ' and ', 'p_blkt_nuclear_heat_total_mw =', p_blkt_nuclear_heat_total_mw
-        # write(*,*)'p_shld_nuclear_heat_mw =', p_shld_nuclear_heat_mw, ' p_tf_nuclear_heat_mw =', p_tf_nuclear_heat_mw
+        # write(*,*)'p_fw_nuclear_heat_total_mw =', p_fw_nuclear_heat_total_mw, ' and ',
+        # 'p_blkt_nuclear_heat_total_mw =', p_blkt_nuclear_heat_total_mw
+        # write(*,*)'p_shld_nuclear_heat_mw =', p_shld_nuclear_heat_mw,
+        # ' p_tf_nuclear_heat_mw =', p_tf_nuclear_heat_mw
         # end if
 
         # Solid angle fraction taken by the breeding blankets/shields
@@ -309,10 +316,12 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             * self.data.fwbs.f_a_fw_coolant_outboard
         )
 
-        # Mass of He coolant = volume * density at typical coolant temperatures and pressures (kg)
+        # Mass of He coolant = volume * density at typical coolant temperatures
+        # and pressures (kg)
         self.data.fwbs.m_fw_blkt_div_coolant_total = coolvol * 1.517
 
-        # Average first wall coolant fraction, only used by old routines in fispact.f90, safety.f90
+        # Average first wall coolant fraction, only used by old routines in fispact.f90,
+        # safety.f90
         self.data.fwbs.fwclfr = (
             self.data.first_wall.a_fw_inboard
             * self.data.build.dr_fw_inboard
@@ -326,9 +335,11 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             * (self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard)
         )
 
-        # CCFE HCPB calculates the mass of the divertor, blanket (including seprate masses for each material),
+        # CCFE HCPB calculates the mass of the divertor,
+        # blanket (including seprate masses for each material),
         # shield, FW and FW armour.
-        # KIT HCPB calculates the mass of the blanket (including seprate masses for each material)
+        # KIT HCPB calculates the mass of the blanket
+        # (including seprate masses for each material)
         # and the void fraction for the blanket.
         # N.B. i_blanket_type=1 for CCFE HCPB
 
@@ -657,7 +668,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         Returns
         -------
         :
-            p_blkt_nuclear_heat_total_mw (float): Total nuclear heating in the blanket (MW).
+            p_blkt_nuclear_heat_total_mw (float): Total nuclear heating in the blanket
+            (MW).
             - exp_blanket (float): Exponential blanket factor (dimensionless).
 
         Raises
@@ -699,9 +711,11 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
     ) -> tuple[float, float, float, float]:
         """Calculate the nuclear heating in the shield for the CCFE HCPB model.
 
-        This method calculates the nuclear heating in the shield using empirical coefficients and exponents,
-        based on the shield's geometry, density, and the total fusion power. The calculation distinguishes
-        between spherical tokamak and conventional configurations for the average shield thickness.
+        This method calculates the nuclear heating in the shield using empirical
+        coefficients and exponents, based on the shield's geometry, density,
+        and the total fusion power. The calculation distinguishes
+        between spherical tokamak and
+        conventional configurations for the average shield thickness.
 
         Parameters
         ----------
@@ -726,7 +740,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             p_shld_nuclear_heat_mw (float): Total nuclear heating in shield (MW).
             - exp_shield1 (float): First exponential factor for shield heating.
             - exp_shield2 (float): Second exponential factor for shield heating.
-            - shld_u_nuc_heating (float): Unit nuclear heating of shield (W/kg/GW of fusion power) x mass.
+            - shld_u_nuc_heating (float): Unit nuclear heating of shield
+                (W/kg/GW of fusion power) x mass.
 
         """
         # Shield nuclear heating coefficients and exponents
@@ -865,7 +880,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             # blanket inlet/pump oulet.
             # The pressures (found in fwbs_variables) for coolants using
             # i_p_coolant_pumping==2 are assumed to be the pressure at the
-            # blanket oulet/pump inlet. The equation below is used for i_p_coolant_pumping==2:
+            # blanket oulet/pump inlet.
+            # The equation below is used for i_p_coolant_pumping==2:
             # pfactor = ((pressure+deltap)/pressure)**((gamma-1.0d0)/gamma)
             t_in_compressor = self.data.primary_pumping.t_in_bb / pfactor
             dt_he = (
@@ -945,7 +961,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 )
                 po.ovarre(
                     self.outfile,
-                    "Mechanical pumping power for FW and blanket cooling loop including heat exchanger (MW)",
+                    "Mechanical pumping power for FW and "
+                    "blanket cooling loop including heat exchanger (MW)",
                     "(p_fw_blkt_coolant_pump_mw)",
                     self.data.primary_pumping.p_fw_blkt_coolant_pump_mw,
                     "OP ",
@@ -1188,7 +1205,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # so the TF is mostly copper, making the calculation also valid for
         # Copper TF centrepost
         else:
-            # This subroutine uses an shielding length per decade (/10 drop in neutron heating)
+            # This subroutine uses an shielding length per decade
+            # (/10 drop in neutron heating)
             # of 15.5 cm, within to the "15 - 16 cm" of Menard et al. 2016.
             # (This is an e-folding lenth of 6.72 cm.)
 
@@ -1222,13 +1240,15 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 -24.401 * sh_width_eff
             )
 
-            # Nuclear power density deposited in the tungsten carbyde shield by photons [MW]
+            # Nuclear power density deposited in the
+            # tungsten carbyde shield by photons [MW]
             pnuc_cp_sh_gam = sh_width_eff * (
                 596 * np.exp(-4.130 * sh_width_eff)
                 + 90.586 * np.exp(0.6837 * sh_width_eff)
             )
 
-            # Nuclear power density deposited in the tungsten carbyde shield by neutrons [MW]
+            # Nuclear power density deposited in the
+            # tungsten carbyde shield by neutrons [MW]
             pnuc_cp_sh_n = sh_width_eff * (
                 202.10 * np.exp(-10.533 * sh_width_eff)
                 + 80.510 * np.exp(-0.9801 * sh_width_eff)
@@ -1458,7 +1478,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         )
         po.ovarre(
             self.outfile,
-            "Total nuclear heating in the blanket (including f_p_blkt_multiplication) (MW)",
+            "Total nuclear heating in the blanket "
+            "(including f_p_blkt_multiplication) (MW)",
             "(p_blkt_nuclear_heat_total_mw)",
             self.data.fwbs.p_blkt_nuclear_heat_total_mw,
             "OP ",
@@ -1568,7 +1589,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             )
             po.ovarre(
                 self.outfile,
-                "Total electrical coolant pumping power: first wall, blanket, shield and divertor (MW)",
+                "Total electrical coolant pumping power: "
+                "first wall, blanket, shield and divertor (MW)",
                 "(p_coolant_pump_elec_total_mw)",
                 self.data.heat_transport.p_coolant_pump_elec_total_mw,
                 "OP ",

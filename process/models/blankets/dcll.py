@@ -12,7 +12,7 @@ from process.models.power import PumpingPowerModelTypes
 
 
 class DCLL(InboardBlanket, OutboardBlanket):
-    """This module contains the Dual Coolant Lead Lithium (DCLL) specific submods of PROCESSS.
+    """This module contains the Dual Coolant Lead Lithium (DCLL).
 
 
 
@@ -39,16 +39,22 @@ class DCLL(InboardBlanket, OutboardBlanket):
          Liquid Metal Breeder Material = PbLi
              i_blkt_liquid_breeder_type = 0 * Liquid Metal Breeder Material = PbLi
 
-         Specify dual-coolant i.e., get mass flow required from heat extracted from liqid metal breeder
+         Specify dual-coolant i.e., get mass flow required from heat extracted
+         from liqid metal breeder
              i_blkt_dual_coolant = 2
 
-         FIC switch: 0 = no FIC, Eurofer; 1 = FCIs, perfect electrical insulator, 2 = FCIs, with specified conductance
+         FIC switch: 0 = no FIC, Eurofer; 1 = FCIs, perfect electrical insulator,
+        2 = FCIs, with specified conductance
              i_blkt_liquid_breeder_channel_type = 0, 1, or 2
 
-         Liquid metal duct wall conductance initialised at Eurofer value in fwbs_variables, or can input other value, used for i_blkt_liquid_breeder_channel_type = 0 or 2
+         Liquid metal duct wall conductance initialised at Eurofer value in
+         fwbs_variables, or can input other value,
+         used for i_blkt_liquid_breeder_channel_type = 0 or 2
              (bz_channel_conduct_liq)
 
-         Choose if FW and BB structure are on the same pumping system (unless have diffent coolants), default is same coolant with flow IN->FW->BB->OUT
+         Choose if FW and BB structure are on the same pumping system
+         (unless have diffent coolants), default is same coolant with
+         flow IN->FW->BB->OUT
              (i_fw_blkt_shared_coolant)
 
          Can set inlet and oulet temperature for liquid metal breeder
@@ -65,7 +71,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
                      for self-cooled blankets, Fusion Engineering and Design 27, 399-406
 
          [Gas2001]   Gasior and Mozer (2001), Thermodynamic study of liquid lithium-lead
-                     alloys using the EMF method, Journal of Nuclear Materials, 294, 77-83
+                     alloys using the EMF method, Journal of Nuclear Materials, 294,
+                     77-83
 
          [Pal2016]   Palermo et al. (2016), Neutronic analyses of the preliminary design
                      of a DCLL blanket for the EUROfusion DEMO power plant,
@@ -80,7 +87,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
                      Design 167, 112380
 
 
-    Note: request for when CCFE Bluemira neutronics work is added: output maximum values, as well as average values, for wall neutronics calculation if possible.
+    Note: request for when CCFE Bluemira neutronics work is added: output maximum values,
+    as well as average values, for wall neutronics calculation if possible.
     """
 
     def output(self):
@@ -89,7 +97,9 @@ class DCLL(InboardBlanket, OutboardBlanket):
     def run(self, output: bool = False):
         self.component_volumes()
 
-        # If Shfranov shift is added, the angle formula can be used where the shift is added to the minor radius. For now, the shift is neglected and the angle is calculated using the minor radius only.
+        # If Shfranov shift is added, the angle formula can be used where the shift is
+        # added to the minor radius. For now, the shift is neglected
+        # and the angle is calculated using the minor radius only.
         self.data.blanket.deg_blkt_outboard_poloidal_plasma = (
             self.blkt_outboard_poloidal_plasma_angle(
                 n_divertors=self.data.divertor.n_divertors,
@@ -125,13 +135,13 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         self.set_blanket_module_geometry()
 
-        self.data.blanket.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
+        self.data.blanket.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(  # noqa: E501
             n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
         )
-        self.data.blanket.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
+        self.data.blanket.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(  # noqa: E501
             n_blkt_outboard_modules_toroidal=self.data.fwbs.n_blkt_outboard_modules_toroidal,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
@@ -148,12 +158,14 @@ class DCLL(InboardBlanket, OutboardBlanket):
             self.write_output()
 
     def dcll_neutronics_and_power(self, output: bool):
-        """This is a temporary module that will use results from CCFE Bluemira nutronics work (once completed).
-        Database will provide values for power deposition in FW & BB, BB TBR, and nuron fluence at TF coil for
-        different thicknesses of BB and meterial fractions.
+        """This is a temporary module that will use results from
+        CCFE Bluemira nutronics work (once completed).
+        Database will provide values for power deposition in FW & BB, BB TBR,
+        and nuron fluence at TF coil for different thicknesses of BB
+        and meterial fractions.
 
-        For now we use the same method as KIT HCLL and the user can select appropriate fractional
-        values from DCLL nutronics studies as inputs.
+        For now we use the same method as KIT HCLL and the user can select
+        appropriate fractional values from DCLL nutronics studies as inputs.
         See fwbs_variables:
              - pnuc_fw_ratio_dcll
              - pnuc_blkt_ratio_dcll
@@ -271,11 +283,13 @@ class DCLL(InboardBlanket, OutboardBlanket):
             )
             po.ocmmnt(
                 self.outfile,
-                "(Note: f_p_blkt_multiplication is fixed for this model inside the code)",
+                "(Note: f_p_blkt_multiplication is fixed for "
+                "this model inside the code)",
             )
             po.ovarre(
                 self.outfile,
-                "Total nuclear heating in the blanket (including f_p_blkt_multiplication) (MW)",
+                "Total nuclear heating in the blanket "
+                "(including f_p_blkt_multiplication) (MW)",
                 "(p_blkt_nuclear_heat_total_mw)",
                 self.data.fwbs.p_blkt_nuclear_heat_total_mw,
                 "OP ",
@@ -324,7 +338,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         # For i_p_coolant_pumping == 0:
         # User sets mechanical pumping power directly (primary_pumping_power)
-        # Values of p_blkt_coolant_pump_mw, p_div_coolant_pump_mw, p_fw_coolant_pump_mw, p_shld_coolant_pump_mw set in input file
+        # Values of p_blkt_coolant_pump_mw, p_div_coolant_pump_mw, p_fw_coolant_pump_mw,
+        # p_shld_coolant_pump_mw set in input file
         i_p_coolant_pumping = PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping)
         if i_p_coolant_pumping == PumpingPowerModelTypes.FRACTION_OF_HEAT:
             # User sets mechanical pumping power directly
@@ -355,7 +370,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
         }:
             # Mechanical pumping power is calculated for first wall and blanket
             self.thermo_hydraulic_model(output=output)
-            # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
+            # For divertor,mechanical pumping power is a fraction of
+            # thermal power removed by coolant
             self.data.heat_transport.p_div_coolant_pump_mw = (
                 self.data.heat_transport.f_p_div_coolant_pump_total_heat
                 * (
@@ -365,7 +381,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 )
             )
 
-            # Shield power is negligible and this model doesn't have nuclear heating to the shield
+            # Shield power is negligible and this model doesn't have
+            # nuclear heating to the shield
             self.data.heat_transport.p_shld_coolant_pump_mw = (
                 self.data.heat_transport.f_p_shld_coolant_pump_total_heat * 0.0
             )
@@ -394,7 +411,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
             else:
                 po.ovarre(
                     self.outfile,
-                    "Mechanical pumping power for FW and blanket cooling loop including heat exchanger (MW)",
+                    "Mechanical pumping power for FW and blanket cooling loop including "
+                    "heat exchanger (MW)",
                     "(p_fw_blkt_coolant_pump_mw)",
                     self.data.primary_pumping.p_fw_blkt_coolant_pump_mw,
                     "OP ",
@@ -485,7 +503,9 @@ class DCLL(InboardBlanket, OutboardBlanket):
                  IB/OB FW = 1.98D-2 m, 85.54% EUROfer, 14.46% He
 
                   BZ
-                 IB/OB BZ radial stiffening plates total = 6.0D-2 m, 91.33% EUROfer, 8.67% He
+                 IB/OB BZ radial stiffening plates
+                 total = 6.0D-2 m, 91.33% EUROfer, 8.67% He
+
                  IB PbLi Channels = 3.0D-1 m, 100% PbLi
                  OB PbLi Channels = 6.4D-1 m, 100% PbLi
                  IB He plena EUROfer walls = 1.0D-1 m, 53% EUROfer, 47% He
@@ -514,7 +534,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
         else:
             self.data.dcll.r_fci = 0.0
 
-        # Back wall set 0.02m thickness but will vary BZ (structure and breeder) thickness
+        # Back wall set 0.02m thickness
+        # but will vary BZ (structure and breeder) thickness
         self.data.dcll.bz_r_ib = self.data.build.blbuith - self.data.dcll.r_fci
         self.data.dcll.bz_r_ob = self.data.build.blbuoth - self.data.dcll.r_fci
         # Back wall thickness (m)
@@ -835,8 +856,10 @@ class DCLL(InboardBlanket, OutboardBlanket):
         )
 
         # Mass of material =   density of material * fraction of material by volume * (
-        #                      (volume OB blanket * blanket OB zone thickness/ total OB blanket thickness) +
-        #                      (volume IB blanket * blanket IB zone thickness/ total IB blanket thickness)
+        #                      (volume OB blanket * blanket OB zone thickness/
+        #                       total OB blanket thickness) +
+        #                      (volume IB blanket * blanket IB zone thickness/
+        #                       total IB blanket thickness)
 
         if output:
             po.osubhd(self.outfile, "DCLL model: Masses")
