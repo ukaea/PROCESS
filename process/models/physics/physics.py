@@ -5548,9 +5548,9 @@ class DetailedPhysics(Model):
             t_ion_spitzer_slowing_down=self.data.physics.t_plasma_electron_alpha_spitzer_slow_profile,
         )
 
-        # =============================
+        # ================================================================
         # Alpha particle energy fraction transferred to ions and electrons
-        # =============================
+        # ================================================================
 
         self.data.physics.f_p_plasma_alpha_fast_ions_profile = self.calculate_fast_ion_energy_to_ion_fraction(
             e_fast_ion_initial=constants.DT_ALPHA_ENERGY,
@@ -5559,6 +5559,16 @@ class DetailedPhysics(Model):
 
         self.data.physics.f_p_plasma_alpha_fast_electrons_profile = (
             1 - self.data.physics.f_p_plasma_alpha_fast_ions_profile
+        )
+
+        # ===================================
+        # Fast alpha particle density profile
+        # ===================================
+
+        # n_alpha_fast = S_alpha * tau_alpha_thermalisation
+        self.data.physics.nd_plasma_alphas_fast_profile = (
+            self.data.physics.fusrat_plasma_dt_profile
+            * self.data.physics.t_plasma_fast_alpha_thermalisation_profile
         )
 
     @staticmethod
@@ -6753,4 +6763,12 @@ class DetailedPhysics(Model):
                 f"Fraction of fast alpha particle energy transferred to electrons at point {i}",
                 f"(f_p_plasma_alpha_fast_electrons_profile{i})",
                 self.data.physics.f_p_plasma_alpha_fast_electrons_profile[i],
+            )
+
+        for i in range(len(self.data.physics.nd_plasma_alphas_fast_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Fast alpha particle density at point {i}",
+                f"(nd_plasma_alphas_fast_profile{i})",
+                self.data.physics.nd_plasma_alphas_fast_profile[i],
             )

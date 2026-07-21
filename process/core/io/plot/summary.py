@@ -3902,13 +3902,8 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
 
     nd_plasma_separatrix_electron = mfile.get("nd_plasma_separatrix_electron", scan=scan)
 
-    fusrat_plasma_dt_profile = [
-        mfile.get(f"fusrat_plasma_dt_profile{i}", scan=scan)
-        for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
-    ]
-
-    t_plasma_fast_alpha_thermalisation_profile = [
-        mfile.get(f"t_plasma_fast_alpha_thermalisation_profile{i}", scan=scan)
+    nd_plasma_alphas_fast_profile = [
+        mfile.get(f"nd_plasma_alphas_fast_profile{i}", scan=scan)
         for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
     ]
 
@@ -3995,11 +3990,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     )
     ax_impurity.plot(
         rho,
-        np.multiply(
-            np.asarray(fusrat_plasma_dt_profile),
-            np.asarray(t_plasma_fast_alpha_thermalisation_profile),
-        )
-        / 1e16,
+        np.asarray(nd_plasma_alphas_fast_profile) / 1e16,
         label=r"$n_{\alpha,\text{fast}}$",
         color="#d62728",
         linestyle="--",
@@ -14163,7 +14154,7 @@ def plot_alpha_heating_power_split_profile(
         mfile_data.data[f"f_p_plasma_alpha_fast_electrons_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
-    
+
     fusrat_plasma_dt_profile = [
         mfile_data.data[f"fusrat_plasma_dt_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
@@ -14187,18 +14178,24 @@ def plot_alpha_heating_power_split_profile(
         linestyle="-",
         label=r"$f_{p,\alpha-fast-electrons}$",
     )
-    
+
     right_axis.plot(
         rho,
-        np.array(fusrat_plasma_dt_profile)*np.array(f_p_plasma_alpha_fast_ions_profile)*constants.DT_ALPHA_ENERGY/1e6,
+        np.array(fusrat_plasma_dt_profile)
+        * np.array(f_p_plasma_alpha_fast_ions_profile)
+        * constants.DT_ALPHA_ENERGY
+        / 1e6,
         color="green",
         linestyle="-",
         label=r"$f_{p,fusion-ratio}$",
     )
-    
+
     right_axis.plot(
         rho,
-        np.array(fusrat_plasma_dt_profile)*np.array(f_p_plasma_alpha_fast_electrons_profile)*constants.DT_ALPHA_ENERGY/1e6,
+        np.array(fusrat_plasma_dt_profile)
+        * np.array(f_p_plasma_alpha_fast_electrons_profile)
+        * constants.DT_ALPHA_ENERGY
+        / 1e6,
         color="green",
         linestyle="-",
         label=r"$f_{p,fusion-ratio}$",
