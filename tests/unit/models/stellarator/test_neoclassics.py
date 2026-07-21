@@ -9,7 +9,7 @@ def neoclassics(process_models):
     """Fixture to get the Neoclassics instance from process_models.
 
     :returns: initialised Neoclassics object
-    :rtype: process.stellerator.Neoclassics
+    :rtype: process.stellarator.Neoclassic
     """
     return process_models.neoclassics
 

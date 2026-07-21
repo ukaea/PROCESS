@@ -715,7 +715,7 @@ class TFData:
     """Vertical tension on outboard leg/coil (N)"""
 
     f_a_tf_turn_cable_space_extra_void: float = 0.4
-    """coolant fraction of TFC 'cable' (`i_tf_sup=1`), or of TFC leg (`i_tf_ssup=0`)"""
+    """coolant fraction of TFC 'cable' (`i_tf_sup=1`), or of TFC leg (`i_tf_sup=0`)"""
 
     voltfleg: float = 0.0
     """volume of each TF coil outboard leg (m3)"""

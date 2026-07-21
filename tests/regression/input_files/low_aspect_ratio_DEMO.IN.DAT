@@ -29,7 +29,7 @@ ioptimz  = 1
 * JUSTIFICATION: Optimised run
 
 minmax   = -14 * Switch for figure-of-merit (see lablmm for descriptions)
-* 14: pulse legnth
+* 14: pulse length
 * DESCRIPTION:   Switch for Figure-of-Merit (1: Minimise major radius)
 * JUSTIFICATION: Aim to minimise major radius
 
@@ -118,15 +118,15 @@ icc = 34
 
 icc = 35
 * DESCRIPTION:   J_winding pack
-* JUSTIFICATION: Constraint of TF engineering desgin
+* JUSTIFICATION: Constraint of TF engineering design
 
 icc = 36
 * DESCRIPTION:   TF temp marg
-* JUSTIFICATION: Constraint of TF engineering desgin
+* JUSTIFICATION: Constraint of TF engineering design
 
 icc = 60
 * DESCRIPTION:   OH coil temp margin
-* JUSTIFICATION: Constraint of CS engineering desgin
+* JUSTIFICATION: Constraint of CS engineering design
 
 icc = 62
 * DESCRIPTION:   taup/taueff ratio of particle to energy confinement times
@@ -192,7 +192,7 @@ f_nd_plasma_electron_limit_max = 1.2
 *ixc = 11 * pheat
 p_hcd_primary_extra_heat_mw = 10.0
 * DESCRIPTION:   heating power not used for current drive (MW)
-* JUSTIFICATION: Allows for optimsing curretn drive - helps with convergance   
+* JUSTIFICATION: Allows for optimsing current drive - helps with convergence   
 
 ixc = 13 * dr_tf_inboard
 dr_tf_inboard = 9.99806743174200929e-01
@@ -371,7 +371,7 @@ i_confinement_time = 34
 
 i_plasma_geometry = 10
 * DESCRIPTION:   Switch for plasma cross-sectional shape calculation: 
-* JUSTIFICATION: calcuatle kappa from aspect ratio and m_s_limit
+* JUSTIFICATION: calculate kappa from aspect ratio and m_s_limit
 
 m_s_limit = 0.2
 * DESCRIPTION:   margin to vertical stability
@@ -412,7 +412,7 @@ i_plasma_pedestal = 1
 * DESCRIPTION:   Switch for Pedestal Profiles 
 * JUSTIFICATION: H-mode run not using PLASMOD 
 
-* ieped = 1 * depratced - will set the t_ped manually 
+* ieped = 1 * deprecated - will set the t_ped manually 
 * DESCRIPTION:   EPED pedestal temperature scaling
 * JUSTIFICATION: Saarelma 6-parameter pedestal temperature scaling
 

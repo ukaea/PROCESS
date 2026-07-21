@@ -20,7 +20,7 @@ def stellarator(process_models):
     """Provides Stellarator object for testing.
 
     :returns: initialised Stellarator object
-    :rtype: process.stellerator.Stellarator
+    :rtype: process.stellarator.Stellarator
     """
     return process_models.stellarator
 

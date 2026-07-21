@@ -139,12 +139,12 @@ p_plant_electric_net_required_mw = 100.0
 
 *icc = 28
 * DESCRIPTION:   Constraint equation for fusion gain (big Q) lower limit 
-* JUSTIFICATION: Turned off, dont care about Q lower limit  
+* JUSTIFICATION: Turned off, don't care about Q lower limit  
 * VARIABLES:     i_plasma_ignited,  big_q_plasma calculated in-situ
 
 *big_q_plasma_min = 
 * DESCRIPTION:   Minimum fusion gain Q 
-* JUSTIFICATION: Turned off, dont care about lower Q value
+* JUSTIFICATION: Turned off, don't care about lower Q value
 
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Shaping ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
@@ -165,7 +165,7 @@ aspect = 1.8
 
 *icc = 21
 * DESCRIPTION:   Constraint equation for plasma minor radius lower limit 
-* JUSTIFICATION: Turned off, dont care about lower limit
+* JUSTIFICATION: Turned off, don't care about lower limit
 * VARIABLES:     rminor_min (minimum minor radius (m)), rminor calculated in-situ
 
 *rminor_min = 0 
@@ -222,7 +222,7 @@ triang = 0.5
 
 *icc = 23
 * DESCRIPTION:   Constraint equation for conducting shell radius / rminor upper limit (FW) 
-* JUSTIFICATION: Turned off, dont care about shell radius ratio limit for vertical stability
+* JUSTIFICATION: Turned off, don't care about shell radius ratio limit for vertical stability
 * VARIABLES:     f_r_conducting_wall calculated in-situ
 
 *f_r_conducting_wall = 
@@ -363,7 +363,7 @@ q0 = 2.0
 
 * icc = 45
 * DESCRIPTION:   Constraint equation for edge safety factor lower limit (TART) (i_plasma_geometry = 1)
-* JUSTIFICATION: Not used, dont care about q at edge lower limit
+* JUSTIFICATION: Not used, don't care about q at edge lower limit
 * VARIABLES:     itart, q95_min (lower limit for edge safety factor). q calculated in-situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ H-mode & Confinement ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -399,7 +399,7 @@ icc = 15
 
 *tauee_in = 
 * DESCRIPTION:   Input electron energy confinement time (sec) (i_confinement_time=49 only)'
-* JUSTIFICATION: Not set, not ussing i_confinement_time = 49.
+* JUSTIFICATION: Not set, not using i_confinement_time = 49.
 
 *i_l_h_threshold = 
 * DESCRIPTION:   Switch for L-H power threshold to enforce
@@ -620,7 +620,7 @@ f_nd_impurity_electrons(14) = 5e-05    *Tungsten
 
 *icc = 64
 * DESCRIPTION:   Upper limit on Zeff
-* JUSTIFICATION: Turned off, dont care about maximum effective charge
+* JUSTIFICATION: Turned off, don't care about maximum effective charge
 * VARIABLES:     n_charge_plasma_effective_vol_avg_max (maximum value for Zeff), zeff calculated in-situ
 
 *n_charge_plasma_effective_vol_avg_max = 
@@ -934,7 +934,7 @@ f_j_tf_wp_critical_max = 0.7
 
 *icc = 19
 * DESCRIPTION:   Constraint equation for MVA upper limit in TF coil
-* JUSTIFICATION: Turned off, dont care about limit
+* JUSTIFICATION: Turned off, don't care about limit
 * VARIABLES:     mvalim,p_tf_leg_resistive_mw,p_cp_resistive_mw calculated in-situ
 
 *mvalim =  
@@ -1269,7 +1269,7 @@ sig_tf_wp_max = 700.0E6
 
 *icc = 65
 * DESCRIPTION:   Constraint equation for the stress of the vacuum vessel that occurs when the TF coil quenches.
-* JUSTIFICATION: Turned off, dont care about quenching scenario
+* JUSTIFICATION: Turned off, don't care about quenching scenario
 * VARIABLES:     max_vv_stress (Maximum permitted stress of the VV (Pa)), vv_stress_quench calculated in-situ
 
 *max_vv_stress =  
@@ -1289,7 +1289,7 @@ sig_tf_wp_max = 700.0E6
 
 *icc = 25
 * DESCRIPTION:   Constraint equation for peak toroidal field upper limit 
-* JUSTIFICATION: Turned off, dont care toridal field limit
+* JUSTIFICATION: Turned off, don't care toridal field limit
 * VARIABLES:     b_tf_inboard_peak_symmetric calculated in-situ
 
 * b_tf_inboard_max  = 
@@ -1548,7 +1548,7 @@ i_pf_conductor = 0
 
 *icc = 72
 * DESCRIPTION:   Central Solenoid Tresca yield criterion (i_tf_bucking >=2)
-* JUSTIFICATION: Turned off, dont care about CS stress
+* JUSTIFICATION: Turned off, don't care about CS stress
 * VARIABLES:     sig_tf_cs_bucked ( Maximum shear stress in CS case at flux swing (no current in CS))
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1581,7 +1581,7 @@ i_pf_conductor = 0
 
 *icc = 79
 * DESCRIPTION:   Constraint equation for maximum CS field
-* JUSTIFICATION: Turned off, dont care about maximum CS field
+* JUSTIFICATION: Turned off, don't care about maximum CS field
 * VARIABLES:     b_cs_limit_max (Central solenoid max field limit [T]). b_cs_peak_pulse_start,b_cs_peak_flat_top_end calculated in-situ
 
 *b_cs_limit_max = 
@@ -1590,7 +1590,7 @@ i_pf_conductor = 0
 
 *icc = 26
 * DESCRIPTION:   Constraint equation for CS current density upper limit at EOF 
-* JUSTIFICATION: Turned off, dont care about CS current density limit 
+* JUSTIFICATION: Turned off, don't care about CS current density limit 
 * VARIABLES:     j_cs_flat_top_end calculated in-situ
 
 *ixc = 37
@@ -1604,7 +1604,7 @@ i_pf_conductor = 0
 
 *icc = 27
 * DESCRIPTION:   Constraint equation for CS current density upper limit at BOP 
-* JUSTIFICATION: Turned off, dont care about CS current density limit 
+* JUSTIFICATION: Turned off, don't care about CS current density limit 
 * VARIABLES:     j_cs_pulse_start calculated in-situ
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3186,7 +3186,7 @@ i_plant_availability = 0
 
 *icc = 66
 * DESCRIPTION:   Limit on rate of change of energy in poloidal field
-* JUSTIFICATION: Turned off, dont care about poloidal field change
+* JUSTIFICATION: Turned off, don't care about poloidal field change
 * VARIABLES:     maxpoloidalpower (Maximum permitted absolute rate of change of stored energy in poloidal field (MW)), peakpoloidalpower calculated in-situ
 
 *maxpoloidalpower = 
@@ -3244,13 +3244,13 @@ i_plant_availability = 0
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 
 *icc = 82-83
-* DESCRIPTION:   Stellerator consistency equations
-* JUSTIFICATION: Turned off, not a stellerator device
+* DESCRIPTION:   stellarator consistency equations
+* JUSTIFICATION: Turned off, not a stellarator device
 * VARIABLES:
 
 *icc = 91
-* DESCRIPTION:   Constraint equation for ECRH ignition in Stellerator
-* JUSTIFICATION: Turned off, non Stellerator device
+* DESCRIPTION:   Constraint equation for ECRH ignition in stellarator
+* JUSTIFICATION: Turned off, non stellarator device
 * VARIABLES: 
 
 *________________________________________________________________________*
