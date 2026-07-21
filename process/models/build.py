@@ -95,7 +95,8 @@ class Build(Model):
         tuple[float, float]
             Tuple containing (radius_beam_tangency, radius_beam_tangency_max)
         """
-        # Have kept the single letter variable names to match the original code and documentation diagram.
+        # Have kept the single letter variable names to match the original code and
+        # documentation diagram.
         radius_beam_tangency = f_radius_beam_tangency_rmajor * rmajor
 
         omega = 2.0 * np.pi / n_tf_coils
@@ -133,7 +134,8 @@ class Build(Model):
             radius_beam_tangency_max = f * np.cos(eps) - 0.5e0 * c
         else:
             logger.error(
-                "Max beam tangency radius set =0 temporarily; change dx_beam_duct. %s %s",
+                "Max beam tangency radius set =0 temporarily; "
+                "change dx_beam_duct. %s %s",
                 g,
                 c,
             )
@@ -144,8 +146,10 @@ class Build(Model):
     def calculate_vertical_build(self, output: bool):
         """Determines the vertical build of the machine.
 
-        This method calculates various parameters related to the vertical build of the machine,
-        such as thicknesses, radii, and areas. Results can be outputted with the `output` flag.
+        This method calculates various parameters related
+        to the vertical build of the machine,
+        such as thicknesses, radii, and areas.
+        Results can be outputted with the `output` flag.
 
         Parameters
         ----------
@@ -779,7 +783,9 @@ class Build(Model):
             )
             po.ocmmnt(
                 self.outfile,
-                "\n*Cryostat roof allowance includes uppermost PF coil and outer thermal shield.\n*Cryostat floor allowance includes lowermost PF coil, outer thermal shield and gravity support.",
+                "\n*Cryostat roof allowance includes uppermost PF coil and "
+                "outer thermal shield.\n*Cryostat floor allowance "
+                "includes lowermost PF coil, outer thermal shield and gravity support.",
             )
 
         # Output the cdivertor geometry
@@ -1524,7 +1530,8 @@ class Build(Model):
         tuple[float, float, int]
             Tuple containing:
             - ripple: Calculated ripple at plasma edge (percent)
-            - r_tf_outboard_midmin: Minimum r_tf_outboard_mid that yields the specified maximum ripple (m)
+            - r_tf_outboard_midmin: Minimum r_tf_outboard_mid that yields the specified
+                maximum ripple (m)
             - flag: Applicability flag (0 = OK, non-zero = fitted-range concern)
 
         Notes
@@ -1532,7 +1539,8 @@ class Build(Model):
         - Fitted coefficients originate from parametric MAGINT runs (M. Kovari, 2014).
         - Picture-frame coil analytical model (Ken McClements, 2022) is used when
         `i_tf_shape == 2` and gives approximate results (within ~10% of numerical).
-        - The routine sets an applicability flag when fitted-range assumptions are exceeded.
+        - The routine sets an applicability flag when fitted-range assumptions are
+        exceeded.
         """
         if i_tf_sup == 1:
             # Minimal inboard WP radius [m]
@@ -1569,7 +1577,8 @@ class Build(Model):
             # Ken McClements ST picture frame coil analytical ripple calc
             # Calculated ripple for coil at r_tf_outboard_mid (%)
             ripple = 100.0e0 * ((rmajor + rminor) / r_tf_outboard_mid) ** (n_tf_coils)
-            #  Calculated r_tf_outboard_mid to produce a ripple of amplitude ripple_b_tf_plasma_edge_max
+            #  Calculated r_tf_outboard_mid to produce a ripple of amplitude
+            # ripple_b_tf_plasma_edge_max
             r_tf_outboard_midmin = (rmajor + rminor) / (
                 (0.01e0 * ripple_b_tf_plasma_edge_max) ** (1.0e0 / n_tf_coils)
             )
@@ -1588,7 +1597,8 @@ class Build(Model):
                 * ((rmajor + rminor) / r_tf_outboard_mid) ** (n_tf_coils - c2)
             )
 
-            #  Calculated r_tf_outboard_mid to produce a ripple of amplitude ripple_b_tf_plasma_edge_max
+            #  Calculated r_tf_outboard_mid to produce a ripple of amplitude
+            # ripple_b_tf_plasma_edge_max
             base = 0.01 * ripple_b_tf_plasma_edge_max / c1
             # Avoid potential negative or complex result: kludge base to be
             # small and positive if required
@@ -1700,7 +1710,8 @@ class Build(Model):
             self.data.build.dr_cs_precomp = 0.0e0
 
         # Issue #514 Radial dimensions of inboard leg
-        # Calculate self.data.build.dr_tf_inboard if self.data.tfcoil.dr_tf_wp_with_insulation is an iteration variable (140)
+        # Calculate self.data.build.dr_tf_inboard if
+        # self.data.tfcoil.dr_tf_wp_with_insulation is an iteration variable (140)
         if 140 in self.data.numerics.ixc[0 : self.data.numerics.nvar]:
             self.data.build.dr_tf_inboard = (
                 self.data.tfcoil.dr_tf_wp_with_insulation
@@ -1762,11 +1773,14 @@ class Build(Model):
                     + self.data.tfcoil.drtop
                 )
 
-                # Notify user that self.data.build.r_cp_top has been set to 1.01*self.data.build.r_tf_inboard_out (lvl 2 error)
+                # Notify user that self.data.build.r_cp_top has been set to
+                # 1.01*self.data.build.r_tf_inboard_out (lvl 2 error)
                 if self.data.build.r_cp_top < 1.01e0 * self.data.build.r_tf_inboard_out:
                     logger.error(
-                        "TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out -> potential top rbuild issue"
-                        f"{self.data.build.r_cp_top=} {self.data.build.r_tf_inboard_out=}"
+                        "TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out "
+                        "-> potential top rbuild issue"
+                        f"{self.data.build.r_cp_top=} "
+                        f"{self.data.build.r_tf_inboard_out=}"
                     )
 
                     # self.data.build.r_cp_top correction
@@ -1779,11 +1793,14 @@ class Build(Model):
 
             # User defined self.data.build.r_cp_top
             elif self.data.build.i_r_cp_top == 1:
-                # Notify user that self.data.build.r_cp_top has been set to 1.01*self.data.build.r_tf_inboard_out (lvl 2 error)
+                # Notify user that self.data.build.r_cp_top has been set to
+                # 1.01*self.data.build.r_tf_inboard_out (lvl 2 error)
                 if self.data.build.r_cp_top < 1.01e0 * self.data.build.r_tf_inboard_out:
                     logger.error(
-                        "TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out -> potential top rbuild issue"
-                        f"{self.data.build.r_cp_top=} {self.data.build.r_tf_inboard_out=}"
+                        "TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out "
+                        "-> potential top rbuild issue"
+                        f"{self.data.build.r_cp_top=} "
+                        f"{self.data.build.r_tf_inboard_out=}"
                     )
 
                     # self.data.build.r_cp_top correction
@@ -1819,7 +1836,8 @@ class Build(Model):
             + self.data.tfcoil.drtop
         ):
             logger.error(
-                f"Top CP radius larger that its value determined with plasma shape {self.data.build.r_cp_top=}"
+                "Top CP radius larger that its value determined with plasma shape "
+                f"{self.data.build.r_cp_top=}"
             )
         if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
             #  Radial position of vacuum vessel [m]
@@ -1989,12 +2007,15 @@ class Build(Model):
                         / self.data.physics.rmajor
                     )
                     logger.warning(
-                        "(TF coil ripple calculation) Dimensionless coil width X out of fitted range. %s",
+                        "(TF coil ripple calculation) "
+                        "Dimensionless coil width X out of fitted range. %s",
                         diagnostic,
                     )
                 elif self.data.build.ripflag == 2:
                     logger.warning(
-                        f"(TF coil ripple calculation) No of TF coils not between 16 and 20 inclusive {self.data.tfcoil.n_tf_coils=}"
+                        "(TF coil ripple calculation) "
+                        "No of TF coils not between 16 and 20 inclusive "
+                        f"{self.data.tfcoil.n_tf_coils=}"
                     )
                 else:
                     diagnostic = (
@@ -2002,7 +2023,8 @@ class Build(Model):
                     ) / self.data.build.r_tf_outboard_mid
 
                     logger.warning(
-                        "(TF coil ripple calculation) (R+a)/rtot=%s out of fitted range.",
+                        "(TF coil ripple calculation) "
+                        "(R+a)/rtot=%s out of fitted range.",
                         diagnostic,
                     )
 
@@ -2015,7 +2037,8 @@ class Build(Model):
             po.ocmmnt(
                 self.outfile,
                 (
-                    f"  -> {TFCSRadialConfiguration(self.data.build.i_tf_inside_cs).description}"
+                    "  -> "
+                    f"{TFCSRadialConfiguration(self.data.build.i_tf_inside_cs).description}"
                 ),
             )
             po.oblnkl(self.outfile)
@@ -2031,13 +2054,15 @@ class Build(Model):
                 po.ocmmnt(
                     self.outfile,
                     (
-                        "\n (The stated machine dr_bore size is just for the hollow space, "
+                        "\n "
+                        "(The stated machine dr_bore size is just for the hollow space, "
                     ),
                 )
                 po.ocmmnt(
                     self.outfile,
                     (
-                        "the true dr_bore size used for calculations is dr_bore + dr_tf_inboard + dr_cs_tf_gap)\n"
+                        "the true dr_bore size used for calculations is "
+                        "dr_bore + dr_tf_inboard + dr_cs_tf_gap)\n"
                     ),
                 )
             if (
@@ -2046,7 +2071,8 @@ class Build(Model):
             ):
                 po.ocmmnt(
                     self.outfile,
-                    "(Bore hollow space has been filled with a solid metal cyclinder to act as wedge support)\n",
+                    "(Bore hollow space has been filled with a solid metal cyclinder to"
+                    " act as wedge support)\n",
                 )
 
             # an array that holds the following information
@@ -2350,7 +2376,8 @@ class Build(Model):
             ):
                 po.ovarre(
                     self.mfile,
-                    "Width of neutral beam duct where it passes between the TF coils (m)",
+                    "Width of neutral beam duct where it passes between the "
+                    "TF coils (m)",
                     "(dx_beam_duct)",
                     self.data.current_drive.dx_beam_duct,
                 )

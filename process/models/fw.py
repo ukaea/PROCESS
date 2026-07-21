@@ -323,7 +323,8 @@ class FirstWall(Model):
 
         if a_fw_outboard <= 0.0e0:
             raise ProcessValueError(
-                "fhole+f_ster_div_single+f_a_fw_outboard_hcd is too high for a credible outboard wall area",
+                "fhole+f_ster_div_single+f_a_fw_outboard_hcd is too high "
+                "for a credible outboard wall area",
                 f_ster_div_single=f_ster_div_single,
                 f_a_fw_outboard_hcd=f_a_fw_outboard_hcd,
             )
@@ -367,16 +368,27 @@ class FirstWall(Model):
 
         Returns
         -------
-        tuple
+        :
 
+        Notes
+        -----
         Detailed thermal hydraulic model for the blanket (first wall + breeding zone).
         Given the heating incident on the first wall, and the coolant outlet temperature,
-        the maximum temperature of the first wall is calculated to check it is below material limits.
+        the maximum temperature of the first wall is calculated to check it is below
+        material limits.
         The routine is called separately for the inboard and outboard sides.
         The calculation of the maximum temperature is described by Gardner:
-        "Temperature distribution in the first wall", K:\\Power Plant Physics and Technology\\ PROCESS\\PROCESS References & Systems Codes\\Pulsed option - Gardner.
-        This is in turn taken from "Methods of First Wall Structural Analysis with Application to the Long Pulse Commercial Tokamak Reactor Design", R.J. LeClaire, MIT, PFC/RR-84-9.
-        Contains peak first wall temperature (K), coolant specific heat capacity at constant pressure (J/kg/K),
+        "Temperature distribution in the first wall",
+
+        K:\\Power Plant Physics and Technology\\ PROCESS\\
+        PROCESS References & Systems Codes\\Pulsed option - Gardner.
+
+        This is in turn taken from "Methods of First Wall Structural Analysis with
+        Application to the Long Pulse Commercial Tokamak Reactor Design", R.J. LeClaire,
+        MIT, PFC/RR-84-9.
+
+        Contains peak first wall temperature (K), coolant specific heat capacity
+        at constant pressure (J/kg/K),
         """
         # First wall volume (inboard or outboard depending on arguments) (m^3)
         vol_fw = a_fw * dr_fw
@@ -384,7 +396,8 @@ class FirstWall(Model):
         # First wall channel area (m^2)
         a_fw_channel = np.pi * radius_fw_channel**2
 
-        # Heat generation in the first wall due to neutron flux deposited in the material (W/m3)
+        # Heat generation in the first wall due to neutron flux
+        # deposited in the material (W/m3)
         pden_fw_nuclear = 1e6 * pnuc_deposited / vol_fw
 
         # the nuclear heating in the coolant is small. (W/m2)
@@ -442,7 +455,8 @@ class FirstWall(Model):
         # Coolant velocity (m/s)
         vel_fw_coolant_average = mflux_fw_coolant / outlet_coolant_properties.density
 
-        # Mean temperature of the wall material on the plasma side of the coolant 'temp_fw_peak'
+        # Mean temperature of the wall material on the plasma side of the coolant
+        # 'temp_fw_peak'
         # is the estimate from the previous iteration of the wall surface temperature
         # (underneath the armour)
         temp_k = (self.data.fwbs.temp_fw_coolant_out + self.data.fwbs.temp_fw_peak) / 2
@@ -481,7 +495,8 @@ class FirstWall(Model):
         # Model B: Simple 1-dimensional calculation !
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        # This is optimistic as it neglects the higher temperature midway between the channels.
+        # This is optimistic as it neglects the higher temperature midway between the
+        # channels.
         # I have included 1/4 of the volume load:
         # 1/2 is absorbed in the plasma-facing wall (A)
         # which on average has to pass through 1/2 the wall thickness.
@@ -654,7 +669,8 @@ class FirstWall(Model):
         len_fw_channel: float,
         dx_fw_module: float,
     ) -> tuple[int, int]:
-        """Calculate the total number of first wall channels for inboard and outboard sections.
+        """Calculate the total number of first wall channels for inboard and outboard
+        sections.
 
         Parameters
         ----------

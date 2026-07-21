@@ -39,7 +39,8 @@ def pumping_powers_as_fractions(
     p_div_nuclear_heat_total_mw: float,
     p_div_rad_total_mw: float,
 ) -> tuple[float, float, float, float]:
-    """Calculate mechanical pumping powers as fractions of thermal power in each component.
+    """Calculate mechanical pumping powers as fractions of thermal power in each
+    component.
 
     Parameters
     ----------
@@ -132,10 +133,12 @@ def eshellarea(rshell, rmini, rmino, zminor):
 def dshellarea(
     rmajor: float, rminor: float, zminor: float
 ) -> tuple[float, float, float]:
-    """Calculate the inboard, outboard, and total surface areas of a D-shaped toroidal shell.
+    """Calculate the inboard, outboard, and total surface areas of a D-shaped toroidal
+    shell.
 
     The inboard section is assumed to be a cylinder.
-    The outboard section is defined by a semi-ellipse, centred on the major radius of the inboard section.
+    The outboard section is defined by a semi-ellipse,
+    centred on the major radius of the inboard section.
 
     Parameters
     ----------
