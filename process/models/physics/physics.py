@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 
 import numba as nb
 import numpy as np
+import scipy
 
 import process.models.physics.fusion_reactions as reactions
 import process.models.physics.radiation_power as physics_funcs
@@ -5571,6 +5572,16 @@ class DetailedPhysics(Model):
             * self.data.physics.t_plasma_fast_alpha_thermalisation_profile
         )
 
+        fast_alpha_profile_x = np.linspace(
+            0.0,
+            1.0,
+            num=len(self.data.physics.nd_plasma_alphas_fast_profile),
+        )
+        self.data.physics.nd_plasma_alphas_fast_vol_avg = 2 * scipy.integrate.simpson(
+            self.data.physics.nd_plasma_alphas_fast_profile * fast_alpha_profile_x,
+            x=fast_alpha_profile_x,
+        )
+
     @staticmethod
     @nb.njit(cache=True)
     def calculate_debye_length(
@@ -6764,6 +6775,15 @@ class DetailedPhysics(Model):
                 f"(f_p_plasma_alpha_fast_electrons_profile{i})",
                 self.data.physics.f_p_plasma_alpha_fast_electrons_profile[i],
             )
+
+        po.osubhd(self.outfile, "Fast Alpha Particle Densities:")
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged fast alpha particle density [/m³]",
+            "(nd_plasma_alphas_fast_vol_avg)",
+            self.data.physics.nd_plasma_alphas_fast_vol_avg,
+        )
 
         for i in range(len(self.data.physics.nd_plasma_alphas_fast_profile)):
             po.ovarre(

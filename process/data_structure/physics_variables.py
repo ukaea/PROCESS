@@ -1653,6 +1653,9 @@ class PhysicsData:
     nd_plasma_alphas_fast_profile: list[float] = field(default_factory=list)
     """Profile of fast alpha particle density in plasma [/m³]"""
 
+    nd_plasma_alphas_fast_vol_avg: float = 0.0
+    """Volume averaged fast alpha particle density in plasma [/m³]"""
+
     f_p_plasma_alpha_fast_ions_profile: list[float] = field(default_factory=list)
     """Profile of fast alpha particle energy fraction transferred to ions in plasma (0..1)"""
 
