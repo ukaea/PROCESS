@@ -249,7 +249,7 @@ The total neutral beam alpha power is
 $$
 \text{P}_{\alpha,\text{beam}}
 =
-\mathtt{beamfus0}
+\texttt{beamfus0}
 \left(
 \text{P}_{\alpha,\text{D-beam}}
 +
@@ -264,7 +264,7 @@ The neutral beam beta is computed from the hot beam density and the deposited be
 $$
 \beta_{\text{beam}}
 =
-\mathtt{betbm0}
+\texttt{betbm0}
 \times
 4.03\times10^{-22}
 \times
@@ -438,7 +438,7 @@ $$
 -
 \frac{1}{\sqrt{3}}\tan^{-1}\left(\frac{1}{\sqrt{3}}\right)
 \right]
-}_{\mathtt{fast\_ion\_pressure\_integral}(\text{E}_{\text{beam}},\text{E}_{\text{crit,D}})}
+}_{\texttt{fast\_ion\_pressure\_integral}(\text{E}_{\text{beam}},\text{E}_{\text{crit,D}})}
 $$
 
 $$
@@ -456,7 +456,7 @@ $$
 -
 \frac{1}{\sqrt{3}}\tan^{-1}\left(\frac{1}{\sqrt{3}}\right)
 \right]
-}_{\mathtt{fast\_ion\_pressure\_integral}(\text{E}_{\text{beam}},\text{E}_{\text{crit,T}})}
+}_{\texttt{fast\_ion\_pressure\_integral}(\text{E}_{\text{beam}},\text{E}_{\text{crit,T}})}
 $$
 
 with
@@ -829,7 +829,7 @@ The returned beam alpha power is then
 $$
 \text{P}_{\alpha,\text{beam}}
 =
-\mathtt{beamfus0}
+\texttt{beamfus0}
 \left(
 \text{P}_{\alpha,\text{D-beam}}
 +

@@ -37,7 +37,7 @@ $$
 
 The EBWs can only couple to the plasma if the cyclotron harmonic is above the plasma density cut-off. In order to capture this behaviour, we introduce an ad-hoc model which reduces the plasma current up to this condition, by way of a tanh function:
 
-Where $\mathtt{fp}$ is the plasma frequency, $\mathtt{fc}$ is the cyclotron frequency, $\mathtt{n_ecrh_harmonic}$ is the harmonic number and $a$ is a free parameter which defines the sharpness of the transition.
+Where $\texttt{fp}$ is the plasma frequency, $\texttt{fc}$ is the cyclotron frequency, $\texttt{n_ecrh_harmonic}$ is the harmonic number and $a$ is a free parameter which defines the sharpness of the transition.
 
 The effect of this factor can be seen below:
 
@@ -46,19 +46,19 @@ a = 0.1
 $$
 
 $$
-\mathtt{fc} = \frac{\frac{1}{2\pi}\times \mathtt{n_ecrh_harmonic} \times e B_{\text{T}}}{m_{\text{e}}}
+\texttt{fc} = \frac{\frac{1}{2\pi}\times \texttt{n_ecrh_harmonic} \times e B_{\text{T}}}{m_{\text{e}}}
 $$
 
 $$
-\mathtt{fp} = \frac{1}{2\pi}\times \sqrt{\frac{n_{\text{e}}\text{e}^2}{m_{\text{e}} \epsilon_0}}
+\texttt{fp} = \frac{1}{2\pi}\times \sqrt{\frac{n_{\text{e}}\text{e}^2}{m_{\text{e}} \epsilon_0}}
 $$
 
 $$
-\mathtt{density factor} = 0.5 \times \left(1 + \tanh{\left(\frac{2}{\mathtt{a}}\times \frac{\mathtt{fp}-\mathtt{fc}}{\mathtt{fp}- \mathtt{a}}\right)}\right)
+\texttt{density factor} = 0.5 \times \left(1 + \tanh{\left(\frac{2}{\texttt{a}}\times \frac{\texttt{fp}-\texttt{fc}}{\texttt{fp}- \texttt{a}}\right)}\right)
 $$
 
 $$
-\text{Current drive efficiency [A/W]} = \gamma_{\text{CD}} \times \mathtt{densityfactor}
+\text{Current drive efficiency [A/W]} = \gamma_{\text{CD}} \times \texttt{densityfactor}
 $$
 
 <figure markdown>

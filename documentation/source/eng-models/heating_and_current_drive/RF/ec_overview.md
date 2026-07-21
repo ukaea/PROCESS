@@ -18,11 +18,11 @@ One of the methods for calculating the normalised current drive efficiency is th
 
 | Input       | Description                          |
 | :---------- | :----------------------------------- |
-| $\mathtt{tlocal}$       |      Local electron temperature (keV)  |
-| $\mathtt{epsloc}$       |  Local inverse aspect ratio |
-| $\mathtt{zlocal}$    |     Local plasma effective charge |
-| $\mathtt{cosang}$       |  Cosine of the poloidal angle at which ECCD takes place (+1 outside, -1 inside) 
-| $\mathtt{coulog}$       | Local coulomb logarithm for ion-electron collisions |
+| $\texttt{tlocal}$       |      Local electron temperature (keV)  |
+| $\texttt{epsloc}$       |  Local inverse aspect ratio |
+| $\texttt{zlocal}$    |     Local plasma effective charge |
+| $\texttt{cosang}$       |  Cosine of the poloidal angle at which ECCD takes place (+1 outside, -1 inside) 
+| $\texttt{coulog}$       | Local coulomb logarithm for ion-electron collisions |
 
 This routine calculates the current drive parameters for a electron cyclotron system, based on the AEA FUS 172 model.
 It works out the ECCD efficiency using the formula due to Cohen quoted in the ITER Physics Design Guidelines : 1989 (but including division by the Coulomb Logarithm omitted from IPDG89). 
@@ -33,63 +33,63 @@ The answer ECGAM is the normalised efficiency $n_{\text{e}}IR/P$ with $n_{\text{
         
 
 $$
-\mathtt{mcsq} = m_{\text{e}} \frac{c^2}{1  \text{keV}}
+\texttt{mcsq} = m_{\text{e}} \frac{c^2}{1  \text{keV}}
 $$
 
 $$
-\mathtt{f} = 16\left(\frac{\mathtt{tlocal}}{\mathtt{mcsq}}\right)^2
+\texttt{f} = 16\left(\frac{\texttt{tlocal}}{\texttt{mcsq}}\right)^2
 $$
 
-$\mathtt{fp}$ is the derivative of $\mathtt{f}$ with respect to gamma, the relativistic factor, taken equal to $1 + \frac{2T_{\text{e}}}{(m_{\text{e}}c^2)}$
+$\texttt{fp}$ is the derivative of $\texttt{f}$ with respect to gamma, the relativistic factor, taken equal to $1 + \frac{2T_{\text{e}}}{(m_{\text{e}}c^2)}$
 
 $$
-\mathtt{fp} = 16 \left(\frac{\mathtt{tlocal}}{\mathtt{mcsq}}\right)
+\texttt{fp} = 16 \left(\frac{\texttt{tlocal}}{\texttt{mcsq}}\right)
 $$
         
-$\mathtt{lam}$ is IPDG89's lambda. `legend` calculates the Legendre function of order $\alpha$ and argument `lam`, `palpha`, and its derivative, `palphap`.
+$\texttt{lam}$ is IPDG89's lambda. `legend` calculates the Legendre function of order $\alpha$ and argument `lam`, `palpha`, and its derivative, `palphap`.
 Here `alpha` satisfies $\alpha(\alpha+1) = \frac{-8}{(1+z_{\text{local}})}$. $\alpha$ is of the form  $(-1/2 + ix)$, with x a real number and $i = \sqrt{-1}$.
 
 $$
-\mathtt{lam} = 1.0
+\texttt{lam} = 1.0
 $$
 
 $$
-\mathtt{palpha, palphap} = \text{legend}(\mathtt{zlocal, lam})
+\texttt{palpha, palphap} = \text{legend}(\texttt{zlocal, lam})
 $$
 
 $$
-\mathtt{lams} = \sqrt{\frac{2 \times \mathtt{epsloc}}{1 + \mathtt{epsloc}}}
+\texttt{lams} = \sqrt{\frac{2 \times \texttt{epsloc}}{1 + \texttt{epsloc}}}
 $$
 
 $$
-\mathtt{palphas} = \text{legend}(\mathtt{zlocal, lams})
+\texttt{palphas} = \text{legend}(\texttt{zlocal, lams})
 $$
 
-$\mathtt{hp}$ is the derivative of IPDG89's \mathtt{h} function with respect to $\mathtt{lam}$
+$\texttt{hp}$ is the derivative of IPDG89's \texttt{h} function with respect to $\texttt{lam}$
 
 $$
-\mathtt{h} = \frac{-4 \times \mathtt{lam}}{\mathtt{zlocal + 5}} \times \frac{1- (\mathtt{lams \times \mathtt{palpha}})}{\mathtt{lam \times \mathtt{palphas}}}
+\texttt{h} = \frac{-4 \times \texttt{lam}}{\texttt{zlocal + 5}} \times \frac{1- (\texttt{lams \times \texttt{palpha}})}{\texttt{lam \times \texttt{palphas}}}
 $$
 
 $$
-\mathtt{hp} = \frac{-4}{\mathtt{zlocal}+5} \times \left(1- \mathtt{lams} \times \frac{\mathtt{palphap}}{\mathtt{palphas}}
+\texttt{hp} = \frac{-4}{\texttt{zlocal}+5} \times \left(1- \texttt{lams} \times \frac{\texttt{palphap}}{\texttt{palphas}}
 \right)
 $$
 
-$\mathtt{facm}$ is IPDG89's momentum conserving factor
+$\texttt{facm}$ is IPDG89's momentum conserving factor
 
 $$
-\mathtt{facm} = 1.5
+\texttt{facm} = 1.5
 $$
 
 $$
-\mathtt{y} = \frac{\mathtt{mcsq}}{2 \times \mathtt{tlocal}} \times (1+ \mathtt{epsloc} \times \mathtt{cosang})
+\texttt{y} = \frac{\texttt{mcsq}}{2 \times \texttt{tlocal}} \times (1+ \texttt{epsloc} \times \texttt{cosang})
 $$
 
 We take the negative of the IPDG89 expression to get a positive number
 
 $$
-\mathtt{ecgam} = \left(\frac{-7.8 \times \mathtt{facm \times \sqrt{\frac{1 + \mathtt{epsloc}}{1- \mathtt{epsloc}}}}}{\mathtt{coulog}}\right) \times (\mathtt{h} \times \mathtt{fp} -0.5 \times \mathtt{y} \times \mathtt{f} \times \mathtt{hp})
+\texttt{ecgam} = \left(\frac{-7.8 \times \texttt{facm \times \sqrt{\frac{1 + \texttt{epsloc}}{1- \texttt{epsloc}}}}}{\texttt{coulog}}\right) \times (\texttt{h} \times \texttt{fp} -0.5 \times \texttt{y} \times \texttt{f} \times \texttt{hp})
 $$
 
 ----------------------------------------------------------------------------------
@@ -98,8 +98,8 @@ $$
 
 | Input       | Description                          |
 | :---------- | :----------------------------------- |
-| $\mathtt{zlocal}$       |  Local plasma effective charge  |
-| $\mathtt{arg}$       |  Argument of Legendre function |
+| $\texttt{zlocal}$       |  Local plasma effective charge  |
+| $\texttt{arg}$       |  Argument of Legendre function |
 
 The `legend()` function is a routine that calculates the Legendre function and its derivative. It takes two input parameters: `zlocal` (local plasma effective charge) and `arg` (argument of the Legendre function). The function returns two output values: `palpha` (value of the Legendre function) and `palphap` (derivative of the Legendre function).
 

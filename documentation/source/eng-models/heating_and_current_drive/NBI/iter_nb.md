@@ -4,9 +4,9 @@
 
 | Output | Description |
 |----------|-------------|
-| $\mathtt{effnbss}$  | Neutral beam current drive efficiency in $\text{A/W}$ |
-| $\mathtt{f_p_beam_injected_ions}$    | Fraction of NB power given to ions |
-| $\mathtt{fshine}$   | Shine-through fraction of the beam |
+| $\texttt{effnbss}$  | Neutral beam current drive efficiency in $\text{A/W}$ |
+| $\texttt{f_p_beam_injected_ions}$    | Fraction of NB power given to ions |
+| $\texttt{fshine}$   | Shine-through fraction of the beam |
 
 This model calculates the current drive parameters for a neutral beam system, based on the 1990 ITER model.[^1]
 
@@ -19,7 +19,7 @@ $$
 The beam path length to centre is calculated:
 
 $$
-\underbrace{\mathtt{dpath}}_{\text{Path length to centre}} = R_0 \sqrt{\left(\left(1+\frac{1}{A}\right)^2-\mathtt{f_radius_beam_tangency_rmajor}^2\right)}
+\underbrace{\texttt{dpath}}_{\text{Path length to centre}} = R_0 \sqrt{\left(\left(1+\frac{1}{A}\right)^2-\texttt{f_radius_beam_tangency_rmajor}^2\right)}
 $$
 
 
@@ -29,21 +29,21 @@ Beam stopping cross-section ($\sigma_{\text{beam}}$) is calculated using the `si
 Calculate number of electron decay lengths to centre
 
 $$
-\tau_{\text{beam}} = \mathtt{dpath}\times n_e \sigma_{\text{beam}}
+\tau_{\text{beam}} = \texttt{dpath}\times n_e \sigma_{\text{beam}}
 $$
 
 Shine-through fraction of beam:
 $$
-f_{\text{shine}} = e^{(-2.0 \times  \mathtt{dpath} \times  n_e  \sigma_{\text{beam}})} \\
+f_{\text{shine}} = e^{(-2.0 \times  \texttt{dpath} \times  n_e  \sigma_{\text{beam}})} \\
 $$
 
 Deuterium and tritium beam densities:
 $$
-n_D = n_i * (1.0 - \mathtt{f_beam_tritium}) 
+n_D = n_i * (1.0 - \texttt{f_beam_tritium}) 
 $$
 
 $$
-n_T = n_i * \mathtt{f_beam_tritium}
+n_T = n_i * \texttt{f_beam_tritium}
 $$
 
 Power split to ions / electrons is calculated via the the `cfnbi` method described [here](nbi_overview.md)
@@ -59,68 +59,68 @@ ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
 
 | Input   | Description                                               |
 |---------|-----------------------------------------------------------|
-| $\mathtt{m_beam_amu}$, $m_{\text{u,ion}}$   | Beam ion mass ($\text{amu}$)                                       |
-| $\mathtt{alphan}$  | Density profile factor                                    |
-| $\mathtt{alphat}$  | Temperature profile factor                                |
-| $\mathtt{aspect}$, $A$  | Aspect ratio                                              |
-| $\mathtt{dene20}$, $n_{\text{e,20}}$    | Volume averaged electron density ($10^{20} \text{m}^{-3}$)                  |
-| $\mathtt{ebeam}$   | Neutral beam energy ($\text{keV}$)                                 |
-| $\mathtt{rmajor}$, R  | Plasma major radius ($\text{m}$)                                   |
-| $\mathtt{temp_plasma_electron_density_weighted_kev}$     | Density weighted average electron temperature ($\text{keV}$)       |
-| $\mathtt{zeff}$, $Z_{\text{eff}}$    | Plasma effective charge                                   |
+| $\texttt{m_beam_amu}$, $m_{\text{u,ion}}$   | Beam ion mass ($\text{amu}$)                                       |
+| $\texttt{alphan}$  | Density profile factor                                    |
+| $\texttt{alphat}$  | Temperature profile factor                                |
+| $\texttt{aspect}$, $A$  | Aspect ratio                                              |
+| $\texttt{dene20}$, $n_{\text{e,20}}$    | Volume averaged electron density ($10^{20} \text{m}^{-3}$)                  |
+| $\texttt{ebeam}$   | Neutral beam energy ($\text{keV}$)                                 |
+| $\texttt{rmajor}$, R  | Plasma major radius ($\text{m}$)                                   |
+| $\texttt{temp_plasma_electron_density_weighted_kev}$     | Density weighted average electron temperature ($\text{keV}$)       |
+| $\texttt{zeff}$, $Z_{\text{eff}}$    | Plasma effective charge                                   |
 
 | Output  | Description                                               |
 |---------|-----------------------------------------------------------|
-| $\mathtt{etanb}$   | Neutral beam current drive efficiency in $\text{A/W}$ |
+| $\texttt{etanb}$   | Neutral beam current drive efficiency in $\text{A/W}$ |
 
 
 
 
 $$
-\mathtt{zbeam} = 1.0
+\texttt{zbeam} = 1.0
 $$
 
 $$
-\mathtt{bbd} = 1.0
+\texttt{bbd} = 1.0
 $$
 
 
 Ratio of E_beam/E_crit
 
 $$
-\mathtt{xjs} = \frac{\mathtt{ebeam}}{10 \  m_{\text{u,ion}} \ T_e} 
+\texttt{xjs} = \frac{\texttt{ebeam}}{10 \  m_{\text{u,ion}} \ T_e} 
 $$
 
 $$
-\mathtt{xj} = \sqrt{\mathtt{xjs}}
+\texttt{xj} = \sqrt{\texttt{xjs}}
 $$
     
 $$
-\mathtt{yj} = 0.8 \frac{Z_{\text{eff}}}{m_{\text{u,ion}}}
+\texttt{yj} = 0.8 \frac{Z_{\text{eff}}}{m_{\text{u,ion}}}
 $$
         
 $$
-\mathtt{rjfunc} = \frac{\mathtt{xjs}}{((4.0 + 3.0\mathtt{yj} + \mathtt{xjs}(\mathtt{xj} + 1.39 + 0.61\mathtt{yj}^{0.7})))}
+\texttt{rjfunc} = \frac{\texttt{xjs}}{((4.0 + 3.0\texttt{yj} + \texttt{xjs}(\texttt{xj} + 1.39 + 0.61\texttt{yj}^{0.7})))}
 $$
 
 $$
-\mathtt{epseff} = \frac{0.5}{A}
+\texttt{epseff} = \frac{0.5}{A}
 $$
 
 $$
-\mathtt{gfac} = \left(1.55 + \frac{0.85}{Z_{\text{eff}}}\right)\left(\sqrt{\mathtt{epseff}}-\left(0.2+\frac{1.55}{Z_{\text{eff}}}\right)\mathtt{epseff}\right)
+\texttt{gfac} = \left(1.55 + \frac{0.85}{Z_{\text{eff}}}\right)\left(\sqrt{\texttt{epseff}}-\left(0.2+\frac{1.55}{Z_{\text{eff}}}\right)\texttt{epseff}\right)
 $$
 
 $$
-\mathtt{ffac} = \frac{1}{\mathtt{zbeam}} - \frac{(1-\mathtt{gfac})}{Z_{\text{eff}}}
+\texttt{ffac} = \frac{1}{\texttt{zbeam}} - \frac{(1-\texttt{gfac})}{Z_{\text{eff}}}
 $$
     
 $$
-\mathtt{abd} = 0.107 (1-0.35 \ \mathtt{alphan}+0.14 \ \mathtt{alphan}^2)(1-0.21 \ \mathtt{alphat})(1-0.2\times 10^{-3}\mathtt{ebeam}+0.09\times 10^{-6} \ \mathtt{ebeam}^2)
+\texttt{abd} = 0.107 (1-0.35 \ \texttt{alphan}+0.14 \ \texttt{alphan}^2)(1-0.21 \ \texttt{alphat})(1-0.2\times 10^{-3}\texttt{ebeam}+0.09\times 10^{-6} \ \texttt{ebeam}^2)
 $$
 
 $$
-\text{Current drive efficiency [A/W]} = \mathtt{abd} \times\frac{5}{R_0} \times0.1\frac{\mathtt{temp_plasma_electron_density_weighted_kev}}{n_{\text{e},20}} \times \frac{\mathtt{rjfunc}}{0.2}\mathtt{ffac}
+\text{Current drive efficiency [A/W]} = \texttt{abd} \times\frac{5}{R_0} \times0.1\frac{\texttt{temp_plasma_electron_density_weighted_kev}}{n_{\text{e},20}} \times \frac{\texttt{rjfunc}}{0.2}\texttt{ffac}
 $$
 
         

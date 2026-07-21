@@ -110,7 +110,7 @@ This function is used to calculate the first wall heating, it assumes the same c
 3. Compute the heat load per unit length $[\text{W/m}]$ of a first wall segment with its own cooling pipe:
 
     $$
-    \text{Load} = \left(\mathtt{pden\_fw\_nuclear} \Delta r_{FW} + \mathtt{pflux\_fw\_rad}\right) \times \mathtt{dx\_fw\_module}
+    \text{Load} = \left(\texttt{pden\_fw\_nuclear} \Delta r_{FW} + \texttt{pflux\_fw\_rad}\right) \times \texttt{dx\_fw\_module}
     $$
 
 4. Determine the mean mass flow rate:
@@ -128,23 +128,23 @@ This function is used to calculate the first wall heating, it assumes the same c
 6. Compute the coolant velocity:
 
     $$
-    \mathtt{vel\_fw\_coolant\_average} = \frac{\text{Mass flux}}{\rho_{\text{outlet}}}
+    \texttt{vel\_fw\_coolant\_average} = \frac{\text{Mass flux}}{\rho_{\text{outlet}}}
     $$
 
 7. Estimate the mean temperature between the outlet coolant and the peak FW structure temperature:
 
     $$
-    \mathtt{temp_k} = \frac{T_{\text{outlet}} + T_{\text{FW,peak}}}{2}
+    \texttt{temp_k} = \frac{T_{\text{outlet}} + T_{\text{FW,peak}}}{2}
     $$
 
-8. Calculate the FW thermal conductivity at $\mathtt{temp_k}$ using the [`eurofer97_thermal_conductivity()`](../eng-models/generic_methods/materials.md#eurofer97-thermal-conductivity--eurofer97_thermal_conductivity) function.
+8. Calculate the FW thermal conductivity at $\texttt{temp_k}$ using the [`eurofer97_thermal_conductivity()`](../eng-models/generic_methods/materials.md#eurofer97-thermal-conductivity--eurofer97_thermal_conductivity) function.
 
 9. Determine the heat transfer coefficient using the [`gnielinski_heat_transfer_coefficient()`](../eng-models/generic_methods/pumping.md#gnielinski-heat-transfer--gnielinski_heat_transfer_coefficient) function.
 
 10. Compute the worst-case load.
 
     $$
-    \text{Oneload} = \mathtt{f\_fw\_peak} \times \frac{\mathtt{pden\_fw\_nuclear} \times \mathtt{dx\_fw\_module} \times \frac{\Delta r_{FW}}{4}}{\mathtt{pflux\_fw\_rad} \times \times \mathtt{dx\_fw\_module}}
+    \text{Oneload} = \texttt{f\_fw\_peak} \times \frac{\texttt{pden\_fw\_nuclear} \times \texttt{dx\_fw\_module} \times \frac{\Delta r_{FW}}{4}}{\texttt{pflux\_fw\_rad} \times \times \texttt{dx\_fw\_module}}
     $$
 
 11. Set the effective heat transfer area equal to the pipe diameter

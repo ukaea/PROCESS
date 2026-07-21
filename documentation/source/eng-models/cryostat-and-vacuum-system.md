@@ -11,10 +11,10 @@ The _vacuum vessel_ provides a toroidal evacuated chamber containing the plasma,
 The radius of the inboard side of the cryostat is found by taking the radius of the furthest out PF coil and adding a clearance gap:
 
 $$
-\mathtt{r\_cryostat\_inboard}, r_{\text{cryostat}} = \text{max}(r_{\text{PF}}) + \mathtt{dr\_pf\_cryostat}
+\texttt{r\_cryostat\_inboard}, r_{\text{cryostat}} = \text{max}(r_{\text{PF}}) + \texttt{dr\_pf\_cryostat}
 $$
 
-where $\mathtt{dr\_pf\_cryostat}$ is the radial PF coil to cryostat gap specified by the user at input.
+where $\texttt{dr\_pf\_cryostat}$ is the radial PF coil to cryostat gap specified by the user at input.
 
 ----------------
 
@@ -23,17 +23,17 @@ where $\mathtt{dr\_pf\_cryostat}$ is the radial PF coil to cryostat gap specifie
 The top flange of the cryostat will be a large structure taking a considerable load from atmospheric pressure.  The vertical distance $\mathrm{d}z_{\text{PF,cryostat}}$ between the uppermost PF coil and the top inside flange of the cryostat is set using a scaling based on ITER is used:
 
 $$
-\mathtt{dz\_pf\_cryostat}, \mathrm{d}z_{\text{PF,cryostat}} = \texttt{f_z_cryostat} \left( \frac{2 \times \texttt{r_cryostat_inboard}}{28.440}\right)
+\texttt{dz\_pf\_cryostat}, \mathrm{d}z_{\text{PF,cryostat}} = \texttt{f_z_cryostat} \left( \frac{2 \times \texttt{r_cryostat_inboard}}{28.440}\right)
 $$
 
 -------------------
 
 ### Half-height
 
-The internal half height of the cryostat is then calculated by taking the maximum vertical height of the PF coils and adding the calculated clearance, $\mathtt{dz\_pf\_cryostat}$.
+The internal half height of the cryostat is then calculated by taking the maximum vertical height of the PF coils and adding the calculated clearance, $\texttt{dz\_pf\_cryostat}$.
 
 $$
-\mathtt{z\_cryostat\_half\_inside} = \text{max}(z_{\text{PF}}) + \mathtt{dz\_pf\_cryostat}
+\texttt{z\_cryostat\_half\_inside} = \text{max}(z_{\text{PF}}) + \texttt{dz\_pf\_cryostat}
 $$
 
 -------------------
@@ -43,7 +43,7 @@ $$
 The vertical clearance between the top of the TF coil and the inside of the cryostat is then calculated:
 
 $$
-\mathtt{dz\_tf\_cryostat} = \mathtt{z\_cryostat\_half\_inside} - (z_{\text{TF}} + \mathrm{d}z_{\text{TF}})
+\texttt{dz\_tf\_cryostat} = \texttt{z\_cryostat\_half\_inside} - (z_{\text{TF}} + \mathrm{d}z_{\text{TF}})
 $$
 
 where $z_{\text{TF}}$ is the height of the inside of the TF leg and $\mathrm{d}z_{\text{TF}}$ is its thickness.
@@ -56,9 +56,9 @@ where $z_{\text{TF}}$ is the height of the inside of the TF leg and $\mathrm{d}z
 We calculate the cryostat volume by taking the outer dimensions of the cryostat structure and then remove that of the inside structure. This is just subtracting the volumes of two cylinders.
 
 $$
-\mathtt{vol\_cryostat}, V_{\text{cryostat}} = \\
-\underbrace{\left[\pi \left(r_{\text{cryostat}}+dr_{\text{cryostat}}\right)^2 \times 2\left(\mathtt{z\_cryostat\_half\_inside}+ dr_{\text{cryostat}}\right)\right]}_{\text{Outer shell}} \\
-- \underbrace{\left[\pi r_{\text{cryostat}}+^2 \times 2\left(\mathtt{z\_cryostat\_half\_inside}\right) \right]}_{\text{Inner shell}}
+\texttt{vol\_cryostat}, V_{\text{cryostat}} = \\
+\underbrace{\left[\pi \left(r_{\text{cryostat}}+dr_{\text{cryostat}}\right)^2 \times 2\left(\texttt{z\_cryostat\_half\_inside}+ dr_{\text{cryostat}}\right)\right]}_{\text{Outer shell}} \\
+- \underbrace{\left[\pi r_{\text{cryostat}}+^2 \times 2\left(\texttt{z\_cryostat\_half\_inside}\right) \right]}_{\text{Inner shell}}
 $$
 
 where $dr_{\text{cryostat}}$ is the uniform thickness of the cryostat that is set at input by the user with `dr_cryostat =`

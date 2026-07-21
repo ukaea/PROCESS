@@ -58,15 +58,15 @@ This function calculates the integrand for the fusion power integration by evalu
     - Scale the ion temperature profile by the ratio of the volume-averaged ion to electron temperature.
 
     $$
-    \mathtt{ion\_temperature\_profile} = \frac{\langle T_{\text{i}} \rangle}{\langle T_{\text{e}} \rangle} \\
-    \times \mathtt{plasma\_profile.teprofile.profile\_y}
+    \texttt{ion\_temperature\_profile} = \frac{\langle T_{\text{i}} \rangle}{\langle T_{\text{e}} \rangle} \\
+    \times \texttt{plasma\_profile.teprofile.profile\_y}
     $$
 
 2. **Calculate Fusion Reactivity**:
     - Calculate the number of fusion reactions per unit volume per particle volume density using the [`bosch_hale_reactivity`](#volumetric-fusion-rate--bosch_hale_reactivity) function.
 
     $$
-    \langle \sigma v \rangle = \mathtt{bosch\_hale\_reactivity( \\
+    \langle \sigma v \rangle = \texttt{bosch\_hale\_reactivity( \\
     ion\_temperature\_profile, reaction\_constants)}
     $$
 
@@ -74,16 +74,16 @@ This function calculates the integrand for the fusion power integration by evalu
     - Normalize the density profile by the volume-averaged density.
 
     $$
-    \mathtt{density\_profile\_normalised} = \frac{1}{\langle n_{\text{i}} \rangle} \\
-    \times \mathtt{plasma\_profile.neprofile.profile\_y}
+    \texttt{density\_profile\_normalised} = \frac{1}{\langle n_{\text{i}} \rangle} \\
+    \times \texttt{plasma\_profile.neprofile.profile\_y}
     $$
 
 4. **Compute and return the Fusion Integral**:
     - Calculate the volume-averaged fusion reaction integral.
 
     $$
-    \mathtt{fusion\_integral} =2 \int \langle \sigma v \rangle \times \\
-    \mathtt{plasma\_profile.teprofile.profile\_x} \times \mathtt{density\_profile\_normalised}^2
+    \texttt{fusion\_integral} =2 \int \langle \sigma v \rangle \times \\
+    \texttt{plasma\_profile.teprofile.profile\_x} \times \texttt{density\_profile\_normalised}^2
     $$
 
     The above is returned.

@@ -91,13 +91,13 @@ It is recommended that <b>only one</b> of these two constraint equations is used
 
 | Input       | Description                          |
 | :---------- | :----------------------------------- |
-| $\mathtt{eb}$      | Beam energy $\left(\text{keV}/\text{amu}\right)$   |
-| $\mathtt{temp_plasma_electron_vol_avg_kev}$, $T_{\text{e}}$       | Electron temperature $\left(\text{keV}\right)$   |
-| $\mathtt{ne}$, $n_{\text{e}}$       | Electron density $\left(10^{20}\text{m}^{-3}\right)$  |
-| $\mathtt{rnhe}$      | Alpha density / $n_{\text{e}}$   |
-| $\mathtt{rnc}$,        | Carbon density /$n_{\text{e}}$   |
-| $\mathtt{rno}$,      | Oxygen density /$n_{\text{e}}$  |
-| $\mathtt{rnfe}$      | Iron density /$n_{\text{e}}$   |
+| $\texttt{eb}$      | Beam energy $\left(\text{keV}/\text{amu}\right)$   |
+| $\texttt{temp_plasma_electron_vol_avg_kev}$, $T_{\text{e}}$       | Electron temperature $\left(\text{keV}\right)$   |
+| $\texttt{ne}$, $n_{\text{e}}$       | Electron density $\left(10^{20}\text{m}^{-3}\right)$  |
+| $\texttt{rnhe}$      | Alpha density / $n_{\text{e}}$   |
+| $\texttt{rnc}$,        | Carbon density /$n_{\text{e}}$   |
+| $\texttt{rno}$,      | Oxygen density /$n_{\text{e}}$  |
+| $\texttt{rnfe}$      | Iron density /$n_{\text{e}}$   |
 
 
 Both the [ITER](./iter_nb.md) and [Culham](culham_nb.md) NBI models both use the `sigbeam` method to calculate the stopping cross section[^1]. It finds a suitable analytic expression for $\sigma_s^{(Z)}(E,n_{\text{e}},T_{\text{e}},Z_{\text{eff}})$ for fitting $\sigma_s$ data for a single impurity $(\text{Z)}$ plasma:
@@ -140,14 +140,14 @@ Both the [ITER](./iter_nb.md) and [Culham](culham_nb.md) NBI models both use the
 
 | Input       | Description                          |
 | :---------- | :----------------------------------- |
-| $\mathtt{afast}$, $m_{\text{u,fast}}$      | Mass of fast particle (units of proton mass)   |
-| $\mathtt{efast}$, $E_{\text{fast}}$     | Energy of fast particle ($\text{keV}$)   |
-| $\mathtt{temp_plasma_electron_vol_avg_kev}$, $T_{\text{e}}$       | Density weighted average electron temperature ($\text{keV}$)   |
-| $\mathtt{ne}$, $n_{\text{e}}$       | Volume averaged electron density ($\text{m}^{-3}$)  |
-| $\mathtt{nd}$      | Deuterium beam density ($\text{m}^{-3}$)   |
-| $\mathtt{nt}$      | Tritium beam density ($\text{m}^{-3}$)   |
-| $\mathtt{zeffai}$      | Mass weighted plasma effective charge   |
-| $\mathtt{xlmbda}$      | Ion-electron Coulomb logarithm   |
+| $\texttt{afast}$, $m_{\text{u,fast}}$      | Mass of fast particle (units of proton mass)   |
+| $\texttt{efast}$, $E_{\text{fast}}$     | Energy of fast particle ($\text{keV}$)   |
+| $\texttt{temp_plasma_electron_vol_avg_kev}$, $T_{\text{e}}$       | Density weighted average electron temperature ($\text{keV}$)   |
+| $\texttt{ne}$, $n_{\text{e}}$       | Volume averaged electron density ($\text{m}^{-3}$)  |
+| $\texttt{nd}$      | Deuterium beam density ($\text{m}^{-3}$)   |
+| $\texttt{nt}$      | Tritium beam density ($\text{m}^{-3}$)   |
+| $\texttt{zeffai}$      | Mass weighted plasma effective charge   |
+| $\texttt{xlmbda}$      | Ion-electron Coulomb logarithm   |
 
 ### Coloumb logarithm | `xlmbdabi()`
 Firstly, the Coulomb logarithm for the ion-ion collisions ($\ln \Lambda$) is calculated using the `xlmbdabi` method [^2]. The calculation follows these steps:
@@ -179,13 +179,13 @@ Next, the following calculations are performed:
 
 1. Calculate `sumln` using the formula:
     $$
-    \mathtt{sumln} = \mathtt{zeffai} \times \frac{\mathtt{xlmbdai}}{\mathtt{xlmbda}}
+    \texttt{sumln} = \texttt{zeffai} \times \frac{\texttt{xlmbdai}}{\texttt{xlmbda}}
     $$
-    where $\mathtt{zeffai}$ is the mass-weighted plasma effective charge and $\ln\Lambda_{\text{i-e}}$ is the ion-electron Coulomb logarithm.
+    where $\texttt{zeffai}$ is the mass-weighted plasma effective charge and $\ln\Lambda_{\text{i-e}}$ is the ion-electron Coulomb logarithm.
 
 2. Calculate `xlnrat` using the formula:
     $$
-    \mathtt{xlnrat} = 3 \left(\frac{\sqrt \pi}{4}\frac{m_{\text{e}}}{m_{\text{p}} \  \mathtt{sumln}}\right)^{\frac{2}{3}}
+    \texttt{xlnrat} = 3 \left(\frac{\sqrt \pi}{4}\frac{m_{\text{e}}}{m_{\text{p}} \  \texttt{sumln}}\right)^{\frac{2}{3}}
     $$
     where $m_{\text{e}}$ is the electron mass and $m_{\text{p}}$ is the proton mass.
 
@@ -197,34 +197,34 @@ Next, the following calculations are performed:
 
 4. Calculate `ecritfi` using the formula:
     $$
-    \mathtt{ecritfi} = \frac{m_{\text{u,fast}} m_{\text{p}} v_{\text{e}}^2 \  \mathtt{xlnrat}} {(2000 \times e)}
+    \texttt{ecritfi} = \frac{m_{\text{u,fast}} m_{\text{p}} v_{\text{e}}^2 \  \texttt{xlnrat}} {(2000 \times e)}
     $$
     where $e$ is the elementary charge.
 
 5. Calculate `x` using the formula:
     $$
-    \mathtt{x} = \sqrt{\frac{\mathtt{efast}}{\mathtt{ecritfi}}}
+    \texttt{x} = \sqrt{\frac{\texttt{efast}}{\texttt{ecritfi}}}
     $$
 
 6. Calculate `ti` using the formula:
    
     $$
-    \mathtt{ti} = \log{\frac{x^2-x+1}{(x+1)^2}}
+    \texttt{ti} = \log{\frac{x^2-x+1}{(x+1)^2}}
     $$
 
 7. Calculate `thx` using the formula:
     $$
-    \mathtt{thx} = \frac{(2x-1)}{\sqrt{3}}
+    \texttt{thx} = \frac{(2x-1)}{\sqrt{3}}
     $$
 
 8. Calculate `t2` using the formula:
     $$
-    \mathtt{t2} = 2 \sqrt{3} \arctan({\mathtt{thx}})+\frac{\pi}{6}
+    \texttt{t2} = 2 \sqrt{3} \arctan({\texttt{thx}})+\frac{\pi}{6}
     $$
 
 Finally, the fraction of fast particle energy coupled to ions is calculated using the formula:
 $$
-\text{Fraction of fast particle energy coupled to ions} = \frac{(\mathtt{t1}+\mathtt{t2})}{3\mathtt{x}^2}
+\text{Fraction of fast particle energy coupled to ions} = \frac{(\texttt{t1}+\texttt{t2})}{3\texttt{x}^2}
 $$
 
 [^1]:Janev, R. K., Boley, C. D., & Post, D. E. (1989). *"Penetration of energetic neutral beams into fusion plasmas."* Nuclear Fusion, 29(12), 006. https://doi.org/10.1088/0029-5515/29/12/006

@@ -53,20 +53,20 @@ If converting between units it may be required to have some capital letters at t
 
 The agreed upon style is to name the variables by the following scheme:
 
-$\mathtt{var = \ <data type>\_<system>\_<description>\_<units>}$
+$\texttt{var = \ <data type>\_<system>\_<description>\_<units>}$
 
 **Having the units at the end of the name is only necessary when the variable is not in SI/standard units.**
 
 For example, a variable can look like:
 
 $$
-\mathtt{var = \ a_\_tf\_wp}
+\texttt{var = \ a_\_tf\_wp}
 $$
 
 Which represents:
 
 $$
-\mathtt{var = \ \text{Area}:\text{Toroidal Field system}:\text{Winding Pack}}
+\texttt{var = \ \text{Area}:\text{Toroidal Field system}:\text{Winding Pack}}
 $$
 
 So for above; `a` is the data type representing area, `tf` is the system representing the TF coils and `wp` is the secondary description or system. This variable thus represents the cross-sectional area of the TF coil winding pack.
@@ -76,13 +76,13 @@ It may also be useful to use several data type prefixes to greater greater clari
 For example, a variable can look like:
 
 $$
-\mathtt{var = \ f\_a_\_tf\_wp}
+\texttt{var = \ f\_a_\_tf\_wp}
 $$
 
 In system designation it means this:
 
 $$
-\mathtt{var = \ \text{Fraction}:\text{Area}:\text{Toroidal Field system}:\text{Winding Pack}}
+\texttt{var = \ \text{Fraction}:\text{Area}:\text{Toroidal Field system}:\text{Winding Pack}}
 $$
 
 This means the variable represents the fraction of the TF coil area taken up by the winding pack.

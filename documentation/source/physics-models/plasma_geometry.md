@@ -324,8 +324,8 @@ $$
 $$
 
 $$
-\fbox{$ \mathtt{thetai} = \theta_i = \arctan \left({\frac{\kappa}{L}}\right) \\
-\mathtt{xi} = x_i = a(L+1-\delta)$}
+\fbox{$ \texttt{thetai} = \theta_i = \arctan \left({\frac{\kappa}{L}}\right) \\
+\texttt{xi} = x_i = a(L+1-\delta)$}
 $$
 
 Similarly for the inboard side:
@@ -348,8 +348,8 @@ $$
 $$
 
 $$
-\fbox{$\mathtt{thetao}= \theta_o = \arctan \left({\frac{\kappa}{M}}\right) \\
-\mathtt{xo}=x_o = a(M+1+\delta)$}
+\fbox{$\texttt{thetao}= \theta_o = \arctan \left({\frac{\kappa}{M}}\right) \\
+\texttt{xo}=x_o = a(M+1+\delta)$}
 $$
 
 
@@ -382,8 +382,8 @@ It uses the geometrical properties derived in `plasma_angles_arcs()`
 </figure>
 
 $$
-\mathtt{rc}  = R_0-a + \mathtt{xi} \\ 
-\mathtt{xsi} = 4\pi \times \mathtt{xi} (\mathtt{rc} \times \mathtt{thetai} -(\mathtt{xi} \times \sin({\mathtt{thetai}))})
+\texttt{rc}  = R_0-a + \texttt{xi} \\ 
+\texttt{xsi} = 4\pi \times \texttt{xi} (\texttt{rc} \times \texttt{thetai} -(\texttt{xi} \times \sin({\texttt{thetai}))})
 $$
 
 For the outboard side:
@@ -392,8 +392,8 @@ For the outboard side:
 <figcaption>Figure 3: Outboard surface area calculation parameters</figcaption>
 </figure>
 $$
-\mathtt{rc}  = R_0+a - \mathtt{xo} \\ 
-\mathtt{xso} = 4\pi \times \mathtt{xo} (\mathtt{rc} \times \mathtt{thetao}+ (\mathtt{xo}\times \sin({\mathtt{thetao}))})
+\texttt{rc}  = R_0+a - \texttt{xo} \\ 
+\texttt{xso} = 4\pi \times \texttt{xo} (\texttt{rc} \times \texttt{thetao}+ (\texttt{xo}\times \sin({\texttt{thetao}))})
 $$
 
 ------------------
@@ -415,7 +415,7 @@ The poloidal plasma perimtere length `len_plasma_poloidal` is calculated as foll
 | `len_plasma_poloidal`       | Plasma poloidal perimeter [$\text{m}$] |
 
 $$
-\mathtt{len\_plasma\_poloidal} = 2.0 \times (\mathtt{xo} \times \mathtt{thetao} + \mathtt{xi} \times \mathtt{thetai})
+\texttt{len\_plasma\_poloidal} = 2.0 \times (\texttt{xo} \times \texttt{thetao} + \texttt{xi} \times \texttt{thetai})
 $$
 
 ------------------
@@ -442,25 +442,25 @@ The `f_vol_plasma` iteration variable can be used to scale this output
 Calculate the volume for the inboard plasma side:
 
 $$
-\mathtt{rc} = R_0 - a + \mathtt{xi} \\
-\mathtt{vin} = (2\pi \times \mathtt{xi}) \times(\mathtt{rc}^2 \times \sin{(\mathtt{thetai})} - (\mathtt{rc}\times \mathtt{xi} \times \mathtt{thetai}) \\
--(0.5\times\mathtt{rc} \mathtt{xi} \times \sin{(2\times\mathtt{thetai})})+(\mathtt{xi}^2\times \sin{(\mathtt{thetai})}) \\
--\left(\frac{1}{3}\times \mathtt{xi}^2 \times (\sin{(\mathtt{thetai})})^3\right)
+\texttt{rc} = R_0 - a + \texttt{xi} \\
+\texttt{vin} = (2\pi \times \texttt{xi}) \times(\texttt{rc}^2 \times \sin{(\texttt{thetai})} - (\texttt{rc}\times \texttt{xi} \times \texttt{thetai}) \\
+-(0.5\times\texttt{rc} \texttt{xi} \times \sin{(2\times\texttt{thetai})})+(\texttt{xi}^2\times \sin{(\texttt{thetai})}) \\
+-\left(\frac{1}{3}\times \texttt{xi}^2 \times (\sin{(\texttt{thetai})})^3\right)
 $$
 
 Calculate the volume for the outboard plasma side:
 
 $$
-\mathtt{rc} = R_0 + a - \mathtt{xo} \\
-\mathtt{vout} = (2\pi \times \mathtt{xo}) \times(\mathtt{rc}^2 \times \sin{(\mathtt{thetao})} + (\mathtt{rc}\times \mathtt{xo} \times \mathtt{thetao}) \\
-+(0.5\times\mathtt{rc} \times\mathtt{xo} \times \sin{(2\times\mathtt{thetao})})+(\mathtt{xo}^2\times \sin{(\mathtt{thetao})}) \\
--\left(\frac{1}{3}\times \mathtt{xo}^2 \times (\sin{(\mathtt{thetao})})^3\right)
+\texttt{rc} = R_0 + a - \texttt{xo} \\
+\texttt{vout} = (2\pi \times \texttt{xo}) \times(\texttt{rc}^2 \times \sin{(\texttt{thetao})} + (\texttt{rc}\times \texttt{xo} \times \texttt{thetao}) \\
++(0.5\times\texttt{rc} \times\texttt{xo} \times \sin{(2\times\texttt{thetao})})+(\texttt{xo}^2\times \sin{(\texttt{thetao})}) \\
+-\left(\frac{1}{3}\times \texttt{xo}^2 \times (\sin{(\texttt{thetao})})^3\right)
 $$
 
 The volume is then the difference between the two volumes
 
 $$
-\mathtt{xvol} = \mathtt{vout}-\mathtt{vin}
+\texttt{xvol} = \texttt{vout}-\texttt{vin}
 $$
 
 ------------------
@@ -485,10 +485,10 @@ This calculation is appropriate for plasmas with a separatrix.
 
 
 $$
-\mathtt{xsecta} = \mathtt{xo}^2 \times (
-            \mathtt{thetao} - \cos{(\mathtt{thetao})} \times \sin({\mathtt{thetao}})
+\texttt{xsecta} = \texttt{xo}^2 \times (
+            \texttt{thetao} - \cos{(\texttt{thetao})} \times \sin({\texttt{thetao}})
         ) \\
-        + \mathtt{xi}^2 \times (\mathtt{thetai} - \cos{(\mathtt{thetai})} \times \sin{(\mathtt{thetai}))}
+        + \texttt{xi}^2 \times (\texttt{thetai} - \cos{(\texttt{thetai})} \times \sin{(\texttt{thetai}))}
 $$
 
 ------------------
@@ -514,7 +514,7 @@ This function calculates the plasma volumes, areas, perimeter and shapes based o
 | `vol_plasma`       | Plasma volume [$\text{m}^3$] |
 
 $$
-\mathtt{w07} = \mathtt{plasma\_square} + 1
+\texttt{w07} = \texttt{plasma\_square} + 1
 $$
 
 $$
@@ -524,25 +524,25 @@ $$
 Poloidal perimeter (named $L_p$ in Sauter)
 
 $$
-\mathtt{len\_plasma\_poloidal} = 2.0\pi a (1 + 0.55 (\kappa - 1))(1 + 0.08 \delta^2)(1 + 0.2 (\mathtt{w07} - 1))
+\texttt{len\_plasma\_poloidal} = 2.0\pi a (1 + 0.55 (\kappa - 1))(1 + 0.08 \delta^2)(1 + 0.2 (\texttt{w07} - 1))
 $$
 
 Surface area (named $A_p$ in Sauter)
 
 $$
-\mathtt{a\_plasma\_surface} = 2.0\pi R (1 - 0.32 \delta \epsilon) \mathtt{len\_plasma\_poloidal}
+\texttt{a\_plasma\_surface} = 2.0\pi R (1 - 0.32 \delta \epsilon) \texttt{len\_plasma\_poloidal}
 $$ 
 
 Cross-section area (named $S_{\phi}$ in Sauter)
 
 $$
-\mathtt{a\_plasma\_poloidal} = \pi a^2 \kappa (1 + 0.52 (\mathtt{w07} - 1))
+\texttt{a\_plasma\_poloidal} = \pi a^2 \kappa (1 + 0.52 (\texttt{w07} - 1))
 $$
 
 Volume  (named $V$ in Sauter)
 
 $$
-\mathtt{vol\_plasma} = 2.0\pi R (1 - 0.25 \delta \epsilon) \mathtt{a\_plasma\_poloidal}
+\texttt{vol\_plasma} = 2.0\pi R (1 - 0.25 \delta \epsilon) \texttt{a\_plasma\_poloidal}
 $$
 
 -------------------------
@@ -600,42 +600,42 @@ It was the original method in PROCESS[^6].
 | `so`   | Plasma outboard surface area [$\text{m}^2$] |
 
 $$
-\mathtt{radco} = a \frac{(1.0 + (\kappa^2 + \delta^2 - 1.0)}{(2.0 \times (1.0 + \delta))}
+\texttt{radco} = a \frac{(1.0 + (\kappa^2 + \delta^2 - 1.0)}{(2.0 \times (1.0 + \delta))}
 $$
 
 $$
-\mathtt{b} = \kappa \times a
+\texttt{b} = \kappa \times a
 $$
 
 $$
-\mathtt{thto} = \arcsin{(\mathtt{b}/\mathtt{radco})}
+\texttt{thto} = \arcsin{(\texttt{b}/\texttt{radco})}
 $$
 
 $$
-\mathtt{so} = 4.0\pi \times \mathtt{radco} \times ((R + a - \mathtt{radco}) \times \mathtt{thto} + \mathtt{b})
+\texttt{so} = 4.0\pi \times \texttt{radco} \times ((R + a - \texttt{radco}) \times \texttt{thto} + \texttt{b})
 $$
 
 Inboard side
 
 
 $$
-\mathtt{radci} = a \frac{(1.0 + (\kappa^2 + \delta^2 - 1.0)}{(2.0 \times (1.0 - \delta))}
+\texttt{radci} = a \frac{(1.0 + (\kappa^2 + \delta^2 - 1.0)}{(2.0 \times (1.0 - \delta))}
 $$
 
 $$
-\mathtt{b} = \kappa \times a
+\texttt{b} = \kappa \times a
 $$
 
 $$
-\mathtt{thti} = \arcsin{(\mathtt{b}/\mathtt{radci})}
+\texttt{thti} = \arcsin{(\texttt{b}/\texttt{radci})}
 $$
 
 $$
-\mathtt{si} = 4.0\pi \times \mathtt{radci} \times ((R - a + \mathtt{radci}) \times \mathtt{thti} - \mathtt{b})
+\texttt{si} = 4.0\pi \times \texttt{radci} \times ((R - a + \texttt{radci}) \times \texttt{thti} - \texttt{b})
 $$
 
 $$
-\mathtt{sa} = \mathtt{so} + \mathtt{si}
+\texttt{sa} = \texttt{so} + \texttt{si}
 $$
 
 -------------------------
@@ -659,33 +659,33 @@ This calculation is appropriate for plasmas with a separatrix.
 Inboard arc
 
 $$
-\mathtt{denomi} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 - \delta))}+ \delta
+\texttt{denomi} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 - \delta))}+ \delta
 $$
 
 $$
-\mathtt{thetai} = \arctan\left(\frac{\kappa}{\mathtt{denomi}}\right)
+\texttt{thetai} = \arctan\left(\frac{\kappa}{\texttt{denomi}}\right)
 $$
 
 $$
-\mathtt{xli} = a \times (\mathtt{denomi} + 1.0 - \delta)
+\texttt{xli} = a \times (\texttt{denomi} + 1.0 - \delta)
 $$
 
 Outboard arc
 
 $$
-\mathtt{denomo} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 + \delta))} -\delta \\
+\texttt{denomo} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 + \delta))} -\delta \\
 $$
 
 $$
-\mathtt{thetao} = \arctan\left(\frac{\kappa}{\mathtt{denomo}}\right) \\
+\texttt{thetao} = \arctan\left(\frac{\kappa}{\texttt{denomo}}\right) \\
 $$
 
 $$
-\mathtt{xlo} = a \times (\mathtt{denomo} + 1.0 + \delta) \\
+\texttt{xlo} = a \times (\texttt{denomo} + 1.0 + \delta) \\
 $$
 
 $$
-\mathtt{perim} = 2.0 \times (\mathtt{xlo} \times \mathtt{thetao} + \mathtt{xli} \times \mathtt{thetai})
+\texttt{perim} = 2.0 \times (\texttt{xlo} \times \texttt{thetao} + \texttt{xli} \times \texttt{thetai})
 $$
 
 -------------------------
@@ -709,37 +709,37 @@ This calculation is appropriate for plasmas with a separatrix.
 
 
 $$
-\mathtt{zn} = \kappa \times a
+\texttt{zn} = \kappa \times a
 $$
 
 $$
-\mathtt{c1} = \frac{{(R + a)^2 - (R - \delta \times a)^2 - \mathtt{zn}^2}}{{2 \times (1 + \delta) \times a}}
+\texttt{c1} = \frac{{(R + a)^2 - (R - \delta \times a)^2 - \texttt{zn}^2}}{{2 \times (1 + \delta) \times a}}
 $$
 
 $$
-\mathtt{rc1} = R + a - \mathtt{c1}
+\texttt{rc1} = R + a - \texttt{c1}
 $$
 
 $$
-\mathtt{{vout}} = -\frac{2}{3} \pi \times \mathtt{zn}^3 + 2 \pi \times \mathtt{zn} \times (\mathtt{c1}^2 + \mathtt{rc1}^2) \\
-+ 2 \pi \times \mathtt{c1} \times \left(\mathtt{zn} \times \sqrt{\mathtt{rc1}^2 - \mathtt{zn}^2} + \mathtt{rc1}^2 \times \arcsin{\left(\frac{\mathtt{zn}}{\mathtt{rc1}}\right)}\right)
+\texttt{{vout}} = -\frac{2}{3} \pi \times \texttt{zn}^3 + 2 \pi \times \texttt{zn} \times (\texttt{c1}^2 + \texttt{rc1}^2) \\
++ 2 \pi \times \texttt{c1} \times \left(\texttt{zn} \times \sqrt{\texttt{rc1}^2 - \texttt{zn}^2} + \texttt{rc1}^2 \times \arcsin{\left(\frac{\texttt{zn}}{\texttt{rc1}}\right)}\right)
 $$
 
 $$
-\mathtt{c2} = \frac{-((R - a)^2) + (R - \delta \times a)^2 + \mathtt{zn}^2)}{(2 \times (1 - \delta) \times a)}
+\texttt{c2} = \frac{-((R - a)^2) + (R - \delta \times a)^2 + \texttt{zn}^2)}{(2 \times (1 - \delta) \times a)}
 $$
 
 $$
-\mathtt{rc2} = \mathtt{c2} - R + a
+\texttt{rc2} = \texttt{c2} - R + a
 $$
 
 $$
-\mathtt{vin} = -\frac{2}{3} \pi \times \mathtt{zn}^3 + 2 \pi \times \mathtt{zn} \times (\mathtt{rc2}^2 + \mathtt{c2}^2) \\
-- 2 \pi \times \mathtt{c2} \times \left(\mathtt{zn} \times \sqrt{\mathtt{rc2}^2 - \mathtt{zn}^2} + \mathtt{rc2}^2 \times \arcsin{\left(\frac{\mathtt{zn}}{\mathtt{rc2}}\right)}\right)
+\texttt{vin} = -\frac{2}{3} \pi \times \texttt{zn}^3 + 2 \pi \times \texttt{zn} \times (\texttt{rc2}^2 + \texttt{c2}^2) \\
+- 2 \pi \times \texttt{c2} \times \left(\texttt{zn} \times \sqrt{\texttt{rc2}^2 - \texttt{zn}^2} + \texttt{rc2}^2 \times \arcsin{\left(\frac{\texttt{zn}}{\texttt{rc2}}\right)}\right)
 $$
 
 $$
-\mathtt{fvol} = \mathtt{vout} - \mathtt{vin}
+\texttt{fvol} = \texttt{vout} - \texttt{vin}
 $$
 
 -------------------------
@@ -761,47 +761,47 @@ This calculation is appropriate for plasmas with a separatrix.
 | `xsect0`       | Plasma cross-sectional area [$\text{m}^2$] |
 
 $$
-\mathtt{denomi} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 - \delta))}+ \delta
+\texttt{denomi} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 - \delta))}+ \delta
 $$
 
 $$
-\mathtt{thetai} = \arctan\left(\frac{\kappa}{\mathtt{denomi}}\right)
+\texttt{thetai} = \arctan\left(\frac{\kappa}{\texttt{denomi}}\right)
 $$
 
 $$
-\mathtt{xli} = a \times (\mathtt{denomi} + 1.0 - \delta)
+\texttt{xli} = a \times (\texttt{denomi} + 1.0 - \delta)
 $$
 
 $$
-\mathtt{cti} = \cos(\mathtt{thetai})
+\texttt{cti} = \cos(\texttt{thetai})
 $$
 
 $$
-\mathtt{sti} = \sin(\mathtt{thetai})
+\texttt{sti} = \sin(\texttt{thetai})
 $$
 
 $$
-\mathtt{denomo} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 + \delta))}- \delta
+\texttt{denomo} = \frac{(\delta^2 + \kappa^2 - 1.0)}{(2.0 \times (1.0 + \delta))}- \delta
 $$
 
 $$
-\mathtt{thetao} = \arctan\left(\frac{\kappa}{\mathtt{denomo}}\right)
+\texttt{thetao} = \arctan\left(\frac{\kappa}{\texttt{denomo}}\right)
 $$
 
 $$
-\mathtt{xlo} = a \times (\mathtt{denomo} + 1.0 + \delta)
+\texttt{xlo} = a \times (\texttt{denomo} + 1.0 + \delta)
 $$
 
 $$
-\mathtt{cto} = \cos(\mathtt{thetao})
+\texttt{cto} = \cos(\texttt{thetao})
 $$
 
 $$
-\mathtt{sto} = \sin(\mathtt{thetao})
+\texttt{sto} = \sin(\texttt{thetao})
 $$
 
 $$
-\mathtt{xsect0} = \mathtt{xlo}^2 \times (\mathtt{thetao} - \mathtt{cto} \times \mathtt{sto}) + \mathtt{xli}^2 \times (\mathtt{thetai} - \mathtt{cti} \times \mathtt{sti})
+\texttt{xsect0} = \texttt{xlo}^2 \times (\texttt{thetao} - \texttt{cto} \times \texttt{sto}) + \texttt{xli}^2 \times (\texttt{thetai} - \texttt{cti} \times \texttt{sti})
 $$
 
 

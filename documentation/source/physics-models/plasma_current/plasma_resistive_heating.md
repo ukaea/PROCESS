@@ -15,7 +15,7 @@ $$
 We calculate the plasma resistance as:
 
 $$
-\mathtt{res\_plasma} = \Omega_{\text{plasma}} \approx 2.15 \times 10^{-3} Z_{\text{eff}}\langle \gamma_{\text{NC}} \rangle \frac{R_0}{\kappa a^2} \frac{1}{T_{10}^{1.5}}
+\texttt{res\_plasma} = \Omega_{\text{plasma}} \approx 2.15 \times 10^{-3} Z_{\text{eff}}\langle \gamma_{\text{NC}} \rangle \frac{R_0}{\kappa a^2} \frac{1}{T_{10}^{1.5}}
 $$
 
 where $Z_{\text{eff}}$ is the plasma effective charge and $T_{10}$ is the density-weighted temperature in units of 10 keV.
@@ -33,7 +33,7 @@ where $A$ is valid in the range of 2.5 - 4.0. If $A < 2.5$ then $\langle \gamma_
 The ohmic heating power in MW is then simply found using Joules law:
 
 $$
-\mathtt{p\_plasma\_ohmic\_mw} = P_{\text{OH}} = 1\times 10^{-6} \left[f_{\text{ind}}I_{\text{p}}^2\Omega_{\text{plasma}}\right]
+\texttt{p\_plasma\_ohmic\_mw} = P_{\text{OH}} = 1\times 10^{-6} \left[f_{\text{ind}}I_{\text{p}}^2\Omega_{\text{plasma}}\right]
 $$
 
 where $f_{\text{ind}}$ is the fraction of plasma current driven by inductive means.
@@ -41,7 +41,7 @@ where $f_{\text{ind}}$ is the fraction of plasma current driven by inductive mea
 Likewise, the ohmic heating per unit volume simply as:
 
 $$
-\mathtt{pden\_plasma\_ohmic\_mw} = \frac{\mathtt{p\_plasma\_ohmic\_mw}}{V_{\text{p}}}
+\texttt{pden\_plasma\_ohmic\_mw} = \frac{\texttt{p\_plasma\_ohmic\_mw}}{V_{\text{p}}}
 $$
 
 

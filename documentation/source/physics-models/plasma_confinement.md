@@ -44,7 +44,7 @@ $$
 
 where $V_{\text{p}}$ is the plasma volume, $R$ is the plasma major radius and $a$ is the plasma minor radius.
 
-The loss power $P_{\text{L}}$ [$\mathtt{p\_plasma\_loss\_mw}$] is calculated from above but may have a separate radiation term depending on the condition of `i_rad_loss` switch below.
+The loss power $P_{\text{L}}$ [$\texttt{p\_plasma\_loss\_mw}$] is calculated from above but may have a separate radiation term depending on the condition of `i_rad_loss` switch below.
 
 
 -------------
@@ -99,7 +99,7 @@ option is not recommended.
 Many energy confinement time scaling laws are available within PROCESS, for conventional aspect ratio tokamaks, spherical tokamaks, and stellarators.
 The value of `i_confinement_time` determines which of the scalings is used in the plasma energy balance calculation.
 
-The scaling chosen with `i_confinement_time` is then calculated and multiplied with the $H$-factor [$\mathtt{hfact}$]. $\mathtt{hfact}$ can be set as an interation variable by setting `ixc = 10` in the `IN.DAT` input file.
+The scaling chosen with `i_confinement_time` is then calculated and multiplied with the $H$-factor [$\texttt{hfact}$]. $\texttt{hfact}$ can be set as an interation variable by setting `ixc = 10` in the `IN.DAT` input file.
 
 ---------------
 
@@ -108,7 +108,7 @@ The scaling chosen with `i_confinement_time` is then calculated and multiplied w
 Is selected with `i_confinement_time = 0`
 
 $$
-\tau_{\text{E}} = \mathtt{t\_electron\_confinement\_in}
+\tau_{\text{E}} = \texttt{t\_electron\_confinement\_in}
 $$
 
 ------------
@@ -654,11 +654,11 @@ After the confinement time scaling with $H$-factor correction has been calculate
 This is simply the volume averaged thermal energy of the electron and ions divided by the $H$-factor corrected confinement time from the chosen scaling.
 
 $$
-\mathtt{pden\_ion\_transport\_loss\_mw} = \frac{3}{2}\frac{n_{\text{i}} \langle T_{\text{i}} \rangle_{\text{n}}}{\tau_{\text{E}}}
+\texttt{pden\_ion\_transport\_loss\_mw} = \frac{3}{2}\frac{n_{\text{i}} \langle T_{\text{i}} \rangle_{\text{n}}}{\tau_{\text{E}}}
 $$
 
 $$
-\mathtt{pden\_electron\_transport\_loss\_mw} = \frac{3}{2}\frac{n_{\text{e}} \langle T_{\text{e}} \rangle_{\text{n}}}{\tau_{\text{E}}}
+\texttt{pden\_electron\_transport\_loss\_mw} = \frac{3}{2}\frac{n_{\text{e}} \langle T_{\text{e}} \rangle_{\text{n}}}{\tau_{\text{E}}}
 $$
 
 Here $\langle T_{\text{i}} \rangle$ and $\langle T_{\text{e}} \rangle$ are the ion and electron density weighted temperatures respectively.

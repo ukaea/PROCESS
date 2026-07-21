@@ -36,7 +36,7 @@ target. Each divertor is assumed to be approximately triangular in the R,Z plane
 The inner radius of the divertor region is given by:
 
 $$
-r_{\text{inner}} = R_0 - \left(a \times \delta \right) - \left(3 \times \Delta r_{\text{FW, plasma}}\right) + \mathtt{drtop}
+r_{\text{inner}} = R_0 - \left(a \times \delta \right) - \left(3 \times \Delta r_{\text{FW, plasma}}\right) + \texttt{drtop}
 $$
 
 This is treated as the same as the centrepost and first wall thickness at the divertor height.
@@ -88,7 +88,7 @@ $$
 The divertor heat load is then found as:
 
 $$
-\mathtt{pflux_div_heat_load_mw} = \frac{\mathtt{p_plasma_separatrix_mw}}{A_{\text{div}}}
+\texttt{pflux_div_heat_load_mw} = \frac{\texttt{p_plasma_separatrix_mw}}{A_{\text{div}}}
 $$
 
 !!! warning "Radiated power area"

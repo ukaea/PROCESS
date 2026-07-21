@@ -63,7 +63,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
         - `f_nd_alpha_thermal_electron` can be set as an iteration variable (`ixc = 109`) or set directly.
 
     $$
-    n_{\alpha} = \mathtt{f\_nd\_alpha\_electron}\times n_{\text{e}}
+    n_{\alpha} = \texttt{f\_nd\_alpha\_electron}\times n_{\text{e}}
     $$
 
 
@@ -92,7 +92,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
         - `f_nd_beam_electron` can be set as an iteration variable (`ixc = 7`) or set directly.
 
     $$
-    \mathtt{nd\_beam\_ions} | n_{\text{beam}} = \mathtt{f\_nd\_beam\_electron} \times n_{\text{e}}
+    \texttt{nd\_beam\_ions} | n_{\text{beam}} = \texttt{f\_nd\_beam\_electron} \times n_{\text{e}}
     $$
 
 4. **Sum of charge number density for all impurity ions**
@@ -100,20 +100,20 @@ All of the plasma composites are normally given as a fraction of the volume aver
     - Sum the product of charge number (`Zi`) and number density for all impurity ions with charge greater than helium. 
 
     $$
-    \mathtt{znimp} = \sum_j Z_j n_{\text{e}} f_j
+    \texttt{znimp} = \sum_j Z_j n_{\text{e}} f_j
     $$
 
 5. **Fuel Portion - Conserve Charge Neutrality**
     - Calculate the fuel portion (`znfuel`) by conserving charge neutrality.
 
     $$
-   \mathtt{znfuel} | \underbrace{Z_{\text{fuel}}n_{\text{i}}}_{\text{Fuel Ions}} =  n_{\text{e}} - \underbrace{2n_{\text{e}}f_{\alpha}}_{\text{Alpha particles}} - \underbrace{n_{\text{e}}f_{\text{beam}}}_{\text{Neutral beams}} - \underbrace{\sum_j Z_j n_{\text{e}} f_j}_{\text{Impurities}}
+   \texttt{znfuel} | \underbrace{Z_{\text{fuel}}n_{\text{i}}}_{\text{Fuel Ions}} =  n_{\text{e}} - \underbrace{2n_{\text{e}}f_{\alpha}}_{\text{Alpha particles}} - \underbrace{n_{\text{e}}f_{\text{beam}}}_{\text{Neutral beams}} - \underbrace{\sum_j Z_j n_{\text{e}} f_j}_{\text{Impurities}}
     $$
 
 6. **Fuel Ion Density Calculation**
 
     $$
-    \mathtt{nd\_fuel\_ions} | n_{\text{i}} = \frac{\mathtt{znfuel}}{1+f_{\text{3He}}}
+    \texttt{nd\_fuel\_ions} | n_{\text{i}} = \frac{\texttt{znfuel}}{1+f_{\text{3He}}}
     $$
 
     - Calculate the fuel ion density (`nd_plasma_fuel_ions_vol_avg`).
@@ -127,7 +127,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     $$
 
     $$
-    \frac{n_{\text{He}}}{n_{\text{e}}} = f_{\text{3He}}n_{\text{i}}+\mathtt{f\_nd\_alpha\_electron}
+    \frac{n_{\text{He}}}{n_{\text{e}}} = f_{\text{3He}}n_{\text{i}}+\texttt{f\_nd\_alpha\_electron}
     $$
 
 8. **Total Impurity Density Calculation**
@@ -135,7 +135,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     - Calculate the total impurity density (`nd_plasma_impurities_vol_avg`).
 
     $$
-    \mathtt{nd\_impurities} | n_{\text{impurities}} = \sum_j n_{\text{e}} f_j
+    \texttt{nd\_impurities} | n_{\text{impurities}} = \sum_j n_{\text{e}} f_j
     $$
 
 9. **Total Ion Density Calculation**
@@ -143,7 +143,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     - Calculate the total ion density (`nd_plasma_ions_total_vol_avg`).
 
     $$
-    \mathtt{nd\_ions\_total} | n_{\text{i,total}} = n_{\text{i}} + n_{\alpha}+n_{\text{protons}}+ n_{\text{beam}}+n_{\text{impurities}}
+    \texttt{nd\_ions\_total} | n_{\text{i,total}} = n_{\text{i}} + n_{\alpha}+n_{\text{protons}}+ n_{\text{beam}}+n_{\text{impurities}}
     $$
 
 10. **Set Impurity Fraction Variables**
@@ -151,7 +151,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     - Set global impurity fraction variables for other routines.
 
     $$
-    \mathtt{f_nd_plasma_carbon_electron} = \frac{n_{\text{C}}}{n_{\text{e}}}, \quad \mathtt{f_nd_plasma_oxygen_electron} = \frac{n_{\text{O}}}{n_{\text{e}}} \quad \mathtt{f_nd_plasma_iron_argon_electron} = \frac{n_{\text{Fe}}+ n_{\text{Ar}}}{n_{\text{e}}}
+    \texttt{f_nd_plasma_carbon_electron} = \frac{n_{\text{C}}}{n_{\text{e}}}, \quad \texttt{f_nd_plasma_oxygen_electron} = \frac{n_{\text{O}}}{n_{\text{e}}} \quad \texttt{f_nd_plasma_iron_argon_electron} = \frac{n_{\text{Fe}}+ n_{\text{Ar}}}{n_{\text{e}}}
     $$
 
     The variable above are set as global physics variables to be used in the [`sigbeam()`](../eng-models/heating_and_current_drive/NBI/nbi_overview.md#beam-stopping-cross-section--sigbeam) routine, which calculates the beam stopping cross-section.
@@ -173,7 +173,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     Thus we can write:
 
     $$
-    \mathtt{zeff} | Z_{\text{eff}} = \frac{\sum_j Z^2_j n_{\text{e}} f_j}{n_{\text{e}}}
+    \texttt{zeff} | Z_{\text{eff}} = \frac{\sum_j Z^2_j n_{\text{e}} f_j}{n_{\text{e}}}
     $$
 
     More info can be found [here](https://wiki.fusion.ciemat.es/wiki/Effective_charge_state).
@@ -184,11 +184,11 @@ All of the plasma composites are normally given as a fraction of the volume aver
     - Calculate the fraction of alpha energy going to electrons and ions.
 
     $$
-    \mathtt{f\_alpha\_electron} = 0.88155\exp{\left[-\langle T_{\text{e}} \rangle \frac{(1+\alpha_n)(1+\alpha_T)}{67.4036(1+\alpha_T+\alpha_n)}\right]}
+    \texttt{f\_alpha\_electron} = 0.88155\exp{\left[-\langle T_{\text{e}} \rangle \frac{(1+\alpha_n)(1+\alpha_T)}{67.4036(1+\alpha_T+\alpha_n)}\right]}
     $$
 
     $$
-    \mathtt{f\_alpha\_ion} = (1.0 - \mathtt{f\_alpha\_electron})
+    \texttt{f\_alpha\_ion} = (1.0 - \texttt{f\_alpha\_electron})
     $$
 
 13. **Average Atomic Masses of Injected Fuel Species**
@@ -196,7 +196,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     - Calculate the average atomic masses of injected fuel species.
 
     $$
-    \mathtt{m\_fuel\_amu} | m_{\text{fuel,amu}} = \left(m_{\text{D}}f_{\text{D}}\right) + \left(m_{\text{T}}f_{\text{T}}\right) + \left(m_{\text{3He}}f_{\text{3He}}\right)
+    \texttt{m\_fuel\_amu} | m_{\text{fuel,amu}} = \left(m_{\text{D}}f_{\text{D}}\right) + \left(m_{\text{T}}f_{\text{T}}\right) + \left(m_{\text{3He}}f_{\text{3He}}\right)
     $$
 
 14. **Average Atomic Masses of Injected Fuel Species in Neutral Beams**
@@ -204,7 +204,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     - Calculate the average atomic masses of injected fuel species in the neutral beams.
 
     $$
-    \mathtt{m\_beam\_amu} | m_{\text{beam,amu}} = \left(m_{\text{D}}(1-f_{\text{T,beam}}\right)) + \left(m_{\text{T}}f_{\text{T,beam}}\right)
+    \texttt{m\_beam\_amu} | m_{\text{beam,amu}} = \left(m_{\text{D}}(1-f_{\text{T,beam}}\right)) + \left(m_{\text{T}}f_{\text{T,beam}}\right)
     $$
 
 15. **Density Weighted Mass Calculation**
@@ -212,7 +212,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     - Calculate the density-weighted mass of ions.
 
     $$
-    \mathtt{m\_ions\_total\_amu} = \\
+    \texttt{m\_ions\_total\_amu} = \\
     \left[\frac{\left(m_{\text{fuel}}n_{\text{i}}\right) + \left(m_{\alpha}n_{\alpha}\right) + \left(m_{\text{p}}n_{p}\right) + \left(m_{\text{beam}}n_{\text{beam}}\right) + \sum_j m_{j} n_{\text{e}} f_j}{n_{\text{i,total}}}\right]
     $$
 
@@ -221,7 +221,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     - Calculate the mass-weighted plasma effective charge (`zeffai`). Similar to the calculation of the effective charge except each element is divided by its mass
 
     $$
-    \mathtt{zeffai} | Z_{\text{eff,m}} = \frac{\sum_j \frac{Z^2_j n_{\text{e}} f_j}{m_{\text{j}}}}{n_{\text{e}}}
+    \texttt{zeffai} | Z_{\text{eff,m}} = \frac{\sum_j \frac{Z^2_j n_{\text{e}} f_j}{m_{\text{j}}}}{n_{\text{e}}}
     $$
 
 ---------------

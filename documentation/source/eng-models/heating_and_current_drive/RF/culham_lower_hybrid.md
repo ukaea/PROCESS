@@ -26,20 +26,20 @@ AEA FUS 172: Physics Assessment for the European Reactor Study[^1]
 This routine determines numerically the minor radius at which the damping of Lower Hybrid waves occurs, using a Newton-Raphson method to establish the correct minor radius ratio. The required minor radius ratio has been found when the difference between the results of the two formulae for the energy E given in AEA FUS 172, p.58 is sufficiently close to zero.
 
 Correction to refractive index (kept within valid bounds)
-  $\mathtt{drfind} = \min\left(0.7, \max\left(0.1, \frac{12.5}{\text{te0}}\right)\right)$
+  $\texttt{drfind} = \min\left(0.7, \max\left(0.1, \frac{12.5}{\text{te0}}\right)\right)$
 
 Use Newton-Raphson method to establish the correct minor radius ratio. The required minor radius ratio has been found when the difference between the results of the two formulae for the energy E given in AEA FUS 172, p.58 is sufficiently close to zero.
 
 Iterate over the following steps to find the minor radius ratio:
 
-1. Set an initial guess for the minor radius ratio, $\mathtt{rat0}$, to 0.8.
+1. Set an initial guess for the minor radius ratio, $\texttt{rat0}$, to 0.8.
 2. Repeat the following steps for a maximum of 100 iterations:
-    - Calculate the minor radius ratios, $r1$ and $r2$, by subtracting and adding 0.1% of $\mathtt{rat0}$, respectively.
-    - Evaluate the function $g$ at $\mathtt{rat0}$, $r1$, and $r2$ using the method `lheval(drfind, rat)`.
+    - Calculate the minor radius ratios, $r1$ and $r2$, by subtracting and adding 0.1% of $\texttt{rat0}$, respectively.
+    - Evaluate the function $g$ at $\texttt{rat0}$, $r1$, and $r2$ using the method `lheval(drfind, rat)`.
     - Calculate the gradient of $g$ with respect to the minor radius ratio, $\frac{{dg}}{{dr}}$, using the formula $\frac{{g2 - g1}}{{r2 - r1}}$.
-    - Calculate a new approximation for the minor radius ratio, $\mathtt{rat1}$, using the formula $\mathtt{rat0} - \frac{{g0}}{{\frac{{dg}}{{dr}}}}$.
-    - Ensure that $\mathtt{rat1}$ is within the bounds of 0.0001 and 0.9999.
+    - Calculate a new approximation for the minor radius ratio, $\texttt{rat1}$, using the formula $\texttt{rat0} - \frac{{g0}}{{\frac{{dg}}{{dr}}}}$.
+    - Ensure that $\texttt{rat1}$ is within the bounds of 0.0001 and 0.9999.
     - If the absolute value of $g0$ is less than or equal to 0.01, exit the loop.
-    - Update $\mathtt{rat0}$ with the new approximation, $\mathtt{rat1}$.
-3. If the loop completes all 100 iterations without finding a satisfactory solution, report an error and set $\mathtt{rat0}$ to 0.8.
-4. Return the final value of $\mathtt{rat0}$.
+    - Update $\texttt{rat0}$ with the new approximation, $\texttt{rat1}$.
+3. If the loop completes all 100 iterations without finding a satisfactory solution, report an error and set $\texttt{rat0}$ to 0.8.
+4. Return the final value of $\texttt{rat0}$.
