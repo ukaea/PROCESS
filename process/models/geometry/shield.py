@@ -17,7 +17,8 @@ def shield_geometry_single_null(
     triang: float,
     cumulative_lower: dict,
 ) -> ArbitraryGeometry:
-    """Calculates radial and vertical distances for the geometry of shield in a single null configuration
+    """Calculates radial and vertical distances for the geometry of shield in a single
+    null configuration
 
     Parameters
     ----------
@@ -89,7 +90,8 @@ def shield_geometry_lower(
     rminx_near: float,
     triang: float,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """Calculates radial and vertical distances for the geometry of section of shield below the midplane
+    """Calculates radial and vertical distances for the geometry of section of shield
+    below the midplane
 
     Parameters
     ----------
@@ -108,8 +110,11 @@ def shield_geometry_lower(
 
     Returns
     -------
-    Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
-        tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the shield geometry below the midplane
+    :
+        tuple containing the R coordinates for the outboard,
+        Z coordinates for the outboard,
+        R coordinates for the inboard,
+        Z coordinates for the inboard of the shield geometry below the midplane
     """
     # Side furthest from plasma
     kapx = cumulative_lower["dz_shld_lower"] / rminx_far
@@ -130,8 +135,10 @@ def shield_geometry_double_null(
     rminx_near: float,
     triang: float,
 ) -> ArbitraryGeometry:
-    """Calculates radial and vertical distances for the geometry of shield in a double null configuration
-    In a double null configuration, the geometry of the lower shield is reflected across the midplane to create the section of shield above the midplane
+    """Calculates radial and vertical distances for the geometry of shield in a double
+    null configuration
+    In a double null configuration, the geometry of the lower shield is reflected across
+    the midplane to create the section of shield above the midplane
 
     Parameters
     ----------
@@ -150,7 +157,7 @@ def shield_geometry_double_null(
 
     Returns
     -------
-    ArbitraryGeometry
+    :
         dataclass returning radial and vertical coordinates
     """
     # Lower shield

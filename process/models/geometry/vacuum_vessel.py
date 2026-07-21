@@ -19,7 +19,8 @@ def vacuum_vessel_geometry_single_null(
     cumulative_lower: dict,
     lower: dict,
 ) -> ArbitraryGeometry:
-    """Calculates radial and vertical distances for the geometry of the vacuum vessel in a single null configuration
+    """Calculates radial and vertical distances for the geometry of the vacuum vessel in
+    a single null configuration
 
     Parameters
     ----------
@@ -103,7 +104,8 @@ def vacuum_vessel_geometry_lower(
     radx_inner: float,
     rminx_inner: float,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """Calculates radial and vertical distances for the geometry of section of vacuum vessel below the midplane
+    """Calculates radial and vertical distances for the geometry of section of
+    vacuum vessel below the midplane
 
     Parameters
     ----------
@@ -125,7 +127,10 @@ def vacuum_vessel_geometry_lower(
     Returns
     -------
     :
-        tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the vacuum vessel geometry below the midplane
+        tuple containing the R coordinates for the outboard,
+        Z coordinates for the outboard,
+        R coordinates for the inboard,
+        Z coordinates for the inboard of the vacuum vessel geometry below the midplane
     """
     kapx = cumulative_lower["dz_vv_lower"] / rminx_outer
     rs_lower_outboard, zs_lower_outboard = dh_vertices(
@@ -151,8 +156,10 @@ def vacuum_vessel_geometry_double_null(
     radx_inner: float,
     rminx_inner: float,
 ) -> ArbitraryGeometry:
-    """Calculates radial and vertical distances for the geometry of vacuum vessel in a double null configuration
-    In a double null configuration, the geometry of the lower vacuum vessel is reflected across the midplane to create the section of vacuum vessel above the midplane
+    """Calculates radial and vertical distances for the geometry of vacuum vessel in a
+    double null configuration
+    In a double null configuration, the geometry of the lower vacuum vessel is reflected
+    across the midplane to create the section of vacuum vessel above the midplane
 
     Parameters
     ----------
