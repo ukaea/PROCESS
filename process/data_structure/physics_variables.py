@@ -1010,7 +1010,7 @@ class PhysicsData:
     j_plasma_bootstrap_sauter_profile: list[float] = field(default_factory=list)
     """Profile of bootstrap current density in plasma using Sauter et al scaling [A/m²]"""
 
-    n_plasma_profile_elements: int = 501
+    n_plasma_profile_elements: int = 101
     """Number of elements in plasma profile"""
 
     pres_plasma_thermal_vol_avg: float = None
