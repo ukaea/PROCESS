@@ -18,8 +18,12 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
-from process.data_structure.physics_variables import PlasmaIgnitionModel
+from process.data_structure.physics_variables import (
+    CurrentProfileIndexModel,
+    PlasmaIgnitionModel,
+)
 from process.models.physics import impurity_radiation
+from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
     PlasmaProfileShapeType,
@@ -323,17 +327,16 @@ class Physics(Model):
             qstar=self.data.physics.qstar, q0=self.data.physics.q0
         )
 
-        # Map calculation methods to a dictionary
-        alphaj_calculations = {
-            0: self.data.physics.alphaj,
-            1: self.data.physics.alphaj_wesson,
-        }
-
-        # Calculate alphaj based on i_alphaj
-        if int(self.data.physics.i_alphaj) in alphaj_calculations:
-            self.data.physics.alphaj = alphaj_calculations[
-                int(self.data.physics.i_alphaj)
-            ]
+        if (
+            CurrentProfileIndexModel(self.data.physics.i_alphaj)
+            == CurrentProfileIndexModel.USER_INPUT
+        ):
+            self.data.physics.alphaj = self.data.physics.alphaj
+        elif (
+            CurrentProfileIndexModel(self.data.physics.i_alphaj)
+            == CurrentProfileIndexModel.WESSON
+        ):
+            self.data.physics.alphaj = self.data.physics.alphaj_wesson
         else:
             raise ProcessValueError(
                 "Illegal value of i_alphaj",
@@ -531,7 +534,9 @@ class Physics(Model):
         if (
             self.data.current_drive.f_c_plasma_bootstrap
             > self.data.current_drive.f_c_plasma_bootstrap_max
-        ) and self.data.physics.i_bootstrap_current != 0:
+        ) and BootstrapCurrentFractionModel(
+            self.data.physics.i_bootstrap_current
+        ) != BootstrapCurrentFractionModel.USER_INPUT:
             self.data.current_drive.f_c_plasma_bootstrap = min(
                 self.data.current_drive.f_c_plasma_bootstrap,
                 self.data.current_drive.f_c_plasma_bootstrap_max,

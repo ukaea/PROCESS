@@ -2513,7 +2513,7 @@ class BlanketLibrary(Model):
                     pres_coolant_pump_inlet=self.data.fwbs.pres_fw_coolant,
                     dpres_coolant=deltap_fw_blkt,
                     mflow_coolant_total=self.data.blanket.mftotal,
-                    primary_coolant_switch=self.data.fwbs.i_fw_coolant_type,
+                    i_coolant_type=self.data.fwbs.i_fw_coolant_type,
                     den_coolant=self.data.fwbs.den_fw_coolant,
                     label="First Wall and Blanket",
                 )
