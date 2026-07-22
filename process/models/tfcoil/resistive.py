@@ -1360,7 +1360,7 @@ class ResistiveTFCoil(TFCoil):
                 np.pi * rmid**2 - a_tfin_hole - n_tf_coils * a_cp_cool - a_cp_ins
             )
 
-            # Volumes and resisitive losses calculations
+            # Volumes and resistive losses calculations
             vol_cond_cp = 2.0e0 * hmaxi * a_cond_midplane
             vol_ins_cp = 2.0e0 * hmaxi * a_cp_ins
             vol_gr_ins_cp = 2.0e0 * hmaxi * a_cp_gr_ins

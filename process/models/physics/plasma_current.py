@@ -804,7 +804,7 @@ class PlasmaCurrent(Model):
         ----------
         [1] N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
 
-        [2] T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        [2] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
         AEA FUS 172, 1992
         """
         return (
@@ -843,7 +843,7 @@ class PlasmaCurrent(Model):
         ----------
         [1] D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
 
-        [2] T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        [2] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
         AEA FUS 172, 1992
         """
         # Calculate the Todd scaling based on the model
@@ -901,7 +901,7 @@ class PlasmaCurrent(Model):
         [1] J.W.Connor and R.J.Hastie, Culham Lab Report CLM-M106 (1985).
         https://scientific-publications.ukaea.uk/wp-content/uploads/CLM-M106-1.pdf
 
-        [2] T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        [2] T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
         AEA FUS 172, 1992
         """
         # Exponent in Connor-Hastie current profile

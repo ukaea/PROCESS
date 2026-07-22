@@ -71,7 +71,7 @@ class PlasmaProfile(Model):
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
         ):
-            self.parabolic_paramterisation()
+            self.parabolic_parameterisation()
             self.calculate_profile_factors()
             self.calculate_parabolic_profile_factors()
         # Pedestal profile case
@@ -79,7 +79,7 @@ class PlasmaProfile(Model):
             self.pedestal_parameterisation()
             self.calculate_profile_factors()
 
-    def parabolic_paramterisation(self):
+    def parabolic_parameterisation(self):
         """Parameterise plasma profiles in the case where i_plasma_pedestal == 0.
 
         This routine calculates the parameterization of plasma profiles in the case

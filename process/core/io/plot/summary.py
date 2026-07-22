@@ -8474,13 +8474,13 @@ def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
             (sig_case, "TF bucking max TRESCA stress", "MPa"),
             (fcoolcp, "CP cooling fraction", "%"),
             ("vel_cp_coolant_midplane", "Maximum coolant flow speed", "ms$^{-1}$"),
-            (p_cp_resistive, "CP Resisitive heating", "MW"),
+            (p_cp_resistive, "CP resistive heating", "MW"),
             (
                 p_tf_leg_resistive,
-                "legs Resisitive heating (all legs)",
+                "legs resistive heating (all legs)",
                 "MW",
             ),
-            (p_tf_joints_resistive, "TF joints resisitive heating ", "MW"),
+            (p_tf_joints_resistive, "TF joints resistive heating ", "MW"),
         ]
 
     plot_info(axis, data, mfile, scan)

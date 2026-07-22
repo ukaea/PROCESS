@@ -847,7 +847,7 @@ class TFData:
 
     temp_cp_average: float = 373.15  # 100 C
     """Average temperature of centrepost called CP (K). Only used for resistive coils
-    to compute the resisitive heating. Must be an iteration variable for
+    to compute the resistive heating. Must be an iteration variable for
     ST (`itart=1`) (`iteration variable 20`)
     """
 

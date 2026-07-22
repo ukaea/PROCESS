@@ -427,7 +427,7 @@ def plot_tracking_data(database, tracked_variables):
     figures = {}
 
     variable_parent_map = {}
-    # holds a map of variable parent's names overriden using the . (dot) syntax
+    # holds a map of variable parent's names overridden using the . (dot) syntax
     # variable: parent module name
 
     # populates the overrides map
@@ -524,7 +524,7 @@ def plot_tracking_data(database, tracked_variables):
 
     panels = []
 
-    # each module/overriden name
+    # each module/overridden name
     # e.g. CostModel2 has a panel which holds graphs for all variables under that scope
     for parent_module_name, figs in figures.items():
         if len(figs) % 2 != 0:
