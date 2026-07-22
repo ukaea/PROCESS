@@ -2201,7 +2201,7 @@ i_blanket_type = 1
 * =2 KIT HCPB model
 * =3 CCFE HCPB model with Tritium Breeding Ratio calculation
 * =4 KIT HCLL model
-* =5 DCLL model -  no nutronics model included (in development) please check/choose values for
+* =5 DCLL model -  no neutronics model included (in development) please check/choose values for
 *                  'dual-coolant blanket' fractions (provided in this file).
 *                  please use i_p_coolant_pumping = 0 or 1.
 * JUSTIFICATION: Assuming DCLL blanket

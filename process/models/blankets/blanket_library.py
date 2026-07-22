@@ -3027,7 +3027,7 @@ class BlanketLibrary(Model):
         lead-lithium alloy, two candidate liquid metal breeder materials
         for self-cooled blankets, Fusion Engineering and Design 27, 399-406
 
-        [Iba2013]   Ibano et al (2013), Nutronics and pumping power analysis on the
+        [Iba2013]   Ibano et al (2013), neutronics and pumping power analysis on the
         Tokamak reactor for the fusion-biomass hybrid concept,
         Fusion Engineering and Design, 88
 
