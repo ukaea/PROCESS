@@ -722,7 +722,7 @@ selected with the `i_tf_bucking` integer switch.
 - <p style='text-align: justify;'>
     **Free standing TF bucking (`i_tf_bucking == 1`):** the conductor is
     supported by a dedicated centering support and is not in contact with the CS
-    coil. This support is nown as a bucking cylinder for resistive magnets, and is referred to as the 'nose'
+    coil. This support is known as a bucking cylinder for resistive magnets, and is referred to as the 'nose'
     of the case for superconducting magnets. This is the default option
     for aluminium (`i_tf_sup = 2`) and superconducting magnets (`i_tf_sup = 1`).
   </p>
@@ -778,12 +778,12 @@ $$
 
 <p style='text-align: justify;'>
   The transverse stresses (\(\sigma_\mathrm{rr}\) and \(\sigma_\mathrm{\theta\theta}\))
-  are negative and the vertical streess (\(\sigma_\mathrm{zz}\)) positive. As
+  are negative and the vertical stress (\(\sigma_\mathrm{zz}\)) positive. As
   the toroidal stress is generally larger than the toroidal one, the \(\left|
   \sigma_\mathrm{\theta\theta} - \sigma_\mathrm{zz} \right|\) term is expected
   to drive the yield stress value. The associated constraint equations are the
   31, 32 and the 72 (if <em>i_tf_bucking == 2 or 3</em>). The value of the
-  Von-Mises yeild stress is also shown in the output for information.
+  Von-Mises yield stress is also shown in the output for information.
 </p>
 
 -------------
@@ -949,9 +949,9 @@ $$
 | `dr_tf_wp_with_insulation`            | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140          | No default                           | m    |
 | `dr_tf_nose_case`     | Nose/inner case radial thickness                                                                                                                     | ixc = 57           | 0.3                                  | m    |
 | `dx_tf_side_case_min`     | Minimal sidewall casing thickness                                                                                                                    | -                  | -                                    | m    |
-| `casths_fraction`     | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `dx_tf_side_case_min` input value                       | -                  | 0.03                                 | -    |
+| `casths_fraction`     | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwrites the `dx_tf_side_case_min` input value                       | -                  | 0.03                                 | -    |
 | `casthi`              | Minimal plasma side casing thickness                                                                                                                 | -                  | -                                    | m    |
-| `casthi_fraction`     | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `casthi` input value                         | -                  | 0.05                                 | -    |
+| `casthi_fraction`     | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwrites the `casthi` input value                         | -                  | 0.05                                 | -    |
 | `i_tf_case_geom`      | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing                                                 | -                  | 0                                    | -    |
 | `i_tf_wp_geom`        | Winding pack geometry option:<br> - 0 : rectangular <br> - 1 : double rectangle <br> - 2 : trapezoidal                                               | -                  | Integer turn : 0  <br> otherwise : 1 | -    |
 | `dx_tf_wp_insulation`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
@@ -964,9 +964,9 @@ $$
 | `dr_tf_wp_with_insulation`            | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140          | No default                           | m    |
 | `dr_tf_nose_case`     | Nose/inner case radial thickness                                                                                                                     | ixc = 57           | 0.3                                  | m    |
 | `dx_tf_side_case_min`     | Minimal sidewall casing thickness                                                                                                                    | -                  | -                                    | m    |
-| `casths_fraction`     | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `dx_tf_side_case_min` input value                       | -                  | 0.03                                 | -    |
+| `casths_fraction`     | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwrites the `dx_tf_side_case_min` input value                       | -                  | 0.03                                 | -    |
 | `dr_tf_plasma_case`   | Minimal plasma side casing thickness                                                                                                                 | -                  | -                                    | m    |
-| `f_dr_tf_plasma_case` | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `dr_tf_plasma_case` input value              | -                  | 0.05                                 | -    |
+| `f_dr_tf_plasma_case` | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwrites the `dr_tf_plasma_case` input value              | -                  | 0.05                                 | -    |
 | `i_tf_case_geom`      | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing                                                 | -                  | 0                                    | -    |
 | `i_tf_wp_geom`        | Winding pack geometry option:<br> - 0 : rectangular <br> - 1 : double rectangle <br> - 2 : trapezoidal                                               | -                  | Integer turn : 0  <br> otherwise : 1 | -    |
 | `dx_tf_wp_insulation`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
@@ -984,7 +984,7 @@ $$
 | `dx_tf_turn_general`          | TF turn squared size                                                                                                        | -                  | No default    | m    |
 | `dx_tf_turn_cable_space_general`         | TF cable diameter size                                                                                                      | -                  | No default    | m    |
 | `t_turn_tf_max`      | Maximum turn squared size for constraint (icc = 86)                                                                         | -                  | 0.05          | m    |
-| `c_tf_turn`              | Current per turn <br> Overwitten if `dx_tf_turn_general` is set by the user                                                          | ixc = 60           | $70.10^3$     | A    |
+| `c_tf_turn`              | Current per turn <br> Overwritten if `dx_tf_turn_general` is set by the user                                                          | ixc = 60           | $70.10^3$     | A    |
 | `dx_tf_turn_insulation`           | Turn insulation layer thickness                                                                                             | -                  | $0.8.10^{-3}$ | m    |
 | `dx_tf_turn_steel`           | Steekl jacket/conduit thickness                                                                                             | 58                 | $8.10^{-3}$   | m    |
 | `dia_tf_turn_coolant_channel`            | Helium cooling channel diameter                                                                                             | -                  | $5.10^{-3}$   | m    |

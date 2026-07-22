@@ -216,7 +216,7 @@ will be inaccurate for single-null plasmas, `i_single_null = 1`)
   $$
   \kappa_{95} = \frac{(18.84 -(0.87 \times A)) - \sqrt{4.84A^2 -28.77 A+52.52+14.74 \times  m_{\text{s,limit}}}}{2a}
   $$
-Where $m_{\text{s,limit}}$ is the inputted vertical stablity margin limit (default = 0.3)
+Where $m_{\text{s,limit}}$ is the inputted vertical stability margin limit (default = 0.3)
   
 
 If $\kappa_{95}>1.77$ then its value is adjusted:
@@ -253,7 +253,7 @@ $$
 
 ---------------------------------------------------------------------
 
-- `i_plasma_geometry = 12` -- The elongation is calculated directly from the aspect ratio based on a scaling for the maximum contrallable elongation in a spherical tokamak [^5] and asssuming a constant $l_i(3)$ and a fixed $\langle \beta_{\mathrm{p}} \rangle = 0.5$. The triangularity is a user input.
+- `i_plasma_geometry = 12` -- The elongation is calculated directly from the aspect ratio based on a scaling for the maximum contrallable elongation in a spherical tokamak [^5] and assuming a constant $l_i(3)$ and a fixed $\langle \beta_{\mathrm{p}} \rangle = 0.5$. The triangularity is a user input.
     $$
     \kappa = 2.93 \left(\frac{1.8}{A}\right)^{1.4}
     $$

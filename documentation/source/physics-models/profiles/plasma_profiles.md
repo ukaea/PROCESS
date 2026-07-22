@@ -23,12 +23,12 @@ $$\begin{aligned}
 
 where $\rho = r/a$, and $a$ is the plasma minor radius. This gives
 volume-averaged values $\langle n \rangle = n_0 / (1+\alpha_n)$, and
- approximate line-averaged values of $\bar{n} \approx n_0 / \sqrt{(1+\alpha_n)}$, the full equation used can be seen [here](./plasma_profiles.md#parabolic_paramterisation).  These
+ approximate line-averaged values of $\bar{n} \approx n_0 / \sqrt{(1+\alpha_n)}$, the full equation used can be seen [here](./plasma_profiles.md#parabolic_parameterisation).  These
 volume- and line-averages are used throughout the code along with the profile
 indices $\alpha$, in the various physics models, many of which are fits to
 theory-based or empirical scalings. Thus, the plasma model in PROCESS may
 be described as 1/2-D.  The relevant profile index variables are
-`alphan`, `alphat` and `alphaj`, respectively. For full derivation and description of the core and line averaged values please see the [parabolic_paramterisation()](plasma_profiles.md#parabolic_paramterisation) section which calculates these values for both temperature and density. A table of the the associated variables can be seen below
+`alphan`, `alphat` and `alphaj`, respectively. For full derivation and description of the core and line averaged values please see the [parabolic_parameterisation()](plasma_profiles.md#parabolic_parameterisation) section which calculates these values for both temperature and density. A table of the the associated variables can be seen below
 
 | Profile parameter                | Density   | Temperature | Current  |
 |----------------------------------|-----------|-------------|----------------|
@@ -262,7 +262,7 @@ Depending on the value of `i_plasma_pedestal` different functions will be ran, t
 
 #### Parabolic Profile | `i_plasma_pedestal == 0`
 
-##### `parabolic_paramterisation()`
+##### `parabolic_parameterisation()`
 
 If pedestal profile values are set they are reset to have values that agree with the original form of the parabolic profiles. Such that $\rho_{\text{ped}} = 1$ and that pedestal and separatrix densities and temepratures are zero. This will then warn the user in the terminal.
 

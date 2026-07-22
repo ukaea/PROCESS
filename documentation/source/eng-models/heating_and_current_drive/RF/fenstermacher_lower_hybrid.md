@@ -2,7 +2,7 @@
 
 - `i_hcd_primary/i_hcd_secondary` = 1:
 
-This forumla was originally in the Oak RidgeSystems Code[^1], attributed to Fenstermacher and is used in the AEA FUS 172 report[^2].
+This formula was originally in the Oak RidgeSystems Code[^1], attributed to Fenstermacher and is used in the AEA FUS 172 report[^2].
 
 $$
 \text{Current drive efficiency [A/W]} = 0.36 \frac{(1+(T_{\text{e}}/25)^{1.16})}{R_{0} n_{\text{e},20}}

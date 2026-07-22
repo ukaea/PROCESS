@@ -1,5 +1,5 @@
 
-# Utilites
+# Utilities
 
 There are a number of utilities available with `PROCESS`. These are accessible in various modules in the io package or through the `PROCESS` CLI.
 

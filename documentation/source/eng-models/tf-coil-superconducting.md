@@ -144,7 +144,7 @@ turns. The number of turns can be parametrized in three different ways :
     fill the WP area is deduced. There is no guarantee that a realistic turn
     configuration (with all the turn geometrically fitting in the allocated
     space) or even have an integer number of turns is used with this parametrization.
-    The current per turn `c_tf_turn` will be overwitten.
+    The current per turn `c_tf_turn` will be overwritten.
   </p>
 - <p style='text-align: justify;'>
     **Cable size parametrization:** the dimension of the SC cable `dx_tf_turn_cable_space_general`
@@ -155,7 +155,7 @@ turns. The number of turns can be parametrized in three different ways :
     necessary to fill the WP area is then deduced. There is no guarantee that a
     realistic turn configuration (with all the turn geometrically fitting in the
     allocated space) or even have an integer number of turns is used with this
-    parametrization. The current per turn `c_tf_turn` will be overwitten.
+    parametrization. The current per turn `c_tf_turn` will be overwritten.
   </p> 
 - <p style='text-align: justify;'> 
     **Integer turn parametrization:** `i_tf_turns_integer = 1` the user sets the
@@ -237,7 +237,7 @@ The toroidal field falls off at a rate $1/R$, with the peak value occurring at t
 
 Three constraints are relevant to the operating current density $J_{\mbox{op}}$ in the TF coils.
 
-- Criticial current (`constraint 33`): $f_{\text{iooic}}J_{\mbox{op}}$ must not exceed the critical value $J_{\mbox{crit}}$ where `f_j_tf_wp_critical_max` is a margin on the constraint that defaults to `0.7`.
+- Critical current (`constraint 33`): $f_{\text{iooic}}J_{\mbox{op}}$ must not exceed the critical value $J_{\mbox{crit}}$ where `f_j_tf_wp_critical_max` is a margin on the constraint that defaults to `0.7`.
 
 - Temperature margin (`constraint 36`) -- The critical current density $J_{\mbox{crit}}$ falls with 
   the temperature of the superconductor. The temperature margin $\Delta T$ is the difference between the current sharing temperature (at which $J_{\mbox{crit}}$ would be equal to $J_{\mbox{op}}$) and the operating temperature. The minimum allowed $\Delta T$
