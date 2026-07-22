@@ -373,7 +373,8 @@ def get_solver(data: DataStructure, solver_name: str = "vmcon") -> _Solver:
             solver = load_external_solver(solver_name)
         except Exception as e:
             raise ProcessValueError(
-                f'Solver name is not an inbuilt PROCESS solver or recognised package "{solver_name}"'
+                "Solver name is not an inbuilt PROCESS solver or recognised package "
+                f'"{solver_name}"'
             ) from e
 
     return solver

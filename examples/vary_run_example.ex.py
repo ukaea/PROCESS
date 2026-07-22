@@ -23,29 +23,46 @@
 
 # %% [markdown]
 # <div class="alert alert-block alert-info">
-# <b>NOTE</b> We run the examples in a temporary directory so all the inputs are copied there and the outputs contained there before the directory is removed when the example has finished running. This keeps the examples directory tidy and does not permanently modify any data files. The use of temporary directories is not needed for regular use of PROCESS.
+# <b>NOTE</b> We run the examples in a temporary directory so all the inputs are copied
+# there and the outputs contained there before the directory is removed when the example
+# has finished running.
+# This keeps the examples directory tidy and does not permanently modify any data files.
+# The use of temporary directories is not needed for regular use of PROCESS.
 # </div>
 
 # %% [markdown]
-# `VaryRun` is a tool which takes an input file that does not converge and varies the initial values of the
-# iteration variables, within a tolerance, to find an initial point that converges, and creates
-# a new input file using these values.
+# `VaryRun` is a tool which takes an input file that does not converge and varies the
+# initial values of the iteration variables, within a tolerance,
+# to find an initial point that converges,
+# and creates a new input file using these values.
 #
-# `VaryRun` requires a `.conf` file which specifies certain parameters needed for `VaryRun`.
-# In this file, you specify the original input file, the maximum number of iterations to be performed, and a factor within which the iteration variables are changed.
+# `VaryRun` requires a `.conf` file which specifies certain parameters needed for
+# `VaryRun`.
+# In this file, you specify the original input file,
+# the maximum number of iterations to be performed,
+# and a factor within which the iteration variables are changed.
 #
-# If `VaryRun` is able to find a new initial point within the maximum number of iterations, you can find this file in the same directory as your initial input file. This new file will now converge when you run `PROCESS`.
+# If `VaryRun` is able to find a new initial point within the maximum number of
+# iterations,
+# you can find this file in the same directory as your initial input file.
+# This new file will now converge when you run `PROCESS`.
 # `VaryRun` will produce new, numbered sets of files for each iteration it performs.
 # %% [markdown]
 # # VaryRun setup
 #
-# VaryRun requires a `.conf` file in order to run. An example `.conf` file is displayed below.
+# VaryRun requires a `.conf` file in order to run. An example `.conf` file is
+# displayed below.
 #
-# - `WDIR` specifies the path to the working directory where `PROCESS` is being run, here is is `.` to run in the directory of the `.conf` file, which is in `examples/data`
+# - `WDIR` specifies the path to the working directory where `PROCESS` is being run,
+#    here is is `.` to run in the directory of the `.conf` file,
+#    which is in `examples/data`
 # - `ORIGINAL_IN_DAT` is providing the name of the original input file
 # - `NITER` is specifying the maximum number of iterations to perform
-# - `SEED` is specifying a random number generator. Here it is set to 5 so the results of running `VaryRun` on the original input file will always be the same
-# - `FACTOR` is specifying a factor within which the iteration variables will change. Here it is set to 1.5, so this means the iteration variables can be varied within 50% of their initial values in the original input file
+# - `SEED` is specifying a random number generator. Here it is set to 5 so the results of
+#    running `VaryRun` on the original input file will always be the same
+# - `FACTOR` is specifying a factor within which the iteration variables will change.
+#    Here it is set to 1.5, so this means the iteration variables can be varied within
+#    50% of their initial values in the original input file
 
 # %% [markdown]
 # ```ini
@@ -71,7 +88,10 @@
 # %% [markdown]
 # ## Run `VaryRun`
 #
-# Run `PROCESS` on an input file using the `VaryRun` class. The initial input file, `large_tokamak_varyrun_IN.DAT` does not converge. `VaryRun` will vary the initial values of the iteration variables to find an initial point that converges, and will create a new input file with these new values.
+# Run `PROCESS` on an input file using the `VaryRun` class. The initial input file,
+# `large_tokamak_varyrun_IN.DAT` does not converge. `VaryRun` will vary the
+# initial values of the iteration variables to find an initial point that converges,
+# and will create a new input file with these new values.
 
 # %%
 # %load_ext autoreload
@@ -131,7 +151,8 @@ _, updated_iteration_variable_values = get_mfile_initial_ixc_values(
 # %%
 import pandas as pd
 
-# Use pandas to display the values of the iteration variables before and after running VaryRun
+# Use pandas to display the values of the iteration variables before and after running
+# VaryRun
 df = pd.DataFrame({
     "Iteration variable names": iteration_variable_names,
     "Original values": original_iteration_variable_values,

@@ -36,7 +36,8 @@ ax.set_xlabel("Temperature of superconductor (K)")
 ax.set_ylabel("Magnetic field at superconductor (T)")
 ax.set_zlabel("$J_{\\text{crit}}$ (kA/mm²)")
 ax.set_title(
-    "Western Superconducting Ltd. Nb\u2083Sn Critical Current Density Surface at Zero Strain"
+    "Western Superconducting Ltd. Nb\u2083Sn"
+    " Critical Current Density Surface at Zero Strain"
 )
 ax.view_init(elev=30, azim=45)  # Rotate the plot around the z-axis by 45 degrees
 fig.colorbar(surf, shrink=0.5, aspect=10)
@@ -52,7 +53,8 @@ fig_plotly = go.Figure(
 
 # Update layout for better visualization
 fig_plotly.update_layout(
-    title="Western Superconducting Ltd. Nb\u2083Sn Critical Current Density Surface at Zero Strain",
+    title="Western Superconducting Ltd. Nb\u2083Sn"
+    " Critical Current Density Surface at Zero Strain",
     scene={
         "xaxis_title": "Temperature of superconductor (K)",
         "yaxis_title": "Magnetic field strength at superconductor (T)",

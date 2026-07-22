@@ -52,7 +52,7 @@ callback = CustomJS(
     const y1 = Array.from(x, (x) => 0.29 * (A/20 - 0.37) * (x)**2) // Example transformation for the first line
     const y2 = Array.from(x, (x) => 0.26 * (A/20 - 0.65)**0.5 * (x)**2) // Example transformation for the second line
     source.data = { x, y1, y2 }
-""",
+""",  # noqa: E501
 )
 
 te.js_on_change("value", callback)

@@ -147,11 +147,14 @@ def st_d_limit_ecrh(gyro_frequency_max, bt_input, i_plasma_pedestal):
 
 
 def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available):
-    """Routine to calculate if the plasma is ignitable with the current values for the B field. Assumes
-    current ECRH achievable peak temperature (which is inaccurate as the cordey pass should be calculated)
+    """Calculate if the plasma is ignitable with the current values for the B field.
+
+    Assumes current ECRH achievable peak temperature
+    (which is inaccurate as the cordey pass should be calculated)
 
     This routine calculates the density limit due to an ECRH heating scheme on axis
-    Assumes current peak temperature (which is inaccurate as the cordey pass should be calculated)
+    Assumes current peak temperature
+    (which is inaccurate as the cordey pass should be calculated)
     Maybe use this: https://doi.org/10.1088/0029-5515/49/8/085026
 
     Parameters
@@ -196,10 +199,10 @@ def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available):
         bt_ecrh_max, proxy_stellarator.data.physics.b_plasma_toroidal_on_axis
     )
 
+    # The second call seems to be necessary for all values to "converge"
+    # (and is sufficient)
     proxy_stellarator.st_phys(False)
-    proxy_stellarator.st_phys(
-        False
-    )  # The second call seems to be necessary for all values to "converge" (and is sufficient)
+    proxy_stellarator.st_phys(False)
 
     powerht_out = max(
         proxy_stellarator.data.physics.p_plasma_loss_mw, 0.00001e0

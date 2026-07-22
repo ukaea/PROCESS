@@ -1804,14 +1804,14 @@ class CurrentDrive(Model):
 
             # Calculate the normalised current drive efficieny for the primary
             # heating method
-            self.data.current_drive.eta_cd_norm_hcd_primary = self.calculate_normalised_current_drive_efficiency(
+            self.data.current_drive.eta_cd_norm_hcd_primary = self.calculate_normalised_current_drive_efficiency(  # noqa: E501
                 eta_cd_hcd=self.data.current_drive.eta_cd_hcd_primary,
                 nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
                 rmajor=self.data.physics.rmajor,
             )
             # Calculate the normalised current drive efficieny for the secondary
             # heating method
-            self.data.current_drive.eta_cd_norm_hcd_secondary = self.calculate_normalised_current_drive_efficiency(
+            self.data.current_drive.eta_cd_norm_hcd_secondary = self.calculate_normalised_current_drive_efficiency(  # noqa: E501
                 eta_cd_hcd=self.data.current_drive.eta_cd_hcd_secondary,
                 nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
                 rmajor=self.data.physics.rmajor,
@@ -1854,8 +1854,9 @@ class CurrentDrive(Model):
                 / self.data.physics.plasma_current
             )
 
-            # Calculate the dimensionless current drive efficiency for the primary heating method (ζ)
-            self.data.current_drive.eta_cd_dimensionless_hcd_primary = self.calculate_dimensionless_current_drive_efficiency(
+            # Calculate the dimensionless current drive efficiency for
+            # the primary heating method (ζ)
+            self.data.current_drive.eta_cd_dimensionless_hcd_primary = self.calculate_dimensionless_current_drive_efficiency(  # noqa: E501
                 nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
                 rmajor=self.data.physics.rmajor,
                 temp_plasma_electron_vol_avg_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
@@ -1866,7 +1867,7 @@ class CurrentDrive(Model):
             if self.data.current_drive.p_hcd_secondary_injected_mw > 0.0:
                 # Calculate the dimensionless current drive efficiency for the secondary
                 # heating method (ζ)
-                self.data.current_drive.eta_cd_dimensionless_hcd_secondary = self.calculate_dimensionless_current_drive_efficiency(
+                self.data.current_drive.eta_cd_dimensionless_hcd_secondary = self.calculate_dimensionless_current_drive_efficiency(  # noqa: E501
                     nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
                     rmajor=self.data.physics.rmajor,
                     temp_plasma_electron_vol_avg_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,

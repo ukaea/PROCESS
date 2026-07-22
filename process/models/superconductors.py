@@ -181,11 +181,16 @@ def jcrit_rebco(
     -------
     tuple[float, bool, float, float]
         A tuple containing:
-        - j_critical: Critical current density in the superconductor (A/m²).
-        - validity: A boolean indicating whether the input parameters are within the
-                    valid range.
-        - b_c20max: Upper critical field (T) for the superconductor at zero temperature and strain.
-        - temp_c0max: Critical temperature (K) at zero field and strain.
+        - j_critical:
+            Critical current density in the superconductor (A/m²).
+        - validity:
+            A boolean indicating whether the input parameters are within the
+            valid range.
+        - b_c20max:
+            Upper critical field (T) for the superconductor
+            at zero temperature and strain.
+        - temp_c0max:
+            Critical temperature (K) at zero field and strain.
 
     Notes
     -----

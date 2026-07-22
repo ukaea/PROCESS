@@ -237,8 +237,10 @@ class Costs2015(Model):
             "Blanket and shield materials and manufacturing"
         )
         # The cost of making the blanket was estimated for PPCS A.
-        # This cost includes only manufacturing - not R&D, transport, or assembly in the reactor.
-        # It includes the first wall, blanket and shield, but excludes the breeder and multiplier materials.
+        # This cost includes only manufacturing - not R&D, transport,
+        # or assembly in the reactor.
+        # It includes the first wall, blanket and shield, but excludes the breeder
+        # and multiplier materials.
         self.data.costs_2015.s_cref[25] = 317.0e6
         #  Scale with steel mass in blanket + shield mass
         self.data.costs_2015.s_k[25] = (
@@ -264,7 +266,8 @@ class Costs2015(Model):
         """
         po.oheadr(
             self.outfile,
-            'Estimate of "overnight" capital cost for a first of kind power plant (2014 M$)',
+            'Estimate of "overnight" capital cost for a first of kind power plant '
+            "(2014 M$)",
         )
 
         po.oshead(self.outfile, "Buildings (M$)")
@@ -1039,9 +1042,11 @@ class Costs2015(Model):
         self.data.costs_2015.s_label[51] = "Electrical power supply and distribution"
         #  Cost of ITER electrical power supply and distribution
         self.data.costs_2015.s_cref[51] = 1188.0e6
-        #  Scale with total magnetic energy in the poloidal field / resistive diffusion time (W)
+        #  Scale with total magnetic energy in the
+        #  poloidal field / resistive diffusion time (W)
         #  For ITER value see
-        #  K:\Power Plant Physics and Technology\PROCESS\PROCESS documentation papers\resistive diffusion time.xmcd or pdf
+        #  K:\Power Plant Physics and Technology\PROCESS\
+        #  PROCESS documentation papers\resistive diffusion time.xmcd or pdf
         self.data.costs_2015.s_k[51] = (
             self.data.pf_power.ensxpfm * 1.0e6 / self.data.physics.t_plasma_res_diffusion
         )

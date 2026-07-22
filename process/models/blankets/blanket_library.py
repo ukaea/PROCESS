@@ -1,4 +1,4 @@
-"""This library contains routines that can be shared by the blanket modules used in PROCESS."""
+"""This library contains routines that can be shared by the blanket modules."""
 
 import logging
 from enum import IntEnum
@@ -45,7 +45,9 @@ logger = logging.getLogger(__name__)
 
 
 class FWBlktCoolantLoopTypes(IntEnum):
-    """Enumeration for first wall and blanket coolant loop types. `i_fw_blkt_shared_coolant`."""
+    """Enumeration for first wall and blanket coolant loop types.
+    `i_fw_blkt_shared_coolant`.
+    """
 
     SHARED_LOOP = 0
     SEPARATE_LOOPS = 1
@@ -264,8 +266,9 @@ class BlanketLibrary(Model):
 
         Returns
         -------
-        tuple[float, float, float]
-            Tuple containing inboard blanket surface area (m²), outboard blanket surface area (m²),
+        :
+            Tuple containing inboard blanket surface area (m²),
+            outboard blanket surface area (m²),
             and total blanket surface area (m²)
         """
         # Calculate major radius to outer edge of inboard ...
@@ -412,8 +415,9 @@ class BlanketLibrary(Model):
 
         Returns
         -------
-        tuple[float, float, float]
-            Tuple containing inboard blanket surface area (m²), outboard blanket surface area (m²),
+        :
+            Tuple containing inboard blanket surface area (m²),
+            outboard blanket surface area (m²),
             and total blanket surface area (m²)
         """
         # Major radius to centre of inboard and outboard ellipses (m)
@@ -695,7 +699,8 @@ class BlanketLibrary(Model):
 
         """
         # Make sure that, if the inputs for the FW and blanket inputs are different,
-        # the i_fw_blkt_shared_coolant variable is appropriately set for separate coolants
+        # the i_fw_blkt_shared_coolant variable is
+        # appropriately set for separate coolants
         if CoolantType(self.data.fwbs.i_fw_coolant_type) != CoolantType(
             self.data.fwbs.i_blkt_coolant_type
         ):
@@ -765,7 +770,8 @@ class BlanketLibrary(Model):
             or np.isnan(self.data.fwbs.den_fw_coolant)
         ):
             raise ProcessValueError(
-                f"Error in primary_coolant_properties. {self.data.fwbs.den_fw_coolant = }"
+                "Error in primary_coolant_properties. "
+                f"{self.data.fwbs.den_fw_coolant = }"
             )
         if (
             self.data.fwbs.den_blkt_coolant > 1e9
@@ -773,7 +779,8 @@ class BlanketLibrary(Model):
             or np.isnan(self.data.fwbs.den_blkt_coolant)
         ):
             raise ProcessValueError(
-                f"Error in primary_coolant_properties. {self.data.fwbs.den_blkt_coolant = }"
+                "Error in primary_coolant_properties. "
+                f"{self.data.fwbs.den_blkt_coolant = }"
             )
 
         if output:
@@ -782,7 +789,8 @@ class BlanketLibrary(Model):
             )
             po.ocmmnt(
                 self.outfile,
-                "Calculated using mid temp(s) of system (or systems if use different coolant types).",
+                "Calculated using mid temp(s) of system "
+                "(or systems if use different coolant types).",
             )
 
             # FW (or FW/BB)
@@ -888,22 +896,30 @@ class BlanketLibrary(Model):
                 )
 
     def set_blanket_module_geometry(self):
-        """Sets the geometry parameters for blanket modules, including coolant channel dimensions,
-        module segmentation, and flow lengths, based on the current configuration and input variables.
+        """Sets the geometry parameters for blanket modules,
+        including coolant channel dimensions,
+        module segmentation, and flow lengths,
+        based on the current configuration and input variables.
 
         The method performs the following steps:
-        - Determines inboard and outboard coolant channel radial lengths based on blanket type.
-        - Segments the blanket modules poloidally and toroidally according to input segmentation settings.
-        - Calculates the toroidal segment lengths for inboard and outboard blanket modules.
+        - Determines inboard and outboard coolant channel radial lengths
+            based on blanket type.
+        - Segments the blanket modules poloidally and toroidally according to input
+            segmentation settings.
+        - Calculates the toroidal segment lengths for inboard and outboard
+            blanket modules.
         - Computes the poloidal height of blanket modules.
-        - For dual coolant blankets, calculates the minimum available space for liquid breeder pipes
-          in radial, toroidal, and poloidal directions, and checks for geometric constraints.
-        - Calculates total flow lengths for primary coolant channels, used in pressure drop calculations.
+        - For dual coolant blankets, calculates the minimum available space
+            for liquid breeder pipes in radial, toroidal, and poloidal directions,
+            and checks for geometric constraints.
+        - Calculates total flow lengths for primary coolant channels,
+            used in pressure drop calculations.
 
         Raises
         ------
         Error
-            If the poloidal segment length is less than three times the minimum liquid breeder pipe width.
+            If the poloidal segment length is less than three times
+            the minimum liquid breeder pipe width.
         """
         i_blanket_type = BlktModelTypes(self.data.fwbs.i_blanket_type)
         if i_blanket_type == BlktModelTypes.DCLL:
@@ -926,7 +942,8 @@ class BlanketLibrary(Model):
         # blanket into nblktmodp*nblktmodt modules, all assumed to be the same size
 
         # If SMS blanket then do not have separate poloidal modules....
-        # Should not need this as n_blkt_inboard_modules_poloidal is input but make sure here.
+        # Should not need this as n_blkt_inboard_modules_poloidal is input
+        # but make sure here.
         if self.data.fwbs.i_blkt_module_segmentation == 1:
             self.data.fwbs.n_blkt_inboard_modules_poloidal = 1
             self.data.fwbs.n_blkt_outboard_modules_poloidal = 1
@@ -935,12 +952,12 @@ class BlanketLibrary(Model):
             self.data.physics.itart == 1
             or self.data.fwbs.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
-            self.data.blanket.len_blkt_inboard_segment_poloidal = self.calculate_dshaped_inboard_blkt_segment_poloidal(
+            self.data.blanket.len_blkt_inboard_segment_poloidal = self.calculate_dshaped_inboard_blkt_segment_poloidal(  # noqa: E501
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
                 n_blkt_inboard_modules_poloidal=self.data.fwbs.n_blkt_inboard_modules_poloidal,
             )
 
-            self.data.blanket.len_blkt_outboard_segment_poloidal = self.calculate_dshaped_outboard_blkt_segment_poloidal(
+            self.data.blanket.len_blkt_outboard_segment_poloidal = self.calculate_dshaped_outboard_blkt_segment_poloidal(  # noqa: E501
                 n_blkt_outboard_modules_poloidal=self.data.fwbs.n_blkt_outboard_modules_poloidal,
                 dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
                 rminor=self.data.physics.rminor,
@@ -950,7 +967,7 @@ class BlanketLibrary(Model):
                 f_ster_div_single=self.data.fwbs.f_ster_div_single,
             )
         else:
-            self.data.blanket.len_blkt_inboard_segment_poloidal = self.calculate_elliptical_inboard_blkt_segment_poloidal(
+            self.data.blanket.len_blkt_inboard_segment_poloidal = self.calculate_elliptical_inboard_blkt_segment_poloidal(  # noqa: E501
                 rmajor=self.data.physics.rmajor,
                 rminor=self.data.physics.rminor,
                 triang=self.data.physics.triang,
@@ -961,7 +978,7 @@ class BlanketLibrary(Model):
                 f_ster_div_single=self.data.fwbs.f_ster_div_single,
             )
 
-            self.data.blanket.len_blkt_outboard_segment_poloidal = self.calculate_elliptical_outboard_blkt_segment_poloidal(
+            self.data.blanket.len_blkt_outboard_segment_poloidal = self.calculate_elliptical_outboard_blkt_segment_poloidal(  # noqa: E501
                 rmajor=self.data.physics.rmajor,
                 rminor=self.data.physics.rminor,
                 triang=self.data.physics.triang,
@@ -974,7 +991,8 @@ class BlanketLibrary(Model):
 
         # If liquid breeder or dual coolant blanket then calculate
         if self.data.fwbs.i_blkt_dual_coolant > 0:
-            # Use smallest space available to pipes for pipe sizes in pumping calculations (worst case)
+            # Use smallest space available to pipes for pipe sizes
+            # in pumping calculations (worst case)
             if (
                 self.data.build.i_blkt_inboard
                 == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
@@ -1257,8 +1275,10 @@ class BlanketLibrary(Model):
                 flow_density=self.data.fwbs.den_blkt_coolant,
             )
 
-            # Get mass flow rate etc. for inboard blanket breeder flow for tritium extraction
-            # Use the number of desired recirculations ([Aub2013]=10) and mass from dcll_masses
+            # Get mass flow rate etc. for inboard blanket breeder flow
+            # for tritium extraction
+            # Use the number of desired recirculations ([Aub2013]=10)
+            # and mass from dcll_masses
             # N.B. wht_liq is BZ mass, does not include manifold.
             self.data.blanket.mfblkto_liq = (
                 self.data.fwbs.n_liq_recirc * self.data.fwbs.wht_liq_ob
@@ -1307,8 +1327,10 @@ class BlanketLibrary(Model):
                     flow_density=self.data.fwbs.den_blkt_coolant,
                 )
 
-                # Get mass flow rate etc. for inboard blanket breeder flow for tritium extraction
-                # Use the number of desired recirculations ([Aub2013]=10) and mass from dcll_masses
+                # Get mass flow rate etc. for inboard blanket breeder flow for
+                # tritium extraction
+                # Use the number of desired recirculations ([Aub2013]=10) and
+                # mass from dcll_masses
                 # N.B. wht_liq is BZ mass, does not include manifold.
                 self.data.blanket.mfblkti_liq = (
                     self.data.fwbs.n_liq_recirc * self.data.fwbs.wht_liq_ib
@@ -1324,7 +1346,8 @@ class BlanketLibrary(Model):
 
         # If the blanket is single-coolant with solid breeder...
         else:
-            # Calculate total number of pipes (in all outboard modules) from coolant fraction and
+            # Calculate total number of pipes (in all outboard modules) from
+            # coolant fraction and
             # channel dimensions (assumes up/down flow, two 90 deg bends per length)
             self.data.blanket.n_blkt_outboard_channels = (
                 self.data.fwbs.f_a_blkt_cooling_channels
@@ -1675,8 +1698,10 @@ class BlanketLibrary(Model):
         # Calculate ellipse circumference using Ramanujan approximation (m)
         ptor = np.pi * (3.0 * (a + b) - np.sqrt((3.0 * a + b) * (a + 3.0 * b)))
 
-        # Calculate inboard blanket poloidal length and segment, subtracting divertor length (m)
-        # Assume divertor lies between the two ellipses, so fraction f_ster_div_single still applies
+        # Calculate inboard blanket poloidal length and segment,
+        # subtracting divertor length (m)
+        # Assume divertor lies between the two ellipses,
+        # so fraction f_ster_div_single still applies
 
         # kit hcll version only had the single null option
         if n_divertors == 2:
@@ -1745,7 +1770,8 @@ class BlanketLibrary(Model):
         ptor = np.pi * (3.0 * (a + b) - np.sqrt((3.0 * a + b) * (a + 3.0 * b)))
 
         # kit hcll version only had the single null option
-        # Calculate outboard blanket poloidal length and segment, subtracting divertor length (m)
+        # Calculate outboard blanket poloidal length and segment,
+        # subtracting divertor length (m)
         if n_divertors == 2:
             # Double null configuration
             len_blkt_outboard_segment_poloidal = (
@@ -1762,8 +1788,11 @@ class BlanketLibrary(Model):
         return len_blkt_outboard_segment_poloidal
 
     def liquid_breeder_properties(self, output: bool = False):
-        """Calculates the fluid properties of the Liquid Metal Breeder/Coolant in the Blanket BZ
-        Uses middle value of input and output temperatures of Liquid Metal Breeder/Coolant
+        """Calculates the fluid properties of the
+        Liquid Metal Breeder/Coolant in the Blanket BZ
+
+        Uses middle value of input and output temperatures of
+        Liquid Metal Breeder/Coolant
         Curently have PbLi but can expand with e.g., Lithium
 
         Parameters
@@ -1781,7 +1810,8 @@ class BlanketLibrary(Model):
                     nuclear fusion technology, Journal of Nuclear Materials, Vol. 376(6).
 
         [Mar2019]   Martelli et al. (2019), Literature review of lead-lithium
-                    thermophysical properties, Fusion Engineering and Design, 138, 183-195.
+                    thermophysical properties, Fusion Engineering and Design, 138,
+                    183-195.
         """
         # Use mid temp
         if self.data.fwbs.inlet_temp_liq == self.data.fwbs.outlet_temp_liq:
@@ -1797,15 +1827,15 @@ class BlanketLibrary(Model):
             # Constant pressure ~ 17 atmospheres ~ 1.7D6 Pa
             # Li content is ~ 17%
             #
-            # density                      kg m-3          T in Kelvin     range = 508-880 K
+            # density                      kg m-3     T in Kelvin     range = 508-880 K
             #
-            # specific_heat                J kg-1 K-1      T in Kelvin     range = 508-880 K
+            # specific_heat                J kg-1 K-1 T in Kelvin     range = 508-880 K
             #
-            # thermal_conductivity         W m-1 K-1       T in Celcius    range = 508-773 K
+            # thermal_conductivity         W m-1 K-1  T in Celcius    range = 508-773 K
             #
-            # dynamic_viscosity            Pa s            T in Celcius    range = 508-873 K
+            # dynamic_viscosity            Pa s       T in Celcius    range = 508-873 K
             #
-            # electrical_conductivity      A V-1 m-1       T in Kelvin     range = 600-800 K
+            # electrical_conductivity      A V-1 m-1  T in Kelvin     range = 600-800 K
 
             # Caculate properties
             self.data.fwbs.den_liq = 1.052e4 * (1 - mid_temp_liq * 1.13e-4)
@@ -1837,7 +1867,8 @@ class BlanketLibrary(Model):
 
         # If the liquid metal is Li...
         elif self.data.fwbs.i_blkt_liquid_breeder_type == 1:
-            # Temporary - should be updated with information from Li reviews conducted at CCFE once completed
+            # Temporary - should be updated with information from Li reviews conducted
+            # at CCFE once completed
             # Li Properties from [Mal1995] at 300 Celcius
             # den_liq = 505                            kg/m3
             # specific_heat_liq = 4260                 J kg-1 K-1
@@ -1845,7 +1876,8 @@ class BlanketLibrary(Model):
             # dynamic_viscosity_liq = 1.0D-6           m2 s-1
             # electrical_conductivity_liq = 3.03D6     A V-1 m-1
 
-            # New from 'Application of lithium in systems of fusion reactors. 1. Physical and chemical properties of lithium'
+            # New from 'Application of lithium in systems of fusion reactors.
+            # 1. Physical and chemical properties of lithium'
             # Lyublinski et al., 2009, Plasma Devicec and Operations
             self.data.fwbs.den_liq = (
                 504.43
@@ -1911,7 +1943,8 @@ class BlanketLibrary(Model):
             self.data.fwbs.electrical_conductivity_liq
             / self.data.fwbs.dynamic_viscosity_liq
         )
-        # Use toroidal width of the rectangular cooling channel as characteristic length scale
+        # Use toroidal width of the rectangular cooling channel
+        # as characteristic length scale
         self.data.fwbs.hartmann_liq = (
             np.asarray(self.data.fwbs.b_mag_blkt)
             * self.data.fwbs.a_bz_liq
@@ -1925,13 +1958,15 @@ class BlanketLibrary(Model):
             or (t_ranges[:, 1] < mid_temp_liq).any()
         ):
             logger.error(
-                "Outside temperature limit for one or more liquid metal breeder properties"
+                "Outside temperature limit for one or more "
+                "liquid metal breeder properties"
             )
 
             if output:
                 po.ocmmnt(
                     self.outfile,
-                    "Outside temperature limit for one or more liquid metal breeder properties.",
+                    "Outside temperature limit for one or "
+                    "more liquid metal breeder properties.",
                 )
                 po.ovarre(
                     self.outfile,
@@ -2024,8 +2059,11 @@ class BlanketLibrary(Model):
         )
 
     def flow_velocity(self, i_channel_shape, mass_flow_rate, flow_density):
-        """Calculate the coolant flow velocity (m/s) for given pipe mass flow rate and pipe size/shape.
-        N.B. Assumed that primary BB and FW coolants have same pipe radius (= radius_fw_channel).
+        """Calculate the coolant flow velocity (m/s) for given pipe mass flow rate
+        and pipe size/shape.
+
+        N.B. Assumed that primary BB and FW coolants have same pipe radius
+        (= radius_fw_channel).
 
 
         Parameters
@@ -2067,43 +2105,49 @@ class BlanketLibrary(Model):
         Dual-coolant modifications and generalisation refactor: G. Graham, CCFE
 
         Three options:
-        1.   Solid breeder - nuclear heating in the blanket is exctrated by the primary coolant.
+        1.   Solid breeder - nuclear heating in the blanket is
+            exctrated by the primary coolant.
         2.   Liquid metal breeder, single-coolant
                  - nuclear heating in the blanket is exctrated by the primary coolant.
-                 - liquid metal is circulated for tritium extraction, specified by number of circulations/day.
+                 - liquid metal is circulated for tritium extraction, specified
+                    by number of circulations/day.
         3.   Liquid metal breeder, dual-coolant -
-                 - nuclear heating in the liquid breeder/coolant is extracted by the liquid breeder/coolant.
-                 - nuclear heating in the blanket structure is extracted by the primary coolant
+                 - nuclear heating in the liquid breeder/coolant is extracted
+                    by the liquid breeder/coolant.
+                 - nuclear heating in the blanket structure is extracted
+                    by the primary coolant
 
         Flow Channel and Coolant Input Info:
 
-            N.B. Primary coolant applies to single-coolant BB, or structural cooling of dual-coolant BB.
-            Secondary coolant applies to self-cooled breeder material.
+        N.B. Primary coolant applies to single-coolant BB, or structural cooling of
+        dual-coolant BB.
+        Secondary coolant applies to self-cooled breeder material.
 
-            Coolant Channels            FW                      BB primary          BB Liquid Breeder/Coolant
+        Coolant Channels          FW                      BB primary          BB Liquid Breeder/Coolant
 
-            length (m)                  len_fw_channel
-            width (m)                   radius_fw_channel (radius, cicular)   radius_fw_channel                 a_bz_liq, b_bz_liq (rectangular)
-            wall thickness (m)          dr_fw_wall                 dr_fw_wall             th_wall_secondary
-            dx_fw_module (m)                   dx_fw_module
-            roughness epsilon           roughness_fw_channel
-            peak FW temp (K)            temp_fw_peak
-            maximum temp (K)            temp_fw_max
-            FCI switch                  ---                     ---                 i_blkt_liquid_breeder_channel_type
+        length (m)                  len_fw_channel
+        width (m)                   radius_fw_channel    radius_fw_channel    a_bz_liq, b_bz_liq (rectangular)
+                                    (radius, cicular)
+        wall thickness (m)          dr_fw_wall                 dr_fw_wall      th_wall_secondary
+        dx_fw_module (m)            dx_fw_module
+        roughness epsilon           roughness_fw_channel
+        peak FW temp (K)            temp_fw_peak
+        maximum temp (K)            temp_fw_max
+        FCI switch                  ---                     ---        i_blkt_liquid_breeder_channel_type
 
-            Coolant                     FW                      BB primary          BB secondary
+        Coolant                     FW                      BB primary              BB secondary
 
-            primary coolant switch      i_fw_coolant_type               i_blkt_coolant_type              ---
-            secondary coolant switch    ---                     ---                 i_blkt_liquid_breeder_type
-            inlet temp (K)              temp_fw_coolant_in                 temp_blkt_coolant_in          inlet_temp_liq
-            outlet temp (K)             temp_fw_coolant_out                temp_blkt_coolant_out         outlet_temp_liq
-            pressure (Pa)               pres_fw_coolant              pres_blkt_coolant          blpressure_liq
+        primary coolant switch      i_fw_coolant_type       i_blkt_coolant_type     ---
+        secondary coolant switch   ---                  ---                         i_blkt_liquid_breeder_type
+        inlet temp (K)              temp_fw_coolant_in      temp_blkt_coolant_in    inlet_temp_liq
+        outlet temp (K)             temp_fw_coolant_out     temp_blkt_coolant_out   outlet_temp_liq
+        pressure (Pa)               pres_fw_coolant         pres_blkt_coolant       blpressure_liq
 
         Parameters
         ----------
         output: bool
 
-        """
+        """  # noqa: E501
         ######################################################
         # Pre calculations needed for thermo-hydraulic model #
         ######################################################
@@ -2166,7 +2210,8 @@ class BlanketLibrary(Model):
         # FW and BB Mass Flow ###########
 
         # Make sure that, if the inputs for the FW and blanket inputs are different,
-        # the i_fw_blkt_shared_coolant variable is appropriately set for separate coolants
+        # the i_fw_blkt_shared_coolant variable is appropriately set
+        # for separate coolants
         if CoolantType(self.data.fwbs.i_fw_coolant_type) != CoolantType(
             self.data.fwbs.i_blkt_coolant_type
         ):
@@ -2348,8 +2393,10 @@ class BlanketLibrary(Model):
                 )
             )
 
-            # Get mass flow rate etc. for inboard blanket breeder flow for tritium extraction
-            # Use the number of desired recirculations ([Aub2013]=10) and mass from dcll_masses
+            # Get mass flow rate etc. for inboard blanket breeder flow
+            # for tritium extraction
+            # Use the number of desired recirculations ([Aub2013]=10)
+            # and mass from dcll_masses
             # N.B. wht_liq is BZ mass, does not include manifold.
             self.data.blanket.mfblkto_liq = (
                 self.data.fwbs.n_liq_recirc * self.data.fwbs.wht_liq_ob
@@ -2806,7 +2853,8 @@ class BlanketLibrary(Model):
             if self.data.fwbs.i_blkt_dual_coolant > 0:
                 po.ovarre(
                     self.outfile,
-                    "Total mechanical pumping power for FW, blanket and liquid metal breeder(MW)",
+                    "Total mechanical pumping power for FW, "
+                    "blanket and liquid metal breeder(MW)",
                     "(htpmw_blkt_tot)",
                     self.data.heat_transport.htpmw_blkt_tot,
                     "OP ",
@@ -2841,9 +2889,11 @@ class BlanketLibrary(Model):
         nopolchan: int,
         label: str,
     ) -> float:
-        """Calculate the total pressure drop (Pa) for coolant flow in the first wall (FW) and breeding blanket (BZ).
+        """Calculate the total pressure drop (Pa) for coolant flow in the
+        first wall (FW) and breeding blanket (BZ).
 
-        This includes frictional losses and, for liquid breeder coolants, magnetohydrodynamic (MHD) losses.
+        This includes frictional losses and, for liquid breeder coolants,
+        magnetohydrodynamic (MHD) losses.
 
         Parameters
         ----------
@@ -2941,8 +2991,10 @@ class BlanketLibrary(Model):
         label: str,
         output: bool = False,
     ):
-        """Calculates the pressure drop in a liquid metal flow channel due to MHD effects. The total pressure
-        drop is the sum of contributions. This is only used for secondary coolant/breeder so rectangular flow
+        """Calculates the pressure drop in a liquid metal flow channel
+        due to MHD effects.
+        The total pressure drop is the sum of contributions.
+        This is only used for secondary coolant/breeder so rectangular flow
         channels are assumed.
 
 
@@ -2966,8 +3018,10 @@ class BlanketLibrary(Model):
 
         References
         ----------
-        [Miy1986]   Miyazaki et al. (1986), Magneto-Hydro-Dynamic Pressure Drop of Lithium
-        Flow in Rectangular Ducts, Fusion Technology, 10:3P2A, 830-836, DOI: 10.13182/FST10-830
+        [Miy1986]   Miyazaki et al. (1986), Magneto-Hydro-Dynamic
+        Pressure Drop of Lithium
+        Flow in Rectangular Ducts, Fusion Technology, 10:3P2A, 830-836,
+        DOI: 10.13182/FST10-830
 
         [Mal1995]   Malang and Mattas (1995), Comparison of lithium and the eutectic
         lead-lithium alloy, two candidate liquid metal breeder materials
@@ -3034,7 +3088,8 @@ class BlanketLibrary(Model):
             if self.data.fwbs.i_blkt_liquid_breeder_channel_type == 0:
                 po.ocmmnt(
                     self.outfile,
-                    "Flow channels have thin conducting walls (i_blkt_liquid_breeder_channel_type==0)",
+                    "Flow channels have thin conducting walls "
+                    "(i_blkt_liquid_breeder_channel_type==0)",
                 )
                 po.ovarre(
                     self.outfile,
@@ -3046,7 +3101,8 @@ class BlanketLibrary(Model):
             elif self.data.fwbs.i_blkt_liquid_breeder_channel_type == 2:
                 po.ocmmnt(
                     self.outfile,
-                    "Flow Channel Inserts (FCIs) used (i_blkt_liquid_breeder_channel_type==2)",
+                    "Flow Channel Inserts (FCIs) used "
+                    "(i_blkt_liquid_breeder_channel_type==2)",
                 )
                 po.ovarre(
                     self.outfile,
@@ -3058,7 +3114,8 @@ class BlanketLibrary(Model):
             else:
                 po.ocmmnt(
                     self.outfile,
-                    "Flow Channel Inserts - assumed perfect insulator (i_blkt_liquid_breeder_channel_type==1)",
+                    "Flow Channel Inserts - assumed perfect insulator "
+                    "(i_blkt_liquid_breeder_channel_type==1)",
                 )
 
             po.ovarre(
@@ -3155,7 +3212,8 @@ class BlanketLibrary(Model):
         )
 
         # Calculate Darcy friction factor
-        # N.B. friction function Uses Haaland approx. which assumes a filled circular pipe.
+        # N.B. friction function Uses Haaland approx.
+        # which assumes a filled circular pipe.
         # Use dh which allows us to do fluid calculations for non-cicular tubes
         # (dh is estimate appropriate for fully developed flow).
 
@@ -3328,7 +3386,8 @@ class BlanketLibrary(Model):
             a = 0.7 + (0.35 * np.sin((deg_pipe_elbow / 90.0) * (np.pi / 180.0)))
         else:
             raise ProcessValueError(
-                "No formula for 70 <= elbow angle(deg) <= 100, only 90 deg option available in this range."
+                "No formula for 70 <= elbow angle(deg) <= 100, "
+                "only 90 deg option available in this range."
             )
 
         r_ratio = radius_pipe_elbow / dia_pipe
@@ -3367,14 +3426,16 @@ class BlanketLibrary(Model):
         den_coolant: float,
         label: str,
     ) -> float:
-        """Calculate the coolant pumping power in MW for the first wall (FW) or breeding blanket (BZ) coolant.
+        """Calculate the coolant pumping power in MW for the first wall (FW) or
+        breeding blanket (BZ) coolant.
 
         Parameters
         ----------
         output : bool
             Whether to write data to output file.
         i_liquid_breeder : int
-            Switch for primary coolant or secondary coolant/breeder (1=primary He/H2O, 2=secondary PbLi/Li).
+            Switch for primary coolant or secondary coolant/breeder
+            (1=primary He/H2O, 2=secondary PbLi/Li).
         temp_coolant_pump_outlet : float
             Pump outlet temperature (K).
         temp_coolant_pump_inlet : float
@@ -3423,7 +3484,8 @@ class BlanketLibrary(Model):
             # Assume isentropic pump so that s1 = s2
             s1 = pump_outlet_fluid_properties.entropy
 
-            # Get specific enthalpy at the outlet (J/kg) before pump using pressure and entropy s1
+            # Get specific enthalpy at the outlet (J/kg) before pump using
+            # pressure and entropy s1
             pump_inlet_fluid_properties = FluidProperties.of(
                 fluid_name=CoolantType(i_coolant_type).full_name,
                 pressure=pres_coolant_pump_inlet,
@@ -3677,7 +3739,8 @@ class InboardBlanket(BlanketLibrary):
         dz_blkt_half: float,
         dr_fw_plasma_gap_inboard: float,
     ) -> float:
-        """Calculate the poloidal angle subtended by the inboard blanket at the plasma mid-plane.
+        """Calculate the poloidal angle subtended by the inboard blanket
+        at the plasma mid-plane.
 
         Angle is taken from the FW surface
 
@@ -3706,7 +3769,8 @@ class InboardBlanket(BlanketLibrary):
         rminor: float,
         dr_fw_plasma_gap_inboard: float,
     ) -> float:
-        """Calculate the mid-plane toroidal circumference and segment length of the inboard blanket.
+        """Calculate the mid-plane toroidal circumference and segment length
+        of the inboard blanket.
 
         Parameters
         ----------

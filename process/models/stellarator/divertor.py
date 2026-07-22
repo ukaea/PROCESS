@@ -30,66 +30,67 @@ def st_div(stellarator, f_output: bool, data: DataStructure):
     xi_p = data.divertor.xpertin
     T_scrape = data.divertor.tdiv
 
-    #  Scrape-off temperature in Joules
+    # Scrape-off temperature in Joules
 
     e = T_scrape * constants.ELECTRON_CHARGE
 
-    #  Sound speed of particles (m/s)
+    # Sound speed of particles (m/s)
 
     c_s = np.sqrt(e / (data.physics.m_fuel_amu * constants.UMASS))
 
-    #  Island size (m)
+    # Island size (m)
 
     w_r = 4.0e0 * np.sqrt(
         data.stellarator.bmn * r / (data.stellarator.shear * data.stellarator.n_res)
     )
 
-    #  Perpendicular (to plate) distance from X-point to divertor plate (m)
+    # Perpendicular (to plate) distance from X-point to divertor plate (m)
 
     Delta = data.stellarator.f_w * w_r
 
-    #  Length 'along' plasma (m)
+    # Length 'along' plasma (m)
 
     l_p = 2 * np.pi * r * (data.stellarator.m_res) / data.stellarator.n_res
 
-    #  Connection length from X-point to divertor plate (m)
+    # Connection length from X-point to divertor plate (m)
 
     l_x_t = Delta / Theta
 
-    #  Power decay length (m)
+    # Power decay length (m)
 
     l_q = np.sqrt(xi_p * (l_x_t / c_s))
 
-    #  Channel broadening length (m)
+    # Channel broadening length (m)
 
     l_b = np.sqrt(xi_p * l_p / (c_s))
 
-    #  Channel broadening factor
+    # Channel broadening factor
 
     f_x = 1.0e0 + (l_b / (l_p * Theta))
 
-    #  Length of a single divertor plate (m)
+    # Length of a single divertor plate (m)
 
     l_d = f_x * l_p * (Theta / alpha)
 
-    #  Total length of divertor plates (m)
+    # Total length of divertor plates (m)
 
     l_t = 2.0e0 * data.stellarator.n_res * l_d
 
-    #  Wetted area (m2)
+    # Wetted area (m2)
 
     a_eff = l_t * l_q
 
-    #  Divertor plate width (m): assume total area is wetted area/data.stellarator.fdivwet
+    # Divertor plate width (m): assume total area is
+    # wetted area/data.stellarator.fdivwet
 
     darea = a_eff / data.stellarator.fdivwet
     l_w = darea / l_t
 
-    #  Divertor heat load (MW/m2)
+    # Divertor heat load (MW/m2)
 
     q_div = data.stellarator.f_asym * (p_div / a_eff)
 
-    #  Transfer to global variables
+    # Transfer to global variables
 
     data.divertor.pflux_div_heat_load_mw = q_div
     data.divertor.a_div_surface_total = darea
@@ -101,12 +102,12 @@ def st_div(stellarator, f_output: bool, data: DataStructure):
 
 
 def output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta, data: DataStructure):
-    """Outputs a summary of divertor-related parameters and results to the stellartor object.
-        stellarator: An object containing stellarator configuration and output handle.
+    """Outputs a summary of divertor-related stellarator parameters and results
 
-    The function writes various physical and geometric parameters related to the divertor,
-    including power, angles, heat transport coefficients, resonance numbers, field perturbations,
-    and other relevant quantities, to the output file associated with the stellarator object.
+    The function writes various physical and geometric parameters related to
+    the divertor, including power, angles, heat transport coefficients,
+    resonance numbers, field perturbations, and other relevant quantities,
+    to the output file associated with the stellarator object.
 
     Parameters
     ----------

@@ -213,7 +213,8 @@ def process_cli(
         if varyiterparams:
             if mfile_path is not None:
                 raise click.BadParameter(
-                    "--mfile not supported on vary run please specify in the configuration file"
+                    "--mfile not supported on vary run please specify "
+                    "in the configuration file"
                 )
             runtype = VaryRun(config_file, solver)
         elif indat is None:
@@ -438,7 +439,8 @@ class SingleRun:
             pass
         # ioptimz == -2: evaluation
         elif self.data.numerics.ioptimz == PROCESSRunMode.EVALUATION:
-            # No optimisation: solve equality (consistency) constraints only using fsolve (HYBRD)
+            # No optimisation:
+            # solve equality (consistency) constraints only using fsolve (HYBRD)
             self.solver = "fsolve"
         else:
             raise ValueError(
@@ -480,9 +482,10 @@ class SingleRun:
             mfile_file.writelines(input_lines)
 
     def validate_input(self, replace_obsolete: bool = False):
-        """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
-        within obsolete_variables.py. If obsolete variables are found, and if `replace_obsolete`
-        is set to True, they are either removed or replaced by their updated names as specified
+        """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict
+        contained within obsolete_variables.py.
+        If obsolete variables are found, and if `replace_obsolete` is set to True,
+        they are either removed or replaced by their updated names as specified
         in the OBS_VARS dictionary.
         """
         obsolete_variables = ov.OBS_VARS
@@ -525,13 +528,16 @@ class SingleRun:
                                 # Raise an error if replacement is a list
                                 replacement_str = ", ".join(replacement)
                                 raise ValueError(
-                                    f"The variable '{variable_name}' is obsolete and should be replaced by the following variables: {replacement_str}. "
+                                    f"The variable '{variable_name}' is obsolete and "
+                                    "should be replaced by the following variables: "
+                                    f"{replacement_str}. "
                                     "Please set their values accordingly."
                                 )
                             # Replace obsolete variable
                             modified_line = line.replace(variable_name, replacement, 1)
                             modified_lines.append(
-                                f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}"
+                                f"* Replaced '{variable_name}' with "
+                                f"'{replacement}'\n{modified_line}"
                             )
                             changes_made.append(
                                 f"Replaced '{variable_name}' with '{replacement}'"
@@ -554,7 +560,8 @@ class SingleRun:
                 with open(filename, "w") as file:
                     file.writelines(modified_lines)
                 print(
-                    "The IN.DAT file has been updated to replace or comment out obsolete variables."
+                    "The IN.DAT file has been updated to replace or "
+                    "comment out obsolete variables."
                 )
                 print("Summary of changes made:")
                 for change in changes_made:
@@ -562,16 +569,25 @@ class SingleRun:
             else:
                 # Only print the report if replace_obsolete is False
                 message = (
-                    "The IN.DAT file contains obsolete variables from the OBS_VARS dictionary. "
-                    f"The obsolete variables in your IN.DAT file are: {obs_vars_in_in_dat}. "
-                    "Either remove these or replace them with their updated variable names. "
+                    "The IN.DAT file contains obsolete variables "
+                    "from the OBS_VARS dictionary. "
+                    "The obsolete variables in your IN.DAT file are: "
+                    f"{obs_vars_in_in_dat}. "
+                    "Either remove these or replace them with "
+                    "their updated variable names. "
                 )
                 for obs_var in obs_vars_in_in_dat:
                     replacement = obsolete_variables.get(obs_var)
                     if replacement is None:
-                        message += f"\n\n{obs_var} is an obsolete variable and needs to be removed."
+                        message += (
+                            f"\n\n{obs_var} is an obsolete variable "
+                            "and needs to be removed."
+                        )
                     else:
-                        message += f"\n\n{obs_var} is an obsolete variable and needs to be replaced by {replacement}."
+                        message += (
+                            f"\n\n{obs_var} is an obsolete variable "
+                            f"and needs to be replaced by {replacement}."
+                        )
                     message += f" {obsolete_vars_help_message.get(obs_var, '')}"
                 raise ValueError(message)
 
@@ -720,8 +736,10 @@ class Models:
 
     @property
     def models(self) -> tuple[Model, ...]:
-        # At the moment, this property just returns models that implement the Model interface.
-        # Eventually every Model will comply and then this method can be used as the caller/outputter!
+        # At the moment, this property just returns models
+        # that implement the Model interface.
+        # Eventually every Model will comply and then
+        # this method can be used as the caller/outputter!
         return (
             self.water_use,
             self._costs_2015,

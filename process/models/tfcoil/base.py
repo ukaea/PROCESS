@@ -401,7 +401,8 @@ class TFCoil(Model):
               magnet [T].
             - **c_tf_total** (*float*): Total current in TF coils [A].
             - **c_tf_coil** (*float*): Current per TF coil [A].
-            - **j_tf_coil_full_area** (*float*): Global inboard leg average current density in TF coils [A/m²].
+            - **j_tf_coil_full_area** (*float*):
+                 Global inboard leg average current density in TF coils [A/m²].
         """
         # Calculation of the maximum B field on the magnet [T]
         b_tf_inboard_peak_symmetric = (
@@ -646,7 +647,8 @@ class TFCoil(Model):
         )
         po.ocmmnt(
             self.outfile,
-            f"TF conductor model selected: {TFConductorModel(self.data.tfcoil.i_tf_sup).name}",
+            "TF conductor model selected: "
+            f"{TFConductorModel(self.data.tfcoil.i_tf_sup).name}",
         )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
@@ -664,7 +666,8 @@ class TFCoil(Model):
             po.ocmmnt(self.outfile, "D-shape coil, inner surface shape approximated by")
             po.ocmmnt(
                 self.outfile,
-                "by a straight segment and elliptical arcs between the following points:",
+                "by a straight segment and elliptical arcs between the "
+                "following points:",
             )
             po.oblnkl(self.outfile)
         elif self.data.tfcoil.i_tf_shape == TFCoilShapeModel.PICTURE_FRAME:
@@ -679,7 +682,8 @@ class TFCoil(Model):
         for ii in range(5):
             po.write(
                 self.outfile,
-                f"  {ii}              {self.data.tfcoil.r_tf_arc[ii]:.6e}  {self.data.tfcoil.z_tf_arc[ii]:.6e}",
+                f"  {ii}              {self.data.tfcoil.r_tf_arc[ii]:.6e}  "
+                f"{self.data.tfcoil.z_tf_arc[ii]:.6e}",
             )
             po.ovarre(
                 constants.MFILE,

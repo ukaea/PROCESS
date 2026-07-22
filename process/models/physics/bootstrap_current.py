@@ -277,21 +277,23 @@ class PlasmaBootstrapCurrent(Model):
         float
             The bootstrap current fraction value.
         """
+        cd = self.data.current_drive
+        bs_cf_m = BootstrapCurrentFractionModel
         model_map = {
-            BootstrapCurrentFractionModel.USER_INPUT: self.data.current_drive.f_c_plasma_bootstrap,
-            BootstrapCurrentFractionModel.ITER_89: self.data.current_drive.f_c_plasma_bootstrap_iter89,
-            BootstrapCurrentFractionModel.NEVINS: self.data.current_drive.f_c_plasma_bootstrap_nevins,
-            BootstrapCurrentFractionModel.WILSON: self.data.current_drive.f_c_plasma_bootstrap_wilson,
-            BootstrapCurrentFractionModel.SAUTER: self.data.current_drive.f_c_plasma_bootstrap_sauter,
-            BootstrapCurrentFractionModel.SAKAI: self.data.current_drive.f_c_plasma_bootstrap_sakai,
-            BootstrapCurrentFractionModel.ARIES: self.data.current_drive.f_c_plasma_bootstrap_aries,
-            BootstrapCurrentFractionModel.ANDRADE: self.data.current_drive.f_c_plasma_bootstrap_andrade,
-            BootstrapCurrentFractionModel.HOANG: self.data.current_drive.f_c_plasma_bootstrap_hoang,
-            BootstrapCurrentFractionModel.WONG: self.data.current_drive.f_c_plasma_bootstrap_wong,
-            BootstrapCurrentFractionModel.GI_1: self.data.current_drive.bscf_gi_i,
-            BootstrapCurrentFractionModel.GI_2: self.data.current_drive.bscf_gi_ii,
-            BootstrapCurrentFractionModel.SUGIYAMA_L_MODE: self.data.current_drive.f_c_plasma_bootstrap_sugiyama_l,
-            BootstrapCurrentFractionModel.SUGIYAMA_H_MODE: self.data.current_drive.f_c_plasma_bootstrap_sugiyama_h,
+            bs_cf_m.USER_INPUT: cd.f_c_plasma_bootstrap,
+            bs_cf_m.ITER_89: cd.f_c_plasma_bootstrap_iter89,
+            bs_cf_m.NEVINS: cd.f_c_plasma_bootstrap_nevins,
+            bs_cf_m.WILSON: cd.f_c_plasma_bootstrap_wilson,
+            bs_cf_m.SAUTER: cd.f_c_plasma_bootstrap_sauter,
+            bs_cf_m.SAKAI: cd.f_c_plasma_bootstrap_sakai,
+            bs_cf_m.ARIES: cd.f_c_plasma_bootstrap_aries,
+            bs_cf_m.ANDRADE: cd.f_c_plasma_bootstrap_andrade,
+            bs_cf_m.HOANG: cd.f_c_plasma_bootstrap_hoang,
+            bs_cf_m.WONG: cd.f_c_plasma_bootstrap_wong,
+            bs_cf_m.GI_1: cd.bscf_gi_i,
+            bs_cf_m.GI_2: cd.bscf_gi_ii,
+            bs_cf_m.SUGIYAMA_L_MODE: cd.f_c_plasma_bootstrap_sugiyama_l,
+            bs_cf_m.SUGIYAMA_H_MODE: cd.f_c_plasma_bootstrap_sugiyama_h,
         }
         return model_map[model]
 
@@ -1277,7 +1279,8 @@ class PlasmaBootstrapCurrent(Model):
         )
         po.ocmmnt(
             self.outfile,
-            f"Bootstrap current fraction model selected: {BootstrapCurrentFractionModel(self.data.physics.i_bootstrap_current).full_name} ",
+            "Bootstrap current fraction model selected: "
+            f"{BootstrapCurrentFractionModel(self.data.physics.i_bootstrap_current).full_name} ",  # noqa: E501
         )
         po.oblnkl(self.outfile)
 

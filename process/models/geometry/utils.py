@@ -1,5 +1,6 @@
 """
-Module to hold plotting functions, used in plot_summary, which are common to multiple reactor components
+Module to hold plotting functions, used in plot_summary, which are common to multiple
+reactor components
 """
 
 import numpy as np
@@ -8,7 +9,8 @@ import numpy as np
 def dh_vertices(
     r0: float, a: float, triang: float, kap: float
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Returns the radial and vertical coordinates which, when plotted, plots half a thin D-section, centred on z = 0
+    """Returns the radial and vertical coordinates which, when plotted, plots half a
+    thin D-section, centred on z = 0
 
     Parameters
     ----------
@@ -24,7 +26,8 @@ def dh_vertices(
     Returns
     -------
     :
-        tuple containing radial and vertical coordinates which, when plotted, plots a half thin D-section with a gap
+        tuple containing radial and vertical coordinates which, when plotted,
+        plots a half thin D-section with a gap
     """
     angs = np.linspace(0, np.pi, 50, endpoint=True)
     rs = r0 + a * np.cos(angs + triang * np.sin(1.0 * angs))
@@ -50,7 +53,8 @@ def dhgap_vertices(
     np.ndarray,
     np.ndarray,
 ]:
-    """Returns the radial and vertical coordinates which, when plotted, plots a half thick D-section with a gap
+    """Returns the radial and vertical coordinates which, when plotted,
+    plots a half thick D-section with a gap
 
     Parameters
     ----------
@@ -72,7 +76,8 @@ def dhgap_vertices(
     Returns
     -------
     :
-        tuple containing radial and vertical coordinates which, when plotted, plots a half thick D-section with a gap
+        tuple containing radial and vertical coordinates which, when plotted,
+        plots a half thick D-section with a gap
     """
     arc = np.pi / 4.0
     r01 = (inpt + outpt) / 2.0
@@ -105,7 +110,8 @@ def ellips_fill_vertices(
     ang1: float = 0,
     ang2: float = np.pi / 2,
 ) -> list[tuple[float, float]]:
-    """Returns the vertices of a shape which, when filled, fills the space between two concentric ellipse sectors
+    """Returns the vertices of a shape which, when filled, fills the space between
+    two concentric ellipse sectors
 
     Parameters
     ----------
@@ -129,7 +135,8 @@ def ellips_fill_vertices(
     Returns
     -------
     :
-        list containing (R,Z) coordinates which, when plotted, fill space between ellipses
+        list containing (R,Z) coordinates which, when plotted,
+        fill space between ellipses
     """
     angs = np.linspace(ang1, ang2, endpoint=True)
     r1 = ((np.cos(angs) / a1) ** 2 + (np.sin(angs) / b1) ** 2) ** (-0.5)

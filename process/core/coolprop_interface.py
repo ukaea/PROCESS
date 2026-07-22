@@ -69,13 +69,13 @@ class FluidProperties:
         fluid_name :
             the name of the fluid to calculate properties for, e.g. 'Helium' or 'Water'.
         temperature :
-            the current temperature [K] of the fluid to calculate the properties with respect to.
+            the current temperature [K] of the fluid to calculate the properties.
         pressure :
-            the current pressure [Pa] of the fluid to calculate the properties with respect to.
+            the current pressure [Pa] of the fluid to calculate the properties.
         entropy :
-            the current entropy [J/kg/K] of the fluid to calculate the properties with respect to.
+            the current entropy [J/kg/K] of the fluid to calculate the properties.
         vapor_quality :
-            the molar vapor quality [mol/mol] of the fluid to calculate the properties with respect to.
+            the molar vapor quality [mol/mol] of the fluid to calculate the properties.
             `[0, 1]`, where `0` is a saturated liquid and `1` is a saturated vapor.
         """
         coolprop_inputs = []

@@ -9,6 +9,14 @@ from process.models import superconductors
 logger = logging.getLogger(__name__)
 
 
+def j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he):
+    """j_crit_cable = (
+       j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+    )
+    """
+    return j_crit_sc * (1.0 - f_tf_conductor_copper) * (1.0e0 - f_he)
+
+
 def jcrit_from_material(
     b_max,
     t_helium,
@@ -23,7 +31,9 @@ def jcrit_from_material(
     j_wp,
 ):
     strain = -0.005  # for now a small value
-    f_he = f_a_tf_turn_cable_space_extra_void  # this is helium fraction in the superconductor (set it to the fixed global variable here)
+    # this is helium fraction in the superconductor
+    # (set it to the fixed global variable here)
+    f_he = f_a_tf_turn_cable_space_extra_void
 
     f_tf_conductor_copper = (
         f_a_tf_turn_cable_copper  # fcutfsu is a global variable. Is the copper fraction
@@ -45,8 +55,7 @@ def jcrit_from_material(
                 _tcrit,
             ) = superconductors.itersc(t_helium, b_max, strain, bc20m, tc0m)
 
-        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-        j_crit_cable = j_crit_sc * (1.0 - f_tf_conductor_copper) * (1.0e0 - f_he)
+        j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
 
         # This is needed right now. Can we change it later?
         j_crit_sc = max(1.0e-9, j_crit_sc)
@@ -87,9 +96,7 @@ def jcrit_from_material(
             )
             # I dont need tcrit here so dont use it.
 
-        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-        j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
-
+        j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
         # This is needed right now. Can we change it later?
         j_crit_sc = max(1.0e-9, j_crit_sc)
         j_crit_cable = max(1.0e-9, j_crit_cable)
@@ -99,8 +106,7 @@ def jcrit_from_material(
         j_crit_sc, _bcrit, _tcrit = superconductors.itersc(
             t_helium, b_max, strain, bc20m, tc0m
         )
-        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-        j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
+        j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
     elif i_tf_sc_mat == 5:  # WST Nb3Sn parameterisation
         bc20m = 32.97
         tc0m = 16.06
@@ -115,13 +121,12 @@ def jcrit_from_material(
             bc20m,
             tc0m,
         )
-        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-        j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
+        j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
+
     elif i_tf_sc_mat == 6:  # ! "REBCO" 2nd generation HTS superconductor in CrCo strand
         j_crit_sc, _validity, _, _ = superconductors.jcrit_rebco(t_helium, b_max, 0)
         j_crit_sc = max(1.0e-9, j_crit_sc)
-        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-        j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
+        j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
 
     elif i_tf_sc_mat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
         bc20m = b_crit_upper_nbti
@@ -129,8 +134,8 @@ def jcrit_from_material(
         j_crit_sc, _bcrit, _tcrit = superconductors.gl_nbti(
             t_helium, b_max, strain, bc20m, tc0m
         )
-        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-        j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
+        j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
+
     elif i_tf_sc_mat == 8:
         bc20m = 429
         tc0m = 185
@@ -138,8 +143,8 @@ def jcrit_from_material(
             t_helium, b_max, strain, bc20m, tc0m
         )
         # A0 calculated for tape cross section already
-        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-        j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
+        j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
+
     else:
         raise ProcessValueError(
             "Illegal value for i_pf_superconductor", i_tf_sc_mat=i_tf_sc_mat

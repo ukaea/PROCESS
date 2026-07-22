@@ -134,8 +134,11 @@ def power_balance_sankey(m_file: Path):
         30,  # 44: TF nuclear heat to secondary heat
         15,  # 45: HCD electric losses to secondary heat
         24,  # 46: Coolant pumps electric to secondary heat
-        6,  # 47: FW pump to primary heat, Should only show if FW and Bkt pumps are separate
-        7,  # 48: Blkt pump to primary heat, Should only show if FW and Blkt pumps are separate
+        # 47: FW pump to primary heat, Should only show if FW and Bkt pumps are separate
+        6,
+        # 48: Blkt pump to primary heat,
+        # Should only show if FW and Blkt pumps are separate
+        7,
         2,  # 49 Should show in beams are present
         2,  # 50:  Should show in beams are present
         4,  # 51 Neutrons to CP shield, should only show if CP shield is present
@@ -199,8 +202,11 @@ def power_balance_sankey(m_file: Path):
         29,  # 44: TF nuclear heat to secondary heat
         29,  # 45: HCD electric losses to secondary heat
         29,  # 46: Coolant pumps electric to secondary heat
-        9,  # 47: FW pump to primary heat, Should only show if FW and Bkt pumps are separate
-        9,  # 48: Blkt pump to primary heat, Should only show if FW and Blkt pumps are separate
+        # 47: FW pump to primary heat, Should only show if FW and Bkt pumps are separate
+        9,
+        # 48: Blkt pump to primary heat,
+        # Should only show if FW and Blkt pumps are separate
+        9,
         6,  # 49 Should show in beams are present
         6,  # 50:  Should show in beams are present
         28,  # 51 Neutrons to CP shield, should only show if CP shield is present
@@ -561,7 +567,7 @@ class SuperSankey(Sankey):
 def plot_sankey(
     mfilename=Path("MFILE.DAT"), format_: str = "pdf"
 ):  # Plot simplified power flow Sankey Diagram
-    # ------------------------------- Pulling values from the MFILE -------------------------------
+    # Pulling values from the MFILE
     mfilename = Path(mfilename)
     m_file = MFile(mfilename)
 
@@ -600,7 +606,8 @@ def plot_sankey(
         "vachtmw",  # vacuum pump power (MW)
         "p_pf_electric_supplies_mw",  # Total mean wall plug power for PFC & CS (MW)
         "p_hcd_electric_total_mw",  # injector wall plug power (MW)
-        "p_coolant_pump_elec_total_mw",  # heat transport system electrical pump power (MW)
+        # heat transport system electrical pump power (MW)
+        "p_coolant_pump_elec_total_mw",
         "p_cp_coolant_pump_elec",  # pumping power
     ]
     (
@@ -691,7 +698,7 @@ def plot_sankey(
         + p_cp_coolant_pump_elec_mw
     )
 
-    # -------------------------------- Visual Settings ------------------------------------
+    #  Visual Settings
 
     plt.rcParams.update({"font.size": 9})  # Setting font size to 9
     fig = plt.figure()
@@ -702,7 +709,7 @@ def plot_sankey(
     trunk = 0.7
     len1 = 0.5
     len2 = 0.8
-    # --------------------------------------- PLASMA - 0 --------------------------------------
+    # --- PLASMA - 0 --
 
     # Fusion power, Injected power + ohmic power, - total plasma power
     plasma = [
@@ -722,7 +729,7 @@ def plot_sankey(
         labels=["Fusion Power", None, "Plasma"],
     )
 
-    # --------------------------------- ENERGY DEPOSITION - 1 ---------------------------------
+    # ------------ ENERGY DEPOSITION - 1 ------------
 
     # Plasma power, - divertor deposited power, - blanket deposited power
     deposition = [totalplasma, -totalblktetc - totaldivetc - totalcpetc]
@@ -742,7 +749,7 @@ def plot_sankey(
         labels=[None, "Blanket/etc."],
     )
 
-    # -------------------------------------- BLANKET - 2 --------------------------------------
+    # -- BLANKET - 2 --
 
     # Blanket deposited power, blanket energy multiplication, - primary heat
     blanketsetc = [
@@ -767,7 +774,7 @@ def plot_sankey(
         labels=[None, "Energy Mult.", "Primary Heat"],
     )
 
-    # ------------------------------------- HEAT LOSS - 3 -------------------------------------
+    # - HEAT LOSS - 3 -
 
     # Primary heat, -Gross electric power, -difference (loss)
     primary = [
@@ -789,7 +796,7 @@ def plot_sankey(
         labels=[None, "Gross electric", "Losses"],
     )
 
-    # ------------------------------------ ELECTRICITY - 4 ------------------------------------
+    #  ELECTRICITY - 4
 
     # If net electric is +ve or -ve changes the flow organisation
     if p_plant_electric_net_mw >= 0:  # net electric is +ve
@@ -825,7 +832,7 @@ def plot_sankey(
             labels=["Net elec.", None, "Recirc. Power"],
         )
 
-    # -------------------------------- RECIRCULATING POWER - 5 --------------------------------
+    # ----------- RECIRCULATING POWER - 5 -----------
 
     # Recirculated power, -Core Systems, -Heating System
     recirc = [
@@ -853,7 +860,7 @@ def plot_sankey(
         labels=[None, "Core Systems", "Heating System"],
     )
 
-    # --------------------------------------- LOSSES - 6 --------------------------------------
+    # --- LOSSES - 6 --
 
     # HCD: Heating system, -Plasma heating, -losses
     hcd = [
@@ -876,7 +883,7 @@ def plot_sankey(
     diagrams = sankey.finish()
     fig.tight_layout()
 
-    # --------------------------------------- Label Positioning ---------------------------------------
+    # --- Label Positioning ---
 
     # Manipulating the positioning of the branch labels
     # -ve to left and down; +ve to right and up

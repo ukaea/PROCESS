@@ -19,8 +19,9 @@ def write(models, data, _outfile):
         Fortran output unit identifier
 
     """
-    # ensure we are capturing warnings that occur in the 'output' stage as these are warnings
-    # that occur at our solution point. So we clear existing warnings
+    # ensure we are capturing warnings that occur in the 'output' stage
+    # as these are warnings that occur at our solution point.
+    # So we clear existing warnings
     logging_model_handler.start_capturing()
     logging_model_handler.clear_logs()
 

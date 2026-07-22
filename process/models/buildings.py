@@ -31,7 +31,8 @@ class Buildings(Model):
 
     def run(self, output: bool = False):
         # Find TF coil radial positions
-        # outboard edge: outboard mid-leg radial position + half-thickness of outboard leg
+        # outboard edge: outboard mid-leg radial position + half-thickness
+        # of outboard leg
         tfro = self.data.build.r_tf_outboard_mid + (
             self.data.build.dr_tf_outboard * 0.5e0
         )
@@ -177,7 +178,9 @@ class Buildings(Model):
         # rxcl : clearance around reactor, m
         # trcl : transportation clearance between components, m
         # row  : clearance to building wall for crane operation, m
-        # 19.48258241468535 + 4 + max(13.764874193548387 - 4.7423258064516141, 17.123405859443331 - 2.9939411851091102) + 1 + 4 = 42.61204708901957
+        # 19.48258241468535 + 4 + max(13.764874193548387 - 4.7423258064516141,
+        #                             17.123405859443331 - 2.9939411851091102) + 1 + 4
+        # = 42.61204708901957
         self.data.buildings.wrbi = (
             bmr
             + self.data.buildings.rxcl
@@ -307,7 +310,8 @@ class Buildings(Model):
         cryv = 55.0e0 * helpow**0.5
         # Other building volumes
         # pibv : power injection building volume, m3
-        # esbldgm3 is forced to be zero if no energy storage is required (i_pulsed_plant=0)
+        # esbldgm3 is forced to be zero if no energy storage is required
+        # (i_pulsed_plant=0)
         elev = (
             self.data.buildings.tfcbv
             + self.data.buildings.pfbldgm3
@@ -519,8 +523,9 @@ class Buildings(Model):
         reactor_building_vol = reactor_building_area * reactor_building_h
 
         # Reactor maintenance basement and tunnel
-        # Architecture proposed here is a basement directly beneath the reactor enabling the
-        # downwards extraction of hot components. The footprint estimated here is oversized to
+        # Architecture proposed here is a basement directly beneath the reactor enabling
+        # the downwards extraction of hot components.
+        # The footprint estimated here is oversized to
         # include allowance for a tunnel to the hot cell storage/maintenance building.
         reactor_basement_l = self.data.buildings.reactor_hall_w
         reactor_basement_w = self.data.buildings.reactor_hall_w
@@ -541,18 +546,25 @@ class Buildings(Model):
         buildings_total_vol = reactor_hall_vol + reactor_basement_vol
 
         # Hot Cell Facility
-        # Provides hot cell facilities to maintain or dismantle highly radioactive components.
-        # These are simplifications of R. Gowland's estimates of Operational Active Waste Storage,
-        # which assumes all in-vessel components used through the life of the plant will need storage.
-        # The storage area required is derived from the sizes and number of components, allowing
-        # for a margin in component numbers as set by the quantity safety factor (self.data.buildings.qnty_sfty_fac).
-        # Footprints and volumes required for storage include hot separation distance (self.data.buildings.hot_sepdist).
+        # Provides hot cell facilities to maintain or dismantle highly radioactive
+        # components.
+        # These are simplifications of R. Gowland's estimates of
+        # Operational Active Waste Storage,
+        # which assumes all in-vessel components used through the life of the plant
+        #  will need storage.
+        # The storage area required is derived from the sizes and number of components,
+        # allowing for a margin in component numbers as set by the quantity safety factor
+        # (self.data.buildings.qnty_sfty_fac).
+        # Footprints and volumes required for storage include hot separation distance
+        # (self.data.buildings.hot_sepdist).
 
         # Assumptions:
-        # tokomak is toroidally segmented based on number of TF coils (self.data.tfcoil.n_tf_coils);
+        # tokomak is toroidally segmented based on number of TF coils
+        # (self.data.tfcoil.n_tf_coils);
         # component will be stored with the largest dimension oriented horizontally;
         # height is the largest dimension;
-        # if a component lifetime == 0, that component is not in the current machine build.
+        # if a component lifetime == 0,
+        # that component is not in the current machine build.
 
         # Inboard 'component': shield, blanket, first wall:
         # find height, maximum radial dimension, maximum toroidal dimension
@@ -593,7 +605,8 @@ class Buildings(Model):
                 min(hcomp_rad_thk, hcomp_tor_thk) + self.data.buildings.hot_sepdist
             )
             # required lifetime supply of components =
-            #   ( number in build * (plant lifetime / component lifetime) ) * quantity safety factor
+            #   ( number in build * (plant lifetime / component lifetime) )
+            #    * quantity safety factor
             hcomp_req_supply = (
                 self.data.tfcoil.n_tf_coils
                 * (self.data.costs.life_plant / self.data.costs.life_plant)
@@ -719,7 +732,8 @@ class Buildings(Model):
 
         # Heat sink facilities, includes aux heat sink at heat energy island,
         # low temp and emergency heat sink facilities, ultimate heat sink facility
-        # to sea/river/cooling towers, including pumping, chemical dosing and heat exchangers
+        # to sea/river/cooling towers, including pumping,
+        # chemical dosing and heat exchangers
         heat_sink_area = (
             self.data.buildings.heat_sink_l * self.data.buildings.heat_sink_w
         )
@@ -860,7 +874,8 @@ class Buildings(Model):
         buildings_total_vol += elec_buildings_vol
 
         # Turbine Hall
-        # As proposed by R. Gowland, based on assessment of 18 existing fission power plants:
+        # As proposed by R. Gowland, based on assessment of 18 existing
+        # fission power plants:
         # turbine hall size is largely independent of plant output power.
         # The default footprint used here represents a weighted mean of those plants
         # and the design of a Steam Rankine cycle turbine building,
@@ -964,9 +979,11 @@ class Buildings(Model):
         # Staff Services
         # Derived from W. Smith's estimates of necessary facilities and their sizes;
         # includes main office buildings, contractor offices, staff restaurant and cafe,
-        # staff induction and training facilities, main gate and reception, access control
+        # staff induction and training facilities, main gate and reception,
+        # access control
         # and site pass office, occupational health centre.
-        # Amalgamates estimates of floor area for all individual buildings, uses average height.
+        # Amalgamates estimates of floor area for all individual buildings,
+        # uses average height.
         staff_buildings_vol = (
             self.data.buildings.staff_buildings_area
             * self.data.buildings.staff_buildings_h

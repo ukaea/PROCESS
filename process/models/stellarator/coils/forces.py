@@ -4,7 +4,8 @@ from process.core.model import DataStructure
 
 
 def calculate_max_force_density(a_tf_wp_no_insulation, data: DataStructure):
-    """Calculate the maximum force density in the TF coil winding pack from scaling. [MN/m3]
+    """Calculate the maximum force density in the TF coil winding pack from scaling.
+     [MN/m3]
 
     Parameters
     ----------
@@ -25,7 +26,9 @@ def calculate_max_force_density(a_tf_wp_no_insulation, data: DataStructure):
 
 
 def calculate_max_force_density_mnm(data: DataStructure):
-    """Calculate the maximum force per meter in the TF coil winding pack from scaling. [MN/m]"""
+    """Calculate the maximum force per meter in the TF coil winding pack from scaling.
+    [MN/m]
+    """
     return (
         data.stellarator_config.stella_config_max_force_density_mnm
         * data.stellarator.f_st_i_total
@@ -36,14 +39,17 @@ def calculate_max_force_density_mnm(data: DataStructure):
 
 
 def calculate_maximum_stress(data):
-    """Approximate, very simple maxiumum stress (needed for limitation of icc 32), in Pa"""
+    """Approximate, very simple maxiumum stress (needed for limitation of icc 32),
+    in Pa
+    """
     data.tfcoil.sig_tf_wp = (
         data.tfcoil.max_force_density * data.tfcoil.dr_tf_wp_with_insulation * 1.0e6
     )
 
 
 def calculate_max_lateral_force_density(a_tf_wp_no_insulation, data: DataStructure):
-    """Calculate the maximum lateral force density in the TF coil winding pack from scaling. [MN/m3]
+    """Calculate the maximum lateral force density in the TF coil winding pack
+     from scaling. [MN/m3]
 
     Parameters
     ----------
@@ -64,7 +70,8 @@ def calculate_max_lateral_force_density(a_tf_wp_no_insulation, data: DataStructu
 
 
 def calculate_max_radial_force_density(a_tf_wp_no_insulation, data):
-    """Calculate the maximum radial force density in the TF coil winding pack from scaling. [MN/m3]
+    """Calculate the maximum radial force density in the TF coil winding pack
+    from scaling. [MN/m3]
 
     Parameters
     ----------

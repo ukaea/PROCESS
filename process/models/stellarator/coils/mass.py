@@ -7,10 +7,13 @@ from process.core.model import DataStructure
 def calculate_coils_mass(
     a_tf_wp_with_insulation: float, a_tf_wp_no_insulation: float, data: DataStructure
 ):
-    """Calculates the mass of stellarator coils by aggregating the masses of various coil components.
+    """Calculates the mass of stellarator coils by aggregating the masses of
+    various coil components.
 
-    This function computes the masses of conductor constituents (casing, ground insulation, superconductor, copper),
-    conduit masses (steel and insulation), and then calculates the total conductor and coil masses.
+    This function computes the masses of conductor constituents
+    (casing, ground insulation, superconductor, copper),
+    conduit masses (steel and insulation),
+    and then calculates the total conductor and coil masses.
 
     Parameters
     ----------
@@ -39,7 +42,8 @@ def calculate_coils_mass(
 def casing(data: DataStructure):
     """[kg] Mass of case
     (no need for correction factors as is the case for tokamaks)
-    This is only correct if the winding pack is 'thin' (len_tf_coil>>sqrt(data.tfcoil.a_tf_coil_inboard_case)).
+    This is only correct if the winding pack is 'thin'
+    (len_tf_coil>>sqrt(data.tfcoil.a_tf_coil_inboard_case)).
 
     """
     data.tfcoil.m_tf_coil_case = (
@@ -104,12 +108,16 @@ def conduit_steel(data):
         * data.tfcoil.a_tf_turn_steel
         * data.fwbs.den_steel
     )
-    # if (i_tf_sc_mat==6)   data.tfcoil.m_tf_wp_steel_conduit = fcondsteel * a_tf_wp_no_insulation *data.tfcoil.len_tf_coil* fwbs_variables.denstl
+    # if (i_tf_sc_mat==6)
+    # data.tfcoil.m_tf_wp_steel_conduit = (
+    #  fcondsteel * a_tf_wp_no_insulation *data.tfcoil.len_tf_coil* fwbs_variables.denstl
+    # )
 
 
 def conduit_insulation(data: DataStructure):
     """Conduit insulation mass [kg]
-    (data.tfcoil.a_tf_coil_wp_turn_insulation already contains data.tfcoil.n_tf_coil_turns)
+    (data.tfcoil.a_tf_coil_wp_turn_insulation
+    already contains data.tfcoil.n_tf_coil_turns)
 
     """
     data.tfcoil.m_tf_coil_wp_turn_insulation = (

@@ -1410,7 +1410,8 @@ class PlasmaConfinementTime(Model):
             po.ocmmnt(
                 self.outfile,
                 f"{'':>2}{scaling_name:<38}"
-                f"{confinement_time_data.t_plasma_energy_confinement:<28.3f}{self.data.physics.hfac[i_confinement_time - 1]:.3f}",
+                f"{confinement_time_data.t_plasma_energy_confinement:<28.3f}"
+                f"{self.data.physics.hfac[i_confinement_time - 1]:.3f}",
             )
 
         po.oblnkl(self.outfile)

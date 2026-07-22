@@ -75,7 +75,8 @@ if __name__ == "__main__":
         type=Path,
         default=None,
         help="A JSON file containing a list of variables to track."
-        "See the description of DEFAULT_TRACKING_VARIABLES for details on formatting the strings in the list.",
+        "See the description of DEFAULT_TRACKING_VARIABLES "
+        "for details on formatting the strings in the list.",
     )
     subparser_trk.add_argument("--strict", action="store_true", default=False)
 

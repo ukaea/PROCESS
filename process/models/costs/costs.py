@@ -55,7 +55,8 @@ class Costs(Model):
         self.acc26()
 
         #  Total plant direct cost
-        # cdirt = c21 + c22 + self.data.costs.c23 + self.data.costs.c24 + self.data.costs.c25 + self.data.costs.c26
+        # cdirt = c21 + c22 + self.data.costs.c23 + self.data.costs.c24 +
+        # self.data.costs.c25 + self.data.costs.c26
         self.data.costs.cdirt = (
             self.data.costs.c21
             + self.data.costs.c22
@@ -1754,7 +1755,8 @@ class Costs(Model):
                     * constants.DEN_COPPER
                 )
             else:
-                # MDK I don't know if this is ccorrect as we never use the resistive model
+                # MDK I don't know if this is ccorrect as we never use the
+                # resistive model
                 costpfcu = (
                     self.data.costs.uccu
                     * self.data.pf_coil.a_cs_cable_space
@@ -1896,7 +1898,9 @@ class Costs(Model):
 
                 #  Account 223.3 : Neutral Beam
 
-                # self.data.costs.c2233 = 1.0e-6 * self.data.costs.ucnbi * (1.0e6*p_hcd_beam_injected_total_mw)**exprf
+                # self.data.costs.c2233 =
+                # 1.0e-6 * self.data.costs.ucnbi
+                # * (1.0e6*p_hcd_beam_injected_total_mw)**exprf
                 # #327
 
                 self.data.costs.c2233 = (
@@ -2213,8 +2217,8 @@ class Costs(Model):
 
         #  Pumps and piping system
         #  N.B. with blktmodel > 0, the blanket is assumed to be helium-cooled,
-        #  but the shield etc. is water-cooled (i_blkt_coolant_type=2). Therefore, a slight
-        #  inconsistency exists here...
+        #  but the shield etc. is water-cooled (i_blkt_coolant_type=2).
+        # Therefore, a slight inconsistency exists here...
         self.data.costs.cpp = (
             1.0e-6
             * self.data.costs.uchts[self.data.fwbs.i_blkt_coolant_type - 1]
@@ -2334,7 +2338,8 @@ class Costs(Model):
         """
         if self.data.ife.ife != 1:
             #  Previous calculation, using molflow_plasma_fuelling_required in Amps:
-            #  1.3 should have been self.data.physics.m_fuel_amu*umass/electron_charge*1000*s/day = 2.2
+            #  1.3 should have been
+            # self.data.physics.m_fuel_amu*umass/electron_charge*1000*s/day = 2.2
             # wtgpd = burnup * molflow_plasma_fuelling_required * 1.3e0
 
             #  New calculation: 2 nuclei * reactions/sec * kg/nucleus * g/kg * sec/day
@@ -2648,8 +2653,8 @@ class Costs(Model):
                 #  of the cost of the piping within the block, etc.
                 #
                 #  shcss is the specific heat capacity of stainless steel (J/kg/K)
-                #  self.data.pulse.dtstor is the maximum allowable temperature change in the
-                #  stainless steel block (input)
+                #  self.data.pulse.dtstor is the maximum allowable temperature change in
+                # the stainless steel block (input)
 
                 shcss = 520.0e0
                 self.data.costs.c2253 = (
@@ -2863,7 +2868,9 @@ class Costs(Model):
         if self.data.heat_transport.p_plant_electric_net_mw < 0:
             sqrt_p_plant_electric_net_mw_1200 = 0.0
             logger.warning(
-                "p_plant_electric_net_mw has gone negative! Clamping it to 0 for the calculation of annoam and annwst (cost of maintenance and cost of waste)."
+                "p_plant_electric_net_mw has gone negative! "
+                "Clamping it to 0 for the calculation of annoam and annwst "
+                "(cost of maintenance and cost of waste)."
             )
         else:
             sqrt_p_plant_electric_net_mw_1200 = np.sqrt(
@@ -2932,8 +2939,9 @@ class Costs(Model):
         #  this purpose at the start of the plant life.
         #  Final factor takes into account inflation over the plant lifetime
         #  (suggested by Tim Hender 07/03/96)
-        #  Difference (self.data.costs.dintrt) between borrowing and saving interest rates is
-        #  included, along with the possibility of completing the fund self.data.costs.dtlife
+        #  Difference (self.data.costs.dintrt) between borrowing and
+        #  saving interest rates is included,
+        #  along with the possibility of completing the fund self.data.costs.dtlife
         #  years before the end of the plant's lifetime
 
         anndecom = (
@@ -2981,7 +2989,8 @@ class Costs(Model):
             self.data.fwbs.life_blkt = (
                 self.data.fwbs.life_blkt_fpy * self.data.costs.f_t_plant_available
             )
-            # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
+            # Current drive system lifetime
+            # (assumed equal to first wall and blanket lifetime)
             self.data.costs.cdrlife_cal = self.data.fwbs.life_blkt
         else:
             self.data.fwbs.life_blkt = self.data.fwbs.life_blkt_fpy

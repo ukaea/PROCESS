@@ -1,5 +1,6 @@
 """
-Calculate radial and vertical coordinates for the geometry of the pf coils and central coil
+Calculate radial and vertical coordinates for the geometry of the pf coils and
+central coil
 """
 
 import numpy as np
@@ -16,7 +17,8 @@ def pfcoil_geometry(
     dr_cs: float,
     ohdz: float,
 ) -> tuple[np.ndarray, np.ndarray, RectangleGeometry]:
-    """Calculates radial and vertical distances for the geometry of the pf coils and central coil
+    """Calculates radial and vertical distances for the geometry of the pf coils and
+    central coil
 
     Parameters
     ----------
@@ -38,7 +40,9 @@ def pfcoil_geometry(
     Returns
     -------
     :
-        tuple containing radial and vertical coordinates for pf coils, and dataclass returning coordinates representing a rectangular geometry used to plot the central coil
+        tuple containing radial and vertical coordinates for pf coils, and dataclass
+        returning coordinates representing a rectangular geometry
+        used to plot the central coil
     """
     r_points = []
     z_points = []

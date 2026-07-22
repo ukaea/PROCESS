@@ -56,12 +56,14 @@ class Availability(Model):
         Parameters
         ----------
         output :
-            indicate whether output should be written to the output file, or not (default = False)
+            indicate whether output should be written to the output file, or not
         """
         if self.data.costs.i_plant_availability == 3:
             if self.data.physics.itart != 1:
                 raise ProcessValueError(
-                    f"{self.data.costs.i_plant_availability=} is for a Spherical Tokamak. Please set itart=1 to use this model."
+                    f"{self.data.costs.i_plant_availability=}"
+                    " is for a Spherical Tokamak."
+                    " Please set itart=1 to use this model."
                 )
             self.avail_st(output)  # ST model (2023)
         elif self.data.costs.i_plant_availability == 2:
@@ -84,15 +86,21 @@ class Availability(Model):
         """
         # Full power lifetime (in years)
         if self.data.ife.ife != 1:
-            # Calculate DPA per FPY - based on neutronics-derived fusion power relation to DEMO blanket lifetime provided by Matti Coleman
-            # Detailed and cited in T. Franke 2020, "The EU DEMO equatorial outboard limiter — Design and port integration concept"
+            # Calculate DPA per FPY - based on neutronics-derived fusion power relation
+            # to DEMO blanket lifetime provided by Matti Coleman
+            # Detailed and cited in T. Franke 2020,
+            # "The EU DEMO equatorial outboard limiter,
+            #  Design and port integration concept"
             # https://www.sciencedirect.com/science/article/pii/S0920379620301952#bib0075
-            # Scaling w.r.t. fusion power drops out a large number of factors relating to neutronics, such as:
+            # Scaling w.r.t. fusion power drops out a large number of factors relating
+            #  to neutronics, such as:
             # - the actual neutron flux
-            # - the geometry and material composition leading to the neutron flux at the EUROfer FW OMP
+            # - the geometry and material composition leading to the neutron flux at the
+            #   EUROfer FW OMP
             # - the neutron energy spectrum
             # - all of the above and more leading to the dpa/fpy in EUROfer at the FW OMP
-            # About a relatively "constant" reference point, we can reasonably assume they all equal to 1.0.
+            # About a relatively "constant" reference point, we can reasonably assume
+            # they all equal to 1.0.
             ref_fusion_power = 2.0e3  # (MW) fusion power for EU-DEMO
             f_scale = self.data.physics.p_fusion_total_mw / ref_fusion_power
             ref_dpa_fpy = (
@@ -101,8 +109,10 @@ class Availability(Model):
             dpa_fpy = f_scale * ref_dpa_fpy
 
             # First wall / blanket lifetime (years)
-            # TODO MDK Do this calculation whatever the value of blktmodel (whatever that is)
-            # For some reason life_fw_fpy is not always calculated, so ignore it if it is still zero.
+            # TODO MDK Do this calculation whatever the value of blktmodel
+            # (whatever that is)
+            # For some reason life_fw_fpy is not always calculated,
+            # so ignore it if it is still zero.
             if self.data.fwbs.life_fw_fpy < 0.0001e0:
                 # Calculate blanket lifetime using neutron fluence model (ibkt_life=0)
                 # or DEMO fusion power model (ibkt_life=1)
@@ -225,7 +235,8 @@ class Availability(Model):
                     self.data.costs.life_plant,
                 )
 
-        # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
+        # Current drive system lifetime
+        # (assumed equal to first wall and blanket lifetime)
         self.data.costs.life_hcd_fpy = self.data.fwbs.life_blkt_fpy
 
         # Output section
@@ -418,7 +429,8 @@ class Availability(Model):
                     self.data.fwbs.life_blkt_fpy / self.data.costs.f_t_plant_available,
                     self.data.costs.life_plant,
                 )
-                # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
+                # Current drive system lifetime
+                # (assumed equal to first wall and blanket lifetime)
                 self.data.costs.life_hcd_fpy = self.data.fwbs.life_blkt_fpy
 
             # Divertor
@@ -535,14 +547,18 @@ class Availability(Model):
         # Full power lifetimes (in years) !
 
         # Caculate DPA per FPY
-        # Detailed and cited in T. Franke 2020, "The EU DEMO equatorial outboard limiter — Design and port integration concept"
+        # Detailed and cited in T. Franke 2020,
+        # "The EU DEMO equatorial outboard limiter — Design and port integration concept"
         # https://www.sciencedirect.com/science/article/pii/S0920379620301952#bib0075
-        # Scaling w.r.t. fusion power drops out a large number of factors relating to neutronics, such as:
+        # Scaling w.r.t. fusion power drops out a large number of factors relating
+        # to neutronics, such as:
         # - the actual neutron flux
-        # - the geometry and material composition leading to the neutron flux at the EUROfer FW OMP
+        # - the geometry and material composition leading to the neutron flux at
+        #   the EUROfer FW OMP
         # - the neutron energy spectrum
         # - all of the above and more leading to the dpa/fpy in EUROfer at the FW OMP
-        # About a relatively "constant" reference point, we can reasonably assume they all equal to 1.0.
+        # About a relatively "constant" reference point, we can reasonably assume
+        # they all equal to 1.0.
         ref_fusion_power = 2.0e3  # (MW) fusion power for EU-DEMO
         f_scale = self.data.physics.p_fusion_total_mw / ref_fusion_power
         ref_dpa_fpy = 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
@@ -698,7 +714,8 @@ class Availability(Model):
         # lifetime starts to decline.
         start_of_risk = mag_temp_marg_limit / self.data.costs.conf_mag
 
-        # Determine if temperature margin is in region with risk of unplanned unavailability
+        # Determine if temperature margin is in region with risk of
+        # unplanned unavailability
         if self.data.tfcoil.temp_margin >= start_of_risk:
             u_unplanned_magnets = mag_min_u_unplanned
         else:
@@ -783,12 +800,15 @@ class Availability(Model):
         # Integrating the instantaneous availability gives the mean
         # availability over the planned cycle life N
         if self.data.costs.div_nu <= self.data.costs.div_nref:
-            logger.error("""div_nu <= div_nref
-            The cycle when the divertor fails with 100% probability <= & Reference value for cycle life of divertor
-            """)
+            logger.error(
+                "div_nu <= div_nref\n"
+                "The cycle when the divertor fails with 100% probability <="
+                " & Reference value for cycle life of divertor"
+            )
             po.ocmmnt(
                 self.outfile,
-                "ERROR: The cycle when the divertor fails with 100% probability & <= Reference value for cycle cycle life of divertor",
+                "ERROR: The cycle when the divertor fails with 100% probability & <="
+                " Reference value for cycle cycle life of divertor",
             )
 
         # Check number of cycles
@@ -893,12 +913,15 @@ class Availability(Model):
         )
 
         if self.data.costs.fwbs_nu <= self.data.costs.fwbs_nref:
-            logger.error("""fwbs_nu <= fwbs_nref
-            The cycle when the blanket fails with 100% probability <= &Reference value for cycle life of blanket
-            """)
+            logger.error(
+                "fwbs_nu <= fwbs_nref\n"
+                "The cycle when the blanket fails with 100% probability <="
+                " &Reference value for cycle life of blanket"
+            )
             po.ocmmnt(
                 self.outfile,
-                "EROROR: The cycle when the blanket fails with 100% probability& <= Reference value for cycle life of blanket",
+                "EROROR: The cycle when the blanket fails with 100% probability& <= "
+                "Reference value for cycle life of blanket",
             )
 
         # Integrating the instantaneous availability gives the mean
@@ -1027,7 +1050,8 @@ class Availability(Model):
 
     @staticmethod
     def calc_u_unplanned_hcd() -> float:
-        """Calculates the unplanned unavailability of the heating and current drive system
+        """Calculates the unplanned unavailability of the heating
+        and current drive system
 
 
         This routine calculates the unplanned unavailability of the heating
@@ -1093,7 +1117,8 @@ class Availability(Model):
         sum_prob = 0.0e0
 
         for n in range(self.data.costs.redun_vac + 1, total_pumps + 1):
-            # Probability for n failures in the operational period, n > number of redundant pumps
+            # Probability for n failures in the operational period, n > number
+            # of redundant pumps
 
             # calculate sum in formula for downtime
             sum_prob += (
@@ -1150,8 +1175,9 @@ class Availability(Model):
     def avail_st(self, output: bool):
         """Calculate the availability for a plant with a Spherical Tokamak.
 
-        This routine calculates the availability of a plant by considering various factors such as
-        the lifetime of different components, planned and unplanned unavailability, and maintenance cycles.
+        This routine calculates the availability of a plant by considering various
+        factors such as the lifetime of different components,
+        planned and unplanned unavailability, and maintenance cycles.
 
         Parameters
         ----------
@@ -1160,21 +1186,31 @@ class Availability(Model):
 
         Notes
         -----
-        - The method calculates the Displacements Per Atom (DPA) per Full Power Year (FPY) based on the fusion power.
-        - It determines the lifetime of the first wall and blanket, divertor, and current drive.
-        - It calculates the time for a maintenance cycle and the number of maintenance cycles over the plant's lifetime.
-        - It computes the planned and unplanned unavailability of various components such as magnets, divertor, first wall and blanket, balance of plant, heating and current drive, and vacuum systems.
-        - The total availability of the plant is then calculated considering both planned and unplanned unavailability.
-        - The method also adjusts the lifetimes of components based on the calculated availability.
+        - The method calculates the Displacements Per Atom (DPA)
+            per Full Power Year (FPY) based on the fusion power.
+        - It determines the lifetime of the first wall and blanket, divertor,
+            and current drive.
+        - It calculates the time for a maintenance cycle and the number of maintenance
+            cycles over the plant's lifetime.
+        - It computes the planned and unplanned unavailability of various components
+            such as magnets, divertor, first wall and blanket,
+            balance of plant, heating and current drive, and vacuum systems.
+        - The total availability of the plant is then calculated considering
+            both planned and unplanned unavailability.
+        - The method also adjusts the lifetimes of components based on the
+            calculated availability.
         - Finally, it calculates the capacity factor and operational time of the plant.
 
-        If `output` is True, the method writes detailed availability information to the output file.
+        If `output` is True, the method writes detailed availability information to the
+        output file.
         - The method assumes certain constants and reference points for calculations.
-        - The method modifies the lifetimes of components to account for the calculated availability.
+        - The method modifies the lifetimes of components to account for the calculated
+            availability.
 
         References
         ----------
-        - T. Franke 2020, "The EU DEMO equatorial outboard limiter — Design and port integration concept"
+        - T. Franke 2020,
+        "The EU DEMO equatorial outboard limiter — Design and port integration concept"
           https://www.sciencedirect.com/science/article/pii/S0920379620301952#bib0075
         """
         ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
@@ -1483,7 +1519,8 @@ class Availability(Model):
     def divertor_lifetime(self):
         """Calculate Divertor Lifetime
 
-        This routine calculates the lifetime of the divertor based on the allowable divertor heat fluence.
+        This routine calculates the lifetime of the divertor based on the
+        allowable divertor heat fluence.
 
         Returns
         -------
@@ -1491,7 +1528,8 @@ class Availability(Model):
             Divertor lifetime
         """
         # Divertor lifetime
-        # Either 0.0, calculated from allowable divertor fluence and heat load, or lifetime of the plant
+        # Either 0.0, calculated from allowable divertor fluence and heat load,
+        # or lifetime of the plant
         return max(
             0.0,
             min(

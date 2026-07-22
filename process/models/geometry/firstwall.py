@@ -23,7 +23,8 @@ def first_wall_geometry_single_null(
     dr_fw_outboard: float,
     tfwvt: float,
 ) -> ArbitraryGeometry:
-    """Calculates radial and vertical distances for the geometry of first wall in a single null configuration
+    """Calculates radial and vertical distances for the geometry of first wall in a
+    single null configuration
 
     Parameters
     ----------
@@ -113,7 +114,8 @@ def first_wall_geometry_lower(
     tfwvt: float,
     top_point: float,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """Calculates radial and vertical distances for the geometry of section of first wall below the midplane
+    """Calculates radial and vertical distances for the geometry of section of first wall
+    below the midplane
 
     Parameters
     ----------
@@ -135,8 +137,10 @@ def first_wall_geometry_lower(
     Returns
     -------
     :
-        tuple containing the R coordinates for the outboard, Z coordinates for the outboard,
-        R coordinates for the inboard, Z coordinates for the inboard of the first wall geometry below the midplane
+        tuple containing the R coordinates for the outboard,
+        Z coordinates for the outboard,
+        R coordinates for the inboard,
+        Z coordinates for the inboard of the first wall geometry below the midplane
     """
     # Lower first wall
     rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = dhgap_vertices(
@@ -168,8 +172,10 @@ def first_wall_geometry_double_null(
     dr_fw_outboard: float,
     tfwvt: float,
 ) -> ArbitraryGeometry:
-    """Calculates radial and vertical distances for the geometry of first wall in a double null configuration
-    In a double null configuration, the geometry of the lower first wall is reflected across the midplane to create the section of first wall above the midplane
+    """Calculates radial and vertical distances for the geometry of first wall in a
+    double null configuration
+    In a double null configuration, the geometry of the lower first wall is reflected
+    across the midplane to create the section of first wall above the midplane
 
     Parameters
     ----------

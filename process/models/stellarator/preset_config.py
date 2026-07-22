@@ -27,7 +27,8 @@ HELIAS5B = {
     "coillength": 1680.0,  # Central filament length of machine with outer radius 1m.
     "I0": 13.06,  # Coil Current needed to produce 1T on axis in [MA] at outer radius 1m
     "inductance": 1655.76e-6,  # inductance in muH
-    "WP_ratio": 1.2,  # The fit values in stellarator config class should be calculated using this value.
+    # The fit values in stellarator config class should be calculated using this value.
+    "WP_ratio": 1.2,
     "max_force_density": 120.0,  # [MN/m^3]
     "max_force_density_mnm": 98.0,  # [MN/m]
     "max_lateral_force_density": 92.4,  # [MN/m^3]

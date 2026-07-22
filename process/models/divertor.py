@@ -153,11 +153,16 @@ class Divertor(Model):
 
         References
         ----------
-            - Y.-K. M. Peng, J. B. Hicks, AEA Fusion, Culham (UK), "Engineering feasibility of tight aspect ratio Tokamak (spherical torus) reactors".
+            - Y.-K. M. Peng, J. B. Hicks, AEA Fusion, Culham (UK),
+            "Engineering feasibility of tight aspect ratio Tokamak (spherical torus)
+             reactors".
               1990. https://inis.iaea.org/records/ey2rf-dah04
 
-            - Y.-K. M. Peng, J. B. Hicks, “Engineering feasibility of tight aspect ratio tokamak (spherical torus) reactors,”
-              Osti.gov, 1991. https://www.osti.gov/biblio/1022679 (accessed Mar. 24, 2025).
+            - Y.-K. M. Peng, J. B. Hicks,
+            “Engineering feasibility of tight aspect ratio tokamak (spherical torus)
+            reactors,”
+              Osti.gov, 1991. https://www.osti.gov/biblio/1022679
+              (accessed Mar. 24, 2025).
         """
         #  Thickness of centrepost + first wall at divertor height
 
@@ -258,8 +263,10 @@ class Divertor(Model):
 
         This subroutine calculates the divertor heat flux for any machine,
         with either a single null or double null configuration.
-        It uses the Eich scaling (Eich et al. 2013) and spreading factor (Scarabosio et al. 2014)
-        to calculate the SOL width. This is then used with a flux expansion factor to calculate
+        It uses the Eich scaling (Eich et al. 2013) and spreading factor
+        (Scarabosio et al. 2014)
+        to calculate the SOL width.
+        This is then used with a flux expansion factor to calculate
         the wetted area and then the heat flux.
 
         Parameters
@@ -340,7 +347,8 @@ class Divertor(Model):
         # Divertor heat load
         hldiv_base = p_plasma_separatrix_mw * (1 - rad_fraction_sol) / area_wetted
 
-        # For double null, calculate heat loads to upper and lower divertors and use the highest
+        # For double null, calculate heat loads to upper and lower divertors
+        # and use the highest
         if self.data.divertor.n_divertors == 2:
             hldiv_lower = f_p_div_lower * hldiv_base
             hldiv_upper = (1.0 - f_p_div_lower) * hldiv_base

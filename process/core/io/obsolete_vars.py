@@ -1,4 +1,5 @@
-"""Dict of obsolete vars and their new names for the input validator, and dict of help messages for certain obsolete vars.
+"""Dict of obsolete vars and their new names for the input validator,
+and dict of help messages for certain obsolete vars.
 
 This is used by the input_validator module to find any obsolete variables in the
 input file (which have since been renamed in the current version of the source).
@@ -475,11 +476,19 @@ OBS_VARS = {
 
 OBS_VARS_HELP = {
     "iculdl": "(use IDENSL=3 for equivalent model to ICULDL=0). ",
-    "dz_blkt_upper": "WARNING. BLNKTTH is now always calculated rather than input - please remove it from the input file. ",
-    "iprofile": "Use i_beta_norm_max, i_alphaj and i_ind_plasma_internal_norm instead. See docs for setup. ",
+    "dz_blkt_upper": (
+        "WARNING. "
+        "BLNKTTH is now always calculated rather than input - "
+        "please remove it from the input file. "
+    ),
+    "iprofile": (
+        "Use i_beta_norm_max, i_alphaj and i_ind_plasma_internal_norm instead. "
+        "See docs for setup. "
+    ),
     "fl_h_threshold": (
         "fl_h_threshold has been replaced by f_h_mode_margin/f_l_mode_margin"
-        " please check the docstring for constraint 15/22 to find the appropriate variable"
+        " please check the docstring for constraint 15/22 to "
+        "find the appropriate variable"
     ),
 }
 
@@ -506,7 +515,10 @@ kallenbach_list = [
     "mach0",
     "neratio",
 ]
-kallenbach_message = "The Kallenbach model is currently not included in PROCESS. See issue #1886 for more information on the use of the Kallenbach model. "
+kallenbach_message = (
+    "The Kallenbach model is currently not included in PROCESS. "
+    "See issue #1886 for more information on the use of the Kallenbach model. "
+)
 OBS_VARS.update(dict.fromkeys(kallenbach_list, None))
 OBS_VARS_HELP.update(dict.fromkeys(kallenbach_list, kallenbach_message))
 

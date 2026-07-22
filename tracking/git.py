@@ -1,19 +1,26 @@
-"""Simple submodule to provide access to some git attributes about the current repository"""
+"""Simple submodule to provide access to some git attributes about the repository"""
 
 import subprocess  # noqa: S404
 from pathlib import Path
 
 
-def git_commit_message(directory=None) -> str:
-    """Get the commit message for `directory` or, if `directory` is not provided, the current working directory.
+def git_commit_message(directory=str | bytes | None) -> str:
+    """Get the commit message for `directory` or the current directory if not provided
 
-    Will raise a subprocess.CalledProcessError if the directory checked is not a git repository.
-
+    Parameters
+    ----------
     :param directory: the directory to get the commit message at
-    :type directory: str | bytes | path-like
 
-    :return commit_message: the commit message for the git repository
-    :type commit_message: str
+    Returns
+    -------
+    :
+        the commit message for the git repository
+
+    Raises
+    ------
+    subprocess.CalledProcessError
+        if the directory checked is not a git repository.
+
     """
     if directory is None:
         directory = Path.cwd()
@@ -30,15 +37,21 @@ def git_commit_message(directory=None) -> str:
 
 
 def git_commit_hash(directory=None) -> str:
-    """Get the commit hash for `directory` or, if `directory` is not provided, the current working directory.
+    """Get the commit hash for `directory` or the current directory if not provided
 
-    Will raise a subprocess.CalledProcessError if the directory checked is not a git repository.
+    Parameters
+    ----------
+    :param directory: the directory to get the commit hash at
 
-    :param directory: the directory to get the commit hash for
-    :type directory: str | bytes | path-like
+    Returns
+    -------
+    :
+        the commit hash for the git repository
 
-    :return commit_hash: the commit hash for the git repository
-    :type commit_hash: str
+    Raises
+    ------
+    subprocess.CalledProcessError
+        if the directory checked is not a git repository.
     """
     if directory is None:
         directory = Path.cwd()
