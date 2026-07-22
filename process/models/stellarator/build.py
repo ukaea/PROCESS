@@ -204,6 +204,12 @@ def output(stellarator):
         "(required_radial_space)",
         build_variables.required_radial_space,
     )
+    po.ovarre(
+        stellarator.outfile,
+        "Normalized plasma-coil distance",
+        "(f_dr_plasma_coil_normalized)",
+        build_variables.available_radial_space / physics_variables.rminor,
+    )
 
     radius = 0.0e0
     po.obuild(stellarator.outfile, "Device centreline", 0.0e0, radius)
