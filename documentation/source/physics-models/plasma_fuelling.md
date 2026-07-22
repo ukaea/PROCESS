@@ -26,7 +26,7 @@ $$
 \frac{dn_{\text{D}}}{dt} = \frac{dn_{\text{T}}}{dt} = \frac{dn_{\text{3He}}}{dt} = \frac{dn_{\alpha}}{dt} = 0
 $$
 
-Here $\eta_{\text{fuelling}}$ is the fuelling efficiecny which represents the method of injecting fuel into the plasma. Gas puffing on the low field side is probably around 0.01-0.1, supersonic gas is 0.1 and 0.2 and using pellets can get you close to unity with 0.5-0.9. $\Gamma_{\text{fuelling}}$ is the fuel injection rate into the vacuum vessel, so $\eta_{\text{fuelling}} \Gamma_{\text{fuelling}}$ together presents the fraction of injected fuel that actually makes it into the plasma core to fuse. 
+Here, $\eta_{\text{fuelling}}$ is the fuelling efficiency, which quantifies how effectively fuel injected into the vacuum vessel reaches the plasma core. The value of $\eta_{\text{fuelling}}$ depends on the fuelling method. Typical values are around 0.01--0.1 for low-field-side gas puffing, 0.1--0.2 for supersonic gas injection, and 0.5--0.9 for pellet injection, which can approach unity under favourable conditions. $\Gamma_{\text{fuelling}}$ is the fuel injection rate into the vacuum vessel. The product $\eta_{\text{fuelling}} \Gamma_{\text{fuelling}}$ therefore represents the effective fuelling rate, i.e. the fraction of the injected fuel that successfully penetrates into the plasma and becomes available for fusion reactions.
 
 
 The fuelling fractional compositions is given by $f$
