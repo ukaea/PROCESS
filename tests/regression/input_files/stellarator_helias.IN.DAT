@@ -79,12 +79,12 @@ boundl(2) = 4.0
 boundu(2) = 10.0
 
 ixc = 3                 *rmajor (m)
-rmajor   = 20.0         *Plasma major radius (m)
+rmajor   = 25.0         *Plasma major radius (m)
 boundl(3) = 10.0
 boundu(3) = 30.0
 
 ixc = 4                 *te (keV)
-temp_plasma_electron_vol_avg_kev = 7.0  *Volume averaged electron temperature (keV)
+temp_plasma_electron_vol_avg_kev = 5.0  *Volume averaged electron temperature (keV)
 boundl(4) = 3.
 boundu(4) = 15.
 
@@ -103,6 +103,7 @@ f_j_tf_wp_critical_max = 0.8
 ixc = 109 * f_nd_alpha_thermal_electron: thermal alpha density / electron density
 boundl(109) = 0.0001
 boundu(109) = 0.4
+f_nd_alpha_thermal_electron = 0.05
 
 ixc = 59 * itv_fcutfsu Copper Fraction Of Cable Conductor (TF Coils)
 f_a_tf_turn_cable_copper = 0.7
@@ -110,7 +111,7 @@ boundu(59) = 0.9
 boundl(59) = 0.3
 
 ixc = 56 * itv_tdmptf Fast Discharge Time For TF Coil In Event Of Quench (S) (`Iteration Variable 56`)
-t_tf_superconductor_quench = 10.0
+t_tf_superconductor_quench = 35.0
 boundl(56) = 1
 boundu(56) = 50.
 
