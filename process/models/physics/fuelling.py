@@ -226,8 +226,6 @@ class PlasmaFuelling(Model):
             Total fuelling rate (particles/s).
         fusrat_plasma_dd_triton : float
             Tritium production rate from D-D fusion (particles/s).
-        t_energy_confinement : float
-            Energy confinement time (s).
 
         Returns
         -------
@@ -411,7 +409,7 @@ class PlasmaFuelling(Model):
         fusrat_plasma_dhe3: float,
         t_energy_confinement: float,
         f_t_alpha_energy_confinement: float,
-        nd_plasma_alphas_vol_avg: float,
+        nd_plasma_alphas_thermal_vol_avg: float,
         vol_plasma: float,
     ) -> float:
         """Calculate the net alpha particle flow rate into the plasma.
@@ -426,7 +424,7 @@ class PlasmaFuelling(Model):
             Energy confinement time (s).
         f_t_alpha_energy_confinement : float
             Ratio of alpha particle confinement time to energy confinement time (dimensionless).
-        nd_plasma_alphas_vol_avg : float
+        nd_plasma_alphas_thermal_vol_avg : float
             Volume-averaged density of alpha particles in the plasma (particles/m³).
         vol_plasma : float
             Plasma volume (m³).
@@ -447,7 +445,7 @@ class PlasmaFuelling(Model):
         return (
             fusrat_dt_total
             + fusrat_plasma_dhe3
-            - (nd_plasma_alphas_vol_avg * vol_plasma)
+            - (nd_plasma_alphas_thermal_vol_avg * vol_plasma)
             / (t_energy_confinement * f_t_alpha_energy_confinement)
         )
 

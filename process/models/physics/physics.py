@@ -958,7 +958,7 @@ class Physics(Model):
             self.data.physics.f_t_alpha_energy_confinement,
         ) = self.phyaux(
             fusden_alpha_total=self.data.physics.fusden_alpha_total,
-            nd_plasma_alphas_vol_avg=self.data.physics.nd_plasma_alphas_thermal_vol_avg,
+            nd_plasma_alphas_thermal_vol_avg=self.data.physics.nd_plasma_alphas_thermal_vol_avg,
             t_energy_confinement=self.data.physics.t_energy_confinement,
         )
 
