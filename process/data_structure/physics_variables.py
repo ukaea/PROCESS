@@ -13,6 +13,13 @@ from enum import IntEnum
 import numpy as np
 
 
+class CurrentProfileIndexModel(IntEnum):
+    """Enum for current profile index models."""
+
+    USER_INPUT = 0
+    WESSON = 1
+
+
 class PlasmaIgnitionModel(IntEnum):
     """Enum for plasma ignition models."""
 
