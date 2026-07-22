@@ -1,6 +1,43 @@
 import abc
 from dataclasses import dataclass, fields
 
+from process.data_structure.blanket_variables import BlanketData
+from process.data_structure.build_variables import BuildData
+from process.data_structure.buildings_variables import BuildingsData
+from process.data_structure.ccfe_hcpb_variables import CCFEHCPBData
+from process.data_structure.constraint_variables import ConstraintData
+from process.data_structure.cost_2015_variables import Cost2015Data
+from process.data_structure.cost_variables import CostData
+from process.data_structure.cs_fatigue_variables import CSFatigueData
+from process.data_structure.current_drive_variables import CurrentDriveData
+from process.data_structure.dcll_variables import DCLLData
+from process.data_structure.divertor_variables import DivertorData
+from process.data_structure.first_wall_variables import FirstWallData
+from process.data_structure.fwbs_variables import FWBSData
+from process.data_structure.global_variables import GlobalData
+from process.data_structure.heat_transport_variables import HeatTransportData
+from process.data_structure.ife_variables import IFEData
+from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
+from process.data_structure.neoclassics_variables import NeoclassicsData
+from process.data_structure.numerics import NumericsData
+from process.data_structure.pf_power_variables import PFPowerData
+from process.data_structure.pfcoil_variables import PFCoilData
+from process.data_structure.physics_variables import PhysicsData
+from process.data_structure.power_variables import PowerData
+from process.data_structure.primary_pumping_variables import PrimaryPumpingData
+from process.data_structure.pulse_variables import PulseData
+from process.data_structure.rebco_variables import RebcoData
+from process.data_structure.reinke_variables import ReinkeData
+from process.data_structure.scan_variables import ScanData
+from process.data_structure.stellarator_configuration import StellaratorConfigData
+from process.data_structure.stellarator_variables import StellaratorData
+from process.data_structure.structure_variables import StructureData
+from process.data_structure.superconducting_tf_coil_variables import (
+    SuperconductingTFData,
+)
+from process.data_structure.tfcoil_variables import TFData
+from process.data_structure.times_variables import TimesData
+from process.data_structure.vacuum_variables import VacuumData
 from process.data_structure.water_usage_variables import WaterUseData
 
 initialise_later = object()
@@ -9,6 +46,41 @@ initialise_later = object()
 @dataclass(kw_only=True)
 class DataStructure:
     water_use: WaterUseData = initialise_later
+    costs_2015: Cost2015Data = initialise_later
+    cs_fatigue: CSFatigueData = initialise_later
+    vacuum: VacuumData = initialise_later
+    costs: CostData = initialise_later
+    first_wall: FirstWallData = initialise_later
+    fwbs: FWBSData = initialise_later
+    blanket: BlanketData = initialise_later
+    structure: StructureData = initialise_later
+    times: TimesData = initialise_later
+    reinke: ReinkeData = initialise_later
+    ccfe_hcpb: CCFEHCPBData = initialise_later
+    pulse: PulseData = initialise_later
+    build: BuildData = initialise_later
+    primary_pumping: PrimaryPumpingData = initialise_later
+    buildings: BuildingsData = initialise_later
+    constraints: ConstraintData = initialise_later
+    dcll: DCLLData = initialise_later
+    current_drive: CurrentDriveData = initialise_later
+    heat_transport: HeatTransportData = initialise_later
+    ife: IFEData = initialise_later
+    divertor: DivertorData = initialise_later
+    pf_coil: PFCoilData = initialise_later
+    power: PowerData = initialise_later
+    stellarator: StellaratorData = initialise_later
+    stellarator_config: StellaratorConfigData = initialise_later
+    pf_power: PFPowerData = initialise_later
+    neoclassics: NeoclassicsData = initialise_later
+    impurity_radiation: ImpurityRadiationData = initialise_later
+    physics: PhysicsData = initialise_later
+    rebco: RebcoData = initialise_later
+    tfcoil: TFData = initialise_later
+    superconducting_tfcoil: SuperconductingTFData = initialise_later
+    globals: GlobalData = initialise_later
+    scan: ScanData = initialise_later
+    numerics: NumericsData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):
@@ -23,7 +95,7 @@ class Model(abc.ABC):
     def run(self) -> None:
         """Run the model.
 
-        The run method is resposible for 'running' the model, ensuring it updates the data
+        The run method is responsible for 'running' the model, ensuring it updates the data
         structure with variables that subsequent models will require.
         """
 

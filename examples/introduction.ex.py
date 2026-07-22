@@ -63,17 +63,15 @@ single_run.run()
 
 # %% [markdown]
 # ## Plot summary
-# Create a summary of the generated `MFILE.DAT` using `plot_proc`.
+# Create a summary of the generated `MFILE.DAT` using `plot_summary`.
 #
-# You can also call `plot_proc` from the cli with `python -m process.core.io.plot_proc`
+# You can also call `plot_summary` from the cli with `process plot summary`
 
 # %%
-from process.core.io import plot_proc
+from process.core.io.plot import plot_summary
 
 # Pdf and png output are also available
-plot_proc.main(
-    args=["-f", single_run.mfile_path.as_posix(), "--output-format", "none", "--show"]
-)
+plot_summary(single_run.mfile_path, output_format="none", show=True)
 
 # %% [markdown]
 # ## View key output variables
@@ -81,11 +79,10 @@ plot_proc.main(
 # we have set some values on the `CostModel` instance and can print them.
 
 # %%
-import process.data_structure
 
 # Print some values on the CostModel instance
-print(f"Heat transport system: {process.data_structure.cost_variables.c226:.3e} M$")
-print(f"Electrical plant equipment: {process.data_structure.cost_variables.c24:.3e} M$")
+print(f"Heat transport system: {single_run.data.costs.c226:.3e} M$")
+print(f"Electrical plant equipment: {single_run.data.costs.c24:.3e} M$")
 
 # %%
 # Clean up

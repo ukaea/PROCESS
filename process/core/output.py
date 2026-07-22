@@ -1,9 +1,12 @@
-from process import data_structure
 from process.core.log import logging_model_handler
+from process.data_structure.blanket_variables import BlktModelTypes
 from process.models.tfcoil.base import TFConductorModel
+from process.models.tfcoil.superconducting import (
+    SuperconductingTFTurnType,
+)
 
 
-def write(models, _outfile):
+def write(models, data, _outfile):
     """Write the results to the main output file (OUT.DAT).
 
     Write the program results to a file, in a tidy format.
@@ -22,12 +25,12 @@ def write(models, _outfile):
     logging_model_handler.clear_logs()
 
     # Call stellarator output routine instead if relevant
-    if data_structure.stellarator_variables.istell != 0:
+    if data.stellarator.istell != 0:
         models.stellarator.output()
         return
 
     #  Call IFE output routine instead if relevant
-    if data_structure.ife_variables.ife != 0:
+    if data.ife.ife != 0:
         models.ife.output()
         return
 
@@ -65,24 +68,32 @@ def write(models, _outfile):
     models.cryostat.output()
 
     # Toroidal field coil copper model
-    if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+    if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
         models.copper_tf_coil.output()
 
     # Toroidal field coil superconductor model
-    if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-        models.sctfcoil.output()
+    if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+        tf_turn_type = SuperconductingTFTurnType(
+            data.superconducting_tfcoil.i_tf_turn_type
+        )
+        if tf_turn_type == SuperconductingTFTurnType.CABLE_IN_CONDUIT:
+            models.cicc_sctfcoil.output()
+        elif tf_turn_type == SuperconductingTFTurnType.CROSS_CONDUCTOR:
+            models.croco_sctfcoil.output()
+        else:
+            raise ValueError(
+                "Unsupported superconducting TF turn type: "
+                f"{data.superconducting_tfcoil.i_tf_turn_type}"
+            )
 
     # Toroidal field coil aluminium model
-    if (
-        data_structure.tfcoil_variables.i_tf_sup
-        == TFConductorModel.HELIUM_COOLED_ALUMINIUM
-    ):
+    if data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
         models.aluminium_tf_coil.output()
 
     # Tight aspect ratio machine model
     if (
-        data_structure.physics_variables.itart == 1
-        and data_structure.tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+        data.physics.itart == 1
+        and data.tfcoil.i_tf_sup != TFConductorModel.SUPERCONDUCTING
     ):
         models.tfcoil.output()
 
@@ -108,11 +119,11 @@ def write(models, _outfile):
     # First wall geometry
     models.fw.output()
 
-    if data_structure.fwbs_variables.i_blanket_type == 1:
+    if data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
         # CCFE HCPB model
         models.ccfe_hcpb.output()
 
-    elif data_structure.fwbs_variables.i_blanket_type == 5:
+    elif data.fwbs.i_blanket_type == BlktModelTypes.DCLL:
         # DCLL model
         models.dcll.output()
 

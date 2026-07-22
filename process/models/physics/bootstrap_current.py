@@ -1,20 +1,24 @@
+"""Bootstrap current models and calculations for plasma physics simulations."""
+
+from __future__ import annotations
+
 import logging
 from enum import IntEnum
+from types import DynamicClassAttribute
+from typing import TYPE_CHECKING
 
 import numba as nb
 import numpy as np
 import scipy
-import scipy.integrate as integrate
+from scipy import integrate
 
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    current_drive_variables,
-    physics_variables,
-)
-from process.models.physics.plasma_profiles import PlasmaProfile
+
+if TYPE_CHECKING:
+    from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 
@@ -22,209 +26,244 @@ logger = logging.getLogger(__name__)
 class BootstrapCurrentFractionModel(IntEnum):
     """Bootstrap plasma current fraction (f_BS) model types"""
 
-    USER_INPUT = 0
-    ITER_89 = 1
-    NEVINS = 2
-    WILSON = 3
-    SAUTER = 4
-    SAKAI = 5
-    ARIES = 6
-    ANDRADE = 7
-    HOANG = 8
-    WONG = 9
-    GI_1 = 10
-    GI_2 = 11
-    SUGIYAMA_L_MODE = 12
-    SUGIYAMA_H_MODE = 13
+    USER_INPUT = (0, "User Input")
+    ITER_89 = (1, "ITER IPDG89 scaling")
+    NEVINS = (2, "Nevins scaling")
+    WILSON = (3, "Wilson scaling")
+    SAUTER = (4, "Sauter scaling")
+    SAKAI = (5, "Sakai scaling")
+    ARIES = (6, "Aries scaling")
+    ANDRADE = (7, "Andrade scaling")
+    HOANG = (8, "Hoang scaling")
+    WONG = (9, "Wong scaling")
+    GI_1 = (10, "GI 1 scaling")
+    GI_2 = (11, "GI 2 scaling")
+    SUGIYAMA_L_MODE = (12, "Sugiyama L Mode scaling")
+    SUGIYAMA_H_MODE = (13, "Sugiyama H Mode scaling")
+
+    def __new__(cls, value: int, full_name: str):
+        """Create a new BootstrapCurrentFractionModel enum instance.
+
+        Parameters
+        ----------
+        value : int
+            The integer value of the enum member.
+        full_name : str
+            The full name/description of the bootstrap current model.
+
+        Returns
+        -------
+        BootstrapCurrentFractionModel
+            A new enum instance with the specified value and full_name.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        """The full name of the bootstrap current model."""
+        return self._full_name_
 
 
 class PlasmaBootstrapCurrent(Model):
     """Class to hold plasma bootstrap current for plasma processing."""
 
-    def __init__(self, plasma_profile: PlasmaProfile) -> None:
+    def __init__(
+        self, plasma_profile: PlasmaProfile, sauter_bootstrap: SauterBootstrapCurrent
+    ) -> None:
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
-        self.sauter_bootstrap = SauterBootstrapCurrent()
+        self.sauter_bootstrap = sauter_bootstrap
 
     def run(self) -> None:
+        """Calculate bootstrap current fraction using various models.
+
+        Raises
+        ------
+        ProcessValueError
+            If an illegal value of i_bootstrap_current is provided.
+        """
         # Calculate bootstrap current fraction using various models
-        current_drive_variables.f_c_plasma_bootstrap_iter89 = (
-            current_drive_variables.cboot
+        self.data.current_drive.f_c_plasma_bootstrap_iter89 = (
+            self.data.current_drive.cboot
             * self.bootstrap_fraction_iter89(
-                aspect=physics_variables.aspect,
-                beta=physics_variables.beta_total_vol_avg,
-                b_plasma_toroidal_on_axis=physics_variables.b_plasma_total,
-                plasma_current=physics_variables.plasma_current,
-                q95=physics_variables.q95,
-                q0=physics_variables.q0,
-                rmajor=physics_variables.rmajor,
-                vol_plasma=physics_variables.vol_plasma,
+                aspect=self.data.physics.aspect,
+                beta=self.data.physics.beta_total_vol_avg,
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_total,
+                plasma_current=self.data.physics.plasma_current,
+                q95=self.data.physics.q95,
+                q0=self.data.physics.q0,
+                rmajor=self.data.physics.rmajor,
+                vol_plasma=self.data.physics.vol_plasma,
             )
         )
 
-        current_drive_variables.f_c_plasma_bootstrap_nevins = (
-            current_drive_variables.cboot
+        self.data.current_drive.f_c_plasma_bootstrap_nevins = (
+            self.data.current_drive.cboot
             * self.bootstrap_fraction_nevins(
-                alphan=physics_variables.alphan,
-                alphat=physics_variables.alphat,
-                beta_toroidal=physics_variables.beta_toroidal_vol_avg,
-                b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
-                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
-                plasma_current=physics_variables.plasma_current,
-                q95=physics_variables.q95,
-                q0=physics_variables.q0,
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
-                te=physics_variables.temp_plasma_electron_vol_avg_kev,
-                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
+                alphan=self.data.physics.alphan,
+                alphat=self.data.physics.alphat,
+                beta_toroidal=self.data.physics.beta_toroidal_vol_avg,
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+                nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                plasma_current=self.data.physics.plasma_current,
+                q95=self.data.physics.q95,
+                q0=self.data.physics.q0,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                te=self.data.physics.temp_plasma_electron_vol_avg_kev,
+                zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
             )
         )
 
         # Wilson scaling uses thermal poloidal beta, not total
-        current_drive_variables.f_c_plasma_bootstrap_wilson = (
-            current_drive_variables.cboot
+        self.data.current_drive.f_c_plasma_bootstrap_wilson = (
+            self.data.current_drive.cboot
             * self.bootstrap_fraction_wilson(
-                alphaj=physics_variables.alphaj,
-                alphap=physics_variables.alphap,
-                alphat=physics_variables.alphat,
-                betpth=physics_variables.beta_thermal_poloidal_vol_avg,
-                q0=physics_variables.q0,
-                q95=physics_variables.q95,
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
+                alphaj=self.data.physics.alphaj,
+                alphap=self.data.physics.alphap,
+                alphat=self.data.physics.alphat,
+                betpth=self.data.physics.beta_thermal_poloidal_vol_avg,
+                q0=self.data.physics.q0,
+                q95=self.data.physics.q95,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
             )
         )
 
         (
-            current_drive_variables.f_c_plasma_bootstrap_sauter,
-            physics_variables.j_plasma_bootstrap_sauter_profile,
+            self.data.current_drive.f_c_plasma_bootstrap_sauter,
+            self.data.physics.j_plasma_bootstrap_sauter_profile,
         ) = self.bootstrap_fraction_sauter(self.plasma_profile)
-        current_drive_variables.f_c_plasma_bootstrap_sauter *= (
-            current_drive_variables.cboot
+        self.data.current_drive.f_c_plasma_bootstrap_sauter *= (
+            self.data.current_drive.cboot
         )
 
-        current_drive_variables.f_c_plasma_bootstrap_sakai = (
-            current_drive_variables.cboot
+        self.data.current_drive.f_c_plasma_bootstrap_sakai = (
+            self.data.current_drive.cboot
             * self.bootstrap_fraction_sakai(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                q95=physics_variables.q95,
-                q0=physics_variables.q0,
-                alphan=physics_variables.alphan,
-                alphat=physics_variables.alphat,
-                eps=physics_variables.eps,
-                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                q95=self.data.physics.q95,
+                q0=self.data.physics.q0,
+                alphan=self.data.physics.alphan,
+                alphat=self.data.physics.alphat,
+                eps=self.data.physics.eps,
+                ind_plasma_internal_norm=self.data.physics.ind_plasma_internal_norm,
             )
         )
 
-        current_drive_variables.f_c_plasma_bootstrap_aries = (
-            current_drive_variables.cboot
+        self.data.current_drive.f_c_plasma_bootstrap_aries = (
+            self.data.current_drive.cboot
             * self.bootstrap_fraction_aries(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
-                core_density=physics_variables.nd_plasma_electron_on_axis,
-                average_density=physics_variables.nd_plasma_electrons_vol_avg,
-                inverse_aspect=physics_variables.eps,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                ind_plasma_internal_norm=self.data.physics.ind_plasma_internal_norm,
+                core_density=self.data.physics.nd_plasma_electron_on_axis,
+                average_density=self.data.physics.nd_plasma_electrons_vol_avg,
+                inverse_aspect=self.data.physics.eps,
             )
         )
 
-        current_drive_variables.f_c_plasma_bootstrap_andrade = (
-            current_drive_variables.cboot
+        self.data.current_drive.f_c_plasma_bootstrap_andrade = (
+            self.data.current_drive.cboot
             * self.bootstrap_fraction_andrade(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                core_pressure=physics_variables.pres_plasma_thermal_on_axis,
-                average_pressure=physics_variables.pres_plasma_thermal_vol_avg,
-                inverse_aspect=physics_variables.eps,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                core_pressure=self.data.physics.pres_plasma_thermal_on_axis,
+                average_pressure=self.data.physics.pres_plasma_thermal_vol_avg,
+                inverse_aspect=self.data.physics.eps,
             )
         )
-        current_drive_variables.f_c_plasma_bootstrap_hoang = (
-            current_drive_variables.cboot
+        self.data.current_drive.f_c_plasma_bootstrap_hoang = (
+            self.data.current_drive.cboot
             * self.bootstrap_fraction_hoang(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                pressure_index=physics_variables.alphap,
-                current_index=physics_variables.alphaj,
-                inverse_aspect=physics_variables.eps,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                pressure_index=self.data.physics.alphap,
+                current_index=self.data.physics.alphaj,
+                inverse_aspect=self.data.physics.eps,
             )
         )
-        current_drive_variables.f_c_plasma_bootstrap_wong = (
-            current_drive_variables.cboot
+        self.data.current_drive.f_c_plasma_bootstrap_wong = (
+            self.data.current_drive.cboot
             * self.bootstrap_fraction_wong(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                density_index=physics_variables.alphan,
-                temperature_index=physics_variables.alphat,
-                inverse_aspect=physics_variables.eps,
-                elongation=physics_variables.kappa,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                density_index=self.data.physics.alphan,
+                temperature_index=self.data.physics.alphat,
+                inverse_aspect=self.data.physics.eps,
+                elongation=self.data.physics.kappa,
             )
         )
-        current_drive_variables.bscf_gi_i = (
-            current_drive_variables.cboot
+        self.data.current_drive.bscf_gi_i = (
+            self.data.current_drive.cboot
             * self.bootstrap_fraction_gi_I(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                pressure_index=physics_variables.alphap,
-                temperature_index=physics_variables.alphat,
-                inverse_aspect=physics_variables.eps,
-                effective_charge=physics_variables.n_charge_plasma_effective_vol_avg,
-                q95=physics_variables.q95,
-                q0=physics_variables.q0,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                pressure_index=self.data.physics.alphap,
+                temperature_index=self.data.physics.alphat,
+                inverse_aspect=self.data.physics.eps,
+                effective_charge=self.data.physics.n_charge_plasma_effective_vol_avg,
+                q95=self.data.physics.q95,
+                q0=self.data.physics.q0,
             )
         )
 
-        current_drive_variables.bscf_gi_ii = (
-            current_drive_variables.cboot
+        self.data.current_drive.bscf_gi_ii = (
+            self.data.current_drive.cboot
             * self.bootstrap_fraction_gi_II(
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                pressure_index=physics_variables.alphap,
-                temperature_index=physics_variables.alphat,
-                inverse_aspect=physics_variables.eps,
-                effective_charge=physics_variables.n_charge_plasma_effective_vol_avg,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                pressure_index=self.data.physics.alphap,
+                temperature_index=self.data.physics.alphat,
+                inverse_aspect=self.data.physics.eps,
+                effective_charge=self.data.physics.n_charge_plasma_effective_vol_avg,
             )
         )
-        current_drive_variables.f_c_plasma_bootstrap_sugiyama_l = (
-            current_drive_variables.cboot
+        self.data.current_drive.f_c_plasma_bootstrap_sugiyama_l = (
+            self.data.current_drive.cboot
             * self.bootstrap_fraction_sugiyama_l_mode(
-                eps=physics_variables.eps,
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                alphan=physics_variables.alphan,
-                alphat=physics_variables.alphat,
-                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
-                q95=physics_variables.q95,
-                q0=physics_variables.q0,
+                eps=self.data.physics.eps,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                alphan=self.data.physics.alphan,
+                alphat=self.data.physics.alphat,
+                zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                q95=self.data.physics.q95,
+                q0=self.data.physics.q0,
             )
         )
-        current_drive_variables.f_c_plasma_bootstrap_sugiyama_h = (
-            current_drive_variables.cboot
+        self.data.current_drive.f_c_plasma_bootstrap_sugiyama_h = (
+            self.data.current_drive.cboot
             * self.bootstrap_fraction_sugiyama_h_mode(
-                eps=physics_variables.eps,
-                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                alphan=physics_variables.alphan,
-                alphat=physics_variables.alphat,
-                tbeta=physics_variables.tbeta,
-                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
-                q95=physics_variables.q95,
-                q0=physics_variables.q0,
-                radius_plasma_pedestal_density_norm=physics_variables.radius_plasma_pedestal_density_norm,
-                nd_plasma_pedestal_electron=physics_variables.nd_plasma_pedestal_electron,
-                n_greenwald=physics_variables.nd_plasma_electron_max_array[6],
-                temp_plasma_pedestal_kev=physics_variables.temp_plasma_pedestal_kev,
+                eps=self.data.physics.eps,
+                beta_poloidal=self.data.physics.beta_poloidal_vol_avg,
+                alphan=self.data.physics.alphan,
+                alphat=self.data.physics.alphat,
+                tbeta=self.data.physics.tbeta,
+                zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                q95=self.data.physics.q95,
+                q0=self.data.physics.q0,
+                radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
+                nd_plasma_pedestal_electron=self.data.physics.nd_plasma_pedestal_electron,
+                n_greenwald=self.data.physics.nd_plasma_electron_max_array[6],
+                temp_plasma_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
             )
         )
 
         # Calculate beta_norm_max based on i_beta_norm_max
         try:
             model = BootstrapCurrentFractionModel(
-                int(physics_variables.i_bootstrap_current)
+                int(self.data.physics.i_bootstrap_current)
             )
-            current_drive_variables.f_c_plasma_bootstrap = (
+            self.data.current_drive.f_c_plasma_bootstrap = (
                 self.get_bootstrap_current_fraction_value(model)
             )
         except ValueError:
             raise ProcessValueError(
                 "Illegal value of i_bootstrap_current",
-                i_bootstrap_current=physics_variables.i_bootstrap_current,
+                i_bootstrap_current=self.data.physics.i_bootstrap_current,
             ) from None
 
     def get_bootstrap_current_fraction_value(
-        self, model: BootstrapCurrentFractionModel
+        self,
+        model: BootstrapCurrentFractionModel,
     ) -> float:
         """Get the plasma current bootstrap fraction (f_BS) for the specified model.
 
@@ -239,20 +278,20 @@ class PlasmaBootstrapCurrent(Model):
             The bootstrap current fraction value.
         """
         model_map = {
-            BootstrapCurrentFractionModel.USER_INPUT: current_drive_variables.f_c_plasma_bootstrap,
-            BootstrapCurrentFractionModel.ITER_89: current_drive_variables.f_c_plasma_bootstrap_iter89,
-            BootstrapCurrentFractionModel.NEVINS: current_drive_variables.f_c_plasma_bootstrap_nevins,
-            BootstrapCurrentFractionModel.WILSON: current_drive_variables.f_c_plasma_bootstrap_wilson,
-            BootstrapCurrentFractionModel.SAUTER: current_drive_variables.f_c_plasma_bootstrap_sauter,
-            BootstrapCurrentFractionModel.SAKAI: current_drive_variables.f_c_plasma_bootstrap_sakai,
-            BootstrapCurrentFractionModel.ARIES: current_drive_variables.f_c_plasma_bootstrap_aries,
-            BootstrapCurrentFractionModel.ANDRADE: current_drive_variables.f_c_plasma_bootstrap_andrade,
-            BootstrapCurrentFractionModel.HOANG: current_drive_variables.f_c_plasma_bootstrap_hoang,
-            BootstrapCurrentFractionModel.WONG: current_drive_variables.f_c_plasma_bootstrap_wong,
-            BootstrapCurrentFractionModel.GI_1: current_drive_variables.bscf_gi_i,
-            BootstrapCurrentFractionModel.GI_2: current_drive_variables.bscf_gi_ii,
-            BootstrapCurrentFractionModel.SUGIYAMA_L_MODE: current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
-            BootstrapCurrentFractionModel.SUGIYAMA_H_MODE: current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
+            BootstrapCurrentFractionModel.USER_INPUT: self.data.current_drive.f_c_plasma_bootstrap,
+            BootstrapCurrentFractionModel.ITER_89: self.data.current_drive.f_c_plasma_bootstrap_iter89,
+            BootstrapCurrentFractionModel.NEVINS: self.data.current_drive.f_c_plasma_bootstrap_nevins,
+            BootstrapCurrentFractionModel.WILSON: self.data.current_drive.f_c_plasma_bootstrap_wilson,
+            BootstrapCurrentFractionModel.SAUTER: self.data.current_drive.f_c_plasma_bootstrap_sauter,
+            BootstrapCurrentFractionModel.SAKAI: self.data.current_drive.f_c_plasma_bootstrap_sakai,
+            BootstrapCurrentFractionModel.ARIES: self.data.current_drive.f_c_plasma_bootstrap_aries,
+            BootstrapCurrentFractionModel.ANDRADE: self.data.current_drive.f_c_plasma_bootstrap_andrade,
+            BootstrapCurrentFractionModel.HOANG: self.data.current_drive.f_c_plasma_bootstrap_hoang,
+            BootstrapCurrentFractionModel.WONG: self.data.current_drive.f_c_plasma_bootstrap_wong,
+            BootstrapCurrentFractionModel.GI_1: self.data.current_drive.bscf_gi_i,
+            BootstrapCurrentFractionModel.GI_2: self.data.current_drive.bscf_gi_ii,
+            BootstrapCurrentFractionModel.SUGIYAMA_L_MODE: self.data.current_drive.f_c_plasma_bootstrap_sugiyama_l,
+            BootstrapCurrentFractionModel.SUGIYAMA_H_MODE: self.data.current_drive.f_c_plasma_bootstrap_sugiyama_h,
         }
         return model_map[model]
 
@@ -296,14 +335,14 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        This function performs the original ITER calculation of the plasma current bootstrap fraction.
+        This function performs the original ITER calculation of the plasma current
+        bootstrap fraction.
 
         References
         ----------
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
-
         # Calculate the bootstrap current coefficient
         c_bs = 1.32 - 0.235 * (q95 / q0) + 0.0185 * (q95 / q0) ** 2
 
@@ -360,10 +399,15 @@ class PlasmaBootstrapCurrent(Model):
         float
             The bootstrap current fraction.
 
+        Raises
+        ------
+        ProcessValueError
+            If illegal profile values are found (NaN errors or aj < 0).
+
         Notes
         -----
-        This function calculates the bootstrap current fraction using the numerically fitted algorithm
-        written by Howard Wilson.
+        This function calculates the bootstrap current fraction using the numerically
+        fitted algorithm written by Howard Wilson.
 
         References
         ----------
@@ -371,19 +415,21 @@ class PlasmaBootstrapCurrent(Model):
 
         H. R. Wilson, Nuclear Fusion 32 (1992) 257
         """
-
         term1 = np.log(0.5)
         term2 = np.log(q0 / q95)
 
-        # Re-arranging of parabolic profile to be equal to (r/a)^2 where the profile value is half of the core value
+        # Re-arranging of parabolic profile to be equal to (r/a)^2 where the profile
+        # value is half of the core value
 
         termp = 1.0 - 0.5 ** (1.0 / alphap)
         termt = 1.0 - 0.5 ** (1.0 / alphat)
         termj = 1.0 - 0.5 ** (1.0 / alphaj)
 
-        # Assuming a parabolic safety factor profile of the form q = q0 + (q95 - q0) * (r/a)^2
-        # Substitute (r/a)^2 term from temperature,pressure and current profiles into q profile when values is 50% of core value
-        # Take natural log of q profile over q95 and q0 to get the profile index
+        # Assuming a parabolic safety factor profile of the form
+        # q = q0 + (q95 - q0) * (r/a)^2
+        # Substitute (r/a)^2 term from temperature,pressure and current
+        # profiles into q profile when values is 50% of core value. Take natural log of
+        # q profile over q95 and q0 to get the profile index
 
         alfpnw = term1 / np.log(np.log((q0 + (q95 - q0) * termp) / q95) / term2)
         alftnw = term1 / np.log(np.log((q0 + (q95 - q0) * termt) / q95) / term2)
@@ -502,10 +548,9 @@ class PlasmaBootstrapCurrent(Model):
         Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715,
         ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2014.07.009.
 
-        Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current drive."
-        ITER-TN-PH-8-4, June 1988.
+        Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current
+        drive." ITER-TN-PH-8-4, June 1988.
         """
-
         # Compute average electron beta
         betae = (
             nd_plasma_electrons_vol_avg
@@ -545,13 +590,14 @@ class PlasmaBootstrapCurrent(Model):
         Parameters
         ----------
         plasma_profile : PlasmaProfile
-            The plasma profile object containing the necessary plasma parameters for the Sauter
-            bootstrap calculation.
+            The plasma profile object containing the necessary plasma parameters for the
+            Sauter bootstrap calculation.
 
         Returns
         -------
         tuple[float, np.ndarray]
-            A tuple containing the bootstrap current fraction and the bootstrap current density profile.
+            A tuple containing the bootstrap current fraction and the bootstrap current
+            density profile.
         """
         return self.sauter_bootstrap.bootstrap_fraction_sauter(plasma_profile)
 
@@ -606,25 +652,28 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        This function calculates the bootstrap current fraction using the Nevins et al method.
+        This function calculates the bootstrap current fraction using the Nevins et al
+        method.
 
         References
         ----------
-        K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, "Bootstrap current fraction scaling for a tokamak reactor design study,"
-        Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
+        K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, "Bootstrap current fraction
+        scaling for a tokamak reactor design study," Fusion Engineering and Design,
+        vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
         doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
 
-        Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current drive."
-        ITER-TN-PH-8-4, June 1988.
+        Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current
+        drive." ITER-TN-PH-8-4, June 1988.
         """
-        # Calculate peak electron beta at plasma centre, this is not the form used in the paper
-        # The paper assumes parabolic profiles for calculating core values with the profile indexes.
-        # We instead use the directly calculated electron density and temperature values at the core.
-        # So that it is compatible with all profiles
+        # Calculate peak electron beta at plasma centre, this is not the form used in
+        # the paper. The paper assumes parabolic profiles for calculating core values
+        # with the profile indexes. We instead use the directly calculated electron
+        # density and temperature values at the core. So that it is compatible with all
+        # profiles.
 
         betae0 = (
-            physics_variables.nd_plasma_electron_on_axis
-            * physics_variables.temp_plasma_electron_on_axis_kev
+            self.data.physics.nd_plasma_electron_on_axis
+            * self.data.physics.temp_plasma_electron_on_axis_kev
             * 1.0e3
             * constants.ELECTRON_CHARGE
             / (b_plasma_toroidal_on_axis**2 / (2.0 * constants.RMU0))
@@ -693,23 +742,27 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        - The profile assumed for the alphan and alphat indexes is only a parabolic profile without a
-          pedestal (L-mode).
-        - The Root Mean Squared Error for the fitting database of this formula was 0.025.
-        - Concentrating on the positive shear plasmas using the ACCOME code equilibria with the fully
-          non-inductively driven conditions with neutral beam (NB) injection only are calculated.
+        - The profile assumed for the alphan and alphat indexes is only a parabolic
+          profile without a pedestal (L-mode).
+        - The Root Mean Squared Error for the fitting database of this formula was
+          0.025.
+        - Concentrating on the positive shear plasmas using the ACCOME code equilibria
+          with the fully non-inductively driven conditions with neutral beam (NB)
+          injection only are calculated.
         - The electron temperature and the ion temperature were assumed to be equal.
         - This can be used for all aspect ratios.
         - The diamagnetic fraction is included in this formula.
 
         References
         ----------
-        R. Sakai, T. Fujita, and A. Okamoto, "Derivation of bootstrap current fraction scaling formula for
-        0-D system code analysis," Fusion Engineering and Design, vol. 149, p. 111322, Dec. 2019,
+        R. Sakai, T. Fujita, and A. Okamoto, "Derivation of bootstrap current fraction
+        scaling formula for 0-D system code analysis," Fusion Engineering and Design,
+        vol. 149, p. 111322, Dec. 2019,
         doi: https://doi.org/10.1016/j.fusengdes.2019.111322.
         """
-        # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
-        # So the diamganetic current should not be calculated with this. i_diamagnetic_current = 0
+        # Sakai states that the ACCOME dataset used has the toridal diamagnetic current
+        # included in the bootstrap current. So the diamganetic current should not be
+        # calculated with this. i_diamagnetic_current = 0
         return (
             10 ** (0.951 * eps - 0.948)
             * beta_poloidal ** (1.226 * eps + 1.584)
@@ -750,13 +803,14 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        The source reference does not provide any info about the derivation of the formula.
-        It is only stated.
+        The source reference does not provide any info about the derivation of the
+        formula. It is only stated.
 
         References
         ----------
-        Zoran Dragojlovic et al., "An advanced computational algorithm for systems analysis of tokamak power plants,"
-        Fusion Engineering and Design, vol. 85, no. 2, pp. 243-265, Apr. 2010,
+        Zoran Dragojlovic et al., "An advanced computational algorithm for systems
+        analysis of tokamak power plants," Fusion Engineering and Design, vol. 85,
+        no. 2, pp. 243-265, Apr. 2010,
         doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
         """
         # Using the standard variable naming from the ARIES paper
@@ -801,19 +855,20 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        - Based off 350 plasma profiles from Experimento Tokamak Esferico (ETE) spherical tokamak
-          with A = 1.5, R_0 = 0.3m, I_p = 200kA, B_0=0.4T, beta = 4-10%.
+        - Based off 350 plasma profiles from Experimento Tokamak Esferico (ETE)
+          spherical tokamak with A = 1.5, R_0 = 0.3m, I_p = 200kA, B_0=0.4T,
+          beta = 4-10%.
         - Profiles taken as Gaussian shaped functions.
-        - Errors mostly up to the order of 10% are obtained when both expressions are compared with
-          the equilibrium estimates for the bootstrap current in ETE.
+        - Errors mostly up to the order of 10% are obtained when both expressions are
+          compared with the equilibrium estimates for the bootstrap current in ETE.
 
         References
         ----------
-        M. C. R. Andrade and G. O. Ludwig, "Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,"
-        Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001-065001, Apr. 2008,
+        M. C. R. Andrade and G. O. Ludwig, "Scaling of bootstrap current on equilibrium
+        and plasma profile parameters in tokamak plasmas," Plasma Physics and Controlled
+        Fusion, vol. 50, no. 6, pp. 065001-065001, Apr. 2008,
         doi: https://doi.org/10.1088/0741-3335/50/6/065001.
         """
-
         # Using the standard variable naming from the Andrade et.al. paper
         c_p = core_pressure / average_pressure
 
@@ -851,27 +906,30 @@ class PlasmaBootstrapCurrent(Model):
         Notes
         -----
         - Based off of TFTR data calculated using the TRANSP plasma analysis code.
-        - 170 discharges which was assembled to study the tritium influx and transport in discharges
-          with D-only neutral beam injection (NBI).
-        - Contains L-mode, supershots, reversed shear, enhanced reversed shear and increased li discharges.
+        - 170 discharges which was assembled to study the tritium influx and transport
+          in discharges with D-only neutral beam injection (NBI).
+        - Contains L-mode, supershots, reversed shear, enhanced reversed shear and
+          increased li discharges.
         - Discharges with monotonic flux profiles with reversed shear are also included.
         - Is applied to circular cross-section plasmas.
 
         References
         ----------
-        G. T. Hoang and R. V. Budny, "The bootstrap fraction in TFTR," AIP conference proceedings,
-        Jan. 1997, doi: https://doi.org/10.1063/1.53414.
+        G. T. Hoang and R. V. Budny, "The bootstrap fraction in TFTR," AIP conference
+        proceedings, Jan. 1997, doi: https://doi.org/10.1063/1.53414.
         """
-
         # Using the standard variable naming from the Hoang et.al. paper
         # Hoang et.al uses a different definition for the profile indexes such that
-        # alpha_p is defined as the ratio of the central and the volume-averaged values, and the peakedness of the density of the total plasma current
+        # alpha_p is defined as the ratio of the central and the volume-averaged values,
+        # and the peakedness of the density of the total plasma current
         # (defined as ratio of the central value and I_p), alpha_j$
 
-        # We assume the pressure and current profile is parabolic and use the (profile_index +1) term in lieu
-        # The term represents the ratio of the the core to volume averaged value
+        # We assume the pressure and current profile is parabolic and use the
+        # (profile_index +1) term in lieu. The term represents the ratio of the the
+        # core to volume averaged value
 
-        # This could lead to large changes in the value depending on interpretation of the profile index
+        # This could lead to large changes in the value depending on interpretation of
+        # the profile index
 
         c_bs = np.sqrt((pressure_index + 1) / (current_index + 1))
 
@@ -908,21 +966,24 @@ class PlasmaBootstrapCurrent(Model):
         Notes
         -----
         - Data is based off of equilibria from Miller et al.
-        - A: 1.2 - 3.0 and stable to n ballooning and low n kink modes at a bootstrap fraction of 99%
-          for kappa = 2, 2.5 and 3.
+        - A: 1.2 - 3.0 and stable to n ballooning and low n kink modes at a bootstrap
+          fraction of 99% for kappa = 2, 2.5 and 3.
         - The results were parameterized as a function of aspect ratio and elongation.
-        - The parametric dependency of beta_p and beta_T are based on fitting of the DIII-D high
-          equivalent DT yield results.
-        - Parabolic profiles should be used for best results as the pressure peaking value is calculated
-          as the product of a parabolic temperature and density profile.
+        - The parametric dependency of beta_p and beta_T are based on fitting of the
+          DIII-D high equivalent DT yield results.
+        - Parabolic profiles should be used for best results as the pressure peaking
+          value is calculated as the product of a parabolic temperature and density
+          profile.
 
         References
         ----------
-        C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, "Toroidal reactor designs as a function of aspect ratio and elongation,"
-        vol. 42, no. 5, pp. 547-556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
+        C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, "Toroidal reactor
+        designs as a function of aspect ratio and elongation," vol. 42, no. 5,
+        pp. 547-556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
 
-        Miller, R L, "Stable bootstrap-current driven equilibria for low aspect ratio tokamaks".
-        Switzerland: N. p., 1996. Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
+        Miller, R L, "Stable bootstrap-current driven equilibria for low aspect ratio
+        tokamaks". Switzerland: N. p., 1996.
+        Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
         """
         # Using the standard variable naming from the Wong et.al. paper
         f_peak = 2.0 / scipy.special.beta(0.5, density_index + temperature_index + 1)
@@ -942,7 +1003,8 @@ class PlasmaBootstrapCurrent(Model):
         q95: float,
         q0: float,
     ) -> float:
-        """Calculate the bootstrap fraction using the first scaling from the Gi et al formula.
+        """Calculate the bootstrap fraction using the first scaling from the Gi et al
+        formula.
 
         Parameters
         ----------
@@ -968,23 +1030,26 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        - Scaling found by solving the Hirshman-Sigmar bootstrap model using the matrix inversion method.
-        - Method was done to put the scaling into parameters compatible with the TPC systems code.
-        - Uses the ACCOME code to create bootstrap current fractions without using the iterative
-          calculations of the current drive and equilibrium models in the scan.
-        - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, triang = 0.3, alpha_n = 0.1 - 0.8, alpha_t = 1.0 - 3.0,
-          Z_eff = 1.2 - 3.0.
+        - Scaling found by solving the Hirshman-Sigmar bootstrap model using the matrix
+          inversion method.
+        - Method was done to put the scaling into parameters compatible with the TPC
+          systems code.
+        - Uses the ACCOME code to create bootstrap current fractions without using the
+          iterative calculations of the current drive and equilibrium models in the
+          scan.
+        - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, triang = 0.3, alpha_n = 0.1 - 0.8,
+          alpha_t = 1.0 - 3.0, Z_eff = 1.2 - 3.0.
         - Uses parabolic plasma profiles only.
-        - Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the f_BS value
-          for reversed shear equilibrium.
+        - Scaling 1 has better accuracy than Scaling 2. However, Scaling 1
+          overestimated the f_BS value for reversed shear equilibrium.
 
         References
         ----------
-        K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, "Bootstrap current fraction scaling for a tokamak reactor design study,"
-        Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
+        K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, "Bootstrap current fraction
+        scaling for a tokamak reactor design study," Fusion Engineering and Design,
+        vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
         doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
         """
-
         # Using the standard variable naming from the Gi et.al. paper
 
         c_bs = (
@@ -1007,7 +1072,8 @@ class PlasmaBootstrapCurrent(Model):
         inverse_aspect: float,
         effective_charge: float,
     ) -> float:
-        """Calculate the bootstrap fraction using the second scaling from the Gi et al formula.
+        """Calculate the bootstrap fraction using the second scaling from the Gi et al
+        formula.
 
         Parameters
         ----------
@@ -1029,23 +1095,27 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        - Scaling found by solving the Hirshman-Sigmar bootstrap model using the matrix inversion method.
-        - Method was done to put the scaling into parameters compatible with the TPC systems code.
-        - Uses the ACCOME code to create bootstrap current fractions without using the iterative
-          calculations of the current drive and equilibrium models in the scan.
-        - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, triang = 0.3, alpha_n = 0.1 - 0.8, alpha_t = 1.0 - 3.0,
-          Z_eff = 1.2 - 3.0.
+        - Scaling found by solving the Hirshman-Sigmar bootstrap model using the matrix
+          inversion method.
+        - Method was done to put the scaling into parameters compatible with the TPC
+          systems code.
+        - Uses the ACCOME code to create bootstrap current fractions without using the
+          iterative calculations of the current drive and equilibrium models in the
+          scan.
+        - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, triang = 0.3, alpha_n = 0.1 - 0.8,
+          alpha_t = 1.0 - 3.0, Z_eff = 1.2 - 3.0.
         - Uses parabolic plasma profiles only.
-        - This scaling has the q profile dependence removed to obtain a scaling formula with much more
-          flexible variables than that by a single profile factor for internal current profile.
+        - This scaling has the q profile dependence removed to obtain a scaling formula
+          with much more flexible variables than that by a single profile factor for
+          internal current profile.
 
         References
         ----------
-        K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, "Bootstrap current fraction scaling for a tokamak reactor design study,"
-        Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
+        K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, "Bootstrap current fraction
+        scaling for a tokamak reactor design study," Fusion Engineering and Design,
+        vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
         doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
         """
-
         # Using the standard variable naming from the Gi et.al. paper
 
         c_bs = (
@@ -1069,7 +1139,8 @@ class PlasmaBootstrapCurrent(Model):
         q95: float,
         q0: float,
     ) -> float:
-        """Calculate the bootstrap fraction using the L-mode scaling from the Sugiyama et al formula.
+        """Calculate the bootstrap fraction using the L-mode scaling from the Sugiyama
+        et al formula.
 
         Parameters
         ----------
@@ -1101,12 +1172,11 @@ class PlasmaBootstrapCurrent(Model):
 
         References
         ----------
-        S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, "Improvement of core plasma power and
-        current balance models for tokamak systems code considering H-mode plasma profiles,"
-        Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
-        https://doi.org/10.1016/j.fusengdes.2025.115022.
+        S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, "Improvement of core plasma
+        power and current balance models for tokamak systems code considering H-mode
+        plasma profiles," Fusion Engineering and Design, vol. 216, p. 115022,
+        Jul. 2025, doi:https://doi.org/10.1016/j.fusengdes.2025.115022.
         """
-
         return (
             0.740
             * eps**0.418
@@ -1132,7 +1202,8 @@ class PlasmaBootstrapCurrent(Model):
         n_greenwald: float,
         temp_plasma_pedestal_kev: float,
     ) -> float:
-        """Calculate the bootstrap fraction using the H-mode scaling from the Sugiyama et al formula.
+        """Calculate the bootstrap fraction using the H-mode scaling from the Sugiyama
+        et al formula.
 
         Parameters
         ----------
@@ -1176,12 +1247,11 @@ class PlasmaBootstrapCurrent(Model):
 
         References
         ----------
-        S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, "Improvement of core plasma power and
-        current balance models for tokamak systems code considering H-mode plasma profiles,"
-        Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
-        https://doi.org/10.1016/j.fusengdes.2025.115022.
+        S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, "Improvement of core plasma
+        power and current balance models for tokamak systems code considering H-mode
+        plasma profiles," Fusion Engineering and Design, vol. 216, p. 115022,
+        Jul. 2025, doi: https://doi.org/10.1016/j.fusengdes.2025.115022.
         """
-
         return (
             0.789
             * eps**0.606
@@ -1198,221 +1268,151 @@ class PlasmaBootstrapCurrent(Model):
 
     def output(self):
         """Output the calculated bootstrap current information to the output file."""
+        po.oheadr(self.outfile, "Plasma Bootstrap Current Fraction")
+        po.ovarin(
+            self.outfile,
+            "Plasma bootstrap current fraction scaling used",
+            "(i_bootstrap_current)",
+            self.data.physics.i_bootstrap_current,
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"Bootstrap current fraction model selected: {BootstrapCurrentFractionModel(self.data.physics.i_bootstrap_current).full_name} ",
+        )
+        po.oblnkl(self.outfile)
 
         po.ovarrf(
             self.outfile,
             "Bootstrap current fraction multiplier",
             "(cboot)",
-            current_drive_variables.cboot,
+            self.data.current_drive.cboot,
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (ITER 1989)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.ITER_89.full_name})",
             "(f_c_plasma_bootstrap_iter89)",
-            current_drive_variables.f_c_plasma_bootstrap_iter89,
+            self.data.current_drive.f_c_plasma_bootstrap_iter89,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.NEVINS.full_name})",
+            "(f_c_plasma_bootstrap_nevins)",
+            self.data.current_drive.f_c_plasma_bootstrap_nevins,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.WILSON.full_name})",
+            "(f_c_plasma_bootstrap_wilson)",
+            self.data.current_drive.f_c_plasma_bootstrap_wilson,
             "OP ",
         )
 
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Sauter et al)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.SAUTER.full_name})",
             "(f_c_plasma_bootstrap_sauter)",
-            current_drive_variables.f_c_plasma_bootstrap_sauter,
+            self.data.current_drive.f_c_plasma_bootstrap_sauter,
             "OP ",
         )
-        for point in range(len(physics_variables.j_plasma_bootstrap_sauter_profile)):
+        for point in range(len(self.data.physics.j_plasma_bootstrap_sauter_profile)):
             po.ovarrf(
                 self.mfile,
                 f"Sauter et al bootstrap current density profile at point {point}",
                 f"(j_plasma_bootstrap_sauter_profile{point})",
-                physics_variables.j_plasma_bootstrap_sauter_profile[point],
+                self.data.physics.j_plasma_bootstrap_sauter_profile[point],
                 "OP ",
             )
 
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Nevins et al)",
-            "(f_c_plasma_bootstrap_nevins)",
-            current_drive_variables.f_c_plasma_bootstrap_nevins,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Bootstrap fraction (Wilson)",
-            "(f_c_plasma_bootstrap_wilson)",
-            current_drive_variables.f_c_plasma_bootstrap_wilson,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Bootstrap fraction (Sakai)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.SAKAI.full_name})",
             "(f_c_plasma_bootstrap_sakai)",
-            current_drive_variables.f_c_plasma_bootstrap_sakai,
+            self.data.current_drive.f_c_plasma_bootstrap_sakai,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (ARIES)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.ARIES.full_name})",
             "(f_c_plasma_bootstrap_aries)",
-            current_drive_variables.f_c_plasma_bootstrap_aries,
+            self.data.current_drive.f_c_plasma_bootstrap_aries,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Andrade)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.ANDRADE.full_name})",
             "(f_c_plasma_bootstrap_andrade)",
-            current_drive_variables.f_c_plasma_bootstrap_andrade,
+            self.data.current_drive.f_c_plasma_bootstrap_andrade,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Hoang)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.HOANG.full_name})",
             "(f_c_plasma_bootstrap_hoang)",
-            current_drive_variables.f_c_plasma_bootstrap_hoang,
+            self.data.current_drive.f_c_plasma_bootstrap_hoang,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Wong)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.WONG.full_name})",
             "(f_c_plasma_bootstrap_wong)",
-            current_drive_variables.f_c_plasma_bootstrap_wong,
+            self.data.current_drive.f_c_plasma_bootstrap_wong,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Gi I)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.GI_1.full_name})",
             "(bscf_gi_i)",
-            current_drive_variables.bscf_gi_i,
+            self.data.current_drive.bscf_gi_i,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Gi II)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.GI_2.full_name})",
             "(bscf_gi_ii)",
-            current_drive_variables.bscf_gi_ii,
+            self.data.current_drive.bscf_gi_ii,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Sugiyama L-mode)",
+            f"Bootstrap fraction"
+            f" ({BootstrapCurrentFractionModel.SUGIYAMA_L_MODE.full_name})",
             "(f_c_plasma_bootstrap_sugiyama_l)",
-            current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
+            self.data.current_drive.f_c_plasma_bootstrap_sugiyama_l,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Sugiyama H-mode)",
+            f"Bootstrap fraction"
+            f" ({BootstrapCurrentFractionModel.SUGIYAMA_H_MODE.full_name})",
             "(f_c_plasma_bootstrap_sugiyama_h)",
-            current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
+            self.data.current_drive.f_c_plasma_bootstrap_sugiyama_h,
             "OP ",
         )
 
-        po.ovarrf(
-            self.outfile,
-            "Diamagnetic fraction (Hender)",
-            "(f_c_plasma_diamagnetic_hender)",
-            current_drive_variables.f_c_plasma_diamagnetic_hender,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Diamagnetic fraction (SCENE)",
-            "(f_c_plasma_diamagnetic_scene)",
-            current_drive_variables.f_c_plasma_diamagnetic_scene,
-            "OP ",
-        )
+        po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile,
             "Pfirsch-Schlueter fraction (SCENE)",
             "(f_c_plasma_pfirsch_schluter_scene)",
-            current_drive_variables.f_c_plasma_pfirsch_schluter_scene,
+            self.data.current_drive.f_c_plasma_pfirsch_schluter_scene,
             "OP ",
         )
         # Error to catch if bootstap fraction limit has been enforced
-        if physics_variables.err242 == 1:
+        if self.data.physics.err242 == 1:
             logger.error("Bootstrap fraction upper limit enforced")
 
         # Error to catch if self-driven current fraction limit has been enforced
-        if physics_variables.err243 == 1:
+        if self.data.physics.err243 == 1:
             logger.error(
-                "Predicted plasma driven current is more than upper limit on non-inductive fraction"
+                "Predicted plasma driven current is more than upper limit on "
+                "non-inductive fraction"
             )
 
-        if physics_variables.i_bootstrap_current == 0:
-            po.ocmmnt(self.outfile, "  (User-specified bootstrap current fraction used)")
-        elif physics_variables.i_bootstrap_current == 1:
-            po.ocmmnt(
-                self.outfile, "  (ITER 1989 bootstrap current fraction model used)"
-            )
-        elif physics_variables.i_bootstrap_current == 2:
-            po.ocmmnt(
-                self.outfile,
-                "  (Nevins et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 3:
-            po.ocmmnt(self.outfile, "  (Wilson bootstrap current fraction model used)")
-        elif physics_variables.i_bootstrap_current == 4:
-            po.ocmmnt(
-                self.outfile,
-                "  (Sauter et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 5:
-            po.ocmmnt(
-                self.outfile,
-                "  (Sakai et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 6:
-            po.ocmmnt(
-                self.outfile,
-                "  (ARIES bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 7:
-            po.ocmmnt(
-                self.outfile,
-                "  (Andrade et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 8:
-            po.ocmmnt(
-                self.outfile,
-                "  (Hoang et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 9:
-            po.ocmmnt(
-                self.outfile,
-                "  (Wong et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 10:
-            po.ocmmnt(
-                self.outfile,
-                "  (Gi-I et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 11:
-            po.ocmmnt(
-                self.outfile,
-                "  (Gi-II et al bootstrap current fraction model used)",
-            )
-
-        if physics_variables.i_diamagnetic_current == 0:
-            po.ocmmnt(self.outfile, "  (Diamagnetic current fraction not calculated)")
-            # Error to show if diamagnetic current is above 1% but not used
-            if current_drive_variables.f_c_plasma_diamagnetic_scene > 0.01e0:
-                logger.error(
-                    "Diamagnetic fraction is more than 1%, but not calculated. "
-                    "Consider using i_diamagnetic_current=2 and i_pfirsch_schluter_current=1"
-                )
-
-        elif physics_variables.i_diamagnetic_current == 1:
-            po.ocmmnt(
-                self.outfile, "  (Hender diamagnetic current fraction scaling used)"
-            )
-        elif physics_variables.i_diamagnetic_current == 2:
-            po.ocmmnt(
-                self.outfile, "  (SCENE diamagnetic current fraction scaling used)"
-            )
-
-        if physics_variables.i_pfirsch_schluter_current == 0:
+        if self.data.physics.i_pfirsch_schluter_current == 0:
             po.ocmmnt(self.outfile, "  Pfirsch-Schluter current fraction not calculated")
-        elif physics_variables.i_pfirsch_schluter_current == 1:
+        elif self.data.physics.i_pfirsch_schluter_current == 1:
             po.ocmmnt(
                 self.outfile,
                 "  (SCENE Pfirsch-Schluter current fraction scaling used)",
@@ -1422,29 +1422,35 @@ class PlasmaBootstrapCurrent(Model):
             self.outfile,
             "Bootstrap fraction (enforced)",
             "(f_c_plasma_bootstrap.)",
-            current_drive_variables.f_c_plasma_bootstrap,
+            self.data.current_drive.f_c_plasma_bootstrap,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Diamagnetic fraction (enforced)",
             "(f_c_plasma_diamagnetic.)",
-            current_drive_variables.f_c_plasma_diamagnetic,
+            self.data.current_drive.f_c_plasma_diamagnetic,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Pfirsch-Schlueter fraction (enforced)",
             "(f_c_plasma_pfirsch_schluter.)",
-            current_drive_variables.f_c_plasma_pfirsch_schluter,
+            self.data.current_drive.f_c_plasma_pfirsch_schluter,
             "OP ",
         )
 
 
-class SauterBootstrapCurrent:
+class SauterBootstrapCurrent(Model):
     """Class to calculate the bootstrap current using the Sauter et al formula."""
 
-    def bootstrap_fraction_sauter(self, plasma_profile: float) -> float:
+    def run(self):
+        """This model isn't run"""
+
+    def output(self):
+        """This model doesn't have any output"""
+
+    def bootstrap_fraction_sauter(self, plasma_profile: PlasmaProfile) -> float:
         """Calculate the bootstrap current fraction from the Sauter et al scaling.
 
         Parameters
@@ -1459,66 +1465,68 @@ class SauterBootstrapCurrent:
 
         Notes
         -----
-        This function calculates the bootstrap current fraction using the Sauter, Angioni, and
-        Lin-Liu scaling.
+        This function calculates the bootstrap current fraction using the Sauter,
+        Angioni, and Lin-Liu scaling.
 
         References
         ----------
         O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime.
-        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime. Phys. Plasmas
+        1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
 
         O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime [Phys. Plasmas 6, 2834 (1999)].
-        Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime
+        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12):
+        5140. https://doi.org/10.1063/1.1517052
 
-        Note: The code was supplied by Emiliano Fable, IPP Garching (private communication).
+        Note: The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
         """
-
         # Radial points from 0 to 1 seperated by 1/profile_size
         roa = plasma_profile.neprofile.profile_x
 
         # Local circularised minor radius
-        rho = np.sqrt(physics_variables.a_plasma_poloidal / np.pi) * roa
+        rho = np.sqrt(self.data.physics.a_plasma_poloidal / np.pi) * roa
 
         # Square root of local aspect ratio
-        sqeps = np.sqrt(roa * (physics_variables.rminor / physics_variables.rmajor))
+        sqeps = np.sqrt(roa * (self.data.physics.rminor / self.data.physics.rmajor))
 
         # Calculate electron and ion density profiles
         ne = plasma_profile.neprofile.profile_y * 1e-19
         ni = (
-            physics_variables.nd_plasma_ions_total_vol_avg
-            / physics_variables.nd_plasma_electrons_vol_avg
+            self.data.physics.nd_plasma_ions_total_vol_avg
+            / self.data.physics.nd_plasma_electrons_vol_avg
         ) * ne
 
         # Calculate electron and ion temperature profiles
         tempe = plasma_profile.teprofile.profile_y
         tempi = (
-            physics_variables.temp_plasma_ion_vol_avg_kev
-            / physics_variables.temp_plasma_electron_vol_avg_kev
+            self.data.physics.temp_plasma_ion_vol_avg_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
         ) * tempe
 
         # Flat Zeff profile assumed
         # Return tempi like array object filled with zeff
-        zeff = np.full_like(tempi, physics_variables.n_charge_plasma_effective_vol_avg)
+        zeff = np.full_like(tempi, self.data.physics.n_charge_plasma_effective_vol_avg)
 
         # inverse_q = 1/safety factor
         # Parabolic q profile assumed
         inverse_q = 1 / (
-            physics_variables.q0
-            + (physics_variables.q95 - physics_variables.q0) * roa**2
+            self.data.physics.q0
+            + (self.data.physics.q95 - self.data.physics.q0) * roa**2
         )
         # Create new array of average mass of fuel portion of ions
-        amain = np.full_like(inverse_q, physics_variables.m_ions_total_amu)
+        amain = np.full_like(inverse_q, self.data.physics.m_ions_total_amu)
 
         # Create new array of average main ion charge
-        zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_plasma_fuel_helium3)
+        zmain = np.full_like(inverse_q, 1.0 + self.data.physics.f_plasma_fuel_helium3)
 
         # Calculate total bootstrap current (MA) by summing along profiles
-        # Looping from 2 because _calculate_l31_coefficient() etc should return 0 @ j == 1
-        radial_elements = np.arange(2, plasma_profile.profile_size)
+        # Looping from 2 because _calculate_l31_coefficient() etc should return 0
+        # @ j == 1
+        radial_elements = np.arange(2, self.data.physics.n_plasma_profile_elements)
 
         # Change in localised minor radius to be used as delta term in derivative
         drho = rho[radial_elements] - rho[radial_elements - 1]
@@ -1536,10 +1544,10 @@ class SauterBootstrapCurrent:
             * (
                 self._calculate_l31_coefficient(
                     radial_elements,
-                    plasma_profile.profile_size,
-                    physics_variables.rmajor,
-                    physics_variables.b_plasma_toroidal_on_axis,
-                    physics_variables.triang,
+                    self.data.physics.n_plasma_profile_elements,
+                    self.data.physics.rmajor,
+                    self.data.physics.b_plasma_toroidal_on_axis,
+                    self.data.physics.triang,
                     ne,
                     ni,
                     tempe,
@@ -1552,10 +1560,10 @@ class SauterBootstrapCurrent:
                 * dlogne_drho
                 + self._calculate_l31_32_coefficient(
                     radial_elements,
-                    plasma_profile.profile_size,
-                    physics_variables.rmajor,
-                    physics_variables.b_plasma_toroidal_on_axis,
-                    physics_variables.triang,
+                    self.data.physics.n_plasma_profile_elements,
+                    self.data.physics.rmajor,
+                    self.data.physics.b_plasma_toroidal_on_axis,
+                    self.data.physics.triang,
                     ne,
                     ni,
                     tempe,
@@ -1568,10 +1576,10 @@ class SauterBootstrapCurrent:
                 * dlogte_drho
                 + self._calculate_l34_alpha_31_coefficient(
                     radial_elements,
-                    plasma_profile.profile_size,
-                    physics_variables.rmajor,
-                    physics_variables.b_plasma_toroidal_on_axis,
-                    physics_variables.triang,
+                    self.data.physics.n_plasma_profile_elements,
+                    self.data.physics.rmajor,
+                    self.data.physics.b_plasma_toroidal_on_axis,
+                    self.data.physics.triang,
                     inverse_q,
                     sqeps,
                     tempi,
@@ -1587,24 +1595,26 @@ class SauterBootstrapCurrent:
             )
             * 1.0e6
             * (
-                -physics_variables.b_plasma_toroidal_on_axis
-                / (0.2 * np.pi * physics_variables.rmajor)
+                -self.data.physics.b_plasma_toroidal_on_axis
+                / (0.2 * np.pi * self.data.physics.rmajor)
                 * rho[radial_elements - 1]
                 * inverse_q[radial_elements - 1]
             )
         )  # A/m2
 
-        return (np.sum(da * jboot, axis=0) / physics_variables.plasma_current), jboot
+        return (np.sum(da * jboot, axis=0) / self.data.physics.plasma_current), jboot
 
     @staticmethod
     @nb.njit(cache=True)
     def _coulomb_logarithm_sauter(
         radial_elements: int, tempe: np.ndarray, ne: np.ndarray
     ) -> np.ndarray:
-        """Calculate the Coulomb logarithm used in the arrays for the Sauter bootstrap current scaling.
+        """Calculate the Coulomb logarithm used in the arrays for the Sauter bootstrap
+        current scaling.
 
-        This function calculates the Coulomb logarithm, which is valid for e-e collisions (T_e > 0.01 keV)
-        and for e-i collisions (T_e > 0.01*Zeff^2) (Alexander, 9/5/1994).
+        This function calculates the Coulomb logarithm, which is valid for e-e
+        collisions (T_e > 0.01 keV) and for e-i collisions (T_e > 0.01*Zeff^2)
+        (Alexander, 9/5/1994).
 
         Parameters
         ----------
@@ -1623,11 +1633,13 @@ class SauterBootstrapCurrent:
         References
         ----------
         C. A. Ordonez, M. I. Molina;
-        Evaluation of the Coulomb logarithm using cutoff and screened Coulomb interaction potentials.
-        Phys. Plasmas 1 August 1994; 1 (8): 2515-2518. https://doi.org/10.1063/1.870578
+        Evaluation of the Coulomb logarithm using cutoff and screened Coulomb
+        interaction potentials. Phys. Plasmas 1 August 1994; 1 (8): 2515-2518.
+        https://doi.org/10.1063/1.870578
 
-        Y. R. Shen, "Recent advances in nonlinear optics," Reviews of Modern Physics, vol. 48, no. 1,
-        pp. 1-32, Jan. 1976, doi: https://doi.org/10.1103/revmodphys.48.1.
+        Y. R. Shen, "Recent advances in nonlinear optics," Reviews of Modern Physics,
+        vol. 48, no. 1,pp. 1-32, Jan. 1976,
+        doi: https://doi.org/10.1103/revmodphys.48.1.
         """
         return (
             15.9
@@ -1638,7 +1650,8 @@ class SauterBootstrapCurrent:
     def _electron_collisions_sauter(
         self, radial_elements: np.ndarray, tempe: np.ndarray, ne: np.ndarray
     ) -> np.ndarray:
-        """Calculate the frequency of electron-electron collisions used in the arrays for the Sauter bootstrap current scaling.
+        """Calculate the frequency of electron-electron collisions used in the arrays
+        for the Sauter bootstrap current scaling.
 
         Parameters
         ----------
@@ -1675,7 +1688,8 @@ class SauterBootstrapCurrent:
         tempe: np.ndarray,
         ne: np.ndarray,
     ) -> np.ndarray:
-        """Calculate the electron collisionality used in the arrays for the Sauter bootstrap current scaling.
+        """Calculate the electron collisionality used in the arrays for the Sauter
+        bootstrap current scaling.
 
         Parameters
         ----------
@@ -1725,9 +1739,11 @@ class SauterBootstrapCurrent:
         tempi: np.ndarray,
         amain: np.ndarray,
     ) -> np.ndarray:
-        """Calculate the full frequency of ion collisions used in the arrays for the Sauter bootstrap current scaling.
+        """Calculate the full frequency of ion collisions used in the arrays for the
+         Sauter bootstrap current scaling.
 
-        This function calculates the full frequency of ion collisions using the Coulomb logarithm of 15.
+        This function calculates the full frequency of ion collisions using the Coulomb
+        logarithm of 15.
 
         Parameters
         ----------
@@ -1768,7 +1784,8 @@ class SauterBootstrapCurrent:
         zeff: np.ndarray,
         ni: np.ndarray,
     ) -> float:
-        """Calculate the ion collisionality to be used in the Sauter bootstrap current scaling.
+        """Calculate the ion collisionality to be used in the Sauter bootstrap current
+          scaling.
 
         Parameters
         ----------
@@ -1855,19 +1872,21 @@ class SauterBootstrapCurrent:
         Returns
         -------
         float
-            The coefficient scaling grad(ln(ne)) in the Sauter bootstrap current scaling.
+            The coefficient scaling grad(ln(ne)) in the Sauter bootstrap current
+            scaling.
 
         References
         ----------
         O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime.
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
         Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
 
         O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime [Phys. Plasmas 6, 2834 (1999)].
-        Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime
+        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140.
+        https://doi.org/10.1063/1.1517052
         """
         # Prevents first element being 0
         charge_profile = zeff[radial_elements - 1]
@@ -1924,9 +1943,11 @@ class SauterBootstrapCurrent:
         zeff: np.ndarray,
         sqeps: np.ndarray,
     ) -> float:
-        """L31 & L32 coefficient before Grad(ln(Te)) in the Sauter bootstrap scaling.
+        """L31 & L32 coefficient before Grad(ln(Te)) in the Sauter bootstrap current
+        scaling.
 
-        This function calculates the coefficient scaling grad(ln(Te)) in the Sauter bootstrap current scaling.
+        This function calculates the coefficient scaling grad(ln(Te)) in the Sauter
+        bootstrap current scaling.
 
         Parameters
         ----------
@@ -1960,21 +1981,22 @@ class SauterBootstrapCurrent:
         Returns
         -------
         float
-            The L31 & L32 coefficient scaling grad(ln(Te)) in the Sauter bootstrap current scaling.
+            The L31 & L32 coefficient scaling grad(ln(Te)) in the Sauter bootstrap
+            current scaling.
 
         References
         ----------
         O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime.
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
         Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
 
         O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime [Phys. Plasmas 6, 2834 (1999)].
-        Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime
+        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140.
+        https://doi.org/10.1063/1.1517052
         """
-
         # Prevents first element being 0
         charge_profile = zeff[radial_elements - 1]
 
@@ -2112,9 +2134,11 @@ class SauterBootstrapCurrent:
         rho: np.ndarray,
         zeff: np.ndarray,
     ) -> float:
-        """L34, alpha and L31 coefficient before Grad(ln(Ti)) in the Sauter bootstrap scaling.
+        """L34, alpha and L31 coefficient before Grad(ln(Ti)) in the Sauter bootstrap
+        current scaling.
 
-        This function calculates the coefficient scaling grad(ln(Ti)) in the Sauter bootstrap current scaling.
+        This function calculates the coefficient scaling grad(ln(Ti)) in the Sauter
+        bootstrap current scaling.
 
         Parameters
         ----------
@@ -2152,19 +2176,21 @@ class SauterBootstrapCurrent:
         Returns
         -------
         float
-            The L34, alpha and L31 coefficient scaling grad(ln(Ti)) in the Sauter bootstrap current scaling.
+            The L34, alpha and L31 coefficient scaling grad(ln(Ti)) in the Sauter
+            bootstrap current scaling.
 
         References
         ----------
         O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime.
-        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime. Phys. Plasmas
+        1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
 
         O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime [Phys. Plasmas 6, 2834 (1999)].
-        Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime
+        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140.
+        https://doi.org/10.1063/1.1517052
         """
         # Prevents first element being 0
         charge_profile = zeff[radial_elements - 1]
@@ -2287,7 +2313,8 @@ class SauterBootstrapCurrent:
         inverse_q: np.ndarray,
         rho: np.ndarray,
     ) -> np.ndarray:
-        """Calculate the local beta poloidal using only electron profiles for the Sauter bootstrap current scaling.
+        """Calculate the local beta poloidal using only electron profiles for the Sauter
+        bootstrap current scaling.
 
         Parameters
         ----------
@@ -2347,7 +2374,8 @@ class SauterBootstrapCurrent:
         inverse_q: np.ndarray,
         rho: np.ndarray,
     ) -> np.ndarray:
-        """Calculate the local beta poloidal including ion pressure for the Sauter bootstrap current scaling.
+        """Calculate the local beta poloidal including ion pressure for the Sauter
+        bootstrap current scaling.
 
         Parameters
         ----------
@@ -2415,7 +2443,8 @@ class SauterBootstrapCurrent:
     def _trapped_particle_fraction_sauter(
         radial_elements: np.ndarray, triang: float, sqeps: np.ndarray, fit: int = 0
     ) -> np.ndarray:
-        """Calculates the trapped particle fraction to be used in the Sauter bootstrap current scaling.
+        """Calculates the trapped particle fraction to be used in the Sauter bootstrap
+        current scaling.
 
         Parameters
         ----------
@@ -2434,6 +2463,11 @@ class SauterBootstrapCurrent:
         np.ndarray
             Trapped particle fraction.
 
+        Raises
+        ------
+        ProcessValueError
+            If fit is not 0, 1, or 2.
+
         Notes
         -----
         This function calculates the trapped particle fraction at a given radius.
@@ -2441,19 +2475,21 @@ class SauterBootstrapCurrent:
         References
         ----------
         Used in this paper:
-        O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime.
-        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
 
-        O. Sauter, R. J. Buttery, R. Felton, T. C. Hender, D. F. Howell, and contributors to the E.-J. Workprogramme,
-        "Marginal-limit for neoclassical tearing modes in JET H-mode discharges,"
-        Plasma Physics and Controlled Fusion, vol. 44, no. 9, pp. 1999-2019, Aug. 2002,
+        O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime. Phys. Plasmas
+        1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+
+        O. Sauter, R. J. Buttery, R. Felton, T. C. Hender, D. F. Howell, and
+        contributors to the E.-J. Workprogramme, "Marginal-limit for neoclassical
+        tearing modes in JET H-mode discharges," Plasma Physics and Controlled Fusion,
+        vol. 44, no. 9, pp. 1999-2019, Aug. 2002,
         doi: https://doi.org/10.1088/0741-3335/44/9/315.
 
-        O. Sauter, Geometric formulas for system codes including the effect of negative triangularity,
-        Fusion Engineering and Design, Volume 112, 2016, Pages 633-645, ISSN 0920-3796,
-        https://doi.org/10.1016/j.fusengdes.2016.04.033.
+        O. Sauter, Geometric formulas for system codes including the effect of negative
+        triangularity, Fusion Engineering and Design, Volume 112, 2016, Pages 633-645,
+        ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2016.04.033.
         """
         # Prevent first element from being zero
         sqeps_reduced = sqeps[radial_elements - 1]

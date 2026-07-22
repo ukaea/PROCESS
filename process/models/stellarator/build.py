@@ -1,18 +1,8 @@
 from process.core import process_output as po
-from process.data_structure import (
-    build_variables,
-    first_wall_variables,
-    fwbs_variables,
-    heat_transport_variables,
-    physics_variables,
-    stellarator_configuration,
-)
-from process.data_structure import (
-    stellarator_variables as st,
-)
+from process.core.model import DataStructure
 
 
-def st_build(stellarator, f_output: bool):
+def st_build(stellarator, f_output: bool, data: DataStructure):
     """Routine to determine the build of a stellarator machine
 
     This routine determines the build of the stellarator machine.
@@ -26,183 +16,186 @@ def st_build(stellarator, f_output: bool):
 
     f_output:
 
+    data: DataStructure
+        data structure object to provide model data
 
     """
-    if fwbs_variables.blktmodel > 0:
-        build_variables.dr_blkt_inboard = (
-            build_variables.blbuith + build_variables.blbmith + build_variables.blbpith
+    if data.fwbs.blktmodel > 0:
+        data.build.dr_blkt_inboard = (
+            data.build.blbuith + data.build.blbmith + data.build.blbpith
         )
-        build_variables.dr_blkt_outboard = (
-            build_variables.blbuoth + build_variables.blbmoth + build_variables.blbpoth
+        data.build.dr_blkt_outboard = (
+            data.build.blbuoth + data.build.blbmoth + data.build.blbpoth
         )
-        build_variables.dz_shld_upper = 0.5e0 * (
-            build_variables.dr_shld_inboard + build_variables.dr_shld_outboard
+        data.build.dz_shld_upper = 0.5e0 * (
+            data.build.dr_shld_inboard + data.build.dr_shld_outboard
         )
 
     #  Top/bottom blanket thickness
 
-    build_variables.dz_blkt_upper = 0.5e0 * (
-        build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
+    data.build.dz_blkt_upper = 0.5e0 * (
+        data.build.dr_blkt_inboard + data.build.dr_blkt_outboard
     )
 
     # First Wall
-    build_variables.dr_fw_inboard = (
-        2.0e0 * fwbs_variables.radius_fw_channel + 2.0e0 * fwbs_variables.dr_fw_wall
+    data.build.dr_fw_inboard = (
+        2.0e0 * data.fwbs.radius_fw_channel + 2.0e0 * data.fwbs.dr_fw_wall
     )
-    build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
+    data.build.dr_fw_outboard = data.build.dr_fw_inboard
 
-    build_variables.dr_bore = physics_variables.rmajor - (
-        build_variables.dr_cs
-        + build_variables.dr_cs_tf_gap
-        + build_variables.dr_tf_inboard
-        + build_variables.dr_shld_vv_gap_inboard
-        + build_variables.dr_vv_inboard
-        + build_variables.dr_shld_inboard
-        + build_variables.dr_blkt_inboard
-        + build_variables.dr_fw_inboard
-        + build_variables.dr_fw_plasma_gap_inboard
-        + physics_variables.rminor
-    )
-
-    #  Radial build to centre of plasma (should be equal to physics_variables.rmajor)
-    build_variables.rbld = (
-        build_variables.dr_bore
-        + build_variables.dr_cs
-        + build_variables.dr_cs_tf_gap
-        + build_variables.dr_tf_inboard
-        + build_variables.dr_shld_vv_gap_inboard
-        + build_variables.dr_vv_inboard
-        + build_variables.dr_shld_inboard
-        + build_variables.dr_blkt_inboard
-        + build_variables.dr_fw_inboard
-        + build_variables.dr_fw_plasma_gap_inboard
-        + physics_variables.rminor
+    data.build.dr_bore = data.physics.rmajor - (
+        data.build.dr_cs
+        + data.build.dr_cs_tf_gap
+        + data.build.dr_tf_inboard
+        + data.build.dr_shld_vv_gap_inboard
+        + data.build.dr_vv_inboard
+        + data.build.dr_shld_inboard
+        + data.build.dr_blkt_inboard
+        + data.build.dr_fw_inboard
+        + data.build.dr_fw_plasma_gap_inboard
+        + data.physics.rminor
     )
 
-    # Bc stellarators cannot scale physics_variables.rminor reasonably well an additional constraint equation is required,
+    #  Radial build to centre of plasma (should be equal to data.physics.rmajor)
+    data.build.rbld = (
+        data.build.dr_bore
+        + data.build.dr_cs
+        + data.build.dr_cs_tf_gap
+        + data.build.dr_tf_inboard
+        + data.build.dr_shld_vv_gap_inboard
+        + data.build.dr_vv_inboard
+        + data.build.dr_shld_inboard
+        + data.build.dr_blkt_inboard
+        + data.build.dr_fw_inboard
+        + data.build.dr_fw_plasma_gap_inboard
+        + data.physics.rminor
+    )
+
+    # Bc stellarators cannot scale data.physics.rminor reasonably well an additional constraint equation is required,
     # that ensures that there is enough space between coils and plasma.
-    build_variables.required_radial_space = (
-        build_variables.dr_tf_inboard / 2.0e0
-        + build_variables.dr_shld_vv_gap_inboard
-        + build_variables.dr_vv_inboard
-        + build_variables.dr_shld_inboard
-        + build_variables.dr_blkt_inboard
-        + build_variables.dr_fw_inboard
-        + build_variables.dr_fw_plasma_gap_inboard
+    data.build.required_radial_space = (
+        data.build.dr_tf_inboard / 2.0e0
+        + data.build.dr_shld_vv_gap_inboard
+        + data.build.dr_vv_inboard
+        + data.build.dr_shld_inboard
+        + data.build.dr_blkt_inboard
+        + data.build.dr_fw_inboard
+        + data.build.dr_fw_plasma_gap_inboard
     )
 
     # derivative_min_LCFS_coils_dist  for how strong the stellarator shape changes wrt to aspect ratio
-    build_variables.available_radial_space = (
-        st.r_coil_minor * st.f_coil_shape - physics_variables.rminor
+    data.build.available_radial_space = (
+        data.stellarator.r_coil_minor * data.stellarator.f_coil_shape
+        - data.physics.rminor
     )
-    +stellarator_configuration.stella_config_derivative_min_lcfs_coils_dist * (
-        physics_variables.rminor
-        - st.f_st_rmajor * stellarator_configuration.stella_config_rminor_ref
+    +data.stellarator_config.stella_config_derivative_min_lcfs_coils_dist * (
+        data.physics.rminor
+        - data.stellarator.f_st_rmajor * data.stellarator_config.stella_config_rminor_ref
     )
+
     #  Radius to inner edge of inboard shield
-    build_variables.r_shld_inboard_inner = (
-        physics_variables.rmajor
-        - physics_variables.rminor
-        - build_variables.dr_fw_plasma_gap_inboard
-        - build_variables.dr_fw_inboard
-        - build_variables.dr_blkt_inboard
-        - build_variables.dr_shld_inboard
+    data.build.r_shld_inboard_inner = (
+        data.physics.rmajor
+        - data.physics.rminor
+        - data.build.dr_fw_plasma_gap_inboard
+        - data.build.dr_fw_inboard
+        - data.build.dr_blkt_inboard
+        - data.build.dr_shld_inboard
     )
 
     #  Radius to outer edge of outboard shield
-    build_variables.r_shld_outboard_outer = (
-        physics_variables.rmajor
-        + physics_variables.rminor
-        + build_variables.dr_fw_plasma_gap_outboard
-        + build_variables.dr_fw_outboard
-        + build_variables.dr_blkt_outboard
-        + build_variables.dr_shld_outboard
+    data.build.r_shld_outboard_outer = (
+        data.physics.rmajor
+        + data.physics.rminor
+        + data.build.dr_fw_plasma_gap_outboard
+        + data.build.dr_fw_outboard
+        + data.build.dr_blkt_outboard
+        + data.build.dr_shld_outboard
     )
 
     #  Thickness of outboard TF coil legs
-    build_variables.dr_tf_outboard = build_variables.dr_tf_inboard
+    data.build.dr_tf_outboard = data.build.dr_tf_inboard
 
     #  Radius to centre of outboard TF coil legs
 
-    build_variables.dr_shld_vv_gap_outboard = build_variables.gapomin
-    build_variables.r_tf_outboard_mid = (
-        build_variables.r_shld_outboard_outer
-        + build_variables.dr_vv_outboard
-        + build_variables.dr_shld_vv_gap_outboard
-        + 0.5e0 * build_variables.dr_tf_outboard
+    data.build.dr_shld_vv_gap_outboard = data.build.gapomin
+    data.build.r_tf_outboard_mid = (
+        data.build.r_shld_outboard_outer
+        + data.build.dr_vv_outboard
+        + data.build.dr_shld_vv_gap_outboard
+        + 0.5e0 * data.build.dr_tf_outboard
     )
 
     #  Height to inside edge of TF coil
     #  Roughly equal to average of (inboard build from TF coil to plasma
     #  centre) and (outboard build from plasma centre to TF coil)
 
-    build_variables.z_tf_inside_half = 0.5e0 * (
+    data.build.z_tf_inside_half = 0.5e0 * (
         (
-            build_variables.dr_shld_vv_gap_inboard
-            + build_variables.dr_vv_inboard
-            + build_variables.dr_shld_inboard
-            + build_variables.dr_blkt_inboard
-            + build_variables.dr_fw_inboard
-            + build_variables.dr_fw_plasma_gap_inboard
-            + physics_variables.rminor
+            data.build.dr_shld_vv_gap_inboard
+            + data.build.dr_vv_inboard
+            + data.build.dr_shld_inboard
+            + data.build.dr_blkt_inboard
+            + data.build.dr_fw_inboard
+            + data.build.dr_fw_plasma_gap_inboard
+            + data.physics.rminor
         )
         + (
-            physics_variables.rminor
-            + build_variables.dr_fw_plasma_gap_outboard
-            + build_variables.dr_fw_outboard
-            + build_variables.dr_blkt_outboard
-            + build_variables.dr_shld_outboard
-            + build_variables.dr_vv_outboard
-            + build_variables.dr_shld_vv_gap_outboard
+            data.physics.rminor
+            + data.build.dr_fw_plasma_gap_outboard
+            + data.build.dr_fw_outboard
+            + data.build.dr_blkt_outboard
+            + data.build.dr_shld_outboard
+            + data.build.dr_vv_outboard
+            + data.build.dr_shld_vv_gap_outboard
         )
     )
 
     #  Outer divertor strike point radius, set equal to major radius
 
-    build_variables.rspo = physics_variables.rmajor
+    data.build.rspo = data.physics.rmajor
 
     #  First wall area: scales with minor radius
 
     # Average minor radius of the first wall
-    awall = physics_variables.rminor + 0.5e0 * (
-        build_variables.dr_fw_plasma_gap_inboard
-        + build_variables.dr_fw_plasma_gap_outboard
+    awall = data.physics.rminor + 0.5e0 * (
+        data.build.dr_fw_plasma_gap_inboard + data.build.dr_fw_plasma_gap_outboard
     )
-    first_wall_variables.a_fw_total = (
-        physics_variables.a_plasma_surface * awall / physics_variables.rminor
+    data.first_wall.a_fw_total = (
+        data.physics.a_plasma_surface * awall / data.physics.rminor
     )
 
-    if heat_transport_variables.ipowerflow == 0:
-        first_wall_variables.a_fw_total = (
-            1.0e0 - fwbs_variables.fhole
-        ) * first_wall_variables.a_fw_total
+    if data.heat_transport.ipowerflow == 0:
+        data.first_wall.a_fw_total = (
+            1.0e0 - data.fwbs.fhole
+        ) * data.first_wall.a_fw_total
     else:
-        first_wall_variables.a_fw_total = (
+        data.first_wall.a_fw_total = (
             1.0e0
-            - fwbs_variables.fhole
-            - fwbs_variables.f_ster_div_single
-            - fwbs_variables.f_a_fw_outboard_hcd
-        ) * first_wall_variables.a_fw_total
+            - data.fwbs.fhole
+            - data.fwbs.f_ster_div_single
+            - data.fwbs.f_a_fw_outboard_hcd
+        ) * data.first_wall.a_fw_total
 
     if f_output:
         #  Print out device build
-        output(stellarator)
+        output(stellarator, data)
 
 
-def output(stellarator):
+def output(stellarator, data):
     po.oheadr(stellarator.outfile, "Radial Build")
 
     po.ovarre(
         stellarator.outfile,
         "Avail. Space (m)",
         "(available_radial_space)",
-        build_variables.available_radial_space,
+        data.build.available_radial_space,
     )
     po.ovarre(
         stellarator.outfile,
         "Req. Space (m)",
         "(required_radial_space)",
-        build_variables.required_radial_space,
+        data.build.required_radial_space,
     )
     po.ovarre(
         stellarator.outfile,
@@ -214,20 +207,16 @@ def output(stellarator):
     radius = 0.0e0
     po.obuild(stellarator.outfile, "Device centreline", 0.0e0, radius)
 
-    drbild = (
-        build_variables.dr_bore + build_variables.dr_cs + build_variables.dr_cs_tf_gap
-    )
-    radius = radius + drbild
+    drbild = data.build.dr_bore + data.build.dr_cs + data.build.dr_cs_tf_gap
+    radius += drbild
     po.obuild(stellarator.outfile, "Machine dr_bore", drbild, radius, "(dr_bore)")
-    po.ovarre(
-        stellarator.outfile, "Machine build_variables.dr_bore (m)", "(dr_bore)", drbild
-    )
+    po.ovarre(stellarator.outfile, "Machine data.build.dr_bore (m)", "(dr_bore)", drbild)
 
-    radius = radius + build_variables.dr_tf_inboard
+    radius += data.build.dr_tf_inboard
     po.obuild(
         stellarator.outfile,
         "Coil inboard leg",
-        build_variables.dr_tf_inboard,
+        data.build.dr_tf_inboard,
         radius,
         "(dr_tf_inboard)",
     )
@@ -235,14 +224,14 @@ def output(stellarator):
         stellarator.outfile,
         "Coil inboard leg (m)",
         "(deltf)",
-        build_variables.dr_tf_inboard,
+        data.build.dr_tf_inboard,
     )
 
-    radius = radius + build_variables.dr_shld_vv_gap_inboard
+    radius += data.build.dr_shld_vv_gap_inboard
     po.obuild(
         stellarator.outfile,
         "Gap",
-        build_variables.dr_shld_vv_gap_inboard,
+        data.build.dr_shld_vv_gap_inboard,
         radius,
         "(dr_shld_vv_gap_inboard)",
     )
@@ -250,14 +239,14 @@ def output(stellarator):
         stellarator.outfile,
         "Gap (m)",
         "(dr_shld_vv_gap_inboard)",
-        build_variables.dr_shld_vv_gap_inboard,
+        data.build.dr_shld_vv_gap_inboard,
     )
 
-    radius = radius + build_variables.dr_vv_inboard
+    radius += data.build.dr_vv_inboard
     po.obuild(
         stellarator.outfile,
         "Vacuum vessel",
-        build_variables.dr_vv_inboard,
+        data.build.dr_vv_inboard,
         radius,
         "(dr_vv_inboard)",
     )
@@ -265,14 +254,14 @@ def output(stellarator):
         stellarator.outfile,
         "Vacuum vessel radial thickness (m)",
         "(dr_vv_inboard)",
-        build_variables.dr_vv_inboard,
+        data.build.dr_vv_inboard,
     )
 
-    radius = radius + build_variables.dr_shld_inboard
+    radius += data.build.dr_shld_inboard
     po.obuild(
         stellarator.outfile,
         "Inboard shield",
-        build_variables.dr_shld_inboard,
+        data.build.dr_shld_inboard,
         radius,
         "(dr_shld_inboard)",
     )
@@ -280,14 +269,14 @@ def output(stellarator):
         stellarator.outfile,
         "Inner radiation shield radial thickness (m)",
         "(dr_shld_inboard)",
-        build_variables.dr_shld_inboard,
+        data.build.dr_shld_inboard,
     )
 
-    radius = radius + build_variables.dr_blkt_inboard
+    radius += data.build.dr_blkt_inboard
     po.obuild(
         stellarator.outfile,
         "Inboard blanket",
-        build_variables.dr_blkt_inboard,
+        data.build.dr_blkt_inboard,
         radius,
         "(dr_blkt_inboard)",
     )
@@ -295,14 +284,14 @@ def output(stellarator):
         stellarator.outfile,
         "Inboard blanket radial thickness (m)",
         "(dr_blkt_inboard)",
-        build_variables.dr_blkt_inboard,
+        data.build.dr_blkt_inboard,
     )
 
-    radius = radius + build_variables.dr_fw_inboard
+    radius += data.build.dr_fw_inboard
     po.obuild(
         stellarator.outfile,
         "Inboard first wall",
-        build_variables.dr_fw_inboard,
+        data.build.dr_fw_inboard,
         radius,
         "(dr_fw_inboard)",
     )
@@ -310,14 +299,14 @@ def output(stellarator):
         stellarator.outfile,
         "Inboard first wall radial thickness (m)",
         "(dr_fw_inboard)",
-        build_variables.dr_fw_inboard,
+        data.build.dr_fw_inboard,
     )
 
-    radius = radius + build_variables.dr_fw_plasma_gap_inboard
+    radius += data.build.dr_fw_plasma_gap_inboard
     po.obuild(
         stellarator.outfile,
         "Inboard scrape-off",
-        build_variables.dr_fw_plasma_gap_inboard,
+        data.build.dr_fw_plasma_gap_inboard,
         radius,
         "(dr_fw_plasma_gap_inboard)",
     )
@@ -325,32 +314,32 @@ def output(stellarator):
         stellarator.outfile,
         "Inboard scrape-off radial thickness (m)",
         "(dr_fw_plasma_gap_inboard)",
-        build_variables.dr_fw_plasma_gap_inboard,
+        data.build.dr_fw_plasma_gap_inboard,
     )
 
-    radius = radius + physics_variables.rminor
+    radius += data.physics.rminor
     po.obuild(
         stellarator.outfile,
         "Plasma geometric centre",
-        physics_variables.rminor,
+        data.physics.rminor,
         radius,
         "(rminor)",
     )
 
-    radius = radius + physics_variables.rminor
+    radius += data.physics.rminor
     po.obuild(
         stellarator.outfile,
         "Plasma outboard edge",
-        physics_variables.rminor,
+        data.physics.rminor,
         radius,
         "(rminor)",
     )
 
-    radius = radius + build_variables.dr_fw_plasma_gap_outboard
+    radius += data.build.dr_fw_plasma_gap_outboard
     po.obuild(
         stellarator.outfile,
         "Outboard scrape-off",
-        build_variables.dr_fw_plasma_gap_outboard,
+        data.build.dr_fw_plasma_gap_outboard,
         radius,
         "(dr_fw_plasma_gap_outboard)",
     )
@@ -358,14 +347,14 @@ def output(stellarator):
         stellarator.outfile,
         "Outboard scrape-off radial thickness (m)",
         "(dr_fw_plasma_gap_outboard)",
-        build_variables.dr_fw_plasma_gap_outboard,
+        data.build.dr_fw_plasma_gap_outboard,
     )
 
-    radius = radius + build_variables.dr_fw_outboard
+    radius += data.build.dr_fw_outboard
     po.obuild(
         stellarator.outfile,
         "Outboard first wall",
-        build_variables.dr_fw_outboard,
+        data.build.dr_fw_outboard,
         radius,
         "(dr_fw_outboard)",
     )
@@ -373,14 +362,14 @@ def output(stellarator):
         stellarator.outfile,
         "Outboard first wall radial thickness (m)",
         "(dr_fw_outboard)",
-        build_variables.dr_fw_outboard,
+        data.build.dr_fw_outboard,
     )
 
-    radius = radius + build_variables.dr_blkt_outboard
+    radius += data.build.dr_blkt_outboard
     po.obuild(
         stellarator.outfile,
         "Outboard blanket",
-        build_variables.dr_blkt_outboard,
+        data.build.dr_blkt_outboard,
         radius,
         "(dr_blkt_outboard)",
     )
@@ -388,14 +377,14 @@ def output(stellarator):
         stellarator.outfile,
         "Outboard blanket radial thickness (m)",
         "(dr_blkt_outboard)",
-        build_variables.dr_blkt_outboard,
+        data.build.dr_blkt_outboard,
     )
 
-    radius = radius + build_variables.dr_shld_outboard
+    radius += data.build.dr_shld_outboard
     po.obuild(
         stellarator.outfile,
         "Outboard shield",
-        build_variables.dr_shld_outboard,
+        data.build.dr_shld_outboard,
         radius,
         "(dr_shld_outboard)",
     )
@@ -403,23 +392,23 @@ def output(stellarator):
         stellarator.outfile,
         "Outer radiation shield radial thickness (m)",
         "(dr_shld_outboard)",
-        build_variables.dr_shld_outboard,
+        data.build.dr_shld_outboard,
     )
 
-    radius = radius + build_variables.dr_vv_outboard
+    radius += data.build.dr_vv_outboard
     po.obuild(
         stellarator.outfile,
         "Vacuum vessel",
-        build_variables.dr_vv_outboard,
+        data.build.dr_vv_outboard,
         radius,
         "(dr_vv_outboard)",
     )
 
-    radius = radius + build_variables.dr_shld_vv_gap_outboard
+    radius += data.build.dr_shld_vv_gap_outboard
     po.obuild(
         stellarator.outfile,
         "Gap",
-        build_variables.dr_shld_vv_gap_outboard,
+        data.build.dr_shld_vv_gap_outboard,
         radius,
         "(dr_shld_vv_gap_outboard)",
     )
@@ -427,14 +416,14 @@ def output(stellarator):
         stellarator.outfile,
         "Gap (m)",
         "(dr_shld_vv_gap_outboard)",
-        build_variables.dr_shld_vv_gap_outboard,
+        data.build.dr_shld_vv_gap_outboard,
     )
 
-    radius = radius + build_variables.dr_tf_outboard
+    radius += data.build.dr_tf_outboard
     po.obuild(
         stellarator.outfile,
         "Coil outboard leg",
-        build_variables.dr_tf_outboard,
+        data.build.dr_tf_outboard,
         radius,
         "(dr_tf_outboard)",
     )
@@ -442,5 +431,5 @@ def output(stellarator):
         stellarator.outfile,
         "Coil outboard leg radial thickness (m)",
         "(dr_tf_outboard)",
-        build_variables.dr_tf_outboard,
+        data.build.dr_tf_outboard,
     )

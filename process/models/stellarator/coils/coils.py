@@ -2,11 +2,9 @@ import logging
 
 import numpy as np
 
-import process.models.superconductors as superconductors
 from process.core.exceptions import ProcessValueError
-from process.data_structure import (
-    stellarator_configuration,
-)
+from process.core.model import DataStructure
+from process.models import superconductors
 
 logger = logging.getLogger(__name__)
 
@@ -120,7 +118,7 @@ def jcrit_from_material(
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
     elif i_tf_sc_mat == 6:  # ! "REBCO" 2nd generation HTS superconductor in CrCo strand
-        j_crit_sc, _validity = superconductors.jcrit_rebco(t_helium, b_max, 0)
+        j_crit_sc, _validity, _, _ = superconductors.jcrit_rebco(t_helium, b_max, 0)
         j_crit_sc = max(1.0e-9, j_crit_sc)
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
@@ -234,18 +232,18 @@ def intersect(x1, y1, x2, y2, xin):
 
         #  Adjust x using Newton-Raphson method
 
-        x = x - 2.0e0 * dx * y / (yright - yleft)
+        x -= 2.0e0 * dx * y / (yright - yleft)
 
         if x < xmin:
             logger.error(
-                f"X has dropped below Xmin; X={x} has been set equal to Xmin={xmin}"
+                "X has dropped below Xmin; X=%s has been set equal to Xmin=%s", x, xmin
             )
             x = xmin
             break
 
         if x > xmax:
             logger.error(
-                f"X has risen above Xmax; X={x} has been set equal to Xmax={xmin}"
+                "X has risen above Xmax; X=%s has been set equal to Xmax=%s", x, xmin
             )
             x = xmax
             break
@@ -255,7 +253,9 @@ def intersect(x1, y1, x2, y2, xin):
     return x
 
 
-def bmax_from_awp(wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_minor):
+def bmax_from_awp(
+    wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_minor, data: DataStructure
+):
     """Returns a fitted function for bmax for stellarators
 
     Returns a fitted function for bmax in dependence
@@ -274,16 +274,16 @@ def bmax_from_awp(wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_min
 
     r_coil_minor :
 
-
+    data: DataStructure
+        data structure object
     """
-
     return (
         2e-1  # this is mu x 1e6, to use current in MA
         * current
         * n_tf_coils
         / (r_coil_major - r_coil_minor)
         * (
-            stellarator_configuration.stella_config_a1
-            + stellarator_configuration.stella_config_a2 * r_coil_major / wp_width_radial
+            data.stellarator_config.stella_config_a1
+            + data.stellarator_config.stella_config_a2 * r_coil_major / wp_width_radial
         )
     )

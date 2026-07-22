@@ -1,3 +1,5 @@
+"""Module containing support structure calculations"""
+
 import logging
 import math
 
@@ -6,13 +8,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import build_variables as bv
-from process.data_structure import divertor_variables as divv
-from process.data_structure import fwbs_variables as fwbsv
-from process.data_structure import pfcoil_variables as pfv
-from process.data_structure import physics_variables as pv
-from process.data_structure import structure_variables as stv
-from process.data_structure import tfcoil_variables as tfv
+from process.data_structure.pfcoil_variables import PFConductorModel
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +25,7 @@ class Structure(Model):
         self.outfile = constants.NOUT  # output file unit
 
     def output(self):
+        """Write the results to the main output file (OUT.DAT)."""
         self.run(output=True)
 
     def run(self, output: bool = False):
@@ -41,34 +38,38 @@ class Structure(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-
         # Total weight of the PF coil conductor and its structure
-        total_weight_pf = pfv.m_pf_coil_conductor_total + pfv.m_pf_coil_structure_total
+        total_weight_pf = (
+            self.data.pf_coil.m_pf_coil_conductor_total
+            + self.data.pf_coil.m_pf_coil_structure_total
+        )
 
         (
-            stv.fncmass,
-            stv.aintmass,
-            stv.clgsmass,
-            stv.coldmass,
-            stv.gsmass,
+            self.data.structure.fncmass,
+            self.data.structure.aintmass,
+            self.data.structure.clgsmass,
+            self.data.structure.coldmass,
+            self.data.structure.gsmass,
         ) = self.structure(
-            pv.plasma_current,
-            pv.rmajor,
-            pv.rminor,
-            pv.kappa,
-            pv.b_plasma_toroidal_on_axis,
-            tfv.i_tf_sup,
-            pfv.i_pf_conductor,
-            bv.dr_tf_inner_bore + bv.dr_tf_outboard + bv.dr_tf_inboard,
-            bv.z_tf_inside_half,
-            fwbsv.whtshld,
-            divv.m_div_plate,
+            self.data.physics.plasma_current,
+            self.data.physics.rmajor,
+            self.data.physics.rminor,
+            self.data.physics.kappa,
+            self.data.physics.b_plasma_toroidal_on_axis,
+            self.data.tfcoil.i_tf_sup,
+            self.data.pf_coil.i_pf_conductor,
+            self.data.build.dr_tf_inner_bore
+            + self.data.build.dr_tf_outboard
+            + self.data.build.dr_tf_inboard,
+            self.data.build.z_tf_inside_half,
+            self.data.fwbs.whtshld,
+            self.data.divertor.m_div_plate,
             total_weight_pf,
-            tfv.m_tf_coils_total,
-            fwbsv.m_fw_total,
-            fwbsv.m_blkt_total,
-            fwbsv.m_fw_blkt_div_coolant_total,
-            fwbsv.dewmkg,
+            self.data.tfcoil.m_tf_coils_total,
+            self.data.fwbs.m_fw_total,
+            self.data.fwbs.m_blkt_total,
+            self.data.fwbs.m_fw_blkt_div_coolant_total,
+            self.data.fwbs.dewmkg,
             output=output,
         )
 
@@ -146,17 +147,14 @@ class Structure(Model):
             - coldmass (`float`) total mass of cryogenic temp. stuff (kg)
             - gsm (`float`) gravity support for magnets, and shield/blanket (kg)
         """
-
         #  Outer PF coil fence (1990 ITER fit)
         fncmass = 2.1e-11 * ai * ai * r0 * akappa * a
 
         #  Intercoil support between TF coils to react overturning moment
         #  (scaled to 1990 ITER fit)
         aintmass = 1.4e6 * (ai / 2.2e7) * b0 / 4.85e0 * tf_h_width**2 / 50.0e0
-        try:
-            assert aintmass < np.inf
-        except AssertionError:
-            logger.exception("aintmass is inf. Kludging to 1e10.")
+        if np.isinf(aintmass):
+            logger.error("aintmass is inf. Kludging to 1e10.")
             aintmass = 1e10
 
         #  Total mass of coils plus support plus vacuum vessel + cryostat
@@ -166,8 +164,8 @@ class Structure(Model):
         coldmass = 0.0e0
         if i_tf_sup == 1:
             coldmass = coldmass + tfmass + aintmass + dewmass
-        if i_pf_conductor != 1:
-            coldmass = coldmass + pfmass
+        if i_pf_conductor != PFConductorModel.RESISTIVE:
+            coldmass += pfmass
 
         #  Coil gravity support mass
         #  Set density (kg/m3) and allowable stress (Pa)

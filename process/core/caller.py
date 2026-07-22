@@ -1,23 +1,24 @@
 from __future__ import annotations
 
 import logging
-import warnings
 from typing import TYPE_CHECKING
 
 import numpy as np
 from tabulate import tabulate
 
-import process.core.solver.constraints as constraints
-from process import data_structure
 from process.core import constants
 from process.core.final import finalise
 from process.core.io.mfile import MFile
 from process.core.process_output import OutputFileManager, ovarre
+from process.core.solver import constraints
 from process.core.solver.iteration_variables import set_scaled_iteration_variable
 from process.core.solver.objectives import objective_function
+from process.data_structure.blanket_variables import BlktModelTypes
 from process.models.tfcoil.base import TFConductorModel
+from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
 if TYPE_CHECKING:
+    from process.core.model import DataStructure
     from process.main import Models
 
 logger = logging.getLogger(__name__)
@@ -26,17 +27,22 @@ logger = logging.getLogger(__name__)
 class Caller:
     """Calls physics and engineering models."""
 
-    def __init__(self, models: Models):
+    def __init__(self, models: Models, data: DataStructure):
         """Initialise all physics and engineering models.
 
         To ensure that, at the start of a run, all physics/engineering
         variables are fully initialised with consistent values, the models are
-        called with the initial optimisation paramters, x.
+        called with the initial optimisation parameters, x.
 
-        :param models: physics and engineering model objects
-        :type models: Models
+        Parameters
+        ----------
+        models :
+            physics and engineering model objects
+        data :
+            data structure object to be passed on to the constraint evaluators
         """
         self.models = models
+        self.data = data
 
     @staticmethod
     def check_agreement(
@@ -91,8 +97,8 @@ class Caller:
         for _ in range(10):
             self._call_models_once(xc)
             # Evaluate objective function and constraints
-            objf = objective_function(data_structure.numerics.minmax)
-            conf, _, _, _, _ = constraints.constraint_eqns(m, -1)
+            objf = objective_function(self.data.numerics.minmax, self.data)
+            conf, _, _, _, _ = constraints.constraint_eqns(m, -1, self.data)
 
             if objf_prev is None and conf_prev is None:
                 # First run: run again to check idempotence
@@ -148,20 +154,18 @@ class Caller:
         # mfiles at this stage
         previous_mfile_data = None
 
-        try:
+        try:  # noqa: PLW0717
             # Evaluate models up to 10 times; any more implies non-converging values
             for _ in range(10):
                 # Divert OUT.DAT and MFILE.DAT output to scratch files for
                 # idempotence checking
-                OutputFileManager.open_idempotence_files()
+                OutputFileManager.open_idempotence_files(self.data.globals.output_prefix)
                 self._call_models_once(xc)
                 # Write mfile
-                finalise(self.models, ifail)
+                finalise(self.models, self.data, ifail)
 
                 # Extract data from intermediate idempotence-checking mfile
-                mfile_path = (
-                    data_structure.global_variables.output_prefix
-                ) + "IDEM_MFILE.DAT"
+                mfile_path = (self.data.globals.output_prefix) + "IDEM_MFILE.DAT"
                 mfile = MFile(mfile_path)
                 # Create mfile dict of float values: only compare floats
                 mfile_data = {
@@ -196,9 +200,11 @@ class Caller:
                     logger.debug("Mfiles idempotent, returning")
                     # Divert OUT.DAT and MFILE.DAT output back to original files
                     # now idempotence checking complete
-                    OutputFileManager.close_idempotence_files()
+                    OutputFileManager.close_idempotence_files(
+                        self.data.globals.output_prefix
+                    )
                     # Write final output file and mfile
-                    finalise(self.models, ifail)
+                    finalise(self.models, self.data, ifail)
                     return
 
                 # Mfiles not yet idempotent: need to re-evaluate models
@@ -216,25 +222,26 @@ class Caller:
                 headers=["Variable", "Previous value", "Current value"],
             )
 
-            warnings.warn(
+            logger.warning(
                 f"\033[93m{non_idempotent_warning}\n{non_idempotent_table}\033[0m",
                 stacklevel=2,
             )
 
             # Close idempotence files, write final output file and mfile
-            OutputFileManager.close_idempotence_files()
-            finalise(
-                self.models,
-                ifail,
-                non_idempotent_msg=non_idempotent_warning + "\n" + non_idempotent_table,
-            )
-            return
+            OutputFileManager.close_idempotence_files(self.data.globals.output_prefix)
 
         except Exception:
             # If exception in model evaluations delete intermediate idempotence
             # files to clean up
-            OutputFileManager.close_idempotence_files()
+            OutputFileManager.close_idempotence_files(self.data.globals.output_prefix)
             raise
+        else:
+            finalise(
+                self.models,
+                self.data,
+                ifail,
+                non_idempotent_msg=non_idempotent_warning + "\n" + non_idempotent_table,
+            )
 
     def _call_models_once(self, xc: np.ndarray):
         """Call the physics and engineering models.
@@ -252,20 +259,20 @@ class Caller:
         nvars = len(xc)
 
         # Increment the call counter
-        data_structure.numerics.ncalls = data_structure.numerics.ncalls + 1
+        self.data.numerics.ncalls += 1
 
         # Convert variables
-        set_scaled_iteration_variable(xc, nvars)
+        set_scaled_iteration_variable(xc, nvars, self.data)
 
         # Perform the various function calls
         # Stellarator caller
-        if data_structure.stellarator_variables.istell != 0:
+        if self.data.stellarator.istell != 0:
             self.models.stellarator.run()
             # TODO Is this return safe?
             return
 
         # Inertial Fusion Energy calls
-        if data_structure.ife_variables.ife != 0:
+        if self.data.ife.ife != 0:
             self.models.ife.run()
             return
 
@@ -282,20 +289,27 @@ class Caller:
         # Toroidal field coil model
 
         # Toroidal field coil resistive model
-        if (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.WATER_COOLED_COPPER
-        ):
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             self.models.copper_tf_coil.run()
 
         # Toroidal field coil superconductor model
-        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            self.models.sctfcoil.run()
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+            if (
+                SuperconductingTFTurnType(
+                    self.data.superconducting_tfcoil.i_tf_turn_type
+                )
+                == SuperconductingTFTurnType.CABLE_IN_CONDUIT
+            ):
+                self.models.cicc_sctfcoil.run()
+            elif (
+                SuperconductingTFTurnType(
+                    self.data.superconducting_tfcoil.i_tf_turn_type
+                )
+                == SuperconductingTFTurnType.CROSS_CONDUCTOR
+            ):
+                self.models.croco_sctfcoil.run()
 
-        if (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
-        ):
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             self.models.aluminium_tf_coil.run()
 
         # Poloidal field and central solenoid model
@@ -303,6 +317,8 @@ class Caller:
 
         # Pulsed reactor model
         self.models.pulse.run()
+
+        self.models.divertor.run()
 
         # First wall model
         self.models.fw.run()
@@ -321,15 +337,13 @@ class Caller:
         4    |  KIT HCLL model
         5    |  DCLL model
         """
-        if data_structure.fwbs_variables.i_blanket_type == 1:
+        if self.data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
             # CCFE HCPB model
             self.models.ccfe_hcpb.run()
 
-        elif data_structure.fwbs_variables.i_blanket_type == 5:
+        elif self.data.fwbs.i_blanket_type == BlktModelTypes.DCLL:
             # DCLL model
             self.models.dcll.run()
-
-        self.models.divertor.run()
 
         self.models.cryostat.run()
 
@@ -338,9 +352,8 @@ class Caller:
 
         # Tight aspect ratio machine model
         if (
-            data_structure.physics_variables.itart == 1
-            and data_structure.tfcoil_variables.i_tf_sup
-            != TFConductorModel.SUPERCONDUCTING
+            self.data.physics.itart == 1
+            and self.data.tfcoil.i_tf_sup != TFConductorModel.SUPERCONDUCTING
         ):
             self.models.tfcoil.run()
 
@@ -352,6 +365,15 @@ class Caller:
 
         # Buildings model
         self.models.buildings.run()
+
+        # These two methods need to be run after vacuum/buildings otherwise
+        # output changes quite a lot
+        # TODO: split these two sections into a new model with a .run method
+        # Plant AC power requirements
+        self.models.power.acpow(output=False)
+
+        # Plant heat transport pt 2 & 3
+        self.models.power.plant_electric_production()
 
         # Availability model
         self.models.availability.run()
@@ -372,20 +394,24 @@ class Caller:
         # FISPACT and LOCA model (not used)- removed
 
 
-def write_output_files(models: Models, ifail: int, *, runtime: float | None = None):
+def write_output_files(
+    models: Models, data: DataStructure, ifail: int, *, runtime: float | None = None
+):
     """Evaluate models and write output files (OUT.DAT and MFILE.DAT).
 
     Parameters
     ----------
     models : Models
         physics and engineering models
+    data: DataStructure
+        data structure object
     ifail : int
         solver return code
     """
-    n = data_structure.numerics.nvar
-    x = data_structure.numerics.xcm[:n]
+    n = data.numerics.nvar
+    x = data.numerics.xcm[:n]
     # Call models, ensuring output mfiles are fully idempotent
-    caller = Caller(models)
+    caller = Caller(models, data)
     if runtime is not None:
         ovarre(
             constants.MFILE,

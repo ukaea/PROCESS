@@ -45,7 +45,7 @@ Code example in the `input.py` file:
 ```python
   INPUT_VARIABLES = {
   ...
-    "rho_tf_joints": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 0.01)),
+    "rho_tf_joints": InputVariable("tfcoil", float, range=(0.0, 0.01)),
 ```
 
 -----------------
@@ -55,7 +55,7 @@ Code example in the `input.py` file:
 To add a `PROCESS` iteration variable please follow the steps below, in addition to the instructions for adding an input variable:
 
 
-1. The parameter `ipnvars` in module `numerics` of `numerics.f90` will normally be greater than the actual number of iteration variables, and does not need to be changed.
+1. The parameter `IPNVARS` in module `numerics` of `numerics.f90` will normally be greater than the actual number of iteration variables, and does not need to be changed.
 2. Append a new iteration number key to the end of the `ITERATION_VARIABLES` dictionary  in `iteration_variables.py`. The associated variable is the corresponding key value.
 3. Set the variable origin file and then the associated lower and upper bounds
 4. Update the `lablxc` description in `numerics.f90`.
@@ -71,7 +71,7 @@ Here is a code snippet showing how `rmajor` is defined in `iteration_variables.p
 ```python
 ITERATION_VARIABLES = {
   ...
-  3: IterationVariable("rmajor", fortran.physics_variables, 0.1, 50.00),
+  3: IterationVariable("rmajor", "physics", 0.1, 50.00),
 ```
 
 -----------------
@@ -80,13 +80,11 @@ ITERATION_VARIABLES = {
 
 New figures of merit are added to `PROCESS` in the following way:
 
-1. Increment the parameter `ipnfoms` in module `numerics` in source file `numerics.f90` to accommodate the new figure of merit.
+1. Increment the parameter `IPNFOMS` in module `numerics` in source file `numerics.py` to accommodate the new figure of merit.
   
-2. Assign a description of the new figure of merit to the relevant element of array `lablmm` in module `numerics` in the source file `numerics.f90`.
+2. Assign the new integer value and description string of the new figure of merit to the `FiguresOfMerit` enumerator in `numerics.py`.
   
 3. Add the new figure of merit equation to `objective_function()` in `objectives.py`, following the method used in the existing examples. The value of figure of merit case should be of order unity, so select a reasonable scaling factor if necessary. 
-  
-4. Add the new figure of merit description to the `OBJECTIVES_NAMES` dictionary in `objectives.py`
   
 An example can be found below:
 
@@ -94,10 +92,11 @@ An example can be found below:
 ```python
 objective_function():
   ...
-  match figure_of_merit:
+  try:
+      figure_of_merit = FiguresOfMerit(abs(minmax))
   ...  
-  case 1:
-        objective_metric = 0.2 * physics_variables.rmajor
+  if figure_of_merit == FiguresOfMerit.MAJOR_RADIUS:
+        objective_metric = 0.2 * data.physics.rmajor
 ```
 
 -----------

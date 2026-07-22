@@ -48,19 +48,20 @@ single_run.run()
 
 # %% slideshow={"slide_type": "subslide"}
 # %matplotlib inline
-from process.core.io import plot_scans
+from process.core.io.plot.scans import plot_scan
 
 # Define working directory relative to project dir and input file name
 mfile_name = data_dir / "scan_example_file_MFILE.DAT"
 output_dir = data_dir
 
-plot_scans.main(
-    args=[
-        "-f",
-        str(mfile_name),
-        "-yv",
-        "b_plasma_toroidal_on_axis rmajor p_plant_electric_net_mw p_fusion_total_mw capcost",
-        "--outputdir",
-        str(output_dir),
-    ]
+plot_scan(
+    mfile_name,
+    outputdir=output_dir,
+    output_names=[
+        "b_plasma_toroidal_on_axis",
+        "rmajor",
+        "p_plant_electric_net_mw",
+        "p_fusion_total_mw",
+        "capcost",
+    ],
 )

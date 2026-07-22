@@ -383,7 +383,7 @@ The geometry of a single CroCo cable is calculated as follows:
 1. The diameter of the circular internal tape region is given by the outer copper diameter minus its thickness:
 
     $$
-    \overbrace{D_{\text{cable,internal}}}^{\texttt{dia_croco_strand_tape_region}} = \overbrace{D_{\text{cable}}}^{\texttt{dia_croco_strand}} - \overbrace{dx_{\text{cable,copper}}}^{\texttt{dx_croco_strand_copper}}
+    \overbrace{D_{\text{cable,internal}}}^{\texttt{dia_croco_strand_tape_region}} = \overbrace{D_{\text{cable}}}^{\texttt{dia_croco_strand}} - 2 \times \overbrace{dx_{\text{cable,copper}}}^{\texttt{dx_croco_strand_copper}}
     $$
 
 2. The total thickness of the HTS tape is found:

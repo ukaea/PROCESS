@@ -27,7 +27,8 @@ def examples_temp_data(tmp_path_factory):
         ignore=ignore_patterns("*.md", "*log", "__pycache__", "*.ipynb*"),
     )
 
-    # This change of directory is undone by the return_to_root fixture, hence we do not need to change back directories here
+    # This change of directory is undone by the return_to_root fixture, hence we do not
+    # need to change back directories here
     os.chdir(tmp_path / "examples")
 
     # Return tmp_path/examples, now containing files copied from examples dir
@@ -42,7 +43,8 @@ def _get_location(loc, name):
 
 
 def test_scan(examples_temp_data):
-    """Run scan.ex.py notebook check no exceptions are raised and that an MFILE is created.
+    """Run scan.ex.py notebook check no exceptions are raised and that an MFILE is
+    created.
 
     scan.ex.py intentionally produces files when running the notebook, but remove
     them when testing.
@@ -60,17 +62,17 @@ def test_scan(examples_temp_data):
     ):
         tb.execute()
         # Run entire scan.ex.py notebook and assert an MFILE is created
-        assert os.path.exists(examples_temp_data / "data/scan_example_file_MFILE.DAT")
+        assert Path(examples_temp_data / "data/scan_example_file_MFILE.DAT").exists()
 
 
 @pytest.mark.parametrize(
     "name",
-    (
+    [
         "introduction",
         "single_model_evaluation",
         "vary_run_example",
         "optimum_solutions_comparison",
-    ),
+    ],
 )
 def test_no_assertion_solutions(name, examples_temp_data):
     """Run examples and check no exceptions are raised.

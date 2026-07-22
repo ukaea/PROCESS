@@ -1,36 +1,68 @@
+"""Module for plasma profile definitions and utilities.
+
+This module provides abstract base classes and implementations for creating
+and managing plasma profiles such as temperature and density distributions.
+"""
+
 import logging
 from abc import ABC, abstractmethod
+from enum import IntEnum
+from types import DynamicClassAttribute
 
 import numpy as np
 import scipy as sp
 
-from process.data_structure import physics_variables
+from process.core.model import Model
+from process.models.physics.density_limit import PlasmaDensityLimit
 
 logger = logging.getLogger(__name__)
 
 
-class Profile(ABC):
+class PlasmaProfileShapeType(IntEnum):
+    """Enum for i_plasma_pedestal method types"""
+
+    PARABOLIC_PROFILE = (0, "Parabolic Profile (L-mode)")
+    PEDESTAL_PROFILE = (1, "Pedestal Profile (H-mode)")
+
+    def __new__(cls, value: int, description: str):
+        """Create a new PlasmaProfileShapeType instance."""
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._description_ = description
+        return obj
+
+    @DynamicClassAttribute
+    def description(self):
+        """The description of the plasma profile shape."""
+        return self._description_
+
+
+class Profile(Model, ABC):
     """Abstract base class used to create and hold profiles (temperature, density)"""
 
-    def __init__(self, profile_size: int):
+    def __init__(self):
         """
         Initialize a Profiles object.
 
-        Parameters:
-        - profile_size (int): The size of the profile.
-
-        Attributes:
+        Attributes
+        ----------
         - profile_size (int): The size of the profile.
         - profile_x (ndarray): An array of values ranging from 0 to profile_size-1.
         - profile_y (ndarray): An array of zeros with length profile_size.
         - profile_integ (int): The integral of the profile_y array.
         - profile_dx (int): The step size between consecutive values in profile_x.
         """
-        self.profile_size = profile_size
-        self.profile_x = np.arange(self.profile_size)
-        self.profile_y = np.zeros(self.profile_size)
         self.profile_integ = 0
         self.profile_dx = 0
+
+    def run(self):
+        self.profile_x = np.arange(
+            self.data.physics.n_plasma_profile_elements, dtype=float
+        )
+        self.profile_y = np.zeros(self.data.physics.n_plasma_profile_elements)
+
+    def output(self):
+        """This model doesn't have any output"""
 
     def normalise_profile_x(self):
         """Normalizes the x-dimension of the profile.
@@ -47,15 +79,18 @@ class Profile(ABC):
 
 
         """
-        self.profile_x = self.profile_x / max(self.profile_x)
+        self.profile_x /= max(self.profile_x)
 
     def calculate_profile_dx(self):
         """Calculates the differential between points in the profile.
 
-        This method calculates the differential between points in the profile by dividing the maximum x value in the profile
-        by the difference in size between the points. The result is stored in the `profile_dx` attribute.
+        This method calculates the differential between points in the profile by
+        dividing the maximum x value in the profile by the difference in size between
+        the points. The result is stored in the `profile_dx` attribute.
         """
-        self.profile_dx = max(self.profile_x) / (self.profile_size - 1)
+        self.profile_dx = max(self.profile_x) / (
+            self.data.physics.n_plasma_profile_elements - 1
+        )
 
     @abstractmethod
     def calculate_profile_y(self):
@@ -66,32 +101,58 @@ class Profile(ABC):
     def integrate_profile_y(self):
         """Integrate profile_y values using scipy.integrate.simpson() function.
 
-        This method calculates the integral of the profile_y values using the Simpson's rule
-        provided by the scipy.integrate.simpson() function. The integral is stored in the
-        self.profile_integ attribute.
+        This method calculates the integral of the profile_y values using the Simpson's
+        rule provided by the scipy.integrate.simpson() function. The integral is stored
+        in the `profile_integ` attribute.
         """
         self.profile_integ = sp.integrate.simpson(
             self.profile_y, x=self.profile_x, dx=self.profile_dx
         )
 
 
+class DensityProfilePedestalType(IntEnum):
+    """Enum for i_nd_plasma_pedestal_separatrix types"""
+
+    USER_INPUT = (0, "User input direct values")
+    GREENWALD_FRACTION = (1, "Fractions of the Greenwald limit")
+
+    def __new__(cls, value: int, description: str):
+        """Create a new DensityProfilePedestalType instance.
+
+        Parameters
+        ----------
+            value: Integer value for the enum member.
+            description: Human-readable description for the enum member.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._description_ = description
+        return obj
+
+    @DynamicClassAttribute
+    def description(self):
+        """The description of the plasma profile shape."""
+        return self._description_
+
+
 class NeProfile(Profile):
-    """Electron density profile class. Contains a function to calculate the electron density profile and
-    store the data.
+    """Electron density profile class. Contains a function to calculate the electron
+    density profile and store the data.
     """
 
     def run(self):
         """Subroutine which calls profile functions and stores neprofile data."""
+        super().run()
         self.normalise_profile_x()
         self.calculate_profile_dx()
         self.set_physics_variables()
         self.calculate_profile_y(
             self.profile_x,
-            physics_variables.radius_plasma_pedestal_density_norm,
-            physics_variables.nd_plasma_electron_on_axis,
-            physics_variables.nd_plasma_pedestal_electron,
-            physics_variables.nd_plasma_separatrix_electron,
-            physics_variables.alphan,
+            self.data.physics.radius_plasma_pedestal_density_norm,
+            self.data.physics.nd_plasma_electron_on_axis,
+            self.data.physics.nd_plasma_pedestal_electron,
+            self.data.physics.nd_plasma_separatrix_electron,
+            self.data.physics.alphan,
         )
         self.integrate_profile_y()
 
@@ -104,7 +165,7 @@ class NeProfile(Profile):
         nsep: float,
         alphan: float,
     ):
-        """This routine calculates the density at each normalised minor radius position
+        """Calculates the density at each normalised minor radius position
         rho for a HELIOS-type density pedestal profile (neprofile).
 
         Parameters
@@ -122,15 +183,19 @@ class NeProfile(Profile):
         alphan :
             Density peaking parameter.
         """
-
-        if physics_variables.i_plasma_pedestal == 0:
+        if (
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PARABOLIC_PROFILE
+        ):
             self.profile_y = n0 * (1 - rho**2) ** alphan
 
         # Input checks
 
         if n0 < nped:
             logger.info(
-                f"NPROFILE: density pedestal is higher than core density. {nped = }, {n0 = }"
+                "NPROFILE: density pedestal is higher than core density. %s, %s",
+                nped,
+                n0,
             )
         rho_index = rho <= radius_plasma_pedestal_density_norm
         self.profile_y[rho_index] = (
@@ -151,12 +216,15 @@ class NeProfile(Profile):
         nav: float,
         alphan: float,
     ) -> float:
-        """This routine calculates the core density of a pedestalised profile.
-        The solution comes from integrating and summing the two separate density profiles for the core
-        and pedestal region within their bounds. This has to be multiplied by the torus volume element before integration which leads
-        to an added rho term in each part of the profile. When dividing by the volume of integration to get the average density
-        the simplification leads to a factor of 2 having to be multiplied on to each of the integration results.
-        This function for the average density can then be re-arranged to calculate the central plasma density n_0 / ncore.
+        """Calculates the core density of a pedestalised profile.
+        The solution comes from integrating and summing the two separate density profiles
+        for the core and pedestal region within their bounds. This has to be multiplied
+        by the torus volume element before integration which leads to an added rho term
+        in each part of the profile. When dividing by the volume of integration to get
+        the average density the simplification leads to a factor of 2 having to be
+        multiplied on to each of the integration results. This function for the average
+        density can then be re-arranged to calculate the central plasma density
+        n_0 / ncore.
 
         Parameters
         ----------
@@ -176,10 +244,12 @@ class NeProfile(Profile):
         :
             The core density.
 
-        References:
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
+        References
+        ----------
+            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor
+            Studies. Fusion Science and Technology, 59(2), 308-349.
+            https://doi.org/10.13182/FST11-A11650
         """
-
         ncore = (
             1
             / (3 * radius_plasma_pedestal_density_norm**2)
@@ -202,52 +272,107 @@ class NeProfile(Profile):
 
         if ncore < 0.0:
             # Allows solver to continue and
-            # warns the user to raise the lower bound on nd_plasma_electrons_vol_avg if the run did not converge
+            # warns the user to raise the lower bound on nd_plasma_electrons_vol_avg
+            # if the run did not converge
             logger.error(
-                "ncore is going negative when solving. Please raise the value of nd_plasma_electrons_vol_avg and or its lower limit."
+                "ncore is going negative when solving. Please raise the value of "
+                "nd_plasma_electrons_vol_avg and or its lower limit."
             )
             ncore = 1.0e-6
         return ncore
 
+    def set_pedestal_and_separatrix_values(self):
+        """Sets the pedestal and separatrix density values based on the user input or greenwald fraction method."""
+        i_nd_plasma_pedestal_separatrix = DensityProfilePedestalType(
+            self.data.physics.i_nd_plasma_pedestal_separatrix
+        )
+
+        if i_nd_plasma_pedestal_separatrix == DensityProfilePedestalType.USER_INPUT:
+            self.data.physics.f_nd_plasma_pedestal_greenwald = (
+                self.data.physics.nd_plasma_pedestal_electron
+                / (
+                    PlasmaDensityLimit.calculate_greenwald_density_limit(
+                        c_plasma=self.data.physics.plasma_current,
+                        rminor=self.data.physics.rminor,
+                    )
+                )
+            )
+
+            self.data.physics.f_nd_plasma_separatrix_greenwald = (
+                self.data.physics.nd_plasma_separatrix_electron
+                / (
+                    PlasmaDensityLimit.calculate_greenwald_density_limit(
+                        c_plasma=self.data.physics.plasma_current,
+                        rminor=self.data.physics.rminor,
+                    )
+                )
+            )
+        elif (
+            i_nd_plasma_pedestal_separatrix
+            == DensityProfilePedestalType.GREENWALD_FRACTION
+        ):
+            self.data.physics.nd_plasma_pedestal_electron = (
+                self.data.physics.f_nd_plasma_pedestal_greenwald
+                * PlasmaDensityLimit.calculate_greenwald_density_limit(
+                    c_plasma=self.data.physics.plasma_current,
+                    rminor=self.data.physics.rminor,
+                )
+            )
+            self.data.physics.nd_plasma_separatrix_electron = (
+                self.data.physics.f_nd_plasma_separatrix_greenwald
+                * PlasmaDensityLimit.calculate_greenwald_density_limit(
+                    c_plasma=self.data.physics.plasma_current,
+                    rminor=self.data.physics.rminor,
+                )
+            )
+
     def set_physics_variables(self):
         """Calculates and sets physics variables required for the profile."""
-
-        if physics_variables.i_plasma_pedestal == 0:
-            physics_variables.nd_plasma_electron_on_axis = (
-                physics_variables.nd_plasma_electrons_vol_avg
-                * (1.0 + physics_variables.alphan)
+        if (
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PARABOLIC_PROFILE
+        ):
+            self.data.physics.nd_plasma_electron_on_axis = (
+                self.data.physics.nd_plasma_electrons_vol_avg
+                * (1.0 + self.data.physics.alphan)
             )
-        elif physics_variables.i_plasma_pedestal == 1:
-            physics_variables.nd_plasma_electron_on_axis = self.ncore(
-                physics_variables.radius_plasma_pedestal_density_norm,
-                physics_variables.nd_plasma_pedestal_electron,
-                physics_variables.nd_plasma_separatrix_electron,
-                physics_variables.nd_plasma_electrons_vol_avg,
-                physics_variables.alphan,
+        elif (
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
+            self.data.physics.nd_plasma_electron_on_axis = self.ncore(
+                self.data.physics.radius_plasma_pedestal_density_norm,
+                self.data.physics.nd_plasma_pedestal_electron,
+                self.data.physics.nd_plasma_separatrix_electron,
+                self.data.physics.nd_plasma_electrons_vol_avg,
+                self.data.physics.alphan,
             )
-        physics_variables.nd_plasma_ions_on_axis = (
-            physics_variables.nd_plasma_ions_total_vol_avg
-            / physics_variables.nd_plasma_electrons_vol_avg
-            * physics_variables.nd_plasma_electron_on_axis
+        self.data.physics.nd_plasma_ions_on_axis = (
+            self.data.physics.nd_plasma_ions_total_vol_avg
+            / self.data.physics.nd_plasma_electrons_vol_avg
+            * self.data.physics.nd_plasma_electron_on_axis
         )
 
 
 class TeProfile(Profile):
-    """Electron temperature profile class. Contains a function to calculate the temperature profile and store the data."""
+    """Electron temperature profile class. Contains a function to calculate the
+    temperature profile and store the data.
+    """
 
     def run(self):
         """Subroutine to initialise neprofile and execute calculations."""
+        super().run()
         self.normalise_profile_x()
         self.calculate_profile_dx()
         self.set_physics_variables()
         self.calculate_profile_y(
             self.profile_x,
-            physics_variables.radius_plasma_pedestal_temp_norm,
-            physics_variables.temp_plasma_electron_on_axis_kev,
-            physics_variables.temp_plasma_pedestal_kev,
-            physics_variables.temp_plasma_separatrix_kev,
-            physics_variables.alphat,
-            physics_variables.tbeta,
+            self.data.physics.radius_plasma_pedestal_temp_norm,
+            self.data.physics.temp_plasma_electron_on_axis_kev,
+            self.data.physics.temp_plasma_pedestal_kev,
+            self.data.physics.temp_plasma_separatrix_kev,
+            self.data.physics.alphat,
+            self.data.physics.tbeta,
         )
         self.integrate_profile_y()
 
@@ -261,7 +386,8 @@ class TeProfile(Profile):
         alphat: float,
         tbeta: float,
     ):
-        """Calculates the temperature at a normalised minor radius position rho for a pedestalised profile (teprofile).
+        """Calculates the temperature at a normalised minor radius position rho for a
+        pedestalised profile (teprofile).
         If i_plasma_pedestal = 0 the original parabolic profile form is used instead.
 
         Parameters
@@ -281,18 +407,27 @@ class TeProfile(Profile):
         tbeta : float
             Second temperature exponent.
 
-        References:
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
+        References
+        ----------
+            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor
+            Studies. Fusion Science and Technology, 59(2), 308-349.
+            https://doi.org/10.13182/FST11-A11650
         """
-        if physics_variables.i_plasma_pedestal == 0:
-            # profile values of 0 cause divide by 0 errors so ensure the profile value is at least 1e-8
+        if (
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PARABOLIC_PROFILE
+        ):
+            # profile values of 0 cause divide by 0 errors so ensure the profile value
+            # is at least 1e-8
             # which is small enough that it won't make a difference to any calculations
             self.profile_y = np.maximum(t0 * (1 - rho**2) ** alphat, 1e-8)
             return
 
         if t0 < temp_plasma_pedestal_kev:
             logger.info(
-                f"TPROFILE: temperature pedestal is higher than core temperature. {temp_plasma_pedestal_kev = }, {t0 = }"
+                "TPROFILE: temperature pedestal is higher than core temperature. %s, %s",
+                temp_plasma_pedestal_kev,
+                t0,
             )
 
         rho_index = rho <= radius_plasma_pedestal_temp_norm
@@ -315,14 +450,15 @@ class TeProfile(Profile):
         alphat: float,
         tbeta: float,
     ) -> float:
-        """This routine calculates the core temperature (keV)
-        of a pedestalised profile. The solution comes from integrating and summing the two seprate temperature profiles for the core
-        and pedestal region within their bounds. This has to be multiplied by the torus volume element before integration which leads
-        to an added rho term in each part of the profile. When dividing by the volume of integration to get the average temperature
-        the simplification leads to a factor of 2 having to be multiplied on to each of the integration results.
-        This function for the average temperature can then be re-arranged to calculate the central plasma temeprature T_0 / tcore.
-        References:
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
+        """Calculates the core temperature (keV)
+        of a pedestalised profile. The solution comes from integrating and summing the
+        two separate temperature profiles for the core and pedestal region within their
+        bounds. This has to be multiplied by the torus volume element before integration
+        which leads to an added rho term in each part of the profile. When dividing by
+        the volume of integration to get the average temperature the simplification
+        leads to a factor of 2 having to be multiplied on to each of the integration
+        results. This function for the average temperature can then be re-arranged to
+        calculate the central plasma temperature T_0 / tcore.
 
         Parameters
         ----------
@@ -343,6 +479,12 @@ class TeProfile(Profile):
         -------
         float
             Core temperature.
+
+        References
+        ----------
+        Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor
+        Studies. Fusion Science and Technology, 59(2), 308-349.
+        https://doi.org/10.13182/FST11-A11650
         """
         #  Calculate core temperature
 
@@ -374,23 +516,29 @@ class TeProfile(Profile):
 
     def set_physics_variables(self):
         """Calculates and sets physics variables required for the temperature profile."""
-        if physics_variables.i_plasma_pedestal == 0:
-            physics_variables.temp_plasma_electron_on_axis_kev = (
-                physics_variables.temp_plasma_electron_vol_avg_kev
-                * (1.0 + physics_variables.alphat)
+        if (
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PARABOLIC_PROFILE
+        ):
+            self.data.physics.temp_plasma_electron_on_axis_kev = (
+                self.data.physics.temp_plasma_electron_vol_avg_kev
+                * (1.0 + self.data.physics.alphat)
             )
-        elif physics_variables.i_plasma_pedestal == 1:
-            physics_variables.temp_plasma_electron_on_axis_kev = self.tcore(
-                physics_variables.radius_plasma_pedestal_temp_norm,
-                physics_variables.temp_plasma_pedestal_kev,
-                physics_variables.temp_plasma_separatrix_kev,
-                physics_variables.temp_plasma_electron_vol_avg_kev,
-                physics_variables.alphat,
-                physics_variables.tbeta,
+        elif (
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
+            self.data.physics.temp_plasma_electron_on_axis_kev = self.tcore(
+                self.data.physics.radius_plasma_pedestal_temp_norm,
+                self.data.physics.temp_plasma_pedestal_kev,
+                self.data.physics.temp_plasma_separatrix_kev,
+                self.data.physics.temp_plasma_electron_vol_avg_kev,
+                self.data.physics.alphat,
+                self.data.physics.tbeta,
             )
 
-        physics_variables.temp_plasma_ion_on_axis_kev = (
-            physics_variables.temp_plasma_ion_vol_avg_kev
-            / physics_variables.temp_plasma_electron_vol_avg_kev
-            * physics_variables.temp_plasma_electron_on_axis_kev
+        self.data.physics.temp_plasma_ion_on_axis_kev = (
+            self.data.physics.temp_plasma_ion_vol_avg_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
+            * self.data.physics.temp_plasma_electron_on_axis_kev
         )

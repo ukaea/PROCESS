@@ -137,9 +137,9 @@ This function is used to calculate the first wall heating, it assumes the same c
     \mathtt{temp_k} = \frac{T_{\text{outlet}} + T_{\text{FW,peak}}}{2}
     $$
 
-8. Calculate the FW thermal conductivity at $\mathtt{temp_k}$ using the [`fw_thermal_conductivity()`](#fw-thermal-conductivity--fw_thermal_conductivity) function.
+8. Calculate the FW thermal conductivity at $\mathtt{temp_k}$ using the [`eurofer97_thermal_conductivity()`](../eng-models/generic_methods/materials.md#eurofer97-thermal-conductivity--eurofer97_thermal_conductivity) function.
 
-9. Determine the heat transfer coefficient using the [`heat_transfer()`](#fw-heat-transfer--heat_transfer) function.
+9. Determine the heat transfer coefficient using the [`gnielinski_heat_transfer_coefficient()`](../eng-models/generic_methods/pumping.md#gnielinski-heat-transfer--gnielinski_heat_transfer_coefficient) function.
 
 10. Compute the worst-case load.
 
@@ -193,77 +193,7 @@ $$
 
 where $\texttt{tkfw}$ is the thermal conductivity of the first wall material and $\texttt{onedload}$ is the heat load per unit length.
 
--------------
-
-### FW heat transfer | `heat_transfer()`
-
-1. **Calculate the Reynolds number:**
-
-    $$
-    \mathrm{Re} = \frac{\rho v \left(2r_{\text{channel}}\right)}{\mu}
-    $$
-
-    where $\rho$ is the coolant density and $\mu$ is the coolant viscosity.
-
-2. **Calculate the Prandtl number:**
-
-    $$
-    \mathrm{Pr} = \frac{c_{\text{p}}\mu}{k}
-    $$
-
-    were $c_{\text{p}}$ is the coolant heat capacity and $k$ is the coolant thermal conductivity.
-
-3. **Calculate the Darcy friction factor using the [`darcy_friction_haaland()`](#fw-coolant-friction--darcy_friction_haaland) method:**
-
-    $$
-    f = \texttt{darcy_friction_haaland()}
-    $$
-
-4. **Calculate the Nusselt number using the [Gnielinski correlation](https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation):**
-
-    $$
-    \mathrm{Nu_D}  = \frac{\left(f/8\right)\left(\mathrm{Re}-1000\right)\mathrm{Pr}}{1+12.7\left(f/8\right)^{0.5}\left(\mathrm{Pr}^{2/3}-1\right)}
-    $$
-
-    The relation is valid for:
-
-    $$
-    0.5 \le \mathrm{Pr} \le 2000 \\
-    3000 \le \mathrm{Re} \le 5 \times 10^6
-    $$
-
-5. **Calculate the heat transfer coefficient with the Nusselt number:**
-
-    $$
-    h = \frac{\mathrm{Nu_D}k}{2r_{\text{channel}}}
-    $$
-
-
 --------------
-
-### FW coolant friction | `darcy_friction_haaland()`
-
- The pressure drop is based on the Darcy fraction factor, using the [Haaland equation](https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation), an approximation to the implicit Colebrook–White equation. 
-
-$$
-\frac{1}{\sqrt{f}} = -1.8 \log{\left[ \left(\frac{\epsilon / D}{3.7}\right)^{1.11} \frac{6.9}{\text{Re}} \right]}
-$$
-
-------------
-
-### FW thermal conductivity | `fw_thermal_conductivity()`
-
-The thermal conductivity of the first wall is assumed to be that of Eurofer97 using the relation below[^1] [^2]:
- 
-$$
-K_{\text{Eurofer97}} = 5.4308 + 0.13565T - 0.00023862T^2 + 1.3393 \times 10^{-7} T^3
-$$
-
-!!! warning Thermal conductivity validity bounds
-
-    The sources for the stated thermal conductivity relation above state that the relation is only valid up to 800K [^1] [^2].
-
--------------
 
 
 ### Model Switches
@@ -324,8 +254,3 @@ There are three model options, chosen by the user to match their selected blanke
 |         Variable         |   Units   | Itvar. | Usage       | Default | Description                                                         |
 | :----------------------: | :-------: | ------ | ----------- | ------- | ------------------------------------------------------------------- |
 | `bz_channel_conduct_liq` | A V-1 m-1 | 72     | ifci = 0, 2 | 8.33D5  | Liquid metal coolant/breeder thin conductor or FCI wall conductance |
-
-
-[^1]: A. A. Tavassoli et al., “Materials design data for reduced activation martensitic steel type EUROFER,” Journal of Nuclear Materials, vol. 329–333, pp. 257–262, Aug. 2004, doi: https://doi.org/10.1016/j.jnucmat.2004.04.020.
-
-[^2]: Tavassoli, F. "Fusion Demo Interim Structural Design Criteria (DISDC)/Appendix A Material Design Limit Data/A3. S18E Eurofer Steel." CEA, EFDA_TASK_TW4-TTMS-005-D01 (2004).

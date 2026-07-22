@@ -100,8 +100,8 @@ i_bldgs_size = 0 * switch between routines estimating building sizes (0 = defaul
 pflux_fw_rad_max = 1.2 * Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
 f_fw_rad_max = 1.0 * peaking factor for radiation wall load (`constraint equation 67`)
 p_fusion_total_max_mw  = 2500.0 * maximum fusion power (MW) (`constraint equation 9`)
-pseprmax = 40.0 * maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
-f_alpha_energy_confinement_min = 5.0 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
+p_plasma_separatrix_rmajor_max_mw = 40.0 * maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
+f_t_alpha_energy_confinement_min = 5.0 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
 p_plant_electric_net_required_mw = 100.0 * minimum net electric
 
 *-------------------Constraints--------------------*
@@ -163,7 +163,7 @@ i_blkt_inboard = 0 * switch for inboard blanket;
 inuclear = 0 * switch for nuclear heating in the coils;
 i_p_coolant_pumping = 3 * Switch for pumping power for primary coolant (mechanical power only and peak first wall
 i_thermal_electric_conversion = 2 * Switch for power conversion cycle;
-i_fw_coolant_type = helium * switch for first wall coolant (can be different from blanket coolant);
+i_fw_coolant_type = 1 * switch for first wall coolant (can be different from blanket coolant);
 etaiso   = 0.9 * isentropic efficiency of FW and blanket coolant pumps
 eta_coolant_pump_electric   = 0.87 * electrical efficiency of primary coolant pumps
 i_fw_blkt_shared_coolant    = 0 * Switch for whether the FW and BB are on the same pump system

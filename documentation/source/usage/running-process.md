@@ -52,6 +52,15 @@ will produce the following output files in the same directory as the input file:
 
 ### VaryRun 
 
+VaryRun is a tool which takes an input file that does not converge and varies the initial values of the iteration variables, within a tolerance, to find an initial point that converges, and creates an input file using these variables.
+
+VaryRun requires a `.conf` file, which specifies certain parameters needed for VaryRun. These 
+include a path to the original input file, the maximum number of iterations to perform, and a
+factor within which the iteration variables are changed.
+
+For a given iteration, `X`, of VaryRun, the values of the iteration variables will be
+changed and a new input file, `X_IN.DAT` will be created in the same directory as the `.conf` file. `PROCESS` will be run on this input file to produce the associated output files, `X_MFILE.DAT`, `X_OUT.DAT` and `X_process.log`. If `VaryRun` is not able to find a converging input file within the maximum number of iterations, some more information on error status can be found in the created README.txt file. If no converging solution is found, you could try increasing the maximum number of iterations, changing the factor within which the iteration variables are changed, or by changing the initial values of the iteration variables.
+
 The default VaryRun configuration filename is `run_process.conf`. If no configuration filename is given as an argument in the command line, `run_process.conf` is assumed to be present in the current directory:
 ```bash
 # Use a configuration file called run_process.conf in the current directory
@@ -87,10 +96,10 @@ The configuration file has the following format:
 * Path to working directory in which PROCESS is run.
 WDIR = .
 
-* original IN.DAT name (should not be called IN.DAT!)
-ORIGINAL_IN_DAT = large_tokamak_IN.DAT
+* original IN.DAT name
+ORIGINAL_IN_DAT = path/to/original_IN.DAT
 
-* ONE line comment to be put into README.txt
+* optional ONE line comment to be put into README.txt
 COMMENT = 
 
 * Maximum number of runs

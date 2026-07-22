@@ -2,16 +2,10 @@
 
 import numpy as np
 
-from process.data_structure import (
-    build_variables,
-    physics_variables,
-    rebco_variables,
-    superconducting_tf_coil_variables,
-    tfcoil_variables,
-)
+from process.core.model import DataStructure
 
 
-def calculate_quench_protection(coilcurrent):
+def calculate_quench_protection(coilcurrent, data: DataStructure):
     """Calculate quench protecion limits for stellarator coils
     Includes calculation of the vacuum vessel force density, quench protection current density
     and max dump voltage during quench
@@ -26,75 +20,68 @@ def calculate_quench_protection(coilcurrent):
     # This copied from the tokamak module:
     # Radial position of vacuum vessel [m]
     rad_vv_in = (
-        physics_variables.rmajor
-        - physics_variables.rminor
-        - build_variables.dr_fw_plasma_gap_inboard
-        - build_variables.dr_fw_inboard
-        - build_variables.dr_blkt_inboard
-        - build_variables.dr_shld_blkt_gap
-        - build_variables.dr_shld_inboard
+        data.physics.rmajor
+        - data.physics.rminor
+        - data.build.dr_fw_plasma_gap_inboard
+        - data.build.dr_fw_inboard
+        - data.build.dr_blkt_inboard
+        - data.build.dr_shld_blkt_gap
+        - data.build.dr_shld_inboard
     )
     rad_vv_out = (
-        physics_variables.rmajor
-        + physics_variables.rminor
-        + build_variables.dr_fw_plasma_gap_outboard
-        + build_variables.dr_fw_outboard
-        + build_variables.dr_blkt_outboard
-        + build_variables.dr_shld_blkt_gap
-        + build_variables.dr_shld_outboard
+        data.physics.rmajor
+        + data.physics.rminor
+        + data.build.dr_fw_plasma_gap_outboard
+        + data.build.dr_fw_outboard
+        + data.build.dr_blkt_outboard
+        + data.build.dr_shld_blkt_gap
+        + data.build.dr_shld_outboard
     )
 
     # Stellarator version is working on the W7-X scaling, so we should actual use vv r_major
     # plasma r_major is just an approximation, but exact calculations require 3D geometry
     # Maybe it can be added to the stella_config file in the future
-    rad_vv = physics_variables.rmajor
+    rad_vv = data.physics.rmajor
 
     # MN/m^3
-    f_vv_actual = calculate_vv_max_force_density_from_W7X_scaling(rad_vv)
+    f_vv_actual = calculate_vv_max_force_density_from_W7X_scaling(rad_vv, data)
 
     # This approach merge stress model from tokamaks with induced force calculated from W7-X scaling
     a_vv = (rad_vv_out + rad_vv_in) / (rad_vv_out - rad_vv_in)
     zeta = 1 + ((a_vv - 1) * np.log((a_vv + 1) / (a_vv - 1)) / (2 * a_vv))
 
-    superconducting_tf_coil_variables.vv_stress_quench = (
-        zeta * f_vv_actual * 1e6 * rad_vv_in
-    )
+    data.superconducting_tfcoil.vv_stress_quench = zeta * f_vv_actual * 1e6 * rad_vv_in
 
     # comparison
     # the new quench protection routine, see #1047
-    tfcoil_variables.j_tf_wp_quench_heat_max = (
-        calculate_quench_protection_current_density(
-            tau_quench=tfcoil_variables.t_tf_superconductor_quench,
-            t_detect=tfcoil_variables.t_tf_quench_detection,
-            f_cu=tfcoil_variables.f_a_tf_turn_cable_copper,
-            f_cond=1 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
-            temp=tfcoil_variables.tftmp,
-            a_cable=tfcoil_variables.a_tf_turn_cable_space_no_void,
-            a_turn=tfcoil_variables.dx_tf_turn_general**2,
-        )
+    data.tfcoil.j_tf_wp_quench_heat_max = calculate_quench_protection_current_density(
+        tau_quench=data.tfcoil.t_tf_superconductor_quench,
+        t_detect=data.tfcoil.t_tf_quench_detection,
+        f_cu=data.tfcoil.f_a_tf_turn_cable_copper,
+        f_cond=1 - data.tfcoil.f_a_tf_turn_cable_space_extra_void,
+        temp=data.tfcoil.tftmp,
+        a_cable=data.tfcoil.a_tf_turn_cable_space_no_void,
+        a_turn=data.tfcoil.dx_tf_turn_general**2,
     )
 
     # Also give the copper current density (copper A/m2) for REBCO quench calculations:
-    rebco_variables.coppera_m2 = (
+    data.rebco.coppera_m2 = (
         coilcurrent
         * 1.0e6
-        / (
-            tfcoil_variables.a_tf_wp_conductor
-            * tfcoil_variables.f_a_tf_turn_cable_copper
-        )
+        / (data.tfcoil.a_tf_wp_conductor * data.tfcoil.f_a_tf_turn_cable_copper)
     )
 
     # Max volatage during fast discharge of TF coil (V)
     # (note that tf_coil_variable is in kV, while calculation is in V)
-    tfcoil_variables.v_tf_coil_dump_quench_kv = (
+    data.tfcoil.v_tf_coil_dump_quench_kv = (
         max_dump_voltage(
             tf_energy_stored=(
-                tfcoil_variables.e_tf_magnetic_stored_total_gj
-                / tfcoil_variables.n_tf_coils
+                data.tfcoil.e_tf_magnetic_stored_total_gj
+                / data.tfcoil.n_tf_coils
                 * 1.0e9
             ),
-            t_dump=tfcoil_variables.t_tf_superconductor_quench,
-            current=tfcoil_variables.c_tf_turn,
+            t_dump=data.tfcoil.t_tf_superconductor_quench,
+            current=data.tfcoil.c_tf_turn,
         )
         / 1.0e3
     )  # turn into kV
@@ -102,13 +89,18 @@ def calculate_quench_protection(coilcurrent):
     return f_vv_actual
 
 
-def calculate_vv_max_force_density_from_W7X_scaling(rad_vv: float) -> float:
+def calculate_vv_max_force_density_from_W7X_scaling(
+    rad_vv: float, data: DataStructure
+) -> float:
     """Actual VV force density from scaling [MN/m^3]
     Based on reference values from W-7X.
 
     Parameters
     ----------
     rad_vv:
+
+    data: DataStructure
+        data structure object
 
     Returns
     -------
@@ -127,20 +119,20 @@ def calculate_vv_max_force_density_from_W7X_scaling(rad_vv: float) -> float:
         force_density_ref
         * (
             b_ref
-            / physics_variables.b_plasma_toroidal_on_axis
+            / data.physics.b_plasma_toroidal_on_axis
             * i_total_ref
-            / tfcoil_variables.c_tf_total
+            / data.tfcoil.c_tf_total
             * rminor_ref**2
-            / physics_variables.rminor**2
+            / data.physics.rminor**2
         )
         ** (-1)
         * (
             tau_ref
-            / tfcoil_variables.t_tf_superconductor_quench
+            / data.tfcoil.t_tf_superconductor_quench
             * rmajor_ref
             / rad_vv
             * dr_vv_ref
-            / ((build_variables.dr_vv_inboard + build_variables.dr_vv_outboard) / 2)
+            / ((data.build.dr_vv_inboard + data.build.dr_vv_outboard) / 2)
         )
     )
 

@@ -9,7 +9,7 @@ https://www.thermal-engineering.org/what-is-latent-heat-of-vaporization-definiti
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class WaterUseData:
     airtemp: float = 15.0
     """ambient air temperature (degrees Celsius)"""

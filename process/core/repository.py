@@ -12,5 +12,4 @@ def get_process_root() -> Path:
 
     E.g. '/home/user/process'
     """
-
     return Path(_PROCESS_ROOT)

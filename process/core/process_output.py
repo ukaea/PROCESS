@@ -4,38 +4,37 @@ from pathlib import Path
 import numpy as np
 
 from process.core import constants
-from process.data_structure import global_variables, numerics
 
 
 class OutputFileManager:
     @classmethod
-    def open_files(cls, *, mode="w"):
+    def open_files(cls, output_prefix: str, *, mode="w"):
         cls._outfile = open(  # noqa: SIM115
-            Path(global_variables.output_prefix + "OUT.DAT"), mode
+            Path(output_prefix + "OUT.DAT"), mode
         )
         cls._mfile = open(  # noqa: SIM115
-            Path(global_variables.output_prefix + "MFILE.DAT"), mode
+            Path(output_prefix + "MFILE.DAT"), mode
         )
 
     @classmethod
-    def open_idempotence_files(cls):
+    def open_idempotence_files(cls, output_prefix: str):
         cls._outfile.close()
         cls._mfile.close()
 
         cls._outfile = open(  # noqa: SIM115
-            Path(global_variables.output_prefix + "IDEM_OUT.DAT"), "w"
+            Path(output_prefix + "IDEM_OUT.DAT"), "w"
         )
         cls._mfile = open(  # noqa: SIM115
-            Path(global_variables.output_prefix + "IDEM_MFILE.DAT"), "w"
+            Path(output_prefix + "IDEM_MFILE.DAT"), "w"
         )
 
     @classmethod
-    def close_idempotence_files(cls):
+    def close_idempotence_files(cls, output_prefix: str):
         Path(cls._outfile.name).unlink()
         Path(cls._mfile.name).unlink()
         cls._outfile.close()
         cls._mfile.close()
-        cls.open_files(mode="a")
+        cls.open_files(mode="a", output_prefix=output_prefix)
 
     @classmethod
     def finish(cls):
@@ -45,9 +44,9 @@ class OutputFileManager:
 
 def write(file, string: str):
     if file == constants.MFILE:
-        OutputFileManager._mfile.write(f"{string}\n")  # noqa: SLF001
+        OutputFileManager._mfile.write(f"{string}\n")
     elif file == constants.NOUT:
-        OutputFileManager._outfile.write(f"{string}\n")  # noqa: SLF001
+        OutputFileManager._outfile.write(f"{string}\n")
     elif file == constants.IOTTY:
         print(string)
 
@@ -183,10 +182,12 @@ def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
 
     format_value = f"{value:.17e}" if isinstance(value, float) else f"{value: >12}"
 
-    if varnam.strip("()") in numerics.name_xc:
-        # MDK add ITV label if it is an iteration variable
-        # The ITV flag overwrites the output_flag
-        output_flag = "ITV"
+    # TODO need to find a way to identify iteration variables at a higher level
+    # in the data structure
+    # if varnam.strip("()") in numerics.name_xc:
+    #     # MDK add ITV label if it is an iteration variable
+    #     # The ITV flag overwrites the output_flag
+    #     output_flag = "ITV"
 
     line = f"{description}{replacement_character} {varname}{replacement_character} {format_value} {output_flag}"
     write(file, line)

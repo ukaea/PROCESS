@@ -269,8 +269,7 @@ DEN_TUNGSTEN = 19250.0
 """Density of Tungsten [kg/m3]"""
 
 TEMP_ROOM = 293.15
-""" Room temperature in Kelvin
-Assume the room is at 20 degrees Celsius
+""" Room temperature in Kelvin. Assuming the room is at 20 degrees Celsius
 """
 
 RMU0 = 1.256637062e-6
@@ -285,11 +284,11 @@ EPSILON0 = 8.85418781e-12
 CPH2O = 4180.0
 """specific heat capacity of water (J/kg/K)"""
 
-den_copper: float = None
-"""density of copper (kg/m3)"""
+DEN_COPPER = 8900.0
+"""Density of copper [kg/m³]"""
 
-den_aluminium: float = None
-"""density of aluminium (kg/m3)"""
+DEN_ALUMINIUM = 2700.0
+"""Density of aluminium [kg/m³]"""
 
 DENH2O = 985.0
 """density of water (kg/m3)"""
@@ -308,10 +307,3 @@ N_DAY_YEAR = 365.2425
 
 ACCELERATION_GRAVITY = 9.81
 """Acceleration due to gravity [m/s2]"""
-
-
-def init_constants():
-    global den_copper, den_aluminium
-
-    den_copper = 8900.0
-    den_aluminium = 2700.0

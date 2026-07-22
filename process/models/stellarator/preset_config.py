@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from process.core.exceptions import ProcessValueError
-from process.data_structure import stellarator_configuration
+from process.core.model import DataStructure
 
 HELIAS5B = {
     "name": "Helias 5b",
@@ -209,7 +209,7 @@ W7X50 = {
 }
 
 
-def load_stellarator_config(istell: int, config_file: Path | None):
+def load_stellarator_config(istell: int, config_file: Path | None, data: DataStructure):
     """Load the appropriate Stellarator machine configuration
 
     Parameters
@@ -223,6 +223,8 @@ def load_stellarator_config(istell: int, config_file: Path | None):
         istell = 6: Init from json
     config_file:
 
+    data: DataStructure
+        data structure object
 
     """
     match istell:
@@ -246,8 +248,11 @@ def load_stellarator_config(istell: int, config_file: Path | None):
             raise ProcessValueError(f"{istell=} is not an integer in the range [1, 6]")
 
     for variable_name, variable_value in machine_config.items():
-        setattr(
-            stellarator_configuration,
-            f"stella_config_{variable_name.lower()}",
-            variable_value,
-        )
+        name_on_data_structure = f"stella_config_{variable_name.lower()}"
+
+        if hasattr(data.stellarator_config, name_on_data_structure):
+            setattr(
+                data.stellarator_config,
+                name_on_data_structure,
+                variable_value,
+            )

@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objects as go
 
-import process.models.superconductors as superconductors
+from process.models import superconductors
 
 temp_c0max = 90.0  # Critical temperature (K) at zero field and strain
 b_c20max = (
@@ -21,6 +21,8 @@ for i in range(temp_grid.shape[0]):
     for j in range(temp_grid.shape[1]):
         (
             j_scaling[i, j],
+            _,
+            _,
             _,
         ) = superconductors.jcrit_rebco(temp_grid[i, j], b_grid[i, j])
         # Convert from A/m² to kA/mm² (1 A/m² = 1e-6 A/mm²)

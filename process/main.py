@@ -39,38 +39,23 @@ Box file F/MI/PJK/PROCESS and F/PL/PJK/PROCESS (15/01/96 to 24/01/12)
 Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 """
 
-import argparse
 import logging
-import os
 from pathlib import Path
-from typing import Any, Protocol
 
-import process
-import process.core.init as init
-import process.data_structure as data_structure
-from process.core import constants
-from process.core.io import (
-    mfile,
-    plot_plotly_sankey,
-    plot_proc,
-)
+import click
+
+import process  # noqa: F401
+from process.core import constants, init
 from process.core.io import obsolete_vars as ov
-
-# For VaryRun
-from process.core.io.process_config import RunProcessConfig
-from process.core.io.process_funcs import (
-    check_input_error,
-    get_neqns_itervars,
-    get_variable_range,
-    no_unfeasible_mfile,
-    process_stopped,
-    process_warnings,
-    vary_iteration_variables,
-)
+from process.core.io.cli_tools import LazyGroup, help_opt, indat_opt
+from process.core.io.mfile import MFile
+from process.core.io.plot import plot_sankey_plotly, plot_summary
+from process.core.io.vary_run import RunProcessConfig, vary_iteration_variables
 from process.core.log import logging_model_handler, show_errors
 from process.core.model import DataStructure, Model
 from process.core.process_output import OutputFileManager, oheadr
 from process.core.scan import Scan
+from process.data_structure.numerics import PROCESSRunMode
 from process.models.availability import Availability
 from process.models.blankets.blanket_library import BlanketLibrary
 from process.models.blankets.dcll import DCLL
@@ -84,8 +69,11 @@ from process.models.cs_fatigue import CsFatigue
 from process.models.divertor import Divertor
 from process.models.fw import FirstWall
 from process.models.ife import IFE
-from process.models.pfcoil import PFCoil
-from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
+from process.models.pfcoil import CSCoil, PFCoil
+from process.models.physics.bootstrap_current import (
+    PlasmaBootstrapCurrent,
+    SauterBootstrapCurrent,
+)
 from process.models.physics.confinement_time import PlasmaConfinementTime
 from process.models.physics.current_drive import (
     CurrentDrive,
@@ -97,7 +85,9 @@ from process.models.physics.current_drive import (
 )
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
-from process.models.physics.impurity_radiation import initialise_imprad
+from process.models.physics.impurity_radiation import (
+    initialise_imprad,
+)
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
 from process.models.physics.physics import (
     DetailedPhysics,
@@ -105,9 +95,14 @@ from process.models.physics.physics import (
     PlasmaBeta,
     PlasmaInductance,
 )
-from process.models.physics.plasma_current import PlasmaCurrent
+from process.models.physics.plasma_current import (
+    PlasmaCurrent,
+    PlasmaDiamagneticCurrent,
+)
+from process.models.physics.plasma_fields import PlasmaFields
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
+from process.models.physics.profiles import NeProfile, TeProfile
 from process.models.power import Power
 from process.models.pulse import Pulse
 from process.models.shield import Shield
@@ -120,156 +115,132 @@ from process.models.tfcoil.resistive import (
     CopperTFCoil,
     ResistiveTFCoil,
 )
-from process.models.tfcoil.superconducting import SuperconductingTFCoil
+from process.models.tfcoil.superconducting import (
+    CICCSuperconductingTFCoil,
+    CROCOSuperconductingTFCoil,
+    SuperconductingTFCoil,
+)
 from process.models.vacuum import Vacuum, VacuumVessel
 from process.models.water_use import WaterUse
-
-os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
 PACKAGE_LOGGING = True
 """Can be set False to disable package-level logging, e.g. in the test suite"""
 logger = logging.getLogger("process")
 
 
-class Process:
-    """The main Process class."""
+@click.group(
+    cls=LazyGroup,
+    lazy_subcommands={
+        "mfile": "process.core.io.mfile.cli.mfile",
+        "plot": "process.core.io.plot.cli.plot",
+        "indat": "process.core.io.in_dat.cli.new_indat",
+    },
+    invoke_without_command=True,
+    no_args_is_help=True,
+)
+@click.version_option()
+@help_opt
+@indat_opt(default=None)
+@click.option(
+    "-s",
+    "--solver",
+    default="vmcon",
+    type=str,
+    help="Specify which solver to use: only 'vmcon' at the moment",
+)
+@click.option(
+    "-v",
+    "--varyiterparams",
+    is_flag=True,
+    help="Vary iteration parameters",
+)
+@click.option(
+    "-c",
+    "--varyiterparamsconfig",
+    "config_file",
+    default="run_process.conf",
+    help="configuration file for varying iteration parameters",
+)
+@click.option(
+    "-m",
+    "--mfile",
+    "mfile_path",
+    type=click.Path(dir_okay=False, resolve_path=True, path_type=Path),
+    help="Output mfile location",
+)
+@click.option(
+    "-mj",
+    "--mfilejson",
+    is_flag=True,
+    help="Produce a filled json from --mfile arg in working dir",
+)
+@click.option(
+    "--update-obsolete",
+    is_flag=True,
+    help="Automatically update obsolete variables in the IN.DAT file",
+)
+@click.option(
+    "--full-output",
+    is_flag=True,
+    help="Run all summary plotting scripts for the output",
+)
+@click.pass_context
+def process_cli(
+    ctx,
+    indat,
+    solver,
+    varyiterparams,
+    config_file,
+    mfile_path,
+    mfilejson,
+    update_obsolete,
+    full_output,
+):
+    """
+    \b
+    PROCESS
+    Power Reactor Optimisation Code
+    Copyright (c) [2023] [United Kingdom Atomic Energy Authority]
 
-    def __init__(self, args: list[Any] | None = None):
-        """Run Process.
+    \b
+    Contact
+    James Morris     : james.morris2@ukaea.uk
+    Jonathan Maddock : jonathan.maddock@ukaea.uk
 
-        :param args: Arguments to parse, defaults to None
-        """
-        self.parse_args(args)
-        self.run_mode()
-        self.post_process()
-
-    def parse_args(self, args: list[Any] | None):
-        """Parse the command-line arguments, such as the input filename.
-
-        Parameters
-        ----------
-        args :
-            Arguments to parse
-        """
-        parser = argparse.ArgumentParser(
-            formatter_class=argparse.RawDescriptionHelpFormatter,
-            description=(
-                "PROCESS\n"
-                "Power Reactor Optimisation Code\n"
-                "Copyright (c) [2023] [United Kingdom Atomic Energy Authority]\n"
-                "\n"
-                "Contact\n"
-                "James Morris  : james.morris2@ukaea.uk\n"
-                "Jonathan Maddock : jonathan.maddock@ukaea.uk\n"
-                "\n"
-                "GitHub        : https://github.com/ukaea/PROCESS\n"
-            ),
-        )
-
-        # Optional args
-        parser.add_argument(
-            "-i",
-            "--input",
-            default="IN.DAT",
-            metavar="input_file_path",
-            type=str,
-            help="The path to the input file that Process runs on",
-        )
-        parser.add_argument(
-            "-s",
-            "--solver",
-            default="vmcon",
-            metavar="solver_name",
-            type=str,
-            help="Specify which solver to use: only 'vmcon' at the moment",
-        )
-        parser.add_argument(
-            "-v",
-            "--varyiterparams",
-            action="store_true",
-            help="Vary iteration parameters",
-        )
-        parser.add_argument(
-            "-c",
-            "--varyiterparamsconfig",
-            metavar="config_file",
-            default="run_process.conf",
-            help="configuration file for varying iteration parameters",
-        )
-        parser.add_argument(
-            "-m",
-            "--mfile",
-            default="MFILE.DAT",
-            help="mfile for post-processing/plotting",
-        )
-        parser.add_argument(
-            "-mj",
-            "--mfilejson",
-            action="store_true",
-            help="Produce a filled json from --mfile arg in working dir",
-        )
-        parser.add_argument(
-            "--version",
-            action="store_true",
-            help="Print the version of PROCESS to the terminal",
-        )
-        parser.add_argument(
-            "--update-obsolete",
-            action="store_true",
-            help="Automatically update obsolete variables in the IN.DAT file",
-        )
-        parser.add_argument(
-            "--full-output",
-            action="store_true",
-            help="Run all summary plotting scripts for the output",
-        )
-
-        # If args is not None, then parse the supplied arguments. This is likely
-        # to come from the test suite when testing command-line arguments; the
-        # method is being run from the test suite.
-        # If args is None, then use actual command-line arguments (e.g.
-        # sys.argv), as the method is being run from the command-line.
-        self.args = parser.parse_args(args)
-        # Store namespace object of the args
-
-    def run_mode(self):
-        """Determine how to run Process."""
-        if self.args.version:
-            print(process.__version__)
-            return
-        # Store run object: useful for testing
-        if self.args.varyiterparams:
-            self.run = VaryRun(self.args.varyiterparamsconfig, self.args.solver)
+    GitHub        : https://github.com/ukaea/PROCESS
+    """
+    if ctx.invoked_subcommand is None:
+        if varyiterparams:
+            if mfile_path is not None:
+                raise click.BadParameter(
+                    "--mfile not supported on vary run please specify in the configuration file"
+                )
+            runtype = VaryRun(config_file, solver)
+        elif indat is None:
+            raise click.BadParameter("IN.DAT not specified")
         else:
-            self.run = SingleRun(
-                self.args.input,
-                self.args.solver,
-                update_obsolete=self.args.update_obsolete,
+            runtype = SingleRun(
+                indat, solver, update_obsolete=update_obsolete, filepath_out=mfile_path
             )
-        self.run.run()
 
-    def post_process(self):
-        """Perform post-run actions, like plotting the mfile."""
-        # TODO Currently, Process will always run on an input file beforehand.
-        # It would be better to not require this, so just plot_proc could be
-        # run, for example.
-        if self.args.mfilejson:
+        runtype.run()
+
+        mfile_path = runtype.mfile_path
+
+        if mfilejson:
             # Produce a json file containing mfile output, useful for VVUQ work.
-            mfile_path = Path(self.args.mfile)
-            mfile_data = mfile.MFile(filename=mfile_path)
+            mfile_data = MFile(filename=mfile_path)
             mfile_data.open_mfile()
-            mfile_data.write_to_json()
-        if self.args.full_output:
-            # Run all summary plotting scripts for the output
-            mfile_path = Path(str(self.args.input).replace("IN.DAT", "MFILE.DAT"))
-            mfile_str = str(mfile_path.resolve())
-            print(f"Plotting mfile {mfile_str}")
-            if mfile_path.exists():
-                plot_proc.main(args=["-f", mfile_str])
-                plot_plotly_sankey.main(args=["-m", mfile_str])
+            mfile_data.to_json()
 
+        if full_output:
+            # Run all summary plotting scripts for the output
+            if mfile_path.exists():
+                print(f"Plotting mfile {mfile_path.resolve().as_posix()}")
+                plot_summary(mfile_path)
+                plot_sankey_plotly(mfile_path)
             else:
-                logger.error("mfile to be used for plotting doesn't exist")
+                logger.error("Cannot find mfile for plotting %s", mfile_path)
 
 
 class VaryRun:
@@ -287,14 +258,20 @@ class VaryRun:
     An IN.DAT file as specified in the config file
 
     Output files:
-    All of them in the work directory specified in the config file
-    OUT.DAT     -  PROCESS output
-    MFILE.DAT   -  PROCESS output
+    All of them in the working directory specified in the config file
+    X_IN.DAT      -  PROCESS input
+    X_OUT.DAT     -  PROCESS output
+    X_MFILE.DAT   -  PROCESS output
     process.log - logfile of PROCESS output to stdout
     README.txt  - contains comments from config file
     """
 
-    def __init__(self, config_file: str, solver: str = "vmcon"):
+    def __init__(
+        self,
+        config_file: str,
+        solver: str = "vmcon",
+        data_structure: DataStructure | None = None,
+    ):
         """Initialise and perform a VaryRun.
 
         Parameters
@@ -306,8 +283,12 @@ class VaryRun:
         """
         # Store the absolute path to the config file immediately: various
         # dir changes happen in old run_process code
-        self.config_file = Path(config_file).resolve()
-        self.solver = solver
+        self.config = RunProcessConfig.from_file(Path(config_file).resolve(), solver)
+        self.data = data_structure or DataStructure()
+
+    @property
+    def mfile_path(self):
+        return self.config.outfile
 
     def run(self):
         """Perform a VaryRun by running multiple SingleRuns.
@@ -317,79 +298,29 @@ class VaryRun:
         FileNotFoundError
             if input file doesn't exist
         """
-        # The input path for the varied input file
-        input_path = self.config_file.parent / "IN.DAT"
+        logging_model_handler.clear_logs()
+        self.config.setup(self.data)
 
-        # Taken without much modification from the original run_process.py
-        # Something changes working dir in config lines below
-        config = RunProcessConfig(self.config_file)
-        config.setup()
+        setup_loggers(Path(self.config.wdir) / "process.log")
 
-        setup_loggers(Path(config.wdir) / "process.log")
-
-        init.init_all_module_vars()
-        init.init_process()
-
-        _neqns, itervars = get_neqns_itervars()
-        lbs, ubs = get_variable_range(itervars, config.factor)
-
-        # If config file contains WDIR, use that. Otherwise, use the directory
-        # containing the config file (used when running regression tests in
-        # temp dirs)
-        # TODO Not sure this is required any more
-        wdir = config.wdir or Path(self.config_file).parent
-
-        # Check IN.DAT exists
-        if not input_path.exists():
-            raise FileNotFoundError
+        init.init_process(self.data)
 
         # TODO add diff ixc summary part
-        for i in range(config.niter):
-            print(i, end=" ")
-
-            # Run single runs (SingleRun()) of process as subprocesses. This
-            # is the only way to deal with Fortran "stop" statements when
-            # running VaryRun(), which otherwise cause the Python
-            # interpreter to exit, when we want to vary the parameters and
-            # run again
-            # TODO Don't do this; remove stop statements from Fortran and
-            # handle error codes
-            # Run process on an IN.DAT file
-            config.run_process(input_path, self.solver)
-
-            check_input_error(wdir=wdir)
-
-            if not process_stopped():
-                no_unfeasible = no_unfeasible_mfile()
-                if no_unfeasible <= config.no_allowed_unfeasible:
-                    if no_unfeasible > 0:
-                        print(
-                            "WARNING: Non feasible point(s) in sweep, "
-                            f"But finished anyway! {no_unfeasible} "
-                        )
-                    if process_warnings():
-                        print(
-                            "\nThere were warnings in the final PROCESS run. "
-                            "Please check the log file!\n"
-                        )
-                    # This means success: feasible solution found
-                    break
-                print(
-                    f"WARNING: {no_unfeasible} non-feasible point(s) in sweep! Rerunning!"
-                )
-            else:
-                print("PROCESS has stopped without finishing!")
-
-            vary_iteration_variables(itervars, lbs, ubs, config.generator)
-
-        config.error_status2readme()
+        for _indat, _mfile, itervars, lbs, ubs in self.config:
+            vary_iteration_variables(itervars, lbs, ubs, self.config)
 
 
 class SingleRun:
     """Perform a single run of PROCESS."""
 
     def __init__(
-        self, input_file: str, solver: str = "vmcon", *, update_obsolete: bool = False
+        self,
+        input_file: Path | str,
+        solver: str = "vmcon",
+        *,
+        filepath_out: Path | str | None = None,
+        update_obsolete: bool = False,
+        data_structure: DataStructure | None = None,
     ):
         """Read input file and initialise variables.
 
@@ -400,13 +331,14 @@ class SingleRun:
         solver:
             which solver to use, as specified in solver.py
         """
-        self.input_file = input_file
+        self.input_file = Path(input_file)
+        self.data = data_structure or DataStructure()
 
         self.validate_input(update_obsolete)
         self.init_module_vars()
-        self.set_filenames()
+        self.set_filenames(filepath_out)
         self.initialise()
-        self.models = Models()
+        self.models = Models(self.data)
         self.solver = solver
 
     def run(self):
@@ -426,11 +358,25 @@ class SingleRun:
         This "resets" all module variables to their initialised values, so each
         new run doesn't have any side-effects from previous runs.
         """
-        init.init_all_module_vars()
+        logging_model_handler.clear_logs()
 
-    def set_filenames(self):
+    def set_filenames(self, filepath_out):
         """Validate the input filename and create other filenames from it."""
+        filepath = Path(filepath_out or self.input_file)
+        if filepath.is_file() or filepath.name.endswith(("MFILE.DAT", "IN.DAT")):
+            filepath = filepath.parent
+        self.filepath = filepath
+        self.filename_prefix = (
+            Path(filepath_out or self.input_file)
+            .name.replace("IN.DAT", "")
+            .replace("MFILE.DAT", "")
+        ).strip()
         self.set_input()
+        self.data.globals.output_prefix = (
+            f"{Path(self.filepath).as_posix().strip()}/"
+            if not self.filename_prefix
+            else Path(self.filepath, self.filename_prefix).as_posix().strip()
+        )
         self.set_output()
         self.set_mfile()
 
@@ -438,10 +384,8 @@ class SingleRun:
         """Validate and set the input file path."""
         # Check input file ends in "IN.DAT", then save prefix
         # (the part before the IN.DAT)
-        if self.input_file[-6:] != "IN.DAT":
+        if not self.input_file.name.endswith("IN.DAT"):
             raise ValueError("Input filename must end in IN.DAT.")
-
-        self.filename_prefix = self.input_file[:-6]
 
         # Check input file exists (path specified as CLI argument)
         input_path = Path(self.input_file)
@@ -457,19 +401,18 @@ class SingleRun:
             )
 
         # Set the input file in the Fortran
-        data_structure.global_variables.fileprefix = str(self.input_path.resolve())
+        self.data.globals.fileprefix = self.input_path.resolve()
 
     def set_output(self):
         """Set the output file name.
 
         Set Path object on the Process object, and set the prefix in the Fortran.
         """
-        self.output_path = Path(self.filename_prefix + "OUT.DAT")
-        data_structure.global_variables.output_prefix = self.filename_prefix
+        self.output_path = Path(self.data.globals.output_prefix + "OUT.DAT")
 
     def set_mfile(self):
         """Set the mfile filename."""
-        self.mfile_path = Path(self.filename_prefix + "MFILE.DAT")
+        self.mfile_path = Path(self.data.globals.output_prefix + "MFILE.DAT")
 
     def initialise(self):
         """Run the init module to call all initialisation routines."""
@@ -477,38 +420,40 @@ class SingleRun:
             Path(self.output_path.as_posix().replace("OUT.DAT", "process.log"))
         )
 
-        initialise_imprad()
+        initialise_imprad(self.data)
         # Reads in input file
-        init.init_process()
+        init.init_process(self.data)
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
-        n = int(data_structure.numerics.nvar)
+        n = int(self.data.numerics.nvar)
         # [:n] as array always at max size: contains 0s
-        data_structure.numerics.ixc[:n].sort()
+        self.data.numerics.ixc[:n].sort()
 
     def run_scan(self):
         """Create scan object if required."""
         # TODO Move this solver logic up to init?
         # ioptimz == 1: optimisation
-        if data_structure.numerics.ioptimz == 1:
+        if self.data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
             pass
         # ioptimz == -2: evaluation
-        elif data_structure.numerics.ioptimz == -2:
+        elif self.data.numerics.ioptimz == PROCESSRunMode.EVALUATION:
             # No optimisation: solve equality (consistency) constraints only using fsolve (HYBRD)
             self.solver = "fsolve"
         else:
             raise ValueError(
-                f"Invalid ioptimz value: {data_structure.numerics.ioptimz}. Please "
+                f"Invalid ioptimz value: {self.data.numerics.ioptimz}. Please "
                 "select either 1 (optimise) or -2 (no optimisation)."
             )
-        self.scan = Scan(self.models, self.solver)
+        self.scan = Scan(self.models, self.solver, self.data)
 
-    def show_errors(self):
+    @staticmethod
+    def show_errors():
         """Report all informational/error messages encountered."""
         show_errors(constants.NOUT)
 
-    def finish(self):
+    @staticmethod
+    def finish():
         """Run the finish subroutine to close files open in the Fortran.
 
         Files being handled by Fortran must be closed before attempting to
@@ -540,7 +485,6 @@ class SingleRun:
         is set to True, they are either removed or replaced by their updated names as specified
         in the OBS_VARS dictionary.
         """
-
         obsolete_variables = ov.OBS_VARS
         obsolete_vars_help_message = ov.OBS_VARS_HELP
 
@@ -647,16 +591,6 @@ class SingleRun:
             raise ValueError("User-created model not injected correctly") from err
 
 
-class CostsProtocol(Protocol):
-    """Protocol layout for costs models"""
-
-    def run(self):
-        """Run the model"""
-
-    def output(self):
-        """write model output"""
-
-
 class Models:
     """Creates instances of physics and engineering model classes.
 
@@ -664,21 +598,26 @@ class Models:
     engineering modules.
     """
 
-    def __init__(self):
+    def __init__(self, data: DataStructure):
         """Create physics and engineering model objects.
 
         This also initialises module variables in the Fortran for that module.
         """
+        self.data = data
+
         self._costs_custom = None
         self._costs_1990 = Costs()
         self._costs_2015 = Costs2015()
         self.cs_fatigue = CsFatigue()
-        self.pfcoil = PFCoil(cs_fatigue=self.cs_fatigue)
+        self.cs_coil = CSCoil(cs_fatigue=self.cs_fatigue)
+        self.pfcoil = PFCoil(cs_fatigue=self.cs_fatigue, cs_coil=self.cs_coil)
         self.power = Power()
         self.cryostat = Cryostat()
         self.build = Build()
         self.sctfcoil = SuperconductingTFCoil()
-        self.tfcoil = TFCoil(build=self.build)
+        self.cicc_sctfcoil = CICCSuperconductingTFCoil()
+        self.croco_sctfcoil = CROCOSuperconductingTFCoil()
+        self.tfcoil = TFCoil()
         self.resistive_tf_coil = ResistiveTFCoil()
         self.copper_tf_coil = CopperTFCoil()
         self.aluminium_tf_coil = AluminiumTFCoil()
@@ -693,28 +632,37 @@ class Models:
         self.pulse = Pulse()
         self.shield = Shield()
         self.ife = IFE(availability=self.availability, costs=self.costs)
-        self.plasma_profile = PlasmaProfile()
+        self.ne_profile = NeProfile()
+        self.te_profile = TeProfile()
+        self.plasma_profile = PlasmaProfile(self.ne_profile, self.te_profile)
         self.fw = FirstWall()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(fw=self.fw)
+        self.neutral_beam = NeutralBeam(plasma_profile=self.plasma_profile)
+        self.electron_cyclotron = ElectronCyclotron(plasma_profile=self.plasma_profile)
+        self.lower_hybrid = LowerHybrid(plasma_profile=self.plasma_profile)
         self.current_drive = CurrentDrive(
             plasma_profile=self.plasma_profile,
-            electron_cyclotron=ElectronCyclotron(plasma_profile=self.plasma_profile),
+            electron_cyclotron=self.electron_cyclotron,
             ion_cyclotron=IonCyclotron(plasma_profile=self.plasma_profile),
-            lower_hybrid=LowerHybrid(plasma_profile=self.plasma_profile),
-            neutral_beam=NeutralBeam(plasma_profile=self.plasma_profile),
+            lower_hybrid=self.lower_hybrid,
+            neutral_beam=self.neutral_beam,
             electron_bernstein=ElectronBernstein(plasma_profile=self.plasma_profile),
         )
         self.plasma_beta = PlasmaBeta()
         self.plasma_inductance = PlasmaInductance()
         self.plasma_density_limit = PlasmaDensityLimit()
         self.plasma_exhaust = PlasmaExhaust()
+        self.sauter_bootstrap_current = SauterBootstrapCurrent()
         self.plasma_bootstrap_current = PlasmaBootstrapCurrent(
-            plasma_profile=self.plasma_profile
+            plasma_profile=self.plasma_profile,
+            sauter_bootstrap=self.sauter_bootstrap_current,
         )
         self.plasma_confinement = PlasmaConfinementTime()
         self.plasma_transition = PlasmaConfinementTransition()
         self.plasma_current = PlasmaCurrent()
+        self.plasma_fields = PlasmaFields()
+        self.plasma_dia_current = PlasmaDiamagneticCurrent()
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
@@ -726,61 +674,114 @@ class Models:
             plasma_confinement=self.plasma_confinement,
             plasma_transition=self.plasma_transition,
             plasma_current=self.plasma_current,
+            plasma_fields=self.plasma_fields,
+            plasma_dia_current=self.plasma_dia_current,
+            plasma_geometry=self.plasma_geom,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
         )
         self.neoclassics = Neoclassics()
-        if data_structure.stellarator_variables.istell != 0:
-            self.stellarator = Stellarator(
-                availability=self.availability,
-                buildings=self.buildings,
-                vacuum=self.vacuum,
-                costs=self.costs,
-                power=self.power,
-                plasma_profile=self.plasma_profile,
-                hcpb=self.ccfe_hcpb,
-                current_drive=self.current_drive,
-                physics=self.physics,
-                neoclassics=self.neoclassics,
-                plasma_beta=self.plasma_beta,
-                plasma_bootstrap=self.plasma_bootstrap_current,
-            )
+        self.stellarator = Stellarator(
+            availability=self.availability,
+            buildings=self.buildings,
+            vacuum=self.vacuum,
+            costs=self.costs,
+            power=self.power,
+            plasma_profile=self.plasma_profile,
+            hcpb=self.ccfe_hcpb,
+            current_drive=self.current_drive,
+            physics=self.physics,
+            neoclassics=self.neoclassics,
+            plasma_beta=self.plasma_beta,
+            plasma_bootstrap=self.plasma_bootstrap_current,
+        )
 
         self.dcll = DCLL(fw=self.fw)
-
         self.setup_data_structure()
 
     @property
-    def costs(self) -> CostsProtocol:
-        if data_structure.cost_variables.cost_model == 0:
+    def costs(self) -> Model:
+        if self.data.costs.cost_model == 0:
             return self._costs_1990
-        if data_structure.cost_variables.cost_model == 1:
+        if self.data.costs.cost_model == 1:
             return self._costs_2015
-        if data_structure.cost_variables.cost_model == 2:
+        if self.data.costs.cost_model == 2:
             if self._costs_custom is not None:
+                self._costs_custom.data = self.data
                 return self._costs_custom
             raise ValueError("Custom costs model not initialised")
         # Probably overkill but makes typing happy
         raise ValueError("Unknown costs model")
 
     @costs.setter
-    def costs(self, value: CostsProtocol):
+    def costs(self, value: Model):
         self._costs_custom = value
 
     @property
     def models(self) -> tuple[Model, ...]:
         # At the moment, this property just returns models that implement the Model interface.
         # Eventually every Model will comply and then this method can be used as the caller/outputter!
-        return (self.water_use,)
+        return (
+            self.water_use,
+            self._costs_2015,
+            self.cs_fatigue,
+            self.cs_coil,
+            self.pfcoil,
+            self.vacuum,
+            self.vacuum_vessel,
+            self._costs_1990,
+            self.availability,
+            self.ife,
+            self.buildings,
+            self.power,
+            self.stellarator,
+            self.ccfe_hcpb,
+            self.fw,
+            self.dcll,
+            self.blanket_library,
+            self.cryostat,
+            self.sctfcoil,
+            self.copper_tf_coil,
+            self.cicc_sctfcoil,
+            self.croco_sctfcoil,
+            self.tfcoil,
+            self.build,
+            self.shield,
+            self.divertor,
+            self.structure,
+            self.physics,
+            self.pulse,
+            self.plasma_geom,
+            self.resistive_tf_coil,
+            self.plasma_confinement,
+            self.plasma_beta,
+            self.current_drive,
+            self.neutral_beam,
+            self.plasma_density_limit,
+            self.plasma_profile,
+            self.plasma_dia_current,
+            self.plasma_bootstrap_current,
+            self.plasma_exhaust,
+            self.plasma_current,
+            self.neoclassics,
+            self.plasma_inductance,
+            self.ne_profile,
+            self.te_profile,
+            self.plasma_fields,
+            self.sauter_bootstrap_current,
+            self.plasma_transition,
+            self.physics_detailed,
+            self.electron_cyclotron,
+            self.lower_hybrid,
+        )
 
     def setup_data_structure(self):
         # This Models class should be replaced with a dataclass so we can
         # iterate over the `fields`.
         # This can be a disgusting temporary measure :(
-        data = DataStructure()
         for model in self.models:
-            model.data = data
+            model.data = self.data
 
 
 # setup handlers for writing to terminal (on warnings+)
@@ -828,24 +829,3 @@ def setup_loggers(working_directory_log_path: Path | None = None):
         logging_file_input_location_handler.setLevel(logging.INFO)
         logging_file_input_location_handler.setFormatter(logging_formatter)
         logger.addHandler(logging_file_input_location_handler)
-
-
-def main(args: list[Any] | None = None):
-    """Run Process.
-
-    The args parameter is used to control command-line arguments when running
-    tests. Optional args can be supplied by different tests, which are then
-    used instead of command-line arguments by argparse. This allows testing of
-    different command-line arguments from the test suite.
-
-    Parameters
-    ----------
-    args :
-        Arguments to parse, defaults to None
-    """
-
-    Process(args)
-
-
-if __name__ == "__main__":
-    main()

@@ -7,6 +7,9 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from process.data_structure.physics_variables import DivertorNumberModels
+from process.models.physics.plasma_geometry import PlasmaShapeModelType
+
 
 @dataclass
 class PlasmaGeometry:
@@ -57,9 +60,8 @@ def plasma_geometry(
     PlasmaGeometry
         A dataclass containing the plasma elongation and the radial and vertical coordinates of the plasma.
     """
-
     # Original PROCESS double arc plasma shape
-    if i_plasma_shape == 0:
+    if i_plasma_shape == PlasmaShapeModelType.PROCESS_ORIGINAL:
         x1 = (2.0 * rmajor * (1.0 + triang) - rminor * (triang**2 + kappa**2 - 1.0)) / (
             2.0 * (1.0 + triang)
         )
@@ -76,7 +78,7 @@ def plasma_geometry(
         theta2 = np.arcsin((kappa * rminor) / r2)
         inang = 1.0 / r1
         outang = 1.5 / r2
-        if i_single_null == 0:
+        if i_single_null == DivertorNumberModels.DOUBLE_NULL:
             angs1 = np.linspace(
                 -(inang + theta1) + np.pi, (inang + theta1) + np.pi, 500, endpoint=True
             )
@@ -100,7 +102,7 @@ def plasma_geometry(
         return PlasmaGeometry(rs=rs, zs=zs, kappa=kappa)
 
     # Sauter plasma shape
-    if i_plasma_shape == 1:
+    if i_plasma_shape == PlasmaShapeModelType.SAUTER:
         x = np.linspace(-np.pi, np.pi, 256)
 
         # Sauter

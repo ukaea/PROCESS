@@ -25,6 +25,7 @@ nav:
           - Usage: development/git-usage.md
           - Pre-commit: development/pre-commit.md
           - Continuous Integration: development/ci-guide.md
+          - Versioning: development/versioning.md
       - Maintenance:
           - Testing: development/testing.md
           - Debugging: development/debugging.md
@@ -33,7 +34,6 @@ nav:
           - Python Optimisation and Numba: development/numba.md
       - Style:
           - Standards: development/standards.md
-              # - Versioning: development/versioning.md
   - Models:
       - Physics Models:
           - Plasma:
@@ -48,6 +48,7 @@ nav:
                   - Overview: physics-models/fusion_reactions/plasma_reactions.md
                   - Beam reactions: physics-models/fusion_reactions/beam_reactions.md
                   - Bosch-Hale Methods: physics-models/fusion_reactions/plasma_bosch_hale.md
+              - Magnetic Fields: physics-models/plasma_magnetic_fields.md
               - Beta Limit:
                   - Overview: physics-models/plasma_beta/plasma_beta.md
                   - Fast Alpha: physics-models/plasma_beta/plasma_alpha_beta_contribution.md
@@ -117,6 +118,9 @@ nav:
           - Plant Availability: eng-models/plant-availability.md
           - Power Requirements: eng-models/power-requirements.md
           - Vacuum Vessel: eng-models/vacuum-vessel.md
+          - Generic Engineering Methods:
+              - Pumping: eng-models/generic_methods/pumping.md
+              - Materials: eng-models/generic_methods/materials.md
       - Unique Models:
           - Water Use: unique-models/water_use.md
           - Power Plant Building Sizes: unique-models/buildings_sizes.md

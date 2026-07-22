@@ -4,15 +4,19 @@ Defines fixtures that will be shared across all test modules.
 """
 
 import os
+import pathlib
+import traceback
 import warnings
 
 import matplotlib as mpl
 import pytest
 from _pytest.fixtures import SubRequest
+from click.testing import CliRunner
 from system_check import system_compatible
 
 from process import main
 from process.core.log import logging_model_handler
+from process.core.model import DataStructure
 from process.main import Models
 
 
@@ -39,7 +43,8 @@ def pytest_addoption(parser):
         "--opt-params-only",
         action="store_true",
         default=False,
-        help="Only regression test optimisation parameters: useful for solver comparisons",
+        help="Only regression test optimisation parameters: useful for solver "
+        "comparisons",
     )
     parser.addoption(
         "--plotting-on",
@@ -112,8 +117,8 @@ def opt_params_only(request: SubRequest) -> bool:
 
 @pytest.fixture
 def skip_if_incompatible_system():
-    """Skip the test using this fixture if it is detcted that their system is incompatible
-    and may raise errors because of floating-point rounding error.
+    """Skip the test using this fixture if it is detected that their system is
+    incompatible and may raise errors because of floating-point rounding error.
     """
     if not system_compatible():
         pytest.skip(
@@ -122,7 +127,7 @@ def skip_if_incompatible_system():
         )
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session", autouse=True)  # noqa: RUF076
 def running_on_compatible_system_warning():
     """Check for an outdated system
 
@@ -132,7 +137,8 @@ def running_on_compatible_system_warning():
         return
     warnings.warn(
         """
-        \u001b[33m\033[1mYou are running the PROCESS test suite on an incompatible system.\033[0m
+        \u001b[33m\033[1mYou are running the PROCESS test suite on an incompatible
+         system.\033[0m
         This can cause floating point rounding errors in tests.
 
         Some unit tests may be skipped!
@@ -142,7 +148,7 @@ def running_on_compatible_system_warning():
     )
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session", autouse=True)  # noqa: RUF076
 def initialise_error_module():
     """pytest fixture to initialise the error module before tests run.
 
@@ -165,18 +171,18 @@ def reinitialise_error_module():
     logging_model_handler.clear_logs()
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True)  # noqa: RUF076
 def return_to_root():
     """Various parts of PROCESS change directories and do not always change back.
     This fixture ensures that, at the end of each test, the cwd is reset to what it
     was at the beginning of the test.
     """
-    cwd = os.getcwd()
+    cwd = pathlib.Path.cwd()
     yield
     os.chdir(cwd)
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True)  # noqa: RUF076
 def disable_package_logger(monkeypatch):
     """Various parts of PROCESS change directories and do not always change back.
     This fixture ensures that, at the end of each test, the cwd is reset to what it
@@ -185,7 +191,7 @@ def disable_package_logger(monkeypatch):
     monkeypatch.setattr(main, "PACKAGE_LOGGING", False)
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True)  # noqa: RUF076
 def _plot_show_and_close(request):
     """Fixture to show and close plots
 
@@ -193,7 +199,7 @@ def _plot_show_and_close(request):
     -----
     Does not do anything if testclass marked with 'classplot'
     """
-    import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt  # noqa:PLC0415
 
     cls = request.node.getparent(pytest.Class)
 
@@ -211,7 +217,7 @@ def _plot_show_and_close(request):
         plt.close()
 
 
-@pytest.fixture(scope="class", autouse=True)
+@pytest.fixture(scope="class", autouse=True)  # noqa: RUF076
 def _plot_show_and_close_class(request):
     """Fixture to show and close plots for marked classes
 
@@ -219,7 +225,7 @@ def _plot_show_and_close_class(request):
     -----
     Only shows and closes figures on classes marked with 'classplot'
     """
-    import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt  # noqa:PLC0415
 
     if "classplot" in request.keywords:
         yield
@@ -235,4 +241,20 @@ def _plot_show_and_close_class(request):
 
 @pytest.fixture
 def process_models():
-    return Models()
+    models = Models(DataStructure())
+    for model in models.models:
+        model.data = models.data
+    return models
+
+
+@pytest.fixture
+def cli_runner():
+    def _cli_runner(command, args: list[str] | None = None, exit_code=0):
+        result = CliRunner().invoke(command, args=args or [])
+
+        assert result.exit_code == exit_code, (
+            f"{result.exception} "
+            f"{''.join(traceback.format_exception(result.exc_info[1]))}"
+        )
+
+    return _cli_runner
