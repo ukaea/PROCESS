@@ -29,13 +29,10 @@ class SolverHandler:
 
     def run(self):
         """Run solver and retry if it fails in certain ways."""
-        # Initialise iteration variables and bounds in Fortran
         load_iteration_variables(self.data)
         load_scaled_bounds(self.data)
 
-        # Initialise iteration variables and bounds in Python: relies on Fortran
-        # iteration variables being defined above
-        # Trim maximum size arrays down to actually used size
+        # Initialise solver variables from numerics module
         n = self.data.numerics.nvar
         x = self.data.numerics.xcm[:n]
         bndl = self.data.numerics.itv_scaled_lower_bounds[:n]
@@ -100,7 +97,5 @@ class SolverHandler:
         Objective function value, solution vector and constraints vector.
         """
         self.data.numerics.norm_objf = self.solver.objf
-        # Slicing required due to Fortran arrays being maximum possible, rather
-        # than required, size
         self.data.numerics.xcm[: self.solver.x.shape[0]] = self.solver.x
         self.data.numerics.rcm[: self.solver.conf.shape[0]] = self.solver.conf

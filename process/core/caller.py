@@ -247,8 +247,7 @@ class Caller:
         """Call the physics and engineering models.
 
         This method is the principal caller of all the physics and
-        engineering models. Some are Fortran subroutines within modules, others
-        will be methods on Python model objects.
+        engineering models.
 
         Parameters
         ----------
