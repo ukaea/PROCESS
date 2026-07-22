@@ -110,7 +110,7 @@ boundu(59) = 0.9
 boundl(59) = 0.3
 
 ixc = 56 * itv_tdmptf Fast Discharge Time For TF Coil In Event Of Quench (S) (`Iteration Variable 56`)
-t_tf_superconductor_quench = 10.0
+t_tf_superconductor_quench = 35.0
 boundl(56) = 1
 boundu(56) = 50.
 
