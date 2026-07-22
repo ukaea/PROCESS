@@ -109,7 +109,7 @@ $$
 f_b = \frac{\Gamma_{\text{fusion}}}{\Gamma_{\text{fuel}}}
 $$
 
-where $\Gamma_{\text{fusion}}$ is the fusion rate in reactions per second $[\text{s}^{-1}]$, and $\Gamma_{\text{fuel}}$ is our fuelling rate into the vessel like is shown above also in $[\text{s}^{-1}]$.
+where $\Gamma_{\text{fusion}}$ is the fusion reaction rate per second $[\text{s}^{-1}]$, and $\Gamma_{\text{fuel}}$ is the fuel injection rate into the vacuum vessel in particles per second $[\text{s}^{-1}]$.
 
 -----------------
 
