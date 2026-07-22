@@ -15882,7 +15882,8 @@ def plot_tritium_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
 
     for i, recycling in enumerate(recycling_range):
         for j, fuelling in enumerate(fuelling_range):
-            tritium_flow[i, j] = PlasmaFuelling.calculate_plasma_tritium_flow_rate(
+            plasma_fuelling = PlasmaFuelling()
+            tritium_flow[i, j] = plasma_fuelling.calculate_plasma_tritium_flow_rate(
                 f_molflow_plasma_fuelling_tritium=mfile.get(
                     "f_molflow_plasma_fuelling_tritium", scan=scan
                 ),
@@ -16026,8 +16027,8 @@ def plot_alpha_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
                 fusrat_dt_total=fusion_dt,
                 fusrat_plasma_dhe3=mfile.get("fusrat_plasma_dhe3", scan=scan),
                 t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
-                nd_plasma_alphas_vol_avg=mfile.get(
-                    "nd_plasma_alphas_vol_avg", scan=scan
+                nd_plasma_alphas_thermal_vol_avg=mfile.get(
+                    "nd_plasma_alphas_thermal_vol_avg", scan=scan
                 ),
                 vol_plasma=mfile.get("vol_plasma", scan=scan),
                 f_t_alpha_energy_confinement=f_t_alpha_energy_confinement,
