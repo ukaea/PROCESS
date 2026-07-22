@@ -106,7 +106,10 @@ class BuildData:
     """upper first wall thickness (m)"""
 
     dr_bore: float = 1.42
-    """central solenoid inboard radius (m) (`iteration variable 29`)"""
+    """Machine centre bore gap inboard radius (m) (`iteration variable 29`)"""
+
+    dr_cs_bore: float = 1.42
+    """Central solenoid bore radius [m]"""
 
     f_z_cryostat: float = 4.268
     """cryostat lid height scaling factor (tokamaks)"""

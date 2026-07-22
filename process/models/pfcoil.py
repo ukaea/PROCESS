@@ -182,7 +182,7 @@ class PFCoil(Model):
             z_tf_inside_half=self.data.build.z_tf_inside_half,
             f_z_cs_tf_internal=self.data.pf_coil.f_z_cs_tf_internal,
             dr_cs=self.data.build.dr_cs,
-            dr_bore=self.data.build.dr_bore,
+            dr_cs_bore=self.data.build.dr_cs_bore,
         )
 
         self.data.pf_coil.z_cs_upper = self.data.pf_coil.z_pf_coil_upper[
@@ -649,9 +649,9 @@ class PFCoil(Model):
                 * np.pi
                 * np.pi
                 * (
-                    (self.data.build.dr_bore * self.data.build.dr_bore)
+                    (self.data.build.dr_cs_bore * self.data.build.dr_cs_bore)
                     + (self.data.build.dr_cs * self.data.build.dr_cs) / 6.0e0
-                    + (self.data.build.dr_cs * self.data.build.dr_bore) / 2.0e0
+                    + (self.data.build.dr_cs * self.data.build.dr_cs_bore) / 2.0e0
                 )
                 / (self.data.pf_coil.dz_cs_full)
             )
@@ -1050,7 +1050,7 @@ class PFCoil(Model):
                 c += 1
 
         self.data.pf_coil.itr_sum += (
-            (self.data.build.dr_bore + 0.5 * self.data.build.dr_cs)
+            (self.data.build.dr_cs_bore + 0.5 * self.data.build.dr_cs)
             * self.data.pf_coil.n_pf_coil_turns[self.data.pf_coil.n_cs_pf_coils - 1]
             * self.data.pf_coil.c_pf_coil_turn_peak_input[
                 self.data.pf_coil.n_cs_pf_coils - 1
@@ -1543,14 +1543,14 @@ class PFCoil(Model):
                         if self.data.pf_coil.r_pf_coil_middle_group_array[
                             ii, ij
                         ] <= (  # Inboard TF coil collision
-                            self.data.build.dr_bore
+                            self.data.build.dr_cs_bore
                             + self.data.build.dr_cs
                             + self.data.build.dr_cs_precomp
                             + self.data.build.dr_cs_tf_gap
                             + self.data.build.dr_tf_inboard
                             + self.data.pf_coil.r_pf_coil_middle[i]
                         ) and self.data.pf_coil.r_pf_coil_middle_group_array[ii, ij] >= (
-                            self.data.build.dr_bore
+                            self.data.build.dr_cs_bore
                             + self.data.build.dr_cs
                             + self.data.build.dr_cs_precomp
                             + self.data.build.dr_cs_tf_gap
@@ -3009,7 +3009,7 @@ class CSCoil(Model):
         z_tf_inside_half: float,
         f_z_cs_tf_internal: float,
         dr_cs: float,
-        dr_bore: float,
+        dr_cs_bore: float,
     ) -> CSGeometry:
         """Calculate the geometry of the Central Solenoid (CS) coil.
 
@@ -3021,8 +3021,8 @@ class CSCoil(Model):
             Fractional height of CS relative to TF bore
         dr_cs : float
             Thickness of the CS coil (m)
-        dr_bore : float
-            Radius of the TF bore (m)
+        dr_cs_bore : float
+            Radius of the CS bore (m)
 
         Returns
         -------
@@ -3030,7 +3030,7 @@ class CSCoil(Model):
             Data class containing the geometry parameters of the CS coil
         """
         # Central Solenoid mean radius
-        r_cs_middle = dr_bore + (0.5e0 * dr_cs)
+        r_cs_middle = dr_cs_bore + (0.5e0 * dr_cs)
 
         # Scale the CS height relative to TF bore height
         z_cs_half = z_tf_inside_half * f_z_cs_tf_internal
@@ -3234,7 +3234,7 @@ class CSCoil(Model):
             z_tf_inside_half=self.data.build.z_tf_inside_half,
             f_z_cs_tf_internal=self.data.pf_coil.f_z_cs_tf_internal,
             dr_cs=self.data.build.dr_cs,
-            dr_bore=self.data.build.dr_bore,
+            dr_cs_bore=self.data.build.dr_cs_bore,
         )
 
         self.data.pf_coil.z_cs_upper = self.data.pf_coil.z_pf_coil_upper[
@@ -3870,8 +3870,8 @@ class CSCoil(Model):
         op.ovarre(
             self.outfile,
             "Radial thickness of the CS bore [m]",
-            "(dr_bore)",
-            self.data.build.dr_bore,
+            "(dr_cs_bore)",
+            self.data.build.dr_cs_bore,
             "OP ",
         )
         op.oblnkl(self.outfile)

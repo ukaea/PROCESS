@@ -2048,7 +2048,7 @@ def test_brookscoil(pfcoil):
 
 
 @pytest.mark.parametrize(
-    ("z_tf_inside_half", "f_z_cs_tf_internal", "dr_cs", "dr_bore", "expected"),
+    ("z_tf_inside_half", "f_z_cs_tf_internal", "dr_cs", "dr_cs_bore", "expected"),
     [
         # Typical values
         (
@@ -2101,13 +2101,13 @@ def test_brookscoil(pfcoil):
     ],
 )
 def test_calculate_cs_geometry(
-    cs_coil, z_tf_inside_half, f_z_cs_tf_internal, dr_cs, dr_bore, expected
+    cs_coil, z_tf_inside_half, f_z_cs_tf_internal, dr_cs, dr_cs_bore, expected
 ):
     result = cs_coil.calculate_cs_geometry(
         z_tf_inside_half=z_tf_inside_half,
         f_z_cs_tf_internal=f_z_cs_tf_internal,
         dr_cs=dr_cs,
-        dr_bore=dr_bore,
+        dr_cs_bore=dr_cs_bore,
     )
     for field in fields(result):
         assert pytest.approx(getattr(result, field.name)) == getattr(
@@ -2436,7 +2436,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfcoil.data.build, "dr_tf_outboard", 1.4)
     monkeypatch.setattr(pfcoil.data.build, "dr_tf_inboard", 1.4)
     monkeypatch.setattr(pfcoil.data.build, "r_tf_outboard_mid", 1.66e1)
-    monkeypatch.setattr(pfcoil.data.build, "dr_bore", 2.15)
+    monkeypatch.setattr(pfcoil.data.build, "dr_cs_bore", 2.15)
     monkeypatch.setattr(pfcoil.data.fwbs, "den_steel", 7.8e3)
     monkeypatch.setattr(pfcoil.data.pf_coil, "dr_pf_cs_middle_offset", 0.0)
     monkeypatch.setattr(pfcoil.data.pf_coil, "m_pf_coil_structure_total", 0.0)
@@ -2584,7 +2584,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     monkeypatch.setattr(cs_coil.data.build, "z_tf_inside_half", 8.864)
     monkeypatch.setattr(cs_coil.data.build, "dr_cs", 6.510e-1)
     monkeypatch.setattr(cs_coil.data.fwbs, "den_steel", 7.8e3)
-    monkeypatch.setattr(cs_coil.data.build, "dr_bore", 2.6745)
+    monkeypatch.setattr(cs_coil.data.build, "dr_cs_bore", 2.6745)
     monkeypatch.setattr(cs_coil.data.pf_coil, "n_cs_pf_coils", 5)
     monkeypatch.setattr(cs_coil.data.pf_coil, "b_cs_peak_flat_top_end", 1.4e1)
     monkeypatch.setattr(cs_coil.data.pf_coil, "j_cs_flat_top_end", 1.693e7)
