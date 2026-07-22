@@ -330,8 +330,8 @@ beta_norm_max = 3.0
 * JUSTIFICATION: Enforces the limit of beta limit  (icc=24)
 
 fkzohm = 1.0245
-* DESCRIPTION:   Zohm elongation scaling adjustment factor (ishape=2; 3)
-* JUSTIFICATION: Not used in the ishape=10 calculation (not used in this file???)
+* DESCRIPTION:   Zohm elongation scaling adjustment factor (i_plasma_geometry=2; 3)
+* JUSTIFICATION: Not used in the i_plasma_geometry=10 calculation (not used in this file???)
 
 ejima_coeff = 0.2
 * DESCRIPTION:   Ejima coefficient for resistive startup v-s formula
@@ -847,24 +847,24 @@ i_cs_superconductor = 5
 * JUSTIFICATION: Design choice, superconducting CS coil
 
 t_crack_vertical = 0.65D-3
-* DESCRIPTION:   Inital vertical crack size (m)
-* JUSTIFICATION: Intial crack area 1 mm2
+* DESCRIPTION:   Initial vertical crack size (m)
+* JUSTIFICATION: Initial crack area 1 mm2
 
 sf_vertical_crack = 1.0
-* DESCRIPTION:   Inital vertical crack size (m)
+* DESCRIPTION:   Initial vertical crack size (m)
 * JUSTIFICATION: No safety factor 
 
 sf_radial_crack = 1.0
-* DESCRIPTION:   Inital vertical crack size (m)
+* DESCRIPTION:   Initial vertical crack size (m)
 * JUSTIFICATION: No safety factor 
 
 sf_fast_fracture = 1.0
-* DESCRIPTION:   Inital vertical crack size (m)
+* DESCRIPTION:   Initial vertical crack size (m)
 * JUSTIFICATION: No safety factor 
 
 residual_sig_hoop = 1.50e8
-* DESCRIPTION:   Inital vertical crack size (m)
-* JUSTIFICATION: Intial crack area 1 mm2
+* DESCRIPTION:   Initial vertical crack size (m)
+* JUSTIFICATION: Initial crack area 1 mm2
 
 paris_coefficient = 3.86e-11
 * DESCRIPTION:   Paris equation material coefficient (-)
@@ -875,7 +875,7 @@ paris_power_law = 2.394
 * JUSTIFICATION: 316LN (ITER DDD TF p. 83)
 
 walker_coefficient = 0.5
-* DESCRIPTION:   walker coefficent (-)
+* DESCRIPTION:   walker coefficient (-)
 * JUSTIFICATION: 
 
 fracture_toughness = 150.0
@@ -969,7 +969,7 @@ inuclear = 1
 
 qnuc = 1.292E4
 * DESCRIPTION:   Nuclear heating of cryogenic components
-* JUSTIFICATION: Intial value chosen to help convergence
+* JUSTIFICATION: Initial value chosen to help convergence
 
 v_tf_coil_dump_quench_max_kv    = 10.00 
 * DESCRIPTION:   Max voltage across tf coil during quench (kv)

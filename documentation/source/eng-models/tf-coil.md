@@ -735,7 +735,7 @@ selected with the `i_tf_bucking` integer switch.
     moment when no current flows in the CS coil. The CS coil is therefore
     represented as an additional stress layer with `e.m.` no body forces.
     The layer structural properties are defined using using similar smearing/
-    unsmeating procedure as the TF coil, as detailed in issue [4]. The maximum
+    unsmearing procedure as the TF coil, as detailed in issue [4]. The maximum
     between the CS stress from the this model and the on calculated in the
     `pfcoil` module is taken as the CS coil stress limit (constraint 72). A fast
     version, neglecting the interface layer properties is implemented 
@@ -1050,7 +1050,7 @@ $$
     **Smeared normal stress:** in the radial, toroidal and vertical directions.
     Vertical stress is expected to vary in the condictor layer but to remain
     constant in each other layers (no body forces). Continuous radial stress is
-    expected as the layers are assumed to be in contact while discontinous
+    expected as the layers are assumed to be in contact while discontinuous
     toroidal stress is expexted between layer if the toroilal young modulus are
     different.
 - <p style='text-align: justify;'>

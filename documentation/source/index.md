@@ -58,7 +58,7 @@ different well-established source libraries.
 A great deal of effort was expended upon 
 [UKAEA](https://www.gov.uk/government/organisations/uk-atomic-energy-authority) on 
 the code’s arrival from ORNL in the early 1990s to upgrade and extend the code, 
-including the addition of machines based on the stellerator, reversed field pinch 
+including the addition of machines based on the stellarator, reversed field pinch 
 and inertial confinement concepts.
 
 PROCESS is actively being developed. The documentation is updated in parallel with the code 

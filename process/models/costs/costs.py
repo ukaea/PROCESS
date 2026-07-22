@@ -1142,7 +1142,7 @@ class Costs(Model):
         The first wall cost is scaled linearly with surface area from TFCX.
         If ifueltyp = 1, the first wall cost is treated as a fuel cost,
         rather than as a capital cost.
-        If ifueltyp = 2, inital first wall is included as a capital cost,
+        If ifueltyp = 2, initial first wall is included as a capital cost,
         and the replacement first wall cost is treated as a fuel costs.
         """
         cmlsa = [0.5000e0, 0.7500e0, 0.8750e0, 1.0000e0]

@@ -1203,7 +1203,7 @@ i_tf_tresca = 0
 
 *n_tf_graded_layers
 * DESCRIPTION:   Number of layers of different stress properties in the WP. If n_tf_graded_layers > 1,
-* a graded coil is condidered. (default = 100)
+* a graded coil is considered. (default = 100)
 * JUSTIFICATION: Not set, assuming default
 
 *n_rad_per_layer
@@ -1455,7 +1455,7 @@ tftmp = 20.0
 
 * flu_tf_neutron_fast_max = 
 * DESCRIPTION:   max fast neutron fluence on TF coil (n/m2) (`blktmodel>0`) (`constraint equation 53`)
-* Also used for demontable magnets (itart = 1) and superconducting coils (i_tf_sup = 1)
+* Also used for demountable magnets (itart = 1) and superconducting coils (i_tf_sup = 1)
 * To set the CP lifetime (`constraint equation 85`) 
 * JUSTIFICATION: Not set, not using icc = 53
 
@@ -2214,7 +2214,7 @@ i_blkt_inboard = 0
 * JUSTIFICATION: Not yet set.
 
 *i_blkt_module_segmentation = 
-* DESCRIPTION:   Switch for Multi Module Segment (MMS) or Single Modle Segment (SMS) (default = 0)
+* DESCRIPTION:   Switch for Multi Module Segment (MMS) or Single Module Segment (SMS) (default = 0)
 * =0    MMS
 * =1    SMS
 * JUSTIFICATION: Not yet set.
@@ -2267,7 +2267,7 @@ inuclear = 0
 *-----------*
 
 *breeder_multiplier = 
-* DESCRIPTION: combined breeder/multipler fraction of blanket by volume
+* DESCRIPTION: combined breeder/multiplier fraction of blanket by volume
 * JUSTIFICATION: 
 
 *breeder_f = 

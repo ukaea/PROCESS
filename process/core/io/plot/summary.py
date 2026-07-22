@@ -4522,7 +4522,7 @@ def profiles_with_pedestal(mfile, scan: int):
     te0 = mfile.get("temp_plasma_electron_on_axis_kev", scan=scan)
 
     if i_plasma_pedestal == 0:
-        # Intialise the radius
+        # Initialise the radius
 
         # The density profile
         ne = nd_plasma_electron_on_axis * (1 - rho**2) ** alphan

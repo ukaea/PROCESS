@@ -472,7 +472,7 @@ class Stellarator(Model):
             _,
         ) = self.sc_tf_coil_nuclear_heating_iter90()
 
-        # blktlife calculation left entierly to availability
+        # blktlife calculation left entirely to availability
         # Cannot find calculation for vvhemax in CCFE blanket
 
     def st_fwbs(self, output: bool):

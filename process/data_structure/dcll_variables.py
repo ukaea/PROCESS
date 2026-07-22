@@ -138,10 +138,10 @@ class DCLLData:
     """BZ masses by composition [kg]"""
 
     wht_bw_stl: float = 0.0
-    """Backwall masses by composition [kg]"""
+    """Back wall masses by composition [kg]"""
 
     wht_bw_cool: float = 0.0
-    """Backwall masses by composition [kg]"""
+    """Back wall masses by composition [kg]"""
 
     wht_mfbss_stl: float = 0.0
     """MF/BSS masses by composition [kg]"""

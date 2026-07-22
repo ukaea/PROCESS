@@ -2275,7 +2275,7 @@ class Build(Model):
 
             radius += self.data.build.dr_shld_thermal_outboard
             radial_build_data.append([
-                "Ouboard thermal shield",
+                "Outboard thermal shield",
                 "dr_shld_thermal_outboard",
                 self.data.build.dr_shld_thermal_outboard,
                 radius,

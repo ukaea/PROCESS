@@ -1567,7 +1567,7 @@ class LowerHybrid(Model):
 
         Notes
         -----
-        - This forumla was originally in the Oak RidgeSystems Code, attributed to
+        - This formula was originally in the Oak RidgeSystems Code, attributed to
           Fenstermacher and is used in the AEA FUS 172 report.
 
         References

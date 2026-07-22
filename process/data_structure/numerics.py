@@ -16,7 +16,7 @@ class PROCESSRunMode(IntEnum):
     """In this mode, the code will not perform any optimisation, and will instead
     simply evaluate the constraints for the given input parameters, which is useful
     for testing and for evaluating the performance of a given design point without
-    trying to optimise it. Internally, PROCESS uses `fsolve` (a Newton-Krylov/hybrid
+    trying to optimise it. Internally, PROCESS uses `fsolve` (a Newton-Krylov/hybrd
     root-finding method from `scipy.optimize`) to seek a *consistent* solution by
     varying a subset of the iteration variables until the consistency constraints
     (equality constraints whose residuals must be driven to zero) are simultaneously

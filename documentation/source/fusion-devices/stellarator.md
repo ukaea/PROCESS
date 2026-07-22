@@ -4,7 +4,7 @@ The code has the ability to perform calculations based on the physics and engine
 
 The model is largely based on W7-X and the HELIAS 5-B stellarator power plant design[^1] (Figure 1) and related modelling that has been performed by IPP Greifswald[^2] [^3] [^4] [^5]
 
-![alt text](../images/helias5b.png "Stellerator HELIAS 5-B power plant design")
+![alt text](../images/helias5b.png "Stellarator HELIAS 5-B power plant design")
 
 *Figure 1: Fusion power core of the HELIAS 5-B conceptual power plant design*[^1]
 

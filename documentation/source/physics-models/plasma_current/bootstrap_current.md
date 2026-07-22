@@ -681,7 +681,7 @@ $$
 
 Is selected by setting `i_bootstrap_current = 11`
 
-This scaling has the $q$ profile dependance removed to obtain a scaling formula with much more flexible variables than that by a single profile factor for internal current profile.
+This scaling has the $q$ profile dependence removed to obtain a scaling formula with much more flexible variables than that by a single profile factor for internal current profile.
 
 $$
 C_{\text{BS}} = 0.382 \epsilon^{-0.242} \alpha_{\text{p}}^{0.974} \alpha_{\text{T}}^{-0.416} Z_{\text{eff}}^{0.178}

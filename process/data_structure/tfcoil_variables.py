@@ -790,7 +790,7 @@ class TFData:
 
     # New TF shape:  Horizontal and vertical radii of inside edge of TF coil
     # Arcs are numbered clockwise:
-    # 1=upper inboard, 2=upper outboard, 3=lower ouboard, 4=lower inboard
+    # 1=upper inboard, 2=upper outboard, 3=lower outboard, 4=lower inboard
 
     tfa: list[float] = field(default_factory=lambda: np.zeros(4))
     """Horizontal radius of inside edge of TF coil (m)"""
@@ -855,7 +855,7 @@ class TFData:
     """Computed centrepost average temperature (K) (for consistency)"""
 
     temp_tf_legs_outboard: float = -1.0
-    """Average temperature of the TF outboard legs [K]. If `temp_tf_legs_outboard=-1.0`, the ouboard
+    """Average temperature of the TF outboard legs [K]. If `temp_tf_legs_outboard=-1.0`, the outboard
     legs and CP temperatures are the same. Fixed for now, should use a contraints eq like temp_cp_average
     """
 

@@ -1714,7 +1714,7 @@ class TFCoil(Model):
         # Rem : this force does not depends on the TF shape or the presence of
         #        sliding joints, the in/outboard vertical tension repartition is
         # -#
-        # Ouboard leg WP plasma side radius without ground insulation/insertion gat [m]
+        # Outboard leg WP plasma side radius without ground insulation/insertion gat [m]
         if i_tf_sup == 1:
             r_tf_wp_outboard_inner_conductor = (
                 r_tf_outboard_in
@@ -1814,7 +1814,7 @@ class TFCoil(Model):
             # Inboard vertical tension [N]
             vforce = f_vforce_inboard * vforce_tot
 
-            # Ouboard vertical tension [N]
+            # Outboard vertical tension [N]
             vforce_outboard = vforce * ((1.0e0 / f_vforce_inboard) - 1.0e0)
 
         # Total vertical force
@@ -2901,7 +2901,7 @@ class TFCoil(Model):
             r_wp_inner_eff = np.double(r_tf_wp_inboard_inner)
             r_wp_outer_eff = np.double(r_tf_wp_inboard_outer)
 
-        # Thickness of the layer representing the WP in stress calcualtions [m]
+        # Thickness of the layer representing the WP in stress calculations [m]
         dr_tf_wp_eff = r_wp_outer_eff - r_wp_outer_eff
 
         # Thickness of WP with homogeneous stress property [m]
@@ -3916,7 +3916,7 @@ def extended_plane_strain(
     # Lame parameters and strains vector at outer radius
     # of each layer
 
-    # The stress calcualtion differential equations is analytically sloved
+    # The stress calculation differential equations is analytically sloved
     # The final solution is given by the layer boundary conditions on
     # radial stress and displacement between layers solved
     # The problem is set as aa.cc = bb, cc being the constant we search

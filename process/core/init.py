@@ -580,7 +580,7 @@ def check_process(inputs, data):  # noqa: ARG001
             data.pf_coil.i_pf_location[1] = PFLocationTypes.OUTSIDE_TF
             data.pf_coil.i_pf_location[2] = PFLocationTypes.OUTSIDE_TF
 
-        # Water cooled copper magnets initalisation / checks
+        # Water cooled copper magnets initialisation / checks
         if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             # Check if the initial centrepost coolant loop adapted to the
             # magnet technology
@@ -617,7 +617,7 @@ def check_process(inputs, data):  # noqa: ARG001
                 stacklevel=2,
             )
 
-        # Aluminium magnets initalisation / checks
+        # Aluminium magnets initialisation / checks
         # Initialize the CP conductor temperature to cryogenic temperature for
         # cryo-al magnets (20 K)
         elif data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:

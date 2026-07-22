@@ -512,7 +512,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             # There is no inner blanket for TART design [m]
             th_blanket_av = self.data.build.dr_blkt_outboard
 
-            # The CP shield in considered in a separate calcualtion [m]
+            # The CP shield in considered in a separate calculation [m]
             th_shield_av = self.data.build.dr_shld_outboard
 
         else:
@@ -751,7 +751,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         # Calculation of average blanket/shield thickness [m]
         if itart == 1:
-            # The CP shield in considered in a separate calcualtion
+            # The CP shield in considered in a separate calculation
             dr_shld_average = dr_shld_outboard
         else:
             # Average neutronic shield thickness [m]
@@ -874,7 +874,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 (self.data.primary_pumping.gamma_he - 1)
                 / self.data.primary_pumping.gamma_he
             )
-            # N.B. Currenlty i_p_coolant_pumping==3 uses seperate variables found in
+            # N.B. Currenlty i_p_coolant_pumping==3 uses separate variables found in
             # primary_pumping_variables rather than self.data.fwbs.
             # The pressure (p_he) is assumed to be the pressure at the
             # blanket inlet/pump oulet.
@@ -1084,8 +1084,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
     def st_tf_centrepost_fast_neut_flux(self, p_neutron_total_mw, sh_width, rmajor):
         """
         Routine calculating the fast neutron (E > 0.1 MeV) flux reaching the TF
-        at the centerpost. These calcualtion are made from a CP only MCNP fit
-        with a variable tungsten carbyde shield with 13% water cooling. The
+        at the centerpost. These calculation are made from a CP only MCNP fit
+        with a variable tungsten carbide shield with 13% water cooling. The
         TF size is kept constant in the MCNP runs in such a way tha it increases
         size.
         This subroutine uses an shielding length per decade (/10 drop in flux)
@@ -1190,7 +1190,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Aluminium CP
         # ------------
         # From Pfus = 1 GW ST MCNP neutronic calculations assuming
-        # Tungsten carbyde with 13% water cooling fraction
+        # Tungsten carbide with 13% water cooling fraction
         if self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             pnuc_cp_tf = (pneut / 800) * np.exp(3.882 - 16.69 * sh_width_eff)
 
@@ -1241,14 +1241,14 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             )
 
             # Nuclear power density deposited in the
-            # tungsten carbyde shield by photons [MW]
+            # tungsten carbide shield by photons [MW]
             pnuc_cp_sh_gam = sh_width_eff * (
                 596 * np.exp(-4.130 * sh_width_eff)
                 + 90.586 * np.exp(0.6837 * sh_width_eff)
             )
 
             # Nuclear power density deposited in the
-            # tungsten carbyde shield by neutrons [MW]
+            # tungsten carbide shield by neutrons [MW]
             pnuc_cp_sh_n = sh_width_eff * (
                 202.10 * np.exp(-10.533 * sh_width_eff)
                 + 80.510 * np.exp(-0.9801 * sh_width_eff)

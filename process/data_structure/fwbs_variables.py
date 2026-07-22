@@ -543,7 +543,7 @@ class FWBSData:
     """
 
     i_blkt_module_segmentation: int = 0
-    """Switch for Multi Module Segment (MMS) or Single Modle Segment (SMS)
+    """Switch for Multi Module Segment (MMS) or Single Module Segment (SMS)
     - =0    MMS
     - =1    SMS
     """
@@ -612,7 +612,7 @@ class FWBSData:
     """Hartmann number"""
 
     b_mag_blkt: list[float] = field(default_factory=lambda: [5.0, 5.0])
-    """Toroidal Magnetic feild strength for IB/OB blanket [T]"""
+    """Toroidal Magnetic field strength for IB/OB blanket [T]"""
 
     etaiso_liq: float = 0.85
     """Isentropic efficiency of blanket liquid breeder/coolant pumps"""
