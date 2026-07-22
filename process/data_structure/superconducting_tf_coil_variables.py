@@ -113,11 +113,11 @@ class SuperconductingTFData:
     tan_theta_coil: float = 0.0
     """Tan half toroidal angular extent of a single TF coil inboard leg"""
 
-    t_conductor_radial: float = 0.0
-    """Conductor area radial and toroidal dimension (integer turn only) [m]"""
+    dr_tf_turn_conduit_full: float = 0.0
+    """Radial thickness of the full conduit around the cable space (integer turn only) [m]"""
 
-    t_conductor_toroidal: float = 0.0
-    """Conductor area radial and toroidal dimension (integer turn only) [m]"""
+    dx_tf_turn_conduit_full_toroidal: float = 0.0
+    """Toroidal thickness of the full conduit around the cable space (integer turn only) [m]"""
 
     dr_tf_turn_cable_space: float = 0.0
     """Cable area radial and toroidal dimension (integer turn only) [m]"""
@@ -246,31 +246,27 @@ class SuperconductingTFData:
     a_tf_croco_strand: float = 0.0
     """Total area of a CroCo strand (m²)"""
 
-    # croco_strand
-
-    tf_croco_strand_area: float = 0.0
     cur_tf_turn_croco_strand_critical: float = 0.0
     """Critical current in the TF turn CroCo strand (A)"""
 
-    # conductor
+    a_tf_turn_croco_cable_space_copper: float = 0.0
+    """Area of the copper in the CroCo cable space of the TF turn (includes tapes,
+    outer tube and central copper) (m²)"""
 
-    a_tf_turn_croco_cable_space_copper: float = None
-    conductor_copper_fraction: float = None
-    a_tf_turn_croco_copper_bar: float = None
+    a_tf_turn_copper_total: float = 0.0
+    """Area of all copper in the TF turn [m²]"""
+
+    f_a_tf_turn_copper: float = 0.0
+    """Fraction of the TF turn area that is copper"""
+
+    a_tf_turn_croco_copper_bar: float = 0.0
     """Area of the central copper strand in the CroCo TF turn [m²]"""
-    a_tf_turn_croco_hastelloy: float = None
-    conductor_hastelloy_fraction: float = None
-    conductor_helium_area: float = None
-    conductor_helium_fraction: float = None
-    conductor_solder_area: float = None
-    conductor_solder_fraction: float = None
-    conductor_jacket_area: float = None
-    conductor_jacket_fraction: float = None
-    conductor_rebco_area: float = None
-    conductor_rebco_fraction: float = None
-    conductor_critical_current: float = None
-    conductor_area: float = None
-    """Area of cable space inside jacket"""
+
+    f_a_tf_turn_superconductor: float = 0.0
+    """Fraction of the TF turn area that is superconducting material"""
+
+    a_tf_turn_croco_hastelloy: float = 0.0
+    """Area of the Hastelloy in the CroCo cable space of the TF turn (includes tapes and outer tube) (m²)"""
 
     t1: float = 0.0
 

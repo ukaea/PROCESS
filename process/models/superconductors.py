@@ -814,34 +814,34 @@ def hijc_rebco(
     # finding A(T); constants based on a Newton polynomial fit to pubished data
     a_t = a_0 + (u * temp_conductor**2) + (v * temp_conductor)
 
-    # Critical current density (A/m2)
+    # Critical current
     # In the original formula bcrit must be > bmax to prevent NaNs.
     # However, negative jcrit is permissible (I think).
     # So when bcrit < bmax, I reverse the sign of the bracket,
     # giving a negative but real value of jcrit.
 
     if b_critical > b_conductor:
-        j_critical = (
+        cur_critical = (
             (a_t / b_conductor)
             * b_critical**b
             * (b_conductor / b_critical) ** p
             * (1 - b_conductor / b_critical) ** q
         )
     else:
-        j_critical = (
+        cur_critical = (
             (a_t / b_conductor)
             * b_critical**b
             * (b_conductor / b_critical) ** p
             * (b_conductor / b_critical - 1) ** q
         )
 
-    # Jc times HTS area: default area is width 4mm times HTS layer thickness 1 um,
+    # Critical current times HTS area: default area is width 4mm times HTS layer thickness 1 um,
     # divided by the tape area to provide engineering Jc per tape,!
     # A scaling factor of 0.4 used to be applied below to assume the difference
     # between tape stacks and CORC cable layouts.
 
     j_critical = (
-        j_critical
+        cur_critical
         * (dr_hts_tape * dx_hts_tape_rebco)
         / (dr_hts_tape * dx_hts_tape_total)
     )

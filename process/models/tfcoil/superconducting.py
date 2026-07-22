@@ -17,6 +17,7 @@ from process.models.superconductors import (
     N_CROCO_STRANDS_TURN,
     SuperconductorMaterial,
     SuperconductorModel,
+    SuperconductorShape,
     calculate_croco_cable_geometry,
 )
 from process.models.tfcoil import quench
@@ -79,7 +80,7 @@ class SuperconductingTFWPShapeType(IntEnum):
         return self.name.title().replace("_", " ")
 
 
-@dataclass
+@dataclass(slots=True)
 class TFWPGeometry:
     """Data class for storing the geometry of the TF coil winding pack and
     ground insulation.
@@ -98,7 +99,7 @@ class TFWPGeometry:
     a_tf_wp_ground_insulation: float
 
 
-@dataclass
+@dataclass(slots=True)
 class TFSuperconductorLimits:
     j_tf_wp_critical: float
     j_superconductor_critical: float
@@ -459,9 +460,48 @@ class SuperconductingTFCoil(TFCoil):
 
         # WP material fraction
         po.osubhd(self.outfile, "TF winding pack (WP) material area/fractions:")
+
         po.ovarre(
             self.outfile,
-            "Steel WP cross-section (total) (m²)",
+            "Area of all turn insulation in WP [m²]",
+            "(a_tf_coil_wp_turn_insulation)",
+            self.data.tfcoil.a_tf_coil_wp_turn_insulation,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total insulation area in TF coil (turn and WP) [m²]",
+            "(a_tf_coil_inboard_insulation)",
+            self.data.superconducting_tfcoil.a_tf_coil_inboard_insulation,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total steel area in inboard TF coil (turn and case) [m²]",
+            "(a_tf_coil_inboard_steel)",
+            self.data.superconducting_tfcoil.a_tf_coil_inboard_steel,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total conductor area in WP [m²]",
+            "(a_tf_wp_conductor)",
+            self.data.tfcoil.a_tf_wp_conductor,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total additional void area in WP [m²]",
+            "(a_tf_wp_extra_void)",
+            self.data.tfcoil.a_tf_wp_extra_void,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Area of all coolant channels in WP [m²]",
+            "(a_tf_wp_coolant_channels)",
+            self.data.tfcoil.a_tf_wp_coolant_channels,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Steel WP cross-section (total) [m²]",
             "(a_tf_wp_steel*n_tf_coils)",
             self.data.tfcoil.a_tf_wp_steel * self.data.tfcoil.n_tf_coils,
         )
@@ -502,9 +542,9 @@ class SuperconductingTFCoil(TFCoil):
             self.data.tfcoil.i_tf_turns_integer,
         )
         if self.data.tfcoil.i_tf_turns_integer == 0:
-            po.ocmmnt(self.outfile, "  Non-integer number of turns")
+            po.ocmmnt(self.outfile, "->  Non-integer number of turns")
         else:
-            po.ocmmnt(self.outfile, "  Integer number of turns")
+            po.ocmmnt(self.outfile, "->  Integer number of turns")
 
         po.ovarre(
             self.outfile,
@@ -545,15 +585,15 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Radial width of conductor (m)",
-                "(t_conductor_radial)",
-                d_sc_tf.t_conductor_radial,
+                "(dr_tf_turn_conduit_full)",
+                self.data.superconducting_tfcoil.dr_tf_turn_conduit_full,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Toroidal width of conductor (m)",
-                "(t_conductor_toroidal)",
-                d_sc_tf.t_conductor_toroidal,
+                "(dx_tf_turn_conduit_full_toroidal)",
+                self.data.superconducting_tfcoil.dx_tf_turn_conduit_full_toroidal,
                 "OP ",
             )
             po.ovarre(
@@ -584,14 +624,14 @@ class SuperconductingTFCoil(TFCoil):
             )
             po.ovarre(
                 self.outfile,
-                "Width of conductor (square) (m)",
-                "(t_conductor)",
-                self.data.tfcoil.t_conductor,
+                "Width of conduit surrounding cable space (square) (m)",
+                "(dx_tf_turn_conduit_full_average)",
+                self.data.tfcoil.dx_tf_turn_conduit_full_average,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Width of space inside conductor (m)",
+                "Width of cable space inside conduit (m)",
                 "(dx_tf_turn_cable_space_average)",
                 d_sc_tf.dx_tf_turn_cable_space_average,
                 "OP ",
@@ -615,11 +655,38 @@ class SuperconductingTFCoil(TFCoil):
             "(dx_tf_turn_insulation)",
             self.data.tfcoil.dx_tf_turn_insulation,
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "TF coil turn area (m²)",
+            "TF coil turn area [m²]",
             "(a_tf_turn)",
             self.data.tfcoil.a_tf_turn,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total area of available cable space [m²]",
+            "(a_tf_turn_cable_space_no_void)",
+            self.data.tfcoil.a_tf_turn_cable_space_no_void,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "True area of turn cable space usable by conductor [m²]",
+            "(a_tf_turn_cable_space_effective)",
+            self.data.superconducting_tfcoil.a_tf_turn_cable_space_effective,
+        )
+        po.ovarre(
+            self.outfile,
+            "Area of steel in turn [m²]",
+            "(a_tf_turn_steel)",
+            self.data.tfcoil.a_tf_turn_steel,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Extra coolant area fraction in turn cable space",
+            "(f_a_tf_turn_cable_space_extra_void)",
+            self.data.tfcoil.f_a_tf_turn_cable_space_extra_void,
         )
 
         po.oblnkl(self.outfile)
@@ -683,8 +750,8 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "Mass of each TF coil (kg)",
-            "(m_tf_coils_total/n_tf_coils)",
-            self.data.tfcoil.m_tf_coils_total / self.data.tfcoil.n_tf_coils,
+            "(m_tf_coil)",
+            self.data.tfcoil.m_tf_coil,
             "OP ",
         )
         po.ovarre(
@@ -864,6 +931,13 @@ class SuperconductingTFCoil(TFCoil):
             "(tftmp)",
             self.data.tfcoil.tftmp,
         )
+        po.ovarre(
+            self.outfile,
+            "Peak inboard toroidal field including ripple (T)",
+            "(b_tf_inboard_peak_with_ripple)",
+            self.data.tfcoil.b_tf_inboard_peak_with_ripple,
+        )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Total cooling area fraction inside cable space",
@@ -1969,11 +2043,16 @@ class SuperconductingTFCoil(TFCoil):
         # ---------------------------------
 
         # Total TF coil mass [kg] (all coils)
-        self.data.tfcoil.m_tf_coils_total = (
+        self.data.tfcoil.m_tf_coil = (
             self.data.tfcoil.m_tf_coil_case
             + self.data.tfcoil.m_tf_coil_conductor
             + self.data.tfcoil.m_tf_coil_wp_insulation
-        ) * self.data.tfcoil.n_tf_coils
+        )
+
+        # Total TF coil mass [kg] (all coils)
+        self.data.tfcoil.m_tf_coils_total = (
+            self.data.tfcoil.m_tf_coil * self.data.tfcoil.n_tf_coils
+        )
 
         # If spherical tokamak, distribute between centrepost and outboard legs
         # (in this case, total TF coil length = inboard `cplen` +
@@ -2166,9 +2245,9 @@ class SuperconductingTFCoil(TFCoil):
                 self.data.tfcoil.sig_tf_wp = 0.0e0
 
 
-@dataclass
-class CICCAveragedTurnGeometry:
-    """Averaged turn geometry for a CICC conductor with LTS cables."""
+@dataclass(slots=True)
+class TFGeneralTurnGeometry:
+    """General turn geometry info needed for all TF turn types."""
 
     a_tf_turn_cable_space_no_void: float
     a_tf_turn_steel: float
@@ -2178,31 +2257,45 @@ class CICCAveragedTurnGeometry:
     dx_tf_turn_general: float
     dr_tf_turn: float
     dx_tf_turn: float
-    t_conductor: float
-    radius_tf_turn_cable_space_corners: float
+    dx_tf_turn_conduit_full_average: float
     dx_tf_turn_cable_space_average: float
+
+
+@dataclass(slots=True)
+class SuperconTFAreasFractions:
+    """Superconducting TF coil winding pack areas and fractions."""
+
+    a_tf_wp_coolant_channels: float
+    a_tf_wp_conductor: float
+    a_tf_wp_extra_void: float
+    a_tf_coil_wp_turn_insulation: float
+    a_tf_wp_steel: float
+    a_tf_coil_inboard_steel: float
+    f_a_tf_coil_inboard_steel: float
+    a_tf_coil_inboard_insulation: float
+    f_a_tf_coil_inboard_insulation: float
+
+
+@dataclass(slots=True)
+class CICCAveragedTurnGeometry(TFGeneralTurnGeometry):
+    """Averaged turn geometry for a CICC conductor with LTS cables."""
+
+    radius_tf_turn_cable_space_corners: float
     a_tf_turn_cable_space_effective: float
     f_a_tf_turn_cable_space_cooling: float
 
 
-@dataclass
-class CICCIntegerTurnGeometry:
+@dataclass(slots=True)
+class CICCIntegerTurnGeometry(TFGeneralTurnGeometry):
     """Integer turn geometry for a CICC conductor with LTS cables."""
 
     radius_tf_turn_cable_space_corners: float
-    dr_tf_turn: float
-    dx_tf_turn: float
-    a_tf_turn_cable_space_no_void: float
-    a_tf_turn_steel: float
-    a_tf_turn_insulation: float
-    c_tf_turn: float
-    n_tf_coil_turns: int
-    t_conductor_radial: float
-    t_conductor_toroidal: float
-    t_conductor: float
+    dr_tf_turn_conduit_full: float
+    dx_tf_turn_conduit_full_toroidal: float
     dr_tf_turn_cable_space: float
     dx_tf_turn_cable_space: float
-    dx_tf_turn_cable_space_average: float
+    a_tf_turn_cable_space_effective: float
+    f_a_tf_turn_cable_space_cooling: float
 
 
 class CICCSuperconductingTFCoil(SuperconductingTFCoil):
@@ -2249,10 +2342,12 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             self.data.tfcoil.dx_tf_turn_general = avg_turn_geometry.dx_tf_turn_general
             self.data.tfcoil.c_tf_turn = avg_turn_geometry.c_tf_turn
             self.data.tfcoil.dx_tf_turn_general = avg_turn_geometry.dx_tf_turn_general
-            d_sc_tf.dr_tf_turn = avg_turn_geometry.dr_tf_turn
-            d_sc_tf.dx_tf_turn = avg_turn_geometry.dx_tf_turn
-            self.data.tfcoil.t_conductor = avg_turn_geometry.t_conductor
-            d_sc_tf.radius_tf_turn_cable_space_corners = (
+            self.data.superconducting_tfcoil.dr_tf_turn = avg_turn_geometry.dr_tf_turn
+            self.data.superconducting_tfcoil.dx_tf_turn = avg_turn_geometry.dx_tf_turn
+            self.data.tfcoil.dx_tf_turn_conduit_full_average = (
+                avg_turn_geometry.dx_tf_turn_conduit_full_average
+            )
+            self.data.superconducting_tfcoil.radius_tf_turn_cable_space_corners = (
                 avg_turn_geometry.radius_tf_turn_cable_space_corners
             )
             d_sc_tf.dx_tf_turn_cable_space_average = (
@@ -2294,14 +2389,31 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             )
             self.data.tfcoil.c_tf_turn = int_turn_geometry.c_tf_turn
             self.data.tfcoil.n_tf_coil_turns = int_turn_geometry.n_tf_coil_turns
-            d_sc_tf.t_conductor_radial = int_turn_geometry.t_conductor_radial
-            d_sc_tf.t_conductor_toroidal = int_turn_geometry.t_conductor_toroidal
-            self.data.tfcoil.t_conductor = int_turn_geometry.t_conductor
-            d_sc_tf.dr_tf_turn_cable_space = int_turn_geometry.dr_tf_turn_cable_space
-            d_sc_tf.dx_tf_turn_cable_space = int_turn_geometry.dx_tf_turn_cable_space
-            d_sc_tf.dx_tf_turn_cable_space_average = (
+            self.data.superconducting_tfcoil.dr_tf_turn_conduit_full = (
+                int_turn_geometry.dr_tf_turn_conduit_full
+            )
+            self.data.superconducting_tfcoil.dx_tf_turn_conduit_full_toroidal = (
+                int_turn_geometry.dx_tf_turn_conduit_full_toroidal
+            )
+            self.data.tfcoil.dx_tf_turn_conduit_full_average = (
+                int_turn_geometry.dx_tf_turn_conduit_full_average
+            )
+            self.data.superconducting_tfcoil.dr_tf_turn_cable_space = (
+                int_turn_geometry.dr_tf_turn_cable_space
+            )
+            self.data.superconducting_tfcoil.dx_tf_turn_cable_space = (
+                int_turn_geometry.dx_tf_turn_cable_space
+            )
+            self.data.superconducting_tfcoil.dx_tf_turn_cable_space_average = (
                 int_turn_geometry.dx_tf_turn_cable_space_average
             )
+            self.data.superconducting_tfcoil.a_tf_turn_cable_space_effective = (
+                int_turn_geometry.a_tf_turn_cable_space_effective
+            )
+            self.data.superconducting_tfcoil.f_a_tf_turn_cable_space_cooling = (
+                int_turn_geometry.f_a_tf_turn_cable_space_cooling
+            )
+            self.data.tfcoil.dx_tf_turn_general = int_turn_geometry.dx_tf_turn_general
 
         # Calculate number of cables in turn if CICC conductor
         # ---------------------------------------------------
@@ -2323,65 +2435,39 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             n_tf_turn_superconducting_cables=d_sc_tf.n_tf_turn_superconducting_cables,
         )
 
-        # Areas and fractions
-        # -------------------
-        # Central helium channel down the conductor core [m2]
+        inboard_areas_fractions = self.tf_cicc_inboard_areas_and_fractions(
+            n_tf_coil_turns=self.data.tfcoil.n_tf_coil_turns,
+            dia_tf_turn_coolant_channel=self.data.tfcoil.dia_tf_turn_coolant_channel,
+            a_tf_turn_cable_space_no_void=self.data.tfcoil.a_tf_turn_cable_space_no_void,
+            f_a_tf_turn_cable_space_extra_void=self.data.tfcoil.f_a_tf_turn_cable_space_extra_void,
+            a_tf_turn_insulation=self.data.tfcoil.a_tf_turn_insulation,
+            a_tf_turn_steel=self.data.tfcoil.a_tf_turn_steel,
+            n_tf_coils=self.data.tfcoil.n_tf_coils,
+            a_tf_inboard_total=self.data.tfcoil.a_tf_inboard_total,
+            a_tf_coil_inboard_case=self.data.tfcoil.a_tf_coil_inboard_case,
+            a_tf_wp_ground_insulation=self.data.superconducting_tfcoil.a_tf_wp_ground_insulation,
+        )
+
         self.data.tfcoil.a_tf_wp_coolant_channels = (
-            0.25e0
-            * self.data.tfcoil.n_tf_coil_turns
-            * np.pi
-            * self.data.tfcoil.dia_tf_turn_coolant_channel**2
+            inboard_areas_fractions.a_tf_wp_coolant_channels
         )
-
-        # Total conductor cross-sectional area, taking account of void area
-        # and central helium channel [m2]
-        self.data.tfcoil.a_tf_wp_conductor = (
-            self.data.tfcoil.a_tf_turn_cable_space_no_void
-            * self.data.tfcoil.n_tf_coil_turns
-            * (1.0e0 - self.data.tfcoil.f_a_tf_turn_cable_space_extra_void)
-            - self.data.tfcoil.a_tf_wp_coolant_channels
-        )
-
-        # Void area in conductor for He, not including central channel [m2]
-        self.data.tfcoil.a_tf_wp_extra_void = (
-            self.data.tfcoil.a_tf_turn_cable_space_no_void
-            * self.data.tfcoil.n_tf_coil_turns
-            * self.data.tfcoil.f_a_tf_turn_cable_space_extra_void
-        )
-
-        # Area of inter-turn insulation: total [m2]
+        self.data.tfcoil.a_tf_wp_conductor = inboard_areas_fractions.a_tf_wp_conductor
+        self.data.tfcoil.a_tf_wp_extra_void = inboard_areas_fractions.a_tf_wp_extra_void
         self.data.tfcoil.a_tf_coil_wp_turn_insulation = (
-            self.data.tfcoil.n_tf_coil_turns * self.data.tfcoil.a_tf_turn_insulation
+            inboard_areas_fractions.a_tf_coil_wp_turn_insulation
         )
-
-        # Area of steel structure in winding pack [m2]
-        self.data.tfcoil.a_tf_wp_steel = (
-            self.data.tfcoil.n_tf_coil_turns * self.data.tfcoil.a_tf_turn_steel
+        self.data.tfcoil.a_tf_wp_steel = inboard_areas_fractions.a_tf_wp_steel
+        self.data.superconducting_tfcoil.a_tf_coil_inboard_steel = (
+            inboard_areas_fractions.a_tf_coil_inboard_steel
         )
-
-        # Inboard coil steel area [m2]
-        d_sc_tf.a_tf_coil_inboard_steel = (
-            self.data.tfcoil.a_tf_coil_inboard_case + self.data.tfcoil.a_tf_wp_steel
+        self.data.superconducting_tfcoil.f_a_tf_coil_inboard_steel = (
+            inboard_areas_fractions.f_a_tf_coil_inboard_steel
         )
-
-        # Inboard coil steel fraction [-]
-        d_sc_tf.f_a_tf_coil_inboard_steel = (
-            self.data.tfcoil.n_tf_coils
-            * d_sc_tf.a_tf_coil_inboard_steel
-            / self.data.tfcoil.a_tf_inboard_total
+        self.data.superconducting_tfcoil.a_tf_coil_inboard_insulation = (
+            inboard_areas_fractions.a_tf_coil_inboard_insulation
         )
-
-        # Inboard coil insulation cross-section [m2]
-        d_sc_tf.a_tf_coil_inboard_insulation = (
-            self.data.tfcoil.a_tf_coil_wp_turn_insulation
-            + d_sc_tf.a_tf_wp_ground_insulation
-        )
-
-        #  Inboard coil insulation fraction [-]
-        d_sc_tf.f_a_tf_coil_inboard_insulation = (
-            self.data.tfcoil.n_tf_coils
-            * d_sc_tf.a_tf_coil_inboard_insulation
-            / self.data.tfcoil.a_tf_inboard_total
+        self.data.superconducting_tfcoil.f_a_tf_coil_inboard_insulation = (
+            inboard_areas_fractions.f_a_tf_coil_inboard_insulation
         )
 
         # Negative areas or fractions error reporting
@@ -2767,14 +2853,18 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         and also the protection information (for a quench).
         Not used for the CroCo conductor.
 
-        The critical current density for a superconductor
-        (``j_superconductor_critical``) is for the superconducting strands/tape,
-        not including copper. The critical current density for
-        a cable (``j_crit_cable``) accounts for both the fraction of the cable taken
-        up by helium coolant channels, and the cable conductor copper fraction
-        (i.e., the copper in the superconducting strands and any additional copper,
-        such as REBCO tape support).
         """
+        if (
+            SuperconductorModel(i_tf_superconductor).sc_shape
+            != SuperconductorShape.CABLE
+        ):
+            raise ProcessValueError(
+                "Cannot calculate cable in conduit superconductor properties for "
+                "non-cable superconductors. Change `i_tf_sc_mat` to a cable "
+                "superconductor or use a different TF coil class for non-cable "
+                "superconductors."
+            )
+
         # Guard against negative conductor fraction f_a_tf_turn_cable_space_conductor
         # Kludge to allow solver to continue and hopefully be constrained away
         # from this point
@@ -2969,14 +3059,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         # =================================================================
 
-        # "REBCO" 2nd generation HTS superconductor in CrCo strand
-        elif i_tf_superconductor == SuperconductorModel.CROCO_REBCO:
-            raise ProcessValueError(
-                "sctfcoil.supercon has been called but data.tfcoil.i_tf_sc_mat=6"
-            )
-
-        # =================================================================
-
         # Durham Ginzburg-Landau Nb-Ti parameterisation
         elif i_tf_superconductor == SuperconductorModel.DURHAM_NBTI:
             bc20m = data.tfcoil.b_crit_upper_nbti  # [T]
@@ -3004,86 +3086,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             )
 
         # =================================================================
-
-        # Durham Ginzburg-Landau critical surface model for REBCO
-        elif i_tf_superconductor == SuperconductorModel.DURHAM_REBCO:
-            bc20m = 430  # [T]
-            tc0m = 185  # [K]
-
-            # If strain limit achieved, throw a warning and use the lower strain
-            if abs(strain) > 0.7e-2:
-                logger.error(
-                    f"TF strain={strain} was outside the region of applicability. "
-                    f"Used lower strain."
-                )
-                strain = np.sign(strain) * 0.7e-2
-
-            j_superconductor_critical, _, _ = superconductors.gl_rebco(
-                temp_conductor=temp_tf_coolant_peak_field,
-                b_conductor=b_tf_inboard_peak,
-                strain=strain,
-                b_c20max=bc20m,
-                t_c0=tc0m,
-            )
-            # Scale for the copper area fraction of the cable
-            j_cables_critical = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
-
-            #  Critical current in turn all turn cables
-            c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
-
-            # Strand critical current calulation for costing in $ / kAm
-            # Already includes buffer and support layers so no need to include
-            # f_a_tf_turn_cable_copper here
-            data.tfcoil.j_crit_str_tf = j_superconductor_critical
-
-            # REBCO measurements from 2 T to 14 T, extrapolating outside this
-            if (b_tf_inboard_peak) >= 14.0:
-                logger.error(
-                    "Field on superconductor > 14 T (outside of interpolation range)"
-                )
-
-        # =================================================================
-
-        # Hazelton experimental data + Zhai conceptual model for REBCO
-        elif i_tf_superconductor == SuperconductorModel.HAZELTON_ZHAI_REBCO:
-            bc20m = 138  # [T]
-            tc0m = 92  # [K]
-
-            # If strain limit achieved, throw a warning and use the lower strain
-            if abs(strain) > 0.7e-2:
-                logger.error(
-                    f"TF strain={strain} was outside the region of applicability. "
-                    f"Used lower strain."
-                )
-                strain = np.sign(strain) * 0.7e-2
-
-            # 'high current density' as per parameterisation described in Wolf,
-            #  and based on Hazelton experimental data and Zhai conceptual model;
-            #  see subroutine for full references
-            j_superconductor_critical, _, _ = superconductors.hijc_rebco(
-                temp_conductor=temp_tf_coolant_peak_field,
-                b_conductor=b_tf_inboard_peak,
-                b_c20max=bc20m,
-                t_c0=tc0m,
-                dr_hts_tape=data.superconducting_tfcoil.dr_tf_hts_tape,
-                dx_hts_tape_rebco=data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
-                dx_hts_tape_total=data.superconducting_tfcoil.dx_tf_hts_tape_total,
-            )
-            # Scale for the copper area fraction of the cable
-            j_cables_critical = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
-
-            #  Critical current in turn all turn cables
-            c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
-
-            # Strand critical current calulation for costing in $ / kAm
-            # = superconducting filaments jc * (1 -strand copper fraction)
-            data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
 
         else:
             raise ProcessValueError(
@@ -3312,7 +3314,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # See derivation in the following document
         # k:\power plant physics and technology\process\hts\hts coil module
         # for process.docx
-        t_conductor = (
+        dx_tf_turn_conduit_full_average = (
             -layer_ins + np.sqrt(layer_ins**2 + 4.0e00 * a_tf_turn)
         ) / 2 - 2.0e0 * dx_tf_turn_insulation
 
@@ -3320,13 +3322,15 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         n_tf_coil_turns = a_tf_wp_no_insulation / a_tf_turn
 
         # Area of inter-turn insulation: single turn [m2]
-        a_tf_turn_insulation = a_tf_turn - t_conductor**2
+        a_tf_turn_insulation = a_tf_turn - dx_tf_turn_conduit_full_average**2
 
         # Radius of rounded corners of cable space inside conduit [m]
         radius_tf_turn_cable_space_corners = dx_tf_turn_steel * 0.75e0
 
         # Dimension of square cable space inside conduit [m]
-        dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
+        dx_tf_turn_cable_space_average = (
+            dx_tf_turn_conduit_full_average - 2.0e0 * dx_tf_turn_steel
+        )
 
         # Cross-sectional area of cable space per turn
         # taking account of rounded inside corners [m2]
@@ -3352,7 +3356,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         )
 
         if a_tf_turn_cable_space_no_void <= 0.0e0:
-            if t_conductor < 0.0e0:
+            if dx_tf_turn_conduit_full_average < 0.0e0:
                 logger.error(
                     "Negative cable space dimension. %s %s",
                     a_tf_turn_cable_space_no_void,
@@ -3369,7 +3373,9 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 a_tf_turn_cable_space_no_void = dx_tf_turn_cable_space_average**2
 
         # Cross-sectional area of conduit jacket per turn [m2]
-        a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
+        a_tf_turn_steel = (
+            dx_tf_turn_conduit_full_average**2 - a_tf_turn_cable_space_no_void
+        )
 
         return CICCAveragedTurnGeometry(
             a_tf_turn_cable_space_no_void=a_tf_turn_cable_space_no_void,
@@ -3380,7 +3386,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             dx_tf_turn_general=dx_tf_turn_general,
             dr_tf_turn=dr_tf_turn,
             dx_tf_turn=dx_tf_turn,
-            t_conductor=t_conductor,
+            dx_tf_turn_conduit_full_average=dx_tf_turn_conduit_full_average,
             radius_tf_turn_cable_space_corners=radius_tf_turn_cable_space_corners,
             dx_tf_turn_cable_space_average=dx_tf_turn_cable_space_average,
             a_tf_turn_cable_space_effective=a_tf_turn_cable_space_effective,
@@ -3462,7 +3468,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             )
 
         # Average turn dimension [m]
-        data.tfcoil.dx_tf_turn_general = np.sqrt(dr_tf_turn * dx_tf_turn)
+        dx_tf_turn_general = np.sqrt(dr_tf_turn * dx_tf_turn)
 
         # Number of TF turns
         n_tf_coil_turns = np.double(n_tf_wp_layers * n_tf_wp_pancakes)
@@ -3471,13 +3477,17 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         c_tf_turn = c_tf_coil / n_tf_coil_turns
 
         # Radial and toroidal dimension of conductor [m]
-        t_conductor_radial = dr_tf_turn - 2.0e0 * dx_tf_turn_insulation
-        t_conductor_toroidal = dx_tf_turn - 2.0e0 * dx_tf_turn_insulation
-        t_conductor = np.sqrt(t_conductor_radial * t_conductor_toroidal)
+        dr_tf_turn_conduit_full = dr_tf_turn - 2.0e0 * dx_tf_turn_insulation
+        dx_tf_turn_conduit_full_toroidal = dx_tf_turn - 2.0e0 * dx_tf_turn_insulation
+        dx_tf_turn_conduit_full_average = np.sqrt(
+            dr_tf_turn_conduit_full * dx_tf_turn_conduit_full_toroidal
+        )
 
         # Dimension of square cable space inside conduit [m]
-        dr_tf_turn_cable_space = t_conductor_radial - 2.0e0 * dx_tf_turn_steel
-        dx_tf_turn_cable_space = t_conductor_toroidal - 2.0e0 * dx_tf_turn_steel
+        dr_tf_turn_cable_space = dr_tf_turn_conduit_full - 2.0e0 * dx_tf_turn_steel
+        dx_tf_turn_cable_space = (
+            dx_tf_turn_conduit_full_toroidal - 2.0e0 * dx_tf_turn_steel
+        )
         dx_tf_turn_cable_space_average = np.sqrt(
             dr_tf_turn_cable_space * dx_tf_turn_cable_space
         )
@@ -3490,7 +3500,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Calculate the true effective cable space by taking away the cooling
         # channel and the extra void fraction
-        data.superconducting_tfcoil.a_tf_turn_cable_space_effective = (
+        a_tf_turn_cable_space_effective = (
             a_tf_turn_cable_space_no_void
             -
             # Coolant channel area
@@ -3506,9 +3516,8 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             )
         )
 
-        data.superconducting_tfcoil.f_a_tf_turn_cable_space_cooling = 1 - (
-            data.superconducting_tfcoil.a_tf_turn_cable_space_effective
-            / a_tf_turn_cable_space_no_void
+        f_a_tf_turn_cable_space_cooling = 1 - (
+            a_tf_turn_cable_space_effective / a_tf_turn_cable_space_no_void
         )
 
         if a_tf_turn_cable_space_no_void <= 0.0e0:
@@ -3531,7 +3540,8 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Cross-sectional area of conduit jacket per turn [m²]
         a_tf_turn_steel = (
-            t_conductor_radial * t_conductor_toroidal - a_tf_turn_cable_space_no_void
+            dr_tf_turn_conduit_full * dx_tf_turn_conduit_full_toroidal
+            - a_tf_turn_cable_space_no_void
         )
 
         # Area of inter-turn insulation: single turn [m²]
@@ -3547,15 +3557,91 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             a_tf_turn_insulation=a_tf_turn_insulation,
             c_tf_turn=c_tf_turn,
             n_tf_coil_turns=n_tf_coil_turns,
-            t_conductor_radial=t_conductor_radial,
-            t_conductor_toroidal=t_conductor_toroidal,
-            t_conductor=t_conductor,
+            dr_tf_turn_conduit_full=dr_tf_turn_conduit_full,
+            dx_tf_turn_conduit_full_toroidal=dx_tf_turn_conduit_full_toroidal,
+            dx_tf_turn_conduit_full_average=dx_tf_turn_conduit_full_average,
             dr_tf_turn_cable_space=dr_tf_turn_cable_space,
             dx_tf_turn_cable_space=dx_tf_turn_cable_space,
             dx_tf_turn_cable_space_average=dx_tf_turn_cable_space_average,
+            a_tf_turn_cable_space_effective=a_tf_turn_cable_space_effective,
+            f_a_tf_turn_cable_space_cooling=f_a_tf_turn_cable_space_cooling,
+            dx_tf_turn_general=dx_tf_turn_general,
         )
 
         # -------------
+
+    @staticmethod
+    def tf_cicc_inboard_areas_and_fractions(
+        n_tf_coil_turns: int,
+        dia_tf_turn_coolant_channel: float,
+        a_tf_turn_cable_space_no_void: float,
+        f_a_tf_turn_cable_space_extra_void: float,
+        a_tf_turn_insulation: float,
+        a_tf_turn_steel: float,
+        n_tf_coils: int,
+        a_tf_inboard_total: float,
+        a_tf_coil_inboard_case: float,
+        a_tf_wp_ground_insulation: float,
+    ) -> SuperconTFAreasFractions:
+
+        # Areas and fractions
+        # -------------------
+        # Central helium channel down the conductor core [m2]
+        a_tf_wp_coolant_channels = (
+            0.25e0 * n_tf_coil_turns * np.pi * dia_tf_turn_coolant_channel**2
+        )
+
+        # Total conductor cross-sectional area, taking account of void area
+        # and central helium channel [m2]
+        a_tf_wp_conductor = (
+            a_tf_turn_cable_space_no_void
+            * n_tf_coil_turns
+            * (1.0e0 - f_a_tf_turn_cable_space_extra_void)
+            - a_tf_wp_coolant_channels
+        )
+
+        # Void area in conductor for He, not including central channel [m2]
+        a_tf_wp_extra_void = (
+            a_tf_turn_cable_space_no_void
+            * n_tf_coil_turns
+            * f_a_tf_turn_cable_space_extra_void
+        )
+
+        # Area of inter-turn insulation: total [m2]
+        a_tf_coil_wp_turn_insulation = n_tf_coil_turns * a_tf_turn_insulation
+
+        # Area of steel structure in winding pack [m2]
+        a_tf_wp_steel = n_tf_coil_turns * a_tf_turn_steel
+
+        # Inboard coil steel area [m2]
+        a_tf_coil_inboard_steel = a_tf_coil_inboard_case + a_tf_wp_steel
+
+        # Inboard coil steel fraction [-]
+        f_a_tf_coil_inboard_steel = (
+            n_tf_coils * a_tf_coil_inboard_steel / a_tf_inboard_total
+        )
+
+        # Inboard coil insulation cross-section [m2]
+        a_tf_coil_inboard_insulation = (
+            a_tf_coil_wp_turn_insulation + a_tf_wp_ground_insulation
+        )
+
+        #  Inboard coil insulation fraction [-]
+        f_a_tf_coil_inboard_insulation = (
+            n_tf_coils * a_tf_coil_inboard_insulation / a_tf_inboard_total
+        )
+
+        return SuperconTFAreasFractions(
+            a_tf_wp_coolant_channels=a_tf_wp_coolant_channels,
+            a_tf_wp_conductor=a_tf_wp_conductor,
+            a_tf_wp_extra_void=a_tf_wp_extra_void,
+            a_tf_coil_wp_turn_insulation=a_tf_coil_wp_turn_insulation,
+            a_tf_wp_steel=a_tf_wp_steel,
+            a_tf_coil_inboard_steel=a_tf_coil_inboard_steel,
+            f_a_tf_coil_inboard_steel=f_a_tf_coil_inboard_steel,
+            a_tf_coil_inboard_insulation=a_tf_coil_inboard_insulation,
+            f_a_tf_coil_inboard_insulation=f_a_tf_coil_inboard_insulation,
+        )
 
     def output_cable_in_conduit_cable_info(self) -> None:
         """
@@ -3595,114 +3681,22 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             "(len_tf_superconductor_total)",
             d_sc_tf.len_tf_superconductor_total,
         )
-        po.ocmmnt(self.outfile, "Fractions by area")
-        po.ovarre(
-            self.outfile,
-            "internal area of the cable space",
-            "(a_tf_turn_cable_space_no_void)",
-            self.data.tfcoil.a_tf_turn_cable_space_no_void,
-        )
-        po.ovarre(
-            self.outfile,
-            "True area of turn cable space with gaps and channels removed",
-            "(a_tf_turn_cable_space_effective)",
-            d_sc_tf.a_tf_turn_cable_space_effective,
-        )
+        po.oblnkl(self.outfile)
 
         po.ovarre(
             self.outfile,
-            "Coolant fraction in conductor excluding central channel",
-            "(f_a_tf_turn_cable_space_extra_void)",
-            self.data.tfcoil.f_a_tf_turn_cable_space_extra_void,
-        )
-        po.ovarre(
-            self.outfile,
-            "Area of steel in turn",
-            "(a_tf_turn_steel)",
-            self.data.tfcoil.a_tf_turn_steel,
-        )
-        po.ovarre(
-            self.outfile,
-            "Area of all turn insulation in WP",
-            "(a_tf_coil_wp_turn_insulation)",
-            self.data.tfcoil.a_tf_coil_wp_turn_insulation,
-        )
-        po.ovarre(
-            self.outfile,
-            "Total insulation area in TF coil (turn and WP)",
-            "(a_tf_coil_inboard_insulation)",
-            d_sc_tf.a_tf_coil_inboard_insulation,
-        )
-        po.ovarre(
-            self.outfile,
-            "Total steel area in inboard TF coil (turn and case)",
-            "(a_tf_coil_inboard_steel)",
-            d_sc_tf.a_tf_coil_inboard_steel,
-        )
-        po.ovarre(
-            self.outfile,
-            "Total conductor area in WP",
-            "(a_tf_wp_conductor)",
-            self.data.tfcoil.a_tf_wp_conductor,
-        )
-        po.ovarre(
-            self.outfile,
-            "Total additional void area in WP",
-            "(a_tf_wp_extra_void)",
-            self.data.tfcoil.a_tf_wp_extra_void,
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Area of all coolant channels in WP",
-            "(a_tf_wp_coolant_channels)",
-            self.data.tfcoil.a_tf_wp_coolant_channels,
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Copper fraction of conductor",
+            "Copper area fraction of cable conductor",
             "(f_a_tf_turn_cable_copper)",
             self.data.tfcoil.f_a_tf_turn_cable_copper,
         )
         po.ovarre(
             self.outfile,
-            "Superconductor fraction of conductor",
+            "Superconductor area fraction of cable conductor",
             "(1-f_a_tf_turn_cable_copper)",
             1 - self.data.tfcoil.f_a_tf_turn_cable_copper,
         )
-        ap = (
-            self.data.tfcoil.a_tf_wp_conductor
-            + self.data.tfcoil.n_tf_coil_turns * self.data.tfcoil.a_tf_turn_steel
-            + self.data.tfcoil.a_tf_coil_wp_turn_insulation
-            + self.data.tfcoil.a_tf_wp_extra_void
-            + self.data.tfcoil.a_tf_wp_coolant_channels
-        )
-        po.ovarre(
-            self.outfile,
-            "Check total area fractions in winding pack = 1",
-            "",
-            (
-                self.data.tfcoil.a_tf_wp_conductor
-                + self.data.tfcoil.n_tf_coil_turns * self.data.tfcoil.a_tf_turn_steel
-                + self.data.tfcoil.a_tf_coil_wp_turn_insulation
-                + self.data.tfcoil.a_tf_wp_extra_void
-                + self.data.tfcoil.a_tf_wp_coolant_channels
-            )
-            / ap,
-        )
-        po.ovarre(
-            self.outfile,
-            "minimum TF conductor temperature margin  (K)",
-            "(temp_tf_superconductor_margin_min)",
-            self.data.tfcoil.temp_tf_superconductor_margin_min,
-        )
-        po.ovarre(
-            self.outfile,
-            "TF conductor temperature margin (K)",
-            "(temp_tf_superconductor_margin)",
-            self.data.tfcoil.temp_tf_superconductor_margin,
-        )
+
+        po.oblnkl(self.outfile)
 
         po.ovarre(
             self.outfile,
@@ -3734,29 +3728,20 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         )
 
 
-@dataclass
-class CROCOAveragedTurnGeometry:
-    a_tf_turn_cable_space_no_void: float
-    a_tf_turn_steel: float
-    a_tf_turn_insulation: float
-    n_tf_coil_turns: int
-    c_tf_turn: float
-    dx_tf_turn_general: float
-    dr_tf_turn: float
-    dx_tf_turn: float
-    t_conductor: float
-    dx_tf_turn_cable_space_average: float
+@dataclass(slots=True)
+class CROCOAveragedTurnGeometry(TFGeneralTurnGeometry):
+    """Data class for the averaged turn geometry of a CroCo conductor."""
 
 
-@dataclass
+@dataclass(slots=True)
 class CroCoCableSpaceGeometry:
+    """Data class for the geometry of the cable space in a CroCo conductor."""
+
     dia_tf_turn_croco_cable: float
     a_tf_turn_cable_space_no_void: float
     a_tf_turn_cable_space_effective: float
     a_tf_turn_steel: float
-    conductor_area: float
-    conductor_jacket_area: float
-    conductor_jacket_fraction: float
+    f_a_tf_turn_cable_space_cooling: float
 
 
 class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
@@ -3802,10 +3787,12 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             self.data.tfcoil.dx_tf_turn_general = avg_turn_geometry.dx_tf_turn_general
             self.data.tfcoil.c_tf_turn = avg_turn_geometry.c_tf_turn
             self.data.tfcoil.dx_tf_turn_general = avg_turn_geometry.dx_tf_turn_general
-            d_sc_tf.dr_tf_turn = avg_turn_geometry.dr_tf_turn
-            d_sc_tf.dx_tf_turn = avg_turn_geometry.dx_tf_turn
-            self.data.tfcoil.t_conductor = avg_turn_geometry.t_conductor
-            d_sc_tf.dx_tf_turn_cable_space_average = (
+            self.data.superconducting_tfcoil.dr_tf_turn = avg_turn_geometry.dr_tf_turn
+            self.data.superconducting_tfcoil.dx_tf_turn = avg_turn_geometry.dx_tf_turn
+            self.data.tfcoil.dx_tf_turn_conduit_full_average = (
+                avg_turn_geometry.dx_tf_turn_conduit_full_average
+            )
+            self.data.superconducting_tfcoil.dx_tf_turn_cable_space_average = (
                 avg_turn_geometry.dx_tf_turn_cable_space_average
             )
 
@@ -3814,65 +3801,8 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 "Integer turn geometry not implemented for CroCo conductor."
             )
 
-        # Areas and fractions
-        # -------------------
-        # Central helium channel down the conductor core [m²]
-        # No central channel in CroCo conductor,
-        self.data.tfcoil.a_tf_wp_coolant_channels = 0.0
-
-        # Total conductor cross-sectional area, taking account of void area
-        # and central helium channel [m²]
-        self.data.tfcoil.a_tf_wp_conductor = (
-            self.data.tfcoil.a_tf_turn_cable_space_no_void
-            * self.data.tfcoil.n_tf_coil_turns
-            * (1.0e0 - self.data.tfcoil.f_a_tf_turn_cable_space_extra_void)
-            - self.data.tfcoil.a_tf_wp_coolant_channels
-        )
-
-        # Void area in conductor for He, not including central channel [m²]
-        self.data.tfcoil.a_tf_wp_extra_void = (
-            self.data.tfcoil.a_tf_turn_cable_space_no_void
-            * self.data.tfcoil.n_tf_coil_turns
-            * self.data.tfcoil.f_a_tf_turn_cable_space_extra_void
-        )
-
-        # Area of inter-turn insulation: total [m²]
-        self.data.tfcoil.a_tf_coil_wp_turn_insulation = (
-            self.data.tfcoil.n_tf_coil_turns * self.data.tfcoil.a_tf_turn_insulation
-        )
-
-        # Area of steel structure in winding pack [m²]
-        self.data.tfcoil.a_tf_wp_steel = (
-            self.data.tfcoil.n_tf_coil_turns * self.data.tfcoil.a_tf_turn_steel
-        )
-
-        # Inboard coil steel area [m²]
-        d_sc_tf.a_tf_coil_inboard_steel = (
-            self.data.tfcoil.a_tf_coil_inboard_case + self.data.tfcoil.a_tf_wp_steel
-        )
-
-        # Inboard coil steel fraction [-]
-        d_sc_tf.f_a_tf_coil_inboard_steel = (
-            self.data.tfcoil.n_tf_coils
-            * d_sc_tf.a_tf_coil_inboard_steel
-            / self.data.tfcoil.a_tf_inboard_total
-        )
-
-        # Inboard coil insulation cross-section [m²]
-        d_sc_tf.a_tf_coil_inboard_insulation = (
-            self.data.tfcoil.a_tf_coil_wp_turn_insulation
-            + d_sc_tf.a_tf_wp_ground_insulation
-        )
-
-        #  Inboard coil insulation fraction [-]
-        d_sc_tf.f_a_tf_coil_inboard_insulation = (
-            self.data.tfcoil.n_tf_coils
-            * d_sc_tf.a_tf_coil_inboard_insulation
-            / self.data.tfcoil.a_tf_inboard_total
-        )
-
-        croco_cable_space_geometry = self.tf_turn_croco_cable_space_properties(
-            t_conductor=self.data.tfcoil.t_conductor,
+        croco_cable_space_geometry: CroCoCableSpaceGeometry = self.tf_turn_croco_cable_space_properties(
+            dx_tf_turn_conduit_full_average=self.data.tfcoil.dx_tf_turn_conduit_full_average,
             dx_tf_turn_steel=self.data.tfcoil.dx_tf_turn_steel,
         )
 
@@ -3886,10 +3816,8 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             croco_cable_space_geometry.a_tf_turn_cable_space_effective
         )
         self.data.tfcoil.a_tf_turn_steel = croco_cable_space_geometry.a_tf_turn_steel
-        d_sc_tf.conductor_area = croco_cable_space_geometry.conductor_area
-        d_sc_tf.conductor_jacket_area = croco_cable_space_geometry.conductor_jacket_area
-        d_sc_tf.conductor_jacket_fraction = (
-            croco_cable_space_geometry.conductor_jacket_fraction
+        self.data.superconducting_tfcoil.f_a_tf_turn_cable_space_cooling = (
+            croco_cable_space_geometry.f_a_tf_turn_cable_space_cooling
         )
 
         croco_cable_geometry = calculate_croco_cable_geometry(
@@ -3921,11 +3849,57 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             croco_cable_geometry.dx_croco_strand_tape_stack
         )
 
-        d_sc_tf.a_tf_croco_strand_copper_total = d_sc_tf.a_tf_croco_strand_copper_total
-        d_sc_tf.a_tf_croco_strand_hastelloy = d_sc_tf.a_tf_croco_strand_hastelloy
-        d_sc_tf.a_tf_croco_strand_solder = d_sc_tf.a_tf_croco_strand_solder
-        d_sc_tf.a_tf_croco_strand_rebco = d_sc_tf.a_tf_croco_strand_rebco
-        d_sc_tf.a_tf_croco_strand = d_sc_tf.a_tf_croco_strand
+        self.data.superconducting_tfcoil.a_tf_croco_strand_copper_total = (
+            self.data.superconducting_tfcoil.a_tf_croco_strand_copper_total
+        )
+        self.data.superconducting_tfcoil.a_tf_croco_strand_hastelloy = (
+            self.data.superconducting_tfcoil.a_tf_croco_strand_hastelloy
+        )
+        self.data.superconducting_tfcoil.a_tf_croco_strand_solder = (
+            self.data.superconducting_tfcoil.a_tf_croco_strand_solder
+        )
+        self.data.superconducting_tfcoil.a_tf_croco_strand_rebco = (
+            self.data.superconducting_tfcoil.a_tf_croco_strand_rebco
+        )
+        self.data.superconducting_tfcoil.a_tf_croco_strand = (
+            self.data.superconducting_tfcoil.a_tf_croco_strand
+        )
+
+        self.data.tfcoil.f_a_tf_turn_cable_space_extra_void = 0.0
+
+        inbaord_areas_fractions = self.tf_croco_inboard_areas_and_fractions(
+            a_tf_turn_cable_space_no_void=self.data.tfcoil.a_tf_turn_cable_space_no_void,
+            n_tf_coil_turns=self.data.tfcoil.n_tf_coil_turns,
+            f_a_tf_turn_cable_space_extra_void=self.data.tfcoil.f_a_tf_turn_cable_space_extra_void,
+            a_tf_turn_insulation=self.data.tfcoil.a_tf_turn_insulation,
+            a_tf_turn_steel=self.data.tfcoil.a_tf_turn_steel,
+            a_tf_coil_inboard_case=self.data.tfcoil.a_tf_coil_inboard_case,
+            n_tf_coils=self.data.tfcoil.n_tf_coils,
+            a_tf_inboard_total=self.data.tfcoil.a_tf_inboard_total,
+            a_tf_wp_ground_insulation=self.data.superconducting_tfcoil.a_tf_wp_ground_insulation,
+            a_tf_croco_strand=self.data.superconducting_tfcoil.a_tf_croco_strand,
+        )
+        self.data.tfcoil.a_tf_wp_coolant_channels = (
+            inbaord_areas_fractions.a_tf_wp_coolant_channels
+        )
+        self.data.tfcoil.a_tf_wp_conductor = inbaord_areas_fractions.a_tf_wp_conductor
+        self.data.tfcoil.a_tf_wp_extra_void = inbaord_areas_fractions.a_tf_wp_extra_void
+        self.data.tfcoil.a_tf_coil_wp_turn_insulation = (
+            inbaord_areas_fractions.a_tf_coil_wp_turn_insulation
+        )
+        self.data.tfcoil.a_tf_wp_steel = inbaord_areas_fractions.a_tf_wp_steel
+        self.data.superconducting_tfcoil.a_tf_coil_inboard_steel = (
+            inbaord_areas_fractions.a_tf_coil_inboard_steel
+        )
+        self.data.superconducting_tfcoil.f_a_tf_coil_inboard_steel = (
+            inbaord_areas_fractions.f_a_tf_coil_inboard_steel
+        )
+        self.data.superconducting_tfcoil.a_tf_coil_inboard_insulation = (
+            inbaord_areas_fractions.a_tf_coil_inboard_insulation
+        )
+        self.data.superconducting_tfcoil.f_a_tf_coil_inboard_insulation = (
+            inbaord_areas_fractions.f_a_tf_coil_inboard_insulation
+        )
 
         # Area of core = area of strand
         d_sc_tf.a_tf_turn_croco_copper_bar = d_sc_tf.a_tf_croco_strand
@@ -3933,36 +3907,35 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             d_sc_tf.a_tf_croco_strand_copper_total * N_CROCO_STRANDS_TURN
             + d_sc_tf.a_tf_turn_croco_copper_bar
         )
-        d_sc_tf.conductor_copper_fraction = (
-            d_sc_tf.a_tf_turn_croco_cable_space_copper / d_sc_tf.conductor_area
+
+        # Total conductor cross-sectional area, taking account of void area
+        # and central helium channel [m²]
+        self.data.tfcoil.a_tf_wp_conductor = (
+            N_CROCO_STRANDS_TURN * self.data.superconducting_tfcoil.a_tf_croco_strand
+        ) * self.data.tfcoil.n_tf_coil_turns
+
+        self.data.superconducting_tfcoil.a_tf_turn_copper_total = (
+            self.data.superconducting_tfcoil.a_tf_turn_croco_cable_space_copper
         )
 
-        # Helium area is set by the user.
-        # conductor_helium_area = cable_helium_fraction * self.data.tfcoil.a_tf_turn_cable_space_no_void  # noqa: E501
-        d_sc_tf.conductor_helium_area = np.pi / 2.0 * d_sc_tf.dia_tf_turn_croco_cable**2
-        d_sc_tf.conductor_helium_fraction = (
-            d_sc_tf.conductor_helium_area / d_sc_tf.conductor_area
+        self.data.superconducting_tfcoil.f_a_tf_turn_copper = (
+            self.data.superconducting_tfcoil.a_tf_turn_croco_cable_space_copper
+            / self.data.tfcoil.a_tf_turn
         )
+
+        self.data.superconducting_tfcoil.f_a_tf_turn_cable_space_cooling = (
+            self.data.tfcoil.a_tf_turn_cable_space_no_void
+            - (
+                (
+                    N_CROCO_STRANDS_TURN
+                    * self.data.superconducting_tfcoil.a_tf_croco_strand
+                )
+                - self.data.superconducting_tfcoil.a_tf_turn_croco_copper_bar
+            )
+        ) / self.data.tfcoil.a_tf_turn_cable_space_no_void
 
         d_sc_tf.a_tf_turn_croco_hastelloy = (
             d_sc_tf.a_tf_croco_strand_hastelloy * N_CROCO_STRANDS_TURN
-        )
-        d_sc_tf.conductor_hastelloy_fraction = (
-            d_sc_tf.a_tf_turn_croco_hastelloy / d_sc_tf.conductor_area
-        )
-
-        d_sc_tf.conductor_solder_area = (
-            d_sc_tf.a_tf_croco_strand_solder * N_CROCO_STRANDS_TURN
-        )
-        d_sc_tf.conductor_solder_fraction = (
-            d_sc_tf.conductor_solder_area / d_sc_tf.conductor_area
-        )
-
-        d_sc_tf.conductor_rebco_area = (
-            d_sc_tf.a_tf_croco_strand_rebco * N_CROCO_STRANDS_TURN
-        )
-        d_sc_tf.conductor_rebco_fraction = (
-            d_sc_tf.conductor_rebco_area / d_sc_tf.conductor_area
         )
 
         # Cross-sectional area per turn
@@ -3972,44 +3945,60 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             * self.data.tfcoil.n_tf_coil_turns
         )
 
-        if (
-            SuperconductorModel(self.data.tfcoil.i_tf_sc_mat)
-            == SuperconductorModel.CROCO_REBCO
-        ):
-            superconductor_critical_properties = self.tf_croco_superconductor_properties(
-                a_tf_turn=self.data.tfcoil.a_tf_turn,
-                b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
-                cur_tf_turn=self.data.tfcoil.c_tf_turn,
-                temp_tf_peak=self.data.tfcoil.tftmp,
-            )
+        superconductor_critical_properties: TFSuperconductorLimits = self.tf_croco_superconductor_properties(
+            a_tf_turn=self.data.tfcoil.a_tf_turn,
+            b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
+            cur_tf_turn=self.data.tfcoil.c_tf_turn,
+            temp_tf_peak=self.data.tfcoil.tftmp,
+            i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
+            dr_tf_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
+            dx_tf_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
+            dx_tf_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
+            a_tf_croco_strand=self.data.superconducting_tfcoil.a_tf_croco_strand,
+        )
 
-            self.data.tfcoil.j_tf_wp_critical = (
-                superconductor_critical_properties.j_tf_wp_critical
-            )
-            d_sc_tf.j_tf_superconductor_critical = (
-                superconductor_critical_properties.j_superconductor_critical
-            )
-            d_sc_tf.f_c_tf_turn_operating_critical = (
-                superconductor_critical_properties.f_c_tf_turn_operating_critical
-            )
-            d_sc_tf.j_tf_superconductor = (
-                superconductor_critical_properties.j_superconductor
-            )
-            d_sc_tf.j_tf_coil_turn = superconductor_critical_properties.j_tf_coil_turn
+        self.data.tfcoil.j_tf_wp_critical = (
+            superconductor_critical_properties.j_tf_wp_critical
+        )
+        self.data.superconducting_tfcoil.j_tf_superconductor_critical = (
+            superconductor_critical_properties.j_superconductor_critical
+        )
+        self.data.superconducting_tfcoil.f_c_tf_turn_operating_critical = (
+            superconductor_critical_properties.f_c_tf_turn_operating_critical
+        )
+        self.data.superconducting_tfcoil.j_tf_superconductor = (
+            superconductor_critical_properties.j_superconductor
+        )
+        self.data.superconducting_tfcoil.j_tf_coil_turn = (
+            superconductor_critical_properties.j_tf_coil_turn
+        )
 
-            d_sc_tf.b_tf_superconductor_critical_zero_temp_strain = (
-                superconductor_critical_properties.bc20m
-            )
-            d_sc_tf.temp_tf_superconductor_critical_zero_field_strain = (
-                superconductor_critical_properties.tc0m
-            )
-            d_sc_tf.c_tf_turn_cables_critical = (
-                superconductor_critical_properties.c_turn_cables_critical
-            )
+        self.data.superconducting_tfcoil.b_tf_superconductor_critical_zero_temp_strain = superconductor_critical_properties.bc20m
+        self.data.superconducting_tfcoil.temp_tf_superconductor_critical_zero_field_strain = superconductor_critical_properties.tc0m
+        self.data.superconducting_tfcoil.cur_tf_turn_croco_strand_critical = (
+            self.data.superconducting_tfcoil.c_tf_turn_cables_critical
+        ) = superconductor_critical_properties.c_turn_cables_critical
 
-            self.data.tfcoil.v_tf_coil_dump_quench_kv = (
-                self.croco_voltage() / 1.0e3
-            )  # TFC Quench voltage in kV
+        if self.data.tfcoil.i_str_wp == 0:
+            strain = self.data.tfcoil.str_tf_con_res
+        else:
+            strain = self.data.tfcoil.str_wp
+
+        self.data.tfcoil.temp_tf_superconductor_margin = self.calculate_superconductor_temperature_margin(
+            i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
+            j_superconductor=self.data.superconducting_tfcoil.j_tf_superconductor,
+            b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
+            strain=strain,
+            bc20m=self.data.superconducting_tfcoil.b_tf_superconductor_critical_zero_temp_strain,
+            tc0m=self.data.superconducting_tfcoil.temp_tf_superconductor_critical_zero_field_strain,
+            c0=1.0e10,
+            temp_tf_coolant_peak_field=self.data.tfcoil.tftmp,
+            data=self.data,
+        )
+
+        self.data.tfcoil.v_tf_coil_dump_quench_kv = (
+            self.croco_voltage() / 1.0e3
+        )  # TFC Quench voltage in kV
 
         # Negative areas or fractions error reporting
         if (
@@ -4344,7 +4333,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         dr_tf_turn = dx_tf_turn_general
         dx_tf_turn = dx_tf_turn_general
 
-        t_conductor = (
+        dx_tf_turn_conduit_full_average = (
             -layer_ins + np.sqrt(layer_ins**2 + 4.0e00 * a_tf_turn)
         ) / 2 - 2.0e0 * dx_tf_turn_insulation
 
@@ -4352,13 +4341,21 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         n_tf_coil_turns = a_tf_wp_no_insulation / a_tf_turn
 
         # Area of inter-turn insulation: single turn [m²]
-        a_tf_turn_insulation = a_tf_turn - t_conductor**2
+        a_tf_turn_insulation = a_tf_turn - dx_tf_turn_conduit_full_average**2
+
+        a_tf_turn_cable_space_no_void = copy.copy(
+            self.data.tfcoil.a_tf_turn_cable_space_no_void
+        )
 
         # Diameter of circular cable space inside conduit [m]
-        dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
+        dx_tf_turn_cable_space_average = (
+            dx_tf_turn_conduit_full_average - 2.0e0 * dx_tf_turn_steel
+        )
 
         # Cross-sectional area of conduit jacket per turn [m²]
-        a_tf_turn_steel = t_conductor**2 - self.data.tfcoil.a_tf_turn_cable_space_no_void
+        a_tf_turn_steel = (
+            dx_tf_turn_conduit_full_average**2 - a_tf_turn_cable_space_no_void
+        )
 
         return CROCOAveragedTurnGeometry(
             a_tf_turn_cable_space_no_void=self.data.tfcoil.a_tf_turn_cable_space_no_void,
@@ -4369,7 +4366,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             dx_tf_turn_general=dx_tf_turn_general,
             dr_tf_turn=dr_tf_turn,
             dx_tf_turn=dx_tf_turn,
-            t_conductor=t_conductor,
+            dx_tf_turn_conduit_full_average=dx_tf_turn_conduit_full_average,
             dx_tf_turn_cable_space_average=dx_tf_turn_cable_space_average,
         )
 
@@ -4379,54 +4376,158 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         b_tf_inboard_peak: float,
         cur_tf_turn: float,
         temp_tf_peak: float,
+        i_tf_superconductor: int,
+        dr_tf_hts_tape: float,
+        dx_tf_hts_tape_rebco: float,
+        dx_tf_hts_tape_total: float,
+        a_tf_croco_strand: float,
     ) -> TFSuperconductorLimits:
         """TF superconducting CroCo conductor using REBCO tape
 
         Parameters
         ----------
         a_tf_turn :
-
+            Cross-sectional area of the TF turn (m²)
         b_tf_inboard_peak :
             Peak field at conductor (T)
         cur_tf_turn :
             Operating current per turn (A)
         temp_tf_peak :
-            He temperature at peak field point (K)
+            Coil temperature at peak field point (K)
+        a_tf_turn_cable_space_effective :
+            Effective cross-sectional area of the TF turn cable space (m²)
+        i_tf_superconductor :
+            Integer identifier for the superconductor material model to use.
+        dr_tf_hts_tape :
+            Thickness of the HTS tape (m)
+        dx_tf_hts_tape_rebco :
+            Width of the REBCO layer in the HTS tape (m)
+        dx_tf_hts_tape_total :
+            Total width of the HTS tape (m)
+
+        Returns
+        -------
+        TFSuperconductorLimits
+             A dataclass containing the calculated superconducting properties of the TF coil, including:
+            - j_tf_wp_critical: Critical current density in the TF winding pack (A/m²).
+            - j_superconductor_critical: Critical current density in the superconductor (A/m²).
+            - f_c_tf_turn_operating_critical: Ratio of operating current to critical current for the TF turn (dimensionless).
+            - j_tf_superconductor: Current density  in the superconductor at operating conditions (A/m²).
+            - j_tf_coil_turn: Current density in the TF coil turn at operating conditions (A/m²).
+            - bc20m: Critical magnetic field at 20 K and zero strain (T).
+            - tc0m: Critical temperature at zero magnetic field and zero strain (K).
+            - c_turn_cables_critical: Critical current in the TF turn cables (A).
 
         """
-        #  Find critical current density in superconducting cable, j_crit_cable
-        j_crit_sc, _, bc20m, tc0m = superconductors.jcrit_rebco(
-            temp_conductor=temp_tf_peak, b_conductor=b_tf_inboard_peak
-        )
+        if SuperconductorModel(i_tf_superconductor).sc_shape != SuperconductorShape.TAPE:
+            raise ProcessValueError(
+                "Cannot calculate tape superconductor properties for "
+                "non-tape superconductors. Change `i_tf_sc_mat` to a tape "
+                "superconductor or use a different TF coil class for non-tape "
+                "superconductors."
+            )
 
-        d_sc_tf = self.data.superconducting_tfcoil
+        if self.data.tfcoil.i_str_wp == 0:
+            strain = self.data.tfcoil.str_tf_con_res
+        else:
+            strain = self.data.tfcoil.str_wp
 
-        d_sc_tf.cur_tf_turn_croco_strand_critical = j_crit_sc * d_sc_tf.a_tf_croco_strand
+        # =================================================================
+
+        if i_tf_superconductor == SuperconductorModel.CROCO_REBCO:
+            #  Find critical current density in superconducting cable, j_crit_cable
+            j_superconductor_critical, _, bc20m, tc0m = superconductors.jcrit_rebco(
+                temp_conductor=temp_tf_peak, b_conductor=b_tf_inboard_peak
+            )
+
+        # =================================================================
+
+        # Durham Ginzburg-Landau critical surface model for REBCO
+        elif i_tf_superconductor == SuperconductorModel.DURHAM_REBCO:
+            bc20m = 430  # [T]
+            tc0m = 185  # [K]
+
+            # If strain limit achieved, throw a warning and use the lower strain
+            if abs(strain) > 0.7e-2:
+                logger.error(
+                    f"TF strain={strain} was outside the region of applicability. "
+                    f"Used lower strain."
+                )
+                strain = np.sign(strain) * 0.7e-2
+
+            j_superconductor_critical, _, _ = superconductors.gl_rebco(
+                temp_conductor=temp_tf_peak,
+                b_conductor=b_tf_inboard_peak,
+                strain=strain,
+                b_c20max=bc20m,
+                t_c0=tc0m,
+            )
+
+        # =================================================================
+
+        # Hazelton experimental data + Zhai conceptual model for REBCO
+        elif i_tf_superconductor == SuperconductorModel.HAZELTON_ZHAI_REBCO:
+            bc20m = 138  # [T]
+            tc0m = 92  # [K]
+
+            # If strain limit achieved, throw a warning and use the lower strain
+            if abs(strain) > 0.7e-2:
+                logger.error(
+                    f"TF strain={strain} was outside the region of applicability. "
+                    f"Used lower strain."
+                )
+                strain = np.sign(strain) * 0.7e-2
+
+            # 'high current density' as per parameterisation described in Wolf,
+            #  and based on Hazelton experimental data and Zhai conceptual model;
+            #  see subroutine for full references
+            j_superconductor_critical, _, _ = superconductors.hijc_rebco(
+                temp_conductor=temp_tf_peak,
+                b_conductor=b_tf_inboard_peak,
+                b_c20max=bc20m,
+                t_c0=tc0m,
+                dr_hts_tape=dr_tf_hts_tape,
+                dx_hts_tape_rebco=dx_tf_hts_tape_rebco,
+                dx_hts_tape_total=dx_tf_hts_tape_total,
+            )
+
+        # =================================================================
+
+        # Strand critical current calulation for costing in $ / kAm
+        # Already includes buffer and support layers so no need to include
+        # f_a_tf_turn_cable_copper here
+        self.data.tfcoil.j_crit_str_tf = j_superconductor_critical
+
+        # REBCO measurements from 2 T to 14 T, extrapolating outside this
+        if (b_tf_inboard_peak) >= 14.0:
+            logger.error(
+                "Field on superconductor > 14 T (outside of interpolation range)"
+            )
+
+        cur_tf_turn_croco_strand_critical = j_superconductor_critical * a_tf_croco_strand
 
         # Conductor properties
-        d_sc_tf.conductor_critical_current = (
-            d_sc_tf.cur_tf_turn_croco_strand_critical * N_CROCO_STRANDS_TURN
-        )
-
-        d_sc_tf.tf_coppera_m2 = cur_tf_turn / d_sc_tf.a_tf_turn_croco_cable_space_copper
-
-        cur_critical = d_sc_tf.conductor_critical_current
+        cur_tf_turn_critical = cur_tf_turn_croco_strand_critical * N_CROCO_STRANDS_TURN
 
         # Critical current density in winding pack
         # a_tf_turn : Area per turn (i.e. entire jacketed conductor with insulation) (m2)
-        j_tf_wp_critical = cur_critical / a_tf_turn
+        j_tf_wp_critical = cur_tf_turn_critical / a_tf_turn
+
         #  Ratio of operating / critical current
-        iooic = cur_tf_turn / cur_critical
+        f_c_tf_turn_operating_critical = cur_tf_turn / cur_tf_turn_critical
+
         #  Operating current density
-        jwdgop = cur_tf_turn / a_tf_turn
+        j_tf_coil_turn = cur_tf_turn / a_tf_turn
+
         #  Actual current density in superconductor,
         # which should be equal to jcrit(thelium+tmarg)
-
         #  when we have found the desired value of tmarg
-        jsc = iooic * j_crit_sc
+        j_superconductor = f_c_tf_turn_operating_critical * j_superconductor_critical
 
         # Temperature margin
-        current_sharing_t = superconductors.current_sharing_rebco(b_tf_inboard_peak, jsc)
+        current_sharing_t = superconductors.current_sharing_rebco(
+            b_tf_inboard_peak, j_superconductor
+        )
         tmarg = current_sharing_t - temp_tf_peak
         self.data.tfcoil.temp_margin = (
             tmarg  # Only used in the availabilty routine - see comment to Issue #526
@@ -4434,36 +4535,35 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         return TFSuperconductorLimits(
             j_tf_wp_critical=j_tf_wp_critical,
-            j_superconductor_critical=j_crit_sc,
-            f_c_tf_turn_operating_critical=iooic,
-            j_superconductor=jsc,
-            j_tf_coil_turn=jwdgop,
+            j_superconductor_critical=j_superconductor_critical,
+            f_c_tf_turn_operating_critical=f_c_tf_turn_operating_critical,
+            j_superconductor=j_superconductor,
+            j_tf_coil_turn=j_tf_coil_turn,
             bc20m=bc20m,
             tc0m=tc0m,
-            c_turn_cables_critical=d_sc_tf.cur_tf_turn_croco_strand_critical,
+            c_turn_cables_critical=cur_tf_turn_croco_strand_critical,
         )
 
     @staticmethod
     def tf_turn_croco_cable_space_properties(
-        t_conductor: float, dx_tf_turn_steel: float
+        dx_tf_turn_conduit_full_average: float, dx_tf_turn_steel: float
     ) -> CroCoCableSpaceGeometry:
         """Calculate the properties of the cable space in the TF turn for a CroCo
         conductor.
 
         Parameters
         ----------
-        t_conductor : float
+        dx_tf_turn_conduit_full_average : float
             Thickness of the conductor in the TF turn (in meters).
         dx_tf_turn_steel : float
             Thickness of the steel layer in the TF turn (in meters).
 
         Returns
         -------
-        :
-            CroCo cable space geometry
+        CroCoCableSpaceGeometry
         """
-        dia_tf_turn_croco_cable = t_conductor / 3.0e0 - dx_tf_turn_steel * (
-            2.0e0 / 3.0e0
+        dia_tf_turn_croco_cable = (
+            dx_tf_turn_conduit_full_average / 3.0e0 - dx_tf_turn_steel * (2.0e0 / 3.0e0)
         )
 
         # Area of the full cable circle in the turn
@@ -4471,26 +4571,90 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             9.0e0 / 4.0e0 * np.pi * dia_tf_turn_croco_cable**2
         )
 
-        # Area of the full cable spac circle minus the central copper strand
+        # Just the area of the CroCo strands in the turn (i.e. not including voids)
         a_tf_turn_cable_space_effective = (
-            a_tf_turn_cable_space_no_void - 0.25e0 * np.pi * dia_tf_turn_croco_cable**2
+            N_CROCO_STRANDS_TURN * np.pi * (dia_tf_turn_croco_cable / 2.0e0) ** 2
         )
 
-        conductor_area = t_conductor**2  # does this not assume it's a sqaure???
+        a_tf_turn_steel = (
+            dx_tf_turn_conduit_full_average**2 - a_tf_turn_cable_space_no_void
+        )
 
-        conductor_jacket_area = conductor_area - a_tf_turn_cable_space_no_void
-        a_tf_turn_steel = conductor_jacket_area
-
-        conductor_jacket_fraction = conductor_jacket_area / conductor_area
+        f_a_tf_turn_cable_space_cooling = a_tf_turn_cable_space_no_void - (
+            (N_CROCO_STRANDS_TURN + 1) * np.pi * (dia_tf_turn_croco_cable / 2.0e0) ** 2
+        )
 
         return CroCoCableSpaceGeometry(
             dia_tf_turn_croco_cable=dia_tf_turn_croco_cable,
             a_tf_turn_cable_space_no_void=a_tf_turn_cable_space_no_void,
             a_tf_turn_cable_space_effective=a_tf_turn_cable_space_effective,
             a_tf_turn_steel=a_tf_turn_steel,
-            conductor_area=conductor_area,
-            conductor_jacket_area=conductor_jacket_area,
-            conductor_jacket_fraction=conductor_jacket_fraction,
+            f_a_tf_turn_cable_space_cooling=f_a_tf_turn_cable_space_cooling,
+        )
+
+    @staticmethod
+    def tf_croco_inboard_areas_and_fractions(
+        a_tf_turn_cable_space_no_void: float,
+        n_tf_coil_turns: int,
+        f_a_tf_turn_cable_space_extra_void: float,
+        a_tf_turn_insulation: float,
+        a_tf_turn_steel: float,
+        a_tf_coil_inboard_case: float,
+        n_tf_coils: int,
+        a_tf_inboard_total: float,
+        a_tf_wp_ground_insulation: float,
+        a_tf_croco_strand: float,
+    ) -> SuperconTFAreasFractions:
+
+        # Areas and fractions
+        # -------------------
+        # Central helium channel down the conductor core [m²]
+        # No central channel in CroCo conductor,
+        a_tf_wp_coolant_channels = 0.0
+
+        a_tf_wp_conductor = n_tf_coil_turns * a_tf_croco_strand * N_CROCO_STRANDS_TURN
+
+        # Void area in conductor for He, not including central channel [m²]
+        a_tf_wp_extra_void = (
+            a_tf_turn_cable_space_no_void
+            * n_tf_coil_turns
+            * f_a_tf_turn_cable_space_extra_void
+        )
+
+        # Area of inter-turn insulation: total [m²]
+        a_tf_coil_wp_turn_insulation = n_tf_coil_turns * a_tf_turn_insulation
+
+        # Area of steel structure in winding pack [m²]
+        a_tf_wp_steel = n_tf_coil_turns * a_tf_turn_steel
+
+        # Inboard coil steel area [m²]
+        a_tf_coil_inboard_steel = a_tf_coil_inboard_case + a_tf_wp_steel
+
+        # Inboard coil steel fraction [-]
+        f_a_tf_coil_inboard_steel = (
+            n_tf_coils * a_tf_coil_inboard_steel / a_tf_inboard_total
+        )
+
+        # Inboard coil insulation cross-section [m²]
+        a_tf_coil_inboard_insulation = (
+            a_tf_coil_wp_turn_insulation + a_tf_wp_ground_insulation
+        )
+
+        #  Inboard coil insulation fraction [-]
+        f_a_tf_coil_inboard_insulation = (
+            n_tf_coils * a_tf_coil_inboard_insulation / a_tf_inboard_total
+        )
+
+        return SuperconTFAreasFractions(
+            a_tf_wp_coolant_channels=a_tf_wp_coolant_channels,
+            a_tf_wp_conductor=a_tf_wp_conductor,
+            a_tf_wp_extra_void=a_tf_wp_extra_void,
+            a_tf_coil_wp_turn_insulation=a_tf_coil_wp_turn_insulation,
+            a_tf_wp_steel=a_tf_wp_steel,
+            a_tf_coil_inboard_steel=a_tf_coil_inboard_steel,
+            f_a_tf_coil_inboard_steel=f_a_tf_coil_inboard_steel,
+            a_tf_coil_inboard_insulation=a_tf_coil_inboard_insulation,
+            f_a_tf_coil_inboard_insulation=f_a_tf_coil_inboard_insulation,
         )
 
     def croco_voltage(self) -> float:
@@ -4633,27 +4797,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             d_sc_tf.a_tf_croco_strand_solder,
             "OP ",
         )
-        po.ovarre(
-            self.outfile,
-            "Total: area of CroCo strand (m²)  ",
-            "(a_tf_croco_strand)",
-            d_sc_tf.a_tf_croco_strand,
-            "OP ",
-        )
-        if (
-            abs(
-                d_sc_tf.a_tf_croco_strand
-                - (
-                    d_sc_tf.a_tf_croco_strand_rebco
-                    + d_sc_tf.a_tf_croco_strand_copper_total
-                    + d_sc_tf.a_tf_croco_strand_hastelloy
-                    + d_sc_tf.a_tf_croco_strand_solder
-                )
-            )
-            > 1e-6
-        ):
-            po.ocmmnt(self.outfile, "ERROR: Areas in CroCo strand do not add up")
-            logger.error("Areas in CroCo strand do not add up - see OUT.DAT")
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "Cable information")
@@ -4662,13 +4805,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             "Number of CroCo strands in the cable (fixed) ",
             "",
             N_CROCO_STRANDS_TURN,
-        )
-        po.ovarre(
-            self.outfile,
-            "Total area of circular cable space (m²)",
-            "(a_tf_turn_cable_space_no_void)",
-            self.data.tfcoil.a_tf_turn_cable_space_no_void,
-            "OP ",
         )
 
         po.oblnkl(self.outfile)
@@ -4679,64 +4815,29 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         po.ovarre(
             self.outfile,
             "Width of square conductor (cable + steel jacket) (m)",
-            "(t_conductor)",
-            self.data.tfcoil.t_conductor,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Area of conductor (m²)",
-            "(area)",
-            d_sc_tf.conductor_area,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "REBCO area of conductor (m²)",
-            "(a_tf_croco_strand_rebco)",
-            d_sc_tf.conductor_rebco_area,
+            "(dx_tf_turn_conduit_full_average)",
+            self.data.tfcoil.dx_tf_turn_conduit_full_average,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Area of central copper bar (m²)",
-            "(copper_bar_area)",
-            d_sc_tf.a_tf_turn_croco_copper_bar,
+            "(a_tf_turn_croco_copper_bar)",
+            self.data.superconducting_tfcoil.a_tf_turn_croco_copper_bar,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Total copper area of conductor, total (m²)",
-            "(a_tf_croco_strand_copper_total)",
-            d_sc_tf.a_tf_turn_croco_cable_space_copper,
+            "(a_tf_turn_croco_cable_space_copper)",
+            self.data.superconducting_tfcoil.a_tf_turn_croco_cable_space_copper,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Hastelloy area of conductor (m²)",
-            "(a_tf_croco_strand_hastelloy)",
-            d_sc_tf.a_tf_turn_croco_hastelloy,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Solder area of conductor (m²)",
-            "(a_tf_croco_strand_solder)",
-            d_sc_tf.conductor_solder_area,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Jacket area of conductor (m²)",
-            "(jacket_area)",
-            d_sc_tf.conductor_jacket_area,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Helium area of conductor (m²)",
-            "(helium_area)",
-            d_sc_tf.conductor_helium_area,
+            "(a_tf_turn_croco_hastelloy)",
+            self.data.superconducting_tfcoil.a_tf_turn_croco_hastelloy,
             "OP ",
         )
 
@@ -4745,13 +4846,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             "Critical current of CroCo strand (A)",
             "(cur_tf_turn_croco_strand_critical)",
             d_sc_tf.cur_tf_turn_croco_strand_critical,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Critical current of conductor (A) ",
-            "(conductor_critical_current)",
-            d_sc_tf.conductor_critical_current,
             "OP ",
         )
 
