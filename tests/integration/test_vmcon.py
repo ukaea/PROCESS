@@ -495,8 +495,8 @@ def get_case3():
     c1(x1,x2) = x1 + x2 - 3 = 0
     c2(x1,x2) = -x1**2/4 - x2**2 + 1 >= 0
 
-    Note that this test is supposed to fail with ifail=5
-    as there is no feasible solution
+    Note that this test is supposed to fail with ifail=SolverOutputCondition.NO_SOLUTION
+    (ifail = 5) as there is no feasible solution
     VMCON documentation ANL-80-64
     """
     # Create a case-specific Vmcon object with overridden fcnvmc1 and 2
