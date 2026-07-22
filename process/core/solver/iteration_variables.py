@@ -291,6 +291,7 @@ ITERATION_VARIABLES = {
     176: IterationVariable(
         "f_st_coil_aspect", data_structure.stellarator_variables, 0.70, 1.30
     ),
+    177: IterationVariable("f_a_tf_turn_cable_space_extra_void", data_structure.tfcoil_variables, 0.01, 1.0),
 }
 
 
