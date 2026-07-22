@@ -61,7 +61,7 @@ Over the course of a pulse, the timings are detailed as:
 - Burn time (`t_plant_pulse_burn`) - Flat-top duration. The plasma is approximately steady. Fusion power and electricity are produced. The CS and other PF coil currents all change steadily in a pulsed reactor, but are constant for a "steady-state" reactor. Auxiliary heating is on.
 - Ramp-down (`t_plant_pulse_plasma_current_ramp_down`) - The plasma current, density and temperature all ramp down to zero simultaneously. As a starter for ten we could assume that the CS and PF coil currents also ramp to zero at the same time. Auxiliary heating is possibly on.
 - Between pulse (`t_plant_pulse_dwell`) -  CS and PF coil currents are zero - a few minutes may be required to permit vacuum pumping. May be much longer for an experimental device such as DEMO.
-- Pulse repitition (`t_plant_pulse_plasma_present`) - Sum of all the above times.
+- Pulse repetition (`t_plant_pulse_plasma_present`) - plant pulse time in which a plasma is present = `t_plant_pulse_plasma_current_ramp_up` + `t_plant_pulse_fusion_ramp` + `t_plant_pulse_burn` + `t_plant_pulse_plasma_current_ramp_down` .
 
 A plot showing schematically these timings over a pulse can be found in Figure 2.
 
