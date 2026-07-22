@@ -445,7 +445,7 @@ class BuildingsData:
     """Floor area of fuel handling and storage building in m^2"""
 
     a_control_room_bldg: float = 2.88e3
-    """Floor area of controlroom building in m^2"""
+    """Floor area of control room building in m^2"""
 
     a_ac_ps_bldg: float = 6.423e3
     """Floor area of AC power supply building in m^2"""

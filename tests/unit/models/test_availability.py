@@ -281,7 +281,7 @@ def calc_u_unplanned_magnets_params():
 
 @pytest.fixture(
     params=calc_u_unplanned_magnets_params(),
-    ids=["no_degredation", "no_degradation_conf", "degradation_conf"],
+    ids=["no_degradation", "no_degradation_conf", "degradation_conf"],
 )
 def calc_u_unplanned_magnets_fix(availability, request, monkeypatch):
     """Fixture for the calc_u_unplanned_magnets() test.

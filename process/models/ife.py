@@ -20,7 +20,7 @@ MATERIALS = [
     "Li2O",
     "concrete",
     "helium",
-    "zenon",
+    "xenon",
     "lithium",
 ]
 

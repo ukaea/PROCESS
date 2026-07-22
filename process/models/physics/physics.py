@@ -3781,7 +3781,7 @@ class PlasmaBeta(Model):
               status,” Plasma Physics and Controlled Fusion, vol. 30, no. 11,
               pp. 1597-1609, Oct. 1988,doi: https://doi.org/10.1088/0741-3335/30/11/019.
 
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
               AEA FUS 172, 1992
         """
         # Multiplied by 0.01 to convert from % to fraction

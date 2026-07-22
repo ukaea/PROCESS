@@ -1,6 +1,6 @@
 *************************************************************************
 *****                                                               *****
-*****                     Stellartor test                           *****
+*****                     Stellarator test                           *****
 *****               Jedrzej Walkowiak (16/02/2026)                  *****
 *****            Based on Felix Warmer Run (27/05/2015)             *****
 *****   Warmer et al. (2016), IEEE Trans. Plasma Sci. 44, 1576      *****
@@ -12,12 +12,12 @@
 neqns = 2               *number of equalities
 
 
-*--------------- equaltities
+*--------------- equalities
 icc = 2                 *Global power balance (consistency equation)
 icc = 16                *Net electric power lower limit
 p_plant_electric_net_required_mw = 1000         * Required net electric power (MW)
 
-*-------------- inequaltities
+*-------------- inequalities
 
 * Beta limit
 icc = 24                *Upper beta limit
@@ -234,7 +234,7 @@ runtitle = SQuID
 
 i_tf_sc_mat = 1         * Switch for superconductor material in tf coils (1: ITER Nb3Sn)
 tftmp     = 4.5         * Peak helium coolant temperature in TF coils and PF coils (K)
-tmargmin = 1.5          * Temperature margin for superconductor current denisty calculation (K)
+tmargmin = 1.5          * Temperature margin for superconductor current density calculation (K)
 temp_tf_cryo = 4.5      * Coil temperature for cryogenic plant power calculation (K)
 dx_tf_turn_general = 0.056                * Dimension conductor area including steel and insulation.
 dx_tf_turn_insulation = 0.002             * Conduit insulation thickness (m)

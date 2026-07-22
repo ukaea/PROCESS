@@ -13,7 +13,7 @@ a legend
 
 - 2D SCANS: n_scan_1 graph will be plotted using the second scanned variable
 as x axis and the selected output as y axis
-- Only one 2D scan can be ploted at once.
+- Only one 2D scan can be plotted at once.
 
 Performed checks:
 - Non converged points are not plotted
@@ -70,13 +70,13 @@ def plot_scan(
         if if_.is_dir():
             input_files[ii] = if_ / "MFILE.DAT"
 
-    # nsweep varible dict
+    # nsweep variable dict
     # -------------------
     # TODO WOULD BE GREAT TO HAVE IT AUTOMATICALLY GENERATED ON THE PROCESS CMAKE!
     #        THE SAME WAY THE DICTS ARE
     # This needs to be kept in sync automatically; this will break frequently
     # otherwise
-    # Rem : Some variables are not in the MFILE, making the defintion rather tricky...
+    # Rem : Some variables are not in the MFILE, making the definition rather tricky...
     nsweep_dict = {
         1: "aspect",
         2: "pflux_div_heat_load_max_mw",
@@ -134,7 +134,7 @@ def plot_scan(
         54: "b_crit_upper_nbti",
         55: "dr_shld_inboard",
         56: "p_cryo_plant_electric_max_mw",
-        # Genuinly b_plasma_toroidal_on_axis lower bound
+        # Genuinely b_plasma_toroidal_on_axis lower bound
         57: "b_plasma_toroidal_on_axis",
         58: "dr_fw_plasma_gap_inboard",
         59: "dr_fw_plasma_gap_outboard",
@@ -204,7 +204,7 @@ def plot_scan(
         )
         sys.exit()
 
-    # Only one imput must be used for a 2D scan
+    # Only one input must be used for a 2D scan
     if is_2D_scan and len(input_files) > 1:
         print("ERROR : Only one input file can be used for 2D scans\nERROR : Exiting")
         sys.exit()

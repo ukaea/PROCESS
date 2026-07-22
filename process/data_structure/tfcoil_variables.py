@@ -8,7 +8,7 @@ import numpy as np
 
 N_RADIAL_ARRAY = 50
 """Size of the radial distribution arrays per layers
-used for stress, strain and displacement distibution
+used for stress, strain and displacement distribution
 """
 
 
@@ -286,7 +286,7 @@ class TFData:
 
     i_tf_cond_eyoung_trans: int = 1
     """Switch for the behavior of the elastic properties of the TF coil
-    conductorin the transverse direction. Only active if
+    conductor in the transverse direction. Only active if
     `i_tf_cond_eyoung_axial == 2`
     - =0  Cable not potted in solder. Transverse Young's modulus set to zero.
     - =1  Cable potted in solder. If `i_tf_cond_eyoung_axial == 2`, the
@@ -312,7 +312,7 @@ class TFData:
     - if Superconducting TF  (i_tf_sup = 1) : Free standing TF with a steel casing
     - if aluminium  TF       (i_tf_sup = 2) : Free standing TF with a bucking structure
     Rem : the case is a bucking structure
-    - =0 : Free standing TF without case/bucking cyliner (only a conductor layer)
+    - =0 : Free standing TF without case/bucking cylinder (only a conductor layer)
     - =1 : Free standing TF with a case/bucking cylinder made of
     - if copper resistive     TF (i_tf_sup = 0) : used defined bucking cylinder
     - if Superconducting      TF (i_tf_sup = 1) : Steel casing
@@ -322,13 +322,13 @@ class TFData:
     The CS is frictionally decoupled from the TF, does not carry axial tension
     - =3 : The TF is in contact with the CS : "bucked and wedged design"
     Full version : thin TF-CS Kapton interface introduced in the stress calculations (4 layers)
-    The CS and kaptop are frictionally decoupled from the TF, do not carry
+    The CS and Kapton are frictionally decoupled from the TF, do not carry
     axial tension
     """
 
     n_tf_graded_layers: int = 1
     """Number of layers of different stress properties in the WP. If `n_tf_graded_layers > 1`,
-    a graded coil is condidered
+    a graded coil is considered
     """
 
     n_tf_stress_layers: int = 0
@@ -587,12 +587,12 @@ class TFData:
     """Outboard legs resistivity enhancement factor. Only used for `itart=1`."""
 
     i_cp_joints: int = -1
-    """Switch for CP demoutable joints type
-    -= 0 : Clampled joints
+    """Switch for CP demountable joints type
+    -= 0 : Clamped joints
     -= 1 : Sliding joints
     Default value (-1) choses :
     Sliding joints for resistive magnets (i_tf_sup = 0, 2)
-    Clampled joints for superconducting magnets (i_tf_sup = 1)
+    Clamped joints for superconducting magnets (i_tf_sup = 1)
     """
 
     rho_tf_joints: float = 2.5e-10
@@ -616,7 +616,7 @@ class TFData:
     """TF coil circumference (m)"""
 
     eff_tf_cryo: float = -1.0
-    """TF cryoplant efficiency (compared to pefect Carnot cycle).
+    """TF cryoplant efficiency (compared to perfect Carnot cycle).
     Using -1 set the default value depending on magnet technology:
     - i_tf_sup = 1 : SC magnet, eff_tf_cryo = 0.13 (ITER design)
     - i_tf_sup = 2 : Cryo-aluminium, eff_tf_cryo = 0.4
@@ -715,7 +715,7 @@ class TFData:
     """Vertical tension on outboard leg/coil (N)"""
 
     f_a_tf_turn_cable_space_extra_void: float = 0.4
-    """coolant fraction of TFC 'cable' (`i_tf_sup=1`), or of TFC leg (`i_tf_ssup=0`)"""
+    """coolant fraction of TFC 'cable' (`i_tf_sup=1`), or of TFC leg (`i_tf_sup=0`)"""
 
     voltfleg: float = 0.0
     """volume of each TF coil outboard leg (m3)"""
@@ -790,7 +790,7 @@ class TFData:
 
     # New TF shape:  Horizontal and vertical radii of inside edge of TF coil
     # Arcs are numbered clockwise:
-    # 1=upper inboard, 2=upper outboard, 3=lower ouboard, 4=lower inboard
+    # 1=upper inboard, 2=upper outboard, 3=lower outboard, 4=lower inboard
 
     tfa: list[float] = field(default_factory=lambda: np.zeros(4))
     """Horizontal radius of inside edge of TF coil (m)"""
@@ -847,7 +847,7 @@ class TFData:
 
     temp_cp_average: float = 373.15  # 100 C
     """Average temperature of centrepost called CP (K). Only used for resistive coils
-    to compute the resisitive heating. Must be an iteration variable for
+    to compute the resistive heating. Must be an iteration variable for
     ST (`itart=1`) (`iteration variable 20`)
     """
 
@@ -855,7 +855,7 @@ class TFData:
     """Computed centrepost average temperature (K) (for consistency)"""
 
     temp_tf_legs_outboard: float = -1.0
-    """Average temperature of the TF outboard legs [K]. If `temp_tf_legs_outboard=-1.0`, the ouboard
+    """Average temperature of the TF outboard legs [K]. If `temp_tf_legs_outboard=-1.0`, the outboard
     legs and CP temperatures are the same. Fixed for now, should use a contraints eq like temp_cp_average
     """
 

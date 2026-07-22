@@ -202,7 +202,7 @@ D_T_ENERGY = (
     (DEUTERON_MASS + TRITON_MASS) - (ALPHA_MASS + NEUTRON_MASS)
 ) * SPEED_LIGHT**2
 """Deuterium - Tritium reaction energy [J]
-Find the mass difference in the reactancts and products of the D-T reaction
+Find the mass difference in the reactants and products of the D-T reaction
 Multiply by the speed of light squared to get the energy released
 """
 
@@ -210,7 +210,7 @@ D_HELIUM_ENERGY = (
     (DEUTERON_MASS + HELION_MASS) - (ALPHA_MASS + PROTON_MASS)
 ) * SPEED_LIGHT**2
 """Deuterium - Helion (3He) reaction energy [J]
-Find the mass difference in the reactancts and products of the D-3He reaction
+Find the mass difference in the reactants and products of the D-3He reaction
 Multiply by the speed of light squared to get the energy released
 """
 
@@ -218,7 +218,7 @@ DD_HELIUM_ENERGY = (
     (DEUTERON_MASS + DEUTERON_MASS) - (HELION_MASS + NEUTRON_MASS)
 ) * SPEED_LIGHT**2
 """Deuterium - Deuterium (3He producing) reaction energy [J]
-Find the mass difference in the reactancts and products of the D-D reaction
+Find the mass difference in the reactants and products of the D-D reaction
 Multiply by the speed of light squared to get the energy released
 """
 
@@ -226,7 +226,7 @@ DD_TRITON_ENERGY = (
     (DEUTERON_MASS + DEUTERON_MASS) - (TRITON_MASS + PROTON_MASS)
 ) * SPEED_LIGHT**2
 """Deuterium - Deuterium (Triton producing) reaction energy [J]
-Find the mass difference in the reactancts and products of the D-D reaction
+Find the mass difference in the reactants and products of the D-D reaction
 Multiply by the speed of light squared to get the energy released
 """
 

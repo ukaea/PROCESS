@@ -102,7 +102,7 @@ class RadialBuild:
     cumulative_radial: dict[str, float]
 
 
-# Colours are PROCESS defualt, BLUEMIRA
+# Colours are PROCESS default, BLUEMIRA
 SOLENOID_COLOUR = ["pink", "#1764ab"]
 CSCOMPRESSION_COLOUR = ["maroon", "#33CCCC"]
 TFC_COLOUR = ["cyan", "#084a91"]
@@ -4522,7 +4522,7 @@ def profiles_with_pedestal(mfile, scan: int):
     te0 = mfile.get("temp_plasma_electron_on_axis_kev", scan=scan)
 
     if i_plasma_pedestal == 0:
-        # Intialise the radius
+        # Initialise the radius
 
         # The density profile
         ne = nd_plasma_electron_on_axis * (1 - rho**2) ** alphan
@@ -8474,13 +8474,13 @@ def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
             (sig_case, "TF bucking max TRESCA stress", "MPa"),
             (fcoolcp, "CP cooling fraction", "%"),
             ("vel_cp_coolant_midplane", "Maximum coolant flow speed", "ms$^{-1}$"),
-            (p_cp_resistive, "CP Resisitive heating", "MW"),
+            (p_cp_resistive, "CP resistive heating", "MW"),
             (
                 p_tf_leg_resistive,
-                "legs Resisitive heating (all legs)",
+                "legs resistive heating (all legs)",
                 "MW",
             ),
-            (p_tf_joints_resistive, "TF joints resisitive heating ", "MW"),
+            (p_tf_joints_resistive, "TF joints resistive heating ", "MW"),
         ]
 
     plot_info(axis, data, mfile, scan)

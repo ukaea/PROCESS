@@ -106,7 +106,7 @@ $$
 
 -----------------
 
-[^1]: T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+[^1]: T.C.Hender et.al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992
 
 [^2]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
 

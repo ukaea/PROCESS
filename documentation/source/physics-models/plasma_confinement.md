@@ -34,7 +34,7 @@ where $f_{\alpha}$ is the [fraction of alpha power that is coupled to the plasma
 
 ## Calculating plasma confinement time | `calculate_confinement_time()`
 
-The correspoding plasma confinement time is calculated by the `calculate_confinement_time()` function in `physics.py` with scalings taken from `confinement_time.py`.
+The corresponding plasma confinement time is calculated by the `calculate_confinement_time()` function in `physics.py` with scalings taken from `confinement_time.py`.
 
 A key definition of elongation is defined here and is used mainly in the ITER physics basis scalings [^12]:
 
@@ -99,7 +99,7 @@ option is not recommended.
 Many energy confinement time scaling laws are available within PROCESS, for conventional aspect ratio tokamaks, spherical tokamaks, and stellarators.
 The value of `i_confinement_time` determines which of the scalings is used in the plasma energy balance calculation.
 
-The scaling chosen with `i_confinement_time` is then calculated and multiplied with the $H$-factor [$\mathtt{hfact}$]. $\mathtt{hfact}$ can be set as an interation variable by setting `ixc = 10` in the `IN.DAT` input file.
+The scaling chosen with `i_confinement_time` is then calculated and multiplied with the $H$-factor [$\mathtt{hfact}$]. $\mathtt{hfact}$ can be set as an iteration variable by setting `ixc = 10` in the `IN.DAT` input file.
 
 ---------------
 

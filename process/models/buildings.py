@@ -170,7 +170,7 @@ class Buildings(Model):
         bmr = max(crr, pfr, tfro)
 
         # Determine largest transported piece
-        sectl = shro - shri  # Shield thicknes (m)
+        sectl = shro - shri  # Shield thickness (m)
         coill = tfro - tfri  # TF coil thickness (m)
         sectl = max(coill, sectl)
 

@@ -39,7 +39,7 @@ def calculate_max_force_density_mnm(data: DataStructure):
 
 
 def calculate_maximum_stress(data):
-    """Approximate, very simple maxiumum stress (needed for limitation of icc 32),
+    """Approximate, very simple maximum stress (needed for limitation of icc 32),
     in Pa
     """
     data.tfcoil.sig_tf_wp = (

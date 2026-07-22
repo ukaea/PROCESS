@@ -1899,7 +1899,7 @@ class BlanketLibrary(Model):
                 (0.9249e9 * mid_temp_liq) + 2.3167e6 - (0.7131e3 * mid_temp_liq)
             )
 
-        # Magnetic feild strength in T for Hartmann calculation
+        # Magnetic field strength in T for Hartmann calculation
         # IB
         if (
             self.data.build.i_blkt_inboard
@@ -3027,7 +3027,7 @@ class BlanketLibrary(Model):
         lead-lithium alloy, two candidate liquid metal breeder materials
         for self-cooled blankets, Fusion Engineering and Design 27, 399-406
 
-        [Iba2013]   Ibano et al (2013), Nutronics and pumping power analysis on the
+        [Iba2013]   Ibano et al (2013), neutronics and pumping power analysis on the
         Tokamak reactor for the fusion-biomass hybrid concept,
         Fusion Engineering and Design, 88
 
@@ -3046,7 +3046,7 @@ class BlanketLibrary(Model):
         Control fusion, 63, 124002
 
         """
-        # Magnetic feild strength in IB or OB blanket
+        # Magnetic field strength in IB or OB blanket
         if label == "Inboard blanket breeder liquid":
             b_mag = self.data.fwbs.b_mag_blkt[0]  # IB
         if label == "Outboard blanket breeder liquid":

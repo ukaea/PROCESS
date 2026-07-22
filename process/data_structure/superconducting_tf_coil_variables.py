@@ -67,7 +67,7 @@ class SuperconductingTFData:
     """Radial position of centre and centre of winding pack [m]"""
 
     dr_tf_wp_top: float = 0.0
-    """Conductor layer radial thickness at centercollumn top [m]
+    """Conductor layer radial thickness at centre column top [m]
     Ground insulation layer included, only defined for itart = 1
     """
 
@@ -99,13 +99,13 @@ class SuperconductingTFData:
     """Inboard mid-plane cross-section area of the WP ground insulation [m²]"""
 
     a_leg_ins: float = 0.0
-    """TF ouboard leg turn insulation area per coil [m²]"""
+    """TF outboard leg turn insulation area per coil [m²]"""
 
     a_leg_gr_ins: float = 0.0
     """TF outboard leg ground insulation area per coil [m²]"""
 
     a_leg_cond: float = 0.0
-    """Exact TF ouboard leg conductor area [m²]"""
+    """Exact TF outboard leg conductor area [m²]"""
 
     rad_tf_coil_inboard_toroidal_half: float = 0.0
     """Half toroidal angular extent of a single TF coil inboard leg"""

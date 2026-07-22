@@ -232,7 +232,7 @@ class PlasmaGeom(Model):
             self.data.physics.i_plasma_geometry == PlasmaGeometryModelType.IPDG89_X_POINT
         ):  # Use input kappa, self.data.physics.triang values
             #  Rough estimate of 95% values
-            #  ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
+            #  ITER Physics Design Guidelines: 1989 (Uckan et al. 1990)
             #  (close to previous estimate of (self.data.physics.kappa - 0.04) / 1.1
             #  over a large self.data.physics.kappa range)
 
@@ -273,7 +273,7 @@ class PlasmaGeom(Model):
                 2.0e0, 1.5e0 + 0.5e0 / (self.data.physics.aspect - 1.0e0)
             )
 
-            # ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
+            # ITER Physics Design Guidelines: 1989 (Uckan et al. 1990)
             self.data.physics.kappa95 = self.data.physics.kappa / 1.12e0
             self.data.physics.triang95 = self.data.physics.triang / 1.50e0
 
@@ -286,7 +286,7 @@ class PlasmaGeom(Model):
                 2.0e0, 1.5e0 + 0.5e0 / (self.data.physics.aspect - 1.0e0)
             )
 
-            # ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
+            # ITER Physics Design Guidelines: 1989 (Uckan et al. 1990)
             self.data.physics.triang = 1.5e0 * self.data.physics.triang95
 
             self.data.physics.kappa95 = self.data.physics.kappa / 1.12e0
@@ -296,7 +296,7 @@ class PlasmaGeom(Model):
         if (
             self.data.physics.i_plasma_geometry == PlasmaGeometryModelType.IPDG89_95
         ):  # Use input kappa95, self.data.physics.triang95 values
-            # ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
+            # ITER Physics Design Guidelines: 1989 (Uckan et al. 1990)
             self.data.physics.kappa = 1.12e0 * self.data.physics.kappa95
             self.data.physics.triang = 1.5e0 * self.data.physics.triang95
 

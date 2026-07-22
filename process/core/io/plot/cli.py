@@ -193,7 +193,7 @@ def sankey(mfile, format_):
     help=(
         "Option to plot 2D scans as a coloured contour plot instead of a line plot \n  "
         "Note: Non convergent points will show up with a value of zero \n "
-        "Note: The scan paramters must both be in increasing orderl \n "
+        "Note: The scan parameters must both be in increasing orderl \n "
     ),
 )
 @click.option(
@@ -262,10 +262,10 @@ def plot_scans_cli(
     type=click.Choice(["all", "sig", "disp", "strain", "sm_sig"]),
     help="""\b
 Plot selection string :
-- If it containts 'sig'      -> Stress radial dependency
-- If it containts 'strain'   -> Strain
-- If it containts 'disp'     -> Displacement
-- If it containts 'all'      -> all the mentioned plots (default value)
+- If it contains 'sig'      -> Stress radial dependency
+- If it contains 'strain'   -> Strain
+- If it contains 'disp'     -> Displacement
+- If it contains 'all'      -> all the mentioned plots (default value)
 """,
 )
 @click.option(

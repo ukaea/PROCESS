@@ -115,7 +115,7 @@ $$
 \overbrace{\Phi_{\text{ind,ramp}}}^{\texttt{vs_self_ind_ramp}} =  \texttt{ind_plasma_total} \times I_{\text{p}}
 $$
 
-So the total resisitive and inductive flux consumption at current ramp up which is the total flux requires is given by:
+So the total resistive and inductive flux consumption at current ramp up which is the total flux requires is given by:
 
 $$
 \overbrace{\Phi_{\text{tot,ramp}}}^{\texttt{vs_plasma_ramp_required}} =  \overbrace{\Phi_{\text{res,ramp}}}^{\texttt{vs_res_ramp}} + \overbrace{\Phi_{\text{ind,ramp}}}^{\texttt{vs_self_ind_ramp}}

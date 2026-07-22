@@ -99,7 +99,7 @@ Based on the Lagrange method, sequential (also successive or recursive) quadrati
 
 ## 4- VMCON
 
-The optimisation solver implemented in `PROCESS` is the Fortran routine `VMCON`[^3]. It is a modified version of the `vf02ad` routine from the Harwell Software Library (www.hsl.rl.ac.uk) and implements a SQP method originally suggested by Powell[^5] (this should not be confused with Powell's algorithm[^4] which solves a multidimensional unconstrained minimisation problem without derivatives)  based on work by Han[^6]. As stated before `VMCON` is designed to converge on a solution of the *necerssary* KKT conditions (eq. \ref{eqn:equation-4e}), but does not check the *sufficient* conditions. Its convergence criterion is therefore given by
+The optimisation solver implemented in `PROCESS` is the Fortran routine `VMCON`[^3]. It is a modified version of the `vf02ad` routine from the Harwell Software Library (www.hsl.rl.ac.uk) and implements a SQP method originally suggested by Powell[^5] (this should not be confused with Powell's algorithm[^4] which solves a multidimensional unconstrained minimisation problem without derivatives)  based on work by Han[^6]. As stated before `VMCON` is designed to converge on a solution of the *necessary* KKT conditions (eq. \ref{eqn:equation-4e}), but does not check the *sufficient* conditions. Its convergence criterion is therefore given by
 
 $$
 \begin{equation}
