@@ -5,25 +5,25 @@
 The control of fuelling is governed by 4 key particle flux equations for each of the primary fuel species and the thermal helium $\alpha$ ash.
 
 $$
-\frac{dn_{\text{T}}}{dt} = f_{\text{fuelling,T}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}}+\Gamma_{\text{T,beam}} + \Gamma_{\text{D+D} \rightarrow \text{T}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{T}}^*}
+\frac{dN_{\text{T}}}{dt} = f_{\text{fuelling,T}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}}+\Gamma_{\text{T,beam}} + \Gamma_{\text{D+D} \rightarrow \text{T}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{T}}^*}
 $$
 
 $$
-\frac{dn_{\text{D}}}{dt} = f_{\text{fuelling,D}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}}+\Gamma_{\text{D,beam}} -2 \Gamma_{\text{D+D}}- \Gamma_{\text{D+3He}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{D}}^*}
+\frac{dN_{\text{D}}}{dt} = f_{\text{fuelling,D}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}}+\Gamma_{\text{D,beam}} -2 \Gamma_{\text{D+D}}- \Gamma_{\text{D+3He}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{D}}^*}
 $$
 
 $$
-\frac{dn_{\text{3He}}}{dt} = f_{\text{fuelling,3He}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} + \Gamma_{\text{D+D} \rightarrow \text{3He}} -\Gamma_{\text{D+3He}} - \frac{N_{\text{T}}}{\tau_{\text{3He}}^*}
+\frac{dN_{\text{3He}}}{dt} = f_{\text{fuelling,3He}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} + \Gamma_{\text{D+D} \rightarrow \text{3He}} -\Gamma_{\text{D+3He}} - \frac{N_{\text{T}}}{\tau_{\text{3He}}^*}
 $$
 
 $$
-\frac{dn_{\alpha,\text{thermal}}}{dt} = \Gamma_{\text{D+3He}} + \Gamma_{\text{D+T}} - \frac{N_{\alpha,\text{thermal}}}{\tau_{\alpha}^*}
+\frac{dN_{\alpha,\text{thermal}}}{dt} = \Gamma_{\text{D+3He}} + \Gamma_{\text{D+T}} - \frac{N_{\alpha,\text{thermal}}}{\tau_{\alpha}^*}
 $$
 
 In a steady state equilibrium all 4 of these equations should balance, therefore:
 
 $$
-\frac{dn_{\text{D}}}{dt} = \frac{dn_{\text{T}}}{dt} = \frac{dn_{\text{3He}}}{dt} = \frac{dn_{\alpha,\text{thermal}}}{dt} = 0
+\frac{dN_{\text{D}}}{dt} = \frac{dN_{\text{T}}}{dt} = \frac{dN_{\text{3He}}}{dt} = \frac{dN_{\alpha,\text{thermal}}}{dt} = 0
 $$
 
 Here, $\eta_{\text{fuelling}}$ is the fuelling efficiency, which quantifies how effectively fuel injected into the vacuum vessel reaches the plasma core. The value of $\eta_{\text{fuelling}}$ depends on the fuelling method. Typical values are around 0.01--0.1 for low-field-side gas puffing, 0.1--0.2 for supersonic gas injection, and 0.5--0.9 for pellet injection, which can approach unity under favourable conditions. $\Gamma_{\text{fuelling}}$ is the fuel injection rate into the vacuum vessel. The product $\eta_{\text{fuelling}} \Gamma_{\text{fuelling}}$ therefore represents the effective fuelling rate, i.e. the fraction of the injected fuel that successfully penetrates into the plasma and becomes available for fusion reactions. $\Gamma_{\text{T,beam}}$ and $\Gamma_{\text{D,beam}}$ respectively are the particle source rates from neutral beam systems (if present).
@@ -61,7 +61,7 @@ Where $\tau_p$ is the particle confinement time which we can assume is approxima
 ### Tritium Flow Rate | `calculate_plasma_tritium_flow_rate()`
 
 $$
-\frac{dn_{\text{T}}}{dt} = f_{\text{fuelling,T}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}}+\Gamma_{\text{T,beam}} + \Gamma_{\text{D+D} \rightarrow \text{T}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{T}}^*}
+\frac{dN_{\text{T}}}{dt} = f_{\text{fuelling,T}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}}+\Gamma_{\text{T,beam}} + \Gamma_{\text{D+D} \rightarrow \text{T}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{T}}^*}
 $$
 
 ---------------
@@ -69,7 +69,7 @@ $$
 ### Deuterium Flow Rate | `calculate_plasma_deuterium_flow_rate()`
 
 $$
-\frac{dn_{\text{D}}}{dt} = f_{\text{fuelling,D}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}}+\Gamma_{\text{D,beam}} -2 \Gamma_{\text{D+D}}- \Gamma_{\text{D+3He}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{D}}^*}
+\frac{dN_{\text{D}}}{dt} = f_{\text{fuelling,D}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}}+\Gamma_{\text{D,beam}} -2 \Gamma_{\text{D+D}}- \Gamma_{\text{D+3He}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{D}}^*}
 $$
 
 ---------------
@@ -77,7 +77,7 @@ $$
 ### Helium-3 Flow Rate | `calculate_plasma_helium3_flow_rate()`
 
 $$
-\frac{dn_{\text{3He}}}{dt} = f_{\text{fuelling,3He}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} + \Gamma_{\text{D+D} \rightarrow \text{3He}}-\Gamma_{\text{D+3He}} - \frac{N_{\text{T}}}{\tau_{\text{3He}}^*}
+\frac{dN_{\text{3He}}}{dt} = f_{\text{fuelling,3He}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} + \Gamma_{\text{D+D} \rightarrow \text{3He}}-\Gamma_{\text{D+3He}} - \frac{N_{\text{T}}}{\tau_{\text{3He}}^*}
 $$
 
 ---------------
@@ -85,7 +85,7 @@ $$
 ### Thermal Alpha Particle Flow Rate | `calculate_plasma_alphas_thermal_flow_rate()`
 
 $$
-\frac{dn_{\alpha,\text{thermal}}}{dt} = \Gamma_{\text{D+3He}} + \Gamma_{\text{D+T}} - \frac{N_{\alpha,\text{thermal}}}{\tau_{\alpha}^*}
+\frac{dN_{\alpha,\text{thermal}}}{dt} = \Gamma_{\text{D+3He}} + \Gamma_{\text{D+T}} - \frac{N_{\alpha,\text{thermal}}}{\tau_{\alpha}^*}
 $$
 
 -----------------
