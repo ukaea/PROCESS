@@ -708,7 +708,7 @@ INPUT_VARIABLES = {
         "superconducting_tfcoil",
         float,
         range=(1e-08, 0.0001),
-        additional_actions=lambda _n, rt, _i, _c: (
+        additional_actions=lambda _n, rt, *_: (
             rt <= 1e-6
             or logger.warning(
                 (
