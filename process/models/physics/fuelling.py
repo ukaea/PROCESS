@@ -555,7 +555,59 @@ class PlasmaFuelling(Model):
         )
 
     @staticmethod
+    def calculate_plasma_alphas_thermal_source_rate(
+        fusrat_dt_total: float,
+        fusrat_plasma_dhe3: float,
+    ) -> float:
+        """Calculate the thermal alpha particle source rate in the plasma.
+
+        Parameters
+        ----------
+        fusrat_dt_total : float
+            Total DT fusion rate (particles/s).
+        fusrat_plasma_dhe3 : float
+            Deuterium consumption rate from D-He3 fusion (particles/s).
+
+        Returns
+        -------
+        float
+            Thermal alpha particle source rate in the plasma (particles/s).
+
+        """
+        return fusrat_dt_total + fusrat_plasma_dhe3
+
+    @staticmethod
+    def calculate_plasma_alphas_thermal_loss_rate(
+        t_energy_confinement: float,
+        f_t_alpha_energy_confinement: float,
+        nd_plasma_alphas_thermal_vol_avg: float,
+        vol_plasma: float,
+    ) -> float:
+        """Calculate the thermal alpha particle loss rate from the plasma.
+
+        Parameters
+        ----------
+        t_energy_confinement : float
+            Energy confinement time (s).
+        f_t_alpha_energy_confinement : float
+            Ratio of alpha particle confinement time to energy confinement time (dimensionless).
+        nd_plasma_alphas_thermal_vol_avg : float
+            Volume-averaged density of thermal alpha particles in the plasma (particles/m³).
+        vol_plasma : float
+            Plasma volume (m³).
+
+        Returns
+        -------
+        float
+            Thermal alpha particle loss rate from the plasma (particles/s).
+
+        """
+        return -(nd_plasma_alphas_thermal_vol_avg * vol_plasma) / (
+            t_energy_confinement * f_t_alpha_energy_confinement
+        )
+
     def calculate_plasma_alphas_thermal_flow_rate(
+        self,
         fusrat_dt_total: float,
         fusrat_plasma_dhe3: float,
         t_energy_confinement: float,
@@ -592,11 +644,13 @@ class PlasmaFuelling(Model):
         from the plasma.
 
         """
-        return (
-            fusrat_dt_total
-            + fusrat_plasma_dhe3
-            - (nd_plasma_alphas_thermal_vol_avg * vol_plasma)
-            / (t_energy_confinement * f_t_alpha_energy_confinement)
+        return self.calculate_plasma_alphas_thermal_source_rate(
+            fusrat_dt_total=fusrat_dt_total, fusrat_plasma_dhe3=fusrat_plasma_dhe3
+        ) + self.calculate_plasma_alphas_thermal_loss_rate(
+            t_energy_confinement=t_energy_confinement,
+            f_t_alpha_energy_confinement=f_t_alpha_energy_confinement,
+            nd_plasma_alphas_thermal_vol_avg=nd_plasma_alphas_thermal_vol_avg,
+            vol_plasma=vol_plasma,
         )
 
     def output_fuelling_info(self):
