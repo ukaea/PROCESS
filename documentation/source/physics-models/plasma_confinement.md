@@ -54,7 +54,7 @@ The loss power $P_{\text{L}}$ [$\mathtt{p\_plasma\_loss\_mw}$] is calculated fro
 Published confinement scalings are all based on low radiation pulses. A power
 plant will certainly be a high radiation machine, both in the core, due to
 bremsstrahlung and synchrotron radiation, and in the edge due to impurity
-seeding. The scaling data does not predict this radiation [^23] [^24], that needs to be
+seeding. The scaling data does not predict this radiation [^24] [^25], that needs to be
 done by the radiation model. However, if the transport is very "stiff", as
 predicted by some models, then the additional radiation causes an almost equal
 drop in power transported by ions and electrons, leaving the confinement
@@ -647,6 +647,15 @@ $$
 
 -------------------------
 
+#### 51: Paz-Soldan negative triangularity scaling (L-mode) | `paz_soldan_nt_confinement_time()`
+
+Is selected with `i_confinement_time = 51` [^paz_soldan_neg]
+
+$$
+\tau_{\text{E}} =  0.0821 I_{\text{p}}^{1.02} B_{\text{T}}^{0.11} P_{\text{L}}^{-0.91} \overline{n}_{19}^{0.51} 
+$$
+
+-------------------------
 ### Transport Powers
 
 After the confinement time scaling with $H$-factor correction has been calculated, the ion and electron transport power densities are found. `PROCESS` assumes the scaling confinement time to be equal to the ion and electron energy confinement time.
@@ -729,6 +738,7 @@ The value of `f_t_alpha_energy_confinement_min` can be set to the desired minimu
 [^20]: J. E. Menard, “Compact steady-state tokamak performance dependence on magnet and core physics limits,” Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440-20170440, Feb. 2019, doi: https://doi.org/10.1098/rsta.2017.0440.
 [^21]: P. F. Buxton, L. Connor, A. E. Costley, M. Gryaznevich, and S. McNamara, “On the energy confinement time in spherical tokamaks: implications for the design of pilot plants and fusion reactors,” vol. 61, no. 3, pp. 035006-035006, Jan. 2019, doi: https://doi.org/10.1088/1361-6587/aaf7e5.
 [^22]: G. Verdoolaege et al., “The updated ITPA global H-mode confinement database: description and analysis,” Nuclear Fusion, vol. 61, no. 7, pp. 076006-076006, Jan. 2021, doi: https://doi.org/10.1088/1741-4326/abdb91.
-[^23]: H. Lux, R. Kemp, E. Fable, and R. Wenninger, “Radiation and confinement in 0D fusion systems codes,” Plasma Physics and Controlled Fusion, vol. 58, no. 7, pp. 075001–075001, May 2016, doi: https://doi.org/10.1088/0741-3335/58/7/075001.
-[^24]: H. Lux, R. Kemp, D. J. Ward, and M. Sertoli, “Impurity radiation in DEMO systems modelling,” Fusion Engineering and Design, vol. 101, pp. 42–51, Dec. 2015, doi: https://doi.org/10.1016/j.fusengdes.2015.10.002.
+[^paz_soldan_neg]: P. Lunia, A.O. Nelson, and C. Paz-Soldan, "Energy Confinement Time Scaling Law Derived from Paz-Soldan NF 2024", doi: https://arxiv.org/abs/2509.04279v2
+[^24]: H. Lux, R. Kemp, E. Fable, and R. Wenninger, “Radiation and confinement in 0D fusion systems codes,” Plasma Physics and Controlled Fusion, vol. 58, no. 7, pp. 075001–075001, May 2016, doi: https://doi.org/10.1088/0741-3335/58/7/075001.
+[^25]: H. Lux, R. Kemp, D. J. Ward, and M. Sertoli, “Impurity radiation in DEMO systems modelling,” Fusion Engineering and Design, vol. 101, pp. 42–51, Dec. 2015, doi: https://doi.org/10.1016/j.fusengdes.2015.10.002.
 ‌
