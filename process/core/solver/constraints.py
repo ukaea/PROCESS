@@ -2018,13 +2018,18 @@ def constraint_equation_96(constraint_registration, data):
     rate of thermal alpha particle loss, maintaining a steady-state condition for
     thermal alpha particles in the plasma.
     """
-    # Alpha particle balance
-    numerator = data.physics.fusrat_dt_total + data.physics.fusrat_plasma_dhe3
-    denominator = (
-        data.physics.nd_plasma_alphas_thermal_vol_avg * data.physics.vol_plasma
-    ) / (data.physics.t_energy_confinement * data.physics.f_t_alpha_energy_confinement)
+    source = PlasmaFuelling.calculate_plasma_alphas_thermal_source_rate(
+        fusrat_dt_total=data.physics.fusrat_dt_total,
+        fusrat_plasma_dhe3=data.physics.fusrat_plasma_dhe3,
+    )
+    sink = PlasmaFuelling.calculate_plasma_alphas_thermal_loss_rate(
+        nd_plasma_alphas_thermal_vol_avg=data.physics.nd_plasma_alphas_thermal_vol_avg,
+        vol_plasma=data.physics.vol_plasma,
+        t_energy_confinement=data.physics.t_energy_confinement,
+        f_t_alpha_energy_confinement=data.physics.f_t_alpha_energy_confinement,
+    )
 
-    return eq(numerator, denominator, constraint_registration)
+    return eq(source, -sink, constraint_registration)
 
 
 @ConstraintManager.register_constraint(97, "", "=")
