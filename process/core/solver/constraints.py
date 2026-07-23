@@ -1984,21 +1984,22 @@ def constraint_equation_95(constraint_registration, data):
     The equation ensures that the rate of helium-3 production equals the rate of helium-3
     loss, maintaining a steady-state condition for helium-3 in the plasma.
     """
-    numerator = (
-        data.physics.eta_plasma_fuelling
-        * data.physics.molflow_plasma_fuelling_vv_injected
-        * data.physics.f_molflow_plasma_fuelling_helium3
-    ) + data.physics.fusrat_plasma_dhe3
-    denominator = (
-        data.physics.nd_plasma_fuel_ions_vol_avg
-        * data.physics.vol_plasma
-        * data.physics.f_plasma_fuel_helium3
-    ) / (
-        data.physics.t_energy_confinement
-        / (1 - data.physics.f_plasma_particles_lcfs_recycled)
+    source = PlasmaFuelling.calculate_plasma_helium3_source_rate(
+        f_molflow_plasma_fuelling_helium3=data.physics.f_molflow_plasma_fuelling_helium3,
+        eta_plasma_fuelling=data.physics.eta_plasma_fuelling,
+        molflow_plasma_fuelling_vv_injected=data.physics.molflow_plasma_fuelling_vv_injected,
+        fusrat_plasma_dd_helion=data.physics.fusrat_plasma_dd_helion,
+    )
+    sink = PlasmaFuelling.calculate_plasma_helium3_loss_rate(
+        fusrat_plasma_dhe3=data.physics.fusrat_plasma_dhe3,
+        t_energy_confinement=data.physics.t_energy_confinement,
+        f_plasma_particles_lcfs_recycled=data.physics.f_plasma_particles_lcfs_recycled,
+        nd_plasma_fuel_ions_vol_avg=data.physics.nd_plasma_fuel_ions_vol_avg,
+        vol_plasma=data.physics.vol_plasma,
+        f_plasma_fuel_helium3=data.physics.f_plasma_fuel_helium3,
     )
 
-    return eq(numerator, denominator, constraint_registration)
+    return eq(source, -sink, constraint_registration)
 
 
 @ConstraintManager.register_constraint(96, "particles/s", "=")
