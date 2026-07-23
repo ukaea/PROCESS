@@ -21,9 +21,7 @@ class CurrentDriveData:
     """bootstrap current fraction (enforced; see i_bootstrap_current)"""
 
     f_c_plasma_bootstrap_max: float = 0.9
-    """maximum fraction of plasma current from bootstrap; if `f_c_plasma_bootstrap_max < 0`,
-    bootstrap fraction = abs(f_c_plasma_bootstrap_max)
-    """
+    """Maximum fraction of plasma current from bootstrap"""
 
     f_c_plasma_bootstrap_iter89: float = 0.0
     """bootstrap current fraction, ITER 1989 model"""
