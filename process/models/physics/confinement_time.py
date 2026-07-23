@@ -1672,7 +1672,7 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
               AEA FUS 172, 1992
 
             - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and
@@ -1731,7 +1731,7 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
               AEA FUS 172, 1992
         """
         term1 = (
@@ -1798,7 +1798,7 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
               AEA FUS 172, 1992
         """
         rll = (rminor**2 * rmajor * kappa) ** (1.0e0 / 3.0e0)
@@ -2086,7 +2086,7 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
               AEA FUS 172, 1992
         """
         return (
@@ -2137,7 +2137,7 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
               AEA FUS 172, 1992
         """
         return (
@@ -2190,7 +2190,7 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
               AEA FUS 172, 1992
         """
         return (
@@ -2240,7 +2240,7 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
               AEA FUS 172, 1992
         """
         qhat = (
@@ -2298,7 +2298,7 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
               AEA FUS 172, 1992
         """
         return (
@@ -2351,7 +2351,7 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+            - T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
               AEA FUS 172, 1992
         """
         return (

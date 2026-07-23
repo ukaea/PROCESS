@@ -523,7 +523,7 @@ def calculate_quench_protection_current_density(
     - Assumes constant magnetic field over the duration of the quench.
     - Assumes the dump resistor has a constant resistance much higher
     than that of the TF coil.
-    - Operates on the current-carring cross-section of a conductor. The
+    - Operates on the current-carrying cross-section of a conductor. The
     jacket and insulation are ignored. The actual allowable WP current
     density must be weighted with the ratio of current-carrying cross-section
     vs. total WP cross-section (including jacket and insulation).

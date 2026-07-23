@@ -35,7 +35,7 @@ def test_pimpden(process_models):
     :param expected_pimpden: Total impurity radiation density (W/m3)
     :type expected_pimpden: float
     """
-    pimden_parameters = PimpdenParam(
+    pimpden_parameters = PimpdenParam(
         imp_element_index=0,
         ne=np.array([
             9.42593370e19,
@@ -76,12 +76,12 @@ def test_pimpden(process_models):
     )
 
     pimpden = impurity_radiation.pimpden(
-        pimden_parameters.imp_element_index,
-        pimden_parameters.ne,
-        pimden_parameters.te,
+        pimpden_parameters.imp_element_index,
+        pimpden_parameters.ne,
+        pimpden_parameters.te,
         process_models.physics.data,
     )
-    assert pytest.approx(pimpden) == pimden_parameters.expected_pimpden
+    assert pytest.approx(pimpden) == pimpden_parameters.expected_pimpden
 
 
 class FradcoreParam(NamedTuple):

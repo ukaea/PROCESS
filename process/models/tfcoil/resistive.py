@@ -287,7 +287,7 @@ class ResistiveTFCoil(TFCoil):
             self.data.build.r_tf_inboard_out - self.data.tfcoil.dr_tf_plasma_case
         )
 
-        # Conductor layer radial thickness at centercollumn top [m]
+        # Conductor layer radial thickness at centre column top [m]
         if self.data.physics.itart == 1:
             self.data.superconducting_tfcoil.dr_tf_wp_top = (
                 self.data.build.r_cp_top
@@ -407,7 +407,7 @@ class ResistiveTFCoil(TFCoil):
             / self.data.tfcoil.a_tf_inboard_total
         )
 
-        # Total cross-sectional area of the bucking cylindre and the outer support
+        # Total cross-sectional area of the bucking cylinder and the outer support
         # support structure per coil [m2]
         # self.data.physics.itart = 1 : Only valid at mid-plane
         self.data.tfcoil.a_tf_coil_inboard_case = (
@@ -419,7 +419,7 @@ class ResistiveTFCoil(TFCoil):
             self.data.tfcoil.n_tf_coil_turns * self.data.tfcoil.n_tf_coils
         )
 
-        # Exact current density on TF oubard legs
+        # Exact current density on TF outboard legs
         self.data.tfcoil.cdtfleg = self.data.tfcoil.c_tf_total / (
             (1.0e0 - self.data.tfcoil.fcoolcp)
             * (
@@ -496,7 +496,7 @@ class ResistiveTFCoil(TFCoil):
 
         # Calculations dedicated for configurations with CP
         if self.data.physics.itart == 1:
-            # Tricky trick to make the leg / CP tempearture the same
+            # Tricky trick to make the leg / CP temperatures the same
             if (
                 abs(self.data.tfcoil.temp_tf_legs_outboard + 1.0e0)
                 < np.finfo(float(self.data.tfcoil.temp_tf_legs_outboard)).eps
@@ -521,7 +521,7 @@ class ResistiveTFCoil(TFCoil):
                     + 8.89159e-12 * self.data.tfcoil.temp_tf_legs_outboard
                 )
 
-            # Tricky trick to make the leg / CP tempearture the same
+            # Tricky trick to make the leg / CP temperatures the same
             if self.data.superconducting_tfcoil.is_leg_cp_temp_same == 1:
                 self.data.tfcoil.temp_tf_legs_outboard = -1.0e0
 
@@ -552,7 +552,7 @@ class ResistiveTFCoil(TFCoil):
             )
 
         # Leg cross-section areas
-        # Rem : For self.data.physics.itart = 1, these quantitire corresponds to
+        # Rem : For self.data.physics.itart = 1, these quantities corresponds to
         # the outer leg only
         # ---
         # Leg ground insulation area per coil [m2]
@@ -660,7 +660,7 @@ class ResistiveTFCoil(TFCoil):
                 )
             )
 
-            # self.data.tfcoil.p_cp_resistive containts the the total resistive
+            # self.data.tfcoil.p_cp_resistive contains the the total resistive
             # power losses
             self.data.tfcoil.p_tf_leg_resistive = 0.0e0
 
@@ -673,7 +673,7 @@ class ResistiveTFCoil(TFCoil):
         vol_ins = 0.0e0  # Total leg turn insulation volume [m3]
         vol_gr_ins = 0.0e0  # Total leg turn insulation volume [m3]
         vol_cond = 0.0e0  # Total conductor insulator volume [m3]
-        vol_ins_leg = 0.0e0  # Outboard leg turn isulation volume [m3]
+        vol_ins_leg = 0.0e0  # Outboard leg turn insulation volume [m3]
         vol_gr_ins_leg = 0.0e0  # Outboard leg turn insulation volume [m3]
         vol_cond_leg = 0.0e0  # Outboard leg conductor insulator volume [m3]
 
@@ -709,7 +709,7 @@ class ResistiveTFCoil(TFCoil):
                 + self.data.tfcoil.n_tf_coils * vol_ins_leg
             )
 
-            # Ouboard leg TF ground insulation layer volume (per leg) [m3]
+            # Outboard leg TF ground insulation layer volume (per leg) [m3]
             vol_gr_ins_leg = (
                 self.data.tfcoil.len_tf_coil
                 * self.data.superconducting_tfcoil.a_leg_gr_ins
@@ -976,7 +976,7 @@ class ResistiveTFCoil(TFCoil):
         radius += self.data.tfcoil.dr_tf_nose_case
         po.obuild(
             self.outfile,
-            "Coil bucking cylindre",
+            "Coil bucking cylinder",
             self.data.tfcoil.dr_tf_nose_case,
             radius,
             "(dr_tf_nose_case)",
@@ -1149,14 +1149,14 @@ class ResistiveTFCoil(TFCoil):
             po.osubhd(self.outfile, "Radial build of TF coil at central collumn top :")
             # write(self.outfile,5)
 
-            # Restart the radial build at bucking cylindre inner radius
+            # Restart the radial build at bucking cylinder inner radius
             radius = self.data.build.r_tf_inboard_in
             po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
 
             radius += self.data.tfcoil.dr_tf_nose_case
             po.obuild(
                 self.outfile,
-                "Coil bucking cylindre",
+                "Coil bucking cylinder",
                 self.data.tfcoil.dr_tf_nose_case,
                 radius,
                 "(dr_tf_nose_case)",
@@ -1360,7 +1360,7 @@ class ResistiveTFCoil(TFCoil):
                 np.pi * rmid**2 - a_tfin_hole - n_tf_coils * a_cp_cool - a_cp_ins
             )
 
-            # Volumes and resisitive losses calculations
+            # Volumes and resistive losses calculations
             vol_cond_cp = 2.0e0 * hmaxi * a_cond_midplane
             vol_ins_cp = 2.0e0 * hmaxi * a_cp_ins
             vol_gr_ins_cp = 2.0e0 * hmaxi * a_cp_gr_ins

@@ -25,7 +25,7 @@ class StellaratorData:
     """Actual minor radius to reference value from stella_config file"""
 
     f_coil_shape: float = 0.0
-    """Paramtere required for coil scaling
+    """Parameter required for coil scaling
     (min_plasma_coil_distance + stella_config_rminor_ref) / stella_config_coil_rminor
     """
 

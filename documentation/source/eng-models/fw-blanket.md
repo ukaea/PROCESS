@@ -33,7 +33,7 @@ lifetime because of the high neutron fluence.
 
 ### Blanket Model Options
 
-The models used for the thermoydraulics of the first wall, the profile of 
+The models used for the thermohydraulics of the first wall, the profile of 
 deposition of the neutron energy, tritium breeding, and conversion of heat to 
 electricity have been revised extensively.
 
@@ -61,7 +61,7 @@ Summary of key variables and switches:
 | :----------------------: | :---------------------: | ------------------------ | ------------------------------------ |
 |     Coolant Channels     |      :-----------:      | ------------------------ | --------------------------           |
 |        length (m)        |   `len_fw_channel`   | ---                      | ---                                  |
-|        width (m)         | `radius_fw_channel` (radius, cicular) | `radius_fw_channel`                    | `a_bz_liq`, `b_bz_liq` (rectangular) |
+|        width (m)         | `radius_fw_channel` (radius, circular) | `radius_fw_channel`                    | `a_bz_liq`, `b_bz_liq` (rectangular) |
 |    wall thickness (m)    |        `dr_fw_wall`        | dr_fw_wall                  | `th_wall_secondary`                  |
 |        dx_fw_module (m)         |         `dx_fw_module`         | ---                      | ---                                  |
 |    roughness epsilon     |       `roughness_fw_channel`       | ---                      | ---                                  |
@@ -207,7 +207,7 @@ There are three blanket model options, chosen by the user to match their selecte
         - nuclear heating in the liquid breeder/coolant is extracted by the liquid breeder/coolant.
         - nuclear heating in the blanket structure is extracted by the primary coolant
 
-The default assuption for all blanket models is that the first wall and breeding blanket have the same coolant (flow = FW inlet -> FW outlet -> BB inlet-> BB outlet). 
+The default assumption for all blanket models is that the first wall and breeding blanket have the same coolant (flow = FW inlet -> FW outlet -> BB inlet-> BB outlet). 
 It is possible to choose a different coolant for the FW and breeding blanket, in which case the mechanical pumping powers for the FW and BB are calculated separately. 
 The model has three mechanical pumping power options, chosen by the user to match their selected blanket design using the switch 'i_fw_blkt_shared_coolant' (default=0): 
     0.   Same coolant for FW and BB ('i_fw_coolant_type`=`i_blkt_coolant_type`)
@@ -233,13 +233,13 @@ There are two material options for the liquid breeder/coolant, chosen by the use
     0.  Lead-Lithium 
     1.  Lithium (needs testing)    
 Both options use the mid-temperature of the metal to find the following properties: density, specific heat, thermal conductivity, dynamic viscosity and electrical conductivity. 
-The Hartmann number is also calculated (using the magnetic feild strength in the centre of the inboard or outboard blanket module). 
+The Hartmann number is also calculated (using the magnetic field strength in the centre of the inboard or outboard blanket module). 
 
 |       Variable        | Units | Scanvar. | Usage         | Default | Description                                           |
 | :-------------------: | :---: | -------- | ------------- | ------- | ----------------------------------------------------- |
 |   `blpressure_liq`    |  Pa   | 70       | idualcool=1,2 | 1.7D6   | liquid metal breeder/coolant pressure                 |
-|   `inlet_temp_liq`    |   K   | 68       | idualcool=1,2 | 570     | Inlet temperatute of liquid metal breeder/coolant     |
-|   `outlet_temp_liq`   |   K   | 69       | idualcool=1,2 | 720     | Outlet temperatute of liquid metal breeder/coolant    |
+|   `inlet_temp_liq`    |   K   | 68       | idualcool=1,2 | 570     | Inlet temperature of liquid metal breeder/coolant     |
+|   `outlet_temp_liq`   |   K   | 69       | idualcool=1,2 | 720     | Outlet temperature of liquid metal breeder/coolant    |
 |    `n_liq_recirc`     |  ---  | 71       | idualcool=1   | 10      | Number of liquid metal breeder recirculations per day |
 | `f_nuc_pow_bz_struct` |  ---  | 73       | i_blanket_type=5    | 0.34    | FW nuclear power as fraction of total                 |
 |  `f_nuc_pow_bz_liq`   |  ---  | 74       | i_blanket_type=5    | 0.66    | Fraction of BZ power cooled by primary coolant        |

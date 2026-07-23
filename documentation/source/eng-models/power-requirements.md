@@ -448,7 +448,7 @@ Some details of the auxiliary systems are as follows.
 
 `tfcpwr` calculates the TF coil power conversion system parameters.  Only the steady-state power consumption for a superconducting TFC system is described here.
 
-The TF current is carried from the power supplies to the reactor by room-temperature aluminium busbars, organised in $N_{circuit}$ circuits.  The total length of the busbars is (somehwat arbitrarily) given by
+The TF current is carried from the power supplies to the reactor by room-temperature aluminium busbars, organised in $N_{circuit}$ circuits.  The total length of the busbars is (somewhat arbitrarily) given by
 
 $$
 L_bus = 8 \pi R_0 + (1 + N_{circuit}) (12 R_0 + 80)

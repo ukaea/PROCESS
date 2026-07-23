@@ -174,7 +174,7 @@ $$
 A = 2 \pi \left(\pi R_1 R_2 + 2R_2^2\right)
 $$
 
-Taking into acount the elongation of the arc, $\kappa$:
+Taking into account the elongation of the arc, $\kappa$:
 
 $$
 \kappa = \frac{\mathrm{d}z_{\text{FW,half}}}{R_2}

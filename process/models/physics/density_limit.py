@@ -171,7 +171,7 @@ class PlasmaDensityLimit(Model):
 
         References
         ----------
-        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
         AEA FUS 172, 1992
         """
         return (
@@ -212,7 +212,7 @@ class PlasmaDensityLimit(Model):
 
         References
         ----------
-        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
         AEA FUS 172, 1992
         """
         return (
@@ -253,7 +253,7 @@ class PlasmaDensityLimit(Model):
 
         References
         ----------
-        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
         AEA FUS 172, 1992
         """
         return (
@@ -288,7 +288,7 @@ class PlasmaDensityLimit(Model):
 
         References
         ----------
-        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
         AEA FUS 172, 1992
         """
         denom = (zeff - 1.0) * (1.0 - 4.0 / (3.0 * qcyl))
@@ -324,7 +324,7 @@ class PlasmaDensityLimit(Model):
 
         References
         ----------
-        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        T.C.Hender et.al., 'Physics Assessment of the European Reactor Study',
         AEA FUS 172, 1992
         """
         return (

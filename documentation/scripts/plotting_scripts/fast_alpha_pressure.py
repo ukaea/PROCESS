@@ -40,7 +40,7 @@ plot.line(
 )
 
 te = Slider(
-    start=0.1, end=40, value=15, step=0.1, title="Desnity weighted temperature | T"
+    start=0.1, end=40, value=15, step=0.1, title="Density weighted temperature | T"
 )
 
 callback = CustomJS(

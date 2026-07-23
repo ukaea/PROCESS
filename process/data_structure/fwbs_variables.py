@@ -76,7 +76,7 @@ class FWBSData:
     - =2 KIT HCPB model  # REMOVED, no longer usable
     - =3 CCFE HCPB model with Tritium Breeding Ratio calculation # REMOVED, no longer usable
     - =4 KIT HCLL model  # REMOVED, no longer usable
-    - =5 DCLL model -  no nutronics model included (in development) please check/choose values for
+    - =5 DCLL model -  no neutronics model included (in development) please check/choose values for
     'dual-coolant blanket' fractions (provided in this file).
     -  please use i_p_coolant_pumping = 0 or 1.
     """
@@ -138,7 +138,7 @@ class FWBSData:
     """Volume ratio: Li4SiO4/(Be12Ti+Li4SiO4) (`iteration variable 108`)"""
 
     breeder_multiplier: float = 0.75
-    """combined breeder/multipler fraction of blanket by volume"""
+    """combined breeder/multiplier fraction of blanket by volume"""
 
     vfcblkt: float = 0.05295
     """He coolant fraction of blanket by volume (`i_blanket_type= 1` (CCFE HCPB))"""
@@ -161,7 +161,7 @@ class FWBSData:
     f_neut_shield: float = -1.0
     """Fraction of nuclear power shielded before the CP magnet (ST)
     ( neut_absorb = -1 --> a fit on simplified MCNP neutronic
-    calculation is used assuming water cooled (13%) tungesten carbyde )
+    calculation is used assuming water cooled (13%) tungsten carbide )
     """
 
     f_a_fw_coolant_inboard: float = 0.0
@@ -543,7 +543,7 @@ class FWBSData:
     """
 
     i_blkt_module_segmentation: int = 0
-    """Switch for Multi Module Segment (MMS) or Single Modle Segment (SMS)
+    """Switch for Multi Module Segment (MMS) or Single Module Segment (SMS)
     - =0    MMS
     - =1    SMS
     """
@@ -612,7 +612,7 @@ class FWBSData:
     """Hartmann number"""
 
     b_mag_blkt: list[float] = field(default_factory=lambda: [5.0, 5.0])
-    """Toroidal Magnetic feild strength for IB/OB blanket [T]"""
+    """Toroidal Magnetic field strength for IB/OB blanket [T]"""
 
     etaiso_liq: float = 0.85
     """Isentropic efficiency of blanket liquid breeder/coolant pumps"""

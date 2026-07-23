@@ -43,7 +43,7 @@ def plot_stress(
     elif isinstance(plot_conf, dict):
         plot_conf = StressPlotConfig(axis_font_size, **plot_conf)
 
-    # Boolean swiches for plot selection
+    # Boolean switches for plot selection
     # -----------------------------------
     plot_sig = ("sig" in plot_selection) or ("all" in plot_selection)
     plot_disp = ("disp" in plot_selection) or ("all" in plot_selection)

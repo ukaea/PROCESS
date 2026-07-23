@@ -1487,7 +1487,7 @@ class SauterBootstrapCurrent(Model):
         Note: The code was supplied by Emiliano Fable, IPP Garching
         (private communication).
         """
-        # Radial points from 0 to 1 seperated by 1/profile_size
+        # Radial points from 0 to 1 separated by 1/profile_size
         roa = plasma_profile.neprofile.profile_x
 
         # Local circularised minor radius

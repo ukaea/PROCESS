@@ -272,7 +272,7 @@ def power_balance_sankey(m_file: Path):
         m_file.get("p_hcd_electric_loss_mw", scan=-1),  # 45
         m_file.get("p_coolant_pump_loss_total_mw", scan=-1),  # 46
         #
-        # Should only show if FW and Bkt pumps are seperate
+        # Should only show if FW and Bkt pumps are separate
         m_file.get("p_fw_coolant_pump_mw", scan=-1),  # 47
         m_file.get("p_blkt_coolant_pump_mw", scan=-1),  # 48
         #

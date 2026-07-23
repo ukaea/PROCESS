@@ -35,7 +35,7 @@ Regression tests compare the output of PROCESS locally when running an input fil
 
 
 !!! Info "CI System"
-    Our tests are run automatically using the Continous Integration (CI) system on GitHub.
+    Our tests are run automatically using the Continuous Integration (CI) system on GitHub.
     More information about how the jobs run on our CI and update the tracked files can be found [here](https://ukaea.github.io/PROCESS/development/ci-guide/).
 
 

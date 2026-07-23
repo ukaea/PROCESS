@@ -61,7 +61,7 @@ class ConstraintData:
 
     flu_tf_neutron_fast_max: float = 1.0e23
     """Max allowed fast neutron fluence on TF coil (n/m²) (`blktmodel>0`) (`constraint equation 53`)
-    Also used for demontable magnets (itart = 1) and superconducting coils (i_tf_sup = 1)
+    Also used for demountable magnets (itart = 1) and superconducting coils (i_tf_sup = 1)
     and quench protection
     To set the CP lifetime (`constraint equation 85`)
     """

@@ -44,7 +44,7 @@ This will often involve making comments on specific areas of the code or asking 
 A pull request must be reviewed by at least one of the codeowners (@ukaea/process-maintainers) before it can be merged. Codeowners are the maintainers of (a section of) the PROCESS repository. Their review will be requested automatically on each pull request. Other reviewers can still be added by maintainers/developers if they believe the pull request will benefit from that specific person's review.
 
 **The assignee**
-This is the 'lead reviewer' of the pull request and will be one of the codeowners. Codeowners will assign themselves/eachother to a pull request based upon availability and expertise. The assignee is ultimately responsible for ensuring a pull request is ready to be merged:
+This is the 'lead reviewer' of the pull request and will be one of the codeowners. Codeowners will assign themselves/each other to a pull request based upon availability and expertise. The assignee is ultimately responsible for ensuring a pull request is ready to be merged:
 * The changes are appropriately tested and documented.
 * The changes pass all existing and new tests (see below for more detail about tests that can 'fail').
 * The pull request fully implements the feature/bugfix from the issue.
@@ -54,7 +54,7 @@ This is the 'lead reviewer' of the pull request and will be one of the codeowner
 The assignee will be the person to merge the pull request onto main. They may also need to create new issues (e.g. for future work that arises from the pull request).
 
 **The author**
-The author is the user that creates the pull request after being assigned to an issue and making changes on a branch. They are responsible for ensuring they make correct and high-quality contributions to PROCESS. This will engaging with the reviewers and assignee in the comments of the pull request and ammending/correcting the pull request according to comments from the reviewers. 
+The author is the user that creates the pull request after being assigned to an issue and making changes on a branch. They are responsible for ensuring they make correct and high-quality contributions to PROCESS. This will engaging with the reviewers and assignee in the comments of the pull request and amending/correcting the pull request according to comments from the reviewers. 
 
 ### Testing
 PROCESS has unit, integration, and regression tests. Any new functionality must be appropriately tested. Sometimes, changes may require other tests to be changed. These changes should be justified in the pull request description. Tests can be run locally by following [our testing documentation](https://ukaea.github.io/PROCESS/development/testing/). All pull requests will also be run against our GitHub actions which will run all of the tests and report back to the reviewer any failures. **The unit and integration tests must pass on the CI for the changes to be accepted**.

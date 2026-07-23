@@ -23,12 +23,12 @@ $$\begin{aligned}
 
 where $\rho = r/a$, and $a$ is the plasma minor radius. This gives
 volume-averaged values $\langle n \rangle = n_0 / (1+\alpha_n)$, and
- approximate line-averaged values of $\bar{n} \approx n_0 / \sqrt{(1+\alpha_n)}$, the full equation used can be seen [here](./plasma_profiles.md#parabolic_paramterisation).  These
+ approximate line-averaged values of $\bar{n} \approx n_0 / \sqrt{(1+\alpha_n)}$, the full equation used can be seen [here](./plasma_profiles.md#parabolic_parameterisation).  These
 volume- and line-averages are used throughout the code along with the profile
 indices $\alpha$, in the various physics models, many of which are fits to
 theory-based or empirical scalings. Thus, the plasma model in PROCESS may
 be described as 1/2-D.  The relevant profile index variables are
-`alphan`, `alphat` and `alphaj`, respectively. For full derivation and description of the core and line averaged values please see the [parabolic_paramterisation()](plasma_profiles.md#parabolic_paramterisation) section which calculates these values for both temperature and density. A table of the the associated variables can be seen below
+`alphan`, `alphat` and `alphaj`, respectively. For full derivation and description of the core and line averaged values please see the [parabolic_parameterisation()](plasma_profiles.md#parabolic_parameterisation) section which calculates these values for both temperature and density. A table of the the associated variables can be seen below
 
 | Profile parameter                | Density   | Temperature | Current  |
 |----------------------------------|-----------|-------------|----------------|
@@ -37,7 +37,7 @@ be described as 1/2-D.  The relevant profile index variables are
 
 ???+ note "Plasma current profile"
 
-    While PROCESS assumes a standard parabolic profile to be the shape of the current profile as per the 1989 ITER physics guidelines[^2] , it does not calculate its shape or values apart from the core value. The profile peaking factor `alphaj` is calculated after the plasma current calculation relating to `i_alphaj` found [here](../plasma_current/plasma_current.md#setting-the-current-profile-index).The on-axis current density is analytically calculated in [`calculate_profile_factors()`](#calculate_profile_factors) Only the temeprature and density profiles are calculated fully withing the `PlasmaProfiles` class.
+    While PROCESS assumes a standard parabolic profile to be the shape of the current profile as per the 1989 ITER physics guidelines[^2] , it does not calculate its shape or values apart from the core value. The profile peaking factor `alphaj` is calculated after the plasma current calculation relating to `i_alphaj` found [here](../plasma_current/plasma_current.md#setting-the-current-profile-index).The on-axis current density is analytically calculated in [`calculate_profile_factors()`](#calculate_profile_factors) Only the temperature and density profiles are calculated fully withing the `PlasmaProfiles` class.
 
 The graph below is for a standard parabolic profile. You can vary the core value (`n0`) and the profile index (`alphan`) to see how the function behaves
 
@@ -262,9 +262,9 @@ Depending on the value of `i_plasma_pedestal` different functions will be ran, t
 
 #### Parabolic Profile | `i_plasma_pedestal == 0`
 
-##### `parabolic_paramterisation()`
+##### `parabolic_parameterisation()`
 
-If pedestal profile values are set they are reset to have values that agree with the original form of the parabolic profiles. Such that $\rho_{\text{ped}} = 1$ and that pedestal and separatrix densities and temepratures are zero. This will then warn the user in the terminal.
+If pedestal profile values are set they are reset to have values that agree with the original form of the parabolic profiles. Such that $\rho_{\text{ped}} = 1$ and that pedestal and separatrix densities and temperatures are zero. This will then warn the user in the terminal.
 
 The density and temperature profile runner function [`TeProfile/NeProfile.run()`](plasma_density_profile.md#runner-function-run) is then called to re-calculate the profile and core values.
 
@@ -420,7 +420,7 @@ $$
     \alpha_p = \alpha_n + \alpha_T
     $$
 
-    The volume averaged pressure can then be set if we assume the pressure also has a parabolic profile. Using the standard relation used for both density and temeprature we can set the volume averaged pressure as:
+    The volume averaged pressure can then be set if we assume the pressure also has a parabolic profile. Using the standard relation used for both density and temperature we can set the volume averaged pressure as:
 
     $$
     \langle p \rangle =   \frac{p_0}{\alpha_p+1}
@@ -456,7 +456,7 @@ Where $\operatorname{B}$ is the [Beta function](https://en.wikipedia.org/wiki/Be
 
 ##### `calculate_parabolic_profile_factors()`
 
-This is used by the stellerator module to find temperature gradients.
+This is used by the stellarator module to find temperature gradients.
 We first need to find the normalised position in the plasma where the change in the pressure gradient is at a minima or maxima. This is just when the second derivative of the profile is zero. Using the density profile as an example, though this is true for temperature also.
 
 $$

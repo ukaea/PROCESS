@@ -224,7 +224,7 @@ class PFCoil(Model):
 
             if self.data.pf_coil.nfxf > NFIXMX:
                 raise ProcessValueError(
-                    "Too many filaments nfxf repesenting the OH coil",
+                    "Too many filaments nfxf representing the OH coil",
                     nfxf=self.data.pf_coil.nfxf,
                     nfixmx=NFIXMX,
                 )
@@ -4657,7 +4657,7 @@ def superconpf(
 
     N.B. critical current density for a super conductor (j_crit_sc)
     is for the superconducting strands/tape, not including copper.
-    Critical current density for a cable (j_crit_cable) acounts for
+    Critical current density for a cable (j_crit_cable) accounts for
     both the fraction of the cable taken up by helium coolant channels,
     and the cable conductor copper fraction - i.e., the copper in the
     superconducting strands AND any addtional copper, such as REBCO
@@ -5267,7 +5267,7 @@ def mtrx(
 
     nrws = 2 * npts + n_pf_coil_groups
 
-    # numba doesnt like np.zeros(..., order="F") so this acts as a work
+    # numba doesn't like np.zeros(..., order="F") so this acts as a work
     # around to that missing signature
     gmat = np.asfortranarray(gmat)
 

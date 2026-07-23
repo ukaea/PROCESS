@@ -19,9 +19,9 @@ from process.models.physics.physics import Physics, rether
 from process.models.power import PumpingPowerModelTypes
 from process.models.stellarator.build import st_build
 from process.models.stellarator.coils.calculate import st_coil
-from process.models.stellarator.denisty_limits import (
+from process.models.stellarator.density_limits import (
     power_at_ignition_point,
-    st_denisty_limits,
+    st_density_limits,
 )
 from process.models.stellarator.divertor import st_div
 from process.models.stellarator.heating import st_heat
@@ -127,11 +127,11 @@ class Stellarator(Model):
             self.physics.outplas()
             st_heat(self, True, self.data)
             self.st_phys(True)
-            st_denisty_limits(self, True, self.data)
+            st_density_limits(self, True, self.data)
 
             # Change in density limit can result in changed dene?
-            # A second call of st_phys is used to make sure it is consitent.
-            # st_phys and denisty limits should be integarted to avoid this double call.
+            # A second call of st_phys is used to make sure it is consistent.
+            # st_phys and density limits should be integrated to avoid this double call.
             # Problem was probably bigger in the older version
 
             self.st_phys(False)
@@ -153,7 +153,7 @@ class Stellarator(Model):
         self.st_new_config()
         self.st_geom()
         self.st_phys(False)
-        st_denisty_limits(self, False, self.data)
+        st_density_limits(self, False, self.data)
         st_coil(self, False, self.data)
         st_build(self, False, self.data)
         self.st_strc(False)
@@ -472,7 +472,7 @@ class Stellarator(Model):
             _,
         ) = self.sc_tf_coil_nuclear_heating_iter90()
 
-        # blktlife calculation left entierly to availability
+        # blktlife calculation left entirely to availability
         # Cannot find calculation for vvhemax in CCFE blanket
 
     def st_fwbs(self, output: bool):

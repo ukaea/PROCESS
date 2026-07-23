@@ -68,7 +68,7 @@ class Caller:
         return False
 
     def call_models(self, xc: np.ndarray, m: int) -> tuple[float, np.ndarray]:
-        """Evalutate models until results are idempotent.
+        """Evaluate models until results are idempotent.
 
         Ensure objective function and constraints are idempotent before returning.
 

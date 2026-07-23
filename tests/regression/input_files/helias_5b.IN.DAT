@@ -12,13 +12,13 @@
 neqns = 3               *number of equalities
 
 
-*--------------- equaltities
+*--------------- equalities
 icc = 2                 *Global power balance (consistency equation)
 icc = 11                *Radial build (consistency equation)
 icc = 16                *Net electric power lower limit
 
 
-*-------------- inequaltities
+*-------------- inequalities
 icc = 84                *Lower beta limit
 icc = 24                *Upper beta limit
 

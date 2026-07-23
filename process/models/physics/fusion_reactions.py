@@ -706,13 +706,13 @@ def fusion_rate_integral(
     # divided by the square of the volume-averaged ion density
     # to retain the dimensions m^3/s (this is multiplied back in later)
 
-    # Set each point in the desnity profile as a fraction of the volume averaged desnity
+    # Set each point in the density profile as a fraction of the volume averaged density
     density_profile_normalised = (
         1.0 / physics_data.nd_plasma_electrons_vol_avg
     ) * plasma_profile.neprofile.profile_y
 
     # Calculate a volume averaged fusion reaction integral that allows for fusion power
-    # to be scaled with just the volume averged ion density.
+    # to be scaled with just the volume averaged ion density.
     return (
         2.0 * plasma_profile.teprofile.profile_x * sigv * density_profile_normalised**2
     )

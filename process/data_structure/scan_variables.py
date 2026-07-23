@@ -105,7 +105,7 @@ class ScanData:
     <LI> 71 `n_liq_recirc' : Selected number of liquid metal breeder recirculations per day
     <LI> 72 `bz_channel_conduct_liq' : Conductance of liquid metal breeder duct walls (A V-1 m-1)
     <LI> 73 `pnuc_fw_ratio_dcll' : Ratio of FW nuclear power as fraction of total (FW+BB)
-    <LI> 74 `f_nuc_pow_bz_struct' : Fraction of BZ power cooled by primary coolant for dual-coolant balnket
+    <LI> 74 `f_nuc_pow_bz_struct' : Fraction of BZ power cooled by primary coolant for dual-coolant blanket
     <LI> 75 dx_fw_module : pitch of first wall cooling channels (m)
     <LI> 76 eta_turbine : Thermal conversion eff.
     <LI> 77 startupratio : Gyrotron redundancy

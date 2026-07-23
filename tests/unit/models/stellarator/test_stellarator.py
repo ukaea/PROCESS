@@ -9,7 +9,7 @@ from process.models.stellarator.coils.quench import (
     calculate_quench_protection_current_density,
     max_dump_voltage,
 )
-from process.models.stellarator.denisty_limits import (
+from process.models.stellarator.density_limits import (
     st_d_limit_ecrh,
     st_sudo_density_limit,
 )
@@ -20,7 +20,7 @@ def stellarator(process_models):
     """Provides Stellarator object for testing.
 
     :returns: initialised Stellarator object
-    :rtype: process.stellerator.Stellarator
+    :rtype: process.stellarator.Stellarator
     """
     return process_models.stellarator
 

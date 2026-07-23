@@ -16,7 +16,7 @@ Acronyms for this module:
      LT          Low Temperature
      HT          High Temperature
      MMS         Multi Module Segment
-     SMS         Single Modle Segment
+     SMS         Single Module Segment
      IB          Inboard
      OB          Outboard
      HCD         Heating & Current Drive

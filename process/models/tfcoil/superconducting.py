@@ -189,7 +189,7 @@ class SuperconductingTFCoil(TFCoil):
             dr_tf_wp_with_insulation=self.data.tfcoil.dr_tf_wp_with_insulation,
         )
 
-        # WP/trun currents
+        # WP/turn currents
         self.tf_wp_currents(self.data)
 
         self.data.tfcoil.ind_tf_coil = self.tf_coil_self_inductance(

@@ -181,7 +181,7 @@ This produces the recommended variable values of:
 - $u: 0.0$
 - $w: 2.2$
 
-The stress dependance is derived by observing bespoke single-filament wires. In a multifilamentary Nb-Ti wire considerable strain would be applied when winding and mounting it to a Walter's spring. In such a sample, the filaments would be significantly compressed on the inboard side of the wire and significantly tensioned on the outboard side while soldering the wire to the spring. Such an effect is minimised by choice to measure a small single filament wire because the filament lies on the neutral axis. The critical current densities were measured at 4.2 K, at fields of 7 T to 10 T and between intrinsic strains of -1.03 % and +1.26%.  The strain fit parameters are shown in Table 5. 
+The stress dependence is derived by observing bespoke single-filament wires. In a multifilamentary Nb-Ti wire considerable strain would be applied when winding and mounting it to a Walter's spring. In such a sample, the filaments would be significantly compressed on the inboard side of the wire and significantly tensioned on the outboard side while soldering the wire to the spring. Such an effect is minimised by choice to measure a small single filament wire because the filament lies on the neutral axis. The critical current densities were measured at 4.2 K, at fields of 7 T to 10 T and between intrinsic strains of -1.03 % and +1.26%.  The strain fit parameters are shown in Table 5. 
 
 The best fit parameters calculated below were done with Python (version 3.7.4) `curve_fit` function:
 

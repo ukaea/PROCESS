@@ -1021,7 +1021,7 @@ class Power(Model):
         """
         #  Cryogenic power
         # ---
-        # Initialisation (unchanged if all coil resisitive)
+        # Initialisation (unchanged if all coil resistive)
         self.data.heat_transport.helpow = 0.0e0
         self.data.heat_transport.p_cryo_plant_electric_mw = 0.0e0
         p_tf_cryoal_cryo = 0.0e0

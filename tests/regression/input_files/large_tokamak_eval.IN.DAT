@@ -308,7 +308,7 @@ i_single_null = 1 * switch for single null / double null plasma;
 f_sync_reflect    = 0.6 * synchrotron wall reflectivity factor
 temp_plasma_electron_vol_avg_kev       = 12.221383528378944 * volume averaged electron temperature (keV) (`iteration variable 4`)
 triang   = 0.5 * plasma separatrix triangularity (calculated if `i_plasma_geometry = 1; 3-5 or 7`)
-i_ind_plasma_internal_norm = 1 * Normalised plasma intenral induction selection switch (0 = user input) 
+i_ind_plasma_internal_norm = 1 * Normalised plasma internal induction selection switch (0 = user input) 
 
 *----------------------Power-----------------------*
 
@@ -372,7 +372,7 @@ c_tf_turn    = 85462.67500253802 * TF coil current per turn (A); (calculated for
 dia_tf_turn_coolant_channel  = 0.01 * diameter of central helium channel in TF winding (m)
 f_a_tf_turn_cable_copper  = 0.8231999768826475 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1 * Switch for superconductor material in TF coils;
-ripple_b_tf_plasma_edge_max   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
+ripple_b_tf_plasma_edge_max   = 0.6 * maximum allowable toroidal field ripple amplitude at plasma edge (%)
 t_tf_superconductor_quench   = 17.97282589344206 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 n_tf_coils     = 16 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)
@@ -383,7 +383,7 @@ dx_tf_wp_insulation   = 0.008 * Thickness of the ground insulation layer surroun
 temp_cs_superconductor_margin_min = 1.5 * minimum allowable temperature margin ; CS (K)
 tmargmin = 1.5 * minimum allowable temperature margin ; TFC AND CS (K)
 v_tf_coil_dump_quench_max_kv    = 10.0 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
-f_a_tf_turn_cable_space_extra_void     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
+f_a_tf_turn_cable_space_extra_void     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_sup=0`)
 flu_tf_neutron_fast_max = 1e22 * max fluence in the TF coil
 
 

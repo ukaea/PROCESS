@@ -65,7 +65,7 @@ def test_set_input(single_run, monkeypatch, input_file):
     # methods (don't have to run Process.parse_args() first to set up this way)
     monkeypatch.setattr(single_run, "input_file", Path(input_file), raising=False)
 
-    # Mocking undo trys to set the value as none
+    # Mocking undo tries to set the value as none
 
     # Mocks set up, can now run set_input()
     single_run.set_input()
