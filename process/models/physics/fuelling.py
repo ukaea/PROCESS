@@ -422,11 +422,82 @@ class PlasmaFuelling(Model):
         )
 
     @staticmethod
+    def calculate_plasma_helium3_source_rate(
+        f_molflow_plasma_fuelling_helium3: float,
+        eta_plasma_fuelling: float,
+        molflow_plasma_fuelling_vv_injected: float,
+        fusrat_plasma_dd_helion: float,
+    ) -> float:
+        """Calculate the helium-3 source rate in the plasma.
+
+        Parameters
+        ----------
+        f_molflow_plasma_fuelling_helium3 : float
+            Fraction of helium-3 in the plasma fuelling.
+        eta_plasma_fuelling : float
+            Fuelling rate efficiency.
+        molflow_plasma_fuelling_vv_injected : float
+            Total fuelling rate (particles/s).
+        fusrat_plasma_dd_helion : float
+            Helium-3 production rate from DD fusion (particles/s).
+
+        Returns
+        -------
+        float
+            Helium-3 source rate in the plasma (particles/s).
+
+        """
+        return (
+            f_molflow_plasma_fuelling_helium3
+            * eta_plasma_fuelling
+            * molflow_plasma_fuelling_vv_injected
+        ) + fusrat_plasma_dd_helion
+
+    @staticmethod
+    def calculate_plasma_helium3_loss_rate(
+        fusrat_plasma_dhe3: float,
+        t_energy_confinement: float,
+        f_plasma_particles_lcfs_recycled: float,
+        nd_plasma_fuel_ions_vol_avg: float,
+        vol_plasma: float,
+        f_plasma_fuel_helium3: float,
+    ) -> float:
+        """Calculate the helium-3 loss rate from the plasma.
+
+        Parameters
+        ----------
+        fusrat_plasma_dhe3 : float
+            Deuterium consumption rate from D-He3 fusion (particles/s).
+        t_energy_confinement : float
+            Energy confinement time (s).
+        f_plasma_particles_lcfs_recycled : float
+            Fraction of plasma particles recycled at the LCFS.
+        nd_plasma_fuel_ions_vol_avg : float
+            Volume-averaged density of fuel ions in the plasma (particles/m³).
+        vol_plasma : float
+            Plasma volume (m³).
+        f_plasma_fuel_helium3 : float
+            Fraction of helium-3 in the plasma fuel.
+
+        Returns
+        -------
+        float
+            Helium-3 loss rate from the plasma (particles/s).
+
+
+        """
+        return -fusrat_plasma_dhe3 - (
+            (nd_plasma_fuel_ions_vol_avg * vol_plasma * f_plasma_fuel_helium3)
+            / (t_energy_confinement / (1 - f_plasma_particles_lcfs_recycled))
+        )
+
     def calculate_plasma_helium3_flow_rate(
+        self,
         f_molflow_plasma_fuelling_helium3: float,
         eta_plasma_fuelling: float,
         molflow_plasma_fuelling_vv_injected: float,
         fusrat_plasma_dhe3: float,
+        fusrat_plasma_dd_helion: float,
         t_energy_confinement: float,
         f_plasma_particles_lcfs_recycled: float,
         nd_plasma_fuel_ions_vol_avg: float,
@@ -445,6 +516,8 @@ class PlasmaFuelling(Model):
             Total fuelling rate (particles/s).
         fusrat_plasma_dhe3 : float
             Deuterium consumption rate from D-He3 fusion (particles/s).
+        fusrat_plasma_dd_helion : float
+            Helium-3 production rate from DD fusion (particles/s).
         t_energy_confinement : float
             Energy confinement time (s).
         f_plasma_particles_lcfs_recycled : float
@@ -467,17 +540,18 @@ class PlasmaFuelling(Model):
         while a negative value indicates a net loss of helium-3 from the plasma.
 
         """
-        return (
-            (
-                f_molflow_plasma_fuelling_helium3
-                * eta_plasma_fuelling
-                * molflow_plasma_fuelling_vv_injected
-            )
-            + fusrat_plasma_dhe3
-            - (
-                (nd_plasma_fuel_ions_vol_avg * vol_plasma * f_plasma_fuel_helium3)
-                / (t_energy_confinement / (1 - f_plasma_particles_lcfs_recycled))
-            )
+        return self.calculate_plasma_helium3_source_rate(
+            f_molflow_plasma_fuelling_helium3=f_molflow_plasma_fuelling_helium3,
+            eta_plasma_fuelling=eta_plasma_fuelling,
+            molflow_plasma_fuelling_vv_injected=molflow_plasma_fuelling_vv_injected,
+            fusrat_plasma_dd_helion=fusrat_plasma_dd_helion,
+        ) + self.calculate_plasma_helium3_loss_rate(
+            fusrat_plasma_dhe3=fusrat_plasma_dhe3,
+            t_energy_confinement=t_energy_confinement,
+            f_plasma_particles_lcfs_recycled=f_plasma_particles_lcfs_recycled,
+            nd_plasma_fuel_ions_vol_avg=nd_plasma_fuel_ions_vol_avg,
+            vol_plasma=vol_plasma,
+            f_plasma_fuel_helium3=f_plasma_fuel_helium3,
         )
 
     @staticmethod
