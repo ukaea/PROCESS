@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8335291.svg)](https://doi.org/10.5281/zenodo.8335291) [![codecov](https://codecov.io/gh/ukaea/process/graph/badge.svg?token=F94XDNUIX0)](https://codecov.io/gh/ukaea/process)
+[![DOI](https://img.shields.io/badge/DOI-10.5281/zenodo.8335291-blue)](https://doi.org/10.5281/zenodo.8335291) [![codecov](https://codecov.io/gh/ukaea/process/graph/badge.svg?token=F94XDNUIX0)](https://codecov.io/gh/ukaea/process)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ukaea/PROCESS/HEAD?urlpath=%2Fdoc%2Ftree%2Fexamples%2F)
 # PROCESS
 
