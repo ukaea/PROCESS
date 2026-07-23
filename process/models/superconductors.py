@@ -1088,16 +1088,28 @@ def bottura_scaling(
 
 @dataclass
 class CroCoCableGeometry:
+    """Dataclass holding CroCo cable geometry parameters"""
+
     dia_croco_strand_tape_region: float
+    """Inner diameter of CroCo strand tape region (m)"""
     n_croco_strand_hts_tapes: float
+    """Number of HTS tapes in CroCo strand"""
     a_croco_strand_copper_total: float
+    """Total copper area in CroCo strand (m²)"""
     a_croco_strand_hastelloy: float
+    """ Total Hastelloy area in CroCo strand (m²)"""
     a_croco_strand_solder: float
+    """ Total solder area in CroCo strand (m²)"""
     a_croco_strand_rebco: float
+    """Total REBCO area in CroCo strand (m²)"""
     a_croco_strand: float
+    """Total area of CroCo strand (m²)"""
     dr_hts_tape: float
+    """Width of the tape (m)"""
     dx_hts_tape_total: float
+    """thickness of tape, inc. all layers (m)"""
     dx_croco_strand_tape_stack: float
+    """Height of the tape stack in the CroCo strand (m)"""
 
 
 def calculate_croco_cable_geometry(
@@ -1125,15 +1137,7 @@ def calculate_croco_cable_geometry(
     Returns
     -------
     CroCoCableGeometry
-    - dia_croco_strand_tape_region: Inner diameter of CroCo strand tape region (m)
-    - n_croco_strand_hts_tapes: Number of HTS tapes in CroCo strand
-    - a_croco_strand_copper_total: Total copper area in CroCo strand (m²)
-    - a_croco_strand_hastelloy: Total Hastelloy area in CroCo strand (m²)
-    - a_croco_strand_solder: Total solder area in CroCo strand (m²)
-    - a_croco_strand_rebco: Total REBCO area in CroCo strand (m²)
-    - a_croco_strand: Total area of CroCo strand (m²)
-    - dr_hts_tape: Width of the tape (m)
-    - dx_croco_strand_tape_stack: Height of the tape stack in the CroCo strand (m)
+        Dataclass holding CroCo cable geometry parameters
     """
     # Calculate the inner diameter of the CroCo strand tape region
     dia_croco_strand_tape_region = dia_croco_strand - 2.0 * dx_croco_strand_copper
