@@ -14,9 +14,8 @@ A SCAN is available in any of these modes.  One input variable can be scanned (`
 
 ## To run PROCESS
 
-PROCESS input file names end in IN.DAT. If no input file name is given as an argument in the command line, PROCESS will run `process --help`. 
+PROCESS input file names end in `IN.DAT`. The user can provide a named input file, provided the last 6 characters of the input file name are `IN.DAT`.
 
-The user can provide a named input file, provided the last 6 characters of the input file name are IN.DAT.
 ```bash
 process -i path/to/my_file_name_IN.DAT
 ```
@@ -82,7 +81,7 @@ The full set of command line arguments is available with:
 process --help
 ```
 
-or
+or equivalently with:
 
 ```bash
 process
