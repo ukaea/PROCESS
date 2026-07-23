@@ -2005,18 +2005,18 @@ def constraint_equation_95(constraint_registration, data):
 @ConstraintManager.register_constraint(96, "particles/s", "=")
 def constraint_equation_96(constraint_registration, data):
     """
-    Alpha particle balance consistency equation.
+    Thermal alpha particle balance consistency equation.
 
-    This constraint ensures that the alpha particle balance is maintained in the
+    This constraint ensures that the thermal alpha particle balance is maintained in the
     plasma.
 
-    The numerator represents the total alpha particle sources,
-    while the denominator represents the total alpha particle sinks, which are
+    The numerator represents the total thermal alpha particle sources,
+    while the denominator represents the total thermal alpha particle sinks, which are
     related to the plasma volume, fuel ion density, and confinement time.
 
-    The equation ensures that the rate of alpha particle production equals the rate of
-    alpha particle loss, maintaining a steady-state condition for alpha particles in
-    the plasma.
+    The equation ensures that the rate of thermal alpha particle production equals the
+    rate of thermal alpha particle loss, maintaining a steady-state condition for
+    thermal alpha particles in the plasma.
     """
     # Alpha particle balance
     numerator = data.physics.fusrat_dt_total + data.physics.fusrat_plasma_dhe3
