@@ -1,3 +1,5 @@
+"""Library of constants used in PROCESS."""
+
 IOTTY = 6
 """Standard output unit identifier"""
 

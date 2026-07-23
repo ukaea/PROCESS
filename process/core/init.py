@@ -1,3 +1,5 @@
+"""Routines for PROCESS initialisation."""
+
 from __future__ import annotations
 
 import datetime
@@ -238,6 +240,12 @@ def check_process(inputs, data):  # noqa: ARG001
 
     This routine performs a sanity check of the input variables
     and ensures other dependent variables are given suitable values.
+
+    Raises
+    ------
+    ProcessValidationError
+        If there is a problem with the contents of the input file.
+        See individual ProcessValidationError instances for more details.
     """
     # Check that there are sufficient iteration variables
     if data.numerics.nvar < data.numerics.neqns:

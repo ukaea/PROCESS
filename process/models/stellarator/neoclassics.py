@@ -10,15 +10,17 @@ logger = logging.getLogger(__name__)
 
 
 class Neoclassics(Model):
+    """Module containing neoclassics routines"""
+
     @property
     def no_roots(self):
         return self.data.neoclassics.roots.shape[0]
 
     def output(self):
-        """This model doesn't have any output"""
+        """Neoclassics model doesn't have any output"""
 
     def run(self):
-        """This model doesn't need to be run"""
+        """Neoclassics model doesn't need to be run"""
 
     def init_neoclassics(self, r_effin, eps_effin, iotain):
         """Constructor of the neoclassics object from the effective radius,
