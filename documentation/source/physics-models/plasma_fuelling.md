@@ -5,11 +5,11 @@
 The control of fuelling is governed by 4 key particle flux equations for each of the primary fuel species and the thermal helium $\alpha$ ash.
 
 $$
-\frac{dn_{\text{T}}}{dt} = f_{\text{fuelling,T}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} + \Gamma_{\text{D+D} \rightarrow \text{T}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{T}}^*}
+\frac{dn_{\text{T}}}{dt} = f_{\text{fuelling,T}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}}+\Gamma_{\text{T,beam}} + \Gamma_{\text{D+D} \rightarrow \text{T}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{T}}^*}
 $$
 
 $$
-\frac{dn_{\text{D}}}{dt} = f_{\text{fuelling,D}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} -2 \Gamma_{\text{D+D}}- \Gamma_{\text{D+3He}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{D}}^*}
+\frac{dn_{\text{D}}}{dt} = f_{\text{fuelling,D}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}}+\Gamma_{\text{D,beam}} -2 \Gamma_{\text{D+D}}- \Gamma_{\text{D+3He}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{D}}^*}
 $$
 
 $$
@@ -26,7 +26,7 @@ $$
 \frac{dn_{\text{D}}}{dt} = \frac{dn_{\text{T}}}{dt} = \frac{dn_{\text{3He}}}{dt} = \frac{dn_{\alpha,\text{thermal}}}{dt} = 0
 $$
 
-Here, $\eta_{\text{fuelling}}$ is the fuelling efficiency, which quantifies how effectively fuel injected into the vacuum vessel reaches the plasma core. The value of $\eta_{\text{fuelling}}$ depends on the fuelling method. Typical values are around 0.01--0.1 for low-field-side gas puffing, 0.1--0.2 for supersonic gas injection, and 0.5--0.9 for pellet injection, which can approach unity under favourable conditions. $\Gamma_{\text{fuelling}}$ is the fuel injection rate into the vacuum vessel. The product $\eta_{\text{fuelling}} \Gamma_{\text{fuelling}}$ therefore represents the effective fuelling rate, i.e. the fraction of the injected fuel that successfully penetrates into the plasma and becomes available for fusion reactions.
+Here, $\eta_{\text{fuelling}}$ is the fuelling efficiency, which quantifies how effectively fuel injected into the vacuum vessel reaches the plasma core. The value of $\eta_{\text{fuelling}}$ depends on the fuelling method. Typical values are around 0.01--0.1 for low-field-side gas puffing, 0.1--0.2 for supersonic gas injection, and 0.5--0.9 for pellet injection, which can approach unity under favourable conditions. $\Gamma_{\text{fuelling}}$ is the fuel injection rate into the vacuum vessel. The product $\eta_{\text{fuelling}} \Gamma_{\text{fuelling}}$ therefore represents the effective fuelling rate, i.e. the fraction of the injected fuel that successfully penetrates into the plasma and becomes available for fusion reactions. $\Gamma_{\text{T,beam}}$ and $\Gamma_{\text{D,beam}}$ respectively are the particle source rates from neutral beam systems (if present).
 
 
 The fuelling fractional compositions is given by $f$
@@ -61,7 +61,7 @@ Where $\tau_p$ is the particle confinement time which we can assume is approxima
 ### Tritium Flow Rate | `calculate_plasma_tritium_flow_rate()`
 
 $$
-\frac{dn_{\text{T}}}{dt} = f_{\text{fuelling,T}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} + \Gamma_{\text{D+D} \rightarrow \text{T}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{T}}^*}
+\frac{dn_{\text{T}}}{dt} = f_{\text{fuelling,T}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}}+\Gamma_{\text{T,beam}} + \Gamma_{\text{D+D} \rightarrow \text{T}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{T}}^*}
 $$
 
 ---------------
@@ -69,7 +69,7 @@ $$
 ### Deuterium Flow Rate | `calculate_plasma_deuterium_flow_rate()`
 
 $$
-\frac{dn_{\text{D}}}{dt} = f_{\text{fuelling,D}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} -2 \Gamma_{\text{D+D}}- \Gamma_{\text{D+3He}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{D}}^*}
+\frac{dn_{\text{D}}}{dt} = f_{\text{fuelling,D}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}}+\Gamma_{\text{D,beam}} -2 \Gamma_{\text{D+D}}- \Gamma_{\text{D+3He}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{D}}^*}
 $$
 
 ---------------
@@ -95,10 +95,10 @@ $$
 In a steady state tokamak, the burnup fraction ($f_b$) is explicitly defined by the following rate equation:
 
 $$
-f_b = \frac{\Gamma_{\text{fusion}}}{\Gamma_{\text{fuel}}}
+f_b = \frac{\Gamma_{\text{fusion}}}{\sum\Gamma_{\text{fuel}}}
 $$
 
-where $\Gamma_{\text{fusion}}$ is the fusion reaction rate per second $[\text{s}^{-1}]$, and $\Gamma_{\text{fuel}}$ is the fuel injection rate into the vacuum vessel in particles per second $[\text{s}^{-1}]$.
+where $\Gamma_{\text{fusion}}$ is the fusion reaction rate per second $[\text{s}^{-1}]$, and $\sum\Gamma_{\text{fuel}}$ is the sum of all fuel injection rates into the vacuum vessel by any means in particles per second $[\text{s}^{-1}]$.
 
 -----------------
 
@@ -107,7 +107,7 @@ where $\Gamma_{\text{fusion}}$ is the fusion reaction rate per second $[\text{s}
 For the total burnup fraction we state:
 
 $$
-\overbrace{f_b}^{\texttt{f_plasma_fuel_burnup}} = \frac{2\left(\Gamma_{\text{D+D}}+\Gamma_{\text{D+T}}+\Gamma_{\text{D+3He}}\right)}{\Gamma_{\text{fuel}}}
+\overbrace{f_b}^{\texttt{f_plasma_fuel_burnup}} = \frac{2\left(\Gamma_{\text{D+D}}+\Gamma_{\text{D+T}}+\Gamma_{\text{D+3He}}\right)}{\Gamma_{\text{fuel}}+\Gamma_{\text{D,beam}}+\Gamma_{\text{T,beam}}}
 $$
 
 Here the factor of 2 is included as each fusion reaction removes 2 particles but our fuelling rate looks at indivudal particles injected.
@@ -119,7 +119,7 @@ Here the factor of 2 is included as each fusion reaction removes 2 particles but
 For just the tritium burnup fraction we state:
 
 $$
-\overbrace{f_b}^{\texttt{f_plasma_tritium_burnup}} = \frac{\left(\Gamma_{\text{D+T}}\right)}{\Gamma_{\text{fuel}}f_{\text{fuelling,T}}} 
+\overbrace{f_b}^{\texttt{f_plasma_tritium_burnup}} = \frac{\left(\Gamma_{\text{D+T}}\right)}{\Gamma_{\text{fuel}}f_{\text{fuelling,T}}+\Gamma_{\text{T,beam}}} 
 $$
 
 ------------------
@@ -129,7 +129,7 @@ $$
 For just the deuterium burnup fraction we state:
 
 $$
-\overbrace{f_b}^{\texttt{f_plasma_deuterium_burnup}} = \frac{2\left(\Gamma_{\text{D+D}}+\Gamma_{\text{D+3He}}\right)}{\Gamma_{\text{fuel}}f_{\text{fuelling,D}}}
+\overbrace{f_b}^{\texttt{f_plasma_deuterium_burnup}} = \frac{2\left(\Gamma_{\text{D+D}}+\Gamma_{\text{D+3He}}\right)}{\Gamma_{\text{fuel}}f_{\text{fuelling,D}}+\Gamma_{\text{D,beam}}}
 $$
 
 ------------------

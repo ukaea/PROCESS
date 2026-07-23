@@ -31,16 +31,20 @@ class PlasmaFuelling(Model):
         self.data.physics.f_plasma_fuel_burnup = self.calculate_fuel_burnup_fraction(
             fusrat_total=self.data.physics.fusrat_total,
             molflow_plasma_fuelling_vv_injected=self.data.physics.molflow_plasma_fuelling_vv_injected,
+            molflow_beam_deuterium_vv_injected=self.data.physics.molflow_beam_deuterium_vv_injected,
+            molflow_beam_tritium_vv_injected=self.data.physics.molflow_beam_tritium_vv_injected,
         )
         self.data.physics.f_plasma_tritium_burnup = self.calculate_tritium_burnup_fraction(
             fusrat_dt_total=self.data.physics.fusrat_dt_total,
             molflow_plasma_fuelling_vv_injected=self.data.physics.molflow_plasma_fuelling_vv_injected,
             f_molflow_plasma_fuelling_tritium=self.data.physics.f_molflow_plasma_fuelling_tritium,
+            molflow_beam_tritium_vv_injected=self.data.physics.molflow_beam_tritium_vv_injected,
         )
 
         self.data.physics.f_plasma_deuterium_burnup = self.calculate_deuterium_burnup_fraction(
             fusrat_plasma_dd_total=self.data.physics.fusrat_plasma_dd_total,
             molflow_plasma_fuelling_vv_injected=self.data.physics.molflow_plasma_fuelling_vv_injected,
+            molflow_beam_deuterium_vv_injected=self.data.physics.molflow_beam_deuterium_vv_injected,
             f_molflow_plasma_fuelling_deuterium=self.data.physics.f_molflow_plasma_fuelling_deuterium,
             fusrat_dt_total=self.data.physics.fusrat_dt_total,
             fusrat_plasma_dhe3=self.data.physics.fusrat_plasma_dhe3,
@@ -53,7 +57,10 @@ class PlasmaFuelling(Model):
 
     @staticmethod
     def calculate_fuel_burnup_fraction(
-        fusrat_total: float, molflow_plasma_fuelling_vv_injected: float
+        fusrat_total: float,
+        molflow_plasma_fuelling_vv_injected: float,
+        molflow_beam_deuterium_vv_injected: float,
+        molflow_beam_tritium_vv_injected: float,
     ) -> float:
         """Calculate the fuel burnup fraction
 
@@ -63,6 +70,10 @@ class PlasmaFuelling(Model):
             Total fusion rate (particles/s).
         molflow_plasma_fuelling_vv_injected : float
             Total fuelling rate into vacuum vessel (particles/s).
+        molflow_beam_deuterium_vv_injected : float
+            Beam deuterium injection rate into the vacuum vessel (particles/s).
+        molflow_beam_tritium_vv_injected : float
+            Beam tritium injection rate into the vacuum vessel (particles/s).
 
         Returns
         -------
@@ -74,13 +85,22 @@ class PlasmaFuelling(Model):
         as the fuelling rate is in particles/s.
 
         """
-        return 2 * fusrat_total / molflow_plasma_fuelling_vv_injected
+        return (
+            2
+            * fusrat_total
+            / (
+                molflow_plasma_fuelling_vv_injected
+                + molflow_beam_deuterium_vv_injected
+                + molflow_beam_tritium_vv_injected
+            )
+        )
 
     @staticmethod
     def calculate_tritium_burnup_fraction(
         fusrat_dt_total: float,
         molflow_plasma_fuelling_vv_injected: float,
         f_molflow_plasma_fuelling_tritium: float,
+        molflow_beam_tritium_vv_injected: float,
     ) -> float:
         """Calculate the tritium burnup fraction
 
@@ -92,6 +112,8 @@ class PlasmaFuelling(Model):
             Total fuelling rate into vacuum vessel (particles/s).
         f_molflow_plasma_fuelling_tritium : float
             Fraction of tritium in the plasma fuelling.
+        molflow_beam_tritium_vv_injected : float
+            Beam tritium injection rate into the vacuum vessel (particles/s).
 
         Returns
         -------
@@ -104,13 +126,15 @@ class PlasmaFuelling(Model):
 
         """
         return fusrat_dt_total / (
-            molflow_plasma_fuelling_vv_injected * f_molflow_plasma_fuelling_tritium
+            (molflow_plasma_fuelling_vv_injected * f_molflow_plasma_fuelling_tritium)
+            + molflow_beam_tritium_vv_injected
         )
 
     @staticmethod
     def calculate_deuterium_burnup_fraction(
         fusrat_dt_total: float,
         molflow_plasma_fuelling_vv_injected: float,
+        molflow_beam_deuterium_vv_injected: float,
         f_molflow_plasma_fuelling_deuterium: float,
         fusrat_plasma_dd_total: float,
         fusrat_plasma_dhe3: float,
@@ -123,6 +147,8 @@ class PlasmaFuelling(Model):
             Total DT fusion rate (particles/s).
         molflow_plasma_fuelling_vv_injected : float
             Total fuelling rate into vacuum vessel (particles/s).
+        molflow_beam_deuterium_vv_injected : float
+            Beam deuterium injection rate into the vacuum vessel (particles/s).
         f_molflow_plasma_fuelling_deuterium : float
             Fraction of deuterium in the plasma fuelling.
         fusrat_plasma_dd_total : float
@@ -141,7 +167,8 @@ class PlasmaFuelling(Model):
 
         """
         return (fusrat_dt_total + 2 * fusrat_plasma_dd_total + fusrat_plasma_dhe3) / (
-            molflow_plasma_fuelling_vv_injected * f_molflow_plasma_fuelling_deuterium
+            (molflow_plasma_fuelling_vv_injected * f_molflow_plasma_fuelling_deuterium)
+            + molflow_beam_deuterium_vv_injected
         )
 
     def calculate_plasma_tritium_flow_rate(
@@ -149,6 +176,7 @@ class PlasmaFuelling(Model):
         f_molflow_plasma_fuelling_tritium: float,
         eta_plasma_fuelling: float,
         molflow_plasma_fuelling_vv_injected: float,
+        molflow_beam_tritium_vv_injected: float,
         fusrat_dt_total: float,
         fusrat_plasma_dd_triton: float,
         t_energy_confinement: float,
@@ -167,6 +195,8 @@ class PlasmaFuelling(Model):
             Fuelling rate efficiency.
         molflow_plasma_fuelling_vv_injected : float
             Total fuelling rate (particles/s).
+        molflow_beam_tritium_vv_injected : float
+            Beam tritium injection rate into the vacuum vessel (particles/s).
         fusrat_dt_total : float
             Total DT fusion rate (particles/s).
         fusrat_plasma_dd_triton : float
@@ -198,6 +228,7 @@ class PlasmaFuelling(Model):
             eta_plasma_fuelling=eta_plasma_fuelling,
             molflow_plasma_fuelling_vv_injected=molflow_plasma_fuelling_vv_injected,
             fusrat_plasma_dd_triton=fusrat_plasma_dd_triton,
+            molflow_beam_tritium_vv_injected=molflow_beam_tritium_vv_injected,
         ) + self.calculate_plasma_tritium_loss_rate(
             fusrat_dt_total=fusrat_dt_total,
             t_energy_confinement=t_energy_confinement,
@@ -213,6 +244,7 @@ class PlasmaFuelling(Model):
         eta_plasma_fuelling: float,
         molflow_plasma_fuelling_vv_injected: float,
         fusrat_plasma_dd_triton: float,
+        molflow_beam_tritium_vv_injected: float,
     ) -> float:
         """Calculate the tritium source rate in the plasma.
 
@@ -226,6 +258,8 @@ class PlasmaFuelling(Model):
             Total fuelling rate (particles/s).
         fusrat_plasma_dd_triton : float
             Tritium production rate from D-D fusion (particles/s).
+        molflow_beam_tritium_vv_injected : float
+            Beam tritium injection rate into the vacuum vessel (particles/s).
 
         Returns
         -------
@@ -234,10 +268,14 @@ class PlasmaFuelling(Model):
 
         """
         return (
-            f_molflow_plasma_fuelling_tritium
-            * eta_plasma_fuelling
-            * molflow_plasma_fuelling_vv_injected
-        ) + fusrat_plasma_dd_triton
+            (
+                f_molflow_plasma_fuelling_tritium
+                * eta_plasma_fuelling
+                * molflow_plasma_fuelling_vv_injected
+            )
+            + fusrat_plasma_dd_triton
+            + molflow_beam_tritium_vv_injected
+        )
 
     @staticmethod
     def calculate_plasma_tritium_loss_rate(
@@ -281,6 +319,7 @@ class PlasmaFuelling(Model):
         f_molflow_plasma_fuelling_deuterium: float,
         eta_plasma_fuelling: float,
         molflow_plasma_fuelling_vv_injected: float,
+        molflow_beam_deuterium_vv_injected: float,
     ) -> float:
         """Calculate the deuterium source rate in the plasma.
 
@@ -292,6 +331,8 @@ class PlasmaFuelling(Model):
             Fuelling rate efficiency.
         molflow_plasma_fuelling_vv_injected : float
             Total fuelling rate (particles/s).
+        molflow_beam_deuterium_vv_injected : float
+            Beam deuterium injection rate into the vacuum vessel (particles/s).
 
         Returns
         -------
@@ -303,7 +344,7 @@ class PlasmaFuelling(Model):
             f_molflow_plasma_fuelling_deuterium
             * eta_plasma_fuelling
             * molflow_plasma_fuelling_vv_injected
-        )
+        ) + molflow_beam_deuterium_vv_injected
 
     @staticmethod
     def calculate_plasma_deuterium_loss_rate(
@@ -358,6 +399,7 @@ class PlasmaFuelling(Model):
         f_molflow_plasma_fuelling_deuterium: float,
         eta_plasma_fuelling: float,
         molflow_plasma_fuelling_vv_injected: float,
+        molflow_beam_deuterium_vv_injected: float,
         fusrat_dt_total: float,
         fusrat_plasma_dhe3: float,
         fusrat_plasma_dd_total: float,
@@ -377,6 +419,8 @@ class PlasmaFuelling(Model):
             Fuelling rate efficiency.
         molflow_plasma_fuelling_vv_injected : float
             Total fuelling rate (particles/s).
+        molflow_beam_deuterium_vv_injected : float
+            Beam deuterium injection rate into the vacuum vessel (particles/s).
         fusrat_dt_total : float
             Total DT fusion rate (particles/s).
         fusrat_plasma_dhe3 : float
@@ -410,6 +454,7 @@ class PlasmaFuelling(Model):
             f_molflow_plasma_fuelling_deuterium=f_molflow_plasma_fuelling_deuterium,
             eta_plasma_fuelling=eta_plasma_fuelling,
             molflow_plasma_fuelling_vv_injected=molflow_plasma_fuelling_vv_injected,
+            molflow_beam_deuterium_vv_injected=molflow_beam_deuterium_vv_injected,
         ) + self.calculate_plasma_deuterium_loss_rate(
             fusrat_dt_total=fusrat_dt_total,
             fusrat_plasma_dd_total=fusrat_plasma_dd_total,
@@ -658,30 +703,45 @@ class PlasmaFuelling(Model):
         po.oheadr(self.outfile, "Plasma Fuelling")
         po.ovarre(
             self.outfile,
-            "Fuelling rate (nucleus-pairs/s)",
+            "Fuelling rate into vessel [particles/s]",
             "(molflow_plasma_fuelling_vv_injected)",
             self.data.physics.molflow_plasma_fuelling_vv_injected,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Fuelling rate (moles/s)",
+            "Fuelling rate into vessel [moles/s]",
             "(molflow_plasma_fuelling_vv_injected_moles)",
             self.data.physics.molflow_plasma_fuelling_vv_injected_moles,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Fuelling loss (nucleus-pairs/s)",
+            "Fuelling loss that doesn't enter the plasma [particles/s]",
             "(molflow_plasma_fuelling_loss)",
             self.data.physics.molflow_plasma_fuelling_loss,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Fuelling loss (moles/s)",
+            "Fuelling loss that doesn't enter the plasma [moles/s]",
             "(molflow_plasma_fuelling_loss_moles)",
             self.data.physics.molflow_plasma_fuelling_loss_moles,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Beam deuterium injection rate into the vacuum vessel [particles/s]",
+            "(molflow_beam_deuterium_vv_injected)",
+            self.data.physics.molflow_beam_deuterium_vv_injected,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Beam tritium injection rate into the vacuum vessel [particles/s]",
+            "(molflow_beam_tritium_vv_injected)",
+            self.data.physics.molflow_beam_tritium_vv_injected,
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -723,7 +783,7 @@ class PlasmaFuelling(Model):
         )
         po.ovarre(
             self.outfile,
-            "Fuel burn-up rate (reactions/s)",
+            "Fuel burn-up rate [reactions/s]",
             "(fusrat_total)",
             self.data.physics.fusrat_total,
             "OP ",

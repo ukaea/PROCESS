@@ -15891,6 +15891,9 @@ def plot_tritium_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
                 molflow_plasma_fuelling_vv_injected=mfile.get(
                     "molflow_plasma_fuelling_vv_injected", scan=scan
                 ),
+                molflow_beam_tritium_vv_injected=mfile.get(
+                    "molflow_beam_tritium_vv_injected", scan=scan
+                ),
                 fusrat_dt_total=mfile.get("fusrat_dt_total", scan=scan),
                 fusrat_plasma_dd_triton=mfile.get("fusrat_plasma_dd_triton", scan=scan),
                 t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
@@ -15958,6 +15961,9 @@ def plot_deuterium_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
                 eta_plasma_fuelling=fuelling,
                 molflow_plasma_fuelling_vv_injected=mfile.get(
                     "molflow_plasma_fuelling_vv_injected", scan=scan
+                ),
+                molflow_beam_deuterium_vv_injected=mfile.get(
+                    "molflow_beam_deuterium_vv_injected", scan=scan
                 ),
                 fusrat_dt_total=mfile.get("fusrat_dt_total", scan=scan),
                 fusrat_plasma_dhe3=mfile.get("fusrat_plasma_dhe3", scan=scan),
@@ -16146,13 +16152,17 @@ def plot_fuelling_info(fig: plt.Figure, mfile: MFile, scan: int):
     """Plot fuelling information."""
     msg = (
         f"$\\mathbf{{Plasma \\ Fuelling \\ Information:}}$\n\n"
-        f"Total fuelling rate:"
+        f"Fuelling rate into vessel:"
         f"{mfile.get('molflow_plasma_fuelling_vv_injected', scan=scan):.4e} particles/s\n"
-        f"Total fuelling rate: "
+        f"Fuelling rate into vessel: "
         f"{mfile.get('molflow_plasma_fuelling_vv_injected_moles', scan=scan):.4e} moles/s\n"
-        f"Total fuelling loss: "
+        f"Additional deuterium beam fuelling: "
+        f"{mfile.get('molflow_beam_deuterium_vv_injected', scan=scan):.4e} particles/s\n"
+        f"Additional tritium beam fuelling: "
+        f"{mfile.get('molflow_beam_tritium_vv_injected', scan=scan):.4e} particles/s\n\n"
+        f"Fuelling loss that doesn't enter the plasma: "
         f"{mfile.get('molflow_plasma_fuelling_loss', scan=scan):.4e} particles/s\n"
-        f"Total fuelling loss: "
+        f"Fuelling loss that doesn't enter the plasma: "
         f"{mfile.get('molflow_plasma_fuelling_loss_moles', scan=scan):.4e} moles/s\n"
         f"Fuelling Rate Efficiency ($\\eta_{{\\text{{fuelling}}}}$): "
         f"{mfile.get('eta_plasma_fuelling', scan=scan):.4f}\n"
