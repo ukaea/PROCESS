@@ -13,7 +13,7 @@ $$
 $$
 
 $$
-\frac{dn_{\text{3He}}}{dt} = f_{\text{fuelling,3He}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} + \Gamma_{\text{D+D} \rightarrow \text{3He}} - \frac{N_{\text{T}}}{\tau_{\text{3He}}^*}
+\frac{dn_{\text{3He}}}{dt} = f_{\text{fuelling,3He}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} + \Gamma_{\text{D+D} \rightarrow \text{3He}} -\Gamma_{\text{D+3He}} - \frac{N_{\text{T}}}{\tau_{\text{3He}}^*}
 $$
 
 $$
@@ -88,7 +88,7 @@ $$
 ### Helium-3 Flow Rate | `calculate_plasma_helium3_flow_rate()`
 
 $$
-\frac{dn_{\text{3He}}}{dt} = f_{\text{fuelling,3He}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} + \Gamma_{\text{D+D} \rightarrow \text{3He}} - \frac{N_{\text{T}}}{\tau_{\text{3He}}^*}
+\frac{dn_{\text{3He}}}{dt} = f_{\text{fuelling,3He}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} + \Gamma_{\text{D+D} \rightarrow \text{3He}}-\Gamma_{\text{D+3He}} - \frac{N_{\text{T}}}{\tau_{\text{3He}}^*}
 $$
 
 ---------------

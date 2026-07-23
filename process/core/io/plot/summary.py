@@ -16084,7 +16084,7 @@ def plot_helium3_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
 
     for i, recycling in enumerate(recycling_range):
         for j, fuelling in enumerate(fuelling_range):
-            helium3_flow[i, j] = PlasmaFuelling.calculate_plasma_helium3_flow_rate(
+            helium3_flow[i, j] = PlasmaFuelling().calculate_plasma_helium3_flow_rate(
                 f_molflow_plasma_fuelling_helium3=mfile.get(
                     "f_molflow_plasma_fuelling_helium3", scan=scan
                 ),
@@ -16093,6 +16093,7 @@ def plot_helium3_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
                     "molflow_plasma_fuelling_vv_injected", scan=scan
                 ),
                 fusrat_plasma_dhe3=mfile.get("fusrat_plasma_dhe3", scan=scan),
+                fusrat_plasma_dd_helion=mfile.get("fusrat_plasma_dd_helion", scan=scan),
                 t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
                 f_plasma_particles_lcfs_recycled=recycling,
                 nd_plasma_fuel_ions_vol_avg=mfile.get(
