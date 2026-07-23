@@ -111,7 +111,7 @@ deploy = "mkdocs gh-deploy"
 
 [tool.hatch.envs.lint]
 detached     = true                           # Don't inherit from default (does not download project dependencies)
-dependencies = ["pre-commit", "ruff", "ty"]
+dependencies = ["pre-commit", "ruff==0.15.22", "ty"]
 
 [tool.hatch.envs.lint.scripts]
 fmt    = ["pre-commit run --all-files --hook-stage manual {args:}"]
