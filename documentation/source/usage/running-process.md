@@ -38,12 +38,12 @@ process -i path/to/my_file_name_IN.DAT --full-output
 will produce the following output files in the same directory as the input file:
 
 ```
-    large_tokamak_MFILE.DAT
-    large_tokamak_MFILE.DATSUMMARY.pdf
-    large_tokamak_OUT.DAT
-    large_tokamak_SIG_TF.json
-    large_tokamak_plotly_sankey.html
-    large_tokamak_process.log
+    my_file_name_MFILE.DAT
+    my_file_name_MFILE.DATSUMMARY.pdf
+    my_file_name_OUT.DAT
+    my_file_name_SIG_TF.json
+    my_file_name_plotly_sankey.html
+    my_file_name_process.log
 ```
 
 The `examples/data` folder in the repository has the commonly used `large_tokamak_IN.DAT` input file, which can be a useful starting point for new users.
