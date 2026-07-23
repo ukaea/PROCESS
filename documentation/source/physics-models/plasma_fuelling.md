@@ -2,7 +2,7 @@
 
 ## Particle balance
 
-The control of fuelling is governed by 4 key particle flux equations for each of the primary fuel species and the helium ash, $\alpha$.
+The control of fuelling is governed by 4 key particle flux equations for each of the primary fuel species and the thermal helium $\alpha$ ash.
 
 $$
 \frac{dn_{\text{T}}}{dt} = f_{\text{fuelling,T}}\eta_{\text{fuelling}}\Gamma_{\text{fuel}} + \Gamma_{\text{D+D} \rightarrow \text{T}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{T}}^*}
@@ -17,13 +17,13 @@ $$
 $$
 
 $$
-\frac{dn_{\alpha}}{dt} = \Gamma_{\text{D+3He}} + \Gamma_{\text{D+T}} - \frac{N_{\alpha}}{\tau_{\alpha}^*}
+\frac{dn_{\alpha,\text{thermal}}}{dt} = \Gamma_{\text{D+3He}} + \Gamma_{\text{D+T}} - \frac{N_{\alpha,\text{thermal}}}{\tau_{\alpha}^*}
 $$
 
 In a steady state equilibrium all 4 of these equations should balance, therefore:
 
 $$
-\frac{dn_{\text{D}}}{dt} = \frac{dn_{\text{T}}}{dt} = \frac{dn_{\text{3He}}}{dt} = \frac{dn_{\alpha}}{dt} = 0
+\frac{dn_{\text{D}}}{dt} = \frac{dn_{\text{T}}}{dt} = \frac{dn_{\text{3He}}}{dt} = \frac{dn_{\alpha,\text{thermal}}}{dt} = 0
 $$
 
 Here, $\eta_{\text{fuelling}}$ is the fuelling efficiency, which quantifies how effectively fuel injected into the vacuum vessel reaches the plasma core. The value of $\eta_{\text{fuelling}}$ depends on the fuelling method. Typical values are around 0.01--0.1 for low-field-side gas puffing, 0.1--0.2 for supersonic gas injection, and 0.5--0.9 for pellet injection, which can approach unity under favourable conditions. $\Gamma_{\text{fuelling}}$ is the fuel injection rate into the vacuum vessel. The product $\eta_{\text{fuelling}} \Gamma_{\text{fuelling}}$ therefore represents the effective fuelling rate, i.e. the fraction of the injected fuel that successfully penetrates into the plasma and becomes available for fusion reactions.
@@ -56,17 +56,6 @@ Where $\tau_p$ is the particle confinement time which we can assume is approxima
     The recycling coefficient $R$, defined as the fraction of particles crossing the LCFS that return to the plasma, can depend on numerous factors—including vessel pumping speed, neutral pressure in the private‑divertor region, impurity seeding levels, and the detailed properties of the SOL. Among these parameters, $R$ is the least certain and the most difficult to quantify. In next‑step devices, the SOL temperature is expected to be high, so particles reflected from the vessel walls are mostly ionized within the SOL and are removed by pumping before they can effectively refuel the burning plasma. As a result, the recycling coefficient is anticipated to be lower than in present‑day tokamaks, where $R$ can often approach unity. An additional uncertainty is the extent of neutral penetration at the plasma edge, which influences both the pedestal density and the density profile, and therefore also affects $R$[^1].
 
 
-
-
-### METIS Alpha Confinement
-
-$$
-\tau_{\alpha} = f_{\alpha}\tau_{\text{E}}\frac{R}{1-R}\tau_{\text{ne}}
-$$
-
-This is the model currently in METIS[^2] and is found in [^3]
-
-
 --------------
 
 ### Tritium Flow Rate | `calculate_plasma_tritium_flow_rate()`
@@ -93,10 +82,10 @@ $$
 
 ---------------
 
-### Alpha Particle Flow Rate | `calculate_plasma_alphas_flow_rate()`
+### Thermal Alpha Particle Flow Rate | `calculate_plasma_alphas_thermal_flow_rate()`
 
 $$
-\frac{dn_{\alpha}}{dt} = \Gamma_{\text{D+3He}} + \Gamma_{\text{D+T}} - \frac{N_{\alpha}}{\tau_{\alpha}^*}
+\frac{dn_{\alpha,\text{thermal}}}{dt} = \Gamma_{\text{D+3He}} + \Gamma_{\text{D+T}} - \frac{N_{\alpha,\text{thermal}}}{\tau_{\alpha}^*}
 $$
 
 -----------------
@@ -177,11 +166,11 @@ This constraint ensures that the change in helium-3 particles as a function of t
 
 ----------------
 
-### Alpha Particle Flow Consistency
+### Thermal Alpha Particle Flow Consistency
 
 This constraint can be activated by stating `icc = 96` in the input file.
 
-This constraint ensures that the change in alpha particles as a function of time is zero. It ensures the output of `calculate_plasma_alphas_flow_rate(()` is zero
+This constraint ensures that the change in thermal alpha particles as a function of time is zero. It ensures the output of `calculate_plasma_alphas_thermal_flow_rate()` is zero
 
 **It is recommended to have this constraint on as it is a plasma consistency model**
 
