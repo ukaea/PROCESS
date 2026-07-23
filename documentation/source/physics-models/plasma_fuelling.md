@@ -136,13 +136,15 @@ $$
 
 ## Key Constraints
 
+The implementation of the equations above as equality constraints is required in order to achieve a plasma steady state equilibrium where there is not a net rate of change of species number.
+
 ### Tritium Flow Consistency
 
 This constraint can be activated by stating `icc = 93` in the input file.
 
 This constraint ensures that the change in tritium particles as a function of time is zero. It ensures the output of `calculate_plasma_tritium_flow_rate()` is zero
 
-**It is recommended to have this constraint on as it is a plasma consistency model**
+**It is recommended to have this constraint on as it is a plasma equilibrium solution model**
 
 -----------------
 
@@ -152,7 +154,7 @@ This constraint can be activated by stating `icc = 94` in the input file.
 
 This constraint ensures that the change in deuterium particles as a function of time is zero. It ensures the output of `calculate_plasma_deuterium_flow_rate()` is zero
 
-**It is recommended to have this constraint on as it is a plasma consistency model**
+**It is recommended to have this constraint on as it is a plasma equilibrium solution model**
 
 ----------------
 
@@ -162,7 +164,7 @@ This constraint can be activated by stating `icc = 95` in the input file.
 
 This constraint ensures that the change in helium-3 particles as a function of time is zero. It ensures the output of `calculate_plasma_helium3_flow_rate()` is zero
 
-**It is recommended to have this constraint on as it is a plasma consistency model**
+**It is recommended to have this constraint on as it is a plasma equilibrium solution model**
 
 ----------------
 
@@ -172,7 +174,7 @@ This constraint can be activated by stating `icc = 96` in the input file.
 
 This constraint ensures that the change in thermal alpha particles as a function of time is zero. It ensures the output of `calculate_plasma_alphas_thermal_flow_rate()` is zero
 
-**It is recommended to have this constraint on as it is a plasma consistency model**
+**It is recommended to have this constraint on as it is a plasma equilibrium solution model**
 
 ------------------
 
