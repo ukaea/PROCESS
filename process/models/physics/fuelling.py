@@ -635,9 +635,11 @@ class PlasmaFuelling(Model):
         t_energy_confinement : float
             Energy confinement time (s).
         f_t_alpha_energy_confinement : float
-            Ratio of alpha particle confinement time to energy confinement time (dimensionless).
+            Ratio of alpha particle confinement time to energy confinement time
+            (dimensionless).
         nd_plasma_alphas_thermal_vol_avg : float
-            Volume-averaged density of thermal alpha particles in the plasma (particles/m³).
+            Volume-averaged density of thermal alpha particles in the plasma
+            (particles/m³).
         vol_plasma : float
             Plasma volume (m³).
 
@@ -671,7 +673,8 @@ class PlasmaFuelling(Model):
         t_energy_confinement : float
             Energy confinement time (s).
         f_t_alpha_energy_confinement : float
-            Ratio of alpha particle confinement time to energy confinement time (dimensionless).
+            Ratio of alpha particle confinement time to energy confinement time
+            (dimensionless).
         nd_plasma_alphas_thermal_vol_avg : float
             Volume-averaged density of alpha particles in the plasma (particles/m³).
         vol_plasma : float
