@@ -1,3 +1,5 @@
+"""Routine to calculate the auxiliary heating power in a stellarator"""
+
 import logging
 
 from process.core import process_output as po
