@@ -1948,8 +1948,8 @@ def constraint_equation_94(constraint_registration, data):
     reactions, while the denominator represents the total deuterium sinks, which are
     related to the plasma volume, fuel ion density, and confinement time.
 
-    The equation ensures that the rate of deuterium production equals the rate of deuterium
-    loss, maintaining a steady-state condition for deuterium in the plasma.
+    The equation ensures that the rate of deuterium production equals the rate of
+    deuterium loss, maintaining a steady-state condition for deuterium in the plasma.
     """
     source = PlasmaFuelling.calculate_plasma_deuterium_source_rate(
         f_molflow_plasma_fuelling_deuterium=data.physics.f_molflow_plasma_fuelling_deuterium,
