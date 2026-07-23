@@ -171,6 +171,9 @@ class TrackingFile:
         # tracking data that shows the value of an important variable as a key-value pair
 
     def asdict(self) -> dict:
+        """
+        Returns a dict of metadata and tracking data
+        """
         return {"meta": self.meta, "tracking": self.tracking}
 
 
@@ -197,6 +200,11 @@ class ProcessTracker:
             the path to an mfile to create tracking data for.
         database:
             the folder (acting as a database) that stores all tracking JSON files
+
+        Raises
+        ------
+        RuntimeError
+            if PROCESS has failed to converge
         """
         self.mfile = mf.MFile(mfile)
 
@@ -558,6 +566,11 @@ def track_entrypoint(arguments):
     Entrypoint if we run in track mode.
 
     Generates a tracking JSOn file for the provided MFile.
+
+    Raises
+    ------
+    ValueError
+        if '--mfile' argument is not set
     """
     if not arguments.mfile:
         raise ValueError("track requires --mfile be set")
@@ -576,6 +589,11 @@ def plot_entrypoint(arguments):
     Entrypoint if we run in plot mode.
 
     Plots all tracking data into a single tracking.html file
+
+    Raises
+    ------
+    ValueError
+        if '--out' argument is not set
     """
     if not arguments.out:
         raise ValueError("plot requires --out be set")
