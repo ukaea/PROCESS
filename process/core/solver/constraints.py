@@ -1922,6 +1922,7 @@ def constraint_equation_93(constraint_registration, data):
         eta_plasma_fuelling=data.physics.eta_plasma_fuelling,
         molflow_plasma_fuelling_vv_injected=data.physics.molflow_plasma_fuelling_vv_injected,
         fusrat_plasma_dd_triton=data.physics.fusrat_plasma_dd_triton,
+        molflow_beam_tritium_vv_injected=data.physics.molflow_beam_tritium_vv_injected,
     )
     sink = PlasmaFuelling.calculate_plasma_tritium_loss_rate(
         fusrat_dt_total=data.physics.fusrat_dt_total,
@@ -1954,6 +1955,7 @@ def constraint_equation_94(constraint_registration, data):
         f_molflow_plasma_fuelling_deuterium=data.physics.f_molflow_plasma_fuelling_deuterium,
         eta_plasma_fuelling=data.physics.eta_plasma_fuelling,
         molflow_plasma_fuelling_vv_injected=data.physics.molflow_plasma_fuelling_vv_injected,
+        molflow_beam_deuterium_vv_injected=data.physics.molflow_beam_deuterium_vv_injected,
     )
     sink = PlasmaFuelling.calculate_plasma_deuterium_loss_rate(
         fusrat_dt_total=data.physics.fusrat_dt_total,

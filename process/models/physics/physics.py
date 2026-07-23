@@ -659,6 +659,17 @@ class Physics(Model):
             self.data.physics.p_beam_dt_mw = self.data.physics.p_beam_alpha_mw * (
                 1 / (1 - constants.DT_NEUTRON_ENERGY_FRACTION)
             )
+
+            self.data.physics.molflow_beam_deuterium_vv_injected = (
+                self.data.current_drive.c_beam_total
+                * (1.0 - self.data.current_drive.f_beam_tritium)
+                / constants.ELECTRON_CHARGE
+            )
+            self.data.physics.molflow_beam_tritium_vv_injected = (
+                self.data.current_drive.c_beam_total
+                * self.data.current_drive.f_beam_tritium
+                / constants.ELECTRON_CHARGE
+            )
         else:
             # If no beams present then the total alpha rates and power are the same as
             # the plasma values
