@@ -555,7 +555,7 @@ class PlasmaFuelling(Model):
         )
 
     @staticmethod
-    def calculate_plasma_alphas_flow_rate(
+    def calculate_plasma_alphas_thermal_flow_rate(
         fusrat_dt_total: float,
         fusrat_plasma_dhe3: float,
         t_energy_confinement: float,
@@ -563,7 +563,7 @@ class PlasmaFuelling(Model):
         nd_plasma_alphas_thermal_vol_avg: float,
         vol_plasma: float,
     ) -> float:
-        """Calculate the net alpha particle flow rate into the plasma.
+        """Calculate the net thermal alpha particle flow rate into the plasma.
 
         Parameters
         ----------
@@ -583,16 +583,15 @@ class PlasmaFuelling(Model):
         Returns
         -------
         float
-            Alpha particle flow rate into the plasma (particles/s).
+            Thermal alpha particle flow rate into the plasma (particles/s).
 
         Notes
         -----
-        - A positive value indicates a net flow of alpha particles into the plasma,
-        while a negative value indicates a net loss of alpha particles from the plasma.
+        - A positive value indicates a net flow of thermal alpha particles into the
+        plasma, while a negative value indicates a net loss of thermal alpha particles
+        from the plasma.
 
         """
-        # Alpha particle balance
-
         return (
             fusrat_dt_total
             + fusrat_plasma_dhe3

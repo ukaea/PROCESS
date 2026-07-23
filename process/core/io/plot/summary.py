@@ -16023,7 +16023,7 @@ def plot_alpha_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
         for j, f_t_alpha_energy_confinement in enumerate(
             f_t_alpha_energy_confinement_range
         ):
-            alpha_flow[i, j] = PlasmaFuelling.calculate_plasma_alphas_flow_rate(
+            alpha_flow[i, j] = PlasmaFuelling.calculate_plasma_alphas_thermal_flow_rate(
                 fusrat_dt_total=fusion_dt,
                 fusrat_plasma_dhe3=mfile.get("fusrat_plasma_dhe3", scan=scan),
                 t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
