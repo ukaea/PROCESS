@@ -240,7 +240,7 @@ INPUT_VARIABLES = {
     "bmn": InputVariable("stellarator", float, range=(0.0001, 0.01)),
     "b_tf_inboard_max": InputVariable("constraints", float, range=(0.1, 50.0)),
     "f_c_plasma_bootstrap_max": InputVariable(
-        "current_drive", float, range=(-0.999, 0.999)
+        "current_drive", float, range=(0.0, 0.999)
     ),
     "f_c_plasma_bootstrap": InputVariable("current_drive", float, range=(0.0, 1.0)),
     "breeder_f": InputVariable("fwbs", float, range=(0.0, 1.0)),
