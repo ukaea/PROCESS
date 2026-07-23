@@ -48,7 +48,7 @@ class Vacuum(Model):
         # MDK Check this!!
         gasld = (
             2.0e0
-            * self.data.physics.molflow_plasma_fuelling_required
+            * self.data.physics.molflow_plasma_fuelling_vv_injected
             * self.data.physics.m_fuel_amu
             * constants.UMASS
         )
@@ -116,7 +116,7 @@ class Vacuum(Model):
         # One ITER torus cryopump has a throughput of 50 Pa m3/s = 1.2155e+22 molecules/s
         # Issue #304
         n_iter_vacuum_pumps = (
-            self.data.physics.molflow_plasma_fuelling_required
+            self.data.physics.molflow_plasma_fuelling_vv_injected
             / self.data.vacuum.molflow_vac_pumps
         )
 
@@ -160,8 +160,8 @@ class Vacuum(Model):
             process_output.ovarre(
                 self.outfile,
                 "Plasma fuelling rate (nucleus-pairs/s)",
-                "(molflow_plasma_fuelling_required)",
-                self.data.physics.molflow_plasma_fuelling_required,
+                "(molflow_plasma_fuelling_vv_injected)",
+                self.data.physics.molflow_plasma_fuelling_vv_injected,
                 "OP ",
             )
             process_output.ocmmnt(

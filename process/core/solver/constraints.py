@@ -11,6 +11,7 @@ from process.core.model import DataStructure
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.fuelling import PlasmaFuelling
 from process.models.physics.physics import (
     BetaComponentLimits,
     PlasmaBeta,
@@ -1896,6 +1897,155 @@ def constraint_equation_92(constraint_registration, data):
         data.physics.f_plasma_fuel_deuterium
         + data.physics.f_plasma_fuel_tritium
         + data.physics.f_plasma_fuel_helium3,
+        1.0,
+        constraint_registration,
+    )
+
+
+@ConstraintManager.register_constraint(93, "particles/s", "=")
+def constraint_equation_93(constraint_registration, data):
+    """
+    Tritium particle balance consistency equation.
+
+    This constraint ensures that the tritium particle balance is maintained in the
+    plasma.
+
+    The numerator represents the total tritium sources, including fuelling and fusion
+    reactions, while the denominator represents the total tritium sinks, which are
+    related to the plasma volume, fuel ion density, and confinement time.
+
+    The equation ensures that the rate of tritium production equals the rate of tritium
+    loss, maintaining a steady-state condition for tritium in the plasma.
+    """
+    source = PlasmaFuelling.calculate_plasma_tritium_source_rate(
+        f_molflow_plasma_fuelling_tritium=data.physics.f_molflow_plasma_fuelling_tritium,
+        eta_plasma_fuelling=data.physics.eta_plasma_fuelling,
+        molflow_plasma_fuelling_vv_injected=data.physics.molflow_plasma_fuelling_vv_injected,
+        fusrat_plasma_dd_triton=data.physics.fusrat_plasma_dd_triton,
+        molflow_beam_tritium_vv_injected=data.physics.molflow_beam_tritium_vv_injected,
+    )
+    sink = PlasmaFuelling.calculate_plasma_tritium_loss_rate(
+        fusrat_dt_total=data.physics.fusrat_dt_total,
+        t_energy_confinement=data.physics.t_energy_confinement,
+        f_plasma_particles_lcfs_recycled=data.physics.f_plasma_particles_lcfs_recycled,
+        nd_plasma_fuel_ions_vol_avg=data.physics.nd_plasma_fuel_ions_vol_avg,
+        vol_plasma=data.physics.vol_plasma,
+        f_plasma_fuel_tritium=data.physics.f_plasma_fuel_tritium,
+    )
+
+    return eq(source, -sink, constraint_registration)
+
+
+@ConstraintManager.register_constraint(94, "particles/s", "=")
+def constraint_equation_94(constraint_registration, data):
+    """
+    Deuterium particle balance consistency equation.
+
+    This constraint ensures that the deuterium particle balance is maintained in the
+    plasma.
+
+    The numerator represents the total deuterium sources, including fuelling and fusion
+    reactions, while the denominator represents the total deuterium sinks, which are
+    related to the plasma volume, fuel ion density, and confinement time.
+
+    The equation ensures that the rate of deuterium production equals the rate of
+    deuterium loss, maintaining a steady-state condition for deuterium in the plasma.
+    """
+    source = PlasmaFuelling.calculate_plasma_deuterium_source_rate(
+        f_molflow_plasma_fuelling_deuterium=data.physics.f_molflow_plasma_fuelling_deuterium,
+        eta_plasma_fuelling=data.physics.eta_plasma_fuelling,
+        molflow_plasma_fuelling_vv_injected=data.physics.molflow_plasma_fuelling_vv_injected,
+        molflow_beam_deuterium_vv_injected=data.physics.molflow_beam_deuterium_vv_injected,
+    )
+    sink = PlasmaFuelling.calculate_plasma_deuterium_loss_rate(
+        fusrat_dt_total=data.physics.fusrat_dt_total,
+        fusrat_plasma_dd_total=data.physics.fusrat_plasma_dd_total,
+        fusrat_plasma_dhe3=data.physics.fusrat_plasma_dhe3,
+        t_energy_confinement=data.physics.t_energy_confinement,
+        f_plasma_particles_lcfs_recycled=data.physics.f_plasma_particles_lcfs_recycled,
+        nd_plasma_fuel_ions_vol_avg=data.physics.nd_plasma_fuel_ions_vol_avg,
+        vol_plasma=data.physics.vol_plasma,
+        f_plasma_fuel_deuterium=data.physics.f_plasma_fuel_deuterium,
+    )
+
+    return eq(source, -sink, constraint_registration)
+
+
+@ConstraintManager.register_constraint(95, "particles/s", "=")
+def constraint_equation_95(constraint_registration, data):
+    """
+    Helium-3 particle balance consistency equation.
+
+    This constraint ensures that the helium-3 particle balance is maintained in the
+    plasma.
+
+    The numerator represents the total helium-3 sources, including fuelling and fusion
+    reactions, while the denominator represents the total helium-3 sinks, which are
+    related to the plasma volume, fuel ion density, and confinement time.
+
+    The equation ensures that the rate of helium-3 production equals the rate of helium-3
+    loss, maintaining a steady-state condition for helium-3 in the plasma.
+    """
+    source = PlasmaFuelling.calculate_plasma_helium3_source_rate(
+        f_molflow_plasma_fuelling_helium3=data.physics.f_molflow_plasma_fuelling_helium3,
+        eta_plasma_fuelling=data.physics.eta_plasma_fuelling,
+        molflow_plasma_fuelling_vv_injected=data.physics.molflow_plasma_fuelling_vv_injected,
+        fusrat_plasma_dd_helion=data.physics.fusrat_plasma_dd_helion,
+    )
+    sink = PlasmaFuelling.calculate_plasma_helium3_loss_rate(
+        fusrat_plasma_dhe3=data.physics.fusrat_plasma_dhe3,
+        t_energy_confinement=data.physics.t_energy_confinement,
+        f_plasma_particles_lcfs_recycled=data.physics.f_plasma_particles_lcfs_recycled,
+        nd_plasma_fuel_ions_vol_avg=data.physics.nd_plasma_fuel_ions_vol_avg,
+        vol_plasma=data.physics.vol_plasma,
+        f_plasma_fuel_helium3=data.physics.f_plasma_fuel_helium3,
+    )
+
+    return eq(source, -sink, constraint_registration)
+
+
+@ConstraintManager.register_constraint(96, "particles/s", "=")
+def constraint_equation_96(constraint_registration, data):
+    """
+    Thermal alpha particle balance consistency equation.
+
+    This constraint ensures that the thermal alpha particle balance is maintained in the
+    plasma.
+
+    The numerator represents the total thermal alpha particle sources,
+    while the denominator represents the total thermal alpha particle sinks, which are
+    related to the plasma volume, fuel ion density, and confinement time.
+
+    The equation ensures that the rate of thermal alpha particle production equals the
+    rate of thermal alpha particle loss, maintaining a steady-state condition for
+    thermal alpha particles in the plasma.
+    """
+    source = PlasmaFuelling.calculate_plasma_alphas_thermal_source_rate(
+        fusrat_dt_total=data.physics.fusrat_dt_total,
+        fusrat_plasma_dhe3=data.physics.fusrat_plasma_dhe3,
+    )
+    sink = PlasmaFuelling.calculate_plasma_alphas_thermal_loss_rate(
+        nd_plasma_alphas_thermal_vol_avg=data.physics.nd_plasma_alphas_thermal_vol_avg,
+        vol_plasma=data.physics.vol_plasma,
+        t_energy_confinement=data.physics.t_energy_confinement,
+        f_t_alpha_energy_confinement=data.physics.f_t_alpha_energy_confinement,
+    )
+
+    return eq(source, -sink, constraint_registration)
+
+
+@ConstraintManager.register_constraint(97, "", "=")
+def constraint_equation_97(constraint_registration, data):
+    """Equation for checking the fuelling composition is consistent.
+
+    f_molflow_plasma_fuelling_deuterium: fraction of deuterium ions
+    f_molflow_plasma_fuelling_tritium: fraction of tritium ions
+    f_molflow_plasma_fuelling_helium3: fraction of helium-3 ions
+    """
+    return eq(
+        data.physics.f_molflow_plasma_fuelling_deuterium
+        + data.physics.f_molflow_plasma_fuelling_tritium
+        + data.physics.f_molflow_plasma_fuelling_helium3,
         1.0,
         constraint_registration,
     )

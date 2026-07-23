@@ -576,8 +576,14 @@ class PhysicsData:
     e_plasma_magnetic_stored: float = 0.0
     """Plasma stored magnetic energy [J]"""
 
-    burnup: float = 0.0
-    """fractional plasma burnup"""
+    f_plasma_fuel_burnup: float = 0.0
+    """Total fuel burnup fraction in plasma"""
+
+    f_plasma_tritium_burnup: float = 0.0
+    """Tritium burnup fraction in plasma"""
+
+    f_plasma_deuterium_burnup: float = 0.0
+    """Deuterium burnup fraction in plasma"""
 
     burnup_in: float = 0.0
     """fractional plasma burnup user input"""
@@ -735,6 +741,27 @@ class PhysicsData:
 
     fusrat_total: float = 0.0
     """fusion reaction rate, from beams and plasma (reactions/sec)"""
+
+    fusrat_plasma_dt: float = 0.0
+    """ D-T fusion reaction rate in plasma, (reactions/sec)"""
+
+    fusrat_dt_total: float = 0.0
+    """ Total D-T fusion reaction rate from beams and plasma, (reactions/sec)"""
+
+    fusrat_plasma_dd_helion: float = 0.0
+    """D-D fusion reaction rate (helium branch) in plasma, (reactions/sec)"""
+
+    fusrat_plasma_dd_triton: float = 0.0
+    """D-D fusion reaction rate (tritium branch) in plasma, (reactions/sec)"""
+
+    fusrat_plasma_dd_total: float = 0.0
+    """Total D-D fusion reaction rate in plasma, (reactions/sec)"""
+
+    fusrat_plasma_dhe3: float = 0.0
+    """D-3He fusion reaction rate in plasma, (reactions/sec)"""
+
+    fusrat_neutron_production_total: float = 0.0
+    """Total neutron production rate from plasma and beams (neutrons/sec)"""
 
     fusrat_plasma_dt_profile: list[float] = field(default_factory=list)
     """Profile of D-T fusion reaction rate in plasma, (reactions/sec)"""
@@ -1247,11 +1274,38 @@ class PhysicsData:
     """Plasma safety factor at 95% flux surface (q₉₅) (`iteration variable 18`)
     """
 
-    molflow_plasma_fuelling_required: float = 0.0
-    """plasma fuelling rate (nucleus-pairs/s)"""
+    f_plasma_particles_lcfs_recycled: float = 0.9
+    """Fraction of plasma particles that are recycled at the LCFS. Recycling coefficent (R)"""
 
-    tauratio: float = 1.0
-    """tauratio /1.0/ : ratio of He and pellet particle confinement times"""
+    eta_plasma_fuelling: float = 0.7
+    """Fuelling efficiency (η), fraction of fuel particles injected that become confined in the plasma"""
+
+    molflow_plasma_fuelling_vv_injected: float = 5e21
+    """Plasma fuelling rate into the vacuum vessel [particles/s]"""
+
+    molflow_plasma_fuelling_vv_injected_moles: float = 0.0
+    """Plasma fuelling rate into the vacuum vessel [moles/s]"""
+
+    molflow_plasma_fuelling_loss: float = 0.0
+    """Plasma fuelling rate that doesn't make it to plasma [particles/s]"""
+
+    molflow_plasma_fuelling_loss_moles: float = 0.0
+    """Plasma fuelling rate that doesn't make it to plasma [moles/s]"""
+
+    f_molflow_plasma_fuelling_deuterium: float = 0.5
+    """Fraction of plasma fuelling that is deuterium"""
+
+    f_molflow_plasma_fuelling_tritium: float = 0.5
+    """Fraction of plasma fuelling that is tritium"""
+
+    f_molflow_plasma_fuelling_helium3: float = 0.0
+    """Fraction of plasma fuelling that is helium-3"""
+
+    molflow_beam_deuterium_vv_injected: float = 0.0
+    """Beam deuterium injection rate into the vacuum vessel [particles/s]"""
+
+    molflow_beam_tritium_vv_injected: float = 0.0
+    """Beam tritium injection rate into the vacuum vessel [particles/s]"""
 
     q95_min: float = 0.0
     """Plasmalower limit for edge safety factor"""
@@ -1297,9 +1351,6 @@ class PhysicsData:
 
     f_nd_plasma_carbon_electron: float = 0.0
     """n_carbon / n_e"""
-
-    rndfuel: float = 0.0
-    """fuel burnup rate (reactions/second)"""
 
     f_nd_plasma_iron_argon_electron: float = 0.0
     """n_highZ / n_e"""
