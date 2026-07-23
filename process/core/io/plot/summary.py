@@ -15951,7 +15951,7 @@ def plot_deuterium_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
 
     for i, recycling in enumerate(recycling_range):
         for j, fuelling in enumerate(fuelling_range):
-            deuterium_flow[i, j] = PlasmaFuelling.calculate_plasma_deuterium_flow_rate(
+            deuterium_flow[i, j] = PlasmaFuelling().calculate_plasma_deuterium_flow_rate(
                 f_molflow_plasma_fuelling_deuterium=mfile.get(
                     "f_molflow_plasma_fuelling_deuterium", scan=scan
                 ),

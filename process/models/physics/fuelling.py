@@ -277,7 +277,84 @@ class PlasmaFuelling(Model):
         )
 
     @staticmethod
+    def calculate_plasma_deuterium_source_rate(
+        f_molflow_plasma_fuelling_deuterium: float,
+        eta_plasma_fuelling: float,
+        molflow_plasma_fuelling_vv_injected: float,
+    ) -> float:
+        """Calculate the deuterium source rate in the plasma.
+
+        Parameters
+        ----------
+        f_molflow_plasma_fuelling_deuterium : float
+            Fraction of deuterium in the plasma fuelling.
+        eta_plasma_fuelling : float
+            Fuelling rate efficiency.
+        molflow_plasma_fuelling_vv_injected : float
+            Total fuelling rate (particles/s).
+
+        Returns
+        -------
+        float
+            Deuterium source rate in the plasma (particles/s).
+
+        """
+        return (
+            f_molflow_plasma_fuelling_deuterium
+            * eta_plasma_fuelling
+            * molflow_plasma_fuelling_vv_injected
+        )
+
+    @staticmethod
+    def calculate_plasma_deuterium_loss_rate(
+        fusrat_dt_total: float,
+        fusrat_plasma_dd_total: float,
+        fusrat_plasma_dhe3: float,
+        t_energy_confinement: float,
+        f_plasma_particles_lcfs_recycled: float,
+        nd_plasma_fuel_ions_vol_avg: float,
+        vol_plasma: float,
+        f_plasma_fuel_deuterium: float,
+    ) -> float:
+        """Calculate the deuterium loss rate from the plasma.
+
+        Parameters
+        ----------
+        fusrat_dt_total : float
+            Total DT fusion rate (particles/s).
+        fusrat_plasma_dd_total : float
+            Total deuterium consumption rate from DD fusion (particles/s).
+        fusrat_plasma_dhe3 : float
+            Deuterium consumption rate from D-He3 fusion (particles/s).
+        t_energy_confinement : float
+            Energy confinement time (s).
+        f_plasma_particles_lcfs_recycled : float
+            Fraction of plasma particles recycled at the LCFS.
+        nd_plasma_fuel_ions_vol_avg : float
+            Volume-averaged density of fuel ions in the plasma (particles/m³).
+        vol_plasma : float
+            Plasma volume (m³).
+        f_plasma_fuel_deuterium : float
+            Fraction of deuterium in the plasma fuel.
+
+        Returns
+        -------
+        float
+            Deuterium loss rate from the plasma (particles/s).
+
+        """
+        return (
+            -fusrat_dt_total
+            - 2 * fusrat_plasma_dd_total
+            - fusrat_plasma_dhe3
+            - (
+                (nd_plasma_fuel_ions_vol_avg * vol_plasma * f_plasma_fuel_deuterium)
+                / (t_energy_confinement / (1 - f_plasma_particles_lcfs_recycled))
+            )
+        )
+
     def calculate_plasma_deuterium_flow_rate(
+        self,
         f_molflow_plasma_fuelling_deuterium: float,
         eta_plasma_fuelling: float,
         molflow_plasma_fuelling_vv_injected: float,
@@ -329,19 +406,19 @@ class PlasmaFuelling(Model):
 
 
         """
-        return (
-            (
-                f_molflow_plasma_fuelling_deuterium
-                * eta_plasma_fuelling
-                * molflow_plasma_fuelling_vv_injected
-            )
-            - fusrat_dt_total
-            - 2 * fusrat_plasma_dd_total
-            - fusrat_plasma_dhe3
-            - (
-                (nd_plasma_fuel_ions_vol_avg * vol_plasma * f_plasma_fuel_deuterium)
-                / (t_energy_confinement / (1 - f_plasma_particles_lcfs_recycled))
-            )
+        return self.calculate_plasma_deuterium_source_rate(
+            f_molflow_plasma_fuelling_deuterium=f_molflow_plasma_fuelling_deuterium,
+            eta_plasma_fuelling=eta_plasma_fuelling,
+            molflow_plasma_fuelling_vv_injected=molflow_plasma_fuelling_vv_injected,
+        ) + self.calculate_plasma_deuterium_loss_rate(
+            fusrat_dt_total=fusrat_dt_total,
+            fusrat_plasma_dd_total=fusrat_plasma_dd_total,
+            fusrat_plasma_dhe3=fusrat_plasma_dhe3,
+            t_energy_confinement=t_energy_confinement,
+            f_plasma_particles_lcfs_recycled=f_plasma_particles_lcfs_recycled,
+            nd_plasma_fuel_ions_vol_avg=nd_plasma_fuel_ions_vol_avg,
+            vol_plasma=vol_plasma,
+            f_plasma_fuel_deuterium=f_plasma_fuel_deuterium,
         )
 
     @staticmethod

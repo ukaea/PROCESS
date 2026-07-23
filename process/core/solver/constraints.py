@@ -1950,26 +1950,23 @@ def constraint_equation_94(constraint_registration, data):
     The equation ensures that the rate of deuterium production equals the rate of deuterium
     loss, maintaining a steady-state condition for deuterium in the plasma.
     """
-    numerator = (
-        (
-            data.physics.eta_plasma_fuelling
-            * data.physics.molflow_plasma_fuelling_vv_injected
-            * data.physics.f_molflow_plasma_fuelling_deuterium
-        )
-        - data.physics.fusrat_dt_total
-        - data.physics.fusrat_plasma_dhe3
-        - 2.0 * data.physics.fusrat_plasma_dd_total
+    source = PlasmaFuelling.calculate_plasma_deuterium_source_rate(
+        f_molflow_plasma_fuelling_deuterium=data.physics.f_molflow_plasma_fuelling_deuterium,
+        eta_plasma_fuelling=data.physics.eta_plasma_fuelling,
+        molflow_plasma_fuelling_vv_injected=data.physics.molflow_plasma_fuelling_vv_injected,
     )
-    denominator = (
-        data.physics.nd_plasma_fuel_ions_vol_avg
-        * data.physics.vol_plasma
-        * data.physics.f_plasma_fuel_deuterium
-    ) / (
-        data.physics.t_energy_confinement
-        / (1 - data.physics.f_plasma_particles_lcfs_recycled)
+    sink = PlasmaFuelling.calculate_plasma_deuterium_loss_rate(
+        fusrat_dt_total=data.physics.fusrat_dt_total,
+        fusrat_plasma_dd_total=data.physics.fusrat_plasma_dd_total,
+        fusrat_plasma_dhe3=data.physics.fusrat_plasma_dhe3,
+        t_energy_confinement=data.physics.t_energy_confinement,
+        f_plasma_particles_lcfs_recycled=data.physics.f_plasma_particles_lcfs_recycled,
+        nd_plasma_fuel_ions_vol_avg=data.physics.nd_plasma_fuel_ions_vol_avg,
+        vol_plasma=data.physics.vol_plasma,
+        f_plasma_fuel_deuterium=data.physics.f_plasma_fuel_deuterium,
     )
 
-    return eq(numerator, denominator, constraint_registration)
+    return eq(source, -sink, constraint_registration)
 
 
 @ConstraintManager.register_constraint(95, "particles/s", "=")
