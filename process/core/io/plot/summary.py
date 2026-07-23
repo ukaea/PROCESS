@@ -375,10 +375,11 @@ def poloidal_cross_section(
     colour_scheme :
         colour scheme to use for plots
     """
-    axis.set_xlabel("R / m")
-    axis.set_ylabel("Z / m")
-    axis.set_title("Poloidal cross-section")
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.set_title("Poloidal Cross-Section")
     axis.minorticks_on()
+    axis.grid(which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
     plot_vacuum_vessel_and_divertor(axis, mfile, scan, radial_build, colour_scheme)
     plot_shield(axis, mfile, scan, radial_build, colour_scheme)
@@ -451,8 +452,8 @@ def plot_full_machine_poloidal_cross_section(
     plot_pf_coils(axis, mfile, scan, colour_scheme)
     plot_pf_coils(axis, mfile, scan, colour_scheme, mirror_negative_x=True)
 
-    axis.set_xlabel("Radial position [m]")
-    axis.set_ylabel("Vertical position [m]")
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
     axis.set_aspect("equal")
     axis.minorticks_on()
     axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
@@ -3567,10 +3568,11 @@ def toroidal_cross_section(
     colour_scheme: Literal[1, 2],
 ):
     """Function to plot toroidal cross-section"""
-    axis.set_xlabel("x / m")
-    axis.set_ylabel("y / m")
-    axis.set_title("Toroidal cross-section")
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("X [m]")
+    axis.set_title("Toroidal Cross-Section")
     axis.minorticks_on()
+    axis.grid(which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
     rmajor = mfile.get("rmajor", scan=scan)
     rminor = mfile.get("rminor", scan=scan)
@@ -3592,7 +3594,8 @@ def toroidal_cross_section(
         radius_beam_tangency = 0
 
     dr_tf_outboard = mfile.get("dr_tf_outboard", scan=scan)
-    arc(axis, rmajor, style="dashed")
+    full_angle = 2 * np.pi
+    arc(axis, rmajor, theta2=full_angle, style="dashed")
 
     # Colour in the main components
     for v, colours in [
@@ -3602,7 +3605,8 @@ def toroidal_cross_section(
             "dr_tf_inboard",
             (
                 TFC_COLOUR[colour_scheme - 1]
-                if mfile.get("i_tf_sup", scan=scan) != 0
+                if TFConductorModel(mfile.get("i_tf_sup", scan=scan))
+                != TFConductorModel.WATER_COOLED_COPPER
                 else "#b87333"
             ),
         ),
@@ -3618,10 +3622,14 @@ def toroidal_cross_section(
         ("dr_shld_thermal_outboard", THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
     ]:
         r2, r1 = cumulative_radial_build2(v, mfile, scan)
-        arc_fill(axis, r1, r2, color=colours)
+        arc_fill(axis, r1, r2, color=colours, theta2=full_angle + 1)
 
     arc_fill(
-        axis, rmajor - rminor, rmajor + rminor, color=PLASMA_COLOUR[colour_scheme - 1]
+        axis,
+        rmajor - rminor,
+        rmajor + rminor,
+        color=PLASMA_COLOUR[colour_scheme - 1],
+        theta2=full_angle + 1,
     )
 
     arc_fill(
@@ -3629,35 +3637,28 @@ def toroidal_cross_section(
         r_cryostat_inboard,
         r_cryostat_inboard + dr_cryostat,
         color=CRYOSTAT_COLOUR[colour_scheme - 1],
+        theta2=full_angle + 1,
     )
 
     # Segment the TF coil inboard
     # Calculate centrelines
-    n = int(n_tf_coils / 4) + 1
     spacing = 2 * np.pi / n_tf_coils
-    i = np.arange(0, n)
+    coil_indices = np.arange(int(n_tf_coils))
 
-    ang = i * spacing
-    angl = ang - spacing / 2
-    angu = ang + spacing / 2
     r1, _ = cumulative_radial_build2("dr_cs_tf_gap", mfile, scan)
     r2, _ = cumulative_radial_build2("dr_tf_inboard", mfile, scan)
     r4, r3 = cumulative_radial_build2("dr_tf_outboard", mfile, scan)
 
     # Coil width
     w = r2 * np.tan(spacing / 2)
-    xi = r1 * np.cos(angl)
-    yi = r1 * np.sin(angl)
-    xo = r2 * np.cos(angl)
-    yo = r2 * np.sin(angl)
-    axis.plot((xi, xo), (yi, yo), color="black")
-    xi = r1 * np.cos(angu)
-    yi = r1 * np.sin(angu)
-    xo = r2 * np.cos(angu)
-    yo = r2 * np.sin(angu)
-    axis.plot((xi, xo), (yi, yo), color="black")
+    for ang in (coil_indices * spacing) - spacing / 2:
+        axis.plot(
+            [r1 * np.cos(ang), r2 * np.cos(ang)],
+            [r1 * np.sin(ang), r2 * np.sin(ang)],
+            color="black",
+        )
 
-    for item in i:
+    for item in coil_indices:
         # Neutral beam shielding
         TF_outboard(
             axis,
@@ -3678,13 +3679,14 @@ def toroidal_cross_section(
             w=w,
             facecolor=(
                 TFC_COLOUR[colour_scheme - 1]
-                if mfile.get("i_tf_sup", scan=scan) != 0
+                if TFConductorModel(mfile.get("i_tf_sup", scan=scan))
+                != TFConductorModel.WATER_COOLED_COPPER
                 else "#b87333"
             ),
         )
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
-    if i_hcd_primary in {5, 8}:
+    if CurrentDriveModel(i_hcd_primary).method == CurrentDriveMethodType.NEUTRAL_BEAM:
         # Neutral beam geometry. See docs for diagram.
         a = w + dx_beam_shield
         b = dr_tf_outboard
@@ -3744,10 +3746,10 @@ def toroidal_cross_section(
     )
     if n_blkt_inboard_modules_toroidal > 1:
         # Calculate the angular spacing for each module
-        spacing = rtangle / (n_blkt_inboard_modules_toroidal / 4)
+        spacing = full_angle / (n_blkt_inboard_modules_toroidal)
         r1, _ = cumulative_radial_build2("dr_shld_inboard", mfile, scan)
         r2, _ = cumulative_radial_build2("dr_blkt_inboard", mfile, scan)
-        for i in range(1, int(n_blkt_inboard_modules_toroidal / 4)):
+        for i in range(int(n_blkt_inboard_modules_toroidal)):
             ang = i * spacing
             # Draw a line from r1 to r2 at angle ang
             axis.plot(
@@ -3765,10 +3767,10 @@ def toroidal_cross_section(
     )
     if n_blkt_outboard_modules_toroidal > 1:
         # Calculate the angular spacing for each module
-        spacing = rtangle / (n_blkt_outboard_modules_toroidal / 4)
+        spacing = full_angle / (n_blkt_outboard_modules_toroidal)
         r1, _ = cumulative_radial_build2("dr_fw_outboard", mfile, scan)
         r2, _ = cumulative_radial_build2("dr_blkt_outboard", mfile, scan)
-        for i in range(1, int(n_blkt_outboard_modules_toroidal / 4)):
+        for i in range(int(n_blkt_outboard_modules_toroidal)):
             ang = i * spacing
             # Draw a line from r1 to r2 at angle ang
             axis.plot(
@@ -3837,7 +3839,7 @@ def arc(axis: plt.Axes, r, theta1=0, theta2=rtangle, style="solid"):
     axis.plot(xs, ys, linestyle=style, color="black", lw=0.2)
 
 
-def arc_fill(axis: plt.Axes, r1, r2, color="pink"):
+def arc_fill(axis: plt.Axes, r1, r2, color="pink", theta1=0, theta2=rtangle):
     """Fills the space between two quarter circles.
 
     Parameters
@@ -3853,16 +3855,14 @@ def arc_fill(axis: plt.Axes, r1, r2, color="pink"):
     color :
          (Default value = "pink")
     """
-    angs = np.linspace(0, rtangle, endpoint=True)
+    angs = np.linspace(theta1, theta2, endpoint=True)
     xs1 = r1 * np.cos(angs)
     ys1 = r1 * np.sin(angs)
-    angs = np.linspace(rtangle, 0, endpoint=True)
+    angs = np.linspace(theta2, theta1, endpoint=True)
     xs2 = r2 * np.cos(angs)
     ys2 = r2 * np.sin(angs)
     verts = list(zip(xs1, ys1, strict=False))
     verts.extend(list(zip(xs2, ys2, strict=False)))
-    endpoint = [(r2, 0)]
-    verts.extend(endpoint)
     path = mplPath(verts, closed=True)
     patch = patches.PathPatch(path, facecolor=color, lw=0)
     axis.add_patch(patch)
@@ -16162,6 +16162,25 @@ def main_plot(
         radial_build,
         colour_scheme,
     )
+
+    ax_full_toroidal = _add_page("full_machine_toroidal").add_subplot(
+        111, aspect="equal"
+    )
+    toroidal_cross_section(
+        ax_full_toroidal,
+        m_file,
+        scan,
+        demo_ranges,
+        colour_scheme,
+    )
+    ax_full_toroidal.set_ylim([
+        -ax_full_toroidal.get_ylim()[1],
+        ax_full_toroidal.get_ylim()[1],
+    ])
+    ax_full_toroidal.set_xlim([
+        -ax_full_toroidal.get_xlim()[1],
+        ax_full_toroidal.get_xlim()[1],
+    ])
 
     ax18 = _add_page().add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
