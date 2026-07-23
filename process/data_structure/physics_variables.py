@@ -1301,6 +1301,12 @@ class PhysicsData:
     f_molflow_plasma_fuelling_helium3: float = 0.0
     """Fraction of plasma fuelling that is helium-3"""
 
+    molflow_beam_deuterium_vv_injected: float = 0.0
+    """Beam deuterium injection rate into the vacuum vessel [particles/s]"""
+
+    molflow_beam_tritium_vv_injected: float = 0.0
+    """Beam tritium injection rate into the vacuum vessel [particles/s]"""
+
     q95_min: float = 0.0
     """Plasmalower limit for edge safety factor"""
 
