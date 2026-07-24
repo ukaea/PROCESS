@@ -8914,6 +8914,85 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     axis.set_facecolor("#f0f0f0")
 
 
+def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: int):
+    """Function to plot a scatter box plot of SOL power decay lengths (λ_q).
+
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE data object
+    scan :
+        scan number to use
+    """
+    len_plasma_sol_eich13_power_decay_mm = (
+        mfile.get("len_plasma_sol_eich13_power_decay", scan=scan) * 1e3
+    )
+    len_plasma_sol_mast14_power_decay_1_mm = (
+        mfile.get("len_plasma_sol_mast14_power_decay_1", scan=scan) * 1e3
+    )
+    len_plasma_sol_mast14_power_decay_2_mm = (
+        mfile.get("len_plasma_sol_mast14_power_decay_2", scan=scan) * 1e3
+    )
+
+    # Data for the box plot
+    data = {
+        "Eich 2013": len_plasma_sol_eich13_power_decay_mm,
+        "MAST 2014 (1)": len_plasma_sol_mast14_power_decay_1_mm,
+        "MAST 2014 (2)": len_plasma_sol_mast14_power_decay_2_mm,
+    }
+    # Create the violin plot
+    axis.violinplot(data.values(), showextrema=False)
+
+    # Create the box plot
+    axis.boxplot(
+        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
+    )
+
+    # Scatter plot for each data point
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    for index, (key, value) in enumerate(data.items()):
+        axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
+    axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
+
+    # Calculate average, standard deviation, and median
+    data_values = list(data.values())
+    avg_decay_length = np.mean(data_values)
+    std_decay_length = np.std(data_values)
+    median_decay_length = np.median(data_values)
+
+    # Plot average, standard deviation, and median as text
+    axis.text(
+        1.02,
+        0.2,
+        f"Average: {avg_decay_length:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.02,
+        0.15,
+        f"Standard Dev: {std_decay_length:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.02,
+        0.1,
+        f"Median: {median_decay_length:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+
+    axis.set_title("SOL Power Decay Length ($\\lambda_q$) Comparison")
+    axis.set_ylabel("Power Decay Length [mm]")
+    axis.set_xlim([0.5, 1.5])
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+    axis.set_facecolor("#f0f0f0")
+
+
 def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=None):
     """Function to plot a scatter box plot of L-H threshold power comparisons.
 
@@ -16088,6 +16167,10 @@ def main_plot(
     )
     plot_confinement_time_comparison(
         pages["plasma_compare_2"].add_subplot(224), m_file, scan
+    )
+
+    plot_sol_power_decay_length_comparison(
+        _add_page("plasma_compare_3").add_subplot(221), m_file, scan
     )
 
     plot_debye_length_profile(
