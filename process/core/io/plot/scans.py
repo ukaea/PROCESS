@@ -33,6 +33,7 @@ import numpy as np
 
 from process.core.io.mfile import MFile
 from process.core.io.variable_metadata import var_dicts as meta
+from process.data_structure.numerics import SolverOutputCondition
 
 
 def plot_scan(
@@ -285,7 +286,7 @@ def plot_scan(
             conv_i = []
             for ii in range(n_scan):
                 ifail = m_file.data["ifail"].get_scan(ii + 1)
-                if ifail == 1:
+                if ifail == SolverOutputCondition.CONVERGED:
                     conv_i.append(ii + 1)
                 else:
                     failed_value = m_file.data[scan_var_name].get_scan(ii + 1)
@@ -737,7 +738,7 @@ def plot_scan(
             for _jj in range(n_scan_2):
                 ii_jj += 1  # Represents the scan point number in the MFILE
                 ifail = m_file.data["ifail"].get_scan(ii_jj)
-                if ifail == 1:
+                if ifail == SolverOutputCondition.CONVERGED:
                     conv_ij[ii].append(
                         ii_jj
                     )  # Only appends scan number if scan converged

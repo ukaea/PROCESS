@@ -7,6 +7,42 @@ import numpy as np
 from process.core.solver.iteration_variables import ITERATION_VARIABLES
 
 
+class SolverOutputCondition(IntEnum):
+    """Enum for the possible conditions that can be returned by the solvers.
+    This is for the `ifail` condition.
+
+    Notes
+    -----
+    - These outputs can be solver specific, but the ones defined here are common to
+    all solvers used in PROCESS.
+    """
+
+    USER_TERMINATED = -1
+    # Solver was terminated by the user (e.g. via a keyboard interrupt)
+
+    IMPROPER_INPUT = 0
+    # Solver failed due to improper input (e.g. invalid parameters, or failure to
+    # satisfy solver preconditions)
+
+    CONVERGED = 1
+    # Solver converged successfully
+
+    MAX_ITERATIONS = 2
+    # Solver failed to converge within the maximum number of iterations
+
+    MAX_LINE_SEARCHES = 3
+    # Line search required 10 function calls without finding a better solution
+
+    UPHILL_SEARCH = 4
+    # Uphill search direction was calculated
+
+    NO_SOLUTION = 5
+    # No feasible solution or bad approximation of Hessian
+
+    SINGULAR_MATRIX_OR_BOUNDS = 6
+    # Singular matrix in quadratic subproblem or restriction by artificial bounds
+
+
 class PROCESSRunMode(IntEnum):
     """Enumeration of the available PROCESS run modes, which determine the behaviour
     of the code in various places. This is controlled by the `ioptimz` variable

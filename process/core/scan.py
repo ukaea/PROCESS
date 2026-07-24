@@ -15,7 +15,11 @@ from process.core.exceptions import ProcessValueError
 from process.core.log import logging_model_handler, show_errors
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
-from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
+from process.data_structure.numerics import (
+    FiguresOfMerit,
+    PROCESSRunMode,
+    SolverOutputCondition,
+)
 from process.data_structure.scan_variables import IPNSCNS, NOUTVARS, ScanData
 
 if TYPE_CHECKING:
@@ -271,14 +275,16 @@ class Scan:
             process_output.ocmmnt(
                 constants.NOUT, "PROCESS has performed a VMCON (optimisation) run."
             )
-        if ifail != 1:
+        if ifail != SolverOutputCondition.CONVERGED:
             process_output.ovarre(constants.NOUT, "Error flag", "(ifail)", ifail)
             process_output.oheadr(
                 constants.IOTTY, "PROCESS COULD NOT FIND A FEASIBLE SOLUTION"
             )
             process_output.oblnkl(constants.IOTTY)
 
-            logger.critical("Solver returns with ifail /= 1. %s", ifail)
+            logger.critical(
+                "Solver returns with ifail /= %s.", SolverOutputCondition.CONVERGED.value
+            )
 
             # Error code handler for VMCON
             if self.solver == "vmcon":
@@ -411,7 +417,7 @@ class Scan:
         process_output.oblnkl(constants.NOUT)
 
         if self.solver == "fsolve":
-            if ifail == 1:
+            if ifail == SolverOutputCondition.CONVERGED:
                 msg = "PROCESS has solved using fsolve."
             else:
                 msg = "PROCESS failed to solve using fsolve."
@@ -420,7 +426,7 @@ class Scan:
                 f"{msg}\n",
             )
         else:
-            if ifail == 1:
+            if ifail == SolverOutputCondition.CONVERGED:
                 string1 = "PROCESS has successfully optimised"
             else:
                 string1 = "PROCESS has failed to optimise"
@@ -707,10 +713,10 @@ class Scan:
         ifail: int :
 
         """
-        if ifail == -1:
+        if ifail == SolverOutputCondition.USER_TERMINATED:
             process_output.ocmmnt(constants.NOUT, "User-terminated execution of VMCON.")
             process_output.ocmmnt(constants.IOTTY, "User-terminated execution of VMCON.")
-        elif ifail == 0:
+        elif ifail == SolverOutputCondition.IMPROPER_INPUT:
             process_output.ocmmnt(
                 constants.NOUT, "Improper input parameters to the VMCON routine."
             )
@@ -720,7 +726,7 @@ class Scan:
                 constants.IOTTY, "Improper input parameters to the VMCON routine."
             )
             process_output.ocmmnt(constants.IOTTY, "PROCESS coding must be checked.")
-        elif ifail == 2:
+        elif ifail == SolverOutputCondition.MAX_ITERATIONS:
             process_output.ocmmnt(
                 constants.NOUT,
                 "The maximum number of calls has been reached without solution.",
@@ -763,7 +769,7 @@ class Scan:
                 constants.IOTTY,
                 "Try changing the variables in IXC, or modify their initial values.",
             )
-        elif ifail == 3:
+        elif ifail == SolverOutputCondition.MAX_LINE_SEARCHES:
             process_output.ocmmnt(
                 constants.NOUT, "The line search required the maximum of 10 calls."
             )
@@ -783,7 +789,7 @@ class Scan:
             process_output.ocmmnt(
                 constants.IOTTY, "Try changing or adding variables to IXC."
             )
-        elif ifail == 4:
+        elif ifail == SolverOutputCondition.UPHILL_SEARCH:
             process_output.ocmmnt(
                 constants.NOUT, "An uphill search direction was found."
             )
@@ -799,7 +805,7 @@ class Scan:
                 constants.IOTTY, "Try changing the equations in ICC, or"
             )
             process_output.ocmmnt(constants.IOTTY, "adding new variables to IXC.")
-        elif ifail == 5:
+        elif ifail == SolverOutputCondition.NO_SOLUTION:
             process_output.ocmmnt(
                 constants.NOUT, "The quadratic programming technique was unable to"
             )
@@ -827,7 +833,7 @@ class Scan:
                 "their initial values (especially if only 1 optimisation",
             )
             process_output.ocmmnt(constants.IOTTY, "iteration was performed).")
-        elif ifail == 6:
+        elif ifail == SolverOutputCondition.SINGULAR_MATRIX_OR_BOUNDS:
             process_output.ocmmnt(
                 constants.NOUT, "The quadratic programming technique was restricted"
             )

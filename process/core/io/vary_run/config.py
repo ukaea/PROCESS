@@ -26,6 +26,7 @@ from process.core.io.vary_run.tools import (
     set_variable_in_indat,
 )
 from process.core.model import DataStructure
+from process.data_structure.numerics import SolverOutputCondition
 
 logger = logging.getLogger(__name__)
 
@@ -158,7 +159,7 @@ iteration variables should get varied"""
         m_file = MFile(filename=self.wdir / mfile)
         ifail = m_file.data["ifail"].get_scan(-1)
 
-        if ifail != 1:
+        if ifail != SolverOutputCondition.CONVERGED:
             print(f"VaryRun iteration {self._current_iteration} did not converge.\n")
         else:
             print(
@@ -246,7 +247,7 @@ iteration variables should get varied"""
             error_status = "The MFILE is empty. PROCESS probably exited prematurely.\n"
 
         ifail = m_file.data["ifail"].get_scan(-1)
-        if ifail != 1:
+        if ifail != SolverOutputCondition.CONVERGED:
             ifail_msg = (
                 "PROCESS has been unable to find a converging input file "
                 "within the chosen maximum number of iterations.\n"
