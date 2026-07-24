@@ -377,17 +377,6 @@ def init_imp_element(
     data.impurity_radiation.impurity_arr_zav[n_species_index - 1, :] = zav
 
 
-def z2index(zimp, data: DataStructure) -> int:
-    for i in range(len(data.impurity_radiation.impurity_arr_label)):
-        if zimp == data.impurity_radiation.impurity_arr_z[i]:
-            return i
-
-    # Should only get here if there is a problem
-    raise ProcessValueError(
-        "Element with the given charge is not in the impurity array", zimp=zimp
-    )
-
-
 def create_f_rad_core_profile(
     rho: np.array, radius_plasma_core_norm: float, f_p_plasma_core_rad_reduction: float
 ) -> np.array:
