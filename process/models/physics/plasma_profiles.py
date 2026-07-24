@@ -32,7 +32,8 @@ class PlasmaProfile(Model):
             neprofile (NeProfile): An instance of the NeProfile class.
             teprofile (TeProfile): An instance of the TeProfile class.
         """
-        # Default profile_size = 501, but it's possible to experiment with this value.
+        # Default profile_size = 101, but it's possible to experiment with this value.
+        # See `n_plasma_profile_elements`
         self.outfile = constants.NOUT
         self.neprofile = ne_profile
         self.teprofile = te_profile

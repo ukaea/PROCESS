@@ -242,7 +242,7 @@ The parent plasma profile class is `PlasmaProfile`. Initialization sets the prof
 
 ???+ Note
 
-    Profile sizes are set to 501 point by default. this can be varied in the `__init__` of `PlasmaProfile`. Changing this will affect the values when doing Simpsons rule integration on the profiles.
+    Profile sizes are set to 101 point by default. this can be varied in the `__init__` of `PlasmaProfile`. Changing this will affect the values when doing Simpsons rule integration on the profiles.
 
 ----------
 
