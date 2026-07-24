@@ -4178,10 +4178,11 @@ def plot_jprofile(prof, mfile: MFile, scan: int):
     """
     alphaj = mfile.get("alphaj", scan=scan)
     j_plasma_0 = mfile.get("j_plasma_on_axis", scan=scan)
+    n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     j_plasma_bootstrap_sauter_profile = [
         mfile.get(f"j_plasma_bootstrap_sauter_profile{i}", scan=scan) / 1000.0
-        for i in range(498)
+        for i in range(n_plasma_profile_elements - 3)
     ]
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
@@ -4196,7 +4197,7 @@ def plot_jprofile(prof, mfile: MFile, scan: int):
     prof.plot(rho, y2, color="red")
 
     prof.plot(
-        np.linspace(0, 1, 498),
+        np.linspace(0, 1, n_plasma_profile_elements - 3),
         j_plasma_bootstrap_sauter_profile,
         label="Sauter Bootstrap",
         color="green",
