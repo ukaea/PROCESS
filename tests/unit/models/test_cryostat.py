@@ -131,7 +131,7 @@ def test_external_cryo_geometry(externalcryogeometryparam, monkeypatch, cryostat
     Automatically generated Regression Unit Test for external_cryo_geometry.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_eval.IN.DAT.
+    large_tokamak_eval.IN.DAT.
 
     :param externalcryogeometryparam: the data used to mock and assert in this test.
     :type externalcryogeometryparam: externalcryogeometryparam

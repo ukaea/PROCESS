@@ -18,7 +18,8 @@ class TestDivertor:
     def test_divtart(monkeypatch, divertor):
         """Test the divtart subroutine.
 
-        Uses test data from the second call of this subroutine by FNSF regression test.
+        Uses test data from the second call of this subroutine by
+        FNSF regression test (no longer exists in the PROCESS repository).
 
         :param monkeypatch: pytest mocking fixture
         :type monkeypatch: object
@@ -59,7 +60,8 @@ class TestDivertor:
     def test_divwade(monkeypatch, divertor):
         """Test the divwade subroutine.
 
-        Uses test data from the second call of this subroutine by FNSF regression test.
+        Uses test data from the second call of this subroutine by
+        FNSF regression test (no longer exists in the PROCESS repository).
 
         :param monkeypatch: pytest mocking fixture
         :type monkeypatch: object

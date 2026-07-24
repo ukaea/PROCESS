@@ -206,7 +206,8 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
     """
     Automatically generated Regression Unit Test for nuclear_heating_magnets.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param nuclearheatingmagnetsparam: the data used to mock and assert in this test.
     :type nuclearheatingmagnetsparam: nuclearheatingmagnetsparam
@@ -366,7 +367,8 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for nuclear_heating_fw.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param nuclearheatingfwparam: the data used to mock and assert in this test.
     :type nuclearheatingfwparam: nuclearheatingfwparam
@@ -433,7 +435,8 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for nuclear_heating_blanket.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param nuclearheatingblanketparam: the data used to mock and assert in this test.
     :type nuclearheatingblanketparam: nuclearheatingblanketparam
@@ -510,7 +513,8 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for nuclear_heating_shield.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param nuclearheatingshieldparam: the data used to mock and assert in this test.
     :type nuclearheatingshieldparam: nuclearheatingshieldparam
@@ -726,7 +730,8 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for powerflow_calc.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param powerflowcalcparam: the data used to mock and assert in this test.
     :type powerflowcalcparam: powerflowcalcparam
@@ -862,7 +867,8 @@ def test_st_cp_angle_fraction(stcpanglefractionparam, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for st_cp_angle_fraction.
 
-    This test was generated using data from tests/regression/scenarios/FNSF/IN.DAT.
+    This test was generated using data from the FNSF IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param stcpanglefractionparam: the data used to mock and assert in this test.
     :type stcpanglefractionparam: stcpanglefractionparam
@@ -915,8 +921,8 @@ def test_st_tf_centrepost_fast_neut_flux(
     """
     Automatically generated Regression Unit Test for st_tf_centrepost_fast_neut_flux.
 
-    This test was generated using data from
-    tests/regression/scenarios/Menard_HTS-PP/IN.DAT.
+    This test was generated using data from the Menard_HTS-PP IN.DAT
+    (no longer exists in the PROCESS repository)
 
     :param sttfcentrepostfastneutfluxparam: data used to mock and assert in this test.
     :type sttfcentrepostfastneutfluxparam: sttfcentrepostfastneutfluxparam
@@ -985,8 +991,8 @@ def test_st_centrepost_nuclear_heating(
     """
     Automatically generated Regression Unit Test for st_centrepost_nuclear_heating.
 
-    This test was generated using data from
-    tests/regression/scenarios/Menard_HTS-PP/IN.DAT.
+    This test was generated using data from Menard_HTS-PP IN.DAT
+    (no longer exists in the PROCESS repository)
 
     :param stcentrepostnuclearheatingparam: data used to mock and assert in this test.
     :type stcentrepostnuclearheatingparam: stcentrepostnuclearheatingparam
@@ -1166,7 +1172,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     Automatically generated Regression Unit Test for component_masses.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_eval.IN.DAT.
+    large_tokamak_eval.IN.DAT.
 
     :param componentmassesparam: the data used to mock and assert in this test.
     :type componentmassesparam: componentmassesparam

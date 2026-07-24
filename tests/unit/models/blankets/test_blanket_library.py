@@ -510,7 +510,7 @@ def test_apply_coverage_factors(applycoveragefactorsparam, monkeypatch, blanket_
     Automatically generated Regression Unit Test for apply_coverage_factors.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_eval.IN.DAT.
+    large_tokamak_eval.IN.DAT.
 
     :param applycoveragefactorsparam: the data used to mock and assert in this test.
     :type applycoveragefactorsparam: applycoveragefactorsparam
@@ -1324,7 +1324,7 @@ def test_calculate_dshaped_blkt_areas(calculatedshapedblktareasparam, blanket_li
     Regression Unit Test for calculate_dshaped_blkt_areas.
 
     This test was generated using data from
-    tests/regression/input_files/st_regression.IN.DAT.
+    st_regression.IN.DAT.
 
     :param calculatedshapedblktareasparam: the data used in this test.
     :type calculatedshapedblktareasparam: CalculateDshapedBlktAreasParam
@@ -1401,7 +1401,7 @@ def test_calculate_dshaped_blkt_volumes(
     Regression Unit Test for calculate_dshaped_blkt_volumes.
 
     This test was generated using data from
-    tests/regression/input_files/st_regression.IN.DAT.
+    st_regression.IN.DAT.
 
     :param calculatedshapedblktvolumesparam: the data used in this test.
     :type calculatedshapedblktvolumesparam: CalculateDshapedBlktVolumesParam
@@ -1478,7 +1478,7 @@ def test_calculate_elliptical_blkt_areas(
     Regression Unit Test for calculate_elliptical_blkt_areas.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_eval.IN.DAT.
+    large_tokamak_eval.IN.DAT.
 
     :param calculateellipticalblktareasparam: the data used in this test.
     :type calculateellipticalblktareasparam: CalculateEllipticalBlktAreasParam
@@ -1556,7 +1556,7 @@ def test_calculate_elliptical_blkt_volumes(
     Regression Unit Test for calculate_elliptical_blkt_volumes.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_eval.IN.DAT.
+    large_tokamak_eval.IN.DAT.
 
     :param calculateellipticalblktvolumesparam: the data used in this test.
     :type calculateellipticalblktvolumesparam: CalculateEllipticalBlktVolumesParam

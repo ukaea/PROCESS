@@ -54,7 +54,7 @@ def test_itersc(iterscparam):
     Automatically generated Regression Unit Test for itersc.
 
     This test was generated using data from
-    tests/regression/scenarios/large-tokamak/IN.DAT.
+    large_tokamak_nof.IN.DAT.
 
     :param iterscparam: the data used to mock and assert in this test.
     :type iterscparam: iterscparam
@@ -122,7 +122,7 @@ def test_jcrit_nbti(jcritnbtiparam):
     Automatically generated Regression Unit Test for jcrit_nbti.
 
     This test was generated using data from
-    tests/regression/scenarios/large-tokamak/IN.DAT.
+    large_tokamak_nof.IN.DAT.
 
     :param jcritnbtiparam: the data used to mock and assert in this test.
     :type jcritnbtiparam: jcritnbtiparam

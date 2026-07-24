@@ -119,7 +119,7 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
     Automatically generated Regression Unit Test for bootstrap_fraction_iter89.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_nof.IN.DAT.
+    large_tokamak_nof.IN.DAT.
 
     :param bootstrapfractioniter89param: the data used to mock and assert in this test.
     :type bootstrapfractioniter89param: bootstrapfractioniter89param
@@ -203,7 +203,7 @@ def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch, ph
     Automatically generated Regression Unit Test for bootstrap_fraction_nevins.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_nof.IN.DAT.
+    large_tokamak_nof.IN.DAT.
 
     :param bootstrapfractionnevinsparam: the data used to mock and assert in this test.
     :type bootstrapfractionnevinsparam: bootstrapfractionnevinsparam
@@ -294,7 +294,7 @@ def test_bootstrap_fraction_wilson(bootstrapfractionwilsonparam, physics):
     Automatically generated Regression Unit Test for bootstrap_fraction_wilson.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_nof.IN.DAT.
+    large_tokamak_nof.IN.DAT.
 
     :param bootstrapfractionwilsonparam: the data used to mock and assert in this test.
     :type bootstrapfractionwilsonparam: bootstrapfractionwilsonparam
@@ -412,7 +412,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     Automatically generated Regression Unit Test for bootstrap_fraction_sauter.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_nof.IN.DAT.
+    large_tokamak_nof.IN.DAT.
 
     :param bootstrapfractionsauterparam: the data used to mock and assert in this test.
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
@@ -509,8 +509,8 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
     Automatically generated Regression Unit Test for bootstrap_fraction_sakai.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak.IN.DAT.
-    and tests/regression/input_files/st_regression.IN.DAT.
+    large_tokamak.IN.DAT.
+    and st_regression.IN.DAT.
 
     :param bootstrapfractionsauterparam: the data used to mock and assert in this test.
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
@@ -564,7 +564,7 @@ def test_bootstrap_fraction_aries(bootstrapfractionariesparam, physics):
     Automatically generated Regression Unit Test for bootstrap_fraction_aries.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak.IN.DAT.
+    large_tokamak.IN.DAT.
 
     :param bootstrapfractionsauterparam: the data used to mock and assert in this test.
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
@@ -610,7 +610,7 @@ def test_bootstrap_fraction_andrade(bootstrapfractionandradeparam, physics):
     Automatically generated Regression Unit Test for bootstrap_fraction_andrade.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak.IN.DAT.
+    large_tokamak.IN.DAT.
 
     :param bootstrapfractionsauterparam: the data used to mock and assert in this test.
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
@@ -655,7 +655,7 @@ def test_bootstrap_fraction_hoang(bootstrapfractionhoangparam, physics):
     Automatically generated Regression Unit Test for bootstrap_fraction_hoang.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak.IN.DAT.
+    large_tokamak.IN.DAT.
 
     :param bootstrapfractionsauterparam: the data used to mock and assert in this test.
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
@@ -703,7 +703,7 @@ def test_bootstrap_fraction_wong(bootstrapfractionwongparam, physics):
     Automatically generated Regression Unit Test for bootstrap_fraction_wong.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak.IN.DAT.
+    large_tokamak.IN.DAT.
 
     :param bootstrapfractionsauterparam: the data used to mock and assert in this test.
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
@@ -758,7 +758,7 @@ def test_bootstrap_fraction_gi_I(bootstrapfractiongiiparam, physics):
     Automatically generated Regression Unit Test for bootstrap_fraction_gi.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak.IN.DAT.
+    large_tokamak.IN.DAT.
 
     :param bootstrapfractionsauterparam: the data used to mock and assert in this test.
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
@@ -809,7 +809,7 @@ def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):
     Automatically generated Regression Unit Test for bootstrap_fraction_gi.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak.IN.DAT.
+    large_tokamak.IN.DAT.
 
     :param bootstrapfractionsauterparam: the data used to mock and assert in this test.
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
@@ -1076,7 +1076,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     Automatically generated Regression Unit Test for calculate_plasma_current().
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_nof.IN.DAT.
+    large_tokamak_nof.IN.DAT.
 
     :param plasmacurrentparam: the data used to mock and assert in this test.
     :type plasmacurrentparam: plasmacurrentparam
@@ -1548,7 +1548,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     Automatically generated Regression Unit Test for plasma_composition.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_nof.IN.DAT.
+    large_tokamak_nof.IN.DAT.
 
     :param plasmacompositionparam: the data used to mock and assert in this test.
     :type plasmacompositionparam: plasmacompositionparam
@@ -1764,7 +1764,7 @@ def test_vscalc(voltsecondreqparam):
     calculate_volt_second_requirements().
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_nof.IN.DAT.
+    large_tokamak_nof.IN.DAT.
 
     :param voltsecondreqparam: the data used to mock and assert in this test.
     :type voltsecondreqparam: voltsecondreqparam
@@ -1916,7 +1916,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     Automatically generated Regression Unit Test for phyaux.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_nof.IN.DAT.
+    large_tokamak_nof.IN.DAT.
 
     :param phyauxparam: the data used to mock and assert in this test.
     :type phyauxparam: phyauxparam
@@ -2028,7 +2028,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
     Automatically generated Regression Unit Test for plasma_ohmic_heating.
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_nof.IN.DAT.
+    large_tokamak_nof.IN.DAT.
 
     :param pohmparam: the data used to mock and assert in this test.
     :type pohmparam: pohmparam
@@ -2135,7 +2135,7 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
     Automatically generated Regression Unit Test for calculate_density_limit().
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_nof.IN.DAT.
+    large_tokamak_nof.IN.DAT.
 
     :param calculatedensitylimitparam: the data used to mock and assert in this test.
     :type calculatedensitylimitparam: calculatedensitylimitparam
@@ -3100,7 +3100,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     Automatically generated Regression Unit Test for calculate_confinement_time().
 
     This test was generated using data from
-    tests/regression/input_files/large_tokamak_nof.IN.DAT.
+    large_tokamak_nof.IN.DAT.
 
     :param confinementtimeparam: the data used to mock and assert in this test.
     :type confinementtimeparam: confinementtimeparam

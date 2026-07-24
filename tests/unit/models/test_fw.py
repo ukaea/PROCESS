@@ -110,7 +110,8 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
     """
     Automatically generated Regression Unit Test for fw_temp.
 
-    This test was generated using data from dcll/dcll_mms_lt_IN.DAT.
+    This test was generated using data from large_tokamak_nof.DAT
+    with the DCLL model enabled.
 
     :param fwtempparam: the data used to mock and assert in this test.
     :type fwtempparam: fwtempparam

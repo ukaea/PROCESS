@@ -356,7 +356,8 @@ def test_circumference(a: float, b: float, expected_circumference, tfcoil):
     This unit test uses values from an external blog referenced in the
     routine header
     (https://www.johndcook.com/blog/2013/05/05/ramanujan-circumference-ellipse/)
-    as well as results obtained from baseline 2018.
+    as well as results obtained from baseline 2018 (no longer exists in the
+    PROCESS repository).
 
     Parameters
     ----------
@@ -519,7 +520,8 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
     """
     Automatically generated Regression Unit Test for tf_field_and_force.
 
-    This test was generated using data from tests/regression/scenarios/FNSF/IN.DAT.
+    This test was generated using data from the FNSF IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param tffieldandforceparam: the data used to mock and assert in this test.
     :type tffieldandforceparam: tffieldandforceparam
@@ -654,7 +656,8 @@ def test_tf_coil_self_inductance(tfcindparam, monkeypatch, tfcoil):
     """
     Automatically generated Regression Unit Test for tf_coil_self_inductance().
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param tfcindparam: the data used to mock and assert in this test.
     :type tfcindparam: tfcindparam
@@ -729,7 +732,8 @@ def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, 
     """
     Automatically generated Regression Unit Test for tf_coil_area_and_masses.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param tfcoilareaandmassesparam: the data used to mock and assert in this test.
     :type tfcoilareaandmassesparam: tfcoilareaandmassesparam
@@ -1205,7 +1209,8 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
     """
     Automatically generated Regression Unit Test for stresscl.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param stressclparam: the data used to mock and assert in this test.
     :type stressclparam: stressclparam
@@ -1420,7 +1425,8 @@ def test_plane_stress(planestressparam, skip_if_incompatible_system, request):
     """
     Automatically generated Regression Unit Test for plane_stress.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param planestressparam: the data used to mock and assert in this test.
     :type planestressparam: planestressparam
@@ -1578,7 +1584,8 @@ def test_extended_plane_strain(extendedplanestrainparam):
     """
     Automatically generated Regression Unit Test for extended_plane_strain.
 
-    This test was generated using data from tests/regression/scenarios/FNSF/IN.DAT.
+    This test was generated using data from the FNSF IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param extendedplanestrainparam: the data used to mock and assert in this test.
     :type extendedplanestrainparam: extendedplanestrainparam
@@ -1686,7 +1693,8 @@ def test_eyoung_parallel(eyoungparallelparam, monkeypatch):
     """
     Automatically generated Regression Unit Test for eyoung_parallel.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param eyoungparallelparam: the data used to mock and assert in this test.
     :type eyoungparallelparam: eyoungparallelparam
@@ -1798,7 +1806,8 @@ def test_eyoung_t_nested_squares(eyoungtnestedsquaresparam, monkeypatch):
     """
     Automatically generated Regression Unit Test for eyoung_t_nested_squares.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param eyoungtnestedsquaresparam: the data used to mock and assert in this test.
     :type eyoungtnestedsquaresparam: eyoungtnestedsquaresparam
@@ -1865,7 +1874,8 @@ def test_eyoung_series(eyoungseriesparam, monkeypatch):
     """
     Automatically generated Regression Unit Test for eyoung_series.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param eyoungseriesparam: the data used to mock and assert in this test.
     :type eyoungseriesparam: eyoungseriesparam
@@ -1920,7 +1930,8 @@ def test_eyoung_parallel_array(eyoungparallelarrayparam, monkeypatch):
     """
     Automatically generated Regression Unit Test for eyoung_parallel_array.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param eyoungparallelarrayparam: the data used to mock and assert in this test.
     :type eyoungparallelarrayparam: eyoungparallelarrayparam

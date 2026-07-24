@@ -8,7 +8,7 @@ and also variable data: the value of a given variable during this run;
 this is all stored in one JSON file.
 
 * Run title:
-    the name of the run input, and hence output, file (e.g. baseline 2018).
+    the name of the run input, and hence output, file (e.g. large tokamak).
 * Tracking history:
     the data held within all JSON files in the database that span many variables,
     many different run titles and spans a period of time.
@@ -332,7 +332,7 @@ class TrackedVariable:
         Parameters
         ----------
         title:
-            name of the run e.g. starfire or baseline_2018 (not unique)
+            name of the run e.g. large_tokamak_nof (not unique)
         data:
             the value of the variable, `name`,
             on `title` run at time `date` (possibly unique)
