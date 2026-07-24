@@ -103,6 +103,7 @@ from process.models.physics.plasma_fields import PlasmaFields
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.physics.profiles import NeProfile, TeProfile
+from process.models.physics.scrape_off_layer import ScrapeOffLayer
 from process.models.power import Power
 from process.models.pulse import Pulse
 from process.models.shield import Shield
@@ -679,6 +680,7 @@ class Models:
         self.plasma_current = PlasmaCurrent()
         self.plasma_fields = PlasmaFields()
         self.plasma_dia_current = PlasmaDiamagneticCurrent()
+        self.scrape_off_layer = ScrapeOffLayer()
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
@@ -693,6 +695,7 @@ class Models:
             plasma_fields=self.plasma_fields,
             plasma_dia_current=self.plasma_dia_current,
             plasma_geometry=self.plasma_geom,
+            scrape_off_layer=self.scrape_off_layer,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,

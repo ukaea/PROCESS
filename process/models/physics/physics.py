@@ -45,6 +45,7 @@ if TYPE_CHECKING:
     from process.models.physics.plasma_fields import PlasmaFields
     from process.models.physics.plasma_geometry import PlasmaGeom
     from process.models.physics.plasma_profiles import PlasmaProfile
+    from process.models.physics.scrape_off_layer import ScrapeOffLayer
 
 logger = logging.getLogger(__name__)
 
@@ -195,6 +196,7 @@ class Physics(Model):
         plasma_fields: PlasmaFields,
         plasma_dia_current: PlasmaDiamagneticCurrent,
         plasma_geometry: PlasmaGeom,
+        scrape_off_layer: ScrapeOffLayer,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -211,6 +213,7 @@ class Physics(Model):
         self.fields = plasma_fields
         self.dia_current = plasma_dia_current
         self.geometry = plasma_geometry
+        self.scrape_off_layer = scrape_off_layer
 
     def output(self) -> None:
         """Output plasma physics information."""
