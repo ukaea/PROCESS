@@ -13,7 +13,8 @@
 #     language: python
 #     name: python3
 # ---
-
+# %%
+"""An example to compare optimum solutions from PROCESS"""
 # %% [markdown]
 # # Optimum solutions comparison notebook
 #

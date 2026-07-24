@@ -1,3 +1,6 @@
+"""Base exceptions from which other PROCESS exceptions are derived"""
+
+
 class ProcessError(Exception):
     """A base Exception to derive other PROCESS exceptions from"""
 

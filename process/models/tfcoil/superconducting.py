@@ -86,20 +86,33 @@ class TFWPGeometry:
     """
 
     r_tf_wp_inboard_inner: float
+    """WP inboard inner radius [m]"""
     r_tf_wp_inboard_outer: float
+    """WP inboard outer radius [m]"""
     r_tf_wp_inboard_centre: float
+    """WP inboard centre radius [m]"""
     dx_tf_wp_toroidal_min: float
+    """Minimal toroidal thickness of WP [m]"""
     dr_tf_wp_no_insulation: float
+    """Radial thickness of winding pack without insulation [m]"""
     dx_tf_wp_primary_toroidal: float
+    """Primary toroidal thickness [m]"""
     dx_tf_wp_secondary_toroidal: float
+    """Secondary toroidal thickness [m]"""
     dx_tf_wp_toroidal_average: float
+    """Averaged toroidal thickness [m]"""
     a_tf_wp_with_insulation: float
+    """WP cross-sectional area with insulation [m²]"""
     a_tf_wp_no_insulation: float
+    """WP cross-sectional area without insulation [m²]"""
     a_tf_wp_ground_insulation: float
+    """WP ground insulation cross-sectional area [m²]"""
 
 
 @dataclass
 class TFSuperconductorLimits:
+    """Dataclass holding superconducting TF coil limits"""
+
     j_tf_wp_critical: float
     j_superconductor_critical: float
     f_c_tf_turn_operating_critical: float
@@ -135,7 +148,6 @@ class SuperconductingTFCoil(TFCoil):
         d_sc_tf = self.data.superconducting_tfcoil
 
         # Calculating the WP / ground insulation areas
-        wp_geometry = TFWPGeometry
         wp_geometry = self.superconducting_tf_wp_geometry(
             i_tf_wp_geom=self.data.tfcoil.i_tf_wp_geom,
             r_tf_inboard_in=self.data.build.r_tf_inboard_in,
@@ -1477,29 +1489,13 @@ class SuperconductingTFCoil(TFCoil):
         Returns
         -------
         TFWPGeometry
-            A TFWPGeometry dataclass containing the following attributes:
-            - r_tf_wp_inboard_inner (float): WP inboard inner radius [m]
-            - r_tf_wp_inboard_outer (float): WP inboard outer radius [m]
-            - r_tf_wp_inboard_centre (float): WP inboard centre radius [m]
-            - dx_tf_wp_toroidal_min (float): Minimal toroidal thickness of WP [m]
-            - dr_tf_wp_no_insulation (float): Radial thickness of winding pack without
-              insulation [m]
-            - dx_tf_wp_primary_toroidal (float): Primary toroidal thickness [m]
-            - dx_tf_wp_secondary_toroidal (float): Secondary toroidal thickness [m]
-            - dx_tf_wp_toroidal_average (float): Averaged toroidal thickness [m]
-            - a_tf_wp_with_insulation (float): WP cross-sectional area with
-              insulation [m²]
-            - a_tf_wp_no_insulation (float): WP cross-sectional area without
-              insulation [m²]
-            - a_tf_wp_ground_insulation (float): WP ground insulation cross-sectional
-              area [m²]
+            Data class for storing the geometry of the TF coil winding pack and
+            ground insulation.
 
         Raises
         ------
-        ValueError
-            If calculated winding pack area (with or without insulation) is
-            non-positive, or if i_tf_wp_geom is not a valid
-            SuperconductingTFWPShapeType.
+        ProcessValueError
+            If i_tf_wp_geom is not a valid SuperconductingTFWPShapeType.
         """
         r_tf_wp_inboard_inner = r_tf_inboard_in + dr_tf_nose_case
 
@@ -2757,7 +2753,12 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         Returns
         -------
         :
-            Superconcting TF coil limits dataclass
+            Superconducting TF coil limits dataclass
+
+        Raises
+        ------
+        ProcessValueError
+            If sctfcoil.supercon has been called but data.tfcoil.i_tf_sc_mat=6
 
         Notes
         -----
@@ -3736,6 +3737,8 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
 @dataclass
 class CROCOAveragedTurnGeometry:
+    """Dataclass holding CroCo averaged turn geometry parameters"""
+
     a_tf_turn_cable_space_no_void: float
     a_tf_turn_steel: float
     a_tf_turn_insulation: float
@@ -3750,6 +3753,8 @@ class CROCOAveragedTurnGeometry:
 
 @dataclass
 class CroCoCableSpaceGeometry:
+    """Dataclass holding CroCo cable space geometry parameters"""
+
     dia_tf_turn_croco_cable: float
     a_tf_turn_cable_space_no_void: float
     a_tf_turn_cable_space_effective: float
@@ -3769,6 +3774,11 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         ----------
         output : bool
             If True, print the results of the calculations.
+
+        Raises
+        ------
+        ProcessValueError
+            if integer turn geometry used for CroCo conductor
         """
         self.run_base_superconducting_tf()
 
@@ -4494,6 +4504,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         )
 
     def croco_voltage(self) -> float:
+        """Calculates CROCO voltage"""
         d_sc_tf = self.data.superconducting_tfcoil
 
         if self.data.tfcoil.quench_model == "linear":

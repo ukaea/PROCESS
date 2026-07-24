@@ -212,6 +212,7 @@ def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available):
 
 
 def output(stellarator, bt_ecrh, ne0_max_ECRH, data):
+    """Outputs stellarator ECRH information to output file"""
     po.oheadr(stellarator.outfile, "ECRH Ignition at lower values. Information:")
 
     po.ovarre(

@@ -14,6 +14,8 @@
 #     name: python3
 # ---
 
+# %%
+"""An example to introduce running PROCESS"""
 # %% [markdown]
 # # Introduction to running PROCESS
 #

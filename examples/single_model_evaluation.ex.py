@@ -14,6 +14,8 @@
 #     name: python3
 # ---
 
+# %%
+"""An example to evaluate a single PROCESS model"""
 # %% [markdown]
 # # Evaluating a single PROCESS model
 # When understanding or investigating an individual model within Process,
@@ -54,6 +56,7 @@ single_run.run()
 # Doesn't crash after running a once-through
 # Print initial values of interest
 def print_values():
+    """Function to print values of some variables"""
     print(
         "W frac = "
         f"{single_run.data.impurity_radiation.f_nd_impurity_electron_array[13]:.3e}"

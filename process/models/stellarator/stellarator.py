@@ -1,3 +1,5 @@
+"""Module containing stellarator routines"""
+
 from __future__ import annotations
 
 import logging
@@ -106,6 +108,7 @@ class Stellarator(Model):
         self.bootstrap = plasma_bootstrap
 
     def output(self):
+        """Routine to output stellarator parameters"""
         self.run(output=True)
 
     def run(self, output: bool = False):
@@ -500,6 +503,12 @@ class Stellarator(Model):
         Parameters
         ----------
         output:
+
+        Raises
+        ------
+        ProcessValueError
+            If i_p_coolant_pumping not 0 or 1
+            (can only use i_p_coolant_pumping = 0 or 1 for stellarator)
 
 
         """
@@ -1884,6 +1893,11 @@ class Stellarator(Model):
         ----------
         output :
 
+        Raises
+        ------
+        ProcessValueError
+            If beta is in ixc and istell>0
+
         References
         ----------
         AEA FUS 172: Physics Assessment for the European Reactor Study
@@ -2463,6 +2477,7 @@ class Stellarator(Model):
         nd_plasma_electron_line,
         nd_plasma_electrons_max,
     ):
+        """Routine to output stellarator physics paramaters"""
         po.oheadr(self.outfile, "Stellarator Specific Physics:")
 
         po.ovarre(
