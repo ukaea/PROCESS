@@ -1165,7 +1165,7 @@ class Physics(Model):
         # frequently resulting in a confusing bootstrap current error later.
         # Catch early and explicitly instead
         if znfuel < 0.0:
-            raise ValueError(f"znfuel is negative: {znfuel}")
+            raise ProcessValueError(f"znfuel is negative: {znfuel}")
 
         # ======================================================================
 
