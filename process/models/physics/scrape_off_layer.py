@@ -64,3 +64,70 @@ class ScrapeOffLayer(Model):
             + b_plasma_surface_poloidal_average**-0.92
             + aspect**-0.42
         )
+
+    @staticmethod
+    def calculate_mast2014_sol_power_decay_length_1(
+        p_plasma_separatrix_mw: float,
+        b_plasma_surface_poloidal_average: float,
+    ) -> float:
+        """Calculate the MAST 2014 SOL power decay length (λ_q).
+
+        Parameters
+        ----------
+        p_plasma_separatrix_mw : float
+            Power crossing the separatrix (Pₛₑₚ) (MW)
+        b_plasma_surface_poloidal_average : float
+            Poloidal magnetic field at the plasma surface (⟨Bₚₒₗ(a)⟩)  [T]
+
+        Returns
+        -------
+        float
+            MAST 2014 SOL power decay length (λ_q) [m]
+
+        Notes
+        -----
+        - The paper states that the poloidal field terms is for the outer midplane
+        Bₚₒₗ(a), we are using the outer surface average
+
+        References
+        ----------
+        [1] A. J. Thornton and A. Kirk, “Scaling of the scrape-off layer width during
+        inter-ELM H modes on MAST as measured by infrared thermography,”
+        Plasma Physics and Controlled Fusion, vol. 56, no. 5, p. 055008, Apr. 2014,
+        doi: 10.1088/0741-3335/56/5/055008.
+
+        """
+        return (
+            1.84e-3 * p_plasma_separatrix_mw**0.18
+            + b_plasma_surface_poloidal_average**-0.68
+        )
+
+    @staticmethod
+    def calculate_mast2014_sol_power_decay_length_2(
+        p_plasma_separatrix_mw: float,
+        cur_plasma_ma: float,
+    ) -> float:
+        """Calculate the MAST 2014 SOL power decay length (λ_q).
+
+        Parameters
+        ----------
+        p_plasma_separatrix_mw : float
+            Power crossing the separatrix (Pₛₑₚ) (MW)
+        cur_plasma_ma : float
+            Plasma current (Iₚ) [MA]
+
+        Returns
+        -------
+        float
+            MAST 2014 SOL power decay length (λ_q) [m]
+
+
+        References
+        ----------
+        [1] A. J. Thornton and A. Kirk, “Scaling of the scrape-off layer width during
+        inter-ELM H modes on MAST as measured by infrared thermography,”
+        Plasma Physics and Controlled Fusion, vol. 56, no. 5, p. 055008, Apr. 2014,
+        doi: 10.1088/0741-3335/56/5/055008.
+
+        """
+        return 4.57e-3 * p_plasma_separatrix_mw**0.22 + cur_plasma_ma**-0.64
