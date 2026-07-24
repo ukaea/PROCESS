@@ -100,8 +100,8 @@ i_bldgs_size = 0 * switch between routines estimating building sizes (0 = defaul
 pflux_fw_rad_max = 1.2 * Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
 f_fw_rad_max = 1.0 * peaking factor for radiation wall load (`constraint equation 67`)
 p_fusion_total_max_mw  = 2500.0 * maximum fusion power (MW) (`constraint equation 9`)
-pseprmax = 40.0 * maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
-f_alpha_energy_confinement_min = 5.0 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
+p_plasma_separatrix_rmajor_max_mw = 40.0 * maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
+f_t_alpha_energy_confinement_min = 5.0 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
 p_plant_electric_net_required_mw = 100.0 * minimum net electric
 
 *-------------------Constraints--------------------*
@@ -163,7 +163,7 @@ i_blkt_inboard = 0 * switch for inboard blanket;
 inuclear = 0 * switch for nuclear heating in the coils;
 i_p_coolant_pumping = 3 * Switch for pumping power for primary coolant (mechanical power only and peak first wall
 i_thermal_electric_conversion = 2 * Switch for power conversion cycle;
-i_fw_coolant_type = helium * switch for first wall coolant (can be different from blanket coolant);
+i_fw_coolant_type = 1 * switch for first wall coolant (can be different from blanket coolant);
 etaiso   = 0.9 * isentropic efficiency of FW and blanket coolant pumps
 eta_coolant_pump_electric   = 0.87 * electrical efficiency of primary coolant pumps
 i_fw_blkt_shared_coolant    = 0 * Switch for whether the FW and BB are on the same pump system
@@ -280,7 +280,7 @@ itartpf  = 1 * switch for Spherical Tokamak PF models;
 kappa    = 2.8 * plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5; 7 or 9-10`)
 q95        = 5.835830999686161 * Safety factor 'near' plasma edge (`iteration variable 18`) equal to q95
 q0       = 2.0 * safety factor on axis
-f_nd_alpha_electron = 0.08870796537675113 * thermal alpha density/electron density (`iteration variable 109`)
+f_nd_alpha_thermal_electron = 0.08870796537675113 * thermal alpha density/electron density (`iteration variable 109`)
 ind_plasma_internal_norm      = 0.3 * plasma normalised internal inductance
 i_ind_plasma_internal_norm = 0 * Normalised plasma intenral induction selection switch (0 = user input) 
 rmajor   = 4.5 * plasma major radius (m) (`iteration variable 3`)
@@ -352,7 +352,7 @@ i_tf_sup = 1 * Switch for TF coil conductor model;
 i_tf_shape = 2 * Switch for TF coil toroidal shape;
 i_tf_bucking = 1 * Switch for TF inboard suport structure design;
 eyoung_res_tf_buck = 205.0e9 * Resistive TF magnets bucking cylinder young modulus (Pa)
-ripple_b_tf_plasma_edge_max   = 1.0 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
+ripple_b_tf_plasma_edge_max   = 1.0 * maximum allowable toroidal field ripple amplitude at plasma edge (%)
 i_cp_joints = 0 * Switch for CP demoutable joints type
 n_tf_coils     = 12 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 20.0 * peak helium coolant temperature in TF coils and PF coils (K)

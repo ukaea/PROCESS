@@ -7,7 +7,7 @@ from process.core import output as op
 from process.core import process_output as po
 from process.core.solver import constraints
 from process.core.solver.objectives import objective_function
-from process.data_structure import numerics
+from process.data_structure.numerics import PROCESSRunMode
 
 
 def finalise(models, data, ifail: int, non_idempotent_msg: str | None = None):
@@ -32,7 +32,7 @@ def finalise(models, data, ifail: int, non_idempotent_msg: str | None = None):
         po.oheadr(constants.NOUT, "Final UNFEASIBLE Point")
 
     # Output relevant to no optimisation
-    if numerics.ioptimz == -2:
+    if data.numerics.ioptimz == PROCESSRunMode.EVALUATION:
         output_evaluation(data)
 
     # Print non-idempotence warning to OUT.DAT only
@@ -41,7 +41,7 @@ def finalise(models, data, ifail: int, non_idempotent_msg: str | None = None):
         po.ocmmnt(constants.NOUT, non_idempotent_msg)
 
     # Write output to OUT.DAT and MFILE.DAT
-    op.write(models, constants.NOUT)
+    op.write(models, data, constants.NOUT)
 
 
 def output_evaluation(data):
@@ -57,18 +57,21 @@ def output_evaluation(data):
     po.oblnkl(constants.NOUT)
 
     # Evaluate objective function
-    norm_objf = objective_function(numerics.minmax)
+    norm_objf = objective_function(data.numerics.minmax, data)
     po.ovarre(constants.MFILE, "Normalised objective function", "(norm_objf)", norm_objf)
 
     # Print the residuals of the constraint equations
 
     residual_error, value, residual, symbols, units = constraints.constraint_eqns(
-        numerics.neqns + numerics.nineqns, -1, data
+        data.numerics.neqns + data.numerics.nineqns, -1, data
     )
 
     labels = [
-        numerics.lablcc[j]
-        for j in [i - 1 for i in numerics.icc[: numerics.neqns + numerics.nineqns]]
+        data.numerics.lablcc[j]
+        for j in [
+            i - 1
+            for i in data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns]
+        ]
     ]
     physical_constraint = [f"{c} {u}" for c, u in zip(value, units, strict=False)]
     physical_residual = [f"{c} {u}" for c, u in zip(residual, units, strict=False)]
@@ -83,8 +86,8 @@ def output_evaluation(data):
 
     po.write(constants.NOUT, tabulate(table_data, headers="keys"))
 
-    for i in range(numerics.neqns):
-        constraint_id = numerics.icc[i]
+    for i in range(data.numerics.neqns):
+        constraint_id = data.numerics.icc[i]
         po.ovarre(
             constants.MFILE,
             f"{labels[i]} normalised residue",
@@ -92,11 +95,11 @@ def output_evaluation(data):
             residual_error[i],
         )
 
-    for i in range(numerics.nineqns):
-        constraint_id = numerics.icc[numerics.neqns + i]
+    for i in range(data.numerics.nineqns):
+        constraint_id = data.numerics.icc[data.numerics.neqns + i]
         po.ovarre(
             constants.MFILE,
-            f"{labels[numerics.neqns + i]}",
+            f"{labels[data.numerics.neqns + i]}",
             f"(ineq_con{constraint_id:03d})",
-            residual_error[numerics.neqns + i],
+            residual_error[data.numerics.neqns + i],
         )

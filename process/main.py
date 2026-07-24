@@ -41,12 +41,10 @@ Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 
 import logging
 from pathlib import Path
-from typing import Protocol
 
 import click
 
 import process  # noqa: F401
-from process import data_structure
 from process.core import constants, init
 from process.core.io import obsolete_vars as ov
 from process.core.io.cli_tools import LazyGroup, help_opt, indat_opt
@@ -57,6 +55,7 @@ from process.core.log import logging_model_handler, show_errors
 from process.core.model import DataStructure, Model
 from process.core.process_output import OutputFileManager, oheadr
 from process.core.scan import Scan
+from process.data_structure.numerics import PROCESSRunMode
 from process.models.availability import Availability
 from process.models.blankets.blanket_library import BlanketLibrary
 from process.models.blankets.dcll import DCLL
@@ -71,7 +70,10 @@ from process.models.divertor import Divertor
 from process.models.fw import FirstWall
 from process.models.ife import IFE
 from process.models.pfcoil import CSCoil, PFCoil
-from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
+from process.models.physics.bootstrap_current import (
+    PlasmaBootstrapCurrent,
+    SauterBootstrapCurrent,
+)
 from process.models.physics.confinement_time import PlasmaConfinementTime
 from process.models.physics.current_drive import (
     CurrentDrive,
@@ -83,7 +85,9 @@ from process.models.physics.current_drive import (
 )
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
-from process.models.physics.impurity_radiation import initialise_imprad
+from process.models.physics.impurity_radiation import (
+    initialise_imprad,
+)
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
 from process.models.physics.physics import (
     DetailedPhysics,
@@ -91,10 +95,14 @@ from process.models.physics.physics import (
     PlasmaBeta,
     PlasmaInductance,
 )
-from process.models.physics.plasma_current import PlasmaCurrent, PlasmaDiamagneticCurrent
+from process.models.physics.plasma_current import (
+    PlasmaCurrent,
+    PlasmaDiamagneticCurrent,
+)
 from process.models.physics.plasma_fields import PlasmaFields
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
+from process.models.physics.profiles import NeProfile, TeProfile
 from process.models.power import Power
 from process.models.pulse import Pulse
 from process.models.shield import Shield
@@ -205,7 +213,8 @@ def process_cli(
         if varyiterparams:
             if mfile_path is not None:
                 raise click.BadParameter(
-                    "--mfile not supported on vary run please specify in the configuration file"
+                    "--mfile not supported on vary run please specify "
+                    "in the configuration file"
                 )
             runtype = VaryRun(config_file, solver)
         elif indat is None:
@@ -250,14 +259,20 @@ class VaryRun:
     An IN.DAT file as specified in the config file
 
     Output files:
-    All of them in the work directory specified in the config file
-    OUT.DAT     -  PROCESS output
-    MFILE.DAT   -  PROCESS output
+    All of them in the working directory specified in the config file
+    X_IN.DAT      -  PROCESS input
+    X_OUT.DAT     -  PROCESS output
+    X_MFILE.DAT   -  PROCESS output
     process.log - logfile of PROCESS output to stdout
     README.txt  - contains comments from config file
     """
 
-    def __init__(self, config_file: str, solver: str = "vmcon"):
+    def __init__(
+        self,
+        config_file: str,
+        solver: str = "vmcon",
+        data_structure: DataStructure | None = None,
+    ):
         """Initialise and perform a VaryRun.
 
         Parameters
@@ -270,7 +285,7 @@ class VaryRun:
         # Store the absolute path to the config file immediately: various
         # dir changes happen in old run_process code
         self.config = RunProcessConfig.from_file(Path(config_file).resolve(), solver)
-        self.data = DataStructure()
+        self.data = data_structure or DataStructure()
 
     @property
     def mfile_path(self):
@@ -284,11 +299,11 @@ class VaryRun:
         FileNotFoundError
             if input file doesn't exist
         """
-        self.config.setup()
+        logging_model_handler.clear_logs()
+        self.config.setup(self.data)
 
         setup_loggers(Path(self.config.wdir) / "process.log")
 
-        init.init_all_module_vars()
         init.init_process(self.data)
 
         # TODO add diff ixc summary part
@@ -306,6 +321,7 @@ class SingleRun:
         *,
         filepath_out: Path | str | None = None,
         update_obsolete: bool = False,
+        data_structure: DataStructure | None = None,
     ):
         """Read input file and initialise variables.
 
@@ -317,11 +333,11 @@ class SingleRun:
             which solver to use, as specified in solver.py
         """
         self.input_file = Path(input_file)
+        self.data = data_structure or DataStructure()
 
         self.validate_input(update_obsolete)
         self.init_module_vars()
         self.set_filenames(filepath_out)
-        self.data = DataStructure()
         self.initialise()
         self.models = Models(self.data)
         self.solver = solver
@@ -343,7 +359,7 @@ class SingleRun:
         This "resets" all module variables to their initialised values, so each
         new run doesn't have any side-effects from previous runs.
         """
-        init.init_all_module_vars()
+        logging_model_handler.clear_logs()
 
     def set_filenames(self, filepath_out):
         """Validate the input filename and create other filenames from it."""
@@ -355,8 +371,13 @@ class SingleRun:
             Path(filepath_out or self.input_file)
             .name.replace("IN.DAT", "")
             .replace("MFILE.DAT", "")
-        )
+        ).strip()
         self.set_input()
+        self.data.globals.output_prefix = (
+            f"{Path(self.filepath).as_posix().strip()}/"
+            if not self.filename_prefix
+            else Path(self.filepath, self.filename_prefix).as_posix().strip()
+        )
         self.set_output()
         self.set_mfile()
 
@@ -381,21 +402,18 @@ class SingleRun:
             )
 
         # Set the input file in the Fortran
-        data_structure.global_variables.fileprefix = self.input_path.resolve()
+        self.data.globals.fileprefix = self.input_path.resolve()
 
     def set_output(self):
         """Set the output file name.
 
         Set Path object on the Process object, and set the prefix in the Fortran.
         """
-        self.output_path = Path(self.filepath, self.filename_prefix.strip() + "OUT.DAT")
-        data_structure.global_variables.output_prefix = (
-            Path(self.filepath, self.filename_prefix).as_posix().strip()
-        )
+        self.output_path = Path(self.data.globals.output_prefix + "OUT.DAT")
 
     def set_mfile(self):
         """Set the mfile filename."""
-        self.mfile_path = Path(self.filepath, self.filename_prefix.strip() + "MFILE.DAT")
+        self.mfile_path = Path(self.data.globals.output_prefix + "MFILE.DAT")
 
     def initialise(self):
         """Run the init module to call all initialisation routines."""
@@ -403,38 +421,41 @@ class SingleRun:
             Path(self.output_path.as_posix().replace("OUT.DAT", "process.log"))
         )
 
-        initialise_imprad()
+        initialise_imprad(self.data)
         # Reads in input file
         init.init_process(self.data)
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
-        n = int(data_structure.numerics.nvar)
+        n = int(self.data.numerics.nvar)
         # [:n] as array always at max size: contains 0s
-        data_structure.numerics.ixc[:n].sort()
+        self.data.numerics.ixc[:n].sort()
 
     def run_scan(self):
         """Create scan object if required."""
         # TODO Move this solver logic up to init?
         # ioptimz == 1: optimisation
-        if data_structure.numerics.ioptimz == 1:
+        if self.data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
             pass
         # ioptimz == -2: evaluation
-        elif data_structure.numerics.ioptimz == -2:
-            # No optimisation: solve equality (consistency) constraints only using fsolve (HYBRD)
+        elif self.data.numerics.ioptimz == PROCESSRunMode.EVALUATION:
+            # No optimisation:
+            # solve equality (consistency) constraints only using fsolve (HYBRD)
             self.solver = "fsolve"
         else:
             raise ValueError(
-                f"Invalid ioptimz value: {data_structure.numerics.ioptimz}. Please "
+                f"Invalid ioptimz value: {self.data.numerics.ioptimz}. Please "
                 "select either 1 (optimise) or -2 (no optimisation)."
             )
         self.scan = Scan(self.models, self.solver, self.data)
 
-    def show_errors(self):
+    @staticmethod
+    def show_errors():
         """Report all informational/error messages encountered."""
         show_errors(constants.NOUT)
 
-    def finish(self):
+    @staticmethod
+    def finish():
         """Run the finish subroutine to close files open in the Fortran.
 
         Files being handled by Fortran must be closed before attempting to
@@ -461,9 +482,10 @@ class SingleRun:
             mfile_file.writelines(input_lines)
 
     def validate_input(self, replace_obsolete: bool = False):
-        """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
-        within obsolete_variables.py. If obsolete variables are found, and if `replace_obsolete`
-        is set to True, they are either removed or replaced by their updated names as specified
+        """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict
+        contained within obsolete_variables.py.
+        If obsolete variables are found, and if `replace_obsolete` is set to True,
+        they are either removed or replaced by their updated names as specified
         in the OBS_VARS dictionary.
         """
         obsolete_variables = ov.OBS_VARS
@@ -506,13 +528,16 @@ class SingleRun:
                                 # Raise an error if replacement is a list
                                 replacement_str = ", ".join(replacement)
                                 raise ValueError(
-                                    f"The variable '{variable_name}' is obsolete and should be replaced by the following variables: {replacement_str}. "
+                                    f"The variable '{variable_name}' is obsolete and "
+                                    "should be replaced by the following variables: "
+                                    f"{replacement_str}. "
                                     "Please set their values accordingly."
                                 )
                             # Replace obsolete variable
                             modified_line = line.replace(variable_name, replacement, 1)
                             modified_lines.append(
-                                f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}"
+                                f"* Replaced '{variable_name}' with "
+                                f"'{replacement}'\n{modified_line}"
                             )
                             changes_made.append(
                                 f"Replaced '{variable_name}' with '{replacement}'"
@@ -535,7 +560,8 @@ class SingleRun:
                 with open(filename, "w") as file:
                     file.writelines(modified_lines)
                 print(
-                    "The IN.DAT file has been updated to replace or comment out obsolete variables."
+                    "The IN.DAT file has been updated to replace or "
+                    "comment out obsolete variables."
                 )
                 print("Summary of changes made:")
                 for change in changes_made:
@@ -543,16 +569,25 @@ class SingleRun:
             else:
                 # Only print the report if replace_obsolete is False
                 message = (
-                    "The IN.DAT file contains obsolete variables from the OBS_VARS dictionary. "
-                    f"The obsolete variables in your IN.DAT file are: {obs_vars_in_in_dat}. "
-                    "Either remove these or replace them with their updated variable names. "
+                    "The IN.DAT file contains obsolete variables "
+                    "from the OBS_VARS dictionary. "
+                    "The obsolete variables in your IN.DAT file are: "
+                    f"{obs_vars_in_in_dat}. "
+                    "Either remove these or replace them with "
+                    "their updated variable names. "
                 )
                 for obs_var in obs_vars_in_in_dat:
                     replacement = obsolete_variables.get(obs_var)
                     if replacement is None:
-                        message += f"\n\n{obs_var} is an obsolete variable and needs to be removed."
+                        message += (
+                            f"\n\n{obs_var} is an obsolete variable "
+                            "and needs to be removed."
+                        )
                     else:
-                        message += f"\n\n{obs_var} is an obsolete variable and needs to be replaced by {replacement}."
+                        message += (
+                            f"\n\n{obs_var} is an obsolete variable "
+                            f"and needs to be replaced by {replacement}."
+                        )
                     message += f" {obsolete_vars_help_message.get(obs_var, '')}"
                 raise ValueError(message)
 
@@ -570,16 +605,6 @@ class SingleRun:
             _tmp = self.models.costs
         except ValueError as err:
             raise ValueError("User-created model not injected correctly") from err
-
-
-class CostsProtocol(Protocol):
-    """Protocol layout for costs models"""
-
-    def run(self):
-        """Run the model"""
-
-    def output(self):
-        """Write model output"""
 
 
 class Models:
@@ -608,7 +633,7 @@ class Models:
         self.sctfcoil = SuperconductingTFCoil()
         self.cicc_sctfcoil = CICCSuperconductingTFCoil()
         self.croco_sctfcoil = CROCOSuperconductingTFCoil()
-        self.tfcoil = TFCoil(build=self.build)
+        self.tfcoil = TFCoil()
         self.resistive_tf_coil = ResistiveTFCoil()
         self.copper_tf_coil = CopperTFCoil()
         self.aluminium_tf_coil = AluminiumTFCoil()
@@ -623,24 +648,31 @@ class Models:
         self.pulse = Pulse()
         self.shield = Shield()
         self.ife = IFE(availability=self.availability, costs=self.costs)
-        self.plasma_profile = PlasmaProfile()
+        self.ne_profile = NeProfile()
+        self.te_profile = TeProfile()
+        self.plasma_profile = PlasmaProfile(self.ne_profile, self.te_profile)
         self.fw = FirstWall()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(fw=self.fw)
+        self.neutral_beam = NeutralBeam(plasma_profile=self.plasma_profile)
+        self.electron_cyclotron = ElectronCyclotron(plasma_profile=self.plasma_profile)
+        self.lower_hybrid = LowerHybrid(plasma_profile=self.plasma_profile)
         self.current_drive = CurrentDrive(
             plasma_profile=self.plasma_profile,
-            electron_cyclotron=ElectronCyclotron(plasma_profile=self.plasma_profile),
+            electron_cyclotron=self.electron_cyclotron,
             ion_cyclotron=IonCyclotron(plasma_profile=self.plasma_profile),
-            lower_hybrid=LowerHybrid(plasma_profile=self.plasma_profile),
-            neutral_beam=NeutralBeam(plasma_profile=self.plasma_profile),
+            lower_hybrid=self.lower_hybrid,
+            neutral_beam=self.neutral_beam,
             electron_bernstein=ElectronBernstein(plasma_profile=self.plasma_profile),
         )
         self.plasma_beta = PlasmaBeta()
         self.plasma_inductance = PlasmaInductance()
         self.plasma_density_limit = PlasmaDensityLimit()
         self.plasma_exhaust = PlasmaExhaust()
+        self.sauter_bootstrap_current = SauterBootstrapCurrent()
         self.plasma_bootstrap_current = PlasmaBootstrapCurrent(
-            plasma_profile=self.plasma_profile
+            plasma_profile=self.plasma_profile,
+            sauter_bootstrap=self.sauter_bootstrap_current,
         )
         self.plasma_confinement = PlasmaConfinementTime()
         self.plasma_transition = PlasmaConfinementTransition()
@@ -666,47 +698,48 @@ class Models:
             plasma_profile=self.plasma_profile,
         )
         self.neoclassics = Neoclassics()
-        if data_structure.stellarator_variables.istell != 0:
-            self.stellarator = Stellarator(
-                availability=self.availability,
-                buildings=self.buildings,
-                vacuum=self.vacuum,
-                costs=self.costs,
-                power=self.power,
-                plasma_profile=self.plasma_profile,
-                hcpb=self.ccfe_hcpb,
-                current_drive=self.current_drive,
-                physics=self.physics,
-                neoclassics=self.neoclassics,
-                plasma_beta=self.plasma_beta,
-                plasma_bootstrap=self.plasma_bootstrap_current,
-            )
+        self.stellarator = Stellarator(
+            availability=self.availability,
+            buildings=self.buildings,
+            vacuum=self.vacuum,
+            costs=self.costs,
+            power=self.power,
+            plasma_profile=self.plasma_profile,
+            hcpb=self.ccfe_hcpb,
+            current_drive=self.current_drive,
+            physics=self.physics,
+            neoclassics=self.neoclassics,
+            plasma_beta=self.plasma_beta,
+            plasma_bootstrap=self.plasma_bootstrap_current,
+        )
 
         self.dcll = DCLL(fw=self.fw)
-
         self.setup_data_structure()
 
     @property
-    def costs(self) -> CostsProtocol:
-        if data_structure.cost_variables.cost_model == 0:
+    def costs(self) -> Model:
+        if self.data.costs.cost_model == 0:
             return self._costs_1990
-        if data_structure.cost_variables.cost_model == 1:
+        if self.data.costs.cost_model == 1:
             return self._costs_2015
-        if data_structure.cost_variables.cost_model == 2:
+        if self.data.costs.cost_model == 2:
             if self._costs_custom is not None:
+                self._costs_custom.data = self.data
                 return self._costs_custom
             raise ValueError("Custom costs model not initialised")
         # Probably overkill but makes typing happy
         raise ValueError("Unknown costs model")
 
     @costs.setter
-    def costs(self, value: CostsProtocol):
+    def costs(self, value: Model):
         self._costs_custom = value
 
     @property
     def models(self) -> tuple[Model, ...]:
-        # At the moment, this property just returns models that implement the Model interface.
-        # Eventually every Model will comply and then this method can be used as the caller/outputter!
+        # At the moment, this property just returns models
+        # that implement the Model interface.
+        # Eventually every Model will comply and then
+        # this method can be used as the caller/outputter!
         return (
             self.water_use,
             self._costs_2015,
@@ -718,6 +751,47 @@ class Models:
             self._costs_1990,
             self.availability,
             self.ife,
+            self.buildings,
+            self.power,
+            self.stellarator,
+            self.ccfe_hcpb,
+            self.fw,
+            self.dcll,
+            self.blanket_library,
+            self.cryostat,
+            self.sctfcoil,
+            self.copper_tf_coil,
+            self.cicc_sctfcoil,
+            self.croco_sctfcoil,
+            self.tfcoil,
+            self.build,
+            self.shield,
+            self.divertor,
+            self.structure,
+            self.physics,
+            self.pulse,
+            self.plasma_geom,
+            self.resistive_tf_coil,
+            self.plasma_confinement,
+            self.plasma_beta,
+            self.current_drive,
+            self.neutral_beam,
+            self.plasma_density_limit,
+            self.plasma_profile,
+            self.plasma_dia_current,
+            self.plasma_bootstrap_current,
+            self.plasma_exhaust,
+            self.plasma_current,
+            self.neoclassics,
+            self.plasma_inductance,
+            self.ne_profile,
+            self.te_profile,
+            self.plasma_fields,
+            self.sauter_bootstrap_current,
+            self.plasma_transition,
+            self.physics_detailed,
+            self.electron_cyclotron,
+            self.lower_hybrid,
         )
 
     def setup_data_structure(self):

@@ -235,7 +235,7 @@ from process.models.physics.confinement_time import PlasmaConfinementTime
         (
             PlasmaConfinementTime.itpa20_confinement_time,
             (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0),
-            0.06802157257083392,
+            0.06863001842086452,
         ),
         (
             PlasmaConfinementTime.itpa20_il_confinement_time,

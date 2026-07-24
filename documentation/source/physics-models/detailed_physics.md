@@ -1,6 +1,6 @@
 # Detailed Plasma Physics
 
-It can sometimes be useful to calculate rough values for key plasma paramters that are normally used in higher fidelity codes. The `DetailedPhysics()` class stores functions that are called and the end of the run to show rough values for key plasma behavior parameters. The calculation is done at the end as no other methods currently depend on these values.
+It can sometimes be useful to calculate rough values for key plasma parameters that are normally used in higher fidelity codes. The `DetailedPhysics()` class stores functions that are called and the end of the run to show rough values for key plasma behavior parameters. The calculation is done at the end as no other methods currently depend on these values.
 
 ## Detailed Plasma Physics | `DetailedPhysics()`
 
@@ -9,7 +9,7 @@ It can sometimes be useful to calculate rough values for key plasma paramters th
 
 ### Debye length | `calculate_debye_length()`
 
-Calculates the Debye lenght given by:
+Calculates the Debye length given by:
 
 $$
 \lambda_{D} = \sqrt{\frac{\epsilon_0 k_B T_e}{n e^2}}
@@ -38,7 +38,7 @@ $$
 b_{\text{max}} = \lambda_{\text{Debye}}
 $$
 
-The minimum impact paramter is the largest of either the classical distance of closest approach or the Debye length. 
+The minimum impact parameter is the largest of either the classical distance of closest approach or the Debye length. 
 
 $$
 \begin{split}b_{\text{min}} ≡

@@ -1,3 +1,5 @@
+"""Module containing vacuum system routines"""
+
 import logging
 import math
 
@@ -6,17 +8,8 @@ import numpy as np
 from process.core import constants, process_output
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import (
-    blanket_library,
-    build_variables,
-    divertor_variables,
-    fwbs_variables,
-    physics_variables,
-    tfcoil_variables,
-    times_variables,
-)
-from process.models.blankets.blanket_library import dshellvol, eshellvol
 from process.models.build import FwBlktVVShape
+from process.models.engineering.ivc_functions import dshellvol, eshellvol
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +25,7 @@ class Vacuum(Model):
         self.outfile: int = constants.NOUT
 
     def output(self):
+        """Routine to call the vacuum module and write output to file"""
         self.run(output=True)
 
     def run(self, output: bool = False):
@@ -54,8 +48,8 @@ class Vacuum(Model):
         # MDK Check this!!
         gasld = (
             2.0e0
-            * physics_variables.molflow_plasma_fuelling_required
-            * physics_variables.m_fuel_amu
+            * self.data.physics.molflow_plasma_fuelling_required
+            * self.data.physics.m_fuel_amu
             * constants.UMASS
         )
 
@@ -71,26 +65,26 @@ class Vacuum(Model):
                 self.data.vacuum.m_vv_vacuum_duct_shield,
                 self.data.vacuum.dia_vv_vacuum_ducts,
             ) = self.vacuum(
-                physics_variables.p_fusion_total_mw,
-                physics_variables.rmajor,
-                physics_variables.rminor,
+                self.data.physics.p_fusion_total_mw,
+                self.data.physics.rmajor,
+                self.data.physics.rminor,
                 0.5e0
                 * (
-                    build_variables.dr_fw_plasma_gap_inboard
-                    + build_variables.dr_fw_plasma_gap_outboard
+                    self.data.build.dr_fw_plasma_gap_inboard
+                    + self.data.build.dr_fw_plasma_gap_outboard
                 ),
-                physics_variables.a_plasma_surface,
-                physics_variables.vol_plasma,
-                build_variables.dr_shld_outboard,
-                build_variables.dr_shld_inboard,
-                build_variables.dr_tf_inboard,
-                build_variables.r_shld_inboard_inner
-                - build_variables.dr_shld_vv_gap_inboard
-                - build_variables.dr_vv_inboard,
-                tfcoil_variables.n_tf_coils,
-                times_variables.t_plant_pulse_dwell,
-                physics_variables.nd_plasma_electrons_vol_avg,
-                divertor_variables.n_divertors,
+                self.data.physics.a_plasma_surface,
+                self.data.physics.vol_plasma,
+                self.data.build.dr_shld_outboard,
+                self.data.build.dr_shld_inboard,
+                self.data.build.dr_tf_inboard,
+                self.data.build.r_shld_inboard_inner
+                - self.data.build.dr_shld_vv_gap_inboard
+                - self.data.build.dr_vv_inboard,
+                self.data.tfcoil.n_tf_coils,
+                self.data.times.t_plant_pulse_dwell,
+                self.data.physics.nd_plasma_electrons_vol_avg,
+                self.data.divertor.n_divertors,
                 qtorus,
                 gasld,
                 output=output,
@@ -122,7 +116,7 @@ class Vacuum(Model):
         # One ITER torus cryopump has a throughput of 50 Pa m3/s = 1.2155e+22 molecules/s
         # Issue #304
         n_iter_vacuum_pumps = (
-            physics_variables.molflow_plasma_fuelling_required
+            self.data.physics.molflow_plasma_fuelling_required
             / self.data.vacuum.molflow_vac_pumps
         )
 
@@ -132,17 +126,17 @@ class Vacuum(Model):
             self.data.vacuum.volflow_vac_pumps_max
             * self.data.vacuum.f_a_vac_pump_port_plasma_surface
             * self.data.vacuum.f_volflow_vac_pumps_impedance
-            * physics_variables.a_plasma_surface
-            / tfcoil_variables.n_tf_coils
+            * self.data.physics.a_plasma_surface
+            / self.data.tfcoil.n_tf_coils
         )
 
-        wallarea = (physics_variables.a_plasma_surface / 1084.0e0) * 2000.0e0
+        wallarea = (self.data.physics.a_plasma_surface / 1084.0e0) * 2000.0e0
         # Required pumping speed for pump-down
         pumpdownspeed = (
             self.data.vacuum.outgasfactor
             * wallarea
             / self.data.vacuum.pres_vv_chamber_base
-        ) * times_variables.t_plant_pulse_dwell ** (-self.data.vacuum.outgasindex)
+        ) * self.data.times.t_plant_pulse_dwell ** (-self.data.vacuum.outgasindex)
         # Number of pumps required for pump-down
         npumpdown = pumpdownspeed / pumpspeed
 
@@ -153,7 +147,7 @@ class Vacuum(Model):
         #  Output section
         if output:
             process_output.oheadr(self.outfile, "Vacuum System")
-            process_output.ovarst(
+            process_output.ovarre(
                 self.outfile,
                 "Switch for vacuum pumping model",
                 "(i_vacuum_pumping)",
@@ -167,7 +161,7 @@ class Vacuum(Model):
                 self.outfile,
                 "Plasma fuelling rate (nucleus-pairs/s)",
                 "(molflow_plasma_fuelling_required)",
-                physics_variables.molflow_plasma_fuelling_required,
+                self.data.physics.molflow_plasma_fuelling_required,
                 "OP ",
             )
             process_output.ocmmnt(
@@ -189,7 +183,7 @@ class Vacuum(Model):
                 self.outfile,
                 "Dwell time",
                 "(t_plant_pulse_dwell)",
-                times_variables.t_plant_pulse_dwell,
+                self.data.times.t_plant_pulse_dwell,
             )
             process_output.ovarre(
                 self.outfile,
@@ -259,7 +253,8 @@ class Vacuum(Model):
         nplasma :
             Plasma density (m**-3)
         ndiv :
-            Number of divertors with pumping (single null = 1, double null = 2 if pumping provided at both locations)
+            Number of divertors with pumping (single null = 1, double null = 2 if
+            pumping provided at both locations)
         qtorus :
             Gas load  from NBI (deuterons/second)
         gasld :
@@ -328,10 +323,12 @@ class Vacuum(Model):
         #  Initial pumpdown based on outgassing
         #  s(1) = net pump speed (N2) required for pumpdown to base pressure (m^3/s)
         #  area = vacuum chamber/fw area (m^2)  ;  outgassing area = 10 x area
-        #  outgrat_fw = outgassing rate (effective for N2) of plasma chamber surface (Pa-m/s)
+        #  outgrat_fw = outgassing rate (effective for N2) of plasma chamber surface
+        #  (Pa-m/s)
         #  pres_vv_chamber_base = base pressure (Pa)
 
-        #  Old method: area = 4.0e0 * pi*pi * r0 * aw * sqrt(0.5e0*(1.0e0 + kappa*kappa))
+        #  Old method: area = 4.0e0 * pi*pi * r0 * aw
+        #  * sqrt(0.5e0*(1.0e0 + kappa*kappa))
 
         area = plasma_sarea * (aw + dsol) / aw
 
@@ -356,9 +353,9 @@ class Vacuum(Model):
 
         #  dwell pumping options
         if (self.data.vacuum.i_vac_pump_dwell == 1) or (t_plant_pulse_dwell == 0):
-            tpump = times_variables.t_plant_pulse_coil_precharge
+            tpump = self.data.times.t_plant_pulse_coil_precharge
         elif self.data.vacuum.i_vac_pump_dwell == 2:
-            tpump = t_plant_pulse_dwell + times_variables.t_plant_pulse_coil_precharge
+            tpump = t_plant_pulse_dwell + self.data.times.t_plant_pulse_coil_precharge
         else:
             tpump = t_plant_pulse_dwell
 
@@ -469,7 +466,9 @@ class Vacuum(Model):
 
                 else:
                     logger.error(
-                        f"Newton's method not converging; check fusion power, te {physics_variables.p_fusion_total_mw=} {physics_variables.temp_plasma_electron_vol_avg_kev=}"
+                        f"Newton's method not converging; check fusion power, te "
+                        f"{self.data.physics.p_fusion_total_mw=} "
+                        f"{self.data.physics.temp_plasma_electron_vol_avg_kev=}"
                     )
 
                 theta = math.pi / ntf
@@ -572,7 +571,7 @@ class Vacuum(Model):
             process_output.ovarre(
                 self.outfile, "Chamber pressure before burn (Pa)", "(pstart)", pstart
             )
-            process_output.ovarin(
+            process_output.ovarre(
                 self.outfile,
                 "Allowable pumping time switch",
                 "(i_vac_pump_dwell)",
@@ -588,7 +587,7 @@ class Vacuum(Model):
                 self.outfile,
                 "CS ramp-up time burns (s)",
                 "(t_plant_pulse_coil_precharge.)",
-                times_variables.t_plant_pulse_coil_precharge,
+                self.data.times.t_plant_pulse_coil_precharge,
             )
             process_output.ovarre(
                 self.outfile,
@@ -685,7 +684,7 @@ class Vacuum(Model):
                 )
 
             process_output.oblnkl(self.outfile)
-            process_output.ovarin(
+            process_output.ovarre(
                 self.outfile, "Number of large pump ducts", "(nduct)", nduct
             )
             process_output.ovarre(
@@ -725,62 +724,63 @@ class VacuumVessel(Model):
         self.outfile = constants.NOUT
 
     def run(self):
-        blanket_library.dz_vv_half = self.calculate_vessel_half_height(
-            z_tf_inside_half=build_variables.z_tf_inside_half,
-            dz_shld_vv_gap=build_variables.dz_shld_vv_gap,
-            dz_vv_lower=build_variables.dz_vv_lower,
-            n_divertors=divertor_variables.n_divertors,
-            dz_blkt_upper=build_variables.dz_blkt_upper,
-            dz_shld_upper=build_variables.dz_shld_upper,
-            z_plasma_xpoint_upper=build_variables.z_plasma_xpoint_upper,
-            dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
-            dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
-            dr_fw_inboard=build_variables.dr_fw_inboard,
-            dr_fw_outboard=build_variables.dr_fw_outboard,
+        """Routine to calculate the parameters of the vacuum vessel"""
+        self.data.blanket.dz_vv_half = self.calculate_vessel_half_height(
+            z_tf_inside_half=self.data.build.z_tf_inside_half,
+            dz_shld_vv_gap=self.data.build.dz_shld_vv_gap,
+            dz_vv_lower=self.data.build.dz_vv_lower,
+            n_divertors=self.data.divertor.n_divertors,
+            dz_blkt_upper=self.data.build.dz_blkt_upper,
+            dz_shld_upper=self.data.build.dz_shld_upper,
+            z_plasma_xpoint_upper=self.data.build.z_plasma_xpoint_upper,
+            dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
+            dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
+            dr_fw_inboard=self.data.build.dr_fw_inboard,
+            dr_fw_outboard=self.data.build.dr_fw_outboard,
         )
         # D-shaped blanket and shield
         if (
-            physics_variables.itart == 1
-            or fwbs_variables.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
+            self.data.physics.itart == 1
+            or self.data.fwbs.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
             (
-                blanket_library.vol_vv_inboard,
-                blanket_library.vol_vv_outboard,
-                fwbs_variables.vol_vv,
+                self.data.blanket.vol_vv_inboard,
+                self.data.blanket.vol_vv_outboard,
+                self.data.fwbs.vol_vv,
             ) = self.calculate_dshaped_vessel_volumes(
-                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
-                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
-                dz_vv_half=blanket_library.dz_vv_half,
-                dr_vv_inboard=build_variables.dr_vv_inboard,
-                dr_vv_outboard=build_variables.dr_vv_outboard,
-                dz_vv_upper=build_variables.dz_vv_upper,
-                dz_vv_lower=build_variables.dz_vv_lower,
+                r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
+                r_shld_outboard_outer=self.data.build.r_shld_outboard_outer,
+                dz_vv_half=self.data.blanket.dz_vv_half,
+                dr_vv_inboard=self.data.build.dr_vv_inboard,
+                dr_vv_outboard=self.data.build.dr_vv_outboard,
+                dz_vv_upper=self.data.build.dz_vv_upper,
+                dz_vv_lower=self.data.build.dz_vv_lower,
             )
         else:
             (
-                blanket_library.vol_vv_inboard,
-                blanket_library.vol_vv_outboard,
-                fwbs_variables.vol_vv,
+                self.data.blanket.vol_vv_inboard,
+                self.data.blanket.vol_vv_outboard,
+                self.data.fwbs.vol_vv,
             ) = self.calculate_elliptical_vessel_volumes(
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
-                triang=physics_variables.triang,
-                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
-                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
-                dz_vv_half=blanket_library.dz_vv_half,
-                dr_vv_inboard=build_variables.dr_vv_inboard,
-                dr_vv_outboard=build_variables.dr_vv_outboard,
-                dz_vv_upper=build_variables.dz_vv_upper,
-                dz_vv_lower=build_variables.dz_vv_lower,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                triang=self.data.physics.triang,
+                r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
+                r_shld_outboard_outer=self.data.build.r_shld_outboard_outer,
+                dz_vv_half=self.data.blanket.dz_vv_half,
+                dr_vv_inboard=self.data.build.dr_vv_inboard,
+                dr_vv_outboard=self.data.build.dr_vv_outboard,
+                dz_vv_upper=self.data.build.dz_vv_upper,
+                dz_vv_lower=self.data.build.dz_vv_lower,
             )
 
         # Apply vacuum vessel coverage factor
         # moved from dshaped_* and elliptical_* to keep coverage factor
         # changes in the same location.
-        fwbs_variables.vol_vv = fwbs_variables.fvoldw * fwbs_variables.vol_vv
+        self.data.fwbs.vol_vv = self.data.fwbs.fvoldw * self.data.fwbs.vol_vv
 
         # Vacuum vessel mass (kg)
-        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.den_steel
+        self.data.fwbs.m_vv = self.data.fwbs.vol_vv * self.data.fwbs.den_steel
 
     @staticmethod
     def calculate_vessel_half_height(
@@ -955,24 +955,24 @@ class VacuumVessel(Model):
         """Output shield areas and volumes to log."""
         po.oheadr(self.outfile, "Vacuum Vessel Areas and Volumes")
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Volume of inboard vacuum vessel (m^3)",
             "(vol_vv_inboard)",
-            blanket_library.vol_vv_inboard,
+            self.data.blanket.vol_vv_inboard,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Volume of outboard vacuum vessel (m^3)",
             "(vol_vv_outboard)",
-            blanket_library.vol_vv_outboard,
+            self.data.blanket.vol_vv_outboard,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Total volume of vacuum vessel (m^3)",
             "(vol_vv)",
-            fwbs_variables.vol_vv,
+            self.data.fwbs.vol_vv,
             "OP ",
         )

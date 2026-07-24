@@ -44,7 +44,7 @@ var_dicts = {
         description="Effective energy confinement time",
         units="s",
     ),
-    "f_nd_alpha_electron": VariableMetadata(
+    "f_nd_alpha_thermal_electron": VariableMetadata(
         latex=r"$f_\mathrm{\alpha}$",
         description="Alpha particle heating fraction",
         units="",
@@ -54,7 +54,7 @@ var_dicts = {
         description="Average electron temperature",
         units="keV",
     ),
-    "f_alpha_energy_confinement_min": VariableMetadata(
+    "f_t_alpha_energy_confinement_min": VariableMetadata(
         latex=r"$max : \frac{\tau_\mathrm{\alpha}}{\tau_\mathrm{E}}$",
         description="Ratio of alpha heating time to energy confinement time",
         units="",
@@ -167,7 +167,7 @@ var_dicts = {
         description="Number of cycles",
         units="",
     ),
-    "alstroh": VariableMetadata(
+    "stress_cs_steel_max": VariableMetadata(
         latex=r"$\sigma_{\mathrm{oh}}^{\mathrm{max}}$[$Pa$]",
         description="Maximum allowable stress",
         units="Pa",
@@ -187,7 +187,7 @@ var_dicts = {
         description="Average electron density",
         units="m^{-3}",
     ),
-    "dnla_gw": VariableMetadata(
+    "f_nd_plasma_greenwald": VariableMetadata(
         latex=r"$f_{\mathrm{GW}}$", description="Greenwald fraction", units=""
     ),
     "normalised_toroidal_beta": VariableMetadata(

@@ -2,22 +2,15 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import (
-    build_variables,
-    divertor_variables,
-    physics_variables,
-)
-from process.models.build import Build
-
 
 @pytest.fixture
-def build():
+def build(process_models):
     """Provides Build object for testing.
 
     :returns build: initialised Build object
     :rtype: process.build.Build
     """
-    return Build()
+    return process_models.build
 
 
 class DivgeomParam(NamedTuple):
@@ -96,37 +89,37 @@ def test_divgeom(divgeomparam, monkeypatch, build):
     :type build: tests.unit.test_build.build (functional fixture)
     """
 
-    monkeypatch.setattr(build_variables, "rspo", divgeomparam.rspo)
+    monkeypatch.setattr(build.data.build, "rspo", divgeomparam.rspo)
 
-    monkeypatch.setattr(build_variables, "plleno", divgeomparam.plleno)
+    monkeypatch.setattr(build.data.build, "plleno", divgeomparam.plleno)
 
     monkeypatch.setattr(
-        build_variables,
+        build.data.build,
         "dz_tf_plasma_centre_offset",
         divgeomparam.dz_tf_plasma_centre_offset,
     )
 
-    monkeypatch.setattr(build_variables, "plsepi", divgeomparam.plsepi)
+    monkeypatch.setattr(build.data.build, "plsepi", divgeomparam.plsepi)
 
-    monkeypatch.setattr(build_variables, "plleni", divgeomparam.plleni)
+    monkeypatch.setattr(build.data.build, "plleni", divgeomparam.plleni)
 
-    monkeypatch.setattr(build_variables, "plsepo", divgeomparam.plsepo)
+    monkeypatch.setattr(build.data.build, "plsepo", divgeomparam.plsepo)
 
-    monkeypatch.setattr(divertor_variables, "betao", divgeomparam.betao)
+    monkeypatch.setattr(build.data.divertor, "betao", divgeomparam.betao)
 
-    monkeypatch.setattr(divertor_variables, "betai", divgeomparam.betai)
+    monkeypatch.setattr(build.data.divertor, "betai", divgeomparam.betai)
 
-    monkeypatch.setattr(physics_variables, "itart", divgeomparam.itart)
+    monkeypatch.setattr(build.data.physics, "itart", divgeomparam.itart)
 
-    monkeypatch.setattr(physics_variables, "rmajor", divgeomparam.rmajor)
+    monkeypatch.setattr(build.data.physics, "rmajor", divgeomparam.rmajor)
 
-    monkeypatch.setattr(physics_variables, "rminor", divgeomparam.rminor)
+    monkeypatch.setattr(build.data.physics, "rminor", divgeomparam.rminor)
 
-    monkeypatch.setattr(divertor_variables, "n_divertors", divgeomparam.n_divertors)
+    monkeypatch.setattr(build.data.divertor, "n_divertors", divgeomparam.n_divertors)
 
-    monkeypatch.setattr(physics_variables, "kappa", divgeomparam.kappa)
+    monkeypatch.setattr(build.data.physics, "kappa", divgeomparam.kappa)
 
-    monkeypatch.setattr(physics_variables, "triang", divgeomparam.triang)
+    monkeypatch.setattr(build.data.physics, "triang", divgeomparam.triang)
 
     divht = build.divgeom(output=False)
 
@@ -346,7 +339,8 @@ def test_plasma_outboard_edge_toroidal_ripple_additional(param, build):
     Additional unit tests for plasma_outboard_edge_toroidal_ripple.
 
     - First case exercises the picture-frame analytical branch (i_tf_shape == 2)
-        and checks returned ripple and r_tf_outboard_midmin against the analytical formula.
+        and checks returned ripple and r_tf_outboard_midmin against the analytical
+        formula.
     - Second case forces the fitted-range diagnostic (x out of range) to ensure the
         applicability flag is set (flag == 1) and results remain finite/positive.
     - Additional cases vary coil counts (n_tf_coils) and toroidal WP thickness
@@ -367,6 +361,7 @@ def test_plasma_outboard_edge_toroidal_ripple_additional(param, build):
         i_tf_sup=param.i_tf_sup,
         dx_tf_wp_insulation=param.dx_tf_wp_insulation,
         dx_tf_wp_insertion_gap=param.dx_tf_wp_insertion_gap,
+        i_tf_wp_geom=1,
     )
 
     if param.i_tf_shape == 2:

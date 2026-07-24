@@ -1,9 +1,4 @@
 from process.core import process_output as po
-from process.data_structure import (
-    build_variables,
-    stellarator_variables,
-    tfcoil_variables,
-)
 
 
 def write(
@@ -17,7 +12,7 @@ def write(
     coppera_m2_max,
     f_a_scu_of_wp,
     f_vv_actual,
-    fiooic,
+    f_j_tf_wp_critical_max,
     inductance,
     max_force_density,
     max_force_density_mnm,
@@ -32,6 +27,7 @@ def write(
     toroidalgap,
     allowed_quench_voltage,
     quench_voltage,
+    data,
 ):
     """Writes stellarator modular coil output to file
 
@@ -60,7 +56,7 @@ def write(
 
     f_vv_actual :
 
-    fiooic :
+    f_j_tf_wp_critical_max :
 
     inductance :
 
@@ -90,6 +86,8 @@ def write(
 
     quench_voltage :
 
+    data: DataStructure
+        data structure object
 
     """
     po.oheadr(stellarator.outfile, "Modular Coils")
@@ -100,7 +98,7 @@ def write(
         stellarator.outfile,
         "Number of modular coils",
         "(n_tf_coils)",
-        tfcoil_variables.n_tf_coils,
+        data.tfcoil.n_tf_coils,
     )
     po.ovarre(stellarator.outfile, "Av. coil major radius", "(coil_r)", r_coil_major)
     po.ovarre(stellarator.outfile, "Av. coil minor radius", "(coil_a)", r_coil_minor)
@@ -115,37 +113,37 @@ def write(
         stellarator.outfile,
         "Cross-sectional area per coil (m2)",
         "(tfarea/n_tf_coils)",
-        tfcoil_variables.a_tf_inboard_total / tfcoil_variables.n_tf_coils,
+        data.tfcoil.a_tf_inboard_total / data.tfcoil.n_tf_coils,
     )
     po.ovarre(
         stellarator.outfile,
         "Total inboard leg radial thickness (m)",
         "(dr_tf_inboard)",
-        build_variables.dr_tf_inboard,
+        data.build.dr_tf_inboard,
     )
     po.ovarre(
         stellarator.outfile,
         "Total outboard leg radial thickness (m)",
         "(dr_tf_outboard)",
-        build_variables.dr_tf_outboard,
+        data.build.dr_tf_outboard,
     )
     po.ovarre(
         stellarator.outfile,
         "Inboard leg outboard half-width (m)",
         "(tficrn)",
-        tfcoil_variables.tficrn,
+        data.tfcoil.tficrn,
     )
     po.ovarre(
         stellarator.outfile,
         "Inboard leg inboard half-width (m)",
         "(tfocrn)",
-        tfcoil_variables.tfocrn,
+        data.tfcoil.tfocrn,
     )
     po.ovarre(
         stellarator.outfile,
         "Outboard leg toroidal thickness (m)",
         "(dx_tf_inboard_out_toroidal)",
-        tfcoil_variables.dx_tf_inboard_out_toroidal,
+        data.tfcoil.dx_tf_inboard_out_toroidal,
     )
     po.ovarre(
         stellarator.outfile, "Minimum coil distance (m)", "(toroidalgap)", toroidalgap
@@ -166,49 +164,49 @@ def write(
         stellarator.outfile,
         "Mean coil circumference (m)",
         "(len_tf_coil)",
-        tfcoil_variables.len_tf_coil,
+        data.tfcoil.len_tf_coil,
     )
     po.ovarre(
         stellarator.outfile,
         "Total current (MA)",
         "(c_tf_total)",
-        1.0e-6 * tfcoil_variables.c_tf_total,
+        1.0e-6 * data.tfcoil.c_tf_total,
     )
     po.ovarre(
         stellarator.outfile,
         "Current per coil(MA)",
         "(c_tf_total/n_tf_coils)",
-        1.0e-6 * tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils,
+        1.0e-6 * data.tfcoil.c_tf_total / data.tfcoil.n_tf_coils,
     )
     po.ovarre(
         stellarator.outfile,
         "Winding pack current density (A/m2)",
         "(j_tf_wp)",
-        tfcoil_variables.j_tf_wp,
+        data.tfcoil.j_tf_wp,
     )
     po.ovarre(
         stellarator.outfile,
         "Max allowable current density as restricted by quench (A/m2)",
         "(j_tf_wp_quench_heat_max)",
-        tfcoil_variables.j_tf_wp_quench_heat_max,
+        data.tfcoil.j_tf_wp_quench_heat_max,
     )
     po.ovarre(
         stellarator.outfile,
         "Overall current density (A/m2)",
-        "(oacdcp)",
-        tfcoil_variables.oacdcp,
+        "(j_tf_coil_full_area)",
+        data.tfcoil.j_tf_coil_full_area,
     )
     po.ovarre(
         stellarator.outfile,
         "Maximum field on superconductor (T)",
         "(b_tf_inboard_peak_symmetric)",
-        tfcoil_variables.b_tf_inboard_peak_symmetric,
+        data.tfcoil.b_tf_inboard_peak_symmetric,
     )
     po.ovarre(
         stellarator.outfile,
         "Total Stored energy (GJ)",
         "(e_tf_magnetic_stored_total_gj)",
-        tfcoil_variables.e_tf_magnetic_stored_total_gj,
+        data.tfcoil.e_tf_magnetic_stored_total_gj,
     )
     po.ovarre(
         stellarator.outfile, "Inductance of TF Coils (H)", "(inductance)", inductance
@@ -217,7 +215,7 @@ def write(
         stellarator.outfile,
         "Total mass of coils (kg)",
         "(m_tf_coils_total)",
-        tfcoil_variables.m_tf_coils_total,
+        data.tfcoil.m_tf_coils_total,
     )
 
     po.osubhd(stellarator.outfile, "Coil Geometry :")
@@ -226,13 +224,13 @@ def write(
         stellarator.outfile,
         "Outboard leg centre radius (m)",
         "(r_tf_outboard_mid)",
-        build_variables.r_tf_outboard_mid,
+        data.build.r_tf_outboard_mid,
     )
     po.ovarre(
         stellarator.outfile,
         "Maximum inboard edge height (m)",
         "(z_tf_inside_half)",
-        build_variables.z_tf_inside_half,
+        data.build.z_tf_inside_half,
     )
 
     po.osubhd(stellarator.outfile, "Conductor Information :")
@@ -240,49 +238,49 @@ def write(
         stellarator.outfile,
         "Superconductor mass per coil (kg)",
         "(m_tf_coil_superconductor)",
-        tfcoil_variables.m_tf_coil_superconductor,
+        data.tfcoil.m_tf_coil_superconductor,
     )
     po.ovarre(
         stellarator.outfile,
         "Copper mass per coil (kg)",
         "(m_tf_coil_copper)",
-        tfcoil_variables.m_tf_coil_copper,
+        data.tfcoil.m_tf_coil_copper,
     )
     po.ovarre(
         stellarator.outfile,
         "Steel conduit mass per coil (kg)",
         "(m_tf_wp_steel_conduit)",
-        tfcoil_variables.m_tf_wp_steel_conduit,
+        data.tfcoil.m_tf_wp_steel_conduit,
     )
     po.ovarre(
         stellarator.outfile,
         "Total conductor cable mass per coil (kg)",
         "(m_tf_coil_conductor)",
-        tfcoil_variables.m_tf_coil_conductor,
+        data.tfcoil.m_tf_coil_conductor,
     )
     po.ovarre(
         stellarator.outfile,
         "Cable conductor + void area (m2)",
         "(a_tf_turn_cable_space_no_void)",
-        tfcoil_variables.a_tf_turn_cable_space_no_void,
+        data.tfcoil.a_tf_turn_cable_space_no_void,
     )
     po.ovarre(
         stellarator.outfile,
         "Cable space coolant fraction",
         "(f_a_tf_turn_cable_space_extra_void)",
-        tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
+        data.tfcoil.f_a_tf_turn_cable_space_extra_void,
     )
     po.ovarre(
         stellarator.outfile,
         "Conduit case thickness (m)",
         "(dx_tf_turn_steel)",
-        tfcoil_variables.dx_tf_turn_steel,
+        data.tfcoil.dx_tf_turn_steel,
     )
     po.ovarre(
         stellarator.outfile,
         "Cable insulation thickness (m)",
         "(dx_tf_turn_insulation)",
-        tfcoil_variables.dx_tf_turn_insulation,
+        data.tfcoil.dx_tf_turn_insulation,
     )
 
     ap = a_tf_wp_no_insulation
@@ -292,55 +290,55 @@ def write(
         stellarator.outfile,
         "Conductor fraction of winding pack",
         "(a_tf_wp_conductor/ap)",
-        tfcoil_variables.a_tf_wp_conductor / ap,
+        data.tfcoil.a_tf_wp_conductor / ap,
     )
     po.ovarre(
         stellarator.outfile,
         "Copper fraction of conductor",
         "(f_a_tf_turn_cable_copper)",
-        tfcoil_variables.f_a_tf_turn_cable_copper,
+        data.tfcoil.f_a_tf_turn_cable_copper,
     )
     po.ovarre(
         stellarator.outfile,
         "Structure fraction of winding pack",
         "(a_tf_wp_steel/ap)",
-        tfcoil_variables.a_tf_wp_steel / ap,
+        data.tfcoil.a_tf_wp_steel / ap,
     )
     po.ovarre(
         stellarator.outfile,
         "Insulator fraction of winding pack",
         "(a_tf_coil_wp_turn_insulation/ap)",
-        tfcoil_variables.a_tf_coil_wp_turn_insulation / ap,
+        data.tfcoil.a_tf_coil_wp_turn_insulation / ap,
     )
     po.ovarre(
         stellarator.outfile,
         "Helium fraction of winding pack",
         "(a_tf_wp_extra_void/ap)",
-        tfcoil_variables.a_tf_wp_extra_void / ap,
+        data.tfcoil.a_tf_wp_extra_void / ap,
     )
     po.ovarre(
         stellarator.outfile,
         "Winding radial thickness (m)",
         "(dr_tf_wp_with_insulation)",
-        tfcoil_variables.dr_tf_wp_with_insulation,
+        data.tfcoil.dr_tf_wp_with_insulation,
     )
     po.ovarre(
         stellarator.outfile,
         "Winding toroidal thickness (m)",
         "(dx_tf_wp_primary_toroidal)",
-        tfcoil_variables.dx_tf_wp_primary_toroidal,
+        data.tfcoil.dx_tf_wp_primary_toroidal,
     )
     po.ovarre(
         stellarator.outfile,
         "Ground wall insulation thickness (m)",
         "(dx_tf_wp_insulation)",
-        tfcoil_variables.dx_tf_wp_insulation,
+        data.tfcoil.dx_tf_wp_insulation,
     )
     po.ovarre(
         stellarator.outfile,
         "Number of turns per coil",
         "(n_tf_coil_turns)",
-        tfcoil_variables.n_tf_coil_turns,
+        data.tfcoil.n_tf_coil_turns,
     )
     po.ovarre(
         stellarator.outfile,
@@ -352,27 +350,28 @@ def write(
         stellarator.outfile,
         "Current per turn (A)",
         "(c_tf_turn)",
-        tfcoil_variables.c_tf_turn,
+        data.tfcoil.c_tf_turn,
     )
-    po.ovarre(stellarator.outfile, "jop/jcrit", "(fiooic)", fiooic)
+    po.ovarre(
+        stellarator.outfile,
+        "jop/jcrit",
+        "(f_j_tf_wp_critical_max)",
+        f_j_tf_wp_critical_max,
+    )
     po.ovarre(
         stellarator.outfile,
         "Current density in conductor area (A/m2)",
         "(c_tf_total/a_tf_wp_conductor)",
         1.0e-6
-        * tfcoil_variables.c_tf_total
-        / tfcoil_variables.n_tf_coils
-        / tfcoil_variables.a_tf_wp_conductor,
+        * data.tfcoil.c_tf_total
+        / data.tfcoil.n_tf_coils
+        / data.tfcoil.a_tf_wp_conductor,
     )
     po.ovarre(
         stellarator.outfile,
         "Current density in SC area (A/m2)",
         "(c_tf_total/a_tf_wp_conductor/f_a_scu_of_wp)",
-        1.0e-6
-        * tfcoil_variables.c_tf_total
-        / tfcoil_variables.n_tf_coils
-        / ap
-        / f_a_scu_of_wp,
+        1.0e-6 * data.tfcoil.c_tf_total / data.tfcoil.n_tf_coils / ap / f_a_scu_of_wp,
     )
     po.ovarre(
         stellarator.outfile,
@@ -442,7 +441,7 @@ def write(
     )
     po.ovarre(
         stellarator.outfile,
-        "Actual quench vaccuum vessel force density (MN/m^3)",
+        "Actual quench vacuum vessel force density (MN/m^3)",
         "(f_vv_actual)",
         f_vv_actual,
     )
@@ -478,31 +477,31 @@ def write(
         stellarator.outfile,
         "Case thickness, plasma side (m)",
         "(dr_tf_plasma_case)",
-        tfcoil_variables.dr_tf_plasma_case,
+        data.tfcoil.dr_tf_plasma_case,
     )
     po.ovarre(
         stellarator.outfile,
         "Case thickness, outer side (m)",
         "(dr_tf_nose_case)",
-        tfcoil_variables.dr_tf_nose_case,
+        data.tfcoil.dr_tf_nose_case,
     )
     po.ovarre(
         stellarator.outfile,
         "Case toroidal thickness (m)",
         "(dx_tf_side_case_min)",
-        tfcoil_variables.dx_tf_side_case_min,
+        data.tfcoil.dx_tf_side_case_min,
     )
     po.ovarre(
         stellarator.outfile,
         "Case area per coil (m2)",
         "(a_tf_coil_inboard_case)",
-        tfcoil_variables.a_tf_coil_inboard_case,
+        data.tfcoil.a_tf_coil_inboard_case,
     )
     po.ovarre(
         stellarator.outfile,
         "External case mass per coil (kg)",
         "(m_tf_coil_case)",
-        tfcoil_variables.m_tf_coil_case,
+        data.tfcoil.m_tf_coil_case,
     )
 
     po.osubhd(stellarator.outfile, "Available Space for Ports :")
@@ -511,35 +510,35 @@ def write(
         stellarator.outfile,
         "Max toroidal size of vertical ports (m)",
         "(vporttmax)",
-        stellarator_variables.vporttmax,
+        data.stellarator.vporttmax,
     )
     po.ovarre(
         stellarator.outfile,
         "Max poloidal size of vertical ports (m)",
         "(vportpmax)",
-        stellarator_variables.vportpmax,
+        data.stellarator.vportpmax,
     )
     po.ovarre(
         stellarator.outfile,
         "Max area of vertical ports (m2)",
         "(vportamax)",
-        stellarator_variables.vportamax,
+        data.stellarator.vportamax,
     )
     po.ovarre(
         stellarator.outfile,
         "Max toroidal size of horizontal ports (m)",
         "(hporttmax)",
-        stellarator_variables.hporttmax,
+        data.stellarator.hporttmax,
     )
     po.ovarre(
         stellarator.outfile,
         "Max poloidal size of horizontal ports (m)",
         "(hportpmax)",
-        stellarator_variables.hportpmax,
+        data.stellarator.hportpmax,
     )
     po.ovarre(
         stellarator.outfile,
         "Max area of horizontal ports (m2)",
         "(hportamax)",
-        stellarator_variables.hportamax,
+        data.stellarator.hportamax,
     )

@@ -3,24 +3,15 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import (
-    blanket_library,
-    build_variables,
-    buildings_variables,
-    fwbs_variables,
-    pfcoil_variables,
-)
-from process.models.cryostat import Cryostat
-
 
 @pytest.fixture
-def cryostat_fixture():
-    """Provides BlanketLibrary object for testing.
+def cryostat(process_models):
+    """Fixture to get the Cryostat instance from process_models.
 
-    :returns: initialised BlanketLibrary object
-    :rtype: process.blanket_library.BlanketLibrary
+    :returns: initialised Cryostat object
+    :rtype: process.models.cryostat.Cryostat
     """
-    return Cryostat()
+    return process_models.cryostat
 
 
 class ExternalCryoGeometryParam(NamedTuple):
@@ -135,13 +126,12 @@ class ExternalCryoGeometryParam(NamedTuple):
         ),
     ],
 )
-def test_external_cryo_geometry(
-    externalcryogeometryparam, monkeypatch, cryostat_fixture
-):
+def test_external_cryo_geometry(externalcryogeometryparam, monkeypatch, cryostat):
     """
     Automatically generated Regression Unit Test for external_cryo_geometry.
 
-    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
+    This test was generated using data from
+    tests/regression/input_files/large_tokamak_eval.IN.DAT.
 
     :param externalcryogeometryparam: the data used to mock and assert in this test.
     :type externalcryogeometryparam: externalcryogeometryparam
@@ -150,67 +140,87 @@ def test_external_cryo_geometry(
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(
-        build_variables, "f_z_cryostat", externalcryogeometryparam.f_z_cryostat
+        cryostat.data.build,
+        "f_z_cryostat",
+        externalcryogeometryparam.f_z_cryostat,
     )
     monkeypatch.setattr(
-        build_variables, "z_tf_inside_half", externalcryogeometryparam.z_tf_inside_half
+        cryostat.data.build,
+        "z_tf_inside_half",
+        externalcryogeometryparam.z_tf_inside_half,
     )
     monkeypatch.setattr(
-        build_variables, "dr_tf_inboard", externalcryogeometryparam.dr_tf_inboard
+        cryostat.data.build,
+        "dr_tf_inboard",
+        externalcryogeometryparam.dr_tf_inboard,
     )
     monkeypatch.setattr(
-        build_variables, "dr_cryostat", externalcryogeometryparam.dr_cryostat
+        cryostat.data.build, "dr_cryostat", externalcryogeometryparam.dr_cryostat
     )
     monkeypatch.setattr(
-        fwbs_variables,
+        cryostat.data.fwbs,
         "r_cryostat_inboard",
         externalcryogeometryparam.r_cryostat_inboard,
     )
     monkeypatch.setattr(
-        fwbs_variables, "dr_pf_cryostat", externalcryogeometryparam.dr_pf_cryostat
+        cryostat.data.fwbs,
+        "dr_pf_cryostat",
+        externalcryogeometryparam.dr_pf_cryostat,
     )
     monkeypatch.setattr(
-        fwbs_variables,
+        cryostat.data.fwbs,
         "z_cryostat_half_inside",
         externalcryogeometryparam.z_cryostat_half_inside,
     )
     monkeypatch.setattr(
-        fwbs_variables, "vol_cryostat", externalcryogeometryparam.vol_cryostat
+        cryostat.data.fwbs,
+        "vol_cryostat",
+        externalcryogeometryparam.vol_cryostat,
     )
-    monkeypatch.setattr(fwbs_variables, "m_vv", externalcryogeometryparam.m_vv)
-    monkeypatch.setattr(fwbs_variables, "vol_vv", externalcryogeometryparam.vol_vv)
-    monkeypatch.setattr(fwbs_variables, "den_steel", externalcryogeometryparam.den_steel)
-    monkeypatch.setattr(fwbs_variables, "dewmkg", externalcryogeometryparam.dewmkg)
+    monkeypatch.setattr(cryostat.data.fwbs, "m_vv", externalcryogeometryparam.m_vv)
+    monkeypatch.setattr(cryostat.data.fwbs, "vol_vv", externalcryogeometryparam.vol_vv)
     monkeypatch.setattr(
-        pfcoil_variables, "r_pf_coil_outer", externalcryogeometryparam.r_pf_coil_outer
+        cryostat.data.fwbs, "den_steel", externalcryogeometryparam.den_steel
+    )
+    monkeypatch.setattr(cryostat.data.fwbs, "dewmkg", externalcryogeometryparam.dewmkg)
+    monkeypatch.setattr(
+        cryostat.data.pf_coil,
+        "r_pf_coil_outer",
+        externalcryogeometryparam.r_pf_coil_outer,
     )
     monkeypatch.setattr(
-        pfcoil_variables, "z_pf_coil_upper", externalcryogeometryparam.z_pf_coil_upper
+        cryostat.data.pf_coil,
+        "z_pf_coil_upper",
+        externalcryogeometryparam.z_pf_coil_upper,
     )
     monkeypatch.setattr(
-        buildings_variables, "dz_tf_cryostat", externalcryogeometryparam.dz_tf_cryostat
+        cryostat.data.buildings,
+        "dz_tf_cryostat",
+        externalcryogeometryparam.dz_tf_cryostat,
     )
     monkeypatch.setattr(
-        blanket_library, "dz_pf_cryostat", externalcryogeometryparam.dz_pf_cryostat
+        cryostat.data.blanket,
+        "dz_pf_cryostat",
+        externalcryogeometryparam.dz_pf_cryostat,
     )
 
-    cryostat_fixture.external_cryo_geometry()
+    cryostat.external_cryo_geometry()
 
-    assert fwbs_variables.r_cryostat_inboard == pytest.approx(
+    assert cryostat.data.fwbs.r_cryostat_inboard == pytest.approx(
         externalcryogeometryparam.expected_r_cryostat_inboard
     )
-    assert fwbs_variables.z_cryostat_half_inside == pytest.approx(
+    assert cryostat.data.fwbs.z_cryostat_half_inside == pytest.approx(
         externalcryogeometryparam.expected_z_cryostat_half_inside
     )
-    assert fwbs_variables.vol_cryostat == pytest.approx(
+    assert cryostat.data.fwbs.vol_cryostat == pytest.approx(
         externalcryogeometryparam.expected_vol_cryostat
     )
-    assert fwbs_variables.dewmkg == pytest.approx(
+    assert cryostat.data.fwbs.dewmkg == pytest.approx(
         externalcryogeometryparam.expected_dewmkg
     )
-    assert buildings_variables.dz_tf_cryostat == pytest.approx(
+    assert cryostat.data.buildings.dz_tf_cryostat == pytest.approx(
         externalcryogeometryparam.expected_dz_tf_cryostat
     )
-    assert blanket_library.dz_pf_cryostat == pytest.approx(
+    assert cryostat.data.blanket.dz_pf_cryostat == pytest.approx(
         externalcryogeometryparam.expected_dz_pf_cryostat
     )

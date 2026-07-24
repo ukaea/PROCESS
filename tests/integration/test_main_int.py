@@ -101,7 +101,8 @@ def test_single_run_with_mfilejson(temp_data, cli_runner):
     # Run a SingleRun with the --mfilejson flag.
     cli_runner(process_cli, args=["-i", input_file, "--mfilejson", "-m", mfile])
 
-    # Assert that 'large_tokamak_eval.MFILE.DAT.json' has been produced in the temp_data directory.
+    # Assert that 'large_tokamak_eval.MFILE.DAT.json' has been produced in the
+    # temp_data directory.
     expected_json = temp_data / "large_tokamak_eval.MFILE.DAT.json"
     assert expected_json.exists(), "large_tokamak_eval.MFILE.DAT.json was not found"
 

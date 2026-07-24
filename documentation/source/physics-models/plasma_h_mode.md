@@ -11,7 +11,7 @@ for the scaling laws listed [below](#l-h-scaling-options), in routine `l_h_thres
 
 Depending on the value of the chosen scaling by setting `i_l_h_threshold`, a different L-H threshold power is set to the `p_l_h_threshold_mw` variable.
 
-We define the net power across the seperatrix for the scaling as `p_plasma_separatrix_mw` below. This is equal to the net heating power of the plasma with radiation losses removed. This is then treated as the excess heating power for the plasma that is given to the divertors.
+We define the net power across the separatrix for the scaling as `p_plasma_separatrix_mw` below. This is equal to the net heating power of the plasma with radiation losses removed. This is then treated as the excess heating power for the plasma that is given to the divertors.
 
 $$
 \texttt{p_plasma_separatrix_mw} = \frac{\mathrm{d}W}{\mathrm{d}t} =  \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}} - P_{\text{rad}}

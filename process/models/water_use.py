@@ -1,18 +1,35 @@
+"""Water use model for calculating water usage during plant operation."""
+
 import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import heat_transport_variables
 
 SECDAY = 86400e0
 
 
 class WaterUse(Model):
+    """Model to calculate water use during plant operation, based on the amount of heat
+    that needs to be rejected through the cooling system, and the cooling mechanism
+    used.
+
+    The water use is calculated for two different cooling mechanisms: cooling towers,
+    and cooling through water bodies (pond, lake, river). The water use for cooling
+    through water bodies is calculated for both recirculating and once-through systems.
+
+    The water use for cooling towers is calculated as a single value, as the water use
+    for cooling towers is not expected to differ significantly between recirculating
+    and once-through systems.
+    """
+
     def __init__(self):
         self.outfile = constants.NOUT
 
     def output(self):
+        """Routine to call the water usage calculation routines and write output to
+        file.
+        """
         self.run(output=True)
 
     def run(self, output: bool = False):
@@ -24,8 +41,8 @@ class WaterUse(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-        rejected_heat = heat_transport_variables.p_plant_primary_heat_mw * (
-            1 - heat_transport_variables.eta_turbine
+        rejected_heat = self.data.heat_transport.p_plant_primary_heat_mw * (
+            1 - self.data.heat_transport.eta_turbine
         )
 
         wastethermeng = rejected_heat * SECDAY
@@ -36,7 +53,8 @@ class WaterUse(Model):
             )
             po.ocmmnt(
                 self.outfile,
-                "Estimated amount of water used through different cooling system options:",
+                "Estimated amount of water used through different cooling system "
+                "options:",
             )
             po.ocmmnt(self.outfile, "1. Cooling towers")
             po.ocmmnt(
@@ -107,8 +125,8 @@ class WaterUse(Model):
     def cooling_water_body(self, wastetherm: float, output: bool):
         """Water evaporated in cooling through water bodies
         Based on spreadsheet from Diehl et al. USGS Report 2013-5188, which includes
-        cooling coefficients found through fits across a dataset containing a wide range of
-        temperatures, windspeeds, and heat loading:
+        cooling coefficients found through fits across a dataset containing a wide range
+        of temperatures, windspeeds, and heat loading:
         http://pubs.usgs.gov/sir/2013/5188/appendix/sir2013-5188_appendix4_fews_version_3.104.xlsx
 
 
@@ -177,12 +195,13 @@ class WaterUse(Model):
                 j = 20.596e0
 
             # Unfortunately, the source spreadsheet was from the US, so the fits for
-            #   water body heating due to heat loading and the cooling wind functions
-            #   are in non-metric units, hence the conversions required here.
-            # Limitations: maximum wind speed of ~5 m/s; initial self.data.water_use.watertemp < 25 degC
+            # water body heating due to heat loading and the cooling wind functions
+            # are in non-metric units, hence the conversions required here.
+            # Limitations: maximum wind speed of ~5 m/s; initial
+            # self.data.water_use.watertemp < 25 degC
 
             # convert self.data.water_use.windspeed to mph
-            self.data.water_use.windspeedmph = self.data.water_use.windspeed * 2.237e0
+            windspeedmph = self.data.water_use.windspeed * 2.237e0
 
             # convert heat loading into cal/(cm2.sec)
             heatloadimp = heatload * 1000000.0e0 * 0.239e0 / 40469000.0e0
@@ -191,17 +210,15 @@ class WaterUse(Model):
             heatratio = (
                 d
                 + (e * self.data.water_use.watertemp)
-                + (f * self.data.water_use.windspeedmph)
+                + (f * windspeedmph)
                 + (g * heatload)
                 + (h * self.data.water_use.watertemp**2)
-                + (i * self.data.water_use.windspeedmph**2)
+                + (i * windspeedmph**2)
                 + (j * heatload**2)
             )
 
             # estimate resultant heated water temperature
-            self.data.water_use.watertempheated = self.data.water_use.watertemp + (
-                heatloadimp * heatratio
-            )
+            watertempheated = self.data.water_use.watertemp + (heatloadimp * heatratio)
 
             # find wind function, m/(day.kPa), applicable to this water body:
             windfunction = (
@@ -213,10 +230,7 @@ class WaterUse(Model):
             # difference in saturation vapour pressure (Clausius-Clapeyron approximation)
             satvapdelta = (
                 0.611e0
-                * np.exp(
-                    (17.27e0 * self.data.water_use.watertempheated)
-                    / (237.3e0 + self.data.water_use.watertempheated)
-                )
+                * np.exp((17.27e0 * watertempheated) / (237.3e0 + watertempheated))
             ) - (
                 0.611e0
                 * np.exp(
@@ -255,15 +269,17 @@ class WaterUse(Model):
 
             self.data.water_use.evapvol = wastetherm * self.data.water_use.volperenergy
 
-            # using this method the estimates for pond, lake and river evaporation produce similar results,
-            #   the average will be taken and used in the next stage of calculation
+            # using this method the estimates for pond, lake and river evaporation
+            # produce similar results, the average will be taken and used in the next
+            # stage of calculation
             evapsum += self.data.water_use.evapvol
 
         evapsum /= icool
 
-        # water volume withdrawn from external source depends on recirculation or 'once-through' system choice
-        #   Estimated as a ratio to evaporated water (averaged across observed dataset)
-        #   as per Diehl et al. USGS Report 2014-5184, http://dx.doi.org/10.3133/sir20145184
+        # water volume withdrawn from external source depends on recirculation or
+        # 'once-through' system choice. Estimated as a ratio to evaporated water
+        # (averaged across observed dataset) as per Diehl et al. USGS Report 2014-5184,
+        # http://dx.doi.org/10.3133/sir20145184
 
         # recirculating water system:
         self.data.water_use.wateruserecirc = 1.0e0 * evapsum

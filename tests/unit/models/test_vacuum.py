@@ -2,10 +2,6 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import physics_variables as pv
-from process.data_structure import tfcoil_variables as tfv
-from process.data_structure import times_variables as tv
-
 
 @pytest.fixture
 def vacuum(process_models):
@@ -28,7 +24,8 @@ def vacuum_vessel(process_models):
 
 
 class TestVacuum:
-    def test_simple_model(self, monkeypatch, vacuum):
+    @staticmethod
+    def test_simple_model(monkeypatch, vacuum):
         """Tests `vacuum_simple` subroutine.
 
         Values taken from first calling of the model in i_vacuum_pumping regression test.
@@ -40,11 +37,13 @@ class TestVacuum:
         :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
         """
         monkeypatch.setattr(
-            pv, "molflow_plasma_fuelling_required", 7.5745668997694112e22
+            vacuum.data.physics,
+            "molflow_plasma_fuelling_required",
+            7.5745668997694112e22,
         )
-        monkeypatch.setattr(pv, "a_plasma_surface", 1500.3146527709359)
-        monkeypatch.setattr(tfv, "n_tf_coils", 18)
-        monkeypatch.setattr(tv, "t_plant_pulse_dwell", 500)
+        monkeypatch.setattr(vacuum.data.physics, "a_plasma_surface", 1500.3146527709359)
+        monkeypatch.setattr(vacuum.data.tfcoil, "n_tf_coils", 18)
+        monkeypatch.setattr(vacuum.data.times, "t_plant_pulse_dwell", 500)
         monkeypatch.setattr(vacuum.data.vacuum, "outgasfactor", 0.0235)
         monkeypatch.setattr(vacuum.data.vacuum, "outgasindex", 1)
         monkeypatch.setattr(vacuum.data.vacuum, "pres_vv_chamber_base", 0.0005)
@@ -59,14 +58,17 @@ class TestVacuum:
 
         assert n_iter_vacuum_pumps == pytest.approx(14.082585474801862)
 
-    def test_old_model(self, monkeypatch, vacuum):
+    @staticmethod
+    def test_old_model(monkeypatch, vacuum):
         """Test `vacuum` subroutine.
 
         Values taken from first calling of the model in G-L_Nb-Ti regression test.
         """
-        monkeypatch.setattr(pv, "p_fusion_total_mw", 2115.3899563651776)
-        monkeypatch.setattr(pv, "temp_plasma_electron_vol_avg_kev", 15.872999999999999)
-        monkeypatch.setattr(tv, "t_plant_pulse_coil_precharge", 30)
+        monkeypatch.setattr(vacuum.data.physics, "p_fusion_total_mw", 2115.3899563651776)
+        monkeypatch.setattr(
+            vacuum.data.physics, "temp_plasma_electron_vol_avg_kev", 15.872999999999999
+        )
+        monkeypatch.setattr(vacuum.data.times, "t_plant_pulse_coil_precharge", 30)
         monkeypatch.setattr(vacuum.data.vacuum, "i_vac_pump_dwell", 0)
         monkeypatch.setattr(vacuum.data.vacuum, "i_vacuum_pump_type", 1)
         monkeypatch.setattr(

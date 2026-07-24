@@ -1,4 +1,4 @@
-"""Unit and Integration tests for tfcoil.f90."""
+"""Unit and Integration tests for tfcoil.py."""
 
 import json
 from collections.abc import Sequence
@@ -10,27 +10,18 @@ import numpy as np
 import pytest
 
 import process.models.tfcoil.base as tfcoil_module
-from process.data_structure import (
-    build_variables,
-    fwbs_variables,
-    superconducting_tf_coil_variables,
-    tfcoil_variables,
-)
-from process.models.build import Build
-from process.models.tfcoil.base import TFCoil
+from process.data_structure.build_variables import TFCSRadialConfiguration
+from process.data_structure.pfcoil_variables import PFConductorModel
 
 
 @pytest.fixture
-def tfcoil():
-    """Provides TFCoil object for testing.
-
-    :param monkeypatch: pytest mocking fixture
-    :type monkeypatch: MonkeyPatch
+def tfcoil(process_models):
+    """Fixture to get the TFCoil instance from process_models.
 
     :return tfcoil: initialised TFCoil object
     :type tfcoil: process.tfcoil.TFCoil
     """
-    return TFCoil(build=Build())
+    return process_models.tfcoil
 
 
 @pytest.mark.parametrize(
@@ -110,21 +101,21 @@ class CntrpstTestAsset(NamedTuple):
     """Test asset for a test case of cntrpst"""
 
     i_tf_sup: int
-    """tfcoil_variables.i_tf_sup value to be mocked (0=Copper, 2=Cryogenic aluminium)"""
+    """tfcoil.data.tfcoil.i_tf_sup value to be mocked"""
     temp_cp_coolant_inlet: float
-    """tfcoil_variables.temp_cp_coolant_inlet value to be mocked
+    """tfcoil.data.tfcoil.temp_cp_coolant_inlet value to be mocked
     (centrepost coolant inlet temperature)"""
     expected_dtiocool: float
-    """expected value of tfcoil_variables.dtemp_cp_coolant
+    """expected value of tfcoil.data.tfcoil.dtemp_cp_coolant
     after tfcoil.cntrpst routine has run"""
     expected_tcpav2: float
-    """expected value of tfcoil_variables.tcpav2
+    """expected value of tfcoil.data.tfcoil.tcpav2
     after tfcoil.cntrpst routine has run"""
     expected_temp_cp_peak: float
-    """expected value of tfcoil_variables.temp_cp_peak
+    """expected value of tfcoil.data.tfcoil.temp_cp_peak
     after tfcoil.cntrpst routine has run"""
     expected_ppump: float
-    """expected value of tfcoil_variables.p_cp_coolant_pump_elec
+    """expected value of tfcoil.data.tfcoil.p_cp_coolant_pump_elec
     after tfcoil.cntrpst routine has run"""
 
 
@@ -149,36 +140,38 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
         - temp_cp_peak
         - p_cp_coolant_pump_elec
     """
-    monkeypatch.setattr(tfcoil_variables, "a_cp_cool", 1)
-    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 16)
-    monkeypatch.setattr(tfcoil_variables, "radius_cp_coolant_channel", 0.005)
-    monkeypatch.setattr(tfcoil_variables, "vel_cp_coolant_midplane", 20.0)
-    monkeypatch.setattr(tfcoil_variables, "vol_cond_cp", 2)
-    monkeypatch.setattr(tfcoil_variables, "p_cp_resistive", 1)
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", cntrpst_asset.i_tf_sup)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "a_cp_cool", 1)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "n_tf_coils", 16)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "radius_cp_coolant_channel", 0.005)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "vel_cp_coolant_midplane", 20.0)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "vol_cond_cp", 2)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "p_cp_resistive", 1)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "i_tf_sup", cntrpst_asset.i_tf_sup)
     monkeypatch.setattr(
-        tfcoil_variables, "temp_cp_coolant_inlet", cntrpst_asset.temp_cp_coolant_inlet
+        tfcoil.data.tfcoil, "temp_cp_coolant_inlet", cntrpst_asset.temp_cp_coolant_inlet
     )
-    monkeypatch.setattr(fwbs_variables, "pnuc_cp_tf", 1)
-    monkeypatch.setattr(build_variables, "z_tf_inside_half", 1)
-    monkeypatch.setattr(build_variables, "dr_tf_outboard", 0.5)
+    monkeypatch.setattr(tfcoil.data.fwbs, "pnuc_cp_tf", 1)
+    monkeypatch.setattr(tfcoil.data.build, "z_tf_inside_half", 1)
+    monkeypatch.setattr(tfcoil.data.build, "dr_tf_outboard", 0.5)
 
     tfcoil.cntrpst()
 
     # appears to be the same for all cases?
-    assert pytest.approx(tfcoil_variables.n_cp_coolant_channels_total) == 203718.3271576
+    assert (
+        pytest.approx(tfcoil.data.tfcoil.n_cp_coolant_channels_total) == 203718.3271576
+    )
 
     assert (
-        pytest.approx(tfcoil_variables.dtemp_cp_coolant, abs=1e-8)
+        pytest.approx(tfcoil.data.tfcoil.dtemp_cp_coolant, abs=1e-8)
         == cntrpst_asset.expected_dtiocool
     )
-    assert pytest.approx(tfcoil_variables.tcpav2) == cntrpst_asset.expected_tcpav2
+    assert pytest.approx(tfcoil.data.tfcoil.tcpav2) == cntrpst_asset.expected_tcpav2
     assert (
-        pytest.approx(tfcoil_variables.temp_cp_peak)
+        pytest.approx(tfcoil.data.tfcoil.temp_cp_peak)
         == cntrpst_asset.expected_temp_cp_peak
     )
     assert (
-        pytest.approx(tfcoil_variables.p_cp_coolant_pump_elec)
+        pytest.approx(tfcoil.data.tfcoil.p_cp_coolant_pump_elec)
         == cntrpst_asset.expected_ppump
     )
 
@@ -286,6 +279,7 @@ def test_tf_global_geometry(
         r_tf_inboard_in,
         r_tf_outboard_mid,
         dr_tf_outboard,
+        tfcoil.data,
     )
     assert astuple(result) == expected
 
@@ -310,7 +304,7 @@ def test_tf_global_geometry(
                 pytest.approx(12.4),  # b_tf_inboard_peak_symmetric
                 pytest.approx(154999999.93042317),  # c_tf_total
                 pytest.approx(9687499.995651448),  # c_tf_coil
-                pytest.approx(193749999.91302896),  # oacdcp
+                pytest.approx(193749999.91302896),  # j_tf_coil_full_area
             ),
         ),
         (
@@ -323,7 +317,7 @@ def test_tf_global_geometry(
                 pytest.approx(8.333333333),  # b_tf_inboard_peak_symmetric
                 pytest.approx(74999999.9663338),  # c_tf_total
                 pytest.approx(6249999.997194484),  # c_tf_coil
-                pytest.approx(149999999.9326676),  # oacdcp
+                pytest.approx(149999999.9326676),  # j_tf_coil_full_area
             ),
         ),
     ],
@@ -669,7 +663,7 @@ def test_tf_coil_self_inductance(tfcindparam, monkeypatch, tfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(tfcoil_variables, "ind_tf_coil", tfcindparam.ind_tf_coil)
+    monkeypatch.setattr(tfcoil.data.tfcoil, "ind_tf_coil", tfcindparam.ind_tf_coil)
 
     ind_tf_coil = tfcoil.tf_coil_self_inductance(
         dr_tf_inboard=tfcindparam.dr_tf_inboard,
@@ -745,47 +739,49 @@ def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, 
     """
 
     monkeypatch.setattr(
-        build_variables, "r_tf_outboard_mid", tfcoilareaandmassesparam.r_tf_outboard_mid
+        tfcoil.data.build,
+        "r_tf_outboard_mid",
+        tfcoilareaandmassesparam.r_tf_outboard_mid,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "len_tf_coil", tfcoilareaandmassesparam.len_tf_coil
+        tfcoil.data.tfcoil, "len_tf_coil", tfcoilareaandmassesparam.len_tf_coil
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_mid", tfcoilareaandmassesparam.r_tf_inboard_mid
+        tfcoil.data.build, "r_tf_inboard_mid", tfcoilareaandmassesparam.r_tf_inboard_mid
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfcoilareaandmassesparam.r_tf_inboard_in
+        tfcoil.data.build, "r_tf_inboard_in", tfcoilareaandmassesparam.r_tf_inboard_in
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfcoilareaandmassesparam.r_tf_inboard_out
+        tfcoil.data.build, "r_tf_inboard_out", tfcoilareaandmassesparam.r_tf_inboard_out
     )
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables,
+        tfcoil.data.superconducting_tfcoil,
         "rad_tf_coil_inboard_toroidal_half",
         tfcoilareaandmassesparam.rad_tf_coil_inboard_toroidal_half,
     )
     monkeypatch.setattr(
-        superconducting_tf_coil_variables,
+        tfcoil.data.superconducting_tfcoil,
         "tan_theta_coil",
         tfcoilareaandmassesparam.tan_theta_coil,
     )
 
     tfcoil.generic_tf_coil_area_and_masses()
 
-    assert tfcoil_variables.tficrn == pytest.approx(
+    assert tfcoil.data.tfcoil.tficrn == pytest.approx(
         tfcoilareaandmassesparam.expected_tficrn
     )
 
-    assert tfcoil_variables.tfcryoarea == pytest.approx(
+    assert tfcoil.data.tfcoil.tfcryoarea == pytest.approx(
         tfcoilareaandmassesparam.expected_tfcryoarea
     )
 
-    assert tfcoil_variables.tfocrn == pytest.approx(
+    assert tfcoil.data.tfcoil.tfocrn == pytest.approx(
         tfcoilareaandmassesparam.expected_tfocrn
     )
 
@@ -802,8 +798,6 @@ class StressclParam(NamedTuple):
     i_tf_inside_cs: Any = None
 
     dr_cs_tf_gap: Any = None
-
-    z_tf_inside_half: Any = None
 
     r_tf_inboard_in: Any = None
 
@@ -913,8 +907,6 @@ class StressclParam(NamedTuple):
 
     f_a_cs_turn_steel: Any = None
 
-    f_z_cs_tf_internal: Any = None
-
     j_cs_flat_top_end: Any = None
 
     j_cs_pulse_start: Any = None
@@ -953,6 +945,8 @@ class StressclParam(NamedTuple):
 
     vforce_inboard_tot: Any = None
 
+    a_cs_poloidal: Any = None
+
     iprint: Any = None
 
     outfile: Any = None
@@ -977,12 +971,12 @@ class StressclParam(NamedTuple):
     [
         StressclParam(
             dr_tf_inboard=1.208,
-            i_tf_inside_cs=0,
+            i_tf_inside_cs=TFCSRadialConfiguration.TF_OUTSIDE_CS,
             dr_cs_tf_gap=0.01,
             r_tf_inboard_mid=3.5979411851091103,
             dr_bore=2.3322000000000003,
             dr_cs=0.55242000000000002,
-            z_tf_inside_half=9.0730900215620327,
+            a_cs_poloidal=9.021881501,
             r_tf_inboard_in=2.9939411851091102,
             casestr=0,
             n_tf_coil_turns=200,
@@ -1035,9 +1029,8 @@ class StressclParam(NamedTuple):
             f_a_tf_turn_cable_copper=0.80884,
             str_wp=0,
             n_tf_wp_stress_layers=5,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_turn_steel=0.57874999999999999,
-            f_z_cs_tf_internal=0.90000000000000002,
             j_cs_flat_top_end=20726000,
             j_cs_pulse_start=0,
             n_pf_coils_in_group=np.array((1, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0)),
@@ -1094,12 +1087,12 @@ class StressclParam(NamedTuple):
         ),
         StressclParam(
             dr_tf_inboard=1.208,
-            i_tf_inside_cs=0,
+            i_tf_inside_cs=TFCSRadialConfiguration.TF_OUTSIDE_CS,
             dr_cs_tf_gap=0.01,
             r_tf_inboard_mid=3.5979411851091103,
             dr_bore=2.3322000000000003,
             dr_cs=0.55242000000000002,
-            z_tf_inside_half=9.0730900215620327,
+            a_cs_poloidal=9.021881501,
             r_tf_inboard_in=2.9939411851091102,
             casestr=0.00094360452596334093,
             n_tf_coil_turns=200,
@@ -1152,9 +1145,8 @@ class StressclParam(NamedTuple):
             f_a_tf_turn_cable_copper=0.80884,
             str_wp=0.0015619754370069119,
             n_tf_wp_stress_layers=5,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             f_a_cs_turn_steel=0.57874999999999999,
-            f_z_cs_tf_internal=0.90000000000000002,
             j_cs_flat_top_end=20726000,
             j_cs_pulse_start=19311657.760000002,
             n_pf_coils_in_group=np.array((1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0)),
@@ -1258,73 +1250,72 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         insstrain,
         _,
     ) = tfcoil.stresscl(
-        stressclparam.n_tf_layer,
-        stressclparam.n_radial_array,
-        stressclparam.n_tf_wp_stress_layers,
-        stressclparam.i_tf_bucking,
-        stressclparam.r_tf_inboard_in,
-        stressclparam.dr_bore,
-        stressclparam.z_tf_inside_half,
-        stressclparam.f_z_cs_tf_internal,
-        stressclparam.dr_cs,
-        stressclparam.i_tf_inside_cs,
-        stressclparam.dr_tf_inboard,
-        stressclparam.dr_cs_tf_gap,
-        stressclparam.i_pf_conductor,
-        stressclparam.j_cs_flat_top_end,
-        stressclparam.j_cs_pulse_start,
-        stressclparam.c_pf_coil_turn_peak_input,
-        stressclparam.n_pf_coils_in_group,
-        70 / 22,
-        3e-3,
-        stressclparam.f_a_cs_turn_steel,
-        stressclparam.eyoung_steel,
-        stressclparam.poisson_steel,
-        stressclparam.eyoung_cond_axial,
-        stressclparam.poisson_cond_axial,
-        stressclparam.eyoung_cond_trans,
-        stressclparam.poisson_cond_trans,
-        stressclparam.eyoung_ins,
-        stressclparam.poisson_ins,
-        stressclparam.dx_tf_turn_insulation,
-        stressclparam.eyoung_copper,
-        stressclparam.poisson_copper,
-        stressclparam.i_tf_sup,
-        stressclparam.eyoung_res_tf_buck,
-        stressclparam.r_tf_wp_inboard_inner,
-        stressclparam.tan_theta_coil,
-        stressclparam.rad_tf_coil_inboard_toroidal_half,
-        stressclparam.r_tf_wp_inboard_outer,
-        stressclparam.a_tf_coil_inboard_steel,
-        stressclparam.a_tf_plasma_case,
-        stressclparam.a_tf_coil_nose_case,
-        stressclparam.dx_tf_wp_insertion_gap,
-        stressclparam.dx_tf_wp_insulation,
-        stressclparam.n_tf_coil_turns,
-        stressclparam.i_tf_turns_integer,
-        stressclparam.dx_tf_turn_cable_space_average,
-        stressclparam.dr_tf_turn_cable_space,
-        stressclparam.dia_tf_turn_coolant_channel,
-        stressclparam.f_a_tf_turn_cable_copper,
-        stressclparam.dx_tf_turn_steel,
-        stressclparam.dx_tf_side_case_average,
-        stressclparam.dx_tf_wp_toroidal_average,
-        stressclparam.a_tf_coil_inboard_insulation,
-        stressclparam.a_tf_wp_steel,
-        stressclparam.a_tf_wp_conductor,
-        stressclparam.a_tf_wp_with_insulation,
-        stressclparam.eyoung_al,
-        stressclparam.poisson_al,
-        stressclparam.fcoolcp,
-        stressclparam.n_tf_graded_layers,
-        stressclparam.c_tf_total,
-        stressclparam.dr_tf_plasma_case,
-        stressclparam.i_tf_stress_model,
-        stressclparam.vforce_inboard_tot,
-        stressclparam.i_tf_tresca,
-        stressclparam.a_tf_coil_inboard_case,
-        stressclparam.vforce,
-        stressclparam.a_tf_turn_steel,
+        n_tf_layer=stressclparam.n_tf_layer,
+        n_radial_array=stressclparam.n_radial_array,
+        n_tf_wp_stress_layers=stressclparam.n_tf_wp_stress_layers,
+        i_tf_bucking=stressclparam.i_tf_bucking,
+        r_tf_inboard_in=stressclparam.r_tf_inboard_in,
+        dr_bore=stressclparam.dr_bore,
+        dr_cs=stressclparam.dr_cs,
+        i_tf_inside_cs=stressclparam.i_tf_inside_cs,
+        dr_tf_inboard=stressclparam.dr_tf_inboard,
+        dr_cs_tf_gap=stressclparam.dr_cs_tf_gap,
+        i_pf_conductor=stressclparam.i_pf_conductor,
+        j_cs_flat_top_end=stressclparam.j_cs_flat_top_end,
+        j_cs_pulse_start=stressclparam.j_cs_pulse_start,
+        c_pf_coil_turn_peak_input=stressclparam.c_pf_coil_turn_peak_input,
+        n_pf_coils_in_group=stressclparam.n_pf_coils_in_group,
+        f_dr_dz_cs_turn=70 / 22,
+        radius_cs_turn_corners=3e-3,
+        f_a_cs_turn_steel=stressclparam.f_a_cs_turn_steel,
+        eyoung_steel=stressclparam.eyoung_steel,
+        poisson_steel=stressclparam.poisson_steel,
+        eyoung_cond_axial=stressclparam.eyoung_cond_axial,
+        poisson_cond_axial=stressclparam.poisson_cond_axial,
+        eyoung_cond_trans=stressclparam.eyoung_cond_trans,
+        poisson_cond_trans=stressclparam.poisson_cond_trans,
+        eyoung_ins=stressclparam.eyoung_ins,
+        poisson_ins=stressclparam.poisson_ins,
+        dx_tf_turn_insulation=stressclparam.dx_tf_turn_insulation,
+        eyoung_copper=stressclparam.eyoung_copper,
+        poisson_copper=stressclparam.poisson_copper,
+        i_tf_sup=stressclparam.i_tf_sup,
+        eyoung_res_tf_buck=stressclparam.eyoung_res_tf_buck,
+        r_tf_wp_inboard_inner=stressclparam.r_tf_wp_inboard_inner,
+        tan_theta_coil=stressclparam.tan_theta_coil,
+        rad_tf_coil_inboard_toroidal_half=stressclparam.rad_tf_coil_inboard_toroidal_half,
+        r_tf_wp_inboard_outer=stressclparam.r_tf_wp_inboard_outer,
+        a_tf_coil_inboard_steel=stressclparam.a_tf_coil_inboard_steel,
+        a_tf_plasma_case=stressclparam.a_tf_plasma_case,
+        a_tf_coil_nose_case=stressclparam.a_tf_coil_nose_case,
+        dx_tf_wp_insertion_gap=stressclparam.dx_tf_wp_insertion_gap,
+        dx_tf_wp_insulation=stressclparam.dx_tf_wp_insulation,
+        n_tf_coil_turns=stressclparam.n_tf_coil_turns,
+        i_tf_turns_integer=stressclparam.i_tf_turns_integer,
+        dx_tf_turn_cable_space_average=stressclparam.dx_tf_turn_cable_space_average,
+        dr_tf_turn_cable_space=stressclparam.dr_tf_turn_cable_space,
+        dia_tf_turn_coolant_channel=stressclparam.dia_tf_turn_coolant_channel,
+        f_a_tf_turn_cable_copper=stressclparam.f_a_tf_turn_cable_copper,
+        dx_tf_turn_steel=stressclparam.dx_tf_turn_steel,
+        dx_tf_side_case_average=stressclparam.dx_tf_side_case_average,
+        dx_tf_wp_toroidal_average=stressclparam.dx_tf_wp_toroidal_average,
+        a_tf_coil_inboard_insulation=stressclparam.a_tf_coil_inboard_insulation,
+        a_tf_wp_steel=stressclparam.a_tf_wp_steel,
+        a_tf_wp_conductor=stressclparam.a_tf_wp_conductor,
+        a_tf_wp_with_insulation=stressclparam.a_tf_wp_with_insulation,
+        eyoung_al=stressclparam.eyoung_al,
+        poisson_al=stressclparam.poisson_al,
+        fcoolcp=stressclparam.fcoolcp,
+        n_tf_graded_layers=stressclparam.n_tf_graded_layers,
+        c_tf_total=stressclparam.c_tf_total,
+        dr_tf_plasma_case=stressclparam.dr_tf_plasma_case,
+        i_tf_stress_model=stressclparam.i_tf_stress_model,
+        vforce_inboard_tot=stressclparam.vforce_inboard_tot,
+        i_tf_tresca=stressclparam.i_tf_tresca,
+        a_tf_coil_inboard_case=stressclparam.a_tf_coil_inboard_case,
+        vforce=stressclparam.vforce,
+        a_tf_turn_steel=stressclparam.a_tf_turn_steel,
+        a_cs_poloidal=stressclparam.a_cs_poloidal,
     )
 
     assert casestr == pytest.approx(stressclparam.expected_casestr, rel=0.01)
@@ -1955,21 +1946,6 @@ def test_eyoung_parallel_array(eyoungparallelarrayparam, monkeypatch):
 
 
 @pytest.mark.parametrize(
-    ("sx", "sy", "sz", "expected"),
-    [
-        (0, -3.2e8, 2.4e8, 486621002.42385757),
-        (-2.8e8, 0, 2.4e8, 450777106.7833858),
-    ],
-)
-def test_sigvm(sx, sy, sz, expected):
-    # could not find an example of a use in PROCESS where
-    # tx, ty, or tz were anything other than 0
-    ret = tfcoil_module.sigvm(sx, sy, sz, 0, 0, 0)
-
-    assert ret == pytest.approx(expected)
-
-
-@pytest.mark.parametrize(
     (
         "ind_tf_coil",
         "c_tf_total",
@@ -1993,9 +1969,9 @@ def test_tf_stored_magnetic_energy(
     expected_total,
     expected_total_gj,
     expected_single,
+    tfcoil,
 ):
-    tfc = TFCoil(build=None)
-    result = tfc.tf_stored_magnetic_energy(
+    result = tfcoil.tf_stored_magnetic_energy(
         ind_tf_coil=ind_tf_coil, c_tf_total=c_tf_total, n_tf_coils=n_tf_coils
     )
     assert pytest.approx(result[0]) == expected_total

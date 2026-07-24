@@ -369,3 +369,49 @@ def test_surfa(surfaparam: SurfaParam, monkeypatch):
     assert sa == pytest.approx(surfaparam.expected_sa)
 
     assert so == pytest.approx(surfaparam.expected_so)
+
+
+class CalculateIterPhysicsBasisElongationParam(NamedTuple):
+    vol_plasma: Any = None
+
+    rmajor: Any = None
+
+    rminor: Any = None
+
+    expected_kappa_ipb: Any = None
+
+
+@pytest.mark.parametrize(
+    "elongationparam",
+    [
+        CalculateIterPhysicsBasisElongationParam(
+            vol_plasma=2694.44683912,
+            rmajor=9.2995201822511735,
+            rminor=2.9998452200810237,
+            expected_kappa_ipb=1.631103960469709,
+        ),
+    ],
+)
+def test_calculate_iter_physics_basis_elongation(
+    elongationparam: CalculateIterPhysicsBasisElongationParam, plasma
+):
+    """
+    Unit test for calculate_iter_physics_basis_elongation.
+
+    This test verifies the calculation of ITER physics basis elongation.
+
+    Parameters
+    ----------
+    elongationparam:
+        the data used to mock and assert in this test.
+    plasma:
+        pytest fixture for PlasmaGeom instance
+    """
+
+    kappa_ipb = plasma.calculate_iter_physics_basis_elongation(
+        vol_plasma=elongationparam.vol_plasma,
+        rmajor=elongationparam.rmajor,
+        rminor=elongationparam.rminor,
+    )
+
+    assert kappa_ipb == pytest.approx(elongationparam.expected_kappa_ipb)

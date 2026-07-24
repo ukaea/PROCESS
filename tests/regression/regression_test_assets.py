@@ -30,15 +30,16 @@ class RegressionTestAssetCollector:
         self._tracked_mfiles = self._get_tracked_mfiles()
 
     def _get_regression_assets(self):
-        """Ensures the user has an up-to-date local copy of the regression references by cloning/pulling
-        the remote repository to a local cache.
+        """Ensures the user has an up-to-date local copy of the regression
+        references by cloning/pulling the remote repository to a local cache.
         """
         repo_dir = self._cache_location / "process-tracking-data"
         if not repo_dir.exists():
             repo_dir.mkdir(parents=True)
 
             subprocess.run(  # noqa: S602
-                f"git clone https://github.com/timothy-nunn/process-tracking-data.git '{repo_dir.as_posix()}'",
+                "git clone https://github.com/timothy-nunn/process-tracking-data.git "
+                f"'{repo_dir.as_posix()}'",
                 shell=True,
                 check=True,
             )
@@ -55,7 +56,8 @@ class RegressionTestAssetCollector:
 
     def get_reference_mfile(self, scenario_name: str, target_hash: str | None = None):
         """Finds the most recent reference MFile for `<scenario_name>.IN.DAT`
-        and downloads it to the `directory` with the name `ref.<scenario_name>.MFILE.DAT`.
+        and downloads it to the `directory` with the name
+        `ref.<scenario_name>.MFILE.DAT`.
 
         Providing a `target_hash` will ONLY return a reference MFILE that exactly
         matches the requested commit hash.
@@ -69,7 +71,8 @@ class RegressionTestAssetCollector:
         will be downloaded, if available.
         :type target_hash:
 
-        :returns: Path to the downloaded reference MFile, if no reference MFile can be found,
+        :returns: Path to the downloaded reference MFile, if no reference MFile can be
+        found,
         `None` is returned.
         :rtype: Path
         """
@@ -82,7 +85,8 @@ class RegressionTestAssetCollector:
 
         return None
 
-    def _git_commit_hashes(self):
+    @classmethod
+    def _git_commit_hashes(cls):
         """Returns the list of commit hashes.
 
         :returns: a list of commit hashes from 'git log'
@@ -125,7 +129,8 @@ class RegressionTestAssetCollector:
             key=lambda m: self._hashes.index(m.hash),
         )
 
-    def _get_tracked_mfile(self, file: Path):
+    @staticmethod
+    def _get_tracked_mfile(file: Path):
         """Converts JSON data of a file tracked on GitHub into a
         `TrackedMFile`, if appropriate
 

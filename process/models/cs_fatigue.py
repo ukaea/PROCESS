@@ -50,7 +50,7 @@ class CsFatigue(Model):
         max_hoop_stress_MPa = max_hoop_stress / 1.0e6
         residual_stress_MPa = residual_stress / 1.0e6
 
-        # Set intial crack size
+        # Set initial crack size
         t_crack_radial = 3.0e0 * t_crack_vertical
         a = t_crack_vertical
         c = t_crack_radial
@@ -74,8 +74,9 @@ class CsFatigue(Model):
         n_pulse = 0.0
         k_max = 0.0
 
-        # factor 2 taken as saftey factors in the crack sizes
-        # Default CS steel undergoes fast fracture when SIF > 200 MPa, under a saftey factor 1.5 we use 133MPa
+        # factor 2 taken as safety factors in the crack sizes
+        # Default CS steel undergoes fast fracture when SIF > 200 MPa,
+        # under a safety factor 1.5 we use 133MPa
         pi_2_arr = np.array([np.pi / 2.0e0, 0])
         while (
             (a <= dz_cs_turn_conduit / self.data.cs_fatigue.sf_vertical_crack)
@@ -100,7 +101,7 @@ class CsFatigue(Model):
             # run euler_method and find number of cycles needed to give crack increase
             delta_n = delta / (cr * (k_max**self.data.cs_fatigue.paris_power_law))
 
-            # update a and c, N (+= doesnt work for fortran (?) reasons)
+            # update a and c, N (+= doesn't work for fortran (?) reasons)
             a += delta * (k_a / k_max) ** self.data.cs_fatigue.paris_power_law
             c += delta * (k_c / k_max) ** self.data.cs_fatigue.paris_power_law
             n_pulse += delta_n
@@ -111,19 +112,21 @@ class CsFatigue(Model):
     @staticmethod
     @njit(cache=True)
     def embedded_stress_intensity_factor(hoop_stress, t, w, a, c, phi):
-        # ! Assumes an embedded elliptical efect geometry
-        # ! geometric quantities
-        # ! hoop_stress - change in hoop stress over cycle
-        # ! t - plate thickness
-        # ! w - plate width
-        # ! a - crack depth (t -direction)
-        # ! c - crack length (w - direction)
-        # ! Ref: J. C. Newman, I. S. Raju "Stress-Intensity Factor Equations for Cracks in
-        # ! Three-Dimensional Finite Bodies Subjected to Tension and Bending Loads"
-        # ! https://core.ac.uk/download/pdf/42849129.pdf
-        # ! Ref: C. Jong, Magnet Structural Design
-        # ! Criteria Part 1: Main Structural Components and Welds 2012
+        """
+        Assumes an embedded elliptical effect geometry
 
+        geometric quantities
+        hoop_stress - change in hoop stress over cycle
+        t - plate thickness
+        w - plate width
+        a - crack depth (t -direction)
+        c - crack length (w - direction)
+        Ref: J. C. Newman, I. S. Raju "Stress-Intensity Factor Equations for Cracks in
+        Three-Dimensional Finite Bodies Subjected to Tension and Bending Loads"
+        https://core.ac.uk/download/pdf/42849129.pdf
+        Ref: C. Jong, Magnet Structural Design
+        Criteria Part 1: Main Structural Components and Welds 2012
+        """
         # reuse of calc
         a_c = a / c
         a_t = a / t
@@ -171,19 +174,21 @@ class CsFatigue(Model):
     @staticmethod
     @njit(cache=True)
     def surface_stress_intensity_factor(hoop_stress, t, w, a, c, phi):
-        # ! Assumes an surface semi elliptical defect geometry
-        # ! geometric quantities
-        # ! hoop_stress - change in hoop stress over cycle
-        # ! t - plate thickness
-        # ! w - plate width
-        # ! a - crack depth (t -direction)
-        # ! c - crack length (w - direction)
-        # ! Ref: J. C. Newman, I. S. Raju "Stress-Intensity Factor Equations for Cracks in
-        # ! Three-Dimensional Finite Bodies Subjected to Tension and Bending Loads"
-        # ! https://core.ac.uk/download/pdf/42849129.pdf
-        # ! Ref: C. Jong, Magnet Structural Design
-        # ! Criteria Part 1: Main Structural Components and Welds 2012
+        """
+        Assumes an surface semi elliptical defect geometry
 
+        geometric quantities
+        hoop_stress - change in hoop stress over cycle
+        t - plate thickness
+        w - plate width
+        a - crack depth (t -direction)
+        c - crack length (w - direction)
+        Ref: J. C. Newman, I. S. Raju "Stress-Intensity Factor Equations for Cracks in
+        Three-Dimensional Finite Bodies Subjected to Tension and Bending Loads"
+        https://core.ac.uk/download/pdf/42849129.pdf
+        Ref: C. Jong, Magnet Structural Design
+        Criteria Part 1: Main Structural Components and Welds 2012
+        """
         bending_stress = 0.0e0  # * 3.0 * M / (w*d**2.0)
 
         # reuse of calc

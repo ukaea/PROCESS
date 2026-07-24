@@ -20,7 +20,8 @@ def tfcoil_geometry_rectangular_shape(
     *,
     offset_in: float = 0.0,
 ) -> list[RectangleGeometry]:
-    """Calculates rectangular geometries for tf coils in a picture frame/rectangular shape parametrization
+    """Calculates rectangular geometries for tf coils in a picture frame/rectangular
+    shape parametrization
 
     Parameters
     ----------
@@ -96,7 +97,8 @@ def tfcoil_geometry_d_shape(
     *,
     offset_in: float = 0.0,
 ) -> tuple[list[RectangleGeometry], list[list[tuple[float, float]]]]:
-    """Calculates radial and vertical distances for the geometry of the tf coils in a D-shape parametrization
+    """Calculates radial and vertical distances for the geometry of the tf coils in a
+    D-shape parametrization
 
     Parameters
     ----------

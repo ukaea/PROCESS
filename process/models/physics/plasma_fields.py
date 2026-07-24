@@ -1,3 +1,5 @@
+"""Module for calculating plasma magnetic fields."""
+
 import logging
 
 import numba as nb
@@ -6,15 +8,14 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import (
-    physics_variables,
-)
-from process.models.physics.plasma_current import PlasmaCurrent
+from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
 
 logger = logging.getLogger(__name__)
 
 
 class PlasmaFields(Model):
+    """Model for calculating plasma magnetic fields."""
+
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -26,19 +27,19 @@ class PlasmaFields(Model):
     def calculate_surface_averaged_poloidal_field(
         self,
         i_plasma_current: int,
-        ip: float,
+        cur_plasma: float,
         q95: float,
         aspect: float,
-        eps: float,
         b_plasma_toroidal_on_axis: float,
         kappa: float,
-        delta: float,
-        perim: float,
+        triang: float,
+        len_plasma_poloidal: float,
     ) -> float:
-        """Function to calculate surface-averaged poloidal field (⟨Bₚ(a)⟩) from the plasma current
+        """Function to calculate surface-averaged poloidal field (⟨Bₚ(a)⟩) from the
+        plasma current
 
-        This function calculates the surface-averaged poloidal field from the plasma current in Tesla,
-        using a simple calculation using Ampere's law for conventional
+        This function calculates the surface-averaged poloidal field from the plasma
+        current in Tesla, using a simple calculation using Ampere's law for conventional
         tokamaks, or for TARTs, a scaling from Peng, Galambos and
         Shipe (1992).
 
@@ -46,22 +47,20 @@ class PlasmaFields(Model):
         ----------
         i_plasma_current :
             current scaling model to use
-        ip :
+        cur_plasma :
             plasma current (A)
         q95 :
             95% flux surface safety factor
         aspect :
             plasma aspect ratio
-        eps :
-            inverse aspect ratio
         b_plasma_toroidal_on_axis :
             toroidal field on axis (T)
         kappa :
             plasma elongation
-        delta :
+        triang :
             plasma triangularity
-        perim :
-            plasma perimeter (m)
+        len_plasma_poloidal :
+            plasma poloidal length (m)
 
         Returns
         -------
@@ -71,22 +70,25 @@ class PlasmaFields(Model):
 
         References
         ----------
-            - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-            unpublished internal Oak Ridge document
-            - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
-            'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-            1729-1738. https://doi.org/10.13182/FST92-A29971
+        [1] J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+        unpublished internal Oak Ridge document
+
+        [2] Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+        'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
+        1729-1738. https://doi.org/10.13182/FST92-A29971
 
         """
         # Use Ampere's law using the plasma poloidal cross-section this simply returns
         # ⟨Bₚ(a)⟩
-        if i_plasma_current != 2:
-            return constants.RMU0 * ip / perim
+        if i_plasma_current != PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
+            return constants.RMU0 * cur_plasma / len_plasma_poloidal
         # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
-        ff1, ff2, _, _ = self.current.plascar_bpol(aspect, eps, kappa, delta)
+        ff1, ff2, _, _ = self.current.plascar_bpol(
+            aspect=aspect, eps=(1 / aspect), kappa=kappa, triang=triang
+        )
 
         # Transform q95 to qbar
-        qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
+        qbar = q95 * 1.3e0 * (1.0e0 - (1 / aspect)) ** 0.6e0
 
         return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
@@ -196,54 +198,55 @@ class PlasmaFields(Model):
         return np.sqrt(b_plasma_toroidal**2 + b_plasma_poloidal**2)
 
     def output(self):
+        """Output plasma magnetic fields data."""
         po.oheadr(self.outfile, "Plasma magnetic fields")
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
-            "Vertical field at plasma (T)",
+            "Vertical field at plasma (Bᵥ) (T)",
             "(b_plasma_vertical_required)",
-            physics_variables.b_plasma_vertical_required,
+            self.data.physics.b_plasma_vertical_required,
             "OP ",
         )
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
-            "Vacuum toroidal field at R (T)",
+            "Vacuum toroidal field at R₀ (Bᴛ(R₀)) (T)",
             "(b_plasma_toroidal_on_axis)",
-            physics_variables.b_plasma_toroidal_on_axis,
+            self.data.physics.b_plasma_toroidal_on_axis,
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
-            "Toroidal field at plasma inboard (T)",
+            "Toroidal field at plasma inboard (Bᴛ(R₀-a)) (T)",
             "(b_plasma_inboard_toroidal)",
-            physics_variables.b_plasma_inboard_toroidal,
+            self.data.physics.b_plasma_inboard_toroidal,
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
-            "Toroidal field at plasma outboard (T)",
+            "Toroidal field at plasma outboard (Bᴛ(R₀+a)) (T)",
             "(b_plasma_outboard_toroidal)",
-            physics_variables.b_plasma_outboard_toroidal,
+            self.data.physics.b_plasma_outboard_toroidal,
         )
 
-        for i in range(len(physics_variables.b_plasma_toroidal_profile)):
+        for i in range(len(self.data.physics.b_plasma_toroidal_profile)):
             po.ovarre(
                 self.mfile,
                 f"Toroidal field in plasma at point {i}",
                 f"b_plasma_toroidal_profile{i}",
-                physics_variables.b_plasma_toroidal_profile[i],
+                self.data.physics.b_plasma_toroidal_profile[i],
             )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
-            "Plasma surface averaged poloidal field (T)",
+            "Plasma surface averaged poloidal field (⟨Bₚₒₗ(a)⟩) (T)",
             "(b_plasma_surface_poloidal_average)",
-            physics_variables.b_plasma_surface_poloidal_average,
+            self.data.physics.b_plasma_surface_poloidal_average,
             "OP ",
         )
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
-            "Total field (sqrt(b_plasma_surface_poloidal_average^2 + b_plasma_toroidal_on_axis^2)) (T)",
+            "Total field (Bₜₒₜ) (T)",
             "(b_plasma_total)",
-            physics_variables.b_plasma_total,
+            self.data.physics.b_plasma_total,
             "OP ",
         )

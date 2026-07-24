@@ -6,7 +6,7 @@ In a tokamak there are two main magnetic fields that we are concerned about, the
 
 ## Toroidal Field
 
-In `PROCESS` the toroidal magnetic field at the plasma centre  $(B_{\text{T}}(R_0))$ (`b_plasma_toroidal_on_axis`) is normally an iteration variable and is a key paramter is most plasma physics and engineering models.
+In `PROCESS` the toroidal magnetic field at the plasma centre  $(B_{\text{T}}(R_0))$ (`b_plasma_toroidal_on_axis`) is normally an iteration variable and is a key parameter is most plasma physics and engineering models.
 
 The toroidal field decreases as $\propto \frac{1}{R}$ from the edge of the inboard toroidal field coil winding pack across the plasma.
 

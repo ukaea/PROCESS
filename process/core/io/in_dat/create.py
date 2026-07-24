@@ -12,7 +12,8 @@ from process.core.io.mfile import MFile
 
 
 def feasible_point(filename, position: int):
-    """Function to check for feasible solution before creating new IN.DAT, or to determine the first or last feasible point in a scan
+    """Function to check for feasible solution before creating new IN.DAT,
+    or to determine the first or last feasible point in a scan
 
     Parameters
     ----------

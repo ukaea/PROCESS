@@ -17,8 +17,8 @@ from pyvmcon import (
 from scipy.optimize import fsolve
 
 from process.core.exceptions import ProcessValueError
+from process.core.model import DataStructure
 from process.core.solver.evaluators import Evaluators
-from process.data_structure import global_variables, numerics
 
 logger = logging.getLogger(__name__)
 
@@ -26,12 +26,15 @@ logger = logging.getLogger(__name__)
 class _Solver(ABC):
     """Base class for different solver implementations."""
 
-    def __init__(self):
+    def __init__(self, *, data: DataStructure):
         """Initialise a solver."""
         # Exit code for the solver
         self.ifail = 0
-        self.tolerance = numerics.epsvmc
+        self.data = data
+        self.tolerance = self.data.numerics.epsvmc
         self.b: float | None = None
+        self.convergence_parameter: float | None = None
+        self.maxcal = self.data.globals.maxcal
 
     def set_evaluators(self, evaluators: Evaluators):
         """Set objective and constraint functions and their gradient evaluators.
@@ -179,11 +182,11 @@ class Vmcon(_Solver):
 
         bb = None
         if self.b is not None:
-            bb = np.identity(numerics.nvar) * self.b
+            bb = np.identity(self.data.numerics.nvar) * self.b
 
         def _solver_callback(i: int, _result, _x, convergence_param: float):
-            numerics.nviter = i + 1
-            global_variables.convergence_parameter = convergence_param
+            self.data.numerics.nviter = i + 1
+            self.convergence_parameter = convergence_param
             print(
                 f"{i + 1} | Convergence Parameter: {convergence_param:.3E}",
                 end="\r",
@@ -224,7 +227,9 @@ class Vmcon(_Solver):
             # negative constraint value = violated
             # Check all ineqs are satisfied to within the tolerance
             # E.g. the relative violations are no more than v=0-tolerance
-            return bool(np.all(result.ie >= -numerics.force_vmcon_inequality_tolerance))
+            return bool(
+                np.all(result.ie >= -self.data.numerics.force_vmcon_inequality_tolerance)
+            )
 
         try:
             x, _, _, res = solve(
@@ -232,13 +237,13 @@ class Vmcon(_Solver):
                 np.array(self.x_0),
                 np.array(self.bndl),
                 np.array(self.bndu),
-                max_iter=global_variables.maxcal,
+                max_iter=self.maxcal,
                 epsilon=self.tolerance,
                 qsp_options={"solver": cvxpy.CLARABEL},
                 initial_B=bb,
                 callback=_solver_callback,
                 additional_convergence=_ineq_cons_satisfied
-                if numerics.force_vmcon_inequality_satisfication
+                if self.data.numerics.force_vmcon_inequality_satisfication
                 else None,
             )
         except VMCONConvergenceException as e:
@@ -256,8 +261,10 @@ class Vmcon(_Solver):
 
         except ValueError:
             itervar_name_list = ""
-            for count, iter_var in enumerate(numerics.ixc[: numerics.nvar]):
-                itervar_name = numerics.lablxc[iter_var - 1]
+            for count, iter_var in enumerate(
+                self.data.numerics.ixc[: self.data.numerics.nvar]
+            ):
+                itervar_name = self.data.numerics.lablxc[iter_var - 1]
                 itervar_name_list += f"{count}: {itervar_name} \n"
 
             logger.warning(f"Active iteration variables are : \n{itervar_name_list}")
@@ -340,7 +347,7 @@ class FSolve(_Solver):
         return self.info
 
 
-def get_solver(solver_name: str = "vmcon") -> _Solver:
+def get_solver(data: DataStructure, solver_name: str = "vmcon") -> _Solver:
     """Return a solver instance.
 
     Parameters
@@ -356,17 +363,18 @@ def get_solver(solver_name: str = "vmcon") -> _Solver:
     solver: _Solver
 
     if solver_name == "vmcon":
-        solver = Vmcon()
+        solver = Vmcon(data=data)
     elif solver_name == "vmcon_bounded":
-        solver = VmconBounded()
+        solver = VmconBounded(data=data)
     elif solver_name == "fsolve":
-        solver = FSolve()
+        solver = FSolve(data=data)
     else:
         try:
             solver = load_external_solver(solver_name)
         except Exception as e:
             raise ProcessValueError(
-                f'Solver name is not an inbuilt PROCESS solver or recognised package "{solver_name}"'
+                "Solver name is not an inbuilt PROCESS solver or recognised package "
+                f'"{solver_name}"'
             ) from e
 
     return solver

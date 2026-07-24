@@ -5,6 +5,7 @@
     src="images/ukaea-logo.png"
     alt="ukaea-logo.png"
     class="logo"
+    width="200"
     >
 
 PROCESS is a systems code at [UKAEA](https://ccfe.ukaea.uk/) that calculates in a
@@ -57,7 +58,7 @@ different well-established source libraries.
 A great deal of effort was expended upon 
 [UKAEA](https://www.gov.uk/government/organisations/uk-atomic-energy-authority) on 
 the code’s arrival from ORNL in the early 1990s to upgrade and extend the code, 
-including the addition of machines based on the stellerator, reversed field pinch 
+including the addition of machines based on the stellarator, reversed field pinch 
 and inertial confinement concepts.
 
 PROCESS is actively being developed. The documentation is updated in parallel with the code 

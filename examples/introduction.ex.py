@@ -23,19 +23,27 @@
 
 # %% [markdown]
 # <div class="alert alert-block alert-info">
-# <b>NOTE</b> We run the examples in a temporary directory so all the inputs are copied there and the outputs contained there before the directory is removed when the example has finished running. This keeps the examples directory tidy and does not permanently modify any data files. The use of temporary directories is not needed for regular use of PROCESS.
+# <b>NOTE</b> We run the examples in a temporary directory so all the inputs are copied
+# there and the outputs contained there before the directory is removed when the example
+# has finished running.
+# This keeps the examples directory tidy and does not permanently modify any data files.
+# The use of temporary directories is not needed for regular use of PROCESS.
 # </div>
 
 # %% [markdown]
-# Process can be run from the command line with the `process` command or as a standard python package.
-# Using process as a package allows for more complex scripting of a process run for different tasks.
+# Process can be run from the command line with the `process` command or as a standard
+# python package.
+# Using process as a package allows for more complex scripting of a process run for
+# different tasks.
 
 
 # %% [markdown]
 # ## Basic run of Process
-# Run Process on an input file using the `SingleRun` class. This outputs an `MFILE.DAT` and an `OUT.DAT`.
+# Run Process on an input file using the `SingleRun` class.
+# This outputs an `MFILE.DAT` and an `OUT.DAT`.
 #
-# This is equivalent to running `process -i data/large_tokamak_IN.DAT` in the examples folder.
+# This is equivalent to running `process -i data/large_tokamak_IN.DAT`
+# in the examples folder.
 
 # %%
 # %load_ext autoreload
@@ -79,11 +87,10 @@ plot_summary(single_run.mfile_path, output_format="none", show=True)
 # we have set some values on the `CostModel` instance and can print them.
 
 # %%
-import process.data_structure
 
 # Print some values on the CostModel instance
-print(f"Heat transport system: {process.data_structure.cost_variables.c226:.3e} M$")
-print(f"Electrical plant equipment: {process.data_structure.cost_variables.c24:.3e} M$")
+print(f"Heat transport system: {single_run.data.costs.c226:.3e} M$")
+print(f"Electrical plant equipment: {single_run.data.costs.c24:.3e} M$")
 
 # %%
 # Clean up

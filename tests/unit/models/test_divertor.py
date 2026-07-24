@@ -2,23 +2,20 @@
 
 import pytest
 
-from process.data_structure import divertor_variables as dv
-from process.data_structure import tfcoil_variables as tfv
-from process.models.divertor import Divertor
-
 
 @pytest.fixture
-def divertor():
+def divertor(process_models):
     """Provides Divertor object for testing.
 
     :returns: initialised Divertor object
     :rtype: process.divertor.Divertor
     """
-    return Divertor()
+    return process_models.divertor
 
 
 class TestDivertor:
-    def test_divtart(self, monkeypatch, divertor):
+    @staticmethod
+    def test_divtart(monkeypatch, divertor):
         """Test the divtart subroutine.
 
         Uses test data from the second call of this subroutine by FNSF regression test.
@@ -30,7 +27,7 @@ class TestDivertor:
         :type divertor: tests.unit.test_divertor.divertor (functional fixture)
         """
 
-        monkeypatch.setattr(tfv, "drtop", 0)
+        monkeypatch.setattr(divertor.data.tfcoil, "drtop", 0)
 
         rmajor = 1.7
         rminor = 0.97142857142857153
@@ -40,7 +37,7 @@ class TestDivertor:
         p_plasma_separatrix_mw = 7.7197999809272062
         i_single_null = 0
         dz_divertor = 0.5
-        monkeypatch.setattr(dv, "i_div_heat_load", 1)
+        monkeypatch.setattr(divertor.data.divertor, "i_div_heat_load", 1)
 
         expected_pflux_div_heat_load_mw = 0.087770426974167357
 
@@ -58,7 +55,8 @@ class TestDivertor:
 
         assert pflux_div_heat_load_mw == pytest.approx(expected_pflux_div_heat_load_mw)
 
-    def test_divwade(self, monkeypatch, divertor):
+    @staticmethod
+    def test_divwade(monkeypatch, divertor):
         """Test the divwade subroutine.
 
         Uses test data from the second call of this subroutine by FNSF regression test.
@@ -70,7 +68,7 @@ class TestDivertor:
         :type divertor: tests.unit.test_divertor.divertor (functional fixture)
         """
 
-        monkeypatch.setattr(tfv, "drtop", 0)
+        monkeypatch.setattr(divertor.data.tfcoil, "drtop", 0)
 
         rmajor = 2.0
         rminor = 1.0

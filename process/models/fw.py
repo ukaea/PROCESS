@@ -7,21 +7,17 @@ from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    blanket_library,
-    build_variables,
-    constraint_variables,
-    divertor_variables,
-    first_wall_variables,
-    fwbs_variables,
-    physics_variables,
-)
-from process.models.blankets.blanket_library import (
-    BlanketLibrary,
+from process.models.build import FwBlktVVShape
+from process.models.engineering.ivc_functions import (
+    calculate_pipe_bend_radius,
     dshellarea,
     eshellarea,
 )
-from process.models.build import FwBlktVVShape
+from process.models.engineering.materials import eurofer97_thermal_conductivity
+from process.models.engineering.pumping import (
+    CoolantType,
+    gnielinski_heat_transfer_coefficient,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +25,6 @@ logger = logging.getLogger(__name__)
 class FirstWall(Model):
     def __init__(self):
         self.outfile = constants.NOUT
-        self.blanket_library = BlanketLibrary(fw=self)
 
     def output(self):
         # First wall geometry
@@ -42,105 +37,109 @@ class FirstWall(Model):
         self.output_fw_pumping()
 
     def run(self):
-        fwbs_variables.dz_fw_half = self.calculate_first_wall_half_height(
-            z_plasma_xpoint_lower=build_variables.z_plasma_xpoint_lower,
-            dz_xpoint_divertor=build_variables.dz_xpoint_divertor,
-            dz_divertor=divertor_variables.dz_divertor,
-            dz_blkt_upper=build_variables.dz_blkt_upper,
-            z_plasma_xpoint_upper=build_variables.z_plasma_xpoint_upper,
-            dz_fw_plasma_gap=build_variables.dz_fw_plasma_gap,
-            n_divertors=divertor_variables.n_divertors,
-            dr_fw_inboard=build_variables.dr_fw_inboard,
-            dr_fw_outboard=build_variables.dr_fw_outboard,
+        self.data.fwbs.dz_fw_half = self.calculate_first_wall_half_height(
+            z_plasma_xpoint_lower=self.data.build.z_plasma_xpoint_lower,
+            dz_xpoint_divertor=self.data.build.dz_xpoint_divertor,
+            dz_divertor=self.data.divertor.dz_divertor,
+            dz_blkt_upper=self.data.build.dz_blkt_upper,
+            z_plasma_xpoint_upper=self.data.build.z_plasma_xpoint_upper,
+            dz_fw_plasma_gap=self.data.build.dz_fw_plasma_gap,
+            n_divertors=self.data.divertor.n_divertors,
+            dr_fw_inboard=self.data.build.dr_fw_inboard,
+            dr_fw_outboard=self.data.build.dr_fw_outboard,
         )
 
         if (
-            physics_variables.itart == 1
-            or fwbs_variables.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
+            self.data.physics.itart == 1
+            or self.data.fwbs.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
             (
-                first_wall_variables.a_fw_inboard_full_coverage,
-                first_wall_variables.a_fw_outboard_full_coverage,
-                first_wall_variables.a_fw_total_full_coverage,
+                self.data.first_wall.a_fw_inboard_full_coverage,
+                self.data.first_wall.a_fw_outboard_full_coverage,
+                self.data.first_wall.a_fw_total_full_coverage,
             ) = self.calculate_dshaped_first_wall_areas(
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
-                dz_fw_half=fwbs_variables.dz_fw_half,
-                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
-                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                dz_fw_half=self.data.fwbs.dz_fw_half,
+                dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
+                dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
             )
 
         else:
             (
-                first_wall_variables.a_fw_inboard_full_coverage,
-                first_wall_variables.a_fw_outboard_full_coverage,
-                first_wall_variables.a_fw_total_full_coverage,
+                self.data.first_wall.a_fw_inboard_full_coverage,
+                self.data.first_wall.a_fw_outboard_full_coverage,
+                self.data.first_wall.a_fw_total_full_coverage,
             ) = self.calculate_elliptical_first_wall_areas(
-                rmajor=physics_variables.rmajor,
-                rminor=physics_variables.rminor,
-                triang=physics_variables.triang,
-                dz_fw_half=fwbs_variables.dz_fw_half,
-                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
-                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                triang=self.data.physics.triang,
+                dz_fw_half=self.data.fwbs.dz_fw_half,
+                dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
+                dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
             )
 
         (
-            first_wall_variables.a_fw_inboard,
-            first_wall_variables.a_fw_outboard,
-            first_wall_variables.a_fw_total,
+            self.data.first_wall.a_fw_inboard,
+            self.data.first_wall.a_fw_outboard,
+            self.data.first_wall.a_fw_total,
         ) = self.apply_first_wall_coverage_factors(
-            n_divertors=divertor_variables.n_divertors,
-            f_ster_div_single=fwbs_variables.f_ster_div_single,
-            f_a_fw_outboard_hcd=fwbs_variables.f_a_fw_outboard_hcd,
-            a_fw_inboard_full_coverage=first_wall_variables.a_fw_inboard_full_coverage,
-            a_fw_outboard_full_coverage=first_wall_variables.a_fw_outboard_full_coverage,
+            n_divertors=self.data.divertor.n_divertors,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
+            f_a_fw_outboard_hcd=self.data.fwbs.f_a_fw_outboard_hcd,
+            a_fw_inboard_full_coverage=self.data.first_wall.a_fw_inboard_full_coverage,
+            a_fw_outboard_full_coverage=self.data.first_wall.a_fw_outboard_full_coverage,
         )
 
         (
-            blanket_library.n_fw_inboard_channels,
-            blanket_library.n_fw_outboard_channels,
+            self.data.blanket.n_fw_inboard_channels,
+            self.data.blanket.n_fw_outboard_channels,
         ) = self.calculate_total_fw_channels(
-            first_wall_variables.a_fw_inboard,
-            first_wall_variables.a_fw_outboard,
-            fwbs_variables.len_fw_channel,
-            fwbs_variables.dx_fw_module,
+            self.data.first_wall.a_fw_inboard,
+            self.data.first_wall.a_fw_outboard,
+            self.data.fwbs.len_fw_channel,
+            self.data.fwbs.dx_fw_module,
         )
 
         self.set_fw_geometry()
 
         (
-            fwbs_variables.radius_fw_channel_90_bend,
-            fwbs_variables.radius_fw_channel_180_bend,
-        ) = self.blanket_library.calculate_pipe_bend_radius(i_ps=1)
+            self.data.fwbs.radius_fw_channel_90_bend,
+            self.data.fwbs.radius_fw_channel_180_bend,
+        ) = calculate_pipe_bend_radius(
+            i_ps=1,
+            radius_fw_channel=self.data.fwbs.radius_fw_channel,
+            b_bz_liq=self.data.fwbs.b_bz_liq,
+        )
 
-        if physics_variables.i_pflux_fw_neutron == 1:
-            physics_variables.pflux_fw_neutron_mw = (
-                physics_variables.ffwal
-                * physics_variables.pflux_plasma_surface_neutron_avg_mw
+        if self.data.physics.i_pflux_fw_neutron == 1:
+            self.data.physics.pflux_fw_neutron_mw = (
+                self.data.physics.ffwal
+                * self.data.physics.pflux_plasma_surface_neutron_avg_mw
             )
         else:
-            physics_variables.pflux_fw_neutron_mw = (
-                physics_variables.p_neutron_total_mw / first_wall_variables.a_fw_total
+            self.data.physics.pflux_fw_neutron_mw = (
+                self.data.physics.p_neutron_total_mw / self.data.first_wall.a_fw_total
             )
 
-        if physics_variables.i_pflux_fw_neutron == 1:
-            physics_variables.pflux_fw_rad_mw = (
-                physics_variables.ffwal
-                * physics_variables.p_plasma_rad_mw
-                / physics_variables.a_plasma_surface
+        if self.data.physics.i_pflux_fw_neutron == 1:
+            self.data.physics.pflux_fw_rad_mw = (
+                self.data.physics.ffwal
+                * self.data.physics.p_plasma_rad_mw
+                / self.data.physics.a_plasma_surface
             )
         else:
-            physics_variables.pflux_fw_rad_mw = (
-                physics_variables.p_plasma_rad_mw / build_variables.a_fw_total
+            self.data.physics.pflux_fw_rad_mw = (
+                self.data.physics.p_plasma_rad_mw / self.data.first_wall.a_fw_total
             )
 
-        constraint_variables.pflux_fw_rad_max_mw = (
-            physics_variables.pflux_fw_rad_mw * constraint_variables.f_fw_rad_max
+        self.data.constraints.pflux_fw_rad_max_mw = (
+            self.data.physics.pflux_fw_rad_mw * self.data.constraints.f_fw_rad_max
         )
 
         # Power transported to the first wall by escaped alpha particles
-        physics_variables.p_fw_alpha_mw = physics_variables.p_alpha_total_mw * (
-            1.0e0 - physics_variables.f_p_alpha_plasma_deposited
+        self.data.physics.p_fw_alpha_mw = self.data.physics.p_alpha_total_mw * (
+            1.0e0 - self.data.physics.f_p_alpha_plasma_deposited
         )
 
     @staticmethod
@@ -324,7 +323,8 @@ class FirstWall(Model):
 
         if a_fw_outboard <= 0.0e0:
             raise ProcessValueError(
-                "fhole+f_ster_div_single+f_a_fw_outboard_hcd is too high for a credible outboard wall area",
+                "fhole+f_ster_div_single+f_a_fw_outboard_hcd is too high "
+                "for a credible outboard wall area",
                 f_ster_div_single=f_ster_div_single,
                 f_a_fw_outboard_hcd=f_a_fw_outboard_hcd,
             )
@@ -332,10 +332,10 @@ class FirstWall(Model):
         return a_fw_inboard, a_fw_outboard, a_fw_total
 
     def set_fw_geometry(self):
-        build_variables.dr_fw_inboard = (
-            2 * fwbs_variables.radius_fw_channel + 2 * fwbs_variables.dr_fw_wall
+        self.data.build.dr_fw_inboard = (
+            2 * self.data.fwbs.radius_fw_channel + 2 * self.data.fwbs.dr_fw_wall
         )
-        build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
+        self.data.build.dr_fw_outboard = self.data.build.dr_fw_inboard
 
     def fw_temp(
         self,
@@ -368,16 +368,27 @@ class FirstWall(Model):
 
         Returns
         -------
-        tuple
+        :
 
+        Notes
+        -----
         Detailed thermal hydraulic model for the blanket (first wall + breeding zone).
         Given the heating incident on the first wall, and the coolant outlet temperature,
-        the maximum temperature of the first wall is calculated to check it is below material limits.
+        the maximum temperature of the first wall is calculated to check it is below
+        material limits.
         The routine is called separately for the inboard and outboard sides.
         The calculation of the maximum temperature is described by Gardner:
-        "Temperature distribution in the first wall", K:\\Power Plant Physics and Technology\\ PROCESS\\PROCESS References & Systems Codes\\Pulsed option - Gardner.
-        This is in turn taken from "Methods of First Wall Structural Analysis with Application to the Long Pulse Commercial Tokamak Reactor Design", R.J. LeClaire, MIT, PFC/RR-84-9.
-        Contains peak first wall temperature (K), coolant specific heat capacity at constant pressure (J/kg/K),
+        "Temperature distribution in the first wall",
+
+        K:\\Power Plant Physics and Technology\\ PROCESS\\
+        PROCESS References & Systems Codes\\Pulsed option - Gardner.
+
+        This is in turn taken from "Methods of First Wall Structural Analysis with
+        Application to the Long Pulse Commercial Tokamak Reactor Design", R.J. LeClaire,
+        MIT, PFC/RR-84-9.
+
+        Contains peak first wall temperature (K), coolant specific heat capacity
+        at constant pressure (J/kg/K),
         """
         # First wall volume (inboard or outboard depending on arguments) (m^3)
         vol_fw = a_fw * dr_fw
@@ -385,7 +396,8 @@ class FirstWall(Model):
         # First wall channel area (m^2)
         a_fw_channel = np.pi * radius_fw_channel**2
 
-        # Heat generation in the first wall due to neutron flux deposited in the material (W/m3)
+        # Heat generation in the first wall due to neutron flux
+        # deposited in the material (W/m3)
         pden_fw_nuclear = 1e6 * pnuc_deposited / vol_fw
 
         # the nuclear heating in the coolant is small. (W/m2)
@@ -397,16 +409,16 @@ class FirstWall(Model):
 
         # Calculate inlet coolant fluid properties (fixed pressure)
         inlet_coolant_properties = FluidProperties.of(
-            fwbs_variables.i_fw_coolant_type,
-            temperature=fwbs_variables.temp_fw_coolant_in,
-            pressure=fwbs_variables.pres_fw_coolant,
+            CoolantType(self.data.fwbs.i_fw_coolant_type).full_name,
+            temperature=self.data.fwbs.temp_fw_coolant_in,
+            pressure=self.data.fwbs.pres_fw_coolant,
         )
 
         # Calculate outlet coolant fluid properties (fixed pressure)
         outlet_coolant_properties = FluidProperties.of(
-            fwbs_variables.i_fw_coolant_type,
-            temperature=fwbs_variables.temp_fw_coolant_out,
-            pressure=fwbs_variables.pres_fw_coolant,
+            CoolantType(self.data.fwbs.i_fw_coolant_type).full_name,
+            temperature=self.data.fwbs.temp_fw_coolant_out,
+            pressure=self.data.fwbs.pres_fw_coolant,
         )
 
         # Mean properties (inlet + outlet)/2
@@ -424,14 +436,14 @@ class FirstWall(Model):
 
         # Heat load per unit length of one first wall segment (W/m)
         # Nuclear particle and radiation heating
-        load = (nuclear_heat_per_area + pflux_fw_rad) * fwbs_variables.dx_fw_module
+        load = (nuclear_heat_per_area + pflux_fw_rad) * self.data.fwbs.dx_fw_module
 
         # Coolant mass flow rate (kg/s) (use mean properties)
         mflow_fw_coolant = (
-            fwbs_variables.len_fw_channel
+            self.data.fwbs.len_fw_channel
             * load
             / heatcap_fw_coolant_average
-            / (fwbs_variables.temp_fw_coolant_out - fwbs_variables.temp_fw_coolant_in)
+            / (self.data.fwbs.temp_fw_coolant_out - self.data.fwbs.temp_fw_coolant_in)
         )
 
         # Coolant mass flux in a single channel (kg/m2/s)
@@ -443,10 +455,11 @@ class FirstWall(Model):
         # Coolant velocity (m/s)
         vel_fw_coolant_average = mflux_fw_coolant / outlet_coolant_properties.density
 
-        # Mean temperature of the wall material on the plasma side of the coolant 'temp_fw_peak'
+        # Mean temperature of the wall material on the plasma side of the coolant
+        # 'temp_fw_peak'
         # is the estimate from the previous iteration of the wall surface temperature
         # (underneath the armour)
-        temp_k = (fwbs_variables.temp_fw_coolant_out + fwbs_variables.temp_fw_peak) / 2
+        temp_k = (self.data.fwbs.temp_fw_coolant_out + self.data.fwbs.temp_fw_peak) / 2
 
         # Print debug info if temperature too low/high or NaN/Inf
         if np.isnan(temp_k):
@@ -457,17 +470,19 @@ class FirstWall(Model):
             )
 
         # Thermal conductivity of first wall material (W/m.K)
-        tkfw = self.fw_thermal_conductivity(temp_k)
+        tkfw = eurofer97_thermal_conductivity(
+            temp=temp_k, fw_th_conductivity=self.data.fwbs.fw_th_conductivity
+        )
 
         # Heat transfer coefficient (W m^-2 K^-1)
-        hcoeff = self.heat_transfer(
-            mflux_fw_coolant,
-            outlet_coolant_properties.density,
-            radius_fw_channel,
-            outlet_coolant_properties.specific_heat_const_p,
-            outlet_coolant_properties.viscosity,
-            outlet_coolant_properties.thermal_conductivity,
-            fwbs_variables.roughness_fw_channel,
+        hcoeff = gnielinski_heat_transfer_coefficient(
+            mflux_coolant=mflux_fw_coolant,
+            den_coolant=outlet_coolant_properties.density,
+            radius_channel=radius_fw_channel,
+            heatcap_coolant=outlet_coolant_properties.specific_heat_const_p,
+            visc_coolant=outlet_coolant_properties.viscosity,
+            thermcond_coolant=outlet_coolant_properties.thermal_conductivity,
+            roughness_channel=self.data.fwbs.roughness_fw_channel,
         )
 
         # Temperature drops between first-wall surface and bulk coolant !
@@ -480,7 +495,8 @@ class FirstWall(Model):
         # Model B: Simple 1-dimensional calculation !
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        # This is optimistic as it neglects the higher temperature midway between the channels.
+        # This is optimistic as it neglects the higher temperature midway between the
+        # channels.
         # I have included 1/4 of the volume load:
         # 1/2 is absorbed in the plasma-facing wall (A)
         # which on average has to pass through 1/2 the wall thickness.
@@ -492,9 +508,9 @@ class FirstWall(Model):
         #  ______________
 
         # Worst case load (as above) per unit length in 1-D calculation (W/m)
-        onedload = fwbs_variables.f_fw_peak * (
-            pden_fw_nuclear * fwbs_variables.dx_fw_module * dr_fw / 4
-            + pflux_fw_rad * fwbs_variables.dx_fw_module
+        onedload = self.data.fwbs.f_fw_peak * (
+            pden_fw_nuclear * self.data.fwbs.dx_fw_module * dr_fw / 4
+            + pflux_fw_rad * self.data.fwbs.dx_fw_module
         )
 
         # Effective area for heat transfer (m2)
@@ -509,17 +525,17 @@ class FirstWall(Model):
         # Calculate maximum distance travelled by surface heat load (m)
         # dr_fw_wall | Minimum distance travelled by surface heat load (m)
         diagonal = np.sqrt(
-            (fwbs_variables.dx_fw_module / 2 - radius_fw_channel) ** 2
+            (self.data.fwbs.dx_fw_module / 2 - radius_fw_channel) ** 2
             + (radius_fw_channel + dr_fw) ** 2
         )
 
         # Mean distance travelled by surface heat (m)
-        mean_distance = (fwbs_variables.dr_fw_wall + diagonal) / 2
+        mean_distance = (self.data.fwbs.dr_fw_wall + diagonal) / 2
 
         # This heat starts off spread over width = 'dx_fw_module'.
         # It ends up spread over one half the circumference.
         # Use the mean of these values.
-        mean_width = (fwbs_variables.dx_fw_module + np.pi * radius_fw_channel) / 2  # (m)
+        mean_width = (self.data.fwbs.dx_fw_module + np.pi * radius_fw_channel) / 2  # (m)
 
         # As before, use a combined load 'onedload'
         # Temperature drop in first-wall material (K)
@@ -529,7 +545,7 @@ class FirstWall(Model):
         deltat_coolant = load / (2 * np.pi * radius_fw_channel * hcoeff)
 
         # Peak first wall temperature (K)
-        tpeakfw = fwbs_variables.temp_fw_coolant_out + deltat_solid + deltat_coolant
+        tpeakfw = self.data.fwbs.temp_fw_coolant_out + deltat_solid + deltat_coolant
 
         if output:
             po.oheadr(
@@ -559,19 +575,19 @@ class FirstWall(Model):
                 self.outfile,
                 "Ratio of peak local heat load (surface and nuclear) to mean",
                 "(f_fw_peak)",
-                fwbs_variables.f_fw_peak,
+                self.data.fwbs.f_fw_peak,
             )
             po.ovarre(
                 self.outfile,
                 "Vertical length of a single coolant channel (all in parallel) (m)",
                 "(len_fw_channel)",
-                fwbs_variables.len_fw_channel,
+                self.data.fwbs.len_fw_channel,
             )
             po.ovarre(
                 self.outfile,
                 "Width of a FW module containing a cooling channel [m]",
                 "(dx_fw_module)",
-                fwbs_variables.dx_fw_module,
+                self.data.fwbs.dx_fw_module,
             )
             po.ovarre(
                 self.outfile,
@@ -605,7 +621,7 @@ class FirstWall(Model):
                 self.outfile,
                 "Outlet temperature of first wall coolant (K)",
                 "(temp_fw_coolant_out)",
-                fwbs_variables.temp_fw_coolant_out,
+                self.data.fwbs.temp_fw_coolant_out,
             )
             po.ovarre(
                 self.outfile, "Heat transfer coefficient", "(hcoeff)", hcoeff, "OP "
@@ -646,163 +662,6 @@ class FirstWall(Model):
             mflow_fw_coolant,
         )
 
-    def fw_thermal_conductivity(self, temp: float) -> float:
-        """Calculates the thermal conductivity of the first wall material (Eurofer97).
-
-        Parameters
-        ----------
-        temp:
-            Property temperature in Kelvin (K).
-
-        Returns
-        -------
-        :
-            Thermal conductivity of Eurofer97 in W/m/K.
-
-        Notes
-        -----
-        Valid up to about 800 K
-
-        References
-        ----------
-            - A. A. Tavassoli et al., “Materials design data for reduced activation martensitic steel type EUROFER,”
-            Journal of Nuclear Materials, vol. 329-333, pp. 257-262, Aug. 2004,
-            doi: https://doi.org/10.1016/j.jnucmat.2004.04.020.
-
-            - Tavassoli, F. "Fusion Demo Interim Structural Design Criteria (DISDC)/Appendix A Material Design Limit Data/A3. S18E Eurofer Steel."
-              CEA, EFDA_TASK_TW4-TTMS-005-D01 (2004)
-        """
-        # temp in Kelvin
-        return (
-            (5.4308 + 0.13565 * temp - 0.00023862 * temp**2 + 1.3393e-7 * temp**3)
-            * fwbs_variables.fw_th_conductivity
-            / 28.34
-        )
-
-    def heat_transfer(
-        self,
-        mflux_coolant: float,
-        den_coolant: float,
-        radius_channel: float,
-        heatcap_coolant: float,
-        visc_coolant: float,
-        thermcond_coolant: float,
-        roughness_fw_channel: float,
-    ) -> float:
-        """Calculate heat transfer coefficient using Gnielinski correlation.
-
-        Parameters
-        ----------
-        mflux_coolant:
-            Coolant mass flux in a single channel (kg/m^2/s).
-        den_coolant:
-            Coolant density (average of inlet and outlet) (kg/m^3).
-        radius_channel:
-            Coolant pipe radius (m).
-        heatcap_coolant:
-            Coolant specific heat capacity (average of inlet and outlet) (J/kg/K).
-        visc_coolant:
-            Coolant viscosity (average of inlet and outlet) (Pa.s).
-        thermcond_coolant:
-            Thermal conductivity of coolant (average of inlet and outlet) (W/m.K).
-        roughness_fw_channel:
-            Roughness of the first wall coolant channel (m).
-
-        Returns
-        -------
-        :
-            Heat transfer coefficient (W/m^2K).
-
-        Notes
-        -----
-        Gnielinski correlation. Ignore the distinction between wall and
-        bulk temperatures. Valid for: 3000 < Re < 5e6, 0.5 < Pr < 2000
-
-        References
-        ----------
-            - https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation
-
-        """
-        # Calculate pipe diameter (m)
-        diameter = 2 * radius_channel
-
-        # Calculate flow velocity (m/s)
-        velocity = mflux_coolant / den_coolant
-
-        # Calculate Reynolds number
-        reynolds = den_coolant * velocity * diameter / visc_coolant
-
-        # Calculate Prandtl number
-        pr = heatcap_coolant * visc_coolant / thermcond_coolant
-
-        # Calculate Darcy friction factor, using Haaland equation
-        f = self.darcy_friction_haaland(
-            reynolds,
-            roughness_fw_channel,
-            radius_channel,
-        )
-
-        # Calculate the Nusselt number
-        nusselt = (
-            (f / 8.0)
-            * (reynolds - 1000.0)
-            * pr
-            / (1 + 12.7 * np.sqrt(f / 8.0) * (pr ** (2 / 3) - 1.0))
-        )
-
-        # Calculate the heat transfer coefficient (W/m^2K)
-        heat_transfer_coefficient = nusselt * thermcond_coolant / (2.0 * radius_channel)
-
-        # Check that Reynolds number is in valid range for the Gnielinski correlation
-        if (reynolds <= 3000.0) or (reynolds > 5.0e6):
-            logger.error("Reynolds number out of range : [3e3-5000e3]. %s", reynolds)
-
-        # Check that Prandtl number is in valid range for the Gnielinski correlation
-        if (pr < 0.5) or (pr > 2000.0):
-            logger.error("Prandtl number out of range : [0.5-2000]. %s", pr)
-
-        # Check that the Darcy friction factor is in valid range for the Gnielinski correlation
-        if f <= 0.0:
-            logger.error("Negative Darcy friction factor (f). %s", f)
-
-        return heat_transfer_coefficient
-
-    def darcy_friction_haaland(
-        self, reynolds: float, roughness_fw_channel: float, radius_fw_channel: float
-    ) -> float:
-        """Calculate Darcy friction factor using the Haaland equation.
-
-        Parameters
-        ----------
-        reynolds
-            Reynolds number.
-        roughness_fw_channel
-            Roughness of the first wall coolant channel (m).
-        radius_fw_channel
-            Radius of the first wall coolant channel (m).
-
-        Returns
-        -------
-        :
-            Darcy friction factor.
-
-        Notes
-        -----
-            The Haaland equation is an approximation to the implicit Colebrook-White equation.
-            It is used to calculate the Darcy friction factor for turbulent flow in pipes.
-
-        References
-        ----------
-            - https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation
-        """
-        # Bracketed term in Haaland equation
-        bracket = (
-            roughness_fw_channel / radius_fw_channel / 3.7
-        ) ** 1.11 + 6.9 / reynolds
-
-        # Calculate Darcy friction factor
-        return (1.8 * np.log10(bracket)) ** (-2)
-
     @staticmethod
     def calculate_total_fw_channels(
         a_fw_inboard: float,
@@ -810,7 +669,8 @@ class FirstWall(Model):
         len_fw_channel: float,
         dx_fw_module: float,
     ) -> tuple[int, int]:
-        """Calculate the total number of first wall channels for inboard and outboard sections.
+        """Calculate the total number of first wall channels for inboard and outboard
+        sections.
 
         Parameters
         ----------
@@ -836,72 +696,72 @@ class FirstWall(Model):
         """Outputs the first wall geometry details to the output file."""
         po.oheadr(self.outfile, "First wall build")
 
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Radius of first wall cooling channels (m)",
             "(radius_fw_channel)",
-            fwbs_variables.radius_fw_channel,
+            self.data.fwbs.radius_fw_channel,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Radius of 90 degree coolant channel bend (m)",
             "(radius_fw_channel_90_bend)",
-            fwbs_variables.radius_fw_channel_90_bend,
+            self.data.fwbs.radius_fw_channel_90_bend,
         )
         po.ovarre(
             self.outfile,
             "Radius of 180 degree coolant channel bend (m)",
             "(radius_fw_channel_180_bend)",
-            fwbs_variables.radius_fw_channel_180_bend,
+            self.data.fwbs.radius_fw_channel_180_bend,
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Radial wall thickness surrounding first wall coolant channel (m)",
             "(dr_fw_wall)",
-            fwbs_variables.dr_fw_wall,
+            self.data.fwbs.dr_fw_wall,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Toroidal width of each first wall module (m)",
             "(dx_fw_module)",
-            fwbs_variables.dx_fw_module,
+            self.data.fwbs.dx_fw_module,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Length of each first wall channel (m)",
             "(len_fw_channel)",
-            fwbs_variables.len_fw_channel,
+            self.data.fwbs.len_fw_channel,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Radial thickness off inboard first wall (m)",
             "(dr_fw_inboard)",
-            build_variables.dr_fw_inboard,
+            self.data.build.dr_fw_inboard,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Radial thickness off outboard first wall (m)",
             "(dr_fw_outboard)",
-            build_variables.dr_fw_outboard,
+            self.data.build.dr_fw_outboard,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Number of inboard first wall cooling channels",
             "(n_fw_inboard_channels)",
-            blanket_library.n_fw_inboard_channels,
+            self.data.blanket.n_fw_inboard_channels,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Number of outboard first wall cooling channels",
             "(n_fw_outboard_channels)",
-            blanket_library.n_fw_outboard_channels,
+            self.data.blanket.n_fw_outboard_channels,
             "OP ",
         )
 
@@ -909,38 +769,38 @@ class FirstWall(Model):
         """Outputs the first wall pumping details to the output file."""
         po.oheadr(self.outfile, "First wall pumping")
 
-        po.ovarst(
+        po.ovarre(
             self.outfile,
             "First wall coolant type",
             "(i_fw_coolant_type)",
-            f"'{fwbs_variables.i_fw_coolant_type}'",
+            f"'{CoolantType(self.data.fwbs.i_fw_coolant_type).full_name}'",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Outlet temperature of first wall coolant [K]",
             "(temp_fw_coolant_out)",
-            fwbs_variables.temp_fw_coolant_out,
+            self.data.fwbs.temp_fw_coolant_out,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Inlet temperature of first wall coolant [K]",
             "(temp_fw_coolant_in)",
-            fwbs_variables.temp_fw_coolant_in,
+            self.data.fwbs.temp_fw_coolant_in,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Pressure of first wall coolant [Pa]",
             "(pres_fw_coolant)",
-            fwbs_variables.pres_fw_coolant,
+            self.data.fwbs.pres_fw_coolant,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Peak temperature of first wall [K]",
             "(temp_fw_peak)",
-            fwbs_variables.temp_fw_peak,
+            self.data.fwbs.temp_fw_peak,
             "OP ",
         )
 
@@ -952,41 +812,41 @@ class FirstWall(Model):
             self.outfile,
             "Nominal mean radiation load on vessel first-wall (MW/m^2)",
             "(pflux_fw_rad_mw)",
-            physics_variables.pflux_fw_rad_mw,
+            self.data.physics.pflux_fw_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Peaking factor for radiation first-wall load",
             "(f_fw_rad_max)",
-            constraint_variables.f_fw_rad_max,
+            self.data.constraints.f_fw_rad_max,
             "IP ",
         )
         po.ovarre(
             self.outfile,
             "Maximum permitted radiation first-wall load (MW/m^2)",
             "(pflux_fw_rad_max)",
-            constraint_variables.pflux_fw_rad_max,
+            self.data.constraints.pflux_fw_rad_max,
             "IP ",
         )
         po.ovarre(
             self.outfile,
             "Peak radiation wall load (MW/m^2)",
             "(pflux_fw_rad_max_mw)",
-            constraint_variables.pflux_fw_rad_max_mw,
+            self.data.constraints.pflux_fw_rad_max_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Fast alpha particle power incident on the first-wall (MW)",
             "(p_fw_alpha_mw)",
-            physics_variables.p_fw_alpha_mw,
+            self.data.physics.p_fw_alpha_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Nominal mean neutron load on vessel first-wall (MW/m^2)",
             "(pflux_fw_neutron_mw)",
-            physics_variables.pflux_fw_neutron_mw,
+            self.data.physics.pflux_fw_neutron_mw,
             "OP ",
         )

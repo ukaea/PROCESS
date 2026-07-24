@@ -43,7 +43,7 @@ def plot_stress(
     elif isinstance(plot_conf, dict):
         plot_conf = StressPlotConfig(axis_font_size, **plot_conf)
 
-    # Boolean swiches for plot selection
+    # Boolean switches for plot selection
     # -----------------------------------
     plot_sig = ("sig" in plot_selection) or ("all" in plot_selection)
     plot_disp = ("disp" in plot_selection) or ("all" in plot_selection)
@@ -51,7 +51,7 @@ def plot_stress(
     plot_sm_sig = ("sm_sig" in plot_selection) or ("all" in plot_selection)
 
     # Step 1 : Data extraction
-    # ----------------------------------------------------------------------------------------------
+
     # Number of physical quantity value per coil layer
     n_radial_array_layer = 0
 

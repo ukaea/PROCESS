@@ -1,16 +1,89 @@
+"""Module for plasma exhaust calculations and analysis."""
+
 import logging
 
 from process.core import constants
+from process.core import process_output as po
+from process.core.model import Model
 
 logger = logging.getLogger(__name__)
 
 
-class PlasmaExhaust:
+class PlasmaExhaust(Model):
     """Class to hold plasma exhaust calculations for plasma processing."""
 
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+
+    def run(self):
+        """This model isn't run."""
+
+    def output(self):
+        """Output plasma exhaust results to the output file."""
+        po.oheadr(self.outfile, "Plasma Exhaust")
+        po.ovarre(
+            self.outfile,
+            "Plasma separatrix power (Pₛₑₚ) (MW)",
+            "(p_plasma_separatrix_mw)",
+            self.data.physics.p_plasma_separatrix_mw,
+            "OP ",
+        )
+
+        if self.data.physics.p_plasma_separatrix_mw <= 0.001e0:
+            logger.error(
+                "Possible problem with high radiation power, forcing "
+                "p_plasma_separatrix_mw to odd values. "
+                f"{self.data.physics.p_plasma_separatrix_mw=}"
+            )
+            po.oblnkl(self.outfile)
+            po.ocmmnt(
+                self.outfile, "  BEWARE: possible problem with high radiation power"
+            )
+            po.ocmmnt(self.outfile, "          Power into divertor zone is unrealistic;")
+            po.ocmmnt(self.outfile, "          divertor calculations will be nonsense#")
+            po.ocmmnt(
+                self.outfile, "  Set constraint 17 (Radiation fraction upper limit)."
+            )
+            po.oblnkl(self.outfile)
+
+        if self.data.divertor.n_divertors == 2:
+            # Double null divertor configuration
+            po.ovarre(
+                self.outfile,
+                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) (MW/m) "
+                "(On peak divertor)",
+                "(p_plasma_separatrix_rmajor_mw)",
+                self.data.physics.p_plasma_separatrix_rmajor_mw,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) "
+                "(MWT/m) (On peak divertor)",
+                "(p_div_bt_q_aspect_rmajor_mw)",
+                self.data.physics.p_div_bt_q_aspect_rmajor_mw,
+                "OP ",
+            )
+        else:
+            # Single null divertor configuration
+            po.ovarre(
+                self.outfile,
+                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) (MW/m)",
+                "(p_plasma_separatrix_rmajor_mw)",
+                self.data.physics.p_plasma_separatrix_rmajor_mw,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) "
+                "(MWT/m)",
+                "(p_div_bt_q_aspect_rmajor_mw)",
+                self.data.physics.p_div_bt_q_aspect_rmajor_mw,
+                "OP ",
+            )
+
+        po.oblnkl(self.outfile)
 
     @staticmethod
     def calculate_separatrix_power(
@@ -22,7 +95,7 @@ class PlasmaExhaust:
         p_plasma_rad_mw: float,
     ) -> float:
         """
-        Calculate the power crossing the separatrix (P_sep).
+        Calculate the power crossing the separatrix (Pₛₑₚ).
 
         Parameters
         ----------
@@ -57,19 +130,19 @@ class PlasmaExhaust:
         p_plasma_separatrix_mw: float, rmajor: float
     ) -> float:
         """
-        Calculate the power crossing the separatrix per unit major radius (P_sep/R).
+        Calculate the power crossing the separatrix per unit major radius (Pₛₑₚ / R₀).
 
         Parameters
         ----------
         p_plasma_separatrix_mw : float
-            Power crossing the separatrix (MW).
+            Power crossing the separatrix (Pₛₑₚ) [MW].
         rmajor : float
-            Plasma major radius (m).
+            Plasma major radius (R₀) [m].
 
         Returns
         -------
         float
-            Power crossing the separatrix per unit major radius (MW/m).
+            Power crossing the separatrix per unit major radius (Pₛₑₚ / R₀) [MW/m].
         """
         return p_plasma_separatrix_mw / rmajor
 
@@ -81,38 +154,67 @@ class PlasmaExhaust:
         aspect: float,
         rmajor: float,
     ) -> float:
-        """Calculate the EU DEMO divertor protection re-attachment metric for plasma exhaust.
+        """Calculate the EU DEMO divertor protection re-attachment metric for plasma
+        exhaust (PₛₑₚBₜ / q₉₅AR₀).
 
         Parameters
         ----------
         p_plasma_separatrix_mw : float
-            Power crossing the separatrix (MW).
+            Power crossing the separatrix (Pₛₑₚ) [MW].
         b_plasma_toroidal_on_axis : float
-            Toroidal magnetic field on axis (T).
+            Toroidal magnetic field on axis (Bₜ) [T].
         q95 : float
-            Safety factor at 95% flux surface.
+            Safety factor at 95% flux surface (q₉₅).
         aspect : float
-            Aspect ratio of the plasma.
+            Aspect ratio of the plasma (A).
         rmajor : float
-            Plasma major radius (m).
+            Plasma major radius (R₀) [m].
 
         Returns
         -------
         float
-            EU DEMO re-attachment metric (MW T /m).
+            EU DEMO re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) [MW T /m].
 
         References
         ----------
-        - M. Siccinio, G. Federici, R. Kembleton, H. Lux, F. Maviglia, and J. Morris,
-          "Figure of merit for divertor protection in the preliminary design of the EU-DEMO reactor,"
-          Nuclear Fusion, vol. 59, no. 10, pp. 106026-106026, Jul. 2019,
-          doi: https://doi.org/10.1088/1741-4326/ab3153.
+        [1] M. Siccinio, G. Federici, R. Kembleton, H. Lux, F. Maviglia, and J. Morris,
+        "Figure of merit for divertor protection in the preliminary design of the
+        EU-DEMO reactor," Nuclear Fusion, vol. 59, no. 10, pp. 106026-106026,
+        Jul. 2019, doi: https://doi.org/10.1088/1741-4326/ab3153.
 
-        - H. Zohm et al.,
-          "A stepladder approach to a tokamak fusion power plant,"
-          Nuclear Fusion, vol. 57, no. 8, pp. 086002-086002, May 2017,
-          doi: https://doi.org/10.1088/1741-4326/aa739e.
+        [2] H. Zohm et al.,
+        "A stepladder approach to a tokamak fusion power plant,"
+        Nuclear Fusion, vol. 57, no. 8, pp. 086002-086002, May 2017,
+        doi: https://doi.org/10.1088/1741-4326/aa739e.
         """
         return (p_plasma_separatrix_mw * b_plasma_toroidal_on_axis) / (
             q95 * aspect * rmajor
         )
+
+    @staticmethod
+    def calculate_radiation_fraction(
+        p_plasma_rad_mw: float, p_plasma_heating_mw: float
+    ) -> float:
+        """
+        Calculate the radiation fraction of the plasma.
+
+        Parameters
+        ----------
+        p_plasma_rad_mw : float
+            Radiated power from plasma (MW).
+        p_plasma_heating_mw : float
+            Total plasma heating power (MW).
+
+        Returns
+        -------
+        float
+            Radiation fraction of the plasma.
+        """
+        if p_plasma_heating_mw == 0:
+            logger.warning(
+                "Total plasma heating power is zero, "
+                "cannot calculate radiation fraction."
+            )
+            return 0.0
+
+        return p_plasma_rad_mw / p_plasma_heating_mw

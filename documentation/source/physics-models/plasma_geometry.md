@@ -216,7 +216,7 @@ will be inaccurate for single-null plasmas, `i_single_null = 1`)
   $$
   \kappa_{95} = \frac{(18.84 -(0.87 \times A)) - \sqrt{4.84A^2 -28.77 A+52.52+14.74 \times  m_{\text{s,limit}}}}{2a}
   $$
-Where $m_{\text{s,limit}}$ is the inputted vertical stablity margin limit (default = 0.3)
+Where $m_{\text{s,limit}}$ is the inputted vertical stability margin limit (default = 0.3)
   
 
 If $\kappa_{95}>1.77$ then its value is adjusted:
@@ -253,6 +253,21 @@ $$
 
 ---------------------------------------------------------------------
 
+- `i_plasma_geometry = 12` -- The elongation is calculated directly from the aspect ratio based on a scaling for the maximum contrallable elongation in a spherical tokamak [^5] and assuming a constant $l_i(3)$ and a fixed $\langle \beta_{\mathrm{p}} \rangle = 0.5$. The triangularity is a user input.
+    $$
+    \kappa = 2.93 \left(\frac{1.8}{A}\right)^{1.4}
+    $$
+
+  The elongation and triangularity of the 95% flux surface are calculated as follows, based on the 1989 ITER guidelines [^1]:
+
+  $$
+  \kappa_{95} = \kappa / 1.12
+  $$
+  $$
+  \delta_{95} = \delta / 1.5 
+  $$
+
+---------------------------------------------------------------------
 
 ### Plasma-Wall Gap
 
@@ -530,6 +545,18 @@ $$
 \mathtt{vol\_plasma} = 2.0\pi R (1 - 0.25 \delta \epsilon) \mathtt{a\_plasma\_poloidal}
 $$
 
+-------------------------
+
+### ITER Physics Basis Elongation
+
+The ITER physics basis uses a specific definition for the separatrix elongation that is used frequently in many energy confinement time scalings[^9]:
+
+$$
+\kappa = \frac{V}{2\pi R\pi a^2}
+$$
+
+where $V$ is the plasma volume.
+
 ------------------
 
 ## Key Constraints
@@ -785,7 +812,9 @@ Unpublished internal Oak Ridge document.
 [^3]: H. Zohm et al, *'On the Physics Guidelines for a Tokamak DEMO'*,
 FTP/3-3, Proc. IAEA Fusion Energy Conference, October 2012, San Diego
 [^4]: Menard, J.E. & Brown, T. & El-Guebaly, L. & Boyer, M. & Canik, J. & Colling, Bethany & Raman, Roger & Wang, Z. & Zhai, Yunbo & Buxton, Peter & Covele, B. & D’Angelo, C. & Davis, Andrew & Gerhardt, S. & Gryaznevich, M. & Harb, Moataz & Hender, T.C. & Kaye, S. & Kingham, David & Woolley, R.. (2016). *Fusion nuclear science facilities and pilot plants based on the spherical tokamak.* Nuclear Fusion. 56. 106023. 10.1088/0029-5515/56/10/106023. 
+[^5]: J. E. Menard, S. C. Jardin, S. M. Kaye, C. E. Kessel, and J. Manickam, “Ideal MHD stability limits of low aspect ratio tokamak plasmas,” Nuclear Fusion, vol. 37, no. 5, pp. 595–610, May 1997, doi: https://doi.org/10.1088/0029-5515/37/5/i03.
 [^6]: J D Galambos, *STAR Code : Spherical Tokamak Analysis and Reactor Code*,
 unpublished internal Oak Ridge document
 [^7]: O. Sauter, “Geometric formulas for system codes including the effect of negative triangularity,” Fusion Engineering and Design, vol. 112, pp. 633–645, Nov. 2016, doi: https://doi.org/10.1016/j.fusengdes.2016.04.033.
 [^8]: Y. Sakamoto, 'Recent progress in vertical stability analysis in JA', Task meeting EU-JA #16, Fusion for Energy, Garching, 24--25 June 2014
+[^9]: Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9, pp. 099801099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.

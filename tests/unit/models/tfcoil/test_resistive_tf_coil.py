@@ -2,23 +2,15 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import (
-    build_variables,
-    physics_variables,
-    superconducting_tf_coil_variables,
-    tfcoil_variables,
-)
-from process.models.tfcoil.resistive import ResistiveTFCoil
-
 
 @pytest.fixture
-def resistive_tf_coil():
+def resistive_tf_coil(process_models):
     """Provides SuperconductingTFCoil object for testing.
 
     :returns: initialised SuperconductingTFCoil object
     :rtype: process.sctfcoil.SuperconductingTFCoil
     """
-    return ResistiveTFCoil()
+    return process_models.resistive_tf_coil
 
 
 class ResTfInternalGeomParam(NamedTuple):
@@ -149,128 +141,150 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
     """
 
     monkeypatch.setattr(
-        tfcoil_variables, "n_tf_coil_turns", restfinternalgeomparam.n_tf_coil_turns
+        resistive_tf_coil.data.tfcoil,
+        "n_tf_coil_turns",
+        restfinternalgeomparam.n_tf_coil_turns,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        resistive_tf_coil.data.tfcoil,
         "dx_tf_turn_insulation",
         restfinternalgeomparam.dx_tf_turn_insulation,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "dr_tf_nose_case", restfinternalgeomparam.dr_tf_nose_case
+        resistive_tf_coil.data.tfcoil,
+        "dr_tf_nose_case",
+        restfinternalgeomparam.dr_tf_nose_case,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        resistive_tf_coil.data.tfcoil,
         "dr_tf_wp_with_insulation",
         restfinternalgeomparam.dr_tf_wp_with_insulation,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        resistive_tf_coil.data.tfcoil,
         "dx_tf_inboard_out_toroidal",
         restfinternalgeomparam.dx_tf_inboard_out_toroidal,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        resistive_tf_coil.data.tfcoil,
         "a_tf_inboard_total",
         restfinternalgeomparam.a_tf_inboard_total,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "c_tf_total", restfinternalgeomparam.c_tf_total
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "fcoolcp", restfinternalgeomparam.fcoolcp)
-
-    monkeypatch.setattr(tfcoil_variables, "c_tf_turn", restfinternalgeomparam.c_tf_turn)
-
-    monkeypatch.setattr(tfcoil_variables, "cdtfleg", restfinternalgeomparam.cdtfleg)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dr_tf_plasma_case", restfinternalgeomparam.dr_tf_plasma_case
+        resistive_tf_coil.data.tfcoil, "c_tf_total", restfinternalgeomparam.c_tf_total
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        resistive_tf_coil.data.tfcoil, "fcoolcp", restfinternalgeomparam.fcoolcp
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil, "c_tf_turn", restfinternalgeomparam.c_tf_turn
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil, "cdtfleg", restfinternalgeomparam.cdtfleg
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil,
+        "dr_tf_plasma_case",
+        restfinternalgeomparam.dr_tf_plasma_case,
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil,
         "a_tf_coil_wp_turn_insulation",
         restfinternalgeomparam.a_tf_coil_wp_turn_insulation,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        resistive_tf_coil.data.tfcoil,
         "a_tf_coil_inboard_case",
         restfinternalgeomparam.a_tf_coil_inboard_case,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        resistive_tf_coil.data.tfcoil,
         "dx_tf_wp_insulation",
         restfinternalgeomparam.dx_tf_wp_insulation,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "n_tf_coils", restfinternalgeomparam.n_tf_coils
+        resistive_tf_coil.data.tfcoil, "n_tf_coils", restfinternalgeomparam.n_tf_coils
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_tf_outboard", restfinternalgeomparam.dr_tf_outboard
+        resistive_tf_coil.data.build,
+        "dr_tf_outboard",
+        restfinternalgeomparam.dr_tf_outboard,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", restfinternalgeomparam.r_tf_inboard_in
+        resistive_tf_coil.data.build,
+        "r_tf_inboard_in",
+        restfinternalgeomparam.r_tf_inboard_in,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", restfinternalgeomparam.r_tf_inboard_out
+        resistive_tf_coil.data.build,
+        "r_tf_inboard_out",
+        restfinternalgeomparam.r_tf_inboard_out,
     )
 
-    monkeypatch.setattr(build_variables, "r_cp_top", restfinternalgeomparam.r_cp_top)
+    monkeypatch.setattr(
+        resistive_tf_coil.data.build, "r_cp_top", restfinternalgeomparam.r_cp_top
+    )
 
-    monkeypatch.setattr(physics_variables, "itart", restfinternalgeomparam.itart)
+    monkeypatch.setattr(
+        resistive_tf_coil.data.physics, "itart", restfinternalgeomparam.itart
+    )
 
     resistive_tf_coil.res_tf_internal_geom()
 
-    assert tfcoil_variables.n_tf_coil_turns == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.n_tf_coil_turns == pytest.approx(
         restfinternalgeomparam.expected_n_tf_coil_turns
     )
 
-    assert tfcoil_variables.c_tf_turn == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.c_tf_turn == pytest.approx(
         restfinternalgeomparam.expected_cpttf
     )
 
-    assert tfcoil_variables.cdtfleg == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.cdtfleg == pytest.approx(
         restfinternalgeomparam.expected_cdtfleg
     )
 
-    assert tfcoil_variables.a_tf_coil_wp_turn_insulation == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.a_tf_coil_wp_turn_insulation == pytest.approx(
         restfinternalgeomparam.expected_a_tf_coil_wp_turn_insulation
     )
 
-    assert tfcoil_variables.a_tf_coil_inboard_case == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.a_tf_coil_inboard_case == pytest.approx(
         restfinternalgeomparam.expected_a_tf_coil_inboard_case
     )
 
-    assert tfcoil_variables.n_tf_coil_turns == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.n_tf_coil_turns == pytest.approx(
         restfinternalgeomparam.expected_n_tf_coil_turns
     )
 
-    assert tfcoil_variables.c_tf_turn == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.c_tf_turn == pytest.approx(
         restfinternalgeomparam.expected_cpttf
     )
 
-    assert tfcoil_variables.cdtfleg == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.cdtfleg == pytest.approx(
         restfinternalgeomparam.expected_cdtfleg
     )
 
-    assert tfcoil_variables.a_tf_coil_wp_turn_insulation == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.a_tf_coil_wp_turn_insulation == pytest.approx(
         restfinternalgeomparam.expected_a_tf_coil_wp_turn_insulation
     )
 
-    assert tfcoil_variables.a_tf_coil_inboard_case == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.a_tf_coil_inboard_case == pytest.approx(
         restfinternalgeomparam.expected_a_tf_coil_inboard_case
     )
 
@@ -444,174 +458,235 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(tfcoil_variables, "rho_cp", tfresheatingparam.rho_cp)
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil, "rho_cp", tfresheatingparam.rho_cp
+    )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        resistive_tf_coil.data.tfcoil,
         "temp_tf_legs_outboard",
         tfresheatingparam.temp_tf_legs_outboard,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        resistive_tf_coil.data.tfcoil,
         "dx_tf_turn_insulation",
         tfresheatingparam.dx_tf_turn_insulation,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "th_joint_contact", tfresheatingparam.th_joint_contact
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "rho_tf_leg", tfresheatingparam.rho_tf_leg)
-
-    monkeypatch.setattr(tfcoil_variables, "vol_cond_cp", tfresheatingparam.vol_cond_cp)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "n_tf_coil_turns", tfresheatingparam.n_tf_coil_turns
+        resistive_tf_coil.data.tfcoil,
+        "th_joint_contact",
+        tfresheatingparam.th_joint_contact,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "dr_tf_nose_case", tfresheatingparam.dr_tf_nose_case
+        resistive_tf_coil.data.tfcoil, "rho_tf_leg", tfresheatingparam.rho_tf_leg
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        resistive_tf_coil.data.tfcoil, "vol_cond_cp", tfresheatingparam.vol_cond_cp
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil,
+        "n_tf_coil_turns",
+        tfresheatingparam.n_tf_coil_turns,
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil,
+        "dr_tf_nose_case",
+        tfresheatingparam.dr_tf_nose_case,
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil,
         "dx_tf_inboard_out_toroidal",
         tfresheatingparam.dx_tf_inboard_out_toroidal,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "len_tf_coil", tfresheatingparam.len_tf_coil)
-
-    monkeypatch.setattr(tfcoil_variables, "res_tf_leg", tfresheatingparam.res_tf_leg)
-
     monkeypatch.setattr(
-        tfcoil_variables, "temp_cp_average", tfresheatingparam.temp_cp_average
+        resistive_tf_coil.data.tfcoil, "len_tf_coil", tfresheatingparam.len_tf_coil
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "a_tf_leg_outboard", tfresheatingparam.a_tf_leg_outboard
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "c_tf_total", tfresheatingparam.c_tf_total)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "rho_tf_joints", tfresheatingparam.rho_tf_joints
+        resistive_tf_coil.data.tfcoil, "res_tf_leg", tfresheatingparam.res_tf_leg
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "p_tf_leg_resistive", tfresheatingparam.p_tf_leg_resistive
+        resistive_tf_coil.data.tfcoil,
+        "temp_cp_average",
+        tfresheatingparam.temp_cp_average,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "p_cp_resistive", tfresheatingparam.p_cp_resistive
+        resistive_tf_coil.data.tfcoil,
+        "a_tf_leg_outboard",
+        tfresheatingparam.a_tf_leg_outboard,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables,
+        resistive_tf_coil.data.tfcoil, "c_tf_total", tfresheatingparam.c_tf_total
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil, "rho_tf_joints", tfresheatingparam.rho_tf_joints
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil,
+        "p_tf_leg_resistive",
+        tfresheatingparam.p_tf_leg_resistive,
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil, "p_cp_resistive", tfresheatingparam.p_cp_resistive
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil,
         "p_tf_joints_resistive",
         tfresheatingparam.p_tf_joints_resistive,
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "n_tf_joints_contact", tfresheatingparam.n_tf_joints_contact
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "n_tf_joints", tfresheatingparam.n_tf_joints)
-
-    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfresheatingparam.n_tf_coils)
-
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tfresheatingparam.i_tf_sup)
-
-    monkeypatch.setattr(tfcoil_variables, "frholeg", tfresheatingparam.frholeg)
-
-    monkeypatch.setattr(tfcoil_variables, "frhocp", tfresheatingparam.frhocp)
-
-    monkeypatch.setattr(tfcoil_variables, "fcoolcp", tfresheatingparam.fcoolcp)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dr_tf_plasma_case", tfresheatingparam.dr_tf_plasma_case
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "a_cp_cool", tfresheatingparam.a_cp_cool)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "f_a_tf_cool_outboard", tfresheatingparam.f_a_tf_cool_outboard
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "i_cp_joints", tfresheatingparam.i_cp_joints)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dx_tf_wp_insulation", tfresheatingparam.dx_tf_wp_insulation
+        resistive_tf_coil.data.tfcoil,
+        "n_tf_joints_contact",
+        tfresheatingparam.n_tf_joints_contact,
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_tf_outboard", tfresheatingparam.dr_tf_outboard
+        resistive_tf_coil.data.tfcoil, "n_tf_joints", tfresheatingparam.n_tf_joints
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_tf_inboard", tfresheatingparam.dr_tf_inboard
-    )
-
-    monkeypatch.setattr(build_variables, "r_cp_top", tfresheatingparam.r_cp_top)
-
-    monkeypatch.setattr(
-        build_variables, "z_tf_inside_half", tfresheatingparam.z_tf_inside_half
+        resistive_tf_coil.data.tfcoil, "n_tf_coils", tfresheatingparam.n_tf_coils
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfresheatingparam.r_tf_inboard_in
+        resistive_tf_coil.data.tfcoil, "i_tf_sup", tfresheatingparam.i_tf_sup
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfresheatingparam.r_tf_inboard_out
-    )
-
-    monkeypatch.setattr(physics_variables, "itart", tfresheatingparam.itart)
-
-    monkeypatch.setattr(
-        superconducting_tf_coil_variables, "z_cp_top", tfresheatingparam.z_cp_top
+        resistive_tf_coil.data.tfcoil, "frholeg", tfresheatingparam.frholeg
     )
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables,
+        resistive_tf_coil.data.tfcoil, "frhocp", tfresheatingparam.frhocp
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil, "fcoolcp", tfresheatingparam.fcoolcp
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil,
+        "dr_tf_plasma_case",
+        tfresheatingparam.dr_tf_plasma_case,
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil, "a_cp_cool", tfresheatingparam.a_cp_cool
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil,
+        "f_a_tf_cool_outboard",
+        tfresheatingparam.f_a_tf_cool_outboard,
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil, "i_cp_joints", tfresheatingparam.i_cp_joints
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.tfcoil,
+        "dx_tf_wp_insulation",
+        tfresheatingparam.dx_tf_wp_insulation,
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.build, "dr_tf_outboard", tfresheatingparam.dr_tf_outboard
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.build, "dr_tf_inboard", tfresheatingparam.dr_tf_inboard
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.build, "r_cp_top", tfresheatingparam.r_cp_top
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.build,
+        "z_tf_inside_half",
+        tfresheatingparam.z_tf_inside_half,
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.build,
+        "r_tf_inboard_in",
+        tfresheatingparam.r_tf_inboard_in,
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.build,
+        "r_tf_inboard_out",
+        tfresheatingparam.r_tf_inboard_out,
+    )
+
+    monkeypatch.setattr(resistive_tf_coil.data.physics, "itart", tfresheatingparam.itart)
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.superconducting_tfcoil,
+        "z_cp_top",
+        tfresheatingparam.z_cp_top,
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.superconducting_tfcoil,
         "is_leg_cp_temp_same",
         tfresheatingparam.is_leg_cp_temp_same,
     )
 
     resistive_tf_coil.tf_res_heating()
 
-    assert tfcoil_variables.rho_cp == pytest.approx(tfresheatingparam.expected_rho_cp)
+    assert resistive_tf_coil.data.tfcoil.rho_cp == pytest.approx(
+        tfresheatingparam.expected_rho_cp
+    )
 
-    assert tfcoil_variables.rho_tf_leg == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.rho_tf_leg == pytest.approx(
         tfresheatingparam.expected_rho_tf_leg
     )
 
-    assert tfcoil_variables.vol_cond_cp == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.vol_cond_cp == pytest.approx(
         tfresheatingparam.expected_vol_cond_cp
     )
 
-    assert tfcoil_variables.res_tf_leg == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.res_tf_leg == pytest.approx(
         tfresheatingparam.expected_res_tf_leg
     )
 
-    assert tfcoil_variables.p_tf_leg_resistive == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.p_tf_leg_resistive == pytest.approx(
         tfresheatingparam.expected_p_tf_leg_resistive
     )
 
-    assert tfcoil_variables.p_cp_resistive == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.p_cp_resistive == pytest.approx(
         tfresheatingparam.expected_p_cp_resistive
     )
 
-    assert tfcoil_variables.p_tf_joints_resistive == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.p_tf_joints_resistive == pytest.approx(
         tfresheatingparam.expected_pres_joints
     )
 
-    assert tfcoil_variables.a_cp_cool == pytest.approx(
+    assert resistive_tf_coil.data.tfcoil.a_cp_cool == pytest.approx(
         tfresheatingparam.expected_a_cp_cool
     )
 
-    assert superconducting_tf_coil_variables.is_leg_cp_temp_same == pytest.approx(
-        tfresheatingparam.expected_is_leg_cp_temp_same
+    assert (
+        resistive_tf_coil.data.superconducting_tfcoil.is_leg_cp_temp_same
+        == pytest.approx(tfresheatingparam.expected_is_leg_cp_temp_same)
     )
 
 
@@ -723,7 +798,9 @@ def test_cpost(cpostparam, monkeypatch, resistive_tf_coil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "z_tf_inside_half", cpostparam.z_tf_inside_half)
+    monkeypatch.setattr(
+        resistive_tf_coil.data.build, "z_tf_inside_half", cpostparam.z_tf_inside_half
+    )
 
     (
         a_cp_cool,

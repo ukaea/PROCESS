@@ -151,7 +151,7 @@ $$
 \beta_{\text{P}} = \frac{2\mu_0\langle p \rangle}{\langle \langle B_{\text{P}} \rangle \rangle^2}
 $$
 
-Where $\langle p \rangle$ is the volume averaged pressure and $\langle \langle B_{\text{P}} \rangle \rangle$  is the plasma surface average of the polidal field.
+Where $\langle p \rangle$ is the volume averaged pressure and $\langle \langle B_{\text{P}} \rangle \rangle$  is the plasma surface average of the poloidal field.
 
 The Wilson method extrapolates on the analytically derived expression for the bootstrap current fraction in the limit of large aspect ratio with circular cross-section. This large aspect expression assumed coincidence of a constant $r$ surface with a constant flux surface. The allowed the treatment of the temperature, pressure and current density as functions of $r$ only with the simple parabolic profile form. 
 For the Wilson method this is expanded to the arbitrary aspect ratio case with D-shaped plasmas with a given triangularity and elongation. The profiles for pressure and temperature are now of the form:
@@ -681,7 +681,7 @@ $$
 
 Is selected by setting `i_bootstrap_current = 11`
 
-This scaling has the $q$ profile dependance removed to obtain a scaling formula with much more flexible variables than that by a single profile factor for internal current profile.
+This scaling has the $q$ profile dependence removed to obtain a scaling formula with much more flexible variables than that by a single profile factor for internal current profile.
 
 $$
 C_{\text{BS}} = 0.382 \epsilon^{-0.242} \alpha_{\text{p}}^{0.974} \alpha_{\text{T}}^{-0.416} Z_{\text{eff}}^{0.178}
@@ -804,7 +804,7 @@ Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715, ISSN 
 [^4]: O. Sauter, C. Angioni, Y. R. Lin-Liu; Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime. Phys. Plasmas 1 July 1999; 6 (7): 2834–2839. https://doi.org/10.1063/1.873240 
 [^5]: O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum: “Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime” [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052  
 [^6]: Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis, Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2019.111322.
-[^7]: T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992 
+[^7]: T.C.Hender et.al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992 
 [^8]: Zoran Dragojlovic et al., “An advanced computational algorithm for systems analysis of tokamak power plants, ”Fusion Engineering and Design, vol. 85, no. 2, pp. 243–265, Apr. 2010, doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
 [^9]: M. C. R. Andrade and G. O. Ludwig, “Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,” Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001–065001, Apr. 2008, doi: https://doi.org/10.1088/0741-3335/50/6/065001.
 [^10]: G. T. Hoang and R. V. Budny, “The bootstrap fraction in TFTR,” AIP conference proceedings, Jan. 1997, doi: https://doi.org/10.1063/1.53414.

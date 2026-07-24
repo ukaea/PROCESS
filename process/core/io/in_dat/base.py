@@ -16,14 +16,8 @@ from re import sub
 from process.core.exceptions import ProcessValidationError
 from process.core.io.data_structure_dicts import get_dicts
 from process.core.solver.constraints import ConstraintManager
-
-# ioptimz values
-ioptimz_des = {
-    "-2": "for no optimisation, no VMCOM or HYBRD",
-    "-1": "for no optimisation HYBRD only",
-    "0": "for HYBRD and VMCON (not recommended)",
-    "1": "for optimisation VMCON only",
-}
+from process.core.solver.iteration_variables import ITERATION_VARIABLES
+from process.data_structure.numerics import PROCESSRunMode
 
 
 def fortran_python_scientific(var_value):
@@ -159,7 +153,6 @@ def is_array(name):
     try:
         return "array" in dicts["DICT_VAR_TYPE"][name]
     except KeyError:
-        # print("Warning:", name, "is not in DICT_VAR_TYPE")
         return False
 
 
@@ -179,55 +172,21 @@ def find_line_type(line):
     # Split variable name from line
     name = line.split("=")[0].strip("")
 
-    # If the line is just the title for a section
+    line_type = "Parameter"
     if is_title(line):
-        return "Title"
+        line_type = "Title"
+    elif is_comment(line):
+        line_type = "Comment"
+    elif is_constraint_equation(name):
+        line_type = "Constraint Equation"
+    elif is_iteration_variable(name):
+        line_type = "Iteration Variable"
+    elif is_bound(name):
+        line_type = "Bound"
+    elif is_array(name):
+        line_type = "Array"
 
-    # If the line is a commented line
-    if is_comment(line):
-        return "Comment"
-
-    # Else if the line contains a constraint equation
-    if is_constraint_equation(name):
-        return "Constraint Equation"
-
-    # Else if the line contains an iteration variable
-    if is_iteration_variable(name):
-        return "Iteration Variable"
-
-    # Else if the line contains a bound statement
-    if is_bound(name):
-        return "Bound"
-
-    # Else all other arrays
-    if is_array(name):
-        return "Array"
-
-    # Else the line contains an regular parameter
-    return "Parameter"
-
-
-def find_parameter_group(name):
-    """Function to find the module which the parameter belongs to.
-
-    Parameters
-    ----------
-     name:
-         Parameter name
-
-    Returns
-    -------
-    :
-         Return the module the parameter belongs to
-    """
-    # Load dicts from dicts JSON file
-    dicts = get_dicts()
-
-    # Search DICT_MODULES for parameter
-    for key in dicts["DICT_MODULE"]:
-        if name in dicts["DICT_MODULE"][key]:
-            return key
-    return None  # Explicit return
+    return line_type
 
 
 def write_title(title, out_file):
@@ -258,14 +217,13 @@ def get_constraint_equations(data):
 
     Parameters
     ----------
-    dict:
-        data: Data dictionary for the IN.DAT information
-    data :
+    data:
+        Data dictionary for the IN.DAT information
 
 
     Returns
     -------
-    dict
+    :
         dict of the constraint numbers and their comments
     """
     constraints = {}
@@ -279,10 +237,12 @@ def get_constraint_equations(data):
 
         if constraint is None:
             raise ProcessValidationError(
-                f"Constraint equation {constraint_number} requested but has not been registered"
+                f"Constraint equation {constraint_number} requested "
+                "but has not been registered"
             )
 
-        # TODO: we should store a short description of each constraint that we can use here.
+        # TODO: we should store a short description of each constraint
+        # that we can use here.
         # Currently, no such information exists.
         constraints[constraint_number] = ""
 
@@ -330,10 +290,6 @@ def get_iteration_variables(data: dict):
         variable number, comment, upper and/or lower bounds if present
     """
     variables = {}
-
-    # Load dicts from dicts JSON file
-    dicts = get_dicts()
-
     # List of variable numbers in IN.DAT
     variable_numbers = data["ixc"].value
 
@@ -341,10 +297,7 @@ def get_iteration_variables(data: dict):
     for variable_number in variable_numbers:
         variable = {}
 
-        comment = dicts["DICT_IXC_SIMPLE"][
-            str(variable_number).replace(",", ";").replace(".", ";").replace(":", ";")
-        ]
-        variable["comment"] = comment
+        variable["comment"] = ITERATION_VARIABLES[int(variable_number)].name
 
         # Set bounds if there are any
         if str(variable_number) in data["bounds"].value:
@@ -451,14 +404,23 @@ def get_parameters(data, use_string_values=True):
                 if item == "f_nd_impurity_electrons":
                     for k in range(len(data["f_nd_impurity_electrons"].get_value)):
                         name = f"f_nd_impurity_electrons({str(k + 1).zfill(1)})"
-                        value = data["f_nd_impurity_electrons"].get_value[k]
-                        parameters[module][name] = value
+                        # if the variable appears elsewhere in data, it is being
+                        # used as an iteration variable. need to add to
+                        # parameters separately otherwise its value in a
+                        # varyrun remains the same as it is taken from the
+                        # default values
+                        if name in data:
+                            value = data[name].value
+                            parameters[module][name] = value
+                        else:
+                            value = data["f_nd_impurity_electrons"].get_value[k]
+                            parameters[module][name] = value
 
                 elif item == "ioptimz":
                     name = item
                     ioptimz = {}
                     iop_val = data["ioptimz"].get_value
-                    iop_comment = ioptimz_des[str(iop_val)]
+                    iop_comment = f"{PROCESSRunMode(iop_val).description}"
                     ioptimz["value"] = iop_val
                     ioptimz["comment"] = iop_comment
                     parameters[module][name] = ioptimz
@@ -496,13 +458,13 @@ def get_parameters(data, use_string_values=True):
 
                         if isinstance(line_value, str):
                             split_line = line_value.split(" ")
-                        try:
-                            float(split_line[0])
-                        except ValueError:
-                            pass
-                        else:
-                            if len(split_line) > 1:
-                                line_value = ", ".join(list(split_line))
+                            try:
+                                float(split_line[0])
+                            except ValueError:
+                                pass
+                            else:
+                                if len(split_line) > 1:
+                                    line_value = ", ".join(list(split_line))
 
                     else:
                         # Store the parameter value preserving its type
@@ -660,7 +622,6 @@ def add_parameter(data, parameter_name, parameter_value):
 
     # Check that the parameter is not already in the dictionary
     if parameter_name not in data:
-        parameter_group = find_parameter_group(parameter_name)
         if "f_nd_impurity_electrons" in parameter_name:
             comment = dicts["DICT_DESCRIPTIONS"]["f_nd_impurity_electrons"]
         else:
@@ -675,21 +636,13 @@ def add_parameter(data, parameter_name, parameter_value):
                 )
                 comment = ""
 
-        param_data = INVariable(
-            parameter_name, parameter_value, "Parameter", parameter_group, comment
-        )
+        param_data = INVariable(parameter_name, parameter_value, "Parameter", comment)
 
         data[parameter_name] = param_data
 
     # If it is already in there change the value to the new value
     else:
         data[parameter_name].value = parameter_value
-
-    # def __delitem__(self, key):
-    #    del self.__dict__[key]
-
-    # def keys(self):
-    #    return self.__dict__.keys()
 
 
 def remove_parameter(data, parameter_name):
@@ -826,61 +779,50 @@ def parameter_type(name, value):
     # Find parameter type from PROCESS dictionary
     param_type = dicts["DICT_VAR_TYPE"][name]
 
-    # Check if parameter is a list
     if isinstance(value, list):
-        if value[-1] == "":
-            value = value[:-1]
-
-        # Real array parameter
         if "real_array" in param_type:
             return [
-                item if item is None else float(fortran_float_to_py(item))
+                item
+                if item is None
+                else _convert_parameter_python("real_variable", item)
                 for item in value
             ]
-            # Convert list to floats, but not if the value is None
 
-        # Integer array parameter
         if "int_array" in param_type:
-            return [item if item is None else int(item) for item in value]
-            # Convert list to ints, but not if the value is None
+            return [
+                item if item is None else _convert_parameter_python("int_variable", item)
+                for item in value
+            ]
+    elif isinstance(value, str):
+        return _convert_parameter_python(param_type, value)
 
-        # otherwise, return value
-        return value
+    return value
 
-    # Check if parameter is a string
-    if isinstance(value, str):
-        # If a real variable just convert to float
-        if "real_variable" in param_type:
-            # Prepare so float conversion succeeds
-            value = value.lower()
-            value = value.replace("d", "e")
-            return float(value)
 
-        # If a real array split and make a float list
-        if "real_array" in param_type:
-            # Prepare so float conversion succeeds
-            value = value.lower()
-            value = value.replace("d", "e")
-            value = value.split(",")
-            if value[-1] == "":
-                value = value[:-1]
-            return [float(item) for item in value]
+def _convert_parameter_python(param_type, value):
+    """Converts an IN.DAT parameter into its Python representation."""
+    # If a real variable just convert to float
+    if "real_variable" in param_type:
+        # Prepare so float conversion succeeds
+        return float(fortran_float_to_py(value))
 
-        # If an integer variable convert to integer
-        if "int_variable" in param_type:
-            return int(value)
+    # If a real array split and make a float list
+    if "real_array" in param_type:
+        # Prepare so float conversion succeeds
+        return [
+            float(fortran_float_to_py(item))
+            for item in filter(None, value.lower().split(","))
+        ]
 
-        # If an integer array split and make an integer list
-        if "int_array" in param_type:
-            value = value.split(",")
-            if value[-1] == "":
-                value = value[:-1]
-            return [int(item) for item in value]
+    # If an integer variable convert to integer
+    if "int_variable" in param_type:
+        return int(value)
 
-        # If type unknown return original value
-        return value
+    # If an integer array split and make an integer list
+    if "int_array" in param_type:
+        return [int(item) for item in filter(None, value.split(","))]
 
-    # If type is other return original value
+    # If type unknown return original value
     return value
 
 
@@ -917,7 +859,8 @@ def variable_constraint_type_check(item_number, var_type):
 
             # rounded float number with warning
             print(
-                f"Value {item_number} for {var_type} not an integer. Value rounded to {int(item_number)}."
+                f"Value {item_number} for {var_type} not an integer. "
+                f"Value rounded to {int(item_number)}."
                 " Check!"
             )
             return int(item_number)
@@ -936,7 +879,8 @@ def variable_constraint_type_check(item_number, var_type):
 
         # If not an integer warn of rounding and return rounded integer
         print(
-            f"Value {item_number} for {var_type} not an integer. Value rounded to {int(item_number)}. Check!"
+            f"Value {item_number} for {var_type} not an integer. "
+            f"Value rounded to {int(item_number)}. Check!"
         )
         return int(item_number)
 
@@ -1000,7 +944,8 @@ def variable_bound_check(bound_number, bound_type):
             return int(bound_number), bound_type
         bound_number = int(bound_number)
         print(
-            f"Bound number {bound_number} not an integer. Value rounded to {int(bound_number)}"
+            f"Bound number {bound_number} not an integer. "
+            f"Value rounded to {int(bound_number)}"
         )
         return bound_number, bound_type
 
@@ -1009,7 +954,7 @@ def variable_bound_check(bound_number, bound_type):
 
 class INVariable:
     """Class to stores the information of a single variable from the
-        IN.DAT file
+    IN.DAT file.
 
     Parameters
     ----------
@@ -1019,40 +964,38 @@ class INVariable:
         Item value
     v_type:
         Type of item
-    parameter_group:
-        PROCESS variable group item belongs to
     comment:
         Comment for item
     """
 
-    def __init__(self, name, value, v_type, parameter_group, comment):
+    def __init__(self, name, value, v_type, comment):
         self.name = name
         self.value = value
         self.v_type = v_type
-        self.parameter_group = parameter_group
         self.comment = comment
 
     def __eq__(self, value):
-        # intentionally missing .comment, this is not necessary for the variables to be equal
+        # intentionally missing .comment,
+        # this is not necessary for the variables to be equal
         return (
             self.name == value.name
             and self.value == value.value
             and self.v_type == value.v_type
-            and self.parameter_group == value.parameter_group
         )
 
     def __hash__(self):
-        return hash((self.name, self.value, self.v_type, self.parameter_group))
+        return hash((self.name, self.value, self.v_type))
 
     def __repr__(self):
         return (
-            f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, v_type={self.v_type!r}, "
-            f"parameter_group={self.parameter_group!r}, comment={self.comment!r})"
+            f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, "
+            f"v_type={self.v_type!r}, "
+            f"comment={self.comment!r})"
         )
 
     @property
     def get_value(self):
-        """Get value of variables"""
+        """The value of variables"""
         if self.v_type != "Bound":
             return parameter_type(self.name, self.value)
         return self.value
@@ -1145,7 +1088,7 @@ class InDat:
         # Create bound variable class using INVariable class if the bounds entry
         # doesn't exist
         if "bounds" not in self.data:
-            self.data["bounds"] = INVariable("bounds", {}, "Bound", "Bound", "Bounds")
+            self.data["bounds"] = INVariable("bounds", {}, "Bound", "Bounds")
 
         # Constraint equations
         if line_type == "Constraint Equation":
@@ -1161,7 +1104,7 @@ class InDat:
 
         # Arrays
         elif line_type == "Array":
-            # Create geneneric array variable class using INVariable class,
+            # Create generic array variable class using INVariable class,
             # if it does not yet exist
             line_commentless = line.split("*")[0]
             array_name = line_commentless.split("(")[0]
@@ -1179,8 +1122,6 @@ class InDat:
                 empty_array = []
 
             if array_name not in self.data:
-                parameter_group = find_parameter_group(array_name)
-
                 # Get parameter comment/description from dictionary
                 comment = (
                     dicts["DICT_DESCRIPTIONS"][array_name]
@@ -1195,7 +1136,7 @@ class InDat:
                 # DICT_DEFAULT; don't want changes to data to change the
                 # defaults
                 self.data[array_name] = INVariable(
-                    array_name, empty_array_copy, array_name, parameter_group, comment
+                    array_name, empty_array_copy, array_name, comment
                 )
 
             self.process_array(line, empty_array)
@@ -1248,9 +1189,6 @@ class InDat:
                 )
                 sys.exit()
 
-        # Find group of variables the parameter belongs to
-        parameter_group = find_parameter_group(name)
-
         # Get parameter comment/description from dictionary
         comment = (
             dicts["DICT_DESCRIPTIONS"][name]
@@ -1265,7 +1203,7 @@ class InDat:
             self.add_duplicate_variable(name)
 
         # Populate the IN.DAT dictionary with the information
-        self.data[name] = INVariable(name, value, "Parameter", parameter_group, comment)
+        self.data[name] = INVariable(name, value, "Parameter", comment)
 
     def process_constraint_equation(self, line):
         """Function to process constraint equation entry in IN.DAT
@@ -1299,7 +1237,6 @@ class InDat:
             self.data["icc"] = INVariable(
                 "icc",
                 value,
-                "Constraint Equation",
                 "Constraint Equation",
                 "Constraint Equations",
             )
@@ -1348,7 +1285,6 @@ class InDat:
             self.data["ixc"] = INVariable(
                 "ixc",
                 value,
-                "Iteration Variable",
                 "Iteration Variable",
                 "Iteration Variables",
             )
@@ -1472,7 +1408,7 @@ class InDat:
         if len(empty_array) == 0:
             empty_array = [None] * array_len
 
-        # If the Pyhton list is an empty list, make a list of Nones of
+        # If the Python list is an empty list, make a list of Nones of
         # matching length to the Fortran array
         if list_len == 0:
             self.data[name].value = [None] * array_len
@@ -1680,14 +1616,14 @@ class InDat:
     @property
     def number_of_constraints(self):
         """
-        Return number of itvars
+        The number of constraints
         """
         return len(self.data["icc"].value)
 
     @property
     def number_of_itvars(self):
         """
-        Return number of itvars
+        The number of itvars
         """
         return len(self.data["ixc"].value)
 
@@ -1708,14 +1644,16 @@ class StructuredInputData:
     self.data["parameters"]["physics_variables"]["i_plasma_geometry"]["value"] = 0
     """
 
-    def __init__(self, filename="IN.DAT"):
+    def __init__(self, filename: str = "IN.DAT"):
         """Use InDat to create the data dict.
 
         Use InDat to read in an input file and store the data, then construct a
         structured input data dict from it.
 
-        :param filename: input data filename, defaults to "IN.DAT"
-        :type filename: str, optional
+        Parameters
+        ----------
+        filename :
+            Input data filename, defaults to "IN.DAT"
         """
         self.data = {}
         # Structured input data dict

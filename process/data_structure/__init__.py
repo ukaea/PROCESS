@@ -1,8 +1,8 @@
 from process.data_structure import (
-    blanket_library,
+    blanket_variables,
     build_variables,
     buildings_variables,
-    ccfe_hcpb_module,
+    ccfe_hcpb_variables,
     constraint_variables,
     cost_2015_variables,
     cost_variables,
@@ -14,7 +14,7 @@ from process.data_structure import (
     global_variables,
     heat_transport_variables,
     ife_variables,
-    impurity_radiation_module,
+    impurity_radiation_variables,
     neoclassics_variables,
     numerics,
     pf_power_variables,
@@ -37,10 +37,10 @@ from process.data_structure import (
 )
 
 __all__ = [
-    "blanket_library",
+    "blanket_variables",
     "build_variables",
     "buildings_variables",
-    "ccfe_hcpb_module",
+    "ccfe_hcpb_variables",
     "constraint_variables",
     "cost_2015_variables",
     "cost_variables",
@@ -52,7 +52,7 @@ __all__ = [
     "global_variables",
     "heat_transport_variables",
     "ife_variables",
-    "impurity_radiation_module",
+    "impurity_radiation_variables",
     "neoclassics_variables",
     "numerics",
     "pf_power_variables",

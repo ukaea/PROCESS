@@ -9,20 +9,6 @@ from shutil import copy
 
 import pytest
 
-from process.core.init import init_all_module_vars
-
-
-@pytest.fixture(autouse=True)
-def reinit_fix():
-    """Re-initialise the data structure before each test is run.
-
-    This is run once before each unit test (function scope),
-    ensuring that all of the module variables are set to their initial values.
-    'autouse' ensures that this fixture is used automatically by any test
-    function in the unit directory.
-    """
-    init_all_module_vars()
-
 
 @pytest.fixture
 def input_file():
@@ -67,7 +53,7 @@ def temp_int_data(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def temp_int_data_cwd(temp_int_data: Path):
-    """Change cwd to temp_data dir, then yield it.
+    """Change cwd to temp_int_data dir, then yield it.
 
     This uses integration test data
 
@@ -75,7 +61,7 @@ def temp_int_data_cwd(temp_int_data: Path):
 
     Parameters
     ----------
-    temp_data:
+    temp_int_data:
         temporary path containing data files
 
     Yields
@@ -83,7 +69,7 @@ def temp_int_data_cwd(temp_int_data: Path):
     :
         temporary path containing data files
     """
-    # Setup by changing cwd to temp_data and yielding it
+    # Setup by changing cwd to temp_int_data and yielding it
     old_wd = Path.cwd()
     os.chdir(temp_int_data)
     yield temp_int_data

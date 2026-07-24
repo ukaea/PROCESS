@@ -6,11 +6,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import build_variables as bv
-from process.data_structure import divertor_variables as dv
-from process.data_structure import fwbs_variables as fwbs
-from process.data_structure import physics_variables as pv
-from process.data_structure import tfcoil_variables as tfv
+from process.data_structure.physics_variables import DivertorNumberModels
 
 
 class Divertor(Model):
@@ -38,55 +34,69 @@ class Divertor(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-        fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(
-            p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
-            f_ster_div_single=fwbs.f_ster_div_single,
-            n_divertors=dv.n_divertors,
+        self.data.divertor.deg_div_poloidal_plasma = self.single_divertor_angle
+        self.data.fwbs.f_ster_div_single = (
+            self.data.divertor.deg_div_poloidal_plasma / 360.0
         )
 
-        fwbs.p_div_rad_total_mw = self.incident_radiation_power(
-            p_plasma_rad_mw=pv.p_plasma_rad_mw,
-            f_ster_div_single=fwbs.f_ster_div_single,
-            n_divertors=dv.n_divertors,
+        self.data.fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(
+            p_plasma_neutron_mw=self.data.physics.p_plasma_neutron_mw,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
+            n_divertors=self.data.divertor.n_divertors,
         )
 
-        if dv.i_div_heat_load == 0 and output:
+        self.data.fwbs.p_div_rad_total_mw = self.incident_radiation_power(
+            p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
+            n_divertors=self.data.divertor.n_divertors,
+        )
+
+        if self.data.divertor.i_div_heat_load == 0 and output:
             po.ovarre(
                 self.outfile,
-                "Divertor heat load (MW/m2)",
+                "Divertor heat load (MW/m²)",
                 "(pflux_div_heat_load_mw)",
-                dv.pflux_div_heat_load_mw,
+                self.data.divertor.pflux_div_heat_load_mw,
             )
             return
-        if dv.i_div_heat_load == 1:
+        if self.data.divertor.i_div_heat_load == 1:
             self.divtart(
-                pv.rmajor,
-                pv.rminor,
-                pv.triang,
-                bv.dr_fw_plasma_gap_inboard,
-                bv.dz_xpoint_divertor,
-                pv.p_plasma_separatrix_mw,
+                self.data.physics.rmajor,
+                self.data.physics.rminor,
+                self.data.physics.triang,
+                self.data.build.dr_fw_plasma_gap_inboard,
+                self.data.build.dz_xpoint_divertor,
+                self.data.physics.p_plasma_separatrix_mw,
                 output=output,
-                i_single_null=pv.i_single_null,
-                dz_divertor=dv.dz_divertor,
+                i_single_null=self.data.physics.i_single_null,
+                dz_divertor=self.data.divertor.dz_divertor,
             )
             return
-        if dv.i_div_heat_load == 2:
+        if self.data.divertor.i_div_heat_load == 2:
             self.divwade(
-                pv.rmajor,
-                pv.rminor,
-                pv.aspect,
-                pv.b_plasma_toroidal_on_axis,
-                pv.b_plasma_surface_poloidal_average,
-                pv.p_plasma_separatrix_mw,
-                dv.f_div_flux_expansion,
-                pv.nd_plasma_separatrix_electron,
-                dv.deg_div_field_plate,
-                pv.rad_fraction_sol,
-                pv.f_p_div_lower,
+                self.data.physics.rmajor,
+                self.data.physics.rminor,
+                self.data.physics.aspect,
+                self.data.physics.b_plasma_toroidal_on_axis,
+                self.data.physics.b_plasma_surface_poloidal_average,
+                self.data.physics.p_plasma_separatrix_mw,
+                self.data.divertor.f_div_flux_expansion,
+                self.data.physics.nd_plasma_separatrix_electron,
+                self.data.divertor.deg_div_field_plate,
+                self.data.physics.rad_fraction_sol,
+                self.data.physics.f_p_div_lower,
                 output=output,
             )
             return
+
+    @property
+    def single_divertor_angle(self):
+        """
+        Calculate the angle subtended by a single divertor.
+        Angle is calculated as 180 degrees minus the inboard
+        blanket poloidal angle, divided by 2 (for two divertors).
+        """
+        return (180.0 - self.data.blanket.deg_blkt_inboard_poloidal_plasma) / 2.0
 
     def divtart(
         self,
@@ -143,15 +153,25 @@ class Divertor(Model):
 
         References
         ----------
-            - Y.-K. M. Peng, J. B. Hicks, AEA Fusion, Culham (UK), "Engineering feasibility of tight aspect ratio Tokamak (spherical torus) reactors".
+            - Y.-K. M. Peng, J. B. Hicks, AEA Fusion, Culham (UK),
+            "Engineering feasibility of tight aspect ratio Tokamak (spherical torus)
+             reactors".
               1990. https://inis.iaea.org/records/ey2rf-dah04
 
-            - Y.-K. M. Peng, J. B. Hicks, “Engineering feasibility of tight aspect ratio tokamak (spherical torus) reactors,”
-              Osti.gov, 1991. https://www.osti.gov/biblio/1022679 (accessed Mar. 24, 2025).
+            - Y.-K. M. Peng, J. B. Hicks,
+            “Engineering feasibility of tight aspect ratio tokamak (spherical torus)
+            reactors,”
+              Osti.gov, 1991. https://www.osti.gov/biblio/1022679
+              (accessed Mar. 24, 2025).
         """
         #  Thickness of centrepost + first wall at divertor height
 
-        r1 = rmajor - rminor * triang - 3.0e0 * dr_fw_plasma_gap_inboard + tfv.drtop
+        r1 = (
+            rmajor
+            - rminor * triang
+            - 3.0e0 * dr_fw_plasma_gap_inboard
+            + self.data.tfcoil.drtop
+        )
 
         #  Outer radius of divertor region
 
@@ -181,16 +201,16 @@ class Divertor(Model):
         #  Total divertor area
 
         # Single null case
-        if i_single_null == 1:
+        if i_single_null == DivertorNumberModels.SINGLE_NULL:
             areadv = a1 + a2 + a3
         # Double null case
-        elif i_single_null == 0:
+        elif i_single_null == DivertorNumberModels.DOUBLE_NULL:
             areadv = 2.0 * (a1 + a2 + a3)
 
-        if dv.i_div_heat_load == 1:
-            dv.pflux_div_heat_load_mw = p_plasma_separatrix_mw / areadv
+        if self.data.divertor.i_div_heat_load == 1:
+            self.data.divertor.pflux_div_heat_load_mw = p_plasma_separatrix_mw / areadv
 
-        if output and dv.i_div_heat_load == 1:
+        if output and self.data.divertor.i_div_heat_load == 1:
             po.osubhd(self.outfile, "Divertor Heat Load")
             po.ocmmnt(self.outfile, "Assume an expanded divertor with a gaseous target")
             po.oblnkl(self.outfile)
@@ -200,12 +220,12 @@ class Divertor(Model):
                 "(p_plasma_separatrix_mw.)",
                 p_plasma_separatrix_mw,
             )
-            po.ovarre(self.outfile, "Divertor surface area (m2)", "(areadv)", areadv)
+            po.ovarre(self.outfile, "Divertor surface area (m²)", "(areadv)", areadv)
             po.ovarre(
                 self.outfile,
-                "Divertor heat load (MW/m2)",
+                "Divertor heat load (MW/m²)",
                 "(pflux_div_heat_load_mw)",
-                dv.pflux_div_heat_load_mw,
+                self.data.divertor.pflux_div_heat_load_mw,
             )
 
         elif output:
@@ -218,11 +238,11 @@ class Divertor(Model):
             )
             po.ovarre(
                 self.outfile,
-                "Divertor heat load (MW/m2)",
+                "Divertor heat load (MW/m²)",
                 "(pflux_div_heat_load_mw)",
-                dv.pflux_div_heat_load_mw,
+                self.data.divertor.pflux_div_heat_load_mw,
             )
-        return dv.pflux_div_heat_load_mw
+        return self.data.divertor.pflux_div_heat_load_mw
 
     def divwade(
         self,
@@ -243,8 +263,10 @@ class Divertor(Model):
 
         This subroutine calculates the divertor heat flux for any machine,
         with either a single null or double null configuration.
-        It uses the Eich scaling (Eich et al. 2013) and spreading factor (Scarabosio et al. 2014)
-        to calculate the SOL width. This is then used with a flux expansion factor to calculate
+        It uses the Eich scaling (Eich et al. 2013) and spreading factor
+        (Scarabosio et al. 2014)
+        to calculate the SOL width.
+        This is then used with a flux expansion factor to calculate
         the wetted area and then the heat flux.
 
         Parameters
@@ -325,13 +347,14 @@ class Divertor(Model):
         # Divertor heat load
         hldiv_base = p_plasma_separatrix_mw * (1 - rad_fraction_sol) / area_wetted
 
-        # For double null, calculate heat loads to upper and lower divertors and use the highest
-        if dv.n_divertors == 2:
+        # For double null, calculate heat loads to upper and lower divertors
+        # and use the highest
+        if self.data.divertor.n_divertors == 2:
             hldiv_lower = f_p_div_lower * hldiv_base
             hldiv_upper = (1.0 - f_p_div_lower) * hldiv_base
-            dv.pflux_div_heat_load_mw = max(hldiv_lower, hldiv_upper)
+            self.data.divertor.pflux_div_heat_load_mw = max(hldiv_lower, hldiv_upper)
         else:
-            dv.pflux_div_heat_load_mw = hldiv_base
+            self.data.divertor.pflux_div_heat_load_mw = hldiv_base
 
         if output:
             po.osubhd(self.outfile, "Divertor Heat Load")
@@ -351,14 +374,14 @@ class Divertor(Model):
             )
             po.ovarre(
                 self.outfile,
-                "Divertor heat load (MW/m2)",
+                "Divertor heat load (MW/m²)",
                 "(pflux_div_heat_load_mw)",
-                dv.pflux_div_heat_load_mw,
+                self.data.divertor.pflux_div_heat_load_mw,
             )
-        return dv.pflux_div_heat_load_mw
+        return self.data.divertor.pflux_div_heat_load_mw
 
+    @staticmethod
     def incident_radiation_power(
-        self,
         p_plasma_rad_mw: float,
         f_ster_div_single: float,
         n_divertors: int,
@@ -381,8 +404,8 @@ class Divertor(Model):
         """
         return p_plasma_rad_mw * f_ster_div_single * n_divertors
 
+    @staticmethod
     def incident_neutron_power(
-        self,
         p_plasma_neutron_mw: float,
         f_ster_div_single: float,
         n_divertors: int,
@@ -412,15 +435,15 @@ class LowerDivertor(Divertor):
     def run(self, output: bool):
         super().run(output=output)
 
-        dv.p_div_lower_nuclear_heat_mw = self.incident_neutron_power(
-            p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
-            f_ster_div_single=fwbs.f_ster_div_single,
+        self.data.divertor.p_div_lower_nuclear_heat_mw = self.incident_neutron_power(
+            p_plasma_neutron_mw=self.data.physics.p_plasma_neutron_mw,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=1,
         )
 
-        dv.p_div_lower_rad_mw = self.incident_radiation_power(
-            p_plasma_rad_mw=pv.p_plasma_rad_mw,
-            f_ster_div_single=fwbs.f_ster_div_single,
+        self.data.divertor.p_div_lower_rad_mw = self.incident_radiation_power(
+            p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=1,
         )
 
@@ -431,14 +454,14 @@ class UpperDivertor(Divertor):
     def run(self, output: bool):
         super().run(output=output)
 
-        dv.p_div_upper_nuclear_heat_mw = self.incident_neutron_power(
-            p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
-            f_ster_div_single=fwbs.f_ster_div_single,
+        self.data.divertor.p_div_upper_nuclear_heat_mw = self.incident_neutron_power(
+            p_plasma_neutron_mw=self.data.physics.p_plasma_neutron_mw,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=1,
         )
 
-        dv.p_div_upper_rad_mw = self.incident_radiation_power(
-            p_plasma_rad_mw=pv.p_plasma_rad_mw,
-            f_ster_div_single=fwbs.f_ster_div_single,
+        self.data.divertor.p_div_upper_rad_mw = self.incident_radiation_power(
+            p_plasma_rad_mw=self.data.physics.p_plasma_rad_mw,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=1,
         )

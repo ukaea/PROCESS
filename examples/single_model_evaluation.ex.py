@@ -16,13 +16,16 @@
 
 # %% [markdown]
 # # Evaluating a single PROCESS model
-# When understanding or investigating an individual model within Process, it can be useful to run the model in isolation and plot some responses. This is done here to investigate the effect of tungsten impurity concentration on radiated power and power incident on the divertor.
+# When understanding or investigating an individual model within Process,
+# it can be useful to run the model in isolation and plot some responses.
+# This is done here to investigate the effect of tungsten impurity concentration
+# on radiated power and power incident on the divertor.
 
 # %%
 import matplotlib.pyplot as plt
 import numpy as np
 
-from process import data_structure
+from process.data_structure.physics_variables import PhysicsData
 from process.main import SingleRun
 
 # %% [markdown]
@@ -30,12 +33,13 @@ from process.main import SingleRun
 # First, inspect a variable to check its uninitialised value:
 
 # %%
-print(
-    f"p_plasma_separatrix_mw = {data_structure.physics_variables.p_plasma_separatrix_mw}"
-)
+print(f"p_plasma_separatrix_mw = {PhysicsData.p_plasma_separatrix_mw}")
 
 # %% [markdown]
-# In order to initialise all variables in Process with their values at a given point (design parameter vector), run an evaluation input file (one with no optimisation) to initialise values in all models. The "large tokamak" regression test solution is used here.
+# In order to initialise all variables in Process with their values at a given point
+# (design parameter vector), run an evaluation input file (one with no optimisation)
+# to initialise values in all models.
+# The "large tokamak" regression test solution is used here.
 
 # %%
 from process.core.repository import get_process_root
@@ -51,29 +55,33 @@ single_run.run()
 # Print initial values of interest
 def print_values():
     print(
-        f"W frac = {data_structure.impurity_radiation_module.f_nd_impurity_electron_array[13]:.3e}"
+        "W frac = "
+        f"{single_run.data.impurity_radiation.f_nd_impurity_electron_array[13]:.3e}"
     )
-    print(f"p_plasma_rad_mw = {data_structure.physics_variables.p_plasma_rad_mw:.3e}")
+    print(f"p_plasma_rad_mw = {single_run.data.physics.p_plasma_rad_mw:.3e}")
     print(
-        f"p_plasma_separatrix_mw = {data_structure.physics_variables.p_plasma_separatrix_mw:.3e}"
+        f"p_plasma_separatrix_mw = {single_run.data.physics.p_plasma_separatrix_mw:.3e}"
     )
 
 
 print_values()
 
 # %% [markdown]
-# Now try increasing the tungsten impurity fraction to see if there's a change in the divertor power.
+# Now try increasing the tungsten impurity fraction to see if there's a change in
+# the divertor power.
 
 # %%
-data_structure.impurity_radiation_module.f_nd_impurity_electron_array[13] = 5.0e-5
+single_run.data.impurity_radiation.f_nd_impurity_electron_array[13] = 5.0e-5
 single_run.models.physics.run()
 print_values()
 
 # %% [markdown]
-# With a higher W impurity fraction, the radiated power has increased and the power incident on the divertor has decreased.
+# With a higher W impurity fraction, the radiated power has increased and
+# the power incident on the divertor has decreased.
 #
 # ## Parameter study of W impurity
-# Now investigate effect of varying W impurity on impurity radiation power, divertor power and constraint 15 (L-H threshold constraint).
+# Now investigate effect of varying W impurity on impurity radiation power,
+# divertor power and constraint 15 (L-H threshold constraint).
 
 # %%
 from process.core.solver.constraints import ConstraintManager
@@ -90,9 +98,7 @@ def run_impurities(w_imp_fracs):
     # Loop over W impurity values, evaluate model and store responses at each point
     for i, imp_frac in enumerate(w_imp_fracs):
         # Set W impurity fraction, then run physics model
-        data_structure.impurity_radiation_module.f_nd_impurity_electron_array[13] = (
-            imp_frac
-        )
+        single_run.data.impurity_radiation.f_nd_impurity_electron_array[13] = imp_frac
         single_run.models.physics.run()
 
         # Evaluate constraint equation 15 (L-H threshold constraint)
@@ -101,13 +107,9 @@ def run_impurities(w_imp_fracs):
         ).normalised_residual
 
         # Need to copy values
-        p_plasma_rad_mw[i] = data_structure.physics_variables.p_plasma_rad_mw.item()
-        p_plasma_separatrix_mw[i] = (
-            data_structure.physics_variables.p_plasma_separatrix_mw.item()
-        )
-        p_l_h_threshold_mw[i] = (
-            data_structure.physics_variables.p_l_h_threshold_mw.item()
-        )
+        p_plasma_rad_mw[i] = single_run.data.physics.p_plasma_rad_mw.item()
+        p_plasma_separatrix_mw[i] = single_run.data.physics.p_plasma_separatrix_mw.item()
+        p_l_h_threshold_mw[i] = single_run.data.physics.p_l_h_threshold_mw.item()
         # Need to flip sign of constraint so negative means violated
         con15[i] = -con15_value
 
@@ -150,4 +152,5 @@ ax.annotate("Violated", (0.0, -0.15))
 # %% [markdown]
 # The constraint becomes violated for W fraction values $> 6\times10^{-5}$.
 #
-# This can easily be modified to investigate behaviour of any model in Process in isolation, without running other models or optimising.
+# This can easily be modified to investigate behaviour of
+# any model in Process in isolation, without running other models or optimising.

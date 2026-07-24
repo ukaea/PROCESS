@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from process.core.exceptions import ProcessValueError
-from process.data_structure import stellarator_configuration
+from process.core.model import DataStructure
 
 HELIAS5B = {
     "name": "Helias 5b",
@@ -27,7 +27,8 @@ HELIAS5B = {
     "coillength": 1680.0,  # Central filament length of machine with outer radius 1m.
     "I0": 13.06,  # Coil Current needed to produce 1T on axis in [MA] at outer radius 1m
     "inductance": 1655.76e-6,  # inductance in muH
-    "WP_ratio": 1.2,  # The fit values in stellarator config class should be calculated using this value.
+    # The fit values in stellarator config class should be calculated using this value.
+    "WP_ratio": 1.2,
     "max_force_density": 120.0,  # [MN/m^3]
     "max_force_density_mnm": 98.0,  # [MN/m]
     "max_lateral_force_density": 92.4,  # [MN/m^3]
@@ -209,7 +210,7 @@ W7X50 = {
 }
 
 
-def load_stellarator_config(istell: int, config_file: Path | None):
+def load_stellarator_config(istell: int, config_file: Path | None, data: DataStructure):
     """Load the appropriate Stellarator machine configuration
 
     Parameters
@@ -223,6 +224,8 @@ def load_stellarator_config(istell: int, config_file: Path | None):
         istell = 6: Init from json
     config_file:
 
+    data: DataStructure
+        data structure object
 
     """
     match istell:
@@ -246,8 +249,11 @@ def load_stellarator_config(istell: int, config_file: Path | None):
             raise ProcessValueError(f"{istell=} is not an integer in the range [1, 6]")
 
     for variable_name, variable_value in machine_config.items():
-        setattr(
-            stellarator_configuration,
-            f"stella_config_{variable_name.lower()}",
-            variable_value,
-        )
+        name_on_data_structure = f"stella_config_{variable_name.lower()}"
+
+        if hasattr(data.stellarator_config, name_on_data_structure):
+            setattr(
+                data.stellarator_config,
+                name_on_data_structure,
+                variable_value,
+            )

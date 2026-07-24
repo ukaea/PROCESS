@@ -1,4 +1,4 @@
-"""Unit tests for physics_functions.f90."""
+"""Unit tests for fusion_reactions.py."""
 
 from typing import Any, NamedTuple
 
@@ -6,26 +6,11 @@ import numpy as np
 import pytest
 
 from process.core import constants
-from process.data_structure import physics_variables as pv
 from process.models.physics import fusion_reactions as reactions
 
 
 class SetFusionPowersParam(NamedTuple):
     f_p_alpha_plasma_deposited: Any = None
-
-    f_plasma_fuel_deuterium: Any = None
-
-    i_beta_fast_alpha: Any = None
-
-    b_plasma_poloidal_average: Any = None
-
-    b_plasma_toroidal_on_axis: Any = None
-
-    nd_plasma_electrons_vol_avg: Any = None
-
-    nd_plasma_fuel_ions_vol_avg: Any = None
-
-    nd_plasma_ions_total_vol_avg: Any = None
 
     f_alpha_electron: Any = None
 
@@ -34,10 +19,6 @@ class SetFusionPowersParam(NamedTuple):
     p_beam_alpha_mw: Any = None
 
     pden_non_alpha_charged_mw: Any = None
-
-    temp_plasma_electron_density_weighted_kev: Any = None
-
-    temp_plasma_ion_density_weighted_kev: Any = None
 
     vol_plasma: Any = None
 
@@ -55,8 +36,6 @@ class SetFusionPowersParam(NamedTuple):
 
     expected_non_alpha_charged_power: Any = None
 
-    expected_beta_fast_alpha: Any = None
-
     expected_alpha_power_electron_density: Any = None
 
     expected_alpha_power_ion_density: Any = None
@@ -71,7 +50,6 @@ class SetFusionPowersParam(NamedTuple):
     [
         SetFusionPowersParam(
             f_p_alpha_plasma_deposited=0.95,
-            f_plasma_fuel_deuterium=0.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
             p_beam_alpha_mw=0,
@@ -91,7 +69,6 @@ class SetFusionPowersParam(NamedTuple):
         ),
         SetFusionPowersParam(
             f_p_alpha_plasma_deposited=0.95,
-            f_plasma_fuel_deuterium=0.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
             p_beam_alpha_mw=100.5,
@@ -109,29 +86,9 @@ class SetFusionPowersParam(NamedTuple):
             expected_charged_particle_power=497.580075,
             expected_fusion_power=2483.04427258794345,
         ),
-        SetFusionPowersParam(
-            f_p_alpha_plasma_deposited=0.95,
-            f_plasma_fuel_deuterium=2.5,
-            f_alpha_electron=0.68,
-            f_alpha_ion=0.32,
-            p_beam_alpha_mw=100.5,
-            pden_non_alpha_charged_mw=0.00066,
-            vol_plasma=2426.25,
-            pden_plasma_alpha_mw=0.163,
-            pden_plasma_neutron_mw=0.654,
-            expected_alpha_power_density=0.20442195,
-            expected_neutron_power_density=0.8183263050336705,
-            expected_alpha_power_total=495.97875,
-            expected_neutron_power_total=1985.464197587943,
-            expected_non_alpha_charged_power=1.601325,
-            expected_alpha_power_ion_density=0.062144272,
-            expected_alpha_power_electron_density=0.132056578,
-            expected_charged_particle_power=497.580075,
-            expected_fusion_power=2483.0442725879434,
-        ),
     ],
 )
-def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
+def test_set_fusion_powers(setfusionpowersparam):
     """
     Automatically generated Regression Unit Test for set_fusion_powers().
 
@@ -143,14 +100,6 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(
-        pv,
-        "f_p_alpha_plasma_deposited",
-        setfusionpowersparam.f_p_alpha_plasma_deposited,
-    )
-    monkeypatch.setattr(
-        pv, "f_plasma_fuel_deuterium", setfusionpowersparam.f_plasma_fuel_deuterium
-    )
 
     (
         pden_neutron_total_mw,
@@ -172,6 +121,7 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
         pden_plasma_neutron_mw=setfusionpowersparam.pden_plasma_neutron_mw,
         vol_plasma=setfusionpowersparam.vol_plasma,
         pden_plasma_alpha_mw=setfusionpowersparam.pden_plasma_alpha_mw,
+        f_p_alpha_plasma_deposited=setfusionpowersparam.f_p_alpha_plasma_deposited,
     )
 
     assert pden_alpha_total_mw == pytest.approx(

@@ -12,7 +12,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 import pytest
 
-from process.core.init import init_all_module_vars
+from process.core.model import DataStructure
 from process.core.solver.evaluators import Evaluators
 from process.core.solver.solver import get_solver
 
@@ -20,10 +20,9 @@ from process.core.solver.solver import get_solver
 logger = logging.getLogger(__name__)
 
 
-@pytest.fixture(autouse=True)
-def reinit():
-    """Re-initialise Fortran module variables before each test is run."""
-    init_all_module_vars()
+@pytest.fixture
+def data_structure_obj():
+    return DataStructure()
 
 
 class Case:
@@ -115,7 +114,8 @@ class Evaluator1(CustomFunctionEvaluator):
     :type CustomFunctionEvaluator: CustomFunctionEvaluator
     """
 
-    def fcnvmc1(self, n, m, x, ifail):
+    @staticmethod
+    def fcnvmc1(n, m, x, ifail):
         """Function evaluator.
 
 
@@ -141,7 +141,8 @@ class Evaluator1(CustomFunctionEvaluator):
 
         return objf, conf
 
-    def fcnvmc2(self, n, m, x, lcnorm):
+    @staticmethod
+    def fcnvmc2(n, m, x, lcnorm):
         """Gradient function evaluator.
 
         Calculates the gradients of the objective and constraint functions at
@@ -178,7 +179,8 @@ class Evaluator2(CustomFunctionEvaluator):
     :type CustomFunctionEvaluator: CustomFunctionEvaluator
     """
 
-    def fcnvmc1(self, n, m, x, ifail):
+    @staticmethod
+    def fcnvmc1(n, m, x, ifail):
         """Function evaluator.
 
 
@@ -204,7 +206,8 @@ class Evaluator2(CustomFunctionEvaluator):
 
         return objf, conf
 
-    def fcnvmc2(self, n, m, x, lcnorm):
+    @staticmethod
+    def fcnvmc2(n, m, x, lcnorm):
         """Gradient function evaluator.
 
         Calculates the gradients of the objective and constraint functions at
@@ -242,7 +245,8 @@ class Evaluator3(CustomFunctionEvaluator):
     :type CustomFunctionEvaluator: CustomFunctionEvaluator
     """
 
-    def fcnvmc1(self, n, m, x, ifail):
+    @staticmethod
+    def fcnvmc1(n, m, x, ifail):
         """Function evaluator.
 
 
@@ -265,7 +269,8 @@ class Evaluator3(CustomFunctionEvaluator):
 
         return objf, conf
 
-    def fcnvmc2(self, n, m, x, lcnorm):
+    @staticmethod
+    def fcnvmc2(n, m, x, lcnorm):
         """Gradient function evaluator.
 
         Calculates the gradients of the objective and constraint functions at
@@ -303,7 +308,8 @@ class Evaluator4(CustomFunctionEvaluator):
     :type CustomFunctionEvaluator: CustomFunctionEvaluator
     """
 
-    def fcnvmc1(self, n, m, x, ifail):
+    @staticmethod
+    def fcnvmc1(n, m, x, ifail):
         """Function evaluator.
 
         Calculates the objective and constraint functions at the
@@ -325,7 +331,8 @@ class Evaluator4(CustomFunctionEvaluator):
 
         return objf, conf
 
-    def fcnvmc2(self, n, m, x, lcnorm):
+    @staticmethod
+    def fcnvmc2(n, m, x, lcnorm):
         """Gradient function evaluator.
 
         Calculates the gradients of the objective and constraint functions at
@@ -358,7 +365,8 @@ class Evaluator5(CustomFunctionEvaluator):
     :type CustomFunctionEvaluator: CustomFunctionEvaluator
     """
 
-    def fcnvmc1(self, n, m, x, ifail):
+    @staticmethod
+    def fcnvmc1(n, m, x, ifail):
         """Function evaluator.
 
         Calculates the objective and constraint functions at the
@@ -380,7 +388,8 @@ class Evaluator5(CustomFunctionEvaluator):
 
         return objf, conf
 
-    def fcnvmc2(self, n, m, x, lcnorm):
+    @staticmethod
+    def fcnvmc2(n, m, x, lcnorm):
         """Gradient function evaluator.
 
         Calculates the gradients of the objective and constraint functions at
@@ -600,7 +609,7 @@ def case(request):
     return case_fn()
 
 
-def test_vmcon(case, solver_name):
+def test_vmcon(case, solver_name, data_structure_obj):
     """Integration test for Vmcon.
 
     :param case: a Vmcon scenario and its expected result
@@ -616,7 +625,7 @@ def test_vmcon(case, solver_name):
         logger.debug(f"x[{i}] = {case.solver_args.x[i]}")
 
     # Configure solver for problem
-    solver = get_solver(solver_name)
+    solver = get_solver(data_structure_obj, solver_name)
     solver.set_evaluators(case.evaluator)
     solver.set_opt_params(case.solver_args.x)
     solver.set_bounds(

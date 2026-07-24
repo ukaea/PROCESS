@@ -1,9 +1,16 @@
+"""Module for calculating radiation power densities in tokamak plasmas.
+
+This module provides functions to compute synchrotron and impurity radiation
+power densities for plasma systems.
+"""
+
 import logging
 from dataclasses import dataclass
 
 import numpy as np
 
 import process.models.physics.impurity_radiation as impurity
+from process.core.model import DataStructure
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
@@ -33,6 +40,7 @@ def calculate_radiation_powers(
     rmajor: float,
     kappa: float,
     vol_plasma: float,
+    data_structure: DataStructure,
 ) -> RadpwrData:
     """Calculate the radiation powers in MW/m^3 by calling relevant routines.
 
@@ -73,19 +81,26 @@ def calculate_radiation_powers(
     -------
     RadpwrData
         A dataclass containing the following radiation power densities:
-            - pden_plasma_sync_mw (float): Synchrotron radiation power per unit volume (MW/m^3).
-            - pden_plasma_core_rad_mw (float): Total core radiation power per unit volume (MW/m^3).
-            - pden_plasma_outer_rad_mw (float): Edge radiation power per unit volume (MW/m^3).
-            - pden_plasma_rad_mw (float): Total radiation power per unit volume (MW/m^3).
+        - pden_plasma_sync_mw (float): Synchrotron radiation power per unit
+          volume (MW/m^3).
+        - pden_plasma_core_rad_mw (float): Total core radiation power per unit
+          volume (MW/m^3).
+        - pden_plasma_outer_rad_mw (float): Edge radiation power per unit
+          volume (MW/m^3).
+        - pden_plasma_rad_mw (float): Total radiation power per unit volume (MW/m^3).
 
     References
     ----------
-        - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron radiation losses in realistic tokamak plasmas,”
-          Nuclear Fusion, vol. 41, no. 6, pp. 665-678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
-        - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of arbitrary geometry,”
-          Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758, Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
+        - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron
+          radiation losses in realistic tokamak plasmas,” Nuclear Fusion, vol. 41,
+          no. 6, pp. 665-678, Jun. 2001,
+          doi: https://doi.org/10.1088/0029-5515/41/6/301.
+
+        - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks
+          of arbitrary geometry,” Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758,
+          Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
     """
-    imp_rad = impurity.ImpurityRadiation(plasma_profile)
+    imp_rad = impurity.ImpurityRadiation(plasma_profile, data_structure)
     imp_rad.calculate_imprad()
 
     pden_plasma_outer_rad_mw = (
@@ -140,8 +155,9 @@ def psync_albajar_fidone(
 ) -> float:
     """Calculate the synchrotron radiation power in MW/m^3.
 
-    This function computes the synchrotron radiation power density for the plasma based on
-    the plasma shape, major and minor radii, electron density, and temperature profiles.
+    This function computes the synchrotron radiation power density for the plasma based
+    on the plasma shape, major and minor radii, electron density, and temperature
+    profiles.
 
     Parameters
     ----------
@@ -177,11 +193,13 @@ def psync_albajar_fidone(
 
     References
     ----------
-    - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron radiation losses in realistic tokamak plasmas,”
-      Nuclear Fusion, vol. 41, no. 6, pp. 665-678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
+    - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron
+      radiation losses in realistic tokamak plasmas,” Nuclear Fusion, vol. 41, no. 6,
+      pp. 665-678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
 
-    - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of arbitrary geometry,”
-      Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758, Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
+    - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of
+      arbitrary geometry,” Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758, Dec. 2001,
+      doi: https://doi.org/10.1088/0029-5515/41/12/102.
     """
     # Variable names are created to closely match those from the reference papers.
 

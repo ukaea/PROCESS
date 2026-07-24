@@ -92,16 +92,16 @@ dr_shld_blkt_gap  = 0.02 * gap between vacuum vessel and blanket (m)
 *---------------Constraint Variables---------------*
 
 b_tf_inboard_max   = 14.0 * maximum peak toroidal field (T) (`constraint equation 25`)
-fdene    = 1.2 * density limit constraint scale (constraint equation 5)
-fiooic   = 0.65 * margin for TF coil operating current / critical current ratio
+f_nd_plasma_electron_limit_max    = 1.2 * density limit constraint scale (constraint equation 5)
+f_j_tf_wp_critical_max   = 0.65 * margin for TF coil operating current / critical current ratio
 fjohc    = 0.6 * margin for central solenoid current at end-of-flattop
 fjohc0   = 0.6 * margin for central solenoid current at beginning of pulse
 p_plant_electric_net_required_mw = 400.0 * required net electric power (MW) (`constraint equation 16`)
 p_fusion_total_max_mw  = 3000 * maximum fusion power (MW) (`constraint equation 9`)
-psepbqarmax = 10.0 * maximum ratio of Psep*Bt/qAR (MWT/m) (`constraint equation 68`)
+p_div_bt_q_aspect_rmajor_max_mw = 10.0 * maximum ratio of Psep*Bt/qAR (MWT/m) (`constraint equation 68`)
 t_burn_min   = 7200.0 * minimum burn time (s) (KE - no longer itv;; see issue #706)
 pflux_fw_neutron_max_mw   = 2.0 * allowable neutron wall-load (MW/m2) (`constraint equation 8`)
-f_alpha_energy_confinement_min = 5.0 * Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement
+f_t_alpha_energy_confinement_min = 5.0 * Lower limit on f_t_alpha_energy_confinementnt the ratio of alpha particle to energy confinement
 
 *-------------------Constraints--------------------*
 
@@ -236,7 +236,7 @@ f_nd_impurity_electrons(14) = 5e-06
 
 *-----------------Pfcoil Variables-----------------*
 
-alstroh  = 7.5d8 * allowable hoop stress in Central Solenoid structural material (Pa)
+stress_cs_steel_max  = 7.5d8 * allowable hoop stress in Central Solenoid structural material (Pa)
 j_cs_flat_top_end   = 21443595.371072624 * Central solenoid overall current density at end of flat-top (A/m2) (`iteration variable 37`) (`sweep variable 62`)
 c_pf_coil_turn_peak_input   = 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4 * peak current per turn input for PF coil i (A)
 f_j_cs_start_pulse_end_flat_top  = 0.93491189654662 * ratio of central solenoid overall current density at beginning of pulse / end of flat-top
@@ -301,7 +301,7 @@ i_plasma_geometry   = 0 * switch for plasma cross-sectional shape calculation;
 kappa    = 1.85 * plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5; 7 or 9-10`)
 q95        = 3.7339078193128556 * Safety factor 'near' plasma edge (`iteration variable 18`) equal to q95
 q0       = 1.0 * safety factor on axis
-f_nd_alpha_electron   = 0.060238763988650204 * thermal alpha density/electron density (`iteration variable 109`)
+f_nd_alpha_thermal_electron   = 0.060238763988650204 * thermal alpha density/electron density (`iteration variable 109`)
 rmajor   = 8.0 * plasma major radius (m) (`iteration variable 3`)
 i_single_null = 1 * switch for single null / double null plasma;
 f_sync_reflect    = 0.6 * synchrotron wall reflectivity factor
@@ -370,7 +370,7 @@ c_tf_turn    = 85462.67500253802 * TF coil current per turn (A); (calculated for
 dia_tf_turn_coolant_channel  = 0.01 * diameter of central helium channel in TF winding (m)
 f_a_tf_turn_cable_copper  = 0.8231999768826475 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1 * Switch for superconductor material in TF coils;
-ripple_b_tf_plasma_edge_max   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
+ripple_b_tf_plasma_edge_max   = 0.6 * maximum allowable toroidal field ripple amplitude at plasma edge (%)
 t_tf_superconductor_quench   = 17.97282589344206 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 n_tf_coils     = 16 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)
@@ -381,7 +381,7 @@ dx_tf_wp_insulation   = 0.008 * Thickness of the ground insulation layer surroun
 temp_cs_superconductor_margin_min = 1.5 * minimum allowable temperature margin ; CS (K)
 tmargmin = 1.5 * minimum allowable temperature margin ; TFC AND CS (K)
 v_tf_coil_dump_quench_max_kv    = 10.0 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
-f_a_tf_turn_cable_space_extra_void     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
+f_a_tf_turn_cable_space_extra_void     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_sup=0`)
 
 *-----------------Times Variables------------------*
 

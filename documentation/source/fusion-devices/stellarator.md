@@ -4,20 +4,20 @@ The code has the ability to perform calculations based on the physics and engine
 
 The model is largely based on W7-X and the HELIAS 5-B stellarator power plant design[^1] (Figure 1) and related modelling that has been performed by IPP Greifswald[^2] [^3] [^4] [^5]
 
-![alt text](../images/helias5b.png "Stellerator HELIAS 5-B power plant design")
+![alt text](../images/helias5b.png "Stellarator HELIAS 5-B power plant design")
 
 *Figure 1: Fusion power core of the HELIAS 5-B conceptual power plant design*[^1]
 
-To activate the stellarator coding, it is necessary to create a file `deivce.dat`, containing the single character 1 in the first row, in the working directory. This has the effect of setting the internally-used switch `istell = 1`. If the file is absent, or its first character is set to something other than 1, the stellarator model is not used, and `istell` is set to 0.
+To activate the stellarator coding, it is necessary to create a file `device.dat`, containing the single character 1 in the first row, in the working directory. This has the effect of setting the internally-used switch `istell = 1`. If the file is absent, or its first character is set to something other than 1, the stellarator model is not used, and `istell` is set to 0.
 
 ## Stellarators in PROCESS
 
 PROCESS can model any module stellarator reactor when provided with a dedicated input file.
 The procedure use is based on the prescription described in [^6], using a set of pre-calculated parameters which needs to be provided by a file with the name `stella_conf.json` which can be calculated by the `pre-sPROCESS` code [^6].
-This functionionality is enabled by `istell=6`, and PROCESS will then expect the configuration file `stella_conf.json` in the same directory as the input file. 
+This functionality is enabled by `istell=6`, and PROCESS will then expect the configuration file `stella_conf.json` in the same directory as the input file. 
 Using `istell=6` is the advised way to use the stellarator version of PROCESS as no hardcoded stellarator-parameters are being used in this case.
 
-Nevertheless, there are four types of stellarators which can be used without providding the configuration file, a HELIAS type stellarator with 3, 4 or 5 field periods as described in the collected paper [^13], and a W7-X like stellarator.
+Nevertheless, there are four types of stellarators which can be used without providing the configuration file, a HELIAS type stellarator with 3, 4 or 5 field periods as described in the collected paper [^13], and a W7-X like stellarator.
 
 <img src=../images/HSR3.png alt="drawing" width="200"/>
 <img src=../images/HSR4.png alt="drawing" width="200"/>
@@ -52,7 +52,7 @@ icc = 2 * Global Power balance (core)
 * Inequalities
 icc = 8  * Neutron Wall load limit
 icc = 17 * Global Power balance overall (needed to limit radiation)
-icc = 18 * Divertor power limt
+icc = 18 * Divertor power limit
 icc = 24 * Plasma Beta limit
 icc = 32 * Maximal Coil Stress on Ground insulation (approx.)
 icc = 34 * Dumping voltage during Coil Quench
@@ -74,7 +74,7 @@ ixc = 10 * "ISS04 Renormalization Factor" (can also be fixed)
 ixc = 50 * Coil current density, aka winding pack thickness (required!) 
 ixc = 59 * Winding Pack copper fraction
 ixc = 56 * Exponential Quench Dumping Time
-ixc = 109 * Thermal alpha particle pressure (iterated to consistency, use together with `f_alpha_energy_confinement_min`)
+ixc = 109 * Thermal alpha particle pressure (iterated to consistency, use together with `f_t_alpha_energy_confinement_min`)
 ixc = 169 * Achievable Temperature of the ECRH at the ignition point
 ```
 
@@ -101,10 +101,10 @@ The model call is in the following order
  12. Vacuum Model
  13. AC power requirements model
  14. Heat Transport Model (Second part)
- 15. Availablity
+ 15. Availability
  16. Costs
 
-Calls 1-8 are *stellarator specfic*, although use certain overlap with the tokamak modules as will be addressed more in detail below.
+Calls 1-8 are *stellarator specific*, although use certain overlap with the tokamak modules as will be addressed more in detail below.
 Calls 9-16 use the tokamak models and assume applicability also to stellarators.
 In these calls, there are `if (istell == 0) then` calls in these models implemented if certain steps are not applicable.
 
@@ -131,7 +131,7 @@ The density limit relevant to certain stellarators experiments has been proposed
 
 $n_{max} = 0.25(PB_0/R_0a^2_p)^{1/2}$
 
-where $n$ is the line-averaged electron density in units of $10^{20} m^{-3}$, $p$ is the absorbed heating power (MW), $B_0$ is the on-axis field (t), $R_0$ is the major radius (m), and $a_p$ is the plasma minor radius (m). To enforce the Sudo density limit, turn on constraint equation no. 5 (`fdene != 1` can be used to scale the constraint bound).
+where $n$ is the line-averaged electron density in units of $10^{20} m^{-3}$, $p$ is the absorbed heating power (MW), $B_0$ is the on-axis field (t), $R_0$ is the major radius (m), and $a_p$ is the plasma minor radius (m). To enforce the Sudo density limit, turn on constraint equation no. 5 (`f_nd_plasma_electron_limit_max != 1` can be used to scale the constraint bound).
 
 Note that the Sudo limit is a radiation based density limit and it is unclear how well this limit extrapolates to reactor parameters, especially as no impurity dependence e.g. is present in the Sudo model.
 PROCESS features an impurity dependent radiation module already which can be used with `icc=17` and by setting the `f_nd_impurity_electrons` vector.
@@ -226,7 +226,7 @@ f_a_tf_turn_cable_copper = 0.7 *Copper fraction of cable conductor (TF coils), S
 tftmp = 4.75 *Peak helium coolant temperature in TF coils and PF coils (K)
 temp_tf_cryo = 4.75 * Temperature in TF coils, required for plant efficiency (K)
 f_a_tf_turn_cable_space_extra_void = 0.3 *Coolant fraction of TF coil leg (itfsup=0) this is the same for conductor and strand!
-fiooic = 0.78 * Fraction TF coil critical current to operation current (constraint margin)
+f_j_tf_wp_critical_max = 0.78 * Fraction TF coil critical current to operation current (constraint margin)
 v_tf_coil_dump_quench_max_kv = 12.64 * Max voltage across tf coil during quench (kV)
 t_tf_superconductor_quench = 20 * Dump time (should be iteration variable)
 dr_tf_nose_case = 0.1 * Thickness TF Coil case (for stellarators: Also for toroidal direction)

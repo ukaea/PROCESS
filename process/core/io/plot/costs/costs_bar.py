@@ -96,7 +96,8 @@ def cost_comp_1990(
         # Explain why moneyint is missing
         if "moneyint" not in item.data:
             print(
-                "Interest during construction (moneyint) is only calculated for ireactor = 1"
+                "Interest during construction (moneyint) "
+                "is only calculated for ireactor = 1"
             )
 
         if inflate:  # Inflate costs using value parsed if specified

@@ -1,7 +1,7 @@
 """
 Python tool for comparing MFILE and outputting differences.
 The tool does not work for MFiles that are not the result of
-a full PROCESS run (ie if an error or exception occured).
+a full PROCESS run (ie if an error or exception occurred).
 """
 
 from __future__ import annotations
@@ -72,7 +72,7 @@ DEFAULT_COMPARE_PARAMS = [
     "p_coolant_pump_elec_total_mw",
     "p_plant_electric_net_mw",
     "pflux_fw_neutron_mw",
-    "f_nd_alpha_electron",
+    "f_nd_alpha_thermal_electron",
     "p_plasma_inner_rad_mw",
     "p_plasma_rad_mw",
     "p_blkt_nuclear_heat_total_mw",
@@ -117,7 +117,7 @@ BASELINE_LIST = [
     "temp_plasma_electron_on_axis_kev",
     "nd_plasma_electrons_vol_avg",
     "nd_plasma_electron_on_axis",
-    "dnla_gw",
+    "f_nd_plasma_greenwald",
     "temp_plasma_separatrix_kev",
     "nd_plasma_separatrix_electron",
     "temp_plasma_pedestal_kev",
@@ -127,7 +127,7 @@ BASELINE_LIST = [
     "t_energy_confinement",
     "hfact",
     "tauelaw",
-    "f_nd_alpha_electron",
+    "f_nd_alpha_thermal_electron",
     "pflux_fw_neutron_mw",
     "p_plasma_inner_rad_mw",
     "p_plasma_sync_mw",
@@ -221,7 +221,7 @@ GENERIC_LIST = [
     "p_plant_electric_net_mw",
     "pflux_fw_neutron_mw",
     "pflux_fw_rad_mw",
-    "f_nd_alpha_electron",
+    "f_nd_alpha_thermal_electron",
     "p_plasma_inner_rad_mw",
     "p_plasma_rad_mw",
     "f_c_plasma_bootstrap",
@@ -290,8 +290,16 @@ def compare_mfiles(
 
     Parameters
     ----------
-    arg :
-        List of arguments
+    files:
+        file paths
+    comparison:
+        comparison type
+    acc:
+        percentage tolerance
+    save:
+        save flag
+    verbose:
+        verbosity flag
     """
     print_counter = 0
     n = 2

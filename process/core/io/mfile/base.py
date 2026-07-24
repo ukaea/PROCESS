@@ -13,7 +13,7 @@ from typing import Any
 
 import numpy as np
 
-from process import data_structure
+from process.core.model import DataStructure
 from process.core.solver import iteration_variables
 
 logger = logging.getLogger(__name__)
@@ -266,9 +266,8 @@ class MFile:
 
         else:
             var_des = line[0]
-            extracted_var_name = sort_brackets(line[1])
 
-            if extracted_var_name == "":
+            if not (extracted_var_name := sort_brackets(line[1])):
                 var_name = var_des
                 self.des_name.append(var_name)
             else:
@@ -285,7 +284,7 @@ class MFile:
             self.mfile_modules[self.current_module].append(var_name)
             self.add_to_mfile_variable(var_des, var_name, var_value, var_unit, var_flag)
 
-    def add_to_mfile_variable(self, des, name, value, unit, flag, scan=None):
+    def add_to_mfile_variable(self, des, name: str, value, unit, flag, scan=None):
         """Function to add value to MFile class for that name/description
 
         Parameters
@@ -303,7 +302,7 @@ class MFile:
         scan :
              (Default value = None)
         """
-        var_key = des.lower().replace("_", " ") if name == "" else name.lower()
+        var_key = des.lower().replace("_", " ") if not name else name.lower()
 
         if var_key in self.data:
             scan_num = scan or (self.data[var_key].get_number_of_scans() + 1)
@@ -396,6 +395,8 @@ class MFile:
 
         Parameters
         ----------
+        filename:
+            file name
         keys_to_write :
              keys to select
         scan :
@@ -419,12 +420,14 @@ class MFile:
 
         Parameters
         ----------
-        args : string, list of tuples
-            input filename, variable data
-        csv_outfile :
-
-        output_data :
-             (Default value = None)
+        filename:
+            file name
+        keys_to_write :
+             keys to select
+        scan :
+             scan to select
+        verbose :
+             verbosity of output
         """
         columns = (
             ("Description", "Varname", "Value") if verbose else ("Varname", "Value")
@@ -497,7 +500,7 @@ def sort_value(value_words: list[str]) -> str | float:
         return " ".join(value_words).strip()
 
 
-def sort_brackets(var):
+def sort_brackets(var: str):
     """Function to sort bracket madness on variable name.
 
     Parameters
@@ -505,7 +508,7 @@ def sort_brackets(var):
     var :
 
     """
-    if var != "":
+    if var:
         tmp_name = var.lstrip("(").split(")")
         if len(tmp_name) > 2:
             return tmp_name[0] + ")"
@@ -513,7 +516,7 @@ def sort_brackets(var):
     return ""
 
 
-def clean_line(line):
+def clean_line(line: str):
     """Cleans an MFILE line into the three parts we care about
 
     Parameters
@@ -521,7 +524,7 @@ def clean_line(line):
     line :
 
     """
-    return [item.strip("_ \n") for item in line.split(" ") if item != ""]
+    return [item.strip("_ \n") for item in line.split(" ") if item]
 
 
 def search_keys(dictionary, variable):
@@ -555,8 +558,8 @@ def search_des(dictionary, description):
     ----------
     dictionary :
         dictionary to search in
-    variable :
-        variable name to search for
+    description :
+        variable description to search for
 
     Returns
     -------
@@ -581,13 +584,13 @@ def get_unit(variable_desc):
     return None
 
 
-def get_mfile_initial_ixc_values(file_path: Path):
+def get_mfile_initial_ixc_values(file_path: Path, data: DataStructure):
     """Initialise the input file and obtain the initial values of the iteration variables
 
     Parameters
     ----------
     file_path :
-        The path to the MFile to get the initial iteration variable values from.
+        The path to the input file to get the initial iteration variable values from.
 
     Notes
     -----
@@ -596,25 +599,23 @@ def get_mfile_initial_ixc_values(file_path: Path):
     """
     from process.main import SingleRun  # noqa:PLC0415
 
-    SingleRun(file_path.as_posix())
-    iteration_variables.load_iteration_variables()
+    SingleRun(file_path.as_posix(), data_structure=data)
+    iteration_variables.load_iteration_variables(data)
 
     iteration_variable_names = []
     iteration_variable_values = []
 
-    for i in range(data_structure.numerics.nvar):
-        ivar = data_structure.numerics.ixc[i].item()
+    for i in range(data.numerics.nvar):
+        ivar = data.numerics.ixc[i].item()
 
         itv = iteration_variables.ITERATION_VARIABLES[ivar]
-
+        module = getattr(data, itv.module) if isinstance(itv.module, str) else itv.module
         iteration_variable_names.append(itv.name)
         if array := re.match(r"(\w+)\(([0-9]+)\)", itv.name):
             var_name = array.group(1)
             index = array.group(2)
-            iteration_variable_values.append(
-                getattr(itv.module, var_name)[int(index) - 1]
-            )
+            iteration_variable_values.append(getattr(module, var_name)[int(index) - 1])
         else:
-            iteration_variable_values.append(getattr(itv.module, itv.name))
+            iteration_variable_values.append(getattr(module, itv.name))
 
     return iteration_variable_names, iteration_variable_values

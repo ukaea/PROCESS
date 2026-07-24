@@ -6642,7 +6642,7 @@ Radiation_power_subtracted_from_plasma_power_balance_(MW)________________ ______
 H*_non-radiation_corrected_______________________________________________ (hstar)________________________ 1.10238022229611166e+00 OP
 Alpha_particle_confinement_time_(s)______________________________________ (t_alpha_confinement)__________ 2.06324613124898733e+01 OP 
 Alpha_particle/energy_confinement_time_ratio_____________________________ (f_alpha_energy_confinement)___ 6.58586617734714519e+00 OP 
-Lower_limit_on_f_alpha_energy_confinement________________________________ (f_alpha_energy_confinement_min)_ 5.00000000000000000e+00 
+Lower_limit_on_f_alpha_energy_confinement________________________________ (f_t_alpha_energy_confinement_min)_ 5.00000000000000000e+00 
 # Energy confinement times, and required H-factors : #
 Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al_____________ (beta_mcdonald)________________ 3.84667911988001016e-02 OP 
 Normalized_ion_Larmor_radius_____________________________________________ (rho_star)_____________________ 2.07847482385001801e-03 OP 
@@ -7200,7 +7200,7 @@ ___CS_void_cross-sectional_area_(m2)_____________________________________ (awpoh
 CS_steel_cross-sectional_area_(m2)_______________________________________ (a_cs_poloidal-awpoh)__________ 4.82632267125448777e+00 OP 
 CS_steel_area_fraction___________________________________________________ (f_a_cs_turn_steel)____________ 5.32206960520000383e-01 
 Switch_for_CS_stress_calculation_________________________________________ (i_cs_stress)__________________            0 
-Allowable_stress_in_CS_steel_(Pa)________________________________________ (alstroh)______________________ 7.50000000000000000e+08 
+Allowable_stress_in_CS_steel_(Pa)________________________________________ (stress_cs_steel_max)______________________ 7.50000000000000000e+08 
 Hoop_stress_in_CS_steel_(Pa)_____________________________________________ (sig_hoop)_____________________ 6.36342985396654248e+08 OP 
 Axial_stress_in_CS_steel_(Pa)____________________________________________ (sig_axial)____________________ -7.37875243663206577e+08 OP 
 Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)___________ (s_shear_cs_peak)______________ 6.36342985396654248e+08 OP 
@@ -7356,7 +7356,7 @@ Radial_thickness_off_outboard_first_wall_(m)_____________________________ (dr_fw
 Number_of_inboard_first_wall_cooling_channels____________________________ (n_fw_inboard_channels)________         7550 OP 
 Number_of_outboard_first_wall_cooling_channels___________________________ (n_fw_outboard_channels)_______        12505 OP 
 # First wall pumping #
-First_wall_coolant_type__________________________________________________ (i_fw_coolant_type)____________     'helium' 
+First_wall_coolant_type__________________________________________________ (i_fw_coolant_type)____________     'Helium' 
 Outlet_temperature_of_first_wall_coolant_[K]_____________________________ (temp_fw_coolant_out)__________ 8.23000000000000000e+02 OP 
 Inlet_temperature_of_first_wall_coolant_[K]______________________________ (temp_fw_coolant_in)___________ 5.73000000000000000e+02 OP 
 Pressure_of_first_wall_coolant_[Pa]______________________________________ (pres_fw_coolant)______________ 1.55000000000000000e+07 OP 
@@ -7650,7 +7650,7 @@ icc = 11
 *---------------------*
 icc = 5
 ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
-fdene = 1.2
+f_nd_plasma_electron_limit_max = 1.2
 nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
@@ -7693,7 +7693,7 @@ p_hcd_injected_max = 200.0
 *--------------------------------*
 icc = 16
 ixc = 25 * fp_plant_electric_net_required_mw
-* Minimum allowable value for net eletric power [MW]
+* Minimum allowable value for net electric power [MW]
 p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *
@@ -7730,9 +7730,9 @@ f_j_cs_start_pulse_end_flat_top = 0.9
 * I_op/I_Crit TF coil limit *
 *---------------------------*
 icc = 33
-ixc = 50 * fiooic
+ixc = 50 * f_j_tf_wp_critical_max
 boundu(50) = 1.0
-fiooic = 0.65
+f_j_tf_wp_critical_max = 0.65
 
 * Dump voltage upper limit *
 *--------------------------*
@@ -7764,7 +7764,7 @@ temp_cs_superconductor_margin_min = 1.5
 *-------------------------------------------------------------------------------*
 icc = 62 
 ixc = 110 * falpha_energy_confinement
-f_alpha_energy_confinement_min = 5.0
+f_t_alpha_energy_confinement_min = 5.0
 
 * dump time constraint for VV stresses *
 *--------------------------------------*
@@ -7778,7 +7778,7 @@ icc = 72
 ixc = 123 * foh_stress
 foh_stress = 1.0
 * allowable hoop stress in Central Solenoid structural material [Pa]
-alstroh = 7.5D8
+stress_cs_steel_max = 7.5D8
 
 * nd_plasma_pedestal_electron<nd_plasma_electron_on_axis *
 *------------------*
@@ -7791,7 +7791,7 @@ ixc = 154 *fne0
 
 icc = 68
 ixc = 117 *fpsepbqar
-psepbqarmax = 10.0
+p_div_bt_q_aspect_rmajor_max_mw = 10.0
 
 * TF coil stress limits *
 *-----------------------*

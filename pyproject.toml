@@ -22,7 +22,6 @@ dependencies = [
     "numpy>=1.23",
     "scipy>=1.10",
     "cvxpy~=1.7.3",
-    "osqp>=1.0",
     "pandas>=2.0",
     "numba>=0.57",
     "PyVMCON>=2.4.0,<2.5.0",
@@ -56,12 +55,12 @@ test = [
   "testbook>=0.4",
   "pytest-cov>=3.0.0",
   "pytest-xdist>=2.5.0",
-  "platformdirs~=4.5.0",
+  "platformdirs~=4.10.0",
   "filelock",
   "process[examples]"
 ]
-examples = ["jupyter==1.0.0", "jupytext"]
-plotly = ["plotly>=5.15.0,<6"]
+examples = ["jupyter==1.1.1", "jupytext"]
+plotly = ["plotly>=5.15,<7"]
 docs = [
   "mkdocs>=1.1",
   "mkdocs-literate-nav",
@@ -70,13 +69,13 @@ docs = [
   "mkdocs-glightbox>=0.3.4",
   "pymdown-extensions>=6.3",
   "bokeh>=3.4.0,<4",
-  "mkdocstrings[python]==1.0.3",
+  "mkdocstrings[python]==1.0.4",
   "Jinja2>=3.0",
-  "mkdocs-jupyter>=0.24,<0.26",
+  "mkdocs-jupyter>=0.24,<0.27",
   "mkdocs-gen-files",
   "mkdocs-literate-nav",
 ]
-lint = ["pre-commit>=2.16.0", "ruff==0.15.10", "ty"]
+lint = ["pre-commit>=2.16.0", "ruff==0.15.22", "ty"]
 all = ["process[test,docs,lint,examples,plotly]", "toml"]
 
 [project.scripts]
@@ -112,11 +111,11 @@ deploy = "mkdocs gh-deploy"
 
 [tool.hatch.envs.lint]
 detached     = true                           # Don't inherit from default (does not download project dependencies)
-dependencies = ["pre-commit", "ruff", "ty"]
+dependencies = ["pre-commit", "ruff==0.15.22", "ty"]
 
 [tool.hatch.envs.lint.scripts]
 fmt    = ["pre-commit run --all-files --hook-stage manual {args:}"]
-fmt_extra = ["ruff check --select=E501,PLR6301,C901,PLR0904,PLR0911,PLR0912,PLR0913,PLR0914,PLR0915,PLR0916,PLR0917,PLR1702,D100,D101,D102,D103,DOC501,D404,DOC102,D104,D105,PLC1901,S307 {args:.}"]
+fmt_extra = ["ruff check --select=C901,PLR0904,PLR0912,PLR0913,PLR0914,PLR0915,PLR0916,PLR0917,PLR1702,D100,D101,D102,D103,DOC501,D404,D104,D105,S307 {args:.}"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
@@ -165,7 +164,6 @@ max-locals = 17
 "tests/**" = [
     "ARG",
     "PLR2004",
-    "PLR6301",
     "PLR0904",
     "PLC1901",
     "S101",
@@ -196,6 +194,7 @@ max-locals = 17
 ]
 "examples/**" = [ 'B018', 'E402']
 "{tests,tracking,documentation/scripts,examples}/**" = ['INP001']
+"process/{core/io/plot/summary.py,data_structure/*}" = ["E501"]
 
 [tool.ruff.lint]
 preview = true
@@ -236,12 +235,9 @@ ignore =  [
     "G004",
 
     # urgent removal remainder
-    "E501",
-    "PLR6301",
     # complexity
     "C901",
     "PLR0904",
-    "PLR0911",
     "PLR0912",
     "PLR0913",
     "PLR0914",
@@ -256,11 +252,13 @@ ignore =  [
     "D103",
     "DOC501",  # docstring-missing-exception
     "D404",    # docstring-starts-with-this
-    "DOC102",  # docstring-extraneous-parameter
     "D104",    # undocumented-public-package
     "D105",    # undocumented-magic-method
-    "PLC1901", # compare-to-empty-string
     "S307",
+
+    "RUF105",  # noqa-comments
+    "RUF106",  # rule-codes-in-suppression-comments
+    "RUF201",  # rule-codes-in-selectors
 
 ]
 

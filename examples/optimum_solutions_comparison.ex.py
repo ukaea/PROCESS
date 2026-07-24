@@ -18,25 +18,43 @@
 # # Optimum solutions comparison notebook
 #
 # %% [markdown]
-# A Jupyter notebook to demonstrate how changing input parameters changes the optimum solution found by PROCESS.
+# A Jupyter notebook to demonstrate how changing input parameters changes the optimum
+#  solution found by PROCESS.
 #
 # %% [markdown]
 # <div class="alert alert-block alert-info">
-# <b>NOTE</b> We run the examples in a temporary directory so all the inputs are copied there and the outputs contained there before the directory is removed when the example has finished running. This keeps the examples directory tidy and does not permanently modify any data files. The use of temporary directories is not needed for regular use of PROCESS.
+# <b>NOTE</b> We run the examples in a temporary directory so all the inputs are copied
+# there and the outputs contained there before the directory is removed when the example
+# has finished running.
+# This keeps the examples directory tidy and does not permanently modify any data files.
+# The use of temporary directories is not needed for regular use of PROCESS.
 # </div>
 
 # %% [markdown]
-# This notebook demonstrates how the optimum solution found by `PROCESS` changes as we vary input parameters. We will use the large tokamak example input file to do this. The figure of merit for this example is to minimise the major radius, `rmajor`.
+# This notebook demonstrates how the optimum solution found by `PROCESS` changes
+# as we vary input parameters.
+# We will use the large tokamak example input file to do this.
+# The figure of merit for this example is to minimise the major radius, `rmajor`.
 #
-# We use the functionality from `plot.solutions` and from `plot.summary` to demonstrate this.
+# We use the functionality from `plot.solutions` and from `plot.summary`
+# to demonstrate this.
 #
-# These tools plot the solution vectors (i.e. final values of optimisation parameters) for different runs of `PROCESS`. This allows visual comparisons of different solution points.
+# These tools plot the solution vectors (i.e. final values of optimisation parameters)
+# for different runs of `PROCESS`.
+# This allows visual comparisons of different solution points.
 #
-# It can use different intra-solution optimisation parameter normalisations (e.g. initial value, parameter range) and inter-solution normalisations (e.g. normalise to a certain solution).
+# It can use different intra-solution optimisation parameter normalisations
+# (e.g. initial value, parameter range)
+# and inter-solution normalisations (e.g. normalise to a certain solution).
 #
 # ### Known Limitations
 #
-# - The solution vectors (optimisation parameter values at the solution) currently plotted are normalised to the initial point (from the `IN.DAT`) of each solution: each element of the vector is the $x_{final}/x_{initial}$, the `xcmxxx` values in the `MFILE.DAT`. This allows all optimisation parameters to be plotted on the same axis, showing the relative changes from their initial values across multiple solutions.
+# - The solution vectors (optimisation parameter values at the solution) currently
+#   plotted are normalised to the initial point (from the `IN.DAT`) of each solution:
+#   each element of the vector is the $x_{final}/x_{initial}$,
+#   the `xcmxxx` values in the `MFILE.DAT`.
+#   This allows all optimisation parameters to be plotted on the same axis,
+#   showing the relative changes from their initial values across multiple solutions.
 # - Solutions being plotted together must also have the same optimisation parameters.
 # - The solutions plotted in this example are fictitious.
 
@@ -90,7 +108,9 @@ single_run.run()
 # %% [markdown]
 # # Plot single solution
 #
-# First we will look at the original large tokamak optimum solution. We will plot its solution, showing optimisation parameters normalised to their initial values.
+# First we will look at the original large tokamak optimum solution.
+# We will plot its solution, showing optimisation parameters normalised
+# to their initial values.
 
 # %%
 large_tokamak_mfile = working_dir / "large_tokamak_MFILE.DAT"
@@ -109,11 +129,15 @@ df1
 # %% [markdown]
 # # Comparing optimum solutions
 #
-# Now we will see the effect that varying an input parameter in the large tokamak input file has on the optimum solution found.
+# Now we will see the effect that varying an input parameter in the large tokamak input
+# file has on the optimum solution found.
 #
-# Here, the minimum allowable value for net electric power, `p_plant_electric_net_required_mw`, has been changed from 400MW to 200MW, and PROCESS has found a different optimum solution.
+# Here, the minimum allowable value for net electric power,
+# `p_plant_electric_net_required_mw`, has been changed from 400MW to 200MW,
+# and PROCESS has found a different optimum solution.
 #
-# We can plot the two MFILEs together, showing normalised values of the optimisation parameters at the solution points, as well as the objective function values.
+# We can plot the two MFILEs together, showing normalised values of the optimisation
+# parameters at the solution points, as well as the objective function values.
 
 # %%
 large_tokamak_varied_min_net_electric_mfile = (
@@ -157,14 +181,19 @@ f.suptitle("Inequality Constraint Equations", y=1.6, x=1.4)
 # %% [markdown]
 # To have lower net electric, `PROCESS` has found a solution where:
 # - the fusion power has dropped, therefore the neutron wall load has gone down
-# - the toroidal field required has slightly dropped, therefore the case stress limits are lower as less current in the coils is needed
+# - the toroidal field required has slightly dropped, therefore the case stress limits
+#   are lower as less current in the coils is needed
 
 # %% [markdown]
 # # Other solution comparison plots
 #
-# There are some other ways that you can compare solutions in `PROCESS`. We will demonstrate these for the same two MFILEs as above, but you can add in more MFILEs if you want.
+# There are some other ways that you can compare solutions in `PROCESS`.
+# We will demonstrate these for the same two MFILEs as above, but you can add in
+# more MFILEs if you want.
 #
-# Here we refer to the original large tokamak file as `Large tokamak 1`, and the new solution obtained by varying `p_plant_electric_net_required_mw` as `Large tokamak 2`.
+# Here we refer to the original large tokamak file as `Large tokamak 1`,
+# and the new solution obtained by varying `p_plant_electric_net_required_mw`
+# as `Large tokamak 2`.
 
 # %% [markdown]
 # ## Plot one solution normalised to another
@@ -204,7 +233,8 @@ df5
 # %% [markdown]
 # ## Solutions normalised by range
 #
-# Use `nitvar` values instead; the solution optimisation parameters are normalised to the range of their upper and lower bounds.
+# Use `nitvar` values instead; the solution optimisation parameters are normalised
+# to the range of their upper and lower bounds.
 
 # %%
 fig6, df6 = plot_mfile_solutions(

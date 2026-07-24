@@ -9,7 +9,7 @@ repos:
       - id: check-merge-conflict
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.10
+    rev: v0.15.22
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -19,10 +19,10 @@ repos:
     rev: 0.2.3
     hooks:
       - id: yamlfmt
-        args: [--mapping, '2', --sequence, '4', --offset, '2']
+        args: [--mapping, '2', --sequence, '4', --offset, '2', --preserve-quotes]
 
   - repo: https://github.com/biomejs/pre-commit
-    rev: v2.4.11
+    rev: v2.5.0
     hooks:
       - id: biome-format
         types: [json]

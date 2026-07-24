@@ -1,5 +1,6 @@
 """
-Calculate plasma elongation and radial and vertical coordinates for the geometry of the plasma
+Calculate plasma elongation and radial and vertical coordinates for the geometry
+of the plasma
 """
 
 import math
@@ -7,6 +8,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.physics.plasma_geometry import PlasmaShapeModelType
 
 
@@ -31,11 +33,14 @@ def plasma_geometry(
     i_plasma_shape: int,
     square: float,
 ) -> PlasmaGeometry:
-    """Calculates radial and vertical distances and plasma elongation for the geometry of the plasma.
+    """Calculates radial and vertical distances and plasma elongation for the geometry
+    of the plasma.
 
-    This function computes the radial and vertical coordinates of the plasma boundary, as well as the plasma elongation,
-    based on the given major radius, minor radius, triangularity, and elongation at 95% of the plasma surface. It also
-    considers whether the plasma configuration is single null or double null.
+    This function computes the radial and vertical coordinates of the plasma boundary,
+    as well as the plasma elongation,
+    based on the given major radius, minor radius, triangularity, and elongation at 95%
+    of the plasma surface.
+    It also considers whether the plasma configuration is single null or double null.
 
     Parameters
     ----------
@@ -56,8 +61,9 @@ def plasma_geometry(
 
     Returns
     -------
-    PlasmaGeometry
-        A dataclass containing the plasma elongation and the radial and vertical coordinates of the plasma.
+    :
+        A dataclass containing the plasma elongation and the radial and vertical
+        coordinates of the plasma.
     """
     # Original PROCESS double arc plasma shape
     if i_plasma_shape == PlasmaShapeModelType.PROCESS_ORIGINAL:
@@ -77,7 +83,7 @@ def plasma_geometry(
         theta2 = np.arcsin((kappa * rminor) / r2)
         inang = 1.0 / r1
         outang = 1.5 / r2
-        if i_single_null == 0:
+        if i_single_null == DivertorNumberModels.DOUBLE_NULL:
             angs1 = np.linspace(
                 -(inang + theta1) + np.pi, (inang + theta1) + np.pi, 500, endpoint=True
             )

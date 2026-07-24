@@ -2,18 +2,17 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import fwbs_variables
-from process.models.fw import FirstWall
+from process.models.engineering.pumping import CoolantType
 
 
 @pytest.fixture
-def fw():
-    """Provides FirstWall object for testing.
+def fw(process_models):
+    """Fixture to get the FirstWall instance from process_models.
 
     :returns: initialised FirstWall object
     :rtype: process.fw.FirstWall
     """
-    return FirstWall()
+    return process_models.fw
 
 
 class FwTempParam(NamedTuple):
@@ -63,7 +62,7 @@ class FwTempParam(NamedTuple):
     [
         FwTempParam(
             fw_th_conductivity=28.34,
-            i_fw_coolant_type="helium",
+            i_fw_coolant_type=CoolantType.HELIUM,
             temp_fw_coolant_in=573,
             pres_fw_coolant=8000000,
             temp_fw_coolant_out=773,
@@ -85,7 +84,7 @@ class FwTempParam(NamedTuple):
         ),
         FwTempParam(
             fw_th_conductivity=28.34,
-            i_fw_coolant_type="helium",
+            i_fw_coolant_type=CoolantType.HELIUM,
             temp_fw_coolant_in=573,
             pres_fw_coolant=8000000,
             temp_fw_coolant_out=773,
@@ -120,32 +119,30 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(
-        fwbs_variables, "fw_th_conductivity", fwtempparam.fw_th_conductivity
+        fw.data.fwbs, "fw_th_conductivity", fwtempparam.fw_th_conductivity
     )
 
-    # monkeypatch doesnt work for strings
-    # but helium is the default
-    # monkeypatch.setattr(fwbs_variables, "i_fw_coolant_type", fwtempparam.i_fw_coolant_type)
+    monkeypatch.setattr(fw.data.fwbs, "i_fw_coolant_type", fwtempparam.i_fw_coolant_type)
 
     monkeypatch.setattr(
-        fwbs_variables, "temp_fw_coolant_in", fwtempparam.temp_fw_coolant_in
+        fw.data.fwbs, "temp_fw_coolant_in", fwtempparam.temp_fw_coolant_in
     )
 
-    monkeypatch.setattr(fwbs_variables, "pres_fw_coolant", fwtempparam.pres_fw_coolant)
+    monkeypatch.setattr(fw.data.fwbs, "pres_fw_coolant", fwtempparam.pres_fw_coolant)
 
     monkeypatch.setattr(
-        fwbs_variables, "temp_fw_coolant_out", fwtempparam.temp_fw_coolant_out
+        fw.data.fwbs, "temp_fw_coolant_out", fwtempparam.temp_fw_coolant_out
     )
 
-    monkeypatch.setattr(fwbs_variables, "dx_fw_module", fwtempparam.dx_fw_module)
+    monkeypatch.setattr(fw.data.fwbs, "dx_fw_module", fwtempparam.dx_fw_module)
 
-    monkeypatch.setattr(fwbs_variables, "len_fw_channel", fwtempparam.len_fw_channel)
+    monkeypatch.setattr(fw.data.fwbs, "len_fw_channel", fwtempparam.len_fw_channel)
 
-    monkeypatch.setattr(fwbs_variables, "temp_fw_peak", fwtempparam.temp_fw_peak)
+    monkeypatch.setattr(fw.data.fwbs, "temp_fw_peak", fwtempparam.temp_fw_peak)
 
-    monkeypatch.setattr(fwbs_variables, "f_fw_peak", fwtempparam.f_fw_peak)
+    monkeypatch.setattr(fw.data.fwbs, "f_fw_peak", fwtempparam.f_fw_peak)
 
-    monkeypatch.setattr(fwbs_variables, "dr_fw_wall", fwtempparam.dr_fw_wall)
+    monkeypatch.setattr(fw.data.fwbs, "dr_fw_wall", fwtempparam.dr_fw_wall)
 
     tpeakfw, cfmean, rhofmean, massrate = fw.fw_temp(
         False,
@@ -164,27 +161,3 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
     assert rhofmean == pytest.approx(fwtempparam.expected_rhofmean, rel=1e-4)
 
     assert massrate == pytest.approx(fwtempparam.expected_massrate, rel=1e-4)
-
-
-def test_darcy_friction_haaland(fw):
-    assert fw.darcy_friction_haaland(5500, 1e-6, 0.1) == pytest.approx(
-        0.0366668931278784
-    )
-
-
-def test_heat_transfer(fw):
-    assert fw.heat_transfer(
-        mflux_coolant=112.19853108876258,
-        den_coolant=8.8673250601290707,
-        radius_channel=0.0060000000000000001,
-        heatcap_coolant=5184.9330299967578,
-        visc_coolant=4.0416219836935569e-05,
-        thermcond_coolant=0.3211653052986152,
-        roughness_fw_channel=6e-8,
-    ) == pytest.approx(1929.2042015869506)
-
-
-def test_fw_thermal_conductivity(monkeypatch, fw):
-    monkeypatch.setattr(fwbs_variables, "fw_th_conductivity", 28.9)
-
-    assert fw.fw_thermal_conductivity(1900.0) == pytest.approx(326.70406785462256)

@@ -2,62 +2,37 @@ from __future__ import annotations
 
 import datetime
 import getpass
+import logging
 import socket
 import subprocess  # noqa: S404
 from pathlib import Path
 from typing import TYPE_CHECKING
-from warnings import warn
 
 import process
-from process import data_structure
 from process.core import constants, process_output
 from process.core.exceptions import ProcessValidationError
 from process.core.input import parse_input_file
-from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
-from process.data_structure.blanket_library import init_blanket_library
-from process.data_structure.build_variables import init_build_variables
-from process.data_structure.buildings_variables import init_buildings_variables
-from process.data_structure.ccfe_hcpb_module import init_ccfe_hcpb_module
-from process.data_structure.constraint_variables import init_constraint_variables
-from process.data_structure.cost_variables import init_cost_variables
-from process.data_structure.current_drive_variables import init_current_drive_variables
-from process.data_structure.dcll_variables import init_dcll_module
-from process.data_structure.divertor_variables import init_divertor_variables
-from process.data_structure.fwbs_variables import init_fwbs_variables
-from process.data_structure.heat_transport_variables import (
-    init_heat_transport_variables,
+from process.data_structure.blanket_variables import BlktModelTypes
+from process.data_structure.build_variables import (
+    CSPrecompressionConfiguration,
+    InboardBlanketConfiguration,
+    TFCSRadialConfiguration,
 )
-from process.data_structure.ife_variables import init_ife_variables
-from process.data_structure.impurity_radiation_module import (
-    init_impurity_radiation_module,
-)
-from process.data_structure.neoclassics_variables import init_neoclassics_variables
-from process.data_structure.pf_power_variables import init_pf_power_variables
-from process.data_structure.pfcoil_variables import (
-    init_pfcoil_module,
-    init_pfcoil_variables,
-)
+from process.data_structure.impurity_radiation_variables import N_IMPURITIES
+from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
+from process.data_structure.pfcoil_variables import PFConductorModel
 from process.data_structure.physics_variables import (
-    init_physics_module,
-    init_physics_variables,
+    ConfinementMode,
+    ConfinementTimeModel,
+    DivertorNumberModels,
 )
-from process.data_structure.power_variables import init_power_variables
-from process.data_structure.primary_pumping_variables import (
-    init_primary_pumping_variables,
+from process.models.pfcoil import PFLocationTypes
+from process.models.physics.profiles import (
+    DensityProfilePedestalType,
+    PlasmaProfileShapeType,
 )
-from process.data_structure.pulse_variables import init_pulse_variables
-from process.data_structure.rebco_variables import init_rebco_variables
-from process.data_structure.reinke_variables import init_reinke_variables
-from process.data_structure.scan_variables import init_scan_variables
-from process.data_structure.stellarator_variables import init_stellarator_variables
-from process.data_structure.structure_variables import init_structure_variables
-from process.data_structure.superconducting_tf_coil_variables import (
-    init_superconducting_tf_coil_variables,
-)
-from process.data_structure.tfcoil_variables import init_tfcoil_variables
-from process.data_structure.times_variables import init_times_variables
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
@@ -67,6 +42,7 @@ from process.models.superconductors import (
 from process.models.tfcoil.base import TFCoilShapeModel, TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
 
+logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from process.core.model import DataStructure
 
@@ -79,27 +55,27 @@ def init_process(data: DataStructure):
     the input file, and checks the run parameters for consistency.
     """
     # Initialise the program variables
-    iteration_variables.initialise_iteration_variables()
+    iteration_variables.initialise_iteration_variables(data)
 
     # Creating and open the files MFile and OUTFile
-    process_output.OutputFileManager.open_files()
+    process_output.OutputFileManager.open_files(data.globals.output_prefix)
 
     # Input any desired new initial values
     inputs = parse_input_file(data)
 
     # Set active constraints
-    set_active_constraints()
+    set_active_constraints(data)
 
     # set the device type (icase)
-    set_device_type()
+    set_device_type(data)
 
     # Initialise the Stellarator
-    st_init()
+    st_init(data)
 
     # Check input data for errors/ambiguities
     check_process(inputs, data)
 
-    run_summary()
+    run_summary(data)
 
 
 def get_git_summary() -> tuple[str, str]:
@@ -137,7 +113,7 @@ def get_git_summary() -> tuple[str, str]:
         return git_branch, git_tag
 
 
-def run_summary():
+def run_summary(data: DataStructure):
     """Write a summary of the PROCESS run to the output file and MFile"""
     # Outfile and terminal #
     for outfile in [constants.NOUT, constants.IOTTY]:
@@ -173,12 +149,12 @@ def run_summary():
         process_output.ocmmnt(outfile, f"Computer : {machine}")
         process_output.ocmmnt(outfile, f"Directory : {Path.cwd()}")
 
-        fileprefix = data_structure.global_variables.fileprefix
+        fileprefix = data.globals.fileprefix
         process_output.ocmmnt(
             outfile,
             f"Input : {fileprefix}",
         )
-        runtitle = data_structure.global_variables.runtitle
+        runtitle = data.globals.runtitle
         process_output.ocmmnt(
             outfile,
             f"Run title : {runtitle}",
@@ -186,51 +162,47 @@ def run_summary():
 
         process_output.ocmmnt(
             outfile,
-            f"Run type : Reactor concept design: {data_structure.global_variables.icase}, (c) UK Atomic Energy Authority",
+            f"Run type : Reactor concept design: {data.globals.icase},"
+            " (c) UK Atomic Energy Authority",
         )
 
         process_output.oblnkl(outfile)
         process_output.ostars(outfile, 110)
         process_output.oblnkl(outfile)
 
+        process_output.ocmmnt(outfile, f"Equality constraints : {data.numerics.neqns}")
         process_output.ocmmnt(
-            outfile, f"Equality constraints : {data_structure.numerics.neqns}"
+            outfile,
+            f"Inequality constraints : {data.numerics.nineqns}",
         )
         process_output.ocmmnt(
             outfile,
-            f"Inequality constraints : {data_structure.numerics.nineqns}",
+            f"Total constraints : {data.numerics.nineqns + data.numerics.neqns}",
         )
-        process_output.ocmmnt(
-            outfile,
-            f"Total constraints : {data_structure.numerics.nineqns + data_structure.numerics.neqns}",
-        )
-        process_output.ocmmnt(
-            outfile, f"Iteration variables : {data_structure.numerics.nvar}"
-        )
+        process_output.ocmmnt(outfile, f"Iteration variables : {data.numerics.nvar}")
         # If optimising, write objective function and convergence parameter
-        if data_structure.numerics.ioptimz == 1:
+        if data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
             process_output.ocmmnt(
                 outfile,
-                f"Max iterations : {data_structure.global_variables.maxcal}",
+                f"Max iterations : {data.globals.maxcal}",
             )
 
-            if data_structure.numerics.minmax > 0:
+            if data.numerics.minmax > 0:
                 minmax_string = "  -- minimise "
                 minmax_sign = "+"
             else:
                 minmax_string = "  -- maximise "
                 minmax_sign = "-"
 
-            fom_string = data_structure.numerics.lablmm[
-                abs(data_structure.numerics.minmax) - 1
-            ]
+            fom_string = FiguresOfMerit(abs(data.numerics.minmax)).description
             process_output.ocmmnt(
                 outfile,
-                f"Figure of merit : {minmax_sign}{abs(data_structure.numerics.minmax)}{minmax_string}{fom_string}",
+                f"Figure of merit : {minmax_sign}{abs(data.numerics.minmax)}"
+                f"{minmax_string}{fom_string}",
             )
             process_output.ocmmnt(
                 outfile,
-                f"Convergence parameter : {data_structure.numerics.epsvmc}",
+                f"Convergence parameter : {data.numerics.epsvmc}",
             )
 
         process_output.oblnkl(outfile)
@@ -239,68 +211,25 @@ def run_summary():
     # MFile #
     mfile = constants.MFILE
 
-    process_output.ovarst(mfile, "PROCESS version", "(procver)", f'"{version}"')
-    process_output.ovarst(mfile, "Date of run", "(date)", f'"{date_string}"')
-    process_output.ovarst(mfile, "Time of run", "(time)", f'"{time_string}"')
-    process_output.ovarst(mfile, "User", "(username)", f'"{user}"')
-    process_output.ovarst(mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"')
-    process_output.ovarst(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
-    process_output.ovarst(
+    process_output.ovarre(mfile, "PROCESS version", "(procver)", f'"{version}"')
+    process_output.ovarre(mfile, "Date of run", "(date)", f'"{date_string}"')
+    process_output.ovarre(mfile, "Time of run", "(time)", f'"{time_string}"')
+    process_output.ovarre(mfile, "User", "(username)", f'"{user}"')
+    process_output.ovarre(mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"')
+    process_output.ovarre(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
+    process_output.ovarre(
         mfile, "PROCESS git branch", "(branch_name)", f'"{git_branch}"'
     )
-    process_output.ovarst(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
+    process_output.ovarre(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
 
-    process_output.ovarin(
-        mfile, "Optimisation switch", "(ioptimz)", data_structure.numerics.ioptimz
+    process_output.ovarre(
+        mfile, "Optimisation switch", "(ioptimz)", data.numerics.ioptimz
     )
     # If optimising, write figure of merit switch
-    if data_structure.numerics.ioptimz == 1:
-        process_output.ovarin(
-            mfile, "Figure of merit switch", "(minmax)", data_structure.numerics.minmax
+    if data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
+        process_output.ovarre(
+            mfile, "Figure of merit switch", "(minmax)", data.numerics.minmax
         )
-
-
-def init_all_module_vars():
-    """Initialise all module variables
-    This is vital to ensure a 'clean' state of Process before a new run starts,
-    otherwise components of the previous run's state can persist into the new
-    run. This matters ever since Process is used as a shared library, rather
-    than a 'run-once' executable.
-    """
-    logging_model_handler.clear_logs()
-    data_structure.numerics.init_numerics()
-    init_buildings_variables()
-    init_cost_variables()
-    init_divertor_variables()
-    init_fwbs_variables()
-    data_structure.global_variables.init_global_variables()
-    init_ccfe_hcpb_module()
-    init_heat_transport_variables()
-    init_ife_variables()
-    init_impurity_radiation_module()
-    init_pfcoil_module()
-    init_physics_module()
-    init_physics_variables()
-    init_scan_variables()
-    init_superconducting_tf_coil_variables()
-    init_stellarator_variables()
-    init_tfcoil_variables()
-    init_times_variables()
-    constants.init_constants()
-    init_current_drive_variables()
-    init_primary_pumping_variables()
-    init_pfcoil_variables()
-    init_structure_variables()
-    init_pf_power_variables()
-    init_build_variables()
-    init_constraint_variables()
-    init_pulse_variables()
-    init_rebco_variables()
-    init_reinke_variables()
-    init_blanket_library()
-    init_dcll_module()
-    init_power_variables()
-    init_neoclassics_variables()
 
 
 def check_process(inputs, data):  # noqa: ARG001
@@ -311,62 +240,63 @@ def check_process(inputs, data):  # noqa: ARG001
     and ensures other dependent variables are given suitable values.
     """
     # Check that there are sufficient iteration variables
-    if data_structure.numerics.nvar < data_structure.numerics.neqns:
+    if data.numerics.nvar < data.numerics.neqns:
         raise ProcessValidationError(
             "Insufficient iteration variables to solve the problem! NVAR < NEQNS",
-            nvar=data_structure.numerics.nvar,
-            neqns=data_structure.numerics.neqns,
+            nvar=data.numerics.nvar,
+            neqns=data.numerics.neqns,
         )
 
     # Check that sufficient elements of ixc and icc have been specified
-    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 0).any():
+    if (data.numerics.ixc[: data.numerics.nvar] == 0).any():
         raise ProcessValidationError(
-            "The number of iteration variables specified is smaller than the number stated in ixc",
-            nvar=data_structure.numerics.nvar,
+            "The number of iteration variables specified is smaller than the number"
+            " stated in ixc",
+            nvar=data.numerics.nvar,
         )
 
-    # Check that dr_tf_wp_with_insulation (ixc = 140) and dr_tf_inboard (ixc = 13) are not being used simultaneously as iteration variables
-    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 13).any() and (
-        data_structure.numerics.ixc[: data_structure.numerics.nvar] == 140
+    # Check that dr_tf_wp_with_insulation (ixc = 140) and dr_tf_inboard (ixc = 13)
+    # are not being used simultaneously as iteration variables
+    if (data.numerics.ixc[: data.numerics.nvar] == 13).any() and (
+        data.numerics.ixc[: data.numerics.nvar] == 140
     ).any():
         raise ProcessValidationError(
             "Iteration variables 13 and 140 cannot be used simultaneously",
         )
 
-    # Can't use c_tf_turn as interation var, constraint or input if i_tf_turns_integer == 1
+    # Can't use c_tf_turn as iteration var, constraint or
+    # input if i_tf_turns_integer == 1
     if (
-        data_structure.numerics.ixc[: data_structure.numerics.nvar] == 60
-    ).any() and data_structure.tfcoil_variables.i_tf_turns_integer == 1:
+        data.numerics.ixc[: data.numerics.nvar] == 60
+    ).any() and data.tfcoil.i_tf_turns_integer == 1:
         raise ProcessValidationError(
-            "Iteration variable 60 (TF current per turn, c_tf_turn) cannot be used with the TF coil integer turn model (i_tf_turns_integer == 1) as it is a calculated output instead for this model. However, the maximum current per turn can be constrained with constraint 77."
+            "Iteration variable 60 (TF current per turn, c_tf_turn) cannot be used with"
+            " the TF coil integer turn model (i_tf_turns_integer == 1) as it is a"
+            " calculated output instead for this model. However, the maximum current per"
+            " turn can be constrained with constraint 77."
         )
 
     # Can't have icc 77 and ixc 60 at the same time
-    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 60).any() and (
-        data_structure.numerics.icc[: data_structure.numerics.nvar] == 77
+    if (data.numerics.ixc[: data.numerics.nvar] == 60).any() and (
+        data.numerics.icc[: data.numerics.nvar] == 77
     ).any():
         raise ProcessValidationError(
-            "Cannot use iteration variable 60 (TF coil current per turn, c_tf_turn) and constraint 77 (maximum TF current per turn) simultaneously."
+            "Cannot use iteration variable 60 (TF coil current per turn, c_tf_turn) and "
+            "constraint 77 (maximum TF current per turn) simultaneously."
         )
 
-    if (
-        data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
-        ]
-        == 0
-    ).any():
+    if (data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 0).any():
         raise ProcessValidationError(
-            "The number of constraints specified is smaller than the number stated in neqns+nineqns",
-            neqns=data_structure.numerics.neqns,
-            nineqns=data_structure.numerics.nineqns,
+            "The number of constraints specified is smaller than the number stated"
+            " in neqns+nineqns",
+            neqns=data.numerics.neqns,
+            nineqns=data.numerics.nineqns,
         )
 
     # Deprecate constraints
     for depcrecated_constraint in [3, 4, 10, 74, 42]:
         if (
-            data_structure.numerics.icc[
-                : data_structure.numerics.neqns + data_structure.numerics.nineqns
-            ]
+            data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns]
             == depcrecated_constraint
         ).any():
             raise ProcessValidationError(
@@ -375,10 +305,7 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # MDK Report error if constraint 63 is used with old vacuum model
     if (
-        data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
-        ]
-        == 63
+        data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 63
     ).any() and data.vacuum.i_vacuum_pumping != "simple":
         raise ProcessValidationError(
             "Constraint 63 is requested without the correct vacuum model (simple)"
@@ -388,75 +315,71 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         abs(
             1.0
-            - data_structure.physics_variables.f_plasma_fuel_deuterium
-            - data_structure.physics_variables.f_plasma_fuel_tritium
-            - data_structure.physics_variables.f_plasma_fuel_helium3
+            - data.physics.f_plasma_fuel_deuterium
+            - data.physics.f_plasma_fuel_tritium
+            - data.physics.f_plasma_fuel_helium3
         )
         > 1e-6
     ):
         raise ProcessValidationError(
             "Fuel ion fractions do not sum to 1.0",
-            f_plasma_fuel_deuterium=data_structure.physics_variables.f_plasma_fuel_deuterium,
-            f_plasma_fuel_tritium=data_structure.physics_variables.f_plasma_fuel_tritium,
-            f_plasma_fuel_helium3=data_structure.physics_variables.f_plasma_fuel_helium3,
+            f_plasma_fuel_deuterium=data.physics.f_plasma_fuel_deuterium,
+            f_plasma_fuel_tritium=data.physics.f_plasma_fuel_tritium,
+            f_plasma_fuel_helium3=data.physics.f_plasma_fuel_helium3,
         )
 
-    if (
-        data_structure.physics_variables.f_plasma_fuel_tritium < 1.0e-3
-    ):  # tritium fraction is negligible
-        data_structure.buildings_variables.triv = 0.0
-        data_structure.heat_transport_variables.p_tritium_plant_electric_mw = 0.0
+    if data.physics.f_plasma_fuel_tritium < 1.0e-3:  # tritium fraction is negligible
+        data.buildings.triv = 0.0
+        data.heat_transport.p_tritium_plant_electric_mw = 0.0
 
-    if data_structure.impurity_radiation_module.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069
+    if data.impurity_radiation.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069
         raise ProcessValidationError(
-            "The thermal alpha/electron density ratio should be controlled using f_nd_alpha_electron (itv 109) and not f_nd_impurity_electrons(2)."
-            "f_nd_impurity_electrons(2) should be removed from the input file, or set to the default value 0.1D0."
+            "The thermal alpha/electron density ratio should be controlled using"
+            " f_nd_alpha_thermal_electron (itv 109) and not f_nd_impurity_electrons(2)."
+            "f_nd_impurity_electrons(2) should be removed from the input file,"
+            " or set to the default value 0.1D0."
         )
 
     # Impurity fractions
-    for imp in range(data_structure.impurity_radiation_module.N_IMPURITIES):
-        data_structure.impurity_radiation_module.f_nd_impurity_electron_array[imp] = (
-            data_structure.impurity_radiation_module.f_nd_impurity_electrons[imp]
+    for imp in range(N_IMPURITIES):
+        data.impurity_radiation.f_nd_impurity_electron_array[imp] = (
+            data.impurity_radiation.f_nd_impurity_electrons[imp]
         )
 
-    # Stop the run if oacdcp is used as an optimisation variable
-    # As the current density is now calculated from b_plasma_toroidal_on_axis without constraint 10
+    # Stop the run if j_tf_coil_full_area is used as an optimisation variable
+    # As the current density is now calculated from b_plasma_toroidal_on_axis
+    # without constraint 10
 
-    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 12).any():
+    if (data.numerics.ixc[: data.numerics.nvar] == 12).any():
         raise ProcessValidationError(
             "The 1/R toroidal B field dependency constraint is being depreciated"
         )
 
     # Plasma profile consistency checks
-    if (
-        data_structure.ife_variables.ife != 1
-        and data_structure.physics_variables.i_plasma_pedestal == 1
-    ):
+    if data.ife.ife != 1 and data.physics.i_plasma_pedestal == 1:
         # Temperature checks
         if (
-            data_structure.physics_variables.temp_plasma_pedestal_kev
-            < data_structure.physics_variables.temp_plasma_separatrix_kev
+            data.physics.temp_plasma_pedestal_kev
+            < data.physics.temp_plasma_separatrix_kev
         ):
             raise ProcessValidationError(
                 "Pedestal temperature is lower than separatrix temperature",
-                temp_plasma_pedestal_kev=data_structure.physics_variables.temp_plasma_pedestal_kev,
-                temp_plasma_separatrix_kev=data_structure.physics_variables.temp_plasma_separatrix_kev,
+                temp_plasma_pedestal_kev=data.physics.temp_plasma_pedestal_kev,
+                temp_plasma_separatrix_kev=data.physics.temp_plasma_separatrix_kev,
             )
 
-        if (
-            abs(data_structure.physics_variables.radius_plasma_pedestal_temp_norm - 1.0)
-            <= 1e-7
-        ) and (
+        if (abs(data.physics.radius_plasma_pedestal_temp_norm - 1.0) <= 1e-7) and (
             (
-                data_structure.physics_variables.temp_plasma_pedestal_kev
-                - data_structure.physics_variables.temp_plasma_separatrix_kev
+                data.physics.temp_plasma_pedestal_kev
+                - data.physics.temp_plasma_separatrix_kev
             )
             >= 1e-7
         ):
-            warn(
+            logger.warning(
                 f"Temperature pedestal is at plasma edge, but temp_plasma_pedestal_kev "
-                f"({data_structure.physics_variables.temp_plasma_pedestal_kev}) differs from temp_plasma_separatrix_kev "
-                f"({data_structure.physics_variables.temp_plasma_separatrix_kev})",
+                f"({data.physics.temp_plasma_pedestal_kev}) differs from"
+                " temp_plasma_separatrix_kev"
+                f" ({data.physics.temp_plasma_separatrix_kev})",
                 stacklevel=2,
             )
 
@@ -466,177 +389,174 @@ def check_process(inputs, data):  # noqa: ARG001
         # temperature. Prevent this by adjusting te, and its lower bound
         # (which will only have an effect if this is an optimisation run)
         if (
-            data_structure.physics_variables.temp_plasma_electron_vol_avg_kev
-            <= data_structure.physics_variables.temp_plasma_pedestal_kev
+            data.physics.temp_plasma_electron_vol_avg_kev
+            <= data.physics.temp_plasma_pedestal_kev
         ):
-            warn(
-                f"Volume-averaged temperature ({data_structure.physics_variables.te}) has been "
-                f"forced to exceed input pedestal height ({data_structure.physics_variables.temp_plasma_pedestal_kev}). "
+            logger.warning(
+                f"Volume-averaged temperature ({data.physics.te}) has been "
+                "forced to exceed input pedestal height"
+                f" ({data.physics.temp_plasma_pedestal_kev}). "
                 "Changing to te = temp_plasma_pedestal_kev*1.001",
                 stacklevel=2,
             )
-            data_structure.physics_variables.temp_plasma_electron_vol_avg_kev = (
-                data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
+            data.physics.temp_plasma_electron_vol_avg_kev = (
+                data.physics.temp_plasma_pedestal_kev * 1.001
             )
 
         if (
-            data_structure.numerics.ioptimz >= 0
-            and (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 4).any()
-            and data_structure.numerics.boundl[3]
-            < data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
+            data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION
+            and (data.numerics.ixc[: data.numerics.nvar] == 4).any()
+            and data.numerics.boundl[3] < data.physics.temp_plasma_pedestal_kev * 1.001
         ):
-            warn(
-                "Lower limit of volume averaged electron temperature (temp_plasma_electron_vol_avg_kev) has been raised to ensure temp_plasma_electron_vol_avg_kev > temp_plasma_pedestal_kev",
+            logger.warning(
+                "Lower limit of volume averaged electron temperature"
+                " (temp_plasma_electron_vol_avg_kev)"
+                " has been raised to ensure"
+                " temp_plasma_electron_vol_avg_kev > temp_plasma_pedestal_kev",
                 stacklevel=2,
             )
-            data_structure.numerics.boundl[3] = (
-                data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
-            )
-            data_structure.numerics.boundu[3] = max(
-                data_structure.numerics.boundu[3], data_structure.numerics.boundl[3]
+            data.numerics.boundl[3] = data.physics.temp_plasma_pedestal_kev * 1.001
+            data.numerics.boundu[3] = max(
+                data.numerics.boundu[3], data.numerics.boundl[3]
             )
 
         # Density checks
-        # Case where pedestal density is set manually
+        # Issue #589: Pedestal density is lower than separatrix density
+        pedestal_type = DensityProfilePedestalType(
+            data.physics.i_nd_plasma_pedestal_separatrix
+        )
         if (
-            data_structure.physics_variables.f_nd_plasma_pedestal_greenwald < 0
-            or not (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
-            ).any()
+            pedestal_type == DensityProfilePedestalType.USER_INPUT
+            and data.physics.nd_plasma_pedestal_electron
+            < data.physics.nd_plasma_separatrix_electron
+        ) or (
+            pedestal_type == DensityProfilePedestalType.GREENWALD_FRACTION
+            and data.physics.f_nd_plasma_pedestal_greenwald
+            < data.physics.f_nd_plasma_separatrix_greenwald
         ):
-            # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron but it is less than nd_plasma_separatrix_electron.
-            if (
-                data_structure.physics_variables.nd_plasma_pedestal_electron
-                < data_structure.physics_variables.nd_plasma_separatrix_electron
-            ):
-                raise ProcessValidationError(
-                    "Density pedestal is lower than separatrix density",
-                    nd_plasma_pedestal_electron=data_structure.physics_variables.nd_plasma_pedestal_electron,
-                    nd_plasma_separatrix_electron=data_structure.physics_variables.nd_plasma_separatrix_electron,
-                )
+            raise ProcessValidationError(
+                "Density pedestal is lower than separatrix density",
+                **(
+                    {
+                        k: getattr(data.physics, k)
+                        for k in (
+                            "nd_plasma_pedestal_electron",
+                            "nd_plasma_separatrix_electron",
+                        )
+                    }
+                    if pedestal_type == DensityProfilePedestalType.USER_INPUT
+                    else {
+                        k: getattr(data.physics, k)
+                        for k in (
+                            "f_nd_plasma_pedestal_greenwald",
+                            "f_nd_plasma_separatrix_greenwald",
+                        )
+                    }
+                ),
+            )
 
-            # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron,
-            # but pedestal width = 0.
-            if (
-                abs(
-                    data_structure.physics_variables.radius_plasma_pedestal_density_norm
-                    - 1.0
-                )
-                <= 1e-7
-                and (
-                    data_structure.physics_variables.nd_plasma_pedestal_electron
-                    - data_structure.physics_variables.nd_plasma_separatrix_electron
-                )
-                >= 1e-7
-            ):
-                warn(
-                    "Density pedestal is at plasma edge "
-                    f"({data_structure.physics_variables.radius_plasma_pedestal_density_norm = }), but nd_plasma_pedestal_electron "
-                    f"({data_structure.physics_variables.nd_plasma_pedestal_electron}) differs from "
-                    f"nd_plasma_separatrix_electron ({data_structure.physics_variables.nd_plasma_separatrix_electron})",
-                    stacklevel=2,
-                )
+        if (
+            abs(data.physics.radius_plasma_pedestal_density_norm - 1.0) <= 1e-7
+            and (
+                data.physics.nd_plasma_pedestal_electron
+                - data.physics.nd_plasma_separatrix_electron
+            )
+            >= 1e-7
+        ):
+            logger.warning(
+                "Density pedestal is at plasma edge "
+                f"({data.physics.radius_plasma_pedestal_density_norm = }),"
+                " but nd_plasma_pedestal_electron "
+                f"({data.physics.nd_plasma_pedestal_electron}) differs from "
+                "nd_plasma_separatrix_electron"
+                f" ({data.physics.nd_plasma_separatrix_electron})",
+                stacklevel=2,
+            )
 
-        # Issue #862 : Variable nd_plasma_electron_on_axis/nd_plasma_pedestal_electron ratio without constraint eq 81 (nd_plasma_electron_on_axis>nd_plasma_pedestal_electron)
+        # Issue #862 : Variable nd_plasma_electron_on_axis/nd_plasma_pedestal_electron
+        # ratio without constraint eq 81
+        # (nd_plasma_electron_on_axis>nd_plasma_pedestal_electron)
         #  -> Potential hollowed density profile
         if (
-            data_structure.numerics.ioptimz >= 0
+            data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION
             and not (
-                data_structure.numerics.icc[
-                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
-                ]
-                == 81
+                data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 81
             ).any()
         ):
-            if (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
-            ).any():
-                warn(
-                    "nd_plasma_pedestal_electron set with f_nd_plasma_pedestal_greenwald without constraint eq 81 (nd_plasma_pedestal_electron<nd_plasma_electron_on_axis)",
+            if (data.numerics.ixc[: data.numerics.nvar] == 145).any():
+                logger.warning(
+                    "nd_plasma_pedestal_electron set with"
+                    " f_nd_plasma_pedestal_greenwald"
+                    " without constraint"
+                    " eq 81 (nd_plasma_pedestal_electron<nd_plasma_electron_on_axis)",
                     stacklevel=2,
                 )
-            if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 6).any():
-                warn(
-                    "nd_plasma_electrons_vol_avg used as iteration variable without constraint 81 (nd_plasma_pedestal_electron<nd_plasma_electron_on_axis)",
+            if (data.numerics.ixc[: data.numerics.nvar] == 6).any():
+                logger.warning(
+                    "nd_plasma_electrons_vol_avg used as iteration variable without"
+                    " constraint 81"
+                    " (nd_plasma_pedestal_electron<nd_plasma_electron_on_axis)",
                     stacklevel=2,
                 )
 
     # Cannot use Psep/R and PsepB/qAR limits at the same time
     if (
-        data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
-        ]
-        == 68
+        data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 68
     ).any() and (
-        data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
-        ]
-        == 56
+        data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 56
     ).any():
         raise ProcessValidationError(
             "Cannot use Psep/R and PsepB/qAR constraint equations at the same time"
         )
 
     # if lower bound of f_nd_plasma_pedestal_greenwald < f_nd_plasma_separatrix_greenwald
-    if (
-        data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
-    ).any() and data_structure.numerics.boundl[
+    if (data.numerics.ixc[: data.numerics.nvar] == 145).any() and data.numerics.boundl[
         144
-    ] < data_structure.physics_variables.f_nd_plasma_separatrix_greenwald:
+    ] < data.physics.f_nd_plasma_separatrix_greenwald:
         raise ProcessValidationError(
-            "Set lower bound of iteration variable 145, f_nd_plasma_pedestal_greenwald, to be greater than f_nd_plasma_separatrix_greenwald",
-            boundl_145=data_structure.numerics.boundl[144],
-            f_nd_plasma_separatrix_greenwald=data_structure.physics_variables.f_nd_plasma_separatrix_greenwald,
+            "Set lower bound of iteration variable 145, f_nd_plasma_pedestal_greenwald,"
+            " to be greater than f_nd_plasma_separatrix_greenwald",
+            boundl_145=data.numerics.boundl[144],
+            f_nd_plasma_separatrix_greenwald=data.physics.f_nd_plasma_separatrix_greenwald,
         )
 
-    if (
-        data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
-        ]
-        == 78
-    ).any():
-        # If Reinke criterion is used temp_plasma_separatrix_kev is calculated and cannot be an
-        # iteration variable
-        if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 119).any():
+    if (data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 78).any():
+        # If Reinke criterion is used temp_plasma_separatrix_kev is calculated and
+        # cannot be an iteration variable
+        if (data.numerics.ixc[: data.numerics.nvar] == 119).any():
             raise ProcessValidationError(
-                "REINKE IMPURITY MODEL: temp_plasma_separatrix_kev is calculated and cannot be an "
-                "iteration variable for the Reinke model"
+                "REINKE IMPURITY MODEL: temp_plasma_separatrix_kev is calculated and "
+                "cannot be an iteration variable for the Reinke model"
             )
 
         # If Reinke criterion is used need to enforce LH-threshold
         # using Martin scaling for consistency
-        if (data_structure.physics_variables.i_l_h_threshold != 6) or (
+        if (data.physics.i_l_h_threshold != 6) or (
             not (
-                data_structure.numerics.icc[
-                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
-                ]
-                == 15
+                data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 15
             ).any()
-            and data_structure.physics_variables.i_plasma_pedestal
+            and data.physics.i_plasma_pedestal
         ):
-            warn(
-                "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommended for the Reinke model",
+            logger.warning(
+                "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used "
+                "and is recommended for the Reinke model",
                 stacklevel=2,
             )
-
-    if data_structure.physics_variables.i_single_null == 0:
-        data_structure.divertor_variables.n_divertors = 2
-        data_structure.build_variables.dz_fw_plasma_gap = (
-            data_structure.build_variables.dz_xpoint_divertor
+    i_single_null = DivertorNumberModels(data.physics.i_single_null)
+    if i_single_null == DivertorNumberModels.DOUBLE_NULL:
+        data.divertor.n_divertors = 2
+        data.build.dz_fw_plasma_gap = data.build.dz_xpoint_divertor
+        data.build.dz_shld_upper = data.build.dz_shld_lower
+        data.build.dz_vv_upper = data.build.dz_vv_lower
+        logger.warning(
+            "Double-null: Upper vertical build forced to match lower", stacklevel=2
         )
-        data_structure.build_variables.dz_shld_upper = (
-            data_structure.build_variables.dz_shld_lower
-        )
-        data_structure.build_variables.dz_vv_upper = (
-            data_structure.build_variables.dz_vv_lower
-        )
-        warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
-    else:  # i_single_null == 1
-        data_structure.divertor_variables.n_divertors = 1
+    else:  # i_single_null == DivertorNumberModels.SINGLE_NULL
+        data.divertor.n_divertors = 1
 
     #  Tight aspect ratio options (ST)
-    if data_structure.physics_variables.itart == 1:
-        data_structure.global_variables.icase = "Tight aspect ratio tokamak model"
+    if data.physics.itart == 1:
+        data.globals.icase = "Tight aspect ratio tokamak model"
 
         # Disabled Forcing that no inboard breeding blanket is used
         # Disabled i_blkt_inboard = 0
@@ -644,9 +564,10 @@ def check_process(inputs, data):  # noqa: ARG001
         # Check if the choice of plasma current is addapted for ST
         # 2 : Peng Ip scaling (See STAR code documentation)
         # 9 : Fiesta Ip scaling
-        if data_structure.physics_variables.i_plasma_current not in {2, 9}:
-            warn(
-                "Usual current scaling for TARTs (i_plasma_current=2 or 9) is not being used",
+        if data.physics.i_plasma_current not in {2, 9}:
+            logger.warning(
+                "Usual current scaling for TARTs (i_plasma_current=2 or 9)"
+                " is not being used",
                 stacklevel=2,
             )
 
@@ -654,161 +575,157 @@ def check_process(inputs, data):  # noqa: ARG001
         # Overwrite the location of the TF coils
         # 2 : PF coil on top of TF coil
         # 3 : PF coil outside of TF coil
-        if data_structure.physics_variables.itartpf == 0:
-            data_structure.pfcoil_variables.i_pf_location[0] = 2
-            data_structure.pfcoil_variables.i_pf_location[1] = 3
-            data_structure.pfcoil_variables.i_pf_location[2] = 3
+        if data.physics.itartpf == 0:
+            data.pf_coil.i_pf_location[0] = PFLocationTypes.ABOVE_TF
+            data.pf_coil.i_pf_location[1] = PFLocationTypes.OUTSIDE_TF
+            data.pf_coil.i_pf_location[2] = PFLocationTypes.OUTSIDE_TF
 
-        # Water cooled copper magnets initalisation / checks
-        if (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.WATER_COOLED_COPPER
-        ):
-            # Check if the initial centrepost coolant loop adapted to the magnet technology
+        # Water cooled copper magnets initialisation / checks
+        if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+            # Check if the initial centrepost coolant loop adapted to the
+            # magnet technology
             # Ice cannot flow so temp_cp_coolant_inlet > 273.15 K
-            if data_structure.tfcoil_variables.temp_cp_coolant_inlet < 273.15:
+            if data.tfcoil.temp_cp_coolant_inlet < 273.15:
                 raise ProcessValidationError(
-                    "Coolant temperature (temp_cp_coolant_inlet) cannot be < 0 C (273.15 K) for water cooled copper magents"
+                    "Coolant temperature (temp_cp_coolant_inlet) cannot be < 0 C"
+                    " (273.15 K) for water cooled copper magents"
                 )
 
             # Temperature of the TF legs cannot be cooled down
             if (
-                data_structure.tfcoil_variables.temp_tf_legs_outboard > 0
-                and data_structure.tfcoil_variables.temp_tf_legs_outboard < 273.15
+                data.tfcoil.temp_tf_legs_outboard > 0
+                and data.tfcoil.temp_tf_legs_outboard < 273.15
             ):
                 raise ProcessValidationError(
-                    "TF legs conductor temperature (temp_tf_legs_outboard) cannot be < 0 C (273.15 K) for water cooled magents"
+                    "TF legs conductor temperature (temp_tf_legs_outboard) cannot be"
+                    " < 0 C (273.15 K) for water cooled magents"
                 )
 
             # Check if conductor upper limit is properly set to 50 K or below
             if (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 20
-            ).any() and data_structure.numerics.boundu[19] < 273.15:
+                data.numerics.ixc[: data.numerics.nvar] == 20
+            ).any() and data.numerics.boundu[19] < 273.15:
                 raise ProcessValidationError(
-                    "Too low CP conductor temperature (temp_cp_average). Lower limit for copper > 273.15 K"
+                    "Too low CP conductor temperature (temp_cp_average)."
+                    " Lower limit for copper > 273.15 K"
                 )
 
         # Call a lvl 3 error if superconductor magnets are used
-        elif (
-            data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING
-        ):
-            warn(
-                "Joints res not cal. for SC (itart = 1) TF (data_structure.tfcoil_variables.i_tf_sup = 1)",
+        elif data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+            logger.warning(
+                "Joints res not cal. for SC (itart = 1) TF (data.tfcoil.i_tf_sup = 1)",
                 stacklevel=2,
             )
 
-        # Aluminium magnets initalisation / checks
-        # Initialize the CP conductor temperature to cryogenic temperature for cryo-al magnets (20 K)
-        elif (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
-        ):
+        # Aluminium magnets initialisation / checks
+        # Initialize the CP conductor temperature to cryogenic temperature for
+        # cryo-al magnets (20 K)
+        elif data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             # Call a lvl 3 error if the inlet coolant temperature is too large
             # Motivation : ill-defined aluminium resistivity fit for T > 40-50 K
-            if data_structure.tfcoil_variables.temp_cp_coolant_inlet > 40.0:
+            if data.tfcoil.temp_cp_coolant_inlet > 40.0:
                 raise ProcessValidationError(
-                    "Coolant temperature (temp_cp_coolant_inlet) should be < 40 K for the cryo-al resistivity to be defined"
+                    "Coolant temperature (temp_cp_coolant_inlet) should be < 40 K for"
+                    " the cryo-al resistivity to be defined"
                 )
 
             # Check if the leg average temperature is low enough for the resisitivity fit
-            if data_structure.tfcoil_variables.temp_tf_legs_outboard > 50.0:
+            if data.tfcoil.temp_tf_legs_outboard > 50.0:
                 raise ProcessValidationError(
-                    "TF legs conductor temperature (temp_tf_legs_outboard) should be < 40 K for the cryo-al resistivity to be defined"
+                    "TF legs conductor temperature (temp_tf_legs_outboard) should be"
+                    " < 40 K for the cryo-al resistivity to be defined"
                 )
 
             # Check if conductor upper limit is properly set to 50 K or below
             if (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 20
-            ).any() and data_structure.numerics.boundu[19] > 50.0:
+                data.numerics.ixc[: data.numerics.nvar] == 20
+            ).any() and data.numerics.boundu[19] > 50.0:
                 raise ProcessValidationError(
-                    "Too large CP conductor temperature (temp_cp_average). Upper limit for cryo-al < 50 K"
+                    "Too large CP conductor temperature (temp_cp_average). Upper limit"
+                    " for cryo-al < 50 K"
                 )
 
             # Otherwise intitialise the average conductor temperature at
-            data_structure.tfcoil_variables.temp_cp_average = (
-                data_structure.tfcoil_variables.temp_cp_coolant_inlet
-            )
+            data.tfcoil.temp_cp_average = data.tfcoil.temp_cp_coolant_inlet
 
         # Check if the boostrap current selection is addapted to ST
-        if data_structure.physics_variables.i_bootstrap_current == 1:
+        if data.physics.i_bootstrap_current == 1:
             raise ProcessValidationError(
                 "Invalid boostrap current law for ST, do not use i_bootstrap_current = 1"
             )
 
         # Check if a single null divertor is used in double null machine
-        if data_structure.physics_variables.i_single_null == 0 and (
-            data_structure.physics_variables.f_p_div_lower in {1.0, 0.0}
+        if i_single_null == DivertorNumberModels.DOUBLE_NULL and (
+            data.physics.f_p_div_lower in {1.0, 0.0}
         ):
-            warn("Operating with a single null in a double null machine", stacklevel=2)
+            logger.error(
+                "Operating with a single null in a double null machine", stacklevel=2
+            )
 
         # Set the TF coil shape to picture frame (if default value)
-        if data_structure.tfcoil_variables.i_tf_shape == TFCoilShapeModel.DEFAULT:
-            data_structure.tfcoil_variables.i_tf_shape = TFCoilShapeModel.PICTURE_FRAME
+        if data.tfcoil.i_tf_shape == TFCoilShapeModel.DEFAULT:
+            data.tfcoil.i_tf_shape = TFCoilShapeModel.PICTURE_FRAME
 
         # Warning stating that the CP fast neutron fluence calculation
         # is not addapted for cryoaluminium calculations yet
         if (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
+            data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM
             and (
-                data_structure.numerics.icc[
-                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
-                ]
-                == 85
+                data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 85
             ).any()
-            and data_structure.physics_variables.itart == 1
+            and data.physics.itart == 1
         ):
             raise ProcessValidationError(
-                "Al TF coil fluence not calculated properly for Al CP, do not use constraint 85"
+                "Al TF coil fluence not calculated properly for Al CP,"
+                " do not use constraint 85"
             )
 
         # Setting the CP joints default options :
-        #  0 : No joints for superconducting magents (data_structure.tfcoil_variables.i_tf_sup = 1)
-        #  1 : Sliding joints for resistive magnets (data_structure.tfcoil_variables.i_tf_sup = 0, 2)
-        if data_structure.tfcoil_variables.i_cp_joints == -1:
-            if (
-                data_structure.tfcoil_variables.i_tf_sup
-                == TFConductorModel.SUPERCONDUCTING
-            ):
-                data_structure.tfcoil_variables.i_cp_joints = 0
+        #  0 : No joints for superconducting magents (data.tfcoil.i_tf_sup = 1)
+        #  1 : Sliding joints for resistive magnets (data.tfcoil.i_tf_sup = 0, 2)
+        if data.tfcoil.i_cp_joints == -1:
+            if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+                data.tfcoil.i_cp_joints = 0
             else:
-                data_structure.tfcoil_variables.i_cp_joints = 1
+                data.tfcoil.i_cp_joints = 1
 
         # Checking the CP TF top radius
         if (
-            abs(data_structure.build_variables.r_cp_top) > 0
-            or (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 174).any()
-        ) and data_structure.build_variables.i_r_cp_top != 1:
+            abs(data.build.r_cp_top) > 0
+            or (data.numerics.ixc[: data.numerics.nvar] == 174).any()
+        ) and data.build.i_r_cp_top != 1:
             raise ProcessValidationError(
                 "To set the TF CP top value, you must use i_r_cp_top = 1"
             )
 
     # Conventionnal aspect ratios specific
     else:
-        if data_structure.physics_variables.i_plasma_current in {2, 9}:
+        if data.physics.i_plasma_current in {2, 9}:
             raise ProcessValidationError(
                 "i_plasma_current=2,9 is not a valid option for a non-TART device"
             )
 
         # Set the TF coil shape to PROCESS D-shape (if default value)
-        if data_structure.tfcoil_variables.i_tf_shape == TFCoilShapeModel.DEFAULT:
-            data_structure.tfcoil_variables.i_tf_shape = TFCoilShapeModel.D_SHAPE
+        if data.tfcoil.i_tf_shape == TFCoilShapeModel.DEFAULT:
+            data.tfcoil.i_tf_shape = TFCoilShapeModel.D_SHAPE
 
         # Check PF coil configurations
         j = 0
         k = 0
-        for i in range(data_structure.pfcoil_variables.n_pf_coil_groups):
+        for i in range(data.pf_coil.n_pf_coil_groups):
             if (
-                data_structure.pfcoil_variables.i_pf_location[i] != 2
-                and data_structure.pfcoil_variables.n_pf_coils_in_group[i] != 2
+                PFLocationTypes(data.pf_coil.i_pf_location[i])
+                != PFLocationTypes.ABOVE_TF
+                and data.pf_coil.n_pf_coils_in_group[i] != 2
             ):
                 raise ProcessValidationError(
-                    "n_pf_coils_in_group(i) .ne. 2 is not a valid option except for (i_pf_location = 2)"
+                    "n_pf_coils_in_group(i) .ne. 2 is not a valid option except for"
+                    " (i_pf_location = 2)"
                 )
 
-            if data_structure.pfcoil_variables.i_pf_location[i] == 2:
+            if data.pf_coil.i_pf_location[i] == PFLocationTypes.ABOVE_TF:
                 j += 1
-                k += data_structure.pfcoil_variables.n_pf_coils_in_group[i]
+                k += data.pf_coil.n_pf_coils_in_group[i]
 
         if k == 1:
             raise ProcessValidationError(
@@ -816,29 +733,28 @@ def check_process(inputs, data):  # noqa: ARG001
             )
         if k > 2:
             raise ProcessValidationError(
-                "More than 2 divertor coils (i_pf_location = 2) is not a valid configuration"
+                "More than 2 divertor coils (i_pf_location = 2)"
+                " is not a valid configuration"
             )
-        if data_structure.physics_variables.i_single_null == 1 and j < 2:
+        if i_single_null == DivertorNumberModels.SINGLE_NULL and j < 2:
             raise ProcessValidationError(
-                "If i_single_null=1, use 2 individual divertor coils (i_pf_location = 2, 2; n_pf_coils_in_group = 1, 1)"
+                "If i_single_null=1, use 2 individual divertor coils"
+                " (i_pf_location = 2, 2; n_pf_coils_in_group = 1, 1)"
             )
 
         # Constraint 10 is dedicated to ST designs with demountable joints
         if (
-            data_structure.numerics.icc[
-                : data_structure.numerics.neqns + data_structure.numerics.nineqns
-            ]
-            == 10
+            data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 10
         ).any():
             raise ProcessValidationError(
                 "Constraint equation 10 (CP lifetime) to used with ST desing (itart=1)"
             )
 
     #  Pulsed power plant model
-    if data_structure.pulse_variables.i_pulsed_plant == 1:
-        data_structure.global_variables.icase = "Pulsed tokamak model"
+    if data.pulse.i_pulsed_plant == 1:
+        data.globals.icase = "Pulsed tokamak model"
     else:
-        data_structure.buildings_variables.esbldgm3 = 0.0
+        data.buildings.esbldgm3 = 0.0
 
     # TF coil
     # -------
@@ -849,73 +765,62 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         (
             not (
-                (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 16).any()
-                or (
-                    data_structure.numerics.ixc[: data_structure.numerics.nvar] == 29
-                ).any()
-                or (
-                    data_structure.numerics.ixc[: data_structure.numerics.nvar] == 42
-                ).any()
+                (data.numerics.ixc[: data.numerics.nvar] == 16).any()
+                or (data.numerics.ixc[: data.numerics.nvar] == 29).any()
+                or (data.numerics.ixc[: data.numerics.nvar] == 42).any()
             )
         )  # No dr_bore,dr_cs_tf_gap, dr_cs iteration
         and (
             abs(
-                data_structure.build_variables.dr_bore
-                + data_structure.build_variables.dr_cs_tf_gap
-                + data_structure.build_variables.dr_cs
-                + data_structure.build_variables.dr_cs_precomp
+                data.build.dr_bore
+                + data.build.dr_cs_tf_gap
+                + data.build.dr_cs
+                + data.build.dr_cs_precomp
             )
             <= 0
         )  # dr_bore + dr_cs_tf_gap + dr_cs = 0
         and (
             (
-                data_structure.numerics.icc[
-                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
-                ]
-                == 31
+                data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 31
             ).any()
             or (
-                data_structure.numerics.icc[
-                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
-                ]
-                == 32
+                data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 32
             ).any()
         )  # Stress constraints (31 or 32) is used
         and (
-            data_structure.tfcoil_variables.i_tf_stress_model != 2
+            data.tfcoil.i_tf_stress_model != 2
         )  # TF stress model can't handle no dr_bore
     ):
         raise ProcessValidationError(
-            "Invalid stress model if dr_bore + dr_cs_tf_gap + dr_cs = 0. Don't use constraint 31"
+            "Invalid stress model if dr_bore + dr_cs_tf_gap + dr_cs = 0."
+            " Don't use constraint 31"
         )
 
     # Make sure that plane stress model is not used for resistive magnets
     if (
-        data_structure.tfcoil_variables.i_tf_stress_model == 1
-        and data_structure.tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+        data.tfcoil.i_tf_stress_model == 1
+        and data.tfcoil.i_tf_sup != TFConductorModel.SUPERCONDUCTING
     ):
         raise ProcessValidationError(
-            "Use generalized plane strain for resistive magnets (i_tf_stress_model = 0 or 2)"
+            "Use generalized plane strain for resistive magnets"
+            " (i_tf_stress_model = 0 or 2)"
         )
 
     # bucking cylinder default option setting
     # - bucking (casing) for SC i_tf_bucking ( i_tf_bucking = 1 )
     # - No bucking for copper magnets ( i_tf_bucking = 0 )
     # - Bucking for aluminium magnets ( i_tf_bucking = 1 )
-    if data_structure.tfcoil_variables.i_tf_bucking == -1:
-        if (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.WATER_COOLED_COPPER
-        ):
-            data_structure.tfcoil_variables.i_tf_bucking = 0
+    if data.tfcoil.i_tf_bucking == -1:
+        if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+            data.tfcoil.i_tf_bucking = 0
         else:
-            data_structure.tfcoil_variables.i_tf_bucking = 1
+            data.tfcoil.i_tf_bucking = 1
 
     # Ensure that the TF isnt placed against the
     # CS which is now outside it
     if (
-        data_structure.tfcoil_variables.i_tf_bucking >= 2
-        and data_structure.build_variables.i_tf_inside_cs == 1
+        data.tfcoil.i_tf_bucking >= 2
+        and data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
     ):
         raise ProcessValidationError(
             "Cannot have i_tf_bucking >= 2 when i_tf_inside_cs = 1"
@@ -924,8 +829,9 @@ def check_process(inputs, data):  # noqa: ARG001
     # Ensure that no pre-compression structure
     # is used for bucked and wedged design
     if (
-        data_structure.tfcoil_variables.i_tf_bucking >= 2
-        and data_structure.build_variables.i_cs_precomp == 1
+        data.tfcoil.i_tf_bucking >= 2
+        and CSPrecompressionConfiguration(data.build.i_cs_precomp)
+        == CSPrecompressionConfiguration.CS_PRECOMPRESSION_STRUCTURE_PRESENT
     ):
         raise ProcessValidationError(
             "No CS precompression structure for bucked and wedged, use i_cs_precomp = 0"
@@ -933,38 +839,30 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Number of stress calculation layers
     # +1 to add in the inboard TF coil case on the plasma side, per Issue #1509
-    data_structure.tfcoil_variables.n_tf_stress_layers = (
-        data_structure.tfcoil_variables.i_tf_bucking
-        + data_structure.tfcoil_variables.n_tf_graded_layers
-        + 1
+    data.tfcoil.n_tf_stress_layers = (
+        data.tfcoil.i_tf_bucking + data.tfcoil.n_tf_graded_layers + 1
     )
 
     # If TFC sidewall has not been set by user
-    if data_structure.tfcoil_variables.dx_tf_side_case_min < 0.1e-10:
-        data_structure.tfcoil_variables.tfc_sidewall_is_fraction = True
+    if data.tfcoil.dx_tf_side_case_min < 0.1e-10:
+        data.tfcoil.tfc_sidewall_is_fraction = True
 
     # If inboard TF coil case plasma side thickness has not been set by user
-    if data_structure.tfcoil_variables.dr_tf_plasma_case < 0.1e-10:
-        data_structure.tfcoil_variables.i_f_dr_tf_plasma_case = True
+    if data.tfcoil.dr_tf_plasma_case < 0.1e-10:
+        data.tfcoil.i_f_dr_tf_plasma_case = True
 
     # Setting the default cryo-plants efficiencies
-    if abs(data_structure.tfcoil_variables.eff_tf_cryo + 1) < 1e-6:
+    if abs(data.tfcoil.eff_tf_cryo + 1) < 1e-6:
         # The ITER cyoplant efficiency is used for SC
-        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            data_structure.tfcoil_variables.eff_tf_cryo = 0.13
+        if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+            data.tfcoil.eff_tf_cryo = 0.13
 
         # Strawbrige plot extrapolation is used for Cryo-Al
-        elif (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
-        ):
-            data_structure.tfcoil_variables.eff_tf_cryo = 0.40
+        elif data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+            data.tfcoil.eff_tf_cryo = 0.40
 
     # Cryo-plane efficiency must be in [0-1.0]
-    elif (
-        data_structure.tfcoil_variables.eff_tf_cryo > 1.0
-        or data_structure.tfcoil_variables.eff_tf_cryo < 0.0
-    ):
+    elif data.tfcoil.eff_tf_cryo > 1.0 or data.tfcoil.eff_tf_cryo < 0.0:
         raise ProcessValidationError(
             "TF cryo-plant efficiency `eff_tf_cryo` must be within [0-1]"
         )
@@ -972,177 +870,165 @@ def check_process(inputs, data):  # noqa: ARG001
     # Integer turns option not yet available for REBCO taped turns
 
     if (
-        data_structure.tfcoil_variables.i_tf_sc_mat == SuperconductorModel.CROCO_REBCO
-        and data_structure.tfcoil_variables.i_tf_turns_integer == 1
+        data.tfcoil.i_tf_sc_mat == SuperconductorModel.CROCO_REBCO
+        and data.tfcoil.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
-            "Integer turns (i_tf_turns_integer = 1) not supported for REBCO (i_tf_sc_mat = 6)"
+            "Integer turns (i_tf_turns_integer = 1) not supported for REBCO"
+            " (i_tf_sc_mat = 6)"
         )
 
     # Setting up insulation layer young modulae default values [Pa]
 
-    if data_structure.tfcoil_variables.eyoung_ins <= 1.0e8:
+    if data.tfcoil.eyoung_ins <= 1.0e8:
         # Copper magnets, no insulation material defined
         # But use the ITER design by default
-        if data_structure.tfcoil_variables.i_tf_sup in {
+        if data.tfcoil.i_tf_sup in {
             TFConductorModel.WATER_COOLED_COPPER,
             TFConductorModel.SUPERCONDUCTING,
         }:
             # SC magnets
             # Value from DDD11-2 v2 2 (2009)
-            data_structure.tfcoil_variables.eyoung_ins = 20.0e9
+            data.tfcoil.eyoung_ins = 20.0e9
 
         # Cryo-aluminum magnets (Kapton polymer)
-        elif (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
-        ):
-            data_structure.tfcoil_variables.eyoung_ins = 2.5e9
+        elif data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+            data.tfcoil.eyoung_ins = 2.5e9
 
     # Setting the default WP geometry
-    i_tf_wp_geom = SuperconductingTFWPShapeType(
-        data_structure.tfcoil_variables.i_tf_wp_geom
-    )
+    i_tf_wp_geom = SuperconductingTFWPShapeType(data.tfcoil.i_tf_wp_geom)
     if i_tf_wp_geom == SuperconductingTFWPShapeType.UNSET:
-        if data_structure.tfcoil_variables.i_tf_turns_integer == 0:
-            data_structure.tfcoil_variables.i_tf_wp_geom = (
-                SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR
-            )
-        if data_structure.tfcoil_variables.i_tf_turns_integer == 1:
-            data_structure.tfcoil_variables.i_tf_wp_geom = (
-                SuperconductingTFWPShapeType.RECTANGULAR
-            )
+        if data.tfcoil.i_tf_turns_integer == 0:
+            data.tfcoil.i_tf_wp_geom = SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR
+        if data.tfcoil.i_tf_turns_integer == 1:
+            data.tfcoil.i_tf_wp_geom = SuperconductingTFWPShapeType.RECTANGULAR
 
     # Setting the TF coil conductor elastic properties
 
-    if data_structure.tfcoil_variables.i_tf_cond_eyoung_axial == 0:
+    if data.tfcoil.i_tf_cond_eyoung_axial == 0:
         # Conductor stiffness is not considered
-        data_structure.tfcoil_variables.eyoung_cond_axial = 0
-        data_structure.tfcoil_variables.eyoung_cond_trans = 0
-    elif data_structure.tfcoil_variables.i_tf_cond_eyoung_axial == 2:
+        data.tfcoil.eyoung_cond_axial = 0
+        data.tfcoil.eyoung_cond_trans = 0
+    elif data.tfcoil.i_tf_cond_eyoung_axial == 2:
         # Select sensible defaults from the literature
         if (
-            SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).material
+            SuperconductorModel(data.tfcoil.i_tf_sc_mat).material
             == SuperconductorMaterial.NB3SN
         ):
-            # Nb3Sn: Nyilas, A et. al, Superconductor Science and Technology 16, no. 9 (2003): 1036-42. https://doi.org/10.1088/0953-2048/16/9/313.
-            data_structure.tfcoil_variables.eyoung_cond_axial = 32e9
+            # Nb3Sn: Nyilas, A et. al, Superconductor Science and Technology 16,
+            # no. 9 (2003): 1036-42. https://doi.org/10.1088/0953-2048/16/9/313.
+            data.tfcoil.eyoung_cond_axial = 32e9
         elif (
-            SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).material
+            SuperconductorModel(data.tfcoil.i_tf_sc_mat).material
             == SuperconductorMaterial.BI2212
         ):
-            # Bi-2212: Brown, M. et al, IOP Conference Series: Materials Science and Engineering 279 (2017): 012022. https://doi.org/10.1088/1757-899X/279/1/012022.
-            data_structure.tfcoil_variables.eyoung_cond_axial = 80e9
+            # Bi-2212: Brown, M. et al, IOP Conference Series: Materials Science
+            # and Engineering 279 (2017): 012022.
+            # https://doi.org/10.1088/1757-899X/279/1/012022.
+            data.tfcoil.eyoung_cond_axial = 80e9
         elif (
-            SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).material
+            SuperconductorModel(data.tfcoil.i_tf_sc_mat).material
             == SuperconductorMaterial.NBTI
         ):
-            # NbTi: Vedrine, P. et. al, IEEE Transactions on Applied Superconductivity 9, no. 2 (1999): 236-39. https://doi.org/10.1109/77.783280.
-            data_structure.tfcoil_variables.eyoung_cond_axial = 6.8e9
+            # NbTi: Vedrine, P. et. al, IEEE Transactions on Applied Superconductivity
+            #  9, no. 2 (1999): 236-39. https://doi.org/10.1109/77.783280.
+            data.tfcoil.eyoung_cond_axial = 6.8e9
         elif (
-            SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).material
+            SuperconductorModel(data.tfcoil.i_tf_sc_mat).material
             == SuperconductorMaterial.REBCO
         ):
-            # REBCO: Fujishiro, H. et. al, Physica C: Superconductivity, 426-431 (2005): 699-704. https://doi.org/10.1016/j.physc.2005.01.045.
-            data_structure.tfcoil_variables.eyoung_cond_axial = 145e9
+            # REBCO: Fujishiro, H. et. al, Physica C: Superconductivity,
+            # 426-431 (2005): 699-704. https://doi.org/10.1016/j.physc.2005.01.045.
+            data.tfcoil.eyoung_cond_axial = 145e9
 
-        if data_structure.tfcoil_variables.i_tf_cond_eyoung_trans == 0:
+        if data.tfcoil.i_tf_cond_eyoung_trans == 0:
             # Transverse stiffness is not considered
-            data_structure.tfcoil_variables.eyoung_cond_trans = 0
+            data.tfcoil.eyoung_cond_trans = 0
         else:
             # Transverse stiffness is significant
-            data_structure.tfcoil_variables.eyoung_cond_trans = (
-                data_structure.tfcoil_variables.eyoung_cond_axial
-            )
+            data.tfcoil.eyoung_cond_trans = data.tfcoil.eyoung_cond_axial
 
-    # Check if the WP/conductor radial thickness (dr_tf_wp_with_insulation) is large enough
+    # Check if the WP/conductor radial thickness (dr_tf_wp_with_insulation)
+    # is large enough
     # To contains the insulation, cooling and the support structure
     # Rem : Only verified if the WP thickness is used
-    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 140).any():
+    if (data.numerics.ixc[: data.numerics.nvar] == 140).any():
         # Minimal WP thickness
-        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+        if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             dr_tf_wp_min = 2.0 * (
-                data_structure.tfcoil_variables.dx_tf_wp_insulation
-                + data_structure.tfcoil_variables.dx_tf_wp_insertion_gap
-                + data_structure.tfcoil_variables.dx_tf_turn_insulation
-                + data_structure.tfcoil_variables.dia_tf_turn_coolant_channel
+                data.tfcoil.dx_tf_wp_insulation
+                + data.tfcoil.dx_tf_wp_insertion_gap
+                + data.tfcoil.dx_tf_turn_insulation
+                + data.tfcoil.dia_tf_turn_coolant_channel
             )
 
             # Steel conduit thickness (can be an iteration variable)
-            if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 58).any():
-                dr_tf_wp_min += 2.0 * data_structure.numerics.boundl[57]
+            if (data.numerics.ixc[: data.numerics.nvar] == 58).any():
+                dr_tf_wp_min += 2.0 * data.numerics.boundl[57]
             else:
-                dr_tf_wp_min += 2.0 * data_structure.tfcoil_variables.dx_tf_turn_steel
+                dr_tf_wp_min += 2.0 * data.tfcoil.dx_tf_turn_steel
 
         # Minimal conductor layer thickness
-        elif data_structure.tfcoil_variables.i_tf_sup in {
+        elif data.tfcoil.i_tf_sup in {
             TFConductorModel.WATER_COOLED_COPPER,
             TFConductorModel.HELIUM_COOLED_ALUMINIUM,
         }:
             dr_tf_wp_min = (
                 2.0
-                * (
-                    data_structure.tfcoil_variables.dx_tf_turn_insulation
-                    + data_structure.tfcoil_variables.dx_tf_wp_insulation
-                )
-                + 4.0 * data_structure.tfcoil_variables.radius_cp_coolant_channel
+                * (data.tfcoil.dx_tf_turn_insulation + data.tfcoil.dx_tf_wp_insulation)
+                + 4.0 * data.tfcoil.radius_cp_coolant_channel
             )
 
-        if data_structure.numerics.boundl[139] < dr_tf_wp_min:
+        if data.numerics.boundl[139] < dr_tf_wp_min:
             raise ProcessValidationError(
                 "The TF coil WP thickness (dr_tf_wp_with_insulation) must be at least",
                 dr_tf_wp_min=dr_tf_wp_min,
             )
 
     # Setting i_dx_tf_turn_general_input to true if dx_tf_turn_general is an input
-    data_structure.tfcoil_variables.i_dx_tf_turn_general_input = (
-        abs(data_structure.tfcoil_variables.dx_tf_turn_general) > 0
-    )
+    data.tfcoil.i_dx_tf_turn_general_input = abs(data.tfcoil.dx_tf_turn_general) > 0
 
     # Impossible to set the turn size of integer turn option
-    if (
-        data_structure.tfcoil_variables.i_dx_tf_turn_general_input
-        and data_structure.tfcoil_variables.i_tf_turns_integer == 1
-    ):
+    if data.tfcoil.i_dx_tf_turn_general_input and data.tfcoil.i_tf_turns_integer == 1:
         raise ProcessValidationError(
-            "Impossible to set the TF turn/cable size with the integer turn option (i_tf_turns_integer: 1)"
+            "Impossible to set the TF turn/cable size with the integer turn option"
+            " (i_tf_turns_integer: 1)"
         )
 
     if (
-        data_structure.tfcoil_variables.i_tf_wp_geom
-        != SuperconductingTFWPShapeType.RECTANGULAR
-        and data_structure.tfcoil_variables.i_tf_turns_integer == 1
+        data.tfcoil.i_tf_wp_geom != SuperconductingTFWPShapeType.RECTANGULAR
+        and data.tfcoil.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
             "Can only have i_tf_turns_integer = 1 with i_tf_wp_geom = 0"
         )
 
-    if (
-        data_structure.physics_variables.i_bootstrap_current == 5
-        and data_structure.physics_variables.i_diamagnetic_current != 0
-    ):
+    if data.physics.i_bootstrap_current == 5 and data.physics.i_diamagnetic_current != 0:
         raise ProcessValidationError(
-            "i_diamagnetic_current = 0 should be used with the Sakai plasma current scaling"
+            "i_diamagnetic_current = 0 should be used with the"
+            " Sakai plasma current scaling"
         )
 
-    # Setting i_dx_tf_turn_cable_space_general_input to true if dx_tf_turn_cable_space_general is an input
-    data_structure.tfcoil_variables.i_dx_tf_turn_cable_space_general_input = (
-        abs(data_structure.tfcoil_variables.dx_tf_turn_cable_space_general) > 0
+    # Setting i_dx_tf_turn_cable_space_general_input to true if
+    # dx_tf_turn_cable_space_general is an input
+    data.tfcoil.i_dx_tf_turn_cable_space_general_input = (
+        abs(data.tfcoil.dx_tf_turn_cable_space_general) > 0
     )
 
     # Impossible to set the cable size of integer turn option
     if (
-        data_structure.tfcoil_variables.i_dx_tf_turn_cable_space_general_input
-        and data_structure.tfcoil_variables.i_tf_turns_integer == 1
+        data.tfcoil.i_dx_tf_turn_cable_space_general_input
+        and data.tfcoil.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
-            "Impossible to set the TF turn/cable size with the integer turn option (i_tf_turns_integer: 1)"
+            "Impossible to set the TF turn/cable size with the integer turn option"
+            " (i_tf_turns_integer: 1)"
         )
 
     # Impossible to set both the TF coil turn and the cable dimension
     if (
-        data_structure.tfcoil_variables.i_dx_tf_turn_general_input
-        and data_structure.tfcoil_variables.i_dx_tf_turn_cable_space_general_input
+        data.tfcoil.i_dx_tf_turn_general_input
+        and data.tfcoil.i_dx_tf_turn_cable_space_general_input
     ):
         raise ProcessValidationError(
             "Impossible to set the TF coil turn and cable size simultaneously"
@@ -1150,105 +1036,116 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Checking the SC temperature for LTS
     if (
-        SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).sc_type
+        SuperconductorModel(data.tfcoil.i_tf_sc_mat).sc_type
         == SuperconductorType.LOW_TEMPERATURE
-        and data_structure.tfcoil_variables.tftmp > 10.0
+        and data.tfcoil.tftmp > 10.0
     ):
         raise ProcessValidationError(
             "The LTS conductor temperature (tftmp) has to be lower than 10"
         )
 
     # PF coil resistivity is zero if superconducting
-    if data_structure.pfcoil_variables.i_pf_conductor == 0:
-        data_structure.pfcoil_variables.rho_pf_coil = 0.0
+    if data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
+        data.pf_coil.rho_pf_coil = 0.0
 
     # If there is no NBI, then hot beam density should be zero
-    if data_structure.current_drive_variables.i_hcd_calculations == 1:
-        if data_structure.current_drive_variables.i_hcd_primary not in {5, 8}:
-            data_structure.physics_variables.f_nd_beam_electron = 0.0
+    if data.current_drive.i_hcd_calculations == 1:
+        if data.current_drive.i_hcd_primary not in {5, 8}:
+            data.physics.f_nd_beam_electron = 0.0
     else:
-        data_structure.physics_variables.f_nd_beam_electron = 0.0
+        data.physics.f_nd_beam_electron = 0.0
 
     # Set inboard blanket thickness to zero if no inboard blanket switch
     # used (Issue #732)
-    if data_structure.fwbs_variables.i_blkt_inboard == 0:
-        data_structure.build_variables.dr_blkt_inboard = 0.0
+    if data.build.i_blkt_inboard == InboardBlanketConfiguration.NO_INBOARD_BLANKET:
+        data.build.dr_blkt_inboard = 0.0
 
     # Ensure that blanket material fractions allow non-zero space for steel
     # CCFE HCPB Model
 
-    if data_structure.stellarator_variables.istell == 0 and (
-        data_structure.fwbs_variables.i_blanket_type == 1
+    if data.stellarator.istell == 0 and (
+        data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB
     ):
-        fsum = (
-            data_structure.fwbs_variables.breeder_multiplier
-            + data_structure.fwbs_variables.vfcblkt
-            + data_structure.fwbs_variables.vfpblkt
-        )
+        fsum = data.fwbs.breeder_multiplier + data.fwbs.vfcblkt + data.fwbs.vfpblkt
         if fsum >= 1.0:
             raise ProcessValidationError(
                 "Blanket material fractions do not sum to 1.0",
-                i_blanket_type=data_structure.fwbs_variables.i_blanket_type,
-                breeder_multiplier=data_structure.fwbs_variables.breeder_multiplier,
-                vfcblkt=data_structure.fwbs_variables.vfcblkt,
-                vfpblkt=data_structure.fwbs_variables.vfpblkt,
+                i_blanket_type=data.fwbs.i_blanket_type,
+                breeder_multiplier=data.fwbs.breeder_multiplier,
+                vfcblkt=data.fwbs.vfcblkt,
+                vfpblkt=data.fwbs.vfpblkt,
                 fsum=fsum,
             )
 
     # Check that the temperature margins are not overdetermined
-    if data_structure.tfcoil_variables.tmargmin > 0.0001:
+    if data.tfcoil.tmargmin > 0.0001:
         # This limit has been input and will be applied to both TFC and CS
-        if data_structure.tfcoil_variables.temp_tf_superconductor_margin_min > 0.0001:
-            warn(
-                "temp_tf_superconductor_margin_min and tmargmin should not both be specified in IN.DAT "
-                "temp_tf_superconductor_margin_min has been ignored",
+        if data.tfcoil.temp_tf_superconductor_margin_min > 0.0001:
+            logger.error(
+                "temp_tf_superconductor_margin_min and tmargmin should not both"
+                " be specified in IN.DAT"
+                " temp_tf_superconductor_margin_min has been ignored",
                 stacklevel=2,
             )
-        if data_structure.tfcoil_variables.temp_cs_superconductor_margin_min > 0.0001:
-            warn(
-                "temp_cs_superconductor_margin_min and tmargmin should not both be specified in IN.DAT "
-                "temp_cs_superconductor_margin_min has been ignored",
+        if data.tfcoil.temp_cs_superconductor_margin_min > 0.0001:
+            logger.error(
+                "temp_cs_superconductor_margin_min and tmargmin should not both"
+                " be specified in IN.DAT"
+                " temp_cs_superconductor_margin_min has been ignored",
                 stacklevel=2,
             )
 
-        data_structure.tfcoil_variables.temp_tf_superconductor_margin_min = (
-            data_structure.tfcoil_variables.tmargmin
-        )
-        data_structure.tfcoil_variables.temp_cs_superconductor_margin_min = (
-            data_structure.tfcoil_variables.tmargmin
-        )
+        data.tfcoil.temp_tf_superconductor_margin_min = data.tfcoil.tmargmin
+        data.tfcoil.temp_cs_superconductor_margin_min = data.tfcoil.tmargmin
 
     if (
-        data_structure.physics_variables.tauee_in > 1e-10
-        and data_structure.physics_variables.i_confinement_time != 48
+        data.physics.tauee_in > 1e-10
+        and data.physics.i_confinement_time != ConfinementTimeModel.NSTX_GYRO_BOHM
     ):
         # Report error if confinement time is in the input
         # but the scaling to use it is not selected.
-        warn("tauee_in is for use with i_confinement_time=48 only", stacklevel=2)
+        logger.warning(
+            "tauee_in is for use with i_confinement_time=48 only", stacklevel=2
+        )
 
     if (
-        data_structure.physics_variables.aspect > 1.7
-        and data_structure.physics_variables.i_confinement_time == 46
+        data.physics.aspect > 1.7
+        and data.physics.i_confinement_time == ConfinementTimeModel.MENARD_NSTX
     ):
         # NSTX scaling is for A<1.7
-        warn("NSTX scaling is for A<1.7", stacklevel=2)
+        logger.warning("NSTX scaling is for A<1.7", stacklevel=2)
 
     if (
-        data_structure.physics_variables.i_plasma_current == 2
-        and data_structure.physics_variables.i_confinement_time == 42
+        data.physics.i_plasma_current == 2
+        and data.physics.i_confinement_time == ConfinementTimeModel.LANG_HIGH_DENSITY
     ):
         raise ProcessValidationError(
-            "Lang 2012 confinement scaling cannot be used for i_plasma_current=2 due to wrong q"
+            "Lang 2012 confinement scaling cannot be used for i_plasma_current=2"
+            " due to wrong q"
+        )
+    if (
+        data.stellarator.istell == 0
+        and ConfinementTimeModel(data.physics.i_confinement_time).mode
+        == ConfinementMode.STELLARATOR
+    ):
+        raise ProcessValidationError(
+            "Stellarator confinement time scaling cannot be used for a tokamak"
+        )
+    if (
+        data.physics.i_plasma_pedestal == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        and ConfinementTimeModel(data.physics.i_confinement_time).mode
+        not in {ConfinementMode.H_MODE, ConfinementMode.I_MODE}
+    ):
+        logger.warning(
+            "Non H-mode or I-mode confinement time scaling should not be used"
+            " with a pedestal profile"
         )
 
     # Cannot use temperature margin constraint with REBCO TF coils
     if (
-        data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
-        ]
-        == 36
+        data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 36
     ).any() and (
-        SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).sc_type
+        SuperconductorModel(data.tfcoil.i_tf_sc_mat).sc_type
         == SuperconductorMaterial.REBCO
     ):
         raise ProcessValidationError(
@@ -1257,51 +1154,41 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Cannot use temperature margin constraint with REBCO CS coils
     if (
-        data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
-        ]
-        == 60
-    ).any() and data_structure.pfcoil_variables.i_cs_superconductor == 8:
+        data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 60
+    ).any() and data.pf_coil.i_cs_superconductor == 8:
         raise ProcessValidationError(
             "turn off CS temperature margin constraint icc = 60 when using REBCO"
         )
 
     # Cold end of the cryocooler should be colder than the TF
-    if (
-        data_structure.tfcoil_variables.temp_tf_cryo
-        > data_structure.tfcoil_variables.tftmp
-    ):
+    if data.tfcoil.temp_tf_cryo > data.tfcoil.tftmp:
         raise ProcessValidationError("temp_tf_cryo should be lower than tftmp")
 
     # Cannot use TF coil strain limit if i_str_wp is off:
     if (
-        data_structure.numerics.icc[
-            : data_structure.numerics.neqns + data_structure.numerics.nineqns
-        ]
-        == 88
-    ).any() and data_structure.tfcoil_variables.i_str_wp == 0:
+        data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 88
+    ).any() and data.tfcoil.i_str_wp == 0:
         raise ProcessValidationError("Can't use constraint 88 if i_strain_tf == 0")
 
 
-def set_active_constraints():
+def set_active_constraints(data: DataStructure):
     """Set constraints provided in the input file as 'active'"""
     num_constraints = 0
     for i in range(ConstraintManager.num_constraints()):
-        if data_structure.numerics.icc[i] != 0:
-            data_structure.numerics.active_constraints[
-                data_structure.numerics.icc[i] - 1
-            ] = True
+        if data.numerics.icc[i] != 0:
+            data.numerics.active_constraints[data.numerics.icc[i] - 1] = True
             num_constraints += 1
 
-    if data_structure.numerics.neqns < 0:
+    if data.numerics.neqns < 0:
         # The value of neqns has not been set in the input file.  Default = 0.
-        data_structure.numerics.neqns = num_constraints - data_structure.numerics.nineqns
+        data.numerics.neqns = num_constraints - data.numerics.nineqns
     else:
-        data_structure.numerics.nineqns = num_constraints - data_structure.numerics.neqns
+        data.numerics.nineqns = num_constraints - data.numerics.neqns
 
 
-def set_device_type():
-    if data_structure.ife_variables.ife == 1:
-        data_structure.global_variables.icase = "Inertial Fusion model"
-    elif data_structure.stellarator_variables.istell != 0:
-        data_structure.global_variables.icase = "Stellarator model"
+def set_device_type(data: DataStructure):
+    """Set the fusion device type on the data structure"""
+    if data.ife.ife == 1:
+        data.globals.icase = "Inertial Fusion model"
+    elif data.stellarator.istell != 0:
+        data.globals.icase = "Stellarator model"

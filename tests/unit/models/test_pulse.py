@@ -3,25 +3,17 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import (
-    constraint_variables,
-    numerics,
-    pf_power_variables,
-    pfcoil_variables,
-    physics_variables,
-    pulse_variables,
-)
-from process.models.pulse import Pulse
+from process.data_structure.pfcoil_variables import PFConductorModel
 
 
 @pytest.fixture
-def pulse():
+def pulse(process_models):
     """Provides Pulse object for testing.
 
     :returns: initialised Pulse object
     :rtype: process.pulse.Pulse
     """
-    return Pulse()
+    return process_models.pulse
 
 
 class TohswgParam(NamedTuple):
@@ -69,7 +61,7 @@ class TohswgParam(NamedTuple):
             t_current_ramp_up_min=0,
             vpfskv=0,
             n_pf_cs_plasma_circuits=8,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             n_cs_pf_coils=7,
             p_cs_resistive_flat_top=0,
             ind_pf_cs_plasma_mutual=np.array(
@@ -627,7 +619,7 @@ class TohswgParam(NamedTuple):
             t_current_ramp_up_min=-526.67247746645455,
             vpfskv=20,
             n_pf_cs_plasma_circuits=8,
-            i_pf_conductor=0,
+            i_pf_conductor=PFConductorModel.SUPERCONDUCTING,
             n_cs_pf_coils=7,
             p_cs_resistive_flat_top=0,
             ind_pf_cs_plasma_mutual=np.array(
@@ -1197,52 +1189,64 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
     """
 
     monkeypatch.setattr(
-        constraint_variables, "t_current_ramp_up_min", tohswgparam.t_current_ramp_up_min
+        pulse.data.constraints,
+        "t_current_ramp_up_min",
+        tohswgparam.t_current_ramp_up_min,
     )
 
-    monkeypatch.setattr(pf_power_variables, "vpfskv", tohswgparam.vpfskv)
+    monkeypatch.setattr(pulse.data.pf_power, "vpfskv", tohswgparam.vpfskv)
 
     monkeypatch.setattr(
-        pfcoil_variables, "n_pf_cs_plasma_circuits", tohswgparam.n_pf_cs_plasma_circuits
+        pulse.data.pf_coil,
+        "n_pf_cs_plasma_circuits",
+        tohswgparam.n_pf_cs_plasma_circuits,
     )
 
-    monkeypatch.setattr(pfcoil_variables, "i_pf_conductor", tohswgparam.i_pf_conductor)
+    monkeypatch.setattr(pulse.data.pf_coil, "i_pf_conductor", tohswgparam.i_pf_conductor)
 
-    monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", tohswgparam.n_cs_pf_coils)
+    monkeypatch.setattr(pulse.data.pf_coil, "n_cs_pf_coils", tohswgparam.n_cs_pf_coils)
 
     monkeypatch.setattr(
-        pfcoil_variables, "p_cs_resistive_flat_top", tohswgparam.p_cs_resistive_flat_top
+        pulse.data.pf_coil,
+        "p_cs_resistive_flat_top",
+        tohswgparam.p_cs_resistive_flat_top,
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "ind_pf_cs_plasma_mutual", tohswgparam.ind_pf_cs_plasma_mutual
+        pulse.data.pf_coil,
+        "ind_pf_cs_plasma_mutual",
+        tohswgparam.ind_pf_cs_plasma_mutual,
     )
 
-    monkeypatch.setattr(pfcoil_variables, "c_pf_coil_turn", tohswgparam.c_pf_coil_turn)
+    monkeypatch.setattr(pulse.data.pf_coil, "c_pf_coil_turn", tohswgparam.c_pf_coil_turn)
 
     monkeypatch.setattr(
-        pfcoil_variables, "c_pf_cs_coils_peak_ma", tohswgparam.c_pf_cs_coils_peak_ma
+        pulse.data.pf_coil, "c_pf_cs_coils_peak_ma", tohswgparam.c_pf_cs_coils_peak_ma
     )
 
-    monkeypatch.setattr(pfcoil_variables, "n_pf_coil_turns", tohswgparam.n_pf_coil_turns)
+    monkeypatch.setattr(
+        pulse.data.pf_coil, "n_pf_coil_turns", tohswgparam.n_pf_coil_turns
+    )
 
     monkeypatch.setattr(
-        pfcoil_variables,
+        pulse.data.pf_coil,
         "c_pf_coil_turn_peak_input",
         tohswgparam.c_pf_coil_turn_peak_input,
     )
 
-    monkeypatch.setattr(physics_variables, "plasma_current", tohswgparam.plasma_current)
+    monkeypatch.setattr(pulse.data.physics, "plasma_current", tohswgparam.plasma_current)
 
-    monkeypatch.setattr(physics_variables, "rmajor", tohswgparam.rmajor)
+    monkeypatch.setattr(pulse.data.physics, "rmajor", tohswgparam.rmajor)
 
-    monkeypatch.setattr(numerics, "active_constraints", tohswgparam.active_constraints)
+    monkeypatch.setattr(
+        pulse.data.numerics, "active_constraints", tohswgparam.active_constraints
+    )
 
-    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", tohswgparam.i_pulsed_plant)
+    monkeypatch.setattr(pulse.data.pulse, "i_pulsed_plant", tohswgparam.i_pulsed_plant)
 
     pulse.tohswg(output=False)
 
-    assert constraint_variables.t_current_ramp_up_min == pytest.approx(
+    assert pulse.data.constraints.t_current_ramp_up_min == pytest.approx(
         tohswgparam.expected_tohsmn
     )
 
@@ -1265,8 +1269,8 @@ def test_calculate_burn_time_valid(
     v_plasma_loop_burn,
     t_plant_pulse_fusion_ramp,
     expected,
+    pulse,
 ):
-    pulse = Pulse()
     result = pulse.calculate_burn_time(
         vs_cs_pf_total_burn=vs_cs_pf_total_burn,
         v_plasma_loop_burn=v_plasma_loop_burn,

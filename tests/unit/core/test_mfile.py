@@ -6,14 +6,20 @@ from pathlib import Path
 import pytest
 
 from process.core.io.mfile import MFile, get_mfile_initial_ixc_values
+from process.core.model import DataStructure
 
 
-def test_get_mfile_initial_ixc_values(input_file, tmp_path):
+@pytest.fixture
+def data_structure_obj():
+    return DataStructure()
+
+
+def test_get_mfile_initial_ixc_values(input_file, tmp_path, data_structure_obj):
     tmp_input_file = tmp_path / "IN.DAT"
     shutil.copy(input_file, tmp_input_file)
 
     iteration_variable_names, iteration_variable_values = get_mfile_initial_ixc_values(
-        Path(tmp_input_file)
+        Path(tmp_input_file), data_structure_obj
     )
 
     assert iteration_variable_names[0] == "b_plasma_toroidal_on_axis"
@@ -26,7 +32,7 @@ def test_get_mfile_initial_ixc_values(input_file, tmp_path):
     assert iteration_variable_values[-1] == pytest.approx(0.5)
 
     # A default not provided in the MFile
-    assert iteration_variable_names[-4] == "f_nd_alpha_electron"
+    assert iteration_variable_names[-4] == "f_nd_alpha_thermal_electron"
     assert iteration_variable_values[-4] == pytest.approx(0.1)
 
 

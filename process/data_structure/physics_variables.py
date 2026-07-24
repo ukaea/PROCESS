@@ -1,6 +1,5 @@
 """Module containing tokamak plasma physics routines
 
-N/A
 This module contains all the primary plasma physics routines
 for a tokamak device.
 
@@ -8,2194 +7,1655 @@ for a tokamak device.
 Module containing global variables relating to the plasma physics
 """
 
+from dataclasses import dataclass, field
+from enum import IntEnum
+
 import numpy as np
 
-# From physics.f90:
-iscz: int = None
+
+class CurrentProfileIndexModel(IntEnum):
+    """Enum for current profile index models."""
+
+    USER_INPUT = 0
+    WESSON = 1
 
 
-err242: int = None
+class PlasmaIgnitionModel(IntEnum):
+    """Enum for plasma ignition models."""
+
+    NON_IGNITED = 0
+    IGNITED = 1
 
 
-err243: int = None
+class DivertorNumberModels(IntEnum):
+    """Enum for divertor number models. `i_single_null` is the index for this enum."""
+
+    DOUBLE_NULL = 0
+    SINGLE_NULL = 1
 
 
-f_p_plasma_separatrix_rad: float = None
-"""Separatrix radiation fraction"""
+class ConfinementMode(IntEnum):
+    """Enum for plasma confinement mode"""
+
+    L_MODE = (0, "L")
+    H_MODE = (1, "H")
+    I_MODE = (2, "I")
+    STELLARATOR = (3, "Stell")
+    OHMIC = (4, "Ohmic")
+
+    def __new__(cls, value: int, abbreviation: str):
+        """Create a new instance of ConfinementMode.
+
+        Parameters
+        ----------
+        value : int
+            The enum value
+        abbreviation : str
+            The abbreviation of the confinement mode
+
+        Returns
+        -------
+        ConfinementMode
+            A new enum instance with the given value and abbreviation
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj.abbreviation = abbreviation
+
+        return obj
 
 
-e_plasma_beta: float = None
-"""[J]"""
+class ConfinementTimeModel(IntEnum):
+    """Confinement time (τ_E) model types"""
+
+    USER_INPUT = (0, "User input electron confinement   ", None)
+    NEO_ALCATOR = (
+        1,
+        f"Neo-Alcator                ({ConfinementMode.OHMIC.abbreviation})",
+        ConfinementMode.OHMIC,
+    )
+    MIRNOV = (
+        2,
+        f"Mirnov                         ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    MEREZHKIN_MUHKOVATOV = (
+        3,
+        f"Merezkhin-Muhkovatov    ({ConfinementMode.OHMIC.abbreviation})({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.OHMIC | ConfinementMode.L_MODE,
+    )
+    SHIMOMURA = (
+        4,
+        f"Shimomura                      ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    KAYE_GOLDSTON = (
+        5,
+        f"Kaye-Goldston                  ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    ITER_89P = (
+        6,
+        f"ITER 89-P                      ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    ITER_89_0 = (
+        7,
+        f"ITER 89-O                      ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    REBUT_LALLIA = (
+        8,
+        f"Rebut-Lallia                   ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    GOLDSTON = (
+        9,
+        f"Goldston                       ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    T_10 = (
+        10,
+        f"T10                            ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    JAERI = (
+        11,
+        f"JAERI / Odajima-Shimomura      ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    KAYE_BIG = (
+        12,
+        f"Kaye-Big Complex               ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    ITER_H90_P = (
+        13,
+        f"ITER H90-P                     ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    MINIMUM_OF_ITER_89P_AND_ITER_89_0 = (
+        14,
+        f"ITER 89-P & 89-O min           ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    RIEDEL_L = (
+        15,
+        f"Riedel                         ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    CHRISTIANSEN = (
+        16,
+        f"Christiansen                   ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    LACKNER_GOTTARDI = (
+        17,
+        f"Lackner-Gottardi               ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    NEO_KAYE = (
+        18,
+        f"Neo-Kaye                       ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    RIEDEL_H = (
+        19,
+        f"Riedel                         ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    ITER_H90_P_AMENDED = (
+        20,
+        f"ITER H90-P amended             ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    SUDO_ET_AL = (
+        21,
+        f"LHD                        ({ConfinementMode.STELLARATOR.abbreviation})",
+        ConfinementMode.STELLARATOR,
+    )
+    GYRO_REDUCED_BOHM = (
+        22,
+        f"Gyro-reduced Bohm          ({ConfinementMode.STELLARATOR.abbreviation})",
+        ConfinementMode.STELLARATOR,
+    )
+    LACKNER_GOTTARDI_STELLARATOR = (
+        23,
+        f"Lackner-Gottardi           ({ConfinementMode.STELLARATOR.abbreviation})",
+        ConfinementMode.STELLARATOR,
+    )
+    ITER_93H = (
+        24,
+        f"ITER-93H  ELM-free             ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    TITAN_REMOVED = (
+        25,
+        "TITAN RFP OBSOLETE                (N/A)",
+        None,
+    )
+    ITER_H97P = (
+        26,
+        f"ITER H-97P ELM-free            ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    ITER_H97P_ELMY = (
+        27,
+        f"ITER H-97P ELMy                ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    ITER_96P = (
+        28,
+        f"ITER-96P (ITER-97L)            ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    VALOVIC_ELMY = (
+        29,
+        f"Valovic modified ELMy          ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    KAYE = (
+        30,
+        f"Kaye 98 modified               ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    ITER_PB98P_Y = (
+        31,
+        f"ITERH-PB98P(y)                 ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    IPB98_Y = (
+        32,
+        f"IPB98(y)                       ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    ITER_IPB98Y1 = (
+        33,
+        f"IPB98(y,1)                     ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    ITER_IPB98Y2 = (
+        34,
+        f"IPB98(y,2)                     ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    ITER_IPB98Y3 = (
+        35,
+        f"IPB98(y,3)                     ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    ITER_IPB98Y4 = (
+        36,
+        f"IPB98(y,4)                     ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    ISS95_STELLARATOR = (
+        37,
+        f"ISS95                      ({ConfinementMode.STELLARATOR.abbreviation})",
+        ConfinementMode.STELLARATOR,
+    )
+    ISS04_STELLARATOR = (
+        38,
+        f"ISS04                      ({ConfinementMode.STELLARATOR.abbreviation})",
+        ConfinementMode.STELLARATOR,
+    )
+    DS03 = (
+        39,
+        f"DS03 beta-independent          ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    MURARI = (
+        40,
+        f'Murari "Non-power law"         ({ConfinementMode.H_MODE.abbreviation})',
+        ConfinementMode.H_MODE,
+    )
+    PETTY08 = (
+        41,
+        f"Petty 2008                     ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    LANG_HIGH_DENSITY = (
+        42,
+        f"Lang high density              ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    HUBBARD_NOMINAL = (
+        43,
+        f"Hubbard 2017 - nominal         ({ConfinementMode.I_MODE.abbreviation})",
+        ConfinementMode.I_MODE,
+    )
+    HUBBARD_LOWER = (
+        44,
+        f"Hubbard 2017 - lower           ({ConfinementMode.I_MODE.abbreviation})",
+        ConfinementMode.I_MODE,
+    )
+    HUBBARD_UPPER = (
+        45,
+        f"Hubbard 2017 - upper           ({ConfinementMode.I_MODE.abbreviation})",
+        ConfinementMode.I_MODE,
+    )
+    MENARD_NSTX = (
+        46,
+        f"Menard NSTX                    ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    MENARD_NSTX_PETTY08_HYBRID = (
+        47,
+        f"Menard NSTX-Petty08 hybrid     ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    NSTX_GYRO_BOHM = (
+        48,
+        f"Buxton NSTX gyro-Bohm          ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    ITPA20 = (
+        49,
+        f"ITPA20                         ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+    ITPA20_IL = (
+        50,
+        f"ITPA20-IL                      ({ConfinementMode.H_MODE.abbreviation})",
+        ConfinementMode.H_MODE,
+    )
+
+    def __new__(cls, value: int, full_name: str, mode: ConfinementMode = None):
+        """Create a new instance of ConfinementTimeModel.
+
+        Parameters
+        ----------
+        value : int
+            The enum value
+        full_name : str
+            The full name of the confinement time model
+        mode : ConfinementMode
+            The confinement mode associated with the model
+
+        Returns
+        -------
+        ConfinementTimeModel
+            A new enum instance with the given value and full name
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj.full_name = full_name
+        obj.mode = mode
+        return obj
 
 
-p_plasma_heating_total_mw: float = None
-"""[W]"""
+class ConfinementRadiationLossModel(IntEnum):
+    """Confinement radiation loss model types"""
+
+    FULL_RADIATION = (0, "All radiation included in loss power term")
+    CORE_ONLY = (1, "Only core radiation included in loss power term")
+    NO_RADIATION = (2, "No radiation included in loss power term")
+
+    def __new__(cls, value: int, description: str):
+        """Create a new instance of ConfinementRadiationLossModel.
+
+        Parameters
+        ----------
+        value : int
+            The enum value
+        description : str
+            The description of the radiation loss model
+
+        Returns
+        -------
+        ConfinementRadiationLossModel
+            A new enum instance with the given value and description
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj.description = description
+        return obj
 
 
-t_energy_confinement_beta: float = None
-"""[s]"""
-
-
-ptarmw: float = None
-
-
-lambdaio: float = None
-
-
-drsep: float = None
-
-
-fio: float = None
-
-
-fli: float = None
-
-
-flo: float = None
-
-
-fui: float = None
-
-
-fuo: float = None
-
-
-plimw: float = None
-
-
-plomw: float = None
-
-
-puimw: float = None
-
-
-puomw: float = None
-
-
-rho_star: float = None
-
-nu_star: float = None
-
-beta_mcdonald: float = None
-
-itart_r: float = None
-
-# Var in subroutine plasma_composition which requires re-initialisation on
-# each new run:
-first_call: int = None
-
-
-# From physics_variables.f90:
-N_CONFINEMENT_SCALINGS: int = 51
+N_CONFINEMENT_SCALINGS = len(ConfinementTimeModel)
 """number of energy confinement time scaling laws"""
 
 
-m_beam_amu: float = None
-"""beam ion mass (amu)"""
+@dataclass(slots=True)
+class PhysicsData:
+    iscz: int = 0
 
+    err242: int = 0
 
-m_fuel_amu: float = None
-"""average mass of fuel portion of ions (amu)"""
+    err243: int = 0
 
+    f_p_plasma_separatrix_rad: float = 0.0
+    """Separatrix radiation fraction"""
 
-m_ions_total_amu: float = None
-"""average mass of all ions (amu)"""
+    e_plasma_beta: float = 0.0
+    """[J]"""
 
+    p_plasma_heating_total_mw: float = 0.0
+    """Total heating power given to the plasma (Pₕₑₐₜ) [MW]"""
 
-m_plasma_fuel_ions: float = None
-"""Mass of the plasma fuel ions (kg)"""
+    t_energy_confinement_beta: float = 0.0
+    """[s]"""
 
+    ptarmw: float = 0.0
 
-m_plasma_ions_total: float = None
-"""Mass of all ions in plasma (kg)"""
+    lambdaio: float = 0.0
 
+    drsep: float = 0.0
 
-m_plasma_alpha: float = None
-"""Mass of the alpha particles in the plasma (kg)"""
+    fio: float = 0.0
 
+    fli: float = 0.0
 
-m_plasma_electron: float = None
-"""Mass of the electrons in the plasma (kg)"""
+    flo: float = 0.0
 
+    fui: float = 0.0
 
-m_plasma: float = None
-"""Total mass of the plasma (kg)"""
+    fuo: float = 0.0
 
+    plimw: float = 0.0
 
-alphaj: float = None
-"""current profile index"""
+    plomw: float = 0.0
 
+    puimw: float = 0.0
 
-alphaj_wesson: float = None
-"""Wesson-like current profile index"""
+    puomw: float = 0.0
 
+    rho_star: float = 0.0
 
-alphan: float = None
-"""density profile index"""
+    nu_star: float = 0.0
 
+    beta_mcdonald: float = 0.0
 
-alphap: float = None
-"""pressure profile index"""
+    itart_r: float = 0.0
 
+    # Var in subroutine plasma_composition which requires re-initialisation on
+    # each new run:
+    first_call: int = 1
 
-fusden_alpha_total: float = None
-"""Alpha particle production rate per unit volume, from plasma and beams [particles/m3/sec]"""
+    m_beam_amu: float = 0.0
+    """beam ion mass (amu)"""
 
+    m_fuel_amu: float = 0.0
+    """average mass of fuel portion of ions (amu)"""
 
-fusden_plasma_alpha: float = None
-"""Alpha particle production rate per unit volume, just from plasma [particles/m3/sec]"""
+    m_ions_total_amu: float = 0.0
+    """average mass of all ions (amu)"""
 
+    m_plasma_fuel_ions: float = 0.0
+    """Mass of the plasma fuel ions (kg)"""
 
-alphat: float = None
-"""temperature profile index"""
+    m_plasma_ions_total: float = 0.0
+    """Mass of all ions in plasma (kg)"""
 
+    m_plasma_alpha: float = 0.0
+    """Mass of the alpha particles in the plasma (kg)"""
 
-aspect: float = None
-"""aspect ratio (`iteration variable 1`)"""
+    m_plasma_electron: float = 0.0
+    """Mass of the electrons in the plasma (kg)"""
 
+    m_plasma: float = 0.0
+    """Total mass of the plasma (kg)"""
 
-beamfus0: float = None
-"""multiplier for beam-background fusion calculation"""
+    alphaj: float = 1.0
+    """Plasma current profile index (⍺ⱼ)"""  # noqa: RUF001
 
+    alphaj_wesson: float = None
+    """Wesson-like current profile index"""
 
-beta_total_vol_avg: float = None
-"""Volume averaged total plasma beta (`iteration variable 5`) (calculated if stellarator)"""
+    alphan: float = 0.25
+    """Plasma density profile index (⍺ₙ)"""  # noqa: RUF001
 
+    alphap: float = 0.0
+    """Plasma pressure profile index (⍺ₚ)"""  # noqa: RUF001
 
-beta_fast_alpha: float = None
-"""fast alpha beta component"""
+    fusden_alpha_total: float = 0.0
+    """Alpha particle production rate per unit volume, from plasma and beams [particles/m³/sec]"""
 
+    fusden_plasma_alpha: float = 0.0
+    """Alpha particle production rate per unit volume, just from plasma [particles/m³/sec]"""
 
-beta_vol_avg_max: float = None
-"""Max allowable volume averaged beta"""
+    alphat: float = 0.5
+    """Plasma temperature profile index (⍺ₜ)"""  # noqa: RUF001
 
+    aspect: float = 2.907
+    """Plasma aspect ratio (A) (`iteration variable 1`)"""
 
-beta_vol_avg_min: float = None
-"""Minimum allowable volume averaged beta"""
+    beamfus0: float = 1.0
+    """multiplier for beam-background fusion calculation"""
 
+    beta_total_vol_avg: float = 0.042
+    """Volume averaged total plasma beta (⟨β⟩) (`iteration variable 5`) (calculated if stellarator)"""
 
-beta_beam: float = None
-"""neutral beam beta component"""
+    beta_fast_alpha: float = 0.0
+    """Fast alpha beta component (β_alpha)"""
 
+    beta_vol_avg_max: float = 0.0
+    """Max allowable volume averaged beta (⟨β⟩<)"""
 
-beta_poloidal_vol_avg: float = None
-"""poloidal beta"""
+    beta_vol_avg_min: float = 0.0
+    """Minimum allowable volume averaged beta (⟨β⟩>)"""
 
+    beta_beam: float = 0.0
+    """Neutral beam beta component (β_beam)"""
 
-beta_poloidal_eps: float = None
-"""Poloidal beta and inverse aspcet ratio product"""
+    beta_poloidal_vol_avg: float = 0.0
+    """Volume averaged poloidal beta (⟨βₚ⟩)"""
 
+    beta_poloidal_eps: float = 0.0
+    """Poloidal beta and inverse aspcet ratio product (⟨βₚ⟩*ε)"""
 
-beta_toroidal_vol_avg: float = None
-"""Plasma volume averaged toroidal beta"""
+    beta_toroidal_vol_avg: float = 0.0
+    """Volume averaged toroidal beta (⟨βₜ⟩)"""
 
-beta_thermal_toroidal_profile: list[float] = None
-"""toroidal beta profile"""
+    beta_thermal_toroidal_profile: list[float] = field(default_factory=list)
+    """Toroidal beta profile"""
 
+    beta_thermal_vol_avg: float = 0.0
+    """Volume averaged thermal beta (⟨βₜₕ⟩)"""
 
-beta_thermal_vol_avg: float = None
-"""Plasma volume averaged thermal beta"""
+    beta_thermal_poloidal_vol_avg: float = 0.0
+    """Volume averaged poloidal thermal beta (⟨βₚₜₕ⟩)"""
 
+    beta_thermal_toroidal_vol_avg: float = 0.0
+    """Volume averaged toroidal thermal beta (⟨βₜₕ⟩)"""
 
-beta_thermal_poloidal_vol_avg: float = None
-"""Plasma volume averaged poloidal thermal beta"""
+    beta_norm_total: float = 0.0
+    """Normalised total beta (βₙ)"""
 
+    beta_norm_thermal: float = 0.0
+    """Normalised thermal beta (βₙₜₕ)"""
 
-beta_thermal_toroidal_vol_avg: float = None
-"""Plasma volume averaged toloidal thermal beta"""
+    beta_norm_toroidal: float = 0.0
+    """Normalised toroidal beta (βₙₜ)"""
 
+    beta_norm_poloidal: float = 0.0
+    """Normalised poloidal beta (βₙₚ)"""
 
-beta_norm_total: float = None
-"""normaised total beta"""
+    e_plasma_beta_thermal: float = 0.0
+    """Plasma thermal energy derived from thermal beta"""
 
+    e_plasma_thermal_total: float = 0.0
+    """Plasma total stored thermal energy (J)"""
 
-beta_norm_thermal: float = None
-"""normaised thermal beta"""
+    eden_plasma_thermal_vol_avg: float = 0.0
+    """Plasma volume averaged thermal energy density (J/m³)"""
 
+    e_plasma_electrons_thermal: float = 0.0
+    """Plasma thermal energy in electrons (J)"""
 
-beta_norm_toroidal: float = None
-"""normaised toroidal beta"""
+    eden_plasma_electrons_thermal_vol_avg: float = 0.0
+    """Plasma volume averaged thermal energy density in electrons (J/m³)"""
 
+    e_plasma_ions_thermal: float = 0.0
+    """Plasma thermal energy in ions (J)"""
 
-beta_norm_poloidal: float = None
-"""normaised poloidal beta"""
+    eden_plasma_ions_thermal_vol_avg: float = 0.0
+    """Plasma volume averaged thermal energy density in ions (J/m³)"""
 
+    betbm0: float = 1.5
+    """leading coefficient for NB beta fraction"""
 
-e_plasma_beta_thermal: float = None
-"""Plasma thermal energy derived from thermal beta"""
+    b_plasma_surface_poloidal_average: float = 0.0
+    """Plasma surface average poloidal field (T)"""
 
+    b_plasma_toroidal_on_axis: float = 5.68
+    """Plasma toroidal field on axis (Bᴛ(R₀)) [T] (`iteration variable 2`)"""
 
-betbm0: float = None
-"""leading coefficient for NB beta fraction"""
+    b_plasma_inboard_toroidal: float = 0.0
+    """Plasma inboard toroidal field (Bᴛ(R₀-a)) [T]"""
 
+    b_plasma_outboard_toroidal: float = 0.0
+    """Plasma outboard toroidal field (Bᴛ(R₀+a)) [T]"""
 
-b_plasma_surface_poloidal_average: float = None
-"""Plasma surface average poloidal field (T)"""
+    b_plasma_toroidal_profile: list[float] = field(default_factory=list)
+    """Plasma toroidal field profile (Bᴛ(r)) [T]"""
 
+    b_plasma_total: float = 0.0
+    """Sum of plasma total toroidal + poloidal field (Bₜₒₜ) [T]"""
 
-b_plasma_toroidal_on_axis: float = None
-"""Plasma toroidal field on axis (T) (`iteration variable 2`)"""
+    e_plasma_magnetic_stored: float = 0.0
+    """Plasma stored magnetic energy [J]"""
 
-b_plasma_inboard_toroidal: float = None
-"""Plasma inboard toroidal field (T)"""
+    burnup: float = 0.0
+    """fractional plasma burnup"""
 
-b_plasma_outboard_toroidal: float = None
-"""Plasma outboard toroidal field (T)"""
+    burnup_in: float = 0.0
+    """fractional plasma burnup user input"""
 
-b_plasma_toroidal_profile: list[float] = None
-"""toroidal field profile in plasma (T)"""
+    b_plasma_vertical_required: float = 0.0
+    """Vertical field needed for plasma equilibrium (Bᵥ) [T]"""
 
+    c_beta: float = 0.5
+    """Destabalisation parameter for i_beta_norm_max=4 beta limit"""
 
-b_plasma_total: float = None
-"""Sum of plasma total toroidal + poloidal field (T)"""
+    csawth: float = 1.0
+    """coeff. for sawteeth effects on burn V-s requirement"""
 
-e_plasma_magnetic_stored: float = None
-"""Plasma stored magnetic energy (J)"""
+    f_vol_plasma: float = 1.0
+    """multiplying factor for the plasma volume (normally=1)"""
 
+    f_r_conducting_wall: float = 1.35
+    """maximum ratio of conducting wall distance to plasma minor radius for
+    vertical stability (`constraint equation 23`)
+    """
 
-burnup: float = None
-"""fractional plasma burnup"""
+    nd_plasma_electrons_vol_avg: float = 9.8e19
+    """Plasma volume averaged electron density (⟨nₑ⟩) [/m³] (`iteration variable 6`)"""
 
+    nd_plasma_fuel_ions_vol_avg: float = 0.0
+    """Plasma volume averaged fuel ion density (⟨n_fuel⟩) [/m³]"""
 
-burnup_in: float = None
-"""fractional plasma burnup user input"""
+    dlamee: float = 0.0
+    """electron-electron coulomb logarithm"""
 
+    dlamie: float = 0.0
+    """ion-electron coulomb logarithm"""
 
-b_plasma_vertical_required: float = None
-"""Vertical field needed for plasma equilibrium (T)"""
+    nd_plasma_electron_max_array: list[float] = field(
+        default_factory=lambda: np.zeros(8, dtype=np.float64)
+    )
+    """Array of plasma electron density upper limits values (nₑ,max) [/m³]"""
 
+    nd_plasma_alphas_thermal_vol_avg: float = 0.0
+    """Plasma volume averaged thermal alpha density (⟨n_αₜₕ⟩) [/m³]"""
 
-c_beta: float = None
-"""Destabalisation parameter for i_beta_norm_max=4 beta limit"""
+    nd_beam_ions: float = 0.0
+    """Hot beam ion density, variable (⟨n_beam⟩) [/m³]"""
 
+    nd_beam_ions_out: float = 0.0
+    """Hot beam ion density from calculation [/m³]"""
 
-csawth: float = None
-"""coeff. for sawteeth effects on burn V-s requirement"""
+    beta_norm_max: float = 3.5
+    """Troyon-like coefficient for beta scaling"""
 
+    beta_norm_max_wesson: float = 0.0
+    """Wesson-like coefficient for beta scaling"""
 
-f_vol_plasma: float = None
-"""multiplying factor for the plasma volume (normally=1)"""
+    beta_norm_max_menard: float = 0.0
+    """Menard-like coefficient for beta scaling"""
 
+    beta_norm_max_original_scaling: float = 0.0
+    """Original scaling coefficient for beta scaling"""
 
-f_r_conducting_wall: float = None
-"""maximum ratio of conducting wall distance to plasma minor radius for
-vertical stability (`constraint equation 23`)
-"""
+    beta_norm_max_tholerus: float = 0.0
+    """Tholerus-like coefficient for beta scaling"""
 
+    beta_norm_max_stambaugh: float = 0.0
+    """Stambaugh-like coefficient for beta scaling"""
 
-nd_plasma_electrons_vol_avg: float = None
-"""Plasma volume averaged electron density (/m3) (`iteration variable 6`)"""
+    nd_plasma_electrons_max: float = 0.0
+    """Plasma electron max density limit (nₑ,max) [/m³]"""
 
+    nd_plasma_ions_total_vol_avg: float = 0.0
+    """Plasma volume averaged total ion density (⟨n_i⟩) [/m³]"""
 
-nd_plasma_fuel_ions_vol_avg: float = None
-"""Plasma volume averaged fuel ion density (/m3)"""
+    nd_plasma_electron_line: float = 0.0
+    """Plasma line averaged electron density (⟨nₑ⟩_line) [/m³]"""
 
+    nd_plasma_protons_vol_avg: float = 0.0
+    """Plasma volume averaged proton ash density (⟨n_p⟩) [/m³]"""
 
-dlamee: float = None
-"""electron-electron coulomb logarithm"""
+    ntau: float = 0.0
+    """Fusion double product [s/m³]"""
 
+    nTtau: float = 0.0
+    """Lawson triple product [keV s / m³]"""
 
-dlamie: float = None
-"""ion-electron coulomb logarithm"""
+    nd_plasma_impurities_vol_avg: float = 0.0
+    """Plasma volume averaged impurity (Z > 2) ion density (⟨n_imp⟩) [/m³]"""
 
+    gradient_length_ne: float = None
+    """Max. normalised gradient length in el. density (i_plasma_pedestal==0 only)"""
 
-nd_plasma_electron_max_array: list[float] = None
-"""Array of plasma electron density upper limits values (/m3)"""
+    gradient_length_te: float = None
+    """Max. normalised gradient length in el. temperature (i_plasma_pedestal==0 only)"""
 
+    beta_poloidal_eps_max: float = 1.38
+    """maximum (eps*beta_poloidal) (`constraint equation 6`). Note: revised issue #346
+    "Operation at the tokamak equilibrium poloidal beta-limit in TFTR", 1992 Nucl. Fusion 32 1468
+    """
 
-nd_plasma_alphas_vol_avg: float = None
-"""Plasma volume averaged thermal alpha density (/m3)"""
+    eps: float = 0.34399724802
+    """Plasma inverse aspect ratio (ε)"""
 
+    f_c_plasma_auxiliary: float = 0.0
+    """fraction of plasma current produced by auxiliary current drive"""
 
-nd_beam_ions: float = None
-"""hot beam ion density, variable (/m3)"""
+    f_c_plasma_inductive: float = 0.0
+    """fraction of plasma current produced inductively"""
 
+    f_alpha_electron: float = 0.0
+    """fraction of alpha energy to electrons"""
 
-nd_beam_ions_out: float = None
-"""hot beam ion density from calculation (/m3)"""
+    f_p_alpha_plasma_deposited: float = 0.95
+    """Fraction of alpha power deposited in plasma. Default of 0.95 taken from https://doi.org/10.1088/0029-5515/39/12/305."""
 
+    f_alpha_ion: float = 0.0
+    """fraction of alpha power to ions"""
 
-beta_norm_max: float = None
-"""Troyon-like coefficient for beta scaling"""
+    f_plasma_fuel_deuterium: float = 0.5
+    """Plasma deuterium fuel fraction"""
 
+    f_p_div_lower: float = 1.0
+    """fraction of power to the lower divertor in double null configuration
+    (`i_single_null = 0` only) (default assumes SN)
+    """
 
-beta_norm_max_wesson: float = None
-"""Wesson-like coefficient for beta scaling"""
+    ffwal: float = 0.92
+    """factor to convert plasma surface area to first wall area in neutron wall
+    load calculation (`i_pflux_fw_neutron=1`)
+    """
 
+    f_nd_plasma_greenwald: float = None
+    """Greenwald fraction of the line averaged electron density. The classic Greenwald
+    limit value"""
 
-beta_norm_max_menard: float = None
-"""Menard-like coefficient for beta scaling"""
+    f_nd_plasma_pedestal_greenwald: float = 0.85
+    """Greenwald fraction of the pedestal density
+    """
 
+    f_nd_plasma_separatrix_greenwald: float = 0.5
+    """Greenwald fraction of the separatrix density
+    """
 
-beta_norm_max_original_scaling: float = None
-"""Original scaling coefficient for beta scaling"""
+    f_plasma_fuel_helium3: float = 0.0
+    """Plasma Helium-3 fuel fraction"""
 
+    figmer: float = 0.0
+    """physics figure of merit (= plasma_current*aspect**sbar, where `sbar=1`)"""
 
-beta_norm_max_tholerus: float = None
-"""Tholerus-like coefficient for beta scaling"""
+    fkzohm: float = 1.0
+    """Zohm elongation scaling adjustment factor (`i_plasma_geometry=2, 3`)"""
 
+    f_plasma_fuel_tritium: float = 0.5
+    """Plasma tritium fuel fraction"""
 
-beta_norm_max_stambaugh: float = None
-"""Stambaugh-like coefficient for beta scaling"""
+    fusden_total: float = 0.0
+    """fusion reaction rate density, from beams and plasma (reactions/m3/sec)"""
 
+    fusrat_total: float = 0.0
+    """fusion reaction rate, from beams and plasma (reactions/sec)"""
 
-nd_plasma_electrons_max: float = None
-"""Plasma electron max density limit (/m3)"""
+    fusrat_plasma_dt_profile: list[float] = field(default_factory=list)
+    """Profile of D-T fusion reaction rate in plasma, (reactions/sec)"""
 
+    fusrat_plasma_dd_triton_profile: list[float] = field(default_factory=list)
+    """Profile of D-D fusion reaction rate (tritium branch) in plasma, (reactions/sec)"""
 
-nd_plasma_ions_total_vol_avg: float = None
-"""Plasma volume averaged total ion density (/m3)"""
+    fusrat_plasma_dd_helion_profile: list[float] = field(default_factory=list)
+    """Profile of D-D fusion reaction rate (helium branch) in plasma, (reactions/sec)"""
 
+    fusrat_plasma_dhe3_profile: list[float] = field(default_factory=list)
+    """Profile of D-3He fusion reaction rate in plasma, (reactions/sec)"""
 
-nd_plasma_electron_line: float = None
-"""Plasma line averaged electron density (/m3)"""
+    fusden_plasma: float = 0.0
+    """fusion reaction rate, just from plasma (reactions/m3/sec)"""
 
+    f_c_plasma_non_inductive: float = 1.0
+    """fraction of the plasma current produced by non-inductive means (`iteration variable 44`)"""
 
-nd_plasma_protons_vol_avg: float = None
-"""Plasma volume averaged proton ash density (/m3)"""
+    ejima_coeff: float = 0.4
+    """Ejima coefficient for resistive startup V-s formula"""
 
+    f_beta_alpha_beam_thermal: float = 0.0
+    """ratio of (fast alpha + neutral beam beta) to thermal beta"""
 
-ntau: float = None
-"""Fusion double product (s/m3)"""
+    hfac: list[float] = field(
+        default_factory=lambda: np.zeros(N_CONFINEMENT_SCALINGS, dtype=np.float64)
+    )
+    """H factors for an ignited plasma for each energy confinement time scaling law"""
 
+    hfact: float = 1.0
+    """H factor on energy confinement times, radiation corrected (`iteration variable 10`)."""
 
-nTtau: float = None
-"""Lawson triple product [keV s / m3]"""
+    hstar: float = 1.0
+    """H* non-radiation corrected H factor on energy confinement times"""
 
+    t_plasma_energy_confinement_max: float = 10.0
+    """Maximum allowed energy confinement time (s)"""
 
-nd_plasma_impurities_vol_avg: float = None
-"""Plasma volume averaged impurity (Z > 2) ion density (/m3)"""
+    i_bootstrap_current: int = 3
+    """switch for bootstrap current scaling
+    - =1 ITER 1989 bootstrap scaling (high R/a only)
+    - =2 for Nevins et al general scaling
+    - =3 for Wilson et al numerical scaling
+    - =4 for Sauter et al scaling
+    - =5 for Sakai et al scaling
+    - =6 for ARIES scaling
+    - =7 for Andrade et al scaling
+    - =8 for Hoang et al scaling
+    - =9 for Wong et al scaling
+    - =10 for Gi-I et al scaling
+    - =11 for Gi-II et al scaling
+    - =12 for Sugiyama (L-mode) et al scaling
+    - =13 for Sugiyama (H-mode) et al scaling
+    """
 
+    i_beta_component: int = 0
+    """switch for beta limit scaling (`constraint equation 24`)
+    - =0 apply limit to total beta
+    - =1 apply limit to thermal beta
+    - =2 apply limit to thermal + neutral beam beta
+    - =3 apply limit to toroidal beta
+    """
 
-gradient_length_ne: float = None
-"""Max. normalised gradient length in el. density (i_plasma_pedestal==0 only)"""
+    i_plasma_current: int = 4
+    """switch for plasma current scaling to use
+    - =1 Peng analytic fit
+    - =2 Peng double null divertor scaling (ST)
+    - =3 simple ITER scaling (k = 2.2, d = 0.6)
+    - =4 later ITER scaling, a la Uckan
+    - =5 Todd empirical scaling I
+    - =6 Todd empirical scaling II
+    - =7 Connor-Hastie model
+    - =8 Sauter scaling allowing negative triangularity
+    - =9 FIESTA ST fit
+    """
 
+    i_diamagnetic_current: int = 0
+    """switch for diamagnetic current scaling
+    - =0 Do not calculate
+    - =1 Use original TART scaling
+    - =2 Use SCENE scaling
+    """
 
-gradient_length_te: float = None
-"""Max. normalised gradient length in el. temperature (i_plasma_pedestal==0 only)"""
+    i_density_limit: int = 8
+    """switch for density limit to enforce (`constraint equation 5`)
+    - =1 old ASDEX
+    - =2 Borrass model for ITER (I)
+    - =3 Borrass model for ITER (II)
+    - =4 JET edge radiation
+    - =5 JET simplified
+    - =6 Hugill-Murakami Mq limit
+    - =7 Greenwald limit
+    - =8 ASDEX New
+    """
 
+    i_beta_fast_alpha: int = 1
+    """switch for fast alpha pressure calculation
+    - =0 ITER physics rules (Uckan) fit
+    - =1 Modified fit (D. Ward) - better at high temperature
+    """
 
-beta_poloidal_eps_max: float = None
-"""maximum (eps*beta_poloidal) (`constraint equation 6`). Note: revised issue #346
-"Operation at the tokamak equilibrium poloidal beta-limit in TFTR", 1992 Nucl. Fusion 32 1468
-"""
+    i_plasma_ignited: int = 0
+    """switch for ignition assumption. Obviously, i_plasma_ignited must be zero if current drive
+    is required. If i_plasma_ignited is 1, any auxiliary power is assumed to be used only during
+    plasma start-up, and is excluded from all steady-state power balance calculations.
+    - =0 do not assume plasma ignition
+    - =1 assume ignited (but include auxiliary power in costs)</UL
+    """
 
+    i_plasma_pedestal: int = 1
+    """switch for pedestal profiles:
+    - =0 use original parabolic profiles
+    - =1 use pedestal profile
+    """
 
-eps: float = None
-"""inverse aspect ratio"""
+    i_pfirsch_schluter_current: int = 0
+    """switch for Pfirsch-Schlüter current scaling (issue #413):
+    - =0 Do not calculate
+    - =1 Use SCENE scaling
+    """
 
+    nd_plasma_pedestal_electron: float = 4.0e19
+    """Plasma electron density at pedestal (nₑ,pedestal) [/m³] (`i_plasma_pedestal==1)"""
 
-f_c_plasma_auxiliary: float = None
-"""fraction of plasma current produced by auxiliary current drive"""
+    nd_plasma_separatrix_electron: float = 3.0e19
+    """Plasma electron density at separatrix (nₑ,sep) [/m³] (`i_plasma_pedestal==1)"""
 
+    i_nd_plasma_pedestal_separatrix: int = 1
+    """switch for pedestal and separatrix density calculation:
+    - =0 User input pedestal and separatrix density
+    - =1 Calculate pedestal and separatrix density as fraction of Greenwald limit (see `f_nd_plasma_pedestal_greenwald` and `f_nd_plasma_separatrix_greenwald`)
+    """
 
-f_c_plasma_inductive: float = None
-"""fraction of plasma current produced inductively"""
+    alpha_crit: float = 0.0
+    """critical ballooning parameter value"""
 
+    nd_plasma_separatrix_electron_eich_max: float = 0.0
+    """Eich critical electron density at separatrix [/m³]"""
 
-f_alpha_electron: float = None
-"""fraction of alpha energy to electrons"""
+    plasma_res_factor: float = 1.0
+    """plasma resistivity pre-factor"""
 
+    radius_plasma_pedestal_density_norm: float = 1.0
+    """PPlasma normalised radius of density pedestal (ρₙ,pedestal)  (`i_plasma_pedestal==1`)"""
 
-f_p_alpha_plasma_deposited: float = None
-"""Fraction of alpha power deposited in plasma. Default of 0.95 taken from https://doi.org/10.1088/0029-5515/39/12/305."""
+    radius_plasma_pedestal_temp_norm: float = 1.0
+    """Plasma normalised radius of temperature pedestal (ρₜ,pedestal) (`i_plasma_pedestal==1`)"""
 
+    rho_te_max: float = 0.0
+    """r/a where the temperature gradient is largest (`i_plasma_pedestal==0`)"""
 
-f_alpha_ion: float = None
-"""fraction of alpha power to ions"""
+    rho_ne_max: float = 0.0
+    """r/a where the density gradient is largest (`i_plasma_pedestal==0`)"""
 
+    tbeta: float = 2.0
+    """Plasma temperature profile index beta (βₜ)  (`i_plasma_pedestal==1)"""
 
-f_plasma_fuel_deuterium: float = None
-"""Plasma deuterium fuel fraction"""
+    temp_plasma_pedestal_kev: float = 1.0
+    """Plasma electron temperature of pedestal (Tₑ,pedestal) [keV] (`i_plasma_pedestal==1`)"""
 
+    temp_plasma_separatrix_kev: float = 0.1
+    """Plasma electron temperature at separatrix (Tₑ,ₛₑₚ) [keV] (`i_plasma_pedestal==1`) calculated if reinke
+    criterion is used (`icc=78`)
+    """
 
-f_p_div_lower: float = None
-"""fraction of power to the lower divertor in double null configuration
-(`i_single_null = 0` only) (default assumes SN)
-"""
+    i_beta_norm_max: int = 1
+    """Switch for maximum normalised beta scaling (βₙ)"""
 
+    i_ind_plasma_internal_norm: int = 0
+    """Switch for plasma normalised internal inductance scaling (lᵢ)"""
 
-ffwal: float = None
-"""factor to convert plasma surface area to first wall area in neutron wall
-load calculation (`i_pflux_fw_neutron=1`)
-"""
+    i_alphaj: int = 0
+    """Switch for plasma current profile index scaling (αⱼ) """
 
+    i_rad_loss: int = 1
+    """switch for radiation loss term usage in power balance (see User Guide):
+    - =0 total power lost is scaling power plus radiation
+    - =1 total power lost is scaling power plus core radiation only
+    - =2 total power lost is scaling power only, with no additional
+    allowance for radiation. This is not recommended for power plant models.
+    """
 
-f_nd_plasma_pedestal_greenwald: float = None
-"""fraction of Greenwald density to set as pedestal-top density. If `<0`, pedestal-top
-density set manually using nd_plasma_pedestal_electron (`i_plasma_pedestal==1`).
-(`iteration variable 145`)
-"""
+    i_confinement_time: int = 34
+    """Switch for plasma energy confinement time scaling law (τₑ)"""
 
+    i_plasma_wall_gap: int = 1
+    """Switch for plasma-first wall clearances at the mid-plane:
+    - =0 use 10% of plasma minor radius
+    - =1 use input (`dr_fw_plasma_gap_inboard` and `dr_fw_plasma_gap_outboard`)
+    """
 
-f_nd_plasma_separatrix_greenwald: float = None
-"""fraction of Greenwald density to set as separatrix density. If `<0`, separatrix
-density set manually using nd_plasma_separatrix_electron (`i_plasma_pedestal==1`).
-(`iteration variable 152`)
-"""
+    i_plasma_geometry: int = 0
+    """switch for plasma elongation and triangularity calculations:
+    - =0 use input kappa, triang to calculate 95% values
+    - =1 scale q95_min, kappa, triang with aspect ratio (ST)
+    - =2 set kappa to the natural elongation value (Zohm ITER scaling), triang input
+    - =3 set kappa to the natural elongation value (Zohm ITER scaling), triang95 input
+    - =4 use input kappa95, triang95 to calculate separatrix values
+    - =5 use input kappa95, triang95 to calculate separatrix values based on MAST scaling (ST)
+    - =6 use input kappa, triang to calculate 95% values based on MAST scaling (ST)
+    - =7 use input kappa95, triang95 to calculate separatrix values based on fit to FIESTA (ST)
+    - =8 use input kappa, triang to calculate 95% values based on fit to FIESTA (ST)
+    - =9 set kappa to the natural elongation value, triang input
+    - =10 set kappa to maximum stable value at a given aspect ratio (2.6<A<3.6)), triang input (#1399)
+    - =11 set kappa Menard 2016 aspect-ratio-dependent scaling, triang input (#1439)
+    - =12 set kappa Menard 1997 aspect-ratio-dependent scaling, triang input
+    """
 
+    i_plasma_shape: int = 0
+    """switch for plasma boundary shape:
+    - =0 use original PROCESS 2-arcs model
+    - =1 use the Sauter model
+    """
 
-f_plasma_fuel_helium3: float = None
-"""Plasma Helium-3 fuel fraction"""
+    itart: int = 0
+    """switch for spherical tokamak (ST) models:
+    - =0 use conventional aspect ratio models
+    - =1 use spherical tokamak models
+    """
 
+    itartpf: int = 0
+    """switch for Spherical Tokamak PF models:
+    - =0 use Peng and Strickler (1986) model
+    - =1 use conventional aspect ratio model
+    """
 
-figmer: float = None
-"""physics figure of merit (= plasma_current*aspect**sbar, where `sbar=1`)"""
+    i_pflux_fw_neutron: int = 1
+    """switch for neutron wall load calculation:
+    - =1 use scaled plasma surface area
+    - =2 use first wall area directly
+    """
 
+    plasma_square: float = 0.0
+    """Plasma squareness (ζ)"""
 
-fkzohm: float = None
-"""Zohm elongation scaling adjustment factor (`i_plasma_geometry=2, 3`)"""
+    kappa: float = 1.792
+    """Plasma separatrix elongation (κₐ)  (calculated if `i_plasma_geometry = 1-5, 7 or 9-10`)"""
 
+    kappa95: float = 1.6
+    """Plasma elongation at 95% surface (κ₉₅) (calculated if `i_plasma_geometry = 0-3, 6, or 8-10`)"""
 
-f_plasma_fuel_tritium: float = None
-"""Plasma tritium fuel fraction"""
+    kappa_ipb: float = 0.0
+    """Separatrix elongation calculated for IPB scalings"""
 
+    nd_plasma_electron_on_axis: float = 0.0
+    """central electron density (/m3)"""
 
-fusden_total: float = None
-"""fusion reaction rate density, from beams and plasma (reactions/m3/sec)"""
+    nd_plasma_ions_on_axis: float = 0.0
+    """central ion density (/m3)"""
 
+    m_s_limit: float = 0.3
+    """margin to vertical stability"""
 
-fusrat_total: float = None
-"""fusion reaction rate, from beams and plasma (reactions/sec)"""
+    pres_plasma_thermal_on_axis: float = 0.0
+    """Plasma central thermal pressure (p₀) (no fast ions or beam pressure) [Pa]"""
 
-fusrat_plasma_dt_profile: list[float] = None
-"""Profile of D-T fusion reaction rate in plasma, (reactions/sec)"""
+    pres_plasma_thermal_total_profile: list[float] = field(default_factory=list)
+    """Profile of total pressure in plasma [Pa]"""
 
-fusrat_plasma_dd_triton_profile: list[float] = None
-"""Profile of D-D fusion reaction rate (tritium branch) in plasma, (reactions/sec)"""
+    pres_plasma_electron_profile: list[float] = field(default_factory=list)
+    """Profile of electron pressure in plasma [Pa]"""
 
-fusrat_plasma_dd_helion_profile: list[float] = None
-"""Profile of D-D fusion reaction rate (helium branch) in plasma, (reactions/sec)"""
+    pres_plasma_ion_total_profile: list[float] = field(default_factory=list)
+    """Profile of ion pressure in plasma [Pa]"""
 
-fusrat_plasma_dhe3_profile: list[float] = None
-"""Profile of D-3He fusion reaction rate in plasma, (reactions/sec)"""
+    pres_plasma_fuel_profile: list[float] = field(default_factory=list)
+    """Profile of fuel pressure in plasma [Pa]"""
 
-fusden_plasma: float = None
-"""fusion reaction rate, just from plasma (reactions/m3/sec)"""
+    j_plasma_on_axis: float = 0.0
+    """Central plasma current density (j₀) [A/m²]"""
 
+    j_plasma_bootstrap_sauter_profile: list[float] = field(default_factory=list)
+    """Profile of bootstrap current density in plasma using Sauter et al scaling [A/m²]"""
 
-f_c_plasma_non_inductive: float = None
-"""fraction of the plasma current produced by non-inductive means (`iteration variable 44`)"""
+    n_plasma_profile_elements: int = 501
+    """Number of elements in plasma profile"""
 
+    pres_plasma_thermal_vol_avg: float = None
+    """Volume averaged thermal plasma pressure (⟨p⟩)  (no fast ions or beam pressure) [Pa]"""
 
-ejima_coeff: float = None
-"""Ejima coefficient for resistive startup V-s formula"""
+    f_dd_branching_trit: float = 0.0
+    """branching ratio for DD -> T"""
 
+    pden_plasma_alpha_mw: float = 0.0
+    """Alpha power per volume just from plasma [MW/m3]"""
 
-f_beta_alpha_beam_thermal: float = None
-"""ratio of (fast alpha + neutral beam beta) to thermal beta"""
+    pden_alpha_total_mw: float = 0.0
+    """Alpha power per volume from plasma and beams [MW/m3]"""
 
+    f_pden_alpha_electron_mw: float = 0.0
+    """Alpha power per volume to electrons [MW/m3]"""
 
-hfac: list[float] = None
-"""H factors for an ignited plasma for each energy confinement time scaling law"""
+    p_fw_alpha_mw: float = 0.0
+    """alpha power escaping plasma and reaching first wall (MW)"""
 
+    f_pden_alpha_ions_mw: float = 0.0
+    """alpha power per volume to ions (MW/m3)"""
 
-hfact: float = None
-"""H factor on energy confinement times, radiation corrected (`iteration variable 10`)."""
+    p_plasma_alpha_mw: float = 0.0
+    """Alpha power from only the plasma (MW)"""
 
+    p_alpha_total_mw: float = 0.0
+    """Total alpha power from plasma and beams (MW)"""
 
-hstar: float = None
-"""H* non-radiation corrected H factor on energy confinement times"""
+    p_beam_alpha_mw: float = 0.0
+    """alpha power from hot neutral beam ions (MW)"""
 
+    p_beam_neutron_mw: float = 0.0
+    """neutron power from hot neutral beam ions (MW)"""
 
-t_plasma_energy_confinement_max: float = None
-"""Maximum allowed energy confinement time (s)"""
+    p_beam_dt_mw: float = 0.0
+    """D-T fusion power from hot neutral beam ions (MW)"""
 
+    p_non_alpha_charged_mw: float = 0.0
+    """non-alpha charged particle fusion power (MW)"""
 
-i_bootstrap_current: int = None
-"""switch for bootstrap current scaling
-- =1 ITER 1989 bootstrap scaling (high R/a only)
-- =2 for Nevins et al general scaling
-- =3 for Wilson et al numerical scaling
-- =4 for Sauter et al scaling
-- =5 for Sakai et al scaling
-- =6 for ARIES scaling
-- =7 for Andrade et al scaling
-- =8 for Hoang et al scaling
-- =9 for Wong et al scaling
-- =10 for Gi-I et al scaling
-- =11 for Gi-II et al scaling
-- =12 for Sugiyama (L-mode) et al scaling
-- =13 for Sugiyama (H-mode) et al scaling
-"""
+    p_charged_particle_mw: float = 0.0
+    """Total charged particle fusion power [MW]"""
 
+    pden_non_alpha_charged_mw: float = 0.0
+    """Non-alpha charged particle fusion power per volume [MW/m3]"""
 
-i_beta_component: int = None
-"""switch for beta limit scaling (`constraint equation 24`)
-- =0 apply limit to total beta
-- =1 apply limit to thermal beta
-- =2 apply limit to thermal + neutral beam beta
-- =3 apply limit to toroidal beta
-"""
+    f_temp_plasma_electron_density_vol_avg: float = 0.0
+    """Ratio of density weighted plasma electron tempertaurature to volume averaged (Profile Factor)"""
 
+    p_plasma_inner_rad_mw: float = 0.0
+    """radiation power from inner zone (MW)"""
 
-i_plasma_current: int = None
-"""switch for plasma current scaling to use
-- =1 Peng analytic fit
-- =2 Peng double null divertor scaling (ST)
-- =3 simple ITER scaling (k = 2.2, d = 0.6)
-- =4 later ITER scaling, a la Uckan
-- =5 Todd empirical scaling I
-- =6 Todd empirical scaling II
-- =7 Connor-Hastie model
-- =8 Sauter scaling allowing negative triangularity
-- =9 FIESTA ST fit
-"""
+    pden_plasma_core_rad_mw: float = 0.0
+    """total core radiation power per volume (MW/m3)"""
 
+    p_dd_total_mw: float = 0.0
+    """deuterium-deuterium fusion power (MW)"""
 
-i_diamagnetic_current: int = None
-"""switch for diamagnetic current scaling
-- =0 Do not calculate
-- =1 Use original TART scaling
-- =2 Use SCENE scaling
-"""
+    p_dhe3_total_mw: float = 0.0
+    """deuterium-helium3 fusion power (MW)"""
 
+    p_plasma_separatrix_mw: float = 0.0
+    """power to conducted to the divertor region (MW)"""
 
-i_density_limit: int = None
-"""switch for density limit to enforce (`constraint equation 5`)
-- =1 old ASDEX
-- =2 Borrass model for ITER (I)
-- =3 Borrass model for ITER (II)
-- =4 JET edge radiation
-- =5 JET simplified
-- =6 Hugill-Murakami Mq limit
-- =7 Greenwald limit
-- =8 ASDEX New
-"""
+    p_plasma_separatrix_rmajor_mw: float = 0.0
+    """Power to conducted to the divertor region per major radius (MW/m)"""
 
+    p_div_bt_q_aspect_rmajor_mw: float = 0.0
+    """EU DEMO divertor protection parameter (PₛₑₚBₜ / q₉₅AR₀)  [MWT/m]"""
 
-i_beta_fast_alpha: int = None
-"""switch for fast alpha pressure calculation
-- =0 ITER physics rules (Uckan) fit
-- =1 Modified fit (D. Ward) - better at high temperature
-"""
+    p_div_lower_separatrix_mw: float = 0.0
+    """Separatrix power conducted to the lower divertor region (calculated if `i_single_null = 0`) (MW)"""
 
+    p_div_upper_separatrix_mw: float = 0.0
+    """Separatrix power conducted to the upper divertor region (calculated if `i_single_null = 0`) (MW)"""
 
-i_plasma_ignited: int = None
-"""switch for ignition assumption. Obviously, i_plasma_ignited must be zero if current drive
-is required. If i_plasma_ignited is 1, any auxiliary power is assumed to be used only during
-plasma start-up, and is excluded from all steady-state power balance calculations.
-- =0 do not assume plasma ignition
-- =1 assume ignited (but include auxiliary power in costs)</UL
-"""
+    p_div_separatrix_max_mw: float = 0.0
+    """Separatrix power conducted to the divertor with most load (calculated if `i_single_null = 0`) (MW)"""
 
+    p_dt_total_mw: float = 0.0
+    """Total deuterium-tritium fusion power, from plasma and beams [MW]"""
 
-i_plasma_pedestal: int = None
-"""switch for pedestal profiles:
-- =0 use original parabolic profiles
-- =1 use pedestal profile
-"""
+    p_plasma_dt_mw: float = 0.0
+    """Deuterium-tritium fusion power, just from plasma [MW]"""
 
+    p_plasma_outer_rad_mw: float = 0.0
+    """radiation power from outer zone (MW)"""
 
-i_pfirsch_schluter_current: int = None
-"""switch for Pfirsch-Schlüter current scaling (issue #413):
-- =0 Do not calculate
-- =1 Use SCENE scaling
-"""
+    pden_plasma_outer_rad_mw: float = 0.0
+    """edge radiation power per volume (MW/m3)"""
 
+    vs_plasma_internal: float = 0.0
+    """internal plasma V-s"""
 
-nd_plasma_pedestal_electron: float = None
-"""electron density of pedestal [m-3] (`i_plasma_pedestal==1)"""
+    pflux_fw_rad_mw: float = 0.0
+    """Nominal mean radiation load on inside surface of reactor (MW/m2)"""
 
+    pden_ion_electron_equilibration_mw: float = 0.0
+    """ion/electron equilibration power per volume (MW/m3)"""
 
-nd_plasma_separatrix_electron: float = None
-"""electron density at separatrix [m-3] (`i_plasma_pedestal==1)"""
+    plasma_current: float = 0.0
+    """Plasma current (Iₚ) [A]"""
 
+    c_plasma_peng_analytic: float = 0.0
+    """Peng analytic plasma current (A)"""
 
-alpha_crit: float = None
-"""critical ballooning parameter value"""
+    c_plasma_peng_double_null: float = 0.0
+    """Peng double null divertor plasma current (A)"""
 
+    c_plasma_cyclindrical: float = 0.0
+    """Cylindrical plasma current (A)"""
 
-nd_plasma_separatrix_electron_eich_max: float = None
-"""Eich critical electron density at separatrix [m-3]"""
+    c_plasma_ipdg89: float = 0.0
+    """ITER IPDG89 plasma current (A)"""
 
+    c_plasma_todd_empirical_i: float = 0.0
+    """Todd empirical plasma current I (A)"""
 
-plasma_res_factor: float = None
-"""plasma resistivity pre-factor"""
+    c_plasma_todd_empirical_ii: float = 0.0
+    """Todd empirical plasma current II (A)"""
 
+    c_plasma_connor_hastie: float = 0.0
+    """Connor-Hastie plasma current (A)"""
 
-radius_plasma_pedestal_density_norm: float = None
-"""Normalised radius of density pedestal (`i_plasma_pedestal==1`)"""
+    c_plasma_sauter: float = 0.0
+    """Sauter plasma current (A)"""
 
+    c_plasma_fiesta_st: float = 0.0
+    """FIESTA ST plasma current (A)"""
 
-radius_plasma_pedestal_temp_norm: float = None
-"""Normalised radius of temperature pedestal (`i_plasma_pedestal==1`)"""
+    p_plasma_neutron_mw: float = 0.0
+    """Neutron fusion power from just the plasma [MW]"""
 
+    p_neutron_total_mw: float = 0.0
+    """Total neutron fusion power from plasma and beams [MW]"""
 
-rho_te_max: float = None
-"""r/a where the temperature gradient is largest (`i_plasma_pedestal==0`)"""
+    pden_neutron_total_mw: float = 0.0
+    """neutron fusion power per volume from beams and plasma (MW/m3)"""
 
+    pden_plasma_neutron_mw: float = 0.0
+    """neutron fusion power per volume just from plasma (MW/m3)"""
 
-rho_ne_max: float = None
-"""r/a where the density gradient is largest (`i_plasma_pedestal==0`)"""
+    p_plasma_ohmic_mw: float = 0.0
+    """ohmic heating power (MW)"""
 
+    pden_plasma_ohmic_mw: float = 0.0
+    """ohmic heating power per volume (MW/m3)"""
 
-tbeta: float = None
-"""temperature profile index beta  (`i_plasma_pedestal==1)"""
+    p_plasma_loss_mw: float = 0.0
+    """heating power (= transport loss power) (MW) used in confinement time calculation"""
 
+    p_fusion_total_mw: float = 0.0
+    """fusion power (MW)"""
 
-temp_plasma_pedestal_kev: float = None
-"""Plasma electron temperature of pedestal (keV) (`i_plasma_pedestal==1`)"""
+    len_plasma_poloidal: float = 0.0
+    """plasma poloidal perimeter (m)"""
 
+    p_plasma_rad_mw: float = 0.0
+    """total radiation power from inside LCFS (MW)"""
 
-temp_plasma_separatrix_kev: float = None
-"""Plasma electron temperature at separatrix (keV) (`i_plasma_pedestal==1`) calculated if reinke
-criterion is used (`icc=78`)
-"""
+    pden_plasma_rad_mw: float = 0.0
+    """total radiation power per volume (MW/m3)"""
 
+    pradsolmw: float = 0.0
+    """radiation power from SoL (MW)"""
 
-i_beta_norm_max: int = None
-"""Switch for maximum normalised beta scaling:"""
+    proton_rate_density: float = 0.0
+    """Proton production rate [particles/m3/sec]"""
 
+    psolradmw: float = 0.0
+    """SOL radiation power (MW) (`stellarator only`)"""
 
-i_ind_plasma_internal_norm: int = None
-"""Switch for plasma normalised internal inductance scaling:"""
+    pden_plasma_sync_mw: float = 0.0
+    """Plasma synchrotron radiation power per unit volume [MW/m³]"""
 
+    p_plasma_sync_mw: float = 0.0
+    """Total synchrotron radiation power from plasma (Pₛₙ) [MW]"""
 
-i_alphaj: int = None
-"""Switch for current profile index scaling:"""
+    i_l_h_threshold: int = 19
+    """switch for L-H mode power threshold scaling to use (see l_h_threshold_powers for list)"""
 
+    p_l_h_threshold_mw: float = 0.0
+    """L-H mode power threshold (MW) (chosen via i_l_h_threshold, and enforced if
+    constraint equation 15 is on)
+    """
 
-i_rad_loss: int = None
-"""switch for radiation loss term usage in power balance (see User Guide):
-- =0 total power lost is scaling power plus radiation
-- =1 total power lost is scaling power plus core radiation only
-- =2 total power lost is scaling power only, with no additional
-allowance for radiation. This is not recommended for power plant models.
-"""
+    l_h_threshold_powers: list[float] = field(
+        default_factory=lambda: np.zeros(21, dtype=np.float64)
+    )
+    """L-H power threshold for various scalings (MW)
+    - =1 ITER 1996 scaling: nominal
+    - =2 ITER 1996 scaling: upper bound
+    - =3 ITER 1996 scaling: lower bound
+    - =4 ITER 1997 scaling: excluding elongation
+    - =5 ITER 1997 scaling: including elongation
+    - =6 Martin 2008 scaling: nominal
+    - =7 Martin 2008 scaling: 95% upper bound
+    - =8 Martin 2008 scaling: 95% lower bound
+    - =9 Snipes 2000 scaling: nominal
+    - =10 Snipes 2000 scaling: upper bound
+    - =11 Snipes 2000 scaling: lower bound
+    - =12 Snipes 2000 scaling (closed divertor): nominal
+    - =13 Snipes 2000 scaling (closed divertor): upper bound
+    - =14 Snipes 2000 scaling (closed divertor): lower bound
+    - =15 Hubbard et al. 2012 L-I threshold scaling: nominal
+    - =16 Hubbard et al. 2012 L-I threshold scaling: lower bound
+    - =17 Hubbard et al. 2012 L-I threshold scaling: upper bound
+    - =18 Hubbard et al. 2017 L-I threshold scaling
+    - =19 Martin 2008 aspect ratio corrected scaling: nominal
+    - =20 Martin 2008 aspect ratio corrected scaling: 95% upper bound
+    - =21 Martin 2008 aspect ratio corrected scaling: 95% lower bound
+    """
 
+    p_electron_transport_loss_mw: float = 0.0
+    """electron transport power (MW)"""
 
-i_confinement_time: int = None
-"""switch for energy confinement time scaling law"""
+    pden_electron_transport_loss_mw: float = 0.0
+    """electron transport power per volume (MW/m3)"""
 
+    p_ion_transport_loss_mw: float = 0.0
+    """ion transport power (MW)"""
 
-i_plasma_wall_gap: int = None
-"""Switch for plasma-first wall clearances at the mid-plane:
-- =0 use 10% of plasma minor radius
-- =1 use input (`dr_fw_plasma_gap_inboard` and `dr_fw_plasma_gap_outboard`)
-"""
+    pscalingmw: float = 0.0
+    """Total transport power from scaling law (MW)"""
 
+    pden_ion_transport_loss_mw: float = 0.0
+    """ion transport power per volume (MW/m3)"""
 
-i_plasma_geometry: int = None
-"""switch for plasma elongation and triangularity calculations:
-- =0 use input kappa, triang to calculate 95% values
-- =1 scale q95_min, kappa, triang with aspect ratio (ST)
-- =2 set kappa to the natural elongation value (Zohm ITER scaling), triang input
-- =3 set kappa to the natural elongation value (Zohm ITER scaling), triang95 input
-- =4 use input kappa95, triang95 to calculate separatrix values
-- =5 use input kappa95, triang95 to calculate separatrix values based on MAST scaling (ST)
-- =6 use input kappa, triang to calculate 95% values based on MAST scaling (ST)
-- =7 use input kappa95, triang95 to calculate separatrix values based on fit to FIESTA (ST)
-- =8 use input kappa, triang to calculate 95% values based on fit to FIESTA (ST)
-- =9 set kappa to the natural elongation value, triang input
-- =10 set kappa to maximum stable value at a given aspect ratio (2.6<A<3.6)), triang input (#1399)
-- =11 set kappa Menard 2016 aspect-ratio-dependent scaling, triang input (#1439)
-"""
+    q0: float = 1.0
+    """Plasma safety factor on axis (q₀)"""
 
+    q95: float = 0.0
+    """Plasma safety factor at 95% flux surface (q₉₅) (`iteration variable 18`)
+    """
 
-i_plasma_shape: int = None
-"""switch for plasma boundary shape:
-- =0 use original PROCESS 2-arcs model
-- =1 use the Sauter model
-"""
+    molflow_plasma_fuelling_required: float = 0.0
+    """plasma fuelling rate (nucleus-pairs/s)"""
 
+    tauratio: float = 1.0
+    """tauratio /1.0/ : ratio of He and pellet particle confinement times"""
 
-itart: int = None
-"""switch for spherical tokamak (ST) models:
-- =0 use conventional aspect ratio models
-- =1 use spherical tokamak models
-"""
+    q95_min: float = 0.0
+    """Plasmalower limit for edge safety factor"""
 
+    qstar: float = 0.0
+    """Plasma cylindrical safety factor (qcyl)"""
 
-itartpf: int = None
-"""switch for Spherical Tokamak PF models:
-- =0 use Peng and Strickler (1986) model
-- =1 use conventional aspect ratio model
-"""
+    rad_fraction_sol: float = 0.8
+    """SoL radiation fraction"""
 
+    rad_fraction_total: float = 0.0
+    """Radiation fraction total = SoL + LCFS radiation / total power deposited in plasma"""
 
-i_pflux_fw_neutron: int = None
-"""switch for neutron wall load calculation:
-- =1 use scaled plasma surface area
-- =2 use first wall area directly
-"""
+    f_nd_alpha_thermal_electron: float = 0.1
+    """Thermal alpha density/electron density (⟨n_αₜₕ⟩/⟨nₑ⟩)"""
 
+    f_nd_protium_electrons: float = 0.0
+    """Seeded f_nd_protium_electrons density / electron density."""
 
-plasma_square: float = None
-"""plasma squareness used by Sauter plasma shape"""
+    ind_plasma_internal_norm: float = 0.9
+    """Plasma normalised internal inductance"""
 
+    ind_plasma_internal_norm_iter_3: float = 0.0
+    """Plasma normalised internal inductance (ITER type 3)"""
 
-kappa: float = None
-"""plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5, 7 or 9-10`)"""
+    ind_plasma_internal_norm_wesson: float = 0.0
+    """Wesson-like plasma normalised internal inductance"""
 
+    ind_plasma_internal_norm_menard: float = 0.0
+    """Menard-like plasma normalised internal inductance"""
 
-kappa95: float = None
-"""plasma elongation at 95% surface (calculated if `i_plasma_geometry = 0-3, 6, or 8-10`)"""
+    ind_plasma: float = 0.0
+    """plasma inductance (H)"""
 
+    rmajor: float = 8.14
+    """Plasma major radius (R₀) [m] (`iteration variable 3`)"""
 
-kappa_ipb: float = None
-"""Separatrix elongation calculated for IPB scalings"""
+    rminor: float = 0.0
+    """Plasma minor radius (a) [m]"""
 
+    f_nd_beam_electron: float = 0.005
+    """hot beam density / n_e (`iteration variable 7`)"""
 
-nd_plasma_electron_on_axis: float = None
-"""central electron density (/m3)"""
+    f_nd_plasma_carbon_electron: float = 0.0
+    """n_carbon / n_e"""
 
+    rndfuel: float = 0.0
+    """fuel burnup rate (reactions/second)"""
 
-nd_plasma_ions_on_axis: float = None
-"""central ion density (/m3)"""
+    f_nd_plasma_iron_argon_electron: float = 0.0
+    """n_highZ / n_e"""
 
+    f_nd_plasma_oxygen_electron: float = 0.0
+    """n_oxygen / n_e"""
 
-m_s_limit: float = None
-"""margin to vertical stability"""
+    f_res_plasma_neo: float = 0.0
+    """neo-classical correction factor to res_plasma"""
 
+    res_plasma: float = 0.0
+    """plasma resistance (ohm)"""
 
-pres_plasma_thermal_on_axis: float = None
-"""Plasma central thermal pressure (no fast ions or beam pressure) (Pa)"""
+    t_plasma_res_diffusion: float = 0.0
+    """plasma current resistive diffusion time (s)"""
 
-pres_plasma_thermal_total_profile: list[float] = None
-"""Profile of total pressure in plasma (Pa)"""
+    a_plasma_surface: float = 0.0
+    """plasma surface area"""
 
-pres_plasma_electron_profile: list[float] = None
-"""Profile of electron pressure in plasma (Pa)"""
+    a_plasma_surface_outboard: float = 0.0
+    """outboard plasma surface area"""
 
-pres_plasma_ion_total_profile: list[float] = None
-"""Profile of ion pressure in plasma (Pa)"""
+    i_single_null: int = 1
+    """switch for single null / double null plasma:
+    - =0 for double null
+    - =1 for single null (diverted side down)
+    """
 
-pres_plasma_fuel_profile: list[float] = None
-"""Profile of fuel pressure in plasma (Pa)"""
+    f_sync_reflect: float = 0.6
+    """synchrotron wall reflectivity factor"""
 
-j_plasma_on_axis: float = None
-"""Central plasma current density (A/m2)"""
+    t_electron_energy_confinement: float = 0.0
+    """electron energy confinement time (sec)"""
 
-j_plasma_bootstrap_sauter_profile: list[float] = None
-"""Profile of bootstrap current density in plasma using Sauter et al scaling (A/m2)"""
+    tauee_in: float = 0.0
+    """Input electron energy confinement time (sec) (`i_confinement_time=48 only`)"""
 
-n_plasma_profile_elements: int = None
-"""Number of elements in plasma profile"""
+    t_energy_confinement: float = 0.0
+    """global thermal energy confinement time (sec)"""
 
-pres_plasma_thermal_vol_avg: float = None
-"""Volume averaged thermal plasma pressure (no fast ions or beam pressure) (Pa)"""
+    t_ion_energy_confinement: float = 0.0
+    """ion energy confinement time (sec)"""
 
+    t_alpha_confinement: float = 0.0
+    """alpha particle confinement time (sec)"""
 
-f_dd_branching_trit: float = None
-"""branching ratio for DD -> T"""
+    f_t_alpha_energy_confinement: float = 0.0
+    """Alpha particle to energy confinement time ratio"""
 
+    temp_plasma_electron_vol_avg_kev: float = 12.9
+    """Plasma volume averaged electron temperature (⟨Tₑ⟩) [keV] (`iteration variable 4`)"""
 
-pden_plasma_alpha_mw: float = None
-"""Alpha power per volume just from plasma [MW/m3]"""
+    temp_plasma_electron_on_axis_kev: float = 0.0
+    """Plasma central electron temperature (Tₑ₀) [keV]"""
 
+    temp_plasma_electron_density_weighted_kev: float = 0.0
+    """Density weighted average electron temperature (⟨Tₑ⟩_n) [keV]"""
 
-pden_alpha_total_mw: float = None
-"""Alpha power per volume from plasma and beams [MW/m3]"""
+    temp_plasma_electron_line_avg_kev: float = None
+    """Line averaged electron temperature (keV)"""
 
+    temp_plasma_ion_vol_avg_kev: float = 12.9
+    """Volume averaged ion temperature (⟨Tᵢ⟩) [keV]. N.B. calculated from temp_plasma_electron_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`"""
 
-f_pden_alpha_electron_mw: float = None
-"""Alpha power per volume to electrons [MW/m3]"""
+    temp_plasma_ion_on_axis_kev: float = 0.0
+    """Plasma central ion temperature (Tᵢ₀) [keV]"""
 
+    temp_plasma_ion_density_weighted_kev: float = 0.0
+    """Plasma density weighted average ion temperature (⟨Tᵢ⟩ₙ) [keV]"""
 
-p_fw_alpha_mw: float = None
-"""alpha power escaping plasma and reaching first wall (MW)"""
+    f_temp_plasma_ion_electron: float = 1.0
+    """Plasma ratio of ion temperature to electron temperature (used to calculate temp_plasma_ion_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`)"""
 
+    triang: float = 0.36
+    """Plasma separatrix triangularity (δₐ) (calculated if `i_plasma_geometry = 1, 3-5 or 7`)"""
 
-f_pden_alpha_ions_mw: float = None
-"""alpha power per volume to ions (MW/m3)"""
+    triang95: float = 0.24
+    """Plasma triangularity at 95% surface (δ₉₅) (calculated if `i_plasma_geometry = 0-2, 6, 8 or 9`)"""
 
+    vol_plasma: float = 0.0
+    """Plasma volume [m³]"""
 
-p_plasma_alpha_mw: float = None
-"""Alpha power from only the plasma (MW)"""
+    vs_plasma_burn_required: float = 0.0
+    """V-s needed during flat-top (heat + burn times) (Wb)"""
 
+    vs_plasma_ramp_required: float = 0.0
+    """V-s needed during ramp-up (Wb)"""
 
-p_alpha_total_mw: float = None
-"""Total alpha power from plasma and beams (MW)"""
+    v_plasma_loop_burn: float = 0.0
+    """Plasma loop voltage during flat-top (V)"""
 
+    vs_plasma_ind_ramp: float = 0.0
+    """Total plasma inductive flux consumption for plasma current ramp-up (Vs)(Wb)"""
 
-p_beam_alpha_mw: float = None
-"""alpha power from hot neutral beam ions (MW)"""
+    vs_plasma_res_ramp: float = 0.0
+    """Plasma resistive flux consumption for plasma current ramp-up (Vs)(Wb)"""
 
+    vs_plasma_total_required: float = 0.0
+    """Total V-s needed for full plasma pulse [Wb]"""
 
-p_beam_neutron_mw: float = None
-"""neutron power from hot neutral beam ions (MW)"""
+    pflux_fw_neutron_mw: float = 0.0
+    """Average FW neutron wall load [MW/m²]"""
 
+    pflux_plasma_surface_neutron_avg_mw: float = 0.0
+    """Average neutron flux at plasma surface [MW/m²]"""
 
-p_beam_dt_mw: float = None
-"""D-T fusion power from hot neutral beam ions (MW)"""
+    wtgpd: float = 0.0
+    """Mass of fuel used per day [g]"""
 
+    a_plasma_poloidal: float = 0.0
+    """Plasma poloidal cross-sectional area [m²]"""
 
-p_non_alpha_charged_mw: float = None
-"""non-alpha charged particle fusion power (MW)"""
+    n_charge_plasma_effective_vol_avg: float = 0.0
+    """Volume averaged plasma effective charge (⟨Zₑ⟩)"""
 
+    n_charge_plasma_effective_profile: list[float] = field(default_factory=list)
+    """Profile of plasma effective charge"""
 
-p_charged_particle_mw: float = None
-"""Total charged particle fusion power [MW]"""
+    n_charge_plasma_effective_mass_weighted_vol_avg: float = 0.0
+    """Plasma mass-weighted volume averaged plasma effective charge (⟨Zₑ⟩ₘ)"""
 
+    len_plasma_debye_electron_profile: list[float] = field(default_factory=list)
+    """Profile of electron Debye length in plasma (m)"""
 
-pden_non_alpha_charged_mw: float = None
-"""Non-alpha charged particle fusion power per volume [MW/m3]"""
+    radius_plasma_deuteron_toroidal_larmor_isotropic_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of deuteron toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
 
+    radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg: float = 0.0
+    """Volume averaged deuteron toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
 
-f_temp_plasma_electron_density_vol_avg: float = None
-"""Ratio of density weighted plasma electron tempertaurature to volume averaged (Profile Factor)"""
+    radius_plasma_triton_toroidal_larmor_isotropic_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of triton toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
 
+    radius_plasma_triton_toroidal_larmor_isotropic_vol_avg: float = 0.0
+    """Volume averaged triton toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
 
-p_plasma_inner_rad_mw: float = None
-"""radiation power from inner zone (MW)"""
+    len_plasma_debye_electron_vol_avg: float = 0.0
+    """Volume averaged electron Debye length in plasma (m)"""
 
+    vel_plasma_electron_profile: list[float] = field(default_factory=list)
+    """Profile of electron thermal velocity in plasma (m/s)"""
 
-pden_plasma_core_rad_mw: float = None
-"""total core radiation power per volume (MW/m3)"""
+    vel_plasma_deuteron_vol_avg: float = 0.0
+    """Volume averaged deuteron thermal velocity in plasma (m/s)"""
 
+    vel_plasma_electron_vol_avg: float = 0.0
+    """Volume averaged electron thermal velocity in plasma (m/s)"""
 
-p_dd_total_mw: float = None
-"""deuterium-deuterium fusion power (MW)"""
+    vel_plasma_deuteron_profile: list[float] = field(default_factory=list)
+    """Profile of deuteron thermal velocity in plasma (m/s)"""
 
+    vel_plasma_triton_profile: list[float] = field(default_factory=list)
+    """Profile of triton thermal velocity in plasma (m/s)"""
 
-p_dhe3_total_mw: float = None
-"""deuterium-helium3 fusion power (MW)"""
+    vel_plasma_triton_vol_avg: float = 0.0
+    """Volume averaged triton thermal velocity in plasma (m/s)"""
 
+    vel_plasma_alpha_thermal_profile: list[float] = field(default_factory=list)
+    """Profile of thermal alpha particle velocity in plasma (m/s)"""
 
-p_plasma_separatrix_mw: float = None
-"""power to conducted to the divertor region (MW)"""
+    vel_plasma_alpha_thermal_vol_avg: float = 0.0
+    """Volume averaged thermal alpha particle velocity in plasma (m/s)"""
 
-p_plasma_separatrix_rmajor_mw: float = None
-"""Power to conducted to the divertor region per major radius (MW/m)"""
+    vel_plasma_alpha_birth: float = 0.0
+    """Birth velocity of alpha particles in plasma (m/s)"""
 
-p_div_bt_q_aspect_rmajor_mw: float = None
-"""EU DEMO divertor protection parameter (MW/T/m)"""
+    plasma_coulomb_log_electron_electron_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-electron Coulomb logarithm in plasma"""
 
+    plasma_coulomb_log_electron_electron_vol_avg: float = 0.0
+    """Volume averaged electron-electron Coulomb logarithm in plasma"""
 
-p_div_lower_separatrix_mw: float = None
-"""Separatrix power conducted to the lower divertor region (calculated if `i_single_null = 0`) (MW)"""
+    plasma_coulomb_log_electron_deuteron_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-deuteron Coulomb logarithm in plasma"""
 
+    plasma_coulomb_log_electron_deuteron_vol_avg: float = 0.0
+    """Volume averaged electron-deuteron Coulomb logarithm in plasma"""
 
-p_div_upper_separatrix_mw: float = None
-"""Separatrix power conducted to the upper divertor region (calculated if `i_single_null = 0`) (MW)"""
+    plasma_coulomb_log_electron_triton_profile: list[float] = field(default_factory=list)
+    """Profile of electron-triton Coulomb logarithm in plasma"""
 
+    plasma_coulomb_log_electron_triton_vol_avg: float = 0.0
+    """Volume averaged electron-triton Coulomb logarithm in plasma"""
 
-p_div_separatrix_max_mw: float = None
-"""Separatrix power conducted to the divertor with most load (calculated if `i_single_null = 0`) (MW)"""
+    plasma_coulomb_log_deuteron_triton_profile: list[float] = field(default_factory=list)
+    """Profile of deuteron-triton Coulomb logarithm in plasma"""
 
+    plasma_coulomb_log_deuteron_triton_vol_avg: float = 0.0
+    """Volume averaged deuteron-triton Coulomb logarithm in plasma"""
 
-p_dt_total_mw: float = None
-"""Total deuterium-tritium fusion power, from plasma and beams [MW]"""
+    plasma_coulomb_log_electron_alpha_thermal_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-alpha Coulomb logarithm in plasma"""
 
+    plasma_coulomb_log_electron_alpha_thermal_vol_avg: float = 0.0
+    """Volume averaged electron-alpha Coulomb logarithm in plasma"""
 
-p_plasma_dt_mw: float = None
-"""Deuterium-tritium fusion power, just from plasma [MW]"""
+    t_plasma_electron_alpha_spitzer_slow_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-alpha Spitzer slowing down time in plasma (s)"""
 
+    t_plasma_electron_alpha_spitzer_slow_vol_avg: float = 0.0
+    """Volume averaged electron-alpha Spitzer slowing down time in plasma (s)"""
 
-p_plasma_outer_rad_mw: float = None
-"""radiation power from outer zone (MW)"""
+    freq_plasma_electron_profile: list[float] = field(default_factory=list)
+    """Electron plasma frequency profile (Hz)"""
 
+    freq_plasma_electron_vol_avg: float = 0.0
+    """Volume averaged electron plasma frequency (Hz)"""
 
-pden_plasma_outer_rad_mw: float = None
-"""edge radiation power per volume (MW/m3)"""
+    freq_plasma_deuteron_profile: list[float] = field(default_factory=list)
+    """Deuteron plasma frequency profile (Hz)"""
 
+    freq_plasma_larmor_toroidal_electron_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
-vs_plasma_internal: float = None
-"""internal plasma V-s"""
+    freq_plasma_larmor_toroidal_electron_vol_avg: float = None
+    """Volume averaged electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
+    freq_plasma_larmor_toroidal_deuteron_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of deuteron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
-pflux_fw_rad_mw: float = None
-"""Nominal mean radiation load on inside surface of reactor (MW/m2)"""
+    freq_plasma_larmor_toroidal_deuteron_vol_avg: float = None
+    """Volume averaged deuteron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
+    freq_plasma_larmor_toroidal_triton_profile: list[float] = field(default_factory=list)
+    """Profile of triton Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
-pden_ion_electron_equilibration_mw: float = None
-"""ion/electron equilibration power per volume (MW/m3)"""
+    freq_plasma_larmor_toroidal_triton_vol_avg: float = None
+    """Volume averaged triton Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
+    freq_plasma_upper_hybrid_profile: list[float] = field(default_factory=list)
+    """Profile of upper hybrid frequency in plasma (Hz)"""
 
-plasma_current: float = None
-"""plasma current (A)"""
+    freq_plasma_upper_hybrid_vol_avg: float = 0.0
+    """Volume averaged upper hybrid frequency in plasma (Hz)"""
 
-c_plasma_peng_analytic: float = None
-"""Peng analytic plasma current (A)"""
+    t_plasma_electron_electron_collision_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-electron collision time in plasma (s)"""
 
-c_plasma_peng_double_null: float = None
-"""Peng double null divertor plasma current (A)"""
+    t_plasma_electron_electron_collision_vol_avg: float = 0.0
+    """Volume averaged electron-electron collision time in plasma (s)"""
 
-c_plasma_cyclindrical: float = None
-"""Cylindrical plasma current (A)"""
+    t_plasma_electron_deuteron_collision_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-deuteron collision time in plasma (s)"""
 
-c_plasma_ipdg89: float = None
-"""ITER IPDG89 plasma current (A)"""
+    t_plasma_electron_deuteron_collision_vol_avg: float = 0.0
+    """Volume averaged electron-deuteron collision time in plasma (s)"""
 
-c_plasma_todd_empirical_i: float = None
-"""Todd empirical plasma current I (A)"""
+    t_plasma_electron_triton_collision_profile: list[float] = field(default_factory=list)
+    """Profile of electron-triton collision time in plasma (s)"""
 
-c_plasma_todd_empirical_ii: float = None
-"""Todd empirical plasma current II (A)"""
-c_plasma_connor_hastie: float = None
-"""Connor-Hastie plasma current (A)"""
+    t_plasma_electron_triton_collision_vol_avg: float = 0.0
+    """Volume averaged electron-triton collision time in plasma (s)"""
 
-c_plasma_sauter: float = None
-"""Sauter plasma current (A)"""
+    t_plasma_electron_alpha_thermal_collision_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-alpha collision time in plasma (s)"""
 
-c_plasma_fiesta_st: float = None
-"""FIESTA ST plasma current (A)"""
+    t_plasma_electron_alpha_thermal_collision_vol_avg: float = 0.0
+    """Volume averaged electron-alpha collision time in plasma (s)"""
 
-p_plasma_neutron_mw: float = None
-"""Neutron fusion power from just the plasma [MW]"""
+    freq_plasma_electron_electron_collision_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-electron collision frequency in plasma (Hz)"""
 
+    freq_plasma_electron_electron_collision_vol_avg: float = 0.0
+    """Volume averaged electron-electron collision frequency in plasma (Hz)"""
 
-p_neutron_total_mw: float = None
-"""Total neutron fusion power from plasma and beams [MW]"""
+    freq_plasma_electron_deuteron_collision_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-deuteron collision frequency in plasma (Hz)"""
 
+    freq_plasma_electron_deuteron_collision_vol_avg: float = 0.0
+    """Volume averaged electron-deuteron collision frequency in plasma (Hz)"""
 
-pden_neutron_total_mw: float = None
-"""neutron fusion power per volume from beams and plasma (MW/m3)"""
+    freq_plasma_electron_triton_collision_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-triton collision frequency in plasma (Hz)"""
 
+    freq_plasma_electron_triton_collision_vol_avg: float = 0.0
+    """Volume averaged electron-triton collision frequency in plasma (Hz)"""
 
-pden_plasma_neutron_mw: float = None
-"""neutron fusion power per volume just from plasma (MW/m3)"""
+    freq_plasma_electron_alpha_thermal_collision_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-alpha collision frequency in plasma (Hz)"""
 
+    freq_plasma_electron_alpha_thermal_collision_vol_avg: float = 0.0
+    """Volume averaged electron-alpha collision frequency in plasma (Hz)"""
 
-p_plasma_ohmic_mw: float = None
-"""ohmic heating power (MW)"""
+    len_plasma_electron_electron_mean_free_path_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-electron mean free path in plasma (m)"""
 
+    len_plasma_electron_electron_mean_free_path_vol_avg: float = 0.0
+    """Volume averaged electron-electron mean free path in plasma (m)"""
 
-pden_plasma_ohmic_mw: float = None
-"""ohmic heating power per volume (MW/m3)"""
+    len_plasma_electron_deuteron_mean_free_path_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-deuteron mean free path in plasma (m)"""
 
+    len_plasma_electron_deuteron_mean_free_path_vol_avg: float = 0.0
+    """Volume averaged electron-deuteron mean free path in plasma (m)"""
 
-p_plasma_loss_mw: float = None
-"""heating power (= transport loss power) (MW) used in confinement time calculation"""
+    len_plasma_electron_triton_mean_free_path_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-triton mean free path in plasma (m)"""
 
+    len_plasma_electron_triton_mean_free_path_vol_avg: float = 0.0
+    """Volume averaged electron-triton mean free path in plasma (m)"""
 
-p_fusion_total_mw: float = None
-"""fusion power (MW)"""
+    len_plasma_electron_alpha_thermal_mean_free_path_profile: list[float] = field(
+        default_factory=list
+    )
+    """Profile of electron-alpha mean free path in plasma (m)"""
 
+    len_plasma_electron_alpha_thermal_mean_free_path_vol_avg: float = 0.0
+    """Volume averaged electron-alpha mean free path in plasma (m)"""
 
-len_plasma_poloidal: float = None
-"""plasma poloidal perimeter (m)"""
+    res_plasma_fuel_spitzer_profile: list[float] = field(default_factory=list)
+    """Profile of plasma Spitzer resistivity due to fuel ions (ohm m)"""
 
+    res_plasma_fuel_spitzer_vol_avg: float = 0.0
+    """Volume averaged plasma Spitzer resistivity due to fuel ions (ohm m)"""
 
-p_plasma_rad_mw: float = None
-"""total radiation power from inside LCFS (MW)"""
+    dt_power_density_plasma: float = 0.0
+    sigmav_dt_average: float = 0.0
+    dhe3_power_density: float = 0.0
+    dd_power_density: float = 0.0
+    fusrat: float = 0.0
 
 
-pden_plasma_rad_mw: float = None
-"""total radiation power per volume (MW/m3)"""
-
-
-pradsolmw: float = None
-"""radiation power from SoL (MW)"""
-
-
-proton_rate_density: float = None
-"""Proton production rate [particles/m3/sec]"""
-
-
-psolradmw: float = None
-"""SOL radiation power (MW) (`stellarator only`)"""
-
-
-pden_plasma_sync_mw: float = None
-"""synchrotron radiation power per volume (MW/m3)"""
-
-
-p_plasma_sync_mw: float = None
-"""Total synchrotron radiation power from plasma (MW)"""
-
-
-i_l_h_threshold: int = None
-"""switch for L-H mode power threshold scaling to use (see l_h_threshold_powers for list)"""
-
-
-p_l_h_threshold_mw: float = None
-"""L-H mode power threshold (MW) (chosen via i_l_h_threshold, and enforced if
-constraint equation 15 is on)
-"""
-
-
-l_h_threshold_powers: list[float] = None
-"""L-H power threshold for various scalings (MW)
-- =1 ITER 1996 scaling: nominal
-- =2 ITER 1996 scaling: upper bound
-- =3 ITER 1996 scaling: lower bound
-- =4 ITER 1997 scaling: excluding elongation
-- =5 ITER 1997 scaling: including elongation
-- =6 Martin 2008 scaling: nominal
-- =7 Martin 2008 scaling: 95% upper bound
-- =8 Martin 2008 scaling: 95% lower bound
-- =9 Snipes 2000 scaling: nominal
-- =10 Snipes 2000 scaling: upper bound
-- =11 Snipes 2000 scaling: lower bound
-- =12 Snipes 2000 scaling (closed divertor): nominal
-- =13 Snipes 2000 scaling (closed divertor): upper bound
-- =14 Snipes 2000 scaling (closed divertor): lower bound
-- =15 Hubbard et al. 2012 L-I threshold scaling: nominal
-- =16 Hubbard et al. 2012 L-I threshold scaling: lower bound
-- =17 Hubbard et al. 2012 L-I threshold scaling: upper bound
-- =18 Hubbard et al. 2017 L-I threshold scaling
-- =19 Martin 2008 aspect ratio corrected scaling: nominal
-- =20 Martin 2008 aspect ratio corrected scaling: 95% upper bound
-- =21 Martin 2008 aspect ratio corrected scaling: 95% lower bound
-"""
-
-
-p_electron_transport_loss_mw: float = None
-"""electron transport power (MW)"""
-
-
-pden_electron_transport_loss_mw: float = None
-"""electron transport power per volume (MW/m3)"""
-
-
-p_ion_transport_loss_mw: float = None
-"""ion transport power (MW)"""
-
-
-pscalingmw: float = None
-"""Total transport power from scaling law (MW)"""
-
-
-pden_ion_transport_loss_mw: float = None
-"""ion transport power per volume (MW/m3)"""
-
-
-q0: float = None
-"""Safety factor on axis"""
-
-
-q95: float = None
-"""Safety factor at 95% flux surface (iteration variable 18) (unless icurr=2 (ST current scaling),
-in which case q95 = mean edge safety factor qbar)
-"""
-
-
-molflow_plasma_fuelling_required: float = None
-"""plasma fuelling rate (nucleus-pairs/s)"""
-
-
-tauratio: float = None
-"""tauratio /1.0/ : ratio of He and pellet particle confinement times"""
-
-
-q95_min: float = None
-"""lower limit for edge safety factor"""
-
-
-qstar: float = None
-"""cylindrical safety factor"""
-
-
-rad_fraction_sol: float = None
-"""SoL radiation fraction"""
-
-
-rad_fraction_total: float = None
-"""Radiation fraction total = SoL + LCFS radiation / total power deposited in plasma"""
-
-
-f_nd_alpha_electron: float = None
-"""thermal alpha density/electron density (`iteration variable 109`)"""
-
-
-f_nd_protium_electrons: float = None
-"""Seeded f_nd_protium_electrons density / electron density."""
-
-
-ind_plasma_internal_norm: float = None
-"""Plasma normalised internal inductance"""
-
-ind_plasma_internal_norm_iter_3: float = None
-"""Plasma normalised internal inductance (ITER type 3)"""
-
-
-ind_plasma_internal_norm_wesson: float = None
-"""Wesson-like plasma normalised internal inductance"""
-
-
-ind_plasma_internal_menard: float = None
-"""Menard-like plasma normalised internal inductance"""
-
-
-ind_plasma: float = None
-"""plasma inductance (H)"""
-
-
-rmajor: float = None
-"""plasma major radius (m) (`iteration variable 3`)"""
-
-
-rminor: float = None
-"""plasma minor radius (m)"""
-
-
-f_nd_beam_electron: float = None
-"""hot beam density / n_e (`iteration variable 7`)"""
-
-
-f_nd_plasma_carbon_electron: float = None
-"""n_carbon / n_e"""
-
-
-rndfuel: float = None
-"""fuel burnup rate (reactions/second)"""
-
-
-f_nd_plasma_iron_argon_electron: float = None
-"""n_highZ / n_e"""
-
-
-f_nd_plasma_oxygen_electron: float = None
-"""n_oxygen / n_e"""
-
-
-f_res_plasma_neo: float = None
-"""neo-classical correction factor to res_plasma"""
-
-
-res_plasma: float = None
-"""plasma resistance (ohm)"""
-
-t_plasma_res_diffusion: float = None
-"""plasma current resistive diffusion time (s)"""
-
-
-a_plasma_surface: float = None
-"""plasma surface area"""
-
-
-a_plasma_surface_outboard: float = None
-"""outboard plasma surface area"""
-
-
-i_single_null: int = None
-"""switch for single null / double null plasma:
-- =0 for double null
-- =1 for single null (diverted side down)
-"""
-
-
-f_sync_reflect: float = None
-"""synchrotron wall reflectivity factor"""
-
-
-t_electron_energy_confinement: float = None
-"""electron energy confinement time (sec)"""
-
-
-tauee_in: float = None
-"""Input electron energy confinement time (sec) (`i_confinement_time=48 only`)"""
-
-
-t_energy_confinement: float = None
-"""global thermal energy confinement time (sec)"""
-
-
-t_ion_energy_confinement: float = None
-"""ion energy confinement time (sec)"""
-
-
-t_alpha_confinement: float = None
-"""alpha particle confinement time (sec)"""
-
-
-f_alpha_energy_confinement: float = None
-"""alpha particle to energy confinement time ratio"""
-
-
-temp_plasma_electron_vol_avg_kev: float = None
-"""volume averaged electron temperature (keV) (`iteration variable 4`)"""
-
-
-temp_plasma_electron_on_axis_kev: float = None
-"""central electron temperature (keV)"""
-
-
-temp_plasma_electron_density_weighted_kev: float = None
-"""density weighted average electron temperature (keV)"""
-
-
-temp_plasma_ion_vol_avg_kev: float = None
-"""volume averaged ion temperature (keV). N.B. calculated from temp_plasma_electron_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`"""
-
-
-temp_plasma_ion_on_axis_kev: float = None
-"""central ion temperature (keV)"""
-
-
-temp_plasma_ion_density_weighted_kev: float = None
-"""density weighted average ion temperature (keV)"""
-
-
-f_temp_plasma_ion_electron: float = None
-"""ion temperature / electron temperature(used to calculate temp_plasma_ion_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`"""
-
-
-triang: float = None
-"""plasma separatrix triangularity (calculated if `i_plasma_geometry = 1, 3-5 or 7`)"""
-
-
-triang95: float = None
-"""plasma triangularity at 95% surface (calculated if `i_plasma_geometry = 0-2, 6, 8 or 9`)"""
-
-
-vol_plasma: float = None
-"""plasma volume (m3)"""
-
-
-vs_plasma_burn_required: float = None
-"""V-s needed during flat-top (heat + burn times) (Wb)"""
-
-
-vs_plasma_ramp_required: float = None
-"""V-s needed during ramp-up (Wb)"""
-
-
-v_plasma_loop_burn: float = None
-"""Plasma loop voltage during flat-top (V)"""
-
-
-vs_plasma_ind_ramp: float = None
-"""Total plasma inductive flux consumption for plasma current ramp-up (Vs)(Wb)"""
-
-
-vs_plasma_res_ramp: float = None
-"""Plasma resistive flux consumption for plasma current ramp-up (Vs)(Wb)"""
-
-
-vs_plasma_total_required: float = None
-"""total V-s needed (Wb)"""
-
-
-pflux_fw_neutron_mw: float = None
-"""average neutron wall load (MW/m2)"""
-
-pflux_plasma_surface_neutron_avg_mw: float = None
-"""Average neutron flux at plasma surface (MW/m2)"""
-
-
-wtgpd: float = None
-"""mass of fuel used per day (g)"""
-
-
-a_plasma_poloidal: float = None
-"""plasma poloidal cross-sectional area [m^2]"""
-
-
-n_charge_plasma_effective_vol_avg: float = None
-"""Volume averaged plasma effective charge"""
-
-n_charge_plasma_effective_profile: list[float] = None
-"""Profile of plasma effective charge"""
-
-
-n_charge_plasma_effective_mass_weighted_vol_avg: float = None
-"""Plasma mass-weighted volume averaged plasma effective charge"""
-
-len_plasma_debye_electron_profile: list[float] = None
-"""Profile of electron Debye length in plasma (m)"""
-
-radius_plasma_deuteron_toroidal_larmor_isotropic_profile: list[float] = None
-"""Profile of deuteron toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
-
-radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg: float = None
-"""Volume averaged deuteron toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
-
-radius_plasma_triton_toroidal_larmor_isotropic_profile: list[float] = None
-"""Profile of triton toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
-
-radius_plasma_triton_toroidal_larmor_isotropic_vol_avg: float = None
-"""Volume averaged triton toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
-
-len_plasma_debye_electron_vol_avg: float = None
-"""Volume averaged electron Debye length in plasma (m)"""
-
-vel_plasma_electron_profile: list[float] = None
-"""Profile of electron thermal velocity in plasma (m/s)"""
-
-vel_plasma_deuteron_vol_avg: float = None
-"""Volume averaged deuteron thermal velocity in plasma (m/s)"""
-
-vel_plasma_electron_vol_avg: float = None
-"""Volume averaged electron thermal velocity in plasma (m/s)"""
-
-vel_plasma_deuteron_profile: list[float] = None
-"""Profile of deuteron thermal velocity in plasma (m/s)"""
-
-vel_plasma_triton_profile: list[float] = None
-"""Profile of triton thermal velocity in plasma (m/s)"""
-
-vel_plasma_triton_vol_avg: float = None
-"""Volume averaged triton thermal velocity in plasma (m/s)"""
-
-vel_plasma_alpha_thermal_profile: list[float] = None
-"""Profile of thermal alpha particle velocity in plasma (m/s)"""
-
-vel_plasma_alpha_thermal_vol_avg: float = None
-"""Volume averaged thermal alpha particle velocity in plasma (m/s)"""
-
-vel_plasma_alpha_birth: float = None
-"""Birth velocity of alpha particles in plasma (m/s)"""
-
-plasma_coulomb_log_electron_electron_profile: list[float] = None
-"""Profile of electron-electron Coulomb logarithm in plasma"""
-
-plasma_coulomb_log_electron_electron_vol_avg: float = None
-"""Volume averaged electron-electron Coulomb logarithm in plasma"""
-
-plasma_coulomb_log_electron_deuteron_profile: list[float] = None
-"""Profile of electron-deuteron Coulomb logarithm in plasma"""
-
-plasma_coulomb_log_electron_deuteron_vol_avg: float = None
-"""Volume averaged electron-deuteron Coulomb logarithm in plasma"""
-
-plasma_coulomb_log_electron_triton_profile: list[float] = None
-"""Profile of electron-triton Coulomb logarithm in plasma"""
-
-plasma_coulomb_log_electron_triton_vol_avg: float = None
-"""Volume averaged electron-triton Coulomb logarithm in plasma"""
-
-plasma_coulomb_log_deuteron_triton_profile: list[float] = None
-"""Profile of deuteron-triton Coulomb logarithm in plasma"""
-
-plasma_coulomb_log_deuteron_triton_vol_avg: float = None
-"""Volume averaged deuteron-triton Coulomb logarithm in plasma"""
-
-plasma_coulomb_log_electron_alpha_thermal_profile: list[float] = None
-"""Profile of electron-alpha Coulomb logarithm in plasma"""
-
-plasma_coulomb_log_electron_alpha_thermal_vol_avg: float = None
-"""Volume averaged electron-alpha Coulomb logarithm in plasma"""
-
-t_plasma_electron_alpha_spitzer_slow_profile: list[float] = None
-"""Profile of electron-alpha Spitzer slowing down time in plasma (s)"""
-
-t_plasma_electron_alpha_spitzer_slow_vol_avg: float = None
-"""Volume averaged electron-alpha Spitzer slowing down time in plasma (s)"""
-
-freq_plasma_electron_profile: list[float] = None
-"""Electron plasma frequency profile (Hz)"""
-
-freq_plasma_electron_vol_avg: float = None
-"""Volume averaged electron plasma frequency (Hz)"""
-
-freq_plasma_deuteron_profile: list[float] = None
-"""Deuteron plasma frequency profile (Hz)"""
-
-freq_plasma_larmor_toroidal_electron_profile: list[float] = None
-"""Profile of electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
-
-freq_plasma_larmor_toroidal_electron_vol_avg: float = None
-"""Volume averaged electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
-
-freq_plasma_larmor_toroidal_deuteron_profile: list[float] = None
-"""Profile of deuteron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
-
-freq_plasma_larmor_toroidal_deuteron_vol_avg: float = None
-"""Volume averaged deuteron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
-
-freq_plasma_larmor_toroidal_triton_profile: list[float] = None
-"""Profile of triton Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
-
-freq_plasma_larmor_toroidal_triton_vol_avg: float = None
-"""Volume averaged triton Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
-
-freq_plasma_upper_hybrid_profile: list[float] = None
-"""Profile of upper hybrid frequency in plasma (Hz)"""
-
-freq_plasma_upper_hybrid_vol_avg: float = None
-"""Volume averaged upper hybrid frequency in plasma (Hz)"""
-
-t_plasma_electron_electron_collision_profile: list[float] = None
-"""Profile of electron-electron collision time in plasma (s)"""
-
-t_plasma_electron_electron_collision_vol_avg: float = None
-"""Volume averaged electron-electron collision time in plasma (s)"""
-
-t_plasma_electron_deuteron_collision_profile: list[float] = None
-"""Profile of electron-deuteron collision time in plasma (s)"""
-
-t_plasma_electron_deuteron_collision_vol_avg: float = None
-"""Volume averaged electron-deuteron collision time in plasma (s)"""
-
-t_plasma_electron_triton_collision_profile: list[float] = None
-"""Profile of electron-triton collision time in plasma (s)"""
-
-t_plasma_electron_triton_collision_vol_avg: float = None
-"""Volume averaged electron-triton collision time in plasma (s)"""
-
-t_plasma_electron_alpha_thermal_collision_profile: list[float] = None
-"""Profile of electron-alpha collision time in plasma (s)"""
-
-t_plasma_electron_alpha_thermal_collision_vol_avg: float = None
-"""Volume averaged electron-alpha collision time in plasma (s)"""
-
-freq_plasma_electron_electron_collision_profile: list[float] = None
-"""Profile of electron-electron collision frequency in plasma (Hz)"""
-
-freq_plasma_electron_electron_collision_vol_avg: float = None
-"""Volume averaged electron-electron collision frequency in plasma (Hz)"""
-
-freq_plasma_electron_deuteron_collision_profile: list[float] = None
-"""Profile of electron-deuteron collision frequency in plasma (Hz)"""
-
-freq_plasma_electron_deuteron_collision_vol_avg: float = None
-"""Volume averaged electron-deuteron collision frequency in plasma (Hz)"""
-
-freq_plasma_electron_triton_collision_profile: list[float] = None
-"""Profile of electron-triton collision frequency in plasma (Hz)"""
-
-freq_plasma_electron_triton_collision_vol_avg: float = None
-"""Volume averaged electron-triton collision frequency in plasma (Hz)"""
-
-freq_plasma_electron_alpha_thermal_collision_profile: list[float] = None
-"""Profile of electron-alpha collision frequency in plasma (Hz)"""
-
-freq_plasma_electron_alpha_thermal_collision_vol_avg: float = None
-"""Volume averaged electron-alpha collision frequency in plasma (Hz)"""
-
-len_plasma_electron_electron_mean_free_path_profile: list[float] = None
-"""Profile of electron-electron mean free path in plasma (m)"""
-
-len_plasma_electron_electron_mean_free_path_vol_avg: float = None
-"""Volume averaged electron-electron mean free path in plasma (m)"""
-
-len_plasma_electron_deuteron_mean_free_path_profile: list[float] = None
-"""Profile of electron-deuteron mean free path in plasma (m)"""
-
-len_plasma_electron_deuteron_mean_free_path_vol_avg: float = None
-"""Volume averaged electron-deuteron mean free path in plasma (m)"""
-
-len_plasma_electron_triton_mean_free_path_profile: list[float] = None
-"""Profile of electron-triton mean free path in plasma (m)"""
-
-len_plasma_electron_triton_mean_free_path_vol_avg: float = None
-"""Volume averaged electron-triton mean free path in plasma (m)"""
-
-len_plasma_electron_alpha_thermal_mean_free_path_profile: list[float] = None
-"""Profile of electron-alpha mean free path in plasma (m)"""
-
-len_plasma_electron_alpha_thermal_mean_free_path_vol_avg: float = None
-"""Volume averaged electron-alpha mean free path in plasma (m)"""
-
-res_plasma_fuel_spitzer_profile: list[float] = None
-"""Profile of plasma Spitzer resistivity due to fuel ions (ohm m)"""
-
-res_plasma_fuel_spitzer_vol_avg: float = None
-"""Volume averaged plasma Spitzer resistivity due to fuel ions (ohm m)"""
-
-
-def init_physics_module():
-    """Initialise the physics module"""
-    global \
-        first_call, \
-        iscz, \
-        err242, \
-        err243, \
-        f_p_plasma_separatrix_rad, \
-        e_plasma_beta, \
-        p_plasma_heating_total_mw, \
-        t_energy_confinement_beta, \
-        ptarmw, \
-        lambdaio, \
-        drsep, \
-        fio, \
-        fli, \
-        flo, \
-        fui, \
-        fuo, \
-        plimw, \
-        plomw, \
-        puimw, \
-        puomw, \
-        rho_star, \
-        rho_ne_max, \
-        rho_te_max, \
-        nu_star, \
-        beta_mcdonald, \
-        itart_r
-
-    first_call = 1
-    iscz = 0
-    err242 = 0
-    err243 = 0
-    f_p_plasma_separatrix_rad = 0.0
-    e_plasma_beta = 0.0
-    p_plasma_heating_total_mw = 0.0
-    t_energy_confinement_beta = 0.0
-    ptarmw = 0.0
-    lambdaio = 0.0
-    drsep = 0.0
-    fio = 0.0
-    fli = 0.0
-    flo = 0.0
-    fui = 0.0
-    fuo = 0.0
-    plimw = 0.0
-    plomw = 0.0
-    puimw = 0.0
-    puomw = 0.0
-    rho_ne_max = 0.0
-    rho_te_max = 0.0
-    rho_star = 0.0
-    nu_star = 0.0
-    beta_mcdonald = 0.0
-    itart_r = 0.0
-
-
-def init_physics_variables():
-    global \
-        m_beam_amu, \
-        m_fuel_amu, \
-        m_ions_total_amu, \
-        m_plasma_fuel_ions, \
-        m_plasma_ions_total, \
-        m_plasma_alpha, \
-        m_plasma_electron, \
-        m_plasma, \
-        alphaj, \
-        i_alphaj, \
-        alphan, \
-        alphap, \
-        fusden_alpha_total, \
-        fusden_plasma_alpha, \
-        alphat, \
-        aspect, \
-        beamfus0, \
-        beta_total_vol_avg, \
-        beta_fast_alpha, \
-        beta_vol_avg_max, \
-        beta_vol_avg_min, \
-        beta_beam, \
-        beta_poloidal_vol_avg, \
-        beta_poloidal_eps, \
-        beta_toroidal_vol_avg, \
-        beta_thermal_toroidal_profile, \
-        beta_thermal_vol_avg, \
-        beta_thermal_poloidal_vol_avg, \
-        beta_thermal_toroidal_vol_avg, \
-        beta_norm_total, \
-        beta_norm_thermal, \
-        beta_norm_poloidal, \
-        e_plasma_beta_thermal, \
-        beta_norm_toroidal, \
-        betbm0, \
-        b_plasma_surface_poloidal_average, \
-        b_plasma_toroidal_on_axis, \
-        b_plasma_toroidal_inboard, \
-        b_plasma_toroidal_outboard, \
-        b_plasma_toroidal_profile, \
-        b_plasma_total, \
-        e_plasma_magnetic_stored, \
-        burnup, \
-        burnup_in, \
-        b_plasma_vertical_required, \
-        c_beta, \
-        csawth, \
-        f_vol_plasma, \
-        f_r_conducting_wall, \
-        nd_plasma_electrons_vol_avg, \
-        nd_plasma_fuel_ions_vol_avg, \
-        dlamee, \
-        dlamie, \
-        nd_plasma_electron_max_array, \
-        nd_plasma_alphas_vol_avg, \
-        nd_beam_ions, \
-        nd_beam_ions_out, \
-        beta_norm_max, \
-        beta_norm_max_wesson, \
-        beta_norm_max_menard, \
-        beta_norm_max_original_scaling, \
-        beta_norm_max_tholerus, \
-        beta_norm_max_stambaugh, \
-        nd_plasma_electrons_max, \
-        nd_plasma_ions_total_vol_avg, \
-        nd_plasma_electron_line, \
-        nd_plasma_protons_vol_avg, \
-        ntau, \
-        nTtau, \
-        nd_plasma_impurities_vol_avg, \
-        beta_poloidal_eps_max, \
-        eps, \
-        f_c_plasma_auxiliary, \
-        f_c_plasma_inductive, \
-        f_alpha_electron, \
-        f_p_alpha_plasma_deposited, \
-        f_alpha_ion, \
-        f_plasma_fuel_deuterium, \
-        f_p_div_lower, \
-        ffwal, \
-        f_nd_plasma_pedestal_greenwald, \
-        f_nd_plasma_separatrix_greenwald, \
-        f_plasma_fuel_helium3, \
-        figmer, \
-        fkzohm, \
-        f_plasma_fuel_tritium, \
-        fusden_total, \
-        fusrat_total, \
-        fusrat_plasma_dt_profile, \
-        fusrat_plasma_dd_triton_profile, \
-        fusrat_plasma_dd_helion_profile, \
-        fusrat_plasma_dhe3_profile, \
-        fusden_plasma, \
-        f_c_plasma_non_inductive, \
-        ejima_coeff, \
-        f_beta_alpha_beam_thermal, \
-        hfac, \
-        hfact, \
-        hstar, \
-        t_plasma_energy_confinement_max, \
-        i_bootstrap_current, \
-        i_beta_component, \
-        i_plasma_current, \
-        i_diamagnetic_current, \
-        i_density_limit, \
-        i_beta_fast_alpha, \
-        i_plasma_ignited, \
-        i_plasma_pedestal, \
-        i_pfirsch_schluter_current, \
-        nd_plasma_pedestal_electron, \
-        nd_plasma_separatrix_electron, \
-        alpha_crit, \
-        nd_plasma_separatrix_electron_eich_max, \
-        plasma_res_factor, \
-        radius_plasma_pedestal_density_norm, \
-        radius_plasma_pedestal_temp_norm, \
-        tbeta, \
-        temp_plasma_pedestal_kev, \
-        temp_plasma_separatrix_kev, \
-        i_beta_norm_max, \
-        i_rad_loss, \
-        i_confinement_time, \
-        i_plasma_wall_gap, \
-        i_plasma_geometry, \
-        i_plasma_shape, \
-        itart, \
-        itartpf, \
-        i_pflux_fw_neutron, \
-        plasma_square, \
-        kappa, \
-        kappa95, \
-        kappa_ipb, \
-        nd_plasma_electron_on_axis, \
-        nd_plasma_ions_on_axis, \
-        m_s_limit, \
-        pres_plasma_thermal_on_axis, \
-        pres_plasma_thermal_total_profile, \
-        pres_plasma_electron_profile, \
-        pres_plasma_ion_total_profile, \
-        pres_plasma_fuel_profile, \
-        j_plasma_on_axis, \
-        n_plasma_profile_elements, \
-        f_dd_branching_trit, \
-        pden_plasma_alpha_mw, \
-        pden_alpha_total_mw, \
-        f_pden_alpha_electron_mw, \
-        p_fw_alpha_mw, \
-        f_pden_alpha_ions_mw, \
-        p_alpha_total_mw, \
-        p_plasma_alpha_mw, \
-        p_beam_alpha_mw, \
-        p_beam_neutron_mw, \
-        p_beam_dt_mw, \
-        p_non_alpha_charged_mw, \
-        pden_non_alpha_charged_mw, \
-        f_temp_plasma_electron_density_vol_avg, \
-        p_plasma_inner_rad_mw, \
-        pden_plasma_core_rad_mw, \
-        p_dd_total_mw, \
-        p_dhe3_total_mw, \
-        p_plasma_separatrix_mw, \
-        p_plasma_separatrix_rmajor_mw, \
-        p_div_bt_q_aspect_rmajor_mw, \
-        p_div_lower_separatrix_mw, \
-        p_div_upper_separatrix_mw, \
-        p_div_separatrix_max_mw, \
-        p_dt_total_mw, \
-        p_plasma_dt_mw, \
-        p_plasma_outer_rad_mw, \
-        pden_plasma_outer_rad_mw, \
-        p_charged_particle_mw, \
-        vs_plasma_internal, \
-        pflux_fw_rad_mw, \
-        pden_ion_electron_equilibration_mw, \
-        plasma_current, \
-        c_plasma_peng_analytic, \
-        c_plasma_peng_double_null, \
-        c_plasma_cyclindrical, \
-        c_plasma_ipdg89, \
-        c_plasma_todd_empirical_i, \
-        c_plasma_todd_empirical_ii, \
-        c_plasma_connor_hastie, \
-        c_plasma_sauter, \
-        c_plasma_fiesta_st, \
-        p_plasma_neutron_mw, \
-        p_neutron_total_mw, \
-        pden_neutron_total_mw, \
-        pden_plasma_neutron_mw, \
-        p_plasma_ohmic_mw, \
-        pden_plasma_ohmic_mw, \
-        p_plasma_loss_mw, \
-        p_fusion_total_mw, \
-        len_plasma_poloidal, \
-        p_plasma_rad_mw, \
-        pden_plasma_rad_mw, \
-        pradsolmw, \
-        proton_rate_density, \
-        psolradmw, \
-        pden_plasma_sync_mw, \
-        p_plasma_sync_mw, \
-        i_l_h_threshold, \
-        p_l_h_threshold_mw, \
-        l_h_threshold_powers, \
-        p_electron_transport_loss_mw, \
-        pden_electron_transport_loss_mw, \
-        p_ion_transport_loss_mw, \
-        pscalingmw, \
-        pden_ion_transport_loss_mw, \
-        q0, \
-        q95, \
-        molflow_plasma_fuelling_required, \
-        tauratio, \
-        q95_min, \
-        qstar, \
-        rad_fraction_sol, \
-        rad_fraction_total, \
-        f_nd_alpha_electron, \
-        f_nd_protium_electrons, \
-        ind_plasma_internal_norm, \
-        ind_plasma_internal_norm_wesson, \
-        ind_plasma_internal_norm_menard, \
-        ind_plasma_internal_norm_iter_3, \
-        i_ind_plasma_internal_norm, \
-        ind_plasma, \
-        rmajor, \
-        rminor, \
-        f_nd_beam_electron, \
-        f_nd_plasma_carbon_electron, \
-        rndfuel, \
-        f_nd_plasma_iron_argon_electron, \
-        f_nd_plasma_oxygen_electron, \
-        f_res_plasma_neo, \
-        res_plasma, \
-        rho_plasma_spitzer_classical_profile, \
-        t_plasma_res_diffusion, \
-        a_plasma_surface, \
-        a_plasma_surface_outboard, \
-        i_single_null, \
-        f_sync_reflect, \
-        t_electron_energy_confinement, \
-        tauee_in, \
-        t_energy_confinement, \
-        t_ion_energy_confinement, \
-        t_alpha_confinement, \
-        f_alpha_energy_confinement, \
-        temp_plasma_electron_vol_avg_kev, \
-        temp_plasma_electron_on_axis_kev, \
-        temp_plasma_electron_density_weighted_kev, \
-        temp_plasma_ion_vol_avg_kev, \
-        temp_plasma_ion_on_axis_kev, \
-        temp_plasma_ion_density_weighted_kev, \
-        f_temp_plasma_ion_electron, \
-        triang, \
-        triang95, \
-        vol_plasma, \
-        vs_plasma_burn_required, \
-        vs_plasma_ramp_required, \
-        v_plasma_loop_burn, \
-        vs_plasma_ind_ramp, \
-        vs_plasma_res_ramp, \
-        vs_plasma_total_required, \
-        pflux_fw_neutron_mw, \
-        pflux_plasma_surface_neutron_avg_mw, \
-        wtgpd, \
-        a_plasma_poloidal, \
-        n_charge_plasma_effective_vol_avg, \
-        n_charge_plasma_effective_profile, \
-        n_charge_plasma_effective_mass_weighted_vol_avg, \
-        j_plasma_bootstrap_sauter_profile, \
-        len_plasma_debye_electron_profile, \
-        radius_plasma_deuteron_toroidal_larmor_isotropic_profile, \
-        radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg, \
-        radius_plasma_triton_toroidal_larmor_isotropic_profile, \
-        radius_plasma_triton_toroidal_larmor_isotropic_vol_avg, \
-        len_plasma_debye_electron_vol_avg, \
-        vel_plasma_electron_profile, \
-        vel_plasma_deuteron_vol_avg, \
-        vel_plasma_electron_vol_avg, \
-        vel_plasma_deuteron_profile, \
-        vel_plasma_triton_profile, \
-        vel_plasma_triton_vol_avg, \
-        vel_plasma_alpha_thermal_profile, \
-        vel_plasma_alpha_thermal_vol_avg, \
-        vel_plasma_alpha_birth, \
-        plasma_coulomb_log_electron_electron_profile, \
-        plasma_coulomb_log_electron_electron_vol_avg, \
-        plasma_coulomb_log_electron_deuteron_profile, \
-        plasma_coulomb_log_electron_deuteron_vol_avg, \
-        plasma_coulomb_log_electron_triton_profile, \
-        plasma_coulomb_log_electron_triton_vol_avg, \
-        plasma_coulomb_log_deuteron_triton_profile, \
-        plasma_coulomb_log_deuteron_triton_vol_avg, \
-        plasma_coulomb_log_electron_alpha_thermal_profile, \
-        plasma_coulomb_log_electron_alpha_thermal_vol_avg, \
-        t_plasma_electron_alpha_spitzer_slow_profile, \
-        t_plasma_electron_alpha_spitzer_slow_vol_avg, \
-        freq_plasma_electron_profile, \
-        freq_plasma_electron_vol_avg, \
-        freq_plasma_deuteron_profile, \
-        freq_plasma_larmor_toroidal_electron_profile, \
-        freq_plasma_larmor_toroidal_deuteron_profile, \
-        freq_plasma_larmor_toroidal_triton_profile, \
-        freq_plasma_upper_hybrid_profile, \
-        freq_plasma_upper_hybrid_vol_avg, \
-        t_plasma_electron_electron_collision_profile, \
-        t_plasma_electron_electron_collision_vol_avg, \
-        t_plasma_electron_deuteron_collision_profile, \
-        t_plasma_electron_deuteron_collision_vol_avg, \
-        t_plasma_electron_triton_collision_profile, \
-        t_plasma_electron_triton_collision_vol_avg, \
-        t_plasma_electron_alpha_thermal_collision_profile, \
-        t_plasma_electron_alpha_thermal_collision_vol_avg, \
-        freq_plasma_electron_electron_collision_profile, \
-        freq_plasma_electron_electron_collision_vol_avg, \
-        freq_plasma_electron_deuteron_collision_profile, \
-        freq_plasma_electron_deuteron_collision_vol_avg, \
-        freq_plasma_electron_triton_collision_profile, \
-        freq_plasma_electron_triton_collision_vol_avg, \
-        freq_plasma_electron_alpha_thermal_collision_profile, \
-        freq_plasma_electron_alpha_thermal_collision_vol_avg, \
-        len_plasma_electron_electron_mean_free_path_profile, \
-        len_plasma_electron_electron_mean_free_path_vol_avg, \
-        len_plasma_electron_deuteron_mean_free_path_profile, \
-        len_plasma_electron_deuteron_mean_free_path_vol_avg, \
-        len_plasma_electron_triton_mean_free_path_profile, \
-        len_plasma_electron_triton_mean_free_path_vol_avg, \
-        len_plasma_electron_alpha_thermal_mean_free_path_profile, \
-        len_plasma_electron_alpha_thermal_mean_free_path_vol_avg, \
-        res_plasma_fuel_spitzer_profile, \
-        res_plasma_fuel_spitzer_vol_avg
-
-    m_beam_amu = 0.0
-    m_fuel_amu = 0.0
-    m_ions_total_amu = 0.0
-    m_plasma_fuel_ions = 0.0
-    m_plasma_ions_total = 0.0
-    m_plasma_alpha = 0.0
-    m_plasma_electron = 0.0
-    m_plasma = 0.0
-    alphaj = 1.0
-    i_alphaj = 0
-    alphan = 0.25
-    alphap = 0.0
-    fusden_alpha_total = 0.0
-    fusden_plasma_alpha = 0.0
-    alphat = 0.5
-    aspect = 2.907
-    beamfus0 = 1.0
-    beta_total_vol_avg = 0.042
-    beta_fast_alpha = 0.0
-    beta_vol_avg_max = 0.0
-    beta_vol_avg_min = 0.0
-    beta_beam = 0.0
-    beta_poloidal_vol_avg = 0.0
-    beta_poloidal_eps = 0.0
-    beta_toroidal_vol_avg = 0.0
-    beta_thermal_toroidal_profile = []
-    beta_thermal_vol_avg = 0.0
-    beta_thermal_poloidal_vol_avg = 0.0
-    beta_thermal_toroidal_vol_avg = 0.0
-    beta_norm_total = 0.0
-    beta_norm_thermal = 0.0
-    beta_norm_poloidal = 0.0
-    e_plasma_beta_thermal = 0.0
-    beta_norm_toroidal = 0.0
-    betbm0 = 1.5
-    b_plasma_surface_poloidal_average = 0.0
-    b_plasma_toroidal_on_axis = 5.68
-    b_plasma_toroidal_inboard = 0.0
-    b_plasma_toroidal_outboard = 0.0
-    b_plasma_toroidal_profile = []
-    b_plasma_total = 0.0
-    e_plasma_magnetic_stored = 0.0
-    burnup = 0.0
-    burnup_in = 0.0
-    b_plasma_vertical_required = 0.0
-    c_beta = 0.5
-    csawth = 1.0
-    f_vol_plasma = 1.0
-    f_r_conducting_wall = 1.35
-    nd_plasma_electrons_vol_avg = 9.8e19
-    nd_plasma_fuel_ions_vol_avg = 0.0
-    dlamee = 0.0
-    dlamie = 0.0
-    nd_plasma_electron_max_array = np.zeros(8, dtype=np.float64)
-    nd_plasma_alphas_vol_avg = 0.0
-    nd_beam_ions = 0.0
-    nd_beam_ions_out = 0.0
-    beta_norm_max = 3.5
-    beta_norm_max_wesson = 0.0
-    beta_norm_max_menard = 0.0
-    beta_norm_max_original_scaling = 0.0
-    beta_norm_max_tholerus = 0.0
-    beta_norm_max_stambaugh = 0.0
-    nd_plasma_electrons_max = 0.0
-    nd_plasma_ions_total_vol_avg = 0.0
-    nd_plasma_electron_line = 0.0
-    nd_plasma_protons_vol_avg = 0.0
-    ntau = 0.0
-    nTtau = 0.0
-    nd_plasma_impurities_vol_avg = 0.0
-    beta_poloidal_eps_max = 1.38
-    eps = 0.34399724802
-    f_c_plasma_auxiliary = 0.0
-    f_c_plasma_inductive = 0.0
-    f_alpha_electron = 0.0
-    f_p_alpha_plasma_deposited = 0.95
-    f_alpha_ion = 0.0
-    f_plasma_fuel_deuterium = 0.5
-    f_p_div_lower = 1.0
-    ffwal = 0.92
-    f_nd_plasma_pedestal_greenwald = 0.85
-    f_nd_plasma_separatrix_greenwald = 0.50
-    f_plasma_fuel_helium3 = 0.0
-    figmer = 0.0
-    fkzohm = 1.0
-    f_plasma_fuel_tritium = 0.5
-    fusden_total = 0.0
-    fusrat_total = 0.0
-    fusrat_plasma_dt_profile = []
-    fusrat_plasma_dd_triton_profile = []
-    fusrat_plasma_dd_helion_profile = []
-    fusrat_plasma_dhe3_profile = []
-    fusden_plasma = 0.0
-    f_c_plasma_non_inductive = 1.0
-    ejima_coeff = 0.4
-    f_beta_alpha_beam_thermal = 0.0
-    hfac = np.zeros(N_CONFINEMENT_SCALINGS, dtype=np.float64)
-    hfact = 1.0
-    hstar = 1.0
-    t_plasma_energy_confinement_max = 10.0
-    i_bootstrap_current = 3
-    i_beta_component = 0
-    i_plasma_current = 4
-    i_diamagnetic_current = 0
-    i_density_limit = 8
-    i_beta_fast_alpha = 1
-    i_plasma_ignited = 0
-    i_plasma_pedestal = 1
-    i_pfirsch_schluter_current = 0
-    nd_plasma_pedestal_electron = 4.0e19
-    nd_plasma_separatrix_electron = 3.0e19
-    alpha_crit = 0.0
-    nd_plasma_separatrix_electron_eich_max = 0.0
-    plasma_res_factor = 1.0
-    radius_plasma_pedestal_density_norm = 1.0
-    radius_plasma_pedestal_temp_norm = 1.0
-    tbeta = 2.0
-    temp_plasma_pedestal_kev = 1.0
-    temp_plasma_separatrix_kev = 0.1
-    i_beta_norm_max = 1
-    i_rad_loss = 1
-    i_confinement_time = 34
-    i_plasma_wall_gap = 1
-    i_plasma_geometry = 0
-    i_plasma_shape = 0
-    itart = 0
-    itartpf = 0
-    i_pflux_fw_neutron = 1
-    plasma_square = 0.0
-    kappa = 1.792
-    kappa95 = 1.6
-    kappa_ipb = 0.0
-    nd_plasma_electron_on_axis = 0.0
-    nd_plasma_ions_on_axis = 0.0
-    m_s_limit = 0.3
-    pres_plasma_thermal_on_axis = 0.0
-    pres_plasma_thermal_total_profile = []
-    pres_plasma_electron_profile = []
-    pres_plasma_ion_total_profile = []
-    pres_plasma_fuel_profile = []
-    j_plasma_on_axis = 0.0
-    j_plasma_bootstrap_sauter_profile = []
-    n_plasma_profile_elements = 500
-    f_dd_branching_trit = 0.0
-    pden_plasma_alpha_mw = 0.0
-    pden_alpha_total_mw = 0.0
-    f_pden_alpha_electron_mw = 0.0
-    p_fw_alpha_mw = 0.0
-    f_pden_alpha_ions_mw = 0.0
-    p_alpha_total_mw = 0.0
-    p_plasma_alpha_mw = 0.0
-    p_beam_alpha_mw = 0.0
-    p_beam_neutron_mw = 0.0
-    p_beam_dt_mw = 0.0
-    p_non_alpha_charged_mw = 0.0
-    pden_non_alpha_charged_mw = 0.0
-    f_temp_plasma_electron_density_vol_avg = 0.0
-    p_plasma_inner_rad_mw = 0.0
-    pden_plasma_core_rad_mw = 0.0
-    p_dd_total_mw = 0.0
-    p_dhe3_total_mw = 0.0
-    p_plasma_separatrix_mw = 0.0
-    p_plasma_separatrix_rmajor_mw = 0.0
-    p_div_bt_q_aspect_rmajor_mw = 0.0
-    p_div_lower_separatrix_mw = 0.0
-    p_div_lower_separatrix_mw = 0.0
-    p_div_upper_separatrix_mw = 0.0
-    p_div_separatrix_max_mw = 0.0
-    p_dt_total_mw = 0.0
-    p_plasma_dt_mw = 0.0
-    p_plasma_outer_rad_mw = 0.0
-    pden_plasma_outer_rad_mw = 0.0
-    p_charged_particle_mw = 0.0
-    vs_plasma_internal = 0.0
-    pflux_fw_rad_mw = 0.0
-    pden_ion_electron_equilibration_mw = 0.0
-    plasma_current = 0.0
-    c_plasma_peng_analytic = 0.0
-    c_plasma_peng_double_null = 0.0
-    c_plasma_cyclindrical = 0.0
-    c_plasma_ipdg89 = 0.0
-    c_plasma_todd_empirical_i = 0.0
-    c_plasma_todd_empirical_ii = 0.0
-    c_plasma_connor_hastie = 0.0
-    c_plasma_sauter = 0.0
-    c_plasma_fiesta_st = 0.0
-    p_plasma_neutron_mw = 0.0
-    p_neutron_total_mw = 0.0
-    pden_neutron_total_mw = 0.0
-    pden_plasma_neutron_mw = 0.0
-    p_plasma_ohmic_mw = 0.0
-    pden_plasma_ohmic_mw = 0.0
-    p_plasma_loss_mw = 0.0
-    p_fusion_total_mw = 0.0
-    len_plasma_poloidal = 0.0
-    p_plasma_rad_mw = 0.0
-    pden_plasma_rad_mw = 0.0
-    pradsolmw = 0.0
-    proton_rate_density = 0.0
-    psolradmw = 0.0
-    pden_plasma_sync_mw = 0.0
-    p_plasma_sync_mw = 0.0
-    i_l_h_threshold = 19
-    p_l_h_threshold_mw = 0.0
-    l_h_threshold_powers = np.zeros(21, dtype=np.float64)
-    p_electron_transport_loss_mw = 0.0
-    pden_electron_transport_loss_mw = 0.0
-    p_ion_transport_loss_mw = 0.0
-    pscalingmw = 0.0
-    pden_ion_transport_loss_mw = 0.0
-    q0 = 1.0
-    q95 = 0.0
-    molflow_plasma_fuelling_required = 0.0
-    tauratio = 1.0
-    q95_min = 0.0
-    qstar = 0.0
-    rad_fraction_sol = 0.8
-    rad_fraction_total = 0.0
-    f_nd_alpha_electron = 0.1
-    f_nd_protium_electrons = 0.0
-    ind_plasma_internal_norm = 0.9
-    ind_plasma_internal_norm_wesson = 0.0
-    ind_plasma_internal_norm_menard = 0.0
-    ind_plasma_internal_norm_iter_3 = 0.0
-    i_ind_plasma_internal_norm = 0
-    ind_plasma = 0.0
-    rmajor = 8.14
-    rminor = 0.0
-    f_nd_beam_electron = 0.005
-    f_nd_plasma_carbon_electron = 0.0
-    rndfuel = 0.0
-    f_nd_plasma_iron_argon_electron = 0.0
-    f_nd_plasma_oxygen_electron = 0.0
-    f_res_plasma_neo = 0.0
-    res_plasma = 0.0
-    rho_plasma_spitzer_classical_profile = []
-    t_plasma_res_diffusion = 0.0
-    a_plasma_surface = 0.0
-    a_plasma_surface_outboard = 0.0
-    i_single_null = 1
-    f_sync_reflect = 0.6
-    t_electron_energy_confinement = 0.0
-    tauee_in = 0.0
-    t_energy_confinement = 0.0
-    t_ion_energy_confinement = 0.0
-    t_alpha_confinement = 0.0
-    f_alpha_energy_confinement = 0.0
-    temp_plasma_electron_vol_avg_kev = 12.9
-    temp_plasma_electron_on_axis_kev = 0.0
-    temp_plasma_electron_density_weighted_kev = 0.0
-    temp_plasma_ion_vol_avg_kev = 12.9
-    temp_plasma_ion_on_axis_kev = 0.0
-    temp_plasma_ion_density_weighted_kev = 0.0
-    f_temp_plasma_ion_electron = 1.0
-    triang = 0.36
-    triang95 = 0.24
-    vol_plasma = 0.0
-    vs_plasma_burn_required = 0.0
-    vs_plasma_ramp_required = 0.0
-    v_plasma_loop_burn = 0.0
-    vs_plasma_ind_ramp = 0.0
-    vs_plasma_res_ramp = 0.0
-    vs_plasma_total_required = 0.0
-    pflux_fw_neutron_mw = 0.0
-    pflux_plasma_surface_neutron_avg_mw = 0.0
-    wtgpd = 0.0
-    a_plasma_poloidal = 0.0
-    n_charge_plasma_effective_vol_avg = 0.0
-    n_charge_plasma_effective_profile = []
-    n_charge_plasma_effective_mass_weighted_vol_avg = 0.0
-    len_plasma_debye_electron_profile = []
-    radius_plasma_deuteron_toroidal_larmor_isotropic_profile = []
-    radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg = 0.0
-    radius_plasma_triton_toroidal_larmor_isotropic_profile = []
-    radius_plasma_triton_toroidal_larmor_isotropic_vol_avg = 0.0
-    len_plasma_debye_electron_vol_avg = 0.0
-    vel_plasma_electron_profile = []
-    vel_plasma_electron_vol_avg = 0.0
-    vel_plasma_deuteron_profile = []
-    vel_plasma_deuteron_vol_avg = 0.0
-    vel_plasma_triton_profile = []
-    vel_plasma_triton_vol_avg = 0.0
-    vel_plasma_alpha_thermal_profile = []
-    vel_plasma_alpha_thermal_vol_avg = 0.0
-    vel_plasma_alpha_birth = 0.0
-    plasma_coulomb_log_electron_electron_profile = []
-    plasma_coulomb_log_electron_electron_vol_avg = 0.0
-    plasma_coulomb_log_electron_deuteron_profile = []
-    plasma_coulomb_log_electron_deuteron_vol_avg = 0.0
-    plasma_coulomb_log_electron_triton_profile = []
-    plasma_coulomb_log_electron_triton_vol_avg = 0.0
-    plasma_coulomb_log_deuteron_triton_profile = []
-    plasma_coulomb_log_deuteron_triton_vol_avg = 0.0
-    plasma_coulomb_log_electron_alpha_thermal_profile = []
-    plasma_coulomb_log_electron_alpha_thermal_vol_avg = 0.0
-    freq_plasma_electron_profile = []
-    freq_plasma_electron_vol_avg = 0.0
-    freq_plasma_deuteron_profile = []
-    freq_plasma_larmor_toroidal_electron_profile = []
-    freq_plasma_larmor_toroidal_deuteron_profile = []
-    freq_plasma_larmor_toroidal_triton_profile = []
-    freq_plasma_upper_hybrid_profile = []
-    freq_plasma_upper_hybrid_vol_avg = 0.0
-    t_plasma_electron_electron_collision_profile = []
-    t_plasma_electron_electron_collision_vol_avg = 0.0
-    t_plasma_electron_deuteron_collision_profile = []
-    t_plasma_electron_deuteron_collision_vol_avg = 0.0
-    t_plasma_electron_triton_collision_profile = []
-    t_plasma_electron_triton_collision_vol_avg = 0.0
-    t_plasma_electron_alpha_thermal_collision_profile = []
-    t_plasma_electron_alpha_thermal_collision_vol_avg = 0.0
-    t_plasma_electron_alpha_spitzer_slow_profile = []
-    t_plasma_electron_alpha_spitzer_slow_vol_avg = 0.0
-    freq_plasma_electron_electron_collision_profile = []
-    freq_plasma_electron_electron_collision_vol_avg = 0.0
-    freq_plasma_electron_deuteron_collision_profile = []
-    freq_plasma_electron_deuteron_collision_vol_avg = 0.0
-    freq_plasma_electron_triton_collision_profile = []
-    freq_plasma_electron_triton_collision_vol_avg = 0.0
-    freq_plasma_electron_alpha_thermal_collision_profile = []
-    freq_plasma_electron_alpha_thermal_collision_vol_avg = 0.0
-    len_plasma_electron_electron_mean_free_path_profile = []
-    len_plasma_electron_electron_mean_free_path_vol_avg = 0.0
-    len_plasma_electron_deuteron_mean_free_path_profile = []
-    len_plasma_electron_deuteron_mean_free_path_vol_avg = 0.0
-    len_plasma_electron_triton_mean_free_path_profile = []
-    len_plasma_electron_triton_mean_free_path_vol_avg = 0.0
-    len_plasma_electron_alpha_thermal_mean_free_path_profile = []
-    len_plasma_electron_alpha_thermal_mean_free_path_vol_avg = 0.0
-    res_plasma_fuel_spitzer_profile = []
-    res_plasma_fuel_spitzer_vol_avg = 0.0
+CREATE_DICTS_FROM_DATACLASS = PhysicsData

@@ -5,7 +5,6 @@ from pathlib import Path
 
 import pytest
 
-from process import data_structure
 from process.core.model import DataStructure
 from process.main import SingleRun, VaryRun
 
@@ -66,12 +65,12 @@ def test_set_input(single_run, monkeypatch, input_file):
     # methods (don't have to run Process.parse_args() first to set up this way)
     monkeypatch.setattr(single_run, "input_file", Path(input_file), raising=False)
 
-    # Mocking undo trys to set the value as none
+    # Mocking undo tries to set the value as none
 
     # Mocks set up, can now run set_input()
     single_run.set_input()
     # Check path has been set
-    assert data_structure.global_variables.fileprefix == expected
+    assert single_run.data.globals.fileprefix == expected
 
 
 def test_set_output(single_run, monkeypatch):
@@ -85,14 +84,11 @@ def test_set_output(single_run, monkeypatch):
     # Expected output prefix
     expected = "output_prefix"
     # Mock self.filename_prefix on single_run with the value of expected
-    monkeypatch.setattr(single_run, "filename_prefix", expected, raising=False)
+    monkeypatch.setattr(single_run.data.globals, "output_prefix", expected)
 
-    # Mocking undo trys to set the value as none
-    # monkeypatch.setattr(data_structure.global_variables, "output_prefix", None)
-    # Run the method, and extract the value
     single_run.set_output()
 
-    assert Path(data_structure.global_variables.output_prefix).name == expected
+    assert Path(single_run.data.globals.output_prefix).name == expected
 
 
 def test_initialise(single_run, monkeypatch):
@@ -117,7 +113,7 @@ def test_set_mfile(single_run, monkeypatch):
     prefix = "test"
     expected = Path(prefix + "MFILE.DAT")
     # Mock filename_prefix and run
-    monkeypatch.setattr(single_run, "filename_prefix", prefix, raising=False)
+    monkeypatch.setattr(single_run.data.globals, "output_prefix", prefix)
     single_run.set_mfile()
     assert single_run.mfile_path.name == expected.name
 

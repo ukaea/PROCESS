@@ -23,12 +23,12 @@ $$\begin{aligned}
 
 where $\rho = r/a$, and $a$ is the plasma minor radius. This gives
 volume-averaged values $\langle n \rangle = n_0 / (1+\alpha_n)$, and
- approximate line-averaged values of $\bar{n} \approx n_0 / \sqrt{(1+\alpha_n)}$, the full equation used can be seen [here](./plasma_profiles.md#parabolic_paramterisation).  These
+ approximate line-averaged values of $\bar{n} \approx n_0 / \sqrt{(1+\alpha_n)}$, the full equation used can be seen [here](./plasma_profiles.md#parabolic_parameterisation).  These
 volume- and line-averages are used throughout the code along with the profile
 indices $\alpha$, in the various physics models, many of which are fits to
 theory-based or empirical scalings. Thus, the plasma model in PROCESS may
 be described as 1/2-D.  The relevant profile index variables are
-`alphan`, `alphat` and `alphaj`, respectively. For full derivation and description of the core and line averaged values please see the [parabolic_paramterisation()](plasma_profiles.md#parabolic_paramterisation) section which calculates these values for both temperature and density. A table of the the associated variables can be seen below
+`alphan`, `alphat` and `alphaj`, respectively. For full derivation and description of the core and line averaged values please see the [parabolic_parameterisation()](plasma_profiles.md#parabolic_parameterisation) section which calculates these values for both temperature and density. A table of the the associated variables can be seen below
 
 | Profile parameter                | Density   | Temperature | Current  |
 |----------------------------------|-----------|-------------|----------------|
@@ -37,7 +37,7 @@ be described as 1/2-D.  The relevant profile index variables are
 
 ???+ note "Plasma current profile"
 
-    While PROCESS assumes a standard parabolic profile to be the shape of the current profile as per the 1989 ITER physics guidelines[^2] , it does not calculate its shape or values apart from the core value. The profile peaking factor `alphaj` is calculated after the plasma current calculation relating to `i_alphaj` found [here](../plasma_current/plasma_current.md#setting-the-current-profile-index).The on-axis current density is analytically calculated in [`calculate_profile_factors()`](#calculate_profile_factors) Only the temeprature and density profiles are calculated fully withing the `PlasmaProfiles` class.
+    While PROCESS assumes a standard parabolic profile to be the shape of the current profile as per the 1989 ITER physics guidelines[^2] , it does not calculate its shape or values apart from the core value. The profile peaking factor `alphaj` is calculated after the plasma current calculation relating to `i_alphaj` found [here](../plasma_current/plasma_current.md#setting-the-current-profile-index).The on-axis current density is analytically calculated in [`calculate_profile_factors()`](#calculate_profile_factors) Only the temperature and density profiles are calculated fully withing the `PlasmaProfiles` class.
 
 The graph below is for a standard parabolic profile. You can vary the core value (`n0`) and the profile index (`alphan`) to see how the function behaves
 
@@ -262,9 +262,9 @@ Depending on the value of `i_plasma_pedestal` different functions will be ran, t
 
 #### Parabolic Profile | `i_plasma_pedestal == 0`
 
-##### `parabolic_paramterisation()`
+##### `parabolic_parameterisation()`
 
-If pedestal profile values are set they are reset to have values that agree with the original form of the parabolic profiles. Such that $\rho_{\text{ped}} = 1$ and that pedestal and separatrix densities and temepratures are zero. This will then warn the user in the terminal.
+If pedestal profile values are set they are reset to have values that agree with the original form of the parabolic profiles. Such that $\rho_{\text{ped}} = 1$ and that pedestal and separatrix densities and temperatures are zero. This will then warn the user in the terminal.
 
 The density and temperature profile runner function [`TeProfile/NeProfile.run()`](plasma_density_profile.md#runner-function-run) is then called to re-calculate the profile and core values.
 
@@ -277,10 +277,10 @@ $$
 
 --------
 
-The line averaged density is then calculated for the profile paramaters
+The line averaged density/temperature is then calculated for the profile paramaters
 
-###### Line averaged density derivation
-Line averaged electron density is calculated by integrating the profile across the normalised width of the profile and then dividing by the width of the integration bounds
+###### Line averaged density/temperature derivation
+Line averaged electron density/temperature is calculated by integrating the profile across the normalised width of the profile and then dividing by the width of the integration bounds. Using the density as an example:
 
 $$
 \overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_plasma_electron_line}} = \frac{\int^1_0 n_0(1-\rho^2)^{\alpha_n} \ d\rho}{\rho}
@@ -420,7 +420,7 @@ $$
     \alpha_p = \alpha_n + \alpha_T
     $$
 
-    The volume averaged pressure can then be set if we assume the pressure also has a parabolic profile. Using the standard relation used for both density and temeprature we can set the volume averaged pressure as:
+    The volume averaged pressure can then be set if we assume the pressure also has a parabolic profile. Using the standard relation used for both density and temperature we can set the volume averaged pressure as:
 
     $$
     \langle p \rangle =   \frac{p_0}{\alpha_p+1}
@@ -456,7 +456,7 @@ Where $\operatorname{B}$ is the [Beta function](https://en.wikipedia.org/wiki/Be
 
 ##### `calculate_parabolic_profile_factors()`
 
-This is used by the stellerator module to find temperature gradients.
+This is used by the stellarator module to find temperature gradients.
 We first need to find the normalised position in the plasma where the change in the pressure gradient is at a minima or maxima. This is just when the second derivative of the profile is zero. Using the density profile as an example, though this is true for temperature also.
 
 $$
@@ -612,10 +612,14 @@ $$
 \texttt{f_temp_plasma_electron_density_vol_avg} =\frac{\langle T_{\text{e}} \rangle_{\text{n}}}{\underbrace{\langle T_{\text{e}} \rangle_{\text{V}}}_{\texttt{temp_plasma_electrons_vol_avg}}}
 $$
 
-Calculate the line averaged electron density by integrating the normalised profile using the class [`integrate_profile_y()`](./plasma_profiles_abstract_class.md#calculate-the-profile-integral-value-integrate_profile_y) function
+Calculate the line averaged electron density and temperature by integrating the normalised profile using the class [`integrate_profile_y()`](./plasma_profiles_abstract_class.md#calculate-the-profile-integral-value-integrate_profile_y) function
 
 $$
  \overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_plasma_electron_line}} = \int_0^1{n(\rho) \ d\rho}
+$$
+
+$$
+ \overbrace{\bar{T_{\text{e}}}}^{\texttt{temp_plasma_electron_line_avg_kev}} = \int_0^1{T(\rho) \ d\rho}
 $$
 
 A divertor variable `prn1` is set to be equal to the separatrix density over the mean density:
@@ -636,24 +640,6 @@ The same function is run from the `i_plasma_pedestal == 0 ` profile case, found 
 
 --------
 
-### Setting pedestal values as fractions of the Greenwald limit
-
-By default, the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ are set as fractions of the [Greenwald](https://wiki.fusion.ciemat.es/wiki/Greenwald_limit) limit such as:
-
-$$
-n_{\text{ped}} = \overbrace{f_{\text{GW,ped}}}^{\texttt{f_nd_plasma_pedestal_greenwald}} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
-$$
-
-$$
-n_{\text{sep}} = \overbrace{f_{\text{GW,sep}}}^{\texttt{f_nd_plasma_separatrix_greenwald}} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
-$$
-
-To set the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ directly, the user can input the value of $\texttt{f_nd_plasma_pedestal_greenwald}$ or $\texttt{f_nd_plasma_separatrix_greenwald}$ to be less than 0.0 (i.e negative) to prevent the Greenwald fraction value being set.
-
-$\texttt{f_nd_plasma_pedestal_greenwald}$ and $\texttt{f_nd_plasma_separatrix_greenwald}$ can be set as iteration variables respectively by using `ixc = 45`
-and `ixc = 152` respectively
-
-------
 
 ### Pedestal Density Upper limit
 
