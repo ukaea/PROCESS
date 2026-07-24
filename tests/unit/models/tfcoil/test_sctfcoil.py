@@ -113,7 +113,8 @@ def test_protect(protectparam, sctfcoil):
     """
     Automatically generated Regression Unit Test for protect.
 
-    This test was generated using data from baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param protectparam: the data used to mock and assert in this test.
     :type protectparam: protectparam
@@ -344,7 +345,8 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
     """
     Automatically generated Regression Unit Test for supercon.
 
-    This test was generated using data from baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param superconparam: the data used to mock and assert in this test.
     :type superconparam: superconparam
@@ -533,7 +535,8 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     """
     Automatically generated Regression Unit Test for peak_tf_with_ripple.
 
-    This test was generated using data from baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param peaktfwithrippleparam: the data used to mock and assert in this test.
     :type peaktfwithrippleparam: peaktfwithrippleparam
@@ -924,7 +927,8 @@ def test_superconducting_tf_case_geometry(tfcasegeomparam, sctfcoil):
     """
     Automatically generated Regression Unit Test for superconducting_tf_case_geometry.
 
-    This test was generated using data from baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param tfcasegeomparam: the data used to mock and assert in this test.
     :type tfcasegeomparam: tfcasegeomparam
@@ -1123,7 +1127,8 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
     Automatically generated Regression Unit Test for
     tf_cable_in_conduit_integer_turn_geometry.
 
-    This test was generated using data from baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param tfintegerturngeomparam: the data used to mock and assert in this test.
     :type tfintegerturngeomparam: tfintegerturngeomparam
@@ -1366,7 +1371,8 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
     Automatically generated Regression Unit Test for
     tf_cable_in_conduit_averaged_turn_geometry.
 
-    This test was generated using data from I-mode IN.DAT (no longer exists in the PROCESS repository)
+    This test was generated using data from I-mode IN.DAT
+    (no longer exists in the PROCESS repository)
 
     :param tfaveragedturngeomparam: the data used to mock and assert in this test.
     :type tfaveragedturngeomparam: tfaveragedturngeomparam
@@ -1472,7 +1478,8 @@ def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
     """
     Automatically generated Regression Unit Test for tf_wp_currents.
 
-    This test was generated using data from I-mode IN.DAT (no longer exists in the PROCESS repository).
+    This test was generated using data from I-mode IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param tfwpcurrentsparam: the data used to mock and assert in this test.
     :type tfwpcurrentsparam: tfwpcurrentsparam
@@ -1903,7 +1910,8 @@ def test_superconducting_tf_coil_area_and_masses(
     """
     Automatically generated Regression Unit Test for tf_coil_area_and_masses.
 
-    This test was generated using data from baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param tfcoilareaandmassesparam: the data used to mock and assert in this test.
     :type tfcoilareaandmassesparam: tfcoilareaandmassesparam

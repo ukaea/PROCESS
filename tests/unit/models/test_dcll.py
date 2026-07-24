@@ -94,7 +94,8 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     """
     Automatically generated Regression Unit Test for dcll_neutronics_and_power.
 
-    This test was generated using data from large_tokamak_nof.DAT with the DCLL model enabled.
+    This test was generated using data from large_tokamak_nof.DAT with the DCLL model
+    enabled.
 
     :param dcllneutronicsandpowerparam: the data used to mock and assert in this test.
     :type dcllneutronicsandpowerparam: dcllneutronicsandpowerparam
@@ -467,7 +468,8 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
     """
     Automatically generated Regression Unit Test for dcll_masses.
 
-    This test was generated using data from large_tokamak_nof.DAT with the DCLL model enabled.
+    This test was generated using data from large_tokamak_nof.DAT with
+    the DCLL model enabled.
 
     :param dcllmassesparam: the data used to mock and assert in this test.
     :type dcllmassesparam: dcllmassesparam

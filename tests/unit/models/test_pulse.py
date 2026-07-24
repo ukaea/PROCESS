@@ -1179,7 +1179,8 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
     """
     Automatically generated Regression Unit Test for tohswg.
 
-    This test was generated using data from baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
+    This test was generated using data from baseline_2018_IN.DAT
+    (no longer exists in the PROCESS repository).
 
     :param tohswgparam: the data used to mock and assert in this test.
     :type tohswgparam: tohswgparam
