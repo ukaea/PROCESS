@@ -1,3 +1,5 @@
+"""Module containing routines for buildings calculations"""
+
 import logging
 
 import numpy as np
@@ -17,20 +19,22 @@ logger = logging.getLogger(__name__)
 class Buildings(Model):
     """
 
-    This module contains routines for calculating the
+    Module containing routines for buildings calculations
     """
 
     def __init__(self):
         """
 
-        This routine calls the buildings calculations.
+        Routine calling the buildings calculations.
         """
         self.outfile = constants.NOUT  # output file unit
 
     def output(self):
+        """Output buildings information"""
         self.run(output=True)
 
     def run(self, output: bool = False):
+        """Run the buildings models"""
         # Find TF coil radial positions
         # outboard edge: outboard mid-leg radial position + half-thickness
         # of outboard leg

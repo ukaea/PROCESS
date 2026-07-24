@@ -50,6 +50,7 @@ class IFE(Model):
         self.costs = costs
 
     def output(self):
+        """Outputs IFE information"""
         self.run(output=True)
 
     def run(self, output: bool = False):
@@ -584,6 +585,10 @@ class IFE(Model):
         )
 
     def hylbld(self):
+        """Routine to create the build of an inertial fusion energy
+        device, based on the design of the HYLIFE-II study,
+        and to calculate the material volumes for the device core
+        """
         # Radial build
         self.data.ife.r1 = self.data.ife.chrad
         self.data.ife.r2 = self.data.ife.r1 + self.data.ife.fwdr
@@ -810,6 +815,11 @@ class IFE(Model):
         and top corners and with a lower shield at the centre.  See diagram
         attached to Issue #907.
         Issue #907
+
+        Raises
+        ------
+        ProcessValueError
+            If inputs are not appropriate for 2019 IFE build
         """
         # Check input
         if self.data.ife.fwdr > 0 or self.data.ife.v1dr > 0:
@@ -1336,6 +1346,11 @@ class IFE(Model):
         ----------
         output: bool
              (Default value = False)
+
+        Raises
+        ------
+        ProcessValueError
+            If selected ifedrv is an invalid option
         """
         match self.data.ife.ifedrv:
             case -1:
@@ -1678,6 +1693,11 @@ class IFE(Model):
         ----------
         output: bool
              (Default value = False)
+
+        Raises
+        ------
+        ProcessValueError
+            If illegal fbreed value used
         """
         # Material densities
         # 0 = void

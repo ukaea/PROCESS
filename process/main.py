@@ -290,6 +290,7 @@ class VaryRun:
 
     @property
     def mfile_path(self):
+        """Mfile path"""
         return self.config.outfile
 
     def run(self):
@@ -383,7 +384,15 @@ class SingleRun:
         self.set_mfile()
 
     def set_input(self):
-        """Validate and set the input file path."""
+        """Validate and set the input file path.
+
+        Raises
+        ------
+        ValueError
+            If input filename doesn't end in 'IN.DAT'
+        FileNotFoundError
+            If input file not found
+        """
         # Check input file ends in "IN.DAT", then save prefix
         # (the part before the IN.DAT)
         if not self.input_file.name.endswith("IN.DAT"):
@@ -433,7 +442,13 @@ class SingleRun:
         self.data.numerics.ixc[:n].sort()
 
     def run_scan(self):
-        """Create scan object if required."""
+        """Create scan object if required.
+
+        Raises
+        ------
+        ValueError
+            If invalid ioptimiz value selected
+        """
         # TODO Move this solver logic up to init?
         # ioptimz == 1: optimisation
         if self.data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
@@ -488,6 +503,11 @@ class SingleRun:
         If obsolete variables are found, and if `replace_obsolete` is set to True,
         they are either removed or replaced by their updated names as specified
         in the OBS_VARS dictionary.
+
+        Raises
+        ------
+        ValueError
+            If obsolete variables are present in the input file.
         """
         obsolete_variables = ov.OBS_VARS
         obsolete_vars_help_message = ov.OBS_VARS_HELP
@@ -600,6 +620,11 @@ class SingleRun:
 
         Ensures that the corresponding model variable in Models is defined
         and that any relevant switches are set correctly.
+
+        Raises
+        ------
+        ValueError
+            If user-created model not injected correctly
         """
         # try and get costs model
         try:
@@ -719,6 +744,14 @@ class Models:
 
     @property
     def costs(self) -> Model:
+        """Set up cost model parameters
+
+        Raises
+        ------
+        ValueError
+            If custom costs not initialised, or if costs model
+            is unknown
+        """
         if CostModels(self.data.costs.i_cost_model) == CostModels.PROCESS_1990:
             return self._costs_1990
         if CostModels(self.data.costs.i_cost_model) == CostModels.KOVARI_2014:
@@ -737,6 +770,7 @@ class Models:
 
     @property
     def models(self) -> tuple[Model, ...]:
+        """Set up the models"""
         # At the moment, this property just returns models
         # that implement the Model interface.
         # Eventually every Model will comply and then
@@ -796,6 +830,7 @@ class Models:
         )
 
     def setup_data_structure(self):
+        """Set up the data structure"""
         # This Models class should be replaced with a dataclass so we can
         # iterate over the `fields`.
         # This can be a disgusting temporary measure :(

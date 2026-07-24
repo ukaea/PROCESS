@@ -1,3 +1,5 @@
+"""Module containing cost 2015 routines"""
+
 import logging
 
 import numpy as np
@@ -10,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class Costs2015(Model):
+    """Cost 2015 accounting calculations"""
+
     def __init__(self):
         self.outfile = constants.NOUT
 

@@ -1,3 +1,5 @@
+"""Module containing routines for build calculations"""
+
 import logging
 from enum import IntEnum
 
@@ -29,11 +31,14 @@ class FwBlktVVShape(IntEnum):
 
 
 class Build(Model):
+    """Routines for build calculations"""
+
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
 
     def output(self):
+        """Output the build information"""
         # Radial build
         self.calculate_radial_build(output=True)
 
@@ -41,6 +46,7 @@ class Build(Model):
         self.calculate_vertical_build(output=True)
 
     def run(self):
+        """Run the build routines"""
         self.calculate_radial_build(output=False)
         self.calculate_vertical_build(output=False)
 
@@ -1630,7 +1636,7 @@ class Build(Model):
         return ripple, r_tf_outboard_midmin, flag
 
     def calculate_radial_build(self, output: bool):
-        """This method determines the radial build of the machine.
+        """Method determining the radial build of the machine.
         It calculates various parameters related to the build of the machine,
         such as thicknesses, radii, and areas.
         Results can be outputted with the `output` flag.

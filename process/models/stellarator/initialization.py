@@ -1,3 +1,5 @@
+"""Module to initialise variables relevant to stellarators."""
+
 from process.core.model import DataStructure
 
 

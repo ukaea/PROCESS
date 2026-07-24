@@ -1,3 +1,5 @@
+"""Module containing CS fatigue routines"""
+
 import numpy as np
 from numba import njit
 
@@ -6,14 +8,16 @@ from process.core.model import Model
 
 
 class CsFatigue(Model):
+    """Calculate CS fatigue model parameters"""
+
     def __init__(self):
         self.outfile = constants.NOUT
 
     def output(self):
-        """This model doesn't have any output"""
+        """CsFatigue model doesn't have any output"""
 
     def run(self):
-        """This model doesn't need to be run"""
+        """CsFatigue model doesn't need to be run"""
 
     def ncycle(
         self,

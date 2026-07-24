@@ -1,3 +1,5 @@
+"""Module containing the PROCESS CCFE HCPB blanket model"""
+
 import logging
 
 import numpy as np
@@ -21,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 class CCFE_HCPB(OutboardBlanket, InboardBlanket):
-    """This module contains the PROCESS CCFE HCPB blanket model
+    """Module containing the PROCESS CCFE HCPB blanket model
     based on CCFE HCPB model from the PROCESS engineering paper
     PROCESS Engineering paper (M. Kovari et al.)
 
@@ -34,9 +36,11 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
     """
 
     def output(self):
+        """Output CCFE HCPB information"""
         self.run(output=True)
 
     def run(self, output: bool = False):
+        """Run CCFE HCPB routines"""
         # Coolant type
         self.data.fwbs.i_blkt_coolant_type = CoolantType.HELIUM
         # Note that the first wall coolant is now input separately.
@@ -1289,6 +1293,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         return pnuc_cp_tf, p_cp_shield_nuclear_heat_mw, pnuc_cp
 
     def write_output(self):
+        """Output CCFE HCPB information"""
         po.oheadr(self.outfile, "First wall and blanket : CCFE HCPB model")
 
         self.output_blkt_volumes_and_areas()

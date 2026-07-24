@@ -47,7 +47,7 @@ class PlasmaProfile(Model):
         self.parameterise_plasma()
 
     def output(self):
-        """This model doesn't have any output"""
+        """PlasmaProfile model doesn't have any output"""
 
     def parameterise_plasma(self):
         """Initializes the density and temperature

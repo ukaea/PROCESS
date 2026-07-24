@@ -1,3 +1,5 @@
+"""Module containing cost routines"""
+
 import logging
 
 import numpy as np
@@ -13,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 class Costs(Model):
+    """Cost accounting calculations"""
+
     def __init__(self):
         self.outfile = constants.NOUT
 
@@ -79,6 +83,7 @@ class Costs(Model):
             self.coelc()
 
     def output(self):
+        """Output costs information"""
         self.run()
         if self.data.costs.output_costs == 0:
             return
@@ -2589,6 +2594,11 @@ class Costs(Model):
     def acc2253(self):
         """Account 225.3 : Energy storage
         This routine evaluates the Account 225.3 (energy storage) costs.
+
+        Raises
+        ------
+        ProcessValueError
+            If illegal value used for istore",
         """
         self.data.costs.c2253 = 0.0e0
 

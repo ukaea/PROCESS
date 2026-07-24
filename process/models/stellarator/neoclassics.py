@@ -1,3 +1,5 @@
+"""Module containing neoclassics routines"""
+
 import logging
 
 import numpy as np
@@ -14,6 +16,7 @@ class Neoclassics(Model):
 
     @property
     def no_roots(self):
+        """Obtain number of Gauss Laguerre roots"""
         return self.data.neoclassics.roots.shape[0]
 
     def output(self):
@@ -277,6 +280,7 @@ class Neoclassics(Model):
         return dens, temp, dr_dens, dr_temp
 
     def calc_neoclassics(self):
+        """Calculate neoclassics parameters"""
         if self.data.stellarator_config.stella_config_epseff < 0:
             logger.error(
                 "epseff value lower than 0: "
@@ -612,6 +616,7 @@ class Neoclassics(Model):
         return neoclassics_calc_nu_star_fromT
 
     def neoclassics_calc_vd(self):
+        """Calculates the drift velocity on GL roots"""
         vde = (
             self.data.neoclassics.roots
             * self.data.neoclassics.temperatures[0]

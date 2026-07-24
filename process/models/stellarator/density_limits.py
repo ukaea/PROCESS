@@ -1,3 +1,5 @@
+"""Module containing stellarator density limit routines."""
+
 import copy
 import logging
 
@@ -74,6 +76,10 @@ def st_sudo_density_limit(b_plasma_toroidal_on_axis, powht, rmajor, rminor, data
     dlimit :
         Maximum volume-averaged plasma density (/m3)
 
+    Raises
+    ------
+    ProcessValueError
+        If negative square root imminent
     """
     arg = powht * b_plasma_toroidal_on_axis / (rmajor * rminor * rminor)
 
