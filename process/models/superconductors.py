@@ -1034,7 +1034,9 @@ def bottura_scaling(
     # If input field is over the strain adjusted critical field then report error
     if b_conductor / b_c20_eps >= 1.0:
         logger.error(
-            "Reduced field bzero artificially lowered %s %s", b_conductor, b_c20_eps
+            "Reduced field bzero artificially lowered b_conductor=%s b_c20_eps=%s",
+            b_conductor,
+            b_c20_eps,
         )
 
     # Reduced field at zero temperature, taking account of strain
