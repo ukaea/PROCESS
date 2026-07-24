@@ -655,8 +655,10 @@ class ImpurityRadiation:
         """Integrate the radiation loss profiles using the Simpson rule.
         Store the total values for each aspect of impurity radiation loss.
         """
-        # 2.0e-6 converts from W/m^3 to MW/m^3 and also accounts for both sides of the
-        # plasma
+        # 1e-6 converts from W/m^3 to MW/m^3
+        # The factor 2 below and and normalised radius profile_x above may be unexpected, but are correct:
+        # see github.com/ukaea/PROCESS/issues/3968#issuecomment-3491154712
+        # and github.com/ukaea/PROCESS/issues/3968#issuecomment-4935567006
         self.pden_impurity_rad_total_mw = 2.0e-6 * integrate.simpson(
             self.pden_impurity_rad_profile,
             x=self.plasma_profile.neprofile.profile_x,
