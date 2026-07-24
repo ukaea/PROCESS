@@ -1473,7 +1473,7 @@ class SauterBootstrapCurrent:
         # Check for any negative temperature in profile: always fatal eventually,
         # report explicitly at source
         if (tempe < 0).any():
-            raise ValueError("Negative temperature in plasma profile")
+            raise ProcessValueError("Negative temperature in plasma profile")
         tempi = (
             physics_variables.temp_plasma_ion_vol_avg_kev
             / physics_variables.temp_plasma_electron_vol_avg_kev
