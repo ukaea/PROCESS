@@ -12,6 +12,7 @@ from types import DynamicClassAttribute
 import numpy as np
 import scipy as sp
 
+from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.models.physics.density_limit import PlasmaDensityLimit
 
@@ -442,6 +443,11 @@ class TeProfile(Profile):
         self.profile_y[~rho_index] = temp_plasma_separatrix_kev + (
             temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
         ) * (1 - rho[~rho_index]) / (1 - radius_plasma_pedestal_temp_norm)
+
+        # Check for any negative temperature in profile: always fatal in
+        # later models eventually
+        if (self.profile_y < 0).any():
+            raise ProcessValueError("Negative temperature in plasma profile")
 
     @staticmethod
     def tcore(
