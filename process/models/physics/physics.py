@@ -816,6 +816,13 @@ class Physics(Model):
             )
         )
 
+        # ===============================
+
+        # Calculate scrape-off layer physics
+
+        self.scrape_off_layer.run()
+
+        # ===============================
         self.data.physics.pflux_plasma_surface_neutron_avg_mw = (
             self.data.physics.p_neutron_total_mw / self.data.physics.a_plasma_surface
         )
@@ -2336,6 +2343,8 @@ class Physics(Model):
             po.ocmmnt(self.outfile, "  (Injected power only used for start-up phase)")
 
         self.exhaust.output()
+
+        self.scrape_off_layer.output()
 
         if self.data.stellarator.istell == 0:
             self.plasma_transition.output()

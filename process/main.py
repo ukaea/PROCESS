@@ -785,6 +785,7 @@ class Models:
             self.plasma_bootstrap_current,
             self.plasma_exhaust,
             self.plasma_current,
+            self.scrape_off_layer,
             self.neoclassics,
             self.plasma_inductance,
             self.ne_profile,

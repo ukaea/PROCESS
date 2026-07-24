@@ -3,6 +3,7 @@
 import logging
 
 from process.core import constants
+from process.core import process_output as po
 from process.core.model import Model
 
 logger = logging.getLogger(__name__)
@@ -16,10 +17,50 @@ class ScrapeOffLayer(Model):
         self.mfile = constants.MFILE
 
     def run(self):
-        """Run the model. This model cannot yet be 'run'."""
+        """Calculate the scrape off layer physics and update the physics variables."""
+        self.data.physics.len_plasma_sol_eich13_power_decay = self.calculate_eich2013_sol_power_decay_length(
+            p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
+            rmajor=self.data.physics.rmajor,
+            b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
+            aspect=self.data.physics.aspect,
+        )
+
+        self.data.physics.len_plasma_sol_mast14_power_decay_1 = self.calculate_mast2014_sol_power_decay_length_1(
+            p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
+            b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
+        )
+
+        self.data.physics.len_plasma_sol_mast14_power_decay_2 = (
+            self.calculate_mast2014_sol_power_decay_length_2(
+                p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
+                cur_plasma_ma=self.data.physics.plasma_current / 1e6,  # Convert A to MA
+            )
+        )
 
     def output(self) -> None:
         """Output plasma scrape off layer physics information."""
+        po.oheadr(self.outfile, "Plasma Scrape Off Layer")
+
+        po.osubhd(self.outfile, "Power Decay Lengths (λ_q)")
+
+        po.ovarre(
+            self.outfile,
+            "Eich 2013 SOL power decay length (λ_q) [m]",
+            "(len_plasma_sol_eich13_power_decay)",
+            self.data.physics.len_plasma_sol_eich13_power_decay,
+        )
+        po.ovarre(
+            self.outfile,
+            "MAST 2014 SOL power decay length 1 (λ_q) [m]",
+            "(len_plasma_sol_mast14_power_decay_1)",
+            self.data.physics.len_plasma_sol_mast14_power_decay_1,
+        )
+        po.ovarre(
+            self.outfile,
+            "MAST 2014 SOL power decay length 2 (λ_q) [m]",
+            "(len_plasma_sol_mast14_power_decay_2)",
+            self.data.physics.len_plasma_sol_mast14_power_decay_2,
+        )
 
     @staticmethod
     def calculate_eich2013_sol_power_decay_length(
@@ -59,10 +100,11 @@ class ScrapeOffLayer(Model):
 
         """
         return (
-            1.35e-3 * p_plasma_separatrix_mw**-0.02
-            + rmajor**0.04
-            + b_plasma_surface_poloidal_average**-0.92
-            + aspect**-0.42
+            1.35e-3
+            * p_plasma_separatrix_mw**-0.02
+            * rmajor**0.04
+            * b_plasma_surface_poloidal_average**-0.92
+            * aspect**-0.42
         )
 
     @staticmethod
@@ -98,8 +140,9 @@ class ScrapeOffLayer(Model):
 
         """
         return (
-            1.84e-3 * p_plasma_separatrix_mw**0.18
-            + b_plasma_surface_poloidal_average**-0.68
+            1.84e-3
+            * p_plasma_separatrix_mw**0.18
+            * b_plasma_surface_poloidal_average**-0.68
         )
 
     @staticmethod
@@ -130,4 +173,4 @@ class ScrapeOffLayer(Model):
         doi: 10.1088/0741-3335/56/5/055008.
 
         """
-        return 4.57e-3 * p_plasma_separatrix_mw**0.22 + cur_plasma_ma**-0.64
+        return 4.57e-3 * p_plasma_separatrix_mw**0.22 * cur_plasma_ma**-0.64
