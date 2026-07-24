@@ -372,6 +372,8 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     expected_bfs: Any = None
 
+    n_plasma_profile_elements: int = None
+
 
 @pytest.mark.parametrize(
     "bootstrapfractionsauterparam",
@@ -403,6 +405,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             alphan=1,
             radius_plasma_pedestal_temp_norm=0.9400000000000001,
             alphat=1.45,
+            n_plasma_profile_elements=501,
             expected_bfs=0.4052168782500341,
         ),
     ],
@@ -448,6 +451,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         "alphan",
         "radius_plasma_pedestal_temp_norm",
         "alphat",
+        "n_plasma_profile_elements",
     ]:
         monkeypatch.setattr(
             physics.data.physics, field, getattr(bootstrapfractionsauterparam, field)
