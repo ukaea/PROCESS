@@ -456,7 +456,7 @@ def _calculate_average_charge_at_temp_compiled(
 
     Parameters
     ----------
-    imp_element_index
+    imp_element_index:
         Impurity element index
     temp_electron_kev
         electron temperature in keV
