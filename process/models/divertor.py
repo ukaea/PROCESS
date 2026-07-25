@@ -6,6 +6,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.data_structure.divertor_variables import DivertorHeatLoadModel
 from process.data_structure.physics_variables import DivertorNumberModels
 
 
@@ -51,7 +52,11 @@ class Divertor(Model):
             n_divertors=self.data.divertor.n_divertors,
         )
 
-        if self.data.divertor.i_div_heat_load == 0 and output:
+        if (
+            DivertorHeatLoadModel(self.data.divertor.i_div_heat_load)
+            == DivertorHeatLoadModel.USER_INPUT
+            and output
+        ):
             po.ovarre(
                 self.outfile,
                 "Divertor heat load (MW/m²)",
@@ -59,7 +64,10 @@ class Divertor(Model):
                 self.data.divertor.pflux_div_heat_load_mw,
             )
             return
-        if self.data.divertor.i_div_heat_load == 1:
+        if (
+            DivertorHeatLoadModel(self.data.divertor.i_div_heat_load)
+            == DivertorHeatLoadModel.PENG_CHAMBER
+        ):
             self.divtart(
                 self.data.physics.rmajor,
                 self.data.physics.rminor,
@@ -72,7 +80,10 @@ class Divertor(Model):
                 dz_divertor=self.data.divertor.dz_divertor,
             )
             return
-        if self.data.divertor.i_div_heat_load == 2:
+        if (
+            DivertorHeatLoadModel(self.data.divertor.i_div_heat_load)
+            == DivertorHeatLoadModel.WADE
+        ):
             self.divwade(
                 self.data.physics.rmajor,
                 self.data.physics.rminor,
@@ -207,10 +218,17 @@ class Divertor(Model):
         elif i_single_null == DivertorNumberModels.DOUBLE_NULL:
             areadv = 2.0 * (a1 + a2 + a3)
 
-        if self.data.divertor.i_div_heat_load == 1:
+        if (
+            DivertorHeatLoadModel(self.data.divertor.i_div_heat_load)
+            == DivertorHeatLoadModel.PENG_CHAMBER
+        ):
             self.data.divertor.pflux_div_heat_load_mw = p_plasma_separatrix_mw / areadv
 
-        if output and self.data.divertor.i_div_heat_load == 1:
+        if (
+            output
+            and DivertorHeatLoadModel(self.data.divertor.i_div_heat_load)
+            == DivertorHeatLoadModel.PENG_CHAMBER
+        ):
             po.osubhd(self.outfile, "Divertor Heat Load")
             po.ocmmnt(self.outfile, "Assume an expanded divertor with a gaseous target")
             po.oblnkl(self.outfile)
