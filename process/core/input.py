@@ -990,7 +990,7 @@ INPUT_VARIABLES = {
     "tf_coppera_m2_max": InputVariable(
         "superconducting_tfcoil", float, range=(1.0e6, 1.0e10)
     ),
-    "cost_model": InputVariable("costs", int, choices=[0, 1, 2]),
+    "i_cost_model": InputVariable("costs", int, choices=[0, 1, 2]),
     "i_vac_pump_dwell": InputVariable("vacuum", int, choices=[0, 1, 2]),
     "i_fw_blkt_vv_shape": InputVariable("fwbs", int, range=(1, 2)),
     "hcdportsize": InputVariable("fwbs", int, range=(1, 2)),

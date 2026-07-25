@@ -320,7 +320,7 @@ class CostData:
     amortization: float = 13.6
     """amortization factor (fixed charge factor) "A" (years)"""
 
-    cost_model: int = 1
+    i_cost_model: int = 1
     """Switch for cost model:
     - =0 use $ 1990 PROCESS model
     - =1 use $ 2014 Kovari model

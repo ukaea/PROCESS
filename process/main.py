@@ -719,11 +719,11 @@ class Models:
 
     @property
     def costs(self) -> Model:
-        if CostModels(self.data.costs.cost_model) == CostModels.PROCESS_1990:
+        if CostModels(self.data.costs.i_cost_model) == CostModels.PROCESS_1990:
             return self._costs_1990
-        if CostModels(self.data.costs.cost_model) == CostModels.KOVARI_2014:
+        if CostModels(self.data.costs.i_cost_model) == CostModels.KOVARI_2014:
             return self._costs_2015
-        if CostModels(self.data.costs.cost_model) == CostModels.USER_PROVIDED:
+        if CostModels(self.data.costs.i_cost_model) == CostModels.USER_PROVIDED:
             if self._costs_custom is not None:
                 self._costs_custom.data = self.data
                 return self._costs_custom
