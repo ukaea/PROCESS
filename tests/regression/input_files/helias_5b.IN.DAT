@@ -170,7 +170,7 @@ dr_tf_nose_case    = 0.06        * Case thickness
 
 
 *------------------Cost Variables------------------*
-cost_model = 0          *0: 1990 cost module, the 2015 does not work yet for stellarators
+i_cost_model = 0          *0: 1990 cost module, the 2015 does not work yet for stellarators
 abktflnc = 15.0         *Allowable first wall/blanket neutron (MW-yr/m2)
 adivflnc = 25.0         *Allowable divertor heat fluence (MW-yr/m2)
 f_t_plant_available   = 0.75         *Total plant capacity fraction

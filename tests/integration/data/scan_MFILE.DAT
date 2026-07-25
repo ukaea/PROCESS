@@ -9123,7 +9123,7 @@ p_div_bt_q_aspect_rmajor_max_mw = 9.2 * maximum ratio of Psep*Bt/qAR (MWT/m)
 *------------------Cost Variables------------------*
 
 output_costs = 0
-cost_model = 0
+i_cost_model = 0
 abktflnc = 15 * Allowable first wall/blanket neutron
 adivflnc = 20.0 * Allowable divertor heat fluence (mw-yr/m2)
 f_t_plant_available   = 0.75 * Total plant availability fraction;

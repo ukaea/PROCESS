@@ -1,8 +1,8 @@
 # Cost Models
 
-Two cost models are available, determined by the switch `cost_model`.
+Two cost models are available, determined by the switch `i_cost_model`.
 
-## 1990 cost model (`cost_model = 0`)
+## 1990 cost model (`i_cost_model = 0`)
 
 This combines methods[^1] used in the TETRA code [^2] and the Generomak[^3] scheme. The costs are split into accounting categories[^4]. The best references for the algorithms used are[^5], and source file `costs.f90` in the code itself. The majority of the costed items have a unit cost associated with them. These values scale with (for example) power output, volume, component mass etc., and many are available to be changed via the input file. All costs and their algorithms correspond to 1990 dollars.
 
@@ -16,7 +16,7 @@ If the switch `ireactor = 0`, no cost of electricity calculation is performed. I
 
 The net electric power is calculated in routine `POWER` It is possible that the net electric power can become negative due to a high recirculating power. Switch `ipnet` determines whether the net electric power is scaled to always remain positive (`ipnet = 0`, or whether it is allowed to become negative (`ipnet = 1`), in which case no cost of electricity calculation is performed.
 
-## 2015 Kovari model (`cost_model = 1`)
+## 2015 Kovari model (`i_cost_model = 1`)
 
 This model[^8] provides only capital cost, and it is not currently suitable for estimating the cost of electricity. *N<sup>th</sup>*-of-a-kind factors, level of safety assurance factors, and blanket replacement costs are not included. The mean electric output is calculated using the capacity factor, which takes account of the availability and the dwell time for a pulsed reactor. The capital cost divided by the mean electric output is a useful comparison parameter.
 
