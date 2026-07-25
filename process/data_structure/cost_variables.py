@@ -1,4 +1,18 @@
 from dataclasses import dataclass, field
+from enum import IntEnum
+
+
+class CostModels(IntEnum):
+    """Enum for cost model selection"""
+
+    PROCESS_1990 = 0
+    """Use $ 1990 PROCESS model"""
+
+    KOVARI_2014 = 1
+    """Use $ 2014 Kovari model"""
+
+    USER_PROVIDED = 2
+    """Use user-provided model"""
 
 
 @dataclass(slots=True)

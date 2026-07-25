@@ -55,6 +55,7 @@ from process.core.log import logging_model_handler, show_errors
 from process.core.model import DataStructure, Model
 from process.core.process_output import OutputFileManager, oheadr
 from process.core.scan import Scan
+from process.data_structure.cost_variables import CostModels
 from process.data_structure.numerics import PROCESSRunMode
 from process.models.availability import Availability
 from process.models.blankets.blanket_library import BlanketLibrary
@@ -718,11 +719,11 @@ class Models:
 
     @property
     def costs(self) -> Model:
-        if self.data.costs.cost_model == 0:
+        if CostModels(self.data.costs.cost_model) == CostModels.PROCESS_1990:
             return self._costs_1990
-        if self.data.costs.cost_model == 1:
+        if CostModels(self.data.costs.cost_model) == CostModels.KOVARI_2014:
             return self._costs_2015
-        if self.data.costs.cost_model == 2:
+        if CostModels(self.data.costs.cost_model) == CostModels.USER_PROVIDED:
             if self._costs_custom is not None:
                 self._costs_custom.data = self.data
                 return self._costs_custom
