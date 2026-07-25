@@ -1,5 +1,7 @@
 import logging
 import math
+from enum import IntEnum
+from types import DynamicClassAttribute
 
 from scipy.special import comb as combinations
 
@@ -11,6 +13,41 @@ from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
 
+
+class AvailabilityModel(IntEnum):
+    """Enum for availability models"""
+
+    INPUT = (0, "Input value for f_t_plant_available")
+    WARD_TAYLOR = (1, "Ward and Taylor model (1999)")
+    MORRIS = (2, "Morris model (2015)")
+    ST = (3, "ST model (2023)")
+
+    def __new__(cls, value: int, full_name: str):
+        """Create a new AvailabilityModel enum instance.
+
+        Parameters
+        ----------
+        value : int
+            The integer value of the enum member.
+        full_name : str
+            The full name/description of the availability model.
+
+        Returns
+        -------
+        AvailabilityModel
+            A new enum instance with the specified value and full_name.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        """The full name of the availability model."""
+        return self._full_name_
+
+
 DAY_SECONDS = 60 * 60 * 24
 # Number of seconds in a day [s]
 
@@ -19,13 +56,6 @@ DAYS_IN_YEAR = 365.25
 
 YEAR_SECONDS = DAY_SECONDS * DAYS_IN_YEAR
 # Number of seconds in a year [s]
-
-AVAILABILITY_MODELS = {
-    0: "Input value for f_t_plant_available",
-    1: "Ward and Taylor model (1999)",
-    2: "Morris model (2015)",
-    3: "ST model (2023)",
-}
 
 
 class Availability(Model):
@@ -58,7 +88,10 @@ class Availability(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-        if self.data.costs.i_plant_availability == 3:
+        if (
+            AvailabilityModel(self.data.costs.i_plant_availability)
+            == AvailabilityModel.ST
+        ):
             if self.data.physics.itart != 1:
                 raise ProcessValueError(
                     f"{self.data.costs.i_plant_availability=}"
@@ -66,7 +99,10 @@ class Availability(Model):
                     " Please set itart=1 to use this model."
                 )
             self.avail_st(output)  # ST model (2023)
-        elif self.data.costs.i_plant_availability == 2:
+        elif (
+            AvailabilityModel(self.data.costs.i_plant_availability)
+            == AvailabilityModel.MORRIS
+        ):
             self.avail_2(output)  # Morris model (2015)
         else:
             self.avail(output)  # Taylor and Ward model (1999)
