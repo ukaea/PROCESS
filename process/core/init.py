@@ -28,6 +28,7 @@ from process.data_structure.physics_variables import (
     ConfinementTimeModel,
     DivertorNumberModels,
 )
+from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.pfcoil import PFLocationTypes
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
@@ -266,9 +267,9 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Can't use c_tf_turn as iteration var, constraint or
     # input if i_tf_turns_integer == 1
-    if (
-        data.numerics.ixc[: data.numerics.nvar] == 60
-    ).any() and data.tfcoil.i_tf_turns_integer == 1:
+    if (data.numerics.ixc[: data.numerics.nvar] == 60).any() and TFWPIntegerTurnType(
+        data.tfcoil.i_tf_turns_integer
+    ) == TFWPIntegerTurnType.INTEGER:
         raise ProcessValidationError(
             "Iteration variable 60 (TF current per turn, c_tf_turn) cannot be used with"
             " the TF coil integer turn model (i_tf_turns_integer == 1) as it is a"
@@ -871,7 +872,8 @@ def check_process(inputs, data):  # noqa: ARG001
 
     if (
         data.tfcoil.i_tf_sc_mat == SuperconductorModel.CROCO_REBCO
-        and data.tfcoil.i_tf_turns_integer == 1
+        and TFWPIntegerTurnType(data.tfcoil.i_tf_turns_integer)
+        == TFWPIntegerTurnType.INTEGER
     ):
         raise ProcessValidationError(
             "Integer turns (i_tf_turns_integer = 1) not supported for REBCO"
@@ -898,9 +900,15 @@ def check_process(inputs, data):  # noqa: ARG001
     # Setting the default WP geometry
     i_tf_wp_geom = SuperconductingTFWPShapeType(data.tfcoil.i_tf_wp_geom)
     if i_tf_wp_geom == SuperconductingTFWPShapeType.UNSET:
-        if data.tfcoil.i_tf_turns_integer == 0:
+        if (
+            TFWPIntegerTurnType(data.tfcoil.i_tf_turns_integer)
+            == TFWPIntegerTurnType.NON_INTEGER
+        ):
             data.tfcoil.i_tf_wp_geom = SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR
-        if data.tfcoil.i_tf_turns_integer == 1:
+        if (
+            TFWPIntegerTurnType(data.tfcoil.i_tf_turns_integer)
+            == TFWPIntegerTurnType.INTEGER
+        ):
             data.tfcoil.i_tf_wp_geom = SuperconductingTFWPShapeType.RECTANGULAR
 
     # Setting the TF coil conductor elastic properties
@@ -989,7 +997,11 @@ def check_process(inputs, data):  # noqa: ARG001
     data.tfcoil.i_dx_tf_turn_general_input = abs(data.tfcoil.dx_tf_turn_general) > 0
 
     # Impossible to set the turn size of integer turn option
-    if data.tfcoil.i_dx_tf_turn_general_input and data.tfcoil.i_tf_turns_integer == 1:
+    if (
+        data.tfcoil.i_dx_tf_turn_general_input
+        and TFWPIntegerTurnType(data.tfcoil.i_tf_turns_integer)
+        == TFWPIntegerTurnType.INTEGER
+    ):
         raise ProcessValidationError(
             "Impossible to set the TF turn/cable size with the integer turn option"
             " (i_tf_turns_integer: 1)"
@@ -997,7 +1009,8 @@ def check_process(inputs, data):  # noqa: ARG001
 
     if (
         data.tfcoil.i_tf_wp_geom != SuperconductingTFWPShapeType.RECTANGULAR
-        and data.tfcoil.i_tf_turns_integer == 1
+        and TFWPIntegerTurnType(data.tfcoil.i_tf_turns_integer)
+        == TFWPIntegerTurnType.INTEGER
     ):
         raise ProcessValidationError(
             "Can only have i_tf_turns_integer = 1 with i_tf_wp_geom = 0"
@@ -1018,7 +1031,8 @@ def check_process(inputs, data):  # noqa: ARG001
     # Impossible to set the cable size of integer turn option
     if (
         data.tfcoil.i_dx_tf_turn_cable_space_general_input
-        and data.tfcoil.i_tf_turns_integer == 1
+        and TFWPIntegerTurnType(data.tfcoil.i_tf_turns_integer)
+        == TFWPIntegerTurnType.INTEGER
     ):
         raise ProcessValidationError(
             "Impossible to set the TF turn/cable size with the integer turn option"

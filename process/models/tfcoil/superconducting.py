@@ -12,6 +12,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
+from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models import superconductors
 from process.models.superconductors import (
     N_CROCO_STRANDS_TURN,
@@ -416,7 +417,10 @@ class SuperconductingTFCoil(TFCoil):
             "OP ",
         )
 
-        if self.data.tfcoil.i_tf_turns_integer == 1:
+        if (
+            TFWPIntegerTurnType(self.data.tfcoil.i_tf_turns_integer)
+            == TFWPIntegerTurnType.INTEGER
+        ):
             po.ovarre(
                 self.outfile,
                 "Winding pack toroidal width (m)",
@@ -501,7 +505,10 @@ class SuperconductingTFCoil(TFCoil):
             "(i_tf_turns_integer)",
             self.data.tfcoil.i_tf_turns_integer,
         )
-        if self.data.tfcoil.i_tf_turns_integer == 0:
+        if (
+            TFWPIntegerTurnType(self.data.tfcoil.i_tf_turns_integer)
+            == TFWPIntegerTurnType.NON_INTEGER
+        ):
             po.ocmmnt(self.outfile, "  Non-integer number of turns")
         else:
             po.ocmmnt(self.outfile, "  Integer number of turns")
@@ -513,7 +520,10 @@ class SuperconductingTFCoil(TFCoil):
             self.data.tfcoil.n_tf_coil_turns,
             "OP ",
         )
-        if self.data.tfcoil.i_tf_turns_integer == 1:
+        if (
+            TFWPIntegerTurnType(self.data.tfcoil.i_tf_turns_integer)
+            == TFWPIntegerTurnType.INTEGER
+        ):
             po.ovarre(
                 self.outfile,
                 "Number of TF pancakes",
@@ -529,7 +539,10 @@ class SuperconductingTFCoil(TFCoil):
 
         po.oblnkl(self.outfile)
 
-        if self.data.tfcoil.i_tf_turns_integer == 1:
+        if (
+            TFWPIntegerTurnType(self.data.tfcoil.i_tf_turns_integer)
+            == TFWPIntegerTurnType.INTEGER
+        ):
             po.ovarre(
                 self.outfile,
                 "Radial width of turn (m)",
@@ -2221,7 +2234,10 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         d_sc_tf = self.data.superconducting_tfcoil
 
         # Setting the WP turn geometry / areas
-        if self.data.tfcoil.i_tf_turns_integer == 0:
+        if (
+            TFWPIntegerTurnType(self.data.tfcoil.i_tf_turns_integer)
+            == TFWPIntegerTurnType.NON_INTEGER
+        ):
             # Non-ingeger number of turns
             avg_turn_geometry = self.tf_cable_in_conduit_averaged_turn_geometry(
                 j_tf_wp=self.data.tfcoil.j_tf_wp,
@@ -3775,7 +3791,10 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         d_sc_tf = self.data.superconducting_tfcoil
 
         # Setting the WP turn geometry / areas
-        if self.data.tfcoil.i_tf_turns_integer == 0:
+        if (
+            TFWPIntegerTurnType(self.data.tfcoil.i_tf_turns_integer)
+            == TFWPIntegerTurnType.NON_INTEGER
+        ):
             # Non-ingeger number of turns
 
             avg_turn_geometry = self.tf_croco_averaged_turn_geometry(
@@ -3809,7 +3828,10 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 avg_turn_geometry.dx_tf_turn_cable_space_average
             )
 
-        elif self.data.tfcoil.i_tf_turns_integer == 1:
+        elif (
+            TFWPIntegerTurnType(self.data.tfcoil.i_tf_turns_integer)
+            == TFWPIntegerTurnType.INTEGER
+        ):
             raise ProcessValueError(
                 "Integer turn geometry not implemented for CroCo conductor."
             )

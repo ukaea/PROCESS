@@ -10,6 +10,19 @@ PROCESS Superconducting TF Coil Model, J. Morris, CCFE, 1st May 2014
 """
 
 from dataclasses import dataclass
+from enum import IntEnum
+
+
+class TFWPIntegerTurnType(IntEnum):
+    """TF winding pack integer turn type, controlled via the `i_tf_turns_integer`
+    variable.
+    """
+
+    NON_INTEGER = 0
+    """Non integer number of turns in TF winding pack"""
+
+    INTEGER = 1
+    """Integer number of turns in TF winding pack"""
 
 
 @dataclass(slots=True)

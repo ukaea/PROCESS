@@ -24,6 +24,7 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.data_structure.physics_variables import ConfinementTimeModel
+from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.build import Build
 from process.models.engineering.materials import (
     calculate_tresca_stress,
@@ -5793,7 +5794,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     r_tf_wp_inboard_outer = mfile.get("r_tf_wp_inboard_outer", scan=scan)
     r_tf_wp_inboard_centre = mfile.get("r_tf_wp_inboard_centre", scan=scan)
 
-    if i_tf_turns_integer == 1:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         turn_layers = mfile.get("n_tf_wp_layers", scan=scan)
         turn_pancakes = mfile.get("n_tf_wp_pancakes", scan=scan)
 
@@ -5953,7 +5954,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
         # Plot the rectangular WP
         if i_tf_wp_geom == 0:
-            if i_tf_turns_integer == 1:
+            if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
                 long_turns = round(turn_layers)
                 short_turns = round(turn_pancakes)
             else:
@@ -7149,13 +7150,13 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     # Import the TF turn variables then multiply into mm
     i_tf_turns_integer = mfile.get("i_tf_turns_integer", scan=scan)
     # If integer turns switch is on then the turns can have non square dimensions
-    if i_tf_turns_integer == 1:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         turn_width = mfile.get("dr_tf_turn", scan=scan)
         turn_height = mfile.get("dx_tf_turn", scan=scan)
         cable_space_width_radial = mfile.get("dr_tf_turn_cable_space", scan=scan)
         cable_space_width_toroidal = mfile.get("dx_tf_turn_cable_space", scan=scan)
 
-    elif i_tf_turns_integer == 0:
+    elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         turn_width = mfile.get("dx_tf_turn_general", scan=scan)
         cable_space_width = mfile.get("dx_tf_turn_cable_space_average", scan=scan)
 
@@ -7179,7 +7180,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
 
     # Plot the total turn shape
-    if i_tf_turns_integer == 0:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         axis.add_patch(
             Rectangle(
                 [0, 0],
@@ -7261,7 +7262,13 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
                 cable_space_bounds=cable_bounds,
                 pipe_center=(
                     turn_width / 2,
-                    (turn_width if i_tf_turns_integer == 0 else turn_height) / 2,
+                    (
+                        turn_width
+                        if TFWPIntegerTurnType(i_tf_turns_integer)
+                        == TFWPIntegerTurnType.NON_INTEGER
+                        else turn_height
+                    )
+                    / 2,
                 ),
                 pipe_radius=he_pipe_diameter / 2,
                 strand_diameter=strand_diameter,
@@ -7278,7 +7285,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         axis.set_ylim(-turn_width * 0.05, turn_width * 1.05)
 
     # Non square turns
-    elif i_tf_turns_integer == 1:
+    elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         axis.add_patch(
             Rectangle(
                 [0, 0],
@@ -7423,7 +7430,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         },
     )
 
-    if i_tf_turns_integer == 0:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         # Add info about the steel casing surrounding the WP
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
@@ -7433,7 +7440,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
             f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
         )
-    elif i_tf_turns_integer == 1:
+    elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
             f"Cable space: \n$\\Delta r$: {cable_space_width_radial:.3e} m \n"
@@ -7460,14 +7467,14 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         },
     )
 
-    if i_tf_turns_integer == 0:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         textstr_turn = (
             f"$\\mathbf{{Turn:}}$\n\n"
             f"$\\Delta r$: {turn_width:.3e} m\n"
             f"$\\Delta x$: {turn_width:.3e} m"
         )
 
-    if i_tf_turns_integer == 1:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         textstr_turn = (
             f"$\\mathbf{{Turn:}}$\n\n"
             f"$\\Delta r$: {turn_width:.3e} m\n"
@@ -7552,13 +7559,13 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     # Import the TF turn variables then multiply into mm
     i_tf_turns_integer = mfile.get("i_tf_turns_integer", scan=scan)
     # If integer turns switch is on then the turns can have non square dimensions
-    if i_tf_turns_integer == 1:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         turn_width = mfile.get("dr_tf_turn", scan=scan)
         turn_height = mfile.get("dx_tf_turn", scan=scan)
         cable_space_width_radial = mfile.get("dr_tf_turn_cable_space", scan=scan)
         cable_space_width_toroidal = mfile.get("dx_tf_turn_cable_space", scan=scan)
 
-    elif i_tf_turns_integer == 0:
+    elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         turn_width = mfile.get("dx_tf_turn_general", scan=scan)
         cable_space_width = mfile.get("dx_tf_turn_cable_space_average", scan=scan)
 
@@ -7584,7 +7591,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     dia_tf_turn_croco_cable = mfile.get("dia_tf_turn_croco_cable", scan=scan)
 
     # Plot the total turn shape
-    if i_tf_turns_integer == 0:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         axis.add_patch(
             Rectangle(
                 [0, 0],
@@ -7702,7 +7709,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         },
     )
 
-    if i_tf_turns_integer == 0:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         # Add info about the steel casing surrounding the WP
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
@@ -7712,7 +7719,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
             f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
         )
-    elif i_tf_turns_integer == 1:
+    elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
             f"Cable space: \n$\\Delta r$: {cable_space_width_radial:.3e} m \n"
@@ -7739,14 +7746,14 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         },
     )
 
-    if i_tf_turns_integer == 0:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         textstr_turn = (
             f"$\\mathbf{{Turn:}}$\n\n"
             f"$\\Delta r$: {turn_width:.3e} m\n"
             f"$\\Delta x$: {turn_width:.3e} m"
         )
 
-    if i_tf_turns_integer == 1:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         textstr_turn = (
             f"$\\mathbf{{Turn:}}$\n\n"
             f"$\\Delta r$: {turn_width:.3e} m\n"
