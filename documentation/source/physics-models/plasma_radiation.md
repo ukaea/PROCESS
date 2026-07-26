@@ -53,7 +53,7 @@ For the regime above $40 \ \text{keV}$ whichc an be seen by the dashed lines in 
     
 
 !!! note "Particle confinement"
-    For the loss function $L_Z (Z_i, T)$, the particles are assumed to be in equailibrium and thus have infinite confinement time. (This is the data found at the bottom of the ADAS derived files in `process/data/lz_non_corona_14_elements`)
+    For the loss function $L_Z (Z_i, T)$, the particles are assumed to be in equilibrium and thus have infinite confinement time. (This is the data found at the bottom of the ADAS derived files in `process/data/lz_non_corona_14_elements`)
 
     This assumes:
 

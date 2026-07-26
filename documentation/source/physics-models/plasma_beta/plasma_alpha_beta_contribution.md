@@ -3,9 +3,9 @@
 The pressure contribution from the fast alpha particles can be controlled using switch `i_beta_fast_alpha`.
 This sets the value of the physics variable, `beta_fast_alpha`.
 
-A contribution from fast alphas to the total plasma pressure can be relatively high (~ 10-30%) for fusion temperatures of interest Because the maximum volume-averaged beta achievable in a tokamak is limited by  magnetohydrrdynamic (MHD) instabilities (e.g.,ballooning and kink modes), the presence of fast alphas, if $\langle \beta_{\text{tot}} \rangle$ is constant, reduces the background thermal plasma pressure. Furthermore, the energetic alpha population can influence (favorably or unfavorably) the bulk plasma ballooning mode stability boundaries[^2].
+A contribution from fast alphas to the total plasma pressure can be relatively high (~ 10-30%) for fusion temperatures of interest Because the maximum volume-averaged beta achievable in a tokamak is limited by  magnetohydrodynamic (MHD) instabilities (e.g.,ballooning and kink modes), the presence of fast alphas, if $\langle \beta_{\text{tot}} \rangle$ is constant, reduces the background thermal plasma pressure. Furthermore, the energetic alpha population can influence (favorably or unfavorably) the bulk plasma ballooning mode stability boundaries[^2].
 
-A comaprison between the two avaialbe scalings can be experimented with below:
+A comparison between the two available scalings can be experimented with below:
 
 <!DOCTYPE html>
 <html lang="en">
@@ -85,7 +85,7 @@ A comaprison between the two avaialbe scalings can be experimented with below:
 
 </html>
 
-Both available models are truncated so that they return a value for $\frac{\beta_{\alpha}}{\beta_{\text{th}}}$ no less than 0.3. This value is then multiplied by the internally calcualted value fo the thermal beta $\beta_{\text{th}}$, using the ion and electron desnity weighted temperatures. The value is then scaled by the fraction of total alpha power vs alpha power produced internally by the plasma to account for additional alpha pressure produced by beam-plasma interactions.
+Both available models are truncated so that they return a value for $\frac{\beta_{\alpha}}{\beta_{\text{th}}}$ no less than 0.3. This value is then multiplied by the internally calculated value fo the thermal beta $\beta_{\text{th}}$, using the ion and electron density weighted temperatures. The value is then scaled by the fraction of total alpha power vs alpha power produced internally by the plasma to account for additional alpha pressure produced by beam-plasma interactions.
 
 ----------------------
 

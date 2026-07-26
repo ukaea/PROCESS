@@ -22,7 +22,7 @@ The `BoschHaleConstants` class is a data structure designed to hold the constant
 
 ## Volumetric Fusion Rate | `bosch_hale_reactivity()`
 
-This function calcualtes the relative velocity fusion reactivity $\langle \sigma v \rangle$ for each point in the plasma profile based on the temperature.
+This function calculates the relative velocity fusion reactivity $\langle \sigma v \rangle$ for each point in the plasma profile based on the temperature.
 
  |  Input Variable             |  Variable Name  |
     |----------------------------------|-----------|

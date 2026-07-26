@@ -43,7 +43,7 @@ For the toroidal field coils, the chance of a quench is likely to be the largest
 
 The unplanned downtime for the blanket is based on the number of cycles it experiences before planned replacement. (This model is restricted of pulsed reactors.) The cycle life of the blanket is expressed using a reference lifetime. Before this lifetime, there is a constant but small probability of failure in each pulse. After the reference lifetime the reliability of the blanket starts to decline, reaching zero at the upper lifetime limit.
 
-It is assumed that the vacuum system can be maintained in parallel with blanket replacement, so it does not contribute to the planned downtime. The unplanned downtime is baed on an assumed failure rate for a cryo-pump, and a specified total number pumps, with some of them being redundant. The resulting downtime can be reduced to a negligible level if there are several redundant pumps, but in addition, there is a fixed unavailability to allow for common mode failures affecting several pumps.
+It is assumed that the vacuum system can be maintained in parallel with blanket replacement, so it does not contribute to the planned downtime. The unplanned downtime is based on an assumed failure rate for a cryo-pump, and a specified total number pumps, with some of them being redundant. The resulting downtime can be reduced to a negligible level if there are several redundant pumps, but in addition, there is a fixed unavailability to allow for common mode failures affecting several pumps.
 
 -------------------
 
@@ -77,7 +77,7 @@ where $U_{\text{unplanned}}$ is unplanned unavailability. The cross term takes a
 
 This model uses the unplanned unavailability calculations implemented in `i_plant_availability = 2` (see above). This includes the magnets, divertor, first wall and blanket, balance of plant, heating and current drive, and vacuum systems. The centrepost unplanned unavailability $U_{\text{unplanned,CP}}$ is provided by the user i.e. how often do you expect the centrepost to break over its lifetime. These unplanned unavailabilities are then added to $U_{\text{unplanned,CP}}$ to give $U_{\text{unplanned}}$.
 
-Finally, the capcity factor is given by
+Finally, the capacity factor is given by
 
 $$ C = A_{\text{tot}} (t_{\text{burn}} / t_{\text{cycle}}) $$
 

@@ -29,7 +29,7 @@ ioptimz  = 1
 * JUSTIFICATION: Optimised run
 
 minmax   = -14 * Switch for figure-of-merit (see lablmm for descriptions)
-* 14: pulse legnth
+* 14: pulse length
 * DESCRIPTION:   Switch for Figure-of-Merit (1: Minimise major radius)
 * JUSTIFICATION: Aim to minimise major radius
 
@@ -118,15 +118,15 @@ icc = 34
 
 icc = 35
 * DESCRIPTION:   J_winding pack
-* JUSTIFICATION: Constraint of TF engineering desgin
+* JUSTIFICATION: Constraint of TF engineering design
 
 icc = 36
 * DESCRIPTION:   TF temp marg
-* JUSTIFICATION: Constraint of TF engineering desgin
+* JUSTIFICATION: Constraint of TF engineering design
 
 icc = 60
 * DESCRIPTION:   OH coil temp margin
-* JUSTIFICATION: Constraint of CS engineering desgin
+* JUSTIFICATION: Constraint of CS engineering design
 
 icc = 62
 * DESCRIPTION:   taup/taueff ratio of particle to energy confinement times
@@ -181,10 +181,10 @@ beta_total_vol_avg = 3.71965626913446160e-02
 ixc = 6
 nd_plasma_electrons_vol_avg = 6.88360041658364314e+19
 * DESCRIPTION:   Electron density (/m3)
-* JUSTIFICATION: Density is constrained by fdene
+* JUSTIFICATION: Density is constrained by f_nd_plasma_electron_limit_max
 
 *ixc = 9
-fdene = 1.2
+f_nd_plasma_electron_limit_max = 1.2
 *boundu(9) = 1.2
 * DESCRIPTION:   margin for density limit (used to set max greenwald fraction)
 * JUSTIFICATION: Used with icc=5 to enforce density limit
@@ -192,7 +192,7 @@ fdene = 1.2
 *ixc = 11 * pheat
 p_hcd_primary_extra_heat_mw = 10.0
 * DESCRIPTION:   heating power not used for current drive (MW)
-* JUSTIFICATION: Allows for optimsing curretn drive - helps with convergance   
+* JUSTIFICATION: Allows for optimsing current drive - helps with convergence   
 
 ixc = 13 * dr_tf_inboard
 dr_tf_inboard = 9.99806743174200929e-01
@@ -241,7 +241,7 @@ f_c_plasma_non_inductive = 4.92677875380845121e-01
 * DESCRIPTION:   fraction of the plasma current produced by non-inductive means
 * JUSTIFICATION: We have a pulsed reactor so this can vary 
 
-fiooic = 1.0
+f_j_tf_wp_critical_max = 1.0
 * DESCRIPTION:   margin for TF coil operating current / critical current density ratio
 * JUSTIFICATION: Constraint equation 33 is used
 
@@ -286,7 +286,7 @@ f_h_mode_margin = 1.1
 * JUSTIFICATION: Used with icc=15 to enforce H-mode
 
 ixc = 109
-f_nd_alpha_electron = 6.14955494147856815e-02
+f_nd_alpha_thermal_electron = 6.14955494147856815e-02
 * DESCRIPTION:   Thermal alpha density / electron density
 * JUSTIFICATION: Calculate He fraction consistent with tau ratio
 
@@ -330,8 +330,8 @@ beta_norm_max = 3.0
 * JUSTIFICATION: Enforces the limit of beta limit  (icc=24)
 
 fkzohm = 1.0245
-* DESCRIPTION:   Zohm elongation scaling adjustment factor (ishape=2; 3)
-* JUSTIFICATION: Not used in the ishape=10 calculation (not used in this file???)
+* DESCRIPTION:   Zohm elongation scaling adjustment factor (i_plasma_geometry=2; 3)
+* JUSTIFICATION: Not used in the i_plasma_geometry=10 calculation (not used in this file???)
 
 ejima_coeff = 0.2
 * DESCRIPTION:   Ejima coefficient for resistive startup v-s formula
@@ -371,7 +371,7 @@ i_confinement_time = 34
 
 i_plasma_geometry = 10
 * DESCRIPTION:   Switch for plasma cross-sectional shape calculation: 
-* JUSTIFICATION: calcuatle kappa from aspect ratio and m_s_limit
+* JUSTIFICATION: calculate kappa from aspect ratio and m_s_limit
 
 m_s_limit = 0.2
 * DESCRIPTION:   margin to vertical stability
@@ -412,7 +412,7 @@ i_plasma_pedestal = 1
 * DESCRIPTION:   Switch for Pedestal Profiles 
 * JUSTIFICATION: H-mode run not using PLASMOD 
 
-* ieped = 1 * depratced - will set the t_ped manually 
+* ieped = 1 * deprecated - will set the t_ped manually 
 * DESCRIPTION:   EPED pedestal temperature scaling
 * JUSTIFICATION: Saarelma 6-parameter pedestal temperature scaling
 
@@ -464,7 +464,7 @@ pflux_fw_neutron_max_mw = 8.0
 * DESCRIPTION:   Allowable wall-load (mw/m2) (icc=8)
 * JUSTIFICATION: Used with icc=8 to set the enforced max allowable wall load
 
-psepbqarmax = 6.0
+p_div_bt_q_aspect_rmajor_max_mw = 6.0
 * DESCRIPTION:   maximum ratio of Psep*Bt/qAR (MWT/m) (icc=68)
 * JUSTIFICATION: 
 
@@ -476,7 +476,7 @@ sig_tf_wp_max = 5.8E8
 * DESCRIPTION:   Allowable Tresca stress in TF coil winding pack (Pa) (icc=33)
 * JUSTIFICATION: 
 
-alstroh = 6.6D8 
+stress_cs_steel_max = 6.6D8 
 * DESCRIPTION:   Allowable hoop stress in CS coil (Pa) (icc=72)
 * JUSTIFICATION: 
 
@@ -635,7 +635,7 @@ bkt_life_csf = 1
 * DESCRIPTION:   Switch for whether blanket model feeds n_cycle_min
 * JUSTIFICATION: choose to make the constraint on blanket and CS the same 
 
-nflutfmax = 0.0
+flu_tf_neutron_fast_max = 0.0
 * DESCRIPTION:   max fast neutron fluence on TF coil (n/m2) used in quench protection
 * JUSTIFICATION: zero to align with older quench protection model 
 
@@ -847,24 +847,24 @@ i_cs_superconductor = 5
 * JUSTIFICATION: Design choice, superconducting CS coil
 
 t_crack_vertical = 0.65D-3
-* DESCRIPTION:   Inital vertical crack size (m)
-* JUSTIFICATION: Intial crack area 1 mm2
+* DESCRIPTION:   Initial vertical crack size (m)
+* JUSTIFICATION: Initial crack area 1 mm2
 
 sf_vertical_crack = 1.0
-* DESCRIPTION:   Inital vertical crack size (m)
+* DESCRIPTION:   Initial vertical crack size (m)
 * JUSTIFICATION: No safety factor 
 
 sf_radial_crack = 1.0
-* DESCRIPTION:   Inital vertical crack size (m)
+* DESCRIPTION:   Initial vertical crack size (m)
 * JUSTIFICATION: No safety factor 
 
 sf_fast_fracture = 1.0
-* DESCRIPTION:   Inital vertical crack size (m)
+* DESCRIPTION:   Initial vertical crack size (m)
 * JUSTIFICATION: No safety factor 
 
 residual_sig_hoop = 1.50e8
-* DESCRIPTION:   Inital vertical crack size (m)
-* JUSTIFICATION: Intial crack area 1 mm2
+* DESCRIPTION:   Initial vertical crack size (m)
+* JUSTIFICATION: Initial crack area 1 mm2
 
 paris_coefficient = 3.86e-11
 * DESCRIPTION:   Paris equation material coefficient (-)
@@ -875,7 +875,7 @@ paris_power_law = 2.394
 * JUSTIFICATION: 316LN (ITER DDD TF p. 83)
 
 walker_coefficient = 0.5
-* DESCRIPTION:   walker coefficent (-)
+* DESCRIPTION:   walker coefficient (-)
 * JUSTIFICATION: 
 
 fracture_toughness = 150.0
@@ -969,7 +969,7 @@ inuclear = 1
 
 qnuc = 1.292E4
 * DESCRIPTION:   Nuclear heating of cryogenic components
-* JUSTIFICATION: Intial value chosen to help convergence
+* JUSTIFICATION: Initial value chosen to help convergence
 
 v_tf_coil_dump_quench_max_kv    = 10.00 
 * DESCRIPTION:   Max voltage across tf coil during quench (kv)

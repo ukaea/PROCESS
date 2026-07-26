@@ -1,6 +1,6 @@
 # Detailed Plasma Physics
 
-It can sometimes be useful to calculate rough values for key plasma paramters that are normally used in higher fidelity codes. The `DetailedPhysics()` class stores functions that are called and the end of the run to show rough values for key plasma behavior parameters. The calculation is done at the end as no other methods currently depend on these values.
+It can sometimes be useful to calculate rough values for key plasma parameters that are normally used in higher fidelity codes. The `DetailedPhysics()` class stores functions that are called and the end of the run to show rough values for key plasma behavior parameters. The calculation is done at the end as no other methods currently depend on these values.
 
 ## Detailed Plasma Physics | `DetailedPhysics()`
 
@@ -9,7 +9,7 @@ It can sometimes be useful to calculate rough values for key plasma paramters th
 
 ### Debye length | `calculate_debye_length()`
 
-Calculates the Debye lenght given by:
+Calculates the Debye length given by:
 
 $$
 \lambda_{D} = \sqrt{\frac{\epsilon_0 k_B T_e}{n e^2}}
@@ -38,7 +38,7 @@ $$
 b_{\text{max}} = \lambda_{\text{Debye}}
 $$
 
-The minimum impact paramter is the largest of either the classical distance of closest approach or the Debye length. 
+The minimum impact parameter is the largest of either the classical distance of closest approach or the Debye length. 
 
 $$
 \begin{split}b_{\text{min}} ≡
@@ -79,7 +79,84 @@ $$
 ---------------------
 
 ### Larmor Frequency | `calculate_larmor_frequency()`
-
+ 
 $$
 f_{\text{Larmor}} = \frac{Z_ieB}{2\pi m_i}
+$$
+
+--------------------
+
+### Upper Hybrid Frequency | `calculate_upper_hybrid_frequency()`
+
+$$
+f_{\text{UH}} = \sqrt{\omega_{p}^2+ \omega_{\text{Larmor}}^2}
+$$
+
+--------------------
+
+### Reduced mass of two particles | `calculate_reduced_mass()`
+
+$$
+m_{\text{reduced}} = \frac{m_1 m_2}{m_1+m_2}
+$$
+
+-----------------
+
+### Relative average velocity | `calculate_average_relative_velocity()`
+
+$$
+v_{\text{rel}} = \sqrt{v_1^2+v_2^2}
+$$
+
+-----------------
+
+### Electron-electron collision time | `calculate_electron_electron_collision_time()`
+
+For $T_\text{e}$ in eV
+
+$$
+\tau_{\text{ee}} = \frac{12\sqrt{2}\pi^{\frac{3}{2}}\epsilon_0^2 \sqrt{m_{\text{e}}}T_{\text{e}}^{\frac{3}{2}}}{\ln \Lambda_{\text{ee}}\text{e}^4 n_{\text{e}}}
+$$
+
+-------------------
+
+### Electron-ion collision time | `calculate_electron_ion_collision_time()`
+
+For $T_\text{e}$ in eV.
+
+This method takes the ion density $n_i$ (`nd_plasma_ions`). For a quasi-neutral single-species plasma,
+
+$$
+n_{\text{e}} = Z_i n_i
+$$
+
+so the standard form written in terms of electron density,
+
+$$
+\tau_{\text{ei}} = \frac{12 \pi^{\frac{3}{2}}\epsilon_0^2 \sqrt{m_{\text{e}}}T_{\text{e}}^{\frac{3}{2}}}{\sqrt{2} Z_i^2 \ln \Lambda_{\text{ei}} \text{e}^4 n_{\text{e}}}
+$$
+
+is equivalent to the form used with ion density,
+
+$$
+\tau_{\text{ei}} = \frac{12 \pi^{\frac{3}{2}}\epsilon_0^2 \sqrt{m_{\text{e}}}T_{\text{e}}^{\frac{3}{2}}}{\sqrt{2} Z_i^3 \ln \Lambda_{\text{ei}} \text{e}^4 n_i}
+$$
+--------------------
+
+### Spitzer ion slowing down time | `calculate_spitzer_ion_slowing_down_time()`
+
+For $T_\text{e}$ in eV
+
+$$
+\tau_{\text{spitzer}} = \frac{3 (2\pi)^{\frac{3}{2}}\epsilon_0^2 \sqrt{m_{\text{e}}} m_{\text{i}} T_{\text{e}}^{\frac{3}{2}}}{Z_i^2 \ln \Lambda_{\text{ei}} \text{e}^4 n_{\text{e}}}
+$$
+
+--------------------
+
+### Spitzer resistivity | `calculate_spitzer_resistivity()`
+
+For $T_\text{e}$ in eV
+
+$$
+\eta_{\text{spitzer}} = \frac{4 \sqrt{2 \pi}}{3 }\frac{Z_i e^2 \sqrt{m_{\text{e}}} \ln \Lambda_{\text{ei}}}{\left(4 \pi \epsilon_0 \right)^2 T_{\text{e}}^{\frac{3}{2}}}
 $$

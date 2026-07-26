@@ -107,7 +107,7 @@ temp_cs_superconductor_margin_min = 1.5
 * Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
 icc = 62 
-f_alpha_energy_confinement_min = 5.0
+f_t_alpha_energy_confinement_min = 5.0
 
 * dump time constraint for VV stresses *
 *--------------------------------------*
@@ -117,7 +117,7 @@ icc = 65
 *-----------------*
 icc = 72
 * allowable hoop stress in Central Solenoid structural material [Pa]
-alstroh = 7.5D8
+stress_cs_steel_max = 7.5D8
 
 * nd_plasma_pedestal_electron<ne0 *
 *------------------*
@@ -128,7 +128,7 @@ icc = 81
 *------------------*
 
 icc = 68
-psepbqarmax = 10.0
+p_div_bt_q_aspect_rmajor_max_mw = 10.0
 
 * TF coil stress limits *
 *-----------------------*
@@ -572,4 +572,4 @@ f_a_tf_turn_cable_space_extra_void = 0.3
 i_tf_sc_mat = 1
 
 * max fluence in the TF coil
-nflutfmax = 1e22
+flu_tf_neutron_fast_max = 1e22

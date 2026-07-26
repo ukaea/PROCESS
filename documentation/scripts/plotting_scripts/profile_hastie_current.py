@@ -51,7 +51,7 @@ callback = CustomJS(
     const y1 = Array.from(x, (x) => A * (1 - x**2)**B)
     const y2 = Array.from(x, (x) => A / (1+B*x**2)**2) // Example transformation for the second line
     source.data = { x, y1, y2 }
-""",
+""",  # noqa: E501
 )
 
 n0.js_on_change("value", callback)

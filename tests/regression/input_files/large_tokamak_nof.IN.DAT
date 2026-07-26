@@ -63,7 +63,7 @@ icc = 15
 * Net electric power lower limit *
 *--------------------------------*
 icc = 16
-* Minimum allowable value for net eletric power [MW]
+* Minimum allowable value for net electric power [MW]
 p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *
@@ -92,7 +92,7 @@ fjohc0 = 1.0
 * I_op/I_Crit TF coil limit *
 *---------------------------*
 icc = 33
-fiooic = 1.0 * margin for TF coil operating current / critical current ratio
+f_j_tf_wp_critical_max = 1.0 * margin for TF coil operating current / critical current ratio
 
 * Dump voltage upper limit *
 *--------------------------*
@@ -114,10 +114,10 @@ tmargmin = 1.5
 icc = 60
 temp_cs_superconductor_margin_min = 1.5
 
-* Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
+* Lower limit on f_t_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
 icc = 62 
-f_alpha_energy_confinement_min = 5.0
+f_t_alpha_energy_confinement_min = 5.0
 
 * dump time constraint for VV stresses *
 *--------------------------------------*
@@ -127,7 +127,7 @@ icc = 65
 *-----------------*
 icc = 72
 * allowable hoop stress in Central Solenoid structural material [Pa]
-alstroh = 7.5D8
+stress_cs_steel_max = 7.5D8
 
 * nd_plasma_pedestal_electron<ne0 *
 *------------------*
@@ -138,7 +138,7 @@ icc = 81
 *------------------*
 
 icc = 68
-psepbqarmax = 10.0
+p_div_bt_q_aspect_rmajor_max_mw = 10.0
 
 * TF coil stress limits *
 *-----------------------*
@@ -152,7 +152,7 @@ sig_tf_wp_max    = 7.5E8 * Allowable maximum shear stress in TF coil conduit (Tr
 *---------------------*
 icc = 5
 ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
-fdene = 1.2 * density limit constraint scale (constraint equation 5)
+f_nd_plasma_electron_limit_max = 1.2 * density limit constraint scale (constraint equation 5)
 nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
@@ -241,7 +241,7 @@ boundl(60) = 65000.0
 boundu(60) = 90000.0
 c_tf_turn = 65000.0
 
-* Helium fraction (f_nd_alpha_electron)
+* Helium fraction (f_nd_alpha_thermal_electron)
 ixc = 109
 boundu(109) = 0.1
 
@@ -583,4 +583,4 @@ f_a_tf_turn_cable_space_extra_void = 0.3
 i_tf_sc_mat = 1
 
 * max fluence in the TF coil
-nflutfmax = 1e22
+flu_tf_neutron_fast_max = 1e22

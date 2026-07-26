@@ -1,13 +1,19 @@
 import numpy as np
 from numba import njit
 
-import process.data_structure as data_structure
 from process.core import constants
+from process.core.model import Model
 
 
-class CsFatigue:
+class CsFatigue(Model):
     def __init__(self):
         self.outfile = constants.NOUT
+
+    def output(self):
+        """This model doesn't have any output"""
+
+    def run(self):
+        """This model doesn't need to be run"""
 
     def ncycle(
         self,
@@ -36,15 +42,15 @@ class CsFatigue:
         # X. Sarasola et al, IEEE Transactions on Applied Superconductivity,
         # vol. 30, no. 4, pp. 1-5, June 2020, Art no. 4200705
 
-        n = -data_structure.cs_fatigue_variables.paris_power_law * (
-            data_structure.cs_fatigue_variables.walker_coefficient - 1.0e0
+        n = -self.data.cs_fatigue.paris_power_law * (
+            self.data.cs_fatigue.walker_coefficient - 1.0e0
         )
 
         # Set units to MPa
         max_hoop_stress_MPa = max_hoop_stress / 1.0e6
         residual_stress_MPa = residual_stress / 1.0e6
 
-        # Set intial crack size
+        # Set initial crack size
         t_crack_radial = 3.0e0 * t_crack_vertical
         a = t_crack_vertical
         c = t_crack_radial
@@ -59,7 +65,7 @@ class CsFatigue:
 
         # Calculated constant for a given stress ratio using Walker equation
         # https://en.wikipedia.org/wiki/Crack_growth_equation#Walker_equation
-        cr = data_structure.cs_fatigue_variables.paris_coefficient / (1.0e0 - r) ** n
+        cr = self.data.cs_fatigue.paris_coefficient / (1.0e0 - r) ** n
 
         # select given increase in crack area
         delta = 1.0e-4
@@ -68,24 +74,17 @@ class CsFatigue:
         n_pulse = 0.0
         k_max = 0.0
 
-        # factor 2 taken as saftey factors in the crack sizes
-        # Default CS steel undergoes fast fracture when SIF > 200 MPa, under a saftey factor 1.5 we use 133MPa
+        # factor 2 taken as safety factors in the crack sizes
+        # Default CS steel undergoes fast fracture when SIF > 200 MPa,
+        # under a safety factor 1.5 we use 133MPa
         pi_2_arr = np.array([np.pi / 2.0e0, 0])
         while (
-            (
-                a
-                <= dz_cs_turn_conduit
-                / data_structure.cs_fatigue_variables.sf_vertical_crack
-            )
-            and (
-                c
-                <= dr_cs_turn_conduit
-                / data_structure.cs_fatigue_variables.sf_radial_crack
-            )
+            (a <= dz_cs_turn_conduit / self.data.cs_fatigue.sf_vertical_crack)
+            and (c <= dr_cs_turn_conduit / self.data.cs_fatigue.sf_radial_crack)
             and (
                 k_max
-                <= data_structure.cs_fatigue_variables.fracture_toughness
-                / data_structure.cs_fatigue_variables.sf_fast_fracture
+                <= self.data.cs_fatigue.fracture_toughness
+                / self.data.cs_fatigue.sf_fast_fracture
             )
         ):
             # find SIF max from SIF_a and SIF_c
@@ -100,22 +99,12 @@ class CsFatigue:
             k_max = max(k_a, k_c)
 
             # run euler_method and find number of cycles needed to give crack increase
-            delta_n = delta / (
-                cr * (k_max**data_structure.cs_fatigue_variables.paris_power_law)
-            )
+            delta_n = delta / (cr * (k_max**self.data.cs_fatigue.paris_power_law))
 
-            # update a and c, N (+= doesnt work for fortran (?) reasons)
-            a = (
-                a
-                + delta
-                * (k_a / k_max) ** data_structure.cs_fatigue_variables.paris_power_law
-            )
-            c = (
-                c
-                + delta
-                * (k_c / k_max) ** data_structure.cs_fatigue_variables.paris_power_law
-            )
-            n_pulse = n_pulse + delta_n
+            # update a and c, N (+= doesn't work for fortran (?) reasons)
+            a += delta * (k_a / k_max) ** self.data.cs_fatigue.paris_power_law
+            c += delta * (k_c / k_max) ** self.data.cs_fatigue.paris_power_law
+            n_pulse += delta_n
 
         # two pulses - ramp to Vsmax and ramp down per cycle
         return n_pulse / 2.0e0, t_crack_radial
@@ -123,19 +112,21 @@ class CsFatigue:
     @staticmethod
     @njit(cache=True)
     def embedded_stress_intensity_factor(hoop_stress, t, w, a, c, phi):
-        # ! Assumes an embedded elliptical efect geometry
-        # ! geometric quantities
-        # ! hoop_stress - change in hoop stress over cycle
-        # ! t - plate thickness
-        # ! w - plate width
-        # ! a - crack depth (t -direction)
-        # ! c - crack length (w - direction)
-        # ! Ref: J. C. Newman, I. S. Raju "Stress-Intensity Factor Equations for Cracks in
-        # ! Three-Dimensional Finite Bodies Subjected to Tension and Bending Loads"
-        # ! https://core.ac.uk/download/pdf/42849129.pdf
-        # ! Ref: C. Jong, Magnet Structural Design
-        # ! Criteria Part 1: Main Structural Components and Welds 2012
+        """
+        Assumes an embedded elliptical effect geometry
 
+        geometric quantities
+        hoop_stress - change in hoop stress over cycle
+        t - plate thickness
+        w - plate width
+        a - crack depth (t -direction)
+        c - crack length (w - direction)
+        Ref: J. C. Newman, I. S. Raju "Stress-Intensity Factor Equations for Cracks in
+        Three-Dimensional Finite Bodies Subjected to Tension and Bending Loads"
+        https://core.ac.uk/download/pdf/42849129.pdf
+        Ref: C. Jong, Magnet Structural Design
+        Criteria Part 1: Main Structural Components and Welds 2012
+        """
         # reuse of calc
         a_c = a / c
         a_t = a / t
@@ -183,19 +174,21 @@ class CsFatigue:
     @staticmethod
     @njit(cache=True)
     def surface_stress_intensity_factor(hoop_stress, t, w, a, c, phi):
-        # ! Assumes an surface semi elliptical defect geometry
-        # ! geometric quantities
-        # ! hoop_stress - change in hoop stress over cycle
-        # ! t - plate thickness
-        # ! w - plate width
-        # ! a - crack depth (t -direction)
-        # ! c - crack length (w - direction)
-        # ! Ref: J. C. Newman, I. S. Raju "Stress-Intensity Factor Equations for Cracks in
-        # ! Three-Dimensional Finite Bodies Subjected to Tension and Bending Loads"
-        # ! https://core.ac.uk/download/pdf/42849129.pdf
-        # ! Ref: C. Jong, Magnet Structural Design
-        # ! Criteria Part 1: Main Structural Components and Welds 2012
+        """
+        Assumes an surface semi elliptical defect geometry
 
+        geometric quantities
+        hoop_stress - change in hoop stress over cycle
+        t - plate thickness
+        w - plate width
+        a - crack depth (t -direction)
+        c - crack length (w - direction)
+        Ref: J. C. Newman, I. S. Raju "Stress-Intensity Factor Equations for Cracks in
+        Three-Dimensional Finite Bodies Subjected to Tension and Bending Loads"
+        https://core.ac.uk/download/pdf/42849129.pdf
+        Ref: C. Jong, Magnet Structural Design
+        Criteria Part 1: Main Structural Components and Welds 2012
+        """
         bending_stress = 0.0e0  # * 3.0 * M / (w*d**2.0)
 
         # reuse of calc

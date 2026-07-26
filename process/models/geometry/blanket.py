@@ -22,7 +22,8 @@ def blanket_geometry_single_null(
     dr_blkt_inboard: float,
     dr_blkt_outboard: float,
 ) -> ArbitraryGeometry:
-    """Calculates radial and vertical distances for the geometry of the blanket in a single null configuration
+    """Calculates radial and vertical distances for the geometry of the blanket in a
+    single null configuration
 
     Parameters
     ----------
@@ -111,7 +112,8 @@ def blanket_geometry_lower(
     dr_blkt_outboard: float,
     divgap: float,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """Calculates radial and vertical distances for the geometry of section of blanket below the midplane
+    """Calculates radial and vertical distances for the geometry of section of blanket
+    below the midplane
 
     Parameters
     ----------
@@ -133,7 +135,10 @@ def blanket_geometry_lower(
     Returns
     -------
     :
-        tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the blanket geometry below the midplane
+        tuple containing the R coordinates for the outboard,
+        Z coordinates for the outboard,
+        R coordinates for the inboard,
+        Z coordinates for the inboard of the blanket geometry below the midplane
     """
     # Lower blanket
     rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = dhgap_vertices(
@@ -164,8 +169,10 @@ def blanket_geometry_double_null(
     dr_blkt_inboard: float,
     dr_blkt_outboard: float,
 ) -> ArbitraryGeometry:
-    """Calculates radial and vertical distances for the geometry of blanket in a double null configuration
-    In a double null configuration, the geometry of the lower blanket is reflected across the midplane to create the section of blanket above the midplane
+    """Calculates radial and vertical distances for the geometry of blanket in a double
+    null configuration
+    In a double null configuration, the geometry of the lower blanket is reflected across
+    the midplane to create the section of blanket above the midplane
 
     Parameters
     ----------

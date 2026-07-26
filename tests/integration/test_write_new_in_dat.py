@@ -1,13 +1,13 @@
 """Integration tests for write_new_in_dat.py."""
 
-from pytest import approx
+import pytest
 
-from process.core.io import write_new_in_dat
 from process.core.io.in_dat import InDat
+from process.core.io.in_dat.cli import new_indat
 from process.core.io.mfile import MFile
 
 
-def test_write_new_in_dat(temp_data, mfile_name):
+def test_write_new_in_dat(temp_data, mfile_name, cli_runner):
     """Ensure solution vector from MFILE.DAT is copied to new IN.DAT.
 
     :param temp_data: temporary data dir
@@ -24,13 +24,14 @@ def test_write_new_in_dat(temp_data, mfile_name):
     fimp13_exp = mfile.data["f_nd_impurity_electrons(13)"].get_scan(-1)
 
     # Write new IN.DAT then inspect value in new input file
-    write_new_in_dat.main(
-        args=["-f", str(mfile_path), "-i", str(in_dat_path), "-o", str(new_in_dat_path)]
+    cli_runner(
+        new_indat,
+        args=["-f", str(mfile_path), "-i", str(in_dat_path), "-o", str(new_in_dat_path)],
     )
-    in_dat = InDat(str(new_in_dat_path))
+    in_dat = InDat(new_in_dat_path)
     te_obs = in_dat.data["temp_plasma_electron_vol_avg_kev"].get_value
     fimp13_obs = in_dat.data["f_nd_impurity_electrons"].get_value[12]
 
     # Assert mfile values are now the same as IN.DAT value
-    assert te_obs == approx(te_exp)
-    assert fimp13_obs == approx(fimp13_exp)
+    assert te_obs == pytest.approx(te_exp)
+    assert fimp13_obs == pytest.approx(fimp13_exp)

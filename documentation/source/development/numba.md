@@ -28,6 +28,7 @@ for more information.
 from numba import njit
 import numpy as np
 
+
 @njit
 def my_function(a, b):
     c = a[0] + a[1]
@@ -46,14 +47,14 @@ But, also **cannot** do the following:
 
 ```python
 from numba import njit
-from process.data_structure import superconducting_tf_coil_variables as sctfv
+
 
 @njit
-def my_other_function(n):
-    return n + sctfv.n_tf_coils
+def my_other_function(n, data):
+    return n + data.superconducting_tfcoil.n_tf_coils
 ```
 
-because Numba does not know what `sctfv` is.
+because Numba does not know what `data` is.
 
 !!! Info "Numba benefits"
     The above examples are simple by design, however this also means they are poor candidates for 
@@ -90,7 +91,7 @@ First ensure that `gprof2dot` is installed by issuing the command `pip install g
 Execute the following commands from the PROCESS root directory:
 
 ```bash
-> python3 -m cProfile -o large-tok.pstats process/main.py -i tests/regression/scenarios/large-tokamak/IN.DAT
+> python3 -m cProfile -o large-tok.pstats process/main.py -i tests/regression/input_files/large_tokamak_nof.IN.DAT
 
 > gprof2dot -f pstats large-tok.pstats | dot -Tpng -o large_tokamak_profile.png
 ```

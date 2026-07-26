@@ -1,4 +1,5 @@
-"""Dict of obsolete vars and their new names for the input validator, and dict of help messages for certain obsolete vars.
+"""Dict of obsolete vars and their new names for the input validator,
+and dict of help messages for certain obsolete vars.
 
 This is used by the input_validator module to find any obsolete variables in the
 input file (which have since been renamed in the current version of the source).
@@ -155,7 +156,7 @@ OBS_VARS = {
     "nimp": "n_impurities",
     "ssync": "f_sync_reflect",
     "rnbeam": "f_nd_beam_electron",
-    "ralpne": "f_nd_alpha_electron",
+    "ralpne": "f_nd_alpha_thermal_electron",
     "protium": "f_nd_protium_electrons",
     "clhsf": "f_z_cryostat",
     "ddwex": "dr_cryostat",
@@ -182,7 +183,7 @@ OBS_VARS = {
     "d_vv_in": "dr_vv_inboard",
     "d_vv_out": "dr_vv_outboard",
     "iblnkith": "i_blkt_inboard",
-    "taulimit": "f_alpha_energy_confinement_min",
+    "taulimit": "f_t_alpha_energy_confinement_min",
     "isc": "i_confinement_time",
     "iradloss": "i_rad_loss",
     "iinvqd": None,
@@ -209,7 +210,6 @@ OBS_VARS = {
     "tfwmatmax": "temp_fw_max",
     "fw_channel_length": "len_fw_channel",
     "denw": None,
-    "s_tresca_oh": "s_shear_cs_peak",
     "sig_tf_tresca_max": "s_shear_tf_peak",
     "s_tresca_cond_cear": "s_shear_cea_tf_cond",
     "sig_tf_tresca": "s_shear_tf",
@@ -242,7 +242,7 @@ OBS_VARS = {
     "divfix": "dz_divertor",
     "coreradius": "radius_plasma_core_norm",
     "maxradwallload": "pflux_fw_rad_max",
-    "fdiv": "f_ster_div_single",
+    "fdiv": None,
     "fhcd": "f_a_fw_outboard_hcd",
     "nblktmodti": "n_blkt_inboard_modules_toroidal",
     "nblktmodpo": "n_blkt_outboard_modules_poloidal",
@@ -360,7 +360,7 @@ OBS_VARS = {
     "tmax_croco": "temp_croco_quench_max",
     "vdalw": "v_tf_coil_dump_quench_max_kv",
     "vvhealw": None,
-    "zeffmax": "zeff_max",
+    "zeffmax": "n_charge_plasma_effective_vol_avg_max",
     "f_a_fw_hcd": "f_a_fw_outboard_hcd",
     "fpumpblkt": "f_p_blkt_coolant_pump_total_heat",
     "fpumpshld": "f_p_shld_coolant_pump_total_heat",
@@ -369,10 +369,12 @@ OBS_VARS = {
     "ims": "i_blkt_module_segmentation",
     "i_coolant_pumping": "i_p_coolant_pumping",
     "vfblkt": "f_a_blkt_cooling_channels",
-    "dalu": "den_aluminium",
+    "dalu": None,
+    "den_aluminium": None,
     "dcase": "den_tf_coil_case",
     "dcondins": "den_tf_wp_turn_insulation",
-    "dcopper": "den_copper",
+    "dcopper": None,
+    "den_copper": None,
     "denstl": "den_steel",
     "ripmax": "ripple_b_tf_plasma_edge_max",
     "n_layer": "n_tf_wp_layers",
@@ -420,12 +422,12 @@ OBS_VARS = {
     "t_structural_vertical": "dz_cs_turn_conduit",
     "t_cable_tf": "dx_tf_turn_cable_space_general",
     "t_turn_tf": "dx_tf_turn_general",
-    "copper_thick": "dx_hts_tape_copper",
-    "croco_thick": "dx_croco_strand_copper",
-    "hastelloy_thickness": "dx_hts_tape_hastelloy",
-    "rebco_thickness": "dx_hts_tape_rebco",
-    "tape_thickness": "dx_hts_tape_total",
-    "tape_width": "dr_hts_tape",
+    "copper_thick": "dx_tf_hts_tape_copper",
+    "croco_thick": "dx_tf_croco_strand_copper",
+    "hastelloy_thickness": "dx_tf_hts_tape_hastelloy",
+    "rebco_thickness": "dx_tf_hts_tape_rebco",
+    "tape_thickness": "dx_tf_hts_tape_total",
+    "tape_width": "dr_tf_hts_tape",
     "beta": "beta_total_vol_avg",
     "beta_max": "beta_vol_avg_max",
     "beta_min": "beta_vol_avg_min",
@@ -448,15 +450,45 @@ OBS_VARS = {
     "vcool": "vel_cp_coolant_midplane",
     "rcool": "radius_cp_coolant_channel",
     "fl_h_threshold": None,
+    "dx_hts_tape_copper": "dx_tf_hts_tape_copper",
+    "dx_croco_strand_copper": "dx_tf_croco_strand_copper",
+    "dx_hts_tape_hastelloy": "dx_tf_hts_tape_hastelloy",
+    "dx_hts_tape_rebco": "dx_tf_hts_tape_rebco",
+    "oacdcp": "j_tf_coil_full_area",
+    "dx_hts_tape_total": "dx_tf_hts_tape_total",
+    "dr_hts_tape": "dr_tf_hts_tape",
+    "coppera_m2_max": "tf_coppera_m2_max",
+    "f_ster_div_single": None,
+    "fradpwr": "f_p_plasma_separatrix_rad_max",
+    "aplasmin": "rminor_min",
+    "nflutfmax": "flu_tf_neutron_fast_max",
+    "pseprmax": "p_plasma_separatrix_rmajor_max_mw",
+    "avail_min": "f_t_plant_available_min",
+    "f_alpha_energy_confinement_min": "f_t_alpha_energy_confinement_min",
+    "zeff_max": "n_charge_plasma_effective_vol_avg_max",
+    "psepbqarmax": "p_div_bt_q_aspect_rmajor_max_mw",
+    "fdene": "f_nd_plasma_electron_limit_max",
+    "fiooic": "f_j_tf_wp_critical_max",
+    "alstroh": "stress_cs_steel_max",
+    "i_cs_stress": None,
+    "f_nd_alpha_electron": "f_nd_alpha_thermal_electron",
 }
 
 OBS_VARS_HELP = {
     "iculdl": "(use IDENSL=3 for equivalent model to ICULDL=0). ",
-    "dz_blkt_upper": "WARNING. BLNKTTH is now always calculated rather than input - please remove it from the input file. ",
-    "iprofile": "Use i_beta_norm_max, i_alphaj and i_ind_plasma_internal_norm instead. See docs for setup. ",
+    "dz_blkt_upper": (
+        "WARNING. "
+        "BLNKTTH is now always calculated rather than input - "
+        "please remove it from the input file. "
+    ),
+    "iprofile": (
+        "Use i_beta_norm_max, i_alphaj and i_ind_plasma_internal_norm instead. "
+        "See docs for setup. "
+    ),
     "fl_h_threshold": (
         "fl_h_threshold has been replaced by f_h_mode_margin/f_l_mode_margin"
-        " please check the docstring for constraint 15/22 to find the appropriate variable"
+        " please check the docstring for constraint 15/22 to "
+        "find the appropriate variable"
     ),
 }
 
@@ -483,7 +515,10 @@ kallenbach_list = [
     "mach0",
     "neratio",
 ]
-kallenbach_message = "The Kallenbach model is currently not included in PROCESS. See issue #1886 for more information on the use of the Kallenbach model. "
+kallenbach_message = (
+    "The Kallenbach model is currently not included in PROCESS. "
+    "See issue #1886 for more information on the use of the Kallenbach model. "
+)
 OBS_VARS.update(dict.fromkeys(kallenbach_list, None))
 OBS_VARS_HELP.update(dict.fromkeys(kallenbach_list, kallenbach_message))
 
@@ -542,6 +577,7 @@ fvalues_list = [
     "fniterpump",
     "fpoloidalpower",
     "ftemp_croco_quench_max",
+    "fne0",
 ]
 
 OBS_VARS.update(dict.fromkeys(fvalues_list, None))

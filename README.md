@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8335291.svg)](https://doi.org/10.5281/zenodo.8335291) [![codecov](https://codecov.io/gh/ukaea/process/graph/badge.svg?token=F94XDNUIX0)](https://codecov.io/gh/ukaea/process)
+[![DOI](https://img.shields.io/badge/DOI-10.5281/zenodo.8335291-blue)](https://doi.org/10.5281/zenodo.8335291) [![codecov](https://codecov.io/gh/ukaea/process/graph/badge.svg?token=F94XDNUIX0)](https://codecov.io/gh/ukaea/process)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ukaea/PROCESS/HEAD?urlpath=%2Fdoc%2Ftree%2Fexamples%2F)
 # PROCESS
 
@@ -39,5 +39,7 @@ A list of publications using PROCESS is given [here](https://ukaea.github.io/PRO
 ## Citing PROCESS
 If you use PROCESS in your work, please cite it using the "Cite this repository" link in the "About" section of the repository. This will cite the latest version of PROCESS, if you are using a different release, please find the appropriate DOI on [PROCESS' Zenodo page](https://doi.org/10.5281/zenodo.8335291). To ensure reproducible research, we recommend you run an [official release of PROCESS](https://github.com/ukaea/PROCESS/releases) by checking out the appropriate git tag.
 
-## Contact
-A contact form can be found on the [PROCESS webpage](https://www.ukaea.org/service/process/) to make contact with the UKAEA maintainers of PROCESS. Alternatively, you can make an issue or discussion in line with our [contribution guide](CONTRIBUTING.md).
+## Contact and Collaboration
+If you would like to get in touch with the PROCESS group for a more detailed discussion, please use the contact form on the [PROCESS webpage](https://www.ukaea.org/service/process/) to make contact with the UKAEA maintainers of PROCESS. 
+
+We can, at our discretion, provide some free modeller time without a formal collaboration agreement. This can help you towards converging your problem, and can be a good starting point for further collaboration; please contact us if you are interested. Alternatively, you can make an issue or discussion in line with our [contribution guide](CONTRIBUTING.md).

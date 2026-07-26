@@ -33,7 +33,7 @@ lifetime because of the high neutron fluence.
 
 ### Blanket Model Options
 
-The models used for the thermoydraulics of the first wall, the profile of 
+The models used for the thermohydraulics of the first wall, the profile of 
 deposition of the neutron energy, tritium breeding, and conversion of heat to 
 electricity have been revised extensively.
 
@@ -61,7 +61,7 @@ Summary of key variables and switches:
 | :----------------------: | :---------------------: | ------------------------ | ------------------------------------ |
 |     Coolant Channels     |      :-----------:      | ------------------------ | --------------------------           |
 |        length (m)        |   `len_fw_channel`   | ---                      | ---                                  |
-|        width (m)         | `radius_fw_channel` (radius, cicular) | `radius_fw_channel`                    | `a_bz_liq`, `b_bz_liq` (rectangular) |
+|        width (m)         | `radius_fw_channel` (radius, circular) | `radius_fw_channel`                    | `a_bz_liq`, `b_bz_liq` (rectangular) |
 |    wall thickness (m)    |        `dr_fw_wall`        | dr_fw_wall                  | `th_wall_secondary`                  |
 |        dx_fw_module (m)         |         `dx_fw_module`         | ---                      | ---                                  |
 |    roughness epsilon     |       `roughness_fw_channel`       | ---                      | ---                                  |
@@ -137,9 +137,9 @@ This function is used to calculate the first wall heating, it assumes the same c
     \mathtt{temp_k} = \frac{T_{\text{outlet}} + T_{\text{FW,peak}}}{2}
     $$
 
-8. Calculate the FW thermal conductivity at $\mathtt{temp_k}$ using the [`fw_thermal_conductivity()`](#fw-thermal-conductivity--fw_thermal_conductivity) function.
+8. Calculate the FW thermal conductivity at $\mathtt{temp_k}$ using the [`eurofer97_thermal_conductivity()`](../eng-models/generic_methods/materials.md#eurofer97-thermal-conductivity--eurofer97_thermal_conductivity) function.
 
-9. Determine the heat transfer coefficient using the [`heat_transfer()`](#fw-heat-transfer--heat_transfer) function.
+9. Determine the heat transfer coefficient using the [`gnielinski_heat_transfer_coefficient()`](../eng-models/generic_methods/pumping.md#gnielinski-heat-transfer--gnielinski_heat_transfer_coefficient) function.
 
 10. Compute the worst-case load.
 
@@ -193,77 +193,7 @@ $$
 
 where $\texttt{tkfw}$ is the thermal conductivity of the first wall material and $\texttt{onedload}$ is the heat load per unit length.
 
--------------
-
-### FW heat transfer | `heat_transfer()`
-
-1. **Calculate the Reynolds number:**
-
-    $$
-    \mathrm{Re} = \frac{\rho v \left(2r_{\text{channel}}\right)}{\mu}
-    $$
-
-    where $\rho$ is the coolant density and $\mu$ is the coolant viscosity.
-
-2. **Calculate the Prandtl number:**
-
-    $$
-    \mathrm{Pr} = \frac{c_{\text{p}}\mu}{k}
-    $$
-
-    were $c_{\text{p}}$ is the coolant heat capacity and $k$ is the coolant thermal conductivity.
-
-3. **Calculate the Darcy friction factor using the [`darcy_friction_haaland()`](#fw-coolant-friction--darcy_friction_haaland) method:**
-
-    $$
-    f = \texttt{darcy_friction_haaland()}
-    $$
-
-4. **Calculate the Nusselt number using the [Gnielinski correlation](https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation):**
-
-    $$
-    \mathrm{Nu_D}  = \frac{\left(f/8\right)\left(\mathrm{Re}-1000\right)\mathrm{Pr}}{1+12.7\left(f/8\right)^{0.5}\left(\mathrm{Pr}^{2/3}-1\right)}
-    $$
-
-    The relation is valid for:
-
-    $$
-    0.5 \le \mathrm{Pr} \le 2000 \\
-    3000 \le \mathrm{Re} \le 5 \times 10^6
-    $$
-
-5. **Calculate the heat transfer coefficient with the Nusselt number:**
-
-    $$
-    h = \frac{\mathrm{Nu_D}k}{2r_{\text{channel}}}
-    $$
-
-
 --------------
-
-### FW coolant friction | `darcy_friction_haaland()`
-
- The pressure drop is based on the Darcy fraction factor, using the [Haaland equation](https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation), an approximation to the implicit Colebrook–White equation. 
-
-$$
-\frac{1}{\sqrt{f}} = -1.8 \log{\left[ \left(\frac{\epsilon / D}{3.7}\right)^{1.11} \frac{6.9}{\text{Re}} \right]}
-$$
-
-------------
-
-### FW thermal conductivity | `fw_thermal_conductivity()`
-
-The thermal conductivity of the first wall is assumed to be that of Eurofer97 using the relation below[^1] [^2]:
- 
-$$
-K_{\text{Eurofer97}} = 5.4308 + 0.13565T - 0.00023862T^2 + 1.3393 \times 10^{-7} T^3
-$$
-
-!!! warning Thermal conductivity validity bounds
-
-    The sources for the stated thermal conductivity relation above state that the relation is only valid up to 800K [^1] [^2].
-
--------------
 
 
 ### Model Switches
@@ -277,7 +207,7 @@ There are three blanket model options, chosen by the user to match their selecte
         - nuclear heating in the liquid breeder/coolant is extracted by the liquid breeder/coolant.
         - nuclear heating in the blanket structure is extracted by the primary coolant
 
-The default assuption for all blanket models is that the first wall and breeding blanket have the same coolant (flow = FW inlet -> FW outlet -> BB inlet-> BB outlet). 
+The default assumption for all blanket models is that the first wall and breeding blanket have the same coolant (flow = FW inlet -> FW outlet -> BB inlet-> BB outlet). 
 It is possible to choose a different coolant for the FW and breeding blanket, in which case the mechanical pumping powers for the FW and BB are calculated separately. 
 The model has three mechanical pumping power options, chosen by the user to match their selected blanket design using the switch 'i_fw_blkt_shared_coolant' (default=0): 
     0.   Same coolant for FW and BB ('i_fw_coolant_type`=`i_blkt_coolant_type`)
@@ -303,13 +233,13 @@ There are two material options for the liquid breeder/coolant, chosen by the use
     0.  Lead-Lithium 
     1.  Lithium (needs testing)    
 Both options use the mid-temperature of the metal to find the following properties: density, specific heat, thermal conductivity, dynamic viscosity and electrical conductivity. 
-The Hartmann number is also calculated (using the magnetic feild strength in the centre of the inboard or outboard blanket module). 
+The Hartmann number is also calculated (using the magnetic field strength in the centre of the inboard or outboard blanket module). 
 
 |       Variable        | Units | Scanvar. | Usage         | Default | Description                                           |
 | :-------------------: | :---: | -------- | ------------- | ------- | ----------------------------------------------------- |
 |   `blpressure_liq`    |  Pa   | 70       | idualcool=1,2 | 1.7D6   | liquid metal breeder/coolant pressure                 |
-|   `inlet_temp_liq`    |   K   | 68       | idualcool=1,2 | 570     | Inlet temperatute of liquid metal breeder/coolant     |
-|   `outlet_temp_liq`   |   K   | 69       | idualcool=1,2 | 720     | Outlet temperatute of liquid metal breeder/coolant    |
+|   `inlet_temp_liq`    |   K   | 68       | idualcool=1,2 | 570     | Inlet temperature of liquid metal breeder/coolant     |
+|   `outlet_temp_liq`   |   K   | 69       | idualcool=1,2 | 720     | Outlet temperature of liquid metal breeder/coolant    |
 |    `n_liq_recirc`     |  ---  | 71       | idualcool=1   | 10      | Number of liquid metal breeder recirculations per day |
 | `f_nuc_pow_bz_struct` |  ---  | 73       | i_blanket_type=5    | 0.34    | FW nuclear power as fraction of total                 |
 |  `f_nuc_pow_bz_liq`   |  ---  | 74       | i_blanket_type=5    | 0.66    | Fraction of BZ power cooled by primary coolant        |
@@ -324,8 +254,3 @@ There are three model options, chosen by the user to match their selected blanke
 |         Variable         |   Units   | Itvar. | Usage       | Default | Description                                                         |
 | :----------------------: | :-------: | ------ | ----------- | ------- | ------------------------------------------------------------------- |
 | `bz_channel_conduct_liq` | A V-1 m-1 | 72     | ifci = 0, 2 | 8.33D5  | Liquid metal coolant/breeder thin conductor or FCI wall conductance |
-
-
-[^1]: A. A. Tavassoli et al., “Materials design data for reduced activation martensitic steel type EUROFER,” Journal of Nuclear Materials, vol. 329–333, pp. 257–262, Aug. 2004, doi: https://doi.org/10.1016/j.jnucmat.2004.04.020.
-
-[^2]: Tavassoli, F. "Fusion Demo Interim Structural Design Criteria (DISDC)/Appendix A Material Design Limit Data/A3. S18E Eurofer Steel." CEA, EFDA_TASK_TW4-TTMS-005-D01 (2004).

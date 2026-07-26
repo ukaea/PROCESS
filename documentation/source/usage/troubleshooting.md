@@ -41,8 +41,6 @@ The error messages produced by the code attempt to provide diagnostic informatio
 where the problems occurs, and also suggest a possible solution. These messages are out of 
 necessity brief, and so cannot promise to lead to a more successful outcome.
 
-The is the option to turn on extra debugging output; to do this, set `verbose = 1` in the input file.
-
 ### Optimisation problems
 
 On reflection it is perhaps surprising that PROCESS ever does manage to find the global minimum 

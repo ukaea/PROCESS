@@ -4,11 +4,7 @@ import math
 import numpy as np
 
 from process.core.caller import Caller
-from process.data_structure import cost_variables as cv
-from process.data_structure import global_variables as gv
-from process.data_structure import numerics
-from process.data_structure import physics_variables as pv
-from process.data_structure import times_variables as tv
+from process.core.model import DataStructure
 
 logger = logging.getLogger(__name__)
 
@@ -16,15 +12,20 @@ logger = logging.getLogger(__name__)
 class Evaluators:
     """Calls models to evaluate function and gradient functions."""
 
-    def __init__(self, models, _x):
+    def __init__(self, models, data: DataStructure, _x: np.ndarray):
         """Instantiate Caller with model objects.
 
-        :param models: physics and engineering model objects
-        :type models: process.main.Models
-        :param x: optimisation parameters
-        :type x: np.ndarray
+        Parameters
+        ----------
+        models :
+            Physics and engineering model objects
+        data :
+            Data structure object for providing constraint data to the Caller
+        _x :
+            Optimisation parameters
         """
-        self.caller = Caller(models)
+        self.caller = Caller(models, data)
+        self.data = data
 
     def fcnvmc1(self, _n, m, xv, ifail):
         """Function evaluator for VMCON.
@@ -60,25 +61,23 @@ class Evaluators:
         # Evaluate machine parameters at xv
         objf, conf = self.caller.call_models(xv, m)
 
-        # Verbose diagnostics
-        if gv.verbose == 1:
-            summ = 0.0
-            for i in range(m):
-                summ = summ + conf[i] ** 2
+        summ = 0.0
+        for i in range(m):
+            summ += conf[i] ** 2
 
-            sqsumconfsq = math.sqrt(summ)
-            logger.debug("Key evaluator values:")
-            logger.debug(f"{numerics.nviter = }")
-            logger.debug(f"{(1 - (ifail % 7)) - 1 = }")
-            logger.debug(f"{(numerics.nviter % 2) - 1 = }")
-            logger.debug(f"{pv.temp_plasma_electron_vol_avg_kev = }")
-            logger.debug(f"{cv.coe = }")
-            logger.debug(f"{pv.rmajor = }")
-            logger.debug(f"{pv.p_fusion_total_mw = }")
-            logger.debug(f"{pv.b_plasma_toroidal_on_axis = }")
-            logger.debug(f"{tv.t_plant_pulse_burn = }")
-            logger.debug(f"{sqsumconfsq = }")
-            logger.debug(f"{xv = }")
+        sqsumconfsq = math.sqrt(summ)
+        logger.debug("Key evaluator values:")
+        logger.debug(f"{self.data.numerics.nviter = }")
+        logger.debug(f"{(1 - (ifail % 7)) - 1 = }")
+        logger.debug(f"{(self.data.numerics.nviter % 2) - 1 = }")
+        logger.debug(f"{self.data.physics.temp_plasma_electron_vol_avg_kev = }")
+        logger.debug(f"{self.data.costs.coe = }")
+        logger.debug(f"{self.data.physics.rmajor = }")
+        logger.debug(f"{self.data.physics.p_fusion_total_mw = }")
+        logger.debug(f"{self.data.physics.b_plasma_toroidal_on_axis = }")
+        logger.debug(f"{self.data.times.t_plant_pulse_burn = }")
+        logger.debug("%s", sqsumconfsq)
+        logger.debug("%s", xv)
 
         return objf, conf
 
@@ -125,8 +124,8 @@ class Evaluators:
                 xfor[j] = xv[j]
                 xbac[j] = xv[j]
                 if i == j:
-                    xfor[i] = xv[j] * (1.0 + numerics.epsfcn)
-                    xbac[i] = xv[j] * (1.0 - numerics.epsfcn)
+                    xfor[i] = xv[j] * (1.0 + self.data.numerics.epsfcn)
+                    xbac[i] = xv[j] * (1.0 - self.data.numerics.epsfcn)
 
             # Evaluate at (x+dx)
             ffor, cfor = self.caller.call_models(xfor, m)

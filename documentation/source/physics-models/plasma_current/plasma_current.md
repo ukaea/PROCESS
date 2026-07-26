@@ -133,7 +133,7 @@ $$
 I_{\text{p}} = \frac{5a B_{\text{T}}\kappa}{2\pi^2 \bar{q}}(F_1+F_2)\left(\frac{\arcsin{E_1}}{E_1}+\frac{\arcsin{E_2}}{E_2}\right)
 $$
 
-The values of $F_1$, $F_2$, $d_1$ & $d_2$ are first calculated from the [`_plascar_bpol()`](#_plasc_bpol) function.
+The values of $F_1$, $F_2$, $d_1$ & $d_2$ are first calculated from the [`plascar_bpol()`](#_plasc_bpol) function.
 
 The values of $E_1$ & $E_2$ are then calculated such as
 
@@ -523,7 +523,7 @@ $$
 --------------
 
 
-## Plasma Current Poloidal Field | `calculate_poloidal_field()`
+## Plasma Current Poloidal Field | `calculate_surface_averaged_poloidal_field()`
 
 For calculating the poloidal magnetic field created due to the presence of the plasma current, [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) can be used. In this case the plasma edge average poloidal field is simply returned as:
 
@@ -696,7 +696,7 @@ This constraint was initially though to prevent instabilities and act as a guide
 Unpublished internal Oak Ridge document.
 [^5]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
 [^6]: D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
-[^7]: T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+[^7]: T.C.Hender et.al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992
 [^8]: J.W.Connor and R.J.Hastie, Culham Lab Report CLM-M106 (1985). https://scientific-publications.ukaea.uk/wp-content/uploads/CLM-M106-1.pdf
 [^9]: O. Sauter, Geometric formulas for system codes including the effect of negative triangularity, Fusion Engineering and Design, Volume 112, 2016, Pages 633-645, ISSN 0920-3796,
 https://doi.org/10.1016/j.fusengdes.2016.04.033.

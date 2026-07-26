@@ -4,7 +4,7 @@ The poloidal field (PF) coils are used initially to cancel the vertical field pr
 centre of the plasma by the central solenoid during start-up, and then to maintain the plasma 
 position and shape during the flat-top period.
 
-## Positioning
+## Positioning | `PFLocationTypes(IntEnum)`
 
 The positions and sizes of te PF coils are partly input, and partly calculated after consideration 
 of the required currents and allowable current density.

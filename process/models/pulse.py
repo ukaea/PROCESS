@@ -1,26 +1,23 @@
+"""Module containing the Pulse class for pulsed reactor calculations."""
+
 import logging
 
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import (
-    constraint_variables,
-    numerics,
-    pf_power_variables,
-    pfcoil_variables,
-    physics_variables,
-    pulse_variables,
-    times_variables,
-)
+from process.data_structure.pfcoil_variables import PFConductorModel
 
 logger = logging.getLogger(__name__)
 
 
 class Pulse(Model):
+    """Class containing pulsed reactor calculations"""
+
     def __init__(self):
         self.outfile = constants.NOUT
 
     def output(self):
+        """Write the results to the main output file (OUT.DAT)."""
         self.run(output=True)
 
     def run(self, output: bool = False):
@@ -34,15 +31,15 @@ class Pulse(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-        if pulse_variables.i_pulsed_plant == 1:
+        if self.data.pulse.i_pulsed_plant == 1:
             self.tohswg(output=output)
 
             #  Burn time calculation
 
-            times_variables.t_plant_pulse_burn = self.calculate_burn_time(
-                vs_cs_pf_total_burn=pfcoil_variables.vs_cs_pf_total_burn,
-                v_plasma_loop_burn=physics_variables.v_plasma_loop_burn,
-                t_plant_pulse_fusion_ramp=times_variables.t_plant_pulse_fusion_ramp,
+            self.data.times.t_plant_pulse_burn = self.calculate_burn_time(
+                vs_cs_pf_total_burn=self.data.pf_coil.vs_cs_pf_total_burn,
+                v_plasma_loop_burn=self.data.physics.v_plasma_loop_burn,
+                t_plant_pulse_fusion_ramp=self.data.times.t_plant_pulse_fusion_ramp,
             )
 
     def tohswg(self, output: bool):
@@ -58,28 +55,28 @@ class Pulse(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-        if pulse_variables.i_pulsed_plant != 1:
+        if self.data.pulse.i_pulsed_plant != 1:
             return
 
         #  Current/turn in Central Solenoid at beginning of pulse (A/turn)
 
-        ioht1 = pfcoil_variables.c_pf_coil_turn[pfcoil_variables.n_cs_pf_coils - 1, 1]
+        ioht1 = self.data.pf_coil.c_pf_coil_turn[self.data.pf_coil.n_cs_pf_coils - 1, 1]
 
         #  Current/turn in Central Solenoid at start of flat-top (A/turn)
 
-        ioht2 = pfcoil_variables.c_pf_coil_turn[pfcoil_variables.n_cs_pf_coils - 1, 2]
+        ioht2 = self.data.pf_coil.c_pf_coil_turn[self.data.pf_coil.n_cs_pf_coils - 1, 2]
 
         #  Central Solenoid resistance (ohms)
 
-        if pfcoil_variables.i_pf_conductor == 0:
+        if self.data.pf_coil.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
             r = 0.0e0
         else:
             r = (
-                pfcoil_variables.p_cs_resistive_flat_top
+                self.data.pf_coil.p_cs_resistive_flat_top
                 / (
                     1.0e6
-                    * pfcoil_variables.c_pf_cs_coils_peak_ma[
-                        pfcoil_variables.n_cs_pf_coils - 1
+                    * self.data.pf_coil.c_pf_cs_coils_peak_ma[
+                        self.data.pf_coil.n_cs_pf_coils - 1
                     ]
                 )
                 ** 2
@@ -88,54 +85,55 @@ class Pulse(Model):
         #  Central Solenoid bus resistance (ohms) (assumed to include power supply)
         #  Bus parameters taken from routine PFPWR.
 
-        pfbusl = 8.0e0 * physics_variables.rmajor + 140.0e0
+        pfbusl = 8.0e0 * self.data.physics.rmajor + 140.0e0
         albusa = (
             abs(
-                pfcoil_variables.c_pf_coil_turn_peak_input[
-                    pfcoil_variables.n_cs_pf_coils - 1
+                self.data.pf_coil.c_pf_coil_turn_peak_input[
+                    self.data.pf_coil.n_cs_pf_coils - 1
                 ]
             )
             / 100.0e0
         )
 
         # rho = 1.5e0 * 2.62e-4 * pfbusl / albusa
-        #  I have removed the fudge factor of 1.5 but included it in the value of rhopfbus
-        rho = pfcoil_variables.rhopfbus * pfbusl / (albusa / 10000)
+        # I have removed the fudge factor of 1.5 but included it in the value of
+        #  rhopfbus
+        rho = self.data.pf_coil.rhopfbus * pfbusl / (albusa / 10000)
 
         #  Central Solenoid power source emf (volts)
 
-        v = pf_power_variables.vpfskv * 1.0e3
+        v = self.data.pf_power.vpfskv * 1.0e3
 
         #  Mutual inductance between Central Solenoid and plasma (H)
 
-        m = pfcoil_variables.ind_pf_cs_plasma_mutual[
-            pfcoil_variables.n_cs_pf_coils - 1,
-            pfcoil_variables.n_pf_cs_plasma_circuits - 1,
+        m = self.data.pf_coil.ind_pf_cs_plasma_mutual[
+            self.data.pf_coil.n_cs_pf_coils - 1,
+            self.data.pf_coil.n_pf_cs_plasma_circuits - 1,
         ]
 
         #  Self inductance of Central Solenoid (H)
 
-        loh = pfcoil_variables.ind_pf_cs_plasma_mutual[
-            pfcoil_variables.n_cs_pf_coils - 1, pfcoil_variables.n_cs_pf_coils - 1
+        loh = self.data.pf_coil.ind_pf_cs_plasma_mutual[
+            self.data.pf_coil.n_cs_pf_coils - 1, self.data.pf_coil.n_cs_pf_coils - 1
         ]
 
         #  Maximum rate of change of plasma current (A/s)
         #  - now a function of the plasma current itself (previously just 0.5e6)
 
-        ipdot = 0.0455e0 * physics_variables.plasma_current
+        ipdot = 0.0455e0 * self.data.physics.plasma_current
 
         #  Minimum plasma current ramp-up time (s)
-        #  - corrected (bus resistance is not a function of pfcoil_variables.turns)
+        #  - corrected (bus resistance is not a function of self.data.pf_coil.turns)
 
-        constraint_variables.t_current_ramp_up_min = (
+        self.data.constraints.t_current_ramp_up_min = (
             loh
             * (ioht2 - ioht1)
             / (
                 ioht2
                 * (
                     r
-                    * pfcoil_variables.n_pf_coil_turns[
-                        pfcoil_variables.n_cs_pf_coils - 1
+                    * self.data.pf_coil.n_pf_coil_turns[
+                        self.data.pf_coil.n_cs_pf_coils - 1
                     ]
                     + rho
                 )
@@ -146,17 +144,17 @@ class Pulse(Model):
 
         #  Output section
 
-        if output == 1 and numerics.active_constraints[40]:
+        if output == 1 and self.data.numerics.active_constraints[40]:
             po.osubhd(self.outfile, "Central solenoid considerations:")
             po.ovarre(
                 self.outfile,
                 "Minimum plasma current ramp-up time (s)",
                 "(t_current_ramp_up_min)",
-                constraint_variables.t_current_ramp_up_min,
+                self.data.constraints.t_current_ramp_up_min,
             )
 
+    @staticmethod
     def calculate_burn_time(
-        self,
         vs_cs_pf_total_burn: float,
         v_plasma_loop_burn: float,
         t_plant_pulse_fusion_ramp: float,
@@ -182,15 +180,18 @@ class Pulse(Model):
         float
             Calculated burn time (s)
         """
-
         t_plant_pulse_burn = (
             abs(vs_cs_pf_total_burn) / v_plasma_loop_burn
         ) - t_plant_pulse_fusion_ramp
 
         if t_plant_pulse_burn < 0.0e0:
             logger.error(
-                "Negative burn time available; reduce t_plant_pulse_fusion_ramp or raise PF coil V-s capabilit. "
-                f"{t_plant_pulse_burn=} {vs_cs_pf_total_burn=} {v_plasma_loop_burn=} {t_plant_pulse_fusion_ramp=}"
+                "Negative burn time available; reduce t_plant_pulse_fusion_ramp or "
+                "raise PF coil V-s capability. %s %s %s %s",
+                t_plant_pulse_burn,
+                vs_cs_pf_total_burn,
+                v_plasma_loop_burn,
+                t_plant_pulse_fusion_ramp,
             )
 
         return t_plant_pulse_burn

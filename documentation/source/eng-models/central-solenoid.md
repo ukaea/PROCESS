@@ -3,7 +3,7 @@
 The central solenoid (CS) is a PF coil used during start-up and during the burn phase to create and 
 maintain the plasma current by electromagnetic induction. Swinging (changing) the current through 
 the central solenoid causes a change in the flux linked to the plasma region, inducing a current in 
-it. `PROCESS` calculates the amount of flux required to produce the plasma curren, and also the 
+it. `PROCESS` calculates the amount of flux required to produce the plasma current, and also the 
 amount actually available. The code measures the magnetic flux in units of Volt.seconds (= Webers).
 
 Switch `iohcl` controls whether a central solenoid is present. A value of 1 denotes that this coil 
@@ -33,7 +33,7 @@ This method calculates the CS geometry parameters. The CS is assumed to be a per
 2. The half height of the CS is set relative to that of the inside height of the TF and can be scaled by changing the input value of `f_z_cs_tf_internal`:
 
     $$
-    \overbrace{z_{\text{CS,half}}}^{\texttt{z_cs_inside_half}} = \overbrace{z_{\text{TF,inside-half}}}^{\texttt{z_tf_inside_half}} \times \texttt{f_z_cs_tf_internal}
+    \overbrace{z_{\text{CS,half}}}^{\texttt{z_cs_half}} = \overbrace{z_{\text{TF,inside-half}}}^{\texttt{z_tf_inside_half}} \times \texttt{f_z_cs_tf_internal}
     $$
 
 3. The full height of the CS is thus simply given by
@@ -42,6 +42,17 @@ This method calculates the CS geometry parameters. The CS is assumed to be a per
     \overbrace{dz_{\text{CS}}}^{\texttt{dz_cs_full}} = z_{\text{CS,half}} \times 2
     $$
 
+    Along with the upper and lower dimensions:
+
+    $$
+    z_{\text{CS,upper}} = z_{\text{CS,half}}
+    $$
+
+    $$
+    z_{\text{CS,lower}} = -z_{\text{CS,upper}}
+    $$
+
+
 4. The outboard edge of the CS is given by:
 
 
@@ -49,10 +60,73 @@ This method calculates the CS geometry parameters. The CS is assumed to be a per
     r_{\text{CS,outer}} = r_{\text{CS,middle}} + \frac{dr_{\text{CS}}}{2}
     $$
 
-5. The full poloidal cross-sectional area is given by:
+5. The inboard edge of the CS is given by:
 
     $$
-    \overbrace{A_{\text{CS,poloidal}}}^{\texttt{a_cs_poloidal}} = 2 \times dr_{\text{CS}} \times dz_{\text{CS}}
+    r_{\text{CS,inner}} = r_{\text{CS,outer}} - dr_{\text{CS}}
+    $$
+
+6. The full radial width of the CS is given by:
+
+    $$
+    dr_{\text{CS,full}}  = 2 \times r_{\text{CS,outer}}
+    $$
+
+
+7. The full poloidal cross-sectional area is given by:
+
+    $$
+    \overbrace{A_{\text{CS,poloidal}}}^{\texttt{a_cs_poloidal}} = dr_{\text{CS}} \times dz_{\text{CS}}
+    $$
+
+8. The full top-down toroidal cross-sectional area is given by:
+
+    $$
+    \overbrace{A_{\text{CS,toroidal}}}^{\texttt{a_cs_toroidal}} = \pi \left(r_{\text{CS,outer}}^2 - r_{\text{CS,inner}}^2 \right)
+    $$
+
+------------
+
+### EU-DEMO Turn Geometry | `calculate_cs_turn_geometry_eu_demo()`
+
+This superconducting turn structure for the CS assumes a rectangular turn shape with a "stadium"-shaped cable area[^eu_demo_turn].
+
+
+![CS turn layout](../eng-models/images/cs_eu_demo_turn.PNG "CS EU-DEMO like turn")
+
+The turn geometry is calculated as follows:
+
+1. The vertical height of the turn is given by:
+
+    $$
+    dz_{\text{CS,turn}} = \sqrt{\frac{A_{\text{CS,turn}}}{\texttt{f_dr_dz_cs_turn}}}
+    $$
+
+    $\texttt{f_dr_dz_cs_turn}$ is the intended length to height ratio of the turn
+
+2. The radial width or length of the turn is now given by:
+
+    $$
+    dr_{\text{CS,turn}} = \texttt{f_dr_dz_cs_turn} \times dz_{\text{CS,turn}}
+    $$
+
+3. The radius of the corners of the cable space is given by:
+
+    $$
+    r_{\text{CS,cable space corner}} = - \frac{dr_{\text{CS,turn}}-dz_{\text{CS,turn}}}{\pi}
+    + \sqrt{\left(\frac{dr_{\text{CS,turn}}-dz_{\text{CS,turn}}}{\pi}\right)^2+ \frac{dr_{\text{CS,turn}}dz_{\text{CS,turn}}(4-\pi)r_{\text{CS,turn corners}}^2 - (A_{\text{CS,turn}}\times \texttt{f_a_cs_turn_steel})}{\pi}}
+    $$
+
+4. The thickness of the conduit around the cable space is given by:
+
+    $$
+    dz_{\text{CS,turn conduit}} = \frac{dz_{\text{CS,turn}}}{2} - r_{\text{CS,cable space corner}}
+    $$
+
+    In this model the vertical and radial conduit thicknesses are equal so:
+
+    $$
+    dr_{\text{CS,turn conduit}}  = dz_{\text{CS,turn conduit}}
     $$
 
 
@@ -66,21 +140,32 @@ This method calculates the CS geometry parameters. The CS is assumed to be a per
 
 -----------
 
-### Self peak magnetic field | `calculate_cs_self_peak_magnetic_field()`
+### Self peak bore magnetic field | `calculate_cs_bore_magnetic_field()`
 
-The general form for the field at the very centre of the central solenoid bore with uniform current density and rectangular cross-section is given by:
+The self induced peak field at the central bore of a homogenous current density rectangular cross-section solenoid is given by:
 
 $$
-B_0 = J_{\text{CS}}aF(\alpha,\beta)
+B_0 = J_{\text{CS}}r_{\text{CS,inner}}F(\alpha,\beta)
 $$
 
 $$
 F(\alpha,\beta) = \mu_0\beta \ln{\left[\frac{\alpha+\sqrt{\alpha^2+\beta^2}}{1+\sqrt{1+\beta^2}}\right]}
 $$
 
-where $\alpha = \frac{r_{\text{CS,outer}}}{r_{\text{CS,inner}}}$, is the ratio of the outer and inner radii of the solenoid and $\beta = \frac{z_{\text{CS,half}}}{r_{\text{CS,outer}}}$, is the ratio of the solenoid half height to its inboard radius.
+where $\alpha = \frac{r_{\text{CS,outer}}}{r_{\text{CS,inner}}}$, is the ratio of the outer and inner radii of the solenoid and $\beta = \frac{z_{\text{CS,half}}}{r_{\text{CS,inner}}}$, is the ratio of the solenoid half height to its inboard radius.
 
-The peak field at the bore of the central solenoid will not be the same as that felt by the conductors inside the structures. We require to know the peak field on the conductor if we are to design a superconducting central solenoid that has enough margin. Fits to data[^1] for different ranges of $\beta$ have been calculated as follows:
+This is Equation 3.13 from "Case Studies in Superconducting Magnets"[^2].
+
+-------------
+
+### Self peak on coil magnetic field | `calculate_cs_self_peak_magnetic_field()`
+
+The peak field at the bore of the central solenoid will not be the same as that felt by the 
+conductors inside the structures. So we cannot use the bore value directly calculated by 
+[`calculate_cs_bore_magnetic_field()`](#self-peak-bore-magnetic-field--calculate_cs_bore_magnetic_field). 
+We need to know the peak field on the conductor if we are to design a superconducting 
+central solenoid that has enough margin. Fits to data[^1] for different ranges of $\beta$ 
+have been calculated as follows to scale the bore field value by:
 
 - $\beta > 3.0$
 
@@ -89,7 +174,7 @@ The peak field at the bore of the central solenoid will not be the same as that 
     +\left(1.0- \left(\frac{3}{\beta}\right)^2\right) \times  (J_{\text{CS}}dr_{\text{CS}})
     $$
 
-- $\beta > 2.0$
+- $2.0 < \beta \le 3.0$
 
     $$
     B_{\text{conductor,peak}} = B_0 \times \left(1.025-(\beta-2.0)\times 0.018\right) + (\alpha -1.0) \\
@@ -97,7 +182,7 @@ The peak field at the bore of the central solenoid will not be the same as that 
     $$
 
 
-- $\beta > 1.0$
+- $1.0 < \beta \le 2.0$
 
     $$
     B_{\text{conductor,peak}} = B_0 \times \left(1.117-(\beta-1.0)\times 0.092\right) + (\alpha -1.0) \\
@@ -105,7 +190,7 @@ The peak field at the bore of the central solenoid will not be the same as that 
     $$
 
 
-- $\beta > 0.75$
+- $0.75 < \beta \le 1.0$
 
     $$
     B_{\text{conductor,peak}} = B_0 \times \left(1.3-0.732(\beta-0.75)\right) + (\alpha -1.0) \\
@@ -123,10 +208,65 @@ The peak field at the bore of the central solenoid will not be the same as that 
 
 -----------
 
-### Axial stresses | `calculate_cs_self_peak_midplane_axial_stress()`
+### Axial Stress | `calculate_cs_self_axial_stress()`
+
+The vertical (axial) force at location $z$ for a "thin-walled" solenoid ($\alpha = 1$) with a uniform surface current density and its midplane at $z=0$ is given by Equation 3.40 in "Case studies in superconducting magnets" [^2]:
+
+$$
+F_{z}(z)=\frac{\mu_0}{2}\left(\frac{N I}{2 \times dz_{\text{half}}}\right) \times \\
+ \left((dz_{\text{half}}-z) \sqrt{4r_{\text{CS,outer}}^2 + (dz_{\text{half}}-z)^2} \left[K(k_{b-}) - E(k_{b-})\right]\\
+ +(dz_{\text{half}}+z) \sqrt{4r_{\text{CS,outer}}^2 + (dz_{\text{half}}+z)^2} \left[K(k_{b+}) - E(k_{b+})\right]\\
+  - 2dz_{\text{half}} \sqrt{4r_{\text{CS,outer}}^2 + 4dz_{\text{half}}^2} \left[K(k_{2b}) - E(k_{2b})\right]  \right)
+$$
+
+The ellipticic integral moduli, $k_{b-}^2$, $k_{b+}^2$, $k_{2b}^2$
+
+$$
+k_{b-}^2 = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+(dz_{\text{half}}-z)^2}}
+$$
+
+$$
+k_{b+}^2 = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+(dz_{\text{half}}+z)^2}}
+$$
+
+and $k_b$ is given by:
+
+$$
+k_{2b}^2 = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+4dz_{\text{half}}^2}}
+$$
+
+Here $K(k)$ and $E(k)$ are the complete elliptic integrals, respectively of the first and second kinds.
+
+!!! info "Non thin-walled solenoids"
+
+    For solenoids that can be classed as "thick-walled" ($\alpha > 1$), the coil has to be divided radially into several thin-walled solenoids. This is not currently performed though more info can be found in Section 3.5.5 of "Case studies in superconducting magnets" [^2].
+
+The axial compressive force at $z$ in an isolated solenoid increases from $0$ at $z  = dz_{\text{half}}$
+to the maximum at the midplane, $F_{z}(0)$.
+
+The axial stress in the steel is given by:
+
+$$
+\sigma_z = \frac{F_z}{f_z A_z}
+$$
+
+where $F_z$ is the axial force, $f_z$ is the fraction of the horizontal cross-section occupied by 
+steel, and $A_z$ is the area of the horizontal cross-section.
+
+The fraction of the horizontal cross-section occupied by steel is calculated assuming that the 
+conductor is square and has a steel jacket with the same thickness on all four sides, giving:
+
+$$
+f_z = 0.5.
+$$
+
+--------------
 
 
-The vertical (axial) force for a "thin-walled" solenoid ($\alpha = 1$) at the midplane is given by[^2]:
+#### Peak Axial Stress | `calculate_cs_self_peak_midplane_axial_stress()`
+
+
+By inserting $z=0$ into the general axial stress equation above we can get an expression for the midplane force which is the peak value. This is also given as Equation 3.41 in "Case studies in superconducting magnets" [^2]:
 
 $$
 F_{z}(0)=\frac{\mu_0}{2}\left(\frac{N I}{2 \times dz_{\text{half}}}\right) \times \\
@@ -146,54 +286,72 @@ $$
 k_{2b} = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+dz_{\text{half}}^2}}
 $$
 
-Here $K(k)$ and $E(k)$ are the complete elliptic integrals, respectively of the first and second kinds.
-
-
-The axial compressive force at $z$ in an isolated solenoid increases from 0 at $z  = dz_{\text{half}}$
-to the maximum at the midplane, $F_{z}(0)$.
-
-
 
 --------------------------
 
 
-### Hoop stress | `hoop_stress()`
+### Radial stress | `calculate_cs_radial_stress()`
 
 
-
-
-The hoop stress is calculated using equations 4.10 and 4.11 from "Superconducting magnets", Martin N. 
-Wilson (1983).  This is divided by the fraction of the area occupied by steel to obtain the hoop 
-stress in the steel, $\sigma_{hoop}$.
-
-The axial stress can be calculated using "Case studies in superconducting magnets", Y. Iwasa, p. 
-86, 3.5.2, Special Case 4: Midplane force.  This applies exactly only to a thin-walled solenoid. 
-The axial stress in the steel is given by:
+The self induced radial stress is calculated using Equation 4.11 from "Superconducting magnets" [^1].
 
 $$
-\sigma_z = \frac{F_z}{f_z A_z}
+\sigma_{r} = \frac{K(2+v)}{3(\alpha+1)}\times \left(\alpha^2+\alpha+1-\frac{\alpha^2}{\epsilon^2}-\epsilon(\alpha+1)\right) \\
+- \frac{M(3+v)}{8}\left(\alpha^2+1-\frac{\alpha^2}{\epsilon^2}-\epsilon^2\right)
 $$
 
-where $F_z$ is the axial force, $f_z$ is the fraction of the horizontal cross-section occupied by 
-steel, and $A_z$ is the area of the horizontal cross-section.
+Where:
 
-The fraction of the horizontal cross-section occupied by steel is calculated assuming that the 
-conductor is square and has a steel jacket with the same thickness on all four sides, giving:
+- $\epsilon = \frac{r}{r_{\text{CS,inner}}}$
+- $\alpha = \frac{r_{\text{CS,outer}}}{r_{\text{CS,inner}}}$
 
-$$
-f_z = \frac{f_V}{2}.
-$$
-
-The radial stress is neglected. The hoop and axial stresses are combined to give the maximum shear 
-stress, as required by the Tresca stress criterion:
+The terms $K$ and $M$ are given by:
 
 $$
-\sigma_{max shear} = max(|\sigma_{hoop} - \sigma_{z}| , |\sigma_z|, |\sigma_{hoop}|)
+K = \frac{J r_{\text{CS,inner}}\left(\alpha B_{\text{CS,inner}} - B_{\text{CS,outer}}\right)}{(\alpha-1)}
 $$
 
-However, the axial stress is only included if the switch `i_cs_stress` = 1.  The axial stress is 
-set to zero if `i_cs_stress` = 0.  This option has no physical justification but can be used if 
-there are reasons to be believe that the calculation above gives unrealistically large stresses.
+$$
+M = \frac{J r_{\text{CS,inner}}\left(B_{\text{CS,inner}} - B_{\text{CS,outer}}\right)}{(\alpha-1)}
+$$
+
+-------------
+
+
+### Hoop stress | `calculate_cs_hoop_stress()`
+
+
+
+
+The hoop stress is calculated using Equation 4.10 from "Superconducting magnets" [^1]. This is divided by the fraction of the area occupied by steel to obtain the hoop 
+stress in the steel, $\sigma_{\theta}$.
+
+$$
+\sigma_{\theta} = \frac{K(2+v)}{3(\alpha+1)}\times \left(\alpha^2+\alpha+1+\frac{\alpha^2}{\epsilon^2}-\epsilon \frac{(1+2v)(\alpha+1)}{(2+v)}\right) \\
+- \frac{M(3+v)}{8}\left(\alpha^2+1+\frac{\alpha^2}{\epsilon^2}-\frac{(1+3v)}{(3+v)}\epsilon^2\right)
+$$
+
+Where:
+
+- $\epsilon = \frac{r}{r_{\text{CS,inner}}}$
+- $\alpha = \frac{r_{\text{CS,outer}}}{r_{\text{CS,inner}}}$
+
+The terms $K$ and $M$ are given by:
+
+$$
+K = \frac{J r_{\text{CS,inner}}\left(\alpha B_{\text{CS,inner}} - B_{\text{CS,outer}}\right)}{(\alpha-1)}
+$$
+
+$$
+M = \frac{J r_{\text{CS,inner}}\left(B_{\text{CS,inner}} - B_{\text{CS,outer}}\right)}{(\alpha-1)}
+$$
+
+!!! warning "Assumption of outer field, $B_{\text{CS,outer}}$" 
+
+    In this case we currently assume that $B_{\text{CS,outer}} = 0$. This is the same as that for an infinite solenoid. Approximation of the outboard field is currently not performed.
+
+--------------------------
+
 
 ## Fatigue
 
@@ -275,7 +433,7 @@ solenoid usually consists of several coils, which can have opposite currents.  T
 forces that tend to separate the coils.  To prevent this, ITER has "tie-plates" which hold the coil 
 segments together.  PROCESS has a corresponding structure, known as the pre-compression structure, 
 made up of two cylinders, one on the inside and one on the outside, of the same thickness. The 
-radii of the two cylinders are `dr_bore` and `dr_bore` + `dr_cs`.  The thickness is derived using the 
+radii of the two cylinders are `dr_cs_bore` and `dr_cs_bore` + `dr_cs`.  The thickness is derived using the 
 separation force and the combined cross-sectional area:
 
 $$
@@ -320,4 +478,5 @@ constraints (26 and 27) are activated.
 
 [^1]: M. N. Wilson, Superconducting Magnets. Oxford University Press, USA, 1983, ISBN 13: 9780198548102
 [^2]: Case Studies in Superconducting Magnets. Boston, MA: Springer US, 2009. doi: https://doi.org/10.1007/b112047.
+[^eu_demo_turn]: R. Wesche et al., “Central solenoid winding pack design for DEMO,” Fusion Engineering and Design, vol. 124, pp. 82-85, Apr. 2017, doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
 ‌

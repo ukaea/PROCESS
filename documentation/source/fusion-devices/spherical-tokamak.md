@@ -26,7 +26,7 @@
 
 4. A simple PF coil current scaling algorithm is available for use with the ST option. <br></br>
 
-5. The plasma shaping terms (elongation and triangularity) can be calculated directly given the spect ratio, using `isahpe` = 1. This setting also scales the lower limit for the edge safety factor, for use with constraint equation no. 45:
+5. The plasma shaping terms (elongation and triangularity) can be calculated directly given the aspect ratio, using `i_plasma_geometry` = 1. This setting also scales the lower limit for the edge safety factor, for use with constraint equation no. 45:
 
     $$
     q_{lim} = 3 (1 + 2.6 \epsilon^{2.8})

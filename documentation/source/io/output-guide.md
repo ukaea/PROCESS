@@ -12,9 +12,6 @@ most of the same data as `OUT.DAT` but in a different format and has been design
 "machine-readable" by some of the [utility programs](utilities.md) for 
 post-processing and graphical output.
 
-An additional diagnostic output text file `VFILE.DAT` is generated if the `verbose` flag is set 
-to 1 in the input file.   
-
 (If there is already a file with any of the above filenames it will be overwritten.)
 
 Utilities generate additional output files.

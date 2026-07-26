@@ -21,16 +21,21 @@
 #
 # ## Scan details
 #
-# The input file is a scan-enabled version of the large tokamak `IN.DAT`, as found in the `tests` directory. The scan-relevant values are:
+# The input file is a scan-enabled version of the large tokamak `IN.DAT`,
+# as found in the `tests` directory. The scan-relevant values are:
 # ```
-# nsweep = 17 * b_tf_inboard_max, maximum peak toroidal field (T) (constraint equation 25)
+# nsweep = 17 * b_tf_inboard_max, maximum peak toroidal field (T)
 # isweep = 6
 # sweep = 10.5, 10.4, 10.3, 10.2, 10.1, 10.0
 # ```
 #
-# - `nsweep`: integer denoting the variable to scan (see `scan_module` for options). Here `17` corresponds to `b_tf_inboard_max` being scanned
+# - `nsweep`:
+#    integer denoting the variable to scan (see `scan_module` for options).
+#    Here `17` corresponds to `b_tf_inboard_max` being scanned
 # - `isweep`: the number of scan points to run
-# - `sweep`: array of values for the scanned variable to take; one for each run. Should be of length `isweep`
+# - `sweep`:
+#    array of values for the scanned variable to take; one for each run.
+#    Should be of length `isweep`
 
 # %% slideshow={"slide_type": "subslide"}
 from process.core.repository import get_process_root
@@ -48,19 +53,20 @@ single_run.run()
 
 # %% slideshow={"slide_type": "subslide"}
 # %matplotlib inline
-from process.core.io import plot_scans
+from process.core.io.plot.scans import plot_scan
 
 # Define working directory relative to project dir and input file name
 mfile_name = data_dir / "scan_example_file_MFILE.DAT"
 output_dir = data_dir
 
-plot_scans.main(
-    args=[
-        "-f",
-        str(mfile_name),
-        "-yv",
-        "b_plasma_toroidal_on_axis rmajor p_plant_electric_net_mw p_fusion_total_mw capcost",
-        "--outputdir",
-        str(output_dir),
-    ]
+plot_scan(
+    mfile_name,
+    outputdir=output_dir,
+    output_names=[
+        "b_plasma_toroidal_on_axis",
+        "rmajor",
+        "p_plant_electric_net_mw",
+        "p_fusion_total_mw",
+        "capcost",
+    ],
 )

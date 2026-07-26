@@ -54,7 +54,7 @@ callback = CustomJS(
     source.data['y1'] = y1;
     source.data['y2'] = y2;
     source.change.emit();
-""",
+""",  # noqa: E501
 )
 
 q95.js_on_change("value", callback)

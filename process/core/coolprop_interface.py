@@ -9,47 +9,47 @@ class FluidProperties:
 
     @property
     def temperature(self):
-        """fluid temperature [K]"""
+        """Fluid temperature [K]"""
         return _temperature(self._coolprop_inputs)
 
     @property
     def pressure(self):
-        """fluid pressure [Pa]"""
+        """Fluid pressure [Pa]"""
         return _pressure(self._coolprop_inputs)
 
     @property
     def density(self):
-        """fluid density [kg/m3]"""
+        """Fluid density [kg/m3]"""
         return _density(self._coolprop_inputs)
 
     @property
     def enthalpy(self):
-        """fluid specific enthalpy [J/kg]"""
+        """Fluid specific enthalpy [J/kg]"""
         return _enthalpy(self._coolprop_inputs)
 
     @property
     def entropy(self):
-        """fluid entropy [J/kg/K]"""
+        """Fluid entropy [J/kg/K]"""
         return _entropy(self._coolprop_inputs)
 
     @property
     def specific_heat_const_p(self):
-        """fluid specific heat capacity at constant pressure [J/kg/K]"""
+        """Fluid specific heat capacity at constant pressure [J/kg/K]"""
         return _specific_heat_const_p(self._coolprop_inputs)
 
     @property
     def specific_heat_const_v(self):
-        """fluid specific heat capacity at constant volume [J/kg/K]"""
+        """Fluid specific heat capacity at constant volume [J/kg/K]"""
         return _specific_heat_const_v(self._coolprop_inputs)
 
     @property
     def viscosity(self):
-        """fluid viscosity [Pa.s]"""
+        """Fluid viscosity [Pa.s]"""
         return _viscosity(self._coolprop_inputs)
 
     @property
     def thermal_conductivity(self):
-        """fluid thermal conductivity [W/m/K]"""
+        """Fluid thermal conductivity [W/m/K]"""
         return _thermal_conductivity(self._coolprop_inputs)
 
     @classmethod
@@ -69,13 +69,13 @@ class FluidProperties:
         fluid_name :
             the name of the fluid to calculate properties for, e.g. 'Helium' or 'Water'.
         temperature :
-            the current temperature [K] of the fluid to calculate the properties with respect to.
+            the current temperature [K] of the fluid to calculate the properties.
         pressure :
-            the current pressure [Pa] of the fluid to calculate the properties with respect to.
+            the current pressure [Pa] of the fluid to calculate the properties.
         entropy :
-            the current entropy [J/kg/K] of the fluid to calculate the properties with respect to.
+            the current entropy [J/kg/K] of the fluid to calculate the properties.
         vapor_quality :
-            the molar vapor quality [mol/mol] of the fluid to calculate the properties with respect to.
+            the molar vapor quality [mol/mol] of the fluid to calculate the properties.
             `[0, 1]`, where `0` is a saturated liquid and `1` is a saturated vapor.
         """
         coolprop_inputs = []

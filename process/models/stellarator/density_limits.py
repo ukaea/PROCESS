@@ -1,0 +1,283 @@
+import copy
+import logging
+
+import numpy as np
+
+from process.core import process_output as po
+from process.core.exceptions import ProcessValueError
+
+logger = logging.getLogger(__name__)
+
+
+def st_density_limits(stellarator, f_output, data):
+    """Routine to reiterate the physics loop
+
+    This routine reiterates some physics modules.
+
+    Parameters
+    ----------
+    stellarator :
+
+    f_output :
+
+    data: DataStructure
+        data structure object
+
+    """
+    #  Set the required value for icc=5
+    data.physics.nd_plasma_electrons_max = st_sudo_density_limit(
+        data.physics.b_plasma_toroidal_on_axis,
+        data.physics.p_plasma_loss_mw,
+        data.physics.rmajor,
+        data.physics.rminor,
+        data,
+    )
+
+    # Calculates the ECRH parameters
+
+    ne0_max_ECRH, bt_ecrh = st_d_limit_ecrh(
+        data.stellarator.max_gyrotron_frequency,
+        data.physics.b_plasma_toroidal_on_axis,
+        data.physics.i_plasma_pedestal,
+    )
+
+    ne0_max_ECRH = min(data.physics.nd_plasma_electron_on_axis, ne0_max_ECRH)
+    bt_ecrh = min(data.physics.b_plasma_toroidal_on_axis, bt_ecrh)
+
+    if f_output:
+        output(stellarator, bt_ecrh, ne0_max_ECRH, data)
+
+
+def st_sudo_density_limit(b_plasma_toroidal_on_axis, powht, rmajor, rminor, data):
+    """Routine to calculate the Sudo density limit in a stellarator
+
+    This routine calculates the density limit for a stellarator.
+    S.Sudo, Y.Takeiri, H.Zushi et al., Scalings of Energy Confinement
+    and Density Limit in Stellarator/Heliotron Devices, Nuclear Fusion
+    vol.30, 11 (1990).
+
+    Parameters
+    ----------
+    b_plasma_toroidal_on_axis :
+        Toroidal field on axis (T)
+    powht :
+        Absorbed heating power (MW)
+    rmajor :
+        Plama major radius (m)
+    rminor :
+        Plama minor radius (m)
+    data: DataStructure
+        data structure object
+
+    Returns
+    -------
+    dlimit :
+        Maximum volume-averaged plasma density (/m3)
+
+    """
+    arg = powht * b_plasma_toroidal_on_axis / (rmajor * rminor * rminor)
+
+    if arg <= 0.0e0:
+        raise ProcessValueError(
+            "Negative square root imminent",
+            arg=arg,
+            powht=powht,
+            bt=b_plasma_toroidal_on_axis,
+            rmajor=rmajor,
+            rminor=rminor,
+        )
+
+    #  Maximum line-averaged electron density
+
+    dnlamx = 0.25e20 * np.sqrt(arg)
+
+    #  Scale the result so that it applies to the volume-averaged
+    #  electron density
+
+    nd_plasma_electron_max_array = (
+        dnlamx
+        * data.physics.nd_plasma_electrons_vol_avg
+        / data.physics.nd_plasma_electron_line
+    )
+
+    data.physics.nd_plasma_electrons_max = nd_plasma_electron_max_array
+
+    return nd_plasma_electron_max_array
+
+
+def st_d_limit_ecrh(gyro_frequency_max, bt_input, i_plasma_pedestal):
+    """Routine to calculate the density limit due to an ECRH heating scheme on axis
+    depending on an assumed maximal available gyrotron frequency.
+
+    This routine calculates the density limit due to an ECRH heating scheme on axis
+
+    Parameters
+    ----------
+    gyro_frequency_max :
+        Maximal available Gyrotron frequency (1/s) NOT (rad/s)
+    bt_input :
+        Maximal magnetic field on axis (T)
+    i_plasma_pedestal: int
+        switch for pedestal profiles
+
+    Returns
+    -------
+    dlimit_ecrh:
+        Maximum peak plasma density by ECRH constraints (/m3)
+    bt_max:
+        Maximum allowable b field for ecrh heating (T)
+
+    """
+    gyro_frequency = min(1.76e11 * bt_input, gyro_frequency_max * 2.0e0 * np.pi)
+
+    # Restrict b field to the maximal available gyrotron frequency
+    bt_max = (gyro_frequency_max * 2.0e0 * np.pi) / 1.76e11
+
+    #                      me*e0/e^2       * w^2
+    ne0_max = max(0.0e0, 3.142077e-4 * gyro_frequency**2)
+
+    # Check if parabolic profiles are used:
+    if i_plasma_pedestal == 0:
+        # Parabolic profiles used, use analytical formula:
+        dlimit_ecrh = ne0_max
+    else:
+        logger.error("It was used i_plasma_pedestal = 1 in a stellarator routine.")
+
+    return dlimit_ecrh, bt_max
+
+
+def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available):
+    """Calculate if the plasma is ignitable with the current values for the B field.
+
+    Assumes current ECRH achievable peak temperature
+    (which is inaccurate as the cordey pass should be calculated)
+
+    This routine calculates the density limit due to an ECRH heating scheme on axis
+    Assumes current peak temperature
+    (which is inaccurate as the cordey pass should be calculated)
+    Maybe use this: https://doi.org/10.1088/0029-5515/49/8/085026
+
+    Parameters
+    ----------
+    stellarator :
+        An object containing stellarator configuration and output handle
+    gyro_frequency_max :
+        Maximal available Gyrotron frequency (1/s) NOT (rad/s)
+
+    te0_available :
+        Reachable peak electron temperature, reached by ECRH (KEV)
+
+    Returns
+    -------
+    powerht_out:
+        Heating Power at ignition point (MW)
+    pscalingmw_out:
+        Heating Power loss at ignition point (MW)
+
+    """
+    # Create a copy of the data structure so we can run models without side effects!
+    proxy_stellarator = copy.deepcopy(stellarator)
+
+    # Volume averaged data.physics.te from te0_achievable
+    proxy_stellarator.data.physics.temp_plasma_electron_vol_avg_kev = te0_available / (
+        1.0e0 + proxy_stellarator.data.physics.alphat
+    )
+    ne0_max, bt_ecrh_max = st_d_limit_ecrh(
+        gyro_frequency_max,
+        proxy_stellarator.data.physics.b_plasma_toroidal_on_axis,
+        proxy_stellarator.data.physics.i_plasma_pedestal,
+    )
+    # Now go to point where ECRH is still available
+    # In density..
+    proxy_stellarator.data.physics.nd_plasma_electrons_vol_avg = min(
+        proxy_stellarator.data.physics.nd_plasma_electrons_vol_avg,
+        ne0_max / (1.0e0 + proxy_stellarator.data.physics.alphan),
+    )
+
+    # And B-field..
+    proxy_stellarator.data.physics.b_plasma_toroidal_on_axis = min(
+        bt_ecrh_max, proxy_stellarator.data.physics.b_plasma_toroidal_on_axis
+    )
+
+    # The second call seems to be necessary for all values to "converge"
+    # (and is sufficient)
+    proxy_stellarator.st_phys(False)
+    proxy_stellarator.st_phys(False)
+
+    powerht_out = max(
+        proxy_stellarator.data.physics.p_plasma_loss_mw, 0.00001e0
+    )  # the radiation module sometimes returns negative heating power
+
+    return powerht_out, proxy_stellarator.data.physics.pscalingmw
+
+
+def output(stellarator, bt_ecrh, ne0_max_ECRH, data):
+    po.oheadr(stellarator.outfile, "ECRH Ignition at lower values. Information:")
+
+    po.ovarre(
+        stellarator.outfile,
+        "Maximal available gyrotron freq (input)",
+        "(max_gyro_frequency)",
+        data.stellarator.max_gyrotron_frequency,
+    )
+
+    po.ovarre(
+        stellarator.outfile,
+        "Operating point: bfield",
+        "(b_plasma_toroidal_on_axis)",
+        data.physics.b_plasma_toroidal_on_axis,
+    )
+
+    po.ovarre(
+        stellarator.outfile,
+        "Operating point: Peak density",
+        "(nd_plasma_electron_on_axis)",
+        data.physics.nd_plasma_electron_on_axis,
+    )
+    po.ovarre(
+        stellarator.outfile,
+        "Operating point: Peak temperature",
+        "(temp_plasma_electron_on_axis_kev)",
+        data.physics.temp_plasma_electron_on_axis_kev,
+    )
+
+    po.ovarre(stellarator.outfile, "Ignition point: bfield (T)", "(bt_ecrh)", bt_ecrh)
+    po.ovarre(
+        stellarator.outfile,
+        "Ignition point: density (/m3)",
+        "(ne0_max_ECRH)",
+        ne0_max_ECRH,
+    )
+    po.ovarre(
+        stellarator.outfile,
+        "Maximum reachable ECRH temperature (pseudo) (KEV)",
+        "(te0_ecrh_achievable)",
+        data.stellarator.te0_ecrh_achievable,
+    )
+
+    powerht_local, pscalingmw_local = power_at_ignition_point(
+        stellarator,
+        data.stellarator.max_gyrotron_frequency,
+        data.stellarator.te0_ecrh_achievable,
+    )
+    po.ovarre(
+        stellarator.outfile,
+        "Ignition point: Heating Power (MW)",
+        "(powerht_ecrh)",
+        powerht_local,
+    )
+    po.ovarre(
+        stellarator.outfile,
+        "Ignition point: Loss Power (MW)",
+        "(pscalingmw_ecrh)",
+        pscalingmw_local,
+    )
+
+    if powerht_local >= pscalingmw_local:
+        po.ovarre(
+            stellarator.outfile, "Operation point ECRH ignitable?", "(ecrh_bool)", 1
+        )
+    else:
+        po.ovarre(
+            stellarator.outfile, "Operation point ECRH ignitable?", "(ecrh_bool)", 0
+        )

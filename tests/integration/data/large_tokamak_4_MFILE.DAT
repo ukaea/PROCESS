@@ -496,7 +496,7 @@
  Radiation_power_subtracted_from_plasma_power_balance_(MW)_______________ ______________________________      9.1650E+01 OP 
  Alpha_particle_confinement_time_(s)_____________________________________ (t_alpha_confinement)________________________      2.2270E+01    
  Alpha_particle/energy_confinement_time_ratio____________________________ (f_alpha_energy_confinement)_________________      6.9512E+00    
- Lower_limit_on_taup/taueff______________________________________________ (f_alpha_energy_confinement_min)____________________      5.0000E+00    
+ Lower_limit_on_taup/taueff______________________________________________ (f_t_alpha_energy_confinement_min)____________________      5.0000E+00    
  Total_energy_confinement_time_including_radiation_loss_(s)______________ (t_energy_confinement_beta)______      2.8018E+00    
  Normalized_plasma_pressure_beta_as_defined_by_McDonald_et_al____________ (beta_mcdonald)_______________      3.4553E-02 OP 
  Normalized_ion_Larmor_radius____________________________________________ (rho_star)____________________      1.9603E-03 OP 
@@ -791,7 +791,7 @@
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.7411E+00 OP 
  CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      5.1868E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
- Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
+ Allowable_stress_in_CS_steel_(Pa)_______________________________________ (stress_cs_steel_max)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.7569E+08 OP 
  Axial_stress_in_CS_steel_(Pa)___________________________________________ (sig_axial)___________________     -7.6205E+08 OP 
  Maximum_shear_stress_in_CS_steel_for_the_Tresca_criterion_(Pa)__________ (s_tresca_oh)_________________      6.7569E+08 OP 
@@ -1231,7 +1231,7 @@ icc = 11
 *---------------------*
 icc = 5
 ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
-fdene = 1.2
+f_nd_plasma_electron_limit_max = 1.2
 nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
@@ -1274,7 +1274,7 @@ p_hcd_injected_max = 200.0
 *--------------------------------*
 icc = 16
 ixc = 25 * fp_plant_electric_net_required_mw
-* Minimum allowable value for net eletric power [MW]
+* Minimum allowable value for net electric power [MW]
 p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *
@@ -1311,9 +1311,9 @@ f_j_cs_start_pulse_end_flat_top = 0.9
 * I_op/I_Crit TF coil limit *
 *---------------------------*
 icc = 33
-ixc = 50 * fiooic
+ixc = 50 * f_j_tf_wp_critical_max
 boundu(50) = 1.0
-fiooic = 0.65
+f_j_tf_wp_critical_max = 0.65
 
 * Dump voltage upper limit *
 *--------------------------*
@@ -1347,7 +1347,7 @@ temp_cs_superconductor_margin_min = 1.5
 *-------------------------------------------------------------------------------*
 icc = 62 
 ixc = 110 * falpha_energy_confinement
-f_alpha_energy_confinement_min = 5.0
+f_t_alpha_energy_confinement_min = 5.0
 
 * dump time constraint for VV stresses *
 *--------------------------------------*
@@ -1361,7 +1361,7 @@ icc = 72
 ixc = 123 * foh_stress
 foh_stress = 1.0
 * allowable hoop stress in Central Solenoid structural material [Pa]
-alstroh = 7.5D8
+stress_cs_steel_max = 7.5D8
 
 * nd_plasma_pedestal_electron<nd_plasma_electron_on_axis *
 *------------------*
@@ -1374,7 +1374,7 @@ ixc = 154 *fne0
 
 icc = 68
 ixc = 117 *fpsepbqar
-psepbqarmax = 10.0
+p_div_bt_q_aspect_rmajor_max_mw = 10.0
 
 * TF coil stress limits *
 *-----------------------*

@@ -157,7 +157,7 @@ callback = CustomJS(
         ys2_mirror[i] = ys2[i];
     }
     source.change.emit();
-""",
+""",  # noqa: E501
 )
 
 r0.js_on_change("value", callback)

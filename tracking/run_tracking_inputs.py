@@ -3,7 +3,7 @@
 
 import argparse
 import shutil
-import subprocess
+import subprocess  # noqa: S404
 from pathlib import Path
 
 from tracking_data import ProcessTracker
@@ -19,7 +19,7 @@ def run_and_move_tracked_files(arguments):
     tracking_dir = Path(__file__).parent
     for file_path in input_files:
         try:
-            subprocess.run(
+            subprocess.run(  # noqa: S602
                 f"process -i {file_path} {arguments.options}", shell=True, check=True
             )
         except subprocess.CalledProcessError:
@@ -75,7 +75,8 @@ if __name__ == "__main__":
         type=Path,
         default=None,
         help="A JSON file containing a list of variables to track."
-        "See the description of DEFAULT_TRACKING_VARIABLES for details on formatting the strings in the list.",
+        "See the description of DEFAULT_TRACKING_VARIABLES "
+        "for details on formatting the strings in the list.",
     )
     subparser_trk.add_argument("--strict", action="store_true", default=False)
 
