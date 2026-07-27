@@ -203,7 +203,10 @@ class Availability(Model):
         # if i_plant_availability = 0 use input value for f_t_plant_available
 
         # Taylor and Ward 1999 model (i_plant_availability=1)
-        if self.data.costs.i_plant_availability == 1:
+        if (
+            AvailabilityModel(self.data.costs.i_plant_availability)
+            == AvailabilityModel.WARD_TAYLOR
+        ):
             # Which component has the shorter life?
             if self.data.costs.life_div_fpy < self.data.fwbs.life_blkt_fpy:
                 ld = self.data.costs.life_div_fpy
@@ -330,7 +333,10 @@ class Availability(Model):
                 self.data.costs.life_plant,
             )
 
-            if self.data.costs.i_plant_availability == 1:
+            if (
+                AvailabilityModel(self.data.costs.i_plant_availability)
+                == AvailabilityModel.WARD_TAYLOR
+            ):
                 if self.data.costs.life_div_fpy < self.data.fwbs.life_blkt_fpy:
                     po.ovarre(
                         self.outfile,
@@ -367,7 +373,10 @@ class Availability(Model):
                     "OP ",
                 )
 
-            if self.data.costs.i_plant_availability == 0:
+            if (
+                AvailabilityModel(self.data.costs.i_plant_availability)
+                == AvailabilityModel.INPUT
+            ):
                 po.ovarre(
                     self.outfile,
                     "Total plant availability fraction",

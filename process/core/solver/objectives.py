@@ -3,6 +3,7 @@ import numpy as np
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 from process.data_structure.numerics import FiguresOfMerit
+from process.models.availability import AvailabilityModel
 
 
 def objective_function(minmax: int, data: DataStructure) -> float:
@@ -70,7 +71,10 @@ def objective_function(minmax: int, data: DataStructure) -> float:
     elif figure_of_merit == FiguresOfMerit.PULSE_LENGTH:
         objective_metric = data.times.t_plant_pulse_burn / 2.0e4
     elif figure_of_merit == FiguresOfMerit.PLANT_AVAILABILITY_FACTOR:
-        if data.costs.i_plant_availability != 1:
+        if (
+            AvailabilityModel(data.costs.i_plant_availability)
+            != AvailabilityModel.WARD_TAYLOR
+        ):
             raise ProcessValueError("minmax=15 requires i_plant_availability=1")
         objective_metric = data.costs.f_t_plant_available
     elif figure_of_merit == FiguresOfMerit.MIN_R0_MAX_TAU_BURN:
