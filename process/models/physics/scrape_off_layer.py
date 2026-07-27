@@ -40,11 +40,24 @@ class ScrapeOffLayer(Model):
             )
         )
 
+        self.data.physics.a_plasma_outboard_sol_eich13_parallel = self.calculate_upstream_sol_outboard_parallel_area(
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
+            len_plasma_sol_power_decay=self.data.physics.len_plasma_sol_eich13_power_decay,
+            b_plasma_outboard_total=self.data.physics.b_plasma_outboard_total,
+            b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
+        )
+
+        self.data.physics.pflux_plasma_outboard_sol_eich13_parallel_mw = (
+            self.data.physics.p_plasma_separatrix_mw
+            / self.data.physics.a_plasma_outboard_sol_eich13_parallel
+        )
+
     def output(self) -> None:
         """Output plasma scrape off layer physics information."""
         po.oheadr(self.outfile, "Plasma Scrape Off Layer")
 
-        po.osubhd(self.outfile, "Power Decay Lengths (λ_q)")
+        po.osubhd(self.outfile, "Power Decay Lengths (λ_q):")
 
         po.ovarre(
             self.outfile,
@@ -63,6 +76,21 @@ class ScrapeOffLayer(Model):
             "MAST 2014 SOL power decay length 2 (λ_q) [m]",
             "(len_plasma_sol_mast14_power_decay_2)",
             self.data.physics.len_plasma_sol_mast14_power_decay_2,
+        )
+
+        po.osubhd(self.outfile, "Upstream Outboard SOL Parallel Area and Power Flux")
+        po.ovarre(
+            self.outfile,
+            "Plasma outboard midplane Eich 2013 SOL parrallel area (Aₗₗ,ᵤ) [m²]",
+            "(a_plasma_outboard_sol_eich13_parallel)",
+            self.data.physics.a_plasma_outboard_sol_eich13_parallel,
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma outboard midplane Eich 2013 SOL parrallel power flux "
+            "(qₗₗ,ᵤ) [MW/m²]",
+            "(pflux_plasma_outboard_sol_eich13_parallel_mw)",
+            self.data.physics.pflux_plasma_outboard_sol_eich13_parallel_mw,
         )
 
     @staticmethod
@@ -183,7 +211,7 @@ class ScrapeOffLayer(Model):
         rmajor: float,
         rminor: float,
         len_plasma_sol_power_decay: float,
-        b_plasma_edge_total: float,
+        b_plasma_outboard_total: float,
         b_plasma_surface_poloidal_average: float,
     ) -> float:
         """Calculate the outboard SOL upstream parallel area (Aₗₗ,ᵤ) [m²].
@@ -196,8 +224,8 @@ class ScrapeOffLayer(Model):
             Minor radius of the plasma (a) [m]
         len_plasma_sol_power_decay : float
             Power decay length (λ_q) [m]
-        b_plasma_edge_total : float
-            Total magnetic field at the plasma edge (Bₜₒₜ(a)) [T]
+        b_plasma_outboard_total : float
+            Total magnetic field at the plasma outboard (Bₜₒₜ(R₀+a)) [T]
         b_plasma_surface_poloidal_average : float
             Poloidal magnetic field at the plasma surface (⟨Bₚₒₗ(a)⟩)  [T]
 
@@ -211,5 +239,5 @@ class ScrapeOffLayer(Model):
         return (
             (2 * np.pi * (rmajor + rminor))
             * len_plasma_sol_power_decay
-            * (b_plasma_edge_total / b_plasma_surface_poloidal_average)
+            * (b_plasma_outboard_total / b_plasma_surface_poloidal_average)
         )
