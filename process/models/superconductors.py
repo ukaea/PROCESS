@@ -76,49 +76,72 @@ class SuperconductorModel(IntEnum):
     ITER_NB3SN = (
         1,
         SuperconductorMaterial.NB3SN,
+        32.97e0,  # [T]
+        16.06e0,  # [K]
         SuperconductorShape.CABLE,
         "ITER Nb₃Sn critical surface model",
     )
-    BI2212 = (2, SuperconductorMaterial.BI2212, SuperconductorShape.CABLE, "Bi-2212")
+    BI2212 = (
+        2,
+        SuperconductorMaterial.BI2212,
+        None,
+        None,
+        SuperconductorShape.CABLE,
+        "Bi-2212",
+    )
     OLD_LUBELL_NBTI = (
         3,
         SuperconductorMaterial.NBTI,
+        15.0e0,  # [T]
+        9.3e0,  # [K]
         SuperconductorShape.CABLE,
         "Old Lubell NbTi",
     )
     USER_DEFINED_NB3SN = (
         4,
         SuperconductorMaterial.NB3SN,
+        None,
+        None,
         SuperconductorShape.CABLE,
         "User-defined ITER Nb₃Sn",
     )
     WST_NB3SN = (
         5,
         SuperconductorMaterial.NB3SN,
+        32.97e0,  # [T]
+        16.06e0,  # [K]
         SuperconductorShape.CABLE,
         "Western Superconducting Nb₃Sn",
     )
     CROCO_REBCO = (
         6,
         SuperconductorMaterial.REBCO,
+        None,
+        None,
         SuperconductorShape.TAPE,
         "CROCO REBCO",
     )
     DURHAM_NBTI = (
         7,
         SuperconductorMaterial.NBTI,
+        None,
+        None,
         SuperconductorShape.CABLE,
         "Durham Ginzburg-Landau NbTi",
     )
     DURHAM_REBCO = (
         8,
         SuperconductorMaterial.REBCO,
+        430.0e0,  # [T]
+        185.0e0,  # [K]
         SuperconductorShape.TAPE,
         "Durham Ginzburg-Landau REBCO",
     )
     HAZELTON_ZHAI_REBCO = (
         9,
         SuperconductorMaterial.REBCO,
+        138.0e0,  # [T]
+        92.0e0,  # [K]
         SuperconductorShape.TAPE,
         "Hazelton-Zhai REBCO",
     )
@@ -127,6 +150,8 @@ class SuperconductorModel(IntEnum):
         cls,
         value: int,
         material: SuperconductorMaterial,
+        b_crit_zero_temp_strain: float,
+        temp_crit_zero_field_strain: float,
         shape: SuperconductorShape,
         full_name: str,
     ):
@@ -134,6 +159,8 @@ class SuperconductorModel(IntEnum):
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._material_ = material
+        obj._b_crit_zero_temp_strain = b_crit_zero_temp_strain
+        obj._temp_crit_zero_field_strain = temp_crit_zero_field_strain
         obj._shape_ = shape
         obj._full_name_ = full_name
         return obj
@@ -152,6 +179,20 @@ class SuperconductorModel(IntEnum):
     def sc_shape(self):
         """The superconductor shape associated with this model."""
         return self._shape_
+
+    @DynamicClassAttribute
+    def b_crit_zero_field_strain(self):
+        """The upper critical field [T] for the superconductor at zero temperature and
+        strain (ε = 0).
+        """
+        return self._b_crit_zero_temp_strain
+
+    @DynamicClassAttribute
+    def temp_crit_zero_field_strain(self):
+        """The critical temperature [K] for the superconductor at zero field and strain
+        (ε = 0).
+        """
+        return self._temp_crit_zero_field_strain
 
     @DynamicClassAttribute
     def sc_type(self):
