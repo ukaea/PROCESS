@@ -4103,9 +4103,9 @@ class PlasmaConfinementTime(Model):
 
         References
         ----------
-            - Y. Chen et al., “Energy confinement scaling in the NCST spherical
-              tokamak,” AIP Advances, vol. 16, no. 3, pp. 035043-035043,
-              Mar. 2026, doi: https://doi.org/10.1063/5.0311657.
+          [1] Y. Chen et al., “Energy confinement scaling in the NCST spherical
+            tokamak,” AIP Advances, vol. 16, no. 3, pp. 035043-035043,
+            Mar. 2026, doi: https://doi.org/10.1063/5.0311657.
         """
         return (
             0.11
