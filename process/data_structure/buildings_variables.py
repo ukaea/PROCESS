@@ -7,8 +7,8 @@ class BuildingsModel(IntEnum):
     `i_bldgs_size` in `BuildingsData`.
     """
 
-    ITER_1992 = 1
-    CHAPMAN_2024 = 2
+    ITER_1992 = 0
+    CHAPMAN_2024 = 1
 
 
 @dataclass(slots=True)
