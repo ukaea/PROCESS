@@ -581,6 +581,9 @@ class PhysicsData:
     b_plasma_outboard_total: float = 0.0
     """Plasma outboard total magnetic field (Bₜₒₜ(R₀+a)) [T]"""
 
+    b_plasma_inboard_total: float = 0.0
+    """Plasma inboard total magnetic field (Bₜₒₜ(R₀-a)) [T]"""
+
     e_plasma_magnetic_stored: float = 0.0
     """Plasma stored magnetic energy [J]"""
 
