@@ -206,9 +206,28 @@ class Caller:
                     OutputFileManager.close_idempotence_files(
                         self.data.globals.output_prefix
                     )
+
+                    # Now idempotent, return
+                    # Pass model caller and opt params for stability constraint evaluation
+                    con_residuals_normalised, _, con_residuals, _, _ = (
+                        constraints.constraint_eqns(
+                            self.data.numerics.neqns + self.data.numerics.nineqns,
+                            -1,
+                            self.data,
+                        )
+                    )
+                    # Evaluate constraints and store in numerics during solver iterations:
+                    # can be used in objective function 20. Hence evaluate before objective
+                    # calculated
+                    self.data.numerics.constraint_residuals_normalised = (
+                        con_residuals_normalised
+                    )
+                    self.data.numerics.constraint_residuals = con_residuals
+                    # Evaluate objective function and constraints
+                    objf = objective_function(self.data.numerics.minmax, self.data)
                     # Write final output file and mfile
                     finalise(self.models, self.data, ifail)
-                    return
+                    return objf, con_residuals_normalised
 
                 # Mfiles not yet idempotent: need to re-evaluate models
                 logger.debug("Mfiles not idempotent, evaluating models again")
