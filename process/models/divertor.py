@@ -88,17 +88,17 @@ class Divertor(Model):
             == DivertorHeatLoadModel.WADE
         ):
             self.divwade(
-                self.data.physics.rmajor,
-                self.data.physics.rminor,
-                self.data.physics.aspect,
-                self.data.physics.b_plasma_toroidal_on_axis,
-                self.data.physics.b_plasma_surface_poloidal_average,
-                self.data.physics.p_plasma_separatrix_mw,
-                self.data.divertor.f_div_flux_expansion,
-                self.data.physics.nd_plasma_separatrix_electron,
-                self.data.divertor.deg_div_field_plate,
-                self.data.physics.rad_fraction_sol,
-                self.data.physics.f_p_div_lower,
+                rmajor=self.data.physics.rmajor,
+                rminor=self.data.physics.rminor,
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+                b_plasma_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
+                p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
+                len_plasma_sol_power_decay=self.data.physics.len_plasma_sol_eich13_power_decay,
+                f_div_flux_expansion=self.data.divertor.f_div_flux_expansion,
+                nd_plasma_separatrix_electron=self.data.physics.nd_plasma_separatrix_electron,
+                deg_div_field_plate=self.data.divertor.deg_div_field_plate,
+                rad_fraction_sol=self.data.physics.rad_fraction_sol,
+                f_p_div_lower=self.data.physics.f_p_div_lower,
                 output=output,
             )
             return
@@ -273,10 +273,10 @@ class Divertor(Model):
         self,
         rmajor: float,
         rminor: float,
-        aspect: float,
         b_plasma_toroidal_on_axis: float,
         b_plasma_poloidal_average: float,
         p_plasma_separatrix_mw: float,
+        len_plasma_sol_power_decay: float,
         f_div_flux_expansion: float,
         nd_plasma_separatrix_electron: float,
         deg_div_field_plate: float,
@@ -300,14 +300,14 @@ class Divertor(Model):
             plasma major radius (m)
         rminor : float
             plasma minor radius (m)
-        aspect : float
-            tokamak aspect ratio
         b_plasma_toroidal_on_axis : float
             toroidal field (T)
         b_plasma_poloidal_average : float
             poloidal field (T)
         p_plasma_separatrix_mw : float
             power to divertor (MW)
+        len_plasma_sol_power_decay : float
+            SOL power decay length (λ_q) [m]
         f_div_flux_expansion : float
             plasma flux expansion in divertor
         nd_plasma_separatrix_electron : float
@@ -332,15 +332,6 @@ class Divertor(Model):
 
         Bt_omp = -b_plasma_toroidal_on_axis * rmajor / r_omp
 
-        # Eich scaling for lambda_q
-        lambda_eich = (
-            1.35
-            * p_plasma_separatrix_mw**-0.02
-            * rmajor**0.04
-            * b_plasma_poloidal_average**-0.92
-            * aspect**0.42
-        )
-
         # Spreading factor
         spread_fact = (
             0.12
@@ -351,7 +342,7 @@ class Divertor(Model):
         )
 
         # SOL width
-        lambda_int = lambda_eich + 1.64 * spread_fact
+        lambda_int = len_plasma_sol_power_decay + 1.64 * spread_fact
 
         # Flux angle on midplane
         alpha_mid = math.degrees(math.atan(Bp_omp / Bt_omp))
