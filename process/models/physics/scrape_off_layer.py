@@ -2,6 +2,8 @@
 
 import logging
 
+import numpy as np
+
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
@@ -175,3 +177,39 @@ class ScrapeOffLayer(Model):
 
         """
         return 4.57e-3 * p_plasma_separatrix_mw**0.22 * cur_plasma_ma**-0.64
+
+    @staticmethod
+    def calculate_upstream_sol_outboard_parallel_area(
+        rmajor: float,
+        rminor: float,
+        len_plasma_sol_power_decay: float,
+        b_plasma_edge_total: float,
+        b_plasma_surface_poloidal_average: float,
+    ) -> float:
+        """Calculate the outboard SOL upstream parallel area (Aₗₗ,ᵤ) [m²].
+
+        Parameters
+        ----------
+        rmajor : float
+            Major radius of the plasma (R₀) [m]
+        rminor : float
+            Minor radius of the plasma (a) [m]
+        len_plasma_sol_power_decay : float
+            Power decay length (λ_q) [m]
+        b_plasma_edge_total : float
+            Total magnetic field at the plasma edge (Bₜₒₜ(a)) [T]
+        b_plasma_surface_poloidal_average : float
+            Poloidal magnetic field at the plasma surface (⟨Bₚₒₗ(a)⟩)  [T]
+
+        Returns
+        -------
+        float
+            Upstream outboard SOL parallel area (Aₗₗ,ᵤ) [m²]
+
+
+        """
+        return (
+            (2 * np.pi * (rmajor + rminor))
+            * len_plasma_sol_power_decay
+            * (b_plasma_edge_total / b_plasma_surface_poloidal_average)
+        )
