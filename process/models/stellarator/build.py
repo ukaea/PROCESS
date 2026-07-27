@@ -201,7 +201,7 @@ def output(stellarator, data):
         stellarator.outfile,
         "Normalized plasma-coil distance",
         "(f_dr_plasma_coil_normalized)",
-        build_variables.available_radial_space / physics_variables.rminor,
+        data.build.available_radial_space / data.physics.rminor,
     )
 
     radius = 0.0e0
