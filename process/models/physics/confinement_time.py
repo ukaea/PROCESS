@@ -924,14 +924,13 @@ class PlasmaConfinementTime(Model):
             )
 
         # ==========================================================================
-
         # NCST spherical tokamak L-mode confinement time scaling
         elif model == ConfinementTimeModel.NCST:
             t_electron_confinement = self.ncst_confinement_time(
-                pcur,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-                dnla19,
+                pcur=pcur,
+                b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                p_plasma_loss_mw=p_plasma_loss_mw,
+                dnla19=dnla19,
             )
 
         # ==========================================================================
