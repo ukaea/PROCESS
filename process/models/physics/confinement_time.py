@@ -4096,10 +4096,10 @@ class PlasmaConfinementTime(Model):
 
         Notes
         -----
-            - The electron density used to derive the scaling was measured locally
-              at a normalised minor radius of approximately 0.9. The central
-              line-averaged electron density is used here as the closest available
-              PROCESS quantity.
+          - The electron density used to derive the scaling was measured locally
+          at a normalised minor radius of approximately 0.9. The central
+          line-averaged electron density is used here as the closest available
+          PROCESS quantity.
 
         References
         ----------
