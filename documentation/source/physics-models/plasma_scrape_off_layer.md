@@ -83,6 +83,20 @@ The $R^2$ value for this fit is 0.55
 
 --------
 
+## Spreading Parameter
+
+The scrape-off layer (SOL) spreading parameter $S$ represents a Gaussian width that quantifies additional perpendicular heat spreading in the divertor leg. It works alongside the upstream heat flux decay length $\lambda_{q}$ to determine total target heat loads on the divertor.
+
+Unlike $\lambda_{q}$, which is governed by robust upstream parallel and perpendicular transport physics at the plasma midplane, $S$ is inherently a "local" divertor parameter. Deriving a single, absolute multi-machine formula for $S$ is incredibly difficult due to several overlapping regional variables:
+
+- Divertor Geometry: The path length from the X-point to the target tile heavily impacts how much the heat spreads radially.
+
+- Plasma Recycling Regimes: Low-recycling, high-recycling, and detached plasma conditions completely alter the cross-field diffusion rates.
+
+- Localized Radiation: Impurity seeding and neutral gas interactions dissipate power unevenly along the divertor leg, altering the effective Gaussian profile width.
+
+------------
+
 [^eich_2013]: T. Eich et al., “Scaling of the tokamak near the scrape-off layer H-mode power width and implications for ITER,” Nuclear Fusion, vol. 53, no. 9 p. 093031, Aug. 2013, doi: 10.1088/0029-5515/53/9/093031.
 
 [^mast_2014]: A. J. Thornton and A. Kirk, “Scaling of the scrape-off layer width during inter-ELM H modes on MAST as measured by infrared thermography,”
