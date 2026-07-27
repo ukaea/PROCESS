@@ -3805,8 +3805,6 @@ def test_peakb(monkeypatch, pfcoil):
 
 
 class SuperconPFParam(NamedTuple):
-    b_crit_upper_nbti: Any = None
-    t_crit_nbti: Any = None
     bmax: Any = None
     fhe: Any = None
     fcu: Any = None
@@ -3836,8 +3834,6 @@ class SuperconPFParam(NamedTuple):
             thelium=4.75,
             bcritsc=24,
             tcritsc=16,
-            b_crit_upper_nbti=14.86,
-            t_crit_nbti=9.04,
             dr_tf_hts_tape=4.0e-3,
             dx_tf_hts_tape_rebco=1.0e-6,
             dx_tf_hts_tape_total=6.5e-5,
@@ -3873,8 +3869,6 @@ def test_superconpf(superconpfparam):
         superconpfparam.thelium,
         superconpfparam.bcritsc,
         superconpfparam.tcritsc,
-        superconpfparam.b_crit_upper_nbti,
-        superconpfparam.t_crit_nbti,
         superconpfparam.dr_tf_hts_tape,
         superconpfparam.dx_tf_hts_tape_rebco,
         superconpfparam.dx_tf_hts_tape_total,

@@ -886,8 +886,6 @@ class PFCoil(Model):
                             temp_pf_peak_field=self.data.tfcoil.tftmp,
                             bcritsc=self.data.tfcoil.bcritsc,
                             tcritsc=self.data.tfcoil.tcritsc,
-                            b_crit_upper_nbti=self.data.tfcoil.b_crit_upper_nbti,
-                            t_crit_nbti=self.data.tfcoil.t_crit_nbti,
                             dr_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
                             dx_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
                             dx_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
@@ -3610,8 +3608,6 @@ class CSCoil(Model):
                 temp_pf_peak_field=self.data.pf_coil.temp_cs_superconductor_operating,
                 bcritsc=self.data.tfcoil.bcritsc,
                 tcritsc=self.data.tfcoil.tcritsc,
-                b_crit_upper_nbti=self.data.tfcoil.b_crit_upper_nbti,
-                t_crit_nbti=self.data.tfcoil.t_crit_nbti,
                 dr_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
                 dx_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
                 dx_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
@@ -3660,8 +3656,6 @@ class CSCoil(Model):
                 temp_pf_peak_field=self.data.pf_coil.temp_cs_superconductor_operating,
                 bcritsc=self.data.tfcoil.bcritsc,
                 tcritsc=self.data.tfcoil.tcritsc,
-                b_crit_upper_nbti=self.data.tfcoil.b_crit_upper_nbti,
-                t_crit_nbti=self.data.tfcoil.t_crit_nbti,
                 dr_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
                 dx_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
                 dx_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
@@ -4649,8 +4643,6 @@ def superconpf(
     temp_pf_peak_field: float,
     bcritsc: float,
     tcritsc: float,
-    b_crit_upper_nbti: float,
-    t_crit_nbti: float,
     dr_hts_tape: float,
     dx_hts_tape_rebco: float,
     dx_hts_tape_total: float,
@@ -4698,10 +4690,6 @@ def superconpf(
         Critical field at zero temperature and strain [T] (isumat=4 only)
     tcritsc : float
         Critical temperature at zero field and strain [K] (isumat=4 only)
-    b_crit_upper_nbti: float
-        upper critical field of GL_nbti [T]
-    t_crit_nbti: float
-        critical temperature of GL_nbti [K]
     dr_hts_tape: float
         Mean width of tape [m]
     dx_hts_tape_rebco: float
@@ -4835,8 +4823,12 @@ def superconpf(
 
     elif isumat == SuperconductorModel.DURHAM_NBTI:
         # Durham Ginzburg-Landau critical surface model for Nb-Ti
-        bc20m = b_crit_upper_nbti  # [T] critical field at 0 K and 0 strain
-        tc0m = t_crit_nbti  # [K] critical temperature at 0 T and 0 strain
+        bc20m = (
+            SuperconductorModel.DURHAM_NBTI.b_crit_zero_field_strain
+        )  # [T] critical field at 0 K and 0 strain
+        tc0m = (
+            SuperconductorModel.DURHAM_NBTI.temp_crit_zero_field_strain
+        )  # [K] critical temperature at 0 T and 0 strain
         j_crit_sc, _, _ = superconductors.gl_nbti(
             temp_conductor=temp_pf_peak_field,
             b_conductor=b_pf_peak,
