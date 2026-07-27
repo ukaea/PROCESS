@@ -94,8 +94,8 @@ class Divertor(Model):
                 b_plasma_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
                 p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
                 len_plasma_sol_power_decay=self.data.physics.len_plasma_sol_eich13_power_decay,
+                len_plasma_sol_power_spreading=self.data.physics.len_plasma_sol_scrabosio14_power_spreading,
                 f_div_flux_expansion=self.data.divertor.f_div_flux_expansion,
-                nd_plasma_separatrix_electron=self.data.physics.nd_plasma_separatrix_electron,
                 deg_div_field_plate=self.data.divertor.deg_div_field_plate,
                 rad_fraction_sol=self.data.physics.rad_fraction_sol,
                 f_p_div_lower=self.data.physics.f_p_div_lower,
@@ -277,8 +277,8 @@ class Divertor(Model):
         b_plasma_poloidal_average: float,
         p_plasma_separatrix_mw: float,
         len_plasma_sol_power_decay: float,
+        len_plasma_sol_power_spreading: float,
         f_div_flux_expansion: float,
-        nd_plasma_separatrix_electron: float,
         deg_div_field_plate: float,
         rad_fraction_sol: float,
         f_p_div_lower: float,
@@ -308,10 +308,10 @@ class Divertor(Model):
             power to divertor (MW)
         len_plasma_sol_power_decay : float
             SOL power decay length (λ_q) [m]
+        len_plasma_sol_power_spreading : float
+            SOL power spreading factor (S) [m]
         f_div_flux_expansion : float
             plasma flux expansion in divertor
-        nd_plasma_separatrix_electron : float
-            electron density at separatrix (m-3)
         deg_div_field_plate : float
             field line angle wrt divertor target plate (degrees)
         rad_fraction_sol : float
@@ -332,17 +332,8 @@ class Divertor(Model):
 
         Bt_omp = -b_plasma_toroidal_on_axis * rmajor / r_omp
 
-        # Spreading factor
-        spread_fact = (
-            0.12
-            * (nd_plasma_separatrix_electron / 1e19) ** -0.02
-            * p_plasma_separatrix_mw**-0.21
-            * rmajor**0.71
-            * b_plasma_poloidal_average**-0.82
-        )
-
         # SOL width
-        lambda_int = len_plasma_sol_power_decay + 1.64 * spread_fact
+        lambda_int = len_plasma_sol_power_decay + 1.64 * len_plasma_sol_power_spreading
 
         # Flux angle on midplane
         alpha_mid = math.degrees(math.atan(Bp_omp / Bt_omp))
