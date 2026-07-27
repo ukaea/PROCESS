@@ -2,6 +2,8 @@
 
 import pytest
 
+from process.data_structure.divertor_variables import DivertorHeatLoadModel
+
 
 @pytest.fixture
 def divertor(process_models):
@@ -38,7 +40,9 @@ class TestDivertor:
         p_plasma_separatrix_mw = 7.7197999809272062
         i_single_null = 0
         dz_divertor = 0.5
-        monkeypatch.setattr(divertor.data.divertor, "i_div_heat_load", 1)
+        monkeypatch.setattr(
+            divertor.data.divertor, "i_div_heat_load", DivertorHeatLoadModel.PENG_CHAMBER
+        )
 
         expected_pflux_div_heat_load_mw = 0.087770426974167357
 

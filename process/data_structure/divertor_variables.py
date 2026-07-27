@@ -1,4 +1,18 @@
 from dataclasses import dataclass
+from enum import IntEnum
+
+
+class DivertorHeatLoadModel(IntEnum):
+    """Divertor heat load model enumeration, controlled' by `i_div_heat_load`"""
+
+    USER_INPUT = 0
+    """User input for divertor heat load"""
+
+    PENG_CHAMBER = 1
+    """Divertor heat load model based on Peng chamber"""
+
+    WADE = 2
+    """Divertor heat load model based on Wade (Wade 2020)"""
 
 
 @dataclass(slots=True)
@@ -47,9 +61,9 @@ class DivertorData:
     i_div_heat_load: int = 2
     """switch for user input pflux_div_heat_load_mw:
 
-    - = 0: divtart model turned off and user inputs pflux_div_heat_load_mw
-    - = 1: divtart model calculates pflux_div_heat_load_mw
-    - = 2: divwade model calculates pflux_div_heat_load_mw"""
+    - = 0: User input
+    - = 1: Peng chamber model
+    - = 2: Wade model"""
 
     pflux_div_heat_load_max_mw: float = 5.0
     """heat load limit (MW/m2)"""
