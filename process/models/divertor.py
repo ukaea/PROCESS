@@ -89,9 +89,8 @@ class Divertor(Model):
         ):
             self.divwade(
                 rmajor=self.data.physics.rmajor,
-                rminor=self.data.physics.rminor,
-                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
-                b_plasma_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
+                b_plasma_outboard_toroidal=self.data.physics.b_plasma_outboard_toroidal,
+                b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
                 p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
                 len_plasma_sol_power_decay=self.data.physics.len_plasma_sol_eich13_power_decay,
                 len_plasma_sol_power_spreading=self.data.physics.len_plasma_sol_scrabosio14_power_spreading,
@@ -272,9 +271,8 @@ class Divertor(Model):
     def divwade(
         self,
         rmajor: float,
-        rminor: float,
-        b_plasma_toroidal_on_axis: float,
-        b_plasma_poloidal_average: float,
+        b_plasma_outboard_toroidal: float,
+        b_plasma_surface_poloidal_average: float,
         p_plasma_separatrix_mw: float,
         len_plasma_sol_power_decay: float,
         len_plasma_sol_power_spreading: float,
@@ -298,12 +296,10 @@ class Divertor(Model):
         ----------
         rmajor : float
             plasma major radius (m)
-        rminor : float
-            plasma minor radius (m)
-        b_plasma_toroidal_on_axis : float
-            toroidal field (T)
-        b_plasma_poloidal_average : float
-            poloidal field (T)
+        b_plasma_outboard_toroidal : float
+            toroidal field at the outboard midplane (T)
+        b_plasma_surface_poloidal_average : float
+            Surface averaged poloidal field (B) [T]
         p_plasma_separatrix_mw : float
             power to divertor (MW)
         len_plasma_sol_power_decay : float
@@ -324,19 +320,14 @@ class Divertor(Model):
         float
             divertor heat load for a tight aspect ratio machine
         """
-        # Radius on midplane
-        r_omp = rmajor + rminor
-
-        # B fields on midplane
-        Bp_omp = -b_plasma_poloidal_average * rmajor / r_omp
-
-        Bt_omp = -b_plasma_toroidal_on_axis * rmajor / r_omp
-
-        # SOL width
+        # SOL width at divertor plates (λ_int) [m]
+        # λ_int = λ_q + 1.64 * S
         lambda_int = len_plasma_sol_power_decay + 1.64 * len_plasma_sol_power_spreading
 
         # Flux angle on midplane
-        alpha_mid = math.degrees(math.atan(Bp_omp / Bt_omp))
+        alpha_mid = math.degrees(
+            math.atan(b_plasma_surface_poloidal_average / b_plasma_outboard_toroidal)
+        )
 
         # Flux angle in the divertor
         alpha_div = f_div_flux_expansion * alpha_mid
