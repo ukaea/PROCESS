@@ -161,13 +161,9 @@ class SuperconParam(NamedTuple):
 
     a_tf_turn_cable_space_effective: Any = None
 
-    b_crit_upper_nbti: Any = None
-
     i_str_wp: Any = None
 
     str_wp: Any = None
-
-    t_crit_nbti: Any = None
 
     tf_fit_t: Any = None
 
@@ -249,11 +245,9 @@ class SuperconParam(NamedTuple):
             c_tf_turn=74026.751437500003,
             b_tf_inboard_peak_with_ripple=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
-            b_crit_upper_nbti=14.859999999999999,
             i_str_wp=1,
             f_a_tf_turn_cable_space_cooling=0.3,
             str_wp=0.0015619754370069119,
-            t_crit_nbti=9.0399999999999991,
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
             f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
@@ -299,11 +293,9 @@ class SuperconParam(NamedTuple):
             c_tf_turn=74026.751437500003,
             b_tf_inboard_peak_with_ripple=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
-            b_crit_upper_nbti=14.859999999999999,
             i_str_wp=1,
             f_a_tf_turn_cable_space_cooling=0.3,
             str_wp=0.0015619754370069119,
-            t_crit_nbti=9.0399999999999991,
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
             f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
@@ -400,17 +392,9 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
         cicc_sctfcoil.data.tfcoil, "str_tf_con_res", superconparam.str_tf_con_res
     )
 
-    monkeypatch.setattr(
-        cicc_sctfcoil.data.tfcoil, "b_crit_upper_nbti", superconparam.b_crit_upper_nbti
-    )
-
     monkeypatch.setattr(cicc_sctfcoil.data.tfcoil, "i_str_wp", superconparam.i_str_wp)
 
     monkeypatch.setattr(cicc_sctfcoil.data.tfcoil, "str_wp", superconparam.str_wp)
-
-    monkeypatch.setattr(
-        cicc_sctfcoil.data.tfcoil, "t_crit_nbti", superconparam.t_crit_nbti
-    )
 
     monkeypatch.setattr(
         cicc_sctfcoil.data.superconducting_tfcoil, "tf_fit_t", superconparam.tf_fit_t

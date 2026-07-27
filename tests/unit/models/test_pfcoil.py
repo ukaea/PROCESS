@@ -2478,8 +2478,6 @@ class PFCoilParam(NamedTuple):
     tcritsc: Any = None
     str_pf_con_res: Any = None
     bcritsc: Any = None
-    b_crit_upper_nbti: Any = None
-    t_crit_nbti: Any = None
     first_call: Any = None
     r_tf_outboard_out: Any = None
     t_plant_pulse_coil_precharge: Any = None
@@ -2553,8 +2551,6 @@ class PFCoilParam(NamedTuple):
             tcritsc=1.6e1,
             str_pf_con_res=-5.0e-3,
             bcritsc=2.4e1,
-            b_crit_upper_nbti=1.486e1,
-            t_crit_nbti=9.04,
             first_call=True,
             r_tf_outboard_out=10.0,
             t_plant_pulse_coil_precharge=5.0e2,
@@ -2661,8 +2657,6 @@ def test_pfcoil(monkeypatch, pfcoil, pfcoilparam):
         "tcritsc",
         "str_pf_con_res",
         "bcritsc",
-        "b_crit_upper_nbti",
-        "t_crit_nbti",
     ]:
         monkeypatch.setattr(pfcoil.data.tfcoil, field, getattr(pfcoilparam, field))
 
@@ -2727,14 +2721,12 @@ class OhCalcParam(NamedTuple):
     str_cs_con_res: Any = None
     fhts: Any = None
     bcritsc: Any = None
-    t_crit_nbti: Any = None
     c_pf_cs_coil_pulse_start_ma: Any = None
     c_pf_cs_coil_flat_top_ma: Any = None
     c_pf_cs_coil_pulse_end_ma: Any = None
     rmajor: Any = None
     plasma_current: Any = None
     poisson_steel: Any = None
-    b_crit_upper_nbti: Any = None
     exp_b_pf_coil_peak: Any = None
     exp_j_cs_critical_flat_top_end: Any = None
 
@@ -2780,14 +2772,12 @@ class OhCalcParam(NamedTuple):
             str_cs_con_res=-5.000e-3,
             fhts=0.5,
             bcritsc=2.4e1,
-            t_crit_nbti=9.04,
             c_pf_cs_coil_pulse_start_ma=np.full(22, 0.0),
             c_pf_cs_coil_flat_top_ma=np.full(22, 0.0),
             c_pf_cs_coil_pulse_end_ma=np.full(22, -175.84911993600002),
             rmajor=8.938,
             plasma_current=1.8254e7,
             poisson_steel=3.0e-1,
-            b_crit_upper_nbti=9.04,
             exp_b_pf_coil_peak=13.073958753751993,
             exp_j_cs_critical_flat_top_end=54101481.7685945,
         )
@@ -2854,9 +2844,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil, ohcalcparam):
         "str_cs_con_res",
         "fhts",
         "bcritsc",
-        "t_crit_nbti",
         "poisson_steel",
-        "b_crit_upper_nbti",
     ]:
         monkeypatch.setattr(cs_coil.data.tfcoil, field, getattr(ohcalcparam, field))
 

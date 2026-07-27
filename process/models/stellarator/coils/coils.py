@@ -7,6 +7,7 @@ import numpy as np
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 from process.models import superconductors
+from process.models.superconductors import SuperconductorModel
 
 logger = logging.getLogger(__name__)
 
@@ -23,11 +24,9 @@ def jcrit_from_material(
     b_max,
     t_helium,
     i_tf_sc_mat,
-    b_crit_upper_nbti,
     b_crit_sc,
     f_a_tf_turn_cable_copper,
     f_hts,
-    t_crit_nbti,
     t_crit_sc,
     f_a_tf_turn_cable_space_extra_void,
     j_wp,
@@ -138,8 +137,8 @@ def jcrit_from_material(
         j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
 
     elif i_tf_sc_mat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
-        bc20m = b_crit_upper_nbti
-        tc0m = t_crit_nbti
+        bc20m = SuperconductorModel.DURHAM_NBTI.b_crit_zero_field_strain
+        tc0m = SuperconductorModel.DURHAM_NBTI.temp_crit_zero_field_strain
         j_crit_sc, _bcrit, _tcrit = superconductors.gl_nbti(
             t_helium, b_max, strain, bc20m, tc0m
         )

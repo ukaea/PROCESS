@@ -216,7 +216,6 @@ INPUT_VARIABLES = {
     "auxcool_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "p_hcd_injected_min_mw": InputVariable("constraints", float, range=(0.01, 100.0)),
     "f_t_plant_available_min": InputVariable("costs", float, range=(0.0, 1.0)),
-    "b_crit_upper_nbti": InputVariable("tfcoil", float, range=(0.0, 30.0)),
     "p_plant_electric_base": InputVariable(
         "heat_transport", float, range=(1000000.0, 10000000000.0)
     ),
@@ -781,7 +780,6 @@ INPUT_VARIABLES = {
     "dx_tf_turn_cable_space_general": InputVariable("tfcoil", float, range=(0.0, 0.1)),
     "t_crack_radial": InputVariable("cs_fatigue", float, range=(1e-05, 1.0)),
     "t_crack_vertical": InputVariable("cs_fatigue", float, range=(1e-05, 1.0)),
-    "t_crit_nbti": InputVariable("tfcoil", float, range=(0.0, 15.0)),
     "t_plant_pulse_plasma_current_ramp_up": InputVariable(
         "times", float, range=(0.0, 10000.0)
     ),
