@@ -1668,6 +1668,9 @@ class PhysicsData:
     len_plasma_sol_mast14_power_decay_2: float = 0.0
     """MAST 2014 power decay length in the scrape-off layer scaling 2 (λ_q) [m]"""
 
+    a_plasma_outboard_sol_eich13_parallel: float = 0.0
+    """Plasma outboard midplane (upstream) Eich 2013 SOL parrallel area (Aₗₗ,ᵤ) [m]"""
+
     dt_power_density_plasma: float = 0.0
     sigmav_dt_average: float = 0.0
     dhe3_power_density: float = 0.0
