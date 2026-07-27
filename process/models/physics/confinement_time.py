@@ -4087,7 +4087,7 @@ class PlasmaConfinementTime(Model):
         p_plasma_loss_mw :
             Thermal power lost due to transport through the LCFS [MW]
         dnla19 :
-            Central line-averaged electron density in units of 10**19 m**-3
+            Central line-averaged electron density in units of 10¹⁹ m⁻³
 
         Returns
         -------
