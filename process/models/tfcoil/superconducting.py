@@ -3087,8 +3087,8 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Durham Ginzburg-Landau Nb-Ti parameterisation
         elif i_tf_superconductor == SuperconductorModel.DURHAM_NBTI:
-            bc20m = data.tfcoil.b_crit_upper_nbti  # [T]
-            tc0m = data.tfcoil.t_crit_nbti  # [K]
+            bc20m = SuperconductorModel.DURHAM_NBTI.b_crit_zero_field_strain  # [T]
+            tc0m = SuperconductorModel.DURHAM_NBTI.temp_crit_zero_field_strain  # [K]
 
             j_superconductor_critical, _, _ = superconductors.gl_nbti(
                 temp_conductor=temp_tf_coolant_peak_field,

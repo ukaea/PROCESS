@@ -124,8 +124,8 @@ class SuperconductorModel(IntEnum):
     DURHAM_NBTI = (
         7,
         SuperconductorMaterial.NBTI,
-        None,
-        None,
+        14.86e0,  # [T]
+        9.2e0,  # [K]
         SuperconductorShape.CABLE,
         "Durham Ginzburg-Landau NbTi",
     )
