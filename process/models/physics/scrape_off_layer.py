@@ -97,6 +97,14 @@ class ScrapeOffLayer(Model):
             / self.data.physics.a_plasma_outboard_sol_eich13_parallel
         )
 
+        self.data.physics.len_plasma_sol_scrabosio14_power_spreading = self.calculate_scarabosio2014_power_spreading_factor(
+            p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
+            b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
+            nd_plasma_separatrix_electron_19=self.data.physics.nd_plasma_separatrix_electron
+            / 1e19,
+            rmajor=self.data.physics.rmajor,
+        )
+
     def output(self) -> None:
         """Output plasma scrape off layer physics information."""
         po.oheadr(self.outfile, "Plasma Scrape Off Layer")
@@ -168,6 +176,14 @@ class ScrapeOffLayer(Model):
             "Plasma outboard midplane Eich 2013 SOL parallel power flux (qₗₗ,ᵤ) [MW/m²]",
             "(pflux_plasma_outboard_sol_eich13_parallel_mw)",
             self.data.physics.pflux_plasma_outboard_sol_eich13_parallel_mw,
+        )
+
+        po.osubhd(self.outfile, "Power Spreading Factors (S):")
+        po.ovarre(
+            self.outfile,
+            "Scrabosio 2014 H-mode power spreading factor (S) [m]",
+            "(len_plasma_sol_scrabosio14_power_spreading)",
+            self.data.physics.len_plasma_sol_scrabosio14_power_spreading,
         )
 
     @staticmethod

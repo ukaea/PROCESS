@@ -1700,9 +1700,9 @@ class PhysicsData:
 
     len_plasma_sol_mast14_power_decay_2: float = 0.0
     """MAST 2014 power decay length in the scrape-off layer scaling 2 (λ_q) [m]"""
-    
+
     len_plasma_sol_scrabosio14_power_spreading: float = 0.0
-    """Scrabosio 2014 H-mode power spreading length in the scrape-off layer scaling 
+    """Scrabosio 2014 H-mode power spreading length in the scrape-off layer scaling
     (S) [m]"""
 
     a_plasma_outboard_sol_eich13_parallel: float = 0.0
