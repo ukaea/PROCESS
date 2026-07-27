@@ -254,6 +254,13 @@ class PlasmaFields(Model):
         )
         po.ovarre(
             self.outfile,
+            "Total field at inboard (Bₜₒₜ(R₀-a)) [T]",
+            "(b_plasma_inboard_total)",
+            self.data.physics.b_plasma_inboard_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Total field at outboard (Bₜₒₜ(R₀+a)) [T]",
             "(b_plasma_outboard_total)",
             self.data.physics.b_plasma_outboard_total,
