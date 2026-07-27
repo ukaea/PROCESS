@@ -326,3 +326,48 @@ class ScrapeOffLayer(Model):
             * len_plasma_sol_power_decay
             * (b_plasma_surface_poloidal_average / b_plasma_outboard_total)
         )
+
+    @staticmethod
+    def calculate_scarabosio2014_power_spreading_factor(
+        p_plasma_separatrix_mw: float,
+        b_plasma_surface_poloidal_average: float,
+        nd_plasma_separatrix_electron_19: float,
+        rmajor: float,
+    ) -> float:
+        """Calculate the Scrabosio 2014 H-mode power spreading factor (S).
+
+        Parameters
+        ----------
+        p_plasma_separatrix_mw : float
+            Power crossing the separatrix (Pₛₑₚ) [MW]
+        b_plasma_surface_poloidal_average : float
+            Poloidal magnetic field at the plasma surface (Bₚₒₗ(a))  [T]
+        nd_plasma_separatrix_electron_19 : float
+            Electron density at the separatrix (nₑ,ₛₑₚ) [10¹⁹ m⁻³]
+        rmajor : float
+            Major radius of the plasma (R₀) [m]
+
+        Returns
+        -------
+        float
+            Scrabosio 2014 H-mode power spreading factor (S) [m]
+
+        Notes
+        -----
+        - The R² for the fit is 0.65
+
+        References
+        ----------
+        [1] A. Scarabosio et al., “Scaling of the divertor power spreading (S-factor) in
+        open and closed divertor operation in JET and ASDEX Upgrade,”
+        Journal of Nuclear Materials, vol. 463, pp. 49-54, Aug. 2015,
+        doi: 10.1016/j.jnucmat.2014.11.076.
+
+        """
+        return (
+            0.12e-3
+            * p_plasma_separatrix_mw**0.21
+            * b_plasma_surface_poloidal_average**-0.82
+            * nd_plasma_separatrix_electron_19**-0.02
+            * rmajor**0.71
+        )

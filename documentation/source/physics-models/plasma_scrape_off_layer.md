@@ -81,7 +81,7 @@ This can be found in Table 2 and Equation 4 from Thornton et.al [^mast_2014]
 
 The $R^2$ value for this fit is 0.55
 
---------
+-------------
 
 ## Spreading Parameter
 
@@ -95,6 +95,19 @@ Unlike $\lambda_{q}$, which is governed by robust upstream parallel and perpendi
 
 - Localized Radiation: Impurity seeding and neutral gas interactions dissipate power unevenly along the divertor leg, altering the effective Gaussian profile width.
 
+-----------
+
+### Scarabosio 2015 | `calculate_scarabosio2015_power_spreading_factor()`
+
+The H-mode SOL spreading factor, $S$ is given in $\text{m}$ by[^scarabosio_2015]:
+
+$$
+S = (0.12(\pm0.07)\times 10^{-3}) P_{\text{sep}}^{0.21(\pm0.11)}R_0^{0.71(\pm0.5)}B_{\text{p}}(a)^{-0.82(\pm0.27)}n_{\text{sep}}^{0.71(\pm0.5)}
+$$
+
+- This was fitted from ASDEX Upgrade and JET outer target data
+- The $R^2$ value of the regression fit was 0.65
+
 ------------
 
 [^eich_2013]: T. Eich et al., “Scaling of the tokamak near the scrape-off layer H-mode power width and implications for ITER,” Nuclear Fusion, vol. 53, no. 9 p. 093031, Aug. 2013, doi: 10.1088/0029-5515/53/9/093031.
@@ -105,3 +118,5 @@ Plasma Physics and Controlled Fusion, vol. 56, no. 5, p. 055008, Apr. 2014, doi:
 [^stangeby_boundary]: P. C. Stangeby, “The Plasma Boundary of Magnetic Fusion Devices,” Jan. 2000, doi: 10.1201/9780367801489.
 
 [^henderson_step]: S. S. Henderson et al., “An overview of the STEP divertor design and the simple models driving the plasma exhaust scenario,” Nuclear Fusion, vol. 65, no. 1, pp. 016033–016033, Nov. 2024, doi: 10.1088/1741-4326/ad93e7.
+
+[^scarabosio_2015]: A. Scarabosio et al., “Scaling of the divertor power spreading (S-factor) in open and closed divertor operation in JET and ASDEX Upgrade,” Journal of Nuclear Materials, vol. 463, pp. 49-54, Aug. 2015, doi: 10.1016/j.jnucmat.2014.11.076.
