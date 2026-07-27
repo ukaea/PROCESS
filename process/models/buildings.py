@@ -5,6 +5,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
+from process.data_structure.buildings_variables import BuildingsModel
 from process.models.physics.current_drive import (
     CurrentDriveMethodType,
     CurrentDriveModel,
@@ -53,7 +54,10 @@ class Buildings(Model):
 
         # Calculate building areas and volumes
 
-        if self.data.buildings.i_bldgs_size == 1:
+        if (
+            BuildingsModel(self.data.buildings.i_bldgs_size)
+            == BuildingsModel.CHAPMAN_2024
+        ):
             # Updated building estimates
             self.bldgs_sizes(output, tf_radial_dim, tf_vertical_dim)
 

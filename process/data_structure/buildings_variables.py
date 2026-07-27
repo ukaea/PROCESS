@@ -1,4 +1,14 @@
 from dataclasses import dataclass
+from enum import IntEnum
+
+
+class BuildingsModel(IntEnum):
+    """Enum for building size estimation models, controlled by
+    `i_bldgs_size` in `BuildingsData`.
+    """
+
+    ITER_1992 = 0
+    CHAPMAN_2024 = 1
 
 
 @dataclass(slots=True)
