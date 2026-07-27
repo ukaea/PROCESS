@@ -557,8 +557,6 @@ IN.DAT
 
 i_alphaj = 0
 alphaj = 1.0
-
-
 ```
 
 -----------
