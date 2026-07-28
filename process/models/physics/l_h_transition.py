@@ -307,7 +307,7 @@ class PlasmaConfinementTransition(Model):
             self.outfile,
             f"{PlasmaConfinementTransitionModel(self.data.physics.i_l_h_threshold).full_name}",
         )
-        if (self.data.numerics.ioptimz > 0) and (
+        if (self.data.numerics.i_process_run_mode > 0) and (
             self.data.numerics.active_constraints[14]
         ):
             po.ovarre(

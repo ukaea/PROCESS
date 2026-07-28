@@ -24,7 +24,7 @@ epsvmc   = 1.0e-8
 * DESCRIPTION:   Error tolerance for VMCON
 * JUSTIFICATION: Same tolerance as used on on previous DEMO
 
-ioptimz  = 1 
+i_process_run_mode  = 1 
 * DESCRIPTION:   Code operation switch (1: VMCON)
 * JUSTIFICATION: Optimised run
 

@@ -42,7 +42,7 @@ class SolverOutputCondition(IntEnum):
 
 class PROCESSRunMode(IntEnum):
     """Enumeration of the available PROCESS run modes, which determine the behaviour
-    of the code in various places. This is controlled by the `ioptimz` variable
+    of the code in various places. This is controlled by the `i_process_run_mode` variable
     """
 
     EVALUATION = (-2, "Evaluation mode (no optimisation)")
@@ -147,7 +147,7 @@ N_CONSTRAINT_EQUATIONS_MAX = 500
 class NumericsData:
     """Dataclass holding numerics variables"""
 
-    ioptimz: int = 1
+    i_process_run_mode: int = 1
     """Code operation switch:
     * -2 for evaluation mode (i.e. no optimisation)
     * 1 for optimisation mode (e.g. via VMCON)

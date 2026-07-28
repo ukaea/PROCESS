@@ -675,7 +675,7 @@ class Power(Model):
             "OP ",
         )
 
-        if (self.data.numerics.ioptimz > 0) and (
+        if (self.data.numerics.i_process_run_mode > 0) and (
             self.data.numerics.active_constraints[65]
         ):
             po.ovarre(

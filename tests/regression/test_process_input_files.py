@@ -127,7 +127,7 @@ class RegressionTestScenario:
 
         assert (
             ifail == SolverOutputCondition.CONVERGED
-            or mfile.data["ioptimz"].get_scan(-1) == -2
+            or mfile.data["i_process_run_mode"].get_scan(-1) == -2
         ), (
             f"\033[0;36m ifail of {ifail} indicates PROCESS did not solve "
             "successfully\033[0m"

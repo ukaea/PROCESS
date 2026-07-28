@@ -107,14 +107,14 @@ def test_parse_input(tmp_path, data_structure_obj):
     init.init_process(data_structure_obj)
 
     assert data_structure_obj.globals.runtitle == "my run title"
-    assert data_structure_obj.numerics.ioptimz == PROCESSRunMode.EVALUATION
+    assert data_structure_obj.numerics.i_process_run_mode == PROCESSRunMode.EVALUATION
     assert pytest.approx(data_structure_obj.numerics.epsvmc) == 0.6
     assert pytest.approx(data_structure_obj.numerics.boundl[0]) == 0.5
 
 
 def test_input_choices(tmp_path, data_structure_obj):
     data_structure_obj.globals.fileprefix = _create_input_file(
-        tmp_path, ("ioptimz = -1")
+        tmp_path, ("i_process_run_mode = -1")
     )
 
     with pytest.raises(ProcessValidationError):
@@ -156,7 +156,7 @@ def test_input_not_array_when_is(tmp_path, data_structure_obj):
 
 def test_input_float_when_int(tmp_path, data_structure_obj):
     data_structure_obj.globals.fileprefix = _create_input_file(
-        tmp_path, ("ioptimz = 0.5")
+        tmp_path, ("i_process_run_mode = 0.5")
     )
 
     with pytest.raises(ProcessValidationError):

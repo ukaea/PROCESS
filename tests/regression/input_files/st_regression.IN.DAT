@@ -47,7 +47,7 @@ epsvmc = 1e-9
 * DESCRIPTION:   HYBRD/VMCON derivative step length
 * JUSTIFICATION: Default step length
 
-ioptimz = 1
+i_process_run_mode = 1
 * DESCRIPTION:   Code operation switch (1: VMCON)
 * JUSTIFICATION: Optimised run
 

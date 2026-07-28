@@ -1,5 +1,5 @@
 * Evaluation problem: evaluate models consistently by solving equality constraints only
-ioptimz = -2
+i_process_run_mode = -2
 
 *---------------Constraint Equations---------------*
 * Define number of equality constraints

@@ -146,7 +146,7 @@ class InputVariable:
 
 INPUT_VARIABLES = {
     "runtitle": InputVariable("globals", str),
-    "ioptimz": InputVariable("numerics", int, choices=[1, -2]),
+    "i_process_run_mode": InputVariable("numerics", int, choices=[1, -2]),
     "epsvmc": InputVariable("numerics", float, range=(0.0, 1.0)),
     "boundl": InputVariable("numerics", float, array=True),
     "boundu": InputVariable("numerics", float, array=True),

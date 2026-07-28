@@ -166,7 +166,7 @@ class PfpwrParam(NamedTuple):
 
     active_constraints: Any = None
 
-    ioptimz: Any = None
+    i_process_run_mode: Any = None
 
     pulse_timings: PulseTimings = None
 
@@ -784,7 +784,7 @@ class PfpwrParam(NamedTuple):
                 False,
                 False,
             ),
-            ioptimz=1,
+            i_process_run_mode=1,
             pulse_timings=PulseTimings(
                 t_plant_pulse_coil_precharge=500,
                 t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
@@ -1405,7 +1405,7 @@ class PfpwrParam(NamedTuple):
                 False,
                 False,
             ),
-            ioptimz=1,
+            i_process_run_mode=1,
             pulse_timings=PulseTimings(
                 t_plant_pulse_coil_precharge=500,
                 t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
@@ -1485,7 +1485,9 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
         power.data.numerics, "active_constraints", pfpwrparam.active_constraints
     )
 
-    monkeypatch.setattr(power.data.numerics, "ioptimz", pfpwrparam.ioptimz)
+    monkeypatch.setattr(
+        power.data.numerics, "i_process_run_mode", pfpwrparam.i_process_run_mode
+    )
 
     monkeypatch.setattr(
         power.data.times,

@@ -185,7 +185,7 @@ def run_summary(data: DataStructure):
         )
         process_output.ocmmnt(outfile, f"Iteration variables : {data.numerics.nvar}")
         # If optimising, write objective function and convergence parameter
-        if data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
+        if data.numerics.i_process_run_mode == PROCESSRunMode.OPTIMISATION:
             process_output.ocmmnt(
                 outfile,
                 f"Max iterations : {data.globals.maxcal}",
@@ -227,10 +227,13 @@ def run_summary(data: DataStructure):
     process_output.ovarre(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
 
     process_output.ovarre(
-        mfile, "Optimisation switch", "(ioptimz)", data.numerics.ioptimz
+        mfile,
+        "Optimisation switch",
+        "(i_process_run_mode)",
+        data.numerics.i_process_run_mode,
     )
     # If optimising, write figure of merit switch
-    if data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
+    if data.numerics.i_process_run_mode == PROCESSRunMode.OPTIMISATION:
         process_output.ovarre(
             mfile, "Figure of merit switch", "(minmax)", data.numerics.minmax
         )
@@ -414,7 +417,7 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
         if (
-            data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION
+            data.numerics.i_process_run_mode == PROCESSRunMode.OPTIMISATION
             and (data.numerics.ixc[: data.numerics.nvar] == 4).any()
             and data.numerics.boundl[3] < data.physics.temp_plasma_pedestal_kev * 1.001
         ):
@@ -488,7 +491,7 @@ def check_process(inputs, data):  # noqa: ARG001
         # (nd_plasma_electron_on_axis>nd_plasma_pedestal_electron)
         #  -> Potential hollowed density profile
         if (
-            data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION
+            data.numerics.i_process_run_mode == PROCESSRunMode.OPTIMISATION
             and not (
                 data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 81
             ).any()
