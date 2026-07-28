@@ -37,8 +37,8 @@ logger = logging.getLogger(__name__)
 def _ixc_additional_actions(
     _name, value: int, _array_index, _config, data: DataStructure
 ):
-    data.numerics.ixc[data.numerics.nvar] = value
-    data.numerics.nvar += 1
+    data.numerics.ixc[data.numerics.n_iteration_variables] = value
+    data.numerics.n_iteration_variables += 1
 
 
 def _icc_additional_actions(
@@ -1194,7 +1194,7 @@ def parse_input_file(data_structure_obj: DataStructure):
     """
     # These get incremented when reading the file, so need
     # to ensure they are 0 before we parse the file
-    data_structure_obj.numerics.nvar = 0
+    data_structure_obj.numerics.n_iteration_variables = 0
     data_structure_obj.numerics.n_constraints = 0
 
     input_file_path = (

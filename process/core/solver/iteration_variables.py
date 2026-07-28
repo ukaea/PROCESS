@@ -283,7 +283,7 @@ def load_iteration_variables(data):
     ProcessValueError
         If iteration variable is missing
     """
-    for i in range(data.numerics.nvar):
+    for i in range(data.numerics.n_iteration_variables):
         variable_index = data.numerics.ixc[i]
         iteration_variable = ITERATION_VARIABLES[variable_index]
 
@@ -405,7 +405,7 @@ def set_scaled_iteration_variable(xc, nn: int, data: DataStructure):
 
 def load_scaled_bounds(data: DataStructure):
     """Sets the scaled bounds of the iteration variables."""
-    for i in range(data.numerics.nvar):
+    for i in range(data.numerics.n_iteration_variables):
         variable_index = data.numerics.ixc[i] - 1
         data.numerics.itv_scaled_lower_bounds[i] = (
             data.numerics.boundl[variable_index] * data.numerics.scale[i]

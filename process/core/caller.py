@@ -508,7 +508,7 @@ def write_output_files(
     ifail : int
         solver return code
     """
-    n = data.numerics.nvar
+    n = data.numerics.n_iteration_variables
     x = data.numerics.xcm[:n]
     # Call models, ensuring output mfiles are fully idempotent
     caller = Caller(models, data)

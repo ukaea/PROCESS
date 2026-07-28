@@ -177,7 +177,7 @@ class NumericsData:
     (leave at zero for now)
     """
 
-    nvar: int = 0
+    n_iteration_variables: int = 0
     """number of iteration variables to use"""
 
     nviter: int = 0

@@ -433,7 +433,7 @@ class SingleRun:
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
-        n = int(self.data.numerics.nvar)
+        n = int(self.data.numerics.n_iteration_variables)
         # [:n] as array always at max size: contains 0s
         self.data.numerics.ixc[:n].sort()
 

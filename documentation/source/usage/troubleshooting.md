@@ -44,9 +44,9 @@ necessity brief, and so cannot promise to lead to a more successful outcome.
 ### Optimisation problems
 
 On reflection it is perhaps surprising that PROCESS ever does manage to find the global minimum 
-figure of merit value, if there are `nvar` iteration variables active the search is 
-over `nvar`-dimensional parameter space, in which there may be many shallow minima of approximately 
-equal depth. Remember that `nvar` is usually of the order of twenty.
+figure of merit value, if there are `n_iteration_variables` iteration variables active the search is 
+over `n_iteration_variables`-dimensional parameter space, in which there may be many shallow minima of approximately 
+equal depth. Remember that `n_iteration_variables` is usually of the order of twenty.
 
 The machine found by PROCESS may not, therefore, be the absolute optimal device. It is quite easy 
 to have two or more solutions, with results only a few percent different, but a long way apart in 
