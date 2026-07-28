@@ -150,8 +150,8 @@ class SuperconductorModel(IntEnum):
         cls,
         value: int,
         material: SuperconductorMaterial,
-        b_crit_zero_temp_strain: float,
-        temp_crit_zero_field_strain: float,
+        b_crit_zero_temp_strain: float | None,
+        temp_crit_zero_field_strain: float | None,
         shape: SuperconductorShape,
         full_name: str,
     ):
