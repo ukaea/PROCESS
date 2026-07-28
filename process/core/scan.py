@@ -327,9 +327,7 @@ class Scan:
             )
             process_output.oblnkl(constants.IOTTY)
 
-            logger.critical(
-                "Solver returns with ifail /= %s.", SolverOutputCondition.CONVERGED.value
-            )
+            logger.critical("Solver returns with ifail /= 1.\nifail = %s", ifail)
 
             # Error code handler for VMCON
             if self.solver == "vmcon":

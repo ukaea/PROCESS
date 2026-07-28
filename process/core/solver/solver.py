@@ -16,10 +16,10 @@ from pyvmcon import (
 )
 from scipy.optimize import fsolve
 
-from process.core.data_structure.numerics import SolverOutputCondition
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 from process.core.solver.evaluators import Evaluators
+from process.data_structure.numerics import SolverOutputCondition
 
 logger = logging.getLogger(__name__)
 
