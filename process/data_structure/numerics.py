@@ -160,7 +160,7 @@ class NumericsData:
     n_constraints: int = 0
     """Total number of constraints (n_equality_constraints + n_inequality_constraints)"""
 
-    ncalls: int = 0
+    n_model_calls: int = 0
     """number of function calls during solution"""
 
     n_equality_constraints: int = -1
