@@ -180,7 +180,7 @@ class NumericsData:
     n_iteration_variables: int = 0
     """number of iteration variables to use"""
 
-    nviter: int = 0
+    n_solver_iterations: int = 0
     """number of optimisation iterations performed"""
 
     icc: list[int] = field(

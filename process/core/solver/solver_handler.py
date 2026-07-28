@@ -83,10 +83,10 @@ class SolverHandler:
             # If VMCON has exited with error code 5
             # (ifail = SolverOutputCondition.NO_SOLUTION) try another run using a
             # multiple of the identity matrix as input for the Hessian b(n,n)
-            # Only do this if VMCON has not iterated (nviter=1)
+            # Only do this if VMCON has not iterated (n_solver_iterations=1)
             if (
                 ifail == SolverOutputCondition.NO_SOLUTION
-                and self.data.numerics.nviter < 2
+                and self.data.numerics.n_solver_iterations < 2
             ):
                 print(
                     "VMCON error code = 5 (SolverOutputCondition.NO_SOLUTION). "

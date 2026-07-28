@@ -12085,7 +12085,7 @@ def plot_cover_page(
     # VMCON_convergence_parameter
     convergence_parameter = mfile.get("convergence_parameter", scan=-1) or "N/A"
     # Number_of_optimising_solver_iterations
-    nviter = int(mfile.get("nviter", scan=-1)) or "N/A"
+    n_solver_iterations = int(mfile.get("n_solver_iterations", scan=-1)) or "N/A"
 
     # Objective name with minimising/maximising
     if isinstance(minmax_switch, str):
@@ -12163,7 +12163,7 @@ def plot_cover_page(
         f"• Number of Iteration Variables: {int(nvars)}\n"
         f"• Constraint Residuals (sqrt sum sq): {sqsumsq}\n"
         f"• Convergence Parameter: {convergence_parameter}\n"
-        f"• Solver Iterations: {nviter}\n"
+        f"• Solver Iterations: {n_solver_iterations}\n"
         f"• Runtime: {mfile.get('process_runtime', scan=-1):.6f} seconds"
     )
     axis.text(
