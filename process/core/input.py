@@ -153,7 +153,7 @@ INPUT_VARIABLES = {
     "epsfcn": InputVariable("numerics", float, range=(0.0, 1.0)),
     "maxcal": InputVariable("globals", int, range=(0, 10000)),
     "i_figure_merit": InputVariable("numerics", int),
-    "neqns": InputVariable(
+    "n_equality_constraints": InputVariable(
         "numerics", int, range=(0, ConstraintManager.num_constraints())
     ),
     "nineqns": InputVariable(

@@ -158,12 +158,12 @@ class NumericsData:
     """
 
     n_constraints: int = 0
-    """Total number of constraints (neqns + nineqns)"""
+    """Total number of constraints (n_equality_constraints + nineqns)"""
 
     ncalls: int = 0
     """number of function calls during solution"""
 
-    neqns: int = -1
+    n_equality_constraints: int = -1
     """number of equality constraints to be satisfied"""
 
     nfev1: int = 0

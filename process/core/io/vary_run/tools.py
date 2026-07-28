@@ -297,7 +297,7 @@ def vary_iteration_variables(itervars, lbs, ubs, config: RunProcessConfig):
     return new_values
 
 
-def get_solution_from_mfile(neqns, nvars, wdir=".", mfile="MFILE.DAT"):
+def get_solution_from_mfile(n_equality_constraints, nvars, wdir=".", mfile="MFILE.DAT"):
     """Returns
     ifail - error_value of VMCON/PROCESS
     the objective functions
@@ -319,10 +319,12 @@ def get_solution_from_mfile(neqns, nvars, wdir=".", mfile="MFILE.DAT"):
     constraints = m_file.get("sqsumsq")
 
     table_sol = [m_file.get(f"itvar{var_no + 1:03}") for var_no in range(nvars)]
-    table_res = [m_file.get(f"normres{con_no + 1:03}") for con_no in range(neqns)]
+    table_res = [
+        m_file.get(f"normres{con_no + 1:03}") for con_no in range(n_equality_constraints)
+    ]
 
     if ifail != SolverOutputCondition.CONVERGED:
-        return ifail, "0", "0", ["0"] * nvars, ["0"] * neqns
+        return ifail, "0", "0", ["0"] * nvars, ["0"] * n_equality_constraints
 
     return ifail, objective_function, constraints, table_sol, table_res
 

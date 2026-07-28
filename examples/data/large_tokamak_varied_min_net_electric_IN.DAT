@@ -17,7 +17,7 @@ i_figure_merit = 1
 * Error tolerance for VMCON
 epsvmc = 1e-7
 
-neqns = 3
+n_equality_constraints = 3
 
 * Constraint Equations - Consistency Equations *
 ************************************************

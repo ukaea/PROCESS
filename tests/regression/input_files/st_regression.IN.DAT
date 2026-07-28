@@ -55,8 +55,8 @@ i_figure_merit = -5
 * DESCRIPTION:   Switch for Figure-of-Merit 
 * JUSTIFICATION: Selected optimisation
 
-neqns = 3
-* DESCRIPTION:   Number of equality constraints (the first neqns icc = ... statements are considered equality)
+n_equality_constraints = 3
+* DESCRIPTION:   Number of equality constraints (the first n_equality_constraints icc = ... statements are considered equality)
 * JUSTIFICATION: 3 equality (consistency) equations
 
 *________________________________________________________________________*

@@ -33,7 +33,7 @@ i_figure_merit   = -14 * Switch for figure-of-merit (see lablmm for descriptions
 * DESCRIPTION:   Switch for Figure-of-Merit (1: Minimise major radius)
 * JUSTIFICATION: Aim to minimise major radius
 
-neqns = 4
+n_equality_constraints = 4
 * DESCRIPTION:   No of equality constraints
 * JUSTIFICATION: 
 
