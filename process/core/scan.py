@@ -13,6 +13,7 @@ from tabulate import tabulate
 from process.core import constants, process_output
 from process.core.caller import write_output_files
 from process.core.exceptions import ProcessValueError
+from process.core.io.data_structure_dicts import get_dicts
 from process.core.log import logging_model_handler, show_errors
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
@@ -59,6 +60,7 @@ class ScanVariables(ScanVariable, Enum):
                     return sv
         raise ProcessValueError("Illegal scan variable number", nwp=value)
 
+    @DynamicClassAttribute
     def fname(self):
         if "__" in self.name:
             return self.name.replace("__", "(") + ")"
@@ -86,11 +88,18 @@ class ScanVariables(ScanVariable, Enum):
             name = self.name
 
         self._data_ = getattr(var_area, name)
+        self._description_ = get_dicts()["DICT_DESCRIPTIONS"][name]
 
     @DynamicClassAttribute
     def data(self):
         if hasattr(self, "_data_"):
             return self._data_
+        raise ValueError("Data not available")
+
+    @DynamicClassAttribute
+    def description(self):
+        if hasattr(self, "_description_"):
+            return self._description_
         raise ValueError("Data not available")
 
     def get_val(self, mfile, scan):
@@ -1014,7 +1023,7 @@ class Scan:
         sv = self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan)
 
         self.data.globals.vlabel = sv.fname
-        self.data.globals.xlabel = sv.data.description
+        self.data.globals.xlabel = sv.description
 
         process_output.oblnkl(constants.NOUT)
         process_output.ostars(constants.NOUT, 110)
