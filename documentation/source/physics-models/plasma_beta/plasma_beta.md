@@ -164,8 +164,6 @@ IN.DAT
 
 i_beta_norm_max = 0
 beta_norm_max = 3.0
-
-
 ```
 
 ---------

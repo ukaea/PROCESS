@@ -16,8 +16,6 @@ IN.DAT
 
 i_ind_plasma_internal_norm = 0
 ind_plasma_internal_norm = 1.0
-
-
 ```
 
 ----------

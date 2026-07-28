@@ -8,6 +8,7 @@ breakpoint in the code, insert the following code where you want the code to bre
 
 ```python
 import pdb
+
 pdb.set_trace()
 ```
 
