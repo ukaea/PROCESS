@@ -1797,6 +1797,7 @@ class Physics(Model):
             self.data.physics.fusrat_total,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "D-T Fusion rate: total (reactions/sec)",
@@ -1811,7 +1812,7 @@ class Physics(Model):
             self.data.physics.fusrat_plasma_dt,
             "OP ",
         )
-
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "D-D -> 3He Fusion rate: plasma (reactions/sec)",
@@ -1833,6 +1834,7 @@ class Physics(Model):
             self.data.physics.fusrat_plasma_dd_total,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "D-3He Fusion rate: total (reactions/sec)",
@@ -1840,6 +1842,7 @@ class Physics(Model):
             self.data.physics.fusrat_plasma_dhe3,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Neutron production rate: total (particles/sec)",
@@ -1847,27 +1850,7 @@ class Physics(Model):
             self.data.physics.fusrat_neutron_production_total,
             "OP ",
         )
-        po.ovarre(
-            self.outfile,
-            "D-3He Fusion rate: total (reactions/sec)",
-            "(fusrat_plasma_dhe3)",
-            self.data.physics.fusrat_plasma_dhe3,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Neutron production rate: total (particles/sec)",
-            "(fusrat_neutron_production_total)",
-            self.data.physics.fusrat_neutron_production_total,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "D-D Fusion rate: total (reactions/sec)",
-            "(fusrat_plasma_dd_total)",
-            self.data.physics.fusrat_plasma_dd_total,
-            "OP ",
-        )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Fusion rate density: total (reactions/m³/sec)",
