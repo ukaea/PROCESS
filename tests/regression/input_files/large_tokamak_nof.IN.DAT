@@ -191,27 +191,27 @@ t_burn_min = 7200.0
 ***********************
 
 * Particle recycling fraction
-ixc = 177
+ixc = 178
 f_plasma_particles_lcfs_recycled = 0.9
 
 * Plasma fuelling efficiecy
-ixc = 178
+ixc = 179
 eta_plasma_fuelling = 0.7
 
 * Injected VV fuelling rate
-ixc = 179
+ixc = 180
 molflow_plasma_fuelling_vv_injected = 5e21
-boundl(179) = 1e20
+boundl(180) = 1e20
 
 * Deuterium fuelling fraction
-ixc = 180
+ixc = 181
 f_molflow_plasma_fuelling_deuterium = 0.5
-boundl(180) = 0.4
+boundl(181) = 0.4
 
 * Tritium fuelling fraction
-ixc = 181
+ixc = 182
 f_molflow_plasma_fuelling_tritium = 0.5
-boundl(181) = 0.4
+boundl(182) = 0.4
 
 
 * b_plasma_toroidal_on_axis [T]
