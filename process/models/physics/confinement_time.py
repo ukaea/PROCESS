@@ -4096,16 +4096,16 @@ class PlasmaConfinementTime(Model):
 
         Notes
         -----
-          - The electron density used to derive the scaling was measured locally
-          at a normalised minor radius of approximately 0.9. The central
-          line-averaged electron density is used here as the closest available
-          PROCESS quantity.
+        - The electron density used to derive the scaling was measured locally
+        at a normalised minor radius of approximately 0.9. The central
+        line-averaged electron density is used here as the closest available
+        PROCESS quantity.
 
         References
         ----------
-          [1] Y. Chen et al., “Energy confinement scaling in the NCST spherical
-            tokamak,” AIP Advances, vol. 16, no. 3, pp. 035043-035043,
-            Mar. 2026, doi: https://doi.org/10.1063/5.0311657.
+        [1] Y. Chen et al., “Energy confinement scaling in the NCST spherical
+        tokamak,” AIP Advances, vol. 16, no. 3, pp. 035043-035043,
+        Mar. 2026, doi: https://doi.org/10.1063/5.0311657.
         """
         return (
             0.11
