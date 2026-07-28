@@ -472,6 +472,7 @@ OBS_VARS = {
     "alstroh": "stress_cs_steel_max",
     "i_cs_stress": None,
     "f_nd_alpha_electron": "f_nd_alpha_thermal_electron",
+    "cost_model": "i_cost_model",
 }
 
 OBS_VARS_HELP = {

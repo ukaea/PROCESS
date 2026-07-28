@@ -2850,7 +2850,7 @@ output_costs = 1
 * DESCRIPTION:   Switch for Costs Output (1: Write Cost-Related Outputs to File) 
 * JUSTIFICATION: Want to see costs
 
-cost_model = 0 
+i_cost_model = 0 
 * DESCRIPTION:   Switch for Cost Model 
 * JUSTIFICATION: 
 

@@ -236,7 +236,7 @@ f_p_blkt_multiplication       = 1.26     *Energy multiplication in blanket and s
 fhole       = 0.0      *Area fraction taken up by other holes 
 
 *-----------------Cost Variables-------------------*
-cost_model = 0         *1990 cost model
+i_cost_model = 0         *1990 cost model
 abktflnc    = 20.0     *Allowable first wall/blanket neutron fluence (MW-yr/m2)
 f_t_plant_available      = 0.75     *Total plant availability fraction
 fcdfuel     = 0.0      *Fraction of current drive cost treated as fuel (if ifueltyp = 1)

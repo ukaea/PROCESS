@@ -495,7 +495,7 @@ qnuc = 1.3E4
 output_costs = 1
 
 * Costs model switch
-cost_model = 0
+i_cost_model = 0
 
 * Total plant availability fraction;
 f_t_plant_available = 0.80

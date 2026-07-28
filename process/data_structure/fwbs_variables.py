@@ -259,7 +259,7 @@ class FWBSData:
     """
 
     i_shield_mat: int = 0
-    """Switch for shield material - *currently only applied in costing routines* `cost_model = 2`
+    """Switch for shield material - *currently only applied in costing routines* `i_cost_model = 2`
     - =0 Tungsten (default)
     - =1 Tungsten carbide
     """

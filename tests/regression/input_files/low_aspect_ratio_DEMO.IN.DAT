@@ -579,7 +579,7 @@ output_costs = 0
 * DESCRIPTION:   Switch for costs output
 * JUSTIFICATION: Do not print to OUT.DAT all accounts 
 
-cost_model = 0
+i_cost_model = 0
 * DESCRIPTION:   Switch for Cost Model
 * JUSTIFICATION: Use $ 1990 PROCESS model
 

@@ -1,4 +1,18 @@
 from dataclasses import dataclass, field
+from enum import IntEnum
+
+
+class CostModels(IntEnum):
+    """Enum for cost model selection"""
+
+    PROCESS_1990 = 0
+    """Use $ 1990 PROCESS model"""
+
+    KOVARI_2014 = 1
+    """Use $ 2014 Kovari model"""
+
+    USER_PROVIDED = 2
+    """Use user-provided model"""
 
 
 @dataclass(slots=True)
@@ -306,7 +320,7 @@ class CostData:
     amortization: float = 13.6
     """amortization factor (fixed charge factor) "A" (years)"""
 
-    cost_model: int = 1
+    i_cost_model: int = 1
     """Switch for cost model:
     - =0 use $ 1990 PROCESS model
     - =1 use $ 2014 Kovari model
