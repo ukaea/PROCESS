@@ -1011,9 +1011,10 @@ class Scan:
 
     def scan_1d_write_point_header(self, iscan: int):
         self.data.globals.iscan_global = iscan
-        self.data.globals.vlabel, self.data.globals.xlabel = self.scan_select(
-            self.data.scan.nsweep, self.data.scan.sweep, iscan
-        )
+        sv = self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan)
+
+        self.data.globals.vlabel = sv.fname
+        self.data.globals.xlabel = sv.data.description
 
         process_output.oblnkl(constants.NOUT)
         process_output.ostars(constants.NOUT, 110)
@@ -1043,12 +1044,12 @@ class Scan:
         sv_1 = self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan_1)
 
         self.data.globals.vlabel = sv_1.fname
-        self.data.globals.xlabel = sv_1.description
+        self.data.globals.xlabel = sv_1.data.description
 
         sv_2 = self.scan_select(self.data.scan.nsweep_2, self.data.scan.sweep_2, iscan_r)
 
         self.data.globals.vlabel_2 = sv_2.fname
-        self.data.globals.xlabel_2 = sv_2.description
+        self.data.globals.xlabel_2 = sv_2.data.description
 
         process_output.oblnkl(constants.NOUT)
         process_output.ostars(constants.NOUT, 110)
