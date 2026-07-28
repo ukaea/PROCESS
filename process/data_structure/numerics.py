@@ -147,13 +147,11 @@ N_CONSTRAINT_EQUATIONS_MAX = 500
 class NumericsData:
     """Dataclass holding numerics variables"""
 
-    i_process_run_mode: int = 1
-    """Code operation switch:
-    * -2 for evaluation mode (i.e. no optimisation)
-    * 1 for optimisation mode (e.g. via VMCON)
+    i_process_run_mode: int | PROCESSRunMode = 1
+    """PROCESS run mode (see `PROCESSRunMode` for descriptions)
     """
 
-    minmax: int = 7
+    i_figure_merit: int | FiguresOfMerit = 7
     """
     Switch for figure-of-merit (see `FiguresOfMerit` for descriptions)
     negative => maximise, positive => minimise

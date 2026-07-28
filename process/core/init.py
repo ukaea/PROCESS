@@ -191,17 +191,17 @@ def run_summary(data: DataStructure):
                 f"Max iterations : {data.globals.maxcal}",
             )
 
-            if data.numerics.minmax > 0:
+            if data.numerics.i_figure_merit > 0:
                 minmax_string = "  -- minimise "
                 minmax_sign = "+"
             else:
                 minmax_string = "  -- maximise "
                 minmax_sign = "-"
 
-            fom_string = FiguresOfMerit(abs(data.numerics.minmax)).description
+            fom_string = FiguresOfMerit(abs(data.numerics.i_figure_merit)).description
             process_output.ocmmnt(
                 outfile,
-                f"Figure of merit : {minmax_sign}{abs(data.numerics.minmax)}"
+                f"Figure of merit : {minmax_sign}{abs(data.numerics.i_figure_merit)}"
                 f"{minmax_string}{fom_string}",
             )
             process_output.ocmmnt(
@@ -235,7 +235,10 @@ def run_summary(data: DataStructure):
     # If optimising, write figure of merit switch
     if data.numerics.i_process_run_mode == PROCESSRunMode.OPTIMISATION:
         process_output.ovarre(
-            mfile, "Figure of merit switch", "(minmax)", data.numerics.minmax
+            mfile,
+            "Figure of merit switch",
+            "(i_figure_merit)",
+            data.numerics.i_figure_merit,
         )
 
 

@@ -8,12 +8,12 @@ from process.data_structure.numerics import FiguresOfMerit
 from process.models.availability import AvailabilityModel
 
 
-def objective_function(minmax: int, data: DataStructure) -> float:
+def objective_function(i_figure_merit: int, data: DataStructure) -> float:
     """Calculate the specified objective function
 
     Parameters
     ----------
-    minmax : int
+    i_figure_merit : int
         the ID and sign of the figure of merit to evaluate.
         A negative value indicates maximisation.
         A positive value indicates minimisation.
@@ -43,13 +43,15 @@ def objective_function(minmax: int, data: DataStructure) -> float:
         If minmax=15 not used with i_plant_availability=1
     """
     try:
-        figure_of_merit = FiguresOfMerit(abs(minmax))
+        figure_of_merit = FiguresOfMerit(abs(i_figure_merit))
     except ValueError as err:
-        raise ProcessValueError(f"Invalid minmax value: {minmax}") from err
+        raise ProcessValueError(
+            f"Invalid i_figure_merit value: {i_figure_merit}"
+        ) from err
 
     # -1 = maximise
     # +1 = minimise
-    objective_sign = np.sign(minmax)
+    objective_sign = np.sign(i_figure_merit)
 
     if figure_of_merit == FiguresOfMerit.MAJOR_RADIUS:
         objective_metric = 0.2 * data.physics.rmajor
@@ -83,7 +85,7 @@ def objective_function(minmax: int, data: DataStructure) -> float:
             == AvailabilityModel.USER_INPUT
         ):
             raise ProcessValueError(
-                "minmax=15 requires `f_t_plant_available` to be calculated, not user "
+                "i_figure_merit=15 requires `f_t_plant_available` to be calculated, not user "
                 "input"
             )
         objective_metric = data.costs.f_t_plant_available

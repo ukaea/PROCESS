@@ -152,7 +152,7 @@ INPUT_VARIABLES = {
     "boundu": InputVariable("numerics", float, array=True),
     "epsfcn": InputVariable("numerics", float, range=(0.0, 1.0)),
     "maxcal": InputVariable("globals", int, range=(0, 10000)),
-    "minmax": InputVariable("numerics", int),
+    "i_figure_merit": InputVariable("numerics", int),
     "neqns": InputVariable(
         "numerics", int, range=(0, ConstraintManager.num_constraints())
     ),
