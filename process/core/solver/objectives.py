@@ -33,6 +33,11 @@ def objective_function(minmax: int, data: DataStructure) -> float:
     data: DataStructure
         data structure object for providing data to the
         objective function
+
+    Raises
+    ------
+    ProcessValueError
+        If minmax=15 not used with i_plant_availability=1
     """
     try:
         figure_of_merit = FiguresOfMerit(abs(minmax))

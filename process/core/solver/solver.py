@@ -359,6 +359,11 @@ def get_solver(data: DataStructure, solver_name: str = "vmcon") -> _Solver:
     -------
     _Solver
         solver to use for optimisation
+
+    Raises
+    ------
+    ProcessValueError
+        If solver name is not an inbuilt PROCESS solver or recognised package
     """
     solver: _Solver
 
@@ -389,6 +394,11 @@ def load_external_solver(package: str):
     Parameters
     ----------
     package: str :
+
+    Raises
+    ------
+    AttributeError
+        If module does not have a '__process_solver__' attribute
 
     """
     module = importlib.import_module(package)

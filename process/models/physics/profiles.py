@@ -411,6 +411,11 @@ class TeProfile(Profile):
         tbeta : float
             Second temperature exponent.
 
+        Raises
+        ------
+        ProcessValueError
+            If negative temperature in plasma profile
+
         References
         ----------
             Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor

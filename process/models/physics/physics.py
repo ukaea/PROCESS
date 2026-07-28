@@ -1162,6 +1162,11 @@ class Physics(Model):
           beams.
         - Calculates the density weighted mass and mass weighted plasma effective
           charge.
+
+        Raises
+        ------
+        ProcessValueError
+           If znfuel is negative
         """
         # Alpha ash portion
         self.data.physics.nd_plasma_alphas_thermal_vol_avg = (
