@@ -158,7 +158,7 @@ class NumericsData:
     """
 
     n_constraints: int = 0
-    """Total number of constraints (n_equality_constraints + nineqns)"""
+    """Total number of constraints (n_equality_constraints + n_inequality_constraints)"""
 
     ncalls: int = 0
     """number of function calls during solution"""
@@ -172,7 +172,7 @@ class NumericsData:
     nfev2: int = 0
     """number of calls to FCNVMC1 (VMCON function caller) made"""
 
-    nineqns: int = 0
+    n_inequality_constraints: int = 0
     """number of inequality constraints VMCON must satisfy
     (leave at zero for now)
     """
