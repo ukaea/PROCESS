@@ -135,7 +135,7 @@ class FiguresOfMerit(IntEnum):
         return self._description_
 
 
-IPNVARS = max(ITERATION_VARIABLES.keys())
+N_ITERATION_VARIABLES_MAX = max(ITERATION_VARIABLES.keys())
 """total number of variables available for iteration"""
 
 # Set to a really large number so that it should never need to be changed
@@ -391,12 +391,14 @@ class NumericsData:
     * (92) D/T/He3 ratio in fuel sums to 1
     """
 
-    ixc: list[int] = field(default_factory=lambda: np.array([0] * IPNVARS))
+    ixc: list[int] = field(
+        default_factory=lambda: np.array([0] * N_ITERATION_VARIABLES_MAX)
+    )
     """Array defining which iteration variables to activate
     (see lablxc for descriptions)
     """
 
-    lablxc: list[str] = field(default_factory=lambda: [""] * IPNVARS)
+    lablxc: list[str] = field(default_factory=lambda: [""] * N_ITERATION_VARIABLES_MAX)
     """Labels describing iteration variables<UL>
     * ( 1) aspect
     * ( 2) b_plasma_toroidal_on_axis
@@ -577,7 +579,7 @@ class NumericsData:
     # WARNING These labels are used as variable names by new_indat(), and possibly
     # other python utilities, so they cannot easily be changed.
 
-    name_xc: list[str] = field(default_factory=lambda: [""] * IPNVARS)
+    name_xc: list[str] = field(default_factory=lambda: [""] * N_ITERATION_VARIABLES_MAX)
 
     sqsumsq: float = 0.0
     """sqrt of the sum of the square of the constraint residuals"""
@@ -594,43 +596,61 @@ class NumericsData:
     epsvmc: float = 1.0e-6
     """Error tolerance for optimiser"""
 
-    boundl: list[float] = field(default_factory=lambda: np.array([9.0e-99] * IPNVARS))
+    boundl: list[float] = field(
+        default_factory=lambda: np.array([9.0e-99] * N_ITERATION_VARIABLES_MAX)
+    )
     """Lower bounds used on ixc variables during
     optimisation runs
     """
 
-    boundu: list[float] = field(default_factory=lambda: np.array([9.0e99] * IPNVARS))
+    boundu: list[float] = field(
+        default_factory=lambda: np.array([9.0e99] * N_ITERATION_VARIABLES_MAX)
+    )
     """Upper bounds used on ixc variables"""
 
     itv_scaled_lower_bounds: list[float] = field(
-        default_factory=lambda: np.array([0.0] * IPNVARS)
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
     )
     """Lower bound of the ixc variables scaled to (divided by)
     the initial value of the corresponding ixc
     """
 
     itv_scaled_upper_bounds: list[float] = field(
-        default_factory=lambda: np.array([0.0] * IPNVARS)
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
     )
     """Upper bound of the ixc variables scaled to (divided by)
     the initial value of the corresponding ixc
     """
 
-    rcm: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    rcm: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
 
-    resdl: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    resdl: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
 
-    scafc: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    scafc: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
     """The initial value of each ixc variable"""
 
-    scale: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    scale: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
     """The reciprocal of the initial value of each ixc variable"""
 
-    xcm: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    xcm: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
 
-    xcs: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    xcs: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
 
-    vlam: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    vlam: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
 
     force_vmcon_inequality_satisfication: int = 1
     """If 1, adds an additional convergence criteria to the VMCON solver
