@@ -1148,7 +1148,7 @@ class Scan:
             case 22:
                 if (
                     AvailabilityModel(self.data.costs.i_plant_availability)
-                    == AvailabilityModel.WARD_TAYLOR
+                    != AvailabilityModel.USER_INPUT
                 ):
                     raise ProcessValueError(
                         "Do not scan f_t_plant_available if i_plant_availability=1"

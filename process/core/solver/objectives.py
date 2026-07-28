@@ -73,9 +73,12 @@ def objective_function(minmax: int, data: DataStructure) -> float:
     elif figure_of_merit == FiguresOfMerit.PLANT_AVAILABILITY_FACTOR:
         if (
             AvailabilityModel(data.costs.i_plant_availability)
-            != AvailabilityModel.WARD_TAYLOR
+            == AvailabilityModel.USER_INPUT
         ):
-            raise ProcessValueError("minmax=15 requires i_plant_availability=1")
+            raise ProcessValueError(
+                "minmax=15 requires `f_t_plant_available` to be calculated, not user "
+                "input"
+            )
         objective_metric = data.costs.f_t_plant_available
     elif figure_of_merit == FiguresOfMerit.MIN_R0_MAX_TAU_BURN:
         objective_metric = 0.95 * (data.physics.rmajor / 9.0) - 0.05 * (

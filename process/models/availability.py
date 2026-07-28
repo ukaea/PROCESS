@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class AvailabilityModel(IntEnum):
     """Enum for availability models"""
 
-    INPUT = (0, "Input value for f_t_plant_available")
+    USER_INPUT = (0, "Input value for `f_t_plant_available`")
     WARD_TAYLOR = (1, "Ward and Taylor model (1999)")
     MORRIS = (2, "Morris model (2015)")
     ST = (3, "ST model (2023)")
@@ -375,7 +375,7 @@ class Availability(Model):
 
             if (
                 AvailabilityModel(self.data.costs.i_plant_availability)
-                == AvailabilityModel.INPUT
+                == AvailabilityModel.USER_INPUT
             ):
                 po.ovarre(
                     self.outfile,
