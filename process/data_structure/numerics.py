@@ -139,7 +139,7 @@ N_ITERATION_VARIABLES_MAX = max(ITERATION_VARIABLES.keys())
 """total number of variables available for iteration"""
 
 # Set to a really large number so that it should never need to be changed
-IPEQNS = 500
+N_CONSTRAINT_EQUATIONS_MAX = 500
 """Maximum number of constraint equations available"""
 
 
@@ -185,9 +185,13 @@ class NumericsData:
     nviter: int = 0
     """number of optimisation iterations performed"""
 
-    icc: list[int] = field(default_factory=lambda: np.array([0] * IPEQNS))
+    icc: list[int] = field(
+        default_factory=lambda: np.array([0] * N_CONSTRAINT_EQUATIONS_MAX)
+    )
 
-    active_constraints: list[bool] = field(default_factory=lambda: [False] * IPEQNS)
+    active_constraints: list[bool] = field(
+        default_factory=lambda: [False] * N_CONSTRAINT_EQUATIONS_MAX
+    )
     """Logical array showing which constraints are active"""
 
     # TODO Do not change the comments for lablcc: they are used to create the
