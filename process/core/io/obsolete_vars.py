@@ -474,6 +474,10 @@ OBS_VARS = {
     "f_nd_alpha_electron": "f_nd_alpha_thermal_electron",
     "cost_model": "i_cost_model",
     "t_conductor": "dx_tf_turn_conduit_full_average",
+    "ioptimz": "i_process_run_mode",
+    "minmax": "i_figure_merit",
+    "neqns": "n_equality_constraints",
+    "nineqns": "n_inequality_constraints",
 }
 
 OBS_VARS_HELP = {
