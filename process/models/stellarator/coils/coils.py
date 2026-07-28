@@ -48,9 +48,11 @@ def jcrit_from_material(
     )
     # of a cable conductor.
 
-    if i_tf_sc_mat == 1:  # ITER Nb3Sn critical surface parameterization
-        bc20m = 32.97  # these are values taken from sctfcoil.f90
-        tc0m = 16.06
+    if (
+        i_tf_sc_mat == SuperconductorModel.ITER_NB3SN
+    ):  # ITER Nb3Sn critical surface parameterization
+        bc20m = SuperconductorModel.ITER_NB3SN.b_crit_zero_field_strain
+        tc0m = SuperconductorModel.ITER_NB3SN.temp_crit_zero_field_strain
 
         #  j_crit_sc returned by itersc is the critical current density in the
         #  superconductor - not the whole strand, which contains copper
@@ -69,7 +71,7 @@ def jcrit_from_material(
         j_crit_sc = max(1.0e-9, j_crit_sc)
         j_crit_cable = max(1.0e-9, j_crit_cable)
 
-    elif i_tf_sc_mat == 2:
+    elif i_tf_sc_mat == SuperconductorModel.BI2212:
         # Bi-2212 high temperature superconductor parameterization
         #  Current density in a strand of Bi-2212 conductor
         #  N.B. jcrit returned by bi2212 is the critical current density
@@ -87,9 +89,9 @@ def jcrit_from_material(
         )  # bi2212 outputs j_crit_cable
         j_crit_sc = j_crit_cable / (1 - f_tf_conductor_copper)
         _tcrit = t_helium + tmarg
-    elif i_tf_sc_mat == 3:  # NbTi data
-        bc20m = 15.0
-        tc0m = 9.3
+    elif i_tf_sc_mat == SuperconductorModel.OLD_LUBELL_NBTI:  # NbTi data
+        bc20m = SuperconductorModel.OLD_LUBELL_NBTI.b_crit_zero_field_strain
+        tc0m = SuperconductorModel.OLD_LUBELL_NBTI.temp_crit_zero_field_strain
         c0 = 1.0
 
         if b_max > bc20m:
@@ -108,16 +110,18 @@ def jcrit_from_material(
         # This is needed right now. Can we change it later?
         j_crit_sc = max(1.0e-9, j_crit_sc)
         j_crit_cable = max(1.0e-9, j_crit_cable)
-    elif i_tf_sc_mat == 4:  # As (1), but user-defined parameters
+    elif (
+        i_tf_sc_mat == SuperconductorModel.USER_DEFINED_NB3SN
+    ):  # As (1), but user-defined parameters
         bc20m = b_crit_sc
         tc0m = t_crit_sc
         j_crit_sc, _bcrit, _tcrit = superconductors.itersc(
             t_helium, b_max, strain, bc20m, tc0m
         )
         j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
-    elif i_tf_sc_mat == 5:  # WST Nb3Sn parameterisation
-        bc20m = 32.97
-        tc0m = 16.06
+    elif i_tf_sc_mat == SuperconductorModel.WST_NB3SN:  # WST Nb3Sn parameterisation
+        bc20m = SuperconductorModel.WST_NB3SN.b_crit_zero_field_strain
+        tc0m = SuperconductorModel.WST_NB3SN.temp_crit_zero_field_strain
 
         #  j_crit_sc returned by itersc is the critical current density in the
         #  superconductor - not the whole strand, which contains copper
@@ -131,12 +135,16 @@ def jcrit_from_material(
         )
         j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
 
-    elif i_tf_sc_mat == 6:  # ! "REBCO" 2nd generation HTS superconductor in CroCo strand
+    elif (
+        i_tf_sc_mat == SuperconductorModel.CROCO_REBCO
+    ):  # ! "REBCO" 2nd generation HTS superconductor in CrCo strand
         j_crit_sc, _validity, _, _ = superconductors.jcrit_rebco(t_helium, b_max, 0)
         j_crit_sc = max(1.0e-9, j_crit_sc)
         j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
 
-    elif i_tf_sc_mat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
+    elif (
+        i_tf_sc_mat == SuperconductorModel.DURHAM_NBTI
+    ):  # Durham Ginzburg-Landau Nb-Ti parameterisation
         bc20m = SuperconductorModel.DURHAM_NBTI.b_crit_zero_field_strain
         tc0m = SuperconductorModel.DURHAM_NBTI.temp_crit_zero_field_strain
         j_crit_sc, _bcrit, _tcrit = superconductors.gl_nbti(
@@ -144,9 +152,9 @@ def jcrit_from_material(
         )
         j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
 
-    elif i_tf_sc_mat == 8:
-        bc20m = 429
-        tc0m = 185
+    elif i_tf_sc_mat == SuperconductorModel.DURHAM_REBCO:
+        bc20m = SuperconductorModel.DURHAM_REBCO.b_crit_zero_field_strain
+        tc0m = SuperconductorModel.DURHAM_REBCO.temp_crit_zero_field_strain
         j_crit_sc, _bcrit, _tcrit = superconductors.gl_rebco(
             t_helium, b_max, strain, bc20m, tc0m
         )

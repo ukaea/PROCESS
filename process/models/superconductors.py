@@ -84,7 +84,7 @@ class SuperconductorModel(IntEnum):
     BI2212 = (
         2,
         SuperconductorMaterial.BI2212,
-        None,
+        None,  # Model is fitted to experimental data, so no critical B or T is defined
         None,
         SuperconductorShape.CABLE,
         "Bi-2212",
@@ -100,8 +100,8 @@ class SuperconductorModel(IntEnum):
     USER_DEFINED_NB3SN = (
         4,
         SuperconductorMaterial.NB3SN,
-        None,
-        None,
+        None,  # User input via `bcritsc`
+        None,  # User input via `tcritsc`
         SuperconductorShape.CABLE,
         "User-defined ITER Nb₃Sn",
     )
