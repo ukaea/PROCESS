@@ -110,7 +110,7 @@ class ScanVariables(ScanVariable, Enum):
 
         if "__" in self.name:
             name, index = self.name.split("__")
-            getattr(var_area, name)[int(index)] = sweep_val
+            getattr(var_area, name)[int(index) - 1] = sweep_val
             if name == "f_nd_impurity_electrons":
                 var_area.f_nd_impurity_electron_array[int(index - 1)] = sweep_val
         else:
