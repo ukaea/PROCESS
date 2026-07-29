@@ -18,14 +18,14 @@ class ScrapeOffLayer(Model):
 
     def run(self):
         """Calculate the scrape off layer physics and update the physics variables."""
-        self.data.physics.len_plasma_sol_eich13_power_decay = self.calculate_eich2013_sol_power_decay_length(
+        self.data.physics.len_plasma_sol_eich13_power_decay = self.calculate_eich2013_sol_power_decay_length(  # noqa: E501
             p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
             rmajor=self.data.physics.rmajor,
             b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
             aspect=self.data.physics.aspect,
         )
 
-        self.data.physics.len_plasma_sol_mast14_power_decay_1 = self.calculate_mast2014_sol_power_decay_length_1(
+        self.data.physics.len_plasma_sol_mast14_power_decay_1 = self.calculate_mast2014_sol_power_decay_length_1(  # noqa: E501
             p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
             b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
         )
