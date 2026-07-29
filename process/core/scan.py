@@ -17,6 +17,7 @@ from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.scan_variables import IPNSCNS, NOUTVARS, ScanData
+from process.models.availability import AvailabilityModel
 
 if TYPE_CHECKING:
     from process.core.model import DataStructure, Model
@@ -1145,9 +1146,13 @@ class Scan:
             case 20:
                 self.data.constraints.t_burn_min = swp[iscn - 1]
             case 22:
-                if self.data.costs.i_plant_availability == 1:
+                if (
+                    AvailabilityModel(self.data.costs.i_plant_availability)
+                    != AvailabilityModel.USER_INPUT
+                ):
                     raise ProcessValueError(
-                        "Do not scan f_t_plant_available if i_plant_availability=1"
+                        "Do not scan f_t_plant_available if i_plant_availability is not "
+                        "set to 1 (user input) in the input file."
                     )
                 self.data.costs.f_t_plant_available = swp[iscn - 1]
             case 24:
