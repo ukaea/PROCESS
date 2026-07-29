@@ -312,6 +312,11 @@ class PlasmaProfile(Model):
             * self.data.physics.temp_plasma_ion_density_weighted_kev
         ) * constants.KILOELECTRON_VOLT
 
+        self.data.physics.f_pres_plasma_thermal_on_axis_vol_avg = (
+            self.data.physics.pres_plasma_thermal_on_axis
+            / self.data.physics.pres_plasma_thermal_vol_avg
+        )
+
         # Central plasma current density (A/m²)
         # Assumes a parabolic profile for the current density
         self.data.physics.j_plasma_on_axis = (

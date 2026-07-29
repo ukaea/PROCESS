@@ -3226,6 +3226,13 @@ class Physics(Model):
             self.data.physics.pres_plasma_thermal_vol_avg,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Central to volume averaged plasma thermal pressure ratio (p₀/⟨p⟩)",
+            "(f_pres_plasma_thermal_on_axis_vol_avg)",
+            self.data.physics.f_pres_plasma_thermal_on_axis_vol_avg,
+            "OP ",
+        )
         # As array output is not currently supported, each element is output as a float
         # instance
         # Output plasma pressure profiles to mfile

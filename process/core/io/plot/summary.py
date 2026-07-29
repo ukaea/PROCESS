@@ -12281,7 +12281,10 @@ def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     axis.legend()
 
     textstr_pressure = "\n".join((
-        rf"$p_0$: {mfile.get('pres_plasma_thermal_on_axis', scan=scan) / 1000:,.3f} kPa",
+        (
+            rf"$p_0$: {mfile.get('pres_plasma_thermal_on_axis', scan=scan) / 1000:,.3f} kPa"
+            rf"$\hspace{{2}} \frac{{p_0}}{{\langle p_{{\text{{total}}}} \rangle_\text{{V}}}}$: {mfile.get('f_pres_plasma_thermal_on_axis_vol_avg', scan=scan):,.3f}"
+        ),
         rf"$\langle p_{{\text{{total}}}} \rangle_\text{{V}}$: {mfile.get('pres_plasma_thermal_vol_avg', scan=scan) / 1000:,.3f} kPa",
     ))
 
