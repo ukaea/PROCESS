@@ -1151,7 +1151,8 @@ class Scan:
                     != AvailabilityModel.USER_INPUT
                 ):
                     raise ProcessValueError(
-                        "Do not scan f_t_plant_available if i_plant_availability=1"
+                        "Do not scan f_t_plant_available if i_plant_availability is not "
+                        "set to 1 (user input) in the input file."
                     )
                 self.data.costs.f_t_plant_available = swp[iscn - 1]
             case 24:
