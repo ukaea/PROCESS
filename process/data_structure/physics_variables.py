@@ -1055,6 +1055,12 @@ class PhysicsData:
     pres_plasma_fuel_profile: list[float] = field(default_factory=list)
     """Profile of fuel pressure in plasma [Pa]"""
 
+    pres_plasma_pedestal_thermal: float = 0.0
+    """Plasma pedestal thermal pressure (p_ped) (no fast ions or beam pressure) [Pa]"""
+
+    pres_plasma_separatrix_thermal: float = 0.0
+    """Plasma separatrix thermal pressure (pₛₑₚ) (no fast ions or beam pressure) [Pa]"""
+
     j_plasma_on_axis: float = 0.0
     """Central plasma current density (j₀) [A/m²]"""
 
