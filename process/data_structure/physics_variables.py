@@ -1040,6 +1040,9 @@ class PhysicsData:
     pres_plasma_thermal_on_axis: float = 0.0
     """Plasma central thermal pressure (p₀) (no fast ions or beam pressure) [Pa]"""
 
+    f_pres_plasma_thermal_on_axis_vol_avg: float = 0.0
+    """Ratio of central plasma thermal pressure to volume averaged (p₀/⟨p⟩)"""
+
     pres_plasma_thermal_total_profile: list[float] = field(default_factory=list)
     """Profile of total pressure in plasma [Pa]"""
 
