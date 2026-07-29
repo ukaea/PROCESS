@@ -26,6 +26,11 @@ logger = logging.getLogger(__name__)
 def get_neqns_itervars(in_dat, wdir="."):
     """Returns the number of equations and a list of variable
     names of all iteration variables
+
+    Raises
+    ------
+    ValueError
+        If the number of iteration variables is not consistent
     """
     in_dat = InDat(Path(wdir, in_dat))
 
@@ -133,6 +138,11 @@ def get_variable_range(itervars, factor, indat, data: DataStructure, wdir="."):
 def check_in_dat(filename):
     """Tests IN.DAT during setup:
     1)Are ixc bounds outside of allowed input ranges?
+
+    Raises
+    ------
+    RuntimeError
+        If an iteration variable does not have a corresponding input variable
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()

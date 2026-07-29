@@ -1,3 +1,5 @@
+"""Module containing routines to set up constraints"""
+
 import logging
 from collections.abc import Callable, Hashable
 from dataclasses import asdict, dataclass
@@ -90,6 +92,7 @@ class ConstraintManager:
 
     @classmethod
     def constraint_ids(cls):
+        """Return the constraint IDs"""
         return tuple(cls._constraint_registry.keys())
 
     @classmethod

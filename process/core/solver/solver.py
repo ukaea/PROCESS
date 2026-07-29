@@ -139,12 +139,15 @@ class _Solver(ABC):
 
 
 class VmconProblem(AbstractProblem):
+    """Set up the Vmcon problem"""
+
     def __init__(self, evaluator, nequality, ninequality):
         self._evaluator = evaluator
         self._nequality = nequality
         self._ninequality = ninequality
 
     def __call__(self, x: np.ndarray) -> Result:
+        """Call a problem"""
         n = x.shape[0]
         objf, conf = self._evaluator.fcnvmc1(n, self.total_constraints, x, 0)
         fgrd, cnorm = self._evaluator.fcnvmc2(n, self.total_constraints, x, n)
@@ -160,10 +163,12 @@ class VmconProblem(AbstractProblem):
 
     @property
     def num_equality(self) -> int:
+        """Number of equality constraints"""
         return self._nequality
 
     @property
     def num_inequality(self) -> int:
+        """Number of inequality constraints"""
         return self._ninequality
 
 
