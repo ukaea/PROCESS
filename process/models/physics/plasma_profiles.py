@@ -300,10 +300,21 @@ class PlasmaProfile(Model):
             == PlasmaProfileShapeType.PEDESTAL_PROFILE
         ):
             # Pedestal pressure is the profile value where gradient is maximum
+            # (i.e the smallest negative value)
             rho = self.neprofile.profile_x
             pres_profile = self.data.physics.pres_plasma_thermal_total_profile
             dpres_drho = np.gradient(pres_profile, rho)
-            max_grad_idx = np.argmin(dpres_drho)
+            # Find rho index closest to the normalized pedestal positions
+            pedestal_rho = np.min([
+                self.data.physics.radius_plasma_pedestal_temp_norm,
+                self.data.physics.radius_plasma_pedestal_density_norm,
+            ])
+            closest_idx = np.argmin(np.abs(rho - pedestal_rho))
+            mask = np.zeros_like(rho, dtype=bool)
+            mask[closest_idx:] = True
+            dpres_drho_pedestal = dpres_drho[mask]
+            max_grad_idx_pedestal = np.argmax(dpres_drho_pedestal)
+            max_grad_idx = np.where(mask)[0][max_grad_idx_pedestal]
             self.data.physics.pres_plasma_pedestal_thermal = pres_profile[max_grad_idx]
 
             self.data.physics.pres_plasma_separatrix_thermal = (

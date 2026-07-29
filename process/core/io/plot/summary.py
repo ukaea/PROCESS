@@ -79,8 +79,8 @@ from process.models.physics.plasma_geometry import (
     PlasmaGeometryModelType,
     PlasmaShapeModelType,
 )
-from process.models.pulse import PulseTimings
 from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
     TFCoilShapeModel,
