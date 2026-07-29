@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from process.data_structure.pfcoil_variables import PFConductorModel
+from process.data_structure.vacuum_variables import VacuumPumpType
 from process.models.engineering.pumping import CoolantType
 from process.models.superconductors import (
     SuperconductorModel,
@@ -2936,7 +2937,7 @@ class Acc224Param(NamedTuple):
             m_vv_vacuum_duct_shield=0,
             n_vac_pumps_high=46,
             dia_vv_vacuum_ducts=0.57081858183821432,
-            i_vacuum_pump_type=1,
+            i_vacuum_pump_type=VacuumPumpType.COMPOUND_CRYOPUMP,
             n_vv_vacuum_ducts=16,
             c22=0,
             c2245=0,
@@ -2953,7 +2954,7 @@ class Acc224Param(NamedTuple):
             m_vv_vacuum_duct_shield=0,
             n_vac_pumps_high=46,
             dia_vv_vacuum_ducts=0.57072331228476758,
-            i_vacuum_pump_type=1,
+            i_vacuum_pump_type=VacuumPumpType.COMPOUND_CRYOPUMP,
             n_vv_vacuum_ducts=16,
             c22=3474.7391916096453,
             c2245=0,
