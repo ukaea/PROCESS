@@ -3272,21 +3272,21 @@ class Physics(Model):
 
         po.ovarre(
             self.outfile,
-            "Total plasma thermal energy [W]",
+            "Total plasma thermal energy [J]",
             "(e_plasma_thermal_total)",
             self.data.physics.e_plasma_thermal_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Plasma thermal energy in electrons [W]",
+            "Plasma thermal energy in electrons [J]",
             "(e_plasma_electrons_thermal)",
             self.data.physics.e_plasma_electrons_thermal,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Plasma thermal energy in ions [W]",
+            "Plasma thermal energy in ions [J]",
             "(e_plasma_ions_thermal)",
             self.data.physics.e_plasma_ions_thermal,
             "OP ",
