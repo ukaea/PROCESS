@@ -156,6 +156,11 @@ class ConstraintManager:
         -------
         ConstraintResult | None
             the result of evaluating the constraint
+
+        Raises
+        ------
+        ProcessError
+            If a constraint registration does not exist
         """
         registration = cls.get_constraint(name)
 
@@ -499,6 +504,11 @@ def constraint_equation_7(constraint_registration, data):
     power balance calculations.
     nd_beam_ions_out: hot beam ion density from calculation (/m³)
     nd_beam_ions: hot beam ion density, variable (/m³)
+
+    Raises
+    ------
+    ProcessValueError
+        If constraint 7 is being used with i_plasma_ignited=1
     """
     if PlasmaIgnitionModel(data.physics.i_plasma_ignited) == PlasmaIgnitionModel.IGNITED:
         raise ProcessValueError("Do not use constraint equation 7 if i_plasma_ignited=1")
@@ -871,6 +881,11 @@ def constraint_equation_28(constraint_registration, data):
     If i_plasma_ignited=1, any auxiliary power is assumed to be used only
     during plasma start-up, and is excluded from all steady-state
     power balance calculations.
+
+    Raises
+    ------
+    ProcessValueError
+        If constraint 28 is being used with i_plasma_ignited=1
     """
     if (
         PlasmaIgnitionModel(data.physics.i_plasma_ignited)
@@ -1035,6 +1050,11 @@ def constraint_equation_39(constraint_registration, data):
         maximum temperature of first wall material (K) (i_thermal_electric_conversion>1)
     temp_fw_peak:
         peak first wall temperature (K)
+
+    Raises
+    ------
+    ProcessValueError
+        If constraint 39 is being used with i_pulsed_plant=0
     """
     if data.fwbs.temp_fw_peak < 1.0:
         raise ProcessValueError(
@@ -1085,6 +1105,11 @@ def constraint_equation_42(constraint_registration, data):
 
     t_plant_pulse_total: full cycle time (s)
     t_cycle_min: minimum cycle time (s)
+
+    Raises
+    ------
+    ProcessValueError
+        If constraint 42 is being used with i_pulsed_plant=0
     """
     if data.constraints.t_cycle_min < 1.0:
         raise ProcessValueError(
@@ -1108,6 +1133,11 @@ def constraint_equation_43(constraint_registration, data):
     itart: switch for spherical tokamak (ST) models:
     - 0 use conventional aspect ratio models;
     - 1 use spherical tokamak models
+
+    Raises
+    ------
+    ProcessValueError
+        If constraint 43 is being used with itart=0
     """
     if data.physics.itart == 0:
         raise ProcessValueError("Do not use constraint 43 if itart=0")
@@ -1131,6 +1161,11 @@ def constraint_equation_44(constraint_registration, data):
     itart: switch for spherical tokamak (ST) models:
     - 0: use conventional aspect ratio models;
     - 1: use spherical tokamak models
+
+    Raises
+    ------
+    ProcessValueError
+        If constraint 44 is being used with itart=0
     """
     if data.physics.itart == 0:
         raise ProcessValueError("Do not use constraint 44 if itart=0")
@@ -1159,6 +1194,11 @@ def constraint_manager_45(constraint_registration, data):
         input integer : switch for spherical tokamak (ST) models:
         - 0 use conventional aspect ratio models;
         - 1 use spherical tokamak models
+
+    Raises
+    ------
+    ProcessValueError
+        If constraint 45 is being used with itart=0
     """
     if data.physics.itart == 0:
         raise ProcessValueError("Do not use constraint 45 if itart=0")
@@ -1180,6 +1220,11 @@ def constraint_equation_46(constraint_registration, data):
     itart: switch for spherical tokamak (ST) models:
     - 0: use conventional aspect ratio models;
     - 1: use spherical tokamak models
+
+    Raises
+    ------
+    ProcessValueError
+        If constraint 46 is being used with itart=0
     """
     if data.physics.itart == 0:
         raise ProcessValueError("Do not use constraint 46 if itart=0")
@@ -1240,6 +1285,11 @@ def constraint_equation_52(constraint_registration, data):
 
     tbr: tritium breeding ratio
     tbrmin: minimum tritium breeding ratio
+
+    Raises
+    ------
+    ProcessValueError
+        If constraint 52 is not being used with the IFE model
     """
     if data.ife.ife != 1:
         raise ProcessValueError(
@@ -1915,6 +1965,10 @@ def constraint_eqns(m: int, ieqn: int, data: DataStructure):
         DataStructure object to provide data to evaluate the constraints
         NOTE: this is only for getting data, not setting it
 
+    Raises
+    ------
+    ProcessValueError
+        If a constraint equation returns an invalid residual
     """
     if ieqn > 0:
         i1 = ieqn - 1

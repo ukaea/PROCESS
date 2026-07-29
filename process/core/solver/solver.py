@@ -177,6 +177,11 @@ class Vmcon(_Solver):
         -------
         int
             solver error code
+
+        Raises
+        ------
+        ValueError
+            If the initial point vector is the wrong shape or out of bounds
         """
         problem = VmconProblem(self.evaluators, self.meq, self.m - self.meq)
 
@@ -288,6 +293,14 @@ class VmconBounded(Vmcon):
     """A solver that uses VMCON but checks x is in bounds before running"""
 
     def set_opt_params(self, x_0: np.ndarray):
+        """Define the initial optimisation parameters.
+
+        Parameters
+        ----------
+        x_0 : np.ndarray
+            optimisation parameters vector
+
+        """
         lower_violated = np.less(x_0, self.bndl)
         upper_violated = np.greater(x_0, self.bndu)
 

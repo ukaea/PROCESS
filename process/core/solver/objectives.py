@@ -1,3 +1,5 @@
+"""Objective function routine"""
+
 import numpy as np
 
 from process.core.exceptions import ProcessValueError
