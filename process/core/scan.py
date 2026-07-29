@@ -144,7 +144,7 @@ class ScanVariables(ScanVariable, Enum):
         """
         if hasattr(self, "_description_"):
             return self._description_
-        raise ValueError("Data not available")
+        raise ValueError("Description not available")
 
     def get_val(self, mfile, scan):
         """Get value from mfile"""
