@@ -4687,6 +4687,89 @@ def plot_line_bhrem_power_density_profile(
     # ---
 
 
+def plot_line_bhrem_loss_function_profile(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    impp: str,
+):
+    """Function to plot Line and Bremsstrahlung radiation power density profile.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        axis object to add plot to
+    mfile : MFile
+        MFile object containing plasma and impurity profile information.
+    scan : int
+        scan number to use
+    impp : str
+        impurity path
+
+    """
+    # read in the impurity data
+    imp_data = read_imprad_data(_skiprows=2, data_path=impp)
+
+    # find impurity densities
+    imp_frac = np.array([
+        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+    ])
+
+    rho, _, te = profiles_with_pedestal(mfile, scan)
+
+    # Intailise the radiation profile arrays
+    lz = np.zeros([imp_data.shape[0], te.shape[0]])
+
+    # Intailise the impurity radiation profile
+    for k in range(te.shape[0]):
+        for i in range(imp_data.shape[0]):
+            if te[k] <= imp_data[i][0][0]:
+                lz[i][k] = imp_data[i][0][1]
+            elif te[k] >= imp_data[i][imp_data.shape[1] - 1][0]:
+                lz[i][k] = imp_data[i][imp_data.shape[1] - 1][1]
+            else:
+                # Use np.interp for log-log interpolation
+                log_te_data = np.log([row[0] for row in imp_data[i]])
+                log_lz_data = np.log([row[1] for row in imp_data[i]])
+                lz[i][k] = np.exp(np.interp(np.log(te[k]), log_te_data, log_lz_data))
+
+    axis.plot(rho, lz[0], label="H")
+    axis.plot(rho, lz[1], label="He")
+    if imp_frac[2] > 1.0e-30:
+        axis.plot(rho, lz[2], label="Be")
+    if imp_frac[3] > 1.0e-30:
+        axis.plot(rho, lz[3], label="C")
+    if imp_frac[4] > 1.0e-30:
+        axis.plot(rho, lz[4], label="N")
+    if imp_frac[5] > 1.0e-30:
+        axis.plot(rho, lz[5], label="O")
+    if imp_frac[6] > 1.0e-30:
+        axis.plot(rho, lz[6], label="Ne")
+    if imp_frac[7] > 1.0e-30:
+        axis.plot(rho, lz[7], label="Si")
+    if imp_frac[8] > 1.0e-30:
+        axis.plot(rho, lz[8], label="Ar")
+    if imp_frac[9] > 1.0e-30:
+        axis.plot(rho, lz[9], label="Fe")
+    if imp_frac[10] > 1.0e-30:
+        axis.plot(rho, lz[10], label="Ni")
+    if imp_frac[11] > 1.0e-30:
+        axis.plot(rho, lz[11], label="Kr")
+    if imp_frac[12] > 1.0e-30:
+        axis.plot(rho, lz[12], label="Xe")
+    if imp_frac[13] > 1.0e-30:
+        axis.plot(rho, lz[13], label="W")
+    axis.legend(loc="best", ncol=4)
+    axis.minorticks_on()
+
+    axis.set_xlabel(r"$\rho \quad [r/a]$")
+    axis.set_ylabel(r"$L_z$ $[\mathrm{W}\mathrm{m}^3]$")
+    axis.set_title("Line & Bremsstrahlung Loss Function ($L_z$) Profiles")
+    axis.set_xlim([0, 1.0])
+    axis.set_yscale("log")
+    axis.yaxis.grid(True, which="both", alpha=0.2)
+
+
 def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
     """Plots the contour of line and bremsstrahlung radiation density for a plasma cross-section.
 
@@ -16001,10 +16084,27 @@ def main_plot(
     ax13.set_position([0.7, 0.105, 0.25, 0.15])
     plot_qprofile(ax13, demo_ranges, m_file, scan)
 
-    plot_plasma_effective_charge_profile(
-        _add_page("rad_contour").add_subplot(221), m_file, scan
+    ax_line_bhrem = _add_page("rad_contour").add_subplot(325)
+    plot_line_bhrem_loss_function_profile(
+        axis=ax_line_bhrem,
+        mfile=m_file,
+        scan=scan,
+        impp=imp,
     )
-    plot_ion_charge_profile(pages["rad_contour"].add_subplot(223), m_file, scan)
+
+    ax_zeff = pages["rad_contour"].add_subplot(321, sharex=ax_line_bhrem)
+    plot_plasma_effective_charge_profile(ax_zeff, m_file, scan)
+    ax_zeff.set_xlabel("")
+    ax_zeff.tick_params(
+        axis="x", which="both", bottom=True, top=False, labelbottom=False
+    )
+
+    ax_ion_charge = pages["rad_contour"].add_subplot(323, sharex=ax_line_bhrem)
+    plot_ion_charge_profile(ax_ion_charge, m_file, scan)
+    ax_ion_charge.set_xlabel("")
+    ax_ion_charge.tick_params(
+        axis="x", which="both", bottom=True, top=False, labelbottom=False
+    )
 
     if i_shape == 1:
         plot_rad_contour(pages["rad_contour"].add_subplot(122), m_file, scan, imp)
