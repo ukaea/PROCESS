@@ -1,3 +1,5 @@
+"""Module containing routines to plot the EUTF4 Nb3Sn critical surface"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objects as go

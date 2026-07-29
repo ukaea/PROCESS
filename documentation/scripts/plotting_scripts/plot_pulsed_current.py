@@ -1,3 +1,5 @@
+"""Module containing routines to plot the pulsed current"""
+
 import matplotlib.pyplot as plt
 
 # Define data points for each segment
