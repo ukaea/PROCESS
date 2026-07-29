@@ -1,8 +1,12 @@
+"""Module containing variables relating to the CS fatigue routines"""
+
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class CSFatigueData:
+    """Dataclass holding CS fatigue variables"""
+
     residual_sig_hoop: float = 2.4e8
     """residual hoop stress in structural material (Pa)"""
 

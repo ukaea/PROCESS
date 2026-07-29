@@ -1,3 +1,5 @@
+"""Module containing variables relating to the buildings routines"""
+
 from dataclasses import dataclass
 from enum import IntEnum
 
@@ -13,6 +15,8 @@ class BuildingsModel(IntEnum):
 
 @dataclass(slots=True)
 class BuildingsData:
+    """Dataclass holding buildings variables"""
+
     admv: float = 1.0e5
     """administration building volume (m3)"""
 

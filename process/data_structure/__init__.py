@@ -1,3 +1,5 @@
+"""Module containing data structure variables"""
+
 from process.data_structure import (
     blanket_variables,
     build_variables,

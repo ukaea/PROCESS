@@ -1,15 +1,12 @@
-"""
-Module containing global variables relating to the first wall, blanket and
-shield components
-### References
--
-"""
+"""Module containing variables relating to the first wall, blanket and shield components"""
 
 from dataclasses import dataclass, field
 
 
 @dataclass(slots=True)
 class FWBSData:
+    """Dataclass holding first wall, blanket and shield variables"""
+
     life_blkt_fpy: float = 0.0
     """Full power blanket lifetime (years)"""
 

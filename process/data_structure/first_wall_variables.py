@@ -1,8 +1,12 @@
+"""Module containing variables relating to the first wall routines"""
+
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class FirstWallData:
+    """Dataclass holding first wall variables"""
+
     a_fw_total_full_coverage: float = 0.0
     """First wall total surface area with no holes or ports [m^2]"""
 

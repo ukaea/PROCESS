@@ -1,8 +1,12 @@
+"""Module containing variables relating to the primary pumping routines"""
+
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class PrimaryPumpingData:
+    """Dataclass holding primary pumping variables"""
+
     gamma_he: float = 1.667
     """ratio of specific heats for helium (`i_p_coolant_pumping=3`)"""
 

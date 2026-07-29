@@ -1,8 +1,12 @@
+"""Module containing variables relating to the pulse routines"""
+
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class PulseData:
+    """Dataclass holding pulse variables"""
+
     bctmp: float = 320.0
     """first wall bulk coolant temperature (C)"""
 

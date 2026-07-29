@@ -1,4 +1,4 @@
-"""Module containing neoclassical computations
+"""Module containing variables relating to the neoclassical computations
 
 Formulas used are described in:
 Beidler (2013), https://doi.org/10.1088/0029-5515/51/7/076001
@@ -14,6 +14,8 @@ NO_ROOTS = 30
 
 @dataclass(slots=True)
 class NeoclassicsData:
+    """Dataclass holding neoclassics variables"""
+
     densities: list[float] = field(default_factory=lambda: np.zeros(4))
     """Densities of the species that are considered [/m3]"""
 

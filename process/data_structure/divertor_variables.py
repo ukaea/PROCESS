@@ -1,3 +1,5 @@
+"""Module containing variables relating to the divertor routines"""
+
 from dataclasses import dataclass
 from enum import IntEnum
 
@@ -17,7 +19,7 @@ class DivertorHeatLoadModel(IntEnum):
 
 @dataclass(slots=True)
 class DivertorData:
-    """Divertor model dataclass"""
+    """Dataclass holding divertor variables"""
 
     anginc: float = 0.262
     """angle of incidence of field line on plate (rad)"""

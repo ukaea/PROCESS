@@ -1,6 +1,4 @@
-"""
-Module containing global variables relating to the PF coil power conversion system
-"""
+"""Module containing variables relating to the PF coil power routines"""
 
 from dataclasses import dataclass, field
 
@@ -9,6 +7,8 @@ import numpy as np
 
 @dataclass(slots=True)
 class PFPowerData:
+    """Dataclass holding PF power variables"""
+
     acptmax: float = 0.0
     """average of currents in PF circuits (kA)"""
 

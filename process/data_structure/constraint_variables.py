@@ -1,8 +1,12 @@
+"""Module containing variables relating to the constraint routines"""
+
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class ConstraintData:
+    """Dataclass holding constraint variables"""
+
     p_hcd_injected_min_mw: float = 0.1
     """minimum auxiliary power (MW) (`constraint equation 40`)"""
 

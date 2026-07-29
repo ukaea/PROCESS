@@ -1,4 +1,4 @@
-"""Module containing global variables relating to the water usage
+"""Module containing variables relating to the water usage routines
 
 References
 ----------
@@ -11,6 +11,8 @@ from dataclasses import dataclass
 
 @dataclass(slots=True)
 class WaterUseData:
+    """Dataclass holding water use variables"""
+
     airtemp: float = 15.0
     """ambient air temperature (degrees Celsius)"""
     watertemp: float = 5.0

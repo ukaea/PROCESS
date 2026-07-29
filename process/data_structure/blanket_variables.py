@@ -1,29 +1,4 @@
-"""This library contains routines that can be shared by the blanket modules used in PROCESS.
-
-These include:
-- component_volumes
-- component_masses
-- thermo_hydraulic_model
-
-
-
-Acronyms for this module:
-
-     BB          Breeding Blanket
-     FW          First Wall
-     BZ          Breeder Zone
-     MF/BSS      Manifold/Back Supporting Structure
-     LT          Low Temperature
-     HT          High Temperature
-     MMS         Multi Module Segment
-     SMS         Single Module Segment
-     IB          Inboard
-     OB          Outboard
-     HCD         Heating & Current Drive
-     FCI         Flow Channel Insert
-
-Any changes within a subroutine or function code will have a comment explaining the change
-"""
+"""Module containing variables relating to the blanket routines"""
 
 from dataclasses import dataclass
 from enum import IntEnum
@@ -38,6 +13,8 @@ class BlktModelTypes(IntEnum):
 
 @dataclass(slots=True)
 class BlanketData:
+    """Dataclass holding blanket variables"""
+
     vol_shld_inboard: float = 0.0
     """Volume of inboard shield (m3)"""
 

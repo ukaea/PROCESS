@@ -1,8 +1,5 @@
-"""
-This module contains global variables relating to the heat transport system
+"""Module containing variables relating to the  heat transport system
 of a fusion power plant, and also those for a hydrogen production plant.
-### References
--
 """
 
 from dataclasses import dataclass
@@ -10,6 +7,8 @@ from dataclasses import dataclass
 
 @dataclass(slots=True)
 class HeatTransportData:
+    """Dataclass holding heat transport variables"""
+
     p_plant_electric_base: float = 5.0e6
     """base plant electric load (W)"""
 

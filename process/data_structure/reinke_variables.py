@@ -1,8 +1,12 @@
+"""Module containing variables relating to the Reinke routines"""
+
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class ReinkeData:
+    """Dataclass holding Reinke variables"""
+
     impvardiv: int = 9
     """Index of impurity to be iterated for Reinke divertor detachment criterion"""
 

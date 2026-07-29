@@ -1,3 +1,5 @@
+"""Module containing variables relating to the costs routines"""
+
 from dataclasses import dataclass, field
 from enum import IntEnum
 
@@ -17,6 +19,8 @@ class CostModels(IntEnum):
 
 @dataclass(slots=True)
 class CostData:
+    """Dataclass holding cost variables"""
+
     c228: float = 0.0
     """c228 account cost"""
 
