@@ -1,3 +1,5 @@
+"""Scanning mechanics"""
+
 from __future__ import annotations
 
 import logging
@@ -30,12 +32,16 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ScanVariable:
+    """Scan variable container"""
+
     number: int
     area: SVE = field(repr=False)
     _out_name_: str | None = None
 
 
 class SVE(Enum):
+    """Scan variable data structure area shorthand"""
+
     P = "physics"
     D = "divertor"
     C = "constraints"
@@ -53,6 +59,8 @@ class SVE(Enum):
 
 
 class ScanVariables(ScanVariable, Enum):
+    """Scan variable options"""
+
     @classmethod
     def _missing_(cls, value):
         if isinstance(value, int):
@@ -68,17 +76,27 @@ class ScanVariables(ScanVariable, Enum):
 
     @DynamicClassAttribute
     def fname(self):
+        """Full name"""
         if "__" in self.name:
             return self.name.replace("__", "(") + ")"
         return self.name
 
     @DynamicClassAttribute
     def out_name(self):
+        """Output name"""
         if self._out_name_ is None:
-            return self.name
+            return self.fname
         return self._out_name_
 
     def set(self, data: DataStructure, sweep_val: float):
+        """Set value of scan variable
+
+        Raises
+        ------
+        ProcessValueError
+            Scanning f_t_plant_available if i_plant_availability=1"
+
+        """
         var_area = getattr(data, self.area.value)
 
         if (
@@ -104,17 +122,33 @@ class ScanVariables(ScanVariable, Enum):
 
     @DynamicClassAttribute
     def data(self):
+        """Variable value
+
+        Raises
+        ------
+        ValueError
+            data not set
+        """
         if hasattr(self, "_data_"):
             return self._data_
         raise ValueError("Data not available")
 
     @DynamicClassAttribute
     def description(self):
+        """Variable description
+
+        Raises
+        ------
+        ValueError
+            description not set
+        """
         if hasattr(self, "_description_"):
             return self._description_
         raise ValueError("Data not available")
 
     def get_val(self, mfile, scan):
+        """Get value from mfile"""
+        # TODO this might fail for array variables eg boundu(10)?
         return mfile.get(self.out_name, scan=scan)
 
     aspect = (1, SVE.P)
@@ -216,6 +250,11 @@ class Scan:
         performing a sweep over a range of values of a particular variable. A
         number of output variable values are written to the MFILE.DAT file at
         each scan point, for plotting or other post-processing purposes.
+
+        Raises
+        ------
+        ProcessValueError
+            isweep value greater than IPNSCNS
         """
         if self.data.scan.isweep == 0:
             # Solve single problem, rather than an array of problems (scan)
@@ -992,6 +1031,7 @@ class Scan:
 
     @staticmethod
     def scan_2d_init(scan_data: ScanData):
+        """Scan 2d initialisation"""
         process_output.ovarre(
             constants.MFILE,
             "Number of first variable scan points",
@@ -1030,6 +1070,7 @@ class Scan:
         )
 
     def scan_1d_write_point_header(self, iscan: int):
+        """Scan 1d header"""
         self.data.globals.iscan_global = iscan
         sv = self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan)
 
@@ -1057,6 +1098,7 @@ class Scan:
         )
 
     def scan_2d_write_point_header(self, iscan, iscan_1, iscan_2):
+        """Scan 2d header"""
         iscan_r = self.data.scan.isweep_2 - iscan_2 + 1 if iscan_1 % 2 == 0 else iscan_2
 
         # Makes iscan available globally (read-only)
@@ -1097,6 +1139,7 @@ class Scan:
 
     @staticmethod
     def scan_1d_write_plot(scan_data: ScanData):
+        """Scan 1d plotter"""
         if scan_data.first_call_1d:
             process_output.ovarre(
                 constants.MFILE,
@@ -1113,7 +1156,8 @@ class Scan:
 
             scan_data.first_call_1d = False
 
-    def scan_select(self, nsweep, sweep, iscan):
+    def scan_select(self, nsweep, sweep, iscan) -> ScanVariables:
+        """Select a scan"""
         sv = ScanVariables(nsweep)
         sv.set(self.data, sweep[iscan - 1])
         return sv

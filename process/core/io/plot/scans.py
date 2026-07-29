@@ -45,6 +45,8 @@ if TYPE_CHECKING:
 
 @dataclass
 class AxisData:
+    """Axis data container"""
+
     name: str
     percent: bool
     max_: Sequence[float]
@@ -55,17 +57,22 @@ class AxisData:
 
 
 class AxisChoice(Enum):
+    """Axis choices"""
+
     X = auto()
     Y = auto()
 
     def axis(self, ax):
+        """Get correct axis"""
         return getattr(ax, f"{self.name.lower()}axis")
 
     def set_lim(self, ax, lower, upper):
+        """Set axis limits"""
         getattr(ax, f"set_{self.name.lower()}lim")(lower, upper)
 
 
 def get_list_padded(inp, names):
+    """Pad list contents"""
     target_len = len(names)
     inp_array = np.array(inp, dtype=float)
     if (i_len := len(inp_array)) < target_len:
@@ -85,6 +92,15 @@ def value_checks(
     m_file: MFile,
     input_files: Sequence[Path],
 ):
+    """Check scan variable values
+
+    Raises
+    ------
+    ValueError
+        Scan variable not in MFILE
+    ValueError
+        Multiple input files specified for plotting
+    """
     ve_string = (
         "`{}` does not exist in PROCESS dicts\n"
         " The scan variable ({}) is probably an upper/lower boundary\n"
@@ -104,7 +120,7 @@ def value_checks(
 
 
 def array_check(output_name: str, m_file: MFile) -> bool:
-    # Check if the output variable exists in the MFILE
+    """Check if the output variable exists in the MFILE"""
     if output_name not in m_file.data:
         print(
             f"Warning : `{output_name}` does not exist in PROCESS dicts\n"
@@ -117,15 +133,17 @@ def array_check(output_name: str, m_file: MFile) -> bool:
 def create_o_array(
     n_scan: int, m_file: MFile, output_name: str, conv_i: list[int]
 ) -> np.ndarray:
+    """Creating output array"""
     return np.array([m_file.get(output_name, scan=conv_i[ii]) for ii in range(n_scan)])
 
 
 def get_label(name: str) -> str:
+    """Get latex label"""
     return meta[name].latex if name in meta else f"{name}"
 
 
 def axis_manipulation(ax: Axes, axis: AxisData, index: int, contour: np.ndarray):
-
+    """Manipulate axes for unified layout"""
     an = AxisChoice[axis.name.upper()]
 
     if len(axis.range_) > 0:
@@ -266,6 +284,15 @@ def oned_scan(
     *,
     term_output: bool,
 ) -> tuple[np.ndarray, ...]:
+    """One d scan plotting setup
+
+    Raises
+    ------
+    ValueError
+        Input files must have the same scan variables
+    ValueError
+        Mixing 1D and 2D scan files
+    """
     # input file, output_name, scan
     output_arrays = {}
     # input file, output_name2, scan
@@ -354,7 +381,13 @@ def plot_1d_scan(
     *,
     stack_plots: bool,
 ):
+    """One d scan plotting
 
+    Raises
+    ------
+    ValueError
+        Stack plots requires >=2 variables
+    """
     if stack_plots:
         # check stack plots will work
         if len(output_names) <= 1:
@@ -527,6 +560,7 @@ def twod_scan(
     *,
     twod_contour: bool,
 ):
+    """2D scan plottings"""
     m_file = MFile(filename=input_files[0])
 
     # Number of scan points
