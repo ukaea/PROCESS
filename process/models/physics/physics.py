@@ -2970,6 +2970,13 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
+            "Ratio of electron temperature on axis to volume averaged (Tₑ₀/⟨Tₑ⟩)",
+            "(f_temp_plasma_electron_on_axis_vol_avg)",
+            self.data.physics.f_temp_plasma_electron_on_axis_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Line averaged electron temperature (keV)",
             "(temp_plasma_electron_line_avg_kev)",
             self.data.physics.temp_plasma_electron_line_avg_kev,

@@ -4345,7 +4345,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         (
             rf"$\rho_{{\text{{ped,T}}}}$: {radius_plasma_pedestal_temp_norm:.3f}"
             r"$ \hspace{5} \frac{T_{e,0}}{\langle T_e \rangle}$: "
-            f"{te0 / te:.3f}"
+            f"{mfile.get('f_temp_plasma_electron_on_axis_vol_avg', scan=scan):.3f}"
         ),
         (
             rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_kev:.3f} keV"

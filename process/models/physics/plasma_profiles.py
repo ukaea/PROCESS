@@ -171,6 +171,11 @@ class PlasmaProfile(Model):
             * (1.0 + self.data.physics.alphat)
         )
 
+        self.data.physics.f_temp_plasma_electron_on_axis_vol_avg = (
+            self.data.physics.temp_plasma_electron_on_axis_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
+        )
+
         self.data.physics.nd_plasma_electron_on_axis = (
             self.data.physics.nd_plasma_electrons_vol_avg
             * (1.0 + self.data.physics.alphan)
@@ -235,6 +240,11 @@ class PlasmaProfile(Model):
 
         self.data.physics.temp_plasma_electron_line_avg_kev = (
             self.teprofile.profile_integ
+        )
+
+        self.data.physics.f_temp_plasma_electron_on_axis_vol_avg = (
+            self.data.physics.temp_plasma_electron_on_axis_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
         )
 
         #  Scrape-off density / volume averaged density
