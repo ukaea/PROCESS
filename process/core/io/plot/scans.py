@@ -87,17 +87,17 @@ def value_checks(
 ):
     ve_string = (
         "`{}` does not exist in PROCESS dicts\n"
-        " The scan variable is probably an upper/lower boundary\n"
+        " The scan variable ({}) is probably an upper/lower boundary\n"
         " Please modify 'nsweep_dict' dict with the constrained var"
     )
     # Check if the scan variable is present
-    if scan_var.name not in m_file.data:
-        raise ValueError(ve_string.format(scan_var.name))
+    if scan_var.out_name not in m_file.data:
+        raise ValueError(ve_string.format(scan_var.out_name, scan_var.name))
 
     # Check if the second scan variable is present
     if scan_2_var is not None:
-        if scan_2_var.name not in m_file.data:
-            raise ValueError(ve_string.format(scan_2_var.name))
+        if scan_2_var.out_name not in m_file.data:
+            raise ValueError(ve_string.format(scan_2_var.out_name, scan_2_var.name))
 
         if len(input_files) > 1:
             raise ValueError("Only one input file can be used for 2D scans")

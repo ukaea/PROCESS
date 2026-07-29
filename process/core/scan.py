@@ -32,6 +32,7 @@ logger = logging.getLogger(__name__)
 class ScanVariable:
     number: int
     area: SVE = field(repr=False)
+    _out_name_: str | None = None
 
 
 class SVE(Enum):
@@ -58,13 +59,24 @@ class ScanVariables(ScanVariable, Enum):
             for sv in cls:
                 if sv.number == value:
                     return sv
-        raise ProcessValueError("Illegal scan variable number", nwp=value)
+            raise ProcessValueError("Illegal scan variable number", nwp=value)
+
+        if isinstance(value, str):
+            return cls[value.replace("(", "__").replace(")", "")]
+
+        return super()._missing_(value)
 
     @DynamicClassAttribute
     def fname(self):
         if "__" in self.name:
             return self.name.replace("__", "(") + ")"
         return self.name
+
+    @DynamicClassAttribute
+    def out_name(self):
+        if self._out_name_ is None:
+            return self.name
+        return self._out_name_
 
     def set(self, data: DataStructure, sweep_val: float):
         var_area = getattr(data, self.area.value)
@@ -103,8 +115,7 @@ class ScanVariables(ScanVariable, Enum):
         raise ValueError("Data not available")
 
     def get_val(self, mfile, scan):
-        print(mfile)
-        return mfile.get(self.name, scan=scan)
+        return mfile.get(self.out_name, scan=scan)
 
     aspect = (1, SVE.P)
     pflux_div_heat_load_max_mw = (2, SVE.D)
@@ -114,13 +125,13 @@ class ScanVariables(ScanVariable, Enum):
     pflux_fw_neutron_max_mw = (6, SVE.C)
     beamfus0 = (7, SVE.P)
     temp_plasma_electron_vol_avg_kev = (9, SVE.P)
-    boundu__14 = (10, SVE.NUM)
+    boundu__15 = (10, SVE.NUM)
     beta_norm_max = (11, SVE.P)
     f_c_plasma_bootstrap_max = (12, SVE.CD)
     boundu__10 = (13, SVE.NUM)
     f_j_tf_wp_critical_max = (14, SVE.C)  # TODO is this needed
     rmajor = (16, SVE.P)
-    b_tf_inboard_max = (17, SVE.C)
+    b_tf_inboard_max = (17, SVE.C, "b_tf_inboard_peak_symmetric")
     eta_cd_norm_hcd_primary_max = (18, SVE.C)
     boundl__16 = (19, SVE.NUM)
     t_burn_min = (20, SVE.C)
