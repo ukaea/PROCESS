@@ -789,6 +789,9 @@ class Neoclassics(Model):
         )
 
     def st_calc_eff_chi(self):
+        """Calculates the effective thermal diffusivity from the alpha
+        heating in the core to the boundary
+        """
         volscaling = (
             self.data.physics.vol_plasma
             * self.data.stellarator.f_st_rmajor
