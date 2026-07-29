@@ -8,6 +8,7 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.pfcoil_variables import PFConductorModel
 from process.models.tfcoil.base import TFConductorModel
+from process.models.vacuum import VacuumPumpType
 
 logger = logging.getLogger(__name__)
 
@@ -1976,7 +1977,10 @@ class Costs(Model):
         This routine evaluates the Account 224 (vacuum system) costs.
         The costs are scaled from TETRA reactor code runs.
         """
-        if self.data.vacuum.i_vacuum_pump_type == 1:
+        if (
+            VacuumPumpType(self.data.vacuum.i_vacuum_pump_type)
+            == VacuumPumpType.COMPOUND_CRYOPUMP
+        ):
             self.data.costs.c2241 = (
                 1.0e-6 * self.data.vacuum.n_vac_pumps_high * self.data.costs.UCCPMP
             )
