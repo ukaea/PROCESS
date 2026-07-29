@@ -1403,6 +1403,9 @@ class PhysicsData:
     temp_plasma_electron_on_axis_kev: float = 0.0
     """Plasma central electron temperature (Tₑ₀) [keV]"""
 
+    f_temp_plasma_electron__on_axis_vol_avg: float = 0.0
+    """Ratio of plasma central electron temperature to volume averaged (Tₑ₀/⟨Tₑ⟩)"""
+
     temp_plasma_electron_density_weighted_kev: float = 0.0
     """Density weighted average electron temperature (⟨Tₑ⟩_n) [keV]"""
 
