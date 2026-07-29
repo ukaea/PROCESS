@@ -294,6 +294,22 @@ class PlasmaProfile(Model):
             + self.data.physics.pres_plasma_ion_total_profile
         )
 
+        # Calculate pedestal and separatrix pressures for pedestal profile case
+        if (
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
+            # Pedestal pressure is the profile value where gradient is maximum
+            rho = self.neprofile.profile_x
+            pres_profile = self.data.physics.pres_plasma_thermal_total_profile
+            dpres_drho = np.gradient(pres_profile, rho)
+            max_grad_idx = np.argmin(dpres_drho)
+            self.data.physics.pres_plasma_pedestal_thermal = pres_profile[max_grad_idx]
+
+            self.data.physics.pres_plasma_separatrix_thermal = (
+                self.data.physics.pres_plasma_thermal_total_profile[-1]
+            )
+
         # Fuel ion pressure profile (Pa)
         self.data.physics.pres_plasma_fuel_profile = (
             self.data.physics.nd_plasma_fuel_ions_vol_avg

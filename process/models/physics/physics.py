@@ -3240,6 +3240,24 @@ class Physics(Model):
             self.data.physics.f_pres_plasma_thermal_on_axis_vol_avg,
             "OP ",
         )
+        if (
+            self.data.physics.i_plasma_pedestal
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
+            po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "Plasma thermal pressure at pedestal (p_ped) [Pa]",
+                "(pres_plasma_pedestal_thermal)",
+                self.data.physics.pres_plasma_pedestal_thermal,
+            )
+            po.ovarre(
+                self.outfile,
+                "Plasma thermal pressure at separatrix (pₛₑₚ) [Pa]",
+                "(pres_plasma_separatrix_thermal)",
+                self.data.physics.pres_plasma_separatrix_thermal,
+            )
+
         # As array output is not currently supported, each element is output as a float
         # instance
         # Output plasma pressure profiles to mfile

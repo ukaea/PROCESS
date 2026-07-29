@@ -80,6 +80,7 @@ from process.models.physics.plasma_geometry import (
     PlasmaShapeModelType,
 )
 from process.models.pulse import PulseTimings
+from process.models.physics.profiles import PlasmaProfileShapeType
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
     TFCoilShapeModel,
@@ -12298,6 +12299,26 @@ def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5},
     )
+
+    if (
+        int(mfile.get("i_plasma_pedestal", scan=scan))
+        == PlasmaProfileShapeType.PEDESTAL_PROFILE
+    ):
+        textstr_pressure_pedestal = "\n".join((
+            rf"$p_{{\text{{ped}}}}$: {mfile.get('pres_plasma_pedestal_thermal', scan=scan) / 1000:,.3f} kPa",
+            rf"$p_{{\text{{sep}}}}$: {mfile.get('pres_plasma_separatrix_thermal', scan=scan) / 1000:,.3f} kPa",
+        ))
+
+        axis.text(
+            0.9,
+            1.2,
+            textstr_pressure_pedestal,
+            transform=axis.transAxes,
+            fontsize=9,
+            verticalalignment="top",
+            horizontalalignment="center",
+            bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5},
+        )
 
 
 def plot_plasma_current_comparison(axis: plt.Axes, mfile: MFile, scan: int):
