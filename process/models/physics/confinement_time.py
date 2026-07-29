@@ -220,7 +220,7 @@ class PlasmaConfinementTime(Model):
         if (
             model == ConfinementTimeModel.USER_INPUT
         ):  # t_electron_energy_confinement is an input
-            t_electron_confinement = self.data.physics.tauee_in
+            t_global_confinement_scaling = self.data.physics.tauee_in
 
         # ========================================================================
 
@@ -228,7 +228,7 @@ class PlasmaConfinementTime(Model):
         if (
             model == ConfinementTimeModel.NEO_ALCATOR
         ):  # t_electron_energy_confinement is an input
-            t_electron_confinement = self.neo_alcator_confinement_time(
+            t_global_confinement_scaling = self.neo_alcator_confinement_time(
                 n20, rminor, rmajor, qstar
             )
 
@@ -236,13 +236,15 @@ class PlasmaConfinementTime(Model):
 
         # "Mirnov"-like scaling (H-mode)
         elif model == ConfinementTimeModel.MIRNOV:  # Mirnov scaling (H-mode)
-            t_electron_confinement = self.mirnov_confinement_time(rminor, kappa95, pcur)
+            t_global_confinement_scaling = self.mirnov_confinement_time(
+                rminor, kappa95, pcur
+            )
 
         # ========================================================================
 
         # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
         elif model == ConfinementTimeModel.MEREZHKIN_MUHKOVATOV:
-            t_electron_confinement = self.merezhkin_muhkovatov_confinement_time(
+            t_global_confinement_scaling = self.merezhkin_muhkovatov_confinement_time(
                 rmajor,
                 rminor,
                 kappa95,
@@ -256,7 +258,7 @@ class PlasmaConfinementTime(Model):
 
         # Shimomura (S) optimized H-mode scaling
         elif model == ConfinementTimeModel.SHIMOMURA:
-            t_electron_confinement = self.shimomura_confinement_time(
+            t_global_confinement_scaling = self.shimomura_confinement_time(
                 rmajor, rminor, b_plasma_toroidal_on_axis, kappa95, m_fuel_amu
             )
 
@@ -264,7 +266,7 @@ class PlasmaConfinementTime(Model):
 
         # Kaye-Goldston scaling (L-mode)
         elif model == ConfinementTimeModel.KAYE_GOLDSTON:
-            t_electron_confinement = self.kaye_goldston_confinement_time(
+            t_global_confinement_scaling = self.kaye_goldston_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -279,7 +281,7 @@ class PlasmaConfinementTime(Model):
 
         # ITER Power scaling - ITER 89-P (L-mode)
         elif model == ConfinementTimeModel.ITER_89P:
-            t_electron_confinement = self.iter_89p_confinement_time(
+            t_global_confinement_scaling = self.iter_89p_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -294,7 +296,7 @@ class PlasmaConfinementTime(Model):
 
         # ITER Offset linear scaling - ITER 89-O (L-mode)
         elif model == ConfinementTimeModel.ITER_89_0:
-            t_electron_confinement = self.iter_89_0_confinement_time(
+            t_global_confinement_scaling = self.iter_89_0_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -308,7 +310,7 @@ class PlasmaConfinementTime(Model):
 
         # Rebut-Lallia offset linear scaling (L-mode)
         elif model == ConfinementTimeModel.REBUT_LALLIA:
-            t_electron_confinement = self.rebut_lallia_confinement_time(
+            t_global_confinement_scaling = self.rebut_lallia_confinement_time(
                 rminor,
                 rmajor,
                 kappa,
@@ -324,7 +326,7 @@ class PlasmaConfinementTime(Model):
 
         # Goldston scaling (L-mode)
         elif model == ConfinementTimeModel.GOLDSTON:  # Goldston scaling (L-mode)
-            t_electron_confinement = self.goldston_confinement_time(
+            t_global_confinement_scaling = self.goldston_confinement_time(
                 pcur, rmajor, rminor, kappa95, m_fuel_amu, p_plasma_loss_mw
             )
 
@@ -332,7 +334,7 @@ class PlasmaConfinementTime(Model):
 
         # T-10 scaling (L-mode)
         elif model == ConfinementTimeModel.T_10:
-            t_electron_confinement = self.t10_confinement_time(
+            t_global_confinement_scaling = self.t10_confinement_time(
                 dnla20,
                 rmajor,
                 qstar,
@@ -348,7 +350,7 @@ class PlasmaConfinementTime(Model):
 
         # JAERI / Odajima-Shimomura L-mode scaling
         elif model == ConfinementTimeModel.JAERI:  # JAERI scaling
-            t_electron_confinement = self.jaeri_confinement_time(
+            t_global_confinement_scaling = self.jaeri_confinement_time(
                 kappa95,
                 rminor,
                 m_fuel_amu,
@@ -365,7 +367,7 @@ class PlasmaConfinementTime(Model):
 
         # Kaye "big"  L-mode scaling (based only on big tokamak data)
         elif model == ConfinementTimeModel.KAYE_BIG:
-            t_electron_confinement = self.kaye_big_confinement_time(
+            t_global_confinement_scaling = self.kaye_big_confinement_time(
                 rmajor,
                 rminor,
                 b_plasma_toroidal_on_axis,
@@ -380,7 +382,7 @@ class PlasmaConfinementTime(Model):
 
         # ITER H90-P H-mode scaling
         elif model == ConfinementTimeModel.ITER_H90_P:
-            t_electron_confinement = self.iter_h90_p_confinement_time(
+            t_global_confinement_scaling = self.iter_h90_p_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -395,7 +397,7 @@ class PlasmaConfinementTime(Model):
 
         # Minimum of ITER 89-P and ITER 89-O
         elif model == ConfinementTimeModel.MINIMUM_OF_ITER_89P_AND_ITER_89_0:
-            t_electron_confinement = min(
+            t_global_confinement_scaling = min(
                 self.iter_89p_confinement_time(
                     pcur,
                     rmajor,
@@ -422,7 +424,7 @@ class PlasmaConfinementTime(Model):
 
         # Riedel scaling (L-mode)
         elif model == ConfinementTimeModel.RIEDEL_L:
-            t_electron_confinement = self.riedel_l_confinement_time(
+            t_global_confinement_scaling = self.riedel_l_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -436,7 +438,7 @@ class PlasmaConfinementTime(Model):
 
         # Christiansen et al scaling (L-mode)
         elif model == ConfinementTimeModel.CHRISTIANSEN:
-            t_electron_confinement = self.christiansen_confinement_time(
+            t_global_confinement_scaling = self.christiansen_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -451,7 +453,7 @@ class PlasmaConfinementTime(Model):
 
         # Lackner-Gottardi scaling (L-mode)
         elif model == ConfinementTimeModel.LACKNER_GOTTARDI:
-            t_electron_confinement = self.lackner_gottardi_confinement_time(
+            t_global_confinement_scaling = self.lackner_gottardi_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -465,7 +467,7 @@ class PlasmaConfinementTime(Model):
 
         # Neo-Kaye scaling (L-mode)
         elif model == ConfinementTimeModel.NEO_KAYE:
-            t_electron_confinement = self.neo_kaye_confinement_time(
+            t_global_confinement_scaling = self.neo_kaye_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -479,7 +481,7 @@ class PlasmaConfinementTime(Model):
 
         # Riedel scaling (H-mode)
         elif model == ConfinementTimeModel.RIEDEL_H:
-            t_electron_confinement = self.riedel_h_confinement_time(
+            t_global_confinement_scaling = self.riedel_h_confinement_time(
                 pcur,
                 rmajor,
                 rminor,
@@ -494,7 +496,7 @@ class PlasmaConfinementTime(Model):
 
         # Amended version of ITER H90-P law
         elif model == ConfinementTimeModel.ITER_H90_P_AMENDED:
-            t_electron_confinement = self.iter_h90_p_amended_confinement_time(
+            t_global_confinement_scaling = self.iter_h90_p_amended_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 m_fuel_amu,
@@ -507,7 +509,7 @@ class PlasmaConfinementTime(Model):
 
         # Sudo et al. scaling (stellarators/heliotron)
         elif model == ConfinementTimeModel.SUDO_ET_AL:
-            t_electron_confinement = self.sudo_et_al_confinement_time(
+            t_global_confinement_scaling = self.sudo_et_al_confinement_time(
                 rmajor,
                 rminor,
                 dnla20,
@@ -519,7 +521,7 @@ class PlasmaConfinementTime(Model):
 
         # Gyro-reduced Bohm scaling
         elif model == ConfinementTimeModel.GYRO_REDUCED_BOHM:
-            t_electron_confinement = self.gyro_reduced_bohm_confinement_time(
+            t_global_confinement_scaling = self.gyro_reduced_bohm_confinement_time(
                 b_plasma_toroidal_on_axis,
                 dnla20,
                 p_plasma_loss_mw,
@@ -531,20 +533,22 @@ class PlasmaConfinementTime(Model):
 
         # Lackner-Gottardi stellarator scaling
         elif model == ConfinementTimeModel.LACKNER_GOTTARDI_STELLARATOR:
-            t_electron_confinement = self.lackner_gottardi_stellarator_confinement_time(
-                rmajor,
-                rminor,
-                dnla20,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-                q95,
+            t_global_confinement_scaling = (
+                self.lackner_gottardi_stellarator_confinement_time(
+                    rmajor,
+                    rminor,
+                    dnla20,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                    q95,
+                )
             )
 
         # ==========================================================================
 
         # ITER_93 ELM-free H-mode scaling
         elif model == ConfinementTimeModel.ITER_93H:
-            t_electron_confinement = self.iter_93h_confinement_time(
+            t_global_confinement_scaling = self.iter_93h_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
@@ -563,7 +567,7 @@ class PlasmaConfinementTime(Model):
 
         # ELM-free: ITERH-97P
         elif model == ConfinementTimeModel.ITER_H97P:
-            t_electron_confinement = self.iter_h97p_confinement_time(
+            t_global_confinement_scaling = self.iter_h97p_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
@@ -578,7 +582,7 @@ class PlasmaConfinementTime(Model):
 
         # ELMy: ITERH-97P(y)
         elif model == ConfinementTimeModel.ITER_H97P_ELMY:
-            t_electron_confinement = self.iter_h97p_elmy_confinement_time(
+            t_global_confinement_scaling = self.iter_h97p_elmy_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
@@ -593,7 +597,7 @@ class PlasmaConfinementTime(Model):
 
         # ITER-96P (= ITER-97L) L-mode scaling
         elif model == ConfinementTimeModel.ITER_96P:
-            t_electron_confinement = self.iter_96p_confinement_time(
+            t_global_confinement_scaling = self.iter_96p_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 kappa95,
@@ -609,7 +613,7 @@ class PlasmaConfinementTime(Model):
         # Valovic modified ELMy-H mode scaling
         # WARNING: No reference found for this scaling. This may not be its real name
         elif model == ConfinementTimeModel.VALOVIC_ELMY:
-            t_electron_confinement = self.valovic_elmy_confinement_time(
+            t_global_confinement_scaling = self.valovic_elmy_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -625,7 +629,7 @@ class PlasmaConfinementTime(Model):
         # Kaye PPPL Workshop April 1998 L-mode scaling
         # WARNING: No reference found for this scaling. This may not be its real name
         elif model == ConfinementTimeModel.KAYE:
-            t_electron_confinement = self.kaye_confinement_time(
+            t_global_confinement_scaling = self.kaye_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 kappa,
@@ -641,7 +645,7 @@ class PlasmaConfinementTime(Model):
         # ITERH-PB98P(y), ELMy H-mode scaling
         # WARNING: No reference found for this scaling. This may not be its real name
         elif model == ConfinementTimeModel.ITER_PB98P_Y:
-            t_electron_confinement = self.iter_pb98py_confinement_time(
+            t_global_confinement_scaling = self.iter_pb98py_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -656,7 +660,7 @@ class PlasmaConfinementTime(Model):
 
         # IPB98(y), ELMy H-mode scaling
         elif model == ConfinementTimeModel.IPB98_Y:
-            t_electron_confinement = self.iter_ipb98y_confinement_time(
+            t_global_confinement_scaling = self.iter_ipb98y_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -671,7 +675,7 @@ class PlasmaConfinementTime(Model):
 
         # IPB98(y,1), ELMy H-mode scaling
         elif model == ConfinementTimeModel.ITER_IPB98Y1:
-            t_electron_confinement = self.iter_ipb98y1_confinement_time(
+            t_global_confinement_scaling = self.iter_ipb98y1_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -686,7 +690,7 @@ class PlasmaConfinementTime(Model):
 
         # IPB98(y,2), ELMy H-mode scaling
         elif model == ConfinementTimeModel.ITER_IPB98Y2:
-            t_electron_confinement = self.iter_ipb98y2_confinement_time(
+            t_global_confinement_scaling = self.iter_ipb98y2_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -701,7 +705,7 @@ class PlasmaConfinementTime(Model):
 
         # IPB98(y,3), ELMy H-mode scaling
         elif model == ConfinementTimeModel.ITER_IPB98Y3:
-            t_electron_confinement = self.iter_ipb98y3_confinement_time(
+            t_global_confinement_scaling = self.iter_ipb98y3_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -716,7 +720,7 @@ class PlasmaConfinementTime(Model):
 
         # IPB98(y,4), ELMy H-mode scaling
         elif model == ConfinementTimeModel.ITER_IPB98Y4:
-            t_electron_confinement = self.iter_ipb98y4_confinement_time(
+            t_global_confinement_scaling = self.iter_ipb98y4_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -733,7 +737,7 @@ class PlasmaConfinementTime(Model):
         elif model == ConfinementTimeModel.ISS95_STELLARATOR:
             # dummy argument q95 is actual argument iotabar for stellarators
             iotabar = q95
-            t_electron_confinement = self.iss95_stellarator_confinement_time(
+            t_global_confinement_scaling = self.iss95_stellarator_confinement_time(
                 rminor,
                 rmajor,
                 dnla19,
@@ -748,7 +752,7 @@ class PlasmaConfinementTime(Model):
         elif model == ConfinementTimeModel.ISS04_STELLARATOR:
             # dummy argument q95 is actual argument iotabar for stellarators
             iotabar = q95
-            t_electron_confinement = self.iss04_stellarator_confinement_time(
+            t_global_confinement_scaling = self.iss04_stellarator_confinement_time(
                 rminor,
                 rmajor,
                 dnla19,
@@ -761,7 +765,7 @@ class PlasmaConfinementTime(Model):
 
         # DS03 beta-independent H-mode scaling
         elif model == ConfinementTimeModel.DS03:
-            t_electron_confinement = self.ds03_confinement_time(
+            t_global_confinement_scaling = self.ds03_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -776,7 +780,7 @@ class PlasmaConfinementTime(Model):
 
         #  Murari "Non-power law" scaling
         elif model == ConfinementTimeModel.MURARI:
-            t_electron_confinement = self.murari_confinement_time(
+            t_global_confinement_scaling = self.murari_confinement_time(
                 pcur,
                 rmajor,
                 self.data.physics.kappa_ipb,
@@ -789,7 +793,7 @@ class PlasmaConfinementTime(Model):
 
         # Petty08, beta independent dimensionless scaling
         elif model == ConfinementTimeModel.PETTY08:
-            t_electron_confinement = self.petty08_confinement_time(
+            t_global_confinement_scaling = self.petty08_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -803,7 +807,7 @@ class PlasmaConfinementTime(Model):
 
         # Lang high density relevant confinement scaling
         elif model == ConfinementTimeModel.LANG_HIGH_DENSITY:
-            t_electron_confinement = self.lang_high_density_confinement_time(
+            t_global_confinement_scaling = self.lang_high_density_confinement_time(
                 plasma_current,
                 b_plasma_toroidal_on_axis,
                 nd_plasma_electron_line,
@@ -821,7 +825,7 @@ class PlasmaConfinementTime(Model):
 
         # Hubbard 2017 I-mode confinement time scaling - nominal
         elif model == ConfinementTimeModel.HUBBARD_NOMINAL:
-            t_electron_confinement = self.hubbard_nominal_confinement_time(
+            t_global_confinement_scaling = self.hubbard_nominal_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla20,
@@ -832,7 +836,7 @@ class PlasmaConfinementTime(Model):
 
         # Hubbard 2017 I-mode confinement time scaling - lower
         elif model == ConfinementTimeModel.HUBBARD_LOWER:
-            t_electron_confinement = self.hubbard_lower_confinement_time(
+            t_global_confinement_scaling = self.hubbard_lower_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla20,
@@ -843,7 +847,7 @@ class PlasmaConfinementTime(Model):
 
         # Hubbard 2017 I-mode confinement time scaling - upper
         elif model == ConfinementTimeModel.HUBBARD_UPPER:
-            t_electron_confinement = self.hubbard_upper_confinement_time(
+            t_global_confinement_scaling = self.hubbard_upper_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla20,
@@ -854,7 +858,7 @@ class PlasmaConfinementTime(Model):
 
         # Menard NSTX, ELMy H-mode scaling
         elif model == ConfinementTimeModel.MENARD_NSTX:
-            t_electron_confinement = self.menard_nstx_confinement_time(
+            t_global_confinement_scaling = self.menard_nstx_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -869,22 +873,24 @@ class PlasmaConfinementTime(Model):
 
         # Menard NSTX-Petty08 Hybrid
         elif model == ConfinementTimeModel.MENARD_NSTX_PETTY08_HYBRID:
-            t_electron_confinement = self.menard_nstx_petty08_hybrid_confinement_time(
-                pcur,
-                b_plasma_toroidal_on_axis,
-                dnla19,
-                p_plasma_loss_mw,
-                rmajor,
-                self.data.physics.kappa_ipb,
-                aspect,
-                m_fuel_amu,
+            t_global_confinement_scaling = (
+                self.menard_nstx_petty08_hybrid_confinement_time(
+                    pcur,
+                    b_plasma_toroidal_on_axis,
+                    dnla19,
+                    p_plasma_loss_mw,
+                    rmajor,
+                    self.data.physics.kappa_ipb,
+                    aspect,
+                    m_fuel_amu,
+                )
             )
 
         # ==========================================================================
 
         # NSTX gyro-Bohm (Buxton)
         elif model == ConfinementTimeModel.NSTX_GYRO_BOHM:
-            t_electron_confinement = self.nstx_gyro_bohm_confinement_time(
+            t_global_confinement_scaling = self.nstx_gyro_bohm_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
@@ -896,7 +902,7 @@ class PlasmaConfinementTime(Model):
 
         # ITPA20 H-mode scaling
         elif model == ConfinementTimeModel.ITPA20:
-            t_electron_confinement = self.itpa20_confinement_time(
+            t_global_confinement_scaling = self.itpa20_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -912,7 +918,7 @@ class PlasmaConfinementTime(Model):
 
         # ITPA20-IL confinement time scaling
         elif model == ConfinementTimeModel.ITPA20_IL:
-            t_electron_confinement = self.itpa20_il_confinement_time(
+            t_global_confinement_scaling = self.itpa20_il_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
@@ -930,12 +936,6 @@ class PlasmaConfinementTime(Model):
                 "Illegal value for i_confinement_time",
                 i_confinement_time=i_confinement_time,
             )
-
-        # Apply H-factor correction to chosen scaling
-        t_electron_energy_confinement = hfact * t_electron_confinement
-
-        # Ion energy confinement time
-        t_ion_energy_confinement = t_electron_energy_confinement
 
         # Calculate H* non-radiation corrected H factor
         # Note: we will assume the IPB-98y2 scaling.
@@ -972,11 +972,22 @@ class PlasmaConfinementTime(Model):
         elif self.data.physics.i_rad_loss == ConfinementRadiationLossModel.NO_RADIATION:
             hstar = hfact
 
-        # Calculation of the transport power loss terms
-        # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
-        # (here, temp_plasma_ion_density_weighted_kev and
-        # temp_plasma_electron_density_weighted_kev are in keV, and
-        # pden_electron_transport_loss_mw and pden_ion_transport_loss_mw are in MW/m3)
+        t_energy_confinement = t_global_confinement_scaling * hfact
+
+        # Apply H-factor correction to chosen scaling
+        t_electron_energy_confinement = (
+            self.calculate_electron_species_consistent_energy_confinement_time(
+                self.data.physics.f_t_fuel_ion_electron_energy_confinement,
+                eden_plasma_ions_thermal_vol_avg,
+                eden_plasma_electrons_thermal_vol_avg,
+                t_energy_confinement,
+            )
+        )
+        # Ion energy confinement time
+        t_ion_energy_confinement = (
+            t_electron_energy_confinement
+            * self.data.physics.f_t_fuel_ion_electron_energy_confinement
+        )
 
         # The transport losses is just the electron and ion thermal energies divided by
         # the confinement time.
@@ -986,14 +997,6 @@ class PlasmaConfinementTime(Model):
         pden_electron_transport_loss_mw = (
             eden_plasma_electrons_thermal_vol_avg / t_electron_energy_confinement
         ) / 1e6  # Convert from W/m³ to MW/m³
-
-        ratio = eden_plasma_ions_thermal_vol_avg / eden_plasma_electrons_thermal_vol_avg
-
-        # Global energy confinement time
-
-        t_energy_confinement = (ratio + 1.0e0) / (
-            ratio / t_ion_energy_confinement + 1.0e0 / t_electron_energy_confinement
-        )
 
         # For comparison directly calculate the confinement time from the stored energy
         # calculated from the total plasma beta and the loss power used above.
@@ -1040,6 +1043,48 @@ class PlasmaConfinementTime(Model):
         nTtau = ntau * temp_plasma_electrons_vol_avg_kev
 
         return ntau, nTtau
+
+    @staticmethod
+    def calculate_electron_species_consistent_energy_confinement_time(
+        f_t_fuel_ion_electron_energy_confinement: float,
+        eden_plasma_ions_thermal_vol_avg: float,
+        eden_plasma_electrons_thermal_vol_avg: float,
+        t_plasma_global_energy_confinement: float,
+    ) -> float:
+        """Calculate the electron energy confinement time based on the global plasma
+        energy confinement time and the species ratio.
+
+        Parameters
+        ----------
+        f_t_fuel_ion_electron_energy_confinement : float
+            Ratio of fuel ion to electron energy confinement times.
+        eden_plasma_ions_thermal_vol_avg : float
+            Volume averaged thermal energy density of ions [J/m³].
+        eden_plasma_electrons_thermal_vol_avg : float
+            Volume averaged thermal energy density of electrons [J/m³].
+        t_plasma_global_energy_confinement : float
+            Global plasma energy confinement time [s].
+
+        Returns
+        -------
+        float
+            Electron energy confinement time [s].
+
+        Notes
+        -----
+        - The variable `f_t_fuel_ion_electron_energy_confinement` is used to relate
+        the energy confinement times of fuel ions and electrons. R = τ_i / τ_e.
+        """
+        return t_plasma_global_energy_confinement * (
+            (
+                eden_plasma_electrons_thermal_vol_avg
+                + (
+                    eden_plasma_ions_thermal_vol_avg
+                    / f_t_fuel_ion_electron_energy_confinement
+                )
+            )
+            / (eden_plasma_electrons_thermal_vol_avg + eden_plasma_ions_thermal_vol_avg)
+        )
 
     def find_other_h_factors(self, i_confinement_time: int) -> float:
         """Function to find H-factor for the equivalent confinement time in other
@@ -1194,6 +1239,13 @@ class PlasmaConfinementTime(Model):
         po.ocmmnt(self.outfile, "----------------------------")
         po.oblnkl(self.outfile)
 
+        po.ovarre(
+            self.outfile,
+            "Ratio of fuel ion to electron energy confinement times",
+            "(f_t_fuel_ion_electron_energy_confinement)",
+            self.data.physics.f_t_fuel_ion_electron_energy_confinement,
+            "OP ",
+        )
         po.ovarre(
             self.outfile,
             "Ion energy confinement time, from scaling (s)",

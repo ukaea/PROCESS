@@ -647,59 +647,104 @@ $$
 
 -------------------------
 
+### Species Confinement Times
+
+Once the global energy confinement time $\tau_{\text{E}}$ is calculated from the scaling we calculate the species and $H$ factor corrected confinement time.
+
+Using out $H$ factor we find the new corrected value for the global energy confinement time:
+
+$$
+\tau_{\text{E}} = H\tau_{\text{E,scaling}}
+$$
+
+We then find the electron confinement time via the consistency relation from [`calculate_electron_species_consistent_energy_confinement_time()`](#global-confinement-time-consistency--calculate_electron_species_consistent_energy_confinement_time)
+
+$$
+\tau_{\text{e}} = \tau_{\text{E}}\left(\frac{W_{\text{e}} +\frac{W_{\text{i}}}{R}}{W_{\text{e}} +W_{\text{i}}}\right)
+$$
+
+The ion energy confinement time is then simply defined as:
+
+$$
+\tau_{\text{i}} = R\tau_{\text{e}}
+$$
+
+
+----------------
+
 ### Transport Powers
 
-After the confinement time scaling with $H$-factor correction has been calculated, the ion and electron transport power densities are found. `PROCESS` assumes the scaling confinement time to be equal to the ion and electron energy confinement time.
+After the confinement time scaling with $H$-factor correction has been calculated along with the specific ion and electron energy confinement times, the ion and electron transport power densities are found.
 
 This is simply the volume averaged thermal energy of the electron and ions divided by the $H$-factor corrected confinement time from the chosen scaling.
 
 $$
-\mathtt{pden\_ion\_transport\_loss\_mw} = \frac{3}{2}\frac{n_{\text{i}} \langle T_{\text{i}} \rangle_{\text{n}}}{\tau_{\text{E}}}
+\overbrace{\left(\frac{P_{\text{i,loss}}}{V}\right)}^{\texttt{pden_ion_transport_loss_mw}} = \frac{3}{2}\frac{\frac{W_{\text{i}}}{V}}{\tau_{\text{E}}}
 $$
 
 $$
-\mathtt{pden\_electron\_transport\_loss\_mw} = \frac{3}{2}\frac{n_{\text{e}} \langle T_{\text{e}} \rangle_{\text{n}}}{\tau_{\text{E}}}
+\overbrace{\left(\frac{P_{\text{e,loss}}}{V}\right)}^{\texttt{pden_electron_transport_loss_mw}} = \frac{3}{2}\frac{\frac{W_{\text{e}}}{V}}{\tau_{\text{E}}}
 $$
 
-Here $\langle T_{\text{i}} \rangle$ and $\langle T_{\text{e}} \rangle$ are the ion and electron density weighted temperatures respectively.
+Here $W_{\text{e}}$ and $W_{\text{i}}$ are the electron and ion stored thermal energies respectively and $V$ is the plasma volume.
 
-Calculate the density and density weighted ratio:
+
+
+----------
+
+## Global confinement time consistency | `calculate_electron_species_consistent_energy_confinement_time()`
+
+It is possible to set a relative ratio between the electron and ion confinement times $\overbrace{R}^{\texttt{f_t_fuel_ion_electron_energy_confinement}} = \frac{\tau_\text{i}}{\tau_\text{e}}$ that still ensures the global energy confinment time is consistent.
+
+It is derived as:
+
+The global energy confinement time is defined as:
 
 $$
-\frac{n_{\text{i}}}{n_{\text{e}}}\frac{\langle T_{\text{i}} \rangle_{\text{n}}}{\langle T_{\text{e}} \rangle_{\text{n}}}
+\tau_{\text{E}} = \frac{W_{\text{e}} +W_{\text{i}}}{P_{\text{e}} +P_{\text{i}}}
 $$
 
-The density weighted global energy confinement time is then found in terms of this ratio:
+where $W_{\text{e}},W_{\text{i}}$ is the stored thermal energy of the electrons and ions respectively and $P_{\text{e}},P_{\text{i}}$ is the electron and ion energy transport powers.
+
+The electron and ion energy confinement times alone are:
 
 $$
-\tau_{\text{E}} = \frac{\frac{n_{\text{i}}}{n_{\text{e}}}\frac{\langle T_{\text{i}} \rangle_{\text{n}}}{\langle T_{\text{e}} \rangle_{\text{n}}} + 1}{\left(\frac{\frac{n_{\text{i}}}{n_{\text{e}}}\frac{\langle T_{\text{i}} \rangle_{\text{n}}}{\langle T_{\text{e}} \rangle_{\text{n}}}}{\tau_{\text{i}}}+\frac{1}{\tau_{\text{e}}}\right)}
+\tau_{\text{e}} = \frac{W_{\text{e}}}{P_{\text{e}}}
 $$
+
+$$
+\tau_{\text{i}} = \frac{W_{\text{i}}}{P_{\text{i}}}
+$$
+
+Substituting the individual ion and electron terms into the global term we get:
+
+$$
+\tau_{\text{E}} = \frac{W_{\text{e}} +W_{\text{i}}}{\frac{W_{\text{e}}}{\tau_{\text{e}}} +\frac{W_{\text{i}}}{\tau_{\text{i}}}}
+$$
+
+Substituting in our known ratio $\left(R = \frac{\tau_\text{i}}{\tau_\text{e}}\right)$:
+
+$$
+\tau_{\text{E}} = \frac{W_{\text{e}} +W_{\text{i}}}{\frac{W_{\text{e}}}{\tau_{\text{e}}} +\frac{W_{\text{e}}}{R\tau_{\text{e}}}}
+$$
+
+Factor out the $\frac{1}{\tau_{\text{e}}}$ from the denominator:
+
+$$
+\tau_{\text{E}} = \tau_{\text{e}}\left(\frac{W_{\text{e}} +W_{\text{i}}}{W_{\text{e}} +\frac{W_{\text{i}}}{R}}\right)
+$$
+
+Finally re-arrange the equation to isolate $\tau_{\text{e}}$:
+
+$$
+\tau_{\text{e}} = \tau_{\text{E}}\left(\frac{W_{\text{e}} +\frac{W_{\text{i}}}{R}}{W_{\text{e}} +W_{\text{i}}}\right)
+$$
+
+Using the above we can specify plasmas where $\tau_{\text{e}} \neq \tau_{\text{i}} \neq \tau_{\text{E}}$ and still ensure that our global plasma and species energy transport is self consistent.
 
 ----------
 
 ## Key Constraints
-
-### Global plasma power balance
-
-This constraint can be activated by stating `icc = 2` in the input file.
-
-This constraint ensures self consistency between the the transport loss power used for the confinement scalings and the calculated confinement time in relation to the plasmas total thermal energy:
-
-$$
-P_{\text{L}} = \frac{W}{\tau_{\text{E}}}
-$$
-
-$$
-\underbrace{\frac{3}{2}\frac{n_{\text{i}} \langle T_{\text{i}} \rangle_{\text{n}}}{\tau_{\text{E}}} + \frac{3}{2}\frac{n_{\text{e}} \langle T_{\text{e}} \rangle_{\text{n}}}{\tau_{\text{E}}}}_{\frac{W}{\tau_{\text{E}}}}  = \underbrace{\frac{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}{V_{\text{P}}} - \frac{P_{\text{rad}}}{V_{\text{p}}}}_{P_{\text{L}}}
-$$
-
-The $\frac{3}{2}n_{\text{i}} \langle T_{\text{i}} \rangle_{\text{n}}$ value is simply the volume averaged ion thermal energy density where $\langle T_{\text{i}} \rangle_{\text{n}}$ is the density weighted temperature. The same goes for the $\frac{3}{2}n_{\text{e}} \langle T_{\text{e}} \rangle_{\text{e}}$ electron thermal energy density term. $\tau_{\text{E}}$ is the confinement time calculated from the chosen confinement scaling via `i_confinement_time`. 
-
-The constraint uses the loss power and thermal densities hence the inclusion of the $V_{\text{p}}$ plasma volume term. The constraint is adapted depending on the condition of `i_rad_loss` which governs the radiation contribution to the loss power definition, see the [radiation and energy confinement section](#effect-of-radiation-on-energy-confinement) for more info. The injected heating and current drive contribution $P_{\text{HCD}}$ is also included or excluded depending if the plasma is deemed to be ignited with the `i_plasma_ignited` switch.
-
-**It is highly recommended to always have this constraint on as it is a global consistency checker**
-
-----------
 
 ### Lower limit on alpha particle confinement time ratio
 
