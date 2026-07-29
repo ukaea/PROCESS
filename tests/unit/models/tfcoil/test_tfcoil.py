@@ -12,6 +12,7 @@ import pytest
 import process.models.tfcoil.base as tfcoil_module
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.pfcoil_variables import PFConductorModel
+from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 
 
 @pytest.fixture
@@ -1020,7 +1021,7 @@ class StressclParam(NamedTuple):
             n_tf_coils=16,
             i_tf_stress_model=1,
             sig_tf_wp_max=580000000,
-            i_tf_turns_integer=1,
+            i_tf_turns_integer=TFWPIntegerTurnType.INTEGER,
             dr_tf_plasma_case=0.060000000000000012,
             a_tf_wp_conductor=0.1653572639592335,
             a_tf_wp_extra_void=0.07759938309736393,
@@ -1136,7 +1137,7 @@ class StressclParam(NamedTuple):
             n_tf_coils=16,
             i_tf_stress_model=1,
             sig_tf_wp_max=580000000,
-            i_tf_turns_integer=1,
+            i_tf_turns_integer=TFWPIntegerTurnType.INTEGER,
             dr_tf_plasma_case=0.060000000000000012,
             a_tf_wp_conductor=0.1653572639592335,
             a_tf_wp_extra_void=0.07759938309736393,
