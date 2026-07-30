@@ -473,35 +473,14 @@ class Vacuum(Model):
         #  = 1 if problem is identified in output, but run continues
         #  = 0 otherwise
         #  Newton's method solution for duct diameter
+
         while True:
             d[i] = 1.0e0
-
             for _ in range(100):
-                a1 = 0.25e0 * math.pi * d[i] * d[i]  # Area of aperture and duct (m^2)
-                a2 = 1.44e0 * a1
-                a3 = a2
-                k1 = 4.0e0 / 3.0e0 * d[i] / (l1 + 4.0e0 / 3.0e0 * d[i])
-                k2 = 4.0e0 / 3.0e0 * d[i] * 1.2e0 / (l2 + 4.0e0 / 3.0e0 * d[i] * 1.2e0)
-                k3 = 4.0e0 / 3.0e0 * d[i] * 1.2e0 / (l3 + 4.0e0 / 3.0e0 * d[i] * 1.2e0)
-                cap = 119.0e0 * a1 / xmult[i]
-                dcap = 2.0e0 * cap / d[i]
-                c1 = 119.0e0 * a1 * k1 / xmult[i]
-                dc1 = c1 / d[i] * (3.0e0 - k1)
-                c2 = 119.0e0 * a2 * k2 / xmult[i]
-                dc2 = c2 / d[i] / 1.2e0 * (3.0e0 - k2)
-                c3 = 119.0e0 * a3 * k3 / xmult[i]
-                dc3 = c3 / d[i] / 1.2e0 * (3.0e0 - k3)
-                cnew = 1.0e0 / (1.0e0 / cap + 1.0e0 / c1 + 1.0e0 / c2 + 1.0e0 / c3)
-                y = -ceff[i] + cnew
-                dy = (
-                    cnew
-                    * cnew
-                    * (dcap / cap / cap + dc1 / c1 / c1 + dc2 / c2 / c2 + dc3 / c3 / c3)
-                )
-                dnew = d[i] - y / dy
+                dnew, a1 = self._newton_function(d[i], l1, l2, l3, xmult, i, ceff)
                 dd = abs((d[i] - dnew) / d[i])
                 d[i] = dnew
-                if dd <= 0.01e0:
+                if dd <= 0.01:
                     break
 
             else:
@@ -517,16 +496,41 @@ class Vacuum(Model):
             #  ritf = outer radius of inboard leg of TF coil (m)
 
             a1max = (r0 + aw - ritf - thcsh / math.tan(theta)) ** 2 * math.tan(theta)
-            d1max = math.sqrt(4.0e0 * a1max / math.pi)  # Equivalent diameter
+            d1max = math.sqrt(4.0 * a1max / math.pi)  # Equivalent diameter
             if a1 < a1max:
                 break
 
-            ceff[i] *= 0.9e0
-            if ceff[i] <= (1.1e0 * s[i]):
+            ceff[i] *= 0.9
+            if ceff[i] <= (1.1 * s[i]):
                 #  Ducts are not big enough. Flag and continue.
                 nflag = 1
                 break
         return ceff, nflag, d1max
+
+    @staticmethod
+    def _newton_function(d_i, l1, l2, l3, xmult, i, ceff):
+        a1 = 0.25 * math.pi * d_i * d_i  # Area of aperture and duct (m^2)
+        a2 = 1.44 * a1
+        a3 = a2
+        k1 = 4 / 3 * d_i / (l1 + 4 / 3 * d_i)
+        k2 = 4 / 3 * d_i * 1.2 / (l2 + 4 / 3 * d_i * 1.2)
+        k3 = 4 / 3 * d_i * 1.2 / (l3 + 4 / 3 * d_i * 1.2)
+        cap = 119 * a1 / xmult[i]
+        dcap = 2 * cap / d_i
+        c1 = 119 * a1 * k1 / xmult[i]
+        dc1 = c1 / d_i * (3 - k1)
+        c2 = 119 * a2 * k2 / xmult[i]
+        dc2 = c2 / d_i / 1.2 * (3 - k2)
+        c3 = 119 * a3 * k3 / xmult[i]
+        dc3 = c3 / d_i / 1.2 * (3 - k3)
+        cnew = 1 / (1 / cap + 1 / c1 + 1 / c2 + 1 / c3)
+        y = -ceff[i] + cnew
+        dy = (
+            cnew
+            * cnew
+            * (dcap / cap / cap + dc1 / c1 / c1 + dc2 / c2 / c2 + dc3 / c3 / c3)
+        )
+        return d_i - y / dy, a1
 
     def _write_to_outfile(
         self,
