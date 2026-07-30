@@ -136,7 +136,51 @@ $$
 
 ## Key Constraints
 
-The implementation of the equations above as equality constraints is required in order to achieve a plasma steady state equilibrium where there is not a net rate of change of species number.
+The implementation of the equations above as equality constraints is required in order to achieve a plasma steady state equilibrium where there is not a net rate of change of species number. In any given run several of these constraints and iterations variables will almost always be on.Below is the generic input used for a D-T only plasma where we have allowed all of the key solution variables to be iteration variables: 
+
+```python
+* Tritium particle balance
+icc = 93
+
+* Deuterium particle balance
+icc = 94
+
+* Alpha particle balance
+icc = 96
+
+* Fuelling composition consistency
+icc = 97
+
+
+* Particle recycling fraction
+ixc = 178
+f_plasma_particles_lcfs_recycled = 0.9
+
+* Plasma fuelling efficiecy
+ixc = 179
+eta_plasma_fuelling = 0.7
+
+* Injected VV fuelling rate
+ixc = 180
+molflow_plasma_fuelling_vv_injected = 5e21
+boundl(180) = 1e20
+
+* Deuterium fuelling fraction
+ixc = 181
+f_molflow_plasma_fuelling_deuterium = 0.5
+boundl(181) = 0.4
+
+* Tritium fuelling fraction
+ixc = 182
+f_molflow_plasma_fuelling_tritium = 0.5
+boundl(182) = 0.4
+```
+
+Note that the Helium-3 consistency equation (`icc= 95`) is not active as we are not actively fuelling and have no stated Helium-3 in the plasma composition. 
+
+If solving this as an evaluation problem it would be typical to fix the values of the reycling fraction, $R$ (`f_plasma_particles_lcfs_recycled`) and the fuelling efficiency $\eta_{\text{fuelling}}$ (`eta_plasma_fuelling`) as these represent higher order assumptions already about the plant design that `PROCESS` cannot model. This realistically leaves the total fuelling rate $\Gamma_{\text{fuel}}$ (`molflow_plasma_fuelling_vv_injected`) and the fuelling fractions $f_{\text{fuelling,D}}$,$f_{\text{fuelling,T}}$ (`f_molflow_plasma_fuelling_deuterium,f_molflow_plasma_fuelling_tritium`) to solve this consistency equations. This is ideal as the fuelling rates and fractions are ideal optimisation paramters as they can be directly controlled from the machine control room.
+
+------------
 
 ### Tritium Flow Consistency
 
