@@ -282,7 +282,7 @@ class Vmcon(_Solver):
             raise
 
         else:
-            self.info = 1
+            self.info = SolverOutputCondition.CONVERGED
 
         # print a blank line because of the carridge return
         # in the callback
