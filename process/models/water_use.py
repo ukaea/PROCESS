@@ -1,5 +1,7 @@
 """Water use model for calculating water usage during plant operation."""
 
+from dataclasses import dataclass
+
 import numpy as np
 
 from process.core import constants
@@ -139,122 +141,90 @@ class WaterUse(Model):
         """
         evapsum = 0.0e0
 
-        for icool in range(1, 4):
-            if icool == 1:
+        icools = [
+            # coefficients as per Brady et al. 1969:
+            CoolingWaterBodyCoeffs(
+                # wind function coefficients
+                a=2.47e0,
+                b=0e0,
+                c=0.12e0,
+                # fitted coefficients of heat loading
+                d=3061.331e0,
+                e=-48.810e0,
+                f=-78.559e0,
+                g=-291.820e0,
+                h=0.267e0,
+                i=-0.610e0,
+                j=33.497e0,
                 # small pond as a cooling body
                 # heat loading, MW/acre, based on estimations from US power plants
-                heatload = 0.35e0
-                # coefficients as per Brady et al. 1969:
+                heatload=0.35e0,
+            ),
+            # coefficients as per Webster et al. 1995:
+            CoolingWaterBodyCoeffs(
                 # wind function coefficients
-                a = 2.47e0
-                b = 0e0
-                c = 0.12e0
+                a=1.04e0,
+                b=1.05e0,
+                c=0.0e0,
                 # fitted coefficients of heat loading
-                d = 3061.331e0
-                e = -48.810e0
-                f = -78.559e0
-                g = -291.820e0
-                h = 0.267e0
-                i = -0.610e0
-                j = 33.497e0
-
-            elif icool == 2:
+                d=3876.843e0,
+                e=-49.071e0,
+                f=-295.246e0,
+                g=-327.935e0,
+                h=0.260e0,
+                i=10.528e0,
+                j=40.188e0,
                 # large lake or reservoir as a cooling body
                 # heat loading, MW/acre, based on estimations from US power plants
-                heatload = 0.10e0
-                # coefficients as per Webster et al. 1995:
+                heatload=0.10e0,
+            ),
+            # coefficients as per Gulliver et al. 1986:
+            CoolingWaterBodyCoeffs(
                 # wind function coefficients
-                a = 1.04e0
-                b = 1.05e0
-                c = 0.0e0
+                a=2.96e0,
+                b=0.64e0,
+                c=0.0e0,
                 # fitted coefficients of heat loading
-                d = 3876.843e0
-                e = -49.071e0
-                f = -295.246e0
-                g = -327.935e0
-                h = 0.260e0
-                i = 10.528e0
-                j = 40.188e0
-
-            elif icool == 3:
+                d=2565.009e0,
+                e=-43.636e0,
+                f=-93.834e0,
+                g=-203.767e0,
+                h=0.257e0,
+                i=2.408e0,
+                j=20.596e0,
                 # stream or river as a cooling body
                 # heat loading, MW/acre, based on estimations from US power plants
-                heatload = 0.20e0
-                # coefficients as per Gulliver et al. 1986:
-                # wind function coefficients
-                a = 2.96e0
-                b = 0.64e0
-                c = 0.0e0
-                # fitted coefficients of heat loading
-                d = 2565.009e0
-                e = -43.636e0
-                f = -93.834e0
-                g = -203.767e0
-                h = 0.257e0
-                i = 2.408e0
-                j = 20.596e0
+                heatload=0.20e0,
+            ),
+        ]
 
+        for icool in icools:
             # Unfortunately, the source spreadsheet was from the US, so the fits for
             # water body heating due to heat loading and the cooling wind functions
             # are in non-metric units, hence the conversions required here.
             # Limitations: maximum wind speed of ~5 m/s; initial
             # self.data.water_use.watertemp < 25 degC
 
-            # convert self.data.water_use.windspeed to mph
-            windspeedmph = self.data.water_use.windspeed * 2.237e0
-
-            # convert heat loading into cal/(cm2.sec)
-            heatloadimp = heatload * 1000000.0e0 * 0.239e0 / 40469000.0e0
-
-            # estimate how heat loading will raise temperature, for this water body
-            heatratio = (
-                d
-                + (e * self.data.water_use.watertemp)
-                + (f * windspeedmph)
-                + (g * heatload)
-                + (h * self.data.water_use.watertemp**2)
-                + (i * windspeedmph**2)
-                + (j * heatload**2)
-            )
-
-            # estimate resultant heated water temperature
-            watertempheated = self.data.water_use.watertemp + (heatloadimp * heatratio)
-
-            # find wind function, m/(day.kPa), applicable to this water body:
-            windfunction = (
-                a
-                + (b * self.data.water_use.windspeed)
-                + (c * self.data.water_use.windspeed**2)
-            ) / 1000.0e0
-
-            # difference in saturation vapour pressure (Clausius-Clapeyron approximation)
-            satvapdelta = (
-                0.611e0
-                * np.exp((17.27e0 * watertempheated) / (237.3e0 + watertempheated))
-            ) - (
-                0.611e0
-                * np.exp(
-                    (17.27e0 * self.data.water_use.watertemp)
-                    / (237.3e0 + self.data.water_use.watertemp)
-                )
-            )
-
-            # find 'forced evaporation' driven by heat inserted into system
-            deltae = (
-                self.data.water_use.waterdens
-                * self.data.water_use.latentheat
-                * windfunction
-                * satvapdelta
-            )
-
-            # convert heat loading to J/(m2.day)
-            heatloadmet = heatload * 1000000.0e0 / 4046.85642e0 * SECDAY
-
             # find evaporation ratio: ratio of the heat used to evaporate water
-            #   to the total heat discharged through the tower
-            self.data.water_use.evapratio = deltae / heatloadmet
+            # to the total heat discharged through the tower
+            self.data.water_use.evapratio = (
+                icool.delta_e(
+                    self.data.water_use.windspeed,
+                    # estimate resultant heated water temperature
+                    self.data.water_use.watertemp
+                    + (
+                        icool.imp_heatload_conversion()
+                        * icool.heat_ratio(
+                            self.data.water_use.watertemp, self.data.water_use.windspeed
+                        )
+                    ),
+                    self.data.water_use.watertemp,
+                    self.data.water_use.waterdens,
+                    self.data.water_use.latentheat,
+                )
+                / icool.met_heatload_conversion()
+            )
             # Diehl et al. USGS Report 2013-5188, http://dx.doi.org/10.3133/sir20135188
-
             self.data.water_use.volheat = (
                 self.data.water_use.waterdens * self.data.water_use.latentheat
             )
@@ -274,7 +244,7 @@ class WaterUse(Model):
             # stage of calculation
             evapsum += self.data.water_use.evapvol
 
-        evapsum /= icool
+        evapsum /= len(icools)
 
         # water volume withdrawn from external source depends on recirculation or
         # 'once-through' system choice. Estimated as a ratio to evaporated water
@@ -305,3 +275,56 @@ class WaterUse(Model):
                 self.data.water_use.wateruseonethru,
                 "OP ",
             )
+
+
+@dataclass
+class CoolingWaterBodyCoeffs:
+    """Cooling water body coefficients"""
+
+    a: float
+    b: float
+    c: float
+    d: float
+    e: float
+    f: float
+    g: float
+    h: float
+    i: float
+    j: float
+    heatload: float
+
+    def heat_ratio(self, watertemp, windspeed):
+        """Estimate how heat loading will raise temperature, for this water body"""
+        # convert self.data.water_use.windspeed to mph
+        windspeedmph = windspeed * 2.237e0
+        return (
+            self.d
+            + (self.e * watertemp)
+            + (self.f * windspeedmph)
+            + (self.g * self.heatload)
+            + (self.h * watertemp**2)
+            + (self.i * windspeedmph**2)
+            + (self.j * self.heatload**2)
+        )
+
+    def imp_heatload_conversion(self):
+        """Convert heat loading into cal/(cm2.sec)"""
+        return self.heatload * 1000000.0e0 * 0.239e0 / 40469000.0e0
+
+    def met_heatload_conversion(self):
+        """Convert heat loading to J/(m2.day)"""
+        return self.heatload * 1000000.0e0 / 4046.85642e0 * SECDAY
+
+    def delta_e(self, windspeed, watertempheated, watertemp, waterdens, latentheat):
+        """Find 'forced evaporation' driven by heat inserted into system"""
+        # find wind function, m/(day.kPa), applicable to this water body:
+        windfunction = (
+            self.a + (self.b * windspeed) + (self.c * windspeed**2)
+        ) / 1000.0e0
+
+        # difference in saturation vapour pressure (Clausius-Clapeyron approximation)
+        satvapdelta = (
+            0.611e0 * np.exp((17.27e0 * watertempheated) / (237.3e0 + watertempheated))
+        ) - (0.611e0 * np.exp((17.27e0 * watertemp) / (237.3e0 + watertemp)))
+
+        return waterdens * latentheat * windfunction * satvapdelta
