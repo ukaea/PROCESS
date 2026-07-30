@@ -474,7 +474,7 @@ def plot_1d_scan(
                 color="blue" if len(input_files) == 1 else "black",
             )
             ax.set_xlabel(
-                get_label(scan_var.name),
+                get_label(scan_var.out_name),
                 fontsize=x_axis.font_size,
             )
             if len(input_files) != 1:
@@ -483,7 +483,7 @@ def plot_1d_scan(
             ax.minorticks_on()
             ax.grid(True)
             ax.set_ylabel(get_label(output_name))
-            ax.set_xlabel(get_label(scan_var.name), fontsize=x_axis.font_size)
+            ax.set_xlabel(get_label(scan_var.out_name), fontsize=x_axis.font_size)
 
             ymin, ymax = ax.get_ylim()
             if ymin < 0 and ymax > 0:
@@ -515,10 +515,10 @@ def plot_1d_scan(
                 fontsize=x_axis.font_size,
                 color="red" if len(output_names2) > 0 else "black",
             )
-            ax.set_xlabel(get_label(scan_var.name), fontsize=x_axis.font_size)
+            ax.set_xlabel(get_label(scan_var.out_name), fontsize=x_axis.font_size)
 
             fig.suptitle(
-                f"{get_label(output_name)} vs {get_label(scan_var.name)}",
+                f"{get_label(output_name)} vs {get_label(scan_var.out_name)}",
                 fontsize=x_axis.font_size,
             )
             if len(input_files) != 1:
@@ -624,7 +624,7 @@ def twod_scan(
             fig.colorbar(contour).set_label(
                 label=get_label(output_name), size=y_axis.font_size
             )
-            ax.set_ylabel(get_label(scan_var.name), fontsize=y_axis.font_size)
+            ax.set_ylabel(get_label(scan_var.out_name), fontsize=y_axis.font_size)
 
         else:
             y_contour = [m_file.get(output_name, scan=i + 1) for i in range(n_scan_2)]
@@ -641,13 +641,13 @@ def twod_scan(
                     for jj in range(len(conv_j))
                 ]).T
 
-                label = f"{get_label(scan_var.name)} = {scan_1_var_array[0]}"
+                label = f"{get_label(scan_var.out_name)} = {scan_1_var_array[0]}"
                 ax.plot(scan_2_var_array, output_array, "--o", label=label)
 
             ax.set_ylabel(get_label(output_name), fontsize=y_axis.font_size)
             fig.legend(loc="best", fontsize=x_axis.legend_size)
 
-        ax.set_xlabel(get_label(scan_2_var.name), fontsize=x_axis.font_size)
+        ax.set_xlabel(get_label(scan_2_var.out_name), fontsize=x_axis.font_size)
 
         axis_manipulation(ax, axis=x_axis, index=index, contour=x_contour)
         axis_manipulation(ax, axis=y_axis, index=index, contour=y_contour)
