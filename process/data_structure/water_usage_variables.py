@@ -54,10 +54,20 @@ class WaterUseData(PROCESSModelData):
     ] = 0.0
     """total volume of water used in cooling tower (m3/day)"""
 
-    wateruserecirc: Parameter[float] = 0.0
+    wateruserecirc: Annotated[
+        Parameter[float],
+        ParameterMetadata(
+            description="Volume used in recirculating water system (m3/day)"
+        ),
+    ] = 0.0
     """total volume of water used in recirculating system (m3/day)"""
 
-    wateruseonethru: Parameter[float] = 0.0
+    wateruseonethru: Annotated[
+        Parameter[float],
+        ParameterMetadata(
+            description="Volume used in once-through water system (m3/day)"
+        ),
+    ] = 0.0
     """total volume of water used in once-through system (m3/day)"""
 
 
