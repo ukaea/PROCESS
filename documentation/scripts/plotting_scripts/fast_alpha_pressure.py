@@ -1,3 +1,5 @@
+"""Module containing routines to plot the fast alpha pressure"""
+
 import numpy as np
 from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource, CustomJS, Slider

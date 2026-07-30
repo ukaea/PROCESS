@@ -1,3 +1,5 @@
+"""Module containing routines to plot the old empirical NBTI critical NbTi"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objects as go

@@ -1,3 +1,7 @@
+"""Module containing routines to plot the normalised
+synchrotron loss vs wall reflectivity
+"""
+
 import numpy as np
 from bokeh.models import ColumnDataSource
 from bokeh.plotting import figure, output_file, save

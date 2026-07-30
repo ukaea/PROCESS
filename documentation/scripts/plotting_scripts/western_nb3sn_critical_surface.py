@@ -1,3 +1,7 @@
+"""Module containing routines to plot the Western superconducting
+NbSn critical current density
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objects as go

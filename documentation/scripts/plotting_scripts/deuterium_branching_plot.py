@@ -1,3 +1,5 @@
+"""Module containing routines to plot the deuterium branching"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 
