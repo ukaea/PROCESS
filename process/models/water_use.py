@@ -31,16 +31,33 @@ class WaterUse(Model):
         """Routine to call the water usage calculation routines and write output to
         file.
         """
-        self.run(output=True)
+        self.run()
 
-    def run(self, output: bool = False):
+        po.oheadr(self.outfile, "Water usage during plant operation (secondary cooling)")
+        po.ocmmnt(
+            self.outfile,
+            "Estimated amount of water used through different cooling system options:",
+        )
+        po.ocmmnt(self.outfile, "1. Cooling towers")
+        po.ocmmnt(
+            self.outfile,
+            "2. Water bodies (pond, lake, river): recirculating or once-through",
+        )
+
+        for _, parameter in self.data.water_use.parameters():
+            if not parameter.description:
+                continue
+            po.ovarre(
+                self.outfile,
+                parameter.description,
+                f"({parameter.name})",
+                parameter,
+                "OP ",
+            )
+
+    def run(self):
         """Routine to call the water usage calculation routines.
         This routine calls the different water usage routines.
-
-        Parameters
-        ----------
-        output :
-            indicate whether output should be written to the output file, or not
         """
         rejected_heat = self.data.heat_transport.p_plant_primary_heat_mw * (
             1 - self.data.heat_transport.eta_turbine
@@ -48,37 +65,24 @@ class WaterUse(Model):
 
         wastethermeng = rejected_heat * SECDAY
 
-        if output:
-            po.oheadr(
-                self.outfile, "Water usage during plant operation (secondary cooling)"
-            )
-            po.ocmmnt(
-                self.outfile,
-                "Estimated amount of water used through different cooling system "
-                "options:",
-            )
-            po.ocmmnt(self.outfile, "1. Cooling towers")
-            po.ocmmnt(
-                self.outfile,
-                "2. Water bodies (pond, lake, river): recirculating or once-through",
-            )
-
-        # call subroutines for cooling mechanisms:
-
         # cooling towers
-        self.cooling_towers(wastethermeng, output=output)
+        self.cooling_towers(wastethermeng)
 
         # water-body cooling
-        self.cooling_water_body(wastethermeng, output=output)
+        self.cooling_water_body(wastethermeng)
 
-    def cooling_towers(self, wastetherm: float, output: bool):
+    def cooling_towers(self, wastetherm: float):
         """Water used in cooling towers
 
-        Parameters
-        ----------
-        wastetherm:
-            thermal energy per day (MJ/day) to be cooled by this system
-        output:
+                Parameters
+                ----------
+                wastetherm:
+        <<<<<<< HEAD
+                    thermal energy per day (MJ/day) to be cooled by this system
+                output:
+        =======
+                    thermal energy (MJ) to be cooled by this system
+        >>>>>>> d343bd8e (Use Parameter's in water model to automate output)
 
         """
         self.data.water_use.evapratio = 1.0e0 - (
@@ -111,17 +115,7 @@ class WaterUse(Model):
         # Estimated as a ratio to evaporated water (averaged across observed dataset)
         #  as per Diehl et al. USGS Report 2014-5184, http://dx.doi.org/10.3133/sir20145184
 
-        #  Output section
-        if output:
-            po.ovarre(
-                self.outfile,
-                self.data.water_use.waterusetower.description,
-                f"({self.data.water_use.waterusetower.name})",
-                self.data.water_use.waterusetower,
-                "OP ",
-            )
-
-    def cooling_water_body(self, wastetherm: float, output: bool):
+    def cooling_water_body(self, wastetherm: float):
         """Water evaporated in cooling through water bodies
         Based on spreadsheet from Diehl et al. USGS Report 2013-5188, which includes
         cooling coefficients found through fits across a dataset containing a wide range
@@ -133,7 +127,6 @@ class WaterUse(Model):
         ----------
         wastetherm:
             thermal energy per day (MJ/day) to be cooled by this system
-        output:
 
         """
         evapsum = 0.0e0
@@ -253,23 +246,6 @@ class WaterUse(Model):
 
         # once-through water system:
         self.data.water_use.wateruseonethru = 98.0e0 * evapsum
-
-        #  Output section
-        if output:
-            po.ovarre(
-                self.outfile,
-                "Volume used in recirculating water system (m3/day)",
-                "(wateruserecirc)",
-                self.data.water_use.wateruserecirc,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Volume used in once-through water system (m3/day)",
-                "(wateruseonethru)",
-                self.data.water_use.wateruseonethru,
-                "OP ",
-            )
 
 
 @dataclass(slots=True)

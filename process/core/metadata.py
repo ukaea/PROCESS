@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from dataclasses import asdict, dataclass, fields
 from typing import Annotated, get_args, get_origin
 
@@ -22,11 +23,14 @@ class PROCESSModelData:
     def __post_init__(self):
         for f in fields(self):
             current_value = getattr(self, f.name)
-            # Check that the Parameter has not been instantiated yet (this will cause issues and is bad with dataclasses)
+            # Check that the Parameter has not been instantiated yet (this will cause
+            # issues and is bad with dataclasses)
             if isinstance(current_value, Parameter):
                 error_msg = (
-                    f"Field {f.name} is initialised as a {type(current_value).__name__}. This is dangerous as it is mutable! "
-                    f"Initialise the field as a bare constant e.g. {f.name}: {f.type!r} = 0.0"
+                    f"Field {f.name} is initialised as a {type(current_value).__name__}."
+                    " This is dangerous as it is mutable!"
+                    f" Initialise the field as a bare constant e.g. {f.name}: {f.type!r}"
+                    " = 0.0"
                 )
 
                 raise TypeError(error_msg)
@@ -35,8 +39,10 @@ class PROCESSModelData:
             # Check for non-generic types that are Parameters
             if isinstance(field_type, type) and issubclass(field_type, Parameter):
                 error_msg = (
-                    f"{f.name} is typed as a bare {field_type.__name__} on dataclass {self.__class__}. "
-                    f"You must specify a generic e.g. {field_type.__name__}[{type(f.default).__name__}]."
+                    f"{f.name} is typed as a bare {field_type.__name__}"
+                    f" on dataclass {self.__class__}."
+                    f" You must specify a generic e.g."
+                    f" {field_type.__name__}[{type(f.default).__name__}]."
                 )
                 raise TypeError(error_msg)
 
@@ -47,8 +53,8 @@ class PROCESSModelData:
 
                 if not isinstance(metadata, ParameterMetadata):
                     error_msg = (
-                        f"{f.name} is annotated with the wrong type of data ({type(metadata).__name__}), "
-                        "expected ParameterMetadata."
+                        f"{f.name} is annotated with the wrong type of data"
+                        f" ({type(metadata).__name__}), expected ParameterMetadata."
                     )
                     raise TypeError(error_msg)
 
@@ -75,3 +81,10 @@ class PROCESSModelData:
             current_value.set_value(value)
             return
         super().__setattr__(name, value)
+
+    def parameters(self) -> Generator[tuple[str, Parameter], None, None]:
+        return (
+            (field.name, param)
+            for field in fields(self)
+            if isinstance(param := getattr(self, field.name), Parameter)
+        )
