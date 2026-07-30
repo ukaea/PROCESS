@@ -36,6 +36,21 @@ class PROCESSModelData:
                 raise TypeError(error_msg)
 
             field_type = f.type
+            # Extract the metadata
+            origin_type = get_origin(field_type)
+            metadata = {}
+            if isinstance(origin_type, type) and issubclass(origin_type, Annotated):
+                field_type, metad = get_args(field_type)
+
+                if not isinstance(metad, ParameterMetadata):
+                    error_msg = (
+                        f"{f.name} is annotated with the wrong type of data"
+                        f" ({type(metad).__name__}), expected ParameterMetadata."
+                    )
+                    raise TypeError(error_msg)
+
+                metadata = asdict(metad)
+
             # Check for non-generic types that are Parameters
             if isinstance(field_type, type) and issubclass(field_type, Parameter):
                 error_msg = (
@@ -46,20 +61,7 @@ class PROCESSModelData:
                 )
                 raise TypeError(error_msg)
 
-            origin_type = get_origin(field_type)
-            metadata = {}
-            if issubclass(origin_type, Annotated):
-                field_type, metadata = get_args(field_type)
-
-                if not isinstance(metadata, ParameterMetadata):
-                    error_msg = (
-                        f"{f.name} is annotated with the wrong type of data"
-                        f" ({type(metadata).__name__}), expected ParameterMetadata."
-                    )
-                    raise TypeError(error_msg)
-
-                metadata = asdict(metadata)
-
+            # Get it again in case the field_type has changed (when Annotated)
             origin_type = get_origin(field_type)
 
             # Make the field a Parameter if it:
