@@ -1162,6 +1162,11 @@ class Physics(Model):
           beams.
         - Calculates the density weighted mass and mass weighted plasma effective
           charge.
+
+        Raises
+        ------
+        ProcessValueError
+           If znfuel is negative
         """
         # Alpha ash portion
         self.data.physics.nd_plasma_alphas_thermal_vol_avg = (
@@ -3283,7 +3288,7 @@ class PlasmaBeta(Model):
         self.mfile = constants.MFILE
 
     def output(self):
-        """This model doesn't have any output"""
+        """PlasmaBeta model doesn't have any output"""
 
     @staticmethod
     def get_beta_norm_max_value(
@@ -4273,7 +4278,7 @@ class PlasmaInductance(Model):
         self.mfile = constants.MFILE
 
     def output(self):
-        """This model has no output"""
+        """PlasmaInductance model has no output"""
 
     def run(self):
         """Calculate plasma inductance parameters.

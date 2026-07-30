@@ -54,6 +54,13 @@ iteration variables should get varied"""
 
     @classmethod
     def from_file(cls, filename: str | Path, solver: str = "vmcon"):
+        """Get the configuration parameters from the .conf file
+
+        Raises
+        ------
+        FileNotFoundError
+            If config file is not found
+        """
         if isinstance(filename, str):
             filename = Path(filename)
 
@@ -130,6 +137,14 @@ iteration variables should get varied"""
         return ""
 
     def __post_init__(self):
+        """Set the first iteration and check the IN.DAT specified in the
+        .conf file exists
+
+        Raises
+        ------
+        FileNotFoundError
+            If the original IN.DAT specified in the .conf file does not exist
+        """
         self._current_iteration = 0
         self._base_input = "{}_IN.DAT"
         self._base_output = "{}_MFILE.DAT"
@@ -141,9 +156,17 @@ iteration variables should get varied"""
             )
 
     def __iter__(self):
+        """Iterator for VaryRun"""
         return self
 
     def __next__(self):
+        """Perform an iteration of VaryRun
+
+        Raises
+        ------
+        StopIteration
+            If VaryRun reaches the maximum number of allowed iterations
+        """
         _neqns, itervars = get_neqns_itervars(in_dat=self.initial_infile, wdir=self.wdir)
 
         lbs, ubs = get_variable_range(
@@ -176,18 +199,22 @@ iteration variables should get varied"""
 
     @property
     def infile(self):
+        """Current iteration's IN.DAT"""
         return self._base_input.format(self._current_iteration)
 
     @property
     def outfile(self):
+        """Current iteration's MFILE.DAT"""
         return self._base_output.format(self._current_iteration)
 
     @property
     def prev_outfile(self):
+        """Previous iteration's IN.DAT"""
         return self._base_output.format(self._current_iteration - 1)
 
     @property
     def initial_infile(self):
+        """Initial IN.DAT"""
         return self._base_input.format(0)
 
     def echo(self):
@@ -304,6 +331,11 @@ iteration variables should get varied"""
             the input file to run on
         solver :
             which solver to use, as specified in solver.py, defaults to "vmcon"
+
+        Raises
+        ------
+        KeyboardInterrupt
+            If run interrupted by user
         """
         # TODO should call SingleRun directly...at least this is not a subprocess!
         from process.main import process_cli  # noqa:PLC0415
@@ -356,6 +388,7 @@ class RunProcessConfig(ProcessConfig):
 
     @classmethod
     def from_file(cls, filename: str | Path = "run_process.conf", solver: str = "vmcon"):
+        """Setup the VaryRun config"""
         self = super().from_file(filename, solver)
 
         no_allowed_unfeasible = (
@@ -456,6 +489,13 @@ class RunProcessConfig(ProcessConfig):
         return dictvar
 
     def __next__(self):
+        """Process the result from the iteration of VaryRun
+
+        Raises
+        ------
+        StopIteration
+            If feasible solution found
+        """
         indat, mfile, itervars, lbs, ubs = super().__next__()
 
         if not process_stopped(wdir=self.wdir, mfile=mfile):

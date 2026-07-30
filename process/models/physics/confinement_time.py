@@ -50,10 +50,10 @@ class PlasmaConfinementTime(Model):
         self.mfile = constants.MFILE
 
     def output(self):
-        """This model doesn't have any output"""
+        """PlasmaConfinementTime model doesn't have any output"""
 
     def run(self):
-        """This model doesn't need to be run"""
+        """PlasmaConfinementTime model doesn't need to be run"""
 
     def calculate_confinement_time(
         self,

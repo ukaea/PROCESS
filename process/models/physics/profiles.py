@@ -57,13 +57,14 @@ class Profile(Model, ABC):
         self.profile_dx = 0
 
     def run(self):
+        """Initialise profile_x and profile_y"""
         self.profile_x = np.arange(
             self.data.physics.n_plasma_profile_elements, dtype=float
         )
         self.profile_y = np.zeros(self.data.physics.n_plasma_profile_elements)
 
     def output(self):
-        """This model doesn't have any output"""
+        """Profile model doesn't have any output"""
 
     def normalise_profile_x(self):
         """Normalizes the x-dimension of the profile.
@@ -409,6 +410,11 @@ class TeProfile(Profile):
             Temperature peaking parameter.
         tbeta : float
             Second temperature exponent.
+
+        Raises
+        ------
+        ProcessValueError
+            If negative temperature in plasma profile
 
         References
         ----------

@@ -1,3 +1,5 @@
+"""Module containing cryostat routines"""
+
 import numpy as np
 
 from process.core import constants
@@ -6,6 +8,8 @@ from process.core.model import Model
 
 
 class Cryostat(Model):
+    """Calculate cryostat parameters"""
+
     def __init__(self):
         self.outfile = constants.NOUT
 

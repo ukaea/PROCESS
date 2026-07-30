@@ -221,4 +221,5 @@ def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
 
 
 def obuild(file, descr: str, thick: float, total: float, variable_name: str = ""):
+    """Write build variables to the output file via its identifier."""
     write(file, f"{descr:<50}{thick:.3e}{' ':<10}{total:.3e}  {variable_name}")

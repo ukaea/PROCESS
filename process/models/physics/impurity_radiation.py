@@ -669,10 +669,10 @@ class ImpurityRadiation:
         self.pden_impurity_rad_edge_total_mw = 0.0
 
     def run(self):
-        """This model isn't run"""
+        """ImpurityRadiation model isn't run"""
 
     def output(self):
-        """This model has no output"""
+        """ImpurityRadiation model has no output"""
 
     def map_imprad_profile(self):
         """Map imprad_profile() over each impurity element index."""

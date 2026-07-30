@@ -1,3 +1,5 @@
+"""Module containing stellarator coil routines"""
+
 import logging
 
 import numpy as np
@@ -17,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def st_coil(stellarator, output: bool, data: DataStructure):
-    """This routine calculates the properties of the coils for
+    """Routine to calculate the properties of the coils for
     a stellarator device.
 
     Some precalculated effective parameters for a stellarator power
@@ -166,6 +168,7 @@ def st_coil(stellarator, output: bool, data: DataStructure):
 
 
 def calculate_coil_toroidal_thickness(data: DataStructure):
+    """Calculate coil toroidal thickness"""
     data.tfcoil.dx_tf_inboard_out_toroidal = (
         data.tfcoil.dx_tf_wp_primary_toroidal
         + 2.0e0 * data.tfcoil.dx_tf_side_case_min
@@ -187,6 +190,7 @@ def calculate_coil_radial_thickness(data):
 
 
 def calculate_coil_cross_sectional_area(a_tf_wp_with_insulation, data):
+    """Calculate coil cross-sectional area"""
     # [m^2] overall coil cross-sectional area
     # (assuming inboard and outboard leg are the same)
     data.tfcoil.a_tf_leg_outboard = (
@@ -199,6 +203,7 @@ def calculate_coil_cross_sectional_area(a_tf_wp_with_insulation, data):
 
 
 def calculate_coil_half_widths(data: DataStructure):
+    """Calculate coil half widths"""
     # [m] Half-width of side of coil nearest torus centreline
     data.tfcoil.tfocrn = 0.5e0 * data.tfcoil.dx_tf_inboard_out_toroidal
     # [m] Half-width of side of coil nearest plasma
@@ -206,6 +211,7 @@ def calculate_coil_half_widths(data: DataStructure):
 
 
 def calculate_plasma_facing_coil_area(data: DataStructure):
+    """Calculate plasma facing coil area"""
     # [m^2] Total surface area of coil side facing plasma: inboard region
     data.tfcoil.tfsai = (
         data.tfcoil.n_tf_coils
@@ -279,7 +285,9 @@ def calculate_coils_summary_variables(
 
 
 def calculate_inductance(r_coil_minor, data: DataStructure):
-    """This uses the reference value for the inductance and scales it with a^2/R
+    """Calculate inductance
+
+    This uses the reference value for the inductance and scales it with a^2/R
     (toroid inductance scaling)
 
     Parameters
@@ -373,6 +381,7 @@ def calculate_current(data: DataStructure):
 def winding_pack_total_size(
     r_coil_major: float, r_coil_minor: float, coilcurrent: float, data: DataStructure
 ):
+    """Calculate winding pack total size"""
     # Winding Pack total size:
 
     n_it = 200  # number of iterations
@@ -546,6 +555,7 @@ def calculate_casing(data: DataStructure):
 
 
 def calculate_vertical_ports(data: DataStructure):
+    """Calculate vertical ports"""
     # Maximal toroidal port size (vertical ports) (m)
     # The maximal distance is correct
     # but the vertical extension of this port is not clear
@@ -565,6 +575,7 @@ def calculate_vertical_ports(data: DataStructure):
 
 
 def calculate_horizontal_ports(data: DataStructure):
+    """Calculate horizontal ports"""
     # Maximal toroidal port size (horizontal ports) (m)
     data.stellarator.hporttmax = (
         0.8e0

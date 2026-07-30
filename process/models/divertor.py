@@ -1,3 +1,5 @@
+"""Module containing divertor routines"""
+
 import math
 
 import numpy as np
@@ -21,6 +23,7 @@ class Divertor(Model):
         self.outfile = constants.NOUT  # output file unit
 
     def output(self):
+        """Output divertor information"""
         self.run(output=True)
 
     def run(self, output: bool = False):
@@ -154,6 +157,10 @@ class Divertor(Model):
         float
             Divertor heat load for a tight aspect ratio machine (MW/m2)
 
+        Raises
+        ------
+        ProcessValueError
+            If dz_xpoint_divertor is non-positive
 
         Notes
         -----
@@ -451,6 +458,7 @@ class LowerDivertor(Divertor):
     """Module containing lower divertor routines"""
 
     def run(self, output: bool):
+        """Run the LowerDivertor routines"""
         super().run(output=output)
 
         self.data.divertor.p_div_lower_nuclear_heat_mw = self.incident_neutron_power(
@@ -470,6 +478,7 @@ class UpperDivertor(Divertor):
     """Module containing upper divertor routines"""
 
     def run(self, output: bool):
+        """Run the UpperDivertor routine"""
         super().run(output=output)
 
         self.data.divertor.p_div_upper_nuclear_heat_mw = self.incident_neutron_power(

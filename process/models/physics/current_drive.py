@@ -138,10 +138,10 @@ class NeutralBeam(Model):
         self.plasma_profile = plasma_profile
 
     def output(self):
-        """This model doesn't have any output"""
+        """NeutralBeam model doesn't have any output"""
 
     def run(self):
-        """This model doesn't need to be run"""
+        """NeutralBeam model doesn't need to be run"""
 
     def iternb(self):
         """Routine to calculate ITER Neutral Beam current drive parameters
@@ -792,10 +792,10 @@ class ElectronCyclotron(Model):
         self.plasma_profile = plasma_profile
 
     def run(self):
-        """This model isn't run"""
+        """ElectronCyclotron model isn't run"""
 
     def output(self):
-        """This has no output"""
+        """ElectronCyclotron model has no output"""
 
     def culecd(self):
         """Routine to calculate Electron Cyclotron current drive efficiency
@@ -1315,10 +1315,10 @@ class LowerHybrid(Model):
         self.plasma_profile = plasma_profile
 
     def run(self):
-        """This isn't run"""
+        """LowerHybrid model isn't run"""
 
     def output(self):
-        """This has no output"""
+        """LowerHybrid model has no output"""
 
     def cullhy(self):
         """Calculate Culham Lower Hybrid current drive efficiency.

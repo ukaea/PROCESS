@@ -1,3 +1,5 @@
+"""Module containing first wall routines"""
+
 import logging
 
 import numpy as np
@@ -23,10 +25,13 @@ logger = logging.getLogger(__name__)
 
 
 class FirstWall(Model):
+    """Calculate the first wall parameters"""
+
     def __init__(self):
         self.outfile = constants.NOUT
 
     def output(self):
+        """Output first wall information"""
         # First wall geometry
         self.output_fw_geometry()
 
@@ -37,6 +42,7 @@ class FirstWall(Model):
         self.output_fw_pumping()
 
     def run(self):
+        """Run the first wall model routines"""
         self.data.fwbs.dz_fw_half = self.calculate_first_wall_half_height(
             z_plasma_xpoint_lower=self.data.build.z_plasma_xpoint_lower,
             dz_xpoint_divertor=self.data.build.dz_xpoint_divertor,
@@ -200,6 +206,7 @@ class FirstWall(Model):
         dr_fw_plasma_gap_inboard: float,
         dr_fw_plasma_gap_outboard: float,
     ) -> tuple[float, float, float]:
+        """Calculate d-shaped first wall areas"""
         # D-shaped
         #  Major radius to outer edge of inboard section
         r1 = rmajor - rminor - dr_fw_plasma_gap_inboard
@@ -303,6 +310,12 @@ class FirstWall(Model):
         -------
         tuple[float, float, float]
             Contains first wall inboard area, outboard area, and total area (m^2).
+
+        Raises
+        ------
+        ProcessValueError
+            If fhole+f_ster_div_single+f_a_fw_outboard_hcd is too high
+            for a credible outboard wall area
         """
         if n_divertors == 2:
             # Double null configuration
@@ -332,6 +345,7 @@ class FirstWall(Model):
         return a_fw_inboard, a_fw_outboard, a_fw_total
 
     def set_fw_geometry(self):
+        """Set dr_fw_inboard and dr_fw_outboard"""
         self.data.build.dr_fw_inboard = (
             2 * self.data.fwbs.radius_fw_channel + 2 * self.data.fwbs.dr_fw_wall
         )

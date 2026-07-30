@@ -14,6 +14,8 @@
 #     name: python3
 # ---
 
+# %%
+"""An example to run and visualise a PROCESS scan"""
 # %% [markdown] slideshow={"slide_type": "slide"}
 # # Running and visualising a PROCESS scan
 #

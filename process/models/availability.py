@@ -1,3 +1,5 @@
+"""Module containing plant availability routines"""
+
 import logging
 import math
 from enum import IntEnum
@@ -70,6 +72,7 @@ class Availability(Model):
         self.outfile = constants.NOUT  # output file unit
 
     def output(self):
+        """Output availability information"""
         self.run(output=True)
 
     def run(self, output: bool = False):
@@ -87,6 +90,12 @@ class Availability(Model):
         ----------
         output :
             indicate whether output should be written to the output file, or not
+
+        Raises
+        ------
+        ProcessValueError
+            If i_plant_availability == 3, as this is for a spherical tokamak and
+            so need to use itart=1 for that model
         """
         if (
             AvailabilityModel(self.data.costs.i_plant_availability)

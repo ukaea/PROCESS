@@ -73,7 +73,7 @@ class PlasmaCurrent(Model):
         self.mfile = constants.MFILE
 
     def run(self):
-        """This model doesn't need to be run"""
+        """PlasmaCurrent model doesn't need to be run"""
 
     def output(self) -> None:
         """Output plasma current and safety factor information."""

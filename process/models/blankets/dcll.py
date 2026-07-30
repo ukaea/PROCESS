@@ -1,3 +1,5 @@
+"""Module containing Dual Coolant Lead Lithium (DCLL) routines"""
+
 from process.core import constants
 from process.core import (
     process_output as po,
@@ -12,8 +14,8 @@ from process.models.power import PumpingPowerModelTypes
 
 
 class DCLL(InboardBlanket, OutboardBlanket):
-    """This module contains the Dual Coolant Lead Lithium (DCLL).
-
+    """Module containing the Dual Coolant Lead Lithium (DCLL)
+    routines.
 
 
     Acronyms for this module:
@@ -92,9 +94,11 @@ class DCLL(InboardBlanket, OutboardBlanket):
     """
 
     def output(self):
+        """Output DCLL information"""
         self.run(output=True)
 
     def run(self, output: bool = False):
+        """Run DCLL routines"""
         self.component_volumes()
 
         # If Shafranov shift is added, the angle formula can be used where the shift is
@@ -158,7 +162,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
             self.write_output()
 
     def dcll_neutronics_and_power(self, output: bool):
-        """This is a temporary module that will use results from
+        """Temporary module that will use results from
         CCFE Bluemira neutronics work (once completed).
         Database will provide values for power deposition in FW & BB, BB TBR,
         and neutron fluence at TF coil for different thicknesses of BB
@@ -334,6 +338,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
             )
 
     def dcll_power_and_heating(self, output: bool):
+        """DCLL power and heating calculations"""
         # Mechanical Pumping
 
         # For i_p_coolant_pumping == 0:
@@ -977,6 +982,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
             )
 
     def write_output(self):
+        """Output DCLL information"""
         # Component Volumes
         po.osubhd(self.outfile, "Component Volumes :")
 

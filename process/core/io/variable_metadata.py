@@ -1,8 +1,12 @@
+"""Module containing variable metadata"""
+
 from dataclasses import dataclass
 
 
 @dataclass
 class VariableMetadata:
+    """Variable metadata"""
+
     latex: str
     description: str
     units: str

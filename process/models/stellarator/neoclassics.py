@@ -1,3 +1,5 @@
+"""Module containing neoclassics routines"""
+
 import logging
 
 import numpy as np
@@ -10,15 +12,18 @@ logger = logging.getLogger(__name__)
 
 
 class Neoclassics(Model):
+    """Module containing neoclassics routines"""
+
     @property
     def no_roots(self):
+        """Obtain number of Gauss Laguerre roots"""
         return self.data.neoclassics.roots.shape[0]
 
     def output(self):
-        """This model doesn't have any output"""
+        """Neoclassics model doesn't have any output"""
 
     def run(self):
-        """This model doesn't need to be run"""
+        """Neoclassics model doesn't need to be run"""
 
     def init_neoclassics(self, r_effin, eps_effin, iotain):
         """Constructor of the neoclassics object from the effective radius,
@@ -275,6 +280,7 @@ class Neoclassics(Model):
         return dens, temp, dr_dens, dr_temp
 
     def calc_neoclassics(self):
+        """Calculate neoclassics parameters"""
         if self.data.stellarator_config.stella_config_epseff < 0:
             logger.error(
                 "epseff value lower than 0: "
@@ -610,6 +616,7 @@ class Neoclassics(Model):
         return neoclassics_calc_nu_star_fromT
 
     def neoclassics_calc_vd(self):
+        """Calculates the drift velocity on GL roots"""
         vde = (
             self.data.neoclassics.roots
             * self.data.neoclassics.temperatures[0]
@@ -782,6 +789,9 @@ class Neoclassics(Model):
         )
 
     def st_calc_eff_chi(self):
+        """Calculates the effective thermal diffusivity from the alpha
+        heating in the core to the boundary
+        """
         volscaling = (
             self.data.physics.vol_plasma
             * self.data.stellarator.f_st_rmajor

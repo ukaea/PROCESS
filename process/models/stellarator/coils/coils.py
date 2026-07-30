@@ -1,3 +1,5 @@
+"""Module containing stellarator coil routines"""
+
 import logging
 
 import numpy as np
@@ -30,6 +32,13 @@ def jcrit_from_material(
     f_a_tf_turn_cable_space_extra_void,
     j_wp,
 ):
+    """Calculate critical current density
+
+    Raises
+    ------
+    ProcessValueError
+        If illegal value for i_pf_superconductor
+    """
     strain = -0.005  # for now a small value
     # this is helium fraction in the superconductor
     # (set it to the fixed global variable here)

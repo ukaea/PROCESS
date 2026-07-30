@@ -127,8 +127,6 @@ def test_jcrit_nbti(jcritnbtiparam):
     :param jcritnbtiparam: the data used to mock and assert in this test.
     :type jcritnbtiparam: jcritnbtiparam
 
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
     jcrit, tcrit = superconductors.jcrit_nbti(
@@ -270,7 +268,7 @@ def test_calculate_croco_cable_geometry(
     dx_hts_tape_hastelloy,
     expected,
 ):
-    result: CroCoCableGeometry = superconductors.calculate_croco_cable_geometry(
+    result = superconductors.calculate_croco_cable_geometry(
         dia_croco_strand,
         dx_croco_strand_copper,
         dx_hts_tape_rebco,
