@@ -6,6 +6,7 @@ from process.core.solver.iteration_variables import (
     load_scaled_bounds,
 )
 from process.core.solver.solver import get_solver
+from process.data_structure.numerics import SolverOutputCondition
 
 
 class SolverHandler:
@@ -61,7 +62,7 @@ class SolverHandler:
 
         # If VMCON optimisation has failed then try altering value of epsfcn
         if self.solver_name == "vmcon":
-            if ifail != 1:
+            if ifail != SolverOutputCondition.CONVERGED:
                 print("Trying again with new epsfcn")
                 # epsfcn is only used in evaluators.Evaluators()
                 # TODO epsfcn could be set in Evaluators instance now, don't need to
@@ -70,24 +71,30 @@ class SolverHandler:
                 print("new epsfcn = ", self.data.numerics.epsfcn)
 
                 ifail = self.solver.solve()
-                # First solution attempt failed (ifail != 1): supply ifail value
+                # First solution attempt failed
+                # (ifail != SolverOutputCondition.CONVERGED): supply ifail value
                 # to next attempt
                 self.data.numerics.epsfcn /= 10  # reset value
 
-            if ifail != 1:
+            if ifail != SolverOutputCondition.CONVERGED:
                 print("Trying again with new epsfcn")
                 self.data.numerics.epsfcn /= 10  # try new smaller value
                 print("new epsfcn = ", self.data.numerics.epsfcn)
                 ifail = self.solver.solve()
                 self.data.numerics.epsfcn *= 10  # reset value
 
-            # If VMCON has exited with error code 5 try another run using a multiple
-            # of the identity matrix as input for the Hessian b(n,n)
+            # If VMCON has exited with error code 5
+            # (ifail = SolverOutputCondition.NO_SOLUTION) try another run using a
+            # multiple of the identity matrix as input for the Hessian b(n,n)
             # Only do this if VMCON has not iterated (nviter=1)
-            if ifail == 5 and self.data.numerics.nviter < 2:
+            if (
+                ifail == SolverOutputCondition.NO_SOLUTION
+                and self.data.numerics.nviter < 2
+            ):
                 print(
-                    "VMCON error code = 5.  Rerunning VMCON with a new initial "
-                    "estimate of the second derivative matrix."
+                    "VMCON error code = 5 (SolverOutputCondition.NO_SOLUTION). "
+                    "Rerunning VMCON with a new initial estimate of the second "
+                    "derivative matrix."
                 )
                 self.solver.set_b(2.0)
                 ifail = self.solver.solve()

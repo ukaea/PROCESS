@@ -15,6 +15,7 @@ import pytest
 from process.core.model import DataStructure
 from process.core.solver.evaluators import Evaluators
 from process.core.solver.solver import get_solver
+from process.data_structure.numerics import SolverOutputCondition
 
 # Debug-level terminal output logging
 logger = logging.getLogger(__name__)
@@ -74,7 +75,7 @@ class ExpectedResult:
         self.errlm = 0.0
         self.errcom = 0.0
         self.errcon = 0.0
-        self.ifail = 1
+        self.ifail = SolverOutputCondition.CONVERGED
 
 
 class CustomFunctionEvaluator(ABC, Evaluators):
@@ -494,8 +495,8 @@ def get_case3():
     c1(x1,x2) = x1 + x2 - 3 = 0
     c2(x1,x2) = -x1**2/4 - x2**2 + 1 >= 0
 
-    Note that this test is supposed to fail with ifail=5
-    as there is no feasible solution
+    Note that this test is supposed to fail with ifail=SolverOutputCondition.NO_SOLUTION
+    (ifail = 5) as there is no feasible solution
     VMCON documentation ANL-80-64
     """
     # Create a case-specific Vmcon object with overridden fcnvmc1 and 2
@@ -516,7 +517,7 @@ def get_case3():
     case.exp.vlam = np.array([0.0, 0.0])
     case.exp.errlg = 1.599997724349894
     case.exp.errcon = 8.0000000000040417e-01
-    case.exp.ifail = 5
+    case.exp.ifail = SolverOutputCondition.NO_SOLUTION
 
     return case
 

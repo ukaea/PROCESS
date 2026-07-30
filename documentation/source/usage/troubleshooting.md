@@ -99,7 +99,7 @@ escape to the global minimum. Again, a helpful technique os to wither change the
 variables in use, or to simply modify their initial values to try to help the code avoid such regions.
 
 A technique that occasionally removes problems due to unfeasible results, particularly if an error 
-code `ifail = 3` is encountered during an optimisation run, is to adjust slightly one of the limits 
+code `ifail = 3` `(SolverOutputCondition.MAX_LINE_SEARCHES)` is encountered during an optimisation run, is to adjust slightly one of the limits 
 imposed on the iteration variables, even if the limit in question has not been reached. This subtly 
 alters the gradients computed by the code during the iteration process and may tip the balance so 
 that the code decides that the device produced is feasible after all. For instance, a certain 

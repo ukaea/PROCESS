@@ -19,6 +19,7 @@ from scipy.optimize import fsolve
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 from process.core.solver.evaluators import Evaluators
+from process.data_structure.numerics import SolverOutputCondition
 
 logger = logging.getLogger(__name__)
 
@@ -128,12 +129,12 @@ class _Solver(ABC):
         self.b = b
 
     @abstractmethod
-    def solve(self) -> int:
+    def solve(self) -> SolverOutputCondition:
         """Run the optimisation.
 
         Returns
         -------
-        int
+        SolverOutputCondition
             solver error code
         """
 
@@ -175,12 +176,12 @@ class VmconProblem(AbstractProblem):
 class Vmcon(_Solver):
     """New VMCON implementation."""
 
-    def solve(self) -> int:
+    def solve(self) -> SolverOutputCondition:
         """Optimise using new VMCON.
 
         Returns
         -------
-        int
+        SolverOutputCondition
             solver error code
 
         Raises
@@ -258,11 +259,11 @@ class Vmcon(_Solver):
             )
         except VMCONConvergenceException as e:
             if isinstance(e, LineSearchConvergenceException):
-                self.info = 3
+                self.info = SolverOutputCondition.MAX_LINE_SEARCHES
             elif isinstance(e, QSPSolverException):
-                self.info = 5
+                self.info = SolverOutputCondition.NO_SOLUTION
             else:
-                self.info = 2
+                self.info = SolverOutputCondition.MAX_ITERATIONS
 
             logger.critical(str(e))
 
@@ -281,7 +282,7 @@ class Vmcon(_Solver):
             raise
 
         else:
-            self.info = 1
+            self.info = SolverOutputCondition.CONVERGED
 
         # print a blank line because of the carridge return
         # in the callback

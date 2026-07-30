@@ -166,6 +166,7 @@ def axis_manipulation(ax: Axes, axis: AxisData, index: int, contour: np.ndarray)
 
     ax.figure.tight_layout()
     ax.tick_params(axis=an.name.lower(), labelsize=axis.tick_size)
+from process.data_structure.numerics import SolverOutputCondition
 
 
 def plot_scan(
@@ -318,7 +319,7 @@ def oned_scan(
         conv_i = []
         for ii in range(n_scan):
             ifail = m_file.get("ifail", scan=ii + 1)
-            if ifail == 1:
+            if ifail == SolverOutputCondition.CONVERGED:
                 conv_i.append(ii + 1)
             else:
                 failed_value = scan_var.get_val(m_file, scan=ii + 1)
@@ -576,7 +577,7 @@ def twod_scan(
         for _jj in range(n_scan_2):
             ii_jj += 1  # Represents the scan point number in the MFILE
             ifail = m_file.get("ifail", scan=ii_jj)
-            if ifail == 1:
+            if ifail == SolverOutputCondition.CONVERGED:
                 conv_ij[ii].append(ii_jj)  # Only appends scan number if scan converged
                 contour_conv_ij.append(ii_jj)
             else:
