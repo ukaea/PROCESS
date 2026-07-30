@@ -1,3 +1,5 @@
+"""Plasma fuelling model."""
+
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
