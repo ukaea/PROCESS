@@ -34,14 +34,8 @@ class SolverOutputCondition(IntEnum):
     """Line search required 10 function calls without finding a better solution (solver
     specific)"""
 
-    UPHILL_SEARCH = 4
-    """Uphill search direction was calculated"""
-
     NO_SOLUTION = 5
     """No feasible solution or bad approximation of Hessian (in VMCON only)."""
-
-    SINGULAR_MATRIX_OR_BOUNDS = 6
-    """Singular matrix in quadratic subproblem or restriction by artificial bounds"""
 
 
 class PROCESSRunMode(IntEnum):

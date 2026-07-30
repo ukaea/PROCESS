@@ -832,22 +832,6 @@ class Scan:
             process_output.ocmmnt(
                 constants.IOTTY, "Try changing or adding variables to IXC."
             )
-        elif ifail == SolverOutputCondition.UPHILL_SEARCH:
-            process_output.ocmmnt(
-                constants.NOUT, "An uphill search direction was found."
-            )
-            process_output.ocmmnt(
-                constants.NOUT, "Try changing the equations in ICC, or"
-            )
-            process_output.ocmmnt(constants.NOUT, "adding new variables to IXC.")
-
-            process_output.ocmmnt(
-                constants.IOTTY, "An uphill search direction was found."
-            )
-            process_output.ocmmnt(
-                constants.IOTTY, "Try changing the equations in ICC, or"
-            )
-            process_output.ocmmnt(constants.IOTTY, "adding new variables to IXC.")
         elif ifail == SolverOutputCondition.NO_SOLUTION:
             process_output.ocmmnt(
                 constants.NOUT, "The quadratic programming technique was unable to"
@@ -876,30 +860,6 @@ class Scan:
                 "their initial values (especially if only 1 optimisation",
             )
             process_output.ocmmnt(constants.IOTTY, "iteration was performed).")
-        elif ifail == SolverOutputCondition.SINGULAR_MATRIX_OR_BOUNDS:
-            process_output.ocmmnt(
-                constants.NOUT, "The quadratic programming technique was restricted"
-            )
-            process_output.ocmmnt(
-                constants.NOUT, "by an artificial bound, or failed due to a singular"
-            )
-            process_output.ocmmnt(constants.NOUT, "matrix.")
-            process_output.ocmmnt(
-                constants.NOUT, "Try changing the equations in ICC, or"
-            )
-            process_output.ocmmnt(constants.NOUT, "adding new variables to IXC.")
-
-            process_output.ocmmnt(
-                constants.IOTTY, "The quadratic programming technique was restricted"
-            )
-            process_output.ocmmnt(
-                constants.IOTTY, "by an artificial bound, or failed due to a singular"
-            )
-            process_output.ocmmnt(constants.IOTTY, "matrix.")
-            process_output.ocmmnt(
-                constants.IOTTY, "Try changing the equations in ICC, or"
-            )
-            process_output.ocmmnt(constants.IOTTY, "adding new variables to IXC.")
 
     def scan_1d(self):
         """Run a 1-D scan."""

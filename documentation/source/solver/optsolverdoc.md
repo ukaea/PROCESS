@@ -128,9 +128,8 @@ Figure 2: *This is the flow chart of the `VMCON` optimisation solver. The criter
 |  1  |  `CONVERGED`  |  `VMCON`: Normal return  |  `VMCON` has found a solution that fulfills the necessary conditions within the specified error tolerances (c.f eq. \ref{eqn:equation-5})  |  Test whether the solution is a global solution by using different starting parameters.  |
 |  2  |  `MAX_ITERATIONS`  |  Too many function calls  |  During the line search`VMCON` has reached the maximum number of total function calls (`maxfev=100`)  |  `VMCON` struggles to find a solution. Retry with different start parameters.  |
 |  3  |  `MAX_LINE_SEARCHES`  |  Line search required 10 function calls  |  The results produced by input objective function/constraints and their gradients are inconsistent. This can be due to numerical noise in the input functions.  |  The developer needs to check the consistency and numerical robustness of the objective function, constraints and their derivatives. Perhaps the accuracy in numerical integrations/differentiations needs to be higher. As a user, try changing the iteration bounds or adding other iteration variables.  |
-|  4  |  `UPHILL_SEARCH`  |  Uphill search direction was calculated  |  The quadratic subproblem has suggested a search direction in which the objective function only increases.  |  This happens if an inconsistency between the objective function, the constraints and their respective derivatives occurs (c.f. `ifail=3`)  |
 |  5  |  `NO_SOLUTION`  |  `qpsub`: no feasible solution or bad approximation of Hessian  |  Either no optimum lies within the space allowed by constraints and variable bounds or the identity matrix is not a good first approximation of the Hessian.  |  As a user, add a new iteration variable, as developer, try using a multiple of the identity matrix as initial Hessian instead.  |
-|  6  |  `SINGULAR_MATRIX_OR_BOUNDS`  |  `qpsub`: Singular matrix in quadratic subproblem or restriction by artificial bounds  |  This is fairly self-explanatory.  |  If this is meaningful, widen the boundaries of the iteration variables.  |
+
 
 Table 1: Summary of the description and meaning of the `VMCON` return parameters `ifail`. This logic is contained within the `SolverOutputCondition` `enum`
 
@@ -166,7 +165,6 @@ To solve the QSP `VMCON` uses `harwqp` a modification of the Harwell library rou
 
 If the routine cannot fund a feasible point it fails with `ifail = 5/SolverOutputCondition.NO_SOLUTION` (c.f. [Table 1](#table-1)). As the routine is only checking the local linear approximation of the constraints rather than the full non-linear constraints, there is a chance that a feasible point exists even though the routine fails with `ifail = 5/SolverOutputCondition.NO_SOLUTION`. In these cases, it is possible that the first approximation of the Hessian has not been good and the algorithm has, therefore, taken an inappropriately large step. Then using a multiple of the identity matrix will convergence of the algorithm.
 
-If a singular matrix is encountered with the QSP solver or the solution is restricted by the artificial bounds, `VMCON` fails with `ifail = 6/SolverOutputCondition.SINGULAR_MATRIX_OR_BOUNDS`. In this case it can be helpful to widen the boundaries of the iteration variable.
 
 <a name="section-6"></a>
 
@@ -215,8 +213,6 @@ $$
 \left. \frac{d \Phi}{d\alpha}\right|_{\alpha=0} < 0.
 \end{equation}
 $$
-
-In case the derivative is positive (`dflsa` $\geq$ 0), an uphill search direction has been determined and the code stops with `ifail = 4/SolverOutputCondition.UPHILL_SEARCH`. This typically only happens, if the objective function or constraints are inconsistent with their own derivatives.
 
 As the line search tries to determine the optimum of a one dimensional, but fully non-linear function $\Phi(\alpha)$, it creates a series of $\alpha_l$ values (In the actual code $\alpha =$ `calpha` and $\alpha_l =$ `alpha` $*\alpha_{l-1}$). At each iteration $l$, a quadratic local function $\Phi_l(\alpha)$ fulfilling the boundary conditions $\Phi_l(0) = \Phi(0)$, $\Phi'_l(0) = \Delta$ and $\Phi_l(\alpha_{l-1}) = \Phi(\alpha_{l-1})$ is minimised, where typically $\Delta = \Phi'(0)$. This leads to
 
