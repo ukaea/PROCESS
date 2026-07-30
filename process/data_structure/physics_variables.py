@@ -319,6 +319,11 @@ class ConfinementTimeModel(IntEnum):
         f"ITPA20-IL                      ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
     )
+    NCST = (
+        51,
+        f"NCST                           ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
 
     def __new__(cls, value: int, full_name: str, mode: ConfinementMode = None):
         """Create a new instance of ConfinementTimeModel.

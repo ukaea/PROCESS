@@ -924,6 +924,16 @@ class PlasmaConfinementTime(Model):
             )
 
         # ==========================================================================
+        # NCST spherical tokamak L-mode confinement time scaling
+        elif model == ConfinementTimeModel.NCST:
+            t_electron_confinement = self.ncst_confinement_time(
+                pcur=pcur,
+                b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                p_plasma_loss_mw=p_plasma_loss_mw,
+                dnla19=dnla19,
+            )
+
+        # ==========================================================================
 
         else:
             raise ProcessValueError(
@@ -4057,4 +4067,50 @@ class PlasmaConfinementTime(Model):
             * (1 + triang) ** 0.560
             * kappa_ipb**0.673
             * aion**0.302
+        )
+
+    @staticmethod
+    def ncst_confinement_time(
+        pcur: float,
+        b_plasma_toroidal_on_axis: float,
+        p_plasma_loss_mw: float,
+        dnla19: float,
+    ) -> float:
+        """Calculate the NCST spherical tokamak L-mode confinement time
+
+        Parameters
+        ----------
+        pcur :
+            Plasma current [MA]
+        b_plasma_toroidal_on_axis :
+            Toroidal magnetic field [T]
+        p_plasma_loss_mw :
+            Thermal power lost due to transport through the LCFS [MW]
+        dnla19 :
+            Central line-averaged electron density in units of 10¹⁹ m⁻³
+
+        Returns
+        -------
+        :
+            float: NCST confinement time [s]
+
+        Notes
+        -----
+        - The electron density used to derive the scaling was measured locally
+        at a normalised minor radius of approximately 0.9. The central
+        line-averaged electron density is used here as the closest available
+        PROCESS quantity.
+
+        References
+        ----------
+        [1] Y. Chen et al., “Energy confinement scaling in the NCST spherical
+        tokamak,” AIP Advances, vol. 16, no. 3, pp. 035043-035043,
+        Mar. 2026, doi: https://doi.org/10.1063/5.0311657.
+        """
+        return (
+            0.11
+            * pcur**0.33
+            * b_plasma_toroidal_on_axis**1.03
+            * p_plasma_loss_mw ** (-0.07)
+            * dnla19 ** (-0.01)
         )
