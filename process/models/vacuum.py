@@ -2,6 +2,7 @@
 
 import logging
 import math
+from dataclasses import dataclass, field
 
 import numpy as np
 
@@ -13,6 +14,68 @@ from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import dshellvol, eshellvol
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class VacuumFlowRates:
+    """Dataclass for vacuum pump flow rates for different gases in m³/s"""
+
+    nitrogen: float
+    deuterium_tritium: float
+    helium: float
+    deuterium_tritium_again: float
+
+
+@dataclass
+class VacuumPump:
+    """Base dataclass for vacuum pump specifications"""
+
+    name: str
+    """Name of the vacuum pump type"""
+    volflow_pump: VacuumFlowRates
+    """Volumetric flow rates of the vacuum pump for different gases in m³/s"""
+    description: str = ""
+    """Description of the vacuum pump"""
+
+
+@dataclass
+class TurbomolecularPump(VacuumPump):
+    """Turbomolecular pump with magnetic bearing specifications
+
+    Nominal speed of 2.0 m^3/s
+    """
+
+    name: str = "Turbomolecular"
+    volflow_pump: VacuumFlowRates = field(
+        default_factory=lambda: VacuumFlowRates(
+            nitrogen=1.95,
+            deuterium_tritium=1.8,
+            helium=1.8,
+            deuterium_tritium_again=1.8,
+        )
+    )
+    description: str = (
+        "Turbomolecular pump (magnetic bearing) with nominal speed 2.0 m³/s"
+    )
+
+
+@dataclass
+class CryoPump(VacuumPump):
+    """Compound cryopump specifications
+
+    Nominal speed of 10 m³/s
+    """
+
+    name: str = "Cryopump"
+    volflow_pump: VacuumFlowRates = field(
+        default_factory=lambda: VacuumFlowRates(
+            nitrogen=9.0,
+            deuterium_tritium=25.0,
+            helium=5.0,
+            deuterium_tritium_again=25.0,
+        )
+    )
+    description: str = "Compound cryopump with nominal speed 10 m³/s"
 
 
 class Vacuum(Model):
