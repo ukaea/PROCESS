@@ -36,14 +36,14 @@ class PlasmaFuelling(Model):
             molflow_beam_deuterium_vv_injected=self.data.physics.molflow_beam_deuterium_vv_injected,
             molflow_beam_tritium_vv_injected=self.data.physics.molflow_beam_tritium_vv_injected,
         )
-        self.data.physics.f_plasma_tritium_burnup = self.calculate_tritium_burnup_fraction(
+        self.data.physics.f_plasma_tritium_burnup = self.calculate_tritium_burnup_fraction(  # noqa: E501
             fusrat_dt_total=self.data.physics.fusrat_dt_total,
             molflow_plasma_fuelling_vv_injected=self.data.physics.molflow_plasma_fuelling_vv_injected,
             f_molflow_plasma_fuelling_tritium=self.data.physics.f_molflow_plasma_fuelling_tritium,
             molflow_beam_tritium_vv_injected=self.data.physics.molflow_beam_tritium_vv_injected,
         )
 
-        self.data.physics.f_plasma_deuterium_burnup = self.calculate_deuterium_burnup_fraction(
+        self.data.physics.f_plasma_deuterium_burnup = self.calculate_deuterium_burnup_fraction(  # noqa: E501
             fusrat_plasma_dd_total=self.data.physics.fusrat_plasma_dd_total,
             molflow_plasma_fuelling_vv_injected=self.data.physics.molflow_plasma_fuelling_vv_injected,
             molflow_beam_deuterium_vv_injected=self.data.physics.molflow_beam_deuterium_vv_injected,
