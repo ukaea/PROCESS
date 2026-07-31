@@ -9,9 +9,7 @@ https://www.thermal-engineering.org/what-is-latent-heat-of-vaporization-definiti
 from dataclasses import dataclass
 from typing import Annotated
 
-from parameter_frame import Parameter
-
-from process.core.metadata import ParameterMetadata, PROCESSModelData
+from process.core.metadata import Parameter, ParameterMetadata, PROCESSModelData
 
 
 @dataclass(slots=True)

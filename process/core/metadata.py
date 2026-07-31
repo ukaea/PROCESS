@@ -1,8 +1,35 @@
 from collections.abc import Generator
 from dataclasses import asdict, dataclass, fields
-from typing import Annotated, get_args, get_origin
+from typing import Annotated, Generic, get_args, get_origin
 
-from parameter_frame import Parameter
+from parameter_frame import Parameter as DefaultParameter
+from parameter_frame import ParameterValueType
+
+
+class Parameter(DefaultParameter, Generic[ParameterValueType]):
+    def __init__(
+        self,
+        name: str,
+        value: ParameterValueType,
+        unit: str = "",
+        source: str = "",
+        description: str = "",
+        long_name: str = "",
+        symbol: str = "",
+        latex_symbol: str = "",
+        _value_types: tuple[type, ...] | None = None,
+    ):
+        self._latext_symbol = latex_symbol
+        self._symbol = symbol
+        super().__init__(name, value, unit, source, description, long_name, _value_types)
+
+    @property
+    def symbol(self) -> str:
+        return self._symbol
+
+    @property
+    def latex_symbol(self) -> str:
+        return self._latex_symbol
 
 
 @dataclass(slots=True, kw_only=True)

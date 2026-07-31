@@ -2,9 +2,8 @@ from dataclasses import dataclass
 from typing import Annotated
 
 import pytest
-from parameter_frame import Parameter
 
-from process.core.metadata import ParameterMetadata, PROCESSModelData
+from process.core.metadata import Parameter, ParameterMetadata, PROCESSModelData
 
 
 @dataclass
