@@ -16,7 +16,7 @@ from process.models.engineering.ivc_functions import dshellvol, eshellvol
 logger = logging.getLogger(__name__)
 
 
-@dataclass
+@dataclass(frozen=True)
 class VacuumSpecies:
     """Dataclass for different particle species in the vacuum system"""
 
@@ -26,7 +26,7 @@ class VacuumSpecies:
     deuterium_tritium_again: float
 
 
-@dataclass
+@dataclass(frozen=True)
 class VacuumPump:
     """Base dataclass for vacuum pump specifications"""
 
@@ -63,7 +63,7 @@ class VacuumPump:
             )
 
 
-@dataclass
+@dataclass(frozen=True)
 class TurbomolecularPump(VacuumPump):
     """Turbomolecular pump with magnetic bearing specifications
 
@@ -84,7 +84,7 @@ class TurbomolecularPump(VacuumPump):
     )
 
 
-@dataclass
+@dataclass(frozen=True)
 class CryoPump(VacuumPump):
     """Compound cryopump specifications
 
