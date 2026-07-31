@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class VacuumFlowRates:
-    """Dataclass for vacuum pump flow rates for different gases in m³/s"""
+class VacuumSpecies:
+    """Dataclass for different particle species in the vacuum system"""
 
     nitrogen: float
     deuterium_tritium: float
@@ -32,8 +32,17 @@ class VacuumPump:
 
     name: str
     """Name of the vacuum pump type"""
-    volflow_pump: VacuumFlowRates
+    volflow_pump: VacuumSpecies
     """Volumetric flow rates of the vacuum pump for different gases in m³/s"""
+    xmult: VacuumSpecies = field(
+        default_factory=lambda: VacuumSpecies(
+            nitrogen=1.0e0,
+            deuterium_tritium=0.423e0,
+            helium=0.378e0,
+            deuterium_tritium_again=0.423e0,
+        )
+    )
+    """Multiplier to convert conductance from gas species i to nitrogen"""
     description: str = ""
     """Description of the vacuum pump"""
 
@@ -46,8 +55,8 @@ class TurbomolecularPump(VacuumPump):
     """
 
     name: str = "Turbomolecular"
-    volflow_pump: VacuumFlowRates = field(
-        default_factory=lambda: VacuumFlowRates(
+    volflow_pump: VacuumSpecies = field(
+        default_factory=lambda: VacuumSpecies(
             nitrogen=1.95,
             deuterium_tritium=1.8,
             helium=1.8,
@@ -67,8 +76,8 @@ class CryoPump(VacuumPump):
     """
 
     name: str = "Cryopump"
-    volflow_pump: VacuumFlowRates = field(
-        default_factory=lambda: VacuumFlowRates(
+    volflow_pump: VacuumSpecies = field(
+        default_factory=lambda: VacuumSpecies(
             nitrogen=9.0,
             deuterium_tritium=25.0,
             helium=5.0,
