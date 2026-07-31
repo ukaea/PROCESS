@@ -3,11 +3,19 @@ ioptimz  = -2
 
 *---------------Constraint Equations---------------*
 * Define number of equality constraints
-neqns = 2
+neqns = 6
 
 * Equalities
 icc = 1 * Beta
 icc = 2 * Global power balance
+* Tritium particle balance
+icc = 93
+* Deuterium particle balance
+icc = 94
+* Alpha particle balance
+icc = 96
+* Fuelling composition consistency
+icc = 97
 
 * Inequalities
 icc = 5 * Density upper limit
@@ -39,6 +47,26 @@ icc = 32 * TF coil conduit stress upper limit
 ixc = 4 * temp_plasma_electron_vol_avg_kev
 boundu(4) = 100.0
 ixc = 6 * nd_plasma_electrons_vol_avg
+
+* Particles recycled at LCFS
+ixc = 178
+f_plasma_particles_lcfs_recycled = 0.89
+
+* Injected VV fuelling rate
+ixc = 180
+molflow_plasma_fuelling_vv_injected = 4.9992093e21
+
+* Deuterium fuelling fraction
+ixc = 181
+f_molflow_plasma_fuelling_deuterium = 0.50092526
+
+* Tritium fuelling fraction
+ixc = 182
+f_molflow_plasma_fuelling_tritium = 0.49907474
+
+
+
+
 
 *---------------Cs Fatigue Variables---------------*
 
@@ -309,6 +337,9 @@ f_sync_reflect    = 0.6 * synchrotron wall reflectivity factor
 temp_plasma_electron_vol_avg_kev       = 12.221383528378944 * volume averaged electron temperature (keV) (`iteration variable 4`)
 triang   = 0.5 * plasma separatrix triangularity (calculated if `i_plasma_geometry = 1; 3-5 or 7`)
 i_ind_plasma_internal_norm = 1 * Normalised plasma internal induction selection switch (0 = user input) 
+
+eta_plasma_fuelling = 0.7
+
 
 *----------------------Power-----------------------*
 

@@ -2371,7 +2371,7 @@ class Stellarator(Model):
             self.data.physics.t_energy_confinement,
         )
 
-        self.data.physics.f_plasma_fuel_burnup = self.physics.fuelling.calculate_fuel_burnup_fraction(
+        self.data.physics.f_plasma_fuel_burnup = self.physics.fuelling.calculate_fuel_burnup_fraction(  # noqa: E501
             fusrat_total=self.data.physics.fusrat_total,
             molflow_plasma_fuelling_vv_injected=self.data.physics.molflow_plasma_fuelling_vv_injected,
             molflow_beam_deuterium_vv_injected=self.data.physics.molflow_beam_deuterium_vv_injected,
