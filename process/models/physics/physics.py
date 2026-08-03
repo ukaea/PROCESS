@@ -1479,7 +1479,6 @@ class Physics(Model):
         # ======================================================================
 
     @staticmethod
-    @nb.njit(cache=True)
     def phyaux(
         fusden_alpha_total: float,
         nd_plasma_alphas_thermal_vol_avg: float,

@@ -794,21 +794,21 @@ class PlasmaFuelling(Model):
             "OP ",
         )
         po.oblnkl(self.outfile)
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Total fuel burn-up fraction",
             "(f_plasma_fuel_burnup)",
             self.data.physics.f_plasma_fuel_burnup,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Tritium burn-up fraction",
             "(f_plasma_tritium_burnup)",
             self.data.physics.f_plasma_tritium_burnup,
             "OP ",
         )
-        po.ovarrf(
+        po.ovarre(
             self.outfile,
             "Deuterium burn-up fraction",
             "(f_plasma_deuterium_burnup)",
