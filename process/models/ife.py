@@ -930,8 +930,8 @@ class IFE(Model):
 
         self.data.ife.v3dzu = (
             (self.data.ife.zu6 + self.data.ife.zl6)
-            + self.data.buildings.trcl
-            + self.data.buildings.stcl
+            + self.data.buildings.dr_plant_reactor_building_transport_clearance
+            + self.data.buildings.dz_plant_reactor_building_crane_roof_clearance
             + 5.1
             + 9.41e-6 * 1.0e5
         )
@@ -2263,18 +2263,25 @@ class IFE(Model):
         hrbi = self.data.ife.zl7 + self.data.ife.zu7
 
         # Distance from centre of device to wall
-        self.data.buildings.wrbi = self.data.ife.r7
+        self.data.buildings.dr_plant_reactor_building_internal_half = self.data.ife.r7
 
         # Internal volume (square floor)
-        vrci = (2.0 * self.data.buildings.wrbi) ** 2 * hrbi
+        vrci = (
+            2.0 * self.data.buildings.dr_plant_reactor_building_internal_half
+        ) ** 2 * hrbi
 
         # External dimensions
         # RBWT = wall thickness
         # RBRT = roof thickness
         # FNDT = foundation thickness
-        rbw = 2.0 * (self.data.ife.r7 + self.data.buildings.rbwt)
+        rbw = 2.0 * (self.data.ife.r7 + self.data.buildings.dx_plant_reactor_building_wall
+        )
         rbl = rbw
-        rbh = hrbi + self.data.buildings.rbrt + self.data.buildings.fndt
+        rbh = (
+            hrbi
+            + self.data.buildings.dz_plant_reactor_building_roof
+            + self.data.buildings.dz_plant_reactor_building_foundation
+        )
 
         # External volume
         rbv = rbw * rbl * rbh
@@ -2293,7 +2300,7 @@ class IFE(Model):
 
         # Transport corridor size
 
-        tcw = self.data.ife.r6 + 4.0 * self.data.buildings.trcl
+        tcw = self.data.ife.r6 + 4.0 * self.data.buildings.dr_plant_reactor_building_transport_clearance
         tcl = 5.0 * tcw + 2.0 * self.data.buildings.hcwt
 
         # Decontamination cell size
@@ -2325,13 +2332,17 @@ class IFE(Model):
         rmbh = (
             10.0
             + (self.data.ife.zl6 + self.data.ife.zu6)
-            + self.data.buildings.trcl
+            + self.data.buildings.dr_plant_reactor_building_transport_clearance
             + cran
             + 5.1
-            + self.data.buildings.stcl
-            + self.data.buildings.fndt
+            + self.data.buildings.dz_plant_reactor_building_crane_roof_clearance
+            + self.data.buildings.dz_plant_reactor_building_foundation
         )
-        tch = shh + self.data.buildings.stcl + self.data.buildings.fndt
+        tch = (
+            shh
+            + self.data.buildings.dz_plant_reactor_building_crane_roof_clearance
+            + self.data.buildings.dz_plant_reactor_building_foundation
+        )
 
         # Volume
 
@@ -2359,28 +2370,38 @@ class IFE(Model):
             rbv
             + rmbv
             + wsv
-            + self.data.buildings.triv
+            + self.data.buildings.vol_plant_tritium_fuel_building
             + elev
-            + self.data.buildings.conv
+            + self.data.buildings.vol_plant_control_building
             + cryv
-            + self.data.buildings.admv
-            + self.data.buildings.shov
+            + self.data.buildings.vol_plant_administration_building
+            + self.data.buildings.vol_plant_shops_warehouse_buildings
         ) / 6.0
 
         # Convert local into global variables
 
-        self.data.buildings.admvol = self.data.buildings.admv
-        self.data.buildings.convol = self.data.buildings.conv
-        self.data.buildings.elevol = elev
-        self.data.buildings.rbvol = rbv
-        self.data.buildings.rmbvol = rmbv
-        self.data.buildings.shovol = self.data.buildings.shov
-        self.data.buildings.volrci = vrci
-        self.data.buildings.wsvol = wsv
+        self.data.buildings.admvol = self.data.(
+            buildings.vol_plant_administration_building
+        )
+        self.data.buildings.convol = self.data.buildings.vol_plant_control_building
+        self.data.buildings.vol_plant_electrical_building = elev
+        self.data.buildings.vol_plant_reactor_building = rbv
+        self.data.buildings.vol_plant_maintenance_assembly_building = rmbv
+        self.data.buildings.shovol = self.data.(
+            buildings.vol_plant_shops_warehouse_buildings
+        )
+        self.data.buildings.vol_plant_reactor_building_internal = vrci
+        self.data.buildings.vol_plant_warm_shop_building = wsv
 
         # Total volume of nuclear buildings
 
-        self.data.buildings.volnucb = vrci + rmbv + wsv + self.data.buildings.triv + cryv
+        self.data.buildings.vol_plant_nuclear_buildings = (
+            vrci
+            + rmbv
+            + wsv
+            + self.data.buildings.vol_plant_tritium_fuel_building
+            + cryv
+        )
 
         if not output:
             return
@@ -2392,8 +2413,8 @@ class IFE(Model):
         process_output.ovarre(
             self.outfile,
             "Dist from device centre to bldg wall (m)",
-            "(wrbi)",
-            self.data.buildings.wrbi,
+            "(dr_plant_reactor_building_internal_half)",
+            self.data.buildings.dr_plant_reactor_building_internal_half,
         )
         process_output.ovarre(
             self.outfile,
@@ -2409,8 +2430,8 @@ class IFE(Model):
         process_output.ovarre(
             self.outfile,
             "Tritium building volume (m3)",
-            "(triv)",
-            self.data.buildings.triv,
+            "(vol_plant_tritium_fuel_building)",
+            self.data.buildings.vol_plant_tritium_fuel_building,
         )
         process_output.ovarre(
             self.outfile, "Electrical building volume (m3)", "(elev)", elev
@@ -2418,8 +2439,8 @@ class IFE(Model):
         process_output.ovarre(
             self.outfile,
             "Control building volume (m3)",
-            "(conv)",
-            self.data.buildings.conv,
+            "(vol_plant_control_building)",
+            self.data.buildings.vol_plant_control_building,
         )
         process_output.ovarre(
             self.outfile, "Cryogenics building volume (m3)", "(cryv)", cryv
@@ -2427,17 +2448,20 @@ class IFE(Model):
         process_output.ovarre(
             self.outfile,
             "Administration building volume (m3)",
-            "(admv)",
-            self.data.buildings.admv,
+            "(vol_plant_administration_building)",
+            self.data.buildings.vol_plant_administration_building,
         )
         process_output.ovarre(
-            self.outfile, "Shops volume (m3)", "(shov)", self.data.buildings.shov
+            self.outfile,
+            "Shops volume (m3)",
+            "(vol_plant_shops_warehouse_buildings)",
+            self.data.buildings.vol_plant_shops_warehouse_buildings,
         )
         process_output.ovarre(
             self.outfile,
             "Total volume of nuclear buildings (m3)",
-            "(volnucb)",
-            self.data.buildings.volnucb,
+            "(vol_plant_nuclear_buildings)",
+            self.data.buildings.vol_plant_nuclear_buildings,
         )
 
     def ifevac(self):

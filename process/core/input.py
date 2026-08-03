@@ -192,7 +192,7 @@ INPUT_VARIABLES = {
     "fkzohm": InputVariable("physics", float, range=(0.5, 2.0)),
     "abktflnc": InputVariable("costs", float, range=(0.1, 100.0)),
     "adivflnc": InputVariable("costs", float, range=(0.1, 100.0)),
-    "admv": InputVariable("buildings", float, range=(1.0e4, 1.0e6)),
+    "vol_plant_administration_building": InputVariable("buildings", float, range=(1.0e4, 1.0e6)),
     "airtemp": InputVariable("water_use", float, range=(-15.0, 40.0)),
     "alfapf": InputVariable("pf_coil", float, range=(1e-12, 1.0)),
     "stress_cs_steel_max": InputVariable(
@@ -271,7 +271,7 @@ INPUT_VARIABLES = {
     "control_buildings_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "control_buildings_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "control_buildings_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
-    "conv": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
+    "vol_plant_control_building": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
     "coolp": InputVariable("fwbs", float, range=(100000.0, 100000000.0)),
     "copper_rrr": InputVariable("rebco", float, range=(1.0, 10000.0)),
     "dx_tf_hts_tape_copper": InputVariable(
@@ -478,7 +478,9 @@ INPUT_VARIABLES = {
     "flpitch": InputVariable("stellarator", float, range=(0.0001, 0.01)),
     "f_div_flux_expansion": InputVariable("divertor", float, range=(0.0, 10.0)),
     "fmgdmw": InputVariable("heat_transport", float, range=(0.0, 100.0)),
-    "fndt": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "dz_plant_reactor_building_foundation": InputVariable(
+        "buildings", float, range=(0.0, 10.0)
+    ),
     "f_p_beam_orbit_loss": InputVariable("current_drive", float, range=(0.0, 0.999)),
     "f_p_blkt_coolant_pump_total_heat": InputVariable(
         "heat_transport", float, range=(0.0, 0.2)
@@ -693,9 +695,13 @@ INPUT_VARIABLES = {
     "rad_fraction_sol": InputVariable("physics", float, range=(0.0, 1.0)),
     "radius_fw_channel": InputVariable("fwbs", float, range=(0.001, 0.5)),
     "outgrat_fw": InputVariable("vacuum", float, range=(1e-10, 1e-06)),
-    "rbrt": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "dz_plant_reactor_building_roof": InputVariable(
+        "buildings", float, range=(0.0, 10.0)
+    ),
     "rbvfac": InputVariable("buildings", float, range=(0.9, 3.0)),
-    "rbwt": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "dx_plant_reactor_building_wall": InputVariable(
+        "buildings", float, range=(0.0, 10.0)
+    ),
     "radius_cp_coolant_channel": InputVariable("tfcoil", float, range=(1e-06, 1.0)),
     "reactor_clrnc": InputVariable("buildings", float, range=(0.0, 10.0)),
     "reactor_fndtn_thk": InputVariable("buildings", float, range=(0.25, 25.0)),
@@ -748,7 +754,9 @@ INPUT_VARIABLES = {
     "rrin": InputVariable("ife", float, range=(0.1, 50.0)),
     "rrmax": InputVariable("ife", float, range=(1.0, 50.0)),
     "rrr_tf_cu": InputVariable("tfcoil", float, range=(1.0, 1000.0)),
-    "rxcl": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "dr_plant_reactor_extra_clearance": InputVariable(
+        "buildings", float, range=(0.0, 10.0)
+    ),
     "sec_buildings_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "sec_buildings_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "sec_buildings_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
@@ -762,7 +770,7 @@ INPUT_VARIABLES = {
     "dz_shld_lower": InputVariable("build", float, range=(0.0, 10.0)),
     "dz_shld_upper": InputVariable("build", float, range=(0.0, 10.0)),
     "shmf": InputVariable("buildings", float, range=(0.0, 1.0)),
-    "shov": InputVariable("buildings", float, range=(1000.0, 1000000.0)),
+    "vol_plant_shops_warehouse_buildings": InputVariable("buildings", float, range=(1000.0, 1000000.0)),
     "sig_tf_case_max": InputVariable("tfcoil", float, range=(1000000.0, 100000000000.0)),
     "sig_tf_wp_max": InputVariable("tfcoil", float, range=(1000000.0, 100000000000.0)),
     "sigallpc": InputVariable("build", float, range=(0.0, 1000000000.0)),
@@ -775,7 +783,9 @@ INPUT_VARIABLES = {
     ),
     "staff_buildings_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "startupratio": InputVariable("costs", float, range=(0.0, 10.0)),
-    "stcl": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "dz_plant_reactor_building_crane_roof_clearance": InputVariable(
+        "buildings", float, range=(0.0, 10.0)
+    ),
     "str_cs_con_res": InputVariable("tfcoil", float, range=(-0.02, 0.02)),
     "str_pf_con_res": InputVariable("tfcoil", float, range=(-0.02, 0.02)),
     "str_tf_con_res": InputVariable("tfcoil", float, range=(-0.02, 0.02)),
@@ -834,7 +844,7 @@ INPUT_VARIABLES = {
     "temp_fw_max": InputVariable("fwbs", float, range=(500.0, 2000.0)),
     "temp_plasma_pedestal_kev": InputVariable("physics", float, range=(0.0, 20.0)),
     "temp_plasma_separatrix_kev": InputVariable("physics", float, range=(0.0, 20.0)),
-    "tfcbv": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
+    "vol_plant_tf_power_supplies_building": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
     "dx_tf_wp_insertion_gap": InputVariable("tfcoil", float, range=(1e-10, 0.1)),
     "f_dr_tf_outboard_inboard": InputVariable("build", float, range=(0.2, 5.0)),
     "tftmp": InputVariable("tfcoil", float, range=(0.01, 293.0)),
@@ -867,13 +877,15 @@ INPUT_VARIABLES = {
     "i_t_current_ramp_up": InputVariable("times", int, choices=[0, 1]),
     "transp_clrnc": InputVariable("buildings", float, range=(0.0, 10.0)),
     "f_temp_plasma_ion_electron": InputVariable("physics", float, range=(0.0, 2.0)),
-    "trcl": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "dr_plant_reactor_building_transport_clearance": InputVariable(
+        "buildings", float, range=(0.0, 10.0)
+    ),
     "triang": InputVariable("physics", float, range=(-1.0, 1.0)),
     "triang95": InputVariable("physics", float, range=(0.0, 1.0)),
     "p_tritium_plant_electric_mw": InputVariable(
         "heat_transport", float, range=(0.0, 100.0)
     ),
-    "triv": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
+    "vol_plant_tritium_fuel_building": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
     "turbine_hall_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "turbine_hall_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "turbine_hall_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
@@ -968,7 +980,7 @@ INPUT_VARIABLES = {
     "water_buildings_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "water_buildings_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "watertemp": InputVariable("water_use", float, range=(0.0, 25.0)),
-    "wgt": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
+    "m_plant_reactor_building_crane_capacity": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
     "wgt2": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
     "windspeed": InputVariable("water_use", float, range=(0.0, 10.0)),
     "workshop_h": InputVariable("buildings", float, range=(1.0, 100.0)),

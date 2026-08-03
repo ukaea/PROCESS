@@ -2291,7 +2291,7 @@ class Power(Model):
             self.data.tfcoil.tfckw,
             self.data.tfcoil.len_tf_bus,
             self.data.tfcoil.drarea,
-            self.data.buildings.tfcbv,
+            self.data.buildings.vol_plant_tf_power_supplies_building,
             self.data.heat_transport.p_tf_electric_supplies_mw,
         ) = self.tfcpwr(
             output,
@@ -2451,7 +2451,7 @@ class Power(Model):
         drarea = 0.5e0 * ndumpr * (1.0e0 + r1emj) ** 0.667e0
 
         #  Total TF coil power conversion building volume, m3
-        tfcbv = 6.0e0 * tfcfsp
+        vol_plant_tf_power_supplies_building = 6.0e0 * tfcfsp
 
         #  TF coil AC inductive power demand, MW
         xpwrmw = xpower / 0.9e0
@@ -2463,7 +2463,7 @@ class Power(Model):
         # tftsp = tfcfsp
         #  Total TF coil power conversion building volume, m3
 
-        # tftbv = tfcbv
+        # tftbv = vol_plant_tf_power_supplies_building
 
         #  Output section
         if output:
@@ -2580,9 +2580,9 @@ class Power(Model):
             )
             po.ovarre(
                 self.outfile,
-                "TF coil power conv. building volume (m3)",
-                "(tfcbv)",
-                tfcbv,
+                "TF coil power vol_plant_control_building. building volume (m3)",
+                "(vol_plant_tf_power_supplies_building)",
+                vol_plant_tf_power_supplies_building,
                 "OP ",
             )
             po.ovarre(
@@ -2600,7 +2600,13 @@ class Power(Model):
                 "OP ",
             )
 
-        return (tfckw, len_tf_bus, drarea, tfcbv, p_tf_electric_supplies_mw)
+        return (
+            tfckw,
+            len_tf_bus,
+            drarea,
+            vol_plant_tf_power_supplies_building,
+            p_tf_electric_supplies_mw,
+        )
 
     @staticmethod
     def power_profiles_over_time(

@@ -1048,7 +1048,7 @@ class Costs(Model):
         self.data.costs.c212 = (
             1.0e-6
             * self.data.costs.ucrb
-            * self.data.buildings.rbvol**exprb
+            * self.data.buildings.vol_plant_reactor_building**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
 
@@ -1066,13 +1066,13 @@ class Costs(Model):
         self.data.costs.c2141 = (
             1.0e-6
             * self.data.costs.UCMB
-            * self.data.buildings.rmbvol**exprb
+            * self.data.buildings.vol_plant_maintenance_assembly_building**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
         self.data.costs.c2142 = (
             1.0e-6
             * self.data.costs.UCWS
-            * self.data.buildings.wsvol**exprb
+            * self.data.buildings.vol_plant_warm_shop_building**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
         self.data.costs.c214 = self.data.costs.c2141 + self.data.costs.c2142
@@ -1082,7 +1082,7 @@ class Costs(Model):
         self.data.costs.c215 = (
             1.0e-6
             * self.data.costs.UCTR
-            * self.data.buildings.triv**exprb
+            * self.data.buildings.vol_plant_tritium_fuel_building**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
 
@@ -1091,7 +1091,7 @@ class Costs(Model):
         self.data.costs.c216 = (
             1.0e-6
             * self.data.costs.UCEL
-            * self.data.buildings.elevol**exprb
+            * self.data.buildings.vol_plant_electrical_building**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
 
@@ -1120,7 +1120,7 @@ class Costs(Model):
         self.data.costs.c2174 = (
             1.0e-6
             * self.data.costs.UCCR
-            * self.data.buildings.cryvol**exprb
+            * self.data.buildings.vol_plant_cryoplant_building**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
         self.data.costs.c217 = (
@@ -2393,7 +2393,9 @@ class Costs(Model):
                 * self.data.costs.UCDTC
                 * (
                     (cfrht / 1.0e4) ** 0.6e0
-                    * (self.data.buildings.volrci + self.data.buildings.wsvol)
+                    * (self.data.buildings.vol_plant_reactor_building_internal
+                        + self.data.buildings.vol_plant_warm_shop_building
+                    )
                 )
             )
         else:
@@ -2408,7 +2410,10 @@ class Costs(Model):
         self.data.costs.c2274 = (
             1.0e-6
             * self.data.costs.UCNBV
-            * (self.data.buildings.volrci + self.data.buildings.wsvol) ** 0.8e0
+            * (self.data.buildings.vol_plant_reactor_building_internal
+                + self.data.buildings.vol_plant_warm_shop_building
+            )
+            ** 0.8e0
         )
 
         #  Apply Nth kind factor

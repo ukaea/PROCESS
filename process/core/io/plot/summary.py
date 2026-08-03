@@ -31,6 +31,7 @@ from process.models.engineering.materials import (
     calculate_von_mises_stress,
     poisson_steel,
 )
+from process.models.buildings import BuildingsITER1992
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,

@@ -2267,8 +2267,8 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
 
 class Bld2019Param(NamedTuple):
     a_fw_total: Any = None
-    trcl: Any = None
-    stcl: Any = None
+    dr_plant_reactor_building_transport_clearance: Any = None
+    dz_plant_reactor_building_crane_roof_clearance: Any = None
     tbr: Any = None
     f_p_blkt_multiplication: Any = None
     ifetyp: Any = None
@@ -2359,8 +2359,8 @@ class Bld2019Param(NamedTuple):
     [
         Bld2019Param(
             a_fw_total=0.0,
-            trcl=1.0,
-            stcl=3.0,
+            dr_plant_reactor_building_transport_clearance=1.0,
+            dz_plant_reactor_building_crane_roof_clearance=3.0,
             tbr=0.0,
             f_p_blkt_multiplication=1.26,
             ifetyp=4,
@@ -2640,8 +2640,16 @@ def test_bld2019(bld2019param, monkeypatch, ife):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(ife.data.first_wall, "a_fw_total", bld2019param.a_fw_total)
-    monkeypatch.setattr(ife.data.buildings, "trcl", bld2019param.trcl)
-    monkeypatch.setattr(ife.data.buildings, "stcl", bld2019param.stcl)
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "dr_plant_reactor_building_transport_clearance",
+        bld2019param.dr_plant_reactor_building_transport_clearance,
+    )
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "dz_plant_reactor_building_crane_roof_clearance",
+        bld2019param.dz_plant_reactor_building_crane_roof_clearance,
+    )
     monkeypatch.setattr(ife.data.fwbs, "tbr", bld2019param.tbr)
     monkeypatch.setattr(
         ife.data.fwbs, "f_p_blkt_multiplication", bld2019param.f_p_blkt_multiplication
@@ -2854,30 +2862,30 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
 
 
 class IfebdgParam(NamedTuple):
-    wrbi: Any = None
-    rbwt: Any = None
-    rbrt: Any = None
-    fndt: Any = None
-    trcl: Any = None
+    dr_plant_reactor_building_internal_half: Any = None
+    dx_plant_reactor_building_wall: Any = None
+    dz_plant_reactor_building_roof: Any = None
+    dz_plant_reactor_building_foundation: Any = None
+    dr_plant_reactor_building_transport_clearance: Any = None
     hcwt: Any = None
     hccl: Any = None
     wgt2: Any = None
-    stcl: Any = None
+    dz_plant_reactor_building_crane_roof_clearance: Any = None
     pibv: Any = None
     a_plant_floor_effective: Any = None
-    triv: Any = None
-    conv: Any = None
-    admv: Any = None
-    shov: Any = None
+    vol_plant_tritium_fuel_building: Any = None
+    vol_plant_control_building: Any = None
+    vol_plant_administration_building: Any = None
+    vol_plant_shops_warehouse_buildings: Any = None
     admvol: Any = None
     convol: Any = None
-    elevol: Any = None
-    rbvol: Any = None
-    rmbvol: Any = None
+    vol_plant_electrical_building: Any = None
+    vol_plant_reactor_building: Any = None
+    vol_plant_maintenance_assembly_building: Any = None
     shovol: Any = None
-    volrci: Any = None
-    wsvol: Any = None
-    volnucb: Any = None
+    vol_plant_reactor_building_internal: Any = None
+    vol_plant_warm_shop_building: Any = None
+    vol_plant_nuclear_buildings: Any = None
     whtshld: Any = None
     helpow: Any = None
     zl7: Any = None
@@ -2903,30 +2911,30 @@ class IfebdgParam(NamedTuple):
     "ifebdgparam",
     [
         IfebdgParam(
-            wrbi=0.0,
-            rbwt=3.2000000000000002,
-            rbrt=3.2000000000000002,
-            fndt=2.0,
-            trcl=1.0,
+            dr_plant_reactor_building_internal_half=0.0,
+            dx_plant_reactor_building_wall=3.2000000000000002,
+            dz_plant_reactor_building_roof=3.2000000000000002,
+            dz_plant_reactor_building_foundation=2.0,
+            dr_plant_reactor_building_transport_clearance=1.0,
             hcwt=1.5,
             hccl=5.0,
             wgt2=100000.0,
-            stcl=3.0,
+            dz_plant_reactor_building_crane_roof_clearance=3.0,
             pibv=40000.0,
             a_plant_floor_effective=0.0,
-            triv=40000.0,
-            conv=60000.0,
-            admv=100000.0,
-            shov=100000.0,
+            vol_plant_tritium_fuel_building=40000.0,
+            vol_plant_control_building=60000.0,
+            vol_plant_administration_building=100000.0,
+            vol_plant_shops_warehouse_buildings=100000.0,
             admvol=0.0,
             convol=0.0,
-            elevol=0.0,
-            rbvol=0.0,
-            rmbvol=0.0,
+            vol_plant_electrical_building=0.0,
+            vol_plant_reactor_building=0.0,
+            vol_plant_maintenance_assembly_building=0.0,
             shovol=0.0,
-            volrci=0.0,
-            wsvol=0.0,
-            volnucb=0.0,
+            vol_plant_reactor_building_internal=0.0,
+            vol_plant_warm_shop_building=0.0,
+            vol_plant_nuclear_buildings=0.0,
             whtshld=1067310.9593707009,
             helpow=20277.29636048527,
             zl7=5.8499999999999996,
@@ -2961,34 +2969,98 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(ife.data.buildings, "wrbi", ifebdgparam.wrbi)
-    monkeypatch.setattr(ife.data.buildings, "rbwt", ifebdgparam.rbwt)
-    monkeypatch.setattr(ife.data.buildings, "rbrt", ifebdgparam.rbrt)
-    monkeypatch.setattr(ife.data.buildings, "fndt", ifebdgparam.fndt)
-    monkeypatch.setattr(ife.data.buildings, "trcl", ifebdgparam.trcl)
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "dr_plant_reactor_building_internal_half",
+        ifebdgparam.dr_plant_reactor_building_internal_half,
+    )
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "dx_plant_reactor_building_wall",
+        ifebdgparam.dx_plant_reactor_building_wall,
+    )
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "dz_plant_reactor_building_roof",
+        ifebdgparam.dz_plant_reactor_building_roof,
+    )
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "dz_plant_reactor_building_foundation",
+        ifebdgparam.dz_plant_reactor_building_foundation,
+    )
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "dr_plant_reactor_building_transport_clearance",
+        ifebdgparam.dr_plant_reactor_building_transport_clearance,
+    )
     monkeypatch.setattr(ife.data.buildings, "hcwt", ifebdgparam.hcwt)
     monkeypatch.setattr(ife.data.buildings, "hccl", ifebdgparam.hccl)
     monkeypatch.setattr(ife.data.buildings, "wgt2", ifebdgparam.wgt2)
-    monkeypatch.setattr(ife.data.buildings, "stcl", ifebdgparam.stcl)
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "dz_plant_reactor_building_crane_roof_clearance",
+        ifebdgparam.dz_plant_reactor_building_crane_roof_clearance,
+    )
     monkeypatch.setattr(ife.data.buildings, "pibv", ifebdgparam.pibv)
     monkeypatch.setattr(
         ife.data.buildings,
         "a_plant_floor_effective",
         ifebdgparam.a_plant_floor_effective,
     )
-    monkeypatch.setattr(ife.data.buildings, "triv", ifebdgparam.triv)
-    monkeypatch.setattr(ife.data.buildings, "conv", ifebdgparam.conv)
-    monkeypatch.setattr(ife.data.buildings, "admv", ifebdgparam.admv)
-    monkeypatch.setattr(ife.data.buildings, "shov", ifebdgparam.shov)
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "vol_plant_tritium_fuel_building",
+        ifebdgparam.vol_plant_tritium_fuel_building,
+    )
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "vol_plant_control_building",
+        ifebdgparam.vol_plant_control_building,
+    )
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "vol_plant_administration_building",
+        ifebdgparam.vol_plant_administration_building,
+    )
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "vol_plant_shops_warehouse_buildings",
+        ifebdgparam.vol_plant_shops_warehouse_buildings,
+    )
     monkeypatch.setattr(ife.data.buildings, "admvol", ifebdgparam.admvol)
     monkeypatch.setattr(ife.data.buildings, "convol", ifebdgparam.convol)
-    monkeypatch.setattr(ife.data.buildings, "elevol", ifebdgparam.elevol)
-    monkeypatch.setattr(ife.data.buildings, "rbvol", ifebdgparam.rbvol)
-    monkeypatch.setattr(ife.data.buildings, "rmbvol", ifebdgparam.rmbvol)
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "vol_plant_electrical_building",
+        ifebdgparam.vol_plant_electrical_building,
+    )
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "vol_plant_reactor_building",
+        ifebdgparam.vol_plant_reactor_building,
+    )
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "vol_plant_maintenance_assembly_building",
+        ifebdgparam.vol_plant_maintenance_assembly_building,
+    )
     monkeypatch.setattr(ife.data.buildings, "shovol", ifebdgparam.shovol)
-    monkeypatch.setattr(ife.data.buildings, "volrci", ifebdgparam.volrci)
-    monkeypatch.setattr(ife.data.buildings, "wsvol", ifebdgparam.wsvol)
-    monkeypatch.setattr(ife.data.buildings, "volnucb", ifebdgparam.volnucb)
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "vol_plant_reactor_building_internal",
+        ifebdgparam.vol_plant_reactor_building_internal,
+    )
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "vol_plant_warm_shop_building",
+        ifebdgparam.vol_plant_warm_shop_building,
+    )
+    monkeypatch.setattr(ife.data.
+        buildings,
+        "vol_plant_nuclear_buildings",
+        ifebdgparam.vol_plant_nuclear_buildings,
+    )
     monkeypatch.setattr(ife.data.fwbs, "whtshld", ifebdgparam.whtshld)
     monkeypatch.setattr(ife.data.heat_transport, "helpow", ifebdgparam.helpow)
     monkeypatch.setattr(ife.data.ife, "zl7", ifebdgparam.zl7)
@@ -3000,19 +3072,33 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
 
     ife.ifebdg()
 
-    assert ife.data.buildings.wrbi == pytest.approx(ifebdgparam.expected_wrbi)
+    assert ife.data.buildings.dr_plant_reactor_building_internal_half == pytest.approx(
+        ifebdgparam.expected_wrbi
+    )
     assert ife.data.buildings.a_plant_floor_effective == pytest.approx(
         ifebdgparam.expected_a_plant_floor_effective
     )
     assert ife.data.buildings.admvol == pytest.approx(ifebdgparam.expected_admvol)
     assert ife.data.buildings.convol == pytest.approx(ifebdgparam.expected_convol)
-    assert ife.data.buildings.elevol == pytest.approx(ifebdgparam.expected_elevol)
-    assert ife.data.buildings.rbvol == pytest.approx(ifebdgparam.expected_rbvol)
-    assert ife.data.buildings.rmbvol == pytest.approx(ifebdgparam.expected_rmbvol)
+    assert ife.data.buildings.vol_plant_electrical_building == pytest.approx(
+        ifebdgparam.expected_elevol
+    )
+    assert ife.data.buildings.vol_plant_reactor_building == pytest.approx(
+        ifebdgparam.expected_rbvol
+    )
+    assert ife.data.buildings.vol_plant_maintenance_assembly_building == pytest.approx(
+        ifebdgparam.expected_rmbvol
+    )
     assert ife.data.buildings.shovol == pytest.approx(ifebdgparam.expected_shovol)
-    assert ife.data.buildings.volrci == pytest.approx(ifebdgparam.expected_volrci)
-    assert ife.data.buildings.wsvol == pytest.approx(ifebdgparam.expected_wsvol)
-    assert ife.data.buildings.volnucb == pytest.approx(ifebdgparam.expected_volnucb)
+    assert ife.data.buildings.vol_plant_reactor_building_internal == pytest.approx(
+        ifebdgparam.expected_volrci
+    )
+    assert ife.data.buildings.vol_plant_warm_shop_building == pytest.approx(
+        ifebdgparam.expected_wsvol
+    )
+    assert ife.data.buildings.vol_plant_nuclear_buildings == pytest.approx(
+        ifebdgparam.expected_volnucb
+    )
 
 
 class Ifepw2Param(NamedTuple):

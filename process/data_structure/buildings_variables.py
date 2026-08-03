@@ -13,7 +13,7 @@ class BuildingsModel(IntEnum):
 
 @dataclass(slots=True)
 class BuildingsData:
-    admv: float = 1.0e5
+    vol_plant_administration_building: float = 1.0e5
     """administration building volume (m3)"""
 
     admvol: float = 0.0
@@ -64,7 +64,7 @@ class BuildingsData:
     control_buildings_h: float = 6.0
     """control building height (m)"""
 
-    conv: float = 6.0e4
+    vol_plant_control_building: float = 6.0e4
     """control building volume (m3)"""
 
     convol: float = 0.0
@@ -100,12 +100,15 @@ class BuildingsData:
     cryostat_clrnc: float = 2.5
     """vertical clearance from TF coil to cryostat (m)"""
 
-    cryvol: float = 0.0
+    vol_plant_cryoplant_building: float = 0.0
     """volume of cryoplant building (m3)"""
 
     a_plant_floor_effective: float = 0.0
     """effective total floor space (m2)"""
 
+
+dz_plant_reactor_building_internal: float = None
+"""Internal height of the reactor building (m)"""
     elecdist_l: float = 380.0
     """Transformers and electrical distribution facilities length (m)"""
 
@@ -133,7 +136,7 @@ class BuildingsData:
     elecstore_h: float = 12.0
     """Energy Storage facilities height (m)"""
 
-    elevol: float = 0.0
+    vol_plant_electrical_building: float = 0.0
     """volume of electrical equipment building (m3)"""
 
     esbldgm3: float = 1.0e3
@@ -145,7 +148,7 @@ class BuildingsData:
     fc_building_w: float = 60.0
     """Fuel Cycle facilities width (m)"""
 
-    fndt: float = 2.0
+    dz_plant_reactor_building_foundation: float = 2.0
     """foundation thickness (m)"""
 
     gas_buildings_l: float = 25.0
@@ -280,13 +283,13 @@ class BuildingsData:
     rbvfac: float = 1.6
     """reactor building volume multiplication factor"""
 
-    rbrt: float = 1.0
+    dz_plant_reactor_building_roof: float = 1.0
     """reactor building roof thickness (m)"""
 
-    rbvol: float = 0.0
+    vol_plant_reactor_building: float = 0.0
     """reactor building volume (m3)"""
 
-    rbwt: float = 2.0
+    dx_plant_reactor_building_wall: float = 2.0
     """reactor building wall thickness (m)"""
 
     reactor_clrnc: float = 4.0
@@ -310,7 +313,7 @@ class BuildingsData:
     reactor_wall_thk: float = 2.0
     """reactor building wall thickness (m)"""
 
-    rmbvol: float = 0.0
+    vol_plant_maintenance_assembly_building: float = 0.0
     """volume of maintenance and assembly building (m3)"""
 
     robotics_l: float = 50.0
@@ -322,10 +325,12 @@ class BuildingsData:
     robotics_h: float = 30.0
     """robotics buildings height (m)"""
 
-    row: float = 4.0
+    dr_plant_reactor_crane_clearance: float = 4.0
     """clearance to building wall for crane operation (m)"""
 
-    rxcl: float = 4.0
+dz_plant_reactor_building_crane: float = None
+"""Height of crane operation in the reactor building (m)"""
+    dr_plant_reactor_extra_clearance: float = 4.0
     """clearance around reactor (m)"""
 
     sec_buildings_l: float = 30.0
@@ -340,7 +345,7 @@ class BuildingsData:
     shmf: float = 0.5
     """fraction of shield mass per TF coil to be moved in the maximum shield lift"""
 
-    shov: float = 1.0e5
+    vol_plant_shops_warehouse_buildings: float = 1.0e5
     """shops and warehouse volume (m3)"""
 
     shovol: float = 0.0
@@ -352,19 +357,19 @@ class BuildingsData:
     staff_buildings_h: float = 5.0
     """staff buildings height (m)"""
 
-    stcl: float = 3.0
+    dz_plant_reactor_building_crane_roof_clearance: float = 3.0
     """clearance above crane to roof (m)"""
 
-    tfcbv: float = 2.0e4
+    vol_plant_tf_power_supplies_building: float = 2.0e4
     """volume of TF coil power supply building (m3) (calculated if TF coils are superconducting)"""
 
     transp_clrnc: float = 1.0
     """transportation clearance between components (m)"""
 
-    trcl: float = 1.0
+    dr_plant_reactor_building_transport_clearance: float = 1.0
     """transportation clearance between components (m)"""
 
-    triv: float = 4.0e4
+    vol_plant_tritium_fuel_building: float = 4.0e4
     """volume of tritium, fuel handling and health physics buildings (m3)"""
 
     turbine_hall_l: float = 109.0
@@ -385,10 +390,10 @@ class BuildingsData:
     tw_storage_h: float = 5.0
     """tritiated waste storage building height (m)"""
 
-    volrci: float = 0.0
+    vol_plant_reactor_building_internal: float = 0.0
     """internal volume of reactor building (m3)"""
 
-    volnucb: float = 0.0
+    vol_plant_nuclear_buildings: float = 0.0
     """sum of nuclear buildings volumes (m3)"""
 
     warm_shop_l: float = 100.0
@@ -409,7 +414,7 @@ class BuildingsData:
     water_buildings_h: float = 5.0
     """water, laundry & drainage buildings height (m)"""
 
-    wgt: float = 5.0e5
+    m_plant_reactor_building_crane_capacity: float = 5.0e5
     """reactor building crane capacity (kg) (calculated if 0 is input)"""
 
     wgt2: float = 1.0e5
@@ -424,10 +429,10 @@ class BuildingsData:
     workshop_h: float = 10.0
     """[cold] workshop buildings height (m)"""
 
-    wrbi: float = 0.0
+    dr_plant_reactor_building_internal_half: float = 0.0
     """distance from centre of machine to building wall (m)"""
 
-    wsvol: float = 0.0
+    vol_plant_warm_shop_building: float = 0.0
     """volume of warm shop building (m3)"""
 
     wsvfac: float = 1.9
