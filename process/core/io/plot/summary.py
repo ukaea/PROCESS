@@ -4571,7 +4571,7 @@ def profiles_with_pedestal(mfile, scan: int):
     return rho, ne, te
 
 
-def plot_line_bhrem_power_density_profile(
+def plot_line_brem_power_density_profile(
     axis: plt.Axes, mfile: MFile, scan: int, impp: str, demo_ranges: bool
 ):
     """Function to plot Line and Bremsstrahlung radiation power density profile.
@@ -4687,7 +4687,7 @@ def plot_line_bhrem_power_density_profile(
     # ---
 
 
-def plot_line_bhrem_loss_function_profile(
+def plot_line_brem_loss_function_profile(
     axis: plt.Axes,
     mfile: MFile,
     scan: int,
@@ -16070,7 +16070,7 @@ def main_plot(
     # Plot impurity profiles
     ax11 = pages["profiles"].add_subplot(233)
     ax11.set_position([0.7, 0.45, 0.25, 0.5])
-    plot_line_bhrem_power_density_profile(
+    plot_line_brem_power_density_profile(
         axis=ax11, mfile=m_file, scan=scan, impp=imp, demo_ranges=demo_ranges
     )
 
@@ -16084,22 +16084,22 @@ def main_plot(
     ax13.set_position([0.7, 0.105, 0.25, 0.15])
     plot_qprofile(ax13, demo_ranges, m_file, scan)
 
-    ax_line_bhrem = _add_page("rad_contour").add_subplot(325)
-    plot_line_bhrem_loss_function_profile(
-        axis=ax_line_bhrem,
+    ax_line_brem = _add_page("rad_contour").add_subplot(325)
+    plot_line_brem_loss_function_profile(
+        axis=ax_line_brem,
         mfile=m_file,
         scan=scan,
         impp=imp,
     )
 
-    ax_zeff = pages["rad_contour"].add_subplot(321, sharex=ax_line_bhrem)
+    ax_zeff = pages["rad_contour"].add_subplot(321, sharex=ax_line_brem)
     plot_plasma_effective_charge_profile(ax_zeff, m_file, scan)
     ax_zeff.set_xlabel("")
     ax_zeff.tick_params(
         axis="x", which="both", bottom=True, top=False, labelbottom=False
     )
 
-    ax_ion_charge = pages["rad_contour"].add_subplot(323, sharex=ax_line_bhrem)
+    ax_ion_charge = pages["rad_contour"].add_subplot(323, sharex=ax_line_brem)
     plot_ion_charge_profile(ax_ion_charge, m_file, scan)
     ax_ion_charge.set_xlabel("")
     ax_ion_charge.tick_params(

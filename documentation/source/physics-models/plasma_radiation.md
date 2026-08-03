@@ -44,12 +44,12 @@ The lowest line is H, with the other lines in the order listed. The dashed lines
 the bremsstrahlung calculated using a separate method.</figcaption>
 </figure>
 
-For the regime above $40 \ \text{keV}$ whichc an be seen by the dashed lines in Figure 1 above, the radiation is assumed to be Bhremsstrahlung dominated so the values are extrapolated via a power law.
+For the regime above $40 \ \text{keV}$ whichc an be seen by the dashed lines in Figure 1 above, the radiation is assumed to be Bremsstrahlung dominated so the values are extrapolated via a power law.
 
 
 !!! note "Location of impurities"
 
-    All species/impurities are currently assumed to be distributed at a fixed relative value to the electron density profile throughout the plasma. So the electron density and temperature profiles are integrated using the values of `f_nd_impurity_electron()` to get the line and Bhremmsstrahlung radiation of a species across the plasma profile. 
+    All species/impurities are currently assumed to be distributed at a fixed relative value to the electron density profile throughout the plasma. So the electron density and temperature profiles are integrated using the values of `f_nd_impurity_electron()` to get the line and Bremmsstrahlung radiation of a species across the plasma profile. 
     
 
 !!! note "Particle confinement"
