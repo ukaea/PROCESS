@@ -92,7 +92,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 )
 def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcll):
     """
-    Automatically generated Regression Unit Test for dcll_neutronics_and_power.
+    Automatically generated Unit Test for dcll_neutronics_and_power.
 
     This test was generated using data from large_tokamak_nof.DAT with the DCLL model
     enabled.
@@ -466,7 +466,7 @@ class DcllMassesParam(NamedTuple):
 )
 def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
     """
-    Automatically generated Regression Unit Test for dcll_masses.
+    Automatically generated Unit Test for dcll_masses.
 
     This test was generated using data from large_tokamak_nof.DAT with
     the DCLL model enabled.

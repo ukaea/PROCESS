@@ -53,7 +53,7 @@ def test_plasma_angles_arcs(
     plasmaanglesarcsparam: PlasmaAnglesArcsParam, monkeypatch, plasma
 ):
     """
-    Automatically generated Regression Unit Test for plasma_angles_arcs().
+    Automatically generated Unit Test for plasma_angles_arcs().
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -298,7 +298,7 @@ class SurfaceAreaParam(NamedTuple):
 )
 def test_plasma_surface_area(surfaceareaparam: SurfaceAreaParam, monkeypatch, plasma):
     """
-    Automatically generated Regression Unit Test for plasma_surface_area().
+    Automatically generated Unit Test for plasma_surface_area().
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -354,7 +354,7 @@ class SurfaParam(NamedTuple):
 )
 def test_surfa(surfaparam: SurfaParam, monkeypatch):
     """
-    Automatically generated Regression Unit Test for surfa.
+    Automatically generated Unit Test for surfa.
 
     This test was generated using data from the FNSF IN.DAT
     (no longer exists in the PROCESS repository).

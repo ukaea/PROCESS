@@ -958,7 +958,7 @@ class InitNeoclassicsParam(NamedTuple):
 )
 def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
     """
-    Automatically generated Regression Unit Test for init_neoclassics.
+    Automatically generated Unit Test for init_neoclassics.
 
     This test was generated using data from helias5b.IN.DAT.
 

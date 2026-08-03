@@ -87,7 +87,7 @@ class CryoParam(NamedTuple):
 )
 def test_cryo(cryoparam, monkeypatch, power):
     """
-    Automatically generated Regression Unit Test for cryo.
+    Automatically generated Unit Test for cryo.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1486,7 +1486,7 @@ class PfpwrParam(NamedTuple):
 )
 def test_pfpwr(pfpwrparam, monkeypatch, power):
     """
-    Automatically generated Regression Unit Test for pfpwr.
+    Automatically generated Unit Test for pfpwr.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1632,7 +1632,7 @@ class AcpowParam(NamedTuple):
 )
 def test_acpow(acpowparam, monkeypatch, power):
     """
-    Automatically generated Regression Unit Test for acpow.
+    Automatically generated Unit Test for acpow.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1797,7 +1797,7 @@ class PlantElectricProductionParam(NamedTuple):
 )
 def test_plant_electric_production(plantelecprodparam, monkeypatch, power):
     """
-    Automatically generated Regression Unit Test for plant_electric_production.
+    Automatically generated Unit Test for plant_electric_production.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
