@@ -309,12 +309,14 @@ def coolant_pumping_power(
     etaiso: float,
     etaiso_liq: float,
 ) -> float:
-    """Calculate the coolant pumping power in MW for the first wall (FW) or breeding blanket (BZ) coolant.
+    """Calculate the coolant pumping power in MW for the first wall (FW) or breeding
+    blanket (BZ) coolant.
 
     Parameters
     ----------
     i_liquid_breeder : int
-        Switch for primary coolant or secondary coolant/breeder (1=primary He/H2O, 2=secondary PbLi/Li).
+        Switch for primary coolant or secondary coolant/breeder
+        (1=primary He/H2O, 2=secondary PbLi/Li).
     temp_coolant_pump_outlet : float
         Pump outlet temperature (K).
     temp_coolant_pump_inlet : float
@@ -365,7 +367,8 @@ def coolant_pumping_power(
         # Assume isentropic pump so that s1 = s2
         s1 = pump_outlet_fluid_properties.entropy
 
-        # Get specific enthalpy at the outlet (J/kg) before pump using pressure and entropy s1
+        # Get specific enthalpy at the outlet (J/kg) before pump using pressure and
+        # entropy s1
         pump_inlet_fluid_properties = FluidProperties.of(
             fluid_name=CoolantType(i_coolant_type).full_name,
             pressure=pres_coolant_pump_inlet,
@@ -585,7 +588,8 @@ def elbow_coeff(
         a = 0.7 + (0.35 * np.sin((deg_pipe_elbow / 90.0) * (np.pi / 180.0)))
     else:
         raise ProcessValueError(
-            "No formula for 70 <= elbow angle(deg) <= 100, only 90 deg option available in this range."
+            "No formula for 70 <= elbow angle(deg) <= 100, only 90 deg option available "
+            "in this range."
         )
 
     r_ratio = radius_pipe_elbow / dia_pipe
