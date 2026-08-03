@@ -13,6 +13,7 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.pfcoil_variables import NGC2, PFConductorModel
+from process.models.pulse import PulseTimings
 
 
 class PumpingPowerModelTypes(IntEnum):
@@ -50,7 +51,17 @@ class Power(Model):
         self.tfpwr(output=True)
 
         # Poloidal field coil power model !
-        self.pfpwr(output=True)
+        self.pfpwr(
+            output=True,
+            PulseTimings=PulseTimings(
+                t_plant_pulse_coil_precharge=self.data.times.t_plant_pulse_coil_precharge,
+                t_plant_pulse_plasma_current_ramp_up=self.data.times.t_plant_pulse_plasma_current_ramp_up,
+                t_plant_pulse_fusion_ramp=self.data.times.t_plant_pulse_fusion_ramp,
+                t_plant_pulse_burn=self.data.times.t_plant_pulse_burn,
+                t_plant_pulse_plasma_current_ramp_down=self.data.times.t_plant_pulse_plasma_current_ramp_down,
+                t_plant_pulse_dwell=self.data.times.t_plant_pulse_dwell,
+            ),
+        )
 
         # Plant AC power requirements
         self.acpow(output=True)
@@ -67,7 +78,17 @@ class Power(Model):
         self.tfpwr(output=False)
 
         # Poloidal field coil power model
-        self.pfpwr(output=False)
+        self.pfpwr(
+            output=False,
+            PulseTimings=PulseTimings(
+                t_plant_pulse_coil_precharge=self.data.times.t_plant_pulse_coil_precharge,
+                t_plant_pulse_plasma_current_ramp_up=self.data.times.t_plant_pulse_plasma_current_ramp_up,
+                t_plant_pulse_fusion_ramp=self.data.times.t_plant_pulse_fusion_ramp,
+                t_plant_pulse_burn=self.data.times.t_plant_pulse_burn,
+                t_plant_pulse_plasma_current_ramp_down=self.data.times.t_plant_pulse_plasma_current_ramp_down,
+                t_plant_pulse_dwell=self.data.times.t_plant_pulse_dwell,
+            ),
+        )
 
         # Plant heat transport part 1
         self.component_thermal_powers()
@@ -277,7 +298,7 @@ class Power(Model):
 
         return e_loss_pf_store_j + e_loss_pf_psu_j + e_loss_pf_bus_j
 
-    def pfpwr(self, output: bool):
+    def pfpwr(self, output: bool, PulseTimings: PulseTimings = PulseTimings):
         """PF coil power supply requirements
 
         This routine calculates the MVA, power and energy requirements
@@ -292,8 +313,8 @@ class Power(Model):
         output:
 
         """
+        pulse_timings = PulseTimings
         # Local aliases for readability (no functional change)
-        t_pulse_cumulative = self.data.times.t_pulse_cumulative  # [s]
         c_pf_coil_turn = self.data.pf_coil.c_pf_coil_turn  # [A]
         ind_pf_cs_plasma_mutual = self.data.pf_coil.ind_pf_cs_plasma_mutual  # [H]
         f_p_pf_energy_store_loss = (
@@ -310,15 +331,12 @@ class Power(Model):
         p_pf_circuit_resistive_peak = np.zeros((NGC2,))
         vpfi = np.zeros((NGC2,))
         psmva = np.zeros((NGC2,))
-        poloidalenergy = np.zeros((6,))
-        inductxcurrent = np.zeros((6,))
-        pfdissipation = np.zeros((5,))
+        poloidalenergy = np.zeros((pulse_timings.n_pf_active_points_total,))
+        inductxcurrent = np.zeros((pulse_timings.n_pf_active_points_total,))
+        pfdissipation = np.zeros((pulse_timings.n_pf_active_points_intervals,))
 
         #  Bus length
         pfbusl = 8.0e0 * self.data.physics.rmajor + 140.0e0
-
-        #  Find power requirements for PF coils at
-        # self.data.times.t_pulse_cumulative(ktim)
 
         #  PF coil resistive power requirements
         #  Bussing losses assume aluminium bussing with 100 A/cm**2
@@ -433,26 +451,27 @@ class Power(Model):
                     )
 
                     #  Voltage in circuit idx_pf_coil at time,
-                    # self.data.times.t_pulse_cumulative(3),
+                    # pulse_timings.pf_active_cumulative[3],
                     # due to changes in coil currents
                     vpfi[idx_pf_coil] += vpfij
 
                     #  MVA in circuit idx_pf_coil at time,
-                    # self.data.times.t_pulse_cumulative(3) due to changes in current
+                    # pulse_timings.pf_active_cumulative[3] due to changes in current
                     powpfii[idx_pf_coil] += (
                         vpfij * c_pf_coil_turn[idx_pf_coil, 2] / 1.0e6
                     )
 
                     # Term used for calculating stored energy at each time
-                    for idx_time in range(6):
+                    for idx_time in range(pulse_timings.n_pf_active_points_total):
                         inductxcurrent[idx_time] += (
                             ind_pf_cs_plasma_mutual[idx_pf_coil, idx_circuit]
                             * c_pf_coil_turn[idx_circuit, idx_time]
                         )
 
                 #  Stored magnetic energy of the poloidal field at each time
-                # idx_time is the time INDEX. 't_pulse_cumulative' is the time.
-                for idx_time in range(6):
+                # idx_time is the time INDEX. 'pulse_timings.pf_active_cumulative' is
+                # the time.
+                for idx_time in range(pulse_timings.n_pf_active_points_total):
                     poloidalenergy[idx_time] += (
                         0.5e0
                         * inductxcurrent[idx_time]
@@ -460,8 +479,8 @@ class Power(Model):
                     )
 
                 # Resistive power in circuits at times
-                # self.data.times.t_pulse_cumulative(3) and
-                # self.data.times.t_pulse_cumulative(5) respectively (MW)
+                # pulse_timings.pf_active_cumulative[3] and
+                # pulse_timings.pf_active_cumulative[5] respectively (MW)
                 powpfr += (
                     self.data.pf_coil.n_pf_coil_turns[idx_pf_coil]
                     * c_pf_coil_turn[idx_pf_coil, 2]
@@ -476,14 +495,15 @@ class Power(Model):
                 )
                 powpfi += powpfii[idx_pf_coil]
 
-        for idx_time_interval in range(5):
+        for idx_time_interval in range(pulse_timings.n_pf_active_points_intervals):
             # Stored magnetic energy of the poloidal field at each time
-            # idx_time_interval is the time index. 't_pulse_cumulative' is the time.
+            # idx_time_interval is the time index. 'pulse_timings.pf_active_cumulative'
+            # is the time.
             # Mean rate of change of stored energy between time and time+1
             if (
                 abs(
-                    t_pulse_cumulative[idx_time_interval + 1]
-                    - t_pulse_cumulative[idx_time_interval]
+                    pulse_timings.pf_active_cumulative[idx_time_interval + 1]
+                    - pulse_timings.pf_active_cumulative[idx_time_interval]
                 )
                 > 1.0e0
             ):
@@ -491,16 +511,16 @@ class Power(Model):
                     poloidalenergy[idx_time_interval + 1]
                     - poloidalenergy[idx_time_interval]
                 ) / (
-                    t_pulse_cumulative[idx_time_interval + 1]
-                    - t_pulse_cumulative[idx_time_interval]
+                    pulse_timings.pf_active_cumulative[idx_time_interval + 1]
+                    - pulse_timings.pf_active_cumulative[idx_time_interval]
                 )
             else:
                 # Flag when an interval is small or zero MDK 30/11/16
                 self.data.pf_power.poloidalpower[idx_time_interval] = 9.9e9
 
             dt_pulse_phase_s = (
-                t_pulse_cumulative[idx_time_interval + 1]
-                - t_pulse_cumulative[idx_time_interval]
+                pulse_timings.pf_active_cumulative[idx_time_interval + 1]
+                - pulse_timings.pf_active_cumulative[idx_time_interval]
             )
 
             # Electrical energy dissipated in PFC power supplies as they increase or
@@ -520,9 +540,13 @@ class Power(Model):
         # Mean power dissipated
         # The flat top duration (time 4 to 5) is the denominator, as this is the time
         # when electricity is generated.
-        if t_pulse_cumulative[4] - t_pulse_cumulative[3] > 1.0e0:
+        if (
+            pulse_timings.pf_active_cumulative[4] - pulse_timings.pf_active_cumulative[3]
+            > 1.0e0
+        ):
             pfpower = sum(pfdissipation[:]) / (
-                t_pulse_cumulative[4] - t_pulse_cumulative[3]
+                pulse_timings.pf_active_cumulative[4]
+                - pulse_timings.pf_active_cumulative[3]
             )
         else:
             # Give up when an interval is small or zero.
@@ -666,8 +690,6 @@ class Power(Model):
 
         po.ocmmnt(self.outfile, "Energy stored in poloidal magnetic field :")
         po.oblnkl(self.outfile)
-
-        # write(self.outfile,50)(self.data.times.t_pulse_cumulative(time),time=1,6)
 
     def acpow(self, output: bool):
         """AC power requirements

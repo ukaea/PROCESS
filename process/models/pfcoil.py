@@ -2728,12 +2728,12 @@ class PFCoil(Model):
             t_plant_pulse_plasma_current_ramp_down=self.data.times.t_plant_pulse_plasma_current_ramp_down,
             t_plant_pulse_dwell=self.data.times.t_plant_pulse_dwell,
         )
-        for k in range(pulse_timings.n_timing_intervals):
-            line += f"\t\t{pulse_timings.cumulative[k]:.2f}"
+        for k in range(pulse_timings.n_pf_active_points_total):
+            line += f"\t\t{pulse_timings.pf_active_cumulative[k]:.2f}"
         op.write(self.outfile, line)
 
         line = "\t\t"
-        for k in range(pulse_timings.n_timing_intervals):
+        for k in range(pulse_timings.n_pf_active_points_total):
             label = self.data.times.timelabel[k]
             line += f"\t\t{label}"
         op.write(self.outfile, line)
