@@ -55,7 +55,10 @@ class PulseTimings:
         return self.no_burn + self.t_plant_pulse_burn
 
     @property
-    def cumulative(self) -> tuple[float, float, float, float, float, float, float]:
+    def total_pulse_cumulative(
+        self,
+    ) -> tuple[float, float, float, float, float, float, float]:
+        """Calculate the cumulative timing points for all pulse phases."""
         t0 = 0.0
         t1 = t0 + self.t_plant_pulse_coil_precharge
         t2 = t1 + self.t_plant_pulse_plasma_current_ramp_up
@@ -66,12 +69,29 @@ class PulseTimings:
         return (t0, t1, t2, t3, t4, t5, t6)
 
     @property
-    def n_timing_points(self) -> int:
-        return len(self.cumulative)
+    def n_pulse_points_total(self) -> int:
+        """Calculate the total number of timing points for all pulse phases."""
+        return len(self.total_pulse_cumulative)
 
     @property
-    def n_timing_intervals(self) -> int:
-        return int(self.n_timing_points - 1)
+    def n_pulse_points_intervals_total(self) -> int:
+        """Calculate the total number of timing intervals for all pulse phases."""
+        return int(self.n_pulse_points_total - 1)
+
+    @property
+    def pf_active_cumulative(self) -> tuple[float, float, float, float, float, float]:
+        """Calculate the cumulative timing points for PF coil active phases."""
+        return self.total_pulse_cumulative[:-1]  # Exclude the last point (dwell)
+
+    @property
+    def n_pf_active_points_total(self) -> int:
+        """Calculate the total number of timing points for PF coil active phases."""
+        return len(self.pf_active_cumulative)
+
+    @property
+    def n_pf_active_points_intervals(self) -> int:
+        """Calculate the total number of timing intervals for PF coil active phases."""
+        return int(self.n_pf_active_points_total - 1)
 
 
 class Pulse(Model):
