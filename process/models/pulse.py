@@ -65,6 +65,14 @@ class PulseTimings:
         t6 = t5 + self.t_plant_pulse_dwell
         return (t0, t1, t2, t3, t4, t5, t6)
 
+    @property
+    def n_timing_points(self) -> int:
+        return len(self.cumulative)
+
+    @property
+    def n_timing_intervals(self) -> int:
+        return int(self.n_timing_points - 1)
+
 
 class Pulse(Model):
     """Class containing pulsed reactor calculations"""
