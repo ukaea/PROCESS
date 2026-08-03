@@ -91,6 +91,7 @@ from process.models.physics.profiles import (
     PlasmaProfileShapeType,
     calculate_profile_shell_contributions,
 )
+from process.models.power import PumpingPowerModelTypes
 from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
@@ -16910,10 +16911,312 @@ def plot_outboard_blanket_coolant_properties(fig: plt.Figure, m_file: MFile, sca
     fig.tight_layout()
     
 
+def plot_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: int):
+    """Function to plot plasma thermal energy profiles on the given axis.
 
-def plot_blanket_coolant_channel_structure_and_properties(
-    fig: plt.Figure, m_file: MFile, scan: int
-):
+    Parameters
+    ----------
+    axis :
+        Matplotlib axis to plot on
+    m_file :
+        MFILE
+    scan :
+        scan to read from MFILE
+    """
+    n_plasma_profile_elements = int(m_file.get("n_plasma_profile_elements", scan=scan))
+
+    eden_plasma_electrons_thermal_profile_mj = [
+        m_file.get(f"eden_plasma_electrons_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+    eden_plasma_ions_thermal_profile_mj = [
+        m_file.get(f"eden_plasma_ions_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+    eden_plasma_thermal_profile_mj = [
+        m_file.get(f"eden_plasma_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+    e_plasma_electrons_thermal_profile_mj = [
+        m_file.get(f"e_plasma_electrons_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    e_plasma_ions_thermal_profile_mj = [
+        m_file.get(f"e_plasma_ions_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+    e_plasma_thermal_profile_mj = [
+        m_file.get(f"e_plasma_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        e_plasma_electrons_thermal_profile_mj,
+        label="$W_{\\text{e}}$",
+        color="tab:blue",
+        linestyle=":",
+    )
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        e_plasma_ions_thermal_profile_mj,
+        label="$W_{\\text{i}}$",
+        color="tab:blue",
+        linestyle="--",
+    )
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        e_plasma_thermal_profile_mj,
+        label="$W_{\\text{total}}$",
+        color="tab:blue",
+        linestyle="-",
+    )
+
+    total_thermal_energy_max_index = int(np.argmax(e_plasma_thermal_profile_mj))
+    total_thermal_energy_max_rho = np.linspace(0, 1, n_plasma_profile_elements)[
+        total_thermal_energy_max_index
+    ]
+    total_thermal_energy_max = e_plasma_thermal_profile_mj[
+        total_thermal_energy_max_index
+    ]
+    axis.axvline(
+        total_thermal_energy_max_rho,
+        color="tab:red",
+        alpha=0.7,
+        label="$W_{\\text{total, peak}}$",
+    )
+    axis.axhline(
+        total_thermal_energy_max,
+        color="tab:red",
+        alpha=0.7,
+    )
+
+    density_axis = axis.twinx()
+    density_axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        eden_plasma_electrons_thermal_profile_mj,
+        label="$W_{\\text{density, e}}$",
+        color="tab:orange",
+        linestyle=":",
+    )
+    density_axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        eden_plasma_ions_thermal_profile_mj,
+        label="$W_{\\text{density, i}}$",
+        color="tab:orange",
+        linestyle="--",
+    )
+    density_axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        eden_plasma_thermal_profile_mj,
+        label="$W_{\\text{density, total}}$",
+        color="tab:orange",
+        linestyle="-",
+    )
+
+    axis.grid(True, alpha=0.3)
+    axis.minorticks_on()
+    axis.set_xlabel(r"$\rho \quad [r/a]$")
+    axis.set_xlim(left=0.0, right=1.0)
+    axis.set_ylabel(
+        "Thermal Energy [MJ]",
+        color="tab:blue",
+    )
+    axis.tick_params(axis="y", colors="tab:blue")
+    density_axis.set_ylabel(
+        "Thermal Energy Density [MJ/m$^3$]",
+        color="tab:orange",
+    )
+    density_axis.tick_params(axis="y", colors="tab:orange")
+    handles, labels = axis.get_legend_handles_labels()
+    density_handles, density_labels = density_axis.get_legend_handles_labels()
+    axis.legend(handles + density_handles, labels + density_labels)
+
+
+def plot_cumulative_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: int):
+    """Function to plot the cumulative plasma thermal energy profiles on the given axis.
+
+    Parameters
+    ----------
+    axis :
+        Matplotlib axis to plot on
+    m_file :
+        MFILE
+    scan :
+        scan to read from MFILE
+    """
+    n_plasma_profile_elements = int(m_file.get("n_plasma_profile_elements", scan=scan))
+    e_plasma_thermal_total_mj = m_file.get("e_plasma_thermal_total", scan=scan) / 1e6
+    e_plasma_electrons_thermal_profile_mj = [
+        m_file.get(f"e_plasma_electrons_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    e_plasma_ions_thermal_profile_mj = [
+        m_file.get(f"e_plasma_ions_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+    e_plasma_thermal_profile_mj = [
+        m_file.get(f"e_plasma_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        np.cumsum(e_plasma_electrons_thermal_profile_mj),
+        label="$\\Sigma W_{\\text{e}}$",
+        color="tab:blue",
+        linestyle=":",
+    )
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        np.cumsum(e_plasma_ions_thermal_profile_mj),
+        label="$\\Sigma W_{\\text{i}}$",
+        color="tab:blue",
+        linestyle="--",
+    )
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        np.cumsum(e_plasma_thermal_profile_mj),
+        label="$\\Sigma W_{\\text{total}}$",
+        color="tab:blue",
+        linestyle="-",
+    )
+    axis.axhline(
+        y=e_plasma_thermal_total_mj,
+        label="$W_{\\text{thermal,total}}$",
+        color="tab:red",
+        linestyle="--",
+    )
+    cumulative_thermal_energy_mj = np.cumsum(e_plasma_thermal_profile_mj)
+    half_thermal_energy_mj = 0.5 * e_plasma_thermal_total_mj
+    half_thermal_energy_position = np.interp(
+        half_thermal_energy_mj,
+        cumulative_thermal_energy_mj,
+        np.linspace(0, 1, n_plasma_profile_elements),
+    )
+    axis.axhline(
+        y=half_thermal_energy_mj,
+        label="$50\\%\\ W_{\\text{thermal,total}}$",
+        color="tab:green",
+        linestyle=":",
+    )
+    axis.axvline(
+        x=half_thermal_energy_position,
+        color="tab:green",
+        linestyle=":",
+    )
+
+    axis.legend()
+    axis.set_title("Thermal Energy Profiles and Cumulative Distribution")
+    axis.grid(True, alpha=0.3)
+    axis.minorticks_on()
+    axis.tick_params(axis="x", labelbottom=False)
+    axis.set_xlim(left=0.0, right=1.0)
+    axis.set_ylabel(
+        "Cumulative Thermal Energy [MJ]",
+    )
+
+
+def plot_outboard_blanket_coolant_properties(fig: plt.Figure, m_file: MFile, scan: int):
+    """Plots the properties of the outboard blanket coolant along the poloidal direction."""
+    temp_blkt_coolant_in = float(m_file.get("temp_blkt_coolant_in", scan=scan))
+    temp_blkt_coolant_out = float(m_file.get("temp_blkt_coolant_out", scan=scan))
+    pres_blkt_coolant = float(m_file.get("pres_blkt_coolant", scan=scan))
+    dens_blkt_coolant_in = PropsSI(
+        "Dmass", "T", temp_blkt_coolant_in, "P", pres_blkt_coolant, "Helium"
+    )
+    dens_blkt_coolant_out = PropsSI(
+        "Dmass", "T", temp_blkt_coolant_out, "P", pres_blkt_coolant, "Helium"
+    )
+
+    fig.clear()
+    axes = fig.subplots(2, 2)
+
+    axis = axes[0, 0]
+
+    plot = PropertyPlot("Helium", "PH", axis=axis, unit_system="SI")
+
+    # #axis.set_xscale('log')
+    axis.set_ylim(((pres_blkt_coolant) * 0.9), (pres_blkt_coolant) * 1.5)
+    # plot.set_axis_limits([None, None, (pres_blkt_coolant/1e3)*0.9, (pres_blkt_coolant/1e3)*1.1])
+
+    plot.calc_isolines(CoolProp.iT)  # Temperature
+    plot.calc_isolines(CoolProp.iSmass)  # Entropy
+    plot.calc_isolines(CoolProp.iDmass)  # Density
+    # plot.axis.relim()
+    # plot.axis.autoscale_view()
+    plot.draw()
+
+    axis.set_title("Pressure-enthalpy plot")
+
+    axis = axes[0, 1]
+    plot = PropertyPlot("Helium", "TD", axis=axis, unit_system="SI")
+
+    density_min = min(dens_blkt_coolant_in, dens_blkt_coolant_out)
+    density_max = max(dens_blkt_coolant_in, dens_blkt_coolant_out)
+    temperature_min = min(temp_blkt_coolant_in, temp_blkt_coolant_out)
+    temperature_max = max(temp_blkt_coolant_in, temp_blkt_coolant_out)
+
+    density_margin = max((density_max - density_min) * 0.2, max(density_max, 1.0) * 0.05)
+    temperature_margin = max(
+        (temperature_max - temperature_min) * 0.2,
+        max(temperature_max, 1.0) * 0.05,
+    )
+
+    axis.set_xlim(density_min - density_margin, density_max + density_margin)
+    axis.set_ylim(
+        temperature_min - temperature_margin, temperature_max + temperature_margin
+    )
+
+    plot.calc_isolines(CoolProp.iP)  # Pressure
+    plot.calc_isolines(CoolProp.iHmass)  # Enthalpy
+    plot.draw()
+
+    axis.plot(
+        [dens_blkt_coolant_in, dens_blkt_coolant_out],
+        [temp_blkt_coolant_in, temp_blkt_coolant_out],
+        color="C3",
+        marker="o",
+        linewidth=1.5,
+        label="Coolant path",
+    )
+    axis.legend(fontsize=8, loc="best")
+    axis.set_title("Temperature-density plot")
+
+    axis = axes[1, 0]
+    plot = PropertyPlot("Helium", "PD", axis=axis, unit_system="SI")
+
+    pressure_margin = max(pres_blkt_coolant * 0.1, 1.0)
+
+    axis.set_xlim(density_min - density_margin, density_max + density_margin)
+    axis.set_ylim(
+        pres_blkt_coolant - pressure_margin, pres_blkt_coolant + pressure_margin
+    )
+
+    plot.calc_isolines(CoolProp.iT)  # Temperature
+    plot.calc_isolines(CoolProp.iHmass)  # Enthalpy
+    plot.draw()
+
+    axis.plot(
+        [dens_blkt_coolant_in, dens_blkt_coolant_out],
+        [pres_blkt_coolant, pres_blkt_coolant],
+        color="C3",
+        marker="o",
+        linewidth=1.5,
+        label="Coolant path",
+    )
+    axis.legend(fontsize=8, loc="best")
+    axis.set_title("Pressure-density plot")
+
+    axes[1, 1].axis("off")
+
+    fig.tight_layout()
+    
+
+
+def plot_blanket_coolant_properties(fig: plt.Figure, m_file: MFile, scan: int):
     """Combined plot of blanket coolant channel structure and properties."""
     # Add info about the Winding Pack
     textstr_outboard_blkt = (
@@ -17642,9 +17945,11 @@ def main_plot(
     )
 
     plot_blkt_pipe_bends(_add_page("blkt_cooling"), m_file, scan)
-    plot_blanket_coolant_channel_structure_and_properties(
-        pages["blkt_cooling"], m_file, scan
-    )
+    if (
+        m_file.get("i_p_coolant_pumping", scan=scan)
+        == PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP
+    ):
+        plot_blanket_coolant_properties(pages["blkt_cooling"], m_file, scan)
 
     plot_main_power_flow(
         _add_page("main_power_flow").add_subplot(111, aspect="equal"),
