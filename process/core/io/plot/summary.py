@@ -84,6 +84,7 @@ from process.models.physics.plasma_geometry import (
     PlasmaShapeModelType,
 )
 from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.power import PumpingPowerModelTypes
 from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
@@ -16475,9 +16476,7 @@ def plot_pf_dimensions(
     axis.set_aspect("equal", adjustable="box")
 
 
-def plot_blanket_coolant_channel_structure_and_properties(
-    fig: plt.Figure, m_file: MFile, scan: int
-):
+def plot_blanket_coolant_properties(fig: plt.Figure, m_file: MFile, scan: int):
     """Combined plot of blanket coolant channel structure and properties."""
     # Add info about the Winding Pack
     textstr_outboard_blkt = (
@@ -17189,9 +17188,11 @@ def main_plot(
     )
 
     plot_blkt_pipe_bends(_add_page("blkt_cooling"), m_file, scan)
-    plot_blanket_coolant_channel_structure_and_properties(
-        pages["blkt_cooling"], m_file, scan
-    )
+    if (
+        m_file.get("i_p_coolant_pumping", scan=scan)
+        == PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP
+    ):
+        plot_blanket_coolant_properties(pages["blkt_cooling"], m_file, scan)
 
     plot_main_power_flow(
         _add_page("main_power_flow").add_subplot(111, aspect="equal"),
