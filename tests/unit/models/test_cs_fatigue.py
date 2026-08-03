@@ -41,7 +41,7 @@ class NcycleParam(NamedTuple):
 )
 def test_ncycle(ncycleparam, monkeypatch, cs_fatigue_python):
     """
-    Automatically generated Regression Unit Test for ncycle.
+    Automatically generated Unit Test for ncycle.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
