@@ -2903,7 +2903,7 @@ class TFCoil(Model):
             r_wp_outer_eff = np.double(r_tf_wp_inboard_outer)
 
         # Thickness of the layer representing the WP in stress calculations [m]
-        dr_tf_wp_eff = r_wp_outer_eff - r_wp_outer_eff
+        dr_tf_wp_eff = r_wp_outer_eff - r_wp_inner_eff
 
         # Thickness of WP with homogeneous stress property [m]
         dr_wp_layer = dr_tf_wp_eff / n_tf_graded_layers
