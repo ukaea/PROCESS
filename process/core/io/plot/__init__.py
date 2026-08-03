@@ -1,3 +1,5 @@
+"""Module containing plotting routines"""
+
 from process.core.io.plot.sankey import plot_sankey_plotly
 from process.core.io.plot.scans import plot_scan
 from process.core.io.plot.solutions import (

@@ -94,6 +94,8 @@ from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
 @dataclass
 class RadialBuild:
+    """Dataclass containing radial build dictionaries"""
+
     upper: dict[str, float]
     lower: dict[str, float]
     radial: dict[str, float]
@@ -3798,6 +3800,7 @@ def toroidal_cross_section(
 
 
 def TF_outboard(axis: plt.Axes, item, n_tf_coils, r3, r4, w, facecolor):
+    """Plot outboard TF coils"""
     spacing = 2 * np.pi / n_tf_coils
     ang = item * spacing
     dx = w * np.sin(ang)
@@ -4495,6 +4498,7 @@ def read_imprad_data(_skiprows, data_path):
 
 
 def profiles_with_pedestal(mfile, scan: int):
+    """Calculate profiles with pedestal"""
     alphan = mfile.get("alphan", scan=scan)
     alphat = mfile.get("alphat", scan=scan)
     nd_plasma_electron_on_axis = mfile.get("nd_plasma_electron_on_axis", scan=scan)
@@ -5270,6 +5274,7 @@ def plot_blanket(
 
 
 def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot first wall top down cross-section"""
     # Import required variables
     radius_fw_channel = mfile.get("radius_fw_channel", scan=scan) * 100
     dr_fw_wall = mfile.get("dr_fw_wall", scan=scan) * 100
@@ -5381,6 +5386,7 @@ def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: MFile, scan: i
 
 
 def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot first wall poloidal cross-section"""
     # Import required variables
     radius_fw_channel = mfile.get("radius_fw_channel", scan=scan)
     dr_fw_wall = mfile.get("dr_fw_wall", scan=scan)
@@ -6842,6 +6848,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
 
 def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
+    """Plot info about the resistive TF coils"""
     # Add info about the steel casing surrounding the WP
     textstr_casing = (
         f"$\\mathbf{{Casing:}}$\n \n"
@@ -10185,6 +10192,7 @@ def plot_cs_stress_time_profile(axis: plt.Axes, mfile: MFile, scan: int) -> None
 
 
 def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
+    """Plot the CS turn structure"""
     a_cs_turn = mfile.get("a_cs_turn", scan=scan)
     dz_cs_turn = mfile.get("dz_cs_turn", scan=scan)
     dr_cs_turn = mfile.get("dr_cs_turn", scan=scan)
@@ -10291,7 +10299,7 @@ def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
 
 def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme=1):
-    # Plot the TF coil poloidal cross-section
+    """Plot the TF coil poloidal cross-section"""
     plot_tf_coils(axis, mfile, scan, colour_scheme)
 
     x1 = mfile.get("r_tf_arc(1)", scan=scan)
@@ -11481,7 +11489,7 @@ def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
 
 
 def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
-    # Plot the fusion rate profiles on the given axis
+    """Plot the fusion rate profiles on the given axis"""
     fusrat_plasma_dt_profile = []
     fusrat_plasma_dd_triton_profile = []
     fusrat_plasma_dd_helion_profile = []
@@ -12051,7 +12059,7 @@ def plot_cover_page(
 
 
 def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
-    # Plot the plasma pressure profiles on the given axis
+    """Plot the plasma pressure profiles on the given axis"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     pres_plasma_profile = [
@@ -12308,6 +12316,7 @@ def plot_max_normalised_beta_comparison(axis: plt.Axes, mfile: MFile, scan: int)
 
 
 def plot_plasma_pressure_gradient_profiles(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot plasma pressure gradient profiles"""
     # Get the plasma pressure profiles
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
@@ -12432,6 +12441,7 @@ def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: MFile, scan: i
 
 
 def interp1d_profile(profile, mfile: MFile, scan: int):
+    """Interpolate profile over a grid"""
     # Get plasma geometry and boundary
     pg = plasma_geometry(
         rmajor=mfile.get("rmajor", scan=scan),
@@ -12610,7 +12620,7 @@ def plot_hts_tape_geometry(
     dx_hts_tape_hastelloy: float,
     show_legend: bool = True,
 ):
-
+    """Plot HTS tape geometry"""
     legend_label = None if show_legend else "_nolegend_"
     # Plot a rectangular tape stack in the middle
     rect = Rectangle(
@@ -12693,7 +12703,7 @@ def plot_hts_tape_geometry(
 
 
 def plot_tf_corc_cable_summary_box(axis, fig, mfile: MFile, scan: int):
-
+    """Plot TF CORC cable summary box"""
     textstr_cable = (
         f"$\\mathbf{{CroCo \\ Cable:}}$\n \n"
         f"Cable diameter: {mfile.get('dia_tf_turn_croco_cable', scan=scan) * 1e3:,.4f} mm\n"
@@ -12737,6 +12747,7 @@ def reaction_plot_grid(
     fractions=(0.25, 0.5, 0.75),
     colours=("blue", "yellow", "red"),
 ):
+    """Plot fusion reaction rate"""
     # Mask points outside the plasma boundary (optional, but grid is inside by construction)
     # Plot filled contour
 
@@ -12800,6 +12811,7 @@ def plot_fusion_rate_contours(
     mfile: MFile,
     scan: int,
 ):
+    """Plot fusion rate contours"""
     fusrat_plasma_dt_profile = []
     fusrat_plasma_dd_triton_profile = []
     fusrat_plasma_dd_helion_profile = []
@@ -12860,8 +12872,7 @@ def plot_fusion_rate_contours(
 
 
 def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
-    # Plot magnetic field profiles inside the plasma boundary
-
+    """Plot magnetic field profiles inside the plasma boundary"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     # Get toroidal magnetic field profile (in Tesla)
@@ -12940,8 +12951,7 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
 
 
 def plot_beta_profiles(axis: plt.Axes, mfile: MFile, scan: int):
-    # Plot the beta profiles on the given axis
-
+    """Plot the beta profiles on the given axis"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     beta_plasma_toroidal_profile = [
@@ -12976,6 +12986,7 @@ def plot_beta_profiles(axis: plt.Axes, mfile: MFile, scan: int):
 
 
 def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: MFile, scan: int):
+    """Plot plasma outboard toroidal ripple map"""
     r_tf_outboard_mid = mfile.get("r_tf_outboard_mid", scan=scan)
     n_tf_coils = mfile.get("n_tf_coils", scan=scan)
     rmajor = mfile.get("rmajor", scan=scan)
@@ -13290,6 +13301,7 @@ def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: MFile, scan: int):
 
 
 def plot_plasma_effective_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot plasma effective charge profile"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     n_charge_plasma_effective_vol_avg = mfile.get(
@@ -13325,6 +13337,7 @@ def plot_plasma_effective_charge_profile(axis: plt.Axes, mfile: MFile, scan: int
 
 
 def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot ion charge profile"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     # find impurity densities
@@ -13394,7 +13407,7 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
 
 
 def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: MFile, scan: int):
-    # Plot EBW and ECRH coupling efficiency graph
+    """Plot EBW and ECRH coupling efficiency graph"""
     ebw = ElectronBernstein(plasma_profile=0)
     ecrg = ElectronCyclotron(plasma_profile=0)
     b_on_axis = mfile.get("b_plasma_toroidal_on_axis", scan=scan)
@@ -14973,6 +14986,11 @@ def plot_quench_time_evolution(
     show:
         Whether to display the plot with Matplotlib. Defaults to False to avoid
         GUI backend warnings in non-interactive environments.
+
+    Raises
+    ------
+    ValueError
+        If only one set of axes is provided, instead of both or neither
     """
     figure = None
     if axes_1 is None and axes_2 is None:
@@ -15279,6 +15297,7 @@ def plot_cs_radial_stress_profile(
     j_cs: float,
     b_cs_inner: float,
 ):
+    """Plot CS radial stress profile"""
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
 
@@ -15320,6 +15339,7 @@ def plot_cs_hoop_stress_profile(
     j_cs: float,
     b_cs_inner: float,
 ):
+    """Plot CS hoop stress profile"""
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
 
@@ -15363,6 +15383,7 @@ def plot_cs_radial_stress_contour_profile(
     b_cs_inner: float,
     colorbar_axis: plt.Axes | None = None,
 ):
+    """Plot CS radial stress contour profile"""
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
@@ -15454,6 +15475,7 @@ def plot_cs_hoop_stress_contour_profile(
     b_cs_inner: float,
     colorbar_axis: plt.Axes | None = None,
 ):
+    """Plot CS hoop stress contour profile"""
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
@@ -15544,6 +15566,7 @@ def plot_cs_vertical_stress_profile(
     mfile: MFile,
     scan: int,
 ):
+    """Plot CS vertical stress profile"""
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
 
     stress_z_profile = np.array([
@@ -15576,6 +15599,7 @@ def plot_vertical_stress_contour_profile(
     scan: int,
     colorbar_axis: plt.Axes | None = None,
 ):
+    """Vertical stress contour plot"""
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
@@ -15657,6 +15681,7 @@ def plot_cs_tresca_2d_contour(
     scan: int,
     colorbar_axis: plt.Axes | None = None,
 ):
+    """CS Tresca stress contour plot"""
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
@@ -15767,6 +15792,7 @@ def plot_cs_von_mises_2d_contour(
     scan: int,
     colorbar_axis: plt.Axes | None = None,
 ):
+    """CS Von Mises stress contour plot"""
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
@@ -15918,7 +15944,13 @@ def main_plot(
     pages = {}
 
     def _add_page(name: str | None = None):
-        """Add a page to the dictionary of pages. If no name is provided, then assign the lowest unused number."""
+        """Add a page to the dictionary of pages. If no name is provided, then assign the lowest unused number.
+
+        Raises
+        ------
+        KeyError
+            If a page number has already been used
+        """
         if name is None:
             prev_index = max((int(k) for k in pages if k.isnumeric()), default=0)
             name = str(prev_index + 1)
@@ -16481,7 +16513,7 @@ def main_plot(
 
 
 def create_thickness_builds(m_file, scan: int):
-    # Build the dictionaries of radial and vertical build values and cumulative values
+    """Create the dictionaries of radial and vertical build values and cumulative values"""
     if int(m_file.get("i_single_null", scan=scan)) == 0:
         vertical_upper = [
             "z_plasma_xpoint_upper",
@@ -16557,6 +16589,7 @@ def plot_summary(
     output_format: str = "pdf",
     show: bool = False,
 ):
+    """Create the summary.pdf"""
 
     def add_page_footer(
         fig: plt.Figure, page_number: int, total_pages: int, run_label: str

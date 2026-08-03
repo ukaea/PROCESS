@@ -1,4 +1,4 @@
-"""PROCESS cli"""
+"""PROCESS plotting cli"""
 
 from pathlib import Path
 

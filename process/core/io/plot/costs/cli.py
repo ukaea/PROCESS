@@ -1,3 +1,5 @@
+"""PROCESS costs plotting CLI"""
+
 import sys
 
 import click

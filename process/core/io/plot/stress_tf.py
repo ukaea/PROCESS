@@ -16,6 +16,11 @@ import matplotlib.pyplot as plt
 
 @dataclass
 class StressPlotConfig:
+    """
+    Dataclass containing TF stress plot
+    configuration parameters
+    """
+
     axis_font_size: float
     axis_tick_size: int = 16
     legend_size: int = 12
@@ -24,6 +29,7 @@ class StressPlotConfig:
     outdir: Path | None = None
 
     def __post_init__(self):
+        """Set the output directory"""
         if self.outdir is None:
             self.outdir = Path.cwd()
         if not Path(self.outdir).is_dir():
@@ -38,6 +44,7 @@ def plot_stress(
     input_file,
     plot_conf: StressPlotConfig | dict | None = None,
 ):
+    """Create the relevant stress plots"""
     if plot_conf is None:
         plot_conf = StressPlotConfig(axis_font_size)
     elif isinstance(plot_conf, dict):
@@ -300,6 +307,7 @@ def terminal_output(
     toroidal_strain,
     vertical_strain,
 ):
+    """Output TF stress details to terminal"""
     ii_ins = 0
     ii_mids = int(0.5 * float(n_radial_array_layer))
     ii_outs = n_radial_array_layer - 1
@@ -385,6 +393,7 @@ def stress_summary(
     save_format,
     plot_conf,
 ):
+    """Plot structural stress"""
     lw = plot_conf.line_width
     ms = plot_conf.mark_size
     ats = plot_conf.axis_tick_size
@@ -458,6 +467,7 @@ def smeared_stress_summary(
     save_format,
     plot_conf,
 ):
+    """Plot smeared stress"""
     lw = plot_conf.line_width
     ms = plot_conf.mark_size
     ats = plot_conf.axis_tick_size
@@ -547,6 +557,7 @@ def strain_summary(
     save_format,
     plot_conf,
 ):
+    """Plot TF strain"""
     lw = plot_conf.line_width
     ms = plot_conf.mark_size
     ats = plot_conf.axis_tick_size
@@ -598,6 +609,7 @@ def strain_summary(
 
 
 def displacement(n_layers, radius, radial_displacement, save_format, plot_conf):
+    """Plot the radial displacement"""
     plt.plot(radius[0], radial_displacement[0], color="dodgerblue")
     for ii in range(1, n_layers):
         plt.plot(radius[ii], radial_displacement[ii], color="dodgerblue")
