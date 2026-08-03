@@ -871,7 +871,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             if output:
                 po.ovarre(
                     self.outfile,
-                    "Mechanical pumping power for FW and blanket cooling loop including heat exchanger (MW)",
+                    "Mechanical pumping power for FW and blanket cooling loop including "
+                    "heat exchanger (MW)",
                     "(p_fw_blkt_coolant_pump_mw)",
                     self.data.primary_pumping.p_fw_blkt_coolant_pump_mw,
                     "OP ",

@@ -16925,13 +16925,19 @@ def main_plot(
     )
 
     plot_main_power_flow(
-        figs[36].add_subplot(111, aspect="equal"), m_file, scan, figs[36]
+        _add_page("main_power_flow").add_subplot(111, aspect="equal"),
+        m_file,
+        scan,
+        pages["main_power_flow"],
     )
 
-    ax24 = figs[37].add_subplot(111)
+    ax24 = _add_page("power_profile_over_time").add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[37])
+    plot_system_power_profiles_over_time(
+        ax24, m_file, scan, pages["power_profile_over_time"]
+    )
+    return list(pages.values())
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -17035,10 +17041,6 @@ def plot_summary(
             va="bottom",
             color="dimgray",
         )
-
-    # create main plot
-    # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(38)]
 
     # run main_plot
     mfile_obj = MFile(mfile) if mfile else MFile("MFILE.DAT")
