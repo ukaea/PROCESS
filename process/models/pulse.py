@@ -1,6 +1,7 @@
 """Module containing the Pulse class for pulsed reactor calculations."""
 
 import logging
+from dataclasses import dataclass
 
 from process.core import constants
 from process.core import process_output as po
@@ -8,6 +9,61 @@ from process.core.model import Model
 from process.data_structure.pfcoil_variables import PFConductorModel
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass(frozen=True, slots=True)
+class PulseTimings:
+    """Class to hold the timing parameters for a pulsed reactor."""
+
+    t_plant_pulse_coil_precharge: float
+    """Time for coil precharge (s)"""
+    t_plant_pulse_plasma_current_ramp_up: float
+    """Time for plasma current ramp-up (s)"""
+    t_plant_pulse_fusion_ramp: float
+    """Time for fusion ramp (s)"""
+    t_plant_pulse_burn: float
+    """Time for burn (s)"""
+    t_plant_pulse_plasma_current_ramp_down: float
+    """Time for plasma current ramp-down (s)"""
+    t_plant_pulse_dwell: float
+    """Time for dwell (s)"""
+
+    @property
+    def plasma_present(self) -> float:
+        """Calculate the total time during which plasma is present in the reactor."""
+        return (
+            self.t_plant_pulse_plasma_current_ramp_up
+            + self.t_plant_pulse_fusion_ramp
+            + self.t_plant_pulse_burn
+            + self.t_plant_pulse_plasma_current_ramp_down
+        )
+
+    @property
+    def no_burn(self) -> float:
+        """Calculate the total time excluding the burn phase."""
+        return (
+            self.t_plant_pulse_coil_precharge
+            + self.t_plant_pulse_plasma_current_ramp_up
+            + self.t_plant_pulse_plasma_current_ramp_down
+            + self.t_plant_pulse_dwell
+            + self.t_plant_pulse_fusion_ramp
+        )
+
+    @property
+    def total(self) -> float:
+        """Calculate the total time including the burn phase."""
+        return self.no_burn + self.t_plant_pulse_burn
+
+    @property
+    def cumulative(self) -> tuple[float, float, float, float, float, float, float]:
+        t0 = 0.0
+        t1 = t0 + self.t_plant_pulse_coil_precharge
+        t2 = t1 + self.t_plant_pulse_plasma_current_ramp_up
+        t3 = t2 + self.t_plant_pulse_fusion_ramp
+        t4 = t3 + self.t_plant_pulse_burn
+        t5 = t4 + self.t_plant_pulse_plasma_current_ramp_down
+        t6 = t5 + self.t_plant_pulse_dwell
+        return (t0, t1, t2, t3, t4, t5, t6)
 
 
 class Pulse(Model):
