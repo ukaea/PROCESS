@@ -3013,7 +3013,8 @@ class BlanketLibrary(Model):
         nopolchan: int,
         label: str,
     ) -> tuple[float, CoolantFrictionLossParameters]:
-        """Calculate the total pressure drop (Pa) for coolant flow in the first wall (FW) and breeding blanket (BZ).
+        """Calculate the total pressure drop (Pa) for coolant flow in the first wall
+        (FW) and breeding blanket (BZ).
 
         This includes frictional losses and, for liquid breeder coolants,
         magnetohydrodynamic (MHD) losses.
