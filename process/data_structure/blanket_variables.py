@@ -1,4 +1,20 @@
-"""Module containing variables relating to the blanket routines"""
+"""Module containing variables relating to the blanket routines
+
+Acronyms for this module:
+
+     BB          Breeding Blanket
+     FW          First Wall
+     BZ          Breeder Zone
+     MF/BSS      Manifold/Back Supporting Structure
+     LT          Low Temperature
+     HT          High Temperature
+     MMS         Multi Module Segment
+     SMS         Single Module Segment
+     IB          Inboard
+     OB          Outboard
+     HCD         Heating & Current Drive
+     FCI         Flow Channel Insert
+"""
 
 from dataclasses import dataclass
 from enum import IntEnum
