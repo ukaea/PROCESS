@@ -4102,7 +4102,7 @@ class PlasmaConfinementTime(Model):
 
     @staticmethod
     def ncst_confinement_time(
-        pcur: float,
+        cur_plasma_ma: float,
         b_plasma_toroidal_on_axis: float,
         p_plasma_loss_mw: float,
         nd_plasma_electron_line_19: float,
@@ -4111,7 +4111,7 @@ class PlasmaConfinementTime(Model):
 
         Parameters
         ----------
-        pcur :
+        cur_plasma_ma :
             Plasma current [MA]
         b_plasma_toroidal_on_axis :
             Toroidal magnetic field [T]
@@ -4140,7 +4140,7 @@ class PlasmaConfinementTime(Model):
         """
         return (
             0.11
-            * pcur**0.33
+            * cur_plasma_ma**0.33
             * b_plasma_toroidal_on_axis**1.03
             * p_plasma_loss_mw ** (-0.07)
             * nd_plasma_electron_line_19 ** (-0.01)
