@@ -16,8 +16,7 @@ import matplotlib.pyplot as plt
 
 @dataclass
 class StressPlotConfig:
-    """
-    Dataclass containing TF stress plot
+    """Dataclass containing TF stress plot
     configuration parameters
     """
 
