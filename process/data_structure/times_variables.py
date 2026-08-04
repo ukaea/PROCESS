@@ -33,11 +33,6 @@ class TimesData:
     t_plant_pulse_fusion_ramp: float = 10.0
     """time for plasma temperature and density rise to full values (s)"""
 
-    t_pulse_cumulative: list[float] = field(
-        default_factory=lambda: np.zeros(6, dtype=np.float64)
-    )
-    """array of time points during plasma pulse (s)"""
-
     t_plant_pulse_plasma_current_ramp_up: float = 30.0
     """Plant pulse time for plasma current to ramp up to approx. full value (s) (calculated if `i_pulsed_plant=0`)
       (`iteration variable 65`)"""
