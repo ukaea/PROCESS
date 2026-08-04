@@ -1,4 +1,4 @@
-"""Module containing variables relating to the costs 2015 routines"""
+"""Module containing variables for the costs 2015 models"""
 
 from dataclasses import dataclass, field
 

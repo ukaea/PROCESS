@@ -1,4 +1,4 @@
-"""Module containing variables relating to the numerics"""
+"""Module containing variables for the numerics"""
 
 from dataclasses import dataclass, field
 from enum import IntEnum

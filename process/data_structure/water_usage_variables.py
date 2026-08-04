@@ -1,4 +1,4 @@
-"""Module containing variables relating to the water usage routines
+"""Module containing variables for the water usage models
 
 References
 ----------

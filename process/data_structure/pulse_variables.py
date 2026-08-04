@@ -1,4 +1,4 @@
-"""Module containing variables relating to the pulse routines"""
+"""Module containing variables for the pulse models"""
 
 from dataclasses import dataclass
 

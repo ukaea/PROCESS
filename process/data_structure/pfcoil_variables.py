@@ -1,4 +1,4 @@
-"""Module containing variables relating to the PF coil routines"""
+"""Module containing variables for the PF coil models"""
 
 from dataclasses import dataclass, field
 from enum import IntEnum

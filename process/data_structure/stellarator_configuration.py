@@ -1,4 +1,4 @@
-"""Module containing variables relating to the stellarator configuration routines"""
+"""Module containing variables for the stellarator configuration models"""
 
 from dataclasses import dataclass
 

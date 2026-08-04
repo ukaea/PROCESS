@@ -1,4 +1,4 @@
-"""Module containing variables relating to the power routines"""
+"""Module containing variables for the power models"""
 
 from dataclasses import dataclass, field
 

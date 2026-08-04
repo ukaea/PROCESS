@@ -1,4 +1,4 @@
-"""Module containing variables relating to the costs routines"""
+"""Module containing variables for the costs models"""
 
 from dataclasses import dataclass, field
 from enum import IntEnum

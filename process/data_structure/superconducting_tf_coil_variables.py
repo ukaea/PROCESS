@@ -1,4 +1,4 @@
-"""Module containing variables relating to the superconducting TF coil routines"""
+"""Module containing variables for the superconducting TF coil models"""
 
 from dataclasses import dataclass
 from enum import IntEnum

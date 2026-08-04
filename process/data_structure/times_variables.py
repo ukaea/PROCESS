@@ -1,4 +1,4 @@
-"""Module containing variables relating to the times routines"""
+"""Module containing variables for the times models"""
 
 from dataclasses import dataclass, field
 

@@ -1,4 +1,4 @@
-"""Module containing variables relating to the first wall, blanket and shield components"""
+"""Module containing variables for the first wall, blanket and shield components"""
 
 from dataclasses import dataclass, field
 

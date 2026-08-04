@@ -1,4 +1,4 @@
-"""Module containing variables relating to the plasma routines"""
+"""Module containing variables for the plasma models"""
 
 from dataclasses import dataclass, field
 from enum import IntEnum

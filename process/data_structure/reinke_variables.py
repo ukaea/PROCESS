@@ -1,4 +1,4 @@
-"""Module containing variables relating to the Reinke routines"""
+"""Module containing variables for the Reinke models"""
 
 from dataclasses import dataclass
 

@@ -1,4 +1,4 @@
-"""Module containing variables relating to the primary pumping routines"""
+"""Module containing variables for the primary pumping models"""
 
 from dataclasses import dataclass
 

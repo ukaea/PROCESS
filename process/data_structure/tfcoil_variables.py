@@ -1,4 +1,4 @@
-"""Module containing variables relating to the TF coil routines"""
+"""Module containing variables for the TF coil models"""
 
 from dataclasses import dataclass, field
 

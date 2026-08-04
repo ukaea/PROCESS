@@ -1,4 +1,4 @@
-"""Module containing variables relating to the PF coil power routines"""
+"""Module containing variables for the PF coil power models"""
 
 from dataclasses import dataclass, field
 

@@ -1,4 +1,4 @@
-"""Module containing variables relating to the CCFE HCPB routines"""
+"""Module containing variables for the CCFE HCPB models"""
 
 from dataclasses import dataclass
 

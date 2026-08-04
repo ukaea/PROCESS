@@ -1,4 +1,4 @@
-"""Module containing variables relating to the  heat transport system
+"""Module containing variables for the heat transport system
 of a fusion power plant, and also those for a hydrogen production plant.
 """
 

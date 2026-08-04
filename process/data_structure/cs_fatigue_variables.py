@@ -1,4 +1,4 @@
-"""Module containing variables relating to the CS fatigue routines"""
+"""Module containing variables for the CS fatigue models"""
 
 from dataclasses import dataclass
 

@@ -1,4 +1,4 @@
-"""Module containing variables relating to the buildings routines"""
+"""Module containing variables for the buildings models"""
 
 from dataclasses import dataclass
 from enum import IntEnum

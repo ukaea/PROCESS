@@ -1,4 +1,4 @@
-"""Module containing variables relating to the neoclassical computations
+"""Module containing variables for the neoclassical computations
 
 Formulas used are described in:
 Beidler (2013), https://doi.org/10.1088/0029-5515/51/7/076001

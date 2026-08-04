@@ -1,4 +1,4 @@
-"""Module containing variables relating to the current drive system routines"""
+"""Module containing variables for the current drive system models"""
 
 from dataclasses import dataclass
 

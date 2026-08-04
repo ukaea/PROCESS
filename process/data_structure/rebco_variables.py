@@ -1,4 +1,4 @@
-"""Module containing variables relating to the REBCO routines"""
+"""Module containing variables for the REBCO models"""
 
 from dataclasses import dataclass
 

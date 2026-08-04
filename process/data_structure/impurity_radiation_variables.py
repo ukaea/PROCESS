@@ -1,4 +1,4 @@
-"""Module containing variables relating to the impurity radiation routines"""
+"""Module containing variables for the impurity radiation models"""
 
 from dataclasses import dataclass, field
 

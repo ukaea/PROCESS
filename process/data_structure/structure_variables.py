@@ -1,4 +1,4 @@
-"""Module containing variables relating to the structure routines"""
+"""Module containing variables for the structure models"""
 
 from dataclasses import dataclass
 

@@ -1,4 +1,4 @@
-"""Module containing global variables relating to the Inertial Fusion Energy (IFE) routines
+"""Module containing global variables for the Inertial Fusion Energy (IFE) models
 
 
 

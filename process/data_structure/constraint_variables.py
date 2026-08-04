@@ -1,4 +1,4 @@
-"""Module containing variables relating to the constraint routines"""
+"""Module containing variables for the constraint models"""
 
 from dataclasses import dataclass
 

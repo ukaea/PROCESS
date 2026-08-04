@@ -1,4 +1,4 @@
-"""Module containing variables relating to the blanket routines
+"""Module containing variables for the blanket models
 
 Acronyms for this module:
 

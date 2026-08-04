@@ -1,4 +1,4 @@
-"""Module containing variables relating to the vacuum vessel routines"""
+"""Module containing variables for the vacuum vessel models"""
 
 from dataclasses import dataclass
 from enum import IntEnum

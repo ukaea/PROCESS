@@ -1,4 +1,4 @@
-"""Module containing variables relating to the Dual Coolant Lead Lithium (DCLL) routines
+"""Module containing variables for the Dual Coolant Lead Lithium (DCLL) models
 
 Acronyms for this module:
 

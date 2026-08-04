@@ -1,4 +1,4 @@
-"""Module containing variables relating to the divertor routines"""
+"""Module containing variables for the divertor models"""
 
 from dataclasses import dataclass
 from enum import IntEnum

@@ -1,4 +1,4 @@
-"""Module containing variables relating to the first wall routines"""
+"""Module containing variables for the first wall models"""
 
 from dataclasses import dataclass
 
