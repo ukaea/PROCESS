@@ -9074,7 +9074,7 @@ def plot_confinement_time_comparison(
     """
     rminor = mfile.get("rminor", scan=scan)
     rmajor = mfile.get("rmajor", scan=scan)
-    c_plasma_ma = mfile.get("plasma_current_ma", scan=scan)
+    cur_plasma_ma = mfile.get("plasma_current_ma", scan=scan)
     kappa95 = mfile.get("kappa95", scan=scan)
     nd_plasma_electron_line_20 = mfile.get("nd_plasma_electron_line", scan=scan) / 1e20
     afuel = mfile.get("m_fuel_amu", scan=scan)
@@ -9091,7 +9091,7 @@ def plot_confinement_time_comparison(
 
     # Calculate confinement times using the scan data
     iter_89p = confine.iter_89p_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         rmajor=rmajor,
         rminor=rminor,
         kappa=kappa,
@@ -9101,7 +9101,7 @@ def plot_confinement_time_comparison(
         p_plasma_loss_mw=p_plasma_separatrix_mw,
     )
     iter_89_0 = confine.iter_89_0_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         rmajor=rmajor,
         rminor=rminor,
         kappa=kappa,
@@ -9111,7 +9111,7 @@ def plot_confinement_time_comparison(
         p_plasma_loss_mw=p_plasma_separatrix_mw,
     )
     iter_h90_p = confine.iter_h90_p_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         rmajor=rmajor,
         rminor=rminor,
         kappa=kappa,
@@ -9121,7 +9121,7 @@ def plot_confinement_time_comparison(
         p_plasma_loss_mw=p_plasma_separatrix_mw,
     )
     iter_h90_p_amended = confine.iter_h90_p_amended_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         afuel=afuel,
         rmajor=rmajor,
@@ -9129,7 +9129,7 @@ def plot_confinement_time_comparison(
         kappa=kappa,
     )
     iter_93h = confine.iter_93h_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         afuel=afuel,
@@ -9139,7 +9139,7 @@ def plot_confinement_time_comparison(
         kappa=kappa,
     )
     iter_h97p = confine.iter_h97p_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         nd_plasma_electron_line_19=nd_plasma_electron_line_19,
@@ -9149,7 +9149,7 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     iter_h97p_elmy = confine.iter_h97p_elmy_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         nd_plasma_electron_line_19=nd_plasma_electron_line_19,
@@ -9159,7 +9159,7 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     iter_96p = confine.iter_96p_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         kappa95=kappa95,
         rmajor=rmajor,
@@ -9169,7 +9169,7 @@ def plot_confinement_time_comparison(
         p_plasma_loss_mw=p_plasma_separatrix_mw,
     )
     iter_pb98py = confine.iter_pb98py_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
@@ -9179,7 +9179,7 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     iter_ipb98y = confine.iter_ipb98y_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
@@ -9189,7 +9189,7 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     iter_ipb98y1 = confine.iter_ipb98y1_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
@@ -9199,7 +9199,7 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     iter_ipb98y2 = confine.iter_ipb98y2_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
@@ -9209,7 +9209,7 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     iter_ipb98y3 = confine.iter_ipb98y3_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
@@ -9219,7 +9219,7 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     iter_ipb98y4 = confine.iter_ipb98y4_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
@@ -9229,7 +9229,7 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     petty08 = confine.petty08_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
@@ -9238,7 +9238,7 @@ def plot_confinement_time_comparison(
         aspect=aspect,
     )
     menard_nstx = confine.menard_nstx_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
@@ -9248,7 +9248,7 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     menard_nstx_petty08 = confine.menard_nstx_petty08_hybrid_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
@@ -9258,7 +9258,7 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     itpa20 = confine.itpa20_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
@@ -9269,7 +9269,7 @@ def plot_confinement_time_comparison(
         aion=m_ions_total_amu,
     )
     itpa20_ilc = confine.itpa20_il_confinement_time(
-        c_plasma_ma=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         nd_plasma_electron_line_19=nd_plasma_electron_line_19,
