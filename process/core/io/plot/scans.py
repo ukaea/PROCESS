@@ -191,7 +191,13 @@ def plot_scan(
     twod_contour: bool = False,
     stack_plots: bool = False,
 ):
-    """Main plot scans script."""
+    """Main plot scans script.
+
+    Raises
+    ------
+    ValueError
+        If stack_plots does not have at least two output variables
+    """
     outputdir = outputdir or Path.cwd()
     input_files = mfiles if isinstance(mfiles, Iterable) else [mfiles]
 
