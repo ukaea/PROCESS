@@ -79,6 +79,7 @@ from process.models.physics.plasma_geometry import (
     PlasmaGeometryModelType,
     PlasmaShapeModelType,
 )
+from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
     TFCoilShapeModel,
@@ -3200,25 +3201,20 @@ def plot_main_plasma_information(
 
 def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     """Plots the current profiles over time for PF circuits, CS coil, and plasma."""
-    t_plant_pulse_coil_precharge = mfile.get("t_plant_pulse_coil_precharge", scan=scan)
-    t_plant_pulse_plasma_current_ramp_up = mfile.get(
-        "t_plant_pulse_plasma_current_ramp_up", scan=scan
+    pulse_timings = PulseTimings(
+        t_plant_pulse_coil_precharge=mfile.get(
+            "t_plant_pulse_coil_precharge", scan=scan
+        ),
+        t_plant_pulse_plasma_current_ramp_up=mfile.get(
+            "t_plant_pulse_plasma_current_ramp_up", scan=scan
+        ),
+        t_plant_pulse_fusion_ramp=mfile.get("t_plant_pulse_fusion_ramp", scan=scan),
+        t_plant_pulse_burn=mfile.get("t_plant_pulse_burn", scan=scan),
+        t_plant_pulse_plasma_current_ramp_down=mfile.get(
+            "t_plant_pulse_plasma_current_ramp_down", scan=scan
+        ),
+        t_plant_pulse_dwell=mfile.get("t_plant_pulse_dwell", scan=scan),
     )
-    t_plant_pulse_fusion_ramp = mfile.get("t_plant_pulse_fusion_ramp", scan=scan)
-    t_plant_pulse_burn = mfile.get("t_plant_pulse_burn", scan=scan)
-    t_plant_pulse_plasma_current_ramp_down = mfile.get(
-        "t_plant_pulse_plasma_current_ramp_down", scan=scan
-    )
-
-    # Define a cumulative sum list for each point in the pulse
-    t_steps = np.cumsum([
-        0,
-        t_plant_pulse_coil_precharge,
-        t_plant_pulse_plasma_current_ramp_up,
-        t_plant_pulse_fusion_ramp,
-        t_plant_pulse_burn,
-        t_plant_pulse_plasma_current_ramp_down,
-    ])
 
     # Find the number of PF circuits, n_pf_cs_plasma_circuits includes the CS and plasma circuits
     n_pf_cs_plasma_circuits = mfile.get("n_pf_cs_plasma_circuits", scan=scan)
@@ -3228,11 +3224,12 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     pf_circuits = {}
     for i in range(int(n_pf_cs_plasma_circuits - 2)):
         pf_circuits[f"PF Circuit {i}"] = [
-            mfile.get(f"pfc{i}t{j}", scan=scan) for j in range(6)
+            mfile.get(f"pfc{i}t{j}", scan=scan)
+            for j in range(pulse_timings.n_pf_active_points_total)
         ]
         # Change from 0 to 1 index to align with poloidal cross-section plot numbering
         axis.plot(
-            t_steps,
+            pulse_timings.pf_active_cumulative,
             pf_circuits[f"PF Circuit {i}"],
             label=f"PF Coil {i + 1}",
             linestyle="--",
@@ -3240,8 +3237,16 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
 
     # Since CS may not always be present try to retireve values
     try:
-        cs_circuit = [mfile.get(f"cs_t{i}", scan=scan) for i in range(6)]
-        axis.plot(t_steps, cs_circuit, label="CS Coil", linestyle="--")
+        cs_circuit = [
+            mfile.get(f"cs_t{i}", scan=scan)
+            for i in range(pulse_timings.n_pf_active_points_total)
+        ]
+        axis.plot(
+            pulse_timings.pf_active_cumulative,
+            cs_circuit,
+            label="CS Coil",
+            linestyle="--",
+        )
     except KeyError:
         pass
 
@@ -3253,7 +3258,7 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     plasmat5 = mfile.get("plasmat5", scan=scan)
 
     # x-coirdinates for the plasma current
-    x_plasma = t_steps[1:]
+    x_plasma = pulse_timings.pf_active_cumulative[1:]
     # x-coirdinates for the plasma current
     y_plasma = [plasmat1, plasmat2, plasmat3, plasmat4, plasmat5]
 
@@ -3266,7 +3271,7 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     # Annotate key points
     # Create a secondary x-axis for annotations
     secax = axis.secondary_xaxis("bottom")
-    secax.set_xticks(t_steps)
+    secax.set_xticks(pulse_timings.pf_active_cumulative)
     secax.set_xticklabels(
         [
             "Precharge",
@@ -3299,37 +3304,34 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
 
 def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int, fig):
     """Plots the power profiles over time for various systems."""
-    t_precharge = mfile.get("t_plant_pulse_coil_precharge", scan=scan)
-    t_current_ramp_up = mfile.get("t_plant_pulse_plasma_current_ramp_up", scan=scan)
-    t_fusion_ramp = mfile.get("t_plant_pulse_fusion_ramp", scan=scan)
-    t_burn = mfile.get("t_plant_pulse_burn", scan=scan)
-    t_ramp_down = mfile.get("t_plant_pulse_plasma_current_ramp_down", scan=scan)
-    t_between_pulse = mfile.get("t_plant_pulse_dwell", scan=scan)
-
-    # Define a cumulative sum list for each point in the pulse
-    t_steps = np.cumsum([
-        0,
-        t_precharge,
-        t_current_ramp_up,
-        t_fusion_ramp,
-        t_burn,
-        t_ramp_down,
-        t_between_pulse,
-    ])
+    pulse_timings = PulseTimings(
+        t_plant_pulse_coil_precharge=mfile.get(
+            "t_plant_pulse_coil_precharge", scan=scan
+        ),
+        t_plant_pulse_plasma_current_ramp_up=mfile.get(
+            "t_plant_pulse_plasma_current_ramp_up", scan=scan
+        ),
+        t_plant_pulse_fusion_ramp=mfile.get("t_plant_pulse_fusion_ramp", scan=scan),
+        t_plant_pulse_burn=mfile.get("t_plant_pulse_burn", scan=scan),
+        t_plant_pulse_plasma_current_ramp_down=mfile.get(
+            "t_plant_pulse_plasma_current_ramp_down", scan=scan
+        ),
+        t_plant_pulse_dwell=mfile.get("t_plant_pulse_dwell", scan=scan),
+    )
 
     # Create empty arrays for the power at each time step for each system
     power_profiles = {
-        "Fusion Power": np.zeros(len(t_steps)),
-        "Plant Base Load": np.zeros(len(t_steps)),
-        "Cryo Plant": np.zeros(len(t_steps)),
-        "Tritium Plant": np.zeros(len(t_steps)),
-        "Vacuum Pumps": np.zeros(len(t_steps)),
-        "TF Coil Supplies": np.zeros(len(t_steps)),
-        "PF Coil Supplies": np.zeros(len(t_steps)),
-        "Coolant Pump Elec Total": np.zeros(len(t_steps)),
-        "HCD Electric Total": np.zeros(len(t_steps)),
-        "Gross Electric Power": np.zeros(len(t_steps)),
-        "Net Electric Power": np.zeros(len(t_steps)),
+        "Fusion Power": np.zeros(pulse_timings.n_pulse_points_total),
+        "Plant Base Load": np.zeros(pulse_timings.n_pulse_points_total),
+        "Cryo Plant": np.zeros(pulse_timings.n_pulse_points_total),
+        "Tritium Plant": np.zeros(pulse_timings.n_pulse_points_total),
+        "Vacuum Pumps": np.zeros(pulse_timings.n_pulse_points_total),
+        "TF Coil Supplies": np.zeros(pulse_timings.n_pulse_points_total),
+        "PF Coil Supplies": np.zeros(pulse_timings.n_pulse_points_total),
+        "Coolant Pump Elec Total": np.zeros(pulse_timings.n_pulse_points_total),
+        "HCD Electric Total": np.zeros(pulse_timings.n_pulse_points_total),
+        "Gross Electric Power": np.zeros(pulse_timings.n_pulse_points_total),
+        "Net Electric Power": np.zeros(pulse_timings.n_pulse_points_total),
     }
 
     # Fill power_profiles arrays using vectorized assignment
@@ -3346,7 +3348,7 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
         ("Coolant Pump Elec Total", "p_coolant_pump_elec_total_profile_mw"),
         ("HCD Electric Total", "p_hcd_electric_total_profile_mw"),
     ]:
-        for time in range(len(t_steps)):
+        for time in range(pulse_timings.n_pulse_points_total):
             power_profiles[label][time] = mfile.get(f"{key}{time}", scan=scan)
 
     # Define line styles for each system
@@ -3368,7 +3370,9 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
     # Plot each system's power profile over time with different line styles
     for label, powers in power_profiles.items():
         style = line_styles.get(label, "-")
-        axis.plot(t_steps, powers, label=label, linestyle=style)
+        axis.plot(
+            pulse_timings.total_pulse_cumulative, powers, label=label, linestyle=style
+        )
 
     # Move the x-axis to 0 on the y-axis
     axis.spines["bottom"].set_position("zero")
@@ -3376,7 +3380,7 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
     # Annotate key points
     # Create a secondary x-axis for annotations
     secax = axis.secondary_xaxis("bottom")
-    secax.set_xticks(t_steps)
+    secax.set_xticks(pulse_timings.total_pulse_cumulative)
     secax.set_xticklabels(
         [
             "Precharge",
@@ -10137,39 +10141,30 @@ def plot_cs_coil_structure(
 
 def plot_cs_stress_time_profile(axis: plt.Axes, mfile: MFile, scan: int) -> None:
     """Function to plot the time profile of the CS stress during the pulse."""
-    t_plant_pulse_coil_precharge = mfile.get("t_plant_pulse_coil_precharge", scan=scan)
-    t_plant_pulse_plasma_current_ramp_up = mfile.get(
-        "t_plant_pulse_plasma_current_ramp_up", scan=scan
+    pulse_timings = PulseTimings(
+        t_plant_pulse_coil_precharge=mfile.get(
+            "t_plant_pulse_coil_precharge", scan=scan
+        ),
+        t_plant_pulse_plasma_current_ramp_up=mfile.get(
+            "t_plant_pulse_plasma_current_ramp_up", scan=scan
+        ),
+        t_plant_pulse_fusion_ramp=mfile.get("t_plant_pulse_fusion_ramp", scan=scan),
+        t_plant_pulse_burn=mfile.get("t_plant_pulse_burn", scan=scan),
+        t_plant_pulse_plasma_current_ramp_down=mfile.get(
+            "t_plant_pulse_plasma_current_ramp_down", scan=scan
+        ),
+        t_plant_pulse_dwell=mfile.get("t_plant_pulse_dwell", scan=scan),
     )
-    t_plant_pulse_fusion_ramp = mfile.get("t_plant_pulse_fusion_ramp", scan=scan)
-    t_plant_pulse_burn = mfile.get("t_plant_pulse_burn", scan=scan)
-    t_plant_pulse_plasma_current_ramp_down = mfile.get(
-        "t_plant_pulse_plasma_current_ramp_down", scan=scan
-    )
 
-    # Define a cumulative sum list for each point in the pulse
-    t_steps = np.cumsum([
-        0,
-        t_plant_pulse_coil_precharge,
-        t_plant_pulse_plasma_current_ramp_up,
-        t_plant_pulse_fusion_ramp,
-        t_plant_pulse_burn,
-        t_plant_pulse_plasma_current_ramp_down,
-    ])
-
-    stress_times = t_steps[
-        :6
-    ]  # Get the first 6 time points corresponding to the stress profile
-
-    stress_z_cs_self_midplane_profile = np.zeros(6)
-    for i in range(6):
+    stress_z_cs_self_midplane_profile = np.zeros(pulse_timings.n_pf_active_points_total)
+    for i in range(pulse_timings.n_pf_active_points_total):
         stress_z_cs_self_midplane_profile[i] = mfile.get(
             f"stress_z_cs_self_midplane_profile[{i}]", scan=scan
         )
 
     # Plot stress vs time
     axis.plot(
-        stress_times,
+        pulse_timings.pf_active_cumulative,
         stress_z_cs_self_midplane_profile / 1e6,
         "o-",
         linewidth=2,
