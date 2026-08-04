@@ -4693,7 +4693,7 @@ def plot_line_brem_loss_function_profile(
     scan: int,
     impp: str,
 ):
-    """Function to plot Line and Bremsstrahlung radiation power density profile.
+    """Function to plot Line and Bremsstrahlung loss function (L_z) profile.
 
     Parameters
     ----------

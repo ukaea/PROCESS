@@ -44,7 +44,7 @@ The lowest line is H, with the other lines in the order listed. The dashed lines
 the bremsstrahlung calculated using a separate method.</figcaption>
 </figure>
 
-For the regime above $40 \ \text{keV}$ whichc an be seen by the dashed lines in Figure 1 above, the radiation is assumed to be Bremsstrahlung dominated so the values are extrapolated via a power law.
+For the regime above $40 \ \text{keV}$ which can be seen by the dashed lines in Figure 1 above, the radiation is assumed to be Bremsstrahlung dominated so the values are extrapolated via a power law.
 
 
 !!! note "Location of impurities"
