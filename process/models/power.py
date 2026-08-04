@@ -412,7 +412,8 @@ class Power(Model):
             )
 
         #  Inductive MVA requirements, and stored energy
-        delktim = self.data.times.t_plant_pulse_plasma_current_ramp_up
+        #  Use the timing object passed into pfpwr as the source of truth.
+        delktim = pulse_timings.t_plant_pulse_plasma_current_ramp_up
 
         #  PF system (including Central Solenoid solenoid) inductive MVA requirements
         #  self.data.pf_coil.c_pf_coil_turn(i,j) : current per turn of coil i at (end)
