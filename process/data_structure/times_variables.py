@@ -38,23 +38,6 @@ class TimesData:
     )
     """array of time points during plasma pulse (s)"""
 
-    timelabel: list[str] = field(
-        default_factory=lambda: ["Start", "BOP  ", "EOR  ", "BOF  ", "EOF  ", "EOP  "]
-    )
-    """array of time labels during plasma pulse (s)"""
-
-    intervallabel: list[str] = field(
-        default_factory=lambda: [
-            "t_plant_pulse_coil_precharge        ",
-            "t_plant_pulse_plasma_current_ramp_up  ",
-            "t_plant_pulse_fusion_ramp      ",
-            "t_plant_pulse_burn             ",
-            "t_plant_pulse_plasma_current_ramp_down        ",
-        ]
-    )
-
-    """time intervals - as strings (s)"""
-
     t_plant_pulse_plasma_current_ramp_up: float = 30.0
     """Plant pulse time for plasma current to ramp up to approx. full value (s) (calculated if `i_pulsed_plant=0`)
       (`iteration variable 65`)"""

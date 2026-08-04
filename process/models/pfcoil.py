@@ -2734,7 +2734,7 @@ class PFCoil(Model):
 
         line = "\t\t"
         for k in range(pulse_timings.n_pf_active_points_total):
-            label = self.data.times.timelabel[k]
+            label = pulse_timings.point_abbreviations[k]
             line += f"\t\t{label}"
         op.write(self.outfile, line)
 

@@ -3,8 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.models.pulse import PulseTimings
-
 
 @pytest.fixture
 def power(process_models):
@@ -168,11 +166,7 @@ class PfpwrParam(NamedTuple):
 
     ioptimz: Any = None
 
-    pulse_timings: PulseTimings = None
-
-    intervallabel: Any = None
-
-    timelabel: Any = None
+    t_pulse_cumulative: Any = None
 
     t_plant_pulse_plasma_current_ramp_up: Any = None
 
@@ -789,29 +783,20 @@ class PfpwrParam(NamedTuple):
                 False,
             ),
             ioptimz=1,
-            pulse_timings=PulseTimings(
-                t_plant_pulse_coil_precharge=500.0,
-                t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
-                t_plant_pulse_fusion_ramp=10.0,
-                t_plant_pulse_burn=10000.0,
-                t_plant_pulse_plasma_current_ramp_down=177.21306969367816,
-                t_plant_pulse_dwell=500.0,
-            ),
-            intervallabel=(
-                "t_plant_pulse_coil_precharge      ",
-                "t_plant_pulse_plasma_current_ramp_up       ",
-                "t_plant_pulse_fusion_ramp      ",
-                "t_plant_pulse_burn      ",
-                "t_plant_pulse_plasma_current_ramp_down      ",
-            ),
-            timelabel=(
-                "Start      ",
-                "BOP        ",
-                "EOR        ",
-                "BOF        ",
-                "EOF        ",
-                "EOP        ",
-            ),
+            t_pulse_cumulative=np.array(
+                np.array(
+                    (
+                        0,
+                        500,
+                        677.21306969367811,
+                        687.21306969367811,
+                        10687.213069693678,
+                        10864.426139387357,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
             t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
             expected_peakmva=736.39062584245937,
             expected_pfckts=12,
@@ -1425,29 +1410,20 @@ class PfpwrParam(NamedTuple):
                 False,
             ),
             ioptimz=1,
-            pulse_timings=PulseTimings(
-                t_plant_pulse_coil_precharge=500.0,
-                t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
-                t_plant_pulse_fusion_ramp=10.0,
-                t_plant_pulse_burn=0.0,
-                t_plant_pulse_plasma_current_ramp_down=177.21306969367816,
-                t_plant_pulse_dwell=500.0,
-            ),
-            intervallabel=(
-                "t_plant_pulse_coil_precharge      ",
-                "t_plant_pulse_plasma_current_ramp_up       ",
-                "t_plant_pulse_fusion_ramp      ",
-                "t_plant_pulse_burn      ",
-                "t_plant_pulse_plasma_current_ramp_down      ",
-            ),
-            timelabel=(
-                "Start      ",
-                "BOP        ",
-                "EOR        ",
-                "BOF        ",
-                "EOF        ",
-                "EOP        ",
-            ),
+            t_pulse_cumulative=np.array(
+                np.array(
+                    (
+                        0,
+                        500,
+                        677.21306969367811,
+                        687.21306969367811,
+                        687.21306969367811,
+                        864.42613938735622,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
             t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
             expected_peakmva=90.673341440806112,
             expected_pfckts=12,
@@ -1523,12 +1499,16 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
     monkeypatch.setattr(power.data.numerics, "ioptimz", pfpwrparam.ioptimz)
 
     monkeypatch.setattr(
+        power.data.times, "t_pulse_cumulative", pfpwrparam.t_pulse_cumulative
+    )
+
+    monkeypatch.setattr(
         power.data.times,
         "t_plant_pulse_plasma_current_ramp_up",
         pfpwrparam.t_plant_pulse_plasma_current_ramp_up,
     )
 
-    power.pfpwr(output=False, PulseTimings=pfpwrparam.pulse_timings)
+    power.pfpwr(output=False)
 
     assert power.data.heat_transport.peakmva == pytest.approx(
         pfpwrparam.expected_peakmva

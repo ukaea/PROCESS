@@ -2,6 +2,7 @@
 
 import logging
 from dataclasses import dataclass
+from typing import ClassVar
 
 from process.core import constants
 from process.core import process_output as po
@@ -27,6 +28,16 @@ class PulseTimings:
     """Time for plasma current ramp-down (s)"""
     t_plant_pulse_dwell: float
     """Time for dwell (s)"""
+
+    point_abbreviations: ClassVar[tuple[str, ...]] = (
+        "Start",
+        "BOP",
+        "EOR",
+        "BOF",
+        "EOF",
+        "EOP",
+        "Dwell",
+    )
 
     @property
     def plasma_present(self) -> float:
