@@ -527,7 +527,7 @@ class SombldParam(NamedTuple):
 )
 def test_sombld(sombldparam, monkeypatch, ife):
     """
-    Automatically generated Regression Unit Test for sombld.
+    Automatically generated Unit Test for sombld.
 
     This test was generated using data from the IFE.IN.DAT.
 
@@ -688,7 +688,7 @@ class DriverParam(NamedTuple):
 )
 def test_driver(driverparam, ife):
     """
-    Automatically generated Regression Unit Test for driver.
+    Automatically generated Unit Test for driver.
 
     This test was generated using data from a modified IFE.IN.DAT.
 
@@ -722,7 +722,7 @@ class LasdrvParam(NamedTuple):
 )
 def test_lasdrv(lasdrvparam, ife):
     """
-    Automatically generated Regression Unit Test for lasdrv.
+    Automatically generated Unit Test for lasdrv.
 
     This test was generated using data from a modified IFE.IN.DAT.
 
@@ -1118,7 +1118,7 @@ class HylbldParam(NamedTuple):
 )
 def test_hylbld(hylbldparam, monkeypatch, ife):
     """
-    Automatically generated Regression Unit Test for hylbld.
+    Automatically generated Unit Test for hylbld.
 
     This test was generated using data from a modified IFE.IN.DAT.
 
@@ -1236,7 +1236,7 @@ class IondrvParam(NamedTuple):
 )
 def test_iondrv(iondrvparam, ife):
     """
-    Automatically generated Regression Unit Test for iondrv.
+    Automatically generated Unit Test for iondrv.
 
     This test was generated using data from a modified IFE.IN.DAT.
 
@@ -1558,7 +1558,7 @@ class IfefbsParam(NamedTuple):
 )
 def test_ifefbs(ifefbsparam, monkeypatch, ife):
     """
-    Automatically generated Regression Unit Test for ifefbs.
+    Automatically generated Unit Test for ifefbs.
 
     This test was generated using data from a modified IFE.IN.DAT.
 
@@ -2009,7 +2009,7 @@ class GenbldParam(NamedTuple):
 )
 def test_genbld(genbldparam, monkeypatch, ife):
     """
-    Automatically generated Regression Unit Test for genbld.
+    Automatically generated Unit Test for genbld.
 
     This test was generated using data from a modified IFE.IN.DAT.
 
@@ -2175,7 +2175,7 @@ class Ifepw1Param(NamedTuple):
 )
 def test_ifepw1(ifepw1param, monkeypatch, ife):
     """
-    Automatically generated Regression Unit Test for ifepw1.
+    Automatically generated Unit Test for ifepw1.
 
     This test was generated using data from a modified IFE.IN.DAT.
 
@@ -2629,7 +2629,7 @@ class Bld2019Param(NamedTuple):
 )
 def test_bld2019(bld2019param, monkeypatch, ife):
     """
-    Automatically generated Regression Unit Test for bld2019.
+    Automatically generated Unit Test for bld2019.
 
     This test was generated using data from a modified IFE.IN.DAT.
 
@@ -2789,7 +2789,7 @@ class IfeacpParam(NamedTuple):
 )
 def test_ifeacp(ifeacpparam, monkeypatch, ife):
     """
-    Automatically generated Regression Unit Test for ifeacp.
+    Automatically generated Unit Test for ifeacp.
 
     This test was generated using data from IFE.IN.DAT.
 
@@ -2951,7 +2951,7 @@ class IfebdgParam(NamedTuple):
 )
 def test_ifebdg(ifebdgparam, monkeypatch, ife):
     """
-    Automatically generated Regression Unit Test for ifebdg.
+    Automatically generated Unit Test for ifebdg.
 
     This test was generated using data from IFE.IN.DAT.
 
@@ -3093,7 +3093,7 @@ class Ifepw2Param(NamedTuple):
 )
 def test_ifepw2(ifepw2param, monkeypatch, ife):
     """
-    Automatically generated Regression Unit Test for ifepw2.
+    Automatically generated Unit Test for ifepw2.
 
     This test was generated using data from IFE.IN.DAT.
 

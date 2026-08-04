@@ -811,7 +811,7 @@ class Acc21Param(NamedTuple):
 )
 def test_acc21(acc21param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc21.
+    Automatically generated Unit Test for acc21.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -975,7 +975,7 @@ class Acc2211Param(NamedTuple):
 )
 def test_acc2211(acc2211param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2211.
+    Automatically generated Unit Test for acc2211.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1195,7 +1195,7 @@ class Acc2212Param(NamedTuple):
 )
 def test_acc2212(acc2212param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2212.
+    Automatically generated Unit Test for acc2212.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1383,7 +1383,7 @@ class Acc2213Param(NamedTuple):
 )
 def test_acc2213(acc2213param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2213.
+    Automatically generated Unit Test for acc2213.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1461,7 +1461,7 @@ class Acc2214Param(NamedTuple):
 )
 def test_acc2214(acc2214param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2214.
+    Automatically generated Unit Test for acc2214.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1531,7 +1531,7 @@ class Acc2215Param(NamedTuple):
 )
 def test_acc2215(acc2215param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2215.
+    Automatically generated Unit Test for acc2215.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1758,7 +1758,7 @@ class Acc2221Param(NamedTuple):
 )
 def test_acc2221(acc2221param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2221.
+    Automatically generated Unit Test for acc2221.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -2503,7 +2503,7 @@ class Acc2222Param(NamedTuple):
 )
 def test_acc2222(acc2222param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2222.
+    Automatically generated Unit Test for acc2222.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -2649,7 +2649,7 @@ class Acc2223Param(NamedTuple):
 )
 def test_acc2223(acc2223param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2223.
+    Automatically generated Unit Test for acc2223.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -2809,7 +2809,7 @@ class Acc223Param(NamedTuple):
 )
 def test_acc223(acc223param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc223.
+    Automatically generated Unit Test for acc223.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -2969,7 +2969,7 @@ class Acc224Param(NamedTuple):
 )
 def test_acc224(acc224param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc224.
+    Automatically generated Unit Test for acc224.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -3143,7 +3143,7 @@ class Acc2251Param(NamedTuple):
 )
 def test_acc2251(acc2251param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2251.
+    Automatically generated Unit Test for acc2251.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -3325,7 +3325,7 @@ class Acc2252Param(NamedTuple):
 )
 def test_acc2252(acc2252param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2252.
+    Automatically generated Unit Test for acc2252.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -3447,7 +3447,7 @@ class Acc2253Param(NamedTuple):
 )
 def test_acc2253(acc2253param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2253.
+    Automatically generated Unit Test for acc2253.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -3527,7 +3527,7 @@ class Acc226Param(NamedTuple):
 )
 def test_acc226(acc226param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc226.
+    Automatically generated Unit Test for acc226.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -3627,7 +3627,7 @@ class Acc2261Param(NamedTuple):
 )
 def test_acc2261_rut(acc2261param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2261.
+    Automatically generated Unit Test for acc2261.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -3763,7 +3763,7 @@ class Acc2262Param(NamedTuple):
 )
 def test_acc2262_rut(acc2262param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2262.
+    Automatically generated Unit Test for acc2262.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -3865,7 +3865,7 @@ class Acc2263Param(NamedTuple):
 )
 def test_acc2263_rut(acc2263param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2263.
+    Automatically generated Unit Test for acc2263.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -3933,7 +3933,7 @@ class Acc227Param(NamedTuple):
 )
 def test_acc227(acc227param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc227.
+    Automatically generated Unit Test for acc227.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -3993,7 +3993,7 @@ class Acc2271Param(NamedTuple):
 )
 def test_acc2271_rut(acc2271param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2271.
+    Automatically generated Unit Test for acc2271.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4079,7 +4079,7 @@ class Acc2272Param(NamedTuple):
 )
 def test_acc2272_rut(acc2272param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2272.
+    Automatically generated Unit Test for acc2272.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4159,7 +4159,7 @@ class Acc2273Param(NamedTuple):
 )
 def test_acc2273_rut(acc2273param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2273.
+    Automatically generated Unit Test for acc2273.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4227,7 +4227,7 @@ class Acc2274Param(NamedTuple):
 )
 def test_acc2274_rut(acc2274param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc2274.
+    Automatically generated Unit Test for acc2274.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4283,7 +4283,7 @@ class Acc228Param(NamedTuple):
 )
 def test_acc228_rut(acc228param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc228.
+    Automatically generated Unit Test for acc228.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4335,7 +4335,7 @@ class Acc229Param(NamedTuple):
 )
 def test_acc229_rut(acc229param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc229.
+    Automatically generated Unit Test for acc229.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4395,7 +4395,7 @@ class Acc23Param(NamedTuple):
 )
 def test_acc23_rut(acc23param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc23.
+    Automatically generated Unit Test for acc23.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4463,7 +4463,7 @@ class Acc24Param(NamedTuple):
 )
 def test_acc24(acc24param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc24.
+    Automatically generated Unit Test for acc24.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4515,7 +4515,7 @@ class Acc241Param(NamedTuple):
 )
 def test_acc241_rut(acc241param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc241.
+    Automatically generated Unit Test for acc241.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4573,7 +4573,7 @@ class Acc242Param(NamedTuple):
 )
 def test_acc242_rut(acc242param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc242.
+    Automatically generated Unit Test for acc242.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4633,7 +4633,7 @@ class Acc243Param(NamedTuple):
 )
 def test_acc243_rut(acc243param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc243.
+    Automatically generated Unit Test for acc243.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4681,7 +4681,7 @@ class Acc244Param(NamedTuple):
 )
 def test_acc244_rut(acc244param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc244.
+    Automatically generated Unit Test for acc244.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4729,7 +4729,7 @@ class Acc245Param(NamedTuple):
 )
 def test_acc245_rut(acc245param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc245.
+    Automatically generated Unit Test for acc245.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4770,7 +4770,7 @@ class Acc25Param(NamedTuple):
 )
 def test_acc25_rut(acc25param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc25.
+    Automatically generated Unit Test for acc25.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4840,7 +4840,7 @@ class Acc26Param(NamedTuple):
 )
 def test_acc26_rut(acc26param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc26.
+    Automatically generated Unit Test for acc26.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -4952,7 +4952,7 @@ class Acc9Param(NamedTuple):
 )
 def test_acc9_rut(acc9param, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for acc9.
+    Automatically generated Unit Test for acc9.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -5234,7 +5234,7 @@ class CoelcParam(NamedTuple):
 )
 def test_coelc(coelcparam, monkeypatch, costs):
     """
-    Automatically generated Regression Unit Test for coelc.
+    Automatically generated Unit Test for coelc.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).

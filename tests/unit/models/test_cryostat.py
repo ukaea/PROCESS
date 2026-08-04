@@ -128,7 +128,7 @@ class ExternalCryoGeometryParam(NamedTuple):
 )
 def test_external_cryo_geometry(externalcryogeometryparam, monkeypatch, cryostat):
     """
-    Automatically generated Regression Unit Test for external_cryo_geometry.
+    Automatically generated Unit Test for external_cryo_geometry.
 
     This test was generated using data from
     large_tokamak_eval.IN.DAT.

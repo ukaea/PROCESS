@@ -116,7 +116,7 @@ class BootstrapFractionIter89Param(NamedTuple):
 )
 def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
     """
-    Automatically generated Regression Unit Test for bootstrap_fraction_iter89.
+    Automatically generated Unit Test for bootstrap_fraction_iter89.
 
     This test was generated using data from
     large_tokamak_nof.IN.DAT.
@@ -200,7 +200,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
 )
 def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for bootstrap_fraction_nevins.
+    Automatically generated Unit Test for bootstrap_fraction_nevins.
 
     This test was generated using data from
     large_tokamak_nof.IN.DAT.
@@ -291,7 +291,7 @@ class BootstrapFractionWilsonParam(NamedTuple):
 )
 def test_bootstrap_fraction_wilson(bootstrapfractionwilsonparam, physics):
     """
-    Automatically generated Regression Unit Test for bootstrap_fraction_wilson.
+    Automatically generated Unit Test for bootstrap_fraction_wilson.
 
     This test was generated using data from
     large_tokamak_nof.IN.DAT.
@@ -412,7 +412,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 )
 def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for bootstrap_fraction_sauter.
+    Automatically generated Unit Test for bootstrap_fraction_sauter.
 
     This test was generated using data from
     large_tokamak_nof.IN.DAT.
@@ -510,7 +510,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
 )
 def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for bootstrap_fraction_sakai.
+    Automatically generated Unit Test for bootstrap_fraction_sakai.
 
     This test was generated using data from
     large_tokamak.IN.DAT.
@@ -565,7 +565,7 @@ class BootstrapFractionAriesParam(NamedTuple):
 )
 def test_bootstrap_fraction_aries(bootstrapfractionariesparam, physics):
     """
-    Automatically generated Regression Unit Test for bootstrap_fraction_aries.
+    Automatically generated Unit Test for bootstrap_fraction_aries.
 
     This test was generated using data from
     large_tokamak.IN.DAT.
@@ -611,7 +611,7 @@ class BootstrapFractionAndradeParam(NamedTuple):
 )
 def test_bootstrap_fraction_andrade(bootstrapfractionandradeparam, physics):
     """
-    Automatically generated Regression Unit Test for bootstrap_fraction_andrade.
+    Automatically generated Unit Test for bootstrap_fraction_andrade.
 
     This test was generated using data from
     large_tokamak.IN.DAT.
@@ -656,7 +656,7 @@ class BootstrapFractionHoangParam(NamedTuple):
 )
 def test_bootstrap_fraction_hoang(bootstrapfractionhoangparam, physics):
     """
-    Automatically generated Regression Unit Test for bootstrap_fraction_hoang.
+    Automatically generated Unit Test for bootstrap_fraction_hoang.
 
     This test was generated using data from
     large_tokamak.IN.DAT.
@@ -704,7 +704,7 @@ class BootstrapFractionWongParam(NamedTuple):
 )
 def test_bootstrap_fraction_wong(bootstrapfractionwongparam, physics):
     """
-    Automatically generated Regression Unit Test for bootstrap_fraction_wong.
+    Automatically generated Unit Test for bootstrap_fraction_wong.
 
     This test was generated using data from
     large_tokamak.IN.DAT.
@@ -759,7 +759,7 @@ class BootstrapFractionGiIParam(NamedTuple):
 )
 def test_bootstrap_fraction_gi_I(bootstrapfractiongiiparam, physics):
     """
-    Automatically generated Regression Unit Test for bootstrap_fraction_gi.
+    Automatically generated Unit Test for bootstrap_fraction_gi.
 
     This test was generated using data from
     large_tokamak.IN.DAT.
@@ -810,7 +810,7 @@ class BootstrapFractionGiIIParam(NamedTuple):
 )
 def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):
     """
-    Automatically generated Regression Unit Test for bootstrap_fraction_gi.
+    Automatically generated Unit Test for bootstrap_fraction_gi.
 
     This test was generated using data from
     large_tokamak.IN.DAT.
@@ -1077,7 +1077,7 @@ class PlasmaCurrentParam(NamedTuple):
 )
 def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for calculate_plasma_current().
+    Automatically generated Unit Test for calculate_plasma_current().
 
     This test was generated using data from
     large_tokamak_nof.IN.DAT.
@@ -1549,7 +1549,7 @@ class PlasmaCompositionParam(NamedTuple):
 )
 def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for plasma_composition.
+    Automatically generated Unit Test for plasma_composition.
 
     This test was generated using data from
     large_tokamak_nof.IN.DAT.
@@ -1764,7 +1764,7 @@ class VoltSecondReqParam(NamedTuple):
 )
 def test_vscalc(voltsecondreqparam):
     """
-    Automatically generated Regression Unit Test for
+    Automatically generated Unit Test for
     calculate_volt_second_requirements().
 
     This test was generated using data from
@@ -1917,7 +1917,7 @@ class PhyauxParam(NamedTuple):
 )
 def test_phyaux(phyauxparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for phyaux.
+    Automatically generated Unit Test for phyaux.
 
     This test was generated using data from
     large_tokamak_nof.IN.DAT.
@@ -2029,7 +2029,7 @@ class PohmParam(NamedTuple):
 )
 def test_pohm(pohmparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for plasma_ohmic_heating.
+    Automatically generated Unit Test for plasma_ohmic_heating.
 
     This test was generated using data from
     large_tokamak_nof.IN.DAT.
@@ -2136,7 +2136,7 @@ class CalculateDensityLimitParam(NamedTuple):
 )
 def test_calculate_density_limit(calculatedensitylimitparam, physics):
     """
-    Automatically generated Regression Unit Test for calculate_density_limit().
+    Automatically generated Unit Test for calculate_density_limit().
 
     This test was generated using data from
     large_tokamak_nof.IN.DAT.
@@ -3101,7 +3101,7 @@ class ConfinementTimeParam(NamedTuple):
 )
 def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     """
-    Automatically generated Regression Unit Test for calculate_confinement_time().
+    Automatically generated Unit Test for calculate_confinement_time().
 
     This test was generated using data from
     large_tokamak_nof.IN.DAT.

@@ -111,7 +111,7 @@ class ProtectParam(NamedTuple):
 )
 def test_protect(protectparam, sctfcoil):
     """
-    Automatically generated Regression Unit Test for protect.
+    Automatically generated Unit Test for protect.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -343,7 +343,7 @@ class SuperconParam(NamedTuple):
 )
 def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
     """
-    Automatically generated Regression Unit Test for supercon.
+    Automatically generated Unit Test for supercon.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -533,7 +533,7 @@ class PeakTfWithRippleParam(NamedTuple):
 )
 def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     """
-    Automatically generated Regression Unit Test for peak_tf_with_ripple.
+    Automatically generated Unit Test for peak_tf_with_ripple.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -786,7 +786,7 @@ class TfWpGeomParam(NamedTuple):
 )
 def test_superconducting_tf_wp_geometry(tfwpgeomparam, sctfcoil):
     """
-    Automatically generated Regression Unit Test for superconducting_tf_wp_geometry.
+    Automatically generated Unit Test for superconducting_tf_wp_geometry.
 
     This test was generated using data from
     baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
@@ -925,7 +925,7 @@ class TfCaseGeomParam(NamedTuple):
 )
 def test_superconducting_tf_case_geometry(tfcasegeomparam, sctfcoil):
     """
-    Automatically generated Regression Unit Test for superconducting_tf_case_geometry.
+    Automatically generated Unit Test for superconducting_tf_case_geometry.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1124,7 +1124,7 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
     tfintegerturngeomparam, cicc_sctfcoil
 ):
     """
-    Automatically generated Regression Unit Test for
+    Automatically generated Unit Test for
     tf_cable_in_conduit_integer_turn_geometry.
 
     This test was generated using data from baseline_2018_IN.DAT
@@ -1368,7 +1368,7 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
     tfaveragedturngeomparam, monkeypatch, cicc_sctfcoil
 ):
     """
-    Automatically generated Regression Unit Test for
+    Automatically generated Unit Test for
     tf_cable_in_conduit_averaged_turn_geometry.
 
     This test was generated using data from I-mode IN.DAT
@@ -1476,7 +1476,7 @@ class TfWpCurrentsParam(NamedTuple):
 )
 def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
     """
-    Automatically generated Regression Unit Test for tf_wp_currents.
+    Automatically generated Unit Test for tf_wp_currents.
 
     This test was generated using data from I-mode IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1908,7 +1908,7 @@ def test_superconducting_tf_coil_area_and_masses(
     tfcoilareaandmassesparam, monkeypatch, sctfcoil
 ):
     """
-    Automatically generated Regression Unit Test for tf_coil_area_and_masses.
+    Automatically generated Unit Test for tf_coil_area_and_masses.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).

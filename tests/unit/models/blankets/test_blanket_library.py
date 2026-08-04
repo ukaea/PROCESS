@@ -137,7 +137,7 @@ def test_primary_coolant_properties(
     primarycoolantpropertiesparam, monkeypatch, blanket_library
 ):
     """
-    Automatically generated Regression Unit Test for primary_coolant_properties.
+    Automatically generated Unit Test for primary_coolant_properties.
 
     This test was generated using data from dcll/dcll_mms_lt_IN.DAT.
 
@@ -427,7 +427,7 @@ class ComponentHalfHeightParam(NamedTuple):
 )
 def test_calculate_blkt_half_height(componenthalfheightparam, blanket_library):
     """
-    Regression Unit Test for component_half_height.
+    Unit Test for component_half_height.
 
     This test was generated using data from large_tokamak.IN.DAT.
 
@@ -507,7 +507,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
 )
 def test_apply_coverage_factors(applycoveragefactorsparam, monkeypatch, blanket_library):
     """
-    Automatically generated Regression Unit Test for apply_coverage_factors.
+    Automatically generated Unit Test for apply_coverage_factors.
 
     This test was generated using data from
     large_tokamak_eval.IN.DAT.
@@ -891,7 +891,7 @@ def test_liquid_breeder_properties(
     liquidbreederpropertiesparam, monkeypatch, blanket_library
 ):
     """
-    Automatically generated Regression Unit Test for liquid_breeder_properties.
+    Automatically generated Unit Test for liquid_breeder_properties.
 
     This test was generated using data from blanket_files/large_tokamak_dcll.IN.DAT.
 
@@ -1080,7 +1080,7 @@ class PressureDropParam(NamedTuple):
 )
 def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library):
     """
-    Automatically generated Regression Unit Test for pressure_drop.
+    Automatically generated Unit Test for pressure_drop.
 
     This test was generated using data from
     blanket_files/large_tokamak_primary_pumping2.IN.DAT.
@@ -1228,7 +1228,7 @@ def test_liquid_breeder_pressure_drop_mhd(
     liquidbreederpressuredropmhdparam, monkeypatch, blanket_library
 ):
     """
-    Automatically generated Regression Unit Test for liquid_breeder_pressure_drop_mhd.
+    Automatically generated Unit Test for liquid_breeder_pressure_drop_mhd.
 
     This test was generated using data from blanket_files/dcll_mms_lt_IN.DAT.
 
@@ -1321,7 +1321,7 @@ class CalculateDshapedBlktAreasParam(NamedTuple):
 )
 def test_calculate_dshaped_blkt_areas(calculatedshapedblktareasparam, blanket_library):
     """
-    Regression Unit Test for calculate_dshaped_blkt_areas.
+    Unit Test for calculate_dshaped_blkt_areas.
 
     This test was generated using data from
     st_regression.IN.DAT.
@@ -1398,7 +1398,7 @@ def test_calculate_dshaped_blkt_volumes(
     calculatedshapedblktvolumesparam, blanket_library
 ):
     """
-    Regression Unit Test for calculate_dshaped_blkt_volumes.
+    Unit Test for calculate_dshaped_blkt_volumes.
 
     This test was generated using data from
     st_regression.IN.DAT.
@@ -1475,7 +1475,7 @@ def test_calculate_elliptical_blkt_areas(
     calculateellipticalblktareasparam, blanket_library
 ):
     """
-    Regression Unit Test for calculate_elliptical_blkt_areas.
+    Unit Test for calculate_elliptical_blkt_areas.
 
     This test was generated using data from
     large_tokamak_eval.IN.DAT.
@@ -1553,7 +1553,7 @@ def test_calculate_elliptical_blkt_volumes(
     calculateellipticalblktvolumesparam, blanket_library
 ):
     """
-    Regression Unit Test for calculate_elliptical_blkt_volumes.
+    Unit Test for calculate_elliptical_blkt_volumes.
 
     This test was generated using data from
     large_tokamak_eval.IN.DAT.

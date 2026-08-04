@@ -108,7 +108,7 @@ class FwTempParam(NamedTuple):
 )
 def test_fw_temp(fwtempparam, monkeypatch, fw):
     """
-    Automatically generated Regression Unit Test for fw_temp.
+    Automatically generated Unit Test for fw_temp.
 
     This test was generated using data from large_tokamak_nof.DAT
     with the DCLL model enabled.

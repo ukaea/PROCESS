@@ -126,7 +126,7 @@ class ResTfInternalGeomParam(NamedTuple):
 )
 def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_coil):
     """
-    Automatically generated Regression Unit Test for res_tf_internal_geom.
+    Automatically generated Unit Test for res_tf_internal_geom.
 
     This test was generated using data from the FNSF IN.DAT
     (no longer exists in the PROCESS repository).
@@ -448,7 +448,7 @@ class TfResHeatingParam(NamedTuple):
 )
 def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
     """
-    Automatically generated Regression Unit Test for tf_res_heating.
+    Automatically generated Unit Test for tf_res_heating.
 
     This test was generated using data from the FNSF IN.DAT
     (no longer exists in the PROCESS repository).
@@ -791,7 +791,7 @@ class CpostParam(NamedTuple):
 )
 def test_cpost(cpostparam, monkeypatch, resistive_tf_coil):
     """
-    Automatically generated Regression Unit Test for cpost.
+    Automatically generated Unit Test for cpost.
 
     This test was generated using data from the FNSF IN.DAT
     (no longer exists in the PROCESS repository).

@@ -90,7 +90,7 @@ class SetFusionPowersParam(NamedTuple):
 )
 def test_set_fusion_powers(setfusionpowersparam):
     """
-    Automatically generated Regression Unit Test for set_fusion_powers().
+    Automatically generated Unit Test for set_fusion_powers().
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).

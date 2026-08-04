@@ -51,7 +51,7 @@ class IterscParam(NamedTuple):
 )
 def test_itersc(iterscparam):
     """
-    Automatically generated Regression Unit Test for itersc.
+    Automatically generated Unit Test for itersc.
 
     This test was generated using data from
     large_tokamak_nof.IN.DAT.
@@ -119,7 +119,7 @@ class JcritNbtiParam(NamedTuple):
 )
 def test_jcrit_nbti(jcritnbtiparam):
     """
-    Automatically generated Regression Unit Test for jcrit_nbti.
+    Automatically generated Unit Test for jcrit_nbti.
 
     This test was generated using data from
     large_tokamak_nof.IN.DAT.

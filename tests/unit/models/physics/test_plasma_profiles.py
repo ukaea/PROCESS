@@ -332,7 +332,7 @@ class PlasmaProfilesParam(NamedTuple):
 )
 def test_plasma_profiles(plasmaprofilesparam, monkeypatch, plasmaprofile):
     """
-    Automatically generated Regression Unit Test for plasma_profiles.
+    Automatically generated Unit Test for plasma_profiles.
 
     This test was generated using data from the HARE regression test, which
     has since been removed in preparation for open-sourcing (#1889).
