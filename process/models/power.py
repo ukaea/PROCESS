@@ -331,9 +331,9 @@ class Power(Model):
         p_pf_circuit_resistive_peak = np.zeros((NGC2,))
         vpfi = np.zeros((NGC2,))
         psmva = np.zeros((NGC2,))
-        poloidalenergy = np.zeros((pulse_timings.n_pf_active_points_total,))
-        inductxcurrent = np.zeros((pulse_timings.n_pf_active_points_total,))
-        pfdissipation = np.zeros((pulse_timings.n_pf_active_points_intervals,))
+        poloidalenergy = np.zeros(pulse_timings.n_pf_active_points_total)
+        inductxcurrent = np.zeros(pulse_timings.n_pf_active_points_total)
+        pfdissipation = np.zeros(pulse_timings.n_pf_active_points_intervals)
 
         #  Bus length
         pfbusl = 8.0e0 * self.data.physics.rmajor + 140.0e0
