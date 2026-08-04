@@ -3273,14 +3273,9 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     secax = axis.secondary_xaxis("bottom")
     secax.set_xticks(pulse_timings.pf_active_cumulative)
     secax.set_xticklabels(
-        [
-            "Precharge",
-            r"$I_{\text{P}}$ Ramp-Up",
-            "Fusion Ramp",
-            "Burn",
-            "Ramp Down",
-            "Between Pulse",
-        ],
+        pulse_timings.point_labels[
+            :-1
+        ],  # Exclude the last label as it corresponds to the dwell period
         rotation=60,
     )
     secax.tick_params(axis="x", which="major")
@@ -3382,15 +3377,7 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
     secax = axis.secondary_xaxis("bottom")
     secax.set_xticks(pulse_timings.total_pulse_cumulative)
     secax.set_xticklabels(
-        [
-            "Precharge",
-            r"$I_{\text{P}}$ Ramp-Up",
-            "Fusion Ramp",
-            "Burn",
-            "Ramp Down",
-            "Between Pulse",
-            "Restart Pulse",
-        ],
+        pulse_timings.point_labels,
         rotation=60,
     )
     secax.tick_params(axis="x", which="major")

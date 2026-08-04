@@ -30,13 +30,22 @@ class PulseTimings:
     """Time for dwell (s)"""
 
     point_abbreviations: ClassVar[tuple[str, ...]] = (
-        "Start",
         "BOP",
         "EOR",
         "BOF",
         "EOF",
         "EOP",
         "Dwell",
+    )
+
+    point_labels: ClassVar[tuple[str, ...]] = (
+        "Coil precharge",
+        "$I_{\\text{p}}$ Ramp-Up",
+        "Fusion ramp",
+        "Burn",
+        "$I_{\\text{p}}$ ramp-down",
+        "Dwell",
+        "Restart pulse",
     )
 
     @property
