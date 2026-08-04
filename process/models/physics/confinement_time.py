@@ -929,10 +929,10 @@ class PlasmaConfinementTime(Model):
         # NCST spherical tokamak L-mode confinement time scaling
         elif model == ConfinementTimeModel.NCST:
             t_electron_confinement = self.ncst_confinement_time(
-                pcur=pcur,
+                c_plasma_ma=c_plasma_ma,
                 b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw=p_plasma_loss_mw,
-                dnla19=dnla19,
+                nd_plasma_electron_line_19=nd_plasma_electron_line_19,
             )
 
         # ==========================================================================
@@ -4101,7 +4101,7 @@ class PlasmaConfinementTime(Model):
         pcur: float,
         b_plasma_toroidal_on_axis: float,
         p_plasma_loss_mw: float,
-        dnla19: float,
+        nd_plasma_electron_line_19: float,
     ) -> float:
         """Calculate the NCST spherical tokamak L-mode confinement time
 
@@ -4113,7 +4113,7 @@ class PlasmaConfinementTime(Model):
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
             Thermal power lost due to transport through the LCFS [MW]
-        dnla19 :
+        nd_plasma_electron_line_19 :
             Central line-averaged electron density in units of 10¹⁹ m⁻³
 
         Returns
@@ -4139,9 +4139,9 @@ class PlasmaConfinementTime(Model):
             * pcur**0.33
             * b_plasma_toroidal_on_axis**1.03
             * p_plasma_loss_mw ** (-0.07)
-            * dnla19 ** (-0.01)
+            * nd_plasma_electron_line_19 ** (-0.01)
         )
-        
+
     @staticmethod
     def paz_soldan_nt_confinement_time(
         c_plasma_ma: float,
@@ -4159,7 +4159,7 @@ class PlasmaConfinementTime(Model):
             Toroidal magnetic field [T]
         p_plasma_loss_mw :
             Thermal power lost due to transport through the LCFS [MW]
-        dnla19 :
+        nd_plasma_electron_line_19 :
             Central line-averaged electron density in units of 10¹⁹ m⁻³
 
         Returns
