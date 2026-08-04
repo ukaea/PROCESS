@@ -1,4 +1,4 @@
-"""Module containing global variables relating to the inertial fusion energy model
+"""Module containing global variables for the Inertial Fusion Energy (IFE) models
 
 
 
@@ -31,6 +31,8 @@ MAXMAT = 8
 
 @dataclass(slots=True)
 class IFEData:
+    """Dataclass holding IFE variables"""
+
     bldr: float = 1.0
     """radial thickness of IFE blanket (m; calculated `if ifetyp=4`)"""
 

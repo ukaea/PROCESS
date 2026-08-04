@@ -1,8 +1,12 @@
+"""Module containing variables necessary for running PROCESS"""
+
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class GlobalData:
+    """Dataclass holding global variables"""
+
     icase: str = "Steady-state tokamak model"
     """Power plant type"""
 

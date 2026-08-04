@@ -1,12 +1,12 @@
-"""
-Module containing global variables relating to the current drive system
-"""
+"""Module containing variables for the current drive system models"""
 
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class CurrentDriveData:
+    """Dataclass holding current drive variables"""
+
     dx_beam_duct: float = 0.58
     """width of neutral beam duct where it passes between the TF coils (m)
     T Inoue et al, Design of neutral beam system for ITER-FEAT,

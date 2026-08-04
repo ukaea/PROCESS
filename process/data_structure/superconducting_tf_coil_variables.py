@@ -1,13 +1,4 @@
-"""Module containing superconducting TF coil routines
-
-
-
-N/A
-This module contains routines for calculating the
-parameters of a superconducting TF coil system for a
-fusion power plant.
-PROCESS Superconducting TF Coil Model, J. Morris, CCFE, 1st May 2014
-"""
+"""Module containing variables for the superconducting TF coil models"""
 
 from dataclasses import dataclass
 from enum import IntEnum
@@ -27,6 +18,8 @@ class TFWPIntegerTurnType(IntEnum):
 
 @dataclass(slots=True)
 class SuperconductingTFData:
+    """Dataclass holding superconducting TF variables"""
+
     tf_fit_t: float = 0.0
     """Dimensionless winding pack width"""
 

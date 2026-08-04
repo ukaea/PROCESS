@@ -1,6 +1,4 @@
-"""
-Module containing global variables relating to the toroidal field coil systems
-"""
+"""Module containing variables for the TF coil models"""
 
 from dataclasses import dataclass, field
 
@@ -14,6 +12,8 @@ used for stress, strain and displacement distribution
 
 @dataclass(slots=True)
 class TFData:
+    """Dataclass holding TF coil variables"""
+
     a_tf_coil_inboard_case: float = 0.0
     """external case area per coil (inboard leg) (m2)"""
 

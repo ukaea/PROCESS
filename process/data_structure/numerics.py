@@ -1,3 +1,5 @@
+"""Module containing variables for the numerics"""
+
 from dataclasses import dataclass, field
 from enum import IntEnum
 from types import DynamicClassAttribute
@@ -143,6 +145,8 @@ IPEQNS = 500
 
 @dataclass(slots=True)
 class NumericsData:
+    """Dataclass holding numerics variables"""
+
     ioptimz: int = 1
     """Code operation switch:
     * -2 for evaluation mode (i.e. no optimisation)

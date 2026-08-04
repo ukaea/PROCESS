@@ -1,9 +1,4 @@
-"""Module containing routines to perform a parameter scan
-
-None
-This module contains routines to perform a parameter scan
-over a range of values of a particular scanning variable.
-"""
+"""Module containing variables required to perform a parameter scan"""
 
 from dataclasses import dataclass, field
 
@@ -22,6 +17,8 @@ NOUTVARS = 84
 
 @dataclass(slots=True)
 class ScanData:
+    """Dataclass holding scan variables"""
+
     scan_dim: int = 1
     """1-D or 2-D scan switch (1=1D, 2=2D)"""
 

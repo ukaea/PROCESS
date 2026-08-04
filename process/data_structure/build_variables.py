@@ -1,3 +1,5 @@
+"""Module containing variables for the build models"""
+
 from dataclasses import dataclass
 from enum import IntEnum
 from types import DynamicClassAttribute
@@ -51,6 +53,8 @@ class TFCSRadialConfiguration(IntEnum):
 
 @dataclass(slots=True)
 class BuildData:
+    """Dataclass holding build variables"""
+
     rminor_min: float = 0.25
     """Minimum allowed minor radius (m)"""
 

@@ -1,3 +1,5 @@
+"""Module containing variables for the vacuum vessel models"""
+
 from dataclasses import dataclass
 from enum import IntEnum
 
@@ -11,6 +13,8 @@ class VacuumPumpType(IntEnum):
 
 @dataclass(slots=True)
 class VacuumData:
+    """Dataclass holding vacuum vessel variables"""
+
     i_vacuum_pumping: str = "old"
     """switch for vacuum pumping model:
 

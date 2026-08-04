@@ -1,11 +1,4 @@
-"""Module containing tokamak plasma physics routines
-
-This module contains all the primary plasma physics routines
-for a tokamak device.
-
-
-Module containing global variables relating to the plasma physics
-"""
+"""Module containing variables for the plasma models"""
 
 from dataclasses import dataclass, field
 from enum import IntEnum
@@ -383,6 +376,8 @@ N_CONFINEMENT_SCALINGS = len(ConfinementTimeModel)
 
 @dataclass(slots=True)
 class PhysicsData:
+    """Dataclass holding physics variables"""
+
     iscz: int = 0
 
     err242: int = 0

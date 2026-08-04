@@ -1,11 +1,4 @@
-"""This library contains routines that can be shared by the blanket modules used in PROCESS.
-
-These include:
-- component_volumes
-- component_masses
-- thermo_hydraulic_model
-
-
+"""Module containing variables for the blanket models
 
 Acronyms for this module:
 
@@ -21,8 +14,6 @@ Acronyms for this module:
      OB          Outboard
      HCD         Heating & Current Drive
      FCI         Flow Channel Insert
-
-Any changes within a subroutine or function code will have a comment explaining the change
 """
 
 from dataclasses import dataclass
@@ -38,6 +29,8 @@ class BlktModelTypes(IntEnum):
 
 @dataclass(slots=True)
 class BlanketData:
+    """Dataclass holding blanket variables"""
+
     vol_shld_inboard: float = 0.0
     """Volume of inboard shield (m3)"""
 

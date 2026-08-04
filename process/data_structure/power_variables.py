@@ -1,8 +1,12 @@
+"""Module containing variables for the power models"""
+
 from dataclasses import dataclass, field
 
 
 @dataclass(slots=True)
 class PowerData:
+    """Dataclass holding power variables"""
+
     qmisc: float = 0.0
 
     qac: float = 0.0

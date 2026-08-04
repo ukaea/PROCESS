@@ -1,3 +1,5 @@
+"""Module containing variables for the times models"""
+
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -5,6 +7,8 @@ import numpy as np
 
 @dataclass(slots=True)
 class TimesData:
+    """Dataclass holding times variables"""
+
     pulsetimings: int = 1
     """Switch for pulse timings (if i_pulsed_plant=1):
 
