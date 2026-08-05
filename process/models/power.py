@@ -14,6 +14,7 @@ from process.core.model import Model
 from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.pfcoil_variables import NGC2, PFConductorModel
 from process.models.pulse import PulseTimings
+from process.models.tfcoil.base import TFConductorModel
 
 
 @unique
@@ -50,7 +51,18 @@ class Power(Model):
     def output(self):
         """Write the results to the main output file (OUT.DAT)."""
         # Toroidal field coil power model
-        self.tfpwr(output=True)
+        # Toroidal field coil power model
+        if (
+            TFConductorModel(self.data.tfcoil.i_tf_sup)
+            == TFConductorModel.WATER_COOLED_COPPER
+            or TFConductorModel.HELIUM_COOLED_ALUMINIUM
+        ):
+            self.tfpwr(output=True)
+        elif (
+            TFConductorModel(self.data.tfcoil.i_tf_sup)
+            == TFConductorModel.SUPERCONDUCTING
+        ):
+            self.tfpwcall(output=True)
 
         # Poloidal field coil power model !
         self.pfpwr(
@@ -77,8 +89,17 @@ class Power(Model):
     def run(self):
         """Caller for the power model"""
         # Toroidal field coil power model
-        self.tfpwr(output=False)
-
+        if (
+            TFConductorModel(self.data.tfcoil.i_tf_sup)
+            == TFConductorModel.WATER_COOLED_COPPER
+            or TFConductorModel.HELIUM_COOLED_ALUMINIUM
+        ):
+            self.tfpwr(output=False)
+        elif (
+            TFConductorModel(self.data.tfcoil.i_tf_sup)
+            == TFConductorModel.SUPERCONDUCTING
+        ):
+            self.tfpwcall(output=False)
         # Poloidal field coil power model
         self.pfpwr(
             output=False,
@@ -2130,83 +2151,76 @@ class Power(Model):
         output: bool
 
         """
-        if self.data.tfcoil.i_tf_sup != 1:
-            # Cross-sectional area of bus
-            # self.data.tfcoil.c_tf_turn  - current per TFC turn (A)
-            # self.data.tfcoil.j_tf_bus   - bus current density (A/m2)
-            a_tf_bus = self.data.tfcoil.c_tf_turn / self.data.tfcoil.j_tf_bus
+        # Cross-sectional area of bus
+        # self.data.tfcoil.c_tf_turn  - current per TFC turn (A)
+        # self.data.tfcoil.j_tf_bus   - bus current density (A/m2)
+        a_tf_bus = self.data.tfcoil.c_tf_turn / self.data.tfcoil.j_tf_bus
 
-            # Bus resistance [ohm]
-            # Bus resistivity (self.data.tfcoil.rho_tf_bus)
-            # Issue #1253: there was a fudge here to set the bus bar resistivity equal
-            # to the TF conductor resistivity. I have removed this.
-            tfbusres = (
-                self.data.tfcoil.rho_tf_bus * self.data.tfcoil.len_tf_bus / a_tf_bus
-            )
+        # Bus resistance [ohm]
+        # Bus resistivity (self.data.tfcoil.rho_tf_bus)
+        # Issue #1253: there was a fudge here to set the bus bar resistivity equal
+        # to the TF conductor resistivity. I have removed this.
+        tfbusres = self.data.tfcoil.rho_tf_bus * self.data.tfcoil.len_tf_bus / a_tf_bus
 
-            #  Bus mass (kg)
-            self.data.tfcoil.m_tf_bus = (
-                self.data.tfcoil.len_tf_bus * a_tf_bus * constants.DEN_COPPER
-            )
+        #  Bus mass (kg)
+        self.data.tfcoil.m_tf_bus = (
+            self.data.tfcoil.len_tf_bus * a_tf_bus * constants.DEN_COPPER
+        )
 
-            #  Total maximum impedance MDK actually just fixed resistance
-            res_tf_system_total = (
-                self.data.tfcoil.n_tf_coils * self.data.tfcoil.res_tf_leg
-                + (self.data.tfcoil.p_cp_resistive / self.data.tfcoil.c_tf_total**2)
-                + tfbusres
-            )
+        #  Total maximum impedance MDK actually just fixed resistance
+        res_tf_system_total = (
+            self.data.tfcoil.n_tf_coils * self.data.tfcoil.res_tf_leg
+            + (self.data.tfcoil.p_cp_resistive / self.data.tfcoil.c_tf_total**2)
+            + tfbusres
+        )
 
-            #  No reactive portion of the voltage is included here - assume long
-            #  ramp times
-            #  MDK This is steady state voltage, not "peak" voltage
-            self.data.tfcoil.vtfkv = (
-                1.0e-3
-                * res_tf_system_total
-                * self.data.tfcoil.c_tf_turn
-                / self.data.tfcoil.n_tf_coils
-            )
+        #  No reactive portion of the voltage is included here - assume long
+        #  ramp times
+        #  MDK This is steady state voltage, not "peak" voltage
+        self.data.tfcoil.vtfkv = (
+            1.0e-3
+            * res_tf_system_total
+            * self.data.tfcoil.c_tf_turn
+            / self.data.tfcoil.n_tf_coils
+        )
 
-            # Resistive powers (MW):
-            self.data.tfcoil.p_cp_resistive_mw = (
-                1.0e-6 * self.data.tfcoil.p_cp_resistive
-            )  # inboard legs (called centrepost, CP for tart design)
-            self.data.tfcoil.p_tf_leg_resistive_mw = (
-                1.0e-6 * self.data.tfcoil.p_tf_leg_resistive
-            )  # outboard legs
-            self.data.tfcoil.p_tf_joints_resistive_mw = (
-                1.0e-6 * self.data.tfcoil.p_tf_joints_resistive
-            )  # Joints
-            tfbusmw = (
-                1.0e-6 * self.data.tfcoil.c_tf_turn**2 * tfbusres
-            )  # TF coil bus => Dodgy #
+        # Resistive powers (MW):
+        self.data.tfcoil.p_cp_resistive_mw = (
+            1.0e-6 * self.data.tfcoil.p_cp_resistive
+        )  # inboard legs (called centrepost, CP for tart design)
+        self.data.tfcoil.p_tf_leg_resistive_mw = (
+            1.0e-6 * self.data.tfcoil.p_tf_leg_resistive
+        )  # outboard legs
+        self.data.tfcoil.p_tf_joints_resistive_mw = (
+            1.0e-6 * self.data.tfcoil.p_tf_joints_resistive
+        )  # Joints
+        tfbusmw = (
+            1.0e-6 * self.data.tfcoil.c_tf_turn**2 * tfbusres
+        )  # TF coil bus => Dodgy #
 
-            # TF coil reactive power
-            # Set reactive power to 0, since ramp up can be long
-            # The TF coil can be ramped up as slowly as you like
-            # (although this will affect the time to recover from a magnet quench).
-            # tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_plant_pulse_plasma_current_ramp_up
-            # + t_plant_pulse_coil_precharge)
-            # estotf(=e_tf_magnetic_stored_total_gj/self.data.tfcoil.n_tf_coils)
-            # has been removed (#199 #847)
-            tfreacmw = 0.0e0
+        # TF coil reactive power
+        # Set reactive power to 0, since ramp up can be long
+        # The TF coil can be ramped up as slowly as you like
+        # (although this will affect the time to recover from a magnet quench).
+        # tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_plant_pulse_plasma_current_ramp_up
+        # + t_plant_pulse_coil_precharge)
+        # estotf(=e_tf_magnetic_stored_total_gj/self.data.tfcoil.n_tf_coils)
+        # has been removed (#199 #847)
+        tfreacmw = 0.0e0
 
-            # Total power consumption (MW)
-            self.data.tfcoil.tfcmw = (
-                self.data.tfcoil.p_cp_resistive_mw
-                + self.data.tfcoil.p_tf_leg_resistive_mw
-                + tfbusmw
-                + tfreacmw
-                + self.data.tfcoil.p_tf_joints_resistive_mw
-            )
+        # Total power consumption (MW)
+        self.data.tfcoil.tfcmw = (
+            self.data.tfcoil.p_cp_resistive_mw
+            + self.data.tfcoil.p_tf_leg_resistive_mw
+            + tfbusmw
+            + tfreacmw
+            + self.data.tfcoil.p_tf_joints_resistive_mw
+        )
 
-            # Total steady state AC power demand (MW)
-            self.data.heat_transport.p_tf_electric_supplies_mw = (
-                self.data.tfcoil.tfcmw / self.data.heat_transport.etatf
-            )
-
-        else:  # Superconducting TF coil option
-            self.tfpwcall(output)
-            return
+        # Total steady state AC power demand (MW)
+        self.data.heat_transport.p_tf_electric_supplies_mw = (
+            self.data.tfcoil.tfcmw / self.data.heat_transport.etatf
+        )
 
         # Output section
         if output == 0:
