@@ -6,7 +6,7 @@ The main power flow is controlled by `power.py`. The main class `Power` controls
 
 ### TF Coils
 
-#### Resistive TF coil power requirements | `tfpwr()`
+#### Resistive TF coil power requirements | `resistive_tf_electric_power()`
 
 ---
 

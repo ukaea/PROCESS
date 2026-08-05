@@ -145,7 +145,7 @@ class Stellarator(Model):
             self.st_strc(True)
             self.st_fwbs(True)
 
-            self.power.tfpwr(output=True)
+            self.power.resistive_tf_electric_power(output=True)
             self.buildings.run(output=True)
             self.vacuum.run(output=True)
             self.power.acpow(output=True)
@@ -163,7 +163,7 @@ class Stellarator(Model):
         self.st_fwbs(False)
         st_div(self, False, self.data)
 
-        self.power.tfpwr(output=False)
+        self.power.resistive_tf_electric_power(output=False)
         self.power.component_thermal_powers()
         self.power.calculate_cryo_loads()
         self.buildings.run(output=False)

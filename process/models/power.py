@@ -57,7 +57,7 @@ class Power(Model):
             == TFConductorModel.WATER_COOLED_COPPER
             or TFConductorModel.HELIUM_COOLED_ALUMINIUM
         ):
-            self.tfpwr(output=True)
+            self.resistive_tf_electric_power(output=True)
         elif (
             TFConductorModel(self.data.tfcoil.i_tf_sup)
             == TFConductorModel.SUPERCONDUCTING
@@ -94,7 +94,7 @@ class Power(Model):
             == TFConductorModel.WATER_COOLED_COPPER
             or TFConductorModel.HELIUM_COOLED_ALUMINIUM
         ):
-            self.tfpwr(output=False)
+            self.resistive_tf_electric_power(output=False)
         elif (
             TFConductorModel(self.data.tfcoil.i_tf_sup)
             == TFConductorModel.SUPERCONDUCTING
@@ -2137,7 +2137,7 @@ class Power(Model):
             f"is an invalid option."
         )
 
-    def tfpwr(self, output: bool):
+    def resistive_tf_electric_power(self, output: bool):
         """TF coil power supply requirements for resistive coils
 
         outfile : input integer : output file unit
