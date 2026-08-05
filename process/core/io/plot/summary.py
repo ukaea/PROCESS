@@ -15957,7 +15957,7 @@ def plot_pf_dimensions(
                 zorder=5,
             )
             axis.annotate(
-                f"ΔR={dr_coil:.3f}",
+                f"ΔR={abs(dr_coil):.3f}",
                 xy=(r_middle, radial_arrow_y),
                 xytext=radial_label_offset,
                 textcoords="offset points",
@@ -15987,7 +15987,7 @@ def plot_pf_dimensions(
                 },
             )
             axis.annotate(
-                f"ΔZ={dz_coil:.3f}",
+                f"ΔZ={abs(dz_coil):.3f}",
                 xy=(vertical_arrow_x, z_middle),
                 xytext=(4, 0),
                 textcoords="offset points",
