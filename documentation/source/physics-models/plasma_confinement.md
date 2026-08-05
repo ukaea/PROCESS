@@ -649,7 +649,7 @@ $$
 
 #### 51: NCST spherical tokamak scaling (L-mode) | `ncst_confinement_time()`
 
-Is selected with `i_confinement_time = 51` [^paz_soldan_neg]
+Is selected with `i_confinement_time = 51` [^23]
 
 $$
 \tau_{\text{E}} =  0.11 I_{\text{p}}^{0.33} B_{\text{T}}^{1.03} \overline{n}_{19}^{-0.01} P_{\text{L}}^{-0.07}
@@ -659,7 +659,7 @@ $$
 
 #### 52: Paz-Soldan negative triangularity scaling (L-mode) | `paz_soldan_nt_confinement_time()`
 
-Is selected with `i_confinement_time = 52` [^23]
+Is selected with `i_confinement_time = 52` [^paz_soldan_neg]
 
 $$
 \tau_{\text{E}} =  0.0821 I_{\text{p}}^{1.02} B_{\text{T}}^{0.11} P_{\text{L}}^{-0.91} \overline{n}_{19}^{0.51} 
