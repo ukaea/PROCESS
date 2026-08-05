@@ -788,7 +788,13 @@ class FirstWall(Model):
     def output_fw_pumping(self):
         """Outputs the first wall pumping details to the output file."""
         po.oheadr(self.outfile, "First wall pumping")
-
+        po.ovarre(
+            self.outfile,
+            "Pumping power calculation option",
+            "(i_p_coolant_pumping)",
+            self.data.fwbs.i_p_coolant_pumping,
+            "OP ",
+        )
         po.ovarre(
             self.outfile,
             "First wall coolant type",
