@@ -361,7 +361,7 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Exact mid-plane cross-section area of the conductor per TF coil [m2]
-        self.data.tfcoil.a_res_tf_coil_conductor = np.pi * (
+        self.data.resistive_tfcoil.a_res_tf_coil_conductor = np.pi * (
             (
                 self.data.superconducting_tfcoil.r_tf_wp_inboard_outer
                 - self.data.tfcoil.dx_tf_wp_insulation
@@ -385,12 +385,14 @@ class ResistiveTFCoil(TFCoil):
             self.data.tfcoil.dx_tf_wp_insulation
             + self.data.tfcoil.dx_tf_turn_insulation * self.data.tfcoil.n_tf_coil_turns
         )
-        self.data.tfcoil.a_res_tf_coil_conductor *= 1.0e0 - self.data.tfcoil.fcoolcp
+        self.data.resistive_tfcoil.a_res_tf_coil_conductor *= (
+            1.0e0 - self.data.tfcoil.fcoolcp
+        )
 
         # Inter turn insulation area per coil [m2]
         self.data.tfcoil.a_tf_coil_wp_turn_insulation = (
             self.data.superconducting_tfcoil.a_tf_wp_no_insulation
-            - self.data.tfcoil.a_res_tf_coil_conductor
+            - self.data.resistive_tfcoil.a_res_tf_coil_conductor
             / (1.0e0 - self.data.tfcoil.fcoolcp)
         )
 
@@ -478,17 +480,17 @@ class ResistiveTFCoil(TFCoil):
         """
         # Resistivity of the Glidcop copper centerpost
         if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-            self.data.tfcoil.rho_cp = (
+            self.data.resistive_tfcoil.rho_cp = (
                 # 1.86 is the resistivity at `20°C` for GLIDCOP AL-15
                 # 0.00393 is the coefficient of resistivity for copper
-                self.data.tfcoil.frhocp
+                self.data.resistive_tfcoil.frhocp
                 * (1.86e0 + 0.00393e0 * (self.data.tfcoil.temp_cp_average - 293.15e0))
                 * 1.0e-8
             )
 
         # Resistivity of the aluminium centerpost
         if self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-            self.data.tfcoil.rho_cp = self.data.tfcoil.frhocp * (
+            self.data.resistive_tfcoil.rho_cp = self.data.resistive_tfcoil.frhocp * (
                 2.00016e-14 * self.data.tfcoil.temp_cp_average**3
                 - 6.75384e-13 * self.data.tfcoil.temp_cp_average**2
                 + 8.89159e-12 * self.data.tfcoil.temp_cp_average
@@ -506,8 +508,8 @@ class ResistiveTFCoil(TFCoil):
 
             # Leg resistivity (different leg temperature as separate cooling channels)
             if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-                self.data.tfcoil.rho_tf_leg = (
-                    self.data.tfcoil.frholeg
+                self.data.resistive_tfcoil.rho_tf_leg = (
+                    self.data.resistive_tfcoil.frholeg
                     * (
                         1.86e0
                         + 0.00393e0 * (self.data.tfcoil.temp_tf_legs_outboard - 293.15e0)
@@ -515,10 +517,13 @@ class ResistiveTFCoil(TFCoil):
                     * 1.0e-8
                 )
             elif self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-                self.data.tfcoil.rho_tf_leg = self.data.tfcoil.frholeg * (
-                    2.00016e-14 * self.data.tfcoil.temp_tf_legs_outboard**3
-                    - 6.75384e-13 * self.data.tfcoil.temp_tf_legs_outboard**2
-                    + 8.89159e-12 * self.data.tfcoil.temp_tf_legs_outboard
+                self.data.resistive_tfcoil.rho_tf_leg = (
+                    self.data.resistive_tfcoil.frholeg
+                    * (
+                        2.00016e-14 * self.data.tfcoil.temp_tf_legs_outboard**3
+                        - 6.75384e-13 * self.data.tfcoil.temp_tf_legs_outboard**2
+                        + 8.89159e-12 * self.data.tfcoil.temp_tf_legs_outboard
+                    )
                 )
 
             # Tricky trick to make the leg / CP temperatures the same
@@ -546,7 +551,7 @@ class ResistiveTFCoil(TFCoil):
                 self.data.tfcoil.dx_tf_turn_insulation,
                 self.data.tfcoil.n_tf_coil_turns,
                 self.data.tfcoil.c_tf_total,
-                self.data.tfcoil.rho_cp,
+                self.data.resistive_tfcoil.rho_cp,
                 self.data.tfcoil.fcoolcp,
                 self.data.tfcoil.n_tf_coils,
             )
@@ -603,15 +608,15 @@ class ResistiveTFCoil(TFCoil):
             # Outer leg resistive power loss
             # ---
             # TF outboard leg's resistance calculation (per leg) [ohm]
-            self.data.tfcoil.res_tf_leg = (
-                self.data.tfcoil.rho_tf_leg
+            self.data.resistive_tfcoil.res_tf_leg = (
+                self.data.resistive_tfcoil.rho_tf_leg
                 * self.data.tfcoil.len_tf_coil
                 / self.data.superconducting_tfcoil.a_leg_cond
             )
 
             # TF outer leg resistive power (TOTAL) [W]
             self.data.tfcoil.p_tf_leg_resistive = (
-                self.data.tfcoil.res_tf_leg
+                self.data.resistive_tfcoil.res_tf_leg
                 * (self.data.tfcoil.c_tf_total / self.data.tfcoil.n_tf_coils) ** 2
             ) * self.data.tfcoil.n_tf_coils
             # ---
@@ -634,7 +639,7 @@ class ResistiveTFCoil(TFCoil):
                 )
 
                 # Total joints resistive power losses
-                self.data.tfcoil.p_tf_joints_resistive = (
+                self.data.resistive_tfcoil.p_tf_joints_resistive = (
                     self.data.tfcoil.n_tf_joints
                     * self.data.tfcoil.rho_tf_joints
                     * self.data.tfcoil.c_tf_total**2
@@ -642,7 +647,7 @@ class ResistiveTFCoil(TFCoil):
                 )
             else:
                 # Joints resistance to be evaluated for SC
-                self.data.tfcoil.p_tf_joints_resistive = 0.0e0
+                self.data.resistive_tfcoil.p_tf_joints_resistive = 0.0e0
 
             # ---
 
@@ -651,7 +656,7 @@ class ResistiveTFCoil(TFCoil):
         else:
             # TF resistive powers
             self.data.tfcoil.p_cp_resistive = (
-                self.data.tfcoil.rho_cp
+                self.data.resistive_tfcoil.rho_cp
                 * self.data.tfcoil.c_tf_total**2
                 * self.data.tfcoil.len_tf_coil
                 / (
@@ -665,7 +670,7 @@ class ResistiveTFCoil(TFCoil):
             self.data.tfcoil.p_tf_leg_resistive = 0.0e0
 
             # No joints if self.data.physics.itart = 0
-            self.data.tfcoil.p_tf_joints_resistive = 0.0e0
+            self.data.resistive_tfcoil.p_tf_joints_resistive = 0.0e0
 
     def resistive_tf_coil_areas_and_masses(self):
         """Calculate the areas and masses of the resistive TF coil"""
@@ -946,7 +951,7 @@ class ResistiveTFCoil(TFCoil):
             self.outfile,
             "Area of resistive conductor per coil",
             "(a_res_tf_coil_conductor)",
-            self.data.tfcoil.a_res_tf_coil_conductor,
+            self.data.resistive_tfcoil.a_res_tf_coil_conductor,
         )
         po.ovarre(
             self.outfile,
@@ -1079,13 +1084,13 @@ class ResistiveTFCoil(TFCoil):
                 self.outfile,
                 "CP resistivity (ohm.m)",
                 "(rho_cp)",
-                self.data.tfcoil.rho_cp,
+                self.data.resistive_tfcoil.rho_cp,
             )
             po.ovarre(
                 self.outfile,
                 "Leg resistivity (ohm.m)",
                 "(rho_tf_leg)",
-                self.data.tfcoil.rho_tf_leg,
+                self.data.resistive_tfcoil.rho_tf_leg,
             )
             po.ovarre(
                 self.outfile,
@@ -1103,13 +1108,13 @@ class ResistiveTFCoil(TFCoil):
                 self.outfile,
                 "joints resistive power loss (W)",
                 "(p_tf_joints_resistive)",
-                self.data.tfcoil.p_tf_joints_resistive,
+                self.data.resistive_tfcoil.p_tf_joints_resistive,
             )
             po.ovarre(
                 self.outfile,
                 "Outboard leg resistance per coil (ohm)",
                 "(res_tf_leg)",
-                self.data.tfcoil.res_tf_leg,
+                self.data.resistive_tfcoil.res_tf_leg,
             )
             po.ovarre(
                 self.outfile,
@@ -1129,7 +1134,7 @@ class ResistiveTFCoil(TFCoil):
                 self.outfile,
                 "TF resistivity (ohm.m)",
                 "(p_cp_resistive)",
-                self.data.tfcoil.rho_cp,
+                self.data.resistive_tfcoil.rho_cp,
             )
             po.ovarre(
                 self.outfile,

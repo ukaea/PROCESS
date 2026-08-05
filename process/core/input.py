@@ -499,8 +499,8 @@ INPUT_VARIABLES = {
     "f_radius_beam_tangency_rmajor": InputVariable(
         "current_drive", float, range=(0.5, 2.0)
     ),
-    "frhocp": InputVariable("tfcoil", float, range=(0.01, 5.0)),
-    "frholeg": InputVariable("tfcoil", float, range=(0.01, 5.0)),
+    "frhocp": InputVariable("resistive_tfcoil", float, range=(0.01, 5.0)),
+    "frholeg": InputVariable("resistive_tfcoil", float, range=(0.01, 5.0)),
     "fseppc": InputVariable("build", float, range=(1000000.0, 1000000000.0)),
     "fvoldw": InputVariable("fwbs", float, range=(0.0, 10.0)),
     "fvolsi": InputVariable("fwbs", float, range=(0.0, 10.0)),
@@ -725,7 +725,7 @@ INPUT_VARIABLES = {
     ),
     "redun_vacp": InputVariable("costs", float, range=(0.0, 100.0)),
     "residual_sig_hoop": InputVariable("cs_fatigue", float, range=(0.0, 1000000000.0)),
-    "rho_tf_bus": InputVariable("tfcoil", float, range=(0.0, 1e-05)),
+    "rho_tf_bus": InputVariable("resistive_tfcoil", float, range=(0.0, 1e-05)),
     "rho_tf_joints": InputVariable("tfcoil", float, range=(0.0, 0.01)),
     "radius_plasma_pedestal_density_norm": InputVariable(
         "physics", float, range=(0.01, 1.0)

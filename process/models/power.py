@@ -1067,7 +1067,7 @@ class Power(Model):
             self.data.heat_transport.helpow_cryal = (
                 self.data.tfcoil.p_cp_resistive
                 + self.data.tfcoil.p_tf_leg_resistive
-                + self.data.tfcoil.p_tf_joints_resistive
+                + self.data.resistive_tfcoil.p_tf_joints_resistive
                 + self.data.fwbs.pnuc_cp_tf * 1.0e6
             )
 
@@ -2109,11 +2109,13 @@ class Power(Model):
             a_tf_bus = self.data.tfcoil.c_tf_turn / self.data.tfcoil.j_tf_bus
 
             # Bus resistance [ohm]
-            # Bus resistivity (self.data.tfcoil.rho_tf_bus)
+            # Bus resistivity (self.data.resistive_tfcoil.rho_tf_bus)
             # Issue #1253: there was a fudge here to set the bus bar resistivity equal
             # to the TF conductor resistivity. I have removed this.
             tfbusres = (
-                self.data.tfcoil.rho_tf_bus * self.data.tfcoil.len_tf_bus / a_tf_bus
+                self.data.resistive_tfcoil.rho_tf_bus
+                * self.data.tfcoil.len_tf_bus
+                / a_tf_bus
             )
 
             #  Bus mass (kg)
@@ -2123,7 +2125,7 @@ class Power(Model):
 
             #  Total maximum impedance MDK actually just fixed resistance
             res_tf_system_total = (
-                self.data.tfcoil.n_tf_coils * self.data.tfcoil.res_tf_leg
+                self.data.tfcoil.n_tf_coils * self.data.resistive_tfcoil.res_tf_leg
                 + (self.data.tfcoil.p_cp_resistive / self.data.tfcoil.c_tf_total**2)
                 + tfbusres
             )
@@ -2131,7 +2133,7 @@ class Power(Model):
             #  No reactive portion of the voltage is included here - assume long
             #  ramp times
             #  MDK This is steady state voltage, not "peak" voltage
-            self.data.tfcoil.vtfkv = (
+            self.data.resistive_tfcoil.vtfkv = (
                 1.0e-3
                 * res_tf_system_total
                 * self.data.tfcoil.c_tf_turn
@@ -2139,14 +2141,14 @@ class Power(Model):
             )
 
             # Resistive powers (MW):
-            self.data.tfcoil.p_cp_resistive_mw = (
+            self.data.resistive_tfcoil.p_cp_resistive_mw = (
                 1.0e-6 * self.data.tfcoil.p_cp_resistive
             )  # inboard legs (called centrepost, CP for tart design)
-            self.data.tfcoil.p_tf_leg_resistive_mw = (
+            self.data.resistive_tfcoil.p_tf_leg_resistive_mw = (
                 1.0e-6 * self.data.tfcoil.p_tf_leg_resistive
             )  # outboard legs
-            self.data.tfcoil.p_tf_joints_resistive_mw = (
-                1.0e-6 * self.data.tfcoil.p_tf_joints_resistive
+            self.data.resistive_tfcoil.p_tf_joints_resistive_mw = (
+                1.0e-6 * self.data.resistive_tfcoil.p_tf_joints_resistive
             )  # Joints
             tfbusmw = (
                 1.0e-6 * self.data.tfcoil.c_tf_turn**2 * tfbusres
@@ -2164,11 +2166,11 @@ class Power(Model):
 
             # Total power consumption (MW)
             self.data.tfcoil.tfcmw = (
-                self.data.tfcoil.p_cp_resistive_mw
-                + self.data.tfcoil.p_tf_leg_resistive_mw
+                self.data.resistive_tfcoil.p_cp_resistive_mw
+                + self.data.resistive_tfcoil.p_tf_leg_resistive_mw
                 + tfbusmw
                 + tfreacmw
-                + self.data.tfcoil.p_tf_joints_resistive_mw
+                + self.data.resistive_tfcoil.p_tf_joints_resistive_mw
             )
 
             # Total steady state AC power demand (MW)
@@ -2218,7 +2220,7 @@ class Power(Model):
             self.outfile,
             "Steady-state voltage per coil (kV)",
             "(vtfkv)",
-            self.data.tfcoil.vtfkv,
+            self.data.resistive_tfcoil.vtfkv,
             "OP ",
         )
         # po.ovarre(outfile,'Peak power (MW)','(tfcmw..)',tfcmw)
@@ -2233,14 +2235,14 @@ class Power(Model):
             self.outfile,
             "Power dissipation in TF coil set: inboard legs (MW)",
             "(p_cp_resistive_mw)",
-            self.data.tfcoil.p_cp_resistive_mw,
+            self.data.resistive_tfcoil.p_cp_resistive_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Power dissipation in TF coil set: outboard legs (MW)",
             "(p_tf_leg_resistive_mw)",
-            self.data.tfcoil.p_tf_leg_resistive_mw,
+            self.data.resistive_tfcoil.p_tf_leg_resistive_mw,
             "OP ",
         )
         po.ovarre(
@@ -2255,7 +2257,7 @@ class Power(Model):
                 self.outfile,
                 "Power dissipation in TF coil set: joints",
                 "(p_tf_joints_resistive_mw)",
-                self.data.tfcoil.p_tf_joints_resistive_mw,
+                self.data.resistive_tfcoil.p_tf_joints_resistive_mw,
                 "OP ",
             )
 
@@ -2300,7 +2302,7 @@ class Power(Model):
             self.data.tfcoil.n_tf_coils,
             self.data.tfcoil.v_tf_coil_dump_quench_kv,
             ettfmj,
-            self.data.tfcoil.res_tf_leg,
+            self.data.resistive_tfcoil.res_tf_leg,
         )
 
     def tfcpwr(
@@ -2373,7 +2375,7 @@ class Power(Model):
 
         #  Total resistance of TF bus, ohms
         # rtfbus = 2.62e-4 * len_tf_bus / albusa
-        rtfbus = self.data.tfcoil.rho_tf_bus * len_tf_bus / (albusa / 10000)
+        rtfbus = self.data.resistive_tfcoil.rho_tf_bus * len_tf_bus / (albusa / 10000)
 
         #  Total voltage drop across TF bus, volts
         vtfbus = 1000.0e0 * itfka * rtfbus

@@ -48,6 +48,9 @@ class SuperconductingTFData:
     a_tf_coil_inboard_insulation: float = 0.0
     """Inboard coil insulation cross-section per coil [m²]"""
 
+    a_tf_turn_insulation: float = 0.0
+    """single turn insulation area (m2)"""
+
     f_a_tf_coil_inboard_steel: float = 0.0
     """Inboard coil steel fraction [-]"""
 

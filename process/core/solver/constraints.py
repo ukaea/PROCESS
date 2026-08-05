@@ -695,7 +695,10 @@ def constraint_equation_19(constraint_registration, data):
     p_tf_leg_resistive_mw: TF coil outboard leg resistive power (total) (MW)
     mvalim: MVA limit for resistive TF coil set (total) (MW)
     """
-    totmva = data.tfcoil.p_cp_resistive_mw + data.tfcoil.p_tf_leg_resistive_mw
+    totmva = (
+        data.resistive_tfcoil.p_cp_resistive_mw
+        + data.resistive_tfcoil.p_tf_leg_resistive_mw
+    )
 
     return leq(totmva, data.constraints.mvalim, constraint_registration)
 
