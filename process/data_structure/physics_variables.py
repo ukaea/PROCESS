@@ -1656,6 +1656,15 @@ class PhysicsData:
     res_plasma_fuel_spitzer_vol_avg: float = 0.0
     """Volume averaged plasma Spitzer resistivity due to fuel ions (ohm m)"""
 
+    len_plasma_sol_eich13_power_decay: float = 0.0
+    """Eich 2013 power decay length in the scrape-off layer scaling (λ_q) [m]"""
+
+    len_plasma_sol_mast14_power_decay_1: float = 0.0
+    """MAST 2014 power decay length in the scrape-off layer scaling 1 (λ_q) [m]"""
+
+    len_plasma_sol_mast14_power_decay_2: float = 0.0
+    """MAST 2014 power decay length in the scrape-off layer scaling 2 (λ_q) [m]"""
+
     dt_power_density_plasma: float = 0.0
     sigmav_dt_average: float = 0.0
     dhe3_power_density: float = 0.0

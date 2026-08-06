@@ -45,6 +45,7 @@ if TYPE_CHECKING:
     from process.models.physics.plasma_fields import PlasmaFields
     from process.models.physics.plasma_geometry import PlasmaGeom
     from process.models.physics.plasma_profiles import PlasmaProfile
+    from process.models.physics.scrape_off_layer import ScrapeOffLayer
 
 logger = logging.getLogger(__name__)
 
@@ -195,6 +196,7 @@ class Physics(Model):
         plasma_fields: PlasmaFields,
         plasma_dia_current: PlasmaDiamagneticCurrent,
         plasma_geometry: PlasmaGeom,
+        scrape_off_layer: ScrapeOffLayer,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -211,6 +213,7 @@ class Physics(Model):
         self.fields = plasma_fields
         self.dia_current = plasma_dia_current
         self.geometry = plasma_geometry
+        self.scrape_off_layer = scrape_off_layer
 
     def output(self) -> None:
         """Output plasma physics information."""
@@ -813,6 +816,13 @@ class Physics(Model):
             )
         )
 
+        # ===============================
+
+        # Calculate scrape-off layer physics
+
+        self.scrape_off_layer.run()
+
+        # ===============================
         self.data.physics.pflux_plasma_surface_neutron_avg_mw = (
             self.data.physics.p_neutron_total_mw / self.data.physics.a_plasma_surface
         )
@@ -2749,6 +2759,8 @@ class Physics(Model):
             logger.error("Power plant overall imbalance > 0.1 MW")
 
         self.exhaust.output()
+
+        self.scrape_off_layer.output()
 
         if self.data.stellarator.istell == 0:
             self.plasma_transition.output()
