@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class ScrapeOffLayer(Model):
-    """Model for calculating plasma scrape off layers physics."""
+    """Model for calculating plasma scrape off layer physics."""
 
     def __init__(self):
         self.outfile = constants.NOUT
@@ -30,10 +30,11 @@ class ScrapeOffLayer(Model):
             b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
         )
 
+        # NOTE: converting plasma_current from A to MA
         self.data.physics.len_plasma_sol_mast14_power_decay_2 = (
             self.calculate_mast2014_sol_power_decay_length_2(
                 p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
-                cur_plasma_ma=self.data.physics.plasma_current / 1e6,  # Convert A to MA
+                cur_plasma_ma=self.data.physics.plasma_current / 1e6,
             )
         )
 
@@ -74,13 +75,13 @@ class ScrapeOffLayer(Model):
         Parameters
         ----------
         p_plasma_separatrix_mw : float
-            Power crossing the separatrix (Pₛₑₚ) (MW)
+            Power crossing the separatrix (Pₛₑₚ) [MW]
         rmajor : float
             Major radius of the plasma (R₀) [m]
         b_plasma_surface_poloidal_average : float
-            Poloidal magnetic field at the plasma surface (⟨Bₚₒₗ(a)⟩)  [T]
+            Poloidal magnetic field at the plasma surface (⟨Bₚₒₗ(a)⟩) [T]
         aspect : float
-            Aspect ratio of the plasma  (A)
+            Aspect ratio of the plasma (A)
 
         Returns
         -------
@@ -117,9 +118,9 @@ class ScrapeOffLayer(Model):
         Parameters
         ----------
         p_plasma_separatrix_mw : float
-            Power crossing the separatrix (Pₛₑₚ) (MW)
+            Power crossing the separatrix (Pₛₑₚ) [MW]
         b_plasma_surface_poloidal_average : float
-            Poloidal magnetic field at the plasma surface (⟨Bₚₒₗ(a)⟩)  [T]
+            Poloidal magnetic field at the plasma surface (⟨Bₚₒₗ(a)⟩) [T]
 
         Returns
         -------
@@ -155,7 +156,7 @@ class ScrapeOffLayer(Model):
         Parameters
         ----------
         p_plasma_separatrix_mw : float
-            Power crossing the separatrix (Pₛₑₚ) (MW)
+            Power crossing the separatrix (Pₛₑₚ) [MW]
         cur_plasma_ma : float
             Plasma current (Iₚ) [MA]
 
