@@ -31,6 +31,27 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
     def latex_symbol(self) -> str:
         return self._latex_symbol
 
+    def __eq__(self, o, /):
+        """Check if this parameter is equal to something.
+
+        Parameters are equal if their names and values (with matching
+        units) are equal.
+
+        In PROCESS, a parameter is equal to a non-Parameter 'o' if the
+        parameter value equals 'o'.
+
+        Returns
+        -------
+        :
+            True if the parameters are equal, False otherwise.
+        """
+        if not isinstance(o, DefaultParameter):
+            return self.value == o
+        return super().__eq__(o)
+
+    def __hash__(self):
+        return super().__hash__()
+
 
 @dataclass(slots=True, kw_only=True)
 class ParameterMetadata:
