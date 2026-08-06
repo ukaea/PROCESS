@@ -77,8 +77,10 @@ class ScrapeOffLayer(Model):
             "(len_plasma_sol_mast14_power_decay_2)",
             self.data.physics.len_plasma_sol_mast14_power_decay_2,
         )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
 
-        po.osubhd(self.outfile, "Upstream Outboard SOL Parallel Area and Power Flux")
+        po.osubhd(self.outfile, "Upstream Outboard SOL Parallel Area and Power Flux:")
         po.ovarre(
             self.outfile,
             "Plasma outboard midplane Eich 2013 SOL parrallel area (Aₗₗ,ᵤ) [m²]",
