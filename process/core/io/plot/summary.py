@@ -3237,7 +3237,7 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
             linestyle="--",
         )
 
-    # Since CS may not always be present try to retireve values
+    # Since CS may not always be present try to retrieve values
     try:
         cs_circuit = [
             mfile.get(f"cs_t{i}", scan=scan)
@@ -3259,9 +3259,9 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     plasmat4 = mfile.get("plasmat4", scan=scan)
     plasmat5 = mfile.get("plasmat5", scan=scan)
 
-    # x-coirdinates for the plasma current
+    # x-coordinates for the plasma current
     x_plasma = pulse_timings.pf_active_cumulative[1:]
-    # x-coirdinates for the plasma current
+    # x-coordinates for the plasma current
     y_plasma = [plasmat1, plasmat2, plasmat3, plasmat4, plasmat5]
 
     # Plot the plasma current
