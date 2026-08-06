@@ -1,4 +1,4 @@
-"""Module for calculating plasma scrape off layers physics"""
+"""Module for calculating plasma scrape off layer physics"""
 
 import logging
 
