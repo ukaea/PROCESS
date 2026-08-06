@@ -1,5 +1,34 @@
 # Scrape off Layer | `ScrapeOffLayer`
 
+
+## Parallel energy flux density
+
+The peak unmitigated parallel upstream energy flux density, $q_{\parallel,u}$ is given by[^stangeby_boundary] [^henderson_step]:
+
+$$
+q_{\parallel,u} = \frac{P_{\text{up}}}{2\pi\lambda_{\text{q,u}}R_{\text{u}}}\frac{B_{\text{Tot,u}}}{B_{\text{p,u}}}
+$$
+
+$$
+q_{\parallel,u} = \frac{P_{\text{up}}}{A_{\parallel,u}}
+$$
+
+$P_{\text{up}}$ is defined as $P_{\text{sep}}f_{\text{div}}$, where $P_{\text{sep}}$ is the plasma sepratrix power and $f_{\text{div}}$ is the fraction of the power directed to the divertor. $\lambda_{\text{q,u}}$ is the [upstream power decay length](#power-decay-lengths), $R_{\text{u}}$ is the midplane separatrix radius, $B_{\text{Tot,u}}$ is the total magnetic field strength at the midplane separatrix and $B_{\text{p,u}}$ is the poloidal magnetic field strength at the midplane separatrix.
+
+------------------
+
+### Parallel area | `calculate_upstream_sol_outboard_parallel_area()`
+
+The outboard parallel SOL flux area $A_{\parallel,u}$ can be envisaged as a ribbon going around the outboard cirmcuference of the plasma of width $\lambda_{\text{q,u}}$. It is then weighted by the field ratio $\frac{B_{\text{Tot,u}}}{B_{\text{p,u}}}$ to account for the field line angle at the outboard midplane:
+
+$$
+A_{\parallel,u} = 2\pi\lambda_{\text{q,u}}R_{\text{u}}\frac{B_{\text{Tot,u}}}{B_{\text{p,u}}}
+$$
+
+
+
+------------------
+
 ## Power Decay Lengths
 
 In tokamak scrape-off layer (SOL) physics, $\lambda_q$ is the radial heat flux e-folding length, representing the narrow width over which exhaust power drops exponentially. It measures how tightly thermal energy exiting the core plasma is compressed onto open magnetic field lines.
@@ -58,3 +87,7 @@ The $R^2$ value for this fit is 0.55
 
 [^mast_2014]: A. J. Thornton and A. Kirk, “Scaling of the scrape-off layer width during inter-ELM H modes on MAST as measured by infrared thermography,”
 Plasma Physics and Controlled Fusion, vol. 56, no. 5, p. 055008, Apr. 2014, doi: 10.1088/0741-3335/56/5/055008.
+
+[^stangeby_boundary]: P. C. Stangeby, “The Plasma Boundary of Magnetic Fusion Devices,” Jan. 2000, doi: 10.1201/9780367801489.
+
+[^henderson_step]: S. S. Henderson et al., “An overview of the STEP divertor design and the simple models driving the plasma exhaust scenario,” Nuclear Fusion, vol. 65, no. 1, pp. 016033–016033, Nov. 2024, doi: 10.1088/1741-4326/ad93e7.

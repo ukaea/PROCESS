@@ -40,7 +40,7 @@ class ScrapeOffLayer(Model):
             )
         )
 
-        self.data.physics.a_plasma_outboard_sol_eich13_parallel = self.calculate_upstream_sol_outboard_parallel_area(
+        self.data.physics.a_plasma_outboard_sol_eich13_parallel = self.calculate_upstream_sol_outboard_parallel_area(  # noqa: E501
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             len_plasma_sol_power_decay=self.data.physics.len_plasma_sol_eich13_power_decay,
@@ -227,13 +227,21 @@ class ScrapeOffLayer(Model):
         b_plasma_outboard_total : float
             Total magnetic field at the plasma outboard (Bₜₒₜ(R₀+a)) [T]
         b_plasma_surface_poloidal_average : float
-            Poloidal magnetic field at the plasma surface (⟨Bₚₒₗ(a)⟩)  [T]
+            Poloidal magnetic field at the plasma surface (⟨Bₚₒₗ(a)⟩) [T]
 
         Returns
         -------
         float
             Upstream outboard SOL parallel area (Aₗₗ,ᵤ) [m²]
 
+        References
+        ----------
+        [1] P. C. Stangeby, “The Plasma Boundary of Magnetic Fusion Devices,” Jan. 2000,
+        doi: 10.1201/9780367801489.
+
+        [2] S. S. Henderson et al., “An overview of the STEP divertor design and the
+        simple models driving the plasma exhaust scenario,” Nuclear Fusion, vol. 65,
+        no. 1, pp. 016033-016033, Nov. 2024, doi: 10.1088/1741-4326/ad93e7.
 
         """
         return (
