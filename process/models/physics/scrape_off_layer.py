@@ -249,5 +249,5 @@ class ScrapeOffLayer(Model):
         return (
             (2 * np.pi * (rmajor + rminor))
             * len_plasma_sol_power_decay
-            * (b_plasma_outboard_total / b_plasma_surface_poloidal_average)
+            * (b_plasma_surface_poloidal_average / b_plasma_outboard_total)
         )

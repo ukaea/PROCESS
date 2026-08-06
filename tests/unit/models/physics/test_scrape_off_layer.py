@@ -111,4 +111,4 @@ def test_calculate_upstream_sol_outboard_parallel_area_exact():
         b_plasma_surface_poloidal_average=0.5,
     )
     assert isinstance(result, float)
-    assert pytest.approx(result) == 0.40212385965949354
+    assert pytest.approx(result) == 0.006283185307179587

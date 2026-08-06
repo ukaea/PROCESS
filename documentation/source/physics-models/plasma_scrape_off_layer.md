@@ -3,7 +3,7 @@
 
 ## Parallel energy flux density
 
-The peak unmitigated parallel upstream energy flux density, $q_{\parallel,u}$ is given by[^stangeby_boundary] [^henderson_step]:
+The peak unmitigated parallel upstream energy flux density, $q_{\parallel,u}$ $[\text{W} \text{m}^{-2}]$ is given by[^stangeby_boundary] [^henderson_step]:
 
 $$
 q_{\parallel,u} = \frac{P_{\text{up}}}{2\pi\lambda_{\text{q,u}}R_{\text{u}}}\frac{B_{\text{Tot,u}}}{B_{\text{p,u}}}
@@ -19,10 +19,10 @@ $P_{\text{up}}$ is defined as $P_{\text{sep}}f_{\text{div}}$, where $P_{\text{se
 
 ### Parallel area | `calculate_upstream_sol_outboard_parallel_area()`
 
-The outboard parallel SOL flux area $A_{\parallel,u}$ can be envisaged as a ribbon going around the outboard cirmcuference of the plasma of width $\lambda_{\text{q,u}}$. It is then weighted by the field ratio $\frac{B_{\text{Tot,u}}}{B_{\text{p,u}}}$ to account for the field line angle at the outboard midplane:
+The outboard parallel SOL flux area $A_{\parallel,u}$ [$\text{m}^2$] can be envisaged as a ribbon going around the outboard cirmcuference of the plasma of width $\lambda_{\text{q,u}}$. It is then weighted by the field ratio $\frac{B_{\text{p,u}}}{B_{\text{Tot,u}}}$ to account for the field line angle at the outboard midplane:
 
 $$
-A_{\parallel,u} = 2\pi\lambda_{\text{q,u}}R_{\text{u}}\frac{B_{\text{Tot,u}}}{B_{\text{p,u}}}
+A_{\parallel,u} = 2\pi\lambda_{\text{q,u}}R_{\text{u}}\frac{B_{\text{p,u}}}{B_{\text{Tot,u}}}
 $$
 
 
