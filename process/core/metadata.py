@@ -41,6 +41,8 @@ class ParameterMetadata:
 
 
 class PROCESSModelData:
+    __slots__ = []
+
     def __new__(cls, *args, **kwargs):
         if not hasattr(cls, "__dataclass_fields__"):
             raise TypeError(f"{cls.__name__} must be a dataclass!")
