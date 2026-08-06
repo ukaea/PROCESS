@@ -15981,6 +15981,145 @@ def plot_cs_von_mises_2d_contour(
     axis.set_title("CS Von Mises Stress Contour at BOP")
 
 
+def plot_pf_dimensions(
+    axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1, 2] = 1
+) -> None:
+    """Plot the PF coil dimensions on the given axis."""
+    r_pf_coil_middle = []
+    z_pf_coil_middle = []
+    radial_thicknesses = []
+    vertical_thicknesses = []
+    for coil in range(int(mfile.get("n_pf_cs_plasma_circuits", scan=scan) - 2)):
+        r_pf_coil_middle.append(mfile.get(f"r_pf_coil_middle[{coil}]", scan=scan))
+        z_pf_coil_middle.append(mfile.get(f"z_pf_coil_middle[{coil}]", scan=scan))
+        radial_thicknesses.append(mfile.get(f"pfdr({coil})", scan=scan))
+        vertical_thicknesses.append(mfile.get(f"pfdz({coil})", scan=scan))
+
+    plot_pf_coils(axis=axis, mfile=mfile, scan=scan, colour_scheme=colour_scheme)
+
+    if r_pf_coil_middle:
+        for r_middle, z_middle, dr_coil, dz_coil in zip(
+            r_pf_coil_middle,
+            z_pf_coil_middle,
+            radial_thicknesses,
+            vertical_thicknesses,
+            strict=False,
+        ):
+            half_radial_thickness = dr_coil / 2
+            half_vertical_thickness = dz_coil / 2
+            coil_left = r_middle - half_radial_thickness
+            coil_right = r_middle + half_radial_thickness
+            coil_bottom = z_middle - half_vertical_thickness
+            coil_top = z_middle + half_vertical_thickness
+
+            for x_position in (coil_left, r_middle, coil_right):
+                axis.axvline(
+                    x=x_position,
+                    color="r",
+                    linewidth=0.8,
+                    linestyle="--" if x_position == r_middle else "-",
+                    alpha=0.3,
+                    zorder=4,
+                )
+
+            for y_position in (coil_bottom, z_middle, coil_top):
+                axis.axhline(
+                    y=y_position,
+                    xmax=coil_left,
+                    color="r",
+                    linewidth=0.8,
+                    linestyle="--" if y_position == z_middle else "-",
+                    alpha=0.3,
+                    zorder=4,
+                )
+
+            axis.annotate(
+                f"({r_middle:.3f}, {z_middle:.3f})",
+                xy=(coil_left * 0.925, z_middle),
+                ha="right",
+                va="center",
+                fontsize=8,
+                zorder=6,
+                bbox={
+                    "boxstyle": "round,pad=0.2",
+                    "fc": "white",
+                    "alpha": 1.0,
+                    "ec": "none",
+                },
+            )
+
+            radial_arrow_y = coil_bottom if z_middle < 0 else coil_top
+            radial_label_offset = (0, -24) if z_middle < 0 else (0, 4)
+            radial_label_va = "top" if z_middle < 0 else "bottom"
+            axis.annotate(
+                "",
+                xy=(coil_left, radial_arrow_y),
+                xytext=(coil_right, radial_arrow_y),
+                arrowprops={
+                    "arrowstyle": "<->",
+                    "linewidth": 0.8,
+                    "color": "red",
+                    "shrinkA": 0,
+                    "shrinkB": 0,
+                },
+                zorder=5,
+            )
+            axis.annotate(
+                f"ΔR={abs(dr_coil):.3f}",
+                xy=(r_middle, radial_arrow_y),
+                xytext=radial_label_offset,
+                textcoords="offset points",
+                ha="center",
+                va=radial_label_va,
+                fontsize=8,
+                zorder=6,
+                bbox={
+                    "boxstyle": "round,pad=0.2",
+                    "fc": "white",
+                    "alpha": 1.0,
+                    "ec": "none",
+                },
+            )
+
+            vertical_arrow_x = coil_right
+            axis.annotate(
+                "",
+                xy=(vertical_arrow_x, coil_bottom),
+                xytext=(vertical_arrow_x, coil_top),
+                arrowprops={
+                    "arrowstyle": "<->",
+                    "linewidth": 0.8,
+                    "color": "red",
+                    "shrinkA": 0,
+                    "shrinkB": 0,
+                },
+            )
+            axis.annotate(
+                f"ΔZ={abs(dz_coil):.3f}",
+                xy=(vertical_arrow_x, z_middle),
+                xytext=(4, 0),
+                textcoords="offset points",
+                ha="left",
+                va="center",
+                fontsize=8,
+                zorder=6,
+                bbox={
+                    "boxstyle": "round,pad=0.2",
+                    "fc": "white",
+                    "alpha": 1.0,
+                    "ec": "none",
+                },
+            )
+
+    axis.set_title("PF Coil Dimensions")
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.set_xlim(left=0.0)
+    axis.minorticks_on()
+    axis.grid(True, alpha=0.3)
+    axis.set_aspect("equal", adjustable="box")
+
+
 def main_plot(
     m_file: MFile,
     scan: int,
@@ -16443,6 +16582,13 @@ def main_plot(
     plot_plasma_outboard_toroidal_ripple_map(_add_page(), m_file, scan)
 
     plot_tf_stress(_add_page().subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+
+    plot_pf_dimensions(
+        axis=_add_page("pf_dimensions").add_subplot(121, aspect="equal"),
+        mfile=m_file,
+        scan=scan,
+        colour_scheme=colour_scheme,
+    )
 
     plot_current_profiles_over_time(_add_page().add_subplot(111), m_file, scan)
 
