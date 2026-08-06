@@ -67,6 +67,16 @@ class ExampleModelDataclass(PROCESSModelData):
 def test_process_model_data_parameter():
     data = ExampleModelDataclass()
 
-    assert data.my_param == 42.0  # ruff:ignore[RUF069]
+    assert data.my_param == 42
     assert data.my_param.description == "My parameter"
     assert data.my_param.long_name == "my_parameter"
+
+
+def test_process_model_data_parameter_mutation():
+    data = ExampleModelDataclass()
+
+    data.my_param *= 2
+    assert data.my_param == 84
+
+    data.my_param = data.my_param * 2  # ruff:ignore[PLR6104]
+    assert data.my_param == 168
