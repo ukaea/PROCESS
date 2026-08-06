@@ -835,8 +835,8 @@ def hijc_rebco(
             * (b_conductor / b_critical - 1) ** q
         )
 
-    # Critical current times HTS area: default area is width 4mm times HTS layer thickness 1 um,
-    # divided by the tape area to provide engineering Jc per tape,!
+    # Critical current times HTS area: default area is width 4mm times HTS layer
+    # thickness 1 um, divided by the tape area to provide engineering Jc per tape,!
     # A scaling factor of 0.4 used to be applied below to assume the difference
     # between tape stacks and CORC cable layouts.
 
