@@ -461,7 +461,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
     """
 
     monkeypatch.setattr(
-        resistive_tf_coil.data.tfcoil, "rho_cp", tfresheatingparam.rho_cp
+        resistive_tf_coil.data.resistive_tfcoil, "rho_cp", tfresheatingparam.rho_cp
     )
 
     monkeypatch.setattr(
@@ -483,7 +483,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
     )
 
     monkeypatch.setattr(
-        resistive_tf_coil.data.tfcoil, "rho_tf_leg", tfresheatingparam.rho_tf_leg
+        resistive_tf_coil.data.resistive_tfcoil,
+        "rho_tf_leg",
+        tfresheatingparam.rho_tf_leg,
     )
 
     monkeypatch.setattr(
@@ -513,7 +515,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
     )
 
     monkeypatch.setattr(
-        resistive_tf_coil.data.tfcoil, "res_tf_leg", tfresheatingparam.res_tf_leg
+        resistive_tf_coil.data.resistive_tfcoil,
+        "res_tf_leg",
+        tfresheatingparam.res_tf_leg,
     )
 
     monkeypatch.setattr(
@@ -549,7 +553,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
     )
 
     monkeypatch.setattr(
-        resistive_tf_coil.data.tfcoil,
+        resistive_tf_coil.data.resistive_tfcoil,
         "p_tf_joints_resistive",
         tfresheatingparam.p_tf_joints_resistive,
     )
@@ -573,11 +577,11 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
     )
 
     monkeypatch.setattr(
-        resistive_tf_coil.data.tfcoil, "frholeg", tfresheatingparam.frholeg
+        resistive_tf_coil.data.resistive_tfcoil, "frholeg", tfresheatingparam.frholeg
     )
 
     monkeypatch.setattr(
-        resistive_tf_coil.data.tfcoil, "frhocp", tfresheatingparam.frhocp
+        resistive_tf_coil.data.resistive_tfcoil, "frhocp", tfresheatingparam.frhocp
     )
 
     monkeypatch.setattr(
@@ -656,11 +660,11 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
 
     resistive_tf_coil.tf_res_heating()
 
-    assert resistive_tf_coil.data.tfcoil.rho_cp == pytest.approx(
+    assert resistive_tf_coil.data.resistive_tfcoil.rho_cp == pytest.approx(
         tfresheatingparam.expected_rho_cp
     )
 
-    assert resistive_tf_coil.data.tfcoil.rho_tf_leg == pytest.approx(
+    assert resistive_tf_coil.data.resistive_tfcoil.rho_tf_leg == pytest.approx(
         tfresheatingparam.expected_rho_tf_leg
     )
 
@@ -668,7 +672,7 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
         tfresheatingparam.expected_vol_cond_cp
     )
 
-    assert resistive_tf_coil.data.tfcoil.res_tf_leg == pytest.approx(
+    assert resistive_tf_coil.data.resistive_tfcoil.res_tf_leg == pytest.approx(
         tfresheatingparam.expected_res_tf_leg
     )
 
@@ -680,8 +684,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
         tfresheatingparam.expected_p_cp_resistive
     )
 
-    assert resistive_tf_coil.data.tfcoil.p_tf_joints_resistive == pytest.approx(
-        tfresheatingparam.expected_pres_joints
+    assert (
+        resistive_tf_coil.data.resistive_tfcoil.p_tf_joints_resistive
+        == pytest.approx(tfresheatingparam.expected_pres_joints)
     )
 
     assert resistive_tf_coil.data.tfcoil.a_cp_cool == pytest.approx(

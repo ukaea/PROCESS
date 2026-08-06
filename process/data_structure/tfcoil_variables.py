@@ -28,16 +28,10 @@ class TFData:
     Does not include the area of voids and central helium channel
     """
 
-    a_res_tf_coil_conductor: float = 0.0
-    """Area of resistive conductor in resistive TF coil [m2]"""
-
     a_tf_turn_cable_space_no_void: float = 0.0
     """Cable space area (per turn)  [m2]
     Includes the area of voids and central helium channel
     """
-
-    a_tf_turn_insulation: float = 0.0
-    """single turn insulation area (m2)"""
 
     a_tf_coil_wp_turn_insulation: float = 0.0
     """winding pack turn insulation area per coil (m2)"""
@@ -60,7 +54,7 @@ class TFData:
     a_tf_wp_coolant_channels: float = 0.0
     """winding pack He coil area (m2)"""
 
-    bcritsc: float = 24.0
+    bcritsc: float = 24.0  # superconducting
     """upper critical field (T) for Nb3Sn superconductor at zero temperature and
     strain (`i_tf_sc_mat=4, =bc20m`)
     """
@@ -95,17 +89,17 @@ class TFData:
     tfc_sidewall_is_fraction: bool = False
     """logical switch to make dx_tf_side_case_min a fraction of TF coil thickness (`casths_fraction`)"""
 
-    t_conductor: float = 0.0
+    t_conductor: float = 0.0  # superconducting
     """Conductor (cable + steel conduit) area averaged dimension [m]"""
 
-    dx_tf_turn_general: float = 0.0
+    dx_tf_turn_general: float = 0.0  # superconducting
     """TF coil turn edge length including turn insulation [m]
     If the turn is not a square (i_tf_turns_integer = 1) a squared turn of
     equivalent size is use to calculated this quantity
     If the dx_tf_turn_general is non zero, c_tf_turn is calculated
     """
 
-    i_dx_tf_turn_general_input: bool = False
+    i_dx_tf_turn_general_input: bool = False  # superconducting
     """Boolean switch to activated when the user set the TF coil turn dimensions
     Not an input
     """
@@ -117,23 +111,20 @@ class TFData:
     constraint equation icc = 86
     """
 
-    dx_tf_turn_cable_space_general: float = 0.0
+    dx_tf_turn_cable_space_general: float = 0.0  # superconducting
     """TF coil superconducting cable squared/rounded dimensions [m]
     If the turn is not a square (i_tf_turns_integer = 1) a squared cable of
     equivalent size is use to calculated this quantity
     If the dx_tf_turn_cable_space_general is non zero, c_tf_turn is calculated
     """
 
-    i_dx_tf_turn_cable_space_general_input: bool = False
+    i_dx_tf_turn_cable_space_general_input: bool = False  # superconducting
     """Boolean switch to activated when the user set the TF coil cable dimensions
     Not an input
     """
 
-    acs: float = 0.0
+    acs: float = 0.0  # superconducting
     """Area of space inside conductor (m2)"""
-
-    cdtfleg: float = 0.0
-    """TF outboard leg current density (A/m2) (resistive coils only)"""
 
     cforce: float = 0.0
     """centering force on inboard leg (per coil) (N/m)"""
@@ -184,10 +175,10 @@ class TFData:
     e_tf_coil_magnetic_stored: float = 0.0
     """Stored magnetic energy in a single TF coil (J)"""
 
-    b_crit_upper_nbti: float = 14.86
+    b_crit_upper_nbti: float = 14.86  # superconducting
     """upper critical field of GL_nbti"""
 
-    t_crit_nbti: float = 9.04
+    t_crit_nbti: float = 9.04  # superconducting
     """critical temperature of GL_nbti"""
 
     max_force_density: float = 0.0
@@ -198,7 +189,7 @@ class TFData:
     (iteration variable 59)
     """
 
-    fhts: float = 0.5
+    fhts: float = 0.5  # superconductor
     """technology adjustment factor for critical current density fit for isumat..=2
     Bi-2212 superconductor, to describe the level of technology assumed (i.e. to
     account for stress, fatigue, radiation, AC losses, joints or manufacturing
@@ -243,7 +234,7 @@ class TFData:
     1 : integer turns
     """
 
-    i_tf_sc_mat: int = 1
+    i_tf_sc_mat: int = 1  # superconductor
     """Switch for superconductor material in TF coils:
     - =1 ITER Nb3Sn critical surface model with standard
     ITER parameters
@@ -272,7 +263,7 @@ class TFData:
     - =2  Picture frame coils
     """
 
-    i_tf_cond_eyoung_axial: int = 0
+    i_tf_cond_eyoung_axial: int = 0  # superconductor
     """Switch for the behavior of the TF coil conductor elastic axial properties
     - =0  Young's modulus is set to zero, and the conductor is not considered
     in the stress calculation. This corresponds to the case that the
@@ -284,7 +275,7 @@ class TFData:
     account the superconducting material `i_tf_sc_mat`
     """
 
-    i_tf_cond_eyoung_trans: int = 1
+    i_tf_cond_eyoung_trans: int = 1  # superconductor
     """Switch for the behavior of the elastic properties of the TF coil
     conductor in the transverse direction. Only active if
     `i_tf_cond_eyoung_axial == 2`
@@ -294,10 +285,10 @@ class TFData:
     which is set to a sensible material-dependent default.
     """
 
-    n_tf_wp_pancakes: int = 10
+    n_tf_wp_pancakes: int = 10  # superconductor
     """Number of pancakes in TF coil. Only used if `i_tf_turns_integer=1`"""
 
-    n_tf_wp_layers: int = 20
+    n_tf_wp_layers: int = 20  # superconductor
     """Number of layers in TF coil. Only used if `i_tf_turns_integer=1`"""
 
     n_rad_per_layer: int = 100
@@ -305,7 +296,7 @@ class TFData:
     quantities (stresses, strain displacement etc..)
     """
 
-    i_tf_bucking: int = -1
+    i_tf_bucking: int = 1
     """Switch for TF inboard support structure design:
     Default setting for backward compatibility
     - if copper resistive TF (i_tf_sup = 0) : Free standing TF without bucking structure
@@ -345,7 +336,7 @@ class TFData:
     j_tf_bus: float = 1.25e6
     """bussing current density (A/m2)"""
 
-    j_crit_str_tf: float = 0.0
+    j_crit_str_tf: float = 0.0  # superconductor
     """j_crit_str : superconductor strand critical current density under operating
     conditions (A/m2). Necessary for the cost calculation in $/kAm
     """
@@ -367,10 +358,10 @@ class TFData:
     Necessary for the cost calculation in $/kAm
     """
 
-    j_tf_wp_critical: float = 0.0
+    j_tf_wp_critical: float = 0.0  # superconducting
     """critical current density for winding pack (A/m2)"""
 
-    j_tf_wp_quench_heat_max: float = 0.0
+    j_tf_wp_quench_heat_max: float = 0.0  # supercondcuting
     """allowable TF coil winding pack current density, for dump temperature rise protection (A/m2)"""
 
     j_tf_wp: float = 0.0
@@ -436,9 +427,6 @@ class TFData:
     r_b_tf_inboard_peak: float = 0.0
     """Radius of maximum TF B-field (m)"""
 
-    res_tf_leg: float = 0.0
-    """TF coil leg resistance (ohm)"""
-
     toroidalgap: float = 1.0
     """Minimal distance between two toroidal coils. (m)"""
 
@@ -479,13 +467,13 @@ class TFData:
 
     sig_tf_wp: float = 0.0
 
-    str_cs_con_res: float = -0.005
+    str_cs_con_res: float = -0.005  # superconductor?
     """Residual manufacturing strain in CS superconductor material"""
 
-    str_pf_con_res: float = -0.005
+    str_pf_con_res: float = -0.005  # superconuctor?
     """Residual manufacturing strain in PF superconductor material"""
 
-    str_tf_con_res: float = -0.005
+    str_tf_con_res: float = -0.005  # supercondcutor?
     """Residual manufacturing strain in TF superconductor material
     If `i_str_wp == 0`, used to compute the critical surface.
     Otherwise, the self-consistent winding pack `str_wp` is used.
@@ -512,7 +500,7 @@ class TFData:
     - =1  str_wp is used
     """
 
-    quench_model: str = "exponential"
+    quench_model: str = "exponential"  # superconductor?
     """switch for TF coil quench model (Only applies to REBCO magnet at present, issue #522):
     - ='exponential' exponential quench with constant discharge resistor
     - ='linear' quench with constant voltage
@@ -521,10 +509,10 @@ class TFData:
     time1: float = 0
     """Time at which TF quench is detected (s)"""
 
-    tcritsc: float = 16.0
+    tcritsc: float = 16.0  # superconductor
     """critical temperature (K) for superconductor at zero field and strain (`i_tf_sc_mat=4, =tc0m`)"""
 
-    t_tf_superconductor_quench: float = 10.0
+    t_tf_superconductor_quench: float = 10.0  # superductor
     """fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
     For REBCO model, meaning depends on quench_model:
     - exponential quench : e-folding time (s)`
@@ -546,12 +534,6 @@ class TFData:
     tfcmw: float = 0.0
     """Peak power per TF power supply (MW)"""
 
-    p_cp_resistive_mw: float = 0.0
-    """Peak resistive TF coil inboard leg power (MW)"""
-
-    p_tf_joints_resistive_mw: float = 0.0
-    """TF joints resistive power losses (MW)"""
-
     tfcryoarea: float = 0.0
     """surface area of toroidal shells covering TF coils (m2)"""
 
@@ -563,28 +545,6 @@ class TFData:
 
     dx_tf_wp_insertion_gap: float = 0.01
     """TF coil WP insertion gap (m)"""
-
-    p_tf_leg_resistive_mw: float = 0.0
-    """TF coil outboard leg resistive power (MW)"""
-
-    rho_cp: float = 0.0
-    """TF coil inboard leg resistivity [Ohm-m]. If `itart=0`, this variable is the
-    average resistivity over the whole magnet
-    """
-
-    rho_tf_leg: float = 0.0
-    """Resistivity of a TF coil leg (Ohm-m)"""
-
-    rho_tf_bus: float = 1.86e-8
-    """Resistivity of a TF coil bus (Ohm-m). Default values is for that of GLIDCOP AL-15 (C15715) at 293K"""
-
-    frhocp: float = 1.0
-    """Centrepost resistivity enhancement factor. For `itart=0`, this factor
-    is used for the whole magnet
-    """
-
-    frholeg: float = 1.0
-    """Outboard legs resistivity enhancement factor. Only used for `itart=1`."""
 
     i_cp_joints: int = -1
     """Switch for CP demountable joints type
@@ -608,9 +568,6 @@ class TFData:
 
     th_joint_contact: float = 0.03
     """TF sliding joints contact pad width [m]"""
-
-    p_tf_joints_resistive: float = 0.0
-    """Calculated TF joints resistive power losses [W]"""
 
     len_tf_coil: float = 0.0
     """TF coil circumference (m)"""
@@ -643,7 +600,7 @@ class TFData:
     dx_tf_turn_insulation: float = 8e-4
     """conduit insulation thickness (m)"""
 
-    layer_ins: float = 0.0
+    layer_ins: float = 0.0  # superconducting
     """Additional insulation thickness between layers (m)"""
 
     dr_tf_nose_case: float = 0.3
@@ -670,28 +627,28 @@ class TFData:
     Rem : Thickness calculated for stellarators.
     """
 
-    temp_tf_superconductor_margin_min: float = 0.0
+    temp_tf_superconductor_margin_min: float = 0.0  # superconducting
     """minimum allowable temperature margin : TF coils (K)"""
 
-    temp_cs_superconductor_margin_min: float = 0.0
+    temp_cs_superconductor_margin_min: float = 0.0  # superconducting
     """minimum allowable temperature margin : CS (K)"""
 
-    tmargmin: float = 0.0
+    tmargmin: float = 0.0  # superconducting
     """minimum allowable temperature margin : TFC AND CS (K)"""
 
-    temp_margin: float = 0.0
+    temp_margin: float = 0.0  # superconducting
     """temperature margin (K)"""
 
-    temp_tf_superconductor_margin: float = 0.0
+    temp_tf_superconductor_margin: float = 0.0  # superconducting
     """TF coil superconductor temperature margin (K)"""
 
-    temp_tf_conductor_quench_max: float = 150.0
+    temp_tf_conductor_quench_max: float = 150.0  # superconductor
     """maximum temp during a quench for protection (K)"""
 
-    temp_croco_quench_max: float = 200.0
+    temp_croco_quench_max: float = 200.0  # superconductor
     """CroCo strand: maximum permitted temp during a quench (K)"""
 
-    temp_croco_quench: float = 0.0
+    temp_croco_quench: float = 0.0  # superconductor
     """CroCo strand: Actual temp reached during a quench (K)"""
 
     temp_tf_cryo: float = 4.5
@@ -700,7 +657,7 @@ class TFData:
     n_tf_coil_turns: float = 0.0
     """number of turns per TF coil"""
 
-    v_tf_coil_dump_quench_max_kv: float = 20.0
+    v_tf_coil_dump_quench_max_kv: float = 20.0  # superconducting
     """max voltage across TF coil during quench (kV) (`iteration variable 52`)"""
 
     vforce: float = 0.0
@@ -714,22 +671,19 @@ class TFData:
     vforce_outboard: float = 0.0
     """Vertical tension on outboard leg/coil (N)"""
 
-    f_a_tf_turn_cable_space_extra_void: float = 0.4
+    f_a_tf_turn_cable_space_extra_void: float = 0.4  # superconductor
     """coolant fraction of TFC 'cable' (`i_tf_sup=1`), or of TFC leg (`i_tf_sup=0`)"""
 
     voltfleg: float = 0.0
     """volume of each TF coil outboard leg (m3)"""
 
-    vtfkv: float = 0.0
-    """TF coil voltage for resistive coil including bus (kV)"""
-
-    v_tf_coil_dump_quench_kv: float = 0.0
+    v_tf_coil_dump_quench_kv: float = 0.0  # superconductor
     """voltage across a TF coil during quench (kV)"""
 
     m_tf_coil_case: float = 0.0
     """mass per coil of external case (kg)"""
 
-    m_tf_coil_conductor: float = 0.0
+    m_tf_coil_conductor: float = 0.0  # superconductor?
     """TF coil conductor mass per coil (kg/coil).
     For `itart=1`, coil is return limb plus centrepost/n_tf_coils
     """

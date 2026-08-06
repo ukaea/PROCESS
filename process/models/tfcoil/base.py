@@ -1554,7 +1554,7 @@ class TFCoil(Model):
                 self.outfile,
                 "Average conductor resistivity (ohm.m)",
                 "(rho_cp)",
-                self.data.tfcoil.rho_cp,
+                self.data.resistive_tfcoil.rho_cp,
             )
             po.ovarre(
                 self.outfile,
