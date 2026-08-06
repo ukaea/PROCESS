@@ -1,145 +1,101 @@
+import pytest
+
 from process.models.physics.scrape_off_layer import ScrapeOffLayer
 
 
-class TestScrapeOffLayer:
-    """Test suite for ScrapeOffLayer class."""
+@pytest.mark.parametrize(
+    ("p_plasma_separatrix_mw", "rmajor", "b_plasma_surface_poloidal_average", "aspect"),
+    [
+        (100.0, 3.0, 0.5, 3.0),
+        (10.0, 3.0, 0.5, 3.0),
+        (500.0, 3.0, 0.5, 3.0),
+        (100.0, 10.0, 0.5, 3.0),
+        (100.0, 1.0, 0.5, 3.0),
+    ],
+)
+def test_calculate_eich2013_sol_power_decay_length(
+    p_plasma_separatrix_mw, rmajor, b_plasma_surface_poloidal_average, aspect
+):
+    """Test Eich 2013 SOL power decay length with various parameters."""
+    result = ScrapeOffLayer.calculate_eich2013_sol_power_decay_length(
+        p_plasma_separatrix_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        b_plasma_surface_poloidal_average=b_plasma_surface_poloidal_average,
+        aspect=aspect,
+    )
+    assert isinstance(result, float)
+    assert result > 0
 
-    @staticmethod
-    def test_calculate_eich2013_sol_power_decay_length_nominal():
-        """Test Eich 2013 SOL power decay length with nominal values."""
-        result = ScrapeOffLayer.calculate_eich2013_sol_power_decay_length(
-            p_plasma_separatrix_mw=100.0,
-            rmajor=3.0,
-            b_plasma_surface_poloidal_average=0.5,
-            aspect=3.0,
-        )
-        assert isinstance(result, float)
-        assert result > 0
 
-    @staticmethod
-    def test_calculate_eich2013_sol_power_decay_length_low_power():
-        """Test with low plasma separatrix power."""
-        result = ScrapeOffLayer.calculate_eich2013_sol_power_decay_length(
-            p_plasma_separatrix_mw=10.0,
-            rmajor=3.0,
-            b_plasma_surface_poloidal_average=0.5,
-            aspect=3.0,
-        )
-        assert isinstance(result, float)
-        assert result > 0
+def test_calculate_eich2013_sol_power_decay_length_exact():
+    """Test Eich 2013 SOL power decay length with exact value check."""
+    result = ScrapeOffLayer.calculate_eich2013_sol_power_decay_length(
+        p_plasma_separatrix_mw=100.0,
+        rmajor=3.0,
+        b_plasma_surface_poloidal_average=0.5,
+        aspect=3.0,
+    )
+    assert isinstance(result, float)
+    assert pytest.approx(result) == 0.0015345296622855315
 
-    @staticmethod
-    def test_calculate_eich2013_sol_power_decay_length_high_power():
-        """Test with high plasma separatrix power."""
-        result = ScrapeOffLayer.calculate_eich2013_sol_power_decay_length(
-            p_plasma_separatrix_mw=500.0,
-            rmajor=3.0,
-            b_plasma_surface_poloidal_average=0.5,
-            aspect=3.0,
-        )
-        assert isinstance(result, float)
-        assert result > 0
 
-    @staticmethod
-    def test_calculate_eich2013_sol_power_decay_length_large_rmajor():
-        """Test with large major radius."""
-        result = ScrapeOffLayer.calculate_eich2013_sol_power_decay_length(
-            p_plasma_separatrix_mw=100.0,
-            rmajor=10.0,
-            b_plasma_surface_poloidal_average=0.5,
-            aspect=3.0,
-        )
-        assert isinstance(result, float)
-        assert result > 0
+@pytest.mark.parametrize(
+    ("p_plasma_separatrix_mw", "b_plasma_surface_poloidal_average"),
+    [
+        (100.0, 0.5),
+        (10.0, 0.5),
+        (500.0, 0.5),
+        (100.0, 2.0),
+    ],
+)
+def test_calculate_mast2014_sol_power_decay_length_1(
+    p_plasma_separatrix_mw, b_plasma_surface_poloidal_average
+):
+    """Test MAST 2014 SOL power decay length 1 with various parameters."""
+    result = ScrapeOffLayer.calculate_mast2014_sol_power_decay_length_1(
+        p_plasma_separatrix_mw=p_plasma_separatrix_mw,
+        b_plasma_surface_poloidal_average=b_plasma_surface_poloidal_average,
+    )
+    assert isinstance(result, float)
+    assert result > 0
 
-    @staticmethod
-    def test_calculate_eich2013_sol_power_decay_length_small_rmajor():
-        """Test with small major radius."""
-        result = ScrapeOffLayer.calculate_eich2013_sol_power_decay_length(
-            p_plasma_separatrix_mw=100.0,
-            rmajor=1.0,
-            b_plasma_surface_poloidal_average=0.5,
-            aspect=3.0,
-        )
-        assert isinstance(result, float)
-        assert result > 0
 
-    @staticmethod
-    def test_calculate_mast2014_sol_power_decay_length_1_nominal():
-        """Test MAST 2014 SOL power decay length 1 with nominal values."""
-        result = ScrapeOffLayer.calculate_mast2014_sol_power_decay_length_1(
-            p_plasma_separatrix_mw=100.0,
-            b_plasma_surface_poloidal_average=0.5,
-        )
-        assert isinstance(result, float)
-        assert result > 0
+def test_calculate_mast2014_sol_power_decay_length_1_exact():
+    """Test MAST 2014 SOL power decay length 1 with exact value check."""
+    result = ScrapeOffLayer.calculate_mast2014_sol_power_decay_length_1(
+        p_plasma_separatrix_mw=100.0,
+        b_plasma_surface_poloidal_average=0.5,
+    )
+    assert isinstance(result, float)
+    assert pytest.approx(result) == 0.006753333858250275
 
-    @staticmethod
-    def test_calculate_mast2014_sol_power_decay_length_1_low_power():
-        """Test MAST 2014 SOL power decay length 1 with low power."""
-        result = ScrapeOffLayer.calculate_mast2014_sol_power_decay_length_1(
-            p_plasma_separatrix_mw=10.0,
-            b_plasma_surface_poloidal_average=0.5,
-        )
-        assert isinstance(result, float)
-        assert result > 0
 
-    @staticmethod
-    def test_calculate_mast2014_sol_power_decay_length_1_high_power():
-        """Test MAST 2014 SOL power decay length 1 with high power."""
-        result = ScrapeOffLayer.calculate_mast2014_sol_power_decay_length_1(
-            p_plasma_separatrix_mw=500.0,
-            b_plasma_surface_poloidal_average=0.5,
-        )
-        assert isinstance(result, float)
-        assert result > 0
+@pytest.mark.parametrize(
+    ("p_plasma_separatrix_mw", "cur_plasma_ma"),
+    [
+        (100.0, 1.0),
+        (10.0, 1.0),
+        (500.0, 1.0),
+        (100.0, 3.0),
+    ],
+)
+def test_calculate_mast2014_sol_power_decay_length_2(
+    p_plasma_separatrix_mw, cur_plasma_ma
+):
+    """Test MAST 2014 SOL power decay length 2 with various parameters."""
+    result = ScrapeOffLayer.calculate_mast2014_sol_power_decay_length_2(
+        p_plasma_separatrix_mw=p_plasma_separatrix_mw,
+        cur_plasma_ma=cur_plasma_ma,
+    )
+    assert isinstance(result, float)
+    assert result > 0
 
-    @staticmethod
-    def test_calculate_mast2014_sol_power_decay_length_1_high_bpol():
-        """Test MAST 2014 SOL power decay length 1 with high poloidal field."""
-        result = ScrapeOffLayer.calculate_mast2014_sol_power_decay_length_1(
-            p_plasma_separatrix_mw=100.0,
-            b_plasma_surface_poloidal_average=2.0,
-        )
-        assert isinstance(result, float)
-        assert result > 0
 
-    @staticmethod
-    def test_calculate_mast2014_sol_power_decay_length_2_nominal():
-        """Test MAST 2014 SOL power decay length 2 with nominal values."""
-        result = ScrapeOffLayer.calculate_mast2014_sol_power_decay_length_2(
-            p_plasma_separatrix_mw=100.0,
-            cur_plasma_ma=1.0,
-        )
-        assert isinstance(result, float)
-        assert result > 0
-
-    @staticmethod
-    def test_calculate_mast2014_sol_power_decay_length_2_low_power():
-        """Test MAST 2014 SOL power decay length 2 with low power."""
-        result = ScrapeOffLayer.calculate_mast2014_sol_power_decay_length_2(
-            p_plasma_separatrix_mw=10.0,
-            cur_plasma_ma=1.0,
-        )
-        assert isinstance(result, float)
-        assert result > 0
-
-    @staticmethod
-    def test_calculate_mast2014_sol_power_decay_length_2_high_power():
-        """Test MAST 2014 SOL power decay length 2 with high power."""
-        result = ScrapeOffLayer.calculate_mast2014_sol_power_decay_length_2(
-            p_plasma_separatrix_mw=500.0,
-            cur_plasma_ma=1.0,
-        )
-        assert isinstance(result, float)
-        assert result > 0
-
-    @staticmethod
-    def test_calculate_mast2014_sol_power_decay_length_2_high_current():
-        """Test MAST 2014 SOL power decay length 2 with high plasma current."""
-        result = ScrapeOffLayer.calculate_mast2014_sol_power_decay_length_2(
-            p_plasma_separatrix_mw=100.0,
-            cur_plasma_ma=3.0,
-        )
-        assert isinstance(result, float)
-        assert result > 0
+def test_calculate_mast2014_sol_power_decay_length_2_exact():
+    """Test MAST 2014 SOL power decay length 2 with exact value check."""
+    result = ScrapeOffLayer.calculate_mast2014_sol_power_decay_length_2(
+        p_plasma_separatrix_mw=100.0,
+        cur_plasma_ma=1.0,
+    )
+    assert isinstance(result, float)
+    assert pytest.approx(result) == 0.01258682517425542
