@@ -2,6 +2,8 @@
 
 import logging
 
+import numpy as np
+
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
@@ -218,3 +220,98 @@ class PlasmaExhaust(Model):
             return 0.0
 
         return p_plasma_rad_mw / p_plasma_heating_mw
+
+    @staticmethod
+    def calculate_brunner_divertor_power_splits(
+        dr_plasma_outboard_midplane_separatrix_separation: float,
+        len_plasma_sol_power_decay: float,
+    ):
+        """
+        Calculate the power splits to the divertor targets using Brunner's method.
+
+        Returns
+        -------
+        dict
+            Dictionary containing the power splits to the divertor targets.
+
+        References
+        ----------
+        [1] D. Brunner, A. Q. Kuang, B. LaBombard, and J. L. Terry, “The dependence of
+        divertor power sharing on magnetic flux balance in near double-null
+        configurations on Alcator C-Mod,” Nuclear Fusion, vol. 58, no. 7, p. 076010,
+        May 2018, doi: 10.1088/1741-4326/aac006.
+        """
+        # Fraction of the power to the inner divertors at δR_sep = 0 and δR_sep → ∞
+        F_P_INNER_SEP_0 = 0.16e0
+        F_P_INNER_SEP_INFINITY = 0.41e0
+
+        # Fractions of total outboard power going to each target
+
+        f_p_outboard_lower = 1 / (
+            1
+            + np.exp(
+                -dr_plasma_outboard_midplane_separatrix_separation
+                / len_plasma_sol_power_decay
+            )
+        )
+
+        f_p_outboard_upper = 1 / (
+            1
+            + np.exp(
+                dr_plasma_outboard_midplane_separatrix_separation
+                / len_plasma_sol_power_decay
+            )
+        )
+
+        # Fractions of the total inboard power going to each target
+
+        f_p_inboard_lower = 1 / (
+            1
+            + np.exp(
+                dr_plasma_outboard_midplane_separatrix_separation
+                / (len_plasma_sol_power_decay * 0.5)
+            )
+        )
+
+        f_p_total_inboard = F_P_INNER_SEP_0 + (
+            F_P_INNER_SEP_0 - F_P_INNER_SEP_INFINITY
+        ) * (
+            1.0e0
+            - (
+                2.0e0
+                / (
+                    1.0e0
+                    + np.exp(
+                        -(
+                            (
+                                dr_plasma_outboard_midplane_separatrix_separation
+                                / len_plasma_sol_power_decay
+                            )
+                            ** 2
+                        )
+                    )
+                )
+            )
+        )
+
+        f_p_total_outboard = 1.0e0 - f_p_total_inboard
+
+        f_p_inboard_upper = f_p_total_inboard * (1.0e0 - f_p_inboard_lower)
+        f_p_outboard_upper = f_p_total_outboard * (1.0e0 - f_p_outboard_lower)
+        f_p_inboard_lower = f_p_total_inboard * f_p_inboard_lower
+        f_p_outboard_lower = f_p_total_outboard * f_p_outboard_lower
+
+        print(
+            f"f_p_inboard_lower={f_p_inboard_lower}, f_p_inboard_upper={f_p_inboard_upper}, "
+            f"f_p_outboard_lower={f_p_outboard_lower}, f_p_outboard_upper={f_p_outboard_upper}"
+        )
+        print(
+            f"sum={np.sum([f_p_inboard_lower, f_p_inboard_upper, f_p_outboard_lower, f_p_outboard_upper])}"
+        )
+
+        return (
+            f_p_inboard_lower,
+            f_p_inboard_upper,
+            f_p_outboard_lower,
+            f_p_outboard_upper,
+        )

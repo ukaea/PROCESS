@@ -993,6 +993,11 @@ class Physics(Model):
 
         # ============================================================
 
+        _, _, _, _ = self.exhaust.calculate_brunner_divertor_power_splits(
+            self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
+            len_plasma_sol_power_decay=0.001,
+        )
+
         # Calculate the target imbalances
         # find the total power into the targets
         self.data.physics.ptarmw = self.data.physics.p_plasma_separatrix_mw * (
@@ -1048,7 +1053,7 @@ class Physics(Model):
             self.data.physics.f_p_div_lower_outboard_separatrix = (
                 self.data.physics.f_p_div_lower * (1.0e0 - self.data.physics.fio)
             )
-            self.data.physics.fui = (
+            self.data.physics.f_p_div_upper_inboard_separatrix = (
                 1.0e0 - self.data.physics.f_p_div_lower
             ) * self.data.physics.fio
             self.data.physics.fuo = (1.0e0 - self.data.physics.f_p_div_lower) * (
@@ -1063,7 +1068,10 @@ class Physics(Model):
                 self.data.physics.f_p_div_lower_outboard_separatrix
                 * self.data.physics.ptarmw
             )
-            self.data.physics.puimw = self.data.physics.fui * self.data.physics.ptarmw
+            self.data.physics.puimw = (
+                self.data.physics.f_p_div_upper_inboard_separatrix
+                * self.data.physics.ptarmw
+            )
             self.data.physics.puomw = self.data.physics.fuo * self.data.physics.ptarmw
         else:
             # Single null configuration
@@ -2272,7 +2280,7 @@ class Physics(Model):
                     self.outfile,
                     "Fraction of power incident on the upper inner target",
                     "(fUI)",
-                    self.data.physics.fui,
+                    self.data.physics.f_p_div_upper_inboard_separatrix,
                     "OP ",
                 )
                 po.ovarre(
