@@ -375,7 +375,7 @@ class ScrapeOffLayer(Model):
         p. 093031, Aug. 2013, doi: 10.1088/0029-5515/53/9/093031.
 
         """
-        if r < (rmajor + rminor):
+        if np.any(r < (rmajor + rminor)):
             raise ValueError(
                 f"Radial position r={r} must be greater than or equal to the plasma "
                 f"edge (rmajor + rminor)={rmajor + rminor}."
