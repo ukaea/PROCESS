@@ -1672,10 +1672,10 @@ class PhysicsData:
     """MAST 2014 power decay length in the scrape-off layer scaling 2 (λ_q) [m]"""
 
     a_plasma_outboard_sol_eich13_parallel: float = 0.0
-    """Plasma outboard midplane (upstream) Eich 2013 SOL parrallel area (Aₗₗ,ᵤ) [m]"""
+    """Plasma outboard midplane (upstream) Eich 2013 SOL parallel area (Aₗₗ,ᵤ) [m]"""
 
     pflux_plasma_outboard_sol_eich13_parallel_mw: float = 0.0
-    """Plasma outboard midplane (upstream) Eich 2013 SOL parrallel power flux
+    """Plasma outboard midplane (upstream) Eich 2013 SOL parallel power flux
     (qₗₗ,ᵤ) [MW/m²]"""
 
     dt_power_density_plasma: float = 0.0

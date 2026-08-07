@@ -83,13 +83,13 @@ class ScrapeOffLayer(Model):
         po.osubhd(self.outfile, "Upstream Outboard SOL Parallel Area and Power Flux:")
         po.ovarre(
             self.outfile,
-            "Plasma outboard midplane Eich 2013 SOL parrallel area (Aₗₗ,ᵤ) [m²]",
+            "Plasma outboard midplane Eich 2013 SOL parallel area (Aₗₗ,ᵤ) [m²]",
             "(a_plasma_outboard_sol_eich13_parallel)",
             self.data.physics.a_plasma_outboard_sol_eich13_parallel,
         )
         po.ovarre(
             self.outfile,
-            "Plasma outboard midplane Eich 2013 SOL parrallel power flux "
+            "Plasma outboard midplane Eich 2013 SOL parallel power flux "
             "(qₗₗ,ᵤ) [MW/m²]",
             "(pflux_plasma_outboard_sol_eich13_parallel_mw)",
             self.data.physics.pflux_plasma_outboard_sol_eich13_parallel_mw,

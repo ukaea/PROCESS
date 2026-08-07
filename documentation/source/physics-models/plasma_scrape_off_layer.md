@@ -13,13 +13,13 @@ $$
 q_{\parallel,u} = \frac{P_{\text{up}}}{A_{\parallel,u}}
 $$
 
-$P_{\text{up}}$ is defined as $P_{\text{sep}}f_{\text{div}}$, where $P_{\text{sep}}$ is the plasma sepratrix power and $f_{\text{div}}$ is the fraction of the power directed to the divertor. $\lambda_{\text{q,u}}$ is the [upstream power decay length](#power-decay-lengths), $R_{\text{u}}$ is the midplane separatrix radius, $B_{\text{Tot,u}}$ is the total magnetic field strength at the midplane separatrix and $B_{\text{p,u}}$ is the poloidal magnetic field strength at the midplane separatrix.
+$P_{\text{up}}$ is defined as $P_{\text{sep}}f_{\text{div}}$, where $P_{\text{sep}}$ is the plasma separatrix power and $f_{\text{div}}$ is the fraction of the power directed to the divertor. $\lambda_{\text{q,u}}$ is the [upstream power decay length](#power-decay-lengths), $R_{\text{u}}$ is the midplane separatrix radius, $B_{\text{Tot,u}}$ is the total magnetic field strength at the midplane separatrix and $B_{\text{p,u}}$ is the poloidal magnetic field strength at the midplane separatrix.
 
 ------------------
 
 ### Parallel area | `calculate_upstream_sol_outboard_parallel_area()`
 
-The outboard parallel SOL flux area $A_{\parallel,u}$ [$\text{m}^2$] can be envisaged as a ribbon going around the outboard cirmcuference of the plasma of width $\lambda_{\text{q,u}}$. It is then weighted by the field ratio $\frac{B_{\text{p,u}}}{B_{\text{Tot,u}}}$ to account for the field line angle at the outboard midplane:
+The outboard parallel SOL flux area $A_{\parallel,u}$ [$\text{m}^2$] can be envisaged as a ribbon going around the outboard circumference of the plasma of width $\lambda_{\text{q,u}}$. It is then weighted by the field ratio $\frac{B_{\text{p,u}}}{B_{\text{Tot,u}}}$ to account for the field line angle at the outboard midplane:
 
 $$
 A_{\parallel,u} = 2\pi\lambda_{\text{q,u}}R_{\text{u}}\frac{B_{\text{p,u}}}{B_{\text{Tot,u}}}
