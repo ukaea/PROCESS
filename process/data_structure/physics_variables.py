@@ -435,7 +435,8 @@ class PhysicsData:
     len_sol_outboard_power_decay: float = 0.0
     """Outboard scrape off layer power decay length (λ_q) [m]"""
 
-    drsep: float = 0.0
+    dr_plasma_outboard_midplane_separatrix_separation: float = 0.0
+    """Radial distance between the first and second plasma separatrixes at the outer midplane (δR_sep) [m]"""
 
     fio: float = 0.0
 

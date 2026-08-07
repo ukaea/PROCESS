@@ -1002,15 +1002,15 @@ class Physics(Model):
         # Parameters taken from double null machine
         # D. Brunner et al
 
-        # Issue #1559 Infinities in physics_module.drsep when running single null in a
+        # Issue #1559 Infinities in physics_module.dr_plasma_outboard_midplane_separatrix_separation when running single null in a
         # double null machine
         # C W Ashe
         if self.data.physics.f_p_div_lower < 4.5e-5:
-            self.data.physics.drsep = 1.5e-2
+            self.data.physics.dr_plasma_outboard_midplane_separatrix_separation = 1.5e-2
         elif self.data.physics.f_p_div_lower > (1.0e0 - 4.5e-5):
-            self.data.physics.drsep = -1.5e-2
+            self.data.physics.dr_plasma_outboard_midplane_separatrix_separation = -1.5e-2
         else:
-            self.data.physics.drsep = (
+            self.data.physics.dr_plasma_outboard_midplane_separatrix_separation = (
                 -2.0e0
                 * 1.5e-3
                 * math.atanh(2.0e0 * (self.data.physics.f_p_div_lower - 0.5e0))
@@ -1029,7 +1029,7 @@ class Physics(Model):
                     + np.exp(
                         -(
                             (
-                                self.data.physics.drsep
+                                self.data.physics.dr_plasma_outboard_midplane_separatrix_separation
                                 / self.data.physics.len_sol_outboard_power_decay
                             )
                             ** 2
@@ -2226,9 +2226,9 @@ class Physics(Model):
             if self.data.divertor.n_divertors == 2:
                 po.ovarre(
                     self.outfile,
-                    "Midplane separation of the two magnetic closed flux surfaces (m)",
-                    "(drsep)",
-                    self.data.physics.drsep,
+                    "Radial distance between the first and second plasma separatrixes at the outer midplane (δR_sep) [m]",
+                    "(dr_plasma_outboard_midplane_separatrix_separation)",
+                    self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
                     "OP ",
                 )
 
