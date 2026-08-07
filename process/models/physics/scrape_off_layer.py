@@ -89,8 +89,7 @@ class ScrapeOffLayer(Model):
         )
         po.ovarre(
             self.outfile,
-            "Plasma outboard midplane Eich 2013 SOL parallel power flux "
-            "(qₗₗ,ᵤ) [MW/m²]",
+            "Plasma outboard midplane Eich 2013 SOL parallel power flux (qₗₗ,ᵤ) [MW/m²]",
             "(pflux_plasma_outboard_sol_eich13_parallel_mw)",
             self.data.physics.pflux_plasma_outboard_sol_eich13_parallel_mw,
         )
