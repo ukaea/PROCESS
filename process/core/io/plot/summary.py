@@ -64,6 +64,7 @@ from process.models.physics.current_drive import (
     ElectronCyclotron,
 )
 from process.models.physics.density_limit import DensityLimitModel
+from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.physics import (
@@ -9087,6 +9088,64 @@ def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: i
     axis.set_facecolor("#f0f0f0")
 
 
+def plot_brunner_divertor_power_plit_comparison(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot Brunner divertor power split fractions as a stack plot over dr_sep."""
+    # Use the case decay length when available; fall back to 1 mm if absent.
+    try:
+        len_plasma_sol_power_decay = mfile.get(
+            "len_plasma_sol_eich13_power_decay", scan=scan
+        )
+    except KeyError:
+        len_plasma_sol_power_decay = 1.0e-3
+
+    dr_sep_values = np.linspace(-5*len_plasma_sol_power_decay, 5*len_plasma_sol_power_decay, 200)
+    f_p_inboard_lower = np.zeros_like(dr_sep_values)
+    f_p_inboard_upper = np.zeros_like(dr_sep_values)
+    f_p_outboard_lower = np.zeros_like(dr_sep_values)
+    f_p_outboard_upper = np.zeros_like(dr_sep_values)
+
+    for idx, dr_sep in enumerate(dr_sep_values):
+        (
+            f_p_inboard_lower[idx],
+            f_p_inboard_upper[idx],
+            f_p_outboard_lower[idx],
+            f_p_outboard_upper[idx],
+        ) = PlasmaExhaust().calculate_brunner_divertor_power_splits(
+            dr_plasma_outboard_midplane_separatrix_separation=dr_sep,
+            len_plasma_sol_power_decay=len_plasma_sol_power_decay,
+        )
+
+    axis.stackplot(
+        dr_sep_values,
+        f_p_inboard_lower,
+        f_p_inboard_upper,
+        f_p_outboard_lower,
+        f_p_outboard_upper,
+        labels=[
+            "$f_{P,\\mathrm{in,lower}}$",
+            "$f_{P,\\mathrm{in,upper}}$",
+            "$f_{P,\\mathrm{out,lower}}$",
+            "$f_{P,\\mathrm{out,upper}}$",
+        ],
+        alpha=0.9,
+    )
+
+    axis.axvline(
+        mfile.get("dr_plasma_outboard_midplane_separatrix_separation", scan=scan),
+        color="k",
+        linestyle="--",
+        linewidth=1.0,
+        alpha=0.5,
+    )
+    axis.set_ylim([0.0, 1.0])
+    axis.set_xlim([-5*len_plasma_sol_power_decay, 5*len_plasma_sol_power_decay])
+    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.35)
+    axis.set_title("Brunner Divertor Power Split Fractions")
+    axis.set_xlabel("$\\Delta r_{\\mathrm{sep}}$ [m]")
+    axis.set_ylabel("Power split fraction, $f_P$")
+    axis.legend(loc="upper left", fontsize=8)
+
+
 def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=None):
     """Function to plot a scatter box plot of L-H threshold power comparisons.
 
@@ -16443,6 +16502,10 @@ def main_plot(
 
     plot_sol_power_decay_length_comparison(
         _add_page("plasma_compare_3").add_subplot(221), m_file, scan
+    )
+
+    plot_brunner_divertor_power_plit_comparison(
+        _add_page("plasma_exhaust").add_subplot(121), m_file, scan
     )
 
     plot_debye_length_profile(

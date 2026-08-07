@@ -301,14 +301,6 @@ class PlasmaExhaust(Model):
         f_p_inboard_lower = f_p_total_inboard * f_p_inboard_lower
         f_p_outboard_lower = f_p_total_outboard * f_p_outboard_lower
 
-        print(
-            f"f_p_inboard_lower={f_p_inboard_lower}, f_p_inboard_upper={f_p_inboard_upper}, "
-            f"f_p_outboard_lower={f_p_outboard_lower}, f_p_outboard_upper={f_p_outboard_upper}"
-        )
-        print(
-            f"sum={np.sum([f_p_inboard_lower, f_p_inboard_upper, f_p_outboard_lower, f_p_outboard_upper])}"
-        )
-
         return (
             f_p_inboard_lower,
             f_p_inboard_upper,
