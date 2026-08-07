@@ -326,3 +326,61 @@ class ScrapeOffLayer(Model):
             * len_plasma_sol_power_decay
             * (b_plasma_surface_poloidal_average / b_plasma_outboard_total)
         )
+
+    @staticmethod
+    def calculate_outboard_midplane_near_sol_radial_profile(
+        rmajor: float,
+        rminor: float,
+        len_plasma_sol_power_decay: float,
+        pflux_plasma_outboard_sol_parallel_mw: float,
+        r: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the outboard midplane near SOL radial profile (qₗₗ(r)) [MW/m²].
+
+        Parameters
+        ----------
+        rmajor : float
+            Major radius of the plasma (R₀) [m]
+        rminor : float
+            Minor radius of the plasma (a) [m]
+        len_plasma_sol_power_decay : float
+            Power decay length (λ_q) [m]
+        pflux_plasma_outboard_sol_parallel_mw : float
+            Parallel power flux at the outboard midplane (qₗₗ,ᵤ) [MW/m²]
+        r : float|np.ndarray
+            Radial position(s) at which to calculate the SOL profile [m]
+
+        Returns
+        -------
+        float|np.ndarray
+            Outboard midplane SOL radial profile (qₗₗ(r)) [MW/m²]
+
+        Notes
+        -----
+        - The exponential model is highly valid in the "near-SOL" (typically the first
+        few millimeters to a centimeter outside the separatrix). In this region, parallel
+        heat transport is dominated by classical electron heat conduction
+        (Spitzer-Härm conductivity), which is vastly faster than perpendicular diffusion.
+        This competition between fast parallel conduction and slow perpendicular
+        diffusion naturally produces an exponential radial profile.
+
+        - The midplane exponential assumes steady-state H-mode conditions without the
+        massive, transient convective bursts caused by ELMs, which momentarily
+        flatten the entire midplane profile.
+
+        References
+        ----------
+        [1] T. Eich et al., “Scaling of the tokamak near the scrape-off layer H-mode
+        power width and implications for ITER,” Nuclear Fusion, vol. 53, no. 9,
+        p. 093031, Aug. 2013, doi: 10.1088/0029-5515/53/9/093031.
+
+        """
+        if r < (rmajor + rminor):
+            raise ValueError(
+                f"Radial position r={r} must be greater than or equal to the plasma "
+                f"edge (rmajor + rminor)={rmajor + rminor}."
+            )
+
+        return pflux_plasma_outboard_sol_parallel_mw * np.exp(
+            -(r - (rmajor + rminor)) / len_plasma_sol_power_decay
+        )
