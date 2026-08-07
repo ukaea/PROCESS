@@ -440,7 +440,8 @@ class PhysicsData:
 
     fio: float = 0.0
 
-    fli: float = 0.0
+    f_p_div_lower_inboard_separatrix: float = 0.0
+    """Fraction of plasma separatrix power to the lower inboard divertor target"""
 
     flo: float = 0.0
 

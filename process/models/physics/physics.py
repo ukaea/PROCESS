@@ -1042,7 +1042,7 @@ class Physics(Model):
             # Double Null configuration
             # Find all the power fractions accross the targets
             # Taken from D3-D conventional divertor design
-            self.data.physics.fli = (
+            self.data.physics.f_p_div_lower_inboard_separatrix = (
                 self.data.physics.f_p_div_lower * self.data.physics.fio
             )
             self.data.physics.flo = self.data.physics.f_p_div_lower * (
@@ -1055,16 +1055,22 @@ class Physics(Model):
                 1.0e0 - self.data.physics.fio
             )
             # power into each target
-            self.data.physics.plimw = self.data.physics.fli * self.data.physics.ptarmw
+            self.data.physics.plimw = (
+                self.data.physics.f_p_div_lower_inboard_separatrix
+                * self.data.physics.ptarmw
+            )
             self.data.physics.plomw = self.data.physics.flo * self.data.physics.ptarmw
             self.data.physics.puimw = self.data.physics.fui * self.data.physics.ptarmw
             self.data.physics.puomw = self.data.physics.fuo * self.data.physics.ptarmw
         else:
             # Single null configuration
-            self.data.physics.fli = self.data.physics.fio
+            self.data.physics.f_p_div_lower_inboard_separatrix = self.data.physics.fio
             self.data.physics.flo = 1.0e0 - self.data.physics.fio
             # power into each target
-            self.data.physics.plimw = self.data.physics.fli * self.data.physics.ptarmw
+            self.data.physics.plimw = (
+                self.data.physics.f_p_div_lower_inboard_separatrix
+                * self.data.physics.ptarmw
+            )
             self.data.physics.plomw = self.data.physics.flo * self.data.physics.ptarmw
 
         # Calculate some derived quantities that may not have been defined earlier
@@ -2243,7 +2249,7 @@ class Physics(Model):
                 self.outfile,
                 "Fraction of power incident on the lower inner target",
                 "(fLI)",
-                self.data.physics.fli,
+                self.data.physics.f_p_div_lower_inboard_separatrix,
                 "OP ",
             )
             po.ovarre(
