@@ -578,6 +578,12 @@ class PhysicsData:
     b_plasma_total: float = 0.0
     """Sum of plasma total toroidal + poloidal field (Bₜₒₜ) [T]"""
 
+    b_plasma_outboard_total: float = 0.0
+    """Plasma outboard total magnetic field (Bₜₒₜ(R₀+a)) [T]"""
+
+    b_plasma_inboard_total: float = 0.0
+    """Plasma inboard total magnetic field (Bₜₒₜ(R₀-a)) [T]"""
+
     e_plasma_magnetic_stored: float = 0.0
     """Plasma stored magnetic energy [J]"""
 
@@ -1664,6 +1670,13 @@ class PhysicsData:
 
     len_plasma_sol_mast14_power_decay_2: float = 0.0
     """MAST 2014 power decay length in the scrape-off layer scaling 2 (λ_q) [m]"""
+
+    a_plasma_outboard_sol_eich13_parallel: float = 0.0
+    """Plasma outboard midplane (upstream) Eich 2013 SOL parallel area (Aₗₗ,ᵤ) [m]"""
+
+    pflux_plasma_outboard_sol_eich13_parallel_mw: float = 0.0
+    """Plasma outboard midplane (upstream) Eich 2013 SOL parallel power flux
+    (qₗₗ,ᵤ) [MW/m²]"""
 
     dt_power_density_plasma: float = 0.0
     sigmav_dt_average: float = 0.0

@@ -99,3 +99,16 @@ def test_calculate_mast2014_sol_power_decay_length_2_exact():
     )
     assert isinstance(result, float)
     assert pytest.approx(result) == 0.01258682517425542
+
+
+def test_calculate_upstream_sol_outboard_parallel_area_exact():
+    """Test upstream SOL outboard parallel area with exact value check."""
+    result = ScrapeOffLayer.calculate_upstream_sol_outboard_parallel_area(
+        rmajor=6.0,
+        rminor=2.0,
+        len_plasma_sol_power_decay=0.001,
+        b_plasma_outboard_total=4.0,
+        b_plasma_surface_poloidal_average=0.5,
+    )
+    assert isinstance(result, float)
+    assert pytest.approx(result) == 0.006283185307179587

@@ -13082,7 +13082,8 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
     axis.text(
         0.1,
         0.025,
-        f"$B_{{\\text{{T,inboard}}}}={mfile.get('b_plasma_inboard_toroidal', scan=scan):.2f}$ T",
+        f"$B_{{\\text{{T,inboard}}}}={mfile.get('b_plasma_inboard_toroidal', scan=scan):.2f}$ T\n"
+        f"$B_{{\\text{{total,inboard}}}}={mfile.get('b_plasma_inboard_total', scan=scan):.2f}$ T",
         verticalalignment="center",
         horizontalalignment="center",
         transform=axis.transAxes,
@@ -13093,7 +13094,8 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
     axis.text(
         0.9,
         0.1,
-        f"$B_{{\\text{{T,outboard}}}}={mfile.get('b_plasma_outboard_toroidal', scan=scan):.2f}$ T",
+        f"$B_{{\\text{{T,outboard}}}}={mfile.get('b_plasma_outboard_toroidal', scan=scan):.2f}$ T\n"
+        f"$B_{{\\text{{total,outboard}}}}={mfile.get('b_plasma_outboard_total', scan=scan):.2f}$ T",
         verticalalignment="center",
         horizontalalignment="center",
         transform=axis.transAxes,
@@ -16428,7 +16430,9 @@ def main_plot(
         )
         ax.axis("off")
 
-    plot_magnetic_fields_in_plasma(_add_page("beta").add_subplot(122), m_file, scan)
+    plot_magnetic_fields_in_plasma(
+        _add_page("beta").add_subplot(122, aspect="equal"), m_file, scan
+    )
     plot_beta_profiles(pages["beta"].add_subplot(221), m_file, scan)
 
     plot_ebw_ecrh_coupling_graph(_add_page().add_subplot(111), m_file, scan)

@@ -2,6 +2,8 @@
 
 import logging
 
+import numpy as np
+
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
@@ -38,11 +40,24 @@ class ScrapeOffLayer(Model):
             )
         )
 
+        self.data.physics.a_plasma_outboard_sol_eich13_parallel = self.calculate_upstream_sol_outboard_parallel_area(  # noqa: E501
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
+            len_plasma_sol_power_decay=self.data.physics.len_plasma_sol_eich13_power_decay,
+            b_plasma_outboard_total=self.data.physics.b_plasma_outboard_total,
+            b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
+        )
+
+        self.data.physics.pflux_plasma_outboard_sol_eich13_parallel_mw = (
+            self.data.physics.p_plasma_separatrix_mw
+            / self.data.physics.a_plasma_outboard_sol_eich13_parallel
+        )
+
     def output(self) -> None:
         """Output plasma scrape off layer physics information."""
         po.oheadr(self.outfile, "Plasma Scrape Off Layer")
 
-        po.osubhd(self.outfile, "Power Decay Lengths (λ_q)")
+        po.osubhd(self.outfile, "Power Decay Lengths (λ_q):")
 
         po.ovarre(
             self.outfile,
@@ -61,6 +76,23 @@ class ScrapeOffLayer(Model):
             "MAST 2014 SOL power decay length 2 (λ_q) [m]",
             "(len_plasma_sol_mast14_power_decay_2)",
             self.data.physics.len_plasma_sol_mast14_power_decay_2,
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
+        po.osubhd(self.outfile, "Upstream Outboard SOL Parallel Area and Power Flux:")
+        po.ovarre(
+            self.outfile,
+            "Plasma outboard midplane Eich 2013 SOL parallel area (Aₗₗ,ᵤ) [m²]",
+            "(a_plasma_outboard_sol_eich13_parallel)",
+            self.data.physics.a_plasma_outboard_sol_eich13_parallel,
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma outboard midplane Eich 2013 SOL parallel power flux "
+            "(qₗₗ,ᵤ) [MW/m²]",
+            "(pflux_plasma_outboard_sol_eich13_parallel_mw)",
+            self.data.physics.pflux_plasma_outboard_sol_eich13_parallel_mw,
         )
 
     @staticmethod
@@ -175,3 +207,47 @@ class ScrapeOffLayer(Model):
 
         """
         return 4.57e-3 * p_plasma_separatrix_mw**0.22 * cur_plasma_ma**-0.64
+
+    @staticmethod
+    def calculate_upstream_sol_outboard_parallel_area(
+        rmajor: float,
+        rminor: float,
+        len_plasma_sol_power_decay: float,
+        b_plasma_outboard_total: float,
+        b_plasma_surface_poloidal_average: float,
+    ) -> float:
+        """Calculate the outboard SOL upstream parallel area (Aₗₗ,ᵤ) [m²].
+
+        Parameters
+        ----------
+        rmajor : float
+            Major radius of the plasma (R₀) [m]
+        rminor : float
+            Minor radius of the plasma (a) [m]
+        len_plasma_sol_power_decay : float
+            Power decay length (λ_q) [m]
+        b_plasma_outboard_total : float
+            Total magnetic field at the plasma outboard (Bₜₒₜ(R₀+a)) [T]
+        b_plasma_surface_poloidal_average : float
+            Poloidal magnetic field at the plasma surface (⟨Bₚₒₗ(a)⟩) [T]
+
+        Returns
+        -------
+        float
+            Upstream outboard SOL parallel area (Aₗₗ,ᵤ) [m²]
+
+        References
+        ----------
+        [1] P. C. Stangeby, “The Plasma Boundary of Magnetic Fusion Devices,” Jan. 2000,
+        doi: 10.1201/9780367801489.
+
+        [2] S. S. Henderson et al., “An overview of the STEP divertor design and the
+        simple models driving the plasma exhaust scenario,” Nuclear Fusion, vol. 65,
+        no. 1, pp. 016033-016033, Nov. 2024, doi: 10.1088/1741-4326/ad93e7.
+
+        """
+        return (
+            (2 * np.pi * (rmajor + rminor))
+            * len_plasma_sol_power_decay
+            * (b_plasma_surface_poloidal_average / b_plasma_outboard_total)
+        )
