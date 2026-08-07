@@ -3130,7 +3130,10 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             logger.error(
                 f"""Negative Iop/Icrit for TF coil
             jsc: {j_superconductor}
+            c_tf_turn: {c_tf_turn}
+            c_turn_cables_critical: {c_turn_cables_critical}
             f_c_tf_turn_operating_critical: {f_c_tf_turn_operating_critical}
+            a_tf_turn_cable_space_effective: {a_tf_turn_cable_space_effective}
             j_superconductor_critical: {j_superconductor_critical}
             Check conductor dimensions. Cable space area a_tf_turn_cable_space
             likely gone negative. a_tf_turn_cable_space: {a_tf_turn_cable_space}

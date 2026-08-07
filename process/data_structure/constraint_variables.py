@@ -131,5 +131,8 @@ class ConstraintData:
     I.e. p_l_h_threshold_mw / p_plasma_separatrix_mw >= f_l_mode_margin
     """
 
+    cs_flux_min: float = 0.0
+    """Minimum required flux produced by cs coil (`constraint equation 94`) """
+
 
 CREATE_DICTS_FROM_DATACLASS = ConstraintData

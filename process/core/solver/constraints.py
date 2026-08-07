@@ -1954,6 +1954,53 @@ def constraint_equation_92(constraint_registration, data):
     )
 
 
+@ConstraintManager.register_constraint(93, "GJ/m3", ">=")
+def constraint_equation_93(constraint_registration, data):
+    """Lower limit of the copper in TF coil needed for quench protection
+    f_a_tf_turn_cable_copper: copper fraction of cable conductor TF coils
+    dr_tf_turn: Turn radial dimension (m)
+    dx_tf_turn: Turn toroidal dimension (m)
+    len_tf_coil: TF coil circumference (m)
+    n_tf_coil_turns: Number of turns per TF coil
+    e_tf_magnetic_stored_total_gj: Total stored energy in TF coils (GJ)
+    """
+    vol_tf_copper = (
+        data.tfcoil.f_a_tf_turn_cable_copper
+        * data.superconducting_tfcoil.dr_tf_turn
+        * data.superconducting_tfcoil.dx_tf_turn
+        * data.tfcoil.n_tf_coil_turns
+        * (data.tfcoil.len_tf_coil + data.tfcoil.cplen)
+    )
+
+    energy_per_vol_tf_copper_min = 0.1952 * data.tfcoil.e_tf_magnetic_stored_total_gj
+
+    return geq(vol_tf_copper, energy_per_vol_tf_copper_min, constraint_registration)
+
+
+@ConstraintManager.register_constraint(94, "V.s", ">=")
+def constraint_equation_94(constraint_registration, data):
+    """
+    r_tf_coil_outboard:
+    b_plasma_toroidal_on_axis:
+    cs_flux_min:
+    """
+    r_tf_coil_outboard = (
+        data.build.dr_bore
+        + data.build.dr_cs
+        + data.build.dr_cs_precomp
+        + data.build.dr_cs_tf_gap
+        + data.build.dr_tf_inboard
+    )
+
+    cs_flux = (
+        (-2.1994 * data.physics.b_plasma_toroidal_on_axis + 101.25) * r_tf_coil_outboard
+        - 10.872 * data.physics.b_plasma_toroidal_on_axis
+        - 40.135
+    )
+
+    return geq(cs_flux, data.constraints.cs_flux_min, constraint_registration)
+
+
 def constraint_eqns(m: int, ieqn: int, data: DataStructure):
     """Evaluates the constraints given the current state of PROCESS.
 
