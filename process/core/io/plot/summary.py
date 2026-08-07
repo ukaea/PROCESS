@@ -85,6 +85,7 @@ from process.models.physics.plasma_geometry import (
 )
 from process.models.physics.profiles import PlasmaProfileShapeType
 from process.models.pulse import PulseTimings
+from process.models.physics.scrape_off_layer import ScrapeOffLayer
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
     TFCoilShapeModel,
@@ -9349,6 +9350,50 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
     axis.get_yaxis().set_ticks([])
 
 
+def plot_midplane_near_sol_radial_profile(axis: plt.Axes, mfile: MFile, scan: int):
+    """Function to plot the radial profile of the near SOL at the midplane."""
+    rmajor = mfile.get("rmajor", scan=scan)
+    rminor = mfile.get("rminor", scan=scan)
+    len_plasma_sol_power_decay = mfile.get(
+        "len_plasma_sol_eich13_power_decay", scan=scan
+    )
+    r = np.linspace(
+        (rmajor + rminor), (rmajor + rminor) + (3 * len_plasma_sol_power_decay), 100
+    )
+
+    radial_profile = (
+        ScrapeOffLayer().calculate_outboard_midplane_near_sol_radial_profile(
+            rmajor=rmajor,
+            rminor=rminor,
+            len_plasma_sol_power_decay=mfile.get(
+                "len_plasma_sol_eich13_power_decay", scan=scan
+            ),
+            pflux_plasma_outboard_sol_parallel_mw=mfile.get(
+                "pflux_plasma_outboard_sol_eich13_parallel_mw", scan=scan
+            ),
+            r=r,
+        )
+    )
+
+    axis.axvline(
+        x=rmajor + rminor + len_plasma_sol_power_decay,
+        color="k",
+        linestyle="--",
+        label=r"$\lambda_q$",
+    )
+
+    axis.set_xlim([
+        rmajor + rminor,
+        (rmajor + rminor) + (3 * len_plasma_sol_power_decay),
+    ])
+    axis.plot(r, radial_profile)
+    axis.grid()
+    axis.legend()
+    axis.set_title(r"Upstream Near SOL $q_{\parallel}$ Radial Profile")
+    axis.set_xlabel("Radial Position [m]")
+    axis.set_ylabel(r"$q_{\parallel}$ [MW/m$^2$]")
+
+
 def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=None):
     """Function to plot a scatter box plot of L-H threshold power comparisons.
 
@@ -16729,6 +16774,10 @@ def main_plot(
 
     plot_separatrix_power_split(
         pages["plasma_exhaust"].add_subplot(122), m_file, scan, colour_scheme
+    )
+
+    plot_midplane_near_sol_radial_profile(
+        _add_page("midplane_near_sol_radial_profile").add_subplot(111), m_file, scan
     )
 
     plot_debye_length_profile(
