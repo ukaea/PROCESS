@@ -1,7 +1,7 @@
 """Module containing the Pulse class for pulsed reactor calculations."""
 
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from typing import ClassVar
 
 from process.core import constants
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass(frozen=True, slots=True)
 class PulseTimings:
-    """Class to hold the timing parameters for a pulsed reactor."""
+    """Dataclass to hold the timing parameters for a pulsed reactor."""
 
     t_plant_pulse_coil_precharge: float
     """Time for coil precharge (s)"""
@@ -45,8 +45,21 @@ class PulseTimings:
         "Burn",
         "$I_{\\text{p}}$ ramp-down",
         "Dwell",
-        "Restart pulse",
     )
+
+    def __post_init__(self) -> None:
+        """Validate class metadata against the timing fields."""
+        n_timing_fields = len(fields(self))
+        if len(self.point_labels) != n_timing_fields:
+            raise ValueError(
+                "PulseTimings.point_labels must contain exactly "
+                f"{n_timing_fields} entries; got {len(self.point_labels)}."
+            )
+        if len(self.point_abbreviations) != n_timing_fields:
+            raise ValueError(
+                "PulseTimings.point_abbreviations must contain exactly "
+                f"{n_timing_fields} entries; got {len(self.point_abbreviations)}."
+            )
 
     @property
     def plasma_present(self) -> float:

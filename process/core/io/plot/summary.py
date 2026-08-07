@@ -3271,7 +3271,8 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     # Annotate key points
     # Create a secondary x-axis for annotations
     secax = axis.secondary_xaxis("bottom")
-    secax.set_xticks(pulse_timings.pf_active_cumulative)
+    # Exclude the dwell point so tick positions and labels remain aligned.
+    secax.set_xticks(pulse_timings.pf_active_cumulative[:-1])
     secax.set_xticklabels(
         pulse_timings.point_labels[
             :-1
@@ -3375,7 +3376,8 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
     # Annotate key points
     # Create a secondary x-axis for annotations
     secax = axis.secondary_xaxis("bottom")
-    secax.set_xticks(pulse_timings.total_pulse_cumulative)
+    # Label phase starts only (exclude final end-of-dwell point).
+    secax.set_xticks(pulse_timings.total_pulse_cumulative[:-1])
     secax.set_xticklabels(
         pulse_timings.point_labels,
         rotation=60,

@@ -1493,7 +1493,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
         pfpwrparam.t_plant_pulse_plasma_current_ramp_up,
     )
 
-    power.pfpwr(output=False, PulseTimings=pfpwrparam.pulse_timings)
+    power.pfpwr(output=False, pulse_timings=pfpwrparam.pulse_timings)
 
     assert power.data.heat_transport.peakmva == pytest.approx(
         pfpwrparam.expected_peakmva

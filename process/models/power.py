@@ -53,7 +53,7 @@ class Power(Model):
         # Poloidal field coil power model !
         self.pfpwr(
             output=True,
-            PulseTimings=PulseTimings(
+            pulse_timings=PulseTimings(
                 t_plant_pulse_coil_precharge=self.data.times.t_plant_pulse_coil_precharge,
                 t_plant_pulse_plasma_current_ramp_up=self.data.times.t_plant_pulse_plasma_current_ramp_up,
                 t_plant_pulse_fusion_ramp=self.data.times.t_plant_pulse_fusion_ramp,
@@ -80,7 +80,7 @@ class Power(Model):
         # Poloidal field coil power model
         self.pfpwr(
             output=False,
-            PulseTimings=PulseTimings(
+            pulse_timings=PulseTimings(
                 t_plant_pulse_coil_precharge=self.data.times.t_plant_pulse_coil_precharge,
                 t_plant_pulse_plasma_current_ramp_up=self.data.times.t_plant_pulse_plasma_current_ramp_up,
                 t_plant_pulse_fusion_ramp=self.data.times.t_plant_pulse_fusion_ramp,
@@ -298,7 +298,7 @@ class Power(Model):
 
         return e_loss_pf_store_j + e_loss_pf_psu_j + e_loss_pf_bus_j
 
-    def pfpwr(self, output: bool, PulseTimings: PulseTimings = PulseTimings):
+    def pfpwr(self, output: bool, pulse_timings: PulseTimings):
         """PF coil power supply requirements
 
         This routine calculates the MVA, power and energy requirements
@@ -306,14 +306,22 @@ class Power(Model):
         The routine checks at the beginning of the flattop for the
         peak MVA, and at the end of flattop for the peak stored energy.
         The reactive (inductive) components use waves to calculate the
-        <I>dI/dt</I> at the time periods.
+        dI/dt at the time periods.
+
+        Parameters
+        ----------
+        output : bool
+            If True, write results to output files.
+        pulse_timings : PulseTimings
+            Pulse timing dataclass
+
+
 
         Parameters
         ----------
         output:
 
         """
-        pulse_timings = PulseTimings
         # Local aliases for readability (no functional change)
         c_pf_coil_turn = self.data.pf_coil.c_pf_coil_turn  # [A]
         ind_pf_cs_plasma_mutual = self.data.pf_coil.ind_pf_cs_plasma_mutual  # [H]
@@ -1748,12 +1756,6 @@ class Power(Model):
             self.data.power.p_cryo_plant_electric_profile_mw,
             self.data.power.p_fusion_total_profile_mw,
         ) = self.power_profiles_over_time(
-            t_precharge=self.data.times.t_plant_pulse_coil_precharge,
-            t_current_ramp_up=self.data.times.t_plant_pulse_plasma_current_ramp_up,
-            t_fusion_ramp=self.data.times.t_plant_pulse_fusion_ramp,
-            t_burn=self.data.times.t_plant_pulse_burn,
-            t_ramp_down=self.data.times.t_plant_pulse_plasma_current_ramp_down,
-            t_between_pulse=self.data.times.t_plant_pulse_dwell,
             p_plant_electric_base_total_mw=self.data.heat_transport.p_plant_electric_base_total_mw,
             p_cryo_plant_electric_mw=self.data.heat_transport.p_cryo_plant_electric_mw,
             p_tritium_plant_electric_mw=self.data.heat_transport.p_tritium_plant_electric_mw,
@@ -1765,6 +1767,14 @@ class Power(Model):
             p_fusion_total_mw=self.data.physics.p_fusion_total_mw,
             p_plant_electric_gross_mw=self.data.heat_transport.p_plant_electric_gross_mw,
             p_plant_electric_net_mw=self.data.heat_transport.p_plant_electric_net_mw,
+            pulse_timings=PulseTimings(
+                t_plant_pulse_coil_precharge=self.data.times.t_plant_pulse_coil_precharge,
+                t_plant_pulse_plasma_current_ramp_up=self.data.times.t_plant_pulse_plasma_current_ramp_up,
+                t_plant_pulse_fusion_ramp=self.data.times.t_plant_pulse_fusion_ramp,
+                t_plant_pulse_burn=self.data.times.t_plant_pulse_burn,
+                t_plant_pulse_plasma_current_ramp_down=self.data.times.t_plant_pulse_plasma_current_ramp_down,
+                t_plant_pulse_dwell=self.data.times.t_plant_pulse_dwell,
+            ),
         )
 
     def cryo(
@@ -2627,12 +2637,6 @@ class Power(Model):
 
     @staticmethod
     def power_profiles_over_time(
-        t_precharge: float,
-        t_current_ramp_up: float,
-        t_fusion_ramp: float,
-        t_burn: float,
-        t_ramp_down: float,
-        t_between_pulse: float,
         p_plant_electric_base_total_mw: float,
         p_cryo_plant_electric_mw: float,
         p_tritium_plant_electric_mw: float,
@@ -2644,68 +2648,87 @@ class Power(Model):
         p_fusion_total_mw: float,
         p_plant_electric_gross_mw: float,
         p_plant_electric_net_mw: float,
-    ) -> float:
+        pulse_timings: PulseTimings,
+    ) -> tuple[
+        float,
+        float,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+        np.ndarray,
+    ]:
         """Calculate time-dependent power profiles for different electric systems
 
         Parameters
         ----------
-        t_precharge : float
-            Precharge time (s).
-        t_current_ramp_up : float
-            Current ramp-up time (s).
-        t_fusion_ramp : float
-            Fusion ramp time (s).
-        t_burn : float
-            Burn time (s).
-        t_ramp_down : float
-            Ramp-down time (s).
-        t_between_pulse : float
-            Time between pulses (s).
         p_plant_electric_base_total_mw : float
-            Plant base electric load (MW).
+            Plant base electric load [MW].
         p_cryo_plant_electric_mw : float
-            Cryogenic plant electric load (MW).
+            Cryogenic plant electric load [MW].
         p_tritium_plant_electric_mw : float
-            Tritium plant electric load (MW).
+            Tritium plant electric load [MW].
         vachtmw : float
-            Vacuum pumps electric load (MW).
+            Vacuum pumps electric load [MW].
         p_tf_electric_supplies_mw : float
-            TF coil electric supplies (MW).
+            TF coil electric supplies [MW].
         p_pf_electric_supplies_mw : float
-            PF coil electric supplies (MW).
+            PF coil electric supplies [MW].
         p_coolant_pump_elec_total_mw : float
-            Total coolant pump electric load (MW).
+            Total coolant pump electric load [MW].
         p_hcd_electric_total_mw : float
-            HCD electric total (MW).
+            HCD electric total [MW].
         p_fusion_total_mw : float
-            Fusion power (MW).
+            Fusion power [MW].
         p_plant_electric_gross_mw : float
-            Gross electric power produced (MW).
+            Gross electric power produced [MW].
         p_plant_electric_net_mw : float
-            Net electric power produced (MW).
+            Net electric power produced [MW].
+        pulse_timings : PulseTimings
+            Object containing pulse timing information.
 
         Returns
         -------
         float
-            Total net electric energy produced over the pulse (MJ).
+            Total net electric energy produced over the pulse [MJ].
+        float
+            Total net electric energy produced over the pulse [kWh].
+        np.ndarray
+            Plant base electric load profile [MW].
+        np.ndarray
+            Plant gross electric power profile [MW].
+        np.ndarray
+            Plant net electric power profile [MW].
+        np.ndarray
+            HCD electric total profile [MW].
+        np.ndarray
+            Total coolant pump electric load profile [MW].
+        np.ndarray
+            TF coil electric supplies profile [MW].
+        np.ndarray
+            PF coil electric supplies profile [MW].
+        np.ndarray
+            Vacuum pumps electric load profile [MW].
+        np.ndarray
+            Tritium plant electric load profile [MW].
+        np.ndarray
+            Cryogenic plant electric load profile [MW].
+        np.ndarray
+            Fusion power profile [MW].
 
         Notes
         -----
         - Assumes step-function changes in power at each phase transition.
         - Negative values indicate power consumption (loads).
         """
-        t_steps = np.cumsum([
-            0,
-            t_precharge,
-            t_current_ramp_up,
-            t_fusion_ramp,
-            t_burn,
-            t_ramp_down,
-            t_between_pulse,
-        ])
-
         # Number of time steps
-        n_steps = len(t_steps)
+        n_steps = pulse_timings.n_pulse_points_total
 
         # Initialize arrays for each power profile
         p_fusion_total_profile_mw = np.zeros(n_steps)
@@ -2787,7 +2810,9 @@ class Power(Model):
 
         # Integrate net electric power over the pulse to get total energy produced (MJ)
         # Assume t_steps in seconds, power in MW, so energy in MJ
-        energy_made_mj = sp.integrate.trapezoid(p_plant_electric_net_profile_mw, t_steps)
+        energy_made_mj = sp.integrate.trapezoid(
+            p_plant_electric_net_profile_mw, pulse_timings.total_pulse_cumulative
+        )
         energy_made_kwh = energy_made_mj / 3.6
 
         return (
