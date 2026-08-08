@@ -79,6 +79,7 @@ from process.models.physics.plasma_geometry import (
     PlasmaGeometryModelType,
     PlasmaShapeModelType,
 )
+from process.models.physics.solovev_equilibrium import plot_analytic_equilibrium
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
     TFCoilShapeModel,
@@ -16480,23 +16481,12 @@ def main_plot(
 
     plot_resistivity_profile(pages["detailed_params"].add_subplot(232), m_file, scan)
 
-    plot_detailed_plasma_parameters(
-        pages["detailed_params"].add_subplot(233),
-        fig=pages["detailed_params"],
-        mfile=m_file,
-        scan=scan,
-    )
 
-    ax_electron_freq = _add_page("freq").add_subplot(211)
-    plot_electron_frequency_profile(ax_electron_freq, m_file, scan)
+    plot_larmor_radius_profile(_add_page("larmor_radius").add_subplot(313), m_file, scan)
 
-    ax_ion_freq = pages["freq"].add_subplot(413, sharex=ax_electron_freq)
-    plot_ion_frequency_profile(ax_ion_freq, m_file, scan)
-
-    ax_larmor = pages["freq"].add_subplot(414, sharex=ax_electron_freq)
-    plot_larmor_radius_profile(ax_larmor, m_file, scan)
-
-    pages["freq"].subplots_adjust(hspace=0.5)
+    ax25 = _add_page("analytic_equilibrium").add_subplot(222, aspect="equal")
+    ax25.set_position([0.6, 0.55, 0.45, 0.45])
+    plot_analytic_equilibrium(ax25, m_file, scan, pages["analytic_equilibrium"])
 
     # Plot poloidal cross-section
     poloidal_cross_section(
