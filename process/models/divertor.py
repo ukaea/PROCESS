@@ -1,7 +1,7 @@
 """Module containing divertor routines"""
 
 import math
-
+from dataclasses import dataclass
 import numpy as np
 
 from process.core import constants
@@ -11,6 +11,18 @@ from process.core.model import Model
 from process.data_structure.divertor_variables import DivertorHeatLoadModel
 from process.data_structure.physics_variables import DivertorNumberModels
 
+
+@dataclass
+class WadeDivertorMetrics:
+    """Dataclass to hold the output metrics for the Wade divertor model."""
+
+    lambda_int: float  # SOL width at divertor plates (λ_int) [m]
+    alpha_mid: float  # Flux angle on midplane (degrees)
+    alpha_div: float  # Flux angle in the divertor (degrees)
+    theta_div: float  # Tilt of the separatrix relative to the target in the poloidal plane (radians)
+    area_wetted: float  # Wetted area (m²)
+    strike_width: float  # Strike point width (m)
+    hldiv_base: float  # Base divertor heat load (MW/m²)
 
 class Divertor(Model):
     """Module containing divertor routines
@@ -341,13 +353,16 @@ class Divertor(Model):
 
         # Tilt of the separatrix relative to the target in the poloidal plane
         theta_div = math.asin(
-            (1 + 1 / alpha_div**2) * math.sin(math.radians(deg_div_field_plate))
+            (1 + 1 / math.radians(alpha_div) ** 2)
+            * math.sin(math.radians(deg_div_field_plate))
         )
 
         # Wetted area
         area_wetted = (
             2 * np.pi * rmajor * lambda_int * f_div_flux_expansion * math.sin(theta_div)
         )
+
+        strike_width = lambda_int * f_div_flux_expansion * math.sin(theta_div)
 
         # Divertor heat load
         hldiv_base = p_plasma_separatrix_mw * (1 - rad_fraction_sol) / area_wetted
@@ -379,9 +394,27 @@ class Divertor(Model):
             )
             po.ovarre(
                 self.outfile,
+                "Field line angle wrt to target divertor plate (degrees)",
+                "(alpha_div)",
+                alpha_div,
+            )
+            po.ovarre(
+                self.outfile,
+                "Field line angle wrt to target divertor plate (degrees)",
+                "(theta_div)",
+                theta_div,
+            )
+            po.ovarre(
+                self.outfile,
                 "Divertor heat load (MW/m²)",
                 "(pflux_div_heat_load_mw)",
                 self.data.divertor.pflux_div_heat_load_mw,
+            )
+            po.ovarre(
+                self.outfile,
+                "Strike point width (m)",
+                "(strike_width)",
+                strike_width,
             )
         return self.data.divertor.pflux_div_heat_load_mw
 

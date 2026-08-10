@@ -13,7 +13,7 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import patches
-from matplotlib.patches import Circle, Rectangle
+from matplotlib.patches import Arc, Circle, Polygon, Rectangle
 from matplotlib.path import Path as mplPath
 from scipy.interpolate import interp1d
 
@@ -16189,6 +16189,394 @@ def plot_pf_dimensions(
     axis.set_aspect("equal", adjustable="box")
 
 
+def plot_divertor_geometry(
+    theta_div_deg, alpha_div, beta_div_deg, wetted_width=3.5, plate_angle_deg=20
+):
+    """
+    Plots the divertor geometry using calculated angle values.
+
+    Parameters
+    ----------
+    theta_div_deg : float
+        Separatrix tilt angle in degrees (poloidal plane).
+    alpha_div : float
+        Magnetic pitch / flux expansion factor (F_exp * alpha_mid).
+    beta_div_deg : float
+        Total magnetic field grazing angle in degrees (3D).
+    wetted_width : float
+        Distance along the plate between strike points (in arbitrary units/cm).
+    plate_angle_deg : float
+        Orientation angle of the plate relative to the horizontal plane.
+    """
+    # --- 1. Geometric Angle Calculations ---
+    L = 7.5  # Length of incoming flux lines
+
+    # Orientation of vectors
+    plate_tangent_deg = plate_angle_deg + 180  # Along plate face (leftward)
+    sep_deg = plate_tangent_deg - theta_div_deg  # Direction of incoming flux lines
+
+    plate_tangent_rad = np.radians(plate_tangent_deg)
+    sep_rad = np.radians(sep_deg)
+
+    # --- 2. Target Plate & Strike Point Coordinates ---
+    sp1 = np.array([0.0, 0.0])  # Strike point 1 (origin)
+    sp2 = sp1 + wetted_width * np.array([
+        np.cos(plate_tangent_rad),
+        np.sin(plate_tangent_rad),
+    ])
+
+    # Endpoints of flux lines
+    fl1_end = sp1 + L * np.array([np.cos(sep_rad), np.sin(sep_rad)])
+    fl2_end = sp2 + L * np.array([np.cos(sep_rad), np.sin(sep_rad)])
+
+    # Extend target plate beyond the strike points
+    plate_start = sp1 - 2.0 * np.array([
+        np.cos(plate_tangent_rad),
+        np.sin(plate_tangent_rad),
+    ])
+    plate_end = sp2 + 2.0 * np.array([
+        np.cos(plate_tangent_rad),
+        np.sin(plate_tangent_rad),
+    ])
+
+    # --- 3. Figure Setup ---
+    fig, ax = plt.subplots(figsize=(11, 7.5))
+
+    # Target Plate
+    ax.plot(
+        [plate_start[0], plate_end[0]],
+        [plate_start[1], plate_end[1]],
+        color="dimgray",
+        linewidth=8,
+        solid_capstyle="round",
+        label="Divertor Target Plate",
+    )
+
+    # Highlight Wetted Area (Strike Zone)
+    ax.plot(
+        [sp1[0], sp2[0]],
+        [sp1[1], sp2[1]],
+        color="gold",
+        linewidth=10,
+        zorder=3,
+        label="Wetted Area (Strike Zone)",
+    )
+
+    # Shaded Scrape-Off Layer (SOL) Heat Flow Region
+    sol_region = Polygon(
+        [sp1, fl1_end, fl2_end, sp2],
+        closed=True,
+        color="red",
+        alpha=0.15,
+        label="Heat Flow Corridor (SOL)",
+    )
+    ax.add_patch(sol_region)
+
+    # --- 4. Plot Separatrix Lines ---
+    ax.plot(
+        [sp1[0], fl1_end[0]],
+        [sp1[1], fl1_end[1]],
+        color="red",
+        linewidth=3,
+        linestyle="-",
+        label="Separatrix Line 1",
+    )
+    ax.plot(
+        [sp2[0], fl2_end[0]],
+        [sp2[1], fl2_end[1]],
+        color="darkred",
+        linewidth=3,
+        linestyle="--",
+        label="Flux Line 2 (SOL Edge)",
+    )
+
+    # Strike Points
+    ax.plot(sp1[0], sp1[1], "ko", markersize=7)
+    ax.plot(sp2[0], sp2[1], "ko", markersize=7)
+
+    # --- 5. Dynamic Angle Arc for theta_div ---
+    arc_radius = 2.8
+    arc = Arc(
+        sp1,
+        arc_radius * 2,
+        arc_radius * 2,
+        angle=0,
+        theta1=sep_deg,
+        theta2=plate_tangent_deg,
+        color="red",
+        linewidth=2.5,
+    )
+    ax.add_patch(arc)
+
+    # Label showing the dynamic value of theta_div
+    mid_angle_rad = np.radians((sep_deg + plate_tangent_deg) / 2)
+    label_x = sp1[0] + (arc_radius * 1.3) * np.cos(mid_angle_rad)
+    label_y = sp1[1] + (arc_radius * 1.3) * np.sin(mid_angle_rad)
+    ax.text(
+        label_x,
+        label_y,
+        rf"$\theta_{{div}} = {theta_div_deg:.1f}^\circ$",
+        color="red",
+        fontsize=13,
+        fontweight="bold",
+        ha="center",
+        va="center",
+    )
+
+    # --- 6. Wetted Area Dimension Marker ---
+    normal_vec = np.array([-np.sin(plate_tangent_rad), np.cos(plate_tangent_rad)])
+    offset = 1.0
+    dim_sp1 = sp1 - normal_vec * offset
+    dim_sp2 = sp2 - normal_vec * offset
+
+    ax.annotate(
+        "",
+        xy=dim_sp1,
+        xytext=dim_sp2,
+        arrowprops=dict(arrowstyle="<->", color="darkorange", lw=2.5),
+    )
+
+    dim_mid = (dim_sp1 + dim_sp2) / 2 - normal_vec * 0.5
+    ax.text(
+        dim_mid[0],
+        dim_mid[1],
+        f"Wetted Width = {wetted_width:.2f}",
+        color="darkorange",
+        fontsize=11,
+        fontweight="bold",
+        ha="center",
+        va="center",
+        rotation=plate_angle_deg,
+    )
+
+    # --- 7. Overlay Box displaying Calculated Code Values ---
+    info_text = (
+        r"$\mathbf{Calculated\ Divertor\ Parameters:}$" + "\n"
+        "---------------------------------------\n"
+        rf"• $\mathbf{{\theta_{{div}}}}$ (Separatrix Tilt): {theta_div_deg:.2f}°" + "\n"
+        rf"• $\mathbf{{\alpha_{{div}}}}$ (Pitch / Flux Factor): {alpha_div:.2f}" + "\n"
+        rf"• $\mathbf{{\beta_{{div}}}}$ (3D Grazing Angle): {beta_div_deg:.2f}°" + "\n"
+        "---------------------------------------\n"
+        r"Note: $\beta_{div}$ is a 3D skimming angle" + "\n"
+        r"between total field $\mathbf{B}$ & target face."
+    )
+    props = dict(
+        boxstyle="round,pad=0.6", facecolor="whitesmoke", alpha=0.9, edgecolor="gray"
+    )
+    ax.text(
+        0.03,
+        0.95,
+        info_text,
+        transform=ax.transAxes,
+        fontsize=11,
+        verticalalignment="top",
+        bbox=props,
+    )
+
+    # --- 8. Formatting & Cleanup ---
+    ax.set_aspect("equal")
+    ax.set_xlim(-9, 4)
+    ax.set_ylim(-4, 8)
+    ax.axis("off")
+    ax.legend(loc="upper right", fontsize=11)
+    plt.title(
+        "Divertor Geometry with Calculated Field Angles", fontsize=15, fontweight="bold"
+    )
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_wade_divertor_dimensions(
+    axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1, 2] = 1
+) -> None:
+    """Plot the Wade divertor dimensions on the given axis."""
+    # --- 1. Parameters ---
+    alpha_div = mfile.get(
+        "alpha_div", scan=scan
+    )  # Magnetic pitch / flux expansion factor (F_exp * alpha_mid)
+    beta_div_deg = mfile.get(
+        "deg_div_field_plate", scan=scan
+    )  # Total magnetic field grazing angle (3D)
+    plate_angle_deg = 20  # Visual orientation of the plate in the room
+    theta_div_deg = np.degrees(
+        mfile.get("theta_div", scan=scan)
+    )  # Separatrix tilt angle relative to the target face
+    wetted_width = mfile.get(
+        "strike_width", scan=scan
+    )  # Distance along plate between the two strike points
+    L = 0.5  # Length of flux lines
+
+    # --- 1. Geometric Angle Calculations ---
+    L = 3 * wetted_width  # Length of incoming flux lines
+
+    # Orientation of vectors
+    plate_tangent_deg = plate_angle_deg + 180  # Along plate face (leftward)
+    sep_deg = plate_tangent_deg - theta_div_deg  # Direction of incoming flux lines
+
+    plate_tangent_rad = np.radians(plate_tangent_deg)
+    sep_rad = np.radians(sep_deg)
+
+    # --- 2. Target Plate & Strike Point Coordinates ---
+    sp1 = np.array([0.0, 0.0])  # Strike point 1 (origin)
+    sp2 = sp1 + wetted_width * np.array([
+        np.cos(plate_tangent_rad),
+        np.sin(plate_tangent_rad),
+    ])
+
+    # Endpoints of flux lines
+    fl1_end = sp1 + L * np.array([np.cos(sep_rad), np.sin(sep_rad)])
+    fl2_end = sp2 + L * np.array([np.cos(sep_rad), np.sin(sep_rad)])
+
+    # Extend target plate beyond the strike points
+    plate_start = sp1 - (2 * wetted_width) * np.array([
+        np.cos(plate_tangent_rad),
+        np.sin(plate_tangent_rad),
+    ])
+    plate_end = sp2 + (2 * wetted_width) * np.array([
+        np.cos(plate_tangent_rad),
+        np.sin(plate_tangent_rad),
+    ])
+
+    # Target Plate
+    axis.plot(
+        [plate_start[0], plate_end[0]],
+        [plate_start[1], plate_end[1]],
+        color="dimgray",
+        linewidth=8,
+        solid_capstyle="round",
+        label="Divertor Target Plate",
+    )
+
+    # Highlight Wetted Area (Strike Zone)
+    axis.plot(
+        [sp1[0], sp2[0]],
+        [sp1[1], sp2[1]],
+        color="gold",
+        linewidth=10,
+        zorder=3,
+        label="Wetted Area (Strike Zone)",
+    )
+
+    # Shaded Scrape-Off Layer (SOL) Heat Flow Region
+    sol_region = Polygon(
+        [sp1, fl1_end, fl2_end, sp2],
+        closed=True,
+        color="red",
+        alpha=0.15,
+        label="Heat Flow Corridor (SOL)",
+    )
+    axis.add_patch(sol_region)
+
+    # --- 4. Plot Separatrix Lines ---
+    axis.plot(
+        [sp1[0], fl1_end[0]],
+        [sp1[1], fl1_end[1]],
+        color="red",
+        linewidth=3,
+        linestyle="-",
+        label="Separatrix Line 1",
+    )
+    axis.plot(
+        [sp2[0], fl2_end[0]],
+        [sp2[1], fl2_end[1]],
+        color="darkred",
+        linewidth=3,
+        linestyle="--",
+        label="Flux Line 2 (SOL Edge)",
+    )
+
+    # Strike Points
+    axis.plot(sp1[0], sp1[1], "ko", markersize=7)
+    axis.plot(sp2[0], sp2[1], "ko", markersize=7)
+
+    # --- 5. Dynamic Angle Arc for theta_div ---
+    arc_radius = 2 * wetted_width
+    arc = Arc(
+        sp1,
+        arc_radius * 2,
+        arc_radius * 2,
+        angle=0,
+        theta1=sep_deg,
+        theta2=plate_tangent_deg,
+        color="red",
+        linewidth=2.5,
+    )
+    axis.add_patch(arc)
+
+    # Label showing the dynamic value of theta_div
+    mid_angle_rad = np.radians((sep_deg + plate_tangent_deg) / 2)
+    label_x = sp1[0] + (arc_radius * 1.3) * np.cos(mid_angle_rad)
+    label_y = sp1[1] + (arc_radius * 1.3) * np.sin(mid_angle_rad)
+    axis.text(
+        label_x,
+        label_y,
+        rf"$\theta_{{div}} = {theta_div_deg:.1f}^\circ$",
+        color="red",
+        fontsize=13,
+        fontweight="bold",
+        ha="center",
+        va="center",
+    )
+
+    # --- 6. Wetted Area Dimension Marker ---
+    normal_vec = np.array([-np.sin(plate_tangent_rad), np.cos(plate_tangent_rad)])
+    offset = 1.0
+    dim_sp1 = sp1 - normal_vec * offset
+    dim_sp2 = sp2 - normal_vec * offset
+
+    axis.annotate(
+        "",
+        xy=dim_sp1,
+        xytext=dim_sp2,
+        arrowprops=dict(arrowstyle="<->", color="darkorange", lw=2.5),
+    )
+
+    dim_mid = (dim_sp1 + dim_sp2) / 2 - normal_vec * 0.5
+    axis.text(
+        dim_mid[0],
+        dim_mid[1],
+        f"Wetted Width = {wetted_width:.3e}",
+        color="darkorange",
+        fontsize=11,
+        fontweight="bold",
+        ha="center",
+        va="center",
+        rotation=plate_angle_deg,
+    )
+
+    # --- 7. Overlay Box displaying Calculated Code Values ---
+    info_text = (
+        r"$\mathbf{Calculated\ Divertor\ Parameters:}$" + "\n"
+        "---------------------------------------\n"
+        rf"• $\mathbf{{\theta_{{div}}}}$ (Separatrix Tilt): {theta_div_deg:.2f}°" + "\n"
+        rf"• $\mathbf{{\alpha_{{div}}}}$ (Pitch / Flux Factor): {alpha_div:.2f}" + "\n"
+        rf"• $\mathbf{{\beta_{{div}}}}$ (3D Grazing Angle): {beta_div_deg:.2f}°" + "\n"
+        "---------------------------------------\n"
+        r"Note: $\beta_{div}$ is a 3D skimming angle" + "\n"
+        r"between total field $\mathbf{B}$ & target face."
+    )
+    props = dict(
+        boxstyle="round,pad=0.6", facecolor="whitesmoke", alpha=0.9, edgecolor="gray"
+    )
+    axis.text(
+        0.03,
+        0.95,
+        info_text,
+        transform=axis.transAxes,
+        fontsize=11,
+        verticalalignment="top",
+        bbox=props,
+    )
+
+    # --- 8. Formatting & Cleanup ---
+    axis.set_aspect("equal")
+    axis.legend(loc="upper right", fontsize=11)
+    plt.title(
+        "Divertor Geometry with Calculated Field Angles", fontsize=15, fontweight="bold"
+    )
+    plt.tight_layout()
+
+
 def main_plot(
     m_file: MFile,
     scan: int,
@@ -16485,6 +16873,10 @@ def main_plot(
     plot_larmor_radius_profile(ax_larmor, m_file, scan)
 
     pages["freq"].subplots_adjust(hspace=0.5)
+
+    plot_wade_divertor_dimensions(
+        _add_page("wade_divertor").add_subplot(111), m_file, scan
+    )
 
     # Plot poloidal cross-section
     poloidal_cross_section(
