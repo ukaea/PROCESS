@@ -103,8 +103,6 @@ class Divertor(Model):
         ):
             self.divwade(
                 rmajor=self.data.physics.rmajor,
-                b_plasma_outboard_toroidal=self.data.physics.b_plasma_outboard_toroidal,
-                b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
                 p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
                 len_plasma_sol_power_decay=self.data.physics.len_plasma_sol_eich13_power_decay,
                 len_plasma_sol_power_spreading=self.data.physics.len_plasma_sol_scrabosio14_power_spreading,
@@ -112,6 +110,7 @@ class Divertor(Model):
                 deg_div_field_plate=self.data.divertor.deg_div_field_plate,
                 rad_fraction_sol=self.data.physics.rad_fraction_sol,
                 f_p_div_lower=self.data.physics.f_p_div_lower,
+                deg_b_plasma_outboard_flux_midplane=self.data.physics.deg_b_plasma_outboard_flux_midplane,
                 output=output,
             )
             return
@@ -285,8 +284,6 @@ class Divertor(Model):
     def divwade(
         self,
         rmajor: float,
-        b_plasma_outboard_toroidal: float,
-        b_plasma_surface_poloidal_average: float,
         p_plasma_separatrix_mw: float,
         len_plasma_sol_power_decay: float,
         len_plasma_sol_power_spreading: float,
@@ -294,6 +291,7 @@ class Divertor(Model):
         deg_div_field_plate: float,
         rad_fraction_sol: float,
         f_p_div_lower: float,
+        deg_b_plasma_outboard_flux_midplane: float,
         output: bool,
     ) -> float:
         """Divertor heat load model (Wade 2020)
@@ -310,10 +308,6 @@ class Divertor(Model):
         ----------
         rmajor : float
             plasma major radius (m)
-        b_plasma_outboard_toroidal : float
-            toroidal field at the outboard midplane (T)
-        b_plasma_surface_poloidal_average : float
-            Surface averaged poloidal field (B) [T]
         p_plasma_separatrix_mw : float
             power to divertor (MW)
         len_plasma_sol_power_decay : float
@@ -345,13 +339,8 @@ class Divertor(Model):
         # λ_int = λ_q + 1.64 * S
         lambda_int = len_plasma_sol_power_decay + 1.64 * len_plasma_sol_power_spreading
 
-        # Flux angle on midplane
-        alpha_mid = math.degrees(
-            math.atan(b_plasma_surface_poloidal_average / b_plasma_outboard_toroidal)
-        )
-
         # Flux angle in the divertor
-        alpha_div = f_div_flux_expansion * alpha_mid
+        alpha_div = f_div_flux_expansion * deg_b_plasma_outboard_flux_midplane
 
         # Tilt of the separatrix relative to the target in the poloidal plane
         theta_div = math.asin(
