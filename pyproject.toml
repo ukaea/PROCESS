@@ -186,6 +186,7 @@ max-locals = 17
     "D406",
     "D409",
     "DOC201",
+    "DOC501",
     "N802",
     "PLC2701",
     "PT023",
@@ -250,7 +251,6 @@ ignore =  [
     "D101",
     "D102",
     "D103",
-    "DOC501",  # docstring-missing-exception
     "D404",    # docstring-starts-with-this
     "D104",    # undocumented-public-package
     "D105",    # undocumented-magic-method
