@@ -197,8 +197,9 @@ class PlasmaFields(Model):
         """
         return np.sqrt(b_plasma_toroidal**2 + b_plasma_poloidal**2)
 
+    @staticmethod
     def calculate_plasma_magnetic_flux_angle(
-        self, b_plasma_toroidal: float, b_plasma_poloidal: float
+        b_plasma_toroidal: float, b_plasma_poloidal: float
     ) -> float:
         """Calculate the magnetic flux angle in the plasma based on the toroidal and
         poloidal magnetic fields strengths

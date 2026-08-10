@@ -16392,17 +16392,17 @@ def plot_wade_divertor_dimensions(
     """Plot the Wade divertor dimensions on the given axis."""
     # --- 1. Parameters ---
     alpha_div = mfile.get(
-        "alpha_div", scan=scan
+        "deg_b_div_lower_flux", scan=scan
     )  # Magnetic pitch / flux expansion factor (F_exp * alpha_mid)
     beta_div_deg = mfile.get(
         "deg_b_div_lower_outboard_grazing", scan=scan
     )  # Total magnetic field grazing angle (3D)
     plate_angle_deg = 20  # Visual orientation of the plate in the room
     theta_div_deg = np.degrees(
-        mfile.get("theta_div", scan=scan)
+        mfile.get("deg_div_lower_outboard_plate_separatrix_poloidal", scan=scan)
     )  # Separatrix tilt angle relative to the target face
     wetted_width = mfile.get(
-        "strike_width", scan=scan
+        "dx_div_lower_outboard_strike", scan=scan
     )  # Distance along plate between the two strike points
     L = 0.5  # Length of flux lines
 
