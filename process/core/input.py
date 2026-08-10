@@ -1332,6 +1332,11 @@ def validate_variable(
     -------
     :
         the input value with the correct type.
+
+    Raises
+    ------
+    ProcessValidationError
+        Variable validation failure
     """
     # check that if the variable should be an array, then an array index is provided
     # EXCEPT for if check_array is False. This should only be the case when parsing
@@ -1392,6 +1397,11 @@ def set_scalar_variable(name: str, value: ValidInputTypes, config: InputVariable
         the value of the input variable.
     config :
         the config of the variable that describes how to validate and process it.
+
+    Raises
+    ------
+    ProcessValueError
+        variable not found
     """
     current_value = getattr(config.module, name, ...)
 
@@ -1424,6 +1434,11 @@ def set_array_variable(name: str, value: str, array_index: int, config: InputVar
         the array index of the variable in the input file.
     config :
         the config of the variable that describes how to validate and process it.
+
+    Raises
+    ------
+    ProcessValueError
+        variable not found
     """
     current_array = getattr(config.module, name, ...)
     shape = current_array.shape

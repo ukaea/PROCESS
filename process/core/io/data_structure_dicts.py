@@ -134,6 +134,11 @@ def get_dicts():
 
     WARNING: this function must be used carefully because it
     re-initialises the PROCESS state
+
+    Raises
+    ------
+    TypeError
+        Type annotation not recognised
     """
     dict_objects = []
     # Different dict objects, e.g. variable descriptions

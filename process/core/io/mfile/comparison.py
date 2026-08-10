@@ -300,6 +300,11 @@ def compare_mfiles(
         save flag
     verbose:
         verbosity flag
+
+    Raises
+    ------
+    RuntimeError
+        Unconverged run
     """
     print_counter = 0
     n = 2

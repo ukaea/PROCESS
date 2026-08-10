@@ -222,7 +222,13 @@ class MFile:
         return self.data[variable].get_scan(scan)
 
     def open_mfile(self):
-        """Function to open MFILE.DAT"""
+        """Function to open MFILE.DAT
+
+        Raises
+        ------
+        FileNotFoundError
+            Mfile not found
+        """
         if not self.filename.is_file():
             raise FileNotFoundError(f"MFile '{self.filename}' doesn't exist")
 
