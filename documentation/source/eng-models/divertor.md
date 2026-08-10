@@ -169,21 +169,11 @@ The interactive graph below can be used to investigate how changing the key para
 !!! Note ""
     `i_div_heat_load == 2`
 
-A divertor heat flux model is provided in Appendix A.II. of [^2].  This uses the Eich scaling 
-[^3] and S-factor [^4] to calculate the SOL width at the outboard divertor, mapped to the midplane:
+A divertor heat flux model is provided in Appendix A.II. of [^wade_21].  This model originally uses the [Eich scaling](../physics-models/plasma_scrape_off_layer.md#eich-2013-model--calculate_eich2013_sol_power_decay_length) 
+and the [Scrabosio S-factor](../physics-models/plasma_scrape_off_layer.md#scarabosio-2015--calculate_scarabosio2015_power_spreading_factor) to calculate the SOL width at the outboard divertor, mapped to the midplane:
 
 $$
-\lambda_{int} = \lambda_{q,Eich} + 1.64S
-$$
-
-where
-
-$$
-\lambda_{q,Eich} = 1.35 \, P_{\mathrm{SOL}}^{-0.02} \, R_{o}^{0.04} \, B_{p}^{-0.92} \, \epsilon^{0.42}
-$$
-
-$$
-S = 0.12(n_{e,mid}/10^{19})^{-0.02} \, P_{\mathrm{SOL}}^{-0.21} \, R_{o}^{0.71} \, B_{p}^{-0.82}.
+\lambda_{\text{int}} = \lambda_{\text{q,Eich}} + 1.64S
 $$
 
 This is then used to calculate the wetted area in the divertor
@@ -196,44 +186,40 @@ where $N_{div}$ is the number of divertors (1 or 2), $F_{exp}$ is the relevant f
 $\theta_{div}$ is the tilt of the separatrix relative to the target in the poloidal plane, and has the form
 
 $$
-\theta_{div} = \sin^{-1} [(1+1/\alpha_{div}^{2})\sin\beta_{div}],
+\theta_{\text{div}} = \sin^{-1} [(1+1/\alpha_{\text{div}}^{2})\sin(\beta_{\text{div}})],
 $$
 
 where
 
 $$
-\alpha_{div} = F_{exp}\alpha_{mid}
+\alpha_{\text{div}} = F_{\text{exp}}\alpha_{\text{mid}}
 $$
 
 $$
-\alpha_{mid} = \tan^{-1}\frac{B_{p,mid}}{B_{T,mid}}
+\alpha_{\text{mid}} = \tan^{-1}\frac{B_{\text{p,mid}}}{B_{\text{T,mid}}}
 $$
 
-where $B_{p,mid}$ and $B_{T,mid}$ are the poloidal and toroidal fields on the outer midplane. The 
+where $B_{\text{p,mid}}$ and $B_{\text{T,mid}}$ are the poloidal and toroidal fields on the outer midplane. The 
 parameter $\beta_{div}$ is the angle of incidence between the field line and the target.
 
-The divertor heat flux in $\mathrm{MW}/\mathrm{m^{2}}$ is then 
+The divertor heat flux in $[\mathrm{MW}/\mathrm{m^{2}}]$ is then 
 
 $$
-q_{div} = P_{\mathrm{SOL}}(1-f_{rad,div})/A_{wetted}
+q_{\text{div}} = P_{\mathrm{SOL}}(1-f_{\text{rad,div}})/A_{\text{wetted}}
 $$
 
-where $f_{rad,div}$ is the SOL radiative fraction.
+where $f_{\text{rad,div}}$ is the SOL radiative fraction.
 
 For the purposes of this model, the following are inputs:
 
-- Flux expansion $F_{exp}$  (`f_div_flux_expansion`, default = 2)  
-- Field line angle with respect to divertor target plate (degrees) $\beta_{div}$ (`deg_div_field_plate`), also 
+- Flux expansion $F_{\text{exp}}$  (`f_div_flux_expansion`, default = 2)  
+- Field line angle with respect to divertor target plate (degrees) $\beta_{\text{div}}$ (`deg_div_field_plate`), also 
   available as an iteration variable (170)  
-- SOL radiative fraction, $f_{rad,div}$ (`rad_fraction_sol`).
+- SOL radiative fraction, $f_{\text{rad,div}}$ (`rad_fraction_sol`).
 
 [^1]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
 ITER Documentation Series, No. 10, IAEA/ITER/DS/10 (1990)
 
-[^2]: M.R. Wade & J.A. Leuer, 'Cost Drivers for a Tokamak-Based Compact Pilot Plant, Fusion Science and Technology, 77:2, 119-143 (2021)
-
-[^3]: T. Eich et al, 'Scaling of the tokamak near the scrape-off layer H-mode power width and implications for ITER', Nucl. Fusion 53 093031 (2013)
-
-[^4]: A. Scarabosio et al, 'Scaling of the divertor power spreading (S-factor) in open and closed divertor operation in JET and ASDEX Upgrade, Journal of Nuclear Materials, Vol. 463, 49-54 (2015)
+[^wade_21]: M. R. Wade and J. A. Leuer, “Cost Drivers for a Tokamak-Based Compact Pilot Plant,” Fusion Science and Technology, vol. 77, no. 2, pp. 119–143, Feb. 2021, doi: 10.1080/15361055.2020.1858670.
 
 [^5]: Y.-K. M. Peng, J. B. Hicksand AEA Fusion, Culham (UK), "Engineering feasibility of tight aspect ratio Tokamak (spherical torus) reactors". 1990. https://inis.iaea.org/records/ey2rf-dah04

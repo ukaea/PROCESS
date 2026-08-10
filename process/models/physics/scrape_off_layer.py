@@ -97,7 +97,7 @@ class ScrapeOffLayer(Model):
             / self.data.physics.a_plasma_outboard_sol_eich13_parallel
         )
 
-        self.data.physics.len_plasma_sol_scrabosio14_power_spreading = self.calculate_scarabosio2014_power_spreading_factor(
+        self.data.physics.len_plasma_sol_scrabosio14_power_spreading = self.calculate_scarabosio2014_power_spreading_factor(  # noqa: E501
             p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
             b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
             nd_plasma_separatrix_electron_19=self.data.physics.nd_plasma_separatrix_electron

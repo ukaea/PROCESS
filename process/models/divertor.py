@@ -319,6 +319,13 @@ class Divertor(Model):
         -------
         float
             divertor heat load for a tight aspect ratio machine
+
+
+        References
+        ----------
+        [1] M. R. Wade and J. A. Leuer, “Cost Drivers for a Tokamak-Based Compact Pilot
+        Plant,” Fusion Science and Technology, vol. 77, no. 2, pp. 119-143, Feb. 2021,
+        doi: 10.1080/15361055.2020.1858670.
         """
         # SOL width at divertor plates (λ_int) [m]
         # λ_int = λ_q + 1.64 * S
