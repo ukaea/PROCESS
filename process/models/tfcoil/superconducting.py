@@ -63,6 +63,15 @@ class SuperconductingTFTurnType(IntEnum):
         """The full name for this superconductor type."""
         return self._full_name_
 
+    @classmethod
+    def _missing_(cls, value):
+        try:
+            return cls[value]
+        except KeyError:
+            raise ValueError(
+                f"Unsupported superconducting TF turn type: {value}"
+            ) from None
+
 
 class SuperconductingTFWPShapeType(IntEnum):
     """Enum for the type of TF coil WP shape, which determines the geometry of the

@@ -853,7 +853,6 @@ class Models:
             physics and engineering model objects
         _outfile : int
             Fortran output unit identifier
-
         """
         # ensure we are capturing warnings that occur in the 'output' stage
         # as these are warnings that occur at our solution point.
@@ -912,16 +911,8 @@ class Models:
         if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             tf_turn_type = SuperconductingTFTurnType(
                 data.superconducting_tfcoil.i_tf_turn_type
-            )
-            if tf_turn_type == SuperconductingTFTurnType.CABLE_IN_CONDUIT:
-                self.cicc_sctfcoil.output()
-            elif tf_turn_type == SuperconductingTFTurnType.CROSS_CONDUCTOR:
-                self.croco_sctfcoil.output()
-            else:
-                raise ValueError(
-                    "Unsupported superconducting TF turn type: "
-                    f"{data.superconducting_tfcoil.i_tf_turn_type}"
-                )
+            ).abbreviation.lower()
+            getattr(self, f"{tf_turn_type}_sctfcoil").output()
 
         # Toroidal field coil aluminium model
         if data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:

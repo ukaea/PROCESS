@@ -331,7 +331,7 @@ class Scan:
 
             # Error code handler for VMCON
             if self.solver == "vmcon":
-                self.solver_handler.solver.verror(ifail)
+                self.solver_handler.solver.verror()
             process_output.oblnkl(constants.NOUT)
             process_output.oblnkl(constants.IOTTY)
         else:
