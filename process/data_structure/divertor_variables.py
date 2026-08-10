@@ -105,6 +105,9 @@ class DivertorData:
 
     deg_b_div_lower_flux: float = 0.0
     """Lower divertor flux angle [degrees]"""
+    
+    a_div_lower_outboard_wetted: float = 0.0
+    """Lower divertor outboard wetted area [m²]"""
 
 
 CREATE_DICTS_FROM_DATACLASS = DivertorData
