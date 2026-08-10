@@ -111,6 +111,7 @@ def replace_iteration_variables(iteration_vars, in_data):
 
 
 def write_indat(mfile, indat, output, feasible_point_index):
+    """Write new IN.DAT file using values from an existing MFILE"""
     scan = feasible_point(mfile, feasible_point_index)
     print("Using scan number = ", scan)
 

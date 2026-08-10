@@ -168,15 +168,19 @@ class DefaultOrderedDict(OrderedDict):
         return type(self), args, None, None, self.items()
 
     def copy(self):
+        """Copy the DefaultOrderedDict"""
         return copy.copy(self)
 
     def __copy__(self):
+        """Copy the DefaultOrderedDict"""
         return type(self)(self.default_factory, self)
 
     def __deepcopy__(self, memo):
+        """Deepcopy the DefaultOrderedDict"""
         return type(self)(self.default_factory, copy.deepcopy(self.items()))
 
     def __repr__(self):
+        """Return string representation of DefaultOrderedDict"""
         return (
             f"OrderedDefaultDict({self.default_factory}, {OrderedDict.__repr__(self)})"
         )

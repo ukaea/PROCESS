@@ -30,7 +30,8 @@ output_dict = {}
 
 # Classes for the various dictionary types
 class Dictionary:
-    # Base Dictionary class for all dicts
+    """Base Dictionary class for all dicts"""
+
     def __init__(self, name):
         self.name = name  # Dict name
         self.dict = {}  # Contains the dict
@@ -38,32 +39,32 @@ class Dictionary:
         # value = nested dict of variable info
 
     def make_dict(self):
-        # Make the dictionary
-        pass
+        """Make the dictionary"""
 
     def post_process(self):
-        # Perform any processing after making the dict
-        pass
+        """Perform any processing after making the dict"""
 
     def publish(self):
-        # Add the finished dictionary to the output dict
+        """Add the finished dictionary to the output dict"""
         output_dict.update(self.dict)
 
 
 class SourceDictionary(Dictionary):
-    # Dictionary created from Fortran source
+    """Dictionary created from Fortran source"""
+
     def __init__(self, name, dict_creator_func):
         Dictionary.__init__(self, name)
         # Function that creates the dict
         self.dict_creator_func = dict_creator_func
 
     def make_dict(self):
-        # Make entire nested dict from function
+        """Make entire nested dict from function"""
         self.dict[self.name] = self.dict_creator_func()
 
 
 class HardcodedDictionary(Dictionary):
-    # Dictionary created from a hardcoded dict in this file
+    """Dictionary created from a hardcoded dict in this file"""
+
     def __init__(self, name, hardcoded_dict):
         Dictionary.__init__(self, name)
         self.dict[self.name] = None
@@ -72,7 +73,7 @@ class HardcodedDictionary(Dictionary):
         self.hardcoded_dict = hardcoded_dict
 
     def make_dict(self):
-        # Set the nested value to a hardcoded int, list or dict
+        """Set the nested value to a hardcoded int, list or dict"""
         self.dict[self.name] = self.hardcoded_dict
 
 
@@ -113,7 +114,7 @@ def dict_ixc_full():
 
 
 def dict_ixc_bounds():
-    # Returns dictionary mapping iteration variable name to bounds
+    """Return dictionary mapping iteration variable name to bounds"""
     ixc_full = output_dict["DICT_IXC_FULL"]
     ixc_bounds = {}
     for value in ixc_full.values():

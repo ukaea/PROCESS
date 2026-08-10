@@ -82,6 +82,7 @@ def init_process(data: DataStructure):
 
 
 def get_git_summary() -> tuple[str, str]:
+    """Get git summary"""
     directory = Path(process.__file__).parent
     try:
         git_branch = (

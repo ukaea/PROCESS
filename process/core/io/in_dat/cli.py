@@ -1,3 +1,5 @@
+"""Create new IN.DAT CLI"""
+
 import click
 
 from process.core.io.cli_tools import help_opt, indat_opt, mfile_opt

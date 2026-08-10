@@ -758,6 +758,7 @@ def remove_bound(data, bound, bound_type):
 
 
 def fortran_float_to_py(f: str) -> str:
+    """Convert from fortran float to python float representation"""
     if not isinstance(f, str):
         return f
     return sub(r"([0-9]+\.[0-9]+)(?:D|d)([0-9]+)", r"\1e\2", f)
@@ -990,6 +991,7 @@ class INVariable:
         self.comment = comment
 
     def __eq__(self, value):
+        """Determine if variables are equal"""
         # intentionally missing .comment,
         # this is not necessary for the variables to be equal
         return (
@@ -1002,6 +1004,7 @@ class INVariable:
         return hash((self.name, self.value, self.v_type))
 
     def __repr__(self):
+        """Return string representation of a single variable from the IN.DAT"""
         return (
             f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, "
             f"v_type={self.v_type!r}, "
