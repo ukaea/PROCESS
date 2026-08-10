@@ -1,9 +1,13 @@
+"""Fluid property setup"""
+
 from functools import cache
 
 from CoolProp.CoolProp import PropsSI
 
 
 class FluidProperties:
+    """Fluid properties setup"""
+
     def __init__(self, coolprop_inputs: list[str | float]):
         self._coolprop_inputs = tuple(coolprop_inputs)
 
