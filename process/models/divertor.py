@@ -2,6 +2,7 @@
 
 import math
 from dataclasses import dataclass
+
 import numpy as np
 
 from process.core import constants
@@ -23,6 +24,7 @@ class WadeDivertorMetrics:
     area_wetted: float  # Wetted area (m²)
     strike_width: float  # Strike point width (m)
     hldiv_base: float  # Base divertor heat load (MW/m²)
+
 
 class Divertor(Model):
     """Module containing divertor routines

@@ -96,12 +96,15 @@ class DivertorData:
 
     deg_div_poloidal_plasma: float = 0.0
     """Divertor poloidal angle subtended by plasma (degrees)"""
-    
+
     dx_div_lower_outboard_strike: float = 0.0
     """Lower divertor outboard strike point width [m]"""
-    
+
     f_div_lower_flux_expansion: float = 0.0
     """Lower divertor flux expansion factor (fₓ)"""
+
+    deg_b_div_lower_flux: float = 0.0
+    """Lower divertor flux angle [degrees]""" 
 
 
 CREATE_DICTS_FROM_DATACLASS = DivertorData
