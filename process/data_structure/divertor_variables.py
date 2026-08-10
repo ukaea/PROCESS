@@ -99,6 +99,9 @@ class DivertorData:
     
     dx_div_lower_outboard_strike: float = 0.0
     """Lower divertor outboard strike point width [m]"""
+    
+    f_div_lower_flux_expansion: float = 0.0
+    """Lower divertor flux expansion factor (fₓ)"""
 
 
 CREATE_DICTS_FROM_DATACLASS = DivertorData
