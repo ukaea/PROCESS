@@ -108,6 +108,9 @@ class DivertorData:
     
     a_div_lower_outboard_wetted: float = 0.0
     """Lower divertor outboard wetted area [m²]"""
+    
+    deg_div_lower_outboard_plate_separatrix_poloidal: float = 0.0
+    """Lower divertor outboard plate-separatrix poloidal angle [degrees]"""
 
 
 CREATE_DICTS_FROM_DATACLASS = DivertorData
