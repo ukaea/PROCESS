@@ -96,6 +96,9 @@ class DivertorData:
 
     deg_div_poloidal_plasma: float = 0.0
     """Divertor poloidal angle subtended by plasma (degrees)"""
+    
+    dx_div_lower_outboard_strike: float = 0.0
+    """Lower divertor outboard strike point width [m]"""
 
 
 CREATE_DICTS_FROM_DATACLASS = DivertorData
