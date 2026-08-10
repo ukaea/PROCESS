@@ -304,12 +304,14 @@ class Vmcon(_Solver):
         """
         strings = "\n".join(
             {
-                -1: ("User-terminated execution of VMCON.",),
-                0: (
+                SolverOutputCondition.USER_TERMINATED: (
+                    "User-terminated execution of VMCON.",
+                ),
+                SolverOutputCondition.IMPROPER_INPUT: (
                     "Improper input parameters to the VMCON routine.",
                     "PROCESS coding must be checked.",
                 ),
-                2: (
+                SolverOutputCondition.MAX_ITERATIONS: (
                     "The maximum number of calls has been reached without solution.",
                     (
                         "The code may be stuck in a minimum in the residual space that"
@@ -319,7 +321,7 @@ class Vmcon(_Solver):
                     "is failing to escape from a deep local minimum.",
                     "Try changing the variables in IXC, or modify their initial values.",
                 ),
-                3: (
+                SolverOutputCondition.MAX_LINE_SEARCHES: (
                     "The line search required the maximum of 10 calls.",
                     "A feasible solution may be difficult to achieve.",
                     "Try changing or adding variables to IXC.",
@@ -329,7 +331,7 @@ class Vmcon(_Solver):
                     "Try changing the equations in ICC, or",
                     "adding new variables to IXC.",
                 ),
-                5: (
+                SolverOutputCondition.NO_SOLUTION: (
                     "The quadratic programming technique was unable to",
                     "find a feasible point.\n",
                     "Try changing or adding variables to IXC, or modify",
