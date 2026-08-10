@@ -24,7 +24,7 @@ class DivertorData:
     anginc: float = 0.262
     """angle of incidence of field line on plate (rad)"""
 
-    deg_div_field_plate: float = 1.0
+    deg_b_div_lower_outboard_grazing: float = 1.0
     """field line angle wrt divertor target plate (degrees)"""
 
     betai: float = 1.0

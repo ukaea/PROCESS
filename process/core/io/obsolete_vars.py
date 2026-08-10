@@ -302,7 +302,7 @@ OBS_VARS = {
     "wave_mode": "i_ecrh_wave_mode",
     "pheatfix": "p_hcd_secondary_extra_heat_mw",
     "ftar": "f_p_div_lower",
-    "beta_div": "deg_div_field_plate",
+    "beta_div": "deg_b_div_lower_outboard_grazing",
     "divclfr": "f_vol_div_coolant",
     "divdens": "den_div_structure",
     "divplt": "dx_div_plate",

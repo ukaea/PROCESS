@@ -107,7 +107,7 @@ class Divertor(Model):
                 len_plasma_sol_power_decay=self.data.physics.len_plasma_sol_eich13_power_decay,
                 len_plasma_sol_power_spreading=self.data.physics.len_plasma_sol_scrabosio14_power_spreading,
                 f_div_flux_expansion=self.data.divertor.f_div_flux_expansion,
-                deg_div_field_plate=self.data.divertor.deg_div_field_plate,
+                deg_b_div_lower_outboard_grazing=self.data.divertor.deg_b_div_lower_outboard_grazing,
                 rad_fraction_sol=self.data.physics.rad_fraction_sol,
                 f_p_div_lower=self.data.physics.f_p_div_lower,
                 deg_b_plasma_outboard_flux_midplane=self.data.physics.deg_b_plasma_outboard_flux_midplane,
@@ -288,7 +288,7 @@ class Divertor(Model):
         len_plasma_sol_power_decay: float,
         len_plasma_sol_power_spreading: float,
         f_div_flux_expansion: float,
-        deg_div_field_plate: float,
+        deg_b_div_lower_outboard_grazing: float,
         rad_fraction_sol: float,
         f_p_div_lower: float,
         deg_b_plasma_outboard_flux_midplane: float,
@@ -316,7 +316,7 @@ class Divertor(Model):
             SOL power spreading factor (S) [m]
         f_div_flux_expansion : float
             plasma flux expansion in divertor
-        deg_div_field_plate : float
+        deg_b_div_lower_outboard_grazing : float
             field line angle wrt divertor target plate (degrees)
         rad_fraction_sol : float
             SOL radiation fraction
@@ -345,7 +345,7 @@ class Divertor(Model):
         # Tilt of the separatrix relative to the target in the poloidal plane
         theta_div = math.asin(
             (1 + 1 / math.radians(alpha_div) ** 2)
-            * math.sin(math.radians(deg_div_field_plate))
+            * math.sin(math.radians(deg_b_div_lower_outboard_grazing))
         )
 
         # Wetted area
@@ -380,8 +380,8 @@ class Divertor(Model):
             po.ovarre(
                 self.outfile,
                 "Field line angle wrt to target divertor plate (degrees)",
-                "(deg_div_field_plate)",
-                deg_div_field_plate,
+                "(deg_b_div_lower_outboard_grazing)",
+                deg_b_div_lower_outboard_grazing,
             )
             po.ovarre(
                 self.outfile,

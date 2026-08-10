@@ -748,7 +748,7 @@ p_plasma_separatrix_rmajor_max_mw = 40.0
 * DESCRIPTION:   Angle of incidence of field line on plate (rad) (default = 0.262)
 * JUSTIFICATION: Not yet set
 
-*deg_div_field_plate = 
+*deg_b_div_lower_outboard_grazing = 
 * DESCRIPTION:   Field line angle wrt divertor target plate (degrees) (default = 1.0)
 * JUSTIFICATION: Not yet set
 

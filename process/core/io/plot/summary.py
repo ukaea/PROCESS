@@ -16395,7 +16395,7 @@ def plot_wade_divertor_dimensions(
         "alpha_div", scan=scan
     )  # Magnetic pitch / flux expansion factor (F_exp * alpha_mid)
     beta_div_deg = mfile.get(
-        "deg_div_field_plate", scan=scan
+        "deg_b_div_lower_outboard_grazing", scan=scan
     )  # Total magnetic field grazing angle (3D)
     plate_angle_deg = 20  # Visual orientation of the plate in the room
     theta_div_deg = np.degrees(
