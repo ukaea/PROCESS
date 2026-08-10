@@ -147,61 +147,60 @@ class Vacuum(Model):
 
         #  Output section
         if output:
-            process_output.oheadr(self.outfile, "Vacuum System")
-            process_output.ovarre(
-                self.outfile,
-                "Switch for vacuum pumping model",
-                "(i_vacuum_pumping)",
-                '"' + self.i_vacuum_pumping + '"',
-            )
-            process_output.ocmmnt(
-                self.outfile,
-                "Simple steady-state model with comparison to ITER cryopumps",
-            )
-            process_output.ovarre(
-                self.outfile,
-                "Plasma fuelling rate (nucleus-pairs/s)",
-                "(molflow_plasma_fuelling_required)",
-                self.data.physics.molflow_plasma_fuelling_required,
-                "OP ",
-            )
-            process_output.ocmmnt(
-                self.outfile, "Number of high vacuum pumps, each with the throughput"
-            )
-            process_output.ocmmnt(
-                self.outfile,
-                " of one ITER cryopump (50 Pa m3 s-1 = 1.2e+22 molecules/s),",
-            )
-            process_output.ovarre(
-                self.outfile,
-                " all operating at the same time",
-                "(n_iter_vacuum_pumps)",
-                n_iter_vacuum_pumps,
-                "OP ",
-            )
-
-            process_output.ovarre(
-                self.outfile,
-                "Dwell time",
-                "(t_plant_pulse_dwell)",
-                self.data.times.t_plant_pulse_dwell,
-            )
-            process_output.ovarre(
-                self.outfile,
-                "Number of pumps required for pump-down",
-                "(npumpdown)",
-                npumpdown,
-                "OP ",
-            )
-            process_output.ovarre(
-                self.outfile,
-                "Number of pumps required overall",
-                "(npump)",
-                npump,
-                "OP ",
-            )
+            self._vacuum_simple_output(n_iter_vacuum_pumps, npumpdown, npump)
 
         return npump
+
+    def _vacuum_simple_output(self, n_iter_vacuum_pumps, npumpdown, npump):
+        process_output.oheadr(self.outfile, "Vacuum System")
+        process_output.ovarre(
+            self.outfile,
+            "Switch for vacuum pumping model",
+            "(i_vacuum_pumping)",
+            f'"{self.i_vacuum_pumping}"',
+        )
+        process_output.ocmmnt(
+            self.outfile,
+            "Simple steady-state model with comparison to ITER cryopumps",
+        )
+        process_output.ovarre(
+            self.outfile,
+            "Plasma fuelling rate (nucleus-pairs/s)",
+            "(molflow_plasma_fuelling_required)",
+            self.data.physics.molflow_plasma_fuelling_required,
+            "OP ",
+        )
+        process_output.ocmmnt(
+            self.outfile, "Number of high vacuum pumps, each with the throughput"
+        )
+        process_output.ocmmnt(
+            self.outfile,
+            " of one ITER cryopump (50 Pa m3 s-1 = 1.2e+22 molecules/s),",
+        )
+        process_output.ovarre(
+            self.outfile,
+            " all operating at the same time",
+            "(n_iter_vacuum_pumps)",
+            n_iter_vacuum_pumps,
+            "OP ",
+        )
+
+        process_output.ovarre(
+            self.outfile,
+            "Dwell time",
+            "(t_plant_pulse_dwell)",
+            self.data.times.t_plant_pulse_dwell,
+        )
+        process_output.ovarre(
+            self.outfile,
+            "Number of pumps required for pump-down",
+            "(npumpdown)",
+            npumpdown,
+            "OP ",
+        )
+        process_output.ovarre(
+            self.outfile, "Number of pumps required overall", "(npump)", npump, "OP "
+        )
 
     def vacuum(
         self,
@@ -477,7 +476,7 @@ class Vacuum(Model):
         while True:
             d[i] = 1.0e0
             for _ in range(100):
-                dnew, a1 = self._newton_function(d[i], l1, l2, l3, xmult, i, ceff)
+                dnew, a1 = self._newton_function(d[i], l1, l2, l3, xmult[i], ceff[i])
                 dd = abs((d[i] - dnew) / d[i])
                 d[i] = dnew
                 if dd <= 0.01:
@@ -508,23 +507,23 @@ class Vacuum(Model):
         return ceff, nflag, d1max
 
     @staticmethod
-    def _newton_function(d_i, l1, l2, l3, xmult, i, ceff):
+    def _newton_function(d_i, l1, l2, l3, xmult_i, ceff_i):
         a1 = 0.25 * math.pi * d_i * d_i  # Area of aperture and duct (m^2)
         a2 = 1.44 * a1
         a3 = a2
         k1 = 4 / 3 * d_i / (l1 + 4 / 3 * d_i)
         k2 = 4 / 3 * d_i * 1.2 / (l2 + 4 / 3 * d_i * 1.2)
         k3 = 4 / 3 * d_i * 1.2 / (l3 + 4 / 3 * d_i * 1.2)
-        cap = 119 * a1 / xmult[i]
+        cap = 119 * a1 / xmult_i
         dcap = 2 * cap / d_i
-        c1 = 119 * a1 * k1 / xmult[i]
+        c1 = 119 * a1 * k1 / xmult_i
         dc1 = c1 / d_i * (3 - k1)
-        c2 = 119 * a2 * k2 / xmult[i]
+        c2 = 119 * a2 * k2 / xmult_i
         dc2 = c2 / d_i / 1.2 * (3 - k2)
-        c3 = 119 * a3 * k3 / xmult[i]
+        c3 = 119 * a3 * k3 / xmult_i
         dc3 = c3 / d_i / 1.2 * (3 - k3)
         cnew = 1 / (1 / cap + 1 / c1 + 1 / c2 + 1 / c3)
-        y = -ceff[i] + cnew
+        y = -ceff_i + cnew
         dy = (
             cnew
             * cnew
