@@ -539,9 +539,9 @@ def plot_1d_scan(
         # This uses exclusively the last output_name2 defined in an earlier loop ignoring
         # all other output_name2s...
         if output_name == "plasma_current_MA":
-            extra_str = f"plasma_current{f'_vs_{output_name2}' if len(output_names2) > 0 else ''}"  # ruff:ignore[line-too-long]
+            extra_str = f"plasma_current{f'_vs_{output_name2}' if len(output_names2) > 0 else ''}"  # noqa: E501
         elif stack_plots and output_names[-1] == output_name:
-            extra_str = f"{output_name}{f'_vs_{output_name2}' if len(output_names2) > 0 else '_vs_'.join(output_names)}"  # ruff:ignore[line-too-long]
+            extra_str = f"{output_name}{f'_vs_{output_name2}' if len(output_names2) > 0 else '_vs_'.join(output_names)}"  # noqa: E501
         else:
             extra_str = (
                 f"{output_name}{f'_vs_{output_name2}' if len(output_names2) > 0 else ''}"
