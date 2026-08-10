@@ -104,7 +104,7 @@ class DivertorData:
     """Lower divertor flux expansion factor (fₓ)"""
 
     deg_b_div_lower_flux: float = 0.0
-    """Lower divertor flux angle [degrees]""" 
+    """Lower divertor flux angle [degrees]"""
 
 
 CREATE_DICTS_FROM_DATACLASS = DivertorData
