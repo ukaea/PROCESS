@@ -301,11 +301,6 @@ class Vmcon(_Solver):
 
         This routine prints out relevant messages in the case of
         an unfeasible result from a VMCON (optimisation) run.
-
-        Parameters
-        ----------
-        ifail: int :
-
         """
         strings = "\n".join(
             {

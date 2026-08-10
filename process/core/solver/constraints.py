@@ -2066,13 +2066,14 @@ def constraints_output(data: DataStructure, solver_name: str):
         # Inequalities not necessarily satisfied when evaluating
         process_output.osubhd(
             constants.NOUT,
-            "Negative inequality constraint (normalised) residuals indicate a constraint is satisfied.",
+            "Negative inequality constraint (normalised) residuals "
+            "indicate a constraint is satisfied.",
         )
         if solver_name == "fsolve":
             process_output.osubhd(
                 constants.NOUT,
-                "This MFile was produced via an evaluation, not an optimisation, and so the constraints "
-                "might be violated.",
+                "This MFile was produced via an evaluation, not an optimisation, "
+                "and so the constraints might be violated.",
             )
 
         for i in range(
