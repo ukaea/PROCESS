@@ -47,6 +47,13 @@ class MFileVariable(dict):  # noqa: FURB189
         super().__init__(*args, **kwargs)
 
     def __getattr__(self, name):
+        """Get attribute from dictionary
+
+        Raises
+        ------
+        AttributeError
+            If attribute doesn't exist in dictionary
+        """
         result = self.get(name)
         if result:
             return result
@@ -112,6 +119,13 @@ class MFileErrorClass:
         self.get_number_of_scans = self.get_error
 
     def get_error(self, *args, **kwargs):  # noqa: ARG002
+        """Get error status from MFILE
+
+        Raises
+        ------
+        KeyError
+            If error_status not found in MFILE
+        """
         logger.error(f"Key '{self.item}' not in MFILE. KeyError! Check MFILE")
 
         if self.item == "error_status":
@@ -131,12 +145,26 @@ class MFileDataDictionary(OrderedDict):
     """Class object to act as a dictionary for the data."""
 
     def __getattr__(self, name):
+        """Get attribute from dictionary
+
+        Raises
+        ------
+        AttributeError
+            If attribute doesn't exist in dictionary
+        """
         result = self.get(name)
         if result:
             return result
         raise AttributeError(f"{self.__class__} object has no attribute {name}")
 
     def __getitem__(self, item):
+        """Get item from dictionary
+
+        Raises
+        ------
+        KeyError
+            If item does not exist in dictionary
+        """
         try:
             return dict.__getitem__(self, item)
         except KeyError:
@@ -144,6 +172,8 @@ class MFileDataDictionary(OrderedDict):
 
 
 class DefaultOrderedDict(OrderedDict):
+    """Base class for default ordered dictionary"""
+
     # Source: http://stackoverflow.com/a/6190500/562769
     def __init__(self, default_factory=None, *a, **kw):
         if default_factory is not None and not callable(default_factory):
@@ -152,6 +182,7 @@ class DefaultOrderedDict(OrderedDict):
         self.default_factory = default_factory
 
     def __getitem__(self, key):
+        """Get item from dictionary"""
         try:
             return OrderedDict.__getitem__(self, key)
         except KeyError:
