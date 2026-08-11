@@ -16,6 +16,12 @@ logger = logging.getLogger(__name__)
 class DivertorSeparatrixPowerSplits:
     """Dataclass to hold the power splits to the divertor targets."""
 
+    f_p_div_inboard_separatrix: float = 0.0
+    """Fraction of total separatrix power to inboard divertor targets"""
+    
+    f_p_div_outboard_separatrix: float = 0.0
+    """Fraction of total separatrix power to outboard divertor targets"""
+    
     f_p_div_inboard_lower_separatrix: float = 0.0
     """Fraction of total separatrix power to inboard lower divertor target"""
 
@@ -336,6 +342,8 @@ class PlasmaExhaust(Model):
         f_p_outboard_lower = f_p_total_outboard * f_p_outboard_lower
 
         return DivertorSeparatrixPowerSplits(
+            f_p_div_inboard_separatrix=f_p_total_inboard,
+            f_p_div_outboard_separatrix=f_p_total_outboard,
             f_p_div_inboard_lower_separatrix=f_p_inboard_lower,
             f_p_div_inboard_upper_separatrix=f_p_inboard_upper,
             f_p_div_outboard_lower_separatrix=f_p_outboard_lower,
