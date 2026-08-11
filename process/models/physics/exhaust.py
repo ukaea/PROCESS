@@ -71,7 +71,7 @@ class PlasmaExhaust(Model):
             # Double null divertor configuration
             po.ovarre(
                 self.outfile,
-                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) (MW/m) "
+                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) [MW/m] "
                 "(On peak divertor)",
                 "(p_plasma_separatrix_rmajor_mw)",
                 self.data.physics.p_plasma_separatrix_rmajor_mw,
@@ -80,7 +80,7 @@ class PlasmaExhaust(Model):
             po.ovarre(
                 self.outfile,
                 "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) "
-                "(MWT/m) (On peak divertor)",
+                "[MWT/m] (On peak divertor)",
                 "(p_div_bt_q_aspect_rmajor_mw)",
                 self.data.physics.p_div_bt_q_aspect_rmajor_mw,
                 "OP ",
@@ -89,7 +89,7 @@ class PlasmaExhaust(Model):
             # Single null divertor configuration
             po.ovarre(
                 self.outfile,
-                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) (MW/m)",
+                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) [MW/m]",
                 "(p_plasma_separatrix_rmajor_mw)",
                 self.data.physics.p_plasma_separatrix_rmajor_mw,
                 "OP ",
@@ -97,13 +97,14 @@ class PlasmaExhaust(Model):
             po.ovarre(
                 self.outfile,
                 "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) "
-                "(MWT/m)",
+                "[MWT/m]",
                 "(p_div_bt_q_aspect_rmajor_mw)",
                 self.data.physics.p_div_bt_q_aspect_rmajor_mw,
                 "OP ",
             )
-
         po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        self.output_brunner_divertor_power_splits()
 
     @staticmethod
     def calculate_separatrix_power(
@@ -340,3 +341,111 @@ class PlasmaExhaust(Model):
             f_p_div_outboard_lower_separatrix=f_p_outboard_lower,
             f_p_div_outboard_upper_separatrix=f_p_outboard_upper,
         )
+
+    def output_brunner_divertor_power_splits(self):
+        """Output the Brunner divertor power splits to the output file."""
+        if self.data.stellarator.istell == 0:
+            po.osubhd(self.outfile, "Brunner Divertor Power Splits:")
+            po.ovarre(
+                self.outfile,
+                "Power incident on the divertor targets (MW)",
+                "(ptarmw)",
+                self.data.physics.ptarmw,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Divertor poloidal angle subtended by plasma (degrees)",
+                "(deg_div_poloidal_plasma)",
+                self.data.divertor.deg_div_poloidal_plasma,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Fraction of power to the lower divertor",
+                "(f_p_div_lower)",
+                self.data.physics.f_p_div_lower,
+                "IP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Outboard side heat flux decay length (m)",
+                "(len_sol_outboard_power_decay)",
+                self.data.physics.len_sol_outboard_power_decay,
+                "OP ",
+            )
+            if self.data.divertor.n_divertors == 2:
+                po.ovarre(
+                    self.outfile,
+                    "Radial distance between the first and second plasma separatrixes at the outer midplane (δR_sep) [m]",
+                    "(dr_plasma_outboard_midplane_separatrix_separation)",
+                    self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
+                    "OP ",
+                )
+
+            po.ovarre(
+                self.outfile,
+                "Fraction of power on the inner targets",
+                "(fio)",
+                self.data.physics.fio,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Fraction of power incident on the lower inner target",
+                "(fLI)",
+                self.data.physics.f_p_div_lower_inboard_separatrix,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Fraction of power incident on the lower outer target",
+                "(fLO)",
+                self.data.physics.f_p_div_lower_outboard_separatrix,
+                "OP ",
+            )
+            if self.data.divertor.n_divertors == 2:
+                po.ovarre(
+                    self.outfile,
+                    "Fraction of power incident on the upper inner target",
+                    "(fUI)",
+                    self.data.physics.f_p_div_upper_inboard_separatrix,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Fraction of power incident on the upper outer target",
+                    "(fUO)",
+                    self.data.physics.f_p_div_upper_outboard_separatrix,
+                    "OP ",
+                )
+
+            po.ovarre(
+                self.outfile,
+                "Power incident on the lower inner target (MW)",
+                "(pLImw)",
+                self.data.physics.p_div_lower_inboard_separatrix_mw,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Power incident on the lower outer target (MW)",
+                "(pLOmw)",
+                self.data.physics.p_div_lower_outboard_separatrix_mw,
+                "OP ",
+            )
+            if self.data.divertor.n_divertors == 2:
+                po.ovarre(
+                    self.outfile,
+                    "Power incident on the upper innner target (MW)",
+                    "(pUImw)",
+                    self.data.physics.p_div_upper_inboard_separatrix_mw,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Power incident on the upper outer target (MW)",
+                    "(pUOmw)",
+                    self.data.physics.p_div_upper_outboard_separatrix_mw,
+                    "OP ",
+                )
