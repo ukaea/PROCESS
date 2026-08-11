@@ -9098,22 +9098,24 @@ def plot_brunner_divertor_power_plit_comparison(axis: plt.Axes, mfile: MFile, sc
     except KeyError:
         len_plasma_sol_power_decay = 1.0e-3
 
-    dr_sep_values = np.linspace(-5*len_plasma_sol_power_decay, 5*len_plasma_sol_power_decay, 200)
+    dr_sep_values = np.linspace(
+        -5 * len_plasma_sol_power_decay, 5 * len_plasma_sol_power_decay, 200
+    )
     f_p_inboard_lower = np.zeros_like(dr_sep_values)
     f_p_inboard_upper = np.zeros_like(dr_sep_values)
     f_p_outboard_lower = np.zeros_like(dr_sep_values)
     f_p_outboard_upper = np.zeros_like(dr_sep_values)
 
     for idx, dr_sep in enumerate(dr_sep_values):
-        (
-            f_p_inboard_lower[idx],
-            f_p_inboard_upper[idx],
-            f_p_outboard_lower[idx],
-            f_p_outboard_upper[idx],
-        ) = PlasmaExhaust().calculate_brunner_divertor_power_splits(
+        div_power_splits = PlasmaExhaust().calculate_brunner_divertor_power_splits(
             dr_plasma_outboard_midplane_separatrix_separation=dr_sep,
-            len_plasma_sol_power_decay=len_plasma_sol_power_decay,
+            len_plasma_sol_outboard_power_decay=len_plasma_sol_power_decay,
+            f_len_sol_power_decay_inboard=0.7,
         )
+        f_p_inboard_lower[idx] = div_power_splits.f_p_div_inboard_lower_separatrix
+        f_p_inboard_upper[idx] = div_power_splits.f_p_div_inboard_upper_separatrix
+        f_p_outboard_lower[idx] = div_power_splits.f_p_div_outboard_lower_separatrix
+        f_p_outboard_upper[idx] = div_power_splits.f_p_div_outboard_upper_separatrix
 
     axis.stackplot(
         dr_sep_values,
@@ -9138,7 +9140,7 @@ def plot_brunner_divertor_power_plit_comparison(axis: plt.Axes, mfile: MFile, sc
         alpha=0.5,
     )
     axis.set_ylim([0.0, 1.0])
-    axis.set_xlim([-5*len_plasma_sol_power_decay, 5*len_plasma_sol_power_decay])
+    axis.set_xlim([-5 * len_plasma_sol_power_decay, 5 * len_plasma_sol_power_decay])
     axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.35)
     axis.set_title("Brunner Divertor Power Split Fractions")
     axis.set_xlabel("$\\Delta r_{\\mathrm{sep}}$ [m]")

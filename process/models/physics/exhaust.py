@@ -1,6 +1,7 @@
 """Module for plasma exhaust calculations and analysis."""
 
 import logging
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -9,6 +10,23 @@ from process.core import process_output as po
 from process.core.model import Model
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class DivertorSeparatrixPowerSplits:
+    """Dataclass to hold the power splits to the divertor targets."""
+
+    f_p_div_inboard_lower_separatrix: float = 0.0
+    """Fraction of total separatrix power to inboard lower divertor target"""
+
+    f_p_div_inboard_upper_separatrix: float = 0.0
+    """Fraction of total separatrix power to inboard upper divertor target"""
+
+    f_p_div_outboard_lower_separatrix: float = 0.0
+    """Fraction of total separatrix power to outboard lower divertor target"""
+
+    f_p_div_outboard_upper_separatrix: float = 0.0
+    """Fraction of total separatrix power to outboard upper divertor target"""
 
 
 class PlasmaExhaust(Model):
@@ -224,15 +242,26 @@ class PlasmaExhaust(Model):
     @staticmethod
     def calculate_brunner_divertor_power_splits(
         dr_plasma_outboard_midplane_separatrix_separation: float,
-        len_plasma_sol_power_decay: float,
-    ):
+        len_plasma_sol_outboard_power_decay: float,
+        f_len_sol_power_decay_inboard: float,
+    ) -> DivertorSeparatrixPowerSplits:
         """
         Calculate the power splits to the divertor targets using Brunner's method.
 
+        Parameters
+        ----------
+        dr_plasma_outboard_midplane_separatrix_separation : float
+            Radial separation of the plasma outboard midplane separatrix (δR_sep) [m].
+        len_plasma_sol_outboard_power_decay : float
+            Power decay length in the scrape-off layer (λ_q) [m].
+        f_len_sol_power_decay_inboard : float
+            Fraction of the scrape-off layer power decay length for the inboard side [-].
+
         Returns
         -------
-        dict
-            Dictionary containing the power splits to the divertor targets.
+        DivertorSeparatrixPowerSplits
+            Dataclass containing the fractions of total separatrix power to each
+            divertor target.
 
         References
         ----------
@@ -240,36 +269,40 @@ class PlasmaExhaust(Model):
         divertor power sharing on magnetic flux balance in near double-null
         configurations on Alcator C-Mod,” Nuclear Fusion, vol. 58, no. 7, p. 076010,
         May 2018, doi: 10.1088/1741-4326/aac006.
+
+        [2] T. W. Petrie et al., “The effect of divertor magnetic balance on H-mode
+        performance in DIII-D,” Journal of Nuclear Materials, vol. 290-293, pp. 935-939,
+        Mar. 2001, doi: 10.1016/s0022-3115(00)00492-x.
         """
         # Fraction of the power to the inner divertors at δR_sep = 0 and δR_sep → ∞
         F_P_INNER_SEP_0 = 0.16e0
         F_P_INNER_SEP_INFINITY = 0.41e0
 
         # Fractions of total outboard power going to each target
-
+        # Outboard lower divertor
         f_p_outboard_lower = 1 / (
             1
             + np.exp(
-                -dr_plasma_outboard_midplane_separatrix_separation
-                / len_plasma_sol_power_decay
+                dr_plasma_outboard_midplane_separatrix_separation
+                / len_plasma_sol_outboard_power_decay
             )
         )
 
+        # Outboard upper divertor
         f_p_outboard_upper = 1 / (
             1
             + np.exp(
-                dr_plasma_outboard_midplane_separatrix_separation
-                / len_plasma_sol_power_decay
+                -dr_plasma_outboard_midplane_separatrix_separation
+                / len_plasma_sol_outboard_power_decay
             )
         )
 
         # Fractions of the total inboard power going to each target
-
         f_p_inboard_lower = 1 / (
             1
             + np.exp(
                 dr_plasma_outboard_midplane_separatrix_separation
-                / (len_plasma_sol_power_decay * 0.5)
+                / (len_plasma_sol_outboard_power_decay * f_len_sol_power_decay_inboard)
             )
         )
 
@@ -285,7 +318,7 @@ class PlasmaExhaust(Model):
                         -(
                             (
                                 dr_plasma_outboard_midplane_separatrix_separation
-                                / len_plasma_sol_power_decay
+                                / len_plasma_sol_outboard_power_decay
                             )
                             ** 2
                         )
@@ -301,9 +334,9 @@ class PlasmaExhaust(Model):
         f_p_inboard_lower = f_p_total_inboard * f_p_inboard_lower
         f_p_outboard_lower = f_p_total_outboard * f_p_outboard_lower
 
-        return (
-            f_p_inboard_lower,
-            f_p_inboard_upper,
-            f_p_outboard_lower,
-            f_p_outboard_upper,
+        return DivertorSeparatrixPowerSplits(
+            f_p_div_inboard_lower_separatrix=f_p_inboard_lower,
+            f_p_div_inboard_upper_separatrix=f_p_inboard_upper,
+            f_p_div_outboard_lower_separatrix=f_p_outboard_lower,
+            f_p_div_outboard_upper_separatrix=f_p_outboard_upper,
         )

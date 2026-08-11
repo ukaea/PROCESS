@@ -993,9 +993,10 @@ class Physics(Model):
 
         # ============================================================
 
-        _, _, _, _ = self.exhaust.calculate_brunner_divertor_power_splits(
-            self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
-            len_plasma_sol_power_decay=0.001,
+        div_power_plits = self.exhaust.calculate_brunner_divertor_power_splits(
+            dr_plasma_outboard_midplane_separatrix_separation=self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
+            len_plasma_sol_outboard_power_decay=0.001,
+            f_len_sol_power_decay_inboard=0.7,
         )
 
         # Calculate the target imbalances
@@ -1007,8 +1008,9 @@ class Physics(Model):
         # Parameters taken from double null machine
         # D. Brunner et al
 
-        # Issue #1559 Infinities in physics_module.dr_plasma_outboard_midplane_separatrix_separation when running single null in a
-        # double null machine
+        # Issue #1559 Infinities in
+        # physics_module.dr_plasma_outboard_midplane_separatrix_separation when running
+        # single null in a double null machine
         # C W Ashe
         if self.data.physics.f_p_div_lower < 4.5e-5:
             self.data.physics.dr_plasma_outboard_midplane_separatrix_separation = 1.5e-2
