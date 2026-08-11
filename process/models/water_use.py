@@ -6,9 +6,8 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.constants import SECDAY
 from process.core.model import Model
-
-SECDAY = 86400e0
 
 
 class WaterUse(Model):
@@ -209,18 +208,18 @@ class WaterUse(Model):
             # to the total heat discharged through the tower
             self.data.water_use.evapratio = (
                 icool.delta_e(
-                    self.data.water_use.windspeed,
+                    windspeed=self.data.water_use.windspeed,
                     # estimate resultant heated water temperature
-                    self.data.water_use.watertemp
+                    watertempheated=self.data.water_use.watertemp
                     + (
                         icool.imp_heatload_conversion()
                         * icool.heat_ratio(
                             self.data.water_use.watertemp, self.data.water_use.windspeed
                         )
                     ),
-                    self.data.water_use.watertemp,
-                    self.data.water_use.waterdens,
-                    self.data.water_use.latentheat,
+                    watertemp=self.data.water_use.watertemp,
+                    waterdens=self.data.water_use.waterdens,
+                    latentheat=self.data.water_use.latentheat,
                 )
                 / icool.met_heatload_conversion()
             )
@@ -309,22 +308,20 @@ class CoolingWaterBodyCoeffs:
 
     def imp_heatload_conversion(self):
         """Convert heat loading into cal/(cm2.sec)"""
-        return self.heatload * 1000000.0e0 * 0.239e0 / 40469000.0e0
+        return self.heatload * 1e6 * 0.239 / 40469000.0
 
     def met_heatload_conversion(self):
         """Convert heat loading to J/(m2.day)"""
-        return self.heatload * 1000000.0e0 / 4046.85642e0 * SECDAY
+        return self.heatload * 1e6 / 4046.85642 * SECDAY
 
     def delta_e(self, windspeed, watertempheated, watertemp, waterdens, latentheat):
         """Find 'forced evaporation' driven by heat inserted into system"""
         # find wind function, m/(day.kPa), applicable to this water body:
-        windfunction = (
-            self.a + (self.b * windspeed) + (self.c * windspeed**2)
-        ) / 1000.0e0
+        windfunction = (self.a + (self.b * windspeed) + (self.c * windspeed**2)) / 1e3
 
         # difference in saturation vapour pressure (Clausius-Clapeyron approximation)
         satvapdelta = (
-            0.611e0 * np.exp((17.27e0 * watertempheated) / (237.3e0 + watertempheated))
-        ) - (0.611e0 * np.exp((17.27e0 * watertemp) / (237.3e0 + watertemp)))
+            0.611 * np.exp((17.27 * watertempheated) / (237.3 + watertempheated))
+        ) - (0.611 * np.exp((17.27 * watertemp) / (237.3 + watertemp)))
 
         return waterdens * latentheat * windfunction * satvapdelta

@@ -307,5 +307,8 @@ MUH2O = 4.71e-4
 N_DAY_YEAR = 365.2425
 """Average number of days in a year"""
 
+SECDAY = 86400e0
+"""Number of seconds in a day"""
+
 ACCELERATION_GRAVITY = 9.81
 """Acceleration due to gravity [m/s2]"""
