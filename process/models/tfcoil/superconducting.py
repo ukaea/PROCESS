@@ -4532,9 +4532,14 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         if i_tf_superconductor == SuperconductorModel.CROCO_REBCO:
+            b_c20_max = SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain  # [T]
+            t_c0 = SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain  # [K]
             #  Find critical current density in superconducting cable, j_crit_cable
             j_superconductor_critical, _, bc20m, tc0m = superconductors.jcrit_rebco(
-                temp_conductor=temp_tf_peak, b_conductor=b_tf_inboard_peak
+                temp_conductor=temp_tf_peak,
+                b_conductor=b_tf_inboard_peak,
+                temp_c0_max=t_c0,
+                b_c20_max=b_c20_max,
             )
 
         # =================================================================

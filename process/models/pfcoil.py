@@ -4815,9 +4815,18 @@ def superconpf(
         j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
 
     elif isumat == SuperconductorModel.CROCO_REBCO:
-        # "REBCO" 2nd generation HTS superconductor in CroCo strand
+        # "REBCO" 2nd generation HTS superconductor in CrCo strand
+        b_c20m = (
+            SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain
+        )  # [T] critical field at 0 K and 0 strain
+        t_c0m = (
+            SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain
+        )  # [K] critical temperature at 0 T and 0 strain
         j_crit_sc, _, _, _ = superconductors.jcrit_rebco(
-            temp_conductor=temp_pf_peak_field, b_conductor=b_pf_peak
+            temp_conductor=temp_pf_peak_field,
+            b_conductor=b_pf_peak,
+            b_c20_max=b_c20m,
+            temp_c0_max=t_c0m,
         )
         j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
 

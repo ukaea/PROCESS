@@ -85,7 +85,7 @@ class SuperconductorModel(IntEnum):
         2,
         SuperconductorMaterial.BI2212,
         None,  # Model is fitted to experimental data, so no critical B or T is defined
-        None,
+        None,  # Model is fitted to experimental data, so no critical B or T is defined
         SuperconductorShape.CABLE,
         "Bi-2212",
     )
@@ -116,8 +116,8 @@ class SuperconductorModel(IntEnum):
     CROCO_REBCO = (
         6,
         SuperconductorMaterial.REBCO,
-        None,
-        None,
+        132.5e0,  # [T]
+        90.0e0,  # [K]
         SuperconductorShape.TAPE,
         "CROCO REBCO",
     )
@@ -206,7 +206,7 @@ class SuperconductorModel(IntEnum):
 
 
 def jcrit_rebco(
-    temp_conductor: float, b_conductor: float
+    temp_conductor: float, b_conductor: float, temp_c0_max: float, b_c20_max: float
 ) -> tuple[float, bool, float, float]:
     """Calculate the critical current density for a "REBCO" 2nd generation HTS
     superconductor.
@@ -214,9 +214,13 @@ def jcrit_rebco(
     Parameters
     ----------
     temp_conductor : float
-        Superconductor temperature in Kelvin (K).
+        Superconductor temperature in Kelvin [K].
     b_conductor : float
-        Magnetic field at the superconductor in Tesla (T).
+        Magnetic field at the superconductor in Tesla [T].
+    temp_c0_max : float
+        Critical temperature [K] at zero field and strain.
+    b_c20_max : float
+        Upper critical field [T] for the superconductor at zero temperature and strain.
 
     Returns
     -------
@@ -242,11 +246,6 @@ def jcrit_rebco(
             - For temp_conductor ≥ 65 K: 0.0 T ≤ b_conductor ≤ 11.5 T
 
     """
-    # Critical temperature (K) at zero field and strain.
-    temp_c0max = 90.0
-    # Upper critical field (T) for the superconductor at zero temperature and strain.
-    b_c20max = 132.5
-
     C = 1.82962e8  # scaling constant
     p = 0.5875
     q = 1.7
@@ -274,12 +273,12 @@ def jcrit_rebco(
             b_conductor,
         )
 
-    if temp_conductor < temp_c0max:
+    if temp_conductor < temp_c0_max:
         # Normal case
-        birr = b_c20max * (1 - temp_conductor / temp_c0max) ** alpha
+        birr = b_c20_max * (1 - temp_conductor / temp_c0_max) ** alpha
     else:
         # If temp is greater than critical temp, ensure result is real but negative.
-        birr = b_c20max * (1 - temp_conductor / temp_c0max)
+        birr = b_c20_max * (1 - temp_conductor / temp_c0_max)
 
     if b_conductor < birr:
         # Normal case
@@ -289,10 +288,10 @@ def jcrit_rebco(
         # Field is too high
         # Ensure result is real but negative, and varies with temperature.
         # tcb = critical temperature at field b
-        tcb = temp_c0max * (1 - (b_conductor / b_c20max) ** oneoveralpha)
+        tcb = temp_c0_max * (1 - (b_conductor / b_c20_max) ** oneoveralpha)
         j_critical = -(temp_conductor - tcb)
 
-    return j_critical, validity, b_c20max, temp_c0max
+    return j_critical, validity, b_c20_max, temp_c0_max
 
 
 def current_sharing_rebco(bfield, j):
@@ -312,7 +311,12 @@ def current_sharing_rebco(bfield, j):
     """
 
     def deltaj_rebco(temperature):
-        jcritical, _, _, _ = jcrit_rebco(temperature, bfield)
+        jcritical, _, _, _ = jcrit_rebco(
+            temperature,
+            bfield,
+            SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain,
+            SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain,
+        )
         return jcritical - j
 
     # No additional arguments are required for deltaj_rebco since it only has one
