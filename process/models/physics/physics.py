@@ -1074,7 +1074,7 @@ class Physics(Model):
                 self.data.physics.f_p_div_upper_inboard_separatrix
                 * self.data.physics.ptarmw
             )
-            self.data.physics.puomw = (
+            self.data.physics.p_div_upper_outboard_separatrix_mw = (
                 self.data.physics.f_p_div_upper_outboard_separatrix
                 * self.data.physics.ptarmw
             )
@@ -2322,7 +2322,7 @@ class Physics(Model):
                     self.outfile,
                     "Power incident on the upper outer target (MW)",
                     "(pUOmw)",
-                    self.data.physics.puomw,
+                    self.data.physics.p_div_upper_outboard_separatrix_mw,
                     "OP ",
                 )
 
