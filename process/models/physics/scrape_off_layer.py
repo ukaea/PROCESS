@@ -7,6 +7,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
+from process.data_structure.physics_variables import OutbordSOLPowerDecayLengthModel
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +41,34 @@ class ScrapeOffLayer(Model):
             )
         )
 
+        if (
+            OutbordSOLPowerDecayLengthModel(
+                self.data.physics.i_len_sol_outboard_power_decay
+            )
+            == OutbordSOLPowerDecayLengthModel.EICH_2013
+        ):
+            self.data.physics.len_sol_outboard_power_decay = (
+                self.data.physics.len_plasma_sol_eich13_power_decay
+            )
+        elif (
+            OutbordSOLPowerDecayLengthModel(
+                self.data.physics.i_len_sol_outboard_power_decay
+            )
+            == OutbordSOLPowerDecayLengthModel.MAST_2014_1
+        ):
+            self.data.physics.len_sol_outboard_power_decay = (
+                self.data.physics.len_plasma_sol_mast14_power_decay_1
+            )
+        elif (
+            OutbordSOLPowerDecayLengthModel(
+                self.data.physics.i_len_sol_outboard_power_decay
+            )
+            == OutbordSOLPowerDecayLengthModel.MAST_2014_2
+        ):
+            self.data.physics.len_sol_outboard_power_decay = (
+                self.data.physics.len_plasma_sol_mast14_power_decay_2
+            )
+
         self.data.physics.a_plasma_outboard_sol_eich13_parallel = self.calculate_upstream_sol_outboard_parallel_area(  # noqa: E501
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
@@ -59,6 +88,17 @@ class ScrapeOffLayer(Model):
 
         po.osubhd(self.outfile, "Power Decay Lengths (λ_q):")
 
+        po.ovarre(
+            self.outfile,
+            "Outboard SOL power decay length (λ_q) [m]",
+            "(len_sol_outboard_power_decay)",
+            self.data.physics.len_sol_outboard_power_decay,
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"-> {OutbordSOLPowerDecayLengthModel(self.data.physics.i_len_sol_outboard_power_decay).description} ",  # noqa: E501
+        )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Eich 2013 SOL power decay length (λ_q) [m]",

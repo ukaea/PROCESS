@@ -14,6 +14,20 @@ class OutbordSOLPowerDecayLengthModel(IntEnum):
     MAST_2014_2 = (2, "MAST 2014-2")
 
     def __new__(cls, value: int, description: str):
+        """Create a new instance of OutbordSOLPowerDecayLengthModel.
+
+        Parameters
+        ----------
+        value : int
+            The enum value
+        description : str
+            The description of the model
+
+        Returns
+        -------
+        OutbordSOLPowerDecayLengthModel
+            A new enum instance with the given value and description
+        """
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj.description = description
