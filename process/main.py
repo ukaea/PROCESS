@@ -210,7 +210,7 @@ def process_cli(
     Jonathan Maddock : jonathan.maddock@ukaea.uk
 
     GitHub        : https://github.com/ukaea/PROCESS
-    """
+    """  # noqa: DOC501
     if ctx.invoked_subcommand is None:
         if varyiterparams:
             if mfile_path is not None:

@@ -4449,6 +4449,12 @@ def peak_b_field_at_pf_coil(
         - b_pf_inner_vertical (float): Vertical field at inner edge (T)
         - b_pf_outer_vertical (float): Vertical field at outer edge (T)
 
+
+    Raises
+    ------
+    ProcessValueError
+        Illegal value of t_b_field_peak
+
     Notes
     -----
     This routine calculates the peak magnetic field components at the inner and

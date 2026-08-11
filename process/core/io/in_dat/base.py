@@ -225,6 +225,11 @@ def get_constraint_equations(data):
     -------
     :
         dict of the constraint numbers and their comments
+
+    Raises
+    ------
+    ProcessValidationError
+        Not a registered constraint equation
     """
     constraints = {}
 
@@ -841,6 +846,11 @@ def variable_constraint_type_check(item_number, var_type):
     -------
     :
         Formatted item_number
+
+    Raises
+    ------
+    ValueError
+        Not a recognised format
     """
     # Check if item is in string format
     if isinstance(item_number, str):
@@ -909,6 +919,11 @@ def variable_bound_check(bound_number, bound_type):
     -------
     :
          Formatted bound number and bound type
+
+    Raises
+    ------
+    TypeError
+        Unsupported type for bound number
     """
     # put bound type into lower case for consistency
     bound_type = bound_type.lower()
