@@ -8,6 +8,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
+from process.data_structure.physics_variables import DivertorNumberModels
 
 logger = logging.getLogger(__name__)
 
@@ -357,11 +358,20 @@ class PlasmaExhaust(Model):
 
             po.ovarre(
                 self.outfile,
-                "Fraction of power to the lower divertor",
+                "Requested fraction of power to the lower divertor in double null configuration",
                 "(f_p_div_lower_separatrix)",
                 self.data.physics.f_p_div_lower_separatrix,
                 "IP ",
             )
+            po.ovarre(
+                self.outfile,
+                "Required distance between the first and second plasma separatrixes at the outer midplane (δR_sep) [m]",
+                "(dr_plasma_outboard_midplane_separatrix_separation)",
+                self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
+                "OP ",
+            )
+            po.oblnkl(self.outfile)
+
             po.ovarre(
                 self.outfile,
                 "Outboard side heat flux decay length (m)",
@@ -369,78 +379,89 @@ class PlasmaExhaust(Model):
                 self.data.physics.len_sol_outboard_power_decay,
                 "OP ",
             )
-            if self.data.divertor.n_divertors == 2:
-                po.ovarre(
-                    self.outfile,
-                    "Radial distance between the first and second plasma separatrixes at the outer midplane (δR_sep) [m]",
-                    "(dr_plasma_outboard_midplane_separatrix_separation)",
-                    self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
-                    "OP ",
-                )
+            po.oblnkl(self.outfile)
 
             po.ovarre(
                 self.outfile,
-                "Fraction of power on the inner targets",
+                "Fraction of separatrix power on the inner target(s)",
                 "(f_p_div_inboard_separatrix)",
                 self.data.physics.f_p_div_inboard_separatrix,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Fraction of power incident on the lower inner target",
-                "(fLI)",
+                "Fraction of separatrix power on the outer target(s)",
+                "(f_p_div_outboard_separatrix)",
+                self.data.physics.f_p_div_outboard_separatrix,
+                "OP ",
+            )
+
+            po.oblnkl(self.outfile)
+
+            po.ovarre(
+                self.outfile,
+                "Fraction of separatrix power on the inner lower target",
+                "(f_p_div_lower_inboard_separatrix)",
                 self.data.physics.f_p_div_lower_inboard_separatrix,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Fraction of power incident on the lower outer target",
-                "(fLO)",
+                "Separatrix power on the inner lower target",
+                "(p_div_lower_inboard_separatrix_mw)",
+                self.data.physics.p_div_lower_inboard_separatrix_mw,
+                "OP ",
+            )
+            po.oblnkl(self.outfile)
+
+            po.ovarre(
+                self.outfile,
+                "Fraction of separatrix power on the outer lower target",
+                "(f_p_div_lower_outboard_separatrix)",
                 self.data.physics.f_p_div_lower_outboard_separatrix,
                 "OP ",
             )
-            if self.data.divertor.n_divertors == 2:
+            po.ovarre(
+                self.outfile,
+                "Separatrix power on the outer lower target",
+                "(p_div_lower_outboard_separatrix_mw)",
+                self.data.physics.p_div_lower_outboard_separatrix_mw,
+                "OP ",
+            )
+
+            if (
+                DivertorNumberModels(self.data.physics.i_single_null)
+                == DivertorNumberModels.DOUBLE_NULL
+            ):
+                po.oblnkl(self.outfile)
+                po.ocmmnt(self.outfile, "----------------------------")
+                po.oblnkl(self.outfile)
                 po.ovarre(
                     self.outfile,
-                    "Fraction of power incident on the upper inner target",
-                    "(fUI)",
+                    "Fraction of separatrix power on the inner upper target",
+                    "(f_p_div_upper_inboard_separatrix)",
                     self.data.physics.f_p_div_upper_inboard_separatrix,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
-                    "Fraction of power incident on the upper outer target",
-                    "(fUO)",
-                    self.data.physics.f_p_div_upper_outboard_separatrix,
-                    "OP ",
-                )
-
-            po.ovarre(
-                self.outfile,
-                "Power incident on the lower inner target (MW)",
-                "(pLImw)",
-                self.data.physics.p_div_lower_inboard_separatrix_mw,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Power incident on the lower outer target (MW)",
-                "(pLOmw)",
-                self.data.physics.p_div_lower_outboard_separatrix_mw,
-                "OP ",
-            )
-            if self.data.divertor.n_divertors == 2:
-                po.ovarre(
-                    self.outfile,
-                    "Power incident on the upper innner target (MW)",
-                    "(pUImw)",
+                    "Separatrix power on the inner upper target",
+                    "(p_div_upper_inboard_separatrix_mw)",
                     self.data.physics.p_div_upper_inboard_separatrix_mw,
                     "OP ",
                 )
+                po.oblnkl(self.outfile)
                 po.ovarre(
                     self.outfile,
-                    "Power incident on the upper outer target (MW)",
-                    "(pUOmw)",
+                    "Fraction of separatrix power on the outer upper target",
+                    "(f_p_div_upper_outboard_separatrix)",
+                    self.data.physics.f_p_div_upper_outboard_separatrix,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Separatrix power on the outer upper target",
+                    "(p_div_upper_outboard_separatrix_mw)",
                     self.data.physics.p_div_upper_outboard_separatrix_mw,
                     "OP ",
                 )
