@@ -195,8 +195,8 @@ f_nd_impurity_electrons(14) = 5e-05
 
 *---------------------Numerics---------------------*
 
-ioptimz  = 1 * for optimisation VMCON only
-minmax   = 1 * Switch for figure-of-merit (see lablmm for descriptions)
+i_process_run_mode  = 1 * for optimisation VMCON only
+i_figure_merit   = 1 * Switch for figure-of-merit (see lablmm for descriptions)
 epsvmc   = 1.0e-8 * Error tolerance for vmcon
 
 *-----------------Pfcoil Variables-----------------*

@@ -16,8 +16,8 @@
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             45    
  Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             26    
- Optimisation_switch_____________________________________________________ (ioptimz)_____________________              1    
- Figure_of_merit_switch__________________________________________________ (minmax)______________________              1    
+ Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
+ Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Objective_function_name_________________________________________________ (objf_name)___________________     "major radius"  
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      1.8713E-04 OP 
  VMCON_convergence_parameter_____________________________________________ (convergence_parameter)_______      0.0000E+00 OP 
@@ -1202,7 +1202,7 @@
 runtitle = Generic large tokamak
 
 * Figure of merit - minimise major radius
-minmax = 1
+i_figure_merit = 1
 
 * Error tolerance for VMCON
 epsvmc = 1e-7

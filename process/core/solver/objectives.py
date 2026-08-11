@@ -85,8 +85,8 @@ def objective_function(i_figure_merit: int, data: DataStructure) -> float:
             == AvailabilityModel.USER_INPUT
         ):
             raise ProcessValueError(
-                "i_figure_merit=15 requires `f_t_plant_available` to be calculated, not user "
-                "input"
+                "i_figure_merit=15 requires `f_t_plant_available` to be calculated, not "
+                "user input"
             )
         objective_metric = data.costs.f_t_plant_available
     elif figure_of_merit == FiguresOfMerit.MIN_R0_MAX_TAU_BURN:

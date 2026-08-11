@@ -184,7 +184,7 @@ def run_summary(data: DataStructure):
         process_output.ocmmnt(
             outfile,
             f"Total constraints : "
-            f"{data.numerics.n_inequality_constraints + data.numerics.n_equality_constraints}",
+            f"{data.numerics.n_inequality_constraints + data.numerics.n_equality_constraints}",  # noqa: E501
         )
         process_output.ocmmnt(
             outfile, f"Iteration variables : {data.numerics.n_iteration_variables}"
@@ -287,7 +287,9 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Can't use c_tf_turn as iteration var, constraint or
     # input if i_tf_turns_integer == 1
-    if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 60).any() and TFWPIntegerTurnType(
+    if (
+        data.numerics.ixc[: data.numerics.n_iteration_variables] == 60
+    ).any() and TFWPIntegerTurnType(
         data.tfcoil.i_tf_turns_integer
     ) == TFWPIntegerTurnType.INTEGER:
         raise ProcessValidationError(

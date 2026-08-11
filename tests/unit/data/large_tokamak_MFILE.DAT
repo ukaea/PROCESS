@@ -10,15 +10,15 @@ PROCESS_run_title________________________________________________________ (runti
 PROCESS_git_tag__________________________________________________________ (tagno)________________________ "v3.2.1-20-g7621ab10" 
 PROCESS_git_branch_______________________________________________________ (branch_name)__________________ "update-tracked-mfiles" 
 Input_filename___________________________________________________________ (fileprefix)___________________ "/home/clair/development/PROCESS/tests/unit/data/large_tokamak_IN.DAT" 
-Optimisation_switch______________________________________________________ (ioptimz)______________________            1 
-Figure_of_merit_switch___________________________________________________ (minmax)_______________________            1 
+Optimisation_switch______________________________________________________ (i_process_run_mode)______________________            1 
+Figure_of_merit_switch___________________________________________________ (i_figure_merit)_______________________            1 
 # Numerics #
 # PROCESS found a feasible solution #
 Error_flag_______________________________________________________________ (ifail)________________________            1 
 Number_of_iteration_variables____________________________________________ (nvar)_________________________           43 
 Number_of_constraints_(total)____________________________________________ (neqns+nineqns)________________           26 
-Optimisation_switch______________________________________________________ (ioptimz)______________________            1 
-Figure_of_merit_switch___________________________________________________ (minmax)_______________________            1 
+Optimisation_switch______________________________________________________ (i_process_run_mode)______________________            1 
+Figure_of_merit_switch___________________________________________________ (i_figure_merit)_______________________            1 
 Objective_function_name__________________________________________________ (objf_name)____________________ "major radius          " 
 Normalised_objective_function____________________________________________ (norm_objf)____________________ 1.60000000000000009e+00 OP 
 Square_root_of_the_sum_of_squares_of_the_constraint_residuals____________ (sqsumsq)______________________ 5.51527684827371492e-08 OP 
@@ -7621,7 +7621,7 @@ Error_status_____________________________________________________________ (error
 runtitle = Generic large tokamak
 
 * Figure of merit - minimise major radius
-minmax = 1
+i_figure_merit = 1
 
 * Error tolerance for VMCON
 epsvmc = 1e-7
