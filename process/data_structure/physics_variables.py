@@ -6,6 +6,20 @@ from enum import IntEnum
 import numpy as np
 
 
+class OutbordSOLPowerDecayLengthModel(IntEnum):
+    """Enum for outboard scrape off layer power decay length models with descriptions."""
+
+    EICH_2013 = (0, "Eich 2013")
+    MAST_2014_1 = (1, "MAST 2014-1")
+    MAST_2014_2 = (2, "MAST 2014-2")
+
+    def __new__(cls, value: int, description: str):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj.description = description
+        return obj
+
+
 class CurrentProfileIndexModel(IntEnum):
     """Enum for current profile index models."""
 
