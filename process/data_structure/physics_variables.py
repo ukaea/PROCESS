@@ -430,8 +430,6 @@ class PhysicsData:
     t_energy_confinement_beta: float = 0.0
     """[s]"""
 
-    ptarmw: float = 0.0
-
     len_sol_outboard_power_decay: float = 0.0
     """Outboard scrape off layer power decay length (λ_q) [m]"""
 
