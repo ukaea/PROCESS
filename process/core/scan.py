@@ -191,7 +191,7 @@ class ScanVariables(ScanVariable, Enum):
     n_tf_wp_pancakes = (48, Area.T)
     n_tf_wp_layers = (49, Area.T)
     f_nd_impurity_electrons__13 = (50, Area.IR)
-    f_p_div_lower = (51, Area.P)
+    f_p_div_lower_separatrix = (51, Area.P)
     rad_fraction_sol = (52, Area.P)
     boundu__157 = (53, Area.NUM)
     b_crit_upper_nbti = (54, Area.T)

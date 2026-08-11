@@ -750,7 +750,7 @@ class PhysicsData:
     f_plasma_fuel_deuterium: float = 0.5
     """Plasma deuterium fuel fraction"""
 
-    f_p_div_lower: float = 1.0
+    f_p_div_lower_separatrix: float = 1.0
     """fraction of power to the lower divertor in double null configuration
     (`i_single_null = 0` only) (default assumes SN)
     """

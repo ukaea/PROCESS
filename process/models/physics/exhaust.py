@@ -354,13 +354,12 @@ class PlasmaExhaust(Model):
         """Output the Brunner divertor power splits to the output file."""
         if self.data.stellarator.istell == 0:
             po.osubhd(self.outfile, "Brunner Divertor Power Splits:")
-            
-            
+
             po.ovarre(
                 self.outfile,
                 "Fraction of power to the lower divertor",
-                "(f_p_div_lower)",
-                self.data.physics.f_p_div_lower,
+                "(f_p_div_lower_separatrix)",
+                self.data.physics.f_p_div_lower_separatrix,
                 "IP ",
             )
             po.ovarre(

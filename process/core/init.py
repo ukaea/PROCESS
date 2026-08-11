@@ -718,7 +718,7 @@ def check_process(inputs, data):  # noqa: ARG001
 
         # Check if a single null divertor is used in double null machine
         if i_single_null == DivertorNumberModels.DOUBLE_NULL and (
-            data.physics.f_p_div_lower in {1.0, 0.0}
+            data.physics.f_p_div_lower_separatrix in {1.0, 0.0}
         ):
             logger.error(
                 "Operating with a single null in a double null machine", stacklevel=2

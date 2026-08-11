@@ -845,15 +845,15 @@ class Physics(Model):
         )
 
         # if double null configuration share the power
-        # over the upper and lower divertor, where self.data.physics.f_p_div_lower gives
+        # over the upper and lower divertor, where self.data.physics.f_p_div_lower_separatrix gives
         # the factor of power conducted to the lower divertor
         if self.data.divertor.n_divertors == 2:
             self.data.physics.p_div_lower_separatrix_mw = (
-                self.data.physics.f_p_div_lower
+                self.data.physics.f_p_div_lower_separatrix
                 * self.data.physics.p_plasma_separatrix_mw
             )
             self.data.physics.p_div_upper_separatrix_mw = (
-                1.0e0 - self.data.physics.f_p_div_lower
+                1.0e0 - self.data.physics.f_p_div_lower_separatrix
             ) * self.data.physics.p_plasma_separatrix_mw
             self.data.physics.p_div_separatrix_max_mw = max(
                 self.data.physics.p_div_lower_separatrix_mw,
@@ -997,15 +997,17 @@ class Physics(Model):
         # physics_module.dr_plasma_outboard_midplane_separatrix_separation when running
         # single null in a double null machine
         # C W Ashe
-        if self.data.physics.f_p_div_lower < 4.5e-5:
+        if self.data.physics.f_p_div_lower_separatrix < 4.5e-5:
             self.data.physics.dr_plasma_outboard_midplane_separatrix_separation = 1.5e-2
-        elif self.data.physics.f_p_div_lower > (1.0e0 - 4.5e-5):
+        elif self.data.physics.f_p_div_lower_separatrix > (1.0e0 - 4.5e-5):
             self.data.physics.dr_plasma_outboard_midplane_separatrix_separation = -1.5e-2
         else:
             self.data.physics.dr_plasma_outboard_midplane_separatrix_separation = (
                 -2.0e0
                 * 1.5e-3
-                * math.atanh(2.0e0 * (self.data.physics.f_p_div_lower - 0.5e0))
+                * math.atanh(
+                    2.0e0 * (self.data.physics.f_p_div_lower_separatrix - 0.5e0)
+                )
             )
 
         div_power_plits = self.exhaust.calculate_brunner_divertor_power_splits(
@@ -1052,7 +1054,6 @@ class Physics(Model):
             self.data.physics.f_p_div_upper_outboard_separatrix
             * self.data.physics.p_plasma_separatrix_mw
         )
-
 
         # Calculate some derived quantities that may not have been defined earlier
         self.data.physics.p_plasma_heating_total_mw = (

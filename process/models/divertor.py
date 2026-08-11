@@ -98,7 +98,7 @@ class Divertor(Model):
                 self.data.physics.nd_plasma_separatrix_electron,
                 self.data.divertor.deg_div_field_plate,
                 self.data.physics.rad_fraction_sol,
-                self.data.physics.f_p_div_lower,
+                self.data.physics.f_p_div_lower_separatrix,
                 output=output,
             )
             return
@@ -281,7 +281,7 @@ class Divertor(Model):
         nd_plasma_separatrix_electron: float,
         deg_div_field_plate: float,
         rad_fraction_sol: float,
-        f_p_div_lower: float,
+        f_p_div_lower_separatrix: float,
         output: bool,
     ) -> float:
         """Divertor heat load model (Wade 2020)
@@ -316,7 +316,7 @@ class Divertor(Model):
             field line angle wrt divertor target plate (degrees)
         rad_fraction_sol : float
             SOL radiation fraction
-        f_p_div_lower : float
+        f_p_div_lower_separatrix : float
             fraction of power to the lower divertor in double null configuration
 
         Returns
@@ -375,8 +375,8 @@ class Divertor(Model):
         # For double null, calculate heat loads to upper and lower divertors
         # and use the highest
         if self.data.divertor.n_divertors == 2:
-            hldiv_lower = f_p_div_lower * hldiv_base
-            hldiv_upper = (1.0 - f_p_div_lower) * hldiv_base
+            hldiv_lower = f_p_div_lower_separatrix * hldiv_base
+            hldiv_upper = (1.0 - f_p_div_lower_separatrix) * hldiv_base
             self.data.divertor.pflux_div_heat_load_mw = max(hldiv_lower, hldiv_upper)
         else:
             self.data.divertor.pflux_div_heat_load_mw = hldiv_base

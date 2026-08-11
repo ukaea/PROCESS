@@ -86,7 +86,7 @@ class TestDivertor:
         nd_plasma_separatrix_electron = 1.0e19
         deg_div_field_plate = 5.0
         rad_fraction_sol = 8.0e-1
-        f_p_div_lower = 1.0
+        f_p_div_lower_separatrix = 1.0
 
         expected_pflux_div_heat_load_mw = 0.58898578
 
@@ -101,7 +101,7 @@ class TestDivertor:
             nd_plasma_separatrix_electron,
             deg_div_field_plate,
             rad_fraction_sol,
-            f_p_div_lower,
+            f_p_div_lower_separatrix,
             False,
         )
 
