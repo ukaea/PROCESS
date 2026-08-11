@@ -1703,8 +1703,15 @@ class PhysicsData:
     a_plasma_outboard_sol_eich13_parallel: float = 0.0
     """Plasma outboard midplane (upstream) Eich 2013 SOL parallel area (Aₗₗ,ᵤ) [m]"""
 
+    a_plasma_outboard_sol_parallel: float = 0.0
+    """Plasma outboard midplane (upstream) SOL parallel area (Aₗₗ,ᵤ) [m]"""
+
     pflux_plasma_outboard_sol_eich13_parallel_mw: float = 0.0
     """Plasma outboard midplane (upstream) Eich 2013 SOL parallel power flux
+    (qₗₗ,ᵤ) [MW/m²]"""
+
+    pflux_plasma_outboard_sol_parallel_mw: float = 0.0
+    """Plasma outboard midplane (upstream) SOL parallel power flux
     (qₗₗ,ᵤ) [MW/m²]"""
 
     i_len_sol_outboard_power_decay: int = 0
