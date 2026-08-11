@@ -69,12 +69,25 @@ class ScrapeOffLayer(Model):
                 self.data.physics.len_plasma_sol_mast14_power_decay_2
             )
 
+        self.data.physics.a_plasma_outboard_sol_parallel = self.calculate_upstream_sol_outboard_parallel_area(  # noqa: E501
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
+            len_plasma_sol_power_decay=self.data.physics.len_sol_outboard_power_decay,
+            b_plasma_outboard_total=self.data.physics.b_plasma_outboard_total,
+            b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
+        )
+
         self.data.physics.a_plasma_outboard_sol_eich13_parallel = self.calculate_upstream_sol_outboard_parallel_area(  # noqa: E501
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             len_plasma_sol_power_decay=self.data.physics.len_plasma_sol_eich13_power_decay,
             b_plasma_outboard_total=self.data.physics.b_plasma_outboard_total,
             b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
+        )
+
+        self.data.physics.pflux_plasma_outboard_sol_parallel_mw = (
+            self.data.physics.p_plasma_separatrix_mw
+            / self.data.physics.a_plasma_outboard_sol_parallel
         )
 
         self.data.physics.pflux_plasma_outboard_sol_eich13_parallel_mw = (
@@ -121,12 +134,29 @@ class ScrapeOffLayer(Model):
         po.ocmmnt(self.outfile, "----------------------------")
 
         po.osubhd(self.outfile, "Upstream Outboard SOL Parallel Area and Power Flux:")
+
+        po.ovarre(
+            self.outfile,
+            "Plasma outboard midplane SOL parallel area (Aₗₗ,ᵤ) [m²]",
+            "(a_plasma_outboard_sol_parallel)",
+            self.data.physics.a_plasma_outboard_sol_parallel,
+        )
+        po.oblnkl(self.outfile)
+
         po.ovarre(
             self.outfile,
             "Plasma outboard midplane Eich 2013 SOL parallel area (Aₗₗ,ᵤ) [m²]",
             "(a_plasma_outboard_sol_eich13_parallel)",
             self.data.physics.a_plasma_outboard_sol_eich13_parallel,
         )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma outboard midplane SOL parallel power flux (qₗₗ,ᵤ) [MW/m²]",
+            "(pflux_plasma_outboard_sol_parallel_mw)",
+            self.data.physics.pflux_plasma_outboard_sol_parallel_mw,
+        )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Plasma outboard midplane Eich 2013 SOL parallel power flux (qₗₗ,ᵤ) [MW/m²]",
