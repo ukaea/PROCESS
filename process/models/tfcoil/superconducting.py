@@ -4408,21 +4408,13 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         Returns
         -------
-        TFSuperconductorLimits
-            A dataclass containing the calculated superconducting properties of the TF
-            coil, including:
-            - j_tf_wp_critical: Critical current density in the TF winding pack (A/m²).
-            - j_superconductor_critical: Critical current density in the
-            superconductor (A/m²).
-            - f_c_tf_turn_operating_critical: Ratio of operating current to critical
-            current for the TF turn (dimensionless).
-            - j_tf_superconductor: Current density  in the superconductor at operating
-            conditions (A/m²).
-            - j_tf_coil_turn: Current density in the TF coil turn at operating
-            conditions (A/m²).
-            - bc20m: Critical magnetic field at 20 K and zero strain (T).
-            - tc0m: Critical temperature at zero magnetic field and zero strain (K).
-            - c_turn_cables_critical: Critical current in the TF turn cables (A).
+        :
+            TF superconductor limits dataclass
+
+        Raises
+        ------
+        ProcessValueError
+            Non tape conductors selected
 
         """
         if SuperconductorModel(i_tf_superconductor).sc_shape != SuperconductorShape.TAPE:
@@ -4566,7 +4558,8 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         Returns
         -------
-        CroCoCableSpaceGeometry
+        :
+            croco cable space geometry dataclass
         """
         dia_tf_turn_croco_cable = (
             dx_tf_turn_conduit_full_average / 3.0e0 - dx_tf_turn_steel * (2.0e0 / 3.0e0)
