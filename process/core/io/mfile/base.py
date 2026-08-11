@@ -105,6 +105,7 @@ class MFileVariable(dict):  # noqa: FURB189
 
     @property
     def exists(self):
+        """Does the variable exist (always true)"""
         return True
 
 
@@ -138,6 +139,7 @@ class MFileErrorClass:
 
     @property
     def exists(self):
+        """Does the variable exist (always false)"""
         return False
 
 
@@ -189,12 +191,14 @@ class DefaultOrderedDict(OrderedDict):
             return self.__missing__(key)
 
     def __missing__(self, key):
+        """Deal with unknown keys"""
         if self.default_factory is None:
             return MFileErrorClass(key)
         self[key] = value = self.default_factory()
         return value
 
     def __reduce__(self):
+        """Create a pickleable object tuple"""
         args = () if self.default_factory is None else (self.default_factory,)
         return type(self), args, None, None, self.items()
 

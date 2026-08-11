@@ -1001,6 +1001,7 @@ class INVariable:
         )
 
     def __hash__(self):
+        """INVariable hash representation"""
         return hash((self.name, self.value, self.v_type))
 
     def __repr__(self):
