@@ -1058,9 +1058,9 @@ class Physics(Model):
             self.data.physics.f_p_div_upper_inboard_separatrix = (
                 1.0e0 - self.data.physics.f_p_div_lower
             ) * self.data.physics.fio
-            self.data.physics.fuo = (1.0e0 - self.data.physics.f_p_div_lower) * (
-                1.0e0 - self.data.physics.fio
-            )
+            self.data.physics.f_p_div_upper_outboard_separatrix = (
+                1.0e0 - self.data.physics.f_p_div_lower
+            ) * (1.0e0 - self.data.physics.fio)
             # power into each target
             self.data.physics.plimw = (
                 self.data.physics.f_p_div_lower_inboard_separatrix
@@ -1074,7 +1074,10 @@ class Physics(Model):
                 self.data.physics.f_p_div_upper_inboard_separatrix
                 * self.data.physics.ptarmw
             )
-            self.data.physics.puomw = self.data.physics.fuo * self.data.physics.ptarmw
+            self.data.physics.puomw = (
+                self.data.physics.f_p_div_upper_outboard_separatrix
+                * self.data.physics.ptarmw
+            )
         else:
             # Single null configuration
             self.data.physics.f_p_div_lower_inboard_separatrix = self.data.physics.fio
@@ -2289,7 +2292,7 @@ class Physics(Model):
                     self.outfile,
                     "Fraction of power incident on the upper outer target",
                     "(fUO)",
-                    self.data.physics.fuo,
+                    self.data.physics.f_p_div_upper_outboard_separatrix,
                     "OP ",
                 )
 

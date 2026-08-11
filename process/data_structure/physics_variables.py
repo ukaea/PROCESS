@@ -449,7 +449,8 @@ class PhysicsData:
     f_p_div_upper_inboard_separatrix: float = 0.0
     """Fraction of plasma separatrix power to the upper inboard divertor target"""
 
-    fuo: float = 0.0
+    f_p_div_upper_outboard_separatrix: float = 0.0
+    """Fraction of plasma separatrix power to the upper outboard divertor target"""
 
     plimw: float = 0.0
 
