@@ -417,7 +417,8 @@ class PhysicsData:
 
     ptarmw: float = 0.0
 
-    lambdaio: float = 0.0
+    len_sol_outboard_power_decay: float = 0.0
+    """Outboard scrape off layer power decay length (λ_q) [m]"""
 
     drsep: float = 0.0
 
@@ -1691,7 +1692,7 @@ class PhysicsData:
     pflux_plasma_outboard_sol_eich13_parallel_mw: float = 0.0
     """Plasma outboard midplane (upstream) Eich 2013 SOL parallel power flux
     (qₗₗ,ᵤ) [MW/m²]"""
-    
+
     i_len_sol_outboard_power_decay: int = 0
     """Switch for SOL outboard power decay length (λ_q) scaling to use:
     - =0 Eich 2013 scaling

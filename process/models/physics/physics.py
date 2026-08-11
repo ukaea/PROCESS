@@ -1008,7 +1008,7 @@ class Physics(Model):
         # use self.data.physics.f_p_div_lower to find deltarsep
         # Parameters taken from double null machine
         # D. Brunner et al
-        self.data.physics.lambdaio = 1.57e-3
+        self.data.physics.len_sol_outboard_power_decay = 1.57e-3
 
         # Issue #1559 Infinities in physics_module.drsep when running single null in a
         # double null machine
@@ -1035,7 +1035,13 @@ class Physics(Model):
                 / (
                     1.0e0
                     + np.exp(
-                        -((self.data.physics.drsep / self.data.physics.lambdaio) ** 2)
+                        -(
+                            (
+                                self.data.physics.drsep
+                                / self.data.physics.len_sol_outboard_power_decay
+                            )
+                            ** 2
+                        )
                     )
                 )
             )
@@ -2221,8 +2227,8 @@ class Physics(Model):
             po.ovarre(
                 self.outfile,
                 "Outboard side heat flux decay length (m)",
-                "(lambdaio)",
-                self.data.physics.lambdaio,
+                "(len_sol_outboard_power_decay)",
+                self.data.physics.len_sol_outboard_power_decay,
                 "OP ",
             )
             if self.data.divertor.n_divertors == 2:
