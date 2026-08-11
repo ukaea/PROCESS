@@ -66,7 +66,7 @@ class StgeomParam(NamedTuple):
 )
 def test_stgeom(stgeomparam, monkeypatch, stellarator):
     """
-    Automatically generated Regression Unit Test for stgeom.
+    Automatically generated Unit Test for stgeom.
 
     This test was generated using data from
     helias_5b.IN.DAT.
@@ -299,7 +299,7 @@ class StbuildParam(NamedTuple):
 )
 def test_stbuild(stbuildparam, monkeypatch, stellarator):
     """
-    Automatically generated Regression Unit Test for st_build.
+    Automatically generated Unit Test for st_build.
 
     This test was generated using data from
     helias_5b.IN.DAT.
@@ -496,7 +496,7 @@ class StstrcParam(NamedTuple):
 )
 def test_ststrc(ststrcparam, monkeypatch, stellarator):
     """
-    Automatically generated Regression Unit Test for ststrc.
+    Automatically generated Unit Test for ststrc.
 
     This test was generated using data from
     helias_5b.IN.DAT.
@@ -1440,7 +1440,7 @@ class IntersectParam(NamedTuple):
 )
 def test_intersect(intersectparam):
     """
-    Automatically generated Regression Unit Test for intersect.
+    Automatically generated Unit Test for intersect.
 
     This test was generated using data from
     helias_5b.IN.DAT.
@@ -1505,7 +1505,7 @@ class StdlimParam(NamedTuple):
 )
 def test_stdlim(stdlimparam, monkeypatch, stellarator):
     """
-    Automatically generated Regression Unit Test for stdlim.
+    Automatically generated Unit Test for stdlim.
 
     This test was generated using data from
     helias_5b.IN.DAT.
@@ -1567,7 +1567,7 @@ class StdlimEcrhParam(NamedTuple):
 )
 def test_stdlim_ecrh(stdlimecrhparam, monkeypatch, stellarator):
     """
-    Automatically generated Regression Unit Test for stdlim_ecrh.
+    Automatically generated Unit Test for stdlim_ecrh.
 
     This test was generated using data from
     stellarator_helias.IN.DAT.
@@ -1662,7 +1662,7 @@ class StCalcEffChiParam(NamedTuple):
 )
 def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     """
-    Automatically generated Regression Unit Test for st_calc_eff_chi.
+    Automatically generated Unit Test for st_calc_eff_chi.
 
     This test was generated using data from
     stellarator_helias.IN.DAT.
@@ -1776,7 +1776,7 @@ def test_sctfcoil_nuclear_heating_iter90(
     sctfcoilnuclearheatingiter90param, monkeypatch, stellarator
 ):
     """
-    Automatically generated Regression Unit Test for sctfcoil_nuclear_heating_iter90.
+    Automatically generated Unit Test for sctfcoil_nuclear_heating_iter90.
 
     This test was generated using data from a modified stellarator_helias.IN.DAT.
 

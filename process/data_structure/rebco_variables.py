@@ -1,8 +1,12 @@
+"""Module containing variables for the REBCO models"""
+
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class RebcoData:
+    """Dataclass holding REBCO variables"""
+
     dx_hts_tape_rebco: float = 1.0e-6
     """thickness of REBCO layer in tape (m) (`iteration variable 138`)"""
 

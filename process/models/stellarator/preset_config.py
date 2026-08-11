@@ -1,3 +1,5 @@
+"""Load the appropriate Stellarator machine configuration"""
+
 import json
 from pathlib import Path
 
@@ -227,6 +229,11 @@ def load_stellarator_config(istell: int, config_file: Path | None, data: DataStr
     data: DataStructure
         data structure object
 
+    Raises
+    ------
+    ProcessValueError
+        If stellarator config file is None but istell=6, or if
+        istell is not an integer in the range [1, 6]
     """
     match istell:
         case 1:

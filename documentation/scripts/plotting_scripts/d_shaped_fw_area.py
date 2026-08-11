@@ -1,3 +1,5 @@
+"""Module containing routines to plot the D-shaped first wall area"""
+
 import numpy as np
 from bokeh.io import output_file, save
 from bokeh.layouts import column, row

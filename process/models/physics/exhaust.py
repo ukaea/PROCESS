@@ -17,7 +17,7 @@ class PlasmaExhaust(Model):
         self.mfile = constants.MFILE
 
     def run(self):
-        """This model isn't run."""
+        """PlasmaExhaust model isn't run."""
 
     def output(self):
         """Output plasma exhaust results to the output file."""

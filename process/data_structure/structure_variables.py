@@ -1,9 +1,11 @@
+"""Module containing variables for the structure models"""
+
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class StructureData:
-    """Data describing the structure."""
+    """Dataclass holding structure variables"""
 
     aintmass: float = 0.0
     """intercoil structure mass (kg)"""

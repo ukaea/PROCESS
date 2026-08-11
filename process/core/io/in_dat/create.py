@@ -26,6 +26,11 @@ def feasible_point(filename, position: int):
     -------
     scan_point:
         scan number to use when writing new file
+
+    Raises
+    ------
+    ValueError
+        No feasible point
     """
     mfile_data = MFile(filename)
     scan_point = 0

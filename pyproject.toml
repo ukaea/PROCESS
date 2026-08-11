@@ -75,7 +75,7 @@ docs = [
   "mkdocs-gen-files",
   "mkdocs-literate-nav",
 ]
-lint = ["pre-commit>=2.16.0", "ruff==0.16.0", "ty"]
+lint = ["pre-commit>=2.16.0", "ruff==0.16.1", "ty"]
 all = ["process[test,docs,lint,examples,plotly]", "toml"]
 
 [project.scripts]
@@ -111,11 +111,11 @@ deploy = "mkdocs gh-deploy"
 
 [tool.hatch.envs.lint]
 detached     = true                           # Don't inherit from default (does not download project dependencies)
-dependencies = ["pre-commit", "ruff==0.16.0", "ty"]
+dependencies = ["pre-commit", "ruff==0.16.1", "ty"]
 
 [tool.hatch.envs.lint.scripts]
 fmt    = ["pre-commit run --all-files --hook-stage manual {args:}"]
-fmt_extra = ["ruff check --select=C901,PLR0904,PLR0912,PLR0913,PLR0914,PLR0915,PLR0916,PLR0917,PLR1702,D100,D101,D102,D103,DOC501,D404,D104,D105,S307 {args:.}"]
+fmt_extra = ["ruff check --select=C901,PLR0904,PLR0912,PLR0913,PLR0914,PLR0915,PLR0916,PLR0917,PLR1702,D100,D101,D102,D103,D404,D104,D105,S307 {args:.}"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
@@ -134,6 +134,7 @@ output-format = "concise"
 target-version = "py310"
 line-length = 89
 output-format = "concise"
+output-prefer-rule-codes = true
 extend-exclude = ["env", ".env"]
 
 [tool.ruff.format]
@@ -250,7 +251,6 @@ ignore =  [
     "D101",
     "D102",
     "D103",
-    "DOC501",  # docstring-missing-exception
     "D404",    # docstring-starts-with-this
     "D104",    # undocumented-public-package
     "D105",    # undocumented-magic-method

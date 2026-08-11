@@ -1,8 +1,11 @@
+"""Objective function routine"""
+
 import numpy as np
 
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 from process.data_structure.numerics import FiguresOfMerit
+from process.models.availability import AvailabilityModel
 
 
 def objective_function(minmax: int, data: DataStructure) -> float:
@@ -33,6 +36,11 @@ def objective_function(minmax: int, data: DataStructure) -> float:
     data: DataStructure
         data structure object for providing data to the
         objective function
+
+    Raises
+    ------
+    ProcessValueError
+        If minmax=15 not used with i_plant_availability=1
     """
     try:
         figure_of_merit = FiguresOfMerit(abs(minmax))
@@ -70,8 +78,14 @@ def objective_function(minmax: int, data: DataStructure) -> float:
     elif figure_of_merit == FiguresOfMerit.PULSE_LENGTH:
         objective_metric = data.times.t_plant_pulse_burn / 2.0e4
     elif figure_of_merit == FiguresOfMerit.PLANT_AVAILABILITY_FACTOR:
-        if data.costs.i_plant_availability != 1:
-            raise ProcessValueError("minmax=15 requires i_plant_availability=1")
+        if (
+            AvailabilityModel(data.costs.i_plant_availability)
+            == AvailabilityModel.USER_INPUT
+        ):
+            raise ProcessValueError(
+                "minmax=15 requires `f_t_plant_available` to be calculated, not user "
+                "input"
+            )
         objective_metric = data.costs.f_t_plant_available
     elif figure_of_merit == FiguresOfMerit.MIN_R0_MAX_TAU_BURN:
         objective_metric = 0.95 * (data.physics.rmajor / 9.0) - 0.05 * (

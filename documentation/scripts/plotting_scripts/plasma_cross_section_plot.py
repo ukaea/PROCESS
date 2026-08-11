@@ -1,3 +1,5 @@
+"""Module containing routines to plot the plasma cross section"""
+
 import math
 
 import numpy as np

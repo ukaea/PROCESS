@@ -1,9 +1,12 @@
+"""Scanning mechanics"""
+
 from __future__ import annotations
 
 import logging
 import time
-from dataclasses import astuple, dataclass
+from dataclasses import dataclass, field
 from enum import Enum
+from types import DynamicClassAttribute
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -12,178 +15,219 @@ from tabulate import tabulate
 from process.core import constants, process_output
 from process.core.caller import write_output_files
 from process.core.exceptions import ProcessValueError
+from process.core.io.data_structure_dicts import get_dicts
 from process.core.log import logging_model_handler, show_errors
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
-from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
+from process.data_structure.numerics import (
+    FiguresOfMerit,
+    PROCESSRunMode,
+    SolverOutputCondition,
+)
 from process.data_structure.scan_variables import IPNSCNS, NOUTVARS, ScanData
+from process.models.availability import AvailabilityModel
 
 if TYPE_CHECKING:
     from process.core.model import DataStructure, Model
+
 
 logger = logging.getLogger(__name__)
 
 
 @dataclass
 class ScanVariable:
-    variable_name: str
-    variable_description: str
-    variable_num: int
+    """Scan variable container"""
 
-    def __iter__(self):
-        return iter(astuple(self)[:2])
+    number: int
+    area: Area = field(repr=False)
+    _out_name_: str | None = None
 
 
-class ScanVariables(Enum):
+class Area(Enum):
+    """Scan variable data structure area shorthand
+
+    this mirrors data_structure.area
+    """
+
+    P = "physics"
+    D = "divertor"
+    C = "constraints"
+    T = "tfcoil"
+    TR = "rebco"
+    CD = "current_drive"
+    NUM = "numerics"
+    CST = "costs"
+    IR = "impurity_radiation"
+    B = "build"
+    HT = "heat_transport"
+    PF = "pf_coil"
+    CS = "cs_fatigue"
+    FWBS = "fwbs"
+
+
+class ScanVariables(ScanVariable, Enum):
+    """Scan variable options"""
+
     @classmethod
-    def _missing_(cls, var):
-        if isinstance(var, int):
+    def _missing_(cls, value):
+        if isinstance(value, int):
             for sv in cls:
-                if sv.value.variable_num == var:
+                if sv.number == value:
                     return sv
-        return super()._missing_(var)
+            raise ProcessValueError("Illegal scan variable number", nwp=value)
 
-    aspect = ScanVariable("aspect", "Aspect_ratio", 1)
-    pflux_div_heat_load_max_mw = ScanVariable(
-        "pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)", 2
-    )
-    p_plant_electric_net_required_mw = ScanVariable(
-        "p_plant_electric_net_required_mw", "Net_electric_power_(MW)", 3
-    )
-    hfact = ScanVariable("hfact", "Confinement_H_factor", 4)
-    j_tf_coil_full_area = ScanVariable(
-        "j_tf_coil_full_area", "TF_inboard_leg_J_(MA/m2)", 5
-    )
-    pflux_fw_neutron_max_mw = ScanVariable(
-        "pflux_fw_neutron_max_mw", "Allow._wall_load_(MW/m2)", 6
-    )
-    beamfus0 = ScanVariable("beamfus0", "Beam_bkgrd_multiplier", 7)
-    temp_plasma_electron_vol_avg_kev = ScanVariable(
-        "temp_plasma_electron_vol_avg_kev", "Electron_temperature_keV", 9
-    )
-    boundu15 = ScanVariable("boundu(15)", "Volt-second_upper_bound", 10)
-    beta_norm_max = ScanVariable("beta_norm_max", "Beta_coefficient", 11)
-    f_c_plasma_bootstrap_max = ScanVariable(
-        "f_c_plasma_bootstrap_max", "Bootstrap_fraction", 12
-    )
-    boundu10 = ScanVariable("boundu(10)", "H_factor_upper_bound", 13)
-    f_j_tf_wp_critical_max = ScanVariable(
-        "f_j_tf_wp_critical_max", "TFC_Iop_/_Icrit_margin", 14
-    )
-    rmajor = ScanVariable("rmajor", "Plasma_major_radius_(m)", 16)
-    b_tf_inboard_max = ScanVariable("b_tf_inboard_max", "Max_toroidal_field_(T)", 17)
-    eta_cd_norm_hcd_primary_max = ScanVariable(
-        "eta_cd_norm_hcd_primary_max", "Maximum_CD_gamma", 18
-    )
-    boundl16 = ScanVariable("boundl(16)", "CS_thickness_lower_bound", 19)
-    t_burn_min = ScanVariable("t_burn_min", "Minimum_burn_time_(s)", 20)
-    f_t_plant_available = ScanVariable(
-        "f_t_plant_available", "Plant_availability_factor", 22
-    )
-    p_fusion_total_max_mw = ScanVariable(
-        "p_fusion_total_max_mw", "Fusion_power_limit_(MW)", 24
-    )
-    kappa = ScanVariable("kappa", "Plasma_elongation", 25)
-    triang = ScanVariable("triang", "Plasma_triangularity", 26)
-    tbrmin = ScanVariable("tbrmin", "Min_tritium_breed._ratio", 27)
-    b_plasma_toroidal_on_axis = ScanVariable(
-        "b_plasma_toroidal_on_axis", "Tor._field_on_axis_(T)", 28
-    )
-    coreradius = ScanVariable("coreradius", "Core_radius", 29)
-    f_t_alpha_energy_confinement_min = ScanVariable(
-        "f_t_alpha_energy_confinement_min", "t_alpha_confinement/taueff_lower_limit", 31
-    )
-    epsvmc = ScanVariable("epsvmc", "VMCON error tolerance", 32)
-    boundu129 = ScanVariable("boundu(129)", " Neon upper limit", 38)
-    boundu131 = ScanVariable("boundu(131)", " Argon upper limit", 39)
-    boundu135 = ScanVariable("boundu(135)", " Xenon upper limit", 40)
-    dr_blkt_outboard = ScanVariable("dr_blkt_outboard", "Outboard blanket thick.", 41)
-    f_nd_impurity_electrons9 = ScanVariable(
-        "f_nd_impurity_electrons(9)", "Argon fraction", 42
-    )
-    sig_tf_case_max = ScanVariable(
-        "sig_tf_case_max", "Allowable_stress_in_tf_coil_case_Tresca_(pa)", 44
-    )
-    temp_tf_superconductor_margin_min = ScanVariable(
-        "temp_tf_superconductor_margin_min", "Minimum_allowable_temperature_margin", 45
-    )
-    boundu152 = ScanVariable(
-        "boundu(152)", "Max allowable f_nd_plasma_separatrix_greenwald", 46
-    )
-    n_tf_wp_pancakes = ScanVariable("n_tf_wp_pancakes", "TF Coil - n_tf_wp_pancakes", 48)
-    n_tf_wp_layers = ScanVariable("n_tf_wp_layers", "TF Coil - n_tf_wp_layers", 49)
-    f_nd_impurity_electrons13 = ScanVariable(
-        "f_nd_impurity_electrons(13)", "Xenon fraction", 50
-    )
-    f_p_div_lower = ScanVariable("f_p_div_lower", "lower_divertor_power_fraction", 51)
-    rad_fraction_sol = ScanVariable("rad_fraction_sol", "SoL radiation fraction", 52)
-    boundu157 = ScanVariable("boundu(157)", "Max allowable fvssu", 53)
-    Bc2_0K = ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)", 54)
-    dr_shld_inboard = ScanVariable("dr_shld_inboard", "Inboard neutronic shield", 55)
-    p_cryo_plant_electric_max_mw = ScanVariable(
-        "p_cryo_plant_electric_max_mw", "max allowable p_cryo_plant_electric_mw", 56
-    )
-    boundl2 = ScanVariable("boundl(2)", "b_plasma_toroidal_on_axis minimum", 57)
-    dr_fw_plasma_gap_inboard = ScanVariable(
-        "dr_fw_plasma_gap_inboard", "Inboard FW-plasma sep gap", 58
-    )
-    dr_fw_plasma_gap_outboard = ScanVariable(
-        "dr_fw_plasma_gap_outboard", "Outboard FW-plasma sep gap", 59
-    )
-    sig_tf_wp_max = ScanVariable(
-        "sig_tf_wp_max", "Allowable_stress_in_tf_coil_conduit_Tresca_(pa)", 60
-    )
-    copperaoh_m2_max = ScanVariable(
-        "copperaoh_m2_max", "Max CS coil current / copper area", 61
-    )
-    coheof = ScanVariable("coheof", "CS coil current density at EOF (A/m2)", 62)
-    dr_cs = ScanVariable("dr_cs", "CS coil thickness (m)", 63)
-    ohhghf = ScanVariable("ohhghf", "CS height (m)", 64)
-    n_cycle_min = ScanVariable("n_cycle_min", "CS stress cycles min", 65)
-    oh_steel_frac = ScanVariable("oh_steel_frac", "CS steel fraction", 66)
-    t_crack_vertical = ScanVariable(
-        "t_crack_vertical", "Initial crack vertical size (m)", 67
-    )
-    inlet_temp_liq = ScanVariable(
-        "inlet_temp_liq", "Inlet Temperature Liquid Metal Breeder/Coolant (K)", 68
-    )
-    outlet_temp_liq = ScanVariable(
-        "outlet_temp_liq", "Outlet Temperature Liquid Metal Breeder/Coolant (K)", 69
-    )
-    blpressure_liq = ScanVariable(
-        "blpressure_liq", "Blanket liquid metal breeder/coolant pressure (Pa)", 70
-    )
-    n_liq_recirc = ScanVariable(
-        "n_liq_recirc",
-        "Selected number of liquid metal breeder recirculations per day",
-        71,
-    )
-    bz_channel_conduct_liq = ScanVariable(
-        "bz_channel_conduct_liq",
-        "Conductance of liquid metal breeder duct walls (A V-1 m-1)",
-        72,
-    )
-    pnuc_fw_ratio_dcll = ScanVariable(
-        "pnuc_fw_ratio_dcll",
-        "Ratio of FW nuclear power as fraction of total (FW+BB)",
-        73,
-    )
-    f_nuc_pow_bz_struct = ScanVariable(
-        "f_nuc_pow_bz_struct",
-        "Fraction of BZ power cooled by primary coolant for dual-coolant blanket",
-        74,
-    )
-    dx_fw_module = ScanVariable(
-        "dx_fw_module", "dx_fw_module of first wall cooling channels (m)", 75
-    )
-    eta_turbine = ScanVariable("eta_turbine", "Thermal conversion eff.", 76)
-    startupratio = ScanVariable("startupratio", "Gyrotron redundancy", 77)
-    fkind = ScanVariable("fkind", "Multiplier for Nth of a kind costs", 78)
-    eta_ecrh_injector_wall_plug = ScanVariable(
-        "eta_ecrh_injector_wall_plug", "ECH wall plug to injector efficiency", 79
-    )
-    fcoolcp = ScanVariable("fcoolcp", "Coolant fraction of TF", 80)
-    n_tf_coil_turns = ScanVariable("n_tf_coil_turns", "Number of turns in TF", 81)
+        if isinstance(value, str):
+            return cls[value.replace("(", "__").replace(")", "")]
+
+        return super()._missing_(value)
+
+    @DynamicClassAttribute
+    def fname(self):
+        """Full name"""
+        if "__" in self.name:
+            return self.name.replace("__", "(") + ")"
+        return self.name
+
+    @DynamicClassAttribute
+    def out_name(self):
+        """Output name"""
+        if self._out_name_ is None:
+            return self.fname
+        return self._out_name_
+
+    def set(self, data: DataStructure, sweep_val: float):
+        """Set value of scan variable
+
+        Raises
+        ------
+        ProcessValueError
+            Scanning f_t_plant_available if i_plant_availability=1"
+
+        """
+        var_area = getattr(data, self.area.value)
+
+        if (
+            self.number == 22
+            and AvailabilityModel(var_area.i_plant_availability)
+            != AvailabilityModel.USER_INPUT
+        ):
+            raise ProcessValueError(
+                "Do not scan f_t_plant_available if i_plant_availability=1"
+            )
+
+        if "__" in self.name:
+            name, index = self.name.split("__")
+            getattr(var_area, name)[int(index) - 1] = sweep_val
+            if name == "f_nd_impurity_electrons":
+                var_area.f_nd_impurity_electron_array[int(index - 1)] = sweep_val
+        else:
+            setattr(var_area, self.name, sweep_val)
+            name = self.name
+
+        self._data_ = getattr(var_area, name)
+        self._description_ = get_dicts()["DICT_DESCRIPTIONS"][name]
+
+    @DynamicClassAttribute
+    def data(self):
+        """Variable value
+
+        Raises
+        ------
+        ValueError
+            data not set
+        """
+        if hasattr(self, "_data_"):
+            return self._data_
+        raise ValueError("Data not available")
+
+    @DynamicClassAttribute
+    def description(self):
+        """Variable description
+
+        Raises
+        ------
+        ValueError
+            description not set
+        """
+        if hasattr(self, "_description_"):
+            return self._description_
+        raise ValueError("Description not available")
+
+    def get_val(self, mfile, scan):
+        """Get value from mfile"""
+        # TODO this will fail for boundu/l we should write the scan variable to
+        # the mfile and use that directly (also replacign output names)
+        return mfile.get(self.out_name, scan=scan)
+
+    aspect = (1, Area.P)
+    pflux_div_heat_load_max_mw = (2, Area.D)
+    p_plant_electric_net_required_mw = (3, Area.C)
+    hfact = (4, Area.P)
+    j_tf_coil_full_area = (5, Area.T)
+    pflux_fw_neutron_max_mw = (6, Area.C)
+    beamfus0 = (7, Area.P)
+    temp_plasma_electron_vol_avg_kev = (9, Area.P)
+    boundu__15 = (10, Area.NUM)
+    beta_norm_max = (11, Area.P)
+    f_c_plasma_bootstrap_max = (12, Area.CD)
+    boundu__10 = (13, Area.NUM)
+    f_j_tf_wp_critical_max = (14, Area.C)  # TODO is this needed
+    rmajor = (16, Area.P)
+    b_tf_inboard_max = (17, Area.C, "b_tf_inboard_peak_symmetric")
+    eta_cd_norm_hcd_primary_max = (18, Area.C)
+    boundl__16 = (19, Area.NUM)
+    t_burn_min = (20, Area.C)
+    f_t_plant_available = (22, Area.CST)
+    p_fusion_total_max_mw = (24, Area.C)
+    kappa = (25, Area.P)
+    triang = (26, Area.P)
+    tbrmin = (27, Area.C)
+    b_plasma_toroidal_on_axis = (28, Area.P)
+    coreradius = (29, Area.IR)
+    f_alpha_energy_confinement_min = (31, Area.C)
+    epsvmc = (32, Area.NUM)
+    boundu__129 = (38, Area.NUM)
+    boundu__131 = (39, Area.NUM)
+    boundu__135 = (40, Area.NUM)
+    dr_blkt_outboard = (41, Area.B)
+    f_nd_impurity_electrons__9 = (42, Area.IR)
+    sig_tf_case_max = (44, Area.T)
+    temp_tf_superconductor_margin_min = (45, Area.T)
+    boundu__152 = (46, Area.NUM)
+    n_tf_wp_pancakes = (48, Area.T)
+    n_tf_wp_layers = (49, Area.T)
+    f_nd_impurity_electrons__13 = (50, Area.IR)
+    f_p_div_lower = (51, Area.P)
+    rad_fraction_sol = (52, Area.P)
+    boundu__157 = (53, Area.NUM)
+    b_crit_upper_nbti = (54, Area.T)
+    dr_shld_inboard = (55, Area.B)
+    p_cryo_plant_electric_max_mw = (56, Area.HT)
+    boundl__2 = (57, Area.NUM)
+    dr_fw_plasma_gap_inboard = (58, Area.B)
+    dr_fw_plasma_gap_outboard = (59, Area.B)
+    sig_tf_wp_max = (60, Area.T)
+    copperaoh_m2_max = (61, Area.TR)
+    coheof = (62, Area.PF)
+    dr_cs = (63, Area.B)
+    ohhghf = (64, Area.PF)
+    n_cycle_min = (65, Area.CS)
+    oh_steel_frac = (66, Area.PF)
+    t_crack_vertical = (67, Area.CS)
+    inlet_temp_liq = (68, Area.FWBS)
+    outlet_temp_liq = (69, Area.FWBS)
+    blpressure_liq = (70, Area.FWBS)
+    n_liq_recirc = (71, Area.FWBS)
+    bz_channel_conduct_liq = (72, Area.FWBS)
+    pnuc_fw_ratio_dcll = (73, Area.FWBS)
+    f_nuc_pow_bz_struct = (74, Area.FWBS)
+    dx_fw_module = (75, Area.FWBS)
+    eta_turbine = (76, Area.HT)
+    startupratio = (77, Area.CST)
+    fkind = (78, Area.CST)
+    eta_ecrh_injector_wall_plug = (79, Area.CD)
+    fcoolcp = (80, Area.T)
+    n_tf_coil_turns = (81, Area.T)
 
 
 class Scan:
@@ -214,6 +258,11 @@ class Scan:
         performing a sweep over a range of values of a particular variable. A
         number of output variable values are written to the MFILE.DAT file at
         each scan point, for plotting or other post-processing purposes.
+
+        Raises
+        ------
+        ProcessValueError
+            isweep value greater than IPNSCNS
         """
         if self.data.scan.isweep == 0:
             # Solve single problem, rather than an array of problems (scan)
@@ -271,14 +320,14 @@ class Scan:
             process_output.ocmmnt(
                 constants.NOUT, "PROCESS has performed a VMCON (optimisation) run."
             )
-        if ifail != 1:
+        if ifail != SolverOutputCondition.CONVERGED:
             process_output.ovarre(constants.NOUT, "Error flag", "(ifail)", ifail)
             process_output.oheadr(
                 constants.IOTTY, "PROCESS COULD NOT FIND A FEASIBLE SOLUTION"
             )
             process_output.oblnkl(constants.IOTTY)
 
-            logger.critical("Solver returns with ifail /= 1. %s", ifail)
+            logger.critical("Solver returns with ifail /= 1.\nifail = %s", ifail)
 
             # Error code handler for VMCON
             if self.solver == "vmcon":
@@ -411,7 +460,7 @@ class Scan:
         process_output.oblnkl(constants.NOUT)
 
         if self.solver == "fsolve":
-            if ifail == 1:
+            if ifail == SolverOutputCondition.CONVERGED:
                 msg = "PROCESS has solved using fsolve."
             else:
                 msg = "PROCESS failed to solve using fsolve."
@@ -420,7 +469,7 @@ class Scan:
                 f"{msg}\n",
             )
         else:
-            if ifail == 1:
+            if ifail == SolverOutputCondition.CONVERGED:
                 string1 = "PROCESS has successfully optimised"
             else:
                 string1 = "PROCESS has failed to optimise"
@@ -707,10 +756,10 @@ class Scan:
         ifail: int :
 
         """
-        if ifail == -1:
+        if ifail == SolverOutputCondition.USER_TERMINATED:
             process_output.ocmmnt(constants.NOUT, "User-terminated execution of VMCON.")
             process_output.ocmmnt(constants.IOTTY, "User-terminated execution of VMCON.")
-        elif ifail == 0:
+        elif ifail == SolverOutputCondition.IMPROPER_INPUT:
             process_output.ocmmnt(
                 constants.NOUT, "Improper input parameters to the VMCON routine."
             )
@@ -720,7 +769,7 @@ class Scan:
                 constants.IOTTY, "Improper input parameters to the VMCON routine."
             )
             process_output.ocmmnt(constants.IOTTY, "PROCESS coding must be checked.")
-        elif ifail == 2:
+        elif ifail == SolverOutputCondition.MAX_ITERATIONS:
             process_output.ocmmnt(
                 constants.NOUT,
                 "The maximum number of calls has been reached without solution.",
@@ -763,7 +812,7 @@ class Scan:
                 constants.IOTTY,
                 "Try changing the variables in IXC, or modify their initial values.",
             )
-        elif ifail == 3:
+        elif ifail == SolverOutputCondition.MAX_LINE_SEARCHES:
             process_output.ocmmnt(
                 constants.NOUT, "The line search required the maximum of 10 calls."
             )
@@ -783,23 +832,7 @@ class Scan:
             process_output.ocmmnt(
                 constants.IOTTY, "Try changing or adding variables to IXC."
             )
-        elif ifail == 4:
-            process_output.ocmmnt(
-                constants.NOUT, "An uphill search direction was found."
-            )
-            process_output.ocmmnt(
-                constants.NOUT, "Try changing the equations in ICC, or"
-            )
-            process_output.ocmmnt(constants.NOUT, "adding new variables to IXC.")
-
-            process_output.ocmmnt(
-                constants.IOTTY, "An uphill search direction was found."
-            )
-            process_output.ocmmnt(
-                constants.IOTTY, "Try changing the equations in ICC, or"
-            )
-            process_output.ocmmnt(constants.IOTTY, "adding new variables to IXC.")
-        elif ifail == 5:
+        elif ifail == SolverOutputCondition.NO_SOLUTION:
             process_output.ocmmnt(
                 constants.NOUT, "The quadratic programming technique was unable to"
             )
@@ -827,30 +860,6 @@ class Scan:
                 "their initial values (especially if only 1 optimisation",
             )
             process_output.ocmmnt(constants.IOTTY, "iteration was performed).")
-        elif ifail == 6:
-            process_output.ocmmnt(
-                constants.NOUT, "The quadratic programming technique was restricted"
-            )
-            process_output.ocmmnt(
-                constants.NOUT, "by an artificial bound, or failed due to a singular"
-            )
-            process_output.ocmmnt(constants.NOUT, "matrix.")
-            process_output.ocmmnt(
-                constants.NOUT, "Try changing the equations in ICC, or"
-            )
-            process_output.ocmmnt(constants.NOUT, "adding new variables to IXC.")
-
-            process_output.ocmmnt(
-                constants.IOTTY, "The quadratic programming technique was restricted"
-            )
-            process_output.ocmmnt(
-                constants.IOTTY, "by an artificial bound, or failed due to a singular"
-            )
-            process_output.ocmmnt(constants.IOTTY, "matrix.")
-            process_output.ocmmnt(
-                constants.IOTTY, "Try changing the equations in ICC, or"
-            )
-            process_output.ocmmnt(constants.IOTTY, "adding new variables to IXC.")
 
     def scan_1d(self):
         """Run a 1-D scan."""
@@ -876,7 +885,7 @@ class Scan:
         self.scan_1d_write_plot(self.data.scan)
         print("Scan Convergence Summary \n")
         sweep_values = self.data.scan.sweep[: self.data.scan.isweep]
-        nsweep_var_name, _ = self.scan_select(
+        nsweep_var = self.scan_select(
             self.data.scan.nsweep, self.data.scan.sweep, self.data.scan.isweep
         )
         converged_count = 0
@@ -890,13 +899,13 @@ class Scan:
             if scan_1d_ifail_dict[iscan] == 1:
                 converged_count += 1
                 print(
-                    f"Scan {iscan:02d}: {nsweep_var_name} = {sweep_values[iscan - 1]} "
+                    f"Scan {iscan:02d}: {nsweep_var.fname} = {sweep_values[iscan - 1]} "
                     + " " * offsets[iscan - 1]
                     + "\u001b[32mCONVERGED \u001b[0m"
                 )
             else:
                 print(
-                    f"Scan {iscan:02d}: {nsweep_var_name} = {sweep_values[iscan - 1]} "
+                    f"Scan {iscan:02d}: {nsweep_var.fname} = {sweep_values[iscan - 1]} "
                     + " " * offsets[iscan - 1]
                     + "\u001b[31mUNCONVERGED \u001b[0m"
                 )
@@ -935,10 +944,10 @@ class Scan:
         print("Scan Convergence Summary\n")
         sweep_1_values = self.data.scan.sweep[: self.data.scan.isweep]
         sweep_2_values = self.data.scan.sweep_2[: self.data.scan.isweep_2]
-        nsweep_var_name, _ = self.scan_select(
+        nsweep_var = self.scan_select(
             self.data.scan.nsweep, self.data.scan.sweep, self.data.scan.isweep
         )
-        nsweep_2_var_name, _ = self.scan_select(
+        nsweep_2_var = self.scan_select(
             self.data.scan.nsweep_2, self.data.scan.sweep_2, self.data.scan.isweep_2
         )
         converged_count = 0
@@ -964,8 +973,8 @@ class Scan:
                     converged_count += 1
                     print(
                         (
-                            f"Scan {scan_point:02d}: ({nsweep_var_name} = "
-                            f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var_name} "
+                            f"Scan {scan_point:02d}: ({nsweep_var.fname} = "
+                            f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var.fname} "
                             f"= {sweep_2_values[iscan_2 - 1]}) "
                         )
                         + " " * offsets[iscan_1 - 1][iscan_2 - 1]
@@ -975,8 +984,8 @@ class Scan:
                 else:
                     print(
                         (
-                            f"Scan {scan_point:02d}: ({nsweep_var_name} = "
-                            f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var_name} = "
+                            f"Scan {scan_point:02d}: ({nsweep_var.fname} = "
+                            f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var.fname} = "
                             f"{sweep_2_values[iscan_2 - 1]}) "
                         )
                         + " " * offsets[iscan_1 - 1][iscan_2 - 1]
@@ -990,6 +999,7 @@ class Scan:
 
     @staticmethod
     def scan_2d_init(scan_data: ScanData):
+        """Scan 2d initialisation"""
         process_output.ovarre(
             constants.MFILE,
             "Number of first variable scan points",
@@ -1028,10 +1038,12 @@ class Scan:
         )
 
     def scan_1d_write_point_header(self, iscan: int):
+        """Scan 1d header"""
         self.data.globals.iscan_global = iscan
-        self.data.globals.vlabel, self.data.globals.xlabel = self.scan_select(
-            self.data.scan.nsweep, self.data.scan.sweep, iscan
-        )
+        sv = self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan)
+
+        self.data.globals.vlabel = sv.fname
+        self.data.globals.xlabel = sv.description
 
         process_output.oblnkl(constants.NOUT)
         process_output.ostars(constants.NOUT, 110)
@@ -1054,17 +1066,20 @@ class Scan:
         )
 
     def scan_2d_write_point_header(self, iscan, iscan_1, iscan_2):
+        """Scan 2d header"""
         iscan_r = self.data.scan.isweep_2 - iscan_2 + 1 if iscan_1 % 2 == 0 else iscan_2
 
         # Makes iscan available globally (read-only)
         self.data.globals.iscan_global = iscan
+        sv_1 = self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan_1)
 
-        self.data.globals.vlabel, self.data.globals.xlabel = self.scan_select(
-            self.data.scan.nsweep, self.data.scan.sweep, iscan_1
-        )
-        self.data.globals.vlabel_2, self.data.globals.xlabel_2 = self.scan_select(
-            self.data.scan.nsweep_2, self.data.scan.sweep_2, iscan_r
-        )
+        self.data.globals.vlabel = sv_1.fname
+        self.data.globals.xlabel = sv_1.data.description
+
+        sv_2 = self.scan_select(self.data.scan.nsweep_2, self.data.scan.sweep_2, iscan_r)
+
+        self.data.globals.vlabel_2 = sv_2.fname
+        self.data.globals.xlabel_2 = sv_2.data.description
 
         process_output.oblnkl(constants.NOUT)
         process_output.ostars(constants.NOUT, 110)
@@ -1092,6 +1107,7 @@ class Scan:
 
     @staticmethod
     def scan_1d_write_plot(scan_data: ScanData):
+        """Scan 1d plotter"""
         if scan_data.first_call_1d:
             process_output.ovarre(
                 constants.MFILE,
@@ -1108,155 +1124,8 @@ class Scan:
 
             scan_data.first_call_1d = False
 
-    def scan_select(self, nwp, swp, iscn):
-        match nwp:
-            case 1:
-                self.data.physics.aspect = swp[iscn - 1]
-            case 2:
-                self.data.divertor.pflux_div_heat_load_max_mw = swp[iscn - 1]
-            case 3:
-                self.data.constraints.p_plant_electric_net_required_mw = swp[iscn - 1]
-            case 4:
-                self.data.physics.hfact = swp[iscn - 1]
-            case 5:
-                self.data.tfcoil.j_tf_coil_full_area = swp[iscn - 1]
-            case 6:
-                self.data.constraints.pflux_fw_neutron_max_mw = swp[iscn - 1]
-            case 7:
-                self.data.physics.beamfus0 = swp[iscn - 1]
-            case 9:
-                self.data.physics.temp_plasma_electron_vol_avg_kev = swp[iscn - 1]
-            case 10:
-                self.data.numerics.boundu[14] = swp[iscn - 1]
-            case 11:
-                self.data.physics.beta_norm_max = swp[iscn - 1]
-            case 12:
-                self.data.current_drive.f_c_plasma_bootstrap_max = swp[iscn - 1]
-            case 13:
-                self.data.numerics.boundu[9] = swp[iscn - 1]
-            case 16:
-                self.data.physics.rmajor = swp[iscn - 1]
-            case 17:
-                self.data.constraints.b_tf_inboard_max = swp[iscn - 1]
-            case 18:
-                self.data.constraints.eta_cd_norm_hcd_primary_max = swp[iscn - 1]
-            case 19:
-                self.data.numerics.boundl[15] = swp[iscn - 1]
-            case 20:
-                self.data.constraints.t_burn_min = swp[iscn - 1]
-            case 22:
-                if self.data.costs.i_plant_availability == 1:
-                    raise ProcessValueError(
-                        "Do not scan f_t_plant_available if i_plant_availability=1"
-                    )
-                self.data.costs.f_t_plant_available = swp[iscn - 1]
-            case 24:
-                self.data.constraints.p_fusion_total_max_mw = swp[iscn - 1]
-            case 25:
-                self.data.physics.kappa = swp[iscn - 1]
-            case 26:
-                self.data.physics.triang = swp[iscn - 1]
-            case 27:
-                self.data.constraints.tbrmin = swp[iscn - 1]
-            case 28:
-                self.data.physics.b_plasma_toroidal_on_axis = swp[iscn - 1]
-            case 29:
-                self.data.impurity_radiation.radius_plasma_core_norm = swp[iscn - 1]
-            case 31:
-                self.data.constraints.f_t_alpha_energy_confinement_min = swp[iscn - 1]
-            case 32:
-                self.data.numerics.epsvmc = swp[iscn - 1]
-            case 38:
-                self.data.numerics.boundu[128] = swp[iscn - 1]
-            case 39:
-                self.data.numerics.boundu[130] = swp[iscn - 1]
-            case 40:
-                self.data.numerics.boundu[134] = swp[iscn - 1]
-            case 41:
-                self.data.build.dr_blkt_outboard = swp[iscn - 1]
-            case 42:
-                self.data.impurity_radiation.f_nd_impurity_electrons[8] = swp[iscn - 1]
-                self.data.impurity_radiation.f_nd_impurity_electron_array[8] = (
-                    self.data.impurity_radiation.f_nd_impurity_electrons[8]
-                )
-            case 44:
-                self.data.tfcoil.sig_tf_case_max = swp[iscn - 1]
-            case 45:
-                self.data.tfcoil.temp_tf_superconductor_margin_min = swp[iscn - 1]
-            case 46:
-                self.data.numerics.boundu[151] = swp[iscn - 1]
-            case 48:
-                self.data.tfcoil.n_tf_wp_pancakes = int(swp[iscn - 1])
-            case 49:
-                self.data.tfcoil.n_tf_wp_layers = int(swp[iscn - 1])
-            case 50:
-                self.data.impurity_radiation.f_nd_impurity_electrons[12] = swp[iscn - 1]
-                self.data.impurity_radiation.f_nd_impurity_electron_array[12] = (
-                    self.data.impurity_radiation.f_nd_impurity_electrons[12]
-                )
-            case 51:
-                self.data.physics.f_p_div_lower = swp[iscn - 1]
-            case 52:
-                self.data.physics.rad_fraction_sol = swp[iscn - 1]
-            case 53:
-                self.data.numerics.boundu[156] = swp[iscn - 1]
-            case 54:
-                self.data.tfcoil.b_crit_upper_nbti = swp[iscn - 1]
-            case 55:
-                self.data.build.dr_shld_inboard = swp[iscn - 1]
-            case 56:
-                self.data.heat_transport.p_cryo_plant_electric_max_mw = swp[iscn - 1]
-            case 57:
-                self.data.numerics.boundl[1] = swp[iscn - 1]
-            case 58:
-                self.data.build.dr_fw_plasma_gap_inboard = swp[iscn - 1]
-            case 59:
-                self.data.build.dr_fw_plasma_gap_outboard = swp[iscn - 1]
-            case 60:
-                self.data.tfcoil.sig_tf_wp_max = swp[iscn - 1]
-            case 61:
-                self.data.rebco.copperaoh_m2_max = swp[iscn - 1]
-            case 62:
-                self.data.pf_coil.j_cs_flat_top_end = swp[iscn - 1]
-            case 63:
-                self.data.build.dr_cs = swp[iscn - 1]
-            case 64:
-                self.data.pf_coil.f_z_cs_tf_internal = swp[iscn - 1]
-            case 65:
-                self.data.cs_fatigue.n_cycle_min = swp[iscn - 1]
-            case 66:
-                self.data.pf_coil.f_a_cs_turn_steel = swp[iscn - 1]
-            case 67:
-                self.data.cs_fatigue.t_crack_vertical = swp[iscn - 1]
-            case 68:
-                self.data.fwbs.inlet_temp_liq = swp[iscn - 1]
-            case 69:
-                self.data.fwbs.outlet_temp_liq = swp[iscn - 1]
-            case 70:
-                self.data.fwbs.blpressure_liq = swp[iscn - 1]
-            case 71:
-                self.data.fwbs.n_liq_recirc = swp[iscn - 1]
-            case 72:
-                self.data.fwbs.bz_channel_conduct_liq = swp[iscn - 1]
-            case 73:
-                self.data.fwbs.pnuc_fw_ratio_dcll = swp[iscn - 1]
-            case 74:
-                self.data.fwbs.f_nuc_pow_bz_struct = swp[iscn - 1]
-            case 75:
-                self.data.fwbs.dx_fw_module = swp[iscn - 1]
-            case 76:
-                self.data.heat_transport.eta_turbine = swp[iscn - 1]
-            case 77:
-                self.data.costs.startupratio = swp[iscn - 1]
-            case 78:
-                self.data.costs.fkind = swp[iscn - 1]
-            case 79:
-                self.data.current_drive.eta_ecrh_injector_wall_plug = swp[iscn - 1]
-            case 80:
-                self.data.tfcoil.fcoolcp = swp[iscn - 1]
-            case 81:
-                self.data.tfcoil.n_tf_coil_turns = swp[iscn - 1]
-            case _:
-                raise ProcessValueError("Illegal scan variable number", nwp=nwp)
-
-        return ScanVariables(int(nwp)).value
+    def scan_select(self, nsweep, sweep, iscan) -> ScanVariables:
+        """Select a scan"""
+        sv = ScanVariables(nsweep)
+        sv.set(self.data, sweep[iscan - 1])
+        return sv

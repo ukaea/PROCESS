@@ -24,6 +24,7 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.data_structure.physics_variables import ConfinementTimeModel
+from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.build import Build
 from process.models.engineering.materials import (
     calculate_tresca_stress,
@@ -94,6 +95,8 @@ from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
 @dataclass
 class RadialBuild:
+    """Dataclass containing radial build dictionaries"""
+
     upper: dict[str, float]
     lower: dict[str, float]
     radial: dict[str, float]
@@ -3798,6 +3801,7 @@ def toroidal_cross_section(
 
 
 def TF_outboard(axis: plt.Axes, item, n_tf_coils, r3, r4, w, facecolor):
+    """Plot outboard TF coils"""
     spacing = 2 * np.pi / n_tf_coils
     ang = item * spacing
     dx = w * np.sin(ang)
@@ -4495,6 +4499,7 @@ def read_imprad_data(_skiprows, data_path):
 
 
 def profiles_with_pedestal(mfile, scan: int):
+    """Calculate profiles with pedestal"""
     alphan = mfile.get("alphan", scan=scan)
     alphat = mfile.get("alphat", scan=scan)
     nd_plasma_electron_on_axis = mfile.get("nd_plasma_electron_on_axis", scan=scan)
@@ -4571,29 +4576,28 @@ def profiles_with_pedestal(mfile, scan: int):
     return rho, ne, te
 
 
-def plot_radprofile(prof, mfile: MFile, scan: int, impp, demo_ranges: bool):
-    """Function to plot radiation profile, formula taken from ???.
+def plot_line_brem_power_density_profile(
+    axis: plt.Axes, mfile: MFile, scan: int, impp: str, demo_ranges: bool
+):
+    """Function to plot Line and Bremsstrahlung radiation power density profile.
 
     Parameters
     ----------
-    prof :
+    axis : plt.Axes
         axis object to add plot to
-    mfile :
-        MFILE
-    scan :
+    mfile : MFile
+        MFile object containing plasma and impurity profile information.
+    scan : int
         scan number to use
-    impp :
+    impp : str
         impurity path
-    mfile: MFile :
-
-    scan: int :
-
-    demo_ranges: bool :
+    demo_ranges : bool
+        whether to use fixed demo ranges for the plot
 
     """
-    prof.set_xlabel(r"$\rho \quad [r/a]$")
-    prof.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$")
-    prof.set_title("Raw Data: Line & Bremsstrahlung radiation profile")
+    axis.set_xlabel(r"$\rho \quad [r/a]$")
+    axis.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$")
+    axis.set_title("Raw Data: Line & Bremsstrahlung radiation profile")
 
     # read in the impurity data
     imp_data = read_imprad_data(_skiprows=2, data_path=impp)
@@ -4627,47 +4631,47 @@ def plot_radprofile(prof, mfile: MFile, scan: int, impp, demo_ranges: bool):
         for l_ in range(imp_data.shape[0]):
             prad[k] += pimpden[l_][k] * 1.0e-6
 
-    prof.plot(rho, prad, label="Total", linestyle="dotted")
-    prof.plot(rho, pimpden[0] * 1.0e-6, label="H")
-    prof.plot(rho, pimpden[1] * 1.0e-6, label="He")
+    axis.plot(rho, prad, label="Total", linestyle="dotted")
+    axis.plot(rho, pimpden[0] * 1.0e-6, label="H")
+    axis.plot(rho, pimpden[1] * 1.0e-6, label="He")
     if imp_frac[2] > 1.0e-30:
-        prof.plot(rho, pimpden[2] * 1.0e-6, label="Be")
+        axis.plot(rho, pimpden[2] * 1.0e-6, label="Be")
     if imp_frac[3] > 1.0e-30:
-        prof.plot(rho, pimpden[3] * 1.0e-6, label="C")
+        axis.plot(rho, pimpden[3] * 1.0e-6, label="C")
     if imp_frac[4] > 1.0e-30:
-        prof.plot(rho, pimpden[4] * 1.0e-6, label="N")
+        axis.plot(rho, pimpden[4] * 1.0e-6, label="N")
     if imp_frac[5] > 1.0e-30:
-        prof.plot(rho, pimpden[5] * 1.0e-6, label="O")
+        axis.plot(rho, pimpden[5] * 1.0e-6, label="O")
     if imp_frac[6] > 1.0e-30:
-        prof.plot(rho, pimpden[6] * 1.0e-6, label="Ne")
+        axis.plot(rho, pimpden[6] * 1.0e-6, label="Ne")
     if imp_frac[7] > 1.0e-30:
-        prof.plot(rho, pimpden[7] * 1.0e-6, label="Si")
+        axis.plot(rho, pimpden[7] * 1.0e-6, label="Si")
     if imp_frac[8] > 1.0e-30:
-        prof.plot(rho, pimpden[8] * 1.0e-6, label="Ar")
+        axis.plot(rho, pimpden[8] * 1.0e-6, label="Ar")
     if imp_frac[9] > 1.0e-30:
-        prof.plot(rho, pimpden[9] * 1.0e-6, label="Fe")
+        axis.plot(rho, pimpden[9] * 1.0e-6, label="Fe")
     if imp_frac[10] > 1.0e-30:
-        prof.plot(rho, pimpden[10] * 1.0e-6, label="Ni")
+        axis.plot(rho, pimpden[10] * 1.0e-6, label="Ni")
     if imp_frac[11] > 1.0e-30:
-        prof.plot(rho, pimpden[11] * 1.0e-6, label="Kr")
+        axis.plot(rho, pimpden[11] * 1.0e-6, label="Kr")
     if imp_frac[12] > 1.0e-30:
-        prof.plot(rho, pimpden[12] * 1.0e-6, label="Xe")
+        axis.plot(rho, pimpden[12] * 1.0e-6, label="Xe")
     if imp_frac[13] > 1.0e-30:
-        prof.plot(rho, pimpden[13] * 1.0e-6, label="W")
-    prof.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1), ncol=4)
-    prof.minorticks_on()
+        axis.plot(rho, pimpden[13] * 1.0e-6, label="W")
+    axis.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1), ncol=4)
+    axis.minorticks_on()
     # Plot a vertical line at the core region radius
     core_radius = mfile.get("radius_plasma_core_norm", scan=scan)
 
     # Plot a vertical line at the core region radius
-    prof.axvline(x=core_radius, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
+    axis.axvline(x=core_radius, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
     # Plot a box in the bottom left with f_{core,reduce}
     props_core_reduce = {"boxstyle": "round", "facecolor": "khaki", "alpha": 0.8}
-    prof.text(
+    axis.text(
         0.02,
         0.02,
         rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}",
-        transform=prof.transAxes,
+        transform=axis.transAxes,
         fontsize=8,
         verticalalignment="bottom",
         bbox=props_core_reduce,
@@ -4675,17 +4679,100 @@ def plot_radprofile(prof, mfile: MFile, scan: int, impp, demo_ranges: bool):
 
     # Ranges
     # ---
-    prof.set_xlim([0, 1.0])
-    prof.set_yscale("log")
-    prof.yaxis.grid(True, which="both", alpha=0.2)
+    axis.set_xlim([0, 1.0])
+    axis.set_yscale("log")
+    axis.yaxis.grid(True, which="both", alpha=0.2)
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        prof.set_ylim([1e-6, 0.5])
+        axis.set_ylim([1e-6, 0.5])
 
     # Adapatative ranges
     else:
-        prof.set_ylim([1e-6, prof.get_ylim()[1]])
+        axis.set_ylim([1e-6, axis.get_ylim()[1]])
     # ---
+
+
+def plot_line_brem_loss_function_profile(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+    impp: str,
+):
+    """Function to plot Line and Bremsstrahlung loss function (L_z) profile.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        axis object to add plot to
+    mfile : MFile
+        MFile object containing plasma and impurity profile information.
+    scan : int
+        scan number to use
+    impp : str
+        impurity path
+
+    """
+    # read in the impurity data
+    imp_data = read_imprad_data(_skiprows=2, data_path=impp)
+
+    # find impurity densities
+    imp_frac = np.array([
+        mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
+    ])
+
+    rho, _, te = profiles_with_pedestal(mfile, scan)
+
+    # Intailise the radiation profile arrays
+    lz = np.zeros([imp_data.shape[0], te.shape[0]])
+
+    # Intailise the impurity radiation profile
+    for k in range(te.shape[0]):
+        for i in range(imp_data.shape[0]):
+            if te[k] <= imp_data[i][0][0]:
+                lz[i][k] = imp_data[i][0][1]
+            elif te[k] >= imp_data[i][imp_data.shape[1] - 1][0]:
+                lz[i][k] = imp_data[i][imp_data.shape[1] - 1][1]
+            else:
+                # Use np.interp for log-log interpolation
+                log_te_data = np.log([row[0] for row in imp_data[i]])
+                log_lz_data = np.log([row[1] for row in imp_data[i]])
+                lz[i][k] = np.exp(np.interp(np.log(te[k]), log_te_data, log_lz_data))
+
+    axis.plot(rho, lz[0], label="H")
+    axis.plot(rho, lz[1], label="He")
+    if imp_frac[2] > 1.0e-30:
+        axis.plot(rho, lz[2], label="Be")
+    if imp_frac[3] > 1.0e-30:
+        axis.plot(rho, lz[3], label="C")
+    if imp_frac[4] > 1.0e-30:
+        axis.plot(rho, lz[4], label="N")
+    if imp_frac[5] > 1.0e-30:
+        axis.plot(rho, lz[5], label="O")
+    if imp_frac[6] > 1.0e-30:
+        axis.plot(rho, lz[6], label="Ne")
+    if imp_frac[7] > 1.0e-30:
+        axis.plot(rho, lz[7], label="Si")
+    if imp_frac[8] > 1.0e-30:
+        axis.plot(rho, lz[8], label="Ar")
+    if imp_frac[9] > 1.0e-30:
+        axis.plot(rho, lz[9], label="Fe")
+    if imp_frac[10] > 1.0e-30:
+        axis.plot(rho, lz[10], label="Ni")
+    if imp_frac[11] > 1.0e-30:
+        axis.plot(rho, lz[11], label="Kr")
+    if imp_frac[12] > 1.0e-30:
+        axis.plot(rho, lz[12], label="Xe")
+    if imp_frac[13] > 1.0e-30:
+        axis.plot(rho, lz[13], label="W")
+    axis.legend(loc="best", ncol=4)
+    axis.minorticks_on()
+
+    axis.set_xlabel(r"$\rho \quad [r/a]$")
+    axis.set_ylabel(r"$L_z$ $[\mathrm{W}\mathrm{m}^3]$")
+    axis.set_title("Line & Bremsstrahlung Loss Function ($L_z$) Profiles")
+    axis.set_xlim([0, 1.0])
+    axis.set_yscale("log")
+    axis.yaxis.grid(True, which="both", alpha=0.2)
 
 
 def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
@@ -5270,6 +5357,7 @@ def plot_blanket(
 
 
 def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot first wall top down cross-section"""
     # Import required variables
     radius_fw_channel = mfile.get("radius_fw_channel", scan=scan) * 100
     dr_fw_wall = mfile.get("dr_fw_wall", scan=scan) * 100
@@ -5381,6 +5469,7 @@ def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: MFile, scan: i
 
 
 def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot first wall poloidal cross-section"""
     # Import required variables
     radius_fw_channel = mfile.get("radius_fw_channel", scan=scan)
     dr_fw_wall = mfile.get("dr_fw_wall", scan=scan)
@@ -5794,7 +5883,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     r_tf_wp_inboard_outer = mfile.get("r_tf_wp_inboard_outer", scan=scan)
     r_tf_wp_inboard_centre = mfile.get("r_tf_wp_inboard_centre", scan=scan)
 
-    if i_tf_turns_integer == 1:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         turn_layers = mfile.get("n_tf_wp_layers", scan=scan)
         turn_pancakes = mfile.get("n_tf_wp_pancakes", scan=scan)
 
@@ -5954,7 +6043,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
         # Plot the rectangular WP
         if i_tf_wp_geom == 0:
-            if i_tf_turns_integer == 1:
+            if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
                 long_turns = round(turn_layers)
                 short_turns = round(turn_pancakes)
             else:
@@ -6842,6 +6931,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
 
 def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
+    """Plot info about the resistive TF coils"""
     # Add info about the steel casing surrounding the WP
     textstr_casing = (
         f"$\\mathbf{{Casing:}}$\n \n"
@@ -7150,13 +7240,13 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     # Import the TF turn variables then multiply into mm
     i_tf_turns_integer = mfile.get("i_tf_turns_integer", scan=scan)
     # If integer turns switch is on then the turns can have non square dimensions
-    if i_tf_turns_integer == 1:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         turn_width = mfile.get("dr_tf_turn", scan=scan)
         turn_height = mfile.get("dx_tf_turn", scan=scan)
         cable_space_width_radial = mfile.get("dr_tf_turn_cable_space", scan=scan)
         cable_space_width_toroidal = mfile.get("dx_tf_turn_cable_space", scan=scan)
 
-    elif i_tf_turns_integer == 0:
+    elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         turn_width = mfile.get("dx_tf_turn_general", scan=scan)
         cable_space_width = mfile.get("dx_tf_turn_cable_space_average", scan=scan)
 
@@ -7180,7 +7270,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
 
     # Plot the total turn shape
-    if i_tf_turns_integer == 0:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         axis.add_patch(
             Rectangle(
                 [0, 0],
@@ -7262,7 +7352,13 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
                 cable_space_bounds=cable_bounds,
                 pipe_center=(
                     turn_width / 2,
-                    (turn_width if i_tf_turns_integer == 0 else turn_height) / 2,
+                    (
+                        turn_width
+                        if TFWPIntegerTurnType(i_tf_turns_integer)
+                        == TFWPIntegerTurnType.NON_INTEGER
+                        else turn_height
+                    )
+                    / 2,
                 ),
                 pipe_radius=he_pipe_diameter / 2,
                 strand_diameter=strand_diameter,
@@ -7279,7 +7375,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         axis.set_ylim(-turn_width * 0.05, turn_width * 1.05)
 
     # Non square turns
-    elif i_tf_turns_integer == 1:
+    elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         axis.add_patch(
             Rectangle(
                 [0, 0],
@@ -7424,7 +7520,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         },
     )
 
-    if i_tf_turns_integer == 0:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         # Add info about the steel casing surrounding the WP
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
@@ -7434,7 +7530,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
             f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
         )
-    elif i_tf_turns_integer == 1:
+    elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
             f"Cable space: \n$\\Delta r$: {cable_space_width_radial:.3e} m \n"
@@ -7461,14 +7557,14 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         },
     )
 
-    if i_tf_turns_integer == 0:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         textstr_turn = (
             f"$\\mathbf{{Turn:}}$\n\n"
             f"$\\Delta r$: {turn_width:.3e} m\n"
             f"$\\Delta x$: {turn_width:.3e} m"
         )
 
-    if i_tf_turns_integer == 1:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         textstr_turn = (
             f"$\\mathbf{{Turn:}}$\n\n"
             f"$\\Delta r$: {turn_width:.3e} m\n"
@@ -7521,6 +7617,8 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f"Critical field at zero \ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
         f"Critical temperature at \nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
         f"Temperature at conductor: {mfile.get('tftmp', scan=scan):.4f} K\n"
+        f"Field at conductor: {mfile.get('b_tf_inboard_peak_with_ripple', scan=scan):.4f} T\n"
+        f"Superconductor critical current density at \noperating conditions: {mfile.get('j_tf_superconductor_critical', scan=scan):.2e} A/m$^2$\n"
         f"$I_{{\\text{{TF,turn critical}}}}$: {mfile.get('c_turn_cables_critical', scan=scan):,.2f} A\n"
         f"$I_{{\\text{{TF,turn}}}}$: {mfile.get('c_tf_turn', scan=scan):,.2f} A\n"
         f"Critcal current ratio: {mfile.get('f_c_tf_turn_operating_critical', scan=scan):,.4f}\n"
@@ -7553,13 +7651,13 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     # Import the TF turn variables then multiply into mm
     i_tf_turns_integer = mfile.get("i_tf_turns_integer", scan=scan)
     # If integer turns switch is on then the turns can have non square dimensions
-    if i_tf_turns_integer == 1:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         turn_width = mfile.get("dr_tf_turn", scan=scan)
         turn_height = mfile.get("dx_tf_turn", scan=scan)
         cable_space_width_radial = mfile.get("dr_tf_turn_cable_space", scan=scan)
         cable_space_width_toroidal = mfile.get("dx_tf_turn_cable_space", scan=scan)
 
-    elif i_tf_turns_integer == 0:
+    elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         turn_width = mfile.get("dx_tf_turn_general", scan=scan)
         cable_space_width = mfile.get("dx_tf_turn_cable_space_average", scan=scan)
 
@@ -7585,7 +7683,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     dia_tf_turn_croco_cable = mfile.get("dia_tf_turn_croco_cable", scan=scan)
 
     # Plot the total turn shape
-    if i_tf_turns_integer == 0:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         axis.add_patch(
             Rectangle(
                 [0, 0],
@@ -7703,7 +7801,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         },
     )
 
-    if i_tf_turns_integer == 0:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         # Add info about the steel casing surrounding the WP
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
@@ -7713,7 +7811,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
             f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
         )
-    elif i_tf_turns_integer == 1:
+    elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
             f"Cable space: \n$\\Delta r$: {cable_space_width_radial:.3e} m \n"
@@ -7740,14 +7838,14 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         },
     )
 
-    if i_tf_turns_integer == 0:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         textstr_turn = (
             f"$\\mathbf{{Turn:}}$\n\n"
             f"$\\Delta r$: {turn_width:.3e} m\n"
             f"$\\Delta x$: {turn_width:.3e} m"
         )
 
-    if i_tf_turns_integer == 1:
+    if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         textstr_turn = (
             f"$\\mathbf{{Turn:}}$\n\n"
             f"$\\Delta r$: {turn_width:.3e} m\n"
@@ -7799,6 +7897,8 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f"Critical field at zero \ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
         f"Critical temperature at \nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
         f"Temperature at conductor: {mfile.get('tftmp', scan=scan):.4f} K\n"
+        f"Field at conductor: {mfile.get('b_tf_inboard_peak_with_ripple', scan=scan):.4f} T\n"
+        f"Superconductor critical current density at \noperating conditions: {mfile.get('j_tf_superconductor_critical', scan=scan):.2e} A/m$^2$\n"
         f"$I_{{\\text{{TF,turn critical}}}}$: {mfile.get('c_turn_cables_critical', scan=scan):,.2f} A\n"
         f"$I_{{\\text{{TF,turn}}}}$: {mfile.get('c_tf_turn', scan=scan):,.2f} A\n"
         f"Critcal current ratio: {mfile.get('f_c_tf_turn_operating_critical', scan=scan):,.4f}\n"
@@ -8916,6 +9016,85 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     axis.set_facecolor("#f0f0f0")
 
 
+def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: int):
+    """Function to plot a scatter box plot of SOL power decay lengths (λ_q).
+
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE data object
+    scan :
+        scan number to use
+    """
+    len_plasma_sol_eich13_power_decay_mm = (
+        mfile.get("len_plasma_sol_eich13_power_decay", scan=scan) * 1e3
+    )
+    len_plasma_sol_mast14_power_decay_1_mm = (
+        mfile.get("len_plasma_sol_mast14_power_decay_1", scan=scan) * 1e3
+    )
+    len_plasma_sol_mast14_power_decay_2_mm = (
+        mfile.get("len_plasma_sol_mast14_power_decay_2", scan=scan) * 1e3
+    )
+
+    # Data for the box plot
+    data = {
+        "Eich 2013": len_plasma_sol_eich13_power_decay_mm,
+        "MAST 2014 (1)": len_plasma_sol_mast14_power_decay_1_mm,
+        "MAST 2014 (2)": len_plasma_sol_mast14_power_decay_2_mm,
+    }
+    # Create the violin plot
+    axis.violinplot(data.values(), showextrema=False)
+
+    # Create the box plot
+    axis.boxplot(
+        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
+    )
+
+    # Scatter plot for each data point
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    for index, (key, value) in enumerate(data.items()):
+        axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
+    axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
+
+    # Calculate average, standard deviation, and median
+    data_values = list(data.values())
+    avg_decay_length = np.mean(data_values)
+    std_decay_length = np.std(data_values)
+    median_decay_length = np.median(data_values)
+
+    # Plot average, standard deviation, and median as text
+    axis.text(
+        1.02,
+        0.2,
+        f"Average: {avg_decay_length:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.02,
+        0.15,
+        f"Standard Dev: {std_decay_length:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.02,
+        0.1,
+        f"Median: {median_decay_length:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+
+    axis.set_title("SOL Power Decay Length ($\\lambda_q$) Comparison")
+    axis.set_ylabel("Power Decay Length [mm]")
+    axis.set_xlim([0.5, 1.5])
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+    axis.set_facecolor("#f0f0f0")
+
+
 def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=None):
     """Function to plot a scatter box plot of L-H threshold power comparisons.
 
@@ -9068,15 +9247,15 @@ def plot_confinement_time_comparison(
     """
     rminor = mfile.get("rminor", scan=scan)
     rmajor = mfile.get("rmajor", scan=scan)
-    c_plasma_ma = mfile.get("plasma_current_ma", scan=scan)
+    cur_plasma_ma = mfile.get("plasma_current_ma", scan=scan)
     kappa95 = mfile.get("kappa95", scan=scan)
-    dnla20 = mfile.get("nd_plasma_electron_line", scan=scan) / 1e20
+    nd_plasma_electron_line_20 = mfile.get("nd_plasma_electron_line", scan=scan) / 1e20
     afuel = mfile.get("m_fuel_amu", scan=scan)
     b_plasma_toroidal_on_axis = mfile.get("b_plasma_toroidal_on_axis", scan=scan)
     p_plasma_separatrix_mw = mfile.get("p_plasma_separatrix_mw", scan=scan)
     kappa = mfile.get("kappa", scan=scan)
     aspect = mfile.get("aspect", scan=scan)
-    dnla19 = mfile.get("nd_plasma_electron_line", scan=scan) / 1e19
+    nd_plasma_electron_line_19 = mfile.get("nd_plasma_electron_line", scan=scan) / 1e19
     kappa_ipb = mfile.get("kappa_ipb", scan=scan)
     triang = mfile.get("triang", scan=scan)
     m_ions_total_amu = mfile.get("m_ions_total_amu", scan=scan)
@@ -9085,37 +9264,37 @@ def plot_confinement_time_comparison(
 
     # Calculate confinement times using the scan data
     iter_89p = confine.iter_89p_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         rmajor=rmajor,
         rminor=rminor,
         kappa=kappa,
-        dnla20=dnla20,
+        nd_plasma_electron_line_20=nd_plasma_electron_line_20,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         afuel=afuel,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
     )
     iter_89_0 = confine.iter_89_0_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         rmajor=rmajor,
         rminor=rminor,
         kappa=kappa,
-        dnla20=dnla20,
+        nd_plasma_electron_line_20=nd_plasma_electron_line_20,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         afuel=afuel,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
     )
     iter_h90_p = confine.iter_h90_p_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         rmajor=rmajor,
         rminor=rminor,
         kappa=kappa,
-        dnla20=dnla20,
+        nd_plasma_electron_line_20=nd_plasma_electron_line_20,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         afuel=afuel,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
     )
     iter_h90_p_amended = confine.iter_h90_p_amended_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         afuel=afuel,
         rmajor=rmajor,
@@ -9123,49 +9302,49 @@ def plot_confinement_time_comparison(
         kappa=kappa,
     )
     iter_93h = confine.iter_93h_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         afuel=afuel,
         rmajor=rmajor,
-        dnla20=dnla20,
+        nd_plasma_electron_line_20=nd_plasma_electron_line_20,
         aspect=aspect,
         kappa=kappa,
     )
     iter_h97p = confine.iter_h97p_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         rmajor=rmajor,
         aspect=aspect,
         kappa=kappa,
         afuel=afuel,
     )
     iter_h97p_elmy = confine.iter_h97p_elmy_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         rmajor=rmajor,
         aspect=aspect,
         kappa=kappa,
         afuel=afuel,
     )
     iter_96p = confine.iter_96p_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         kappa95=kappa95,
         rmajor=rmajor,
         aspect=aspect,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         afuel=afuel,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
     )
     iter_pb98py = confine.iter_pb98py_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
         kappa=kappa,
@@ -9173,9 +9352,9 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     iter_ipb98y = confine.iter_ipb98y_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
         kappa=kappa,
@@ -9183,9 +9362,9 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     iter_ipb98y1 = confine.iter_ipb98y1_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
         kappa_ipb=kappa_ipb,
@@ -9193,9 +9372,9 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     iter_ipb98y2 = confine.iter_ipb98y2_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
         kappa_ipb=kappa_ipb,
@@ -9203,9 +9382,9 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     iter_ipb98y3 = confine.iter_ipb98y3_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
         kappa_ipb=kappa_ipb,
@@ -9213,9 +9392,9 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     iter_ipb98y4 = confine.iter_ipb98y4_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
         kappa_ipb=kappa_ipb,
@@ -9223,18 +9402,18 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     petty08 = confine.petty08_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
         kappa_ipb=kappa_ipb,
         aspect=aspect,
     )
     menard_nstx = confine.menard_nstx_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
         kappa_ipb=kappa_ipb,
@@ -9242,9 +9421,9 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     menard_nstx_petty08 = confine.menard_nstx_petty08_hybrid_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
         kappa_ipb=kappa_ipb,
@@ -9252,9 +9431,9 @@ def plot_confinement_time_comparison(
         afuel=afuel,
     )
     itpa20 = confine.itpa20_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
         triang=triang,
@@ -9263,10 +9442,10 @@ def plot_confinement_time_comparison(
         aion=m_ions_total_amu,
     )
     itpa20_ilc = confine.itpa20_il_confinement_time(
-        pcur=c_plasma_ma,
+        cur_plasma_ma=cur_plasma_ma,
         b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
-        dnla19=dnla19,
+        nd_plasma_electron_line_19=nd_plasma_electron_line_19,
         aion=m_ions_total_amu,
         rmajor=rmajor,
         triang=triang,
@@ -10179,6 +10358,7 @@ def plot_cs_stress_time_profile(axis: plt.Axes, mfile: MFile, scan: int) -> None
 
 
 def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
+    """Plot the CS turn structure"""
     a_cs_turn = mfile.get("a_cs_turn", scan=scan)
     dz_cs_turn = mfile.get("dz_cs_turn", scan=scan)
     dr_cs_turn = mfile.get("dr_cs_turn", scan=scan)
@@ -10285,7 +10465,7 @@ def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
 
 def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme=1):
-    # Plot the TF coil poloidal cross-section
+    """Plot the TF coil poloidal cross-section"""
     plot_tf_coils(axis, mfile, scan, colour_scheme)
 
     x1 = mfile.get("r_tf_arc(1)", scan=scan)
@@ -11475,7 +11655,7 @@ def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
 
 
 def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
-    # Plot the fusion rate profiles on the given axis
+    """Plot the fusion rate profiles on the given axis"""
     fusrat_plasma_dt_profile = []
     fusrat_plasma_dd_triton_profile = []
     fusrat_plasma_dd_helion_profile = []
@@ -12053,7 +12233,7 @@ def plot_cover_page(
 
 
 def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
-    # Plot the plasma pressure profiles on the given axis
+    """Plot the plasma pressure profiles on the given axis"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     pres_plasma_profile = [
@@ -12310,6 +12490,7 @@ def plot_max_normalised_beta_comparison(axis: plt.Axes, mfile: MFile, scan: int)
 
 
 def plot_plasma_pressure_gradient_profiles(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot plasma pressure gradient profiles"""
     # Get the plasma pressure profiles
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
@@ -12434,6 +12615,7 @@ def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: MFile, scan: i
 
 
 def interp1d_profile(profile, mfile: MFile, scan: int):
+    """Interpolate profile over a grid"""
     # Get plasma geometry and boundary
     pg = plasma_geometry(
         rmajor=mfile.get("rmajor", scan=scan),
@@ -12612,7 +12794,7 @@ def plot_hts_tape_geometry(
     dx_hts_tape_hastelloy: float,
     show_legend: bool = True,
 ):
-
+    """Plot HTS tape geometry"""
     legend_label = None if show_legend else "_nolegend_"
     # Plot a rectangular tape stack in the middle
     rect = Rectangle(
@@ -12695,7 +12877,7 @@ def plot_hts_tape_geometry(
 
 
 def plot_tf_corc_cable_summary_box(axis, fig, mfile: MFile, scan: int):
-
+    """Plot TF CORC cable summary box"""
     textstr_cable = (
         f"$\\mathbf{{CroCo \\ Cable:}}$\n \n"
         f"Cable diameter: {mfile.get('dia_tf_turn_croco_cable', scan=scan) * 1e3:,.4f} mm\n"
@@ -12739,6 +12921,7 @@ def reaction_plot_grid(
     fractions=(0.25, 0.5, 0.75),
     colours=("blue", "yellow", "red"),
 ):
+    """Plot fusion reaction rate"""
     # Mask points outside the plasma boundary (optional, but grid is inside by construction)
     # Plot filled contour
 
@@ -12802,6 +12985,7 @@ def plot_fusion_rate_contours(
     mfile: MFile,
     scan: int,
 ):
+    """Plot fusion rate contours"""
     fusrat_plasma_dt_profile = []
     fusrat_plasma_dd_triton_profile = []
     fusrat_plasma_dd_helion_profile = []
@@ -12862,8 +13046,7 @@ def plot_fusion_rate_contours(
 
 
 def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
-    # Plot magnetic field profiles inside the plasma boundary
-
+    """Plot magnetic field profiles inside the plasma boundary"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     # Get toroidal magnetic field profile (in Tesla)
@@ -12912,7 +13095,8 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
     axis.text(
         0.1,
         0.025,
-        f"$B_{{\\text{{T,inboard}}}}={mfile.get('b_plasma_inboard_toroidal', scan=scan):.2f}$ T",
+        f"$B_{{\\text{{T,inboard}}}}={mfile.get('b_plasma_inboard_toroidal', scan=scan):.2f}$ T\n"
+        f"$B_{{\\text{{total,inboard}}}}={mfile.get('b_plasma_inboard_total', scan=scan):.2f}$ T",
         verticalalignment="center",
         horizontalalignment="center",
         transform=axis.transAxes,
@@ -12923,7 +13107,8 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
     axis.text(
         0.9,
         0.1,
-        f"$B_{{\\text{{T,outboard}}}}={mfile.get('b_plasma_outboard_toroidal', scan=scan):.2f}$ T",
+        f"$B_{{\\text{{T,outboard}}}}={mfile.get('b_plasma_outboard_toroidal', scan=scan):.2f}$ T\n"
+        f"$B_{{\\text{{total,outboard}}}}={mfile.get('b_plasma_outboard_total', scan=scan):.2f}$ T",
         verticalalignment="center",
         horizontalalignment="center",
         transform=axis.transAxes,
@@ -12942,8 +13127,7 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
 
 
 def plot_beta_profiles(axis: plt.Axes, mfile: MFile, scan: int):
-    # Plot the beta profiles on the given axis
-
+    """Plot the beta profiles on the given axis"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     beta_plasma_toroidal_profile = [
@@ -12978,6 +13162,7 @@ def plot_beta_profiles(axis: plt.Axes, mfile: MFile, scan: int):
 
 
 def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: MFile, scan: int):
+    """Plot plasma outboard toroidal ripple map"""
     r_tf_outboard_mid = mfile.get("r_tf_outboard_mid", scan=scan)
     n_tf_coils = mfile.get("n_tf_coils", scan=scan)
     rmajor = mfile.get("rmajor", scan=scan)
@@ -13292,6 +13477,7 @@ def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: MFile, scan: int):
 
 
 def plot_plasma_effective_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot plasma effective charge profile"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     n_charge_plasma_effective_vol_avg = mfile.get(
@@ -13327,6 +13513,7 @@ def plot_plasma_effective_charge_profile(axis: plt.Axes, mfile: MFile, scan: int
 
 
 def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot ion charge profile"""
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     # find impurity densities
@@ -13396,7 +13583,7 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
 
 
 def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: MFile, scan: int):
-    # Plot EBW and ECRH coupling efficiency graph
+    """Plot EBW and ECRH coupling efficiency graph"""
     ebw = ElectronBernstein(plasma_profile=0)
     ecrg = ElectronCyclotron(plasma_profile=0)
     b_on_axis = mfile.get("b_plasma_toroidal_on_axis", scan=scan)
@@ -14975,6 +15162,11 @@ def plot_quench_time_evolution(
     show:
         Whether to display the plot with Matplotlib. Defaults to False to avoid
         GUI backend warnings in non-interactive environments.
+
+    Raises
+    ------
+    ValueError
+        If only one set of axes is provided, instead of both or neither
     """
     figure = None
     if axes_1 is None and axes_2 is None:
@@ -15281,6 +15473,7 @@ def plot_cs_radial_stress_profile(
     j_cs: float,
     b_cs_inner: float,
 ):
+    """Plot CS radial stress profile"""
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
 
@@ -15322,6 +15515,7 @@ def plot_cs_hoop_stress_profile(
     j_cs: float,
     b_cs_inner: float,
 ):
+    """Plot CS hoop stress profile"""
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
 
@@ -15365,6 +15559,7 @@ def plot_cs_radial_stress_contour_profile(
     b_cs_inner: float,
     colorbar_axis: plt.Axes | None = None,
 ):
+    """Plot CS radial stress contour profile"""
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
@@ -15456,6 +15651,7 @@ def plot_cs_hoop_stress_contour_profile(
     b_cs_inner: float,
     colorbar_axis: plt.Axes | None = None,
 ):
+    """Plot CS hoop stress contour profile"""
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
@@ -15546,6 +15742,7 @@ def plot_cs_vertical_stress_profile(
     mfile: MFile,
     scan: int,
 ):
+    """Plot CS vertical stress profile"""
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
 
     stress_z_profile = np.array([
@@ -15578,6 +15775,7 @@ def plot_vertical_stress_contour_profile(
     scan: int,
     colorbar_axis: plt.Axes | None = None,
 ):
+    """Vertical stress contour plot"""
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
@@ -15659,6 +15857,7 @@ def plot_cs_tresca_2d_contour(
     scan: int,
     colorbar_axis: plt.Axes | None = None,
 ):
+    """CS Tresca stress contour plot"""
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
@@ -15769,6 +15968,7 @@ def plot_cs_von_mises_2d_contour(
     scan: int,
     colorbar_axis: plt.Axes | None = None,
 ):
+    """CS Von Mises stress contour plot"""
     dz_cs_full = mfile.get("dz_cs_full", scan=scan)
     r_cs_inner = mfile.get("r_cs_inner", scan=scan)
     r_cs_outer = mfile.get("r_cs_outer", scan=scan)
@@ -15873,6 +16073,145 @@ def plot_cs_von_mises_2d_contour(
     axis.set_ylim((-dz_cs_full / 2) * 1.1, (dz_cs_full / 2) * 1.1)
     axis.grid(True, alpha=0.3)
     axis.set_title("CS Von Mises Stress Contour at BOP")
+
+
+def plot_pf_dimensions(
+    axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1, 2] = 1
+) -> None:
+    """Plot the PF coil dimensions on the given axis."""
+    r_pf_coil_middle = []
+    z_pf_coil_middle = []
+    radial_thicknesses = []
+    vertical_thicknesses = []
+    for coil in range(int(mfile.get("n_pf_cs_plasma_circuits", scan=scan) - 2)):
+        r_pf_coil_middle.append(mfile.get(f"r_pf_coil_middle[{coil}]", scan=scan))
+        z_pf_coil_middle.append(mfile.get(f"z_pf_coil_middle[{coil}]", scan=scan))
+        radial_thicknesses.append(mfile.get(f"pfdr({coil})", scan=scan))
+        vertical_thicknesses.append(mfile.get(f"pfdz({coil})", scan=scan))
+
+    plot_pf_coils(axis=axis, mfile=mfile, scan=scan, colour_scheme=colour_scheme)
+
+    if r_pf_coil_middle:
+        for r_middle, z_middle, dr_coil, dz_coil in zip(
+            r_pf_coil_middle,
+            z_pf_coil_middle,
+            radial_thicknesses,
+            vertical_thicknesses,
+            strict=False,
+        ):
+            half_radial_thickness = dr_coil / 2
+            half_vertical_thickness = dz_coil / 2
+            coil_left = r_middle - half_radial_thickness
+            coil_right = r_middle + half_radial_thickness
+            coil_bottom = z_middle - half_vertical_thickness
+            coil_top = z_middle + half_vertical_thickness
+
+            for x_position in (coil_left, r_middle, coil_right):
+                axis.axvline(
+                    x=x_position,
+                    color="r",
+                    linewidth=0.8,
+                    linestyle="--" if x_position == r_middle else "-",
+                    alpha=0.3,
+                    zorder=4,
+                )
+
+            for y_position in (coil_bottom, z_middle, coil_top):
+                axis.axhline(
+                    y=y_position,
+                    xmax=coil_left,
+                    color="r",
+                    linewidth=0.8,
+                    linestyle="--" if y_position == z_middle else "-",
+                    alpha=0.3,
+                    zorder=4,
+                )
+
+            axis.annotate(
+                f"({r_middle:.3f}, {z_middle:.3f})",
+                xy=(coil_left * 0.925, z_middle),
+                ha="right",
+                va="center",
+                fontsize=8,
+                zorder=6,
+                bbox={
+                    "boxstyle": "round,pad=0.2",
+                    "fc": "white",
+                    "alpha": 1.0,
+                    "ec": "none",
+                },
+            )
+
+            radial_arrow_y = coil_bottom if z_middle < 0 else coil_top
+            radial_label_offset = (0, -24) if z_middle < 0 else (0, 4)
+            radial_label_va = "top" if z_middle < 0 else "bottom"
+            axis.annotate(
+                "",
+                xy=(coil_left, radial_arrow_y),
+                xytext=(coil_right, radial_arrow_y),
+                arrowprops={
+                    "arrowstyle": "<->",
+                    "linewidth": 0.8,
+                    "color": "red",
+                    "shrinkA": 0,
+                    "shrinkB": 0,
+                },
+                zorder=5,
+            )
+            axis.annotate(
+                f"ΔR={abs(dr_coil):.3f}",
+                xy=(r_middle, radial_arrow_y),
+                xytext=radial_label_offset,
+                textcoords="offset points",
+                ha="center",
+                va=radial_label_va,
+                fontsize=8,
+                zorder=6,
+                bbox={
+                    "boxstyle": "round,pad=0.2",
+                    "fc": "white",
+                    "alpha": 1.0,
+                    "ec": "none",
+                },
+            )
+
+            vertical_arrow_x = coil_right
+            axis.annotate(
+                "",
+                xy=(vertical_arrow_x, coil_bottom),
+                xytext=(vertical_arrow_x, coil_top),
+                arrowprops={
+                    "arrowstyle": "<->",
+                    "linewidth": 0.8,
+                    "color": "red",
+                    "shrinkA": 0,
+                    "shrinkB": 0,
+                },
+            )
+            axis.annotate(
+                f"ΔZ={abs(dz_coil):.3f}",
+                xy=(vertical_arrow_x, z_middle),
+                xytext=(4, 0),
+                textcoords="offset points",
+                ha="left",
+                va="center",
+                fontsize=8,
+                zorder=6,
+                bbox={
+                    "boxstyle": "round,pad=0.2",
+                    "fc": "white",
+                    "alpha": 1.0,
+                    "ec": "none",
+                },
+            )
+
+    axis.set_title("PF Coil Dimensions")
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.set_xlim(left=0.0)
+    axis.minorticks_on()
+    axis.grid(True, alpha=0.3)
+    axis.set_aspect("equal", adjustable="box")
 
 
 def plot_tritium_flow_contour(axis: plt.Axes, mfile: MFile, scan: int):
@@ -16239,7 +16578,13 @@ def main_plot(
     pages = {}
 
     def _add_page(name: str | None = None):
-        """Add a page to the dictionary of pages. If no name is provided, then assign the lowest unused number."""
+        """Add a page to the dictionary of pages. If no name is provided, then assign the lowest unused number.
+
+        Raises
+        ------
+        KeyError
+            If a page number has already been used
+        """
         if name is None:
             prev_index = max((int(k) for k in pages if k.isnumeric()), default=0)
             name = str(prev_index + 1)
@@ -16309,7 +16654,9 @@ def main_plot(
     # Plot impurity profiles
     ax11 = pages["profiles"].add_subplot(233)
     ax11.set_position([0.7, 0.45, 0.25, 0.5])
-    plot_radprofile(ax11, m_file, scan, imp, demo_ranges)
+    plot_line_brem_power_density_profile(
+        axis=ax11, mfile=m_file, scan=scan, impp=imp, demo_ranges=demo_ranges
+    )
 
     # Plot current density profile
     ax12 = pages["profiles"].add_subplot(4, 3, 10)
@@ -16321,10 +16668,27 @@ def main_plot(
     ax13.set_position([0.7, 0.105, 0.25, 0.15])
     plot_qprofile(ax13, demo_ranges, m_file, scan)
 
-    plot_plasma_effective_charge_profile(
-        _add_page("rad_contour").add_subplot(221), m_file, scan
+    ax_line_brem = _add_page("rad_contour").add_subplot(325)
+    plot_line_brem_loss_function_profile(
+        axis=ax_line_brem,
+        mfile=m_file,
+        scan=scan,
+        impp=imp,
     )
-    plot_ion_charge_profile(pages["rad_contour"].add_subplot(223), m_file, scan)
+
+    ax_zeff = pages["rad_contour"].add_subplot(321, sharex=ax_line_brem)
+    plot_plasma_effective_charge_profile(ax_zeff, m_file, scan)
+    ax_zeff.set_xlabel("")
+    ax_zeff.tick_params(
+        axis="x", which="both", bottom=True, top=False, labelbottom=False
+    )
+
+    ax_ion_charge = pages["rad_contour"].add_subplot(323, sharex=ax_line_brem)
+    plot_ion_charge_profile(ax_ion_charge, m_file, scan)
+    ax_ion_charge.set_xlabel("")
+    ax_ion_charge.tick_params(
+        axis="x", which="both", bottom=True, top=False, labelbottom=False
+    )
 
     if i_shape == 1:
         plot_rad_contour(pages["rad_contour"].add_subplot(122), m_file, scan, imp)
@@ -16413,7 +16777,9 @@ def main_plot(
         )
         ax.axis("off")
 
-    plot_magnetic_fields_in_plasma(_add_page("beta").add_subplot(122), m_file, scan)
+    plot_magnetic_fields_in_plasma(
+        _add_page("beta").add_subplot(122, aspect="equal"), m_file, scan
+    )
     plot_beta_profiles(pages["beta"].add_subplot(221), m_file, scan)
 
     plot_ebw_ecrh_coupling_graph(_add_page().add_subplot(111), m_file, scan)
@@ -16432,6 +16798,10 @@ def main_plot(
     )
     plot_confinement_time_comparison(
         pages["plasma_compare_2"].add_subplot(224), m_file, scan
+    )
+
+    plot_sol_power_decay_length_comparison(
+        _add_page("plasma_compare_3").add_subplot(221), m_file, scan
     )
 
     plot_debye_length_profile(
@@ -16647,6 +17017,13 @@ def main_plot(
 
     plot_tf_stress(_add_page().subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
+    plot_pf_dimensions(
+        axis=_add_page("pf_dimensions").add_subplot(121, aspect="equal"),
+        mfile=m_file,
+        scan=scan,
+        colour_scheme=colour_scheme,
+    )
+
     plot_current_profiles_over_time(_add_page().add_subplot(111), m_file, scan)
 
     plot_pf_cs_plasma_mutual_inductance(_add_page().add_subplot(111), m_file, scan)
@@ -16817,7 +17194,7 @@ def main_plot(
 
 
 def create_thickness_builds(m_file, scan: int):
-    # Build the dictionaries of radial and vertical build values and cumulative values
+    """Create the dictionaries of radial and vertical build values and cumulative values"""
     if int(m_file.get("i_single_null", scan=scan)) == 0:
         vertical_upper = [
             "z_plasma_xpoint_upper",
@@ -16893,6 +17270,7 @@ def plot_summary(
     output_format: str = "pdf",
     show: bool = False,
 ):
+    """Create the summary.pdf"""
 
     def add_page_footer(
         fig: plt.Figure, page_number: int, total_pages: int, run_label: str

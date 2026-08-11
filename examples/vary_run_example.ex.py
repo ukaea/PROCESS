@@ -14,6 +14,8 @@
 #     name: python3
 # ---
 
+# %%
+"""An example to demonstrate VaryRun"""
 # %% [markdown]
 # # Demonstration of VaryRun
 

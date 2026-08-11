@@ -204,7 +204,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 )
 def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_hcpb):
     """
-    Automatically generated Regression Unit Test for nuclear_heating_magnets.
+    Automatically generated Unit Test for nuclear_heating_magnets.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -365,7 +365,7 @@ class NuclearHeatingFwParam(NamedTuple):
 )
 def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
     """
-    Automatically generated Regression Unit Test for nuclear_heating_fw.
+    Automatically generated Unit Test for nuclear_heating_fw.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -433,7 +433,7 @@ class NuclearHeatingBlanketParam(NamedTuple):
 )
 def test_nuclear_heating_blanket(nuclearheatingblanketparam, ccfe_hcpb):
     """
-    Automatically generated Regression Unit Test for nuclear_heating_blanket.
+    Automatically generated Unit Test for nuclear_heating_blanket.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -511,7 +511,7 @@ class NuclearHeatingShieldParam(NamedTuple):
 )
 def test_nuclear_heating_shield(nuclearheatingshieldparam, ccfe_hcpb):
     """
-    Automatically generated Regression Unit Test for nuclear_heating_shield.
+    Automatically generated Unit Test for nuclear_heating_shield.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -728,7 +728,7 @@ class PowerflowCalcParam(NamedTuple):
 )
 def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     """
-    Automatically generated Regression Unit Test for powerflow_calc.
+    Automatically generated Unit Test for powerflow_calc.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -865,7 +865,7 @@ class StCpAngleFractionParam(NamedTuple):
 )
 def test_st_cp_angle_fraction(stcpanglefractionparam, ccfe_hcpb):
     """
-    Automatically generated Regression Unit Test for st_cp_angle_fraction.
+    Automatically generated Unit Test for st_cp_angle_fraction.
 
     This test was generated using data from the FNSF IN.DAT
     (no longer exists in the PROCESS repository).
@@ -919,7 +919,7 @@ def test_st_tf_centrepost_fast_neut_flux(
     sttfcentrepostfastneutfluxparam, monkeypatch, ccfe_hcpb
 ):
     """
-    Automatically generated Regression Unit Test for st_tf_centrepost_fast_neut_flux.
+    Automatically generated Unit Test for st_tf_centrepost_fast_neut_flux.
 
     This test was generated using data from the Menard_HTS-PP IN.DAT
     (no longer exists in the PROCESS repository)
@@ -989,7 +989,7 @@ def test_st_centrepost_nuclear_heating(
     stcentrepostnuclearheatingparam, monkeypatch, ccfe_hcpb
 ):
     """
-    Automatically generated Regression Unit Test for st_centrepost_nuclear_heating.
+    Automatically generated Unit Test for st_centrepost_nuclear_heating.
 
     This test was generated using data from Menard_HTS-PP IN.DAT
     (no longer exists in the PROCESS repository)
@@ -1169,7 +1169,7 @@ class ComponentMassesParam(NamedTuple):
 )
 def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     """
-    Automatically generated Regression Unit Test for component_masses.
+    Automatically generated Unit Test for component_masses.
 
     This test was generated using data from
     large_tokamak_eval.IN.DAT.

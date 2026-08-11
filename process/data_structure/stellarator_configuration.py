@@ -1,8 +1,12 @@
+"""Module containing variables for the stellarator configuration"""
+
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class StellaratorConfigData:
+    """Dataclass holding stellarator config variables"""
+
     stella_config_name: str = ""
     """Name of the configuration"""
 

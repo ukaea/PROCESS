@@ -1,3 +1,5 @@
+"""Module to call the stellarator divertor model."""
+
 import numpy as np
 
 from process.core import constants

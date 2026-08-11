@@ -1,16 +1,12 @@
-"""
-This module contains the PROCESS CCFE HCPB blanket model
-based on CCFE HCPB model from the PROCESS engineering paper
-PROCESS Engineering paper (M. Kovari et al.)
-### References
-- Kovari et al., Fusion Engineering and Design 104 (2016) 9-20
-"""
+"""Module containing variables for the CCFE HCPB models"""
 
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class CCFEHCPBData:
+    """Dataclass holding CCFE HCPB variables"""
+
     armour_density: float = 0.0
     """FW armour density [kg/m3]"""
 

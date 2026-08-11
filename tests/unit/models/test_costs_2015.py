@@ -665,7 +665,7 @@ class CalcBuildingCostsParam:
 )
 def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     """
-    Automatically generated Regression Unit Test for calc_building_costs.
+    Automatically generated Unit Test for calc_building_costs.
 
     This test was generated using data from
     the costs paper IN.DAT (no longer exists in the PROCESS repository)
@@ -1443,7 +1443,7 @@ class CalcLandCostsParam:
 )
 def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
     """
-    Automatically generated Regression Unit Test for calc_land_costs.
+    Automatically generated Unit Test for calc_land_costs.
 
     This test was generated using data from
     the costs paper IN.DAT (no longer exists in the PROCESS repository)
@@ -2222,7 +2222,7 @@ class CalcTfCoilCostsParam:
 )
 def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
     """
-    Automatically generated Regression Unit Test for calc_tf_coil_costs.
+    Automatically generated Unit Test for calc_tf_coil_costs.
 
     This test was generated using data from
     the costs paper IN.DAT (no longer exists in the PROCESS repository)
@@ -3096,7 +3096,7 @@ def test_calc_remote_handling_costs(
     calcremotehandlingcostsparam, monkeypatch, costs2015
 ):
     """
-    Automatically generated Regression Unit Test for calc_remote_handling_costs.
+    Automatically generated Unit Test for calc_remote_handling_costs.
 
     This test was generated using data from
     the costs paper IN.DAT (no longer exists in the PROCESS repository)
@@ -3992,7 +3992,7 @@ class CalcNPlantAndVvCostsParam:
 )
 def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs2015):
     """
-    Automatically generated Regression Unit Test for calc_n_plant_and_vv_costs.
+    Automatically generated Unit Test for calc_n_plant_and_vv_costs.
 
     This test was generated using data from
     the costs paper IN.DAT (no longer exists in the PROCESS repository)
@@ -4909,7 +4909,7 @@ def test_calc_energy_conversion_system(
     calcenergyconversionsystemparam, monkeypatch, costs2015
 ):
     """
-    Automatically generated Regression Unit Test for calc_energy_conversion_system.
+    Automatically generated Unit Test for calc_energy_conversion_system.
 
     This test was generated using data from
     the costs paper IN.DAT (no longer exists in the PROCESS repository)
@@ -5958,7 +5958,7 @@ class CalcRemainingSubsystemsParam:
 )
 def test_calc_remaining_subsystems(calcremainingsubsystemsparam, monkeypatch, costs2015):
     """
-    Automatically generated Regression Unit Test for calc_remaining_subsystems.
+    Automatically generated Unit Test for calc_remaining_subsystems.
 
     This test was generated using data from
     the costs paper IN.DAT (no longer exists in the PROCESS repository)
@@ -6095,7 +6095,7 @@ class ValueFunctionParam:
 )
 def test_value_function(valuefunctionparam, monkeypatch, costs2015):
     """
-    Automatically generated Regression Unit Test for value_function.
+    Automatically generated Unit Test for value_function.
 
     This test was generated using data from
     the costs paper IN.DAT (no longer exists in the PROCESS repository)

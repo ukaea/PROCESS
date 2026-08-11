@@ -1,3 +1,5 @@
+"""Module containing iteration variable initialisation routines"""
+
 from __future__ import annotations
 
 import logging
@@ -17,6 +19,8 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class IterationVariable:
+    """Dataclass holding information about iteration variables"""
+
     name: str
     """The name of the variable"""
     module: str | Any
@@ -276,6 +280,12 @@ def check_iteration_variable(iteration_variable_value, name: str = ""):
 
     name: str :
          (Default value = "")
+
+    Raises
+    ------
+    ProcessValueError
+        If an iteration variable is 0 or very close, or if an iteration
+        variable is NaN or infinity
     """
     if abs(iteration_variable_value) <= 1e-12:
         error_msg = f"Iteration variable {name} is 0 (or very close)"
@@ -293,6 +303,11 @@ def check_iteration_variable(iteration_variable_value, name: str = ""):
 def load_iteration_variables(data):
     """
     Loads the physics and engineering variables into the optimisation variable array.
+
+    Raises
+    ------
+    ProcessValueError
+        If iteration variable is missing
     """
     for i in range(data.numerics.nvar):
         variable_index = data.numerics.ixc[i]

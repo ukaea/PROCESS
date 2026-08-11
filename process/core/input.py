@@ -297,7 +297,9 @@ INPUT_VARIABLES = {
     "crane_arm_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "crane_clrnc_h": InputVariable("buildings", float, range=(0.0, 10.0)),
     "crane_clrnc_v": InputVariable("buildings", float, range=(0.0, 10.0)),
-    "dx_tf_croco_strand_copper": InputVariable("rebco", float, range=(0.001, 0.1)),
+    "dx_tf_croco_strand_copper": InputVariable(
+        "superconducting_tfcoil", float, range=(0.001, 0.1)
+    ),
     "cryomag_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "cryomag_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "cryomag_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
@@ -708,20 +710,6 @@ INPUT_VARIABLES = {
         "superconducting_tfcoil",
         float,
         range=(1e-08, 0.0001),
-        additional_actions=lambda _n, rt, *_: (
-            rt <= 1e-6
-            or logger.warning(
-                (
-                    "the relationship between REBCO layer thickness "
-                    "and current density is not linear."
-                    "REBCO layer thicknesses > 1um should be considered "
-                    "an aggressive extrapolation of"
-                    "current HTS technology and any results "
-                    "must be considered speculative."
-                ),
-                stacklevel=1,
-            )
-        ),
     ),
     "redun_vacp": InputVariable("costs", float, range=(0.0, 100.0)),
     "residual_sig_hoop": InputVariable("cs_fatigue", float, range=(0.0, 1000000000.0)),
@@ -1360,6 +1348,11 @@ def validate_variable(
     -------
     :
         the input value with the correct type.
+
+    Raises
+    ------
+    ProcessValidationError
+        Variable validation failure
     """
     # check that if the variable should be an array, then an array index is provided
     # EXCEPT for if check_array is False. This should only be the case when parsing
@@ -1420,6 +1413,11 @@ def set_scalar_variable(name: str, value: ValidInputTypes, config: InputVariable
         the value of the input variable.
     config :
         the config of the variable that describes how to validate and process it.
+
+    Raises
+    ------
+    ProcessValueError
+        variable not found
     """
     current_value = getattr(config.module, name, ...)
 
@@ -1452,6 +1450,11 @@ def set_array_variable(name: str, value: str, array_index: int, config: InputVar
         the array index of the variable in the input file.
     config :
         the config of the variable that describes how to validate and process it.
+
+    Raises
+    ------
+    ProcessValueError
+        variable not found
     """
     current_array = getattr(config.module, name, ...)
     shape = current_array.shape

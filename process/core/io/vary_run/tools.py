@@ -19,6 +19,7 @@ from process.core.solver.iteration_variables import ITERATION_VARIABLES
 if TYPE_CHECKING:
     from process.core.io.vary_run import RunProcessConfig
     from process.core.model import DataStructure
+from process.data_structure.numerics import SolverOutputCondition
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +27,11 @@ logger = logging.getLogger(__name__)
 def get_neqns_itervars(in_dat, wdir="."):
     """Returns the number of equations and a list of variable
     names of all iteration variables
+
+    Raises
+    ------
+    ValueError
+        If the number of iteration variables is not consistent
     """
     in_dat = InDat(Path(wdir, in_dat))
 
@@ -133,6 +139,11 @@ def get_variable_range(itervars, factor, indat, data: DataStructure, wdir="."):
 def check_in_dat(filename):
     """Tests IN.DAT during setup:
     1)Are ixc bounds outside of allowed input ranges?
+
+    Raises
+    ------
+    RuntimeError
+        If an iteration variable does not have a corresponding input variable
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
@@ -243,13 +254,13 @@ def no_unfeasible_mfile(wdir=".", mfile="MFILE.DAT"):
 
     # no scans
     if not m_file.data["isweep"].exists:
-        if m_file.get("ifail") == 1:
+        if m_file.get("ifail") == SolverOutputCondition.CONVERGED:
             return 0
         return 1
 
     ifail = m_file.data["ifail"].get_scans()
     try:
-        return len(ifail) - ifail.count(1)
+        return len(ifail) - ifail.count(SolverOutputCondition.CONVERGED)
     except TypeError:
         # This seems to occur, if ifail is not in MFILE!
         # This probably means in the mfile library a KeyError
@@ -310,7 +321,7 @@ def get_solution_from_mfile(neqns, nvars, wdir=".", mfile="MFILE.DAT"):
     table_sol = [m_file.get(f"itvar{var_no + 1:03}") for var_no in range(nvars)]
     table_res = [m_file.get(f"normres{con_no + 1:03}") for con_no in range(neqns)]
 
-    if ifail != 1:
+    if ifail != SolverOutputCondition.CONVERGED:
         return ifail, "0", "0", ["0"] * nvars, ["0"] * neqns
 
     return ifail, objective_function, constraints, table_sol, table_res

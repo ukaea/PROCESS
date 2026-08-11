@@ -19,6 +19,7 @@ from scipy.optimize import fsolve
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 from process.core.solver.evaluators import Evaluators
+from process.data_structure.numerics import SolverOutputCondition
 
 logger = logging.getLogger(__name__)
 
@@ -128,23 +129,26 @@ class _Solver(ABC):
         self.b = b
 
     @abstractmethod
-    def solve(self) -> int:
+    def solve(self) -> SolverOutputCondition:
         """Run the optimisation.
 
         Returns
         -------
-        int
+        SolverOutputCondition
             solver error code
         """
 
 
 class VmconProblem(AbstractProblem):
+    """Set up the Vmcon problem"""
+
     def __init__(self, evaluator, nequality, ninequality):
         self._evaluator = evaluator
         self._nequality = nequality
         self._ninequality = ninequality
 
     def __call__(self, x: np.ndarray) -> Result:
+        """Call a problem"""
         n = x.shape[0]
         objf, conf = self._evaluator.fcnvmc1(n, self.total_constraints, x, 0)
         fgrd, cnorm = self._evaluator.fcnvmc2(n, self.total_constraints, x, n)
@@ -160,23 +164,30 @@ class VmconProblem(AbstractProblem):
 
     @property
     def num_equality(self) -> int:
+        """Number of equality constraints"""
         return self._nequality
 
     @property
     def num_inequality(self) -> int:
+        """Number of inequality constraints"""
         return self._ninequality
 
 
 class Vmcon(_Solver):
     """New VMCON implementation."""
 
-    def solve(self) -> int:
+    def solve(self) -> SolverOutputCondition:
         """Optimise using new VMCON.
 
         Returns
         -------
-        int
+        SolverOutputCondition
             solver error code
+
+        Raises
+        ------
+        ValueError
+            If the initial point vector is the wrong shape or out of bounds
         """
         problem = VmconProblem(self.evaluators, self.meq, self.m - self.meq)
 
@@ -248,11 +259,11 @@ class Vmcon(_Solver):
             )
         except VMCONConvergenceException as e:
             if isinstance(e, LineSearchConvergenceException):
-                self.info = 3
+                self.info = SolverOutputCondition.MAX_LINE_SEARCHES
             elif isinstance(e, QSPSolverException):
-                self.info = 5
+                self.info = SolverOutputCondition.NO_SOLUTION
             else:
-                self.info = 2
+                self.info = SolverOutputCondition.MAX_ITERATIONS
 
             logger.critical(str(e))
 
@@ -271,7 +282,7 @@ class Vmcon(_Solver):
             raise
 
         else:
-            self.info = 1
+            self.info = SolverOutputCondition.CONVERGED
 
         # print a blank line because of the carridge return
         # in the callback
@@ -288,6 +299,14 @@ class VmconBounded(Vmcon):
     """A solver that uses VMCON but checks x is in bounds before running"""
 
     def set_opt_params(self, x_0: np.ndarray):
+        """Define the initial optimisation parameters.
+
+        Parameters
+        ----------
+        x_0 : np.ndarray
+            optimisation parameters vector
+
+        """
         lower_violated = np.less(x_0, self.bndl)
         upper_violated = np.greater(x_0, self.bndu)
 
@@ -359,6 +378,11 @@ def get_solver(data: DataStructure, solver_name: str = "vmcon") -> _Solver:
     -------
     _Solver
         solver to use for optimisation
+
+    Raises
+    ------
+    ProcessValueError
+        If solver name is not an inbuilt PROCESS solver or recognised package
     """
     solver: _Solver
 
@@ -389,6 +413,11 @@ def load_external_solver(package: str):
     Parameters
     ----------
     package: str :
+
+    Raises
+    ------
+    AttributeError
+        If module does not have a '__process_solver__' attribute
 
     """
     module = importlib.import_module(package)

@@ -8,6 +8,7 @@ import numpy as np
 from process.core import constants, process_output
 from process.core import process_output as po
 from process.core.model import Model
+from process.data_structure.vacuum_variables import VacuumPumpType
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import dshellvol, eshellvol
 
@@ -312,7 +313,8 @@ class Vacuum(Model):
         # nitrogen, DT, helium, DT again
         sp = (
             [1.95, 1.8, 1.8, 1.8]
-            if self.data.vacuum.i_vacuum_pump_type == 0
+            if VacuumPumpType(self.data.vacuum.i_vacuum_pump_type)
+            == VacuumPumpType.TURBOMOLECULAR
             else [9.0, 25.0, 5.0, 25.0]
         )
 
@@ -512,7 +514,10 @@ class Vacuum(Model):
         #  If cryopumps are used then an additional pump is required
         #  for continuous operation with regeneration.
 
-        if self.data.vacuum.i_vacuum_pump_type == 1:
+        if (
+            VacuumPumpType(self.data.vacuum.i_vacuum_pump_type)
+            == VacuumPumpType.COMPOUND_CRYOPUMP
+        ):
             pumpn *= 2.0e0
 
         #  Information for costing routine
@@ -658,7 +663,10 @@ class Vacuum(Model):
                 process_output.oblnkl(self.outfile)
 
             i_fw_blkt_shared_coolant = (
-                "cryo " if self.data.vacuum.i_vacuum_pump_type == 1 else "turbo"
+                "cryo "
+                if VacuumPumpType(self.data.vacuum.i_vacuum_pump_type)
+                == VacuumPumpType.COMPOUND_CRYOPUMP
+                else "turbo"
             )
 
             process_output.oblnkl(self.outfile)

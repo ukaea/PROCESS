@@ -2,6 +2,8 @@ from typing import Any, NamedTuple
 
 import pytest
 
+from process.data_structure.vacuum_variables import VacuumPumpType
+
 
 @pytest.fixture
 def vacuum(process_models):
@@ -70,7 +72,9 @@ class TestVacuum:
         )
         monkeypatch.setattr(vacuum.data.times, "t_plant_pulse_coil_precharge", 30)
         monkeypatch.setattr(vacuum.data.vacuum, "i_vac_pump_dwell", 0)
-        monkeypatch.setattr(vacuum.data.vacuum, "i_vacuum_pump_type", 1)
+        monkeypatch.setattr(
+            vacuum.data.vacuum, "i_vacuum_pump_type", VacuumPumpType.COMPOUND_CRYOPUMP
+        )
         monkeypatch.setattr(
             vacuum.data.vacuum, "pres_vv_chamber_base", 0.00050000000000000001
         )

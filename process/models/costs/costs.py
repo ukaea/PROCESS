@@ -1,3 +1,5 @@
+"""Module containing cost routines"""
+
 import logging
 
 import numpy as np
@@ -8,11 +10,14 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.pfcoil_variables import PFConductorModel
 from process.models.tfcoil.base import TFConductorModel
+from process.models.vacuum import VacuumPumpType
 
 logger = logging.getLogger(__name__)
 
 
 class Costs(Model):
+    """Cost accounting calculations"""
+
     def __init__(self):
         self.outfile = constants.NOUT
 
@@ -79,6 +84,7 @@ class Costs(Model):
             self.coelc()
 
     def output(self):
+        """Output costs information"""
         self.run()
         if self.data.costs.output_costs == 0:
             return
@@ -183,189 +189,189 @@ class Costs(Model):
         )
         po.oblnkl(self.outfile)
         po.oshead(self.outfile, "Structures and Site Facilities")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c211)",
             "Site improvements, facilities, land (M$)",
+            "(c211)",
             self.data.costs.c211,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c212)",
             "Reactor building cost (M$)",
+            "(c212)",
             self.data.costs.c212,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c213)",
             "Turbine building cost (M$)",
+            "(c213)",
             self.data.costs.c213,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2141)",
             "Reactor maintenance building cost (M$)",
+            "(c2141)",
             self.data.costs.c2141,
         )
-        po.ocosts(self.outfile, "(c2142)", "Warm shop cost (M$)", self.data.costs.c2142)
-        po.ocosts(
+        po.ovarre(self.outfile, "Warm shop cost (M$)", "(c2142)", self.data.costs.c2142)
+        po.ovarre(
             self.outfile,
-            "(c215)",
             "Tritium building cost (M$)",
+            "(c215)",
             self.data.costs.c215,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c216)",
             "Electrical equipment building cost (M$)",
+            "(c216)",
             self.data.costs.c216,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2171)",
             "Additional buildings cost (M$)",
+            "(c2171)",
             self.data.costs.c2171,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2172)",
             "Control room buildings cost (M$)",
+            "(c2172)",
             self.data.costs.c2172,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2173)",
             "Shop and warehouses cost (M$)",
+            "(c2173)",
             self.data.costs.c2173,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2174)",
             "Cryogenic building cost (M$)",
+            "(c2174)",
             self.data.costs.c2174,
         )
         po.oblnkl(self.outfile)
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c21)",
             "Total account 21 cost (M$)",
+            "(c21)",
             self.data.costs.c21,
         )
 
         po.oshead(self.outfile, "Reactor Systems")
-        po.ocosts(self.outfile, "(c2211)", "First wall cost (M$)", self.data.costs.c2211)
+        po.ovarre(self.outfile, "First wall cost (M$)", "(c2211)", self.data.costs.c2211)
         if self.data.ife.ife != 1:
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22121)",
                 "Blanket beryllium cost (M$)",
+                "(c22121)",
                 self.data.costs.c22121,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22122)",
                 "Blanket breeder material cost (M$)",
+                "(c22122)",
                 self.data.costs.c22122,
             )
 
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22123)",
                 "Blanket stainless steel cost (M$)",
+                "(c22123)",
                 self.data.costs.c22123,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22124)",
                 "Blanket vanadium cost (M$)",
+                "(c22124)",
                 self.data.costs.c22124,
             )
         else:  # IFE
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22121)",
                 "Blanket beryllium cost (M$)",
+                "(c22121)",
                 self.data.costs.c22121,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22122)",
                 "Blanket lithium oxide cost (M$)",
+                "(c22122)",
                 self.data.costs.c22122,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22123)",
                 "Blanket stainless steel cost (M$)",
+                "(c22123)",
                 self.data.costs.c22123,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22124)",
                 "Blanket vanadium cost (M$)",
+                "(c22124)",
                 self.data.costs.c22124,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22125)",
                 "Blanket carbon cloth cost (M$)",
+                "(c22125)",
                 self.data.costs.c22125,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22126)",
                 "Blanket concrete cost (M$)",
+                "(c22126)",
                 self.data.costs.c22126,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22127)",
                 "Blanket FLiBe cost (M$)",
+                "(c22127)",
                 self.data.costs.c22127,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22128)",
                 "Blanket lithium cost (M$)",
+                "(c22128)",
                 self.data.costs.c22128,
             )
 
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2212)",
             "Blanket total cost (M$)",
+            "(c2212)",
             self.data.costs.c2212,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c22131)",
             "Bulk shield cost (M$)",
+            "(c22131)",
             self.data.costs.c22131,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c22132)",
             "Penetration shielding cost (M$)",
+            "(c22132)",
             self.data.costs.c22132,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2213)",
             "Total shield cost (M$)",
+            "(c2213)",
             self.data.costs.c2213,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2214)",
             "Total support structure cost (M$)",
+            "(c2214)",
             self.data.costs.c2214,
         )
-        po.ocosts(self.outfile, "(c2215)", "Divertor cost (M$)", self.data.costs.c2215)
+        po.ovarre(self.outfile, "Divertor cost (M$)", "(c2215)", self.data.costs.c2215)
         po.oblnkl(self.outfile)
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c221)",
             "Total account 221 cost (M$)",
+            "(c221)",
             self.data.costs.c221,
         )
 
@@ -376,497 +382,497 @@ class Costs(Model):
                 self.data.tfcoil.i_tf_sup != TFConductorModel.SUPERCONDUCTING
             ):  # Resistive TF coils
                 if self.data.physics.itart == 1:
-                    po.ocosts(
+                    po.ovarre(
                         self.outfile,
-                        "(c22211)",
                         "Centrepost costs (M$)",
+                        "(c22211)",
                         self.data.costs.c22211,
                     )
                 else:
-                    po.ocosts(
+                    po.ovarre(
                         self.outfile,
-                        "(c22211)",
                         "Inboard leg cost (M$)",
+                        "(c22211)",
                         self.data.costs.c22211,
                     )
 
-                po.ocosts(
+                po.ovarre(
                     self.outfile,
-                    "(c22212)",
                     "Outboard leg cost (M$)",
+                    "(c22212)",
                     self.data.costs.c22212,
                 )
-                po.ocosts(
+                po.ovarre(
                     self.outfile,
-                    "(c2221)",
                     "TF magnet assemblies cost (M$)",
+                    "(c2221)",
                     self.data.costs.c2221,
                 )
             else:  # Superconducting TF coils
-                po.ocosts(
+                po.ovarre(
                     self.outfile,
-                    "(c22211)",
                     "TF coil conductor cost (M$)",
+                    "(c22211)",
                     self.data.costs.c22211,
                 )
-                po.ocosts(
+                po.ovarre(
                     self.outfile,
-                    "(c22212)",
                     "TF coil winding cost (M$)",
+                    "(c22212)",
                     self.data.costs.c22212,
                 )
-                po.ocosts(
+                po.ovarre(
                     self.outfile,
-                    "(c22213)",
                     "TF coil case cost (M$)",
+                    "(c22213)",
                     self.data.costs.c22213,
                 )
-                po.ocosts(
+                po.ovarre(
                     self.outfile,
-                    "(c22214)",
                     "TF intercoil structure cost (M$)",
+                    "(c22214)",
                     self.data.costs.c22214,
                 )
-                po.ocosts(
+                po.ovarre(
                     self.outfile,
-                    "(c22215)",
                     "TF coil gravity support structure (M$)",
+                    "(c22215)",
                     self.data.costs.c22215,
                 )
-                po.ocosts(
+                po.ovarre(
                     self.outfile,
-                    "(c2221)",
                     "TF magnet assemblies cost (M$)",
+                    "(c2221)",
                     self.data.costs.c2221,
                 )
 
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22221)",
                 "PF coil conductor cost (M$)",
+                "(c22221)",
                 self.data.costs.c22221,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22222)",
                 "PF coil winding cost (M$)",
+                "(c22222)",
                 self.data.costs.c22222,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22223)",
                 "PF coil case cost (M$)",
+                "(c22223)",
                 self.data.costs.c22223,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22224)",
                 "PF coil support structure cost (M$)",
+                "(c22224)",
                 self.data.costs.c22224,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c2222)",
                 "PF magnet assemblies cost (M$)",
+                "(c2222)",
                 self.data.costs.c2222,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c2223)",
                 "Vacuum vessel assembly cost (M$)",
+                "(c2223)",
                 self.data.costs.c2223,
             )
             po.oblnkl(self.outfile)
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c222)",
                 "Total account 222 cost (M$)",
+                "(c222)",
                 self.data.costs.c222,
             )
 
         po.oshead(self.outfile, "Power Injection")
 
         if self.data.ife.ife == 1:
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c2231)",
                 "IFE driver system cost (M$)",
+                "(c2231)",
                 self.data.costs.c2231,
             )
         else:
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c2231)",
                 "ECH system cost (M$)",
+                "(c2231)",
                 self.data.costs.c2231,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c2232)",
                 "Lower hybrid system cost (M$)",
+                "(c2232)",
                 self.data.costs.c2232,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c2233)",
                 "Neutral beam system cost (M$)",
+                "(c2233)",
                 self.data.costs.c2233,
             )
 
         po.oblnkl(self.outfile)
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c223)",
             "Total account 223 cost (M$)",
+            "(c223)",
             self.data.costs.c223,
         )
 
         po.oshead(self.outfile, "Vacuum Systems")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2241)",
             "High vacuum pumps cost (M$)",
+            "(c2241)",
             self.data.costs.c2241,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2242)",
             "Backing pumps cost (M$)",
+            "(c2242)",
             self.data.costs.c2242,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2243)",
             "Vacuum duct cost (M$)",
+            "(c2243)",
             self.data.costs.c2243,
         )
-        po.ocosts(self.outfile, "(c2244)", "Valves cost (M$)", self.data.costs.c2244)
-        po.ocosts(
+        po.ovarre(self.outfile, "Valves cost (M$)", "(c2244)", self.data.costs.c2244)
+        po.ovarre(
             self.outfile,
-            "(c2245)",
             "Duct shielding cost (M$)",
+            "(c2245)",
             self.data.costs.c2245,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2246)",
             "Instrumentation cost (M$)",
+            "(c2246)",
             self.data.costs.c2246,
         )
         po.oblnkl(self.outfile)
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c224)",
             "Total account 224 cost (M$)",
+            "(c224)",
             self.data.costs.c224,
         )
 
         if self.data.ife.ife != 1:
             po.oshead(self.outfile, "Power Conditioning")
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22511)",
                 "TF coil power supplies cost (M$)",
+                "(c22511)",
                 self.data.costs.c22511,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22512)",
                 "TF coil breakers cost (M$)",
+                "(c22512)",
                 self.data.costs.c22512,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22513)",
                 "TF coil dump resistors cost (M$)",
+                "(c22513)",
                 self.data.costs.c22513,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22514)",
                 "TF coil instrumentation and control (M$)",
+                "(c22514)",
                 self.data.costs.c22514,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22515)",
                 "TF coil bussing cost (M$)",
+                "(c22515)",
                 self.data.costs.c22515,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c2251)",
                 "Total, TF coil power costs (M$)",
+                "(c2251)",
                 self.data.costs.c2251,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22521)",
                 "PF coil power supplies cost (M$)",
+                "(c22521)",
                 self.data.costs.c22521,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22522)",
                 "PF coil instrumentation and control (M$)",
+                "(c22522)",
                 self.data.costs.c22522,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22523)",
                 "PF coil bussing cost (M$)",
+                "(c22523)",
                 self.data.costs.c22523,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22524)",
                 "PF coil burn power supplies cost (M$)",
+                "(c22524)",
                 self.data.costs.c22524,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22525)",
                 "PF coil breakers cost (M$)",
+                "(c22525)",
                 self.data.costs.c22525,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22526)",
                 "PF coil dump resistors cost (M$)",
+                "(c22526)",
                 self.data.costs.c22526,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c22527)",
                 "PF coil ac breakers cost (M$)",
+                "(c22527)",
                 self.data.costs.c22527,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c2252)",
                 "Total, PF coil power costs (M$)",
+                "(c2252)",
                 self.data.costs.c2252,
             )
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c2253)",
                 "Total, energy storage cost (M$)",
+                "(c2253)",
                 self.data.costs.c2253,
             )
             po.oblnkl(self.outfile)
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(c225)",
                 "Total account 225 cost (M$)",
+                "(c225)",
                 self.data.costs.c225,
             )
 
         po.oshead(self.outfile, "Heat Transport System")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(cpp)",
             "Pumps and piping system cost (M$)",
+            "(cpp)",
             self.data.costs.cpp,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(chx)",
             "Primary heat exchanger cost (M$)",
+            "(chx)",
             self.data.costs.chx,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2261)",
             "Total, reactor cooling system cost (M$)",
+            "(c2261)",
             self.data.costs.c2261,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(cppa)",
             "Pumps, piping cost (M$)",
+            "(cppa)",
             self.data.costs.cppa,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2262)",
             "Total, auxiliary cooling system cost (M$)",
+            "(c2262)",
             self.data.costs.c2262,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2263)",
             "Total, cryogenic system cost (M$)",
+            "(c2263)",
             self.data.costs.c2263,
         )
         po.oblnkl(self.outfile)
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c226)",
             "Total account 226 cost (M$)",
+            "(c226)",
             self.data.costs.c226,
         )
 
         po.oshead(self.outfile, "Fuel Handling System")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2271)",
             "Fuelling system cost (M$)",
+            "(c2271)",
             self.data.costs.c2271,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2272)",
             "Fuel processing and purification cost (M$)",
+            "(c2272)",
             self.data.costs.c2272,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2273)",
             "Atmospheric recovery systems cost (M$)",
+            "(c2273)",
             self.data.costs.c2273,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c2274)",
             "Nuclear building ventilation cost (M$)",
+            "(c2274)",
             self.data.costs.c2274,
         )
         po.oblnkl(self.outfile)
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c227)",
             "Total account 227 cost (M$)",
+            "(c227)",
             self.data.costs.c227,
         )
 
         po.oshead(self.outfile, "Instrumentation and Control")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c228)",
             "Instrumentation and control cost (M$)",
+            "(c228)",
             self.data.costs.c228,
         )
 
         po.oshead(self.outfile, "Maintenance Equipment")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c229)",
             "Maintenance equipment cost (M$)",
+            "(c229)",
             self.data.costs.c229,
         )
 
         po.oshead(self.outfile, "Total Account 22 Cost")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c22)",
             "Total account 22 cost (M$)",
+            "(c22)",
             self.data.costs.c22,
         )
 
         po.oshead(self.outfile, "Turbine Plant Equipment")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c23)",
             "Turbine plant equipment cost (M$)",
+            "(c23)",
             self.data.costs.c23,
         )
 
         po.oshead(self.outfile, "Electric Plant Equipment")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c241)",
             "Switchyard equipment cost (M$)",
+            "(c241)",
             self.data.costs.c241,
         )
-        po.ocosts(self.outfile, "(c242)", "Transformers cost (M$)", self.data.costs.c242)
-        po.ocosts(
+        po.ovarre(self.outfile, "Transformers cost (M$)", "(c242)", self.data.costs.c242)
+        po.ovarre(
             self.outfile,
-            "(c243)",
             "Low voltage equipment cost (M$)",
+            "(c243)",
             self.data.costs.c243,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c244)",
             "Diesel backup equipment cost (M$)",
+            "(c244)",
             self.data.costs.c244,
         )
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c245)",
             "Auxiliary facilities cost (M$)",
+            "(c245)",
             self.data.costs.c245,
         )
         po.oblnkl(self.outfile)
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c24)",
             "Total account 24 cost (M$)",
+            "(c24)",
             self.data.costs.c24,
         )
 
         po.oshead(self.outfile, "Miscellaneous Plant Equipment")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c25)",
             "Miscellaneous plant equipment cost (M$)",
+            "(c25)",
             self.data.costs.c25,
         )
 
         po.oshead(self.outfile, "Heat Rejection System")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(c26)",
             "Heat rejection system cost (M$)",
+            "(c26)",
             self.data.costs.c26,
         )
 
         po.oshead(self.outfile, "Plant Direct Cost")
-        po.ocosts(
-            self.outfile, "(cdirt)", "Plant direct cost (M$)", self.data.costs.cdirt
+        po.ovarre(
+            self.outfile, "Plant direct cost (M$)", "(cdirt)", self.data.costs.cdirt
         )
 
         po.oshead(self.outfile, "Reactor Core Cost")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(crctcore)",
             "Reactor core cost (M$)",
+            "(crctcore)",
             self.data.costs.crctcore,
         )
 
         po.oshead(self.outfile, "Indirect Cost")
-        po.ocosts(self.outfile, "(c9)", "Indirect cost (M$)", self.data.costs.cindrt)
+        po.ovarre(self.outfile, "Indirect cost (M$)", "(c9)", self.data.costs.cindrt)
 
         po.oshead(self.outfile, "Total Contingency")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(ccont)",
             "Total contingency (M$)",
+            "(ccont)",
             self.data.costs.ccont,
         )
 
         po.oshead(self.outfile, "Constructed Cost")
-        po.ocosts(
+        po.ovarre(
             self.outfile,
-            "(concost)",
             "Constructed cost (M$)",
+            "(concost)",
             self.data.costs.concost,
         )
 
         if self.data.costs.ireactor == 1:
             po.oshead(self.outfile, "Interest during Construction")
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(moneyint)",
                 "Interest during construction (M$)",
+                "(moneyint)",
                 self.data.costs.moneyint,
             )
 
             po.oshead(self.outfile, "Total Capital Investment")
-            po.ocosts(
+            po.ovarre(
                 self.outfile,
-                "(capcost)",
                 "Total capital investment (M$)",
+                "(capcost)",
                 self.data.costs.capcost,
             )
 
@@ -1976,7 +1982,10 @@ class Costs(Model):
         This routine evaluates the Account 224 (vacuum system) costs.
         The costs are scaled from TETRA reactor code runs.
         """
-        if self.data.vacuum.i_vacuum_pump_type == 1:
+        if (
+            VacuumPumpType(self.data.vacuum.i_vacuum_pump_type)
+            == VacuumPumpType.COMPOUND_CRYOPUMP
+        ):
             self.data.costs.c2241 = (
                 1.0e-6 * self.data.vacuum.n_vac_pumps_high * self.data.costs.UCCPMP
             )
@@ -2589,6 +2598,11 @@ class Costs(Model):
     def acc2253(self):
         """Account 225.3 : Energy storage
         This routine evaluates the Account 225.3 (energy storage) costs.
+
+        Raises
+        ------
+        ProcessValueError
+            If illegal value used for istore",
         """
         self.data.costs.c2253 = 0.0e0
 

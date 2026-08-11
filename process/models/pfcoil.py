@@ -1,3 +1,5 @@
+"""Module containing PF coil and CS coil models."""
+
 import logging
 import math
 from dataclasses import dataclass
@@ -92,6 +94,12 @@ class PFCoil(Model):
         This subroutine performs the calculations for the PF and
         Central Solenoid coils, to determine their size, location, current waveforms,
         stresses etc.
+
+        Raises
+        ------
+        ProcessValueError
+            If there are errors with PF coils.
+            See individual ProcessValueError instances for more details.
         """
         lrow1 = 2 * NPTSMX + N_PF_GROUPS_MAX
         lcol1 = N_PF_GROUPS_MAX
@@ -1518,6 +1526,7 @@ class PFCoil(Model):
         return ssq, ccls
 
     def tf_pf_collision_detector(self):
+        """Determine if TF and PF coil positions are colliding."""
         #  Collision test between TF and PF coils for picture frame TF
         #  See issue 1612
         #  https://git.ccfe.ac.uk/process/process/-/issues/1612
@@ -2999,10 +3008,10 @@ class CSCoil(Model):
         self.cs_fatigue = cs_fatigue
 
     def output(self):
-        """This model doesn't have any output"""
+        """CSCoil model doesn't have any output"""
 
     def run(self):
-        """This model doesn't need to be run"""
+        """CSCoil model doesn't need to be run"""
 
     @staticmethod
     def calculate_cs_geometry(
@@ -4225,6 +4234,9 @@ class CSCoil(Model):
     def calculate_cs_self_midplane_axial_stress_time_profile(
         self,
     ) -> None:
+        """
+        Calculate profile for axial stress and axial force for the central solenoid.
+        """
         for time in range(6):
             stress_value, _ = self.calculate_cs_self_peak_midplane_axial_stress(
                 r_cs_outer=self.data.pf_coil.r_pf_coil_outer[
@@ -4436,6 +4448,12 @@ def peak_b_field_at_pf_coil(
         - b_pf_outer_radial (float): Radial field at outer edge (T)
         - b_pf_inner_vertical (float): Vertical field at inner edge (T)
         - b_pf_outer_vertical (float): Vertical field at outer edge (T)
+
+
+    Raises
+    ------
+    ProcessValueError
+        Illegal value of t_b_field_peak
 
     Notes
     -----
@@ -4710,6 +4728,11 @@ def superconpf(
         Critical cable current density [A/m²] (j_crit_cable)
         Superconducting strand non-copper critical current density [A/m²] (j_crit_sc)
         Temperature margin [K] (tmarg)
+
+    Raises
+    ------
+    ProcessValueError
+        If i_pf_superconductor not a valid SuperconductorModel
     """
 
     def j_crit_cable_frac(j_crit_sc, fcu, fhe):

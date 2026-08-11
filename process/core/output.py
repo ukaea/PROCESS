@@ -1,3 +1,5 @@
+"""Module containing routine to write the results to the main output file (OUT.DAT)"""
+
 from process.core.log import logging_model_handler
 from process.data_structure.blanket_variables import BlktModelTypes
 from process.models.tfcoil.base import TFConductorModel
@@ -18,6 +20,10 @@ def write(models, data, _outfile):
     _outfile : int
         Fortran output unit identifier
 
+    Raises
+    ------
+    ValueError
+        If unsupported superconducting TF turn type is used
     """
     # ensure we are capturing warnings that occur in the 'output' stage
     # as these are warnings that occur at our solution point.

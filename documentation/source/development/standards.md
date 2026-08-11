@@ -589,8 +589,8 @@ dtheta_description =
 
 | Variable name | Description | Units |
 | ------------- | ----------- | :---: |
-| `c_plasma`    | Plasma current | A |
-| `c_plasma_MA` | Plasma current | MA |
+| `cur_plasma`    | Plasma current | A |
+| `cur_plasma_ma` | Plasma current | MA |
 | `b_t_onaxis`  | Toroidal field on-axis | T |
 | `b_t_max`     | Max toroidal field | T |
 | `nd_electron_vol` | Volume average electron density | m-3 |

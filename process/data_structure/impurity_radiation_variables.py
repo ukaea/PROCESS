@@ -1,3 +1,5 @@
+"""Module containing variables for the impurity radiation models"""
+
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -24,6 +26,8 @@ N_IMPURITIES = 14
 
 @dataclass(slots=True)
 class ImpurityRadiationData:
+    """Dataclass holding impurity radiation variables"""
+
     radius_plasma_core_norm: float = 0.6
     """Normalised radius defining the 'core' region"""
 

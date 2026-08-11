@@ -814,34 +814,34 @@ def hijc_rebco(
     # finding A(T); constants based on a Newton polynomial fit to pubished data
     a_t = a_0 + (u * temp_conductor**2) + (v * temp_conductor)
 
-    # Critical current density (A/m2)
+    # Critical current
     # In the original formula bcrit must be > bmax to prevent NaNs.
     # However, negative jcrit is permissible (I think).
     # So when bcrit < bmax, I reverse the sign of the bracket,
     # giving a negative but real value of jcrit.
 
     if b_critical > b_conductor:
-        j_critical = (
+        cur_critical = (
             (a_t / b_conductor)
             * b_critical**b
             * (b_conductor / b_critical) ** p
             * (1 - b_conductor / b_critical) ** q
         )
     else:
-        j_critical = (
+        cur_critical = (
             (a_t / b_conductor)
             * b_critical**b
             * (b_conductor / b_critical) ** p
             * (b_conductor / b_critical - 1) ** q
         )
 
-    # Jc times HTS area: default area is width 4mm times HTS layer thickness 1 um,
-    # divided by the tape area to provide engineering Jc per tape,!
+    # Critical current times HTS area: default area is width 4mm times HTS layer
+    # thickness 1 um, divided by the tape area to provide engineering Jc per tape,!
     # A scaling factor of 0.4 used to be applied below to assume the difference
     # between tape stacks and CORC cable layouts.
 
     j_critical = (
-        j_critical
+        cur_critical
         * (dr_hts_tape * dx_hts_tape_rebco)
         / (dr_hts_tape * dx_hts_tape_total)
     )
@@ -1090,16 +1090,28 @@ def bottura_scaling(
 
 @dataclass
 class CroCoCableGeometry:
+    """Dataclass holding CroCo cable geometry parameters"""
+
     dia_croco_strand_tape_region: float
+    """Inner diameter of CroCo strand tape region (m)"""
     n_croco_strand_hts_tapes: float
+    """Number of HTS tapes in CroCo strand"""
     a_croco_strand_copper_total: float
+    """Total copper area in CroCo strand (m²)"""
     a_croco_strand_hastelloy: float
+    """ Total Hastelloy area in CroCo strand (m²)"""
     a_croco_strand_solder: float
+    """ Total solder area in CroCo strand (m²)"""
     a_croco_strand_rebco: float
+    """Total REBCO area in CroCo strand (m²)"""
     a_croco_strand: float
+    """Total area of CroCo strand (m²)"""
     dr_hts_tape: float
+    """Width of the tape (m)"""
     dx_hts_tape_total: float
+    """thickness of tape, inc. all layers (m)"""
     dx_croco_strand_tape_stack: float
+    """Height of the tape stack in the CroCo strand (m)"""
 
 
 def calculate_croco_cable_geometry(
@@ -1127,15 +1139,7 @@ def calculate_croco_cable_geometry(
     Returns
     -------
     CroCoCableGeometry
-    - dia_croco_strand_tape_region: Inner diameter of CroCo strand tape region (m)
-    - n_croco_strand_hts_tapes: Number of HTS tapes in CroCo strand
-    - a_croco_strand_copper_total: Total copper area in CroCo strand (m²)
-    - a_croco_strand_hastelloy: Total Hastelloy area in CroCo strand (m²)
-    - a_croco_strand_solder: Total solder area in CroCo strand (m²)
-    - a_croco_strand_rebco: Total REBCO area in CroCo strand (m²)
-    - a_croco_strand: Total area of CroCo strand (m²)
-    - dr_hts_tape: Width of the tape (m)
-    - dx_croco_strand_tape_stack: Height of the tape stack in the CroCo strand (m)
+        Dataclass holding CroCo cable geometry parameters
     """
     # Calculate the inner diameter of the CroCo strand tape region
     dia_croco_strand_tape_region = dia_croco_strand - 2.0 * dx_croco_strand_copper

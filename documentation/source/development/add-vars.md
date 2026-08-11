@@ -1,6 +1,6 @@
 # Guide for adding variables and constraints
 
-A guide for how to add new inputs, constraints, figures of merit, and scan variables. 
+A guide for how to add new inputs, constraints, figures of merit, and scan variables.
 
 **At all times ensure new variables and functions adhere to the [`PROCESS` style guide](../development/standards.md).**
 
@@ -23,7 +23,7 @@ It is advised that a variable is either used to define a particular PROCESS run 
 ## Add a new variable
 You may need to add a variable to PROCESS when changing or creating models. In most cases, you will want to add your variable to an existing data structure. Creating an entirely new data structure is beyond the scope of this guide, so please seek support from the PROCESS maintainers.
 
-For example, if you are adding a new variable that relates to the blanket model, you would add the variable to `process/data_structure/blanket_variables.py` as part of the `BlanketData` dataclass. 
+For example, if you are adding a new variable that relates to the blanket model, you would add the variable to `process/data_structure/blanket_variables.py` as part of the `BlanketData` dataclass.
 
 ```python
 @dataclass(slots=True)
@@ -116,7 +116,7 @@ class FiguresOfMerit(IntEnum):
     ...
     BLANKET_FIGURE_OF_MERIT = (20, "my FOM description")
 ```
-Here `20` will be the identifier of the figure of merit, and **must** be unique. 
+Here `20` will be the identifier of the figure of merit, and **must** be unique.
 
 Finally, add the equation to `process/core/solver/objectives.py`:
 ```python
@@ -136,26 +136,22 @@ Remember, setting `minmax = -20` would minimise instead of maximise our new vari
 
 ## Add a scan variable
 
-After following the instructions to add an input variable, you can then make a scan variable.
+After following the instruction to add an input variable, you can make the variable a scan variable by following these steps:
 
-First, add the variable to the `ScanVariables` enum in `process/core/scan.py`. 
+1. Update the `ScanVariables` enum in the `scan.py` file by adding a new case statement connecting the variable to the scan integer switch, the variable name and a short description.
+
+2. Add a comment in the corresponding variable file in the data_structure directory, eg, `data_structure/[XX]_variables.py`, to add the variable description indicating the scan switch number.
+
+`SCAN_VARIABLES` case example:
+
+Add the variable to the `ScanVariables` enum in `process/core/scan.py`.
 ```python
-class ScanVariables(Enum):
+  class ScanVariables(ScanVariable, Enum):
+    aspect = (1, SVE.P),
+    pflux_div_heat_load_max_mw = (2, SVE.D)
     ...
-    blanket_scan_variable = ScanVariable(
-        "my_new_blanket_variable", "A blanket variable", 82
-    )
-```
-Here, `82` is the identifier of the scan variable and must be unique. 
-
-Next, increment the parameter `IPNSCNV` in `process/data_structure/scan_variables.py` and be sure to add a description of the scan variable in the docstring of the `nsweep` variable.
-
-Finally, in `process/core/scan.py`, add the scan variable to the `Scan.scan_select()` method.
-```python
-match nwp:
-  ...
-  case 82:
-    self.data.tfcoil.my_new_blanket_variable = swp[iscn - 1]
+    b_crit_upper_nbti =  (54, SVE.T)
+    dr_shld_inboard = (55, SVE.B),
 ```
 
 Please see the [scan documentation](../io/input-guide.md#input-guide) for how to set up a scan `IN.DAT`

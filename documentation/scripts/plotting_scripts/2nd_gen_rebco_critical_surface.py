@@ -1,3 +1,5 @@
+"""Module containing routines to plot the 2nd gen rebco critical surface"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objects as go

@@ -1,8 +1,12 @@
+"""Module containing variables for the stellarator models"""
+
 from dataclasses import dataclass
 
 
 @dataclass(slots=True)
 class StellaratorData:
+    """Dataclass holding stellarator variables"""
+
     f_st_n_coils: float = 0.0
     """Actual number of coils to reference value from stella_config file"""
 

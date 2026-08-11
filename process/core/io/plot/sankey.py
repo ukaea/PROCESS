@@ -23,6 +23,7 @@ except ImportError:
 
 
 def plot_sankey_plotly(m_file: Path):
+    """Plot the Sankey diagram"""
     if not PLOT_SANKEY:
         print(
             "\nPlotly is not installed, unable to create sankey diagram!\n"
@@ -34,6 +35,7 @@ def plot_sankey_plotly(m_file: Path):
 
 
 def power_balance_sankey(m_file: Path):
+    """Set up the power balance Sankey diagram"""
     m_file: MFile = MFile(m_file)
     p_hcd_injected_total_mw = m_file.get("p_hcd_injected_total_mw", scan=-1)
     p_plasma_ohmic_mw = m_file.get("p_plasma_ohmic_mw", scan=-1)
@@ -362,6 +364,7 @@ def power_balance_sankey(m_file: Path):
 
 
 def plotly(sankey_dict, m_file: Path):
+    """Set up the Sankey diagram"""
     fig = go.Figure(data=[sankey_dict])
 
     fig.update_layout({
@@ -404,6 +407,7 @@ class SuperSankey(Sankey):
         rotation: float = 0,
         **kwargs,
     ):
+        """Add a Sankey diagram"""
         __doc__ = super().__doc__  # noqa: F841
         # Here we first check if the "add" method has received arguments that
         # the Sankey class can't handle.
@@ -564,9 +568,8 @@ class SuperSankey(Sankey):
         return result.x
 
 
-def plot_sankey(
-    mfilename=Path("MFILE.DAT"), format_: str = "pdf"
-):  # Plot simplified power flow Sankey Diagram
+def plot_sankey(mfilename=Path("MFILE.DAT"), format_: str = "pdf"):
+    """Plot simplified power flow Sankey Diagram"""
     # Pulling values from the MFILE
     mfilename = Path(mfilename)
     m_file = MFile(mfilename)

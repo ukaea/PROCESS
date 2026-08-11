@@ -1448,10 +1448,10 @@ class SauterBootstrapCurrent(Model):
     """Class to calculate the bootstrap current using the Sauter et al formula."""
 
     def run(self):
-        """This model isn't run"""
+        """SauterBootstrapCurrent model isn't run"""
 
     def output(self):
-        """This model doesn't have any output"""
+        """SauterBootstrapCurrent model doesn't have any output"""
 
     def bootstrap_fraction_sauter(self, plasma_profile: PlasmaProfile) -> float:
         """Calculate the bootstrap current fraction from the Sauter et al scaling.

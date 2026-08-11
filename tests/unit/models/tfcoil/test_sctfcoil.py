@@ -111,7 +111,7 @@ class ProtectParam(NamedTuple):
 )
 def test_protect(protectparam, sctfcoil):
     """
-    Automatically generated Regression Unit Test for protect.
+    Automatically generated Unit Test for protect.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -343,7 +343,7 @@ class SuperconParam(NamedTuple):
 )
 def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
     """
-    Automatically generated Regression Unit Test for supercon.
+    Automatically generated Unit Test for supercon.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -533,7 +533,7 @@ class PeakTfWithRippleParam(NamedTuple):
 )
 def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     """
-    Automatically generated Regression Unit Test for peak_tf_with_ripple.
+    Automatically generated Unit Test for peak_tf_with_ripple.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -786,7 +786,7 @@ class TfWpGeomParam(NamedTuple):
 )
 def test_superconducting_tf_wp_geometry(tfwpgeomparam, sctfcoil):
     """
-    Automatically generated Regression Unit Test for superconducting_tf_wp_geometry.
+    Automatically generated Unit Test for superconducting_tf_wp_geometry.
 
     This test was generated using data from
     baseline_2018_IN.DAT (no longer exists in the PROCESS repository).
@@ -925,7 +925,7 @@ class TfCaseGeomParam(NamedTuple):
 )
 def test_superconducting_tf_case_geometry(tfcasegeomparam, sctfcoil):
     """
-    Automatically generated Regression Unit Test for superconducting_tf_case_geometry.
+    Automatically generated Unit Test for superconducting_tf_case_geometry.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -988,7 +988,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     dx_tf_wp_insertion_gap: Any = None
 
-    t_conductor: Any = None
+    dx_tf_turn_conduit_full_average: Any = None
 
     dx_tf_turn_general: Any = None
 
@@ -996,9 +996,9 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     dx_tf_wp_toroidal_min: Any = None
 
-    t_conductor_radial: Any = None
+    dr_tf_turn_conduit_full: Any = None
 
-    t_conductor_toroidal: Any = None
+    dx_tf_turn_conduit_full_toroidal: Any = None
 
     dr_tf_turn_cable_space: Any = None
 
@@ -1054,12 +1054,12 @@ class TfIntegerTurnGeomParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_wp_insertion_gap=0.01,
-            t_conductor=0,
+            dx_tf_turn_conduit_full_average=0,
             dx_tf_turn_general=0,
             c_tf_coil=14805350.287500001,
             dx_tf_wp_toroidal_min=1.299782604942499,
-            t_conductor_radial=0,
-            t_conductor_toroidal=0,
+            dr_tf_turn_conduit_full=0,
+            dx_tf_turn_conduit_full_toroidal=0,
             dr_tf_turn_cable_space=0,
             dx_tf_turn_cable_space=0,
             dr_tf_turn=0,
@@ -1088,12 +1088,12 @@ class TfIntegerTurnGeomParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_wp_insertion_gap=0.01,
-            t_conductor=0.052553108427885735,
+            dx_tf_turn_conduit_full_average=0.052553108427885735,
             dx_tf_turn_general=0.056579413904423038,
             c_tf_coil=14805350.287500001,
             dx_tf_wp_toroidal_min=1.299782604942499,
-            t_conductor_radial=0.046661087836601015,
-            t_conductor_toroidal=0.059189130247124938,
+            dr_tf_turn_conduit_full=0.046661087836601015,
+            dx_tf_turn_conduit_full_toroidal=0.059189130247124938,
             dr_tf_turn_cable_space=0.030661087836601014,
             dx_tf_turn_cable_space=0.043189130247124938,
             dr_tf_turn=0.050661087836601018,
@@ -1124,7 +1124,7 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
     tfintegerturngeomparam, cicc_sctfcoil
 ):
     """
-    Automatically generated Regression Unit Test for
+    Automatically generated Unit Test for
     tf_cable_in_conduit_integer_turn_geometry.
 
     This test was generated using data from baseline_2018_IN.DAT
@@ -1154,19 +1154,19 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
         0.75 * tfintegerturngeomparam.dx_tf_turn_steel
     )
 
-    assert integer_turn_geometry.t_conductor == pytest.approx(
+    assert integer_turn_geometry.dx_tf_turn_conduit_full_average == pytest.approx(
         tfintegerturngeomparam.expected_t_conductor
     )
 
-    assert cicc_sctfcoil.data.tfcoil.dx_tf_turn_general == pytest.approx(
+    assert integer_turn_geometry.dx_tf_turn_general == pytest.approx(
         tfintegerturngeomparam.expected_dx_tf_turn_general
     )
 
-    assert integer_turn_geometry.t_conductor_radial == pytest.approx(
+    assert integer_turn_geometry.dr_tf_turn_conduit_full == pytest.approx(
         tfintegerturngeomparam.expected_t_conductor_radial
     )
 
-    assert integer_turn_geometry.t_conductor_toroidal == pytest.approx(
+    assert integer_turn_geometry.dx_tf_turn_conduit_full_toroidal == pytest.approx(
         tfintegerturngeomparam.expected_t_conductor_toroidal
     )
 
@@ -1214,7 +1214,7 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
 class TfAveragedTurnGeomParam(NamedTuple):
     layer_ins: Any = None
 
-    t_conductor: Any = None
+    dx_tf_turn_conduit_full_average: Any = None
 
     dx_tf_turn_general: Any = None
 
@@ -1264,7 +1264,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
     [
         TfAveragedTurnGeomParam(
             layer_ins=0,
-            t_conductor=0,
+            dx_tf_turn_conduit_full_average=0,
             dx_tf_turn_general=0,
             i_dx_tf_turn_general_input=False,
             c_tf_turn=65000,
@@ -1289,7 +1289,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
         ),
         TfAveragedTurnGeomParam(
             layer_ins=0,
-            t_conductor=0.047932469413859431,
+            dx_tf_turn_conduit_full_average=0.047932469413859431,
             dx_tf_turn_general=0.049532469413859428,
             i_dx_tf_turn_general_input=False,
             c_tf_turn=65000,
@@ -1314,7 +1314,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
         ),
         TfAveragedTurnGeomParam(
             layer_ins=0,
-            t_conductor=5.712e-02,
+            dx_tf_turn_conduit_full_average=5.712e-02,
             dx_tf_turn_general=0.05872,
             i_dx_tf_turn_general_input=True,
             c_tf_turn=0,
@@ -1339,7 +1339,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
         ),
         TfAveragedTurnGeomParam(
             layer_ins=0,
-            t_conductor=0.058296,
+            dx_tf_turn_conduit_full_average=0.058296,
             dx_tf_turn_general=0,
             i_dx_tf_turn_general_input=False,
             c_tf_turn=0,
@@ -1368,7 +1368,7 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
     tfaveragedturngeomparam, monkeypatch, cicc_sctfcoil
 ):
     """
-    Automatically generated Regression Unit Test for
+    Automatically generated Unit Test for
     tf_cable_in_conduit_averaged_turn_geometry.
 
     This test was generated using data from I-mode IN.DAT
@@ -1397,7 +1397,7 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
     )
 
     # Existing checks
-    assert avg_turn_geometry.t_conductor == pytest.approx(
+    assert avg_turn_geometry.dx_tf_turn_conduit_full_average == pytest.approx(
         tfaveragedturngeomparam.expected_t_conductor
     )
     assert avg_turn_geometry.dx_tf_turn_general == pytest.approx(
@@ -1476,7 +1476,7 @@ class TfWpCurrentsParam(NamedTuple):
 )
 def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
     """
-    Automatically generated Regression Unit Test for tf_wp_currents.
+    Automatically generated Unit Test for tf_wp_currents.
 
     This test was generated using data from I-mode IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1908,7 +1908,7 @@ def test_superconducting_tf_coil_area_and_masses(
     tfcoilareaandmassesparam, monkeypatch, sctfcoil
 ):
     """
-    Automatically generated Regression Unit Test for tf_coil_area_and_masses.
+    Automatically generated Unit Test for tf_coil_area_and_masses.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).

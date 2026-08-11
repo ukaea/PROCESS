@@ -19,6 +19,7 @@ from process.core.model import DataStructure, Model
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.pfcoil_variables import PFConductorModel
 from process.data_structure.physics_variables import DivertorNumberModels
+from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.engineering.materials import (
     calculate_tresca_stress,
     calculate_von_mises_stress,
@@ -2741,7 +2742,7 @@ class TFCoil(Model):
             # Non-integer or interger number of turns
             t_cable_eyng = (
                 dx_tf_turn_cable_space_average
-                if i_tf_turns_integer == 0
+                if i_tf_turns_integer == TFWPIntegerTurnType.NON_INTEGER
                 else dr_tf_turn_cable_space
             )
 
@@ -2902,7 +2903,7 @@ class TFCoil(Model):
             r_wp_outer_eff = np.double(r_tf_wp_inboard_outer)
 
         # Thickness of the layer representing the WP in stress calculations [m]
-        dr_tf_wp_eff = r_wp_outer_eff - r_wp_outer_eff
+        dr_tf_wp_eff = r_wp_outer_eff - r_wp_inner_eff
 
         # Thickness of WP with homogeneous stress property [m]
         dr_wp_layer = dr_tf_wp_eff / n_tf_graded_layers

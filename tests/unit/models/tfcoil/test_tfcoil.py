@@ -12,6 +12,7 @@ import pytest
 import process.models.tfcoil.base as tfcoil_module
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.pfcoil_variables import PFConductorModel
+from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 
 
 @pytest.fixture
@@ -518,7 +519,7 @@ class TfFieldAndForceParam(NamedTuple):
 )
 def test_tf_field_and_force(tffieldandforceparam, tfcoil):
     """
-    Automatically generated Regression Unit Test for tf_field_and_force.
+    Automatically generated Unit Test for tf_field_and_force.
 
     This test was generated using data from the FNSF IN.DAT
     (no longer exists in the PROCESS repository).
@@ -654,7 +655,7 @@ class TfcindParam(NamedTuple):
 )
 def test_tf_coil_self_inductance(tfcindparam, monkeypatch, tfcoil):
     """
-    Automatically generated Regression Unit Test for tf_coil_self_inductance().
+    Automatically generated Unit Test for tf_coil_self_inductance().
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -730,7 +731,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 )
 def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
     """
-    Automatically generated Regression Unit Test for tf_coil_area_and_masses.
+    Automatically generated Unit Test for tf_coil_area_and_masses.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1020,7 +1021,7 @@ class StressclParam(NamedTuple):
             n_tf_coils=16,
             i_tf_stress_model=1,
             sig_tf_wp_max=580000000,
-            i_tf_turns_integer=1,
+            i_tf_turns_integer=TFWPIntegerTurnType.INTEGER,
             dr_tf_plasma_case=0.060000000000000012,
             a_tf_wp_conductor=0.1653572639592335,
             a_tf_wp_extra_void=0.07759938309736393,
@@ -1136,7 +1137,7 @@ class StressclParam(NamedTuple):
             n_tf_coils=16,
             i_tf_stress_model=1,
             sig_tf_wp_max=580000000,
-            i_tf_turns_integer=1,
+            i_tf_turns_integer=TFWPIntegerTurnType.INTEGER,
             dr_tf_plasma_case=0.060000000000000012,
             a_tf_wp_conductor=0.1653572639592335,
             a_tf_wp_extra_void=0.07759938309736393,
@@ -1207,7 +1208,7 @@ class StressclParam(NamedTuple):
 )
 def test_stresscl(stressclparam, monkeypatch, tfcoil):
     """
-    Automatically generated Regression Unit Test for stresscl.
+    Automatically generated Unit Test for stresscl.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1423,7 +1424,7 @@ class PlaneStressExpectedData:
 )
 def test_plane_stress(planestressparam, skip_if_incompatible_system, request):
     """
-    Automatically generated Regression Unit Test for plane_stress.
+    Automatically generated Unit Test for plane_stress.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1582,7 +1583,7 @@ class ExtendedPlaneStressExpectedData:
 )
 def test_extended_plane_strain(extendedplanestrainparam):
     """
-    Automatically generated Regression Unit Test for extended_plane_strain.
+    Automatically generated Unit Test for extended_plane_strain.
 
     This test was generated using data from the FNSF IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1691,7 +1692,7 @@ class EyoungParallelParam(NamedTuple):
 )
 def test_eyoung_parallel(eyoungparallelparam, monkeypatch):
     """
-    Automatically generated Regression Unit Test for eyoung_parallel.
+    Automatically generated Unit Test for eyoung_parallel.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1804,7 +1805,7 @@ class EyoungParallelArrayParam(NamedTuple):
 )
 def test_eyoung_t_nested_squares(eyoungtnestedsquaresparam, monkeypatch):
     """
-    Automatically generated Regression Unit Test for eyoung_t_nested_squares.
+    Automatically generated Unit Test for eyoung_t_nested_squares.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1872,7 +1873,7 @@ def test_eyoung_t_nested_squares(eyoungtnestedsquaresparam, monkeypatch):
 )
 def test_eyoung_series(eyoungseriesparam, monkeypatch):
     """
-    Automatically generated Regression Unit Test for eyoung_series.
+    Automatically generated Unit Test for eyoung_series.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -1928,7 +1929,7 @@ def test_eyoung_series(eyoungseriesparam, monkeypatch):
 )
 def test_eyoung_parallel_array(eyoungparallelarrayparam, monkeypatch):
     """
-    Automatically generated Regression Unit Test for eyoung_parallel_array.
+    Automatically generated Unit Test for eyoung_parallel_array.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).

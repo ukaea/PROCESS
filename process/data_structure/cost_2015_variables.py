@@ -1,3 +1,5 @@
+"""Module containing variables for the costs 2015 models"""
+
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -5,6 +7,8 @@ import numpy as np
 
 @dataclass(slots=True)
 class Cost2015Data:
+    """Dataclass holding cost 2015 variables"""
+
     mean_electric_output: float = 0.0
 
     annual_electric_output: float = 0.0

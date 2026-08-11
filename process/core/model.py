@@ -1,3 +1,5 @@
+"""Module containing routines to set up the data structure and models"""
+
 import abc
 from dataclasses import dataclass, fields
 
@@ -45,6 +47,8 @@ initialise_later = object()
 
 @dataclass(kw_only=True)
 class DataStructure:
+    """Dataclass holding the data structure"""
+
     water_use: WaterUseData = initialise_later
     costs_2015: Cost2015Data = initialise_later
     cs_fatigue: CSFatigueData = initialise_later
@@ -83,12 +87,15 @@ class DataStructure:
     numerics: NumericsData = initialise_later
 
     def __post_init__(self):
+        """Set up the data structure"""
         for f in fields(self):
             if getattr(self, f.name) is initialise_later:
                 setattr(self, f.name, f.type())
 
 
 class Model(abc.ABC):
+    """Set up Model base class"""
+
     data: DataStructure
 
     @abc.abstractmethod

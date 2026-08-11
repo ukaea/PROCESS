@@ -1,3 +1,5 @@
+"""Module to output stellarator modular coil results."""
+
 from process.core import process_output as po
 
 

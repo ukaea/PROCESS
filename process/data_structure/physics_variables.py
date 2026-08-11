@@ -1,11 +1,4 @@
-"""Module containing tokamak plasma physics routines
-
-This module contains all the primary plasma physics routines
-for a tokamak device.
-
-
-Module containing global variables relating to the plasma physics
-"""
+"""Module containing variables for the plasma models"""
 
 from dataclasses import dataclass, field
 from enum import IntEnum
@@ -319,6 +312,16 @@ class ConfinementTimeModel(IntEnum):
         f"ITPA20-IL                      ({ConfinementMode.H_MODE.abbreviation})",
         ConfinementMode.H_MODE,
     )
+    NCST = (
+        51,
+        f"NCST                           ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
+    PAZ_SOLDAN_NT = (
+        51,
+        f"Paz-Soldan Neg Triang          ({ConfinementMode.L_MODE.abbreviation})",
+        ConfinementMode.L_MODE,
+    )
 
     def __new__(cls, value: int, full_name: str, mode: ConfinementMode = None):
         """Create a new instance of ConfinementTimeModel.
@@ -378,6 +381,8 @@ N_CONFINEMENT_SCALINGS = len(ConfinementTimeModel)
 
 @dataclass(slots=True)
 class PhysicsData:
+    """Dataclass holding physics variables"""
+
     iscz: int = 0
 
     err242: int = 0
@@ -572,6 +577,12 @@ class PhysicsData:
 
     b_plasma_total: float = 0.0
     """Sum of plasma total toroidal + poloidal field (Bₜₒₜ) [T]"""
+
+    b_plasma_outboard_total: float = 0.0
+    """Plasma outboard total magnetic field (Bₜₒₜ(R₀+a)) [T]"""
+
+    b_plasma_inboard_total: float = 0.0
+    """Plasma inboard total magnetic field (Bₜₒₜ(R₀-a)) [T]"""
 
     e_plasma_magnetic_stored: float = 0.0
     """Plasma stored magnetic energy [J]"""
@@ -1701,6 +1712,22 @@ class PhysicsData:
 
     res_plasma_fuel_spitzer_vol_avg: float = 0.0
     """Volume averaged plasma Spitzer resistivity due to fuel ions (ohm m)"""
+
+    len_plasma_sol_eich13_power_decay: float = 0.0
+    """Eich 2013 power decay length in the scrape-off layer scaling (λ_q) [m]"""
+
+    len_plasma_sol_mast14_power_decay_1: float = 0.0
+    """MAST 2014 power decay length in the scrape-off layer scaling 1 (λ_q) [m]"""
+
+    len_plasma_sol_mast14_power_decay_2: float = 0.0
+    """MAST 2014 power decay length in the scrape-off layer scaling 2 (λ_q) [m]"""
+
+    a_plasma_outboard_sol_eich13_parallel: float = 0.0
+    """Plasma outboard midplane (upstream) Eich 2013 SOL parallel area (Aₗₗ,ᵤ) [m]"""
+
+    pflux_plasma_outboard_sol_eich13_parallel_mw: float = 0.0
+    """Plasma outboard midplane (upstream) Eich 2013 SOL parallel power flux
+    (qₗₗ,ᵤ) [MW/m²]"""
 
     dt_power_density_plasma: float = 0.0
     sigmav_dt_average: float = 0.0

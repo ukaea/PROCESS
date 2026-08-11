@@ -1,3 +1,5 @@
+"""Module containing stellarator build routines"""
+
 from process.core import process_output as po
 from process.core.model import DataStructure
 
@@ -184,6 +186,7 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
 
 
 def output(stellarator, data):
+    """Output stellarator information"""
     po.oheadr(stellarator.outfile, "Radial Build")
 
     po.ovarre(

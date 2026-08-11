@@ -1,4 +1,4 @@
-"""This library contains routines that can be shared by the blanket modules."""
+"""Library containing routines that can be shared by the blanket modules."""
 
 import logging
 from enum import IntEnum
@@ -54,16 +54,18 @@ class FWBlktCoolantLoopTypes(IntEnum):
 
 
 class BlanketLibrary(Model):
+    """Module containing blanket library routines"""
+
     def __init__(self, fw):
         self.outfile = constants.NOUT
 
         self.fw = fw
 
     def output(self):
-        """This model doesn't have any output"""
+        """BlanketLibrary model doesn't have any output"""
 
     def run(self):
-        """This model doesn't need to be run"""
+        """BlanketLibrary model doesn't need to be run"""
 
     def component_volumes(self):
         """Calculate the blanket, shield, vacuum vessel and cryostat volumes
@@ -696,6 +698,12 @@ class BlanketLibrary(Model):
         Parameters
         ----------
         output: bool
+
+        Raises
+        ------
+        ProcessValueError
+            If there is an error in primary_coolant_properties.
+            See
 
         """
         # Make sure that, if the inputs for the FW and blanket inputs are different,
@@ -2077,6 +2085,11 @@ class BlanketLibrary(Model):
             Coolant mass flow rate per pipe (kg/s)
         flow_density :
             Coolant density
+
+        Raises
+        ------
+        ProcessValueError
+            If i_channel_shape is an invalid option (not in [1,2])
         """
         if i_channel_shape == 1:
             return mass_flow_rate / (
@@ -3330,6 +3343,11 @@ class BlanketLibrary(Model):
         i_channel_shape :
             switch for circular or rectangular channel crossection.
             Shape depends on whether primary or secondary coolant
+
+        Raises
+        ------
+        ProcessValueError
+            If i_channel_shape is an invalid option (not in [1,2])
         """
         # If primary coolant then circular channels assumed
         if i_channel_shape == 1:
@@ -3372,6 +3390,12 @@ class BlanketLibrary(Model):
         -------
         float
             Elbow coefficient for pressure drop calculation
+
+        Raises
+        ------
+        ProcessValueError
+            If 70 <= elbow angle(deg) <= 100 as there is no formula
+            for this range
 
         References
         ----------
@@ -3457,6 +3481,11 @@ class BlanketLibrary(Model):
         -------
         float
             Pumping power in MW.
+
+        Raises
+        ------
+        ProcessValueError
+            If calculated pressure drops in the coolant are too large to be feasible
 
         References
         ----------
@@ -3589,7 +3618,10 @@ class BlanketLibrary(Model):
 
 
 class OutboardBlanket(BlanketLibrary):
+    """Outboard blanket routines"""
+
     def calculate_basic_geometry(self):
+        """Calculate basic outboard blanket geometry"""
         self.component_volumes()
 
         dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)
@@ -3717,7 +3749,10 @@ class OutboardBlanket(BlanketLibrary):
 
 
 class InboardBlanket(BlanketLibrary):
+    """Inboard blanket routines"""
+
     def calculate_basic_geometry(self):
+        """Calculate basic inboard blanket geometry"""
         self.component_volumes()
 
         dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)

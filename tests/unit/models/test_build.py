@@ -75,7 +75,7 @@ class DivgeomParam(NamedTuple):
 )
 def test_divgeom(divgeomparam, monkeypatch, build):
     """
-    Automatically generated Regression Unit Test for divgeom.
+    Automatically generated Unit Test for divgeom.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).
@@ -188,7 +188,7 @@ class PortszParam(NamedTuple):
 )
 def test_calculate_beam_port_size(portszparam, build):
     """
-    Regression Unit Test for calculate_beam_port_size with explicit inputs.
+    Unit Test for calculate_beam_port_size with explicit inputs.
 
     This test was generated using data from baseline_2018_IN.DAT
     (no longer exists in the PROCESS repository).

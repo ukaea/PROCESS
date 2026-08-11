@@ -1,3 +1,5 @@
+"""Module containing variables for the PF coil models"""
+
 from dataclasses import dataclass, field
 from enum import IntEnum
 
@@ -37,7 +39,8 @@ NGC2 = NGC + 2
 
 @dataclass(slots=True)
 class PFCoilData:
-    # PF coil module variables
+    """Dataclass holding PF coil variables"""
+
     nef: int = 0
 
     nfxf: int = 0

@@ -1,3 +1,5 @@
+"""Routine to calculate the auxiliary heating power in a stellarator"""
+
 import logging
 
 from process.core import process_output as po
@@ -23,6 +25,11 @@ def st_heat(stellarator, f_output: bool, data: DataStructure):
 
     data: DataStructure
         data structure object
+
+    Raises
+    ------
+    ProcessValueError
+        If illegal value used for isthtr
 
     """
     f_p_beam_injected_ions = None
@@ -134,6 +141,7 @@ def st_heat(stellarator, f_output: bool, data: DataStructure):
 
 
 def output(stellarator, data: DataStructure, f_p_beam_injected_ions=None):
+    """Outputs the stellarator heating parameters to the output file."""
     po.oheadr(stellarator.outfile, "Auxiliary Heating System")
 
     if data.stellarator.isthtr == 1:

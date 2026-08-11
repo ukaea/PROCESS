@@ -1,0 +1,1 @@
+"""Module containing geometry calculations"""

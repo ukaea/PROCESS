@@ -1,6 +1,4 @@
-"""
-Module containing global variables relating to the toroidal field coil systems
-"""
+"""Module containing variables for the TF coil models"""
 
 from dataclasses import dataclass, field
 
@@ -14,6 +12,8 @@ used for stress, strain and displacement distribution
 
 @dataclass(slots=True)
 class TFData:
+    """Dataclass holding TF coil variables"""
+
     a_tf_coil_inboard_case: float = 0.0
     """external case area per coil (inboard leg) (m2)"""
 
@@ -95,8 +95,8 @@ class TFData:
     tfc_sidewall_is_fraction: bool = False
     """logical switch to make dx_tf_side_case_min a fraction of TF coil thickness (`casths_fraction`)"""
 
-    t_conductor: float = 0.0
-    """Conductor (cable + steel conduit) area averaged dimension [m]"""
+    dx_tf_turn_conduit_full_average: float = 0.0
+    """Average full width of the conduit surrounding the TF turn cable space [m]"""
 
     dx_tf_turn_general: float = 0.0
     """TF coil turn edge length including turn insulation [m]
@@ -757,7 +757,10 @@ class TFData:
     """mass of ground-wall insulation layer per coil (kg/coil)"""
 
     m_tf_coils_total: float = 0.0
-    """total mass of the TF coils (kg)"""
+    """Total mass of all TF coils (kg)"""
+
+    m_tf_coil: float = 0.0
+    """Total mass of one TF coil (kg)"""
 
     dx_tf_wp_primary_toroidal: float = 0.0
     """width of first step of winding pack (m)"""
