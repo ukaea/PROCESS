@@ -54,46 +54,42 @@ class Vacuum(Model):
             * constants.UMASS
         )
 
-        self.i_vacuum_pumping = self.data.vacuum.i_vacuum_pumping
+        vp = self.data.vacuum
+        bld = self.data.build
+        phy = self.data.physics
 
-        # i_vacuum_pumping required to be compared to a b string
-        # as this is what f2py returns
-        if self.i_vacuum_pumping == "old":
+        if vp.i_vacuum_pumping == "old":
             (
                 pumpn,
-                self.data.vacuum.n_vv_vacuum_ducts,
-                self.data.vacuum.dlscal,
-                self.data.vacuum.m_vv_vacuum_duct_shield,
-                self.data.vacuum.dia_vv_vacuum_ducts,
+                vp.n_vv_vacuum_ducts,
+                vp.dlscal,
+                vp.m_vv_vacuum_duct_shield,
+                vp.dia_vv_vacuum_ducts,
             ) = self.vacuum(
-                self.data.physics.p_fusion_total_mw,
-                self.data.physics.rmajor,
-                self.data.physics.rminor,
-                0.5e0
-                * (
-                    self.data.build.dr_fw_plasma_gap_inboard
-                    + self.data.build.dr_fw_plasma_gap_outboard
-                ),
-                self.data.physics.a_plasma_surface,
-                self.data.physics.vol_plasma,
-                self.data.build.dr_shld_outboard,
-                self.data.build.dr_shld_inboard,
-                self.data.build.dr_tf_inboard,
-                self.data.build.r_shld_inboard_inner
-                - self.data.build.dr_shld_vv_gap_inboard
-                - self.data.build.dr_vv_inboard,
+                phy.p_fusion_total_mw,
+                phy.rmajor,
+                phy.rminor,
+                0.5e0 * (bld.dr_fw_plasma_gap_inboard + bld.dr_fw_plasma_gap_outboard),
+                phy.a_plasma_surface,
+                phy.vol_plasma,
+                bld.dr_shld_outboard,
+                bld.dr_shld_inboard,
+                bld.dr_tf_inboard,
+                bld.r_shld_inboard_inner
+                - bld.dr_shld_vv_gap_inboard
+                - bld.dr_vv_inboard,
                 self.data.tfcoil.n_tf_coils,
                 self.data.times.t_plant_pulse_dwell,
-                self.data.physics.nd_plasma_electrons_vol_avg,
+                phy.nd_plasma_electrons_vol_avg,
                 self.data.divertor.n_divertors,
                 qtorus,
                 gasld,
                 output=output,
             )
             # MDK pumpn is real: convert to integer by rounding.
-            self.data.vacuum.n_vac_pumps_high = math.floor(pumpn + 0.5e0)
-        elif self.i_vacuum_pumping == "simple":
-            self.data.vacuum.n_iter_vacuum_pumps = self.vacuum_simple(output=output)
+            vp.n_vac_pumps_high = math.floor(pumpn + 0.5e0)
+        elif vp.i_vacuum_pumping == "simple":
+            vp.n_iter_vacuum_pumps = self.vacuum_simple(output=output)
         else:
             logger.error(
                 f"i_vacuum_pumping is invalid: {self.data.vacuum.i_vacuum_pumping}"
@@ -157,7 +153,7 @@ class Vacuum(Model):
             self.outfile,
             "Switch for vacuum pumping model",
             "(i_vacuum_pumping)",
-            f'"{self.i_vacuum_pumping}"',
+            f'"{self.data.vacuum.i_vacuum_pumping}"',
         )
         process_output.ocmmnt(
             self.outfile,
