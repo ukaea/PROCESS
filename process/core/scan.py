@@ -16,6 +16,7 @@ from process.core.caller import write_output_files
 from process.core.exceptions import ProcessValueError
 from process.core.io.data_structure_dicts import get_dicts
 from process.core.log import logging_model_handler, show_errors
+from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
 from process.data_structure.scan_variables import IPNSCNS, NOUTVARS, ScanData
 from process.models.availability import AvailabilityModel
@@ -289,6 +290,8 @@ class Scan:
         self.data.numerics.sqsumsq = (
             sum(r**2 for r in self.data.numerics.rcm[: self.data.numerics.neqns]) ** 0.5
         )
+        constraints.constraints_output(self.data, self.solver)
+
         return ifail
 
     def scan_1d(self):
