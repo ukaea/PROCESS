@@ -2014,6 +2014,7 @@ def constraint_eqns(m: int, ieqn: int, data: DataStructure):
 
 
 def constraints_output(data: DataStructure, solver_name: str):
+    """Output constraints information to file"""
     nums = data.numerics
 
     process_output.osubhd(
