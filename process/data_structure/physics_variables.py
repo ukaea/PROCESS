@@ -458,7 +458,8 @@ class PhysicsData:
     p_div_lower_outboard_separatrix_mw: float = 0.0
     """Plasma separatrix power directed to the lower outboard divertor target [MW]"""
 
-    puimw: float = 0.0
+    p_div_upper_inboard_separatrix_mw: float = 0.0
+    """Plasma separatrix power directed to the upper inboard divertor target [MW]"""
 
     puomw: float = 0.0
 
