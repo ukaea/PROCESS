@@ -116,13 +116,21 @@ class TFSuperconductorLimits:
     """Dataclass holding superconducting TF coil limits"""
 
     j_tf_wp_critical: float
+    """Critical current density in the TF winding pack (A/m²)."""
     j_superconductor_critical: float
+    """Critical current density in the superconductor (A/m²)."""
     f_c_tf_turn_operating_critical: float
+    """Ratio of operating current to critical current for the TF turn (dimensionless)."""
     j_superconductor: float
+    """Current density  in the superconductor at operating conditions (A/m²)."""
     j_tf_coil_turn: float
+    """Current density in the TF coil turn at operating conditions (A/m²)."""
     bc20m: float
+    """Critical magnetic field at 20 K and zero strain (T)."""
     tc0m: float
+    """Critical temperature at zero magnetic field and zero strain (K)."""
     c_turn_cables_critical: float
+    """Critical current in the TF turn cables (A)."""
 
 
 class SuperconductingTFCoil(TFCoil):
