@@ -1691,6 +1691,13 @@ class PhysicsData:
     pflux_plasma_outboard_sol_eich13_parallel_mw: float = 0.0
     """Plasma outboard midplane (upstream) Eich 2013 SOL parallel power flux
     (qₗₗ,ᵤ) [MW/m²]"""
+    
+    i_len_sol_outboard_power_decay: int = 0
+    """Switch for SOL outboard power decay length (λ_q) scaling to use:
+    - =0 Eich 2013 scaling
+    - =1 MAST 2014 scaling 1
+    - =2 MAST 2014 scaling 2
+    """
 
     dt_power_density_plasma: float = 0.0
     sigmav_dt_average: float = 0.0
