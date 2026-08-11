@@ -130,6 +130,8 @@ class SolverHandler:
     def _numerics_output(self):
         nums = self.data.numerics
 
+        nums.sqsumsq = sum(r**2 for r in nums.rcm[: nums.neqns]) ** 0.5
+
         process_output.oheadr(constants.NOUT, "Numerics")
         s_type = (
             "fsolve (evaluation)" if self.solver == "fsolve" else "VMCON (optimisation)"

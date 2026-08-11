@@ -287,9 +287,6 @@ class Scan:
     def doopt(self):
         """Run the optimiser or solver."""
         ifail = self.solver_handler.run()
-        self.data.numerics.sqsumsq = (
-            sum(r**2 for r in self.data.numerics.rcm[: self.data.numerics.neqns]) ** 0.5
-        )
         constraints.constraints_output(self.data, self.solver)
 
         return ifail

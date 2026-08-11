@@ -35,7 +35,6 @@ class _Solver(ABC):
         self.data = data
         self.tolerance = self.data.numerics.epsvmc
         self.b: float | None = None
-        self.convergence_parameter: float | None = None
         self.maxcal = self.data.globals.maxcal
 
     def set_evaluators(self, evaluators: Evaluators):
@@ -198,7 +197,7 @@ class Vmcon(_Solver):
 
         def _solver_callback(i: int, _result, _x, convergence_param: float):
             self.data.numerics.nviter = i + 1
-            self.convergence_parameter = convergence_param
+            self.data.globals.convergence_parameter = convergence_param
             print(
                 f"{i + 1} | Convergence Parameter: {convergence_param:.3E}",
                 end="\r",
