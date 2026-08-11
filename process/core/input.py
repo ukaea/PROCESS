@@ -95,7 +95,13 @@ class InputVariable:
     Instead only do any `additional_actions`."""
 
     def __post_init__(self):
-        """Check if InputVariable is valid"""
+        """Check if InputVariable is valid
+
+        Raises
+        ------
+        ProcessValueError
+            Invalid InputVariable setup
+        """
         if self.type not in DataTypes:
             error_msg = (
                 f"Cannot parse variable of type {self.type}, must be one of {DataTypes}"
@@ -1177,7 +1183,15 @@ INPUT_VARIABLES = {
 
 
 def parse_input_file(data_structure_obj: DataStructure):
-    """Parse the input file and create a dictionary of variables"""
+    """Parse the input file and create a dictionary of variables
+
+    Raises
+    ------
+    ProcessValueError
+        Unable to parse line in input file
+    ProcessValidationError
+        Unrecognised input in input file
+    """
     # These get incremented when reading the file, so need
     # to ensure they are 0 before we parse the file
     data_structure_obj.numerics.nvar = 0
