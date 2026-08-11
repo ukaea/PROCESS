@@ -48,7 +48,14 @@ class PulseTimings:
     )
 
     def __post_init__(self) -> None:
-        """Validate class metadata against the timing fields."""
+        """Validate class metadata against the timing fields.
+
+        Raises
+        ------
+        ValueError
+            If the number of point labels or abbreviations does not match the number
+            of timing fields.
+        """
         n_timing_fields = len(fields(self))
         if len(self.point_labels) != n_timing_fields:
             raise ValueError(
@@ -105,11 +112,6 @@ class PulseTimings:
     def n_pulse_points_total(self) -> int:
         """Calculate the total number of timing points for all pulse phases."""
         return len(self.total_pulse_cumulative)
-
-    @property
-    def n_pulse_points_intervals_total(self) -> int:
-        """Calculate the total number of timing intervals for all pulse phases."""
-        return int(self.n_pulse_points_total - 1)
 
     @property
     def pf_active_cumulative(self) -> tuple[float, float, float, float, float, float]:
