@@ -98,16 +98,15 @@ class Vacuum(Model):
     def vacuum_simple(self, output) -> float:
         """Simple model of vacuum pumping system
 
-
         Parameters
         ----------
         output :
+            indicate whether output should be written to the output file, or not
 
         Returns
         -------
         npump:
             number of pumps for pumpdown and steady-state
-            indicate whether output should be written to the output file, or not
         """
         # Steady-state model (super simple)
         # One ITER torus cryopump has a throughput of 50 Pa m3/s = 1.2155e+22 molecules/s
@@ -166,21 +165,18 @@ class Vacuum(Model):
             self.data.physics.molflow_plasma_fuelling_required,
             "OP ",
         )
-        process_output.ocmmnt(
-            self.outfile, "Number of high vacuum pumps, each with the throughput"
-        )
-        process_output.ocmmnt(
-            self.outfile,
-            " of one ITER cryopump (50 Pa m3 s-1 = 1.2e+22 molecules/s),",
-        )
+
         process_output.ovarre(
             self.outfile,
-            " all operating at the same time",
+            "Number of high vacuum pumps, each with the throughput of one ITER cryopump"
             "(n_iter_vacuum_pumps)",
             n_iter_vacuum_pumps,
             "OP ",
         )
-
+        process_output.ocmmnt(
+            self.outfile,
+            "(50 Pa m3 s-1 = 1.2e+22 molecules/s), all operating at the same time",
+        )
         process_output.ovarre(
             self.outfile,
             "Dwell time",
@@ -467,6 +463,7 @@ class Vacuum(Model):
         nflag = 0  # Control option if ducts are too small in x-sectional area
         #  = 1 if problem is identified in output, but run continues
         #  = 0 otherwise
+
         #  Newton's method solution for duct diameter
 
         while True:
@@ -480,7 +477,8 @@ class Vacuum(Model):
 
             else:
                 logger.error(
-                    f"Newton's method not converging; check fusion power, te "
+                    "Newton's method not converging; check "
+                    "p_fusion_total_mw and temp_plasma_electron_vol_avg_kev "
                     f"{self.data.physics.p_fusion_total_mw=} "
                     f"{self.data.physics.temp_plasma_electron_vol_avg_kev=}"
                 )
@@ -679,7 +677,7 @@ class Vacuum(Model):
             process_output.oblnkl(self.outfile)
 
         i_fw_blkt_shared_coolant = (
-            "cryo "
+            "cryo"
             if VacuumPumpType(self.data.vacuum.i_vacuum_pump_type)
             == VacuumPumpType.COMPOUND_CRYOPUMP
             else "turbo"
