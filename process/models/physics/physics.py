@@ -1062,7 +1062,7 @@ class Physics(Model):
                 1.0e0 - self.data.physics.f_p_div_lower
             ) * (1.0e0 - self.data.physics.fio)
             # power into each target
-            self.data.physics.plimw = (
+            self.data.physics.p_div_lower_inboard_separatrix_mw = (
                 self.data.physics.f_p_div_lower_inboard_separatrix
                 * self.data.physics.ptarmw
             )
@@ -1085,7 +1085,7 @@ class Physics(Model):
                 1.0e0 - self.data.physics.fio
             )
             # power into each target
-            self.data.physics.plimw = (
+            self.data.physics.p_div_lower_inboard_separatrix_mw = (
                 self.data.physics.f_p_div_lower_inboard_separatrix
                 * self.data.physics.ptarmw
             )
@@ -2300,7 +2300,7 @@ class Physics(Model):
                 self.outfile,
                 "Power incident on the lower inner target (MW)",
                 "(pLImw)",
-                self.data.physics.plimw,
+                self.data.physics.p_div_lower_inboard_separatrix_mw,
                 "OP ",
             )
             po.ovarre(
