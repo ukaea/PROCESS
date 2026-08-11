@@ -1066,7 +1066,7 @@ class Physics(Model):
                 self.data.physics.f_p_div_lower_inboard_separatrix
                 * self.data.physics.ptarmw
             )
-            self.data.physics.plomw = (
+            self.data.physics.p_div_lower_outboard_separatrix_mw = (
                 self.data.physics.f_p_div_lower_outboard_separatrix
                 * self.data.physics.ptarmw
             )
@@ -1089,7 +1089,7 @@ class Physics(Model):
                 self.data.physics.f_p_div_lower_inboard_separatrix
                 * self.data.physics.ptarmw
             )
-            self.data.physics.plomw = (
+            self.data.physics.p_div_lower_outboard_separatrix_mw = (
                 self.data.physics.f_p_div_lower_outboard_separatrix
                 * self.data.physics.ptarmw
             )
@@ -2307,7 +2307,7 @@ class Physics(Model):
                 self.outfile,
                 "Power incident on the lower outer target (MW)",
                 "(pLOmw)",
-                self.data.physics.plomw,
+                self.data.physics.p_div_lower_outboard_separatrix_mw,
                 "OP ",
             )
             if self.data.divertor.n_divertors == 2:
