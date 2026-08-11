@@ -2,6 +2,8 @@
 
 import logging
 
+from tabulate import tabulate
+
 from process.core import constants, process_output
 from process.core.solver.evaluators import Evaluators
 from process.core.solver.iteration_variables import (
@@ -125,10 +127,12 @@ class SolverHandler:
         nums = self.data.numerics
 
         process_output.oheadr(constants.NOUT, "Numerics")
+        s_type = (
+            "fsolve (evaluation)" if self.solver == "fsolve" else "VMCON (optimisation)"
+        )
         process_output.ocmmnt(
             constants.NOUT,
-            f"PROCESS has performed a {'fsolve' if self.solver == 'fsolve' else 'VMCON'}"
-            " (optimisation) run.",
+            f"PROCESS has performed a {s_type} run",
         )
         ifail = self.solver.info
         if ifail != SolverOutputCondition.CONVERGED:
@@ -208,14 +212,16 @@ class SolverHandler:
                     nums.nviter,
                     "OP ",
                 ),
-                (
-                    "Square root of the sum of squares of the constraint residuals",
-                    "(sqsumsq)",
-                    nums.sqsumsq,
-                    "OP ",
-                ),
             ):
                 process_output.ovarre(constants.NOUT, d, var, v, o)
+
+        process_output.ovarre(
+            constants.NOUT,
+            "Square root of the sum of squares of the constraint residuals",
+            "(sqsumsq)",
+            nums.sqsumsq,
+            "OP ",
+        )
 
         process_output.oblnkl(constants.NOUT)
 
@@ -240,3 +246,102 @@ class SolverHandler:
                     + f" the objective function: {nums.objf_name}\n"
                 ),
             )
+
+        written_warning = False
+
+        # Output optimisation parameters
+        solution_vector_table = []
+        for i in range(nums.nvar):
+            nums.xcs[i] = nums.xcm[i] * nums.scafc[i]
+
+            name = nums.lablxc[nums.ixc[i] - 1]
+            solution_vector_table.append([name, nums.xcs[i], nums.xcm[i]])
+
+            xminn = 1.01 * nums.itv_scaled_lower_bounds[i]
+            xmaxx = 0.99 * nums.itv_scaled_upper_bounds[i]
+
+            # Write to output file if close to optimisation parameter bounds
+            if nums.xcm[i] < xminn or nums.xcm[i] > xmaxx:
+                if not written_warning:
+                    written_warning = True
+                    process_output.ocmmnt(
+                        constants.NOUT,
+                        (
+                            "Certain operating limits have been reached,"
+                            "\n as shown by the following optimisation parameters"
+                            " that are"
+                            "\n at or near to the edge of their prescribed range :\n"
+                        ),
+                    )
+
+                xcval = nums.xcm[i] * nums.scafc[i]
+
+                if nums.xcm[i] < xminn:
+                    location, bound = "below", "lower"
+                    bounds = nums.itv_scaled_lower_bounds
+                else:
+                    location, bound = "above", "upper"
+                    bounds = nums.itv_scaled_upper_bounds
+                process_output.write(
+                    constants.NOUT,
+                    f"   {name:<30}= {xcval} is at or {location} its {bound} bound:"
+                    f" {bounds[i] * nums.scafc[i]}",
+                )
+
+            if nums.boundu[i] == nums.boundl[i]:
+                xnorm = 1.0
+            else:
+                xnorm = min(
+                    max(
+                        (nums.xcm[i] - nums.itv_scaled_lower_bounds[i])
+                        / (
+                            nums.itv_scaled_upper_bounds[i]
+                            - nums.itv_scaled_lower_bounds[i]
+                        ),
+                        0.0,
+                    ),
+                    1.0,
+                )
+
+            # Write optimisation parameters to mfile
+            for d, var, v in (
+                (
+                    nums.lablxc[nums.ixc[i] - 1],
+                    f"(itvar{i + 1:03d})",
+                    nums.xcs[i],
+                ),
+                (
+                    f"{name} (final value/initial value)",
+                    f"(xcm{i + 1:03d})",
+                    nums.xcm[i],
+                ),
+                (
+                    f"{name} (range normalised)",
+                    f"(nitvar{i + 1:03d})",
+                    xnorm,
+                ),
+                (
+                    f"{name} (upper bound)",
+                    f"(boundu{i + 1:03d})",
+                    nums.itv_scaled_upper_bounds[i] * nums.scafc[i],
+                ),
+                (
+                    f"{name} (lower bound)",
+                    f"(boundl{i + 1:03d})",
+                    nums.itv_scaled_lower_bounds[i] * nums.scafc[i],
+                ),
+            ):
+                process_output.ovarre(constants.MFILE, d, var, v)
+
+        # Write optimisation parameter headings to output file
+        process_output.osubhd(
+            constants.NOUT, "The solution vector is comprised as follows :"
+        )
+        process_output.write(
+            constants.NOUT,
+            tabulate(
+                solution_vector_table,
+                headers=["", "Final value", "Final / initial"],
+                numalign="left",
+            ),
+        )
