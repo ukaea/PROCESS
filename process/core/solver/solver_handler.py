@@ -114,7 +114,7 @@ class SolverHandler:
         return ifail
 
     def output(self):
-        """Store results back in Fortran self.data.numerics module.
+        """Store results back in self.data.numerics module.
 
         Objective function value, solution vector and constraints vector.
         """
@@ -124,6 +124,10 @@ class SolverHandler:
         self.data.numerics.xcm[: self.solver.x.shape[0]] = self.solver.x
         self.data.numerics.rcm[: self.solver.conf.shape[0]] = self.solver.conf
 
+        self._numerics_output()
+        self._optimisation_parameters_output()
+
+    def _numerics_output(self):
         nums = self.data.numerics
 
         process_output.oheadr(constants.NOUT, "Numerics")
@@ -247,6 +251,9 @@ class SolverHandler:
                 ),
             )
 
+    def _optimisation_parameters_output(self):
+        nums = self.data.numerics
+
         written_warning = False
 
         # Output optimisation parameters
@@ -305,21 +312,13 @@ class SolverHandler:
 
             # Write optimisation parameters to mfile
             for d, var, v in (
-                (
-                    nums.lablxc[nums.ixc[i] - 1],
-                    f"(itvar{i + 1:03d})",
-                    nums.xcs[i],
-                ),
+                (nums.lablxc[nums.ixc[i] - 1], f"(itvar{i + 1:03d})", nums.xcs[i]),
                 (
                     f"{name} (final value/initial value)",
                     f"(xcm{i + 1:03d})",
                     nums.xcm[i],
                 ),
-                (
-                    f"{name} (range normalised)",
-                    f"(nitvar{i + 1:03d})",
-                    xnorm,
-                ),
+                (f"{name} (range normalised)", f"(nitvar{i + 1:03d})", xnorm),
                 (
                     f"{name} (upper bound)",
                     f"(boundu{i + 1:03d})",
