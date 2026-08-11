@@ -438,7 +438,9 @@ class PhysicsData:
     dr_plasma_outboard_midplane_separatrix_separation: float = 0.0
     """Radial distance between the first and second plasma separatrixes at the outer midplane (δR_sep) [m]"""
 
-    fio: float = 0.0
+    f_p_div_inboard_separatrix: float = 0.0
+    """Fraction of the total plasma separatrix power going to the inboard divertor
+    target(s)"""
 
     f_p_div_lower_inboard_separatrix: float = 0.0
     """Fraction of plasma separatrix power to the lower inboard divertor target"""

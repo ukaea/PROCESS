@@ -993,6 +993,21 @@ class Physics(Model):
 
         # ============================================================
 
+        # Issue #1559 Infinities in
+        # physics_module.dr_plasma_outboard_midplane_separatrix_separation when running
+        # single null in a double null machine
+        # C W Ashe
+        if self.data.physics.f_p_div_lower < 4.5e-5:
+            self.data.physics.dr_plasma_outboard_midplane_separatrix_separation = 1.5e-2
+        elif self.data.physics.f_p_div_lower > (1.0e0 - 4.5e-5):
+            self.data.physics.dr_plasma_outboard_midplane_separatrix_separation = -1.5e-2
+        else:
+            self.data.physics.dr_plasma_outboard_midplane_separatrix_separation = (
+                -2.0e0
+                * 1.5e-3
+                * math.atanh(2.0e0 * (self.data.physics.f_p_div_lower - 0.5e0))
+            )
+
         div_power_plits = self.exhaust.calculate_brunner_divertor_power_splits(
             dr_plasma_outboard_midplane_separatrix_separation=self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
             len_plasma_sol_outboard_power_decay=0.001,
@@ -1008,26 +1023,12 @@ class Physics(Model):
         # Parameters taken from double null machine
         # D. Brunner et al
 
-        # Issue #1559 Infinities in
-        # physics_module.dr_plasma_outboard_midplane_separatrix_separation when running
-        # single null in a double null machine
-        # C W Ashe
-        if self.data.physics.f_p_div_lower < 4.5e-5:
-            self.data.physics.dr_plasma_outboard_midplane_separatrix_separation = 1.5e-2
-        elif self.data.physics.f_p_div_lower > (1.0e0 - 4.5e-5):
-            self.data.physics.dr_plasma_outboard_midplane_separatrix_separation = -1.5e-2
-        else:
-            self.data.physics.dr_plasma_outboard_midplane_separatrix_separation = (
-                -2.0e0
-                * 1.5e-3
-                * math.atanh(2.0e0 * (self.data.physics.f_p_div_lower - 0.5e0))
-            )
         # Model Taken from D3-D paper for conventional divertor
         # Journal of Nuclear Materials
         # Volumes 290-293, March 2001, Pages 935-939
         # Find the innner and outer lower target imbalance
 
-        self.data.physics.fio = 0.16e0 + (0.16e0 - 0.41e0) * (
+        self.data.physics.f_p_div_inboard_separatrix = 0.16e0 + (0.16e0 - 0.41e0) * (
             1.0e0
             - (
                 2.0e0
@@ -1050,17 +1051,19 @@ class Physics(Model):
             # Find all the power fractions accross the targets
             # Taken from D3-D conventional divertor design
             self.data.physics.f_p_div_lower_inboard_separatrix = (
-                self.data.physics.f_p_div_lower * self.data.physics.fio
+                self.data.physics.f_p_div_lower
+                * self.data.physics.f_p_div_inboard_separatrix
             )
             self.data.physics.f_p_div_lower_outboard_separatrix = (
-                self.data.physics.f_p_div_lower * (1.0e0 - self.data.physics.fio)
+                self.data.physics.f_p_div_lower
+                * (1.0e0 - self.data.physics.f_p_div_inboard_separatrix)
             )
             self.data.physics.f_p_div_upper_inboard_separatrix = (
                 1.0e0 - self.data.physics.f_p_div_lower
-            ) * self.data.physics.fio
+            ) * self.data.physics.f_p_div_inboard_separatrix
             self.data.physics.f_p_div_upper_outboard_separatrix = (
                 1.0e0 - self.data.physics.f_p_div_lower
-            ) * (1.0e0 - self.data.physics.fio)
+            ) * (1.0e0 - self.data.physics.f_p_div_inboard_separatrix)
             # power into each target
             self.data.physics.p_div_lower_inboard_separatrix_mw = (
                 self.data.physics.f_p_div_lower_inboard_separatrix
@@ -1080,9 +1083,11 @@ class Physics(Model):
             )
         else:
             # Single null configuration
-            self.data.physics.f_p_div_lower_inboard_separatrix = self.data.physics.fio
+            self.data.physics.f_p_div_lower_inboard_separatrix = (
+                self.data.physics.f_p_div_inboard_separatrix
+            )
             self.data.physics.f_p_div_lower_outboard_separatrix = (
-                1.0e0 - self.data.physics.fio
+                1.0e0 - self.data.physics.f_p_div_inboard_separatrix
             )
             # power into each target
             self.data.physics.p_div_lower_inboard_separatrix_mw = (

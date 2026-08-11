@@ -386,8 +386,8 @@ class PlasmaExhaust(Model):
             po.ovarre(
                 self.outfile,
                 "Fraction of power on the inner targets",
-                "(fio)",
-                self.data.physics.fio,
+                "(f_p_div_inboard_separatrix)",
+                self.data.physics.f_p_div_inboard_separatrix,
                 "OP ",
             )
             po.ovarre(
