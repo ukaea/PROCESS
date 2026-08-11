@@ -4541,8 +4541,8 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Durham Ginzburg-Landau critical surface model for REBCO
         elif i_tf_superconductor == SuperconductorModel.DURHAM_REBCO:
-            bc20m = 430  # [T]
-            tc0m = 185  # [K]
+            bc20m = SuperconductorModel.DURHAM_REBCO.b_crit_zero_field_strain  # [T]
+            tc0m = SuperconductorModel.DURHAM_REBCO.temp_crit_zero_field_strain  # [K]
 
             # If strain limit achieved, throw a warning and use the lower strain
             if abs(strain) > 0.7e-2:
@@ -4564,8 +4564,12 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Hazelton experimental data + Zhai conceptual model for REBCO
         elif i_tf_superconductor == SuperconductorModel.HAZELTON_ZHAI_REBCO:
-            bc20m = 138  # [T]
-            tc0m = 92  # [K]
+            bc20m = (
+                SuperconductorModel.HAZELTON_ZHAI_REBCO.b_crit_zero_field_strain
+            )  # [T]
+            tc0m = (
+                SuperconductorModel.HAZELTON_ZHAI_REBCO.temp_crit_zero_field_strain
+            )  # [K]
 
             # If strain limit achieved, throw a warning and use the lower strain
             if abs(strain) > 0.7e-2:
