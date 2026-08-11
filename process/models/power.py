@@ -314,14 +314,7 @@ class Power(Model):
             If True, write results to output files.
         pulse_timings : PulseTimings
             Pulse timing dataclass
-
-
-
-        Parameters
-        ----------
-        output:
-
-        """
+       """
         # Local aliases for readability (no functional change)
         c_pf_coil_turn = self.data.pf_coil.c_pf_coil_turn  # [A]
         ind_pf_cs_plasma_mutual = self.data.pf_coil.ind_pf_cs_plasma_mutual  # [H]
