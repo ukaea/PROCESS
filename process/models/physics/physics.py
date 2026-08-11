@@ -1008,7 +1008,6 @@ class Physics(Model):
         # use self.data.physics.f_p_div_lower to find deltarsep
         # Parameters taken from double null machine
         # D. Brunner et al
-        self.data.physics.len_sol_outboard_power_decay = 1.57e-3
 
         # Issue #1559 Infinities in physics_module.drsep when running single null in a
         # double null machine
