@@ -1010,8 +1010,47 @@ class Physics(Model):
 
         div_power_plits = self.exhaust.calculate_brunner_divertor_power_splits(
             dr_plasma_outboard_midplane_separatrix_separation=self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
-            len_plasma_sol_outboard_power_decay=0.001,
+            len_plasma_sol_outboard_power_decay=self.data.physics.len_sol_outboard_power_decay,
             f_len_sol_power_decay_inboard=0.7,
+        )
+
+        self.data.physics.f_p_div_inboard_separatrix = (
+            div_power_plits.f_p_div_inboard_separatrix
+        )
+        self.data.physics.f_p_div_outboard_separatrix = (
+            div_power_plits.f_p_div_outboard_separatrix
+        )
+        self.data.physics.f_p_div_lower_inboard_separatrix = (
+            div_power_plits.f_p_div_inboard_lower_separatrix
+        )
+        self.data.physics.f_p_div_lower_outboard_separatrix = (
+            div_power_plits.f_p_div_outboard_lower_separatrix
+        )
+        self.data.physics.f_p_div_upper_inboard_separatrix = (
+            div_power_plits.f_p_div_inboard_upper_separatrix
+        )
+        self.data.physics.f_p_div_upper_outboard_separatrix = (
+            div_power_plits.f_p_div_outboard_upper_separatrix
+        )
+
+        self.data.physics.p_div_lower_inboard_separatrix_mw = (
+            self.data.physics.f_p_div_lower_inboard_separatrix
+            * self.data.physics.p_plasma_separatrix_mw
+        )
+
+        self.data.physics.p_div_lower_outboard_separatrix_mw = (
+            self.data.physics.f_p_div_lower_outboard_separatrix
+            * self.data.physics.p_plasma_separatrix_mw
+        )
+
+        self.data.physics.p_div_upper_inboard_separatrix_mw = (
+            self.data.physics.f_p_div_upper_inboard_separatrix
+            * self.data.physics.p_plasma_separatrix_mw
+        )
+
+        self.data.physics.p_div_upper_outboard_separatrix_mw = (
+            self.data.physics.f_p_div_upper_outboard_separatrix
+            * self.data.physics.p_plasma_separatrix_mw
         )
 
         # Calculate the target imbalances

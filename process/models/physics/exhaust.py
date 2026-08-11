@@ -18,10 +18,10 @@ class DivertorSeparatrixPowerSplits:
 
     f_p_div_inboard_separatrix: float = 0.0
     """Fraction of total separatrix power to inboard divertor targets"""
-    
+
     f_p_div_outboard_separatrix: float = 0.0
     """Fraction of total separatrix power to outboard divertor targets"""
-    
+
     f_p_div_inboard_lower_separatrix: float = 0.0
     """Fraction of total separatrix power to inboard lower divertor target"""
 

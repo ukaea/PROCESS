@@ -441,7 +441,7 @@ class PhysicsData:
     f_p_div_inboard_separatrix: float = 0.0
     """Fraction of the total plasma separatrix power going to the inboard divertor
     target(s)"""
-    
+
     f_p_div_outboard_separatrix: float = 0.0
     """Fraction of the total plasma separatrix power going to the outboard divertor
     target(s)"""
