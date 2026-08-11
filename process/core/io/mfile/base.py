@@ -47,6 +47,13 @@ class MFileVariable(dict):  # noqa: FURB189
         super().__init__(*args, **kwargs)
 
     def __getattr__(self, name):
+        """Get attribute from dictionary
+
+        Raises
+        ------
+        AttributeError
+            If attribute doesn't exist in dictionary
+        """
         result = self.get(name)
         if result:
             return result
@@ -98,6 +105,7 @@ class MFileVariable(dict):  # noqa: FURB189
 
     @property
     def exists(self):
+        """Does the variable exist (always true)"""
         return True
 
 
@@ -112,6 +120,13 @@ class MFileErrorClass:
         self.get_number_of_scans = self.get_error
 
     def get_error(self, *args, **kwargs):  # noqa: ARG002
+        """Get error status from MFILE
+
+        Raises
+        ------
+        KeyError
+            If error_status not found in MFILE
+        """
         logger.error(f"Key '{self.item}' not in MFILE. KeyError! Check MFILE")
 
         if self.item == "error_status":
@@ -124,6 +139,7 @@ class MFileErrorClass:
 
     @property
     def exists(self):
+        """Does the variable exist (always false)"""
         return False
 
 
@@ -131,12 +147,26 @@ class MFileDataDictionary(OrderedDict):
     """Class object to act as a dictionary for the data."""
 
     def __getattr__(self, name):
+        """Get attribute from dictionary
+
+        Raises
+        ------
+        AttributeError
+            If attribute doesn't exist in dictionary
+        """
         result = self.get(name)
         if result:
             return result
         raise AttributeError(f"{self.__class__} object has no attribute {name}")
 
     def __getitem__(self, item):
+        """Get item from dictionary
+
+        Raises
+        ------
+        KeyError
+            If item does not exist in dictionary
+        """
         try:
             return dict.__getitem__(self, item)
         except KeyError:
@@ -144,6 +174,8 @@ class MFileDataDictionary(OrderedDict):
 
 
 class DefaultOrderedDict(OrderedDict):
+    """Base class for default ordered dictionary"""
+
     # Source: http://stackoverflow.com/a/6190500/562769
     def __init__(self, default_factory=None, *a, **kw):
         if default_factory is not None and not callable(default_factory):
@@ -152,31 +184,38 @@ class DefaultOrderedDict(OrderedDict):
         self.default_factory = default_factory
 
     def __getitem__(self, key):
+        """Get item from dictionary"""
         try:
             return OrderedDict.__getitem__(self, key)
         except KeyError:
             return self.__missing__(key)
 
     def __missing__(self, key):
+        """Deal with unknown keys"""
         if self.default_factory is None:
             return MFileErrorClass(key)
         self[key] = value = self.default_factory()
         return value
 
     def __reduce__(self):
+        """Create a pickleable object tuple"""
         args = () if self.default_factory is None else (self.default_factory,)
         return type(self), args, None, None, self.items()
 
     def copy(self):
+        """Copy the DefaultOrderedDict"""
         return copy.copy(self)
 
     def __copy__(self):
+        """Copy the DefaultOrderedDict"""
         return type(self)(self.default_factory, self)
 
     def __deepcopy__(self, memo):
+        """Deepcopy the DefaultOrderedDict"""
         return type(self)(self.default_factory, copy.deepcopy(self.items()))
 
     def __repr__(self):
+        """Return string representation of DefaultOrderedDict"""
         return (
             f"OrderedDefaultDict({self.default_factory}, {OrderedDict.__repr__(self)})"
         )

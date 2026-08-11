@@ -1,3 +1,5 @@
+"""PROCESS systems code"""
+
 import logging
 from importlib.metadata import version
 

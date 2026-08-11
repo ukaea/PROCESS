@@ -9,6 +9,7 @@ class ProcessError(Exception):
         self._diagnostics = kwargs
 
     def __str__(self):
+        """Exception message for ProcessError"""
         exception_message = super().__str__()
         diagnostics_message = "\n".join([
             f"\t{d}: {v!r}" for d, v in self._diagnostics.items()

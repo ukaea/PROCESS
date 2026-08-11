@@ -3600,7 +3600,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         a_tf_coil_inboard_case: float,
         a_tf_wp_ground_insulation: float,
     ) -> SuperconTFAreasFractions:
-
+        """Calculate TF coil cable in conduit space winding pack areas and fractions"""
         # Areas and fractions
         # -------------------
         # Central helium channel down the conductor core [m2]
@@ -3662,7 +3662,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
     def output_cable_in_conduit_cable_info(self) -> None:
         """
-        Outputs the calculated cable in condutit cable space geometry information
+        Outputs the calculated cable in conduit cable space geometry information
         for the TF coil.
         """
         d_sc_tf = self.data.superconducting_tfcoil
@@ -3955,18 +3955,16 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             * self.data.tfcoil.n_tf_coil_turns
         )
 
-        superconductor_critical_properties: TFSuperconductorLimits = (
-            self.tf_croco_superconductor_properties(
-                a_tf_turn=self.data.tfcoil.a_tf_turn,
-                b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
-                cur_tf_turn=self.data.tfcoil.c_tf_turn,
-                temp_tf_peak=self.data.tfcoil.tftmp,
-                i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
-                dr_tf_hts_tape=d_sc_tf.dr_tf_hts_tape,
-                dx_tf_hts_tape_rebco=d_sc_tf.dx_tf_hts_tape_rebco,
-                dx_tf_hts_tape_total=d_sc_tf.dx_tf_hts_tape_total,
-                a_tf_croco_strand=d_sc_tf.a_tf_croco_strand,
-            )
+        superconductor_critical_properties = self.tf_croco_superconductor_properties(
+            a_tf_turn=self.data.tfcoil.a_tf_turn,
+            b_tf_inboard_peak=self.data.tfcoil.b_tf_inboard_peak_with_ripple,
+            cur_tf_turn=self.data.tfcoil.c_tf_turn,
+            temp_tf_peak=self.data.tfcoil.tftmp,
+            i_tf_superconductor=self.data.tfcoil.i_tf_sc_mat,
+            dr_tf_hts_tape=d_sc_tf.dr_tf_hts_tape,
+            dx_tf_hts_tape_rebco=d_sc_tf.dx_tf_hts_tape_rebco,
+            dx_tf_hts_tape_total=d_sc_tf.dx_tf_hts_tape_total,
+            a_tf_croco_strand=d_sc_tf.a_tf_croco_strand,
         )
 
         self.data.tfcoil.j_tf_wp_critical = (
@@ -4422,7 +4420,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         Raises
         ------
         ProcessValueError
-            Non tape conductors selected
+            Non tape superconductors selected
 
         """
         if SuperconductorModel(i_tf_superconductor).sc_shape != SuperconductorShape.TAPE:
@@ -4612,7 +4610,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         a_tf_wp_ground_insulation: float,
         a_tf_croco_strand: float,
     ) -> SuperconTFAreasFractions:
-
+        """Calculate TF coil CroCo winding pack areas and fractions"""
         # Areas and fractions
         # -------------------
         # Central helium channel down the conductor core [m²]

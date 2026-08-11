@@ -1,3 +1,5 @@
+"""Module containing MFile routines"""
+
 from process.core.io.mfile.base import (
     MFile,
     MFileErrorClass,

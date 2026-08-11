@@ -1,3 +1,5 @@
+"""PROCESS I/O CLI"""
+
 import importlib
 from pathlib import Path
 
@@ -11,6 +13,7 @@ mfile_arg = click.argument(
 
 
 def mfile_opt(exists: bool = False):
+    """Click option for an mfile filepath"""
     return click.option(
         "-f",
         "--mfile",
@@ -22,6 +25,7 @@ def mfile_opt(exists: bool = False):
 
 
 def indat_opt(default="IN.DAT", exists=True):
+    """Click option for an indat filepath"""
     return click.option(
         "-i",
         "--input",
@@ -33,15 +37,23 @@ def indat_opt(default="IN.DAT", exists=True):
 
 
 def save(help_):
+    """Click save option"""
     return click.option("-s", "--save", "save", default=False, is_flag=True, help=help_)
 
 
 def split_callback(ctx: click.Context, param, value: str | None) -> list[str] | None:  # noqa: ARG001
+    """Callback to split a string on spaces and colons"""
     return value.replace(" ", ":").split(":") if isinstance(value, str) else value
 
 
 # Taken from click documentation
 class LazyGroup(click.Group):
+    """Lazily load click command groups to reduce cli load times
+
+
+    We dont import all things unless required
+    """
+
     def __init__(self, *args, lazy_subcommands=None, **kwargs):
         super().__init__(*args, **kwargs)
         # lazy_subcommands is a map of the form:
@@ -51,11 +63,13 @@ class LazyGroup(click.Group):
         self.lazy_subcommands = lazy_subcommands or {}
 
     def list_commands(self, ctx):
+        """List available commands"""
         base = super().list_commands(ctx)
         lazy = sorted(self.lazy_subcommands.keys())
         return sorted(base + lazy)
 
     def get_command(self, ctx, cmd_name):
+        """Get available commands"""
         if cmd_name in self.lazy_subcommands:
             return self._lazy_load(cmd_name)
         return super().get_command(ctx, cmd_name)

@@ -1,3 +1,5 @@
+"""PROCESS MFile CLI"""
+
 import json
 
 import click
