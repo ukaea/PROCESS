@@ -271,6 +271,11 @@ class PlasmaExhaust(Model):
             Dataclass containing the fractions of total separatrix power to each
             divertor target.
 
+        Notes
+        -----
+        - The fitted value for `F_P_INNER_SEP_0` and `F_P_INNER_SEP_INFINITY` are taken
+        from the fit given by Petrie et al. [2]
+
         References
         ----------
         [1] D. Brunner, A. Q. Kuang, B. LaBombard, and J. L. Terry, “The dependence of
@@ -280,7 +285,7 @@ class PlasmaExhaust(Model):
 
         [2] T. W. Petrie et al., “The effect of divertor magnetic balance on H-mode
         performance in DIII-D,” Journal of Nuclear Materials, vol. 290-293, pp. 935-939,
-        Mar. 2001, doi: 10.1016/s0022-3115(00)00492-x.
+        Mar. 2001, doi: https://doi.org/10.1016/S0022-3115(00)00492-X
         """
         # Fraction of the power to the inner divertors at δR_sep = 0 and δR_sep → ∞
         F_P_INNER_SEP_0 = 0.16e0
