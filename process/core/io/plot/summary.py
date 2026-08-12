@@ -404,7 +404,7 @@ def poloidal_cross_section(
         axis.set_ylim([-15, 15])
         axis.set_xlim([0, 20])
 
-    # Adaptative ranges
+    # Adaptive ranges
     else:
         axis.set_xlim([0, axis.get_xlim()[1]])
     # ---
@@ -3785,7 +3785,7 @@ def toroidal_cross_section(
         axis.set_ylim([0, 20])
         axis.set_xlim([0, 20])
 
-    # Adaptative ranges
+    # Adaptive ranges
     else:
         axis.set_ylim([0.0, axis.get_ylim()[1]])
         axis.set_xlim([0.0, axis.get_xlim()[1]])
@@ -4042,7 +4042,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     if demo_ranges:
         ax_main.set_ylim([0, 20])
 
-    # Adaptative ranges
+    # Adaptive ranges
     else:
         ax_main.set_ylim([0, ax_main.get_ylim()[1]])
         # Use logarithmic scale for impurity axis if any impurity values are very small
@@ -4300,7 +4300,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     if demo_ranges:
         prof.set_ylim([0, 50])
 
-    # Adaptative ranges
+    # Adaptive ranges
     else:
         prof.set_ylim([0, prof.get_ylim()[1]])
 
@@ -4405,7 +4405,7 @@ def plot_qprofile(prof, demo_ranges: bool, mfile: MFile, scan: int):
     if demo_ranges:
         prof.set_ylim([0, 10])
 
-    # Adaptative ranges
+    # Adaptive ranges
     else:
         prof.set_ylim([0, q95 * 1.2])
 
@@ -4678,7 +4678,7 @@ def plot_line_brem_power_density_profile(
     if demo_ranges:
         axis.set_ylim([1e-6, 0.5])
 
-    # Adaptative ranges
+    # Adaptive ranges
     else:
         axis.set_ylim([1e-6, axis.get_ylim()[1]])
     # ---
