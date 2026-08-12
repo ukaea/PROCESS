@@ -3274,7 +3274,7 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     # Exclude the dwell point so tick positions and labels remain aligned.
     secax.set_xticks(pulse_timings.pf_active_cumulative[:-1])
     secax.set_xticklabels(
-        pulse_timings.point_labels[
+        pulse_timings.POINT_LABELS[
             :-1
         ],  # Exclude the last label as it corresponds to the dwell period
         rotation=60,
@@ -3379,7 +3379,7 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
     # Label phase starts only (exclude final end-of-dwell point).
     secax.set_xticks(pulse_timings.total_pulse_cumulative[:-1])
     secax.set_xticklabels(
-        pulse_timings.point_labels,
+        pulse_timings.POINT_LABELS,
         rotation=60,
     )
     secax.tick_params(axis="x", which="major")

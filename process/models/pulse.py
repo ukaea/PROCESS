@@ -29,7 +29,7 @@ class PulseTimings:
     t_plant_pulse_dwell: float
     """Time for dwell (s)"""
 
-    point_abbreviations: ClassVar[tuple[str, ...]] = (
+    POINT_ABBREVIATIONS: ClassVar[tuple[str, ...]] = (
         "BOP",
         "EOR",
         "BOF",
@@ -38,7 +38,7 @@ class PulseTimings:
         "Dwell",
     )
 
-    point_labels: ClassVar[tuple[str, ...]] = (
+    POINT_LABELS: ClassVar[tuple[str, ...]] = (
         "Coil precharge",
         "$I_{\\text{p}}$ Ramp-Up",
         "Fusion ramp",
@@ -57,15 +57,15 @@ class PulseTimings:
             of timing fields.
         """
         n_timing_fields = len(fields(self))
-        if len(self.point_labels) != n_timing_fields:
+        if len(self.POINT_LABELS) != n_timing_fields:
             raise ValueError(
-                "PulseTimings.point_labels must contain exactly "
-                f"{n_timing_fields} entries; got {len(self.point_labels)}."
+                "PulseTimings.POINT_LABELS must contain exactly "
+                f"{n_timing_fields} entries; got {len(self.POINT_LABELS)}."
             )
-        if len(self.point_abbreviations) != n_timing_fields:
+        if len(self.POINT_ABBREVIATIONS) != n_timing_fields:
             raise ValueError(
-                "PulseTimings.point_abbreviations must contain exactly "
-                f"{n_timing_fields} entries; got {len(self.point_abbreviations)}."
+                "PulseTimings.POINT_ABBREVIATIONS must contain exactly "
+                f"{n_timing_fields} entries; got {len(self.POINT_ABBREVIATIONS)}."
             )
 
     @property
