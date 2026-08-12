@@ -29,6 +29,7 @@ from process.models.engineering.materials import (
     calculate_tresca_stress,
     calculate_von_mises_stress,
 )
+from process.models.pulse import PulseTimings
 from process.models.superconductors import (
     SuperconductorMaterial,
     SuperconductorModel,
@@ -160,27 +161,6 @@ class PFCoil(Model):
         self.data.pf_coil.j_cs_pulse_start = (
             self.data.pf_coil.j_cs_flat_top_end
             * self.data.pf_coil.f_j_cs_start_pulse_end_flat_top
-        )
-
-        # Set up array of times
-        self.data.times.t_pulse_cumulative[0] = 0.0e0
-        self.data.times.t_pulse_cumulative[1] = (
-            self.data.times.t_plant_pulse_coil_precharge
-        )
-        self.data.times.t_pulse_cumulative[2] = (
-            self.data.times.t_pulse_cumulative[1]
-            + self.data.times.t_plant_pulse_plasma_current_ramp_up
-        )
-        self.data.times.t_pulse_cumulative[3] = (
-            self.data.times.t_pulse_cumulative[2]
-            + self.data.times.t_plant_pulse_fusion_ramp
-        )
-        self.data.times.t_pulse_cumulative[4] = (
-            self.data.times.t_pulse_cumulative[3] + self.data.times.t_plant_pulse_burn
-        )
-        self.data.times.t_pulse_cumulative[5] = (
-            self.data.times.t_pulse_cumulative[4]
-            + self.data.times.t_plant_pulse_plasma_current_ramp_down
         )
 
         # Set up call to MHD scaling routine for coil currents.
@@ -2740,13 +2720,21 @@ class PFCoil(Model):
 
         op.write(self.outfile, "\t" * 8 + "time (sec)")
         line = "\t\t"
-        for k in range(6):
-            line += f"\t\t{self.data.times.t_pulse_cumulative[k]:.2f}"
+        pulse_timings = PulseTimings(
+            t_plant_pulse_coil_precharge=self.data.times.t_plant_pulse_coil_precharge,
+            t_plant_pulse_plasma_current_ramp_up=self.data.times.t_plant_pulse_plasma_current_ramp_up,
+            t_plant_pulse_fusion_ramp=self.data.times.t_plant_pulse_fusion_ramp,
+            t_plant_pulse_burn=self.data.times.t_plant_pulse_burn,
+            t_plant_pulse_plasma_current_ramp_down=self.data.times.t_plant_pulse_plasma_current_ramp_down,
+            t_plant_pulse_dwell=self.data.times.t_plant_pulse_dwell,
+        )
+        for k in range(pulse_timings.n_pf_active_points_total):
+            line += f"\t\t{pulse_timings.pf_active_cumulative[k]:.2f}"
         op.write(self.outfile, line)
 
         line = "\t\t"
-        for k in range(6):
-            label = self.data.times.timelabel[k]
+        for k in range(pulse_timings.n_pf_active_points_total):
+            label = pulse_timings.POINT_ABBREVIATIONS[k]
             line += f"\t\t{label}"
         op.write(self.outfile, line)
 

@@ -28,6 +28,7 @@ from process.models.physics.profiles import (
     DensityProfilePedestalType,
     PlasmaProfileShapeType,
 )
+from process.models.pulse import PulseTimings
 
 if TYPE_CHECKING:
     from process.data_structure.physics_variables import PhysicsData
@@ -496,6 +497,15 @@ class Physics(Model):
                 self.data.times.t_plant_pulse_plasma_current_ramp_up
             )
 
+        pulse_timings = PulseTimings(
+            t_plant_pulse_coil_precharge=self.data.times.t_plant_pulse_coil_precharge,
+            t_plant_pulse_plasma_current_ramp_up=self.data.times.t_plant_pulse_plasma_current_ramp_up,
+            t_plant_pulse_fusion_ramp=self.data.times.t_plant_pulse_fusion_ramp,
+            t_plant_pulse_burn=self.data.times.t_plant_pulse_burn,
+            t_plant_pulse_plasma_current_ramp_down=self.data.times.t_plant_pulse_plasma_current_ramp_down,
+            t_plant_pulse_dwell=self.data.times.t_plant_pulse_dwell,
+        )
+
         # Reset second self.data.times.t_plant_pulse_burn value
         # (self.data.times.t_burn_0).
         # This is used to ensure that the burn time is used consistently;
@@ -503,29 +513,12 @@ class Physics(Model):
         self.data.times.t_burn_0 = self.data.times.t_plant_pulse_burn
 
         # Time during the pulse in which a plasma is present
-        self.data.times.t_plant_pulse_plasma_present = (
-            self.data.times.t_plant_pulse_plasma_current_ramp_up
-            + self.data.times.t_plant_pulse_fusion_ramp
-            + self.data.times.t_plant_pulse_burn
-            + self.data.times.t_plant_pulse_plasma_current_ramp_down
-        )
-        self.data.times.t_plant_pulse_no_burn = (
-            self.data.times.t_plant_pulse_coil_precharge
-            + self.data.times.t_plant_pulse_plasma_current_ramp_up
-            + self.data.times.t_plant_pulse_plasma_current_ramp_down
-            + self.data.times.t_plant_pulse_dwell
-            + self.data.times.t_plant_pulse_fusion_ramp
-        )
+        self.data.times.t_plant_pulse_plasma_present = pulse_timings.plasma_present
+
+        self.data.times.t_plant_pulse_no_burn = pulse_timings.no_burn
 
         # Total cycle time
-        self.data.times.t_plant_pulse_total = (
-            self.data.times.t_plant_pulse_coil_precharge
-            + self.data.times.t_plant_pulse_plasma_current_ramp_up
-            + self.data.times.t_plant_pulse_fusion_ramp
-            + self.data.times.t_plant_pulse_burn
-            + self.data.times.t_plant_pulse_plasma_current_ramp_down
-            + self.data.times.t_plant_pulse_dwell
-        )
+        self.data.times.t_plant_pulse_total = pulse_timings.total
 
         # ***************************** #
         #      DIAMAGNETIC CURRENT      #

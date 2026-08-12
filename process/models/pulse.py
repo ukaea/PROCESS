@@ -1,6 +1,8 @@
 """Module containing the Pulse class for pulsed reactor calculations."""
 
 import logging
+from dataclasses import dataclass, fields
+from typing import ClassVar
 
 from process.core import constants
 from process.core import process_output as po
@@ -8,6 +10,123 @@ from process.core.model import Model
 from process.data_structure.pfcoil_variables import PFConductorModel
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass(frozen=True, slots=True)
+class PulseTimings:
+    """Dataclass to hold the timing parameters for a pulsed reactor."""
+
+    t_plant_pulse_coil_precharge: float
+    """Time for coil precharge (s)"""
+    t_plant_pulse_plasma_current_ramp_up: float
+    """Time for plasma current ramp-up (s)"""
+    t_plant_pulse_fusion_ramp: float
+    """Time for fusion ramp (s)"""
+    t_plant_pulse_burn: float
+    """Time for burn (s)"""
+    t_plant_pulse_plasma_current_ramp_down: float
+    """Time for plasma current ramp-down (s)"""
+    t_plant_pulse_dwell: float
+    """Time for dwell (s)"""
+
+    POINT_ABBREVIATIONS: ClassVar[tuple[str, ...]] = (
+        "BOP",
+        "EOR",
+        "BOF",
+        "EOF",
+        "EOP",
+        "Dwell",
+    )
+
+    POINT_LABELS: ClassVar[tuple[str, ...]] = (
+        "Coil precharge",
+        "$I_{\\text{p}}$ Ramp-Up",
+        "Fusion ramp",
+        "Burn",
+        "$I_{\\text{p}}$ ramp-down",
+        "Dwell",
+    )
+
+    def __post_init__(self) -> None:
+        """Validate class metadata against the timing fields.
+
+        Raises
+        ------
+        ValueError
+            If the number of point labels or abbreviations does not match the number
+            of timing fields.
+        """
+        n_timing_fields = len(fields(self))
+        if len(self.POINT_LABELS) != n_timing_fields:
+            raise ValueError(
+                "PulseTimings.POINT_LABELS must contain exactly "
+                f"{n_timing_fields} entries; got {len(self.POINT_LABELS)}."
+            )
+        if len(self.POINT_ABBREVIATIONS) != n_timing_fields:
+            raise ValueError(
+                "PulseTimings.POINT_ABBREVIATIONS must contain exactly "
+                f"{n_timing_fields} entries; got {len(self.POINT_ABBREVIATIONS)}."
+            )
+
+    @property
+    def plasma_present(self) -> float:
+        """Calculate the total time during which plasma is present in the reactor."""
+        return (
+            self.t_plant_pulse_plasma_current_ramp_up
+            + self.t_plant_pulse_fusion_ramp
+            + self.t_plant_pulse_burn
+            + self.t_plant_pulse_plasma_current_ramp_down
+        )
+
+    @property
+    def no_burn(self) -> float:
+        """Calculate the total time excluding the burn phase."""
+        return (
+            self.t_plant_pulse_coil_precharge
+            + self.t_plant_pulse_plasma_current_ramp_up
+            + self.t_plant_pulse_plasma_current_ramp_down
+            + self.t_plant_pulse_dwell
+            + self.t_plant_pulse_fusion_ramp
+        )
+
+    @property
+    def total(self) -> float:
+        """Calculate the total time including the burn phase."""
+        return self.no_burn + self.t_plant_pulse_burn
+
+    @property
+    def total_pulse_cumulative(
+        self,
+    ) -> tuple[float, float, float, float, float, float, float]:
+        """Calculate the cumulative timing points for all pulse phases."""
+        t0 = 0.0
+        t1 = t0 + self.t_plant_pulse_coil_precharge
+        t2 = t1 + self.t_plant_pulse_plasma_current_ramp_up
+        t3 = t2 + self.t_plant_pulse_fusion_ramp
+        t4 = t3 + self.t_plant_pulse_burn
+        t5 = t4 + self.t_plant_pulse_plasma_current_ramp_down
+        t6 = t5 + self.t_plant_pulse_dwell
+        return (t0, t1, t2, t3, t4, t5, t6)
+
+    @property
+    def n_pulse_points_total(self) -> int:
+        """Calculate the total number of timing points for all pulse phases."""
+        return len(self.total_pulse_cumulative)
+
+    @property
+    def pf_active_cumulative(self) -> tuple[float, float, float, float, float, float]:
+        """Calculate the cumulative timing points for PF coil active phases."""
+        return self.total_pulse_cumulative[:-1]  # Exclude the last point (dwell)
+
+    @property
+    def n_pf_active_points_total(self) -> int:
+        """Calculate the total number of timing points for PF coil active phases."""
+        return len(self.pf_active_cumulative)
+
+    @property
+    def n_pf_active_points_intervals(self) -> int:
+        """Calculate the total number of timing intervals for PF coil active phases."""
+        return int(self.n_pf_active_points_total - 1)
 
 
 class Pulse(Model):
