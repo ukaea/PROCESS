@@ -276,7 +276,7 @@ class PlasmaExhaust(Model):
         [1] D. Brunner, A. Q. Kuang, B. LaBombard, and J. L. Terry, “The dependence of
         divertor power sharing on magnetic flux balance in near double-null
         configurations on Alcator C-Mod,” Nuclear Fusion, vol. 58, no. 7, p. 076010,
-        May 2018, doi: 10.1088/1741-4326/aac006.
+        May 2018, doi: https://doi.org/10.1088/1741-4326/aac006.
 
         [2] T. W. Petrie et al., “The effect of divertor magnetic balance on H-mode
         performance in DIII-D,” Journal of Nuclear Materials, vol. 290-293, pp. 935-939,

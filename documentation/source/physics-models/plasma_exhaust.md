@@ -36,9 +36,18 @@ $$
 
 -----------
 
-## Divertor Heat Splits
+## Divertor Separatrix Power Heat Splits
 
 ### Brunner Model | `calculate_brunner_divertor_power_splits()`
+
+The Brunner model[^brunner_model] was made to estimate the power-sharing between four divertors in a dynamic double null configuration. Consisting of an in-out and up-down sharing scheme. The model considers the separatrix power flow going to each divertor rather than that which reaches the target plate after dissipation. The power split assumes that the fraction of power to the side walls is negligibly small and there is no radiation in the SOL. We thus have:
+
+$$
+P_{\text{sep}} \approx P_{\text{div,tot}} = P_{\text{lower,in}} + P_{\text{lower,out}} + P_{\text{upper,in}} + P_{\text{upper,in}}
+$$
+
+
+--------------------
 
 
 [^1] M. Siccinio, G. Federici, R. Kembleton, H. Lux, F. Maviglia, and J. Morris,
@@ -48,3 +57,7 @@ Jul. 2019, doi: https://doi.org/10.1088/1741-4326/ab3153.
 
 [^2] H. Zohm et al., "A stepladder approach to a tokamak fusion power plant,"
 Nuclear Fusion, vol. 57, no. 8, pp. 086002-086002, May 2017, doi: https://doi.org/10.1088/1741-4326/aa739e.
+
+[^brunner_model] D. Brunner, A. Q. Kuang, B. LaBombard, and J. L. Terry, “The dependence of
+divertor power sharing on magnetic flux balance in near double-null configurations on 
+Alcator C-Mod,” Nuclear Fusion, vol. 58, no. 7, p. 076010, May 2018, doi: https://doi.org/10.1088/1741-4326/aac006.
