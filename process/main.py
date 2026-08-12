@@ -335,7 +335,7 @@ class SingleRun:
 
         ipdb.set_trace()
         self.update_obsolete = update_obsolete
-        self.init_module_vars()
+        logging_model_handler.clear_logs()
         self.set_filenames(filepath_out)
         self.initialise()  # in here does init_process
         self.models = Models(self.data)
@@ -350,15 +350,6 @@ class SingleRun:
         self.run_scan()
         self.finish()
         self.append_input()
-
-    @staticmethod
-    def init_module_vars():
-        """Initialise all module variables in the Fortran.
-
-        This "resets" all module variables to their initialised values, so each
-        new run doesn't have any side-effects from previous runs.
-        """
-        logging_model_handler.clear_logs()
 
     def set_filenames(self, filepath_out):
         """Validate the input filename and create other filenames from it."""
