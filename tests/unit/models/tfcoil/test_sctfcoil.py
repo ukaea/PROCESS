@@ -3,6 +3,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
+from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil import superconducting as sctf
 
 
@@ -2035,19 +2036,79 @@ def test_superconducting_tf_coil_area_and_masses(
     ),
     [
         # ITER Nb3Sn, standard parameters
-        (1, 1e8, 12.0, 0.0, 32.97, 16.06, 1e10, 4.5, 5.679499736095401),
+        (
+            1,
+            1e8,
+            12.0,
+            0.0,
+            SuperconductorModel.ITER_NB3SN.b_crit_zero_field_strain,
+            SuperconductorModel.ITER_NB3SN.temp_crit_zero_field_strain,
+            1e10,
+            4.5,
+            5.679499736095401,
+        ),
         # NbTi
-        (3, 1e8, 8.0, 0.0, 15.0, 9.3, 1e10, 4.5, 1.3048296694055175),
+        (
+            3,
+            1e8,
+            8.0,
+            0.0,
+            SuperconductorModel.OLD_LUBELL_NBTI.b_crit_zero_field_strain,
+            SuperconductorModel.OLD_LUBELL_NBTI.temp_crit_zero_field_strain,
+            1e10,
+            4.5,
+            1.3048296694055175,
+        ),
         # User-defined Nb3Sn
         (4, 1e8, 10.0, 0.0, 30.0, 15.0, 1e10, 4.5, 5.539631803535094),
         # WST Nb3Sn
-        (5, 1e8, 13.0, 0.0, 32.97, 16.06, 1e10, 4.5, 5.221287311831414),
+        (
+            5,
+            1e8,
+            13.0,
+            0.0,
+            SuperconductorModel.WST_NB3SN.b_crit_zero_field_strain,
+            SuperconductorModel.WST_NB3SN.temp_crit_zero_field_strain,
+            1e10,
+            4.5,
+            5.221287311831414,
+        ),
         # Durham Ginzburg-Landau Nb-Ti
-        (7, 1e8, 7.0, 0.0, 14.85, 9.04, 1e10, 4.5, 1.263064155425198),
+        (
+            7,
+            1e8,
+            7.0,
+            0.0,
+            SuperconductorModel.DURHAM_NBTI.b_crit_zero_field_strain,
+            SuperconductorModel.DURHAM_NBTI.temp_crit_zero_field_strain,
+            1e10,
+            4.5,
+            1.3679852289396255,
+        ),
         # Durham Ginzburg-Landau REBCO
-        (8, 1e8, 10.0, 0.0, 430, 185, 1e10, 20.0, 31.82616792800119),
+        (
+            8,
+            1e8,
+            10.0,
+            0.0,
+            SuperconductorModel.DURHAM_REBCO.b_crit_zero_field_strain,
+            SuperconductorModel.DURHAM_REBCO.temp_crit_zero_field_strain,
+            1e10,
+            20.0,
+            31.82616792800119,
+        ),
         # Hazelton-Zhai REBCO
-        (9, 1e8, 10.0, 0.0, 138, 92, 1e10, 20.0, 48.363687012510425),
+        (
+            9,
+            1e8,
+            10.0,
+            0.0,
+            SuperconductorModel.HAZELTON_ZHAI_REBCO.b_crit_zero_field_strain,
+            SuperconductorModel.HAZELTON_ZHAI_REBCO.temp_crit_zero_field_strain,
+            1e10,
+            20.0,
+            48.363687012510425,
+        ),
     ],
 )
 def test_calculate_superconductor_temperature_margin(
