@@ -312,10 +312,10 @@ def current_sharing_rebco(bfield, j):
 
     def deltaj_rebco(temperature):
         jcritical, _, _, _ = jcrit_rebco(
-            temperature,
-            bfield,
-            SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain,
-            SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain,
+            temp_conductor=temperature,
+            b_conductor=bfield,
+            temp_c0_max=SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain,
+            b_c20_max=SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain,
         )
         return jcritical - j
 

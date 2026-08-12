@@ -5,6 +5,7 @@ import numpy as np
 import plotly.graph_objects as go
 
 from process.models import superconductors
+from process.models.superconductors import SuperconductorModel
 
 # Create a grid of temperature and field values
 temp_conductor = np.linspace(4.2, 40.0, 50)  # Temperature range (K)
@@ -22,8 +23,8 @@ for i in range(temp_grid.shape[0]):
         ) = superconductors.hijc_rebco(
             temp_conductor=temp_grid[i, j],
             b_conductor=b_grid[i, j],
-            b_c20max=138.0,
-            t_c0=92.0,
+            b_c20max=SuperconductorModel.HAZELTON_ZHAI_REBCO.b_crit_zero_field_strain,
+            t_c0=SuperconductorModel.HAZELTON_ZHAI_REBCO.temp_crit_zero_field_strain,
             tape_width=1.0,
             rebco_thickness=1.0,
             tape_thickness=1.0,

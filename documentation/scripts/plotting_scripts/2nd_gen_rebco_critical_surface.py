@@ -5,11 +5,14 @@ import numpy as np
 import plotly.graph_objects as go
 
 from process.models import superconductors
+from process.models.superconductors import SuperconductorModel
 
-temp_c0max = 90.0  # Critical temperature (K) at zero field and strain
+temp_c0max = (
+    SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain
+)  # Critical temperature (K) at zero field and strain
 b_c20max = (
-    132.5  # Upper critical field (T) for superconductor at zero temperature and strain
-)
+    SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain
+)  # Upper critical field (T) for superconductor at zero temperature and strain
 epsilon = 0.00  # Strain in superconductor
 
 # Create a grid of temperature and field values

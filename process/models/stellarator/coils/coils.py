@@ -141,7 +141,10 @@ def jcrit_from_material(
         b_c20m = SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain
         t_c0m = SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain
         j_crit_sc, _validity, _, _ = superconductors.jcrit_rebco(
-            temp_conductor=t_helium, b_conductor=b_max, b_c20_max=b_c20m, temp_c0_max=t_c0m
+            temp_conductor=t_helium,
+            b_conductor=b_max,
+            b_c20_max=b_c20m,
+            temp_c0_max=t_c0m,
         )
         j_crit_sc = max(1.0e-9, j_crit_sc)
         j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
