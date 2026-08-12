@@ -295,7 +295,7 @@ class CoolingWaterBodyCoeffs:
     def heat_ratio(self, watertemp, windspeed):
         """Estimate how heat loading will raise temperature, for this water body"""
         # convert self.data.water_use.windspeed to mph
-        windspeedmph = windspeed * 2.237e0
+        windspeedmph = windspeed * 2.237
         return (
             self.d
             + (self.e * watertemp)

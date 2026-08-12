@@ -175,7 +175,7 @@ class Vacuum(Model):
         )
         process_output.ocmmnt(
             self.outfile,
-            "(50 Pa m3 s-1 = 1.2e+22 molecules/s), all operating at the same time",
+            " (50 Pa m3 s-1 = 1.2e+22 molecules/s), all operating at the same time",
         )
         process_output.ovarre(
             self.outfile,
@@ -478,8 +478,8 @@ class Vacuum(Model):
             else:
                 logger.error(
                     "Newton's method not converging; check "
-                    "p_fusion_total_mw and temp_plasma_electron_vol_avg_kev "
-                    f"{self.data.physics.p_fusion_total_mw=} "
+                    "p_fusion_total_mw and temp_plasma_electron_vol_avg_kev: "
+                    f"{self.data.physics.p_fusion_total_mw=}, "
                     f"{self.data.physics.temp_plasma_electron_vol_avg_kev=}"
                 )
 
