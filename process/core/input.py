@@ -1422,7 +1422,7 @@ def set_scalar_variable(name: str, value: ValidInputTypes, config: InputVariable
     current_value = getattr(config.module, name, ...)
 
     # use ... sentinel because None is probably a valid return from Fortran
-    # and definately will be when moving to a Python data structure
+    # and definitely will be when moving to a Python data structure
     if current_value is ...:
         error_msg = (
             f"Fortran module '{config.module}' does not have a variable '{name}'."

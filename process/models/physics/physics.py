@@ -2221,7 +2221,7 @@ class Physics(Model):
             if self.data.divertor.n_divertors == 2:
                 po.ovarre(
                     self.outfile,
-                    "Midplane seperation of the two magnetic closed flux surfaces (m)",
+                    "Midplane separation of the two magnetic closed flux surfaces (m)",
                     "(drsep)",
                     self.data.physics.drsep,
                     "OP ",

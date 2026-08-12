@@ -132,7 +132,7 @@ def jcrit_from_material(
         )
         j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)
 
-    elif i_tf_sc_mat == 6:  # ! "REBCO" 2nd generation HTS superconductor in CrCo strand
+    elif i_tf_sc_mat == 6:  # ! "REBCO" 2nd generation HTS superconductor in CroCo strand
         j_crit_sc, _validity, _, _ = superconductors.jcrit_rebco(t_helium, b_max, 0)
         j_crit_sc = max(1.0e-9, j_crit_sc)
         j_crit_cable = j_crit_cable_from_fraction(j_crit_sc, f_tf_conductor_copper, f_he)

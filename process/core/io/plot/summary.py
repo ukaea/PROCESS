@@ -404,7 +404,7 @@ def poloidal_cross_section(
         axis.set_ylim([-15, 15])
         axis.set_xlim([0, 20])
 
-    # Adapatative ranges
+    # Adaptive ranges
     else:
         axis.set_xlim([0, axis.get_xlim()[1]])
     # ---
@@ -3237,7 +3237,7 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
             linestyle="--",
         )
 
-    # Since CS may not always be present try to retireve values
+    # Since CS may not always be present try to retrieve values
     try:
         cs_circuit = [
             mfile.get(f"cs_t{i}", scan=scan)
@@ -3259,9 +3259,9 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     plasmat4 = mfile.get("plasmat4", scan=scan)
     plasmat5 = mfile.get("plasmat5", scan=scan)
 
-    # x-coirdinates for the plasma current
+    # x-coordinates for the plasma current
     x_plasma = pulse_timings.pf_active_cumulative[1:]
-    # x-coirdinates for the plasma current
+    # x-coordinates for the plasma current
     y_plasma = [plasmat1, plasmat2, plasmat3, plasmat4, plasmat5]
 
     # Plot the plasma current
@@ -3785,7 +3785,7 @@ def toroidal_cross_section(
         axis.set_ylim([0, 20])
         axis.set_xlim([0, 20])
 
-    # Adapatative ranges
+    # Adaptive ranges
     else:
         axis.set_ylim([0.0, axis.get_ylim()[1]])
         axis.set_xlim([0.0, axis.get_xlim()[1]])
@@ -4042,7 +4042,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     if demo_ranges:
         ax_main.set_ylim([0, 20])
 
-    # Adapatative ranges
+    # Adaptive ranges
     else:
         ax_main.set_ylim([0, ax_main.get_ylim()[1]])
         # Use logarithmic scale for impurity axis if any impurity values are very small
@@ -4300,7 +4300,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     if demo_ranges:
         prof.set_ylim([0, 50])
 
-    # Adapatative ranges
+    # Adaptive ranges
     else:
         prof.set_ylim([0, prof.get_ylim()[1]])
 
@@ -4405,7 +4405,7 @@ def plot_qprofile(prof, demo_ranges: bool, mfile: MFile, scan: int):
     if demo_ranges:
         prof.set_ylim([0, 10])
 
-    # Adapatative ranges
+    # Adaptive ranges
     else:
         prof.set_ylim([0, q95 * 1.2])
 
@@ -4678,7 +4678,7 @@ def plot_line_brem_power_density_profile(
     if demo_ranges:
         axis.set_ylim([1e-6, 0.5])
 
-    # Adapatative ranges
+    # Adaptive ranges
     else:
         axis.set_ylim([1e-6, axis.get_ylim()[1]])
     # ---

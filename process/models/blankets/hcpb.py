@@ -340,10 +340,10 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         )
 
         # CCFE HCPB calculates the mass of the divertor,
-        # blanket (including seprate masses for each material),
+        # blanket (including separate masses for each material),
         # shield, FW and FW armour.
         # KIT HCPB calculates the mass of the blanket
-        # (including seprate masses for each material)
+        # (including separate masses for each material)
         # and the void fraction for the blanket.
         # N.B. i_blanket_type=1 for CCFE HCPB
 
