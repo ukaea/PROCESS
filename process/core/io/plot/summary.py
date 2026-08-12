@@ -23,7 +23,10 @@ from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
-from process.data_structure.physics_variables import ConfinementTimeModel
+from process.data_structure.physics_variables import (
+    ConfinementTimeModel,
+    DivertorNumberModels,
+)
 from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.build import Build
 from process.models.engineering.materials import (
@@ -9088,15 +9091,14 @@ def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: i
     axis.set_facecolor("#f0f0f0")
 
 
-def plot_brunner_divertor_power_plit_comparison(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_brunner_divertor_power_split_comparison_stackplot(
+    axis: plt.Axes, mfile: MFile, scan: int
+):
     """Plot Brunner divertor power split fractions as a stack plot over dr_sep."""
     # Use the case decay length when available; fall back to 1 mm if absent.
-    try:
-        len_plasma_sol_power_decay = mfile.get(
-            "len_plasma_sol_eich13_power_decay", scan=scan
-        )
-    except KeyError:
-        len_plasma_sol_power_decay = 1.0e-3
+
+    len_plasma_sol_power_decay = mfile.get("len_sol_outboard_power_decay", scan=scan)
+    colors = plt.cm.plasma(np.linspace(0.15, 0.85, 4))
 
     dr_sep_values = np.linspace(
         -5 * len_plasma_sol_power_decay, 5 * len_plasma_sol_power_decay, 200
@@ -9129,6 +9131,7 @@ def plot_brunner_divertor_power_plit_comparison(axis: plt.Axes, mfile: MFile, sc
             "$f_{P,\\mathrm{out,lower}}$",
             "$f_{P,\\mathrm{out,upper}}$",
         ],
+        colors=colors,
         alpha=0.9,
     )
 
@@ -9146,6 +9149,196 @@ def plot_brunner_divertor_power_plit_comparison(axis: plt.Axes, mfile: MFile, sc
     axis.set_xlabel("$\\Delta r_{\\mathrm{sep}}$ [m]")
     axis.set_ylabel("Power split fraction, $f_P$")
     axis.legend(loc="upper left", fontsize=8)
+
+
+def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme):
+    """Plot separatrix power split fractions as a bar chart."""
+    plot_plasma(axis=axis, mfile=mfile, scan=scan, colour_scheme=colour_scheme)
+    rmajor, rminor, kappa, dr_sep = mfile.get_variables(
+        "rmajor",
+        "rminor",
+        "kappa",
+        "dr_plasma_outboard_midplane_separatrix_separation",
+        scan=scan,
+    )
+
+    plasma_scale = max(rminor, abs(kappa * rminor), 1e-6)
+    scale_factor = min(max(plasma_scale / 2.0, 0.7), 1.0)
+    text_fontsize = 9 * scale_factor
+
+    is_double_null = (
+        DivertorNumberModels(mfile.get("i_single_null", scan=scan))
+        == DivertorNumberModels.DOUBLE_NULL
+    )
+    p_sep = mfile.get("p_plasma_separatrix_mw", scan=scan)
+    f_outboard = mfile.get("f_p_div_outboard_separatrix", scan=scan)
+    f_inboard = mfile.get("f_p_div_inboard_separatrix", scan=scan)
+    p_outboard = p_sep * f_outboard
+    p_inboard = p_sep * f_inboard
+    p_lower_inboard = mfile.get("p_div_lower_inboard_separatrix_mw", scan=scan)
+    p_lower_outboard = mfile.get("p_div_lower_outboard_separatrix_mw", scan=scan)
+
+    power_values = [
+        p_sep,
+        p_outboard,
+        p_inboard,
+        p_lower_inboard,
+        p_lower_outboard,
+    ]
+
+    p_upper_inboard = None
+    p_upper_outboard = None
+    if is_double_null:
+        p_upper_inboard = mfile.get("p_div_upper_inboard_separatrix_mw", scan=scan)
+        p_upper_outboard = mfile.get("p_div_upper_outboard_separatrix_mw", scan=scan)
+        power_values.extend([p_upper_inboard, p_upper_outboard])
+
+    power_min = min(power_values)
+    power_max = max(power_values)
+    colour_map = mpl.colormaps["coolwarm"]
+
+    def make_bbox_props(power: float) -> dict[str, Any]:
+        norm_power = (
+            1.0
+            if np.isclose(power_max, power_min)
+            else (power - power_min) / (power_max - power_min)
+        )
+        return {
+            "boxstyle": f"round,pad={0.3 * scale_factor:.3f}",
+            "facecolor": colour_map(norm_power),
+            "alpha": 1.0,
+            "linewidth": 2 * scale_factor,
+            "edgecolor": "black",
+        }
+
+    centre_pos = (rmajor, 0.0)
+    outboard_pos = (rmajor + rminor, 0.0)
+    inboard_pos = (rmajor - rminor, 0.0)
+    lower_inboard_pos = (rmajor - rminor, -kappa * rminor)
+    lower_outboard_pos = (rmajor + rminor, -kappa * rminor)
+    upper_inboard_pos = (rmajor - rminor, kappa * rminor)
+    upper_outboard_pos = (rmajor + rminor, kappa * rminor)
+
+    axis.text(
+        *centre_pos,
+        f"$P_{{\\mathrm{{sep}}}} = {p_sep:.3f}$ MW",
+        fontsize=text_fontsize,
+        verticalalignment="center",
+        horizontalalignment="center",
+        bbox=make_bbox_props(p_sep),
+        zorder=101,
+    )
+    axis.text(
+        *outboard_pos,
+        f"$f_{{\\mathrm{{outboard}}}} = {f_outboard:.3f}$\n"
+        f"$\\Delta r_{{\\mathrm{{sep}}}} = {dr_sep:.3f}$ m",
+        fontsize=text_fontsize,
+        verticalalignment="center",
+        horizontalalignment="center",
+        bbox=make_bbox_props(p_outboard),
+        zorder=101,
+    )
+    axis.text(
+        *inboard_pos,
+        f"$f_{{\\mathrm{{inboard}}}} = {f_inboard:.3f}$",
+        fontsize=text_fontsize,
+        verticalalignment="center",
+        horizontalalignment="center",
+        bbox=make_bbox_props(p_inboard),
+        zorder=101,
+    )
+    axis.text(
+        *lower_inboard_pos,
+        f"$f_{{\\mathrm{{lower\\ inboard}}}} = {mfile.get('f_p_div_lower_inboard_separatrix', scan=scan):.3f}$\n"
+        f"$P_{{\\mathrm{{lower\\ inboard}}}} = {p_lower_inboard:.3f}$ MW",
+        fontsize=text_fontsize,
+        verticalalignment="center",
+        horizontalalignment="center",
+        bbox=make_bbox_props(p_lower_inboard),
+        zorder=101,
+    )
+    axis.text(
+        *lower_outboard_pos,
+        f"$f_{{\\mathrm{{lower\\ outboard}}}} = {mfile.get('f_p_div_lower_outboard_separatrix', scan=scan):.3f}$\n"
+        f"$P_{{\\mathrm{{lower\\ outboard}}}} = {p_lower_outboard:.3f}$ MW",
+        fontsize=text_fontsize,
+        verticalalignment="center",
+        horizontalalignment="center",
+        bbox=make_bbox_props(p_lower_outboard),
+        zorder=101,
+    )
+    if is_double_null:
+        axis.text(
+            *upper_inboard_pos,
+            f"$f_{{\\mathrm{{upper\\ inboard}}}} = {mfile.get('f_p_div_upper_inboard_separatrix', scan=scan):.3f}$\n"
+            f"$P_{{\\mathrm{{upper\\ inboard}}}} = {p_upper_inboard:.3f}$ MW",
+            fontsize=text_fontsize,
+            verticalalignment="center",
+            horizontalalignment="center",
+            bbox=make_bbox_props(p_upper_inboard),
+            zorder=101,
+        )
+        axis.text(
+            *upper_outboard_pos,
+            f"$f_{{\\mathrm{{upper\\ outboard}}}} = {mfile.get('f_p_div_upper_outboard_separatrix', scan=scan):.3f}$\n"
+            f"$P_{{\\mathrm{{upper\\ outboard}}}} = {p_upper_outboard:.3f}$ MW",
+            fontsize=text_fontsize,
+            verticalalignment="center",
+            horizontalalignment="center",
+            bbox=make_bbox_props(p_upper_outboard),
+            zorder=101,
+        )
+
+    arrow_props = {
+        "arrowstyle": "->",
+        "color": "red",
+        "linewidth": 3 * scale_factor,
+        "shrinkA": 14 * scale_factor,
+        "shrinkB": 14 * scale_factor,
+        "mutation_scale": 12 * scale_factor,
+    }
+    axis.annotate(
+        "", xy=outboard_pos, xytext=centre_pos, arrowprops=arrow_props, zorder=1
+    )
+    axis.annotate(
+        "", xy=inboard_pos, xytext=centre_pos, arrowprops=arrow_props, zorder=1
+    )
+    axis.annotate(
+        "",
+        xy=lower_outboard_pos,
+        xytext=outboard_pos,
+        arrowprops={**arrow_props, "connectionstyle": "angle3,angleA=0,angleB=-90"},
+        zorder=102,
+    )
+    axis.annotate(
+        "",
+        xy=lower_inboard_pos,
+        xytext=inboard_pos,
+        arrowprops={**arrow_props, "connectionstyle": "angle3,angleA=180,angleB=-90"},
+        zorder=102,
+    )
+    if is_double_null:
+        axis.annotate(
+            "",
+            xy=upper_outboard_pos,
+            xytext=outboard_pos,
+            arrowprops={**arrow_props, "connectionstyle": "angle3,angleA=0,angleB=90"},
+            zorder=102,
+        )
+        axis.annotate(
+            "",
+            xy=upper_inboard_pos,
+            xytext=inboard_pos,
+            arrowprops={**arrow_props, "connectionstyle": "angle3,angleA=180,angleB=90"},
+            zorder=102,
+        )
+
+    axis.spines["top"].set_visible(False)
+    axis.spines["right"].set_visible(False)
+    axis.spines["bottom"].set_visible(False)
+    axis.spines["left"].set_visible(False)
+    axis.get_xaxis().set_ticks([])
+    axis.get_yaxis().set_ticks([])
 
 
 def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=None):
@@ -16506,8 +16699,12 @@ def main_plot(
         _add_page("plasma_compare_3").add_subplot(221), m_file, scan
     )
 
-    plot_brunner_divertor_power_plit_comparison(
+    plot_brunner_divertor_power_split_comparison_stackplot(
         _add_page("plasma_exhaust").add_subplot(121), m_file, scan
+    )
+
+    plot_separatrix_power_split(
+        pages["plasma_exhaust"].add_subplot(122), m_file, scan, colour_scheme
     )
 
     plot_debye_length_profile(

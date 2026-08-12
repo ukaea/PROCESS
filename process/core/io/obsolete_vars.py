@@ -478,6 +478,7 @@ OBS_VARS = {
     "minmax": "i_figure_merit",
     "neqns": "n_equality_constraints",
     "nineqns": "n_inequality_constraints",
+    "f_p_div_lower": "f_p_div_lower_separatrix",
 }
 
 OBS_VARS_HELP = {
