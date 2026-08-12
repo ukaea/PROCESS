@@ -14,6 +14,7 @@ import process
 from process.core import constants, process_output
 from process.core.exceptions import ProcessValidationError
 from process.core.input import parse_input_file
+from process.core.io.in_dat.base import InDat
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.blanket_variables import BlktModelTypes
@@ -50,7 +51,7 @@ if TYPE_CHECKING:
     from process.core.model import DataStructure
 
 
-def init_process(data: DataStructure):
+def init_process(data: DataStructure, update_obsolete: bool = False):
     """Routine that calls the initialisation routines
 
     This routine calls the main initialisation routines that set
@@ -59,9 +60,17 @@ def init_process(data: DataStructure):
     """
     # Initialise the program variables
     iteration_variables.initialise_iteration_variables(data)
-
     # Creating and open the files MFile and OUTFile
     process_output.OutputFileManager.open_files(data.globals.output_prefix)
+    import ipdb
+
+    ipdb.set_trace()
+    # TODO use InDat(filename) instead here?
+    # Use InDat class to read in IN.DAT, update obsolete and
+    # parse input file
+    filename = data.globals.output_prefix + "IN.DAT"
+    # Check for and, if requested, update obsolete variables
+    InDat(filename=filename, update_obsolete=update_obsolete)
 
     # Input any desired new initial values
     inputs = parse_input_file(data)
