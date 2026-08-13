@@ -29,7 +29,12 @@ for i in range(temp_grid.shape[0]):
             _,
             _,
             _,
-        ) = superconductors.jcrit_rebco(temp_grid[i, j], b_grid[i, j])
+        ) = superconductors.jcrit_rebco(
+            temp_conductor=temp_grid[i, j],
+            b_conductor=b_grid[i, j],
+            b_c20_max=b_c20max,
+            temp_c0_max=temp_c0max,
+        )
         # Convert from A/m² to kA/mm² (1 A/m² = 1e-6 A/mm²)
         j_scaling[i, j] *= 1e-9
         print(f"j_scaling[{i}, {j}] = {j_scaling[i, j]} kA/mm²")
