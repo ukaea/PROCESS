@@ -1047,9 +1047,9 @@ class InDat:
         self.filename = filename
         self.start_line = start_line
         self.update_obsolete = update_obsolete
-        import ipdb
+        # import ipdb
 
-        ipdb.set_trace()
+        # ipdb.set_trace()
         # Update obsolete variables if requested
         if self.update_obsolete:
             self.update_obsolete_variables()

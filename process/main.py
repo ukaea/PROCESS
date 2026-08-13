@@ -331,9 +331,9 @@ class SingleRun:
         """
         self.input_file = Path(input_file)
         self.data = data_structure or DataStructure()
-        import ipdb
+        # import ipdb
 
-        ipdb.set_trace()
+        # ipdb.set_trace()
         self.update_obsolete = update_obsolete
         logging_model_handler.clear_logs()
         self.set_filenames(filepath_out)

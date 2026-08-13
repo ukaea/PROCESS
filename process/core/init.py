@@ -62,19 +62,23 @@ def init_process(data: DataStructure, update_obsolete: bool = False):
     iteration_variables.initialise_iteration_variables(data)
     # Creating and open the files MFile and OUTFile
     process_output.OutputFileManager.open_files(data.globals.output_prefix)
-    import ipdb
+    # import ipdb
 
-    ipdb.set_trace()
+    # ipdb.set_trace()
     # TODO use InDat(filename) instead here?
     # Use InDat class to read in IN.DAT, update obsolete and
     # parse input file
     filename = data.globals.output_prefix + "IN.DAT"
     # Check for and, if requested, update obsolete variables
-    InDat(filename=filename, update_obsolete=update_obsolete)
+    in_dat = InDat(filename=filename, update_obsolete=update_obsolete)
 
     # Input any desired new initial values
-    inputs = parse_input_file(data)
+    # if comment this out, everything has its default value from data_structure files
+    # so need InDat to
+    inputs = parse_input_file(data)  # want to absorb into InDat()
+    import ipdb
 
+    ipdb.set_trace()
     # Set active constraints
     set_active_constraints(data)
 
