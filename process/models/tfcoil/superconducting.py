@@ -1228,12 +1228,23 @@ class SuperconductingTFCoil(TFCoil):
         #  Temperature margin (already calculated in superconductors.bi2212 for
         # i_tf_superconductor=2)
 
-        if i_tf_superconductor == 2:
+        if SuperconductorModel(i_tf_superconductor) == SuperconductorModel.BI2212:
             # Bi-2212: temperature margin already calculated elsewhere
             temp_tf_superconductor_margin = 0.0
             # Find temperature at which current density margin = 0
-        elif i_tf_superconductor in {1, 3, 4, 5, 7, 8, 9}:
-            if i_tf_superconductor == 3:
+        elif SuperconductorModel(i_tf_superconductor) in {
+            SuperconductorModel.ITER_NB3SN,
+            SuperconductorModel.OLD_LUBELL_NBTI,
+            SuperconductorModel.USER_DEFINED_NB3SN,
+            SuperconductorModel.WST_NB3SN,
+            SuperconductorModel.DURHAM_NBTI,
+            SuperconductorModel.DURHAM_REBCO,
+            SuperconductorModel.HAZELTON_ZHAI_REBCO,
+        }:
+            if (
+                SuperconductorModel(i_tf_superconductor)
+                == SuperconductorModel.OLD_LUBELL_NBTI
+            ):
                 arguments = (
                     i_tf_superconductor,
                     j_superconductor,
@@ -3112,90 +3123,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             )
 
         # =================================================================
-
-        # Durham Ginzburg-Landau critical surface model for REBCO
-        elif i_tf_superconductor == SuperconductorModel.DURHAM_REBCO:
-            bc20m = SuperconductorModel.DURHAM_REBCO.b_crit_zero_field_strain  # [T]
-            tc0m = SuperconductorModel.DURHAM_REBCO.temp_crit_zero_field_strain  # [K]
-
-            # If strain limit achieved, throw a warning and use the lower strain
-            if abs(strain) > 0.7e-2:
-                logger.error(
-                    f"TF strain={strain} was outside the region of applicability. "
-                    f"Used lower strain."
-                )
-                strain = np.sign(strain) * 0.7e-2
-
-            j_superconductor_critical, _, _ = superconductors.gl_rebco(
-                temp_conductor=temp_tf_coolant_peak_field,
-                b_conductor=b_tf_inboard_peak,
-                strain=strain,
-                b_c20max=bc20m,
-                t_c0=tc0m,
-            )
-            # Scale for the copper area fraction of the cable
-            j_cables_critical = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
-
-            #  Critical current in turn all turn cables
-            c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
-
-            # Strand critical current calulation for costing in $ / kAm
-            # Already includes buffer and support layers so no need to include
-            # f_a_tf_turn_cable_copper here
-            data.tfcoil.j_crit_str_tf = j_superconductor_critical
-
-            # REBCO measurements from 2 T to 14 T, extrapolating outside this
-            if (b_tf_inboard_peak) >= 14.0:
-                logger.error(
-                    "Field on superconductor > 14 T (outside of interpolation range)"
-                )
-
-        # =================================================================
-
-        # Hazelton experimental data + Zhai conceptual model for REBCO
-        elif i_tf_superconductor == SuperconductorModel.HAZELTON_ZHAI_REBCO:
-            bc20m = (
-                SuperconductorModel.HAZELTON_ZHAI_REBCO.b_crit_zero_field_strain
-            )  # [T]
-            tc0m = (
-                SuperconductorModel.HAZELTON_ZHAI_REBCO.temp_crit_zero_field_strain
-            )  # [K]
-
-            # If strain limit achieved, throw a warning and use the lower strain
-            if abs(strain) > 0.7e-2:
-                logger.error(
-                    f"TF strain={strain} was outside the region of applicability. "
-                    f"Used lower strain."
-                )
-                strain = np.sign(strain) * 0.7e-2
-
-            # 'high current density' as per parameterisation described in Wolf,
-            #  and based on Hazelton experimental data and Zhai conceptual model;
-            #  see subroutine for full references
-            j_superconductor_critical, _, _ = superconductors.hijc_rebco(
-                temp_conductor=temp_tf_coolant_peak_field,
-                b_conductor=b_tf_inboard_peak,
-                b_c20max=bc20m,
-                t_c0=tc0m,
-                dr_hts_tape=data.superconducting_tfcoil.dr_tf_hts_tape,
-                dx_hts_tape_rebco=data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
-                dx_hts_tape_total=data.superconducting_tfcoil.dx_tf_hts_tape_total,
-            )
-            # Scale for the copper area fraction of the cable
-            j_cables_critical = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
-
-            #  Critical current in turn all turn cables
-            c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
-
-            # Strand critical current calulation for costing in $ / kAm
-            # = superconducting filaments jc * (1 -strand copper fraction)
-            data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
 
         else:
             raise ProcessValueError(
