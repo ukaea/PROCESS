@@ -45,6 +45,16 @@ class ScrapeOffLayer(Model):
             OutbordSOLPowerDecayLengthModel(
                 self.data.physics.i_len_sol_outboard_power_decay
             )
+            == OutbordSOLPowerDecayLengthModel.USER_INPUT
+        ):
+            self.data.physics.len_sol_outboard_power_decay = (
+                self.data.physics.len_sol_outboard_power_decay
+            )
+
+        elif (
+            OutbordSOLPowerDecayLengthModel(
+                self.data.physics.i_len_sol_outboard_power_decay
+            )
             == OutbordSOLPowerDecayLengthModel.EICH_2013
         ):
             self.data.physics.len_sol_outboard_power_decay = (
@@ -69,7 +79,7 @@ class ScrapeOffLayer(Model):
                 self.data.physics.len_plasma_sol_mast14_power_decay_2
             )
 
-        self.data.physics.a_plasma_outboard_sol_parallel = self.calculate_upstream_sol_outboard_parallel_area(
+        self.data.physics.a_plasma_outboard_sol_parallel = self.calculate_upstream_sol_outboard_parallel_area(  # noqa: E501
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             len_plasma_sol_power_decay=self.data.physics.len_sol_outboard_power_decay,
@@ -77,7 +87,7 @@ class ScrapeOffLayer(Model):
             b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
         )
 
-        self.data.physics.a_plasma_outboard_sol_eich13_parallel = self.calculate_upstream_sol_outboard_parallel_area(
+        self.data.physics.a_plasma_outboard_sol_eich13_parallel = self.calculate_upstream_sol_outboard_parallel_area(  # noqa: E501
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             len_plasma_sol_power_decay=self.data.physics.len_plasma_sol_eich13_power_decay,

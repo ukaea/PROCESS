@@ -9,6 +9,7 @@ import numpy as np
 class OutbordSOLPowerDecayLengthModel(IntEnum):
     """Enum for outboard scrape off layer power decay length models with descriptions."""
 
+    USER_INPUT = (0, "User input")
     EICH_2013 = (1, "Eich 2013")
     MAST_2014_1 = (2, "MAST 2014-1")
     MAST_2014_2 = (3, "MAST 2014-2")
@@ -1714,8 +1715,9 @@ class PhysicsData:
     """Plasma outboard midplane (upstream) SOL parallel power flux
     (qₗₗ,ᵤ) [MW/m²]"""
 
-    i_len_sol_outboard_power_decay: int = 0
+    i_len_sol_outboard_power_decay: int = 1
     """Switch for SOL outboard power decay length (λ_q) scaling to use:
+    - =0 User input
     - =1 Eich 2013 scaling
     - =2 MAST 2014 scaling 1
     - =3 MAST 2014 scaling 2

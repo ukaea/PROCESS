@@ -1172,7 +1172,8 @@ INPUT_VARIABLES = {
     "force_vmcon_inequality_tolerance": InputVariable(
         "numerics", float, range=(0.0, 1e10)
     ),
-    "i_len_sol_outboard_power_decay": InputVariable("physics", int, choices=range(1, 4)),
+    "i_len_sol_outboard_power_decay": InputVariable("physics", int, choices=range(4)),
+    "len_sol_outboard_power_decay": InputVariable("physics", float, range=(0.0, 1.0)),
 }
 
 
