@@ -13,7 +13,7 @@ temp_c0max = (
     SuperconductorModel.WESTERN_NB3SN.temp_crit_zero_field_strain
 )  # Critical temperature (K) at zero field and strain
 b_c20max = (
-    SuperconductorModel.WESTERN_NB3SN.b_crit_zero_field_strain
+    SuperconductorModel.WST_NB3SN.b_crit_zero_field_strain
 )  # Upper critical field (T) for superconductor at zero temperature and strain
 epsilon = 0.00  # Strain in superconductor
 
