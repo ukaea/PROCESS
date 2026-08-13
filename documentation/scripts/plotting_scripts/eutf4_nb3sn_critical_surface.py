@@ -7,7 +7,9 @@ import plotly.graph_objects as go
 from process.models import superconductors
 from process.models.superconductors import SuperconductorModel
 
+# Upper critical field (T) for superconductor at zero temperature and strain
 b_c20max = SuperconductorModel.ITER_NB3SN.b_crit_zero_field_strain
+
 temp_c0max = (
     SuperconductorModel.ITER_NB3SN.temp_crit_zero_field_strain
 )  # Critical temperature (K) at zero field and strain
