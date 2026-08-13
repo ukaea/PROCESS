@@ -255,6 +255,8 @@ class Availability(Model):
             self.data.costs.f_t_plant_available = 1.0e0 - (
                 uplanned + uutot - (uplanned * uutot)
             )
+        else:
+            uplanned = uutot = 0
 
         # Capacity factor
         # Using the amount of time burning for a given pulse cycle

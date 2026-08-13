@@ -184,6 +184,21 @@ class Build(Model):
 
         # Top of TF coil
         tf_top = vbuild - self.data.buildings.dz_tf_cryostat
+
+        top = (
+            (
+                ("Top blanket", bld.dz_blkt_upper, "(dz_blkt_upper)"),
+                ("Top first wall", dz_fw_upper, "(dz_fw_upper)"),
+            )
+            if sn
+            else (
+                (
+                    "Divertor structure",
+                    self.data.divertor.dz_divertor,
+                    "(dz_divertor)",
+                ),
+            )
+        )
         vbuild = self.write_obuild(
             vbuild,
             [
@@ -202,15 +217,14 @@ class Build(Model):
                     "(dz_vv_upper+dz_shld_upper)",
                 ),
                 ("Gap", bld.dr_shld_blkt_gap, "(dr_shld_blkt_gap)"),
-                ("Top blanket", bld.dz_blkt_upper, "(dz_blkt_upper)"),
-                ("Top first wall", dz_fw_upper, "(dz_fw_upper)")
+                *top,
+                ("Top scrape-off", bld.dz_fw_plasma_gap, "(dz_fw_plasma_gap)")
                 if sn
                 else (
-                    "Divertor structure",
-                    self.data.divertor.dz_divertor,
-                    "(dz_divertor)",
+                    "Top scrape-off",
+                    self.data.build.dz_xpoint_divertor,
+                    "(dz_xpoint_divertor)",
                 ),
-                ("Top scrape-off", bld.dz_fw_plasma_gap, "(dz_fw_plasma_gap)"),
                 (
                     "Plasma upper X-point height (m)",
                     bld.z_plasma_xpoint_upper,
@@ -218,7 +232,24 @@ class Build(Model):
                 ),
             ],
         )
-
+        top = (
+            (
+                (
+                    "Top blanket vertical thickness (m)",
+                    "(dz_blkt_upper)",
+                    bld.dz_blkt_upper,
+                ),
+                ("Top first wall vertical thickness (m)", "(dz_fw_upper)", dz_fw_upper),
+            )
+            if sn
+            else (
+                (
+                    "Divertor structure vertical thickness (m)",
+                    "(dz_divertor)",
+                    self.data.divertor.dz_divertor,
+                ),
+            )
+        )
         for desc, name, val in [
             (
                 "Cryostat roof structure*",
@@ -237,18 +268,17 @@ class Build(Model):
                 bld.dz_vv_upper,
             ),
             ("Top radiation shield thickness (m)", "(dz_shld_upper)", bld.dz_shld_upper),
-            ("Top blanket vertical thickness (m)", "(dz_blkt_upper)", bld.dz_blkt_upper),
-            ("Top first wall vertical thickness (m)", "(dz_fw_upper)", dz_fw_upper)
-            if sn
-            else (
-                "Divertor structure vertical thickness (m)",
-                "(dz_divertor)",
-                self.data.divertor.dz_divertor,
-            ),
+            *top,
             (
                 "Top scrape-off vertical thickness (m)",
                 "(dz_fw_plasma_gap)",
                 bld.dz_fw_plasma_gap,
+            )
+            if sn
+            else (
+                "Top scrape-off vertical thickness (m)",
+                "(dz_xpoint_divertor)",
+                self.data.build.dz_xpoint_divertor,
             ),
             (
                 "Plasma upper X-point height (m)",
@@ -472,8 +502,7 @@ class Build(Model):
         # Find radius of inner and outer plasma arcs
         def rc(trilio):
             return 0.5 * np.sqrt(
-                (self.data.physics.rminor**2 * (trilio**2 + kap**2) ** 2)
-                / ((tril + 1.0e0) ** 2)
+                (self.data.physics.rminor**2 * (trilio**2 + kap**2) ** 2) / (trilio**2)
             )
 
         rco = rc(tril + 1)
@@ -481,14 +510,12 @@ class Build(Model):
 
         # Find angles between vertical and legs
         def theta(trilio, rcio):
-            return np.arcsin(
-                1.0e0 - (self.data.physics.rminor * (1.0e0 - trilio)) / rcio
-            )
+            return np.arcsin(1 - (self.data.physics.rminor * trilio) / rcio)
 
         # Inboard arc angle = outboard leg angle
-        thetai = theta(1 - tril, rci)
+        thetai = theta(1 + tril, rco)
         # Outboard arc angle = inboard leg angle
-        thetao = theta(1 + tril, rco)
+        thetao = theta(1 - tril, rci)
 
         #  Position of lower x-pt
         rxpt = self.data.physics.rmajor - tril * self.data.physics.rminor
@@ -1309,10 +1336,7 @@ class Build(Model):
 
         # an array that holds the following information
         # description, variable name, thickness, radius
-        radial_build_data = []
-
-        radius = 0.0e0
-        radial_build_data.append(["Device centreline", None, 0.0, radius])
+        radial_build_data = [["Device centreline", None, 0.0]]
 
         bore_descr = "Machine dr_bore"
         if bld.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
@@ -1400,39 +1424,33 @@ class Build(Model):
             ["TF coil outboard leg", "dr_tf_outboard", bld.dr_tf_outboard],
         ))
 
-        for description, variable, thickness in radial_build_data:
-            radius += thickness
-            var = f"({variable})" if variable else ""
-            po.obuild(self.outfile, description, thickness, radius, var)
-
         # use manual index to ensure count is contiguous in the event
         # of a `None` variable component
         index = 0
-        for description, variable, thickness, radius in radial_build_data:
+        radius = 0.0e0
+        for description, variable, thickness in radial_build_data:
             if variable is None:
                 continue
-
             index += 1
+            radius += thickness
 
-            po.ovarre(
-                self.mfile,
-                f"{description} radial thickness (m)",
-                f"({variable})",
-                thickness,
-            )
+            var = f"({variable})" if variable else ""
+            po.obuild(self.outfile, description, thickness, radius, var)
 
-            po.ovarre(
-                self.mfile,
-                f"Radial build component {index}",
-                f"(radial_label({index}))",
-                f'"{variable}"',
-            )
-            po.ovarre(
-                self.mfile,
-                f"Radial build cumulative radius {index}",
-                f"(radial_cum({index}))",
-                radius,
-            )
+            for d, n, v in [
+                (f"{description} radial thickness (m)", f"({variable})", thickness),
+                (
+                    f"Radial build component {index}",
+                    f"(radial_label({index}))",
+                    f'"{variable}"',
+                ),
+                (
+                    f"Radial build cumulative radius {index}",
+                    f"(radial_cum({index}))",
+                    radius,
+                ),
+            ]:
+                po.ovarre(self.mfile, d, n, v)
 
         if (
             CurrentDriveModel(
