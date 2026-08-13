@@ -43,9 +43,26 @@ def plot_line_brem_loss_function_profile(
         "W",
     ]
 
-    for label, raw_species_data in zip(impurity_labels, imp_data, strict=True):
+    line_styles = [
+        "-",
+        "--",
+        "-.",
+        ":",
+        (0, (5, 1)),
+        (0, (3, 1, 1, 1)),
+        (0, (1, 1)),
+    ]
+
+    for index, (label, raw_species_data) in enumerate(
+        zip(impurity_labels, imp_data, strict=True)
+    ):
         species_data = np.asarray(raw_species_data)
-        axis.plot(species_data[:, 0], species_data[:, 1], label=label)
+        axis.plot(
+            species_data[:, 0],
+            species_data[:, 1],
+            label=label,
+            linestyle=line_styles[index % len(line_styles)],
+        )
 
     axis.legend(loc="best", ncol=4)
     axis.minorticks_on()
