@@ -1051,8 +1051,7 @@ class InDat:
 
         # ipdb.set_trace()
         # Update obsolete variables if requested
-        if self.update_obsolete:
-            self.update_obsolete_variables()
+        self.check_obsolete_variables()
 
         # Initialise parameters
         self.in_dat_lines = []
@@ -1644,7 +1643,7 @@ class InDat:
             # Write parameters
             write_parameters(self.data, output)
 
-    def update_obsolete_variables(self):
+    def check_obsolete_variables(self):
         """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict
         contained within obsolete_variables.py.
         If obsolete variables are found, and if `update_obsolete` is set to True,
