@@ -31,7 +31,7 @@ def initialise_imprad(data: DataStructure):
     """
     errorflag = 0
 
-    table_length = 200  # Number of temperature and Lz values in data file
+    table_length = 600  # Number of temperature and Lz values in data file
 
     f_nd_species_electron = 1.0e0
 
@@ -325,7 +325,7 @@ def init_imp_element(
     )
     data.impurity_radiation.impurity_arr_len_tab[n_species_index - 1] = len_tab
 
-    if len_tab > 200:
+    if len_tab > 600:
         print(
             f"ERROR: len_tab is {len_tab} but has a maximum value of "
             f"{data.impurity_radiation.all_array_hotfix_len}"

@@ -54,7 +54,7 @@ class ImpurityRadiationData:
     )
 
     n_charge_impurity_profile: list[float] = field(
-        default_factory=lambda: np.zeros((N_IMPURITIES, 200))
+        default_factory=lambda: np.zeros((N_IMPURITIES, 600))
     )
     """charge profile of impurities"""
 
@@ -98,16 +98,16 @@ class ImpurityRadiationData:
     )
 
     temp_impurity_keV_array: list[float] = field(
-        default_factory=lambda: np.zeros((N_IMPURITIES, 200))
+        default_factory=lambda: np.zeros((N_IMPURITIES, 600))
     )
     """2D array of impurity temperatures in kilo-electronvolts (keV)"""
 
     pden_impurity_lz_nd_temp_array: list[float] = field(
-        default_factory=lambda: np.zeros((N_IMPURITIES, 200))
+        default_factory=lambda: np.zeros((N_IMPURITIES, 600))
     )
 
     impurity_arr_zav: list[float] = field(
-        default_factory=lambda: np.zeros((N_IMPURITIES, 200))
+        default_factory=lambda: np.zeros((N_IMPURITIES, 600))
     )
 
 
