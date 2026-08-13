@@ -76,9 +76,9 @@ def init_process(data: DataStructure, update_obsolete: bool = False):
     # if comment this out, everything has its default value from data_structure files
     # so need InDat to
     inputs = parse_input_file(data)  # want to absorb into InDat()
-    import ipdb
+    # import ipdb
 
-    ipdb.set_trace()
+    # ipdb.set_trace()
     # Set active constraints
     set_active_constraints(data)
 

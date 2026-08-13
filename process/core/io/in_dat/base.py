@@ -1050,7 +1050,7 @@ class InDat:
         # import ipdb
 
         # ipdb.set_trace()
-        # Update obsolete variables if requested
+        # Check for obsolete variables and update if requested
         self.check_obsolete_variables()
 
         # Initialise parameters
