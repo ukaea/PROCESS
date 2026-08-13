@@ -10,7 +10,7 @@ from process.models import superconductors
 from process.models.superconductors import SuperconductorModel
 
 temp_c0max = (
-    SuperconductorModel.WESTERN_NB3SN.temp_crit_zero_field_strain
+    SuperconductorModel.WST_NB3SN.temp_crit_zero_field_strain
 )  # Critical temperature (K) at zero field and strain
 b_c20max = (
     SuperconductorModel.WST_NB3SN.b_crit_zero_field_strain
