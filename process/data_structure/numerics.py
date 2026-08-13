@@ -288,7 +288,6 @@ class NumericsData:
             "ECRH ignitability                ",  # Stellarator constraint
             "Fuel composition consistency     ",
             "TF coil stored energy < copper in TF coil          ",
-            "Centre column mimimum required by Volt.sec",
         ]
     )
     """Labels describing constraint equations (corresponding itvs)<UL>
@@ -392,7 +391,6 @@ class NumericsData:
     * (91) Checking if the design point is ECRH ignitable
     * (92) D/T/He3 ratio in fuel sums to 1
     * (93) Lower limit of the copper in TF coil needed for quench protection
-    * (94) Lower limit on centre column size needed for required Volt.sec
     """
 
     ixc: list[int] = field(default_factory=lambda: np.array([0] * IPNVARS))
