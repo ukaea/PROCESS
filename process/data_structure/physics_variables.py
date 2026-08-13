@@ -9,9 +9,9 @@ import numpy as np
 class OutbordSOLPowerDecayLengthModel(IntEnum):
     """Enum for outboard scrape off layer power decay length models with descriptions."""
 
-    EICH_2013 = (0, "Eich 2013")
-    MAST_2014_1 = (1, "MAST 2014-1")
-    MAST_2014_2 = (2, "MAST 2014-2")
+    EICH_2013 = (1, "Eich 2013")
+    MAST_2014_1 = (2, "MAST 2014-1")
+    MAST_2014_2 = (3, "MAST 2014-2")
 
     def __new__(cls, value: int, description: str):
         """Create a new instance of OutbordSOLPowerDecayLengthModel.
@@ -1716,9 +1716,9 @@ class PhysicsData:
 
     i_len_sol_outboard_power_decay: int = 0
     """Switch for SOL outboard power decay length (λ_q) scaling to use:
-    - =0 Eich 2013 scaling
-    - =1 MAST 2014 scaling 1
-    - =2 MAST 2014 scaling 2
+    - =1 Eich 2013 scaling
+    - =2 MAST 2014 scaling 1
+    - =3 MAST 2014 scaling 2
     """
 
     dt_power_density_plasma: float = 0.0
