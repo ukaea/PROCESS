@@ -23,6 +23,8 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 include_edge_radiation = False
+int_edge_rad = False
+rho_fix = False
 
 
 def initialise_imprad(data: DataStructure):
@@ -630,6 +632,12 @@ def element2index(element: str, data: DataStructure):
         ) from e
 
 
+# Globals for ease of extraction for investigation plotting only
+global pden_impurity_rad_profile
+global pden_impurity_core_rad_profile
+global pden_impurity_rad_edge_profile
+
+
 class ImpurityRadiation:
     """Calculates the impurity radiation losses for given temperature and
     density profiles. The considers the  total impurity radiation from the core
@@ -707,14 +715,24 @@ class ImpurityRadiation:
         values.
         """
         # Core region radiation profile
-        pden_impurity_core_rad_total = self.pden_impurity_radiation_profile * (
-            self.plasma_profile.neprofile.profile_x
-            * create_f_rad_core_profile(
-                rho=self.plasma_profile.neprofile.profile_x,
-                radius_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
-                f_p_plasma_core_rad_reduction=self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
+        # Should this be multiplied by profile_x? Causes 0 power density at rho = 0
+        if rho_fix:
+            pden_impurity_core_rad_total = self.pden_impurity_radiation_profile * (
+                create_f_rad_core_profile(
+                    rho=self.plasma_profile.neprofile.profile_x,
+                    radius_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
+                    f_p_plasma_core_rad_reduction=self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
+                )
             )
-        )
+        else:
+            pden_impurity_core_rad_total = self.pden_impurity_radiation_profile * (
+                self.plasma_profile.neprofile.profile_x
+                * create_f_rad_core_profile(
+                    rho=self.plasma_profile.neprofile.profile_x,
+                    radius_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
+                    f_p_plasma_core_rad_reduction=self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
+                )
+            )
         if include_edge_radiation:
             # Explicitly include edge radiation
             # Edge region radiation profile
@@ -737,6 +755,7 @@ class ImpurityRadiation:
                 self.pden_impurity_rad_edge_profile, pden_impurity_rad_edge_total
             )
         else:
+            # Old case
             pden_impurity_rad_total = (
                 self.pden_impurity_radiation_profile
                 * self.plasma_profile.neprofile.profile_x
@@ -748,6 +767,14 @@ class ImpurityRadiation:
         self.pden_impurity_core_rad_profile = np.add(
             self.pden_impurity_core_rad_profile, pden_impurity_core_rad_total
         )
+
+        global pden_impurity_rad_profile
+        global pden_impurity_core_rad_profile
+        global pden_impurity_rad_edge_profile
+
+        pden_impurity_rad_profile = self.pden_impurity_rad_profile
+        pden_impurity_core_rad_profile = self.pden_impurity_core_rad_profile
+        pden_impurity_rad_edge_profile = self.pden_impurity_rad_edge_profile
 
     def integrate_radiation_loss_profiles(self):
         """Integrate the radiation loss profiles using the Simpson rule.
