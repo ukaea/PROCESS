@@ -482,7 +482,9 @@ class Build(Model):
 
         # Find angles between vertical and legs
         def theta(trilio, rcio):
-            np.arcsin(1.0e0 - (self.data.physics.rminor * (1.0e0 - trilio)) / rcio)
+            return np.arcsin(
+                1.0e0 - (self.data.physics.rminor * (1.0e0 - trilio)) / rcio
+            )
 
         # Inboard arc angle = outboard leg angle
         thetai = theta(1 - tril, rci)
