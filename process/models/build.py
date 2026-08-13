@@ -457,8 +457,7 @@ class Build(Model):
         #  options for separate upper and lower self.data.physics.triangularity
 
         kap = self.data.physics.kappa
-        triu = self.data.physics.triang
-        tril = self.data.physics.triang
+        triu = tril = self.data.physics.triang
 
         # New method, assuming straight legs -- superceded by new method 26/5/2016
         # Assumed 90 degrees at X-pt -- wrong#
@@ -471,599 +470,299 @@ class Build(Model):
 
         # Method 26/05/2016
         # Find radius of inner and outer plasma arcs
+        def rc(trilio):
+            return 0.5 * np.sqrt(
+                (self.data.physics.rminor**2 * (trilio**2 + kap**2) ** 2)
+                / ((tril + 1.0e0) ** 2)
+            )
 
-        rco = 0.5 * np.sqrt(
-            (self.data.physics.rminor**2 * ((tril + 1.0e0) ** 2 + kap**2) ** 2)
-            / ((tril + 1.0e0) ** 2)
-        )
-        rci = 0.5 * np.sqrt(
-            (self.data.physics.rminor**2 * ((tril - 1.0e0) ** 2 + kap**2) ** 2)
-            / ((tril - 1.0e0) ** 2)
-        )
+        rco = rc(tril + 1)
+        rci = rc(tril - 1)
 
         # Find angles between vertical and legs
+        def theta(trilio, rcio):
+            np.arcsin(1.0e0 - (self.data.physics.rminor * (1.0e0 - trilio)) / rcio)
+
         # Inboard arc angle = outboard leg angle
-
-        thetao = np.arcsin(1.0e0 - (self.data.physics.rminor * (1.0e0 - tril)) / rci)
-
+        thetai = theta(1 - tril, rci)
         # Outboard arc angle = inboard leg angle
-
-        thetai = np.arcsin(1.0e0 - (self.data.physics.rminor * (1.0e0 + tril)) / rco)
+        thetao = theta(1 + tril, rco)
 
         #  Position of lower x-pt
         rxpt = self.data.physics.rmajor - tril * self.data.physics.rminor
         zxpt = -1.0e0 * kap * self.data.physics.rminor
-
-        # Position of inner strike point
-        # rspi = rxpt - self.data.build.plsepi*cos(alphad)
-        # zspi = zxpt - self.data.build.plsepi*sin(alphad)
-        rspi = rxpt - self.data.build.plsepi * np.cos(thetai)
-        zspi = zxpt - self.data.build.plsepi * np.sin(thetai)
 
         # Position of outer strike point
         self.data.build.rspo = rxpt + self.data.build.plsepo * np.cos(thetao)
         zspo = zxpt - self.data.build.plsepo * np.sin(thetao)
 
         # Position of inner plate ends
-        rplti = rspi + (self.data.build.plleni / 2.0e0) * np.cos(
-            thetai + self.data.divertor.betai
+        def plate_cos(l_div_plate, theta, beta):
+            return (l_div_plate / 2) * np.cos(theta + beta)
+
+        def plate_sin(l_div_plate, theta, beta):
+            return (l_div_plate / 2) * np.sin(theta + beta)
+
+        inner_plte_cos = plate_cos(
+            self.data.build.plleni, thetai, self.data.divertor.betai
         )
-        zplti = zspi + (self.data.build.plleni / 2.0e0) * np.sin(
-            thetai + self.data.divertor.betai
+        inner_plte_sin = plate_sin(
+            self.data.build.plleni, thetai, self.data.divertor.betai
         )
-        rplbi = rspi - (self.data.build.plleni / 2.0e0) * np.cos(
-            thetai + self.data.divertor.betai
+        outer_plte_cos = plate_cos(
+            self.data.build.plleno, thetao, self.data.divertor.betao
         )
-        zplbi = zspi - (self.data.build.plleni / 2.0e0) * np.sin(
-            thetai + self.data.divertor.betai
+        outer_plte_sin = plate_sin(
+            self.data.build.plleno, thetao, self.data.divertor.betao
         )
 
-        # Position of outer plate ends
-        rplto = self.data.build.rspo - (self.data.build.plleno / 2.0e0) * np.cos(
-            thetao + self.data.divertor.betao
-        )
-        zplto = zspo + (self.data.build.plleno / 2.0e0) * np.sin(
-            thetao + self.data.divertor.betao
-        )
-        rplbo = self.data.build.rspo + (self.data.build.plleno / 2.0e0) * np.cos(
-            thetao + self.data.divertor.betao
-        )
-        zplbo = zspo - (self.data.build.plleno / 2.0e0) * np.sin(
-            thetao + self.data.divertor.betao
-        )
+        # Position of inner strike point
+        # rspi = rxpt - self.data.build.plsepi*cos(alphad)
+        # zspi = zxpt - self.data.build.plsepi*sin(alphad)
+        rspi = rxpt - self.data.build.plsepi * np.cos(thetai)
+        zspi = zxpt - self.data.build.plsepi * np.sin(thetai)
+        zplti = zspi + inner_plte_sin
+        zplbi = zspi - inner_plte_sin
+        zplto = zspo + outer_plte_sin
+        zplbo = zspo - outer_plte_sin
 
         divht = max(zplti, zplto) - min(zplbo, zplbi)
 
         if output:
-            if self.data.divertor.n_divertors == 1:
-                po.oheadr(self.outfile, "Divertor build and plasma position")
-                po.ocmmnt(self.outfile, "Divertor Configuration = Single Null Divertor")
-                po.oblnkl(self.outfile)
-                ptop_radial = self.data.physics.rmajor - triu * self.data.physics.rminor
-                ptop_vertical = kap * self.data.physics.rminor
-                po.ovarre(
-                    self.outfile,
-                    "Plasma top position, radial (m)",
-                    "(ptop_radial)",
-                    ptop_radial,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma top position, vertical (m)",
-                    "(ptop_vertical)",
-                    ptop_vertical,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma geometric centre, radial (m)",
-                    "(rmajor.)",
-                    self.data.physics.rmajor,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma geometric centre, vertical (m)",
-                    "(0.0)",
-                    0.0e0,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma lower triangularity",
-                    "(tril)",
-                    tril,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma elongation",
-                    "(kappa.)",
-                    kap,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "TF coil vertical offset (m)",
-                    "(dz_tf_plasma_centre_offset)",
-                    self.data.build.dz_tf_plasma_centre_offset,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma outer arc radius of curvature (m)",
-                    "(rco)",
-                    rco,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma inner arc radius of curvature (m)",
-                    "(rci)",
-                    rci,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile, "Plasma lower X-pt, radial (m)", "(rxpt)", rxpt, "OP "
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma lower X-pt, vertical (m)",
-                    "(zxpt)",
-                    zxpt,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Poloidal plane angle between vertical and inner leg (rad)",
-                    "(thetai)",
-                    thetai,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Poloidal plane angle between vertical and outer leg (rad)",
-                    "(thetao)",
-                    thetao,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Poloidal plane angle between inner leg and plate (rad)",
-                    "(betai)",
-                    self.data.divertor.betai,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Poloidal plane angle between outer leg and plate (rad)",
-                    "(betao)",
-                    self.data.divertor.betao,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Inner divertor leg poloidal length (m)",
-                    "(plsepi)",
-                    self.data.build.plsepi,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Outer divertor leg poloidal length (m)",
-                    "(plsepo)",
-                    self.data.build.plsepo,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Inner divertor plate length (m)",
-                    "(plleni)",
-                    self.data.build.plleni,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Outer divertor plate length (m)",
-                    "(plleno)",
-                    self.data.build.plleno,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Inner strike point, radial (m)",
-                    "(rspi)",
-                    rspi,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Inner strike point, vertical (m)",
-                    "(zspi)",
-                    zspi,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile, "Inner plate top, radial (m)", "(rplti)", rplti, "OP "
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Inner plate top, vertical (m)",
-                    "(zplti)",
-                    zplti,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Inner plate bottom, radial (m)",
-                    "(rplbi)",
-                    rplbi,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Inner plate bottom, vertical (m)",
-                    "(zplbi)",
-                    zplbi,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Outer strike point, radial (m)",
-                    "(rspo)",
-                    self.data.build.rspo,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Outer strike point, vertical (m)",
-                    "(zspo)",
-                    zspo,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile, "Outer plate top, radial (m)", "(rplto)", rplto, "OP "
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Outer plate top, vertical (m)",
-                    "(zplto)",
-                    zplto,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Outer plate bottom, radial (m)",
-                    "(rplbo)",
-                    rplbo,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Outer plate bottom, vertical (m)",
-                    "(zplbo)",
-                    zplbo,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Calculated maximum divertor height (m)",
-                    "(divht)",
-                    divht,
-                    "OP ",
-                )
+            self.divertor_geom_output(
+                kap,
+                divht,
+                tril,
+                triu,
+                thetai,
+                thetao,
+                rco,
+                rci,
+                rxpt,
+                zxpt,
+                rspi,
+                zspi,
+                zspo,
+                # Position of inner strike points
+                rplti=rspi + inner_plte_cos,
+                rplbi=rspi - inner_plte_cos,
+                zplti=zplti,
+                zplbi=zplbi,
+                # Position of outer plate ends
+                rplto=self.data.build.rspo - outer_plte_cos,
+                rplbo=self.data.build.rspo + outer_plte_cos,
+                zplto=zplto,
+                zplbo=zplbo,
+            )
 
-            elif self.data.divertor.n_divertors == 2:
-                po.oheadr(self.outfile, "Divertor build and plasma position")
-                po.ocmmnt(self.outfile, "Divertor Configuration = Double Null Divertor")
-                po.oblnkl(self.outfile)
-                # Assume upper and lower divertors geometries are symmetric.
-                ptop_radial = self.data.physics.rmajor - triu * self.data.physics.rminor
-                ptop_vertical = kap * self.data.physics.rminor
-                po.ovarre(
-                    self.outfile,
+        return divht
+
+    def divertor_geom_output(
+        self,
+        kap,
+        divht,
+        tril,
+        triu,
+        thetai,
+        thetao,
+        rco,
+        rci,
+        rxpt,
+        zxpt,
+        rspi,
+        zspi,
+        zspo,
+        rplti,
+        rplbi,
+        zplti,
+        zplbi,
+        rplto,
+        rplbo,
+        zplto,
+        zplbo,
+    ):
+        """Divertor geometry output"""
+        po.oheadr(self.outfile, "Divertor build and plasma position")
+
+        if self.data.divertor.n_divertors == 1:
+            po.ocmmnt(self.outfile, "Divertor Configuration = Single Null Divertor")
+            po.oblnkl(self.outfile)
+
+            for desc, name, var in [
+                (
                     "Plasma top position, radial (m)",
                     "(ptop_radial)",
-                    ptop_radial,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
+                    self.data.physics.rmajor - triu * self.data.physics.rminor,
+                ),
+                (
                     "Plasma top position, vertical (m)",
                     "(ptop_vertical)",
-                    ptop_vertical,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
+                    kap * self.data.physics.rminor,
+                ),
+                (
                     "Plasma geometric centre, radial (m)",
                     "(rmajor.)",
                     self.data.physics.rmajor,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma geometric centre, vertical (m)",
-                    "(0.0)",
-                    0.0e0,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma data.physics.triangularity",
-                    "(tril)",
-                    tril,
-                    "OP ",
-                )
-                po.ovarre(self.outfile, "Plasma elongation", "(kappa.)", kap, "OP ")
-                po.ovarre(
-                    self.outfile,
+                ),
+                ("Plasma geometric centre, vertical (m)", "(0.0)", 0.0e0),
+                ("Plasma lower triangularity", "(tril)", tril),
+                ("Plasma elongation", "(kappa.)", kap),
+                (
                     "TF coil vertical offset (m)",
                     "(dz_tf_plasma_centre_offset)",
                     self.data.build.dz_tf_plasma_centre_offset,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile, "Plasma upper X-pt, radial (m)", "(rxpt)", rxpt, "OP "
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma upper X-pt, vertical (m)",
-                    "(-zxpt)",
-                    -zxpt,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma outer arc radius of curvature (m)",
-                    "(rco)",
-                    rco,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma inner arc radius of curvature (m)",
-                    "(rci)",
-                    rci,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile, "Plasma lower X-pt, radial (m)", "(rxpt)", rxpt, "OP "
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Plasma lower X-pt, vertical (m)",
-                    "(zxpt)",
-                    zxpt,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
+                ),
+                ("Plasma outer arc radius of curvature (m)", "(rco)", rco),
+                ("Plasma inner arc radius of curvature (m)", "(rci)", rci),
+                ("Plasma lower X-pt, radial (m)", "(rxpt)", rxpt),
+                ("Plasma lower X-pt, vertical (m)", "(zxpt)", zxpt),
+                (
                     "Poloidal plane angle between vertical and inner leg (rad)",
                     "(thetai)",
                     thetai,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
+                ),
+                (
                     "Poloidal plane angle between vertical and outer leg (rad)",
                     "(thetao)",
                     thetao,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
+                ),
+                (
                     "Poloidal plane angle between inner leg and plate (rad)",
                     "(betai)",
                     self.data.divertor.betai,
-                )
-                po.ovarre(
-                    self.outfile,
+                ),
+                (
                     "Poloidal plane angle between outer leg and plate (rad)",
                     "(betao)",
                     self.data.divertor.betao,
-                )
-                po.ovarre(
-                    self.outfile,
+                ),
+                (
                     "Inner divertor leg poloidal length (m)",
                     "(plsepi)",
                     self.data.build.plsepi,
-                )
-                po.ovarre(
-                    self.outfile,
+                ),
+                (
                     "Outer divertor leg poloidal length (m)",
                     "(plsepo)",
                     self.data.build.plsepo,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Inner divertor plate length (m)",
-                    "(lleni)",
-                    self.data.build.plleni,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Outer divertor plate length (m)",
-                    "(plleno)",
-                    self.data.build.plleno,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Upper inner strike point, radial (m)",
-                    "(rspi)",
-                    rspi,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Upper inner strike point, vertical (m)",
-                    "(-zspi)",
-                    -zspi,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Upper inner plate top, radial (m)",
-                    "(rplti)",
-                    rplti,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Upper inner plate top, vertical (m)",
-                    "(-zplti)",
-                    -zplti,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Upper inner plate bottom, radial (m)",
-                    "(rplbi)",
-                    rplbi,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Upper inner plate bottom, vertical (m)",
-                    "(-zplbi)",
-                    -zplbi,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Upper outer strike point, radial (m)",
-                    "(rspo)",
-                    self.data.build.rspo,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Upper outer strike point, vertical (m)",
-                    "(-zspo)",
-                    -zspo,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Upper outer plate top, radial (m)",
-                    "(rplto)",
-                    rplto,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Upper outer plate top, vertical (m)",
-                    "(-zplto)",
-                    -zplto,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Upper outer plate bottom, radial (m)",
-                    "(rplbo)",
-                    rplbo,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Upper outer plate bottom, vertical (m)",
-                    "(-zplbo)",
-                    -zplbo,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Lower inner strike point, radial (m)",
-                    "(rspi)",
-                    rspi,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Lower inner strike point, vertical (m)",
-                    "(zspi)",
-                    zspi,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Lower inner plate top, radial (m)",
-                    "(rplti)",
-                    rplti,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Lower inner plate top, vertical (m)",
-                    "(zplti)",
-                    zplti,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Lower inner plate bottom, radial (m)",
-                    "(rplbi)",
-                    rplbi,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Lower inner plate bottom, vertical (m)",
-                    "(zplbi)",
-                    zplbi,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Lower outer strike point, radial (m)",
-                    "(rspo)",
-                    self.data.build.rspo,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Lower outer strike point, vertical (m)",
-                    "(zspo)",
-                    zspo,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Lower outer plate top, radial (m)",
-                    "(rplto)",
-                    rplto,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Lower outer plate top, vertical (m)",
-                    "(zplto)",
-                    zplto,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Lower outer plate bottom, radial (m)",
-                    "(rplbo)",
-                    rplbo,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Lower outer plate bottom, vertical (m)",
-                    "(zplbo)",
-                    zplbo,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Calculated maximum divertor height (m)",
-                    "(divht)",
-                    divht,
-                    "OP ",
-                )
-            else:
-                po.oheadr(self.outfile, "Divertor build and plasma position")
-                po.ocmmnt(
-                    self.outfile,
-                    "ERROR: null value not supported, check i_single_null value.",
-                )
-        return divht
+                ),
+                ("Inner divertor plate length (m)", "(plleni)", self.data.build.plleni),
+                ("Outer divertor plate length (m)", "(plleno)", self.data.build.plleno),
+                ("Inner strike point, radial (m)", "(rspi)", rspi),
+                ("Inner strike point, vertical (m)", "(zspi)", zspi),
+                ("Inner plate top, radial (m)", "(rplti)", rplti),
+                ("Inner plate top, vertical (m)", "(zplti)", zplti),
+                ("Inner plate bottom, radial (m)", "(rplbi)", rplbi),
+                ("Inner plate bottom, vertical (m)", "(zplbi)", zplbi),
+                ("Outer strike point, radial (m)", "(rspo)", self.data.build.rspo),
+                ("Outer strike point, vertical (m)", "(zspo)", zspo),
+                ("Outer plate top, radial (m)", "(rplto)", rplto),
+                ("Outer plate top, vertical (m)", "(zplto)", zplto),
+                ("Outer plate bottom, radial (m)", "(rplbo)", rplbo),
+                ("Outer plate bottom, vertical (m)", "(zplbo)", zplbo),
+                ("Calculated maximum divertor height (m)", "(divht)", divht),
+            ]:
+                po.ovarre(self.outfile, desc, name, var, "OP ")
+
+        elif self.data.divertor.n_divertors == 2:
+            po.ocmmnt(self.outfile, "Divertor Configuration = Double Null Divertor")
+            po.oblnkl(self.outfile)
+            # Assume upper and lower divertors geometries are symmetric.
+            for desc, name, var in [
+                (
+                    "Plasma top position, radial (m)",
+                    "(ptop_radial)",
+                    self.data.physics.rmajor - triu * self.data.physics.rminor,
+                ),
+                (
+                    "Plasma top position, vertical (m)",
+                    "(ptop_vertical)",
+                    kap * self.data.physics.rminor,
+                ),
+                (
+                    "Plasma geometric centre, radial (m)",
+                    "(rmajor.)",
+                    self.data.physics.rmajor,
+                ),
+                ("Plasma geometric centre, vertical (m)", "(0.0)", 0.0e0),
+                ("Plasma data.physics.triangularity", "(tril)", tril),
+                ("Plasma elongation", "(kappa.)", kap),
+                (
+                    "TF coil vertical offset (m)",
+                    "(dz_tf_plasma_centre_offset)",
+                    self.data.build.dz_tf_plasma_centre_offset,
+                ),
+                ("Plasma upper X-pt, radial (m)", "(rxpt)", rxpt),
+                ("Plasma upper X-pt, vertical (m)", "(-zxpt)", -zxpt),
+                ("Plasma outer arc radius of curvature (m)", "(rco)", rco),
+                ("Plasma inner arc radius of curvature (m)", "(rci)", rci),
+                ("Plasma lower X-pt, radial (m)", "(rxpt)", rxpt),
+                ("Plasma lower X-pt, vertical (m)", "(zxpt)", zxpt),
+                (
+                    "Poloidal plane angle between vertical and inner leg (rad)",
+                    "(thetai)",
+                    thetai,
+                ),
+                (
+                    "Poloidal plane angle between vertical and outer leg (rad)",
+                    "(thetao)",
+                    thetao,
+                ),
+                (
+                    "Poloidal plane angle between inner leg and plate (rad)",
+                    "(betai)",
+                    self.data.divertor.betai,
+                ),
+                (
+                    "Poloidal plane angle between outer leg and plate (rad)",
+                    "(betao)",
+                    self.data.divertor.betao,
+                ),
+                (
+                    "Inner divertor leg poloidal length (m)",
+                    "(plsepi)",
+                    self.data.build.plsepi,
+                ),
+                (
+                    "Outer divertor leg poloidal length (m)",
+                    "(plsepo)",
+                    self.data.build.plsepo,
+                ),
+                ("Inner divertor plate length (m)", "(plleni)", self.data.build.plleni),
+                ("Outer divertor plate length (m)", "(plleno)", self.data.build.plleno),
+                ("Upper inner strike point, radial (m)", "(rspi)", rspi),
+                ("Upper inner strike point, vertical (m)", "(-zspi)", -zspi),
+                ("Upper inner plate top, radial (m)", "(rplti)", rplti),
+                ("Upper inner plate top, vertical (m)", "(-zplti)", -zplti),
+                ("Upper inner plate bottom, radial (m)", "(rplbi)", rplbi),
+                ("Upper inner plate bottom, vertical (m)", "(-zplbi)", -zplbi),
+                ("Upper outer strike point, radial (m)", "(rspo)", self.data.build.rspo),
+                ("Upper outer strike point, vertical (m)", "(-zspo)", -zspo),
+                ("Upper outer plate top, radial (m)", "(rplto)", rplto),
+                ("Upper outer plate top, vertical (m)", "(-zplto)", -zplto),
+                ("Upper outer plate bottom, radial (m)", "(rplbo)", rplbo),
+                ("Upper outer plate bottom, vertical (m)", "(-zplbo)", -zplbo),
+                ("Lower inner strike point, radial (m)", "(rspi)", rspi),
+                ("Lower inner strike point, vertical (m)", "(zspi)", zspi),
+                ("Lower inner plate top, radial (m)", "(rplti)", rplti),
+                ("Lower inner plate top, vertical (m)", "(zplti)", zplti),
+                ("Lower inner plate bottom, radial (m)", "(rplbi)", rplbi),
+                ("Lower inner plate bottom, vertical (m)", "(zplbi)", zplbi),
+                ("Lower outer strike point, radial (m)", "(rspo)", self.data.build.rspo),
+                ("Lower outer strike point, vertical (m)", "(zspo)", zspo),
+                ("Lower outer plate top, radial (m)", "(rplto)", rplto),
+                ("Lower outer plate top, vertical (m)", "(zplto)", zplto),
+                ("Lower outer plate bottom, radial (m)", "(rplbo)", rplbo),
+                ("Lower outer plate bottom, vertical (m)", "(zplbo)", zplbo),
+                ("Calculated maximum divertor height (m)", "(divht)", divht),
+            ]:
+                po.ovarre(self.outfile, desc, name, var, "OP ")
+
+        else:
+            po.ocmmnt(
+                self.outfile,
+                "ERROR: null value not supported, check i_single_null value.",
+            )
 
     @staticmethod
     def plasma_outboard_edge_toroidal_ripple(
@@ -1238,277 +937,241 @@ class Build(Model):
         output : bool
             Flag indicating whether to output the results
         """
+        bld = self.data.build
         if self.data.fwbs.blktmodel > 0:
-            self.data.build.dr_blkt_inboard = (
-                self.data.build.blbuith
-                + self.data.build.blbmith
-                + self.data.build.blbpith
-            )
-            self.data.build.dr_blkt_outboard = (
-                self.data.build.blbuoth
-                + self.data.build.blbmoth
-                + self.data.build.blbpoth
-            )
-            self.data.build.dz_shld_upper = 0.5e0 * (
-                self.data.build.dr_shld_inboard + self.data.build.dr_shld_outboard
-            )
+            bld.dr_blkt_inboard = bld.blbuith + bld.blbmith + bld.blbpith
+            bld.dr_blkt_outboard = bld.blbuoth + bld.blbmoth + bld.blbpoth
+            bld.dz_shld_upper = 0.5e0 * (bld.dr_shld_inboard + bld.dr_shld_outboard)
 
         #  Top/bottom blanket thickness
-        self.data.build.dz_blkt_upper = 0.5e0 * (
-            self.data.build.dr_blkt_inboard + self.data.build.dr_blkt_outboard
-        )
+        bld.dz_blkt_upper = 0.5e0 * (bld.dr_blkt_inboard + bld.dr_blkt_outboard)
 
         i_single_null = DivertorNumberModels(self.data.physics.i_single_null)
         if i_single_null == DivertorNumberModels.SINGLE_NULL:
-            #  Check if self.data.build.dz_fw_plasma_gap has been set too small
-            self.data.build.dz_fw_plasma_gap = max(
-                0.5e0
-                * (
-                    self.data.build.dr_fw_plasma_gap_inboard
-                    + self.data.build.dr_fw_plasma_gap_outboard
-                ),
-                self.data.build.dz_fw_plasma_gap,
+            #  Check if bld.dz_fw_plasma_gap has been set too small
+            bld.dz_fw_plasma_gap = max(
+                0.5e0 * (bld.dr_fw_plasma_gap_inboard + bld.dr_fw_plasma_gap_outboard),
+                bld.dz_fw_plasma_gap,
             )
 
         # Issue #514 Radial dimensions of inboard leg
-        # Calculate self.data.build.dr_tf_inboard if
+        # Calculate bld.dr_tf_inboard if
         # self.data.tfcoil.dr_tf_wp_with_insulation is an iteration variable (140)
         if 140 in self.data.numerics.ixc[0 : self.data.numerics.nvar]:
-            self.data.build.dr_tf_inboard = (
+            bld.dr_tf_inboard = (
                 self.data.tfcoil.dr_tf_wp_with_insulation
                 + self.data.tfcoil.dr_tf_plasma_case
                 + self.data.tfcoil.dr_tf_nose_case
             )
 
-        if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
-            self.data.build.r_tf_inboard_in = self.data.build.dr_bore
+        if bld.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
+            bld.r_tf_inboard_in = bld.dr_bore
             # CS bore radius [m]
-            self.data.build.dr_cs_bore = (
-                self.data.build.dr_bore
-                + self.data.build.dr_tf_inboard
-                + self.data.build.dr_cs_tf_gap
-            )
+            bld.dr_cs_bore = bld.dr_bore + bld.dr_tf_inboard + bld.dr_cs_tf_gap
         else:
-            self.data.build.dr_cs_bore = self.data.build.dr_bore
+            bld.dr_cs_bore = bld.dr_bore
 
         # Calculate pre-compression structure thickness
         if (
-            CSPrecompressionConfiguration(self.data.build.i_cs_precomp)
+            CSPrecompressionConfiguration(bld.i_cs_precomp)
             == CSPrecompressionConfiguration.CS_PRECOMPRESSION_STRUCTURE_PRESENT
         ):
-            self.data.build.dr_cs_precomp = self.data.build.fseppc / (
+            bld.dr_cs_precomp = bld.fseppc / (
                 2.0e0
                 * np.pi
-                * self.data.build.fcspc
-                * self.data.build.sigallpc
-                * (2.0 * self.data.build.dr_cs_bore + self.data.build.dr_cs)
+                * bld.fcspc
+                * bld.sigallpc
+                * (2.0 * bld.dr_cs_bore + bld.dr_cs)
             )
         else:
-            self.data.build.dr_cs_precomp = 0.0e0
+            bld.dr_cs_precomp = 0.0e0
 
-        if self.data.build.i_tf_inside_cs != TFCSRadialConfiguration.TF_INSIDE_CS:
+        if bld.i_tf_inside_cs != TFCSRadialConfiguration.TF_INSIDE_CS:
             # Inboard side inner radius [m]
             # This is not calculated above because it requires the dr_cs_precomp
-            self.data.build.r_tf_inboard_in = (
-                self.data.build.dr_bore
-                + self.data.build.dr_cs
-                + self.data.build.dr_cs_precomp
-                + self.data.build.dr_cs_tf_gap
+            bld.r_tf_inboard_in = (
+                bld.dr_bore + bld.dr_cs + bld.dr_cs_precomp + bld.dr_cs_tf_gap
             )
 
         # Radial build to tfcoil middle [m]
-        self.data.build.r_tf_inboard_mid = (
-            self.data.build.r_tf_inboard_in + 0.5e0 * self.data.build.dr_tf_inboard
-        )
+        bld.r_tf_inboard_mid = bld.r_tf_inboard_in + 0.5e0 * bld.dr_tf_inboard
 
         # Radial build to tfcoil plasma facing side [m]
-        self.data.build.r_tf_inboard_out = (
-            self.data.build.r_tf_inboard_in + self.data.build.dr_tf_inboard
-        )
+        bld.r_tf_inboard_out = bld.r_tf_inboard_in + bld.dr_tf_inboard
 
         # WP radial thickness [m]
         # Calculated only if not used as an iteration variable
         if 140 not in self.data.numerics.ixc[0 : self.data.numerics.nvar]:
             self.data.tfcoil.dr_tf_wp_with_insulation = (
-                self.data.build.dr_tf_inboard
+                bld.dr_tf_inboard
                 - self.data.tfcoil.dr_tf_plasma_case
                 - self.data.tfcoil.dr_tf_nose_case
             )
 
         # Radius of the centrepost at the top of the machine
         if self.data.physics.itart == 1 and self.data.tfcoil.i_tf_sup != 1:
-            # self.data.build.r_cp_top is set using the plasma shape
-            if self.data.build.i_r_cp_top == 0:
-                self.data.build.r_cp_top = (
+            # bld.r_cp_top is set using the plasma shape
+            if bld.i_r_cp_top == 0:
+                bld.r_cp_top = (
                     self.data.physics.rmajor
                     - self.data.physics.rminor * self.data.physics.triang
                     - (
-                        self.data.build.dr_tf_shld_gap
-                        + self.data.build.dr_shld_thermal_inboard
-                        + self.data.build.dr_shld_inboard
-                        + self.data.build.dr_shld_blkt_gap
-                        + self.data.build.dr_blkt_inboard
-                        + self.data.build.dr_fw_inboard
-                        + 3.0e0 * self.data.build.dr_fw_plasma_gap_inboard
+                        bld.dr_tf_shld_gap
+                        + bld.dr_shld_thermal_inboard
+                        + bld.dr_shld_inboard
+                        + bld.dr_shld_blkt_gap
+                        + bld.dr_blkt_inboard
+                        + bld.dr_fw_inboard
+                        + 3.0e0 * bld.dr_fw_plasma_gap_inboard
                     )
                     + self.data.tfcoil.drtop
                 )
 
-                # Notify user that self.data.build.r_cp_top has been set to
-                # 1.01*self.data.build.r_tf_inboard_out (lvl 2 error)
-                if self.data.build.r_cp_top < 1.01e0 * self.data.build.r_tf_inboard_out:
+                # Notify user that bld.r_cp_top has been set to
+                # 1.01*bld.r_tf_inboard_out (lvl 2 error)
+                if bld.r_cp_top < 1.01e0 * bld.r_tf_inboard_out:
                     logger.error(
                         "TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out "
                         "-> potential top rbuild issue"
-                        f"{self.data.build.r_cp_top=} "
-                        f"{self.data.build.r_tf_inboard_out=}"
+                        f"{bld.r_cp_top=} "
+                        f"{bld.r_tf_inboard_out=}"
                     )
 
-                    # self.data.build.r_cp_top correction
-                    self.data.build.r_cp_top = self.data.build.r_tf_inboard_out * 1.01e0
+                    # bld.r_cp_top correction
+                    bld.r_cp_top = bld.r_tf_inboard_out * 1.01e0
 
                 # Top and mid-plane TF coil CP radius ratio
-                self.data.build.f_r_cp = (
-                    self.data.build.r_cp_top / self.data.build.r_tf_inboard_out
-                )
+                bld.f_r_cp = bld.r_cp_top / bld.r_tf_inboard_out
 
-            # User defined self.data.build.r_cp_top
-            elif self.data.build.i_r_cp_top == 1:
-                # Notify user that self.data.build.r_cp_top has been set to
-                # 1.01*self.data.build.r_tf_inboard_out (lvl 2 error)
-                if self.data.build.r_cp_top < 1.01e0 * self.data.build.r_tf_inboard_out:
+            # User defined bld.r_cp_top
+            elif bld.i_r_cp_top == 1:
+                # Notify user that bld.r_cp_top has been set to
+                # 1.01*bld.r_tf_inboard_out (lvl 2 error)
+                if bld.r_cp_top < 1.01e0 * bld.r_tf_inboard_out:
                     logger.error(
                         "TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out "
                         "-> potential top rbuild issue"
-                        f"{self.data.build.r_cp_top=} "
-                        f"{self.data.build.r_tf_inboard_out=}"
+                        f"{bld.r_cp_top=} "
+                        f"{bld.r_tf_inboard_out=}"
                     )
 
-                    # self.data.build.r_cp_top correction
-                    self.data.build.r_cp_top = self.data.build.r_tf_inboard_out * 1.01e0
+                    # bld.r_cp_top correction
+                    bld.r_cp_top = bld.r_tf_inboard_out * 1.01e0
 
                 # Top / mid-plane TF CP radius ratio
-                self.data.build.f_r_cp = (
-                    self.data.build.r_cp_top / self.data.build.r_tf_inboard_out
-                )
+                bld.f_r_cp = bld.r_cp_top / bld.r_tf_inboard_out
 
-            # self.data.build.r_cp_top set as a fraction of the outer TF midplane radius
-            elif self.data.build.i_r_cp_top == 2:
-                self.data.build.r_cp_top = (
-                    self.data.build.f_r_cp * self.data.build.r_tf_inboard_out
-                )
+            # bld.r_cp_top set as a fraction of the outer TF midplane radius
+            elif bld.i_r_cp_top == 2:
+                bld.r_cp_top = bld.f_r_cp * bld.r_tf_inboard_out
 
         else:  # End of self.data.physics.itart == 1 .and. self.data.tfcoil.i_tf_sup /= 1
-            self.data.build.r_cp_top = self.data.build.r_tf_inboard_out
+            bld.r_cp_top = bld.r_tf_inboard_out
 
-        if self.data.build.i_r_cp_top != 0 and (
-            self.data.build.r_cp_top
+        if bld.i_r_cp_top != 0 and (
+            bld.r_cp_top
             > self.data.physics.rmajor
             - self.data.physics.rminor * self.data.physics.triang
             - (
-                self.data.build.dr_tf_shld_gap
-                + self.data.build.dr_shld_thermal_inboard
-                + self.data.build.dr_shld_inboard
-                + self.data.build.dr_shld_blkt_gap
-                + self.data.build.dr_blkt_inboard
-                + self.data.build.dr_fw_inboard
-                + 3.0e0 * self.data.build.dr_fw_plasma_gap_inboard
+                bld.dr_tf_shld_gap
+                + bld.dr_shld_thermal_inboard
+                + bld.dr_shld_inboard
+                + bld.dr_shld_blkt_gap
+                + bld.dr_blkt_inboard
+                + bld.dr_fw_inboard
+                + 3.0e0 * bld.dr_fw_plasma_gap_inboard
             )
             + self.data.tfcoil.drtop
         ):
             logger.error(
                 "Top CP radius larger that its value determined with plasma shape "
-                f"{self.data.build.r_cp_top=}"
+                f"{bld.r_cp_top=}"
             )
-        if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
+        if bld.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
             #  Radial position of vacuum vessel [m]
-            self.data.build.r_vv_inboard_out = (
-                self.data.build.r_tf_inboard_out
-                + self.data.build.dr_cs
-                + self.data.build.dr_cs_tf_gap
-                + self.data.build.dr_cs_precomp
-                + self.data.build.dr_tf_shld_gap
-                + self.data.build.dr_shld_thermal_inboard
-                + self.data.build.dr_shld_vv_gap_inboard
-                + self.data.build.dr_vv_inboard
+            bld.r_vv_inboard_out = (
+                bld.r_tf_inboard_out
+                + bld.dr_cs
+                + bld.dr_cs_tf_gap
+                + bld.dr_cs_precomp
+                + bld.dr_tf_shld_gap
+                + bld.dr_shld_thermal_inboard
+                + bld.dr_shld_vv_gap_inboard
+                + bld.dr_vv_inboard
             )
         else:
-            self.data.build.r_vv_inboard_out = (
-                self.data.build.r_tf_inboard_out
-                + self.data.build.dr_tf_shld_gap
-                + self.data.build.dr_shld_thermal_inboard
-                + self.data.build.dr_shld_vv_gap_inboard
-                + self.data.build.dr_vv_inboard
+            bld.r_vv_inboard_out = (
+                bld.r_tf_inboard_out
+                + bld.dr_tf_shld_gap
+                + bld.dr_shld_thermal_inboard
+                + bld.dr_shld_vv_gap_inboard
+                + bld.dr_vv_inboard
             )
         # Radial position of the inner side of inboard neutronic shield [m]
-        self.data.build.r_sh_inboard_in = self.data.build.r_vv_inboard_out
+        bld.r_sh_inboard_in = bld.r_vv_inboard_out
 
         # Radial position of the plasma facing side of inboard neutronic shield [m]
-        self.data.build.r_sh_inboard_out = (
-            self.data.build.r_sh_inboard_in + self.data.build.dr_shld_inboard
-        )
+        bld.r_sh_inboard_out = bld.r_sh_inboard_in + bld.dr_shld_inboard
 
         #  Radial build to centre of plasma (should be equal to self.data.physics.rmajor)
-        self.data.build.rbld = (
-            self.data.build.r_sh_inboard_out
-            + self.data.build.dr_shld_blkt_gap
-            + self.data.build.dr_blkt_inboard
-            + self.data.build.dr_fw_inboard
-            + self.data.build.dr_fw_plasma_gap_inboard
+        bld.rbld = (
+            bld.r_sh_inboard_out
+            + bld.dr_shld_blkt_gap
+            + bld.dr_blkt_inboard
+            + bld.dr_fw_inboard
+            + bld.dr_fw_plasma_gap_inboard
             + self.data.physics.rminor
         )
 
         #  Radius to inner edge of inboard shield
-        self.data.build.r_shld_inboard_inner = (
+        bld.r_shld_inboard_inner = (
             self.data.physics.rmajor
             - self.data.physics.rminor
-            - self.data.build.dr_fw_plasma_gap_inboard
-            - self.data.build.dr_fw_inboard
-            - self.data.build.dr_blkt_inboard
-            - self.data.build.dr_shld_inboard
+            - bld.dr_fw_plasma_gap_inboard
+            - bld.dr_fw_inboard
+            - bld.dr_blkt_inboard
+            - bld.dr_shld_inboard
         )
 
         #  Radius to outer edge of outboard shield
-        self.data.build.r_shld_outboard_outer = (
+        bld.r_shld_outboard_outer = (
             self.data.physics.rmajor
             + self.data.physics.rminor
-            + self.data.build.dr_fw_plasma_gap_outboard
-            + self.data.build.dr_fw_outboard
-            + self.data.build.dr_blkt_outboard
-            + self.data.build.dr_shld_outboard
+            + bld.dr_fw_plasma_gap_outboard
+            + bld.dr_fw_outboard
+            + bld.dr_blkt_outboard
+            + bld.dr_shld_outboard
         )
 
         #  Thickness of outboard TF coil legs
         if self.data.tfcoil.i_tf_sup != 1:
-            self.data.build.dr_tf_outboard = (
-                self.data.build.f_dr_tf_outboard_inboard * self.data.build.dr_tf_inboard
-            )
+            bld.dr_tf_outboard = bld.f_dr_tf_outboard_inboard * bld.dr_tf_inboard
         else:
-            self.data.build.dr_tf_outboard = self.data.build.dr_tf_inboard
+            bld.dr_tf_outboard = bld.dr_tf_inboard
 
         #  Radius to centre of outboard TF coil legs
-        self.data.build.r_tf_outboard_mid = (
-            self.data.build.r_shld_outboard_outer
-            + self.data.build.dr_shld_blkt_gap
-            + self.data.build.dr_vv_outboard
-            + self.data.build.gapomin
-            + self.data.build.dr_shld_thermal_outboard
-            + self.data.build.dr_tf_shld_gap
-            + 0.5e0 * self.data.build.dr_tf_outboard
+        bld.r_tf_outboard_mid = (
+            bld.r_shld_outboard_outer
+            + bld.dr_shld_blkt_gap
+            + bld.dr_vv_outboard
+            + bld.gapomin
+            + bld.dr_shld_thermal_outboard
+            + bld.dr_tf_shld_gap
+            + 0.5e0 * bld.dr_tf_outboard
         )
 
         # TF coil horizontal bore at mid-plane [m]
-        self.data.build.dr_tf_inner_bore = (
-            self.data.build.r_tf_outboard_mid - 0.5e0 * self.data.build.dr_tf_outboard
-        ) - (self.data.build.r_tf_inboard_mid - 0.5e0 * self.data.build.dr_tf_inboard)
+        bld.dr_tf_inner_bore = (bld.r_tf_outboard_mid - 0.5e0 * bld.dr_tf_outboard) - (
+            bld.r_tf_inboard_mid - 0.5e0 * bld.dr_tf_inboard
+        )
 
         (
             self.data.tfcoil.ripple_b_tf_plasma_edge,
             r_tf_outboard_midl,
-            self.data.build.ripflag,
+            bld.ripflag,
         ) = self.plasma_outboard_edge_toroidal_ripple(
             ripple_b_tf_plasma_edge_max=self.data.tfcoil.ripple_b_tf_plasma_edge_max,
-            r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
+            r_tf_outboard_mid=bld.r_tf_outboard_mid,
             n_tf_coils=self.data.tfcoil.n_tf_coils,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
@@ -1524,29 +1187,26 @@ class Build(Model):
         )
 
         #  If the self.data.tfcoil.ripple is too large then move the outboard TF coil leg
-        if r_tf_outboard_midl > self.data.build.r_tf_outboard_mid:
-            self.data.build.r_tf_outboard_mid = r_tf_outboard_midl
-            self.data.build.dr_shld_vv_gap_outboard = (
-                self.data.build.r_tf_outboard_mid
-                - 0.5e0 * self.data.build.dr_tf_outboard
-                - self.data.build.dr_vv_outboard
-                - self.data.build.r_shld_outboard_outer
-                - self.data.build.dr_shld_thermal_outboard
-                - self.data.build.dr_tf_shld_gap
-                - self.data.build.dr_shld_blkt_gap
+        if r_tf_outboard_midl > bld.r_tf_outboard_mid:
+            bld.r_tf_outboard_mid = r_tf_outboard_midl
+            bld.dr_shld_vv_gap_outboard = (
+                bld.r_tf_outboard_mid
+                - 0.5e0 * bld.dr_tf_outboard
+                - bld.dr_vv_outboard
+                - bld.r_shld_outboard_outer
+                - bld.dr_shld_thermal_outboard
+                - bld.dr_tf_shld_gap
+                - bld.dr_shld_blkt_gap
             )
-            self.data.build.dr_tf_inner_bore = (
-                self.data.build.r_tf_outboard_mid
-                - 0.5e0 * self.data.build.dr_tf_outboard
-            ) - (
-                self.data.build.r_tf_inboard_mid - 0.5e0 * self.data.build.dr_tf_inboard
-            )
+            bld.dr_tf_inner_bore = (
+                bld.r_tf_outboard_mid - 0.5e0 * bld.dr_tf_outboard
+            ) - (bld.r_tf_inboard_mid - 0.5e0 * bld.dr_tf_inboard)
         else:
-            self.data.build.dr_shld_vv_gap_outboard = self.data.build.gapomin
+            bld.dr_shld_vv_gap_outboard = bld.gapomin
 
         (
             self.data.tfcoil.ripple_b_tf_plasma_edge,
-            r_tf_outboard_midl,
+            _r_tf_outboard_midl,
             self.data.build.ripflag,
         ) = self.plasma_outboard_edge_toroidal_ripple(
             ripple_b_tf_plasma_edge_max=self.data.tfcoil.ripple_b_tf_plasma_edge_max,
@@ -1566,384 +1226,222 @@ class Build(Model):
         )
 
         if output:
-            #  Print out device build
+            self.radial_build_output()
 
-            po.oheadr(self.outfile, "Radial Build")
+    def _ripple_flag_validation(self):
+        po.ocmmnt(
+            self.outfile,
+            "(Ripple result may not be accurate, as the fit was outside",
+        )
+        po.ocmmnt(self.outfile, " its range of applicability.)")
+        po.oblnkl(self.outfile)
+        logger.warning(
+            "Ripple result may be inaccurate, as the fit has been extrapolated"
+        )
 
-            if self.data.build.ripflag != 0:
-                po.ocmmnt(
-                    self.outfile,
-                    "(Ripple result may not be accurate, as the fit was outside",
-                )
-                po.ocmmnt(self.outfile, " its range of applicability.)")
-                po.oblnkl(self.outfile)
-                logger.warning(
-                    "Ripple result may be inaccurate, as the fit has been extrapolated"
-                )
-
-                if self.data.build.ripflag == 1:
-                    diagnostic = (
-                        self.data.tfcoil.dx_tf_wp_primary_toroidal
-                        * self.data.tfcoil.n_tf_coils
-                        / self.data.physics.rmajor
-                    )
-                    logger.warning(
-                        "(TF coil ripple calculation) "
-                        "Dimensionless coil width X out of fitted range. %s",
-                        diagnostic,
-                    )
-                elif self.data.build.ripflag == 2:
-                    logger.warning(
-                        "(TF coil ripple calculation) "
-                        "No of TF coils not between 16 and 20 inclusive "
-                        f"{self.data.tfcoil.n_tf_coils=}"
-                    )
-                else:
-                    diagnostic = (
-                        self.data.physics.rmajor + self.data.physics.rminor
-                    ) / self.data.build.r_tf_outboard_mid
-
-                    logger.warning(
-                        "(TF coil ripple calculation) "
-                        "(R+a)/rtot=%s out of fitted range.",
-                        diagnostic,
-                    )
-
-            po.ovarre(
-                self.outfile,
-                "TF coil radial placement switch",
-                "(i_tf_inside_cs)",
-                self.data.build.i_tf_inside_cs,
+        if self.data.build.ripflag == 1:
+            warning_str = (
+                "(TF coil ripple calculation) "
+                "Dimensionless coil width X out of fitted range. %s"
             )
+            diagnostic = (
+                self.data.tfcoil.dx_tf_wp_primary_toroidal
+                * self.data.tfcoil.n_tf_coils
+                / self.data.physics.rmajor
+            )
+        elif self.data.build.ripflag == 2:
+            warning_str = (
+                "(TF coil ripple calculation) "
+                "No of TF coils not between 16 and 20 inclusive "
+            )
+            diagnostic = f"{self.data.tfcoil.n_tf_coils=}"
+        else:
+            diagnostic = (
+                self.data.physics.rmajor + self.data.physics.rminor
+            ) / self.data.build.r_tf_outboard_mid
+            warning_str = (
+                "(TF coil ripple calculation) (R+a)/rtot=%s out of fitted range.",
+            )
+
+        logger.warning(warning_str, diagnostic)
+
+    def radial_build_output(self):
+        """Print out device build"""
+        bld = self.data.build
+        po.oheadr(self.outfile, "Radial Build")
+
+        if self.data.build.ripflag != 0:
+            self._ripple_flag_validation()
+
+        po.ovarre(
+            self.outfile,
+            "TF coil radial placement switch",
+            "(i_tf_inside_cs)",
+            self.data.build.i_tf_inside_cs,
+        )
+        po.ocmmnt(
+            self.outfile,
+            (
+                "  -> "
+                f"{TFCSRadialConfiguration(self.data.build.i_tf_inside_cs).description}"
+            ),
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Inboard build thickness (m)",
+            "(dr_inboard_build)",
+            self.data.physics.rmajor - self.data.physics.rminor,
+            "OP ",
+        )
+
+        if (
+            self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
+            and self.data.tfcoil.i_tf_bucking >= 2
+        ):
             po.ocmmnt(
                 self.outfile,
-                (
-                    "  -> "
-                    f"{TFCSRadialConfiguration(self.data.build.i_tf_inside_cs).description}"
-                ),
-            )
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Inboard build thickness (m)",
-                "(dr_inboard_build)",
-                self.data.physics.rmajor - self.data.physics.rminor,
-                "OP ",
+                "(Bore hollow space has been filled with a solid metal cyclinder to"
+                " act as wedge support)\n",
             )
 
-            if (
-                self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
-                and self.data.tfcoil.i_tf_bucking >= 2
-            ):
-                po.ocmmnt(
-                    self.outfile,
-                    "(Bore hollow space has been filled with a solid metal cyclinder to"
-                    " act as wedge support)\n",
-                )
+        # an array that holds the following information
+        # description, variable name, thickness, radius
+        radial_build_data = []
 
-            # an array that holds the following information
-            # description, variable name, thickness, radius
-            radial_build_data = []
+        radius = 0.0e0
+        radial_build_data.append(["Device centreline", None, 0.0, radius])
 
-            radius = 0.0e0
-            radial_build_data.append(["Device centreline", None, 0.0, radius])
-            if (
-                self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
-                and self.data.tfcoil.i_tf_bucking >= 2
-            ):
-                radius += self.data.build.dr_bore
+        bore_descr = "Machine dr_bore"
+        if bld.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
+            bore_descr += (
+                "wedge support cylinder"
+                if self.data.tfcoil.i_tf_bucking >= 2
+                else "hole"
+            )
 
-                radial_build_data.append([
-                    "Machine dr_bore wedge support cylinder",
-                    "dr_bore",
-                    self.data.build.dr_bore,
-                    radius,
-                ])
-            elif (
-                self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
-                and self.data.tfcoil.i_tf_bucking < 2
-            ):
-                radius += self.data.build.dr_bore
-                radial_build_data.append([
-                    "Machine dr_bore hole",
-                    "dr_bore",
-                    self.data.build.dr_bore,
-                    radius,
-                ])
-            else:
-                radius += self.data.build.dr_bore
-                radial_build_data.append([
-                    "Machine dr_bore",
-                    "dr_bore",
-                    self.data.build.dr_bore,
-                    radius,
-                ])
-            if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
-                radius += self.data.build.dr_tf_inboard
-                radial_build_data.append([
+        radial_build_data.append([bore_descr, "dr_bore", bld.dr_bore])
+
+        if bld.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS:
+            radial_build_data.extend((
+                [
                     "TF coil inboard leg (in dr_bore)",
                     "dr_tf_inboard",
-                    self.data.build.dr_tf_inboard,
-                    radius,
-                ])
-
-                radius += self.data.build.dr_cs_tf_gap
-                radial_build_data.append([
+                    bld.dr_tf_inboard,
+                ],
+                [
                     "CS precompresion to TF coil radial gap",
                     "dr_cs_tf_gap",
-                    self.data.build.dr_cs_tf_gap,
-                    radius,
-                ])
+                    bld.dr_cs_tf_gap,
+                ],
+            ))
 
-            radius += self.data.build.dr_cs
-            radial_build_data.append([
-                "Central solenoid",
-                "dr_cs",
-                self.data.build.dr_cs,
-                radius,
-            ])
-
-            radius += self.data.build.dr_cs_precomp
-            radial_build_data.append([
-                "CS precompression",
-                "dr_cs_precomp",
-                self.data.build.dr_cs_precomp,
-                radius,
-            ])
-            if self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_OUTSIDE_CS:
-                radius += self.data.build.dr_cs_tf_gap
-                radial_build_data.append([
+        radial_build_data.extend((
+            ["Central solenoid", "dr_cs", bld.dr_cs],
+            ["CS precompression", "dr_cs_precomp", bld.dr_cs_precomp],
+        ))
+        if bld.i_tf_inside_cs == TFCSRadialConfiguration.TF_OUTSIDE_CS:
+            radial_build_data.extend((
+                [
                     "CS precompresion to TF coil radial gap",
                     "dr_cs_tf_gap",
-                    self.data.build.dr_cs_tf_gap,
-                    radius,
-                ])
-
-                radius += self.data.build.dr_tf_inboard
-                radial_build_data.append([
+                    bld.dr_cs_tf_gap,
+                ],
+                [
                     "TF coil inboard leg",
                     "dr_tf_inboard",
-                    self.data.build.dr_tf_inboard,
-                    radius,
-                ])
+                    bld.dr_tf_inboard,
+                ],
+            ))
 
-            radius += self.data.build.dr_tf_shld_gap
-            radial_build_data.append([
-                "TF coil inboard leg insulation gap",
-                "dr_tf_shld_gap",
-                self.data.build.dr_tf_shld_gap,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_thermal_inboard
-            radial_build_data.append([
+        radial_build_data.extend((
+            ["TF coil inboard leg insulation gap", "dr_tf_shld_gap", bld.dr_tf_shld_gap],
+            [
                 "Thermal shield, inboard",
                 "dr_shld_thermal_inboard",
-                self.data.build.dr_shld_thermal_inboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_vv_gap_inboard
-            radial_build_data.append([
+                bld.dr_shld_thermal_inboard,
+            ],
+            [
                 "Thermal shield to vessel radial gap",
                 "dr_shld_vv_gap_inboard",
-                self.data.build.dr_shld_vv_gap_inboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_vv_inboard
-            radial_build_data.append([
-                "Inboard vacuum vessel",
-                "dr_vv_inboard",
-                self.data.build.dr_vv_inboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_inboard
-            radial_build_data.append([
-                "Inner radiation shield",
-                "dr_shld_inboard",
-                self.data.build.dr_shld_inboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_blkt_gap
-            radial_build_data.append([
-                "Gap",
-                "dr_shld_blkt_gap",
-                self.data.build.dr_shld_blkt_gap,
-                radius,
-            ])
-
-            radius += self.data.build.dr_blkt_inboard
-            radial_build_data.append([
-                "Inboard blanket",
-                "dr_blkt_inboard",
-                self.data.build.dr_blkt_inboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_fw_inboard
-            radial_build_data.append([
-                "Inboard first wall",
-                "dr_fw_inboard",
-                self.data.build.dr_fw_inboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_fw_plasma_gap_inboard
-            radial_build_data.append([
+                bld.dr_shld_vv_gap_inboard,
+            ],
+            ["Inboard vacuum vessel", "dr_vv_inboard", bld.dr_vv_inboard],
+            ["Inner radiation shield", "dr_shld_inboard", bld.dr_shld_inboard],
+            ["Gap", "dr_shld_blkt_gap", bld.dr_shld_blkt_gap],
+            ["Inboard blanket", "dr_blkt_inboard", bld.dr_blkt_inboard],
+            ["Inboard first wall", "dr_fw_inboard", bld.dr_fw_inboard],
+            [
                 "Inboard scrape-off",
                 "dr_fw_plasma_gap_inboard",
-                self.data.build.dr_fw_plasma_gap_inboard,
-                radius,
-            ])
-
-            radius += self.data.physics.rminor
-            radial_build_data.append([
-                "Plasma geometric centre",
-                "rminor",
-                self.data.physics.rminor,
-                radius,
-            ])
-
-            radius += self.data.physics.rminor
-            radial_build_data.append([
-                "Plasma outboard edge",
-                "rminor",
-                self.data.physics.rminor,
-                radius,
-            ])
-
-            radius += self.data.build.dr_fw_plasma_gap_outboard
-            radial_build_data.append([
+                bld.dr_fw_plasma_gap_inboard,
+            ],
+            ["Plasma geometric centre", "rminor", self.data.physics.rminor],
+            ["Plasma outboard edge", "rminor", self.data.physics.rminor],
+            [
                 "Outboard scrape-off",
                 "dr_fw_plasma_gap_outboard",
-                self.data.build.dr_fw_plasma_gap_outboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_fw_outboard
-            radial_build_data.append([
-                "Outboard first wall",
-                "dr_fw_outboard",
-                self.data.build.dr_fw_outboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_blkt_outboard
-            radial_build_data.append([
-                "Outboard blanket",
-                "dr_blkt_outboard",
-                self.data.build.dr_blkt_outboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_blkt_gap
-            radial_build_data.append([
-                "Gap",
-                "dr_shld_blkt_gap",
-                self.data.build.dr_shld_blkt_gap,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_outboard
-            radial_build_data.append([
-                "Outer radiation shield",
-                "dr_shld_outboard",
-                self.data.build.dr_shld_outboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_vv_outboard
-            radial_build_data.append([
-                "Outboard vacuum vessel",
-                "dr_vv_outboard",
-                self.data.build.dr_vv_outboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_vv_gap_outboard
-            radial_build_data.append([
-                "Vessel to TF gap",
-                "dr_shld_vv_gap_outboard",
-                self.data.build.dr_shld_vv_gap_outboard,
-                radius,
-            ])
-
-            radius += self.data.build.dr_shld_thermal_outboard
-            radial_build_data.append([
+                bld.dr_fw_plasma_gap_outboard,
+            ],
+            ["Outboard first wall", "dr_fw_outboard", bld.dr_fw_outboard],
+            ["Outboard blanket", "dr_blkt_outboard", bld.dr_blkt_outboard],
+            ["Gap", "dr_shld_blkt_gap", bld.dr_shld_blkt_gap],
+            ["Outer radiation shield", "dr_shld_outboard", bld.dr_shld_outboard],
+            ["Outboard vacuum vessel", "dr_vv_outboard", bld.dr_vv_outboard],
+            ["Vessel to TF gap", "dr_shld_vv_gap_outboard", bld.dr_shld_vv_gap_outboard],
+            [
                 "Outboard thermal shield",
                 "dr_shld_thermal_outboard",
-                self.data.build.dr_shld_thermal_outboard,
+                bld.dr_shld_thermal_outboard,
+            ],
+            ["Gap", "dr_tf_shld_gap", bld.dr_tf_shld_gap],
+            ["TF coil outboard leg", "dr_tf_outboard", bld.dr_tf_outboard],
+        ))
+
+        for description, variable, thickness in radial_build_data:
+            radius += thickness
+            var = f"({variable})" if variable else ""
+            po.obuild(self.outfile, description, thickness, radius, var)
+
+        # use manual index to ensure count is contiguous in the event
+        # of a `None` variable component
+        index = 0
+        for description, variable, thickness, radius in radial_build_data:
+            if variable is None:
+                continue
+
+            index += 1
+
+            po.ovarre(
+                self.mfile,
+                f"{description} radial thickness (m)",
+                f"({variable})",
+                thickness,
+            )
+
+            po.ovarre(
+                self.mfile,
+                f"Radial build component {index}",
+                f"(radial_label({index}))",
+                f'"{variable}"',
+            )
+            po.ovarre(
+                self.mfile,
+                f"Radial build cumulative radius {index}",
+                f"(radial_cum({index}))",
                 radius,
-            ])
+            )
 
-            radius += self.data.build.dr_tf_shld_gap
-            radial_build_data.append([
-                "Gap",
-                "dr_tf_shld_gap",
-                self.data.build.dr_tf_shld_gap,
-                radius,
-            ])
-
-            radius += self.data.build.dr_tf_outboard
-            radial_build_data.append([
-                "TF coil outboard leg",
-                "dr_tf_outboard",
-                self.data.build.dr_tf_outboard,
-                radius,
-            ])
-
-            for description, variable, thickness, radius in radial_build_data:
-                po.obuild(
-                    self.outfile,
-                    description,
-                    thickness,
-                    radius,
-                    f"({variable})" if variable else "",
-                )
-
-            # use manual index to ensure count is contiguous in the event
-            # of a `None` variable component
-            index = 0
-            for description, variable, thickness, radius in radial_build_data:
-                if variable is None:
-                    continue
-
-                index += 1
-
-                po.ovarre(
-                    self.mfile,
-                    f"{description} radial thickness (m)",
-                    f"({variable})",
-                    thickness,
-                )
-
-                po.ovarre(
-                    self.mfile,
-                    f"Radial build component {index}",
-                    f"(radial_label({index}))",
-                    f'"{variable}"',
-                )
-                po.ovarre(
-                    self.mfile,
-                    f"Radial build cumulative radius {index}",
-                    f"(radial_cum({index}))",
-                    radius,
-                )
-
-            if (
-                CurrentDriveModel(
-                    self.data.current_drive.i_hcd_primary
-                    or self.data.current_drive.i_hcd_secondary
-                ).method
-                == CurrentDriveMethodType.NEUTRAL_BEAM
-            ):
-                po.ovarre(
-                    self.mfile,
-                    "Width of neutral beam duct where it passes between the "
-                    "TF coils (m)",
-                    "(dx_beam_duct)",
-                    self.data.current_drive.dx_beam_duct,
-                )
+        if (
+            CurrentDriveModel(
+                self.data.current_drive.i_hcd_primary
+                or self.data.current_drive.i_hcd_secondary
+            ).method
+            == CurrentDriveMethodType.NEUTRAL_BEAM
+        ):
+            po.ovarre(
+                self.mfile,
+                "Width of neutral beam duct where it passes between the TF coils (m)",
+                "(dx_beam_duct)",
+                self.data.current_drive.dx_beam_duct,
+            )
