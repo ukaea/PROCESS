@@ -17,7 +17,7 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
  Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
  Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      8.4149E-09 OP 
@@ -1012,7 +1012,7 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
  Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
  Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      2.9283E-09 OP 
@@ -2007,7 +2007,7 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
  Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
  Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      2.9329E-09 OP 
@@ -3002,7 +3002,7 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
  Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
  Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      2.9515E-09 OP 
@@ -3997,7 +3997,7 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
  Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
  Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      2.9861E-09 OP 
@@ -4992,7 +4992,7 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
  Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
  Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      3.0397E-09 OP 
@@ -5987,7 +5987,7 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
  Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
  Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      3.1174E-09 OP 
@@ -6982,7 +6982,7 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
  Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
  Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      3.2269E-09 OP 
@@ -7977,7 +7977,7 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
  Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
  Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      3.3800E-09 OP 

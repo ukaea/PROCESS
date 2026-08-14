@@ -197,17 +197,18 @@ def run_summary(data: DataStructure):
             )
 
             if data.numerics.i_figure_merit > 0:
-                minmax_string = "  -- minimise "
-                minmax_sign = "+"
+                figure_merit_string = "  -- minimise "
+                figure_merit_sign = "+"
             else:
-                minmax_string = "  -- maximise "
-                minmax_sign = "-"
+                figure_merit_string = "  -- maximise "
+                figure_merit_sign = "-"
 
             fom_string = FiguresOfMerit(abs(data.numerics.i_figure_merit)).description
             process_output.ocmmnt(
                 outfile,
-                f"Figure of merit : {minmax_sign}{abs(data.numerics.i_figure_merit)}"
-                f"{minmax_string}{fom_string}",
+                f"Figure of merit : "
+                f"{figure_merit_sign}{abs(data.numerics.i_figure_merit)}"
+                f"{figure_merit_string}{fom_string}",
             )
             process_output.ocmmnt(
                 outfile,
@@ -263,7 +264,8 @@ def check_process(inputs, data):  # noqa: ARG001
     # Check that there are sufficient iteration variables
     if data.numerics.n_iteration_variables < data.numerics.n_equality_constraints:
         raise ProcessValidationError(
-            "Insufficient iteration variables to solve the problem! NVAR < NEQNS",
+            "Insufficient iteration variables to solve the problem! "
+            "n_iteration_variables < n_equality_constraints",
             n_iteration_variables=data.numerics.n_iteration_variables,
             n_equality_constraints=data.numerics.n_equality_constraints,
         )

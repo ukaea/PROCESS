@@ -15,7 +15,7 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             45    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             26    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             26    
  Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
  Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Objective_function_name_________________________________________________ (objf_name)___________________     "major radius"   

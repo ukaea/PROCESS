@@ -12075,7 +12075,7 @@ def plot_cover_page(
     branch_name = mfile.get("branch_name", scan=-1)
     fileprefix = mfile.get("fileprefix", scan=-1)
     optmisation_switch = int(mfile.get("i_process_run_mode", scan=-1))
-    minmax_switch = mfile.get("i_figure_merit", scan=-1) or "N/A"
+    figure_merit_switch = mfile.get("i_figure_merit", scan=-1) or "N/A"
     ifail = mfile.get("ifail", scan=-1)
     nvars = mfile.get("n_iteration_variables", scan=-1)
     # Objective_function_name
@@ -12088,13 +12088,13 @@ def plot_cover_page(
     n_solver_iterations = int(mfile.get("n_solver_iterations", scan=-1)) or "N/A"
 
     # Objective name with minimising/maximising
-    if isinstance(minmax_switch, str):
+    if isinstance(figure_merit_switch, str):
         objective_text = ""
-    elif minmax_switch >= 0:
-        minmax_switch = int(minmax_switch)
+    elif figure_merit_switch >= 0:
+        figure_merit_switch = int(figure_merit_switch)
         objective_text = f"  -> Minimising: {objf_name}"
     else:
-        minmax_switch = int(minmax_switch)
+        figure_merit_switch = int(figure_merit_switch)
         objective_text = f"  -> Maximising: {objf_name}"
 
     axis.text(
@@ -12157,7 +12157,7 @@ def plot_cover_page(
     settings_info = (
         f"• Optimisation Switch: {int(optmisation_switch)}\n"
         f"     {PROCESSRunMode(int(optmisation_switch)).description}\n"
-        f"• Figure of Merit Switch (i_figure_merit): {minmax_switch}\n"
+        f"• Figure of Merit Switch (i_figure_merit): {figure_merit_switch}\n"
         f"     {objective_text}\n"
         f"• Fail Status (ifail): {int(ifail)}\n"
         f"• Number of Iteration Variables: {int(nvars)}\n"

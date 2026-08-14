@@ -102,7 +102,10 @@ def test_exact_parsing(value, tmp_path, data_structure_obj):
 def test_parse_input(tmp_path, data_structure_obj):
     data_structure_obj.globals.fileprefix = _create_input_file(
         tmp_path,
-        ("runtitle = my run title\nioptimz = -2\nepsvmc = 0.6\nboundl(1) = 0.5"),
+        (
+            "runtitle = my run title\ni_process_run_mode = -2\nepsvmc = 0.6\nboundl(1) "
+            "= 0.5"
+        ),
     )
     init.init_process(data_structure_obj)
 

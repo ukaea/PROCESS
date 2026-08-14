@@ -16,7 +16,7 @@ Figure_of_merit_switch___________________________________________________ (i_fig
 # PROCESS found a feasible solution #
 Error_flag_______________________________________________________________ (ifail)________________________            1 
 Number_of_iteration_variables____________________________________________ (nvar)_________________________           19 
-Number_of_constraints_(total)____________________________________________ (neqns+nineqns)________________           26 
+Number_of_constraints_(total)____________________________________________ (n_equality_constraints+nineqns)________________           26 
 Optimisation_switch______________________________________________________ (i_process_run_mode)______________________            1 
 Figure_of_merit_switch___________________________________________________ (i_figure_merit)_______________________            1 
 Objective_function_name__________________________________________________ (objf_name)____________________ "Plasma major radius (R₀)" 
@@ -35921,7 +35921,7 @@ i_figure_merit = 1
 * Error tolerance for VMCON
 epsvmc = 1e-7
 
-neqns = 3
+n_equality_constraints = 3
 
 * Constraint Equations - Consistency Equations *
 ************************************************
