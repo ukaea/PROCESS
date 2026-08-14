@@ -4,6 +4,9 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+N_IMPURITIY_LOSS_FUNCTION_POINTS = 600
+"""Number of points in the impurity loss function (L_z) tables"""
+
 N_IMPURITIES = 14
 """Number of ion species in impurity radiation model
 
@@ -54,7 +57,10 @@ class ImpurityRadiationData:
     )
 
     n_charge_impurity_profile: list[float] = field(
-        default_factory=lambda: np.zeros((N_IMPURITIES, 600))
+        default_factory=lambda: np.zeros((
+            N_IMPURITIES,
+            N_IMPURITIY_LOSS_FUNCTION_POINTS,
+        ))
     )
     """charge profile of impurities"""
 
@@ -98,16 +104,25 @@ class ImpurityRadiationData:
     )
 
     temp_impurity_keV_array: list[float] = field(
-        default_factory=lambda: np.zeros((N_IMPURITIES, 600))
+        default_factory=lambda: np.zeros((
+            N_IMPURITIES,
+            N_IMPURITIY_LOSS_FUNCTION_POINTS,
+        ))
     )
     """2D array of impurity temperatures in kilo-electronvolts (keV)"""
 
     pden_impurity_lz_nd_temp_array: list[float] = field(
-        default_factory=lambda: np.zeros((N_IMPURITIES, 600))
+        default_factory=lambda: np.zeros((
+            N_IMPURITIES,
+            N_IMPURITIY_LOSS_FUNCTION_POINTS,
+        ))
     )
 
     impurity_arr_zav: list[float] = field(
-        default_factory=lambda: np.zeros((N_IMPURITIES, 600))
+        default_factory=lambda: np.zeros((
+            N_IMPURITIES,
+            N_IMPURITIY_LOSS_FUNCTION_POINTS,
+        ))
     )
 
 

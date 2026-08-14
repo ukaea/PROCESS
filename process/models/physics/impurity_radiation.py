@@ -14,6 +14,9 @@ from scipy import integrate
 
 from process.core import constants
 from process.core.exceptions import ProcessError, ProcessValueError
+from process.data_structure.impurity_radiation_variables import (
+    N_IMPURITIY_LOSS_FUNCTION_POINTS,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -31,7 +34,8 @@ def initialise_imprad(data: DataStructure):
     """
     errorflag = 0
 
-    table_length = 600  # Number of temperature and Lz values in data file
+    # Number of temperature and Lz values in data file
+    table_length = N_IMPURITIY_LOSS_FUNCTION_POINTS
 
     f_nd_species_electron = 1.0e0
 
@@ -325,10 +329,10 @@ def init_imp_element(
     )
     data.impurity_radiation.impurity_arr_len_tab[n_species_index - 1] = len_tab
 
-    if len_tab > 600:
+    if len_tab > N_IMPURITIY_LOSS_FUNCTION_POINTS:
         print(
             f"ERROR: len_tab is {len_tab} but has a maximum value of "
-            f"{data.impurity_radiation.all_array_hotfix_len}"
+            f"{N_IMPURITIY_LOSS_FUNCTION_POINTS}"
         )
 
     impurity_dir = resources.files("process") / "data/lz_non_corona_14_elements/"
