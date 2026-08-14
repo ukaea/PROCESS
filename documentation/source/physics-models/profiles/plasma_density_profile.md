@@ -19,7 +19,7 @@ $$
 n_{\text{i0}} = \left(\frac{n_\text{i}}{n_\text{e}}\right)n_{\text{e0}}
 $$
 
-#### Electron core density of a pedestalised profile | `calculate_core_on_axis_density()`
+#### Electron core density of a pedestalised profile | `calculate_pedestal_profile_on_axis_density()`
 
 This function calculates the core electron density for a pedestalsied profile (`i_plasma_pedestal == 1`). It takes in values of
 
