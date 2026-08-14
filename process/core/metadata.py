@@ -1,9 +1,23 @@
+import inspect
 from collections.abc import Generator
+from copy import deepcopy
 from dataclasses import asdict, dataclass, fields
 from typing import Annotated, Generic, get_args, get_origin
 
+import numpy as np
 from parameter_frame import Parameter as DefaultParameter
 from parameter_frame import ParameterValueType
+
+KEEP_EDIT_USE_RECORDS = True
+
+
+@dataclass(slots=True, kw_only=True, frozen=True)
+class UseRecord:
+    value: ParameterValueType
+    frame_file: str
+    frame_lineno: int
+    frame_function: str
+    frame_code: list[str] | None
 
 
 class Parameter(DefaultParameter, Generic[ParameterValueType]):
@@ -21,6 +35,9 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
     ):
         self._latext_symbol = latex_symbol
         self._symbol = symbol
+
+        self._edited = []
+        self._used = []
         super().__init__(name, value, unit, source, description, long_name, _value_types)
 
     @property
@@ -51,6 +68,18 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
 
     def __hash__(self):
         return super().__hash__()
+
+    def reset_edit_use_records(self):
+        self._edited = []
+        self._used = []
+
+    @property
+    def edit_records(self):
+        return deepcopy(self._edited)
+
+    @property
+    def usage_records(self) -> list[UseRecord]:
+        return deepcopy(self._used)
 
 
 @dataclass(slots=True, kw_only=True)
@@ -134,9 +163,40 @@ class PROCESSModelData:
             return
         super().__setattr__(name, value)
 
+    def __getattribute__(self, name):
+        if KEEP_EDIT_USE_RECORDS and (
+            isinstance(current_value := super().__getattribute__(name), Parameter)
+        ):
+            try:
+                called_from = next(
+                    filter(lambda frame: "/models/" in frame.filename, inspect.stack())
+                )
+            except StopIteration:
+                return current_value
+
+            current_value._used.append(
+                UseRecord(
+                    value=np.copy(current_value.value),
+                    frame_file=called_from.filename,
+                    frame_lineno=called_from.lineno,
+                    frame_function=called_from.function,
+                    frame_code=called_from.code_context,
+                )
+            )
+            return current_value
+
+        return super().__getattribute__(name)
+
     def parameters(self) -> Generator[tuple[str, Parameter], None, None]:
         return (
             (field.name, param)
             for field in fields(self)
             if isinstance(param := getattr(self, field.name), Parameter)
         )
+
+    def reset_edit_use_records(self):
+        for field in fields(self):
+            value = getattr(self, field.name)
+
+            if isinstance(value, Parameter):
+                value.reset_edit_use_records()
