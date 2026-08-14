@@ -139,7 +139,7 @@ class DensityProfilePedestalType(IntEnum):
         return self._description_
 
 
-class NeProfile(Profile):
+class ElectronDensityProfile(Profile):
     """Electron density profile class. Contains a function to calculate the electron
     density profile and store the data.
     """
