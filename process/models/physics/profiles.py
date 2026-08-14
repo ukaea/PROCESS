@@ -394,7 +394,7 @@ class ElectronTemperatureProfile(Profile):
         alphat :
             Temperature peaking parameter (αₜ).
         tbeta :
-            Second temperature exponent.
+            Second temperature exponent (βₜ).
 
         Raises
         ------
@@ -436,64 +436,51 @@ class ElectronTemperatureProfile(Profile):
             raise ProcessValueError("Negative temperature in plasma profile")
 
     @staticmethod
-    def tcore(
+    def calculate_pedestal_profile_on_axis_temperature(
         radius_plasma_pedestal_temp_norm: float,
-        temp_plasma_pedestal_kev: float,
-        temp_plasma_separatrix_kev: float,
-        tav: float,
+        temp_pedestal_kev: float,
+        temp_separatrix_kev: float,
+        temp_vol_avg_kev: float,
         alphat: float,
         tbeta: float,
     ) -> float:
-        """Calculates the core temperature (keV)
-        of a pedestalised profile. The solution comes from integrating and summing the
-        two separate temperature profiles for the core and pedestal region within their
-        bounds. This has to be multiplied by the torus volume element before integration
-        which leads to an added rho term in each part of the profile. When dividing by
-        the volume of integration to get the average temperature the simplification
-        leads to a factor of 2 having to be multiplied on to each of the integration
-        results. This function for the average temperature can then be re-arranged to
-        calculate the central plasma temperature T_0 / tcore.
+        """Calculates the core density (T₀) of a pedestalised profile.
 
         Parameters
         ----------
-        radius_plasma_pedestal_temp_norm : float
-            Normalised minor radius pedestal position.
-        temp_plasma_pedestal_kev : float
-            Pedestal temperature (keV).
-        temp_plasma_separatrix_kev : float
-            Separatrix temperature (keV).
-        tav : float
-            Volume average temperature (keV).
-        alphat : float
-            Temperature peaking parameter.
-        tbeta : float
-            Second temperature exponent.
+        radius_plasma_pedestal_temp_norm :
+            Normalised minor radius pedestal position (ρₜ,pedestal).
+        temp_pedestal_kev :
+            Pedestal temperature (T_pedestal) [keV].
+        temp_separatrix_kev :
+            Separatrix temperature (T_separatrix) [keV].
+        temp_vol_avg_kev :
+            Volume average temperature (⟨T⟩) [keV].
+        alphat :
+            Temperature peaking parameter (αₜ).
+        tbeta :
+            Second temperature exponent (βₜ).
 
         Returns
         -------
-        float
-            Core temperature.
+        :
+            The core on-axis temperature (T₀) [keV]
 
-        References
-        ----------
-        Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor
-        Studies. Fusion Science and Technology, 59(2), 308-349.
-        https://doi.org/10.13182/FST11-A11650
         """
         #  Calculate core temperature
 
-        return temp_plasma_pedestal_kev + (
+        return temp_pedestal_kev + (
             (
                 tbeta
                 * (
-                    3 * tav
-                    + temp_plasma_separatrix_kev
+                    3 * temp_vol_avg_kev
+                    + temp_separatrix_kev
                     * (
                         -2.0
                         + radius_plasma_pedestal_temp_norm
                         + radius_plasma_pedestal_temp_norm**2
                     )
-                    - temp_plasma_pedestal_kev
+                    - temp_pedestal_kev
                     * (
                         1
                         + radius_plasma_pedestal_temp_norm
@@ -522,13 +509,15 @@ class ElectronTemperatureProfile(Profile):
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PEDESTAL_PROFILE
         ):
-            self.data.physics.temp_plasma_electron_on_axis_kev = self.tcore(
-                self.data.physics.radius_plasma_pedestal_temp_norm,
-                self.data.physics.temp_plasma_pedestal_kev,
-                self.data.physics.temp_plasma_separatrix_kev,
-                self.data.physics.temp_plasma_electron_vol_avg_kev,
-                self.data.physics.alphat,
-                self.data.physics.tbeta,
+            self.data.physics.temp_plasma_electron_on_axis_kev = (
+                self.calculate_pedestal_profile_on_axis_temperature(
+                    self.data.physics.radius_plasma_pedestal_temp_norm,
+                    self.data.physics.temp_plasma_pedestal_kev,
+                    self.data.physics.temp_plasma_separatrix_kev,
+                    self.data.physics.temp_plasma_electron_vol_avg_kev,
+                    self.data.physics.alphat,
+                    self.data.physics.tbeta,
+                )
             )
 
         self.data.physics.temp_plasma_ion_on_axis_kev = (

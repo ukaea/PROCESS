@@ -139,7 +139,10 @@ def test_teprofile(teprofileparam: ProfileParam, monkeypatch, plasmaprofile):
     assert teprofile.profile_y == pytest.approx(teprofileparam.expected_teprofile)
 
 
-def test_tcore(plasmaprofile):
+def test_calculate_pedestal_profile_on_axis_temperature(plasmaprofile: PlasmaProfile):
+    """
+    Test the calculation of the pedestal profile on-axis temperature.
+    """
     teprofile = plasmaprofile.teprofile
     radius_plasma_pedestal_temp_norm = 0.94
     tped = 3.7775374842470044
@@ -148,8 +151,13 @@ def test_tcore(plasmaprofile):
     alphat = 1.45
     tbeta = 2.0
 
-    assert teprofile.tcore(
-        radius_plasma_pedestal_temp_norm, tped, tsep, tav, alphat, tbeta
+    assert teprofile.calculate_pedestal_profile_on_axis_temperature(
+        radius_plasma_pedestal_temp_norm=radius_plasma_pedestal_temp_norm,
+        temp_pedestal_kev=tped,
+        temp_separatrix_kev=tsep,
+        temp_vol_avg_kev=tav,
+        alphat=alphat,
+        tbeta=tbeta,
     ) == pytest.approx(28.09093632260765)
 
 
