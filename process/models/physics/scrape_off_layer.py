@@ -41,17 +41,9 @@ class ScrapeOffLayer(Model):
             )
         )
 
-        if (
-            OutbordSOLPowerDecayLengthModel(
-                self.data.physics.i_len_sol_outboard_power_decay
-            )
-            == OutbordSOLPowerDecayLengthModel.USER_INPUT
-        ):
-            self.data.physics.len_sol_outboard_power_decay = (
-                self.data.physics.len_sol_outboard_power_decay
-            )
+        # Set to user input if OutbordSOLPowerDecayLengthModel = 1/USER_INUT
 
-        elif (
+        if (
             OutbordSOLPowerDecayLengthModel(
                 self.data.physics.i_len_sol_outboard_power_decay
             )
