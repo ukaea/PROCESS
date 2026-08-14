@@ -252,7 +252,7 @@ class SuperconParam(NamedTuple):
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
             f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
-            i_tf_superconductor=5,
+            i_tf_superconductor=SuperconductorModel.WST_NB3SN,
             iprint=0,
             outfile=11,
             a_tf_turn_cable_space=0.001293323051622732,
