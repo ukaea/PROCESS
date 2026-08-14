@@ -325,24 +325,12 @@ class Vmcon(_Solver):
                     "A feasible solution may be difficult to achieve.",
                     "Try changing or adding variables to IXC.",
                 ),
-                4: (
-                    "An uphill search direction was found.",
-                    "Try changing the equations in ICC, or",
-                    "adding new variables to IXC.",
-                ),
                 SolverOutputCondition.NO_SOLUTION: (
                     "The quadratic programming technique was unable to",
                     "find a feasible point.\n",
                     "Try changing or adding variables to IXC, or modify",
                     "their initial values (especially if only 1 optimisation",
                     "iteration was performed).",
-                ),
-                6: (
-                    "The quadratic programming technique was restricted",
-                    "by an artificial bound, or failed due to a singular",
-                    "matrix.",
-                    "Try changing the equations in ICC, or",
-                    "adding new variables to IXC.",
                 ),
             }.get(self.info, "Unknown Error code")
         )
