@@ -176,11 +176,11 @@ class ElectronDensityProfile(Profile):
         radius_plasma_pedestal_density_norm :
             Normalised minor radius pedestal position (ρₙ,pedestal).
         nd_on_axis :
-            Central number density (n₀) [/m³].
+            Central number density (n₀) [m⁻³].
         nd_pedestal :
-            Pedestal density (n_pedestal) [/m³].
+            Pedestal density (n_pedestal) [m⁻³].
         nd_separatrix :
-            Separatrix density (n_sep) [/m³].
+            Separatrix density (n_sep) [m⁻³].
         alphan :
             Density peaking parameter (αₙ).
         """  # noqa: RUF002
@@ -212,58 +212,44 @@ class ElectronDensityProfile(Profile):
     @staticmethod
     def calculate_core_on_axis_density(
         radius_plasma_pedestal_density_norm: float,
-        nped: float,
-        nsep: float,
-        nav: float,
+        nd_pedestal: float,
+        nd_separatrix: float,
+        nd_vol_average: float,
         alphan: float,
     ) -> float:
-        """Calculates the core density of a pedestalised profile.
-        The solution comes from integrating and summing the two separate density profiles
-        for the core and pedestal region within their bounds. This has to be multiplied
-        by the torus volume element before integration which leads to an added rho term
-        in each part of the profile. When dividing by the volume of integration to get
-        the average density the simplification leads to a factor of 2 having to be
-        multiplied on to each of the integration results. This function for the average
-        density can then be re-arranged to calculate the central plasma density
-        n_0 / ncore.
+        """Calculates the core density (n₀) of a pedestalised profile.
 
         Parameters
         ----------
         radius_plasma_pedestal_density_norm :
-             The normalised minor radius pedestal position.
-        nped :
-            The pedestal density (/m3).
-        nsep :
-            The separatrix density (/m3).
-        nav :
-            The electron density (/m3).
-        alphan :
-            The density peaking parameter
+            Normalised minor radius pedestal position (ρₙ,pedestal).
+        nd_pedestal: float,
+            The pedestal density (n_pedestal) [m⁻³].
+        nd_separatrix: float,
+            The separatrix density (n_sep) [m⁻³].
+        nd_vol_average: float,
+            The volume averaged density (⟨n⟩) [m⁻³].
+        alphan: float,
+            The density peaking parameter (αₙ).
 
         Returns
         -------
         :
-            The core density.
-
-        References
-        ----------
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor
-            Studies. Fusion Science and Technology, 59(2), 308-349.
-            https://doi.org/10.13182/FST11-A11650
+            The core on-axis density (n₀) [/m³].
         """
-        ncore = (
+        nd_on_axis = (
             1
             / (3 * radius_plasma_pedestal_density_norm**2)
             * (
-                3 * nav * (1 + alphan)
-                + nsep
+                3 * nd_vol_average * (1 + alphan)
+                + nd_separatrix
                 * (1 + alphan)
                 * (
                     -2
                     + radius_plasma_pedestal_density_norm
                     + radius_plasma_pedestal_density_norm**2
                 )
-                - nped
+                - nd_pedestal
                 * (
                     (1 + alphan) * (1 + radius_plasma_pedestal_density_norm)
                     + (alphan - 2) * radius_plasma_pedestal_density_norm**2
@@ -271,16 +257,16 @@ class ElectronDensityProfile(Profile):
             )
         )
 
-        if ncore < 0.0:
+        if nd_on_axis < 0.0:
             # Allows solver to continue and
             # warns the user to raise the lower bound on nd_plasma_electrons_vol_avg
             # if the run did not converge
             logger.error(
-                "ncore is going negative when solving. Please raise the value of "
-                "nd_plasma_electrons_vol_avg and or its lower limit."
+                "nd_on_axis is going negative when solving. Please raise the value of "
+                "nd_plasma_electrons_vol_avg (⟨nₑ⟩) and or its lower limit."
             )
-            ncore = 1.0e-6
-        return ncore
+            nd_on_axis = 1.0e-6
+        return nd_on_axis
 
     def set_pedestal_and_separatrix_values(self):
         """Sets the pedestal and separatrix density values based on the user input
@@ -343,14 +329,12 @@ class ElectronDensityProfile(Profile):
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PEDESTAL_PROFILE
         ):
-            self.data.physics.nd_plasma_electron_on_axis = (
-                self.calculate_core_on_axis_density(
-                    self.data.physics.radius_plasma_pedestal_density_norm,
-                    self.data.physics.nd_plasma_pedestal_electron,
-                    self.data.physics.nd_plasma_separatrix_electron,
-                    self.data.physics.nd_plasma_electrons_vol_avg,
-                    self.data.physics.alphan,
-                )
+            self.data.physics.nd_plasma_electron_on_axis = self.calculate_core_on_axis_density(
+                radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
+                nd_pedestal=self.data.physics.nd_plasma_pedestal_electron,
+                nd_separatrix=self.data.physics.nd_plasma_separatrix_electron,
+                nd_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                alphan=self.data.physics.alphan,
             )
         self.data.physics.nd_plasma_ions_on_axis = (
             self.data.physics.nd_plasma_ions_total_vol_avg
