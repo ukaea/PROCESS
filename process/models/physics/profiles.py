@@ -212,7 +212,7 @@ class ElectronDensityProfile(Profile):
         ) / (1 - radius_plasma_pedestal_density_norm)
 
     @staticmethod
-    def calculate_core_on_axis_density(
+    def calculate_pedestal_profile_on_axis_density(
         radius_plasma_pedestal_density_norm: float,
         nd_pedestal: float,
         nd_separatrix: float,
@@ -331,7 +331,7 @@ class ElectronDensityProfile(Profile):
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PEDESTAL_PROFILE
         ):
-            self.data.physics.nd_plasma_electron_on_axis = self.calculate_core_on_axis_density(
+            self.data.physics.nd_plasma_electron_on_axis = self.calculate_pedestal_profile_on_axis_density(
                 radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
                 nd_pedestal=self.data.physics.nd_plasma_pedestal_electron,
                 nd_separatrix=self.data.physics.nd_plasma_separatrix_electron,

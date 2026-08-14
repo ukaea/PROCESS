@@ -3,6 +3,8 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
+from process.models.physics.profiles import PlasmaProfile
+
 
 @pytest.fixture
 def plasmaprofile(process_models):
@@ -51,7 +53,9 @@ class NeProfileParam(NamedTuple):
     ],
     ids=["baseline_2018"],
 )
-def test_neprofile(neprofileparam: ProfileParam, monkeypatch, plasmaprofile):
+def test_neprofile(
+    neprofileparam: ProfileParam, monkeypatch, plasmaprofile: PlasmaProfile
+):
     monkeypatch.setattr(
         plasmaprofile.data.physics,
         "n_plasma_profile_elements",
@@ -62,7 +66,9 @@ def test_neprofile(neprofileparam: ProfileParam, monkeypatch, plasmaprofile):
     assert neprofile.profile_y == pytest.approx(neprofileparam.expected_neprofile)
 
 
-def test_ncore(monkeypatch, plasmaprofile):
+def test_calculate_pedestal_profile_on_axis_density(
+    monkeypatch, plasmaprofile: PlasmaProfile
+):
     monkeypatch.setattr(
         plasmaprofile.data.physics,
         "n_plasma_profile_elements",
@@ -74,7 +80,7 @@ def test_ncore(monkeypatch, plasmaprofile):
     nsep = 3.4294618459618943e19
     nav = 7.4321e19
     alphan = 1.0
-    assert neprofile.calculate_core_on_axis_density(
+    assert neprofile.calculate_pedestal_profile_on_axis_density(
         radius_plasma_pedestal_density_norm=radius_plasma_pedestal_density_norm,
         nd_pedestal=nped,
         nd_separatrix=nsep,
