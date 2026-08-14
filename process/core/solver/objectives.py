@@ -40,7 +40,7 @@ def objective_function(i_figure_merit: int, data: DataStructure) -> float:
     Raises
     ------
     ProcessValueError
-        If minmax=15 not used with i_plant_availability=1
+        If i_figure_merit=15 not used with i_plant_availability=1
     """
     try:
         figure_of_merit = FiguresOfMerit(abs(i_figure_merit))

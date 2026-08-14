@@ -51,9 +51,13 @@ class SolverHandler:
         # Initialise iteration variables and bounds in Python: relies on Fortran
         # iteration variables being defined above
         # Trim maximum size arrays down to actually used size
-        x = self.data.numerics.xcm[: self.data.numerics.nvar]
-        bndl = self.data.numerics.itv_scaled_lower_bounds[: self.data.numerics.nvar]
-        bndu = self.data.numerics.itv_scaled_upper_bounds[: self.data.numerics.nvar]
+        x = self.data.numerics.xcm[: self.data.numerics.n_iteration_variables]
+        bndl = self.data.numerics.itv_scaled_lower_bounds[
+            : self.data.numerics.n_iteration_variables
+        ]
+        bndu = self.data.numerics.itv_scaled_upper_bounds[
+            : self.data.numerics.n_iteration_variables
+        ]
 
         # Evaluators() calculates the objective and constraint functions and
         # their gradients for a given vector x
@@ -66,8 +70,9 @@ class SolverHandler:
         self.solver.set_opt_params(x)
         # Define total number of constraints and equality constraints
         self.solver.set_constraints(
-            m=self.data.numerics.neqns + self.data.numerics.nineqns,
-            meq=self.data.numerics.neqns,
+            m=self.data.numerics.n_equality_constraints
+            + self.data.numerics.n_inequality_constraints,
+            meq=self.data.numerics.n_equality_constraints,
         )
         ifail = self.solver.solve()
 
@@ -116,7 +121,7 @@ class SolverHandler:
     def _numerics_output(self):
         nums = self.data.numerics
 
-        nums.sqsumsq = sum(r**2 for r in nums.rcm[: nums.neqns]) ** 0.5
+        nums.sqsumsq = sum(r**2 for r in nums.rcm[: nums.n_equality_constraints]) ** 0.5
 
         process_output.oheadr(constants.NOUT, "Numerics")
         s_type = (
@@ -163,19 +168,23 @@ class SolverHandler:
                 logger.warning(f"High final constraint residues. {nums.sqsumsq=}")
 
         for d, var, v in (
-            ("Number of iteration variables", "(nvar)", nums.nvar),
+            (
+                "Number of iteration variables",
+                "(n_iteration_variables)",
+                nums.n_iteration_variables,
+            ),
             (
                 "Number of constraints (total)",
-                "(neqns+nineqns)",
-                nums.neqns + nums.nineqns,
+                "(n_equality_constraints+n_inequality_constraints)",
+                nums.n_equality_constraints + nums.n_inequality_constraints,
             ),
-            ("Optimisation switch", "(ioptimz)", nums.ioptimz),
+            ("Optimisation switch", "(i_process_run_mode)", nums.i_process_run_mode),
         ):
             process_output.ovarre(constants.NOUT, d, var, v)
 
         process_output.ocmmnt(
             constants.NOUT,
-            f"     {PROCESSRunMode(nums.ioptimz).description}",
+            f"     {PROCESSRunMode(nums.i_process_run_mode).description}",
         )
 
         # Objective function output: none for fsolve
@@ -183,11 +192,11 @@ class SolverHandler:
             process_output.ovarre(
                 constants.NOUT,
                 "Figure of merit switch",
-                "(minmax)",
-                nums.minmax,
+                "(i_figure_merit)",
+                nums.i_figure_merit,
             )
 
-            nums.objf_name = f'"{FiguresOfMerit(abs(nums.minmax)).description}"'
+            nums.objf_name = f'"{FiguresOfMerit(abs(nums.i_figure_merit)).description}"'
 
             for d, var, v, o in (
                 ("Objective function name", "(objf_name)", nums.objf_name, ""),
@@ -200,8 +209,8 @@ class SolverHandler:
                 ),
                 (
                     "Number of optimising solver iterations",
-                    "(nviter)",
-                    nums.nviter,
+                    "(n_solver_iterations)",
+                    nums.n_solver_iterations,
                     "OP ",
                 ),
             ):
@@ -234,7 +243,7 @@ class SolverHandler:
                         else "PROCESS has failed to optimise"
                     )
                     + " the optimisation parameters to"
-                    + ("minimise" if nums.minmax > 0 else "maximise")
+                    + ("minimise" if nums.i_figure_merit > 0 else "maximise")
                     + f" the objective function: {nums.objf_name}\n"
                 ),
             )
@@ -246,7 +255,7 @@ class SolverHandler:
 
         # Output optimisation parameters
         solution_vector_table = []
-        for i in range(nums.nvar):
+        for i in range(nums.n_iteration_variables):
             nums.xcs[i] = nums.xcm[i] * nums.scafc[i]
 
             name = nums.lablxc[nums.ixc[i] - 1]
