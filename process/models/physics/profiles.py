@@ -138,7 +138,7 @@ class DensityProfilePedestalType(IntEnum):
 
 
 class ElectronDensityProfile(Profile):
-    """Electron density profile class. Contains a function to calculate the electron
+    """Electron density (nₑ) profile class. Contains a function to calculate the electron
     density profile and store the data.
     """
 
@@ -149,12 +149,12 @@ class ElectronDensityProfile(Profile):
         self.calculate_profile_dx()
         self.set_physics_variables()
         self.calculate_profile_y(
-            self.profile_x,
-            self.data.physics.radius_plasma_pedestal_density_norm,
-            self.data.physics.nd_plasma_electron_on_axis,
-            self.data.physics.nd_plasma_pedestal_electron,
-            self.data.physics.nd_plasma_separatrix_electron,
-            self.data.physics.alphan,
+            rho=self.profile_x,
+            radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
+            nd_on_axis=self.data.physics.nd_plasma_electron_on_axis,
+            nd_pedestal=self.data.physics.nd_plasma_pedestal_electron,
+            nd_separatrix=self.data.physics.nd_plasma_separatrix_electron,
+            alphan=self.data.physics.alphan,
         )
         self.integrate_profile_y()
 
@@ -162,53 +162,52 @@ class ElectronDensityProfile(Profile):
         self,
         rho: np.array,
         radius_plasma_pedestal_density_norm: float,
-        n0: float,
-        nped: float,
-        nsep: float,
+        nd_on_axis: float,
+        nd_pedestal: float,
+        nd_separatrix: float,
         alphan: float,
-    ):
-        """Calculates the density at each normalised minor radius position
-        rho for a HELIOS-type density pedestal profile (neprofile).
+    ) -> None:
+        """Calculates the number density at each normalised minor radius (ρ) position.
 
         Parameters
         ----------
         rho :
-            Normalised minor radius vector.
+            Normalised minor radius (ρ) vector.
         radius_plasma_pedestal_density_norm :
-            Normalised minor radius pedestal position.
-        n0 :
-            Central density (/m3).
-        nped :
-            Pedestal density (/m3).
-        nsep :
-            Separatrix density (/m3)
+            Normalised minor radius pedestal position (ρₙ,pedestal).
+        nd_on_axis :
+            Central number density (n₀) [/m³].
+        nd_pedestal :
+            Pedestal density (n_pedestal) [/m³].
+        nd_separatrix :
+            Separatrix density (n_sep) [/m³].
         alphan :
-            Density peaking parameter.
-        """
+            Density peaking parameter (αₙ).
+        """  # noqa: RUF002
         if (
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
         ):
-            self.profile_y = n0 * (1 - rho**2) ** alphan
+            self.profile_y = nd_on_axis * (1 - rho**2) ** alphan
 
         # Input checks
 
-        if n0 < nped:
+        if nd_on_axis < nd_pedestal:
             logger.info(
                 "NPROFILE: density pedestal is higher than core density. %s, %s",
-                nped,
-                n0,
+                nd_pedestal,
+                nd_on_axis,
             )
         rho_index = rho <= radius_plasma_pedestal_density_norm
         self.profile_y[rho_index] = (
-            nped
-            + (n0 - nped)
+            nd_pedestal
+            + (nd_on_axis - nd_pedestal)
             * (1 - (rho[rho_index] / radius_plasma_pedestal_density_norm) ** 2) ** alphan
         )
         # Invert the rho_index
-        self.profile_y[~rho_index] = nsep + (nped - nsep) * (1 - rho[~rho_index]) / (
-            1 - radius_plasma_pedestal_density_norm
-        )
+        self.profile_y[~rho_index] = nd_separatrix + (nd_pedestal - nd_separatrix) * (
+            1 - rho[~rho_index]
+        ) / (1 - radius_plasma_pedestal_density_norm)
 
     @staticmethod
     def ncore(
