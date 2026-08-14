@@ -111,8 +111,6 @@ class WaterUse(Model):
         # Estimated as a ratio to evaporated water (averaged across observed dataset)
         #  as per Diehl et al. USGS Report 2014-5184, http://dx.doi.org/10.3133/sir20145184
 
-        # end break
-
         #  Output section
         if output:
             po.ovarre(
@@ -255,8 +253,6 @@ class WaterUse(Model):
 
         # once-through water system:
         self.data.water_use.wateruseonethru = 98.0e0 * evapsum
-
-        # end break
 
         #  Output section
         if output:
