@@ -343,7 +343,7 @@ class ElectronDensityProfile(Profile):
         )
 
 
-class TeProfile(Profile):
+class ElectronTemperatureProfile(Profile):
     """Electron temperature profile class. Contains a function to calculate the
     temperature profile and store the data.
     """

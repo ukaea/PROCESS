@@ -4,7 +4,7 @@
 
 In `PROCESS` the density, temperature and current profiles of the plasma for electrons and ions can take two forms depending on the switch value for `i_plasma_pedestal`. Either without a [pedestal](http://fusionwiki.ciemat.es/wiki/Pedestal), `i_plasma_pedestal == 0` or with a pedestal `i_plasma_pedestal == 1`.  `i_plasma_pedestal == 0` is better suited for modelling L-mode plasmas, while `i_plasma_pedestal == 1` is better suited for modelling [H-mode](https://en.wikipedia.org/wiki/High-confinement_mode) plasmas.
 
-The files responsible for calculating and storing the profiles are `plasma_profiles.py` and `profiles.py`. A central plasma profile object is created from the [`PlasmaProfile`](plasma_profiles.md#plasma-profile-class-plasmaprofile) class that contains attributes for the plasma density and temperature. The density and temperature profiles are in themselves objects of the [`Profile`](./plasma_profiles_abstract_class.md) abstract base class. [`Profile`](./plasma_profiles_abstract_class.md), [`ElectronDensityProfile`](plasma_density_profile.md) and [`TeProfile`](./plasma_temperature_profile.md) are all defined in `profiles.py`. [`PlasmaProfile`](plasma_profiles.md#plasma-profile-class-plasmaprofile) is exclusively in `plasma_profiles.py`
+The files responsible for calculating and storing the profiles are `plasma_profiles.py` and `profiles.py`. A central plasma profile object is created from the [`PlasmaProfile`](plasma_profiles.md#plasma-profile-class-plasmaprofile) class that contains attributes for the plasma density and temperature. The density and temperature profiles are in themselves objects of the [`Profile`](./plasma_profiles_abstract_class.md) abstract base class. [`Profile`](./plasma_profiles_abstract_class.md), [`ElectronDensityProfile`](plasma_density_profile.md) and [`ElectronTemperatureProfile`](./plasma_temperature_profile.md) are all defined in `profiles.py`. [`PlasmaProfile`](plasma_profiles.md#plasma-profile-class-plasmaprofile) is exclusively in `plasma_profiles.py`
 
 <figure markdown>
 ![UML of profiles](./uml_classes_PlasmaProfile.png){height="1000px"}
@@ -238,7 +238,7 @@ The graph below is for a standard pedestal profile. You can vary its attributes 
 
 ## Plasma Profile Class | `PlasmaProfile`
 ### Initialization | `__init__()`
-The parent plasma profile class is `PlasmaProfile`. Initialization sets the profile class size and `neprofile` and `teprofile` to [`ElectronDensityProfile`](plasma_density_profile.md) & [`TeProfile`](plasma_temperature_profile.md) objects from `profiles.py`
+The parent plasma profile class is `PlasmaProfile`. Initialization sets the profile class size and `neprofile` and `teprofile` to [`ElectronDensityProfile`](plasma_density_profile.md) & [`ElectronTemperatureProfile`](plasma_temperature_profile.md) objects from `profiles.py`
 
 ???+ Note
 
@@ -266,7 +266,7 @@ Depending on the value of `i_plasma_pedestal` different functions will be ran, t
 
 If pedestal profile values are set they are reset to have values that agree with the original form of the parabolic profiles. Such that $\rho_{\text{ped}} = 1$ and that pedestal and separatrix densities and temperatures are zero. This will then warn the user in the terminal.
 
-The density and temperature profile runner function [`TeProfile/ElectronDensityProfile.run()`](plasma_density_profile.md#runner-function-run) is then called to re-calculate the profile and core values.
+The density and temperature profile runner function [`ElectronTemperatureProfile/ElectronDensityProfile.run()`](plasma_density_profile.md#runner-function-run) is then called to re-calculate the profile and core values.
 
 Ratio of density-weighted to volume-averaged temperature factor is calculated:
 
@@ -593,7 +593,7 @@ $$
 
 ##### `pedestal_parameterisation()`
 
-The density and temperature profile runner function [`TeProfile/ElectronDensityProfile.run()`](plasma_density_profile.md#runner-function-run) is firstly called to re-calculate the profile and core values.
+The density and temperature profile runner function [`ElectronTemperatureProfile/ElectronDensityProfile.run()`](plasma_density_profile.md#runner-function-run) is firstly called to re-calculate the profile and core values.
 
  Perform integrations to calculate ratio of density-weighted to volume-averaged temperature, etc. Density-weighted temperature = $\frac{\int{nT \ dV}}{\int{n \ dV}}$,  which is approximately equal to the ratio $\frac{\int{\rho \ n(\rho) T(\rho) \ d\rho}}{\int{\rho \ n(\rho) \ d\rho}}$
 
