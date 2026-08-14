@@ -29,7 +29,8 @@ class PlasmaProfile(Model):
         Args:
             profile_size (int): The size of the plasma profile.
             outfile (str): The output file path.
-            neprofile (NeProfile): An instance of the NeProfile class.
+            neprofile (ElectronDensityProfile): An instance of the ElectronDensityProfile
+            class.
             teprofile (TeProfile): An instance of the TeProfile class.
         """
         # Default profile_size = 201, but it's possible to experiment with this value.
@@ -195,7 +196,7 @@ class PlasmaProfile(Model):
         `temp_plasma_electron_density_weighted_kev` and
         `temp_plasma_ion_density_weighted_kev`.
         """
-        #  Run TeProfile and NeProfile class methods:
+        #  Run TeProfile and ElectronDensityProfile class methods:
         #  Re-calculate core and profile values
 
         self.teprofile.run()
