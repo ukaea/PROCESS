@@ -259,6 +259,8 @@ class Caller:
         xc : np.array
             Array of optimisation parameters
         """
+        # TODO: make a method on the data structure to do this for all applicable fields
+        self.data.water_use.reset_edit_use_records()
         # Number of active iteration variables
         nvars = len(xc)
 
