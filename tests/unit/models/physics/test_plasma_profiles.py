@@ -75,7 +75,11 @@ def test_ncore(monkeypatch, plasmaprofile):
     nav = 7.4321e19
     alphan = 1.0
     assert neprofile.calculate_core_on_axis_density(
-        radius_plasma_pedestal_density_norm, nped, nsep, nav, alphan
+        radius_plasma_pedestal_density_norm=radius_plasma_pedestal_density_norm,
+        nd_pedestal=nped,
+        nd_separatrix=nsep,
+        nd_vol_avg=nav,
+        alphan=alphan,
     ) == pytest.approx(9.7756974320342041e19)
 
 
