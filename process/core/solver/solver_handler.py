@@ -335,7 +335,7 @@ class SolverHandler:
 
 
 @contextmanager
-def epsfcn_context(numerics, factor=10):
+def epsfcn_context(numerics, factor):
     """Set and then reset epsfcn value"""
     print("Trying again with new epsfcn")
     # epsfcn is only used in evaluators.Evaluators()
