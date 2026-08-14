@@ -1,6 +1,7 @@
 """Module containing solver handler routines"""
 
 import logging
+from contextlib import contextmanager
 
 from tabulate import tabulate
 
@@ -50,14 +51,9 @@ class SolverHandler:
         # Initialise iteration variables and bounds in Python: relies on Fortran
         # iteration variables being defined above
         # Trim maximum size arrays down to actually used size
-        n = self.data.numerics.nvar
-        x = self.data.numerics.xcm[:n]
-        bndl = self.data.numerics.itv_scaled_lower_bounds[:n]
-        bndu = self.data.numerics.itv_scaled_upper_bounds[:n]
-
-        # Define total number of constraints and equality constraints
-        m = self.data.numerics.neqns + self.data.numerics.nineqns
-        meq = self.data.numerics.neqns
+        x = self.data.numerics.xcm[: self.data.numerics.nvar]
+        bndl = self.data.numerics.itv_scaled_lower_bounds[: self.data.numerics.nvar]
+        bndu = self.data.numerics.itv_scaled_upper_bounds[: self.data.numerics.nvar]
 
         # Evaluators() calculates the objective and constraint functions and
         # their gradients for a given vector x
@@ -68,31 +64,18 @@ class SolverHandler:
         self.solver.set_evaluators(evaluators)
         self.solver.set_bounds(bndl, bndu)
         self.solver.set_opt_params(x)
-        self.solver.set_constraints(m, meq)
+        # Define total number of constraints and equality constraints
+        self.solver.set_constraints(
+            m=self.data.numerics.neqns + self.data.numerics.nineqns,
+            meq=self.data.numerics.neqns,
+        )
         ifail = self.solver.solve()
 
         # If VMCON optimisation has failed then try altering value of epsfcn
         if self.solver_name == "vmcon":
-            if ifail != SolverOutputCondition.CONVERGED:
-                print("Trying again with new epsfcn")
-                # epsfcn is only used in evaluators.Evaluators()
-                # TODO epsfcn could be set in Evaluators instance now, don't need to
-                # set/unset in self.data.numerics module
-                self.data.numerics.epsfcn *= 10  # try new larger value
-                print("new epsfcn = ", self.data.numerics.epsfcn)
-
-                ifail = self.solver.solve()
-                # First solution attempt failed
-                # (ifail != SolverOutputCondition.CONVERGED): supply ifail value
-                # to next attempt
-                self.data.numerics.epsfcn /= 10  # reset value
-
-            if ifail != SolverOutputCondition.CONVERGED:
-                print("Trying again with new epsfcn")
-                self.data.numerics.epsfcn /= 10  # try new smaller value
-                print("new epsfcn = ", self.data.numerics.epsfcn)
-                ifail = self.solver.solve()
-                self.data.numerics.epsfcn *= 10  # reset value
+            if ifail != 1:
+                with epsfcn_context(self.data.numerics):
+                    self.solver.solve()
 
             # If VMCON has exited with error code 5
             # (ifail = SolverOutputCondition.NO_SOLUTION) try another run using a
@@ -346,3 +329,17 @@ class SolverHandler:
                 numalign="left",
             ),
         )
+
+
+@contextmanager
+def epsfcn_context(numerics):
+    print("Trying again with new epsfcn")
+    # epsfcn is only used in evaluators.Evaluators()
+    # TODO epsfcn could be set in Evaluators instance now, don't need to
+    # set/unset in numerics module
+    numerics.epsfcn *= 10  # try new larger value
+    print("new epsfcn = ", numerics.epsfcn)
+    try:
+        yield
+    finally:
+        numerics.epsfcn /= 10  # reset value

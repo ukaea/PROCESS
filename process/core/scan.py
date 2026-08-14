@@ -18,11 +18,11 @@ from process.core.io.data_structure_dicts import get_dicts
 from process.core.log import logging_model_handler, show_errors
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
-from process.data_structure.scan_variables import IPNSCNS, NOUTVARS, ScanData
 from process.models.availability import AvailabilityModel
 
 if TYPE_CHECKING:
-    from process.core.model import DataStructure, Model
+    from process.core.model import DataStructure
+    from process.main import Models
 
 
 logger = logging.getLogger(__name__)
@@ -224,30 +224,33 @@ class ScanVariables(ScanVariable, Enum):
     n_tf_coil_turns = (81, Area.T)
 
 
+@dataclass
+class ScanRes:
+    iscan: int
+    ifail: int
+    solver: SolverHandler
+
+
 class Scan:
-    """Perform a parameter scan using the Fortran scan module."""
+    """Perform a parameter scan
 
-    def __init__(self, models: Model, solver: str, data: DataStructure):
-        """Immediately run the run_scan() method.
+    Parameters
+    ----------
+    models :
+        Physics and engineering model objects
+    solver :
+        Which solver to use, as specified in solver.py
+    data :
+        Data structure object
+    """
 
-        Parameters
-        ----------
-        models :
-            Physics and engineering model objects
-        solver :
-            Which solver to use, as specified in solver.py
-        data :
-            Data structure object
-        """
+    def __init__(self, models: Models, solver: str, data: DataStructure):
         self.models = models
         self.solver = solver
         self.data = data
-        self.solver_handler = SolverHandler(models, solver, data)
-        self.run_scan()
 
-    def run_scan(self):
-        """Call a solver over a range of values of one of the variables.
-
+    def _run(self, iscan, nsweep, sweep, data):
+        """
         This method calls the optimisation routine VMCON a number of times, by
         performing a sweep over a range of values of a particular variable. A
         number of output variable values are written to the MFILE.DAT file at
@@ -258,304 +261,210 @@ class Scan:
         ProcessValueError
             isweep value greater than IPNSCNS
         """
-        if self.data.scan.isweep == 0:
-            # Solve single problem, rather than an array of problems (scan)
-            # doopt() can also run just an evaluation
-            start_time = time.time()
-            ifail = self.doopt()
-            write_output_files(
-                models=self.models,
-                data=self.data,
-                ifail=ifail,
-                runtime=time.time() - start_time,
-            )
-            show_errors(constants.NOUT)
-            return
-
-        if self.data.scan.isweep > IPNSCNS:
-            raise ProcessValueError(
-                "Illegal value of isweep",
-                isweep=self.data.scan.isweep,
-                IPNSCNS=IPNSCNS,
-            )
+        sh = SolverHandler(self.models, self.solver, data)
+        # TODO queue the output to avoid race condition (?)
+        if data.scan.nsweep is not None:
+            self.write_point_header(iscan)
+        start_time = time.time()
+        ifail = sh.run()
+        end_time = time.time() - start_time
+        write_output_files(models=self.models, data=data, ifail=ifail, runtime=end_time)
+        nums = data.numerics
+        nums.sqsumsq = sum(r**2 for r in nums.rcm[: nums.neqns]) ** 0.5
 
         if self.data.scan.scan_dim == 2:
             self.scan_2d()
         else:
             self.scan_1d()
 
-    def doopt(self):
-        """Run the optimiser or solver."""
-        ifail = self.solver_handler.run()
-        constraints.constraints_output(self.data, self.solver)
-
-        return ifail
-
-    def scan_1d(self):
-        """Run a 1-D scan."""
-        # initialise dict which will contain ifail values for each scan point
-        scan_1d_ifail_dict = {}
-
-        for iscan in range(1, self.data.scan.isweep + 1):
-            self.scan_1d_write_point_header(iscan)
-            start_time = time.time()
-            ifail = self.doopt()
-            scan_1d_ifail_dict[iscan] = ifail
-            write_output_files(
-                models=self.models,
-                data=self.data,
-                ifail=ifail,
-                runtime=time.time() - start_time,
-            )
-
-            show_errors(constants.NOUT)
-            logging_model_handler.clear_logs()
-
-        # outvar now contains results
-        self.scan_1d_write_plot(self.data.scan)
-        print("Scan Convergence Summary \n")
-        sweep_values = self.data.scan.sweep[: self.data.scan.isweep]
-        nsweep_var = self.scan_select(
-            self.data.scan.nsweep, self.data.scan.sweep, self.data.scan.isweep
+    def write_outputs(self):
+        write_output_files(
+            models=self.models,
+            data=self.data,
+            ifail=self._ifail,
+            runtime=self._finish_time - self._start_time,
         )
-        converged_count = 0
-        # offsets for aligning the converged/unconverged column
-        max_sweep_value_length = len(str(np.max(sweep_values)).replace(".", ""))
-        offsets = [
-            max_sweep_value_length - len(str(sweep_val).replace(".", ""))
-            for sweep_val in sweep_values
+        show_errors(constants.NOUT)
+
+        logging_model_handler.clear_logs()
+        optimisation_output(data)
+        constraints.constraints_output(data, self.solver)
+
+        return ScanRes(iscan, ifail, sh)
+
+    def _set_v_x_label(self, iscan: list[int]):
+        sv = [
+            self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, isc)
+            for isc in iscan
         ]
-        for iscan in range(1, self.data.scan.isweep + 1):
-            if scan_1d_ifail_dict[iscan] == 1:
-                converged_count += 1
-                print(
-                    f"Scan {iscan:02d}: {nsweep_var.fname} = {sweep_values[iscan - 1]} "
-                    + " " * offsets[iscan - 1]
-                    + "\u001b[32mCONVERGED \u001b[0m"
-                )
-            else:
-                print(
-                    f"Scan {iscan:02d}: {nsweep_var.fname} = {sweep_values[iscan - 1]} "
-                    + " " * offsets[iscan - 1]
-                    + "\u001b[31mUNCONVERGED \u001b[0m"
-                )
-        converged_percentage = converged_count / self.data.scan.isweep * 100
-        print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
+        self.data.globals.vlabel = [s.fname for s in sv]
+        self.data.globals.xlabel = [s.data.description for s in sv]
 
-    def scan_2d(self):
-        """Run a 2-D scan."""
-        # Initialise intent(out) arrays
-        self.scan_2d_init(self.data.scan)
-        iscan = 1
-
-        # initialise array which will contain ifail values for each scan point
-        scan_2d_ifail_list = np.zeros(
-            (NOUTVARS, IPNSCNS),
-            dtype=np.float64,
-            order="F",
-        )
-        for iscan_1 in range(1, self.data.scan.isweep + 1):
-            for iscan_2 in range(1, self.data.scan.isweep_2 + 1):
-                self.scan_2d_write_point_header(iscan, iscan_1, iscan_2)
-                start_time = time.time()
-                ifail = self.doopt()
-                write_output_files(
-                    models=self.models,
-                    data=self.data,
-                    ifail=ifail,
-                    runtime=time.time() - start_time,
-                )
-
-                show_errors(constants.NOUT)
-                logging_model_handler.clear_logs()
-                scan_2d_ifail_list[iscan_1][iscan_2] = ifail
-                iscan += 1
-
-        print("Scan Convergence Summary\n")
-        sweep_1_values = self.data.scan.sweep[: self.data.scan.isweep]
-        sweep_2_values = self.data.scan.sweep_2[: self.data.scan.isweep_2]
-        nsweep_var = self.scan_select(
-            self.data.scan.nsweep, self.data.scan.sweep, self.data.scan.isweep
-        )
-        nsweep_2_var = self.scan_select(
-            self.data.scan.nsweep_2, self.data.scan.sweep_2, self.data.scan.isweep_2
-        )
-        converged_count = 0
-        scan_point = 1
-        # offsets for aligning the converged/unconverged column
-        max_sweep1_value_length = len(str(np.max(sweep_1_values)).replace(".", ""))
-        max_sweep2_value_length = len(str(np.max(sweep_2_values)).replace(".", ""))
-        offsets = np.zeros(
-            (self.data.scan.isweep, self.data.scan.isweep_2), dtype=int, order="F"
-        )
-        for count1, sweep1 in enumerate(sweep_1_values):
-            for count2, sweep2 in enumerate(sweep_2_values):
-                offsets[count1][count2] = (
-                    max_sweep1_value_length
-                    - len(str(sweep1).replace(".", ""))
-                    + max_sweep2_value_length
-                    - len(str(sweep2).replace(".", ""))
-                )
-
-        for iscan_1 in range(1, self.data.scan.isweep + 1):
-            for iscan_2 in range(1, self.data.scan.isweep_2 + 1):
-                if scan_2d_ifail_list[iscan_1][iscan_2] == 1:
-                    converged_count += 1
-                    print(
-                        (
-                            f"Scan {scan_point:02d}: ({nsweep_var.fname} = "
-                            f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var.fname} "
-                            f"= {sweep_2_values[iscan_2 - 1]}) "
-                        )
-                        + " " * offsets[iscan_1 - 1][iscan_2 - 1]
-                        + "\u001b[32mCONVERGED \u001b[0m"
-                    )
-                    scan_point += 1
-                else:
-                    print(
-                        (
-                            f"Scan {scan_point:02d}: ({nsweep_var.fname} = "
-                            f"{sweep_1_values[iscan_1 - 1]}, {nsweep_2_var.fname} = "
-                            f"{sweep_2_values[iscan_2 - 1]}) "
-                        )
-                        + " " * offsets[iscan_1 - 1][iscan_2 - 1]
-                        + "\u001b[31mUNCONVERGED \u001b[0m"
-                    )
-                    scan_point += 1
-        converged_percentage = (
-            converged_count / (self.data.scan.isweep * self.data.scan.isweep_2) * 100
-        )
-        print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
-
-    @staticmethod
-    def scan_2d_init(scan_data: ScanData):
-        """Scan 2d initialisation"""
-        process_output.ovarre(
-            constants.MFILE,
-            "Number of first variable scan points",
-            "(isweep)",
-            scan_data.isweep,
-        )
-        process_output.ovarre(
-            constants.MFILE,
-            "Number of second variable scan points",
-            "(isweep_2)",
-            scan_data.isweep_2,
-        )
-        process_output.ovarre(
-            constants.MFILE,
-            "Scanning first variable number",
-            "(nsweep)",
-            scan_data.nsweep,
-        )
-        process_output.ovarre(
-            constants.MFILE,
-            "Scanning second variable number",
-            "(nsweep_2)",
-            scan_data.nsweep_2,
-        )
-        process_output.ovarre(
-            constants.MFILE,
-            "Scanning second variable number",
-            "(nsweep_2)",
-            scan_data.nsweep_2,
-        )
-        process_output.ovarre(
-            constants.MFILE,
-            "Scanning second variable number",
-            "(nsweep_2)",
-            scan_data.nsweep_2,
-        )
-
-    def scan_1d_write_point_header(self, iscan: int):
-        """Scan 1d header"""
-        self.data.globals.iscan_global = iscan
-        sv = self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan)
-
-        self.data.globals.vlabel = sv.fname
-        self.data.globals.xlabel = sv.description
+    def write_point_header(self, iscan):
+        self._set_v_x_label(iscan)
 
         process_output.oblnkl(constants.NOUT)
-        process_output.ostars(constants.NOUT, 110)
+        process_output.oblnkl(constants.MFILE)
 
         process_output.write(
             constants.NOUT,
-            f"***** Scan point {iscan} of {self.data.scan.isweep} : "
-            f"{self.data.globals.xlabel}"
-            f", {self.data.globals.vlabel} = {self.data.scan.sweep[iscan - 1]} "
-            "*****",
+            f"Scan point {iscan} of {np.prod(self.data.scan.isweep)} : \n".join(
+                f"{v} = {self.data.scan.sweep[iscan[no] - 1]}"
+                for no, v in enumerate(self.data.globals.vlabel)
+            ),
         )
-        process_output.ostars(constants.NOUT, 110)
-        process_output.oblnkl(constants.MFILE)
-        process_output.ovarre(constants.MFILE, "Scan point number", "(iscan)", iscan)
+        process_output.ovarin(constants.MFILE, "Scan point number", "(iscan)", iscan)
 
         print(
-            f"Starting scan point {iscan} of {self.data.scan.isweep} : "
-            f"{self.data.globals.xlabel} , {self.data.globals.vlabel}"
-            f" = {self.data.scan.sweep[iscan - 1]}"
-        )
-
-    def scan_2d_write_point_header(self, iscan, iscan_1, iscan_2):
-        """Scan 2d header"""
-        iscan_r = self.data.scan.isweep_2 - iscan_2 + 1 if iscan_1 % 2 == 0 else iscan_2
-
-        # Makes iscan available globally (read-only)
-        self.data.globals.iscan_global = iscan
-        sv_1 = self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan_1)
-
-        self.data.globals.vlabel = sv_1.fname
-        self.data.globals.xlabel = sv_1.data.description
-
-        sv_2 = self.scan_select(self.data.scan.nsweep_2, self.data.scan.sweep_2, iscan_r)
-
-        self.data.globals.vlabel_2 = sv_2.fname
-        self.data.globals.xlabel_2 = sv_2.data.description
-
-        process_output.oblnkl(constants.NOUT)
-        process_output.ostars(constants.NOUT, 110)
-
-        process_output.write(
-            constants.NOUT,
-            f"***** 2D Scan point {iscan} of "
-            f"{self.data.scan.isweep * self.data.scan.isweep_2} : "
-            f"{self.data.globals.vlabel} = {self.data.scan.sweep[iscan_1 - 1]} and"
-            f" {self.data.globals.vlabel_2} = {self.data.scan.sweep_2[iscan_r - 1]} "
-            "*****",
-        )
-        process_output.ostars(constants.NOUT, 110)
-        process_output.oblnkl(constants.MFILE)
-        process_output.ovarre(constants.MFILE, "Scan point number", "(iscan)", iscan)
-
-        print(
-            f"Starting scan point {iscan}:  {self.data.globals.xlabel}, "
-            f"{self.data.globals.vlabel} = {self.data.scan.sweep[iscan_1 - 1]}"
-            f" and {self.data.globals.xlabel_2}, "
-            f"{self.data.globals.vlabel_2} = {self.data.scan.sweep_2[iscan_r - 1]} "
-        )
-
-        return iscan_r
-
-    @staticmethod
-    def scan_1d_write_plot(scan_data: ScanData):
-        """Scan 1d plotter"""
-        if scan_data.first_call_1d:
-            process_output.ovarre(
-                constants.MFILE,
-                "Number of scan points",
-                "(isweep)",
-                scan_data.isweep,
+            f"Starting scan point {iscan}:  {self.data.globals.xlabel}, \n".join(
+                f"{v} = {self.data.scan.sweep[iscan[no] - 1]}"
+                for no, v in enumerate(self.data.globals.vlabel)
             )
-            process_output.ovarre(
-                constants.MFILE,
-                "Scanning variable number",
-                "(nsweep)",
-                scan_data.nsweep,
-            )
+        )
 
-            scan_data.first_call_1d = False
-
-    def scan_select(self, nsweep, sweep, iscan) -> ScanVariables:
-        """Select a scan"""
+    def scan_select(self, nsweep, sweep, iscan):
         sv = ScanVariables(nsweep)
         sv.set(self.data, sweep[iscan - 1])
         return sv
+
+    def run(self):
+        """Call a solver over a range of values of one of the variables.
+
+        This method calls the optimisation routine VMCON a number of times, by
+        performing a sweep over a range of values of a particular variable. A
+        number of output variable values are written to the MFILE.DAT file at
+        each scan point, for plotting or other post-processing purposes.
+        """
+        # vectorise running of self._run
+        if self.data.scan.nsweep is not None:
+            for d, n, v in (
+                ("Number of scan points", "(isweep)", self.data.scan.isweep),
+                ("Scanning variable number", "(nsweep)", self.data.scan.nsweep),
+            ):
+                process_output.ovarin(constants.MFILE, d, n, v)
+
+        # TODO copy of self.data for each vectorised run (?)
+        scan_res = np.vectorise(self._run)(
+            self.data.scan.isweep, self.data.scan.nsweep, self.data.scan.sweep, self.data
+        )
+
+        if self.data.scan.nsweep is not None:
+            self.summary(scan_res)
+
+    def summary(self, scan_res):
+        print("Scan Convergence Summary\n")
+        sweep_values = self.data.scan.sweep
+        nsweep_var = [ScanVariables(nsw) for nsw in self.data.scan.nsweep]
+
+        conv_list = []
+        converged_count = 0
+        conv_str = "\u001b[3{}CONVERGED \u001b[0m"
+        for no, sr in enumerate(scan_res):
+            if sr.ifail == 1:
+                converged_count += 1
+                conv = conv_str.format("2m")
+            else:
+                conv = conv_str.format("1mUN")
+            conv_list.append([
+                "{sr.iscan:02d}",
+                nsweep_var[no].fname,
+                sweep_values[sr.iscan],
+                conv,
+            ])
+
+        print(
+            tabulate(conv_list, headers=["Iscan", "Sweep Var", "Sweep Val", "Converged"])
+        )
+
+        converged_percentage = converged_count / np.prod(self.data.scan.isweep) * 100
+        print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
+
+
+def optimisation_output(data: DataStructure):
+    nums = data.numerics
+
+    written_warning = False
+
+    # Output optimisation parameters
+    solution_vector_table = []
+    for i in range(nums.nvar):
+        nums.xcs[i] = nums.xcm[i] * nums.scafc[i]
+
+        name = nums.lablxc[nums.ixc[i] - 1]
+        solution_vector_table.append([name, nums.xcs[i], nums.xcm[i]])
+
+        xminn = 1.01 * nums.itv_scaled_lower_bounds[i]
+        xmaxx = 0.99 * nums.itv_scaled_upper_bounds[i]
+
+        # Write to output file if close to optimisation parameter bounds
+        if nums.xcm[i] < xminn or nums.xcm[i] > xmaxx:
+            if not written_warning:
+                written_warning = True
+                process_output.ocmmnt(
+                    constants.NOUT,
+                    (
+                        "Certain operating limits have been reached,"
+                        "\n as shown by the following optimisation parameters that are"
+                        "\n at or near to the edge of their prescribed range :\n"
+                    ),
+                )
+
+            xcval = nums.xcm[i] * nums.scafc[i]
+
+            if nums.xcm[i] < xminn:
+                location, bound = "below", "lower"
+                bounds = nums.itv_scaled_lower_bounds
+            else:
+                location, bound = "above", "upper"
+                bounds = nums.itv_scaled_upper_bounds
+            process_output.write(
+                constants.NOUT,
+                f"   {name:<30}= {xcval} is at or {location} its {bound} bound:"
+                f" {bounds[i] * nums.scafc[i]}",
+            )
+
+        xnorm = (
+            1.0
+            if nums.boundu[i] == nums.boundl[i]
+            else min(
+                max(
+                    (nums.xcm[i] - nums.itv_scaled_lower_bounds[i])
+                    / (
+                        nums.itv_scaled_upper_bounds[i] - nums.itv_scaled_lower_bounds[i]
+                    ),
+                    0.0,
+                ),
+                1.0,
+            )
+        )
+
+        # Write optimisation parameters to mfile
+        for d, var, v in (
+            (nums.lablxc[nums.ixc[i] - 1], f"(itvar{i + 1:03d})", nums.xcs[i]),
+            (f"{name} (final value/initial value)", f"(xcm{i + 1:03d})", nums.xcm[i]),
+            (f"{name} (range normalised)", f"(nitvar{i + 1:03d})", xnorm),
+            (
+                f"{name} (upper bound)",
+                f"(boundu{i + 1:03d})",
+                nums.itv_scaled_upper_bounds[i] * nums.scafc[i],
+            ),
+            (
+                f"{name} (lower bound)",
+                f"(boundl{i + 1:03d})",
+                nums.itv_scaled_lower_bounds[i] * nums.scafc[i],
+            ),
+        ):
+            process_output.ovarre(constants.MFILE, d, var, v)
+
+    # Write optimisation parameter headings to output file
+    process_output.osubhd(
+        constants.NOUT, "The solution vector is comprised as follows :"
+    )
+    process_output.write(
+        constants.NOUT,
+        tabulate(
+            solution_vector_table,
+            headers=["", "Final value", "Final / initial"],
+            numalign="left",
+        ),
+    )
