@@ -97,7 +97,7 @@ from process.models.physics.plasma_current import (
 from process.models.physics.plasma_fields import PlasmaFields
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
-from process.models.physics.profiles import NeProfile, TeProfile
+from process.models.physics.profiles import ElectronDensityProfile, TeProfile
 from process.models.physics.scrape_off_layer import ScrapeOffLayer
 from process.models.power import Power
 from process.models.pulse import Pulse
@@ -669,7 +669,7 @@ class Models:
         self.pulse = Pulse()
         self.shield = Shield()
         self.ife = IFE(availability=self.availability, costs=self.costs)
-        self.ne_profile = NeProfile()
+        self.ne_profile = ElectronDensityProfile()
         self.te_profile = TeProfile()
         self.plasma_profile = PlasmaProfile(self.ne_profile, self.te_profile)
         self.fw = FirstWall()
