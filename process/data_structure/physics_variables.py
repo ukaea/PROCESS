@@ -6,6 +6,35 @@ from enum import IntEnum
 import numpy as np
 
 
+class OutbordSOLPowerDecayLengthModel(IntEnum):
+    """Enum for outboard scrape off layer power decay length models with descriptions."""
+
+    USER_INPUT = (0, "User input")
+    EICH_2013 = (1, "Eich 2013")
+    MAST_2014_1 = (2, "MAST 2014-1")
+    MAST_2014_2 = (3, "MAST 2014-2")
+
+    def __new__(cls, value: int, description: str):
+        """Create a new instance of OutbordSOLPowerDecayLengthModel.
+
+        Parameters
+        ----------
+        value : int
+            The enum value
+        description : str
+            The description of the model
+
+        Returns
+        -------
+        OutbordSOLPowerDecayLengthModel
+            A new enum instance with the given value and description
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj.description = description
+        return obj
+
+
 class CurrentProfileIndexModel(IntEnum):
     """Enum for current profile index models."""
 
@@ -403,7 +432,8 @@ class PhysicsData:
 
     ptarmw: float = 0.0
 
-    lambdaio: float = 0.0
+    len_sol_outboard_power_decay: float = 0.0
+    """Outboard scrape off layer power decay length (λ_q) [m]"""
 
     drsep: float = 0.0
 
@@ -1674,9 +1704,24 @@ class PhysicsData:
     a_plasma_outboard_sol_eich13_parallel: float = 0.0
     """Plasma outboard midplane (upstream) Eich 2013 SOL parallel area (Aₗₗ,ᵤ) [m]"""
 
+    a_plasma_outboard_sol_parallel: float = 0.0
+    """Plasma outboard midplane (upstream) SOL parallel area (Aₗₗ,ᵤ) [m]"""
+
     pflux_plasma_outboard_sol_eich13_parallel_mw: float = 0.0
     """Plasma outboard midplane (upstream) Eich 2013 SOL parallel power flux
     (qₗₗ,ᵤ) [MW/m²]"""
+
+    pflux_plasma_outboard_sol_parallel_mw: float = 0.0
+    """Plasma outboard midplane (upstream) SOL parallel power flux
+    (qₗₗ,ᵤ) [MW/m²]"""
+
+    i_len_sol_outboard_power_decay: int = 1
+    """Switch for SOL outboard power decay length (λ_q) scaling to use:
+    - =0 User input
+    - =1 Eich 2013 scaling
+    - =2 MAST 2014 scaling 1
+    - =3 MAST 2014 scaling 2
+    """
 
     dt_power_density_plasma: float = 0.0
     sigmav_dt_average: float = 0.0
