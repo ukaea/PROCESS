@@ -100,7 +100,7 @@ class Caller:
         for _ in range(10):
             self._call_models_once(xc)
             # Evaluate objective function and constraints
-            objf = objective_function(self.data.numerics.minmax, self.data)
+            objf = objective_function(self.data.numerics.i_figure_merit, self.data)
             conf, _, _, _, _ = constraints.constraint_eqns(m, -1, self.data)
 
             if objf_prev is None and conf_prev is None:
@@ -262,7 +262,7 @@ class Caller:
         nvars = len(xc)
 
         # Increment the call counter
-        self.data.numerics.ncalls += 1
+        self.data.numerics.n_model_calls += 1
 
         # Convert variables
         set_scaled_iteration_variable(xc, nvars, self.data)
@@ -419,7 +419,7 @@ def finalise(models, data, ifail: int, non_idempotent_msg: str | None = None):
         po.oheadr(constants.NOUT, "Final UNFEASIBLE Point")
 
     # Output relevant to no optimisation
-    if data.numerics.ioptimz == PROCESSRunMode.EVALUATION:
+    if data.numerics.i_process_run_mode == PROCESSRunMode.EVALUATION:
         output_evaluation(data)
 
     # Print non-idempotence warning to OUT.DAT only
@@ -444,18 +444,23 @@ def output_evaluation(data):
     po.oblnkl(constants.NOUT)
 
     # Evaluate objective function
-    norm_objf = objective_function(data.numerics.minmax, data)
+    norm_objf = objective_function(data.numerics.i_figure_merit, data)
     po.ovarre(constants.MFILE, "Normalised objective function", "(norm_objf)", norm_objf)
 
     # Print the residuals of the constraint equations
 
     residual_error, value, residual, symbols, units = constraints.constraint_eqns(
-        data.numerics.neqns + data.numerics.nineqns, -1, data
+        data.numerics.n_equality_constraints + data.numerics.n_inequality_constraints,
+        -1,
+        data,
     )
 
     labels = [
         data.numerics.lablcc[j - 1]
-        for j in data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns]
+        for j in data.numerics.icc[
+            : data.numerics.n_equality_constraints
+            + data.numerics.n_inequality_constraints
+        ]
     ]
 
     def _fmt(a, units):
@@ -475,7 +480,7 @@ def output_evaluation(data):
         ),
     )
 
-    for i in range(data.numerics.neqns):
+    for i in range(data.numerics.n_equality_constraints):
         constraint_id = data.numerics.icc[i]
         po.ovarre(
             constants.MFILE,
@@ -484,13 +489,13 @@ def output_evaluation(data):
             residual_error[i],
         )
 
-    for i in range(data.numerics.nineqns):
-        constraint_id = data.numerics.icc[data.numerics.neqns + i]
+    for i in range(data.numerics.n_inequality_constraints):
+        constraint_id = data.numerics.icc[data.numerics.n_equality_constraints + i]
         po.ovarre(
             constants.MFILE,
-            f"{labels[data.numerics.neqns + i]}",
+            f"{labels[data.numerics.n_equality_constraints + i]}",
             f"(ineq_con{constraint_id:03d})",
-            residual_error[data.numerics.neqns + i],
+            residual_error[data.numerics.n_equality_constraints + i],
         )
 
 
@@ -508,7 +513,7 @@ def write_output_files(
     ifail : int
         solver return code
     """
-    n = data.numerics.nvar
+    n = data.numerics.n_iteration_variables
     x = data.numerics.xcm[:n]
     # Call models, ensuring output mfiles are fully idempotent
     caller = Caller(models, data)

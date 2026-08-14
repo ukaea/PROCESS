@@ -174,35 +174,41 @@ def run_summary(data: DataStructure):
         process_output.ostars(outfile, 110)
         process_output.oblnkl(outfile)
 
-        process_output.ocmmnt(outfile, f"Equality constraints : {data.numerics.neqns}")
         process_output.ocmmnt(
-            outfile,
-            f"Inequality constraints : {data.numerics.nineqns}",
+            outfile, f"Equality constraints : {data.numerics.n_equality_constraints}"
         )
         process_output.ocmmnt(
             outfile,
-            f"Total constraints : {data.numerics.nineqns + data.numerics.neqns}",
+            f"Inequality constraints : {data.numerics.n_inequality_constraints}",
         )
-        process_output.ocmmnt(outfile, f"Iteration variables : {data.numerics.nvar}")
+        process_output.ocmmnt(
+            outfile,
+            f"Total constraints : "
+            f"{data.numerics.n_inequality_constraints + data.numerics.n_equality_constraints}",  # noqa: E501
+        )
+        process_output.ocmmnt(
+            outfile, f"Iteration variables : {data.numerics.n_iteration_variables}"
+        )
         # If optimising, write objective function and convergence parameter
-        if data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
+        if data.numerics.i_process_run_mode == PROCESSRunMode.OPTIMISATION:
             process_output.ocmmnt(
                 outfile,
                 f"Max iterations : {data.globals.maxcal}",
             )
 
-            if data.numerics.minmax > 0:
-                minmax_string = "  -- minimise "
-                minmax_sign = "+"
+            if data.numerics.i_figure_merit > 0:
+                figure_merit_string = "  -- minimise "
+                figure_merit_sign = "+"
             else:
-                minmax_string = "  -- maximise "
-                minmax_sign = "-"
+                figure_merit_string = "  -- maximise "
+                figure_merit_sign = "-"
 
-            fom_string = FiguresOfMerit(abs(data.numerics.minmax)).description
+            fom_string = FiguresOfMerit(abs(data.numerics.i_figure_merit)).description
             process_output.ocmmnt(
                 outfile,
-                f"Figure of merit : {minmax_sign}{abs(data.numerics.minmax)}"
-                f"{minmax_string}{fom_string}",
+                f"Figure of merit : "
+                f"{figure_merit_sign}{abs(data.numerics.i_figure_merit)}"
+                f"{figure_merit_string}{fom_string}",
             )
             process_output.ocmmnt(
                 outfile,
@@ -227,12 +233,18 @@ def run_summary(data: DataStructure):
     process_output.ovarre(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
 
     process_output.ovarre(
-        mfile, "Optimisation switch", "(ioptimz)", data.numerics.ioptimz
+        mfile,
+        "Optimisation switch",
+        "(i_process_run_mode)",
+        data.numerics.i_process_run_mode,
     )
     # If optimising, write figure of merit switch
-    if data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
+    if data.numerics.i_process_run_mode == PROCESSRunMode.OPTIMISATION:
         process_output.ovarre(
-            mfile, "Figure of merit switch", "(minmax)", data.numerics.minmax
+            mfile,
+            "Figure of merit switch",
+            "(i_figure_merit)",
+            data.numerics.i_figure_merit,
         )
 
 
@@ -250,25 +262,26 @@ def check_process(inputs, data):  # noqa: ARG001
         See individual ProcessValidationError instances for more details.
     """
     # Check that there are sufficient iteration variables
-    if data.numerics.nvar < data.numerics.neqns:
+    if data.numerics.n_iteration_variables < data.numerics.n_equality_constraints:
         raise ProcessValidationError(
-            "Insufficient iteration variables to solve the problem! NVAR < NEQNS",
-            nvar=data.numerics.nvar,
-            neqns=data.numerics.neqns,
+            "Insufficient iteration variables to solve the problem! "
+            "n_iteration_variables < n_equality_constraints",
+            n_iteration_variables=data.numerics.n_iteration_variables,
+            n_equality_constraints=data.numerics.n_equality_constraints,
         )
 
     # Check that sufficient elements of ixc and icc have been specified
-    if (data.numerics.ixc[: data.numerics.nvar] == 0).any():
+    if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 0).any():
         raise ProcessValidationError(
             "The number of iteration variables specified is smaller than the number"
             " stated in ixc",
-            nvar=data.numerics.nvar,
+            n_iteration_variables=data.numerics.n_iteration_variables,
         )
 
     # Check that dr_tf_wp_with_insulation (ixc = 140) and dr_tf_inboard (ixc = 13)
     # are not being used simultaneously as iteration variables
-    if (data.numerics.ixc[: data.numerics.nvar] == 13).any() and (
-        data.numerics.ixc[: data.numerics.nvar] == 140
+    if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 13).any() and (
+        data.numerics.ixc[: data.numerics.n_iteration_variables] == 140
     ).any():
         raise ProcessValidationError(
             "Iteration variables 13 and 140 cannot be used simultaneously",
@@ -276,7 +289,9 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Can't use c_tf_turn as iteration var, constraint or
     # input if i_tf_turns_integer == 1
-    if (data.numerics.ixc[: data.numerics.nvar] == 60).any() and TFWPIntegerTurnType(
+    if (
+        data.numerics.ixc[: data.numerics.n_iteration_variables] == 60
+    ).any() and TFWPIntegerTurnType(
         data.tfcoil.i_tf_turns_integer
     ) == TFWPIntegerTurnType.INTEGER:
         raise ProcessValidationError(
@@ -287,26 +302,35 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     # Can't have icc 77 and ixc 60 at the same time
-    if (data.numerics.ixc[: data.numerics.nvar] == 60).any() and (
-        data.numerics.icc[: data.numerics.nvar] == 77
+    if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 60).any() and (
+        data.numerics.icc[: data.numerics.n_iteration_variables] == 77
     ).any():
         raise ProcessValidationError(
             "Cannot use iteration variable 60 (TF coil current per turn, c_tf_turn) and "
             "constraint 77 (maximum TF current per turn) simultaneously."
         )
 
-    if (data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 0).any():
+    if (
+        data.numerics.icc[
+            : data.numerics.n_equality_constraints
+            + data.numerics.n_inequality_constraints
+        ]
+        == 0
+    ).any():
         raise ProcessValidationError(
             "The number of constraints specified is smaller than the number stated"
-            " in neqns+nineqns",
-            neqns=data.numerics.neqns,
-            nineqns=data.numerics.nineqns,
+            " in n_equality_constraints+n_inequality_constraints",
+            n_equality_constraints=data.numerics.n_equality_constraints,
+            n_inequality_constraints=data.numerics.n_inequality_constraints,
         )
 
     # Deprecate constraints
     for depcrecated_constraint in [3, 4, 10, 74, 42]:
         if (
-            data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns]
+            data.numerics.icc[
+                : data.numerics.n_equality_constraints
+                + data.numerics.n_inequality_constraints
+            ]
             == depcrecated_constraint
         ).any():
             raise ProcessValidationError(
@@ -315,7 +339,11 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # MDK Report error if constraint 63 is used with old vacuum model
     if (
-        data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 63
+        data.numerics.icc[
+            : data.numerics.n_equality_constraints
+            + data.numerics.n_inequality_constraints
+        ]
+        == 63
     ).any() and data.vacuum.i_vacuum_pumping != "simple":
         raise ProcessValidationError(
             "Constraint 63 is requested without the correct vacuum model (simple)"
@@ -360,7 +388,7 @@ def check_process(inputs, data):  # noqa: ARG001
     # As the current density is now calculated from b_plasma_toroidal_on_axis
     # without constraint 10
 
-    if (data.numerics.ixc[: data.numerics.nvar] == 12).any():
+    if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 12).any():
         raise ProcessValidationError(
             "The 1/R toroidal B field dependency constraint is being depreciated"
         )
@@ -414,8 +442,8 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
         if (
-            data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION
-            and (data.numerics.ixc[: data.numerics.nvar] == 4).any()
+            data.numerics.i_process_run_mode == PROCESSRunMode.OPTIMISATION
+            and (data.numerics.ixc[: data.numerics.n_iteration_variables] == 4).any()
             and data.numerics.boundl[3] < data.physics.temp_plasma_pedestal_kev * 1.001
         ):
             logger.warning(
@@ -488,12 +516,16 @@ def check_process(inputs, data):  # noqa: ARG001
         # (nd_plasma_electron_on_axis>nd_plasma_pedestal_electron)
         #  -> Potential hollowed density profile
         if (
-            data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION
+            data.numerics.i_process_run_mode == PROCESSRunMode.OPTIMISATION
             and not (
-                data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 81
+                data.numerics.icc[
+                    : data.numerics.n_equality_constraints
+                    + data.numerics.n_inequality_constraints
+                ]
+                == 81
             ).any()
         ):
-            if (data.numerics.ixc[: data.numerics.nvar] == 145).any():
+            if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 145).any():
                 logger.warning(
                     "nd_plasma_pedestal_electron set with"
                     " f_nd_plasma_pedestal_greenwald"
@@ -501,7 +533,7 @@ def check_process(inputs, data):  # noqa: ARG001
                     " eq 81 (nd_plasma_pedestal_electron<nd_plasma_electron_on_axis)",
                     stacklevel=2,
                 )
-            if (data.numerics.ixc[: data.numerics.nvar] == 6).any():
+            if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 6).any():
                 logger.warning(
                     "nd_plasma_electrons_vol_avg used as iteration variable without"
                     " constraint 81"
@@ -511,16 +543,26 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Cannot use Psep/R and PsepB/qAR limits at the same time
     if (
-        data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 68
+        data.numerics.icc[
+            : data.numerics.n_equality_constraints
+            + data.numerics.n_inequality_constraints
+        ]
+        == 68
     ).any() and (
-        data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 56
+        data.numerics.icc[
+            : data.numerics.n_equality_constraints
+            + data.numerics.n_inequality_constraints
+        ]
+        == 56
     ).any():
         raise ProcessValidationError(
             "Cannot use Psep/R and PsepB/qAR constraint equations at the same time"
         )
 
     # if lower bound of f_nd_plasma_pedestal_greenwald < f_nd_plasma_separatrix_greenwald
-    if (data.numerics.ixc[: data.numerics.nvar] == 145).any() and data.numerics.boundl[
+    if (
+        data.numerics.ixc[: data.numerics.n_iteration_variables] == 145
+    ).any() and data.numerics.boundl[
         144
     ] < data.physics.f_nd_plasma_separatrix_greenwald:
         raise ProcessValidationError(
@@ -530,10 +572,16 @@ def check_process(inputs, data):  # noqa: ARG001
             f_nd_plasma_separatrix_greenwald=data.physics.f_nd_plasma_separatrix_greenwald,
         )
 
-    if (data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 78).any():
+    if (
+        data.numerics.icc[
+            : data.numerics.n_equality_constraints
+            + data.numerics.n_inequality_constraints
+        ]
+        == 78
+    ).any():
         # If Reinke criterion is used temp_plasma_separatrix_kev is calculated and
         # cannot be an iteration variable
-        if (data.numerics.ixc[: data.numerics.nvar] == 119).any():
+        if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 119).any():
             raise ProcessValidationError(
                 "REINKE IMPURITY MODEL: temp_plasma_separatrix_kev is calculated and "
                 "cannot be an iteration variable for the Reinke model"
@@ -543,7 +591,11 @@ def check_process(inputs, data):  # noqa: ARG001
         # using Martin scaling for consistency
         if (data.physics.i_l_h_threshold != 6) or (
             not (
-                data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 15
+                data.numerics.icc[
+                    : data.numerics.n_equality_constraints
+                    + data.numerics.n_inequality_constraints
+                ]
+                == 15
             ).any()
             and data.physics.i_plasma_pedestal
         ):
@@ -613,7 +665,7 @@ def check_process(inputs, data):  # noqa: ARG001
 
             # Check if conductor upper limit is properly set to 50 K or below
             if (
-                data.numerics.ixc[: data.numerics.nvar] == 20
+                data.numerics.ixc[: data.numerics.n_iteration_variables] == 20
             ).any() and data.numerics.boundu[19] < 273.15:
                 raise ProcessValidationError(
                     "Too low CP conductor temperature (temp_cp_average)."
@@ -648,7 +700,7 @@ def check_process(inputs, data):  # noqa: ARG001
 
             # Check if conductor upper limit is properly set to 50 K or below
             if (
-                data.numerics.ixc[: data.numerics.nvar] == 20
+                data.numerics.ixc[: data.numerics.n_iteration_variables] == 20
             ).any() and data.numerics.boundu[19] > 50.0:
                 raise ProcessValidationError(
                     "Too large CP conductor temperature (temp_cp_average). Upper limit"
@@ -681,7 +733,11 @@ def check_process(inputs, data):  # noqa: ARG001
         if (
             data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM
             and (
-                data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 85
+                data.numerics.icc[
+                    : data.numerics.n_equality_constraints
+                    + data.numerics.n_inequality_constraints
+                ]
+                == 85
             ).any()
             and data.physics.itart == 1
         ):
@@ -702,7 +758,7 @@ def check_process(inputs, data):  # noqa: ARG001
         # Checking the CP TF top radius
         if (
             abs(data.build.r_cp_top) > 0
-            or (data.numerics.ixc[: data.numerics.nvar] == 174).any()
+            or (data.numerics.ixc[: data.numerics.n_iteration_variables] == 174).any()
         ) and data.build.i_r_cp_top != 1:
             raise ProcessValidationError(
                 "To set the TF CP top value, you must use i_r_cp_top = 1"
@@ -754,7 +810,11 @@ def check_process(inputs, data):  # noqa: ARG001
 
         # Constraint 10 is dedicated to ST designs with demountable joints
         if (
-            data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 10
+            data.numerics.icc[
+                : data.numerics.n_equality_constraints
+                + data.numerics.n_inequality_constraints
+            ]
+            == 10
         ).any():
             raise ProcessValidationError(
                 "Constraint equation 10 (CP lifetime) to used with ST desing (itart=1)"
@@ -775,9 +835,9 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         (
             not (
-                (data.numerics.ixc[: data.numerics.nvar] == 16).any()
-                or (data.numerics.ixc[: data.numerics.nvar] == 29).any()
-                or (data.numerics.ixc[: data.numerics.nvar] == 42).any()
+                (data.numerics.ixc[: data.numerics.n_iteration_variables] == 16).any()
+                or (data.numerics.ixc[: data.numerics.n_iteration_variables] == 29).any()
+                or (data.numerics.ixc[: data.numerics.n_iteration_variables] == 42).any()
             )
         )  # No dr_bore,dr_cs_tf_gap, dr_cs iteration
         and (
@@ -791,10 +851,18 @@ def check_process(inputs, data):  # noqa: ARG001
         )  # dr_bore + dr_cs_tf_gap + dr_cs = 0
         and (
             (
-                data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 31
+                data.numerics.icc[
+                    : data.numerics.n_equality_constraints
+                    + data.numerics.n_inequality_constraints
+                ]
+                == 31
             ).any()
             or (
-                data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 32
+                data.numerics.icc[
+                    : data.numerics.n_equality_constraints
+                    + data.numerics.n_inequality_constraints
+                ]
+                == 32
             ).any()
         )  # Stress constraints (31 or 32) is used
         and (
@@ -969,7 +1037,7 @@ def check_process(inputs, data):  # noqa: ARG001
     # is large enough
     # To contains the insulation, cooling and the support structure
     # Rem : Only verified if the WP thickness is used
-    if (data.numerics.ixc[: data.numerics.nvar] == 140).any():
+    if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 140).any():
         # Minimal WP thickness
         if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             dr_tf_wp_min = 2.0 * (
@@ -980,7 +1048,7 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
             # Steel conduit thickness (can be an iteration variable)
-            if (data.numerics.ixc[: data.numerics.nvar] == 58).any():
+            if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 58).any():
                 dr_tf_wp_min += 2.0 * data.numerics.boundl[57]
             else:
                 dr_tf_wp_min += 2.0 * data.tfcoil.dx_tf_turn_steel
@@ -1166,7 +1234,11 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Cannot use temperature margin constraint with REBCO TF coils
     if (
-        data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 36
+        data.numerics.icc[
+            : data.numerics.n_equality_constraints
+            + data.numerics.n_inequality_constraints
+        ]
+        == 36
     ).any() and (
         SuperconductorModel(data.tfcoil.i_tf_sc_mat).sc_type
         == SuperconductorMaterial.REBCO
@@ -1177,7 +1249,11 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Cannot use temperature margin constraint with REBCO CS coils
     if (
-        data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 60
+        data.numerics.icc[
+            : data.numerics.n_equality_constraints
+            + data.numerics.n_inequality_constraints
+        ]
+        == 60
     ).any() and data.pf_coil.i_cs_superconductor == 8:
         raise ProcessValidationError(
             "turn off CS temperature margin constraint icc = 60 when using REBCO"
@@ -1189,7 +1265,11 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Cannot use TF coil strain limit if i_str_wp is off:
     if (
-        data.numerics.icc[: data.numerics.neqns + data.numerics.nineqns] == 88
+        data.numerics.icc[
+            : data.numerics.n_equality_constraints
+            + data.numerics.n_inequality_constraints
+        ]
+        == 88
     ).any() and data.tfcoil.i_str_wp == 0:
         raise ProcessValidationError("Can't use constraint 88 if i_strain_tf == 0")
 
@@ -1202,11 +1282,16 @@ def set_active_constraints(data: DataStructure):
             data.numerics.active_constraints[data.numerics.icc[i] - 1] = True
             num_constraints += 1
 
-    if data.numerics.neqns < 0:
-        # The value of neqns has not been set in the input file.  Default = 0.
-        data.numerics.neqns = num_constraints - data.numerics.nineqns
+    if data.numerics.n_equality_constraints < 0:
+        # The value of n_equality_constraints has not been set in the input file.
+        # Default = 0.
+        data.numerics.n_equality_constraints = (
+            num_constraints - data.numerics.n_inequality_constraints
+        )
     else:
-        data.numerics.nineqns = num_constraints - data.numerics.neqns
+        data.numerics.n_inequality_constraints = (
+            num_constraints - data.numerics.n_equality_constraints
+        )
 
 
 def set_device_type(data: DataStructure):

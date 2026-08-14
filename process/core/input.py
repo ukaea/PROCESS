@@ -15,7 +15,7 @@ from process.core.exceptions import (
 )
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
-from process.data_structure.numerics import IPNVARS
+from process.data_structure.numerics import N_ITERATION_VARIABLES_MAX
 from process.data_structure.pfcoil_variables import N_PF_GROUPS_MAX
 from process.data_structure.physics_variables import N_CONFINEMENT_SCALINGS
 from process.data_structure.scan_variables import IPNSCNS, IPNSCNV
@@ -37,8 +37,8 @@ logger = logging.getLogger(__name__)
 def _ixc_additional_actions(
     _name, value: int, _array_index, _config, data: DataStructure
 ):
-    data.numerics.ixc[data.numerics.nvar] = value
-    data.numerics.nvar += 1
+    data.numerics.ixc[data.numerics.n_iteration_variables] = value
+    data.numerics.n_iteration_variables += 1
 
 
 def _icc_additional_actions(
@@ -146,17 +146,17 @@ class InputVariable:
 
 INPUT_VARIABLES = {
     "runtitle": InputVariable("globals", str),
-    "ioptimz": InputVariable("numerics", int, choices=[1, -2]),
+    "i_process_run_mode": InputVariable("numerics", int, choices=[1, -2]),
     "epsvmc": InputVariable("numerics", float, range=(0.0, 1.0)),
     "boundl": InputVariable("numerics", float, array=True),
     "boundu": InputVariable("numerics", float, array=True),
     "epsfcn": InputVariable("numerics", float, range=(0.0, 1.0)),
     "maxcal": InputVariable("globals", int, range=(0, 10000)),
-    "minmax": InputVariable("numerics", int),
-    "neqns": InputVariable(
+    "i_figure_merit": InputVariable("numerics", int),
+    "n_equality_constraints": InputVariable(
         "numerics", int, range=(0, ConstraintManager.num_constraints())
     ),
-    "nineqns": InputVariable(
+    "n_inequality_constraints": InputVariable(
         "numerics", int, range=(0, ConstraintManager.num_constraints())
     ),
     "alphaj": InputVariable("physics", float, range=(0.0, 10.0)),
@@ -1160,7 +1160,7 @@ INPUT_VARIABLES = {
     "ixc": InputVariable(
         None,
         int,
-        range=(1, IPNVARS),
+        range=(1, N_ITERATION_VARIABLES_MAX),
         additional_actions=_ixc_additional_actions,
         set_variable=False,
     ),
@@ -1196,7 +1196,7 @@ def parse_input_file(data_structure_obj: DataStructure):
     """
     # These get incremented when reading the file, so need
     # to ensure they are 0 before we parse the file
-    data_structure_obj.numerics.nvar = 0
+    data_structure_obj.numerics.n_iteration_variables = 0
     data_structure_obj.numerics.n_constraints = 0
 
     input_file_path = (

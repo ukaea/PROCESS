@@ -42,7 +42,7 @@ class SolverOutputCondition(IntEnum):
 
 class PROCESSRunMode(IntEnum):
     """Enumeration of the available PROCESS run modes, which determine the behaviour
-    of the code in various places. This is controlled by the `ioptimz` variable
+    of the code in various places. This is controlled by the `i_process_run_mode` variable
     """
 
     EVALUATION = (-2, "Evaluation mode (no optimisation)")
@@ -135,11 +135,11 @@ class FiguresOfMerit(IntEnum):
         return self._description_
 
 
-IPNVARS = max(ITERATION_VARIABLES.keys())
+N_ITERATION_VARIABLES_MAX = max(ITERATION_VARIABLES.keys())
 """total number of variables available for iteration"""
 
 # Set to a really large number so that it should never need to be changed
-IPEQNS = 500
+N_CONSTRAINT_EQUATIONS_MAX = 500
 """Maximum number of constraint equations available"""
 
 
@@ -147,25 +147,23 @@ IPEQNS = 500
 class NumericsData:
     """Dataclass holding numerics variables"""
 
-    ioptimz: int = 1
-    """Code operation switch:
-    * -2 for evaluation mode (i.e. no optimisation)
-    * 1 for optimisation mode (e.g. via VMCON)
+    i_process_run_mode: int = 1
+    """PROCESS run mode (see `PROCESSRunMode` for descriptions)
     """
 
-    minmax: int = 7
+    i_figure_merit: int = 7
     """
     Switch for figure-of-merit (see `FiguresOfMerit` for descriptions)
     negative => maximise, positive => minimise
     """
 
     n_constraints: int = 0
-    """Total number of constraints (neqns + nineqns)"""
+    """Total number of constraints (n_equality_constraints + n_inequality_constraints)"""
 
-    ncalls: int = 0
+    n_model_calls: int = 0
     """number of function calls during solution"""
 
-    neqns: int = -1
+    n_equality_constraints: int = -1
     """number of equality constraints to be satisfied"""
 
     nfev1: int = 0
@@ -174,20 +172,24 @@ class NumericsData:
     nfev2: int = 0
     """number of calls to FCNVMC1 (VMCON function caller) made"""
 
-    nineqns: int = 0
+    n_inequality_constraints: int = 0
     """number of inequality constraints VMCON must satisfy
     (leave at zero for now)
     """
 
-    nvar: int = 0
+    n_iteration_variables: int = 0
     """number of iteration variables to use"""
 
-    nviter: int = 0
+    n_solver_iterations: int = 0
     """number of optimisation iterations performed"""
 
-    icc: list[int] = field(default_factory=lambda: np.array([0] * IPEQNS))
+    icc: list[int] = field(
+        default_factory=lambda: np.array([0] * N_CONSTRAINT_EQUATIONS_MAX)
+    )
 
-    active_constraints: list[bool] = field(default_factory=lambda: [False] * IPEQNS)
+    active_constraints: list[bool] = field(
+        default_factory=lambda: [False] * N_CONSTRAINT_EQUATIONS_MAX
+    )
     """Logical array showing which constraints are active"""
 
     # TODO Do not change the comments for lablcc: they are used to create the
@@ -391,12 +393,14 @@ class NumericsData:
     * (92) D/T/He3 ratio in fuel sums to 1
     """
 
-    ixc: list[int] = field(default_factory=lambda: np.array([0] * IPNVARS))
+    ixc: list[int] = field(
+        default_factory=lambda: np.array([0] * N_ITERATION_VARIABLES_MAX)
+    )
     """Array defining which iteration variables to activate
     (see lablxc for descriptions)
     """
 
-    lablxc: list[str] = field(default_factory=lambda: [""] * IPNVARS)
+    lablxc: list[str] = field(default_factory=lambda: [""] * N_ITERATION_VARIABLES_MAX)
     """Labels describing iteration variables<UL>
     * ( 1) aspect
     * ( 2) b_plasma_toroidal_on_axis
@@ -577,7 +581,7 @@ class NumericsData:
     # WARNING These labels are used as variable names by new_indat(), and possibly
     # other python utilities, so they cannot easily be changed.
 
-    name_xc: list[str] = field(default_factory=lambda: [""] * IPNVARS)
+    name_xc: list[str] = field(default_factory=lambda: [""] * N_ITERATION_VARIABLES_MAX)
 
     sqsumsq: float = 0.0
     """sqrt of the sum of the square of the constraint residuals"""
@@ -594,43 +598,61 @@ class NumericsData:
     epsvmc: float = 1.0e-6
     """Error tolerance for optimiser"""
 
-    boundl: list[float] = field(default_factory=lambda: np.array([9.0e-99] * IPNVARS))
+    boundl: list[float] = field(
+        default_factory=lambda: np.array([9.0e-99] * N_ITERATION_VARIABLES_MAX)
+    )
     """Lower bounds used on ixc variables during
     optimisation runs
     """
 
-    boundu: list[float] = field(default_factory=lambda: np.array([9.0e99] * IPNVARS))
+    boundu: list[float] = field(
+        default_factory=lambda: np.array([9.0e99] * N_ITERATION_VARIABLES_MAX)
+    )
     """Upper bounds used on ixc variables"""
 
     itv_scaled_lower_bounds: list[float] = field(
-        default_factory=lambda: np.array([0.0] * IPNVARS)
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
     )
     """Lower bound of the ixc variables scaled to (divided by)
     the initial value of the corresponding ixc
     """
 
     itv_scaled_upper_bounds: list[float] = field(
-        default_factory=lambda: np.array([0.0] * IPNVARS)
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
     )
     """Upper bound of the ixc variables scaled to (divided by)
     the initial value of the corresponding ixc
     """
 
-    rcm: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    rcm: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
 
-    resdl: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    resdl: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
 
-    scafc: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    scafc: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
     """The initial value of each ixc variable"""
 
-    scale: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    scale: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
     """The reciprocal of the initial value of each ixc variable"""
 
-    xcm: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    xcm: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
 
-    xcs: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    xcs: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
 
-    vlam: list[float] = field(default_factory=lambda: np.array([0.0] * IPNVARS))
+    vlam: list[float] = field(
+        default_factory=lambda: np.array([0.0] * N_ITERATION_VARIABLES_MAX)
+    )
 
     force_vmcon_inequality_satisfication: int = 1
     """If 1, adds an additional convergence criteria to the VMCON solver

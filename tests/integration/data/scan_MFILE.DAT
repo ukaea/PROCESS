@@ -17,9 +17,9 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
- Optimisation_switch_____________________________________________________ (ioptimz)_____________________              1    
- Figure_of_merit_switch__________________________________________________ (minmax)______________________              1    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
+ Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
+ Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      8.4149E-09 OP 
  VMCON_convergence_parameter_____________________________________________ (convergence_parameter)_______      1.4624E-09 OP 
  Number_of_VMCON_iterations______________________________________________ (nviter)______________________             68 OP 
@@ -1012,9 +1012,9 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
- Optimisation_switch_____________________________________________________ (ioptimz)_____________________              1    
- Figure_of_merit_switch__________________________________________________ (minmax)______________________              1    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
+ Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
+ Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      2.9283E-09 OP 
  VMCON_convergence_parameter_____________________________________________ (convergence_parameter)_______      5.0653E-09 OP 
  Number_of_VMCON_iterations______________________________________________ (nviter)______________________              5 OP 
@@ -2007,9 +2007,9 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
- Optimisation_switch_____________________________________________________ (ioptimz)_____________________              1    
- Figure_of_merit_switch__________________________________________________ (minmax)______________________              1    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
+ Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
+ Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      2.9329E-09 OP 
  VMCON_convergence_parameter_____________________________________________ (convergence_parameter)_______      5.0396E-09 OP 
  Number_of_VMCON_iterations______________________________________________ (nviter)______________________              5 OP 
@@ -3002,9 +3002,9 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
- Optimisation_switch_____________________________________________________ (ioptimz)_____________________              1    
- Figure_of_merit_switch__________________________________________________ (minmax)______________________              1    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
+ Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
+ Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      2.9515E-09 OP 
  VMCON_convergence_parameter_____________________________________________ (convergence_parameter)_______      5.0186E-09 OP 
  Number_of_VMCON_iterations______________________________________________ (nviter)______________________              5 OP 
@@ -3997,9 +3997,9 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
- Optimisation_switch_____________________________________________________ (ioptimz)_____________________              1    
- Figure_of_merit_switch__________________________________________________ (minmax)______________________              1    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
+ Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
+ Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      2.9861E-09 OP 
  VMCON_convergence_parameter_____________________________________________ (convergence_parameter)_______      5.0194E-09 OP 
  Number_of_VMCON_iterations______________________________________________ (nviter)______________________              5 OP 
@@ -4992,9 +4992,9 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
- Optimisation_switch_____________________________________________________ (ioptimz)_____________________              1    
- Figure_of_merit_switch__________________________________________________ (minmax)______________________              1    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
+ Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
+ Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      3.0397E-09 OP 
  VMCON_convergence_parameter_____________________________________________ (convergence_parameter)_______      5.0474E-09 OP 
  Number_of_VMCON_iterations______________________________________________ (nviter)______________________              5 OP 
@@ -5987,9 +5987,9 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
- Optimisation_switch_____________________________________________________ (ioptimz)_____________________              1    
- Figure_of_merit_switch__________________________________________________ (minmax)______________________              1    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
+ Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
+ Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      3.1174E-09 OP 
  VMCON_convergence_parameter_____________________________________________ (convergence_parameter)_______      5.1102E-09 OP 
  Number_of_VMCON_iterations______________________________________________ (nviter)______________________              5 OP 
@@ -6982,9 +6982,9 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
- Optimisation_switch_____________________________________________________ (ioptimz)_____________________              1    
- Figure_of_merit_switch__________________________________________________ (minmax)______________________              1    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
+ Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
+ Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      3.2269E-09 OP 
  VMCON_convergence_parameter_____________________________________________ (convergence_parameter)_______      5.2193E-09 OP 
  Number_of_VMCON_iterations______________________________________________ (nviter)______________________              5 OP 
@@ -7977,9 +7977,9 @@
  VMCON_error_flag________________________________________________________ (ifail)_______________________              1    
  # PROCESS found a feasible solution #
  Number_of_iteration_variables___________________________________________ (nvar)________________________             40    
- Number_of_constraints_(total)___________________________________________ (neqns+nineqns)_______________             24    
- Optimisation_switch_____________________________________________________ (ioptimz)_____________________              1    
- Figure_of_merit_switch__________________________________________________ (minmax)______________________              1    
+ Number_of_constraints_(total)___________________________________________ (n_equality_constraints+nineqns)_______________             24    
+ Optimisation_switch_____________________________________________________ (i_process_run_mode)_____________________              1    
+ Figure_of_merit_switch__________________________________________________ (i_figure_merit)______________________              1    
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals___________ (sqsumsq)_____________________      3.3800E-09 OP 
  VMCON_convergence_parameter_____________________________________________ (convergence_parameter)_______      5.3917E-09 OP 
  Number_of_VMCON_iterations______________________________________________ (nviter)______________________              5 OP 
@@ -9196,8 +9196,8 @@ fimp(14) = 5e-05
 
 *---------------------Numerics---------------------*
 
-ioptimz  = 1 * for optimisation VMCON only
-minmax   = 1 * Switch for figure-of-merit (see lablmm for descriptions)
+i_process_run_mode  = 1 * for optimisation VMCON only
+i_figure_merit   = 1 * Switch for figure-of-merit (see lablmm for descriptions)
 epsvmc   = 1.0e-8 * Error tolerance for vmcon
 
 *-----------------Pfcoil Variables-----------------*

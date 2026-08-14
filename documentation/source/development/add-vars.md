@@ -128,9 +128,9 @@ Note that you will want to scale the `objective_metric` such that it is of the o
 
 The figure of merit can be selected in the `IN.DAT`:
 ```
-minmax = 20
+i_figure_merit = 20
 ```
-Remember, setting `minmax = -20` would minimise instead of maximise our new variable.
+Remember, setting `i_figure_merit = -20` would minimise instead of maximise our new variable.
 
 -----------------
 

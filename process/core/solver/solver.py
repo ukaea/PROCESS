@@ -193,10 +193,10 @@ class Vmcon(_Solver):
 
         bb = None
         if self.b is not None:
-            bb = np.identity(self.data.numerics.nvar) * self.b
+            bb = np.identity(self.data.numerics.n_iteration_variables) * self.b
 
         def _solver_callback(i: int, _result, _x, convergence_param: float):
-            self.data.numerics.nviter = i + 1
+            self.data.numerics.n_solver_iterations = i + 1
             self.data.globals.convergence_parameter = convergence_param
             print(
                 f"{i + 1} | Convergence Parameter: {convergence_param:.3E}",
@@ -273,7 +273,7 @@ class Vmcon(_Solver):
         except ValueError:
             itervar_name_list = ""
             for count, iter_var in enumerate(
-                self.data.numerics.ixc[: self.data.numerics.nvar]
+                self.data.numerics.ixc[: self.data.numerics.n_iteration_variables]
             ):
                 itervar_name = self.data.numerics.lablxc[iter_var - 1]
                 itervar_name_list += f"{count}: {itervar_name} \n"

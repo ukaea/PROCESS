@@ -9,7 +9,7 @@
 
 *---------------Constraint Equations---------------*
 
-neqns = 0              *No equality constraints
+n_equality_constraints = 0              *No equality constraints
 icc = 16               *Net electric power lower limit
 
 *---------------Iteration Variables----------------*
@@ -23,8 +23,8 @@ runtitle = IFE_001
 p_plant_electric_net_required_mw  = 1000.0     *Required net electric power (MW)
 
 *---------------Numerics Variables-----------------*
-IOPTIMZ   = 1         *Code operation switch (1: for optimisation VMCON only)
-minmax    = 18        *Null FoM, find feasible
+i_process_run_mode   = 1         *Code operation switch (1: for optimisation VMCON only)
+i_figure_merit    = 18        *Null FoM, find feasible
 maxcal    = 100       *Maximum number of solver iterations
 
 

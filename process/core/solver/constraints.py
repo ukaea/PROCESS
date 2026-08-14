@@ -2022,11 +2022,13 @@ def constraints_output(data: DataStructure, solver_name: str):
         "The following equality constraint residues should be close to zero:",
     )
 
-    con1, con2, err, _, lab = constraint_eqns(nums.neqns + nums.nineqns, -1, data)
+    con1, con2, err, _, lab = constraint_eqns(
+        nums.n_equality_constraints + nums.n_inequality_constraints, -1, data
+    )
 
     # Write equality constraints to mfile
     equality_constraint_table = []
-    for i in range(nums.neqns):
+    for i in range(nums.n_equality_constraints):
         name = nums.lablcc[nums.icc[i] - 1]
 
         equality_constraint_table.append([
@@ -2062,7 +2064,7 @@ def constraints_output(data: DataStructure, solver_name: str):
     )
 
     # Write inequality constraints
-    if nums.nineqns > 0:
+    if nums.n_inequality_constraints > 0:
         inequality_constraint_table = []
         # Inequalities not necessarily satisfied when evaluating
         process_output.osubhd(
@@ -2078,8 +2080,8 @@ def constraints_output(data: DataStructure, solver_name: str):
             )
 
         for i in range(
-            nums.neqns,
-            nums.neqns + nums.nineqns,
+            nums.n_equality_constraints,
+            nums.n_equality_constraints + nums.n_inequality_constraints,
         ):
             name = nums.lablcc[nums.icc[i] - 1]
             constraint = ConstraintManager.evaluate_constraint(int(nums.icc[i]), data)

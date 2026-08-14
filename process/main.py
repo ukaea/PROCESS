@@ -433,7 +433,7 @@ class SingleRun:
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
-        n = int(self.data.numerics.nvar)
+        n = int(self.data.numerics.n_iteration_variables)
         # [:n] as array always at max size: contains 0s
         self.data.numerics.ixc[:n].sort()
 
@@ -446,16 +446,18 @@ class SingleRun:
             If invalid ioptimiz value selected
         """
         # TODO Move this solver logic up to init?
-        # ioptimz == 1: optimisation
-        if self.data.numerics.ioptimz == PROCESSRunMode.OPTIMISATION:
+        # i_process_run_mode == 1: optimisation
+        if self.data.numerics.i_process_run_mode == PROCESSRunMode.OPTIMISATION:
             pass
-        elif self.data.numerics.ioptimz == PROCESSRunMode.EVALUATION:
+        # i_process_run_mode == -2: evaluation
+        elif self.data.numerics.i_process_run_mode == PROCESSRunMode.EVALUATION:
             # No optimisation:
             # solve equality (consistency) constraints only using fsolve (HYBRD)
             self.solver = "fsolve"
         else:
             raise ValueError(
-                f"Invalid ioptimz value: {self.data.numerics.ioptimz}. Please "
+                f"Invalid i_process_run_mode value: "
+                f"{self.data.numerics.i_process_run_mode}. Please "
                 "select either 1 (optimise) or -2 (no optimisation)."
             )
         self.scan = Scan(self.models, self.solver, self.data)
