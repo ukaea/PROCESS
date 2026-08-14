@@ -196,7 +196,7 @@ class ElectronDensityProfile(Profile):
 
         if nd_on_axis < nd_pedestal:
             logger.info(
-                "NPROFILE: density pedestal is higher than core density. %s, %s",
+                "NPROFILE: Pedestal density is higher than core density. %s, %s",
                 nd_pedestal,
                 nd_on_axis,
             )
@@ -346,7 +346,7 @@ class ElectronDensityProfile(Profile):
 
 
 class ElectronTemperatureProfile(Profile):
-    """Electron temperature profile class. Contains a function to calculate the
+    """Electron temperature (Tₑ) profile class. Contains a function to calculate the
     temperature profile and store the data.
     """
 
@@ -357,13 +357,13 @@ class ElectronTemperatureProfile(Profile):
         self.calculate_profile_dx()
         self.set_physics_variables()
         self.calculate_profile_y(
-            self.profile_x,
-            self.data.physics.radius_plasma_pedestal_temp_norm,
-            self.data.physics.temp_plasma_electron_on_axis_kev,
-            self.data.physics.temp_plasma_pedestal_kev,
-            self.data.physics.temp_plasma_separatrix_kev,
-            self.data.physics.alphat,
-            self.data.physics.tbeta,
+            rho=self.profile_x,
+            radius_plasma_pedestal_temp_norm=self.data.physics.radius_plasma_pedestal_temp_norm,
+            temp_on_axis_kev=self.data.physics.temp_plasma_electron_on_axis_kev,
+            temp_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
+            temp_separatrix_kev=self.data.physics.temp_plasma_separatrix_kev,
+            alphat=self.data.physics.alphat,
+            tbeta=self.data.physics.tbeta,
         )
         self.integrate_profile_y()
 
@@ -371,31 +371,29 @@ class ElectronTemperatureProfile(Profile):
         self,
         rho: np.array,
         radius_plasma_pedestal_temp_norm: float,
-        t0: float,
-        temp_plasma_pedestal_kev: float,
-        temp_plasma_separatrix_kev: float,
+        temp_on_axis_kev: float,
+        temp_pedestal_kev: float,
+        temp_separatrix_kev: float,
         alphat: float,
         tbeta: float,
-    ):
-        """Calculates the temperature at a normalised minor radius position rho for a
-        pedestalised profile (teprofile).
-        If i_plasma_pedestal = 0 the original parabolic profile form is used instead.
+    ) -> None:
+        """Calculates the temperature at each normalised minor radius (ρ) position.
 
         Parameters
         ----------
-        rho : np.array
-            Normalised minor radius.
-        radius_plasma_pedestal_temp_norm : float
-            Normalised minor radius pedestal position.
-        t0 : float
-            Central temperature (keV).
-        temp_plasma_pedestal_kev : float
-            Pedestal temperature (keV).
-        temp_plasma_separatrix_kev : float
-            Separatrix temperature (keV).
-        alphat : float
-            Temperature peaking parameter.
-        tbeta : float
+        rho :
+            Normalised minor radius (ρ) vector
+        radius_plasma_pedestal_temp_norm :
+            Normalised minor radius pedestal position (ρₜ,pedestal).
+        temp_on_axis_kev :
+            Central on-axis temperature (T₀) [keV].
+        temp_pedestal_kev :
+            Pedestal temperature (T_pedestal) [keV].
+        temp_separatrix_kev :
+            Separatrix temperature (T_separatrix) [keV].
+        alphat :
+            Temperature peaking parameter (αₜ).
+        tbeta :
             Second temperature exponent.
 
         Raises
@@ -403,12 +401,7 @@ class ElectronTemperatureProfile(Profile):
         ProcessValueError
             If negative temperature in plasma profile
 
-        References
-        ----------
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor
-            Studies. Fusion Science and Technology, 59(2), 308-349.
-            https://doi.org/10.13182/FST11-A11650
-        """
+        """  # noqa: RUF002
         if (
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
@@ -416,25 +409,25 @@ class ElectronTemperatureProfile(Profile):
             # profile values of 0 cause divide by 0 errors so ensure the profile value
             # is at least 1e-8
             # which is small enough that it won't make a difference to any calculations
-            self.profile_y = np.maximum(t0 * (1 - rho**2) ** alphat, 1e-8)
+            self.profile_y = np.maximum(temp_on_axis_kev * (1 - rho**2) ** alphat, 1e-8)
             return
 
-        if t0 < temp_plasma_pedestal_kev:
+        if temp_on_axis_kev < temp_pedestal_kev:
             logger.info(
-                "TPROFILE: temperature pedestal is higher than core temperature. %s, %s",
-                temp_plasma_pedestal_kev,
-                t0,
+                "TPROFILE: Pedestal temperature is higher than core temperature. %s, %s",
+                temp_pedestal_kev,
+                temp_on_axis_kev,
             )
 
         rho_index = rho <= radius_plasma_pedestal_temp_norm
         self.profile_y[rho_index] = (
-            temp_plasma_pedestal_kev
-            + (t0 - temp_plasma_pedestal_kev)
+            temp_pedestal_kev
+            + (temp_on_axis_kev - temp_pedestal_kev)
             * (1 - (rho[rho_index] / radius_plasma_pedestal_temp_norm) ** tbeta)
             ** alphat
         )
-        self.profile_y[~rho_index] = temp_plasma_separatrix_kev + (
-            temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
+        self.profile_y[~rho_index] = temp_separatrix_kev + (
+            temp_pedestal_kev - temp_separatrix_kev
         ) * (1 - rho[~rho_index]) / (1 - radius_plasma_pedestal_temp_norm)
 
         # Check for any negative temperature in profile: always fatal in
