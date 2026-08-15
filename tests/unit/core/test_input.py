@@ -12,7 +12,12 @@ from process.data_structure.numerics import PROCESSRunMode
 
 @pytest.fixture
 def data_structure_obj():
-    return DataStructure()
+    data = DataStructure()
+    # These parser tests run init_process on minimal input snippets; give the
+    # scaffold a valid TF thickness so configuration validation (which rejects
+    # a zero-thickness superconducting TF) does not reject the scaffold.
+    data.build.dr_tf_inboard = 1.0
+    return data
 
 
 def _create_input_file(directory, content: str):
