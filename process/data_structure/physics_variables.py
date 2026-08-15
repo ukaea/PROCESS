@@ -1078,6 +1078,9 @@ class PhysicsData:
     pden_plasma_core_rad_mw: float = 0.0
     """total core radiation power per volume (MW/m3)"""
 
+    pden_plasma_core_rad_tauE_mw: float = 0.0
+    """reduced total core radiation power for tauE calculation (MW/m3)"""
+
     p_dd_total_mw: float = 0.0
     """deuterium-deuterium fusion power (MW)"""
 

@@ -18,6 +18,7 @@ from process.data_structure.physics_variables import (
     PlasmaIgnitionModel,
 )
 from process.models.physics.plasma_geometry import PlasmaGeom
+from process.models.physics import impurity_radiation
 
 logger = logging.getLogger(__name__)
 
@@ -166,8 +167,16 @@ class PlasmaConfinementTime(Model):
         try:
             model = ConfinementRadiationLossModel(int(self.data.physics.i_rad_loss))
 
+            # pden_plasma_core_rad_mw was reduced here, but if full radiation, not used!
+            # rad_reduction_for_tauE_only option allows full radiation model in PPB,
+            # but reduced radiation here in confinement time calculation
             if model == ConfinementRadiationLossModel.FULL_RADIATION:
-                p_plasma_loss_mw -= self.data.physics.pden_plasma_rad_mw * vol_plasma
+                if impurity_radiation.rad_reduction_for_tauE_only:
+                    # Reduced rad
+                    p_plasma_loss_mw -= pden_plasma_core_rad_mw * vol_plasma
+                else:
+                    # Not reduced rad
+                    p_plasma_loss_mw -= self.data.physics.pden_plasma_rad_mw * vol_plasma
             elif model == ConfinementRadiationLossModel.CORE_ONLY:
                 p_plasma_loss_mw -= pden_plasma_core_rad_mw * vol_plasma
             # NO_RADIATION: do not adjust p_plasma_loss_mw for radiation

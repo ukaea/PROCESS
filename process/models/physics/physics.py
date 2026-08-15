@@ -751,6 +751,9 @@ class Physics(Model):
         self.data.physics.pden_plasma_core_rad_mw = radpwrdata.pden_plasma_core_rad_mw
         self.data.physics.pden_plasma_outer_rad_mw = radpwrdata.pden_plasma_outer_rad_mw
         self.data.physics.pden_plasma_rad_mw = radpwrdata.pden_plasma_rad_mw
+        self.data.physics.pden_plasma_core_rad_tauE_mw = (
+            radpwrdata.pden_plasma_core_rad_tauE_mw
+        )
 
         self.data.physics.p_plasma_sync_mw = (
             self.data.physics.pden_plasma_sync_mw * self.data.physics.vol_plasma
@@ -871,6 +874,10 @@ class Physics(Model):
 
         # Calculate transport losses and energy confinement time using the
         # chosen scaling law
+        # Reduce pden to effectively modify the highly radiative regime confinement
+        # time scaling
+        reduced_pden = self.data.physics.pden_plasma_core_rad_tauE_mw
+
         confinement_time_data = self.confinement.calculate_confinement_time(
             m_fuel_amu=self.data.physics.m_fuel_amu,
             p_alpha_total_mw=self.data.physics.p_alpha_total_mw,
@@ -887,7 +894,7 @@ class Physics(Model):
             p_non_alpha_charged_mw=self.data.physics.p_non_alpha_charged_mw,
             p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
             plasma_current=self.data.physics.plasma_current,
-            pden_plasma_core_rad_mw=self.data.physics.pden_plasma_core_rad_mw,
+            pden_plasma_core_rad_mw=reduced_pden,
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
             temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
