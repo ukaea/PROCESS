@@ -758,8 +758,11 @@ class PlasmaCurrent(Model):
         'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
         1729-1738. https://doi.org/10.13182/FST92-A29971
         """
-        # Transform q95 to qbar
-        qbar = q95 * 1.3e0 * (1.0e0 - (1.0 / aspect)) ** 0.6e0
+        # Transform q95 to qbar by inverting q95 = 1.3 * qbar * (1 - eps)^0.6
+        # (Peng, Galambos & Shipe 1992). Prior to #3320 the input safety factor
+        # was interpreted as qbar directly and q95 was derived from it with the
+        # forward relation above.
+        qbar = q95 / (1.3e0 * (1.0e0 - (1.0 / aspect)) ** 0.6e0)
 
         ff1, ff2, d1, d2 = self.plascar_bpol(
             aspect=aspect, eps=(1.0 / aspect), kappa=kappa, triang=triang
