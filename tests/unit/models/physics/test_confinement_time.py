@@ -1,5 +1,6 @@
 import pytest
 
+from process.data_structure.physics_variables import ConfinementTimeModel
 from process.models.physics.confinement_time import PlasmaConfinementTime
 
 
@@ -272,3 +273,23 @@ def test_confinement_time(func, args, expected):
 def test_calculate_double_and_triple_product(func, args, expected):
     result = func(*args)
     assert result == pytest.approx(expected)
+
+
+def test_confinement_time_model_values_are_unique():
+    """Every scaling must have its own switch value.
+
+    Guards against a repeat of NCST and PAZ_SOLDAN_NT both being assigned 51,
+    which made PAZ_SOLDAN_NT a silent alias of NCST (selecting
+    i_confinement_time=51 dispatched to the NCST scaling and the Paz-Soldan
+    scaling was unselectable).
+    """
+    values = [model.value for model in ConfinementTimeModel]
+    assert len(values) == len(set(values))
+
+
+def test_ncst_and_paz_soldan_are_distinct_models():
+    assert ConfinementTimeModel.NCST is not ConfinementTimeModel.PAZ_SOLDAN_NT
+    assert ConfinementTimeModel(51) is ConfinementTimeModel.NCST
+    # 52 matches the documented switch value in
+    # documentation/source/physics-models/plasma_confinement.md
+    assert ConfinementTimeModel(52) is ConfinementTimeModel.PAZ_SOLDAN_NT
