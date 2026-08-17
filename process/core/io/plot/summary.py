@@ -9375,24 +9375,53 @@ def plot_midplane_near_sol_radial_profile(axis: plt.Axes, mfile: MFile, scan: in
             r=r,
         )
     )
-
-    axis.axvline(
-        x=rmajor + rminor + len_plasma_sol_power_decay,
-        color="k",
-        linestyle="--",
-        label=r"$\lambda_q$",
-    )
-
-    axis.set_xlim([
-        rmajor + rminor,
-        (rmajor + rminor) + (3 * len_plasma_sol_power_decay),
-    ])
+    
     axis.plot(r, radial_profile)
     axis.grid()
-    axis.legend()
-    axis.set_title(r"Upstream Near SOL $q_{\parallel}$ Radial Profile")
+    axis.set_title(r"Midplane Near SOL Radial Profile")
     axis.set_xlabel("Radial Position [m]")
-    axis.set_ylabel(r"$q_{\parallel}$ [MW/m$^2$]")
+    axis.set_ylabel(r"$q_{||}$ [MW/m$^2$]")
+
+
+def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, scan: int):
+    """Function to plot the Eich target profile at the lower outboard divertor."""
+    rmajor = mfile.get("rmajor", scan=scan)
+    rminor = mfile.get("rminor", scan=scan)
+    len_plasma_sol_power_decay = mfile.get(
+        "len_plasma_sol_eich13_power_decay", scan=scan
+    )
+    f_b_flux_expansion = 5.0
+    r = np.linspace(
+        (rmajor + rminor)- (1.5 * len_plasma_sol_power_decay) * f_b_flux_expansion,
+        (rmajor + rminor) + (3 * len_plasma_sol_power_decay) * f_b_flux_expansion,
+        200,
+    )
+
+    pflux_target_profile = ScrapeOffLayer().calculate_eich_target_heat_flux_profile(
+        rmajor=rmajor,
+        rminor=rminor,
+        pflux_plasma_sol_parallel_mw=mfile.get(
+            "pflux_plasma_outboard_sol_parallel_mw", scan=scan
+        ),
+        len_plasma_sol_power_decay=mfile.get("len_sol_outboard_power_decay", scan=scan),
+        f_b_div_flux_expansion=f_b_flux_expansion,
+        len_plasma_sol_power_spreading=1.5e-3,
+        plux_target_background_heat_flux_mw=0.0,
+        r=r,
+    )
+    peak_idx = np.argmax(pflux_target_profile)
+    peak_r = r[peak_idx]
+    peak_q = pflux_target_profile[peak_idx]
+
+    axis.plot(r, pflux_target_profile)
+    axis.axvline(peak_r, color="black", linestyle="--", linewidth=1)
+    axis.axhline(peak_q, color="black", linestyle="--", linewidth=1)
+    axis.grid()
+    axis.legend()
+    axis.minorticks_on()
+    axis.set_title(r"Lower Outboard Eich Target Heat Flux Profile")
+    axis.set_xlabel("Radial Position [m]")
+    axis.set_ylabel(r"$q_{||,t}$ [MW/m$^2$]")
 
 
 def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=None):
@@ -16778,7 +16807,11 @@ def main_plot(
     )
 
     plot_midplane_near_sol_radial_profile(
-        _add_page("midplane_near_sol_radial_profile").add_subplot(111), m_file, scan
+        _add_page("midplane_near_sol_radial_profile").add_subplot(121), m_file, scan
+    )
+
+    plot_div_lower_outboard_eich_target_profile(
+        pages["midplane_near_sol_radial_profile"].add_subplot(122), m_file, scan
     )
 
     plot_debye_length_profile(
