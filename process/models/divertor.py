@@ -367,24 +367,47 @@ class Divertor(Model):
         # λ_int = λ_q + 1.64 * S
         lambda_int = len_plasma_sol_power_decay + 1.64 * len_plasma_sol_power_spreading
 
-        # Flux angle in the divertor
-        alpha_div = f_div_flux_expansion * deg_b_plasma_outboard_flux_midplane
+        # Flux angle in the divertor as a pitch-like quantity
+        alpha_div = f_div_flux_expansion * math.tan(
+            math.radians(deg_b_plasma_outboard_flux_midplane)
+        )
+
+        if math.isclose(alpha_div, 0.0, abs_tol=1.0e-12):
+            raise ProcessValueError(
+                "Zero divertor flux angle",
+                f_div_flux_expansion=f_div_flux_expansion,
+                deg_b_plasma_outboard_flux_midplane=deg_b_plasma_outboard_flux_midplane,
+            )
+
+        # Flux angle in the divertor for output [degrees]
+        deg_b_div_lower_flux = math.degrees(math.atan(alpha_div))
 
         # Tilt of the separatrix relative to the target in the poloidal plane
-        theta_div = math.asin(
-            (1 + 1 / math.radians(alpha_div) ** 2)
-            * math.sin(math.radians(deg_b_div_lower_outboard_grazing))
+        sin_theta_div = (1.0 + 1.0 / alpha_div**2) * math.sin(
+            math.radians(deg_b_div_lower_outboard_grazing)
         )
+        sin_theta_div = max(-1.0, min(1.0, sin_theta_div))
+        theta_div = math.asin(sin_theta_div)
 
         # Wetted area
         area_wetted = (
-            2 * np.pi * rmajor * lambda_int * f_div_flux_expansion * math.sin(theta_div)
+            2.0
+            * np.pi
+            * rmajor
+            * lambda_int
+            * f_div_flux_expansion
+            * math.sin(theta_div)
         )
 
-        strike_width = lambda_int * f_div_flux_expansion * math.sin(theta_div)
+        if area_wetted <= 0.0:
+            raise ProcessValueError("Non-positive wetted area", area_wetted=area_wetted)
+
+        strike_width = (
+            lambda_int * f_div_flux_expansion * math.sin(theta_div)
+        )
 
         # Divertor heat load
-        hldiv_base = p_plasma_separatrix_mw * (1 - rad_fraction_sol) / area_wetted
+        hldiv_base = p_plasma_separatrix_mw * (1.0 - rad_fraction_sol) / area_wetted
 
         # For double null, calculate heat loads to upper and lower divertors
         # and use the highest
@@ -400,8 +423,8 @@ class Divertor(Model):
             dx_div_lower_outboard_strike=strike_width,
             a_div_lower_outboard_wetted=area_wetted,
             f_div_lower_flux_expansion=f_div_flux_expansion,
-            deg_b_div_lower_flux=deg_b_div_lower_outboard_grazing,
-            deg_div_lower_outboard_plate_separatrix_poloidal=theta_div,
+            deg_b_div_lower_flux=deg_b_div_lower_flux,
+            deg_div_lower_outboard_plate_separatrix_poloidal=math.degrees(theta_div),
             deg_b_div_lower_outboard_grazing=deg_b_div_lower_outboard_grazing,
         )
 
