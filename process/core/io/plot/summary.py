@@ -9148,6 +9148,7 @@ def plot_brunner_divertor_power_split_comparison_stackplot(
         linestyle="--",
         linewidth=1.0,
         alpha=0.5,
+        label="$\u0394 r_{\\mathrm{sep}}$",
     )
     axis.set_ylim([0.0, 1.0])
     axis.set_xlim([
