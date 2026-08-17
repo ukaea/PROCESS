@@ -220,7 +220,7 @@ def first_wall_geometry_double_null(
     )
 
     # Upper first wall
-    top_point = -1 * top_point
+    top_point *= -1
     (
         rs_upper_outboard,
         zs_upper_outboard,

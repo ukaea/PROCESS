@@ -215,7 +215,7 @@ def blanket_geometry_double_null(
     )
 
     # Upper blanket
-    divgap = -1 * divgap
+    divgap *= -1
 
     (
         rs_upper_outboard,
