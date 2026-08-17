@@ -9097,11 +9097,18 @@ def plot_brunner_divertor_power_split_comparison_stackplot(
     """Plot Brunner divertor power split fractions as a stack plot over dr_sep."""
     # Use the case decay length when available; fall back to 1 mm if absent.
 
-    len_plasma_sol_power_decay = mfile.get("len_sol_outboard_power_decay", scan=scan)
+    len_plasma_sol_outboard_power_decay = mfile.get(
+        "len_sol_outboard_power_decay", scan=scan
+    )
+    len_plasma_sol_inboard_power_decay = mfile.get(
+        "len_sol_inboard_power_decay", scan=scan
+    )
     colors = plt.cm.plasma(np.linspace(0.15, 0.85, 4))
 
     dr_sep_values = np.linspace(
-        -5 * len_plasma_sol_power_decay, 5 * len_plasma_sol_power_decay, 200
+        -5 * len_plasma_sol_outboard_power_decay,
+        5 * len_plasma_sol_outboard_power_decay,
+        200,
     )
     f_p_inboard_lower = np.zeros_like(dr_sep_values)
     f_p_inboard_upper = np.zeros_like(dr_sep_values)
@@ -9111,8 +9118,8 @@ def plot_brunner_divertor_power_split_comparison_stackplot(
     for idx, dr_sep in enumerate(dr_sep_values):
         div_power_splits = PlasmaExhaust().calculate_brunner_divertor_power_splits(
             dr_plasma_outboard_midplane_separatrix_separation=dr_sep,
-            len_plasma_sol_outboard_power_decay=len_plasma_sol_power_decay,
-            f_len_sol_power_decay_inboard=0.7,
+            len_plasma_sol_outboard_power_decay=len_plasma_sol_outboard_power_decay,
+            len_plasma_sol_inboard_power_decay=len_plasma_sol_inboard_power_decay,
         )
         f_p_inboard_lower[idx] = div_power_splits.f_p_div_inboard_lower_separatrix
         f_p_inboard_upper[idx] = div_power_splits.f_p_div_inboard_upper_separatrix
@@ -9143,7 +9150,10 @@ def plot_brunner_divertor_power_split_comparison_stackplot(
         alpha=0.5,
     )
     axis.set_ylim([0.0, 1.0])
-    axis.set_xlim([-5 * len_plasma_sol_power_decay, 5 * len_plasma_sol_power_decay])
+    axis.set_xlim([
+        -5 * len_plasma_sol_outboard_power_decay,
+        5 * len_plasma_sol_outboard_power_decay,
+    ])
     axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.35)
     axis.set_title("Brunner Divertor Power Split Fractions")
     axis.set_xlabel("$\\Delta r_{\\mathrm{sep}}$ [m]")

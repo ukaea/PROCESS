@@ -7,7 +7,7 @@ def test_calculate_brunner_divertor_power_splits_at_zero_separatrix_separation()
     result = PlasmaExhaust().calculate_brunner_divertor_power_splits(
         dr_plasma_outboard_midplane_separatrix_separation=0.0,
         len_plasma_sol_outboard_power_decay=0.01,
-        f_len_sol_power_decay_inboard=1.0,
+        len_plasma_sol_inboard_power_decay=0.01,
     )
 
     assert result.f_p_div_inboard_separatrix == pytest.approx(0.16)
@@ -22,7 +22,7 @@ def test_calculate_brunner_divertor_power_splits_asymmetric_case():
     result = PlasmaExhaust().calculate_brunner_divertor_power_splits(
         dr_plasma_outboard_midplane_separatrix_separation=0.01,
         len_plasma_sol_outboard_power_decay=0.005,
-        f_len_sol_power_decay_inboard=1.5,
+        len_plasma_sol_inboard_power_decay=0.0075,
     )
 
     assert result.f_p_div_inboard_separatrix == pytest.approx(0.4010068950189542)

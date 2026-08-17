@@ -251,7 +251,7 @@ class PlasmaExhaust(Model):
     def calculate_brunner_divertor_power_splits(
         dr_plasma_outboard_midplane_separatrix_separation: float,
         len_plasma_sol_outboard_power_decay: float,
-        f_len_sol_power_decay_inboard: float,
+        len_plasma_sol_inboard_power_decay: float,
     ) -> DivertorSeparatrixPowerSplits:
         """
         Calculate the power splits to the divertor targets using Brunner's method.
@@ -262,8 +262,8 @@ class PlasmaExhaust(Model):
             Radial separation of the plasma outboard midplane separatrix (δR_sep) [m].
         len_plasma_sol_outboard_power_decay : float
             Power decay length in the scrape-off layer (λ_q) [m].
-        f_len_sol_power_decay_inboard : float
-            Fraction of the scrape-off layer power decay length for the inboard side [-].
+        len_plasma_sol_inboard_power_decay : float
+            Power decay length in the scrape-off layer for the inboard side (λᵢₙ_q) [m].
 
         Returns
         -------
@@ -273,7 +273,7 @@ class PlasmaExhaust(Model):
 
         Notes
         -----
-        - The fitted value for `F_P_INNER_SEP_0` and `F_P_INNER_SEP_INFINITY` are taken
+        - The fitted value for `f_p_inner_sep_0` and `f_p_inner_sep_infinity` are taken
         from the fit given by Petrie et al. [2]
 
         References
@@ -288,8 +288,8 @@ class PlasmaExhaust(Model):
         Mar. 2001, doi: https://doi.org/10.1016/S0022-3115(00)00492-X
         """
         # Fraction of the power to the inner divertors at δR_sep = 0 and δR_sep → ∞
-        F_P_INNER_SEP_0 = 0.16e0
-        F_P_INNER_SEP_INFINITY = 0.41e0
+        f_p_inner_sep_0 = 0.16e0
+        f_p_inner_sep_infinity = 0.41e0
 
         # Fractions of total outboard power going to each target
         # Outboard lower divertor
@@ -315,12 +315,12 @@ class PlasmaExhaust(Model):
             1
             + np.exp(
                 dr_plasma_outboard_midplane_separatrix_separation
-                / (len_plasma_sol_outboard_power_decay * f_len_sol_power_decay_inboard)
+                / (len_plasma_sol_inboard_power_decay)
             )
         )
 
-        f_p_total_inboard = F_P_INNER_SEP_0 + (
-            F_P_INNER_SEP_0 - F_P_INNER_SEP_INFINITY
+        f_p_total_inboard = f_p_inner_sep_0 + (
+            f_p_inner_sep_0 - f_p_inner_sep_infinity
         ) * (
             1.0e0
             - (
@@ -363,14 +363,16 @@ class PlasmaExhaust(Model):
 
             po.ovarre(
                 self.outfile,
-                "Requested fraction of power to the lower divertor in double null configuration",
+                "Requested fraction of power to the lower divertor in double null "
+                "configuration",
                 "(f_p_div_lower_separatrix)",
                 self.data.physics.f_p_div_lower_separatrix,
                 "IP ",
             )
             po.ovarre(
                 self.outfile,
-                "Required distance between the first and second plasma separatrixes at the outer midplane (δR_sep) [m]",
+                "Required distance between the first and second plasma separatrixes at "
+                "the outer midplane (δR_sep) [m]",
                 "(dr_plasma_outboard_midplane_separatrix_separation)",
                 self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
                 "OP ",

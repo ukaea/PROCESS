@@ -845,8 +845,9 @@ class Physics(Model):
         )
 
         # if double null configuration share the power
-        # over the upper and lower divertor, where self.data.physics.f_p_div_lower_separatrix gives
-        # the factor of power conducted to the lower divertor
+        # over the upper and lower divertor, where
+        # self.data.physics.f_p_div_lower_separatrix gives the factor of power conducted
+        # to the lower divertor
         if self.data.divertor.n_divertors == 2:
             self.data.physics.p_div_lower_separatrix_mw = (
                 self.data.physics.f_p_div_lower_separatrix
@@ -1013,7 +1014,7 @@ class Physics(Model):
         div_power_plits = self.exhaust.calculate_brunner_divertor_power_splits(
             dr_plasma_outboard_midplane_separatrix_separation=self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
             len_plasma_sol_outboard_power_decay=self.data.physics.len_sol_outboard_power_decay,
-            f_len_sol_power_decay_inboard=0.7,
+            len_plasma_sol_inboard_power_decay=self.data.physics.len_sol_inboard_power_decay,
         )
 
         self.data.physics.f_p_div_inboard_separatrix = (

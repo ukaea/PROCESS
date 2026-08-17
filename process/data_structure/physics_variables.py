@@ -430,8 +430,14 @@ class PhysicsData:
     t_energy_confinement_beta: float = 0.0
     """[s]"""
 
+    f_len_sol_power_decay_inboard_outboard: float = 0.7
+    """Ratio of inboard to outboard scrape off layer power decay length (λᵢₙ_q/λₒᵤₜ_q)"""
+
+    len_sol_inboard_power_decay: float = 0.0
+    """Inboard scrape off layer power decay length (λᵢₙ_q) [m]"""
+
     len_sol_outboard_power_decay: float = 0.0
-    """Outboard scrape off layer power decay length (λ_q) [m]"""
+    """Outboard scrape off layer power decay length (λₒᵤₜ_q) [m]"""
 
     dr_plasma_outboard_midplane_separatrix_separation: float = 0.0
     """Radial distance between the first and second plasma separatrixes at the outer midplane (δR_sep) [m]"""
