@@ -3,6 +3,7 @@
 import logging
 
 import numpy as np
+import scipy
 
 from process.core import constants
 from process.core import process_output as po
@@ -384,3 +385,69 @@ class ScrapeOffLayer(Model):
         return pflux_plasma_outboard_sol_parallel_mw * np.exp(
             -(r - (rmajor + rminor)) / len_plasma_sol_power_decay
         )
+
+    @staticmethod
+    def calculate_eich_target_heat_flux_profile(
+        pflux_plasma_sol_parallel_mw: float,
+        len_plasma_sol_power_decay: float,
+        f_b_div_flux_expansion: float,
+        len_plasma_sol_power_spreading: float,
+        plux_target_background_heat_flux_mw: float,
+        r: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the Eich target heat flux profile (qₜ(r)) [MW/m²].
+
+        Parameters
+        ----------
+        pflux_plasma_sol_parallel_mw : float
+            Parallel power flux at the outboard midplane (qₗₗ,ᵤ) [MW/m²]
+        len_plasma_sol_power_decay : float
+            Power decay length (λ_q) [m]
+        f_b_div_flux_expansion : float
+            Divertor flux expansion factor (fₓ) [-]
+        len_plasma_sol_power_spreading : float
+            Power spreading length in the divertor (S) [m]
+        plux_target_background_heat_flux_mw : float
+            Background heat flux at the divertor target [MW/m²]
+        r : float|np.ndarray
+            Radial position(s) at which to calculate the target heat flux profile [m]
+
+        Returns
+        -------
+        float|np.ndarray
+            Eich target heat flux profile (qₜ(r)) [MW/m²]
+
+        Notes
+        -----
+        - The Eich target heat flux profile is derived from the midplane exponential
+        profile, taking into account the magnetic geometry and flux expansion between
+        the midplane and the divertor target. The profile is typically characterized by
+        a combination of an exponential decay and a Gaussian spreading due to cross-field
+        transport in the divertor leg.
+
+        References
+        ----------
+        [1] T. Eich, B. Sieglin, A. Scarabosio, W. Fundamenski, R. J. Goldston, and
+        A. Herrmann, “Inter-ELM Power Decay Length for JET and ASDEX Upgrade: Measurement
+        and Comparison with Heuristic Drift-Based Model,” Physical Review Letters,
+        vol. 107, no. 21, Nov. 2011, doi: https://doi.org/10.1103/PhysRevLett.107.215001
+
+        [2] T. Eich et al., “Scaling of the tokamak near the scrape-off layer H-mode
+        power width and implications for ITER,” Nuclear Fusion, vol. 53, no. 9,
+        p. 093031, Aug. 2013, doi: 10.1088/0029-5515/53/9/093031.
+
+        """
+        return (pflux_plasma_sol_parallel_mw / 2) * np.exp(
+            (
+                (len_plasma_sol_power_spreading)
+                / (2 * len_plasma_sol_power_decay * f_b_div_flux_expansion)
+            )
+            ** 2
+            - (r / (len_plasma_sol_power_spreading * f_b_div_flux_expansion))
+        ) * scipy.special.erfc(
+            (
+                len_plasma_sol_power_spreading
+                / (2 * len_plasma_sol_power_decay * f_b_div_flux_expansion)
+            )
+            - (r / (len_plasma_sol_power_spreading))
+        ) + plux_target_background_heat_flux_mw
