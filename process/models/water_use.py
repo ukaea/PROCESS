@@ -272,21 +272,42 @@ class WaterUse(Model):
             )
 
 
-@dataclass
+@dataclass(slots=True)
 class CoolingWaterBodyCoeffs:
     """Cooling water body coefficients"""
 
-    a: float
-    b: float
-    c: float
-    d: float
-    e: float
-    f: float
-    g: float
-    h: float
-    i: float
-    j: float
-    heatload: float
+    a: float = 0.0
+    """Constant coefficient in wind function f(W)"""
+
+    b: float = 0.0
+    """Wind speed coefficient in wind function f(W), with W in m/s"""
+
+    c: float = 0.0
+    """Squared wind speed coefficient in wind function f(W), with W in m/s"""
+
+    d: float = 0.0
+    """Constant coefficient in the initial temperature estimate"""
+
+    e: float = 0.0
+    """Natural water temperature coefficient in the initial temperature estimate"""
+
+    f: float = 0.0
+    """Wind speed coefficient in the initial temperature estimate, with W in mph"""
+
+    g: float = 0.0
+    """Added heat load coefficient in the initial temperature estimate"""
+
+    h: float = 0.0
+    """Squared water temperature coefficient in the initial temperature estimate"""
+
+    i: float = 0.0
+    """Squared wind speed coefficient in the initial temperature estimate"""
+
+    j: float = 0.0
+    """Squared added heat load coefficient in the initial temperature estimate"""
+
+    heatload: float = 0.0
+    """Added heat load to the water body (MW/acre)"""
 
     def heat_ratio(self, watertemp, windspeed):
         """Estimate how heat loading will raise temperature, for this water body"""
