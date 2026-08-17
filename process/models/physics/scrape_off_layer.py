@@ -388,6 +388,8 @@ class ScrapeOffLayer(Model):
 
     @staticmethod
     def calculate_eich_target_heat_flux_profile(
+        rmajor: float,
+        rminor: float,
         pflux_plasma_sol_parallel_mw: float,
         len_plasma_sol_power_decay: float,
         f_b_div_flux_expansion: float,
@@ -399,6 +401,10 @@ class ScrapeOffLayer(Model):
 
         Parameters
         ----------
+        rmajor : float
+            Major radius of the plasma (R₀) [m]
+        rminor : float
+            Minor radius of the plasma (a) [m]
         pflux_plasma_sol_parallel_mw : float
             Parallel power flux at the outboard midplane (qₗₗ,ᵤ) [MW/m²]
         len_plasma_sol_power_decay : float
@@ -443,11 +449,19 @@ class ScrapeOffLayer(Model):
                 / (2 * len_plasma_sol_power_decay * f_b_div_flux_expansion)
             )
             ** 2
-            - (r / (len_plasma_sol_power_spreading * f_b_div_flux_expansion))
+            - (
+                (r - (rmajor + rminor))
+                * f_b_div_flux_expansion
+                / (len_plasma_sol_power_spreading * f_b_div_flux_expansion)
+            )
         ) * scipy.special.erfc(
             (
                 len_plasma_sol_power_spreading
                 / (2 * len_plasma_sol_power_decay * f_b_div_flux_expansion)
             )
-            - (r / (len_plasma_sol_power_spreading))
+            - (
+                (r - (rmajor + rminor))
+                * f_b_div_flux_expansion
+                / (len_plasma_sol_power_spreading)
+            )
         ) + plux_target_background_heat_flux_mw
