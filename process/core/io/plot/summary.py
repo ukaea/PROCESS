@@ -9160,6 +9160,47 @@ def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, sc
     axis.set_xlabel("Radial Position [m]")
     axis.set_ylabel(r"$q_{||,t}$ [MW/m$^2$]")
 
+def plot_sol_power_flux_profiles(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme):
+    """Plot separatrix power split fractions as a bar chart."""
+    plot_plasma(axis=axis, mfile=mfile, scan=scan, colour_scheme=colour_scheme)
+    rmajor, rminor,kappa= mfile.get_variables(
+        "rmajor",
+        "rminor",
+        "kappa",
+        scan=scan,
+    )
+
+    plasma_scale = max(rminor, abs(kappa * rminor), 1e-6)
+    scale_factor = min(max(plasma_scale / 2.0, 0.7), 1.0)
+    text_fontsize = 9 * scale_factor
+
+
+    
+    outboard_pos = (rmajor + rminor, 0.0)
+
+    axis.text(
+        *outboard_pos,
+        f"$f_{{\\mathrm{{outboard}}}} = {5:.3f}$\n"
+        f"$\\Delta r_{{\\mathrm{{sep}}}} = {6:.3f}$ m",
+        fontsize=text_fontsize,
+        verticalalignment="center",
+        horizontalalignment="center",
+        bbox={
+            "boxstyle": f"round,pad={0.3 * scale_factor:.3f}",
+            "alpha": 1.0,
+            "linewidth": 2 * scale_factor,
+            "edgecolor": "black",
+        },
+        zorder=101,
+    )
+    
+
+    axis.spines["top"].set_visible(False)
+    axis.spines["right"].set_visible(False)
+    axis.spines["bottom"].set_visible(False)
+    axis.spines["left"].set_visible(False)
+    axis.get_xaxis().set_ticks([])
+    axis.get_yaxis().set_ticks([])
 
 def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=None):
     """Function to plot a scatter box plot of L-H threshold power comparisons.
@@ -16519,14 +16560,21 @@ def main_plot(
         _add_page("plasma_compare_3").add_subplot(221), m_file, scan
     )
 
+    
+    
+    plot_sol_power_flux_profiles(_add_page("sol_powerfluxes").add_subplot(121), m_file, scan, colour_scheme)
+
+    
+    fig, (ax1, ax2) = plt.subplots(2, sharex=True)
+    
     plot_midplane_near_sol_radial_profile(
-        _add_page("midplane_near_sol_radial_profile").add_subplot(121), m_file, scan
+        pages["sol_powerfluxes"].add_subplot(324), m_file, scan
     )
 
     plot_div_lower_outboard_eich_target_profile(
-        pages["midplane_near_sol_radial_profile"].add_subplot(122), m_file, scan
+        pages["sol_powerfluxes"].add_subplot(326), m_file, scan
     )
-
+    
     plot_debye_length_profile(
         _add_page("microscopic_quantities").add_subplot(232), m_file, scan
     )
