@@ -2,7 +2,7 @@
 
 import logging
 import math
-from enum import IntEnum
+from enum import IntEnum, unique
 
 import numpy as np
 import scipy as sp
@@ -16,6 +16,7 @@ from process.data_structure.pfcoil_variables import NGC2, PFConductorModel
 from process.models.pulse import PulseTimings
 
 
+@unique
 class PumpingPowerModelTypes(IntEnum):
     """Pumping power model types for `i_p_coolant_pumping` in `fwbs_variables`"""
 
@@ -28,6 +29,7 @@ class PumpingPowerModelTypes(IntEnum):
 logger = logging.getLogger(__name__)
 
 
+@unique
 class ElectricConversionModelTypes(IntEnum):
     """Enum for thermal to electric power conversion model types."""
 

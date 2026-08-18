@@ -3,7 +3,7 @@
 import logging
 import math
 from dataclasses import dataclass
-from enum import IntEnum
+from enum import IntEnum, unique
 
 import numba
 import numpy as np
@@ -42,6 +42,7 @@ logger = logging.getLogger(__name__)
 N_CS_STRESS_PROFILE_POINTS = 20
 
 
+@unique
 class PFLocationTypes(IntEnum):
     """Enum for PF coil location types."""
 

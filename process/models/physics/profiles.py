@@ -6,7 +6,7 @@ and managing plasma profiles such as temperature and density distributions.
 
 import logging
 from abc import ABC, abstractmethod
-from enum import IntEnum
+from enum import IntEnum, unique
 from types import DynamicClassAttribute
 
 import numpy as np
@@ -19,6 +19,7 @@ from process.models.physics.density_limit import PlasmaDensityLimit
 logger = logging.getLogger(__name__)
 
 
+@unique
 class PlasmaProfileShapeType(IntEnum):
     """Enum for i_plasma_pedestal method types"""
 
@@ -112,6 +113,7 @@ class Profile(Model, ABC):
         )
 
 
+@unique
 class DensityProfilePedestalType(IntEnum):
     """Enum for i_nd_plasma_pedestal_separatrix types"""
 

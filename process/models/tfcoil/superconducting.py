@@ -2,7 +2,7 @@
 
 import logging
 from dataclasses import dataclass
-from enum import IntEnum
+from enum import IntEnum, unique
 from types import DynamicClassAttribute
 
 import numpy as np
@@ -27,6 +27,7 @@ from process.models.tfcoil.base import TFCoil, TFPlasmaCaseType
 logger = logging.getLogger(__name__)
 
 
+@unique
 class SuperconductingTFTurnType(IntEnum):
     """Enum for the type of TF coil turn, which determines the superconductor properties
     and stress calculations.
@@ -74,6 +75,7 @@ class SuperconductingTFTurnType(IntEnum):
             ) from None
 
 
+@unique
 class SuperconductingTFWPShapeType(IntEnum):
     """Enum for the type of TF coil WP shape, which determines the geometry of the
     winding pack and ground insulation.

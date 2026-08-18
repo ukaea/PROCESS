@@ -2,7 +2,7 @@
 
 import logging
 import math
-from enum import IntEnum
+from enum import IntEnum, unique
 from types import DynamicClassAttribute
 
 from scipy.special import comb as combinations
@@ -16,6 +16,7 @@ from process.models.tfcoil.base import TFConductorModel
 logger = logging.getLogger(__name__)
 
 
+@unique
 class AvailabilityModel(IntEnum):
     """Enum for availability models"""
 

@@ -1,9 +1,10 @@
 """Module containing variables for the divertor models"""
 
 from dataclasses import dataclass
-from enum import IntEnum
+from enum import IntEnum, unique
 
 
+@unique
 class DivertorHeatLoadModel(IntEnum):
     """Divertor heat load model enumeration, controlled' by `i_div_heat_load`"""
 

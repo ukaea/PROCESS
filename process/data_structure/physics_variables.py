@@ -6,6 +6,7 @@ from enum import IntEnum, unique
 import numpy as np
 
 
+@unique
 class OutbordSOLPowerDecayLengthModel(IntEnum):
     """Enum for outboard scrape off layer power decay length models with descriptions."""
 
@@ -35,6 +36,7 @@ class OutbordSOLPowerDecayLengthModel(IntEnum):
         return obj
 
 
+@unique
 class CurrentProfileIndexModel(IntEnum):
     """Enum for current profile index models."""
 
@@ -42,6 +44,7 @@ class CurrentProfileIndexModel(IntEnum):
     WESSON = 1
 
 
+@unique
 class PlasmaIgnitionModel(IntEnum):
     """Enum for plasma ignition models."""
 
@@ -49,6 +52,7 @@ class PlasmaIgnitionModel(IntEnum):
     IGNITED = 1
 
 
+@unique
 class DivertorNumberModels(IntEnum):
     """Enum for divertor number models. `i_single_null` is the index for this enum."""
 
@@ -56,6 +60,7 @@ class DivertorNumberModels(IntEnum):
     SINGLE_NULL = 1
 
 
+@unique
 class ConfinementMode(IntEnum):
     """Enum for plasma confinement mode"""
 
@@ -377,6 +382,7 @@ class ConfinementTimeModel(IntEnum):
         return obj
 
 
+@unique
 class ConfinementRadiationLossModel(IntEnum):
     """Confinement radiation loss model types"""
 

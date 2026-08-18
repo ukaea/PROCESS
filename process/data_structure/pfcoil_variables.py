@@ -1,11 +1,12 @@
 """Module containing variables for the PF coil models"""
 
 from dataclasses import dataclass, field
-from enum import IntEnum
+from enum import IntEnum, unique
 
 import numpy as np
 
 
+@unique
 class PFConductorModel(IntEnum):
     """Enumeration for PF conductor models.
     Controlled via `i_pf_conductor`

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import math
-from enum import IntEnum
+from enum import IntEnum, unique
 from types import DynamicClassAttribute
 from typing import TYPE_CHECKING
 
@@ -3665,6 +3665,7 @@ def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, 
     )
 
 
+@unique
 class BetaNormMaxModel(IntEnum):
     """Beta norm max (β_N_max) model types"""
 
@@ -3688,6 +3689,7 @@ class BetaNormMaxModel(IntEnum):
         return self._full_name_
 
 
+@unique
 class BetaComponentLimits(IntEnum):
     """Beta component to apply limit types"""
 
@@ -4679,6 +4681,7 @@ class PlasmaBeta(Model):
         po.oblnkl(self.outfile)
 
 
+@unique
 class IndInternalNormModel(IntEnum):
     """Normalised internal inductance (lᵢ) model types"""
 

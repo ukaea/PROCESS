@@ -1,9 +1,10 @@
 """Module containing variables for the vacuum vessel models"""
 
 from dataclasses import dataclass
-from enum import IntEnum
+from enum import IntEnum, unique
 
 
+@unique
 class VacuumPumpType(IntEnum):
     """Enum for vacuum pump types. Controlled via `i_vacuum_pump_type` in `VacuumData`."""
 

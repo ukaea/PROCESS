@@ -2,7 +2,7 @@
 
 import logging
 from dataclasses import dataclass
-from enum import IntEnum
+from enum import IntEnum, unique
 from types import DynamicClassAttribute
 
 import numpy as np
@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 N_CROCO_STRANDS_TURN = 6
 
 
+@unique
 class SuperconductorShape(IntEnum):
     """Enumeration of superconductor shapes."""
 
@@ -24,6 +25,7 @@ class SuperconductorShape(IntEnum):
     "The superconductor is in the form of a flat tape with a rectangular cross-section"
 
 
+@unique
 class SuperconductorType(IntEnum):
     """Enumeration of superconductor types."""
 
@@ -43,6 +45,7 @@ class SuperconductorType(IntEnum):
         return self._abbreviation_
 
 
+@unique
 class SuperconductorMaterial(IntEnum):
     """Enumeration of superconductor materials."""
 
@@ -70,6 +73,7 @@ class SuperconductorMaterial(IntEnum):
         return self._material_name_
 
 
+@unique
 class SuperconductorModel(IntEnum):
     """Enumeration of superconductor models."""
 

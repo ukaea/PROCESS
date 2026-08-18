@@ -6,7 +6,7 @@ different tokamak designs and experimental data.
 """
 
 import logging
-from enum import IntEnum
+from enum import IntEnum, unique
 from types import DynamicClassAttribute
 
 import numba as nb
@@ -21,6 +21,7 @@ from process.models.physics.plasma_geometry import PlasmaGeometryModelType
 logger = logging.getLogger(__name__)
 
 
+@unique
 class PlasmaCurrentModel(IntEnum):
     """Enumeration of plasma current scaling models available for calculations.
 
@@ -1016,6 +1017,7 @@ class PlasmaCurrent(Model):
         return 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
 
 
+@unique
 class PlasmaDiamagneticCurrentModel(IntEnum):
     """Enum for plasma diamagnetic current method types"""
 

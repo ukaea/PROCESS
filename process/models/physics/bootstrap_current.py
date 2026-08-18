@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from enum import IntEnum
+from enum import IntEnum, unique
 from types import DynamicClassAttribute
 from typing import TYPE_CHECKING
 
@@ -23,6 +23,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+@unique
 class BootstrapCurrentFractionModel(IntEnum):
     """Bootstrap plasma current fraction (f_BS) model types"""
 

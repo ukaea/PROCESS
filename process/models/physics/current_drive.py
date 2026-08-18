@@ -1,7 +1,7 @@
 """Module for current drive physics models and heating method types."""
 
 import logging
-from enum import IntEnum
+from enum import IntEnum, unique
 from types import DynamicClassAttribute
 
 import numpy as np
@@ -18,6 +18,7 @@ from process.models.physics.plasma_profiles import PlasmaProfile
 logger = logging.getLogger(__name__)
 
 
+@unique
 class CurrentDriveMethodType(IntEnum):
     """Enum for heating and current drive method types"""
 
@@ -41,6 +42,7 @@ class CurrentDriveMethodType(IntEnum):
         return self._abbreviation_
 
 
+@unique
 class CurrentDriveModel(IntEnum):
     """Heating and current drive models for use in current drive calculations"""
 

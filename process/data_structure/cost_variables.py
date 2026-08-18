@@ -1,9 +1,10 @@
 """Module containing variables for the costs models"""
 
 from dataclasses import dataclass, field
-from enum import IntEnum
+from enum import IntEnum, unique
 
 
+@unique
 class CostModels(IntEnum):
     """Enum for cost model selection"""
 

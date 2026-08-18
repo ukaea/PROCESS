@@ -1,9 +1,10 @@
 """Module containing variables for the superconducting TF coil models"""
 
 from dataclasses import dataclass
-from enum import IntEnum
+from enum import IntEnum, unique
 
 
+@unique
 class TFWPIntegerTurnType(IntEnum):
     """TF winding pack integer turn type, controlled via the `i_tf_turns_integer`
     variable.
