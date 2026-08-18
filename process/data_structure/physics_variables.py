@@ -1,7 +1,7 @@
 """Module containing variables for the plasma models"""
 
 from dataclasses import dataclass, field
-from enum import IntEnum
+from enum import IntEnum, unique
 
 import numpy as np
 
@@ -87,6 +87,7 @@ class ConfinementMode(IntEnum):
         return obj
 
 
+@unique
 class ConfinementTimeModel(IntEnum):
     """Confinement time (τ_E) model types"""
 
@@ -347,7 +348,7 @@ class ConfinementTimeModel(IntEnum):
         ConfinementMode.L_MODE,
     )
     PAZ_SOLDAN_NT = (
-        51,
+        52,
         f"Paz-Soldan Neg Triang          ({ConfinementMode.L_MODE.abbreviation})",
         ConfinementMode.L_MODE,
     )
