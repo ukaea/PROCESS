@@ -88,8 +88,8 @@ class PlasmaFields(Model):
         )
 
         # Transform q95 to qbar by inverting q95 = 1.3 * qbar * (1 - eps)^0.6
-        # (Peng, Galambos & Shipe 1992), consistent with
-        # PlasmaCurrent.calculate_plasma_current_peng
+        # (Muldrew et al., Fusion Eng. Des. 154 (2020) 111530, Eq. 19),
+        # consistent with PlasmaCurrent.calculate_plasma_current_peng
         qbar = q95 / (1.3e0 * (1.0e0 - (1 / aspect)) ** 0.6e0)
 
         return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)

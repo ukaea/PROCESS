@@ -24,8 +24,7 @@ def test_calculate_plasma_current_peng_qbar_transform(plasma_current):
     kappa=2.8, triang=0.5:
         qbar = q95 / (1.3 * (1 - 1/A)^0.6) = 6 / 0.79916... = 7.507881...
     and the remaining geometry factors evaluated from plascar_bpol as in
-    the function body. Note qbar > q95, as required by the forward
-    relation q95 = 1.3 * qbar * (1 - eps)^0.6 < qbar for any eps > 0.
+    the function body.
     """
     current = plasma_current.calculate_plasma_current_peng(
         q95=6.0,
@@ -46,8 +45,6 @@ def test_peng_qbar_roundtrip():
     factor = 1.3e0 * (1.0e0 - (1.0 / aspect)) ** 0.6e0
     qbar = q95 / factor
     assert qbar * factor == pytest.approx(q95)
-    # qbar exceeds q95 for the Peng relation at any finite aspect ratio
-    assert qbar > q95
 
 
 def test_calculate_surface_averaged_poloidal_field_peng(plasma_fields):
