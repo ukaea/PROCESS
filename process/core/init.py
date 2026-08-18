@@ -7,6 +7,7 @@ import getpass
 import logging
 import socket
 import subprocess  # noqa: S404
+from dataclasses import MISSING
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -1032,6 +1033,26 @@ def check_process(inputs, data):  # noqa: ARG001
         else:
             # Transverse stiffness is significant
             data.tfcoil.eyoung_cond_trans = data.tfcoil.eyoung_cond_axial
+
+    # Check if the user has set the critical current density and temperature for
+    # non-user-defined superconductors
+    if data.tfcoil.i_tf_sc_mat != SuperconductorModel.USER_DEFINED_NB3SN:
+        tfcoil_fields = getattr(type(data.tfcoil), "__dataclass_fields__", {})
+        for field_name in ("bcritsc", "tcritsc"):
+            field_definition = tfcoil_fields.get(field_name)
+            if field_definition is None:
+                continue
+
+            if field_definition.default is not MISSING:
+                default_value = field_definition.default
+            elif field_definition.default_factory is not MISSING:
+                default_value = field_definition.default_factory()
+            else:
+                continue
+            if getattr(data.tfcoil, field_name) != default_value:
+                raise ProcessValidationError(
+                    f"Cannot set {field_name} for non-user-defined superconductors"
+                )
 
     # Check if the WP/conductor radial thickness (dr_tf_wp_with_insulation)
     # is large enough
