@@ -1,7 +1,7 @@
 """Plasma geometry models and shape definitions for PROCESS."""
 
 import logging
-from enum import IntEnum
+from enum import IntEnum, unique
 from types import DynamicClassAttribute
 
 import numpy as np
@@ -14,6 +14,7 @@ from process.core.model import Model
 logger = logging.getLogger(__name__)
 
 
+@unique
 class PlasmaShapeModelType(IntEnum):
     """Enum for plasma shape model types."""
 
@@ -33,6 +34,7 @@ class PlasmaShapeModelType(IntEnum):
         return self._full_name_
 
 
+@unique
 class PlasmaGeometryModels(IntEnum):
     """Enum for plasma geometry model types."""
 
@@ -60,6 +62,7 @@ class PlasmaGeometryModels(IntEnum):
         return self._description_
 
 
+@unique
 class PlasmaGeometryModelType(IntEnum):
     """Enum for i_plasma_geometry plasma geometry model types."""
 

@@ -1,7 +1,7 @@
 """Module containing variables for the numerics"""
 
 from dataclasses import dataclass, field
-from enum import IntEnum
+from enum import IntEnum, unique
 from types import DynamicClassAttribute
 
 import numpy as np
@@ -9,6 +9,7 @@ import numpy as np
 from process.core.solver.iteration_variables import ITERATION_VARIABLES
 
 
+@unique
 class SolverOutputCondition(IntEnum):
     """Enum for the possible conditions that can be returned by the solvers.
     This is for the `ifail` condition.
@@ -40,6 +41,7 @@ class SolverOutputCondition(IntEnum):
     """No feasible solution or bad approximation of Hessian (in VMCON only)."""
 
 
+@unique
 class PROCESSRunMode(IntEnum):
     """Enumeration of the available PROCESS run modes, which determine the behaviour
     of the code in various places. This is controlled by the `i_process_run_mode` variable
@@ -85,6 +87,7 @@ class PROCESSRunMode(IntEnum):
         return self._description_
 
 
+@unique
 class FiguresOfMerit(IntEnum):
     """Enumeration of the available figures of merit (FoM) that can be used as
     objective functions for optimisation in PROCESS.

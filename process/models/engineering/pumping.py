@@ -1,12 +1,13 @@
 """Engineering models for pumping system analysis."""
 
 import logging
-from enum import IntEnum
+from enum import IntEnum, unique
 from types import DynamicClassAttribute
 
 import numpy as np
 
 
+@unique
 class CoolantType(IntEnum):
     """Enum for coolant types."""
 

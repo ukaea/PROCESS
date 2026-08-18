@@ -6,7 +6,7 @@ import copy
 import json
 import logging
 from dataclasses import dataclass
-from enum import IntEnum
+from enum import IntEnum, unique
 from types import DynamicClassAttribute
 
 import numba
@@ -28,6 +28,7 @@ from process.models.engineering.materials import (
 logger = logging.getLogger(__name__)
 
 
+@unique
 class TFCoilShapeModel(IntEnum):
     """Enumeration for TF coil shape models.
     0: Auto-select
@@ -41,6 +42,7 @@ class TFCoilShapeModel(IntEnum):
     PICTURE_FRAME = 2
 
 
+@unique
 class TFConductorModel(IntEnum):
     """Enumeration for TF conductor models.
 
@@ -55,6 +57,7 @@ class TFConductorModel(IntEnum):
     HELIUM_COOLED_ALUMINIUM = 2
 
 
+@unique
 class TFPlasmaCaseType(IntEnum):
     """Enumeration for TF plasma-facing case types (i_tf_case_geom).
 

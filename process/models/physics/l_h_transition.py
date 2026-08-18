@@ -1,7 +1,7 @@
 """Module for plasma L-H and L-I transition power threshold calculations."""
 
 import logging
-from enum import IntEnum
+from enum import IntEnum, unique
 
 from process.core import constants
 from process.core import process_output as po
@@ -10,6 +10,7 @@ from process.core.model import Model
 logger = logging.getLogger(__name__)
 
 
+@unique
 class PlasmaConfinementTransitionModel(IntEnum):
     """Enum for plasma L -> H and L -> I transition power threshold models."""
 

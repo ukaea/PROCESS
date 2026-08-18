@@ -1,9 +1,10 @@
 """Module containing variables for the buildings models"""
 
 from dataclasses import dataclass
-from enum import IntEnum
+from enum import IntEnum, unique
 
 
+@unique
 class BuildingsModel(IntEnum):
     """Enum for building size estimation models, controlled by
     `i_bldgs_size` in `BuildingsData`.

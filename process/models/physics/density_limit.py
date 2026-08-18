@@ -6,7 +6,7 @@ Greenwald limits.
 """
 
 import logging
-from enum import IntEnum
+from enum import IntEnum, unique
 from types import DynamicClassAttribute
 
 import numpy as np
@@ -19,6 +19,7 @@ from process.core.model import Model
 logger = logging.getLogger(__name__)
 
 
+@unique
 class DensityLimitModel(IntEnum):
     """Electron density model types"""
 

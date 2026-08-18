@@ -1,7 +1,7 @@
 """Library containing routines that can be shared by the blanket modules."""
 
 import logging
-from enum import IntEnum
+from enum import IntEnum, unique
 
 import numpy as np
 
@@ -44,6 +44,7 @@ logger = logging.getLogger(__name__)
 # FCI         Flow Channel Insert
 
 
+@unique
 class FWBlktCoolantLoopTypes(IntEnum):
     """Enumeration for first wall and blanket coolant loop types.
     `i_fw_blkt_shared_coolant`.

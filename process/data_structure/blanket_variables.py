@@ -17,9 +17,10 @@ Acronyms for this module:
 """
 
 from dataclasses import dataclass
-from enum import IntEnum
+from enum import IntEnum, unique
 
 
+@unique
 class BlktModelTypes(IntEnum):
     """Enum for blanket model types. `i_blanket_type`"""
 

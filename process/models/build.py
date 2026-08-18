@@ -1,7 +1,7 @@
 """Module containing routines for build calculations"""
 
 import logging
-from enum import IntEnum
+from enum import IntEnum, unique
 
 import numpy as np
 
@@ -23,6 +23,7 @@ from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
 logger = logging.getLogger(__name__)
 
 
+@unique
 class FwBlktVVShape(IntEnum):
     """Enum for first wall, blanket, and vacuum vessel shape options."""
 
