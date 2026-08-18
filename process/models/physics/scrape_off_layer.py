@@ -41,6 +41,14 @@ class ScrapeOffLayer(Model):
             )
         )
 
+        self.data.physics.len_plasma_sol_eich11_jet_power_decay = (
+            self.calculate_eich2011_jet_sol_power_decay_length(
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+                q_cyl=self.data.physics.qstar,
+                p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
+            )
+        )
+
         # Set to user input if OutbordSOLPowerDecayLengthModel = 1/USER_INUT
 
         if (
@@ -69,6 +77,15 @@ class ScrapeOffLayer(Model):
         ):
             self.data.physics.len_sol_outboard_power_decay = (
                 self.data.physics.len_plasma_sol_mast14_power_decay_2
+            )
+        elif (
+            OutbordSOLPowerDecayLengthModel(
+                self.data.physics.i_len_sol_outboard_power_decay
+            )
+            == OutbordSOLPowerDecayLengthModel.EICH_2011_JET
+        ):
+            self.data.physics.len_sol_outboard_power_decay = (
+                self.data.physics.len_plasma_sol_eich11_jet_power_decay
             )
 
         self.data.physics.len_sol_inboard_power_decay = (
@@ -153,6 +170,12 @@ class ScrapeOffLayer(Model):
             "MAST 2014 SOL power decay length 2 (λ_q) [m]",
             "(len_plasma_sol_mast14_power_decay_2)",
             self.data.physics.len_plasma_sol_mast14_power_decay_2,
+        )
+        po.ovarre(
+            self.outfile,
+            "Eich 2011 JET power decay length in the scrape-off layer scaling (λ_q) [m]",
+            "(len_plasma_sol_eich11_jet_power_decay)",
+            self.data.physics.len_plasma_sol_eich11_jet_power_decay,
         )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
@@ -304,7 +327,7 @@ class ScrapeOffLayer(Model):
     @staticmethod
     def calculate_eich2011_jet_sol_power_decay_length(
         b_plasma_toroidal_on_axis: float,
-        qcyl: float,
+        q_cyl: float,
         p_plasma_separatrix_mw: float,
     ) -> float:
         """Calculate the Eich 2011 JET SOL power decay length (λ_q).
@@ -313,7 +336,7 @@ class ScrapeOffLayer(Model):
         ----------
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field at the plasma axis (Bᴛ(R₀)) [T]
-        qcyl : float
+        q_cyl : float
             Cylindrical safety factor (q_cyl) [-]
         p_plasma_separatrix_mw : float
             Power crossing the separatrix (Pₛₑₚ) [MW]
@@ -339,7 +362,7 @@ class ScrapeOffLayer(Model):
         return (
             0.7e-3
             * b_plasma_toroidal_on_axis**-0.84
-            * qcyl**1.23
+            * q_cyl**1.23
             * p_plasma_separatrix_mw**0.14
         )
 

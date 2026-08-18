@@ -9034,12 +9034,16 @@ def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: i
     len_plasma_sol_mast14_power_decay_2_mm = (
         mfile.get("len_plasma_sol_mast14_power_decay_2", scan=scan) * 1e3
     )
+    len_plasma_sol_eich11_jet_power_decay_mm = (
+        mfile.get("len_plasma_sol_eich11_jet_power_decay", scan=scan) * 1e3
+    )
 
     # Data for the box plot
     data = {
         "Eich 2013": len_plasma_sol_eich13_power_decay_mm,
         "MAST 2014 (1)": len_plasma_sol_mast14_power_decay_1_mm,
         "MAST 2014 (2)": len_plasma_sol_mast14_power_decay_2_mm,
+        "Eich 2011 JET": len_plasma_sol_eich11_jet_power_decay_mm,
     }
     # Create the violin plot
     axis.violinplot(data.values(), showextrema=False)
