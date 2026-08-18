@@ -24,8 +24,11 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.data_structure.physics_variables import (
+    (
     ConfinementTimeModel,
     DivertorNumberModels,
+),
+    OutbordSOLPowerDecayLengthModel,
 )
 from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.build import Build
@@ -9037,13 +9040,16 @@ def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: i
     len_plasma_sol_eich11_jet_power_decay_mm = (
         mfile.get("len_plasma_sol_eich11_jet_power_decay", scan=scan) * 1e3
     )
-
+    len_plasma_sol_eich11_jet_asdex_power_decay_mm = (
+        mfile.get("len_plasma_sol_eich11_jet_asdex_power_decay", scan=scan) * 1e3
+    )
     # Data for the box plot
     data = {
-        "Eich 2013": len_plasma_sol_eich13_power_decay_mm,
-        "MAST 2014 (1)": len_plasma_sol_mast14_power_decay_1_mm,
-        "MAST 2014 (2)": len_plasma_sol_mast14_power_decay_2_mm,
-        "Eich 2011 JET": len_plasma_sol_eich11_jet_power_decay_mm,
+        f"{OutbordSOLPowerDecayLengthModel.EICH_2013.description}": len_plasma_sol_eich13_power_decay_mm,
+        f"{OutbordSOLPowerDecayLengthModel.MAST_2014_1.description}": len_plasma_sol_mast14_power_decay_1_mm,
+        f"{OutbordSOLPowerDecayLengthModel.MAST_2014_2.description}": len_plasma_sol_mast14_power_decay_2_mm,
+        f"{OutbordSOLPowerDecayLengthModel.EICH_2011_JET.description}": len_plasma_sol_eich11_jet_power_decay_mm,
+        f"{OutbordSOLPowerDecayLengthModel.EICH_2011_JET_ASDEX.description}": len_plasma_sol_eich11_jet_asdex_power_decay_mm,
     }
     # Create the violin plot
     axis.violinplot(data.values(), showextrema=False)
