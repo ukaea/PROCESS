@@ -284,6 +284,48 @@ class ScrapeOffLayer(Model):
         return 4.57e-3 * p_plasma_separatrix_mw**0.22 * cur_plasma_ma**-0.64
 
     @staticmethod
+    def calculate_eich2011_jet_sol_power_decay_length(
+        b_plasma_toroidal_on_axis: float,
+        qcyl: float,
+        p_plasma_separatrix_mw: float,
+    ) -> float:
+        """Calculate the Eich 2011 JET SOL power decay length (λ_q).
+
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis : float
+            Toroidal magnetic field at the plasma axis (B₀) [T]
+        qcyl : float
+            Cylindrical safety factor (q_cyl) [-]
+        p_plasma_separatrix_mw : float
+            Power crossing the separatrix (Pₛₑₚ) [MW]
+
+        Returns
+        -------
+        float
+            Eich 2011 JET SOL power decay length (λ_q) [m]
+            
+        Notes
+        -----
+        - The fit values can be found in Table 2 of [1].
+
+        References
+        ----------
+        [1] T. Eich, B. Sieglin, A. Scarabosio, W. Fundamenski, Robert James Goldston,
+        and A. Herrmann, “Inter-ELM Power Decay Length for JET and ASDEX Upgrade:
+        Measurement and Comparison with Heuristic Drift-Based Model,”
+        Physical Review Letters, vol. 107, no. 21, Nov. 2011,
+        doi: https://doi.org/10.1103/PhysRevLett.107.215001.
+
+        """
+        return (
+            0.7e-3
+            * b_plasma_toroidal_on_axis**-0.84
+            * qcyl**1.23
+            * p_plasma_separatrix_mw**0.14
+        )
+
+    @staticmethod
     def calculate_upstream_sol_outboard_parallel_area(
         rmajor: float,
         rminor: float,
