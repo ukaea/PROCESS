@@ -98,6 +98,20 @@ This can be found in Table 2 from Eich et.al [^eich_2011]
 
 ----------
 
+### Eich 2011 JET+ASDEX Model | `calculate_eich2011_jet_asdex_sol_power_decay_length()`
+
+The power decay length in metres is given by[^eich_2011]:
+
+$$
+\lambda_q = 0.73(\pm0.38) \times 10^{-3} B_{\text{T,0}}^{-0.78(\pm0.25)} q_{\text{cyl}}^{1.2(\pm0.27)} P_{\text{sep}}^{0.1(\pm0.11)}R_0^{0.02(\pm0.2)}
+$$
+
+Here $B_{\text{T,0}}$ is the on axis toroidal magnetic field, $q_{\text{cyl}}$ is the cylindrical safety factor, $P_{\text{sep}}$ is the plasma separatrix power in $\text{MW}$ and $R_0$ is the plasma major radius.
+
+This can be found in Table 2 from Eich et.al [^eich_2011]
+
+------------------
+
 [^eich_2013]: T. Eich et al., “Scaling of the tokamak near the scrape-off layer H-mode power width and implications for ITER,” Nuclear Fusion, vol. 53, no. 9 p. 093031, Aug. 2013, doi: 10.1088/0029-5515/53/9/093031.
 
 [^mast_2014]: A. J. Thornton and A. Kirk, “Scaling of the scrape-off layer width during inter-ELM H modes on MAST as measured by infrared thermography,”

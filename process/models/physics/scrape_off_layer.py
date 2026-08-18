@@ -49,6 +49,15 @@ class ScrapeOffLayer(Model):
             )
         )
 
+        self.data.physics.len_plasma_sol_eich11_jet_asdex_power_decay = (
+            self.calculate_eich2011_jet_asdex_sol_power_decay_length(
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+                q_cyl=self.data.physics.qstar,
+                p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
+                rmajor=self.data.physics.rmajor,
+            )
+        )
+
         # Set to user input if OutbordSOLPowerDecayLengthModel = 1/USER_INUT
 
         if (
@@ -86,6 +95,15 @@ class ScrapeOffLayer(Model):
         ):
             self.data.physics.len_sol_outboard_power_decay = (
                 self.data.physics.len_plasma_sol_eich11_jet_power_decay
+            )
+        elif (
+            OutbordSOLPowerDecayLengthModel(
+                self.data.physics.i_len_sol_outboard_power_decay
+            )
+            == OutbordSOLPowerDecayLengthModel.EICH_2011_JET_ASDEX
+        ):
+            self.data.physics.len_sol_outboard_power_decay = (
+                self.data.physics.len_plasma_sol_eich11_jet_asdex_power_decay
             )
 
         self.data.physics.a_plasma_outboard_sol_parallel = self.calculate_upstream_sol_outboard_parallel_area(  # noqa: E501
@@ -155,9 +173,15 @@ class ScrapeOffLayer(Model):
         )
         po.ovarre(
             self.outfile,
-            "Eich 2011 JET power decay length in the scrape-off layer scaling (λ_q) [m]",
+            "Eich 2011 JET SOL power decay length (λ_q) [m]",
             "(len_plasma_sol_eich11_jet_power_decay)",
             self.data.physics.len_plasma_sol_eich11_jet_power_decay,
+        )
+        po.ovarre(
+            self.outfile,
+            "Eich 2011 JET + ASDEX Upgrade SOL power decay length (λ_q) [m]",
+            "(len_plasma_sol_eich11_jet_asdex_power_decay)",
+            self.data.physics.len_plasma_sol_eich11_jet_asdex_power_decay,
         )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
@@ -346,6 +370,52 @@ class ScrapeOffLayer(Model):
             * b_plasma_toroidal_on_axis**-0.84
             * q_cyl**1.23
             * p_plasma_separatrix_mw**0.14
+        )
+
+    @staticmethod
+    def calculate_eich2011_jet_asdex_sol_power_decay_length(
+        b_plasma_toroidal_on_axis: float,
+        q_cyl: float,
+        p_plasma_separatrix_mw: float,
+        rmajor: float,
+    ) -> float:
+        """Calculate the Eich 2011 JET + ASDEX Upgrade SOL power decay length (λ_q).
+
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis : float
+            Toroidal magnetic field at the plasma axis (Bᴛ(R₀)) [T]
+        q_cyl : float
+            Cylindrical safety factor (q_cyl) [-]
+        p_plasma_separatrix_mw : float
+            Power crossing the separatrix (Pₛₑₚ) [MW]
+        rmajor : float
+            Major radius of the plasma (R₀) [m]
+
+        Returns
+        -------
+        float
+            Eich 2011 JET + ASDEX Upgrade SOL power decay length (λ_q) [m]
+
+        Notes
+        -----
+        - The fit values can be found in Table 2 of [1].
+
+        References
+        ----------
+        [1] T. Eich, B. Sieglin, A. Scarabosio, W. Fundamenski, Robert James Goldston,
+        and A. Herrmann, “Inter-ELM Power Decay Length for JET and ASDEX Upgrade:
+        Measurement and Comparison with Heuristic Drift-Based Model,”
+        Physical Review Letters, vol. 107, no. 21, Nov. 2011,
+        doi: https://doi.org/10.1103/PhysRevLett.107.215001.
+
+        """
+        return (
+            0.73e-3
+            * b_plasma_toroidal_on_axis**-0.78
+            * q_cyl**1.2
+            * p_plasma_separatrix_mw**0.1
+            * rmajor**0.02
         )
 
     @staticmethod
