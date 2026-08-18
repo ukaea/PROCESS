@@ -14,6 +14,7 @@ class OutbordSOLPowerDecayLengthModel(IntEnum):
     EICH_2013 = (1, "Eich 2013")
     MAST_2014_1 = (2, "MAST 2014-1")
     MAST_2014_2 = (3, "MAST 2014-2")
+    EICH_2011_JET = (4, "Eich 2011 JET")
 
     def __new__(cls, value: int, description: str):
         """Create a new instance of OutbordSOLPowerDecayLengthModel.

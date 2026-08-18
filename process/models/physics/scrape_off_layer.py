@@ -294,7 +294,7 @@ class ScrapeOffLayer(Model):
         Parameters
         ----------
         b_plasma_toroidal_on_axis : float
-            Toroidal magnetic field at the plasma axis (B₀) [T]
+            Toroidal magnetic field at the plasma axis (Bᴛ(R₀)) [T]
         qcyl : float
             Cylindrical safety factor (q_cyl) [-]
         p_plasma_separatrix_mw : float
@@ -304,7 +304,7 @@ class ScrapeOffLayer(Model):
         -------
         float
             Eich 2011 JET SOL power decay length (λ_q) [m]
-            
+
         Notes
         -----
         - The fit values can be found in Table 2 of [1].
