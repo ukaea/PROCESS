@@ -40,6 +40,83 @@ def test_calculate_eich2013_sol_power_decay_length_exact():
 
 
 @pytest.mark.parametrize(
+    ("b_plasma_toroidal_on_axis", "q_cyl", "p_plasma_separatrix_mw"),
+    [
+        (3.0, 2.0, 100.0),
+        (2.0, 1.0, 10.0),
+        (5.0, 4.0, 500.0),
+        (1.0, 3.0, 100.0),
+    ],
+)
+def test_calculate_eich2011_jet_sol_power_decay_length(
+    b_plasma_toroidal_on_axis, q_cyl, p_plasma_separatrix_mw
+):
+    """Test Eich 2011 JET SOL power decay length with various parameters."""
+    result = ScrapeOffLayer.calculate_eich2011_jet_sol_power_decay_length(
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+        q_cyl=q_cyl,
+        p_plasma_separatrix_mw=p_plasma_separatrix_mw,
+    )
+    assert isinstance(result, float)
+    assert result > 0
+
+
+def test_calculate_eich2011_jet_sol_power_decay_length_exact():
+    """Test Eich 2011 JET SOL power decay length with exact value check."""
+    result = ScrapeOffLayer.calculate_eich2011_jet_sol_power_decay_length(
+        b_plasma_toroidal_on_axis=1.0,
+        q_cyl=1.0,
+        p_plasma_separatrix_mw=100.0,
+    )
+    assert isinstance(result, float)
+    assert pytest.approx(result) == 0.001333822502574273
+
+
+@pytest.mark.parametrize(
+    (
+        "b_plasma_toroidal_on_axis",
+        "q_cyl",
+        "p_plasma_separatrix_mw",
+        "rmajor",
+    ),
+    [
+        (3.0, 2.0, 100.0, 3.0),
+        (2.0, 1.0, 10.0, 3.0),
+        (5.0, 4.0, 500.0, 3.0),
+        (3.0, 2.0, 100.0, 10.0),
+    ],
+)
+def test_calculate_eich2011_jet_asdex_sol_power_decay_length(
+    b_plasma_toroidal_on_axis, q_cyl, p_plasma_separatrix_mw, rmajor
+):
+    """Test Eich 2011 JET + ASDEX Upgrade SOL power decay length with
+    various parameters.
+    """
+    result = ScrapeOffLayer.calculate_eich2011_jet_asdex_sol_power_decay_length(
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+        q_cyl=q_cyl,
+        p_plasma_separatrix_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+    )
+    assert isinstance(result, float)
+    assert result > 0
+
+
+def test_calculate_eich2011_jet_asdex_sol_power_decay_length_exact():
+    """Test Eich 2011 JET + ASDEX Upgrade SOL power decay length with exact value
+    check.
+    """
+    result = ScrapeOffLayer.calculate_eich2011_jet_asdex_sol_power_decay_length(
+        b_plasma_toroidal_on_axis=1.0,
+        q_cyl=1.0,
+        p_plasma_separatrix_mw=100.0,
+        rmajor=1.0,
+    )
+    assert isinstance(result, float)
+    assert pytest.approx(result) == 0.0011569720304966129
+
+
+@pytest.mark.parametrize(
     ("p_plasma_separatrix_mw", "b_plasma_surface_poloidal_average"),
     [
         (100.0, 0.5),
