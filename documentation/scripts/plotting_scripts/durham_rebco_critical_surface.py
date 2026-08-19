@@ -5,6 +5,7 @@ import numpy as np
 import plotly.graph_objects as go
 
 from process.models import superconductors
+from process.models.superconductors import SuperconductorModel
 
 # Create a grid of temperature and field values
 temp_conductor = np.linspace(4.2, 30.0, 50)  # Temperature range (K)
@@ -23,8 +24,8 @@ for i in range(temp_grid.shape[0]):
             temp_conductor=temp_grid[i, j],
             b_conductor=b_grid[i, j],
             strain=0.0,
-            b_c20max=429.0,
-            t_c0=185.0,
+            b_c20max=SuperconductorModel.DURHAM_REBCO.b_crit_zero_field_strain,
+            t_c0=SuperconductorModel.DURHAM_REBCO.temp_crit_zero_field_strain,
         )
         # Convert from A/m² to kA/mm² (1 A/m² = 1e-6 A/mm²)
         j_scaling[i, j] *= 1e-9

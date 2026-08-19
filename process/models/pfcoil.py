@@ -887,8 +887,6 @@ class PFCoil(Model):
                             temp_pf_peak_field=self.data.tfcoil.tftmp,
                             bcritsc=self.data.tfcoil.bcritsc,
                             tcritsc=self.data.tfcoil.tcritsc,
-                            b_crit_upper_nbti=self.data.tfcoil.b_crit_upper_nbti,
-                            t_crit_nbti=self.data.tfcoil.t_crit_nbti,
                             dr_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
                             dx_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
                             dx_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
@@ -3611,8 +3609,6 @@ class CSCoil(Model):
                 temp_pf_peak_field=self.data.pf_coil.temp_cs_superconductor_operating,
                 bcritsc=self.data.tfcoil.bcritsc,
                 tcritsc=self.data.tfcoil.tcritsc,
-                b_crit_upper_nbti=self.data.tfcoil.b_crit_upper_nbti,
-                t_crit_nbti=self.data.tfcoil.t_crit_nbti,
                 dr_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
                 dx_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
                 dx_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
@@ -3661,8 +3657,6 @@ class CSCoil(Model):
                 temp_pf_peak_field=self.data.pf_coil.temp_cs_superconductor_operating,
                 bcritsc=self.data.tfcoil.bcritsc,
                 tcritsc=self.data.tfcoil.tcritsc,
-                b_crit_upper_nbti=self.data.tfcoil.b_crit_upper_nbti,
-                t_crit_nbti=self.data.tfcoil.t_crit_nbti,
                 dr_hts_tape=self.data.superconducting_tfcoil.dr_tf_hts_tape,
                 dx_hts_tape_rebco=self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
                 dx_hts_tape_total=self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
@@ -4650,8 +4644,6 @@ def superconpf(
     temp_pf_peak_field: float,
     bcritsc: float,
     tcritsc: float,
-    b_crit_upper_nbti: float,
-    t_crit_nbti: float,
     dr_hts_tape: float,
     dx_hts_tape_rebco: float,
     dx_hts_tape_total: float,
@@ -4699,10 +4691,6 @@ def superconpf(
         Critical field at zero temperature and strain [T] (isumat=4 only)
     tcritsc : float
         Critical temperature at zero field and strain [K] (isumat=4 only)
-    b_crit_upper_nbti: float
-        upper critical field of GL_nbti [T]
-    t_crit_nbti: float
-        critical temperature of GL_nbti [K]
     dr_hts_tape: float
         Mean width of tape [m]
     dx_hts_tape_rebco: float
@@ -4734,8 +4722,12 @@ def superconpf(
     # Find critical current density in superconducting strand, jcritstr
     if isumat == SuperconductorModel.ITER_NB3SN:
         # ITER Nb3Sn critical surface parameterization
-        bc20m = 32.97e0  # [T] critical field at 0 K and 0 strain
-        tc0m = 16.06e0  # [K] critical temperature at 0 T and 0 strain
+        bc20m = (
+            SuperconductorModel.ITER_NB3SN.b_crit_zero_field_strain
+        )  # [T] critical field at 0 K and 0 strain
+        tc0m = (
+            SuperconductorModel.ITER_NB3SN.temp_crit_zero_field_strain
+        )  # [K] critical temperature at 0 T and 0 strain
 
         # j_crit_sc returned by superconductors.itersc is
         # the critical current density in the superconductor
@@ -4773,8 +4765,12 @@ def superconpf(
 
     elif isumat == SuperconductorModel.OLD_LUBELL_NBTI:
         # NbTi data
-        bc20m = 15.0e0  # [T] critical field at 0 K and 0 strain
-        tc0m = 9.3e0  # [K] critical temperature at 0 T and 0 strain
+        bc20m = (
+            SuperconductorModel.OLD_LUBELL_NBTI.b_crit_zero_field_strain
+        )  # [T] critical field at 0 K and 0 strain
+        tc0m = (
+            SuperconductorModel.OLD_LUBELL_NBTI.temp_crit_zero_field_strain
+        )  # [K] critical temperature at 0 T and 0 strain
         c0 = 1.0e10  # # [A/m²]
         j_crit_sc, _ = superconductors.jcrit_nbti(
             temp_conductor=temp_pf_peak_field,
@@ -4800,8 +4796,12 @@ def superconpf(
 
     elif isumat == SuperconductorModel.WST_NB3SN:
         # WST Nb3Sn parameterisation
-        bc20m = 32.97e0  # [T] critical field at 0 K and 0 strain
-        tc0m = 16.06e0  # [K] critical temperature at 0 T and 0 strain
+        bc20m = (
+            SuperconductorModel.WST_NB3SN.b_crit_zero_field_strain
+        )  # [T] critical field at 0 K and 0 strain
+        tc0m = (
+            SuperconductorModel.WST_NB3SN.temp_crit_zero_field_strain
+        )  # [K] critical temperature at 0 T and 0 strain
 
         # j_crit_sc returned by superconductors.itersc is the critical current density
         # in the superconductor - not the whole strand, which contains copper
@@ -4816,16 +4816,29 @@ def superconpf(
         j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
 
     elif isumat == SuperconductorModel.CROCO_REBCO:
-        # "REBCO" 2nd generation HTS superconductor in CroCo strand
+        # "REBCO" 2nd generation HTS superconductor in CrCo strand
+        b_c20m = (
+            SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain
+        )  # [T] critical field at 0 K and 0 strain
+        t_c0m = (
+            SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain
+        )  # [K] critical temperature at 0 T and 0 strain
         j_crit_sc, _, _, _ = superconductors.jcrit_rebco(
-            temp_conductor=temp_pf_peak_field, b_conductor=b_pf_peak
+            temp_conductor=temp_pf_peak_field,
+            b_conductor=b_pf_peak,
+            b_c20_max=b_c20m,
+            temp_c0_max=t_c0m,
         )
         j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
 
     elif isumat == SuperconductorModel.DURHAM_NBTI:
         # Durham Ginzburg-Landau critical surface model for Nb-Ti
-        bc20m = b_crit_upper_nbti  # [T] critical field at 0 K and 0 strain
-        tc0m = t_crit_nbti  # [K] critical temperature at 0 T and 0 strain
+        bc20m = (
+            SuperconductorModel.DURHAM_NBTI.b_crit_zero_field_strain
+        )  # [T] critical field at 0 K and 0 strain
+        tc0m = (
+            SuperconductorModel.DURHAM_NBTI.temp_crit_zero_field_strain
+        )  # [K] critical temperature at 0 T and 0 strain
         j_crit_sc, _, _ = superconductors.gl_nbti(
             temp_conductor=temp_pf_peak_field,
             b_conductor=b_pf_peak,
@@ -4837,8 +4850,12 @@ def superconpf(
 
     elif isumat == SuperconductorModel.DURHAM_REBCO:
         # Durham Ginzburg-Landau critical surface model for REBCO
-        bc20m = 429e0  # [T] critical field at 0 K and 0 strain
-        tc0m = 185e0  # [K] critical temperature at 0 T and 0 strain
+        bc20m = (
+            SuperconductorModel.DURHAM_REBCO.b_crit_zero_field_strain
+        )  # [T] critical field at 0 K and 0 strain
+        tc0m = (
+            SuperconductorModel.DURHAM_REBCO.temp_crit_zero_field_strain
+        )  # [K] critical temperature at 0 T and 0 strain
         j_crit_sc, _, _ = superconductors.gl_rebco(
             temp_conductor=temp_pf_peak_field,
             b_conductor=b_pf_peak,
@@ -4851,8 +4868,12 @@ def superconpf(
 
     elif isumat == SuperconductorModel.HAZELTON_ZHAI_REBCO:
         # Hazelton experimental data + Zhai conceptual model for REBCO
-        bc20m = 138  # [T] critical field at 0 K and 0 strain
-        tc0m = 92  # [K] critical temperature at 0 T and 0 strain
+        bc20m = (
+            SuperconductorModel.HAZELTON_ZHAI_REBCO.b_crit_zero_field_strain
+        )  # [T] critical field at 0 K and 0 strain
+        tc0m = (
+            SuperconductorModel.HAZELTON_ZHAI_REBCO.temp_crit_zero_field_strain
+        )  # [K] critical temperature at 0 T and 0 strain
         j_crit_sc, _, _ = superconductors.hijc_rebco(
             temp_conductor=temp_pf_peak_field,
             b_conductor=b_pf_peak,

@@ -5,11 +5,14 @@ import numpy as np
 import plotly.graph_objects as go
 
 from process.models import superconductors
+from process.models.superconductors import SuperconductorModel
 
-temp_c0max = 90.0  # Critical temperature (K) at zero field and strain
+temp_c0max = (
+    SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain
+)  # Critical temperature (K) at zero field and strain
 b_c20max = (
-    132.5  # Upper critical field (T) for superconductor at zero temperature and strain
-)
+    SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain
+)  # Upper critical field (T) for superconductor at zero temperature and strain
 epsilon = 0.00  # Strain in superconductor
 
 # Create a grid of temperature and field values
@@ -26,7 +29,12 @@ for i in range(temp_grid.shape[0]):
             _,
             _,
             _,
-        ) = superconductors.jcrit_rebco(temp_grid[i, j], b_grid[i, j])
+        ) = superconductors.jcrit_rebco(
+            temp_conductor=temp_grid[i, j],
+            b_conductor=b_grid[i, j],
+            b_c20_max=b_c20max,
+            temp_c0_max=temp_c0max,
+        )
         # Convert from A/m² to kA/mm² (1 A/m² = 1e-6 A/mm²)
         j_scaling[i, j] *= 1e-9
         print(f"j_scaling[{i}, {j}] = {j_scaling[i, j]} kA/mm²")

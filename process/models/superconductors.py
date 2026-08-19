@@ -80,49 +80,72 @@ class SuperconductorModel(IntEnum):
     ITER_NB3SN = (
         1,
         SuperconductorMaterial.NB3SN,
+        32.97e0,  # [T]
+        16.06e0,  # [K]
         SuperconductorShape.CABLE,
         "ITER Nb₃Sn critical surface model",
     )
-    BI2212 = (2, SuperconductorMaterial.BI2212, SuperconductorShape.CABLE, "Bi-2212")
+    BI2212 = (
+        2,
+        SuperconductorMaterial.BI2212,
+        None,  # Model is fitted to experimental data, so no critical B or T is defined
+        None,  # Model is fitted to experimental data, so no critical B or T is defined
+        SuperconductorShape.CABLE,
+        "Bi-2212",
+    )
     OLD_LUBELL_NBTI = (
         3,
         SuperconductorMaterial.NBTI,
+        15.0e0,  # [T]
+        9.3e0,  # [K]
         SuperconductorShape.CABLE,
         "Old Lubell NbTi",
     )
     USER_DEFINED_NB3SN = (
         4,
         SuperconductorMaterial.NB3SN,
+        None,  # User input via `bcritsc`
+        None,  # User input via `tcritsc`
         SuperconductorShape.CABLE,
         "User-defined ITER Nb₃Sn",
     )
     WST_NB3SN = (
         5,
         SuperconductorMaterial.NB3SN,
+        32.97e0,  # [T]
+        16.06e0,  # [K]
         SuperconductorShape.CABLE,
         "Western Superconducting Nb₃Sn",
     )
     CROCO_REBCO = (
         6,
         SuperconductorMaterial.REBCO,
+        132.5e0,  # [T]
+        90.0e0,  # [K]
         SuperconductorShape.TAPE,
         "CROCO REBCO",
     )
     DURHAM_NBTI = (
         7,
         SuperconductorMaterial.NBTI,
+        14.86e0,  # [T]
+        9.2e0,  # [K]
         SuperconductorShape.CABLE,
         "Durham Ginzburg-Landau NbTi",
     )
     DURHAM_REBCO = (
         8,
         SuperconductorMaterial.REBCO,
+        430.0e0,  # [T]
+        185.0e0,  # [K]
         SuperconductorShape.TAPE,
         "Durham Ginzburg-Landau REBCO",
     )
     HAZELTON_ZHAI_REBCO = (
         9,
         SuperconductorMaterial.REBCO,
+        138.0e0,  # [T]
+        92.0e0,  # [K]
         SuperconductorShape.TAPE,
         "Hazelton-Zhai REBCO",
     )
@@ -131,6 +154,8 @@ class SuperconductorModel(IntEnum):
         cls,
         value: int,
         material: SuperconductorMaterial,
+        b_crit_zero_temp_strain: float | None,
+        temp_crit_zero_field_strain: float | None,
         shape: SuperconductorShape,
         full_name: str,
     ):
@@ -138,6 +163,8 @@ class SuperconductorModel(IntEnum):
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._material_ = material
+        obj._b_crit_zero_temp_strain = b_crit_zero_temp_strain
+        obj._temp_crit_zero_field_strain = temp_crit_zero_field_strain
         obj._shape_ = shape
         obj._full_name_ = full_name
         return obj
@@ -158,6 +185,20 @@ class SuperconductorModel(IntEnum):
         return self._shape_
 
     @DynamicClassAttribute
+    def b_crit_zero_field_strain(self):
+        """The upper critical field [T] for the superconductor at zero temperature and
+        strain (ε = 0).
+        """
+        return self._b_crit_zero_temp_strain
+
+    @DynamicClassAttribute
+    def temp_crit_zero_field_strain(self):
+        """The critical temperature [K] for the superconductor at zero field and strain
+        (ε = 0).
+        """
+        return self._temp_crit_zero_field_strain
+
+    @DynamicClassAttribute
     def sc_type(self):
         """The superconductor type (LTS or HTS) associated with this model."""
         return self._material_.sc_type
@@ -169,7 +210,7 @@ class SuperconductorModel(IntEnum):
 
 
 def jcrit_rebco(
-    temp_conductor: float, b_conductor: float
+    temp_conductor: float, b_conductor: float, temp_c0_max: float, b_c20_max: float
 ) -> tuple[float, bool, float, float]:
     """Calculate the critical current density for a "REBCO" 2nd generation HTS
     superconductor.
@@ -177,9 +218,13 @@ def jcrit_rebco(
     Parameters
     ----------
     temp_conductor : float
-        Superconductor temperature in Kelvin (K).
+        Superconductor temperature in Kelvin [K].
     b_conductor : float
-        Magnetic field at the superconductor in Tesla (T).
+        Magnetic field at the superconductor in Tesla [T].
+    temp_c0_max : float
+        Critical temperature [K] at zero field and strain.
+    b_c20_max : float
+        Upper critical field [T] for the superconductor at zero temperature and strain.
 
     Returns
     -------
@@ -205,11 +250,6 @@ def jcrit_rebco(
             - For temp_conductor ≥ 65 K: 0.0 T ≤ b_conductor ≤ 11.5 T
 
     """
-    # Critical temperature (K) at zero field and strain.
-    temp_c0max = 90.0
-    # Upper critical field (T) for the superconductor at zero temperature and strain.
-    b_c20max = 132.5
-
     C = 1.82962e8  # scaling constant
     p = 0.5875
     q = 1.7
@@ -237,12 +277,12 @@ def jcrit_rebco(
             b_conductor,
         )
 
-    if temp_conductor < temp_c0max:
+    if temp_conductor < temp_c0_max:
         # Normal case
-        birr = b_c20max * (1 - temp_conductor / temp_c0max) ** alpha
+        birr = b_c20_max * (1 - temp_conductor / temp_c0_max) ** alpha
     else:
         # If temp is greater than critical temp, ensure result is real but negative.
-        birr = b_c20max * (1 - temp_conductor / temp_c0max)
+        birr = b_c20_max * (1 - temp_conductor / temp_c0_max)
 
     if b_conductor < birr:
         # Normal case
@@ -252,10 +292,10 @@ def jcrit_rebco(
         # Field is too high
         # Ensure result is real but negative, and varies with temperature.
         # tcb = critical temperature at field b
-        tcb = temp_c0max * (1 - (b_conductor / b_c20max) ** oneoveralpha)
+        tcb = temp_c0_max * (1 - (b_conductor / b_c20_max) ** oneoveralpha)
         j_critical = -(temp_conductor - tcb)
 
-    return j_critical, validity, b_c20max, temp_c0max
+    return j_critical, validity, b_c20_max, temp_c0_max
 
 
 def current_sharing_rebco(bfield, j):
@@ -275,7 +315,12 @@ def current_sharing_rebco(bfield, j):
     """
 
     def deltaj_rebco(temperature):
-        jcritical, _, _, _ = jcrit_rebco(temperature, bfield)
+        jcritical, _, _, _ = jcrit_rebco(
+            temp_conductor=temperature,
+            b_conductor=bfield,
+            temp_c0_max=SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain,
+            b_c20_max=SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain,
+        )
         return jcritical - j
 
     # No additional arguments are required for deltaj_rebco since it only has one

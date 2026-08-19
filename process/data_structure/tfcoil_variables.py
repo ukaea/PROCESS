@@ -184,12 +184,6 @@ class TFData:
     e_tf_coil_magnetic_stored: float = 0.0
     """Stored magnetic energy in a single TF coil (J)"""
 
-    b_crit_upper_nbti: float = 14.86
-    """upper critical field of GL_nbti"""
-
-    t_crit_nbti: float = 9.04
-    """critical temperature of GL_nbti"""
-
     max_force_density: float = 0.0
     """Maximal (WP averaged) force density in TF coils at 1 point. (MN/m3)"""
 

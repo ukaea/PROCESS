@@ -1230,12 +1230,23 @@ class SuperconductingTFCoil(TFCoil):
         #  Temperature margin (already calculated in superconductors.bi2212 for
         # i_tf_superconductor=2)
 
-        if i_tf_superconductor == 2:
+        if SuperconductorModel(i_tf_superconductor) == SuperconductorModel.BI2212:
             # Bi-2212: temperature margin already calculated elsewhere
             temp_tf_superconductor_margin = 0.0
             # Find temperature at which current density margin = 0
-        elif i_tf_superconductor in {1, 3, 4, 5, 7, 8, 9}:
-            if i_tf_superconductor == 3:
+        elif SuperconductorModel(i_tf_superconductor) in {
+            SuperconductorModel.ITER_NB3SN,
+            SuperconductorModel.OLD_LUBELL_NBTI,
+            SuperconductorModel.USER_DEFINED_NB3SN,
+            SuperconductorModel.WST_NB3SN,
+            SuperconductorModel.DURHAM_NBTI,
+            SuperconductorModel.DURHAM_REBCO,
+            SuperconductorModel.HAZELTON_ZHAI_REBCO,
+        }:
+            if (
+                SuperconductorModel(i_tf_superconductor)
+                == SuperconductorModel.OLD_LUBELL_NBTI
+            ):
                 arguments = (
                     i_tf_superconductor,
                     j_superconductor,
@@ -2911,8 +2922,8 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         # ITER Nb3Sn critical surface parameterization
         if i_tf_superconductor == SuperconductorModel.ITER_NB3SN:
             # Peak field and temperature at zero strain
-            bc20m = 32.97e0  # [T]
-            tc0m = 16.06e0  # [K]
+            bc20m = SuperconductorModel.ITER_NB3SN.b_crit_zero_field_strain  # [T]
+            tc0m = SuperconductorModel.ITER_NB3SN.temp_crit_zero_field_strain  # [K]
 
             # If strain limit achieved, throw a warning and use the lower strain
             if abs(strain) > 0.5e-2:
@@ -2982,8 +2993,8 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         # NbTi data
         elif i_tf_superconductor == SuperconductorModel.OLD_LUBELL_NBTI:
-            bc20m = 15.0e0  # [T]
-            tc0m = 9.3e0  # [K]
+            bc20m = SuperconductorModel.OLD_LUBELL_NBTI.b_crit_zero_field_strain  # [T]
+            tc0m = SuperconductorModel.OLD_LUBELL_NBTI.temp_crit_zero_field_strain  # [K]
             c0 = 1.0e10  # [A/m²]
 
             j_superconductor_critical, _ = superconductors.jcrit_nbti(
@@ -3048,8 +3059,8 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         # WST Nb3Sn parameterisation
         elif i_tf_superconductor == SuperconductorModel.WST_NB3SN:
-            bc20m = 32.97e0  # [T]
-            tc0m = 16.06e0  # [K]
+            bc20m = SuperconductorModel.WST_NB3SN.b_crit_zero_field_strain  # [T]
+            tc0m = SuperconductorModel.WST_NB3SN.temp_crit_zero_field_strain  # [K]
 
             # If strain limit achieved, throw a warning and use the lower strain
             if abs(strain) > 0.5e-2:
@@ -3089,8 +3100,8 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Durham Ginzburg-Landau Nb-Ti parameterisation
         elif i_tf_superconductor == SuperconductorModel.DURHAM_NBTI:
-            bc20m = data.tfcoil.b_crit_upper_nbti  # [T]
-            tc0m = data.tfcoil.t_crit_nbti  # [K]
+            bc20m = SuperconductorModel.DURHAM_NBTI.b_crit_zero_field_strain  # [T]
+            tc0m = SuperconductorModel.DURHAM_NBTI.temp_crit_zero_field_strain  # [K]
 
             j_superconductor_critical, _, _ = superconductors.gl_nbti(
                 temp_conductor=temp_tf_coolant_peak_field,
@@ -4450,17 +4461,22 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         # =================================================================
 
         if i_tf_superconductor == SuperconductorModel.CROCO_REBCO:
+            b_c20_max = SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain  # [T]
+            t_c0 = SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain  # [K]
             #  Find critical current density in superconducting cable, j_crit_cable
             j_superconductor_critical, _, bc20m, tc0m = superconductors.jcrit_rebco(
-                temp_conductor=temp_tf_peak, b_conductor=b_tf_inboard_peak
+                temp_conductor=temp_tf_peak,
+                b_conductor=b_tf_inboard_peak,
+                temp_c0_max=t_c0,
+                b_c20_max=b_c20_max,
             )
 
         # =================================================================
 
         # Durham Ginzburg-Landau critical surface model for REBCO
         elif i_tf_superconductor == SuperconductorModel.DURHAM_REBCO:
-            bc20m = 430  # [T]
-            tc0m = 185  # [K]
+            bc20m = SuperconductorModel.DURHAM_REBCO.b_crit_zero_field_strain  # [T]
+            tc0m = SuperconductorModel.DURHAM_REBCO.temp_crit_zero_field_strain  # [K]
 
             # If strain limit achieved, throw a warning and use the lower strain
             if abs(strain) > 0.7e-2:
@@ -4482,8 +4498,12 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Hazelton experimental data + Zhai conceptual model for REBCO
         elif i_tf_superconductor == SuperconductorModel.HAZELTON_ZHAI_REBCO:
-            bc20m = 138  # [T]
-            tc0m = 92  # [K]
+            bc20m = (
+                SuperconductorModel.HAZELTON_ZHAI_REBCO.b_crit_zero_field_strain
+            )  # [T]
+            tc0m = (
+                SuperconductorModel.HAZELTON_ZHAI_REBCO.temp_crit_zero_field_strain
+            )  # [K]
 
             # If strain limit achieved, throw a warning and use the lower strain
             if abs(strain) > 0.7e-2:

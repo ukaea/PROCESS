@@ -3,7 +3,7 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.models import superconductors
-from process.models.superconductors import CroCoCableGeometry
+from process.models.superconductors import CroCoCableGeometry, SuperconductorModel
 
 
 class IterscParam(NamedTuple):
@@ -31,8 +31,8 @@ class IterscParam(NamedTuple):
             thelium=4.75,
             bmax=13.008974843466492,
             strain=0.001601605753441172,
-            bc20max=32.969999999999999,
-            tc0max=16.059999999999999,
+            bc20max=SuperconductorModel.ITER_NB3SN.b_crit_zero_field_strain,
+            tc0max=SuperconductorModel.ITER_NB3SN.temp_crit_zero_field_strain,
             expected_jcrit=692348194.774593,
             expected_bcrit=27.092853296363597,
             expected_tcrit=11.338458919718571,
@@ -41,8 +41,8 @@ class IterscParam(NamedTuple):
             thelium=6.2510000000000003,
             bmax=13.008974843466492,
             strain=0.001601605753441172,
-            bc20max=32.969999999999999,
-            tc0max=16.059999999999999,
+            bc20max=SuperconductorModel.ITER_NB3SN.b_crit_zero_field_strain,
+            tc0max=SuperconductorModel.ITER_NB3SN.temp_crit_zero_field_strain,
             expected_jcrit=495889332.08959526,
             expected_bcrit=24.442648486388464,
             expected_tcrit=11.338458919718571,
@@ -101,8 +101,8 @@ class JcritNbtiParam(NamedTuple):
             temperature=4.75,
             bmax=8.0517923638507547,
             c0=10000000000,
-            bc20max=15,
-            tc0max=9.3000000000000007,
+            bc20max=SuperconductorModel.OLD_LUBELL_NBTI.b_crit_zero_field_strain,
+            tc0max=SuperconductorModel.OLD_LUBELL_NBTI.temp_crit_zero_field_strain,
             expected_jcrit=906668274.04561484,
             expected_tcrit=5.9060082696285683,
         ),
@@ -110,8 +110,8 @@ class JcritNbtiParam(NamedTuple):
             temperature=6,
             bmax=8.0517923638507547,
             c0=10000000000,
-            bc20max=15,
-            tc0max=9.3000000000000007,
+            bc20max=SuperconductorModel.OLD_LUBELL_NBTI.b_crit_zero_field_strain,
+            tc0max=SuperconductorModel.OLD_LUBELL_NBTI.temp_crit_zero_field_strain,
             expected_jcrit=-73718607.547511846,
             expected_tcrit=5.9060082696285683,
         ),
@@ -143,7 +143,12 @@ def test_jcrit_nbti(jcritnbtiparam):
 
 
 def test_jcrit_rebco():
-    jcrit_rebco, validity, _, _ = superconductors.jcrit_rebco(4.75, 7.0)
+    jcrit_rebco, validity, _, _ = superconductors.jcrit_rebco(
+        temp_conductor=4.75,
+        b_conductor=7.0,
+        temp_c0_max=SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain,
+        b_c20_max=SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain,
+    )
 
     assert jcrit_rebco == pytest.approx(55870234414.171684)
     assert validity
