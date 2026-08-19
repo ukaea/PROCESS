@@ -2750,7 +2750,8 @@ class PFCoil(Model):
         inv_st_pulse = 1.0e0 / pf_d.f_j_cs_start_pulse_end_flat_top
 
         for k in range(self.data.pf_coil.n_pf_cs_plasma_circuits - 1):
-            if k == self.data.pf_coil.n_pf_cs_plasma_circuits - 2:
+            if (self.data.build.iohcl != 0) and (k ==
+                        self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
                 line = "\tCS\t\t"
             else:
                 line = f"\t{k + 1}\t\t"
@@ -2768,7 +2769,8 @@ class PFCoil(Model):
         op.ocmmnt(self.outfile, "This consists of: CS coil field balancing:")
 
         for k in range(pf_d.n_pf_cs_plasma_circuits - 1):
-            if k == pf_d.n_pf_cs_plasma_circuits - 2:
+            if (self.data.build.iohcl != 0) and (k ==
+                                    self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
                 op.write(
                     self.outfile,
                     (
@@ -2796,7 +2798,8 @@ class PFCoil(Model):
         op.oblnkl(self.outfile)
         op.ocmmnt(self.outfile, "And: equilibrium field:")
         for k in range(pf_d.n_pf_cs_plasma_circuits - 1):
-            if k == pf_d.n_pf_cs_plasma_circuits - 2:
+            if (self.data.build.iohcl != 0) and (k ==
+                                    self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
                 op.write(
                     self.outfile,
                     (
@@ -2847,7 +2850,8 @@ class PFCoil(Model):
                 if k == self.data.pf_coil.n_pf_cs_plasma_circuits - 1:
                     circuit_name = f"Plasma Time point {jjj} (A)"
                     circuit_var_name = f"(plasmat{jjj})"
-                elif k == self.data.pf_coil.n_pf_cs_plasma_circuits - 2:
+                elif (self.data.build.iohcl != 0) and (k ==
+                                        self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
                     circuit_name = f"CS Circuit Time point {jjj} (A)"
                     circuit_var_name = f"(cs t{jjj})"
                 else:
