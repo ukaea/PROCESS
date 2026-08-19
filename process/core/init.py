@@ -1040,19 +1040,13 @@ def check_process(inputs, data):  # noqa: ARG001
         tfcoil_fields = getattr(type(data.tfcoil), "__dataclass_fields__", {})
         for field_name in ("bcritsc", "tcritsc"):
             field_definition = tfcoil_fields.get(field_name)
-            if field_definition is None:
-                continue
-
-            if field_definition.default is not MISSING:
-                default_value = field_definition.default
-            elif field_definition.default_factory is not MISSING:
-                default_value = field_definition.default_factory()
-            else:
-                continue
-            if getattr(data.tfcoil, field_name) != default_value:
-                raise ProcessValidationError(
-                    f"Cannot set {field_name} for non-user-defined superconductors"
-                )
+            if field_definition is not None:
+                if field_definition.default is not MISSING:
+                    default_value = field_definition.default
+                if getattr(data.tfcoil, field_name) != default_value:
+                    raise ProcessValidationError(
+                        f"Cannot set {field_name} for non-user-defined superconductors"
+                    )
 
     # Check if the WP/conductor radial thickness (dr_tf_wp_with_insulation)
     # is large enough
