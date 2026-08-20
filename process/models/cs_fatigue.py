@@ -7,17 +7,17 @@ from process.core import constants
 from process.core.model import Model
 
 
-class CsFatigue(Model):
+class CSFatigue(Model):
     """Calculate CS fatigue model parameters"""
 
     def __init__(self):
         self.outfile = constants.NOUT
 
     def output(self):
-        """CsFatigue model doesn't have any output"""
+        """CSFatigue model doesn't have any output"""
 
     def run(self):
-        """CsFatigue model doesn't need to be run"""
+        """CSFatigue model doesn't need to be run"""
 
     def ncycle(
         self,

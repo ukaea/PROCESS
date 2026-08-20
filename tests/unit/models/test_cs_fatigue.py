@@ -5,10 +5,10 @@ import pytest
 
 @pytest.fixture
 def cs_fatigue_python(process_models):
-    """Fixture to create a CsFatigue object.
+    """Fixture to create a CSFatigue object.
 
-    :return: an instance of CsFatigue
-    :rtype: process.cs_fatigue.CsFatigue
+    :return: an instance of CSFatigue
+    :rtype: process.cs_fatigue.CSFatigue
     """
     return process_models.cs_fatigue
 

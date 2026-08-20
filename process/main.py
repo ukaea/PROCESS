@@ -60,7 +60,7 @@ from process.models.buildings import Buildings
 from process.models.costs.costs import Costs
 from process.models.costs.costs_2015 import Costs2015
 from process.models.cryostat import Cryostat
-from process.models.cs_fatigue import CsFatigue
+from process.models.cs_fatigue import CSFatigue
 from process.models.divertor import Divertor
 from process.models.fw import FirstWall
 from process.models.ife import IFE
@@ -647,7 +647,7 @@ class Models:
         self._costs_custom = None
         self._costs_1990 = Costs()
         self._costs_2015 = Costs2015()
-        self.cs_fatigue = CsFatigue()
+        self.cs_fatigue = CSFatigue()
         self.cs_coil = CSCoil(cs_fatigue=self.cs_fatigue)
         self.pfcoil = PFCoil(cs_fatigue=self.cs_fatigue, cs_coil=self.cs_coil)
         self.power = Power()
