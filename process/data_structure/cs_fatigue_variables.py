@@ -40,8 +40,8 @@ class CSFatigueData:
     sf_fast_fracture: float = 1.5
     """safety factor for stress intensity factor (-)"""
 
-    paris_coefficient: float = 65.0e-14
-    """Paris equation material coefficient (-)"""
+    paris_coefficient_cs_turn: float = 65.0e-14
+    """Paris equation material coefficient / fatigue crack growth coefficient (C)"""
 
     paris_power_law: float = 3.5
     """Paris equation material power law (-)"""

@@ -634,7 +634,7 @@ INPUT_VARIABLES = {
     "temp_blkt_coolant_out": InputVariable("fwbs", float, range=(450.0, 900.0)),
     "outlet_temp_liq": InputVariable("fwbs", float, range=(508.0, 1500.0)),
     "p_he": InputVariable("primary_pumping", float, range=(0.0, 100000000.0)),
-    "paris_coefficient": InputVariable("cs_fatigue", float, range=(1e-20, 10.0)),
+    "paris_coefficient_cs_turn": InputVariable("cs_fatigue", float, range=(1e-20, 10.0)),
     "paris_power_law": InputVariable("cs_fatigue", float, range=(1.0, 10.0)),
     "pres_vv_chamber_base": InputVariable("vacuum", float, range=(1e-08, 0.001)),
     "p_plasma_separatrix_min_mw": InputVariable(

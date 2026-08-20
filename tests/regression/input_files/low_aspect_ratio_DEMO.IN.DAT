@@ -866,7 +866,7 @@ stress_hoop_cs_residual = 1.50e8
 * DESCRIPTION:   Initial vertical crack size (m)
 * JUSTIFICATION: Initial crack area 1 mm2
 
-paris_coefficient = 3.86e-11
+paris_coefficient_cs_turn = 3.86e-11
 * DESCRIPTION:   Paris equation material coefficient (-)
 * JUSTIFICATION: 316LN (ITER DDD TF p. 83)
 

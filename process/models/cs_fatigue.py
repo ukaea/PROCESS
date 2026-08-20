@@ -111,7 +111,7 @@ class CSFatigue(Model):
 
         # Calculated constant for a given stress ratio using Walker equation
         # https://en.wikipedia.org/wiki/Crack_growth_equation#Walker_equation
-        cr = self.data.cs_fatigue.paris_coefficient / (1.0e0 - r) ** n
+        cr = self.data.cs_fatigue.paris_coefficient_cs_turn / (1.0e0 - r) ** n
 
         # select given increase in crack area
         delta = 1.0e-4
