@@ -2228,47 +2228,11 @@ class PFCoil(Model):
             )
 
             op.oblnkl(self.outfile)
+            
             # only output CS fatigue model for pulsed reactor design
-            if self.data.physics.f_c_plasma_inductive > 0.0e-4:
-                op.ovarre(
-                    self.outfile,
-                    "Residual hoop stress in CS Steel (Pa)",
-                    "(residual_sig_hoop)",
-                    self.data.cs_fatigue.residual_sig_hoop,
-                )
-                op.ovarre(
-                    self.outfile,
-                    "Minimum burn time (s)",
-                    "(t_burn_min)",
-                    self.data.constraints.t_burn_min,
-                )
-                op.ovarre(
-                    self.outfile,
-                    "Initial vertical crack size (m)",
-                    "(t_crack_vertical)",
-                    self.data.cs_fatigue.t_crack_vertical,
-                )
-                op.ovarre(
-                    self.outfile,
-                    "Initial radial crack size (m)",
-                    "(t_crack_radial)",
-                    self.data.cs_fatigue.t_crack_radial,
-                )
+            self.cs_fatigue.output()
+            
 
-                op.ovarre(
-                    self.outfile,
-                    "Allowable number of cycles till CS fracture",
-                    "(n_cycle)",
-                    self.data.cs_fatigue.n_cycle,
-                    "OP ",
-                )
-                op.ovarre(
-                    self.outfile,
-                    "Minimum number of cycles required till CS fracture",
-                    "(n_cycle_min)",
-                    self.data.cs_fatigue.n_cycle_min,
-                    "OP ",
-                )
             # Check whether CS coil is hitting any limits
             if (
                 abs(pf_d.j_cs_flat_top_end)
