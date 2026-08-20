@@ -27,6 +27,7 @@ from process.data_structure.pfcoil_variables import (
 from process.models import superconductors
 from process.models.engineering.materials import (
     PARIS_COEFFICIENT_SS_316LN,
+    PARIS_EXPONENT_SS_316LN,
     calculate_tresca_stress,
     calculate_von_mises_stress,
 )
@@ -3452,6 +3453,7 @@ class CSCoil(Model):
                 self.data.cs_fatigue.paris_coefficient_cs_turn = (
                     PARIS_COEFFICIENT_SS_316LN
                 )
+                self.data.cs_fatigue.paris_exponent_cs_turn = PARIS_EXPONENT_SS_316LN
                 (
                     self.data.cs_fatigue.n_cycle,
                     self.data.cs_fatigue.dr_cs_turn_crack_initial,
@@ -3462,6 +3464,7 @@ class CSCoil(Model):
                     dz_cs_turn_conduit=self.data.cs_fatigue.dz_cs_turn_conduit,
                     dr_cs_turn_conduit=self.data.cs_fatigue.dr_cs_turn_conduit,
                     paris_coefficient_cs_turn=self.data.cs_fatigue.paris_coefficient_cs_turn,
+                    paris_exponent_cs_turn=self.data.cs_fatigue.paris_exponent_cs_turn,
                 )
 
             # Now steel area fraction is iteration variable and constraint

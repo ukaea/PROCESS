@@ -4,6 +4,7 @@ import pytest
 
 from process.models.engineering.materials import (
     PARIS_COEFFICIENT_SS_316LN,
+    PARIS_EXPONENT_SS_316LN,
 )
 
 
@@ -25,6 +26,7 @@ class NcycleParam(NamedTuple):
     dr_cs_turn_conduit: float
     dr_cs_turn_crack_initial: float
     paris_coefficient_cs_turn: float
+    paris_exponent_cs_turn: float
     expected_n_cycle: float
     expected_t_crack_radial: float
 
@@ -40,6 +42,7 @@ class NcycleParam(NamedTuple):
             dr_cs_turn_conduit=0.0063104538380405924,
             dr_cs_turn_crack_initial=0.0026699999999999996,
             paris_coefficient_cs_turn=PARIS_COEFFICIENT_SS_316LN,
+            paris_exponent_cs_turn=PARIS_EXPONENT_SS_316LN,
             expected_n_cycle=1113.5875631615095,
             expected_t_crack_radial=0.0026699999999999996,
         ),
@@ -66,6 +69,7 @@ def test_ncycle(ncycleparam, monkeypatch, cs_fatigue_python):
         dz_cs_turn_conduit=ncycleparam.dz_cs_turn_conduit,
         dr_cs_turn_conduit=ncycleparam.dr_cs_turn_conduit,
         paris_coefficient_cs_turn=ncycleparam.paris_coefficient_cs_turn,
+        paris_exponent_cs_turn=ncycleparam.paris_exponent_cs_turn
     )
 
     assert n_cycle == pytest.approx(ncycleparam.expected_n_cycle)
