@@ -14,6 +14,7 @@ import process
 from process.core import constants, process_output
 from process.core.exceptions import ProcessValidationError
 from process.core.input import parse_input_file
+from process.core.io.in_dat.base import InDat
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.blanket_variables import BlktModelTypes
@@ -67,9 +68,12 @@ def init_process(data: DataStructure, update_obsolete: bool = False):
     # TODO use InDat(filename) instead here?
     # Use InDat class to read in IN.DAT, update obsolete and
     # parse input file
-    # filename = data.globals.output_prefix + "IN.DAT"
-    # Check for and, if requested, update obsolete variables
-    # in_dat = InDat(filename=filename, update_obsolete=update_obsolete)
+    filename = data.globals.output_prefix + "IN.DAT"
+    # filename = Path.cwd() / str(data.globals.output_prefix + "IN.DAT")
+    # ^ trying this to help tests pass... no luck tho so far
+
+    # Read in the file using the InDat class
+    InDat(filename=filename, update_obsolete=update_obsolete)
 
     # Input any desired new initial values
     # if comment this out, everything has its default value from data_structure files
