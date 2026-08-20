@@ -221,7 +221,8 @@ class CSFatigue(Model):
     @njit(cache=True)
     def surface_stress_intensity_factor(hoop_stress, t, w, a, c, phi):
         """
-        Assumes an surface semi elliptical defect geometry
+        Calculate the stress intensity factor (K) for a semi-elliptical surface crack in
+        a finite plate under tension and bending loads.
 
         geometric quantities
         hoop_stress - change in hoop stress over cycle
@@ -229,76 +230,124 @@ class CSFatigue(Model):
         w - plate width
         a - crack depth (t -direction)
         c - crack length (w - direction)
-        Ref: J. C. Newman, I. S. Raju "Stress-Intensity Factor Equations for Cracks in
-        Three-Dimensional Finite Bodies Subjected to Tension and Bending Loads"
-        https://core.ac.uk/download/pdf/42849129.pdf
+
+
         Ref: C. Jong, Magnet Structural Design
         Criteria Part 1: Main Structural Components and Welds 2012
+
+        Notes
+        -----
+        - The semi-elliptical surface crack example can be seen in Figure 2(b) of
+        Reference [1]
+
+        References
+        ----------
+        [1] Newman, Isadore & Raju, Ivatury. (1984). Stress Intensity Factor Equations
+        for Cracks in Three-Dimensional Finite Bodies Subjected to Tension and Bending
+        Loads. NASA Technical Memorandum. 85.
+        https://ntrs.nasa.gov/citations/19840015857
         """
         bending_stress = 0.0e0  # * 3.0 * M / (w*d**2.0)
 
-        # reuse of calc
-        a_t = a / t
-        a_t_2 = a_t**2.0e0
-        sin_phi = np.sin(phi)
-        cos_phi_2 = np.cos(phi) ** 2.0e0
-
+        # Depth of crack is less than or equal to the half-length of the crack
         if a <= c:
-            # reuse of calc
-            a_c = a / c
+            # Equation 24 of Reference [1]
+            g_21 = -1.22e0 - 0.12e0 * (a / c)
 
-            q = 1.0e0 + 1.464e0 * a_c**1.65e0
-            m1 = 1.13e0 - 0.09e0 * a_c
-            m2 = -0.54e0 + 0.89e0 / (0.2e0 + a_c)
-            m3 = 0.5e0 - 1.0e0 / (0.65e0 + a_c) + 14.0e0 * (1 - a_c) ** 24.0e0
-            g = 1.0e0 + (0.1e0 + 0.35e0 * a_t**2.0e0) * (1.0e0 - sin_phi) ** 2.0e0
-            f_phi = (a_c**2.0e0 * cos_phi_2 + sin_phi**2.0e0) ** 0.25e0
-            p = 0.2e0 + a_c + 0.6e0 * a_t
-            H1 = 1.0e0 - 0.34e0 * a_t - 0.11e0 * a * a / (c * t)
-            H2 = (
-                1.0
-                + (-1.22e0 - 0.12e0 * a_c) * a_t  # G21 * a / t
-                + (0.55e0 - 1.05e0 * a_c**0.75e0 + 0.47e0 * a_c**1.5e0)  # G22
-                * a_t_2
-            )
-        else:  # elif a > c:
-            c_a = c / a
-            c_a_4 = c_a**4.0e0
+            # Equation 25 of Reference [1]
+            g_22 = 0.55e0 - 1.05e0 * (a / c) ** 0.75e0 + 0.47e0 * (a / c) ** 1.5e0
 
-            q = 1.0e0 + 1.464e0 * c_a**1.65e0
-            m1 = np.sqrt(c_a) * (1.0e0 + 0.04e0 * c_a)
+            # Equation 2(a) of Reference [1]
+            q = 1.0e0 + 1.464e0 * (a / c) ** 1.65e0
 
-            m2 = 0.2e0 * c_a_4
-            m3 = -0.11e0 * c_a_4
+            # Equation 16 of Reference [1]
+            m1 = 1.13e0 - 0.09e0 * (a / c)
 
-            g = 1.0e0 + (0.1e0 + 0.35e0 * c_a * a_t_2) * (1.0e0 - sin_phi) ** 2.0e0
-            f_phi = (c_a**2.0e0 * sin_phi**2.0e0 + cos_phi_2) ** 0.25e0
-            p = 0.2e0 + c_a + 0.6e0 * a_t
-            H1 = (
+            # Equation 17 of Reference [1]
+            m2 = -0.54e0 + 0.89e0 / (0.2e0 + (a / c))
+
+            # Equation 18 of Reference [1]
+            m3 = 0.5e0 - 1.0e0 / (0.65e0 + (a / c)) + 14.0e0 * (1 - (a / c)) ** 24.0e0
+
+            # Equation 19 of Reference [1]
+            g = (
                 1.0e0
-                + (-0.04e0 - 0.41e0 * c_a) * a_t  # G11 * a / t
-                + (0.55e0 - 1.93e0 * c_a**0.75e0 + 1.38e0 * c_a**1.5e0)  # G12
-                * a_t_2
-            )
-            H2 = (
-                1.0e0
-                + (-2.11e0 + 0.77e0 * c_a) * a_t  # G21 * a / t
-                + (0.55e0 - 0.72e0 * c_a**0.75e0 + 0.14e0 * c_a**1.5e0) * a_t_2  # G22
+                + (0.1e0 + 0.35e0 * (a / t) ** 2.0e0) * (1.0e0 - np.sin(phi)) ** 2.0e0
             )
 
-        # compute the unitless geometric correction
-        # compute the stress intensity factor
-        return (
-            (  # hoop_stress + Hs * bending_stress
-                hoop_stress + (H1 + (H2 - H1) * sin_phi**p) * bending_stress
+            # Equation 10 of Reference [1]
+            f_phi = (
+                (a / c) ** 2.0e0 * (np.cos(phi) ** 2.0e0) + np.sin(phi) ** 2.0e0
+            ) ** 0.25e0
+
+            # Equation 21 of Reference [1]
+            p = 0.2e0 + (a / c) + 0.6e0 * (a / t)
+
+            # Equation 22 of Reference [1]
+            H1 = 1.0e0 - 0.34e0 * (a / t) - 0.11e0 * a * a / (c * t)
+
+            # Equation 23 of Reference [1]
+            H2 = 1.0 + (g_21) * (a / t) + (g_22) * (a / t) ** 2.0
+
+        # Depth of crack is greater than the half-length of the crack (a > c)
+        else:
+            # Equation 33 of Reference [1]
+            g_11 = -0.04 - 0.41 * (c / a)
+
+            # Equation 34 of Reference [1]
+            g_12 = 0.55 - 1.93 * (c / a) ** 0.75 + 1.38 * (c / a) ** 1.5
+
+            # Equation 35 of Reference [1]
+            g_21 = -2.11 + (0.77 * (c / a))
+
+            # Equation 36 of Reference [1]
+            g_22 = 0.55 - 0.72 * (c / a) ** 0.75 + 0.14 * (c / a) ** 1.5
+
+            # Equation 2(b) of Reference [1]
+            q = 1.0e0 + 1.464e0 * (c / a) ** 1.65e0
+
+            # Equation 26 of Reference [1]
+            m1 = np.sqrt(c / a) * (1.0e0 + 0.04e0 * (c / a))
+
+            # Equation 27 of Reference [1]
+            m2 = 0.2e0 * (c / a) ** 4.0
+
+            # Equation 28 of Reference [1]
+            m3 = -0.11e0 * (c / a) ** 4.0
+
+            # Equation 29 of Reference [1]
+            g = (
+                1.0e0
+                + (0.1e0 + 0.35e0 * (c / a) * (a / t) ** 2.0)
+                * (1.0e0 - np.sin(phi)) ** 2.0e0
             )
-            * (  # f
-                (m1 + m2 * a_t_2 + m3 * a_t**4.0e0)
-                * g
-                * f_phi
-                * np.sqrt(  # f_w
-                    1.0e0 / np.cos(np.sqrt(a_t) * np.pi * c / (2.0e0 * w))
-                )
-            )
-            * np.sqrt(np.pi * a / q)
-        )
+
+            # Equation 13 of Reference [1]
+            f_phi = (
+                (c / a) ** 2.0e0 * np.sin(phi) ** 2.0e0 + (np.cos(phi) ** 2.0e0)
+            ) ** 0.25e0
+
+            # Equation 30 of Reference [1]
+            p = 0.2e0 + (c / a) + 0.6e0 * (a / t)
+
+            # Equation 31 of Reference [1]
+            H1 = 1.0e0 + (g_11) * (a / t) + (g_12) * (a / t) ** 2.0
+
+            # Equation 32 of Reference [1]
+            H2 = 1.0e0 + (g_21) * (a / t) + (g_22) * (a / t) ** 2.0
+
+        # Equation 11 of Reference [1]
+        # Finite width correction factor
+        f_w = np.sqrt(1.0e0 / np.cos(np.sqrt(a / t) * np.pi * c / (2.0e0 * w)))
+
+        # Equation 15 of Reference [1]
+        # Boundary-correction factor for surface crack in a plate under tension
+        f_s = (m1 + m2 * (a / t) ** 2.0 + m3 * (a / t) ** 4.0e0) * g * f_phi * f_w
+
+        # Equation 1(c) of Reference [1]
+        # Bending multiplier for surface crack in a plate
+        h_s = H1 + (H2 - H1) * np.sin(phi) ** p
+
+        # Equation 1(a) of Reference [1]
+        # Stress intensity factor for a semi-elliptical surface crack in a finite plate
+        return (hoop_stress + (h_s) * bending_stress) * f_s * np.sqrt(np.pi * a / q)
