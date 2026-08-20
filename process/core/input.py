@@ -718,7 +718,9 @@ INPUT_VARIABLES = {
         range=(1e-08, 0.0001),
     ),
     "redun_vacp": InputVariable("costs", float, range=(0.0, 100.0)),
-    "residual_sig_hoop": InputVariable("cs_fatigue", float, range=(0.0, 1000000000.0)),
+    "stress_hoop_cs_residual": InputVariable(
+        "cs_fatigue", float, range=(0.0, 1000000000.0)
+    ),
     "rho_tf_bus": InputVariable("tfcoil", float, range=(0.0, 1e-05)),
     "rho_tf_joints": InputVariable("tfcoil", float, range=(0.0, 0.01)),
     "radius_plasma_pedestal_density_norm": InputVariable(

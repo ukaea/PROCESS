@@ -396,7 +396,7 @@ in the case of the CS coils).
 An example output follows.  Note that in this example the cycle life is *not* sufficient.
 
 ```text
- Residual hoop stress in CS Steel (Pa)                                    (residual_sig_hoop)       2.400E+08     
+ Residual hoop stress in CS Steel (Pa)                                    (stress_hoop_cs_residual)       2.400E+08     
  Minimum burn time (s)                                                    (t_burn_min)                  7.200E+03     
  Initial vertical crack size (m)                                          (dz_cs_turn_crack_initial)        8.900E-04     
  Initial radial crack size (m)                                            (dr_cs_turn_crack_initial)          2.670E-03     

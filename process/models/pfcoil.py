@@ -3453,7 +3453,7 @@ class CSCoil(Model):
                     self.data.cs_fatigue.dr_cs_turn_crack_initial,
                 ) = self.cs_fatigue.ncycle(
                     self.data.pf_coil.stress_hoop_cs_inner,
-                    self.data.cs_fatigue.residual_sig_hoop,
+                    self.data.cs_fatigue.stress_hoop_cs_residual,
                     self.data.cs_fatigue.dz_cs_turn_crack_initial,
                     self.data.cs_fatigue.dz_cs_turn_conduit,
                     self.data.cs_fatigue.dr_cs_turn_conduit,

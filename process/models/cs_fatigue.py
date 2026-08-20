@@ -21,8 +21,8 @@ class CSFatigue(Model):
             op.ovarre(
                 self.outfile,
                 "Residual hoop stress in CS Steel (Pa)",
-                "(residual_sig_hoop)",
-                self.data.cs_fatigue.residual_sig_hoop,
+                "(stress_hoop_cs_residual)",
+                self.data.cs_fatigue.stress_hoop_cs_residual,
             )
             op.ovarre(
                 self.outfile,

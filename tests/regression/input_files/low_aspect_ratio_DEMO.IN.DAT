@@ -862,7 +862,7 @@ sf_fast_fracture = 1.0
 * DESCRIPTION:   Initial vertical crack size (m)
 * JUSTIFICATION: No safety factor 
 
-residual_sig_hoop = 1.50e8
+stress_hoop_cs_residual = 1.50e8
 * DESCRIPTION:   Initial vertical crack size (m)
 * JUSTIFICATION: Initial crack area 1 mm2
 

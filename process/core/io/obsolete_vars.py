@@ -479,6 +479,8 @@ OBS_VARS = {
     "neqns": "n_equality_constraints",
     "nineqns": "n_inequality_constraints",
     "t_crack_vertical": "dz_cs_turn_crack_initial",
+    "t_crack_radial": "dr_cs_turn_crack_initial",
+    "residual_sig_hoop": "stress_hoop_cs_residual",
 }
 
 OBS_VARS_HELP = {

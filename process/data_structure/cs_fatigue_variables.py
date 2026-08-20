@@ -7,8 +7,8 @@ from dataclasses import dataclass
 class CSFatigueData:
     """Dataclass holding CS fatigue variables"""
 
-    residual_sig_hoop: float = 2.4e8
-    """residual hoop stress in structural material (Pa)"""
+    stress_hoop_cs_residual: float = 2.4e8
+    """Residual hoop stress in CS structural material (Pa)"""
 
     n_cycle: float = 0.0
     """Allowable number of cycles for CS stress model"""
