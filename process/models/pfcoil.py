@@ -26,6 +26,7 @@ from process.data_structure.pfcoil_variables import (
 )
 from process.models import superconductors
 from process.models.engineering.materials import (
+    PARIS_COEFFICIENT_SS_316LN,
     calculate_tresca_stress,
     calculate_von_mises_stress,
 )
@@ -3448,15 +3449,19 @@ class CSCoil(Model):
             # Calculation of CS fatigue
             # this is only valid for pulsed reactor design
             if self.data.physics.f_c_plasma_inductive > 0.0e-4:
+                self.data.cs_fatigue.paris_coefficient_cs_turn = (
+                    PARIS_COEFFICIENT_SS_316LN
+                )
                 (
                     self.data.cs_fatigue.n_cycle,
                     self.data.cs_fatigue.dr_cs_turn_crack_initial,
                 ) = self.cs_fatigue.ncycle(
-                    self.data.pf_coil.stress_hoop_cs_inner,
-                    self.data.cs_fatigue.stress_hoop_cs_residual,
-                    self.data.cs_fatigue.dz_cs_turn_crack_initial,
-                    self.data.cs_fatigue.dz_cs_turn_conduit,
-                    self.data.cs_fatigue.dr_cs_turn_conduit,
+                    max_hoop_stress=self.data.pf_coil.stress_hoop_cs_inner,
+                    residual_stress=self.data.cs_fatigue.stress_hoop_cs_residual,
+                    dz_cs_turn_crack_initial=self.data.cs_fatigue.dz_cs_turn_crack_initial,
+                    dz_cs_turn_conduit=self.data.cs_fatigue.dz_cs_turn_conduit,
+                    dr_cs_turn_conduit=self.data.cs_fatigue.dr_cs_turn_conduit,
+                    paris_coefficient_cs_turn=self.data.cs_fatigue.paris_coefficient_cs_turn,
                 )
 
             # Now steel area fraction is iteration variable and constraint

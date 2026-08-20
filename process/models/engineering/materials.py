@@ -10,6 +10,15 @@ logger = logging.getLogger(__name__)
 poisson_steel: float = 0.3
 """Steel Poisson's ratio, Source : https://www.engineeringtoolbox.com/metals-poissons-ratio-d_1268.html"""
 
+PARIS_COEFFICIENT_SS_316LN: float = 65.0e-14
+"""Paris equation material coefficient / fatigue crack growth coefficient (C) for
+SS 316LN.
+[1] X. Sarasola, R. Wesche, I. Ivashov, K. Sedlak, D. Uglietti, and P. Bruzzone,
+“Progress in the Design of a Hybrid HTS-Nb3Sn-NbTi Central Solenoid for the EU DEMO,”
+IEEE Transactions on Applied Superconductivity, vol. 30, no. 4, pp. 1-5, June 2020,
+doi: 10.1109/tasc.2020.2965066.
+"""
+
 
 def eurofer97_thermal_conductivity(temp: float, fw_th_conductivity: float) -> float:
     """Calculates the thermal conductivity of the first wall material (Eurofer97).
