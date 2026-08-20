@@ -32,7 +32,7 @@ $$
 where $P_i$ is the radiation per unit volume (excluding synchrotron radiation),
 $L_Z (Z_i, T)$ is the loss function for ion species $i$ at temperature $T$, and $n_i$ is the density of ion species $i$.
 
-The source data comprises of 600 separate data points with a fitted temperature range of $0.25 \ \text{eV}$ tp $500 \ \text{keV}$. The fitted radiation profiles for each species against temperature can be found in the figure below.
+The source data comprises of 600 separate data points with a fitted temperature range of $0.25 \ \text{eV}$ to $500 \ \text{keV}$. The fitted radiation profiles for each species against temperature can be found in the figure below.
 
 
 
