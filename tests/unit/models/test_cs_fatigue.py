@@ -19,7 +19,7 @@ class NcycleParam(NamedTuple):
     dz_cs_turn_crack_initial: float
     dz_cs_turn_conduit: float
     dr_cs_turn_conduit: float
-    t_crack_radial: float
+    dr_cs_turn_crack_initial: float
     expected_n_cycle: float
     expected_t_crack_radial: float
 
@@ -33,7 +33,7 @@ class NcycleParam(NamedTuple):
             dz_cs_turn_crack_initial=0.00088999999999999995,
             dz_cs_turn_conduit=0.0063104538380405924,
             dr_cs_turn_conduit=0.0063104538380405924,
-            t_crack_radial=0.0026699999999999996,
+            dr_cs_turn_crack_initial=0.0026699999999999996,
             expected_n_cycle=1113.5875631615095,
             expected_t_crack_radial=0.0026699999999999996,
         ),
@@ -53,7 +53,7 @@ def test_ncycle(ncycleparam, monkeypatch, cs_fatigue_python):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    n_cycle, t_crack_radial = cs_fatigue_python.ncycle(
+    n_cycle, dr_cs_turn_crack_initial = cs_fatigue_python.ncycle(
         max_hoop_stress=ncycleparam.max_hoop_stress,
         residual_stress=ncycleparam.residual_stress,
         dz_cs_turn_crack_initial=ncycleparam.dz_cs_turn_crack_initial,
@@ -63,7 +63,7 @@ def test_ncycle(ncycleparam, monkeypatch, cs_fatigue_python):
 
     assert n_cycle == pytest.approx(ncycleparam.expected_n_cycle)
 
-    assert t_crack_radial == pytest.approx(ncycleparam.expected_t_crack_radial)
+    assert dr_cs_turn_crack_initial == pytest.approx(ncycleparam.expected_t_crack_radial)
 
 
 @pytest.mark.parametrize(

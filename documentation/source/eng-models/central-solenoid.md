@@ -399,7 +399,7 @@ An example output follows.  Note that in this example the cycle life is *not* su
  Residual hoop stress in CS Steel (Pa)                                    (residual_sig_hoop)       2.400E+08     
  Minimum burn time (s)                                                    (t_burn_min)                  7.200E+03     
  Initial vertical crack size (m)                                          (dz_cs_turn_crack_initial)        8.900E-04     
- Initial radial crack size (m)                                            (t_crack_radial)          2.670E-03     
+ Initial radial crack size (m)                                            (dr_cs_turn_crack_initial)          2.670E-03     
  CS turn area (m)                                                         (a_cs_turn)               1.904E-03     
  CS turn length (m)                                                       (dr_cs_turn)              7.557E-02     
  CS turn internal cable space radius (m)                                  (radius_cs_turn_cable_space)                6.732E-03     

@@ -39,8 +39,8 @@ class CSFatigue(Model):
             op.ovarre(
                 self.outfile,
                 "Initial radial crack size (m)",
-                "(t_crack_radial)",
-                self.data.cs_fatigue.t_crack_radial,
+                "(dr_cs_turn_crack_initial)",
+                self.data.cs_fatigue.dr_cs_turn_crack_initial,
             )
 
             op.ovarre(
@@ -97,9 +97,9 @@ class CSFatigue(Model):
         residual_stress_MPa = residual_stress / 1.0e6
 
         # Set initial crack size
-        t_crack_radial = 3.0e0 * dz_cs_turn_crack_initial
+        dr_cs_turn_crack_initial = 3.0e0 * dz_cs_turn_crack_initial
         a = dz_cs_turn_crack_initial
-        c = t_crack_radial
+        c = dr_cs_turn_crack_initial
 
         # Cyclic element of stress
         hoop_stress_MPa = max_hoop_stress_MPa
@@ -153,7 +153,7 @@ class CSFatigue(Model):
             n_pulse += delta_n
 
         # two pulses - ramp to Vsmax and ramp down per cycle
-        return n_pulse / 2.0e0, t_crack_radial
+        return n_pulse / 2.0e0, dr_cs_turn_crack_initial
 
     @staticmethod
     @njit(cache=True)

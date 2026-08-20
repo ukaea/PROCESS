@@ -3450,7 +3450,7 @@ class CSCoil(Model):
             if self.data.physics.f_c_plasma_inductive > 0.0e-4:
                 (
                     self.data.cs_fatigue.n_cycle,
-                    self.data.cs_fatigue.t_crack_radial,
+                    self.data.cs_fatigue.dr_cs_turn_crack_initial,
                 ) = self.cs_fatigue.ncycle(
                     self.data.pf_coil.stress_hoop_cs_inner,
                     self.data.cs_fatigue.residual_sig_hoop,

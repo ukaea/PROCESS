@@ -778,7 +778,7 @@ INPUT_VARIABLES = {
     "t_plant_pulse_burn": InputVariable("times", float, range=(0.0, 100000000.0)),
     "t_burn_min": InputVariable("constraints", float, range=(0.001, 1000000.0)),
     "dx_tf_turn_cable_space_general": InputVariable("tfcoil", float, range=(0.0, 0.1)),
-    "t_crack_radial": InputVariable("cs_fatigue", float, range=(1e-05, 1.0)),
+    "dr_cs_turn_crack_initial": InputVariable("cs_fatigue", float, range=(1e-05, 1.0)),
     "dz_cs_turn_crack_initial": InputVariable("cs_fatigue", float, range=(1e-05, 1.0)),
     "t_plant_pulse_plasma_current_ramp_up": InputVariable(
         "times", float, range=(0.0, 10000.0)

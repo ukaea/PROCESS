@@ -16,8 +16,8 @@ class CSFatigueData:
     n_cycle_min: float = 2.0e4
     """Minimum allowable number of cycles for CS stress model"""
 
-    t_crack_radial: float = 6.0e-3
-    """Initial depth of crack in thickness of conduit (m)"""
+    dr_cs_turn_crack_initial: float = 6.0e-3
+    """Initial CS turn radial crack size thickness [m]"""
 
     dz_cs_turn_crack_initial: float = 0.89e-3
     """Initial CS turn vertical crack size thickness [m]"""
