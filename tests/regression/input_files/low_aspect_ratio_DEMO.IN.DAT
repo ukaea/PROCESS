@@ -846,7 +846,7 @@ i_cs_superconductor = 5
 * DESCRIPTION:   Switch for Superconductor Material in CS Coil (Nb3Sn)
 * JUSTIFICATION: Design choice, superconducting CS coil
 
-t_crack_vertical = 0.65D-3
+dz_cs_turn_crack_initial = 0.65D-3
 * DESCRIPTION:   Initial vertical crack size (m)
 * JUSTIFICATION: Initial crack area 1 mm2
 

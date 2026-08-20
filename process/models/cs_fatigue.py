@@ -2,8 +2,9 @@
 
 import numpy as np
 from numba import njit
-from process.core import process_output as op
+
 from process.core import constants
+from process.core import process_output as op
 from process.core.model import Model
 
 
@@ -32,8 +33,8 @@ class CSFatigue(Model):
             op.ovarre(
                 self.outfile,
                 "Initial vertical crack size (m)",
-                "(t_crack_vertical)",
-                self.data.cs_fatigue.t_crack_vertical,
+                "(dz_cs_turn_crack_initial)",
+                self.data.cs_fatigue.dz_cs_turn_crack_initial,
             )
             op.ovarre(
                 self.outfile,
@@ -62,12 +63,12 @@ class CSFatigue(Model):
 
     def ncycle(
         self,
-        max_hoop_stress,
-        residual_stress,
-        t_crack_vertical,
-        dz_cs_turn_conduit,
-        dr_cs_turn_conduit,
-    ):
+        max_hoop_stress: float,
+        residual_stress: float,
+        dz_cs_turn_crack_initial: float,
+        dz_cs_turn_conduit: float,
+        dr_cs_turn_conduit: float,
+    ) -> tuple[float, float]:
         """
 
         Parameters
@@ -76,7 +77,7 @@ class CSFatigue(Model):
 
         residual_stress :
 
-        t_crack_vertical :
+        dz_cs_turn_crack_initial :
 
         dz_cs_turn_conduit :
 
@@ -96,8 +97,8 @@ class CSFatigue(Model):
         residual_stress_MPa = residual_stress / 1.0e6
 
         # Set initial crack size
-        t_crack_radial = 3.0e0 * t_crack_vertical
-        a = t_crack_vertical
+        t_crack_radial = 3.0e0 * dz_cs_turn_crack_initial
+        a = dz_cs_turn_crack_initial
         c = t_crack_radial
 
         # Cyclic element of stress
@@ -282,7 +283,7 @@ class CSFatigue(Model):
             H2 = (
                 1.0e0
                 + (-2.11e0 + 0.77e0 * c_a) * a_t  # G21 * a / t
-                + (0.55e0 - 0.72e0 * c_a**0.75e0 + 0.14e0 * c_a ** 1.5e0) * a_t_2  # G22
+                + (0.55e0 - 0.72e0 * c_a**0.75e0 + 0.14e0 * c_a**1.5e0) * a_t_2  # G22
             )
 
         # compute the unitless geometric correction

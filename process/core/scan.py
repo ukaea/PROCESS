@@ -207,7 +207,7 @@ class ScanVariables(ScanVariable, Enum):
     ohhghf = (64, Area.PF)
     n_cycle_min = (65, Area.CS)
     oh_steel_frac = (66, Area.PF)
-    t_crack_vertical = (67, Area.CS)
+    dz_cs_turn_crack_initial = (67, Area.CS)
     inlet_temp_liq = (68, Area.FWBS)
     outlet_temp_liq = (69, Area.FWBS)
     blpressure_liq = (70, Area.FWBS)

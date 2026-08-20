@@ -478,6 +478,7 @@ OBS_VARS = {
     "minmax": "i_figure_merit",
     "neqns": "n_equality_constraints",
     "nineqns": "n_inequality_constraints",
+    "t_crack_vertical": "dz_cs_turn_crack_initial",
 }
 
 OBS_VARS_HELP = {

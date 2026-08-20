@@ -313,7 +313,7 @@ var_dicts = {
         description="Radial turn length",
         units="m",
     ),
-    "t_crack_vertical": VariableMetadata(
+    "dz_cs_turn_crack_initial": VariableMetadata(
         latex=r"$Crack_{\mathrm{vertical}}^{\mathrm{CS}}[$m$]$",
         description="Vertical crack length",
         units="m",

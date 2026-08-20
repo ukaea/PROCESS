@@ -19,8 +19,8 @@ class CSFatigueData:
     t_crack_radial: float = 6.0e-3
     """Initial depth of crack in thickness of conduit (m)"""
 
-    t_crack_vertical: float = 0.89e-3
-    """Initial vertical crack size (m)"""
+    dz_cs_turn_crack_initial: float = 0.89e-3
+    """Initial CS turn vertical crack size thickness [m]"""
 
     dr_cs_turn_conduit: float = 0.07
     """Thickness of CS conductor conduit (m)"""

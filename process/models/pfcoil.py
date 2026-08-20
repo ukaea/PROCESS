@@ -2228,10 +2228,9 @@ class PFCoil(Model):
             )
 
             op.oblnkl(self.outfile)
-            
+
             # only output CS fatigue model for pulsed reactor design
             self.cs_fatigue.output()
-            
 
             # Check whether CS coil is hitting any limits
             if (
@@ -3455,7 +3454,7 @@ class CSCoil(Model):
                 ) = self.cs_fatigue.ncycle(
                     self.data.pf_coil.stress_hoop_cs_inner,
                     self.data.cs_fatigue.residual_sig_hoop,
-                    self.data.cs_fatigue.t_crack_vertical,
+                    self.data.cs_fatigue.dz_cs_turn_crack_initial,
                     self.data.cs_fatigue.dz_cs_turn_conduit,
                     self.data.cs_fatigue.dr_cs_turn_conduit,
                 )

@@ -16,7 +16,7 @@ def cs_fatigue_python(process_models):
 class NcycleParam(NamedTuple):
     max_hoop_stress: float
     residual_stress: float
-    t_crack_vertical: float
+    dz_cs_turn_crack_initial: float
     dz_cs_turn_conduit: float
     dr_cs_turn_conduit: float
     t_crack_radial: float
@@ -30,7 +30,7 @@ class NcycleParam(NamedTuple):
         NcycleParam(
             max_hoop_stress=659999225.25370133,
             residual_stress=240000000,
-            t_crack_vertical=0.00088999999999999995,
+            dz_cs_turn_crack_initial=0.00088999999999999995,
             dz_cs_turn_conduit=0.0063104538380405924,
             dr_cs_turn_conduit=0.0063104538380405924,
             t_crack_radial=0.0026699999999999996,
@@ -56,7 +56,7 @@ def test_ncycle(ncycleparam, monkeypatch, cs_fatigue_python):
     n_cycle, t_crack_radial = cs_fatigue_python.ncycle(
         max_hoop_stress=ncycleparam.max_hoop_stress,
         residual_stress=ncycleparam.residual_stress,
-        t_crack_vertical=ncycleparam.t_crack_vertical,
+        dz_cs_turn_crack_initial=ncycleparam.dz_cs_turn_crack_initial,
         dz_cs_turn_conduit=ncycleparam.dz_cs_turn_conduit,
         dr_cs_turn_conduit=ncycleparam.dr_cs_turn_conduit,
     )
