@@ -870,7 +870,7 @@ paris_coefficient_cs_turn = 3.86e-11
 * DESCRIPTION:   Paris equation material coefficient (-)
 * JUSTIFICATION: 316LN (ITER DDD TF p. 83)
 
-paris_power_law = 2.394
+paris_exponent_cs_turn = 2.394
 * DESCRIPTION:   Paris equation material power law (-)
 * JUSTIFICATION: 316LN (ITER DDD TF p. 83)
 

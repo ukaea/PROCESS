@@ -482,6 +482,7 @@ OBS_VARS = {
     "t_crack_radial": "dr_cs_turn_crack_initial",
     "residual_sig_hoop": "stress_hoop_cs_residual",
     "paris_coefficient": "paris_coefficient_cs_turn",
+    "paris_power_law": "paris_exponent_cs_turn",
 }
 
 OBS_VARS_HELP = {

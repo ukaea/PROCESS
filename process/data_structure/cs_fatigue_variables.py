@@ -43,7 +43,7 @@ class CSFatigueData:
     paris_coefficient_cs_turn: float = 65.0e-14
     """Paris equation material coefficient / fatigue crack growth coefficient (C)"""
 
-    paris_power_law: float = 3.5
+    paris_exponent_cs_turn: float = 3.5
     """Paris equation material power law (-)"""
 
     walker_coefficient: float = 0.436

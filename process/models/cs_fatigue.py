@@ -89,7 +89,7 @@ class CSFatigue(Model):
         # X. Sarasola et al, IEEE Transactions on Applied Superconductivity,
         # vol. 30, no. 4, pp. 1-5, June 2020, Art no. 4200705
 
-        n = -self.data.cs_fatigue.paris_power_law * (
+        n = -self.data.cs_fatigue.paris_exponent_cs_turn * (
             self.data.cs_fatigue.walker_coefficient - 1.0e0
         )
 
@@ -146,11 +146,11 @@ class CSFatigue(Model):
             k_max = max(k_a, k_c)
 
             # run euler_method and find number of cycles needed to give crack increase
-            delta_n = delta / (cr * (k_max**self.data.cs_fatigue.paris_power_law))
+            delta_n = delta / (cr * (k_max**self.data.cs_fatigue.paris_exponent_cs_turn))
 
             # update a and c, N (+= doesn't work for fortran (?) reasons)
-            a += delta * (k_a / k_max) ** self.data.cs_fatigue.paris_power_law
-            c += delta * (k_c / k_max) ** self.data.cs_fatigue.paris_power_law
+            a += delta * (k_a / k_max) ** self.data.cs_fatigue.paris_exponent_cs_turn
+            c += delta * (k_c / k_max) ** self.data.cs_fatigue.paris_exponent_cs_turn
             n_pulse += delta_n
 
         # two pulses - ramp to Vsmax and ramp down per cycle
