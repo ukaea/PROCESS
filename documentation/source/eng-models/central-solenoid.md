@@ -353,24 +353,39 @@ $$
 --------------------------
 
 
-## Fatigue
+## Fatigue | `CSFatigue()`
 
 If the the reactor is assumed to be pulsed, the CS must be assessed against fatigue. 
 
 A simple crack growth model based on Linear Elastic Fracture Mechanics is used to estimate the 
 allowable hoop stress in the conduits. The model follows the method described in the ITER Magnet 
 Structural Design Criteria, using the Paris law to model the growth of a planar elliptical crack 
-across the thickness of a plate with the width and thickness of the conduit wall. The Paris law 
+across the thickness of a plate with the width and thickness of the conduit wall. The Paris-Walker law 
 states that the crack growth rate follows a power law:
 
 $$
-\frac{da}{dN}=\rm{C}\Delta K^m
+\frac{da}{dN}=C\left[\frac{\Delta K}{\left(1-R\right)^{(1-\gamma)}}\right]^m
 $$
 
-where a is the size of the crack, N is the number of cycles, C and m are material constants, and 
-$\Delta K$ is the stress intensity factor. The stress intensity factor is, in turn, a function of the crack 
+where $a$ is the size of the crack, $N$ is the number of cycles, $C$ and $m$ are material constants typicall called the Paris coefficient and exponent, and 
+$\Delta K$ is the stress intensity factor range ($K_{\text{max}}-K_{\text{min}}$). The stress intensity factor is, in turn, a function of the crack 
 geometry, the residual stress in the conduit, and the alternating tensile stress (i.e. hoop stress 
 in the case of the CS coils).
+
+The equation can be collapsed into a simple Paris law format via:
+
+$$
+\frac{da}{dN}=\frac{C}{\left(1-R\right)^{m(1-\gamma)}}(\Delta K)^m
+$$
+
+$$
+n = m(1-\gamma) \\
+C_{\text{R}} = \frac{C}{(1-R)^{m(1-\gamma)}}
+$$
+
+$$
+\frac{da}{dN}=C_{\text{R}}(\Delta K)^m
+$$
 
 !!! Info "Assumptions"
     1.  The initial defect is a planar half-elliptical surface crack, normal to the long axis of the conductor.  

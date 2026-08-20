@@ -90,7 +90,7 @@ class CSFatigue(Model):
         # X. Sarasola et al, IEEE Transactions on Applied Superconductivity,
         # vol. 30, no. 4, pp. 1-5, June 2020, Art no. 4200705
 
-        n = -paris_exponent_cs_turn * (self.data.cs_fatigue.walker_coefficient - 1.0e0)
+        
 
         # Set units to MPa
         max_hoop_stress_MPa = max_hoop_stress / 1.0e6
@@ -109,6 +109,7 @@ class CSFatigue(Model):
         # J. Lorenzo, X. Sarasola, M. Mantsinen
         r = residual_stress_MPa / (max_hoop_stress_MPa + residual_stress_MPa)
 
+        n = -paris_exponent_cs_turn * (self.data.cs_fatigue.walker_coefficient - 1.0e0)
         # Calculated constant for a given stress ratio using Walker equation
         # https://en.wikipedia.org/wiki/Crack_growth_equation#Walker_equation
         cr = paris_coefficient_cs_turn / (1.0e0 - r) ** n
