@@ -1,7 +1,6 @@
 """Plotting script for the total impurity radiation loss function (L_z) profiles."""
 
 from importlib import resources
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -88,12 +87,5 @@ if __name__ == "__main__":
     ) as imp_path:
         data_folder = str(imp_path.parent) + "/"
 
-    if Path(data_folder).is_dir():
-        fig, ax = plt.subplots(figsize=(8, 6))
-        plot_line_brem_loss_function_profile(ax, impp=data_folder)
-    else:
-        print(
-            "\033[91m Warning : Impossible to recover impurity data, try running the "
-            "macro in the main/utility folder"
-        )
-        print("          -> No impurity plot done\033[0m")
+    fig, ax = plt.subplots(figsize=(8, 6))
+    plot_line_brem_loss_function_profile(ax, impp=data_folder)

@@ -16220,13 +16220,8 @@ def main_plot(
     ) as imp_path:
         data_folder = str(imp_path.parent) + "/"
 
-    if Path(data_folder).is_dir():
-        imp = data_folder
-    else:
-        print(
-            "\033[91m Warning : Impossible to recover impurity data, try running the macro in the main/utility folder"
-        )
-        print("          -> No impurity plot done\033[0m")
+    imp = data_folder
+
     i_shape = int(m_file.get("i_plasma_shape", scan=scan))
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
