@@ -34,9 +34,6 @@ def initialise_imprad(data: DataStructure):
     """
     errorflag = 0
 
-    # Number of temperature and Lz values in data file
-    table_length = N_IMPURITIY_LOSS_FUNCTION_POINTS
-
     f_nd_species_electron = 1.0e0
 
     #  Hydrogen
@@ -47,7 +44,7 @@ def initialise_imprad(data: DataStructure):
         z=1,
         m_species_amu=constants.M_PROTIUM_AMU,  # 1.00782503223 1H
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
@@ -61,7 +58,7 @@ def initialise_imprad(data: DataStructure):
         z=2,
         m_species_amu=constants.M_HELIUM_AMU,  # 4.002602 (3He,4He) Average mass
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
@@ -73,7 +70,7 @@ def initialise_imprad(data: DataStructure):
         z=4,
         m_species_amu=constants.M_BERYLLIUM_AMU,  # 9.0121831 9Be
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
@@ -85,7 +82,7 @@ def initialise_imprad(data: DataStructure):
         z=6,
         m_species_amu=constants.M_CARBON_AMU,  # 12.0096, (12C,13C,14C) Average mass
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
@@ -97,7 +94,7 @@ def initialise_imprad(data: DataStructure):
         z=7,
         m_species_amu=constants.M_NITROGEN_AMU,  # 14.00643, (14N,15N) Average mass
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
@@ -109,7 +106,7 @@ def initialise_imprad(data: DataStructure):
         z=8,
         m_species_amu=constants.M_OXYGEN_AMU,  # 15.99903, (16O,17O,18O) Average mass
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
@@ -121,7 +118,7 @@ def initialise_imprad(data: DataStructure):
         z=10,
         m_species_amu=constants.M_NEON_AMU,  # 20.1797 (20Ne,21Ne,22Ne) Average mass
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
@@ -133,7 +130,7 @@ def initialise_imprad(data: DataStructure):
         z=14,
         m_species_amu=constants.M_SILICON_AMU,  # 28.084 (28Si,29Si,30Si) Average mass
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
@@ -145,7 +142,7 @@ def initialise_imprad(data: DataStructure):
         z=18,
         m_species_amu=constants.M_ARGON_AMU,  # 39.948 (40Ar,36Ar,38Ar) Average mass
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
@@ -157,7 +154,7 @@ def initialise_imprad(data: DataStructure):
         z=26,
         m_species_amu=constants.M_IRON_AMU,  # 55.845 (56Fe,54Fe,57Fe,58Fe) Average mass
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
@@ -170,7 +167,7 @@ def initialise_imprad(data: DataStructure):
         # 58.6934 (58Ni,60Ni,61Ni,62Ni,64Ni) Average mass
         m_species_amu=constants.M_NICKEL_AMU,
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
@@ -183,7 +180,7 @@ def initialise_imprad(data: DataStructure):
         # 83.798 (84Kr,86Kr,82Kr,80Kr,78Kr) Average mass
         m_species_amu=constants.M_KRYPTON_AMU,
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
@@ -196,7 +193,7 @@ def initialise_imprad(data: DataStructure):
         # 131.293 (132Xe,129Xe,131Xe,134Xe,136Xe) Average mass
         m_species_amu=constants.M_XENON_AMU,
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
@@ -209,7 +206,7 @@ def initialise_imprad(data: DataStructure):
         # 183.84 (184W,186W,182W,183W,180W) Average mass
         m_species_amu=constants.M_TUNGSTEN_AMU,
         f_nd_species_electron=f_nd_species_electron,
-        len_tab=table_length,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
         error=errorflag,
         data=data,
     )
