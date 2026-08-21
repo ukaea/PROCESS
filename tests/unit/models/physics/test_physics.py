@@ -1116,6 +1116,10 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
 @pytest.mark.parametrize(
     ("arguments", "expected"),
     [
+        # Expected values updated when the q95 -> qbar transform was
+        # corrected from multiplication to division by 1.3*(1-eps)^0.6:
+        # relative to the old values this scales the current by
+        # (1.3*(1-eps)^0.6)^2 (-3.0% at A=2.7, +3.9% at A=3.0).
         (
             {
                 "q95": 2.5,
@@ -1125,7 +1129,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
                 "kappa": 1.85,
                 "triang": 0.5,
             },
-            38.00677211030666,
+            36.86802557693355,
         ),
         (
             {
@@ -1136,7 +1140,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
                 "kappa": 1.85,
                 "triang": 0.5,
             },
-            31.290463480745593,
+            32.50792056059886,
         ),
     ],
 )
@@ -1149,6 +1153,10 @@ def test_calculate_plasma_current_peng(arguments, expected, physics):
 @pytest.mark.parametrize(
     ("arguments", "expected"),
     [
+        # Expected values for the i_plasma_current=2 (Peng TART) branch
+        # updated when the q95 -> qbar transform was corrected from
+        # multiplication to division by 1.3*(1-eps)^0.6 (scales bpol by
+        # (1.3*(1-eps)^0.6)^2).
         (
             {
                 "i_plasma_current": 2,
@@ -1160,7 +1168,7 @@ def test_calculate_plasma_current_peng(arguments, expected, physics):
                 "triang": 0.5,
                 "len_plasma_poloidal": 24,
             },
-            3.5258772213675047,
+            3.4202360358630237,
         ),
         (
             {
@@ -1173,7 +1181,7 @@ def test_calculate_plasma_current_peng(arguments, expected, physics):
                 "triang": 0.5,
                 "len_plasma_poloidal": 24,
             },
-            2.902807218476584,
+            3.0157503585409073,
         ),
         (
             {

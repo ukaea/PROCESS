@@ -6,7 +6,7 @@ from bokeh.models import ColumnDataSource, CustomJS, Slider
 from bokeh.plotting import figure, output_file, save
 
 x = np.linspace(1.0, 3.0, 500)
-y1 = 5.0 * 1.3 * (1.0 - (1.0 / x) ** 0.6)
+y1 = 5.0 / (1.3 * (1.0 - 1.0 / x) ** 0.6)
 y2 = 5.0 * (1.0 + 2.6 * (1.0 / x) ** 2.8)  # Initial data for the second line
 
 source = ColumnDataSource(data={"x": x, "y1": y1, "y2": y2})
@@ -50,7 +50,7 @@ callback = CustomJS(
     const B = qbar.value;
 
     const x = source.data['x'];
-    const y1 = x.map(xi => A * 1.3 * (1.0 - (1.0 / xi) ** 0.6));
+    const y1 = x.map(xi => A / (1.3 * (1.0 - 1.0 / xi) ** 0.6));
     const y2 = x.map(xi => B * (1.0 + 2.6 * (1.0 / xi) ** 2.8)); // Example transformation for the second line
 
     source.data['y1'] = y1;
