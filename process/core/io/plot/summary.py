@@ -84,6 +84,7 @@ from process.models.physics.plasma_geometry import (
     PlasmaShapeModelType,
 )
 from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.power import PumpingPowerModelTypes
 from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
@@ -16332,7 +16333,8 @@ def plot_cs_von_mises_2d_contour(
     axis.set_xlim(r_cs_inner * 0.9, r_cs_outer * 1.1)
     axis.set_ylim((-dz_cs_full / 2) * 1.1, (dz_cs_full / 2) * 1.1)
     axis.grid(True, alpha=0.3)
-    axis.set_title("CS Von Mises Stress Contour at BOP")
+    axis.set_title("CS Radial Stress at BOP")
+    axis.legend(loc="best")
 
 
 def plot_pf_dimensions(
@@ -16472,6 +16474,93 @@ def plot_pf_dimensions(
     axis.minorticks_on()
     axis.grid(True, alpha=0.3)
     axis.set_aspect("equal", adjustable="box")
+
+
+def plot_blanket_coolant_properties(fig: plt.Figure, m_file: MFile, scan: int):
+    """Combined plot of blanket coolant channel structure and properties."""
+    # Add info about the Winding Pack
+    textstr_outboard_blkt = (
+        f"$\\mathbf{{Outboard \\ blanket:}}$\n \n"
+        f"Radius of blanket channel: {m_file.get('radius_blkt_channel', scan=scan):.4f} m\n"
+        f"Channel roughness ($\\epsilon$): {m_file.get('roughness_fw_channel', scan=scan):.4e} m\n\n"
+        f"Radial coolant channel length: {m_file.get('len_blkt_outboard_coolant_channel_radial', scan=scan):.4f} m\n"
+        f"Poloidal coolant channel length: {m_file.get('len_blkt_outboard_segment_poloidal', scan=scan):.4f} m\n"
+        f"Number of radial channels: {m_file.get('n_blkt_outboard_module_coolant_sections_radial', scan=scan)}\n"
+        f"Number of poloidal channels: {m_file.get('n_blkt_outboard_module_coolant_sections_poloidal', scan=scan)}\n"
+        f"Total length of coolant channel straight sections: {m_file.get('len_blkt_outboard_channel_total', scan=scan):.4f} m\n\n"
+        f"Pressure drop for straight sections: {m_file.get('dpres_blkt_outboard_coolant_channel_straight_total', scan=scan):.2e} Pa\n"
+        f"Pressure drop for 90° bends: {m_file.get('dpres_blkt_outboard_coolant_channel_90_bend', scan=scan):.2e} Pa\n"
+        f"Total pressure drop for 90° bends: {m_file.get('dpres_blkt_outboard_coolant_channel_90_bends_total', scan=scan):.2e} Pa\n"
+        f"Pressure drop for 180° bends: {m_file.get('dpres_blkt_outboard_coolant_channel_180_bend', scan=scan):.2e} Pa\n"
+        f"Total pressure drop for 180° bends: {m_file.get('dpres_blkt_outboard_coolant_channel_180_bends_total', scan=scan):.2e} Pa\n"
+        f"Total pressure drop for all bends: {m_file.get('dpres_blkt_outboard_bends_total', scan=scan):.2e} Pa\n\n"
+        f"Reynolds number ($Re$): {m_file.get('reynolds_blkt_outboard_coolant', scan=scan):.4f}\n"
+        f"Darcy Friction factor ($f$): {m_file.get('darcy_frict_blkt_outboard_coolant', scan=scan):.4f}\n\n"
+        f"Friction drop coefficient for straight sections: {m_file.get('f_straight_blkt_outboard_coolant', scan=scan):.4f}\n"
+        f"Friction drop coefficient for 90° bends: {m_file.get('f_elbow_blkt_outboard_90_bend', scan=scan):.4f}\n"
+        f"Friction drop coefficient for 180° bends: {m_file.get('f_elbow_blkt_outboard_180_bend', scan=scan):.4f}\n\n"
+        f"Total coolant mass flow rate: {m_file.get('mflow_blkt_outboard_coolant', scan=scan):.4f} kg/s\n"
+        f"Coolant mass flow rate in single channel: {m_file.get('mflow_blkt_outboard_coolant_channel', scan=scan):.4f} kg/s\n"
+        f"Coolant velocity in single channel: {m_file.get('vel_blkt_outboard_coolant', scan=scan):.4f} m/s"
+    )
+
+    fig.text(
+        0.5,
+        0.5,
+        textstr_outboard_blkt,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add info about the Winding Pack
+    textstr_inboard_blkt = (
+        f"$\\mathbf{{Inboard \\ blanket:}}$\n \n"
+        f"Radius of blanket channel: {m_file.get('radius_blkt_channel', scan=scan):.4f} m\n"
+        f"Channel roughness ($\\epsilon$): {m_file.get('roughness_fw_channel', scan=scan):.4e} m\n\n"
+        f"Radial coolant channel length: {m_file.get('len_blkt_inboard_coolant_channel_radial', scan=scan):.4f} m\n"
+        f"Poloidal coolant channel length: {m_file.get('len_blkt_inboard_segment_poloidal', scan=scan):.4f} m\n"
+        f"Number of radial channels: {m_file.get('n_blkt_inboard_module_coolant_sections_radial', scan=scan)}\n"
+        f"Number of poloidal channels: {m_file.get('n_blkt_inboard_module_coolant_sections_poloidal', scan=scan)}\n"
+        f"Total length of coolant channel straight sections: {m_file.get('len_blkt_inboard_channel_total', scan=scan):.4f} m\n\n"
+        f"Pressure drop for straight sections: {m_file.get('dpres_blkt_inboard_coolant_channel_straight_total', scan=scan):.2e} Pa\n"
+        f"Pressure drop for 90° bends: {m_file.get('dpres_blkt_inboard_coolant_channel_90_bend', scan=scan):.2e} Pa\n"
+        f"Total pressure drop for 90° bends: {m_file.get('dpres_blkt_inboard_coolant_channel_90_bends_total', scan=scan):.2e} Pa\n"
+        f"Pressure drop for 180° bends: {m_file.get('dpres_blkt_inboard_coolant_channel_180_bend', scan=scan):.2e} Pa\n"
+        f"Total pressure drop for 180° bends: {m_file.get('dpres_blkt_inboard_coolant_channel_180_bends_total', scan=scan):.2e} Pa\n"
+        f"Total pressure drop for all bends: {m_file.get('dpres_blkt_inboard_bends_total', scan=scan):.2e} Pa\n\n"
+        f"Reynolds number ($Re$): {m_file.get('reynolds_blkt_inboard_coolant', scan=scan):.4f}\n"
+        f"Darcy Friction factor ($f$): {m_file.get('darcy_frict_blkt_inboard_coolant', scan=scan):.4f}\n\n"
+        f"Friction drop coefficient for straight sections: {m_file.get('f_straight_blkt_inboard_coolant', scan=scan):.4f}\n"
+        f"Friction drop coefficient for 90° bends: {m_file.get('f_elbow_blkt_inboard_90_bend', scan=scan):.4f}\n"
+        f"Friction drop coefficient for 180° bends: {m_file.get('f_elbow_blkt_inboard_180_bend', scan=scan):.4f}\n\n"
+        f"Total coolant mass flow rate: {m_file.get('mflow_blkt_inboard_coolant', scan=scan):.4f} kg/s\n"
+        f"Coolant mass flow rate in single channel: {m_file.get('mflow_blkt_inboard_coolant_channel', scan=scan):.4f} kg/s\n"
+        f"Velocity of inboard blanket coolant in single channel: {m_file.get('vel_blkt_inboard_coolant', scan=scan):.4f} m/s"
+    )
+
+    fig.text(
+        0.1,
+        0.5,
+        textstr_inboard_blkt,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
 
 
 def main_plot(
@@ -17093,16 +17182,17 @@ def main_plot(
     )
     plot_fw_90_deg_pipe_bend(pages["fw_td_cross_section"].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(_add_page("blkt_pipe_bends"), m_file, scan)
-    ax_blanket = pages["blkt_pipe_bends"].add_subplot(122, aspect="equal")
+    ax_blanket = _add_page("blkt_structure").add_subplot(122, aspect="equal")
     plot_blkt_structure(
-        ax_blanket,
-        pages["blkt_pipe_bends"],
-        m_file,
-        scan,
-        radial_build,
-        colour_scheme,
+        ax_blanket, pages["blkt_structure"], m_file, scan, radial_build, colour_scheme
     )
+
+    plot_blkt_pipe_bends(_add_page("blkt_cooling"), m_file, scan)
+    if (
+        m_file.get("i_p_coolant_pumping", scan=scan)
+        == PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP
+    ):
+        plot_blanket_coolant_properties(pages["blkt_cooling"], m_file, scan)
 
     plot_main_power_flow(
         _add_page("main_power_flow").add_subplot(111, aspect="equal"),
@@ -17222,8 +17312,6 @@ def plot_summary(
             color="dimgray",
         )
 
-    # create main plot
-    # Increase range when adding new page
     # run main_plot
     mfile_obj = MFile(mfile) if mfile else MFile("MFILE.DAT")
     run_label = f"{mfile_obj.get('fileprefix', scan=-1)} | scan {scan or -1} | {mfile_obj.get('date', scan=-1)} {mfile_obj.get('time', scan=-1)} | {mfile_obj.get('tagno', scan=-1)} | Branch: {mfile_obj.get('branch_name', scan=-1)}  "

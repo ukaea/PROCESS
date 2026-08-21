@@ -49,6 +49,7 @@ from process.core.model import DataStructure, Model
 from process.core.process_output import OutputFileManager, oheadr
 from process.core.scan import Scan
 from process.data_structure.blanket_variables import BlktModelTypes
+from process.data_structure.build_variables import InboardBlanketConfiguration
 from process.data_structure.cost_variables import CostModels
 from process.data_structure.numerics import PROCESSRunMode
 from process.models.availability import Availability
@@ -99,7 +100,7 @@ from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.physics.profiles import NeProfile, TeProfile
 from process.models.physics.scrape_off_layer import ScrapeOffLayer
-from process.models.power import Power
+from process.models.power import Power, PumpingPowerModelTypes
 from process.models.pulse import Pulse
 from process.models.shield import Shield
 from process.models.stellarator.neoclassics import Neoclassics
@@ -949,6 +950,18 @@ class Models:
         elif data.fwbs.i_blanket_type == BlktModelTypes.DCLL:
             # DCLL model
             self.dcll.output()
+
+        if (
+            data.fwbs.i_p_coolant_pumping
+            == PumpingPowerModelTypes.CALCULATE_PRESSURE_DROP
+        ):
+            if (
+                data.build.i_blkt_inboard
+                == InboardBlanketConfiguration.INBOARD_BLANKET_PRESENT
+            ):
+                self.blanket_library.output_inboard_blkt_pumping_variables()
+
+            self.blanket_library.output_outboard_blkt_pumping_variables()
 
         # FISPACT and LOCA model (not used)- removed
 
