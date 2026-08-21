@@ -3058,7 +3058,7 @@ class BlanketLibrary(Model):
         )
 
         # Friction - for all coolants
-        friction_params: CoolantFrictionLossParameters = coolant_friction_pressure_drop(
+        friction_params = coolant_friction_pressure_drop(
             i_ps=icoolpump,
             radius_pipe_90_deg_bend=radius_pipe_90_deg_bend,
             radius_pipe_180_deg_bend=radius_pipe_180_deg_bend,
