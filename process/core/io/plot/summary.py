@@ -16218,9 +16218,7 @@ def main_plot(
     with resources.path(
         "process.data.lz_non_corona_14_elements", "Ar_lz_tau.dat"
     ) as imp_path:
-        data_folder = str(imp_path.parent) + "/"
-
-    imp = data_folder
+        imp = str(imp_path.parent) + "/"
 
     i_shape = int(m_file.get("i_plasma_shape", scan=scan))
     # Setup params for text plots
