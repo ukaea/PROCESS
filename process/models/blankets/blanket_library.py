@@ -203,7 +203,8 @@ class BlanketLibrary(Model):
         dz_blkt_upper : float
             Vertical thickness of the upper blanket (m)
         n_divertors : int
-            Number of divertors (1 for single null, 2 for double null)
+            Number of divertors (0 for limiter, 1 for single null,
+            2 for double null)
 
         Returns
         -------
@@ -217,8 +218,8 @@ class BlanketLibrary(Model):
         )
 
         # Calculate component internal upper half-height (m)
-        # If a double null machine then symmetric
-        if n_divertors == 2:
+        # Limiter and double-null machines are symmetric
+        if n_divertors in {0, 2}:
             z_top = z_bottom
         else:
             # Blanket
@@ -536,7 +537,14 @@ class BlanketLibrary(Model):
         Apply coverage factors to volumes
         """
         # Apply blanket coverage factors
-        if self.data.divertor.n_divertors == 2:
+        if self.data.divertor.n_divertors == 0:
+            # no divertor cut-out
+            self.data.build.a_blkt_outboard_surface = (
+                self.data.build.a_blkt_total_surface_full_coverage
+                * (1.0 - self.data.fwbs.f_a_fw_outboard_hcd)
+                - self.data.build.a_blkt_inboard_surface_full_coverage
+            )
+        elif self.data.divertor.n_divertors == 2:
             # double null configuration
             self.data.build.a_blkt_outboard_surface = (
                 self.data.build.a_blkt_total_surface_full_coverage
@@ -564,13 +572,14 @@ class BlanketLibrary(Model):
             + self.data.build.a_blkt_outboard_surface
         )
 
+        f_ster_div = (
+            0.0
+            if self.data.divertor.n_divertors == 0
+            else self.data.fwbs.f_ster_div_single
+        )
         self.data.fwbs.vol_blkt_outboard = (
             self.data.fwbs.vol_blkt_total_full_coverage
-            * (
-                1.0
-                - self.data.fwbs.f_ster_div_single
-                - self.data.fwbs.f_a_fw_outboard_hcd
-            )
+            * (1.0 - f_ster_div - self.data.fwbs.f_a_fw_outboard_hcd)
             - self.data.fwbs.vol_blkt_inboard_full_coverage
         )
         self.data.fwbs.vol_blkt_inboard = self.data.fwbs.vol_blkt_inboard_full_coverage
@@ -1619,7 +1628,8 @@ class BlanketLibrary(Model):
         dz_blkt_half :
             Half-height of the blanket module (m)
         n_divertors :
-            Number of divertors (1 for single null, 2 for double null)
+            Number of divertors (0 for limiter, 1 for single null,
+            2 for double null)
         f_ster_div_single :
             Fractional poloidal length of the divertor in single null configuration
 
@@ -1642,7 +1652,11 @@ class BlanketLibrary(Model):
 
         # Calculate blanket poloidal length and segment, subtracting divertor length (m)
         # kit hcll version only had the single null option
-        if n_divertors == 2:
+        if n_divertors == 0:
+            len_blkt_outboard_segment_poloidal = (
+                0.5 * ptor / n_blkt_outboard_modules_poloidal
+            )
+        elif n_divertors == 2:
             # Double null configuration
             len_blkt_outboard_segment_poloidal = (
                 0.5
@@ -1686,7 +1700,8 @@ class BlanketLibrary(Model):
         n_blkt_inboard_modules_poloidal :
             Number of inboard blanket modules in poloidal direction
         n_divertors :
-            Number of divertors (1 for single null, 2 for double null)
+            Number of divertors (0 for limiter, 1 for single null,
+            2 for double null)
         f_ster_div_single :
             Fractional poloidal length of the divertor in single null configuration
 
@@ -1713,7 +1728,11 @@ class BlanketLibrary(Model):
         # so fraction f_ster_div_single still applies
 
         # kit hcll version only had the single null option
-        if n_divertors == 2:
+        if n_divertors == 0:
+            len_blkt_inboard_segment_poloidal = (
+                0.5 * ptor / n_blkt_inboard_modules_poloidal
+            )
+        elif n_divertors == 2:
             # Double null configuration
             len_blkt_inboard_segment_poloidal = (
                 0.5
@@ -1757,7 +1776,8 @@ class BlanketLibrary(Model):
         n_blkt_outboard_modules_poloidal :
             Number of outboard blanket modules in poloidal direction
         n_divertors :
-            Number of divertors (1 for single null, 2 for double null)
+            Number of divertors (0 for limiter, 1 for single null,
+            2 for double null)
         f_ster_div_single :
             Fractional poloidal length of the divertor in single null configuration
 
@@ -1781,7 +1801,11 @@ class BlanketLibrary(Model):
         # kit hcll version only had the single null option
         # Calculate outboard blanket poloidal length and segment,
         # subtracting divertor length (m)
-        if n_divertors == 2:
+        if n_divertors == 0:
+            len_blkt_outboard_segment_poloidal = (
+                0.5 * ptor / n_blkt_outboard_modules_poloidal
+            )
+        elif n_divertors == 2:
             # Double null configuration
             len_blkt_outboard_segment_poloidal = (
                 0.5
@@ -3646,7 +3670,7 @@ class OutboardBlanket(BlanketLibrary):
         Parameters
         ----------
         n_divertors : int
-            Number of divertors in the design (1 or 2).
+            Number of divertors in the design (0, 1 or 2).
         deg_div_poloidal_plasma : float
             Poloidal angle subtended by the divertor at the plasma mid-plane (degrees).
 
@@ -3658,15 +3682,15 @@ class OutboardBlanket(BlanketLibrary):
         Raises
         ------
         ProcessValueError
-            If n_divertors is not 1 or 2.
+            If n_divertors is not 0, 1 or 2.
         """
         if n_divertors == 1:
             return 180.0 + deg_div_poloidal_plasma
-        if n_divertors == 2:
+        if n_divertors in {0, 2}:
             return 180.0
         raise ProcessValueError(
-            f"n_divertors = {n_divertors} is an invalid option. Only 1 or 2 divertors "
-            f"are supported."
+            f"n_divertors = {n_divertors} is an invalid option. Only 0, 1 or 2 "
+            f"divertors are supported."
         )
 
     @property
