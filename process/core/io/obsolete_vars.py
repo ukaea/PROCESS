@@ -478,6 +478,7 @@ OBS_VARS = {
     "minmax": "i_figure_merit",
     "neqns": "n_equality_constraints",
     "nineqns": "n_inequality_constraints",
+    "etatf": "eta_tf_power_supply_conversion",
 }
 
 OBS_VARS_HELP = {

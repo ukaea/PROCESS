@@ -21,8 +21,10 @@ class HeatTransportData:
     Scan variable nwseep = 56
     """
 
-    etatf: float = 0.9
-    """AC to resistive power conversion for TF coils"""
+    eta_tf_power_supply_conversion: float = 0.9
+    """Conversion efficiency of the TF coil power supply (η_tf) (i.e., the ratio of the
+    electrical power delivered to the TF coils to the electrical power drawn from
+    the grid)"""
 
     eta_turbine: float = 0.35
     """thermal to electric conversion efficiency if `i_thermal_electric_conversion=2`; otherwise calculated."""

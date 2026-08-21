@@ -2259,7 +2259,8 @@ class Power(Model):
 
         # Total steady state AC power demand (MW)
         self.data.heat_transport.p_tf_electric_supplies_mw = (
-            self.data.tfcoil.tfcmw / self.data.heat_transport.etatf
+            self.data.tfcoil.tfcmw
+            / self.data.heat_transport.eta_tf_power_supply_conversion
         )
 
         # Output section
@@ -2500,7 +2501,9 @@ class Power(Model):
         xpwrmw = xpower / 0.9e0
 
         #  Total steady state AC power demand, MW
-        p_tf_electric_supplies_mw += rpower / self.data.heat_transport.etatf
+        p_tf_electric_supplies_mw += (
+            rpower / self.data.heat_transport.eta_tf_power_supply_conversion
+        )
         #  Total TF coil power conversion building floor area, m2
 
         # tftsp = tfcfsp

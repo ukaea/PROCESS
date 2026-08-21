@@ -458,4 +458,4 @@ The resistivity of the busbar is 2.62e-8 ohm.m (0.0262 ohm.mm²/m) (hard-coded).
 
 "TF coil resistive power" (`rpower`) includes the dissipation of the cryogenic current leads (assumed to be resistive).
 
-The AC power required is determined by the efficiency of the coil power supply: `etatf` (default = 90%).
+The AC power required is determined by the efficiency of the coil power supply: `eta_tf_power_supply_conversion` (default = 90%).

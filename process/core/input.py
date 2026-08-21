@@ -409,7 +409,9 @@ INPUT_VARIABLES = {
     ),
     "etapsu": InputVariable("pf_coil", float, range=(0.0, 1.0)),
     "etapump": InputVariable("tfcoil", float, range=(0.0, 1.0)),
-    "etatf": InputVariable("heat_transport", float, range=(0.0, 1.0)),
+    "eta_tf_power_supply_conversion": InputVariable(
+        "heat_transport", float, range=(0.0, 1.0)
+    ),
     "eta_turbine": InputVariable("heat_transport", float, range=(0.0, 1.0)),
     "eyoung_al": InputVariable("tfcoil", float, range=(0.0, 1.0)),
     "eyoung_cond_axial": InputVariable("tfcoil", float, range=(0.0, 10000000000000.0)),

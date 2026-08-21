@@ -2797,7 +2797,7 @@ eta_turbine = 0.40
 * DESCRIPTION:   Thermal-to-Electric Conversion Efficiency
 * JUSTIFICATION: 
 
-*etatf = 
+*eta_tf_power_supply_conversion = 
 * DESCRIPTION:   AC to resistive power conversion for TF coils (default = 0.9)
 * JUSTIFICATION: Not yet set
 
