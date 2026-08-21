@@ -249,7 +249,7 @@ class PlasmaExhaust(Model):
 
     @staticmethod
     def calculate_brunner_divertor_power_splits(
-        dr_plasma_outboard_midplane_separatrix_separation: float,
+        dr_outboard_midplane_sep: float,
         len_plasma_sol_outboard_power_decay: float,
         len_plasma_sol_inboard_power_decay: float,
     ) -> DivertorSeparatrixPowerSplits:
@@ -258,7 +258,7 @@ class PlasmaExhaust(Model):
 
         Parameters
         ----------
-        dr_plasma_outboard_midplane_separatrix_separation : float
+        dr_outboard_midplane_sep : float
             Radial separation of the plasma outboard midplane separatrix (δR_sep) [m].
         len_plasma_sol_outboard_power_decay : float
             Power decay length in the scrape-off layer (λ_q) [m].
@@ -294,29 +294,17 @@ class PlasmaExhaust(Model):
         # Fractions of total outboard power going to each target
         # Outboard lower divertor
         f_p_outboard_lower = 1 / (
-            1
-            + np.exp(
-                dr_plasma_outboard_midplane_separatrix_separation
-                / len_plasma_sol_outboard_power_decay
-            )
+            1 + np.exp(dr_outboard_midplane_sep / len_plasma_sol_outboard_power_decay)
         )
 
         # Outboard upper divertor
         f_p_outboard_upper = 1 / (
-            1
-            + np.exp(
-                -dr_plasma_outboard_midplane_separatrix_separation
-                / len_plasma_sol_outboard_power_decay
-            )
+            1 + np.exp(-dr_outboard_midplane_sep / len_plasma_sol_outboard_power_decay)
         )
 
         # Fractions of the total inboard power going to each target
         f_p_inboard_lower = 1 / (
-            1
-            + np.exp(
-                dr_plasma_outboard_midplane_separatrix_separation
-                / (len_plasma_sol_inboard_power_decay)
-            )
+            1 + np.exp(dr_outboard_midplane_sep / (len_plasma_sol_inboard_power_decay))
         )
 
         f_p_total_inboard = f_p_inner_sep_0 + (
@@ -330,7 +318,7 @@ class PlasmaExhaust(Model):
                     + np.exp(
                         -(
                             (
-                                dr_plasma_outboard_midplane_separatrix_separation
+                                dr_outboard_midplane_sep
                                 / len_plasma_sol_outboard_power_decay
                             )
                             ** 2
@@ -361,80 +349,68 @@ class PlasmaExhaust(Model):
         if self.data.stellarator.istell == 0:
             po.osubhd(self.outfile, "Brunner Divertor Power Splits:")
 
-            po.ovarre(
-                self.outfile,
-                "Requested fraction of power to the lower divertor in double null "
-                "configuration",
-                "(f_p_div_lower_separatrix)",
-                self.data.physics.f_p_div_lower_separatrix,
-                "IP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Required distance between the first and second plasma separatrixes at "
-                "the outer midplane (δR_sep) [m]",
-                "(dr_plasma_outboard_midplane_separatrix_separation)",
-                self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
-                "OP ",
-            )
-            po.oblnkl(self.outfile)
-
-            po.ovarre(
-                self.outfile,
-                "Outboard side heat flux decay length (m)",
-                "(len_sol_outboard_power_decay)",
-                self.data.physics.len_sol_outboard_power_decay,
-                "OP ",
-            )
-            po.oblnkl(self.outfile)
-
-            po.ovarre(
-                self.outfile,
-                "Fraction of separatrix power on the inner target(s)",
-                "(f_p_div_inboard_separatrix)",
-                self.data.physics.f_p_div_inboard_separatrix,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Fraction of separatrix power on the outer target(s)",
-                "(f_p_div_outboard_separatrix)",
-                self.data.physics.f_p_div_outboard_separatrix,
-                "OP ",
-            )
-
-            po.oblnkl(self.outfile)
-
-            po.ovarre(
-                self.outfile,
-                "Fraction of separatrix power on the inner lower target",
-                "(f_p_div_lower_inboard_separatrix)",
-                self.data.physics.f_p_div_lower_inboard_separatrix,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Separatrix power on the inner lower target",
-                "(p_div_lower_inboard_separatrix_mw)",
-                self.data.physics.p_div_lower_inboard_separatrix_mw,
-                "OP ",
-            )
-            po.oblnkl(self.outfile)
-
-            po.ovarre(
-                self.outfile,
-                "Fraction of separatrix power on the outer lower target",
-                "(f_p_div_lower_outboard_separatrix)",
-                self.data.physics.f_p_div_lower_outboard_separatrix,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Separatrix power on the outer lower target",
-                "(p_div_lower_outboard_separatrix_mw)",
-                self.data.physics.p_div_lower_outboard_separatrix_mw,
-                "OP ",
-            )
+            for op in [
+                (
+                    (
+                        "Requested fraction of power to the lower divertor in double "
+                        "null configuration"
+                    ),
+                    "(f_p_div_lower_separatrix)",
+                    self.data.physics.f_p_div_lower_separatrix,
+                ),
+                (
+                    (
+                        "Required distance between the first and second plasma "
+                        "separatrixes at the outer midplane (δR_sep) [m]"
+                    ),
+                    "(dr_plasma_outboard_midplane_separatrix_separation)",
+                    self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
+                ),
+                None,
+                (
+                    "Outboard side heat flux decay length (m)",
+                    "(len_sol_outboard_power_decay)",
+                    self.data.physics.len_sol_outboard_power_decay,
+                ),
+                None,
+                (
+                    "Fraction of separatrix power on the inner target(s)",
+                    "(f_p_div_inboard_separatrix)",
+                    self.data.physics.f_p_div_inboard_separatrix,
+                ),
+                (
+                    "Fraction of separatrix power on the outer target(s)",
+                    "(f_p_div_outboard_separatrix)",
+                    self.data.physics.f_p_div_outboard_separatrix,
+                ),
+                None,
+                (
+                    "Fraction of separatrix power on the inner lower target",
+                    "(f_p_div_lower_inboard_separatrix)",
+                    self.data.physics.f_p_div_lower_inboard_separatrix,
+                ),
+                (
+                    "Separatrix power on the inner lower target",
+                    "(p_div_lower_inboard_separatrix_mw)",
+                    self.data.physics.p_div_lower_inboard_separatrix_mw,
+                ),
+                None,
+                (
+                    "Fraction of separatrix power on the outer lower target",
+                    "(f_p_div_lower_outboard_separatrix)",
+                    self.data.physics.f_p_div_lower_outboard_separatrix,
+                ),
+                (
+                    "Separatrix power on the outer lower target",
+                    "(p_div_lower_outboard_separatrix_mw)",
+                    self.data.physics.p_div_lower_outboard_separatrix_mw,
+                ),
+            ]:
+                if op is None:
+                    po.oblnkl(self.outfile)
+                else:
+                    desc, var, val = op
+                    po.ovarre(self.outfile, desc, var, val, "OP ")
 
             if (
                 DivertorNumberModels(self.data.physics.i_single_null)
@@ -443,32 +419,32 @@ class PlasmaExhaust(Model):
                 po.oblnkl(self.outfile)
                 po.ocmmnt(self.outfile, "----------------------------")
                 po.oblnkl(self.outfile)
-                po.ovarre(
-                    self.outfile,
-                    "Fraction of separatrix power on the inner upper target",
-                    "(f_p_div_upper_inboard_separatrix)",
-                    self.data.physics.f_p_div_upper_inboard_separatrix,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Separatrix power on the inner upper target",
-                    "(p_div_upper_inboard_separatrix_mw)",
-                    self.data.physics.p_div_upper_inboard_separatrix_mw,
-                    "OP ",
-                )
-                po.oblnkl(self.outfile)
-                po.ovarre(
-                    self.outfile,
-                    "Fraction of separatrix power on the outer upper target",
-                    "(f_p_div_upper_outboard_separatrix)",
-                    self.data.physics.f_p_div_upper_outboard_separatrix,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Separatrix power on the outer upper target",
-                    "(p_div_upper_outboard_separatrix_mw)",
-                    self.data.physics.p_div_upper_outboard_separatrix_mw,
-                    "OP ",
-                )
+
+                for op in [
+                    (
+                        "Fraction of separatrix power on the inner upper target",
+                        "(f_p_div_upper_inboard_separatrix)",
+                        self.data.physics.f_p_div_upper_inboard_separatrix,
+                    ),
+                    (
+                        "Separatrix power on the inner upper target",
+                        "(p_div_upper_inboard_separatrix_mw)",
+                        self.data.physics.p_div_upper_inboard_separatrix_mw,
+                    ),
+                    None,
+                    (
+                        "Fraction of separatrix power on the outer upper target",
+                        "(f_p_div_upper_outboard_separatrix)",
+                        self.data.physics.f_p_div_upper_outboard_separatrix,
+                    ),
+                    (
+                        "Separatrix power on the outer upper target",
+                        "(p_div_upper_outboard_separatrix_mw)",
+                        self.data.physics.p_div_upper_outboard_separatrix_mw,
+                    ),
+                ]:
+                    if op is None:
+                        po.oblnkl(self.outfile)
+                    else:
+                        desc, var, val = op
+                        po.ovarre(self.outfile, desc, var, val, "OP ")

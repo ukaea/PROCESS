@@ -5,7 +5,7 @@ from process.models.physics.exhaust import PlasmaExhaust
 
 def test_calculate_brunner_divertor_power_splits_at_zero_separatrix_separation():
     result = PlasmaExhaust().calculate_brunner_divertor_power_splits(
-        dr_plasma_outboard_midplane_separatrix_separation=0.0,
+        dr_outboard_midplane_sep=0.0,
         len_plasma_sol_outboard_power_decay=0.01,
         len_plasma_sol_inboard_power_decay=0.01,
     )
@@ -20,7 +20,7 @@ def test_calculate_brunner_divertor_power_splits_at_zero_separatrix_separation()
 
 def test_calculate_brunner_divertor_power_splits_asymmetric_case():
     result = PlasmaExhaust().calculate_brunner_divertor_power_splits(
-        dr_plasma_outboard_midplane_separatrix_separation=0.01,
+        dr_outboard_midplane_sep=0.01,
         len_plasma_sol_outboard_power_decay=0.005,
         len_plasma_sol_inboard_power_decay=0.0075,
     )

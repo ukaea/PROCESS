@@ -1012,7 +1012,7 @@ class Physics(Model):
             )
 
         div_power_plits = self.exhaust.calculate_brunner_divertor_power_splits(
-            dr_plasma_outboard_midplane_separatrix_separation=self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
+            dr_outboard_midplane_sep=self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
             len_plasma_sol_outboard_power_decay=self.data.physics.len_sol_outboard_power_decay,
             len_plasma_sol_inboard_power_decay=self.data.physics.len_sol_inboard_power_decay,
         )
