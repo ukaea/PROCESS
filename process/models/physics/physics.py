@@ -789,7 +789,7 @@ class Physics(Model):
         # Calculate L- to H-mode power threshold for different scalings
         self.plasma_transition.run()
 
-        # Power transported to the divertor by charged particles,
+        # Power transported across the separatrix by charged particles,
         # i.e. excludes neutrons and radiation, and also NBI orbit loss power,
         # which is assumed to be absorbed by the first wall
         pinj = (
@@ -845,6 +845,12 @@ class Physics(Model):
         self.data.physics.p_plasma_separatrix_mw /= 1 - np.exp(
             -self.data.physics.p_plasma_separatrix_mw
         )
+
+        # If there is no divertor, do not assign separatrix power to divertors.
+        if self.data.divertor.n_divertors == 0:
+            self.data.physics.p_div_lower_separatrix_mw = 0.0
+            self.data.physics.p_div_upper_separatrix_mw = 0.0
+            self.data.physics.p_div_separatrix_max_mw = 0.0
 
         # if double null configuration share the power
         # over the upper and lower divertor, where
@@ -1013,51 +1019,67 @@ class Physics(Model):
                 )
             )
 
-        div_power_plits = calculate_brunner_divertor_power_splits(
-            dr_outboard_midplane_sep=self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
-            len_plasma_sol_outboard_power_decay=self.data.physics.len_sol_outboard_power_decay,
-            len_plasma_sol_inboard_power_decay=self.data.physics.len_sol_inboard_power_decay,
-        )
+        if self.data.divertor.n_divertors == 0:
+            self.data.physics.f_p_div_inboard_separatrix = 0.0
+            self.data.physics.f_p_div_outboard_separatrix = 0.0
+            self.data.physics.f_p_div_lower_inboard_separatrix = 0.0
+            self.data.physics.f_p_div_lower_outboard_separatrix = 0.0
+            self.data.physics.f_p_div_upper_inboard_separatrix = 0.0
+            self.data.physics.f_p_div_upper_outboard_separatrix = 0.0
 
-        self.data.physics.f_p_div_inboard_separatrix = (
-            div_power_plits.f_p_div_inboard_separatrix
-        )
-        self.data.physics.f_p_div_outboard_separatrix = (
-            div_power_plits.f_p_div_outboard_separatrix
-        )
-        self.data.physics.f_p_div_lower_inboard_separatrix = (
-            div_power_plits.f_p_div_inboard_lower_separatrix
-        )
-        self.data.physics.f_p_div_lower_outboard_separatrix = (
-            div_power_plits.f_p_div_outboard_lower_separatrix
-        )
-        self.data.physics.f_p_div_upper_inboard_separatrix = (
-            div_power_plits.f_p_div_inboard_upper_separatrix
-        )
-        self.data.physics.f_p_div_upper_outboard_separatrix = (
-            div_power_plits.f_p_div_outboard_upper_separatrix
-        )
+            self.data.physics.p_div_lower_inboard_separatrix_mw = 0.0
+            self.data.physics.p_div_lower_outboard_separatrix_mw = 0.0
+            self.data.physics.p_div_upper_inboard_separatrix_mw = 0.0
+            self.data.physics.p_div_upper_outboard_separatrix_mw = 0.0
 
-        self.data.physics.p_div_lower_inboard_separatrix_mw = (
-            self.data.physics.f_p_div_lower_inboard_separatrix
-            * self.data.physics.p_plasma_separatrix_mw
-        )
+        else:
+            div_power_splits = calculate_brunner_divertor_power_splits(
+                dr_outboard_midplane_sep=(
+                    self.data.physics.dr_plasma_outboard_midplane_separatrix_separation
+                ),
+                len_plasma_sol_outboard_power_decay=(
+                    self.data.physics.len_sol_outboard_power_decay
+                ),
+                len_plasma_sol_inboard_power_decay=(
+                    self.data.physics.len_sol_inboard_power_decay
+                ),
+            )
 
-        self.data.physics.p_div_lower_outboard_separatrix_mw = (
-            self.data.physics.f_p_div_lower_outboard_separatrix
-            * self.data.physics.p_plasma_separatrix_mw
-        )
+            self.data.physics.f_p_div_inboard_separatrix = (
+                div_power_splits.f_p_div_inboard_separatrix
+            )
+            self.data.physics.f_p_div_outboard_separatrix = (
+                div_power_splits.f_p_div_outboard_separatrix
+            )
+            self.data.physics.f_p_div_lower_inboard_separatrix = (
+                div_power_splits.f_p_div_inboard_lower_separatrix
+            )
+            self.data.physics.f_p_div_lower_outboard_separatrix = (
+                div_power_splits.f_p_div_outboard_lower_separatrix
+            )
+            self.data.physics.f_p_div_upper_inboard_separatrix = (
+                div_power_splits.f_p_div_inboard_upper_separatrix
+            )
+            self.data.physics.f_p_div_upper_outboard_separatrix = (
+                div_power_splits.f_p_div_outboard_upper_separatrix
+            )
 
-        self.data.physics.p_div_upper_inboard_separatrix_mw = (
-            self.data.physics.f_p_div_upper_inboard_separatrix
-            * self.data.physics.p_plasma_separatrix_mw
-        )
-
-        self.data.physics.p_div_upper_outboard_separatrix_mw = (
-            self.data.physics.f_p_div_upper_outboard_separatrix
-            * self.data.physics.p_plasma_separatrix_mw
-        )
-
+            self.data.physics.p_div_lower_inboard_separatrix_mw = (
+                self.data.physics.f_p_div_lower_inboard_separatrix
+                * self.data.physics.p_plasma_separatrix_mw
+            )
+            self.data.physics.p_div_lower_outboard_separatrix_mw = (
+                self.data.physics.f_p_div_lower_outboard_separatrix
+                * self.data.physics.p_plasma_separatrix_mw
+            )
+            self.data.physics.p_div_upper_inboard_separatrix_mw = (
+                self.data.physics.f_p_div_upper_inboard_separatrix
+                * self.data.physics.p_plasma_separatrix_mw
+            )
+            self.data.physics.p_div_upper_outboard_separatrix_mw = (
+                self.data.physics.f_p_div_upper_outboard_separatrix
+                * self.data.physics.p_plasma_separatrix_mw
+            )
         # Calculate some derived quantities that may not have been defined earlier
         self.data.physics.p_plasma_heating_total_mw = (
             self.calculate_total_plasma_heating_power(
@@ -2183,6 +2205,112 @@ class Physics(Model):
             self.data.physics.f_p_plasma_separatrix_rad,
             "OP ",
         )
+
+        if self.data.stellarator.istell == 0 and self.data.divertor.n_divertors > 0:
+            po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "Power incident on the divertor targets (MW)",
+                "(ptarmw)",
+                self.data.physics.ptarmw,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Divertor poloidal angle subtended by plasma (degrees)",
+                "(deg_div_poloidal_plasma)",
+                self.data.divertor.deg_div_poloidal_plasma,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Fraction of power to the lower divertor",
+                "(f_p_div_lower)",
+                self.data.physics.f_p_div_lower,
+                "IP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Outboard side heat flux decay length (m)",
+                "(len_sol_outboard_power_decay)",
+                self.data.physics.len_sol_outboard_power_decay,
+                "OP ",
+            )
+            if self.data.divertor.n_divertors == 2:
+                po.ovarre(
+                    self.outfile,
+                    "Midplane separation of the two magnetic closed flux surfaces (m)",
+                    "(drsep)",
+                    self.data.physics.drsep,
+                    "OP ",
+                )
+
+            po.ovarre(
+                self.outfile,
+                "Fraction of power on the inner targets",
+                "(fio)",
+                self.data.physics.fio,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Fraction of power incident on the lower inner target",
+                "(fLI)",
+                self.data.physics.fli,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Fraction of power incident on the lower outer target",
+                "(fLO)",
+                self.data.physics.flo,
+                "OP ",
+            )
+            if self.data.divertor.n_divertors == 2:
+                po.ovarre(
+                    self.outfile,
+                    "Fraction of power incident on the upper inner target",
+                    "(fUI)",
+                    self.data.physics.fui,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Fraction of power incident on the upper outer target",
+                    "(fUO)",
+                    self.data.physics.fuo,
+                    "OP ",
+                )
+
+            po.ovarre(
+                self.outfile,
+                "Power incident on the lower inner target (MW)",
+                "(pLImw)",
+                self.data.physics.plimw,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Power incident on the lower outer target (MW)",
+                "(pLOmw)",
+                self.data.physics.plomw,
+                "OP ",
+            )
+            if self.data.divertor.n_divertors == 2:
+                po.ovarre(
+                    self.outfile,
+                    "Power incident on the upper innner target (MW)",
+                    "(pUImw)",
+                    self.data.physics.puimw,
+                    "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Power incident on the upper outer target (MW)",
+                    "(pUOmw)",
+                    self.data.physics.puomw,
+                    "OP ",
+                )
 
         po.oblnkl(self.outfile)
         po.ovarre(
