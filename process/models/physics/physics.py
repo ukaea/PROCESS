@@ -787,7 +787,7 @@ class Physics(Model):
         # Calculate L- to H-mode power threshold for different scalings
         self.plasma_transition.run()
 
-        # Power transported to the divertor by charged particles,
+        # Power transported across the separatrix by charged particles,
         # i.e. excludes neutrons and radiation, and also NBI orbit loss power,
         # which is assumed to be absorbed by the first wall
         pinj = (
@@ -844,10 +844,16 @@ class Physics(Model):
             -self.data.physics.p_plasma_separatrix_mw
         )
 
+        # If there is no divertor, do not assign separatrix power to divertors.
+        if self.data.divertor.n_divertors == 0:
+            self.data.physics.p_div_lower_separatrix_mw = 0.0
+            self.data.physics.p_div_upper_separatrix_mw = 0.0
+            self.data.physics.p_div_separatrix_max_mw = 0.0
+
         # if double null configuration share the power
         # over the upper and lower divertor, where self.data.physics.f_p_div_lower gives
         # the factor of power conducted to the lower divertor
-        if self.data.divertor.n_divertors == 2:
+        elif self.data.divertor.n_divertors == 2:
             self.data.physics.p_div_lower_separatrix_mw = (
                 self.data.physics.f_p_div_lower
                 * self.data.physics.p_plasma_separatrix_mw
@@ -993,8 +999,8 @@ class Physics(Model):
 
         # ============================================================
 
-        # Calculate the target imbalances
-        # find the total power into the targets
+        # Calculate the target imbalances. ptarmw is the power remaining after
+        # SOL radiation for divertor targets or a limiter surface.
         self.data.physics.ptarmw = self.data.physics.p_plasma_separatrix_mw * (
             1.0e0 - self.data.physics.rad_fraction_sol
         )
@@ -1038,7 +1044,16 @@ class Physics(Model):
                 )
             )
         )
-        if self.data.divertor.n_divertors == 2:
+        if self.data.divertor.n_divertors == 0:
+            self.data.physics.fli = 0.0
+            self.data.physics.flo = 0.0
+            self.data.physics.fui = 0.0
+            self.data.physics.fuo = 0.0
+            self.data.physics.plimw = 0.0
+            self.data.physics.plomw = 0.0
+            self.data.physics.puimw = 0.0
+            self.data.physics.puomw = 0.0
+        elif self.data.divertor.n_divertors == 2:
             # Double Null configuration
             # Find all the power fractions accross the targets
             # Taken from D3-D conventional divertor design
@@ -2193,7 +2208,7 @@ class Physics(Model):
             "OP ",
         )
 
-        if self.data.stellarator.istell == 0:
+        if self.data.stellarator.istell == 0 and self.data.divertor.n_divertors > 0:
             po.oblnkl(self.outfile)
             po.ovarre(
                 self.outfile,
