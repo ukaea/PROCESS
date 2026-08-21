@@ -25,8 +25,8 @@ class DivertorData:
     anginc: float = 0.262
     """angle of incidence of field line on plate (rad)"""
 
-    deg_div_field_plate: float = 1.0
-    """field line angle wrt divertor target plate (degrees)"""
+    deg_b_div_lower_outboard_grazing: float = 1.0
+    """3D grazing field line angle with respect to divertor target plate [degrees]"""
 
     betai: float = 1.0
     """poloidal plane angle between divertor plate and leg, inboard (rad)"""
@@ -97,6 +97,21 @@ class DivertorData:
 
     deg_div_poloidal_plasma: float = 0.0
     """Divertor poloidal angle subtended by plasma (degrees)"""
+
+    dx_div_lower_outboard_strike: float = 0.0
+    """Lower divertor outboard strike point width [m]"""
+
+    f_div_lower_flux_expansion: float = 0.0
+    """Lower divertor flux expansion factor (fₓ)"""
+
+    deg_b_div_lower_flux: float = 0.0
+    """Lower divertor flux angle [degrees]"""
+
+    a_div_lower_outboard_wetted: float = 0.0
+    """Lower divertor outboard wetted area [m²]"""
+
+    deg_div_lower_outboard_plate_separatrix_poloidal: float = 0.0
+    """Lower divertor outboard plate-separatrix poloidal angle [degrees]"""
 
 
 CREATE_DICTS_FROM_DATACLASS = DivertorData

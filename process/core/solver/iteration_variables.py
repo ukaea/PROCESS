@@ -231,7 +231,7 @@ ITERATION_VARIABLES = {
     ),
     162: IterationVariable("r_cp_top", "build", 0.0010, 10.0),
     169: IterationVariable("te0_ecrh_achievable", "stellarator", 1.0, 1.0e3),
-    170: IterationVariable("deg_div_field_plate", "divertor", 0.49, 5.01),
+    170: IterationVariable("deg_b_div_lower_outboard_grazing", "divertor", 0.49, 5.01),
     171: IterationVariable("casths_fraction", "tfcoil", 0.01, 0.99),
     172: IterationVariable("dx_tf_side_case_min", "tfcoil", 0.001, 1.0),
     173: IterationVariable("f_plasma_fuel_tritium", "physics", 0.000, 1.000),

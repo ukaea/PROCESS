@@ -97,6 +97,14 @@ class ScrapeOffLayer(Model):
             / self.data.physics.a_plasma_outboard_sol_eich13_parallel
         )
 
+        self.data.physics.len_plasma_sol_scrabosio14_power_spreading = self.calculate_scarabosio2014_power_spreading_factor(  # noqa: E501
+            p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
+            b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
+            nd_plasma_separatrix_electron_19=self.data.physics.nd_plasma_separatrix_electron
+            / 1e19,
+            rmajor=self.data.physics.rmajor,
+        )
+
     def output(self) -> None:
         """Output plasma scrape off layer physics information."""
         po.oheadr(self.outfile, "Plasma Scrape Off Layer")
@@ -168,6 +176,14 @@ class ScrapeOffLayer(Model):
             "Plasma outboard midplane Eich 2013 SOL parallel power flux (qₗₗ,ᵤ) [MW/m²]",
             "(pflux_plasma_outboard_sol_eich13_parallel_mw)",
             self.data.physics.pflux_plasma_outboard_sol_eich13_parallel_mw,
+        )
+
+        po.osubhd(self.outfile, "Power Spreading Factors (S):")
+        po.ovarre(
+            self.outfile,
+            "Scrabosio 2014 H-mode power spreading factor (S) [m]",
+            "(len_plasma_sol_scrabosio14_power_spreading)",
+            self.data.physics.len_plasma_sol_scrabosio14_power_spreading,
         )
 
     @staticmethod
@@ -325,4 +341,49 @@ class ScrapeOffLayer(Model):
             (2 * np.pi * (rmajor + rminor))
             * len_plasma_sol_power_decay
             * (b_plasma_surface_poloidal_average / b_plasma_outboard_total)
+        )
+
+    @staticmethod
+    def calculate_scarabosio2014_power_spreading_factor(
+        p_plasma_separatrix_mw: float,
+        b_plasma_surface_poloidal_average: float,
+        nd_plasma_separatrix_electron_19: float,
+        rmajor: float,
+    ) -> float:
+        """Calculate the Scrabosio 2014 H-mode power spreading factor (S).
+
+        Parameters
+        ----------
+        p_plasma_separatrix_mw : float
+            Power crossing the separatrix (Pₛₑₚ) [MW]
+        b_plasma_surface_poloidal_average : float
+            Poloidal magnetic field at the plasma surface (Bₚₒₗ(a))  [T]
+        nd_plasma_separatrix_electron_19 : float
+            Electron density at the separatrix (nₑ,ₛₑₚ) [10¹⁹ m⁻³]
+        rmajor : float
+            Major radius of the plasma (R₀) [m]
+
+        Returns
+        -------
+        float
+            Scrabosio 2014 H-mode power spreading factor (S) [m]
+
+        Notes
+        -----
+        - The R² for the fit is 0.65
+
+        References
+        ----------
+        [1] A. Scarabosio et al., “Scaling of the divertor power spreading (S-factor) in
+        open and closed divertor operation in JET and ASDEX Upgrade,”
+        Journal of Nuclear Materials, vol. 463, pp. 49-54, Aug. 2015,
+        doi: 10.1016/j.jnucmat.2014.11.076.
+
+        """
+        return (
+            0.12e-3
+            * p_plasma_separatrix_mw**0.21
+            * b_plasma_surface_poloidal_average**-0.82
+            * nd_plasma_separatrix_electron_19**-0.02
+            * rmajor**0.71
         )

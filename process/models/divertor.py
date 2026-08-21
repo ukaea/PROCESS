@@ -1,6 +1,7 @@
 """Module containing divertor routines"""
 
 import math
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -10,6 +11,26 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.divertor_variables import DivertorHeatLoadModel
 from process.data_structure.physics_variables import DivertorNumberModels
+
+
+@dataclass
+class WadeDivertorMetrics:
+    """Dataclass to hold the output metrics for the Wade divertor model."""
+
+    pflux_div_heat_load_mw: float
+    """Divertor heat load [MW/m²]"""
+    dx_div_lower_outboard_strike: float
+    """Lower outboard divertor strike point width [m]"""
+    a_div_lower_outboard_wetted: float
+    """Lower divertor outboard wetted area [m²]"""
+    f_div_lower_flux_expansion: float
+    """Lower divertor flux expansion factor (fₓ)"""
+    deg_b_div_lower_flux: float
+    """Lower divertor flux angle [degrees]"""
+    deg_div_lower_outboard_plate_separatrix_poloidal: float
+    """Lower divertor outboard plate-separatrix poloidal angle [degrees]"""
+    deg_b_div_lower_outboard_grazing: float
+    """Lower divertor outboard grazing angle [degrees]"""
 
 
 class Divertor(Model):
@@ -87,20 +108,41 @@ class Divertor(Model):
             DivertorHeatLoadModel(self.data.divertor.i_div_heat_load)
             == DivertorHeatLoadModel.WADE
         ):
-            self.divwade(
-                self.data.physics.rmajor,
-                self.data.physics.rminor,
-                self.data.physics.aspect,
-                self.data.physics.b_plasma_toroidal_on_axis,
-                self.data.physics.b_plasma_surface_poloidal_average,
-                self.data.physics.p_plasma_separatrix_mw,
-                self.data.divertor.f_div_flux_expansion,
-                self.data.physics.nd_plasma_separatrix_electron,
-                self.data.divertor.deg_div_field_plate,
-                self.data.physics.rad_fraction_sol,
-                self.data.physics.f_p_div_lower,
-                output=output,
+            wade_divertor = self.divwade(
+                rmajor=self.data.physics.rmajor,
+                p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
+                len_plasma_sol_power_decay=self.data.physics.len_plasma_sol_eich13_power_decay,
+                len_plasma_sol_power_spreading=self.data.physics.len_plasma_sol_scrabosio14_power_spreading,
+                f_div_flux_expansion=self.data.divertor.f_div_flux_expansion,
+                deg_b_div_lower_outboard_grazing=self.data.divertor.deg_b_div_lower_outboard_grazing,
+                rad_fraction_sol=self.data.physics.rad_fraction_sol,
+                f_p_div_lower=self.data.physics.f_p_div_lower,
+                deg_b_plasma_outboard_flux_midplane=self.data.physics.deg_b_plasma_outboard_flux_midplane,
             )
+
+            self.data.divertor.pflux_div_heat_load_mw = (
+                wade_divertor.pflux_div_heat_load_mw
+            )
+            self.data.divertor.dx_div_lower_outboard_strike = (
+                wade_divertor.dx_div_lower_outboard_strike
+            )
+            self.data.divertor.a_div_lower_outboard_wetted = (
+                wade_divertor.a_div_lower_outboard_wetted
+            )
+            self.data.divertor.f_div_lower_flux_expansion = (
+                wade_divertor.f_div_lower_flux_expansion
+            )
+            self.data.divertor.deg_b_div_lower_flux = wade_divertor.deg_b_div_lower_flux
+            self.data.divertor.deg_div_lower_outboard_plate_separatrix_poloidal = (
+                wade_divertor.deg_div_lower_outboard_plate_separatrix_poloidal
+            )
+            self.data.divertor.deg_b_div_lower_outboard_grazing = (
+                wade_divertor.deg_b_div_lower_outboard_grazing
+            )
+
+            if output:
+                self.output_wade_divertor_model()
+
             return
 
     @property
@@ -272,18 +314,15 @@ class Divertor(Model):
     def divwade(
         self,
         rmajor: float,
-        rminor: float,
-        aspect: float,
-        b_plasma_toroidal_on_axis: float,
-        b_plasma_poloidal_average: float,
         p_plasma_separatrix_mw: float,
+        len_plasma_sol_power_decay: float,
+        len_plasma_sol_power_spreading: float,
         f_div_flux_expansion: float,
-        nd_plasma_separatrix_electron: float,
-        deg_div_field_plate: float,
+        deg_b_div_lower_outboard_grazing: float,
         rad_fraction_sol: float,
         f_p_div_lower: float,
-        output: bool,
-    ) -> float:
+        deg_b_plasma_outboard_flux_midplane: float,
+    ) -> WadeDivertorMetrics:
         """Divertor heat load model (Wade 2020)
 
         This subroutine calculates the divertor heat flux for any machine,
@@ -298,21 +337,15 @@ class Divertor(Model):
         ----------
         rmajor : float
             plasma major radius (m)
-        rminor : float
-            plasma minor radius (m)
-        aspect : float
-            tokamak aspect ratio
-        b_plasma_toroidal_on_axis : float
-            toroidal field (T)
-        b_plasma_poloidal_average : float
-            poloidal field (T)
         p_plasma_separatrix_mw : float
             power to divertor (MW)
+        len_plasma_sol_power_decay : float
+            SOL power decay length (λ_q) [m]
+        len_plasma_sol_power_spreading : float
+            SOL power spreading factor (S) [m]
         f_div_flux_expansion : float
             plasma flux expansion in divertor
-        nd_plasma_separatrix_electron : float
-            electron density at separatrix (m-3)
-        deg_div_field_plate : float
+        deg_b_div_lower_outboard_grazing : float
             field line angle wrt divertor target plate (degrees)
         rad_fraction_sol : float
             SOL radiation fraction
@@ -321,89 +354,123 @@ class Divertor(Model):
 
         Returns
         -------
-        float
-            divertor heat load for a tight aspect ratio machine
+        WadeDivertorMetrics
+
+
+        References
+        ----------
+        [1] M. R. Wade and J. A. Leuer, “Cost Drivers for a Tokamak-Based Compact Pilot
+        Plant,” Fusion Science and Technology, vol. 77, no. 2, pp. 119-143, Feb. 2021,
+        doi: 10.1080/15361055.2020.1858670.
         """
-        # Radius on midplane
-        r_omp = rmajor + rminor
+        # SOL width at divertor plates (λ_int) [m]
+        # λ_int = λ_q + 1.64 * S
+        lambda_int = len_plasma_sol_power_decay + 1.64 * len_plasma_sol_power_spreading
 
-        # B fields on midplane
-        Bp_omp = -b_plasma_poloidal_average * rmajor / r_omp
-
-        Bt_omp = -b_plasma_toroidal_on_axis * rmajor / r_omp
-
-        # Eich scaling for lambda_q
-        lambda_eich = (
-            1.35
-            * p_plasma_separatrix_mw**-0.02
-            * rmajor**0.04
-            * b_plasma_poloidal_average**-0.92
-            * aspect**0.42
+        # Flux angle in the divertor as a pitch-like quantity
+        alpha_div = f_div_flux_expansion * math.tan(
+            math.radians(deg_b_plasma_outboard_flux_midplane)
         )
 
-        # Spreading factor
-        spread_fact = (
-            0.12
-            * (nd_plasma_separatrix_electron / 1e19) ** -0.02
-            * p_plasma_separatrix_mw**-0.21
-            * rmajor**0.71
-            * b_plasma_poloidal_average**-0.82
-        )
+        if math.isclose(alpha_div, 0.0, abs_tol=1.0e-12):
+            raise ProcessValueError(
+                "Zero divertor flux angle",
+                f_div_flux_expansion=f_div_flux_expansion,
+                deg_b_plasma_outboard_flux_midplane=deg_b_plasma_outboard_flux_midplane,
+            )
 
-        # SOL width
-        lambda_int = lambda_eich + 1.64 * spread_fact
-
-        # Flux angle on midplane
-        alpha_mid = math.degrees(math.atan(Bp_omp / Bt_omp))
-
-        # Flux angle in the divertor
-        alpha_div = f_div_flux_expansion * alpha_mid
+        # Flux angle in the divertor for output [degrees]
+        deg_b_div_lower_flux = math.degrees(math.atan(alpha_div))
 
         # Tilt of the separatrix relative to the target in the poloidal plane
-        theta_div = math.asin(
-            (1 + 1 / alpha_div**2) * math.sin(math.radians(deg_div_field_plate))
+        sin_theta_div = (1.0 + 1.0 / alpha_div**2) * math.sin(
+            math.radians(deg_b_div_lower_outboard_grazing)
         )
+        sin_theta_div = max(-1.0, min(1.0, sin_theta_div))
+        theta_div = math.asin(sin_theta_div)
 
         # Wetted area
         area_wetted = (
-            2 * np.pi * rmajor * lambda_int * f_div_flux_expansion * math.sin(theta_div)
+            2.0
+            * np.pi
+            * rmajor
+            * lambda_int
+            * f_div_flux_expansion
+            * math.sin(theta_div)
+        )
+
+        if area_wetted <= 0.0:
+            raise ProcessValueError("Non-positive wetted area", area_wetted=area_wetted)
+
+        strike_width = (
+            lambda_int * f_div_flux_expansion * math.sin(theta_div)
         )
 
         # Divertor heat load
-        hldiv_base = p_plasma_separatrix_mw * (1 - rad_fraction_sol) / area_wetted
+        hldiv_base = p_plasma_separatrix_mw * (1.0 - rad_fraction_sol) / area_wetted
 
         # For double null, calculate heat loads to upper and lower divertors
         # and use the highest
         if self.data.divertor.n_divertors == 2:
             hldiv_lower = f_p_div_lower * hldiv_base
             hldiv_upper = (1.0 - f_p_div_lower) * hldiv_base
-            self.data.divertor.pflux_div_heat_load_mw = max(hldiv_lower, hldiv_upper)
+            pflux_div_heat_load_mw = max(hldiv_lower, hldiv_upper)
         else:
-            self.data.divertor.pflux_div_heat_load_mw = hldiv_base
+            pflux_div_heat_load_mw = hldiv_base
 
-        if output:
-            po.osubhd(self.outfile, "Divertor Heat Load")
-            po.ocmmnt(self.outfile, "Assume an expanded divertor with a gaseous target")
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Flux expansion",
-                "(f_div_flux_expansion)",
-                f_div_flux_expansion,
-            )
-            po.ovarre(
-                self.outfile,
-                "Field line angle wrt to target divertor plate (degrees)",
-                "(deg_div_field_plate)",
-                deg_div_field_plate,
-            )
-            po.ovarre(
-                self.outfile,
-                "Divertor heat load (MW/m²)",
-                "(pflux_div_heat_load_mw)",
-                self.data.divertor.pflux_div_heat_load_mw,
-            )
-        return self.data.divertor.pflux_div_heat_load_mw
+        return WadeDivertorMetrics(
+            pflux_div_heat_load_mw=pflux_div_heat_load_mw,
+            dx_div_lower_outboard_strike=strike_width,
+            a_div_lower_outboard_wetted=area_wetted,
+            f_div_lower_flux_expansion=f_div_flux_expansion,
+            deg_b_div_lower_flux=deg_b_div_lower_flux,
+            deg_div_lower_outboard_plate_separatrix_poloidal=math.degrees(theta_div),
+            deg_b_div_lower_outboard_grazing=deg_b_div_lower_outboard_grazing,
+        )
+
+    def output_wade_divertor_model(self):
+
+        po.oheadr(self.outfile, "Wade Divertor Heat Load Model")
+        po.ocmmnt(self.outfile, "Assume an expanded divertor with a gaseous target")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Flux expansion factor (fₓ)",
+            "(f_div_flux_expansion)",
+            self.data.divertor.f_div_lower_flux_expansion,
+        )
+        po.ovarre(
+            self.outfile,
+            "Field line angle wrt to target divertor plate [degrees]",
+            "(deg_b_div_lower_outboard_grazing)",
+            self.data.divertor.deg_b_div_lower_outboard_grazing,
+        )
+        po.ovarre(
+            self.outfile,
+            "Lower divertor flux angle [degrees]",
+            "(deg_b_div_lower_flux)",
+            self.data.divertor.deg_b_div_lower_flux,
+        )
+        po.ovarre(
+            self.outfile,
+            "Lower divertor outboard plate-separatrix poloidal angle [degrees]",
+            "(deg_div_lower_outboard_plate_separatrix_poloidal)",
+            self.data.divertor.deg_div_lower_outboard_plate_separatrix_poloidal,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Strike point width (m)",
+            "(dx_div_lower_outboard_strike)",
+            self.data.divertor.dx_div_lower_outboard_strike,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Divertor heat load [MW/m²]",
+            "(pflux_div_heat_load_mw)",
+            self.data.divertor.pflux_div_heat_load_mw,
+        )
 
     @staticmethod
     def incident_radiation_power(

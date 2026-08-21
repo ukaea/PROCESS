@@ -223,7 +223,9 @@ INPUT_VARIABLES = {
     "bctmp": InputVariable("pulse", float, range=(1.0, 800.0)),
     "e_beam_kev": InputVariable("current_drive", float, range=(1.0, 1000000.0)),
     "dx_beam_duct": InputVariable("current_drive", float, range=(0.001, 5.0)),
-    "deg_div_field_plate": InputVariable("divertor", float, range=(0.0, 360.0)),
+    "deg_b_div_lower_outboard_grazing": InputVariable(
+        "divertor", float, range=(0.0, 360.0)
+    ),
     "beta_poloidal_max": InputVariable("constraints", float, range=(0.01, 2.0)),
     "betai": InputVariable("divertor", float, range=(0.0, 1.5707)),
     "betao": InputVariable("divertor", float, range=(0.0, 1.5707)),

@@ -420,6 +420,13 @@ class Physics(Model):
             )
         )
 
+        self.data.physics.deg_b_plasma_outboard_flux_midplane = (
+            self.fields.calculate_plasma_magnetic_flux_angle(
+                b_plasma_toroidal=self.data.physics.b_plasma_outboard_toroidal,
+                b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
+            )
+        )
+
         # ============================================
 
         # -----------------------------------------------------

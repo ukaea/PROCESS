@@ -573,7 +573,7 @@ class NumericsData:
     * (167) NOT USED
     * (168) NOT USED
     * (169) te0_ecrh_achievable: Max. achievable electron temperature at ignition point
-    * (170) deg_div_field_plate : field line angle wrt divertor target plate (degrees)
+    * (170) deg_b_div_lower_outboard_grazing : field line angle wrt divertor target plate (degrees)
     * (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
     * (172) dx_tf_side_case_min : TF side case thickness [m]
     * (173) f_plasma_fuel_deuterium : Deuterium fraction in fuel
