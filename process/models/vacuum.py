@@ -246,7 +246,8 @@ class Vacuum(Model):
             Plasma density (m**-3)
         ndiv :
             Number of divertors with pumping (single null = 1, double null = 2 if
-            pumping provided at both locations)
+            pumping provided at both locations). A no-divertor design uses two
+            symmetric pumping locations.
         qtorus :
             Gas load  from NBI (deuterons/second)
         gasld :
@@ -292,7 +293,8 @@ class Vacuum(Model):
         #  Multiplier to convert conductance from gas species i to nitrogen
         xmult = [1.0e0, 0.423e0, 0.378e0, 0.423e0]
         # nitrogen, D-T, helium, D-T again
-        nduct = ntf * ndiv
+        n_pumping_locations = 2 if ndiv == 0 else ndiv
+        nduct = ntf * n_pumping_locations
 
         #  Speed of high-vacuum pumps (m^3/s)
         # nitrogen, DT, helium, DT again
