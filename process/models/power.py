@@ -62,7 +62,21 @@ class Power(Model):
             TFConductorModel(self.data.tfcoil.i_tf_sup)
             == TFConductorModel.SUPERCONDUCTING
         ):
-            self.tfpwcall(output=True)
+            (
+                self.data.tfcoil.tfckw,
+                self.data.tfcoil.len_tf_bus,
+                self.data.tfcoil.drarea,
+                self.data.buildings.tfcbv,
+                self.data.heat_transport.p_tf_electric_supplies_mw,
+            ) = self.tfcpwr(
+                output=True,
+                itfka=1.0e-3 * self.data.tfcoil.c_tf_turn,
+                rmajor=self.data.physics.rmajor,
+                ntfc=self.data.tfcoil.n_tf_coils,
+                v_tf_coil_dump_quench_kv=self.data.tfcoil.v_tf_coil_dump_quench_kv,
+                ettfmj=self.data.tfcoil.e_tf_coil_magnetic_stored / 1e6,
+                rptfc=self.data.tfcoil.res_tf_leg,
+            )
 
         # Poloidal field coil power model !
         self.pfpwr(
@@ -99,7 +113,21 @@ class Power(Model):
             TFConductorModel(self.data.tfcoil.i_tf_sup)
             == TFConductorModel.SUPERCONDUCTING
         ):
-            self.tfpwcall(output=False)
+            (
+                self.data.tfcoil.tfckw,
+                self.data.tfcoil.len_tf_bus,
+                self.data.tfcoil.drarea,
+                self.data.buildings.tfcbv,
+                self.data.heat_transport.p_tf_electric_supplies_mw,
+            ) = self.tfcpwr(
+                output=False,
+                itfka=1.0e-3 * self.data.tfcoil.c_tf_turn,
+                rmajor=self.data.physics.rmajor,
+                ntfc=self.data.tfcoil.n_tf_coils,
+                v_tf_coil_dump_quench_kv=self.data.tfcoil.v_tf_coil_dump_quench_kv,
+                ettfmj=self.data.tfcoil.e_tf_coil_magnetic_stored / 1e6,
+                rptfc=self.data.tfcoil.res_tf_leg,
+            )
         # Poloidal field coil power model
         self.pfpwr(
             output=False,
@@ -2317,47 +2345,6 @@ class Power(Model):
 
         # Reactive poower has been set to zero.
         # po.ovarre(outfile,'TF coil reactive power (MW)','(tfreacmw)', tfreacmw)
-
-    def tfpwcall(self, output: bool):
-        """Calls the TF coil power conversion routine for
-        superconducting coils
-
-
-        outfile : input integer : output file unit
-        This routine calls routine <CODE>tfcpwr</CODE> to calculate
-        the power conversion requirements for superconducting TF coils.
-        None
-
-        Parameters
-        ----------
-        output: bool
-
-        """
-        ettfmj = (
-            self.data.tfcoil.e_tf_magnetic_stored_total_gj
-            / self.data.tfcoil.n_tf_coils
-            * 1.0e3
-        )
-
-        #  TF coil current (kA)
-
-        itfka = 1.0e-3 * self.data.tfcoil.c_tf_turn
-
-        (
-            self.data.tfcoil.tfckw,
-            self.data.tfcoil.len_tf_bus,
-            self.data.tfcoil.drarea,
-            self.data.buildings.tfcbv,
-            self.data.heat_transport.p_tf_electric_supplies_mw,
-        ) = self.tfcpwr(
-            output,
-            itfka,
-            self.data.physics.rmajor,
-            self.data.tfcoil.n_tf_coils,
-            self.data.tfcoil.v_tf_coil_dump_quench_kv,
-            ettfmj,
-            self.data.tfcoil.res_tf_leg,
-        )
 
     def tfcpwr(
         self, output: bool, itfka, rmajor, ntfc, v_tf_coil_dump_quench_kv, ettfmj, rptfc
