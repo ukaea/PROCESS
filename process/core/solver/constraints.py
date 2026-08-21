@@ -1955,6 +1955,32 @@ def constraint_equation_92(constraint_registration, data):
     )
 
 
+@ConstraintManager.register_constraint(93, "GJ/m3", ">=")
+def constraint_equation_93(constraint_registration, data):
+    """Lower limit of the copper in TF coil needed for quench protection
+    f_a_tf_turn_cable_copper: copper fraction of cable conductor TF coils
+    dr_tf_turn: Turn radial dimension (m)
+    dx_tf_turn: Turn toroidal dimension (m)
+    len_tf_coil: TF coil circumference (m)
+    n_tf_coil_turns: Number of turns per TF coil
+    e_tf_magnetic_stored_total_gj: Total stored energy in TF coils (GJ)
+    magnetic_stored_energy_copper_vol_ratio: TF coil stored energy to copper volume ratio
+    """
+    vol_tf_copper = (
+        data.tfcoil.f_a_tf_turn_cable_copper
+        * data.superconducting_tfcoil.dr_tf_turn
+        * data.superconducting_tfcoil.dx_tf_turn
+        * data.tfcoil.n_tf_coil_turns
+        * (data.tfcoil.len_tf_coil + data.tfcoil.cplen)
+    )
+    energy_per_vol_tf_copper_min = (
+        data.constraints.magnetic_stored_energy_copper_vol_ratio
+        * data.tfcoil.e_tf_magnetic_stored_total_gj
+    )
+
+    return geq(vol_tf_copper, energy_per_vol_tf_copper_min, constraint_registration)
+
+
 def constraint_eqns(m: int, ieqn: int, data: DataStructure):
     """Evaluates the constraints given the current state of PROCESS.
 
