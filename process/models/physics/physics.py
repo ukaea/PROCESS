@@ -2970,6 +2970,13 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
+            "Ratio of electron temperature on axis to volume averaged (Tₑ₀/⟨Tₑ⟩)",
+            "(f_temp_plasma_electron_on_axis_vol_avg)",
+            self.data.physics.f_temp_plasma_electron_on_axis_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Line averaged electron temperature (keV)",
             "(temp_plasma_electron_line_avg_kev)",
             self.data.physics.temp_plasma_electron_line_avg_kev,
@@ -3226,6 +3233,31 @@ class Physics(Model):
             self.data.physics.pres_plasma_thermal_vol_avg,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Central to volume averaged plasma thermal pressure ratio (p₀/⟨p⟩)",
+            "(f_pres_plasma_thermal_on_axis_vol_avg)",
+            self.data.physics.f_pres_plasma_thermal_on_axis_vol_avg,
+            "OP ",
+        )
+        if (
+            self.data.physics.i_plasma_pedestal
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
+            po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "Plasma thermal pressure at pedestal (p_ped) [Pa]",
+                "(pres_plasma_pedestal_thermal)",
+                self.data.physics.pres_plasma_pedestal_thermal,
+            )
+            po.ovarre(
+                self.outfile,
+                "Plasma thermal pressure at separatrix (pₛₑₚ) [Pa]",
+                "(pres_plasma_separatrix_thermal)",
+                self.data.physics.pres_plasma_separatrix_thermal,
+            )
+
         # As array output is not currently supported, each element is output as a float
         # instance
         # Output plasma pressure profiles to mfile
@@ -3265,21 +3297,21 @@ class Physics(Model):
 
         po.ovarre(
             self.outfile,
-            "Total plasma thermal energy [W]",
+            "Total plasma thermal energy [J]",
             "(e_plasma_thermal_total)",
             self.data.physics.e_plasma_thermal_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Plasma thermal energy in electrons [W]",
+            "Plasma thermal energy in electrons [J]",
             "(e_plasma_electrons_thermal)",
             self.data.physics.e_plasma_electrons_thermal,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Plasma thermal energy in ions [W]",
+            "Plasma thermal energy in ions [J]",
             "(e_plasma_ions_thermal)",
             self.data.physics.e_plasma_ions_thermal,
             "OP ",

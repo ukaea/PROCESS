@@ -79,6 +79,7 @@ from process.models.physics.plasma_geometry import (
     PlasmaGeometryModelType,
     PlasmaShapeModelType,
 )
+from process.models.physics.profiles import PlasmaProfileShapeType
 from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
@@ -4345,7 +4346,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         (
             rf"$\rho_{{\text{{ped,T}}}}$: {radius_plasma_pedestal_temp_norm:.3f}"
             r"$ \hspace{5} \frac{T_{e,0}}{\langle T_e \rangle}$: "
-            f"{te0 / te:.3f}"
+            f"{mfile.get('f_temp_plasma_electron_on_axis_vol_avg', scan=scan):.3f}"
         ),
         (
             rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_kev:.3f} keV"
@@ -12281,7 +12282,10 @@ def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     axis.legend()
 
     textstr_pressure = "\n".join((
-        rf"$p_0$: {mfile.get('pres_plasma_thermal_on_axis', scan=scan) / 1000:,.3f} kPa",
+        (
+            rf"$p_0$: {mfile.get('pres_plasma_thermal_on_axis', scan=scan) / 1000:,.3f} kPa"
+            rf"$\hspace{{2}} \frac{{p_0}}{{\langle p_{{\text{{total}}}} \rangle_\text{{V}}}}$: {mfile.get('f_pres_plasma_thermal_on_axis_vol_avg', scan=scan):,.3f}"
+        ),
         rf"$\langle p_{{\text{{total}}}} \rangle_\text{{V}}$: {mfile.get('pres_plasma_thermal_vol_avg', scan=scan) / 1000:,.3f} kPa",
     ))
 
@@ -12295,6 +12299,26 @@ def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5},
     )
+
+    if (
+        int(mfile.get("i_plasma_pedestal", scan=scan))
+        == PlasmaProfileShapeType.PEDESTAL_PROFILE
+    ):
+        textstr_pressure_pedestal = "\n".join((
+            rf"$p_{{\text{{ped}}}}$: {mfile.get('pres_plasma_pedestal_thermal', scan=scan) / 1000:,.3f} kPa",
+            rf"$p_{{\text{{sep}}}}$: {mfile.get('pres_plasma_separatrix_thermal', scan=scan) / 1000:,.3f} kPa",
+        ))
+
+        axis.text(
+            0.9,
+            1.2,
+            textstr_pressure_pedestal,
+            transform=axis.transAxes,
+            fontsize=9,
+            verticalalignment="top",
+            horizontalalignment="center",
+            bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5},
+        )
 
 
 def plot_plasma_current_comparison(axis: plt.Axes, mfile: MFile, scan: int):

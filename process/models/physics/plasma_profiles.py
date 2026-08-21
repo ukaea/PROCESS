@@ -171,6 +171,11 @@ class PlasmaProfile(Model):
             * (1.0 + self.data.physics.alphat)
         )
 
+        self.data.physics.f_temp_plasma_electron_on_axis_vol_avg = (
+            self.data.physics.temp_plasma_electron_on_axis_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
+        )
+
         self.data.physics.nd_plasma_electron_on_axis = (
             self.data.physics.nd_plasma_electrons_vol_avg
             * (1.0 + self.data.physics.alphan)
@@ -237,6 +242,11 @@ class PlasmaProfile(Model):
             self.teprofile.profile_integ
         )
 
+        self.data.physics.f_temp_plasma_electron_on_axis_vol_avg = (
+            self.data.physics.temp_plasma_electron_on_axis_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
+        )
+
         #  Scrape-off density / volume averaged density
         #  (Input value is used if i_plasma_pedestal = 0)
 
@@ -284,6 +294,33 @@ class PlasmaProfile(Model):
             + self.data.physics.pres_plasma_ion_total_profile
         )
 
+        # Calculate pedestal and separatrix pressures for pedestal profile case
+        if (
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
+            # Pedestal pressure is the profile value where gradient is maximum
+            # (i.e the smallest negative value)
+            rho = self.neprofile.profile_x
+            pres_profile = self.data.physics.pres_plasma_thermal_total_profile
+            dpres_drho = np.gradient(pres_profile, rho)
+            # Find rho index closest to the normalized pedestal positions
+            pedestal_rho = np.min([
+                self.data.physics.radius_plasma_pedestal_temp_norm,
+                self.data.physics.radius_plasma_pedestal_density_norm,
+            ])
+            closest_idx = np.argmin(np.abs(rho - pedestal_rho))
+            mask = np.zeros_like(rho, dtype=bool)
+            mask[closest_idx:] = True
+            dpres_drho_pedestal = dpres_drho[mask]
+            max_grad_idx_pedestal = np.argmax(dpres_drho_pedestal)
+            max_grad_idx = np.where(mask)[0][max_grad_idx_pedestal]
+            self.data.physics.pres_plasma_pedestal_thermal = pres_profile[max_grad_idx]
+
+            self.data.physics.pres_plasma_separatrix_thermal = (
+                self.data.physics.pres_plasma_thermal_total_profile[-1]
+            )
+
         # Fuel ion pressure profile (Pa)
         self.data.physics.pres_plasma_fuel_profile = (
             self.data.physics.nd_plasma_fuel_ions_vol_avg
@@ -311,6 +348,11 @@ class PlasmaProfile(Model):
             + self.data.physics.nd_plasma_ions_total_vol_avg
             * self.data.physics.temp_plasma_ion_density_weighted_kev
         ) * constants.KILOELECTRON_VOLT
+
+        self.data.physics.f_pres_plasma_thermal_on_axis_vol_avg = (
+            self.data.physics.pres_plasma_thermal_on_axis
+            / self.data.physics.pres_plasma_thermal_vol_avg
+        )
 
         # Central plasma current density (A/m²)
         # Assumes a parabolic profile for the current density

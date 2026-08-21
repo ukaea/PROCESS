@@ -1040,6 +1040,9 @@ class PhysicsData:
     pres_plasma_thermal_on_axis: float = 0.0
     """Plasma central thermal pressure (p₀) (no fast ions or beam pressure) [Pa]"""
 
+    f_pres_plasma_thermal_on_axis_vol_avg: float = 0.0
+    """Ratio of central plasma thermal pressure to volume averaged (p₀/⟨p⟩)"""
+
     pres_plasma_thermal_total_profile: list[float] = field(default_factory=list)
     """Profile of total pressure in plasma [Pa]"""
 
@@ -1051,6 +1054,12 @@ class PhysicsData:
 
     pres_plasma_fuel_profile: list[float] = field(default_factory=list)
     """Profile of fuel pressure in plasma [Pa]"""
+
+    pres_plasma_pedestal_thermal: float = 0.0
+    """Plasma pedestal thermal pressure (p_ped) (no fast ions or beam pressure) [Pa]"""
+
+    pres_plasma_separatrix_thermal: float = 0.0
+    """Plasma separatrix thermal pressure (pₛₑₚ) (no fast ions or beam pressure) [Pa]"""
 
     j_plasma_on_axis: float = 0.0
     """Central plasma current density (j₀) [A/m²]"""
@@ -1402,6 +1411,9 @@ class PhysicsData:
 
     temp_plasma_electron_on_axis_kev: float = 0.0
     """Plasma central electron temperature (Tₑ₀) [keV]"""
+
+    f_temp_plasma_electron_on_axis_vol_avg: float = 0.0
+    """Ratio of plasma central electron temperature to volume averaged (Tₑ₀/⟨Tₑ⟩)"""
 
     temp_plasma_electron_density_weighted_kev: float = 0.0
     """Density weighted average electron temperature (⟨Tₑ⟩_n) [keV]"""
