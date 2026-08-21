@@ -24,6 +24,7 @@ from process.data_structure.physics_variables import (
 )
 from process.models.physics import impurity_radiation
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
+from process.models.physics.exhaust import calculate_brunner_divertor_power_splits
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
     PlasmaProfileShapeType,
@@ -1011,7 +1012,7 @@ class Physics(Model):
                 )
             )
 
-        div_power_plits = self.exhaust.calculate_brunner_divertor_power_splits(
+        div_power_plits = calculate_brunner_divertor_power_splits(
             dr_outboard_midplane_sep=self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
             len_plasma_sol_outboard_power_decay=self.data.physics.len_sol_outboard_power_decay,
             len_plasma_sol_inboard_power_decay=self.data.physics.len_sol_inboard_power_decay,

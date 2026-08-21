@@ -67,7 +67,7 @@ from process.models.physics.current_drive import (
     ElectronCyclotron,
 )
 from process.models.physics.density_limit import DensityLimitModel
-from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.exhaust import calculate_brunner_divertor_power_splits
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.physics import (
@@ -9112,7 +9112,7 @@ def plot_brunner_divertor_power_split_comparison_stackplot(
     f_p_outboard_upper = np.zeros_like(dr_sep_values)
 
     for idx, dr_sep in enumerate(dr_sep_values):
-        div_power_splits = PlasmaExhaust().calculate_brunner_divertor_power_splits(
+        div_power_splits = calculate_brunner_divertor_power_splits(
             dr_outboard_midplane_sep=dr_sep,
             len_plasma_sol_outboard_power_decay=len_plasma_sol_outboard_pd,
             len_plasma_sol_inboard_power_decay=len_plasma_sol_inboard_pd,

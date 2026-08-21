@@ -247,103 +247,6 @@ class PlasmaExhaust(Model):
 
         return p_plasma_rad_mw / p_plasma_heating_mw
 
-    @staticmethod
-    def calculate_brunner_divertor_power_splits(
-        dr_outboard_midplane_sep: float,
-        len_plasma_sol_outboard_power_decay: float,
-        len_plasma_sol_inboard_power_decay: float,
-    ) -> DivertorSeparatrixPowerSplits:
-        """
-        Calculate the power splits to the divertor targets using Brunner's method.
-
-        Parameters
-        ----------
-        dr_outboard_midplane_sep : float
-            Radial separation of the plasma outboard midplane separatrix (δR_sep) [m].
-        len_plasma_sol_outboard_power_decay : float
-            Power decay length in the scrape-off layer (λ_q) [m].
-        len_plasma_sol_inboard_power_decay : float
-            Power decay length in the scrape-off layer for the inboard side (λᵢₙ_q) [m].
-
-        Returns
-        -------
-        DivertorSeparatrixPowerSplits
-            Dataclass containing the fractions of total separatrix power to each
-            divertor target.
-
-        Notes
-        -----
-        - The fitted value for `f_p_inner_sep_0` and `f_p_inner_sep_infinity` are taken
-        from the fit given by Petrie et al. [2]
-
-        References
-        ----------
-        [1] D. Brunner, A. Q. Kuang, B. LaBombard, and J. L. Terry, “The dependence of
-        divertor power sharing on magnetic flux balance in near double-null
-        configurations on Alcator C-Mod,” Nuclear Fusion, vol. 58, no. 7, p. 076010,
-        May 2018, doi: https://doi.org/10.1088/1741-4326/aac006.
-
-        [2] T. W. Petrie et al., “The effect of divertor magnetic balance on H-mode
-        performance in DIII-D,” Journal of Nuclear Materials, vol. 290-293, pp. 935-939,
-        Mar. 2001, doi: https://doi.org/10.1016/S0022-3115(00)00492-X
-        """
-        # Fraction of the power to the inner divertors at δR_sep = 0 and δR_sep → ∞
-        f_p_inner_sep_0 = 0.16e0
-        f_p_inner_sep_infinity = 0.41e0
-
-        # Fractions of total outboard power going to each target
-        # Outboard lower divertor
-        f_p_outboard_lower = 1 / (
-            1 + np.exp(dr_outboard_midplane_sep / len_plasma_sol_outboard_power_decay)
-        )
-
-        # Outboard upper divertor
-        f_p_outboard_upper = 1 / (
-            1 + np.exp(-dr_outboard_midplane_sep / len_plasma_sol_outboard_power_decay)
-        )
-
-        # Fractions of the total inboard power going to each target
-        f_p_inboard_lower = 1 / (
-            1 + np.exp(dr_outboard_midplane_sep / (len_plasma_sol_inboard_power_decay))
-        )
-
-        f_p_total_inboard = f_p_inner_sep_0 + (
-            f_p_inner_sep_0 - f_p_inner_sep_infinity
-        ) * (
-            1.0e0
-            - (
-                2.0e0
-                / (
-                    1.0e0
-                    + np.exp(
-                        -(
-                            (
-                                dr_outboard_midplane_sep
-                                / len_plasma_sol_outboard_power_decay
-                            )
-                            ** 2
-                        )
-                    )
-                )
-            )
-        )
-
-        f_p_total_outboard = 1.0e0 - f_p_total_inboard
-
-        f_p_inboard_upper = f_p_total_inboard * (1.0e0 - f_p_inboard_lower)
-        f_p_outboard_upper = f_p_total_outboard * (1.0e0 - f_p_outboard_lower)
-        f_p_inboard_lower = f_p_total_inboard * f_p_inboard_lower
-        f_p_outboard_lower = f_p_total_outboard * f_p_outboard_lower
-
-        return DivertorSeparatrixPowerSplits(
-            f_p_div_inboard_separatrix=f_p_total_inboard,
-            f_p_div_outboard_separatrix=f_p_total_outboard,
-            f_p_div_inboard_lower_separatrix=f_p_inboard_lower,
-            f_p_div_inboard_upper_separatrix=f_p_inboard_upper,
-            f_p_div_outboard_lower_separatrix=f_p_outboard_lower,
-            f_p_div_outboard_upper_separatrix=f_p_outboard_upper,
-        )
-
     def output_brunner_divertor_power_splits(self):
         """Output the Brunner divertor power splits to the output file."""
         if self.data.stellarator.istell == 0:
@@ -448,3 +351,95 @@ class PlasmaExhaust(Model):
                     else:
                         desc, var, val = op
                         po.ovarre(self.outfile, desc, var, val, "OP ")
+
+
+def calculate_brunner_divertor_power_splits(
+    dr_outboard_midplane_sep: float,
+    len_plasma_sol_outboard_power_decay: float,
+    len_plasma_sol_inboard_power_decay: float,
+) -> DivertorSeparatrixPowerSplits:
+    """
+    Calculate the power splits to the divertor targets using Brunner's method.
+
+    Parameters
+    ----------
+    dr_outboard_midplane_sep : float
+        Radial separation of the plasma outboard midplane separatrix (δR_sep) [m].
+    len_plasma_sol_outboard_power_decay : float
+        Power decay length in the scrape-off layer (λ_q) [m].
+    len_plasma_sol_inboard_power_decay : float
+        Power decay length in the scrape-off layer for the inboard side (λᵢₙ_q) [m].
+
+    Returns
+    -------
+    DivertorSeparatrixPowerSplits
+        Dataclass containing the fractions of total separatrix power to each
+        divertor target.
+
+    Notes
+    -----
+    - The fitted value for `f_p_inner_sep_0` and `f_p_inner_sep_infinity` are taken
+    from the fit given by Petrie et al. [2]
+
+    References
+    ----------
+    [1] D. Brunner, A. Q. Kuang, B. LaBombard, and J. L. Terry, “The dependence of
+    divertor power sharing on magnetic flux balance in near double-null
+    configurations on Alcator C-Mod,” Nuclear Fusion, vol. 58, no. 7, p. 076010,
+    May 2018, doi: https://doi.org/10.1088/1741-4326/aac006.
+
+    [2] T. W. Petrie et al., “The effect of divertor magnetic balance on H-mode
+    performance in DIII-D,” Journal of Nuclear Materials, vol. 290-293, pp. 935-939,
+    Mar. 2001, doi: https://doi.org/10.1016/S0022-3115(00)00492-X
+    """
+    # Fraction of the power to the inner divertors at δR_sep = 0 and δR_sep → ∞
+    f_p_inner_sep_0 = 0.16e0
+    f_p_inner_sep_infinity = 0.41e0
+
+    # Fractions of total outboard power going to each target
+    # Outboard lower divertor
+    f_p_outboard_lower = 1 / (
+        1 + np.exp(dr_outboard_midplane_sep / len_plasma_sol_outboard_power_decay)
+    )
+
+    # Outboard upper divertor
+    f_p_outboard_upper = 1 / (
+        1 + np.exp(-dr_outboard_midplane_sep / len_plasma_sol_outboard_power_decay)
+    )
+
+    # Fractions of the total inboard power going to each target
+    f_p_inboard_lower = 1 / (
+        1 + np.exp(dr_outboard_midplane_sep / (len_plasma_sol_inboard_power_decay))
+    )
+
+    f_p_total_inboard = f_p_inner_sep_0 + (f_p_inner_sep_0 - f_p_inner_sep_infinity) * (
+        1.0e0
+        - (
+            2.0e0
+            / (
+                1.0e0
+                + np.exp(
+                    -(
+                        (dr_outboard_midplane_sep / len_plasma_sol_outboard_power_decay)
+                        ** 2
+                    )
+                )
+            )
+        )
+    )
+
+    f_p_total_outboard = 1.0e0 - f_p_total_inboard
+
+    f_p_inboard_upper = f_p_total_inboard * (1.0e0 - f_p_inboard_lower)
+    f_p_outboard_upper = f_p_total_outboard * (1.0e0 - f_p_outboard_lower)
+    f_p_inboard_lower = f_p_total_inboard * f_p_inboard_lower
+    f_p_outboard_lower = f_p_total_outboard * f_p_outboard_lower
+
+    return DivertorSeparatrixPowerSplits(
+        f_p_div_inboard_separatrix=f_p_total_inboard,
+        f_p_div_outboard_separatrix=f_p_total_outboard,
+        f_p_div_inboard_lower_separatrix=f_p_inboard_lower,
+        f_p_div_inboard_upper_separatrix=f_p_inboard_upper,
+        f_p_div_outboard_lower_separatrix=f_p_outboard_lower,
+        f_p_div_outboard_upper_separatrix=f_p_outboard_upper,
+    )
