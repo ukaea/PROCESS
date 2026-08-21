@@ -1838,3 +1838,155 @@ def test_plant_electric_production(plantelecprodparam, monkeypatch, power):
     assert power.data.power.p_plant_core_systems_elec_mw == pytest.approx(
         plantelecprodparam.expected_pcoresystems
     )
+
+
+class ResistiveTFElectricPowerParam(NamedTuple):
+    c_tf_turn: Any = None
+
+    j_tf_bus: Any = None
+
+    rho_tf_bus: Any = None
+
+    len_tf_bus: Any = None
+
+    n_tf_coils: Any = None
+
+    c_tf_total: Any = None
+
+    res_tf_leg: Any = None
+
+    p_tf_joints_resistive_mw: Any = None
+
+    p_tf_leg_resistive_mw: Any = None
+
+    p_cp_resistive_mw: Any = None
+
+    eta_tf_power_supply_conversion: Any = None
+
+    expected_a_tf_bus: Any = None
+
+    expected_res_tf_bus: Any = None
+
+    expected_m_tf_bus: Any = None
+
+    expected_res_tf_system_total: Any = None
+
+    expected_vtfkv: Any = None
+
+    expected_p_tf_bus_mw: Any = None
+
+    expected_tfcmw: Any = None
+
+    expected_p_tf_electric_supplies_mw: Any = None
+
+
+@pytest.mark.parametrize(
+    "resistivetfelectricpowerparam",
+    [
+        ResistiveTFElectricPowerParam(
+            c_tf_turn=6.0e4,
+            j_tf_bus=1.25e6,
+            rho_tf_bus=2.5e-8,
+            len_tf_bus=3.0e2,
+            n_tf_coils=12,
+            c_tf_total=1.5e7,
+            res_tf_leg=1.0e-6,
+            p_tf_joints_resistive_mw=1.0e0,
+            p_tf_leg_resistive_mw=5.0e0,
+            p_cp_resistive_mw=2.0e1,
+            eta_tf_power_supply_conversion=0.85e0,
+            expected_a_tf_bus=6.0e4 / 1.25e6,
+            expected_res_tf_bus=2.5e-8 * 3.0e2 / (6.0e4 / 1.25e6),
+            expected_m_tf_bus=128160.0,
+            expected_res_tf_system_total=(
+                12 * 1.0e-6
+                + (2.0e1 * 1.0e6) / (1.5e7) ** 2
+                + 2.5e-8 * 3.0e2 / (6.0e4 / 1.25e6)
+            ),
+            expected_vtfkv=(
+                1.0e-3
+                * (
+                    12 * 1.0e-6
+                    + (2.0e1 * 1.0e6) / (1.5e7) ** 2
+                    + 2.5e-8 * 3.0e2 / (6.0e4 / 1.25e6)
+                )
+                * 6.0e4
+                / 12
+            ),
+            expected_p_tf_bus_mw=(
+                1.0e-6 * 6.0e4**2 * (2.5e-8 * 3.0e2 / (6.0e4 / 1.25e6))
+            ),
+            expected_tfcmw=(
+                2.0e1
+                + 5.0e0
+                + (1.0e-6 * 6.0e4**2 * (2.5e-8 * 3.0e2 / (6.0e4 / 1.25e6)))
+                + 0.0e0
+                + 1.0e0
+            ),
+            expected_p_tf_electric_supplies_mw=(
+                (
+                    2.0e1
+                    + 5.0e0
+                    + (1.0e-6 * 6.0e4**2 * (2.5e-8 * 3.0e2 / (6.0e4 / 1.25e6)))
+                    + 0.0e0
+                    + 1.0e0
+                )
+                / 0.85e0
+            ),
+        ),
+    ],
+)
+def test_resistive_tf_electric_power(resistivetfelectricpowerparam, power):
+    """Unit test for the resistive_tf_electric_power static method.
+
+    :param resistivetfelectricpowerparam: the data used to run the test
+    :type resistivetfelectricpowerparam: ResistiveTFElectricPowerParam
+
+    :param power: fixture for the power model object
+    :type power: process.power.Power
+    """
+    result = power.resistive_tf_electric_power(
+        c_tf_turn=resistivetfelectricpowerparam.c_tf_turn,
+        j_tf_bus=resistivetfelectricpowerparam.j_tf_bus,
+        rho_tf_bus=resistivetfelectricpowerparam.rho_tf_bus,
+        len_tf_bus=resistivetfelectricpowerparam.len_tf_bus,
+        n_tf_coils=resistivetfelectricpowerparam.n_tf_coils,
+        c_tf_total=resistivetfelectricpowerparam.c_tf_total,
+        res_tf_leg=resistivetfelectricpowerparam.res_tf_leg,
+        p_tf_joints_resistive_mw=resistivetfelectricpowerparam.p_tf_joints_resistive_mw,
+        p_tf_leg_resistive_mw=resistivetfelectricpowerparam.p_tf_leg_resistive_mw,
+        p_cp_resistive_mw=resistivetfelectricpowerparam.p_cp_resistive_mw,
+        eta_tf_power_supply_conversion=resistivetfelectricpowerparam.eta_tf_power_supply_conversion,
+    )
+
+    assert result.a_tf_bus == pytest.approx(
+        resistivetfelectricpowerparam.expected_a_tf_bus
+    )
+
+    assert result.res_tf_bus == pytest.approx(
+        resistivetfelectricpowerparam.expected_res_tf_bus
+    )
+
+    assert result.m_tf_bus == pytest.approx(
+        resistivetfelectricpowerparam.expected_m_tf_bus
+    )
+
+    assert result.res_tf_system_total == pytest.approx(
+        resistivetfelectricpowerparam.expected_res_tf_system_total
+    )
+
+    assert result.vtfkv == pytest.approx(resistivetfelectricpowerparam.expected_vtfkv)
+
+    assert result.p_tf_bus_mw == pytest.approx(
+        resistivetfelectricpowerparam.expected_p_tf_bus_mw
+    )
+
+    assert result.tfcmw == pytest.approx(resistivetfelectricpowerparam.expected_tfcmw)
+
+    assert result.p_tf_electric_supplies_mw == pytest.approx(
+        resistivetfelectricpowerparam.expected_p_tf_electric_supplies_mw
+    )
+
+    assert result.j_tf_bus == pytest.approx(resistivetfelectricpowerparam.j_tf_bus)
+
+    assert result.len_tf_bus == pytest.approx(resistivetfelectricpowerparam.len_tf_bus)
