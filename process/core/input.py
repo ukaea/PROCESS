@@ -1179,6 +1179,7 @@ INPUT_VARIABLES = {
     ),
     "i_len_sol_outboard_power_decay": InputVariable("physics", int, choices=range(4)),
     "len_sol_outboard_power_decay": InputVariable("physics", float, range=(0.0, 1.0)),
+    "n_divertors": InputVariable("divertor", int, choices=range(3)),
 }
 
 
