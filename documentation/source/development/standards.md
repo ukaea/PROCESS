@@ -290,6 +290,12 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Impedances
+
+- Impedances should start with the `imp_` prefix
+
+---------------------
+
 ##### Residual resistance ratios
 
 - Residual resistance ratios should start with the `rrr_` prefix
