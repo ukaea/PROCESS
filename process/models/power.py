@@ -2,6 +2,7 @@
 
 import logging
 import math
+from dataclasses import dataclass
 from enum import IntEnum, unique
 
 import numpy as np
@@ -41,6 +42,32 @@ class ElectricConversionModelTypes(IntEnum):
     SUPERCRITICAL_CO2_BRAYTON_CYCLE = 4
 
 
+@dataclass(slots=True, frozen=True)
+class ResistiveTFPowerParameters:
+    """Dataclass for resistive TF power parameters."""
+
+    p_tf_electric_supplies_mw: float
+    """Steady state AC power demand for TF coil power supply [MW]"""
+    tfcmw: float
+    """Total TF system electrical resistive power [MW]"""
+    p_tf_bus_mw: float
+    """Resistive power in TF busbars [MW]"""
+    vtfkv: float
+    """Peak resistive voltage in TF coil circuit [kV]"""
+    res_tf_system_total: float
+    """Total resistance of TF coil system [Ω]"""
+    m_tf_bus: float
+    """Total mass of TF busbars [kg]"""
+    res_tf_bus: float
+    """Total resistance of TF busbars [Ω]"""
+    a_tf_bus: float
+    """Cross-sectional area of TF busbars [m²]"""
+    j_tf_bus: float
+    """Current density in TF busbars [A/m²]"""
+    len_tf_bus: float
+    """Total length of TF busbars [m]"""
+
+
 class Power(Model):
     """Power model for the fusion reactor."""
 
@@ -51,13 +78,12 @@ class Power(Model):
     def output(self):
         """Write the results to the main output file (OUT.DAT)."""
         # Toroidal field coil power model
-        # Toroidal field coil power model
         if (
             TFConductorModel(self.data.tfcoil.i_tf_sup)
             == TFConductorModel.WATER_COOLED_COPPER
             or TFConductorModel.HELIUM_COOLED_ALUMINIUM
         ):
-            self.resistive_tf_electric_power(output=True)
+            self.output_resistive_tf_power()
         elif (
             TFConductorModel(self.data.tfcoil.i_tf_sup)
             == TFConductorModel.SUPERCONDUCTING
@@ -108,7 +134,27 @@ class Power(Model):
             == TFConductorModel.WATER_COOLED_COPPER
             or TFConductorModel.HELIUM_COOLED_ALUMINIUM
         ):
-            self.resistive_tf_electric_power(output=False)
+            resistive_tf_power_params = self.resistive_tf_electric_power(
+                c_tf_turn=self.data.tfcoil.c_tf_turn,
+                j_tf_bus=self.data.tfcoil.j_tf_bus,
+                rho_tf_bus=self.data.tfcoil.rho_tf_bus,
+                len_tf_bus=self.data.tfcoil.len_tf_bus,
+                n_tf_coils=self.data.tfcoil.n_tf_coils,
+                c_tf_total=self.data.tfcoil.c_tf_total,
+                res_tf_leg=self.data.tfcoil.res_tf_leg,
+                p_tf_joints_resistive_mw=self.data.tfcoil.p_tf_joints_resistive_mw,
+                p_tf_leg_resistive_mw=self.data.tfcoil.p_tf_leg_resistive_mw,
+                p_cp_resistive_mw=self.data.tfcoil.p_cp_resistive_mw,
+                eta_tf_power_supply_conversion=self.data.heat_transport.eta_tf_power_supply_conversion,
+            )
+
+            self.data.heat_transport.p_tf_electric_supplies_mw = (
+                resistive_tf_power_params.p_tf_electric_supplies_mw
+            )
+            self.data.tfcoil.tfcmw = resistive_tf_power_params.tfcmw
+            self.data.tfcoil.vtfkv = resistive_tf_power_params.vtfkv
+            self.data.tfcoil.m_tf_bus = resistive_tf_power_params.m_tf_bus
+
         elif (
             TFConductorModel(self.data.tfcoil.i_tf_sup)
             == TFConductorModel.SUPERCONDUCTING
@@ -2165,21 +2211,20 @@ class Power(Model):
             f"is an invalid option."
         )
 
+    @staticmethod
     def resistive_tf_electric_power(
-        self,
         c_tf_turn: float,
         j_tf_bus: float,
         rho_tf_bus: float,
         len_tf_bus: float,
         n_tf_coils: int,
-        p_cp_resistive: float,
         c_tf_total: float,
         res_tf_leg: float,
         p_tf_joints_resistive_mw: float,
         p_tf_leg_resistive_mw: float,
         p_cp_resistive_mw: float,
-        output: bool,
-    ):
+        eta_tf_power_supply_conversion: float,
+    ) -> ResistiveTFPowerParameters:
         """TF coil power supply requirements for resistive coils
 
 
@@ -2190,43 +2235,42 @@ class Power(Model):
         j_tf_bus : float
             Bus current density [A/m²]
         rho_tf_bus : float
-            Bus resistivity [ohm-m]
+            Bus resistivity [Ω-m]
         len_tf_bus : float
             Bus length - all coils [m]
         n_tf_coils : int
             Number of TF coils
-        p_cp_resistive : float
-            Resistive power in inboard legs (called centrepost, CP for tart design) [W]
         c_tf_total : float
             Total current in TF coils [A]
         res_tf_leg : float
-            Resistance of outboard legs [ohm]
+            Resistance of outboard legs [Ω]
         p_tf_joints_resistive_mw : float
             Resistive power in TF coil joints [MW]
         p_tf_leg_resistive_mw : float
             Resistive power in outboard legs [MW]
         p_cp_resistive_mw : float
             Resistive power in inboard legs [MW]
-        output : bool
-            If True, outputs the calculated resistive TF coil power supply requirements
-            to the output file.
+        eta_tf_power_supply_conversion : float
+            Efficiency of TF coil power supply conversion
 
+        Returns
+        -------
+        ResistiveTFPowerParameters
         """
         # Cross-sectional area of bus
         a_tf_bus = c_tf_turn / j_tf_bus
 
         # Bus resistance [ohm]
-        # Bus resistivity (self.data.tfcoil.rho_tf_bus)
-        # Issue #1253: there was a fudge here to set the bus bar resistivity equal
-        # to the TF conductor resistivity. I have removed this.
         res_tf_bus = rho_tf_bus * len_tf_bus / a_tf_bus
 
-        #  Bus mass (kg)
+        #  Bus mass [kg]
         m_tf_bus = len_tf_bus * a_tf_bus * constants.DEN_COPPER
 
         #  Total maximum impedance MDK actually just fixed resistance
         res_tf_system_total = (
-            n_tf_coils * res_tf_leg + (p_cp_resistive / c_tf_total**2) + res_tf_bus
+            n_tf_coils * res_tf_leg
+            + ((p_cp_resistive_mw * 1.0e6) / c_tf_total**2)
+            + res_tf_bus
         )
 
         #  No reactive portion of the voltage is included here - assume long
@@ -2235,21 +2279,15 @@ class Power(Model):
         vtfkv = 1.0e-3 * res_tf_system_total * c_tf_turn / n_tf_coils
 
         # Resistive powers (MW):
-
         p_tf_bus_mw = 1.0e-6 * c_tf_turn**2 * res_tf_bus  # TF coil bus => Dodgy #
 
         # TF coil reactive power
         # Set reactive power to 0, since ramp up can be long
         # The TF coil can be ramped up as slowly as you like
-        # (although this will affect the time to recover from a magnet quench).
-        # tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_plant_pulse_plasma_current_ramp_up
-        # + t_plant_pulse_coil_precharge)
-        # estotf(=e_tf_magnetic_stored_total_gj/self.data.tfcoil.n_tf_coils)
-        # has been removed (#199 #847)
         p_tf_reactive_mw = 0.0e0
 
-        # Total power consumption (MW)
-        self.data.tfcoil.tfcmw = (
+        # Total power consumption [MW]
+        tfcmw = (
             p_cp_resistive_mw
             + p_tf_leg_resistive_mw
             + p_tf_bus_mw
@@ -2257,95 +2295,86 @@ class Power(Model):
             + p_tf_joints_resistive_mw
         )
 
-        # Total steady state AC power demand (MW)
-        self.data.heat_transport.p_tf_electric_supplies_mw = (
-            self.data.tfcoil.tfcmw
-            / self.data.heat_transport.eta_tf_power_supply_conversion
+        # Total steady state AC power demand [MW]
+        # (including power supply conversion losses)
+        p_tf_electric_supplies_mw = tfcmw / eta_tf_power_supply_conversion
+
+        return ResistiveTFPowerParameters(
+            p_tf_electric_supplies_mw=p_tf_electric_supplies_mw,
+            tfcmw=tfcmw,
+            p_tf_bus_mw=p_tf_bus_mw,
+            vtfkv=vtfkv,
+            res_tf_bus=res_tf_bus,
+            a_tf_bus=a_tf_bus,
+            m_tf_bus=m_tf_bus,
+            res_tf_system_total=res_tf_system_total,
+            j_tf_bus=j_tf_bus,
+            len_tf_bus=len_tf_bus,
         )
 
-        # Output section
-        if output == 0:
-            return
-        # Clarify that these outputs are for resistive coils only
+    def output_resistive_tf_power(self):
+        """Outputs the resistive TF coil power supply requirements to the output file."""
         po.oheadr(self.outfile, "Resistive TF Coil Power Conversion")
-        po.ovarre(
-            self.outfile, "Bus resistance (ohm)", "(res_tf_bus)", res_tf_bus, "OP "
-        )
+
         po.ovarre(
             self.outfile,
-            "Bus current density (A/m2)",
+            "Bus current density [A/m²]",
             "(j_tf_bus)",
             self.data.tfcoil.j_tf_bus,
         )
         po.ovarre(
             self.outfile,
-            "Bus length - all coils (m)",
+            "Bus length - all coils [m]",
             "(len_tf_bus)",
             self.data.tfcoil.len_tf_bus,
         )
         po.ovarre(
             self.outfile,
-            "Bus mass (kg)",
+            "Bus mass [kg]",
             "(m_tf_bus)",
             self.data.tfcoil.m_tf_bus,
             "OP ",
         )
-        # po.ovarre(outfile,'Maximum impedance (ohm)','(ztot)',ztot)
+        po.oblnkl(self.outfile)
+
         po.ovarre(
             self.outfile,
-            "Total resistance for TF coil set (ohm)",
-            "(res_tf_system_total)",
-            res_tf_system_total,
-            "OP ",
-        )
-        # po.ovarre(outfile,'Peak voltage per coil (kV)','(vtfkv)',vtfkv)
-        po.ovarre(
-            self.outfile,
-            "Steady-state voltage per coil (kV)",
+            "Steady-state voltage per coil [kV]",
             "(vtfkv)",
             self.data.tfcoil.vtfkv,
             "OP ",
         )
-        # po.ovarre(outfile,'Peak power (MW)','(tfcmw..)',tfcmw)
+        po.oblnkl(self.outfile)
+
         po.ovarre(
             self.outfile,
-            "Total power dissipation in TF coil set (MW)",
-            "(tfcmw..)",
+            "Total power dissipation in TF coil set [MW]",
+            "(tfcmw)",
             self.data.tfcoil.tfcmw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Power dissipation in TF coil set: inboard legs (MW)",
+            "Power dissipation in TF coil set: inboard legs [MW]",
             "(p_cp_resistive_mw)",
             self.data.tfcoil.p_cp_resistive_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Power dissipation in TF coil set: outboard legs (MW)",
+            "Power dissipation in TF coil set: outboard legs [MW]",
             "(p_tf_leg_resistive_mw)",
             self.data.tfcoil.p_tf_leg_resistive_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Power dissipation in TF coil set: buses",
-            "(tfbusmw)",
-            p_tf_bus_mw,
             "OP ",
         )
         if self.data.tfcoil.i_cp_joints != 0:
             po.ovarre(
                 self.outfile,
-                "Power dissipation in TF coil set: joints",
+                "Power dissipation in TF coil set: joints [MW]",
                 "(p_tf_joints_resistive_mw)",
                 self.data.tfcoil.p_tf_joints_resistive_mw,
                 "OP ",
             )
-
-        # Reactive poower has been set to zero.
-        # po.ovarre(outfile,'TF coil reactive power (MW)','(tfreacmw)', tfreacmw)
 
     def tfcpwr(
         self, output: bool, itfka, rmajor, ntfc, v_tf_coil_dump_quench_kv, ettfmj, rptfc
