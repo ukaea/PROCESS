@@ -2678,6 +2678,91 @@ class Power(Model):
         return (tfckw, len_tf_bus, drarea, tfcbv, p_tf_electric_supplies_mw)
 
     @staticmethod
+    def calculate_tf_power_demand(
+        res_tf_coils_total: float,
+        res_tf_joints_total: float,
+        res_tf_bus: float,
+        cur_tf_coil: float,
+        ind_tf_total: float,
+        ind_tf_bus: float,
+        dcur_tf_total: float,
+    ) -> float:
+        """Calculates the total TF coil power demand
+
+        Parameters
+        ----------
+        res_tf_coils_total : float
+            Total resistance of TF coils [Ω]
+        res_tf_joints_total : float
+            Total resistance of TF coil joints [Ω]
+        res_tf_bus : float
+            Total resistance of TF bus [Ω]
+        cur_tf_coil : float
+            Current in a single TF coil at any time [A]
+        ind_tf_total : float
+            Total inductance of TF coils [H]
+        ind_tf_bus : float
+            Total inductance of TF bus [H]
+        dcur_tf_total : float
+            Current ramp rate of TF coils [A/s]
+
+        Returns
+        -------
+        float
+            Total TF coil power demand [MW]
+        """
+        # Total resistive power in TF coils, joints, and bus [MW]
+        p_tf_resistive_mw = (
+            (res_tf_coils_total + res_tf_joints_total + res_tf_bus)
+            * cur_tf_coil**2
+            * 1.0e-6
+        )
+        p_tf_reactive_mvar = (
+            (ind_tf_total + ind_tf_bus) * cur_tf_coil * dcur_tf_total * 1.0e-6
+        )
+        return p_tf_resistive_mw + p_tf_reactive_mvar
+
+    @staticmethod
+    def calculate_tf_voltage(
+        res_tf_coils_total: float,
+        res_tf_joints_total: float,
+        res_tf_bus: float,
+        cur_tf_coil: float,
+        ind_tf_total: float,
+        ind_tf_bus: float,
+        dcur_tf_total: float,
+    ) -> float:
+        """Calculates the total TF system voltage demand
+
+        Parameters
+        ----------
+        res_tf_coils_total : float
+            Total resistance of TF coils [Ω]
+        res_tf_joints_total : float
+            Total resistance of TF coil joints [Ω]
+        res_tf_bus : float
+            Total resistance of TF bus [Ω]
+        cur_tf_coil : float
+            Current in a single TF coil at any time [A]
+        ind_tf_total : float
+            Total inductance of TF coils [H]
+        ind_tf_bus : float
+            Total inductance of TF bus [H]
+        dcur_tf_total : float
+            Current ramp rate of TF coils [A/s]
+
+        Returns
+        -------
+        float
+            Total TF system voltage demand [V]
+        """
+        v_tf_resistive = (
+            res_tf_coils_total + res_tf_joints_total + res_tf_bus
+        ) * cur_tf_coil
+        v_tf_reactive = (ind_tf_total + ind_tf_bus) * dcur_tf_total
+        return v_tf_resistive + v_tf_reactive
+
+    @staticmethod
     def power_profiles_over_time(
         p_plant_electric_base_total_mw: float,
         p_cryo_plant_electric_mw: float,

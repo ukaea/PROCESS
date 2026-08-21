@@ -79,6 +79,7 @@ from process.models.physics.plasma_geometry import (
     PlasmaGeometryModelType,
     PlasmaShapeModelType,
 )
+from process.models.power import Power
 from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
@@ -16189,6 +16190,96 @@ def plot_pf_dimensions(
     axis.set_aspect("equal", adjustable="box")
 
 
+def plot_tf_energisation_power_voltage(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+):
+    """Plot TF coil power and voltage demand during ramp-up on the given axis."""
+    c_tf_turn = mfile.get("c_tf_turn", scan=scan)
+    ind_tf_coil = mfile.get("ind_tf_coil", scan=scan)
+    tramp = 1000.0
+
+    n_points = 100
+    flat_top_fraction = 0.2
+    flat_top_time = tramp * flat_top_fraction
+    n_flat_top = max(2, int(n_points * flat_top_fraction))
+
+    ramp_fraction = np.linspace(0.0, 1.0, n_points)
+    ramp_time = ramp_fraction * tramp
+    flat_top_time_axis = np.linspace(tramp, tramp + flat_top_time, n_flat_top)
+    time = np.concatenate((ramp_time, flat_top_time_axis[1:]))
+
+    cur_tf_coil_ramp = ramp_fraction * c_tf_turn
+    cur_tf_coil_flat_top = np.full(len(flat_top_time_axis) - 1, c_tf_turn)
+    cur_tf_coil = np.concatenate((cur_tf_coil_ramp, cur_tf_coil_flat_top))
+    # Rate of change of current during a linear ramp-up, then zero at flat-top
+    dcur_tf_total_ramp = np.full(n_points, (c_tf_turn / tramp) / 1000.0)
+    dcur_tf_total_flat_top = np.zeros(len(flat_top_time_axis) - 1)
+    dcur_tf_total = np.concatenate((dcur_tf_total_ramp, dcur_tf_total_flat_top))
+
+    power = Power()
+    tf_power = np.array([
+        power.calculate_tf_power_demand(
+            res_tf_coils_total=0.0,
+            res_tf_joints_total=0.0,
+            res_tf_bus=1e-6,
+            cur_tf_coil=cur_tf_coil[i],
+            ind_tf_total=ind_tf_coil,
+            ind_tf_bus=0.0,
+            dcur_tf_total=dcur_tf_total[i],
+        )
+        for i in range(len(time))
+    ])
+
+    tf_voltage = np.array([
+        power.calculate_tf_voltage(
+            res_tf_coils_total=0.0,
+            res_tf_joints_total=0.0,
+            res_tf_bus=1e-6,
+            cur_tf_coil=cur_tf_coil[i],
+            ind_tf_total=ind_tf_coil,
+            ind_tf_bus=0.0,
+            dcur_tf_total=dcur_tf_total[i],
+        )
+        for i in range(len(time))
+    ])
+
+    axis.plot(time, tf_power, color="C0")
+    voltage_axis = axis.twinx()
+    voltage_axis.plot(time, tf_voltage, color="C1")
+    voltage_axis.set_ylabel("Voltage [V]", color="C1")
+    voltage_axis.tick_params(axis="y", labelcolor="C1")
+    axis.set_title("TF Coil Power Demand During Ramp-Up")
+    axis.set_xlabel("Time [s]")
+    axis.set_ylabel("Power [W]")
+    axis.set_xticks([0.0, tramp, tramp + flat_top_time])
+    axis.set_xticklabels([
+        "0\nStart of charge",
+        f"{tramp:.0f}\nEnd of charge",
+        f"{tramp + flat_top_time:.0f}\nFlat-top",
+    ])
+    axis.set_xlim(0.0, tramp + flat_top_time)
+    axis.minorticks_on()
+    axis.grid(True, alpha=0.3)
+    axis.text(
+        0.03,
+        0.97,
+        f"Target current: {c_tf_turn:.3g} A\n"
+        f"Current ramp rate: {c_tf_turn / tramp:.3g} A/s",
+        transform=axis.transAxes,
+        ha="left",
+        va="top",
+        fontsize=8,
+        bbox={
+            "boxstyle": "round,pad=0.3",
+            "fc": "white",
+            "alpha": 0.9,
+            "ec": "0.7",
+        },
+    )
+
+
 def main_plot(
     m_file: MFile,
     scan: int,
@@ -16657,6 +16748,12 @@ def main_plot(
     plot_plasma_outboard_toroidal_ripple_map(_add_page(), m_file, scan)
 
     plot_tf_stress(_add_page().subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+
+    plot_tf_energisation_power_voltage(
+        axis=_add_page("tf_energisation").add_subplot(111),
+        mfile=m_file,
+        scan=scan,
+    )
 
     plot_pf_dimensions(
         axis=_add_page("pf_dimensions").add_subplot(121, aspect="equal"),

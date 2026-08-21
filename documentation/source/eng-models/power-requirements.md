@@ -10,7 +10,7 @@ Generally the net power consumption of one magnet in $\text{VA}$ is given by:
 
 $$
 P_{\text{TF,electric}} = \left(\Omega_{\text{TF,coil}}+\Omega_{\text{joints}}+\Omega_{\text{feeder}}\right) \times I_{\text{TF,coil}}^2 
-\\ +\left(L_{\text{TF,coil-self}}+L_{\text{feeder}}\right)\frac{dI}{dt}
+\\ +\left(L_{\text{TF,coil-self}}+L_{\text{feeder}}\right)\times I \times\frac{dI}{dt}
 $$
 
 #### Resistive TF coil power requirements | `resistive_tf_electric_power()`
