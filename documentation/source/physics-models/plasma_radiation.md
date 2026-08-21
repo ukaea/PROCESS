@@ -20,7 +20,7 @@ These coefficients utilize the generalized collisional-radiative approach [^3] f
 For $\text{Ni}$, the data is based on [^4], for $\text{Fe}$ it is derived from [^5]; and for $\text{W,}$ the data is obtained from [^6].
 The $\text{Ni}$ and $\text{Fe}$ rates incorporate a density dependence as described in [^7]. For $\text{Kr}$ and $\text{Xe}$, data is taken from the ADAS baseline.
 
-The computed loss functions exhibit a weak dependence on density but are evaluated at a fixed electron density of $10^{19} \text{m}^{-3}$.
+The computed loss functions exhibit a weak dependence on density but are evaluated at a fixed electron density of $10^{20} \text{m}^{-3}$.
 This differs from strict coronal equilibrium, which assumes density independence. 
 In practice, non-local effects arising from density and temperature gradients are significant but are not considered here. 
 The loss functions account for Bremsstrahlung, line radiation, and recombination radiation, represented by:
@@ -32,19 +32,21 @@ $$
 where $P_i$ is the radiation per unit volume (excluding synchrotron radiation),
 $L_Z (Z_i, T)$ is the loss function for ion species $i$ at temperature $T$, and $n_i$ is the density of ion species $i$.
 
-The source data comprises of 200 separate data points with a fitted temperature range of $1 \ \text{eV}$ tp $40 \ \text{keV}$. The fitted radiation profiles for each species against temperature can be found in the figure below.
+The source data comprises of 600 separate data points with a fitted temperature range of $0.25 \ \text{eV}$ to $500 \ \text{keV}$. The fitted radiation profiles for each species against temperature can be found in the figure below.
 
 
 
 
 <figure markdown>
 ![ADAS Radiation](../images/adas_radiation.png){ width = "100"}
-<figcaption>Figure 1: Radiation loss functions as a function of temperature, at 10^19 electrons m^−3.
+<figcaption>Figure 1: Radiation loss functions as a function of temperature, at 10^20 electrons m^−3.
 The lowest line is H, with the other lines in the order listed. The dashed lines show
 the bremsstrahlung calculated using a separate method.</figcaption>
 </figure>
 
-For the regime above $40 \ \text{keV}$ which can be seen by the dashed lines in Figure 1 above, the radiation is assumed to be Bremsstrahlung dominated so the values are extrapolated via a power law.
+!!! warning "Extrapolated ranges"
+    
+    For the regime above $40 \ \text{keV}$, the radiation is assumed to be Bremsstrahlung dominated so the values are extrapolated via a power law.
 
 
 !!! note "Location of impurities"
