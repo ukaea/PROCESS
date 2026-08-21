@@ -614,6 +614,10 @@ class ResistiveTFCoil(TFCoil):
                 self.data.tfcoil.res_tf_leg
                 * (self.data.tfcoil.c_tf_total / self.data.tfcoil.n_tf_coils) ** 2
             ) * self.data.tfcoil.n_tf_coils
+
+            self.data.tfcoil.p_tf_leg_resistive_mw = (
+                1.0e-6 * self.data.tfcoil.p_tf_leg_resistive
+            )
             # ---
 
             # Sliding joints resistive heating
@@ -640,9 +644,13 @@ class ResistiveTFCoil(TFCoil):
                     * self.data.tfcoil.c_tf_total**2
                     / a_joints
                 )
+                self.data.tfcoil.p_tf_joints_resistive_mw = (
+                    1.0e-6 * self.data.tfcoil.p_tf_joints_resistive
+                )
             else:
                 # Joints resistance to be evaluated for SC
                 self.data.tfcoil.p_tf_joints_resistive = 0.0e0
+                self.data.tfcoil.p_tf_joints_resistive_mw = 0.0e0
 
             # ---
 
@@ -660,12 +668,16 @@ class ResistiveTFCoil(TFCoil):
                 )
             )
 
+            self.data.tfcoil.p_cp_resistive_mw = 1.0e-6 * self.data.tfcoil.p_cp_resistive
+
             # self.data.tfcoil.p_cp_resistive contains the the total resistive
             # power losses
             self.data.tfcoil.p_tf_leg_resistive = 0.0e0
+            self.data.tfcoil.p_tf_leg_resistive_mw = 0.0e0
 
             # No joints if self.data.physics.itart = 0
             self.data.tfcoil.p_tf_joints_resistive = 0.0e0
+            self.data.tfcoil.p_tf_joints_resistive_mw = 0.0e0
 
     def resistive_tf_coil_areas_and_masses(self):
         """Calculate the areas and masses of the resistive TF coil"""

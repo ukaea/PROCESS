@@ -2147,6 +2147,9 @@ class Power(Model):
         p_cp_resistive: float,
         c_tf_total: float,
         res_tf_leg: float,
+        p_tf_joints_resistive_mw: float,
+        p_tf_leg_resistive_mw: float,
+        p_cp_resistive_mw: float,
         output: bool,
     ):
         """TF coil power supply requirements for resistive coils
@@ -2170,6 +2173,12 @@ class Power(Model):
             Total current in TF coils [A]
         res_tf_leg : float
             Resistance of outboard legs [ohm]
+        p_tf_joints_resistive_mw : float
+            Resistive power in TF coil joints [MW]
+        p_tf_leg_resistive_mw : float
+            Resistive power in outboard legs [MW]
+        p_cp_resistive_mw : float
+            Resistive power in inboard legs [MW]
         output : bool
             If True, outputs the calculated resistive TF coil power supply requirements
             to the output file.
@@ -2198,15 +2207,7 @@ class Power(Model):
         vtfkv = 1.0e-3 * res_tf_system_total * c_tf_turn / n_tf_coils
 
         # Resistive powers (MW):
-        self.data.tfcoil.p_cp_resistive_mw = (
-            1.0e-6 * self.data.tfcoil.p_cp_resistive
-        )  # inboard legs (called centrepost, CP for tart design)
-        self.data.tfcoil.p_tf_leg_resistive_mw = (
-            1.0e-6 * self.data.tfcoil.p_tf_leg_resistive
-        )  # outboard legs
-        self.data.tfcoil.p_tf_joints_resistive_mw = (
-            1.0e-6 * self.data.tfcoil.p_tf_joints_resistive
-        )  # Joints
+
         p_tf_bus_mw = 1.0e-6 * c_tf_turn**2 * res_tf_bus  # TF coil bus => Dodgy #
 
         # TF coil reactive power
@@ -2221,11 +2222,11 @@ class Power(Model):
 
         # Total power consumption (MW)
         self.data.tfcoil.tfcmw = (
-            self.data.tfcoil.p_cp_resistive_mw
-            + self.data.tfcoil.p_tf_leg_resistive_mw
+            p_cp_resistive_mw
+            + p_tf_leg_resistive_mw
             + p_tf_bus_mw
             + p_tf_reactive_mw
-            + self.data.tfcoil.p_tf_joints_resistive_mw
+            + p_tf_joints_resistive_mw
         )
 
         # Total steady state AC power demand (MW)
