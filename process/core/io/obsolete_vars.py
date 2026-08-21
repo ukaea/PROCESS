@@ -301,7 +301,7 @@ OBS_VARS = {
     "irfcd": "i_hcd_calculations",
     "wave_mode": "i_ecrh_wave_mode",
     "pheatfix": "p_hcd_secondary_extra_heat_mw",
-    "ftar": "f_p_div_lower",
+    "ftar": "f_p_div_lower_separatrix",
     "beta_div": "deg_div_field_plate",
     "divclfr": "f_vol_div_coolant",
     "divdens": "den_div_structure",
@@ -478,6 +478,7 @@ OBS_VARS = {
     "minmax": "i_figure_merit",
     "neqns": "n_equality_constraints",
     "nineqns": "n_inequality_constraints",
+    "f_p_div_lower": "f_p_div_lower_separatrix",
 }
 
 OBS_VARS_HELP = {

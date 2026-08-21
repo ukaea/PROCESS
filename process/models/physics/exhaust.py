@@ -1,12 +1,39 @@
 """Module for plasma exhaust calculations and analysis."""
 
 import logging
+from dataclasses import dataclass
+
+import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
+from process.data_structure.physics_variables import DivertorNumberModels
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class DivertorSeparatrixPowerSplits:
+    """Dataclass to hold the power splits to the divertor targets."""
+
+    f_p_div_inboard_separatrix: float = 0.0
+    """Fraction of total separatrix power to inboard divertor targets"""
+
+    f_p_div_outboard_separatrix: float = 0.0
+    """Fraction of total separatrix power to outboard divertor targets"""
+
+    f_p_div_inboard_lower_separatrix: float = 0.0
+    """Fraction of total separatrix power to inboard lower divertor target"""
+
+    f_p_div_inboard_upper_separatrix: float = 0.0
+    """Fraction of total separatrix power to inboard upper divertor target"""
+
+    f_p_div_outboard_lower_separatrix: float = 0.0
+    """Fraction of total separatrix power to outboard lower divertor target"""
+
+    f_p_div_outboard_upper_separatrix: float = 0.0
+    """Fraction of total separatrix power to outboard upper divertor target"""
 
 
 class PlasmaExhaust(Model):
@@ -51,7 +78,7 @@ class PlasmaExhaust(Model):
             # Double null divertor configuration
             po.ovarre(
                 self.outfile,
-                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) (MW/m) "
+                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) [MW/m] "
                 "(On peak divertor)",
                 "(p_plasma_separatrix_rmajor_mw)",
                 self.data.physics.p_plasma_separatrix_rmajor_mw,
@@ -60,7 +87,7 @@ class PlasmaExhaust(Model):
             po.ovarre(
                 self.outfile,
                 "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) "
-                "(MWT/m) (On peak divertor)",
+                "[MWT/m] (On peak divertor)",
                 "(p_div_bt_q_aspect_rmajor_mw)",
                 self.data.physics.p_div_bt_q_aspect_rmajor_mw,
                 "OP ",
@@ -69,7 +96,7 @@ class PlasmaExhaust(Model):
             # Single null divertor configuration
             po.ovarre(
                 self.outfile,
-                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) (MW/m)",
+                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) [MW/m]",
                 "(p_plasma_separatrix_rmajor_mw)",
                 self.data.physics.p_plasma_separatrix_rmajor_mw,
                 "OP ",
@@ -77,13 +104,14 @@ class PlasmaExhaust(Model):
             po.ovarre(
                 self.outfile,
                 "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) "
-                "(MWT/m)",
+                "[MWT/m]",
                 "(p_div_bt_q_aspect_rmajor_mw)",
                 self.data.physics.p_div_bt_q_aspect_rmajor_mw,
                 "OP ",
             )
-
         po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        self.output_brunner_divertor_power_splits()
 
     @staticmethod
     def calculate_separatrix_power(
@@ -218,3 +246,200 @@ class PlasmaExhaust(Model):
             return 0.0
 
         return p_plasma_rad_mw / p_plasma_heating_mw
+
+    def output_brunner_divertor_power_splits(self):
+        """Output the Brunner divertor power splits to the output file."""
+        if self.data.stellarator.istell == 0:
+            po.osubhd(self.outfile, "Brunner Divertor Power Splits:")
+
+            for op in [
+                (
+                    (
+                        "Requested fraction of power to the lower divertor in double "
+                        "null configuration"
+                    ),
+                    "(f_p_div_lower_separatrix)",
+                    self.data.physics.f_p_div_lower_separatrix,
+                ),
+                (
+                    (
+                        "Required distance between the first and second plasma "
+                        "separatrixes at the outer midplane (δR_sep) [m]"
+                    ),
+                    "(dr_plasma_outboard_midplane_separatrix_separation)",
+                    self.data.physics.dr_plasma_outboard_midplane_separatrix_separation,
+                ),
+                None,
+                (
+                    "Outboard side heat flux decay length (m)",
+                    "(len_sol_outboard_power_decay)",
+                    self.data.physics.len_sol_outboard_power_decay,
+                ),
+                None,
+                (
+                    "Fraction of separatrix power on the inner target(s)",
+                    "(f_p_div_inboard_separatrix)",
+                    self.data.physics.f_p_div_inboard_separatrix,
+                ),
+                (
+                    "Fraction of separatrix power on the outer target(s)",
+                    "(f_p_div_outboard_separatrix)",
+                    self.data.physics.f_p_div_outboard_separatrix,
+                ),
+                None,
+                (
+                    "Fraction of separatrix power on the inner lower target",
+                    "(f_p_div_lower_inboard_separatrix)",
+                    self.data.physics.f_p_div_lower_inboard_separatrix,
+                ),
+                (
+                    "Separatrix power on the inner lower target",
+                    "(p_div_lower_inboard_separatrix_mw)",
+                    self.data.physics.p_div_lower_inboard_separatrix_mw,
+                ),
+                None,
+                (
+                    "Fraction of separatrix power on the outer lower target",
+                    "(f_p_div_lower_outboard_separatrix)",
+                    self.data.physics.f_p_div_lower_outboard_separatrix,
+                ),
+                (
+                    "Separatrix power on the outer lower target",
+                    "(p_div_lower_outboard_separatrix_mw)",
+                    self.data.physics.p_div_lower_outboard_separatrix_mw,
+                ),
+            ]:
+                if op is None:
+                    po.oblnkl(self.outfile)
+                else:
+                    desc, var, val = op
+                    po.ovarre(self.outfile, desc, var, val, "OP ")
+
+            if (
+                DivertorNumberModels(self.data.physics.i_single_null)
+                == DivertorNumberModels.DOUBLE_NULL
+            ):
+                po.oblnkl(self.outfile)
+                po.ocmmnt(self.outfile, "----------------------------")
+                po.oblnkl(self.outfile)
+
+                for op in [
+                    (
+                        "Fraction of separatrix power on the inner upper target",
+                        "(f_p_div_upper_inboard_separatrix)",
+                        self.data.physics.f_p_div_upper_inboard_separatrix,
+                    ),
+                    (
+                        "Separatrix power on the inner upper target",
+                        "(p_div_upper_inboard_separatrix_mw)",
+                        self.data.physics.p_div_upper_inboard_separatrix_mw,
+                    ),
+                    None,
+                    (
+                        "Fraction of separatrix power on the outer upper target",
+                        "(f_p_div_upper_outboard_separatrix)",
+                        self.data.physics.f_p_div_upper_outboard_separatrix,
+                    ),
+                    (
+                        "Separatrix power on the outer upper target",
+                        "(p_div_upper_outboard_separatrix_mw)",
+                        self.data.physics.p_div_upper_outboard_separatrix_mw,
+                    ),
+                ]:
+                    if op is None:
+                        po.oblnkl(self.outfile)
+                    else:
+                        desc, var, val = op
+                        po.ovarre(self.outfile, desc, var, val, "OP ")
+
+
+def calculate_brunner_divertor_power_splits(
+    dr_outboard_midplane_sep: float,
+    len_plasma_sol_outboard_power_decay: float,
+    len_plasma_sol_inboard_power_decay: float,
+) -> DivertorSeparatrixPowerSplits:
+    """
+    Calculate the power splits to the divertor targets using Brunner's method.
+
+    Parameters
+    ----------
+    dr_outboard_midplane_sep : float
+        Radial separation of the plasma outboard midplane separatrix (δR_sep) [m].
+    len_plasma_sol_outboard_power_decay : float
+        Power decay length in the scrape-off layer (λ_q) [m].
+    len_plasma_sol_inboard_power_decay : float
+        Power decay length in the scrape-off layer for the inboard side (λᵢₙ_q) [m].
+
+    Returns
+    -------
+    DivertorSeparatrixPowerSplits
+        Dataclass containing the fractions of total separatrix power to each
+        divertor target.
+
+    Notes
+    -----
+    - The fitted value for `f_p_inner_sep_0` and `f_p_inner_sep_infinity` are taken
+    from the fit given by Petrie et al. [2]
+
+    References
+    ----------
+    [1] D. Brunner, A. Q. Kuang, B. LaBombard, and J. L. Terry, “The dependence of
+    divertor power sharing on magnetic flux balance in near double-null
+    configurations on Alcator C-Mod,” Nuclear Fusion, vol. 58, no. 7, p. 076010,
+    May 2018, doi: https://doi.org/10.1088/1741-4326/aac006.
+
+    [2] T. W. Petrie et al., “The effect of divertor magnetic balance on H-mode
+    performance in DIII-D,” Journal of Nuclear Materials, vol. 290-293, pp. 935-939,
+    Mar. 2001, doi: https://doi.org/10.1016/S0022-3115(00)00492-X
+    """
+    # Fraction of the power to the inner divertors at δR_sep = 0 and δR_sep → ∞
+    f_p_inner_sep_0 = 0.16e0
+    f_p_inner_sep_infinity = 0.41e0
+
+    # Fractions of total outboard power going to each target
+    # Outboard lower divertor
+    f_p_outboard_lower = 1 / (
+        1 + np.exp(dr_outboard_midplane_sep / len_plasma_sol_outboard_power_decay)
+    )
+
+    # Outboard upper divertor
+    f_p_outboard_upper = 1 / (
+        1 + np.exp(-dr_outboard_midplane_sep / len_plasma_sol_outboard_power_decay)
+    )
+
+    # Fractions of the total inboard power going to each target
+    f_p_inboard_lower = 1 / (
+        1 + np.exp(dr_outboard_midplane_sep / (len_plasma_sol_inboard_power_decay))
+    )
+
+    f_p_total_inboard = f_p_inner_sep_0 + (f_p_inner_sep_0 - f_p_inner_sep_infinity) * (
+        1.0e0
+        - (
+            2.0e0
+            / (
+                1.0e0
+                + np.exp(
+                    -(
+                        (dr_outboard_midplane_sep / len_plasma_sol_outboard_power_decay)
+                        ** 2
+                    )
+                )
+            )
+        )
+    )
+
+    f_p_total_outboard = 1.0e0 - f_p_total_inboard
+
+    f_p_inboard_upper = f_p_total_inboard * (1.0e0 - f_p_inboard_lower)
+    f_p_outboard_upper = f_p_total_outboard * (1.0e0 - f_p_outboard_lower)
+    f_p_inboard_lower = f_p_total_inboard * f_p_inboard_lower
+    f_p_outboard_lower = f_p_total_outboard * f_p_outboard_lower
+
+    return DivertorSeparatrixPowerSplits(
+        f_p_div_inboard_separatrix=f_p_total_inboard,
+        f_p_div_outboard_separatrix=f_p_total_outboard,
+        f_p_div_inboard_lower_separatrix=f_p_inboard_lower,
+        f_p_div_inboard_upper_separatrix=f_p_inboard_upper,
+        f_p_div_outboard_lower_separatrix=f_p_outboard_lower,
+        f_p_div_outboard_upper_separatrix=f_p_outboard_upper,
+    )

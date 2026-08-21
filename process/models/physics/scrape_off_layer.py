@@ -71,6 +71,11 @@ class ScrapeOffLayer(Model):
                 self.data.physics.len_plasma_sol_mast14_power_decay_2
             )
 
+        self.data.physics.len_sol_inboard_power_decay = (
+            self.data.physics.f_len_sol_power_decay_inboard_outboard
+            * self.data.physics.len_sol_outboard_power_decay
+        )
+
         self.data.physics.a_plasma_outboard_sol_parallel = self.calculate_upstream_sol_outboard_parallel_area(  # noqa: E501
             rmajor=self.data.physics.rmajor,
             rminor=self.data.physics.rminor,
@@ -105,7 +110,7 @@ class ScrapeOffLayer(Model):
 
         po.ovarre(
             self.outfile,
-            "Outboard SOL power decay length (λ_q) [m]",
+            "Outboard SOL power decay length (λₒᵤₜ_q) [m]",
             "(len_sol_outboard_power_decay)",
             self.data.physics.len_sol_outboard_power_decay,
         )
@@ -116,6 +121,19 @@ class ScrapeOffLayer(Model):
                 self.data.physics.i_len_sol_outboard_power_decay
             ).description
             + " ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Inboard to outboard SOL power decay length ratio (λᵢₙ_q/λₒᵤₜ_q)",
+            "(f_len_sol_power_decay_inboard_outboard)",
+            self.data.physics.f_len_sol_power_decay_inboard_outboard,
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard SOL power decay length (λᵢₙ_q) [m]",
+            "(len_sol_inboard_power_decay)",
+            self.data.physics.len_sol_inboard_power_decay,
         )
         po.oblnkl(self.outfile)
         po.ovarre(

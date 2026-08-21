@@ -1472,6 +1472,13 @@ class Build(Model):
                     self.outfile,
                     "ERROR: null value not supported, check i_single_null value.",
                 )
+            po.ovarre(
+                self.outfile,
+                "Divertor poloidal angle subtended by plasma (degrees)",
+                "(deg_div_poloidal_plasma)",
+                self.data.divertor.deg_div_poloidal_plasma,
+                "OP ",
+            )
         return divht
 
     @staticmethod

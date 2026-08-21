@@ -186,7 +186,7 @@ INPUT_VARIABLES = {
     "beta_norm_max": InputVariable("physics", float, range=(0.0, 20.0)),
     "beta_poloidal_eps_max": InputVariable("physics", float, range=(0.01, 10.0)),
     "f_p_alpha_plasma_deposited": InputVariable("physics", float, range=(0.0, 1.0)),
-    "f_p_div_lower": InputVariable("physics", float, range=(0.0, 1.0)),
+    "f_p_div_lower_separatrix": InputVariable("physics", float, range=(0.0, 1.0)),
     "f_plasma_fuel_deuterium": InputVariable("physics", float, range=(0.0, 1.0)),
     "ffwal": InputVariable("physics", float, range=(0.0, 10.0)),
     "f_nd_plasma_pedestal_greenwald": InputVariable("physics", float, range=(0.1, 1.5)),
@@ -1179,6 +1179,9 @@ INPUT_VARIABLES = {
     ),
     "i_len_sol_outboard_power_decay": InputVariable("physics", int, choices=range(4)),
     "len_sol_outboard_power_decay": InputVariable("physics", float, range=(0.0, 1.0)),
+    "f_len_sol_power_decay_inboard_outboard": InputVariable(
+        "physics", float, range=(0.01, 2.0)
+    ),
 }
 
 

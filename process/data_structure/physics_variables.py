@@ -437,30 +437,49 @@ class PhysicsData:
     t_energy_confinement_beta: float = 0.0
     """[s]"""
 
-    ptarmw: float = 0.0
+    f_len_sol_power_decay_inboard_outboard: float = 0.7
+    """Ratio of inboard to outboard scrape off layer power decay length (λᵢₙ_q/λₒᵤₜ_q)"""
+
+    len_sol_inboard_power_decay: float = 0.0
+    """Inboard scrape off layer power decay length (λᵢₙ_q) [m]"""
 
     len_sol_outboard_power_decay: float = 0.0
-    """Outboard scrape off layer power decay length (λ_q) [m]"""
+    """Outboard scrape off layer power decay length (λₒᵤₜ_q) [m]"""
 
-    drsep: float = 0.0
+    dr_plasma_outboard_midplane_separatrix_separation: float = 0.0
+    """Radial distance between the first and second plasma separatrixes at the outer midplane (δR_sep) [m]"""
 
-    fio: float = 0.0
+    f_p_div_inboard_separatrix: float = 0.0
+    """Fraction of the total plasma separatrix power going to the inboard divertor
+    target(s)"""
 
-    fli: float = 0.0
+    f_p_div_outboard_separatrix: float = 0.0
+    """Fraction of the total plasma separatrix power going to the outboard divertor
+    target(s)"""
 
-    flo: float = 0.0
+    f_p_div_lower_inboard_separatrix: float = 0.0
+    """Fraction of plasma separatrix power to the lower inboard divertor target"""
 
-    fui: float = 0.0
+    f_p_div_lower_outboard_separatrix: float = 0.0
+    """Fraction of plasma separatrix power to the lower outboard divertor target"""
 
-    fuo: float = 0.0
+    f_p_div_upper_inboard_separatrix: float = 0.0
+    """Fraction of plasma separatrix power to the upper inboard divertor target"""
 
-    plimw: float = 0.0
+    f_p_div_upper_outboard_separatrix: float = 0.0
+    """Fraction of plasma separatrix power to the upper outboard divertor target"""
 
-    plomw: float = 0.0
+    p_div_lower_inboard_separatrix_mw: float = 0.0
+    """Plasma separatrix power directed to the lower inboard divertor target [MW]"""
 
-    puimw: float = 0.0
+    p_div_lower_outboard_separatrix_mw: float = 0.0
+    """Plasma separatrix power directed to the lower outboard divertor target [MW]"""
 
-    puomw: float = 0.0
+    p_div_upper_inboard_separatrix_mw: float = 0.0
+    """Plasma separatrix power directed to the upper inboard divertor target [MW]"""
+
+    p_div_upper_outboard_separatrix_mw: float = 0.0
+    """Plasma separatrix power directed to the upper outboard divertor target [MW]"""
 
     rho_star: float = 0.0
 
@@ -744,7 +763,7 @@ class PhysicsData:
     f_plasma_fuel_deuterium: float = 0.5
     """Plasma deuterium fuel fraction"""
 
-    f_p_div_lower: float = 1.0
+    f_p_div_lower_separatrix: float = 1.0
     """fraction of power to the lower divertor in double null configuration
     (`i_single_null = 0` only) (default assumes SN)
     """
