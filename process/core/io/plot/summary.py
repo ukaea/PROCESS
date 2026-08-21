@@ -16279,6 +16279,88 @@ def plot_tf_energisation_power_voltage(
         },
     )
 
+def plot_tf_energisation_field(axis: plt.Axes, mfile: MFile, scan: int):
+    """Plot TF coil magnetic field at the bore and on the coil during ramp-up."""
+    b_plasma_toroidal_on_axis = mfile.get("b_plasma_toroidal_on_axis", scan=scan)
+    b_tf_inboard_peak = mfile.get("b_tf_inboard_peak_symmetric", scan=scan)
+    tramp = 1000.0
+
+    n_points = 100
+    flat_top_fraction = 0.2
+    flat_top_time = tramp * flat_top_fraction
+    n_flat_top = max(2, int(n_points * flat_top_fraction))
+
+    ramp_fraction = np.linspace(0.0, 1.0, n_points)
+    ramp_time = ramp_fraction * tramp
+    flat_top_time_axis = np.linspace(tramp, tramp + flat_top_time, n_flat_top)
+    time = np.concatenate((ramp_time, flat_top_time_axis[1:]))
+
+    fraction_ramp = ramp_fraction
+    fraction_flat_top = np.full(len(flat_top_time_axis) - 1, 1.0)
+    fraction = np.concatenate((fraction_ramp, fraction_flat_top))
+
+    # Toroidal field on plasma axis (bore) scales linearly with TF coil current
+    b_bore = b_plasma_toroidal_on_axis * fraction
+
+    # Peak field on the TF coil scales linearly with TF coil current
+    b_coil = b_tf_inboard_peak * fraction
+
+    # Rates of change of the fields during the charge.  Use the time axis so
+    # that the values remain correct if the ramp or flat-top duration changes.
+    db_bore_dt = np.gradient(b_bore, time)
+    db_coil_dt = np.gradient(b_coil, time)
+
+    axis.plot(time, b_bore, color="C0", label="Field at plasma axis")
+    axis.plot(time, b_coil, color="C1", label="Peak field on TF coil")
+    rate_axis = axis.twinx()
+    rate_axis.plot(
+        time,
+        db_bore_dt,
+        color="C0",
+        linestyle="--",
+        label="Rate at plasma axis",
+    )
+    rate_axis.plot(
+        time,
+        db_coil_dt,
+        color="C1",
+        linestyle="--",
+        label="Rate on TF coil",
+    )
+    axis.set_title("TF Coil Magnetic Field During Ramp-Up")
+    axis.set_xlabel("Time [s]")
+    axis.set_ylabel("Magnetic field [T]")
+    rate_axis.set_ylabel("Rate of change of magnetic field [T/s]")
+    axis.set_xticks([0.0, tramp, tramp + flat_top_time])
+    axis.set_xticklabels([
+        "0\nStart of charge",
+        f"{tramp:.0f}\nEnd of charge",
+        f"{tramp + flat_top_time:.0f}\nFlat-top",
+    ])
+    axis.set_xlim(0.0, tramp + flat_top_time)
+    rate_axis.set_xlim(0.0, tramp + flat_top_time)
+    axis.minorticks_on()
+    axis.grid(True, alpha=0.3)
+    lines, labels = axis.get_legend_handles_labels()
+    rate_lines, rate_labels = rate_axis.get_legend_handles_labels()
+    axis.legend(lines + rate_lines, labels + rate_labels, loc="lower right", fontsize=8)
+    axis.text(
+        0.03,
+        0.97,
+        f"Target field at plasma axis: {b_plasma_toroidal_on_axis:.3g} T\n"
+        f"Target peak field on coil: {b_tf_inboard_peak:.3g} T",
+        transform=axis.transAxes,
+        ha="left",
+        va="top",
+        fontsize=8,
+        bbox={
+            "boxstyle": "round,pad=0.3",
+            "fc": "white",
+            "alpha": 0.9,
+            "ec": "0.7",
+        },
+    )
+
 
 def main_plot(
     m_file: MFile,
@@ -16749,8 +16831,15 @@ def main_plot(
 
     plot_tf_stress(_add_page().subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
+    tf_energisation_axis = _add_page("tf_energisation").add_subplot(211)
     plot_tf_energisation_power_voltage(
-        axis=_add_page("tf_energisation").add_subplot(111),
+        axis=tf_energisation_axis,
+        mfile=m_file,
+        scan=scan,
+    )
+
+    plot_tf_energisation_field(
+        axis=pages["tf_energisation"].add_subplot(212, sharex=tf_energisation_axis),
         mfile=m_file,
         scan=scan,
     )
