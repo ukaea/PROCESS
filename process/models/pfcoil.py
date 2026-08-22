@@ -1993,7 +1993,7 @@ class PFCoil(Model):
             for ig in range(pf_d.nef):
                 op.write(
                     self.outfile,
-                    f"{ig}\t{pf_d.ind_pf_cs_plasma_mutual[:n_pf_cs, ig]}",
+                    f"{ig + 1}\t{pf_d.ind_pf_cs_plasma_mutual[:n_pf_cs, ig]}",
                 )
 
             if self.data.build.iohcl != 0:
@@ -2402,7 +2402,7 @@ class PFCoil(Model):
         # PF coils
         pf_coil_geometry_rows = [
             [
-                f"PF {k}",
+                f"PF {k + 1}",
                 f"{pf_d.r_pf_coil_middle[k]:.2e}",
                 f"{pf_d.z_pf_coil_middle[k]:.2e}",
                 f"{pf_d.r_pf_coil_outer[k] - pf_d.r_pf_coil_inner[k]:.2e}",
@@ -2445,44 +2445,44 @@ class PFCoil(Model):
         for k in range(pf_d.nef):
             op.ovarre(
                 self.mfile,
-                f"PF coil {k} radius (m)",
-                f"(r_pf_coil_middle[{k}])",
+                f"PF coil {k + 1} radius (m)",
+                f"(r_pf_coil_middle[{k + 1}])",
                 pf_d.r_pf_coil_middle[k],
             )
             op.ovarre(
                 self.mfile,
-                f"PF coil {k} vertical position (m)",
-                f"(z_pf_coil_middle[{k}])",
+                f"PF coil {k + 1} vertical position (m)",
+                f"(z_pf_coil_middle[{k + 1}])",
                 pf_d.z_pf_coil_middle[k],
             )
             op.ovarre(
                 self.mfile,
-                f"PF coil {k} radial thickness (m)",
-                f"(pfdr({k}))",
+                f"PF coil {k + 1} radial thickness (m)",
+                f"(pfdr({k + 1}))",
                 pf_d.r_pf_coil_outer[k] - pf_d.r_pf_coil_inner[k],
             )
             op.ovarre(
                 self.mfile,
-                f"PF coil {k} vertical thickness (m)",
-                f"(pfdz({k}))",
+                f"PF coil {k + 1} vertical thickness (m)",
+                f"(pfdz({k + 1}))",
                 pf_d.z_pf_coil_upper[k] - pf_d.z_pf_coil_lower[k],
             )
             op.ovarre(
                 self.mfile,
-                f"PF coil {k} turns",
-                f"(n_pf_coil_turns[{k}])",
+                f"PF coil {k + 1} turns",
+                f"(n_pf_coil_turns[{k + 1}])",
                 pf_d.n_pf_coil_turns[k],
             )
             op.ovarre(
                 self.mfile,
-                f"PF coil {k} current (MA)",
-                f"(c_pf_cs_coils_peak_ma[{k}])",
+                f"PF coil {k + 1} current (MA)",
+                f"(c_pf_cs_coils_peak_ma[{k + 1}])",
                 pf_d.c_pf_cs_coils_peak_ma[k],
             )
             op.ovarre(
                 self.mfile,
-                f"PF coil {k} field (T)",
-                f"(b_pf_coil_peak[{k}])",
+                f"PF coil {k + 1} field (T)",
+                f"(b_pf_coil_peak[{k + 1}])",
                 pf_d.b_pf_coil_peak[k],
             )
         for time in range(6):
@@ -2564,7 +2564,7 @@ class PFCoil(Model):
         for k in range(pf_d.nef):
             if pf_d.i_pf_conductor == PFConductorModel.SUPERCONDUCTING:
                 rows.append([
-                    f"PF {k}",
+                    f"PF {k + 1}",
                     f"{pf_d.c_pf_cs_coils_peak_ma[k]:.3e}",
                     f"{pf_d.j_pf_wp_critical[k]:.3e}",
                     f"{pf_d.j_pf_coil_wp_peak[k]:.3e}",
@@ -2575,7 +2575,7 @@ class PFCoil(Model):
                 ])
             else:
                 rows.append([
-                    f"PF {k}",
+                    f"PF {k + 1}",
                     f"{pf_d.c_pf_cs_coils_peak_ma[k]:.3e}",
                     "-1.0e0",
                     f"{pf_d.j_pf_coil_wp_peak[k]:.3e}",
@@ -2702,14 +2702,14 @@ class PFCoil(Model):
         for k in range(pf.nef):
             op.write(
                 self.outfile,
-                f"\t{k}\t\t\t{pf.vsdum[k, 0]:.3f}"
+                f"\t{k + 1}\t\t\t{pf.vsdum[k, 0]:.3f}"
                 f"\t\t\t{pf.vsdum[k, 1]:.3f}\t\t{pf.vsdum[k, 2]:.3f}",
             )
 
         n_cs = pf.n_cs_pf_coils - 1
         op.write(
             self.outfile,
-            f"\tCS coil\t\t\t{pf.vsdum[n_cs, 0]:.3f}"
+            f"\tCS\t\t\t{pf.vsdum[n_cs, 0]:.3f}"
             f"\t\t\t{pf.vsdum[n_cs, 1]:.3f}\t\t{pf.vsdum[n_cs, 2]:.3f}",
         )
 
@@ -2749,7 +2749,11 @@ class PFCoil(Model):
         inv_st_pulse = 1.0e0 / pf_d.f_j_cs_start_pulse_end_flat_top
 
         for k in range(self.data.pf_coil.n_pf_cs_plasma_circuits - 1):
-            line = f"\t{k}\t\t"
+            if (self.data.build.iohcl != 0) and (k ==
+                        self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
+                line = "\tCS\t\t"
+            else:
+                line = f"\t{k + 1}\t\t"
             for jj in range(6):
                 line += f"\t{cpft[k, jj] * self.data.pf_coil.n_pf_coil_turns[k]:.3e}"
             op.write(self.outfile, line)
@@ -2764,31 +2768,58 @@ class PFCoil(Model):
         op.ocmmnt(self.outfile, "This consists of: CS coil field balancing:")
 
         for k in range(pf_d.n_pf_cs_plasma_circuits - 1):
-            op.write(
-                self.outfile,
-                (
-                    f"{k}\t\t\t{cpft[k, 0] * pf_d.n_pf_coil_turns[k]:.3e}\t"
-                    f"{cpft[k, 1] * nturn[k]:.3e}\t"
-                    f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}\t"
-                    f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}\t"
-                    f"{-cpft[k, 1] * nturn[k] * inv_st_pulse:.3e}\t"
-                    f"{cpft[k, 5] * nturn[k]:.3e}"
-                ),
-            )
+            if (self.data.build.iohcl != 0) and (k ==
+                                    self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
+                op.write(
+                    self.outfile,
+                    (
+                        f"CS\t\t\t{cpft[k, 0] * pf_d.n_pf_coil_turns[k]:.3e}\t"
+                        f"{cpft[k, 1] * nturn[k]:.3e}\t"
+                        f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}\t"
+                        f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}\t"
+                        f"{-cpft[k, 1] * nturn[k] * inv_st_pulse:.3e}\t"
+                        f"{cpft[k, 5] * nturn[k]:.3e}"
+                    ),
+                )
+            else:
+                op.write(
+                    self.outfile,
+                    (
+                        f"{k + 1}\t\t\t{cpft[k, 0] * pf_d.n_pf_coil_turns[k]:.3e}\t"
+                        f"{cpft[k, 1] * nturn[k]:.3e}\t"
+                        f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}\t"
+                        f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}\t"
+                        f"{-cpft[k, 1] * nturn[k] * inv_st_pulse:.3e}\t"
+                        f"{cpft[k, 5] * nturn[k]:.3e}"
+                    ),
+                )
 
         op.oblnkl(self.outfile)
         op.ocmmnt(self.outfile, "And: equilibrium field:")
         for k in range(pf_d.n_pf_cs_plasma_circuits - 1):
-            op.write(
-                self.outfile,
-                (
-                    f"{k}\t\t\t{0.0:.3e}\t{0.0:.3e}\t"
-                    f"{(cpft[k, 2] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}\t"
-                    f"{(cpft[k, 3] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}\t"
-                    f"{(cpft[k, 4] + cpft[k, 1] * inv_st_pulse) * nturn[k]:.3e}\t"
-                    "0.0e0"
-                ),
-            )
+            if (self.data.build.iohcl != 0) and (k ==
+                                    self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
+                op.write(
+                    self.outfile,
+                    (
+                        f"CS\t\t\t{0.0:.3e}\t{0.0:.3e}\t"
+                        f"{(cpft[k, 2] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}\t"
+                        f"{(cpft[k, 3] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}\t"
+                        f"{(cpft[k, 4] + cpft[k, 1] * inv_st_pulse) * nturn[k]:.3e}\t"
+                        "0.0e0"
+                    ),
+                )
+            else:
+                op.write(
+                    self.outfile,
+                    (
+                        f"{k + 1}\t\t\t{0.0:.3e}\t{0.0:.3e}\t"
+                        f"{(cpft[k, 2] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}\t"
+                        f"{(cpft[k, 3] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}\t"
+                        f"{(cpft[k, 4] + cpft[k, 1] * inv_st_pulse) * nturn[k]:.3e}\t"
+                        "0.0e0"
+                    ),
+                )
 
         op.oblnkl(self.outfile)
         op.ovarre(
@@ -2818,11 +2849,12 @@ class PFCoil(Model):
                 if k == self.data.pf_coil.n_pf_cs_plasma_circuits - 1:
                     circuit_name = f"Plasma Time point {jjj} (A)"
                     circuit_var_name = f"(plasmat{jjj})"
-                elif k == self.data.pf_coil.n_pf_cs_plasma_circuits - 2:
+                elif (self.data.build.iohcl != 0) and (k ==
+                                        self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
                     circuit_name = f"CS Circuit Time point {jjj} (A)"
                     circuit_var_name = f"(cs t{jjj})"
                 else:
-                    circuit_name = f"PF Circuit {k} Time point {jjj} (A)"
+                    circuit_name = f"PF Circuit {k + 1} Time point {jjj} (A)"
                     circuit_var_name = f"(pfc{k}t{jjj})"
 
                 op.ovarre(

@@ -8065,10 +8065,10 @@ def plot_pf_coils(
     noc = number_of_coils - 1 if iohcl == 1 else number_of_coils
 
     for coil in range(noc):
-        coils_r.append(mfile.get(f"r_pf_coil_middle[{coil:01}]", scan=scan))
-        coils_z.append(mfile.get(f"z_pf_coil_middle[{coil:01}]", scan=scan))
-        coils_dr.append(mfile.get(f"pfdr({coil:01})", scan=scan))
-        coils_dz.append(mfile.get(f"pfdz({coil:01})", scan=scan))
+        coils_r.append(mfile.get(f"r_pf_coil_middle[{coil + 1:01}]", scan=scan))
+        coils_z.append(mfile.get(f"z_pf_coil_middle[{coil + 1:01}]", scan=scan))
+        coils_dr.append(mfile.get(f"pfdr({coil + 1:01})", scan=scan))
+        coils_dz.append(mfile.get(f"pfdz({coil + 1:01})", scan=scan))
         coil_text.append(str(coil + 1))
 
     r_points, z_points, central_coil = pfcoil_geometry(
@@ -16344,10 +16344,10 @@ def plot_pf_dimensions(
     radial_thicknesses = []
     vertical_thicknesses = []
     for coil in range(int(mfile.get("n_pf_cs_plasma_circuits", scan=scan) - 2)):
-        r_pf_coil_middle.append(mfile.get(f"r_pf_coil_middle[{coil}]", scan=scan))
-        z_pf_coil_middle.append(mfile.get(f"z_pf_coil_middle[{coil}]", scan=scan))
-        radial_thicknesses.append(mfile.get(f"pfdr({coil})", scan=scan))
-        vertical_thicknesses.append(mfile.get(f"pfdz({coil})", scan=scan))
+        r_pf_coil_middle.append(mfile.get(f"r_pf_coil_middle[{coil + 1}]", scan=scan))
+        z_pf_coil_middle.append(mfile.get(f"z_pf_coil_middle[{coil + 1}]", scan=scan))
+        radial_thicknesses.append(mfile.get(f"pfdr({coil + 1})", scan=scan))
+        vertical_thicknesses.append(mfile.get(f"pfdz({coil + 1})", scan=scan))
 
     plot_pf_coils(axis=axis, mfile=mfile, scan=scan, colour_scheme=colour_scheme)
 
