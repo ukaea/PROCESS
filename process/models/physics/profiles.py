@@ -558,3 +558,41 @@ class TeProfile(Profile):
             / self.data.physics.temp_plasma_electron_vol_avg_kev
             * self.data.physics.temp_plasma_electron_on_axis_kev
         )
+
+
+def calculate_vol_avg_of_profile(profile_x: np.ndarray, profile_y: np.ndarray) -> float:
+    """Calculate the volume averaged value (⟨profile_y⟩) of a radially normalised profile.
+
+    Parameters
+    ----------
+    profile_x : np.ndarray
+        The x-values of the profile.
+    profile_y : np.ndarray
+        The y-values of the profile.
+
+    Notes
+    -----
+    - The 2 factor in the calculation arises using both sides of the profile and the
+    radial normalisation of the profile.
+
+    Returns
+    -------
+    float: The volume-averaged value (⟨profile_y⟩) of the profile.
+    """
+    if profile_x.ndim != 1:
+        raise ValueError("profile_x must be a 1D array.")
+
+    if profile_x.size < 2:
+        raise ValueError("profile_x must contain at least 2 points.")
+
+    if not np.isclose(profile_x[0], 0.0) or not np.isclose(profile_x[-1], 1.0):
+        raise ValueError("profile_x must span from 0 to 1.")
+
+    if np.any(np.diff(profile_x) <= 0):
+        raise ValueError("profile_x must be strictly increasing.")
+
+    return 2.0 * sp.integrate.simpson(
+        profile_y * profile_x,
+        x=profile_x,
+        dx=profile_x[1] - profile_x[0],
+    )
