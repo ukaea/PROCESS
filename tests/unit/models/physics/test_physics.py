@@ -1850,18 +1850,20 @@ class PhyauxParam(NamedTuple):
     "phyauxparam",
     [
         PhyauxParam(
+            nd_plasma_alphas_thermal_vol_avg=7.499815489237494e18,
             fusden_alpha_total=1.973996644759543e17,
             t_energy_confinement=3.401323521525641,
-            expected_t_alpha_confinement=37.993985551650177,
+            expected_t_alpha_confinement=37.993050845084205,
         ),
         PhyauxParam(
+            nd_plasma_alphas_thermal_vol_avg=7.499880919696304e18,
             fusden_alpha_total=1.9731194318497056e17,
             t_energy_confinement=3.402116961408892,
-            expected_t_alpha_confinement=38.010876984618747,
+            expected_t_alpha_confinement=38.01027347171541,
         ),
     ],
 )
-def test_phyaux(phyauxparam, monkeypatch, physics):
+def test_phyaux(phyauxparam, physics):
     """
     Automatically generated Unit Test for phyaux.
 
