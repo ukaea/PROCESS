@@ -443,3 +443,109 @@ def test_four_group():
             for num_layer in range(neutron_profile.n_layers)
         ),
     ), "Conservation of neutrons"
+
+def test_potential_negative_flux():
+    dummy = np.geomspace(MAX_E, MIN_E, 5)  # dummy group structure
+    # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
+    mfp_fw_s = 118 * 0.01  # [m]
+    mfp_fw_t = 16.65 * 0.01  # [m]
+
+    sigma_fw_s = 1 / mfp_fw_s  # [1/m]
+    tungsten = MaterialMacroInfo(dummy, 19300.0, {"Te": 1.0}, name="tungsten")
+    tungsten._set_sigma(
+        [ 36.70793446, 82.75605723, 557.10852765, 68.99371192],
+        [
+            [3.56412195e+00, 3.10469266e-03, 1.86354209e-07, 9.59501248e-11],
+            [0.00000000e+00, 7.17103718e+00, 2.01902003e-02, 3.70852436e-06],
+            [0.00000000e+00, 0.00000000e+00, 7.95579530e+00, 2.28258235e-02],
+            [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 7.98194881e+00]
+        ],
+    )
+    lithium = MaterialMacroInfo(dummy, 534.0, {"Te": 1.0}, name="lithium")
+    lithium._set_sigma(
+        [ 8.53058076,  5.00130054,  8.6628814 , 54.01467005],
+        [
+            [6.2826794 , 0.01282172, 0.        , 0.        ],
+            [0.        , 4.41033136, 0.02001536, 0.        ],
+            [0.        , 0.        , 4.42975314, 0.02010321],
+            [0.        , 0.        , 0.        , 4.22604695]
+        ]
+    )
+    ss316 = MaterialMacroInfo(dummy, 7930.0, {"Te": 1.0}, name="ss316")
+    ss316._set_sigma(
+        [  58.75691059,  274.00378023, 3562.92253327,   86.75244242],
+        [
+            [3.48853683e+01, 1.01273247e-02, 0.00000000e+00, 0.00000000e+00],
+            [0.00000000e+00, 2.70925014e+02, 1.66745243e-01, 0.00000000e+00],
+            [0.00000000e+00, 0.00000000e+00, 3.46806397e+03, 2.03609085e+00],
+            [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 4.68049763e+01]
+        ]
+    )
+    concrete = MaterialMacroInfo(dummy, 3600.0, {"Te": 1.0}, name="concrete")
+    concrete._set_sigma(
+        [4.12742084, 7.42553891, 8.24183468, 8.29305646],
+        [
+            [3.56412195e+00, 3.10469266e-03, 1.86354209e-07, 9.59501248e-11],
+            [0.00000000e+00, 7.17103718e+00, 2.01902003e-02, 3.70852436e-06],
+            [0.00000000e+00, 0.00000000e+00, 7.95579530e+00, 2.28258235e-02],
+            [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 7.98194881e+00]
+        ]
+    )
+    incoming_flux = 100.0
+    neutron_profile = NeutronFluxProfile(
+        incoming_flux,
+        np.cumsum([0.05, 0.3, 0.2, 0.4]),
+        [tungsten, lithium, ss316, concrete]
+    )
+    neutron_profile.solve()
+    assert np.isclose(
+        neutron_profile.groupwise_neutron_flux_in_layer(
+            0, 0, neutron_profile.extended_boundary[0]
+        ),
+        0,
+    ), "Extended boundary condition check for group 0"
+    assert np.isclose(
+        neutron_profile.groupwise_neutron_flux_in_layer(
+            1, 0, neutron_profile.extended_boundary[1]
+        ),
+        0,
+    ), "Extended boundary condition check for group 1"
+    assert np.isclose(
+        neutron_profile.groupwise_neutron_flux_in_layer(
+            2, 0, neutron_profile.extended_boundary[2]
+        ),
+        0,
+    ), "Extended boundary condition check for group 2"
+    assert np.isclose(
+        neutron_profile.groupwise_neutron_flux_in_layer(
+            3, 0, neutron_profile.extended_boundary[3]
+        ),
+        0,
+    ), "Extended boundary condition check for group 3"
+
+    num_layer = 0
+    mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
+    for n in range(neutron_profile.n_groups):
+        diffusion_out, total_removal, source_in = _diffusion_equation_in_layer(
+            neutron_profile, n, 0, mid_point
+        )
+        assert np.isclose(diffusion_out, total_removal - source_in), (
+            "Check that the diffusion equation holds up at an arbitrary point."
+        )
+    assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
+    removal_xs = [
+        mat.sigma_t - mat.sigma_s.sum(axis=1) - mat.sigma_in.sum(axis=1)
+        for mat in neutron_profile.materials
+    ]
+    assert np.isclose(
+        sum(neutron_profile.fluxes),
+        neutron_profile.neutron_current_escaped()
+        + sum(
+            sum(
+                removal_xs[num_layer][n]
+                * neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer)
+                for n in range(neutron_profile.n_groups)
+            )
+            for num_layer in range(neutron_profile.n_layers)
+        ),
+    ), "Conservation of neutrons"
