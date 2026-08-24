@@ -17,6 +17,7 @@ class PlasmaFuelling(Model):
         self.mfile = constants.MFILE
 
     def run(self):
+        """Run the plasma fuelling model calculations."""
         self.data.physics.molflow_plasma_fuelling_vv_injected_moles = (
             self.data.physics.molflow_plasma_fuelling_vv_injected
             / constants.AVOGADRO_NUMBER
@@ -53,7 +54,7 @@ class PlasmaFuelling(Model):
         )
 
     def output(self):
-        """This model doesn't output to the output file, but it does generate contour
+        """Model doesn't output to the output file, but it does generate contour
         plots of plasma fuel flow rates vs recycling and fuelling efficiency.
         """
 
