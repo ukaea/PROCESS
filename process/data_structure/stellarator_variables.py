@@ -1,6 +1,33 @@
 """Module containing variables for the stellarator models"""
 
 from dataclasses import dataclass
+from enum import IntEnum, unique
+
+
+@unique
+class StellaratorModel(IntEnum):
+    """Enum for stellarator models"""
+
+    TOKAMAK = 0
+    """Tokamak model"""
+
+    HELIAS_5 = 1
+    """Helias5 stellarator model"""
+
+    HELIAS_4 = 2
+    """Helias4 stellarator model"""
+
+    HELIAS_3 = 3
+    """Helias3 stellarator model"""
+
+    W7X_50_COILS = 4
+    """Wendelstein 7-X stellarator model with 50 coils"""
+
+    W7X_30_COILS = 5
+    """Wendelstein 7-X stellarator model with 30 coils"""
+
+    CUSTOM = 6
+    """Custom stellarator model using stella_conf.json file"""
 
 
 @dataclass(slots=True)
@@ -44,14 +71,14 @@ class StellaratorData:
     """Coil major radius (m)"""
 
     istell: int = 0
-    """Switch for stellarator option (set via `device.dat`):
-        - =0 use tokamak model
-        - =1 use stellarator model: Helias5
-        - =2 use stellarator model: Helias4
-        - =3 use stellarator model: Helias3
-        - =4 use stellarator model: Wendelstein 7-X with 50 Coils
-        - =5 use stellarator model: Wendelstein 7-X with 30 Coils
-        - =6 use stellarator model: Use stella_conf.json file (any modulear stellarator, see documentation)
+    """Switch for stellarator option `StellaratorModel` (set via `device.dat`):
+        - `StellaratorModel.TOKAMAK` use tokamak model
+        - `StellaratorModel.HELIAS_5` use stellarator model: Helias5
+        - `StellaratorModel.HELIAS_4` use stellarator model: Helias4
+        - `StellaratorModel.HELIAS_3` use stellarator model: Helias3
+        - `StellaratorModel.W7X_50_COILS` use stellarator model: Wendelstein 7-X with 50 Coils
+        - `StellaratorModel.W7X_30_COILS` use stellarator model: Wendelstein 7-X with 30 Coils
+        - `StellaratorModel.CUSTOM` use stellarator model: Use stella_conf.json file (any modular stellarator, see documentation)
     """
 
     bmn: float = 1e-3
