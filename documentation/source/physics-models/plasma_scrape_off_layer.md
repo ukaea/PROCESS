@@ -95,6 +95,7 @@ Here $B_{\text{T,0}}$ is the on axis toroidal magnetic field, $q_{\text{cyl}}$ i
 
 This can be found in Table 2 from Eich et.al [^eich_2011]
 
+The scaling is done for type-I ELMy H-mode plasmas
 
 ----------
 
@@ -109,6 +110,8 @@ $$
 Here $B_{\text{T,0}}$ is the on axis toroidal magnetic field, $q_{\text{cyl}}$ is the cylindrical safety factor, $P_{\text{sep}}$ is the plasma separatrix power in $\text{MW}$ and $R_0$ is the plasma major radius.
 
 This can be found in Table 2 from Eich et.al [^eich_2011]
+
+The scaling is done for type-I ELMy H-mode plasmas
 
 ------------------
 

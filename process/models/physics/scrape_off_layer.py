@@ -373,6 +373,7 @@ class ScrapeOffLayer(Model):
         Notes
         -----
         - The fit values can be found in Table 2 of [1].
+        - The scaling is done for type-I ELMy H-mode plasmas
 
         References
         ----------
@@ -418,6 +419,7 @@ class ScrapeOffLayer(Model):
         Notes
         -----
         - The fit values can be found in Table 2 of [1].
+        - The scaling is done for type-I ELMy H-mode plasmas
 
         References
         ----------

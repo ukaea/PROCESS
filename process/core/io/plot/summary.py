@@ -24,10 +24,8 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.data_structure.physics_variables import (
-    (
     ConfinementTimeModel,
     DivertorNumberModels,
-),
     OutbordSOLPowerDecayLengthModel,
 )
 from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
