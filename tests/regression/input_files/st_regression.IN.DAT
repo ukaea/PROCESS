@@ -625,10 +625,6 @@ f_p_plasma_separatrix_rad_max  = 0.64
 * DESCRIPTION:   Fraction of alpha power deposited to plasma
 * JUSTIFICATION: Using default = 0.95
 
-*burnup_in = 
-* DESCRIPTION:   User input plasma fuel burnup fraction
-* JUSTIFICATION: Turned off, allow to be calculated in-situ
-
 ixc = 135
 f_nd_impurity_electrons(13) = 0.0005
 *boundl(135) = 0.000495

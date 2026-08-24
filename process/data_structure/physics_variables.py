@@ -652,9 +652,6 @@ class PhysicsData:
     f_plasma_deuterium_burnup: float = 0.0
     """Deuterium burnup fraction in plasma"""
 
-    burnup_in: float = 0.0
-    """fractional plasma burnup user input"""
-
     b_plasma_vertical_required: float = 0.0
     """Vertical field needed for plasma equilibrium (Bᵥ) [T]"""
 

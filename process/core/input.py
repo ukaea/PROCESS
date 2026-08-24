@@ -169,7 +169,6 @@ INPUT_VARIABLES = {
     "beta_vol_avg_min": InputVariable("physics", float, range=(0.0, 1.0)),
     "betbm0": InputVariable("physics", float, range=(0.0, 10.0)),
     "b_plasma_toroidal_on_axis": InputVariable("physics", float, range=(0.0, 30.0)),
-    "burnup_in": InputVariable("physics", float, range=(0.0, 1.0)),
     "radius_plasma_core_norm": InputVariable(
         "impurity_radiation", float, range=(0.0, 1.0)
     ),
