@@ -1,6 +1,7 @@
 """Module to initialise variables relevant to stellarators."""
 
 from process.core.model import DataStructure
+from process.data_structure.stellarator_variables import StellaratorModel
 
 
 def st_init(data: DataStructure):
@@ -10,7 +11,7 @@ def st_init(data: DataStructure):
     Many of these may override the values set in routine
 
     """
-    if data.stellarator.istell == 0:
+    if data.stellarator.istell == StellaratorModel.TOKAMAK:
         return
 
     data.numerics.boundu[0] = 40.0  # allow higher aspect ratio

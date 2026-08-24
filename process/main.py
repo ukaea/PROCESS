@@ -51,6 +51,7 @@ from process.core.scan import Scan
 from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.cost_variables import CostModels
 from process.data_structure.numerics import PROCESSRunMode
+from process.data_structure.stellarator_variables import StellaratorModel
 from process.models.availability import Availability
 from process.models.blankets.blanket_library import BlanketLibrary
 from process.models.blankets.dcll import DCLL
@@ -856,7 +857,7 @@ class Models:
         logging_model_handler.clear_logs()
 
         # Call stellarator output routine instead if relevant
-        if data.stellarator.istell != 0:
+        if data.stellarator.istell != StellaratorModel.TOKAMAK:
             self.stellarator.output()
             return
 

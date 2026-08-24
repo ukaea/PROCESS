@@ -17,6 +17,7 @@ from process.data_structure.physics_variables import (
     ConfinementTimeModel,
     PlasmaIgnitionModel,
 )
+from process.data_structure.stellarator_variables import StellaratorModel
 from process.models.physics.plasma_geometry import PlasmaGeom
 
 logger = logging.getLogger(__name__)
@@ -1385,7 +1386,9 @@ class PlasmaConfinementTime(Model):
         # Start from range 1 as the first i_confinement_time is a user input
         # If stellarator, use the stellarator scalings
         for i_confinement_time in (
-            range(1, N_CONFINEMENT_SCALINGS) if istell == 0 else stellarator_scalings
+            range(1, N_CONFINEMENT_SCALINGS)
+            if istell == StellaratorModel.TOKAMAK
+            else stellarator_scalings
         ):
             if i_confinement_time == 25:
                 continue
