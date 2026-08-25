@@ -2,7 +2,7 @@
 
 As well as magnetic confinement devices, `PROCESS` has the ability to model inertial fusion plants, in which a laser or ion beam is used to ignite a target pellet containing the fusion fuel.
 
-To activate the inertial fusion energy (IFE) coding, it is necessary to create a file `device.dat`, containing the single character 3 in the first row, in the working directory. This has the effect of setting the internally-used switch `ife = 1`. If the file is absent, or its first character is set to something other than 3, the IFE model is not used, and `ife` is set to 0.
+To activate the inertial fusion energy (IFE) coding, set switch `ife = 1`.
 
 The IFE model[^1] is controlled using two additional switches.
 

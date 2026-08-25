@@ -71,7 +71,7 @@ class StellaratorData:
     """Coil major radius (m)"""
 
     istell: int = 0
-    """Switch for stellarator option `StellaratorModel` (set via `device.dat`):
+    """Switch for stellarator option `StellaratorModel`:
         - `StellaratorModel.DISABLED` use tokamak model
         - `StellaratorModel.HELIAS_5` use stellarator model: Helias5
         - `StellaratorModel.HELIAS_4` use stellarator model: Helias4
