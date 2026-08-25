@@ -8,7 +8,7 @@ The model is largely based on W7-X and the HELIAS 5-B stellarator power plant de
 
 *Figure 1: Fusion power core of the HELIAS 5-B conceptual power plant design*[^1]
 
-To activate the stellarator coding, it is necessary to create a file `device.dat`, containing the single character 1 in the first row, in the working directory. This has the effect of setting the internally-used switch `istell = 1/StellaratorModel.HELIAS_5`. If the file is absent, or its first character is set to something other than 1, the stellarator model is not used, and `istell` is set to `0/StellaratorModel.DISABLED`.
+To activate the stellarator coding, set switch `istell` to correspond to a particular stellarator model, which are detailed below.
 
 ## Stellarators in PROCESS
 
@@ -32,7 +32,7 @@ The user can switch between these models by using the switch variable `istell`:
  - `istell=3`: Helias-3
  - `istell=4`: W7-X
  - `istell=5`: A W7-X variation with 30 coils
- - `istell-6`: Use the `stella_conf.json` file.
+ - `istell=6`: Use the `stella_conf.json` file.
 
 The stellarator version of PROCESS assumes the coil-set itself to be **fixed in shape** and can only scale the *overall* size of the machine in major radius `rmajor`. There is no capability in PROCESS to separately scale the minor coil radius -- in other words: the coil aspect ratio is fixed. Also the number of coils is considered fixed and is given by the configuration.
 
