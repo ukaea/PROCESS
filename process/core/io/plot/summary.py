@@ -3206,6 +3206,50 @@ def plot_main_plasma_information(
     )
 
 
+def plot_cs_current_over_time(
+    axis: plt.Axes,
+    mfile: MFile,
+    scan: int,
+):
+    """Plots the CS coil current profile over time, when available."""
+    pulse_timings = PulseTimings(
+        t_plant_pulse_coil_precharge=mfile.get(
+            "t_plant_pulse_coil_precharge", scan=scan
+        ),
+        t_plant_pulse_plasma_current_ramp_up=mfile.get(
+            "t_plant_pulse_plasma_current_ramp_up", scan=scan
+        ),
+        t_plant_pulse_fusion_ramp=mfile.get("t_plant_pulse_fusion_ramp", scan=scan),
+        t_plant_pulse_burn=mfile.get("t_plant_pulse_burn", scan=scan),
+        t_plant_pulse_plasma_current_ramp_down=mfile.get(
+            "t_plant_pulse_plasma_current_ramp_down", scan=scan
+        ),
+        t_plant_pulse_dwell=mfile.get("t_plant_pulse_dwell", scan=scan),
+    )
+
+    try:
+        cs_circuit = [
+            mfile.get(f"cs_t{i}", scan=scan)
+            for i in range(pulse_timings.n_pf_active_points_total)
+        ]
+        axis.plot(
+            pulse_timings.pf_active_cumulative,
+            cs_circuit,
+            label="CS Coil",
+            linestyle="--",
+        )
+        # Add a legend
+        axis.legend()
+        # Add a grid for better readability
+        axis.grid(True, linestyle="--", alpha=0.6)
+        axis.axhline(0, color="black", linewidth=2)
+        axis.tick_params(axis="x", labelbottom=False)
+        axis.set_ylabel("Current [A]", fontsize=12)
+
+    except KeyError:
+        pass
+
+
 def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     """Plots the current profiles over time for PF circuits, CS coil, and plasma."""
     pulse_timings = PulseTimings(
@@ -3242,21 +3286,6 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
             linestyle="--",
         )
 
-    # Since CS may not always be present try to retrieve values
-    try:
-        cs_circuit = [
-            mfile.get(f"cs_t{i}", scan=scan)
-            for i in range(pulse_timings.n_pf_active_points_total)
-        ]
-        axis.plot(
-            pulse_timings.pf_active_cumulative,
-            cs_circuit,
-            label="CS Coil",
-            linestyle="--",
-        )
-    except KeyError:
-        pass
-
     # Plasma current values
     plasmat1 = mfile.get("plasmat1", scan=scan)
     plasmat2 = mfile.get("plasmat2", scan=scan)
@@ -3286,6 +3315,10 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
         ],  # Exclude the last label as it corresponds to the dwell period
         rotation=60,
     )
+    # Stagger adjacent labels onto two rows so closely spaced pulse events remain
+    # readable without moving their ticks away from the event times.
+    for index, label in enumerate(secax.get_xticklabels()):
+        label.set_y(0.12 if index % 2 else -0.02)
     secax.tick_params(axis="x", which="major")
 
     # Add axis labels
@@ -3293,14 +3326,8 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     axis.xaxis.set_label_coords(1.05, 0.5)
     axis.set_ylabel("Current [A]", fontsize=12)
 
-    # Add a title
-    axis.set_title("Current Profiles Over Time", fontsize=14)
-
     # Add a legend
     axis.legend()
-
-    axis.set_yscale("symlog")
-
     # Add a grid for better readability
     axis.grid(True, linestyle="--", alpha=0.6)
 
@@ -16951,7 +16978,18 @@ def main_plot(
         colour_scheme=colour_scheme,
     )
 
-    plot_current_profiles_over_time(_add_page().add_subplot(111), m_file, scan)
+    # Use the current-profile axis as the shared x-axis so that the CS current
+    # is aligned with the PF and plasma current profiles below it.
+    current_profiles_axis = _add_page("poloidal_current_profiles").add_subplot(212)
+    plot_current_profiles_over_time(current_profiles_axis, m_file, scan)
+    plot_cs_current_over_time(
+        pages["poloidal_current_profiles"].add_subplot(
+            211, sharex=current_profiles_axis
+        ),
+        m_file,
+        scan,
+    )
+    pages["poloidal_current_profiles"].subplots_adjust(hspace=0.05)
 
     plot_pf_cs_plasma_mutual_inductance(_add_page().add_subplot(111), m_file, scan)
 
