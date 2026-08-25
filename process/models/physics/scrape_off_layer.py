@@ -95,6 +95,7 @@ class ScrapeOffLayer(Model):
 
         self.data.physics.pflux_plasma_outboard_sol_parallel_mw = (
             self.data.physics.p_plasma_separatrix_mw
+            * self.data.physics.f_p_div_outboard_separatrix
             / self.data.physics.a_plasma_outboard_sol_parallel
         )
 

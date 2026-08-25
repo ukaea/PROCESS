@@ -1760,7 +1760,7 @@ class PhysicsData:
     - =2 MAST 2014 scaling 1
     - =3 MAST 2014 scaling 2
     """
-    
+
     f_b_div_outboard_lower_flux_expansion: float = 5.0
     """Outboard lower divertor flux expansion factor for the divertor targets (fₓ)"""
 
