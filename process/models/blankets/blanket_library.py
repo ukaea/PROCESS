@@ -26,6 +26,7 @@ from process.models.engineering.pumping import (
     calculate_required_mass_flow_rate,
     coolant_friction_pressure_drop,
     coolant_pumping_power,
+    pipe_hydraulic_diameter,
 )
 from process.models.fw import N_FW_PIPE_90_DEG_BENDS, N_FW_PIPE_180_DEG_BENDS
 from process.models.power import PumpingPowerModelTypes
@@ -3255,7 +3256,7 @@ class BlanketLibrary(Model):
         return liquid_breeder_pressure_drop_mhd
 
     def output_outboard_blkt_pumping_variables(self):
-
+        """Output the outboard blanket pumping variables to the output file."""
         po.oheadr(self.outfile, "Outboard Blanket pumping variables")
 
         po.ovarre(
@@ -3421,7 +3422,7 @@ class BlanketLibrary(Model):
         )
 
     def output_inboard_blkt_pumping_variables(self):
-
+        """Output the inboard blanket pumping variables to the output file."""
         po.oheadr(self.outfile, "Inboard Blanket pumping variables")
 
         po.ovarre(
@@ -3595,7 +3596,7 @@ class OutboardBlanket(BlanketLibrary):
         """Calculate basic outboard blanket geometry"""
         self.component_volumes()
 
-        dia_blkt_channel = self.pipe_hydraulic_diameter(
+        dia_blkt_channel = pipe_hydraulic_diameter(
             i_channel_shape=1,
             radius_fw_channel=self.data.fwbs.radius_fw_channel,
             a_bz_liq=self.data.fwbs.a_bz_liq,
@@ -3731,7 +3732,7 @@ class InboardBlanket(BlanketLibrary):
         """Calculate basic inboard blanket geometry"""
         self.component_volumes()
 
-        dia_blkt_channel = self.pipe_hydraulic_diameter(
+        dia_blkt_channel = pipe_hydraulic_diameter(
             i_channel_shape=1,
             radius_fw_channel=self.data.fwbs.radius_fw_channel,
             a_bz_liq=self.data.fwbs.a_bz_liq,
