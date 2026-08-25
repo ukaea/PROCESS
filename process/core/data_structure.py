@@ -1,3 +1,5 @@
+"""The PROCESS data structure dataclass."""
+
 from dataclasses import dataclass, fields
 
 from process.data_structure.blanket_variables import BlanketData
@@ -44,6 +46,8 @@ initialise_later = object()
 
 @dataclass(kw_only=True)
 class DataStructure:
+    """Dataclass holding the data structure"""
+
     water_use: WaterUseData = initialise_later
     costs_2015: Cost2015Data = initialise_later
     cs_fatigue: CSFatigueData = initialise_later
@@ -82,6 +86,7 @@ class DataStructure:
     numerics: NumericsData = initialise_later
 
     def __post_init__(self):
+        """Set up the data structure"""
         for f in fields(self):
             if getattr(self, f.name) is initialise_later:
                 setattr(self, f.name, f.type())
