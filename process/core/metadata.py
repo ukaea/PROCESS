@@ -2,13 +2,13 @@ import inspect
 from collections.abc import Generator
 from copy import deepcopy
 from dataclasses import asdict, dataclass, fields
-from typing import Annotated, Generic, get_args, get_origin
+from typing import Annotated, Any, Generic, get_args, get_origin
 
 import numpy as np
 from parameter_frame import Parameter as DefaultParameter
 from parameter_frame import ParameterValueType
 
-KEEP_EDIT_USE_RECORDS = True
+KEEP_EDIT_USE_RECORDS = False
 
 
 @dataclass(slots=True, kw_only=True, frozen=True)
@@ -22,7 +22,7 @@ class UseRecord:
 
 @dataclass(slots=True, kw_only=True, frozen=True)
 class EditRecord(UseRecord):
-    new_value: ParameterValueType
+    new_value: Any
 
 
 class Parameter(DefaultParameter, Generic[ParameterValueType]):
@@ -80,10 +80,18 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
 
     @property
     def edit_records(self) -> list[EditRecord]:
+        if not KEEP_EDIT_USE_RECORDS:
+            raise RuntimeError(
+                f"Edit records are disabled because {KEEP_EDIT_USE_RECORDS = }"
+            )
         return deepcopy(self._edited)
 
     @property
     def usage_records(self) -> list[UseRecord]:
+        if not KEEP_EDIT_USE_RECORDS:
+            raise RuntimeError(
+                f"Usage records are disabled because {KEEP_EDIT_USE_RECORDS = }"
+            )
         return deepcopy(self._used)
 
 
