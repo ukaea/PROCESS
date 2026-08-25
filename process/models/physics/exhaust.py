@@ -9,6 +9,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure.physics_variables import DivertorNumberModels
+from process.data_structure.stellarator_variables import StellaratorModel
 
 logger = logging.getLogger(__name__)
 
@@ -249,7 +250,7 @@ class PlasmaExhaust(Model):
 
     def output_brunner_divertor_power_splits(self):
         """Output the Brunner divertor power splits to the output file."""
-        if self.data.stellarator.istell == 0:
+        if self.data.stellarator.istell == StellaratorModel.DISABLED:
             po.osubhd(self.outfile, "Brunner Divertor Power Splits:")
 
             for op in [

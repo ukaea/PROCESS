@@ -16,6 +16,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.data_structure.stellarator_variables import StellaratorModel
 from process.models.physics.plasma_geometry import PlasmaGeometryModelType
 
 logger = logging.getLogger(__name__)
@@ -80,7 +81,7 @@ class PlasmaCurrent(Model):
         """Output plasma current and safety factor information."""
         po.oheadr(self.outfile, "Plasma Current and Safety Factor")
 
-        if self.data.stellarator.istell == 0:
+        if self.data.stellarator.istell == StellaratorModel.DISABLED:
             po.oblnkl(self.outfile)
             po.ovarre(
                 self.outfile,
@@ -148,7 +149,7 @@ class PlasmaCurrent(Model):
                 "OP ",
             )
 
-        if self.data.stellarator.istell == 0:
+        if self.data.stellarator.istell == StellaratorModel.DISABLED:
             po.ovarre(
                 self.outfile, "Safety factor on axis (q₀)", "(q0)", self.data.physics.q0
             )

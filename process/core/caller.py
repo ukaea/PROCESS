@@ -17,6 +17,7 @@ from process.core.solver.iteration_variables import set_scaled_iteration_variabl
 from process.core.solver.objectives import objective_function
 from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.numerics import PROCESSRunMode
+from process.data_structure.stellarator_variables import StellaratorModel
 from process.models.tfcoil.base import TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
@@ -269,7 +270,7 @@ class Caller:
 
         # Perform the various function calls
         # Stellarator caller
-        if self.data.stellarator.istell != 0:
+        if self.data.stellarator.istell != StellaratorModel.DISABLED:
             self.models.stellarator.run()
             # TODO Is this return safe?
             return

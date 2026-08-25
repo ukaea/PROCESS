@@ -8,14 +8,14 @@ The model is largely based on W7-X and the HELIAS 5-B stellarator power plant de
 
 *Figure 1: Fusion power core of the HELIAS 5-B conceptual power plant design*[^1]
 
-To activate the stellarator coding, it is necessary to create a file `device.dat`, containing the single character 1 in the first row, in the working directory. This has the effect of setting the internally-used switch `istell = 1`. If the file is absent, or its first character is set to something other than 1, the stellarator model is not used, and `istell` is set to 0.
+To activate the stellarator coding, it is necessary to create a file `device.dat`, containing the single character 1 in the first row, in the working directory. This has the effect of setting the internally-used switch `istell = 1/StellaratorModel.HELIAS_5`. If the file is absent, or its first character is set to something other than 1, the stellarator model is not used, and `istell` is set to `0/StellaratorModel.DISABLED`.
 
 ## Stellarators in PROCESS
 
 PROCESS can model any module stellarator reactor when provided with a dedicated input file.
 The procedure use is based on the prescription described in [^6], using a set of pre-calculated parameters which needs to be provided by a file with the name `stella_conf.json` which can be calculated by the `pre-sPROCESS` code [^6].
-This functionality is enabled by `istell=6`, and PROCESS will then expect the configuration file `stella_conf.json` in the same directory as the input file. 
-Using `istell=6` is the advised way to use the stellarator version of PROCESS as no hardcoded stellarator-parameters are being used in this case.
+This functionality is enabled by `istell=6/StellaratorModel.CUSTOM`, and PROCESS will then expect the configuration file `stella_conf.json` in the same directory as the input file. 
+Using `istell=StellaratorModel.CUSTOM` is the advised way to use the stellarator version of PROCESS as no hardcoded stellarator-parameters are being used in this case.
 
 Nevertheless, there are four types of stellarators which can be used without providing the configuration file, a HELIAS type stellarator with 3, 4 or 5 field periods as described in the collected paper [^13], and a W7-X like stellarator.
 

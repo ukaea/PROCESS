@@ -10,6 +10,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.data_structure.stellarator_variables import StellaratorModel
 
 logger = logging.getLogger(__name__)
 
@@ -523,7 +524,7 @@ class PlasmaGeom(Model):
         """
         po.oheadr(self.outfile, "Plasma Geometry")
 
-        if self.data.stellarator.istell == 0:
+        if self.data.stellarator.istell == StellaratorModel.DISABLED:
             if self.data.divertor.n_divertors == 0:
                 po.ocmmnt(self.outfile, "Plasma configuration = limiter")
             elif self.data.divertor.n_divertors == 1:
@@ -538,7 +539,7 @@ class PlasmaGeom(Model):
         else:
             po.ocmmnt(self.outfile, "Plasma configuration = stellarator")
 
-        if self.data.stellarator.istell == 0:
+        if self.data.stellarator.istell == StellaratorModel.DISABLED:
             if self.data.physics.itart == 0:
                 self.data.physics.itart_r = self.data.physics.itart
                 po.ovarre(
@@ -606,7 +607,7 @@ class PlasmaGeom(Model):
         po.oblnkl(self.outfile)
         geom_type = PlasmaGeometryModelType(self.data.physics.i_plasma_geometry)
 
-        if self.data.stellarator.istell == 0:
+        if self.data.stellarator.istell == StellaratorModel.DISABLED:
             po.ocmmnt(
                 self.outfile,
                 f"X-Point Elongation set from: {geom_type.kappa_model.description}",

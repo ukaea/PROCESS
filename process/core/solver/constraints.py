@@ -12,6 +12,7 @@ from process.core import constants, process_output
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.core.model import DataStructure
 from process.data_structure.build_variables import TFCSRadialConfiguration
+from process.data_structure.stellarator_variables import StellaratorModel
 from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.physics import (
@@ -658,7 +659,7 @@ def constraint_equation_17(constraint_registration, data):
     f_p_plasma_separatrix_rad_max: maximum allowed plasma radiation fraction at the
     separatrix
     """
-    if data.stellarator.istell != 0:
+    if data.stellarator.istell != StellaratorModel.DISABLED:
         # Remove the contribution of psolradmw from f_p_plasma_separatrix_rad
         # TODO: this is replicating behaviour before #4299
         # is this really what should happen?
@@ -802,7 +803,7 @@ def constraint_equation_24(constraint_registration, data):
     # Include all beta components: relevant for both tokamaks and stellarators
     if (
         data.physics.i_beta_component == BetaComponentLimits.TOTAL
-        or data.stellarator.istell != 0
+        or data.stellarator.istell != StellaratorModel.DISABLED
     ):
         value = data.physics.beta_total_vol_avg
     # Here, the beta limit applies to only the thermal component,
