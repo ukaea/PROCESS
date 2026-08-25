@@ -39,6 +39,8 @@ from numpy import typing as npt
 from process.core.exceptions import ProcessValidationError, ProcessValueError
 from process.models.neutronics.data import N_A, MaterialMacroInfo
 
+negexp = lambda x: np.exp(-x)
+
 def summarize_values(func):
     """
     Keep groupwise_func unchanged, but create a new method under a similar name
@@ -481,7 +483,7 @@ class NeutronFluxProfile:
         abs_x = abs(x)
         if self.materials[num_layer].l2[n] > 0:
             l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
-            c, s = np.cosh, np.sinh
+            c, s = negexp, np.exp
         else:
             l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
             c, s = np.cos, np.sin
@@ -497,7 +499,7 @@ class NeutronFluxProfile:
         abs_x = abs(x)
         if self.materials[num_layer].l2[n] > 0:
             l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
-            return np.array([np.sinh(abs_x / l) / l, np.cosh(abs_x / l) / l])
+            return np.array([-negexp(abs_x / l) / l, np.exp(abs_x / l) / l])
         l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
         return np.array([-np.sin(abs_x / l) / l, np.cos(abs_x / l) / l])
 
@@ -511,8 +513,8 @@ class NeutronFluxProfile:
         if self.materials[num_layer].l2[n] > 0:
             l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([
-                l * (np.sinh(x_upper / l) - np.sinh(x_lower / l)),
-                l * (np.cosh(x_upper / l) - np.cosh(x_lower / l)),
+                -l* (negexp(x_upper / l) - negexp(x_lower / l)),
+                l * (np.exp(x_upper / l) - np.exp(x_lower / l)),
             ])
         l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
         return np.array([
@@ -535,7 +537,7 @@ class NeutronFluxProfile:
         ):
             l2 = self.materials[num_layer].l2[g]
             l = np.sqrt(abs(l2))  # noqa: E741
-            c, s = (np.cosh, np.sinh) if l2 > 0 else (np.cos, np.sin)
+            c, s = (negexp, np.exp) if l2 > 0 else (np.cos, np.sin)
             trig_funcs.append(
                 cs_coefs @ np.array([c(abs_x / l) / l2, s(abs_x / l) / l2])
             )
