@@ -9354,23 +9354,18 @@ def plot_midplane_near_sol_radial_profile(axis: plt.Axes, mfile: MFile, scan: in
     """Function to plot the radial profile of the near SOL at the midplane."""
     rmajor = mfile.get("rmajor", scan=scan)
     rminor = mfile.get("rminor", scan=scan)
-    len_plasma_sol_power_decay = mfile.get(
-        "len_plasma_sol_eich13_power_decay", scan=scan
-    )
-    r = np.linspace(
-        (rmajor + rminor), (rmajor + rminor) + (3 * len_plasma_sol_power_decay), 100
-    )
     len_sol_outboard_power_decay = mfile.get("len_sol_outboard_power_decay", scan=scan)
+    r = np.linspace(
+        (rmajor + rminor), (rmajor + rminor) + (3 * len_sol_outboard_power_decay), 100
+    )
 
     radial_profile = (
         ScrapeOffLayer().calculate_outboard_midplane_near_sol_radial_profile(
             rmajor=rmajor,
             rminor=rminor,
-            len_plasma_sol_power_decay=mfile.get(
-                "len_plasma_sol_eich13_power_decay", scan=scan
-            ),
+            len_plasma_sol_power_decay=len_sol_outboard_power_decay,
             pflux_plasma_outboard_sol_parallel_mw=mfile.get(
-                "pflux_plasma_outboard_sol_eich13_parallel_mw", scan=scan
+                "pflux_plasma_outboard_sol_parallel_mw", scan=scan
             ),
             r=r,
         )
@@ -9401,6 +9396,9 @@ def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, sc
     len_plasma_sol_power_decay = mfile.get(
         "len_plasma_sol_eich13_power_decay", scan=scan
     )
+    len_div_outboard_lower_power_spreading = mfile.get(
+        "len_div_outboard_lower_power_spreading", scan=scan
+    )
     f_b_flux_expansion = 5.0
     r = np.linspace(
         (rmajor + rminor) - (1.5 * len_plasma_sol_power_decay) * f_b_flux_expansion,
@@ -9416,8 +9414,8 @@ def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, sc
         ),
         len_plasma_sol_power_decay=mfile.get("len_sol_outboard_power_decay", scan=scan),
         f_b_div_flux_expansion=f_b_flux_expansion,
-        len_plasma_sol_power_spreading=1.5e-3,
-        plux_target_background_heat_flux_mw=0.0,
+        len_plasma_sol_power_spreading=len_div_outboard_lower_power_spreading,
+        pflux_target_background_heat_flux_mw=0.0,
         r=r,
     )
     peak_idx = np.argmax(pflux_target_profile)
@@ -9430,7 +9428,7 @@ def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, sc
     axis.text(
         0.02,
         0.98,
-        rf"$f_x$ = {f_b_flux_expansion:.2f}",
+        f"$f_x$ = {f_b_flux_expansion:.2f}\n$S$ = {len_div_outboard_lower_power_spreading * 1e3:.3f} mm",
         transform=axis.transAxes,
         ha="left",
         va="top",

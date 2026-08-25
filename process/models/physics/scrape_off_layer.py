@@ -441,10 +441,10 @@ class ScrapeOffLayer(Model):
         len_plasma_sol_power_decay: float,
         f_b_div_flux_expansion: float,
         len_plasma_sol_power_spreading: float,
-        plux_target_background_heat_flux_mw: float,
+        pflux_target_background_heat_flux_mw: float,
         r: float | np.ndarray,
     ) -> float | np.ndarray:
-        """Calculate the Eich target heat flux profile (qₜ(r)) [MW/m²].
+        """Calculate the Eich parallel target heat flux profile (qₗₗ,ₜ(r)) [MW/m²].
 
         Parameters
         ----------
@@ -460,7 +460,7 @@ class ScrapeOffLayer(Model):
             Divertor flux expansion factor (fₓ) [-]
         len_plasma_sol_power_spreading : float
             Power spreading length in the divertor (S) [m]
-        plux_target_background_heat_flux_mw : float
+        pflux_target_background_heat_flux_mw : float
             Background heat flux at the divertor target [MW/m²]
         r : float|np.ndarray
             Radial position(s) at which to calculate the target heat flux profile [m]
@@ -468,11 +468,11 @@ class ScrapeOffLayer(Model):
         Returns
         -------
         float|np.ndarray
-            Eich target heat flux profile (qₜ(r)) [MW/m²]
+            Eich parallel target heat flux profile (qₗₗ,ₜ(r)) [MW/m²]
 
         Notes
         -----
-        - The Eich target heat flux profile is derived from the midplane exponential
+        - The Eich parallel target heat flux profile is derived from the midplane exponential
         profile, taking into account the magnetic geometry and flux expansion between
         the midplane and the divertor target. The profile is typically characterized by
         a combination of an exponential decay and a Gaussian spreading due to cross-field
@@ -511,7 +511,7 @@ class ScrapeOffLayer(Model):
                 * f_b_div_flux_expansion
                 / (len_plasma_sol_power_spreading)
             )
-        ) + plux_target_background_heat_flux_mw
+        ) + pflux_target_background_heat_flux_mw
 
     @staticmethod
     def calculate_scarabosio2014_power_spreading_factor(
