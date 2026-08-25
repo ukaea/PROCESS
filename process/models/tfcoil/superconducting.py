@@ -2289,15 +2289,26 @@ class TFGeneralTurnGeometry:
     """General turn geometry info needed for all TF turn types."""
 
     a_tf_turn_cable_space_no_void: float
+    """Cable space area (per turn)  [m2]
+    Includes the area of voids and central helium channel
+    """
     a_tf_turn_steel: float
+    """Area of the cable conduit [m2]"""
     a_tf_turn_insulation: float
+    """Single turn insulation area [m2]"""
     n_tf_coil_turns: int
+    """Number of turns per TF coil"""
     c_tf_turn: float
+    """TF coil current per turn (A)"""
     dx_tf_turn_general: float
+    """TF coil turn edge length including turn insulation [m]"""
     dr_tf_turn: float
+    """Radial width of turn [m]"""
     dx_tf_turn: float
     dx_tf_turn_conduit_full_average: float
+    """Average full width of the conduit surrounding the TF turn cable space [m]"""
     dx_tf_turn_cable_space_average: float
+    """Width of cable space inside conduit (m)"""
 
 
 @dataclass(slots=True)
@@ -2305,14 +2316,23 @@ class SuperconTFAreasFractions:
     """Superconducting TF coil winding pack areas and fractions."""
 
     a_tf_wp_coolant_channels: float
+    """Winding pack He coil area [m2]"""
     a_tf_wp_conductor: float
+    """Winding pack conductor area [m2]"""
     a_tf_wp_extra_void: float
+    """Winding pack void (He coolant) area [m2]"""
     a_tf_coil_wp_turn_insulation: float
+    """Winding pack turn insulation area per coil [m2]"""
     a_tf_wp_steel: float
+    """Total area of all winding pack steel [m2]"""
     a_tf_coil_inboard_steel: float
+    """Total steel area in inboard TF coil (turn and case) [m²]"""
     f_a_tf_coil_inboard_steel: float
+    """Total steel TF fraction"""
     a_tf_coil_inboard_insulation: float
+    """Total insulation area in TF coil (turn and WP) [m²]"""
     f_a_tf_coil_inboard_insulation: float
+    """Total Insulation fraction"""
 
 
 @dataclass(slots=True)
@@ -2320,8 +2340,11 @@ class CICCAveragedTurnGeometry(TFGeneralTurnGeometry):
     """Averaged turn geometry for a CICC conductor with LTS cables."""
 
     radius_tf_turn_cable_space_corners: float
+    """Radius of turn cable space rounded corners [m]"""
     a_tf_turn_cable_space_effective: float
+    """True area of turn cable space usable by conductor [m²]"""
     f_a_tf_turn_cable_space_cooling: float
+    """Total cooling area fraction inside cable space"""
 
 
 @dataclass(slots=True)
@@ -2329,12 +2352,19 @@ class CICCIntegerTurnGeometry(TFGeneralTurnGeometry):
     """Integer turn geometry for a CICC conductor with LTS cables."""
 
     radius_tf_turn_cable_space_corners: float
+    """Radius of turn cable space rounded corners [m]"""
     dr_tf_turn_conduit_full: float
+    """Radial thickness of the full conduit around the cable space [m]"""
     dx_tf_turn_conduit_full_toroidal: float
+    """Toroidal thickness of the full conduit around the cable space [m]"""
     dr_tf_turn_cable_space: float
+    """Cable area radial and toroidal dimension (integer turn only) [m]"""
     dx_tf_turn_cable_space: float
+    """Cable area radial and toroidal dimension (integer turn only) [m]"""
     a_tf_turn_cable_space_effective: float
+    """True cable area of WP turn. This includes the removal of the cooling pipe [m²]"""
     f_a_tf_turn_cable_space_cooling: float
+    """Fraction of usable turn cable space area used for cooling"""
 
 
 class CICCSuperconductingTFCoil(SuperconductingTFCoil):
@@ -3777,10 +3807,15 @@ class CroCoCableSpaceGeometry:
     """Data class for the geometry of the cable space in a CroCo conductor."""
 
     dia_tf_turn_croco_cable: float
+    """Diameter of the Croco cable in the TF turn [m]"""
     a_tf_turn_cable_space_no_void: float
+    """Cable space area (per turn)  [m2]"""
     a_tf_turn_cable_space_effective: float
+    """True cable area of WP turn. This includes the removal of the cooling pipe [m²]"""
     a_tf_turn_steel: float
+    """Area of the cable conduit [m²]"""
     f_a_tf_turn_cable_space_cooling: float
+    """Fraction of usable turn cable space area used for cooling"""
 
 
 class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
