@@ -8,7 +8,7 @@ The model is largely based on W7-X and the HELIAS 5-B stellarator power plant de
 
 *Figure 1: Fusion power core of the HELIAS 5-B conceptual power plant design*[^1]
 
-To activate the stellarator coding, it is necessary to create a file `device.dat`, containing the single character 1 in the first row, in the working directory. This has the effect of setting the internally-used switch `istell = 1/StellaratorModel.HELIAS_5`. If the file is absent, or its first character is set to something other than 1, the stellarator model is not used, and `istell` is set to `0/StellaratorModel.TOKAMAK`.
+To activate the stellarator coding, it is necessary to create a file `device.dat`, containing the single character 1 in the first row, in the working directory. This has the effect of setting the internally-used switch `istell = 1/StellaratorModel.HELIAS_5`. If the file is absent, or its first character is set to something other than 1, the stellarator model is not used, and `istell` is set to `0/StellaratorModel.DISABLED`.
 
 ## Stellarators in PROCESS
 
