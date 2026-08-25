@@ -249,6 +249,11 @@ def pipe_hydraulic_diameter(
     i_channel_shape :
         switch for circular or rectangular channel crossection.
         Shape depends on whether primary or secondary coolant
+
+    Raises
+    ------
+    ProcessValueError
+        If i_channel_shape is not 1 or 2.
     """
     # If primary coolant then circular channels assumed
     if i_channel_shape == 1:
@@ -340,6 +345,11 @@ def coolant_pumping_power(
     -------
     float
         Pumping power in MW.
+
+    Raises
+    ------
+    ProcessValueError
+        If the pressure drops in the coolant are too large to be feasible.
 
     References
     ----------
@@ -574,6 +584,12 @@ def elbow_coeff(
     -------
     float
         Elbow coefficient for pressure drop calculation
+
+    Raises
+    ------
+    ProcessValueError
+        If deg_pipe_elbow is between 70 and 100 degrees, as no formula is
+        available for this range.
 
     References
     ----------
