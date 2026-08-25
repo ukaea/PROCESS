@@ -120,7 +120,7 @@ def test_input_choices(tmp_path, data_structure_obj):
         tmp_path, ("i_process_run_mode = -1")
     )
 
-    with pytest.raises(ProcessValidationError):
+    with pytest.raises(ProcessValidationError, match="i_process_run_mode"):
         init.init_process(data_structure_obj)
 
 
@@ -135,7 +135,7 @@ def test_input_range(tmp_path, input_file_value, data_structure_obj):
     # check that the test data doesn't change
     assert process_input.INPUT_VARIABLES["epsvmc"].range == (0.0, 1.0)
 
-    with pytest.raises(ProcessValidationError):
+    with pytest.raises(ProcessValidationError, match="epsvmc"):
         init.init_process(data_structure_obj)
 
 
@@ -144,7 +144,7 @@ def test_input_array_when_not(tmp_path, data_structure_obj):
         tmp_path, ("epsvmc(1) = 0.5")
     )
 
-    with pytest.raises(ProcessValidationError):
+    with pytest.raises(ProcessValidationError, match="epsvmc"):
         init.init_process(data_structure_obj)
 
 
@@ -153,7 +153,7 @@ def test_input_not_array_when_is(tmp_path, data_structure_obj):
         tmp_path, ("boundl = 0.5")
     )
 
-    with pytest.raises(ProcessValidationError):
+    with pytest.raises(ProcessValidationError, match="boundl"):
         init.init_process(data_structure_obj)
 
 
@@ -162,7 +162,7 @@ def test_input_float_when_int(tmp_path, data_structure_obj):
         tmp_path, ("i_process_run_mode = 0.5")
     )
 
-    with pytest.raises(ProcessValidationError):
+    with pytest.raises(ProcessValidationError, match="i_process_run_mode"):
         init.init_process(data_structure_obj)
 
 
