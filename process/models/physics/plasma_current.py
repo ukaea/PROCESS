@@ -81,7 +81,7 @@ class PlasmaCurrent(Model):
         """Output plasma current and safety factor information."""
         po.oheadr(self.outfile, "Plasma Current and Safety Factor")
 
-        if self.data.stellarator.istell == StellaratorModel.TOKAMAK:
+        if self.data.stellarator.istell == StellaratorModel.DISABLED:
             po.oblnkl(self.outfile)
             po.ovarre(
                 self.outfile,
@@ -149,7 +149,7 @@ class PlasmaCurrent(Model):
                 "OP ",
             )
 
-        if self.data.stellarator.istell == StellaratorModel.TOKAMAK:
+        if self.data.stellarator.istell == StellaratorModel.DISABLED:
             po.ovarre(
                 self.outfile, "Safety factor on axis (q₀)", "(q0)", self.data.physics.q0
             )

@@ -8,8 +8,8 @@ from enum import IntEnum, unique
 class StellaratorModel(IntEnum):
     """Enum for stellarator models"""
 
-    TOKAMAK = 0
-    """Tokamak model"""
+    DISABLED = 0
+    """Disabled stellarator model (use tokamak model)"""
 
     HELIAS_5 = 1
     """Helias5 stellarator model"""
@@ -72,7 +72,7 @@ class StellaratorData:
 
     istell: int = 0
     """Switch for stellarator option `StellaratorModel` (set via `device.dat`):
-        - `StellaratorModel.TOKAMAK` use tokamak model
+        - `StellaratorModel.DISABLED` use tokamak model
         - `StellaratorModel.HELIAS_5` use stellarator model: Helias5
         - `StellaratorModel.HELIAS_4` use stellarator model: Helias4
         - `StellaratorModel.HELIAS_3` use stellarator model: Helias3

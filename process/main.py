@@ -857,7 +857,7 @@ class Models:
         logging_model_handler.clear_logs()
 
         # Call stellarator output routine instead if relevant
-        if data.stellarator.istell != StellaratorModel.TOKAMAK:
+        if data.stellarator.istell != StellaratorModel.DISABLED:
             self.stellarator.output()
             return
 

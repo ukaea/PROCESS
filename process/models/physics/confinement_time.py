@@ -1387,7 +1387,7 @@ class PlasmaConfinementTime(Model):
         # If stellarator, use the stellarator scalings
         for i_confinement_time in (
             range(1, N_CONFINEMENT_SCALINGS)
-            if istell == StellaratorModel.TOKAMAK
+            if istell == StellaratorModel.DISABLED
             else stellarator_scalings
         ):
             if i_confinement_time == 25:

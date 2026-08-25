@@ -270,7 +270,7 @@ class Caller:
 
         # Perform the various function calls
         # Stellarator caller
-        if self.data.stellarator.istell != StellaratorModel.TOKAMAK:
+        if self.data.stellarator.istell != StellaratorModel.DISABLED:
             self.models.stellarator.run()
             # TODO Is this return safe?
             return

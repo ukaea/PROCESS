@@ -1170,7 +1170,7 @@ def check_process(inputs, data):  # noqa: ARG001
     # Ensure that blanket material fractions allow non-zero space for steel
     # CCFE HCPB Model
 
-    if data.stellarator.istell == StellaratorModel.TOKAMAK and (
+    if data.stellarator.istell == StellaratorModel.DISABLED and (
         data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB
     ):
         fsum = data.fwbs.breeder_multiplier + data.fwbs.vfcblkt + data.fwbs.vfpblkt
@@ -1231,7 +1231,7 @@ def check_process(inputs, data):  # noqa: ARG001
             " due to wrong q"
         )
     if (
-        data.stellarator.istell == StellaratorModel.TOKAMAK
+        data.stellarator.istell == StellaratorModel.DISABLED
         and ConfinementTimeModel(data.physics.i_confinement_time).mode
         == ConfinementMode.STELLARATOR
     ):
@@ -1314,5 +1314,5 @@ def set_device_type(data: DataStructure):
     """Set the fusion device type on the data structure"""
     if data.ife.ife == 1:
         data.globals.icase = "Inertial Fusion model"
-    elif data.stellarator.istell != StellaratorModel.TOKAMAK:
+    elif data.stellarator.istell != StellaratorModel.DISABLED:
         data.globals.icase = "Stellarator model"

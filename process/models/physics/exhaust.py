@@ -250,7 +250,7 @@ class PlasmaExhaust(Model):
 
     def output_brunner_divertor_power_splits(self):
         """Output the Brunner divertor power splits to the output file."""
-        if self.data.stellarator.istell == StellaratorModel.TOKAMAK:
+        if self.data.stellarator.istell == StellaratorModel.DISABLED:
             po.osubhd(self.outfile, "Brunner Divertor Power Splits:")
 
             for op in [
