@@ -20,6 +20,11 @@ class UseRecord:
     frame_code: list[str] | None
 
 
+@dataclass(slots=True, kw_only=True, frozen=True)
+class EditRecord(UseRecord):
+    new_value: ParameterValueType
+
+
 class Parameter(DefaultParameter, Generic[ParameterValueType]):
     def __init__(
         self,
@@ -74,7 +79,7 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
         self._used = []
 
     @property
-    def edit_records(self):
+    def edit_records(self) -> list[EditRecord]:
         return deepcopy(self._edited)
 
     @property
@@ -156,9 +161,29 @@ class PROCESSModelData:
             super().__setattr__(name, value)
 
         current_value = getattr(self, name)
-        if isinstance(current_value, Parameter) and not isinstance(
-            value, type(current_value)
-        ):
+        if KEEP_EDIT_USE_RECORDS and isinstance(current_value, Parameter):
+            try:
+                called_from = next(
+                    filter(lambda frame: "/models/" in frame.filename, inspect.stack())
+                )
+            except StopIteration:
+                pass
+            else:
+                current_value._edited.append(
+                    EditRecord(
+                        value=np.copy(current_value.value),
+                        new_value=np.copy(value.value)
+                        if isinstance(value, Parameter)
+                        else np.copy(value),
+                        frame_file=called_from.filename,
+                        frame_lineno=called_from.lineno,
+                        frame_function=called_from.function,
+                        frame_code=called_from.code_context,
+                    )
+                )
+
+        # Not everything is a Parameter in PROCESS
+        if isinstance(current_value, Parameter) and not isinstance(value, Parameter):
             current_value.set_value(value)
             return
         super().__setattr__(name, value)
