@@ -147,6 +147,7 @@ from process.core.io.plot.summary.reporting.panels import (
     plot_separatrix_power_split,
 )
 from process.core.io.plot.summary.time_profiles import (
+    plot_cs_current_over_time,
     plot_current_profiles_over_time,
     plot_system_power_profiles_over_time,
 )
@@ -684,7 +685,18 @@ def main_plot(
         colour_scheme=colour_scheme,
     )
 
-    plot_current_profiles_over_time(_add_page().add_subplot(111), m_file, scan)
+    # Use the current-profile axis as the shared x-axis so that the CS current
+    # is aligned with the PF and plasma current profiles below it.
+    current_profiles_axis = _add_page("poloidal_current_profiles").add_subplot(212)
+    plot_current_profiles_over_time(current_profiles_axis, m_file, scan)
+    plot_cs_current_over_time(
+        pages["poloidal_current_profiles"].add_subplot(
+            211, sharex=current_profiles_axis
+        ),
+        m_file,
+        scan,
+    )
+    pages["poloidal_current_profiles"].subplots_adjust(hspace=0.05)
 
     plot_pf_cs_plasma_mutual_inductance(_add_page().add_subplot(111), m_file, scan)
 
