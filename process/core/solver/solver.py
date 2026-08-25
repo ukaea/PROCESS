@@ -250,7 +250,7 @@ class Vmcon(_Solver):
                 np.array(self.bndu),
                 max_iter=self.maxcal,
                 epsilon=self.tolerance,
-                qsp_options={"solver": cvxpy.CLARABEL},
+                qsp_options={"solver": cvxpy.CLARABEL, "tol_gap_rel": 1e-6},
                 initial_B=bb,
                 callback=_solver_callback,
                 additional_convergence=_ineq_cons_satisfied
