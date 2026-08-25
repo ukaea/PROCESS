@@ -118,7 +118,7 @@ def test_units():
     assert nfp.get_output_unit(nfp.groupwise_integrated_heating_in_layer) == "W m^-2"
     assert (
         nfp.get_output_unit(nfp.groupwise_integrated_tritium_production_in_layer)
-        == "mole m^-2"
+        == "mole m^-2 s^-1"
     )
     assert nfp.get_output_unit(nfp.groupwise_linear_heating_density_in_layer) == "J m^-1"
     assert nfp.get_output_unit(nfp.groupwise_neutron_current_at) == "m^-2 s^-1"
@@ -132,12 +132,12 @@ def test_units():
     assert nfp.get_output_unit(nfp.groupwise_neutron_flux_in_layer) == "m^-2 s^-1"
     assert nfp.get_output_unit(nfp.groupwise_neutron_heating_at) == "W m^-3"
     assert nfp.get_output_unit(nfp.groupwise_neutron_heating_in_layer) == "W m^-3"
-    assert nfp.get_output_unit(nfp.groupwise_tritium_production_at) == "mole m^-3"
-    assert nfp.get_output_unit(nfp.groupwise_tritium_production_in_layer) == "mole m^-3"
+    assert nfp.get_output_unit(nfp.groupwise_tritium_production_at) == "mole m^-3 s^-1"
+    assert nfp.get_output_unit(nfp.groupwise_tritium_production_in_layer) == "mole m^-3 s^-1"
 
     assert nfp.get_output_unit(nfp.integrated_flux_in_layer) == "m^-1 s^-1"
     assert nfp.get_output_unit(nfp.integrated_heating_in_layer) == "W m^-2"
-    assert nfp.get_output_unit(nfp.integrated_tritium_production_in_layer) == "mole m^-2"
+    assert nfp.get_output_unit(nfp.integrated_tritium_production_in_layer) == "mole m^-2 s^-1"
     assert nfp.get_output_unit(nfp.neutron_current_at) == "m^-2 s^-1"
     assert nfp.get_output_unit(nfp.neutron_current_escaped) == "m^-2 s^-1"
     assert nfp.get_output_unit(nfp.neutron_current_in_layer) == "m^-2 s^-1"
@@ -146,7 +146,7 @@ def test_units():
     assert nfp.get_output_unit(nfp.neutron_flux_in_layer) == "m^-2 s^-1"
     assert nfp.get_output_unit(nfp.neutron_heating_in_layer) == "W m^-3"
     assert nfp.get_output_unit(nfp.neutron_heating_at) == "W m^-3"
-    assert nfp.get_output_unit(nfp.tritium_production_in_layer) == "mole m^-3"
+    assert nfp.get_output_unit(nfp.tritium_production_in_layer) == "mole m^-3 s^-1"
 
 
 def test_get_sign_func():
