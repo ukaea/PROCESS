@@ -10,6 +10,9 @@ from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
     pumping_powers_as_fractions,
 )
+from process.models.engineering.pumping import (
+    pipe_hydraulic_diameter,
+)
 from process.models.power import PumpingPowerModelTypes
 
 
@@ -126,7 +129,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
             self.data.blanket.deg_blkt_inboard_poloidal_plasma / 360.0
         )
 
-        dia_blkt_channel = self.pipe_hydraulic_diameter(
+        dia_blkt_channel = pipe_hydraulic_diameter(
             i_channel_shape=1,
             radius_fw_channel=self.data.fwbs.radius_fw_channel,
             a_bz_liq=self.data.fwbs.a_bz_liq,
