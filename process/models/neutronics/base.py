@@ -341,11 +341,11 @@ UNIT_LOOKUP = {
     "linear_heating_density": "J m^-1",
     "integrated_flux": "m^-1 s^-1",
     "integrated_heating": "W m^-2",
-    "integrated_tritium_production": "mole m^-2",
+    "integrated_tritium_production": "mole m^-2 s^-1",
     "flux": "m^-2 s^-1",
     "current": "m^-2 s^-1",
     "heating": "W m^-3",
-    "tritium_production": "mole m^-3",
+    "tritium_production": "mole m^-3 s^-1",
 }
 
 
@@ -721,8 +721,8 @@ class NeutronFluxProfile:
             # etc. generation of neutrons, which should eventually converge.
         if self.coefficients.has_populated(n):
             return  # skip if it has already been solved.
-        # Parameter to be changed later, to allow solving non-down-scatter
-        # only systems by iterating.
+        # Parameter to be changed later, to allow solving non-down-scatter-only
+        # systems by iterating.
         for num_layer, mat in enumerate(self.materials):
             if mat.diffusion_const[n] > self.layer_x[num_layer]:
                 warnings.warn(
@@ -995,7 +995,7 @@ class NeutronFluxProfile:
         self, n: int, x: float | npt.NDArray
     ) -> float | npt.NDArray:
         """
-        Volumetric tritium production rate [mole m^-3] of the n-th group in the
+        Volumetric tritium production rate [mole m^-3 s^-1] of the n-th group in the
         specified layer, at location x [m].
 
         Parameters
@@ -1015,7 +1015,7 @@ class NeutronFluxProfile:
         -------
         tritium_production:
             Volumetric tritium production rate due to group n's neutrons at x.
-            unit: [mole m^-3]
+            unit: [mole m^-3 s^-1]
         """
         if np.isscalar(x):
             return self.groupwise_tritium_production_at(n, [x])[0]
@@ -1140,7 +1140,7 @@ class NeutronFluxProfile:
         self, n: int, num_layer: int, x: float | npt.NDArray
     ) -> float | npt.NDArray:
         """
-        Calculate volumetric tritium production rate (unit: [mole m^-3]) in
+        Calculate volumetric tritium production rate (unit: [mole m^-3 s^-1]) in
         the specified group and layer.
 
         We do not recommend manually integrating this curve by sampling points
@@ -1165,7 +1165,7 @@ class NeutronFluxProfile:
         -------
         :
             The tritium production rate in that specific layer at position x,
-            due to group n's neutrons. unit: [mole ^-3]
+            due to group n's neutrons. unit: [mole m^-3 s^-1]
         """
         if num_layer == self.n_layers:
             tritium_production_macro_xs_as_mole = 0.0
@@ -1236,7 +1236,7 @@ class NeutronFluxProfile:
         Returns
         -------
         :
-            current in m^-2
+            current in m^-2 s^-1
         """
         x = self.interface_x[n_interface]
 
@@ -1261,7 +1261,7 @@ class NeutronFluxProfile:
         Returns
         -------
         :
-            current in m^-2
+            current in m^-2 s^-1
         """
         return self.groupwise_neutron_current_through_interface(n, self.n_layers)
 
@@ -1290,8 +1290,8 @@ class NeutronFluxProfile:
         num_layer: int,
     ) -> float:
         """
-        The total amount of tritium produced (per unit area) due to (n,t*)
-        reactions across the entire num_layer-th layer. unit: [mole m^-2]. It should
+        The total rate of tritium produced (per unit area) due to (n,t*)
+        reactions across the entire num_layer-th layer. unit: [mole m^-2 s^-1]. It should
         yield the same result as integrating the curve tritium_production_in_layer
         from self.interface_x[n] to self.interface_x[n+1].
 
@@ -1299,7 +1299,7 @@ class NeutronFluxProfile:
         -------
         :
             tritium production rate integrated across the entire layer.
-            unit: [mole m^-2]
+            unit: [mole m^-2 s^-1]
         """
         if num_layer == self.n_layers:
             tritium_production_macro_xs_as_mole = 0.0
