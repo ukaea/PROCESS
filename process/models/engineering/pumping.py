@@ -527,7 +527,6 @@ def gnielinski_heat_transfer_coefficient(
     return heat_transfer_coefficient
 
 
-@staticmethod
 def calculate_reynolds_number(
     den_coolant: float,
     vel_coolant: float,
@@ -560,7 +559,6 @@ def calculate_reynolds_number(
     return den_coolant * vel_coolant * diameter / visc_coolant
 
 
-@staticmethod
 def elbow_coeff(
     radius_pipe_elbow: float,
     deg_pipe_elbow: float,
