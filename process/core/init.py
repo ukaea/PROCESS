@@ -289,24 +289,28 @@ def check_process(inputs, data):  # noqa: ARG001
             "Iteration variables 13 and 140 cannot be used simultaneously",
         )
 
-    # A superconducting TF coil must have a non-zero inboard thickness.
-    # dr_tf_inboard is only derived from the winding pack and case thicknesses
-    # when dr_tf_wp_with_insulation (ixc = 140) is an iteration variable (see
-    # Build.calculate_radial_build); with neither ixc = 13 nor ixc = 140 active
-    # it stays at its input value, and the default of 0 silently removes the
-    # TF coil from the radial build. Stellarators calculate dr_tf_inboard
-    # during the model run, so are excluded from this check.
+    # An inboard TF coil must have a positive thickness. dr_tf_inboard is
+    # only derived from the winding pack and case thicknesses when
+    # dr_tf_wp_with_insulation (ixc = 140) is an iteration variable (see
+    # Build.calculate_radial_build); otherwise the input-file value is what
+    # the radial build uses, and the default of 0 silently removes the TF
+    # coil. This applies to superconducting and resistive conductors alike,
+    # and also when dr_tf_inboard itself is the iteration variable
+    # (ixc = 13): the input value seeds the first model evaluation, an
+    # exactly-zero value is only caught later by the generic
+    # iteration-variable check, and a negative value is not caught at all
+    # (the 1/value scaling in load_iteration_variables inverts the
+    # variable's bounds). Stellarators calculate dr_tf_inboard during the
+    # model run, so are excluded from this check.
     if (
         data.stellarator.istell == 0
         and data.ife.ife == 0
-        and data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING
-        and not (data.numerics.ixc[: data.numerics.n_iteration_variables] == 13).any()
         and not (data.numerics.ixc[: data.numerics.n_iteration_variables] == 140).any()
         and data.build.dr_tf_inboard <= 0.0
     ):
         raise ProcessValidationError(
-            "dr_tf_inboard is not positive: the superconducting inboard TF coil"
-            " has no thickness. Set dr_tf_inboard (or use ixc = 13), or make"
+            "dr_tf_inboard is not positive: the inboard TF coil has no"
+            " thickness. Set a positive dr_tf_inboard, or make"
             " dr_tf_wp_with_insulation an iteration variable (ixc = 140) so that"
             " dr_tf_inboard is derived from the winding pack and case thicknesses",
             dr_tf_inboard=data.build.dr_tf_inboard,

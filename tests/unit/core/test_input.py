@@ -10,14 +10,15 @@ from process.core.model import DataStructure
 from process.data_structure.numerics import PROCESSRunMode
 
 
+@pytest.fixture(autouse=True)
+def turn_off_check_process(monkeypatch):
+    """These are parser tests; configuration validation is not under test."""
+    monkeypatch.setattr(init, "check_process", lambda *_: None)
+
+
 @pytest.fixture
 def data_structure_obj():
-    data = DataStructure()
-    # These parser tests run init_process on minimal input snippets; give the
-    # scaffold a valid TF thickness so configuration validation (which rejects
-    # a zero-thickness superconducting TF) does not reject the scaffold.
-    data.build.dr_tf_inboard = 1.0
-    return data
+    return DataStructure()
 
 
 def _create_input_file(directory, content: str):

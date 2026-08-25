@@ -56,12 +56,41 @@ def test_wp_thickness_iteration_variable_is_accepted():
     assert "dr_tf_inboard" not in _validation_error_message(data)
 
 
-def test_resistive_tf_is_not_checked():
+def test_zero_thickness_resistive_tf_is_rejected():
+    """Resistive TF coils use dr_tf_inboard through the same radial-build
+    path as superconducting ones, so a zero thickness is equally invalid.
+    """
     data = DataStructure()
     data.tfcoil.i_tf_sup = TFConductorModel.WATER_COOLED_COPPER
     data.build.dr_tf_inboard = 0.0
 
+    with pytest.raises(ProcessValidationError, match="dr_tf_inboard"):
+        check_process(None, data)
+
+
+def test_explicit_thickness_resistive_tf_is_accepted():
+    data = DataStructure()
+    data.tfcoil.i_tf_sup = TFConductorModel.WATER_COOLED_COPPER
+    data.build.dr_tf_inboard = 0.5
+
     assert "dr_tf_inboard" not in _validation_error_message(data)
+
+
+def test_thickness_iteration_variable_does_not_exempt():
+    """ixc = 13 does not exempt a non-positive input value: it seeds the
+    first model evaluation, an exactly-zero value is only rejected later by
+    the generic iteration-variable check, and a negative value is not
+    rejected at all (the 1/value scaling inverts the variable's bounds).
+    """
+    for bad_value in (0.0, -0.5):
+        data = DataStructure()
+        data.tfcoil.i_tf_sup = TFConductorModel.SUPERCONDUCTING
+        data.build.dr_tf_inboard = bad_value
+        data.numerics.n_iteration_variables = 1
+        data.numerics.ixc[0] = 13
+
+        with pytest.raises(ProcessValidationError, match="dr_tf_inboard"):
+            check_process(None, data)
 
 
 def test_stellarator_is_not_checked():
