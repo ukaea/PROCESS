@@ -1764,6 +1764,14 @@ class PhysicsData:
     f_b_div_outboard_lower_flux_expansion: float = 5.0
     """Outboard lower divertor flux expansion factor for the divertor targets (fₓ)"""
 
+    len_div_outboard_lower_scrabosio14_power_spreading: float = 0.0
+    """Scrabosio 2014 H-mode power spreading length/factor in the scrape-off layer scaling
+    (S) [m]"""
+
+    len_div_outboard_lower_power_spreading: float = 0.0
+    """Power spreading length/factor at the outboard lower divertor target
+    (S) [m]"""
+
     dt_power_density_plasma: float = 0.0
     sigmav_dt_average: float = 0.0
     dhe3_power_density: float = 0.0
