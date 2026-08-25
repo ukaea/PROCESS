@@ -1,3 +1,5 @@
+"""Classes related to handling and collecting metadata on the PROCESS data structure."""
+
 import inspect
 from collections.abc import Generator
 from copy import deepcopy
@@ -13,16 +15,37 @@ KEEP_EDIT_USE_RECORDS = False
 
 @dataclass(slots=True, kw_only=True, frozen=True)
 class UseRecord:
+    """A dataclass which records the location where a Parameter is used.
+
+    Notes
+    -----
+    Use records are only created when the variable is accessed in a file
+    in the `model` subdirectory.
+    """
+
     value: ParameterValueType
+    """The current value of the Parameter when it is accessed."""
     frame_file: str
+    """The file path of the file where the parameter was accessed."""
     frame_lineno: int
+    """The line number of `frame_file` where the parameter was accessed."""
     frame_function: str
+    """The name of the function in `frame_file` where the parameter was accessed."""
     frame_code: list[str] | None
+    """A copy of the Python code (usually a single line) which accesses the parameter."""
 
 
 @dataclass(slots=True, kw_only=True, frozen=True)
 class EditRecord(UseRecord):
+    """A dataclass which records the location where a Parameter is edited."""
+
     new_value: Any
+    """The value that the Parameter is being updated to.
+
+    Notes
+    -----
+    If the new value is also a Parameter only its `.value` is copied over.
+    """
 
 
 class Parameter(DefaultParameter, Generic[ParameterValueType]):
