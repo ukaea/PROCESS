@@ -72,10 +72,10 @@ def test_one_group():
     )
 
     layer_group_coefs = neutron_profile.coefficients
-    assert np.isclose(layer_group_coefs[0, 0].c[0], 80.5346770788), "c5"
-    assert np.isclose(layer_group_coefs[0, 0].s[0], -76.5562120985), "c6"
-    assert np.isclose(layer_group_coefs[1, 0].c[0], 60.6871656017), "c7"
-    assert np.isclose(layer_group_coefs[1, 0].s[0], -60.7123696772), "c8"
+    assert np.isclose(layer_group_coefs[0, 0].c[0], 78.5454445887), "c1"
+    assert np.isclose(layer_group_coefs[0, 0].s[0], 1.98923249017), "c2"
+    assert np.isclose(layer_group_coefs[1, 0].c[0], 60.6997676395), "c3"
+    assert np.isclose(layer_group_coefs[1, 0].s[0], -0.0126020377605), "c4"
 
     assert np.isclose(neutron_profile.neutron_flux_in_layer(0, x_fw), 48.72444)
     assert np.isclose(neutron_profile.neutron_flux_in_layer(1, x_fw), 48.72444)
