@@ -201,8 +201,8 @@ class Build(Model):
             )
         )
         vbuild = self.write_obuild(
-            vbuild,
-            [
+            vbuild=vbuild,
+            entry=[
                 (
                     "Cryostat roof structure*",
                     self.data.buildings.dz_tf_cryostat,
@@ -292,8 +292,8 @@ class Build(Model):
         po.obuild(self.outfile, "Midplane", 0.0e0, vbuild)
 
         vbuild = self.write_obuild(
-            vbuild,
-            [
+            vbuild=vbuild,
+            entry=[
                 (
                     "Plasma lower X-point height (m)",
                     bld.z_plasma_xpoint_lower,
@@ -355,7 +355,6 @@ class Build(Model):
         # To calculate vertical offset between TF coil centre and plasma centre
         bld.dz_tf_plasma_centre_offset = (vbuile1 + vbuild) / 2.0e0
 
-        # end of Single null case
 
     def write_obuild(self, vbuild, entry: tuple | list[tuple], *, before=False):
         """Write obuild entry"""
@@ -414,7 +413,7 @@ class Build(Model):
             po.ocmmnt(
                 self.outfile,
                 "\n*Cryostat roof allowance includes uppermost PF coil and "
-                "outer thermal shield.\n*Cryostat floor allowance "
+                "outer thermal shield.\n**Cryostat floor allowance "
                 "includes lowermost PF coil, outer thermal shield and gravity support.",
             )
 
@@ -495,11 +494,6 @@ class Build(Model):
         #
         #  Find half-angle of outboard arc
         # denomo = (tril**2 + kap**2 - 1.0e0)/( 2.0e0*(1.0e0+tril) ) - tril
-        # thetao = atan(kap/denomo)
-        # Angle between horizontal and inner divertor leg
-        # alphad = (pi/2.0e0) - thetao
-
-        # Method 26/05/2016
         # Find radius of inner and outer plasma arcs
         def rc(trilio):
             return 0.5 * np.sqrt(
@@ -547,10 +541,8 @@ class Build(Model):
         )
 
         # Position of inner strike point
-        # rspi = rxpt - self.data.build.plsepi*cos(alphad)
-        # zspi = zxpt - self.data.build.plsepi*sin(alphad)
         rspi = rxpt - self.data.build.plsepi * np.cos(thetai)
-        zspi = zxpt - self.data.build.plsepi * np.sin(tHEADhetai)
+        zspi = zxpt - self.data.build.plsepi * np.sin(thetai)
         zplti = zspi + inner_plte_sin
         zplbi = zspi - inner_plte_sin
         zplto = zspo + outer_plte_sin
@@ -631,12 +623,12 @@ class Build(Model):
                 ),
                 (
                     "Plasma geometric centre, radial (m)",
-                    "(rmajor.)",
+                    "(rmajor)",
                     self.data.physics.rmajor,
                 ),
                 ("Plasma geometric centre, vertical (m)", "(0.0)", 0.0e0),
                 ("Plasma lower triangularity", "(tril)", tril),
-                ("Plasma elongation", "(kappa.)", kap),
+                ("Plasma elongation", "(kappa)", kap),
                 (
                     "TF coil vertical offset (m)",
                     "(dz_tf_plasma_centre_offset)",
@@ -711,12 +703,12 @@ class Build(Model):
                 ),
                 (
                     "Plasma geometric centre, radial (m)",
-                    "(rmajor.)",
+                    "(rmajor)",
                     self.data.physics.rmajor,
                 ),
                 ("Plasma geometric centre, vertical (m)", "(0.0)", 0.0e0),
-                ("Plasma data.physics.triangularity", "(tril)", tril),
-                ("Plasma elongation", "(kappa.)", kap),
+                ("Plasma lower triangularity", "(tril)", tril),
+                ("Plasma elongation", "(kappa)", kap),
                 (
                     "TF coil vertical offset (m)",
                     "(dz_tf_plasma_centre_offset)",
@@ -788,11 +780,7 @@ class Build(Model):
             ]:
                 po.ovarre(self.outfile, desc, name, var, "OP ")
 
-        else:
-            po.ocmmnt(
-                self.outfile,
-                "ERROR: null value not supported, check i_single_null value.",
-            )
+
         po.ovarre(
                 self.outfile,
                 "Divertor poloidal angle subtended by plasma (degrees)",
@@ -1292,7 +1280,7 @@ class Build(Model):
         elif self.data.build.ripflag == 2:
             warning_str = (
                 "(TF coil ripple calculation) "
-                "No of TF coils not between 16 and 20 inclusive "
+                "No. of TF coils not between 16 and 20 inclusive "
             )
             diagnostic = f"{self.data.tfcoil.n_tf_coils=}"
         else:

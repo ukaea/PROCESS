@@ -300,7 +300,7 @@ class Availability(Model):
             self.avail_output(uplanned, uutot)
 
     def avail_output(self, uplanned, uutot):
-        """Output for availability model 1"""
+        """Output for Ward and Taylor availability model"""
         po.oheadr(self.outfile, "Plant Availability")
         if self.data.fwbs.blktmodel == 0:
             po.ovarre(
