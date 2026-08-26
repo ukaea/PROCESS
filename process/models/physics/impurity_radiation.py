@@ -13,6 +13,7 @@ from numba import njit
 from scipy import integrate
 
 from process.core import constants
+from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.impurity_radiation_variables import (
     N_IMPURITIY_LOSS_FUNCTION_POINTS,

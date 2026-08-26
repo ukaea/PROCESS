@@ -5,8 +5,8 @@ import pytest
 
 import process.core.input as process_input
 from process.core import init
+from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessValidationError
-from process.core.model import DataStructure
 from process.data_structure.numerics import PROCESSRunMode
 
 

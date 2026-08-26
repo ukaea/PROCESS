@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from process.core.model import DataStructure
+from process.core.data_structure.base import DataStructure
 from process.main import SingleRun, VaryRun
 
 

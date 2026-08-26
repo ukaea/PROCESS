@@ -13,7 +13,7 @@ from typing import Any
 
 import numpy as np
 
-from process.core.model import DataStructure
+from process.core.data_structure.base import DataStructure
 from process.core.solver import iteration_variables
 
 logger = logging.getLogger(__name__)

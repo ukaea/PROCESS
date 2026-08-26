@@ -13,6 +13,7 @@ from shutil import SameFileError, copy
 import click
 from numpy.random import default_rng
 
+from process.core.data_structure.base import DataStructure
 from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile
 from process.core.io.vary_run.tools import (
@@ -25,7 +26,6 @@ from process.core.io.vary_run.tools import (
     process_warnings,
     set_variable_in_indat,
 )
-from process.core.model import DataStructure
 from process.data_structure.numerics import SolverOutputCondition
 
 logger = logging.getLogger(__name__)
