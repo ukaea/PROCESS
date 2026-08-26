@@ -9350,13 +9350,15 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
     axis.get_yaxis().set_ticks([])
 
 
-def plot_midplane_near_sol_radial_profile(axis: plt.Axes, mfile: MFile, scan: int):
+def plot_midplane_near_sol_radial_profile(
+    axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: int
+):
     """Function to plot the radial profile of the near SOL at the midplane."""
     rmajor = mfile.get("rmajor", scan=scan)
     rminor = mfile.get("rminor", scan=scan)
     len_sol_outboard_power_decay = mfile.get("len_sol_outboard_power_decay", scan=scan)
     r = np.linspace(
-        (rmajor + rminor), (rmajor + rminor) + (3 * len_sol_outboard_power_decay), 100
+        (rmajor + rminor), (rmajor + rminor) + (7 * len_sol_outboard_power_decay), 100
     )
 
     radial_profile = (
@@ -9372,7 +9374,15 @@ def plot_midplane_near_sol_radial_profile(axis: plt.Axes, mfile: MFile, scan: in
     )
 
     x_ref = rmajor + rminor + len_sol_outboard_power_decay
+    plasma_boundary = rmajor + rminor
 
+    axis.axvspan(
+        0,
+        plasma_boundary,
+        color=PLASMA_COLOUR[colour_scheme - 1],
+        alpha=0.35,
+        label="Plasma",
+    )
     axis.plot(r, radial_profile, label=r"$q_{||}$ profile")
     axis.axvline(
         x_ref,
@@ -9383,9 +9393,13 @@ def plot_midplane_near_sol_radial_profile(axis: plt.Axes, mfile: MFile, scan: in
     )
     axis.grid()
     axis.legend()
+    axis.set_xlim(
+        (rmajor + rminor - (3 * len_sol_outboard_power_decay)),
+        (rmajor + rminor) + (7 * len_sol_outboard_power_decay),
+    )
     axis.set_title(r"Midplane Near SOL Radial Profile")
-    axis.set_xlabel("Radial Position [m]")
     axis.minorticks_on()
+    axis.tick_params(axis="x", labelbottom=False)
     axis.set_ylabel(r"$q_{||}$ [MW/m$^2$]")
 
 
@@ -9426,18 +9440,18 @@ def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, sc
     axis.axvline(peak_r, color="black", linestyle="--", linewidth=1)
     axis.axhline(peak_q, color="black", linestyle="--", linewidth=1)
     axis.text(
-        0.02,
-        0.98,
+        0.6,
+        0.9,
         f"$f_x$ = {f_b_flux_expansion:.2f}\n$S$ = {len_div_outboard_lower_power_spreading * 1e3:.3f} mm",
         transform=axis.transAxes,
         ha="left",
         va="top",
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 0.8},
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
     )
     axis.grid()
     axis.legend()
     axis.minorticks_on()
-    axis.set_title(r"Lower Outboard Eich Target Heat Flux Profile")
+    axis.set_title(r"Lower Outboard Eich Target Parallel Heat Flux Profile")
     axis.set_xlabel("Radial Position [m]")
     axis.set_ylabel(r"$q_{||,t}$ [MW/m$^2$]")
 
@@ -16875,13 +16889,15 @@ def main_plot(
         _add_page("sol_powerfluxes").add_subplot(121), m_file, scan, colour_scheme
     )
 
+    ax_midplane_near_sol = pages["sol_powerfluxes"].add_subplot(336)
     plot_midplane_near_sol_radial_profile(
-        pages["sol_powerfluxes"].add_subplot(336), m_file, scan
+        ax_midplane_near_sol, m_file, scan, colour_scheme
     )
 
-    plot_div_lower_outboard_eich_target_profile(
-        pages["sol_powerfluxes"].add_subplot(339), m_file, scan
+    ax_div_lower_outboard = pages["sol_powerfluxes"].add_subplot(
+        339, sharex=ax_midplane_near_sol
     )
+    plot_div_lower_outboard_eich_target_profile(ax_div_lower_outboard, m_file, scan)
 
     plot_debye_length_profile(
         _add_page("microscopic_quantities").add_subplot(232), m_file, scan
