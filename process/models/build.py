@@ -787,7 +787,7 @@ class Build(Model):
                 ("Lower outer plate bottom, vertical (m)", "(zplbo)", zplbo),
                 ("Calculated maximum divertor height (m)", "(divht)", divht),
             ]:
-                        po.ovarre(self.outfile, desc, name, var, "OP ")
+                po.ovarre(self.outfile, desc, name, var, "OP ")
         else:
             po.oheadr(self.outfile, "Divertor build and plasma position")
             po.ocmmnt(
@@ -795,14 +795,13 @@ class Build(Model):
                 "ERROR: null value not supported, check i_single_null value.",
             )
 
-
         po.ovarre(
-                self.outfile,
-                "Divertor poloidal angle subtended by plasma (degrees)",
-                "(deg_div_poloidal_plasma)",
-                self.data.divertor.deg_div_poloidal_plasma,
-                "OP ",
-            )
+            self.outfile,
+            "Divertor poloidal angle subtended by plasma (degrees)",
+            "(deg_div_poloidal_plasma)",
+            self.data.divertor.deg_div_poloidal_plasma,
+            "OP ",
+        )
 
     @staticmethod
     def plasma_outboard_edge_toroidal_ripple(
