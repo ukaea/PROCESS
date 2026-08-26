@@ -403,6 +403,11 @@ class ScrapeOffLayer(Model):
         float|np.ndarray
             Outboard midplane SOL radial profile (qₗₗ(r)) [MW/m²]
 
+        Raises
+        ------
+        ValueError
+            If any radial position r is inside the plasma edge (r < rmajor + rminor)
+
         Notes
         -----
         - The exponential model is highly valid in the "near-SOL" (typically the first
@@ -472,11 +477,11 @@ class ScrapeOffLayer(Model):
 
         Notes
         -----
-        - The Eich parallel target heat flux profile is derived from the midplane exponential
-        profile, taking into account the magnetic geometry and flux expansion between
-        the midplane and the divertor target. The profile is typically characterized by
-        a combination of an exponential decay and a Gaussian spreading due to cross-field
-        transport in the divertor leg.
+        - The Eich parallel target heat flux profile is derived from the midplane
+        exponential profile, taking into account the magnetic geometry and flux expansion
+        between the midplane and the divertor target. The profile is typically
+        characterized by a combination of an exponential decay and a Gaussian spreading
+        due to cross-field transport in the divertor leg.
 
         References
         ----------
