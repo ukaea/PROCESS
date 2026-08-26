@@ -355,11 +355,22 @@ class Build(Model):
         # To calculate vertical offset between TF coil centre and plasma centre
         bld.dz_tf_plasma_centre_offset = (vbuile1 + vbuild) / 2.0e0
 
+    def write_obuild(
+        self, vbuild: float, entry: list[tuple[str, float, str]], *, before=False
+    ):
+        """Write obuild entry
 
-    def write_obuild(self, vbuild, entry: tuple | list[tuple], *, before=False):
-        """Write obuild entry"""
-        if not isinstance(entry, list):
-            entry = [entry]
+        Parameters
+        ----------
+        vbuild:
+            vertical build current point
+        entry:
+            the new entries to be added to be vertical build
+        before:
+            whether to remove the variable value from the current entry before
+            or after recording the vertical build value.
+            Top half of the machine set to False, lower half set toTrue
+        """
         for desc, var, name in entry:
             if before:
                 vbuild -= var
@@ -489,13 +500,9 @@ class Build(Model):
         kap = self.data.physics.kappa
         triu = tril = self.data.physics.triang
 
-        # New method, assuming straight legs -- superceded by new method 26/5/2016
-        # Assumed 90 degrees at X-pt -- wrong#
-        #
-        #  Find half-angle of outboard arc
-        # denomo = (tril**2 + kap**2 - 1.0e0)/( 2.0e0*(1.0e0+tril) ) - tril
         # Find radius of inner and outer plasma arcs
         def rc(trilio):
+            """Radius of plasma arcs"""
             return 0.5 * np.sqrt(
                 (self.data.physics.rminor**2 * (trilio**2 + kap**2) ** 2) / (trilio**2)
             )
@@ -503,8 +510,8 @@ class Build(Model):
         rco = rc(tril + 1)
         rci = rc(tril - 1)
 
-        # Find angles between vertical and legs
         def theta(trilio, rcio):
+            """Find angle between vertical and legs"""
             return np.arcsin(1 - (self.data.physics.rminor * trilio) / rcio)
 
         # Inboard arc angle = outboard leg angle
@@ -520,11 +527,17 @@ class Build(Model):
         self.data.build.rspo = rxpt + self.data.build.plsepo * np.cos(thetao)
         zspo = zxpt - self.data.build.plsepo * np.sin(thetao)
 
+        # Position of inner strike point
+        rspi = rxpt - self.data.build.plsepi * np.cos(thetai)
+        zspi = zxpt - self.data.build.plsepi * np.sin(thetai)
+
         # Position of inner plate ends
         def plate_cos(l_div_plate, theta, beta):
+            """Plate cos of angle"""
             return (l_div_plate / 2) * np.cos(theta + beta)
 
         def plate_sin(l_div_plate, theta, beta):
+            """Plate sin of angle"""
             return (l_div_plate / 2) * np.sin(theta + beta)
 
         inner_plte_cos = plate_cos(
@@ -540,9 +553,7 @@ class Build(Model):
             self.data.build.plleno, thetao, self.data.divertor.betao
         )
 
-        # Position of inner strike point
-        rspi = rxpt - self.data.build.plsepi * np.cos(thetai)
-        zspi = zxpt - self.data.build.plsepi * np.sin(thetai)
+        # Inner and Outer plate top and bottom vertical coordinates
         zplti = zspi + inner_plte_sin
         zplbi = zspi - inner_plte_sin
         zplto = zspo + outer_plte_sin
@@ -552,19 +563,18 @@ class Build(Model):
 
         if output:
             self.divertor_geom_output(
-                kap,
-                divht,
-                tril,
-                triu,
-                thetai,
-                thetao,
-                rco,
-                rci,
-                rxpt,
-                zxpt,
-                rspi,
-                zspi,
-                zspo,
+                divht=divht,
+                tril=tril,
+                triu=triu,
+                thetai=thetai,
+                thetao=thetao,
+                rco=rco,
+                rci=rci,
+                rxpt=rxpt,
+                zxpt=zxpt,
+                rspi=rspi,
+                zspi=zspi,
+                zspo=zspo,
                 # Position of inner strike points
                 rplti=rspi + inner_plte_cos,
                 rplbi=rspi - inner_plte_cos,
@@ -581,7 +591,6 @@ class Build(Model):
 
     def divertor_geom_output(
         self,
-        kap,
         divht,
         tril,
         triu,
@@ -619,7 +628,7 @@ class Build(Model):
                 (
                     "Plasma top position, vertical (m)",
                     "(ptop_vertical)",
-                    kap * self.data.physics.rminor,
+                    self.data.physics.kappa * self.data.physics.rminor,
                 ),
                 (
                     "Plasma geometric centre, radial (m)",
@@ -628,7 +637,7 @@ class Build(Model):
                 ),
                 ("Plasma geometric centre, vertical (m)", "(0.0)", 0.0e0),
                 ("Plasma lower triangularity", "(tril)", tril),
-                ("Plasma elongation", "(kappa)", kap),
+                ("Plasma elongation", "(kappa)", self.data.physics.kappa),
                 (
                     "TF coil vertical offset (m)",
                     "(dz_tf_plasma_centre_offset)",
@@ -699,7 +708,7 @@ class Build(Model):
                 (
                     "Plasma top position, vertical (m)",
                     "(ptop_vertical)",
-                    kap * self.data.physics.rminor,
+                    self.data.physics.kappa * self.data.physics.rminor,
                 ),
                 (
                     "Plasma geometric centre, radial (m)",
@@ -708,7 +717,7 @@ class Build(Model):
                 ),
                 ("Plasma geometric centre, vertical (m)", "(0.0)", 0.0e0),
                 ("Plasma lower triangularity", "(tril)", tril),
-                ("Plasma elongation", "(kappa)", kap),
+                ("Plasma elongation", "(kappa)", self.data.physics.kappa),
                 (
                     "TF coil vertical offset (m)",
                     "(dz_tf_plasma_centre_offset)",
@@ -788,6 +797,7 @@ class Build(Model):
                 self.data.divertor.deg_div_poloidal_plasma,
                 "OP ",
             )
+
     @staticmethod
     def plasma_outboard_edge_toroidal_ripple(
         ripple_b_tf_plasma_edge_max: float,
