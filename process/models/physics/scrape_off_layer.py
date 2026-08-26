@@ -217,6 +217,16 @@ class ScrapeOffLayer(Model):
             "(len_div_outboard_lower_scrabosio14_power_spreading)",
             self.data.physics.len_div_outboard_lower_scrabosio14_power_spreading,
         )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Outboard lower divertor flux expansion factor for the divertor targets "
+            "(fₓ)",
+            "(f_b_div_outboard_lower_flux_expansion)",
+            self.data.physics.f_b_div_outboard_lower_flux_expansion,
+        )
 
     @staticmethod
     def calculate_eich2013_sol_power_decay_length(

@@ -9413,7 +9413,7 @@ def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, sc
     len_div_outboard_lower_power_spreading = mfile.get(
         "len_div_outboard_lower_power_spreading", scan=scan
     )
-    f_b_flux_expansion = 5.0
+    f_b_flux_expansion = mfile.get("f_b_div_outboard_lower_flux_expansion", scan=scan)
     r = np.linspace(
         (rmajor + rminor) - (1.5 * len_plasma_sol_power_decay) * f_b_flux_expansion,
         (rmajor + rminor) + (3 * len_plasma_sol_power_decay) * f_b_flux_expansion,
