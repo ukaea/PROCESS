@@ -787,7 +787,13 @@ class Build(Model):
                 ("Lower outer plate bottom, vertical (m)", "(zplbo)", zplbo),
                 ("Calculated maximum divertor height (m)", "(divht)", divht),
             ]:
-                po.ovarre(self.outfile, desc, name, var, "OP ")
+                        po.ovarre(self.outfile, desc, name, var, "OP ")
+        else:
+            po.oheadr(self.outfile, "Divertor build and plasma position")
+            po.ocmmnt(
+                self.outfile,
+                "ERROR: null value not supported, check i_single_null value.",
+            )
 
 
         po.ovarre(
