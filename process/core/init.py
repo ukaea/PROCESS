@@ -49,7 +49,7 @@ from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
 
 logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
-    from process.core.data_structure import DataStructure
+    from process.core.data_structure.base import DataStructure
 
 
 def init_process(data: DataStructure):

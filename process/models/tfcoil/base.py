@@ -27,7 +27,7 @@ from process.models.engineering.materials import (
 )
 
 if TYPE_CHECKING:
-    from process.core.data_structure import DataStructure
+    from process.core.data_structure.base import DataStructure
 
 logger = logging.getLogger(__name__)
 

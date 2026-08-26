@@ -3,7 +3,7 @@
 import logging
 
 from process.core import process_output as po
-from process.core.data_structure import DataStructure
+from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessValueError
 from process.data_structure.physics_variables import PlasmaIgnitionModel
 

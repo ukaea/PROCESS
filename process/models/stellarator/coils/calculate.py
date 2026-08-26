@@ -4,7 +4,7 @@ import logging
 
 import numpy as np
 
-from process.core.data_structure import DataStructure
+from process.core.data_structure.base import DataStructure
 from process.models.stellarator.coils import forces
 from process.models.stellarator.coils.coils import (
     bmax_from_awp,

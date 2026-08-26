@@ -22,7 +22,7 @@ from process.models.tfcoil.base import TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
 if TYPE_CHECKING:
-    from process.core.data_structure import DataStructure
+    from process.core.data_structure.base import DataStructure
     from process.main import Models
 
 logger = logging.getLogger(__name__)

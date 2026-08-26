@@ -9,7 +9,7 @@ import numpy as np
 from tabulate import tabulate
 
 from process.core import constants, process_output
-from process.core.data_structure import DataStructure
+from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.stellarator_variables import StellaratorModel

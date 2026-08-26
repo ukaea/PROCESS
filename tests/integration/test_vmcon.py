@@ -12,7 +12,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 import pytest
 
-from process.core.data_structure import DataStructure
+from process.core.data_structure.base import DataStructure
 from process.core.solver.evaluators import Evaluators
 from process.core.solver.solver import get_solver
 from process.data_structure.numerics import SolverOutputCondition

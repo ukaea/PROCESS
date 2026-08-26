@@ -6,7 +6,7 @@ import abc
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from process.core.data_structure import DataStructure
+    from process.core.data_structure.base import DataStructure
 
 
 class Model(abc.ABC):

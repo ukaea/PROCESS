@@ -7,7 +7,7 @@ import numpy as np
 from scipy import integrate
 
 from process.core import constants
-from process.core.data_structure import DataStructure
+from process.core.data_structure.base import DataStructure
 from process.data_structure.physics_variables import PhysicsData
 from process.models.physics.plasma_profiles import PlasmaProfile
 

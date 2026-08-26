@@ -6,7 +6,7 @@ import math
 import numpy as np
 
 from process.core.caller import Caller
-from process.core.data_structure import DataStructure
+from process.core.data_structure.base import DataStructure
 
 logger = logging.getLogger(__name__)
 

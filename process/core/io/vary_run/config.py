@@ -13,7 +13,7 @@ from shutil import SameFileError, copy
 import click
 from numpy.random import default_rng
 
-from process.core.data_structure import DataStructure
+from process.core.data_structure.base import DataStructure
 from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile
 from process.core.io.vary_run.tools import (

@@ -1,6 +1,6 @@
 """Module for coil force calculations in stellarators."""
 
-from process.core.data_structure import DataStructure
+from process.core.data_structure.base import DataStructure
 
 
 def calculate_max_force_density(a_tf_wp_no_insulation, data: DataStructure):
