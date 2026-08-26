@@ -25,7 +25,31 @@ $$
 A_{\parallel,u} = 2\pi\lambda_{\text{q,u}}R_{\text{u}}\frac{B_{\text{p,u}}}{B_{\text{Tot,u}}}
 $$
 
+---------------
 
+## Upstream radial decay | `calculate_outboard_midplane_near_sol_radial_profile()`
+
+The radial decay length $\lambda_{\text{q}}$ of the scrape-off layer (SOL) at the outer midplane of a tokamak is defined as the e-folding distance over which plasma heat and particle fluxes decay exponentially outside the last closed flux surface. Therefore the decay of the total heat flux outside the separatrix towards the vessel walls can be modelled as [^eich_2011] [^eich_2013]:
+
+$$
+q_{\text{u}}(r) = q_{\parallel,\text{u}}e^{\frac{-r}{\lambda_{\text{q}}}}
+$$
+
+where $r = R - R_{\text{sep}}$, $R_{\text{sep}}$ being the major radius of the separatrix, $\lambda_{\text{q}}$ the [power decay length](#power-decay-lengths) and $q_{\parallel}$ the [upstream energy flux density](#upstream-radial-decay--calculate_outboard_midplane_near_sol_radial_profile)
+
+----------------
+
+## Eich parallel flux at target | `calculate_eich_target_heat_flux_profile()`
+
+The Eich formula (often called the standard SOL heat flux profile) is the primary mathematical model used to describe the distribution of heat target loads on tokamak divertor plates. It convolutionally connects the physics of the plasma edge at the outer midplane with the geometric projection of the heat hitting the divertor surface [^eich_2011] [^eich_2013].
+
+Heat transport into the private flux region is modeled by convolving the power profile $q_{\text{u}}(r)$ with a Gaussian function of width $S$ known as the [spreading parameter](#spreading-parameter). 
+
+$$
+q_{\parallel,t} = \frac{q_0}{2}\times \exp\left(\left(\frac{S}{2\lambda_{\text{q}}}\right)- \frac{\overline{s}}{\lambda_q f_x}\right) \times \operatorname{erfc}\left(\frac{S}{2\lambda_{\text{q}}}- \frac{\overline{s}}{S f_{x}}\right) + q_{\text{BG}}
+$$
+
+where $\overline{s} = s- s_0 = (R_{\text{sep}} - R) \times f_x $. $\operatorname{erfc}$ is the complementary error function, $q_{\text{BG}}$ is the background heat flux, $\lambda_{\text{q}}$ is the [power decay length](#power-decay-lengths), $f_x$ is the effective flux expansion in the region,
 
 ------------------
 
@@ -120,3 +144,5 @@ Plasma Physics and Controlled Fusion, vol. 56, no. 5, p. 055008, Apr. 2014, doi:
 [^henderson_step]: S. S. Henderson et al., “An overview of the STEP divertor design and the simple models driving the plasma exhaust scenario,” Nuclear Fusion, vol. 65, no. 1, pp. 016033–016033, Nov. 2024, doi: 10.1088/1741-4326/ad93e7.
 
 [^scarabosio_2015]: A. Scarabosio et al., “Scaling of the divertor power spreading (S-factor) in open and closed divertor operation in JET and ASDEX Upgrade,” Journal of Nuclear Materials, vol. 463, pp. 49-54, Aug. 2015, doi: 10.1016/j.jnucmat.2014.11.076.
+
+[^eich_2011]: T. Eich, B. Sieglin, A. Scarabosio, W. Fundamenski, R. J. Goldston, and A. Herrmann, “Inter-ELM Power Decay Length for JET and ASDEX Upgrade: Measurement and Comparison with Heuristic Drift-Based Model,” Physical Review Letters, vol. 107, no. 21, Nov. 2011, doi: https://doi.org/10.1103/PhysRevLett.107.215001
