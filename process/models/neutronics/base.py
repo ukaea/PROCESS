@@ -513,6 +513,7 @@ class NeutronFluxProfile:
         if self.materials[num_layer].l2[n] > 0:
             l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([
+                # To be factorized
                 -l* (negexp(x_upper / l) - negexp(x_lower / l)),
                 l * (np.exp(x_upper / l) - np.exp(x_lower / l)),
             ])
@@ -621,8 +622,12 @@ class NeutronFluxProfile:
             self.materials[num_layer + 1].diffusion_const[n]
             * self._groupwise_cs_differential_in_layer(n, num_layer + 1, xm),
         ])
-        inv_det_a_lmn = np.sqrt(abs(self.materials[num_layer + 1].l2[n])) / self.materials[num_layer + 1].diffusion_const[n]
-        inv_a_lmn = inv_det_a_lmn * (a_lmn[::-1, ::-1].T * [[1, -1], [-1, 1]])
+        det_a_lmn = self.materials[num_layer + 1].diffusion_const[n] / np.sqrt(
+            abs(self.materials[num_layer + 1].l2[n])
+        )
+        if self.materials[num_layer + 1].l2[n] > 0:
+            det_a_lmn *= 2
+        inv_a_lmn = 1 / det_a_lmn * (a_lmn[::-1, ::-1].T * [[1, -1], [-1, 1]])
 
         in_scatter_max_group = self.n_groups if include_upscatter else n
         b_mmn = np.array([
@@ -795,13 +800,19 @@ class NeutronFluxProfile:
 
                 self.coefficients[num_layer, n] = coefs_num_layer
 
-            self.coefficients[0, n].s[n] = np.sqrt(abs(self.materials[0].l2[n])) * (
-                -(self.fluxes[n] / self.materials[0].diffusion_const[n])
-                - fsum([
-                    self.coefficients[0, n].s[g] / np.sqrt(abs(self.materials[0].l2[g]))
-                    for g in range(in_scatter_max_group)
-                    if g != n
-                ])
+            # Determine coefficient[0, n].c[n] and coefficient[0, n].s[n] by
+            # boundary conditions: top row enforces current at (x=0) = source
+            # current, bottom row enforces flux = 0 at the extended boundary.
+            top_row = self._groupwise_cs_differential_in_layer(n, 0, 0)
+            y = -(
+                self.fluxes[n] / self.materials[0].diffusion_const[n]
+
+            ) - self._summation_shorthand(
+                n,
+                0,
+                self._groupwise_cs_differential_in_layer,
+                0.0,
+                in_scatter_max_group
             )
 
             m_list, v_list = self._get_all_propagation_operator(n, include_upscatter)
@@ -814,23 +825,25 @@ class NeutronFluxProfile:
                 or [[0, 0]],
                 axis=0,
             )
-            boundary_cs_vector = self._groupwise_cs_values_in_layer(
+
+            bot_row = self._groupwise_cs_values_in_layer(
                 n, self.n_layers - 1, self.extended_boundary[n]
-            )
-            final_left_vector = boundary_cs_vector @ affine_transform_matrix_stack
-            final_const = (
-                -self._summation_shorthand(
+            ) @ affine_transform_matrix_stack
+            z = - (
+                self._groupwise_cs_values_in_layer(
+                    n, self.n_layers - 1, self.extended_boundary[n]
+                ) @ affine_transformed_column_vector
+            ) - self._summation_shorthand(
                     n,
                     self.n_layers - 1,
                     self._groupwise_cs_values_in_layer,
                     self.extended_boundary[n],
                     in_scatter_max_group,
-                )
-                - boundary_cs_vector @ affine_transformed_column_vector
             )
-            self.coefficients[0, n].c[n] = (
-                final_const - final_left_vector[1] * self.coefficients[0, n].s[n]
-            ) / final_left_vector[0]
+            self.coefficients[0, n].c[n], self.coefficients[0, n].s[n] = np.linalg.solve(
+                [top_row, bot_row], [y, z]
+            )
+            print(f"for num_layer=0, n={n}", self.coefficients[0, n])
             # nonnegativity check for layer 0
             if (self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[0]) < 0) or (
                 self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[1]) < 0
