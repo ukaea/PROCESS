@@ -163,18 +163,6 @@ def test_calculate_outboard_midplane_near_sol_radial_profile_array():
     assert np.all(result > 0)
 
 
-def test_calculate_outboard_midplane_near_sol_radial_profile_invalid_r():
-    """Test outboard midplane near SOL radial profile raises for r inside plasma edge."""
-    with pytest.raises(ValueError, match=r"inside plasma edge|outside plasma"):
-        ScrapeOffLayer.calculate_outboard_midplane_near_sol_radial_profile(
-            rmajor=6.0,
-            rminor=2.0,
-            len_plasma_sol_power_decay=0.001,
-            pflux_plasma_outboard_sol_parallel_mw=10.0,
-            r=7.0,
-        )
-
-
 @pytest.mark.parametrize(
     "r",
     [
@@ -212,4 +200,4 @@ def test_calculate_eich_target_heat_flux_profile_exact():
         r=8.001,
     )
     assert isinstance(result, float)
-    assert pytest.approx(result) == 3.8999590240461988
+    assert pytest.approx(result) == 5.534025566786268

@@ -513,19 +513,14 @@ class ScrapeOffLayer(Model):
             ** 2
             - (
                 (r - (rmajor + rminor))
-                * f_b_div_flux_expansion
-                / (len_plasma_sol_power_spreading * f_b_div_flux_expansion)
+                / (len_plasma_sol_power_decay * f_b_div_flux_expansion)
             )
         ) * scipy.special.erfc(
             (
                 len_plasma_sol_power_spreading
                 / (2 * len_plasma_sol_power_decay * f_b_div_flux_expansion)
             )
-            - (
-                (r - (rmajor + rminor))
-                * f_b_div_flux_expansion
-                / (len_plasma_sol_power_spreading)
-            )
+            - ((r - (rmajor + rminor)) / (len_plasma_sol_power_spreading))
         ) + pflux_target_background_heat_flux_mw
 
     @staticmethod

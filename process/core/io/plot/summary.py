@@ -9415,7 +9415,8 @@ def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, sc
     )
     f_b_flux_expansion = mfile.get("f_b_div_outboard_lower_flux_expansion", scan=scan)
     r = np.linspace(
-        (rmajor + rminor) - (1.5 * len_plasma_sol_power_decay) * f_b_flux_expansion,
+        (rmajor + rminor)
+        - ((f_b_flux_expansion / 2) * len_plasma_sol_power_decay) * f_b_flux_expansion,
         (rmajor + rminor) + (3 * len_plasma_sol_power_decay) * f_b_flux_expansion,
         200,
     )
@@ -9440,7 +9441,7 @@ def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, sc
     axis.axvline(peak_r, color="black", linestyle="--", linewidth=1)
     axis.axhline(peak_q, color="black", linestyle="--", linewidth=1)
     axis.text(
-        0.6,
+        0.8,
         0.9,
         f"$f_x$ = {f_b_flux_expansion:.2f}\n$S$ = {len_div_outboard_lower_power_spreading * 1e3:.3f} mm",
         transform=axis.transAxes,
@@ -9449,10 +9450,10 @@ def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, sc
         bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
     )
     axis.grid()
-    axis.legend()
     axis.minorticks_on()
     axis.set_title(r"Lower Outboard Eich Target Parallel Heat Flux Profile")
     axis.set_xlabel("Radial Position [m]")
+    axis.set_xlim(r[0], r[-1])
     axis.set_ylabel(r"$q_{||,t}$ [MW/m$^2$]")
 
 
