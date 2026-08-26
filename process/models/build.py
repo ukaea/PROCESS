@@ -369,7 +369,7 @@ class Build(Model):
         before:
             whether to remove the variable value from the current entry before
             or after recording the vertical build value.
-            Top half of the machine set to False, lower half set toTrue
+            Top half of the machine set to False, lower half set to True
         """
         for desc, var, name in entry:
             if before:
