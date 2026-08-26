@@ -992,7 +992,6 @@ class Build(Model):
         # Calculate bld.dr_tf_inboard if
         # self.data.tfcoil.dr_tf_wp_with_insulation is an iteration variable (140)
         if 140 in self.data.numerics.ixc[0 : self.data.numerics.n_iteration_variables]:
-            self.data.build.dr_tf_inboard = (
             bld.dr_tf_inboard = (
                 self.data.tfcoil.dr_tf_wp_with_insulation
                 + self.data.tfcoil.dr_tf_plasma_case
