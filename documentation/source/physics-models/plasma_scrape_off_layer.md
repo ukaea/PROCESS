@@ -46,10 +46,22 @@ The Eich formula (often called the standard SOL heat flux profile) is the primar
 Heat transport into the private flux region is modeled by convolving the power profile $q_{\text{u}}(r)$ with a Gaussian function of width $S$ known as the [spreading parameter](#spreading-parameter). 
 
 $$
-q_{\parallel,t} = \frac{q_0}{2}\times \exp\left(\left(\frac{S}{2\lambda_{\text{q}}}\right)- \frac{\overline{s}}{\lambda_q f_x}\right) \times \operatorname{erfc}\left(\frac{S}{2\lambda_{\text{q}}}- \frac{\overline{s}}{S f_{x}}\right) + q_{\text{BG}}
+q_{\parallel,t}(s) = \frac{q_0}{2}\times \exp\left[\left(\frac{S}{2\lambda_{\text{q}}f_x}\right)^2- \frac{s-s_0}{\lambda_q f_x}\right] \times \operatorname{erfc}\left(\frac{S}{2\lambda_{\text{q}}f_x}- \frac{s-s_0}{S}\right) + q_{\text{BG}}
 $$
 
-where $\overline{s} = s- s_0 = (R_{\text{sep}} - R) \times f_x $. $\operatorname{erfc}$ is the complementary error function, $q_{\text{BG}}$ is the background heat flux, $\lambda_{\text{q}}$ is the [power decay length](#power-decay-lengths), $f_x$ is the effective flux expansion in the region,
+where $s$ is the coordinate along the divertor target, $s_0$ is the strike-point location on the target, $\operatorname{erfc}$ is the complementary error function, $q_{\text{BG}}$ is the background heat flux, $\lambda_{\text{q}}$ is the [power decay length](#power-decay-lengths), $f_x$ is the effective flux expansion in the region,
+
+A compact equivalent form is:
+
+$$
+q_{\parallel,t}(\overline{s}) = \frac{q_0}{2}\times \exp\left[\left(\frac{S}{2\lambda_{\text{q}}f_x}\right)^2- \frac{\overline{s}}{\lambda_q f_x}\right] \times \operatorname{erfc}\left(\frac{S}{2\lambda_{\text{q}}f_x}- \frac{\overline{s}}{S}\right) + q_{\text{BG}}
+$$
+
+The connection to upstream midplane coordinates is usually:
+
+$$
+\overline{s} = f_x(R-R_{\text{sep}})
+$$
 
 ------------------
 
