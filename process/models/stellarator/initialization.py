@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from process.data_structure.stellarator_variables import StellaratorModel
+
 if TYPE_CHECKING:
     from process.core.data_structure.base import DataStructure
 
