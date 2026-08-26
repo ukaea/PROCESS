@@ -843,7 +843,6 @@ class NeutronFluxProfile:
             self.coefficients[0, n].c[n], self.coefficients[0, n].s[n] = np.linalg.solve(
                 [top_row, bot_row], [y, z]
             )
-            print(f"for num_layer=0, n={n}", self.coefficients[0, n])
             # nonnegativity check for layer 0
             if (self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[0]) < 0) or (
                 self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[1]) < 0
