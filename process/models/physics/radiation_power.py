@@ -10,7 +10,7 @@ from dataclasses import dataclass
 import numpy as np
 
 import process.models.physics.impurity_radiation as impurity
-from process.core.model import DataStructure
+from process.core.data_structure.base import DataStructure
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)

@@ -14,8 +14,9 @@ from tabulate import tabulate
 
 from process.core import constants
 from process.core import process_output as op
+from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessValueError
-from process.core.model import DataStructure, Model
+from process.core.model import Model
 from process.data_structure.pfcoil_variables import (
     N_PF_COILS_IN_GROUP_MAX,
     N_PF_GROUPS_MAX,

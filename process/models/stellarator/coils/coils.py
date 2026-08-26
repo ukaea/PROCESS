@@ -4,8 +4,8 @@ import logging
 
 import numpy as np
 
+from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessValueError
-from process.core.model import DataStructure
 from process.models import superconductors
 from process.models.superconductors import SuperconductorModel
 
@@ -282,7 +282,12 @@ def intersect(x1, y1, x2, y2, xin):
 
 
 def bmax_from_awp(
-    wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_minor, data: DataStructure
+    wp_width_radial,
+    current,
+    n_tf_coils,
+    r_coil_major,
+    r_coil_minor,
+    data: DataStructure,
 ):
     """Returns a fitted function for bmax for stellarators
 

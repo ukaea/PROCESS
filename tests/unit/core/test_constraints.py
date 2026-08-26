@@ -2,8 +2,8 @@ import contextlib
 
 import pytest
 
+from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessValueError
-from process.core.model import DataStructure
 from process.core.solver.constraints import ConstraintManager
 
 

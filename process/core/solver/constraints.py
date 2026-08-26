@@ -9,8 +9,8 @@ import numpy as np
 from tabulate import tabulate
 
 from process.core import constants, process_output
+from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessError, ProcessValueError
-from process.core.model import DataStructure
 from process.data_structure.build_variables import TFCSRadialConfiguration
 from process.data_structure.stellarator_variables import StellaratorModel
 from process.models.physics.density_limit import DensityLimitModel
@@ -2112,7 +2112,11 @@ def constraints_output(data: DataStructure, solver_name: str):
                     f"(ineq_symbol_con{nums.icc[i]:03d})",
                     f"'{constraint.symbol}'",
                 ),
-                ("units", f"(ineq_units_con{nums.icc[i]:03d})", f"'{constraint.units}'"),
+                (
+                    "units",
+                    f"(ineq_units_con{nums.icc[i]:03d})",
+                    f"'{constraint.units}'",
+                ),
                 (
                     "physical bound",
                     f"(ineq_bound_con{nums.icc[i]:03d})",
