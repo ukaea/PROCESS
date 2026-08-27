@@ -357,7 +357,9 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             * self.data.physics.rmajor
             * self.data.physics.rminor
         )
-        if self.data.divertor.n_divertors == 2:
+        if self.data.divertor.n_divertors == 0:
+            self.data.divertor.a_div_surface_total = 0.0
+        elif self.data.divertor.n_divertors == 2:
             self.data.divertor.a_div_surface_total *= 2.0
         self.data.divertor.m_div_plate = (
             self.data.divertor.a_div_surface_total
@@ -836,6 +838,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 p_div_nuclear_heat_total_mw=self.data.fwbs.p_div_nuclear_heat_total_mw,
                 p_div_rad_total_mw=self.data.fwbs.p_div_rad_total_mw,
             )
+            if self.data.divertor.n_divertors == 0:
+                self.data.heat_transport.p_div_coolant_pump_mw = 0.0
 
         elif i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL:
             # Calculate the required material properties of the FW and BB coolant.
@@ -860,6 +864,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     + self.data.fwbs.p_div_rad_total_mw
                 )
             )
+            if self.data.divertor.n_divertors == 0:
+                self.data.heat_transport.p_div_coolant_pump_mw = 0.0
 
         elif i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP:
             # Issue #503
@@ -916,6 +922,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     + self.data.fwbs.p_div_rad_total_mw
                 )
             )
+            if self.data.divertor.n_divertors == 0:
+                self.data.heat_transport.p_div_coolant_pump_mw = 0.0
             if output:
                 po.oheadr(self.outfile, "Pumping for primary coolant (helium)")
                 po.ovarre(
