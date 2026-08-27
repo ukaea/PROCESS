@@ -39,7 +39,11 @@ from numpy import typing as npt
 from process.core.exceptions import ProcessValidationError, ProcessValueError
 from process.models.neutronics.data import N_A, MaterialMacroInfo
 
-negexp = lambda x: np.exp(-x)
+
+def negexp(x):
+    """Shorthand for a function that exponentiates -x rather than x."""
+    return np.exp(-x)
+
 
 def summarize_values(func):
     """
@@ -77,24 +81,29 @@ def summarize_values(func):
     # Instead of returning a function, we return a descriptor that registers itself later
     return RegisterLater(wrapper_setattr)
 
+
 def matrix_fsum(array: npt.NDArray, axis=None):
     """Perform fsum, but ignoring one particular axis of a numpy array."""
-    if axis==None:
+    if axis is None:
         return fsum(array)
     if axis < 0:
-        axis = np.ndim(array)+axis
-    if np.ndim(array)==0:
+        axis = np.ndim(array) + axis
+    if np.ndim(array) == 0:
         return array
-    if np.ndim(array)==1:
-        if axis!=0:
-            raise ValueError(f"Shape of matrix is {np.shape(array)}, which "
-                f"cannot be summed over axis {axis}")
+    if np.ndim(array) == 1:
+        if axis != 0:
+            raise ValueError(
+                f"Shape of matrix is {np.shape(array)}, which "
+                f"cannot be summed over axis {axis}"
+            )
         return fsum(array)
-    flattenable_array = np.transpose(array, [axis,] + [i for i in range(np.ndim(array)) if i!=axis])
+    flattenable_array = np.transpose(
+        array, [axis] + [i for i in range(np.ndim(array)) if i != axis]
+    )
     output_shape = np.shape(flattenable_array[0])
     array_2d = np.array([val.flatten() for val in flattenable_array])
     return np.array([fsum(summable) for summable in array_2d.T]).reshape(output_shape)
-    
+
 
 class RegisterLater:
     """Descriptor class"""
@@ -373,7 +382,7 @@ class NeutronFluxProfile:
         flux:
             Neutron flux directly emitted by the plasma, incident on the first
             wall. unit: m^-2 s^-1
-        
+
         layer_x:
             The x-coordinates of the right side of every layers. By definition,
             the plasma is situated at x=0, so all values in layer_x must be >0.
@@ -459,7 +468,8 @@ class NeutronFluxProfile:
         self.group_energy = fw_mat.group_energy
         self.incident_neutron_group = fw_mat.incident_neutron_group
         self.fluxes = np.array([
-            flux if n == self.incident_neutron_group else 0.0 for n in range(self.n_groups)
+            flux if n == self.incident_neutron_group else 0.0
+            for n in range(self.n_groups)
         ])
 
         mat_name_list = [mat.name for mat in self.materials]
@@ -471,7 +481,6 @@ class NeutronFluxProfile:
         )
         self.num_iteration = [0 for n in range(self.n_groups)]
         self.contains_upscatter = any(not mat.downscatter_only for mat in self.materials)
-
 
     def _groupwise_cs_values_in_layer(
         self, n: int, num_layer: int, x: float | npt.NDArray
@@ -514,7 +523,7 @@ class NeutronFluxProfile:
             l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([
                 # To be factorized
-                -l* (negexp(x_upper / l) - negexp(x_lower / l)),
+                -l * (negexp(x_upper / l) - negexp(x_lower / l)),
                 l * (np.exp(x_upper / l) - np.exp(x_lower / l)),
             ])
         l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
@@ -806,13 +815,8 @@ class NeutronFluxProfile:
             top_row = self._groupwise_cs_differential_in_layer(n, 0, 0)
             y = -(
                 self.fluxes[n] / self.materials[0].diffusion_const[n]
-
             ) - self._summation_shorthand(
-                n,
-                0,
-                self._groupwise_cs_differential_in_layer,
-                0.0,
-                in_scatter_max_group
+                n, 0, self._groupwise_cs_differential_in_layer, 0.0, in_scatter_max_group
             )
 
             m_list, v_list = self._get_all_propagation_operator(n, include_upscatter)
@@ -826,19 +830,23 @@ class NeutronFluxProfile:
                 axis=0,
             )
 
-            bot_row = self._groupwise_cs_values_in_layer(
-                n, self.n_layers - 1, self.extended_boundary[n]
-            ) @ affine_transform_matrix_stack
-            z = - (
+            bot_row = (
                 self._groupwise_cs_values_in_layer(
                     n, self.n_layers - 1, self.extended_boundary[n]
-                ) @ affine_transformed_column_vector
+                )
+                @ affine_transform_matrix_stack
+            )
+            z = -(
+                self._groupwise_cs_values_in_layer(
+                    n, self.n_layers - 1, self.extended_boundary[n]
+                )
+                @ affine_transformed_column_vector
             ) - self._summation_shorthand(
-                    n,
-                    self.n_layers - 1,
-                    self._groupwise_cs_values_in_layer,
-                    self.extended_boundary[n],
-                    in_scatter_max_group,
+                n,
+                self.n_layers - 1,
+                self._groupwise_cs_values_in_layer,
+                self.extended_boundary[n],
+                in_scatter_max_group,
             )
             self.coefficients[0, n].c[n], self.coefficients[0, n].s[n] = np.linalg.solve(
                 [top_row, bot_row], [y, z]
