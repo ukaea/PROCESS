@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Literal
 import numpy as np
 from numpy import isfinite
 
-from process.core.io.data_structure_dicts import get_dicts
+from process.core.data_structure.data_structure_dicts import get_dicts
 from process.core.io.mfile.base import MFile
 
 if TYPE_CHECKING:
