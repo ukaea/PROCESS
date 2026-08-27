@@ -11,6 +11,10 @@ from parameter_frame import Parameter as DefaultParameter
 from parameter_frame import ParameterValueType
 
 KEEP_EDIT_USE_RECORDS = False
+FILTER_EDIT_USE_RECORDS_PATH: str = "/models/"
+"""Filter edit/use records that contain a substring in their path.
+If None, all record are retained.
+"""
 
 
 @dataclass(slots=True, kw_only=True, frozen=True)
@@ -195,7 +199,13 @@ class PROCESSModelData:
         if KEEP_EDIT_USE_RECORDS and isinstance(current_value, Parameter):
             try:
                 called_from = next(
-                    filter(lambda frame: "/models/" in frame.filename, inspect.stack())
+                    filter(
+                        lambda frame: (
+                            FILTER_EDIT_USE_RECORDS_PATH is None
+                            or FILTER_EDIT_USE_RECORDS_PATH in frame.filename
+                        ),
+                        inspect.stack(),
+                    )
                 )
             except StopIteration:
                 pass
@@ -225,7 +235,13 @@ class PROCESSModelData:
         ):
             try:
                 called_from = next(
-                    filter(lambda frame: "/models/" in frame.filename, inspect.stack())
+                    filter(
+                        lambda frame: (
+                            FILTER_EDIT_USE_RECORDS_PATH is None
+                            or FILTER_EDIT_USE_RECORDS_PATH in frame.filename
+                        ),
+                        inspect.stack(),
+                    )
                 )
             except StopIteration:
                 return current_value
