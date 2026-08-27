@@ -104,7 +104,7 @@ class ScrapeOffLayer(Model):
             / self.data.physics.a_plasma_outboard_sol_eich13_parallel
         )
 
-        self.data.physics.len_div_outboard_lower_scrabosio14_power_spreading = self.calculate_scarabosio2014_power_spreading_factor(  # noqa: E501
+        self.data.physics.len_div_outboard_lower_scarabosio15_power_spreading = self.calculate_scarabosio2015_power_spreading_factor(  # noqa: E501
             p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
             b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
             nd_plasma_separatrix_electron_19=self.data.physics.nd_plasma_separatrix_electron
@@ -113,7 +113,7 @@ class ScrapeOffLayer(Model):
         )
 
         self.data.physics.len_div_outboard_lower_power_spreading = (
-            self.data.physics.len_div_outboard_lower_scrabosio14_power_spreading
+            self.data.physics.len_div_outboard_lower_scarabosio15_power_spreading
         )
 
     def output(self) -> None:
@@ -213,9 +213,9 @@ class ScrapeOffLayer(Model):
         )
         po.ovarre(
             self.outfile,
-            "Scrabosio 2014 H-mode power spreading factor (S) [m]",
-            "(len_div_outboard_lower_scrabosio14_power_spreading)",
-            self.data.physics.len_div_outboard_lower_scrabosio14_power_spreading,
+            "Scarabosio 2015 H-mode power spreading factor (S) [m]",
+            "(len_div_outboard_lower_scarabosio15_power_spreading)",
+            self.data.physics.len_div_outboard_lower_scarabosio15_power_spreading,
         )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
@@ -524,13 +524,13 @@ class ScrapeOffLayer(Model):
         ) + pflux_target_background_heat_flux_mw
 
     @staticmethod
-    def calculate_scarabosio2014_power_spreading_factor(
+    def calculate_scarabosio2015_power_spreading_factor(
         p_plasma_separatrix_mw: float,
         b_plasma_surface_poloidal_average: float,
         nd_plasma_separatrix_electron_19: float,
         rmajor: float,
     ) -> float:
-        """Calculate the Scrabosio 2014 H-mode power spreading factor (S).
+        """Calculate the Scarabosio 2015 H-mode power spreading factor (S).
 
         Parameters
         ----------
@@ -546,7 +546,7 @@ class ScrapeOffLayer(Model):
         Returns
         -------
         float
-            Scrabosio 2014 H-mode power spreading factor (S) [m]
+            Scarabosio 2015 H-mode power spreading factor (S) [m]
 
         Notes
         -----
