@@ -66,7 +66,7 @@ def init_process(data: DataStructure, update_obsolete: bool = False):
     # Creating and open the files MFile and OUTFile
     process_output.OutputFileManager.open_files(data.globals.output_prefix)
 
-    filename = data.globals.output_prefix + "IN.DAT"
+    filename = data.globals.fileprefix
     # InDat reads in and updates obsolete variables if requested
     in_dat = InDat(filename=filename, update_obsolete=update_obsolete)  # noqa: F841
 
