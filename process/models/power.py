@@ -820,6 +820,14 @@ class Power(Model):
         and plant power balance constituents.
         None
         """
+        p_limiter_mw = (
+            self.data.physics.p_plasma_separatrix_mw
+            if self.data.divertor.n_divertors == 0
+            else 0.0
+        )
+        if self.data.divertor.n_divertors == 0:
+            self.data.heat_transport.p_div_coolant_pump_mw = 0.0
+
         i_p_coolant_pumping = PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping)
         if i_p_coolant_pumping not in {
             PumpingPowerModelTypes.MECHANICAL,
@@ -908,6 +916,7 @@ class Power(Model):
                 + self.data.current_drive.p_beam_orbit_loss_mw
                 + self.data.physics.p_fw_alpha_mw
                 + self.data.current_drive.p_beam_shine_through_mw
+                + p_limiter_mw
             )
         else:
             # No secondary liquid metal breeder/coolant
@@ -919,6 +928,7 @@ class Power(Model):
                 + self.data.current_drive.p_beam_orbit_loss_mw
                 + self.data.physics.p_fw_alpha_mw
                 + self.data.current_drive.p_beam_shine_through_mw
+                + p_limiter_mw
             )
 
         #  Total power deposited in first wall coolant (MW)
@@ -929,6 +939,7 @@ class Power(Model):
             + self.data.current_drive.p_beam_orbit_loss_mw
             + self.data.physics.p_fw_alpha_mw
             + self.data.current_drive.p_beam_shine_through_mw
+            + p_limiter_mw
         )
 
         #  Total power deposited in blanket coolant (MW)
@@ -945,14 +956,17 @@ class Power(Model):
         )
 
         #  Total thermal power deposited in divertor (MW)
-        self.data.power.p_div_heat_deposited_mw = (
-            self.data.physics.p_plasma_separatrix_mw
-            + (
-                self.data.fwbs.p_div_nuclear_heat_total_mw
-                + self.data.fwbs.p_div_rad_total_mw
+        if self.data.divertor.n_divertors == 0:
+            self.data.power.p_div_heat_deposited_mw = 0.0
+        else:
+            self.data.power.p_div_heat_deposited_mw = (
+                self.data.physics.p_plasma_separatrix_mw
+                + (
+                    self.data.fwbs.p_div_nuclear_heat_total_mw
+                    + self.data.fwbs.p_div_rad_total_mw
+                )
+                + self.data.heat_transport.p_div_coolant_pump_mw
             )
-            + self.data.heat_transport.p_div_coolant_pump_mw
-        )
 
         #  Heat removal from first wall and divertor (MW) (only used in costs.f90)
         i_p_coolant_pumping = PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping)
@@ -1162,6 +1176,13 @@ class Power(Model):
             "(p_fw_coolant_pump_mw)",
             self.data.heat_transport.p_fw_coolant_pump_mw,
         )
+        if self.data.divertor.n_divertors == 0:
+            po.ovarre(
+                self.outfile,
+                "Plasma separatrix power deposited on limiter [MW]",
+                "(p_plasma_separatrix_mw)",
+                self.data.physics.p_plasma_separatrix_mw,
+            )
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
@@ -1260,45 +1281,43 @@ class Power(Model):
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
         po.oblnkl(self.outfile)
-        po.ocmmnt(self.outfile, "Divertor : ")
-        po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Plasma separatrix power deposited in divertor [MW]",
-            "(p_plasma_separatrix_mw)",
-            self.data.physics.p_plasma_separatrix_mw,
-        )
-        po.ovarre(
-            self.outfile,
-            "Neutronic nuclear heat deposited in divertor [MW]",
-            "(p_div_nuclear_heat_total_mw)",
-            self.data.fwbs.p_div_nuclear_heat_total_mw,
-        )
-        po.ovarre(
-            self.outfile,
-            "Radiation heat deposited in divertor [MW]",
-            "(p_div_rad_total_mw)",
-            self.data.fwbs.p_div_rad_total_mw,
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Mechancial pumping power deposited in divertor coolant [MW]",
-            "(p_div_coolant_pump_mw)",
-            self.data.heat_transport.p_div_coolant_pump_mw,
-        )
-
-        po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Total heat deposited in divertor and coolants [MW]",
-            "(p_div_heat_deposited_mw)",
-            self.data.power.p_div_heat_deposited_mw,
-        )
-
-        po.oblnkl(self.outfile)
-        po.ocmmnt(self.outfile, "----------------------------")
-        po.oblnkl(self.outfile)
+        if self.data.divertor.n_divertors > 0:
+            po.ocmmnt(self.outfile, "Divertor : ")
+            po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "Plasma separatrix power deposited in divertor [MW]",
+                "(p_plasma_separatrix_mw)",
+                self.data.physics.p_plasma_separatrix_mw,
+            )
+            po.ovarre(
+                self.outfile,
+                "Neutronic nuclear heat deposited in divertor [MW]",
+                "(p_div_nuclear_heat_total_mw)",
+                self.data.fwbs.p_div_nuclear_heat_total_mw,
+            )
+            po.ovarre(
+                self.outfile,
+                "Radiation heat deposited in divertor [MW]",
+                "(p_div_rad_total_mw)",
+                self.data.fwbs.p_div_rad_total_mw,
+            )
+            po.ovarre(
+                self.outfile,
+                "Mechancial pumping power deposited in divertor coolant [MW]",
+                "(p_div_coolant_pump_mw)",
+                self.data.heat_transport.p_div_coolant_pump_mw,
+            )
+            po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "Total heat deposited in divertor and coolants [MW]",
+                "(p_div_heat_deposited_mw)",
+                self.data.power.p_div_heat_deposited_mw,
+            )
+            po.oblnkl(self.outfile)
+            po.ocmmnt(self.outfile, "----------------------------")
+            po.oblnkl(self.outfile)
 
         po.ovarre(
             self.outfile,
@@ -1331,12 +1350,13 @@ class Power(Model):
             "(p_coolant_pump_loss_total_mw)",
             self.data.heat_transport.p_coolant_pump_loss_total_mw,
         )
-        po.ovarre(
-            self.outfile,
-            "Divertor thermal power not used for electricity production [MW]",
-            "(p_div_secondary_heat_mw)",
-            self.data.heat_transport.p_div_secondary_heat_mw,
-        )
+        if self.data.divertor.n_divertors > 0:
+            po.ovarre(
+                self.outfile,
+                "Divertor thermal power not used for electricity production [MW]",
+                "(p_div_secondary_heat_mw)",
+                self.data.heat_transport.p_div_secondary_heat_mw,
+            )
         po.ovarre(
             self.outfile,
             "Shield thermal power not used for electricity production [MW]",
@@ -1409,19 +1429,20 @@ class Power(Model):
             self.data.power.p_shld_heat_deposited_mw,
         )
         po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Total heat deposited in divertor and coolants [MW]",
-            "(p_div_heat_deposited_mw)",
-            self.data.power.p_div_heat_deposited_mw,
-        )
-        po.ovarre(
-            self.outfile,
-            "Fraction of total primary heat originating from divertor",
-            "(f_p_div_primary_heat)",
-            self.data.power.f_p_div_primary_heat,
-        )
-        po.oblnkl(self.outfile)
+        if self.data.divertor.n_divertors > 0:
+            po.ovarre(
+                self.outfile,
+                "Total heat deposited in divertor and coolants [MW]",
+                "(p_div_heat_deposited_mw)",
+                self.data.power.p_div_heat_deposited_mw,
+            )
+            po.ovarre(
+                self.outfile,
+                "Fraction of total primary heat originating from divertor",
+                "(f_p_div_primary_heat)",
+                self.data.power.f_p_div_primary_heat,
+            )
+            po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Total primary thermal power used for electricity production [MW]",
@@ -1564,12 +1585,13 @@ class Power(Model):
             "(p_shld_coolant_pump_elec_mw)",
             self.data.power.p_shld_coolant_pump_elec_mw,
         )
-        po.ovarre(
-            self.outfile,
-            "Electric power demand of Divertor colant pumps [MWe]",
-            "(p_div_coolant_pump_elec_mw)",
-            self.data.power.p_div_coolant_pump_elec_mw,
-        )
+        if self.data.divertor.n_divertors > 0:
+            po.ovarre(
+                self.outfile,
+                "Electric power demand of Divertor colant pumps [MWe]",
+                "(p_div_coolant_pump_elec_mw)",
+                self.data.power.p_div_coolant_pump_elec_mw,
+            )
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
