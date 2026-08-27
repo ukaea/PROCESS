@@ -286,6 +286,7 @@ def test_input_file(
     opt_params_only: bool,
     hide_model_logs,
     cli_runner,
+    request,
 ):
     """Tests each input file in the 'input_files' directory.
 
@@ -327,9 +328,25 @@ def test_input_file(
 
     scenario = RegressionTestScenario(new_input_file)
 
-    reference_mfile = tracked_regression_test_assets.get_reference_mfile(
-        scenario.scenario_name
-    )
+    local_repo = request.config.getoption("--local-repository")
+
+    if local_repo is None:
+        reference_mfile = tracked_regression_test_assets.get_reference_mfile(
+            scenario.scenario_name
+        )
+    else:
+        # Note that the MFILE must be present in the local repository with the exact
+        # naming pattern as the IN.DAT (including capitalisation, IN.DAT and MFILE.DAT
+        # must be capitals):
+        # - MY.IN.DAT -> MY.MFILE.DAT
+        # - MY_IN.DAT -> MY_MFILE.DAT
+        # - myIN.DAT -> myMFILE.DAT
+        # This naming convention is consistent with PROCESS but is inconsistent with the
+        # remote repoistory for legacy reasons (i.e. scenario_name does not follow
+        # this convention).
+        reference_mfile = Path(
+            local_repo, input_file.name.replace("IN.DAT", "MFILE.DAT")
+        )
 
     scenario.run(solver_name, cli_runner)
 
