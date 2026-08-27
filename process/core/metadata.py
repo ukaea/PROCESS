@@ -1,6 +1,7 @@
 """Classes related to handling and collecting metadata on the PROCESS data structure."""
 
 import inspect
+import logging
 from collections.abc import Generator
 from copy import deepcopy
 from dataclasses import asdict, dataclass, fields
@@ -9,6 +10,8 @@ from typing import Annotated, Any, Generic, get_args, get_origin
 import numpy as np
 from parameter_frame import Parameter as DefaultParameter
 from parameter_frame import ParameterValueType
+
+logger = logging.getLogger(__name__)
 
 KEEP_EDIT_USE_RECORDS = False
 FILTER_EDIT_USE_RECORDS_PATH: str = "/models/"
@@ -115,6 +118,20 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
 
     @property
     def usage_records(self) -> list[UseRecord]:
+        """The usage records for this Parameter.
+
+        Raises
+        ------
+        RuntimeError
+            KEEP_EDIT_USE_RECORDS is false meaning no uses of this Parameter
+            would have been recorded.
+
+        Notes
+        -----
+        If `dataclass.my_param.usage_records` is called in a file that matches the
+        FILTER_EDIT_USE_RECORDS_PATH then this action will create a new use record
+        which will be included in the return from this method.
+        """
         if not KEEP_EDIT_USE_RECORDS:
             raise RuntimeError(
                 f"Usage records are disabled because {KEEP_EDIT_USE_RECORDS = }"
@@ -192,10 +209,12 @@ class PROCESSModelData:
 
     def __setattr__(self, name, value):
         # we are setting this attribute for the first time (e.g. creating the dataclass)
-        if not hasattr(self, name):
+        if not self._hasattr(name):
             super().__setattr__(name, value)
 
-        current_value = getattr(self, name)
+        # Do not want a use record to be created here because we editing it
+        current_value = self.__getattribute__(name, record=False)
+
         if KEEP_EDIT_USE_RECORDS and isinstance(current_value, Parameter):
             try:
                 called_from = next(
@@ -224,14 +243,44 @@ class PROCESSModelData:
                 )
 
         # Not everything is a Parameter in PROCESS
-        if isinstance(current_value, Parameter) and not isinstance(value, Parameter):
+        if isinstance(current_value, Parameter):
+            logger.debug(
+                f"Doing self.{name} = {value!r} only copies {value} into "
+                f"{name}.value. Use set_field to exactly set the dataclass field."
+            )
+            if isinstance(value, Parameter):
+                current_value.set_value(value.value, source=value.name)
+                return
             current_value.set_value(value)
             return
+
         super().__setattr__(name, value)
 
-    def __getattribute__(self, name):
-        if KEEP_EDIT_USE_RECORDS and (
-            isinstance(current_value := super().__getattribute__(name), Parameter)
+    def set_field(self, name, value):
+        """Forcibly set self.name to value.
+
+        This bypasses the Parameter logic when doing self.name = value which maintains
+        the Parameterness of self.name.
+        """
+        super().__setattr__(name, value)
+
+    def _hasattr(self, name: str) -> bool:
+        """Checks if this object has an attribute `name`.
+
+        This method is implemented because using the traditional hasattr(self, name)
+        calls getattr() which causes an access record to be created.
+        """
+        try:
+            self.__getattribute__(name, record=False)
+        except AttributeError:
+            return False
+        return True
+
+    def __getattribute__(self, name, *, record: bool = True):
+        if (
+            record
+            and KEEP_EDIT_USE_RECORDS
+            and (isinstance(current_value := super().__getattribute__(name), Parameter))
         ):
             try:
                 called_from = next(
