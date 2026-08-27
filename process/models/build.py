@@ -4,6 +4,7 @@ import logging
 from enum import IntEnum, unique
 
 import numpy as np
+from tabulate import tabulate
 
 from process.core import constants
 from process.core import process_output as po
@@ -200,7 +201,8 @@ class Build(Model):
                 ),
             )
         )
-        vbuild = self.write_obuild(
+
+        vbuild, vbuild_top_table = self.create_vbuild_table(
             vbuild=vbuild,
             entry=[
                 (
@@ -268,7 +270,11 @@ class Build(Model):
                 "(dz_vv_upper)",
                 bld.dz_vv_upper,
             ),
-            ("Top radiation shield thickness (m)", "(dz_shld_upper)", bld.dz_shld_upper),
+            (
+                "Top radiation shield thickness (m)",
+                "(dz_shld_upper)",
+                bld.dz_shld_upper,
+            ),
             *top,
             (
                 "Top scrape-off vertical thickness (m)",
@@ -289,9 +295,10 @@ class Build(Model):
         ]:
             po.ovarre(self.mfile, desc, name, val)
 
-        po.obuild(self.outfile, "Midplane", 0.0e0, vbuild)
+        vbuild_table = [*vbuild_top_table]
+        vbuild_table.append(("Midplane", 0.0, vbuild, ""))
 
-        vbuild = self.write_obuild(
+        vbuild, vbuild_bottom_table = self.create_vbuild_table(
             vbuild=vbuild,
             entry=[
                 (
@@ -318,6 +325,7 @@ class Build(Model):
             ],
             before=True,
         )
+        vbuild_table.extend(vbuild_bottom_table)
         for desc, name, val in [
             (
                 "Plasma lower X-point height (m)",
@@ -347,6 +355,19 @@ class Build(Model):
         ]:
             po.ovarre(self.mfile, desc, name, val)
 
+        po.write(
+            self.outfile,
+            tabulate(
+                vbuild_table,
+                headers=[
+                    "Description",
+                    "Component height",
+                    "Cumulative height",
+                    "Variable name",
+                ],
+            ),
+        )
+
         # Total height of TF coil
         tf_height = tf_top - vbuild + self.data.buildings.dz_tf_cryostat
         # Inner vertical dimension of TF coil
@@ -355,8 +376,9 @@ class Build(Model):
         # To calculate vertical offset between TF coil centre and plasma centre
         bld.dz_tf_plasma_centre_offset = (vbuile1 + vbuild) / 2.0e0
 
-    def write_obuild(
-        self, vbuild: float, entry: list[tuple[str, float, str]], *, before=False
+    @staticmethod
+    def create_vbuild_table(
+        vbuild: float, entry: list[tuple[str, float, str]], *, before=False
     ):
         """Write obuild entry
 
@@ -371,14 +393,14 @@ class Build(Model):
             or after recording the vertical build value.
             Top half of the machine set to False, lower half set to True
         """
+        table = []
         for desc, var, name in entry:
             if before:
                 vbuild -= var
-            po.obuild(self.outfile, desc, var, vbuild, name)
+            table.append((desc, var, vbuild, name))
             if not before:
                 vbuild -= var
-
-        return vbuild
+        return vbuild, table
 
     def calculate_vertical_build(self, output: bool):
         """Determines the vertical build of the machine.
@@ -767,7 +789,11 @@ class Build(Model):
                 ("Upper inner plate top, vertical (m)", "(-zplti)", -zplti),
                 ("Upper inner plate bottom, radial (m)", "(rplbi)", rplbi),
                 ("Upper inner plate bottom, vertical (m)", "(-zplbi)", -zplbi),
-                ("Upper outer strike point, radial (m)", "(rspo)", self.data.build.rspo),
+                (
+                    "Upper outer strike point, radial (m)",
+                    "(rspo)",
+                    self.data.build.rspo,
+                ),
                 ("Upper outer strike point, vertical (m)", "(-zspo)", -zspo),
                 ("Upper outer plate top, radial (m)", "(rplto)", rplto),
                 ("Upper outer plate top, vertical (m)", "(-zplto)", -zplto),
@@ -779,7 +805,11 @@ class Build(Model):
                 ("Lower inner plate top, vertical (m)", "(zplti)", zplti),
                 ("Lower inner plate bottom, radial (m)", "(rplbi)", rplbi),
                 ("Lower inner plate bottom, vertical (m)", "(zplbi)", zplbi),
-                ("Lower outer strike point, radial (m)", "(rspo)", self.data.build.rspo),
+                (
+                    "Lower outer strike point, radial (m)",
+                    "(rspo)",
+                    self.data.build.rspo,
+                ),
                 ("Lower outer strike point, vertical (m)", "(zspo)", zspo),
                 ("Lower outer plate top, radial (m)", "(rplto)", rplto),
                 ("Lower outer plate top, vertical (m)", "(zplto)", zplto),
@@ -1394,7 +1424,11 @@ class Build(Model):
             ))
 
         radial_build_data.extend((
-            ["TF coil inboard leg insulation gap", "dr_tf_shld_gap", bld.dr_tf_shld_gap],
+            [
+                "TF coil inboard leg insulation gap",
+                "dr_tf_shld_gap",
+                bld.dr_tf_shld_gap,
+            ],
             [
                 "Thermal shield, inboard",
                 "dr_shld_thermal_inboard",
@@ -1427,7 +1461,11 @@ class Build(Model):
             ["Gap", "dr_shld_blkt_gap", bld.dr_shld_blkt_gap],
             ["Outer radiation shield", "dr_shld_outboard", bld.dr_shld_outboard],
             ["Outboard vacuum vessel", "dr_vv_outboard", bld.dr_vv_outboard],
-            ["Vessel to TF gap", "dr_shld_vv_gap_outboard", bld.dr_shld_vv_gap_outboard],
+            [
+                "Vessel to TF gap",
+                "dr_shld_vv_gap_outboard",
+                bld.dr_shld_vv_gap_outboard,
+            ],
             [
                 "Outboard thermal shield",
                 "dr_shld_thermal_outboard",
