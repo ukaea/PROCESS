@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from process.data_structure.stellarator_variables import StellaratorModel
-
 if TYPE_CHECKING:
     from process.core.data_structure.base import DataStructure
 
@@ -17,9 +15,6 @@ def st_init(data: DataStructure):
     Many of these may override the values set in routine
 
     """
-    if data.stellarator.istell == StellaratorModel.DISABLED:
-        return
-
     data.numerics.boundu[0] = 40.0  # allow higher aspect ratio
 
     # These lines switch off tokamak specifics (solenoid, pf coils, pulses etc.).
