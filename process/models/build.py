@@ -1479,6 +1479,7 @@ class Build(Model):
         # of a `None` variable component
         index = 0
         radius = 0.0e0
+        radial_build_table = []
         for description, variable, thickness in radial_build_data:
             if variable is None:
                 continue
@@ -1486,7 +1487,7 @@ class Build(Model):
             radius += thickness
 
             var = f"({variable})" if variable else ""
-            po.obuild(self.outfile, description, thickness, radius, var)
+            radial_build_table.append((description, thickness, radius, var))
 
             for d, n, v in [
                 (f"{description} radial thickness (m)", f"({variable})", thickness),
@@ -1503,6 +1504,18 @@ class Build(Model):
             ]:
                 po.ovarre(self.mfile, d, n, v)
 
+        po.write(
+            self.outfile,
+            tabulate(
+                radial_build_table,
+                [
+                    "Description",
+                    "Component thickness",
+                    "Cumulative thickness",
+                    "Variable name",
+                ],
+            ),
+        )
         if (
             CurrentDriveModel(
                 self.data.current_drive.i_hcd_primary
