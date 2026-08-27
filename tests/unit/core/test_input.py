@@ -10,6 +10,12 @@ from process.core.exceptions import ProcessValidationError
 from process.data_structure.numerics import PROCESSRunMode
 
 
+@pytest.fixture(autouse=True)
+def turn_off_check_process(monkeypatch):
+    """These are parser tests; configuration validation is not a part of test."""
+    monkeypatch.setattr(init, "check_process", lambda *_: None)
+
+
 @pytest.fixture
 def data_structure_obj():
     return DataStructure()
