@@ -74,9 +74,6 @@ def init_process(data: DataStructure):
     # set the device type (icase)
     set_device_type(data)
 
-    # Initialise the Stellarator
-    st_init(data)
-
     # Check input data for errors/ambiguities
     check_process(inputs, data)
 
@@ -1343,3 +1340,4 @@ def set_device_type(data: DataStructure):
         data.globals.icase = "Inertial Fusion model"
     elif data.stellarator.istell != StellaratorModel.DISABLED:
         data.globals.icase = "Stellarator model"
+        st_init(data)
