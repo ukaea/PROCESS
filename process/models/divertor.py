@@ -38,6 +38,14 @@ class Divertor(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
+        if self.data.divertor.n_divertors == 0:
+            self.data.divertor.deg_div_poloidal_plasma = 0.0
+            self.data.fwbs.f_ster_div_single = 0.0
+            self.data.fwbs.p_div_nuclear_heat_total_mw = 0.0
+            self.data.fwbs.p_div_rad_total_mw = 0.0
+            self.data.divertor.pflux_div_heat_load_mw = 0.0
+            return
+
         self.data.divertor.deg_div_poloidal_plasma = self.single_divertor_angle
         self.data.fwbs.f_ster_div_single = (
             self.data.divertor.deg_div_poloidal_plasma / 360.0
@@ -461,6 +469,11 @@ class LowerDivertor(Divertor):
         """Run the LowerDivertor routines"""
         super().run(output=output)
 
+        if self.data.divertor.n_divertors == 0:
+            self.data.divertor.p_div_lower_nuclear_heat_mw = 0.0
+            self.data.divertor.p_div_lower_rad_mw = 0.0
+            return
+
         self.data.divertor.p_div_lower_nuclear_heat_mw = self.incident_neutron_power(
             p_plasma_neutron_mw=self.data.physics.p_plasma_neutron_mw,
             f_ster_div_single=self.data.fwbs.f_ster_div_single,
@@ -480,6 +493,11 @@ class UpperDivertor(Divertor):
     def run(self, output: bool):
         """Run the UpperDivertor routine"""
         super().run(output=output)
+
+        if self.data.divertor.n_divertors == 0:
+            self.data.divertor.p_div_upper_nuclear_heat_mw = 0.0
+            self.data.divertor.p_div_upper_rad_mw = 0.0
+            return
 
         self.data.divertor.p_div_upper_nuclear_heat_mw = self.incident_neutron_power(
             p_plasma_neutron_mw=self.data.physics.p_plasma_neutron_mw,
