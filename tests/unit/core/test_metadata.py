@@ -64,19 +64,23 @@ class ExampleModelDataclass(PROCESSModelData):
     ] = 42.0
 
 
-def test_process_model_data_parameter():
-    data = ExampleModelDataclass()
-
-    assert data.my_param == 42
-    assert data.my_param.description == "My parameter"
-    assert data.my_param.long_name == "my_parameter"
+@pytest.fixture
+def example_model_dataclass():
+    return ExampleModelDataclass()
 
 
-def test_process_model_data_parameter_mutation():
-    data = ExampleModelDataclass()
+def test_process_model_data_parameter(example_model_dataclass):
+    assert example_model_dataclass.my_param == 42.0  # ruff:ignore[RUF069]
+    assert example_model_dataclass.my_param.value == 42.0  # ruff:ignore[RUF069]
+    assert example_model_dataclass.my_param.description == "My parameter"
+    assert example_model_dataclass.my_param.long_name == "my_parameter"
 
-    data.my_param *= 2
-    assert data.my_param == 84
 
-    data.my_param = data.my_param * 2  # ruff:ignore[PLR6104]
-    assert data.my_param == 168
+def test_process_model_data_parameter_mutation(example_model_dataclass):
+    example_model_dataclass.my_param *= 2
+    assert isinstance(example_model_dataclass.my_param, Parameter)
+    assert example_model_dataclass.my_param == 84
+
+    example_model_dataclass.my_param = example_model_dataclass.my_param * 2  # ruff:ignore[PLR6104]
+    assert isinstance(example_model_dataclass.my_param, Parameter)
+    assert example_model_dataclass.my_param == 168
