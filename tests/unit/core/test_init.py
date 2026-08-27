@@ -4,7 +4,7 @@ import pytest
 
 from process.core.exceptions import ProcessValidationError
 from process.core.init import check_process
-from process.core.model import DataStructure
+from process.core.data_structure.base import DataStructure
 from process.models.tfcoil.base import TFConductorModel
 
 
