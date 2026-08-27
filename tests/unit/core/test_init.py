@@ -76,21 +76,23 @@ def test_explicit_thickness_resistive_tf_is_accepted():
     assert "dr_tf_inboard" not in _validation_error_message(data)
 
 
-def test_thickness_iteration_variable_does_not_exempt():
+@pytest.mark.parametrize("bad_value", [0.0, -0.5])
+def test_thickness_iteration_variable_does_not_exempt(bad_value):
     """ixc = 13 does not exempt a non-positive input value: it seeds the
-    first model evaluation, an exactly-zero value is only rejected later by
-    the generic iteration-variable check, and a negative value is not
-    rejected at all (the 1/value scaling inverts the variable's bounds).
+    first model evaluation, and an exactly-zero value is only rejected
+    later by the generic iteration-variable check.  A negative value
+    cannot come from an input file (the parser bounds dr_tf_inboard to
+    [0, 10]), but check_process guards the data structure however it was
+    populated.
     """
-    for bad_value in (0.0, -0.5):
-        data = DataStructure()
-        data.tfcoil.i_tf_sup = TFConductorModel.SUPERCONDUCTING
-        data.build.dr_tf_inboard = bad_value
-        data.numerics.n_iteration_variables = 1
-        data.numerics.ixc[0] = 13
+    data = DataStructure()
+    data.tfcoil.i_tf_sup = TFConductorModel.SUPERCONDUCTING
+    data.build.dr_tf_inboard = bad_value
+    data.numerics.n_iteration_variables = 1
+    data.numerics.ixc[0] = 13
 
-        with pytest.raises(ProcessValidationError, match="dr_tf_inboard"):
-            check_process(None, data)
+    with pytest.raises(ProcessValidationError, match="dr_tf_inboard"):
+        check_process(None, data)
 
 
 def test_stellarator_is_not_checked():
