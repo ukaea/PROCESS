@@ -26,7 +26,7 @@ BARNS_TO_M2 = 1e-28
 N_A = Avogadro
 EV_TO_J = 1.602e-19
 DT_NEUTRON_E = 14.06e6 * EV_TO_J
-NEUTRON_MASS_AS_ENERGY = 939.565E6 * EV_TO_J
+NEUTRON_MASS_AS_ENERGY = 939.565e6 * EV_TO_J
 SPEED_OF_LIGHT = 299_792_458
 
 with open(Path(__file__).parent / "atomic_data.json") as j:
@@ -221,6 +221,7 @@ MT_SCAT_INELASTIC = MTTreeNode(
     },
 )
 
+
 def calculate_mean_energy_and_incident_bin(
     group_structure: npt.NDArray[np.float64],
     init_neutron_e: float,
@@ -279,6 +280,7 @@ def calculate_mean_energy_and_incident_bin(
         )
     weighted_mean[first_bin] = init_neutron_e
     return weighted_mean, incident_neutron_group
+
 
 class ExtractedNuclearData:
     """
@@ -348,7 +350,9 @@ class ExtractedNuclearData:
             self.rules["elastic_scattering"].resolve_xs(
                 self.endf_record, self.group_structure
             )
-            * scattering_weight_matrix(self.group_structure, self.group_energy, self.atomic_mass).T
+            * scattering_weight_matrix(
+                self.group_structure, self.group_energy, self.atomic_mass
+            ).T
         ).T
         self.sigma_scatter += (
             self.rules["inelastic_scattering"].resolve_xs(
@@ -488,10 +492,12 @@ def is_natural(iso_name: str):
 def _get_alpha(atomic_mass: float):
     return ((atomic_mass - 1) / (atomic_mass + 1)) ** 2
 
-def relativistic_energy_to_speed(energy_in_J):
+
+def relativistic_energy_to_speed(energy_in_J):  # noqa: N803
     """Calculate neutron's speed from its relativistic kinetic energy"""
     ratio = energy_in_J / NEUTRON_MASS_AS_ENERGY
-    return np.sqrt(1-1/(ratio+1)**2) * SPEED_OF_LIGHT
+    return np.sqrt(1 - 1 / (ratio + 1) ** 2) * SPEED_OF_LIGHT
+
 
 def scattering_weight_matrix(
     group_structure: npt.NDArray[np.float64],
@@ -871,21 +877,11 @@ class MaterialMacroInfo:
     def _add_data_from_single_record(
         self, xs_data: ExtractedNuclearData, partial_number_density: float
     ) -> None:
-        if not np.isclose(
-                self.group_structure, xs_data.group_structure, atol=0.0
-            ).all():
-            raise ValueError(
-                f"Mismatched group structure between {self} and {xs_data}."
-            )
-        if not np.isclose(
-                self.group_energy, xs_data.group_energy, atol=0.0
-            ).all():
-            raise ValueError(
-                f"Mismatched group energy between {self} and {xs_data}."
-            )
-        if not np.isclose(
-                self.init_neutron_energy, xs_data.init_neutron_energy
-            ):
+        if not np.isclose(self.group_structure, xs_data.group_structure, atol=0.0).all():
+            raise ValueError(f"Mismatched group structure between {self} and {xs_data}.")
+        if not np.isclose(self.group_energy, xs_data.group_energy, atol=0.0).all():
+            raise ValueError(f"Mismatched group energy between {self} and {xs_data}.")
+        if not np.isclose(self.init_neutron_energy, xs_data.init_neutron_energy):
             raise ValueError(
                 f"Mismatched incident neutron energy between {self} and {xs_data}."
             )

@@ -133,11 +133,17 @@ def test_units():
     assert nfp.get_output_unit(nfp.groupwise_neutron_heating_at) == "W m^-3"
     assert nfp.get_output_unit(nfp.groupwise_neutron_heating_in_layer) == "W m^-3"
     assert nfp.get_output_unit(nfp.groupwise_tritium_production_at) == "mole m^-3 s^-1"
-    assert nfp.get_output_unit(nfp.groupwise_tritium_production_in_layer) == "mole m^-3 s^-1"
+    assert (
+        nfp.get_output_unit(nfp.groupwise_tritium_production_in_layer)
+        == "mole m^-3 s^-1"
+    )
 
     assert nfp.get_output_unit(nfp.integrated_flux_in_layer) == "m^-1 s^-1"
     assert nfp.get_output_unit(nfp.integrated_heating_in_layer) == "W m^-2"
-    assert nfp.get_output_unit(nfp.integrated_tritium_production_in_layer) == "mole m^-2 s^-1"
+    assert (
+        nfp.get_output_unit(nfp.integrated_tritium_production_in_layer)
+        == "mole m^-2 s^-1"
+    )
     assert nfp.get_output_unit(nfp.neutron_current_at) == "m^-2 s^-1"
     assert nfp.get_output_unit(nfp.neutron_current_escaped) == "m^-2 s^-1"
     assert nfp.get_output_unit(nfp.neutron_current_in_layer) == "m^-2 s^-1"
@@ -444,58 +450,55 @@ def test_four_group():
         ),
     ), "Conservation of neutrons"
 
+
 def test_potential_negative_flux():
     dummy = np.geomspace(MAX_E, MIN_E, 5)  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
-    mfp_fw_s = 118 * 0.01  # [m]
-    mfp_fw_t = 16.65 * 0.01  # [m]
-
-    sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     tungsten = MaterialMacroInfo(dummy, 19300.0, {"Te": 1.0}, name="tungsten")
-    tungsten._set_sigma(
-        [ 36.70793446, 82.75605723, 557.10852765, 68.99371192],
+    tungsten._set_sigma(  # noqa: SLF001
+        [36.70793446, 82.75605723, 557.10852765, 68.99371192],
         [
-            [3.56412195e+00, 3.10469266e-03, 1.86354209e-07, 9.59501248e-11],
-            [0.00000000e+00, 7.17103718e+00, 2.01902003e-02, 3.70852436e-06],
-            [0.00000000e+00, 0.00000000e+00, 7.95579530e+00, 2.28258235e-02],
-            [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 7.98194881e+00]
+            [3.56412195e00, 3.10469266e-03, 1.86354209e-07, 9.59501248e-11],
+            [0.00000000e00, 7.17103718e00, 2.01902003e-02, 3.70852436e-06],
+            [0.00000000e00, 0.00000000e00, 7.95579530e00, 2.28258235e-02],
+            [0.00000000e00, 0.00000000e00, 0.00000000e00, 7.98194881e00],
         ],
     )
     lithium = MaterialMacroInfo(dummy, 534.0, {"Te": 1.0}, name="lithium")
-    lithium._set_sigma(
-        [ 8.53058076,  5.00130054,  8.6628814 , 54.01467005],
+    lithium._set_sigma(  # noqa: SLF001
+        [8.53058076, 5.00130054, 8.6628814, 54.01467005],
         [
-            [6.2826794 , 0.01282172, 0.        , 0.        ],
-            [0.        , 4.41033136, 0.02001536, 0.        ],
-            [0.        , 0.        , 4.42975314, 0.02010321],
-            [0.        , 0.        , 0.        , 4.22604695]
-        ]
+            [6.2826794, 0.01282172, 0.0, 0.0],
+            [0.0, 4.41033136, 0.02001536, 0.0],
+            [0.0, 0.0, 4.42975314, 0.02010321],
+            [0.0, 0.0, 0.0, 4.22604695],
+        ],
     )
     ss316 = MaterialMacroInfo(dummy, 7930.0, {"Te": 1.0}, name="ss316")
-    ss316._set_sigma(
-        [  58.75691059,  274.00378023, 3562.92253327,   86.75244242],
+    ss316._set_sigma(  # noqa: SLF001
+        [58.75691059, 274.00378023, 3562.92253327, 86.75244242],
         [
-            [3.48853683e+01, 1.01273247e-02, 0.00000000e+00, 0.00000000e+00],
-            [0.00000000e+00, 2.70925014e+02, 1.66745243e-01, 0.00000000e+00],
-            [0.00000000e+00, 0.00000000e+00, 3.46806397e+03, 2.03609085e+00],
-            [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 4.68049763e+01]
-        ]
+            [3.48853683e01, 1.01273247e-02, 0.00000000e00, 0.00000000e00],
+            [0.00000000e00, 2.70925014e02, 1.66745243e-01, 0.00000000e00],
+            [0.00000000e00, 0.00000000e00, 3.46806397e03, 2.03609085e00],
+            [0.00000000e00, 0.00000000e00, 0.00000000e00, 4.68049763e01],
+        ],
     )
     concrete = MaterialMacroInfo(dummy, 3600.0, {"Te": 1.0}, name="concrete")
-    concrete._set_sigma(
+    concrete._set_sigma(  # noqa: SLF001
         [4.12742084, 7.42553891, 8.24183468, 8.29305646],
         [
-            [3.56412195e+00, 3.10469266e-03, 1.86354209e-07, 9.59501248e-11],
-            [0.00000000e+00, 7.17103718e+00, 2.01902003e-02, 3.70852436e-06],
-            [0.00000000e+00, 0.00000000e+00, 7.95579530e+00, 2.28258235e-02],
-            [0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 7.98194881e+00]
-        ]
+            [3.56412195e00, 3.10469266e-03, 1.86354209e-07, 9.59501248e-11],
+            [0.00000000e00, 7.17103718e00, 2.01902003e-02, 3.70852436e-06],
+            [0.00000000e00, 0.00000000e00, 7.95579530e00, 2.28258235e-02],
+            [0.00000000e00, 0.00000000e00, 0.00000000e00, 7.98194881e00],
+        ],
     )
     incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(
         incoming_flux,
         np.cumsum([0.05, 0.3, 0.2, 0.4]),
-        [tungsten, lithium, ss316, concrete]
+        [tungsten, lithium, ss316, concrete],
     )
     neutron_profile.solve()
     assert np.isclose(
