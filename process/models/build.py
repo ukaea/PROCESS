@@ -365,6 +365,7 @@ class Build(Model):
                     "Cumulative height",
                     "Variable name",
                 ],
+                floatfmt=".3e",
             ),
         )
 
@@ -1514,6 +1515,7 @@ class Build(Model):
                     "Cumulative thickness",
                     "Variable name",
                 ],
+                floatfmt=".3e",
             ),
         )
         if (
