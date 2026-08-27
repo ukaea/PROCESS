@@ -484,6 +484,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     fig:
         The matplotlib figure object for additional annotations.
     """
+    has_divertor = int(mfile.get("n_divertors", scan=scan)) > 0
+
     axis.text(
         0.05,
         0.95,
@@ -567,21 +569,21 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         fontsize=12,
     )
 
-    # Draw from gamma arrow bend towards divertor
-    axis.annotate(
-        "",
-        xy=(0.35, 0.55),
-        xytext=(0.35, 0.695),
-        xycoords=fig.transFigure,
-        arrowprops={
-            "arrowstyle": "-|>,head_length=1,head_width=0.3",
-            "color": "blue",
-            "linewidth": 2.0,
-            "zorder": 5,
-            "fill": True,
-        },
-    )
-
+    if has_divertor:
+        # Draw from gamma arrow bend towards divertor
+        axis.annotate(
+            "",
+            xy=(0.35, 0.55),
+            xytext=(0.35, 0.695),
+            xycoords=fig.transFigure,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "blue",
+                "linewidth": 2.0,
+                "zorder": 5,
+                "fill": True,
+            },
+        )
     # Add separatrix power to plasma
     axis.text(
         0.22,
@@ -594,33 +596,49 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         fontsize=11,
     )
 
-    # Draw from separatrix power to arrow bend
-    axis.annotate(
-        "",
-        xy=(0.3725, 0.65),
-        xytext=(0.3, 0.65),
-        xycoords=fig.transFigure,
-        arrowprops={
-            "color": "pink",
-            "arrowstyle": "-",  # No arrow head
-            "linewidth": 2.0,
-        },
-    )
+    if has_divertor:
+        # Draw from separatrix power to arrow bend
+        axis.annotate(
+            "",
+            xy=(0.3725, 0.65),
+            xytext=(0.3, 0.65),
+            xycoords=fig.transFigure,
+            arrowprops={
+                "color": "pink",
+                "arrowstyle": "-",  # No arrow head
+                "linewidth": 2.0,
+            },
+        )
 
-    # Draw from separatrix arrow bend to the divertor
-    axis.annotate(
-        "",
-        xy=(0.37, 0.55),
-        xytext=(0.37, 0.65),
-        xycoords=fig.transFigure,
-        arrowprops={
-            "arrowstyle": "-|>,head_length=1,head_width=0.3",  # solid filled head
-            "color": "pink",
-            "linewidth": 2.0,
-            "zorder": 5,
-            "fill": True,
-        },
-    )
+        # Draw from separatrix arrow bend to the divertor
+        axis.annotate(
+            "",
+            xy=(0.37, 0.55),
+            xytext=(0.37, 0.65),
+            xycoords=fig.transFigure,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "pink",
+                "linewidth": 2.0,
+                "zorder": 5,
+                "fill": True,
+            },
+        )
+    else:
+        # In limiter mode the separatrix power is deposited on the first wall.
+        axis.annotate(
+            "",
+            xy=(0.56, 0.65),
+            xytext=(0.3, 0.65),
+            xycoords=fig.transFigure,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "pink",
+                "linewidth": 2.0,
+                "zorder": 5,
+                "fill": True,
+            },
+        )
 
     # Draw neutron arrow from plasma
     axis.annotate(
@@ -637,20 +655,21 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         },
     )
 
-    # Draw arrow from main neutron arrow down to divertor
-    axis.annotate(
-        "",
-        xy=(0.39, 0.55),
-        xytext=(0.39, 0.76),
-        xycoords=fig.transFigure,
-        arrowprops={
-            "arrowstyle": "-|>,head_length=1,head_width=0.3",
-            "color": "grey",
-            "linewidth": 2.0,
-            "zorder": 5,
-            "fill": True,
-        },
-    )
+    if has_divertor:
+        # Draw arrow from main neutron arrow down to divertor
+        axis.annotate(
+            "",
+            xy=(0.39, 0.55),
+            xytext=(0.39, 0.76),
+            xycoords=fig.transFigure,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "grey",
+                "linewidth": 2.0,
+                "zorder": 5,
+                "fill": True,
+            },
+        )
 
     # Draw radiation arrow from plasma
     axis.annotate(
@@ -1745,149 +1764,152 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     )
 
     # ============================================
-    # Divertor
-    # ============================================
+    if has_divertor:
+        # Divertor
+        # ============================================
 
-    axis.text(
-        0.325,
-        0.48,
-        "Divertor",
-        transform=fig.transFigure,
-        horizontalalignment="left",
-        verticalalignment="bottom",
-        zorder=1000,  # bring to front
-        fontsize=11,
-        color="white",  # make text white
-    )
+        axis.text(
+            0.325,
+            0.48,
+            "Divertor",
+            transform=fig.transFigure,
+            horizontalalignment="left",
+            verticalalignment="bottom",
+            zorder=1000,  # bring to front
+            fontsize=11,
+            color="white",  # make text white
+        )
 
-    # Load the divertor image
-    with resources.path("process.core.io.plot.images", "divertor.png") as img_path:
-        divertor = mpimg.imread(img_path.open("rb"))
+        # Load the divertor image
+        with resources.path("process.core.io.plot.images", "divertor.png") as img_path:
+            divertor = mpimg.imread(img_path.open("rb"))
 
-    # Display the divertor image over the figure, not the axes
-    new_ax = axis.inset_axes([0.1, 0.4, 0.3, 0.25], transform=axis.transAxes, zorder=10)
-    new_ax.imshow(divertor)
-    new_ax.axis("off")
+        # Display the divertor image over the figure, not the axes
+        new_ax = axis.inset_axes(
+            [0.1, 0.4, 0.3, 0.25], transform=axis.transAxes, zorder=10
+        )
+        new_ax.imshow(divertor)
+        new_ax.axis("off")
 
-    # Total divertor radiation power box
-    axis.text(
-        0.29,
-        0.57,
-        f"$P_{{\\text{{div,rad}}}}$:\n{mfile.get('p_div_rad_total_mw', scan=scan):,.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "dodgerblue",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
-    )
+        # Total divertor radiation power box
+        axis.text(
+            0.29,
+            0.57,
+            f"$P_{{\\text{{div,rad}}}}$:\n{mfile.get('p_div_rad_total_mw', scan=scan):,.2f} MW",
+            fontsize=9,
+            verticalalignment="bottom",
+            horizontalalignment="left",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "dodgerblue",
+                "alpha": 0.8,
+                "linewidth": 2,
+            },
+        )
 
-    # Divertor nuclear heat total box
-    axis.text(
-        0.4,
-        0.58,
-        f"$P_{{\\text{{div,nuclear}}}}$:\n{mfile.get('p_div_nuclear_heat_total_mw', scan=scan):,.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
-    )
+        # Divertor nuclear heat total box
+        axis.text(
+            0.4,
+            0.58,
+            f"$P_{{\\text{{div,nuclear}}}}$:\n{mfile.get('p_div_nuclear_heat_total_mw', scan=scan):,.2f} MW",
+            fontsize=9,
+            verticalalignment="bottom",
+            horizontalalignment="left",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "grey",
+                "alpha": 0.8,
+                "linewidth": 2,
+            },
+        )
 
-    # Divertor primary thermal heat deposited box
-    axis.text(
-        0.44,
-        0.46,
-        (
-            f"Primary thermal (inc pump):\n{mfile.get('p_div_heat_deposited_mw', scan=scan):.2f} MWth\n"
-            f"Solid angle fraction: {mfile.get('f_ster_div_single', scan=scan):.3f}\n"
-            f"Primary heat fraction: {mfile.get('f_p_div_primary_heat', scan=scan):.3f}"
-        ),
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "orange",
-            "linewidth": 2,
-        },
-        zorder=100,
-    )
+        # Divertor primary thermal heat deposited box
+        axis.text(
+            0.44,
+            0.46,
+            (
+                f"Primary thermal (inc pump):\n{mfile.get('p_div_heat_deposited_mw', scan=scan):.2f} MWth\n"
+                f"Solid angle fraction: {mfile.get('f_ster_div_single', scan=scan):.3f}\n"
+                f"Primary heat fraction: {mfile.get('f_p_div_primary_heat', scan=scan):.3f}"
+            ),
+            fontsize=9,
+            verticalalignment="bottom",
+            horizontalalignment="left",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "orange",
+                "linewidth": 2,
+            },
+            zorder=100,
+        )
 
-    # Divertor secondary heat box
-    axis.text(
-        0.3,
-        0.375,
-        f"$P_{{\\text{{div,secondary}}}}$:\n{mfile.get('p_div_secondary_heat_mw', scan=scan):.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
-    )
+        # Divertor secondary heat box
+        axis.text(
+            0.3,
+            0.375,
+            f"$P_{{\\text{{div,secondary}}}}$:\n{mfile.get('p_div_secondary_heat_mw', scan=scan):.2f} MWth",
+            fontsize=9,
+            verticalalignment="bottom",
+            horizontalalignment="left",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "lightblue",
+                "alpha": 1.0,
+                "linewidth": 2,
+                "linestyle": "dashed",
+            },
+        )
 
-    # Divertor to divertor secondary heat arrow
-    axis.annotate(
-        "",
-        xy=(0.33, 0.405),
-        xytext=(0.33, 0.5),
-        xycoords=fig.transFigure,
-        arrowprops={
-            "arrowstyle": "-|>,head_length=1,head_width=0.3",
-            "color": "black",
-            "linewidth": 2.0,
-            "zorder": 5,
-            "fill": True,
-            "linestyle": "--",
-        },
-    )
+        # Divertor to divertor secondary heat arrow
+        axis.annotate(
+            "",
+            xy=(0.33, 0.405),
+            xytext=(0.33, 0.5),
+            xycoords=fig.transFigure,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 2.0,
+                "zorder": 5,
+                "fill": True,
+                "linestyle": "--",
+            },
+        )
 
-    # Divertor to divertor primary thermal heat arrow
-    axis.annotate(
-        "",
-        xy=(0.445, 0.5),
-        xytext=(0.4, 0.5),
-        xycoords=fig.transFigure,
-        arrowprops={
-            "arrowstyle": "-|>,head_length=1,head_width=0.3",
-            "color": "orange",
-            "linewidth": 2.0,
-            "zorder": 50,
-            "fill": True,
-        },
-    )
+        # Divertor to divertor primary thermal heat arrow
+        axis.annotate(
+            "",
+            xy=(0.445, 0.5),
+            xytext=(0.4, 0.5),
+            xycoords=fig.transFigure,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "orange",
+                "linewidth": 2.0,
+                "zorder": 50,
+                "fill": True,
+            },
+        )
 
-    # Divertor secondary heat to total secondary heat arrow
-    axis.annotate(
-        "",
-        xy=(0.33, 0.3),
-        xytext=(0.33, 0.375),
-        xycoords=fig.transFigure,
-        arrowprops={
-            "arrowstyle": "-|>,head_length=1,head_width=0.3",
-            "color": "black",
-            "linewidth": 2.0,
-            "zorder": 5,
-            "fill": True,
-            "linestyle": "--",
-        },
-    )
+        # Divertor secondary heat to total secondary heat arrow
+        axis.annotate(
+            "",
+            xy=(0.33, 0.3),
+            xytext=(0.33, 0.375),
+            xycoords=fig.transFigure,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 2.0,
+                "zorder": 5,
+                "fill": True,
+                "linestyle": "--",
+            },
+        )
 
     # ===========================================
 
@@ -1895,52 +1917,53 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     # Coolant pumps
     # ===========================================
 
-    # Divertor coolant pump box
-    axis.text(
-        0.55,
-        0.33,
-        f"$P_{{\\text{{div,pump}}}}$: {mfile.get('p_div_coolant_pump_mw', scan=scan):.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 0.8,
-            "linewidth": 2,
-        },
-    )
+    if has_divertor:
+        # Divertor coolant pump box
+        axis.text(
+            0.55,
+            0.33,
+            f"$P_{{\\text{{div,pump}}}}$: {mfile.get('p_div_coolant_pump_mw', scan=scan):.2f} MW",
+            fontsize=9,
+            verticalalignment="bottom",
+            horizontalalignment="left",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "wheat",
+                "alpha": 0.8,
+                "linewidth": 2,
+            },
+        )
 
-    # Divertor pump box to divertor primary heat deposited box
-    axis.annotate(
-        "",
-        xy=(0.57, 0.46),
-        xytext=(0.57, 0.35),
-        xycoords=fig.transFigure,
-        arrowprops={
-            "arrowstyle": "-|>,head_length=1,head_width=0.3",
-            "color": "black",
-            "linewidth": 3.0,
-            "zorder": 5,
-            "fill": True,
-        },
-    )
+        # Divertor pump box to divertor primary heat deposited box
+        axis.annotate(
+            "",
+            xy=(0.57, 0.46),
+            xytext=(0.57, 0.35),
+            xycoords=fig.transFigure,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 3.0,
+                "zorder": 5,
+                "fill": True,
+            },
+        )
 
-    # Coolant pumps total to divertor pump box
-    axis.annotate(
-        "",
-        xy=(0.64, 0.34),
-        xytext=(0.7, 0.34),
-        xycoords=fig.transFigure,
-        arrowprops={
-            "arrowstyle": "-|>,head_length=1,head_width=0.3",
-            "color": "black",
-            "linewidth": 2.0,
-            "zorder": 5,
-            "fill": True,
-        },
-    )
+        # Coolant pumps total to divertor pump box
+        axis.annotate(
+            "",
+            xy=(0.64, 0.34),
+            xytext=(0.7, 0.34),
+            xycoords=fig.transFigure,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 2.0,
+                "zorder": 5,
+                "fill": True,
+            },
+        )
 
     # Pumps total to shield bump box arrow
     axis.annotate(
@@ -2788,12 +2811,20 @@ def plot_main_plasma_information(
 
     # =========================================
 
-    # Add divertor information
-    textstr_div = (
-        f"\n$P_{{\\text{{sep}}}}$: {mfile.get('p_plasma_separatrix_mw', scan=scan):.2f} MW           \n"
-        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile.get('p_plasma_separatrix_rmajor_mw', scan=scan):.2f} MW/m               \n"
-        f"$\\frac{{P_{{\\text{{sep}}}}B_T}}{{q_{{95}} A  R}}$: {mfile.get('p_div_bt_q_aspect_rmajor_mw', scan=scan):.2f} MW T/m               "
-    )
+    has_divertor = int(mfile.get("n_divertors", scan=scan)) > 0
+    if has_divertor:
+        textstr_div = (
+            f"\n$P_{{\\text{{sep}}}}$: {mfile.get('p_plasma_separatrix_mw', scan=scan):.2f} MW           \n"
+            f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile.get('p_plasma_separatrix_rmajor_mw', scan=scan):.2f} MW/m               \n"
+            f"$\\frac{{P_{{\\text{{sep}}}}B_T}}{{q_{{95}} A  R}}$: {mfile.get('p_div_bt_q_aspect_rmajor_mw', scan=scan):.2f} MW T/m               "
+        )
+        exhaust_label = "$P_{\\text{div}}$"
+    else:
+        textstr_div = (
+            f"\n$P_{{\\text{{sep}}}}$: {mfile.get('p_plasma_separatrix_mw', scan=scan):.2f} MW           \n"
+            f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile.get('p_plasma_separatrix_rmajor_mw', scan=scan):.2f} MW/m"
+        )
+        exhaust_label = "$P_{\\text{lim}}$"
 
     axis.text(
         0.35,
@@ -2810,11 +2841,11 @@ def plot_main_plasma_information(
         },
     )
 
-    # Add divertor label
+    # Add exhaust label
     axis.text(
         0.45,
         0.1,
-        "$P_{\\text{div}}$",
+        exhaust_label,
         fontsize=23,
         verticalalignment="top",
         transform=fig.transFigure,
@@ -3522,8 +3553,10 @@ def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1,
         ("First wall", FIRSTWALL_COLOUR[colour_scheme - 1]),
         ("Plasma", PLASMA_COLOUR[colour_scheme - 1]),
         ("PF coils", "none"),
-        ("Divertor", "black"),
     ]
+
+    if int(mfile.get("n_divertors", scan=scan)) > 0:
+        labels.append(("Divertor", "black"))
 
     if (mfile.get("i_hcd_primary", scan=scan) in {5, 8}) or (
         mfile.get("i_hcd_secondary", scan=scan) in {5, 8}
@@ -4927,6 +4960,7 @@ def plot_vacuum_vessel_and_divertor(
     lower = radial_build.lower
 
     i_single_null = int(mfile.get("i_single_null", scan=scan))
+    has_divertor = int(mfile.get("n_divertors", scan=scan)) > 0
     triang_95 = mfile.get("triang95", scan=scan)
     dz_divertor = mfile.get("dz_divertor", scan=scan)
     dz_xpoint_divertor = mfile.get("dz_xpoint_divertor", scan=scan)
@@ -4998,38 +5032,39 @@ def plot_vacuum_vessel_and_divertor(
             zorder=5,
         )
 
-        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
-        # Find the min and max R values of the vessel boundary between the divertor lines
-        mask = (vvg_single_null.zs >= z_divertor_lower_bottom) & (
-            vvg_single_null.zs <= z_divertor_lower_top
-        )
-        # Get the min/max R for the region between the divertor lines
-        r_min = (
-            np.min(vvg_single_null.rs[mask])
-            + dr_vv_inboard
-            + dr_shld_inboard
-            + (dr_blkt_inboard * 0.5)
-        )
-        r_max = (
-            np.max(vvg_single_null.rs[mask])
-            - dr_vv_outboard
-            - dr_shld_outboard
-            - (dr_blkt_outboard * 0.5)
-        )
-        # Draw a rectangle (box) between the two lines and inside the vessel
-        axis.add_patch(
-            patches.Rectangle(
-                (
-                    x_scale * r_min,
-                    z_divertor_lower_bottom,
-                ),
-                x_scale * (r_max - r_min),
-                z_divertor_lower_top - z_divertor_lower_bottom,
-                facecolor="black",
-                alpha=0.8,
-                zorder=1,
+        if has_divertor:
+            # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
+            # Find the min and max R values of the vessel boundary between the divertor lines
+            mask = (vvg_single_null.zs >= z_divertor_lower_bottom) & (
+                vvg_single_null.zs <= z_divertor_lower_top
             )
-        )
+            # Get the min/max R for the region between the divertor lines
+            r_min = (
+                np.min(vvg_single_null.rs[mask])
+                + dr_vv_inboard
+                + dr_shld_inboard
+                + (dr_blkt_inboard * 0.5)
+            )
+            r_max = (
+                np.max(vvg_single_null.rs[mask])
+                - dr_vv_outboard
+                - dr_shld_outboard
+                - (dr_blkt_outboard * 0.5)
+            )
+            # Draw a rectangle (box) between the two lines and inside the vessel
+            axis.add_patch(
+                patches.Rectangle(
+                    (
+                        x_scale * r_min,
+                        z_divertor_lower_bottom,
+                    ),
+                    x_scale * (r_max - r_min),
+                    z_divertor_lower_top - z_divertor_lower_bottom,
+                    facecolor="black",
+                    alpha=0.8,
+                    zorder=1,
+                )
+            )
 
     if i_single_null == 0:
         vvg_double_null = vacuum_vessel_geometry_double_null(
@@ -5057,72 +5092,73 @@ def plot_vacuum_vessel_and_divertor(
             zorder=5,
         )
 
-        # Plot lower divertor
-        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
-        # Find the min and max R values of the vessel boundary between the divertor lines
-        mask = (vvg_double_null.zs >= z_divertor_lower_bottom) & (
-            vvg_double_null.zs <= z_divertor_lower_top
-        )
-        # Get the min/max R for the region between the divertor lines
-        r_min = (
-            np.min(vvg_double_null.rs[mask])
-            + dr_vv_inboard
-            + dr_shld_inboard
-            + (dr_blkt_inboard * 0.5)
-        )
-        r_max = (
-            np.max(vvg_double_null.rs[mask])
-            - dr_vv_outboard
-            - dr_shld_outboard
-            - (dr_blkt_outboard * 0.5)
-        )
-        # Draw a rectangle (box) between the two lines and inside the vessel
-        axis.add_patch(
-            patches.Rectangle(
-                (
-                    x_scale * r_min,
-                    z_divertor_lower_bottom,
-                ),
-                x_scale * (r_max - r_min),
-                z_divertor_lower_top - z_divertor_lower_bottom,
-                facecolor="black",
-                alpha=0.8,
-                zorder=1,
+        if has_divertor:
+            # Plot lower divertor
+            # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
+            # Find the min and max R values of the vessel boundary between the divertor lines
+            mask = (vvg_double_null.zs >= z_divertor_lower_bottom) & (
+                vvg_double_null.zs <= z_divertor_lower_top
             )
-        )
-        # Plot upper divertor
-        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
-        # Find the min and max R values of the vessel boundary between the divertor lines
-        mask = (vvg_double_null.zs >= z_divertor_upper_bottom) & (
-            vvg_double_null.zs <= z_divertor_upper_top
-        )
-        # Get the min/max R for the region between the divertor lines
-        r_min = (
-            np.min(vvg_double_null.rs[mask])
-            + dr_vv_inboard
-            + dr_shld_inboard
-            + (dr_blkt_inboard * 0.5)
-        )
-        r_max = (
-            np.max(vvg_double_null.rs[mask])
-            - dr_vv_outboard
-            - dr_shld_outboard
-            - (dr_blkt_outboard * 0.5)
-        )
-        # Draw a rectangle (box) between the two lines and inside the vessel
-        axis.add_patch(
-            patches.Rectangle(
-                (
-                    x_scale * r_min,
-                    z_divertor_upper_bottom,
-                ),
-                x_scale * (r_max - r_min),
-                z_divertor_upper_top - z_divertor_upper_bottom,
-                facecolor="black",
-                alpha=0.8,
-                zorder=1,
+            # Get the min/max R for the region between the divertor lines
+            r_min = (
+                np.min(vvg_double_null.rs[mask])
+                + dr_vv_inboard
+                + dr_shld_inboard
+                + (dr_blkt_inboard * 0.5)
             )
-        )
+            r_max = (
+                np.max(vvg_double_null.rs[mask])
+                - dr_vv_outboard
+                - dr_shld_outboard
+                - (dr_blkt_outboard * 0.5)
+            )
+            # Draw a rectangle (box) between the two lines and inside the vessel
+            axis.add_patch(
+                patches.Rectangle(
+                    (
+                        x_scale * r_min,
+                        z_divertor_lower_bottom,
+                    ),
+                    x_scale * (r_max - r_min),
+                    z_divertor_lower_top - z_divertor_lower_bottom,
+                    facecolor="black",
+                    alpha=0.8,
+                    zorder=1,
+                )
+            )
+            # Plot upper divertor
+            # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
+            # Find the min and max R values of the vessel boundary between the divertor lines
+            mask = (vvg_double_null.zs >= z_divertor_upper_bottom) & (
+                vvg_double_null.zs <= z_divertor_upper_top
+            )
+            # Get the min/max R for the region between the divertor lines
+            r_min = (
+                np.min(vvg_double_null.rs[mask])
+                + dr_vv_inboard
+                + dr_shld_inboard
+                + (dr_blkt_inboard * 0.5)
+            )
+            r_max = (
+                np.max(vvg_double_null.rs[mask])
+                - dr_vv_outboard
+                - dr_shld_outboard
+                - (dr_blkt_outboard * 0.5)
+            )
+            # Draw a rectangle (box) between the two lines and inside the vessel
+            axis.add_patch(
+                patches.Rectangle(
+                    (
+                        x_scale * r_min,
+                        z_divertor_upper_bottom,
+                    ),
+                    x_scale * (r_max - r_min),
+                    z_divertor_upper_top - z_divertor_upper_bottom,
+                    facecolor="black",
+                    alpha=0.8,
+                    zorder=1,
+                )
+            )
 
 
 def plot_shield(
@@ -8659,8 +8695,15 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
         ("p_blkt_nuclear_heat_total_mw", "Nuclear heating in blanket", "MW"),
         ("p_shld_nuclear_heat_mw", "Nuclear heating in shield", "MW"),
         (p_cryo_plant_electric_mw, "TF cryogenic power", "MW"),
-        ("p_plasma_separatrix_mw", "Power to divertor", "MW"),
-        ("life_div_fpy", "Divertor life", "years"),
+        (
+            "p_plasma_separatrix_mw",
+            (
+                "Power to divertor"
+                if int(mfile.get("n_divertors", scan=scan)) > 0
+                else "Power to limiter"
+            ),
+            "MW",
+        ),
         ("p_plant_primary_heat_mw", "Primary (high grade) heat", "MW"),
         (gross_eff, "Gross cycle efficiency", "%"),
         (net_eff, "Net cycle efficiency", "%"),
@@ -8672,6 +8715,9 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
             "%",
         ),
     ]
+
+    if int(mfile.get("n_divertors", scan=scan)) > 0:
+        data.insert(10, ("life_div_fpy", "Divertor life", "years"))
 
     plot_info(axis, data, mfile, scan)
 
@@ -10049,12 +10095,6 @@ def plot_lower_vertical_build(
         "dz_tf_cryostat",
     ]
 
-    lower_vertical_build = [[mfile.get(rl, scan=-1) for rl in lower_vertical_variables]]
-
-    lower_vertical_build = np.array(lower_vertical_build)
-
-    lower_vertical_build = np.transpose(lower_vertical_build)
-
     lower_vertical_labels = [
         "Plasma Height",
         "Plasma - Divertor Gap",
@@ -10085,11 +10125,22 @@ def plot_lower_vertical_build(
         "white",
     ]
 
+    if int(mfile.get("n_divertors", scan=-1)) == 0:
+        del lower_vertical_variables[2]
+        del lower_vertical_labels[2]
+        del lower_vertical_color[2]
+        lower_vertical_labels[1] = "Plasma - Wall Gap"
+
+    lower_vertical_build = [[mfile.get(rl, scan=-1) for rl in lower_vertical_variables]]
+    lower_vertical_build = np.array(lower_vertical_build)
+    lower_vertical_build = np.transpose(lower_vertical_build)
+
     # Remove build parts equal to zero
     mask = ~(lower_vertical_build[:, 0] == 0.0)  # noqa: RUF069
     filtered_vertical_build = lower_vertical_build[mask]
     filtered_labels = [lbl for i, lbl in enumerate(lower_vertical_labels) if mask[i]]
     filtered_colors = [col for i, col in enumerate(lower_vertical_color) if mask[i]]
+    filtered_vars = [var for i, var in enumerate(lower_vertical_variables) if mask[i]]
 
     bottom = np.zeros(filtered_vertical_build.shape[1])
     for kk in range(filtered_vertical_build.shape[0]):
@@ -10098,7 +10149,7 @@ def plot_lower_vertical_build(
             -filtered_vertical_build[kk, :],
             bottom=bottom,
             width=0.8,
-            label=f"{filtered_labels[kk]}\n[{lower_vertical_variables[kk]}]\n{filtered_vertical_build[kk][0]:.3f} m",
+            label=f"{filtered_labels[kk]}\n[{filtered_vars[kk]}]\n{filtered_vertical_build[kk][0]:.3f} m",
             color=filtered_colors[kk],
             edgecolor="black",
             linewidth=0.05,
@@ -10142,7 +10193,45 @@ def plot_upper_vertical_build(
     - Components with zero thickness are omitted from the plot.
     - The legend displays the name and thickness (in meters) of each component.
     """
-    if mfile.get("i_single_null", scan=-1) == 1:
+    if int(mfile.get("n_divertors", scan=-1)) == 0:
+        upper_vertical_variables = [
+            "z_plasma_xpoint_upper",
+            "dz_xpoint_divertor",
+            "dz_shld_upper",
+            "dz_vv_upper",
+            "dz_shld_vv_gap",
+            "dz_shld_thermal",
+            "dr_tf_shld_gap",
+            "dr_tf_inboard",
+            "dz_tf_cryostat",
+        ]
+        upper_vertical_labels = [
+            "Plasma Height",
+            "Plasma - Wall Gap",
+            "Shield Upper",
+            "Vacuum Vessel Upper",
+            "Shield-VV Gap",
+            "Thermal Shield",
+            "TF Coil - Shield Gap",
+            "TF Coil",
+            "TF Coil - Cryostat gap",
+        ]
+        upper_vertical_colours = [
+            PLASMA_COLOUR[colour_scheme - 1],
+            "white",
+            SHIELD_COLOUR[colour_scheme - 1],
+            VESSEL_COLOUR[colour_scheme - 1],
+            "white",
+            THERMAL_SHIELD_COLOUR[colour_scheme - 1],
+            "white",
+            (
+                TFC_COLOUR[colour_scheme - 1]
+                if mfile.get("i_tf_sup", scan=-1) != 0
+                else "#b87333"
+            ),
+            "white",
+        ]
+    elif mfile.get("i_single_null", scan=-1) == 1:
         upper_vertical_variables = [
             "z_plasma_xpoint_upper",
             "dz_fw_plasma_gap",
@@ -14844,6 +14933,7 @@ def plot_blkt_structure(
     deg_div_poloidal_plasma = m_file.get("deg_div_poloidal_plasma", scan=scan)
     f_ster_div_single = m_file.get("f_ster_div_single", scan=scan)
     i_single_null = m_file.get("i_single_null", scan=scan)
+    has_divertor = int(m_file.get("n_divertors", scan=scan)) > 0
 
     # ======================
 
@@ -14998,7 +15088,7 @@ def plot_blkt_structure(
 
     # Plot arrows for the divertor angles
     # If double null then plot the upper also
-    if i_single_null == 0:
+    if i_single_null == 0 and has_divertor:
         # Plot arc showing the angle between the two arrows (divertor angle)
         arc_radius = 1.5
         # 3 to 12 o'clock position is +90 degrees,
@@ -15036,43 +15126,44 @@ def plot_blkt_structure(
             zorder=5,
         )
 
-    # Plot arc showing the angle between the two arrows for the lower divertor (divertor angle)
-    arc_radius = 1.5
-    # 3 to 6 o'clock is -90 degrees
-    angle_start = -90.0
-    angle_end = -90.0 - deg_div_poloidal_plasma
+    if has_divertor:
+        # Plot arc showing the angle between the two arrows for the lower divertor (divertor angle)
+        arc_radius = 1.5
+        # 3 to 6 o'clock is -90 degrees
+        angle_start = -90.0
+        angle_end = -90.0 - deg_div_poloidal_plasma
 
-    theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
-    arc_x = rmajor + arc_radius * np.cos(theta)
-    arc_y = arc_radius * np.sin(theta)
+        theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
+        arc_x = rmajor + arc_radius * np.cos(theta)
+        arc_y = arc_radius * np.sin(theta)
 
-    ax.plot(arc_x, arc_y, color="black", linewidth=2)
+        ax.plot(arc_x, arc_y, color="black", linewidth=2)
 
-    # Add angle label at the arc
-    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
-    label_radius = arc_radius * 1.8
-    label_x = rmajor + label_radius * np.cos(mid_angle)
-    label_y = label_radius * np.sin(mid_angle)
+        # Add angle label at the arc
+        mid_angle = np.deg2rad((angle_start + angle_end) / 2)
+        label_radius = arc_radius * 1.8
+        label_x = rmajor + label_radius * np.cos(mid_angle)
+        label_y = label_radius * np.sin(mid_angle)
 
-    # Plot the info box for the lower divertor angle
-    ax.text(
-        label_x,
-        label_y,
-        f"{deg_div_poloidal_plasma:.1f}°\n({f_ster_div_single * 100:.1f}%)",
-        fontsize=7,
-        color="black",
-        ha="center",
-        va="center",
-        weight="bold",
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "white",
-            "alpha": 0.8,
-            "edgecolor": "black",
-            "linewidth": 1.5,
-        },
-        zorder=5,
-    )
+        # Plot the info box for the lower divertor angle
+        ax.text(
+            label_x,
+            label_y,
+            f"{deg_div_poloidal_plasma:.1f}°\n({f_ster_div_single * 100:.1f}%)",
+            fontsize=7,
+            color="black",
+            ha="center",
+            va="center",
+            weight="bold",
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "white",
+                "alpha": 0.8,
+                "edgecolor": "black",
+                "linewidth": 1.5,
+            },
+            zorder=5,
+        )
 
     # Plot vertical lines at the inner and outer radial boundaries of the blanket
     ax.axvline(
@@ -17122,6 +17213,8 @@ def main_plot(
 
 def create_thickness_builds(m_file, scan: int):
     """Create the dictionaries of radial and vertical build values and cumulative values"""
+    has_divertor = int(m_file.get("n_divertors", scan=scan)) > 0
+
     if int(m_file.get("i_single_null", scan=scan)) == 0:
         vertical_upper = [
             "z_plasma_xpoint_upper",
@@ -17172,7 +17265,11 @@ def create_thickness_builds(m_file, scan: int):
     cumulative_upper = {}
     subtotal = 0
     for item in vertical_upper:
-        upper[item] = m_file.get(item, scan=scan)
+        upper[item] = (
+            0.0
+            if item == "dz_divertor" and not has_divertor
+            else m_file.get(item, scan=scan)
+        )
         subtotal += upper[item]
         cumulative_upper[item] = subtotal
 
@@ -17180,7 +17277,11 @@ def create_thickness_builds(m_file, scan: int):
     cumulative_lower = {}
     subtotal = 0
     for item in vertical_lower:
-        lower[item] = m_file.get(item, scan=scan)
+        lower[item] = (
+            0.0
+            if item == "dz_divertor" and not has_divertor
+            else m_file.get(item, scan=scan)
+        )
         subtotal -= lower[item]
         cumulative_lower[item] = subtotal
 
