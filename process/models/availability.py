@@ -180,12 +180,12 @@ class Availability(Model):
                 self.data.costs.life_plant,
             )  # DEMO
 
-            if self.data.divertor.n_divertors == 0:
-                self.data.divertor.pflux_div_heat_load_mw = 0.0
-            else:
-                self.data.divertor.pflux_div_heat_load_mw = max(
-                    self.data.divertor.pflux_div_heat_load_mw, 1.0e-10
-                )
+        if self.data.divertor.n_divertors == 0:
+            self.data.divertor.pflux_div_heat_load_mw = 0.0
+        else:
+            self.data.divertor.pflux_div_heat_load_mw = max(
+                self.data.divertor.pflux_div_heat_load_mw, 1.0e-10
+            )
 
         # Divertor lifetime (years)
         self.data.costs.life_div_fpy = self.divertor_lifetime()
@@ -317,28 +317,28 @@ class Availability(Model):
                 self.data.costs.abktflnc,
             )
 
-            if self.data.divertor.n_divertors > 0:
-                po.ovarre(
-                    self.outfile,
-                    "Allowable divertor heat fluence (MW-yr/m2)",
-                    "(adivflnc)",
-                    self.data.costs.adivflnc,
-                )
+        if self.data.divertor.n_divertors > 0:
             po.ovarre(
                 self.outfile,
-                "First wall / blanket lifetime (years)",
-                "(life_blkt_fpy)",
-                self.data.fwbs.life_blkt_fpy,
+                "Allowable divertor heat fluence (MW-yr/m2)",
+                "(adivflnc)",
+                self.data.costs.adivflnc,
+            )
+        po.ovarre(
+            self.outfile,
+            "First wall / blanket lifetime (years)",
+            "(life_blkt_fpy)",
+            self.data.fwbs.life_blkt_fpy,
+            "OP ",
+        )
+        if self.data.divertor.n_divertors > 0:
+            po.ovarre(
+                self.outfile,
+                "Divertor lifetime (years)",
+                "(life_div_fpy)",
+                self.data.costs.life_div_fpy,
                 "OP ",
             )
-            if self.data.divertor.n_divertors > 0:
-                po.ovarre(
-                    self.outfile,
-                    "Divertor lifetime (years)",
-                    "(life_div_fpy)",
-                    self.data.costs.life_div_fpy,
-                    "OP ",
-                )
 
         if self.data.physics.itart == 1:
             po.ovarre(
@@ -363,53 +363,53 @@ class Availability(Model):
             self.data.costs.life_plant,
         )
 
-            if (
-                AvailabilityModel(self.data.costs.i_plant_availability)
-                == AvailabilityModel.WARD_TAYLOR
-            ):
-                if self.data.divertor.n_divertors == 0:
-                    po.ovarre(
-                        self.outfile,
-                        "Time needed to replace blanket (years)",
-                        "(t_blkt_replace_yrs)",
-                        self.data.costs.t_blkt_replace_yrs,
-                    )
-                elif self.data.costs.life_div_fpy < self.data.fwbs.life_blkt_fpy:
-                    po.ovarre(
-                        self.outfile,
-                        "Time needed to replace divertor (years)",
-                        "(t_div_replace_yrs)",
-                        self.data.costs.t_div_replace_yrs,
-                    )
-                else:
-                    po.ovarre(
-                        self.outfile,
-                        "Time needed to replace blanket (years)",
-                        "(t_blkt_replace_yrs)",
-                        self.data.costs.t_blkt_replace_yrs,
-                    )
+        if (
+            AvailabilityModel(self.data.costs.i_plant_availability)
+            == AvailabilityModel.WARD_TAYLOR
+        ):
+            if self.data.divertor.n_divertors == 0:
+                po.ovarre(
+                    self.outfile,
+                    "Time needed to replace blanket (years)",
+                    "(t_blkt_replace_yrs)",
+                    self.data.costs.t_blkt_replace_yrs,
+                )
+            elif self.data.costs.life_div_fpy < self.data.fwbs.life_blkt_fpy:
+                po.ovarre(
+                    self.outfile,
+                    "Time needed to replace divertor (years)",
+                    "(t_div_replace_yrs)",
+                    self.data.costs.t_div_replace_yrs,
+                )
+            else:
+                po.ovarre(
+                    self.outfile,
+                    "Time needed to replace blanket (years)",
+                    "(t_blkt_replace_yrs)",
+                    self.data.costs.t_blkt_replace_yrs,
+                )
 
-                if self.data.divertor.n_divertors > 0:
-                    po.ovarre(
-                        self.outfile,
-                        "Time needed to replace blkt + div (years)",
-                        "(tcomrepl)",
-                        self.data.costs.tcomrepl,
-                    )
+            if self.data.divertor.n_divertors > 0:
                 po.ovarre(
                     self.outfile,
-                    "Planned unavailability fraction",
-                    "(uplanned)",
-                    uplanned,
-                    "OP ",
+                    "Time needed to replace blkt + div (years)",
+                    "(tcomrepl)",
+                    self.data.costs.tcomrepl,
                 )
-                po.ovarre(
-                    self.outfile,
-                    "Unplanned unavailability fraction",
-                    "(uutot)",
-                    uutot,
-                    "OP ",
-                )
+            po.ovarre(
+                self.outfile,
+                "Planned unavailability fraction",
+                "(uplanned)",
+                uplanned,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Unplanned unavailability fraction",
+                "(uutot)",
+                uutot,
+                "OP ",
+            )
 
         if (
             AvailabilityModel(self.data.costs.i_plant_availability)
@@ -690,7 +690,7 @@ class Availability(Model):
         if self.data.divertor.n_divertors == 0:
             u_planned = mttr_blanket / (self.data.fwbs.life_blkt_fpy + mttr_blanket)
         else:
-            #  Which component has the shorter life?
+            # Which component has the shorter life?
             if self.data.costs.life_div_fpy < self.data.fwbs.life_blkt_fpy:
                 lifetime_shortest = self.data.costs.life_div_fpy
                 lifetime_longest = self.data.fwbs.life_blkt_fpy
@@ -1435,145 +1435,149 @@ class Availability(Model):
         )
 
         if output:
-            po.ocmmnt(self.outfile, "Plant Availability")
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Allowable blanket neutron fluence (MW-yr/m2)",
-                "(abktflnc)",
-                self.data.costs.abktflnc,
+            self.avail_st_output(
+                maint_cycle, n_cycles_main, n_centre_cols, u_planned, u_unplanned
             )
-            if self.data.divertor.n_divertors > 0:
-                po.ovarre(
-                    self.outfile,
-                    "Allowable divertor heat fluence (MW-yr/m2)",
-                    "(adivflnc)",
-                    self.data.costs.adivflnc,
-                )
+
+    def avail_st_output(
+        self, maint_cycle, n_cycles_main, n_centre_cols, u_planned, u_unplanned
+    ):
+        """Output for st availability model"""
+        po.ocmmnt(self.outfile, "Plant Availability")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Allowable blanket neutron fluence (MW-yr/m2)",
+            "(abktflnc)",
+            self.data.costs.abktflnc,
+        )
+        if self.data.divertor.n_divertors > 0:
             po.ovarre(
                 self.outfile,
-                "First wall / blanket lifetime (FPY)",
-                "(life_blkt_fpy)",
-                self.data.fwbs.life_blkt_fpy,
+                "Allowable divertor heat fluence (MW-yr/m2)",
+                "(adivflnc)",
+                self.data.costs.adivflnc,
+            )
+        po.ovarre(
+            self.outfile,
+            "First wall / blanket lifetime (FPY)",
+            "(life_blkt_fpy)",
+            self.data.fwbs.life_blkt_fpy,
+            "OP ",
+        )
+        if self.data.divertor.n_divertors > 0:
+            po.ovarre(
+                self.outfile,
+                "Divertor lifetime (FPY)",
+                "(life_div_fpy)",
+                self.data.costs.life_div_fpy,
                 "OP ",
             )
-            if self.data.divertor.n_divertors > 0:
-                po.ovarre(
-                    self.outfile,
-                    "Divertor lifetime (FPY)",
-                    "(life_div_fpy)",
-                    self.data.costs.life_div_fpy,
-                    "OP ",
-                )
-            if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-                po.ovarre(
-                    self.outfile,
-                    "Max allowed fast neutron fluence on TF coil (n/m²)",
-                    "(flu_tf_neutron_fast_max)",
-                    self.data.constraints.flu_tf_neutron_fast_max,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Centrepost TF fast neutron flux (E > 0.1 MeV) (m^(-2).^(-1))",
-                    "(neut_flux_cp)",
-                    self.data.fwbs.neut_flux_cp,
-                    "OP ",
-                )
-            else:
-                po.ovarre(
-                    self.outfile,
-                    "Allowable ST centrepost neutron fluence (MW-yr/m2)",
-                    "(cpstflnc)",
-                    self.data.costs.cpstflnc,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Average neutron wall load (MW/m2)",
-                    "(pflux_fw_neutron_mw)",
-                    self.data.physics.pflux_fw_neutron_mw,
-                    "OP ",
-                )
+        if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             po.ovarre(
                 self.outfile,
-                "Centrepost lifetime (years)",
-                "(cplife)",
-                self.data.costs.cplife,
-                "OP ",
-            )
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Maintenance time for replacing CP (years)",
-                "(tmain)",
-                self.data.costs.tmain,
+                "Max allowed fast neutron fluence on TF coil (n/m²)",
+                "(flu_tf_neutron_fast_max)",
+                self.data.constraints.flu_tf_neutron_fast_max,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Length of maintenance cycle (years)",
-                "(maint_cycle)",
-                maint_cycle,
+                "Centrepost TF fast neutron flux (E > 0.1 MeV) (m^(-2).^(-1))",
+                "(neut_flux_cp)",
+                self.data.fwbs.neut_flux_cp,
+                "OP ",
+            )
+        else:
+            po.ovarre(
+                self.outfile,
+                "Allowable ST centrepost neutron fluence (MW-yr/m2)",
+                "(cpstflnc)",
+                self.data.costs.cpstflnc,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Number of maintenance cycles over lifetime",
-                "(n_cycles_main)",
-                n_cycles_main,
+                "Average neutron wall load (MW/m2)",
+                "(pflux_fw_neutron_mw)",
+                self.data.physics.pflux_fw_neutron_mw,
                 "OP ",
             )
-            po.ovarre(
-                self.outfile,
-                "Number of centre columns over lifetime",
-                "(n_centre_cols)",
-                n_centre_cols,
-                "OP ",
-            )
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Total planned unavailability",
-                "(u_planned)",
-                u_planned,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Total unplanned unavailability",
-                "(u_unplanned)",
-                u_unplanned,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Total plant availability fraction",
-                "(f_t_plant_available)",
-                self.data.costs.f_t_plant_available,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Capacity factor: total lifetime elec. energy output / output power",
-                "(cpfact)",
-                self.data.costs.cpfact,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Total DT operational time (years)",
-                "(t_plant_operational_total_yrs)",
-                self.data.costs.t_plant_operational_total_yrs,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Total plant lifetime (years)",
-                "(life_plant)",
-                self.data.costs.life_plant,
-                "OP",
-            )
+        po.ovarre(
+            self.outfile,
+            "Centrepost lifetime (years)",
+            "(cplife)",
+            self.data.costs.cplife,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Maintenance time for replacing CP (years)",
+            "(tmain)",
+            self.data.costs.tmain,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Length of maintenance cycle (years)",
+            "(maint_cycle)",
+            maint_cycle,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Number of maintenance cycles over lifetime",
+            "(n_cycles_main)",
+            n_cycles_main,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Number of centre columns over lifetime",
+            "(n_centre_cols)",
+            n_centre_cols,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile, "Total planned unavailability", "(u_planned)", u_planned, "OP "
+        )
+        po.ovarre(
+            self.outfile,
+            "Total unplanned unavailability",
+            "(u_unplanned)",
+            u_unplanned,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total plant availability fraction",
+            "(f_t_plant_available)",
+            self.data.costs.f_t_plant_available,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Capacity factor: total lifetime elec. energy output / output power",
+            "(cpfact)",
+            self.data.costs.cpfact,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total DT operational time (years)",
+            "(t_plant_operational_total_yrs)",
+            self.data.costs.t_plant_operational_total_yrs,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total plant lifetime (years)",
+            "(life_plant)",
+            self.data.costs.life_plant,
+            "OP",
+        )
 
     def cp_lifetime(self):
         """Calculate Centrepost Lifetime
