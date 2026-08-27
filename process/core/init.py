@@ -70,7 +70,7 @@ def init_process(data: DataStructure, update_obsolete: bool = False):
     # InDat reads in and updates obsolete variables if requested
     in_dat = InDat(filename=filename, update_obsolete=update_obsolete)  # noqa: F841
 
-    inputs = parse_input_file(data)
+    _inputs = parse_input_file(data)
 
     # Set active constraints
     set_active_constraints(data)
@@ -79,7 +79,7 @@ def init_process(data: DataStructure, update_obsolete: bool = False):
     set_device_type(data)
 
     # Check input data for errors/ambiguities
-    check_process(inputs, data)
+    check_process(data, _inputs)
 
     run_summary(data)
 
@@ -251,7 +251,7 @@ def run_summary(data: DataStructure):
         )
 
 
-def check_process(inputs, data):  # noqa: ARG001
+def check_process(data, _inputs):
     """Routine to reset specific variables if certain options are
     being used
 
