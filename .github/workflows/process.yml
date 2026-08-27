@@ -91,7 +91,7 @@ jobs:
         with:
           python-version: ${{ env.python-version }}
       - name: Run regression input files
-        run: hatch run python tracking/run_tracking_inputs.py run tests/regression/input_files
+        run: hatch run track:create-tracking-inputs
       - name: Move other files
         run: mv tests/regression/input_files/*.json tracking/
       - name: Archive tracked MFILEs

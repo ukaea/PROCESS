@@ -102,6 +102,9 @@ tests-integration      = "pytest -n auto -v tests/integration {args:}"
 tests-examples      = "pytest -n auto -v tests/examples {args:}"
 tests-cov  = "pytest -n auto --cov process  --cov-report html:htmlcov --cov-report xml {args:tests}"
 
+[tool.hatch.envs.track.scripts]
+create-tracking-inputs = "python tracking/run_tracking_inputs.py run tests/regression/input_files {args:}"
+
 [tool.hatch.envs.docs]
 features = ["docs"]
 [tool.hatch.envs.docs.scripts]
