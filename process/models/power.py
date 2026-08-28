@@ -88,18 +88,7 @@ class Power(Model):
             TFConductorModel(self.data.tfcoil.i_tf_sup)
             == TFConductorModel.SUPERCONDUCTING
         ):
-            (
-                self.data.tfcoil.len_tf_bus,
-                self.data.heat_transport.p_tf_electric_supplies_mw,
-            ) = self.superconducting_tf_power_iter_1988(
-                output=True,
-                cur_tf_turn=self.data.tfcoil.c_tf_turn,
-                rmajor=self.data.physics.rmajor,
-                n_tf_coils=self.data.tfcoil.n_tf_coils,
-                rho_tf_bus=self.data.tfcoil.rho_tf_bus,
-                t_tf_charge=self.data.tfcoil.t_tf_charge,
-                eta_tf_power_supply_conversion=self.data.heat_transport.eta_tf_power_supply_conversion,
-            )
+            self.output_superconducting_tf_power()
 
         # Poloidal field coil power model !
         self.pfpwr(
@@ -158,14 +147,14 @@ class Power(Model):
         ):
             (
                 self.data.tfcoil.len_tf_bus,
+                self.data.tfcoil.m_tf_bus,
+                self.data.tfcoil.j_tf_bus,
                 self.data.heat_transport.p_tf_electric_supplies_mw,
             ) = self.superconducting_tf_power_iter_1988(
-                output=False,
                 cur_tf_turn=self.data.tfcoil.c_tf_turn,
                 rmajor=self.data.physics.rmajor,
                 n_tf_coils=self.data.tfcoil.n_tf_coils,
                 rho_tf_bus=self.data.tfcoil.rho_tf_bus,
-                t_tf_charge=self.data.tfcoil.t_tf_charge,
                 eta_tf_power_supply_conversion=self.data.heat_transport.eta_tf_power_supply_conversion,
             )
         # Poloidal field coil power model
@@ -2312,6 +2301,13 @@ class Power(Model):
 
         po.ovarre(
             self.outfile,
+            "TF coil charge time (hours)",
+            "(t_tf_charge)",
+            self.data.tfcoil.t_tf_charge,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
             "Bus current density [A/m²]",
             "(j_tf_bus)",
             self.data.tfcoil.j_tf_bus,
@@ -2372,12 +2368,10 @@ class Power(Model):
 
     def superconducting_tf_power_iter_1988(
         self,
-        output: bool,
         cur_tf_turn: float,
         rmajor: float,
         n_tf_coils: int,
         rho_tf_bus: float,
-        t_tf_charge: float,
         eta_tf_power_supply_conversion: float,
     ):
         """
@@ -2387,8 +2381,6 @@ class Power(Model):
 
         Parameters
         ----------
-        output : bool
-            Flag to control output.
         cur_tf_turn : float
             TF coil current per turn [A]
         rmajor : float
@@ -2397,8 +2389,6 @@ class Power(Model):
             Number of TF coils.
         rho_tf_bus : float
             TF bus resistivity [Ω-m].
-        t_tf_charge : float
-            TF coil charge time [s].
         eta_tf_power_supply_conversion : float
             Efficiency of the TF power supply conversion [dimensionless].
 
@@ -2420,7 +2410,6 @@ class Power(Model):
         usg=AOvVaw1-LdCefwqI0hJumpHvfTlX&opi=89978449
 
         """
-
         j_tf_bus = 1.25e6  # design current density of TF bus, A/m2
 
         #  Total steady state TF coil AC power demand (summed later)
@@ -2460,62 +2449,57 @@ class Power(Model):
         #  Total steady state AC power demand, MW
         p_tf_electric_supplies_mw = p_tf_required / eta_tf_power_supply_conversion
 
-        #  Output section
-        if output:
-            po.oheadr(self.outfile, "Superconducting TF Coil Power Conversion")
-            po.ovarre(
-                self.outfile, "TF coil current (kA)", "(cur_tf_turn)", cur_tf_turn, "OP "
-            )
-            po.ovarre(
-                self.outfile, "TF coil charge time (hours)", "(t_tf_charge)", t_tf_charge
-            )
+        return (len_tf_bus, m_tf_bus, j_tf_bus, p_tf_electric_supplies_mw)
 
-            po.ovarre(self.outfile, "Number of DC circuit breakers", "(n_tf_breakers)", n_tf_breakers)
+    def output_superconducting_tf_power(self):
+        """Outputs the superconducting TF coil power supply requirements to the output file."""
+        po.oheadr(self.outfile, "Superconducting TF Coil Power Conversion")
 
-            po.ovarre(
-                self.outfile,
-                "Aluminium bus current density (A/m2)",
-                "(j_tf_bus)",
-                j_tf_bus,
-            )
-            po.ovarre(
-                self.outfile,
-                "Aluminium bus cross-sectional area (m2)",
-                "(a_tf_bus)",
-                a_tf_bus,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Total length of TF coil bussing (m)",
-                "(len_tf_bus)",
-                len_tf_bus,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Aluminium bus weight",
-                "(m_tf_bus)",
-                m_tf_bus,
-                "OP ",
-            )
+        po.ovarre(
+            self.outfile,
+            "TF coil charge time (hours)",
+            "(t_tf_charge)",
+            self.data.tfcoil.t_tf_charge,
+        )
 
-            po.ovarre(
-                self.outfile,
-                "Total TF coil bus resistance (ohm)",
-                "(res_tf_bus)",
-                res_tf_bus,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Total steady state AC power demand (MW)",
-                "(p_tf_electric_supplies_mw)",
-                p_tf_electric_supplies_mw,
-                "OP ",
-            )
+        po.oblnkl(self.outfile)
 
-        return (len_tf_bus, p_tf_electric_supplies_mw)
+        po.ovarre(
+            self.outfile,
+            "Bus current density [A/m²]",
+            "(j_tf_bus)",
+            self.data.tfcoil.j_tf_bus,
+        )
+        po.ovarre(
+            self.outfile,
+            "Bus length - all coils [m]",
+            "(len_tf_bus)",
+            self.data.tfcoil.len_tf_bus,
+        )
+        po.ovarre(
+            self.outfile,
+            "Bus mass [kg]",
+            "(m_tf_bus)",
+            self.data.tfcoil.m_tf_bus,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Steady-state voltage per coil [kV]",
+            "(vtfkv)",
+            self.data.tfcoil.vtfkv,
+            "OP ",
+        )
+        if self.data.tfcoil.i_cp_joints != 0:
+            po.ovarre(
+                self.outfile,
+                "Power dissipation in TF coil set: joints [MW]",
+                "(p_tf_joints_resistive_mw)",
+                self.data.tfcoil.p_tf_joints_resistive_mw,
+                "OP ",
+            )
 
     @staticmethod
     def calculate_tf_power_demand(

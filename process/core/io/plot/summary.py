@@ -16223,8 +16223,10 @@ def plot_tf_energisation_power_voltage(
         power.calculate_tf_power_demand(
             res_tf_coils_total=0.0,
             res_tf_joints_total=0.0,
+            res_tf_cp = 0.0,
             res_tf_bus=1e-6,
-            cur_tf_coil=cur_tf_coil[i],
+            cur_tf_turn=cur_tf_coil[i],
+            cur_tf_total = 0.0,
             ind_tf_total=ind_tf_coil,
             ind_tf_bus=0.0,
             dcur_tf_total=dcur_tf_total[i],
