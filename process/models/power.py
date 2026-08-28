@@ -2443,7 +2443,7 @@ class Power(Model):
         res_tf_bus = rho_tf_bus * len_tf_bus / (a_tf_bus)
 
         # Calculate power demand at flat top conditions
-        p_tf_required = self.calculate_tf_power_demand(
+        p_tf_required, _, _ = self.calculate_tf_power_demand(
             res_tf_coils_total=0.0,
             res_tf_joints_total=0.0,
             res_tf_cp=0.0,
@@ -2456,9 +2456,11 @@ class Power(Model):
         )
 
         #  Total steady state AC power demand, MW
-        p_tf_electric_supplies_mw = p_tf_required / eta_tf_power_supply_conversion
+        p_tf_electric_supplies_mw = (
+            p_tf_required / 1e6
+        ) / eta_tf_power_supply_conversion
 
-        return (len_tf_bus, m_tf_bus, j_tf_bus,res_tf_bus, p_tf_electric_supplies_mw)
+        return (len_tf_bus, m_tf_bus, j_tf_bus, res_tf_bus, p_tf_electric_supplies_mw)
 
     def output_superconducting_tf_power(self):
         """Outputs the superconducting TF coil power supply requirements to the output file."""
@@ -2519,16 +2521,16 @@ class Power(Model):
 
     @staticmethod
     def calculate_tf_power_demand(
-        res_tf_coils_total: float,
-        res_tf_joints_total: float,
-        res_tf_cp: float,
-        res_tf_bus: float,
-        cur_tf_turn: float,
-        cur_tf_total: float,
-        ind_tf_total: float,
-        ind_tf_bus: float,
-        dcur_tf_total: float,
-    ) -> float:
+        res_tf_coils_total: float | np.ndarray,
+        res_tf_joints_total: float | np.ndarray,
+        res_tf_cp: float | np.ndarray,
+        res_tf_bus: float | np.ndarray,
+        cur_tf_turn: float | np.ndarray,
+        cur_tf_total: float | np.ndarray,
+        ind_tf_total: float | np.ndarray,
+        ind_tf_bus: float | np.ndarray,
+        dcur_tf_total: float | np.ndarray,
+    ) -> [float | np.ndarray, float | np.ndarray, float | np.ndarray]:
         """Calculates the total TF coil power demand
 
         Parameters
@@ -2554,19 +2556,15 @@ class Power(Model):
 
         Returns
         -------
-        float
-            Total TF coil power demand [MW]
+        tuple
+            Total TF coil power demand [MW], resistive power [MW], reactive power [MW]
         """
         # Total resistive power in TF coils, joints, and bus [MW]
-        p_tf_resistive_mw = (
-            (res_tf_coils_total + res_tf_joints_total + res_tf_bus)
-            * cur_tf_turn**2
-            * 1.0e-6
-        ) + (res_tf_cp * cur_tf_total**2 * 1.0e-6)
-        p_tf_reactive_mvar = (
-            (ind_tf_total + ind_tf_bus) * cur_tf_turn * dcur_tf_total * 1.0e-6
-        )
-        return p_tf_resistive_mw + p_tf_reactive_mvar
+        p_tf_resistive = (
+            (res_tf_coils_total + res_tf_joints_total + res_tf_bus) * cur_tf_turn**2
+        ) + (res_tf_cp * cur_tf_total**2)
+        p_tf_reactive = (ind_tf_total + ind_tf_bus) * cur_tf_turn * dcur_tf_total
+        return p_tf_resistive + p_tf_reactive, p_tf_resistive, p_tf_reactive
 
     @staticmethod
     def calculate_tf_voltage(
