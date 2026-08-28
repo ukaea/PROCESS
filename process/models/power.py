@@ -140,6 +140,7 @@ class Power(Model):
             self.data.tfcoil.tfcmw = resistive_tf_power_params.tfcmw
             self.data.tfcoil.vtfkv = resistive_tf_power_params.vtfkv
             self.data.tfcoil.m_tf_bus = resistive_tf_power_params.m_tf_bus
+            self.data.tfcoil.res_tf_bus = resistive_tf_power_params.res_tf_bus
 
         elif (
             TFConductorModel(self.data.tfcoil.i_tf_sup)
@@ -149,6 +150,7 @@ class Power(Model):
                 self.data.tfcoil.len_tf_bus,
                 self.data.tfcoil.m_tf_bus,
                 self.data.tfcoil.j_tf_bus,
+                self.data.tfcoil.res_tf_bus,
                 self.data.heat_transport.p_tf_electric_supplies_mw,
             ) = self.superconducting_tf_power_iter_1988(
                 cur_tf_turn=self.data.tfcoil.c_tf_turn,
@@ -2325,6 +2327,13 @@ class Power(Model):
             self.data.tfcoil.m_tf_bus,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Bus resistance [Ω]",
+            "(res_tf_bus)",
+            self.data.tfcoil.res_tf_bus,
+            "OP ",
+        )
         po.oblnkl(self.outfile)
 
         po.ovarre(
@@ -2449,7 +2458,7 @@ class Power(Model):
         #  Total steady state AC power demand, MW
         p_tf_electric_supplies_mw = p_tf_required / eta_tf_power_supply_conversion
 
-        return (len_tf_bus, m_tf_bus, j_tf_bus, p_tf_electric_supplies_mw)
+        return (len_tf_bus, m_tf_bus, j_tf_bus,res_tf_bus, p_tf_electric_supplies_mw)
 
     def output_superconducting_tf_power(self):
         """Outputs the superconducting TF coil power supply requirements to the output file."""
@@ -2481,6 +2490,13 @@ class Power(Model):
             "Bus mass [kg]",
             "(m_tf_bus)",
             self.data.tfcoil.m_tf_bus,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Bus resistance [Ω]",
+            "(res_tf_bus)",
+            self.data.tfcoil.res_tf_bus,
             "OP ",
         )
         po.oblnkl(self.outfile)
