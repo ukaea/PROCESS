@@ -104,6 +104,7 @@ tests-cov  = "pytest -n auto --cov process  --cov-report html:htmlcov --cov-repo
 
 [tool.hatch.envs.track.scripts]
 create-tracking-inputs = "python tracking/run_tracking_inputs.py run tests/regression/input_files {args:}"
+run-tracker = "python tracking/run_tracking_inputs.py track process-tracking-data {args:}"
 
 [tool.hatch.envs.docs]
 features = ["docs"]
