@@ -6,12 +6,32 @@ The main power flow is controlled by `power.py`. The main class `Power` controls
 
 ### TF Coils
 
-Generally the net power consumption of one magnet in $\text{VA}$ is given by:
+#### Power requirement | `calculate_tf_power_demand()`
+
+Generally the required electric power at any time, $t$ of one magnet in $\text{VA}$ is given by:
 
 $$
-P_{\text{TF,electric}} = \left(\Omega_{\text{TF,coil}}+\Omega_{\text{joints}}+\Omega_{\text{feeder}}\right) \times I_{\text{TF,coil}}^2 
-\\ +\left(L_{\text{TF,coil-self}}+L_{\text{feeder}}\right)\times I \times\frac{dI}{dt}
+P_{\text{TF,electric}}(t) = \left[\Omega_{\text{TF,coil}}(t)+\Omega_{\text{joints}}(t)+\Omega_{\text{feeder}}(t)\right] \times I_{\text{TF,coil}}^2(t) 
+\\ +\left[L_{\text{TF,coil-self}}(t)+L_{\text{feeder}}(t)\right]\times I_{\text{TF,coil}}(t) \times\frac{dI(t)}{dt}
 $$
+
+where $\Omega_{\text{TF,coil}}$ is the resistance of the coil, $\Omega_{\text{joints}}$ is the resistance of the joints in the coil, $\Omega_{\text{feeder}}$ is the resistance of the feeder/busbar to the coil.
+
+-------------
+
+#### System voltage | `calculate_tf_voltage()`
+
+Similarly from the [power requirement](#power-requirement--calculate_tf_power_demand), the voltage in the TF system can be given by:
+
+$$
+V_{\text{TF}}(t) = \left[\Omega_{\text{TF,coil}}(t)+\Omega_{\text{joints}}(t)+\Omega_{\text{feeder}}(t)\right] \times I_{\text{TF,coil}}(t) 
+\\ +\left[L_{\text{TF,coil-self}}(t)+L_{\text{feeder}}(t)\right] \times\frac{dI(t)}{dt}
+$$
+
+---------------
+
+
+
 
 #### Resistive TF coil power requirements | `resistive_tf_electric_power()`
 
