@@ -16239,7 +16239,7 @@ def plot_tf_energisation_power_voltage(
         for i in range(len(time))
     ]).T
 
-    tf_voltage = np.array([
+    tf_voltage, tf_voltage_resistive, tf_voltage_reactive = np.array([
         power.calculate_tf_voltage(
             res_tf_coils_total=0.0,
             res_tf_joints_total=0.0,
@@ -16250,7 +16250,7 @@ def plot_tf_energisation_power_voltage(
             dcur_tf_total=dcur_tf_total[i],
         )
         for i in range(len(time))
-    ])
+    ]).T
 
     axis.plot(
         time,
@@ -16264,7 +16264,15 @@ def plot_tf_energisation_power_voltage(
     axis.plot(time, tf_reactive, color="C0", linestyle=":", label="Inductive")
     axis.legend(loc="best")
     voltage_axis = axis.twinx()
-    voltage_axis.plot(time, tf_voltage, color="C1")
+    voltage_axis.plot(time, tf_voltage, color="C1", linestyle="-", label="Total")
+    voltage_axis.plot(
+        time, tf_voltage_resistive, color="C1", linestyle="--", label="Resistive"
+    )
+    voltage_axis.plot(
+        time, tf_voltage_reactive, color="C1", linestyle=":", label="Inductive"
+    )
+    voltage_axis.legend(loc="best")
+
     voltage_axis.set_ylabel("Voltage [V]", color="C1")
     voltage_axis.tick_params(axis="y", labelcolor="C1")
     axis.set_title("TF Coil Power Demand During Ramp-Up")

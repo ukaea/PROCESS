@@ -2583,14 +2583,14 @@ class Power(Model):
 
     @staticmethod
     def calculate_tf_voltage(
-        res_tf_coils_total: float,
-        res_tf_joints_total: float,
-        res_tf_bus: float,
-        cur_tf_coil: float,
-        ind_tf_total: float,
-        ind_tf_bus: float,
-        dcur_tf_total: float,
-    ) -> float:
+        res_tf_coils_total: float | np.ndarray,
+        res_tf_joints_total: float | np.ndarray,
+        res_tf_bus: float | np.ndarray,
+        cur_tf_coil: float | np.ndarray,
+        ind_tf_total: float | np.ndarray,
+        ind_tf_bus: float | np.ndarray,
+        dcur_tf_total: float | np.ndarray,
+    ) -> [float | np.ndarray, float | np.ndarray, float | np.ndarray]:
         """Calculates the total TF system voltage demand
 
         Parameters
@@ -2612,14 +2612,14 @@ class Power(Model):
 
         Returns
         -------
-        float
-            Total TF system voltage demand [V]
+        tuple
+            Total TF system voltage demand [V], resistive voltage [V], reactive voltage [V]
         """
         v_tf_resistive = (
             res_tf_coils_total + res_tf_joints_total + res_tf_bus
         ) * cur_tf_coil
         v_tf_reactive = (ind_tf_total + ind_tf_bus) * dcur_tf_total
-        return v_tf_resistive + v_tf_reactive
+        return v_tf_resistive + v_tf_reactive, v_tf_resistive, v_tf_reactive
 
     @staticmethod
     def power_profiles_over_time(
