@@ -895,6 +895,12 @@ class TFData:
     drarea: float = 0.0
 
     r_b_tf_inboard_peak_symmetric: float = 0.0
+    
+    ind_tf_self_total: float = 0.0
+    """Sum of all self inductances of the TF coils [H]"""
+    
+    t_tf_charge: float = 0.0
+    """TF coil charging time to operational current [s]"""
 
 
 CREATE_DICTS_FROM_DATACLASS = TFData
