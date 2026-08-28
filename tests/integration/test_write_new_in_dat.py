@@ -16,7 +16,7 @@ def test_write_new_in_dat(temp_data, mfile_name, cli_runner):
     :type mfile_name: str
     """
     mfile_path = temp_data / mfile_name
-    in_dat_path = temp_data / "ref_IN.DAT"
+    in_dat_path = temp_data / "large_tokamak_IN.DAT"
     new_in_dat_path = temp_data / "new_IN.DAT"
     # Get final value of te and f_nd_impurity_electrons(13) optimisation parameters
     mfile = MFile(mfile_path)
