@@ -78,11 +78,11 @@ class Power(Model):
     def output(self):
         """Write the results to the main output file (OUT.DAT)."""
         # Toroidal field coil power model
-        if (
-            TFConductorModel(self.data.tfcoil.i_tf_sup)
-            == TFConductorModel.WATER_COOLED_COPPER
-            or TFConductorModel.HELIUM_COOLED_ALUMINIUM
-        ):
+
+        if TFConductorModel(self.data.tfcoil.i_tf_sup) in {
+            TFConductorModel.WATER_COOLED_COPPER,
+            TFConductorModel.HELIUM_COOLED_ALUMINIUM,
+        }:
             self.output_resistive_tf_power()
         elif (
             TFConductorModel(self.data.tfcoil.i_tf_sup)
@@ -129,11 +129,11 @@ class Power(Model):
     def run(self):
         """Caller for the power model"""
         # Toroidal field coil power model
-        if (
-            TFConductorModel(self.data.tfcoil.i_tf_sup)
-            == TFConductorModel.WATER_COOLED_COPPER
-            or TFConductorModel.HELIUM_COOLED_ALUMINIUM
-        ):
+
+        if TFConductorModel(self.data.tfcoil.i_tf_sup) in {
+            TFConductorModel.WATER_COOLED_COPPER,
+            TFConductorModel.HELIUM_COOLED_ALUMINIUM,
+        }:
             resistive_tf_power_params = self.resistive_tf_electric_power_flat_top(
                 c_tf_turn=self.data.tfcoil.c_tf_turn,
                 j_tf_bus=self.data.tfcoil.j_tf_bus,
