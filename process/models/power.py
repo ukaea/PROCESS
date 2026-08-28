@@ -103,6 +103,7 @@ class Power(Model):
                 ettfmj=self.data.tfcoil.e_tf_coil_magnetic_stored / 1e6,
                 rho_tf_bus=self.data.tfcoil.rho_tf_bus,
                 t_tf_charge=self.data.tfcoil.t_tf_charge,
+                eta_tf_power_supply_conversion=self.data.heat_transport.eta_tf_power_supply_conversion,
             )
 
         # Poloidal field coil power model !
@@ -175,6 +176,7 @@ class Power(Model):
                 ettfmj=self.data.tfcoil.e_tf_coil_magnetic_stored / 1e6,
                 rho_tf_bus=self.data.tfcoil.rho_tf_bus,
                 t_tf_charge=self.data.tfcoil.t_tf_charge,
+                eta_tf_power_supply_conversion=self.data.heat_transport.eta_tf_power_supply_conversion,
             )
         # Poloidal field coil power model
         self.pfpwr(
@@ -2388,10 +2390,11 @@ class Power(Model):
         ettfmj: float,
         rho_tf_bus: float,
         t_tf_charge: float,
+        eta_tf_power_supply_conversion: float,
     ):
         """
         Calculates the TF coil power conversion system parameters for superconducting
-        coils.
+        coils at flat-top operating point.
 
 
         Parameters
@@ -2408,10 +2411,12 @@ class Power(Model):
             Voltage of TF coil dump/quench, kV.
         ettfmj : float
             Stored energy per TF coil, MJ.
-        rptfc : float
-            TF coil resistance, ohms.
+        rho_tf_bus : float
+            TF bus resistivity, ohm*m.
         t_tf_charge : float
             TF coil charge time, s.
+        eta_tf_power_supply_conversion : float
+            Efficiency of the TF power supply conversion.
 
         Notes
         -----
@@ -2548,10 +2553,20 @@ class Power(Model):
         #  TF coil AC inductive power demand, MW
         xpwrmw = xpower / 0.9e0
 
-        #  Total steady state AC power demand, MW
-        p_tf_electric_supplies_mw += (
-            rpower / self.data.heat_transport.eta_tf_power_supply_conversion
+        p_tf_required = self.calculate_tf_power_demand(
+            res_tf_coils_total=0.0,
+            res_tf_joints_total=0.0,
+            res_tf_cp=0.0,
+            res_tf_bus=rtfbus,
+            cur_tf_turn=itfka * 1e3,
+            cur_tf_total=0.0,
+            ind_tf_total=0.0,
+            ind_tf_bus=0.0,
+            dcur_tf_total=0.0,
         )
+
+        #  Total steady state AC power demand, MW
+        p_tf_electric_supplies_mw = p_tf_required / eta_tf_power_supply_conversion
         #  Total TF coil power conversion building floor area, m2
 
         # tftsp = tfcfsp
