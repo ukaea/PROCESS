@@ -37,7 +37,7 @@ $$
 
 ---
 
-#### Superconducting TF coil power requirements | `tfcpwr()`
+#### Superconducting TF coil power requirements | `superconducting_tf_power_iter_1988()`
 
 The electrical power requirements for the superconducting TF coils are as follows:
 

@@ -94,7 +94,7 @@ class Power(Model):
                 self.data.tfcoil.drarea,
                 self.data.buildings.tfcbv,
                 self.data.heat_transport.p_tf_electric_supplies_mw,
-            ) = self.tfcpwr(
+            ) = self.superconducting_tf_power_iter_1988(
                 output=True,
                 itfka=1.0e-3 * self.data.tfcoil.c_tf_turn,
                 rmajor=self.data.physics.rmajor,
@@ -165,7 +165,7 @@ class Power(Model):
                 self.data.tfcoil.drarea,
                 self.data.buildings.tfcbv,
                 self.data.heat_transport.p_tf_electric_supplies_mw,
-            ) = self.tfcpwr(
+            ) = self.superconducting_tf_power_iter_1988(
                 output=False,
                 itfka=1.0e-3 * self.data.tfcoil.c_tf_turn,
                 rmajor=self.data.physics.rmajor,
@@ -2376,7 +2376,7 @@ class Power(Model):
                 "OP ",
             )
 
-    def tfcpwr(
+    def superconducting_tf_power_iter_1988(
         self, output: bool, itfka, rmajor, ntfc, v_tf_coil_dump_quench_kv, ettfmj, rptfc
     ):
         """Calculates the TF coil power conversion system parameters
