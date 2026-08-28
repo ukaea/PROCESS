@@ -102,6 +102,7 @@ class Power(Model):
                 v_tf_coil_dump_quench_kv=self.data.tfcoil.v_tf_coil_dump_quench_kv,
                 ettfmj=self.data.tfcoil.e_tf_coil_magnetic_stored / 1e6,
                 rptfc=self.data.tfcoil.res_tf_leg,
+                t_tf_charge=self.data.tfcoil.t_tf_charge,
             )
 
         # Poloidal field coil power model !
@@ -173,6 +174,7 @@ class Power(Model):
                 v_tf_coil_dump_quench_kv=self.data.tfcoil.v_tf_coil_dump_quench_kv,
                 ettfmj=self.data.tfcoil.e_tf_coil_magnetic_stored / 1e6,
                 rptfc=self.data.tfcoil.res_tf_leg,
+                t_tf_charge=self.data.tfcoil.t_tf_charge,
             )
         # Poloidal field coil power model
         self.pfpwr(
@@ -2377,7 +2379,7 @@ class Power(Model):
             )
 
     def superconducting_tf_power_iter_1988(
-        self, output: bool, itfka, rmajor, ntfc, v_tf_coil_dump_quench_kv, ettfmj, rptfc
+        self, output: bool, itfka, rmajor, ntfc, v_tf_coil_dump_quench_kv, ettfmj, rptfc, t_tf_charge
     ):
         """Calculates the TF coil power conversion system parameters
         for superconducting coils
@@ -2409,12 +2411,9 @@ class Power(Model):
         fspc2 = 0.8e0  # floor space coefficient for circuit breakers
         fspc3 = 0.4e0  # floor space coefficient for load centres
 
-        if rptfc == 0.0e0:  # noqa: RUF069
-            tchghr = 4.0e0  # charge time of the coils, hours
-            nsptfc = 1.0e0  # superconducting (1.0 = superconducting, 0.0 = resistive)
-        else:
-            tchghr = 0.16667e0  # charge time of the coils, hours
-            nsptfc = 0.0e0  # resistive (1.0 = superconducting, 0.0 = resistive)
+
+        nsptfc = 1.0e0  # superconducting (1.0 = superconducting, 0.0 = resistive)
+
 
         #  Total steady state TF coil AC power demand (summed later)
         p_tf_electric_supplies_mw = 0.0e0
@@ -2455,7 +2454,7 @@ class Power(Model):
         rcoils = ntfc * rptfc
 
         #  Total impedance, ohms
-        ztotal = rtfbus + rcoils + ltfth / (3600.0e0 * tchghr)
+        ztotal = rtfbus + rcoils + ltfth / (t_tf_charge)
 
         #  Charging voltage for the TF coils, volts
         tfcv = 1000.0e0 * itfka * ztotal
@@ -2503,7 +2502,7 @@ class Power(Model):
         rpower = (ntfc * rptfc + rtfbus) * itfka**2
 
         #  Total TF coil peak inductive power demand, MVA
-        xpower = ltfth / (3600.0e0 * tchghr) * itfka**2
+        xpower = ltfth / (t_tf_charge) * itfka**2
 
         #  Building space:
         #  Power modules floor space, m2
@@ -2552,7 +2551,7 @@ class Power(Model):
                 v_tf_coil_dump_quench_kv,
                 "OP ",
             )
-            po.ovarre(self.outfile, "TF coil charge time (hours)", "(tchghr)", tchghr)
+            po.ovarre(self.outfile, "TF coil charge time (hours)", "(t_tf_charge)", t_tf_charge)
             po.ovarre(
                 self.outfile,
                 "Total inductance of TF coils (H)",

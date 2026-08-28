@@ -899,7 +899,7 @@ class TFData:
     ind_tf_self_total: float = 0.0
     """Sum of all self inductances of the TF coils [H]"""
 
-    t_tf_charge: float = 0.0
+    t_tf_charge: float = 14400.0
     """TF coil charging time to operational current [s]"""
 
 
