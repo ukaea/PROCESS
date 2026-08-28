@@ -16197,78 +16197,90 @@ def plot_tf_energisation_power_voltage(
 ):
     """Plot TF coil power and voltage demand during ramp-up on the given axis."""
     c_tf_turn = mfile.get("c_tf_turn", scan=scan)
-    ind_tf_coil = mfile.get("ind_tf_coil", scan=scan)
-    tramp = 1000.0
+    ind_tf_self_total = mfile.get("ind_tf_self_total", scan=scan)
+    t_tf_charge = mfile.get("t_tf_charge", scan=scan)
+    res_tf_bus = mfile.get("res_tf_bus", scan=scan)
 
     n_points = 100
     flat_top_fraction = 0.2
-    flat_top_time = tramp * flat_top_fraction
+    flat_top_time = t_tf_charge * flat_top_fraction
     n_flat_top = max(2, int(n_points * flat_top_fraction))
 
     ramp_fraction = np.linspace(0.0, 1.0, n_points)
-    ramp_time = ramp_fraction * tramp
-    flat_top_time_axis = np.linspace(tramp, tramp + flat_top_time, n_flat_top)
+    ramp_time = ramp_fraction * t_tf_charge
+    flat_top_time_axis = np.linspace(
+        t_tf_charge, t_tf_charge + flat_top_time, n_flat_top
+    )
     time = np.concatenate((ramp_time, flat_top_time_axis[1:]))
 
     cur_tf_coil_ramp = ramp_fraction * c_tf_turn
     cur_tf_coil_flat_top = np.full(len(flat_top_time_axis) - 1, c_tf_turn)
     cur_tf_coil = np.concatenate((cur_tf_coil_ramp, cur_tf_coil_flat_top))
     # Rate of change of current during a linear ramp-up, then zero at flat-top
-    dcur_tf_total_ramp = np.full(n_points, (c_tf_turn / tramp) / 1000.0)
+    dcur_tf_total_ramp = np.full(n_points, (c_tf_turn / t_tf_charge))
     dcur_tf_total_flat_top = np.zeros(len(flat_top_time_axis) - 1)
     dcur_tf_total = np.concatenate((dcur_tf_total_ramp, dcur_tf_total_flat_top))
 
     power = Power()
-    tf_power = np.array([
-        power.calculate_tf_power_demand(
-            res_tf_coils_total=0.0,
-            res_tf_joints_total=0.0,
-            res_tf_cp = 0.0,
-            res_tf_bus=1e-6,
-            cur_tf_turn=cur_tf_coil[i],
-            cur_tf_total = 0.0,
-            ind_tf_total=ind_tf_coil,
-            ind_tf_bus=0.0,
-            dcur_tf_total=dcur_tf_total[i],
-        )
-        for i in range(len(time))
-    ])
+    tf_power, tf_resistive, tf_reactive = np.array(
+        [
+            power.calculate_tf_power_demand(
+                res_tf_coils_total=0.0,
+                res_tf_joints_total=0.0,
+                res_tf_cp=0.0,
+                res_tf_bus=res_tf_bus,
+                cur_tf_turn=cur_tf_coil[i],
+                cur_tf_total=0.0,
+                ind_tf_total=ind_tf_self_total,
+                ind_tf_bus=0.0,
+                dcur_tf_total=dcur_tf_total[i],
+            )
+            for i in range(len(time))
+        ]
+    ).T
 
     tf_voltage = np.array([
         power.calculate_tf_voltage(
             res_tf_coils_total=0.0,
             res_tf_joints_total=0.0,
-            res_tf_bus=1e-6,
+            res_tf_bus=res_tf_bus,
             cur_tf_coil=cur_tf_coil[i],
-            ind_tf_total=ind_tf_coil,
+            ind_tf_total=ind_tf_self_total,
             ind_tf_bus=0.0,
             dcur_tf_total=dcur_tf_total[i],
         )
         for i in range(len(time))
     ])
 
-    axis.plot(time, tf_power, color="C0")
+    axis.plot(time, tf_power, color="C0", linestyle="-", label="Total")
+    axis.plot(
+        time, tf_resistive, color="C0", linestyle="--", label="Resistive"
+    )
+    axis.plot(time, tf_reactive, color="C0", linestyle=":", label="Reactive")
+    axis.legend(loc="best")
     voltage_axis = axis.twinx()
     voltage_axis.plot(time, tf_voltage, color="C1")
     voltage_axis.set_ylabel("Voltage [V]", color="C1")
     voltage_axis.tick_params(axis="y", labelcolor="C1")
     axis.set_title("TF Coil Power Demand During Ramp-Up")
     axis.set_xlabel("Time [s]")
-    axis.set_ylabel("Power [W]")
-    axis.set_xticks([0.0, tramp, tramp + flat_top_time])
+    axis.set_ylabel("Power [W]", color="C0")
+    axis.set_yscale("log")
+    axis.tick_params(axis="y", labelcolor="C0")
+    axis.set_xticks([0.0, t_tf_charge, t_tf_charge + flat_top_time])
     axis.set_xticklabels([
         "0\nStart of charge",
-        f"{tramp:.0f}\nEnd of charge",
-        f"{tramp + flat_top_time:.0f}\nFlat-top",
+        f"{t_tf_charge:.0f}\nEnd of charge",
+        f"{t_tf_charge + flat_top_time:.0f}\nFlat-top",
     ])
-    axis.set_xlim(0.0, tramp + flat_top_time)
+    axis.set_xlim(0.0, t_tf_charge + flat_top_time)
     axis.minorticks_on()
     axis.grid(True, alpha=0.3)
     axis.text(
         0.03,
         0.97,
         f"Target current: {c_tf_turn:.3g} A\n"
-        f"Current ramp rate: {c_tf_turn / tramp:.3g} A/s",
+        f"Current ramp rate: {c_tf_turn / t_tf_charge:.3g} A/s",
         transform=axis.transAxes,
         ha="left",
         va="top",
@@ -16286,16 +16298,18 @@ def plot_tf_energisation_field(axis: plt.Axes, mfile: MFile, scan: int):
     """Plot TF coil magnetic field at the bore and on the coil during ramp-up."""
     b_plasma_toroidal_on_axis = mfile.get("b_plasma_toroidal_on_axis", scan=scan)
     b_tf_inboard_peak = mfile.get("b_tf_inboard_peak_symmetric", scan=scan)
-    tramp = 1000.0
+    t_tf_charge = mfile.get("t_tf_charge", scan=scan)
 
     n_points = 100
     flat_top_fraction = 0.2
-    flat_top_time = tramp * flat_top_fraction
+    flat_top_time = t_tf_charge * flat_top_fraction
     n_flat_top = max(2, int(n_points * flat_top_fraction))
 
     ramp_fraction = np.linspace(0.0, 1.0, n_points)
-    ramp_time = ramp_fraction * tramp
-    flat_top_time_axis = np.linspace(tramp, tramp + flat_top_time, n_flat_top)
+    ramp_time = ramp_fraction * t_tf_charge
+    flat_top_time_axis = np.linspace(
+        t_tf_charge, t_tf_charge + flat_top_time, n_flat_top
+    )
     time = np.concatenate((ramp_time, flat_top_time_axis[1:]))
 
     fraction_ramp = ramp_fraction
@@ -16334,14 +16348,14 @@ def plot_tf_energisation_field(axis: plt.Axes, mfile: MFile, scan: int):
     axis.set_xlabel("Time [s]")
     axis.set_ylabel("Magnetic field [T]")
     rate_axis.set_ylabel("Rate of change of magnetic field [T/s]")
-    axis.set_xticks([0.0, tramp, tramp + flat_top_time])
+    axis.set_xticks([0.0, t_tf_charge, t_tf_charge + flat_top_time])
     axis.set_xticklabels([
         "0\nStart of charge",
-        f"{tramp:.0f}\nEnd of charge",
-        f"{tramp + flat_top_time:.0f}\nFlat-top",
+        f"{t_tf_charge:.0f}\nEnd of charge",
+        f"{t_tf_charge + flat_top_time:.0f}\nFlat-top",
     ])
-    axis.set_xlim(0.0, tramp + flat_top_time)
-    rate_axis.set_xlim(0.0, tramp + flat_top_time)
+    axis.set_xlim(0.0, t_tf_charge + flat_top_time)
+    rate_axis.set_xlim(0.0, t_tf_charge + flat_top_time)
     axis.minorticks_on()
     axis.grid(True, alpha=0.3)
     lines, labels = axis.get_legend_handles_labels()

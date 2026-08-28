@@ -536,7 +536,7 @@ class TFData:
 
     tfckw: float = 0.0
     """available DC power for charging the TF coils (kW)"""
-    
+
     res_tf_bus: float = 0.0
     """Electrical resistance of the TF coil bus-bars [Ω]"""
 
