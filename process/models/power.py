@@ -2518,6 +2518,21 @@ class Power(Model):
                 self.data.tfcoil.p_tf_joints_resistive_mw,
                 "OP ",
             )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Conversion efficiency of the TF coil power supply (η_tf)",
+            "(eta_tf_power_supply_conversion)",
+            self.data.heat_transport.eta_tf_power_supply_conversion,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total TF coil electric supply power demand [MW]",
+            "(p_tf_electric_supplies_mw)",
+            self.data.heat_transport.p_tf_electric_supplies_mw,
+            "OP ",
+        )
 
     @staticmethod
     def calculate_tf_power_demand(

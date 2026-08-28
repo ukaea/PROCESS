@@ -16200,7 +16200,9 @@ def plot_tf_energisation_power_voltage(
     ind_tf_self_total = mfile.get("ind_tf_self_total", scan=scan)
     t_tf_charge = mfile.get("t_tf_charge", scan=scan)
     res_tf_bus = mfile.get("res_tf_bus", scan=scan)
-
+    eta_tf_power_supply_conversion = mfile.get(
+        "eta_tf_power_supply_conversion", scan=scan
+    )
     n_points = 100
     flat_top_fraction = 0.2
     flat_top_time = t_tf_charge * flat_top_fraction
@@ -16222,22 +16224,20 @@ def plot_tf_energisation_power_voltage(
     dcur_tf_total = np.concatenate((dcur_tf_total_ramp, dcur_tf_total_flat_top))
 
     power = Power()
-    tf_power, tf_resistive, tf_reactive = np.array(
-        [
-            power.calculate_tf_power_demand(
-                res_tf_coils_total=0.0,
-                res_tf_joints_total=0.0,
-                res_tf_cp=0.0,
-                res_tf_bus=res_tf_bus,
-                cur_tf_turn=cur_tf_coil[i],
-                cur_tf_total=0.0,
-                ind_tf_total=ind_tf_self_total,
-                ind_tf_bus=0.0,
-                dcur_tf_total=dcur_tf_total[i],
-            )
-            for i in range(len(time))
-        ]
-    ).T
+    tf_power, tf_resistive, tf_reactive = np.array([
+        power.calculate_tf_power_demand(
+            res_tf_coils_total=0.0,
+            res_tf_joints_total=0.0,
+            res_tf_cp=0.0,
+            res_tf_bus=res_tf_bus,
+            cur_tf_turn=cur_tf_coil[i],
+            cur_tf_total=0.0,
+            ind_tf_total=ind_tf_self_total,
+            ind_tf_bus=0.0,
+            dcur_tf_total=dcur_tf_total[i],
+        )
+        for i in range(len(time))
+    ]).T
 
     tf_voltage = np.array([
         power.calculate_tf_voltage(
@@ -16252,11 +16252,16 @@ def plot_tf_energisation_power_voltage(
         for i in range(len(time))
     ])
 
-    axis.plot(time, tf_power, color="C0", linestyle="-", label="Total")
     axis.plot(
-        time, tf_resistive, color="C0", linestyle="--", label="Resistive"
+        time,
+        tf_power / eta_tf_power_supply_conversion,
+        color="C0",
+        linestyle="-.",
+        label="Power Supply",
     )
-    axis.plot(time, tf_reactive, color="C0", linestyle=":", label="Reactive")
+    axis.plot(time, tf_power, color="C0", linestyle="-", label="Total")
+    axis.plot(time, tf_resistive, color="C0", linestyle="--", label="Resistive")
+    axis.plot(time, tf_reactive, color="C0", linestyle=":", label="Inductive")
     axis.legend(loc="best")
     voltage_axis = axis.twinx()
     voltage_axis.plot(time, tf_voltage, color="C1")
