@@ -11,11 +11,11 @@ The main power flow is controlled by `power.py`. The main class `Power` controls
 Generally the required electric power at any time, $t$ of one magnet in $\text{VA}$ is given by:
 
 $$
-P_{\text{TF,electric}}(t) = \left[\Omega_{\text{TF,coil}}(t)+\Omega_{\text{joints}}(t)+\Omega_{\text{feeder}}(t)\right] \times I_{\text{TF,coil}}^2(t) 
-\\ +\left[L_{\text{TF,coil-self}}(t)+L_{\text{feeder}}(t)\right]\times I_{\text{TF,coil}}(t) \times\frac{dI(t)}{dt}
+P_{\text{TF,electric}}(t) = \left[\Omega_{\text{TF,CP}}(t)\times I_{\text{TF,total}}^2(t)\right ]+\\\left[\Omega_{\text{TF,coil}}(t)+\Omega_{\text{joints}}(t)+\Omega_{\text{feeder}}(t)\right] \times I_{\text{TF,turn}}^2(t) 
+\\ +\left[L_{\text{TF,coil-self}}(t)+L_{\text{feeder}}(t)\right]\times I_{\text{TF,turn}}(t) \times\frac{dI_{\text{TF,turn}}(t)}{dt}
 $$
 
-where $\Omega_{\text{TF,coil}}$ is the resistance of the coil, $\Omega_{\text{joints}}$ is the resistance of the joints in the coil, $\Omega_{\text{feeder}}$ is the resistance of the feeder/busbar to the coil.
+where,$\Omega_{\text{TF,CP}}$ is the resistance of the total current carrying centrepost (if present), $\Omega_{\text{TF,coil}}$ is the resistance of the coil legs, $\Omega_{\text{joints}}$ is the resistance of the joints in the coil (if present), $\Omega_{\text{feeder}}$ is the resistance of the feeder/busbar to the coil.
 
 -------------
 
@@ -24,8 +24,8 @@ where $\Omega_{\text{TF,coil}}$ is the resistance of the coil, $\Omega_{\text{jo
 Similarly from the [power requirement](#power-requirement--calculate_tf_power_demand), the voltage in the TF system can be given by:
 
 $$
-V_{\text{TF}}(t) = \left[\Omega_{\text{TF,coil}}(t)+\Omega_{\text{joints}}(t)+\Omega_{\text{feeder}}(t)\right] \times I_{\text{TF,coil}}(t) 
-\\ +\left[L_{\text{TF,coil-self}}(t)+L_{\text{feeder}}(t)\right] \times\frac{dI(t)}{dt}
+V_{\text{TF}}(t) = \left[\Omega_{\text{TF,turn}}(t)+\Omega_{\text{joints}}(t)+\Omega_{\text{feeder}}(t)\right] \times I_{\text{TF,turn}}(t) 
+\\ +\left[L_{\text{TF,coil-self}}(t)+L_{\text{feeder}}(t)\right] \times\frac{dI_{\text{TF,turn}}(t)}{dt}
 $$
 
 ---------------
@@ -33,7 +33,7 @@ $$
 
 
 
-#### Resistive TF coil power requirements | `resistive_tf_electric_power()`
+#### Resistive TF coil power requirements | `resistive_tf_electric_power_flat_top()`
 
 ---
 

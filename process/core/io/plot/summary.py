@@ -16279,6 +16279,7 @@ def plot_tf_energisation_power_voltage(
         },
     )
 
+
 def plot_tf_energisation_field(axis: plt.Axes, mfile: MFile, scan: int):
     """Plot TF coil magnetic field at the bore and on the coil during ramp-up."""
     b_plasma_toroidal_on_axis = mfile.get("b_plasma_toroidal_on_axis", scan=scan)

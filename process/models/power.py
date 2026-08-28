@@ -134,7 +134,7 @@ class Power(Model):
             == TFConductorModel.WATER_COOLED_COPPER
             or TFConductorModel.HELIUM_COOLED_ALUMINIUM
         ):
-            resistive_tf_power_params = self.resistive_tf_electric_power(
+            resistive_tf_power_params = self.resistive_tf_electric_power_flat_top(
                 c_tf_turn=self.data.tfcoil.c_tf_turn,
                 j_tf_bus=self.data.tfcoil.j_tf_bus,
                 rho_tf_bus=self.data.tfcoil.rho_tf_bus,
@@ -2212,7 +2212,7 @@ class Power(Model):
         )
 
     @staticmethod
-    def resistive_tf_electric_power(
+    def resistive_tf_electric_power_flat_top(
         c_tf_turn: float,
         j_tf_bus: float,
         rho_tf_bus: float,
@@ -2225,7 +2225,7 @@ class Power(Model):
         p_cp_resistive_mw: float,
         eta_tf_power_supply_conversion: float,
     ) -> ResistiveTFPowerParameters:
-        """TF coil power supply requirements for resistive coils
+        """TF coil power supply requirements for resistive coils at flat top operation
 
 
         Parameters
@@ -2681,8 +2681,10 @@ class Power(Model):
     def calculate_tf_power_demand(
         res_tf_coils_total: float,
         res_tf_joints_total: float,
+        res_tf_cp: float,
         res_tf_bus: float,
-        cur_tf_coil: float,
+        cur_tf_turn: float,
+        cur_tf_total: float,
         ind_tf_total: float,
         ind_tf_bus: float,
         dcur_tf_total: float,
@@ -2695,10 +2697,14 @@ class Power(Model):
             Total resistance of TF coils [Ω]
         res_tf_joints_total : float
             Total resistance of TF coil joints [Ω]
+        res_tf_cp : float
+            Total resistance of TF coil centre post [Ω]
         res_tf_bus : float
             Total resistance of TF bus [Ω]
-        cur_tf_coil : float
-            Current in a single TF coil at any time [A]
+        cur_tf_turn : float
+            Current in a single TF turn at any time [A]
+        cur_tf_total : float
+            Total current in the TF system [A]
         ind_tf_total : float
             Total inductance of TF coils [H]
         ind_tf_bus : float
@@ -2714,11 +2720,11 @@ class Power(Model):
         # Total resistive power in TF coils, joints, and bus [MW]
         p_tf_resistive_mw = (
             (res_tf_coils_total + res_tf_joints_total + res_tf_bus)
-            * cur_tf_coil**2
+            * cur_tf_turn**2
             * 1.0e-6
-        )
+        ) + (res_tf_cp * cur_tf_total**2 * 1.0e-6)
         p_tf_reactive_mvar = (
-            (ind_tf_total + ind_tf_bus) * cur_tf_coil * dcur_tf_total * 1.0e-6
+            (ind_tf_total + ind_tf_bus) * cur_tf_turn * dcur_tf_total * 1.0e-6
         )
         return p_tf_resistive_mw + p_tf_reactive_mvar
 

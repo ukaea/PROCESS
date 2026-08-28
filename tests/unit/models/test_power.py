@@ -1936,7 +1936,7 @@ class ResistiveTFElectricPowerParam(NamedTuple):
         ),
     ],
 )
-def test_resistive_tf_electric_power(resistivetfelectricpowerparam, power):
+def test_resistive_tf_electric_power_flat_top(resistivetfelectricpowerparam, power):
     """Unit test for the resistive_tf_electric_power static method.
 
     :param resistivetfelectricpowerparam: the data used to run the test
@@ -1945,7 +1945,7 @@ def test_resistive_tf_electric_power(resistivetfelectricpowerparam, power):
     :param power: fixture for the power model object
     :type power: process.power.Power
     """
-    result = power.resistive_tf_electric_power(
+    result = power.resistive_tf_electric_power_flat_top(
         c_tf_turn=resistivetfelectricpowerparam.c_tf_turn,
         j_tf_bus=resistivetfelectricpowerparam.j_tf_bus,
         rho_tf_bus=resistivetfelectricpowerparam.rho_tf_bus,
