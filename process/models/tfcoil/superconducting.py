@@ -237,6 +237,11 @@ class SuperconductingTFCoil(TFCoil):
             r_tf_inboard_mid=self.data.build.r_tf_inboard_mid,
         )
 
+        # Compute the total self-inductance of all TF coils
+        self.data.tfcoil.ind_tf_self_total = (
+            self.data.tfcoil.ind_tf_coil * self.data.tfcoil.n_tf_coils
+        )
+
         (
             self.data.tfcoil.e_tf_magnetic_stored_total,
             self.data.tfcoil.e_tf_magnetic_stored_total_gj,

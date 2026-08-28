@@ -1089,6 +1089,13 @@ class TFCoil(Model):
         )
         po.ovarre(
             self.outfile,
+            "Total self-inductance of all TF coils (H)",
+            "(ind_tf_self_total)",
+            self.data.tfcoil.ind_tf_self_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Total stored magnetic energy in a TF coil (J)",
             "(e_tf_coil_magnetic_stored)",
             self.data.tfcoil.e_tf_coil_magnetic_stored,
