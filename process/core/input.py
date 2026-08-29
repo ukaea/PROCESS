@@ -482,6 +482,9 @@ INPUT_VARIABLES = {
     "fkind": InputVariable("costs", float, range=(0.5, 1.0)),
     "f_h_mode_margin": InputVariable("constraints", float, range=(0.001, 1000000.0)),
     "f_l_mode_margin": InputVariable("constraints", float, range=(0.001, 1000000.0)),
+    "magnetic_stored_energy_copper_vol_ratio": InputVariable(
+        "constraints", float, range=(0.0, 100.0)
+    ),
     "flirad": InputVariable("ife", float, range=(0.0, 10.0)),
     "flpitch": InputVariable("stellarator", float, range=(0.0001, 0.01)),
     "f_div_flux_expansion": InputVariable("divertor", float, range=(0.0, 10.0)),
