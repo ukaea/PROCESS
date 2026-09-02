@@ -321,3 +321,16 @@ class PROCESSModelData:
 
             if isinstance(value, Parameter):
                 value.reset_edit_use_records()
+
+
+def unwrap_parameter(func):
+    def wrapper(*args, **kwargs):
+        return func(
+            *[arg.value if isinstance(arg, Parameter) else arg for arg in args],
+            **{
+                k: (v.value if isinstance(v, Parameter) else v)
+                for k, v in kwargs.items()
+            },
+        )
+
+    return wrapper
