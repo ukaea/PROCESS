@@ -231,7 +231,7 @@ class PROCESSModelData:
             else:
                 current_value._edited.append(
                     EditRecord(
-                        value=np.copy(current_value.value),
+                        value=np.copy(current_value.history()[0].value),
                         new_value=np.copy(value.value)
                         if isinstance(value, Parameter)
                         else np.copy(value),
