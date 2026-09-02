@@ -56,7 +56,7 @@ class PlasmaConfinementTime(Model):
     def run(self):
         """PlasmaConfinementTime model doesn't need to be run"""
 
-    def calculate_confinement_time(
+    def calculate_confinement_time(  # noqa: PLR0917
         self,
         m_fuel_amu: float,
         p_alpha_total_mw: float,
