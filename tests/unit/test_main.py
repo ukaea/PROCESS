@@ -36,7 +36,7 @@ def single_run(monkeypatch, input_file, tmp_path):
     single_run.filepath = tmp_path
     single_run.models = None
     single_run.data = DataStructure()
-    single_run.set_filenames(tmp_path)
+    single_run.set_filenames(None)
     single_run.initialise()
     return single_run
 
