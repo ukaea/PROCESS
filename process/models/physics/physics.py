@@ -15,8 +15,8 @@ import process.models.physics.fusion_reactions as reactions
 import process.models.physics.radiation_power as physics_funcs
 from process.core import constants
 from process.core import process_output as po
+from process.core.data_structure.parameter import unwrap_parameter
 from process.core.exceptions import ProcessValueError
-from process.core.metadata import unwrap_parameter
 from process.core.model import Model
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.physics_variables import (

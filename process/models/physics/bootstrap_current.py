@@ -14,8 +14,8 @@ from scipy import integrate
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.data_structure.parameter import unwrap_parameter
 from process.core.exceptions import ProcessValueError
-from process.core.metadata import unwrap_parameter
 from process.core.model import Model
 
 if TYPE_CHECKING:

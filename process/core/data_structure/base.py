@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, fields
 
-from process.core.metadata import PROCESSModelData
+from process.core.data_structure.parameter import PROCESSModelData
 from process.data_structure.blanket_variables import BlanketData
 from process.data_structure.build_variables import BuildData
 from process.data_structure.buildings_variables import BuildingsData

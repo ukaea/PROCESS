@@ -5,7 +5,7 @@ from enum import IntEnum, unique
 
 import numpy as np
 
-from process.core.metadata import Parameter, PROCESSModelData
+from process.core.data_structure.parameter import Parameter, PROCESSModelData
 
 
 @unique
