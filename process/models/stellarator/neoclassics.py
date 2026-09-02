@@ -1,6 +1,7 @@
 """Module containing neoclassics routines"""
 
 import logging
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -9,6 +10,20 @@ from process.core.model import Model
 from process.models.stellarator.stellarator import KEV
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class NormalisedCollisionality:
+    """Storage for normalised collisionality"""
+
+    e: float
+    """electron"""
+    D: float
+    """Deutrerium"""
+    T: float
+    """Tritium"""
+    He: float
+    """Helium"""
 
 
 class Neoclassics(Model):
@@ -395,10 +410,12 @@ class Neoclassics(Model):
 
         chi_PROCESS_e = self.st_calc_eff_chi()
 
-        nu_star_e = self.data.neoclassics.nu_star_averaged[0]
-        nu_star_d = self.data.neoclassics.nu_star_averaged[1]
-        nu_star_T = self.data.neoclassics.nu_star_averaged[2]
-        nu_star_He = self.data.neoclassics.nu_star_averaged[3]
+        nu_star = NormalisedCollisionality(
+            e=self.data.neoclassics.nu_star_averaged[0],
+            d=self.data.neoclassics.nu_star_averaged[1],
+            T=self.data.neoclassics.nu_star_averaged[2],
+            He=self.data.neoclassics.nu_star_averaged[3],
+        )
 
         return (
             q_PROCESS,
@@ -424,10 +441,7 @@ class Neoclassics(Model):
             dmdt_neo_fuel_from_e,
             chi_neo_e,
             chi_PROCESS_e,
-            nu_star_e,
-            nu_star_d,
-            nu_star_T,
-            nu_star_He,
+            nu_star,
         )
 
     def neoclassics_calc_KT(self):
