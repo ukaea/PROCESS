@@ -207,7 +207,7 @@ def sankey(mfile, format_):
         "Variables will be plotted in order of input"
     ),
 )
-def plot_scans_cli(
+def plot_scans_cli(  # noqa: PLR0917
     mfiles,
     output_names,
     output_names2,
@@ -235,22 +235,22 @@ def plot_scans_cli(
         list(filter(None, output_names)),
         list(filter(None, output_names2)),
         outputdir,
-        term_output,
         save_format,
         axis_font_size,
         axis_tick_size,
-        x_axis_percent,
         list(map(float, filter(None, x_axis_max))),
         list(map(float, filter(None, x_axis_range))),
-        y_axis_percent,
         list(map(float, filter(None, y_axis_max))),
         list(map(float, filter(None, y_axis_range))),
-        y_axis_percent2,
         list(map(float, filter(None, y_axis2_max))),
         list(map(float, filter(None, y_axis_range2))),
         label_name,
-        twod_contour,
-        stack_plots,
+        x_axis_percent=x_axis_percent,
+        y_axis_percent=y_axis_percent,
+        y_axis_percent2=y_axis_percent2,
+        term_output=term_output,
+        twod_contour=twod_contour,
+        stack_plots=stack_plots,
     )
 
 
