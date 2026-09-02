@@ -47,14 +47,12 @@ def feasible_point(filename, position: int):
 
     check_point = 1
 
-    for value in mfile_data.data:
-        # Look for feasible scan points (with ifail = 1)
-        if "ifail" in value and "vmcon_error_flag_(ifail)" not in value:
-            if mfile_data.get(value, scan=check_point) == 1:
-                scan_point = check_point
-            if check_point == position:
-                break
-            check_point += 1
+    for scan in range(1, num_scans + 1):
+        if mfile_data.get("ifail", scan=scan) == 1:
+            scan_point = scan
+        if check_point == position:
+            break
+        check_point += 1
     else:
         raise ValueError("No feasible point found")
     return scan_point
