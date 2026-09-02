@@ -266,7 +266,6 @@ def pipe_hydraulic_diameter(
     raise ProcessValueError(f"i_channel_shape ={i_channel_shape} is an invalid option.")
 
 
-@staticmethod
 def darcy_friction_haaland(
     reynolds: float, roughness_channel: float, radius_channel: float
 ) -> float:
