@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass, fields
 
+from process.core.metadata import PROCESSModelData
 from process.data_structure.blanket_variables import BlanketData
 from process.data_structure.build_variables import BuildData
 from process.data_structure.buildings_variables import BuildingsData
@@ -90,3 +91,10 @@ class DataStructure:
         for f in fields(self):
             if getattr(self, f.name) is initialise_later:
                 setattr(self, f.name, f.type())
+
+    def reset_edit_use_records(self):
+        """Reset the edit/use records for all Parameters."""
+        for f in fields(self):
+            obj = getattr(self, f.name)
+            if isinstance(obj, PROCESSModelData):
+                obj.reset_edit_use_records()
