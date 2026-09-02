@@ -2898,34 +2898,6 @@ class PFCoil(Model):
             "OP ",
         )
 
-        op.oshead(self.outfile, "PF Circuit Waveform Data")
-        op.ovarre(
-            self.outfile,
-            "Number of PF circuits including CS and plasma",
-            "(n_pf_cs_plasma_circuits)",
-            self.data.pf_coil.n_pf_cs_plasma_circuits,
-        )
-        for k in range(self.data.pf_coil.n_pf_cs_plasma_circuits):
-            for jjj in range(6):
-                if k == self.data.pf_coil.n_pf_cs_plasma_circuits - 1:
-                    circuit_name = f"Plasma Time point {jjj} (A)"
-                    circuit_var_name = f"(plasmat{jjj})"
-                elif (self.data.build.iohcl != 0) and (k ==
-                                        self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
-                    circuit_name = f"CS Circuit Time point {jjj} (A)"
-                    circuit_var_name = f"(cs t{jjj})"
-                else:
-                    circuit_name = f"PF Circuit {k + 1} Time point {jjj} (A)"
-                    circuit_var_name = f"(pfc{k}t{jjj})"
-
-                op.ovarre(
-                    self.outfile,
-                    circuit_name,
-                    circuit_var_name,
-                    self.data.pf_coil.c_pf_coil_turn[k, jjj]
-                    * self.data.pf_coil.n_pf_coil_turns[k],
-                )
-
     @staticmethod
     def selfinductance(a, b, c, n):
         """Calculates the selfinductance using Bunet's formula.
