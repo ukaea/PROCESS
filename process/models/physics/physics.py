@@ -60,6 +60,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+@unwrap_parameter
 @nb.jit(nopython=True, cache=True)
 def calculate_cylindrical_safety_factor(
     rmajor: float,
@@ -108,6 +109,7 @@ def calculate_cylindrical_safety_factor(
     )
 
 
+@unwrap_parameter
 @nb.jit(nopython=True, cache=True)
 def rether(
     alphan,
@@ -166,6 +168,7 @@ def rether(
 # -----------------------------------------------------
 
 
+@unwrap_parameter
 @nb.jit(nopython=True, cache=True)
 def ps_fraction_scene(beta: float) -> float:
     """Calculate the Pfirsch-Schlüter fraction based on the SCENE fit by Tim Hender
