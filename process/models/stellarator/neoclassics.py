@@ -412,7 +412,7 @@ class Neoclassics(Model):
 
         nu_star = NormalisedCollisionality(
             e=self.data.neoclassics.nu_star_averaged[0],
-            d=self.data.neoclassics.nu_star_averaged[1],
+            D=self.data.neoclassics.nu_star_averaged[1],
             T=self.data.neoclassics.nu_star_averaged[2],
             He=self.data.neoclassics.nu_star_averaged[3],
         )
