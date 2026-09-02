@@ -7,6 +7,7 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.data_structure.parameter import unwrap_parameter
 from process.core.model import Model
 from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
 
@@ -95,6 +96,7 @@ class PlasmaFields(Model):
         return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_plasma_inboard_toroidal_field(
         b_plasma_toroidal_on_axis: float,
@@ -120,6 +122,7 @@ class PlasmaFields(Model):
         return rmajor * b_plasma_toroidal_on_axis / (rmajor - rminor)
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_plasma_outboard_toroidal_field(
         b_plasma_toroidal_on_axis: float,
@@ -145,6 +148,7 @@ class PlasmaFields(Model):
         return rmajor * b_plasma_toroidal_on_axis / (rmajor + rminor)
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_toroidal_field_profile(
         b_plasma_toroidal_on_axis: float,
@@ -179,6 +183,7 @@ class PlasmaFields(Model):
         return rmajor * b_plasma_toroidal_on_axis / rho
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_total_magnetic_field(
         b_plasma_toroidal: float, b_plasma_poloidal: float

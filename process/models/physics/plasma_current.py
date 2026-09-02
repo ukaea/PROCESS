@@ -14,6 +14,7 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.data_structure.parameter import unwrap_parameter
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.stellarator_variables import StellaratorModel
@@ -1142,6 +1143,7 @@ class PlasmaDiamagneticCurrent(Model):
             )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def diamagnetic_fraction_hender(beta: float) -> float:
         """Calculate the diamagnetic fraction based on the Hender fit.
@@ -1160,6 +1162,7 @@ class PlasmaDiamagneticCurrent(Model):
         return beta / 2.8
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def diamagnetic_fraction_scene(beta: float, q95: float, q0: float) -> float:
         """Calculate the diamagnetic fraction based on the SCENE fit by Tim Hender.
