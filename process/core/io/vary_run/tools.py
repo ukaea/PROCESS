@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from process.core.data_structure.data_structure_dicts import get_dicts
+from process.core.data_structure.dicts import get_dicts
 from process.core.input import INPUT_VARIABLES
 from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile

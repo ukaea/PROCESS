@@ -13,7 +13,7 @@ Notes
 import sys
 from re import sub
 
-from process.core.data_structure.data_structure_dicts import get_dicts
+from process.core.data_structure.dicts import get_dicts
 from process.core.exceptions import ProcessValidationError
 from process.core.solver.constraints import ConstraintManager
 from process.core.solver.iteration_variables import ITERATION_VARIABLES
