@@ -561,23 +561,34 @@ class TeProfile(Profile):
 
 
 def calculate_vol_avg_of_profile(profile_x: np.ndarray, profile_y: np.ndarray) -> float:
-    """Calculate the volume averaged value (⟨profile_y⟩) of a radially normalised profile.
+    """Calculate the volume averaged value (⟨profile_y⟩) of a radially normalised
+    profile.
 
     Parameters
     ----------
-    profile_x : np.ndarray
+    profile_x :
         The x-values of the profile.
-    profile_y : np.ndarray
+    profile_y :
         The y-values of the profile.
+
+    Returns
+    -------
+    float
+        The volume-averaged value (⟨profile_y⟩) of the profile.
+
+    Raises
+    ------
+    ValueError
+        If profile_x is not a 1D array, contains fewer than 2 points,
+        does not span from 0 to 1,or is not strictly increasing.
+
 
     Notes
     -----
     - The 2 factor in the calculation arises using both sides of the profile and the
     radial normalisation of the profile.
 
-    Returns
-    -------
-    float: The volume-averaged value (⟨profile_y⟩) of the profile.
+
     """
     if profile_x.ndim != 1:
         raise ValueError("profile_x must be a 1D array.")
