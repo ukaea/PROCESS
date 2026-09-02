@@ -4,20 +4,32 @@ from typing import Annotated
 import numpy as np
 import pytest
 
-import process.core.metadata
-from process.core.metadata import Parameter, ParameterMetadata, PROCESSModelData
+import process.core.data_structure.parameter
+from process.core.data_structure.parameter import (
+    Parameter,
+    ParameterMetadata,
+    PROCESSModelData,
+)
 
 
 @pytest.fixture
 def turn_off_access_records(monkeypatch):
-    monkeypatch.setattr(process.core.metadata, "KEEP_EDIT_USE_RECORDS", False)
-    monkeypatch.setattr(process.core.metadata, "FILTER_EDIT_USE_RECORDS_PATH", "/tests/")
+    monkeypatch.setattr(
+        process.core.data_structure.parameter, "KEEP_EDIT_USE_RECORDS", False
+    )
+    monkeypatch.setattr(
+        process.core.data_structure.parameter, "FILTER_EDIT_USE_RECORDS_PATH", "/tests/"
+    )
 
 
 @pytest.fixture
 def turn_on_access_records(monkeypatch):
-    monkeypatch.setattr(process.core.metadata, "KEEP_EDIT_USE_RECORDS", True)
-    monkeypatch.setattr(process.core.metadata, "FILTER_EDIT_USE_RECORDS_PATH", "/tests/")
+    monkeypatch.setattr(
+        process.core.data_structure.parameter, "KEEP_EDIT_USE_RECORDS", True
+    )
+    monkeypatch.setattr(
+        process.core.data_structure.parameter, "FILTER_EDIT_USE_RECORDS_PATH", "/tests/"
+    )
 
 
 @dataclass
