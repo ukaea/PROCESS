@@ -252,7 +252,8 @@ ignore =  [
     "RUF105",  # noqa-comments
     "RUF106",  # rule-codes-in-suppression-comments
     "RUF201",  # rule-codes-in-selectors
-
+    # and now ruff ignores preferences
+    "pytest-fixture-autouse"
 ]
 
 [tool.ruff.lint.pep8-naming]
