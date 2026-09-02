@@ -395,6 +395,13 @@ def check_process(inputs, data):  # noqa: ARG001
     if data.physics.f_plasma_fuel_tritium < 1.0e-3:  # tritium fraction is negligible
         data.buildings.triv = 0.0
         data.heat_transport.p_tritium_plant_electric_mw = 0.0
+        logger.warning(
+            "Due to negligible tritium fraction both 'data.buildings.triv'"
+            "(volume of tritium building) and "
+            "'data.heat_transport.p_tritium_plant_electric_mw'"
+            "(power required for tritium processing) are set to 0",
+            stacklevel=2,
+        )
 
     if data.impurity_radiation.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069
         raise ProcessValidationError(
