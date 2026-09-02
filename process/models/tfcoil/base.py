@@ -8,7 +8,7 @@ import logging
 from dataclasses import dataclass
 from enum import IntEnum, unique
 from types import DynamicClassAttribute
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, NamedTuple
 
 import numba
 import numpy as np
@@ -115,17 +115,15 @@ class TFGlobalGeometry:
     """Minimum thickness of the sidewall case [m]."""
 
 
-@dataclass
-class RTZPoint:
+class RTZPoint(NamedTuple):
     """A generic container for data that has radial, toroidal and z components"""
 
-    r: float
-    t: float
-    z: float
+    r: numba.float64[:]
+    t: numba.float64[:]
+    z: numba.float64[:]
 
 
-@dataclass
-class YoungsModulusComponents:
+class YoungsModulusComponents(NamedTuple):
     """Components of youngs modulus"""
 
     axial: float
@@ -147,7 +145,7 @@ class TFCoil(Model):
 
     def run_base_tf(self):
         """Run main tfcoil subroutine without outputting."""
-        global_tf_geometry: TFGlobalGeometry = self.tf_global_geometry(
+        global_tf_geometry = self.tf_global_geometry(
             i_tf_case_geom=self.data.tfcoil.i_tf_case_geom,
             i_f_dr_tf_plasma_case=self.data.tfcoil.i_f_dr_tf_plasma_case,
             f_dr_tf_plasma_case=self.data.tfcoil.f_dr_tf_plasma_case,
