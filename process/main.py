@@ -39,8 +39,8 @@ import click
 
 import process  # noqa: F401
 from process.core import constants, init
+from process.core.data_structure import obsolete_vars as ov
 from process.core.data_structure.base import DataStructure
-from process.core.io import obsolete_vars as ov
 from process.core.io.cli_tools import LazyGroup, help_opt, indat_opt
 from process.core.io.mfile import MFile
 from process.core.io.plot import plot_sankey_plotly, plot_summary
