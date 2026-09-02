@@ -16,6 +16,7 @@ import process.models.physics.radiation_power as physics_funcs
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
+from process.core.metadata import unwrap_parameter
 from process.core.model import Model
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.physics_variables import (
@@ -1485,6 +1486,7 @@ class Physics(Model):
         # ======================================================================
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def phyaux(
         aspect: float,
@@ -3393,6 +3395,7 @@ class Physics(Model):
             )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_plasma_masses(
         m_fuel_amu: float,
@@ -3838,6 +3841,7 @@ class PlasmaBeta(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_plasma_beta(
         pres_plasma: float | np.ndarray, b_field: float | np.ndarray
@@ -3861,6 +3865,7 @@ class PlasmaBeta(Model):
         return 2 * constants.RMU0 * pres_plasma / (b_field**2)
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_beta_norm_max_wesson(ind_plasma_internal_norm: float) -> float:
         """Calculate the Wesson normalsied beta upper limit.
@@ -3895,6 +3900,7 @@ class PlasmaBeta(Model):
         return 4 * ind_plasma_internal_norm
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_beta_norm_max_original(eps: float) -> float:
         """Calculate the original scaling law normalsied beta upper limit.
@@ -3916,6 +3922,7 @@ class PlasmaBeta(Model):
         return 2.7 * (1.0 + 5.0 * eps**3.5)
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_beta_norm_max_menard(eps: float) -> float:
         """Calculate the Menard normalsied beta upper limit.
@@ -3946,6 +3953,7 @@ class PlasmaBeta(Model):
         return 3.12 + 3.5 * eps**1.7
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_beta_norm_max_tholerus(
         c_beta: float, pres_plasma_on_axis: float, pres_plasma_vol_avg: float
@@ -3993,6 +4001,7 @@ class PlasmaBeta(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_beta_norm_max_stambaugh(
         f_c_plasma_bootstrap: float,
@@ -4042,6 +4051,7 @@ class PlasmaBeta(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_normalised_beta(
         beta: float, rminor: float, c_plasma: float, b_field: float
@@ -4073,6 +4083,7 @@ class PlasmaBeta(Model):
         return 1.0e8 * (beta * rminor * b_field) / c_plasma
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_plasma_energy_from_beta(
         beta: float, b_field: float, vol_plasma: float
@@ -4098,6 +4109,7 @@ class PlasmaBeta(Model):
         return (1.5e0 * beta * b_field**2) / (2.0e0 * constants.RMU0) * vol_plasma
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_beta_limit_from_norm(
         b_plasma_toroidal_on_axis: float,
@@ -4157,6 +4169,7 @@ class PlasmaBeta(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_poloidal_beta(
         b_plasma_total: float, b_plasma_poloidal_average: float, beta: float
@@ -4185,6 +4198,7 @@ class PlasmaBeta(Model):
         return beta * (b_plasma_total / b_plasma_poloidal_average) ** 2
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def fast_alpha_beta(
         b_plasma_poloidal_average: float,
@@ -4687,6 +4701,7 @@ class PlasmaInductance(Model):
         return model_map[model]
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_volt_second_requirements(
         csawth: float,
@@ -4823,6 +4838,7 @@ class PlasmaInductance(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_normalised_internal_inductance_iter_3(
         b_plasma_poloidal_vol_avg: float,
@@ -4868,6 +4884,7 @@ class PlasmaInductance(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_internal_inductance_menard(kappa: float) -> float:
         """Calculate the Menard plasma normalized internal inductance.
@@ -4898,6 +4915,7 @@ class PlasmaInductance(Model):
         return 3.4 - kappa
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_internal_inductance_wesson(alphaj: float) -> float:
         """Calculate the Wesson plasma normalized internal inductance.
@@ -5853,6 +5871,7 @@ class DetailedPhysics(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_debye_length(
         temp_plasma_species_kev: float | np.ndarray,
@@ -5879,6 +5898,7 @@ class DetailedPhysics(Model):
         ) ** 0.5
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_lorentz_factor(velocity: float | np.ndarray) -> float | np.ndarray:
         """Calculate the Lorentz factor for a given velocity.
@@ -5897,6 +5917,7 @@ class DetailedPhysics(Model):
         return 1 / (1 - (velocity / constants.SPEED_LIGHT) ** 2) ** 0.5
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_relativistic_particle_speed(
         e_kinetic: float | np.ndarray, mass: float
@@ -5924,6 +5945,7 @@ class DetailedPhysics(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_coulomb_log_from_impact(
         impact_param_max: float, impact_param_min: float
@@ -5946,6 +5968,7 @@ class DetailedPhysics(Model):
         return np.log(impact_param_max / impact_param_min)
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_classical_distance_of_closest_approach(
         charge1: float,
@@ -5977,6 +6000,7 @@ class DetailedPhysics(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_debroglie_wavelength(
         mass: float, velocity: float | np.ndarray
@@ -6005,6 +6029,7 @@ class DetailedPhysics(Model):
         return (constants.PLANCK_CONSTANT / (2 * np.pi)) / (mass * velocity)
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_plasma_frequency(
         nd_particle: float | np.ndarray, m_particle: float, z_particle: float
@@ -6032,6 +6057,7 @@ class DetailedPhysics(Model):
         ) / (2 * np.pi)
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_larmor_frequency(
         b_field: float | np.ndarray, m_particle: float, z_particle: float
@@ -6058,6 +6084,7 @@ class DetailedPhysics(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_upper_hybrid_frequency(
         freq_plasma: float | np.ndarray, freq_larmor: float | np.ndarray
@@ -6079,6 +6106,7 @@ class DetailedPhysics(Model):
         return np.sqrt(freq_plasma**2 + freq_larmor**2)
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_larmor_radius(
         vel_perp: float | np.ndarray,
@@ -6101,6 +6129,7 @@ class DetailedPhysics(Model):
         return vel_perp / (freq_larmor)
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_reduced_mass(mass1: float, mass2: float) -> float:
         """
@@ -6120,6 +6149,7 @@ class DetailedPhysics(Model):
         return (mass1 * mass2) / (mass1 + mass2)
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_average_relative_velocity(
         velocity_1: float | np.ndarray, velocity_2: float | np.ndarray
@@ -6141,6 +6171,7 @@ class DetailedPhysics(Model):
         return np.sqrt(velocity_1**2 + velocity_2**2)
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_electron_electron_collision_time(
         temp_plasma_electron_kev: float | np.ndarray,
@@ -6177,6 +6208,7 @@ class DetailedPhysics(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_electron_ion_collision_time(
         temp_plasma_electron_kev: float | np.ndarray,
@@ -6217,6 +6249,7 @@ class DetailedPhysics(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_spitzer_ion_slowing_down_time(
         m_ion: float,
@@ -6259,6 +6292,7 @@ class DetailedPhysics(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @nb.njit(cache=True)
     def calculate_spitzer_resistivity(
         n_charge: int,

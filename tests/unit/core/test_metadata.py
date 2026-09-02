@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Annotated
 
+import numpy as np
 import pytest
 
 import process.core.metadata
@@ -175,3 +176,11 @@ def test_parameter_edit_record_another_parameter(
 def test_set_field(example_model_dataclass, value):
     example_model_dataclass.set_field("my_param", value)
     assert example_model_dataclass.my_param is value
+
+
+def test_arrayify_parameter():
+    param = Parameter("param", 42.0)
+    array = np.array(param)
+
+    assert isinstance(array, np.ndarray)
+    np.testing.assert_array_equal(array, np.array(42.0))
