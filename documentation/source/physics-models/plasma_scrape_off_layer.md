@@ -83,6 +83,38 @@ The $R^2$ value for this fit is 0.55
 
 --------
 
+### Eich 2011 JET Model | `calculate_eich2011_jet_sol_power_decay_length()`
+
+The power decay length in metres is given by[^eich_2011]:
+
+$$
+\lambda_q = 0.7(\pm0.26) \times 10^{-3} B_{\text{T,0}}^{-0.84(\pm0.26)} q_{\text{cyl}}^{1.23(\pm0.26)} P_{\text{sep}}^{0.14(\pm0.14)}
+$$
+
+Here $B_{\text{T,0}}$ is the on axis toroidal magnetic field, $q_{\text{cyl}}$ is the cylindrical safety factor and $P_{\text{sep}}$ is the plasma separatrix power in $\text{MW}$.
+
+This can be found in Table 2 from Eich et.al [^eich_2011]
+
+The scaling is done for type-I ELMy H-mode plasmas
+
+----------
+
+### Eich 2011 JET+ASDEX Model | `calculate_eich2011_jet_asdex_sol_power_decay_length()`
+
+The power decay length in metres is given by[^eich_2011]:
+
+$$
+\lambda_q = 0.73(\pm0.38) \times 10^{-3} B_{\text{T,0}}^{-0.78(\pm0.25)} q_{\text{cyl}}^{1.2(\pm0.27)} P_{\text{sep}}^{0.1(\pm0.11)}R_0^{0.02(\pm0.2)}
+$$
+
+Here $B_{\text{T,0}}$ is the on axis toroidal magnetic field, $q_{\text{cyl}}$ is the cylindrical safety factor, $P_{\text{sep}}$ is the plasma separatrix power in $\text{MW}$ and $R_0$ is the plasma major radius.
+
+This can be found in Table 2 from Eich et.al [^eich_2011]
+
+The scaling is done for type-I ELMy H-mode plasmas
+
+------------------
+
 [^eich_2013]: T. Eich et al., “Scaling of the tokamak near the scrape-off layer H-mode power width and implications for ITER,” Nuclear Fusion, vol. 53, no. 9 p. 093031, Aug. 2013, doi: 10.1088/0029-5515/53/9/093031.
 
 [^mast_2014]: A. J. Thornton and A. Kirk, “Scaling of the scrape-off layer width during inter-ELM H modes on MAST as measured by infrared thermography,”
@@ -91,3 +123,5 @@ Plasma Physics and Controlled Fusion, vol. 56, no. 5, p. 055008, Apr. 2014, doi:
 [^stangeby_boundary]: P. C. Stangeby, “The Plasma Boundary of Magnetic Fusion Devices,” Jan. 2000, doi: 10.1201/9780367801489.
 
 [^henderson_step]: S. S. Henderson et al., “An overview of the STEP divertor design and the simple models driving the plasma exhaust scenario,” Nuclear Fusion, vol. 65, no. 1, pp. 016033–016033, Nov. 2024, doi: 10.1088/1741-4326/ad93e7.
+
+[^eich_2011]: T. Eich, B. Sieglin, A. Scarabosio, W. Fundamenski, Robert James Goldston, and A. Herrmann, “Inter-ELM Power Decay Length for JET and ASDEX Upgrade: Measurement and Comparison with Heuristic Drift-Based Model,” Physical Review Letters, vol. 107, no. 21, Nov. 2011, doi: https://doi.org/10.1103/PhysRevLett.107.215001. 
