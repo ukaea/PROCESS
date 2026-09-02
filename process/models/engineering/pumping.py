@@ -629,7 +629,6 @@ def elbow_coeff(
     return ximt + xift
 
 
-@staticmethod
 def calculate_required_mass_flow_rate(
     p_heat_total: float,
     heatcap_coolant: float,
