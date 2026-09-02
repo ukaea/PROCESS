@@ -13,8 +13,8 @@ import numpy as np
 
 from process.core import constants, process_output
 from process.core.caller import write_output_files
+from process.core.data_structure.dicts import get_dicts
 from process.core.exceptions import ProcessValueError
-from process.core.io.data_structure_dicts import get_dicts
 from process.core.log import logging_model_handler, show_errors
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
