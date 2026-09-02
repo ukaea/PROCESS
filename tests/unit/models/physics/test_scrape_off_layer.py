@@ -1,3 +1,4 @@
+import numpy as np
 import pytest
 
 from process.models.physics.scrape_off_layer import ScrapeOffLayer
@@ -112,3 +113,91 @@ def test_calculate_upstream_sol_outboard_parallel_area_exact():
     )
     assert isinstance(result, float)
     assert pytest.approx(result) == 0.006283185307179587
+
+
+@pytest.mark.parametrize(
+    "r",
+    [
+        8.001,
+        8.01,
+        8.1,
+    ],
+)
+def test_calculate_outboard_midplane_near_sol_radial_profile(r):
+    """Test outboard midplane near SOL radial profile with various parameters."""
+    result = ScrapeOffLayer.calculate_outboard_midplane_near_sol_radial_profile(
+        rmajor=6.0,
+        rminor=2.0,
+        len_plasma_sol_power_decay=0.001,
+        pflux_plasma_outboard_sol_parallel_mw=10.0,
+        r=r,
+    )
+    assert isinstance(result, float)
+    assert result > 0
+
+
+def test_calculate_outboard_midplane_near_sol_radial_profile_exact():
+    """Test outboard midplane near SOL radial profile with exact value check."""
+    result = ScrapeOffLayer.calculate_outboard_midplane_near_sol_radial_profile(
+        rmajor=6.0,
+        rminor=2.0,
+        len_plasma_sol_power_decay=0.001,
+        pflux_plasma_outboard_sol_parallel_mw=10.0,
+        r=8.001,
+    )
+    assert isinstance(result, float)
+    assert pytest.approx(result) == 3.678794411714423
+
+
+def test_calculate_outboard_midplane_near_sol_radial_profile_array():
+    """Test outboard midplane near SOL radial profile with array input."""
+    r = np.array([8.001, 8.002, 8.003])
+    result = ScrapeOffLayer.calculate_outboard_midplane_near_sol_radial_profile(
+        rmajor=6.0,
+        rminor=2.0,
+        len_plasma_sol_power_decay=0.001,
+        pflux_plasma_outboard_sol_parallel_mw=10.0,
+        r=r,
+    )
+    assert isinstance(result, np.ndarray)
+    assert np.all(result > 0)
+
+
+@pytest.mark.parametrize(
+    "r",
+    [
+        8.001,
+        8.01,
+        8.1,
+    ],
+)
+def test_calculate_eich_target_heat_flux_profile(r):
+    """Test Eich target heat flux profile with various parameters."""
+    result = ScrapeOffLayer.calculate_eich_target_heat_flux_profile(
+        rmajor=6.0,
+        rminor=2.0,
+        pflux_plasma_sol_parallel_mw=10.0,
+        len_plasma_sol_power_decay=0.001,
+        f_b_div_flux_expansion=2.0,
+        len_plasma_sol_power_spreading=0.001,
+        pflux_target_background_heat_flux_mw=0.01,
+        r=r,
+    )
+    assert isinstance(result, float)
+    assert result > 0
+
+
+def test_calculate_eich_target_heat_flux_profile_exact():
+    """Test Eich target heat flux profile with exact value check."""
+    result = ScrapeOffLayer.calculate_eich_target_heat_flux_profile(
+        rmajor=6.0,
+        rminor=2.0,
+        pflux_plasma_sol_parallel_mw=10.0,
+        len_plasma_sol_power_decay=0.001,
+        f_b_div_flux_expansion=2.0,
+        len_plasma_sol_power_spreading=0.001,
+        pflux_target_background_heat_flux_mw=0.01,
+        r=8.001,
+    )
+    assert isinstance(result, float)
+    assert pytest.approx(result) == 5.534025566786268

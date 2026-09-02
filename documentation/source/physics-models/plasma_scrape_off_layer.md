@@ -25,7 +25,43 @@ $$
 A_{\parallel,u} = 2\pi\lambda_{\text{q,u}}R_{\text{u}}\frac{B_{\text{p,u}}}{B_{\text{Tot,u}}}
 $$
 
+---------------
 
+## Upstream radial decay | `calculate_outboard_midplane_near_sol_radial_profile()`
+
+The radial decay length $\lambda_{\text{q}}$ of the scrape-off layer (SOL) at the outer midplane of a tokamak is defined as the e-folding distance over which plasma heat and particle fluxes decay exponentially outside the last closed flux surface. Therefore the decay of the total heat flux outside the separatrix towards the vessel walls can be modelled as [^eich_2011] [^eich_2013]:
+
+$$
+q_{\text{u}}(r) = q_{\parallel,\text{u}}e^{\frac{-r}{\lambda_{\text{q}}}}
+$$
+
+where $r = R - R_{\text{sep}}$, $R_{\text{sep}}$ being the major radius of the separatrix, $\lambda_{\text{q}}$ the [power decay length](#power-decay-lengths) and $q_{\parallel}$ the [upstream energy flux density](#upstream-radial-decay--calculate_outboard_midplane_near_sol_radial_profile)
+
+----------------
+
+## Eich parallel flux at target | `calculate_eich_target_heat_flux_profile()`
+
+The Eich formula (often called the standard SOL heat flux profile) is the primary mathematical model used to describe the distribution of heat target loads on tokamak divertor plates. It convolutionally connects the physics of the plasma edge at the outer midplane with the geometric projection of the heat hitting the divertor surface [^eich_2011] [^eich_2013].
+
+Heat transport into the private flux region is modeled by convolving the power profile $q_{\text{u}}(r)$ with a Gaussian function of width $S$ known as the [spreading parameter](#spreading-parameter). 
+
+$$
+q_{\parallel,t}(s) = \frac{q_0}{2}\times \exp\left[\left(\frac{S}{2\lambda_{\text{q}}f_x}\right)^2- \frac{s-s_0}{\lambda_q f_x}\right] \times \operatorname{erfc}\left(\frac{S}{2\lambda_{\text{q}}f_x}- \frac{s-s_0}{S}\right) + q_{\text{BG}}
+$$
+
+where $s$ is the coordinate along the divertor target, $s_0$ is the strike-point location on the target, $\operatorname{erfc}$ is the complementary error function, $q_{\text{BG}}$ is the background heat flux, $\lambda_{\text{q}}$ is the [power decay length](#power-decay-lengths), $f_x$ is the effective flux expansion in the region,
+
+A compact equivalent form is:
+
+$$
+q_{\parallel,t}(\overline{s}) = \frac{q_0}{2}\times \exp\left[\left(\frac{S}{2\lambda_{\text{q}}f_x}\right)^2- \frac{\overline{s}}{\lambda_q f_x}\right] \times \operatorname{erfc}\left(\frac{S}{2\lambda_{\text{q}}f_x}- \frac{\overline{s}}{S}\right) + q_{\text{BG}}
+$$
+
+The connection to upstream midplane coordinates is usually:
+
+$$
+\overline{s} = f_x(R-R_{\text{sep}})
+$$
 
 ------------------
 
@@ -83,6 +119,33 @@ The $R^2$ value for this fit is 0.55
 
 --------
 
+## Spreading Parameter
+
+The scrape-off layer (SOL) spreading parameter $S$ represents a Gaussian width that quantifies additional perpendicular heat spreading in the divertor leg. It works alongside the upstream heat flux decay length $\lambda_{q}$ to determine total target heat loads on the divertor.
+
+Unlike $\lambda_{q}$, which is governed by robust upstream parallel and perpendicular transport physics at the plasma midplane, $S$ is inherently a "local" divertor parameter. Deriving a single, absolute multi-machine formula for $S$ is incredibly difficult due to several overlapping regional variables:
+
+- Divertor Geometry: The path length from the X-point to the target tile heavily impacts how much the heat spreads radially.
+
+- Plasma Recycling Regimes: Low-recycling, high-recycling, and detached plasma conditions completely alter the cross-field diffusion rates.
+
+- Localized Radiation: Impurity seeding and neutral gas interactions dissipate power unevenly along the divertor leg, altering the effective Gaussian profile width.
+
+-----------
+
+### Scarabosio 2015 | `calculate_scarabosio2015_power_spreading_factor()`
+
+The H-mode SOL spreading factor, $S$ is given in $\text{m}$ by[^scarabosio_2015]:
+
+$$
+S = (0.12(\pm0.07)\times 10^{-3}) P_{\text{sep}}^{0.21(\pm0.11)}R_0^{0.71(\pm0.5)}B_{\text{p}}(a)^{-0.82(\pm0.27)}n_{\text{sep}}^{0.71(\pm0.5)}
+$$
+
+- This was fitted from ASDEX Upgrade and JET outer target data
+- The $R^2$ value of the regression fit was 0.65
+
+------------
+
 [^eich_2013]: T. Eich et al., “Scaling of the tokamak near the scrape-off layer H-mode power width and implications for ITER,” Nuclear Fusion, vol. 53, no. 9 p. 093031, Aug. 2013, doi: 10.1088/0029-5515/53/9/093031.
 
 [^mast_2014]: A. J. Thornton and A. Kirk, “Scaling of the scrape-off layer width during inter-ELM H modes on MAST as measured by infrared thermography,”
@@ -91,3 +154,7 @@ Plasma Physics and Controlled Fusion, vol. 56, no. 5, p. 055008, Apr. 2014, doi:
 [^stangeby_boundary]: P. C. Stangeby, “The Plasma Boundary of Magnetic Fusion Devices,” Jan. 2000, doi: 10.1201/9780367801489.
 
 [^henderson_step]: S. S. Henderson et al., “An overview of the STEP divertor design and the simple models driving the plasma exhaust scenario,” Nuclear Fusion, vol. 65, no. 1, pp. 016033–016033, Nov. 2024, doi: 10.1088/1741-4326/ad93e7.
+
+[^scarabosio_2015]: A. Scarabosio et al., “Scaling of the divertor power spreading (S-factor) in open and closed divertor operation in JET and ASDEX Upgrade,” Journal of Nuclear Materials, vol. 463, pp. 49-54, Aug. 2015, doi: 10.1016/j.jnucmat.2014.11.076.
+
+[^eich_2011]: T. Eich, B. Sieglin, A. Scarabosio, W. Fundamenski, R. J. Goldston, and A. Herrmann, “Inter-ELM Power Decay Length for JET and ASDEX Upgrade: Measurement and Comparison with Heuristic Drift-Based Model,” Physical Review Letters, vol. 107, no. 21, Nov. 2011, doi: https://doi.org/10.1103/PhysRevLett.107.215001

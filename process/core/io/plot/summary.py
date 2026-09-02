@@ -84,6 +84,7 @@ from process.models.physics.plasma_geometry import (
     PlasmaShapeModelType,
 )
 from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.physics.scrape_off_layer import ScrapeOffLayer
 from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
@@ -9349,6 +9350,160 @@ def plot_separatrix_power_split(axis: plt.Axes, mfile: MFile, scan: int, colour_
     axis.get_yaxis().set_ticks([])
 
 
+def plot_midplane_near_sol_radial_profile(
+    axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: int
+):
+    """Function to plot the radial profile of the near SOL at the midplane."""
+    rmajor = mfile.get("rmajor", scan=scan)
+    rminor = mfile.get("rminor", scan=scan)
+    len_sol_outboard_power_decay = mfile.get("len_sol_outboard_power_decay", scan=scan)
+    r = np.linspace(
+        (rmajor + rminor), (rmajor + rminor) + (7 * len_sol_outboard_power_decay), 100
+    )
+
+    radial_profile = (
+        ScrapeOffLayer().calculate_outboard_midplane_near_sol_radial_profile(
+            rmajor=rmajor,
+            rminor=rminor,
+            len_plasma_sol_power_decay=len_sol_outboard_power_decay,
+            pflux_plasma_outboard_sol_parallel_mw=mfile.get(
+                "pflux_plasma_outboard_sol_parallel_mw", scan=scan
+            ),
+            r=r,
+        )
+    )
+
+    x_ref = rmajor + rminor + len_sol_outboard_power_decay
+    plasma_boundary = rmajor + rminor
+
+    axis.axvspan(
+        0,
+        plasma_boundary,
+        color=PLASMA_COLOUR[colour_scheme - 1],
+        alpha=0.35,
+        label="Plasma",
+    )
+    axis.plot(r, radial_profile, label=r"$q_{||}$ profile")
+    axis.axvline(
+        x_ref,
+        color="black",
+        linestyle="--",
+        linewidth=1,
+        label=r"$\lambda_{q,\mathrm{out}}$",
+    )
+    axis.grid()
+    axis.legend()
+    axis.set_xlim(
+        (rmajor + rminor - (3 * len_sol_outboard_power_decay)),
+        (rmajor + rminor) + (7 * len_sol_outboard_power_decay),
+    )
+    axis.set_title(r"Midplane Near SOL Radial Profile")
+    axis.minorticks_on()
+    axis.tick_params(axis="x", labelbottom=False)
+    axis.set_ylabel(r"$q_{||}$ [MW/m$^2$]")
+
+
+def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, scan: int):
+    """Function to plot the Eich target profile at the lower outboard divertor."""
+    rmajor = mfile.get("rmajor", scan=scan)
+    rminor = mfile.get("rminor", scan=scan)
+    len_plasma_sol_power_decay = mfile.get(
+        "len_plasma_sol_eich13_power_decay", scan=scan
+    )
+    len_div_outboard_lower_power_spreading = mfile.get(
+        "len_div_outboard_lower_power_spreading", scan=scan
+    )
+    f_b_flux_expansion = mfile.get("f_b_div_outboard_lower_flux_expansion", scan=scan)
+    r = np.linspace(
+        (rmajor + rminor)
+        - ((f_b_flux_expansion / 2) * len_plasma_sol_power_decay) * f_b_flux_expansion,
+        (rmajor + rminor) + (3 * len_plasma_sol_power_decay) * f_b_flux_expansion,
+        200,
+    )
+
+    pflux_target_profile = ScrapeOffLayer().calculate_eich_target_heat_flux_profile(
+        rmajor=rmajor,
+        rminor=rminor,
+        pflux_plasma_sol_parallel_mw=mfile.get(
+            "pflux_plasma_outboard_sol_parallel_mw", scan=scan
+        ),
+        len_plasma_sol_power_decay=mfile.get("len_sol_outboard_power_decay", scan=scan),
+        f_b_div_flux_expansion=f_b_flux_expansion,
+        len_plasma_sol_power_spreading=len_div_outboard_lower_power_spreading,
+        pflux_target_background_heat_flux_mw=0.0,
+        r=r,
+    )
+    peak_idx = np.argmax(pflux_target_profile)
+    peak_r = r[peak_idx]
+    peak_q = pflux_target_profile[peak_idx]
+
+    axis.plot(r, pflux_target_profile)
+    axis.axvline(peak_r, color="black", linestyle="--", linewidth=1)
+    axis.axhline(peak_q, color="black", linestyle="--", linewidth=1)
+    axis.text(
+        0.8,
+        0.9,
+        f"$f_x$ = {f_b_flux_expansion:.2f}\n$S$ = {len_div_outboard_lower_power_spreading * 1e3:.3f} mm",
+        transform=axis.transAxes,
+        ha="left",
+        va="top",
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+    )
+    axis.grid()
+    axis.minorticks_on()
+    axis.set_title(r"Lower Outboard Eich Target Parallel Heat Flux Profile")
+    axis.set_xlabel("Radial Position [m]")
+    axis.set_xlim(r[0], r[-1])
+    axis.set_ylabel(r"$q_{||,t}$ [MW/m$^2$]")
+
+
+def plot_sol_power_flux_profiles(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme):
+    """Plot separatrix power split fractions as a bar chart."""
+    plot_plasma(axis=axis, mfile=mfile, scan=scan, colour_scheme=colour_scheme)
+    rmajor, rminor, kappa = mfile.get_variables(
+        "rmajor",
+        "rminor",
+        "kappa",
+        scan=scan,
+    )
+    len_sol_outboard_power_decay = mfile.get("len_sol_outboard_power_decay", scan=scan)
+    a_plasma_outboard_sol_parallel = mfile.get(
+        "a_plasma_outboard_sol_parallel", scan=scan
+    )
+    pflux_plasma_outboard_sol_parallel_mw = mfile.get(
+        "pflux_plasma_outboard_sol_parallel_mw", scan=scan
+    )
+    plasma_scale = max(rminor, abs(kappa * rminor), 1e-6)
+    scale_factor = min(max(plasma_scale / 2.0, 0.7), 1.0)
+    text_fontsize = 9 * scale_factor
+
+    outboard_pos = (rmajor + rminor, 0.0)
+
+    axis.text(
+        *outboard_pos,
+        f"$\\lambda_q = {len_sol_outboard_power_decay * 1e3:.3f}$ mm\n"
+        f"$A_{{||}} = {a_plasma_outboard_sol_parallel:.4f}$ m$^2$\n"
+        f"$q_{{||}} = {pflux_plasma_outboard_sol_parallel_mw:,.2f}$ MW/m$^2$",
+        fontsize=text_fontsize,
+        verticalalignment="center",
+        horizontalalignment="center",
+        bbox={
+            "boxstyle": f"round,pad={0.3 * scale_factor:.3f}",
+            "alpha": 1.0,
+            "linewidth": 2 * scale_factor,
+            "edgecolor": "black",
+        },
+        zorder=101,
+    )
+
+    axis.spines["top"].set_visible(False)
+    axis.spines["right"].set_visible(False)
+    axis.spines["bottom"].set_visible(False)
+    axis.spines["left"].set_visible(False)
+    axis.get_xaxis().set_ticks([])
+    axis.get_yaxis().set_ticks([])
+
+
 def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=None):
     """Function to plot a scatter box plot of L-H threshold power comparisons.
 
@@ -16730,6 +16885,20 @@ def main_plot(
     plot_separatrix_power_split(
         pages["plasma_exhaust"].add_subplot(122), m_file, scan, colour_scheme
     )
+
+    plot_sol_power_flux_profiles(
+        _add_page("sol_powerfluxes").add_subplot(121), m_file, scan, colour_scheme
+    )
+
+    ax_midplane_near_sol = pages["sol_powerfluxes"].add_subplot(336)
+    plot_midplane_near_sol_radial_profile(
+        ax_midplane_near_sol, m_file, scan, colour_scheme
+    )
+
+    ax_div_lower_outboard = pages["sol_powerfluxes"].add_subplot(
+        339, sharex=ax_midplane_near_sol
+    )
+    plot_div_lower_outboard_eich_target_profile(ax_div_lower_outboard, m_file, scan)
 
     plot_debye_length_profile(
         _add_page("microscopic_quantities").add_subplot(232), m_file, scan

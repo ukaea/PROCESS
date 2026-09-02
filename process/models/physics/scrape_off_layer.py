@@ -3,6 +3,7 @@
 import logging
 
 import numpy as np
+import scipy
 
 from process.core import constants
 from process.core import process_output as po
@@ -94,12 +95,25 @@ class ScrapeOffLayer(Model):
 
         self.data.physics.pflux_plasma_outboard_sol_parallel_mw = (
             self.data.physics.p_plasma_separatrix_mw
+            * self.data.physics.f_p_div_outboard_separatrix
             / self.data.physics.a_plasma_outboard_sol_parallel
         )
 
         self.data.physics.pflux_plasma_outboard_sol_eich13_parallel_mw = (
             self.data.physics.p_plasma_separatrix_mw
             / self.data.physics.a_plasma_outboard_sol_eich13_parallel
+        )
+
+        self.data.physics.len_div_outboard_lower_scarabosio15_power_spreading = self.calculate_scarabosio2015_power_spreading_factor(  # noqa: E501
+            p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
+            b_plasma_surface_poloidal_average=self.data.physics.b_plasma_surface_poloidal_average,
+            nd_plasma_separatrix_electron_19=self.data.physics.nd_plasma_separatrix_electron
+            / 1e19,
+            rmajor=self.data.physics.rmajor,
+        )
+
+        self.data.physics.len_div_outboard_lower_power_spreading = (
+            self.data.physics.len_div_outboard_lower_scarabosio15_power_spreading
         )
 
     def output(self) -> None:
@@ -186,6 +200,32 @@ class ScrapeOffLayer(Model):
             "Plasma outboard midplane Eich 2013 SOL parallel power flux (qₗₗ,ᵤ) [MW/m²]",
             "(pflux_plasma_outboard_sol_eich13_parallel_mw)",
             self.data.physics.pflux_plasma_outboard_sol_eich13_parallel_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Power Spreading Factors (S):")
+
+        po.ovarre(
+            self.outfile,
+            "Outboard lower divertor power spreading factor (S) [m]",
+            "(len_div_outboard_lower_power_spreading)",
+            self.data.physics.len_div_outboard_lower_power_spreading,
+        )
+        po.ovarre(
+            self.outfile,
+            "Scarabosio 2015 H-mode power spreading factor (S) [m]",
+            "(len_div_outboard_lower_scarabosio15_power_spreading)",
+            self.data.physics.len_div_outboard_lower_scarabosio15_power_spreading,
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Outboard lower divertor flux expansion factor for the divertor targets "
+            "(fₓ)",
+            "(f_b_div_outboard_lower_flux_expansion)",
+            self.data.physics.f_b_div_outboard_lower_flux_expansion,
         )
 
     @staticmethod
@@ -343,4 +383,187 @@ class ScrapeOffLayer(Model):
             (2 * np.pi * (rmajor + rminor))
             * len_plasma_sol_power_decay
             * (b_plasma_surface_poloidal_average / b_plasma_outboard_total)
+        )
+
+    @staticmethod
+    def calculate_outboard_midplane_near_sol_radial_profile(
+        rmajor: float,
+        rminor: float,
+        len_plasma_sol_power_decay: float,
+        pflux_plasma_outboard_sol_parallel_mw: float,
+        r: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the outboard midplane near SOL radial profile (qₗₗ(r)) [MW/m²].
+
+        Parameters
+        ----------
+        rmajor : float
+            Major radius of the plasma (R₀) [m]
+        rminor : float
+            Minor radius of the plasma (a) [m]
+        len_plasma_sol_power_decay : float
+            Power decay length (λ_q) [m]
+        pflux_plasma_outboard_sol_parallel_mw : float
+            Parallel power flux at the outboard midplane (qₗₗ,ᵤ) [MW/m²]
+        r : float|np.ndarray
+            Radial position(s) at which to calculate the SOL profile [m]
+
+        Returns
+        -------
+        float|np.ndarray
+            Outboard midplane SOL radial profile (qₗₗ(r)) [MW/m²]
+
+        Raises
+        ------
+        ValueError
+            If any radial position r is inside the plasma edge (r < rmajor + rminor)
+
+        Notes
+        -----
+        - The exponential model is highly valid in the "near-SOL" (typically the first
+        few millimeters to a centimeter outside the separatrix). In this region, parallel
+        heat transport is dominated by classical electron heat conduction
+        (Spitzer-Härm conductivity), which is vastly faster than perpendicular diffusion.
+        This competition between fast parallel conduction and slow perpendicular
+        diffusion naturally produces an exponential radial profile.
+
+        - The midplane exponential assumes steady-state H-mode conditions without the
+        massive, transient convective bursts caused by ELMs, which momentarily
+        flatten the entire midplane profile.
+
+        References
+        ----------
+        [1] T. Eich et al., “Scaling of the tokamak near the scrape-off layer H-mode
+        power width and implications for ITER,” Nuclear Fusion, vol. 53, no. 9,
+        p. 093031, Aug. 2013, doi: 10.1088/0029-5515/53/9/093031.
+
+        """
+        if np.any(r < (rmajor + rminor)):
+            raise ValueError(
+                f"Radial position r={r} must be greater than or equal to the plasma "
+                f"edge (rmajor + rminor)={rmajor + rminor}."
+            )
+
+        return pflux_plasma_outboard_sol_parallel_mw * np.exp(
+            -(r - (rmajor + rminor)) / len_plasma_sol_power_decay
+        )
+
+    @staticmethod
+    def calculate_eich_target_heat_flux_profile(
+        rmajor: float,
+        rminor: float,
+        pflux_plasma_sol_parallel_mw: float,
+        len_plasma_sol_power_decay: float,
+        f_b_div_flux_expansion: float,
+        len_plasma_sol_power_spreading: float,
+        pflux_target_background_heat_flux_mw: float,
+        r: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the Eich parallel target heat flux profile (qₗₗ,ₜ(r)) [MW/m²].
+
+        Parameters
+        ----------
+        rmajor : float
+            Major radius of the plasma (R₀) [m]
+        rminor : float
+            Minor radius of the plasma (a) [m]
+        pflux_plasma_sol_parallel_mw : float
+            Parallel power flux at the outboard midplane (qₗₗ,ᵤ) [MW/m²]
+        len_plasma_sol_power_decay : float
+            Power decay length (λ_q) [m]
+        f_b_div_flux_expansion : float
+            Divertor flux expansion factor (fₓ) [-]
+        len_plasma_sol_power_spreading : float
+            Power spreading length in the divertor (S) [m]
+        pflux_target_background_heat_flux_mw : float
+            Background heat flux at the divertor target [MW/m²]
+        r : float|np.ndarray
+            Radial position(s) at which to calculate the target heat flux profile [m]
+
+        Returns
+        -------
+        float|np.ndarray
+            Eich parallel target heat flux profile (qₗₗ,ₜ(r)) [MW/m²]
+
+        Notes
+        -----
+        - The Eich parallel target heat flux profile is derived from the midplane
+        exponential profile, taking into account the magnetic geometry and flux expansion
+        between the midplane and the divertor target. The profile is typically
+        characterized by a combination of an exponential decay and a Gaussian spreading
+        due to cross-field transport in the divertor leg.
+
+        References
+        ----------
+        [1] T. Eich, B. Sieglin, A. Scarabosio, W. Fundamenski, R. J. Goldston, and
+        A. Herrmann, “Inter-ELM Power Decay Length for JET and ASDEX Upgrade: Measurement
+        and Comparison with Heuristic Drift-Based Model,” Physical Review Letters,
+        vol. 107, no. 21, Nov. 2011, doi: https://doi.org/10.1103/PhysRevLett.107.215001
+
+        [2] T. Eich et al., “Scaling of the tokamak near the scrape-off layer H-mode
+        power width and implications for ITER,” Nuclear Fusion, vol. 53, no. 9,
+        p. 093031, Aug. 2013, doi: 10.1088/0029-5515/53/9/093031.
+
+        """
+        return (pflux_plasma_sol_parallel_mw / 2) * np.exp(
+            (
+                (len_plasma_sol_power_spreading)
+                / (2 * len_plasma_sol_power_decay * f_b_div_flux_expansion)
+            )
+            ** 2
+            - (
+                (r - (rmajor + rminor))
+                / (len_plasma_sol_power_decay * f_b_div_flux_expansion)
+            )
+        ) * scipy.special.erfc(
+            (
+                len_plasma_sol_power_spreading
+                / (2 * len_plasma_sol_power_decay * f_b_div_flux_expansion)
+            )
+            - ((r - (rmajor + rminor)) / (len_plasma_sol_power_spreading))
+        ) + pflux_target_background_heat_flux_mw
+
+    @staticmethod
+    def calculate_scarabosio2015_power_spreading_factor(
+        p_plasma_separatrix_mw: float,
+        b_plasma_surface_poloidal_average: float,
+        nd_plasma_separatrix_electron_19: float,
+        rmajor: float,
+    ) -> float:
+        """Calculate the Scarabosio 2015 H-mode power spreading factor (S).
+
+        Parameters
+        ----------
+        p_plasma_separatrix_mw : float
+            Power crossing the separatrix (Pₛₑₚ) [MW]
+        b_plasma_surface_poloidal_average : float
+            Poloidal magnetic field at the plasma surface (Bₚₒₗ(a))  [T]
+        nd_plasma_separatrix_electron_19 : float
+            Electron density at the separatrix (nₑ,ₛₑₚ) [10¹⁹ m⁻³]
+        rmajor : float
+            Major radius of the plasma (R₀) [m]
+
+        Returns
+        -------
+        float
+            Scarabosio 2015 H-mode power spreading factor (S) [m]
+
+        Notes
+        -----
+        - The R² for the fit is 0.65
+
+        References
+        ----------
+        [1] A. Scarabosio et al., “Scaling of the divertor power spreading (S-factor) in
+        open and closed divertor operation in JET and ASDEX Upgrade,”
+        Journal of Nuclear Materials, vol. 463, pp. 49-54, Aug. 2015,
+        doi: 10.1016/j.jnucmat.2014.11.076.
+
+        """
+        return (
+            0.12e-3
+            * p_plasma_separatrix_mw**0.21
+            * b_plasma_surface_poloidal_average**-0.82
+            * nd_plasma_separatrix_electron_19**-0.02
+            * rmajor**0.71
         )
