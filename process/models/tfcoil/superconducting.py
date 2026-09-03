@@ -1435,19 +1435,17 @@ class SuperconductingTFCoil(TFCoil):
         d_sc_tf = self.data.superconducting_tfcoil
 
         d_sc_tf.vv_stress_quench = vv_stress_on_quench(
-            # TF shape
-            H_coil=H_coil,
-            ri_coil=ri_coil,
-            ro_coil=ro_coil,
-            rm_coil=rm_coil,
-            ccl_length_coil=self.data.tfcoil.len_tf_coil,
-            theta1_coil=self.data.tfcoil.theta1_coil,
-            # VV shape
-            H_vv=H_vv,
-            ri_vv=ri_vv,
-            ro_vv=ro_vv,
-            rm_vv=rm_vv,
-            theta1_vv=self.data.tfcoil.theta1_vv,
+            coil=TFComponentShape(
+                H=H_coil,
+                ri=ri_coil,
+                ro=ro_coil,
+                rm=rm_coil,
+                ccl_length=self.data.tfcoil.len_tf_coil,
+                theta1=self.data.tfcoil.theta1_coil,
+            ),
+            vv=VVComponentShape(
+                H=H_vv, ri=ri_vv, ro=ro_vv, rm=rm_vv, theta1=self.data.tfcoil.theta1_vv
+            ),
             # TF properties
             n_tf_coils=self.data.tfcoil.n_tf_coils,
             n_tf_coil_turns=self.data.tfcoil.n_tf_coil_turns,
@@ -2115,31 +2113,21 @@ class SuperconductingTFCoil(TFCoil):
 
         try:  # noqa: PLW0717
             (
-                sig_tf_r_max,
-                sig_tf_t_max,
-                sig_tf_z_max,
+                sig_tf_max,
                 sig_tf_vmises_max,
                 s_shear_tf_peak,
                 deflect,
-                eyoung_axial,
-                eyoung_trans,
-                eyoung_wp_axial,
-                eyoung_wp_trans,
+                eyoung,
+                eyoung_wp,
                 poisson_wp_trans,
                 radial_array,
                 s_shear_cea_tf_cond,
                 poisson_wp_axial,
-                sig_tf_r,
-                sig_tf_smeared_r,
-                sig_tf_smeared_t,
-                sig_tf_smeared_z,
-                sig_tf_t,
+                sig_tf,
+                sig_tf_smeared,
                 s_shear_tf,
                 sig_tf_vmises,
-                sig_tf_z,
-                str_tf_r,
-                str_tf_t,
-                str_tf_z,
+                str_tf,
                 n_radial_array,
                 n_tf_bucking,
                 self.data.tfcoil.sig_tf_wp,
@@ -2245,31 +2233,21 @@ class SuperconductingTFCoil(TFCoil):
             )
 
             self.out_stress(
-                sig_tf_r_max,
-                sig_tf_t_max,
-                sig_tf_z_max,
+                sig_tf_max,
                 sig_tf_vmises_max,
                 s_shear_tf_peak,
                 deflect,
-                eyoung_axial,
-                eyoung_trans,
-                eyoung_wp_axial,
-                eyoung_wp_trans,
+                eyoung,
+                eyoung_wp,
                 poisson_wp_trans,
                 radial_array,
                 s_shear_cea_tf_cond,
                 poisson_wp_axial,
-                sig_tf_r,
-                sig_tf_smeared_r,
-                sig_tf_smeared_t,
-                sig_tf_smeared_z,
-                sig_tf_t,
+                sig_tf,
+                sig_tf_smeared,
                 s_shear_tf,
                 sig_tf_vmises,
-                sig_tf_z,
-                str_tf_r,
-                str_tf_t,
-                str_tf_z,
+                str_tf,
                 n_radial_array,
                 n_tf_bucking,
                 sig_tf_wp_av_z,
@@ -2538,31 +2516,21 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         try:  # noqa: PLW0717
             (
-                sig_tf_r_max,
-                sig_tf_t_max,
-                sig_tf_z_max,
+                sig_tf_max,
                 sig_tf_vmises_max,
                 s_shear_tf_peak,
                 deflect,
-                eyoung_axial,
-                eyoung_trans,
-                eyoung_wp_axial,
-                eyoung_wp_trans,
+                eyoung,
+                eyoung_wp,
                 poisson_wp_trans,
                 radial_array,
                 s_shear_cea_tf_cond,
                 poisson_wp_axial,
-                sig_tf_r,
-                sig_tf_smeared_r,
-                sig_tf_smeared_t,
-                sig_tf_smeared_z,
-                sig_tf_t,
+                sig_tf,
+                sig_tf_smeared,
                 s_shear_tf,
                 sig_tf_vmises,
-                sig_tf_z,
-                str_tf_r,
-                str_tf_t,
-                str_tf_z,
+                str_tf,
                 n_radial_array,
                 n_tf_bucking,
                 self.data.tfcoil.sig_tf_wp,
@@ -2669,31 +2637,21 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
             if output:
                 self.out_stress(
-                    sig_tf_r_max,
-                    sig_tf_t_max,
-                    sig_tf_z_max,
+                    sig_tf_max,
                     sig_tf_vmises_max,
                     s_shear_tf_peak,
                     deflect,
-                    eyoung_axial,
-                    eyoung_trans,
-                    eyoung_wp_axial,
-                    eyoung_wp_trans,
+                    eyoung,
+                    eyoung_wp,
                     poisson_wp_trans,
                     radial_array,
                     s_shear_cea_tf_cond,
                     poisson_wp_axial,
-                    sig_tf_r,
-                    sig_tf_smeared_r,
-                    sig_tf_smeared_t,
-                    sig_tf_smeared_z,
-                    sig_tf_t,
+                    sig_tf,
+                    sig_tf_smeared,
                     s_shear_tf,
                     sig_tf_vmises,
-                    sig_tf_z,
-                    str_tf_r,
-                    str_tf_t,
-                    str_tf_z,
+                    str_tf,
                     n_radial_array,
                     n_tf_bucking,
                     sig_tf_wp_av_z,
@@ -4068,31 +4026,21 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         try:  # noqa: PLW0717
             (
-                sig_tf_r_max,
-                sig_tf_t_max,
-                sig_tf_z_max,
+                sig_tf_max,
                 sig_tf_vmises_max,
                 s_shear_tf_peak,
                 deflect,
-                eyoung_axial,
-                eyoung_trans,
-                eyoung_wp_axial,
-                eyoung_wp_trans,
+                eyoung,
+                eyoung_wp,
                 poisson_wp_trans,
                 radial_array,
                 s_shear_cea_tf_cond,
                 poisson_wp_axial,
-                sig_tf_r,
-                sig_tf_smeared_r,
-                sig_tf_smeared_t,
-                sig_tf_smeared_z,
-                sig_tf_t,
+                sig_tf,
+                sig_tf_smeared,
                 s_shear_tf,
                 sig_tf_vmises,
-                sig_tf_z,
-                str_tf_r,
-                str_tf_t,
-                str_tf_z,
+                str_tf,
                 n_radial_array,
                 n_tf_bucking,
                 self.data.tfcoil.sig_tf_wp,
@@ -4198,31 +4146,21 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             )
             if output:
                 self.out_stress(
-                    sig_tf_r_max,
-                    sig_tf_t_max,
-                    sig_tf_z_max,
+                    sig_tf_max,
                     sig_tf_vmises_max,
                     s_shear_tf_peak,
                     deflect,
-                    eyoung_axial,
-                    eyoung_trans,
-                    eyoung_wp_axial,
-                    eyoung_wp_trans,
+                    eyoung,
+                    eyoung_wp,
                     poisson_wp_trans,
                     radial_array,
                     s_shear_cea_tf_cond,
                     poisson_wp_axial,
-                    sig_tf_r,
-                    sig_tf_smeared_r,
-                    sig_tf_smeared_t,
-                    sig_tf_smeared_z,
-                    sig_tf_t,
+                    sig_tf,
+                    sig_tf_smeared,
                     s_shear_tf,
                     sig_tf_vmises,
-                    sig_tf_z,
-                    str_tf_r,
-                    str_tf_t,
-                    str_tf_z,
+                    str_tf,
                     n_radial_array,
                     n_tf_bucking,
                     sig_tf_wp_av_z,
@@ -4982,20 +4920,40 @@ def _theta_factor_integral(
     return (chi1 + 2.0 * chi2) / (2.0 * np.pi)
 
 
+@dataclass
+class ComponentShape:
+    """Shape properties for a component all on the current centre line"""
+
+    H: float
+    """The maximum height of the shape"""
+    ri: float
+    """The radius of the inboard edge"""
+    ro: float
+    """The radius of the outboard edge"""
+    rm: float
+    """The radius where the maximum height occurs"""
+    theta1: float
+    """The polar angle of the point at which one circular arc is
+    joined to another circular arc in the approximation to the CCL,
+    using an arbitrary origin of coordinates (Rc2, Zc2)."""
+
+
+@dataclass
+class TFComponentShape(ComponentShape):
+    """Shape properties for a TF coil"""
+
+    ccl_length: float
+    """The length of the TF coil CCL"""
+
+
+@dataclass
+class VVComponentShape(ComponentShape):
+    """Shape properties for a vacuum vessel"""
+
+
 def vv_stress_on_quench(
-    # TF shape
-    H_coil: float,
-    ri_coil: float,
-    ro_coil: float,
-    rm_coil: float,
-    ccl_length_coil: float,
-    theta1_coil: float,
-    # VV shape
-    H_vv: float,
-    ri_vv: float,
-    ro_vv: float,
-    rm_vv: float,
-    theta1_vv: float,
+    coil: TFComponentShape,
+    vv: VVComponentShape,
     # TF properties
     n_tf_coils: float,
     n_tf_coil_turns: float,
@@ -5021,32 +4979,10 @@ def vv_stress_on_quench(
 
     Parameters
     ----------
-    H_coil :
-        the maximum height of the TF coil CCL
-    ri_coil :
-        the radius of the inboard edge of the TF coil CCL
-    ro_coil :
-        the radius of the outboard edge of the TF coil CCL
-    rm_coil :
-        the radius where the maximum height of the TF coil CCL occurs
-    ccl_length_coil :
-        the length of the TF coil CCL
-    theta1_coil :
-        the polar angle of the point at which one circular arc is
-        joined to another circular arc in the approximation to the coil CCL,
-        using an arbitrary origin of coordinates (Rc2, Zc2).
-    H_vv :
-        the maximum height of the VV CCL
-    ri_vv :
-        the radius of the inboard edge of the VV CCL
-    ro_vv :
-        the radius of the outboard edge of the VV CCL
-    rm_vv :
-        the radius where the maximum height of the VV CCL occurs
-    theta1_vv :
-        the polar angle of the point at which one circular arc is
-        joined to another circular arc in the approximation to the VV CCL,
-        using an arbitrary origin of coordinates (Rc2, Zc2).
+    coil :
+        Tf coil properties on the CCL
+    vv :
+        VV properties on the CCL
     n_tf_coils :
         the number of TF coils
     n_tf_coil_turns :
@@ -5084,23 +5020,23 @@ def vv_stress_on_quench(
     ‌
     """
     # Convert angles into radians
-    theta1_vv_rad = np.pi * (theta1_vv / 180.0)
+    theta1_vv_rad = np.pi * (vv.theta1 / 180.0)
 
     # Poloidal loop resistance (PLR) in ohms
-    theta_vv = _theta_factor_integral(ro_vv, ri_vv, rm_vv, H_vv, theta1_vv_rad)
-    plr_coil = ((0.5 * ccl_length_coil) / (n_tf_coils * (s_cc + s_rp))) * 1e-6
+    theta_vv = _theta_factor_integral(vv.ro, vv.ri, vv.rm, vv.H, theta1_vv_rad)
+    plr_coil = ((0.5 * coil.ccl_length) / (n_tf_coils * (s_cc + s_rp))) * 1e-6
     plr_vv = ((0.84 / d_vv) * theta_vv) * 1e-6
 
     # relevant self-inductances in henry (H)
     coil_structure_self_inductance = (
         (constants.RMU0 / np.pi)
-        * H_coil
-        * _inductance_factor(H_coil, ri_coil, ro_coil, rm_coil, theta1_coil)
+        * coil.H
+        * _inductance_factor(coil.H, coil.ri, coil.ro, coil.rm, coil.theta1)
     )
     vv_self_inductance = (
         (constants.RMU0 / np.pi)
-        * H_vv
-        * _inductance_factor(H_vv, ri_vv, ro_vv, rm_vv, theta1_vv)
+        * vv.H
+        * _inductance_factor(vv.H, vv.ri, vv.ro, vv.rm, vv.theta1)
     )
 
     # s^-1
@@ -5124,15 +5060,15 @@ def vv_stress_on_quench(
     )
     i2 = (lambda1 / lambda2) * i1
 
-    a_vv = (ro_vv + ri_vv) / (ro_vv - ri_vv)
+    a_vv = (vv.ro + vv.ri) / (vv.ro - vv.ri)
     b_vvi = (constants.RMU0 * (n_tf_coils * n_tf_coil_turns * i0 + i1 + (i2 / 2))) / (
-        2 * np.pi * ri_vv
+        2 * np.pi * vv.ri
     )
-    j_vvi = i2 / (2 * np.pi * d_vv * ri_vv)
+    j_vvi = i2 / (2 * np.pi * d_vv * vv.ri)
 
     zeta = 1 + ((a_vv - 1) * np.log((a_vv + 1) / (a_vv - 1)) / (2 * a_vv))
 
-    return zeta * b_vvi * j_vvi * ri_vv
+    return zeta * b_vvi * j_vvi * vv.ri
 
 
 def _inductance_factor(

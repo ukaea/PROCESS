@@ -8,7 +8,7 @@ import logging
 from dataclasses import dataclass
 from enum import IntEnum, unique
 from types import DynamicClassAttribute
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, NamedTuple
 
 import numba
 import numpy as np
@@ -115,6 +115,21 @@ class TFGlobalGeometry:
     """Minimum thickness of the sidewall case [m]."""
 
 
+class RTZPoint(NamedTuple):
+    """A generic container for data that has radial, toroidal and z components"""
+
+    r: numba.float64[:]
+    t: numba.float64[:]
+    z: numba.float64[:]
+
+
+class YoungsModulusComponents(NamedTuple):
+    """Components of youngs modulus"""
+
+    axial: float
+    trans: float
+
+
 class TFCoil(Model):
     """Calculates the parameters of a resistive TF coil system for a fusion
     power plant
@@ -130,7 +145,7 @@ class TFCoil(Model):
 
     def run_base_tf(self):
         """Run main tfcoil subroutine without outputting."""
-        global_tf_geometry: TFGlobalGeometry = self.tf_global_geometry(
+        global_tf_geometry = self.tf_global_geometry(
             i_tf_case_geom=self.data.tfcoil.i_tf_case_geom,
             i_f_dr_tf_plasma_case=self.data.tfcoil.i_f_dr_tf_plasma_case,
             f_dr_tf_plasma_case=self.data.tfcoil.f_dr_tf_plasma_case,
@@ -2226,7 +2241,7 @@ class TFCoil(Model):
 
     @staticmethod
     @numba.njit(cache=True)
-    def stresscl(
+    def stresscl(  # noqa: PLR0917
         n_tf_layer,
         n_radial_array,
         n_tf_wp_stress_layers,
@@ -3243,31 +3258,21 @@ class TFCoil(Model):
         # ----------------
 
         return (
-            sig_tf_r_max,
-            sig_tf_t_max,
-            sig_tf_z_max,
+            RTZPoint(r=sig_tf_r_max, t=sig_tf_t_max, z=sig_tf_z_max),
             sig_tf_vmises_max,
             s_shear_tf_peak,
             deflect,
-            eyoung_axial,
-            eyoung_trans,
-            eyoung_wp_axial,
-            eyoung_wp_trans,
+            YoungsModulusComponents(axial=eyoung_axial, trans=eyoung_trans),
+            YoungsModulusComponents(axial=eyoung_wp_axial, trans=eyoung_wp_trans),
             poisson_wp_trans,
             radial_array,
             s_shear_cea_tf_cond,
             poisson_wp_axial,
-            sig_tf_r,
-            sig_tf_smeared_r,
-            sig_tf_smeared_t,
-            sig_tf_smeared_z,
-            sig_tf_t,
+            RTZPoint(r=sig_tf_r, t=sig_tf_t, z=sig_tf_z),
+            RTZPoint(r=sig_tf_smeared_r, t=sig_tf_smeared_t, z=sig_tf_smeared_z),
             s_shear_tf,
             sig_tf_vmises,
-            sig_tf_z,
-            str_tf_r,
-            str_tf_t,
-            str_tf_z,
+            RTZPoint(r=str_tf_r, t=str_tf_t, z=str_tf_z),
             n_radial_array,
             n_tf_bucking,
             sig_tf_wp,
@@ -3279,33 +3284,23 @@ class TFCoil(Model):
             sig_tf_wp_av_z,
         )
 
-    def out_stress(
+    def out_stress(  # noqa: PLR0917
         self,
-        sig_tf_r_max,
-        sig_tf_t_max,
-        sig_tf_z_max,
+        sig_tf_max,
         sig_tf_vmises_max,
         s_shear_tf_peak,
         deflect,
-        eyoung_axial,
-        eyoung_trans,
-        eyoung_wp_axial,
-        eyoung_wp_trans,
+        eyoung,
+        eyoung_wp,
         poisson_wp_trans,
         radial_array,
         s_shear_cea_tf_cond,
         poisson_wp_axial,
-        sig_tf_r,
-        sig_tf_smeared_r,
-        sig_tf_smeared_t,
-        sig_tf_smeared_z,
-        sig_tf_t,
+        sig_tf,
+        sig_tf_smeared,
         s_shear_tf,
         sig_tf_vmises,
-        sig_tf_z,
-        str_tf_r,
-        str_tf_t,
-        str_tf_z,
+        str_tf,
         n_radial_array,
         n_tf_bucking,
         sig_tf_wp_av_z,
@@ -3316,11 +3311,7 @@ class TFCoil(Model):
 
         Parameters
         ----------
-        sig_tf_r_max :
-
-        sig_tf_t_max :
-
-        sig_tf_z_max :
+        sig_tf_max :
 
         sig_tf_vmises_max :
 
@@ -3328,13 +3319,9 @@ class TFCoil(Model):
 
         deflect :
 
-        eyoung_axial :
+        eyoung :
 
-        eyoung_trans :
-
-        eyoung_wp_axial :
-
-        eyoung_wp_trans :
+        eyoung_wp :
 
         poisson_wp_trans :
 
@@ -3344,27 +3331,15 @@ class TFCoil(Model):
 
         poisson_wp_axial :
 
-        sig_tf_r :
+        sig_tf :
 
-        sig_tf_smeared_r :
-
-        sig_tf_smeared_t :
-
-        sig_tf_smeared_z :
-
-        sig_tf_t :
+        sig_tf_smeared:
 
         s_shear_tf :
 
         sig_tf_vmises :
 
-        sig_tf_z :
-
-        str_tf_r :
-
-        str_tf_t :
-
-        str_tf_z :
+        str_tf:
 
         n_radial_array :
 
@@ -3474,17 +3449,17 @@ class TFCoil(Model):
         po.write(
             self.outfile,
             f"  Radial stress \t\t\t (MPa) \t\t"
-            f"{table_format_arrays(sig_tf_r_max, 1e-6)}",
+            f"{table_format_arrays(sig_tf_max.r, 1e-6)}",
         )
         po.write(
             self.outfile,
             f"  Toroidal stress \t\t\t (MPa) \t\t"
-            f"{table_format_arrays(sig_tf_t_max, 1e-6)}",
+            f"{table_format_arrays(sig_tf_max.t, 1e-6)}",
         )
         po.write(
             self.outfile,
             f"  Vertical stress \t\t\t (MPa) \t\t"
-            f"{table_format_arrays(sig_tf_z_max, 1e-6)}",
+            f"{table_format_arrays(sig_tf_max.z, 1e-6)}",
         )
         po.write(
             self.outfile,
@@ -3512,26 +3487,26 @@ class TFCoil(Model):
         po.write(
             self.outfile,
             f"  Toroidal modulus \t\t\t (GPa) \t\t"
-            f"{table_format_arrays(eyoung_trans, 1e-9)}",
+            f"{table_format_arrays(eyoung.trans, 1e-9)}",
         )
         po.write(
             self.outfile,
             f"  Vertical modulus \t\t\t (GPa) \t\t"
-            f"{table_format_arrays(eyoung_axial, 1e-9)}",
+            f"{table_format_arrays(eyoung.axial, 1e-9)}",
         )
         po.write(self.outfile, "")
         po.ovarre(
             self.outfile,
             "WP transverse modulus (GPa)",
             "(eyoung_wp_trans*1.0d-9)",
-            eyoung_wp_trans * 1.0e-9,
+            eyoung_wp.trans * 1.0e-9,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "WP vertical modulus (GPa)",
             "(eyoung_wp_axial*1.0d-9)",
-            eyoung_wp_axial * 1.0e-9,
+            eyoung_wp.axial * 1.0e-9,
             "OP ",
         )
         po.ovarre(
@@ -3555,19 +3530,19 @@ class TFCoil(Model):
                 constants.MFILE,
                 f"Radial    stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_r_max({ii + 1}))",
-                sig_tf_r_max[ii],
+                sig_tf_max.r[ii],
             )
             po.ovarre(
                 constants.MFILE,
                 f"toroidal  stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_t_max({ii + 1}))",
-                sig_tf_t_max[ii],
+                sig_tf_max.t[ii],
             )
             po.ovarre(
                 constants.MFILE,
                 f"Vertical  stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_z_max({ii + 1}))",
-                sig_tf_z_max[ii],
+                sig_tf_max.z[ii],
             )
             po.ovarre(
                 constants.MFILE,
@@ -3597,12 +3572,12 @@ class TFCoil(Model):
         sig_file_data = {
             "Points per layers": n_radial_array,
             "Radius (m)": radial_array,
-            "Radial stress (MPa)": sig_tf_r * 1e-6,
-            "Toroidal stress (MPa)": sig_tf_t * 1e-6,
-            "Vertical stress (MPa)": sig_tf_z * 1e-6,
-            "Radial smear stress (MPa)": sig_tf_smeared_r * 1e-6,
-            "Toroidal smear stress (MPa)": sig_tf_smeared_t * 1e-6,
-            "Vertical smear stress (MPa)": sig_tf_smeared_z * 1e-6,
+            "Radial stress (MPa)": sig_tf.r * 1e-6,
+            "Toroidal stress (MPa)": sig_tf.t * 1e-6,
+            "Vertical stress (MPa)": sig_tf.z * 1e-6,
+            "Radial smear stress (MPa)": sig_tf_smeared.r * 1e-6,
+            "Toroidal smear stress (MPa)": sig_tf_smeared.t * 1e-6,
+            "Vertical smear stress (MPa)": sig_tf_smeared.z * 1e-6,
             "Von-Mises stress (MPa)": sig_tf_vmises * 1e-6,
             "CEA Tresca stress (MPa)": (
                 s_shear_cea_tf_cond * 1e-6
@@ -3614,9 +3589,9 @@ class TFCoil(Model):
         if self.data.tfcoil.i_tf_stress_model != 1:
             sig_file_data = {
                 **sig_file_data,
-                "Radial strain": str_tf_r,
-                "Toroidal strain": str_tf_t,
-                "Vertical strain": str_tf_z,
+                "Radial strain": str_tf.r,
+                "Toroidal strain": str_tf.t,
+                "Vertical strain": str_tf.z,
             }
 
         if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:

@@ -2424,10 +2424,7 @@ class Stellarator(Model):
             dmdt_neo_fuel_from_e,
             chi_neo_e,
             chi_PROCESS_e,
-            nu_star_e,
-            nu_star_d,
-            nu_star_T,
-            nu_star_He,
+            nu_star,
         ) = self.neoclassics.calc_neoclassics()
 
         if output:
@@ -2446,10 +2443,7 @@ class Stellarator(Model):
                 self.data.physics.gradient_length_ne,
                 self.data.physics.gradient_length_te,
                 self.data.physics.rho_star,
-                nu_star_e,
-                nu_star_d,
-                nu_star_T,
-                nu_star_He,
+                nu_star,
                 self.data.physics.nd_plasma_electron_line,
                 self.data.physics.nd_plasma_electrons_max,
             )
@@ -2470,10 +2464,7 @@ class Stellarator(Model):
         gradient_length_ne,
         gradient_length_te,
         rho_star,
-        nu_star_e,
-        nu_star_D,
-        nu_star_T,
-        nu_star_He,
+        nu_star,
         nd_plasma_electron_line,
         nd_plasma_electrons_max,
     ):
@@ -2568,16 +2559,16 @@ class Stellarator(Model):
             self.outfile,
             "Normalized collisionality (electrons)",
             "(nu_star_e)",
-            nu_star_e,
+            nu_star.e,
         )
         po.ovarre(
-            self.outfile, "Normalized collisionality (D)", "(nu_star_D)", nu_star_D
+            self.outfile, "Normalized collisionality (D)", "(nu_star_D)", nu_star.D
         )
         po.ovarre(
-            self.outfile, "Normalized collisionality (T)", "(nu_star_T)", nu_star_T
+            self.outfile, "Normalized collisionality (T)", "(nu_star_T)", nu_star.T
         )
         po.ovarre(
-            self.outfile, "Normalized collisionality (He)", "(nu_star_He)", nu_star_He
+            self.outfile, "Normalized collisionality (He)", "(nu_star_He)", nu_star.He
         )
 
         po.ovarre(
