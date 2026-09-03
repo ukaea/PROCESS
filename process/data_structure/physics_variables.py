@@ -572,7 +572,7 @@ class PhysicsData(PROCESSModelData):
     beta_toroidal_vol_avg: Parameter[float] = 0.0
     """Volume averaged toroidal beta (⟨βₜ⟩)"""
 
-    beta_thermal_toroidal_profile: list[float] = field(default_factory=list)
+    beta_thermal_toroidal_profile: Parameter[list[float]] = field(default_factory=list)
     """Toroidal beta profile"""
 
     beta_thermal_vol_avg: Parameter[float] = 0.0
@@ -632,7 +632,7 @@ class PhysicsData(PROCESSModelData):
     b_plasma_outboard_toroidal: Parameter[float] = 0.0
     """Plasma outboard toroidal field (Bᴛ(R₀+a)) [T]"""
 
-    b_plasma_toroidal_profile: list[float] = field(default_factory=list)
+    b_plasma_toroidal_profile: Parameter[list[float]] = field(default_factory=list)
     """Plasma toroidal field profile (Bᴛ(r)) [T]"""
 
     b_plasma_total: Parameter[float] = 0.0
@@ -682,7 +682,7 @@ class PhysicsData(PROCESSModelData):
     dlamie: Parameter[float] = 0.0
     """ion-electron coulomb logarithm"""
 
-    nd_plasma_electron_max_array: list[float] = field(
+    nd_plasma_electron_max_array: Parameter[list[float]] = field(
         default_factory=lambda: np.zeros(8, dtype=np.float64)
     )
     """Array of plasma electron density upper limits values (nₑ,max) [/m³]"""
@@ -807,16 +807,16 @@ class PhysicsData(PROCESSModelData):
     fusrat_total: Parameter[float] = 0.0
     """fusion reaction rate, from beams and plasma (reactions/sec)"""
 
-    fusrat_plasma_dt_profile: list[float] = field(default_factory=list)
+    fusrat_plasma_dt_profile: Parameter[list[float]] = field(default_factory=list)
     """Profile of D-T fusion reaction rate in plasma, (reactions/sec)"""
 
-    fusrat_plasma_dd_triton_profile: list[float] = field(default_factory=list)
+    fusrat_plasma_dd_triton_profile: Parameter[list[float]] = field(default_factory=list)
     """Profile of D-D fusion reaction rate (tritium branch) in plasma, (reactions/sec)"""
 
-    fusrat_plasma_dd_helion_profile: list[float] = field(default_factory=list)
+    fusrat_plasma_dd_helion_profile: Parameter[list[float]] = field(default_factory=list)
     """Profile of D-D fusion reaction rate (helium branch) in plasma, (reactions/sec)"""
 
-    fusrat_plasma_dhe3_profile: list[float] = field(default_factory=list)
+    fusrat_plasma_dhe3_profile: Parameter[list[float]] = field(default_factory=list)
     """Profile of D-3He fusion reaction rate in plasma, (reactions/sec)"""
 
     fusden_plasma: Parameter[float] = 0.0
@@ -831,7 +831,7 @@ class PhysicsData(PROCESSModelData):
     f_beta_alpha_beam_thermal: Parameter[float] = 0.0
     """ratio of (fast alpha + neutral beam beta) to thermal beta"""
 
-    hfac: list[float] = field(
+    hfac: Parameter[list[float]] = field(
         default_factory=lambda: np.zeros(N_CONFINEMENT_SCALINGS, dtype=np.float64)
     )
     """H factors for an ignited plasma for each energy confinement time scaling law"""
@@ -1066,16 +1066,18 @@ class PhysicsData(PROCESSModelData):
     f_pres_plasma_thermal_on_axis_vol_avg: Parameter[float] = 0.0
     """Ratio of central plasma thermal pressure to volume averaged (p₀/⟨p⟩)"""
 
-    pres_plasma_thermal_total_profile: list[float] = field(default_factory=list)
+    pres_plasma_thermal_total_profile: Parameter[list[float]] = field(
+        default_factory=list
+    )
     """Profile of total pressure in plasma [Pa]"""
 
-    pres_plasma_electron_profile: list[float] = field(default_factory=list)
+    pres_plasma_electron_profile: Parameter[list[float]] = field(default_factory=list)
     """Profile of electron pressure in plasma [Pa]"""
 
-    pres_plasma_ion_total_profile: list[float] = field(default_factory=list)
+    pres_plasma_ion_total_profile: Parameter[list[float]] = field(default_factory=list)
     """Profile of ion pressure in plasma [Pa]"""
 
-    pres_plasma_fuel_profile: list[float] = field(default_factory=list)
+    pres_plasma_fuel_profile: Parameter[list[float]] = field(default_factory=list)
     """Profile of fuel pressure in plasma [Pa]"""
 
     pres_plasma_pedestal_thermal: Parameter[float] = 0.0
@@ -1087,7 +1089,9 @@ class PhysicsData(PROCESSModelData):
     j_plasma_on_axis: Parameter[float] = 0.0
     """Central plasma current density (j₀) [A/m²]"""
 
-    j_plasma_bootstrap_sauter_profile: list[float] = field(default_factory=list)
+    j_plasma_bootstrap_sauter_profile: Parameter[list[float]] = field(
+        default_factory=list
+    )
     """Profile of bootstrap current density in plasma using Sauter et al scaling [A/m²]"""
 
     n_plasma_profile_elements: int = 201
@@ -1278,7 +1282,7 @@ class PhysicsData(PROCESSModelData):
     constraint equation 15 is on)
     """
 
-    l_h_threshold_powers: list[float] = field(
+    l_h_threshold_powers: Parameter[list[float]] = field(
         default_factory=lambda: np.zeros(21, dtype=np.float64)
     )
     """L-H power threshold for various scalings (MW)
@@ -1498,25 +1502,29 @@ class PhysicsData(PROCESSModelData):
     n_charge_plasma_effective_vol_avg: Parameter[float] = 0.0
     """Volume averaged plasma effective charge (⟨Zₑ⟩)"""
 
-    n_charge_plasma_effective_profile: list[float] = field(default_factory=list)
+    n_charge_plasma_effective_profile: Parameter[list[float]] = field(
+        default_factory=list
+    )
     """Profile of plasma effective charge"""
 
     n_charge_plasma_effective_mass_weighted_vol_avg: Parameter[float] = 0.0
     """Plasma mass-weighted volume averaged plasma effective charge (⟨Zₑ⟩ₘ)"""
 
-    len_plasma_debye_electron_profile: list[float] = field(default_factory=list)
+    len_plasma_debye_electron_profile: Parameter[list[float]] = field(
+        default_factory=list
+    )
     """Profile of electron Debye length in plasma (m)"""
 
-    radius_plasma_deuteron_toroidal_larmor_isotropic_profile: list[float] = field(
-        default_factory=list
+    radius_plasma_deuteron_toroidal_larmor_isotropic_profile: Parameter[list[float]] = (
+        field(default_factory=list)
     )
     """Profile of deuteron toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
 
     radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg: Parameter[float] = 0.0
     """Volume averaged deuteron toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
 
-    radius_plasma_triton_toroidal_larmor_isotropic_profile: list[float] = field(
-        default_factory=list
+    radius_plasma_triton_toroidal_larmor_isotropic_profile: Parameter[list[float]] = (
+        field(default_factory=list)
     )
     """Profile of triton toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
 
@@ -1526,7 +1534,7 @@ class PhysicsData(PROCESSModelData):
     len_plasma_debye_electron_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron Debye length in plasma (m)"""
 
-    vel_plasma_electron_profile: list[float] = field(default_factory=list)
+    vel_plasma_electron_profile: Parameter[list[float]] = field(default_factory=list)
     """Profile of electron thermal velocity in plasma (m/s)"""
 
     vel_plasma_deuteron_vol_avg: Parameter[float] = 0.0
@@ -1535,16 +1543,18 @@ class PhysicsData(PROCESSModelData):
     vel_plasma_electron_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron thermal velocity in plasma (m/s)"""
 
-    vel_plasma_deuteron_profile: list[float] = field(default_factory=list)
+    vel_plasma_deuteron_profile: Parameter[list[float]] = field(default_factory=list)
     """Profile of deuteron thermal velocity in plasma (m/s)"""
 
-    vel_plasma_triton_profile: list[float] = field(default_factory=list)
+    vel_plasma_triton_profile: Parameter[list[float]] = field(default_factory=list)
     """Profile of triton thermal velocity in plasma (m/s)"""
 
     vel_plasma_triton_vol_avg: Parameter[float] = 0.0
     """Volume averaged triton thermal velocity in plasma (m/s)"""
 
-    vel_plasma_alpha_thermal_profile: list[float] = field(default_factory=list)
+    vel_plasma_alpha_thermal_profile: Parameter[list[float]] = field(
+        default_factory=list
+    )
     """Profile of thermal alpha particle velocity in plasma (m/s)"""
 
     vel_plasma_alpha_thermal_vol_avg: Parameter[float] = 0.0
@@ -1553,7 +1563,7 @@ class PhysicsData(PROCESSModelData):
     vel_plasma_alpha_birth: Parameter[float] = 0.0
     """Birth velocity of alpha particles in plasma (m/s)"""
 
-    plasma_coulomb_log_electron_electron_profile: list[float] = field(
+    plasma_coulomb_log_electron_electron_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-electron Coulomb logarithm in plasma"""
@@ -1561,7 +1571,7 @@ class PhysicsData(PROCESSModelData):
     plasma_coulomb_log_electron_electron_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-electron Coulomb logarithm in plasma"""
 
-    plasma_coulomb_log_electron_deuteron_profile: list[float] = field(
+    plasma_coulomb_log_electron_deuteron_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-deuteron Coulomb logarithm in plasma"""
@@ -1569,19 +1579,23 @@ class PhysicsData(PROCESSModelData):
     plasma_coulomb_log_electron_deuteron_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-deuteron Coulomb logarithm in plasma"""
 
-    plasma_coulomb_log_electron_triton_profile: list[float] = field(default_factory=list)
+    plasma_coulomb_log_electron_triton_profile: Parameter[list[float]] = field(
+        default_factory=list
+    )
     """Profile of electron-triton Coulomb logarithm in plasma"""
 
     plasma_coulomb_log_electron_triton_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-triton Coulomb logarithm in plasma"""
 
-    plasma_coulomb_log_deuteron_triton_profile: list[float] = field(default_factory=list)
+    plasma_coulomb_log_deuteron_triton_profile: Parameter[list[float]] = field(
+        default_factory=list
+    )
     """Profile of deuteron-triton Coulomb logarithm in plasma"""
 
     plasma_coulomb_log_deuteron_triton_vol_avg: Parameter[float] = 0.0
     """Volume averaged deuteron-triton Coulomb logarithm in plasma"""
 
-    plasma_coulomb_log_electron_alpha_thermal_profile: list[float] = field(
+    plasma_coulomb_log_electron_alpha_thermal_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-alpha Coulomb logarithm in plasma"""
@@ -1589,7 +1603,7 @@ class PhysicsData(PROCESSModelData):
     plasma_coulomb_log_electron_alpha_thermal_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-alpha Coulomb logarithm in plasma"""
 
-    t_plasma_electron_alpha_spitzer_slow_profile: list[float] = field(
+    t_plasma_electron_alpha_spitzer_slow_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-alpha Spitzer slowing down time in plasma (s)"""
@@ -1597,16 +1611,16 @@ class PhysicsData(PROCESSModelData):
     t_plasma_electron_alpha_spitzer_slow_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-alpha Spitzer slowing down time in plasma (s)"""
 
-    freq_plasma_electron_profile: list[float] = field(default_factory=list)
+    freq_plasma_electron_profile: Parameter[list[float]] = field(default_factory=list)
     """Electron plasma frequency profile (Hz)"""
 
     freq_plasma_electron_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron plasma frequency (Hz)"""
 
-    freq_plasma_deuteron_profile: list[float] = field(default_factory=list)
+    freq_plasma_deuteron_profile: Parameter[list[float]] = field(default_factory=list)
     """Deuteron plasma frequency profile (Hz)"""
 
-    freq_plasma_larmor_toroidal_electron_profile: list[float] = field(
+    freq_plasma_larmor_toroidal_electron_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
@@ -1614,7 +1628,7 @@ class PhysicsData(PROCESSModelData):
     freq_plasma_larmor_toroidal_electron_vol_avg: Parameter[float] = None
     """Volume averaged electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
-    freq_plasma_larmor_toroidal_deuteron_profile: list[float] = field(
+    freq_plasma_larmor_toroidal_deuteron_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of deuteron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
@@ -1622,19 +1636,23 @@ class PhysicsData(PROCESSModelData):
     freq_plasma_larmor_toroidal_deuteron_vol_avg: Parameter[float] = None
     """Volume averaged deuteron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
-    freq_plasma_larmor_toroidal_triton_profile: list[float] = field(default_factory=list)
+    freq_plasma_larmor_toroidal_triton_profile: Parameter[list[float]] = field(
+        default_factory=list
+    )
     """Profile of triton Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
     freq_plasma_larmor_toroidal_triton_vol_avg: Parameter[float] = None
     """Volume averaged triton Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
-    freq_plasma_upper_hybrid_profile: list[float] = field(default_factory=list)
+    freq_plasma_upper_hybrid_profile: Parameter[list[float]] = field(
+        default_factory=list
+    )
     """Profile of upper hybrid frequency in plasma (Hz)"""
 
     freq_plasma_upper_hybrid_vol_avg: Parameter[float] = 0.0
     """Volume averaged upper hybrid frequency in plasma (Hz)"""
 
-    t_plasma_electron_electron_collision_profile: list[float] = field(
+    t_plasma_electron_electron_collision_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-electron collision time in plasma (s)"""
@@ -1642,7 +1660,7 @@ class PhysicsData(PROCESSModelData):
     t_plasma_electron_electron_collision_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-electron collision time in plasma (s)"""
 
-    t_plasma_electron_deuteron_collision_profile: list[float] = field(
+    t_plasma_electron_deuteron_collision_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-deuteron collision time in plasma (s)"""
@@ -1650,13 +1668,15 @@ class PhysicsData(PROCESSModelData):
     t_plasma_electron_deuteron_collision_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-deuteron collision time in plasma (s)"""
 
-    t_plasma_electron_triton_collision_profile: list[float] = field(default_factory=list)
+    t_plasma_electron_triton_collision_profile: Parameter[list[float]] = field(
+        default_factory=list
+    )
     """Profile of electron-triton collision time in plasma (s)"""
 
     t_plasma_electron_triton_collision_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-triton collision time in plasma (s)"""
 
-    t_plasma_electron_alpha_thermal_collision_profile: list[float] = field(
+    t_plasma_electron_alpha_thermal_collision_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-alpha collision time in plasma (s)"""
@@ -1664,7 +1684,7 @@ class PhysicsData(PROCESSModelData):
     t_plasma_electron_alpha_thermal_collision_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-alpha collision time in plasma (s)"""
 
-    freq_plasma_electron_electron_collision_profile: list[float] = field(
+    freq_plasma_electron_electron_collision_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-electron collision frequency in plasma (Hz)"""
@@ -1672,7 +1692,7 @@ class PhysicsData(PROCESSModelData):
     freq_plasma_electron_electron_collision_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-electron collision frequency in plasma (Hz)"""
 
-    freq_plasma_electron_deuteron_collision_profile: list[float] = field(
+    freq_plasma_electron_deuteron_collision_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-deuteron collision frequency in plasma (Hz)"""
@@ -1680,7 +1700,7 @@ class PhysicsData(PROCESSModelData):
     freq_plasma_electron_deuteron_collision_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-deuteron collision frequency in plasma (Hz)"""
 
-    freq_plasma_electron_triton_collision_profile: list[float] = field(
+    freq_plasma_electron_triton_collision_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-triton collision frequency in plasma (Hz)"""
@@ -1688,7 +1708,7 @@ class PhysicsData(PROCESSModelData):
     freq_plasma_electron_triton_collision_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-triton collision frequency in plasma (Hz)"""
 
-    freq_plasma_electron_alpha_thermal_collision_profile: list[float] = field(
+    freq_plasma_electron_alpha_thermal_collision_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-alpha collision frequency in plasma (Hz)"""
@@ -1696,7 +1716,7 @@ class PhysicsData(PROCESSModelData):
     freq_plasma_electron_alpha_thermal_collision_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-alpha collision frequency in plasma (Hz)"""
 
-    len_plasma_electron_electron_mean_free_path_profile: list[float] = field(
+    len_plasma_electron_electron_mean_free_path_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-electron mean free path in plasma (m)"""
@@ -1704,7 +1724,7 @@ class PhysicsData(PROCESSModelData):
     len_plasma_electron_electron_mean_free_path_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-electron mean free path in plasma (m)"""
 
-    len_plasma_electron_deuteron_mean_free_path_profile: list[float] = field(
+    len_plasma_electron_deuteron_mean_free_path_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-deuteron mean free path in plasma (m)"""
@@ -1712,7 +1732,7 @@ class PhysicsData(PROCESSModelData):
     len_plasma_electron_deuteron_mean_free_path_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-deuteron mean free path in plasma (m)"""
 
-    len_plasma_electron_triton_mean_free_path_profile: list[float] = field(
+    len_plasma_electron_triton_mean_free_path_profile: Parameter[list[float]] = field(
         default_factory=list
     )
     """Profile of electron-triton mean free path in plasma (m)"""
@@ -1720,15 +1740,15 @@ class PhysicsData(PROCESSModelData):
     len_plasma_electron_triton_mean_free_path_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-triton mean free path in plasma (m)"""
 
-    len_plasma_electron_alpha_thermal_mean_free_path_profile: list[float] = field(
-        default_factory=list
+    len_plasma_electron_alpha_thermal_mean_free_path_profile: Parameter[list[float]] = (
+        field(default_factory=list)
     )
     """Profile of electron-alpha mean free path in plasma (m)"""
 
     len_plasma_electron_alpha_thermal_mean_free_path_vol_avg: Parameter[float] = 0.0
     """Volume averaged electron-alpha mean free path in plasma (m)"""
 
-    res_plasma_fuel_spitzer_profile: list[float] = field(default_factory=list)
+    res_plasma_fuel_spitzer_profile: Parameter[list[float]] = field(default_factory=list)
     """Profile of plasma Spitzer resistivity due to fuel ions (ohm m)"""
 
     res_plasma_fuel_spitzer_vol_avg: Parameter[float] = 0.0
