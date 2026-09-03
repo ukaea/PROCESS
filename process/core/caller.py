@@ -259,7 +259,6 @@ class Caller:
         xc : np.array
             Array of optimisation parameters
         """
-        self.data.reset_edit_use_records()
         # Number of active iteration variables
         nvars = len(xc)
 
