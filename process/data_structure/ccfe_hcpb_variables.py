@@ -2,51 +2,53 @@
 
 from dataclasses import dataclass
 
+from process.core.data_structure.parameter import Parameter, PROCESSModelData
+
 
 @dataclass(slots=True)
-class CCFEHCPBData:
+class CCFEHCPBData(PROCESSModelData):
     """Dataclass holding CCFE HCPB variables"""
 
-    armour_density: float = 0.0
+    armour_density: Parameter[float] = 0.0
     """FW armour density [kg/m3]"""
 
-    fw_density: float = 0.0
+    fw_density: Parameter[float] = 0.0
     """FW density [kg/m3]"""
 
-    blanket_density: float = 0.0
+    blanket_density: Parameter[float] = 0.0
     """Blanket density [kg/m3]"""
 
-    shield_density: float = 0.0
+    shield_density: Parameter[float] = 0.0
     """Shield density [kg/m3]"""
 
-    vv_density: float = 0.0
+    vv_density: Parameter[float] = 0.0
     """Vacuum vessel density [kg/m3]"""
 
-    x_blanket: float = 0.0
+    x_blanket: Parameter[float] = 0.0
     """Blanket exponent (tonne/m2)"""
 
-    x_shield: float = 0.0
+    x_shield: Parameter[float] = 0.0
     """Shield exponent (tonne/m2)"""
 
-    tfc_nuc_heating: float = 0.0
+    tfc_nuc_heating: Parameter[float] = 0.0
     """Unit nuclear heating in TF coil (W per W of fusion power)"""
 
-    fw_armour_u_nuc_heating: float = 6.25e-7
+    fw_armour_u_nuc_heating: Parameter[float] = 6.25e-7
     """Unit heating of FW and armour in FW armour (W/kg per W of fusion power)"""
 
-    shld_u_nuc_heating: float = 0.0
+    shld_u_nuc_heating: Parameter[float] = 0.0
     """Unit nuclear heating in shield (W per W of fusion power)"""
 
-    pnuc_tot_blk_sector: float = None
+    pnuc_tot_blk_sector: Parameter[float] = None
     """Total nuclear power deposited in blanket covered sector (FW, BLKT, SHLD, TF) (MW)"""
 
-    exp_blanket: float = 0.0
+    exp_blanket: Parameter[float] = 0.0
     """Exponential factors in nuclear heating calcs"""
 
-    exp_shield1: float = 0.0
+    exp_shield1: Parameter[float] = 0.0
     """Exponential factors in nuclear heating calcs"""
 
-    exp_shield2: float = 0.0
+    exp_shield2: Parameter[float] = 0.0
     """Exponential factors in nuclear heating calcs"""
 
 
