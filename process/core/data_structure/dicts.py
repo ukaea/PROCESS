@@ -8,12 +8,13 @@ the python source (e.g. docstrings) or that cannot be dynamically accessed
 import ast
 import inspect
 import logging
+from dataclasses import fields
 from functools import cache
 from importlib import import_module
 from itertools import pairwise
+from typing import Annotated, get_args, get_origin
 
-import numpy as np
-
+from process.core.data_structure.parameter import Parameter
 from process.core.input import INPUT_VARIABLES
 from process.core.log import logging_model_handler
 from process.core.solver.iteration_variables import ITERATION_VARIABLES
@@ -126,6 +127,69 @@ def dict_ixc_bounds():
     return ixc_bounds
 
 
+SCALAR_ANNOTATIONS = [float, int, str, bool]
+LIST_ANNOTATIONS = [list[a] for a in SCALAR_ANNOTATIONS]
+PARAMETER_ANNOTATIONS = [Parameter[a] for a in SCALAR_ANNOTATIONS + LIST_ANNOTATIONS]
+ANNOTATED_ANNOTATIONS_TEXT = [
+    f"Annotated[{a}, ParameterMetadata(...)]" for a in PARAMETER_ANNOTATIONS
+]
+ALL_ANNOTATIONS_TEXT = [
+    str(a)
+    for a in SCALAR_ANNOTATIONS
+    + LIST_ANNOTATIONS
+    + PARAMETER_ANNOTATIONS
+    + ANNOTATED_ANNOTATIONS_TEXT
+]
+
+
+def _classify_annotation(annotation: type):
+    try:
+        if annotation in SCALAR_ANNOTATIONS:
+            return _classify_scalar_id(annotation)
+
+        origin_type = get_origin(annotation)
+        args_type = get_args(annotation)
+
+        if origin_type is list:
+            return _classify_array_id(args_type[0])
+        if origin_type in {Parameter, Annotated}:
+            return _classify_annotation(args_type[0])
+    except Exception as e:
+        error_msg = (
+            f"The type annotation {annotation} is causing problems. "
+            "Ensure it is in: " + ", ".join(ALL_ANNOTATIONS_TEXT)
+        )
+        raise RuntimeError(error_msg) from e
+
+    return None
+
+
+def _classify_scalar_id(annotation: type) -> str | None:
+    if annotation is float:
+        return "real_variable"
+    if annotation is int:
+        return "int_variable"
+    if annotation is str:
+        return "str_variable"
+    if annotation is bool:
+        return "bool_variable"
+
+    return None
+
+
+def _classify_array_id(annotation: str) -> str | None:
+    if annotation is float:
+        return "real_array"
+    if annotation is int:
+        return "int_array"
+    if annotation is str:
+        return "str_array"
+    if annotation is bool:
+        return "bool_array"
+
+    return None
+
+
 # cache the output of get_dicts so that it is never re-calculated in a given
 # process run.
 @cache
@@ -177,66 +241,20 @@ def get_dicts():
 
         # Check whether to get the initial value from the global data structure
         # or some dataclass
-        object_containing_initial_values = (
-            module
-            if not hasattr(module, "CREATE_DICTS_FROM_DATACLASS")
-            else module.CREATE_DICTS_FROM_DATACLASS()
-        )
+        data_structure = module.CREATE_DICTS_FROM_DATACLASS()
 
-        # get the variable names and initial values
-        for node in ast.walk(module_tree):
-            if isinstance(node, ast.AnnAssign):
-                # for each variable in the file, get the initial value
-                # (either is None, or value initialised in init_variables fn)
-                # set default to be None if variable is not being initialised eg if you
-                # just have `example_double: float`
-                # instead of `example_double: float = None`
-                initial_value = getattr(object_containing_initial_values, node.target.id)
-                # JSON doesn't like np arrays
-                if type(initial_value) is np.ndarray:
-                    initial_value = initial_value.tolist()
-                initial_values_dict[node.target.id] = initial_value
-                # get the variable name and add to variable_names list
-                var_name = node.target.id
-                variable_names.append(var_name)
-                # Now want to get the types of these variables
-                if isinstance(node.annotation, ast.Subscript):
-                    if node.annotation.value.id == "list":
-                        if node.annotation.slice.id == "str":
-                            var_type = "string_array"
-                        elif node.annotation.slice.id == "float":
-                            var_type = "real_array"
-                        elif node.annotation.slice.id == "int":
-                            var_type = "int_array"
-                        elif node.annotation.slice.id == "bool":
-                            var_type = "bool_array"
-                        else:
-                            raise TypeError(
-                                f"The type annotation of variable {node.target.id} is "
-                                f"{node.annotation.value.id}[{node.annotation.slice.id}],"
-                                " and this is not recognised. "
-                                "Please change your type annotation for this variable. "
-                                "PROCESS recognises the following type annotations: "
-                                "list[float], list[int], list[str], list[bool]."
-                            )
-                elif node.annotation.id == "float":
-                    var_type = "real_variable"
-                elif node.annotation.id == "int":
-                    var_type = "int_variable"
-                elif node.annotation.id == "str":
-                    var_type = "str_variable"
-                elif node.annotation.id == "bool":
-                    var_type = "bool_variable"
-                else:
-                    raise TypeError(
-                        f"The type annotation of variable {node.target.id} is "
-                        f"{node.annotation.id}, and this is not recognised. "
-                        "Please change your type annotation for this variable. "
-                        "PROCESS recognises the following "
-                        "type annotations: float, int, str, bool."
-                    )
+        for field in fields(data_structure):
+            var_type = _classify_annotation(field.type)
 
-                variable_types[node.target.id] = var_type
+            if var_type is None:
+                error_msg = (
+                    f"The type annotation of {field.name} in {module_name}"
+                    " cannot be classified, ensure it is one of: "
+                    + ", ".join(ALL_ANNOTATIONS_TEXT)
+                )
+                raise TypeError(error_msg)
+
+            variable_types[field.name] = var_type
 
         # Variable descriptions are found under the ast.ClassDef node
         # within ast.ClassDef - need to check for pairs of ast.AnnAssign followed by an
