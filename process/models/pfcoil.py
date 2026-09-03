@@ -2436,12 +2436,12 @@ class PFCoil(Model):
             "1.0e0",
         ])
 
-        for line in tabulate(
+        op.write(self.outfile, tabulate(
             pf_coil_geometry_rows,
             headers=["Coil", "R(m)", "Z(m)", "dR(m)", "dZ(m)", "turns"],
             tablefmt="plain",
-        ).splitlines():
-            op.write(self.outfile, line)
+            disable_numparse=True,
+        ))
 
         for k in range(pf_d.nef):
             op.ovarre(
@@ -2629,13 +2629,12 @@ class PFCoil(Model):
         ])
 
         op.oblnkl(self.outfile)
-        for line in tabulate(
+        op.write(self.outfile, tabulate(
             rows,
             headers=headers,
             tablefmt="plain",
             disable_numparse=True,
-        ).splitlines():
-            op.write(self.outfile, line)
+        ))
 
         op.oblnkl(self.outfile)
         op.ocmmnt(self.outfile, "----------------------------")
@@ -2683,13 +2682,12 @@ class PFCoil(Model):
         ))
 
         op.oblnkl(self.outfile)
-        for line in tabulate(
+        op.write(self.outfile, tabulate(
             rows,
             headers=headers,
             tablefmt="plain",
             disable_numparse=True,
-        ).splitlines():
-            op.write(self.outfile, line)
+        ))
         op.oblnkl(self.outfile)
         op.ovarre(
             self.outfile,
@@ -2707,7 +2705,6 @@ class PFCoil(Model):
         )
 
         op.osubhd(self.outfile, "Summary of volt-second consumption by circuit (Wb):")
-        op.write(self.outfile, "Circuit\t\t\tBOP\t\t\tBOF\t\tEOF")
         op.oblnkl(self.outfile)
         headers = [
             "Circuit",
@@ -2732,13 +2729,12 @@ class PFCoil(Model):
             f"{pf.vsdum[n_cs, 2]:.3f}"
         ])
         op.oblnkl(self.outfile)
-        for line in tabulate(
+        op.write(self.outfile, tabulate(
             rows,
             headers=headers,
             tablefmt="plain",
             disable_numparse=True,
-        ).splitlines():
-            op.write(self.outfile, line)
+        ))
         op.oblnkl(self.outfile)
 
         op.oshead(self.outfile, "Waveforms")
@@ -2763,13 +2759,12 @@ class PFCoil(Model):
         for k in range(pulse_timings.n_pf_active_points_total):
             line += [f"{pulse_timings.pf_active_cumulative[k]:.2f}"]
         rows = [line]
-        for line in tabulate(
+        op.write(self.outfile, tabulate(
             rows,
             headers=headers[1:],
             tablefmt="plain",
             disable_numparse=True,
-        ).splitlines():
-            op.write(self.outfile, line)
+        ))
 
         op.oblnkl(self.outfile)
         op.write(self.outfile, "Currents (A)")
@@ -2803,13 +2798,12 @@ class PFCoil(Model):
 
         # op.write(self.outfile, line)
         op.oblnkl(self.outfile)
-        for line in tabulate(
+        op.write(self.outfile, tabulate(
             rows,
             headers=headers,
             tablefmt="plain",
             disable_numparse=True,
-        ).splitlines():
-            op.write(self.outfile, line)
+        ))
 
         op.oblnkl(self.outfile)
 
@@ -2839,13 +2833,12 @@ class PFCoil(Model):
                     ])
 
         op.oblnkl(self.outfile)
-        for line in tabulate(
+        op.write(self.outfile, tabulate(
             rows,
             headers=headers,
             tablefmt="plain",
             disable_numparse=True,
-        ).splitlines():
-            op.write(self.outfile, line)
+        ))
 
         op.oblnkl(self.outfile)
         op.ocmmnt(self.outfile, "And: equilibrium field:")
@@ -2874,13 +2867,12 @@ class PFCoil(Model):
                 ])
 
         op.oblnkl(self.outfile)
-        for line in tabulate(
+        op.write(self.outfile, tabulate(
             rows,
             headers=headers,
             tablefmt="plain",
             disable_numparse=True,
-        ).splitlines():
-            op.write(self.outfile, line)
+        ))
 
         op.oblnkl(self.outfile)
         op.ovarre(
