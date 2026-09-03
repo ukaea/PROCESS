@@ -248,11 +248,12 @@ def process_models():
 @pytest.fixture
 def cli_runner():
     def _cli_runner(command, args: list[str] | None = None, exit_code=0):
-        result = CliRunner().invoke(command, args=args or [])
 
+        result = CliRunner(catch_exceptions=False).invoke(command, args=args or [])
         assert result.exit_code == exit_code, (
             f"{result.exception} "
             f"{''.join(traceback.format_exception(result.exc_info[1]))}"
         )
+        return result
 
     return _cli_runner
