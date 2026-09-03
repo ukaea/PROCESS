@@ -280,7 +280,6 @@ class AnalyticGradShafranovSolution:
 
         :Notes: Polynomial derivatives not given in reference. Manually derived.
         """
-
         dpsi_1_dx = 0
         dpsi_2_dx = 2 * x
         dpsi_3_dx = -x * (1 + 2 * np.log(x))
@@ -368,7 +367,6 @@ class AnalyticGradShafranovSolution:
 
         :Notes: Polynomial derivatives not given in reference. Manually derived.
         """
-
         d2_psi_1_dx2 = 0
         d2_psi_2_dx2 = 2
         d2_psi_3_dx2 = -3 - 2 * np.log(x)
@@ -471,7 +469,6 @@ class AnalyticGradShafranovSolution:
         """Second derivative of the particular solution with respect to x.
         :Notes: Manually derived.
         """
-
         return (
             self.pressure_parameter * (1.5 + np.log(x))
             - 1.5 * (1.0 + self.pressure_parameter) * x**2
@@ -712,7 +709,8 @@ class AnalyticGradShafranovSolution:
             tolerance (float): Convergence tolerance for the Newton's method.
             max_iterations (int): Maximum number of iterations allowed.
 
-        Returns:
+        Returns
+        -------
             None: Updates the `self.magnetic_axis` attribute with the calculated position.
         """
         # Initial guess for the magnetic axis (near the geometric center).
@@ -897,7 +895,6 @@ class AnalyticGradShafranovSolution:
         Calculate the poloidal flux coordinate normalisation (psi_0) and the plasma 'figures of merit':
         beta_poloidal, beta_toroidal, beta_total and beta_normalised.
         """
-
         len_plasma_poloidal_norm, vol_plasma_norm = (
             self.normalised_circumference,
             self.normalised_volume,
