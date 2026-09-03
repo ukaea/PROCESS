@@ -91,7 +91,7 @@ jobs:
         with:
           python-version: ${{ env.python-version }}
       - name: Run regression input files
-        run: hatch run python tracking/run_tracking_inputs.py run tests/regression/input_files
+        run: hatch run track:create-tracking-inputs
       - name: Move other files
         run: mv tests/regression/input_files/*.json tracking/
       - name: Archive tracked MFILEs
@@ -189,7 +189,7 @@ jobs:
         run: |
           MSG=$(printf "%q " $COMMIT_MESSAGE)
           git config --global --add safe.directory '*'
-          hatch run python tracking/run_tracking_inputs.py track process-tracking-data "${MSG}" ${{ github.sha }}
+          hatch run track:run-tracker "${MSG}" ${{ github.sha }}
       - name: Create the tracking dashboard
         run: hatch run python tracking/tracking_data.py plot process-tracking-data --out tracking.html
       - name: Archive tracking dashboard
