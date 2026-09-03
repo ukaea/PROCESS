@@ -1,5 +1,7 @@
+"""Analytic Solovev equilibrium solution for up-down axisymmetric plasma."""
+
 import logging
-from dataclasses import dataclass
+from dataclasses import astuple, dataclass
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -15,6 +17,8 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ExtremalPoint:
+    """Dataclass representing an extremal point of the plasma boundary."""
+
     elongation: float
     triangularity: float
     x_point: bool
@@ -59,16 +63,35 @@ class ExtremalPoint:
     def get_x_point(self) -> bool:
         return self.x_point
 
+@dataclass
+class PsiTerms:
+    """Dataclass representing the set of homogeneous polynomials (Ψ terms) that 
+    solve the Grad-Shafranov equation."""
+
+    psi_1: float
+    psi_2: float
+    psi_3: float
+    psi_4: float
+    psi_5: float
+    psi_6: float
+    psi_7: float
+    psi_8: float
+    psi_9: float
+    psi_10: float
+    psi_11: float
+    psi_12: float
+
 
 class AnalyticGradShafranovSolution:
     """
+    Class to represent an analytic Grad-Shafranov solution for an up-down axisymmetric
+    plasma equilibrium.
 
-        Class to represent an analytic Grad-Shafranov solution for an up-down axisymmetric plasma equilibrium.
-
-        :references:
-        A. J. Cerfon and J. P. Freidberg, “One size fits all analytic solutions to the Grad-Shafranov equation,”
-        vol. 17, no. 3, pp. 032502-032502, Mar. 2010,
-        doi: https://doi.org/10.1063/1.3328818.
+    References
+    ----------
+    [1] A. J. Cerfon and J. P. Freidberg, “One size fits all analytic solutions to the
+    Grad-Shafranov equation,” vol. 17, no. 3, pp. 032502-032502, Mar. 2010,
+    doi: https://doi.org/10.1063/1.3328818.
     ‌
     """
 
@@ -234,11 +257,14 @@ class AnalyticGradShafranovSolution:
         return self.lower_point.squareness
 
     @staticmethod
-    def psi_polynomials(x: float, y: float) -> tuple[float]:
+    def psi_polynomials(x: float, y: float) -> PsiTerms:
         """
-        The set of homogeneous polynomials (psi terms) that solve the Grad-Shafranov equation.
+        The set of homogeneous polynomials Ψ terms that solve the Grad-Shafranov equation.
 
-        :Notes: Polynomial numbering is given in Equation 8 of Cerfon and Freidberg (2010).
+        Notes
+        -----
+        Polynomial numbering is given in Equation 8 and extended in equation 27 of 
+        Cerfon and Freidberg (2010).
         """
         psi_1 = 1
         psi_2 = x**2
@@ -257,19 +283,21 @@ class AnalyticGradShafranovSolution:
             (8 * y**2 - 80 * x**2 * np.log(x)) * y**2 + (60 * np.log(x) - 45) * x**4
         )
 
-        return (
-            psi_1,
-            psi_2,
-            psi_3,
-            psi_4,
-            psi_5,
-            psi_6,
-            psi_7,
-            psi_8,
-            psi_9,
-            psi_10,
-            psi_11,
-            psi_12,
+        return astuple(
+            PsiTerms(
+                psi_1=psi_1,
+                psi_2=psi_2,
+                psi_3=psi_3,
+                psi_4=psi_4,
+                psi_5=psi_5,
+                psi_6=psi_6,
+                psi_7=psi_7,
+                psi_8=psi_8,
+                psi_9=psi_9,
+                psi_10=psi_10,
+                psi_11=psi_11,
+                psi_12=psi_12,
+            )
         )
 
     @staticmethod
