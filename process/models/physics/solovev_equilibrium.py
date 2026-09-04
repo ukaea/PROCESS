@@ -5,6 +5,7 @@ from dataclasses import astuple, dataclass
 
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy as sp
 import scipy.constants as const
 from scipy.interpolate import interp1d
 from skimage import measure
@@ -24,7 +25,13 @@ class ExtremalPoint:
     squareness: float = 0.0
 
     def __post_init__(self):
-        """Post-initialization to ensure correct types and validate values."""
+        """Post-initialization to ensure correct types and validate values.
+
+        Raises
+        ------
+        ValueError
+            If any of the attributes have invalid values.
+        """
         self.elongation = float(self.elongation)
         self.triangularity = float(self.triangularity)
         self.x_point = bool(self.x_point)
@@ -50,6 +57,26 @@ class ExtremalPoint:
         eps: float,
         rmajor: float,
     ):
+        """Create an ExtremalPoint instance at given coordinates.
+
+        Parameters
+        ----------
+        r : float
+            Radial coordinate [m].
+        z : float
+            Vertical coordinate [m].
+        x_point : bool
+            Whether the point is an X-point.
+        eps : float
+            Inverse aspect ratio.
+        rmajor : float
+            Major radius of plasma [m].
+
+        Returns
+        -------
+        ExtremalPoint
+            The extremal point at the given coordinates.
+        """
         elongation = abs(z) / rmajor / eps
         triangularity = (rmajor - r) / rmajor / eps
 
@@ -61,6 +88,7 @@ class ExtremalPoint:
 
     @property
     def get_x_point(self) -> bool:
+        """Whether this extremal point is an X-point."""
         return self.x_point
 
 
@@ -155,12 +183,6 @@ class AnalyticGradShafranovSolution:
             via trial and error to get the desired beta.
         eps: float
             Inverse aspect ratio epsilon [] = minor radius [m] / major radius [m].
-        elongation: float
-            Plasma elongation kappa []. Can be a tuple with the upper and lower
-            triangularity.
-        triangularity: float
-            Plasma triangularity delta []. Can be a tuple with the upper and lower
-            elongation.
         b_plasma_toroidal_on_axis: float
             Magnetic field strength at the geometric axis r = rmajor [T].
         c_plasma_ma: float
@@ -170,15 +192,21 @@ class AnalyticGradShafranovSolution:
             plasma current.
             Otherwise the value of the plasma current is calculated using the
             provided value.
+
+        Raises
+        ------
+        TypeError
+            If upper_point or lower_point is not an instance of ExtremalPoint.
+
         """
         self.rmajor: float = float(rmajor)
         self.pressure_parameter: float = float(pressure_parameter)
         self.eps: float = float(eps)
 
         if not isinstance(upper_point, ExtremalPoint):
-            raise ValueError("upper_point must be ExtremalPoint")
+            raise TypeError("upper_point must be ExtremalPoint")
         if not isinstance(lower_point, ExtremalPoint):
-            raise ValueError("lower_point must be ExtremalPoint")
+            raise TypeError("lower_point must be ExtremalPoint")
 
         self.upper_point = upper_point
         self.lower_point = lower_point
@@ -203,16 +231,14 @@ class AnalyticGradShafranovSolution:
         self.calculate_geometry_factors(use_d_shaped_model=use_d_shaped_model)
 
         # Use either the plasma current or kink safety factor to calculate the other.
-        b_plasma_toroidal_on_axis = self.b_plasma_toroidal_on_axis
-        rmajor, len_plasma_poloidal_norm = self.rmajor, self.normalised_circumference
 
         if kink_safety_factor is None:
             self.c_plasma_ma: float = abs(float(c_plasma_ma))
             self.kink_safety_factor = abs(
                 self.eps
-                * b_plasma_toroidal_on_axis
-                * rmajor
-                * len_plasma_poloidal_norm
+                * self.b_plasma_toroidal_on_axis
+                * self.rmajor
+                * self.normalised_circumference
                 / const.mu_0
                 / (1e6 * self.c_plasma_ma)
             )
@@ -220,9 +246,9 @@ class AnalyticGradShafranovSolution:
             self.kink_safety_factor = abs(float(kink_safety_factor))
             self.c_plasma_ma = 1e-6 * abs(
                 self.eps
-                * b_plasma_toroidal_on_axis
-                * rmajor
-                * len_plasma_poloidal_norm
+                * self.b_plasma_toroidal_on_axis
+                * self.rmajor
+                * self.normalised_circumference
                 / const.mu_0
                 / self.kink_safety_factor
             )
@@ -565,9 +591,9 @@ class AnalyticGradShafranovSolution:
 
     def psi_particular(self, x: float, _y: float) -> float:
         """
-        Particular solution of the normalised Grad-Shafranov equation. x = r / rmajor
-        and y = z / rmajor are the radius r and height z normalised to the major radius
-        rmajor.
+        Particular solution of the normalised Grad-Shafranov equation (Ψₚ),
+        x = r / rmajorand y = z / rmajor are the radius r and height z normalised to
+        the major radius.
 
         Notes
         -----
@@ -577,8 +603,8 @@ class AnalyticGradShafranovSolution:
             1.0 + self.pressure_parameter
         )
 
-    def psi_particular_dx(self, x: float, y: float) -> float:
-        """First derivative of the particular solution with respect to x.
+    def psi_particular_dx(self, x: float, _y: float) -> float:
+        """First derivative of the particular solution with respect to x (∂Ψₚ/∂x)
 
         Notes
         -----
@@ -593,8 +619,8 @@ class AnalyticGradShafranovSolution:
             )
         )
 
-    def psi_particular_dx2(self, x: float, y: float) -> float:
-        """Second derivative of the particular solution with respect to x.
+    def psi_particular_dx2(self, x: float, _y: float) -> float:
+        """Second derivative of the particular solution with respect to x (∂²Ψₚ/∂x²).
 
         Notes
         -----
@@ -607,7 +633,7 @@ class AnalyticGradShafranovSolution:
 
     def psi_bar(self, x: float, y: float) -> float:
         """
-        Returns the dimensionless Solovev flux function as a function of the
+        Returns the dimensionless Solovev flux function as a function  of the
         normalized radial coordinate x and vertical coordinate y.
         """
         psi = self.psi_particular(x=x, _y=y)
@@ -619,10 +645,10 @@ class AnalyticGradShafranovSolution:
         return psi
 
     def psi_bar_dx(self, x: float, y: float) -> float:
-        """First derivative of poloidal flux function normalised to psi0 with respect
+        """First derivative of poloidal flux function normalised to Ψ₀ with respect
         to x.
         """
-        psi_dx = self.psi_particular_dx(x=x, y=y)
+        psi_dx = self.psi_particular_dx(x=x, _y=y)
 
         # Add weighted sum of the homogeneous solutions.
         for c, p in zip(
@@ -633,7 +659,7 @@ class AnalyticGradShafranovSolution:
         return psi_dx
 
     def psi_bar_dy(self, x: float, y: float) -> float:
-        """First derivative of poloidal flux function normalised to psi0 with respect
+        """First derivative of poloidal flux function normalised to Ψ₀ with respect
         to y.
         """
         psi_dy = 0
@@ -647,10 +673,10 @@ class AnalyticGradShafranovSolution:
         return psi_dy
 
     def psi_bar_dx2(self, x: float, y: float) -> float:
-        """Second derivative of poloidal flux function normalised to psi0 with respect
+        """Second derivative of poloidal flux function normalised to Ψ₀ with respect
         to x.
         """
-        psi_dx2 = self.psi_particular_dx2(x=x, y=y)
+        psi_dx2 = self.psi_particular_dx2(x=x, _y=y)
 
         # Add weighted sum of the homogeneous solutions.
         for c, p in zip(
@@ -661,7 +687,7 @@ class AnalyticGradShafranovSolution:
         return psi_dx2
 
     def psi_bar_dy2(self, x: float, y: float) -> float:
-        """Second derivative of poloidal flux function normalised to psi0 with
+        """Second derivative of poloidal flux function normalised to Ψ₀ with
         respect to y.
         """
         psi_dy2 = 0
@@ -679,7 +705,9 @@ class AnalyticGradShafranovSolution:
         return self.psi_0 * self.psi_bar(x=r / self.rmajor, y=z / self.rmajor)
 
     def psi_dr(self, r: float, z: float) -> float:
-        """First derivative of the poloidal flux function with respect to r [Wb / m]."""
+        """First derivative of the true poloidal flux function with respect
+        to r [Wb / m].
+        """
         return (
             self.psi_0
             * self.psi_bar_dx(x=r / self.rmajor, y=z / self.rmajor)
@@ -687,7 +715,9 @@ class AnalyticGradShafranovSolution:
         )
 
     def psi_dz(self, r: float, z: float) -> float:
-        """First derivative of the poloidal flux function with respect to z [Wb / m]."""
+        """First derivative of the true poloidal flux function with respect
+        to z [Wb/m].
+        """
         return (
             self.psi_0
             * self.psi_bar_dy(x=r / self.rmajor, y=z / self.rmajor)
@@ -695,19 +725,34 @@ class AnalyticGradShafranovSolution:
         )
 
     def psi_norm(self, r: float, z: float) -> float:
+        """Normalized poloidal flux function."""
         return self.psi_bar_to_psi_norm(
             self.psi_bar(x=r / self.rmajor, y=z / self.rmajor)
         )
 
     def magnetic_field(self, r: float, z: float) -> tuple[float, float, float]:
-        """(r, phi, z) components of the magnetic field [T]."""
+        """(r, phi, z) components of the magnetic field [T].
+
+        Parameters
+        ----------
+        r : float
+            Radial coordinate [m].
+        z : float
+            Vertical coordinate [m].
+
+        Returns
+        -------
+        tuple[float, float, float]
+            (r, phi, z) components of the magnetic field [T].
+
+
+        """
         psi_norm = self.psi_norm(r, z)
-        # NOTE: Need a test for this!
-        b_r = self.psi_dz(r, z) / r
-        b_z = -self.psi_dr(r, z) / r
+        b_r = self.psi_dz(r=r, z=z) / r
+        b_z = -self.psi_dr(r=r, z=z) / r
 
         # We account for the direction of the toroidal field in f_function.
-        b_toroidal = self.f_function(psi_norm) / r
+        b_toroidal = self.f_function(psi_norm=psi_norm) / r
         # If plasma current is negative poloidal field reverses sign.
         if not self.c_plasma_anticlockwise:
             b_r *= -1
@@ -865,9 +910,6 @@ class AnalyticGradShafranovSolution:
             tolerance (float): Convergence tolerance for the Newton's method.
             max_iterations (int): Maximum number of iterations allowed.
 
-        Returns
-        -------
-            None: Updates the `self.magnetic_axis` attribute with the calculated position.
         """
         # Initial guess for the magnetic axis (near the geometric center).
         magnetic_axis = np.array([1.0, 0.0])
@@ -939,7 +981,22 @@ class AnalyticGradShafranovSolution:
 
         return x, y
 
-    def d_shape_boundary_derivatives(self, theta: float) -> float:
+    def d_shape_boundary_derivatives(
+        self, theta: float
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """Calculate derivatives of the D-shaped boundary contour.
+
+        Parameters
+        ----------
+        theta : float
+            Poloidal angle at which to evaluate the derivatives.
+
+        Returns
+        -------
+        tuple[np.ndarray, np.ndarray]
+            Derivatives of the D-shaped boundary contour with respect to theta.
+
+        """
         theta = np.array(theta)
         xprime, yprime = np.zeros_like(theta), np.zeros_like(theta)
         mask = np.logical_and(theta >= 0, theta <= np.pi)
@@ -1017,8 +1074,8 @@ class AnalyticGradShafranovSolution:
             xprime, yprime = self.d_shape_boundary_derivatives(theta)
             rprime = (xprime**2 + yprime**2) ** 0.5
 
-            self.normalised_circumference = np.trapz(rprime, theta)
-            self.normalised_volume = -np.trapz(x * xprime * y, theta)
+            self.normalised_circumference = sp.integrate.simpson(rprime, theta)
+            self.normalised_volume = -sp.integrate.simpson(x * xprime * y, theta)
         else:
             circumference = 0
             volume = 0
@@ -1110,10 +1167,21 @@ class AnalyticGradShafranovSolution:
         # Evaluate value of psi_norm at the magnetic axis.
         self.psi_axis = self.psi(*self.magnetic_axis)
 
-    def calculate_q_profile(self, mesh_size: int = 30):
-        """Calculate q profile."""
-        rmajor = self.rmajor
+    def calculate_q_profile(self, mesh_size: int = 30) -> None:
+        """Calculate q profile.
 
+        Parameters
+        ----------
+        mesh_size : int, optional
+            The number of points in the mesh grid for calculating the q profile,
+            by default 30.
+
+        Raises
+        ------
+        ValueError
+            If unable to find a contour for a given psi norm.
+
+        """
         # The q profile q(psi) = 1/(2*pi) * int{F(psi) / (r |grad{psi}|)} dl_p where
         # l_p is the poloidal distance along the surface of constant psi.
         q_profile = np.zeros(mesh_size)
@@ -1121,7 +1189,7 @@ class AnalyticGradShafranovSolution:
         # Calculate (x, y) locations of contours.
         xmesh, ymesh = self.metric_computation_grid()
         dxmesh, dymesh = xmesh[-1] - xmesh[0], ymesh[-1] - ymesh[0]
-        psi_bar_axis = self.psi_bar(*self.magnetic_axis / rmajor)
+        psi_bar_axis = self.psi_bar(*self.magnetic_axis / self.rmajor)
         psi_bar_norm_grid = (
             self.psi_bar(*np.meshgrid(xmesh, ymesh, indexing="ij")) / psi_bar_axis
         )
@@ -1165,18 +1233,19 @@ class AnalyticGradShafranovSolution:
             f = abs(self.f_function(psi_norm))
 
             # Integrate using trapezium rule.
-            lp = rmajor * calculate_arclength(x, y)  # Poloidal arclength [m].
-            q_profile[i] = f * np.trapz(integrand(x, y), lp)
+            lp = self.rmajor * calculate_arclength(x, y)  # Poloidal arclength [m].
+            q_profile[i] = f * sp.integrate.simpson(integrand(x, y), lp)
         # Use pre-computed boundary contour for separatrix. As there is a
         # saddle point the matplotlib contours will sometimes follow the contours
         # towards the divertor instead of following the high field side boundary.
-        x_bdy, y_bdy = self.boundary_radius / rmajor, self.boundary_height / rmajor
+        x_bdy, y_bdy = (
+            self.boundary_radius / self.rmajor,
+            self.boundary_height / self.rmajor,
+        )
 
-        # Integrate using trapezium rule. As we are COCOS 11 q > 0 so take absolute
-        # value of F.
         f = abs(self.f_function(1))
-        lp = rmajor * calculate_arclength(x_bdy, y_bdy)  # Poloidal arclength [m].
-        q_profile[-1] = f * np.trapz(integrand(x_bdy, y_bdy), lp)
+        lp = self.rmajor * calculate_arclength(x_bdy, y_bdy)  # Poloidal arclength [m].
+        q_profile[-1] = f * sp.integrate.simpson(integrand(x_bdy, y_bdy), lp)
 
         # Scale q profile by 2*pi to match definition of poloidal flux function psi.
         q_profile /= 2 * np.pi
@@ -1227,56 +1296,56 @@ class AnalyticGradShafranovSolution:
         """
         return (1 - psi_norm) * self.psi_axis / self.psi_0
 
-    def psi_toroidal(self, r, z):
-        """Toroidal flux function."""
-        psi_poloidal = self.psi(r, z)
-        return self.poloidal_to_toroidal_flux(psi_poloidal)
+    def pressure_kpa(self, psi_norm: float) -> float:
+        """Plasma pressure as a function of the normalised poloidal flux [kPa].
 
-    def psi_norm_toroidal(self, r, z):
-        psi_toroidal = self.psi_toroidal(r, z)
-        return psi_toroidal / self.psi_separatrix_toroidal
+        Parameters
+        ----------
+        psi_norm : float
+            Normalised poloidal flux.
 
-    def psi_norm_poloidal_to_toroidal(self, psi_norm_poloidal):
-        """Convert normalised poloidal flux coordinate to normalised toroidal flux
-        coordinate.
+        Returns
+        -------
+        float
+            Plasma pressure [kPa].
+
+        Notes
+        -----
+        - This is given by Equation 17 of the reference
+
         """
-        psi_poloidal = self.psi_axis * (1 - psi_norm_poloidal)
-        psi_toroidal = self.poloidal_to_toroidal_flux(psi_poloidal)
-        return psi_toroidal / self.psi_separatrix_toroidal
-
-    def psi_norm_toroidal_to_poloidal(self, psi_norm_toroidal):
-        """Convert normalised toroidal flux coordinate to normalised poloidal flux
-        coordinate.
-        """
-        psi_toroidal = self.psi_separatrix_toroidal * psi_norm_toroidal
-        psi_poloidal = self.toroidal_to_poloidal_flux(psi_toroidal)
-        return 1 - (psi_poloidal / self.psi_axis)
-
-    def pressure_kpa(self, psi_norm: float):
-        """Plasma pressure as a function of the normalised poloidal flux [kPa]."""
-        pressure_parameter = self.pressure_parameter
         # Clip psi to 0 so there is not negative pressure.
         psi_bar = np.clip(self.psi_norm_to_psi_bar(psi_norm), 0, None)
         return (
             1e-3
             * (self.psi_0**2 / self.rmajor**4 / const.mu_0)
-            * (1 + pressure_parameter)
+            * (1 + self.pressure_parameter)
             * psi_bar
         )
 
-    def f_function(self, psi_norm: float):
+    def f_function(self, psi_norm: float) -> float:
         """F function radius * toroidal magnetic field as a function of the normalised
         poloidal flux [Wb/m].
+
+        Parameters
+        ----------
+        psi_norm : float
+            Normalised poloidal flux.
+
+        Returns
+        -------
+        float
+            F function (R * B_toroidal) [Wb/m].
         """
-        rmajor, b_plasma_toroidal_on_axis = self.rmajor, self.b_plasma_toroidal_on_axis
-        psi0, pressure_parameter = self.psi_0, self.pressure_parameter
         # Clip psi to 0 to avoid unphysical magnetic fields.
         psi_bar = np.clip(self.psi_norm_to_psi_bar(psi_norm), 0, None)
         f = (
-            rmajor
+            self.rmajor
             * (
-                b_plasma_toroidal_on_axis**2
-                - (2 * psi0**2 / rmajor**4) * pressure_parameter * psi_bar
+                self.b_plasma_toroidal_on_axis**2
+                - (2 * self.psi_0**2 / self.rmajor**4)
+                * self.pressure_parameter
+                * psi_bar
             )
             ** 0.5
         )
@@ -1488,6 +1557,7 @@ def plot_analytic_equilibrium(
     beta_thermal_poloidal_vol_avg = mfile.get("beta_thermal_poloidal_vol_avg", scan=scan)
     beta_thermal_vol_avg = mfile.get("beta_thermal_vol_avg", scan=scan)
     beta_norm_thermal = mfile.get("beta_norm_thermal", scan=scan)
+    q0 = mfile.get("q0", scan=scan)
 
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
@@ -1756,33 +1826,42 @@ def plot_analytic_equilibrium(
         rel_diff_bnorm = np.nan
     pct_diff_bnorm = rel_diff_bnorm * 100 if np.isfinite(rel_diff_bnorm) else np.nan
 
+    if np.isfinite(q0) and abs(q0) > 0:
+        rel_diff_q0 = (plasma.kink_safety_factor - q0) / q0
+    else:
+        rel_diff_q0 = np.nan
+    pct_diff_q0 = rel_diff_q0 * 100 if np.isfinite(rel_diff_q0) else np.nan
+
     textstr = (
         f"Resolved pressure_parameter, $A$ = {p_opt:.3f}\n"
-        f"Resolved kink safety factor = {plasma.kink_safety_factor:.3f}\n"
         f"Normalised circumference = {plasma.normalised_circumference:.3f}\n"
-        f"Normalised volume = {plasma.normalised_volume:.3f}\n"
+        f"Normalised volume = {plasma.normalised_volume:.3f}\n\n"
+        f"Resolved kink safety factor, $q_{0}$ = {plasma.kink_safety_factor:.3f}\n"
+        f"  Relative to PROCESS $q_0$ = {rel_diff_q0:+.3f}  ({pct_diff_q0:+.2f}%)\n\n"
         # show beta poloidal and the signed relative & percentage difference vs
         # PROCESS value
-        f"Equilibria Beta poloidal = {plasma.beta_poloidal:.6f}\n"
+        f"Equilibria Beta poloidal, $\\langle\\beta_{{p}}\\rangle$ = "
+        f"{plasma.beta_poloidal:.6f}\n"
         f"  Relative to PROCESS poloidal = {rel_diff_bp:+.3f}  ({pct_diff_bp:+.2f}%)\n"
-        f"Equilibria Beta toroidal = {plasma.beta_toroidal:.6f}\n"
+        f"Equilibria Beta toroidal, $\\langle\\beta_{{t}}\\rangle$ = "
+        f"{plasma.beta_toroidal:.6f}\n"
         f"  Relative to PROCESS toroidal = {rel_diff_bt:+.3f}  ({pct_diff_bt:+.2f}%)\n"
-        f"Equilibria Beta total = {plasma.beta_total:.6f}\n"
+        f"Equilibria Beta total, $\\langle\\beta\\rangle$ = {plasma.beta_total:.6f}\n"
         f"  Relative to PROCESS total = {rel_diff_btot:+.3f}  ({pct_diff_btot:+.2f}%)\n"
-        f"Beta normalised = {plasma.beta_normalised:.6f}\n"
+        f"Beta normalised, $\\beta_{{N}}$ = {plasma.beta_normalised:.6f}\n"
         f"  Relative to PROCESS normalised = {rel_diff_bnorm:+.3f}  "
-        f"({pct_diff_bnorm:+.2f}%)\n"
+        f"({pct_diff_bnorm:+.2f}%)\n\n"
         f"$\\Psi_0$ = {plasma.psi_0:.3f} Wb\n"
-        f"$\\Psi_{{axis}}$ = {plasma.psi_axis:.3f} Wb\n"
+        f"$\\Psi_{{axis}}$ = {plasma.psi_axis:.3f} Wb\n\n"
         f"Magnetic axis = ({plasma.magnetic_axis[0]:.3f}, "
         f"{plasma.magnetic_axis[1]:.3f}) m\n"
-        f"Shafranov shift [m] = {plasma.dr_shafranov:.3f}"
+        f"Shafranov shift, $\\Delta r$ = {plasma.dr_shafranov:.3f} m"
     )
 
     # Place the info box in the top-left of the axis
     fig.text(
         0.35,
-        0.85,
+        0.875,
         textstr,
         fontsize=9,
         va="top",
@@ -1831,34 +1910,23 @@ def plot_analytic_equilibrium(
     ax_poloidal_field.set_ylabel("Toroidal Current Density [kA/m$^2$]")
     ax_poloidal_field.set_title("Equilibrium Toroidal Current Density Profile")
 
-    ax_toroidal_field = fig.add_subplot(4, 2, 8)
-    ax_toroidal_field.set_position([0.6, 0.075, 0.35, 0.15])
-
-    b_toroidal = plasma.toroidal_field(r_grid, psi_n)
-    b_toroidal_masked = np.ma.masked_where((psi_n < 0) | (psi_n > 1), b_toroidal)
-
-    c_toroidal = ax_toroidal_field.contourf(
-        r_plot,
-        z_plot,
-        b_toroidal_masked.T,
-        levels=20,
-        cmap="cividis",
-    )
-    ax_toroidal_field.contour(
-        r_plot,
-        z_plot,
-        b_toroidal_masked.T,
-        colors="black",
-        linewidths=0.4,
-        levels=10,
-    )
-    fig.colorbar(c_toroidal, ax=ax_toroidal_field, label="Toroidal Field [T]")
-    ax_toroidal_field.set_xlabel("Radius [m]")
-    ax_toroidal_field.set_ylabel("Height [m]")
-    ax_toroidal_field.set_title("Equilibrium Toroidal Field")
-    ax_toroidal_field.set_aspect("equal")
-    ax_toroidal_field.grid(True, linestyle="--", alpha=0.5)
-    ax_toroidal_field.minorticks_on()
+    ax_magnetic_field = fig.add_subplot(4, 2, 8)
+    ax_magnetic_field.set_position([
+        0.6,
+        0.075,
+        0.35,
+        0.15,
+    ])  # [left, bottom, width, height]
+    b_radial, b_toroidal, b_poloidal = plasma.magnetic_field(r_plot, 0.0)
+    ax_magnetic_field.plot(r_plot, b_radial, label=r"$B_R$")
+    ax_magnetic_field.plot(r_plot, b_toroidal, label=r"$B_\phi$")
+    ax_magnetic_field.plot(r_plot, b_poloidal, label=r"$B_\theta$")
+    ax_magnetic_field.set_xlabel("Radius [m]")
+    ax_magnetic_field.set_ylabel("Magnetic Field [T]")
+    ax_magnetic_field.set_title("Equilibrium Magnetic Field Profile")
+    ax_magnetic_field.grid(True, linestyle="--", alpha=0.5)
+    ax_magnetic_field.minorticks_on()
+    ax_magnetic_field.legend()
 
     # Add title to the equilibrium analysis page
     fig.suptitle("Solov'ev Profiles Equilibrium Analysis", fontsize=16, y=0.95)
