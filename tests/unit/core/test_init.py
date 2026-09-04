@@ -16,7 +16,7 @@ def _validation_error_message(data):
     on whether an error was raised.
     """
     try:
-        check_process(None, data)
+        check_process(data, None)
     except ProcessValidationError as error:
         return str(error)
     return ""
@@ -32,7 +32,7 @@ def test_zero_thickness_superconducting_tf_is_rejected():
     data.build.dr_tf_inboard = 0.0
 
     with pytest.raises(ProcessValidationError, match="dr_tf_inboard"):
-        check_process(None, data)
+        check_process(data, None)
 
 
 def test_explicit_tf_thickness_is_accepted():
@@ -65,7 +65,7 @@ def test_zero_thickness_resistive_tf_is_rejected():
     data.build.dr_tf_inboard = 0.0
 
     with pytest.raises(ProcessValidationError, match="dr_tf_inboard"):
-        check_process(None, data)
+        check_process(data, None)
 
 
 def test_explicit_thickness_resistive_tf_is_accepted():
@@ -92,7 +92,7 @@ def test_thickness_iteration_variable_does_not_exempt(bad_value):
     data.numerics.ixc[0] = 13
 
     with pytest.raises(ProcessValidationError, match="dr_tf_inboard"):
-        check_process(None, data)
+        check_process(data, None)
 
 
 def test_stellarator_is_not_checked():
