@@ -116,7 +116,36 @@ def test_embedded_stress_intensity_factor(
             0.0026699999999999996,
             1.5707963267948966,
             35.744426954844926,
-        )
+        ),
+        # a > c branch, phi = pi/2 and phi = 0. Expected values computed
+        # independently from the Newman-Raju surface-crack equations
+        # (NASA TM, "Stress-Intensity Factor Equations for Cracks in
+        # Three-Dimensional Finite Bodies Subjected to Tension and Bending
+        # Loads") for a/c > 1 with zero bending:
+        # Q = 1 + 1.464(c/a)^1.65, M1 = sqrt(c/a)(1 + 0.04 c/a),
+        # M2 = 0.2(c/a)^4, M3 = -0.11(c/a)^4,
+        # g = 1 + [0.1 + 0.35 (c/a)(a/t)^2](1 - sin(phi))^2,
+        # f_phi = [(c/a)^2 sin^2(phi) + cos^2(phi)]^0.25,
+        # f_w = sec[pi c/(2w) sqrt(a/t)]^0.5,
+        # K = sigma (M1 + M2 (a/t)^2 + M3 (a/t)^4) g f_phi f_w sqrt(pi a / Q)
+        (
+            659.99351867335338,
+            0.0063104538380405924,
+            0.0063104538380405924,
+            0.0026699999999999996,
+            0.00088999999999999995,
+            1.5707963267948966,
+            18.451605120658158,
+        ),
+        (
+            659.99351867335338,
+            0.0063104538380405924,
+            0.0063104538380405924,
+            0.0026699999999999996,
+            0.00088999999999999995,
+            0.0,
+            35.82251644569079,
+        ),
     ],
 )
 def test_surface_stress_intensity_factor(
