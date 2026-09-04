@@ -4437,7 +4437,8 @@ def peak_b_field_at_pf_coil(
     Raises
     ------
     ProcessValueError
-        Illegal value of t_b_field_peak
+        Illegal value of t_b_field_peak: i.e. could not determine whether
+        the peak current occurred at pulse start, flat-top, or pulse end.
 
     Notes
     -----
@@ -4478,7 +4479,9 @@ def peak_b_field_at_pf_coil(
             t_b_field_peak = 5
         else:
             raise ProcessValueError(
-                "Illegal value of it; possible rounding error",
+                "Illegal value of t_b_field_peak; "
+                "could not determine whether the peak current occurred at pulse start, "
+                "flat-top, or pulse end. Possible rounding error",
                 t_b_field_peak=t_b_field_peak,
             )
 
