@@ -1,6 +1,7 @@
 """Module containing routines for build calculations"""
 
 import logging
+from dataclasses import dataclass
 from enum import IntEnum, unique
 
 import numpy as np
@@ -22,6 +23,14 @@ from process.models.tfcoil.base import TFCoilShapeModel
 from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class RZPoint:
+    """A generic container for data that has r and z components"""
+
+    r: float
+    z: float
 
 
 @unique
@@ -593,21 +602,15 @@ class Build(Model):
                 thetao=thetao,
                 rco=rco,
                 rci=rci,
-                rxpt=rxpt,
-                zxpt=zxpt,
-                rspi=rspi,
-                zspi=zspi,
+                xpt=RZPoint(r=rxpt, z=zxpt),
+                spi=RZPoint(r=rspi, z=zspi),
                 zspo=zspo,
                 # Position of inner strike points
-                rplti=rspi + inner_plte_cos,
-                rplbi=rspi - inner_plte_cos,
-                zplti=zplti,
-                zplbi=zplbi,
+                plti=RZPoint(r=rspi + inner_plte_cos, z=zplti),
+                plbi=RZPoint(r=rspi - inner_plte_cos, z=zplbi),
                 # Position of outer plate ends
-                rplto=self.data.build.rspo - outer_plte_cos,
-                rplbo=self.data.build.rspo + outer_plte_cos,
-                zplto=zplto,
-                zplbo=zplbo,
+                plto=RZPoint(r=self.data.build.rspo - outer_plte_cos, z=zplto),
+                plbo=RZPoint(r=self.data.build.rspo + outer_plte_cos, z=zplbo),
             )
 
         return divht
@@ -621,19 +624,13 @@ class Build(Model):
         thetao,
         rco,
         rci,
-        rxpt,
-        zxpt,
-        rspi,
-        zspi,
+        xpt,
+        spi,
         zspo,
-        rplti,
-        rplbi,
-        zplti,
-        zplbi,
-        rplto,
-        rplbo,
-        zplto,
-        zplbo,
+        plti,
+        plbi,
+        plto,
+        plbo,
     ):
         """Divertor geometry output"""
         po.oheadr(self.outfile, "Divertor build and plasma position")
@@ -668,8 +665,8 @@ class Build(Model):
                 ),
                 ("Plasma outer arc radius of curvature (m)", "(rco)", rco),
                 ("Plasma inner arc radius of curvature (m)", "(rci)", rci),
-                ("Plasma lower X-pt, radial (m)", "(rxpt)", rxpt),
-                ("Plasma lower X-pt, vertical (m)", "(zxpt)", zxpt),
+                ("Plasma lower X-pt, radial (m)", "(rxpt)", xpt.r),
+                ("Plasma lower X-pt, vertical (m)", "(zxpt)", xpt.z),
                 (
                     "Poloidal plane angle between vertical and inner leg (rad)",
                     "(thetai)",
@@ -702,18 +699,18 @@ class Build(Model):
                 ),
                 ("Inner divertor plate length (m)", "(plleni)", self.data.build.plleni),
                 ("Outer divertor plate length (m)", "(plleno)", self.data.build.plleno),
-                ("Inner strike point, radial (m)", "(rspi)", rspi),
-                ("Inner strike point, vertical (m)", "(zspi)", zspi),
-                ("Inner plate top, radial (m)", "(rplti)", rplti),
-                ("Inner plate top, vertical (m)", "(zplti)", zplti),
-                ("Inner plate bottom, radial (m)", "(rplbi)", rplbi),
-                ("Inner plate bottom, vertical (m)", "(zplbi)", zplbi),
+                ("Inner strike point, radial (m)", "(rspi)", spi.r),
+                ("Inner strike point, vertical (m)", "(zspi)", spi.z),
+                ("Inner plate top, radial (m)", "(rplti)", plti.r),
+                ("Inner plate top, vertical (m)", "(zplti)", plti.z),
+                ("Inner plate bottom, radial (m)", "(rplbi)", plbi.r),
+                ("Inner plate bottom, vertical (m)", "(zplbi)", plbi.z),
                 ("Outer strike point, radial (m)", "(rspo)", self.data.build.rspo),
                 ("Outer strike point, vertical (m)", "(zspo)", zspo),
-                ("Outer plate top, radial (m)", "(rplto)", rplto),
-                ("Outer plate top, vertical (m)", "(zplto)", zplto),
-                ("Outer plate bottom, radial (m)", "(rplbo)", rplbo),
-                ("Outer plate bottom, vertical (m)", "(zplbo)", zplbo),
+                ("Outer plate top, radial (m)", "(rplto)", plto.r),
+                ("Outer plate top, vertical (m)", "(zplto)", plto.z),
+                ("Outer plate bottom, radial (m)", "(rplbo)", plbo.r),
+                ("Outer plate bottom, vertical (m)", "(zplbo)", plbo.z),
                 ("Calculated maximum divertor height (m)", "(divht)", divht),
             ]:
                 po.ovarre(self.outfile, desc, name, var, "OP ")
@@ -746,12 +743,12 @@ class Build(Model):
                     "(dz_tf_plasma_centre_offset)",
                     self.data.build.dz_tf_plasma_centre_offset,
                 ),
-                ("Plasma upper X-pt, radial (m)", "(rxpt)", rxpt),
-                ("Plasma upper X-pt, vertical (m)", "(-zxpt)", -zxpt),
+                ("Plasma upper X-pt, radial (m)", "(rxpt)", xpt.r),
+                ("Plasma upper X-pt, vertical (m)", "(-zxpt)", -xpt.z),
                 ("Plasma outer arc radius of curvature (m)", "(rco)", rco),
                 ("Plasma inner arc radius of curvature (m)", "(rci)", rci),
-                ("Plasma lower X-pt, radial (m)", "(rxpt)", rxpt),
-                ("Plasma lower X-pt, vertical (m)", "(zxpt)", zxpt),
+                ("Plasma lower X-pt, radial (m)", "(rxpt)", xpt.r),
+                ("Plasma lower X-pt, vertical (m)", "(zxpt)", xpt.z),
                 (
                     "Poloidal plane angle between vertical and inner leg (rad)",
                     "(thetai)",
@@ -784,38 +781,38 @@ class Build(Model):
                 ),
                 ("Inner divertor plate length (m)", "(plleni)", self.data.build.plleni),
                 ("Outer divertor plate length (m)", "(plleno)", self.data.build.plleno),
-                ("Upper inner strike point, radial (m)", "(rspi)", rspi),
-                ("Upper inner strike point, vertical (m)", "(-zspi)", -zspi),
-                ("Upper inner plate top, radial (m)", "(rplti)", rplti),
-                ("Upper inner plate top, vertical (m)", "(-zplti)", -zplti),
-                ("Upper inner plate bottom, radial (m)", "(rplbi)", rplbi),
-                ("Upper inner plate bottom, vertical (m)", "(-zplbi)", -zplbi),
+                ("Upper inner strike point, radial (m)", "(rspi)", spi.r),
+                ("Upper inner strike point, vertical (m)", "(-zspi)", -spi.z),
+                ("Upper inner plate top, radial (m)", "(rplti)", plti.r),
+                ("Upper inner plate top, vertical (m)", "(-zplti)", -plti.z),
+                ("Upper inner plate bottom, radial (m)", "(rplbi)", plbi.r),
+                ("Upper inner plate bottom, vertical (m)", "(-zplbi)", -plbi.z),
                 (
                     "Upper outer strike point, radial (m)",
                     "(rspo)",
                     self.data.build.rspo,
                 ),
                 ("Upper outer strike point, vertical (m)", "(-zspo)", -zspo),
-                ("Upper outer plate top, radial (m)", "(rplto)", rplto),
-                ("Upper outer plate top, vertical (m)", "(-zplto)", -zplto),
-                ("Upper outer plate bottom, radial (m)", "(rplbo)", rplbo),
-                ("Upper outer plate bottom, vertical (m)", "(-zplbo)", -zplbo),
-                ("Lower inner strike point, radial (m)", "(rspi)", rspi),
-                ("Lower inner strike point, vertical (m)", "(zspi)", zspi),
-                ("Lower inner plate top, radial (m)", "(rplti)", rplti),
-                ("Lower inner plate top, vertical (m)", "(zplti)", zplti),
-                ("Lower inner plate bottom, radial (m)", "(rplbi)", rplbi),
-                ("Lower inner plate bottom, vertical (m)", "(zplbi)", zplbi),
+                ("Upper outer plate top, radial (m)", "(rplto)", plto.r),
+                ("Upper outer plate top, vertical (m)", "(-zplto)", -plto.z),
+                ("Upper outer plate bottom, radial (m)", "(rplbo)", plbo.r),
+                ("Upper outer plate bottom, vertical (m)", "(-zplbo)", -plbo.z),
+                ("Lower inner strike point, radial (m)", "(rspi)", spi.r),
+                ("Lower inner strike point, vertical (m)", "(zspi)", spi.z),
+                ("Lower inner plate top, radial (m)", "(rplti)", plti.r),
+                ("Lower inner plate top, vertical (m)", "(zplti)", plti.z),
+                ("Lower inner plate bottom, radial (m)", "(rplbi)", plbi.r),
+                ("Lower inner plate bottom, vertical (m)", "(zplbi)", plbi.z),
                 (
                     "Lower outer strike point, radial (m)",
                     "(rspo)",
                     self.data.build.rspo,
                 ),
                 ("Lower outer strike point, vertical (m)", "(zspo)", zspo),
-                ("Lower outer plate top, radial (m)", "(rplto)", rplto),
-                ("Lower outer plate top, vertical (m)", "(zplto)", zplto),
-                ("Lower outer plate bottom, radial (m)", "(rplbo)", rplbo),
-                ("Lower outer plate bottom, vertical (m)", "(zplbo)", zplbo),
+                ("Lower outer plate top, radial (m)", "(rplto)", plto.r),
+                ("Lower outer plate top, vertical (m)", "(zplto)", plto.z),
+                ("Lower outer plate bottom, radial (m)", "(rplbo)", plbo.r),
+                ("Lower outer plate bottom, vertical (m)", "(zplbo)", plbo.z),
                 ("Calculated maximum divertor height (m)", "(divht)", divht),
             ]:
                 po.ovarre(self.outfile, desc, name, var, "OP ")
