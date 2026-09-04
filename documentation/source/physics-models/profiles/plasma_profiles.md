@@ -636,6 +636,47 @@ The same function is run from the `i_plasma_pedestal == 0 ` profile case, found 
 
 -----
 
+
+
+## Calculate profile volume average | `calculate_vol_avg_of_profile()`
+
+General method to calculate the volume averaged value of any normalised radial profile.
+
+### Derivation 
+
+The integral $I$ of any quantity $G(\rho)$ over the volume of the plasma where $\rho$ is the normalised minor radius is:
+
+$$
+I=\int_{}^{} G(\rho) \ dV
+$$
+
+The volume element is the surface area of the toroidal surface times the thickness $dV=2\pi R_0 2\pi\kappa r  dr  $
+
+$$
+I=\int_{0}^{1} G(\rho) 2\pi R_0 2\pi\kappa r  \ dr 
+$$
+
+Substituting the normalised minor radius coordinate $\rho=r/a$, and bringing the constants out in front,
+
+$$
+I=4 \pi^2 R_0 \kappa a^2 \int_{0}^{1} G(\rho)  \rho  \ d\rho 
+$$
+
+However, if we calculate the volume $V$, the exact same integral is used where $G=1$, 
+
+$$
+V=4 \pi^2 R_0 \kappa a^2 \int_{0}^{1}   \rho  \ d\rho = \frac{1}{2}  4 \pi^2 R_0 \kappa a^2
+$$
+
+Therefore the general volume integral of  $G(\rho)$, where $V$ is the volume, is
+
+$$
+I=2 V \int_{0}^{1} G(\rho)  \rho  \ d\rho 
+$$
+
+If $G$ is a density then $2  \int_{0}^{1} G(\rho)  \rho  \ d\rho$ is the volume averaged density.
+
+
 ## Key Constraints
 
 --------
