@@ -31,7 +31,8 @@ class PlasmaProfile(Model):
             outfile (str): The output file path.
             neprofile (ElectronDensityProfile): An instance of the ElectronDensityProfile
             class.
-            teprofile (ElectronTemperatureProfile): An instance of the ElectronTemperatureProfile class.
+            teprofile (ElectronTemperatureProfile): An instance of the
+            ElectronTemperatureProfile class.
         """
         # Default profile_size = 201, but it's possible to experiment with this value.
         # See `n_plasma_profile_elements`
