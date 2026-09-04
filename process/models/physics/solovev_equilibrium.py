@@ -1518,20 +1518,14 @@ class SingleNull(AnalyticGradShafranovSolution):
         use_d_shaped_model: bool = False,
         lower_x: bool = True,
     ):
-        if lower_x:
-            upper_point = ExtremalPoint(
-                elongation, triangularity, False, squareness=squareness
-            )
-            lower_point = ExtremalPoint(
-                elongation, triangularity, True, squareness=squareness
-            )
-        else:
-            upper_point = ExtremalPoint(
-                elongation, triangularity, True, squareness=squareness
-            )
-            lower_point = ExtremalPoint(
-                elongation, triangularity, False, squareness=squareness
-            )
+        xpoint_u, xpoint_l = (False, True) if lower_x else (True, False)
+
+        upper_point = ExtremalPoint(
+            elongation, triangularity, xpoint_u, squareness=squareness
+        )
+        lower_point = ExtremalPoint(
+            elongation, triangularity, xpoint_l, squareness=squareness
+        )
 
         super().__init__(
             rmajor,
