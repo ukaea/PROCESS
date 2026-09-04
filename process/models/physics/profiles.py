@@ -270,6 +270,38 @@ class ElectronDensityProfile(Profile):
             nd_on_axis = 1.0e-6
         return nd_on_axis
 
+    @staticmethod
+    def calculate_parabolic_profile_on_axis_density(
+        nd_vol_average: float,
+        alphan: float,
+    ) -> float:
+        """Calculates the core density (n₀) of a parabolic profile.
+
+        Parameters
+        ----------
+        nd_vol_average: float,
+            The volume averaged density (⟨n⟩) [m⁻³].
+        alphan: float,
+            The density peaking parameter (αₙ).
+
+        Returns
+        -------
+        :
+            The core on-axis density (n₀) [/m³].
+        """
+        nd_on_axis = nd_vol_average * (1.0 + alphan)
+
+        if nd_on_axis < 0.0:
+            # Allows solver to continue and
+            # warns the user to raise the lower bound on nd_plasma_electrons_vol_avg
+            # if the run did not converge
+            logger.error(
+                "nd_on_axis is going negative when solving. Please raise the value of "
+                "nd_plasma_electrons_vol_avg (⟨nₑ⟩) and or its lower limit."
+            )
+            nd_on_axis = 1.0e-6
+        return nd_on_axis
+
     def set_pedestal_and_separatrix_values(self):
         """Sets the pedestal and separatrix density values based on the user input
         or greenwald fraction method.
@@ -324,8 +356,10 @@ class ElectronDensityProfile(Profile):
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
         ):
             self.data.physics.nd_plasma_electron_on_axis = (
-                self.data.physics.nd_plasma_electrons_vol_avg
-                * (1.0 + self.data.physics.alphan)
+                self.calculate_parabolic_profile_on_axis_density(
+                    nd_vol_average=self.data.physics.nd_plasma_electrons_vol_avg,
+                    alphan=self.data.physics.alphan,
+                )
             )
         elif (
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
@@ -444,7 +478,7 @@ class ElectronTemperatureProfile(Profile):
         alphat: float,
         tbeta: float,
     ) -> float:
-        """Calculates the core density (T₀) of a pedestalised profile.
+        """Calculates the core on-axis temperature (T₀) of a pedestalised profile.
 
         Parameters
         ----------
@@ -495,6 +529,30 @@ class ElectronTemperatureProfile(Profile):
             )
         )
 
+    @staticmethod
+    def calculate_parabolic_profile_on_axis_temperature(
+        temp_vol_avg_kev: float,
+        alphat: float,
+    ) -> float:
+        """Calculates the core on-axis temperature (T₀) of a parabolic profile.
+
+        Parameters
+        ----------
+        temp_vol_avg_kev :
+            Volume average temperature (⟨T⟩) [keV].
+        alphat :
+            Temperature peaking parameter (αₜ).
+
+        Returns
+        -------
+        :
+            The core on-axis temperature (T₀) [keV]
+
+        """
+        #  Calculate core temperature
+
+        return temp_vol_avg_kev * (1.0 + alphat)
+
     def set_physics_variables(self):
         """Calculates and sets physics variables required for the temperature profile."""
         if (
@@ -502,8 +560,10 @@ class ElectronTemperatureProfile(Profile):
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
         ):
             self.data.physics.temp_plasma_electron_on_axis_kev = (
-                self.data.physics.temp_plasma_electron_vol_avg_kev
-                * (1.0 + self.data.physics.alphat)
+                self.calculate_parabolic_profile_on_axis_temperature(
+                    self.data.physics.temp_plasma_electron_vol_avg_kev,
+                    self.data.physics.alphat,
+                )
             )
         elif (
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
