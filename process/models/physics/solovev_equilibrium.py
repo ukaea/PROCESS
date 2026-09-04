@@ -5,7 +5,6 @@ from dataclasses import astuple, dataclass
 
 import matplotlib.pyplot as plt
 import numpy as np
-import numpy.typing as npt
 import scipy.constants as const
 from scipy.interpolate import interp1d
 from skimage import measure
@@ -1039,17 +1038,15 @@ class AnalyticGradShafranovSolution:
             self.normalised_circumference = circumference / self.rmajor
             self.normalised_volume = -volume / self.rmajor**3
 
-    def metric_computation_grid(self) -> tuple[npt.NDArray[float], npt.NDArray[float]]:
+    def metric_computation_grid(self) -> tuple[np.ndarray, np.ndarray]:
         """
-        Grid of normalised radius x = r / rmajor and height y = z / rmajor used to calculate numerical integrals
-        for calculating the plasma current and plasma beta.
+        Grid of normalised radius x = r / rmajor and height y = z / rmajor used to
+        calculate numerical integrals for calculating the plasma current and plasma beta.
         """
-        k_up, k_down = (
-            self.upper_elongation,
-            self.lower_elongation,
-        )
         x = np.linspace(1 - self.eps, 1 + self.eps, 100)
-        y = np.linspace(-self.eps * k_down, self.eps * k_up, 101)
+        y = np.linspace(
+            -self.eps * self.lower_elongation, self.eps * self.upper_elongation, 101
+        )
         return x, y
 
     def calculate_metrics(self):
@@ -1085,6 +1082,9 @@ class AnalyticGradShafranovSolution:
         psix_integral = np.sum(psix_integrand) * dxdy
 
         # Calculate beta of plasma.
+        # Calculate poloidal, toroidal, total and normalised beta based on the integrals
+        # computed above.
+        # Equation 19 from the reference paper.
         self.beta_poloidal = (
             (
                 2
@@ -1606,7 +1606,8 @@ def plot_analytic_equilibrium(
     axis.set_ylabel(r"Height [m]")
     axis.set_aspect("equal")
 
-    psi_n = plasma.psi_norm(*np.meshgrid(r_plot, z_plot, indexing="ij"))
+    r_grid, z_grid = np.meshgrid(r_plot, z_plot, indexing="ij")
+    psi_n = plasma.psi_norm(r_grid, z_grid)
 
     # Plot contours of normalised poloidal flux.
     c = axis.contourf(
@@ -1829,6 +1830,35 @@ def plot_analytic_equilibrium(
     ax_poloidal_field.minorticks_on()
     ax_poloidal_field.set_ylabel("Toroidal Current Density [kA/m$^2$]")
     ax_poloidal_field.set_title("Equilibrium Toroidal Current Density Profile")
+
+    ax_toroidal_field = fig.add_subplot(4, 2, 8)
+    ax_toroidal_field.set_position([0.6, 0.075, 0.35, 0.15])
+
+    b_toroidal = plasma.toroidal_field(r_grid, psi_n)
+    b_toroidal_masked = np.ma.masked_where((psi_n < 0) | (psi_n > 1), b_toroidal)
+
+    c_toroidal = ax_toroidal_field.contourf(
+        r_plot,
+        z_plot,
+        b_toroidal_masked.T,
+        levels=20,
+        cmap="cividis",
+    )
+    ax_toroidal_field.contour(
+        r_plot,
+        z_plot,
+        b_toroidal_masked.T,
+        colors="black",
+        linewidths=0.4,
+        levels=10,
+    )
+    fig.colorbar(c_toroidal, ax=ax_toroidal_field, label="Toroidal Field [T]")
+    ax_toroidal_field.set_xlabel("Radius [m]")
+    ax_toroidal_field.set_ylabel("Height [m]")
+    ax_toroidal_field.set_title("Equilibrium Toroidal Field")
+    ax_toroidal_field.set_aspect("equal")
+    ax_toroidal_field.grid(True, linestyle="--", alpha=0.5)
+    ax_toroidal_field.minorticks_on()
 
     # Add title to the equilibrium analysis page
     fig.suptitle("Solov'ev Profiles Equilibrium Analysis", fontsize=16, y=0.95)
