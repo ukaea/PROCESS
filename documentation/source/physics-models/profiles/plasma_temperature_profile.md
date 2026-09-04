@@ -1,4 +1,4 @@
-# Temperature Profile | `TeProfile(Profile)`
+# Temperature Profile | `ElectronTemperatureProfile(Profile)`
 
 The temperature profile class is organised around a central runner function that is called each time the plasma is parameterised by the parent [`PlasmaProfile()`](plasma_profiles.md#plasma-profile-class-plasmaprofile) class. It is called by [`pedestal_parameterisation()`](plasma_profiles.md#pedestal_parameterisation) and [`parabolic parameterisation()`](plasma_profiles.md#parabolic_parameterisation). The sequence of the runner function can be seen below along with explanation of the following calculations.
 
@@ -14,7 +14,7 @@ The temperature profile class is organised around a central runner function that
 
 The core electron temperature is calculated using the [`tcore`](plasma_temperature_profile.md#electron-core-density-of-a-pedestalised-profile--tcore) method.
 
-#### Electron core density of a pedestalised profile | `tcore()`
+#### Electron core density of a pedestalised profile | `calculate_pedestal_profile_on_axis_temperature()`
 
 This function calculates the core electron density for a pedestalsied profile in $\text{keV}$. The inclusion of a new $\beta_T$ exponent term allows a more accurate description of temperature profiles with a triangular shape or a strong gradient near the pedestal (characteristic of regimes with an [internal transport barrier](https://wiki.fusion.ciemat.es/wiki/Internal_Transport_Barrier)).
 

@@ -139,8 +139,8 @@ class DensityProfilePedestalType(IntEnum):
         return self._description_
 
 
-class NeProfile(Profile):
-    """Electron density profile class. Contains a function to calculate the electron
+class ElectronDensityProfile(Profile):
+    """Electron density (nₑ) profile class. Contains a function to calculate the electron
     density profile and store the data.
     """
 
@@ -151,12 +151,12 @@ class NeProfile(Profile):
         self.calculate_profile_dx()
         self.set_physics_variables()
         self.calculate_profile_y(
-            self.profile_x,
-            self.data.physics.radius_plasma_pedestal_density_norm,
-            self.data.physics.nd_plasma_electron_on_axis,
-            self.data.physics.nd_plasma_pedestal_electron,
-            self.data.physics.nd_plasma_separatrix_electron,
-            self.data.physics.alphan,
+            rho=self.profile_x,
+            radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
+            nd_on_axis=self.data.physics.nd_plasma_electron_on_axis,
+            nd_pedestal=self.data.physics.nd_plasma_pedestal_electron,
+            nd_separatrix=self.data.physics.nd_plasma_separatrix_electron,
+            alphan=self.data.physics.alphan,
         )
         self.integrate_profile_y()
 
@@ -164,109 +164,94 @@ class NeProfile(Profile):
         self,
         rho: np.array,
         radius_plasma_pedestal_density_norm: float,
-        n0: float,
-        nped: float,
-        nsep: float,
+        nd_on_axis: float,
+        nd_pedestal: float,
+        nd_separatrix: float,
         alphan: float,
-    ):
-        """Calculates the density at each normalised minor radius position
-        rho for a HELIOS-type density pedestal profile (neprofile).
+    ) -> None:
+        """Calculates the number density at each normalised minor radius (ρ) position.
 
         Parameters
         ----------
         rho :
-            Normalised minor radius vector.
+            Normalised minor radius (ρ) vector.
         radius_plasma_pedestal_density_norm :
-            Normalised minor radius pedestal position.
-        n0 :
-            Central density (/m3).
-        nped :
-            Pedestal density (/m3).
-        nsep :
-            Separatrix density (/m3)
+            Normalised minor radius pedestal position (ρₙ,pedestal).
+        nd_on_axis :
+            Central number density (n₀) [m⁻³].
+        nd_pedestal :
+            Pedestal density (n_pedestal) [m⁻³].
+        nd_separatrix :
+            Separatrix density (n_sep) [m⁻³].
         alphan :
-            Density peaking parameter.
-        """
+            Density peaking parameter (αₙ).
+        """  # noqa: RUF002
         if (
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
         ):
-            self.profile_y = n0 * (1 - rho**2) ** alphan
+            self.profile_y = nd_on_axis * (1 - rho**2) ** alphan
 
         # Input checks
 
-        if n0 < nped:
+        if nd_on_axis < nd_pedestal:
             logger.info(
-                "NPROFILE: density pedestal is higher than core density. %s, %s",
-                nped,
-                n0,
+                "NPROFILE: Pedestal density is higher than core density. %s, %s",
+                nd_pedestal,
+                nd_on_axis,
             )
         rho_index = rho <= radius_plasma_pedestal_density_norm
         self.profile_y[rho_index] = (
-            nped
-            + (n0 - nped)
+            nd_pedestal
+            + (nd_on_axis - nd_pedestal)
             * (1 - (rho[rho_index] / radius_plasma_pedestal_density_norm) ** 2) ** alphan
         )
         # Invert the rho_index
-        self.profile_y[~rho_index] = nsep + (nped - nsep) * (1 - rho[~rho_index]) / (
-            1 - radius_plasma_pedestal_density_norm
-        )
+        self.profile_y[~rho_index] = nd_separatrix + (nd_pedestal - nd_separatrix) * (
+            1 - rho[~rho_index]
+        ) / (1 - radius_plasma_pedestal_density_norm)
 
     @staticmethod
-    def ncore(
+    def calculate_pedestal_profile_on_axis_density(
         radius_plasma_pedestal_density_norm: float,
-        nped: float,
-        nsep: float,
-        nav: float,
+        nd_pedestal: float,
+        nd_separatrix: float,
+        nd_vol_average: float,
         alphan: float,
     ) -> float:
-        """Calculates the core density of a pedestalised profile.
-        The solution comes from integrating and summing the two separate density profiles
-        for the core and pedestal region within their bounds. This has to be multiplied
-        by the torus volume element before integration which leads to an added rho term
-        in each part of the profile. When dividing by the volume of integration to get
-        the average density the simplification leads to a factor of 2 having to be
-        multiplied on to each of the integration results. This function for the average
-        density can then be re-arranged to calculate the central plasma density
-        n_0 / ncore.
+        """Calculates the core density (n₀) of a pedestalised profile.
 
         Parameters
         ----------
         radius_plasma_pedestal_density_norm :
-             The normalised minor radius pedestal position.
-        nped :
-            The pedestal density (/m3).
-        nsep :
-            The separatrix density (/m3).
-        nav :
-            The electron density (/m3).
-        alphan :
-            The density peaking parameter
+            Normalised minor radius pedestal position (ρₙ,pedestal).
+        nd_pedestal: float,
+            The pedestal density (n_pedestal) [m⁻³].
+        nd_separatrix: float,
+            The separatrix density (n_sep) [m⁻³].
+        nd_vol_average: float,
+            The volume averaged density (⟨n⟩) [m⁻³].
+        alphan: float,
+            The density peaking parameter (αₙ).
 
         Returns
         -------
         :
-            The core density.
-
-        References
-        ----------
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor
-            Studies. Fusion Science and Technology, 59(2), 308-349.
-            https://doi.org/10.13182/FST11-A11650
+            The core on-axis density (n₀) [/m³].
         """
-        ncore = (
+        nd_on_axis = (
             1
             / (3 * radius_plasma_pedestal_density_norm**2)
             * (
-                3 * nav * (1 + alphan)
-                + nsep
+                3 * nd_vol_average * (1 + alphan)
+                + nd_separatrix
                 * (1 + alphan)
                 * (
                     -2
                     + radius_plasma_pedestal_density_norm
                     + radius_plasma_pedestal_density_norm**2
                 )
-                - nped
+                - nd_pedestal
                 * (
                     (1 + alphan) * (1 + radius_plasma_pedestal_density_norm)
                     + (alphan - 2) * radius_plasma_pedestal_density_norm**2
@@ -274,16 +259,16 @@ class NeProfile(Profile):
             )
         )
 
-        if ncore < 0.0:
+        if nd_on_axis < 0.0:
             # Allows solver to continue and
             # warns the user to raise the lower bound on nd_plasma_electrons_vol_avg
             # if the run did not converge
             logger.error(
-                "ncore is going negative when solving. Please raise the value of "
-                "nd_plasma_electrons_vol_avg and or its lower limit."
+                "nd_on_axis is going negative when solving. Please raise the value of "
+                "nd_plasma_electrons_vol_avg (⟨nₑ⟩) and or its lower limit."
             )
-            ncore = 1.0e-6
-        return ncore
+            nd_on_axis = 1.0e-6
+        return nd_on_axis
 
     def set_pedestal_and_separatrix_values(self):
         """Sets the pedestal and separatrix density values based on the user input
@@ -346,12 +331,12 @@ class NeProfile(Profile):
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PEDESTAL_PROFILE
         ):
-            self.data.physics.nd_plasma_electron_on_axis = self.ncore(
-                self.data.physics.radius_plasma_pedestal_density_norm,
-                self.data.physics.nd_plasma_pedestal_electron,
-                self.data.physics.nd_plasma_separatrix_electron,
-                self.data.physics.nd_plasma_electrons_vol_avg,
-                self.data.physics.alphan,
+            self.data.physics.nd_plasma_electron_on_axis = self.calculate_pedestal_profile_on_axis_density(
+                radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
+                nd_pedestal=self.data.physics.nd_plasma_pedestal_electron,
+                nd_separatrix=self.data.physics.nd_plasma_separatrix_electron,
+                nd_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                alphan=self.data.physics.alphan,
             )
         self.data.physics.nd_plasma_ions_on_axis = (
             self.data.physics.nd_plasma_ions_total_vol_avg
@@ -360,8 +345,8 @@ class NeProfile(Profile):
         )
 
 
-class TeProfile(Profile):
-    """Electron temperature profile class. Contains a function to calculate the
+class ElectronTemperatureProfile(Profile):
+    """Electron temperature (Tₑ) profile class. Contains a function to calculate the
     temperature profile and store the data.
     """
 
@@ -372,13 +357,13 @@ class TeProfile(Profile):
         self.calculate_profile_dx()
         self.set_physics_variables()
         self.calculate_profile_y(
-            self.profile_x,
-            self.data.physics.radius_plasma_pedestal_temp_norm,
-            self.data.physics.temp_plasma_electron_on_axis_kev,
-            self.data.physics.temp_plasma_pedestal_kev,
-            self.data.physics.temp_plasma_separatrix_kev,
-            self.data.physics.alphat,
-            self.data.physics.tbeta,
+            rho=self.profile_x,
+            radius_plasma_pedestal_temp_norm=self.data.physics.radius_plasma_pedestal_temp_norm,
+            temp_on_axis_kev=self.data.physics.temp_plasma_electron_on_axis_kev,
+            temp_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
+            temp_separatrix_kev=self.data.physics.temp_plasma_separatrix_kev,
+            alphat=self.data.physics.alphat,
+            tbeta=self.data.physics.tbeta,
         )
         self.integrate_profile_y()
 
@@ -386,44 +371,37 @@ class TeProfile(Profile):
         self,
         rho: np.array,
         radius_plasma_pedestal_temp_norm: float,
-        t0: float,
-        temp_plasma_pedestal_kev: float,
-        temp_plasma_separatrix_kev: float,
+        temp_on_axis_kev: float,
+        temp_pedestal_kev: float,
+        temp_separatrix_kev: float,
         alphat: float,
         tbeta: float,
-    ):
-        """Calculates the temperature at a normalised minor radius position rho for a
-        pedestalised profile (teprofile).
-        If i_plasma_pedestal = 0 the original parabolic profile form is used instead.
+    ) -> None:
+        """Calculates the temperature at each normalised minor radius (ρ) position.
 
         Parameters
         ----------
-        rho : np.array
-            Normalised minor radius.
-        radius_plasma_pedestal_temp_norm : float
-            Normalised minor radius pedestal position.
-        t0 : float
-            Central temperature (keV).
-        temp_plasma_pedestal_kev : float
-            Pedestal temperature (keV).
-        temp_plasma_separatrix_kev : float
-            Separatrix temperature (keV).
-        alphat : float
-            Temperature peaking parameter.
-        tbeta : float
-            Second temperature exponent.
+        rho :
+            Normalised minor radius (ρ) vector
+        radius_plasma_pedestal_temp_norm :
+            Normalised minor radius pedestal position (ρₜ,pedestal).
+        temp_on_axis_kev :
+            Central on-axis temperature (T₀) [keV].
+        temp_pedestal_kev :
+            Pedestal temperature (T_pedestal) [keV].
+        temp_separatrix_kev :
+            Separatrix temperature (T_separatrix) [keV].
+        alphat :
+            Temperature peaking parameter (αₜ).
+        tbeta :
+            Second temperature exponent (βₜ).
 
         Raises
         ------
         ProcessValueError
             If negative temperature in plasma profile
 
-        References
-        ----------
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor
-            Studies. Fusion Science and Technology, 59(2), 308-349.
-            https://doi.org/10.13182/FST11-A11650
-        """
+        """  # noqa: RUF002
         if (
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
@@ -431,25 +409,25 @@ class TeProfile(Profile):
             # profile values of 0 cause divide by 0 errors so ensure the profile value
             # is at least 1e-8
             # which is small enough that it won't make a difference to any calculations
-            self.profile_y = np.maximum(t0 * (1 - rho**2) ** alphat, 1e-8)
+            self.profile_y = np.maximum(temp_on_axis_kev * (1 - rho**2) ** alphat, 1e-8)
             return
 
-        if t0 < temp_plasma_pedestal_kev:
+        if temp_on_axis_kev < temp_pedestal_kev:
             logger.info(
-                "TPROFILE: temperature pedestal is higher than core temperature. %s, %s",
-                temp_plasma_pedestal_kev,
-                t0,
+                "TPROFILE: Pedestal temperature is higher than core temperature. %s, %s",
+                temp_pedestal_kev,
+                temp_on_axis_kev,
             )
 
         rho_index = rho <= radius_plasma_pedestal_temp_norm
         self.profile_y[rho_index] = (
-            temp_plasma_pedestal_kev
-            + (t0 - temp_plasma_pedestal_kev)
+            temp_pedestal_kev
+            + (temp_on_axis_kev - temp_pedestal_kev)
             * (1 - (rho[rho_index] / radius_plasma_pedestal_temp_norm) ** tbeta)
             ** alphat
         )
-        self.profile_y[~rho_index] = temp_plasma_separatrix_kev + (
-            temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
+        self.profile_y[~rho_index] = temp_separatrix_kev + (
+            temp_pedestal_kev - temp_separatrix_kev
         ) * (1 - rho[~rho_index]) / (1 - radius_plasma_pedestal_temp_norm)
 
         # Check for any negative temperature in profile: always fatal in
@@ -458,64 +436,51 @@ class TeProfile(Profile):
             raise ProcessValueError("Negative temperature in plasma profile")
 
     @staticmethod
-    def tcore(
+    def calculate_pedestal_profile_on_axis_temperature(
         radius_plasma_pedestal_temp_norm: float,
-        temp_plasma_pedestal_kev: float,
-        temp_plasma_separatrix_kev: float,
-        tav: float,
+        temp_pedestal_kev: float,
+        temp_separatrix_kev: float,
+        temp_vol_avg_kev: float,
         alphat: float,
         tbeta: float,
     ) -> float:
-        """Calculates the core temperature (keV)
-        of a pedestalised profile. The solution comes from integrating and summing the
-        two separate temperature profiles for the core and pedestal region within their
-        bounds. This has to be multiplied by the torus volume element before integration
-        which leads to an added rho term in each part of the profile. When dividing by
-        the volume of integration to get the average temperature the simplification
-        leads to a factor of 2 having to be multiplied on to each of the integration
-        results. This function for the average temperature can then be re-arranged to
-        calculate the central plasma temperature T_0 / tcore.
+        """Calculates the core density (T₀) of a pedestalised profile.
 
         Parameters
         ----------
-        radius_plasma_pedestal_temp_norm : float
-            Normalised minor radius pedestal position.
-        temp_plasma_pedestal_kev : float
-            Pedestal temperature (keV).
-        temp_plasma_separatrix_kev : float
-            Separatrix temperature (keV).
-        tav : float
-            Volume average temperature (keV).
-        alphat : float
-            Temperature peaking parameter.
-        tbeta : float
-            Second temperature exponent.
+        radius_plasma_pedestal_temp_norm :
+            Normalised minor radius pedestal position (ρₜ,pedestal).
+        temp_pedestal_kev :
+            Pedestal temperature (T_pedestal) [keV].
+        temp_separatrix_kev :
+            Separatrix temperature (T_separatrix) [keV].
+        temp_vol_avg_kev :
+            Volume average temperature (⟨T⟩) [keV].
+        alphat :
+            Temperature peaking parameter (αₜ).
+        tbeta :
+            Second temperature exponent (βₜ).
 
         Returns
         -------
-        float
-            Core temperature.
+        :
+            The core on-axis temperature (T₀) [keV]
 
-        References
-        ----------
-        Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor
-        Studies. Fusion Science and Technology, 59(2), 308-349.
-        https://doi.org/10.13182/FST11-A11650
         """
         #  Calculate core temperature
 
-        return temp_plasma_pedestal_kev + (
+        return temp_pedestal_kev + (
             (
                 tbeta
                 * (
-                    3 * tav
-                    + temp_plasma_separatrix_kev
+                    3 * temp_vol_avg_kev
+                    + temp_separatrix_kev
                     * (
                         -2.0
                         + radius_plasma_pedestal_temp_norm
                         + radius_plasma_pedestal_temp_norm**2
                     )
-                    - temp_plasma_pedestal_kev
+                    - temp_pedestal_kev
                     * (
                         1
                         + radius_plasma_pedestal_temp_norm
@@ -544,13 +509,15 @@ class TeProfile(Profile):
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PEDESTAL_PROFILE
         ):
-            self.data.physics.temp_plasma_electron_on_axis_kev = self.tcore(
-                self.data.physics.radius_plasma_pedestal_temp_norm,
-                self.data.physics.temp_plasma_pedestal_kev,
-                self.data.physics.temp_plasma_separatrix_kev,
-                self.data.physics.temp_plasma_electron_vol_avg_kev,
-                self.data.physics.alphat,
-                self.data.physics.tbeta,
+            self.data.physics.temp_plasma_electron_on_axis_kev = (
+                self.calculate_pedestal_profile_on_axis_temperature(
+                    self.data.physics.radius_plasma_pedestal_temp_norm,
+                    self.data.physics.temp_plasma_pedestal_kev,
+                    self.data.physics.temp_plasma_separatrix_kev,
+                    self.data.physics.temp_plasma_electron_vol_avg_kev,
+                    self.data.physics.alphat,
+                    self.data.physics.tbeta,
+                )
             )
 
         self.data.physics.temp_plasma_ion_on_axis_kev = (

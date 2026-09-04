@@ -1,4 +1,4 @@
-# Density Profile | `NeProfile(Profile)`
+# Density Profile | `ElectronDensityProfile(Profile)`
 
 The density profile class is organised around a central runner function that is called each time the plasma is parameterised by the parent [`PlasmaProfile()`](./plasma_profiles.md) class. It is called by [`pedestal_parameterisation()`](plasma_profiles.md#pedestal_parameterisation) and [`parabolic parameterisation()`](./plasma_profiles.md#parabolic_parameterisation). The sequence of the runner function can be seen below along with explanation of the following calculations.
 
@@ -19,7 +19,7 @@ $$
 n_{\text{i0}} = \left(\frac{n_\text{i}}{n_\text{e}}\right)n_{\text{e0}}
 $$
 
-#### Electron core density of a pedestalised profile | `ncore()`
+#### Electron core density of a pedestalised profile | `calculate_pedestal_profile_on_axis_density()`
 
 This function calculates the core electron density for a pedestalsied profile (`i_plasma_pedestal == 1`). It takes in values of
 
