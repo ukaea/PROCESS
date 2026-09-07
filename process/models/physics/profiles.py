@@ -560,7 +560,9 @@ class TeProfile(Profile):
         )
 
 
-def calculate_vol_avg_of_profile(profile_x: np.ndarray, profile_y: np.ndarray) -> float:
+def calculate_vol_avg_of_profile(
+    profile_x: np.ndarray, profile_y: np.ndarray, profile_dx: float | None = None
+) -> float:
     """Calculate the volume averaged value (⟨profile_y⟩) of a radially normalised
     profile.
 
@@ -570,6 +572,8 @@ def calculate_vol_avg_of_profile(profile_x: np.ndarray, profile_y: np.ndarray) -
         The x-values of the profile.
     profile_y :
         The y-values of the profile.
+    profile_dx :
+        The spacing between consecutive x-values in the profile.
 
     Returns
     -------
@@ -605,5 +609,5 @@ def calculate_vol_avg_of_profile(profile_x: np.ndarray, profile_y: np.ndarray) -
     return 2.0 * sp.integrate.simpson(
         profile_y * profile_x,
         x=profile_x,
-        dx=profile_x[1] - profile_x[0],
+        dx=profile_dx if profile_dx is not None else profile_x[1] - profile_x[0],
     )
