@@ -2913,9 +2913,9 @@ class PFCoil(Model):
             "OP ",
         )
 
-        op.oshead(self.outfile, "PF Circuit Waveform Data")
+        op.oshead(self.mfile, "PF Circuit Waveform Data")
         op.ovarre(
-            self.outfile,
+            self.mfile,
             "Number of PF circuits including CS and plasma",
             "(n_pf_cs_plasma_circuits)",
             self.data.pf_coil.n_pf_cs_plasma_circuits,
@@ -2935,7 +2935,7 @@ class PFCoil(Model):
                     circuit_var_name = f"(pfc{k}t{jjj})"
 
                 op.ovarre(
-                    self.outfile,
+                    self.mfile,
                     circuit_name,
                     circuit_var_name,
                     self.data.pf_coil.c_pf_coil_turn[k, jjj]
