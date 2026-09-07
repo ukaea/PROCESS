@@ -2672,19 +2672,19 @@ class PFCoil(Model):
                 "PF coils",
                 f"{pf.vs_pf_coils_total_ramp:.2f}",
                 f"{pf.vs_pf_coils_total_burn:.2f}",
-                f"{pf.vs_pf_coils_total_pulse:.2f}"
+                f"{pf.vs_pf_coils_total_pulse:.2f}",
             ],
             [
                 "CS coil",
                 f"{pf.vs_cs_ramp:.2f}",
                 f"{pf.vs_cs_burn:.2f}",
-                f"{pf.vs_cs_total_pulse:.2f}"
+                f"{pf.vs_cs_total_pulse:.2f}",
             ],
             [
                 "Total",
                 f"{pf.vs_cs_pf_total_ramp:.2f}",
                 f"{pf.vs_cs_pf_total_burn:.2f}",
-                f"{pf.vs_cs_pf_total_pulse:.2f}"
+                f"{pf.vs_cs_pf_total_pulse:.2f}",
             ],
         ))
 
@@ -2835,7 +2835,7 @@ class PFCoil(Model):
                     f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}",
                     f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}",
                     f"{-cpft[k, 1] * nturn[k] * inv_st_pulse:.3e}",
-                    f"{cpft[k, 5] * nturn[k]:.3e}"
+                    f"{cpft[k, 5] * nturn[k]:.3e}",
                 ])
             else:
                 rows.append([
@@ -2845,7 +2845,7 @@ class PFCoil(Model):
                     f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}",
                     f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}",
                     f"{-cpft[k, 1] * nturn[k] * inv_st_pulse:.3e}",
-                    f"{cpft[k, 5] * nturn[k]:.3e}"
+                    f"{cpft[k, 5] * nturn[k]:.3e}",
                 ])
 
         op.oblnkl(self.outfile)
@@ -2873,7 +2873,7 @@ class PFCoil(Model):
                     f"{(cpft[k, 2] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}",
                     f"{(cpft[k, 3] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}",
                     f"{(cpft[k, 4] + cpft[k, 1] * inv_st_pulse) * nturn[k]:.3e}",
-                    "0.0e0"
+                    "0.0e0",
                 ])
             else:
                 rows.append([
@@ -2883,7 +2883,7 @@ class PFCoil(Model):
                     f"{(cpft[k, 2] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}",
                     f"{(cpft[k, 3] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}",
                     f"{(cpft[k, 4] + cpft[k, 1] * inv_st_pulse) * nturn[k]:.3e}",
-                    "0.0e0"
+                    "0.0e0",
                 ])
 
         op.oblnkl(self.outfile)
