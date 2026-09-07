@@ -2436,12 +2436,15 @@ class PFCoil(Model):
             "1.0e0",
         ])
 
-        op.write(self.outfile, tabulate(
-            pf_coil_geometry_rows,
-            headers=["Coil", "R(m)", "Z(m)", "dR(m)", "dZ(m)", "turns"],
-            tablefmt="plain",
-            disable_numparse=True,
-        ))
+        op.write(
+            self.outfile,
+            tabulate(
+                pf_coil_geometry_rows,
+                headers=["Coil", "R(m)", "Z(m)", "dR(m)", "dZ(m)", "turns"],
+                tablefmt="plain",
+                disable_numparse=True,
+            ),
+        )
 
         for k in range(pf_d.nef):
             op.ovarre(
@@ -2629,12 +2632,15 @@ class PFCoil(Model):
         ])
 
         op.oblnkl(self.outfile)
-        op.write(self.outfile, tabulate(
-            rows,
-            headers=headers,
-            tablefmt="plain",
-            disable_numparse=True,
-        ))
+        op.write(
+            self.outfile,
+            tabulate(
+                rows,
+                headers=headers,
+                tablefmt="plain",
+                disable_numparse=True,
+            ),
+        )
 
         op.oblnkl(self.outfile)
         op.ocmmnt(self.outfile, "----------------------------")
@@ -2659,35 +2665,39 @@ class PFCoil(Model):
         op.oheadr(self.outfile, "Volt Second Consumption")
 
         pf = self.data.pf_coil
-        headers = [
-            "",
-            "Start-up (Vs)",
-            "Burn (Vs)",
-            "Total (Vs)"
-        ]
+        headers = ["", "Start-up (Vs)", "Burn (Vs)", "Total (Vs)"]
         rows = []
         rows.extend((
-            ["PF coils",
+            [
+                "PF coils",
                 f"{pf.vs_pf_coils_total_ramp:.2f}",
-            f"{pf.vs_pf_coils_total_burn:.2f}",
-            f"{pf.vs_pf_coils_total_pulse:.2f}"],
-            ["CS coil",
+                f"{pf.vs_pf_coils_total_burn:.2f}",
+                f"{pf.vs_pf_coils_total_pulse:.2f}"
+            ],
+            [
+                "CS coil",
                 f"{pf.vs_cs_ramp:.2f}",
-            f"{pf.vs_cs_burn:.2f}",
-            f"{pf.vs_cs_total_pulse:.2f}"],
-            ["Total",
-            f"{pf.vs_cs_pf_total_ramp:.2f}",
-            f"{pf.vs_cs_pf_total_burn:.2f}",
-            f"{pf.vs_cs_pf_total_pulse:.2f}"]
+                f"{pf.vs_cs_burn:.2f}",
+                f"{pf.vs_cs_total_pulse:.2f}"
+            ],
+            [
+                "Total",
+                f"{pf.vs_cs_pf_total_ramp:.2f}",
+                f"{pf.vs_cs_pf_total_burn:.2f}",
+                f"{pf.vs_cs_pf_total_pulse:.2f}"
+            ],
         ))
 
         op.oblnkl(self.outfile)
-        op.write(self.outfile, tabulate(
-            rows,
-            headers=headers,
-            tablefmt="plain",
-            disable_numparse=True,
-        ))
+        op.write(
+            self.outfile,
+            tabulate(
+                rows,
+                headers=headers,
+                tablefmt="plain",
+                disable_numparse=True,
+            ),
+        )
         op.oblnkl(self.outfile)
         op.ovarre(
             self.outfile,
@@ -2706,19 +2716,14 @@ class PFCoil(Model):
 
         op.osubhd(self.outfile, "Summary of volt-second consumption by circuit (Wb):")
         op.oblnkl(self.outfile)
-        headers = [
-            "Circuit",
-            "BOP",
-            "BOF",
-            "EOF"
-        ]
+        headers = ["Circuit", "BOP", "BOF", "EOF"]
         rows = []
         for k in range(pf.nef):
             rows.append([
                 f"PF {k + 1}",
                 f"{pf.vsdum[k, 0]:.3f}",
                 f"{pf.vsdum[k, 1]:.3f}",
-                f"{pf.vsdum[k, 2]:.3f}"
+                f"{pf.vsdum[k, 2]:.3f}",
             ])
 
         n_cs = pf.n_cs_pf_coils - 1
@@ -2726,15 +2731,18 @@ class PFCoil(Model):
             "CS coil",
             f"{pf.vsdum[n_cs, 0]:.3f}",
             f"{pf.vsdum[n_cs, 1]:.3f}",
-            f"{pf.vsdum[n_cs, 2]:.3f}"
+            f"{pf.vsdum[n_cs, 2]:.3f}",
         ])
         op.oblnkl(self.outfile)
-        op.write(self.outfile, tabulate(
-            rows,
-            headers=headers,
-            tablefmt="plain",
-            disable_numparse=True,
-        ))
+        op.write(
+            self.outfile,
+            tabulate(
+                rows,
+                headers=headers,
+                tablefmt="plain",
+                disable_numparse=True,
+            ),
+        )
         op.oblnkl(self.outfile)
 
         op.oshead(self.outfile, "Waveforms")
@@ -2759,12 +2767,15 @@ class PFCoil(Model):
         for k in range(pulse_timings.n_pf_active_points_total):
             line += [f"{pulse_timings.pf_active_cumulative[k]:.2f}"]
         rows = [line]
-        op.write(self.outfile, tabulate(
-            rows,
-            headers=headers[1:],
-            tablefmt="plain",
-            disable_numparse=True,
-        ))
+        op.write(
+            self.outfile,
+            tabulate(
+                rows,
+                headers=headers[1:],
+                tablefmt="plain",
+                disable_numparse=True,
+            ),
+        )
 
         op.oblnkl(self.outfile)
         op.write(self.outfile, "Currents (A)")
@@ -2782,8 +2793,9 @@ class PFCoil(Model):
         inv_st_pulse = 1.0e0 / pf_d.f_j_cs_start_pulse_end_flat_top
 
         for k in range(self.data.pf_coil.n_pf_cs_plasma_circuits - 1):
-            if (self.data.build.iohcl != 0) and (k ==
-                        self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
+            if (self.data.build.iohcl != 0) and (
+                k == self.data.pf_coil.n_pf_cs_plasma_circuits - 2
+            ):
                 line = ["CS"]
             else:
                 line = [f"PF {k + 1}"]
@@ -2798,81 +2810,92 @@ class PFCoil(Model):
 
         # op.write(self.outfile, line)
         op.oblnkl(self.outfile)
-        op.write(self.outfile, tabulate(
-            rows,
-            headers=headers,
-            tablefmt="plain",
-            disable_numparse=True,
-        ))
+        op.write(
+            self.outfile,
+            tabulate(
+                rows,
+                headers=headers,
+                tablefmt="plain",
+                disable_numparse=True,
+            ),
+        )
 
         op.oblnkl(self.outfile)
 
         op.ocmmnt(self.outfile, "This consists of: CS coil field balancing:")
         rows = []
         for k in range(pf_d.n_pf_cs_plasma_circuits - 1):
-            if (self.data.build.iohcl != 0) and (k ==
-                                    self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
+            if (self.data.build.iohcl != 0) and (
+                k == self.data.pf_coil.n_pf_cs_plasma_circuits - 2
+            ):
                 rows.append([
-                        "CS",
-                        f"{cpft[k, 0] * pf_d.n_pf_coil_turns[k]:.3e}",
-                        f"{cpft[k, 1] * nturn[k]:.3e}",
-                        f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}",
-                        f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}",
-                        f"{-cpft[k, 1] * nturn[k] * inv_st_pulse:.3e}",
-                        f"{cpft[k, 5] * nturn[k]:.3e}"
-                    ])
+                    "CS",
+                    f"{cpft[k, 0] * pf_d.n_pf_coil_turns[k]:.3e}",
+                    f"{cpft[k, 1] * nturn[k]:.3e}",
+                    f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}",
+                    f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}",
+                    f"{-cpft[k, 1] * nturn[k] * inv_st_pulse:.3e}",
+                    f"{cpft[k, 5] * nturn[k]:.3e}"
+                ])
             else:
                 rows.append([
-                        f"PF {k + 1}",
-                        f"{cpft[k, 0] * pf_d.n_pf_coil_turns[k]:.3e}",
-                        f"{cpft[k, 1] * nturn[k]:.3e}",
-                        f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}",
-                        f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}",
-                        f"{-cpft[k, 1] * nturn[k] * inv_st_pulse:.3e}",
-                        f"{cpft[k, 5] * nturn[k]:.3e}"
-                    ])
+                    f"PF {k + 1}",
+                    f"{cpft[k, 0] * pf_d.n_pf_coil_turns[k]:.3e}",
+                    f"{cpft[k, 1] * nturn[k]:.3e}",
+                    f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}",
+                    f"{-cpft[k, 1] * nturn[k] * se_ft_eft:.3e}",
+                    f"{-cpft[k, 1] * nturn[k] * inv_st_pulse:.3e}",
+                    f"{cpft[k, 5] * nturn[k]:.3e}"
+                ])
 
         op.oblnkl(self.outfile)
-        op.write(self.outfile, tabulate(
-            rows,
-            headers=headers,
-            tablefmt="plain",
-            disable_numparse=True,
-        ))
+        op.write(
+            self.outfile,
+            tabulate(
+                rows,
+                headers=headers,
+                tablefmt="plain",
+                disable_numparse=True,
+            ),
+        )
 
         op.oblnkl(self.outfile)
         op.ocmmnt(self.outfile, "And: equilibrium field:")
         rows = []
         for k in range(pf_d.n_pf_cs_plasma_circuits - 1):
-            if (self.data.build.iohcl != 0) and (k ==
-                                    self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
+            if (self.data.build.iohcl != 0) and (
+                k == self.data.pf_coil.n_pf_cs_plasma_circuits - 2
+            ):
                 rows.append([
-                        "CS",
-                        f"{0.0:.3e}",
-                        f"{0.0:.3e}",
-                        f"{(cpft[k, 2] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}",
-                        f"{(cpft[k, 3] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}",
-                        f"{(cpft[k, 4] + cpft[k, 1] * inv_st_pulse) * nturn[k]:.3e}",
-                        "0.0e0"
-                    ])
+                    "CS",
+                    f"{0.0:.3e}",
+                    f"{0.0:.3e}",
+                    f"{(cpft[k, 2] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}",
+                    f"{(cpft[k, 3] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}",
+                    f"{(cpft[k, 4] + cpft[k, 1] * inv_st_pulse) * nturn[k]:.3e}",
+                    "0.0e0"
+                ])
             else:
                 rows.append([
-                        f"PF {k + 1}",
-                        f"{0.0:.3e}",
-                        f"{0.0:.3e}",
-                        f"{(cpft[k, 2] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}",
-                        f"{(cpft[k, 3] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}",
-                        f"{(cpft[k, 4] + cpft[k, 1] * inv_st_pulse) * nturn[k]:.3e}",
-                        "0.0e0"
+                    f"PF {k + 1}",
+                    f"{0.0:.3e}",
+                    f"{0.0:.3e}",
+                    f"{(cpft[k, 2] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}",
+                    f"{(cpft[k, 3] + cpft[k, 1] * se_ft_eft) * nturn[k]:.3e}",
+                    f"{(cpft[k, 4] + cpft[k, 1] * inv_st_pulse) * nturn[k]:.3e}",
+                    "0.0e0"
                 ])
 
         op.oblnkl(self.outfile)
-        op.write(self.outfile, tabulate(
-            rows,
-            headers=headers,
-            tablefmt="plain",
-            disable_numparse=True,
-        ))
+        op.write(
+            self.outfile,
+            tabulate(
+                rows,
+                headers=headers,
+                tablefmt="plain",
+                disable_numparse=True,
+            ),
+        )
 
         op.oblnkl(self.outfile)
         op.ovarre(
@@ -2902,8 +2925,9 @@ class PFCoil(Model):
                 if k == self.data.pf_coil.n_pf_cs_plasma_circuits - 1:
                     circuit_name = f"Plasma Time point {jjj} (A)"
                     circuit_var_name = f"(plasmat{jjj})"
-                elif (self.data.build.iohcl != 0) and (k ==
-                                        self.data.pf_coil.n_pf_cs_plasma_circuits - 2):
+                elif (self.data.build.iohcl != 0) and (
+                    k == self.data.pf_coil.n_pf_cs_plasma_circuits - 2
+                ):
                     circuit_name = f"CS Circuit Time point {jjj} (A)"
                     circuit_var_name = f"(cs t{jjj})"
                 else:
