@@ -2913,7 +2913,7 @@ class PFCoil(Model):
             "OP ",
         )
 
-        op.oshead(self.mfile, "PF Circuit Waveform Data")
+        # Add output for the MFILE to parse
         op.ovarre(
             self.mfile,
             "Number of PF circuits including CS and plasma",
