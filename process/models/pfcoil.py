@@ -2808,7 +2808,6 @@ class PFCoil(Model):
             line += [f"{cpft[self.data.pf_coil.n_pf_cs_plasma_circuits - 1, jj]:.3e}"]
         rows.append(line)
 
-        # op.write(self.outfile, line)
         op.oblnkl(self.outfile)
         op.write(
             self.outfile,

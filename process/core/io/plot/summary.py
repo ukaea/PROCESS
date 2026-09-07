@@ -15694,17 +15694,13 @@ def plot_pf_cs_plasma_mutual_inductance(
     axis.set_title("PF/CS Plasma Mutual Inductance")
     axis.set_xticks(range(n_pf_cs_plasma_circuits))
     axis.set_yticks(range(n_pf_cs_plasma_circuits))
-    x_labels = list(range(n_pf_cs_plasma_circuits))
+    labels = list(range(1, n_pf_cs_plasma_circuits + 1))
 
     if iohcl == 1:
-        x_labels[-2] = "CS"
-    x_labels[-1] = "Plasma"
-    y_labels = list(range(n_pf_cs_plasma_circuits))
-    if iohcl == 1:
-        y_labels[-2] = "CS"
-    y_labels[-1] = "Plasma"
-    axis.set_xticklabels(x_labels)
-    axis.set_yticklabels(y_labels)
+        labels[-2] = "CS"
+    labels[-1] = "Plasma"
+    axis.set_xticklabels(labels)
+    axis.set_yticklabels(labels)
 
     # Add boxes around each cell
     for i in range(n_pf_cs_plasma_circuits):
@@ -16351,7 +16347,9 @@ def plot_pf_dimensions(
     z_pf_coil_middle = []
     radial_thicknesses = []
     vertical_thicknesses = []
-    for coil in range(int(mfile.get("n_pf_cs_plasma_circuits", scan=scan) - 2)):
+    iohcl = mfile.get("iohcl", scan=scan) if "iohcl" in mfile.data else 1
+    x = 1 if iohcl == 0 else 2
+    for coil in range(int(mfile.get("n_pf_cs_plasma_circuits", scan=scan) - x)):
         r_pf_coil_middle.append(mfile.get(f"r_pf_coil_middle[{coil + 1}]", scan=scan))
         z_pf_coil_middle.append(mfile.get(f"z_pf_coil_middle[{coil + 1}]", scan=scan))
         radial_thicknesses.append(mfile.get(f"pfdr({coil + 1})", scan=scan))
