@@ -2,6 +2,8 @@ from typing import Any, NamedTuple
 
 import pytest
 
+from process.core.exceptions import ProcessValueError
+
 
 @pytest.fixture
 def build(process_models):
@@ -385,3 +387,13 @@ def test_plasma_outboard_edge_toroidal_ripple_additional(param, build):
         # Results should be finite and positive
         assert ripple > 0.0
         assert r_tf_outboard_midmin > 0.0
+
+
+def test_invalid_n_divertors_raises(build, monkeypatch):
+    monkeypatch.setattr(build.data.divertor, "n_divertors", 3)
+
+    with pytest.raises(
+        ProcessValueError,
+        match="n_divertors = 3 is invalid",
+    ):
+        build.calculate_vertical_build(output=False)
