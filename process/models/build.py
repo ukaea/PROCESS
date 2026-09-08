@@ -8,6 +8,7 @@ from tabulate import tabulate
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.build_variables import (
     CSPrecompressionConfiguration,
@@ -415,7 +416,19 @@ class Build(Model):
         ----------
         output : bool
             Flag indicating whether to output results
+
+        Raises
+        ------
+        ProcessValueError
+            Only 1 or 2 divertors are supported
+
         """
+        if self.data.divertor.n_divertors not in {1, 2}:
+            raise ProcessValueError(
+                f"n_divertors = {self.data.divertor.n_divertors} is invalid. "
+                "Only 1 or 2 divertors are supported."
+            )
+
         # Set the X-point heights for the top and bottom of the plasma
         # Assumes top-down plasma symmetry
         self.data.build.z_plasma_xpoint_upper = (
@@ -819,13 +832,6 @@ class Build(Model):
                 ("Calculated maximum divertor height (m)", "(divht)", divht),
             ]:
                 po.ovarre(self.outfile, desc, name, var, "OP ")
-        else:
-            po.oheadr(self.outfile, "Divertor build and plasma position")
-            po.ocmmnt(
-                self.outfile,
-                "ERROR: null value not supported, check i_single_null value.",
-            )
-
         po.ovarre(
             self.outfile,
             "Divertor poloidal angle subtended by plasma (degrees)",
