@@ -10,6 +10,7 @@ from process.core import constants
 from process.core.data_structure.base import DataStructure
 from process.data_structure.physics_variables import PhysicsData
 from process.models.physics.plasma_profiles import PlasmaProfile
+from process.models.physics.profiles import calculate_vol_avg_of_profile
 
 logger = logging.getLogger(__name__)
 
@@ -80,27 +81,37 @@ class FusionReactionRate:
 
     Attributes
     ----------
-         plasma_profile (PlasmaProfile): The parameterized temperature and density
-         profiles of the plasma.
-         sigmav_dt_average (float): Average fusion reaction rate <sigma v> for D-T.
-         dhe3_power_density (float): Fusion power density produced by the D-3He reaction.
-         dd_power_density (float): Fusion power density produced by the D-D reactions.
-         dt_power_density (float): Fusion power density produced by the D-T reaction.
-         alpha_power_density (float): Power density of alpha particles produced.
-         pden_non_alpha_charged_mw (float): Power density of charged particles produced.
-         neutron_power_density (float): Power density of neutrons produced.
-         fusion_rate_density (float): Fusion reaction rate density.
-         alpha_rate_density (float): Alpha particle production rate density.
-         proton_rate_density (float): Proton production rate density.
-         f_dd_branching_trit (float): The rate of tritium producing D-D reactions to
-         3He ones.
+    plasma_profile : PlasmaProfile
+        Parameterized temperature and density profiles of the plasma.
+    sigmav_dt_average : float
+        Volume-averaged D-T fusion reactivity, 〈σv〉ᵥ, for D-T.
+    dhe3_power_density : float
+        Fusion power density produced by the D-3He reaction.
+    dd_power_density : float
+        Fusion power density produced by the D-D reactions.
+    dt_power_density : float
+        Fusion power density produced by the D-T reaction.
+    alpha_power_density : float
+        Power density of alpha particles produced.
+    pden_non_alpha_charged_mw : float
+        Power density of charged particles produced.
+    neutron_power_density : float
+        Power density of neutrons produced.
+    fusion_rate_density : float
+        Fusion reaction rate density.
+    alpha_rate_density : float
+        Alpha particle production rate density.
+    proton_rate_density : float
+        Proton production rate density.
+    f_dd_branching_trit : float
+        Ratio of tritium-producing D-D reactions to 3He-producing D-D reactions.
 
     References
     ----------
-        - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections
-          and thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631,
-          Apr. 1992, doi: https://doi.org/10.1088/0029-5515/32/4/i07.
-    """
+    [1] H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections
+    and thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631,
+    Apr. 1992, doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+    """  # noqa: RUF002
 
     def __init__(self, plasma_profile: PlasmaProfile, data: DataStructure):
         """
@@ -139,15 +150,15 @@ class FusionReactionRate:
 
         Notes
         -----
-        For ion temperatures between 0.5 keV and 200 keV.
-        The deviation of the fit from the R-matrix branching ratio is always smaller
+        - For ion temperatures between 0.5 keV and 200 keV.
+        - The deviation of the fit from the R-matrix branching ratio is always smaller
         than 0.5%.
 
         References
         ----------
-            - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections
-              and thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631,
-              Apr. 1992, doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+        [1] H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections
+        and thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631,
+        Apr. 1992, doi: https://doi.org/10.1088/0029-5515/32/4/i07.
         """
         # Divide by 2 to get the branching ratio for the D-D reaction that produces
         # tritium as the output is just the ratio of the two normalized cross sections
@@ -164,33 +175,32 @@ class FusionReactionRate:
 
         This method calculates the fusion reaction rate and power density for the
         deuterium-tritium (D-T) fusion reaction. It uses the Bosch-Hale parametrization
-        to compute the volumetric fusion reaction rate <sigma v> and integrates over
+        to compute the volumetric fusion reaction rate 〈σv〉 and integrates over
         the plasma cross-section to find the core plasma fusion power.
 
         The method updates the following attributes:
-            - self.sigmav_dt_average: Average fusion reaction rate <sigma v> for D-T.
+            - self.sigmav_dt_average: Volume averaged D-T fusion reactivity 〈σv〉ᵥ for D-T.
             - self.dt_power_density: Fusion power density produced by the D-T reaction.
             - self.alpha_power_density: Power density of alpha particles produced.
             - self.pden_non_alpha_charged_mw: Power density of charged particles
-              produced.
+                produced.
             - self.neutron_power_density: Power density of neutrons produced.
             - self.fusion_rate_density: Fusion reaction rate density.
             - self.alpha_rate_density: Alpha particle production rate density.
             - self.proton_rate_density: Proton production rate density.
 
-
-        """
+        """  # noqa: RUF002
         # Initialize Bosch-Hale constants for the D-T reaction
         dt = BoschHaleConstants(**REACTION_CONSTANTS_DT)
 
         self.data.physics.fusrat_plasma_dt_profile = (
             bosch_hale_reactivity(
-                (
+                ion_temperature_profile=(
                     self.data.physics.temp_plasma_ion_vol_avg_kev
                     / self.data.physics.temp_plasma_electron_vol_avg_kev
                 )
                 * self.plasma_profile.teprofile.profile_y,
-                dt,
+                reaction_constants=dt,
             )
             * self.data.physics.f_plasma_fuel_deuterium
             * self.data.physics.f_plasma_fuel_tritium
@@ -204,24 +214,22 @@ class FusionReactionRate:
             ** 2
         )
 
-        # Calculate the fusion reaction rate integral using Simpson's rule
-        sigmav = integrate.simpson(
-            fusion_rate_integral(
-                self.plasma_profile, dt, physics_data=self.data.physics
-            ),
-            x=self.plasma_profile.neprofile.profile_x,
-            dx=self.plasma_profile.neprofile.profile_dx,
+        # Calculate the volume averaged D-T fusion reactivity 〈σv〉ᵥ # noqa: RUF003
+        sigma_v_vol_avg = calculate_vol_avg_reactivity(
+            plasma_profile=self.plasma_profile,
+            reaction_constants=dt,
+            physics_data=self.data.physics,
         )
 
         # Store the average fusion reaction rate
-        self.sigmav_dt_average = sigmav
+        self.sigmav_dt_average = sigma_v_vol_avg
 
         # Reaction energy in MegaJoules [MJ]
         reaction_energy = constants.D_T_ENERGY / 1.0e6
 
-        # Calculate the fusion power density produced [MW/m^3]
+        # Calculate the fusion power density produced [MW/m³]
         fusion_power_density = (
-            sigmav
+            sigma_v_vol_avg
             * reaction_energy
             * (
                 self.data.physics.f_plasma_fuel_deuterium
@@ -233,7 +241,7 @@ class FusionReactionRate:
             )
         )
 
-        # Power densities for different particles [MW/m^3]
+        # Power densities for different particles [MW/m³]
         # Alpha particle gets approximately 20% of the fusion power
         alpha_power_density = (
             1.0 - constants.DT_NEUTRON_ENERGY_FRACTION
@@ -243,7 +251,7 @@ class FusionReactionRate:
             constants.DT_NEUTRON_ENERGY_FRACTION * fusion_power_density
         )
 
-        # Calculate the fusion rate density [reactions/m^3/second]
+        # Calculate the fusion rate density [reactions/m³/second]
         fusion_rate_density = fusion_power_density / reaction_energy
         alpha_rate_density = fusion_rate_density
         proton_rate_density = 0.0
@@ -266,7 +274,7 @@ class FusionReactionRate:
 
         This method calculates the fusion reaction rate and power density for the
         deuterium-helium-3 (D-3He) fusion reaction. It uses the Bosch-Hale
-        parametrization to compute the volumetric fusion reaction rate <sigma v> and
+        parametrization to compute the volumetric fusion reaction rate 〈σv〉 and
         integrates over the plasma cross-section to find the core plasma fusion power.
 
         The method updates the following attributes:
@@ -281,17 +289,13 @@ class FusionReactionRate:
             - self.proton_rate_density: Proton production rate density.
 
 
-        """
+        """  # noqa: RUF002
         # Initialize Bosch-Hale constants for the D-3He reaction
         dhe3 = BoschHaleConstants(**REACTION_CONSTANTS_DHE3)
 
         # Calculate the fusion reaction rate integral using Simpson's rule
-        sigmav = integrate.simpson(
-            fusion_rate_integral(
-                self.plasma_profile, dhe3, physics_data=self.data.physics
-            ),
-            x=self.plasma_profile.neprofile.profile_x,
-            dx=self.plasma_profile.neprofile.profile_dx,
+        sigma_v_vol_avg = calculate_vol_avg_reactivity(
+            self.plasma_profile, dhe3, physics_data=self.data.physics
         )
 
         self.data.physics.fusrat_plasma_dhe3_profile = (
@@ -318,9 +322,9 @@ class FusionReactionRate:
         # Reaction energy in MegaJoules [MJ]
         reaction_energy = constants.D_HELIUM_ENERGY / 1.0e6
 
-        # Calculate the fusion power density produced [MW/m^3]
+        # Calculate the fusion power density produced [MW/m³]
         fusion_power_density = (
-            sigmav
+            sigma_v_vol_avg
             * reaction_energy
             * (
                 self.data.physics.f_plasma_fuel_deuterium
@@ -332,7 +336,7 @@ class FusionReactionRate:
             )
         )
 
-        # Power densities for different particles [MW/m^3]
+        # Power densities for different particles [MW/m³]
         # Alpha particle gets approximately 20% of the fusion power
         alpha_power_density = (
             1.0 - constants.DHELIUM_PROTON_ENERGY_FRACTION
@@ -342,10 +346,10 @@ class FusionReactionRate:
         )
         neutron_power_density = 0.0
 
-        # Calculate the fusion rate density [reactions/m^3/second]
+        # Calculate the fusion rate density [reactions/m³/second]
         fusion_rate_density = fusion_power_density / reaction_energy
         alpha_rate_density = fusion_rate_density
-        proton_rate_density = fusion_rate_density  # Proton production rate [m^3/second]
+        proton_rate_density = fusion_rate_density  # Proton production rate [m³/second]
 
         # Update the cumulative D-3He power density
         self.dhe3_power_density = fusion_power_density
@@ -385,14 +389,10 @@ class FusionReactionRate:
         dd1 = BoschHaleConstants(**REACTION_CONSTANTS_DD1)
 
         # Calculate the fusion reaction rate integral using Simpson's rule
-        sigmav = integrate.simpson(
-            fusion_rate_integral(
-                self.plasma_profile,
-                dd1,
-                physics_data=self.data.physics,
-            ),
-            x=self.plasma_profile.neprofile.profile_x,
-            dx=self.plasma_profile.neprofile.profile_dx,
+        sigmav = calculate_vol_avg_reactivity(
+            self.plasma_profile,
+            dd1,
+            physics_data=self.data.physics,
         )
 
         self.data.physics.fusrat_plasma_dd_helion_profile = (
@@ -489,14 +489,10 @@ class FusionReactionRate:
         dd2 = BoschHaleConstants(**REACTION_CONSTANTS_DD2)
 
         # Calculate the fusion reaction rate integral using Simpson's rule
-        sigmav = integrate.simpson(
-            fusion_rate_integral(
-                self.plasma_profile,
-                dd2,
-                physics_data=self.data.physics,
-            ),
-            x=self.plasma_profile.neprofile.profile_x,
-            dx=self.plasma_profile.neprofile.profile_dx,
+        sigmav = calculate_vol_avg_reactivity(
+            self.plasma_profile,
+            dd2,
+            physics_data=self.data.physics,
         )
 
         self.data.physics.fusrat_plasma_dd_triton_profile = (
@@ -663,12 +659,22 @@ class BoschHaleConstants:
     cc7: float
 
 
-def fusion_rate_integral(
+def calculate_vol_avg_reactivity(
     plasma_profile: PlasmaProfile,
     reaction_constants: BoschHaleConstants,
     physics_data: PhysicsData,
 ) -> np.ndarray:
-    """Evaluate the integrand for the fusion power integration.
+    """Calculate the volume-averaged fusion reactivity 〈σv〉ᵥ for a given plasma profile
+    and Bosch-Hale reaction constants.
+
+    This function computes the integrand for the fusion power by normalizing the density
+    profile with respect to the volume-averaged electron density and multiplying it by
+    the fusion reactivity.
+    The result is then integrated over the plasma volume to obtain the volume-averaged
+    reactivity.
+
+    Parameters
+    ----------
 
     Parameters
     ----------
@@ -686,10 +692,10 @@ def fusion_rate_integral(
 
     References
     ----------
-        - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and
-        thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
-        doi: https://doi.org/10.1088/0029-5515/32/4/i07.
-    """
+    [1] H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and
+    thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
+    doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+    """  # noqa: RUF002
     # Since the electron temperature profile is only calculated directly, we scale the
     # ion temperature profile by the ratio of the volume averaged ion to electron
     # temperature
@@ -713,15 +719,17 @@ def fusion_rate_integral(
 
     # Calculate a volume averaged fusion reaction integral that allows for fusion power
     # to be scaled with just the volume averaged ion density.
-    return (
-        2.0 * plasma_profile.teprofile.profile_x * sigv * density_profile_normalised**2
+
+    return calculate_vol_avg_of_profile(
+        profile_x=plasma_profile.teprofile.profile_x,
+        profile_y=sigv * density_profile_normalised**2,
     )
 
 
 def bosch_hale_reactivity(
     ion_temperature_profile: np.ndarray, reaction_constants: BoschHaleConstants
 ) -> np.ndarray:
-    """Calculate the volumetric fusion reaction rate 〈sigmav〉 (m³/s) for one of four
+    """Calculate the velocity-space average reactivity 〈σv〉 [m³/s] for one of four
     nuclear reactions using the Bosch-Hale parametrization.
 
     The valid range of the fit is 0.2 keV < t < 100 keV except for D-3He where it is
@@ -743,15 +751,15 @@ def bosch_hale_reactivity(
     Returns
     -------
     :
-        np.ndarray: Volumetric fusion reaction rate 〈sigmav〉 in m^3/s for each point in
+        np.ndarray: Velocity-space average reactivity 〈σv〉 [m³/s] for each point in
         the ion temperature profile.
 
     References
     ----------
-        - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and
-        thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
-        doi: https://doi.org/10.1088/0029-5515/32/4/i07.
-    """
+    [1] H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and
+    thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
+    doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+    """  # noqa: RUF002
     theta1 = (
         ion_temperature_profile
         * (
@@ -776,7 +784,7 @@ def bosch_hale_reactivity(
 
     xi = ((reaction_constants.bg**2) / (4.0 * theta)) ** (1 / 3)
 
-    # Volumetric reaction rate / reactivity 〈sigmav〉 (m³/s)
+    # Volumetric reaction rate / reactivity 〈σv〉 [m³/s] # noqa: RUF003
     # Original form is in [cm³/s], so multiply by 1.0e-6 to convert to [m³/s]
     sigmav = (
         1.0e-6
