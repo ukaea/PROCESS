@@ -8,7 +8,6 @@ from scipy import integrate
 
 from process.core import constants
 from process.core.data_structure.base import DataStructure
-from process.data_structure.physics_variables import PhysicsData
 from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.physics.profiles import calculate_vol_avg_of_profile
 
@@ -179,7 +178,8 @@ class FusionReactionRate:
         the plasma cross-section to find the core plasma fusion power.
 
         The method updates the following attributes:
-            - self.sigmav_dt_average: Volume averaged D-T fusion reactivity 〈σv〉ᵥ for D-T.
+            - self.sigmav_dt_average: Volume averaged D-T fusion reactivity 〈σv〉ᵥ
+              for D-T.
             - self.dt_power_density: Fusion power density produced by the D-T reaction.
             - self.alpha_power_density: Power density of alpha particles produced.
             - self.pden_non_alpha_charged_mw: Power density of charged particles
@@ -624,73 +624,6 @@ class BoschHaleConstants:
     cc5: float
     cc6: float
     cc7: float
-
-
-def calculate_vol_avg_reactivity(
-    plasma_profile: PlasmaProfile,
-    reaction_constants: BoschHaleConstants,
-    physics_data: PhysicsData,
-) -> np.ndarray:
-    """Calculate the volume-averaged fusion reactivity 〈σv〉ᵥ for a given plasma profile
-    and Bosch-Hale reaction constants.
-
-    This function computes the integrand for the fusion power by normalizing the density
-    profile with respect to the volume-averaged electron density and multiplying it by
-    the fusion reactivity.
-    The result is then integrated over the plasma volume to obtain the volume-averaged
-    reactivity.
-
-    Parameters
-    ----------
-
-    Parameters
-    ----------
-    plasma_profile :
-        Parameterised temperature and density profiles.
-    reaction_constants :
-        Bosch-Hale reaction constants.
-    physics_data: PhysicsData
-        physics dataclass
-
-    Returns
-    -------
-    :
-        np.ndarray: Integrand for the fusion power.
-
-    References
-    ----------
-    [1] H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and
-    thermal reactivities,” Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
-    doi: https://doi.org/10.1088/0029-5515/32/4/i07.
-    """  # noqa: RUF002
-    # Since the electron temperature profile is only calculated directly, we scale the
-    # ion temperature profile by the ratio of the volume averaged ion to electron
-    # temperature
-    ion_temperature_profile = (
-        physics_data.temp_plasma_ion_vol_avg_kev
-        / physics_data.temp_plasma_electron_vol_avg_kev
-    ) * plasma_profile.teprofile.profile_y
-
-    # Number of fusion reactions per unit volume per particle volume density (m³/s)
-    sigv = bosch_hale_reactivity(ion_temperature_profile, reaction_constants)
-
-    # Integrand for the volume averaged fusion reaction rate sigmav:
-    # sigmav = integral(2 rho (sigv(rho) ni(rho)^2) drho),
-    # divided by the square of the volume-averaged ion density
-    # to retain the dimensions m^3/s (this is multiplied back in later)
-
-    # Set each point in the density profile as a fraction of the volume averaged density
-    density_profile_normalised = (
-        1.0 / physics_data.nd_plasma_electrons_vol_avg
-    ) * plasma_profile.neprofile.profile_y
-
-    # Calculate a volume averaged fusion reaction integral that allows for fusion power
-    # to be scaled with just the volume averaged ion density.
-
-    return calculate_vol_avg_of_profile(
-        profile_x=plasma_profile.teprofile.profile_x,
-        profile_y=sigv * density_profile_normalised**2,
-    )
 
 
 def bosch_hale_reactivity(
