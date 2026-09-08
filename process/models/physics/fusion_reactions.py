@@ -75,7 +75,7 @@ class FusionReactionRate:
         - Deuterium-Deuterium (D-D) second branch
 
     The class uses the Bosch-Hale parametrization to compute the volumetric fusion
-    reaction rate <sigma v> and integrates over the plasma cross-section to find the
+    reaction rate 〈σv〉 and integrates over the plasma cross-section to find the
     core plasma fusion power.
 
     Attributes
@@ -198,12 +198,14 @@ class FusionReactionRate:
             / self.data.physics.temp_plasma_electron_vol_avg_kev
         ) * self.plasma_profile.teprofile.profile_y
 
-        sigv_profile = bosch_hale_reactivity(
+        # Velocity-space average reactivity D-T profile [m³/s]
+        sigma_v_profile = bosch_hale_reactivity(
             ion_temperature_profile=ion_temperature_profile, reaction_constants=dt
         )
 
-        reaction_rate_profile = (
-            sigv_profile
+        # Full fusion reaction rate density profile for the D-T reaction [reactions/m³/s]
+        self.data.physics.fusrat_plasma_dt_profile = fusden_plasma_dt_profile = (
+            sigma_v_profile
             * self.data.physics.f_plasma_fuel_deuterium
             * self.data.physics.f_plasma_fuel_tritium
             * (
@@ -216,44 +218,39 @@ class FusionReactionRate:
             ** 2
         )
 
-        self.data.physics.fusrat_plasma_dt_profile = reaction_rate_profile
-
-        reaction_rate_density = calculate_vol_avg_of_profile(
-            profile_x=self.plasma_profile.teprofile.profile_x,
-            profile_y=reaction_rate_profile,
+        # Volume-averaged fusion reaction rate for the D-T reaction [reactions/m³/s]
+        fusden_dt_vol_avg = calculate_vol_avg_of_profile(
+            profile_x=self.plasma_profile.neprofile.profile_x,
+            profile_y=fusden_plasma_dt_profile,
+            profile_dx=self.plasma_profile.neprofile.profile_dx,
         )
 
         # Reaction energy in MegaJoules [MJ]
-        reaction_energy = constants.D_T_ENERGY / 1.0e6
+        e_reaction_mj = constants.D_T_ENERGY / 1.0e6
 
-        fusion_power_density = reaction_rate_density * reaction_energy
+        # Volume-averaged power density for the D-T reaction [MW/m³]
+        pden_dt_vol_avg_mw = fusden_dt_vol_avg * e_reaction_mj
 
         # Power densities for different particles [MW/m³]
         # Alpha particle gets approximately 20% of the fusion power
-        alpha_power_density = (
+        pden_alpha_vol_avg_mw = (
             1.0 - constants.DT_NEUTRON_ENERGY_FRACTION
-        ) * fusion_power_density
-        pden_non_alpha_charged_mw = 0.0
-        neutron_power_density = (
-            constants.DT_NEUTRON_ENERGY_FRACTION * fusion_power_density
+        ) * pden_dt_vol_avg_mw
+        pden_neutron_vol_avg_mw = (
+            constants.DT_NEUTRON_ENERGY_FRACTION * pden_dt_vol_avg_mw
         )
 
-        # Calculate the fusion rate density [reactions/m³/second]
-        fusion_rate_density = fusion_power_density / reaction_energy
-        alpha_rate_density = fusion_rate_density
-        proton_rate_density = 0.0
-
         # Update the cumulative D-T power density
-        self.dt_power_density = fusion_power_density
+        self.dt_power_density = pden_dt_vol_avg_mw
 
         # Sum the fusion rates for all particles
         self.sum_fusion_rates(
-            alpha_power_density,
-            pden_non_alpha_charged_mw,
-            neutron_power_density,
-            fusion_rate_density,
-            alpha_rate_density,
-            proton_rate_density,
+            alpha_power_add=pden_alpha_vol_avg_mw,
+            charged_power_add=0.0,
+            neutron_power_add=pden_neutron_vol_avg_mw,
+            fusion_rate_add=fusden_dt_vol_avg,
+            alpha_rate_add=fusden_dt_vol_avg,
+            proton_rate_add=0.0,
         )
 
     def dhe3_reaction(self):
@@ -274,8 +271,6 @@ class FusionReactionRate:
             - self.fusion_rate_density: Fusion reaction rate density.
             - self.alpha_rate_density: Alpha particle production rate density.
             - self.proton_rate_density: Proton production rate density.
-
-
         """  # noqa: RUF002
         # Initialize Bosch-Hale constants for the D-3He reaction
         dhe3 = BoschHaleConstants(**REACTION_CONSTANTS_DHE3)
@@ -285,13 +280,15 @@ class FusionReactionRate:
             / self.data.physics.temp_plasma_electron_vol_avg_kev
         ) * self.plasma_profile.teprofile.profile_y
 
-        sigv_profile = bosch_hale_reactivity(
+        # Velocity-space average reactivity D-3He profile [m³/s]
+        sigma_v_profile = bosch_hale_reactivity(
             ion_temperature_profile=ion_temperature_profile,
             reaction_constants=dhe3,
         )
 
-        reaction_rate_profile = (
-            sigv_profile
+        # Full fusion reaction rate profile for the D-3He reaction [reactions/m³/s]
+        self.data.physics.fusrat_plasma_dhe3_profile = fusden_plasma_dhe3_profile = (
+            sigma_v_profile
             * self.data.physics.f_plasma_fuel_deuterium
             * self.data.physics.f_plasma_fuel_helium3
             * (
@@ -304,45 +301,39 @@ class FusionReactionRate:
             ** 2
         )
 
-        self.data.physics.fusrat_plasma_dhe3_profile = reaction_rate_profile
-
-        reaction_rate_density = calculate_vol_avg_of_profile(
-            profile_x=self.plasma_profile.teprofile.profile_x,
-            profile_y=reaction_rate_profile,
+        # Volume-averaged fusion reaction rate for the D-3He reaction [reactions/m³/s]
+        fusden_dhe3_vol_avg = calculate_vol_avg_of_profile(
+            profile_x=self.plasma_profile.neprofile.profile_x,
+            profile_y=fusden_plasma_dhe3_profile,
+            profile_dx=self.plasma_profile.neprofile.profile_dx,
         )
 
         # Reaction energy in MegaJoules [MJ]
-        reaction_energy = constants.D_HELIUM_ENERGY / 1.0e6
+        e_reaction_mj = constants.D_HELIUM_ENERGY / 1.0e6
 
         # Calculate the fusion power density produced [MW/m³]
-        fusion_power_density = reaction_rate_density * reaction_energy
+        pden_dhe3_vol_avg_mw = fusden_dhe3_vol_avg * e_reaction_mj
 
         # Power densities for different particles [MW/m³]
         # Alpha particle gets approximately 20% of the fusion power
-        alpha_power_density = (
+        pden_alpha_vol_avg_mw = (
             1.0 - constants.DHELIUM_PROTON_ENERGY_FRACTION
-        ) * fusion_power_density
+        ) * pden_dhe3_vol_avg_mw
         pden_non_alpha_charged_mw = (
-            constants.DHELIUM_PROTON_ENERGY_FRACTION * fusion_power_density
+            constants.DHELIUM_PROTON_ENERGY_FRACTION * pden_dhe3_vol_avg_mw
         )
-        neutron_power_density = 0.0
-
-        # Calculate the fusion rate density [reactions/m³/second]
-        fusion_rate_density = fusion_power_density / reaction_energy
-        alpha_rate_density = fusion_rate_density
-        proton_rate_density = fusion_rate_density  # Proton production rate [m³/second]
 
         # Update the cumulative D-3He power density
-        self.dhe3_power_density = fusion_power_density
+        self.dhe3_power_density = pden_dhe3_vol_avg_mw
 
         # Sum the fusion rates for all particles
         self.sum_fusion_rates(
-            alpha_power_density,
-            pden_non_alpha_charged_mw,
-            neutron_power_density,
-            fusion_rate_density,
-            alpha_rate_density,
-            proton_rate_density,
+            alpha_power_add=pden_alpha_vol_avg_mw,
+            charged_power_add=pden_non_alpha_charged_mw,
+            neutron_power_add=0.0,
+            fusion_rate_add=fusden_dhe3_vol_avg,
+            alpha_rate_add=fusden_dhe3_vol_avg,
+            proton_rate_add=fusden_dhe3_vol_avg,
         )
 
     def dd_helion_reaction(self):
@@ -351,7 +342,7 @@ class FusionReactionRate:
         This method calculates the fusion reaction rate and power density for the
         deuterium-deuterium (D-D) fusion reaction, specifically the branch that produces
         helium-3 (3He) and a neutron (n). It uses the Bosch-Hale parametrization
-        to compute the volumetric fusion reaction rate <sigma v> and integrates over
+        to compute the volumetric fusion reaction rate 〈σv〉 and integrates over
         the plasma cross-section to find the core plasma fusion power.
 
         The method updates the following attributes:
@@ -363,9 +354,7 @@ class FusionReactionRate:
             - self.fusion_rate_density: Fusion reaction rate density.
             - self.alpha_rate_density: Alpha particle production rate density.
             - self.proton_rate_density: Proton production rate density.
-
-
-        """
+        """  # noqa: RUF002
         # Initialize Bosch-Hale constants for the D-D reaction
         dd1 = BoschHaleConstants(**REACTION_CONSTANTS_DD1)
 
@@ -374,13 +363,18 @@ class FusionReactionRate:
             / self.data.physics.temp_plasma_electron_vol_avg_kev
         ) * self.plasma_profile.teprofile.profile_y
 
-        sigv_profile = bosch_hale_reactivity(
+        # Velocity-space average reactivity D-D -> 3He + n profile [m³/s]
+        sigma_v_profile = bosch_hale_reactivity(
             ion_temperature_profile=ion_temperature_profile,
             reaction_constants=dd1,
         )
 
-        reaction_rate_profile = (
-            sigv_profile
+        # Full fusion reaction rate density profile for the D-D -> 3He + n
+        # reaction [reactions/m³/s]
+        self.data.physics.fusrat_plasma_dd_helion_profile = (
+            fusden_plasma_dd_helion_profile
+        ) = (
+            sigma_v_profile
             * self.data.physics.f_plasma_fuel_deuterium
             * self.data.physics.f_plasma_fuel_deuterium
             * (
@@ -393,49 +387,44 @@ class FusionReactionRate:
             ** 2
         )
 
-        self.data.physics.fusrat_plasma_dd_helion_profile = reaction_rate_profile
-
-        reaction_rate_density = calculate_vol_avg_of_profile(
-            profile_x=self.plasma_profile.teprofile.profile_x,
-            profile_y=reaction_rate_profile,
+        # Volume-averaged fusion reaction rate for the D-D -> 3He + n
+        # reaction [reactions/m³/s]
+        fusden_dd_helion_vol_avg = calculate_vol_avg_of_profile(
+            profile_x=self.plasma_profile.neprofile.profile_x,
+            profile_y=fusden_plasma_dd_helion_profile,
+            profile_dx=self.plasma_profile.neprofile.profile_dx,
         )
 
         # Reaction energy in MegaJoules [MJ]
-        reaction_energy = constants.DD_HELIUM_ENERGY / 1.0e6
+        e_reaction_mj = constants.DD_HELIUM_ENERGY / 1.0e6
 
-        # Calculate the fusion power density produced [MW/m^3]
+        # Calculate the fusion power density produced [MW/m³]
         # The power density is scaled by the branching ratio to simulate the different
         # product pathways
-        fusion_power_density = (
-            reaction_rate_density * reaction_energy * (1.0 - self.f_dd_branching_trit)
+        pden_dd_helion_vol_avg_mw = (
+            fusden_dd_helion_vol_avg * e_reaction_mj * (1.0 - self.f_dd_branching_trit)
         )
 
-        # Power densities for different particles [MW/m^3]
+        # Power densities for different particles [MW/m³]
         # Neutron particle gets approximately 75% of the fusion power
-        alpha_power_density = 0.0
-        pden_non_alpha_charged_mw = (
+        pden_non_alpha_charged_vol_avg_mw = (
             1.0 - constants.DD_NEUTRON_ENERGY_FRACTION
-        ) * fusion_power_density
-        neutron_power_density = (
-            constants.DD_NEUTRON_ENERGY_FRACTION * fusion_power_density
+        ) * pden_dd_helion_vol_avg_mw
+        pden_neutron_vol_avg_mw = (
+            constants.DD_NEUTRON_ENERGY_FRACTION * pden_dd_helion_vol_avg_mw
         )
-
-        # Calculate the fusion rate density [reactions/m^3/second]
-        fusion_rate_density = fusion_power_density / reaction_energy
-        alpha_rate_density = 0.0
-        proton_rate_density = 0.0
 
         # Update the cumulative D-D power density
-        self.dd_power_density += fusion_power_density
+        self.dd_power_density += pden_dd_helion_vol_avg_mw
 
         # Sum the fusion rates for all particles
         self.sum_fusion_rates(
-            alpha_power_density,
-            pden_non_alpha_charged_mw,
-            neutron_power_density,
-            fusion_rate_density,
-            alpha_rate_density,
-            proton_rate_density,
+            alpha_power_add=0.0,
+            charged_power_add=pden_non_alpha_charged_vol_avg_mw,
+            neutron_power_add=pden_neutron_vol_avg_mw,
+            fusion_rate_add=pden_dd_helion_vol_avg_mw,
+            alpha_rate_add=0.0,
+            proton_rate_add=0.0,
         )
 
     def dd_triton_reaction(self):
@@ -444,7 +433,7 @@ class FusionReactionRate:
         This method calculates the fusion reaction rate and power density for the
         deuterium-deuterium (D-D) fusion reaction, specifically the branch that produces
         tritium (T) and a proton (p). It uses the Bosch-Hale parametrization
-        to compute the volumetric fusion reaction rate <sigma v> and integrates over
+        to compute the volumetric fusion reaction rate 〈σv〉 and integrates over
         the plasma cross-section to find the core plasma fusion power.
 
         The method updates the following attributes:
@@ -456,9 +445,7 @@ class FusionReactionRate:
             - self.fusion_rate_density: Fusion reaction rate density.
             - self.alpha_rate_density: Alpha particle production rate density.
             - self.proton_rate_density: Proton production rate density.
-
-
-        """
+        """  # noqa: RUF002
         # Initialize Bosch-Hale constants for the D-D reaction
         dd2 = BoschHaleConstants(**REACTION_CONSTANTS_DD2)
 
@@ -467,13 +454,18 @@ class FusionReactionRate:
             / self.data.physics.temp_plasma_electron_vol_avg_kev
         ) * self.plasma_profile.teprofile.profile_y
 
-        sigv_profile = bosch_hale_reactivity(
+        # Velocity-space average reactivity for the D-D -> T + p reaction
+        sigma_v_profile = bosch_hale_reactivity(
             ion_temperature_profile=ion_temperature_profile,
             reaction_constants=dd2,
         )
 
-        reaction_rate_profile = (
-            sigv_profile
+        # Full fusion reaction rate density profile for the D-D -> T + p reaction
+        # [reactions/m³/s]
+        self.data.physics.fusrat_plasma_dd_triton_profile = (
+            fusden_plasma_dd_triton_profile
+        ) = (
+            sigma_v_profile
             * self.data.physics.f_plasma_fuel_deuterium
             * self.data.physics.f_plasma_fuel_deuterium
             * (
@@ -486,45 +478,41 @@ class FusionReactionRate:
             ** 2
         )
 
-        self.data.physics.fusrat_plasma_dd_triton_profile = reaction_rate_profile
-
-        reaction_rate_density = calculate_vol_avg_of_profile(
-            profile_x=self.plasma_profile.teprofile.profile_x,
-            profile_y=reaction_rate_profile,
+        # Volume-averaged fusion reaction rate density for the D-D -> T + p
+        # reaction [reactions/m³/s]
+        fusden_dd_triton_vol_avg = calculate_vol_avg_of_profile(
+            profile_x=self.plasma_profile.neprofile.profile_x,
+            profile_y=fusden_plasma_dd_triton_profile,
+            profile_dx=self.plasma_profile.neprofile.profile_dx,
         )
 
         # Reaction energy in MegaJoules [MJ]
-        reaction_energy = constants.DD_TRITON_ENERGY / 1.0e6
+        e_reaction_mj = constants.DD_TRITON_ENERGY / 1.0e6
 
-        # Calculate the fusion power density produced [MW/m^3]
+        # Calculate the fusion power density produced [MW/m³]
         # The power density is scaled by the branching ratio to simulate the different
         # product pathways
-        fusion_power_density = (
-            reaction_rate_density * reaction_energy * self.f_dd_branching_trit
+        pden_dd_triton_vol_avg_mw = (
+            fusden_dd_triton_vol_avg * e_reaction_mj * self.f_dd_branching_trit
         )
 
-        # Power densities for different particles [MW/m³]
-        alpha_power_density = 0.0
-        pden_non_alpha_charged_mw = fusion_power_density
-        neutron_power_density = 0.0
-
         # Calculate the fusion rate density [reactions/m³/s]
-        fusion_rate_density = fusion_power_density / reaction_energy
-        alpha_rate_density = 0.0
+        fusion_rate_density = pden_dd_triton_vol_avg_mw / e_reaction_mj
+
         # Proton production rate [particles/m³/s]
         proton_rate_density = fusion_rate_density
 
         # Update the cumulative D-D power density
-        self.dd_power_density += fusion_power_density
+        self.dd_power_density += pden_dd_triton_vol_avg_mw
 
         # Sum the fusion rates for all particles
         self.sum_fusion_rates(
-            alpha_power_density,
-            pden_non_alpha_charged_mw,
-            neutron_power_density,
-            fusion_rate_density,
-            alpha_rate_density,
-            proton_rate_density,
+            alpha_power_add=0.0,
+            charged_power_add=pden_dd_triton_vol_avg_mw,
+            neutron_power_add=0.0,
+            fusion_rate_add=fusion_rate_density,
+            alpha_rate_add=0.0,
+            proton_rate_add=proton_rate_density,
         )
 
     def sum_fusion_rates(
