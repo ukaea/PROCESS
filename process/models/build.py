@@ -420,7 +420,7 @@ class Build(Model):
         Raises
         ------
         ProcessValueError
-            If constraint 39 is being used with i_pulsed_plant=0
+            Only 1 or 2 divertors are supported
 
         """
         if self.data.divertor.n_divertors not in {1, 2}:
