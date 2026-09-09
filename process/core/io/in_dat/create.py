@@ -38,25 +38,20 @@ def feasible_point(filename, position: int):
 
     if position == -1:
         position = num_scans
+    elif position not in range(1, num_scans + 1):
+        raise ValueError(
+            "Invalid value given. "
+            f"Select value in range 1-{num_scans} or -1 for last scan point."
+        )
 
-    position = max(1, position)
-
-    if position > num_scans:
-        position = num_scans
-        print(f"Only {num_scans} in mfile selecting last feasible_point")
-
-    check_point = 1
-
-    for value in mfile_data.data:
-        # Look for feasible scan points (with ifail = 1)
-        if "ifail" in value and "vmcon_error_flag_(ifail)" not in value:
-            if mfile_data.get(value, scan=check_point) == 1:
-                scan_point = check_point
-            if check_point == position:
-                break
-            check_point += 1
+    if mfile_data.get("ifail", scan=position) == 1:
+        scan_point = position
     else:
-        raise ValueError("No feasible point found")
+        raise ValueError(
+            f"Scan point {position} is not feasible. "
+            f"Please select a different scan point."
+        )
+
     return scan_point
 
 
