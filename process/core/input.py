@@ -169,7 +169,6 @@ INPUT_VARIABLES = {
     "beta_vol_avg_min": InputVariable("physics", float, range=(0.0, 1.0)),
     "betbm0": InputVariable("physics", float, range=(0.0, 10.0)),
     "b_plasma_toroidal_on_axis": InputVariable("physics", float, range=(0.0, 30.0)),
-    "burnup_in": InputVariable("physics", float, range=(0.0, 1.0)),
     "radius_plasma_core_norm": InputVariable(
         "impurity_radiation", float, range=(0.0, 1.0)
     ),
@@ -1181,6 +1180,22 @@ INPUT_VARIABLES = {
     "len_sol_outboard_power_decay": InputVariable("physics", float, range=(0.0, 1.0)),
     "f_len_sol_power_decay_inboard_outboard": InputVariable(
         "physics", float, range=(0.01, 2.0)
+    ),
+    "f_plasma_particles_lcfs_recycled": InputVariable(
+        "physics", float, range=(0.0, 1.0)
+    ),
+    "eta_plasma_fuelling": InputVariable("physics", float, range=(0.0, 1.0)),
+    "molflow_plasma_fuelling_vv_injected": InputVariable(
+        "physics", float, range=(1e18, 1e24)
+    ),
+    "f_molflow_plasma_fuelling_deuterium": InputVariable(
+        "physics", float, range=(0.0, 1.0)
+    ),
+    "f_molflow_plasma_fuelling_tritium": InputVariable(
+        "physics", float, range=(0.0, 1.0)
+    ),
+    "f_molflow_plasma_fuelling_helium3": InputVariable(
+        "physics", float, range=(0.0, 1.0)
     ),
 }
 
