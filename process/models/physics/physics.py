@@ -705,7 +705,7 @@ class Physics(Model):
             self.data.physics.pden_non_alpha_charged_mw,
             self.data.physics.pden_plasma_neutron_mw,
             self.data.physics.vol_plasma,
-            self.data.physics.pden_plasma_alpha_mw,
+            self.data.physics.pden_plasma_alpha_vol_avg_mw,
             self.data.physics.f_p_alpha_plasma_deposited,
         )
 
@@ -718,7 +718,7 @@ class Physics(Model):
             temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
             temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
             pden_alpha_total_vol_avg_mw=self.data.physics.pden_alpha_total_vol_avg_mw,
-            pden_plasma_alpha_mw=self.data.physics.pden_plasma_alpha_mw,
+            pden_plasma_alpha_vol_avg_mw=self.data.physics.pden_plasma_alpha_vol_avg_mw,
             i_beta_fast_alpha=self.data.physics.i_beta_fast_alpha,
             f_plasma_fuel_deuterium=self.data.physics.f_plasma_fuel_deuterium,
         )
@@ -2019,9 +2019,9 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Alpha power density: plasma [MW/m³]",
-            "(pden_plasma_alpha_mw)",
-            self.data.physics.pden_plasma_alpha_mw,
+            "Volume-averaged alpha power density: plasma [MW/m³]",
+            "(pden_plasma_alpha_vol_avg_mw)",
+            self.data.physics.pden_plasma_alpha_vol_avg_mw,
             "OP ",
         )
         po.ovarre(
@@ -4203,7 +4203,7 @@ class PlasmaBeta(Model):
         temp_plasma_electron_density_weighted_kev: float,
         temp_plasma_ion_density_weighted_kev: float,
         pden_alpha_total_vol_avg_mw: float,
-        pden_plasma_alpha_mw: float,
+        pden_plasma_alpha_vol_avg_mw: float,
         i_beta_fast_alpha: int,
         f_plasma_fuel_deuterium: float,
     ) -> float:
@@ -4230,7 +4230,7 @@ class PlasmaBeta(Model):
             Density-weighted ion temperature (keV).
         pden_alpha_total_vol_avg_mw : float
             Alpha power per unit volume, from beams and plasma (MW/m³).
-        pden_plasma_alpha_mw : float
+        pden_plasma_alpha_vol_avg_mw : float
             Alpha power per unit volume just from plasma (MW/m³).
         i_beta_fast_alpha : int
             Switch for fast alpha pressure method.
@@ -4313,7 +4313,7 @@ class PlasmaBeta(Model):
                 )
 
             fact = max(fact, 0.0)
-            fact2 = pden_alpha_total_vol_avg_mw / pden_plasma_alpha_mw
+            fact2 = pden_alpha_total_vol_avg_mw / pden_plasma_alpha_vol_avg_mw
             beta_fast_alpha = beta_thermal * fact * fact2
 
         else:  # negligible alpha production, alpha_power_density = p_beam_alpha_mw = 0

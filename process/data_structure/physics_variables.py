@@ -1097,8 +1097,8 @@ class PhysicsData:
     f_dd_branching_trit: float = 0.0
     """branching ratio for DD -> T"""
 
-    pden_plasma_alpha_mw: float = 0.0
-    """Alpha power per volume just from plasma [MW/m3]"""
+    pden_plasma_alpha_vol_avg_mw: float = 0.0
+    """Volume-averaged alpha power per volume just from plasma [MW/m³]"""
 
     pden_alpha_total_vol_avg_mw: float = 0.0
     """Volume-averaged alpha power per volume from plasma and beams [MW/m³]"""

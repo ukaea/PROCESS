@@ -2076,7 +2076,7 @@ class Stellarator(Model):
             self.data.physics.pden_non_alpha_charged_mw,
             self.data.physics.pden_plasma_neutron_mw,
             self.data.physics.vol_plasma,
-            self.data.physics.pden_plasma_alpha_mw,
+            self.data.physics.pden_plasma_alpha_vol_avg_mw,
             self.data.physics.f_p_alpha_plasma_deposited,
         )
 
@@ -2089,7 +2089,7 @@ class Stellarator(Model):
             self.data.physics.temp_plasma_electron_density_weighted_kev,
             self.data.physics.temp_plasma_ion_density_weighted_kev,
             self.data.physics.pden_alpha_total_vol_avg_mw,
-            self.data.physics.pden_plasma_alpha_mw,
+            self.data.physics.pden_plasma_alpha_vol_avg_mw,
             self.data.physics.i_beta_fast_alpha,
             self.data.physics.f_plasma_fuel_deuterium,
         )

@@ -22,7 +22,7 @@ class SetFusionPowersParam(NamedTuple):
 
     vol_plasma: Any = None
 
-    pden_plasma_alpha_mw: Any = None
+    pden_plasma_alpha_vol_avg_mw: Any = None
 
     pden_plasma_neutron_mw: Any = None
 
@@ -55,7 +55,7 @@ class SetFusionPowersParam(NamedTuple):
             p_beam_alpha_mw=0,
             pden_non_alpha_charged_mw=0.00066,
             vol_plasma=2426.25,
-            pden_plasma_alpha_mw=0.163,
+            pden_plasma_alpha_vol_avg_mw=0.163,
             pden_plasma_neutron_mw=0.654,
             expected_alpha_power_density=0.163,
             expected_neutron_power_density=0.654,
@@ -74,7 +74,7 @@ class SetFusionPowersParam(NamedTuple):
             p_beam_alpha_mw=100.5,
             pden_non_alpha_charged_mw=0.00066,
             vol_plasma=2426.25,
-            pden_plasma_alpha_mw=0.163,
+            pden_plasma_alpha_vol_avg_mw=0.163,
             pden_plasma_neutron_mw=0.654,
             expected_alpha_power_density=0.20442195,
             expected_neutron_power_density=0.8183263050336705,
@@ -121,7 +121,7 @@ def test_set_fusion_powers(setfusionpowersparam):
         pden_non_alpha_charged_mw=setfusionpowersparam.pden_non_alpha_charged_mw,
         pden_plasma_neutron_mw=setfusionpowersparam.pden_plasma_neutron_mw,
         vol_plasma=setfusionpowersparam.vol_plasma,
-        pden_plasma_alpha_mw=setfusionpowersparam.pden_plasma_alpha_mw,
+        pden_plasma_alpha_vol_avg_mw=setfusionpowersparam.pden_plasma_alpha_vol_avg_mw,
         f_p_alpha_plasma_deposited=setfusionpowersparam.f_p_alpha_plasma_deposited,
     )
 
