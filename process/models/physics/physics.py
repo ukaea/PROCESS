@@ -644,7 +644,7 @@ class Physics(Model):
                 self.data.physics.vol_plasma,
                 self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
             )
-            self.data.physics.fusden_total = (
+            self.data.physics.fusden_total_vol_avg = (
                 self.data.physics.fusden_plasma
                 + 1.0e6
                 * self.data.physics.p_beam_alpha_mw
@@ -673,12 +673,12 @@ class Physics(Model):
         else:
             # If no beams present then the total alpha rates and power are the same as
             # the plasma values
-            self.data.physics.fusden_total = self.data.physics.fusden_plasma
+            self.data.physics.fusden_total_vol_avg = self.data.physics.fusden_plasma
             self.data.physics.fusden_alpha_total = self.data.physics.fusden_plasma_alpha
             self.data.physics.p_dt_total_mw = self.data.physics.p_plasma_dt_mw
 
         self.data.physics.fusrat_total = (
-            self.data.physics.fusden_total * self.data.physics.vol_plasma
+            self.data.physics.fusden_total_vol_avg * self.data.physics.vol_plasma
         )
 
         # Create some derived values and add beam contribution to fusion power
@@ -969,7 +969,7 @@ class Physics(Model):
         ) = self.phyaux(
             self.data.physics.aspect,
             self.data.physics.nd_plasma_fuel_ions_vol_avg,
-            self.data.physics.fusden_total,
+            self.data.physics.fusden_total_vol_avg,
             self.data.physics.fusden_alpha_total,
             self.data.physics.plasma_current,
             sbar,
@@ -1486,7 +1486,7 @@ class Physics(Model):
     def phyaux(
         aspect: float,
         nd_plasma_fuel_ions_vol_avg: float,
-        fusden_total: float,
+        fusden_total_vol_avg: float,
         fusden_alpha_total: float,
         plasma_current: float,
         sbar: float,
@@ -1504,7 +1504,7 @@ class Physics(Model):
             Plasma aspect ratio.
         nd_plasma_fuel_ions_vol_avg : float
             Fuel ion density (/m3).
-        fusden_total : float
+        fusden_total_vol_avg : float
             Fusion reaction rate from plasma and beams (/m3/s).
         fusden_alpha_total : float
             Alpha particle production rate (/m3/s).
@@ -1542,7 +1542,7 @@ class Physics(Model):
         figmer = 1e-6 * plasma_current * aspect**sbar
 
         # Fusion reactions per second
-        fusrat = fusden_total * vol_plasma
+        fusrat = fusden_total_vol_avg * vol_plasma
 
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
@@ -1868,9 +1868,9 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Fusion rate density: total (reactions/m³/sec)",
-            "(fusden_total)",
-            self.data.physics.fusden_total,
+            "Volume averaged fusion rate density: total [reactions/m³/sec]",
+            "(fusden_total_vol_avg)",
+            self.data.physics.fusden_total_vol_avg,
             "OP ",
         )
         po.ovarre(

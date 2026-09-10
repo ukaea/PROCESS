@@ -2027,7 +2027,7 @@ class Stellarator(Model):
                 self.data.physics.vol_plasma,
                 self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
             )
-            self.data.physics.fusden_total = (
+            self.data.physics.fusden_total_vol_avg = (
                 self.data.physics.fusden_plasma
                 + 1.0e6
                 * self.data.physics.p_beam_alpha_mw
@@ -2048,7 +2048,7 @@ class Stellarator(Model):
         else:
             # If no beams present then the total alpha rates and power are the same as
             # the plasma values
-            self.data.physics.fusden_total = self.data.physics.fusden_plasma
+            self.data.physics.fusden_total_vol_avg = self.data.physics.fusden_plasma
             self.data.physics.fusden_alpha_total = self.data.physics.fusden_plasma_alpha
             self.data.physics.p_dt_total_mw = self.data.physics.p_plasma_dt_mw
 
@@ -2388,7 +2388,7 @@ class Stellarator(Model):
         ) = self.physics.phyaux(
             self.data.physics.aspect,
             self.data.physics.nd_plasma_fuel_ions_vol_avg,
-            self.data.physics.fusden_total,
+            self.data.physics.fusden_total_vol_avg,
             self.data.physics.fusden_alpha_total,
             self.data.physics.plasma_current,
             sbar,

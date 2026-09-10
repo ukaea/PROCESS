@@ -799,8 +799,8 @@ class PhysicsData:
     f_plasma_fuel_tritium: float = 0.5
     """Plasma tritium fuel fraction"""
 
-    fusden_total: float = 0.0
-    """fusion reaction rate density, from beams and plasma (reactions/m3/sec)"""
+    fusden_total_vol_avg: float = 0.0
+    """Total volume averaged fusion reaction rate density, from beams and plasma [reactions/m³/sec]"""
 
     fusrat_total: float = 0.0
     """fusion reaction rate, from beams and plasma (reactions/sec)"""

@@ -1851,7 +1851,7 @@ class PhyauxParam(NamedTuple):
 
     nd_plasma_alphas_thermal_vol_avg: Any = None
 
-    fusden_total: Any = None
+    fusden_total_vol_avg: Any = None
 
     fusden_alpha_total: Any = None
 
@@ -1889,7 +1889,7 @@ class PhyauxParam(NamedTuple):
             aspect=3,
             nd_plasma_fuel_ions_vol_avg=5.858890125e19,
             nd_plasma_alphas_thermal_vol_avg=7.5e18,
-            fusden_total=1.9852091609123786e17,
+            fusden_total_vol_avg=1.9852091609123786e17,
             fusden_alpha_total=1.973996644759543e17,
             plasma_current=18398455.678867526,
             sbar=1,
@@ -1908,7 +1908,7 @@ class PhyauxParam(NamedTuple):
             aspect=3,
             nd_plasma_fuel_ions_vol_avg=5.8576156204039725e19,
             nd_plasma_alphas_thermal_vol_avg=7.5e18,
-            fusden_total=1.9843269653375773e17,
+            fusden_total_vol_avg=1.9843269653375773e17,
             fusden_alpha_total=1.9731194318497056e17,
             plasma_current=18398455.678867526,
             sbar=1,
@@ -1953,7 +1953,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         aspect=phyauxparam.aspect,
         nd_plasma_fuel_ions_vol_avg=phyauxparam.nd_plasma_fuel_ions_vol_avg,
         nd_plasma_alphas_thermal_vol_avg=phyauxparam.nd_plasma_alphas_thermal_vol_avg,
-        fusden_total=phyauxparam.fusden_total,
+        fusden_total_vol_avg=phyauxparam.fusden_total_vol_avg,
         fusden_alpha_total=phyauxparam.fusden_alpha_total,
         plasma_current=phyauxparam.plasma_current,
         sbar=phyauxparam.sbar,
