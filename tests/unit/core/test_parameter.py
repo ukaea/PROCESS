@@ -18,7 +18,9 @@ def turn_off_access_records(monkeypatch):
         process.core.data_structure.parameter, "KEEP_EDIT_USE_RECORDS", False
     )
     monkeypatch.setattr(
-        process.core.data_structure.parameter, "FILTER_EDIT_USE_RECORDS_PATH", "/tests/"
+        process.core.data_structure.parameter,
+        "FILTER_EDIT_USE_RECORDS_PATH",
+        lambda frame: "/tests/" in frame.filename,
     )
 
 
@@ -28,7 +30,9 @@ def turn_on_access_records(monkeypatch):
         process.core.data_structure.parameter, "KEEP_EDIT_USE_RECORDS", True
     )
     monkeypatch.setattr(
-        process.core.data_structure.parameter, "FILTER_EDIT_USE_RECORDS_PATH", "/tests/"
+        process.core.data_structure.parameter,
+        "FILTER_EDIT_USE_RECORDS_PATH",
+        lambda frame: "/tests/" in frame.filename,
     )
 
 
@@ -182,6 +186,23 @@ def test_parameter_edit_record_another_parameter(
     assert len(example_model_dataclass.my_param.edit_records) == 1
     assert example_model_dataclass.my_param.edit_records[0].value == 42.0  # ruff:ignore[RUF069]
     assert example_model_dataclass.my_param.edit_records[0].new_value == 7.0  # ruff:ignore[RUF069]
+
+
+def test_parameter_edit_record_no_frame_filter(
+    turn_on_access_records, example_model_dataclass, monkeypatch
+):
+    monkeypatch.setattr(
+        process.core.data_structure.parameter,
+        "FILTER_EDIT_USE_RECORDS_PATH",
+        lambda _: False,
+    )
+
+    example_model_dataclass.my_param = 72.0
+
+    assert example_model_dataclass.my_param.edit_records[0].frame_code is None
+    assert example_model_dataclass.my_param.edit_records[0].frame_file is None
+    assert example_model_dataclass.my_param.edit_records[0].frame_function is None
+    assert example_model_dataclass.my_param.edit_records[0].frame_lineno is None
 
 
 @pytest.mark.parametrize("value", [1.0, Parameter("a_param", 7.0), [1.0, 2.0]])
