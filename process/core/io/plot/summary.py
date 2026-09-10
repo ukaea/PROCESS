@@ -12070,7 +12070,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     textstr_general = (
         f"Total fusion rate: {mfile.get('fusrat_total', scan=scan):.4e} reactions/s\n"
         f"Total volume averaged fusion rate density: {mfile.get('fusden_total_vol_avg', scan=scan):.4e} reactions/m3/s\n"
-        f"Plasma fusion rate density: {mfile.get('fusden_plasma', scan=scan):.4e} reactions/m3/s\n"
+        f"Plasma volume averaged fusion rate density: {mfile.get('fusden_plasma_vol_avg', scan=scan):.4e} reactions/m3/s\n"
     )
 
     axis.text(

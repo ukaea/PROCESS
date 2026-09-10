@@ -817,8 +817,8 @@ class PhysicsData:
     fusden_plasma_dhe3_profile: list[float] = field(default_factory=list)
     """Profile of D-3He fusion reaction rate density in plasma, [reactions/m³/sec]"""
 
-    fusden_plasma: float = 0.0
-    """fusion reaction rate, just from plasma (reactions/m3/sec)"""
+    fusden_plasma_vol_avg: float = 0.0
+    """Volume averaged fusion reaction rate, just from plasma [reactions/m³/sec]"""
 
     f_c_plasma_non_inductive: float = 1.0
     """fraction of the plasma current produced by non-inductive means (`iteration variable 44`)"""

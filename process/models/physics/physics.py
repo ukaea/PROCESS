@@ -645,7 +645,7 @@ class Physics(Model):
                 self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
             )
             self.data.physics.fusden_total_vol_avg = (
-                self.data.physics.fusden_plasma
+                self.data.physics.fusden_plasma_vol_avg
                 + 1.0e6
                 * self.data.physics.p_beam_alpha_mw
                 / (constants.DT_ALPHA_ENERGY)
@@ -673,7 +673,9 @@ class Physics(Model):
         else:
             # If no beams present then the total alpha rates and power are the same as
             # the plasma values
-            self.data.physics.fusden_total_vol_avg = self.data.physics.fusden_plasma
+            self.data.physics.fusden_total_vol_avg = (
+                self.data.physics.fusden_plasma_vol_avg
+            )
             self.data.physics.fusden_alpha_total = self.data.physics.fusden_plasma_alpha
             self.data.physics.p_dt_total_mw = self.data.physics.p_plasma_dt_mw
 
@@ -1875,9 +1877,9 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Fusion rate density: plasma (reactions/m³/sec)",
-            "(fusden_plasma)",
-            self.data.physics.fusden_plasma,
+            "Volume averaged fusion rate density: plasma [reactions/m³/sec]",
+            "(fusden_plasma_vol_avg)",
+            self.data.physics.fusden_plasma_vol_avg,
             "OP ",
         )
 
