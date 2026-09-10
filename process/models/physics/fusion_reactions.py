@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 import numpy as np
 from scipy import integrate
+from typing_extensions import Self
 
 from process.core import constants
 from process.core import process_output as po
@@ -65,6 +66,44 @@ REACTION_CONSTANTS_DD2 = {
 }
 
 
+@dataclass
+class FusionYieldDensities:
+    """Fusion power and reaction rate densities produced by a reaction (or their sum).
+
+    Attributes
+    ----------
+    pden_plasma_alpha_vol_avg_mw :
+        Alpha particle fusion power per unit volume [MW/m³].
+    pden_non_alpha_charged_vol_avg_mw :
+        Non-alpha charged particle fusion power per unit volume [MW/m³].
+    pden_neutron_vol_avg_mw :
+        Neutron fusion power per unit volume [MW/m³].
+    fusden_vol_avg :
+        Fusion reaction rate per unit volume [reactions/m³/s].
+    fusden_plasma_alpha_vol_avg :
+        Alpha particle production rate per unit volume [particles/m³/s].
+    fusden_plasma_protons_vol_avg :
+        Proton production rate per unit volume [particles/m³/s].
+    """
+
+    pden_plasma_alpha_vol_avg_mw: float = 0.0
+    pden_non_alpha_charged_vol_avg_mw: float = 0.0
+    pden_neutron_vol_avg_mw: float = 0.0
+    fusden_vol_avg: float = 0.0
+    fusden_plasma_alpha_vol_avg: float = 0.0
+    fusden_plasma_protons_vol_avg: float = 0.0
+
+    def __iadd__(self, other: "FusionYieldDensities") -> Self:
+        """In-place addition of fusion rate densities."""
+        self.pden_plasma_alpha_vol_avg_mw += other.pden_plasma_alpha_vol_avg_mw
+        self.pden_non_alpha_charged_vol_avg_mw += other.pden_non_alpha_charged_vol_avg_mw
+        self.pden_neutron_vol_avg_mw += other.pden_neutron_vol_avg_mw
+        self.fusden_vol_avg += other.fusden_vol_avg
+        self.fusden_plasma_alpha_vol_avg += other.fusden_plasma_alpha_vol_avg
+        self.fusden_plasma_protons_vol_avg += other.fusden_plasma_protons_vol_avg
+        return self
+
+
 class PlasmaReactions:
     """Calculate the fusion reaction rate for each reaction case (DT, DHE3, DD1, DD2).
 
@@ -92,18 +131,9 @@ class PlasmaReactions:
         Fusion power density produced by the D-D reactions.
     dt_power_density : float
         Fusion power density produced by the D-T reaction.
-    alpha_power_density : float
-        Power density of alpha particles produced.
-    pden_non_alpha_charged_mw : float
-        Power density of charged particles produced.
-    neutron_power_density : float
-        Power density of neutrons produced.
-    fusion_rate_density : float
-        Fusion reaction rate density.
-    alpha_rate_density : float
-        Alpha particle production rate density.
-    proton_rate_density : float
-        Proton production rate density.
+    fusion_rates : FusionYieldDensities
+        Cumulative fusion power and reaction rate densities, summed over all
+        reactions.
     f_dd_branching_trit : float
         Ratio of tritium-producing D-D reactions to 3He-producing D-D reactions.
 
@@ -133,12 +163,7 @@ class PlasmaReactions:
         self.pden_dhe3_total_vol_avg_mw = 0.0
         self.pden_dd_total_vol_avg_mw = 0.0
         self.dt_power_density = 0.0
-        self.alpha_power_density = 0.0
-        self.pden_non_alpha_charged_mw = 0.0
-        self.neutron_power_density = 0.0
-        self.fusion_rate_density = 0.0
-        self.alpha_rate_density = 0.0
-        self.proton_rate_density = 0.0
+        self.fusion_rates = FusionYieldDensities()
         self.f_dd_branching_trit = 0.0
 
     def deuterium_branching(self, ion_temperature: float) -> float:
@@ -184,13 +209,7 @@ class PlasmaReactions:
             - self.sigmav_dt_average: Volume averaged D-T fusion reactivity 〈σv〉ᵥ
               for D-T.
             - self.dt_power_density: Fusion power density produced by the D-T reaction.
-            - self.alpha_power_density: Power density of alpha particles produced.
-            - self.pden_non_alpha_charged_mw: Power density of charged particles
-                produced.
-            - self.neutron_power_density: Power density of neutrons produced.
-            - self.fusion_rate_density: Fusion reaction rate density.
-            - self.alpha_rate_density: Alpha particle production rate density.
-            - self.proton_rate_density: Proton production rate density.
+            - self.fusion_rates: Cumulative fusion power and reaction rate densities.
 
         """  # noqa: RUF002
         # Initialize Bosch-Hale constants for the D-T reaction
@@ -247,13 +266,11 @@ class PlasmaReactions:
         self.dt_power_density = pden_dt_vol_avg_mw
 
         # Sum the fusion rates for all particles
-        self.sum_fusion_rates(
-            alpha_power_add=pden_alpha_vol_avg_mw,
-            charged_power_add=0.0,
-            neutron_power_add=pden_neutron_vol_avg_mw,
-            fusion_rate_add=fusden_dt_vol_avg,
-            alpha_rate_add=fusden_dt_vol_avg,
-            proton_rate_add=0.0,
+        self.fusion_rates += FusionYieldDensities(
+            pden_plasma_alpha_vol_avg_mw=pden_alpha_vol_avg_mw,
+            pden_neutron_vol_avg_mw=pden_neutron_vol_avg_mw,
+            fusden_vol_avg=fusden_dt_vol_avg,
+            fusden_plasma_alpha_vol_avg=fusden_dt_vol_avg,
         )
 
     def dhe3_reaction(self):
@@ -267,13 +284,7 @@ class PlasmaReactions:
         The method updates the following attributes:
             - self.pden_dhe3_total_vol_avg_mw: Fusion power density produced by the D-3He
               reaction.
-            - self.alpha_power_density: Power density of alpha particles produced.
-            - self.pden_non_alpha_charged_mw: Power density of charged particles
-              produced.
-            - self.neutron_power_density: Power density of neutrons produced.
-            - self.fusion_rate_density: Fusion reaction rate density.
-            - self.alpha_rate_density: Alpha particle production rate density.
-            - self.proton_rate_density: Proton production rate density.
+            - self.fusion_rates: Cumulative fusion power and reaction rate densities.
         """  # noqa: RUF002
         # Initialize Bosch-Hale constants for the D-3He reaction
         dhe3 = BoschHaleConstants(**REACTION_CONSTANTS_DHE3)
@@ -330,13 +341,12 @@ class PlasmaReactions:
         self.pden_dhe3_total_vol_avg_mw = pden_dhe3_vol_avg_mw
 
         # Sum the fusion rates for all particles
-        self.sum_fusion_rates(
-            alpha_power_add=pden_alpha_vol_avg_mw,
-            charged_power_add=pden_non_alpha_charged_mw,
-            neutron_power_add=0.0,
-            fusion_rate_add=fusden_dhe3_vol_avg,
-            alpha_rate_add=fusden_dhe3_vol_avg,
-            proton_rate_add=fusden_dhe3_vol_avg,
+        self.fusion_rates += FusionYieldDensities(
+            pden_plasma_alpha_vol_avg_mw=pden_alpha_vol_avg_mw,
+            pden_non_alpha_charged_vol_avg_mw=pden_non_alpha_charged_mw,
+            fusden_vol_avg=fusden_dhe3_vol_avg,
+            fusden_plasma_alpha_vol_avg=fusden_dhe3_vol_avg,
+            fusden_plasma_protons_vol_avg=fusden_dhe3_vol_avg,
         )
 
     def dd_helion_reaction(self):
@@ -349,14 +359,9 @@ class PlasmaReactions:
         the plasma cross-section to find the core plasma fusion power.
 
         The method updates the following attributes:
-            - self.pden_dd_total_vol_avg_mw: Fusion power density produced by the D-D reaction.
-            - self.alpha_power_density: Power density of alpha particles produced.
-            - self.pden_non_alpha_charged_mw: Power density of charged particles
-              produced.
-            - self.neutron_power_density: Power density of neutrons produced.
-            - self.fusion_rate_density: Fusion reaction rate density.
-            - self.alpha_rate_density: Alpha particle production rate density.
-            - self.proton_rate_density: Proton production rate density.
+        - self.pden_dd_total_vol_avg_mw: Fusion power density produced by the
+          D-D reaction.
+        - self.fusion_rates: Cumulative fusion power and reaction rate densities.
         """  # noqa: RUF002
         # Initialize Bosch-Hale constants for the D-D reaction
         dd1 = BoschHaleConstants(**REACTION_CONSTANTS_DD1)
@@ -421,13 +426,10 @@ class PlasmaReactions:
         self.pden_dd_total_vol_avg_mw += pden_dd_helion_vol_avg_mw
 
         # Sum the fusion rates for all particles
-        self.sum_fusion_rates(
-            alpha_power_add=0.0,
-            charged_power_add=pden_non_alpha_charged_vol_avg_mw,
-            neutron_power_add=pden_neutron_vol_avg_mw,
-            fusion_rate_add=pden_dd_helion_vol_avg_mw,
-            alpha_rate_add=0.0,
-            proton_rate_add=0.0,
+        self.fusion_rates += FusionYieldDensities(
+            pden_non_alpha_charged_vol_avg_mw=pden_non_alpha_charged_vol_avg_mw,
+            pden_neutron_vol_avg_mw=pden_neutron_vol_avg_mw,
+            fusden_vol_avg=pden_dd_helion_vol_avg_mw,
         )
 
     def dd_triton_reaction(self):
@@ -440,14 +442,9 @@ class PlasmaReactions:
         the plasma cross-section to find the core plasma fusion power.
 
         The method updates the following attributes:
-            - self.pden_dd_total_vol_avg_mw: Fusion power density produced by the D-D reaction.
-            - self.alpha_power_density: Power density of alpha particles produced.
-            - self.pden_non_alpha_charged_mw: Power density of charged particles
-              produced.
-            - self.neutron_power_density: Power density of neutrons produced.
-            - self.fusion_rate_density: Fusion reaction rate density.
-            - self.alpha_rate_density: Alpha particle production rate density.
-            - self.proton_rate_density: Proton production rate density.
+            - self.pden_dd_total_vol_avg_mw: Fusion power density produced by the
+              D-D reaction.
+            - self.fusion_rates: Cumulative fusion power and reaction rate densities.
         """  # noqa: RUF002
         # Initialize Bosch-Hale constants for the D-D reaction
         dd2 = BoschHaleConstants(**REACTION_CONSTANTS_DD2)
@@ -509,53 +506,11 @@ class PlasmaReactions:
         self.pden_dd_total_vol_avg_mw += pden_dd_triton_vol_avg_mw
 
         # Sum the fusion rates for all particles
-        self.sum_fusion_rates(
-            alpha_power_add=0.0,
-            charged_power_add=pden_dd_triton_vol_avg_mw,
-            neutron_power_add=0.0,
-            fusion_rate_add=fusion_rate_density,
-            alpha_rate_add=0.0,
-            proton_rate_add=proton_rate_density,
+        self.fusion_rates += FusionYieldDensities(
+            pden_non_alpha_charged_vol_avg_mw=pden_dd_triton_vol_avg_mw,
+            fusden_vol_avg=fusion_rate_density,
+            fusden_plasma_protons_vol_avg=proton_rate_density,
         )
-
-    def sum_fusion_rates(
-        self,
-        alpha_power_add: float,
-        charged_power_add: float,
-        neutron_power_add: float,
-        fusion_rate_add: float,
-        alpha_rate_add: float,
-        proton_rate_add: float,
-    ):
-        """Sum the fusion rate at the end of each reaction.
-
-        This method updates the cumulative fusion power densities and reaction rates
-        for alpha particles, charged particles, neutrons, and protons.
-
-        Parameters
-        ----------
-        alpha_power_add :
-            Alpha particle fusion power per unit volume [MW/m³].
-        charged_power_add :
-            Other charged particle fusion power per unit volume [MW/m³].
-        neutron_power_add :
-            Neutron fusion power per unit volume [MW/m³]
-        fusion_rate_add :
-            Fusion reaction rate per unit volume [reactions/m³/s].
-        alpha_rate_add :
-            Alpha particle production rate per unit volume [particles/m³/s].
-        proton_rate_add :
-            Proton production rate per unit volume [particles/m³/s].
-
-
-
-        """
-        self.alpha_power_density += alpha_power_add
-        self.pden_non_alpha_charged_mw += charged_power_add
-        self.neutron_power_density += neutron_power_add
-        self.fusion_rate_density += fusion_rate_add
-        self.alpha_rate_density += alpha_rate_add
-        self.proton_rate_density += proton_rate_add
 
     def calculate_fusion_rates(self):
         """Initiate all the fusion rate calculations.
@@ -574,12 +529,7 @@ class PlasmaReactions:
 
         """
         # Reset cumulative attributes as this instance persists across calls
-        self.alpha_power_density = 0.0
-        self.pden_non_alpha_charged_mw = 0.0
-        self.neutron_power_density = 0.0
-        self.fusion_rate_density = 0.0
-        self.alpha_rate_density = 0.0
-        self.proton_rate_density = 0.0
+        self.fusion_rates = FusionYieldDensities()
         self.pden_dd_total_vol_avg_mw = 0.0
 
         self.dt_reaction()
@@ -596,12 +546,22 @@ class PlasmaReactions:
 
 
         """
-        self.data.physics.pden_plasma_alpha_vol_avg_mw = self.alpha_power_density
-        self.data.physics.pden_non_alpha_charged_mw = self.pden_non_alpha_charged_mw
-        self.data.physics.pden_plasma_neutron_vol_avg_mw = self.neutron_power_density
-        self.data.physics.fusden_plasma_vol_avg = self.fusion_rate_density
-        self.data.physics.fusden_plasma_alpha_vol_avg = self.alpha_rate_density
-        self.data.physics.proton_rate_density = self.proton_rate_density
+        self.data.physics.pden_plasma_alpha_vol_avg_mw = (
+            self.fusion_rates.pden_plasma_alpha_vol_avg_mw
+        )
+        self.data.physics.pden_non_alpha_charged_mw = (
+            self.fusion_rates.pden_non_alpha_charged_vol_avg_mw
+        )
+        self.data.physics.pden_plasma_neutron_vol_avg_mw = (
+            self.fusion_rates.pden_neutron_vol_avg_mw
+        )
+        self.data.physics.fusden_plasma_vol_avg = self.fusion_rates.fusden_vol_avg
+        self.data.physics.fusden_plasma_alpha_vol_avg = (
+            self.fusion_rates.fusden_plasma_alpha_vol_avg
+        )
+        self.data.physics.proton_rate_density = (
+            self.fusion_rates.fusden_plasma_protons_vol_avg
+        )
         self.data.physics.sigmav_dt_average = self.sigmav_dt_average
         self.data.physics.pden_plasma_dt_vol_avg_mw = self.dt_power_density
         self.data.physics.pden_dhe3_total_vol_avg_mw = self.pden_dhe3_total_vol_avg_mw
