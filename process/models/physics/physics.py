@@ -1115,11 +1115,14 @@ class Physics(Model):
                     " is at least notable"
                 )
 
+            impurity_frac = self.data.impurity_radiation.f_nd_impurity_electron_array[
+                self.data.reinke.impvardiv - 1
+            ]
             po.write(
                 self.outfile,
                 (
                     f" 'fzactual, frac, impvardiv = {self.data.reinke.fzactual},"
-                    f" {self.data.impurity_radiation.f_nd_impurity_electron_array(self.data.reinke.impvardiv)},"  # noqa: E501
+                    f" {impurity_frac},"
                     f" {self.data.reinke.impvardiv}"
                 ),
             )
