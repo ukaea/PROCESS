@@ -500,7 +500,7 @@ class PlasmaReactions:
         fusion_rate_density = pden_dd_triton_vol_avg_mw / e_reaction_mj
 
         # Proton production rate [particles/m³/s]
-        proton_rate_density = fusion_rate_density
+        fusden_plasma_protons_vol_avg = fusion_rate_density
 
         # Update the cumulative D-D power density
         self.pden_dd_total_vol_avg_mw += pden_dd_triton_vol_avg_mw
@@ -509,7 +509,7 @@ class PlasmaReactions:
         self.fusion_rates += FusionYieldDensities(
             pden_non_alpha_charged_vol_avg_mw=pden_dd_triton_vol_avg_mw,
             fusden_vol_avg=fusion_rate_density,
-            fusden_plasma_protons_vol_avg=proton_rate_density,
+            fusden_plasma_protons_vol_avg=fusden_plasma_protons_vol_avg,
         )
 
     def calculate_fusion_rates(self):
@@ -559,7 +559,7 @@ class PlasmaReactions:
         self.data.physics.fusden_plasma_alpha_vol_avg = (
             self.fusion_rates.fusden_plasma_alpha_vol_avg
         )
-        self.data.physics.proton_rate_density = (
+        self.data.physics.fusden_plasma_protons_vol_avg = (
             self.fusion_rates.fusden_plasma_protons_vol_avg
         )
         self.data.physics.sigmav_dt_average = self.sigmav_dt_average
@@ -867,6 +867,14 @@ class PlasmaReactions:
             "Total charged particle power (including alphas) [MW]",
             "(p_charged_particle_mw)",
             self.data.physics.p_charged_particle_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged proton rate density [particles/m³/sec]",
+            "(fusden_plasma_protons_vol_avg)",
+            self.data.physics.fusden_plasma_protons_vol_avg,
             "OP ",
         )
         po.oblnkl(self.outfile)

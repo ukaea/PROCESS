@@ -1179,7 +1179,7 @@ class Physics(Model):
                 self.data.physics.f_nd_protium_electrons
                 * self.data.physics.nd_plasma_electrons_vol_avg,
                 self.data.physics.nd_plasma_alphas_thermal_vol_avg
-                * self.data.physics.proton_rate_density
+                * self.data.physics.fusden_plasma_protons_vol_avg
                 / self.data.physics.fusden_alpha_total_vol_avg,
             )
 

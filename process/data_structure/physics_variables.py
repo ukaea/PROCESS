@@ -1265,8 +1265,8 @@ class PhysicsData:
     pradsolmw: float = 0.0
     """radiation power from SoL (MW)"""
 
-    proton_rate_density: float = 0.0
-    """Proton production rate [particles/m3/sec]"""
+    fusden_plasma_protons_vol_avg: float = 0.0
+    """Volume-averaged proton production rate [particles/m³/sec]"""
 
     psolradmw: float = 0.0
     """SOL radiation power (MW) (`stellarator only`)"""
