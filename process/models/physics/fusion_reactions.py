@@ -8,6 +8,7 @@ from scipy import integrate
 
 from process.core import constants
 from process.core.data_structure.base import DataStructure
+from process.data_structure.physics_variables import PlasmaIgnitionModel
 from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.physics.profiles import calculate_vol_avg_of_profile
 
@@ -63,7 +64,7 @@ REACTION_CONSTANTS_DD2 = {
 }
 
 
-class FusionReactionRate:
+class PlasmaReactions:
     """Calculate the fusion reaction rate for each reaction case (DT, DHE3, DD1, DD2).
 
     This class provides methods to numerically integrate over the plasma cross-section
@@ -114,7 +115,7 @@ class FusionReactionRate:
 
     def __init__(self, plasma_profile: PlasmaProfile, data: DataStructure):
         """
-        Initialize the FusionReactionRate class with the given plasma profile.
+        Initialize the PlasmaReactions class with the given plasma profile.
 
         Parameters
         ----------
@@ -570,6 +571,15 @@ class FusionReactionRate:
 
 
         """
+        # Reset cumulative attributes as this instance persists across calls
+        self.alpha_power_density = 0.0
+        self.pden_non_alpha_charged_mw = 0.0
+        self.neutron_power_density = 0.0
+        self.fusion_rate_density = 0.0
+        self.alpha_rate_density = 0.0
+        self.proton_rate_density = 0.0
+        self.dd_power_density = 0.0
+
         self.dt_reaction()
         self.dhe3_reaction()
         self.dd_helion_reaction()
@@ -595,6 +605,97 @@ class FusionReactionRate:
         self.data.physics.dhe3_power_density = self.dhe3_power_density
         self.data.physics.dd_power_density = self.dd_power_density
         self.data.physics.f_dd_branching_trit = self.f_dd_branching_trit
+
+
+class BeamReactions:
+    """Calculate neutral beam slowing-down and beam-target fusion power.
+
+    This class calculates the beam-target fusion contribution from neutral beam
+    injection, complementing the thermal plasma reactions calculated by
+    PlasmaReactions.
+
+    Attributes
+    ----------
+    beta_beam : float
+        Neutral beam beta contribution.
+    nd_beam_ions_out : float
+        Hot beam ion density [m⁻³].
+    p_beam_alpha_mw : float
+        Alpha power from beam-target fusion [MW].
+    p_beam_neutron_mw : float
+        Neutron power from beam-target fusion [MW].
+    p_beam_dt_mw : float
+        D-T fusion power from beam-target fusion [MW].
+    """
+
+    def __init__(self, data: DataStructure):
+        self.data = data
+
+        self.beta_beam = 0.0
+        self.nd_beam_ions_out = 0.0
+        self.p_beam_alpha_mw = 0.0
+        self.p_beam_neutron_mw = 0.0
+        self.p_beam_dt_mw = 0.0
+
+    def calculate_beam_fusion(self):
+        """Calculate neutral beam slowing-down and beam-target fusion power.
+
+        Neutral beam fusion is neglected, leaving beam attributes at zero, if
+        there is no beam current or the plasma is ignited (beams cannot be
+        present in an ignited plasma).
+
+        The method updates the following attributes:
+            - self.beta_beam: Neutral beam beta contribution.
+            - self.nd_beam_ions_out: Hot beam ion density [m⁻³].
+            - self.p_beam_alpha_mw: Alpha power from beam-target fusion [MW].
+            - self.p_beam_neutron_mw: Neutron power from beam-target fusion [MW].
+            - self.p_beam_dt_mw: D-T fusion power from beam-target fusion [MW].
+        """
+        # Reset as this instance persists across calls
+        self.beta_beam = 0.0
+        self.nd_beam_ions_out = 0.0
+        self.p_beam_alpha_mw = 0.0
+        self.p_beam_neutron_mw = 0.0
+        self.p_beam_dt_mw = 0.0
+
+        if (self.data.current_drive.c_beam_total == 0.0) or (
+            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
+            == PlasmaIgnitionModel.IGNITED
+        ):
+            return
+
+        self.beta_beam, self.nd_beam_ions_out, self.p_beam_alpha_mw = beam_fusion(
+            self.data.physics.beamfus0,
+            self.data.physics.betbm0,
+            self.data.physics.b_plasma_total,
+            self.data.current_drive.c_beam_total,
+            self.data.physics.nd_plasma_electrons_vol_avg,
+            self.data.physics.nd_plasma_fuel_ions_vol_avg,
+            self.data.physics.dlamie,
+            self.data.current_drive.e_beam_kev,
+            self.data.physics.f_plasma_fuel_deuterium,
+            self.data.physics.f_plasma_fuel_tritium,
+            self.data.current_drive.f_beam_tritium,
+            self.data.physics.temp_plasma_electron_density_weighted_kev,
+            self.data.physics.vol_plasma,
+            self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+        )
+
+        self.p_beam_neutron_mw = self.p_beam_alpha_mw * (
+            constants.DT_NEUTRON_ENERGY_FRACTION
+            / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION)
+        )
+        self.p_beam_dt_mw = self.p_beam_alpha_mw * (
+            1.0 / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION)
+        )
+
+    def set_physics_variables(self):
+        """Set the beam fusion physics variables in the physics module."""
+        self.data.physics.beta_beam = self.beta_beam
+        self.data.physics.nd_beam_ions_out = self.nd_beam_ions_out
+        self.data.physics.p_beam_alpha_mw = self.p_beam_alpha_mw
+        self.data.physics.p_beam_neutron_mw = self.p_beam_neutron_mw
+        self.data.physics.p_beam_dt_mw = self.p_beam_dt_mw
 
 
 @dataclass
