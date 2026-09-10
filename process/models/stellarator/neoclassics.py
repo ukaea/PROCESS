@@ -19,7 +19,7 @@ class NormalisedCollisionality:
     e: float
     """electron"""
     D: float
-    """Deutrerium"""
+    """Deuterium"""
     T: float
     """Tritium"""
     He: float

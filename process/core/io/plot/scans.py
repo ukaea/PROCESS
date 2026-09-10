@@ -41,7 +41,7 @@ from process.core.scan import ScanVariables
 from process.data_structure.numerics import SolverOutputCondition
 
 if TYPE_CHECKING:
-    from matproplib.axes import Axes
+    from matplotlib.axes import Axes
 
 
 @dataclass

@@ -119,15 +119,20 @@ class RTZPoint(NamedTuple):
     """A generic container for data that has radial, toroidal and z components"""
 
     r: numba.float64[:]
+    """Radial component [m]"""
     t: numba.float64[:]
+    """Toroidal component [m]"""
     z: numba.float64[:]
+    """Vertical component [m]"""
 
 
 class YoungsModulusComponents(NamedTuple):
-    """Components of youngs modulus"""
+    """Components of Young's modulus"""
 
-    axial: float
-    trans: float
+    axial: float | numba.float64[:]
+    """Axial component of Young's modulus [Pa]"""
+    trans: float | numba.float64[:]
+    """Transverse component of Young's modulus [Pa]"""
 
 
 class TFCoil(Model):
