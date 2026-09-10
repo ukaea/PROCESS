@@ -621,7 +621,7 @@ class Physics(Model):
             self.data.physics.pden_plasma_dt_vol_avg_mw * self.data.physics.vol_plasma
         )
         self.data.physics.p_dhe3_total_mw = (
-            self.data.physics.dhe3_power_density * self.data.physics.vol_plasma
+            self.data.physics.pden_dhe3_total_vol_avg_mw * self.data.physics.vol_plasma
         )
         self.data.physics.p_dd_total_mw = (
             self.data.physics.pden_dd_total_vol_avg_mw * self.data.physics.vol_plasma

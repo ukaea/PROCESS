@@ -12158,7 +12158,10 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
     # =================================================
 
-    textstr_dhe3 = f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW                                 \n\n"
+    textstr_dhe3 = (
+        f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW                                 \n"
+        f"Volume-averaged total power density: {mfile.get('pden_dhe3_total_vol_avg_mw', scan=scan):,.3e} MW/m³\n\n"
+    )
 
     axis.text(
         0.05,

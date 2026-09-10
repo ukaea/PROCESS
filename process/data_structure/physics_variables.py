@@ -1152,7 +1152,10 @@ class PhysicsData:
     """Volume averaged D-D fusion power density [MW/m³]"""
 
     p_dhe3_total_mw: float = 0.0
-    """deuterium-helium3 fusion power (MW)"""
+    """deuterium-helium3 fusion power [MW]"""
+
+    pden_dhe3_total_vol_avg_mw: float = 0.0
+    """Volume averaged D-3He fusion power density [MW/m³]"""
 
     p_plasma_separatrix_mw: float = 0.0
     """power to conducted to the divertor region (MW)"""
@@ -1776,7 +1779,6 @@ class PhysicsData:
     """
 
     sigmav_dt_average: float = 0.0
-    dhe3_power_density: float = 0.0
 
     fusrat: float = 0.0
 
