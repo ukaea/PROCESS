@@ -88,7 +88,7 @@ Initialize the FusionReactionRate class with the given plasma profile.
 - `neutron_power_density (float)`: Power density of neutrons produced.
 - `fusion_rate_density (float)`: Fusion reaction rate density.
 - `alpha_rate_density (float)`: Alpha particle production rate density.
-- `proton_rate_density (float)`: Proton production rate density.
+- `fusden_plasma_protons_vol_avg (float)`: Proton production rate density.
 - `f_dd_branching_trit (float)`: The rate of tritium producing D-D reactions to 3He ones.
 
 All variables above are initialized to be 0.0.
@@ -141,7 +141,7 @@ The method updates the following attributes:
 - `self.neutron_power_density`: Power density of neutrons produced.
 - `self.fusion_rate_density`: Fusion reaction rate density.
 - `self.alpha_rate_density`: Alpha particle production rate density.
-- `self.proton_rate_density`: Proton production rate density.
+- `self.fusden_plasma_protons_vol_avg`: Proton production rate density.
 
 -----------------------
 
@@ -185,7 +185,7 @@ This method sets the required physics variables on the `physics` data structure 
 - `pden_plasma_neutron_vol_avg_mw`: Updated with `self.neutron_power_density`
 - `fusden_plasma_vol_avg`: Updated with `self.fusion_rate_density`
 - `fusden_plasma_alpha_vol_avg`: Updated with `self.alpha_rate_density`
-- `proton_rate_density`: Updated with `self.proton_rate_density`
+- `fusden_plasma_protons_vol_avg`: Updated with `self.fusden_plasma_protons_vol_avg`
 - `sigmav_dt_average`: Updated with `self.sigmav_dt_average`
 - `pden_plasma_dt_vol_avg_mw`: Updated with `self.dt_power_density`
 - `pden_dhe3_total_vol_avg_mw`: Updated with `self.pden_dhe3_total_vol_avg_mw`

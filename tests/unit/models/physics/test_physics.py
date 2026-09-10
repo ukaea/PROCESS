@@ -1283,7 +1283,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     temp_plasma_electron_vol_avg_kev: Any = None
 
-    proton_rate_density: Any = None
+    fusden_plasma_protons_vol_avg: Any = None
 
     f_plasma_fuel_deuterium: Any = None
 
@@ -1407,7 +1407,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_nd_plasma_iron_argon_electron=0,
             m_beam_amu=0,
             temp_plasma_electron_vol_avg_kev=12,
-            proton_rate_density=0,
+            fusden_plasma_protons_vol_avg=0,
             f_plasma_fuel_deuterium=0.5,
             alphan=1,
             nd_beam_ions=0,
@@ -1513,7 +1513,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_nd_plasma_iron_argon_electron=0,
             m_beam_amu=2.01355414,
             temp_plasma_electron_vol_avg_kev=12,
-            proton_rate_density=540072280299564.38,
+            fusden_plasma_protons_vol_avg=540072280299564.38,
             f_plasma_fuel_deuterium=0.5,
             alphan=1,
             nd_beam_ions=0,
@@ -1609,7 +1609,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         "f_nd_plasma_iron_argon_electron",
         "m_beam_amu",
         "temp_plasma_electron_vol_avg_kev",
-        "proton_rate_density",
+        "fusden_plasma_protons_vol_avg",
         "f_plasma_fuel_deuterium",
         "alphan",
         "nd_beam_ions",
