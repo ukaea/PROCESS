@@ -652,7 +652,7 @@ class Physics(Model):
                 / self.data.physics.vol_plasma
             )
             self.data.physics.fusden_alpha_total_vol_avg = (
-                self.data.physics.fusden_plasma_alpha
+                self.data.physics.fusden_plasma_alpha_vol_avg
                 + 1.0e6
                 * self.data.physics.p_beam_alpha_mw
                 / (constants.DT_ALPHA_ENERGY)
@@ -677,7 +677,7 @@ class Physics(Model):
                 self.data.physics.fusden_plasma_vol_avg
             )
             self.data.physics.fusden_alpha_total_vol_avg = (
-                self.data.physics.fusden_plasma_alpha
+                self.data.physics.fusden_plasma_alpha_vol_avg
             )
             self.data.physics.p_dt_total_mw = self.data.physics.p_plasma_dt_mw
 
@@ -1987,11 +1987,12 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Alpha rate density: plasma (particles/m³/sec)",
-            "(fusden_plasma_alpha)",
-            self.data.physics.fusden_plasma_alpha,
+            "Volume-averaged alpha rate density: plasma [particles/m³/sec]",
+            "(fusden_plasma_alpha_vol_avg)",
+            self.data.physics.fusden_plasma_alpha_vol_avg,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Alpha power: total (MW)",
@@ -2027,6 +2028,7 @@ class Physics(Model):
             self.data.physics.p_beam_alpha_mw,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Alpha power per unit volume transferred to electrons (MW/m³)",

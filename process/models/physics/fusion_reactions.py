@@ -588,7 +588,7 @@ class FusionReactionRate:
         self.data.physics.pden_non_alpha_charged_mw = self.pden_non_alpha_charged_mw
         self.data.physics.pden_plasma_neutron_mw = self.neutron_power_density
         self.data.physics.fusden_plasma_vol_avg = self.fusion_rate_density
-        self.data.physics.fusden_plasma_alpha = self.alpha_rate_density
+        self.data.physics.fusden_plasma_alpha_vol_avg = self.alpha_rate_density
         self.data.physics.proton_rate_density = self.proton_rate_density
         self.data.physics.sigmav_dt_average = self.sigmav_dt_average
         self.data.physics.dt_power_density_plasma = self.dt_power_density

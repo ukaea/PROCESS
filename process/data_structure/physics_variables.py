@@ -534,8 +534,8 @@ class PhysicsData:
     fusden_alpha_total_vol_avg: float = 0.0
     """Volume-averaged alpha particle production rate per unit volume, from plasma and beams [particles/m³/sec]"""
 
-    fusden_plasma_alpha: float = 0.0
-    """Alpha particle production rate per unit volume, just from plasma [particles/m³/sec]"""
+    fusden_plasma_alpha_vol_avg: float = 0.0
+    """Volume-averaged alpha particle production rate per unit volume, just from plasma [particles/m³/sec]"""
 
     alphat: float = 0.5
     """Plasma temperature profile index (⍺ₜ)"""  # noqa: RUF001
