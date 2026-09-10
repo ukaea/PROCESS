@@ -603,7 +603,7 @@ class PlasmaReactions:
         self.data.physics.fusden_plasma_alpha_vol_avg = self.alpha_rate_density
         self.data.physics.proton_rate_density = self.proton_rate_density
         self.data.physics.sigmav_dt_average = self.sigmav_dt_average
-        self.data.physics.dt_power_density_plasma = self.dt_power_density
+        self.data.physics.pden_plasma_dt_vol_avg_mw = self.dt_power_density
         self.data.physics.dhe3_power_density = self.dhe3_power_density
         self.data.physics.pden_dd_total_vol_avg_mw = self.pden_dd_total_vol_avg_mw
         self.data.physics.f_dd_branching_trit = self.f_dd_branching_trit
@@ -714,6 +714,13 @@ class PlasmaReactions:
             "D-T fusion power: plasma [MW]",
             "(p_plasma_dt_mw)",
             self.data.physics.p_plasma_dt_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged D-T fusion power density: plasma [MW/m³]",
+            "(pden_plasma_dt_vol_avg_mw)",
+            self.data.physics.pden_plasma_dt_vol_avg_mw,
             "OP ",
         )
         po.ovarre(
