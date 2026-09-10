@@ -2666,8 +2666,7 @@ class PFCoil(Model):
 
         pf = self.data.pf_coil
         headers = ["", "Start-up (Vs)", "Burn (Vs)", "Total (Vs)"]
-        rows = []
-        rows.extend((
+        rows = [
             [
                 "PF coils",
                 f"{pf.vs_pf_coils_total_ramp:.2f}",
@@ -2686,7 +2685,7 @@ class PFCoil(Model):
                 f"{pf.vs_cs_pf_total_burn:.2f}",
                 f"{pf.vs_cs_pf_total_pulse:.2f}",
             ],
-        ))
+        ]
 
         op.oblnkl(self.outfile)
         op.write(
@@ -2763,10 +2762,10 @@ class PFCoil(Model):
         for k in range(pulse_timings.n_pf_active_points_total):
             label = pulse_timings.POINT_ABBREVIATIONS[k]
             headers.append(label)
-        line = []
+        rows = []
         for k in range(pulse_timings.n_pf_active_points_total):
-            line += [f"{pulse_timings.pf_active_cumulative[k]:.2f}"]
-        rows = [line]
+            rows += [f"{pulse_timings.pf_active_cumulative[k]:.2f}"]
+        rows = [rows]
         op.write(
             self.outfile,
             tabulate(
