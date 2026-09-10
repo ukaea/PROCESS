@@ -1,9 +1,16 @@
 """Module to output stellarator modular coil results."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from process.core import process_output as po
 
+if TYPE_CHECKING:
+    from process.core.data_structure.base import DataStructure
 
-def write(
+
+def write(  # noqa: PLR0917
     stellarator,
     a_tf_wp_no_insulation,
     centering_force_avg_mn,
@@ -29,7 +36,7 @@ def write(
     toroidalgap,
     allowed_quench_voltage,
     quench_voltage,
-    data,
+    data: DataStructure,
 ):
     """Writes stellarator modular coil output to file
 
@@ -88,7 +95,7 @@ def write(
 
     quench_voltage :
 
-    data: DataStructure
+    data:
         data structure object
 
     """

@@ -525,7 +525,7 @@ class Vacuum(Model):
         )
         return d_i - y / dy, a1
 
-    def _write_to_outfile(
+    def _write_to_outfile(  # noqa: PLR0917
         self,
         ogas,
         s,

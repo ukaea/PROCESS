@@ -5,6 +5,7 @@ import pytest
 
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil import superconducting as sctf
+from process.models.tfcoil.superconducting import TFComponentShape, VVComponentShape
 
 
 @pytest.fixture
@@ -1500,18 +1501,11 @@ def test_vv_stress_on_quench():
         pytest.approx(
             sctf.vv_stress_on_quench(
                 # TF shape
-                H_coil=9.5,
-                ri_coil=3.55,
-                ro_coil=15.62,
-                rm_coil=7.66,
-                ccl_length_coil=51.1,
-                theta1_coil=48,
+                coil=TFComponentShape(
+                    H=9.5, ri=3.55, ro=15.62, rm=7.66, ccl_length=51.1, theta1=48
+                ),
                 # VV shape
-                H_vv=7.9,
-                ri_vv=4.45,
-                ro_vv=13.09,
-                rm_vv=7.88,
-                theta1_vv=1,
+                vv=VVComponentShape(H=7.9, ri=4.45, ro=13.09, rm=7.88, theta1=1),
                 # TF properties
                 n_tf_coils=18,
                 n_tf_coil_turns=192,
