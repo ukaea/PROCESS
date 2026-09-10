@@ -85,6 +85,7 @@ from process.models.physics.plasma_geometry import (
     PlasmaShapeModelType,
 )
 from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.physics.solovev_equilibrium import plot_analytic_equilibrium
 from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
@@ -16779,6 +16780,10 @@ def main_plot(
     plot_larmor_radius_profile(ax_larmor, m_file, scan)
 
     pages["freq"].subplots_adjust(hspace=0.5)
+
+    ax25 = _add_page("analytic_equilibrium").add_subplot(222, aspect="equal")
+    ax25.set_position([0.6, 0.55, 0.45, 0.45])
+    plot_analytic_equilibrium(ax25, m_file, scan, pages["analytic_equilibrium"])
 
     # Plot poloidal cross-section
     poloidal_cross_section(
