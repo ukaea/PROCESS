@@ -204,7 +204,7 @@ class FusionReactionRate:
         )
 
         # Full fusion reaction rate density profile for the D-T reaction [reactions/m³/s]
-        self.data.physics.fusrat_plasma_dt_profile = fusden_plasma_dt_profile = (
+        self.data.physics.fusden_plasma_dt_profile = fusden_plasma_dt_profile = (
             sigma_v_profile
             * self.data.physics.f_plasma_fuel_deuterium
             * self.data.physics.f_plasma_fuel_tritium
@@ -287,7 +287,7 @@ class FusionReactionRate:
         )
 
         # Full fusion reaction rate profile for the D-3He reaction [reactions/m³/s]
-        self.data.physics.fusrat_plasma_dhe3_profile = fusden_plasma_dhe3_profile = (
+        self.data.physics.fusden_plasma_dhe3_profile = fusden_plasma_dhe3_profile = (
             sigma_v_profile
             * self.data.physics.f_plasma_fuel_deuterium
             * self.data.physics.f_plasma_fuel_helium3
@@ -371,7 +371,7 @@ class FusionReactionRate:
 
         # Full fusion reaction rate density profile for the D-D -> 3He + n
         # reaction [reactions/m³/s]
-        self.data.physics.fusrat_plasma_dd_helion_profile = (
+        self.data.physics.fusden_plasma_dd_helion_profile = (
             fusden_plasma_dd_helion_profile
         ) = (
             sigma_v_profile
@@ -462,7 +462,7 @@ class FusionReactionRate:
 
         # Full fusion reaction rate density profile for the D-D -> T + p reaction
         # [reactions/m³/s]
-        self.data.physics.fusrat_plasma_dd_triton_profile = (
+        self.data.physics.fusden_plasma_dd_triton_profile = (
             fusden_plasma_dd_triton_profile
         ) = (
             sigma_v_profile
