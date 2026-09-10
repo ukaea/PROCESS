@@ -618,7 +618,7 @@ class Physics(Model):
 
         # Combine the plasma-only and beam-target fusion contributions
         self.data.physics.p_plasma_dt_mw = (
-            self.data.physics.dt_power_density_plasma * self.data.physics.vol_plasma
+            self.data.physics.pden_plasma_dt_vol_avg_mw * self.data.physics.vol_plasma
         )
         self.data.physics.p_dhe3_total_mw = (
             self.data.physics.dhe3_power_density * self.data.physics.vol_plasma

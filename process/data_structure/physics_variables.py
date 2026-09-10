@@ -1178,6 +1178,9 @@ class PhysicsData:
     p_plasma_dt_mw: float = 0.0
     """Deuterium-tritium fusion power, just from plasma [MW]"""
 
+    pden_plasma_dt_vol_avg_mw: float = 0.0
+    """Volume-averaged deuterium-tritium fusion power per volume just from plasma [MW/m³]"""
+
     p_plasma_outer_rad_mw: float = 0.0
     """radiation power from outer zone (MW)"""
 
@@ -1772,7 +1775,6 @@ class PhysicsData:
     - =3 MAST 2014 scaling 2
     """
 
-    dt_power_density_plasma: float = 0.0
     sigmav_dt_average: float = 0.0
     dhe3_power_density: float = 0.0
 

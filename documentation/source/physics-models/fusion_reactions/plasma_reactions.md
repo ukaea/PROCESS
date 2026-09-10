@@ -187,7 +187,7 @@ This method sets the required physics variables on the `physics` data structure 
 - `fusden_plasma_alpha_vol_avg`: Updated with `self.alpha_rate_density`
 - `proton_rate_density`: Updated with `self.proton_rate_density`
 - `sigmav_dt_average`: Updated with `self.sigmav_dt_average`
-- `dt_power_density_plasma`: Updated with `self.dt_power_density`
+- `pden_plasma_dt_vol_avg_mw`: Updated with `self.dt_power_density`
 - `dhe3_power_density`: Updated with `self.dhe3_power_density`
 - `pden_dd_total_vol_avg_mw`: Updated with `self.pden_dd_total_vol_avg_mw`
 - `f_dd_branching_trit`: Updated with `self.f_dd_branching_trit`

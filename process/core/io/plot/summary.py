@@ -12094,6 +12094,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     textstr_dt = (
         f"Total fusion power: {mfile.get('p_dt_total_mw', scan=scan):,.2f} MW\n"
         f"Plasma fusion power: {mfile.get('p_plasma_dt_mw', scan=scan):,.2f} MW                     \n"
+        f"Volume-averaged fusion power density: plasma: {mfile.get('pden_plasma_dt_vol_avg_mw', scan=scan):,.3f} MW/m³\n"
         f"Beam fusion power: {mfile.get('p_beam_dt_mw', scan=scan):,.2f} MW\n"
     )
 
