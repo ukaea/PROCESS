@@ -133,28 +133,24 @@ def test_no_records_when_disabled(turn_off_access_records, example_model_datacla
 
 
 def test_parameter_use_record(turn_on_access_records, example_model_dataclass):
-    # Used when the usage records are accessed hence its not 0
-    assert len(example_model_dataclass.my_param.usage_records) == 1
-    assert example_model_dataclass.my_param.usage_records[0].value == 42.0  # ruff:ignore[RUF069]
+    assert len(example_model_dataclass.my_param.usage_records) == 0
 
     _some_param = example_model_dataclass.my_param * 2
 
     # Used once in the calculation and thrice to access the usage records
-    assert len(example_model_dataclass.my_param.usage_records) == 4
-    for record in example_model_dataclass.my_param.usage_records:
-        assert record.value == 42.0  # ruff:ignore[RUF069]
+    assert len(example_model_dataclass.my_param.usage_records) == 1
+    assert example_model_dataclass.my_param.usage_records[0].value == 42.0  # ruff:ignore[RUF069]
 
 
 def test_parameter_use_record_not_created_on_edit(
     turn_on_access_records, example_model_dataclass
 ):
-    # Only used when accessing the usage records, hence 1 not 0
-    assert len(example_model_dataclass.my_param.usage_records) == 1
+    assert len(example_model_dataclass.my_param.usage_records) == 0
 
     example_model_dataclass.my_param = 2
 
     # Used again to get the usage records
-    assert len(example_model_dataclass.my_param.usage_records) == 2
+    assert len(example_model_dataclass.my_param.usage_records) == 0
 
 
 def test_parameter_edit_record(turn_on_access_records, example_model_dataclass):
