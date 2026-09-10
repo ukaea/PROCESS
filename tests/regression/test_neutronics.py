@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+
+from numpy import typing as npt
 import numpy as np
 import pytest
 from scipy.integrate import trapezoid
@@ -14,31 +17,49 @@ from process.models.neutronics.data import (
 MAX_E = DT_NEUTRON_E * 1.01
 MIN_E = 1 / 40 * EV_TO_J
 
+@dataclass
+class DiffusionEqTerms:
+    streaming_out: npt.NDArray[np.float64]
+    total_removal: npt.NDArray[np.float64]
+    scattering_in: npt.NDArray[np.float64]
+    allsources_in: npt.NDArray[np.float64]
 
-def _diffusion_equation_in_layer(test_profile, n, num_layer, x):
-    """
-    Get the three terms in the diffusion equation (equation 5 in the paper.
-    """
-    diffusion_out = test_profile.materials[num_layer].diffusion_const[
-        n
-    ] * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x)  # noqa: SLF001
-    total_removal = test_profile.materials[num_layer].sigma_t[
-        n
-    ] * test_profile.groupwise_neutron_flux_in_layer(n, num_layer, x)
 
-    source_in_terms = []
-    in_matrix = (
-        test_profile.materials[num_layer].sigma_s
-        + test_profile.materials[num_layer].sigma_in
-    )
-    for g, all_sources_entering_from_g in enumerate(in_matrix[:, n]):
-        source_in_terms.append(
-            all_sources_entering_from_g
-            * test_profile.groupwise_neutron_flux_in_layer(g, num_layer, x)
+def groupwise_diffusion_terms(
+    test_profile: NeutronFluxProfile, n: int, x: float
+) -> DiffusionEqTerms:
+    """Lay out the diffusion equation plainly."""
+    if not np.isscalar(x):
+        raise ValueError
+
+    include_upscatter = test_profile.contains_upscatter and test_profile.num_iteration[n] != 0
+    in_scatter_max_group = test_profile.n_groups if include_upscatter else n + 1
+    for num_layer in range(test_profile.n_layers + 1):
+        if test_profile._check_if_in_layer(x, num_layer):
+            mat = test_profile.materials[num_layer]
+            return DiffusionEqTerms(
+               -mat.diffusion_const[n] * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x),
+               mat.sigma_t[n] * test_profile.groupwise_neutron_flux_in_layer(n, num_layer, x),
+               [mat.sigma_s[g, n] * test_profile.groupwise_neutron_flux_in_layer(g, num_layer, x) for g in range(in_scatter_max_group)],
+               [mat.sigma_in[g, n] * test_profile.groupwise_neutron_flux_in_layer(g, num_layer, x) for g in range(in_scatter_max_group)],
+            )
+    raise ValueError("x not in range.")
+
+
+def validate_diffusion_equation_at(
+    test_profile: NeutronFluxProfile, x: float
+) -> None:
+    for n in range(test_profile.n_groups):
+        terms = groupwise_diffusion_terms(test_profile, n, x)
+        np.testing.assert_almost_equal(
+            terms.streaming_out + terms.total_removal,
+            sum(terms.scattering_in) + sum(terms.allsources_in),
+            err_msg=(
+            "Number of neutrons streaming out + removed by reaction (including"
+            " (n,n)) should equal to the in-scatter & production due to "
+            f"reactions from all groups, including the current group {n}."
+            )
         )
-
-    return diffusion_out, total_removal, np.sum(source_in_terms)
-
 
 def test_1_group_1_layer():
     """
@@ -272,10 +293,12 @@ def test_2_groups_2_layers():
             np.testing.assert_almost_equal(
                 neutron_profile.groupwise_neutron_flux_in_layer(n, num_layer, x),
                 neutron_profile.groupwise_neutron_flux_in_layer(n, num_layer+1, x),
+                err_msg=f"Group {n} neutron flux continuity check at the {num_layer} layer interface ({x=}m.)"
             )
             np.testing.assert_almost_equal(
                 neutron_profile.groupwise_neutron_current_in_layer(n, num_layer, x),
                 neutron_profile.groupwise_neutron_current_in_layer(n, num_layer+1, x),
+                err_msg=f"Group {n} neutron current continuity check at the {num_layer} layer interface ({x=}m.)"
             )
 
 
@@ -307,14 +330,11 @@ def test_2_groups_1_layer():
         0,
     ), "Extended boundary condition check for group 1"
     num_layer = 0
-    mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
-    for n in range(neutron_profile.n_groups):
-        diffusion_out, total_removal, source_in = _diffusion_equation_in_layer(
-            neutron_profile, n, 0, mid_point
-        )
-        assert np.isclose(diffusion_out, total_removal - source_in), (
-            "Check that the diffusion equation holds up at an arbitrary point."
-        )
+    for point in np.linspace(
+        neutron_profile.interface_x[0],
+        neutron_profile.interface_x[1]
+    ):
+        validate_diffusion_equation_at(neutron_profile, point)
     removal_xs = [
         mat.sigma_t - mat.sigma_s.sum(axis=1) for mat in neutron_profile.materials
     ]
@@ -402,13 +422,7 @@ def test_3_groups_1_layer():
     ), "Extended boundary condition check for group 2"
     num_layer = 0
     mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
-    for n in range(neutron_profile.n_groups):
-        diffusion_out, total_removal, source_in = _diffusion_equation_in_layer(
-            neutron_profile, n, 0, mid_point
-        )
-        assert np.isclose(diffusion_out, total_removal - source_in), (
-            "Check that the diffusion equation holds up at an arbitrary point."
-        )
+    validate_diffusion_equation_at(neutron_profile, mid_point)
     removal_xs = [
         mat.sigma_t - mat.sigma_s.sum(axis=1) for mat in neutron_profile.materials
     ]
@@ -486,13 +500,7 @@ def test_4_groups_1_layer():
 
     num_layer = 0
     mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
-    for n in range(neutron_profile.n_groups):
-        diffusion_out, total_removal, source_in = _diffusion_equation_in_layer(
-            neutron_profile, n, 0, mid_point
-        )
-        assert np.isclose(diffusion_out, total_removal - source_in), (
-            "Check that the diffusion equation holds up at an arbitrary point."
-        )
+    validate_diffusion_equation_at(neutron_profile, mid_point)
     assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
     removal_xs = [
         mat.sigma_t - mat.sigma_s.sum(axis=1) - mat.sigma_in.sum(axis=1)
@@ -561,41 +569,10 @@ def test_4_groups_4_layers():
         [tungsten, lithium, ss316, concrete],
     )
     neutron_profile.solve()
-    assert np.isclose(
-        neutron_profile.groupwise_neutron_flux_in_layer(
-            0, 0, neutron_profile.extended_boundary[0]
-        ),
-        0,
-    ), "Extended boundary condition check for group 0"
-    assert np.isclose(
-        neutron_profile.groupwise_neutron_flux_in_layer(
-            1, 0, neutron_profile.extended_boundary[1]
-        ),
-        0,
-    ), "Extended boundary condition check for group 1"
-    assert np.isclose(
-        neutron_profile.groupwise_neutron_flux_in_layer(
-            2, 0, neutron_profile.extended_boundary[2]
-        ),
-        0,
-    ), "Extended boundary condition check for group 2"
-    assert np.isclose(
-        neutron_profile.groupwise_neutron_flux_in_layer(
-            3, 0, neutron_profile.extended_boundary[3]
-        ),
-        0,
-    ), "Extended boundary condition check for group 3"
 
     num_layer = 0
     mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
-    for n in range(neutron_profile.n_groups):
-        diffusion_out, total_removal, source_in = _diffusion_equation_in_layer(
-            neutron_profile, n, 0, mid_point
-        )
-        assert np.isclose(diffusion_out, total_removal - source_in), (
-            "Check that the diffusion equation holds up at an arbitrary point."
-        )
-    assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
+    validate_diffusion_equation_at(neutron_profile, mid_point)
     removal_xs = [
         mat.sigma_t - mat.sigma_s.sum(axis=1) - mat.sigma_in.sum(axis=1)
         for mat in neutron_profile.materials
@@ -612,6 +589,28 @@ def test_4_groups_4_layers():
             for num_layer in range(neutron_profile.n_layers)
         ),
     ), "Conservation of neutrons"
+    assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
+    for n in range(neutron_profile.n_groups):
+        for num_layer in range(neutron_profile.n_layers-1):
+            x = neutron_profile.layer_x[num_layer]
+            np.testing.assert_almost_equal(
+                neutron_profile.groupwise_neutron_flux_in_layer(n, num_layer, x),
+                neutron_profile.groupwise_neutron_flux_in_layer(n, num_layer+1, x),
+                err_msg=f"Group {n} neutron flux continuity check at the {num_layer} layer interface ({x=}m.)"
+            )
+            np.testing.assert_almost_equal(
+                neutron_profile.groupwise_neutron_current_in_layer(n, num_layer, x),
+                neutron_profile.groupwise_neutron_current_in_layer(n, num_layer+1, x),
+                err_msg=f"Group {n} neutron current continuity check at the {num_layer} layer interface ({x=}m.)"
+            )
+    for n in range(neutron_profile.n_groups):
+        np.testing.assert_almost_equal(
+            neutron_profile.groupwise_neutron_flux_in_layer(
+                n, 0, neutron_profile.extended_boundary[n]
+            ),
+            0,
+            err_msg=f"Neutron flux at group {n}'s extended boundary is expected to be 0!"
+        )
 
 
 @pytest.mark.filterwarnings("ignore:Calculation of flux")
@@ -670,14 +669,9 @@ def test_5_groups_5_layers():
     for num_layer in range(neutron_profile.n_layers):
         mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
         layer_x = neutron_profile.layer_x[num_layer]
+        validate_diffusion_equation_at(neutron_profile, mid_point)
         for n in range(neutron_profile.n_groups):
-            # Check for conformity with the diffusion equation
-            diffusion_out, total_removal, source_in = _diffusion_equation_in_layer(
-                neutron_profile, n, num_layer, mid_point
-            )
-            assert np.isclose(diffusion_out, total_removal - source_in), (
-                "Check that the diffusion equation holds up at an arbitrary point."
-            )
+
             if num_layer == neutron_profile.n_layers - 1:
                 continue
             # Check for continuity of flux and current
