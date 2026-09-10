@@ -1549,7 +1549,6 @@ class SuperconductingTFCoil(TFCoil):
 
         d_sc_tf.tf_fit_z = dr_tf_wp_no_insulation / dx_tf_wp_toroidal_max
         if (d_sc_tf.tf_fit_z < 0.26e0) or (d_sc_tf.tf_fit_z > 0.7e0):
-            # write(*,*) 'PEAK_TF_WITH_RIPPLE: fitting problem; z = ',z
             logger.warning(
                 "(TF coil peak field calculation) Winding pack radial thickness out of "
                 "fitted range"

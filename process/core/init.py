@@ -818,7 +818,7 @@ def check_process(inputs, data):  # noqa: ARG001
                 and data.pf_coil.n_pf_coils_in_group[i] != 2
             ):
                 raise ProcessValidationError(
-                    "n_pf_coils_in_group(i) .ne. 2 is not a valid option except for"
+                    "n_pf_coils_in_group(i) != 2 is not a valid option except for"
                     " (i_pf_location = 2)"
                 )
 
