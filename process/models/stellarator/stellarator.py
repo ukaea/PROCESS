@@ -2035,7 +2035,7 @@ class Stellarator(Model):
                 / self.data.physics.vol_plasma
             )
             self.data.physics.fusden_alpha_total_vol_avg = (
-                self.data.physics.fusden_plasma_alpha
+                self.data.physics.fusden_plasma_alpha_vol_avg
                 + 1.0e6
                 * self.data.physics.p_beam_alpha_mw
                 / (constants.DT_ALPHA_ENERGY)
@@ -2052,7 +2052,7 @@ class Stellarator(Model):
                 self.data.physics.fusden_plasma_vol_avg
             )
             self.data.physics.fusden_alpha_total_vol_avg = (
-                self.data.physics.fusden_plasma_alpha
+                self.data.physics.fusden_plasma_alpha_vol_avg
             )
             self.data.physics.p_dt_total_mw = self.data.physics.p_plasma_dt_mw
 
