@@ -182,7 +182,7 @@ This method sets the required physics variables on the `physics` data structure 
 #### Updates:
 - `pden_plasma_alpha_vol_avg_mw`: Updated with `self.alpha_power_density`
 - `pden_non_alpha_charged_mw`: Updated with `self.pden_non_alpha_charged_mw`
-- `pden_plasma_neutron_mw`: Updated with `self.neutron_power_density`
+- `pden_plasma_neutron_vol_avg_mw`: Updated with `self.neutron_power_density`
 - `fusden_plasma_vol_avg`: Updated with `self.fusion_rate_density`
 - `fusden_plasma_alpha_vol_avg`: Updated with `self.alpha_rate_density`
 - `proton_rate_density`: Updated with `self.proton_rate_density`
