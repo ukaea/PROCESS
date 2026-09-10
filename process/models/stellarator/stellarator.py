@@ -2034,7 +2034,7 @@ class Stellarator(Model):
                 / (constants.DT_ALPHA_ENERGY)
                 / self.data.physics.vol_plasma
             )
-            self.data.physics.fusden_alpha_total = (
+            self.data.physics.fusden_alpha_total_vol_avg = (
                 self.data.physics.fusden_plasma_alpha
                 + 1.0e6
                 * self.data.physics.p_beam_alpha_mw
@@ -2051,7 +2051,9 @@ class Stellarator(Model):
             self.data.physics.fusden_total_vol_avg = (
                 self.data.physics.fusden_plasma_vol_avg
             )
-            self.data.physics.fusden_alpha_total = self.data.physics.fusden_plasma_alpha
+            self.data.physics.fusden_alpha_total_vol_avg = (
+                self.data.physics.fusden_plasma_alpha
+            )
             self.data.physics.p_dt_total_mw = self.data.physics.p_plasma_dt_mw
 
         # Create some derived values and add beam contribution to fusion power
@@ -2391,7 +2393,7 @@ class Stellarator(Model):
             self.data.physics.aspect,
             self.data.physics.nd_plasma_fuel_ions_vol_avg,
             self.data.physics.fusden_total_vol_avg,
-            self.data.physics.fusden_alpha_total,
+            self.data.physics.fusden_alpha_total_vol_avg,
             self.data.physics.plasma_current,
             sbar,
             self.data.physics.nd_plasma_alphas_thermal_vol_avg,

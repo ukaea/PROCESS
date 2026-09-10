@@ -531,8 +531,8 @@ class PhysicsData:
     alphap: float = 0.0
     """Plasma pressure profile index (⍺ₚ)"""  # noqa: RUF001
 
-    fusden_alpha_total: float = 0.0
-    """Alpha particle production rate per unit volume, from plasma and beams [particles/m³/sec]"""
+    fusden_alpha_total_vol_avg: float = 0.0
+    """Volume-averaged alpha particle production rate per unit volume, from plasma and beams [particles/m³/sec]"""
 
     fusden_plasma_alpha: float = 0.0
     """Alpha particle production rate per unit volume, just from plasma [particles/m³/sec]"""

@@ -651,7 +651,7 @@ class Physics(Model):
                 / (constants.DT_ALPHA_ENERGY)
                 / self.data.physics.vol_plasma
             )
-            self.data.physics.fusden_alpha_total = (
+            self.data.physics.fusden_alpha_total_vol_avg = (
                 self.data.physics.fusden_plasma_alpha
                 + 1.0e6
                 * self.data.physics.p_beam_alpha_mw
@@ -676,7 +676,9 @@ class Physics(Model):
             self.data.physics.fusden_total_vol_avg = (
                 self.data.physics.fusden_plasma_vol_avg
             )
-            self.data.physics.fusden_alpha_total = self.data.physics.fusden_plasma_alpha
+            self.data.physics.fusden_alpha_total_vol_avg = (
+                self.data.physics.fusden_plasma_alpha
+            )
             self.data.physics.p_dt_total_mw = self.data.physics.p_plasma_dt_mw
 
         self.data.physics.fusrat_total = (
@@ -972,7 +974,7 @@ class Physics(Model):
             self.data.physics.aspect,
             self.data.physics.nd_plasma_fuel_ions_vol_avg,
             self.data.physics.fusden_total_vol_avg,
-            self.data.physics.fusden_alpha_total,
+            self.data.physics.fusden_alpha_total_vol_avg,
             self.data.physics.plasma_current,
             sbar,
             self.data.physics.nd_plasma_alphas_thermal_vol_avg,
@@ -1199,7 +1201,9 @@ class Physics(Model):
         # Issue #557 Allow f_nd_protium_electrons impurity to be specified:
         # 'f_nd_protium_electrons'
         # This will override the calculated value which is a minimum.
-        if self.data.physics.fusden_alpha_total < 1.0e-6:  # not calculated yet...
+        if (
+            self.data.physics.fusden_alpha_total_vol_avg < 1.0e-6
+        ):  # not calculated yet...
             self.data.physics.nd_plasma_protons_vol_avg = max(
                 self.data.physics.f_nd_protium_electrons
                 * self.data.physics.nd_plasma_electrons_vol_avg,
@@ -1212,7 +1216,7 @@ class Physics(Model):
                 * self.data.physics.nd_plasma_electrons_vol_avg,
                 self.data.physics.nd_plasma_alphas_thermal_vol_avg
                 * self.data.physics.proton_rate_density
-                / self.data.physics.fusden_alpha_total,
+                / self.data.physics.fusden_alpha_total_vol_avg,
             )
 
         # ======================================================================
@@ -1489,7 +1493,7 @@ class Physics(Model):
         aspect: float,
         nd_plasma_fuel_ions_vol_avg: float,
         fusden_total_vol_avg: float,
-        fusden_alpha_total: float,
+        fusden_alpha_total_vol_avg: float,
         plasma_current: float,
         sbar: float,
         nd_plasma_alphas_thermal_vol_avg: float,
@@ -1508,7 +1512,7 @@ class Physics(Model):
             Fuel ion density (/m3).
         fusden_total_vol_avg : float
             Fusion reaction rate from plasma and beams (/m3/s).
-        fusden_alpha_total : float
+        fusden_alpha_total_vol_avg : float
             Alpha particle production rate (/m3/s).
         plasma_current : float
             Plasma current (A).
@@ -1551,8 +1555,8 @@ class Physics(Model):
         # only likely if DD is only active fusion reaction
         t_alpha_confinement = (
             0.0
-            if fusden_alpha_total == 0.0  # noqa: RUF069
-            else nd_plasma_alphas_thermal_vol_avg / fusden_alpha_total
+            if fusden_alpha_total_vol_avg == 0.0  # noqa: RUF069
+            else nd_plasma_alphas_thermal_vol_avg / fusden_alpha_total_vol_avg
         )
 
         # Fractional burnup
@@ -1976,9 +1980,9 @@ class Physics(Model):
         po.osubhd(self.outfile, "Alpha Powers (α) :")  # noqa: RUF001
         po.ovarre(
             self.outfile,
-            "Alpha rate density: total (particles/m³/sec)",
-            "(fusden_alpha_total)",
-            self.data.physics.fusden_alpha_total,
+            "Volume-averaged alpha rate density: total [particles/m³/sec]",
+            "(fusden_alpha_total_vol_avg)",
+            self.data.physics.fusden_alpha_total_vol_avg,
             "OP ",
         )
         po.ovarre(
