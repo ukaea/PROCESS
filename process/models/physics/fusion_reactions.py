@@ -586,7 +586,7 @@ class FusionReactionRate:
         """
         self.data.physics.pden_plasma_alpha_vol_avg_mw = self.alpha_power_density
         self.data.physics.pden_non_alpha_charged_mw = self.pden_non_alpha_charged_mw
-        self.data.physics.pden_plasma_neutron_mw = self.neutron_power_density
+        self.data.physics.pden_plasma_neutron_vol_avg_mw = self.neutron_power_density
         self.data.physics.fusden_plasma_vol_avg = self.fusion_rate_density
         self.data.physics.fusden_plasma_alpha_vol_avg = self.alpha_rate_density
         self.data.physics.proton_rate_density = self.proton_rate_density
@@ -695,7 +695,7 @@ def set_fusion_powers(
     f_alpha_ion: float,
     p_beam_alpha_mw: float,
     pden_non_alpha_charged_mw: float,
-    pden_plasma_neutron_mw: float,
+    pden_plasma_neutron_vol_avg_mw: float,
     vol_plasma: float,
     pden_plasma_alpha_vol_avg_mw: float,
     f_p_alpha_plasma_deposited: float,
@@ -713,7 +713,7 @@ def set_fusion_powers(
         float
     pden_non_alpha_charged_mw :
         float
-    pden_plasma_neutron_mw :
+    pden_plasma_neutron_vol_avg_mw :
         float
     vol_plasma :
         float
@@ -726,8 +726,8 @@ def set_fusion_powers(
     -------
     :
         tuple: A tuple containing the following elements:
-        - pden_neutron_total_vol_avg_mw (float): Neutron fusion power per unit volume from
-          plasma and beams [MW/m³].
+        - pden_neutron_total_vol_avg_mw (float): Neutron fusion power per unit volume
+          fromplasma and beams [MW/m³].
         - p_plasma_alpha_mw (float): Alpha fusion power from only the plasma [MW].
         - p_alpha_total_mw (float): Total alpha fusion power from plasma and beams [MW].
         - p_plasma_neutron_mw (float): Neutron fusion power from only the plasma [MW].
@@ -763,10 +763,10 @@ def set_fusion_powers(
     # Neutron Power
 
     # Calculate neutron power produced just by the plasma
-    p_plasma_neutron_mw = pden_plasma_neutron_mw * vol_plasma
+    p_plasma_neutron_mw = pden_plasma_neutron_vol_avg_mw * vol_plasma
 
     # Add extra neutron power from beams
-    pden_neutron_total_vol_avg_mw = pden_plasma_neutron_mw + (
+    pden_neutron_total_vol_avg_mw = pden_plasma_neutron_vol_avg_mw + (
         (
             (
                 constants.DT_NEUTRON_ENERGY_FRACTION

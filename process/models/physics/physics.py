@@ -703,7 +703,7 @@ class Physics(Model):
             self.data.physics.f_alpha_ion,
             self.data.physics.p_beam_alpha_mw,
             self.data.physics.pden_non_alpha_charged_mw,
-            self.data.physics.pden_plasma_neutron_mw,
+            self.data.physics.pden_plasma_neutron_vol_avg_mw,
             self.data.physics.vol_plasma,
             self.data.physics.pden_plasma_alpha_vol_avg_mw,
             self.data.physics.f_p_alpha_plasma_deposited,
@@ -2073,9 +2073,9 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Neutron power density: plasma [MW/m³]",
-            "(pden_plasma_neutron_mw)",
-            self.data.physics.pden_plasma_neutron_mw,
+            "Volume-averaged neutron power density: plasma [MW/m³]",
+            "(pden_plasma_neutron_vol_avg_mw)",
+            self.data.physics.pden_plasma_neutron_vol_avg_mw,
             "OP ",
         )
         po.ovarre(

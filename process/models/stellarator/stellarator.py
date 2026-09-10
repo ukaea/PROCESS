@@ -2074,7 +2074,7 @@ class Stellarator(Model):
             self.data.physics.f_alpha_ion,
             self.data.physics.p_beam_alpha_mw,
             self.data.physics.pden_non_alpha_charged_mw,
-            self.data.physics.pden_plasma_neutron_mw,
+            self.data.physics.pden_plasma_neutron_vol_avg_mw,
             self.data.physics.vol_plasma,
             self.data.physics.pden_plasma_alpha_vol_avg_mw,
             self.data.physics.f_p_alpha_plasma_deposited,

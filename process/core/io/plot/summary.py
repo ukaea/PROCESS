@@ -12229,7 +12229,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f"Plasma power: {mfile.get('p_plasma_neutron_mw', scan=scan):,.2f} MW\n"
         f"Beam power: {mfile.get('p_beam_neutron_mw', scan=scan):,.2f} MW\n\n"
         f"Volume-averaged total power density: {mfile.get('pden_neutron_total_vol_avg_mw', scan=scan):,.4e} MW/m3\n"
-        f"Plasma power density: {mfile.get('pden_plasma_neutron_mw', scan=scan):,.4e} MW/m3\n"
+        f"Volume-averaged plasma power density: {mfile.get('pden_plasma_neutron_vol_avg_mw', scan=scan):,.4e} MW/m3\n"
     )
 
     axis.text(
