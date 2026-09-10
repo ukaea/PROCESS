@@ -57,7 +57,7 @@ def validate_diffusion_equation_at(
             err_msg=(
             "Number of neutrons streaming out + removed by reaction (including"
             " (n,n)) should equal to the in-scatter & production due to "
-            f"reactions from all groups, including the current group {n}."
+            f"reactions from all groups, including the current group ({n=})."
             )
         )
 
@@ -570,9 +570,9 @@ def test_4_groups_4_layers():
     )
     neutron_profile.solve()
 
-    num_layer = 0
-    mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
-    validate_diffusion_equation_at(neutron_profile, mid_point)
+    for num_layer in range(neutron_profile.n_layers):
+        mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
+        validate_diffusion_equation_at(neutron_profile, mid_point)
     removal_xs = [
         mat.sigma_t - mat.sigma_s.sum(axis=1) - mat.sigma_in.sum(axis=1)
         for mat in neutron_profile.materials
