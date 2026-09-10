@@ -439,7 +439,6 @@ def winding_pack_total_size(
         * (1.0e0 - data.tfcoil.f_a_tf_turn_cable_copper)
         / (data.tfcoil.dx_tf_turn_general**2)
     )
-    # print *, "f_a_scu_of_wp. ",f_a_scu_of_wp,"Awp min: ",Awp(1)
 
     rhs[:] = coilcurrent / (
         wp_width_r**2
