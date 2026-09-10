@@ -81,7 +81,7 @@ Initialize the FusionReactionRate class with the given plasma profile.
 - `plasma_profile (PlasmaProfile)`: The parameterized temperature and density profiles of the plasma.
 - `sigmav_dt_average (float)`: Average fusion reaction rate $\langle \sigma v \rangle$ for D-T.
 - `dhe3_power_density (float)`: Fusion power density produced by the D-3He reaction.
-- `dd_power_density (float)`: Fusion power density produced by the D-D reactions.
+- `pden_dd_total_vol_avg_mw (float)`: Fusion power density produced by the D-D reactions.
 - `dt_power_density (float)`: Fusion power density produced by the D-T reaction.
 - `alpha_power_density (float)`: Power density of alpha particles produced.
 - `pden_non_alpha_charged_mw (float)`: Power density of charged particles produced.
@@ -189,7 +189,7 @@ This method sets the required physics variables on the `physics` data structure 
 - `sigmav_dt_average`: Updated with `self.sigmav_dt_average`
 - `dt_power_density_plasma`: Updated with `self.dt_power_density`
 - `dhe3_power_density`: Updated with `self.dhe3_power_density`
-- `dd_power_density`: Updated with `self.dd_power_density`
+- `pden_dd_total_vol_avg_mw`: Updated with `self.pden_dd_total_vol_avg_mw`
 - `f_dd_branching_trit`: Updated with `self.f_dd_branching_trit`
 
 -----------------------

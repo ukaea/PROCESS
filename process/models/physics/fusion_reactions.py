@@ -88,7 +88,7 @@ class PlasmaReactions:
         Volume-averaged D-T fusion reactivity, 〈σv〉ᵥ, for D-T.
     dhe3_power_density : float
         Fusion power density produced by the D-3He reaction.
-    dd_power_density : float
+    pden_dd_total_vol_avg_mw : float
         Fusion power density produced by the D-D reactions.
     dt_power_density : float
         Fusion power density produced by the D-T reaction.
@@ -131,7 +131,7 @@ class PlasmaReactions:
         self.mfile = constants.MFILE
         self.sigmav_dt_average = 0.0
         self.dhe3_power_density = 0.0
-        self.dd_power_density = 0.0
+        self.pden_dd_total_vol_avg_mw = 0.0
         self.dt_power_density = 0.0
         self.alpha_power_density = 0.0
         self.pden_non_alpha_charged_mw = 0.0
@@ -349,7 +349,7 @@ class PlasmaReactions:
         the plasma cross-section to find the core plasma fusion power.
 
         The method updates the following attributes:
-            - self.dd_power_density: Fusion power density produced by the D-D reaction.
+            - self.pden_dd_total_vol_avg_mw: Fusion power density produced by the D-D reaction.
             - self.alpha_power_density: Power density of alpha particles produced.
             - self.pden_non_alpha_charged_mw: Power density of charged particles
               produced.
@@ -418,7 +418,7 @@ class PlasmaReactions:
         )
 
         # Update the cumulative D-D power density
-        self.dd_power_density += pden_dd_helion_vol_avg_mw
+        self.pden_dd_total_vol_avg_mw += pden_dd_helion_vol_avg_mw
 
         # Sum the fusion rates for all particles
         self.sum_fusion_rates(
@@ -440,7 +440,7 @@ class PlasmaReactions:
         the plasma cross-section to find the core plasma fusion power.
 
         The method updates the following attributes:
-            - self.dd_power_density: Fusion power density produced by the D-D reaction.
+            - self.pden_dd_total_vol_avg_mw: Fusion power density produced by the D-D reaction.
             - self.alpha_power_density: Power density of alpha particles produced.
             - self.pden_non_alpha_charged_mw: Power density of charged particles
               produced.
@@ -506,7 +506,7 @@ class PlasmaReactions:
         proton_rate_density = fusion_rate_density
 
         # Update the cumulative D-D power density
-        self.dd_power_density += pden_dd_triton_vol_avg_mw
+        self.pden_dd_total_vol_avg_mw += pden_dd_triton_vol_avg_mw
 
         # Sum the fusion rates for all particles
         self.sum_fusion_rates(
@@ -580,7 +580,7 @@ class PlasmaReactions:
         self.fusion_rate_density = 0.0
         self.alpha_rate_density = 0.0
         self.proton_rate_density = 0.0
-        self.dd_power_density = 0.0
+        self.pden_dd_total_vol_avg_mw = 0.0
 
         self.dt_reaction()
         self.dhe3_reaction()
@@ -605,7 +605,7 @@ class PlasmaReactions:
         self.data.physics.sigmav_dt_average = self.sigmav_dt_average
         self.data.physics.dt_power_density_plasma = self.dt_power_density
         self.data.physics.dhe3_power_density = self.dhe3_power_density
-        self.data.physics.dd_power_density = self.dd_power_density
+        self.data.physics.pden_dd_total_vol_avg_mw = self.pden_dd_total_vol_avg_mw
         self.data.physics.f_dd_branching_trit = self.f_dd_branching_trit
 
     def output(self):
@@ -729,6 +729,13 @@ class PlasmaReactions:
             "D-D fusion power [MW]",
             "(p_dd_total_mw)",
             self.data.physics.p_dd_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged D-D fusion power density [MW/m³]",
+            "(pden_dd_total_vol_avg_mw)",
+            self.data.physics.pden_dd_total_vol_avg_mw,
             "OP ",
         )
         po.ovarre(

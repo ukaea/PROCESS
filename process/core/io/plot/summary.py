@@ -12126,6 +12126,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
     textstr_dd = (
         f"Total fusion power: {mfile.get('p_dd_total_mw', scan=scan):,.2f} MW\n"
+        f"Volume-averaged total power density: {mfile.get('pden_dd_total_vol_avg_mw', scan=scan):,.3e} MW/m³\n"
         f"Tritium branching ratio: {mfile.get('f_dd_branching_trit', scan=scan):.4f}                      \n"
     )
 

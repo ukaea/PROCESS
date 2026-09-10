@@ -624,7 +624,7 @@ class Physics(Model):
             self.data.physics.dhe3_power_density * self.data.physics.vol_plasma
         )
         self.data.physics.p_dd_total_mw = (
-            self.data.physics.dd_power_density * self.data.physics.vol_plasma
+            self.data.physics.pden_dd_total_vol_avg_mw * self.data.physics.vol_plasma
         )
 
         beam_alpha_rate_add = (
