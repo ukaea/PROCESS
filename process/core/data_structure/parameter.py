@@ -2,7 +2,7 @@
 
 import inspect
 import logging
-from collections.abc import Generator
+from collections.abc import Callable, Generator
 from copy import deepcopy
 from dataclasses import asdict, dataclass, fields
 from typing import Annotated, Any, Generic, get_args, get_origin
@@ -14,9 +14,18 @@ from parameter_frame import ParameterValueType
 logger = logging.getLogger(__name__)
 
 KEEP_EDIT_USE_RECORDS = False
-FILTER_EDIT_USE_RECORDS_PATH: str = "/models/"
-"""Filter edit/use records that contain a substring in their path.
-If None, all record are retained.
+FILTER_EDIT_USE_RECORDS_PATH: Callable[[inspect.FrameInfo], bool] = lambda frame: (  # noqa: E731
+    "/models/" in frame.filename
+)
+"""An optional filter to find the frame to display in the edit/use record.
+
+If FILTER_EDIT_USE_RECORDS_PATH(frame) = True the first frame is returned
+(probably not a useful frame because it will be one of the functions in this file)
+
+If FILTER_EDIT_USE_RECORDS_PATH(frame) = False no frame information is recorded.
+
+By default, the functions selects the first frame to come from a PROCESS model.
+I.e. process/models/**/*.py
 """
 
 
@@ -107,6 +116,36 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
     def reset_edit_use_records(self):
         self._edited = []
         self._used = []
+
+    @property
+    def value(self):
+        return super().value
+
+    def set_value(self, new_value, source=""):
+        if KEEP_EDIT_USE_RECORDS:
+            try:
+                called_from = next(
+                    filter(
+                        FILTER_EDIT_USE_RECORDS_PATH,
+                        inspect.stack(),
+                    )
+                )
+            except StopIteration:
+                called_from = inspect.FrameInfo(None, None, None, None, None, None)
+
+            self._edited.append(
+                EditRecord(
+                    value=np.copy(self.history()[0].value),
+                    new_value=np.copy(new_value._value)
+                    if isinstance(new_value, Parameter)
+                    else np.copy(new_value),
+                    frame_file=called_from.filename,
+                    frame_lineno=called_from.lineno,
+                    frame_function=called_from.function,
+                    frame_code=called_from.code_context,
+                )
+            )
+        return super().set_value(new_value, source)
 
     @property
     def edit_records(self) -> list[EditRecord]:
@@ -215,33 +254,6 @@ class PROCESSModelData:
         # Do not want a use record to be created here because we editing it
         current_value = self.__getattribute__(name, record=False)
 
-        if KEEP_EDIT_USE_RECORDS and isinstance(current_value, Parameter):
-            try:
-                called_from = next(
-                    filter(
-                        lambda frame: (
-                            FILTER_EDIT_USE_RECORDS_PATH is None
-                            or FILTER_EDIT_USE_RECORDS_PATH in frame.filename
-                        ),
-                        inspect.stack(),
-                    )
-                )
-            except StopIteration:
-                pass
-            else:
-                current_value._edited.append(
-                    EditRecord(
-                        value=np.copy(current_value.history()[0].value),
-                        new_value=np.copy(value.value)
-                        if isinstance(value, Parameter)
-                        else np.copy(value),
-                        frame_file=called_from.filename,
-                        frame_lineno=called_from.lineno,
-                        frame_function=called_from.function,
-                        frame_code=called_from.code_context,
-                    )
-                )
-
         # Not everything is a Parameter in PROCESS
         if isinstance(current_value, Parameter):
             logger.debug(
@@ -283,15 +295,7 @@ class PROCESSModelData:
             and (isinstance(current_value := super().__getattribute__(name), Parameter))
         ):
             try:
-                called_from = next(
-                    filter(
-                        lambda frame: (
-                            FILTER_EDIT_USE_RECORDS_PATH is None
-                            or FILTER_EDIT_USE_RECORDS_PATH in frame.filename
-                        ),
-                        inspect.stack(),
-                    )
-                )
+                called_from = next(filter(FILTER_EDIT_USE_RECORDS_PATH, inspect.stack()))
             except StopIteration:
                 return current_value
 
