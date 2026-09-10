@@ -1904,34 +1904,34 @@ class Physics(Model):
             self.data.physics.p_dt_total_mw,
             "OP ",
         )
-        for i in range(len(self.data.physics.fusrat_plasma_dt_profile)):
+        for i in range(len(self.data.physics.fusden_plasma_dt_profile)):
             po.ovarre(
                 self.mfile,
-                f"DT fusion rate at point {i}",
-                f"fusrat_plasma_dt_profile{i}",
-                self.data.physics.fusrat_plasma_dt_profile[i],
+                f"DT fusion rate density in plasma at point {i}",
+                f"fusden_plasma_dt_profile{i}",
+                self.data.physics.fusden_plasma_dt_profile[i],
             )
 
-        for i in range(len(self.data.physics.fusrat_plasma_dd_triton_profile)):
+        for i in range(len(self.data.physics.fusden_plasma_dd_triton_profile)):
             po.ovarre(
                 self.mfile,
-                f"D-D -> T fusion rate at point {i}",
-                f"fusrat_plasma_dd_triton_profile{i}",
-                self.data.physics.fusrat_plasma_dd_triton_profile[i],
+                f"D-D -> T fusion rate density in plasma at point {i}",
+                f"fusden_plasma_dd_triton_profile{i}",
+                self.data.physics.fusden_plasma_dd_triton_profile[i],
             )
-        for i in range(len(self.data.physics.fusrat_plasma_dd_helion_profile)):
+        for i in range(len(self.data.physics.fusden_plasma_dd_helion_profile)):
             po.ovarre(
                 self.mfile,
-                f"D-D -> 3He fusion rate at point {i}",
-                f"fusrat_plasma_dd_helion_profile{i}",
-                self.data.physics.fusrat_plasma_dd_helion_profile[i],
+                f"D-D -> 3He fusion rate density in plasma at point {i}",
+                f"fusden_plasma_dd_helion_profile{i}",
+                self.data.physics.fusden_plasma_dd_helion_profile[i],
             )
-        for i in range(len(self.data.physics.fusrat_plasma_dhe3_profile)):
+        for i in range(len(self.data.physics.fusden_plasma_dhe3_profile)):
             po.ovarre(
                 self.mfile,
-                f"D-3He fusion rate at point {i}",
-                f"fusrat_plasma_dhe3_profile{i}",
-                self.data.physics.fusrat_plasma_dhe3_profile[i],
+                f"D-3He fusion rate density in plasma at point {i}",
+                f"fusden_plasma_dhe3_profile{i}",
+                self.data.physics.fusden_plasma_dhe3_profile[i],
             )
         po.ovarre(
             self.outfile,

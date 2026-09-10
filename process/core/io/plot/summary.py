@@ -11909,38 +11909,38 @@ def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
 
 def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     """Plot the fusion rate profiles on the given axis"""
-    fusrat_plasma_dt_profile = []
-    fusrat_plasma_dd_triton_profile = []
-    fusrat_plasma_dd_helion_profile = []
-    fusrat_plasma_dhe3_profile = []
+    fusden_plasma_dt_profile = []
+    fusden_plasma_dd_triton_profile = []
+    fusden_plasma_dd_helion_profile = []
+    fusden_plasma_dhe3_profile = []
 
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
-    fusrat_plasma_dt_profile = [
-        mfile.get(f"fusrat_plasma_dt_profile{i}", scan=scan)
+    fusden_plasma_dt_profile = [
+        mfile.get(f"fusden_plasma_dt_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
     ]
 
-    fusrat_plasma_dd_triton_profile = [
-        mfile.get(f"fusrat_plasma_dd_triton_profile{i}", scan=scan)
+    fusden_plasma_dd_triton_profile = [
+        mfile.get(f"fusden_plasma_dd_triton_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
     ]
 
-    fusrat_plasma_dd_helion_profile = [
-        mfile.get(f"fusrat_plasma_dd_helion_profile{i}", scan=scan)
+    fusden_plasma_dd_helion_profile = [
+        mfile.get(f"fusden_plasma_dd_helion_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
     ]
-    fusrat_plasma_dhe3_profile = [
-        mfile.get(f"fusrat_plasma_dhe3_profile{i}", scan=scan)
+    fusden_plasma_dhe3_profile = [
+        mfile.get(f"fusden_plasma_dhe3_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
     ]
 
     fusrat_plasma_total_profile = [
-        fusrat_plasma_dt_profile[i]
-        + fusrat_plasma_dd_triton_profile[i]
-        + fusrat_plasma_dd_helion_profile[i]
-        + fusrat_plasma_dhe3_profile[i]
-        for i in range(len(fusrat_plasma_dt_profile))
+        fusden_plasma_dt_profile[i]
+        + fusden_plasma_dd_triton_profile[i]
+        + fusden_plasma_dd_helion_profile[i]
+        + fusden_plasma_dhe3_profile[i]
+        for i in range(len(fusden_plasma_dt_profile))
     ]
 
     axis.spines["left"].set_color("red")
@@ -11949,29 +11949,29 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
     # Plot fusion rates (dashed lines, left axis) with axis color and different linestyles
     axis.plot(
-        np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
-        fusrat_plasma_dt_profile,
+        np.linspace(0, 1, len(fusden_plasma_dt_profile)),
+        fusden_plasma_dt_profile,
         color=axis.spines["left"].get_edgecolor(),
         linestyle="-",
         label=r"$\mathrm{D-T}$",
     )
     axis.plot(
-        np.linspace(0, 1, len(fusrat_plasma_dd_triton_profile)),
-        fusrat_plasma_dd_triton_profile,
+        np.linspace(0, 1, len(fusden_plasma_dd_triton_profile)),
+        fusden_plasma_dd_triton_profile,
         color=axis.spines["left"].get_edgecolor(),
         linestyle=":",
         label=r"$\mathrm{D-D \ Triton}$",
     )
     axis.plot(
-        np.linspace(0, 1, len(fusrat_plasma_dd_helion_profile)),
-        fusrat_plasma_dd_helion_profile,
+        np.linspace(0, 1, len(fusden_plasma_dd_helion_profile)),
+        fusden_plasma_dd_helion_profile,
         color=axis.spines["left"].get_edgecolor(),
         linestyle="-.",
         label=r"$\mathrm{D-D \ Helion}$",
     )
     axis.plot(
-        np.linspace(0, 1, len(fusrat_plasma_dhe3_profile)),
-        fusrat_plasma_dhe3_profile,
+        np.linspace(0, 1, len(fusden_plasma_dhe3_profile)),
+        fusden_plasma_dhe3_profile,
         color=axis.spines["left"].get_edgecolor(),
         linestyle="--",
         label=r"$\mathrm{D-3He}$",
@@ -11992,37 +11992,37 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     ax2.yaxis.label.set_color("black")
     ax2.tick_params(axis="y", colors="blue")
     ax2.plot(
-        np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
-        np.array(fusrat_plasma_dt_profile) * constants.D_T_ENERGY,
+        np.linspace(0, 1, len(fusden_plasma_dt_profile)),
+        np.array(fusden_plasma_dt_profile) * constants.D_T_ENERGY,
         color=ax2.spines["right"].get_edgecolor(),
         linestyle="-",
     )
 
     ax2.plot(
-        np.linspace(0, 1, len(fusrat_plasma_dd_triton_profile)),
-        np.array(fusrat_plasma_dd_triton_profile) * constants.DD_TRITON_ENERGY,
+        np.linspace(0, 1, len(fusden_plasma_dd_triton_profile)),
+        np.array(fusden_plasma_dd_triton_profile) * constants.DD_TRITON_ENERGY,
         color=ax2.spines["right"].get_edgecolor(),
         linestyle=":",
     )
     ax2.plot(
-        np.linspace(0, 1, len(fusrat_plasma_dd_helion_profile)),
-        np.array(fusrat_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY,
+        np.linspace(0, 1, len(fusden_plasma_dd_helion_profile)),
+        np.array(fusden_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY,
         color=ax2.spines["right"].get_edgecolor(),
         linestyle="-.",
     )
     ax2.plot(
-        np.linspace(0, 1, len(fusrat_plasma_dhe3_profile)),
-        np.array(fusrat_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY,
+        np.linspace(0, 1, len(fusden_plasma_dhe3_profile)),
+        np.array(fusden_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY,
         color=ax2.spines["right"].get_edgecolor(),
         linestyle="--",
     )
     ax2.plot(
         np.linspace(0, 1, len(fusrat_plasma_total_profile)),
         (
-            np.array(fusrat_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY
-            + np.array(fusrat_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY
-            + np.array(fusrat_plasma_dd_triton_profile) * constants.DD_TRITON_ENERGY
-            + np.array(fusrat_plasma_dt_profile) * constants.D_T_ENERGY
+            np.array(fusden_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY
+            + np.array(fusden_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY
+            + np.array(fusden_plasma_dd_triton_profile) * constants.DD_TRITON_ENERGY
+            + np.array(fusden_plasma_dt_profile) * constants.D_T_ENERGY
         ),
         color=ax2.spines["right"].get_edgecolor(),
         linestyle="None",
@@ -13254,44 +13254,44 @@ def plot_fusion_rate_contours(
     scan: int,
 ):
     """Plot fusion rate contours"""
-    fusrat_plasma_dt_profile = []
-    fusrat_plasma_dd_triton_profile = []
-    fusrat_plasma_dd_helion_profile = []
-    fusrat_plasma_dhe3_profile = []
+    fusden_plasma_dt_profile = []
+    fusden_plasma_dd_triton_profile = []
+    fusden_plasma_dd_helion_profile = []
+    fusden_plasma_dhe3_profile = []
 
     rmajor = mfile.get("rmajor", scan=scan)
     rminor = mfile.get("rminor", scan=scan)
     kappa = mfile.get("kappa", scan=scan)
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
-    fusrat_plasma_dt_profile = [
-        mfile.get(f"fusrat_plasma_dt_profile{i}", scan=scan)
+    fusden_plasma_dt_profile = [
+        mfile.get(f"fusden_plasma_dt_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
     ]
 
-    fusrat_plasma_dd_triton_profile = [
-        mfile.get(f"fusrat_plasma_dd_triton_profile{i}", scan=scan)
+    fusden_plasma_dd_triton_profile = [
+        mfile.get(f"fusden_plasma_dd_triton_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
     ]
 
-    fusrat_plasma_dd_helion_profile = [
-        mfile.get(f"fusrat_plasma_dd_helion_profile{i}", scan=scan)
+    fusden_plasma_dd_helion_profile = [
+        mfile.get(f"fusden_plasma_dd_helion_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
     ]
-    fusrat_plasma_dhe3_profile = [
-        mfile.get(f"fusrat_plasma_dhe3_profile{i}", scan=scan)
+    fusden_plasma_dhe3_profile = [
+        mfile.get(f"fusden_plasma_dhe3_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
     ]
 
-    dt_grid, _r_grid, _z_grid = interp1d_profile(fusrat_plasma_dt_profile, mfile, scan)
+    dt_grid, _r_grid, _z_grid = interp1d_profile(fusden_plasma_dt_profile, mfile, scan)
 
     dd_triton_grid, _r_grid, _z_grid = interp1d_profile(
-        fusrat_plasma_dd_triton_profile, mfile, scan
+        fusden_plasma_dd_triton_profile, mfile, scan
     )
     dd_helion_grid, _r_grid, _z_grid = interp1d_profile(
-        fusrat_plasma_dd_helion_profile, mfile, scan
+        fusden_plasma_dd_helion_profile, mfile, scan
     )
-    dhe3_grid, r_grid, z_grid = interp1d_profile(fusrat_plasma_dhe3_profile, mfile, scan)
+    dhe3_grid, r_grid, z_grid = interp1d_profile(fusden_plasma_dhe3_profile, mfile, scan)
 
     dt_axes = fig1.add_subplot(121, aspect="equal")
     dd_triton_axes = fig1.add_subplot(122, aspect="equal")

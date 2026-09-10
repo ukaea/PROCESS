@@ -805,17 +805,17 @@ class PhysicsData:
     fusrat_total: float = 0.0
     """fusion reaction rate, from beams and plasma (reactions/sec)"""
 
-    fusrat_plasma_dt_profile: list[float] = field(default_factory=list)
-    """Profile of D-T fusion reaction rate in plasma, (reactions/sec)"""
+    fusden_plasma_dt_profile: list[float] = field(default_factory=list)
+    """Profile of D-T fusion reaction rate density in plasma, [reactions/m³/sec]"""
 
-    fusrat_plasma_dd_triton_profile: list[float] = field(default_factory=list)
-    """Profile of D-D fusion reaction rate (tritium branch) in plasma, (reactions/sec)"""
+    fusden_plasma_dd_triton_profile: list[float] = field(default_factory=list)
+    """Profile of D-D fusion reaction rate density (tritium branch) in plasma, [reactions/m³/sec]"""
 
-    fusrat_plasma_dd_helion_profile: list[float] = field(default_factory=list)
-    """Profile of D-D fusion reaction rate (helium branch) in plasma, (reactions/sec)"""
+    fusden_plasma_dd_helion_profile: list[float] = field(default_factory=list)
+    """Profile of D-D fusion reaction rate density (helium branch) in plasma, [reactions/m³/sec]"""
 
-    fusrat_plasma_dhe3_profile: list[float] = field(default_factory=list)
-    """Profile of D-3He fusion reaction rate in plasma, (reactions/sec)"""
+    fusden_plasma_dhe3_profile: list[float] = field(default_factory=list)
+    """Profile of D-3He fusion reaction rate density in plasma, [reactions/m³/sec]"""
 
     fusden_plasma: float = 0.0
     """fusion reaction rate, just from plasma (reactions/m3/sec)"""
