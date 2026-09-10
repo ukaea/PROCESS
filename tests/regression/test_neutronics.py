@@ -278,7 +278,7 @@ def test_2_groups_2_layers():
     """Create a 2-layer 2-group model."""
     dummy = np.geomspace(MAX_E, MIN_E, 3)
     mat1 = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="mat1")
-    mat1._set_sigma([100.0, 200], [[90, 1.0], [0.0, 80.0]])
+    mat1._set_sigma([100.0, 200], [[90, 1.0], [0.0, 199.5]])
     mat2 = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="mat2")
     mat2._set_sigma([10.0, 20], [[9, 1.0], [0.0, 8.0]])
     neutron_profile = NeutronFluxProfile(
@@ -329,6 +329,7 @@ def test_2_groups_1_layer():
         ),
         0,
     ), "Extended boundary condition check for group 1"
+    assert np.isclose( neutron_profile.groupwise_neutron_current_at(1, 0), 0), "No incoming neutron current at x=0 for group 1"
     num_layer = 0
     for point in np.linspace(
         neutron_profile.interface_x[0],
@@ -420,6 +421,9 @@ def test_3_groups_1_layer():
         ),
         0,
     ), "Extended boundary condition check for group 2"
+    assert np.isclose( neutron_profile.groupwise_neutron_current_at(1, 0), 0), "No incoming neutron current at x=0 for group 1"
+    assert np.isclose( neutron_profile.groupwise_neutron_current_at(2, 0), 0), "No incoming neutron current at x=0 for group 2"
+
     num_layer = 0
     mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
     validate_diffusion_equation_at(neutron_profile, mid_point)
@@ -497,6 +501,9 @@ def test_4_groups_1_layer():
         ),
         0,
     ), "Extended boundary condition check for group 3"
+    assert np.isclose( neutron_profile.groupwise_neutron_current_at(1, 0), 0), "No incoming neutron current at x=0 for group 1"
+    assert np.isclose( neutron_profile.groupwise_neutron_current_at(2, 0), 0), "No incoming neutron current at x=0 for group 2"
+    assert np.isclose( neutron_profile.groupwise_neutron_current_at(3, 0), 0), "No incoming neutron current at x=0 for group 3"
 
     num_layer = 0
     mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
@@ -577,6 +584,9 @@ def test_4_groups_4_layers():
         mat.sigma_t - mat.sigma_s.sum(axis=1) - mat.sigma_in.sum(axis=1)
         for mat in neutron_profile.materials
     ]
+    assert np.isclose( neutron_profile.groupwise_neutron_current_at(1, 0), 0), "No incoming neutron current at x=0 for group 1"
+    assert np.isclose( neutron_profile.groupwise_neutron_current_at(2, 0), 0), "No incoming neutron current at x=0 for group 2"
+    assert np.isclose( neutron_profile.groupwise_neutron_current_at(3, 0), 0), "No incoming neutron current at x=0 for group 3"
     assert np.isclose(
         sum(neutron_profile.fluxes),
         neutron_profile.neutron_current_escaped()
@@ -665,7 +675,12 @@ def test_5_groups_5_layers():
         mat_list.append(mat)
     incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(incoming_flux, [5, 10, 15, 20, 25], mat_list)
+
     neutron_profile.solve()
+    for n in range(1, neutron_profile.n_groups):
+        assert np.isclose(
+            neutron_profile.groupwise_neutron_current_at(n, 0), 0
+        ), f"No incoming neutron current at x=0 for group {n=}"
     for num_layer in range(neutron_profile.n_layers):
         mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
         layer_x = neutron_profile.layer_x[num_layer]
