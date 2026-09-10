@@ -11908,7 +11908,7 @@ def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
 
 
 def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
-    """Plot the fusion rate profiles on the given axis"""
+    """Plot the fusion rate density profiles on the given axis"""
     fusden_plasma_dt_profile = []
     fusden_plasma_dd_triton_profile = []
     fusden_plasma_dd_helion_profile = []
@@ -12033,60 +12033,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
     # =================================================
 
-    # Compute cumulative integral (trapezoidal) of the total fusion rate profile vs normalised radius
-    rho_c = np.linspace(0.0, 1.0, len(fusrat_plasma_total_profile))
-    y_total = np.asarray(fusrat_plasma_total_profile, dtype=float)
-
-    # handle degenerate case
-    if y_total.size < 2:
-        cum_trap = np.array([0.0, y_total.sum()])
-    else:
-        dx = rho_c[1] - rho_c[0]
-        # cumulative trapezoid: integral from 0 to rho[i]
-        cum_trap_mid = np.cumsum((y_total[1:] + y_total[:-1]) * 0.5 * dx)
-        cum_trap = np.concatenate(([0.0], cum_trap_mid))
-
-    # Normalize to reported total fusion rate if available, otherwise keep raw integral
-    reported_total = mfile.data.get("fusrat_total")
-    if reported_total is not None:
-        total_reported = float(reported_total.get_scan(scan))
-        # avoid division by zero
-        norm_factor = cum_trap[-1] if cum_trap[-1] > 0 else 1.0
-        cum_reactions = cum_trap / norm_factor * total_reported
-    else:
-        cum_reactions = cum_trap
-
-    # Plot cumulative reactions on a separate right-hand axis (offset)
-
-    axis.plot(
-        rho_c,
-        cum_reactions,
-        color="black",
-        linewidth=2,
-        label="Cumulative total reactions",
-    )
-
-    # mark the rho location where cumulative reactions reach 50% of the total
-    total_reactions = float(cum_reactions[-1]) if np.size(cum_reactions) > 0 else 0.0
-    if total_reactions > 0.0:
-        target = 0.5 * total_reactions
-        idxs = np.where(cum_reactions >= target)[0]
-        rho50 = float(rho_c[idxs[0]]) if idxs.size > 0 else float(rho_c[-1])
-
-        # vertical line at 50% cumulative reactions
-        axis.axvline(
-            rho50,
-            color="black",
-            linestyle="--",
-            linewidth=1.5,
-            zorder=1,
-            label="50% total\nreactions",
-        )
-
-    # =================================================
-
     axis.set_xlabel("$\\rho \\ [r/a]$")
-    axis.set_ylabel("Fusion Rate [reactions/second]")
+    axis.set_ylabel("Fusion Rate Density [reactions/m³/sec]")
     axis.legend(
         loc="lower left",
         edgecolor="black",
@@ -12106,8 +12054,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
     axis.tick_params(axis="y", which="minor", colors="red")
 
-    ax2.set_title("Fusion Rate and Fusion Power Profiles")
-    ax2.set_ylabel("Fusion Power [W]")
+    ax2.set_title("Fusion Rate and Fusion Power Density Profiles")
+    ax2.set_ylabel("Fusion Power Density [W/m³]")
     ax2.set_yscale("log")
     ax2.minorticks_on()
     ax2.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
@@ -13189,7 +13137,7 @@ def reaction_plot_grid(
     fractions=(0.25, 0.5, 0.75),
     colours=("blue", "yellow", "red"),
 ):
-    """Plot fusion reaction rate"""
+    """Plot fusion reaction rate density"""
     # Mask points outside the plasma boundary (optional, but grid is inside by construction)
     # Plot filled contour
 
@@ -13199,7 +13147,7 @@ def reaction_plot_grid(
     ax.figure.colorbar(
         upper,
         ax=ax,
-        label="Fusion Rate [reactions/second]",
+        label="Fusion Rate Density [reactions/m³/sec]",
         location="left",
         anchor=(-0.25, 0.5),
     )
@@ -13253,7 +13201,7 @@ def plot_fusion_rate_contours(
     mfile: MFile,
     scan: int,
 ):
-    """Plot fusion rate contours"""
+    """Plot fusion rate density contours"""
     fusden_plasma_dt_profile = []
     fusden_plasma_dd_triton_profile = []
     fusden_plasma_dd_helion_profile = []
