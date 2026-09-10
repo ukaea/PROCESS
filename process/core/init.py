@@ -376,7 +376,21 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     #  Fuel ion fractions must add up to 1.0
-    if (
+    if data.physics.i_fusion_reactions == "p-b11":
+        if (
+            abs(
+                1.0
+                - data.physics.f_plasma_fuel_boron11
+                - data.physics.f_plasma_fuel_proton
+            )
+            > 1e-6
+        ):
+            raise ProcessValidationError(
+                "p-b11 fuel ion fractions do not sum to 1.0",
+                f_plasma_fuel_boron11=data.physics.f_plasma_fuel_boron11,
+                f_plasma_fuel_proton=data.physics.f_plasma_fuel_proton,
+            )
+    elif (
         abs(
             1.0
             - data.physics.f_plasma_fuel_deuterium

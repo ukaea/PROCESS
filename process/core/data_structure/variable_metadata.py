@@ -374,6 +374,9 @@ var_dicts = {
     "f_nd_impurity_electrons(13)": VariableMetadata(
         latex=r"$Xe_{\mathrm{f}}$", description="Impurity fraction (Xenon)", units=""
     ),
+    "f_nd_impurity_electrons(15)": VariableMetadata(
+        latex=r"$B_{\mathrm{f}}$", description="Boron fuel fraction (when proton-boron fusion)", units=""
+    ),
     "pdivmax_over_rmajor": VariableMetadata(
         latex=r"$P_{\mathrm{div}}/R_\mathrm{maj}$ [MW/m]",
         description="Divertor power per major radius",

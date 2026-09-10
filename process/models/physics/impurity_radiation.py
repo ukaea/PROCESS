@@ -212,6 +212,18 @@ def initialise_imprad(data: DataStructure):
         data=data,
     )
 
+    #  Boron
+    init_imp_element(
+        n_species_index=15,
+        name_label=data.impurity_radiation.imp_label[14],
+        z=5,
+        m_species_amu=constants.M_BORON11_AMU,
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
+        error=errorflag,
+        data=data,
+    )
+
 
 @dataclasses.dataclass
 class ImpurityDataHeader:

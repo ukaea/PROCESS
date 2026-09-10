@@ -802,6 +802,23 @@ class PhysicsData:
     f_plasma_fuel_tritium: float = 0.5
     """Plasma tritium fuel fraction"""
 
+    f_plasma_fuel_boron11: float = 0.0
+    """Boron-11 fuel fraction (`i_fusion_reactions='p-b11'`)"""
+
+    f_plasma_fuel_proton: float = 0.0
+    """Proton fuel fraction (`i_fusion_reactions='p-b11'`)"""
+
+    f_nd_protons_electrons_input: float = 0.0
+    """Proton density fraction relative to electron density
+    (`i_fusion_reactions='p-b11'`, `i_nd_plasma_protons=1`)
+    """
+
+    i_fusion_reactions: str = "dt"
+    """Fusion reaction type: ``dt`` for D-T, ``p-b11`` for proton-boron11"""
+
+    i_nd_plasma_protons: int = 0
+    """Proton density mode for p-b11: 0=no other protons except fuel, 1=user input"""
+
     fusden_total: float = 0.0
     """fusion reaction rate density, from beams and plasma (reactions/m3/sec)"""
 

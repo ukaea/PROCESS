@@ -1213,6 +1213,17 @@ class Physics(Model):
                 / self.data.physics.fusden_alpha_total,
             )
 
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            if self.data.physics.i_nd_plasma_protons == 0:
+                self.data.physics.nd_plasma_protons_vol_avg = 0.0
+            elif self.data.physics.i_nd_plasma_protons == 1:
+                # 作为输入
+                self.data.physics.nd_plasma_protons_vol_avg = (
+                    self.data.physics.f_nd_protons_electrons_input
+                    * self.data.physics.nd_plasma_electrons_vol_avg
+                )
+            else:
+                raise ProcessValueError(f"Invalid value for i_nd_plasma_protons: {self.data.physics.i_nd_plasma_protons}")
         # ======================================================================
 
         # Beam hot ion component
@@ -1233,7 +1244,7 @@ class Physics(Model):
         # Sum of Zi.ni for all impurity ions (those with charge > helium)
         znimp = 0.0
         for imp in range(N_IMPURITIES):
-            if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
+            if self.data.impurity_radiation.impurity_arr_z[imp] > 2 and self.data.impurity_radiation.impurity_arr_z[imp] != 5:
                 znimp += impurity_radiation.calculate_average_charge_at_temp(
                     imp,
                     np.array([self.data.physics.temp_plasma_electron_vol_avg_kev]),
@@ -1268,9 +1279,19 @@ class Physics(Model):
         # = nD + nT + 2*nHe3
         # So nd_plasma_fuel_ions_vol_avg = znfuel - nHe3 = znfuel
         # - f_plasma_fuel_helium3*nd_plasma_fuel_ions_vol_avg
-        self.data.physics.nd_plasma_fuel_ions_vol_avg = znfuel / (
-            1.0 + self.data.physics.f_plasma_fuel_helium3
-        )
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            charge_b = impurity_radiation.calculate_average_charge_at_temp(
+                impurity_radiation.element2index("B_", self.data),
+                np.array([self.data.physics.temp_plasma_electron_vol_avg_kev]),
+                self.data,
+            ).squeeze()
+            self.data.physics.nd_plasma_fuel_ions_vol_avg = znfuel / (
+                1.0 + self.data.physics.f_plasma_fuel_boron11 * (charge_b - 1.0)
+            )
+        else:
+            self.data.physics.nd_plasma_fuel_ions_vol_avg = znfuel / (
+                1.0 + self.data.physics.f_plasma_fuel_helium3
+            )
 
         # ======================================================================
 
@@ -1283,6 +1304,7 @@ class Physics(Model):
             + (
                 self.data.physics.f_plasma_fuel_deuterium
                 + self.data.physics.f_plasma_fuel_tritium
+                + self.data.physics.f_plasma_fuel_proton
             )
             * self.data.physics.nd_plasma_fuel_ions_vol_avg
             + self.data.physics.nd_beam_ions
@@ -1297,12 +1319,25 @@ class Physics(Model):
             + self.data.physics.f_nd_alpha_thermal_electron
         )
 
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            self.data.impurity_radiation.f_nd_impurity_electron_array[
+                impurity_radiation.element2index("B_", self.data)
+            ] = (
+                self.data.physics.f_plasma_fuel_boron11
+                * self.data.physics.nd_plasma_fuel_ions_vol_avg
+                / self.data.physics.nd_plasma_electrons_vol_avg
+            )
+        else:
+            self.data.impurity_radiation.f_nd_impurity_electron_array[
+                impurity_radiation.element2index("B_", self.data)
+            ] = 0.0
+
         # ======================================================================
 
         # Total impurity density
         self.data.physics.nd_plasma_impurities_vol_avg = 0.0
         for imp in range(N_IMPURITIES):
-            if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
+            if self.data.impurity_radiation.impurity_arr_z[imp] > 2 and self.data.impurity_radiation.impurity_arr_z[imp] != 5:
                 self.data.physics.nd_plasma_impurities_vol_avg += (
                     self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
                     * self.data.physics.nd_plasma_electrons_vol_avg
@@ -1403,6 +1438,15 @@ class Physics(Model):
 
         # ======================================================================
 
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            self.data.physics.m_fuel_amu = (
+                constants.M_BORON11_AMU * self.data.physics.f_plasma_fuel_boron11
+                + constants.M_PROTON_AMU * self.data.physics.f_plasma_fuel_proton
+            )
+            self.data.physics.m_beam_amu = constants.M_PROTON_AMU
+
+        # ======================================================================
+
         # Average mass of all ions
         self.data.physics.m_ions_total_amu = (
             (
@@ -1417,7 +1461,7 @@ class Physics(Model):
             + (self.data.physics.m_beam_amu * self.data.physics.nd_beam_ions)
         )
         for imp in range(N_IMPURITIES):
-            if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
+            if self.data.impurity_radiation.impurity_arr_z[imp] > 2 and self.data.impurity_radiation.impurity_arr_z[imp] != 5:
                 self.data.physics.m_ions_total_amu += (
                     self.data.physics.nd_plasma_electrons_vol_avg
                     * self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
@@ -1431,7 +1475,7 @@ class Physics(Model):
         # ======================================================================
 
         # Mass weighted plasma effective charge
-        # Σ(Z²ᵢnᵢ) / mᵢ
+        # Σ(Z²ᵢnᵢ) / (mᵢZᵢnᵢ)
         self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg = (
             (
                 self.data.physics.f_plasma_fuel_deuterium
@@ -1466,8 +1510,30 @@ class Physics(Model):
                 / constants.M_TRITON_AMU
             )
         ) / self.data.physics.nd_plasma_electrons_vol_avg
+        
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg = (
+                (
+                    charge_b**2 * self.data.physics.f_plasma_fuel_boron11
+                    * self.data.physics.nd_plasma_fuel_ions_vol_avg
+                    / constants.M_BORON11_AMU
+                )
+                + (
+                    self.data.physics.f_plasma_fuel_proton
+                    * self.data.physics.nd_plasma_fuel_ions_vol_avg
+                    / constants.M_PROTON_AMU
+                )
+                + (
+                    4.0
+                    * self.data.physics.nd_plasma_alphas_thermal_vol_avg
+                    / constants.M_ALPHA_AMU
+                )
+                + (self.data.physics.nd_plasma_protons_vol_avg / constants.M_PROTON_AMU)
+                + (self.data.physics.nd_beam_ions / constants.M_PROTON_AMU)
+            ) / self.data.physics.nd_plasma_electrons_vol_avg
+
         for imp in range(N_IMPURITIES):
-            if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
+            if self.data.impurity_radiation.impurity_arr_z[imp] > 2 and self.data.impurity_radiation.impurity_arr_z[imp] != 5:
                 self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg += (
                     self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
                     * impurity_radiation.calculate_average_charge_at_temp(
@@ -1856,6 +1922,19 @@ class Physics(Model):
             "(f_plasma_fuel_helium3)",
             self.data.physics.f_plasma_fuel_helium3,
         )
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            po.ovarre(
+                self.outfile,
+                "Boron-11 fuel fraction",
+                "(f_plasma_fuel_boron11)",
+                self.data.physics.f_plasma_fuel_boron11,
+            )
+            po.ovarre(
+                self.outfile,
+                "Proton fuel fraction",
+                "(f_plasma_fuel_proton)",
+                self.data.physics.f_plasma_fuel_proton,
+            )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
         po.osubhd(self.outfile, "Fusion rates :")

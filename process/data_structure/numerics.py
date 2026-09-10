@@ -540,7 +540,7 @@ class NumericsData:
     * (134) f_nd_impurity_electrons(12) :  Krypton density fraction relative to electron density
     * (135) f_nd_impurity_electrons(13) :  Xenon density fraction relative to electron density
     * (136) f_nd_impurity_electrons(14) :  Tungsten density fraction relative to electron density
-    * (137) NOT USED
+    * (137) f_nd_impurity_electrons(15) :  Boron fuel density fraction relative to electron density
     * (138) dx_tf_hts_tape_rebco : thickness of REBCO layer in tape (m)
     * (139) dx_tf_hts_tape_copper : thickness of copper layer in tape (m)
     * (140) dr_tf_wp_with_insulation : radial thickness of TFC winding pack (m)
