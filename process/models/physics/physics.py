@@ -687,7 +687,7 @@ class Physics(Model):
 
         # Create some derived values and add beam contribution to fusion power
         (
-            self.data.physics.pden_neutron_total_mw,
+            self.data.physics.pden_neutron_total_vol_avg_mw,
             self.data.physics.p_plasma_alpha_mw,
             self.data.physics.p_alpha_total_mw,
             self.data.physics.p_plasma_neutron_mw,
@@ -2059,9 +2059,9 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Neutron power density: total [MW/m³]",
-            "(pden_neutron_total_mw)",
-            self.data.physics.pden_neutron_total_mw,
+            "Volume-averaged neutron power density: total [MW/m³]",
+            "(pden_neutron_total_vol_avg_mw)",
+            self.data.physics.pden_neutron_total_vol_avg_mw,
             "OP ",
         )
         po.ovarre(

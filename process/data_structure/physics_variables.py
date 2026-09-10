@@ -1226,8 +1226,8 @@ class PhysicsData:
     p_neutron_total_mw: float = 0.0
     """Total neutron fusion power from plasma and beams [MW]"""
 
-    pden_neutron_total_mw: float = 0.0
-    """neutron fusion power per volume from beams and plasma (MW/m3)"""
+    pden_neutron_total_vol_avg_mw: float = 0.0
+    """Volume-averaged total neutron fusion power per volume [MW/m³]"""
 
     pden_plasma_neutron_mw: float = 0.0
     """neutron fusion power per volume just from plasma (MW/m3)"""

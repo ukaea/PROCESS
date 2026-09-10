@@ -2058,7 +2058,7 @@ class Stellarator(Model):
 
         # Create some derived values and add beam contribution to fusion power
         (
-            self.data.physics.pden_neutron_total_mw,
+            self.data.physics.pden_neutron_total_vol_avg_mw,
             self.data.physics.p_plasma_alpha_mw,
             self.data.physics.p_alpha_total_mw,
             self.data.physics.p_plasma_neutron_mw,
