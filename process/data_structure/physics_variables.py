@@ -1100,8 +1100,8 @@ class PhysicsData:
     pden_plasma_alpha_mw: float = 0.0
     """Alpha power per volume just from plasma [MW/m3]"""
 
-    pden_alpha_total_mw: float = 0.0
-    """Alpha power per volume from plasma and beams [MW/m3]"""
+    pden_alpha_total_vol_avg_mw: float = 0.0
+    """Volume-averaged alpha power per volume from plasma and beams [MW/m³]"""
 
     f_pden_alpha_electron_mw: float = 0.0
     """Alpha power per volume to electrons [MW/m3]"""

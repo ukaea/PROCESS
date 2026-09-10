@@ -693,7 +693,7 @@ class Physics(Model):
             self.data.physics.p_plasma_neutron_mw,
             self.data.physics.p_neutron_total_mw,
             self.data.physics.p_non_alpha_charged_mw,
-            self.data.physics.pden_alpha_total_mw,
+            self.data.physics.pden_alpha_total_vol_avg_mw,
             self.data.physics.f_pden_alpha_electron_mw,
             self.data.physics.f_pden_alpha_ions_mw,
             self.data.physics.p_charged_particle_mw,
@@ -717,7 +717,7 @@ class Physics(Model):
             nd_plasma_ions_total_vol_avg=self.data.physics.nd_plasma_ions_total_vol_avg,
             temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
             temp_plasma_ion_density_weighted_kev=self.data.physics.temp_plasma_ion_density_weighted_kev,
-            pden_alpha_total_mw=self.data.physics.pden_alpha_total_mw,
+            pden_alpha_total_vol_avg_mw=self.data.physics.pden_alpha_total_vol_avg_mw,
             pden_plasma_alpha_mw=self.data.physics.pden_plasma_alpha_mw,
             i_beta_fast_alpha=self.data.physics.i_beta_fast_alpha,
             f_plasma_fuel_deuterium=self.data.physics.f_plasma_fuel_deuterium,
@@ -1867,21 +1867,21 @@ class Physics(Model):
         po.osubhd(self.outfile, "Fusion rates :")
         po.ovarre(
             self.outfile,
-            "Fusion rate: total (reactions/sec)",
+            "Fusion rate: total [reactions/sec]",
             "(fusrat_total)",
             self.data.physics.fusrat_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Volume averaged fusion rate density: total [reactions/m³/sec]",
+            "Volume-averaged fusion rate density: total [reactions/m³/sec]",
             "(fusden_total_vol_avg)",
             self.data.physics.fusden_total_vol_avg,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Volume averaged fusion rate density: plasma [reactions/m³/sec]",
+            "Volume-averaged fusion rate density: plasma [reactions/m³/sec]",
             "(fusden_plasma_vol_avg)",
             self.data.physics.fusden_plasma_vol_avg,
             "OP ",
@@ -1898,14 +1898,15 @@ class Physics(Model):
 
         po.ovarre(
             self.outfile,
-            "Total fusion power (MW)",
+            "Total fusion power [MW]",
             "(p_fusion_total_mw)",
             self.data.physics.p_fusion_total_mw,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "D-T fusion power: total (MW)",
+            "D-T fusion power: total [MW]",
             "(p_dt_total_mw)",
             self.data.physics.p_dt_total_mw,
             "OP ",
@@ -1941,21 +1942,22 @@ class Physics(Model):
             )
         po.ovarre(
             self.outfile,
-            "D-T fusion power: plasma (MW)",
+            "D-T fusion power: plasma [MW]",
             "(p_plasma_dt_mw)",
             self.data.physics.p_plasma_dt_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "D-T fusion power: beam (MW)",
+            "D-T fusion power: beam [MW]",
             "(p_beam_dt_mw)",
             self.data.physics.p_beam_dt_mw,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "D-D fusion power (MW)",
+            "D-D fusion power [MW]",
             "(p_dd_total_mw)",
             self.data.physics.p_dd_total_mw,
             "OP ",
@@ -1967,9 +1969,10 @@ class Physics(Model):
             self.data.physics.f_dd_branching_trit,
             "OP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "D-He3 fusion power (MW)",
+            "D-He3 fusion power [MW]",
             "(p_dhe3_total_mw)",
             self.data.physics.p_dhe3_total_mw,
             "OP ",
@@ -1995,35 +1998,35 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Alpha power: total (MW)",
+            "Alpha power: total [MW]",
             "(p_alpha_total_mw)",
             self.data.physics.p_alpha_total_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Alpha power density: total (MW/m³)",
-            "(pden_alpha_total_mw)",
-            self.data.physics.pden_alpha_total_mw,
+            "Volume-averaged alpha power density: total [MW/m³]",
+            "(pden_alpha_total_vol_avg_mw)",
+            self.data.physics.pden_alpha_total_vol_avg_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Alpha power: plasma only (MW)",
+            "Alpha power: plasma only [MW]",
             "(p_plasma_alpha_mw)",
             self.data.physics.p_plasma_alpha_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Alpha power density: plasma (MW/m³)",
+            "Alpha power density: plasma [MW/m³]",
             "(pden_plasma_alpha_mw)",
             self.data.physics.pden_plasma_alpha_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Alpha power: beam-plasma (MW)",
+            "Alpha power: beam-plasma [MW]",
             "(p_beam_alpha_mw)",
             self.data.physics.p_beam_alpha_mw,
             "OP ",
@@ -2031,14 +2034,14 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Alpha power per unit volume transferred to electrons (MW/m³)",
+            "Alpha power per unit volume transferred to electrons [MW/m³]",
             "(f_pden_alpha_electron_mw)",
             self.data.physics.f_pden_alpha_electron_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Alpha power per unit volume transferred to ions (MW/m³)",
+            "Alpha power per unit volume transferred to ions [MW/m³]",
             "(f_pden_alpha_ions_mw)",
             self.data.physics.f_pden_alpha_ions_mw,
             "OP ",
@@ -2049,35 +2052,35 @@ class Physics(Model):
         po.osubhd(self.outfile, "Neutron Powers (n) :")
         po.ovarre(
             self.outfile,
-            "Neutron power: total (MW)",
+            "Neutron power: total [MW]",
             "(p_neutron_total_mw)",
             self.data.physics.p_neutron_total_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Neutron power density: total (MW/m³)",
+            "Neutron power density: total [MW/m³]",
             "(pden_neutron_total_mw)",
             self.data.physics.pden_neutron_total_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Neutron power: plasma only (MW)",
+            "Neutron power: plasma only [MW]",
             "(p_plasma_neutron_mw)",
             self.data.physics.p_plasma_neutron_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Neutron power density: plasma (MW/m³)",
+            "Neutron power density: plasma [MW/m³]",
             "(pden_plasma_neutron_mw)",
             self.data.physics.pden_plasma_neutron_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Neutron power: beam-plasma (MW)",
+            "Neutron power: beam-plasma [MW]",
             "(p_beam_neutron_mw)",
             self.data.physics.p_beam_neutron_mw,
             "OP ",
@@ -2085,7 +2088,7 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Average neutron flux at plasma surface (MW/m²)",
+            "Average neutron flux at plasma surface [MW/m²]",
             "(pflux_plasma_surface_neutron_avg_mw)",
             self.data.physics.pflux_plasma_surface_neutron_avg_mw,
             "OP ",
@@ -2097,21 +2100,21 @@ class Physics(Model):
 
         po.ovarre(
             self.outfile,
-            "Charged particle power (p, 3He, T) (excluding alphas) (MW)",
+            "Charged particle power (p, 3He, T) (excluding alphas) [MW]",
             "(p_non_alpha_charged_mw)",
             self.data.physics.p_non_alpha_charged_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Charged particle power density (p, 3He, T) (excluding alphas) (MW)",
+            "Charged particle power density (p, 3He, T) (excluding alphas) [MW]",
             "(pden_non_alpha_charged_mw)",
             self.data.physics.pden_non_alpha_charged_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Total charged particle power (including alphas) (MW)",
+            "Total charged particle power (including alphas) [MW]",
             "(p_charged_particle_mw)",
             self.data.physics.p_charged_particle_mw,
             "OP ",
@@ -4199,7 +4202,7 @@ class PlasmaBeta(Model):
         nd_plasma_ions_total_vol_avg: float,
         temp_plasma_electron_density_weighted_kev: float,
         temp_plasma_ion_density_weighted_kev: float,
-        pden_alpha_total_mw: float,
+        pden_alpha_total_vol_avg_mw: float,
         pden_plasma_alpha_mw: float,
         i_beta_fast_alpha: int,
         f_plasma_fuel_deuterium: float,
@@ -4225,7 +4228,7 @@ class PlasmaBeta(Model):
             Density-weighted electron temperature (keV).
         temp_plasma_ion_density_weighted_kev : float
             Density-weighted ion temperature (keV).
-        pden_alpha_total_mw : float
+        pden_alpha_total_vol_avg_mw : float
             Alpha power per unit volume, from beams and plasma (MW/m³).
         pden_plasma_alpha_mw : float
             Alpha power per unit volume just from plasma (MW/m³).
@@ -4310,7 +4313,7 @@ class PlasmaBeta(Model):
                 )
 
             fact = max(fact, 0.0)
-            fact2 = pden_alpha_total_mw / pden_plasma_alpha_mw
+            fact2 = pden_alpha_total_vol_avg_mw / pden_plasma_alpha_mw
             beta_fast_alpha = beta_thermal * fact * fact2
 
         else:  # negligible alpha production, alpha_power_density = p_beam_alpha_mw = 0

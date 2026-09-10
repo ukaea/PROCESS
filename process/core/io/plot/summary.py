@@ -12191,7 +12191,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f"Beam power: {mfile.get('p_beam_alpha_mw', scan=scan):.2f} MW\n\n"
         f"Volume-averaged rate density total: {mfile.get('fusden_alpha_total_vol_avg', scan=scan):.4e} particles/m3/sec\n"
         f"Volume-averaged rate density, plasma: {mfile.get('fusden_plasma_alpha_vol_avg', scan=scan):.4e} particles/m3/sec\n\n"
-        f"Total power density: {mfile.get('pden_alpha_total_mw', scan=scan):.4e} MW/m3\n"
+        f"Volume-averaged total power density: {mfile.get('pden_alpha_total_vol_avg_mw', scan=scan):.4e} MW/m3\n"
         f"Plasma power density: {mfile.get('pden_plasma_alpha_mw', scan=scan):.4e} MW/m3\n\n"
         f"Power per unit volume transferred to electrons: {mfile.get('f_pden_alpha_electron_mw', scan=scan):.4e} MW/m3\n"
         f"Power per unit volume transferred to ions: {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m3\n\n"
