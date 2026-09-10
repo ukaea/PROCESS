@@ -531,11 +531,11 @@ class PhysicsData:
     alphap: float = 0.0
     """Plasma pressure profile index (⍺ₚ)"""  # noqa: RUF001
 
-    fusden_alpha_total: float = 0.0
-    """Alpha particle production rate per unit volume, from plasma and beams [particles/m³/sec]"""
+    fusden_alpha_total_vol_avg: float = 0.0
+    """Volume-averaged alpha particle production rate per unit volume, from plasma and beams [particles/m³/sec]"""
 
-    fusden_plasma_alpha: float = 0.0
-    """Alpha particle production rate per unit volume, just from plasma [particles/m³/sec]"""
+    fusden_plasma_alpha_vol_avg: float = 0.0
+    """Volume-averaged alpha particle production rate per unit volume, just from plasma [particles/m³/sec]"""
 
     alphat: float = 0.5
     """Plasma temperature profile index (⍺ₜ)"""  # noqa: RUF001
@@ -799,26 +799,26 @@ class PhysicsData:
     f_plasma_fuel_tritium: float = 0.5
     """Plasma tritium fuel fraction"""
 
-    fusden_total: float = 0.0
-    """fusion reaction rate density, from beams and plasma (reactions/m3/sec)"""
+    fusden_total_vol_avg: float = 0.0
+    """Total volume averaged fusion reaction rate density, from beams and plasma [reactions/m³/sec]"""
 
     fusrat_total: float = 0.0
     """fusion reaction rate, from beams and plasma (reactions/sec)"""
 
-    fusrat_plasma_dt_profile: list[float] = field(default_factory=list)
-    """Profile of D-T fusion reaction rate in plasma, (reactions/sec)"""
+    fusden_plasma_dt_profile: list[float] = field(default_factory=list)
+    """Profile of D-T fusion reaction rate density in plasma, [reactions/m³/sec]"""
 
-    fusrat_plasma_dd_triton_profile: list[float] = field(default_factory=list)
-    """Profile of D-D fusion reaction rate (tritium branch) in plasma, (reactions/sec)"""
+    fusden_plasma_dd_triton_profile: list[float] = field(default_factory=list)
+    """Profile of D-D fusion reaction rate density (tritium branch) in plasma, [reactions/m³/sec]"""
 
-    fusrat_plasma_dd_helion_profile: list[float] = field(default_factory=list)
-    """Profile of D-D fusion reaction rate (helium branch) in plasma, (reactions/sec)"""
+    fusden_plasma_dd_helion_profile: list[float] = field(default_factory=list)
+    """Profile of D-D fusion reaction rate density (helium branch) in plasma, [reactions/m³/sec]"""
 
-    fusrat_plasma_dhe3_profile: list[float] = field(default_factory=list)
-    """Profile of D-3He fusion reaction rate in plasma, (reactions/sec)"""
+    fusden_plasma_dhe3_profile: list[float] = field(default_factory=list)
+    """Profile of D-3He fusion reaction rate density in plasma, [reactions/m³/sec]"""
 
-    fusden_plasma: float = 0.0
-    """fusion reaction rate, just from plasma (reactions/m3/sec)"""
+    fusden_plasma_vol_avg: float = 0.0
+    """Volume averaged fusion reaction rate, just from plasma [reactions/m³/sec]"""
 
     f_c_plasma_non_inductive: float = 1.0
     """fraction of the plasma current produced by non-inductive means (`iteration variable 44`)"""
@@ -1097,11 +1097,11 @@ class PhysicsData:
     f_dd_branching_trit: float = 0.0
     """branching ratio for DD -> T"""
 
-    pden_plasma_alpha_mw: float = 0.0
-    """Alpha power per volume just from plasma [MW/m3]"""
+    pden_plasma_alpha_vol_avg_mw: float = 0.0
+    """Volume-averaged alpha power per volume just from plasma [MW/m³]"""
 
-    pden_alpha_total_mw: float = 0.0
-    """Alpha power per volume from plasma and beams [MW/m3]"""
+    pden_alpha_total_vol_avg_mw: float = 0.0
+    """Volume-averaged alpha power per volume from plasma and beams [MW/m³]"""
 
     f_pden_alpha_electron_mw: float = 0.0
     """Alpha power per volume to electrons [MW/m3]"""
@@ -1148,8 +1148,14 @@ class PhysicsData:
     p_dd_total_mw: float = 0.0
     """deuterium-deuterium fusion power (MW)"""
 
+    pden_dd_total_vol_avg_mw: float = 0.0
+    """Volume averaged D-D fusion power density [MW/m³]"""
+
     p_dhe3_total_mw: float = 0.0
-    """deuterium-helium3 fusion power (MW)"""
+    """deuterium-helium3 fusion power [MW]"""
+
+    pden_dhe3_total_vol_avg_mw: float = 0.0
+    """Volume averaged D-3He fusion power density [MW/m³]"""
 
     p_plasma_separatrix_mw: float = 0.0
     """power to conducted to the divertor region (MW)"""
@@ -1174,6 +1180,9 @@ class PhysicsData:
 
     p_plasma_dt_mw: float = 0.0
     """Deuterium-tritium fusion power, just from plasma [MW]"""
+
+    pden_plasma_dt_vol_avg_mw: float = 0.0
+    """Volume-averaged deuterium-tritium fusion power per volume just from plasma [MW/m³]"""
 
     p_plasma_outer_rad_mw: float = 0.0
     """radiation power from outer zone (MW)"""
@@ -1226,11 +1235,11 @@ class PhysicsData:
     p_neutron_total_mw: float = 0.0
     """Total neutron fusion power from plasma and beams [MW]"""
 
-    pden_neutron_total_mw: float = 0.0
-    """neutron fusion power per volume from beams and plasma (MW/m3)"""
+    pden_neutron_total_vol_avg_mw: float = 0.0
+    """Volume-averaged total neutron fusion power per volume [MW/m³]"""
 
-    pden_plasma_neutron_mw: float = 0.0
-    """neutron fusion power per volume just from plasma (MW/m3)"""
+    pden_plasma_neutron_vol_avg_mw: float = 0.0
+    """Volume-averaged neutron fusion power per volume just from plasma [MW/m³]"""
 
     p_plasma_ohmic_mw: float = 0.0
     """ohmic heating power (MW)"""
@@ -1256,8 +1265,8 @@ class PhysicsData:
     pradsolmw: float = 0.0
     """radiation power from SoL (MW)"""
 
-    proton_rate_density: float = 0.0
-    """Proton production rate [particles/m3/sec]"""
+    fusden_plasma_protons_vol_avg: float = 0.0
+    """Volume-averaged proton production rate [particles/m³/sec]"""
 
     psolradmw: float = 0.0
     """SOL radiation power (MW) (`stellarator only`)"""
@@ -1769,10 +1778,8 @@ class PhysicsData:
     - =3 MAST 2014 scaling 2
     """
 
-    dt_power_density_plasma: float = 0.0
     sigmav_dt_average: float = 0.0
-    dhe3_power_density: float = 0.0
-    dd_power_density: float = 0.0
+
     fusrat: float = 0.0
 
 

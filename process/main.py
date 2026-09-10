@@ -82,6 +82,10 @@ from process.models.physics.current_drive import (
 )
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.fusion_reactions import (
+    BeamReactions,
+    PlasmaReactions,
+)
 from process.models.physics.impurity_radiation import (
     initialise_imprad,
 )
@@ -696,6 +700,10 @@ class Models:
         self.plasma_fields = PlasmaFields()
         self.plasma_dia_current = PlasmaDiamagneticCurrent()
         self.scrape_off_layer = ScrapeOffLayer()
+        self.plasma_reactions = PlasmaReactions(
+            plasma_profile=self.plasma_profile, data=self.data
+        )
+        self.beam_reactions = BeamReactions(data=self.data)
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
@@ -711,6 +719,8 @@ class Models:
             plasma_dia_current=self.plasma_dia_current,
             plasma_geometry=self.plasma_geom,
             scrape_off_layer=self.scrape_off_layer,
+            plasma_reactions=self.plasma_reactions,
+            beam_reactions=self.beam_reactions,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,

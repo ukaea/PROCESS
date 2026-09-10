@@ -6,6 +6,8 @@ import numpy as np
 import pytest
 
 from process.core import constants
+from process.core.data_structure.base import DataStructure
+from process.data_structure.physics_variables import PlasmaIgnitionModel
 from process.models.physics import fusion_reactions as reactions
 
 
@@ -22,9 +24,9 @@ class SetFusionPowersParam(NamedTuple):
 
     vol_plasma: Any = None
 
-    pden_plasma_alpha_mw: Any = None
+    pden_plasma_alpha_vol_avg_mw: Any = None
 
-    pden_plasma_neutron_mw: Any = None
+    pden_plasma_neutron_vol_avg_mw: Any = None
 
     expected_alpha_power_density: Any = None
 
@@ -55,8 +57,8 @@ class SetFusionPowersParam(NamedTuple):
             p_beam_alpha_mw=0,
             pden_non_alpha_charged_mw=0.00066,
             vol_plasma=2426.25,
-            pden_plasma_alpha_mw=0.163,
-            pden_plasma_neutron_mw=0.654,
+            pden_plasma_alpha_vol_avg_mw=0.163,
+            pden_plasma_neutron_vol_avg_mw=0.654,
             expected_alpha_power_density=0.163,
             expected_neutron_power_density=0.654,
             expected_alpha_power_total=395.47875,
@@ -74,8 +76,8 @@ class SetFusionPowersParam(NamedTuple):
             p_beam_alpha_mw=100.5,
             pden_non_alpha_charged_mw=0.00066,
             vol_plasma=2426.25,
-            pden_plasma_alpha_mw=0.163,
-            pden_plasma_neutron_mw=0.654,
+            pden_plasma_alpha_vol_avg_mw=0.163,
+            pden_plasma_neutron_vol_avg_mw=0.654,
             expected_alpha_power_density=0.20442195,
             expected_neutron_power_density=0.8183263050336705,
             expected_alpha_power_total=495.97875,
@@ -103,13 +105,13 @@ def test_set_fusion_powers(setfusionpowersparam):
     """
 
     (
-        pden_neutron_total_mw,
+        pden_neutron_total_vol_avg_mw,
         _p_plasma_alpha_mw,
         p_alpha_total_mw,
         _p_plasma_neutron_mw,
         p_neutron_total_mw,
         p_non_alpha_charged_mw,
-        pden_alpha_total_mw,
+        pden_alpha_total_vol_avg_mw,
         f_pden_alpha_electron_mw,
         f_pden_alpha_ions_mw,
         p_charged_particle_mw,
@@ -119,16 +121,16 @@ def test_set_fusion_powers(setfusionpowersparam):
         f_alpha_ion=setfusionpowersparam.f_alpha_ion,
         p_beam_alpha_mw=setfusionpowersparam.p_beam_alpha_mw,
         pden_non_alpha_charged_mw=setfusionpowersparam.pden_non_alpha_charged_mw,
-        pden_plasma_neutron_mw=setfusionpowersparam.pden_plasma_neutron_mw,
+        pden_plasma_neutron_vol_avg_mw=setfusionpowersparam.pden_plasma_neutron_vol_avg_mw,
         vol_plasma=setfusionpowersparam.vol_plasma,
-        pden_plasma_alpha_mw=setfusionpowersparam.pden_plasma_alpha_mw,
+        pden_plasma_alpha_vol_avg_mw=setfusionpowersparam.pden_plasma_alpha_vol_avg_mw,
         f_p_alpha_plasma_deposited=setfusionpowersparam.f_p_alpha_plasma_deposited,
     )
 
-    assert pden_alpha_total_mw == pytest.approx(
+    assert pden_alpha_total_vol_avg_mw == pytest.approx(
         setfusionpowersparam.expected_alpha_power_density
     )
-    assert pden_neutron_total_mw == pytest.approx(
+    assert pden_neutron_total_vol_avg_mw == pytest.approx(
         setfusionpowersparam.expected_neutron_power_density
     )
     assert p_alpha_total_mw == pytest.approx(
@@ -255,3 +257,121 @@ def test_beam_reaction_rate_coefficient():
     )
 
     assert beam_reaction_rate == pytest.approx(7.465047902975452e-22)
+
+
+def _make_beam_fusion_reactions():
+    return reactions.BeamReactions(data=DataStructure())
+
+
+def test_calculate_beam_fusion():
+    beam_reactions = _make_beam_fusion_reactions()
+    data = beam_reactions.data
+
+    data.physics.beamfus0 = 1.0
+    data.physics.betbm0 = 1.5
+    data.physics.b_plasma_total = 5.367727
+    data.current_drive.c_beam_total = 130
+    data.physics.nd_plasma_electrons_vol_avg = 7.8e19
+    data.physics.nd_plasma_fuel_ions_vol_avg = 6.6e19
+    data.physics.dlamie = 17.8
+    data.current_drive.e_beam_kev = 1000.0
+    data.physics.f_plasma_fuel_deuterium = 0.5
+    data.physics.f_plasma_fuel_tritium = 0.5
+    data.current_drive.f_beam_tritium = 1e-06
+    data.physics.temp_plasma_electron_density_weighted_kev = 13.5
+    data.physics.vol_plasma = 1888.0
+    data.physics.n_charge_plasma_effective_mass_weighted_vol_avg = 0.425
+    data.physics.i_plasma_ignited = PlasmaIgnitionModel.NON_IGNITED
+
+    beam_reactions.calculate_beam_fusion()
+
+    assert beam_reactions.beta_beam == pytest.approx(0.0026264022466211366)
+    assert beam_reactions.nd_beam_ions_out == pytest.approx(4.2133504058678246e17)
+    assert beam_reactions.p_beam_alpha_mw == pytest.approx(9.271206216041564)
+    assert beam_reactions.p_beam_neutron_mw == pytest.approx(
+        beam_reactions.p_beam_alpha_mw
+        * (
+            constants.DT_NEUTRON_ENERGY_FRACTION
+            / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION)
+        )
+    )
+    assert beam_reactions.p_beam_dt_mw == pytest.approx(
+        beam_reactions.p_beam_alpha_mw / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION)
+    )
+
+
+@pytest.mark.parametrize(
+    ("c_beam_total", "i_plasma_ignited"),
+    [
+        (0.0, PlasmaIgnitionModel.NON_IGNITED),
+        (130.0, PlasmaIgnitionModel.IGNITED),
+    ],
+    ids=["no_beam_current", "ignited_plasma"],
+)
+def test_calculate_beam_fusion_neglected(c_beam_total, i_plasma_ignited):
+    beam_reactions = _make_beam_fusion_reactions()
+    beam_reactions.data.current_drive.c_beam_total = c_beam_total
+    beam_reactions.data.physics.i_plasma_ignited = i_plasma_ignited
+
+    beam_reactions.calculate_beam_fusion()
+
+    assert beam_reactions.beta_beam == pytest.approx(0.0)
+    assert beam_reactions.nd_beam_ions_out == pytest.approx(0.0)
+    assert beam_reactions.p_beam_alpha_mw == pytest.approx(0.0)
+    assert beam_reactions.p_beam_neutron_mw == pytest.approx(0.0)
+    assert beam_reactions.p_beam_dt_mw == pytest.approx(0.0)
+
+
+def test_calculate_beam_fusion_resets_stale_state():
+    """A BeamReactions instance is composed once and reused across many
+    calls, so beam results from a previous call must not persist once the beam
+    is switched off.
+    """
+    beam_reactions = _make_beam_fusion_reactions()
+    data = beam_reactions.data
+
+    data.physics.beamfus0 = 1.0
+    data.physics.betbm0 = 1.5
+    data.physics.b_plasma_total = 5.367727
+    data.current_drive.c_beam_total = 130
+    data.physics.nd_plasma_electrons_vol_avg = 7.8e19
+    data.physics.nd_plasma_fuel_ions_vol_avg = 6.6e19
+    data.physics.dlamie = 17.8
+    data.current_drive.e_beam_kev = 1000.0
+    data.physics.f_plasma_fuel_deuterium = 0.5
+    data.physics.f_plasma_fuel_tritium = 0.5
+    data.current_drive.f_beam_tritium = 1e-06
+    data.physics.temp_plasma_electron_density_weighted_kev = 13.5
+    data.physics.vol_plasma = 1888.0
+    data.physics.n_charge_plasma_effective_mass_weighted_vol_avg = 0.425
+    data.physics.i_plasma_ignited = PlasmaIgnitionModel.NON_IGNITED
+
+    beam_reactions.calculate_beam_fusion()
+    assert beam_reactions.p_beam_alpha_mw != pytest.approx(0.0)
+
+    data.current_drive.c_beam_total = 0.0
+    beam_reactions.calculate_beam_fusion()
+
+    assert beam_reactions.beta_beam == pytest.approx(0.0)
+    assert beam_reactions.nd_beam_ions_out == pytest.approx(0.0)
+    assert beam_reactions.p_beam_alpha_mw == pytest.approx(0.0)
+    assert beam_reactions.p_beam_neutron_mw == pytest.approx(0.0)
+    assert beam_reactions.p_beam_dt_mw == pytest.approx(0.0)
+
+
+def test_beam_fusion_reactions_set_physics_variables():
+    beam_reactions = _make_beam_fusion_reactions()
+    beam_reactions.beta_beam = 1.1
+    beam_reactions.nd_beam_ions_out = 2.2
+    beam_reactions.p_beam_alpha_mw = 3.3
+    beam_reactions.p_beam_neutron_mw = 4.4
+    beam_reactions.p_beam_dt_mw = 5.5
+
+    beam_reactions.set_physics_variables()
+
+    data = beam_reactions.data
+    assert data.physics.beta_beam == pytest.approx(1.1)
+    assert data.physics.nd_beam_ions_out == pytest.approx(2.2)
+    assert data.physics.p_beam_alpha_mw == pytest.approx(3.3)
+    assert data.physics.p_beam_neutron_mw == pytest.approx(4.4)
+    assert data.physics.p_beam_dt_mw == pytest.approx(5.5)
