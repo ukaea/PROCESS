@@ -734,8 +734,8 @@ def set_fusion_powers(
         - p_neutron_total_mw (float): Total neutron fusion power from plasma and
           beams [MW].
         - p_non_alpha_charged_mw (float): Other total charged particle fusion power [MW].
-        - pden_alpha_total_mw (float): Alpha power per unit volume, from beams and
-          plasma [MW/m³].
+        - pden_alpha_total_vol_avg_mw (float): Alpha power per unit volume, from beams
+          and plasma [MW/m³].
         - f_pden_alpha_electron_mw (float): Alpha power per unit volume to
           electrons [MW/m³].
         - f_pden_alpha_ions_mw (float): Alpha power per unit volume to ions [MW/m³].
@@ -753,10 +753,10 @@ def set_fusion_powers(
     p_plasma_alpha_mw = pden_plasma_alpha_mw * vol_plasma
 
     # Add neutral beam alpha power / volume
-    pden_alpha_total_mw = pden_plasma_alpha_mw + (p_beam_alpha_mw / vol_plasma)
+    pden_alpha_total_vol_avg_mw = pden_plasma_alpha_mw + (p_beam_alpha_mw / vol_plasma)
 
     # Total alpha power
-    p_alpha_total_mw = pden_alpha_total_mw * vol_plasma
+    p_alpha_total_mw = pden_alpha_total_vol_avg_mw * vol_plasma
 
     # Neutron Power
 
@@ -792,9 +792,11 @@ def set_fusion_powers(
     # Alpha power to electrons and ions (used with electron
     # and ion power balance equations only)
     # No consideration of pden_non_alpha_charged_mw here.
-    f_pden_alpha_ions_mw = f_p_alpha_plasma_deposited * pden_alpha_total_mw * f_alpha_ion
+    f_pden_alpha_ions_mw = (
+        f_p_alpha_plasma_deposited * pden_alpha_total_vol_avg_mw * f_alpha_ion
+    )
     f_pden_alpha_electron_mw = (
-        f_p_alpha_plasma_deposited * pden_alpha_total_mw * f_alpha_electron
+        f_p_alpha_plasma_deposited * pden_alpha_total_vol_avg_mw * f_alpha_electron
     )
 
     return (
@@ -804,7 +806,7 @@ def set_fusion_powers(
         p_plasma_neutron_mw,
         p_neutron_total_mw,
         p_non_alpha_charged_mw,
-        pden_alpha_total_mw,
+        pden_alpha_total_vol_avg_mw,
         f_pden_alpha_electron_mw,
         f_pden_alpha_ions_mw,
         p_charged_particle_mw,

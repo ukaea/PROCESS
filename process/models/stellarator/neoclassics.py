@@ -310,7 +310,7 @@ class Neoclassics(Model):
         q_PROCESS = (
             (
                 self.data.physics.f_p_alpha_plasma_deposited
-                * self.data.physics.pden_alpha_total_mw
+                * self.data.physics.pden_alpha_total_vol_avg_mw
                 - self.data.physics.pden_plasma_core_rad_mw
             )
             * self.data.physics.vol_plasma
@@ -320,7 +320,7 @@ class Neoclassics(Model):
         q_PROCESS_r1 = (
             (
                 self.data.physics.f_p_alpha_plasma_deposited
-                * self.data.physics.pden_alpha_total_mw
+                * self.data.physics.pden_alpha_total_vol_avg_mw
                 - self.data.physics.pden_plasma_core_rad_mw
             )
             * self.data.physics.vol_plasma
@@ -828,7 +828,7 @@ class Neoclassics(Model):
 
         nominator = (
             self.data.physics.f_p_alpha_plasma_deposited
-            * self.data.physics.pden_alpha_total_mw
+            * self.data.physics.pden_alpha_total_vol_avg_mw
             - self.data.physics.pden_plasma_core_rad_mw
         ) * volscaling
 

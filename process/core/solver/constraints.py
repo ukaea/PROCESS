@@ -278,7 +278,7 @@ def constraint_equation_2(constraint_registration, data):
         total core radiation power per volume (MW/m3)
      f_p_alpha_plasma_deposited:
         fraction of alpha power deposited in plasma
-     pden_alpha_total_mw:
+     pden_alpha_total_vol_avg_mw:
         alpha power per volume (MW/m3)
      pden_non_alpha_charged_mw:
         non-alpha charged particle fusion power per volume (MW/m3)
@@ -316,7 +316,8 @@ def constraint_equation_2(constraint_registration, data):
         case PlasmaIgnitionModel.NON_IGNITED:
             pdenom = (
                 data.physics.f_p_alpha_plasma_deposited
-                * data.physics.pden_alpha_total_mw
+               
+            * data.physics.pden_alpha_total_vol_avg_mw
                 + data.physics.pden_non_alpha_charged_mw
                 + data.physics.pden_plasma_ohmic_mw
                 + data.current_drive.p_hcd_injected_total_mw / data.physics.vol_plasma
@@ -324,7 +325,8 @@ def constraint_equation_2(constraint_registration, data):
         case PlasmaIgnitionModel.IGNITED:
             pdenom = (
                 data.physics.f_p_alpha_plasma_deposited
-                * data.physics.pden_alpha_total_mw
+               
+            * data.physics.pden_alpha_total_vol_avg_mw
                 + data.physics.pden_non_alpha_charged_mw
                 + data.physics.pden_plasma_ohmic_mw
             )

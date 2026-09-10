@@ -109,7 +109,7 @@ def test_set_fusion_powers(setfusionpowersparam):
         _p_plasma_neutron_mw,
         p_neutron_total_mw,
         p_non_alpha_charged_mw,
-        pden_alpha_total_mw,
+        pden_alpha_total_vol_avg_mw,
         f_pden_alpha_electron_mw,
         f_pden_alpha_ions_mw,
         p_charged_particle_mw,
@@ -125,7 +125,7 @@ def test_set_fusion_powers(setfusionpowersparam):
         f_p_alpha_plasma_deposited=setfusionpowersparam.f_p_alpha_plasma_deposited,
     )
 
-    assert pden_alpha_total_mw == pytest.approx(
+    assert pden_alpha_total_vol_avg_mw == pytest.approx(
         setfusionpowersparam.expected_alpha_power_density
     )
     assert pden_neutron_total_mw == pytest.approx(
