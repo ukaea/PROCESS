@@ -119,6 +119,22 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
 
     @property
     def value(self):
+        if KEEP_EDIT_USE_RECORDS:
+            try:
+                called_from = next(filter(FILTER_EDIT_USE_RECORDS_PATH, inspect.stack()))
+            except StopIteration:
+                called_from = inspect.FrameInfo(None, None, None, None, None, None)
+
+            self._used.append(
+                UseRecord(
+                    value=np.copy(self._value),
+                    frame_file=called_from.filename,
+                    frame_lineno=called_from.lineno,
+                    frame_function=called_from.function,
+                    frame_code=called_from.code_context,
+                )
+            )
+
         return super().value
 
     def set_value(self, new_value, source=""):
@@ -248,11 +264,11 @@ class PROCESSModelData:
 
     def __setattr__(self, name, value):
         # we are setting this attribute for the first time (e.g. creating the dataclass)
-        if not self._hasattr(name):
+        if not hasattr(self, name):
             super().__setattr__(name, value)
 
         # Do not want a use record to be created here because we editing it
-        current_value = self.__getattribute__(name, record=False)
+        current_value = getattr(self, name)
 
         # Not everything is a Parameter in PROCESS
         if isinstance(current_value, Parameter):
@@ -275,42 +291,6 @@ class PROCESSModelData:
         the Parameterness of self.name.
         """
         super().__setattr__(name, value)
-
-    def _hasattr(self, name: str) -> bool:
-        """Checks if this object has an attribute `name`.
-
-        This method is implemented because using the traditional hasattr(self, name)
-        calls getattr() which causes an access record to be created.
-        """
-        try:
-            self.__getattribute__(name, record=False)
-        except AttributeError:
-            return False
-        return True
-
-    def __getattribute__(self, name, *, record: bool = True):
-        if (
-            record
-            and KEEP_EDIT_USE_RECORDS
-            and (isinstance(current_value := super().__getattribute__(name), Parameter))
-        ):
-            try:
-                called_from = next(filter(FILTER_EDIT_USE_RECORDS_PATH, inspect.stack()))
-            except StopIteration:
-                return current_value
-
-            current_value._used.append(
-                UseRecord(
-                    value=np.copy(current_value.value),
-                    frame_file=called_from.filename,
-                    frame_lineno=called_from.lineno,
-                    frame_function=called_from.function,
-                    frame_code=called_from.code_context,
-                )
-            )
-            return current_value
-
-        return super().__getattribute__(name)
 
     def parameters(self) -> Generator[tuple[str, Parameter], None, None]:
         return (
