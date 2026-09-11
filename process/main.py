@@ -825,6 +825,7 @@ class Models:
             self.plasma_inductance,
             self.ne_profile,
             self.te_profile,
+            self.ti_profile,
             self.plasma_fields,
             self.sauter_bootstrap_current,
             self.plasma_transition,
