@@ -2289,8 +2289,8 @@ class TFGeneralTurnGeometry:
     """General turn geometry info needed for all TF turn types."""
 
     a_tf_turn_cable_space_no_void: float
-    """Cable space area (per turn)  [m2]
-     Includes the area that would be taken up by voids and central cooling channel
+    """Cable space area (per turn), includes the area that would be taken up
+    by voids and central cooling channel [m²]
     """
     a_tf_turn_steel: float
     """Area of the steel cable conduit around the cable space [m²]"""
@@ -2346,7 +2346,8 @@ class CICCAveragedTurnGeometry(TFGeneralTurnGeometry):
     """True area taken up by conductor in the cable space [m²]"""
     f_a_tf_turn_cable_space_cooling: float
     """Fraction of turn cable space area that is for cooling
-    (cooling channel and void space)"""
+    (cooling channel and void space)
+    """
 
 
 @dataclass(slots=True)
@@ -2367,7 +2368,8 @@ class CICCIntegerTurnGeometry(TFGeneralTurnGeometry):
     """True area taken up by conductor in the cable space [m²]"""
     f_a_tf_turn_cable_space_cooling: float
     """Fraction of turn cable space area that is for cooling
-    (cooling channel and void space)"""
+    (cooling channel and void space)
+    """
 
 
 class CICCSuperconductingTFCoil(SuperconductingTFCoil):
@@ -3812,14 +3814,15 @@ class CroCoCableSpaceGeometry:
     dia_tf_turn_croco_cable: float
     """Diameter of the CroCo cable in the TF turn [m]"""
     a_tf_turn_cable_space_no_void: float
-    """Cable space area (per turn)  [m²]"""
+    """Cable space area (per turn) [m²]"""
     a_tf_turn_cable_space_effective: float
     """True area taken up by conductor in the cable space [m²]"""
     a_tf_turn_steel: float
     """Area of the steel conduit around the cable space [m²]"""
     f_a_tf_turn_cable_space_cooling: float
     """Fraction of turn cable space area that is for cooling
-    (cooling channel and void space)"""
+    (cooling channel and void space)
+    """
 
 
 class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
