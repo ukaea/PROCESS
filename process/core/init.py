@@ -68,9 +68,9 @@ def init_process(data: DataStructure, update_obsolete: bool = False):
 
     filename = data.globals.fileprefix
     # InDat reads in and updates obsolete variables if requested
-    in_dat = InDat(filename=filename, update_obsolete=update_obsolete)  # noqa: F841
+    in_dat = InDat(filename=filename, update_obsolete=update_obsolete)
 
-    _inputs = parse_input_file(data)
+    _inputs = parse_input_file(data, in_dat)
 
     # Set active constraints
     set_active_constraints(data)
