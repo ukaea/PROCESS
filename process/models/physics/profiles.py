@@ -67,7 +67,7 @@ class Profile(Model, ABC):
     def output(self):
         """Profile model doesn't have any output"""
 
-    def normalise_profile_x(self):
+    def normalise_profile_x(self) -> None:
         """Normalizes the x-dimension of the profile.
 
         This method divides the values in the `profile_x` attribute by the maximum value
@@ -84,7 +84,7 @@ class Profile(Model, ABC):
         """
         self.profile_x /= max(self.profile_x)
 
-    def calculate_profile_dx(self):
+    def calculate_profile_dx(self) -> None:
         """Calculates the differential between points in the profile.
 
         This method calculates the differential between points in the profile by
@@ -96,12 +96,12 @@ class Profile(Model, ABC):
         )
 
     @abstractmethod
-    def calculate_profile_y(self):
+    def calculate_profile_y(self) -> None:
         """Use a profile function to act on self.profile_x to calculate and set the
         values of self.profile_y.
         """
 
-    def integrate_profile_y(self):
+    def integrate_profile_y(self) -> None:
         """Integrate profile_y values using scipy.integrate.simpson() function.
 
         This method calculates the integral of the profile_y values using the Simpson's
@@ -365,7 +365,7 @@ class ElectronDensityProfile(Profile):
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PEDESTAL_PROFILE
         ):
-            self.data.physics.nd_plasma_electron_on_axis = self.calculate_pedestal_profile_on_axis_density(
+            self.data.physics.nd_plasma_electron_on_axis = self.calculate_pedestal_profile_on_axis_density(  # noqa: E501
                 radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
                 nd_pedestal=self.data.physics.nd_plasma_pedestal_electron,
                 nd_separatrix=self.data.physics.nd_plasma_separatrix_electron,

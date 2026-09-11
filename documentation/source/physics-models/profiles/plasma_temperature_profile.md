@@ -14,15 +14,15 @@ The temperature profile class is organised around a central runner function that
 
 The core electron temperature is calculated using the [`tcore`](plasma_temperature_profile.md#electron-core-density-of-a-pedestalised-profile--tcore) method.
 
-#### Electron core density of a pedestalised profile | `calculate_pedestal_profile_on_axis_temperature()`
+#### Electron core temperature of a pedestalised profile | `calculate_pedestal_profile_on_axis_temperature()`
 
-This function calculates the core electron density for a pedestalsied profile in $\text{keV}$. The inclusion of a new $\beta_T$ exponent term allows a more accurate description of temperature profiles with a triangular shape or a strong gradient near the pedestal (characteristic of regimes with an [internal transport barrier](https://wiki.fusion.ciemat.es/wiki/Internal_Transport_Barrier)).
+This function calculates the core electron temperature for a pedestalsied profile in $\text{keV}$. The inclusion of a new $\beta_T$ exponent term allows a more accurate description of temperature profiles with a triangular shape or a strong gradient near the pedestal (characteristic of regimes with an [internal transport barrier](https://wiki.fusion.ciemat.es/wiki/Internal_Transport_Barrier)).
 
 A list of input parameters for calculating the core plasma temperature can be found below.
 
 | Profile parameter / Input               | Temperature   |
 |----------------------------------|-----------|
-| Pedestal radius (r/a)            | `radius_plasma_pedestal_density_norm`, $\rho_{\text{ped,T}}$ |
+| Pedestal radius (r/a)            | `radius_plasma_pedestal_temp_norm`, $\rho_{\text{ped,T}}$ |
 | Pedestal value                   | `nd_plasma_pedestal_electron`, $T_{\text{ped}}$ |
 | Separatrix value                 | `nd_plasma_separatrix_electron`, $T_{\text{sep}}$ |
 | Average temperature             | `nd_plasma_electrons_vol_avg`, $\langle T_\text{e} \rangle$ |
@@ -39,7 +39,7 @@ Where $\text{B}$ is the [Beta function](https://en.wikipedia.org/wiki/Beta_funct
 
 ##### Derivation
 
-We calculate the volume integrated profile and then divide by the volume of integration to get the volume average density $\langle T_{\text{e}} \rangle$. If we assume the plasma to be a torus of circular cross-section then we can use spherical coordinates. We can simplify the problem by representing the torus as a cylinder of height equal to the circumference of the torus equal to $2\pi R$ where $R$ is the major radius of the torus, and $a$ is the plasma minor radius in the poloidal plane.
+We calculate the volume integrated profile and then divide by the volume of integration to get the volume average temperature $\langle T_{\text{e}} \rangle$. If we assume the plasma to be a torus of circular cross-section then we can use spherical coordinates. We can simplify the problem by representing the torus as a cylinder of height equal to the circumference of the torus equal to $2\pi R$ where $R$ is the major radius of the torus, and $a$ is the plasma minor radius in the poloidal plane.
 
 The cylindrical volume element is given by:
 
@@ -97,6 +97,68 @@ $\blacksquare$
 
 -----
 
+#### Electron core temperature of a parabolic profile | `calculate_parabolic_profile_on_axis_temperature()`
+
+###### Derivation
+
+We calculate the volume integrated profile and then divide by the volume of integration to get the volume average temperature $\langle T \rangle$. If we assume the plasma to be a torus of circular cross-section then we can use spherical coordinates. We can simplify the problem by representing the torus as a cylinder of height equal to the circumference of the torus equal to $2\pi R$ where $R$ is the major radius of the torus.
+
+The cylindrical volume element is given by:
+
+$$
+V = \int \int \int dV = \int^{2\pi R}_0 \int^{2\pi}_0 \int^a_0 r \ dr \ d\theta \ dz
+$$
+
+Inserting our temperature function in the form where $\rho$ is expanded as $\rho = r/a$ we get:
+
+$$
+\int^{2\pi R}_0 \int^{2\pi}_0 \int^a_0     r  \left(T_0(1-r^2/a^2)^{\alpha_T}\right) \ dr \ d\theta \ dz
+$$
+
+Since our temperature function is only a function of $r$, and the torus is symmetric around its center, the integration simplifies to integrating over $r$ and the $d\theta ,\ dz$ integrals are solved to give values for the full poloidal angle and cylindrical height and torus length, leading to:
+
+$$
+4\pi^2R \int^a_0     r  \left(T_0(1-r^2/a^2)^{\alpha_T}\right) \ dr  
+$$
+
+In the form of volume average temperature where the volume integrated temperature function has to be divided by the volume of the cylinder / torus we get:
+
+$$
+\langle n \rangle =  \frac{4\pi^2R \int^a_0     r  \left(T_0(1-r^2/a^2)^{\alpha_T}\right) \ dr}{2\pi^2Ra^2}  
+$$
+
+Simplify:
+
+$$
+\langle n \rangle =  \frac{2 \int^a_0     r  \left(T_0(1-r^2/a^2)^{\alpha_T}\right) \ dr}{a^2}  
+$$
+
+Integrate:
+
+$$
+\langle T \rangle =  \frac{2}{a^2} \frac{a^2 T_0}{2(\alpha_T+1)}
+$$
+
+$$
+\therefore \langle T \rangle =   \frac{T_0}{\alpha_T+1}
+$$
+
+This is in agreement with the derivation from the ITER Physics Design 1989. [^iter_design_89]
+
+Since all parabolic profiles are of the same form this proof holds for the density and temperature.
+
+A similar derivation is found in normalised coordinates, $\rho$ if the line averaged integral is swept around the poloidal circumference then divided by the poloidal area.
+
+$$
+\langle T \rangle =  \frac{2\pi \int^1_0     \rho  \left(T_0(1-\rho^2)^{\alpha_T}\right) \ d\rho}{\pi\rho^2}  
+$$
+
+$\blacksquare$
+
+------
+
+
+
 The core ion temperature is then set such as:
 
 $$
@@ -115,7 +177,7 @@ A table of the input variables can be found below
 |----------------------------------|-----------|
 | Normalised plasma radii            | `profile_x` |
 | Pedestal radius (r/a)            | `radius_plasma_pedestal_temp_norm`, $\rho_{\text{ped,T}}$ |
-| Core density                | `temp_plasma_electron_on_axis_kev`, $T_{\text{e0}}$ |
+| Core temperature                | `temp_plasma_electron_on_axis_kev`, $T_{\text{e0}}$ |
 | Pedestal value                   | `temp_plasma_pedestal_kev`, $T_{\text{ped}}$ |
 | Separatrix value                 | `temp_plasma_separatrix_kev`, $T_{\text{sep}}$ |
 | Profile index/ peaking parameter | `alphat`, $\alpha_T$ |
@@ -130,7 +192,7 @@ $$
 The central temperature ($T_0$) is then checked to make sure it is not less than the pedestal temperature, $T_{\text{ped}}$.
 If it is less than a logger warning is pushed to the terminal at runtime.
 
-Values of the profile temperature are then assigned based on the density function below across bounds from 0 to `radius_plasma_pedestal_density_norm` and `radius_plasma_pedestal_density_norm` to 1.  
+Values of the profile temperature are then assigned based on the temperature function below across bounds from 0 to `radius_plasma_pedestal_temp_norm` and `radius_plasma_pedestal_temp_norm` to 1.  
 
 $$\begin{aligned}
 \mbox{Temperature:} \ \ T(\rho) = \left\{
@@ -146,3 +208,5 @@ $$\begin{aligned}
 5. Profile is then integrated with `integrate_profile_y()` using Simpsons integration from the profile abstract base class
 
 [^1]: Jean, J. (2011). *HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies*. Fusion Science and Technology, 59(2), 308–349. <https://doi.org/10.13182/FST11-A11650>
+
+[^iter_design_89]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
