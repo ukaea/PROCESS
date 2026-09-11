@@ -8,7 +8,7 @@ IPNSCNS = 1000
 """Maximum number of scan points"""
 
 
-IPNSCNV = 81
+IPNSCNV = 82
 """Number of available scan variables"""
 
 
