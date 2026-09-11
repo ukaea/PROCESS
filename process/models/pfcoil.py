@@ -2765,11 +2765,10 @@ class PFCoil(Model):
         rows = []
         for k in range(pulse_timings.n_pf_active_points_total):
             rows += [f"{pulse_timings.pf_active_cumulative[k]:.2f}"]
-        rows = [rows]
         op.write(
             self.outfile,
             tabulate(
-                rows,
+                [rows],
                 headers=headers[1:],
                 tablefmt="plain",
                 disable_numparse=True,
