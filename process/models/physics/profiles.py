@@ -660,8 +660,14 @@ class IonTemperatureProfile(Profile):
         """
         self.profile_x = self.electron_temperature_profile.profile_x
         self.profile_dx = self.electron_temperature_profile.profile_dx
+        self.calculate_profile_y()
+        self.integrate_profile_y()
+
+    def calculate_profile_y(self):
+        """Calculate the ion temperature profile based on the electron temperature
+        profile and the ion-to-electron volume-averaged temperature ratio.
+        """
         self.profile_y = (
             self.electron_temperature_profile.profile_y
             * self.data.physics.f_temp_plasma_ion_electron
         )
-        self.integrate_profile_y()

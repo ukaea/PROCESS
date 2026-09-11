@@ -12,7 +12,12 @@ import scipy as sp
 from process.core import constants
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.physics.profiles import (
+    ElectronDensityProfile,
+    ElectronTemperatureProfile,
+    IonTemperatureProfile,
+    PlasmaProfileShapeType,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -22,23 +27,30 @@ class PlasmaProfile(Model):
     profiles and handles the required physics variables.
     """
 
-    def __init__(self, ne_profile, te_profile):
+    def __init__(
+        self,
+        ne_profile: ElectronDensityProfile,
+        te_profile: ElectronTemperatureProfile,
+        ti_profile: IonTemperatureProfile,
+    ):
         """
         Initialize the PlasmaProfile class.
 
         Args:
-            profile_size (int): The size of the plasma profile.
-            outfile (str): The output file path.
-            neprofile (ElectronDensityProfile): An instance of the ElectronDensityProfile
-            class.
-            teprofile (ElectronTemperatureProfile): An instance of the
+            ne_profile (ElectronDensityProfile): An instance of the
+            ElectronDensityProfile class.
+            te_profile (ElectronTemperatureProfile): An instance of the
             ElectronTemperatureProfile class.
+            ti_profile (IonTemperatureProfile): An instance of the
+            IonTemperatureProfile class.
+
         """
         # Default profile_size = 201, but it's possible to experiment with this value.
         # See `n_plasma_profile_elements`
         self.outfile = constants.NOUT
         self.neprofile = ne_profile
         self.teprofile = te_profile
+        self.tiprofile = ti_profile
 
     def run(self):
         """Subroutine to execute PlasmaProfile functions.
