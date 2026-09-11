@@ -31,6 +31,7 @@ from process.data_structure.physics_variables import (
     ConfinementTimeModel,
     DivertorNumberModels,
 )
+from process.models.physics.plasma_current import PlasmaCurrentModel
 from process.data_structure.stellarator_variables import StellaratorModel
 from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.pfcoil import PFLocationTypes
@@ -415,6 +416,15 @@ def check_process(inputs, data):  # noqa: ARG001
             "'data.heat_transport.p_tritium_plant_electric_mw'"
             "(power required for tritium processing) are set to 0",
             stacklevel=2,
+        )
+
+    if (
+        data.physics.i_plasma_current == PlasmaCurrentModel.USER_INPUT
+        and data.physics.plasma_current_user_input <= 0.0
+    ):
+        raise ProcessValidationError(
+            "plasma_current_user_input must be positive when i_plasma_current=0",
+            plasma_current_user_input=data.physics.plasma_current_user_input,
         )
 
     if data.impurity_radiation.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069

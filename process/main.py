@@ -97,6 +97,7 @@ from process.models.physics.plasma_current import (
     PlasmaDiamagneticCurrent,
 )
 from process.models.physics.plasma_fields import PlasmaFields
+from process.models.physics.plasma_equilibrium import PlasmaEquilibrium
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.physics.profiles import NeProfile, TeProfile
@@ -696,6 +697,7 @@ class Models:
         self.plasma_fields = PlasmaFields()
         self.plasma_dia_current = PlasmaDiamagneticCurrent()
         self.scrape_off_layer = ScrapeOffLayer()
+        self.plasma_equilibrium = PlasmaEquilibrium()
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
@@ -711,6 +713,7 @@ class Models:
             plasma_dia_current=self.plasma_dia_current,
             plasma_geometry=self.plasma_geom,
             scrape_off_layer=self.scrape_off_layer,
+            plasma_equilibrium=self.plasma_equilibrium,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
@@ -796,6 +799,7 @@ class Models:
             self.divertor,
             self.structure,
             self.physics,
+            self.plasma_equilibrium,
             self.pulse,
             self.plasma_geom,
             self.resistive_tf_coil,
@@ -829,6 +833,7 @@ class Models:
         # This can be a disgusting temporary measure :(
         for model in self.models:
             model.data = self.data
+            model.models = self
 
     def write(self, data, _outfile):
         """Write the results to the main output file (OUT.DAT).

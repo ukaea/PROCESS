@@ -890,6 +890,7 @@ class PhysicsData:
 
     i_plasma_current: int = 4
     """switch for plasma current scaling to use
+    - =0 user input (`plasma_current_user_input`)
     - =1 Peng analytic fit
     - =2 Peng double null divertor scaling (ST)
     - =3 simple ITER scaling (k = 2.2, d = 0.6)
@@ -998,6 +999,12 @@ class PhysicsData:
 
     i_alphaj: int = 0
     """Switch for plasma current profile index scaling (αⱼ) """
+    
+    i_equilibrium_solve: int = 0
+    """switch for veqpy equilibrium iteration on ne/te axis values
+    - =0 use standard PROCESS profile parameterisation
+    - =1 iterate axis values to match volume averages in veqpy geometry
+    """
 
     i_rad_loss: int = 1
     """switch for radiation loss term usage in power balance (see User Guide):
@@ -1227,6 +1234,9 @@ class PhysicsData:
 
     plasma_current: float = 0.0
     """Plasma current (Iₚ) [A]"""
+
+    plasma_current_user_input: float = 0.0
+    """User-specified plasma current (Iₚ) [A] (`i_plasma_current=0`)"""
 
     c_plasma_peng_analytic: float = 0.0
     """Peng analytic plasma current (A)"""

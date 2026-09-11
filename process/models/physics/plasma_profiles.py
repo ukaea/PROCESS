@@ -38,6 +38,19 @@ class PlasmaProfile(Model):
         self.neprofile = ne_profile
         self.teprofile = te_profile
 
+    def _active_plasma_equilibrium(self):
+        """Return ``PlasmaEquilibrium`` when veqpy results are available."""
+        if not hasattr(self, "models"):
+            return None
+        plasma_equilibrium = self.models.plasma_equilibrium
+        if (
+            plasma_equilibrium.eq is None
+            or plasma_equilibrium.ne_axis <= 0.0
+            or plasma_equilibrium.te_axis <= 0.0
+        ):
+            return None
+        return plasma_equilibrium
+
     def run(self):
         """Subroutine to execute PlasmaProfile functions.
 
@@ -129,21 +142,33 @@ class PlasmaProfile(Model):
             / (1.0e0 + self.data.physics.alphan + self.data.physics.alphat)
         )
 
+        plasma_equilibrium = self._active_plasma_equilibrium()
+        if plasma_equilibrium is not None:
+            rho = self.neprofile.profile_x
+            dens = self.neprofile.profile_y
+            temp = self.teprofile.profile_y
+            eq = plasma_equilibrium.eq
+            n_t_avg = plasma_equilibrium.get_volume_average(eq, rho, dens * temp)
+            n_avg = plasma_equilibrium.get_volume_average(eq, rho, dens)
+            self.data.physics.temp_plasma_electron_density_weighted_kev = n_t_avg / n_avg
+            self.data.physics.f_temp_plasma_electron_density_vol_avg = (
+                self.data.physics.temp_plasma_electron_density_weighted_kev
+                / self.data.physics.temp_plasma_electron_vol_avg_kev
+            )
+
         # Line averaged electron density (IPDG89)
         # Taken by integrating the parabolic profile over rho in the bounds of 0 and
         # 1 and dividng by the width of the integration bounds
 
         self.data.physics.nd_plasma_electron_line = (
-            self.data.physics.nd_plasma_electrons_vol_avg
-            * (1.0 + self.data.physics.alphan)
+            self.data.physics.nd_plasma_electron_on_axis
             * (sp.special.gamma(0.5) / 2.0)
             * sp.special.gamma(self.data.physics.alphan + 1.0)
             / sp.special.gamma(self.data.physics.alphan + 1.5)
         )
 
         self.data.physics.temp_plasma_electron_line_avg_kev = (
-            self.data.physics.temp_plasma_electron_vol_avg_kev
-            * (1.0 + self.data.physics.alphat)
+            self.data.physics.temp_plasma_electron_on_axis_kev
             * (sp.special.gamma(0.5) / 2.0)
             * sp.special.gamma(self.data.physics.alphat + 1.0)
             / sp.special.gamma(self.data.physics.alphat + 1.5)
@@ -162,13 +187,10 @@ class PlasmaProfile(Model):
 
         #  Central values for temperature (keV) and density (m^-3)
 
-        self.data.physics.temp_plasma_electron_on_axis_kev = (
-            self.data.physics.temp_plasma_electron_vol_avg_kev
-            * (1.0 + self.data.physics.alphat)
-        )
         self.data.physics.temp_plasma_ion_on_axis_kev = (
-            self.data.physics.temp_plasma_ion_vol_avg_kev
-            * (1.0 + self.data.physics.alphat)
+            self.data.physics.temp_plasma_electron_on_axis_kev
+            * self.data.physics.temp_plasma_ion_vol_avg_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
         )
 
         self.data.physics.f_temp_plasma_electron_on_axis_vol_avg = (
@@ -176,14 +198,6 @@ class PlasmaProfile(Model):
             / self.data.physics.temp_plasma_electron_vol_avg_kev
         )
 
-        self.data.physics.nd_plasma_electron_on_axis = (
-            self.data.physics.nd_plasma_electrons_vol_avg
-            * (1.0 + self.data.physics.alphan)
-        )
-        self.data.physics.nd_plasma_ions_on_axis = (
-            self.data.physics.nd_plasma_ions_total_vol_avg
-            * (1.0 + self.data.physics.alphan)
-        )
 
     def pedestal_parameterisation(self):
         """Instance temperature and density profiles then integrate them, setting
@@ -217,6 +231,12 @@ class PlasmaProfile(Model):
 
         integ1 = sp.integrate.simpson(arg1, x=rho, dx=drho)
         integ2 = sp.integrate.simpson(arg2, x=rho, dx=drho)
+
+        plasma_equilibrium = self._active_plasma_equilibrium()
+        if plasma_equilibrium is not None:
+            eq = plasma_equilibrium.eq
+            integ1 = plasma_equilibrium.get_volume_average(eq, rho, dens * temp)
+            integ2 = plasma_equilibrium.get_volume_average(eq, rho, dens)
 
         #  Density-weighted temperatures
         self.data.physics.temp_plasma_electron_density_weighted_kev = integ1 / integ2
@@ -365,6 +385,12 @@ class PlasmaProfile(Model):
             )
         )
 
+        plasma_equilibrium = self._active_plasma_equilibrium()
+        if plasma_equilibrium is not None:
+            self.data.physics.j_plasma_on_axis = float(
+                plasma_equilibrium.eq.jtor[0]
+            )
+
     def calculate_parabolic_profile_factors(self):
         """Calculate the gradient information for i_plasma_pedestal = 0.
 
@@ -385,6 +411,29 @@ class PlasmaProfile(Model):
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
         ):
+            plasma_equilibrium = self._active_plasma_equilibrium()
+            if plasma_equilibrium is not None:
+                rho = self.neprofile.profile_x
+                te = self.teprofile.profile_y
+                ne = self.neprofile.profile_y
+                dtdrho = np.gradient(te, rho)
+                dndrho = np.gradient(ne, rho)
+                te_max_idx = int(np.argmax(np.abs(dtdrho)))
+                ne_max_idx = int(np.argmax(np.abs(dndrho)))
+                rho_te_max = rho[te_max_idx]
+                rho_ne_max = rho[ne_max_idx]
+                te_max = te[te_max_idx]
+                ne_max = ne[ne_max_idx]
+                dtdrho_max = dtdrho[te_max_idx]
+                dndrho_max = dndrho[ne_max_idx]
+                self.data.physics.gradient_length_te = (
+                    -dtdrho_max * self.data.physics.rminor * rho_te_max / te_max
+                )
+                self.data.physics.gradient_length_ne = (
+                    -dndrho_max * self.data.physics.rminor * rho_ne_max / ne_max
+                )
+                return
+
             if self.data.physics.alphat > 1.0:
                 # Rho (normalized radius), where temperature derivative is largest
                 rho_te_max = 1.0 / np.sqrt(-1.0 + 2.0 * self.data.physics.alphat)
