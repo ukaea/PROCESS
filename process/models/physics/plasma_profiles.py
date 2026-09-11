@@ -133,6 +133,7 @@ class PlasmaProfile(Model):
         # Re-calculate core and profile values
         self.teprofile.run()
         self.neprofile.run()
+        self.tiprofile.run()
 
         #  Profile factor; ratio of density-weighted to volume-averaged
         #  temperature
@@ -213,6 +214,7 @@ class PlasmaProfile(Model):
         #  Re-calculate core and profile values
 
         self.teprofile.run()
+        self.tiprofile.run()
         self.neprofile.run()
 
         #  Perform integrations to calculate ratio of density-weighted
