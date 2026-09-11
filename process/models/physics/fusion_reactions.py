@@ -193,14 +193,10 @@ class FusionReactionRate:
         # Initialize Bosch-Hale constants for the D-T reaction
         dt = BoschHaleConstants(**REACTION_CONSTANTS_DT)
 
-        ion_temperature_profile = (
-            self.data.physics.temp_plasma_ion_vol_avg_kev
-            / self.data.physics.temp_plasma_electron_vol_avg_kev
-        ) * self.plasma_profile.teprofile.profile_y
-
         # Velocity-space average reactivity D-T profile [m³/s]
         sigma_v_profile = bosch_hale_reactivity(
-            ion_temperature_profile=ion_temperature_profile, reaction_constants=dt
+            ion_temperature_profile=self.plasma_profile.tiprofile.profile_y,
+            reaction_constants=dt,
         )
 
         # Full fusion reaction rate density profile for the D-T reaction [reactions/m³/s]
@@ -275,14 +271,9 @@ class FusionReactionRate:
         # Initialize Bosch-Hale constants for the D-3He reaction
         dhe3 = BoschHaleConstants(**REACTION_CONSTANTS_DHE3)
 
-        ion_temperature_profile = (
-            self.data.physics.temp_plasma_ion_vol_avg_kev
-            / self.data.physics.temp_plasma_electron_vol_avg_kev
-        ) * self.plasma_profile.teprofile.profile_y
-
         # Velocity-space average reactivity D-3He profile [m³/s]
         sigma_v_profile = bosch_hale_reactivity(
-            ion_temperature_profile=ion_temperature_profile,
+            ion_temperature_profile=self.plasma_profile.tiprofile.profile_y,
             reaction_constants=dhe3,
         )
 
@@ -358,14 +349,9 @@ class FusionReactionRate:
         # Initialize Bosch-Hale constants for the D-D reaction
         dd1 = BoschHaleConstants(**REACTION_CONSTANTS_DD1)
 
-        ion_temperature_profile = (
-            self.data.physics.temp_plasma_ion_vol_avg_kev
-            / self.data.physics.temp_plasma_electron_vol_avg_kev
-        ) * self.plasma_profile.teprofile.profile_y
-
         # Velocity-space average reactivity D-D -> 3He + n profile [m³/s]
         sigma_v_profile = bosch_hale_reactivity(
-            ion_temperature_profile=ion_temperature_profile,
+            ion_temperature_profile=self.plasma_profile.tiprofile.profile_y,
             reaction_constants=dd1,
         )
 
@@ -449,14 +435,9 @@ class FusionReactionRate:
         # Initialize Bosch-Hale constants for the D-D reaction
         dd2 = BoschHaleConstants(**REACTION_CONSTANTS_DD2)
 
-        ion_temperature_profile = (
-            self.data.physics.temp_plasma_ion_vol_avg_kev
-            / self.data.physics.temp_plasma_electron_vol_avg_kev
-        ) * self.plasma_profile.teprofile.profile_y
-
         # Velocity-space average reactivity for the D-D -> T + p reaction
         sigma_v_profile = bosch_hale_reactivity(
-            ion_temperature_profile=ion_temperature_profile,
+            ion_temperature_profile=self.plasma_profile.tiprofile.profile_y,
             reaction_constants=dd2,
         )
 
