@@ -367,6 +367,8 @@ class ElectronDensityProfile(Profile):
                     nd_vol_average=self.data.physics.nd_plasma_electrons_vol_avg,
                     alphan=self.data.physics.alphan,
                 )
+        if self.data.physics.i_equilibrium_solve == 1 and self.equilibrium is not None:
+            self.data.physics.nd_plasma_electron_on_axis = self.equilibrium.ne_axis
         self.data.physics.nd_plasma_ions_on_axis = (
             self.data.physics.nd_plasma_ions_total_vol_avg
             / self.data.physics.nd_plasma_electrons_vol_avg
@@ -566,6 +568,8 @@ class ElectronTemperatureProfile(Profile):
                     alphat=self.data.physics.alphat,
                     tbeta=self.data.physics.tbeta,
                 )
+        if self.data.physics.i_equilibrium_solve == 1 and self.equilibrium is not None:
+            self.data.physics.temp_plasma_electron_on_axis_kev = self.equilibrium.te_axis
 
 
 def calculate_vol_avg_of_profile(
@@ -646,17 +650,22 @@ class IonTemperatureProfile(Profile):
         self.calculate_profile_y()
         self.integrate_profile_y()
 
+        f_temp_plasma_ion_electron = (
+            self.data.physics.temp_plasma_ion_vol_avg_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
+        )
+        
         self.data.physics.temp_plasma_ion_on_axis_kev = (
-            self.data.physics.f_temp_plasma_ion_electron
+            f_temp_plasma_ion_electron
             * self.data.physics.temp_plasma_electron_on_axis_kev
         )
 
         self.data.physics.temp_plasma_pedestal_ion_kev = (
-            self.data.physics.f_temp_plasma_ion_electron
+            f_temp_plasma_ion_electron
             * self.data.physics.temp_plasma_pedestal_electron_kev
         )
         self.data.physics.temp_plasma_separatrix_ion_kev = (
-            self.data.physics.f_temp_plasma_ion_electron
+            f_temp_plasma_ion_electron
             * self.data.physics.temp_plasma_separatrix_electron_kev
         )
 
@@ -666,5 +675,6 @@ class IonTemperatureProfile(Profile):
         """
         self.profile_y = (
             self.electron_temperature_profile.profile_y
-            * self.data.physics.f_temp_plasma_ion_electron
+            * self.data.physics.temp_plasma_ion_vol_avg_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
         )

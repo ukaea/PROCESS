@@ -46,6 +46,7 @@ if TYPE_CHECKING:
         PlasmaDiamagneticCurrent,
     )
     from process.models.physics.plasma_fields import PlasmaFields
+    from process.models.physics.plasma_equilibrium import PlasmaEquilibrium
     from process.models.physics.plasma_geometry import PlasmaGeom
     from process.models.physics.plasma_profiles import PlasmaProfile
     from process.models.physics.scrape_off_layer import ScrapeOffLayer
@@ -200,6 +201,7 @@ class Physics(Model):
         plasma_dia_current: PlasmaDiamagneticCurrent,
         plasma_geometry: PlasmaGeom,
         scrape_off_layer: ScrapeOffLayer,
+        plasma_equilibrium: PlasmaEquilibrium,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -217,6 +219,7 @@ class Physics(Model):
         self.dia_current = plasma_dia_current
         self.geometry = plasma_geometry
         self.scrape_off_layer = scrape_off_layer
+        self.plasma_equilibrium = plasma_equilibrium
 
     def output(self) -> None:
         """Output plasma physics information."""
@@ -354,6 +357,7 @@ class Physics(Model):
 
         # ===================================================
 
+        self.plasma_profile.equilibrium = None
         # Calculate density and temperature profile quantities
         # If self.data.physics.i_plasma_pedestal = 1 then set pedestal density to
         #   self.data.physics.f_nd_plasma_pedestal_greenwald * Greenwald density limit
@@ -365,6 +369,46 @@ class Physics(Model):
             self.plasma_profile.neprofile.set_pedestal_and_separatrix_values()
 
         self.plasma_profile.run()
+
+        # ==================================================
+
+        # solve equilibrium: iterate ne/te axis to match volume averages in veqpy
+        if self.data.physics.i_equilibrium_solve == 1:
+            f_nd_ie = (
+                self.data.physics.nd_plasma_ions_total_vol_avg
+                / self.data.physics.nd_plasma_electrons_vol_avg
+            )
+            f_temp_ie = (
+                self.data.physics.temp_plasma_ion_vol_avg_kev
+                / self.data.physics.temp_plasma_electron_vol_avg_kev
+            )
+            f_pres_ie = f_nd_ie * f_temp_ie
+            (
+                ne_axis,
+                te_axis,
+                _,
+                _,
+                self.plasma_equilibrium.f_temp_plasma_electron_density_vol_avg,
+                _,
+            ) = self.plasma_equilibrium.solve_axis_for_volume_averages(
+                f_pres_ie=f_pres_ie
+            )
+
+            eq = self.plasma_equilibrium.eq
+            self.plasma_profile.equilibrium = self.plasma_equilibrium
+            self.data.physics.nd_plasma_electron_on_axis = ne_axis
+            self.data.physics.temp_plasma_electron_on_axis_kev = te_axis
+            self.data.physics.nd_plasma_ions_on_axis = (
+                f_nd_ie * self.data.physics.nd_plasma_electron_on_axis
+            )
+            self.plasma_profile.run()    
+            self.data.physics.ind_plasma_internal_norm = (
+                self.plasma_equilibrium.calculate_ind_plasma_internal_norm(
+                    eq=eq,
+                    b_poloidal_avg=self.data.physics.b_plasma_surface_poloidal_average,
+                )
+            )
+        # ==================================================
 
         # Calculate total magnetic field [T]
         self.data.physics.b_plasma_total = self.fields.calculate_total_magnetic_field(

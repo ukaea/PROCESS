@@ -51,6 +51,7 @@ class PlasmaProfile(Model):
         self.neprofile = ne_profile
         self.teprofile = te_profile
         self.tiprofile = ti_profile
+        self.equilibrium = None
 
     def run(self):
         """Subroutine to execute PlasmaProfile functions.
@@ -58,6 +59,8 @@ class PlasmaProfile(Model):
         This method calls the parameterise_plasma() method to initialize the plasma
         profiles.
         """
+        self.neprofile.equilibrium = self.equilibrium
+        self.teprofile.equilibrium = self.equilibrium
         self.parameterise_plasma()
 
     def output(self):
@@ -152,21 +155,24 @@ class PlasmaProfile(Model):
             / (1.0e0 + self.data.physics.alphan + self.data.physics.alphat)
         )
 
+        if self.data.physics.i_equilibrium_solve == 1 and self.equilibrium is not None:
+            self.data.physics.f_temp_plasma_electron_density_vol_avg = (
+                self.equilibrium.f_temp_plasma_electron_density_vol_avg
+            )
+
         # Line averaged electron density (IPDG89)
         # Taken by integrating the parabolic profile over rho in the bounds of 0 and
         # 1 and dividng by the width of the integration bounds
 
         self.data.physics.nd_plasma_electron_line = (
-            self.data.physics.nd_plasma_electrons_vol_avg
-            * (1.0 + self.data.physics.alphan)
+            self.data.physics.nd_plasma_electron_on_axis
             * (sp.special.gamma(0.5) / 2.0)
             * sp.special.gamma(self.data.physics.alphan + 1.0)
             / sp.special.gamma(self.data.physics.alphan + 1.5)
         )
 
         self.data.physics.temp_plasma_electron_line_avg_kev = (
-            self.data.physics.temp_plasma_electron_vol_avg_kev
-            * (1.0 + self.data.physics.alphat)
+            self.data.physics.temp_plasma_electron_on_axis_kev
             * (sp.special.gamma(0.5) / 2.0)
             * sp.special.gamma(self.data.physics.alphat + 1.0)
             / sp.special.gamma(self.data.physics.alphat + 1.5)
@@ -183,29 +189,16 @@ class PlasmaProfile(Model):
             * self.data.physics.f_temp_plasma_electron_density_vol_avg
         )
 
-        #  Central values for temperature (keV) and density (m^-3)
-
-        self.data.physics.temp_plasma_electron_on_axis_kev = (
-            self.data.physics.temp_plasma_electron_vol_avg_kev
-            * (1.0 + self.data.physics.alphat)
-        )
-        self.data.physics.temp_plasma_ion_on_axis_kev = (
-            self.data.physics.temp_plasma_ion_vol_avg_kev
-            * (1.0 + self.data.physics.alphat)
-        )
 
         self.data.physics.f_temp_plasma_electron_on_axis_vol_avg = (
             self.data.physics.temp_plasma_electron_on_axis_kev
             / self.data.physics.temp_plasma_electron_vol_avg_kev
         )
 
-        self.data.physics.nd_plasma_electron_on_axis = (
-            self.data.physics.nd_plasma_electrons_vol_avg
-            * (1.0 + self.data.physics.alphan)
-        )
         self.data.physics.nd_plasma_ions_on_axis = (
-            self.data.physics.nd_plasma_ions_total_vol_avg
-            * (1.0 + self.data.physics.alphan)
+            self.data.physics.nd_plasma_electron_on_axis
+            * self.data.physics.nd_plasma_ions_total_vol_avg
+            / self.data.physics.nd_plasma_electrons_vol_avg
         )
 
     def pedestal_parameterisation(self):
@@ -244,6 +237,11 @@ class PlasmaProfile(Model):
 
         #  Density-weighted temperatures
         self.data.physics.temp_plasma_electron_density_weighted_kev = integ1 / integ2
+        if self.data.physics.i_equilibrium_solve == 1 and self.equilibrium is not None:
+            self.data.physics.temp_plasma_electron_density_weighted_kev = (
+                self.equilibrium.f_temp_plasma_electron_density_vol_avg
+                * self.data.physics.temp_plasma_electron_vol_avg_kev
+            )
         self.data.physics.temp_plasma_ion_density_weighted_kev = (
             self.data.physics.temp_plasma_ion_vol_avg_kev
             / self.data.physics.temp_plasma_electron_vol_avg_kev
@@ -380,6 +378,8 @@ class PlasmaProfile(Model):
                 * self.data.physics.a_plasma_poloidal
             )
         )
+        if self.data.physics.i_equilibrium_solve == 1 and self.equilibrium is not None:
+            self.data.physics.j_plasma_on_axis = float(self.equilibrium.eq.jtor[0])
 
     def calculate_parabolic_profile_factors(self):
         """Calculate the gradient information for i_plasma_pedestal = 0.

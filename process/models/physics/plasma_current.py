@@ -54,6 +54,14 @@ class PlasmaCurrent(Model):
                 f"Plasma current model selected: {full_model_name} ",
             )
 
+            if self.data.physics.i_plasma_current == PlasmaCurrentModel.USER_INPUT:
+                po.ovarre(
+                    self.outfile,
+                    "User input plasma current (Iₚ) (A)",
+                    "(plasma_current_user_input)",
+                    self.data.physics.plasma_current_user_input,
+                )
+
             po.ovarre(
                 self.outfile,
                 "Plasma current (Iₚ) (MA)",
@@ -186,6 +194,7 @@ class PlasmaCurrent(Model):
             Inverse aspect ratio .
         i_plasma_current : int
             Current scaling model to use.
+            0 = User input (`plasma_current_user_input`)
             1 = Peng analytic fit
             2 = Peng divertor scaling (TART,STAR)
             3 = Simple ITER scaling
@@ -216,9 +225,8 @@ class PlasmaCurrent(Model):
 
         Returns
         -------
-        tuple[float, float, float, float, float]
-            Tuple containing (b_plasma_poloidal_average, qstar, plasma_current,
-            betap, li).
+        float
+            Plasma current (A).
 
         Raises
         ------
@@ -259,15 +267,19 @@ class PlasmaCurrent(Model):
         # Aspect ratio
         aspect_ratio = 1.0 / eps
 
-        # Only the Sauter scaling (i_plasma_current=8) is suitable for negative
-        # triangularity:
+        # Only the Sauter scaling (i_plasma_current=8) and user input (0) are
+        # suitable for negative triangularity:
         if (
-            PlasmaCurrentModel(i_plasma_current) != PlasmaCurrentModel.SAUTER_SCALING
+            i_plasma_current
+            not in {
+                PlasmaCurrentModel.SAUTER_SCALING,
+                PlasmaCurrentModel.USER_INPUT,
+            }
             and triang < 0.0
         ):
             raise ProcessValueError(
-                f"Triangularity is negative without i_plasma_current = 8 selected:"
-                f" {triang=}, {i_plasma_current=}"
+                f"Triangularity is negative without i_plasma_current = 0 or 8"
+                f" selected: {triang=}, {i_plasma_current=}"
             )
 
         try:  # noqa: PLW0717
@@ -344,6 +356,10 @@ class PlasmaCurrent(Model):
                         eps=eps, kappa=kappa, triang=triang
                     )
 
+                # User input
+                case PlasmaCurrentModel.USER_INPUT:
+                    plasma_current = self.data.physics.plasma_current_user_input
+
         except ValueError as e:
             raise ProcessValueError(
                 "Illegal value of i_plasma_current",
@@ -351,7 +367,10 @@ class PlasmaCurrent(Model):
             ) from e
 
         # Main plasma current calculation using the fq value from the different settings
-        if model != PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
+        if model not in {
+            PlasmaCurrentModel.PENG_DIVERTOR_SCALING,
+            PlasmaCurrentModel.USER_INPUT,
+        }:
             plasma_current = (
                 self.calculate_cyclindrical_plasma_current(
                     rminor=rminor,
