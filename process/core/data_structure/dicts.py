@@ -255,6 +255,13 @@ def get_dicts():
                 raise TypeError(error_msg)
 
             variable_types[field.name] = var_type
+            variable_names.append(field.name)
+
+            initial_value = getattr(data_structure, field.name)
+            if isinstance(initial_value, Parameter):
+                initial_values_dict[field.name] = initial_value.value
+            else:
+                initial_values_dict[field.name] = initial_value
 
         # Variable descriptions are found under the ast.ClassDef node
         # within ast.ClassDef - need to check for pairs of ast.AnnAssign followed by an
