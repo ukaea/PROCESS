@@ -170,7 +170,7 @@ Unlike $\lambda_{q}$, which is governed by robust upstream parallel and perpendi
 The H-mode SOL spreading factor, $S$ is given in $\text{m}$ by[^scarabosio_2015]:
 
 $$
-S = (0.12(\pm0.07)\times 10^{-3}) P_{\text{sep}}^{0.21(\pm0.11)}R_0^{0.71(\pm0.5)}B_{\text{p}}(a)^{-0.82(\pm0.27)}n_{\text{sep}}^{0.71(\pm0.5)}
+S = \left(0.12(\pm0.07)\times 10^{-3}\right) P_{\text{sep}}^{0.21(\pm0.11)}R_0^{0.71(\pm0.5)}B_{\text{p}}(a)^{-0.82(\pm0.27)}n_{\text{sep}}^{-0.02(\pm0.23)}
 $$
 
 - This was fitted from ASDEX Upgrade and JET outer target data
