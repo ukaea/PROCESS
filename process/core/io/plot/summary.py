@@ -85,7 +85,7 @@ from process.models.physics.plasma_geometry import (
     PlasmaShapeModelType,
 )
 from process.models.physics.profiles import PlasmaProfileShapeType
-from process.models.physics.scrape_off_layer import ScrapeOffLayer
+from process.models.physics.scrape_off_layer import BasicTwoPointModel, ScrapeOffLayer
 from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
@@ -16637,6 +16637,87 @@ def plot_pf_dimensions(
     axis.set_aspect("equal", adjustable="box")
 
 
+def plot_basic_two_point_model(
+    axis: plt.Axes,
+    m_file: MFile,
+    scan: int,
+    colour_scheme: Literal[1, 2] = 1,
+) -> None:
+    len_connection = 200.0
+    electron_thermal_conductivity = 2000.0
+    sheath_transmission_coefficient = 7.0
+    two_point_model = BasicTwoPointModel()
+    q_parallel = (
+        m_file.get("pflux_plasma_outboard_sol_parallel_mw", scan=scan) * 1.0e6
+    )
+    q_parallel = 5e8
+
+    temperature_profile = two_point_model.calculate_temperature_profile(
+        len_connection=len_connection,
+        nd_electron_upstream=m_file.get("nd_plasma_separatrix_electron", scan=scan),
+        q_parallel=q_parallel,
+        m_ion_average=m_file.get("m_ions_total_amu", scan=scan)
+        * constants.ATOMIC_MASS_UNIT,
+        electron_thermal_conductivity=electron_thermal_conductivity,
+        sheath_transmission_coefficient=sheath_transmission_coefficient,
+        number_of_points=100,
+    )
+    axis.plot(
+        np.linspace(0, len_connection, 100),
+        temperature_profile,
+        label=(
+            "Temperature "
+            f"$\\kappa_0$={electron_thermal_conductivity:g}, "
+            f"$\\gamma$={sheath_transmission_coefficient:g})"
+        ),
+    )
+    axis.axhline(
+        temperature_profile[0],
+        color="tab:blue",
+        linestyle="--",
+        label=f"$T_{{e,u}}$={temperature_profile[0]:.3g} eV",
+    )
+    axis.axhline(
+        temperature_profile[-1],
+        color="tab:orange",
+        linestyle="--",
+        label=f"$T_{{e,t}}$={temperature_profile[-1]:.3g} eV",
+    )
+    plate_start = len_connection
+    plate_end = plate_start + 10
+    axis.axvspan(
+        plate_start,
+        plate_end,
+        facecolor="lightgrey",
+        edgecolor="black",
+        alpha=0.6,
+    )
+    axis.text(
+        (plate_start + plate_end) / 2,
+        0.5,
+        "Plate",
+        transform=axis.get_xaxis_transform(),
+        ha="center",
+        va="center",
+    )
+
+    axis.axvspan(
+        -5,
+        0,
+        color=PLASMA_COLOUR[colour_scheme - 1],
+        alpha=0.35,
+        label="Plasma",
+    )
+
+    axis.minorticks_on()
+    axis.set_ylabel("$T_e$ [eV]")
+    axis.set_xlabel("Midplane to target [m]")
+    axis.set_xlim(left=-5, right=plate_end)
+    axis.grid(True, alpha=0.3)
+    axis.set_title("Conduction Limited, Unmitigated Scenario")
+    axis.legend()
+
+
 def main_plot(
     m_file: MFile,
     scan: int,
@@ -16901,6 +16982,13 @@ def main_plot(
     ax_midplane_near_sol = pages["sol_powerfluxes"].add_subplot(336)
     plot_midplane_near_sol_radial_profile(
         ax_midplane_near_sol, m_file, scan, colour_scheme
+    )
+
+    plot_basic_two_point_model(
+        _add_page("basic_two_point_model").add_subplot(411),
+        m_file,
+        scan,
+        colour_scheme=colour_scheme,
     )
 
     ax_div_lower_outboard = pages["sol_powerfluxes"].add_subplot(

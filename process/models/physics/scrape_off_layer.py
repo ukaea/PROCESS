@@ -704,3 +704,319 @@ class ScrapeOffLayer(Model):
             * nd_plasma_separatrix_electron_19**-0.02
             * rmajor**0.71
         )
+
+
+class BasicTwoPointModel(Model):
+    r"""
+    Basic two-point model for scrape-off layer physics.
+
+    This model provides a simplified representation of the plasma parameters
+    along the scrape-off layer, assuming a two-point connection between the
+    upstream (midplane) and downstream (target) conditions.
+
+    Notes
+    -----
+    - Electron and ion temperatures are assumed to be equal.
+    - Constant electron pressure, (n_tT_t=n_uT_u);
+    - Braginskii parallel heat conduction (q_|| = -κ_e ∇_|| T_e)
+    - Bohm speed (c_s=\sqrt{2eT_t/m_i});
+    - Sheath heat transmission coefficient (\gamma).
+
+    References
+    ----------
+    [1] Philippe Ghendrih, “The Plasma Boundary of Magnetic Fusion Devices,”
+    Plasma Physics and Controlled Fusion, vol. 43, no. 2, pp. 223-224, Jan. 2001,
+    doi: 10.1088/0741-3335/43/2/702.
+
+    [2] P.C. Stangeby, “Basic physical processes and reduced models for plasma
+    detachment,” vol. 60, no. 4, pp. 044022-044022, Mar. 2018,
+    doi: 10.1088/1361-6587/aaacf6.
+    """
+
+    def __init__(self):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
+
+    def run(self):
+        """Run the basic two-point model calculations."""
+
+    def output(self):
+        """Retrieve the output of the basic two-point model calculations."""
+
+    @staticmethod
+    def calculate_upstream_temperature(
+        pflux_plasma_outboard_sol_parallel: float,
+        len_connection: float,
+        temp_target_ev: float = 0.0,
+        electron_thermal_conductivity: float = 2000.0,
+    ) -> float:
+        """
+        Calculate the upstream electron temperature (Tₑ,ᵤ) in the scrape-off layer.
+
+        Parameters
+        ----------
+        pflux_plasma_outboard_sol_parallel : float
+            Parallel heat flux along the scrape-off layer [W/m2]
+        len_connection : float
+            Connection length from the midplane to the target along the scrape-off layer [m]
+        electron_thermal_conductivity : float, optional
+            Electron thermal conductivity [W/m·eV^(-7/2)] (default is 2000.0)
+
+        Returns
+        -------
+        float
+            Upstream electron temperature [eV]
+
+        Notes
+        -----
+        - The calculation assumes a simplified two-point model for the scrape-off layer.
+
+        """
+        return (
+            temp_target_ev ** (7.0 / 2.0)
+            + (7.0 / 2.0)
+            * pflux_plasma_outboard_sol_parallel
+            * len_connection
+            / electron_thermal_conductivity
+        ) ** (2.0 / 7.0)
+
+    @staticmethod
+    def calculate_connection_length(
+        temp_electron_upstream_ev: float,
+        temp_target_ev: float,
+        pflux_plasma_outboard_sol_parallel: float,
+        electron_thermal_conductivity: float = 2000.0,
+    ) -> float:
+        """Calculate the connection length for given upstream and target temperatures."""
+        return (
+            (2.0 / 7.0)
+            * electron_thermal_conductivity
+            / pflux_plasma_outboard_sol_parallel
+            * (temp_electron_upstream_ev ** (7.0 / 2.0) - temp_target_ev ** (7.0 / 2.0))
+        )
+
+    def calculate_target_electron_temperature(
+        self,
+        m_ion_average: float,
+        pflux_plasma_outboard_sol_parallel: float,
+        nd_electron_upstream: float,
+        temp_electron_upstream_ev: float,
+        f_temp_ion_electron: float = 1.0,
+        f_nd_electron_ion: float = 1.0,
+        f_vel_ion_mach: float = 0.0,
+        sheath_transmission_coefficient: float = 7.0,
+    ) -> float:
+        """
+        Calculate the target electron temperature (Tₑ,ₜ) in the scrape-off layer.
+
+        Parameters
+        ----------
+        m_ion_average : float
+            Average ion mass [kg]
+        pflux_plasma_outboard_sol_parallel : float
+            Parallel heat flux along the scrape-off layer [W/m2]
+        nd_electron_upstream : float
+            Electron density at the upstream (midplane) [m^-3]
+        temp_electron_upstream_ev : float
+            Electron temperature at the upstream (midplane) [eV]
+        sheath_transmission_coefficient : float, optional
+            Sheath transmission coefficient (default is 7.0)
+
+        Returns
+        -------
+        float
+            Target electron temperature [eV]
+
+        Notes
+        -----
+        - Taken from Equation 24 of Reference 2
+        - The ion mass term is described as the fuel ion mass. Though we have used
+        the total ion mass in the calculation, which includes impurities.
+
+        """
+        return (
+            8
+            * m_ion_average
+            * pflux_plasma_outboard_sol_parallel**2
+            / (
+                sheath_transmission_coefficient**2
+                * constants.ELECTRON_CHARGE
+                * (
+                    self.calculate_total_pressure(
+                        nd_electron=nd_electron_upstream,
+                        temp_electron_ev=temp_electron_upstream_ev,
+                        f_temp_ion_electron=f_temp_ion_electron,
+                        f_nd_electron_ion=f_nd_electron_ion,
+                        f_vel_ion_mach=f_vel_ion_mach,
+                    )
+                )
+                ** 2
+            )
+        )
+
+    @staticmethod
+    def calculate_total_pressure(
+        nd_electron: float,
+        temp_electron_ev: float,
+        f_temp_ion_electron: float,
+        f_nd_electron_ion: float,
+        f_vel_ion_mach: float,
+    ) -> float:
+        """
+        Calculate the total pressure in the scrape-off layer.
+
+        Parameters
+        ----------
+        nd_electron : float
+            Electron density [m^-3]
+        temp_electron_ev : float
+            Electron temperature [eV]
+        f_temp_ion_electron : float
+            Ratio of ion temperature to electron temperature
+        f_nd_electron_ion : float
+            Ratio of electron density to ion density
+        f_vel_ion_mach : float
+            Ion velocity in terms of Mach number
+
+        Returns
+        -------
+        float
+            Total pressure [Pa]
+
+        Notes
+        -----
+        - Taken from Equation 20 of Reference 2
+        - The total pressure is calculated considering both electron and ion
+          contributions.
+        - The ion contribution is scaled by the Mach number squared and the
+          temperature and density ratios.
+
+        """
+        return (
+            (1 + f_vel_ion_mach**2)
+            * nd_electron
+            * temp_electron_ev
+            * (1 + f_temp_ion_electron / f_nd_electron_ion)
+            * constants.ELECTRON_CHARGE
+        )
+
+    def solve_basic_two_point_model(
+        self,
+        len_connection: float,
+        nd_electron_upstream: float,
+        q_parallel: float,
+        m_ion_average: float = 1.6726219e-27,
+        electron_thermal_conductivity: float = 2000.0,
+        sheath_transmission_coefficient: float = 7.0,
+    ) -> tuple[float, float]:
+        """Solve the coupled, no-loss basic two-point model in eV."""
+        if len_connection <= 0.0:
+            raise ValueError("Connection length must be positive.")
+        if nd_electron_upstream <= 0.0:
+            raise ValueError("Upstream density must be positive.")
+        if q_parallel <= 0.0:
+            raise ValueError("Parallel heat flux must be positive.")
+        if m_ion_average <= 0.0:
+            raise ValueError("Ion mass must be positive.")
+        if electron_thermal_conductivity <= 0.0:
+            raise ValueError("Thermal conductivity must be positive.")
+        if sheath_transmission_coefficient <= 0.0:
+            raise ValueError("Sheath transmission coefficient must be positive.")
+
+        def residual(temp_electron_upstream_ev: float) -> float:
+            temp_target_ev = self.calculate_target_electron_temperature(
+                m_ion_average=m_ion_average,
+                pflux_plasma_outboard_sol_parallel=q_parallel,
+                nd_electron_upstream=nd_electron_upstream,
+                temp_electron_upstream_ev=temp_electron_upstream_ev,
+                sheath_transmission_coefficient=sheath_transmission_coefficient,
+            )
+            return temp_electron_upstream_ev - self.calculate_upstream_temperature(
+                pflux_plasma_outboard_sol_parallel=q_parallel,
+                len_connection=len_connection,
+                temp_target_ev=temp_target_ev,
+                electron_thermal_conductivity=electron_thermal_conductivity,
+            )
+
+        lower_bound = self.calculate_upstream_temperature(
+            pflux_plasma_outboard_sol_parallel=q_parallel,
+            len_connection=len_connection,
+            electron_thermal_conductivity=electron_thermal_conductivity,
+        )
+        upper_bound = 2.0 * lower_bound
+        while residual(upper_bound) < 0.0:
+            upper_bound *= 2.0
+
+        temp_electron_upstream_ev = scipy.optimize.brentq(
+            residual, lower_bound, upper_bound
+        )
+        temp_target_ev = self.calculate_target_electron_temperature(
+            m_ion_average=m_ion_average,
+            pflux_plasma_outboard_sol_parallel=q_parallel,
+            nd_electron_upstream=nd_electron_upstream,
+            temp_electron_upstream_ev=temp_electron_upstream_ev,
+            sheath_transmission_coefficient=sheath_transmission_coefficient,
+        )
+        return temp_electron_upstream_ev, temp_target_ev
+
+
+    def calculate_temperature_profile(
+        self,
+        len_connection: float,
+        nd_electron_upstream: float,
+        q_parallel: float,
+        m_ion_average: float = 1.6726219e-27,
+        electron_thermal_conductivity: float = 2000.0,
+        sheath_transmission_coefficient: float = 7.0,
+        number_of_points: int = 100,
+    ) -> np.ndarray:
+        """Calculate the temperature profile using the two-point model.
+
+        Parameters
+        ----------
+        len_connection : float
+            Connection length along the magnetic field [m]
+        nd_electron_upstream : float
+            Electron density at the upstream (midplane) [m^-3]
+        q_parallel : float
+            Parallel heat flux, taken as an input from the mfile [W/m^2]
+        m_ion_average : float, optional
+            Average ion mass (default is proton mass)
+        electron_thermal_conductivity : float, optional
+            Electron thermal conductivity (default is 2000.0)
+        sheath_transmission_coefficient : float, optional
+            Sheath transmission coefficient (default is 7.0)
+        number_of_points : int, optional
+            Number of points in the temperature profile (default is 100)
+
+
+
+        Raises
+        ------
+        ValueError
+            If any of the input parameters are non-positive.
+
+        """
+        temp_upstream_target_ev, temp_target_ev = self.solve_basic_two_point_model(
+            len_connection=len_connection,
+            nd_electron_upstream=nd_electron_upstream,
+            q_parallel=q_parallel,
+            m_ion_average=m_ion_average,
+            electron_thermal_conductivity=electron_thermal_conductivity,
+            sheath_transmission_coefficient=sheath_transmission_coefficient,
+        )
+
+        temp_upstream_ev_pow = temp_upstream_target_ev ** (7.0 / 2.0)
+        temp_target_ev_pow = temp_target_ev ** (7.0 / 2.0)
+
+        profile_points = np.linspace(0.0, len_connection, number_of_points)
+
+        # temp_upstream_ev_pow is, by construction, always >= temp_target_ev_pow
+        # so the term being raised to (2/7) below is always non-negative and the
+        # result is always real. Clip to zero to guard against small negative
+        # values arising from floating-point rounding.
+        profile_pow = temp_upstream_ev_pow - (
+            temp_upstream_ev_pow - temp_target_ev_pow
+        ) * (profile_points / len_connection)
+
+        return np.clip(profile_pow, 0.0, None) ** (2.0 / 7.0)

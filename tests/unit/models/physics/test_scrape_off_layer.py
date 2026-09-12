@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from process.models.physics.scrape_off_layer import ScrapeOffLayer
+from process.models.physics.scrape_off_layer import BasicTwoPointModel, ScrapeOffLayer
 
 
 @pytest.mark.parametrize(
@@ -278,3 +278,33 @@ def test_calculate_eich_target_heat_flux_profile_exact():
     )
     assert isinstance(result, float)
     assert pytest.approx(result) == 5.534025566786268
+
+
+def test_solve_basic_two_point_model():
+    """The coupled solution satisfies conduction and sheath equations."""
+    model = BasicTwoPointModel()
+    len_connection = 100.0
+    nd_electron_upstream = 1.0e19
+    q_parallel = 1.0e8
+
+    temp_upstream_ev, temp_target_ev = model.solve_basic_two_point_model(
+        len_connection=len_connection,
+        nd_electron_upstream=nd_electron_upstream,
+        q_parallel=q_parallel,
+    )
+
+    assert temp_upstream_ev == pytest.approx(
+        model.calculate_upstream_temperature(
+            pflux_plasma_outboard_sol_parallel=q_parallel,
+            len_connection=len_connection,
+            temp_target_ev=temp_target_ev,
+        )
+    )
+    assert temp_target_ev == pytest.approx(
+        model.calculate_target_electron_temperature(
+            m_ion_average=1.6726219e-27,
+            pflux_plasma_outboard_sol_parallel=q_parallel,
+            nd_electron_upstream=nd_electron_upstream,
+            temp_electron_upstream_ev=temp_upstream_ev,
+        )
+    )
