@@ -308,3 +308,37 @@ def test_solve_basic_two_point_model():
             temp_electron_upstream_ev=temp_upstream_ev,
         )
     )
+
+
+def test_calculate_density_profile():
+    """The density profile matches the basic two-point-model endpoints."""
+    model = BasicTwoPointModel()
+    len_connection = 100.0
+    nd_electron_upstream = 1.0e19
+    q_parallel = 1.0e8
+    temp_upstream_ev, _ = model.solve_basic_two_point_model(
+        len_connection=len_connection,
+        nd_electron_upstream=nd_electron_upstream,
+        q_parallel=q_parallel,
+    )
+    total_pressure = model.calculate_total_pressure(
+        nd_electron=nd_electron_upstream,
+        temp_electron_ev=temp_upstream_ev,
+        f_temp_ion_electron=1.0,
+        f_nd_electron_ion=1.0,
+        f_vel_ion_mach=0.0,
+    )
+
+    density_profile = model.calculate_density_profile(
+        len_connection=len_connection,
+        nd_electron_upstream=nd_electron_upstream,
+        q_parallel=q_parallel,
+    )
+    target_density = model.calculate_target_electron_density(
+        m_ion_average=1.6726219e-27,
+        pflux_plasma_outboard_sol_parallel=q_parallel,
+        total_pressure=total_pressure,
+    )
+
+    assert density_profile[0] == pytest.approx(nd_electron_upstream)
+    assert density_profile[-1] == pytest.approx(target_density)

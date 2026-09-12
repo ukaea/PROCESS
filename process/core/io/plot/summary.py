@@ -16647,17 +16647,31 @@ def plot_basic_two_point_model(
     electron_thermal_conductivity = 2000.0
     sheath_transmission_coefficient = 7.0
     two_point_model = BasicTwoPointModel()
-    q_parallel = (
-        m_file.get("pflux_plasma_outboard_sol_parallel_mw", scan=scan) * 1.0e6
+    nd_electron_upstream = m_file.get("nd_plasma_separatrix_electron", scan=scan)
+    m_ion_average = (
+        m_file.get("m_ions_total_amu", scan=scan) * constants.ATOMIC_MASS_UNIT
     )
-    q_parallel = 5e8
-
+    q_parallel = m_file.get("pflux_plasma_outboard_sol_parallel_mw", scan=scan) * 1.0e6
+    if q_parallel <= 0.0 or nd_electron_upstream <= 0.0 or m_ion_average <= 0.0:
+        axis.text(
+            0.5,
+            0.5,
+            "Basic two-point model unavailable\n"
+            "Positive density, ion mass, and parallel heat flux are required.",
+            transform=axis.transAxes,
+            ha="center",
+            va="center",
+        )
+        axis.set_axis_off()
+        return
     temperature_profile = two_point_model.calculate_temperature_profile(
         len_connection=len_connection,
-        nd_electron_upstream=m_file.get("nd_plasma_separatrix_electron", scan=scan),
+        nd_electron_upstream=nd_electron_upstream,
         q_parallel=q_parallel,
-        m_ion_average=m_file.get("m_ions_total_amu", scan=scan)
-        * constants.ATOMIC_MASS_UNIT,
+        f_temp_ion_electron=m_file.get("f_temp_plasma_ion_electron", scan=scan),
+        f_nd_electron_ion=m_file.get("nd_plasma_electrons_vol_avg", scan=scan)
+        / m_file.get("nd_plasma_ions_total_vol_avg", scan=scan),
+        m_ion_average=m_ion_average,
         electron_thermal_conductivity=electron_thermal_conductivity,
         sheath_transmission_coefficient=sheath_transmission_coefficient,
         number_of_points=100,
@@ -16683,6 +16697,29 @@ def plot_basic_two_point_model(
         linestyle="--",
         label=f"$T_{{e,t}}$={temperature_profile[-1]:.3g} eV",
     )
+    density_axis = axis.twinx()
+    density_axis.plot(
+        np.linspace(0.0, len_connection, 100),
+        two_point_model.calculate_density_profile(
+            len_connection=len_connection,
+            nd_electron_upstream=nd_electron_upstream,
+            q_parallel=q_parallel,
+            f_temp_ion_electron=m_file.get("f_temp_plasma_ion_electron", scan=scan),
+            f_nd_electron_ion=m_file.get("nd_plasma_electrons_vol_avg", scan=scan)
+            / m_file.get("nd_plasma_ions_total_vol_avg", scan=scan),
+            m_ion_average=m_ion_average,
+            electron_thermal_conductivity=electron_thermal_conductivity,
+            sheath_transmission_coefficient=sheath_transmission_coefficient,
+            number_of_points=100,
+        )
+        / 1.0e19,
+        color="tab:red",
+        linestyle="-.",
+        label="$n_e$ profile",
+    )
+    density_axis.set_ylabel("$n_e$ [$10^{19}$ m$^{-3}$]", color="tab:red")
+    density_axis.tick_params(axis="y", labelcolor="tab:red")
+    density_axis.legend(loc="center right")
     plate_start = len_connection
     plate_end = plate_start + 10
     axis.axvspan(

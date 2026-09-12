@@ -900,11 +900,27 @@ class BasicTwoPointModel(Model):
             * constants.ELECTRON_CHARGE
         )
 
+    @staticmethod
+    def calculate_target_electron_density(
+        m_ion_average: float,
+        pflux_plasma_outboard_sol_parallel: float,
+        total_pressure: float,
+        sheath_transmission_coefficient: float = 7.0,
+    ) -> float:
+        """Calculate the basic two-point-model target electron density [m^-3]."""
+        return (
+            sheath_transmission_coefficient**2
+            * total_pressure**3
+            / (32.0 * m_ion_average * pflux_plasma_outboard_sol_parallel**2)
+        )
+
     def solve_basic_two_point_model(
         self,
         len_connection: float,
         nd_electron_upstream: float,
         q_parallel: float,
+        f_temp_ion_electron: float,
+        f_nd_electron_ion: float,
         m_ion_average: float = 1.6726219e-27,
         electron_thermal_conductivity: float = 2000.0,
         sheath_transmission_coefficient: float = 7.0,
@@ -929,6 +945,8 @@ class BasicTwoPointModel(Model):
                 pflux_plasma_outboard_sol_parallel=q_parallel,
                 nd_electron_upstream=nd_electron_upstream,
                 temp_electron_upstream_ev=temp_electron_upstream_ev,
+                f_temp_ion_electron=f_temp_ion_electron,
+                f_nd_electron_ion=f_nd_electron_ion,
                 sheath_transmission_coefficient=sheath_transmission_coefficient,
             )
             return temp_electron_upstream_ev - self.calculate_upstream_temperature(
@@ -959,12 +977,66 @@ class BasicTwoPointModel(Model):
         )
         return temp_electron_upstream_ev, temp_target_ev
 
+    def calculate_density_profile(
+        self,
+        len_connection: float,
+        nd_electron_upstream: float,
+        q_parallel: float,
+        f_temp_ion_electron: float = 1.0,
+        f_nd_electron_ion: float = 1.0,
+        m_ion_average: float = 1.6726219e-27,
+        electron_thermal_conductivity: float = 2000.0,
+        sheath_transmission_coefficient: float = 7.0,
+        number_of_points: int = 100,
+    ) -> np.ndarray:
+        """Calculate an electron density profile for the basic two-point model.
+
+        The profile conserves total pressure and assumes that the ion Mach
+        number increases linearly from zero upstream to one at the target.
+        """
+        temp_upstream_ev, _ = self.solve_basic_two_point_model(
+            len_connection=len_connection,
+            nd_electron_upstream=nd_electron_upstream,
+            q_parallel=q_parallel,
+            f_temp_ion_electron=f_temp_ion_electron,
+            f_nd_electron_ion=f_nd_electron_ion,
+            m_ion_average=m_ion_average,
+            electron_thermal_conductivity=electron_thermal_conductivity,
+            sheath_transmission_coefficient=sheath_transmission_coefficient,
+        )
+        temperature_profile = self.calculate_temperature_profile(
+            len_connection=len_connection,
+            nd_electron_upstream=nd_electron_upstream,
+            q_parallel=q_parallel,
+            f_temp_ion_electron=f_temp_ion_electron,
+            f_nd_electron_ion=f_nd_electron_ion,
+            m_ion_average=m_ion_average,
+            electron_thermal_conductivity=electron_thermal_conductivity,
+            sheath_transmission_coefficient=sheath_transmission_coefficient,
+            number_of_points=number_of_points,
+        )
+        total_pressure = self.calculate_total_pressure(
+            nd_electron=nd_electron_upstream,
+            temp_electron_ev=temp_upstream_ev,
+            f_temp_ion_electron=1.0,
+            f_nd_electron_ion=1.0,
+            f_vel_ion_mach=0.0,
+        )
+        ion_mach_profile = np.linspace(0.0, 1.0, number_of_points)
+        return total_pressure / (
+            2.0
+            * constants.ELECTRON_CHARGE
+            * temperature_profile
+            * (1.0 + ion_mach_profile**2)
+        )
 
     def calculate_temperature_profile(
         self,
         len_connection: float,
         nd_electron_upstream: float,
         q_parallel: float,
+        f_temp_ion_electron: float,
+        f_nd_electron_ion: float,
         m_ion_average: float = 1.6726219e-27,
         electron_thermal_conductivity: float = 2000.0,
         sheath_transmission_coefficient: float = 7.0,
@@ -1001,6 +1073,8 @@ class BasicTwoPointModel(Model):
             len_connection=len_connection,
             nd_electron_upstream=nd_electron_upstream,
             q_parallel=q_parallel,
+            f_temp_ion_electron=f_temp_ion_electron,
+            f_nd_electron_ion=f_nd_electron_ion,
             m_ion_average=m_ion_average,
             electron_thermal_conductivity=electron_thermal_conductivity,
             sheath_transmission_coefficient=sheath_transmission_coefficient,
