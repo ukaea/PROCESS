@@ -8,6 +8,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
+from process.data_structure.physics_variables import DivertorNumberModels
 from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
 
 logger = logging.getLogger(__name__)
@@ -198,6 +199,49 @@ class PlasmaFields(Model):
             total magnetic field at the plasma edge (T)
         """
         return np.sqrt(b_plasma_toroidal**2 + b_plasma_poloidal**2)
+
+    def calculate_parallel_connection_length(
+        self,
+        q_95: float,
+        rmajor: float,
+    ) -> float:
+        """Calculate the parallel connection length (Lₗₗ) along the scrape-off layer
+        to the X-point.
+
+        Parameters
+        ----------
+        q_95 : float
+            Safety factor at 95% of the plasma minor radius
+        rmajor : float
+            Major radius of the plasma (R₀) [m]
+
+        Returns
+        -------
+        float
+            Parallel connection length along the scrape-off layer [m]
+
+        Raises
+        ------
+        ValueError
+            If the divertor configuration is unsupported.
+
+        Notes
+        -----
+        - The calculation assumes a simplified geometry for the plasma.
+
+        """
+        len_connection = np.pi * q_95 * rmajor
+        if (
+            DivertorNumberModels(self.data.physics.i_single_null)
+            == DivertorNumberModels.SINGLE_NULL
+        ):
+            return len_connection
+        if (
+            DivertorNumberModels(self.data.physics.i_single_null)
+            == DivertorNumberModels.DOUBLE_NULL
+        ):
+            return 0.5 * len_connection
+        raise ValueError("Unsupported divertor configuration")
 
     def output(self):
         """Output plasma magnetic fields data."""
