@@ -292,6 +292,7 @@ class NumericsData:
             "CS achievable stress load cycles lower limit           ",
             "ECRH ignitability                ",  # Stellarator constraint
             "Fuel composition consistency     ",
+            "Separatrix temperature consistency (Tₑ,ₛₑₚ = Tₑ,ᵤ)",
         ]
     )
     """Labels describing constraint equations (corresponding itvs)<UL>

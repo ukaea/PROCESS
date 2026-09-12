@@ -1956,6 +1956,22 @@ def constraint_equation_92(constraint_registration, data):
     )
 
 
+@ConstraintManager.register_constraint(93, "", "=")
+def constraint_equation_93(constraint_registration, data):
+    """Equation for checking if the separatrix temperature taken from
+    `PlasmaProfiles` is consistent with the calculated upstream SOL temperature
+    from defined models. Tₑ,ₛₑₚ = Tₑ,ᵤ
+
+    temp_plasma_separatrix_kev: Electron temperature at the plasma separatrix [keV]
+    temp_plasma_sol_upstream_kev: Electron temperature at the upstream SOL [keV]
+    """
+    return eq(
+        data.physics.temp_plasma_separatrix_kev,
+        data.physics.temp_plasma_sol_upstream_kev,
+        constraint_registration,
+    )
+
+
 def constraint_eqns(m: int, ieqn: int, data: DataStructure):
     """Evaluates the constraints given the current state of PROCESS.
 
