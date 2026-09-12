@@ -970,6 +970,12 @@ class PhysicsData:
     criterion is used (`icc=78`)
     """
 
+    temp_plasma_sol_upstream_kev: float = 0.1
+    """Plasma scrape-off layer electron temperature upstream (Tₑ,ᵤ). This is
+    normally calculated via a power balance in the SOL and can be constrained to
+    always match `temp_plasma_separatrix_kev` [keV]
+    """
+
     i_beta_norm_max: int = 1
     """Switch for maximum normalised beta scaling (βₙ)"""
 
