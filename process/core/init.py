@@ -29,6 +29,7 @@ from process.data_structure.pfcoil_variables import PFConductorModel
 from process.data_structure.physics_variables import (
     ConfinementMode,
     ConfinementTimeModel,
+    CurrentProfileIndexModel,
     DivertorNumberModels,
 )
 from process.models.physics.plasma_current import PlasmaCurrentModel
@@ -426,6 +427,23 @@ def check_process(inputs, data):  # noqa: ARG001
             "plasma_current_user_input must be positive when i_plasma_current=0",
             plasma_current_user_input=data.physics.plasma_current_user_input,
         )
+
+    if data.physics.i_equilibrium_solve == 1:
+        if data.physics.i_plasma_current != PlasmaCurrentModel.USER_INPUT:
+            raise ProcessValidationError(
+                "Plasma equilibrium (i_equilibrium_solve=1) requires user-specified"
+                " plasma current: set i_plasma_current=0 and plasma_current_user_input"
+                " (A)",
+                i_plasma_current=data.physics.i_plasma_current,
+                i_equilibrium_solve=data.physics.i_equilibrium_solve,
+            )
+        if data.physics.i_alphaj != CurrentProfileIndexModel.USER_INPUT:
+            raise ProcessValidationError(
+                "Plasma equilibrium (i_equilibrium_solve=1) requires user-specified"
+                " current profile index: set i_alphaj=0 and alphaj",
+                i_alphaj=data.physics.i_alphaj,
+                i_equilibrium_solve=data.physics.i_equilibrium_solve,
+            )
 
     if data.impurity_radiation.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069
         raise ProcessValidationError(

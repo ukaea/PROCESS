@@ -386,6 +386,8 @@ class Physics(Model):
                 / self.data.physics.temp_plasma_electron_vol_avg_kev
             )
             self.plasma_equilibrium.solve_axis_for_volume_averages(f_pres_ie=f_pres_ie)
+            
+            self.data.physics.q95 = self.plasma_equilibrium.eq.q95
             self.plasma_profile.run()
             self.data.physics.ind_plasma_internal_norm = (
                 self.plasma_equilibrium.calculate_ind_plasma_internal_norm(
@@ -394,28 +396,6 @@ class Physics(Model):
                 )
             )
         # ==================================================
-
-        # Calculate total magnetic field [T]
-        self.data.physics.b_plasma_total = self.fields.calculate_total_magnetic_field(
-            b_plasma_toroidal=self.data.physics.b_plasma_toroidal_on_axis,
-            b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
-        )
-
-        # Calculate total magnetic field at the outboard [T]
-        self.data.physics.b_plasma_outboard_total = (
-            self.fields.calculate_total_magnetic_field(
-                b_plasma_toroidal=self.data.physics.b_plasma_outboard_toroidal,
-                b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
-            )
-        )
-
-        # Calculate total magnetic field at the inboard [T]
-        self.data.physics.b_plasma_inboard_total = (
-            self.fields.calculate_total_magnetic_field(
-                b_plasma_toroidal=self.data.physics.b_plasma_inboard_toroidal,
-                b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
-            )
-        )
 
         # Calculate the inboard and outboard toroidal field
         self.data.physics.b_plasma_inboard_toroidal = (
@@ -443,6 +423,50 @@ class Physics(Model):
                 rmajor=self.data.physics.rmajor,
                 rminor=self.data.physics.rminor,
                 n_plasma_profile_elements=self.data.physics.n_plasma_profile_elements,
+            )
+        )
+
+        if self.data.physics.i_equilibrium_solve == 1:
+            eq = self.plasma_equilibrium.eq
+            self.data.physics.b_plasma_inboard_toroidal = eq.F[-1] / (
+                self.data.physics.rmajor - self.data.physics.rminor
+            )
+            self.data.physics.b_plasma_outboard_toroidal = eq.F[-1] / (
+                self.data.physics.rmajor + self.data.physics.rminor
+            )
+            r_in = eq.Rc - self.data.physics.rminor * eq.rho
+            r_out = eq.Rc + self.data.physics.rminor * eq.rho
+            r_major = np.concatenate([r_in[::-1], r_out])
+            b_plasma_toroidal = np.concatenate([eq.F[::-1] / r_in[::-1], eq.F / r_out])
+            rho = np.linspace(
+                self.data.physics.rmajor - self.data.physics.rminor,
+                self.data.physics.rmajor + self.data.physics.rminor,
+                2 * self.data.physics.n_plasma_profile_elements,
+            )
+            rho = np.where(rho == 0, 1e-10, rho)
+            self.data.physics.b_plasma_toroidal_profile = np.interp(
+                rho, r_major, b_plasma_toroidal
+            )
+
+        # Calculate total magnetic field [T]
+        self.data.physics.b_plasma_total = self.fields.calculate_total_magnetic_field(
+            b_plasma_toroidal=self.data.physics.b_plasma_toroidal_on_axis,
+            b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
+        )
+
+        # Calculate total magnetic field at the outboard [T]
+        self.data.physics.b_plasma_outboard_total = (
+            self.fields.calculate_total_magnetic_field(
+                b_plasma_toroidal=self.data.physics.b_plasma_outboard_toroidal,
+                b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
+            )
+        )
+
+        # Calculate total magnetic field at the inboard [T]
+        self.data.physics.b_plasma_inboard_total = (
+            self.fields.calculate_total_magnetic_field(
+                b_plasma_toroidal=self.data.physics.b_plasma_inboard_toroidal,
+                b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
             )
         )
 
