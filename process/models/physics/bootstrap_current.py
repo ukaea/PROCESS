@@ -1269,6 +1269,102 @@ class PlasmaBootstrapCurrent(Model):
             * temp_plasma_pedestal_kev**0.0552
         )
 
+    @staticmethod
+    def bootstrap_fraction_sauter_equilibrium(
+        rminor,
+        zeff, zmain,
+        rho, ne, ni, te, ti,
+        eq,
+        ):
+        ne = np.interp(eq.rho, rho, ne)
+        te = np.interp(eq.rho, rho, te)
+        ti = np.interp(eq.rho, rho, ti)
+        ni = np.interp(eq.rho, rho, ni)
+        r_pe = ne * te / (ne * te + ni * ti)
+        pres = constants.KILOELECTRON_VOLT * (ne * te + ni * ti)
+        q = eq.q
+        rc = eq.Rc
+        eps = eq.rho * rminor / rc
+
+        f_t = eq.ftrap
+        f_t = np.where(f_t < 1.0e-8, 1.0e-8, f_t)
+        f_t = np.where(f_t > 0.999, 0.999, f_t)
+
+        dlame = 31.3 - np.log(np.sqrt(ne) / te * 1.0e-3)
+        dlamii = 30.0 - np.log(zmain**3 * np.sqrt(ni) / (ti * 1.0e3)**1.5)
+
+        nu_estar = 6.921e-18 * q * rc * ne * zeff * dlame / ((te * 1000.0)**2 * eps**1.5)
+        nu_istar = 4.90e-18 * q * rc * ni * zmain**4 * dlamii / ((ti * 1000.0)**2 * eps**1.5)
+
+        # equation 14b
+        f31 = f_t / (1.0 + (1.0 - 0.1 * f_t) * np.sqrt(nu_estar) + 0.5 * (1.0 - f_t) * nu_estar / zeff)
+        # equation 14a
+        l31 = f31 + (1.4 * f31 - 1.9 * f31**2 + 0.3 * f31**3 + 0.2 * f31**4) / (zeff + 1.0)
+        # equation 15d
+        f32_ee = f_t / (1.0 + 0.26 * (1 - f_t) * np.sqrt(nu_estar) + 0.18 * (1 - 0.37 * f_t) * nu_estar / np.sqrt(zeff))
+        # equation 15e
+        f32_ei = f_t / (1.0 + (1.0 + 0.6 * f_t) * np.sqrt(nu_estar) + 0.85 * (1 - 0.37 * f_t) * nu_estar / (1.0 + np.sqrt(zmain)))
+        # equation 15b and c
+        large_f32_ee = (
+            (0.05 + 0.62 * zeff) / (zeff * (1.0 + 0.44 * zeff)) * (f32_ee - f32_ee**4)
+            + (f32_ee**2 - f32_ee**4 - 1.2 * (f32_ee**3 - f32_ee**4)) / (1.0 + 0.22 * zeff)
+            + 1.2 / (1.0 + 0.5 * zeff) * f32_ee**4)
+        large_f32_ei = (
+            -(0.56 + 1.93 * zeff) / (zeff * (1.0 + 0.44 * zeff)) * (f32_ei - f32_ei**4)
+            + 4.95 * (f32_ei**2 - f32_ei**4 - 0.55 * (f32_ei**3 - f32_ei**4)) / (1.0 + 2.48 * zeff)
+            - 1.2 / (1.0 + 0.5 * zeff) * f32_ei**4)
+        # equation 15a
+        l32 = large_f32_ee + large_f32_ei
+        # equation 16b and a
+        f34 = f_t / (1.0 + (1.0 - 0.1 * f_t) * np.sqrt(nu_estar) + 0.5 * (1.0 - 0.5 * f_t) * nu_estar / zeff)
+        l34 = f34 + (1.4 * f34 - 1.9 * f34**2 + 0.3 * f34**3 + 0.2 * f34**4) / (zeff + 1.0)
+        # equation 17
+        alpha0 = - 1.17 * (1.0 - f_t) / (1.0 - 0.22 * f_t - 0.19 * f_t**2)
+        alpha = (
+            (alpha0 + 0.25 * (1.0 - f_t**2) * np.sqrt(nu_istar)) / (1.0 + 0.5 * np.sqrt(nu_istar))
+            + 0.315 * nu_istar**2 * f_t**6
+        ) / (1.0 + 0.15 * nu_istar**2 * f_t**6)
+
+        dlnne_drho = np.gradient(np.log(np.maximum(ne, 1.0e-30)), eq.rho)
+        dlnte_drho = np.gradient(np.log(np.maximum(te, 1.0e-30)), eq.rho)
+        dlnti_drho = np.gradient(np.log(np.maximum(ti, 1.0e-30)), eq.rho)
+
+        coef_ne = l31
+        coef_te = (l31 + l32) * r_pe
+        coef_ti = (1.0 - r_pe) * (l31 + l34 * alpha)
+
+        r = eq.R
+        jacobian = eq.J
+        r_t = eq.surface_fields[2]   # ∂R/∂θ
+        z_t = eq.Z_t                 # ∂Z/∂θ
+        psi_rho = eq.psin_r[:, None] * eq.alpha2
+        drhodr = -z_t / jacobian
+        drhodz = r_t / jacobian
+
+        bz = psi_rho * drhodr / r
+        br = -psi_rho * drhodz / r
+        b_phi = eq.F[:, None] / r
+        b_total2 = br**2 + bz**2 + b_phi**2
+
+        denom = eq.grid.integrate(eq.J, axis=1)
+        b2_avg = (
+            eq.grid.integrate(np.asarray(b_total2, dtype=np.float64) * eq.J, axis=1) 
+            / np.maximum(denom, 1.0e-30)
+        )
+        invr_avg = (
+            eq.grid.integrate(np.asarray(1.0 / r, dtype=np.float64) * eq.J, axis=1) 
+            / np.maximum(denom, 1.0e-30)
+        )
+
+        psi_rho = eq.psin_r * eq.alpha2
+        j_bs = (
+            - (coef_ne * dlnne_drho + coef_te * dlnte_drho + coef_ti * dlnti_drho) 
+            / (psi_rho * b2_avg) * pres * invr_avg * eq.F**2
+        )
+        j_bs[0] = 0.0
+        current_bs = eq.grid.integrate(j_bs[:, None] * eq.J)
+        return current_bs / float(eq.Ip)
+            
     def output(self):
         """Output the calculated bootstrap current information to the output file."""
         po.oheadr(self.outfile, "Plasma Bootstrap Current Fraction")

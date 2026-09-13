@@ -439,6 +439,8 @@ def calculate_average_charge_at_temp(
     numpy.array
         zav_of_te - electron temperature dependent average atomic charge
     """
+    if imp_element_index == 15:
+        return 5.0
     return _calculate_average_charge_at_temp_compiled(
         imp_element_index=imp_element_index,
         temp_electron_kev=temp_electron_kev,

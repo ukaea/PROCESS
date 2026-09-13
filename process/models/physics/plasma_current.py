@@ -1121,6 +1121,32 @@ class PlasmaDiamagneticCurrent(Model):
                 self.data.current_drive.f_c_plasma_diamagnetic_scene
             )
 
+    @staticmethod
+    def diamagnetic_integral(eq):
+        """Calculate the diamagnetic integral based on the equilibrium."""
+        r = eq.R
+        jacobian = eq.J
+        r_t = eq.surface_fields[2]
+        z_t = eq.Z_t
+
+        p_r = eq.P_r[:, None]
+        drhodr = -z_t / jacobian
+        drhodz = r_t / jacobian
+        dpdr = p_r * drhodr
+        dpdz = p_r * drhodz
+
+        psi_rho = eq.psin_r[:, None] * eq.alpha2
+        bz = psi_rho * drhodr / r
+        br = -psi_rho * drhodz / r
+        b_phi = eq.F[:, None] / r
+        b_total2 = br**2 + bz**2 + b_phi**2
+
+        j_dia_toroidal = -(dpdz * br - dpdr * bz) / b_total2
+        current_dia = float(eq.grid.integrate(j_dia_toroidal * jacobian))
+
+        f_dia = current_dia / float(eq.Ip)
+        return f_dia
+
     def output(self):
         """Output the plasma diamagnetic current model results."""
         po.oblnkl(self.outfile)

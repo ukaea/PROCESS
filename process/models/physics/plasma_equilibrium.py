@@ -268,3 +268,20 @@ class PlasmaEquilibrium(Model):
         bp2_vol_avg = self.get_volume_average_2(eq, bp2)
         li = bp2_vol_avg / b_poloidal_avg**2
         return li
+
+    @staticmethod
+    def miller_delta_profile(eq) -> np.ndarray:
+        R = np.asarray(eq.R, dtype=np.float64)
+        Z = np.asarray(eq.Z, dtype=np.float64)
+        nrho = R.shape[0]
+        delta = np.zeros(nrho, dtype=np.float64)
+        for i in range(nrho):
+            Ri = R[i]
+            Zi = Z[i]
+            a_loc = eq.rho[i] * eq.a
+            if a_loc < 1.0e-12:
+                continue
+            r_geo = eq.Rc[i]
+            r_top = float(Ri[np.argmax(Zi)])
+            delta[i] = (r_geo - r_top) / a_loc
+        return delta
