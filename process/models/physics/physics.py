@@ -402,8 +402,22 @@ class Physics(Model):
                 f_nd_ie * self.data.physics.nd_plasma_electron_on_axis
             )
             self.plasma_profile.run()    
-                     
-            self.data.physics.q95 = self.plasma_equilibrium.eq.q95
+            
+            self.data.physics.kappa95 = np.interp(0.95, self.plasma_equilibrium.eq.psin, self.plasma_equilibrium.eq.kappa)
+            triang = self.plasma_equilibrium.miller_delta_profile(self.plasma_equilibrium.eq)
+            self.data.physics.triang95 = np.interp(0.95, self.plasma_equilibrium.eq.psin, triang)
+            r = self.plasma_equilibrium.eq.R[-1,:]
+            z = self.plasma_equilibrium.eq.Z[-1,:]
+            (_, 
+                self.data.physics.a_plasma_surface_outboard, 
+                self.data.physics.a_plasma_surface, 
+                self.data.physics.len_plasma_poloidal, 
+                self.data.physics.a_plasma_poloidal, 
+                self.data.physics.vol_plasma
+            ) = self.geometry.cal_integral_geometry(r, z)
+
+            self.data.physics.q0 = self.plasma_equilibrium.eq.q[0]
+            self.data.physics.q95 = np.interp(0.95, self.plasma_equilibrium.eq.psin, self.plasma_equilibrium.eq.q)
 
             self.data.physics.ind_plasma_internal_norm = (
                 self.plasma_equilibrium.calculate_ind_plasma_internal_norm(
@@ -607,6 +621,10 @@ class Physics(Model):
         # ***************************** #
 
         self.dia_current.run()
+        if self.data.physics.i_equilibrium_solve == 1:
+            self.data.current_drive.f_c_plasma_diamagnetic = (
+                self.dia_current.diamagnetic_integral(self.plasma_equilibrium.eq)
+            )
 
         # ***************************** #
         #    PFIRSCH-SCHLÜTER CURRENT   #
@@ -623,6 +641,23 @@ class Physics(Model):
             )
 
         self.plasma_bootstrap_current.run()
+        if self.data.physics.i_equilibrium_solve == 1:   
+            zmain = 1.0 + self.data.physics.f_plasma_fuel_helium3
+            if self.data.physics.i_fusion_reactions == "p-b11":
+                zmain = 1.0 + self.data.physics.f_plasma_fuel_boron11 * 4.0
+            self.data.current_drive.f_c_plasma_bootstrap = (
+                self.plasma_bootstrap_current.bootstrap_fraction_sauter_equilibrium(
+                    rminor=self.data.physics.rminor,
+                    zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                    zmain=zmain,
+                    rho=self.plasma_profile.neprofile.profile_x,
+                    ne=self.plasma_profile.neprofile.profile_y,
+                    ni=self.plasma_profile.neprofile.profile_y * self.data.physics.nd_plasma_ions_total_vol_avg / self.data.physics.nd_plasma_electrons_vol_avg,
+                    te=self.plasma_profile.teprofile.profile_y,
+                    ti=self.plasma_profile.teprofile.profile_y * self.data.physics.temp_plasma_ion_vol_avg_kev / self.data.physics.temp_plasma_electron_vol_avg_kev,
+                    eq=self.plasma_equilibrium.eq,
+                )
+            )
 
         self.data.physics.err242 = 0
         if (
