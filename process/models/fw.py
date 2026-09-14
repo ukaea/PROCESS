@@ -170,12 +170,29 @@ class FirstWall(Model):
             self.data.fwbs.rad_fw_inboard_plasma_centre_toroidal
         )
 
-        in_vessel_solid_angle_fractions = self.calculate_component_solid_angle_components(
-            deg_fw_inboard_plasma_centre_toroidal=self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal,
-            deg_blkt_outboard_poloidal_plasma=self.data.blanket.deg_blkt_outboard_poloidal_plasma,
-            deg_blkt_inboard_poloidal_plasma=self.data.blanket.deg_blkt_inboard_poloidal_plasma,
-            deg_div_poloidal_plasma=self.data.divertor.deg_div_poloidal_plasma,
-            i_single_null=self.data.physics.i_single_null,
+        # Idealised coaxial cylinder (inboard/outboard) + annular disk (divertor)
+        # geometry used to evaluate the ring-source view factors below.
+        r_fw_inboard = (
+            self.data.physics.rmajor
+            - self.data.physics.rminor
+            - self.data.build.dr_fw_plasma_gap_inboard
+        )
+        r_fw_outboard = (
+            self.data.physics.rmajor
+            + self.data.physics.rminor
+            + self.data.build.dr_fw_plasma_gap_outboard
+        )
+
+        in_vessel_solid_angle_fractions = (
+            self.calculate_component_solid_angle_components(
+                rmajor=self.data.physics.rmajor,
+                r_fw_inboard=r_fw_inboard,
+                z_fw_half=self.data.fwbs.dz_fw_half,
+                r_div_inner=r_fw_inboard,
+                r_div_outer=self.data.physics.rmajor,
+                z_div=self.data.fwbs.dz_fw_half,
+                i_single_null=self.data.physics.i_single_null,
+            )
         )
 
         self.data.fwbs.f_ster_fw_inboard_ring_source = (
@@ -190,7 +207,6 @@ class FirstWall(Model):
         self.data.divertor.f_ster_div_upper_ring_source = (
             in_vessel_solid_angle_fractions.f_ster_div_upper_ring_source
         )
-        print(in_vessel_solid_angle_fractions)
 
         # Radiation surface heat flux on first wall (MW/m²)
         # The full area is used as the radiation is assumed to be uniformly distributed
@@ -939,27 +955,108 @@ class FirstWall(Model):
         return rad_fw_inboard_toroidal, f_rad_fw_inboard_toroidal
 
     @staticmethod
+    def solid_angle_fraction_coaxial_cylinder(
+        rmajor: float, r_cyl: float, z_half_height: float, n_integral: int = 100
+    ) -> float:
+        """Solid angle fraction (of 4π) subtended by a coaxial cylindrical band,
+        of half-height `z_half_height` and radius `r_cyl` (< rmajor), as seen from
+        a point on the ring source at (rmajor, 0).
+
+        Notes
+        -----
+        This reuses the integral of Guest (1960), also used in
+        `Hcpb.st_cp_angle_fraction` for the centrepost solid angle, here applied to
+        the (non-flared) inboard first wall.
+        """
+        rho = rmajor / r_cyl
+        phi_max = np.arcsin(1.0 / rho)
+        d_phi = phi_max / n_integral
+
+        def integrand(phi):
+            clipped = max(1.0 - rho**2 * np.sin(phi) ** 2, 0.0)
+            return 1.0 / np.sqrt(
+                z_half_height**2 + (rho * np.cos(phi) - np.sqrt(clipped)) ** 2
+            )
+
+        phi = 0.0
+        total = 0.0
+        for _ in range(n_integral):
+            f1 = integrand(phi)
+            phi += d_phi
+            f2 = integrand(phi)
+            total += d_phi * 0.5 * (f1 + f2)
+
+        solid_angle = total * 4.0 * z_half_height
+        return solid_angle / (4.0 * np.pi)
+
+    @staticmethod
+    def solid_angle_fraction_annular_disk(
+        rmajor: float,
+        r_inner: float,
+        r_outer: float,
+        z_height: float,
+        n_rho: int = 50,
+        n_phi: int = 100,
+    ) -> float:
+        """Solid angle fraction (of 4π) subtended by a flat annular disk at
+        height `z_height` above/below the source plane, spanning radius
+        [r_inner, r_outer], as seen from a point on the ring source at
+        (rmajor, 0).
+
+        Notes
+        -----
+        Represents a divertor plate. The point is off-axis relative to the disk,
+        so the point-to-surface solid angle integral dOmega = z_height * dA / d^3
+        is evaluated numerically over the disk.
+        """
+        rho_edges = np.linspace(r_inner, r_outer, n_rho + 1)
+        phi_edges = np.linspace(0.0, 2.0 * np.pi, n_phi + 1)
+        total = 0.0
+        for i in range(n_rho):
+            rho_mid = 0.5 * (rho_edges[i] + rho_edges[i + 1])
+            d_rho = rho_edges[i + 1] - rho_edges[i]
+            for j in range(n_phi):
+                phi_mid = 0.5 * (phi_edges[j] + phi_edges[j + 1])
+                d_phi = phi_edges[j + 1] - phi_edges[j]
+                d2 = (
+                    rho_mid**2
+                    - 2.0 * rho_mid * rmajor * np.cos(phi_mid)
+                    + rmajor**2
+                    + z_height**2
+                )
+                total += z_height * rho_mid / d2**1.5 * d_rho * d_phi
+        return total / (4.0 * np.pi)
+
+    @classmethod
     def calculate_component_solid_angle_components(
-        deg_fw_inboard_plasma_centre_toroidal: float,
-        deg_blkt_outboard_poloidal_plasma: float,
-        deg_blkt_inboard_poloidal_plasma: float,
-        deg_div_poloidal_plasma: float,
+        cls,
+        rmajor: float,
+        r_fw_inboard: float,
+        z_fw_half: float,
+        r_div_inner: float,
+        r_div_outer: float,
+        z_div: float,
         i_single_null: int,
     ) -> InVesselSolidAngleFractions:
-        """Calculate the solid angle subtended by the inboard and outboard first wall.
+        """Calculate the solid angle subtended by the inboard and outboard first
+        wall and the divertor(s), using a ring source at `rmajor`.
 
         Parameters
         ----------
-        deg_fw_inboard_plasma_centre_toroidal : float
-            Toroidal angle subtended by the inboard first wall from the centre of the plasma [degrees].
-        deg_blkt_outboard_poloidal_plasma : float
-            Poloidal angle subtended by the outboard first wall from the centre of the plasma [degrees].
-        deg_blkt_inboard_poloidal_plasma : float
-            Poloidal angle subtended by the inboard first wall from the centre of the plasma [degrees].
-        deg_div_poloidal_plasma : float
-            Poloidal angle subtended by the divertor from the centre of the plasma [degrees].
+        rmajor : float
+            Plasma major radius [m].
+        r_fw_inboard : float
+            Radius of the inboard first wall [m].
+        z_fw_half : float
+            Half-height of the inboard/outboard first wall [m].
+        r_div_inner, r_div_outer : float
+            Inner and outer radial extent of the divertor plate(s) [m].
+        z_div : float
+            Height above (and, for double null, below) the midplane of the
+            divertor plate(s) [m].
         i_single_null : int
-            Flag indicating whether the configuration is single null (1) or double null (0).
+            Flag indicating whether the configuration is single null (1) or
+            double null (0).
 
         Returns
         -------
@@ -967,46 +1064,38 @@ class FirstWall(Model):
 
         Notes
         -----
-        The poloidal angles partition the full 360 degrees of poloidal angle between
-        the inboard FW, outboard FW and divertor(s), so their fractions of 360 already
-        sum to 1 (2 for a double null, since the divertor angle is counted once per
-        divertor).
-
-        The inboard first wall additionally self-shadows the central hole of the
-        torus: only the fraction of ring-source directions aimed at the inboard side
-        given by `deg_fw_inboard_plasma_centre_toroidal / 360` actually intersect the
-        near inboard wall. Directions that do not clear the central hole are not
-        lost - they pass through the centre column region and go on to strike the
-        outboard wall - so that portion of the inboard poloidal fraction is added to
-        the outboard fraction rather than being discarded. This keeps the returned
-        fractions summing to 1 (2 for double null) without needing to renormalise
-        them against each other, which previously biased almost all power to the
-        outboard wall.
+        The inboard first wall and divertor(s) are idealised as, respectively, a
+        coaxial cylindrical band and flat annular disk(s), and their solid angle
+        fractions are computed directly (view factors) rather than approximated
+        from independent poloidal/toroidal angle ratios. The outboard first wall
+        fraction is obtained from the summation rule (the fractions seen from a
+        point inside a closed surface must sum to 1) rather than its own integral,
+        since it corresponds to the harder inside-looking-out geometry.
         """
-        f_poloidal_inboard = deg_blkt_inboard_poloidal_plasma / 360.0
-        f_poloidal_outboard = deg_blkt_outboard_poloidal_plasma / 360.0
-        f_poloidal_div = deg_div_poloidal_plasma / 360.0
-
-        # Fraction of rays aimed at the inboard side that clear the central hole
-        f_toroidal_inboard_hit = deg_fw_inboard_plasma_centre_toroidal / 360.0
-
-        f_ster_fw_inboard_ring_source = f_poloidal_inboard * f_toroidal_inboard_hit
-        f_ster_fw_outboard_ring_source = f_poloidal_outboard + f_poloidal_inboard * (
-            1.0 - f_toroidal_inboard_hit
+        f_ster_fw_inboard_ring_source = cls.solid_angle_fraction_coaxial_cylinder(
+            rmajor, r_fw_inboard, z_fw_half
+        )
+        f_ster_div_lower_ring_source = cls.solid_angle_fraction_annular_disk(
+            rmajor, r_div_inner, r_div_outer, z_div
         )
 
         if i_single_null == DivertorNumberModels.DOUBLE_NULL:
-            return InVesselSolidAngleFractions(
-                f_ster_fw_inboard_ring_source=f_ster_fw_inboard_ring_source,
-                f_ster_fw_outboard_ring_source=f_ster_fw_outboard_ring_source,
-                f_ster_div_lower_ring_source=f_poloidal_div,
-                f_ster_div_upper_ring_source=f_poloidal_div,
-            )
+            f_ster_div_upper_ring_source = f_ster_div_lower_ring_source
+        else:
+            f_ster_div_upper_ring_source = 0.0
+
+        f_ster_fw_outboard_ring_source = (
+            1.0
+            - f_ster_fw_inboard_ring_source
+            - f_ster_div_lower_ring_source
+            - f_ster_div_upper_ring_source
+        )
+
         return InVesselSolidAngleFractions(
             f_ster_fw_inboard_ring_source=f_ster_fw_inboard_ring_source,
             f_ster_fw_outboard_ring_source=f_ster_fw_outboard_ring_source,
-            f_ster_div_lower_ring_source=f_poloidal_div,
-            f_ster_div_upper_ring_source=0.0,
+            f_ster_div_lower_ring_source=f_ster_div_lower_ring_source,
+            f_ster_div_upper_ring_source=f_ster_div_upper_ring_source,
         )
 
     def output_fw_geometry(self):
@@ -1102,6 +1191,13 @@ class FirstWall(Model):
             self.data.fwbs.f_rad_fw_inboard_plasma_centre_toroidal,
         )
         po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Half-height of first wall used in ring source solid angle calculation (m)",
+            "(dz_fw_half)",
+            self.data.fwbs.dz_fw_half,
+            "OP ",
+        )
         po.ovarre(
             self.outfile,
             "",

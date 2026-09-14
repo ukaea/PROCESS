@@ -17219,6 +17219,7 @@ def plot_fw_inboard_toroidal_angle_load(
     f_rad_fw_inboard_plasma_centre_toroidal = mfile.get(
         "f_rad_fw_inboard_plasma_centre_toroidal", scan=scan
     )
+    f_ster_fw_inboard_ring_source = mfile.get("f_ster_fw_inboard_ring_source", scan=scan)
 
     # Get rmajor and first wall distance
     rmajor = mfile.get("rmajor", scan=scan)
@@ -17265,7 +17266,9 @@ def plot_fw_inboard_toroidal_angle_load(
     axis.text(
         label_x,
         label_y,
-        f"${deg_fw_inboard_plasma_centre_toroidal:.1f}°$\n({f_rad_fw_inboard_plasma_centre_toroidal * 100:.2f}%)",
+        f"$\\varphi_{{max}}$={deg_fw_inboard_plasma_centre_toroidal:.2f}°\n "
+        f"$\\frac{{\\varphi_{{max}}}}{{360}}=${f_rad_fw_inboard_plasma_centre_toroidal * 100:.2f}%\n"
+        f"$\\frac{{\\Omega}}{{4\\pi}}=${f_ster_fw_inboard_ring_source * 100:.2f}%",
         fontsize=10,
         color="red",
         ha="center",
@@ -17279,89 +17282,125 @@ def plot_fw_inboard_toroidal_angle_load(
         },
         zorder=100,
     )
-
+    axis.set_title("Ring Source Toroidal View")
     axis.set_ylim([-axis.get_ylim()[1], axis.get_ylim()[1]])
 
 
-def plot_fw_inboard_toroidal_angle_load(
+def plot_ring_source_poloidal_view(
     axis: plt.Axes,
+    fig: plt.Figure,
     mfile: MFile,
     scan: int,
-    demo_ranges: bool,
-    colour_scheme: Literal[1, 2],
 ):
-
-    rad_fw_inboard_plasma_centre_toroidal = mfile.get(
-        "rad_fw_inboard_plasma_centre_toroidal", scan=scan
-    )
-    deg_fw_inboard_plasma_centre_toroidal = mfile.get(
-        "deg_fw_inboard_plasma_centre_toroidal", scan=scan
-    )
-    f_rad_fw_inboard_plasma_centre_toroidal = mfile.get(
-        "f_rad_fw_inboard_plasma_centre_toroidal", scan=scan
-    )
-
-    # Get rmajor and first wall distance
+    """Idealised poloidal (R-Z) diagram of the coaxial cylinder / annular disk
+    geometry used to compute the ring source solid angle fractions, with the
+    resulting fractions for each component annotated.
+    """
     rmajor = mfile.get("rmajor", scan=scan)
     rminor = mfile.get("rminor", scan=scan)
     dr_fw_plasma_gap_inboard = mfile.get("dr_fw_plasma_gap_inboard", scan=scan)
-    a = rminor + dr_fw_plasma_gap_inboard
+    dr_fw_plasma_gap_outboard = mfile.get("dr_fw_plasma_gap_outboard", scan=scan)
+    dz_fw_half = mfile.get("dz_fw_half", scan=scan)
+    i_single_null = mfile.get("i_single_null", scan=scan)
 
-    x_array = np.linspace(0, rmajor, 100)
-    # Calculate toroidal position: y = -(R-a)/sqrt(a*(2*R-a))*(R-x)
-    y = -(rmajor - a) / np.sqrt(a * (2 * rmajor - a)) * (rmajor - x_array)
+    f_ster_fw_inboard_ring_source = mfile.get("f_ster_fw_inboard_ring_source", scan=scan)
+    f_ster_fw_outboard_ring_source = mfile.get(
+        "f_ster_fw_outboard_ring_source", scan=scan
+    )
+    f_ster_div_lower_ring_source = mfile.get("f_ster_div_lower_ring_source", scan=scan)
+    f_ster_div_upper_ring_source = mfile.get("f_ster_div_upper_ring_source", scan=scan)
+
+    r_fw_inboard = rmajor - rminor - dr_fw_plasma_gap_inboard
+    r_fw_outboard = rmajor + rminor + dr_fw_plasma_gap_outboard
+
+    # Idealised coaxial cylinder (inboard/outboard) + annular disk (divertor)
     axis.plot(
-        x_array,
-        y,
-        color="black",
-        linewidth=2,
-        linestyle="--",
-        label="First Wall Load Line",
+        [r_fw_inboard, r_fw_inboard],
+        [-dz_fw_half, dz_fw_half],
+        color="green",
+        linewidth=3,
+        label="Inboard wall (cylinder)",
     )
     axis.plot(
-        x_array,
-        -y,
-        color="black",
-        linewidth=2,
-        linestyle="--",
-        label="First Wall Load Line",
+        [r_fw_outboard, r_fw_outboard],
+        [-dz_fw_half, dz_fw_half],
+        color="purple",
+        linewidth=3,
+        label="Outboard wall (cylinder)",
     )
-    toroidal_cross_section(axis, mfile, scan, demo_ranges, colour_scheme)
+    axis.plot(
+        [r_fw_inboard, r_fw_outboard],
+        [-dz_fw_half, -dz_fw_half],
+        color="black",
+        linewidth=3,
+        label="Divertor (disk)",
+    )
+    if i_single_null == 0:
+        axis.plot(
+            [r_fw_inboard, r_fw_outboard],
+            [dz_fw_half, dz_fw_half],
+            color="black",
+            linewidth=3,
+        )
 
-    angle_start = -deg_fw_inboard_plasma_centre_toroidal / 2
-    angle_end = deg_fw_inboard_plasma_centre_toroidal / 2
+    # Ring source point and sight-lines to the corners of the idealised geometry
+    axis.plot(rmajor, 0.0, marker="o", color="red", markersize=8, zorder=100)
+    for corner in (
+        (r_fw_inboard, dz_fw_half),
+        (r_fw_inboard, -dz_fw_half),
+        (r_fw_outboard, -dz_fw_half),
+    ):
+        axis.plot(
+            [rmajor, corner[0]],
+            [0.0, corner[1]],
+            color="grey",
+            linestyle="--",
+            linewidth=1,
+            zorder=50,
+        )
+    if i_single_null == 0:
+        axis.plot(
+            [rmajor, r_fw_outboard],
+            [0.0, dz_fw_half],
+            color="grey",
+            linestyle="--",
+            linewidth=1,
+            zorder=50,
+        )
 
-    theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
-    arc_x = rmajor - rad_fw_inboard_plasma_centre_toroidal * np.cos(theta)
-    arc_y = rad_fw_inboard_plasma_centre_toroidal * np.sin(theta)
+    axis.axhline(0.0, color="black", linestyle=":", linewidth=1)
+    axis.set_xlabel("Radial position, R [m]")
+    axis.set_ylabel("Vertical position, Z [m]")
+    axis.set_title("Ring Source Solid Angle Geometry (idealised)")
+    axis.legend(loc="upper right", fontsize=7)
+    axis.set_aspect("equal")
 
-    axis.plot(arc_x, arc_y, color="red", linewidth=2)
-
-    # Add angle label at the arc
-    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
-    label_radius = 0.5 * rmajor
-    label_x = rmajor - label_radius * np.cos(mid_angle)
-    label_y = label_radius * np.sin(mid_angle)
-
+    textstr = (
+        "$\\mathbf{Solid\\ angle\\ fractions:}$\n\n"
+        "$f_{in}=\\Omega_{cyl}/4\\pi ="
+        f"{f_ster_fw_inboard_ring_source * 100:.1f}\\%$\n"
+        "$f_{div,lower}=\\Omega_{disk}/4\\pi="
+        f"{f_ster_div_lower_ring_source * 100:.1f}\\%$\n"
+        "$f_{div,upper}="
+        f"{f_ster_div_upper_ring_source * 100:.1f}\\%$\n"
+        "$f_{out}=1-f_{in}-f_{div,lower}-f_{div,upper}="
+        f"{f_ster_fw_outboard_ring_source * 100:.1f}\\%$"
+    )
     axis.text(
-        label_x,
-        label_y,
-        f"${deg_fw_inboard_plasma_centre_toroidal:.1f}°$\n({f_rad_fw_inboard_plasma_centre_toroidal * 100:.2f}%)",
-        fontsize=10,
-        color="red",
-        ha="center",
-        va="center",
-        weight="bold",
+        0.02,
+        0.02,
+        textstr,
+        fontsize=8,
+        transform=axis.transAxes,
+        va="bottom",
+        ha="left",
         bbox={
-            "boxstyle": "round,pad=0.3",
-            "facecolor": "white",
-            "edgecolor": "red",
+            "boxstyle": "round",
+            "facecolor": "wheat",
             "alpha": 1.0,
+            "linewidth": 1.5,
         },
-        zorder=100,
     )
-
-    axis.set_ylim([-axis.get_ylim()[1], axis.get_ylim()[1]])
 
 
 def main_plot(
@@ -18000,7 +18039,6 @@ def main_plot(
     )
     plot_fw_90_deg_pipe_bend(pages["fw_td_cross_section"].add_subplot(337), m_file, scan)
 
-
     ax_blanket = _add_page("vessel_cross_section").add_subplot(122, aspect="equal")
     plot_blkt_structure(
         ax_blanket, pages["blkt_structure"], m_file, scan, radial_build, colour_scheme
@@ -18022,6 +18060,13 @@ def main_plot(
         scan=scan,
         demo_ranges=demo_ranges,
         colour_scheme=colour_scheme,
+    )
+
+    plot_ring_source_poloidal_view(
+        axis=_add_page("ring_source_solid_angles").add_subplot(122),
+        fig=pages["ring_source_solid_angles"],
+        mfile=m_file,
+        scan=scan,
     )
 
 
