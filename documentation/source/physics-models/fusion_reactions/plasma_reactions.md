@@ -79,7 +79,7 @@ Initialize the FusionReactionRate class with the given plasma profile.
 
 #### Attributes:
 - `plasma_profile (PlasmaProfile)`: The parameterized temperature and density profiles of the plasma.
-- `sigmav_dt_average (float)`: Average fusion reaction rate $\langle \sigma v \rangle$ for D-T.
+- `sigma_v_plasma_dt_vol_avg (float)`: Average fusion reaction rate $\langle \sigma v \rangle$ for D-T.
 - `pden_dhe3_total_vol_avg_mw (float)`: Fusion power density produced by the D-3He reaction.
 - `pden_dd_total_vol_avg_mw (float)`: Fusion power density produced by the D-D reactions.
 - `dt_power_density (float)`: Fusion power density produced by the D-T reaction.
@@ -134,7 +134,7 @@ There are 4 key functions for calculating the fusion reaction for the plasma. Th
 #### Attributes Updated
 The method updates the following attributes:
 
-- `self.sigmav_dt_average`: Average fusion reaction rate `<sigma v>` for D-T.
+- `self.sigma_v_plasma_dt_vol_avg`: Average fusion reaction rate `<sigma v>` for D-T.
 - `self.dt_power_density`: Fusion power density produced by the D-T reaction.
 - `self.alpha_power_density`: Power density of alpha particles produced.
 - `self.pden_non_alpha_charged_mw`: Power density of charged particles produced.
@@ -186,7 +186,7 @@ This method sets the required physics variables on the `physics` data structure 
 - `fusden_plasma_vol_avg`: Updated with `self.fusion_rate_density`
 - `fusden_plasma_alpha_vol_avg`: Updated with `self.alpha_rate_density`
 - `fusden_plasma_protons_vol_avg`: Updated with `self.fusden_plasma_protons_vol_avg`
-- `sigmav_dt_average`: Updated with `self.sigmav_dt_average`
+- `sigma_v_plasma_dt_vol_avg`: Updated with `self.sigma_v_plasma_dt_vol_avg`
 - `pden_plasma_dt_vol_avg_mw`: Updated with `self.dt_power_density`
 - `pden_dhe3_total_vol_avg_mw`: Updated with `self.pden_dhe3_total_vol_avg_mw`
 - `pden_dd_total_vol_avg_mw`: Updated with `self.pden_dd_total_vol_avg_mw`
