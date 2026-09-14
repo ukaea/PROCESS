@@ -1131,8 +1131,7 @@ class PlasmaDiamagneticCurrent(Model):
         j_dia_toroidal = -(dpdz * br - dpdr * bz) / b_total2
         current_dia = float(eq.grid.integrate(j_dia_toroidal * jacobian))
 
-        f_dia = current_dia / float(eq.Ip)
-        return f_dia
+        return current_dia / float(eq.Ip)
 
     def output(self):
         """Output the plasma diamagnetic current model results."""

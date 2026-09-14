@@ -45,8 +45,8 @@ if TYPE_CHECKING:
         PlasmaCurrent,
         PlasmaDiamagneticCurrent,
     )
-    from process.models.physics.plasma_fields import PlasmaFields
     from process.models.physics.plasma_equilibrium import PlasmaEquilibrium
+    from process.models.physics.plasma_fields import PlasmaFields
     from process.models.physics.plasma_geometry import PlasmaGeom
     from process.models.physics.plasma_profiles import PlasmaProfile
     from process.models.physics.scrape_off_layer import ScrapeOffLayer
@@ -641,10 +641,18 @@ class Physics(Model):
             )
 
         self.plasma_bootstrap_current.run()
-        if self.data.physics.i_equilibrium_solve == 1:   
+        if self.data.physics.i_equilibrium_solve == 1:
             zmain = 1.0 + self.data.physics.f_plasma_fuel_helium3
             if self.data.physics.i_fusion_reactions == "p-b11":
                 zmain = 1.0 + self.data.physics.f_plasma_fuel_boron11 * 4.0
+            n_i_ratio = (
+                self.data.physics.nd_plasma_ions_total_vol_avg
+                / self.data.physics.nd_plasma_electrons_vol_avg
+            )
+            t_i_ratio = (
+                self.data.physics.temp_plasma_ion_vol_avg_kev
+                / self.data.physics.temp_plasma_electron_vol_avg_kev
+            )
             self.data.current_drive.f_c_plasma_bootstrap = (
                 self.plasma_bootstrap_current.bootstrap_fraction_sauter_equilibrium(
                     rminor=self.data.physics.rminor,
@@ -652,9 +660,9 @@ class Physics(Model):
                     zmain=zmain,
                     rho=self.plasma_profile.neprofile.profile_x,
                     ne=self.plasma_profile.neprofile.profile_y,
-                    ni=self.plasma_profile.neprofile.profile_y * self.data.physics.nd_plasma_ions_total_vol_avg / self.data.physics.nd_plasma_electrons_vol_avg,
+                    ni=self.plasma_profile.neprofile.profile_y * n_i_ratio,
                     te=self.plasma_profile.teprofile.profile_y,
-                    ti=self.plasma_profile.teprofile.profile_y * self.data.physics.temp_plasma_ion_vol_avg_kev / self.data.physics.temp_plasma_electron_vol_avg_kev,
+                    ti=self.plasma_profile.teprofile.profile_y * t_i_ratio,
                     eq=self.plasma_equilibrium.eq,
                 )
             )

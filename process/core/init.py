@@ -36,6 +36,7 @@ from process.data_structure.physics_variables import (
 from process.data_structure.stellarator_variables import StellaratorModel
 from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.pfcoil import PFLocationTypes
+from process.models.physics.plasma_current import PlasmaCurrentModel
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
     PlasmaProfileShapeType,
