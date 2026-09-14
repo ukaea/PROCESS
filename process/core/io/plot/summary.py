@@ -9459,10 +9459,10 @@ def plot_div_lower_outboard_eich_target_profile(axis: plt.Axes, mfile: MFile, sc
     )
     axis.grid()
     axis.minorticks_on()
-    axis.set_title(r"Lower Outboard Eich Target Parallel Heat Flux Profile")
+    axis.set_title(r"Lower Outboard Eich Target Unmitigated Parallel Heat Flux Profile")
     axis.set_xlabel("Radial Position [m]")
     axis.set_xlim(r[0], r[-1])
-    axis.set_ylabel(r"$q_{||,t}$ [MW/m$^2$]")
+    axis.set_ylabel(r"$q_{||,t,\mathrm{unmitigated}}$ [MW/m$^2$]")
 
 
 def plot_sol_power_flux_profiles(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme):
@@ -9484,12 +9484,16 @@ def plot_sol_power_flux_profiles(axis: plt.Axes, mfile: MFile, scan: int, colour
     plasma_scale = max(rminor, abs(kappa * rminor), 1e-6)
     scale_factor = min(max(plasma_scale / 2.0, 0.7), 1.0)
     text_fontsize = 9 * scale_factor
+    sol_power_decay_model_description = OutbordSOLPowerDecayLengthModel(
+        mfile.get("i_len_sol_outboard_power_decay", scan=scan)
+    ).description
 
     outboard_pos = (rmajor + rminor, 0.0)
 
     axis.text(
         *outboard_pos,
-        f"$\\lambda_q = {len_sol_outboard_power_decay * 1e3:.3f}$ mm\n"
+        f"$\\lambda_q = {len_sol_outboard_power_decay * 1e3:.3f}$ mm "
+        f"({sol_power_decay_model_description})\n"
         f"$A_{{||}} = {a_plasma_outboard_sol_parallel:.4f}$ m$^2$\n"
         f"$q_{{||}} = {pflux_plasma_outboard_sol_parallel_mw:,.2f}$ MW/m$^2$",
         fontsize=text_fontsize,

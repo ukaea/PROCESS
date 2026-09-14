@@ -156,12 +156,11 @@ class ScrapeOffLayer(Model):
         po.oheadr(self.outfile, "Plasma Scrape Off Layer")
 
         po.osubhd(self.outfile, "Power Decay Lengths (λ_q):")
-
         po.ovarre(
             self.outfile,
-            "Outboard SOL power decay length (λₒᵤₜ_q) [m]",
-            "(len_sol_outboard_power_decay)",
-            self.data.physics.len_sol_outboard_power_decay,
+            "Outboard SOL power decay length model switch",
+            "(i_len_sol_outboard_power_decay)",
+            self.data.physics.i_len_sol_outboard_power_decay,
         )
         po.ocmmnt(
             self.outfile,
@@ -171,6 +170,13 @@ class ScrapeOffLayer(Model):
             ).description
             + " ",
         )
+        po.ovarre(
+            self.outfile,
+            "Outboard SOL power decay length (λₒᵤₜ_q) [m]",
+            "(len_sol_outboard_power_decay)",
+            self.data.physics.len_sol_outboard_power_decay,
+        )
+
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
