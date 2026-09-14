@@ -3,7 +3,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.models.physics.profiles import PlasmaProfile
+from process.models.physics.plasma_profiles import PlasmaProfile
 
 
 @pytest.fixture
@@ -84,7 +84,7 @@ def test_calculate_pedestal_profile_on_axis_density(
         radius_plasma_pedestal_density_norm=radius_plasma_pedestal_density_norm,
         nd_pedestal=nped,
         nd_separatrix=nsep,
-        nd_vol_avg=nav,
+        nd_vol_average=nav,
         alphan=alphan,
     ) == pytest.approx(9.7756974320342041e19)
 

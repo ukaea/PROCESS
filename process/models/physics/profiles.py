@@ -369,7 +369,7 @@ class ElectronDensityProfile(Profile):
                 radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
                 nd_pedestal=self.data.physics.nd_plasma_pedestal_electron,
                 nd_separatrix=self.data.physics.nd_plasma_separatrix_electron,
-                nd_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                nd_vol_average=self.data.physics.nd_plasma_electrons_vol_avg,
                 alphan=self.data.physics.alphan,
             )
         self.data.physics.nd_plasma_ions_on_axis = (
