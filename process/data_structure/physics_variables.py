@@ -805,7 +805,7 @@ class PhysicsData:
     fusrat_total: float = 0.0
     """fusion reaction rate, from beams and plasma (reactions/sec)"""
 
-    sigmav_dt_average: float = 0.0
+    sigma_v_plasma_dt_vol_avg: float = 0.0
     """Volume averaged plasma D-T fusion reactivity (〈σv〉ᵥ) [m³/s]"""  # noqa: RUF001
 
     fusden_plasma_dt_profile: list[float] = field(default_factory=list)
