@@ -3458,6 +3458,8 @@ def test_detailed_physics_run_computes_profiles(monkeypatch, physics, process_mo
     plasma.teprofile.profile_y = np.array([1.0, 2.0, 3.0])  # keV
     plasma.neprofile.profile_x = plasma.teprofile.profile_x
     plasma.neprofile.profile_y = np.array([1.0e19, 2.0e19, 3.0e19])  # m^-3
+    plasma.tiprofile.profile_x = plasma.teprofile.profile_x
+    plasma.tiprofile.profile_y = np.array([1.0, 2.0, 3.0])  # keV
 
     monkeypatch.setattr(
         physics.data.physics,
