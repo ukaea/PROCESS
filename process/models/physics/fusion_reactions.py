@@ -224,6 +224,12 @@ class PlasmaReactions:
             ion_temperature_profile=ion_temperature_profile, reaction_constants=dt
         )
 
+        self.sigmav_dt_average = calculate_vol_avg_of_profile(
+            profile_x=self.plasma_profile.neprofile.profile_x,
+            profile_y=sigma_v_profile,
+            profile_dx=self.plasma_profile.neprofile.profile_dx,
+        )
+
         # Full fusion reaction rate density profile for the D-T reaction [reactions/m³/s]
         self.data.physics.fusden_plasma_dt_profile = fusden_plasma_dt_profile = (
             sigma_v_profile
@@ -680,6 +686,13 @@ class PlasmaReactions:
             "Volume-averaged D-T fusion power density: plasma [MW/m³]",
             "(pden_plasma_dt_vol_avg_mw)",
             self.data.physics.pden_plasma_dt_vol_avg_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume-averaged plasma D-T fusion reactivity (〈σv〉ᵥ) [m³/s]",  # noqa: RUF001
+            "(sigmav_dt_average)",
+            self.data.physics.sigmav_dt_average,
             "OP ",
         )
         po.ovarre(
