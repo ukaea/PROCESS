@@ -9,13 +9,15 @@ To calculate the coolant pumping power we use the change in enthalpies of the co
 The mechanical pumping power is defined as:
 
 $$
-P = \frac{\frac{\dot{m} \times \left(H_{\text{out}}-H_{\text{in}}\right)}{\eta}}{\left(1-fp\right)}
+P = \frac{\frac{\dot{m} \times \left(H_{\text{out}}-H_{\text{in}}\right)}{\eta}}{\left(1-f_p\right)}
 $$
 
 where $\dot{m}$ is the coolant mass flow rate, $H$ is the coolant enthalpy, $\eta$ is the isentropic efficiency of the pump and $\gamma$ is the adiabatic index of the coolant.
 
+$f_p$ is a seocondary correction accounting for the fact that some of the pump's mechanical work reheats the coolant, and that reheat is already implicitly present in the prescribed $\left(T_{\text{pump,in}}-T_{\text{pump,out}}\right)$ used elsewhere in the plant energy balance, without this correction that portion of the pump work would be double counted. The term uses the classical isentropic ideal-gas relation $T_2/T_1 = (P_2/P_1)^{(\gamma-1)/\gamma}$
+
 $$
-fp = \frac{T_{\text{pump,out}}\left(\frac{P_{\text{pump,out}}}{P_{\text{pump,in}}}\right)^{-\frac{\gamma -1}{\gamma}}}{\eta \left(T_{\text{pump,in}}-T_{\text{pump,out}}\right)}
+f_p = \frac{T_{\text{pump,out}}\left(\frac{P_{\text{pump,out}}}{P_{\text{pump,in}}}\right)^{-\frac{\gamma -1}{\gamma}}}{\eta \left(T_{\text{pump,in}}-T_{\text{pump,out}}\right)}
 $$
 
 ------------------

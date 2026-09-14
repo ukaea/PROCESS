@@ -213,7 +213,7 @@ def test_coolant_friction_loss(coolantfrictionlossparam, monkeypatch, blanket_li
     )
 
 
-def test_pumppower_primary_helium():
+def test_pumppower_secondary_pb_li():
 
     data = {
         "i_liquid_breeder": 2,
@@ -228,10 +228,10 @@ def test_pumppower_primary_helium():
         "etaiso_liq": 0.85,
     }
 
-    assert pytest.approx(coolant_pumping_power(**data)) == 1.8251284651310427
+    assert pytest.approx(coolant_pumping_power(**data)) == 1.3062070319498325
 
 
-def test_pumppower_secondary_pb_li():
+def test_pumppower_primary_helium():
 
     data = {
         "i_liquid_breeder": 1,

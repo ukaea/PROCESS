@@ -359,9 +359,6 @@ def coolant_pumping_power(
     # The pump adds the pressure lost going through the coolant channels back
     pres_coolant_pump_outlet = pres_coolant_pump_inlet + dpres_coolant
 
-    # Adiabatic index for helium or water
-    gamma = (5 / 3) if i_coolant_type == CoolantType.HELIUM else (4 / 3)
-
     # If calculating for primary coolant
     if i_liquid_breeder == 1:
         # The pumping power is be calculated in the most general way,
@@ -371,6 +368,13 @@ def coolant_pumping_power(
             fluid_name=CoolantType(i_coolant_type).full_name,
             temperature=temp_coolant_pump_outlet,
             pressure=pres_coolant_pump_outlet,
+        )
+
+        # Real gamma (cp/cv) at the pump outlet state, so liquid water (gamma~1)
+        # and superheated steam (gamma~1.3) are both handled correctly
+        gamma = (
+            pump_outlet_fluid_properties.specific_heat_const_p
+            / pump_outlet_fluid_properties.specific_heat_const_v
         )
 
         # Assume isentropic pump so that s1 = s2
@@ -410,17 +414,9 @@ def coolant_pumping_power(
         # Calculate specific volume
         spec_vol = 1 / den_coolant
 
-        # Pumping power (MW) is given by pressure change, with a correction for
-        # the isentropic efficiency of the pump.
-        fp = (
-            temp_coolant_pump_outlet
-            * (
-                1
-                - (pres_coolant_pump_outlet / pres_coolant_pump_inlet)
-                ** -((gamma - 1) / gamma)
-            )
-            / (etaiso_liq * (temp_coolant_pump_inlet - temp_coolant_pump_outlet))
-        )
+        # Liquid metal breeders (PbLi/Li) are incompressible, so there is no
+        # gas-law reheat effect from compression: fp is negligible (gamma~1).
+        fp = 0.0
         pumppower = (
             1e-6 * mflow_coolant_total * spec_vol * dpres_coolant / etaiso_liq
         ) / (1 - fp)
