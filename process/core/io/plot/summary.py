@@ -11986,6 +11986,29 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         label=r"Total",
     )
 
+    # Show the plasma volume-averaged rate density and its position on the
+    # profile.
+    profile_positions = np.linspace(0, 1, len(fusrat_plasma_total_profile))
+    profile_rates = np.asarray(fusrat_plasma_total_profile)
+    average_rate = mfile.get("fusden_plasma_vol_avg", scan=scan)
+    axis.axhline(
+        average_rate,
+        color="black",
+        linestyle="--",
+        linewidth=0.9,
+        label="Plasma volume average",
+    )
+
+    average_position = profile_positions[
+        np.nanargmin(np.abs(profile_rates - average_rate))
+    ]
+    axis.axvline(
+        average_position,
+        color="black",
+        linestyle="--",
+        linewidth=0.9,
+    )
+
     # Plot fusion power (solid lines, right axis) with axis color and different linestyles
     ax2 = axis.twinx()
     ax2.spines["right"].set_color("blue")
