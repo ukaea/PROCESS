@@ -10,7 +10,6 @@ from typing_extensions import Self
 from process.core import constants
 from process.core import process_output as po
 from process.core.data_structure.base import DataStructure
-from process.data_structure.physics_variables import PlasmaIgnitionModel
 from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.physics.profiles import calculate_vol_avg_of_profile
 
@@ -930,12 +929,6 @@ class BeamReactions:
         self.p_beam_alpha_mw = 0.0
         self.p_beam_neutron_mw = 0.0
         self.p_beam_dt_mw = 0.0
-
-        if (self.data.current_drive.c_beam_total == 0.0) or (
-            PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
-            == PlasmaIgnitionModel.IGNITED
-        ):
-            return
 
         self.beta_beam, self.nd_beam_ions_out, self.p_beam_alpha_mw = beam_fusion(
             self.data.physics.beamfus0,
