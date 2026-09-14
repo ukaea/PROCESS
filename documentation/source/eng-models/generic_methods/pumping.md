@@ -190,6 +190,10 @@ where $\dot{m}$ is the required mass flow rate in, $P$ is the heating power to b
 
 !!! info "Choice of specific heat capacity"
 
-    For pumping, the specific heat capacity for constant pressure $(c_{\text{p}})$ is used as cooling loops are open-flow systems where the fluid moves continuously through pipes, heat exchangers, and pumps. As the coolant heats up, it expands freely along the loop. Because it is free to expand, the local pressure remains relatively constant while the volume changes.
+    For pumping, the specific heat capacity for constant pressure $(c_{\text{p}})$ is used because
+    cooling loops are open, steady-flow systems: coolant flows continuously through pipes, heat
+    exchangers and pumps at a system pressure that is actively maintained by the pump's operating
+    point and any pressure-control components (e.g. pressurisers, control valves), rather than
+    varying freely with the coolant's volume.
 
     You would only use the specific heat capacity for constant volume $(c_{\text{v}})$ if the coolant was completely sealed inside a rigid, unyielding container with zero flow, where heating it would cause the pressure to spike but the volume to stay exactly the same.
