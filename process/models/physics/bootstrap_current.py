@@ -1506,10 +1506,7 @@ class SauterBootstrapCurrent(Model):
 
         # Calculate electron and ion temperature profiles
         tempe = plasma_profile.teprofile.profile_y
-        tempi = (
-            self.data.physics.temp_plasma_ion_vol_avg_kev
-            / self.data.physics.temp_plasma_electron_vol_avg_kev
-        ) * tempe
+        tempi = plasma_profile.tiprofile.profile_y
 
         # Flat Zeff profile assumed
         # Return tempi like array object filled with zeff

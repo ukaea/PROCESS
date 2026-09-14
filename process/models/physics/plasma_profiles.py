@@ -298,11 +298,7 @@ class PlasmaProfile(Model):
         self.data.physics.pres_plasma_ion_total_profile = (
             self.data.physics.nd_plasma_ions_total_vol_avg
             * (self.neprofile.profile_y / self.data.physics.nd_plasma_electrons_vol_avg)
-        ) * (
-            self.teprofile.profile_y
-            * constants.KILOELECTRON_VOLT
-            * self.data.physics.f_temp_plasma_ion_electron
-        )
+        ) * (self.tiprofile.profile_y * constants.KILOELECTRON_VOLT)
 
         # Total pressure profile (Pa)
         self.data.physics.pres_plasma_thermal_total_profile = (
@@ -341,11 +337,7 @@ class PlasmaProfile(Model):
         self.data.physics.pres_plasma_fuel_profile = (
             self.data.physics.nd_plasma_fuel_ions_vol_avg
             * (self.neprofile.profile_y / self.data.physics.nd_plasma_electrons_vol_avg)
-        ) * (
-            self.teprofile.profile_y
-            * constants.KILOELECTRON_VOLT
-            * self.data.physics.f_temp_plasma_ion_electron
-        )
+        ) * (self.tiprofile.profile_y * constants.KILOELECTRON_VOLT)
 
         #  Pressure profile index (only true for a parabolic profile)
         #  N.B. pres_plasma_thermal_on_axis is NOT equal to <p> * (1 + alphap),
