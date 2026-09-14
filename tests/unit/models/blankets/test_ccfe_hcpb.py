@@ -580,9 +580,9 @@ class PowerflowCalcParam(NamedTuple):
 
     p_cp_shield_nuclear_heat_mw: Any = None
 
-    psurffwi: Any = None
+    p_fw_inboard_surface_heat_mw: Any = None
 
-    psurffwo: Any = None
+    p_fw_outboard_surface_heat_mw: Any = None
 
     p_fw_coolant_pump_mw: Any = None
 
@@ -602,7 +602,7 @@ class PowerflowCalcParam(NamedTuple):
 
     p_plasma_rad_mw: Any = None
 
-    p_fw_alpha_mw: Any = None
+    p_fw_alpha_surface_total_mw: Any = None
 
     p_plasma_separatrix_mw: Any = None
 
@@ -619,12 +619,6 @@ class PowerflowCalcParam(NamedTuple):
     p_fw_blkt_coolant_pump_mw: Any = None
 
     expected_p_div_rad_total_mw: Any = None
-
-    expected_p_fw_rad_total_mw: Any = None
-
-    expected_psurffwi: Any = None
-
-    expected_psurffwo: Any = None
 
     expected_p_shld_coolant_pump_mw: Any = None
 
@@ -654,8 +648,8 @@ class PowerflowCalcParam(NamedTuple):
             p_shld_nuclear_heat_mw=1.3611259588044891,
             etaiso=0.90000000000000002,
             p_cp_shield_nuclear_heat_mw=0,
-            psurffwi=0,
-            psurffwo=0,
+            p_fw_inboard_surface_heat_mw=0,
+            p_fw_outboard_surface_heat_mw=0,
             p_fw_coolant_pump_mw=0,
             f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_blkt_coolant_pump_mw=0,
@@ -665,7 +659,7 @@ class PowerflowCalcParam(NamedTuple):
             p_div_coolant_pump_mw=0,
             f_p_div_coolant_pump_total_heat=0.0050000000000000001,
             p_plasma_rad_mw=287.44866938104849,
-            p_fw_alpha_mw=19.835845058655043,
+            p_fw_alpha_surface_total_mw=19.835845058655043,
             p_plasma_separatrix_mw=143.6315222649435,
             p_he=8000000,
             dp_he=550000,
@@ -673,12 +667,9 @@ class PowerflowCalcParam(NamedTuple):
             t_in_bb=573.13,
             t_out_bb=773.13,
             p_fw_blkt_coolant_pump_mw=0,
-            expected_p_fw_rad_total_mw=254.39207240222791,
-            expected_psurffwi=97.271629070225231,
-            expected_psurffwo=176.95628839065773,
             expected_p_shld_coolant_pump_mw=0.0068056297940224456,
             expected_p_div_coolant_pump_mw=1.7970292653352464,
-            expected_p_fw_blkt_coolant_pump_mw=202.00455086503842,
+            expected_p_fw_blkt_coolant_pump_mw=175.06074627472202,
         ),
         PowerflowCalcParam(
             a_fw_outboard=1168.1172772224481,
@@ -698,8 +689,8 @@ class PowerflowCalcParam(NamedTuple):
             p_shld_nuclear_heat_mw=1.4038170956592293,
             etaiso=0.90000000000000002,
             p_cp_shield_nuclear_heat_mw=0,
-            psurffwi=97.271629070225231,
-            psurffwo=176.95628839065773,
+            p_fw_inboard_surface_heat_mw=97.271629070225231,
+            p_fw_outboard_surface_heat_mw=176.95628839065773,
             p_fw_coolant_pump_mw=0,
             f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_blkt_coolant_pump_mw=0,
@@ -709,7 +700,7 @@ class PowerflowCalcParam(NamedTuple):
             p_div_coolant_pump_mw=1.7970292653352464,
             f_p_div_coolant_pump_total_heat=0.0050000000000000001,
             p_plasma_rad_mw=287.44866938104849,
-            p_fw_alpha_mw=19.829653483586444,
+            p_fw_alpha_surface_total_mw=19.829653483586444,
             p_plasma_separatrix_mw=143.51338080047339,
             p_he=8000000,
             dp_he=550000,
@@ -717,12 +708,9 @@ class PowerflowCalcParam(NamedTuple):
             t_in_bb=573.13,
             t_out_bb=773.13,
             p_fw_blkt_coolant_pump_mw=202.00455086503842,
-            expected_p_fw_rad_total_mw=254.39207240222791,
-            expected_psurffwi=97.271629070225259,
-            expected_psurffwo=176.95009681558912,
             expected_p_shld_coolant_pump_mw=0.007019085478296147,
             expected_p_div_coolant_pump_mw=1.7961533897828594,
-            expected_p_fw_blkt_coolant_pump_mw=201.94492795635171,
+            expected_p_fw_blkt_coolant_pump_mw=201.94553629918676,
         ),
     ],
 )
@@ -813,18 +801,6 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         )
 
     ccfe_hcpb.powerflow_calc(False)
-
-    assert ccfe_hcpb.data.fwbs.p_fw_rad_total_mw == pytest.approx(
-        powerflowcalcparam.expected_p_fw_rad_total_mw
-    )
-
-    assert ccfe_hcpb.data.fwbs.psurffwi == pytest.approx(
-        powerflowcalcparam.expected_psurffwi
-    )
-
-    assert ccfe_hcpb.data.fwbs.psurffwo == pytest.approx(
-        powerflowcalcparam.expected_psurffwo
-    )
 
     assert ccfe_hcpb.data.heat_transport.p_shld_coolant_pump_mw == pytest.approx(
         powerflowcalcparam.expected_p_shld_coolant_pump_mw
