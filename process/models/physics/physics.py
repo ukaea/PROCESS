@@ -45,8 +45,8 @@ if TYPE_CHECKING:
         PlasmaCurrent,
         PlasmaDiamagneticCurrent,
     )
-    from process.models.physics.plasma_fields import PlasmaFields
     from process.models.physics.plasma_equilibrium import PlasmaEquilibrium
+    from process.models.physics.plasma_fields import PlasmaFields
     from process.models.physics.plasma_geometry import PlasmaGeom
     from process.models.physics.plasma_profiles import PlasmaProfile
     from process.models.physics.scrape_off_layer import ScrapeOffLayer
@@ -386,21 +386,24 @@ class Physics(Model):
                 / self.data.physics.temp_plasma_electron_vol_avg_kev
             )
             self.plasma_equilibrium.solve_axis_for_volume_averages(f_pres_ie=f_pres_ie)
-            
-            self.data.physics.kappa95 = np.interp(0.95, self.plasma_equilibrium.eq.psin, self.plasma_equilibrium.eq.kappa)
-            triang = self.plasma_equilibrium.miller_delta_profile(self.plasma_equilibrium.eq)
-            self.data.physics.triang95 = np.interp(0.95, self.plasma_equilibrium.eq.psin, triang)
-            r = self.plasma_equilibrium.eq.R[-1,:]
-            z = self.plasma_equilibrium.eq.Z[-1,:]
-            (_, 
-                self.data.physics.a_plasma_surface_outboard, 
-                self.data.physics.a_plasma_surface, 
-                self.data.physics.len_plasma_poloidal, 
-                self.data.physics.a_plasma_poloidal, 
-                self.data.physics.vol_plasma
+
+            eq = self.plasma_equilibrium.eq
+            psin = eq.psin
+            self.data.physics.kappa95 = float(np.interp(0.95, psin, eq.kappa))
+            triang = self.plasma_equilibrium.miller_delta_profile(eq)
+            self.data.physics.triang95 = float(np.interp(0.95, psin, triang))
+            r = eq.R[-1, :]
+            z = eq.Z[-1, :]
+            (
+                _,
+                self.data.physics.a_plasma_surface_outboard,
+                self.data.physics.a_plasma_surface,
+                self.data.physics.len_plasma_poloidal,
+                self.data.physics.a_plasma_poloidal,
+                self.data.physics.vol_plasma,
             ) = self.geometry.cal_integral_geometry(r, z)
-            self.data.physics.q0 = self.plasma_equilibrium.eq.q[0]
-            self.data.physics.q95 = np.interp(0.95, self.plasma_equilibrium.eq.psin, self.plasma_equilibrium.eq.q)
+            self.data.physics.q0 = eq.q[0]
+            self.data.physics.q95 = float(np.interp(0.95, psin, eq.q))
             self.plasma_profile.run()
             self.data.physics.ind_plasma_internal_norm = (
                 self.plasma_equilibrium.calculate_ind_plasma_internal_norm(
@@ -608,10 +611,18 @@ class Physics(Model):
             )
 
         self.plasma_bootstrap_current.run()
-        if self.data.physics.i_equilibrium_solve == 1:   
+        if self.data.physics.i_equilibrium_solve == 1:
             zmain = 1.0 + self.data.physics.f_plasma_fuel_helium3
             if self.data.physics.i_fusion_reactions == "p-b11":
                 zmain = 1.0 + self.data.physics.f_plasma_fuel_boron11 * 4.0
+            n_i_ratio = (
+                self.data.physics.nd_plasma_ions_total_vol_avg
+                / self.data.physics.nd_plasma_electrons_vol_avg
+            )
+            t_i_ratio = (
+                self.data.physics.temp_plasma_ion_vol_avg_kev
+                / self.data.physics.temp_plasma_electron_vol_avg_kev
+            )
             self.data.current_drive.f_c_plasma_bootstrap = (
                 self.plasma_bootstrap_current.bootstrap_fraction_sauter_equilibrium(
                     rminor=self.data.physics.rminor,
@@ -619,9 +630,9 @@ class Physics(Model):
                     zmain=zmain,
                     rho=self.plasma_profile.neprofile.profile_x,
                     ne=self.plasma_profile.neprofile.profile_y,
-                    ni=self.plasma_profile.neprofile.profile_y * self.data.physics.nd_plasma_ions_total_vol_avg / self.data.physics.nd_plasma_electrons_vol_avg,
+                    ni=self.plasma_profile.neprofile.profile_y * n_i_ratio,
                     te=self.plasma_profile.teprofile.profile_y,
-                    ti=self.plasma_profile.teprofile.profile_y * self.data.physics.temp_plasma_ion_vol_avg_kev / self.data.physics.temp_plasma_electron_vol_avg_kev,
+                    ti=self.plasma_profile.teprofile.profile_y * t_i_ratio,
                     eq=self.plasma_equilibrium.eq,
                 )
             )
@@ -1299,13 +1310,15 @@ class Physics(Model):
             if self.data.physics.i_nd_plasma_protons == 0:
                 self.data.physics.nd_plasma_protons_vol_avg = 0.0
             elif self.data.physics.i_nd_plasma_protons == 1:
-                # 作为输入
                 self.data.physics.nd_plasma_protons_vol_avg = (
                     self.data.physics.f_nd_protons_electrons_input
                     * self.data.physics.nd_plasma_electrons_vol_avg
                 )
             else:
-                raise ProcessValueError(f"Invalid value for i_nd_plasma_protons: {self.data.physics.i_nd_plasma_protons}")
+                raise ProcessValueError(
+                    "Invalid value for i_nd_plasma_protons",
+                    i_nd_plasma_protons=self.data.physics.i_nd_plasma_protons,
+                )
         # ======================================================================
 
         # Beam hot ion component
@@ -1326,7 +1339,8 @@ class Physics(Model):
         # Sum of Zi.ni for all impurity ions (those with charge > helium)
         znimp = 0.0
         for imp in range(N_IMPURITIES):
-            if self.data.impurity_radiation.impurity_arr_z[imp] > 2 and self.data.impurity_radiation.impurity_arr_z[imp] != 5:
+            z_imp = self.data.impurity_radiation.impurity_arr_z[imp]
+            if z_imp > 2 and z_imp != 5:
                 znimp += impurity_radiation.calculate_average_charge_at_temp(
                     imp,
                     np.array([self.data.physics.temp_plasma_electron_vol_avg_kev]),
@@ -1414,7 +1428,8 @@ class Physics(Model):
         # Total impurity density
         self.data.physics.nd_plasma_impurities_vol_avg = 0.0
         for imp in range(N_IMPURITIES):
-            if self.data.impurity_radiation.impurity_arr_z[imp] > 2 and self.data.impurity_radiation.impurity_arr_z[imp] != 5:
+            z_imp = self.data.impurity_radiation.impurity_arr_z[imp]
+            if z_imp > 2 and z_imp != 5:
                 self.data.physics.nd_plasma_impurities_vol_avg += (
                     self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
                     * self.data.physics.nd_plasma_electrons_vol_avg
@@ -1538,7 +1553,8 @@ class Physics(Model):
             + (self.data.physics.m_beam_amu * self.data.physics.nd_beam_ions)
         )
         for imp in range(N_IMPURITIES):
-            if self.data.impurity_radiation.impurity_arr_z[imp] > 2 and self.data.impurity_radiation.impurity_arr_z[imp] != 5:
+            z_imp = self.data.impurity_radiation.impurity_arr_z[imp]
+            if z_imp > 2 and z_imp != 5:
                 self.data.physics.m_ions_total_amu += (
                     self.data.physics.nd_plasma_electrons_vol_avg
                     * self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
@@ -1587,7 +1603,7 @@ class Physics(Model):
                 / constants.M_TRITON_AMU
             )
         ) / self.data.physics.nd_plasma_electrons_vol_avg
-        
+
         if self.data.physics.i_fusion_reactions == "p-b11":
             self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg = (
                 (
@@ -1610,7 +1626,8 @@ class Physics(Model):
             ) / self.data.physics.nd_plasma_electrons_vol_avg
 
         for imp in range(N_IMPURITIES):
-            if self.data.impurity_radiation.impurity_arr_z[imp] > 2 and self.data.impurity_radiation.impurity_arr_z[imp] != 5:
+            z_imp = self.data.impurity_radiation.impurity_arr_z[imp]
+            if z_imp > 2 and z_imp != 5:
                 self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg += (
                     self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
                     * impurity_radiation.calculate_average_charge_at_temp(

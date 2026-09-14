@@ -96,8 +96,8 @@ from process.models.physics.plasma_current import (
     PlasmaCurrent,
     PlasmaDiamagneticCurrent,
 )
-from process.models.physics.plasma_fields import PlasmaFields
 from process.models.physics.plasma_equilibrium import PlasmaEquilibrium
+from process.models.physics.plasma_fields import PlasmaFields
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.physics.profiles import NeProfile, TeProfile

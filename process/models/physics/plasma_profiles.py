@@ -198,7 +198,6 @@ class PlasmaProfile(Model):
             / self.data.physics.temp_plasma_electron_vol_avg_kev
         )
 
-
     def pedestal_parameterisation(self):
         """Instance temperature and density profiles then integrate them, setting
         physics variables temp_plasma_electron_density_weighted_kev and

@@ -999,7 +999,7 @@ class PhysicsData:
 
     i_alphaj: int = 0
     """Switch for plasma current profile index scaling (αⱼ) """
-    
+
     i_equilibrium_solve: int = 0
     """switch for veqpy equilibrium iteration on ne/te axis values
     - =0 use standard PROCESS profile parameterisation

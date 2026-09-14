@@ -218,6 +218,11 @@ class PlasmaGeom(Model):
         terms and input values. It updates the `physics_variables` with calculated
         values for kappa, triangularity, surface area, volume, etc.
 
+        Raises
+        ------
+        ProcessValueError
+            If LCFS or geometry inputs are inconsistent.
+
         References
         ----------
             - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
@@ -1138,6 +1143,11 @@ class PlasmaGeom(Model):
         tuple
             inboard surface area, outboard surface area, total surface area,
             poloidal perimeter, poloidal cross-section area, plasma volume
+
+        Raises
+        ------
+        ProcessValueError
+            If LCFS arrays are invalid.
         """
         r = np.asarray(r_array, dtype=float)
         z = np.asarray(z_array, dtype=float)

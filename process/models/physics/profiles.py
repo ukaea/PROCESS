@@ -353,7 +353,7 @@ class NeProfile(Profile):
                 self.data.physics.nd_plasma_electrons_vol_avg,
                 self.data.physics.alphan,
             )
-        
+
         if (
             hasattr(self, "models")
             and self.models.plasma_equilibrium.eq is not None

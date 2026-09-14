@@ -1,14 +1,14 @@
+"""Fixed-boundary plasma equilibrium via optional veqpy integration."""
+
 import os
 from pathlib import Path
 from typing import Any
 
 import numpy as np
-import scipy as sp
 
-import process.core.constants as constants
-from process.core.data_structure.base import DataStructure
+from process.core import constants
 from process.core.model import Model
-from process.models.physics.profiles import NeProfile, TeProfile, PlasmaProfileShapeType
+from process.models.physics.profiles import NeProfile, TeProfile
 
 _veqpy: Any = None
 
@@ -20,13 +20,15 @@ def _import_veqpy():
         numba_cache = Path(__file__).resolve().parent / ".numba_cache"
         numba_cache.mkdir(exist_ok=True)
         os.environ.setdefault("NUMBA_CACHE_DIR", str(numba_cache))
-        import veqpy as veq
+        import veqpy as veq  # noqa: PLC0415
 
         _veqpy = veq
     return _veqpy
 
 
 class PlasmaEquilibrium(Model):
+    """Solve and hold veqpy equilibrium results for PROCESS physics."""
+
     def __init__(self):
         self.eq = None
         self.te_profile = TeProfile()
@@ -57,13 +59,20 @@ class PlasmaEquilibrium(Model):
         delta,
         b_toroidal_rmajor,
     ):
+        """Build and solve a veqpy equilibrium for given 1D profiles and Ip.
+
+        Raises
+        ------
+        RuntimeError
+            If the veqpy solver does not converge.
+        """
         veq = _import_veqpy()
         nrho = 51
         rho = np.linspace(0.0, 1.0, nrho)
         p = np.interp(rho, rho_pres_array, pres_thermal_plasma_array)
         jtor = np.interp(rho, rho_j_array, j_toroidal_array)
 
-        # PJ1 + coordinate=rho + nodes=uniform：psin 由源积分得到，不能再开 active psin 剖面
+        # PJ1/rho/uniform: psin from source integration; no active psin profile.
         topology = veq.KernelTopology(
             h_count=3,
             v_count=0,
@@ -94,11 +103,14 @@ class PlasmaEquilibrium(Model):
             ka=kappa,
             s_offsets=(float(np.arcsin(np.clip(delta, -1.0, 1.0))),),
         )
-        source = veq.KernelSource(p=p, jtor=jtor, Ip=float(current_plasma_total_ampere))
+        source = veq.KernelSource(
+            p=p, jtor=jtor, Ip=float(current_plasma_total_ampere)
+        )
         result = kernel.solve(boundary=boundary, source=source)
         if not result.success:
             raise RuntimeError(
-                f"veqpy equilibrium solve failed: residual={result.raw_norm:.3e}, nfev={result.nfev}"
+                "veqpy equilibrium solve failed: "
+                f"residual={result.raw_norm:.3e}, nfev={result.nfev}"
             )
         return kernel.build_equilibrium()
 
@@ -112,6 +124,7 @@ class PlasmaEquilibrium(Model):
 
     @staticmethod
     def get_volume_average_2(eq, profile):
+        """Volume average of a field already defined on the equilibrium grid."""
         fun = np.asarray(profile, dtype=np.float64) * eq.R * eq.J
         vol = eq.grid.integrate(eq.R * eq.J)
         return float(eq.grid.integrate(fun) / vol)
@@ -131,6 +144,7 @@ class PlasmaEquilibrium(Model):
         te_axis,
         rho_temp_ped,
     ):
+        """Build thermal pressure vs rho from ne/te pedestal profiles."""
         rho = np.linspace(0.0, 1.0, 101)
         self.ne_profile.profile_y = np.zeros_like(rho)
         self.te_profile.profile_y = np.zeros_like(rho)
@@ -157,12 +171,11 @@ class PlasmaEquilibrium(Model):
             * self.te_profile.profile_y
             * constants.KILOELECTRON_VOLT
         )
-        pres_i_profile = (
-            pres_e_profile * f_pres_ie
-        )
+        pres_i_profile = pres_e_profile * f_pres_ie
         return rho, (pres_e_profile + pres_i_profile)
 
     def iterate_equilibrium(self, ne_axis, te_axis, f_pres_ie):
+        """One veqpy solve for given axis ne/te; return volume averages."""
         rho = np.linspace(0.0, 1.0, 101)
         j_toroidal_array = (1.0 - rho**2) ** self.data.physics.alphaj
         rho, pres_profile = self.pres_profile(
@@ -212,6 +225,11 @@ class PlasmaEquilibrium(Model):
         -------
         tuple[float, float, float, float, object]
             (ne_axis, te_axis, ne_vol_avg, te_vol_avg, eq)
+
+        Raises
+        ------
+        RuntimeError
+            If axis values fail to converge within ``max_iter``.
         """
         self._bind_profile_data()
         physics = self.data.physics
@@ -240,7 +258,9 @@ class PlasmaEquilibrium(Model):
             )
 
         for _ in range(max_iter):
-            ne_vol_avg, te_vol_avg, eq = self.iterate_equilibrium(ne_axis, te_axis, f_pres_ie)
+            ne_vol_avg, te_vol_avg, eq = self.iterate_equilibrium(
+                ne_axis, te_axis, f_pres_ie
+            )
             ne_err = abs(ne_vol_avg - ne_vol_avg_target) / ne_vol_avg_target
             te_err = abs(te_vol_avg - te_vol_avg_target) / te_vol_avg_target
             if ne_err <= tol and te_err <= tol:
@@ -261,27 +281,32 @@ class PlasmaEquilibrium(Model):
         )
 
     def calculate_ind_plasma_internal_norm(self, eq, b_poloidal_avg):
-        r_t = eq.surface_fields[2]   # ∂R/∂θ
-        z_t = eq.Z_t                 # ∂Z/∂θ
-        bp2 = (eq.alpha2 * eq.psin_r[:, None])**2 * (r_t**2 + z_t**2) / (eq.J * eq.R)**2
-        # 体积平均 <Bp^2> = ∫ Bp^2 J R dθ dρ / V
+        """Normalised internal inductance from volume-averaged Bp^2."""
+        r_t = eq.surface_fields[2]  # dR/dtheta
+        z_t = eq.Z_t  # dZ/dtheta
+        bp2 = (
+            (eq.alpha2 * eq.psin_r[:, None]) ** 2
+            * (r_t**2 + z_t**2)
+            / (eq.J * eq.R) ** 2
+        )
+        # Volume average <Bp^2> = int Bp^2 J R dtheta drho / V
         bp2_vol_avg = self.get_volume_average_2(eq, bp2)
-        li = bp2_vol_avg / b_poloidal_avg**2
-        return li
+        return bp2_vol_avg / b_poloidal_avg**2
 
     @staticmethod
     def miller_delta_profile(eq) -> np.ndarray:
-        R = np.asarray(eq.R, dtype=np.float64)
-        Z = np.asarray(eq.Z, dtype=np.float64)
-        nrho = R.shape[0]
+        """Miller delta (triangularity) vs normalised toroidal flux from eq geometry."""
+        r_grid = np.asarray(eq.R, dtype=np.float64)
+        z_grid = np.asarray(eq.Z, dtype=np.float64)
+        nrho = r_grid.shape[0]
         delta = np.zeros(nrho, dtype=np.float64)
         for i in range(nrho):
-            Ri = R[i]
-            Zi = Z[i]
+            r_slice = r_grid[i]
+            z_slice = z_grid[i]
             a_loc = eq.rho[i] * eq.a
             if a_loc < 1.0e-12:
                 continue
             r_geo = eq.Rc[i]
-            r_top = float(Ri[np.argmax(Zi)])
+            r_top = float(r_slice[np.argmax(z_slice)])
             delta[i] = (r_geo - r_top) / a_loc
         return delta

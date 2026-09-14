@@ -54,7 +54,13 @@ def _icc_additional_actions(
 def _lcfs_array_additional_actions(
     _name, value, array_index, _config, data: DataStructure
 ):
-    """Track how many LCFS (R, Z) points were provided in the input file."""
+    """Track how many LCFS (R, Z) points were provided in the input file.
+
+    Raises
+    ------
+    ProcessValidationError
+        If an LCFS array exceeds the maximum allowed length.
+    """
     if isinstance(value, list):
         n_points = len(value)
         if n_points > N_LCFS_POINTS_MAX:

@@ -411,7 +411,10 @@ class PlasmaCurrent(Model):
             ) from e
 
         # Main plasma current calculation using the fq value from the different settings
-        if model != PlasmaCurrentModel.PENG_DIVERTOR_SCALING and model != PlasmaCurrentModel.USER_INPUT:
+        if model not in {
+            PlasmaCurrentModel.PENG_DIVERTOR_SCALING,
+            PlasmaCurrentModel.USER_INPUT,
+        }:
             plasma_current = (
                 self.calculate_cyclindrical_plasma_current(
                     rminor=rminor,
@@ -1144,8 +1147,7 @@ class PlasmaDiamagneticCurrent(Model):
         j_dia_toroidal = -(dpdz * br - dpdr * bz) / b_total2
         current_dia = float(eq.grid.integrate(j_dia_toroidal * jacobian))
 
-        f_dia = current_dia / float(eq.Ip)
-        return f_dia
+        return current_dia / float(eq.Ip)
 
     def output(self):
         """Output the plasma diamagnetic current model results."""
