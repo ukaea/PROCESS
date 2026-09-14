@@ -172,8 +172,6 @@ class FirstWall(Model):
 
         in_vessel_solid_angle_fractions = self.calculate_component_solid_angle_components(
             deg_fw_inboard_plasma_centre_toroidal=self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal,
-            deg_fw_outboard_plasma_centre_toroidal=360.0
-            - self.data.fwbs.deg_fw_inboard_plasma_centre_toroidal,
             deg_blkt_outboard_poloidal_plasma=self.data.blanket.deg_blkt_outboard_poloidal_plasma,
             deg_blkt_inboard_poloidal_plasma=self.data.blanket.deg_blkt_inboard_poloidal_plasma,
             deg_div_poloidal_plasma=self.data.divertor.deg_div_poloidal_plasma,
@@ -192,6 +190,7 @@ class FirstWall(Model):
         self.data.divertor.f_ster_div_upper_ring_source = (
             in_vessel_solid_angle_fractions.f_ster_div_upper_ring_source
         )
+        print(in_vessel_solid_angle_fractions)
 
         # Radiation surface heat flux on first wall (MW/m²)
         # The full area is used as the radiation is assumed to be uniformly distributed
@@ -942,7 +941,6 @@ class FirstWall(Model):
     @staticmethod
     def calculate_component_solid_angle_components(
         deg_fw_inboard_plasma_centre_toroidal: float,
-        deg_fw_outboard_plasma_centre_toroidal: float,
         deg_blkt_outboard_poloidal_plasma: float,
         deg_blkt_inboard_poloidal_plasma: float,
         deg_div_poloidal_plasma: float,
@@ -950,13 +948,10 @@ class FirstWall(Model):
     ) -> InVesselSolidAngleFractions:
         """Calculate the solid angle subtended by the inboard and outboard first wall.
 
-
         Parameters
         ----------
         deg_fw_inboard_plasma_centre_toroidal : float
             Toroidal angle subtended by the inboard first wall from the centre of the plasma [degrees].
-        deg_fw_outboard_plasma_centre_toroidal : float
-            Toroidal angle subtended by the outboard first wall from the centre of the plasma [degrees].
         deg_blkt_outboard_poloidal_plasma : float
             Poloidal angle subtended by the outboard first wall from the centre of the plasma [degrees].
         deg_blkt_inboard_poloidal_plasma : float
@@ -970,39 +965,47 @@ class FirstWall(Model):
         -------
         InVesselSolidAngleFractions
 
+        Notes
+        -----
+        The poloidal angles partition the full 360 degrees of poloidal angle between
+        the inboard FW, outboard FW and divertor(s), so their fractions of 360 already
+        sum to 1 (2 for a double null, since the divertor angle is counted once per
+        divertor).
+
+        The inboard first wall additionally self-shadows the central hole of the
+        torus: only the fraction of ring-source directions aimed at the inboard side
+        given by `deg_fw_inboard_plasma_centre_toroidal / 360` actually intersect the
+        near inboard wall. Directions that do not clear the central hole are not
+        lost - they pass through the centre column region and go on to strike the
+        outboard wall - so that portion of the inboard poloidal fraction is added to
+        the outboard fraction rather than being discarded. This keeps the returned
+        fractions summing to 1 (2 for double null) without needing to renormalise
+        them against each other, which previously biased almost all power to the
+        outboard wall.
         """
-        print(deg_fw_outboard_plasma_centre_toroidal)
-        weighted_inboard = (deg_fw_inboard_plasma_centre_toroidal / 360.0) * (
-            deg_blkt_inboard_poloidal_plasma / 360.0
+        f_poloidal_inboard = deg_blkt_inboard_poloidal_plasma / 360.0
+        f_poloidal_outboard = deg_blkt_outboard_poloidal_plasma / 360.0
+        f_poloidal_div = deg_div_poloidal_plasma / 360.0
+
+        # Fraction of rays aimed at the inboard side that clear the central hole
+        f_toroidal_inboard_hit = deg_fw_inboard_plasma_centre_toroidal / 360.0
+
+        f_ster_fw_inboard_ring_source = f_poloidal_inboard * f_toroidal_inboard_hit
+        f_ster_fw_outboard_ring_source = f_poloidal_outboard + f_poloidal_inboard * (
+            1.0 - f_toroidal_inboard_hit
         )
-        weighted_outboard = (deg_fw_outboard_plasma_centre_toroidal / 360.0) * (
-            deg_blkt_outboard_poloidal_plasma / 360.0
-        )
-        weighted_div_lower = deg_div_poloidal_plasma / 360.0
 
         if i_single_null == DivertorNumberModels.DOUBLE_NULL:
-            weighted_div_upper = deg_div_poloidal_plasma / 360.0
-            total_weighting = np.sum([
-                weighted_inboard,
-                weighted_outboard,
-                weighted_div_lower,
-                weighted_div_upper,
-            ])
             return InVesselSolidAngleFractions(
-                f_ster_fw_inboard_ring_source=weighted_inboard / total_weighting,
-                f_ster_fw_outboard_ring_source=weighted_outboard / total_weighting,
-                f_ster_div_lower_ring_source=weighted_div_lower / total_weighting,
-                f_ster_div_upper_ring_source=weighted_div_upper / total_weighting,
+                f_ster_fw_inboard_ring_source=f_ster_fw_inboard_ring_source,
+                f_ster_fw_outboard_ring_source=f_ster_fw_outboard_ring_source,
+                f_ster_div_lower_ring_source=f_poloidal_div,
+                f_ster_div_upper_ring_source=f_poloidal_div,
             )
-        total_weighting = np.sum([
-            weighted_inboard,
-            weighted_outboard,
-            weighted_div_lower,
-        ])
         return InVesselSolidAngleFractions(
-            f_ster_fw_inboard_ring_source=weighted_inboard / total_weighting,
-            f_ster_fw_outboard_ring_source=weighted_outboard / total_weighting,
-            f_ster_div_lower_ring_source=weighted_div_lower / total_weighting,
+            f_ster_fw_inboard_ring_source=f_ster_fw_inboard_ring_source,
+            f_ster_fw_outboard_ring_source=f_ster_fw_outboard_ring_source,
+            f_ster_div_lower_ring_source=f_poloidal_div,
             f_ster_div_upper_ring_source=0.0,
         )
 

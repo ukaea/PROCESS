@@ -18028,7 +18028,7 @@ def main_plot(
     ax_blanket_bends = _add_page("vessel_power_distribution")
     plot_blkt_pipe_bends(pages["vessel_power_distribution"], m_file, scan)
     plot_poloidal_power_distribution(
-        ax=pages["vessel_power_distribution"].add_subplot(122, aspect="equal"),
+        ax=pages["vessel_power_distribution"].add_subplot(111, aspect="equal"),
         m_file=m_file,
         scan=scan,
         radial_build=radial_build,
