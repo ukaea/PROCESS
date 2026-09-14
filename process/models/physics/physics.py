@@ -25,6 +25,10 @@ from process.data_structure.physics_variables import (
 from process.data_structure.stellarator_variables import StellaratorModel
 from process.models.physics import impurity_radiation
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
+from process.models.physics.current_drive import (
+    CurrentDriveMethodType,
+    CurrentDriveModel,
+)
 from process.models.physics.exhaust import calculate_brunner_divertor_power_splits
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
@@ -613,8 +617,14 @@ class Physics(Model):
 
         # Calculate neutral beam slowing down effects and beam-target fusion.
         # Neglected if there is no beam current or the plasma is ignited.
-        self.beam_reactions.calculate_beam_fusion()
-        self.beam_reactions.set_physics_variables()
+        if (
+            CurrentDriveModel(self.data.current_drive.i_hcd_primary).method
+            == CurrentDriveMethodType.NEUTRAL_BEAM
+            or CurrentDriveModel(self.data.current_drive.i_hcd_secondary).method
+            == CurrentDriveMethodType.NEUTRAL_BEAM
+        ):
+            self.beam_reactions.calculate_beam_fusion()
+            self.beam_reactions.set_physics_variables()
 
         # Combine the plasma-only and beam-target fusion contributions
         self.data.physics.p_plasma_dt_mw = (
