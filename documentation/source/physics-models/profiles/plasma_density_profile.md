@@ -21,7 +21,7 @@ $$
 
 #### Electron core density of a pedestalised profile | `calculate_pedestal_profile_on_axis_density()`
 
-This function calculates the core electron density for a pedestalsied profile (`i_plasma_pedestal == 1`). It takes in values of
+This function calculates the core electron density for a pedestalised profile (`i_plasma_pedestal == 1`). It takes in values of
 
 | Profile parameter / Input               | Density   |
 |----------------------------------|-----------|
@@ -115,9 +115,9 @@ $\blacksquare$
 
 #### Electron core density of a parabolic profile | `calculate_parabolic_profile_on_axis_density()`
 
-###### Derivation
+##### Derivation
 
-We calculate the volume integrated profile and then divide by the volume of integration to get the volume average density $\langle n \rangle$. If we assume the plasma to be a torus of circular cross-section then we can use spherical coordinates. We can simplify the problem by representing the torus as a cylinder of height equal to the circumference of the torus equal to $2\pi R$ where $R$ is the major radius of the torus.
+We calculate the volume integrated profile and then divide by the volume of integration to get the volume average density $\langle n \rangle$. If we assume the plasma to be a torus of circular cross-section then we can use spherical coordinates. We can simplify the problem by representing the torus as a cylinder of height equal to the circumference of the torus, which is equal to $2\pi R$, where $R$ is the major radius of the torus.
 
 The cylindrical volume element is given by:
 
@@ -131,7 +131,7 @@ $$
 \int^{2\pi R}_0 \int^{2\pi}_0 \int^a_0     r  \left(n_0(1-r^2/a^2)^{\alpha_n}\right) \ dr \ d\theta \ dz
 $$
 
-Since our density function is only a function of $r$, and the torus is symmetric around its center, the integration simplifies to integrating over $r$ and the $d\theta ,\ dz$ integrals are solved to give values for the full poloidal angle and cylindrical height and torus length, leading to:
+Since our density function is only a function of $r$, and the torus is symmetric around its center, the integration simplifies to integrating over $r$, with the $d\theta$ and $\dz$ integrals solving to give values for the full poloidal angle, and cylindrical height and torus length, respectively. This leads to:
 
 $$
 4\pi^2R \int^a_0     r  \left(n_0(1-r^2/a^2)^{\alpha_n}\right) \ dr  
@@ -159,7 +159,7 @@ $$
 \therefore \langle n \rangle =   \frac{n_0}{\alpha_n+1}
 $$
 
-This is in agreement with the derivation from the ITER Physics Design 1989. [^iter_design_89]
+This is in agreement with the derivation from the ITER Physics Design 1989[^iter_design_89].
 
 Since all parabolic profiles are of the same form this proof holds for the density and temperature.
 
