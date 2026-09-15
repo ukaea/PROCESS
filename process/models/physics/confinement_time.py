@@ -1131,7 +1131,7 @@ class PlasmaConfinementTime(Model):
                 confinement_time_data.pden_electron_transport_loss_mw
                 + confinement_time_data.pden_ion_transport_loss_mw
                 - self.data.physics.f_p_alpha_plasma_deposited
-                * self.data.physics.pden_alpha_total_mw
+                * self.data.physics.pden_alpha_total_vol_avg_mw
                 - self.data.physics.pden_non_alpha_charged_mw
                 - self.data.physics.pden_plasma_ohmic_mw
             )

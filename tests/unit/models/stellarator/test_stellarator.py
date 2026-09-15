@@ -1600,7 +1600,7 @@ class StCalcEffChiParam(NamedTuple):
 
     f_p_alpha_plasma_deposited: Any = None
 
-    pden_alpha_total_mw: Any = None
+    pden_alpha_total_vol_avg_mw: Any = None
 
     pden_plasma_core_rad_mw: Any = None
 
@@ -1630,7 +1630,7 @@ class StCalcEffChiParam(NamedTuple):
             temp_plasma_electron_on_axis_kev=19.108573496973477,
             nd_plasma_electron_on_axis=3.4479000000000007e20,
             f_p_alpha_plasma_deposited=0.95000000000000007,
-            pden_alpha_total_mw=1.2629524018077414,
+            pden_alpha_total_vol_avg_mw=1.2629524018077414,
             pden_plasma_core_rad_mw=0.10762698429338043,
             alphan=0.35000000000000003,
             alphat=1.2,
@@ -1646,7 +1646,7 @@ class StCalcEffChiParam(NamedTuple):
             temp_plasma_electron_on_axis_kev=17.5,
             nd_plasma_electron_on_axis=3.4479000000000007e20,
             f_p_alpha_plasma_deposited=0.95000000000000007,
-            pden_alpha_total_mw=1.0570658694225301,
+            pden_alpha_total_vol_avg_mw=1.0570658694225301,
             pden_plasma_core_rad_mw=0.1002475669217598,
             alphan=0.35000000000000003,
             alphat=1.2,
@@ -1677,7 +1677,7 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
         "temp_plasma_electron_on_axis_kev",
         "nd_plasma_electron_on_axis",
         "f_p_alpha_plasma_deposited",
-        "pden_alpha_total_mw",
+        "pden_alpha_total_vol_avg_mw",
         "pden_plasma_core_rad_mw",
         "alphan",
         "alphat",

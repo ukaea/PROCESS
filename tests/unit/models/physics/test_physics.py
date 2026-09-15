@@ -1275,7 +1275,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     f_temp_plasma_electron_density_vol_avg: Any = None
 
-    fusden_alpha_total: Any = None
+    fusden_alpha_total_vol_avg: Any = None
 
     f_nd_plasma_iron_argon_electron: Any = None
 
@@ -1283,7 +1283,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     temp_plasma_electron_vol_avg_kev: Any = None
 
-    proton_rate_density: Any = None
+    fusden_plasma_protons_vol_avg: Any = None
 
     f_plasma_fuel_deuterium: Any = None
 
@@ -1403,11 +1403,11 @@ class PlasmaCompositionParam(NamedTuple):
             n_charge_plasma_effective_vol_avg=0,
             nd_plasma_impurities_vol_avg=0,
             f_temp_plasma_electron_density_vol_avg=0,
-            fusden_alpha_total=0,
+            fusden_alpha_total_vol_avg=0,
             f_nd_plasma_iron_argon_electron=0,
             m_beam_amu=0,
             temp_plasma_electron_vol_avg_kev=12,
-            proton_rate_density=0,
+            fusden_plasma_protons_vol_avg=0,
             f_plasma_fuel_deuterium=0.5,
             alphan=1,
             nd_beam_ions=0,
@@ -1509,11 +1509,11 @@ class PlasmaCompositionParam(NamedTuple):
             n_charge_plasma_effective_vol_avg=2.0913454745,
             nd_plasma_impurities_vol_avg=28875000000000004,
             f_temp_plasma_electron_density_vol_avg=1.0521775929921553,
-            fusden_alpha_total=1.973996644759543e17,
+            fusden_alpha_total_vol_avg=1.973996644759543e17,
             f_nd_plasma_iron_argon_electron=0,
             m_beam_amu=2.01355414,
             temp_plasma_electron_vol_avg_kev=12,
-            proton_rate_density=540072280299564.38,
+            fusden_plasma_protons_vol_avg=540072280299564.38,
             f_plasma_fuel_deuterium=0.5,
             alphan=1,
             nd_beam_ions=0,
@@ -1605,11 +1605,11 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         "n_charge_plasma_effective_vol_avg",
         "nd_plasma_impurities_vol_avg",
         "f_temp_plasma_electron_density_vol_avg",
-        "fusden_alpha_total",
+        "fusden_alpha_total_vol_avg",
         "f_nd_plasma_iron_argon_electron",
         "m_beam_amu",
         "temp_plasma_electron_vol_avg_kev",
-        "proton_rate_density",
+        "fusden_plasma_protons_vol_avg",
         "f_plasma_fuel_deuterium",
         "alphan",
         "nd_beam_ions",
@@ -1851,9 +1851,9 @@ class PhyauxParam(NamedTuple):
 
     nd_plasma_alphas_thermal_vol_avg: Any = None
 
-    fusden_total: Any = None
+    fusden_total_vol_avg: Any = None
 
-    fusden_alpha_total: Any = None
+    fusden_alpha_total_vol_avg: Any = None
 
     plasma_current: Any = None
 
@@ -1889,8 +1889,8 @@ class PhyauxParam(NamedTuple):
             aspect=3,
             nd_plasma_fuel_ions_vol_avg=5.858890125e19,
             nd_plasma_alphas_thermal_vol_avg=7.5e18,
-            fusden_total=1.9852091609123786e17,
-            fusden_alpha_total=1.973996644759543e17,
+            fusden_total_vol_avg=1.9852091609123786e17,
+            fusden_alpha_total_vol_avg=1.973996644759543e17,
             plasma_current=18398455.678867526,
             sbar=1,
             t_energy_confinement=3.401323521525641,
@@ -1908,8 +1908,8 @@ class PhyauxParam(NamedTuple):
             aspect=3,
             nd_plasma_fuel_ions_vol_avg=5.8576156204039725e19,
             nd_plasma_alphas_thermal_vol_avg=7.5e18,
-            fusden_total=1.9843269653375773e17,
-            fusden_alpha_total=1.9731194318497056e17,
+            fusden_total_vol_avg=1.9843269653375773e17,
+            fusden_alpha_total_vol_avg=1.9731194318497056e17,
             plasma_current=18398455.678867526,
             sbar=1,
             t_energy_confinement=3.402116961408892,
@@ -1953,8 +1953,8 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         aspect=phyauxparam.aspect,
         nd_plasma_fuel_ions_vol_avg=phyauxparam.nd_plasma_fuel_ions_vol_avg,
         nd_plasma_alphas_thermal_vol_avg=phyauxparam.nd_plasma_alphas_thermal_vol_avg,
-        fusden_total=phyauxparam.fusden_total,
-        fusden_alpha_total=phyauxparam.fusden_alpha_total,
+        fusden_total_vol_avg=phyauxparam.fusden_total_vol_avg,
+        fusden_alpha_total_vol_avg=phyauxparam.fusden_alpha_total_vol_avg,
         plasma_current=phyauxparam.plasma_current,
         sbar=phyauxparam.sbar,
         t_energy_confinement=phyauxparam.t_energy_confinement,
