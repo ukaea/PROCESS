@@ -353,6 +353,9 @@ class NeProfile(Profile):
                 self.data.physics.nd_plasma_electrons_vol_avg,
                 self.data.physics.alphan,
             )
+        veq = self.data.veqpy
+        if veq.equilibrium is not None and veq.ne_axis_m3 > 0.0:
+            self.data.physics.nd_plasma_electron_on_axis = veq.ne_axis_m3
         self.data.physics.nd_plasma_ions_on_axis = (
             self.data.physics.nd_plasma_ions_total_vol_avg
             / self.data.physics.nd_plasma_electrons_vol_avg
@@ -552,6 +555,10 @@ class TeProfile(Profile):
                 self.data.physics.alphat,
                 self.data.physics.tbeta,
             )
+
+        veq = self.data.veqpy
+        if veq.equilibrium is not None and veq.te_axis_kev > 0.0:
+            self.data.physics.temp_plasma_electron_on_axis_kev = veq.te_axis_kev
 
         self.data.physics.temp_plasma_ion_on_axis_kev = (
             self.data.physics.temp_plasma_ion_vol_avg_kev

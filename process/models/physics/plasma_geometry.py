@@ -49,6 +49,7 @@ class PlasmaGeometryModels(IntEnum):
     MENARD_2016 = (7, "Menard 2016 ST Scaling")
     UNKNOWN = (8, "Unknown")
     MENARD_1997 = (9, "Menard 1997 ST Scaling")
+    R_AND_Z_ARRAY = (10, "R and Z Array")
 
     def __new__(cls, value: int, description: str):
         """Create a new PlasmaGeometryModels instance."""
@@ -158,6 +159,13 @@ class PlasmaGeometryModelType(IntEnum):
         PlasmaGeometryModels.IPDG89,
         PlasmaGeometryModels.IPDG89,
     )
+    R_AND_Z_ARRAY = (
+        13,
+        PlasmaGeometryModels.R_AND_Z_ARRAY,
+        PlasmaGeometryModels.R_AND_Z_ARRAY,
+        PlasmaGeometryModels.IPDG89,
+        PlasmaGeometryModels.IPDG89,
+    )
 
     def __new__(
         cls,
@@ -210,6 +218,11 @@ class PlasmaGeom(Model):
         terms and input values. It updates the `physics_variables` with calculated
         values for kappa, triangularity, surface area, volume, etc.
 
+        Raises
+        ------
+        ProcessValueError
+            If LCFS or geometry inputs are inconsistent.
+
         References
         ----------
             - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
@@ -217,12 +230,20 @@ class PlasmaGeom(Model):
             - H. Zohm et al, On the Physics Guidelines for a Tokamak DEMO,
               FTP/3-3, Proc. IAEA Fusion Energy Conference, October 2012, San Diego
         """
-        xsi = 0.0e0
-        xso = 0.0e0
-        thetai = 0.0e0
-        thetao = 0.0e0
-        xi = 0.0e0
-        xo = 0.0e0
+        # Define plasma minor radius from major radius and aspect ratio unless
+        # overridden by an LCFS (R, Z) array.
+        if self.data.physics.i_plasma_geometry == PlasmaGeometryModelType.R_AND_Z_ARRAY:
+            r, _ = self._lcfs_arrays()
+            rmajor = (np.max(r) + np.min(r)) / 2.0
+            rminor = (np.max(r) - np.min(r)) / 2.0
+            if rminor <= 0.0:
+                raise ProcessValueError(
+                    "Invalid LCFS r_array: minor radius must be positive",
+                    r_min=float(np.min(r)),
+                    r_max=float(np.max(r)),
+                )
+            self.data.physics.aspect = rmajor / rminor
+            self.data.physics.rmajor = rmajor
 
         # Define plasma minor radius from major radius and aspect ratio
         self.data.physics.rminor = self.data.physics.rmajor / self.data.physics.aspect
@@ -438,6 +459,17 @@ class PlasmaGeom(Model):
 
         # ======================================================================
 
+        if self.data.physics.i_plasma_geometry == PlasmaGeometryModelType.R_AND_Z_ARRAY:
+            r, z = self._lcfs_arrays()
+            zmax = np.max(np.abs(z))
+            self.data.physics.kappa = zmax / self.data.physics.rminor
+            r_zmax = r[np.argmax(np.abs(z))]
+            self.data.physics.triang = (
+                self.data.physics.rmajor - r_zmax
+            ) / self.data.physics.rminor
+            self.data.physics.kappa95 = self.data.physics.kappa / 1.12e0
+            self.data.physics.triang95 = self.data.physics.triang / 1.50e0
+
         #  Scrape-off layer thicknesses
         if self.data.physics.i_plasma_wall_gap == 0:
             self.data.build.dr_fw_plasma_gap_outboard = 0.1e0 * self.data.physics.rminor
@@ -445,30 +477,18 @@ class PlasmaGeom(Model):
 
         # ======================================================================
 
-        # Find parameters of arcs describing plasma surfaces
-        xi, thetai, xo, thetao = self.plasma_angles_arcs(
-            self.data.physics.rminor,
-            self.data.physics.kappa,
-            self.data.physics.triang,
-        )
-
-        #  Surface area - inboard and outboard.  These are not given by Sauter but
-        #  the outboard area is required by DCLL and divertor
-        xsi, xso = self.plasma_surface_area(
-            self.data.physics.rmajor,
-            self.data.physics.rminor,
-            xi,
-            thetai,
-            xo,
-            thetao,
-        )
-        self.data.physics.a_plasma_surface_outboard = xso
-
-        # ======================================================================
-
         # i_plasma_current = 8 specifies use of the Sauter geometry as well as plasma
         # current.
-        if (
+        if self.data.physics.i_plasma_geometry == PlasmaGeometryModelType.R_AND_Z_ARRAY:
+            r, z = self._lcfs_arrays()
+            _, s_out, s, length, area, vol = self.cal_integral_geometry(r, z)
+            self.data.physics.a_plasma_surface_outboard = s_out
+            self.data.physics.len_plasma_poloidal = length
+            self.data.physics.a_plasma_surface = s
+            self.data.physics.a_plasma_poloidal = area
+            self.data.physics.vol_plasma = vol
+
+        elif (
             self.data.physics.i_plasma_current == 8
             or self.data.physics.i_plasma_shape == PlasmaShapeModelType.SAUTER
         ):
@@ -484,8 +504,41 @@ class PlasmaGeom(Model):
                 self.data.physics.triang,
                 self.data.physics.plasma_square,
             )
+            # Outboard area is not given by Sauter but is required by DCLL/divertor
+            xi, thetai, xo, thetao = self.plasma_angles_arcs(
+                self.data.physics.rminor,
+                self.data.physics.kappa,
+                self.data.physics.triang,
+            )
+            _, xso = self.plasma_surface_area(
+                self.data.physics.rmajor,
+                self.data.physics.rminor,
+                xi,
+                thetai,
+                xo,
+                thetao,
+            )
+            self.data.physics.a_plasma_surface_outboard = xso
 
         else:
+            # Find parameters of arcs describing plasma surfaces
+            xi, thetai, xo, thetao = self.plasma_angles_arcs(
+                self.data.physics.rminor,
+                self.data.physics.kappa,
+                self.data.physics.triang,
+            )
+
+            # Surface area - inboard and outboard
+            xsi, xso = self.plasma_surface_area(
+                self.data.physics.rmajor,
+                self.data.physics.rminor,
+                xi,
+                thetai,
+                xo,
+                thetao,
+            )
+            self.data.physics.a_plasma_surface_outboard = xso
+
             #  Poloidal perimeter
             self.data.physics.len_plasma_poloidal = self.plasma_poloidal_perimeter(
                 xi, thetai, xo, thetao
@@ -679,6 +732,19 @@ class PlasmaGeom(Model):
             )
 
             po.oblnkl(self.outfile)
+
+            if (
+                self.data.physics.i_plasma_geometry
+                == PlasmaGeometryModelType.R_AND_Z_ARRAY
+            ):
+                po.ovarre(
+                    self.outfile,
+                    "Number of LCFS (R, Z) points",
+                    "(n_lcfs_points)",
+                    self.data.physics.n_lcfs_points,
+                    "IP ",
+                )
+                po.oblnkl(self.outfile)
 
             po.ovarre(
                 self.outfile,
@@ -1034,6 +1100,85 @@ class PlasmaGeom(Model):
               vol. 48, no. 9, pp. 099801099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (vol_plasma / (2.0 * np.pi * rmajor)) / (np.pi * rminor**2)
+
+    def _lcfs_arrays(self) -> tuple[np.ndarray, np.ndarray]:
+        """Return the user-provided LCFS (R, Z) arrays for geometry mode 13.
+
+        Returns
+        -------
+        tuple[np.ndarray, np.ndarray]
+            Sliced R and Z arrays of length `n_lcfs_points`.
+
+        Raises
+        ------
+        ProcessValueError
+            If too few points were provided.
+        """
+        n_points = int(self.data.physics.n_lcfs_points)
+        if n_points < 2:
+            raise ProcessValueError(
+                "i_plasma_geometry = 13 requires r_array and z_array "
+                "with at least 2 points",
+                n_lcfs_points=n_points,
+            )
+        r = np.asarray(self.data.physics.r_array[:n_points], dtype=float)
+        z = np.asarray(self.data.physics.z_array[:n_points], dtype=float)
+        return r, z
+
+    @staticmethod
+    def cal_integral_geometry(
+        r_array: np.ndarray, z_array: np.ndarray
+    ) -> tuple[float, float, float, float, float, float]:
+        """Integrate geometric quantities from discrete LCFS (R, Z) points.
+
+        Parameters
+        ----------
+        r_array :
+            LCFS radial coordinates (m)
+        z_array :
+            LCFS vertical coordinates (m)
+
+        Returns
+        -------
+        tuple
+            inboard surface area, outboard surface area, total surface area,
+            poloidal perimeter, poloidal cross-section area, plasma volume
+
+        Raises
+        ------
+        ProcessValueError
+            If LCFS arrays are invalid.
+        """
+        r = np.asarray(r_array, dtype=float)
+        z = np.asarray(z_array, dtype=float)
+        if len(r) < 2 or len(r) != len(z):
+            raise ProcessValueError(
+                "LCFS arrays must have equal length and at least 2 points",
+                n_r=len(r),
+                n_z=len(z),
+            )
+        # Close the contour if the first and last points are not already identical
+        if not (np.isclose(r[0], r[-1]) and np.isclose(z[0], z[-1])):
+            r = np.append(r, r[0])
+            z = np.append(z, z[0])
+        dr = np.diff(r)
+        dz = np.diff(z)
+        dl = np.sqrt(dr**2 + dz**2)
+        r_mid = 0.5 * (r[:-1] + r[1:])
+        surface = 2.0 * np.pi * np.sum(r_mid * dl)
+        r0 = 0.5 * (np.max(r) + np.min(r))
+        # Inboard / outboard surface areas split at geometric major radius
+        s_out = 2.0 * np.pi * np.sum(r_mid[r_mid >= r0] * dl[r_mid >= r0])
+        s_in = 2.0 * np.pi * np.sum(r_mid[r_mid < r0] * dl[r_mid < r0])
+        # Poloidal perimeter
+        length = np.sum(dl)
+        # Volume of revolution
+        vol = (np.pi / 3.0) * np.sum(dz * (r[:-1] ** 2 + r[:-1] * r[1:] + r[1:] ** 2))
+        vol = abs(vol)
+        # Poloidal cross-section area
+        area = 0.5 * np.sum(r[:-1] * z[1:] - r[1:] * z[:-1])
+        area = abs(area)
+        return s_in, s_out, surface, length, area, vol
 
 
 # --------------------------------

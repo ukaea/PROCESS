@@ -3009,7 +3009,8 @@ def plot_main_plasma_information(
         f"             Ni:   {mfile.get('f_nd_impurity_electrons(11)', scan=scan):.4e}\n"
         f"             Kr:   {mfile.get('f_nd_impurity_electrons(12)', scan=scan):.4e}\n"
         f"             Xe:  {mfile.get('f_nd_impurity_electrons(13)', scan=scan):.4e}\n"
-        f"             W:   {mfile.get('f_nd_impurity_electrons(14)', scan=scan):.4e}"
+        f"             W:   {mfile.get('f_nd_impurity_electrons(14)', scan=scan):.4e}\n"
+        f"             B:   {mfile.get('f_nd_impurity_electrons(15)', scan=scan):.4e}"
     )
 
     axis.text(
@@ -13800,6 +13801,7 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
         mfile.get("f_nd_impurity_electrons(12)", scan=scan),
         mfile.get("f_nd_impurity_electrons(13)", scan=scan),
         mfile.get("f_nd_impurity_electrons(14)", scan=scan),
+        mfile.get("f_nd_impurity_electrons(15)", scan=scan),
     ])
 
     imp_label = [
@@ -13817,8 +13819,9 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
         "Kr",
         "Xe",
         "W",
+        "B",
     ]
-    full_charge_array = [1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74]
+    full_charge_array = [1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74, 5]
 
     n_charge_plasma_profile = []
     avg_ionisation_percentages = []
