@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import copy
 import logging
-import re
 from dataclasses import dataclass
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
+
+import numpy as np
 
 from process.core.exceptions import (
     ProcessValidationError,
@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
     from process.core.data_structure.base import DataStructure
+    from process.core.io.in_dat.base import InDat
 
 NumberType = int | float
 ValidInputTypes = NumberType | str
@@ -34,18 +35,16 @@ DataTypes = (int, float, str)
 logger = logging.getLogger(__name__)
 
 
-def _ixc_additional_actions(
-    _name, value: int, _array_index, _config, data: DataStructure
-):
-    data.numerics.ixc[data.numerics.n_iteration_variables] = value
-    data.numerics.n_iteration_variables += 1
+def _ixc_additional_actions(_name, value: list[int], _config, data: DataStructure):
+    for v in value:
+        data.numerics.ixc[data.numerics.n_iteration_variables] = v
+        data.numerics.n_iteration_variables += 1
 
 
-def _icc_additional_actions(
-    _name, value: int, _array_index, _config, data: DataStructure
-):
-    data.numerics.icc[data.numerics.n_constraints] = value
-    data.numerics.n_constraints += 1
+def _icc_additional_actions(_name, value: list[int], _config, data: DataStructure):
+    for v in value:
+        data.numerics.icc[data.numerics.n_constraints] = v
+        data.numerics.n_constraints += 1
 
 
 @dataclass(slots=True)
@@ -63,10 +62,9 @@ class InputVariable:
     array: bool = False
     """Is this input assigning values to an array?"""
     additional_validation: (
-        Callable[[str, ValidInputTypes, int | None, InputVariable], ValidInputTypes]
-        | None
+        Callable[[str, ValidInputTypes, InputVariable], ValidInputTypes] | None
     ) = None
-    """A function that takes the input variable: name, value, array index, and config
+    """A function that takes the input variable: name, value, and config
     (this dataclass) as input and returns a cleaned version of the input value. May raise
     a ProcessValidationError.
 
@@ -74,10 +72,9 @@ class InputVariable:
     been cast to the specified `type`.
     """
     additional_actions: (
-        Callable[[str, ValidInputTypes, int | None, InputVariable, DataStructure], None]
-        | None
+        Callable[[str, ValidInputTypes, InputVariable, DataStructure], None] | None
     ) = None
-    """A function that takes the input variable: name, value, array index, config
+    """A function that takes the input variable: name, value, config
     (this dataclass), and the data structure object as input and performs some additional
     action in addition to the default
     actions prescribed by the variables config. May raise a ProcessValidationError.
@@ -148,8 +145,8 @@ INPUT_VARIABLES = {
     "runtitle": InputVariable("globals", str),
     "i_process_run_mode": InputVariable("numerics", int, choices=[1, -2]),
     "epsvmc": InputVariable("numerics", float, range=(0.0, 1.0)),
-    "boundl": InputVariable("numerics", float, array=True),
-    "boundu": InputVariable("numerics", float, array=True),
+    "boundl": InputVariable("numerics", float),
+    "boundu": InputVariable("numerics", float),
     "epsfcn": InputVariable("numerics", float, range=(0.0, 1.0)),
     "maxcal": InputVariable("globals", int, range=(0, 10000)),
     "i_figure_merit": InputVariable("numerics", int),
@@ -1161,6 +1158,7 @@ INPUT_VARIABLES = {
         range=(1, N_ITERATION_VARIABLES_MAX),
         additional_actions=_ixc_additional_actions,
         set_variable=False,
+        array=True,
     ),
     "icc": InputVariable(
         None,
@@ -1168,6 +1166,7 @@ INPUT_VARIABLES = {
         choices=ConstraintManager.constraint_ids(),
         additional_actions=_icc_additional_actions,
         set_variable=False,
+        array=True,
     ),
     "force_vmcon_inequality_satisfication": InputVariable(
         "numerics",
@@ -1185,140 +1184,154 @@ INPUT_VARIABLES = {
 }
 
 
-def parse_input_file(data_structure_obj: DataStructure):
-    """Parse the input file and create a dictionary of variables
+def parse_input_file(data_structure_obj: DataStructure, in_dat: InDat):
+    """Create a dictionary of variables from the input file
+    and set the values on the data structure
+    TODO rename to set_data_structre or something?
 
-    Raises
-    ------
-    ProcessValueError
-        Unable to parse line in input file
-    ProcessValidationError
-        Unrecognised input in input file
+    Parameters
+    ----------
+    data_structure_obj: DataStructure
+        The data structure object
+    in_dat: InDat
+        The input file data from InDat
+
     """
     # These get incremented when reading the file, so need
     # to ensure they are 0 before we parse the file
+    # TODO check if is this still necessary
     data_structure_obj.numerics.n_iteration_variables = 0
     data_structure_obj.numerics.n_constraints = 0
 
-    input_file_path = (
-        Path(input_file)
-        if (input_file := data_structure_obj.globals.fileprefix)
-        else Path("IN.DAT")
-    )
-
-    with input_file_path.open("r") as f:
-        lines = f.readlines()
-
     variables = {}
 
-    for line_no, line in enumerate(lines, start=1):
-        stripped_line = line.strip()
+    for variable_name, info in in_dat.data.items():
+        # bounds is a dictionary containing upper and lower bounds
+        # need to process boundu and boundl separately
+        if variable_name == "bounds":
+            boundl = {}
+            boundu = {}
+            for index, bounds_dict in info.value.items():
+                idx = int(index)
+                if "l" in bounds_dict:
+                    boundl[idx] = bounds_dict["l"]
+                if "u" in bounds_dict:
+                    boundu[idx] = bounds_dict["u"]
+            # TODO could change them into arrays here?
 
-        # don't bother trying to process blank lines
-        # or comment lines
-        if not stripped_line or stripped_line[0] == "*":
-            continue
+            info_boundl = info
+            info_boundl.value = boundl
+            info_boundl.name = "boundl"
+            variables = set_on_datastructure(
+                variable_name="boundl",
+                info=info_boundl,
+                data_structure_obj=data_structure_obj,
+                variables=variables,
+            )
 
-        # matches (variable name, array index, value)
-        # NOTE: array index is Fortran-based hence starts at 1.
-        line_match = re.match(
-            r"([a-zA-Z0-9_]+)(?:\(([0-9]+)\))?[ ]*=[ ]*([ +\-a-zA-Z0-9.,]+).*",
-            stripped_line,
+            info_boundu = info
+            info_boundu.value = boundu
+            info_boundu.name = "boundu"
+
+            variables = set_on_datastructure(
+                variable_name="boundu",
+                info=info_boundu,
+                data_structure_obj=data_structure_obj,
+                variables=variables,
+            )
+        else:
+            variables = set_on_datastructure(
+                variable_name=variable_name,
+                info=info,
+                data_structure_obj=data_structure_obj,
+                variables=variables,
+            )
+
+
+def set_on_datastructure(variable_name, info, data_structure_obj, variables):
+
+    variable_config = copy.copy(INPUT_VARIABLES.get(variable_name))
+
+    # string indicates it should be set on the new object data structure
+    if isinstance(variable_config.module, str):
+        module = data_structure_obj
+        for name in variable_config.module.split("."):
+            module = getattr(module, name)
+
+        variable_config.module = module
+    variable_value = info.value
+
+    # Validate the variable and also clean it (cast to correct type)
+    # If the variable value (after the = sign) contains a ',' or is a list (len > 0)
+    # then it defines the whole array so needs to be split down into its elements
+    # and the parsed like an array defined as 'my_array(<index>) = <value>'
+    # bounds is a dictionary, so needs to be cleaned here too
+
+    # TODO figure out why it's not being handled as an array variable
+    if "," in variable_value:
+        variable_value = list(variable_value.split(","))
+    if (
+        len(np.shape(variable_value)) > 0 or "," in variable_value
+        # or variable_name == "bounds"
+    ):
+        # TODO not the cleanest, but bounds is a dict now
+        clean_variable_value = [
+            validate_variable(
+                variable_name,
+                v,
+                i,
+                variable_config,
+            )
+            for i, v in enumerate(variable_value, start=1)
+        ]
+    else:
+        clean_variable_value = validate_variable(
+            variable_name,
+            variable_value,
+            None,
+            variable_config,
         )
 
-        if line_match is None:
-            error_msg = (
-                f"Unable to parse line {line_no} of the input file ({stripped_line})"
-            )
-            raise ProcessValueError(error_msg)
+    # check if the target name in the module is different to the variable name
+    # in the input file
+    variable_name_in_module = variable_config.target_name or variable_name
 
-        variable_name, array_index, variable_value = line_match.groups()
-        variable_name = variable_name.lower()
-
-        variable_config = copy.copy(INPUT_VARIABLES.get(variable_name))
-
-        if variable_config is None:
-            error_msg = (
-                f"Unrecognised input '{variable_name}' at line {line_no} of input file."
-            )
-            raise ProcessValidationError(error_msg)
-
-        # string indicates it should be set on the new object data structure
-        if isinstance(variable_config.module, str):
-            module = data_structure_obj
-            for name in variable_config.module.split("."):
-                module = getattr(module, name)
-
-            variable_config.module = module
-
-        # Validate the variable and also clean it (cast to correct type)
-        # If the variable value (after the = sign) contains a ',' then it
-        # defines the whole array so needs to be split down into its elements
-        # and the parsed like an array defined as 'my_array(<index>) = <value>'
-        if "," in variable_value:
-            getattr(variable_config.module, variable_name)[:] = 0.0
-            clean_variable_value = [
-                validate_variable(
-                    variable_name,
-                    v.strip(),
-                    str(i + 1),
-                    variable_config,
-                    line_no,
-                )
-                for i, v in enumerate(variable_value.split(","), start=1)
-            ]
-        else:
-            clean_variable_value = validate_variable(
-                variable_name,
-                variable_value.strip(),
-                array_index,
-                variable_config,
-                line_no,
-            )
-
-        # check if the target name in the module is different to the variable name
-        # in the input file
-        variable_name_in_module = variable_config.target_name or variable_name
-
-        array_index_clean = None if array_index is None else int(array_index)
-
-        if variable_config.set_variable:
-            if isinstance(clean_variable_value, list):
-                for idx, value in enumerate(clean_variable_value, start=1):
-                    set_array_variable(
-                        variable_name_in_module,
-                        value,
-                        idx,
-                        variable_config,
-                    )
-            elif variable_config.array:
+    if variable_config.set_variable:
+        if variable_name in {"boundl", "boundu"}:
+            for key in clean_variable_value:
                 set_array_variable(
                     variable_name_in_module,
-                    clean_variable_value,
-                    array_index_clean,
+                    clean_variable_value[key],
+                    key,
                     variable_config,
                 )
-            else:
-                set_scalar_variable(
-                    variable_name_in_module, clean_variable_value, variable_config
+        elif isinstance(clean_variable_value, list):
+            for idx, value in enumerate(clean_variable_value, start=1):
+                set_array_variable(
+                    variable_name_in_module,
+                    value,
+                    idx,
+                    variable_config,
                 )
-
-        if variable_config.additional_actions is not None:
-            # intentionally passing the variable name as in the input file,
-            # not the module target name.
-            variable_config.additional_actions(
-                variable_name,
-                clean_variable_value,
-                array_index_clean,
-                variable_config,
-                data_structure_obj,
+        else:
+            set_scalar_variable(
+                variable_name_in_module, clean_variable_value, variable_config
             )
+
+    if variable_config.additional_actions is not None:
+        # intentionally passing the variable name as in the input file,
+        # not the module target name.
+        variable_config.additional_actions(
+            variable_name,
+            clean_variable_value,
+            variable_config,
+            data_structure_obj,
+        )
 
         # add the variable to a dictionary indexed by the variable name
         # (in the input file)
         variables[variable_name] = {
             "value": clean_variable_value,
-            "index": array_index_clean,
             "config": variable_config,
         }
 
@@ -1330,7 +1343,6 @@ def validate_variable(
     value: str,
     array_index: int | None,
     config: InputVariable,
-    line_number: int,
 ) -> ValidInputTypes:
     """Validate an input.
 
@@ -1344,8 +1356,6 @@ def validate_variable(
         the array index of the variable in the input file.
     config :
         the config of the variable that describes how to validate and process it.
-    line_number :
-        line number of current line being parsed for error reporting.
 
     Returns
     -------
@@ -1358,25 +1368,31 @@ def validate_variable(
         Variable validation failure
     """
     # check that if the variable should be an array, then an array index is provided
-    # EXCEPT for if check_array is False. This should only be the case when parsing
+    # EXCEPT for if check_array is False TODO this doesn't exist?. This should only be the case when parsing
     # entire arrays (e.g. my_array = 1,2,2,4,5) where there will be no array index.
+
     if array_index is None and config.array:
-        error_msg = f"Expected '{name}' at line {line_number} to be an array."
+        error_msg = f"Expected '{name}' to be an array."
         raise ProcessValidationError(error_msg)
 
     if array_index is not None and not config.array:
-        error_msg = f"Not expecting '{name}' at line {line_number} to be an array."
+        error_msg = f"Not expecting '{name}' to be an array."
         raise ProcessValidationError(error_msg)
 
-    if config.type in {float, int}:
+    if config.type in {float, int} and isinstance(value, str):
         value = value.lower().replace("d", "e")
 
+    # need to validate bounds separately as they are dictionaries
+    if name in {"boundl", "boundu"}:
+        clean_value = {}
+        for i in value:
+            clean_value[i] = config.type(value[i])
+        return clean_value
     try:
         clean_value = config.type(value)
     except ValueError as e:
         error_msg = (
-            f"Cannot cast variable name '{name}' at line {line_number}"
-            f" to a {config.type} (value = {value})"
+            f"Cannot cast variable name '{name}' to a {config.type} (value = {value})"
         )
         raise ProcessValidationError(error_msg) from e
 
@@ -1385,22 +1401,17 @@ def validate_variable(
         and not config.range[0] <= clean_value <= config.range[1]
     ):
         error_msg = (
-            f"Variable '{name}' at line {line_number} is not on the prescribed range"
+            f"Variable '{name}' is not on the prescribed range"
             f" {config.range} (value = {value})"
         )
         raise ProcessValidationError(error_msg)
 
     if config.choices is not None and clean_value not in config.choices:
-        error_msg = (
-            f"Variable '{name}' at line {line_number} is not one of {config.choices}"
-            f" (value = {value})"
-        )
+        error_msg = f"Variable '{name}' is not one of {config.choices} (value = {value})"
         raise ProcessValidationError(error_msg)
 
     if config.additional_validation is not None:
-        clean_value = config.additional_validation(
-            name, clean_value, int(array_index), config
-        )
+        clean_value = config.additional_validation(name, clean_value, config)
 
     return clean_value
 

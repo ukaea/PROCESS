@@ -13,6 +13,7 @@ Notes
 import sys
 from re import sub
 
+from process.core.data_structure import obsolete_vars as ov
 from process.core.data_structure.dicts import get_dicts
 from process.core.exceptions import ProcessValidationError
 from process.core.solver.constraints import ConstraintManager
@@ -34,22 +35,6 @@ def fortran_python_scientific(var_value):
          value with 'd/D' notation swapped for 'e/E' notation
     """
     return var_value.replace("D", "e").replace("d", "e")
-
-
-def remove_empty_lines(lines):
-    """Function to remove empty lines from list.
-
-    Parameters
-    ----------
-     lines:
-         list of lines (type=list)
-
-    Returns
-    -------
-    :
-         list of lines with empty lines removed (type=list)
-    """
-    return [line for line in lines if line.strip(" ") != "\n"]
 
 
 def is_title(line):
@@ -983,18 +968,22 @@ class INVariable:
         Type of item
     comment:
         Comment for item
+    line_no:
+        Line number
+        Optional for purposes of write_indat()
     """
 
-    def __init__(self, name, value, v_type, comment):
+    def __init__(self, name, value, v_type, comment, line_no: int | None = None):
         self.name = name
         self.value = value
         self.v_type = v_type
         self.comment = comment
+        self.line_no = line_no or None
 
     def __eq__(self, value):
         """Determine if variables are equal"""
-        # intentionally missing .comment,
-        # this is not necessary for the variables to be equal
+        # intentionally missing .comment and .line_no,
+        # these are not necessary for the variables to be equal
         return (
             self.name == value.name
             and self.value == value.value
@@ -1010,7 +999,7 @@ class INVariable:
         return (
             f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, "
             f"v_type={self.v_type!r}, "
-            f"comment={self.comment!r})"
+            f"comment={self.comment!r}, line_no={self.line_no!r})"
         )
 
     @property
@@ -1028,9 +1017,15 @@ class InDat:
     - Writing IN.DAT files
     - Storing information in dictionary for use in other codes
     - Alterations to IN.DAT
+    - Checking for and updating obsolete variables
     """
 
-    def __init__(self, filename="IN.DAT", start_line=0):
+    def __init__(
+        self,
+        filename: str,
+        start_line: int = 0,
+        update_obsolete: bool = False,
+    ):
         """Initialise class
 
         Parameters
@@ -1039,14 +1034,19 @@ class InDat:
             Name of input IN.DAT
         start_line:
             Line to start reading from
+        update_obsolete:
+            Whether to update obsolete variables in the IN.DAT or not
         """
         self.filename = filename
         self.start_line = start_line
+        self.update_obsolete = update_obsolete
+
+        # Check for obsolete variables and update if requested
+        self.check_obsolete_variables()
 
         # Initialise parameters
         self.in_dat_lines = []
         self.data = {}
-        self.unrecognised_vars = []
         self.duplicates = []  # Duplicate variables
 
         # read in IN.DAT
@@ -1056,16 +1056,22 @@ class InDat:
     def read_in_dat(self):
         """Function to read in 'self.filename' and put data into dictionary
         'self.data'
+
+        Raises
+        ------
+        ProcessValidationError
+            If invalid line in IN.DAT
         """
         # Read in IN.DAT
         with open(self.filename) as indat:
             self.in_dat_lines = indat.readlines()
             self.in_dat_lines = self.in_dat_lines[self.start_line :]
 
-        # Remove empty lines from the file
-        self.in_dat_lines = remove_empty_lines(self.in_dat_lines)
-
-        for line in self.in_dat_lines:
+        # Remove empty lines from the file - removed this so can get the line numbers
+        for line_no, line in enumerate(self.in_dat_lines, start=1):
+            # Ignore empty lines
+            if line.strip(" ") == "\n":
+                continue
             # Put everything in lower case
             l_line = line.lower() if "vmec" not in line.split("=")[0].lower() else line
 
@@ -1077,20 +1083,20 @@ class InDat:
             if line_type not in {"Title", "Comment"}:
                 try:
                     # for non-title lines process line and store data.
-                    self.process_line(line_type, l_line)
-                except KeyError:
-                    print(
-                        "Warning: Line below is causing a problem. Check "
-                        f"that line in IN.DAT is valid. Line skipped!\n{line}",
-                        file=sys.stderr,
-                    )
+                    self.process_line(line_type, l_line, line_no)
+                except KeyError as err:
+                    msg = f"Unrecognised input at line {line_no} of input file:\n{line}"
+                    raise ProcessValidationError(msg) from err
 
-                    # Store the first part of the unrecognised line (probably a
-                    # variable name) as an unrecognised var
-                    unrecognised_var = line.split("=")[0].strip()
-                    self.unrecognised_vars.append(unrecognised_var)
+        # Inform user of duplicate variables
+        # if len(self.duplicates) > 0:
+        #     raise ProcessValidationError(
+        #         "The following variables are duplicated in the IN.DAT and should only be"
+        #         " defined once:"
+        #         f"\n{self.duplicates}"
+        #     )
 
-    def process_line(self, line_type, line):
+    def process_line(self, line_type, line, line_no):
         """Function to process the line and return the appropriate INVariable
         object
 
@@ -1100,6 +1106,8 @@ class InDat:
             Type of information the line contains
         line:
             Line from IN.DAT to process
+        line_no:
+            Line number from IN.DAT
 
         """
         # Load dicts from dicts JSON file
@@ -1108,15 +1116,15 @@ class InDat:
         # Create bound variable class using INVariable class if the bounds entry
         # doesn't exist
         if "bounds" not in self.data:
-            self.data["bounds"] = INVariable("bounds", {}, "Bound", "Bounds")
+            self.data["bounds"] = INVariable("bounds", {}, "Bound", "Bounds", line_no)
 
         # Constraint equations
         if line_type == "Constraint Equation":
-            self.process_constraint_equation(line)
+            self.process_constraint_equation(line, line_no)
 
         # Iteration_variables
         elif line_type == "Iteration Variable":
-            self.process_iteration_variables(line)
+            self.process_iteration_variables(line, line_no)
 
         # Bounds
         elif line_type == "Bound":
@@ -1156,22 +1164,24 @@ class InDat:
                 # DICT_DEFAULT; don't want changes to data to change the
                 # defaults
                 self.data[array_name] = INVariable(
-                    array_name, empty_array_copy, array_name, comment
+                    array_name, empty_array_copy, array_name, comment, line_no
                 )
 
             self.process_array(line, empty_array)
 
         # Parameter
         else:
-            self.process_parameter(line)
+            self.process_parameter(line, line_no)
 
-    def process_parameter(self, line):
+    def process_parameter(self, line, line_no):
         """Function to process parameter entries in IN.DAT
 
         Parameters
         ----------
         line:
             Line from IN.DAT to process
+        line_no:
+            Line number from IN.DAT
 
         """
         # Load dicts from dicts JSON file
@@ -1223,15 +1233,17 @@ class InDat:
             self.add_duplicate_variable(name)
 
         # Populate the IN.DAT dictionary with the information
-        self.data[name] = INVariable(name, value, "Parameter", comment)
+        self.data[name] = INVariable(name, value, "Parameter", comment, line_no)
 
-    def process_constraint_equation(self, line):
+    def process_constraint_equation(self, line, line_no):
         """Function to process constraint equation entry in IN.DAT
 
         Parameters
         ----------
         line:
             Line from IN.DAT to process
+        line_no:
+            Line number from IN.DAT
 
         """
         # Remove comment from line to make things easier
@@ -1255,10 +1267,7 @@ class InDat:
         # INVariable class
         if "icc" not in self.data:
             self.data["icc"] = INVariable(
-                "icc",
-                value,
-                "Constraint Equation",
-                "Constraint Equations",
+                "icc", value, "Constraint Equation", "Constraint Equations", line_no
             )
 
         else:
@@ -1269,17 +1278,19 @@ class InDat:
                 else:
                     # Duplicate constraint equation number
                     self.add_duplicate_variable(f"icc = {item}")
-            # Don't sort the constraints! Preserves what's eq, what's ineq;
-            # first n_equality_constraints are eqs, rest are ineqs
-            # self.data["icc"].value.sort()
+            # Don't sort the constraints using self.data["icc"].value.sort()! Preserves
+            # what's eq, what's ineq; first n_equality_constraints are eqs, rest are
+            # ineqs
 
-    def process_iteration_variables(self, line):
+    def process_iteration_variables(self, line, line_no):
         """Function to process iteration variables entry in IN.DAT
 
         Parameters
         ----------
         line:
             Line from IN.DAT to process
+        line_no:
+            Line number from IN.DAT
 
         """
         # Remove comment from line to make things easier
@@ -1303,10 +1314,7 @@ class InDat:
         # INVariable class
         if "ixc" not in self.data:
             self.data["ixc"] = INVariable(
-                "ixc",
-                value,
-                "Iteration Variable",
-                "Iteration Variables",
+                "ixc", value, "Iteration Variable", "Iteration Variables", line_no
             )
 
         else:
@@ -1465,7 +1473,8 @@ class InDat:
         name:
             The name of the variable being duplicated
         """
-        self.duplicates.append(name)
+        if name not in self.duplicates:
+            self.duplicates.append(name)
 
     def add_iteration_variable(self, variable_number):
         """Function to add iteration variable to IN.DAT data dictionary
@@ -1632,6 +1641,127 @@ class InDat:
 
             # Write parameters
             write_parameters(self.data, output)
+
+    def check_obsolete_variables(self):
+        """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict
+        contained within obsolete_variables.py.
+        If obsolete variables are found, and if `update_obsolete` is set to True,
+        they are either removed or replaced by their updated names as specified
+        in the OBS_VARS dictionary.
+
+        Raises
+        ------
+        ValueError
+            If obsolete variables are present in the input file and update_obsolete
+            is False.
+        """
+        obsolete_variables = ov.OBS_VARS
+        obsolete_vars_help_message = ov.OBS_VARS_HELP
+
+        filename = self.filename
+        variables_in_in_dat = []
+        modified_lines = []
+        changes_made = []  # To store details of the changes
+
+        with open(filename) as file:
+            for line in file:
+                # Skip comment lines or lines without an assignment
+                if line.startswith("*") or "=" not in line:
+                    modified_lines.append(line)
+                    continue
+
+                # Extract the variable name before the separator
+                raw_variable_name = line.split("=", 1)[0].strip()
+                # handle cases where the variable name might have parentheses
+                variable_name = (
+                    raw_variable_name.split("(", 1)[0]
+                    if "(" in raw_variable_name
+                    else raw_variable_name
+                )
+
+                # Check if the variable is obsolete and needs replacing
+                if variable_name in obsolete_variables:
+                    replacement = obsolete_variables.get(variable_name)
+                    if self.update_obsolete:
+                        # Prepare replacement or removal
+                        if replacement is None:
+                            # If no replacement is defined, comment out the line
+                            modified_lines.append(f"* Obsolete: {line}")
+                            changes_made.append(
+                                f"Commented out obsolete variable: {variable_name}"
+                            )
+                        else:
+                            if isinstance(replacement, list):
+                                # Raise an error if replacement is a list
+                                replacement_str = ", ".join(replacement)
+                                raise ValueError(
+                                    f"The variable '{variable_name}' is obsolete and "
+                                    "should be replaced by the following variables: "
+                                    f"{replacement_str}. "
+                                    "Please set their values accordingly."
+                                )
+                            # Replace obsolete variable
+                            modified_line = line.replace(variable_name, replacement, 1)
+                            modified_lines.append(
+                                f"* Replaced '{variable_name}' with "
+                                f"'{replacement}'\n{modified_line}"
+                            )
+                            changes_made.append(
+                                f"Replaced '{variable_name}' with '{replacement}'"
+                            )
+                            variables_in_in_dat.append(variable_name)
+                    else:
+                        # If replacement is False, add the line as-is
+                        modified_lines.append(line)
+                        variables_in_in_dat.append(variable_name)
+                else:
+                    modified_lines.append(line)
+
+        obs_vars_in_in_dat = [
+            var for var in variables_in_in_dat if var in obsolete_variables
+        ]
+
+        if obs_vars_in_in_dat:
+            if self.update_obsolete:
+                # If update_obsolete is True, write the modified content to the file
+                with open(filename, "w") as file:
+                    file.writelines(modified_lines)
+                print(
+                    "The IN.DAT file has been updated to replace or "
+                    "comment out obsolete variables."
+                )
+                print("Summary of changes made:")
+                for change in changes_made:
+                    print(f" - {change}")
+            else:
+                # Only print the report if update_obsolete is False
+                message = (
+                    "The IN.DAT file contains obsolete variables "
+                    "from the OBS_VARS dictionary. "
+                    "The obsolete variables in your IN.DAT file are: "
+                    f"{obs_vars_in_in_dat}. "
+                    "Either remove these or replace them with "
+                    "their updated variable names. "
+                    "Use the --update-obsolete flag for this "
+                    "to be done automatically."
+                )
+                for obs_var in obs_vars_in_in_dat:
+                    replacement = obsolete_variables.get(obs_var)
+                    if replacement is None:
+                        message += (
+                            f"\n\n{obs_var} is an obsolete variable "
+                            "and needs to be removed."
+                        )
+                    else:
+                        message += (
+                            f"\n\n{obs_var} is an obsolete variable "
+                            f"and needs to be replaced by {replacement}."
+                        )
+                    message += f" {obsolete_vars_help_message.get(obs_var, '')}"
+                raise ValueError(message)
+
+        else:
+            print("The IN.DAT file does not contain any obsolete variables.")
 
     @property
     def number_of_constraints(self):
