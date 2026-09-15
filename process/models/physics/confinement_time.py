@@ -167,11 +167,18 @@ class PlasmaConfinementTime(Model):
         try:
             model = ConfinementRadiationLossModel(int(self.data.physics.i_rad_loss))
 
-            if model == ConfinementRadiationLossModel.FULL_RADIATION:
-                p_plasma_loss_mw -= self.data.physics.pden_plasma_rad_mw * vol_plasma
-            elif model == ConfinementRadiationLossModel.CORE_ONLY:
-                p_plasma_loss_mw -= pden_plasma_core_rad_mw * vol_plasma
-            # NO_RADIATION: do not adjust p_plasma_loss_mw for radiation
+            match model:
+                case ConfinementRadiationLossModel.FULL_RADIATION:
+                    p_plasma_loss_mw -= self.data.physics.pden_plasma_rad_mw * vol_plasma
+                case ConfinementRadiationLossModel.CORE_ONLY:
+                    p_plasma_loss_mw -= pden_plasma_core_rad_mw * vol_plasma
+                case ConfinementRadiationLossModel.NO_RADIATION:
+                    pass
+                case _:
+                    raise ProcessValueError(
+                        "Illegal value for i_rad_loss",
+                        i_rad_loss=self.data.physics.i_rad_loss,
+                    )
         except ValueError as e:
             raise ProcessValueError(
                 "Illegal value of i_rad_loss",
@@ -215,191 +222,58 @@ class PlasmaConfinementTime(Model):
                 i_confinement_time=i_confinement_time,
             ) from e
 
-        # ========================================================================
+        match model:
+            # ====================================================================
 
-        # User defined confinement time
-        if (
-            model == ConfinementTimeModel.USER_INPUT
-        ):  # t_electron_energy_confinement is an input
-            t_electron_confinement = self.data.physics.tauee_in
+            # User defined confinement time
+            case ConfinementTimeModel.USER_INPUT:
+                # t_electron_energy_confinement is an input
+                t_electron_confinement = self.data.physics.tauee_in
 
-        # ========================================================================
+            # ====================================================================
 
-        # Nec-Alcator(NA) OH scaling
-        if (
-            model == ConfinementTimeModel.NEO_ALCATOR
-        ):  # t_electron_energy_confinement is an input
-            t_electron_confinement = self.neo_alcator_confinement_time(
-                n20, rminor, rmajor, qstar
-            )
+            # Nec-Alcator(NA) OH scaling
+            case ConfinementTimeModel.NEO_ALCATOR:
+                # t_electron_energy_confinement is an input
+                t_electron_confinement = self.neo_alcator_confinement_time(
+                    n20, rminor, rmajor, qstar
+                )
 
-        # ========================================================================
+            # ====================================================================
 
-        # "Mirnov"-like scaling (H-mode)
-        elif model == ConfinementTimeModel.MIRNOV:  # Mirnov scaling (H-mode)
-            t_electron_confinement = self.mirnov_confinement_time(
-                rminor, kappa95, cur_plasma_ma
-            )
+            # "Mirnov"-like scaling (H-mode)
+            case ConfinementTimeModel.MIRNOV:  # Mirnov scaling (H-mode)
+                t_electron_confinement = self.mirnov_confinement_time(
+                    rminor, kappa95, cur_plasma_ma
+                )
 
-        # ========================================================================
+            # ====================================================================
 
-        # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
-        elif model == ConfinementTimeModel.MEREZHKIN_MUHKOVATOV:
-            t_electron_confinement = self.merezhkin_muhkovatov_confinement_time(
-                rmajor,
-                rminor,
-                kappa95,
-                qstar,
-                nd_plasma_electron_line_20,
-                m_fuel_amu,
-                temp_plasma_electron_density_weighted_kev,
-            )
+            # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
+            case ConfinementTimeModel.MEREZHKIN_MUHKOVATOV:
+                t_electron_confinement = self.merezhkin_muhkovatov_confinement_time(
+                    rmajor,
+                    rminor,
+                    kappa95,
+                    qstar,
+                    nd_plasma_electron_line_20,
+                    m_fuel_amu,
+                    temp_plasma_electron_density_weighted_kev,
+                )
 
-        # ========================================================================
+            # ====================================================================
 
-        # Shimomura (S) optimized H-mode scaling
-        elif model == ConfinementTimeModel.SHIMOMURA:
-            t_electron_confinement = self.shimomura_confinement_time(
-                rmajor, rminor, b_plasma_toroidal_on_axis, kappa95, m_fuel_amu
-            )
+            # Shimomura (S) optimized H-mode scaling
+            case ConfinementTimeModel.SHIMOMURA:
+                t_electron_confinement = self.shimomura_confinement_time(
+                    rmajor, rminor, b_plasma_toroidal_on_axis, kappa95, m_fuel_amu
+                )
 
-        # ========================================================================
+            # ====================================================================
 
-        # Kaye-Goldston scaling (L-mode)
-        elif model == ConfinementTimeModel.KAYE_GOLDSTON:
-            t_electron_confinement = self.kaye_goldston_confinement_time(
-                cur_plasma_ma,
-                rmajor,
-                rminor,
-                kappa,
-                nd_plasma_electron_line_20,
-                b_plasma_toroidal_on_axis,
-                m_fuel_amu,
-                p_plasma_loss_mw,
-            )
-
-        # ========================================================================
-
-        # ITER Power scaling - ITER 89-P (L-mode)
-        elif model == ConfinementTimeModel.ITER_89P:
-            t_electron_confinement = self.iter_89p_confinement_time(
-                cur_plasma_ma,
-                rmajor,
-                rminor,
-                kappa,
-                nd_plasma_electron_line_20,
-                b_plasma_toroidal_on_axis,
-                m_fuel_amu,
-                p_plasma_loss_mw,
-            )
-
-        # ========================================================================
-
-        # ITER Offset linear scaling - ITER 89-O (L-mode)
-        elif model == ConfinementTimeModel.ITER_89_0:
-            t_electron_confinement = self.iter_89_0_confinement_time(
-                cur_plasma_ma,
-                rmajor,
-                rminor,
-                kappa,
-                nd_plasma_electron_line_20,
-                b_plasma_toroidal_on_axis,
-                m_fuel_amu,
-                p_plasma_loss_mw,
-            )
-        # ========================================================================
-
-        # Rebut-Lallia offset linear scaling (L-mode)
-        elif model == ConfinementTimeModel.REBUT_LALLIA:
-            t_electron_confinement = self.rebut_lallia_confinement_time(
-                rminor,
-                rmajor,
-                kappa,
-                m_fuel_amu,
-                cur_plasma_ma,
-                zeff,
-                nd_plasma_electron_line_20,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-            )
-
-        # ========================================================================
-
-        # Goldston scaling (L-mode)
-        elif model == ConfinementTimeModel.GOLDSTON:  # Goldston scaling (L-mode)
-            t_electron_confinement = self.goldston_confinement_time(
-                cur_plasma_ma, rmajor, rminor, kappa95, m_fuel_amu, p_plasma_loss_mw
-            )
-
-        # ========================================================================
-
-        # T-10 scaling (L-mode)
-        elif model == ConfinementTimeModel.T_10:
-            t_electron_confinement = self.t10_confinement_time(
-                nd_plasma_electron_line_20,
-                rmajor,
-                qstar,
-                b_plasma_toroidal_on_axis,
-                rminor,
-                kappa95,
-                p_plasma_loss_mw,
-                zeff,
-                cur_plasma_ma,
-            )
-
-        # ========================================================================
-
-        # JAERI / Odajima-Shimomura L-mode scaling
-        elif model == ConfinementTimeModel.JAERI:  # JAERI scaling
-            t_electron_confinement = self.jaeri_confinement_time(
-                kappa95,
-                rminor,
-                m_fuel_amu,
-                n20,
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                rmajor,
-                qstar,
-                zeff,
-                p_plasma_loss_mw,
-            )
-
-        # ========================================================================
-
-        # Kaye "big"  L-mode scaling (based only on big tokamak data)
-        elif model == ConfinementTimeModel.KAYE_BIG:
-            t_electron_confinement = self.kaye_big_confinement_time(
-                rmajor,
-                rminor,
-                b_plasma_toroidal_on_axis,
-                kappa95,
-                cur_plasma_ma,
-                n20,
-                m_fuel_amu,
-                p_plasma_loss_mw,
-            )
-
-        # ========================================================================
-
-        # ITER H90-P H-mode scaling
-        elif model == ConfinementTimeModel.ITER_H90_P:
-            t_electron_confinement = self.iter_h90_p_confinement_time(
-                cur_plasma_ma,
-                rmajor,
-                rminor,
-                kappa,
-                nd_plasma_electron_line_20,
-                b_plasma_toroidal_on_axis,
-                m_fuel_amu,
-                p_plasma_loss_mw,
-            )
-
-        # ========================================================================
-
-        # Minimum of ITER 89-P and ITER 89-O
-        elif model == ConfinementTimeModel.MINIMUM_OF_ITER_89P_AND_ITER_89_0:
-            t_electron_confinement = min(
-                self.iter_89p_confinement_time(
+            # Kaye-Goldston scaling (L-mode)
+            case ConfinementTimeModel.KAYE_GOLDSTON:
+                t_electron_confinement = self.kaye_goldston_confinement_time(
                     cur_plasma_ma,
                     rmajor,
                     rminor,
@@ -408,8 +282,13 @@ class PlasmaConfinementTime(Model):
                     b_plasma_toroidal_on_axis,
                     m_fuel_amu,
                     p_plasma_loss_mw,
-                ),
-                self.iter_89_0_confinement_time(
+                )
+
+            # ====================================================================
+
+            # ITER Power scaling - ITER 89-P (L-mode)
+            case ConfinementTimeModel.ITER_89P:
+                t_electron_confinement = self.iter_89p_confinement_time(
                     cur_plasma_ma,
                     rmajor,
                     rminor,
@@ -418,542 +297,679 @@ class PlasmaConfinementTime(Model):
                     b_plasma_toroidal_on_axis,
                     m_fuel_amu,
                     p_plasma_loss_mw,
-                ),
-            )
-
-        # ========================================================================
-
-        # Riedel scaling (L-mode)
-        elif model == ConfinementTimeModel.RIEDEL_L:
-            t_electron_confinement = self.riedel_l_confinement_time(
-                cur_plasma_ma,
-                rmajor,
-                rminor,
-                kappa95,
-                nd_plasma_electron_line_20,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-            )
-
-        # ========================================================================
-
-        # Christiansen et al scaling (L-mode)
-        elif model == ConfinementTimeModel.CHRISTIANSEN:
-            t_electron_confinement = self.christiansen_confinement_time(
-                cur_plasma_ma,
-                rmajor,
-                rminor,
-                kappa95,
-                nd_plasma_electron_line_20,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-                m_fuel_amu,
-            )
-
-        # ========================================================================
-
-        # Lackner-Gottardi scaling (L-mode)
-        elif model == ConfinementTimeModel.LACKNER_GOTTARDI:
-            t_electron_confinement = self.lackner_gottardi_confinement_time(
-                cur_plasma_ma,
-                rmajor,
-                rminor,
-                kappa95,
-                nd_plasma_electron_line_20,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-            )
-
-        # ========================================================================
-
-        # Neo-Kaye scaling (L-mode)
-        elif model == ConfinementTimeModel.NEO_KAYE:
-            t_electron_confinement = self.neo_kaye_confinement_time(
-                cur_plasma_ma,
-                rmajor,
-                rminor,
-                kappa95,
-                nd_plasma_electron_line_20,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-            )
-
-        # ======== ================================================================
-
-        # Riedel scaling (H-mode)
-        elif model == ConfinementTimeModel.RIEDEL_H:
-            t_electron_confinement = self.riedel_h_confinement_time(
-                cur_plasma_ma,
-                rmajor,
-                rminor,
-                kappa95,
-                nd_plasma_electron_line_20,
-                b_plasma_toroidal_on_axis,
-                m_fuel_amu,
-                p_plasma_loss_mw,
-            )
-
-        # ========================================================================
-
-        # Amended version of ITER H90-P law
-        elif model == ConfinementTimeModel.ITER_H90_P_AMENDED:
-            t_electron_confinement = self.iter_h90_p_amended_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                m_fuel_amu,
-                rmajor,
-                p_plasma_loss_mw,
-                kappa,
-            )
-
-        # ==========================================================================
-
-        # Sudo et al. scaling (stellarators/heliotron)
-        elif model == ConfinementTimeModel.SUDO_ET_AL:
-            t_electron_confinement = self.sudo_et_al_confinement_time(
-                rmajor,
-                rminor,
-                nd_plasma_electron_line_20,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-            )
-
-        # ==========================================================================
-
-        # Gyro-reduced Bohm scaling
-        elif model == ConfinementTimeModel.GYRO_REDUCED_BOHM:
-            t_electron_confinement = self.gyro_reduced_bohm_confinement_time(
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_20,
-                p_plasma_loss_mw,
-                rminor,
-                rmajor,
-            )
-
-        # ==========================================================================
-
-        # Lackner-Gottardi stellarator scaling
-        elif model == ConfinementTimeModel.LACKNER_GOTTARDI_STELLARATOR:
-            t_electron_confinement = self.lackner_gottardi_stellarator_confinement_time(
-                rmajor,
-                rminor,
-                nd_plasma_electron_line_20,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-                q95,
-            )
-
-        # ==========================================================================
-
-        # ITER_93 ELM-free H-mode scaling
-        elif model == ConfinementTimeModel.ITER_93H:
-            t_electron_confinement = self.iter_93h_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-                m_fuel_amu,
-                rmajor,
-                nd_plasma_electron_line_20,
-                aspect,
-                kappa,
-            )
-
-        # ==========================================================================
-        # Scaling removed
-        elif model == ConfinementTimeModel.TITAN_REMOVED:
-            raise ProcessValueError("Scaling removed")
-        # ==========================================================================
-
-        # ELM-free: ITERH-97P
-        elif model == ConfinementTimeModel.ITER_H97P:
-            t_electron_confinement = self.iter_h97p_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-                nd_plasma_electron_line_19,
-                rmajor,
-                aspect,
-                kappa,
-                m_fuel_amu,
-            )
-
-        # ==========================================================================
-
-        # ELMy: ITERH-97P(y)
-        elif model == ConfinementTimeModel.ITER_H97P_ELMY:
-            t_electron_confinement = self.iter_h97p_elmy_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-                nd_plasma_electron_line_19,
-                rmajor,
-                aspect,
-                kappa,
-                m_fuel_amu,
-            )
-
-        # ==========================================================================
-
-        # ITER-96P (= ITER-97L) L-mode scaling
-        elif model == ConfinementTimeModel.ITER_96P:
-            t_electron_confinement = self.iter_96p_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                kappa95,
-                rmajor,
-                aspect,
-                nd_plasma_electron_line_19,
-                m_fuel_amu,
-                p_plasma_loss_mw,
-            )
-
-        # ==========================================================================
-
-        # Valovic modified ELMy-H mode scaling
-        # WARNING: No reference found for this scaling. This may not be its real name
-        elif model == ConfinementTimeModel.VALOVIC_ELMY:
-            t_electron_confinement = self.valovic_elmy_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_19,
-                m_fuel_amu,
-                rmajor,
-                rminor,
-                kappa,
-                p_plasma_loss_mw,
-            )
-
-        # ==========================================================================
-
-        # Kaye PPPL Workshop April 1998 L-mode scaling
-        # WARNING: No reference found for this scaling. This may not be its real name
-        elif model == ConfinementTimeModel.KAYE:
-            t_electron_confinement = self.kaye_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                kappa,
-                rmajor,
-                aspect,
-                nd_plasma_electron_line_19,
-                m_fuel_amu,
-                p_plasma_loss_mw,
-            )
-
-        # ==========================================================================
-
-        # ITERH-PB98P(y), ELMy H-mode scaling
-        # WARNING: No reference found for this scaling. This may not be its real name
-        elif model == ConfinementTimeModel.ITER_PB98P_Y:
-            t_electron_confinement = self.iter_pb98py_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_19,
-                p_plasma_loss_mw,
-                rmajor,
-                self.data.physics.kappa_ipb,
-                aspect,
-                m_fuel_amu,
-            )
-
-        # ==========================================================================
-
-        # IPB98(y), ELMy H-mode scaling
-        elif model == ConfinementTimeModel.IPB98_Y:
-            t_electron_confinement = self.iter_ipb98y_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_19,
-                p_plasma_loss_mw,
-                rmajor,
-                kappa,
-                aspect,
-                m_fuel_amu,
-            )
-
-        # ==========================================================================
-
-        # IPB98(y,1), ELMy H-mode scaling
-        elif model == ConfinementTimeModel.ITER_IPB98Y1:
-            t_electron_confinement = self.iter_ipb98y1_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_19,
-                p_plasma_loss_mw,
-                rmajor,
-                self.data.physics.kappa_ipb,
-                aspect,
-                m_fuel_amu,
-            )
-
-        # ==========================================================================
-
-        # IPB98(y,2), ELMy H-mode scaling
-        elif model == ConfinementTimeModel.ITER_IPB98Y2:
-            t_electron_confinement = self.iter_ipb98y2_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_19,
-                p_plasma_loss_mw,
-                rmajor,
-                self.data.physics.kappa_ipb,
-                aspect,
-                m_fuel_amu,
-            )
-
-        # ==========================================================================
-
-        # IPB98(y,3), ELMy H-mode scaling
-        elif model == ConfinementTimeModel.ITER_IPB98Y3:
-            t_electron_confinement = self.iter_ipb98y3_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_19,
-                p_plasma_loss_mw,
-                rmajor,
-                self.data.physics.kappa_ipb,
-                aspect,
-                m_fuel_amu,
-            )
-
-        # ==========================================================================
-
-        # IPB98(y,4), ELMy H-mode scaling
-        elif model == ConfinementTimeModel.ITER_IPB98Y4:
-            t_electron_confinement = self.iter_ipb98y4_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_19,
-                p_plasma_loss_mw,
-                rmajor,
-                self.data.physics.kappa_ipb,
-                aspect,
-                m_fuel_amu,
-            )
-
-        # ==========================================================================
-
-        # ISS95 stellarator scaling
-        elif model == ConfinementTimeModel.ISS95_STELLARATOR:
-            # dummy argument q95 is actual argument iotabar for stellarators
-            iotabar = q95
-            t_electron_confinement = self.iss95_stellarator_confinement_time(
-                rminor,
-                rmajor,
-                nd_plasma_electron_line_19,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-                iotabar,
-            )
-
-        # ==========================================================================
-
-        # ISS04 stellarator scaling
-        elif model == ConfinementTimeModel.ISS04_STELLARATOR:
-            # dummy argument q95 is actual argument iotabar for stellarators
-            iotabar = q95
-            t_electron_confinement = self.iss04_stellarator_confinement_time(
-                rminor,
-                rmajor,
-                nd_plasma_electron_line_19,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-                iotabar,
-            )
-
-        # ==========================================================================
-
-        # DS03 beta-independent H-mode scaling
-        elif model == ConfinementTimeModel.DS03:
-            t_electron_confinement = self.ds03_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_19,
-                p_plasma_loss_mw,
-                rmajor,
-                kappa95,
-                aspect,
-                m_fuel_amu,
-            )
-
-        # ==========================================================================
-
-        #  Murari "Non-power law" scaling
-        elif model == ConfinementTimeModel.MURARI:
-            t_electron_confinement = self.murari_confinement_time(
-                cur_plasma_ma,
-                rmajor,
-                self.data.physics.kappa_ipb,
-                nd_plasma_electron_line_19,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-            )
-
-        # ==========================================================================
-
-        # Petty08, beta independent dimensionless scaling
-        elif model == ConfinementTimeModel.PETTY08:
-            t_electron_confinement = self.petty08_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_19,
-                p_plasma_loss_mw,
-                rmajor,
-                self.data.physics.kappa_ipb,
-                aspect,
-            )
-
-        # ==========================================================================
-
-        # Lang high density relevant confinement scaling
-        elif model == ConfinementTimeModel.LANG_HIGH_DENSITY:
-            t_electron_confinement = self.lang_high_density_confinement_time(
-                plasma_current,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line,
-                p_plasma_loss_mw,
-                rmajor,
-                rminor,
-                q95,
-                qstar,
-                aspect,
-                m_fuel_amu,
-                self.data.physics.kappa_ipb,
-            )
-
-        # ==========================================================================
-
-        # Hubbard 2017 I-mode confinement time scaling - nominal
-        elif model == ConfinementTimeModel.HUBBARD_NOMINAL:
-            t_electron_confinement = self.hubbard_nominal_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_20,
-                p_plasma_loss_mw,
-            )
-
-        # ==========================================================================
-
-        # Hubbard 2017 I-mode confinement time scaling - lower
-        elif model == ConfinementTimeModel.HUBBARD_LOWER:
-            t_electron_confinement = self.hubbard_lower_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_20,
-                p_plasma_loss_mw,
-            )
-
-        # ==========================================================================
-
-        # Hubbard 2017 I-mode confinement time scaling - upper
-        elif model == ConfinementTimeModel.HUBBARD_UPPER:
-            t_electron_confinement = self.hubbard_upper_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_20,
-                p_plasma_loss_mw,
-            )
-
-        # ==========================================================================
-
-        # Menard NSTX, ELMy H-mode scaling
-        elif model == ConfinementTimeModel.MENARD_NSTX:
-            t_electron_confinement = self.menard_nstx_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_19,
-                p_plasma_loss_mw,
-                rmajor,
-                self.data.physics.kappa_ipb,
-                aspect,
-                m_fuel_amu,
-            )
-
-        # ==========================================================================
-
-        # Menard NSTX-Petty08 Hybrid
-        elif model == ConfinementTimeModel.MENARD_NSTX_PETTY08_HYBRID:
-            t_electron_confinement = self.menard_nstx_petty08_hybrid_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_19,
-                p_plasma_loss_mw,
-                rmajor,
-                self.data.physics.kappa_ipb,
-                aspect,
-                m_fuel_amu,
-            )
-
-        # ==========================================================================
-
-        # NSTX gyro-Bohm (Buxton)
-        elif model == ConfinementTimeModel.NSTX_GYRO_BOHM:
-            t_electron_confinement = self.nstx_gyro_bohm_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-                rmajor,
-                nd_plasma_electron_line_20,
-            )
-
-        # ==========================================================================
-
-        # ITPA20 H-mode scaling
-        elif model == ConfinementTimeModel.ITPA20:
-            t_electron_confinement = self.itpa20_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                nd_plasma_electron_line_19,
-                p_plasma_loss_mw,
-                rmajor,
-                self.data.physics.triang,
-                self.data.physics.kappa_ipb,
-                eps,
-                self.data.physics.m_ions_total_amu,
-            )
-
-        # ==========================================================================
-
-        # ITPA20-IL confinement time scaling
-        elif model == ConfinementTimeModel.ITPA20_IL:
-            t_electron_confinement = self.itpa20_il_confinement_time(
-                cur_plasma_ma,
-                b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw,
-                nd_plasma_electron_line_19,
-                self.data.physics.m_ions_total_amu,
-                rmajor,
-                self.data.physics.triang,
-                self.data.physics.kappa_ipb,
-            )
-
-        # ==========================================================================
-        # NCST spherical tokamak L-mode confinement time scaling
-        elif model == ConfinementTimeModel.NCST:
-            t_electron_confinement = self.ncst_confinement_time(
-                cur_plasma_ma=cur_plasma_ma,
-                b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw=p_plasma_loss_mw,
-                nd_plasma_electron_line_19=nd_plasma_electron_line_19,
-            )
-
-        # ==========================================================================
-
-        # Paz-Soldan negative triangularity confinement time scaling
-        elif model == ConfinementTimeModel.PAZ_SOLDAN_NT:
-            t_electron_confinement = self.paz_soldan_nt_confinement_time(
-                cur_plasma_ma=cur_plasma_ma,
-                b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-                p_plasma_loss_mw=p_plasma_loss_mw,
-                nd_plasma_electron_line_19=nd_plasma_electron_line_19,
-            )
-
-        # ==========================================================================
-
-        else:
-            raise ProcessValueError(
-                "Illegal value for i_confinement_time",
-                i_confinement_time=i_confinement_time,
-            )
+                )
+
+            # ====================================================================
+
+            # ITER Offset linear scaling - ITER 89-O (L-mode)
+            case ConfinementTimeModel.ITER_89_0:
+                t_electron_confinement = self.iter_89_0_confinement_time(
+                    cur_plasma_ma,
+                    rmajor,
+                    rminor,
+                    kappa,
+                    nd_plasma_electron_line_20,
+                    b_plasma_toroidal_on_axis,
+                    m_fuel_amu,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Rebut-Lallia offset linear scaling (L-mode)
+            case ConfinementTimeModel.REBUT_LALLIA:
+                t_electron_confinement = self.rebut_lallia_confinement_time(
+                    rminor,
+                    rmajor,
+                    kappa,
+                    m_fuel_amu,
+                    cur_plasma_ma,
+                    zeff,
+                    nd_plasma_electron_line_20,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Goldston scaling (L-mode)
+            case ConfinementTimeModel.GOLDSTON:  # Goldston scaling (L-mode)
+                t_electron_confinement = self.goldston_confinement_time(
+                    cur_plasma_ma,
+                    rmajor,
+                    rminor,
+                    kappa95,
+                    m_fuel_amu,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # T-10 scaling (L-mode)
+            case ConfinementTimeModel.T_10:
+                t_electron_confinement = self.t10_confinement_time(
+                    nd_plasma_electron_line_20,
+                    rmajor,
+                    qstar,
+                    b_plasma_toroidal_on_axis,
+                    rminor,
+                    kappa95,
+                    p_plasma_loss_mw,
+                    zeff,
+                    cur_plasma_ma,
+                )
+
+            # ====================================================================
+
+            # JAERI / Odajima-Shimomura L-mode scaling
+            case ConfinementTimeModel.JAERI:  # JAERI scaling
+                t_electron_confinement = self.jaeri_confinement_time(
+                    kappa95,
+                    rminor,
+                    m_fuel_amu,
+                    n20,
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    rmajor,
+                    qstar,
+                    zeff,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Kaye "big"  L-mode scaling (based only on big tokamak data)
+            case ConfinementTimeModel.KAYE_BIG:
+                t_electron_confinement = self.kaye_big_confinement_time(
+                    rmajor,
+                    rminor,
+                    b_plasma_toroidal_on_axis,
+                    kappa95,
+                    cur_plasma_ma,
+                    n20,
+                    m_fuel_amu,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # ITER H90-P H-mode scaling
+            case ConfinementTimeModel.ITER_H90_P:
+                t_electron_confinement = self.iter_h90_p_confinement_time(
+                    cur_plasma_ma,
+                    rmajor,
+                    rminor,
+                    kappa,
+                    nd_plasma_electron_line_20,
+                    b_plasma_toroidal_on_axis,
+                    m_fuel_amu,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Minimum of ITER 89-P and ITER 89-O
+            case ConfinementTimeModel.MINIMUM_OF_ITER_89P_AND_ITER_89_0:
+                t_electron_confinement = min(
+                    self.iter_89p_confinement_time(
+                        cur_plasma_ma,
+                        rmajor,
+                        rminor,
+                        kappa,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        m_fuel_amu,
+                        p_plasma_loss_mw,
+                    ),
+                    self.iter_89_0_confinement_time(
+                        cur_plasma_ma,
+                        rmajor,
+                        rminor,
+                        kappa,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        m_fuel_amu,
+                        p_plasma_loss_mw,
+                    ),
+                )
+
+            # ====================================================================
+
+            # Riedel scaling (L-mode)
+            case ConfinementTimeModel.RIEDEL_L:
+                t_electron_confinement = self.riedel_l_confinement_time(
+                    cur_plasma_ma,
+                    rmajor,
+                    rminor,
+                    kappa95,
+                    nd_plasma_electron_line_20,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Christiansen et al scaling (L-mode)
+            case ConfinementTimeModel.CHRISTIANSEN:
+                t_electron_confinement = self.christiansen_confinement_time(
+                    cur_plasma_ma,
+                    rmajor,
+                    rminor,
+                    kappa95,
+                    nd_plasma_electron_line_20,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                    m_fuel_amu,
+                )
+
+            # ====================================================================
+
+            # Lackner-Gottardi scaling (L-mode)
+            case ConfinementTimeModel.LACKNER_GOTTARDI:
+                t_electron_confinement = self.lackner_gottardi_confinement_time(
+                    cur_plasma_ma,
+                    rmajor,
+                    rminor,
+                    kappa95,
+                    nd_plasma_electron_line_20,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Neo-Kaye scaling (L-mode)
+            case ConfinementTimeModel.NEO_KAYE:
+                t_electron_confinement = self.neo_kaye_confinement_time(
+                    cur_plasma_ma,
+                    rmajor,
+                    rminor,
+                    kappa95,
+                    nd_plasma_electron_line_20,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                )
+
+            # ======== ================================================================
+
+            # Riedel scaling (H-mode)
+            case ConfinementTimeModel.RIEDEL_H:
+                t_electron_confinement = self.riedel_h_confinement_time(
+                    cur_plasma_ma,
+                    rmajor,
+                    rminor,
+                    kappa95,
+                    nd_plasma_electron_line_20,
+                    b_plasma_toroidal_on_axis,
+                    m_fuel_amu,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Amended version of ITER H90-P law
+            case ConfinementTimeModel.ITER_H90_P_AMENDED:
+                t_electron_confinement = self.iter_h90_p_amended_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    m_fuel_amu,
+                    rmajor,
+                    p_plasma_loss_mw,
+                    kappa,
+                )
+
+            # ====================================================================
+
+            # Sudo et al. scaling (stellarators/heliotron)
+            case ConfinementTimeModel.SUDO_ET_AL:
+                t_electron_confinement = self.sudo_et_al_confinement_time(
+                    rmajor,
+                    rminor,
+                    nd_plasma_electron_line_20,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Gyro-reduced Bohm scaling
+            case ConfinementTimeModel.GYRO_REDUCED_BOHM:
+                t_electron_confinement = self.gyro_reduced_bohm_confinement_time(
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_20,
+                    p_plasma_loss_mw,
+                    rminor,
+                    rmajor,
+                )
+
+            # ====================================================================
+
+            # Lackner-Gottardi stellarator scaling
+            case ConfinementTimeModel.LACKNER_GOTTARDI_STELLARATOR:
+                t_electron_confinement = (
+                    self.lackner_gottardi_stellarator_confinement_time(
+                        rmajor,
+                        rminor,
+                        nd_plasma_electron_line_20,
+                        b_plasma_toroidal_on_axis,
+                        p_plasma_loss_mw,
+                        q95,
+                    )
+                )
+
+            # ====================================================================
+
+            # ITER_93 ELM-free H-mode scaling
+            case ConfinementTimeModel.ITER_93H:
+                t_electron_confinement = self.iter_93h_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                    m_fuel_amu,
+                    rmajor,
+                    nd_plasma_electron_line_20,
+                    aspect,
+                    kappa,
+                )
+
+            # ====================================================================
+            # Scaling removed
+            case ConfinementTimeModel.TITAN_REMOVED:
+                raise ProcessValueError("Scaling removed")
+            # ====================================================================
+
+            # ELM-free: ITERH-97P
+            case ConfinementTimeModel.ITER_H97P:
+                t_electron_confinement = self.iter_h97p_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                    nd_plasma_electron_line_19,
+                    rmajor,
+                    aspect,
+                    kappa,
+                    m_fuel_amu,
+                )
+
+            # ====================================================================
+
+            # ELMy: ITERH-97P(y)
+            case ConfinementTimeModel.ITER_H97P_ELMY:
+                t_electron_confinement = self.iter_h97p_elmy_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                    nd_plasma_electron_line_19,
+                    rmajor,
+                    aspect,
+                    kappa,
+                    m_fuel_amu,
+                )
+
+            # ====================================================================
+
+            # ITER-96P (= ITER-97L) L-mode scaling
+            case ConfinementTimeModel.ITER_96P:
+                t_electron_confinement = self.iter_96p_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    kappa95,
+                    rmajor,
+                    aspect,
+                    nd_plasma_electron_line_19,
+                    m_fuel_amu,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Valovic modified ELMy-H mode scaling
+            # WARNING: No reference found for this scaling. This may not be its real name
+            case ConfinementTimeModel.VALOVIC_ELMY:
+                t_electron_confinement = self.valovic_elmy_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_19,
+                    m_fuel_amu,
+                    rmajor,
+                    rminor,
+                    kappa,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Kaye PPPL Workshop April 1998 L-mode scaling
+            # WARNING: No reference found for this scaling. This may not be its real name
+            case ConfinementTimeModel.KAYE:
+                t_electron_confinement = self.kaye_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    kappa,
+                    rmajor,
+                    aspect,
+                    nd_plasma_electron_line_19,
+                    m_fuel_amu,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # ITERH-PB98P(y), ELMy H-mode scaling
+            # WARNING: No reference found for this scaling. This may not be its real name
+            case ConfinementTimeModel.ITER_PB98P_Y:
+                t_electron_confinement = self.iter_pb98py_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_19,
+                    p_plasma_loss_mw,
+                    rmajor,
+                    self.data.physics.kappa_ipb,
+                    aspect,
+                    m_fuel_amu,
+                )
+
+            # ====================================================================
+
+            # IPB98(y), ELMy H-mode scaling
+            case ConfinementTimeModel.IPB98_Y:
+                t_electron_confinement = self.iter_ipb98y_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_19,
+                    p_plasma_loss_mw,
+                    rmajor,
+                    kappa,
+                    aspect,
+                    m_fuel_amu,
+                )
+
+            # ====================================================================
+
+            # IPB98(y,1), ELMy H-mode scaling
+            case ConfinementTimeModel.ITER_IPB98Y1:
+                t_electron_confinement = self.iter_ipb98y1_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_19,
+                    p_plasma_loss_mw,
+                    rmajor,
+                    self.data.physics.kappa_ipb,
+                    aspect,
+                    m_fuel_amu,
+                )
+
+            # ====================================================================
+
+            # IPB98(y,2), ELMy H-mode scaling
+            case ConfinementTimeModel.ITER_IPB98Y2:
+                t_electron_confinement = self.iter_ipb98y2_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_19,
+                    p_plasma_loss_mw,
+                    rmajor,
+                    self.data.physics.kappa_ipb,
+                    aspect,
+                    m_fuel_amu,
+                )
+
+            # ====================================================================
+
+            # IPB98(y,3), ELMy H-mode scaling
+            case ConfinementTimeModel.ITER_IPB98Y3:
+                t_electron_confinement = self.iter_ipb98y3_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_19,
+                    p_plasma_loss_mw,
+                    rmajor,
+                    self.data.physics.kappa_ipb,
+                    aspect,
+                    m_fuel_amu,
+                )
+
+            # ====================================================================
+
+            # IPB98(y,4), ELMy H-mode scaling
+            case ConfinementTimeModel.ITER_IPB98Y4:
+                t_electron_confinement = self.iter_ipb98y4_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_19,
+                    p_plasma_loss_mw,
+                    rmajor,
+                    self.data.physics.kappa_ipb,
+                    aspect,
+                    m_fuel_amu,
+                )
+
+            # ====================================================================
+
+            # ISS95 stellarator scaling
+            case ConfinementTimeModel.ISS95_STELLARATOR:
+                # dummy argument q95 is actual argument iotabar for stellarators
+                iotabar = q95
+                t_electron_confinement = self.iss95_stellarator_confinement_time(
+                    rminor,
+                    rmajor,
+                    nd_plasma_electron_line_19,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                    iotabar,
+                )
+
+            # ====================================================================
+
+            # ISS04 stellarator scaling
+            case ConfinementTimeModel.ISS04_STELLARATOR:
+                # dummy argument q95 is actual argument iotabar for stellarators
+                iotabar = q95
+                t_electron_confinement = self.iss04_stellarator_confinement_time(
+                    rminor,
+                    rmajor,
+                    nd_plasma_electron_line_19,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                    iotabar,
+                )
+
+            # ====================================================================
+
+            # DS03 beta-independent H-mode scaling
+            case ConfinementTimeModel.DS03:
+                t_electron_confinement = self.ds03_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_19,
+                    p_plasma_loss_mw,
+                    rmajor,
+                    kappa95,
+                    aspect,
+                    m_fuel_amu,
+                )
+
+            # ====================================================================
+
+            #  Murari "Non-power law" scaling
+            case ConfinementTimeModel.MURARI:
+                t_electron_confinement = self.murari_confinement_time(
+                    cur_plasma_ma,
+                    rmajor,
+                    self.data.physics.kappa_ipb,
+                    nd_plasma_electron_line_19,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Petty08, beta independent dimensionless scaling
+            case ConfinementTimeModel.PETTY08:
+                t_electron_confinement = self.petty08_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_19,
+                    p_plasma_loss_mw,
+                    rmajor,
+                    self.data.physics.kappa_ipb,
+                    aspect,
+                )
+
+            # ====================================================================
+
+            # Lang high density relevant confinement scaling
+            case ConfinementTimeModel.LANG_HIGH_DENSITY:
+                t_electron_confinement = self.lang_high_density_confinement_time(
+                    plasma_current,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line,
+                    p_plasma_loss_mw,
+                    rmajor,
+                    rminor,
+                    q95,
+                    qstar,
+                    aspect,
+                    m_fuel_amu,
+                    self.data.physics.kappa_ipb,
+                )
+
+            # ====================================================================
+
+            # Hubbard 2017 I-mode confinement time scaling - nominal
+            case ConfinementTimeModel.HUBBARD_NOMINAL:
+                t_electron_confinement = self.hubbard_nominal_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_20,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Hubbard 2017 I-mode confinement time scaling - lower
+            case ConfinementTimeModel.HUBBARD_LOWER:
+                t_electron_confinement = self.hubbard_lower_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_20,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Hubbard 2017 I-mode confinement time scaling - upper
+            case ConfinementTimeModel.HUBBARD_UPPER:
+                t_electron_confinement = self.hubbard_upper_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_20,
+                    p_plasma_loss_mw,
+                )
+
+            # ====================================================================
+
+            # Menard NSTX, ELMy H-mode scaling
+            case ConfinementTimeModel.MENARD_NSTX:
+                t_electron_confinement = self.menard_nstx_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_19,
+                    p_plasma_loss_mw,
+                    rmajor,
+                    self.data.physics.kappa_ipb,
+                    aspect,
+                    m_fuel_amu,
+                )
+
+            # ====================================================================
+
+            # Menard NSTX-Petty08 Hybrid
+            case ConfinementTimeModel.MENARD_NSTX_PETTY08_HYBRID:
+                t_electron_confinement = (
+                    self.menard_nstx_petty08_hybrid_confinement_time(
+                        cur_plasma_ma,
+                        b_plasma_toroidal_on_axis,
+                        nd_plasma_electron_line_19,
+                        p_plasma_loss_mw,
+                        rmajor,
+                        self.data.physics.kappa_ipb,
+                        aspect,
+                        m_fuel_amu,
+                    )
+                )
+
+            # ====================================================================
+
+            # NSTX gyro-Bohm (Buxton)
+            case ConfinementTimeModel.NSTX_GYRO_BOHM:
+                t_electron_confinement = self.nstx_gyro_bohm_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                    rmajor,
+                    nd_plasma_electron_line_20,
+                )
+
+            # ====================================================================
+
+            # ITPA20 H-mode scaling
+            case ConfinementTimeModel.ITPA20:
+                t_electron_confinement = self.itpa20_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    nd_plasma_electron_line_19,
+                    p_plasma_loss_mw,
+                    rmajor,
+                    self.data.physics.triang,
+                    self.data.physics.kappa_ipb,
+                    eps,
+                    self.data.physics.m_ions_total_amu,
+                )
+
+            # ====================================================================
+
+            # ITPA20-IL confinement time scaling
+            case ConfinementTimeModel.ITPA20_IL:
+                t_electron_confinement = self.itpa20_il_confinement_time(
+                    cur_plasma_ma,
+                    b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw,
+                    nd_plasma_electron_line_19,
+                    self.data.physics.m_ions_total_amu,
+                    rmajor,
+                    self.data.physics.triang,
+                    self.data.physics.kappa_ipb,
+                )
+
+            # ==========================================================================
+            # NCST spherical tokamak L-mode confinement time scaling
+            case ConfinementTimeModel.NCST:
+                t_electron_confinement = self.ncst_confinement_time(
+                    cur_plasma_ma=cur_plasma_ma,
+                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw=p_plasma_loss_mw,
+                    nd_plasma_electron_line_19=nd_plasma_electron_line_19,
+                )
+
+            # ====================================================================
+
+            # Paz-Soldan negative triangularity confinement time scaling
+            case ConfinementTimeModel.PAZ_SOLDAN_NT:
+                t_electron_confinement = self.paz_soldan_nt_confinement_time(
+                    cur_plasma_ma=cur_plasma_ma,
+                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                    p_plasma_loss_mw=p_plasma_loss_mw,
+                    nd_plasma_electron_line_19=nd_plasma_electron_line_19,
+                )
+
+            # ====================================================================
+
+            case _:
+                raise ProcessValueError(
+                    "Illegal value for i_confinement_time",
+                    i_confinement_time=i_confinement_time,
+                )
 
         # Apply H-factor correction to chosen scaling
         t_electron_energy_confinement = hfact * t_electron_confinement
@@ -963,38 +979,39 @@ class PlasmaConfinementTime(Model):
 
         # Calculate H* non-radiation corrected H factor
         # Note: we will assume the IPB-98y2 scaling.
-        if (
-            ConfinementRadiationLossModel(self.data.physics.i_rad_loss)
-            == ConfinementRadiationLossModel.CORE_ONLY
-        ):
-            hstar = (
-                hfact
-                * (
-                    p_plasma_loss_mw
-                    / (
+        match ConfinementRadiationLossModel(self.data.physics.i_rad_loss):
+            case ConfinementRadiationLossModel.CORE_ONLY:
+                hstar = (
+                    hfact
+                    * (
                         p_plasma_loss_mw
-                        + self.data.physics.pden_plasma_sync_mw * vol_plasma
-                        + self.data.physics.p_plasma_inner_rad_mw
+                        / (
+                            p_plasma_loss_mw
+                            + self.data.physics.pden_plasma_sync_mw * vol_plasma
+                            + self.data.physics.p_plasma_inner_rad_mw
+                        )
                     )
+                    ** 0.31
                 )
-                ** 0.31
-            )
-        elif (
-            self.data.physics.i_rad_loss == ConfinementRadiationLossModel.FULL_RADIATION
-        ):
-            hstar = (
-                hfact
-                * (
-                    p_plasma_loss_mw
-                    / (
+            case ConfinementRadiationLossModel.FULL_RADIATION:
+                hstar = (
+                    hfact
+                    * (
                         p_plasma_loss_mw
-                        + self.data.physics.pden_plasma_rad_mw * vol_plasma
+                        / (
+                            p_plasma_loss_mw
+                            + self.data.physics.pden_plasma_rad_mw * vol_plasma
+                        )
                     )
+                    ** 0.31
                 )
-                ** 0.31
-            )
-        elif self.data.physics.i_rad_loss == ConfinementRadiationLossModel.NO_RADIATION:
-            hstar = hfact
+            case ConfinementRadiationLossModel.NO_RADIATION:
+                hstar = hfact
+            case _:
+                raise ProcessValueError(
+                    "Illegal value for i_rad_loss",
+                    i_rad_loss=self.data.physics.i_rad_loss,
+                )
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
