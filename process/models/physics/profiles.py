@@ -571,8 +571,8 @@ class ElectronTemperatureProfile(Profile):
         ):
             self.data.physics.temp_plasma_electron_on_axis_kev = self.calculate_pedestal_profile_on_axis_temperature(  # noqa: E501
                 radius_plasma_pedestal_temp_norm=self.data.physics.radius_plasma_pedestal_temp_norm,
-                temp_plasma_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
-                temp_plasma_separatrix_kev=self.data.physics.temp_plasma_separatrix_kev,
+                temp_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
+                temp_separatrix_kev=self.data.physics.temp_plasma_separatrix_kev,
                 temp_vol_avg_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
                 alphat=self.data.physics.alphat,
                 tbeta=self.data.physics.tbeta,

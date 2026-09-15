@@ -115,7 +115,7 @@ $\blacksquare$
 
 #### Electron core density of a parabolic profile | `calculate_parabolic_profile_on_axis_density()`
 
-This function calculates the core electron density for a pedestalised profile (`i_plasma_pedestal == 0`). It takes in values of
+This function calculates the core electron density for a parabolic profile (`i_plasma_pedestal == 0`). It takes in values of
 
 | Profile parameter / Input               | Density   |
 |----------------------------------|-----------|
