@@ -1165,13 +1165,11 @@ class PlasmaConfinementTime(Model):
                 )
 
             # Include the radiation power if requested
-            if (
-                self.data.physics.i_rad_loss
-                == ConfinementRadiationLossModel.FULL_RADIATION
-            ):
-                fhz_value += self.data.physics.pden_plasma_rad_mw
-            elif self.data.physics.i_rad_loss == ConfinementRadiationLossModel.CORE_ONLY:
-                fhz_value += self.data.physics.pden_plasma_core_rad_mw
+            match ConfinementRadiationLossModel(self.data.physics.i_rad_loss):
+                case ConfinementRadiationLossModel.FULL_RADIATION:
+                    fhz_value += self.data.physics.pden_plasma_rad_mw
+                case ConfinementRadiationLossModel.CORE_ONLY:
+                    fhz_value += self.data.physics.pden_plasma_core_rad_mw
 
             return fhz_value
 
