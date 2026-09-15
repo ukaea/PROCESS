@@ -1,60 +1,13 @@
 """Module for plasma L-H and L-I transition power threshold calculations."""
 
 import logging
-from enum import IntEnum, unique
 
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
+from process.data_structure.physics_variables import PlasmaConfinementTransitionModel
 
 logger = logging.getLogger(__name__)
-
-
-@unique
-class PlasmaConfinementTransitionModel(IntEnum):
-    """Enum for plasma L -> H and L -> I transition power threshold models."""
-
-    ITER1996_NOMINAL = (1, "ITER-1996 Nominal")
-    ITER1996_UPPER = (2, "ITER-1996 Upper")
-    ITER1996_LOWER = (3, "ITER-1996 Lower")
-    SNIPES1997_ITER = (4, "Snipes 1997 ITER Scaling I")
-    SNIPES1997_KAPPA = (5, "Snipes 1997 ITER Scaling II")
-    MARTIN08_NOMINAL = (6, "Martin 2008 Nominal")
-    MARTIN08_UPPER = (7, "Martin 2008 Upper")
-    MARTIN08_LOWER = (8, "Martin 2008 Lower")
-    SNIPES2000_NOMINAL = (9, "Snipes 2000 Nominal")
-    SNIPES2000_UPPER = (10, "Snipes 2000 Upper")
-    SNIPES2000_LOWER = (11, "Snipes 2000 Lower")
-    SNIPES2000_CLOSED_DIVERTOR_NOMINAL = (12, "Snipes 2000 Closed Divertor Nominal")
-    SNIPES2000_CLOSED_DIVERTOR_UPPER = (13, "Snipes 2000 Closed Divertor Upper")
-    SNIPES2000_CLOSED_DIVERTOR_LOWER = (14, "Snipes 2000 Closed Divertor Lower")
-    HUBBARD2012_NOMINAL = (15, "Hubbard 2012 Nominal")
-    HUBBARD2012_LOWER = (16, "Hubbard 2012 Lower")
-    HUBBARD2012_UPPER = (17, "Hubbard 2012 Upper")
-    HUBBARD2017_I_MODE = (18, "Hubbard 2017 I-Mode")
-    MARTIN08_ASPECT_NOMINAL = (19, "Martin 2008 Aspect Corrected Nominal")
-    MARTIN08_ASPECT_UPPER = (20, "Martin 2008 Aspect Corrected Upper")
-    MARTIN08_ASPECT_LOWER = (21, "Martin 2008 Aspect Corrected Lower")
-
-    def __new__(cls, value: int, full_name: str):
-        """Create a new PlasmaConfinementTransitionModel instance.
-
-        Parameters
-        ----------
-        value : int
-            The integer value of the enum member.
-        full_name : str
-            The full descriptive name of the enum member.
-
-        Returns
-        -------
-        PlasmaConfinementTransitionModel
-            A new instance of PlasmaConfinementTransitionModel.
-        """
-        obj = int.__new__(cls, value)
-        obj._value_ = value
-        obj.full_name = full_name
-        return obj
 
 
 class PlasmaConfinementTransition(Model):
@@ -72,15 +25,15 @@ class PlasmaConfinementTransition(Model):
         """
         # Calculate L- to H-mode power threshold for different scalings
         self.data.physics.l_h_threshold_powers = self.l_h_threshold_power(
-            self.data.physics.nd_plasma_electron_line,
-            self.data.physics.b_plasma_toroidal_on_axis,
-            self.data.physics.rmajor,
-            self.data.physics.rminor,
-            self.data.physics.kappa,
-            self.data.physics.a_plasma_surface,
-            self.data.physics.m_ions_total_amu,
-            self.data.physics.aspect,
-            self.data.physics.plasma_current,
+            nd_plasma_electron_line=self.data.physics.nd_plasma_electron_line,
+            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
+            kappa=self.data.physics.kappa,
+            a_plasma_surface=self.data.physics.a_plasma_surface,
+            m_ions_total_amu=self.data.physics.m_ions_total_amu,
+            aspect=self.data.physics.aspect,
+            plasma_current=self.data.physics.plasma_current,
         )
 
         # Enforced L-H power threshold value (if constraint 15 is turned on)
@@ -105,23 +58,23 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         nd_plasma_electron_line : float
-            Line-averaged electron density (/m3)
+            Line-averaged electron density [m⁻³]
         b_plasma_toroidal_on_axis : float
-            Toroidal field on axis (T)
+            Toroidal field on axis [T]
         rmajor : float
-            Plasma major radius (m)
+            Plasma major radius [m]
         rminor : float
-            Plasma minor radius (m)
+            Plasma minor radius [m]
         kappa : float
             Plasma elongation
         a_plasma_surface : float
-            Plasma surface area (m2)
+            Plasma surface area [m²]
         m_ions_total_amu : float
-            Average mass of all ions (amu)
+            Average mass of all ions [amu]
         aspect : float
             Aspect ratio
         plasma_current : float
-            Plasma current (A)
+            Plasma current [A]
 
         Returns
         -------
@@ -138,19 +91,25 @@ class PlasmaConfinementTransition(Model):
 
         # i_l_h_threshold = 1
         iterdd = self.calculate_iter1996_nominal(
-            dnla20, b_plasma_toroidal_on_axis, rmajor
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            rmajor=rmajor,
         )
 
         # Fit to 1996 H-mode power threshold database: upper bound
         # i_l_h_threshold = 2
         iterdd_ub = self.calculate_iter1996_upper(
-            dnla20, b_plasma_toroidal_on_axis, rmajor
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            rmajor=rmajor,
         )
 
         # Fit to 1996 H-mode power threshold database: lower bound
         # i_l_h_threshold = 3
         iterdd_lb = self.calculate_iter1996_lower(
-            dnla20, b_plasma_toroidal_on_axis, rmajor
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            rmajor=rmajor,
         )
 
         # ========================================================================
@@ -159,12 +118,17 @@ class PlasmaConfinementTransition(Model):
 
         # i_l_h_threshold = 4
         snipes_1997 = self.calculate_snipes1997_iter(
-            dnla20, b_plasma_toroidal_on_axis, rmajor
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            rmajor=rmajor,
         )
 
         # i_l_h_threshold = 5
         snipes_1997_kappa = self.calculate_snipes1997_kappa(
-            dnla20, b_plasma_toroidal_on_axis, rmajor, kappa
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            rmajor=rmajor,
+            kappa=kappa,
         )
 
         # ========================================================================
@@ -174,17 +138,26 @@ class PlasmaConfinementTransition(Model):
 
         # i_l_h_threshold = 6
         martin_nominal = self.calculate_martin08_nominal(
-            dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            a_plasma_surface=a_plasma_surface,
+            m_ions_total_amu=m_ions_total_amu,
         )
 
         # i_l_h_threshold = 7
         martin_ub = self.calculate_martin08_upper(
-            dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            a_plasma_surface=a_plasma_surface,
+            m_ions_total_amu=m_ions_total_amu,
         )
 
         # i_l_h_threshold = 8
         martin_lb = self.calculate_martin08_lower(
-            dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            a_plasma_surface=a_plasma_surface,
+            m_ions_total_amu=m_ions_total_amu,
         )
 
         # ========================================================================
@@ -194,17 +167,29 @@ class PlasmaConfinementTransition(Model):
 
         # i_l_h_threshold = 9
         snipes_2000 = self.calculate_snipes2000_nominal(
-            dnla20, b_plasma_toroidal_on_axis, rmajor, rminor, m_ions_total_amu
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            rmajor=rmajor,
+            rminor=rminor,
+            m_ions_total_amu=m_ions_total_amu,
         )
 
         # i_l_h_threshold = 10
         snipes_2000_ub = self.calculate_snipes2000_upper(
-            dnla20, b_plasma_toroidal_on_axis, rmajor, rminor, m_ions_total_amu
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            rmajor=rmajor,
+            rminor=rminor,
+            m_ions_total_amu=m_ions_total_amu,
         )
 
         # i_l_h_threshold = 11
         snipes_2000_lb = self.calculate_snipes2000_lower(
-            dnla20, b_plasma_toroidal_on_axis, rmajor, rminor, m_ions_total_amu
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            rmajor=rmajor,
+            rminor=rminor,
+            m_ions_total_amu=m_ions_total_amu,
         )
 
         # ========================================================================
@@ -214,17 +199,26 @@ class PlasmaConfinementTransition(Model):
 
         # i_l_h_threshold = 12
         snipes_2000_cd = self.calculate_snipes2000_closed_divertor_nominal(
-            dnla20, b_plasma_toroidal_on_axis, rmajor, m_ions_total_amu
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            rmajor=rmajor,
+            m_ions_total_amu=m_ions_total_amu,
         )
 
         # i_l_h_threshold = 13
         snipes_2000_cd_ub = self.calculate_snipes2000_closed_divertor_upper(
-            dnla20, b_plasma_toroidal_on_axis, rmajor, m_ions_total_amu
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            rmajor=rmajor,
+            m_ions_total_amu=m_ions_total_amu,
         )
 
         # i_l_h_threshold = 14
         snipes_2000_cd_lb = self.calculate_snipes2000_closed_divertor_lower(
-            dnla20, b_plasma_toroidal_on_axis, rmajor, m_ions_total_amu
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            rmajor=rmajor,
+            m_ions_total_amu=m_ions_total_amu,
         )
 
         # ========================================================================
@@ -232,13 +226,19 @@ class PlasmaConfinementTransition(Model):
         # Hubbard et al. 2012 L-I threshold scaling
 
         # i_l_h_threshold = 15
-        hubbard_2012 = self.calculate_hubbard2012_nominal(plasma_current, dnla20)
+        hubbard_2012 = self.calculate_hubbard2012_nominal(
+            plasma_current=plasma_current, dnla20=dnla20
+        )
 
         # i_l_h_threshold = 16
-        hubbard_2012_lb = self.calculate_hubbard2012_lower(plasma_current, dnla20)
+        hubbard_2012_lb = self.calculate_hubbard2012_lower(
+            plasma_current=plasma_current, dnla20=dnla20
+        )
 
         # i_l_h_threshold = 17
-        hubbard_2012_ub = self.calculate_hubbard2012_upper(plasma_current, dnla20)
+        hubbard_2012_ub = self.calculate_hubbard2012_upper(
+            plasma_current=plasma_current, dnla20=dnla20
+        )
 
         # ========================================================================
 
@@ -246,7 +246,9 @@ class PlasmaConfinementTransition(Model):
 
         # i_l_h_threshold = 18
         hubbard_2017 = self.calculate_hubbard2017(
-            dnla20, a_plasma_surface, b_plasma_toroidal_on_axis
+            dnla20=dnla20,
+            a_plasma_surface=a_plasma_surface,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         )
 
         # ========================================================================
@@ -255,17 +257,29 @@ class PlasmaConfinementTransition(Model):
 
         # i_l_h_threshold = 19
         martin_nominal_aspect = self.calculate_martin08_aspect_nominal(
-            dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu, aspect
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            a_plasma_surface=a_plasma_surface,
+            m_ions_total_amu=m_ions_total_amu,
+            aspect=aspect,
         )
 
         # i_l_h_threshold = 20
         martin_ub_aspect = self.calculate_martin08_aspect_upper(
-            dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu, aspect
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            a_plasma_surface=a_plasma_surface,
+            m_ions_total_amu=m_ions_total_amu,
+            aspect=aspect,
         )
 
         # i_l_h_threshold = 21
         martin_lb_aspect = self.calculate_martin08_aspect_lower(
-            dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu, aspect
+            dnla20=dnla20,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            a_plasma_surface=a_plasma_surface,
+            m_ions_total_amu=m_ions_total_amu,
+            aspect=aspect,
         )
 
         # ========================================================================
@@ -476,7 +490,11 @@ class PlasmaConfinementTransition(Model):
             "OP ",
         )
         po.oblnkl(self.outfile)
-        if self.data.physics.i_l_h_threshold in {9, 10, 11}:
+        if PlasmaConfinementTransitionModel(self.data.physics.i_l_h_threshold) in {
+            PlasmaConfinementTransitionModel.SNIPES2000_NOMINAL,
+            PlasmaConfinementTransitionModel.SNIPES2000_UPPER,
+            PlasmaConfinementTransitionModel.SNIPES2000_LOWER,
+        }:
             if (self.data.physics.b_plasma_toroidal_on_axis < 0.78e0) or (
                 self.data.physics.b_plasma_toroidal_on_axis > 7.94e0
             ):
@@ -528,7 +546,11 @@ class PlasmaConfinementTransition(Model):
                 po.ocmmnt(self.outfile, "(triang outside Snipes 2000 fitted range)")
                 logger.warning("triang outside Snipes 2000 fitted range")
 
-        if self.data.physics.i_l_h_threshold in {12, 13, 14}:
+        if PlasmaConfinementTransitionModel(self.data.physics.i_l_h_threshold) in {
+            PlasmaConfinementTransitionModel.SNIPES2000_CLOSED_DIVERTOR_NOMINAL,
+            PlasmaConfinementTransitionModel.SNIPES2000_CLOSED_DIVERTOR_UPPER,
+            PlasmaConfinementTransitionModel.SNIPES2000_CLOSED_DIVERTOR_LOWER,
+        }:
             po.ocmmnt(
                 self.outfile,
                 "(L-H threshold for closed divertor only. Limited data used in Snipes "
@@ -547,7 +569,7 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         rmajor : float
@@ -560,13 +582,13 @@ class PlasmaConfinementTransition(Model):
 
         References
         ----------
-            - T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
-            "Threshold power and energy confinement for ITER". 1996.
+        [1] T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
+        "Threshold power and energy confinement for ITER". 1996.
 
-            - J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics
-            issues, capabilities and physics program plans,”
-            Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997,
-            doi: https://doi.org/10.1063/1.872406.
+        [2] J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics
+        issues, capabilities and physics program plans,”
+        Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997,
+        doi: https://doi.org/10.1063/1.872406.
         """
         return 0.45 * dnla20**0.75 * b_plasma_toroidal_on_axis * rmajor**2
 
@@ -579,7 +601,7 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         rmajor : float
@@ -592,13 +614,13 @@ class PlasmaConfinementTransition(Model):
 
         References
         ----------
-            - T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
-            "Threshold power and energy confinement for ITER". 1996.
+        [1] T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
+        "Threshold power and energy confinement for ITER". 1996.
 
-            - J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics
-            issues, capabilities and physics program plans,”
-            Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997,
-            doi: https://doi.org/10.1063/1.872406.
+        [2] J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics
+        issues, capabilities and physics program plans,”
+        Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997,
+        doi: https://doi.org/10.1063/1.872406.
         """
         return 0.3960502816 * dnla20 * b_plasma_toroidal_on_axis * rmajor**2.5
 
@@ -611,7 +633,7 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         rmajor : float
@@ -624,13 +646,13 @@ class PlasmaConfinementTransition(Model):
 
         References
         ----------
-            - T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
-            "Threshold power and energy confinement for ITER". 1996.
+        [1] T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
+        "Threshold power and energy confinement for ITER". 1996.
 
-            - J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics
-            issues, capabilities and physics program plans,”
-            Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997,
-            doi: https://doi.org/10.1063/1.872406.
+        [2] J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics
+        issues, capabilities and physics program plans,”
+        Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997,
+        doi: https://doi.org/10.1063/1.872406.
         """
         return 0.5112987149 * dnla20**0.5 * b_plasma_toroidal_on_axis * rmajor**1.5
 
@@ -643,7 +665,7 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         rmajor : float
@@ -656,12 +678,12 @@ class PlasmaConfinementTransition(Model):
 
         References
         ----------
-            - J. A. Snipes and the ITER H-mode Threshold Database Working Group,
-            "An Analysis of the H-mode Threshold in ITER,"
-            Controlled Fusion and Plasma Physics, 24th EPS Conference,
-            Berchtesgaden, June 9th-13th 1997, vol.21A, part III, p.961.
-            url:https://library.ipp.mpg.de/EPS_24_Vol3_1997.pdf.
-            *This is a conference poster*
+        [1] J. A. Snipes and the ITER H-mode Threshold Database Working Group,
+        "An Analysis of the H-mode Threshold in ITER,"
+        Controlled Fusion and Plasma Physics, 24th EPS Conference,
+        Berchtesgaden, June 9th-13th 1997, vol.21A, part III, p.961.
+        url:https://library.ipp.mpg.de/EPS_24_Vol3_1997.pdf.
+        *This is a conference poster*
         """
         return 0.65 * dnla20**0.93 * b_plasma_toroidal_on_axis**0.86 * rmajor**2.15
 
@@ -675,7 +697,7 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         rmajor : float
@@ -690,12 +712,12 @@ class PlasmaConfinementTransition(Model):
 
         References
         ----------
-            - J. A. Snipes and the ITER H-mode Threshold Database Working Group,
-            "An Analysis of the H-mode Threshold in ITER,"
-            Controlled Fusion and Plasma Physics, 24th EPS Conference,
-            Berchtesgaden, June 9th-13th 1997, vol.21A, part III, p.961.
-            url:https://library.ipp.mpg.de/EPS_24_Vol3_1997.pdf.
-            *This is a conference poster*
+        [1] J. A. Snipes and the ITER H-mode Threshold Database Working Group,
+        "An Analysis of the H-mode Threshold in ITER,"
+        Controlled Fusion and Plasma Physics, 24th EPS Conference,
+        Berchtesgaden, June 9th-13th 1997, vol.21A, part III, p.961.
+        url:https://library.ipp.mpg.de/EPS_24_Vol3_1997.pdf.
+        *This is a conference poster*
         """
         return (
             0.42
@@ -717,11 +739,11 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         a_plasma_surface : float
-            Plasma surface area [m^2]
+            Plasma surface area [m²]
         m_ions_total_amu : float
             Total ion mass in atomic mass units [amu]
 
@@ -732,20 +754,20 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Martin 08 shows
-            that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
-            applied to the deuterium-tritium discharges for ITER, the above predicted
-            values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition so
-            that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
-            20% lower.
+        - A scaling with the total ion mass is used in this model. Martin 08 shows
+        that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
+        applied to the deuterium-tritium discharges for ITER, the above predicted
+        values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition so
+        that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
+        20% lower.
 
 
         References
         ----------
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group,
-            “Power requirement for accessing the H-mode in ITER,”
-            Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
-            doi: https://doi.org/10.1088/1742-6596/123/1/012033.
+        [1] Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group,
+        “Power requirement for accessing the H-mode in ITER,”
+        Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
+        doi: https://doi.org/10.1088/1742-6596/123/1/012033.
         """
         return (
             0.0488
@@ -767,11 +789,11 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         a_plasma_surface : float
-            Plasma surface area [m^2]
+            Plasma surface area [m²]
         m_ions_total_amu : float
             Total ion mass in atomic mass units [amu]
 
@@ -782,19 +804,19 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Martin 08 shows
-            that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
-            applied to the deuterium-tritium discharges for ITER, the above predicted
-            values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
-            so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
-            20% lower.
+        - A scaling with the total ion mass is used in this model. Martin 08 shows
+        that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
+        applied to the deuterium-tritium discharges for ITER, the above predicted
+        values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
+        so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
+        20% lower.
 
         References
         ----------
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power
-            requirement for accessing the H-mode in ITER,”
-            Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
-            doi: https://doi.org/10.1088/1742-6596/123/1/012033.
+        [1] Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power
+        requirement for accessing the H-mode in ITER,”
+        Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
+        doi: https://doi.org/10.1088/1742-6596/123/1/012033.
         """
         return (
             0.05166240355
@@ -816,11 +838,11 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³]
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         a_plasma_surface : float
-            Plasma surface area [m^2]
+            Plasma surface area [m²]
         m_ions_total_amu : float
             Total ion mass in atomic mass units [amu]
 
@@ -831,19 +853,19 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Martin 08 shows
-            that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
-            applied to the deuterium-tritium discharges for ITER, the above predicted
-            values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
-            so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
-            20% lower.
+        - A scaling with the total ion mass is used in this model. Martin 08 shows
+        that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
+        applied to the deuterium-tritium discharges for ITER, the above predicted
+        values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
+        so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
+        20% lower.
 
         References
         ----------
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group,
-            “Power requirement for accessing the H-mode in ITER,”
-            Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
-            doi: https://doi.org/10.1088/1742-6596/123/1/012033.
+        [1] Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group,
+        “Power requirement for accessing the H-mode in ITER,”
+        Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
+        doi: https://doi.org/10.1088/1742-6596/123/1/012033.
         """
         return (
             0.04609619059
@@ -866,7 +888,7 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³]
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         rmajor : float
@@ -883,18 +905,18 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Snipes cites
-            that P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction
-            in the threshold power for a 50/50 D-T mixture compared with the pure
-            deuterium results above". We thus apply a (2/m_i) addition so that for a
-            50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+        - A scaling with the total ion mass is used in this model. Snipes cites
+        that P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction
+        in the threshold power for a 50/50 D-T mixture compared with the pure
+        deuterium results above". We thus apply a (2/m_i) addition so that for a
+        50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         References
         ----------
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
-            threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
-            May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+        [1] J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
+        threshold using the international H-mode threshold database,”
+        Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
+        May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
         """
         return (
             1.42
@@ -918,7 +940,7 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³]
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         rmajor : float
@@ -935,18 +957,18 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Snipes cites
-            that P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction
-            in the threshold power for a 50/50 D-T mixture compared with the pure
-            deuterium results above". We thus apply a (2/m_i) addition so that for a
-            50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+        - A scaling with the total ion mass is used in this model. Snipes cites
+        that P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction
+        in the threshold power for a 50/50 D-T mixture compared with the pure
+        deuterium results above". We thus apply a (2/m_i) addition so that for a
+        50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         References
         ----------
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
-            threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
-            May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+        [1] J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
+        threshold using the international H-mode threshold database,”
+        Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
+        May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
 
         """
         return (
@@ -971,7 +993,7 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         rmajor : float
@@ -988,18 +1010,18 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Snipes cites
-            that P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction
-            in the threshold power for a 50/50 D-T mixture compared with the pure
-            deuterium results above". We thus apply a (2/m_i) addition so that for a
-            50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+        - A scaling with the total ion mass is used in this model. Snipes cites
+        that P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction
+        in the threshold power for a 50/50 D-T mixture compared with the pure
+        deuterium results above". We thus apply a (2/m_i) addition so that for a
+        50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         References
         ----------
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
-            threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
-            May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+        [1] J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
+        threshold using the international H-mode threshold database,”
+        Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
+        May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
 
         """
         return (
@@ -1024,7 +1046,7 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         rmajor : float
@@ -1039,18 +1061,18 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Snipes cites
-            that P_LH scales with 1/m_i. It is stated;m"This results in a 20% reduction
-            in the threshold power for a 50/50 D-T mixture compared with the pure
-            deuterium results above". We thus apply a (2/m_i) addition so that for a
-            50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+        - A scaling with the total ion mass is used in this model. Snipes cites
+        that P_LH scales with 1/m_i. It is stated;m"This results in a 20% reduction
+        in the threshold power for a 50/50 D-T mixture compared with the pure
+        deuterium results above". We thus apply a (2/m_i) addition so that for a
+        50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         References
         ----------
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
-            threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
-            May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+        [1] J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
+        threshold using the international H-mode threshold database,”
+        Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
+        May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
 
         """
         return (
@@ -1074,7 +1096,7 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         rmajor : float
@@ -1089,18 +1111,18 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Snipes cites that
-            P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction in
-            the threshold power for a 50/50 D-T mixture compared with the pure deuterium
-            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T
-            mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+        - A scaling with the total ion mass is used in this model. Snipes cites that
+        P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction in
+        the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+        results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T
+        mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         References
         ----------
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
-            threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
-            May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+        [1] J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
+        threshold using the international H-mode threshold database,”
+        Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
+        May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
 
         """
         return (
@@ -1124,7 +1146,7 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         rmajor : float
@@ -1139,18 +1161,18 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Snipes cites that
-              P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction in
-              the threshold power for a 50/50 D-T mixture compared with the pure
-              deuterium results above". We thus apply a (2/m_i) addition so that for a
-              50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+        - A scaling with the total ion mass is used in this model. Snipes cites that
+            P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction in
+            the threshold power for a 50/50 D-T mixture compared with the pure
+            deuterium results above". We thus apply a (2/m_i) addition so that for a
+            50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         References
         ----------
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
-            threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
-            May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+        [1] J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
+        threshold using the international H-mode threshold database,”
+        Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
+        May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
 
         """
         return (
@@ -1170,7 +1192,7 @@ class PlasmaConfinementTransition(Model):
         plasma_current : float
             Plasma current [A]
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
 
         Returns
         -------
@@ -1179,10 +1201,10 @@ class PlasmaConfinementTransition(Model):
 
         References
         ----------
-        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and
-          H-mode with unfavourable ion grad B drift direction,”
-          Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
-          doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+        [1] A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and
+        H-mode with unfavourable ion grad B drift direction,”
+        Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+        doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 
         """
         return 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65
@@ -1196,7 +1218,7 @@ class PlasmaConfinementTransition(Model):
         plasma_current : float
             Plasma current [A]
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
 
         Returns
         -------
@@ -1205,10 +1227,10 @@ class PlasmaConfinementTransition(Model):
 
         References
         ----------
-        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and
-          H-mode with unfavourable ion grad B drift direction,”
-          Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
-          doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+        [1] A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and
+        H-mode with unfavourable ion grad B drift direction,”
+        Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+        doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 
         """
         return 2.11 * (plasma_current / 1e6) ** 1.18 * dnla20**0.83
@@ -1222,7 +1244,7 @@ class PlasmaConfinementTransition(Model):
         plasma_current : float
             Plasma current [A]
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
 
         Returns
         -------
@@ -1231,10 +1253,10 @@ class PlasmaConfinementTransition(Model):
 
         References
         ----------
-        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and
-          H-mode with unfavourable ion grad B drift direction,”
-          Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
-          doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+        [1] A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and
+        H-mode with unfavourable ion grad B drift direction,”
+        Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+        doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 
         """
         return 2.11 * (plasma_current / 1e6) ** 0.7 * dnla20**0.47
@@ -1248,9 +1270,9 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         a_plasma_surface : float
-            Plasma surface area [m^2]
+            Plasma surface area [m²]
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
 
@@ -1265,9 +1287,9 @@ class PlasmaConfinementTransition(Model):
 
         References
         ----------
-        - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an
-          expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57, no. 12,
-          p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
+        [1] A. E. Hubbard et al., “Physics and performance of the I-mode regime over an
+        expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57, no. 12,
+        p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
 
         """
         return 0.162 * dnla20 * a_plasma_surface * b_plasma_toroidal_on_axis**0.26
@@ -1286,11 +1308,11 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
             Toroidal magnetic field [T]
         a_plasma_surface : float
-            Plasma surface area [m^2]
+            Plasma surface area [m²]
         m_ions_total_amu : float
             Total ion mass in atomic mass units [amu]
         aspect : float
@@ -1303,27 +1325,27 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-            - Thus will return an aspect ratio correction of the aspect ratio is less
-            than or equal to 2.7. If not the usual Martin 2008 scaling will be returned.
+        - Thus will return an aspect ratio correction of the aspect ratio is less
+        than or equal to 2.7. If not the usual Martin 2008 scaling will be returned.
 
-            - A scaling with the total ion mass is used in this model. Martin 08 shows
-            that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
-            applied to the deuterium-tritium discharges for ITER, the above predicted
-            values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
-            so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
-            20% lower.
+        - A scaling with the total ion mass is used in this model. Martin 08 shows
+        that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
+        applied to the deuterium-tritium discharges for ITER, the above predicted
+        values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
+        so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
+        20% lower.
 
         References
         ----------
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power
-            requirement for accessing the H-mode in ITER,”
-            Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
-            doi: https://doi.org/10.1088/1742-6596/123/1/012033.
+        [1] Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power
+        requirement for accessing the H-mode in ITER,”
+        Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
+        doi: https://doi.org/10.1088/1742-6596/123/1/012033.
 
-            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
-            the H-mode power threshold in tokamaks of the ITPA database,”
-            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
-            Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
+        [2] T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
+        the H-mode power threshold in tokamaks of the ITPA database,”
+        Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
+        Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
 
         """
         if aspect <= 2.7:
@@ -1354,15 +1376,15 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
-            Toroidal magnetic field [T]
+            Toroidal magnetic field [T].
         a_plasma_surface : float
-            Plasma surface area [m^2]
+            Plasma surface area [m²].
         m_ions_total_amu : float
-            Total ion mass in atomic mass units [amu]
+            Total ion mass in atomic mass units [amu].
         aspect : float
-            Plasma aspect ratio
+            Plasma aspect ratio [-].
 
         Returns
         -------
@@ -1371,27 +1393,27 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-            - Thus will return an aspect ratio correction of the aspect ratio is less
-            than or equal to 2.7. If not the usual Martin 2008 scaling will be returned.
+        - Thus will return an aspect ratio correction of the aspect ratio is less
+        than or equal to 2.7. If not the usual Martin 2008 scaling will be returned.
 
-            - A scaling with the total ion mass is used in this model. Martin 08 shows
-            that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
-            applied to the deuterium-tritium discharges for ITER, the above predicted
-            values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
-            so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
-            20% lower.
+        - A scaling with the total ion mass is used in this model. Martin 08 shows
+        that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
+        applied to the deuterium-tritium discharges for ITER, the above predicted
+        values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
+        so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
+        20% lower.
 
         References
         ----------
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power
-            requirement for accessing the H-mode in ITER,”
-            Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
-            doi: https://doi.org/10.1088/1742-6596/123/1/012033.
+        [1] Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power
+        requirement for accessing the H-mode in ITER,”
+        Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
+        doi: https://doi.org/10.1088/1742-6596/123/1/012033.
 
-            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
-            the H-mode power threshold in tokamaks of the ITPA database,”
-            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
-            Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
+        [2] T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
+        the H-mode power threshold in tokamaks of the ITPA database,”
+        Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
+        Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
 
         """
         if aspect <= 2.7:
@@ -1422,15 +1444,15 @@ class PlasmaConfinementTransition(Model):
         Parameters
         ----------
         dnla20 : float
-            Line averaged electron density in units of 10^20 m^-3.
+            Line averaged electron density in units of [10²⁰m⁻³].
         b_plasma_toroidal_on_axis : float
-            Toroidal magnetic field [T]
+            Toroidal magnetic field [T].
         a_plasma_surface : float
-            Plasma surface area [m^2]
+            Plasma surface area [m²].
         m_ions_total_amu : float
-            Total ion mass in atomic mass units [amu]
+            Total ion mass in atomic mass units [amu].
         aspect : float
-            Plasma aspect ratio
+            Plasma aspect ratio [-].
 
         Returns
         -------
@@ -1439,27 +1461,27 @@ class PlasmaConfinementTransition(Model):
 
         Notes
         -----
-            - Thus will return an aspect ratio correction of the aspect ratio is less
-            than or equal to 2.7. if not the usual Martin 2008 scaling will be returned.
+        - Thus will return an aspect ratio correction of the aspect ratio is less
+        than or equal to 2.7. if not the usual Martin 2008 scaling will be returned.
 
-            - A scaling with the total ion mass is used in this model. Martin 08 shows
-            that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
-            applied to the deuterium-tritium discharges for ITER, the above predicted
-            values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
-            so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
-            20% lower.
+        - A scaling with the total ion mass is used in this model. Martin 08 shows
+        that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
+        applied to the deuterium-tritium discharges for ITER, the above predicted
+        values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
+        so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
+        20% lower.
 
         References
         ----------
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power
-            requirement for accessing the H-mode in ITER,”
-            Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
-            doi: https://doi.org/10.1088/1742-6596/123/1/012033.
+        [1] Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power
+        requirement for accessing the H-mode in ITER,”
+        Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
+        doi: https://doi.org/10.1088/1742-6596/123/1/012033.
 
-            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
-            the H-mode power threshold in tokamaks of the ITPA database,”
-            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
-            Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
+        [2] T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
+        the H-mode power threshold in tokamaks of the ITPA database,”
+        Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
+        Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
 
         """
         if aspect <= 2.7:

@@ -27,6 +27,7 @@ from process.data_structure.physics_variables import (
     ConfinementTimeModel,
     DivertorNumberModels,
     OutbordSOLPowerDecayLengthModel,
+    PlasmaConfinementTransitionModel,
 )
 from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.build import Build
@@ -70,7 +71,6 @@ from process.models.physics.current_drive import (
 from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.exhaust import calculate_brunner_divertor_power_splits
 from process.models.physics.impurity_radiation import read_impurity_file
-from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.physics import (
     BetaComponentLimits,
     BetaNormMaxModel,
