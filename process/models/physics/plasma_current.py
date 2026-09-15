@@ -16,54 +16,11 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.data_structure.physics_variables import PlasmaCurrentModel
 from process.data_structure.stellarator_variables import StellaratorModel
 from process.models.physics.plasma_geometry import PlasmaGeometryModelType
 
 logger = logging.getLogger(__name__)
-
-
-@unique
-class PlasmaCurrentModel(IntEnum):
-    """Enumeration of plasma current scaling models available for calculations.
-
-    Each model represents a different scaling law used to calculate plasma
-    current based on various plasma and machine parameters.
-    """
-
-    PENG_ANALYTIC_FIT = (1, "Peng analytic fit")
-    PENG_DIVERTOR_SCALING = (2, "Peng divertor scaling")
-    ITER_SCALING = (3, "Simple ITER scaling (cylindrical case)")
-    IPDG89_SCALING = (4, "IPDG89 scaling")
-    TODD_EMPIRICAL_SCALING_I = (5, "Todd empirical scaling I")
-    TODD_EMPIRICAL_SCALING_II = (6, "Todd empirical scaling II")
-    CONNOR_HASTIE_MODEL = (7, "Connor-Hastie model")
-    SAUTER_SCALING = (8, "Sauter scaling")
-    FIESTA_ST_SCALING = (9, "FIESTA ST scaling")
-
-    def __new__(cls, value: int, full_name: str):
-        """Create a new PlasmaCurrentModel enum member with value and full_name.
-
-        Parameters
-        ----------
-        value : int
-            The numeric value of the enum member.
-        full_name : str
-            The full name description of the plasma current model.
-
-        Returns
-        -------
-        PlasmaCurrentModel
-            A new enum member with the specified value and full_name.
-        """
-        obj = int.__new__(cls, value)
-        obj._value_ = value
-        obj._full_name_ = full_name
-        return obj
-
-    @DynamicClassAttribute
-    def full_name(self):
-        """The full name of the plasma current model."""
-        return self._full_name_
 
 
 class PlasmaCurrent(Model):

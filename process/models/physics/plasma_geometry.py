@@ -10,6 +10,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.data_structure.physics_variables import PlasmaCurrentModel
 from process.data_structure.stellarator_variables import StellaratorModel
 
 logger = logging.getLogger(__name__)
@@ -452,20 +453,20 @@ class PlasmaGeom(Model):
 
         # Find parameters of arcs describing plasma surfaces
         xi, thetai, xo, thetao = self.plasma_angles_arcs(
-            self.data.physics.rminor,
-            self.data.physics.kappa,
-            self.data.physics.triang,
+            a=self.data.physics.rminor,
+            kappa=self.data.physics.kappa,
+            triang=self.data.physics.triang,
         )
 
         #  Surface area - inboard and outboard.  These are not given by Sauter but
         #  the outboard area is required by DCLL and divertor
         xsi, xso = self.plasma_surface_area(
-            self.data.physics.rmajor,
-            self.data.physics.rminor,
-            xi,
-            thetai,
-            xo,
-            thetao,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
+            xi=xi,
+            thetai=thetai,
+            xo=xo,
+            thetao=thetao,
         )
         self.data.physics.a_plasma_surface_outboard = xso
 
@@ -474,7 +475,8 @@ class PlasmaGeom(Model):
         # i_plasma_current = 8 specifies use of the Sauter geometry as well as plasma
         # current.
         if (
-            self.data.physics.i_plasma_current == 8
+            PlasmaCurrentModel(self.data.physics.i_plasma_current)
+            == PlasmaCurrentModel.SAUTER_SCALING
             or self.data.physics.i_plasma_shape == PlasmaShapeModelType.SAUTER
         ):
             (
@@ -483,35 +485,35 @@ class PlasmaGeom(Model):
                 self.data.physics.a_plasma_poloidal,
                 self.data.physics.vol_plasma,
             ) = self.sauter_geometry(
-                self.data.physics.rminor,
-                self.data.physics.rmajor,
-                self.data.physics.kappa,
-                self.data.physics.triang,
-                self.data.physics.plasma_square,
+                a=self.data.physics.rminor,
+                r0=self.data.physics.rmajor,
+                kappa=self.data.physics.kappa,
+                triang=self.data.physics.triang,
+                square=self.data.physics.plasma_square,
             )
 
         else:
             #  Poloidal perimeter
             self.data.physics.len_plasma_poloidal = self.plasma_poloidal_perimeter(
-                xi, thetai, xo, thetao
+                xi=xi, thetai=thetai, xo=xo, thetao=thetao
             )
 
             #  Volume
             self.data.physics.vol_plasma = (
                 self.data.physics.f_vol_plasma
                 * self.plasma_volume(
-                    self.data.physics.rmajor,
-                    self.data.physics.rminor,
-                    xi,
-                    thetai,
-                    xo,
-                    thetao,
+                    rmajor=self.data.physics.rmajor,
+                    rminor=self.data.physics.rminor,
+                    xi=xi,
+                    thetai=thetai,
+                    xo=xo,
+                    thetao=thetao,
                 )
             )
 
             #  Cross-sectional area
             self.data.physics.a_plasma_poloidal = self.plasma_cross_section(
-                xi, thetai, xo, thetao
+                xi=xi, thetai=thetai, xo=xo, thetao=thetao
             )
 
             #  Surface area - sum of inboard and outboard.
