@@ -261,85 +261,91 @@ class PlasmaCurrent(Model):
 
         # Only the Sauter scaling (i_plasma_current=8) is suitable for negative
         # triangularity:
-        if i_plasma_current != 8 and triang < 0.0:
+        if (
+            PlasmaCurrentModel(i_plasma_current) != PlasmaCurrentModel.SAUTER_SCALING
+            and triang < 0.0
+        ):
             raise ProcessValueError(
                 f"Triangularity is negative without i_plasma_current = 8 selected:"
                 f" {triang=}, {i_plasma_current=}"
             )
+
         try:  # noqa: PLW0717
             model = PlasmaCurrentModel(int(i_plasma_current))
-            # Calculate the function Fq that scales the edge q from the
-            # circular cross-section cylindrical case
+            match model:
+                # Calculate the function Fq that scales the edge q from the
+                # circular cross-section cylindrical case
 
-            # Peng analytical fit
-            if model == PlasmaCurrentModel.PENG_ANALYTIC_FIT:
-                fq = self.calculate_current_coefficient_peng(
-                    eps=eps, len_plasma_poloidal=len_plasma_poloidal, rminor=rminor
-                )
-
-            # Peng scaling for double null divertor; TARTs [STAR Code]
-            elif model == PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
-                plasma_current = 1.0e6 * self.calculate_plasma_current_peng(
-                    q95=q95,
-                    aspect=aspect_ratio,
-                    rminor=rminor,
-                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-                    kappa=kappa,
-                    triang=triang,
-                )
-
-            # Simple ITER scaling (simply the cylindrical case)
-            elif model == PlasmaCurrentModel.ITER_SCALING:
-                fq = 1.0
-
-            # ITER formula (IPDG89)
-            elif model == PlasmaCurrentModel.IPDG89_SCALING:
-                fq = self.calculate_current_coefficient_ipdg89(
-                    eps=eps, kappa95=kappa95, triang95=triang95
-                )
-
-            # Todd empirical scalings
-            # D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
-            elif model in {
-                PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_I,
-                PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II,
-            }:
-                fq = self.calculate_current_coefficient_todd(
-                    eps=eps, kappa95=kappa95, triang95=triang95, model=1
-                )
-
-                if model == PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II:
-                    fq = self.calculate_current_coefficient_todd(
-                        eps=eps, kappa95=kappa95, triang95=triang95, model=2
+                # Peng analytical fit
+                case PlasmaCurrentModel.PENG_ANALYTIC_FIT:
+                    fq = self.calculate_current_coefficient_peng(
+                        eps=eps, len_plasma_poloidal=len_plasma_poloidal, rminor=rminor
                     )
 
-            # Connor-Hastie asymptotically-correct expression
-            elif model == PlasmaCurrentModel.CONNOR_HASTIE_MODEL:
-                fq = self.calculate_current_coefficient_hastie(
-                    alphaj=alphaj,
-                    alphap=alphap,
-                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-                    triang95=triang95,
-                    eps=eps,
-                    kappa95=kappa95,
-                    pres_plasma_on_axis=pres_plasma_on_axis,
-                    rmu0=constants.RMU0,
-                )
+                # Peng scaling for double null divertor; TARTs [STAR Code]
+                case PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
+                    plasma_current = 1.0e6 * self.calculate_plasma_current_peng(
+                        q95=q95,
+                        aspect=aspect_ratio,
+                        rminor=rminor,
+                        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                        kappa=kappa,
+                        triang=triang,
+                    )
 
-            # Sauter scaling allowing negative triangularity [FED May 2016]
-            # https://doi.org/10.1016/j.fusengdes.2016.04.033.
-            elif model == PlasmaCurrentModel.SAUTER_SCALING:
-                # Assumes zero squareness, note takes kappa, delta at separatrix not _95
-                fq = self.calculate_current_coefficient_sauter(
-                    eps=eps, kappa=kappa, triang=triang
-                )
+                # Simple ITER scaling (simply the cylindrical case)
+                case PlasmaCurrentModel.ITER_SCALING:
+                    fq = 1.0
 
-            # FIESTA ST scaling
-            # https://doi.org/10.1016/j.fusengdes.2020.111530.
-            elif model == PlasmaCurrentModel.FIESTA_ST_SCALING:
-                fq = self.calculate_current_coefficient_fiesta(
-                    eps=eps, kappa=kappa, triang=triang
-                )
+                # ITER formula (IPDG89)
+                case PlasmaCurrentModel.IPDG89_SCALING:
+                    fq = self.calculate_current_coefficient_ipdg89(
+                        eps=eps, kappa95=kappa95, triang95=triang95
+                    )
+
+                # Todd empirical scalings
+                # D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
+                case (
+                    PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_I
+                    | PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II
+                ):
+                    fq = self.calculate_current_coefficient_todd(
+                        eps=eps, kappa95=kappa95, triang95=triang95, model=1
+                    )
+
+                    if model == PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II:
+                        fq = self.calculate_current_coefficient_todd(
+                            eps=eps, kappa95=kappa95, triang95=triang95, model=2
+                        )
+
+                # Connor-Hastie asymptotically-correct expression
+                case PlasmaCurrentModel.CONNOR_HASTIE_MODEL:
+                    fq = self.calculate_current_coefficient_hastie(
+                        alphaj=alphaj,
+                        alphap=alphap,
+                        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                        triang95=triang95,
+                        eps=eps,
+                        kappa95=kappa95,
+                        pres_plasma_on_axis=pres_plasma_on_axis,
+                        rmu0=constants.RMU0,
+                    )
+
+                # Sauter scaling allowing negative triangularity [FED May 2016]
+                # https://doi.org/10.1016/j.fusengdes.2016.04.033.
+                case PlasmaCurrentModel.SAUTER_SCALING:
+                    # Assumes zero squareness, note takes kappa, delta at
+                    # separatrix not _95
+                    fq = self.calculate_current_coefficient_sauter(
+                        eps=eps, kappa=kappa, triang=triang
+                    )
+
+                # FIESTA ST scaling
+                # https://doi.org/10.1016/j.fusengdes.2020.111530.
+                case PlasmaCurrentModel.FIESTA_ST_SCALING:
+                    fq = self.calculate_current_coefficient_fiesta(
+                        eps=eps, kappa=kappa, triang=triang
+                    )
 
         except ValueError as e:
             raise ProcessValueError(
@@ -1040,21 +1046,15 @@ class PlasmaDiamagneticCurrent(Model):
                 self.data.physics.q0,
             )
         )
-
-        if (
-            self.data.physics.i_diamagnetic_current
-            == PlasmaDiamagneticCurrentModel.HENDER_ST_FIT
-        ):
-            self.data.current_drive.f_c_plasma_diamagnetic = (
-                self.data.current_drive.f_c_plasma_diamagnetic_hender
-            )
-        elif (
-            self.data.physics.i_diamagnetic_current
-            == PlasmaDiamagneticCurrentModel.SCENE_FIT
-        ):
-            self.data.current_drive.f_c_plasma_diamagnetic = (
-                self.data.current_drive.f_c_plasma_diamagnetic_scene
-            )
+        match PlasmaDiamagneticCurrentModel(self.data.physics.i_diamagnetic_current):
+            case PlasmaDiamagneticCurrentModel.HENDER_ST_FIT:
+                self.data.current_drive.f_c_plasma_diamagnetic = (
+                    self.data.current_drive.f_c_plasma_diamagnetic_hender
+                )
+            case PlasmaDiamagneticCurrentModel.SCENE_FIT:
+                self.data.current_drive.f_c_plasma_diamagnetic = (
+                    self.data.current_drive.f_c_plasma_diamagnetic_scene
+                )
 
     def output(self):
         """Output the plasma diamagnetic current model results."""
