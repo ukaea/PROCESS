@@ -522,9 +522,8 @@ class NeutronFluxProfile:
         if self.materials[num_layer].l2[n] > 0:
             l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([
-                # To be factorized
-                -l * (negexp(x_upper / l) - negexp(x_lower / l)),
-                l * (np.exp(x_upper / l) - np.exp(x_lower / l)),
+                l * negexp(x_upper / l) * np.expm1((x_upper-x_lower) / l),
+                l * np.exp(x_lower / l) * np.expm1((x_upper-x_lower) / l),
             ])
         l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
         return np.array([
@@ -875,7 +874,7 @@ class NeutronFluxProfile:
                     ])
                     + v_list[num_layer]
                 )
-                # non-negativity check for group 1:
+                # non-negativity check for layer = num_layer:
                 if (
                     self.groupwise_neutron_flux_in_layer(
                         n, num_layer, self.layer_x[num_layer]
@@ -888,6 +887,15 @@ class NeutronFluxProfile:
                         "an unphysical cross-section value.",
                         stacklevel=2,
                     )
+            extended_x_flux = self.groupwise_neutron_flux_in_layer(
+                n, self.n_layers-1, self.extended_boundary[n]
+            )
+            if not np.isclose(extended_x_flux, 0):
+                warnings.warn(
+                    "Boundary condition of flux (at extended_boundary) = 0 "
+                    f"is not adhered to for group {n}! "
+                    f"Instead flux = {extended_x_flux}."
+                )
             self.num_iteration[n] += 1
         except Exception as e:
             for num_layer in range(self.n_layers):
