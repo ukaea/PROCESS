@@ -1680,7 +1680,10 @@ class CurrentDrive(Model):
 
         # To stop issues with input file we force
         # zero secondary heating if no injection method
-        if self.data.current_drive.i_hcd_secondary == 0:
+        if (
+            CurrentDriveModel(self.data.current_drive.i_hcd_secondary)
+            == CurrentDriveModel.NO_CURRENT_DRIVE
+        ):
             self.data.current_drive.p_hcd_secondary_extra_heat_mw = 0.0
 
         # i_hcd_calculations |  switch for current drive calculation
@@ -1776,7 +1779,8 @@ class CurrentDrive(Model):
             if secondary_cdm.method == CurrentDriveMethodType.NEUTRAL_BEAM:
                 _, f_p_beam_injected_ions, f_p_beam_shine_through = (
                     self.neutral_beam.iternb()
-                    if self.data.current_drive.i_hcd_secondary == 5
+                    if CurrentDriveModel(self.data.current_drive.i_hcd_secondary)
+                    == CurrentDriveModel.ITER_NEUTRAL_BEAM
                     else self.neutral_beam.culnbi()
                 )
                 self.data.current_drive.f_p_beam_injected_ions = f_p_beam_injected_ions
@@ -1884,382 +1888,385 @@ class CurrentDrive(Model):
             # ==============================================================
 
             # Lower hybrid cases
-            if secondary_cdm.method == CurrentDriveMethodType.LOWER_HYBRID:
-                # Injected power
-                p_hcd_secondary_electrons_mw = (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                )
+            match secondary_cdm.method:
+                case CurrentDriveMethodType.LOWER_HYBRID:
+                    # Injected power
+                    p_hcd_secondary_electrons_mw = (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    )
 
-                # Wall plug power
-                self.data.heat_transport.p_hcd_secondary_electric_mw = (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                ) / self.data.current_drive.eta_lowhyb_injector_wall_plug
+                    # Wall plug power
+                    self.data.heat_transport.p_hcd_secondary_electric_mw = (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    ) / self.data.current_drive.eta_lowhyb_injector_wall_plug
 
-                # Wall plug to injector efficiency
-                self.data.current_drive.eta_hcd_secondary_injector_wall_plug = (
-                    self.data.current_drive.eta_lowhyb_injector_wall_plug
-                )
+                    # Wall plug to injector efficiency
+                    self.data.current_drive.eta_hcd_secondary_injector_wall_plug = (
+                        self.data.current_drive.eta_lowhyb_injector_wall_plug
+                    )
 
-                self.data.current_drive.p_hcd_lowhyb_injected_total_mw += (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                )
+                    self.data.current_drive.p_hcd_lowhyb_injected_total_mw += (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    )
 
-            # ==========================================================
+                # ==========================================================
 
-            # Ion cyclotron cases
-            if secondary_cdm.method == CurrentDriveMethodType.ION_CYCLOTRON:
-                # Injected power
-                p_hcd_secondary_ions_mw = (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                )
+                # Ion cyclotron cases
+                case CurrentDriveMethodType.ION_CYCLOTRON:
+                    # Injected power
+                    p_hcd_secondary_ions_mw = (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    )
 
-                # Wall plug power
-                self.data.heat_transport.p_hcd_secondary_electric_mw = (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                ) / self.data.current_drive.eta_icrh_injector_wall_plug
+                    # Wall plug power
+                    self.data.heat_transport.p_hcd_secondary_electric_mw = (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    ) / self.data.current_drive.eta_icrh_injector_wall_plug
 
-                # Wall plug to injector efficiency
-                self.data.current_drive.eta_hcd_secondary_injector_wall_plug = (
-                    self.data.current_drive.eta_icrh_injector_wall_plug
-                )
+                    # Wall plug to injector efficiency
+                    self.data.current_drive.eta_hcd_secondary_injector_wall_plug = (
+                        self.data.current_drive.eta_icrh_injector_wall_plug
+                    )
 
-                self.data.current_drive.p_hcd_icrh_injected_total_mw += (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                )
+                    self.data.current_drive.p_hcd_icrh_injected_total_mw += (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    )
 
-            # ==========================================================
+                # ==========================================================
 
-            # Electron cyclotron cases
-            if secondary_cdm.method == CurrentDriveMethodType.ELECTRON_CYCLOTRON:
-                # Injected power
-                p_hcd_secondary_electrons_mw = (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                )
+                # Electron cyclotron cases
+                case CurrentDriveMethodType.ELECTRON_CYCLOTRON:
+                    # Injected power
+                    p_hcd_secondary_electrons_mw = (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    )
 
-                # Wall plug power
-                self.data.heat_transport.p_hcd_secondary_electric_mw = (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                ) / self.data.current_drive.eta_ecrh_injector_wall_plug
+                    # Wall plug power
+                    self.data.heat_transport.p_hcd_secondary_electric_mw = (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    ) / self.data.current_drive.eta_ecrh_injector_wall_plug
 
-                # Wall plug to injector efficiency
-                self.data.current_drive.eta_hcd_secondary_injector_wall_plug = (
-                    self.data.current_drive.eta_ecrh_injector_wall_plug
-                )
+                    # Wall plug to injector efficiency
+                    self.data.current_drive.eta_hcd_secondary_injector_wall_plug = (
+                        self.data.current_drive.eta_ecrh_injector_wall_plug
+                    )
 
-                self.data.current_drive.p_hcd_ecrh_injected_total_mw += (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                )
+                    self.data.current_drive.p_hcd_ecrh_injected_total_mw += (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    )
 
-            # ==========================================================
+                # ==========================================================
 
-            # Electron berstein cases
-            if secondary_cdm.method == CurrentDriveMethodType.ELECTRON_BERNSTEIN:
-                # Injected power
-                p_hcd_secondary_electrons_mw = (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                )
+                # Electron berstein cases
+                case CurrentDriveMethodType.ELECTRON_BERNSTEIN:
+                    # Injected power
+                    p_hcd_secondary_electrons_mw = (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    )
 
-                # Wall plug power
-                self.data.heat_transport.p_hcd_secondary_electric_mw = (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                ) / self.data.current_drive.eta_ebw_injector_wall_plug
+                    # Wall plug power
+                    self.data.heat_transport.p_hcd_secondary_electric_mw = (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    ) / self.data.current_drive.eta_ebw_injector_wall_plug
 
-                # Wall plug to injector efficiency
-                self.data.current_drive.eta_hcd_secondary_injector_wall_plug = (
-                    self.data.current_drive.eta_ebw_injector_wall_plug
-                )
+                    # Wall plug to injector efficiency
+                    self.data.current_drive.eta_hcd_secondary_injector_wall_plug = (
+                        self.data.current_drive.eta_ebw_injector_wall_plug
+                    )
 
-                self.data.current_drive.p_hcd_ebw_injected_total_mw += (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                )
+                    self.data.current_drive.p_hcd_ebw_injected_total_mw += (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    )
 
-            # ==========================================================
+                # ==========================================================
 
-            # Neutral beam cases
-            elif secondary_cdm.method == CurrentDriveMethodType.NEUTRAL_BEAM:
-                # Account for first orbit losses
-                # (power due to particles that are ionised but not thermalised) [MW]:
-                # This includes a second order term in shinethrough*(first orbit loss)
+                # Neutral beam cases
+                case CurrentDriveMethodType.NEUTRAL_BEAM:
+                    # Account for first orbit losses
+                    # (power due to particles that are ionised but not thermalised) [MW]:
+                    # This includes a second order term in
+                    # shinethrough*(first orbit loss)
 
-                self.data.current_drive.f_p_beam_orbit_loss = min(
-                    0.999, self.data.current_drive.f_p_beam_orbit_loss
-                )  # Should never be needed
+                    self.data.current_drive.f_p_beam_orbit_loss = min(
+                        0.999, self.data.current_drive.f_p_beam_orbit_loss
+                    )  # Should never be needed
 
-                # Shinethrough power (atoms that are not ionised) [MW]:
-                self.data.current_drive.p_beam_shine_through_mw = (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                ) * (self.data.current_drive.f_p_beam_shine_through)
+                    # Shinethrough power (atoms that are not ionised) [MW]:
+                    self.data.current_drive.p_beam_shine_through_mw = (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    ) * (self.data.current_drive.f_p_beam_shine_through)
 
-                # First orbit loss
-                self.data.current_drive.p_beam_orbit_loss_mw = (
-                    self.data.current_drive.f_p_beam_orbit_loss
-                    * (
+                    # First orbit loss
+                    self.data.current_drive.p_beam_orbit_loss_mw = (
+                        self.data.current_drive.f_p_beam_orbit_loss
+                        * (
+                            self.data.current_drive.p_hcd_secondary_injected_mw
+                            + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                            - self.data.current_drive.p_beam_shine_through_mw
+                        )
+                    )
+
+                    # Power deposited
+                    self.data.current_drive.p_beam_plasma_coupled_mw = (
                         self.data.current_drive.p_hcd_secondary_injected_mw
                         + self.data.current_drive.p_hcd_secondary_extra_heat_mw
                         - self.data.current_drive.p_beam_shine_through_mw
+                        - self.data.current_drive.p_beam_orbit_loss_mw
                     )
-                )
 
-                # Power deposited
-                self.data.current_drive.p_beam_plasma_coupled_mw = (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                    - self.data.current_drive.p_beam_shine_through_mw
-                    - self.data.current_drive.p_beam_orbit_loss_mw
-                )
-
-                p_hcd_secondary_ions_mw = (
-                    self.data.current_drive.p_beam_plasma_coupled_mw
-                    * self.data.current_drive.f_p_beam_injected_ions
-                )
-
-                p_hcd_secondary_electrons_mw = (
-                    self.data.current_drive.p_beam_plasma_coupled_mw
-                    * (1.0e0 - self.data.current_drive.f_p_beam_injected_ions)
-                )
-
-                self.data.current_drive.pwpnb = (
-                    (
-                        self.data.current_drive.p_hcd_secondary_injected_mw
-                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    p_hcd_secondary_ions_mw = (
+                        self.data.current_drive.p_beam_plasma_coupled_mw
+                        * self.data.current_drive.f_p_beam_injected_ions
                     )
-                    / self.data.current_drive.eta_beam_injector_wall_plug
-                )  # neutral beam wall plug power
 
-                self.data.heat_transport.p_hcd_secondary_electric_mw = (
-                    self.data.current_drive.pwpnb
-                )
+                    p_hcd_secondary_electrons_mw = (
+                        self.data.current_drive.p_beam_plasma_coupled_mw
+                        * (1.0e0 - self.data.current_drive.f_p_beam_injected_ions)
+                    )
 
-                self.data.current_drive.eta_hcd_secondary_injector_wall_plug = (
-                    self.data.current_drive.eta_beam_injector_wall_plug
-                )
-
-                self.data.current_drive.c_beam_total = (
-                    1.0e-3
-                    * (
+                    self.data.current_drive.pwpnb = (
                         (
                             self.data.current_drive.p_hcd_secondary_injected_mw
                             + self.data.current_drive.p_hcd_secondary_extra_heat_mw
                         )
-                        * 1.0e6
-                    )
-                    / self.data.current_drive.e_beam_kev
-                )  # Neutral beam current (A)
+                        / self.data.current_drive.eta_beam_injector_wall_plug
+                    )  # neutral beam wall plug power
 
-                self.data.current_drive.p_hcd_beam_injected_total_mw += (
-                    self.data.current_drive.p_hcd_secondary_injected_mw
-                    + self.data.current_drive.p_hcd_secondary_extra_heat_mw
-                )
+                    self.data.heat_transport.p_hcd_secondary_electric_mw = (
+                        self.data.current_drive.pwpnb
+                    )
+
+                    self.data.current_drive.eta_hcd_secondary_injector_wall_plug = (
+                        self.data.current_drive.eta_beam_injector_wall_plug
+                    )
+
+                    self.data.current_drive.c_beam_total = (
+                        1.0e-3
+                        * (
+                            (
+                                self.data.current_drive.p_hcd_secondary_injected_mw
+                                + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                            )
+                            * 1.0e6
+                        )
+                        / self.data.current_drive.e_beam_kev
+                    )  # Neutral beam current (A)
+
+                    self.data.current_drive.p_hcd_beam_injected_total_mw += (
+                        self.data.current_drive.p_hcd_secondary_injected_mw
+                        + self.data.current_drive.p_hcd_secondary_extra_heat_mw
+                    )
 
             # ==========================================================
 
             # Lower hybrid cases
-            if primary_cdm.method == CurrentDriveMethodType.LOWER_HYBRID:
-                p_hcd_primary_electrons_mw = (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                )
+            match primary_cdm.method:
+                case CurrentDriveMethodType.LOWER_HYBRID:
+                    p_hcd_primary_electrons_mw = (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    )
 
-                self.data.current_drive.p_hcd_lowhyb_injected_total_mw += (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                )
+                    self.data.current_drive.p_hcd_lowhyb_injected_total_mw += (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    )
 
-                # Wall plug power
-                self.data.heat_transport.p_hcd_primary_electric_mw = (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                ) / self.data.current_drive.eta_lowhyb_injector_wall_plug
+                    # Wall plug power
+                    self.data.heat_transport.p_hcd_primary_electric_mw = (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    ) / self.data.current_drive.eta_lowhyb_injector_wall_plug
 
-                # Wall plug to injector efficiency
-                self.data.current_drive.eta_hcd_primary_injector_wall_plug = (
-                    self.data.current_drive.eta_lowhyb_injector_wall_plug
-                )
+                    # Wall plug to injector efficiency
+                    self.data.current_drive.eta_hcd_primary_injector_wall_plug = (
+                        self.data.current_drive.eta_lowhyb_injector_wall_plug
+                    )
 
-                # Wall plug power
-                self.data.current_drive.p_hcd_lowhyb_electric_mw = (
-                    self.data.current_drive.p_hcd_lowhyb_injected_total_mw
-                    / self.data.current_drive.eta_lowhyb_injector_wall_plug
-                )
+                    # Wall plug power
+                    self.data.current_drive.p_hcd_lowhyb_electric_mw = (
+                        self.data.current_drive.p_hcd_lowhyb_injected_total_mw
+                        / self.data.current_drive.eta_lowhyb_injector_wall_plug
+                    )
 
-            # ===========================================================
+                # ===========================================================
 
-            # Ion cyclotron cases
-            if primary_cdm.method == CurrentDriveMethodType.ION_CYCLOTRON:
-                p_hcd_primary_ions_mw = (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                )
+                # Ion cyclotron cases
+                case CurrentDriveMethodType.ION_CYCLOTRON:
+                    p_hcd_primary_ions_mw = (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    )
 
-                # Wall plug power
-                self.data.heat_transport.p_hcd_primary_electric_mw = (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                ) / self.data.current_drive.eta_icrh_injector_wall_plug
+                    # Wall plug power
+                    self.data.heat_transport.p_hcd_primary_electric_mw = (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    ) / self.data.current_drive.eta_icrh_injector_wall_plug
 
-                # Wall plug to injector efficiency
-                self.data.current_drive.eta_hcd_primary_injector_wall_plug = (
-                    self.data.current_drive.eta_icrh_injector_wall_plug
-                )
+                    # Wall plug to injector efficiency
+                    self.data.current_drive.eta_hcd_primary_injector_wall_plug = (
+                        self.data.current_drive.eta_icrh_injector_wall_plug
+                    )
 
-                self.data.current_drive.p_hcd_icrh_injected_total_mw += (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                )
+                    self.data.current_drive.p_hcd_icrh_injected_total_mw += (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    )
 
-                # Wall plug power
-                self.data.current_drive.p_hcd_icrh_electric_mw = (
-                    self.data.current_drive.p_hcd_icrh_injected_total_mw
-                    / self.data.current_drive.eta_icrh_injector_wall_plug
-                )
+                    # Wall plug power
+                    self.data.current_drive.p_hcd_icrh_electric_mw = (
+                        self.data.current_drive.p_hcd_icrh_injected_total_mw
+                        / self.data.current_drive.eta_icrh_injector_wall_plug
+                    )
 
-            # ===========================================================
+                # ===========================================================
 
-            # Electron cyclotron cases
+                # Electron cyclotron cases
+                case CurrentDriveMethodType.ELECTRON_CYCLOTRON:
+                    p_hcd_primary_electrons_mw = (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    )
 
-            if primary_cdm.method == CurrentDriveMethodType.ELECTRON_CYCLOTRON:
-                p_hcd_primary_electrons_mw = (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                )
+                    # Wall plug to injector efficiency
+                    self.data.heat_transport.p_hcd_primary_electric_mw = (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    ) / self.data.current_drive.eta_ecrh_injector_wall_plug
 
-                # Wall plug to injector efficiency
-                self.data.heat_transport.p_hcd_primary_electric_mw = (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                ) / self.data.current_drive.eta_ecrh_injector_wall_plug
+                    self.data.current_drive.eta_hcd_primary_injector_wall_plug = (
+                        self.data.current_drive.eta_ecrh_injector_wall_plug
+                    )
 
-                self.data.current_drive.eta_hcd_primary_injector_wall_plug = (
-                    self.data.current_drive.eta_ecrh_injector_wall_plug
-                )
+                    self.data.current_drive.p_hcd_ecrh_injected_total_mw += (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    )
 
-                self.data.current_drive.p_hcd_ecrh_injected_total_mw += (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                )
+                    # Wall plug power
+                    self.data.current_drive.p_hcd_ecrh_electric_mw = (
+                        self.data.current_drive.p_hcd_ecrh_injected_total_mw
+                        / self.data.current_drive.eta_ecrh_injector_wall_plug
+                    )
 
-                # Wall plug power
-                self.data.current_drive.p_hcd_ecrh_electric_mw = (
-                    self.data.current_drive.p_hcd_ecrh_injected_total_mw
-                    / self.data.current_drive.eta_ecrh_injector_wall_plug
-                )
+                # ===========================================================
 
-            # ===========================================================
+                # Electron bernstein cases
+                case CurrentDriveMethodType.ELECTRON_BERNSTEIN:
+                    p_hcd_primary_electrons_mw = (
+                        self.data.current_drive.p_ebw_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    )
 
-            # Electron bernstein cases
+                    # Wall plug to injector efficiency
+                    self.data.heat_transport.p_hcd_primary_electric_mw = (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    ) / self.data.current_drive.eta_ebw_injector_wall_plug
 
-            if primary_cdm.method == CurrentDriveMethodType.ELECTRON_BERNSTEIN:
-                p_hcd_primary_electrons_mw = (
-                    self.data.current_drive.p_ebw_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                )
+                    self.data.current_drive.eta_hcd_primary_injector_wall_plug = (
+                        self.data.current_drive.eta_ebw_injector_wall_plug
+                    )
 
-                # Wall plug to injector efficiency
-                self.data.heat_transport.p_hcd_primary_electric_mw = (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                ) / self.data.current_drive.eta_ebw_injector_wall_plug
+                    self.data.current_drive.p_hcd_ebw_injected_total_mw += (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    )
 
-                self.data.current_drive.eta_hcd_primary_injector_wall_plug = (
-                    self.data.current_drive.eta_ebw_injector_wall_plug
-                )
+                    # Wall plug power
+                    self.data.current_drive.p_hcd_ebw_electric_mw = (
+                        self.data.current_drive.p_ebw_injected_mw
+                        / self.data.current_drive.eta_ebw_injector_wall_plug
+                    )
 
-                self.data.current_drive.p_hcd_ebw_injected_total_mw += (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                )
+                # ===========================================================
 
-                # Wall plug power
-                self.data.current_drive.p_hcd_ebw_electric_mw = (
-                    self.data.current_drive.p_ebw_injected_mw
-                    / self.data.current_drive.eta_ebw_injector_wall_plug
-                )
+                case CurrentDriveMethodType.NEUTRAL_BEAM:
+                    # Account for first orbit losses
+                    # (power due to particles that are ionised but
+                    # not thermalised) [MW]:
+                    # This includes a second order term in
+                    # shinethrough*(first orbit loss)
+                    self.data.current_drive.f_p_beam_orbit_loss = min(
+                        0.999, self.data.current_drive.f_p_beam_orbit_loss
+                    )  # Should never be needed
 
-            # ===========================================================
+                    # Shinethrough power (atoms that are not ionised) [MW]:
+                    self.data.current_drive.p_beam_shine_through_mw = (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    ) * (self.data.current_drive.f_p_beam_shine_through)
 
-            elif primary_cdm.method == CurrentDriveMethodType.NEUTRAL_BEAM:
-                # Account for first orbit losses
-                # (power due to particles that are ionised but not thermalised) [MW]:
-                # This includes a second order term in shinethrough*(first orbit loss)
-                self.data.current_drive.f_p_beam_orbit_loss = min(
-                    0.999, self.data.current_drive.f_p_beam_orbit_loss
-                )  # Should never be needed
+                    # First orbit loss
+                    self.data.current_drive.p_beam_orbit_loss_mw = (
+                        self.data.current_drive.f_p_beam_orbit_loss
+                        * (
+                            self.data.current_drive.p_hcd_primary_injected_mw
+                            + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                            - self.data.current_drive.p_beam_shine_through_mw
+                        )
+                    )
 
-                # Shinethrough power (atoms that are not ionised) [MW]:
-                self.data.current_drive.p_beam_shine_through_mw = (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                ) * (self.data.current_drive.f_p_beam_shine_through)
-
-                # First orbit loss
-                self.data.current_drive.p_beam_orbit_loss_mw = (
-                    self.data.current_drive.f_p_beam_orbit_loss
-                    * (
+                    # Power deposited
+                    self.data.current_drive.p_beam_plasma_coupled_mw = (
                         self.data.current_drive.p_hcd_primary_injected_mw
                         + self.data.current_drive.p_hcd_primary_extra_heat_mw
                         - self.data.current_drive.p_beam_shine_through_mw
+                        - self.data.current_drive.p_beam_orbit_loss_mw
                     )
-                )
 
-                # Power deposited
-                self.data.current_drive.p_beam_plasma_coupled_mw = (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                    - self.data.current_drive.p_beam_shine_through_mw
-                    - self.data.current_drive.p_beam_orbit_loss_mw
-                )
+                    p_hcd_primary_ions_mw = (
+                        self.data.current_drive.p_beam_plasma_coupled_mw
+                        * self.data.current_drive.f_p_beam_injected_ions
+                    )
+                    p_hcd_primary_electrons_mw = (
+                        self.data.current_drive.p_beam_plasma_coupled_mw
+                        * (1.0e0 - self.data.current_drive.f_p_beam_injected_ions)
+                    )
 
-                p_hcd_primary_ions_mw = (
-                    self.data.current_drive.p_beam_plasma_coupled_mw
-                    * self.data.current_drive.f_p_beam_injected_ions
-                )
-                p_hcd_primary_electrons_mw = (
-                    self.data.current_drive.p_beam_plasma_coupled_mw
-                    * (1.0e0 - self.data.current_drive.f_p_beam_injected_ions)
-                )
+                    self.data.current_drive.pwpnb = (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    ) / self.data.current_drive.eta_beam_injector_wall_plug
 
-                self.data.current_drive.pwpnb = (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                ) / self.data.current_drive.eta_beam_injector_wall_plug
+                    # Neutral beam wall plug power
+                    self.data.heat_transport.p_hcd_primary_electric_mw = (
+                        self.data.current_drive.pwpnb
+                    )
+                    self.data.current_drive.eta_hcd_primary_injector_wall_plug = (
+                        self.data.current_drive.eta_beam_injector_wall_plug
+                    )
 
-                # Neutral beam wall plug power
-                self.data.heat_transport.p_hcd_primary_electric_mw = (
-                    self.data.current_drive.pwpnb
-                )
-                self.data.current_drive.eta_hcd_primary_injector_wall_plug = (
-                    self.data.current_drive.eta_beam_injector_wall_plug
-                )
-
-                self.data.current_drive.c_beam_total = (
-                    1.0e-3
-                    * (
-                        (
-                            self.data.current_drive.p_hcd_primary_injected_mw
-                            + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    self.data.current_drive.c_beam_total = (
+                        1.0e-3
+                        * (
+                            (
+                                self.data.current_drive.p_hcd_primary_injected_mw
+                                + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                            )
+                            * 1.0e6
                         )
-                        * 1.0e6
-                    )
-                    / self.data.current_drive.e_beam_kev
-                )  # Neutral beam current (A)
+                        / self.data.current_drive.e_beam_kev
+                    )  # Neutral beam current (A)
 
-                self.data.current_drive.p_hcd_beam_injected_total_mw += (
-                    self.data.current_drive.p_hcd_primary_injected_mw
-                    + self.data.current_drive.p_hcd_primary_extra_heat_mw
-                )
+                    self.data.current_drive.p_hcd_beam_injected_total_mw += (
+                        self.data.current_drive.p_hcd_primary_injected_mw
+                        + self.data.current_drive.p_hcd_primary_extra_heat_mw
+                    )
 
             # ===========================================================
 
