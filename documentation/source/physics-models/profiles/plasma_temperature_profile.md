@@ -12,8 +12,6 @@ The temperature profile class is organised around a central runner function that
 
 ### Calculate core values | `set_physics_variables()`
 
-The core electron temperature is calculated using the [`tcore`](plasma_temperature_profile.md#electron-core-density-of-a-pedestalised-profile--tcore) method.
-
 #### Electron core temperature of a pedestalised profile | `calculate_pedestal_profile_on_axis_temperature()`
 
 This function calculates the core electron temperature for a pedestalsied profile in $\text{keV}$. The inclusion of a new $\beta_T$ exponent term allows a more accurate description of temperature profiles with a triangular shape or a strong gradient near the pedestal (characteristic of regimes with an [internal transport barrier](https://wiki.fusion.ciemat.es/wiki/Internal_Transport_Barrier)).
@@ -23,10 +21,10 @@ A list of input parameters for calculating the core plasma temperature can be fo
 | Profile parameter / Input               | Temperature   |
 |----------------------------------|-----------|
 | Pedestal radius (r/a)            | `radius_plasma_pedestal_temp_norm`, $\rho_{\text{ped,T}}$ |
-| Pedestal value                   | `nd_plasma_pedestal_electron`, $T_{\text{ped}}$ |
-| Separatrix value                 | `nd_plasma_separatrix_electron`, $T_{\text{sep}}$ |
-| Average temperature             | `nd_plasma_electrons_vol_avg`, $\langle T_\text{e} \rangle$ |
-| Profile index/ peaking parameter | `alphan`, $\alpha_T$ |
+| Pedestal value                   | `temp_plasma_pedestal_kev`, $T_{\text{ped}}$ |
+| Separatrix value                 | `temp_plasma_separatrix_kev`, $T_{\text{sep}}$ |
+| Average temperature             | `temp_vol_avg_kev`, $\langle T \rangle$ |
+| Profile index/ peaking parameter | `alphat`, $\alpha_T$ |
 | Profile index/ peaking parameter | `tbeta`, $\beta_T$ |
 
 $$
@@ -99,6 +97,23 @@ $\blacksquare$
 
 #### Electron core temperature of a parabolic profile | `calculate_parabolic_profile_on_axis_temperature()`
 
+
+This function calculates the core electron temperature for a parabolic profile in $\text{keV}$.
+
+A list of input parameters for calculating the core plasma temperature can be found below.
+
+| Profile parameter / Input               | Temperature   |
+|----------------------------------|-----------|
+| Average temperature             | `temp_vol_avg_kev`, $\langle T \rangle$ |
+| Profile index/ peaking parameter | `alphat`, $\alpha_T$ |
+
+$$
+T_0 = \langle T \rangle \times \left(\alpha_T+1\right)
+$$
+
+
+---------
+
 ##### Derivation
 
 We calculate the volume integrated profile and then divide by the volume of integration to get the volume average temperature $\langle T \rangle$. If we assume the plasma to be a torus of circular cross-section then we can use spherical coordinates. We can simplify the problem by representing the torus as a cylinder of height equal to the circumference of the torus, which is equal to $2\pi R$, where $R$ is the major radius of the torus.
@@ -115,7 +130,7 @@ $$
 \int^{2\pi R}_0 \int^{2\pi}_0 \int^a_0     r  \left(T_0(1-r^2/a^2)^{\alpha_T}\right) \ dr \ d\theta \ dz
 $$
 
-Since our temperature function is only a function of $r$, and the torus is symmetric around its center, the integration simplifies to integrating over $r$, with the $d\theta$ and $\dz$ integrals solving to give values for the full poloidal angle, and cylindrical height and torus length, respectively. This leads to:
+Since our temperature function is only a function of $r$, and the torus is symmetric around its center, the integration simplifies to integrating over $r$, with the $d\theta$ and $dz$ integrals solving to give values for the full poloidal angle, and cylindrical height and torus length, respectively. This leads to:
 
 $$
 4\pi^2R \int^a_0     r  \left(T_0(1-r^2/a^2)^{\alpha_T}\right) \ dr  

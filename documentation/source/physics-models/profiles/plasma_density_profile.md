@@ -12,14 +12,14 @@ The density profile class is organised around a central runner function that is 
 
 ### Calculate core values | `set_physics_variables()`
 
-The core electron density is calculated using the [`ncore`](plasma_density_profile.md#electron-core-density-of-a-pedestalised-profile--ncore) method.
+The core electron density is calculated differently depending if a parabolic or pedestal type profile is used.
 The core ion density is then set from $n_{\text{i}}$ (`nd_plasma_ions_total_vol_avg`) which is the total ion density such as:
 
 $$
 n_{\text{i0}} = \left(\frac{n_\text{i}}{n_\text{e}}\right)n_{\text{e0}}
 $$
 
-#### Electron core density of a pedestalised profile | `calculate_pedestal_profile_on_axis_density()`
+#### Electron core density of a pedestal profile | `calculate_pedestal_profile_on_axis_density()`
 
 This function calculates the core electron density for a pedestalised profile (`i_plasma_pedestal == 1`). It takes in values of
 
@@ -115,6 +115,20 @@ $\blacksquare$
 
 #### Electron core density of a parabolic profile | `calculate_parabolic_profile_on_axis_density()`
 
+This function calculates the core electron density for a pedestalised profile (`i_plasma_pedestal == 0`). It takes in values of
+
+| Profile parameter / Input               | Density   |
+|----------------------------------|-----------|
+| Volume-average density             | `nd_vol_average`, $\langle n \rangle$ |
+| Profile index/ peaking parameter | `alphan`, $\alpha_n$ |
+
+$$
+n_0 = \langle n \rangle \times \left(\alpha_n+1\right)
+$$
+
+----------
+
+
 ##### Derivation
 
 We calculate the volume integrated profile and then divide by the volume of integration to get the volume average density $\langle n \rangle$. If we assume the plasma to be a torus of circular cross-section then we can use spherical coordinates. We can simplify the problem by representing the torus as a cylinder of height equal to the circumference of the torus, which is equal to $2\pi R$, where $R$ is the major radius of the torus.
@@ -131,7 +145,7 @@ $$
 \int^{2\pi R}_0 \int^{2\pi}_0 \int^a_0     r  \left(n_0(1-r^2/a^2)^{\alpha_n}\right) \ dr \ d\theta \ dz
 $$
 
-Since our density function is only a function of $r$, and the torus is symmetric around its center, the integration simplifies to integrating over $r$, with the $d\theta$ and $\dz$ integrals solving to give values for the full poloidal angle, and cylindrical height and torus length, respectively. This leads to:
+Since our density function is only a function of $r$, and the torus is symmetric around its center, the integration simplifies to integrating over $r$, with the $d\theta$ and $dz$ integrals solving to give values for the full poloidal angle, and cylindrical height and torus length, respectively. This leads to:
 
 $$
 4\pi^2R \int^a_0     r  \left(n_0(1-r^2/a^2)^{\alpha_n}\right) \ dr  
@@ -198,8 +212,8 @@ If it is less than a logger warning is pushed to the terminal at runtime.
 
 Values of the profile density are then assigned based on the density function below across bounds from 0 to `radius_plasma_pedestal_density_norm` and `radius_plasma_pedestal_density_norm` to 1.  
 
-$$\begin{aligned}
-\mbox{Density:} \ n(\rho) = \left\{
+$$
+\ n(\rho) = \left\{
 \begin{aligned}
     & n_{\text{ped}} + (n_0 - n_{\text{ped}}) \left( 1 -
     \frac{\rho^2}{\rho_{\text{ped,n}}^2}\right)^{\alpha_n}
@@ -208,7 +222,7 @@ $$\begin{aligned}
 & \ \rho_{\text{ped,n}} < \rho \leq 1
 \end{aligned}
 \right.
-\end{aligned}$$
+$$
 
 5. Profile is then integrated with `integrate_profile_y()` using Simpsons integration from the profile abstract base class
 
