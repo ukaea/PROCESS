@@ -145,17 +145,17 @@ class NeutralBeam(Model):
     def run(self):
         """NeutralBeam model doesn't need to be run"""
 
-    def iternb(self):
+    def iternb(self) -> tuple[float, float, float]:
         """Routine to calculate ITER Neutral Beam current drive parameters
 
         Returns
         -------
         effnbss:
-            neutral beam current drive efficiency (A/W)
+            neutral beam current drive efficiency [A/W]
         f_p_beam_injected_ions:
-            fraction of NB power given to ions
+            fraction of NB power given to ions [-]
         fshine:
-             shine-through fraction of beam
+             shine-through fraction of beam [-]
 
         Raises
         ------
@@ -190,13 +190,13 @@ class NeutralBeam(Model):
 
         # Calculate beam stopping cross-section
         sigstop = self.sigbeam(
-            self.data.current_drive.e_beam_kev / self.data.physics.m_beam_amu,
-            self.data.physics.temp_plasma_electron_vol_avg_kev,
-            self.data.physics.nd_plasma_electrons_vol_avg,
-            self.data.physics.f_nd_alpha_thermal_electron,
-            self.data.physics.f_nd_plasma_carbon_electron,
-            self.data.physics.f_nd_plasma_oxygen_electron,
-            self.data.physics.f_nd_plasma_iron_argon_electron,
+            eb=self.data.current_drive.e_beam_kev / self.data.physics.m_beam_amu,
+            te=self.data.physics.temp_plasma_electron_vol_avg_kev,
+            ne=self.data.physics.nd_plasma_electrons_vol_avg,
+            rnhe=self.data.physics.f_nd_alpha_thermal_electron,
+            rnc=self.data.physics.f_nd_plasma_carbon_electron,
+            rno=self.data.physics.f_nd_plasma_oxygen_electron,
+            rnfe=self.data.physics.f_nd_plasma_iron_argon_electron,
         )
 
         # Calculate number of decay lengths to centre
@@ -222,15 +222,15 @@ class NeutralBeam(Model):
 
         # Current drive efficiency
         effnbss = self.data.current_drive.f_radius_beam_tangency_rmajor * self.etanb(
-            self.data.physics.m_beam_amu,
-            self.data.physics.alphan,
-            self.data.physics.alphat,
-            self.data.physics.aspect,
-            self.data.physics.nd_plasma_electrons_vol_avg,
-            self.data.current_drive.e_beam_kev,
-            self.data.physics.rmajor,
-            self.data.physics.temp_plasma_electron_density_weighted_kev,
-            self.data.physics.n_charge_plasma_effective_vol_avg,
+            m_beam_amu=self.data.physics.m_beam_amu,
+            alphan=self.data.physics.alphan,
+            alphat=self.data.physics.alphat,
+            aspect=self.data.physics.aspect,
+            nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+            ebeam=self.data.current_drive.e_beam_kev,
+            rmajor=self.data.physics.rmajor,
+            temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
+            zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
         )
 
         return effnbss, f_p_beam_injected_ions, fshine
@@ -241,11 +241,11 @@ class NeutralBeam(Model):
         Returns
         -------
         effnbss:
-            neutral beam current drive efficiency (A/W)
+            neutral beam current drive efficiency [A/W]
         f_p_beam_injected_ions:
-            fraction of NB power given to ions
+            fraction of NB power given to ions [-]
         fshine:
-            shine-through fraction of beam
+            shine-through fraction of beam [-]
 
         Raises
         ------
@@ -256,11 +256,14 @@ class NeutralBeam(Model):
 
         Notes
         -----
-        This routine calculates Neutral Beam current drive parameters
+        - This routine calculates Neutral Beam current drive parameters
         using the corrections outlined in AEA FUS 172 to the ITER method.
-        <P>The result cannot be guaranteed for devices with aspect ratios far
+        - The result cannot be guaranteed for devices with aspect ratios far
         from that of ITER (approx. 2.8).
-        AEA FUS 172: Physics Assessment for the European Reactor Study
+
+        References
+        ----------
+        [1] AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         if (
             1.0e0 + self.data.physics.eps
@@ -282,13 +285,13 @@ class NeutralBeam(Model):
         #  Calculate beam stopping cross-section
 
         sigstop = self.sigbeam(
-            self.data.current_drive.e_beam_kev / self.data.physics.m_beam_amu,
-            self.data.physics.temp_plasma_electron_vol_avg_kev,
-            self.data.physics.nd_plasma_electrons_vol_avg,
-            self.data.physics.f_nd_alpha_thermal_electron,
-            self.data.physics.f_nd_plasma_carbon_electron,
-            self.data.physics.f_nd_plasma_oxygen_electron,
-            self.data.physics.f_nd_plasma_iron_argon_electron,
+            eb=self.data.current_drive.e_beam_kev / self.data.physics.m_beam_amu,
+            te=self.data.physics.temp_plasma_electron_vol_avg_kev,
+            ne=self.data.physics.nd_plasma_electrons_vol_avg,
+            rnhe=self.data.physics.f_nd_alpha_thermal_electron,
+            rnc=self.data.physics.f_nd_plasma_carbon_electron,
+            rno=self.data.physics.f_nd_plasma_oxygen_electron,
+            rnfe=self.data.physics.f_nd_plasma_iron_argon_electron,
         )
 
         #  Calculate number of decay lengths to centre
@@ -318,19 +321,19 @@ class NeutralBeam(Model):
         #  Current drive efficiency
 
         effnbss = self.etanb2(
-            self.data.physics.m_beam_amu,
-            self.data.physics.alphan,
-            self.data.physics.alphat,
-            self.data.physics.aspect,
-            self.data.physics.nd_plasma_electrons_vol_avg,
-            self.data.physics.nd_plasma_electron_line,
-            self.data.current_drive.e_beam_kev,
-            self.data.current_drive.f_radius_beam_tangency_rmajor,
-            fshine,
-            self.data.physics.rmajor,
-            self.data.physics.rminor,
-            self.data.physics.temp_plasma_electron_density_weighted_kev,
-            self.data.physics.n_charge_plasma_effective_vol_avg,
+            m_beam_amu=self.data.physics.m_beam_amu,
+            alphan=self.data.physics.alphan,
+            alphat=self.data.physics.alphat,
+            aspect=self.data.physics.aspect,
+            nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+            nd_plasma_electron_line=self.data.physics.nd_plasma_electron_line,
+            e_beam_kev=self.data.current_drive.e_beam_kev,
+            f_radius_beam_tangency_rmajor=self.data.current_drive.f_radius_beam_tangency_rmajor,
+            fshine=fshine,
+            rmajor=self.data.physics.rmajor,
+            rminor=self.data.physics.rminor,
+            temp_plasma_electron_density_weighted_kev=self.data.physics.temp_plasma_electron_density_weighted_kev,
+            zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
         )
 
         return effnbss, f_p_beam_injected_ions, fshine
@@ -359,39 +362,34 @@ class NeutralBeam(Model):
         system, based on the 1990 ITER model, plus correction terms outlined in
         Culham Report AEA FUS 172.
 
-        The formulae are from AEA FUS 172, unless denoted by IPDG89.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-
         Parameters
         ----------
         m_beam_amu : float
-            Beam ion mass (amu)
+            Beam ion mass [amu]
         alphan : float
-            Density profile factor
+            Density profile factor [-]
         alphat : float
-            Temperature profile factor
+            Temperature profile factor [-]
         aspect : float
-            Aspect ratio
+            Aspect ratio [-]
         nd_plasma_electrons_vol_avg : float
-            Volume averaged electron density (m**-3)
+            Volume averaged electron density [m⁻³]
         nd_plasma_electron_line : float
-            Line averaged electron density (m**-3)
+            Line averaged electron density [m⁻³]
         e_beam_kev : float
-            Neutral beam energy (keV)
+            Neutral beam energy [keV]
         f_radius_beam_tangency_rmajor : float
-            R_tangent / R_major for neutral beam injection
+            R_tangent / R_major for neutral beam injection [-]
         fshine : float
-            Shine-through fraction of beam
+            Shine-through fraction of beam [-]
         rmajor : float
-            Plasma major radius (m)
+            Plasma major radius [m]
         rminor : float
-            Plasma minor radius (m)
+            Plasma minor radius [m]
         temp_plasma_electron_density_weighted_kev : float
-            Density weighted average electron temperature (keV)
+            Density weighted average electron temperature [keV]
         zeff : float
-            Plasma effective charge
+            Plasma effective charge [-]
 
         Returns
         -------
@@ -405,6 +403,14 @@ class NeutralBeam(Model):
             If the beam tangency radius is greater than the plasma major radius,
             which would lead to an imminent negative square root argument and the
             NBI missing the plasma completely.
+
+        References
+        ----------
+        [1] AEA FUS 172: Physics Assessment for the European Reactor Study
+
+        [2] ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+
+        [3] ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
         #  Charge of beam ions
         zbeam = 1.0
@@ -508,39 +514,46 @@ class NeutralBeam(Model):
         rmajor: float,
         temp_plasma_electron_density_weighted_kev: float,
         zeff: float,
-    ):
+    ) -> float:
         """Routine to find neutral beam current drive efficiency
         using the ITER 1990 formulation
 
         Parameters
         ----------
         m_beam_amu:
-            beam ion mass (amu)
+            beam ion mass [amu]
         alphan:
-            density profile factor
+            density profile factor [-]
         alphat:
-            temperature profile factor
+            temperature profile factor [-]
         aspect:
-            aspect ratio
+            aspect ratio [-]
         nd_plasma_electrons_vol_avg:
-            volume averaged electron density (m**-3)
+            volume averaged electron density [m⁻³]
         ebeam:
-            neutral beam energy (keV)
+            neutral beam energy [keV]
         rmajor:
-            plasma major radius (m)
+            plasma major radius [m]
         temp_plasma_electron_density_weighted_kev:
-            density weighted average electron temp. (keV)
+            density weighted average electron temp. [keV]
         zeff:
-            plasma effective charge
+            plasma effective charge [-]
+
+
+        Returns
+        -------
+        float
+            neutral beam current drive efficiency [A/W]
 
         Notes
         -----
         This routine calculates the current drive efficiency of
-        a neutral beam system, based on the 1990 ITER model.
-        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        a neutral beam system, based on the 1990 ITER model [1]
+
+        References
+        ----------
+        [1] ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-
-
 
         """
         zbeam = 1.0
@@ -581,32 +594,41 @@ class NeutralBeam(Model):
     @staticmethod
     def sigbeam(
         eb: float, te: float, ne: float, rnhe: float, rnc: float, rno: float, rnfe: float
-    ):
+    ) -> float:
         """Calculates the stopping cross-section for a hydrogen
                beam in a fusion plasma
 
         Parameters
         ----------
         eb:
-            beam energy (kev/amu)
+            beam energy [keV/amu]
         te:
-            electron temperature (keV)
+            electron temperature [keV]
         ne:
-            electron density (10^20m-3)
+            electron density [10²⁰m⁻³]
         rnhe:
-            alpha density / ne
+            alpha density / ne [-]
         rnc:
-            carbon density /ne
+            carbon density /ne [-]
         rno:
-            oxygen density /ne
+            oxygen density /ne [-]
         rnfe:
-            iron density /ne
+            iron density /ne [-]
+
+
+        Returns
+        -------
+        float
+            stopping cross-section [m²]
 
         Notes
         -----
-        This function calculates the stopping cross-section (m^2)
+        This function calculates the stopping cross-section [m²]
         for a hydrogen beam in a fusion plasma.
-        Janev, Boley and Post, Nuclear Fusion 29 (1989) 2125
+
+        References
+        ----------
+        [1] Janev, Boley and Post, Nuclear Fusion 29 (1989) 2125
         """
         a = np.array([
             [
@@ -699,17 +721,17 @@ class NeutralBeam(Model):
         Parameters
         ----------
         afast:
-            mass of fast particle (units of proton mass)
+            mass of fast particle [units of proton mass]
         efast:
-            energy of fast particle (keV)
+            energy of fast particle [keV]
         te:
-            density weighted average electron temp. (keV)
+            density weighted average electron temp. [keV]
         ne:
-            volume averaged electron density (m**-3)
+            volume averaged electron density [m⁻³]
         n_charge_plasma_effective_mass_weighted_vol_avg:
-            mass weighted plasma effective charge
+            mass weighted plasma effective charge [-]
         xlmbda:
-            ion-electron coulomb logarithm
+            ion-electron coulomb logarithm [-]
 
         Returns
         -------
@@ -759,26 +781,35 @@ class NeutralBeam(Model):
         return (t1 + t2) / (3.0e0 * x * x)
 
     @staticmethod
-    def xlmbdabi(mb, mth, eb, t, nelec):
+    def xlmbdabi(mb: float, mth: float, eb: float, t: float, nelec: float) -> float:
         """Calculates the Coulomb logarithm for ion-ion collisions
 
         This function calculates the Coulomb logarithm for ion-ion
         collisions where the relative velocity may be large compared
         with the background ('mt') thermal velocity.
-        Mikkelson and Singer, Nuc Tech/Fus, 4, 237 (1983)
 
         Parameters
         ----------
         mb:
-            mass of fast particle (units of proton mass)
+            mass of fast particle [units of proton mass]
         mth:
-            mass of background ions (units of proton mass)
+            mass of background ions [units of proton mass]
         eb:
-            energy of fast particle (keV)
+            energy of fast particle [keV]
         t:
-            density weighted average electron temp. (keV)
+            density weighted average electron temp. [keV]
         nelec:
-            volume averaged electron density (m**-3)
+            volume averaged electron density [m⁻³]
+
+        Returns
+        -------
+        float
+            Coulomb logarithm for ion-ion collisions [-]
+
+        References
+        ----------
+        [1] Mikkelson and Singer, Nuc Tech/Fus, 4, 237 (1983)
+
         """
         x1 = (t / 10.0) * (eb / 1000.0) * mb / (nelec / 1e20)
         x2 = mth / (mth + mb)
@@ -799,7 +830,7 @@ class ElectronCyclotron(Model):
     def output(self):
         """ElectronCyclotron model has no output"""
 
-    def culecd(self):
+    def culecd(self) -> float:
         """Routine to calculate Electron Cyclotron current drive efficiency
 
         This routine calculates the current drive parameters for a
@@ -808,8 +839,12 @@ class ElectronCyclotron(Model):
 
         Returns
         -------
-        :
-            electron cyclotron current drive efficiency (A/W)
+        float
+            electron cyclotron current drive efficiency [A/W]
+
+        References
+        ----------
+        [1] AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         rrr = 1.0e0 / 3.0e0
 
@@ -863,7 +898,9 @@ class ElectronCyclotron(Model):
         #  Current drive efficiency (A/W)
         return ecgam / (dlocal * self.data.physics.rmajor)
 
-    def eccdef(self, tlocal, epsloc, zlocal, cosang, coulog):
+    def eccdef(
+        self, tlocal: float, epsloc: float, zlocal: float, cosang: float, coulog: float
+    ) -> float:
         """Calculate Electron Cyclotron current drive efficiency.
 
         This routine calculates the current drive parameters for an
@@ -871,11 +908,11 @@ class ElectronCyclotron(Model):
         It works out the ECCD efficiency using the formula due to Cohen
         quoted in the ITER Physics Design Guidelines: 1989
         (but including division by the Coulomb Logarithm omitted from
-        IPDG89). We have assumed gamma**2-1 << 1, where gamma is the
+        IPDG89). We have assumed γ²-1 << 1, where gamma is the
         relativistic factor. The notation follows that in IPDG89.
 
         The answer ECGAM is the normalised efficiency nIR/P with n the
-        local density in 10**20 /m**3, I the driven current in MAmps,
+        local density in 10²⁰ /m³, I the driven current in MA,
         R the major radius in metres, and P the absorbed power in MWatts.
 
 
@@ -883,21 +920,21 @@ class ElectronCyclotron(Model):
         Parameters
         ----------
         tlocal : float
-            Local electron temperature (keV).
+            Local electron temperature [keV].
         epsloc : float
-            Local inverse aspect ratio.
+            Local inverse aspect ratio [-].
         zlocal : float
-            Local plasma effective charge.
+            Local plasma effective charge [-].
         cosang : float
-            Cosine of the poloidal angle at which ECCD takes place
+            Cosine of the poloidal angle at which ECCD takes place [-]
             (+1 outside, -1 inside).
         coulog : float
-            Local coulomb logarithm for ion-electron collisions.
+            Local coulomb logarithm for ion-electron collisions [-].
 
         Returns
         -------
         float
-            Normalised current drive efficiency (A/W m**-2).
+            Normalised current drive efficiency [A/W m⁻²].
 
         Raises
         ------
@@ -906,9 +943,11 @@ class ElectronCyclotron(Model):
 
         References
         ----------
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-        ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        [1] AEA FUS 172: Physics Assessment for the European Reactor Study.
+
+        [2] ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+
+        [3]ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
         mcsq = (
             constants.ELECTRON_MASS * 2.9979e8**2 / (1.0e3 * constants.ELECTRON_VOLT)
@@ -916,7 +955,7 @@ class ElectronCyclotron(Model):
         f = 16.0e0 * (tlocal / mcsq) ** 2
 
         #  fp is the derivative of f with respect to gamma, the relativistic
-        #  factor, taken equal to 1 + 2T/(m c**2)
+        #  factor, taken equal to 1 + 2T/(m c²)
 
         fp = 16.0e0 * tlocal / mcsq
 
@@ -968,23 +1007,23 @@ class ElectronCyclotron(Model):
         Parameters
         ----------
         temp_plasma_electron_density_weighted_kev: float
-            Density weighted average electron temperature keV.
+            Density weighted average electron temperature [keV].
         rmajor: float
-            Major radius of the plasma in meters.
+            Major radius of the plasma [m].
         dene20: float
-            Volume averaged electron density in 1x10^20 m^-3.
+            Volume averaged electron density [10²⁰ m⁻³].
         dlamee: float
-            Electron collision frequency in 1/s.
+            Electron collision frequency [s⁻¹].
 
         Returns
         -------
         float
-            The calculated electron cyclotron heating efficiency in A/W.
+            The calculated electron cyclotron heating efficiency [A/W].
 
         References
         ----------
-        - T.C. Hender et al., 'Physics Assessment of the European Reactor Study',
-          AEA FUS 172, 1992.
+        [1] T.C. Hender et al., 'Physics Assessment of the European Reactor Study',
+        AEA FUS 172, 1992.
         """
         return (0.21e0 * temp_plasma_electron_density_weighted_kev) / (
             rmajor * dene20 * dlamee
@@ -1010,30 +1049,29 @@ class ElectronCyclotron(Model):
         Parameters
         ----------
         te: float
-            Volume averaged electron temperature in keV.
+            Volume averaged electron temperature [keV].
         zeff: float
-            Plasma effective charge.
+            Plasma effective charge [-].
         rmajor: float
-            Major radius of the plasma in meters.
+            Major radius of the plasma [m].
         nd_plasma_electrons_vol_avg: float
-            Volume averaged electron density in m^-3.
+            Volume averaged electron density [m⁻³].
         b_plasma_toroidal_on_axis: float
-            Toroidal magnetic field in Tesla.
+            Toroidal magnetic field [T].
         n_ecrh_harmonic: int
-            Cyclotron harmonic number (fundamental used as default).
+            Cyclotron harmonic number [-] (fundamental used as default).
         i_ecrh_wave_mode: int
-            Wave mode switch (0 for O-mode, 1 for X-mode).
+            Wave mode switch [-] (0 for O-mode, 1 for X-mode).
 
         Returns
         -------
         float
-            The calculated absolute ECCD efficiency in A/W.
+            The calculated absolute ECCD efficiency [A/W].
 
         Raises
         ------
         ValueError
             If the wave mode is invalid (not 0 for O-mode or 1 for X-mode).
-
 
         Notes
         -----
@@ -1043,7 +1081,7 @@ class ElectronCyclotron(Model):
 
         References
         ----------
-        - Freethy, S., PROCESS issue #2994.
+        [1] Freethy, S., PROCESS issue #2994.
         """
         # Cyclotron frequency
         fc = (
@@ -1187,18 +1225,18 @@ class IonCyclotron:
         Parameters
         ----------
         temp_plasma_electron_density_weighted_kev: float
-            Density weighted average electron temperature keV.
+            Density weighted average electron temperature [keV].
         zeff: float
-            Plasma effective charge.
+            Plasma effective charge [-]
         rmajor: float
-            Major radius of the plasma in meters.
+            Major radius of the plasma [m].
         dene20: float
-            Volume averaged electron density in 1x10^20 m^-3.
+            Volume averaged electron density [10²⁰ m⁻³].
 
         Returns
         -------
         float
-            The calculated ion cyclotron heating efficiency in A/W.
+            The calculated ion cyclotron heating efficiency [A/W].
 
         Notes
         -----
@@ -1209,11 +1247,11 @@ class IonCyclotron:
 
         References
         ----------
-        - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
-          https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
+        [1] N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+        https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
 
-        - T.C. Hender et al., 'Physics Assessment of the European Reactor Study',
-          AEA FUS 172, 1992.
+        [2] T.C. Hender et al., 'Physics Assessment of the European Reactor Study',
+        AEA FUS 172, 1992.
         """
         return (
             (0.63e0 * 0.1e0 * temp_plasma_electron_density_weighted_kev) / (2.0e0 + zeff)
@@ -1246,13 +1284,13 @@ class ElectronBernstein:
         Parameters
         ----------
         te: float
-            Volume averaged electron temperature in keV.
+            Volume averaged electron temperature [keV].
         rmajor: float
-            Major radius of the plasma in meters.
+            Major radius of the plasma [m].
         dene20: float
-            Volume averaged electron density in units of 10^20 m^-3.
+            Volume averaged electron density [10²⁰ m⁻³].
         b_plasma_toroidal_on_axis: float
-            Toroidal magnetic field in Tesla.
+            Toroidal magnetic field [T].
         n_ecrh_harmonic: int
             Cyclotron harmonic number (fundamental used as default).
         xi_ebw: float
@@ -1261,7 +1299,7 @@ class ElectronBernstein:
         Returns
         -------
         float
-            The calculated absolute EBW current drive efficiency in A/W.
+            The calculated absolute EBW current drive efficiency [A/W].
 
         Notes
         -----
@@ -1271,7 +1309,7 @@ class ElectronBernstein:
 
         References
         ----------
-        - Freethy, S., PROCESS issue #1262.
+        [1] Freethy, S., PROCESS issue #1262.
         """
         # Normalised current drive efficiency gamma
         eta_cd_norm = (xi_ebw / 32.7e0) * te
@@ -1322,7 +1360,7 @@ class LowerHybrid(Model):
     def output(self):
         """LowerHybrid model has no output"""
 
-    def cullhy(self):
+    def cullhy(self) -> float:
         """Calculate Culham Lower Hybrid current drive efficiency.
 
         This routine calculates the current drive parameters for a
@@ -1335,7 +1373,7 @@ class LowerHybrid(Model):
         Returns
         -------
         float
-            Lower hybrid current drive efficiency (A/W)
+            Lower hybrid current drive efficiency [A/W]
 
         Raises
         ------
@@ -1343,9 +1381,9 @@ class LowerHybrid(Model):
             If the normalised LH efficiency is negative, which may indicate an issue
             with the input parameters
 
-        Notes
-        -----
-        AEA FUS 172: Physics Assessment for the European Reactor Study
+        References
+        ----------
+        [1] AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         rratio = self.lhrad()
         rpenet = rratio * self.data.physics.rminor
@@ -1410,13 +1448,18 @@ class LowerHybrid(Model):
 
         return gamlh / ((0.1e0 * dlocal) * self.data.physics.rmajor)
 
-    def lhrad(self):
-        """Routine to calculate Lower Hybrid wave absorption radius
+    def lhrad(self) -> float:
+        """Routine to calculate Lower Hybrid wave absorption radius [m].
 
         rratio: output real: minor radius of penetration / rminor
         This routine determines numerically the minor radius at which the
         damping of Lower Hybrid waves occurs, using a Newton-Raphson method.
         AEA FUS 172: Physics Assessment for the European Reactor Study
+
+
+        References
+        ----------
+        [1] AEA FUS 172: Physics Assessment for the European Reactor Study, 1992.
         """
         #  Correction to refractive index (kept within valid bounds)
         drfind = min(
@@ -1472,30 +1515,32 @@ class LowerHybrid(Model):
 
         return rat0
 
-    def lheval(self, drfind, rratio):
+    def lheval(self, drfind: float, rratio: float) -> float:
         """Routine to evaluate the difference between electron energy
-        expressions required to find the Lower Hybrid absorption radius
+        expressions required to find the Lower Hybrid absorption radius [m].
 
         Parameters
         ----------
         drfind:
-            correction to parallel refractive index
+            correction to parallel refractive index [-]
         rratio:
-            guess for radius of penetration / rminor
+            guess for radius of penetration / rminor [-]
 
         Returns
         -------
         ediff:
-            difference between the E values (keV)
+            difference between the E values [keV]
 
         Notes
         -----
-        This routine evaluates the difference between the values calculated
+        - This routine evaluates the difference between the values calculated
         from the two equations for the electron energy E, given in
         AEA FUS 172, p.58. This difference is used to locate the Lower Hybrid
         wave absorption radius via a Newton-Raphson method, in calling
-        routine <A HREF="lhrad.html">lhrad</A>.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
+
+        References
+        ----------
+        [1] AEA FUS 172: Physics Assessment for the European Reactor Study, 1992.
         """
         dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
             rratio,
@@ -1556,28 +1601,28 @@ class LowerHybrid(Model):
         Parameters
         ----------
         te: float
-            Volume averaged electron temperature in keV.
+            Volume averaged electron temperature [keV].
         rmajor: float
-            Major radius of the plasma in meters.
+            Major radius of the plasma [m].
         dene20: float
-            Volume averaged electron density in units of 10^20 m^-3.
+            Volume averaged electron density [10²⁰ m⁻³].
 
         Returns
         -------
         float
-            The calculated absolute current drive efficiency in A/W.
+            The calculated absolute current drive efficiency [A/W].
 
         Notes
         -----
         - This formula was originally in the Oak RidgeSystems Code, attributed to
-          Fenstermacher and is used in the AEA FUS 172 report.
+        Fenstermacher and is used in the AEA FUS 172 report.
 
         References
         ----------
-            - T.C. Hender et al., 'Physics Assessment of the European Reactor Study',
-              AEA FUS 172, 1992.
+        [1] T.C. Hender et al., 'Physics Assessment of the European Reactor Study',
+        AEA FUS 172, 1992.
 
-            - R.L.Reid et al, Oak Ridge Report ORNL/FEDC-87-7, 1988
+        [2] R.L.Reid et al, Oak Ridge Report ORNL/FEDC-87-7, 1988
         """
         return (0.36e0 * (1.0e0 + (te / 25.0e0) ** 1.16e0)) / (rmajor * dene20)
 
@@ -1593,26 +1638,26 @@ class LowerHybrid(Model):
         Parameters
         ----------
         te: float
-            Volume averaged electron temperature in keV.
+            Volume averaged electron temperature [keV].
         beta: float
-            Plasma beta value (ratio of plasma pressure to magnetic pressure).
+            Plasma beta value (ratio of plasma pressure to magnetic pressure) [-]
         rmajor: float
-            Major radius of the plasma in meters.
+            Major radius of the plasma [m].
         dene20: float
-            Volume averaged electron density in units of 10^20 m^-3.
+            Volume averaged electron density [10²⁰ m⁻³].
         zeff: float
-            Plasma effective charge.
+            Plasma effective charge [-]
 
         Returns
         -------
         float
-            The calculated absolute current drive efficiency in A/W.
+            The calculated absolute current drive efficiency [A/W].
 
 
         References
         ----------
-            - Ehst, D.A., and Karney, C.F.F., "Lower Hybrid Current Drive in Tokamaks",
-              Nuclear Fusion, 31(10), 1933-1949, 1991.
+        [1] Ehst, D.A., and Karney, C.F.F., "Lower Hybrid Current Drive in Tokamaks",
+        Nuclear Fusion, 31(10), 1933-1949, 1991.
         """
         return (
             ((te**0.77 * (0.034 + 0.196 * beta)) / (rmajor * dene20))
@@ -2473,13 +2518,10 @@ class CurrentDrive(Model):
             self.data.current_drive.eta_cd_dimensionless_hcd_primary,
             "OP ",
         )
-        po.ovarre(
-            self.mfile,
-            "EBW coupling efficiency",
-            "(xi_ebw)",
-            self.data.current_drive.xi_ebw,
-        )
-        if self.data.current_drive.i_hcd_primary == 10:
+        if (
+            CurrentDriveModel(self.data.current_drive.i_hcd_primary)
+            == CurrentDriveModel.USER_INPUT_ELECTRON_CYCLOTRON
+        ):
             po.ovarre(
                 self.outfile,
                 "ECRH plasma heating efficiency",
@@ -2488,21 +2530,21 @@ class CurrentDrive(Model):
             )
         po.ovarre(
             self.outfile,
-            "Power injected into plasma by primary system for current drive (MW)",
+            "Power injected into plasma by primary system for current drive [MW]",
             "(p_hcd_primary_injected_mw)",
             self.data.current_drive.p_hcd_primary_injected_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Extra power injected into plasma by primary system  (MW)",
+            "Extra power injected into plasma by primary system  [MW]",
             "(p_hcd_primary_extra_heat_mw)",
             self.data.current_drive.p_hcd_primary_extra_heat_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Current driven in plasma by primary system (A)",
+            "Current driven in plasma by primary system [A]",
             "(c_hcd_primary_driven)",
             self.data.current_drive.c_hcd_primary_driven,
             "OP ",
@@ -2529,7 +2571,10 @@ class CurrentDrive(Model):
             "OP ",
         )
 
-        if self.data.current_drive.i_hcd_primary in {12, 13}:
+        if CurrentDriveModel(self.data.current_drive.i_hcd_primary) in {
+            CurrentDriveModel.USER_INPUT_ELECTRON_BERNSTEIN,
+            CurrentDriveModel.FREETHY_ELECTRON_CYCLOTRON,
+        }:
             po.oblnkl(self.outfile)
             po.ovarre(
                 self.outfile,
@@ -2543,7 +2588,10 @@ class CurrentDrive(Model):
                 "(xi_ebw)",
                 self.data.current_drive.xi_ebw,
             )
-        if self.data.current_drive.i_hcd_primary == 13:
+        if (
+            CurrentDriveModel(self.data.current_drive.i_hcd_primary)
+            == CurrentDriveModel.FREETHY_ELECTRON_CYCLOTRON
+        ):
             po.ovarre(
                 self.outfile,
                 "Electron cyclotron cutoff wave mode switch",
@@ -2563,7 +2611,7 @@ class CurrentDrive(Model):
 
             po.ovarre(
                 self.outfile,
-                "Neutral beam energy (keV)",
+                "Neutral beam energy [keV]",
                 "(e_beam_kev)",
                 self.data.current_drive.e_beam_kev,
             )
@@ -2573,7 +2621,7 @@ class CurrentDrive(Model):
             ):
                 po.ovarre(
                     self.outfile,
-                    "Neutral beam current (A)",
+                    "Neutral beam current [A]",
                     "(c_beam_total)",
                     self.data.current_drive.c_beam_total,
                     "OP ",
@@ -2587,7 +2635,7 @@ class CurrentDrive(Model):
             )
             po.ovarre(
                 self.outfile,
-                "Beam decay lengths to centre",
+                "Beam decay lengths to centre [m]",
                 "(n_beam_decay_lengths_core)",
                 self.data.current_drive.n_beam_decay_lengths_core,
                 "OP ",
@@ -2606,7 +2654,7 @@ class CurrentDrive(Model):
             ):
                 po.ovarre(
                     self.outfile,
-                    "Beam first orbit loss power (MW)",
+                    "Beam first orbit loss power [MW]",
                     "(p_beam_orbit_loss_mw)",
                     self.data.current_drive.p_beam_orbit_loss_mw,
                     "OP ",
@@ -2620,14 +2668,14 @@ class CurrentDrive(Model):
                 )
                 po.ovarre(
                     self.outfile,
-                    "Maximum allowable beam power (MW)",
+                    "Maximum allowable beam power [MW]",
                     "(p_hcd_injected_max)",
                     self.data.current_drive.p_hcd_injected_max,
                 )
                 po.oblnkl(self.outfile)
                 po.ovarre(
                     self.outfile,
-                    "Beam power entering vacuum vessel (MW)",
+                    "Beam power entering vacuum vessel [MW]",
                     "(p_beam_injected_mw)",
                     self.data.current_drive.p_beam_injected_mw,
                     "OP ",
@@ -2641,7 +2689,7 @@ class CurrentDrive(Model):
                 )
                 po.ovarre(
                     self.outfile,
-                    "Beam duct shielding thickness (m)",
+                    "Beam duct shielding thickness [m]",
                     "(dx_beam_shield)",
                     self.data.current_drive.dx_beam_shield,
                 )
@@ -2653,14 +2701,14 @@ class CurrentDrive(Model):
                 )
                 po.ovarre(
                     self.outfile,
-                    "Beam centreline tangency radius (m)",
+                    "Beam centreline tangency radius [m]",
                     "(radius_beam_tangency)",
                     self.data.current_drive.radius_beam_tangency,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
-                    "Maximum possible tangency radius (m)",
+                    "Maximum possible tangency radius [m]",
                     "(radius_beam_tangency_max)",
                     self.data.current_drive.radius_beam_tangency_max,
                     "OP ",
@@ -2702,7 +2750,10 @@ class CurrentDrive(Model):
             self.data.current_drive.eta_cd_dimensionless_hcd_secondary,
             "OP ",
         )
-        if self.data.current_drive.i_hcd_secondary == 10:
+        if (
+            CurrentDriveModel(self.data.current_drive.i_hcd_secondary)
+            == CurrentDriveModel.USER_INPUT_ELECTRON_CYCLOTRON
+        ):
             po.ovarre(
                 self.outfile,
                 "ECRH plasma heating efficiency",
@@ -2712,21 +2763,21 @@ class CurrentDrive(Model):
 
         po.ovarre(
             self.outfile,
-            "Power injected into plasma by secondary system (MW)",
+            "Power injected into plasma by secondary system [MW]",
             "(p_hcd_secondary_injected_mw)",
             self.data.current_drive.p_hcd_secondary_injected_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Extra power injected into plasma by secondary system  (MW)",
+            "Extra power injected into plasma by secondary system  [MW]",
             "(p_hcd_secondary_extra_heat_mw)",
             self.data.current_drive.p_hcd_secondary_extra_heat_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Current driven in plasma by secondary system (A)",
+            "Current driven in plasma by secondary system [A]",
             "(c_hcd_secondary_driven)",
             self.data.current_drive.c_hcd_secondary_driven,
             "OP ",
@@ -2747,7 +2798,7 @@ class CurrentDrive(Model):
         )
         po.ovarre(
             self.outfile,
-            "Wall plug electric power of secondary system",
+            "Wall plug electric power of secondary system [MW]",
             "(p_hcd_secondary_electric_mw)",
             self.data.heat_transport.p_hcd_secondary_electric_mw,
             "OP ",
@@ -2765,7 +2816,7 @@ class CurrentDrive(Model):
 
             po.ovarre(
                 self.outfile,
-                "Neutral beam energy (keV)",
+                "Neutral beam energy [keV]",
                 "(e_beam_kev)",
                 self.data.current_drive.e_beam_kev,
             )
@@ -2775,7 +2826,7 @@ class CurrentDrive(Model):
             ):
                 po.ovarre(
                     self.outfile,
-                    "Neutral beam current (A)",
+                    "Neutral beam current [A]",
                     "(c_beam_total)",
                     self.data.current_drive.c_beam_total,
                     "OP ",
@@ -2808,7 +2859,7 @@ class CurrentDrive(Model):
             ):
                 po.ovarre(
                     self.outfile,
-                    "Beam first orbit loss power (MW)",
+                    "Beam first orbit loss power [MW]",
                     "(p_beam_orbit_loss_mw)",
                     self.data.current_drive.p_beam_orbit_loss_mw,
                     "OP ",
@@ -2822,14 +2873,14 @@ class CurrentDrive(Model):
                 )
                 po.ovarre(
                     self.outfile,
-                    "Maximum allowable beam power (MW)",
+                    "Maximum allowable beam power [MW]",
                     "(p_hcd_injected_max)",
                     self.data.current_drive.p_hcd_injected_max,
                 )
                 po.oblnkl(self.outfile)
                 po.ovarre(
                     self.outfile,
-                    "Beam power entering vacuum vessel (MW)",
+                    "Beam power entering vacuum vessel [MW]",
                     "(p_beam_injected_mw)",
                     self.data.current_drive.p_beam_injected_mw,
                     "OP ",
@@ -2843,7 +2894,7 @@ class CurrentDrive(Model):
                 )
                 po.ovarre(
                     self.outfile,
-                    "Beam duct shielding thickness (m)",
+                    "Beam duct shielding thickness [m]",
                     "(dx_beam_shield)",
                     self.data.current_drive.dx_beam_shield,
                 )
@@ -2855,14 +2906,14 @@ class CurrentDrive(Model):
                 )
                 po.ovarre(
                     self.outfile,
-                    "Beam centreline tangency radius (m)",
+                    "Beam centreline tangency radius [m]",
                     "(radius_beam_tangency)",
                     self.data.current_drive.radius_beam_tangency,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
-                    "Maximum possible tangency radius (m)",
+                    "Maximum possible tangency radius [m]",
                     "(radius_beam_tangency_max)",
                     self.data.current_drive.radius_beam_tangency_max,
                     "OP ",
@@ -2874,27 +2925,27 @@ class CurrentDrive(Model):
 
         po.ovarre(
             self.outfile,
-            "Total injected heating power that drove plasma current (MW)",
+            "Total injected heating power that drove plasma current [MW]",
             "(p_hcd_injected_current_total_mw)",
             self.data.current_drive.p_hcd_injected_current_total_mw,
         )
         po.ovarre(
             self.outfile,
-            "Total injected heating power across all systems (MW)",
+            "Total injected heating power across all systems [MW]",
             "(p_hcd_injected_total_mw)",
             self.data.current_drive.p_hcd_injected_total_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Total injected heating power given to the electrons (MW)",
+            "Total injected heating power given to the electrons [MW]",
             "(p_hcd_injected_electrons_mw)",
             self.data.current_drive.p_hcd_injected_electrons_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Total injected heating power given to the ions (MW)",
+            "Total injected heating power given to the ions [MW]",
             "(p_hcd_injected_ions_mw)",
             self.data.current_drive.p_hcd_injected_ions_mw,
             "OP ",
@@ -2902,7 +2953,7 @@ class CurrentDrive(Model):
 
         po.ovarre(
             self.outfile,
-            "Upper limit on total plasma injected power (MW)",
+            "Upper limit on total plasma injected power [MW]",
             "(p_hcd_injected_max)",
             self.data.current_drive.p_hcd_injected_max,
             "OP ",
@@ -2912,35 +2963,35 @@ class CurrentDrive(Model):
 
         po.ovarre(
             self.outfile,
-            "Injected power into plasma from lower hybrid systems (MW)",
+            "Injected power into plasma from lower hybrid systems [MW]",
             "(p_hcd_lowhyb_injected_total_mw)",
             self.data.current_drive.p_hcd_lowhyb_injected_total_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Injected power into plasma from ion cyclotron systems (MW)",
+            "Injected power into plasma from ion cyclotron systems [MW]",
             "(p_hcd_icrh_injected_total_mw)",
             self.data.current_drive.p_hcd_icrh_injected_total_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Injected power into plasma from electron cyclotron systems (MW)",
+            "Injected power into plasma from electron cyclotron systems [MW]",
             "(p_hcd_ecrh_injected_total_mw)",
             self.data.current_drive.p_hcd_ecrh_injected_total_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Injected power into plasma from neutral beam systems (MW)",
+            "Injected power into plasma from neutral beam systems [MW]",
             "(p_hcd_beam_injected_total_mw)",
             self.data.current_drive.p_hcd_beam_injected_total_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Injected power into plasma from lower hybrid systems (MW)",
+            "Injected power into plasma from electron Bernstein wave systems [MW]",
             "(p_hcd_ebw_injected_total_mw)",
             self.data.current_drive.p_hcd_ebw_injected_total_mw,
             "OP ",
