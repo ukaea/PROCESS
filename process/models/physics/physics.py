@@ -5125,54 +5125,48 @@ class DetailedPhysics(Model):
 
         self.data.physics.vel_plasma_deuteron_profile = (
             self.calculate_relativistic_particle_speed(
-                e_kinetic=self.plasma_profile.teprofile.profile_y
-                * constants.KILOELECTRON_VOLT
-                * self.data.physics.f_temp_plasma_ion_electron,
+                e_kinetic=self.plasma_profile.tiprofile.profile_y
+                * constants.KILOELECTRON_VOLT,
                 mass=constants.DEUTERON_MASS,
             )
         )
 
         self.data.physics.vel_plasma_deuteron_vol_avg = (
             self.calculate_relativistic_particle_speed(
-                e_kinetic=self.data.physics.temp_plasma_electron_vol_avg_kev
-                * constants.KILOELECTRON_VOLT
-                * self.data.physics.f_temp_plasma_ion_electron,
+                e_kinetic=self.data.physics.temp_plasma_ion_vol_avg_kev
+                * constants.KILOELECTRON_VOLT,
                 mass=constants.DEUTERON_MASS,
             )
         )
 
         self.data.physics.vel_plasma_triton_profile = (
             self.calculate_relativistic_particle_speed(
-                e_kinetic=self.plasma_profile.teprofile.profile_y
-                * constants.KILOELECTRON_VOLT
-                * self.data.physics.f_temp_plasma_ion_electron,
+                e_kinetic=self.plasma_profile.tiprofile.profile_y
+                * constants.KILOELECTRON_VOLT,
                 mass=constants.TRITON_MASS,
             )
         )
 
         self.data.physics.vel_plasma_triton_vol_avg = (
             self.calculate_relativistic_particle_speed(
-                e_kinetic=self.data.physics.temp_plasma_electron_vol_avg_kev
-                * constants.KILOELECTRON_VOLT
-                * self.data.physics.f_temp_plasma_ion_electron,
+                e_kinetic=self.data.physics.temp_plasma_ion_vol_avg_kev
+                * constants.KILOELECTRON_VOLT,
                 mass=constants.TRITON_MASS,
             )
         )
 
         self.data.physics.vel_plasma_alpha_thermal_profile = (
             self.calculate_relativistic_particle_speed(
-                e_kinetic=self.plasma_profile.teprofile.profile_y
-                * constants.KILOELECTRON_VOLT
-                * self.data.physics.f_temp_plasma_ion_electron,
+                e_kinetic=self.plasma_profile.tiprofile.profile_y
+                * constants.KILOELECTRON_VOLT,
                 mass=constants.ALPHA_MASS,
             )
         )
 
         self.data.physics.vel_plasma_alpha_thermal_vol_avg = (
             self.calculate_relativistic_particle_speed(
-                e_kinetic=self.data.physics.temp_plasma_electron_vol_avg_kev
-                * constants.KILOELECTRON_VOLT
-                * self.data.physics.f_temp_plasma_ion_electron,
+                e_kinetic=self.data.physics.temp_plasma_ion_vol_avg_kev
+                * constants.KILOELECTRON_VOLT,
                 mass=constants.ALPHA_MASS,
             )
         )
