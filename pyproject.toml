@@ -9,6 +9,9 @@ fallback-version = "0.0.0"
 [tool.hatch.build.hooks.vcs]
 version-file = "process/_version.py"
 
+[tool.hatch.metadata]
+allow-direct-references = true
+
 [project]
 name = "process"
 authors = [{ name = "UKAEA" }]
@@ -30,6 +33,7 @@ dependencies = [
     "seaborn>=0.12.2",
     "tabulate",
     "pyyaml",  # just used for mfile yml outputting
+    "parameter_frame @ git+ssh://git@github.com/Fusion-Power-Plant-Framework/parameter_frame.git@process"
    ]
 keywords = ['fusion', 'optimisation']
 classifiers = [
