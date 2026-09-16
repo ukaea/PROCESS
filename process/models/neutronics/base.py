@@ -410,7 +410,7 @@ class NeutronFluxProfile:
         group_energy:
             The average neutron energy of each group.
         fluxes:
-            Particle flux (defined by number of neutrons 1 /s /cm^2) entering
+            Particle flux (defined by number of neutrons 1 /s /m^2) entering
             the first wall for the first time from the plasma. It's a vector
             since each neutron group can have a different value.
         init_neutron_energy:
@@ -533,7 +533,7 @@ class NeutronFluxProfile:
 
     def _groupwise_flux_curvature_in_layer(
         self, n: int, num_layer: int, x: float | npt.NDArray
-    ):
+    ) -> float | npt.NDArray:
         """Second derivative of the group n flux in num_layer at location x."""
         abs_x = abs(x)
         trig_funcs = []
