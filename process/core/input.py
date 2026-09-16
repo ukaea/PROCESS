@@ -1182,6 +1182,9 @@ INPUT_VARIABLES = {
     "f_len_sol_power_decay_inboard_outboard": InputVariable(
         "physics", float, range=(0.01, 2.0)
     ),
+    "f_t_fuel_ion_electron_energy_confinement": InputVariable(
+        "physics", float, range=(0.1, 5.0)
+    ),
 }
 
 
