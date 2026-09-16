@@ -35,6 +35,7 @@ from math import fsum
 import numpy as np
 from matplotlib import pyplot as plt
 from numpy import typing as npt
+from scipy import optimize
 
 from process.core.exceptions import ProcessValidationError, ProcessValueError
 from process.models.neutronics.data import N_A, MaterialMacroInfo
@@ -552,7 +553,7 @@ class NeutronFluxProfile:
             )
         return matrix_fsum(trig_funcs, axis=0)
 
-    def _groupwise_neutron_flux_differential_in_layer(
+    def _groupwise_neutron_flux_derivative_in_layer(
         self, n: int, num_layer: int, x: float
     ) -> npt.NDArray[float]:
         """
@@ -578,10 +579,9 @@ class NeutronFluxProfile:
         s_diff:
             d (neutron_flux at (x))/d coefficient.s[num_layer, n, n]
         """
+        return np.array(self._groupwise_cs_values_in_layer(n, num_layer, x))
 
-        return
-
-    def _groupwise_neutron_current_differential_in_layer(
+    def _groupwise_neutron_current_derivative_in_layer(
         self, n: int, num_layer: int, x: float
     ) -> npt.NDArray[float]:
         """
@@ -607,8 +607,7 @@ class NeutronFluxProfile:
         s_diff:
             d (neutron_current at (x))/d coefficient.s[num_layer, n, n]
         """
-
-        return
+        return np.array(self._groupwise_cs_differential_in_layer(n, num_layer, x))
 
     def _summation_shorthand(
         self, n: int, num_layer: int, func: Callable, x: float, max_group: int
@@ -752,10 +751,10 @@ class NeutronFluxProfile:
         -------
         m_list:
             A list of m matrices, starting from subscript 1 to subscript
-            self.n_layer-1, each with shape (2, 2)
+            self.n_layers-1, each with shape (2, 2)
         v_list:
             A list of v vectors, starting from subscript 1 to subscript
-            self.n_layer-1, each with shape (2,)
+            self.n_layers-1, each with shape (2,)
         """
         m_list, v_list = [], []
         for num_layer in range(self.n_layers - 1):
@@ -946,7 +945,7 @@ class NeutronFluxProfile:
                     - self.fluxes[n]
                 )
                 jacobians[0, :2] = (
-                    self._groupwise_neutron_current_differential_in_layer(
+                    self._groupwise_neutron_current_derivative_in_layer(
                         n, 0, 0.0
                     )
                 )
@@ -960,23 +959,23 @@ class NeutronFluxProfile:
                         self.groupwise_neutron_flux_in_layer(n, num_layer, x)
                         - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
                     )
-                    jacobian[i + 1, i:i + 2] = self._groupwise_neutron_flux_differential_in_layer(n, num_layer, x)
-                    jacobian[i + 1, i + 2:i + 4] = -self._groupwise_neutron_flux_differential_in_layer(n, num_layer + 1, x)
+                    jacobians[i + 1, i:i + 2] = self._groupwise_neutron_flux_derivative_in_layer(n, num_layer, x)
+                    jacobians[i + 1, i + 2:i + 4] = -self._groupwise_neutron_flux_derivative_in_layer(n, num_layer + 1, x)
 
                     # Enforce current continuity at self.interface[num_layer]
                     conditions[i + 2] = (
                         self.groupwise_neutron_current_in_layer(n, num_layer, x)
                         - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
                     )
-                    jacobian[i + 2, i:i + 2] = self._groupwise_neutron_current_differential_in_layer(n, num_layer, x)
-                    jacobian[i + 2, i + 2:i + 4] = -self._groupwise_neutron_current_differential_in_layer(n, num_layer + 1, x)
+                    jacobians[i + 2, i:i + 2] = self._groupwise_neutron_current_derivative_in_layer(n, num_layer, x)
+                    jacobians[i + 2, i + 2:i + 4] = -self._groupwise_neutron_current_derivative_in_layer(n, num_layer + 1, x)
 
                 # Enforce zero flux at extended boundary
-                conditions[2 * self.n_layer - 1] = self.groupwise_neutron_flux_in_layer(
+                conditions[2 * self.n_layers - 1] = self.groupwise_neutron_flux_in_layer(
                     n, self.n_layers - 1, self.extended_boundary[n]
                 )
-                jacobians[2 * self.n_layer - 1, self.n_layer - 2:] = (
-                    self._groupwise_neutron_flux_differential_in_layer(
+                jacobians[2 * self.n_layers - 1, 2 * self.n_layers - 2:] = (
+                    self._groupwise_neutron_flux_derivative_in_layer(
                         n, self.n_layers-1, self.extended_boundary[n]
                     )
                 )
@@ -986,10 +985,6 @@ class NeutronFluxProfile:
                 _set_coefficients(coefficients_vector)
                 return _evaluate_fit()
 
-            x0 = np.flatten([
-                [layer_coefs[n].c[n], layer_coefs[n].s[n]]
-                for layer_coefs in self.coefficients
-            ])
             results = optimize.root(objective, x0=init_coefs.flatten(), jac=True)
             _set_coefficients(results.res)
             extended_x_flux = self.groupwise_neutron_flux_in_layer(
@@ -1002,7 +997,7 @@ class NeutronFluxProfile:
                     f"Instead flux = {extended_x_flux}."
                 )
             # non-negativity check for layer = num_layer:
-            for num_layer in range(self.n_layer):
+            for num_layer in range(self.n_layers):
                 if (
                     self.groupwise_neutron_flux_in_layer(n, num_layer, self.interface_x[num_layer]) < 0
                 ) or (
