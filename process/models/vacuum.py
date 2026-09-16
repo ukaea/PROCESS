@@ -336,12 +336,17 @@ class Vacuum(Model):
         volume = plasma_vol * (aw + dsol) * (aw + dsol) / (aw * aw)
 
         #  dwell pumping options
-        if (self.data.vacuum.i_vac_pump_dwell == 1) or (t_plant_pulse_dwell == 0):
-            tpump = self.data.times.t_plant_pulse_coil_precharge
-        elif self.data.vacuum.i_vac_pump_dwell == 2:
-            tpump = t_plant_pulse_dwell + self.data.times.t_plant_pulse_coil_precharge
-        else:
-            tpump = t_plant_pulse_dwell
+        match (self.data.vacuum.i_vac_pump_dwell, t_plant_pulse_dwell):
+            case (_, 0):
+                tpump = self.data.times.t_plant_pulse_coil_precharge
+            case (1, _):
+                tpump = self.data.times.t_plant_pulse_coil_precharge
+            case (2, _):
+                tpump = (
+                    t_plant_pulse_dwell + self.data.times.t_plant_pulse_coil_precharge
+                )
+            case _:
+                tpump = t_plant_pulse_dwell
 
         s.append(volume / tpump * math.log(pend / pstart))
 
