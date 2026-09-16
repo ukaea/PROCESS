@@ -552,6 +552,64 @@ class NeutronFluxProfile:
             )
         return matrix_fsum(trig_funcs, axis=0)
 
+    def _groupwise_neutron_flux_differential_in_layer(
+        self, n: int, num_layer: int, x: float
+    ) -> npt.NDArray[float]:
+        """
+        Differentiate neutron flux w.r.t.
+        self.coefficients[num_layer, n].c[n] and
+        self.coefficients[num_layer, n].s[n].
+
+        Pararmeters
+        -----------
+        n:
+            The group of neutron flux we want differentiated.
+        num_layer:
+            The layer index of the layer whose neutron flux we want
+            differentiated.
+        x:
+            The position where the first order derivative of neutron flux
+            w.r.t. the c and s coefficients is required.
+
+        Returns
+        -------
+        c_diff:
+            d (neutron_flux at (x))/d coefficient.c[num_layer, n, n]
+        s_diff:
+            d (neutron_flux at (x))/d coefficient.s[num_layer, n, n]
+        """
+
+        return
+
+    def _groupwise_neutron_current_differential_in_layer(
+        self, n: int, num_layer: int, x: float
+    ) -> npt.NDArray[float]:
+        """
+        Differentiate neutron current w.r.t.
+        self.coefficients[num_layer, n].c[n] and
+        self.coefficients[num_layer, n].s[n].
+
+        Pararmeters
+        -----------
+        n:
+            The group of neutron current we want differentiated.
+        num_layer:
+            The layer index of the layer whose neutron current we want
+            differentiated.
+        x:
+            The position where the first order derivative of neutron current
+            w.r.t. the c and s coefficients is required.
+
+        Returns
+        -------
+        c_diff:
+            d (neutron_current at (x))/d coefficient.c[num_layer, n, n]
+        s_diff:
+            d (neutron_current at (x))/d coefficient.s[num_layer, n, n]
+        """
+
+        return
+
     def _summation_shorthand(
         self, n: int, num_layer: int, func: Callable, x: float, max_group: int
     ) -> float:
@@ -853,25 +911,6 @@ class NeutronFluxProfile:
             self.coefficients[0, n].c[n], self.coefficients[0, n].s[n] = np.linalg.solve(
                 eqn_32_matrix, eqn_32_vector
             )
-            # nonnegativity check for layer 0
-            if (self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[0]) < 0) or (
-                self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[1]) < 0
-            ):
-                warnings.warn(
-                    f"Negative flux found when solving for group {n}"
-                    " in layer 0! Likely due to an unphysical "
-                    "cross-section value or a previous warning about"
-                    r"layer thickness < 3 λ_{tr}.",
-                    stacklevel=2,
-                )
-
-            print(f"For {n = }")
-            print("Eqn (32) matrix:", np.array([top_row, bot_row]))
-            print("whose determinant is:", np.linalg.det(np.array([top_row, bot_row])))
-            print("in particular, affine_transform_matrix_stack=", affine_transform_matrix_stack)
-            print("affine_transformed_column_vector=", affine_transformed_column_vector)
-            print("Eqn (32) vector:", y, z)
-            print("Solution coefficients", self.coefficients[0, n].c[n], self.coefficients[0, n].s[n])
 
             for num_layer in range(self.n_layers - 1):
                 [
@@ -885,19 +924,74 @@ class NeutronFluxProfile:
                     ])
                     + v_list[num_layer]
                 )
-                # non-negativity check for layer = num_layer:
-                if (
-                    self.groupwise_neutron_flux_in_layer(
-                        n, num_layer, self.layer_x[num_layer]
+            
+            init_coefs = np.array([
+                (self.coefficients[num_layer, n].c[n],
+                    self.coefficients[num_layer, n].s[n]
+                ) for num_layer in range(self.n_layers)
+            ])
+            def _set_coefficients(input_vector: Iterable[float]):
+                for num_layer in range(self.n_layers):
+                    i = num_layer * 2
+                    self.coefficients[num_layer, n].c[n] = input_vector[i]
+                    self.coefficients[num_layer, n].s[n] = input_vector[i + 1]
+
+            def _evaluate_fit():
+                conditions = np.zeros([2 * self.n_layers])
+                jacobians = np.zeros([2 * self.n_layers, 2 * self.n_layers])
+
+                # Net current at origin equal incident flux on that group.
+                conditions[0] = (
+                    self.groupwise_neutron_current_through_interface(n, 0)
+                    - self.fluxes[n]
+                )
+                jacobians[0, :2] = (
+                    self._groupwise_neutron_current_differential_in_layer(
+                        n, 0, 0.0
                     )
-                    < 0
-                ):
-                    warnings.warn(
-                        "Negative flux found when solving for "
-                        f"group {n} in layer {num_layer}! Likely due to "
-                        "an unphysical cross-section value.",
-                        stacklevel=2,
+                )
+
+                for num_layer in range(self.n_layers - 1):
+                    x = self.layer_x[num_layer]
+
+                    i = 2 * num_layer
+                    # Enforce flux continuity at self.interface[num_layer]
+                    conditions[i + 1] = (
+                        self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+                        - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
                     )
+                    jacobian[i + 1, i:i + 2] = self._groupwise_neutron_flux_differential_in_layer(n, num_layer, x)
+                    jacobian[i + 1, i + 2:i + 4] = -self._groupwise_neutron_flux_differential_in_layer(n, num_layer + 1, x)
+
+                    # Enforce current continuity at self.interface[num_layer]
+                    conditions[i + 2] = (
+                        self.groupwise_neutron_current_in_layer(n, num_layer, x)
+                        - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
+                    )
+                    jacobian[i + 2, i:i + 2] = self._groupwise_neutron_current_differential_in_layer(n, num_layer, x)
+                    jacobian[i + 2, i + 2:i + 4] = -self._groupwise_neutron_current_differential_in_layer(n, num_layer + 1, x)
+
+                # Enforce zero flux at extended boundary
+                conditions[2 * self.n_layer - 1] = self.groupwise_neutron_flux_in_layer(
+                    n, self.n_layers - 1, self.extended_boundary[n]
+                )
+                jacobians[2 * self.n_layer - 1, self.n_layer - 2:] = (
+                    self._groupwise_neutron_flux_differential_in_layer(
+                        n, self.n_layers-1, self.extended_boundary[n]
+                    )
+                )
+                return np.array(conditions), np.array(jacobians)
+
+            def objective(coefficients_vector):
+                _set_coefficients(coefficients_vector)
+                return _evaluate_fit()
+
+            x0 = np.flatten([
+                [layer_coefs[n].c[n], layer_coefs[n].s[n]]
+                for layer_coefs in self.coefficients
+            ])
+            results = optimize.root(objective, x0=init_coefs.flatten(), jac=True)
+            _set_coefficients(results.res)
             extended_x_flux = self.groupwise_neutron_flux_in_layer(
                 n, self.n_layers-1, self.extended_boundary[n]
             )
@@ -907,6 +1001,19 @@ class NeutronFluxProfile:
                     f"is not adhered to for group {n}! "
                     f"Instead flux = {extended_x_flux}."
                 )
+            # non-negativity check for layer = num_layer:
+            for num_layer in range(self.n_layer):
+                if (
+                    self.groupwise_neutron_flux_in_layer(n, num_layer, self.interface_x[num_layer]) < 0
+                ) or (
+                    self.groupwise_neutron_flux_in_layer(n, num_layer, self.layer_x[num_layer]) < 0
+                ):
+                    warnings.warn(
+                        "Negative flux found when solving for "
+                        f"group {n} in layer {num_layer}! Perhaps due to "
+                        "an unphysical cross-section value?",
+                        stacklevel=2,
+                    )
             self.num_iteration[n] += 1
         except Exception as e:
             for num_layer in range(self.n_layers):
