@@ -553,62 +553,6 @@ class NeutronFluxProfile:
             )
         return matrix_fsum(trig_funcs, axis=0)
 
-    def _groupwise_neutron_flux_derivative_in_layer(
-        self, n: int, num_layer: int, x: float
-    ) -> npt.NDArray[float]:
-        """
-        Differentiate neutron flux w.r.t.
-        self.coefficients[num_layer, n].c[n] and
-        self.coefficients[num_layer, n].s[n].
-
-        Pararmeters
-        -----------
-        n:
-            The group of neutron flux we want differentiated.
-        num_layer:
-            The layer index of the layer whose neutron flux we want
-            differentiated.
-        x:
-            The position where the first order derivative of neutron flux
-            w.r.t. the c and s coefficients is required.
-
-        Returns
-        -------
-        c_diff:
-            d (neutron_flux at (x))/d coefficient.c[num_layer, n, n]
-        s_diff:
-            d (neutron_flux at (x))/d coefficient.s[num_layer, n, n]
-        """
-        return np.array(self._groupwise_cs_values_in_layer(n, num_layer, x))
-
-    def _groupwise_neutron_current_derivative_in_layer(
-        self, n: int, num_layer: int, x: float
-    ) -> npt.NDArray[float]:
-        """
-        Differentiate neutron current w.r.t.
-        self.coefficients[num_layer, n].c[n] and
-        self.coefficients[num_layer, n].s[n].
-
-        Pararmeters
-        -----------
-        n:
-            The group of neutron current we want differentiated.
-        num_layer:
-            The layer index of the layer whose neutron current we want
-            differentiated.
-        x:
-            The position where the first order derivative of neutron current
-            w.r.t. the c and s coefficients is required.
-
-        Returns
-        -------
-        c_diff:
-            d (neutron_current at (x))/d coefficient.c[num_layer, n, n]
-        s_diff:
-            d (neutron_current at (x))/d coefficient.s[num_layer, n, n]
-        """
-        return np.array(self._groupwise_cs_differential_in_layer(n, num_layer, x))
-
     def _summation_shorthand(
         self, n: int, num_layer: int, func: Callable, x: float, max_group: int
     ) -> float:
@@ -945,7 +889,7 @@ class NeutronFluxProfile:
                     - self.fluxes[n]
                 )
                 jacobians[0, :2] = (
-                    self._groupwise_neutron_current_derivative_in_layer(
+                    self._groupwise_cs_differential_in_layer(
                         n, 0, 0.0
                     )
                 )
@@ -959,23 +903,23 @@ class NeutronFluxProfile:
                         self.groupwise_neutron_flux_in_layer(n, num_layer, x)
                         - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
                     )
-                    jacobians[i + 1, i:i + 2] = self._groupwise_neutron_flux_derivative_in_layer(n, num_layer, x)
-                    jacobians[i + 1, i + 2:i + 4] = -self._groupwise_neutron_flux_derivative_in_layer(n, num_layer + 1, x)
+                    jacobians[i + 1, i:i + 2] = self._groupwise_cs_values_in_layer(n, num_layer, x)
+                    jacobians[i + 1, i + 2:i + 4] = -self._groupwise_cs_values_in_layer(n, num_layer + 1, x)
 
                     # Enforce current continuity at self.interface[num_layer]
                     conditions[i + 2] = (
                         self.groupwise_neutron_current_in_layer(n, num_layer, x)
                         - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
                     )
-                    jacobians[i + 2, i:i + 2] = self._groupwise_neutron_current_derivative_in_layer(n, num_layer, x)
-                    jacobians[i + 2, i + 2:i + 4] = -self._groupwise_neutron_current_derivative_in_layer(n, num_layer + 1, x)
+                    jacobians[i + 2, i:i + 2] = self._groupwise_cs_differential_in_layer(n, num_layer, x)
+                    jacobians[i + 2, i + 2:i + 4] = -self._groupwise_cs_differential_in_layer(n, num_layer + 1, x)
 
                 # Enforce zero flux at extended boundary
                 conditions[2 * self.n_layers - 1] = self.groupwise_neutron_flux_in_layer(
                     n, self.n_layers - 1, self.extended_boundary[n]
                 )
                 jacobians[2 * self.n_layers - 1, 2 * self.n_layers - 2:] = (
-                    self._groupwise_neutron_flux_derivative_in_layer(
+                    self._groupwise_cs_values_in_layer(
                         n, self.n_layers-1, self.extended_boundary[n]
                     )
                 )
