@@ -58,42 +58,44 @@ class Vacuum(Model):
         bld = self.data.build
         phy = self.data.physics
 
-        if vp.i_vacuum_pumping == "old":
-            (
-                pumpn,
-                vp.n_vv_vacuum_ducts,
-                vp.dlscal,
-                vp.m_vv_vacuum_duct_shield,
-                vp.dia_vv_vacuum_ducts,
-            ) = self.vacuum(
-                phy.p_fusion_total_mw,
-                phy.rmajor,
-                phy.rminor,
-                0.5e0 * (bld.dr_fw_plasma_gap_inboard + bld.dr_fw_plasma_gap_outboard),
-                phy.a_plasma_surface,
-                phy.vol_plasma,
-                bld.dr_shld_outboard,
-                bld.dr_shld_inboard,
-                bld.dr_tf_inboard,
-                bld.r_shld_inboard_inner
-                - bld.dr_shld_vv_gap_inboard
-                - bld.dr_vv_inboard,
-                self.data.tfcoil.n_tf_coils,
-                self.data.times.t_plant_pulse_dwell,
-                phy.nd_plasma_electrons_vol_avg,
-                self.data.divertor.n_divertors,
-                qtorus,
-                gasld,
-                output=output,
-            )
-            # MDK pumpn is real: convert to integer by rounding.
-            vp.n_vac_pumps_high = math.floor(pumpn + 0.5e0)
-        elif vp.i_vacuum_pumping == "simple":
-            vp.n_iter_vacuum_pumps = self.vacuum_simple(output=output)
-        else:
-            logger.error(
-                f"i_vacuum_pumping is invalid: {self.data.vacuum.i_vacuum_pumping}"
-            )
+        match vp.i_vacuum_pumping:
+            case "old":
+                (
+                    pumpn,
+                    vp.n_vv_vacuum_ducts,
+                    vp.dlscal,
+                    vp.m_vv_vacuum_duct_shield,
+                    vp.dia_vv_vacuum_ducts,
+                ) = self.vacuum(
+                    phy.p_fusion_total_mw,
+                    phy.rmajor,
+                    phy.rminor,
+                    0.5e0
+                    * (bld.dr_fw_plasma_gap_inboard + bld.dr_fw_plasma_gap_outboard),
+                    phy.a_plasma_surface,
+                    phy.vol_plasma,
+                    bld.dr_shld_outboard,
+                    bld.dr_shld_inboard,
+                    bld.dr_tf_inboard,
+                    bld.r_shld_inboard_inner
+                    - bld.dr_shld_vv_gap_inboard
+                    - bld.dr_vv_inboard,
+                    self.data.tfcoil.n_tf_coils,
+                    self.data.times.t_plant_pulse_dwell,
+                    phy.nd_plasma_electrons_vol_avg,
+                    self.data.divertor.n_divertors,
+                    qtorus,
+                    gasld,
+                    output=output,
+                )
+                # MDK pumpn is real: convert to integer by rounding.
+                vp.n_vac_pumps_high = math.floor(pumpn + 0.5e0)
+            case "simple":
+                vp.n_iter_vacuum_pumps = self.vacuum_simple(output=output)
+            case _:
+                logger.error(
+                    f"i_vacuum_pumping is invalid: {self.data.vacuum.i_vacuum_pumping}"
+                )
 
     def vacuum_simple(self, output) -> float:
         """Simple model of vacuum pumping system
@@ -688,20 +690,23 @@ class Vacuum(Model):
             self.outfile, "The vacuum pumping system size is governed by the"
         )
 
-        if imax == 1:
-            process_output.ocmmnt(
-                self.outfile, "requirements for pumpdown to base pressure."
-            )
-        elif imax == 2:
-            process_output.ocmmnt(
-                self.outfile, "requirements for pumpdown between burns."
-            )
-        elif imax == 3:
-            process_output.ocmmnt(self.outfile, "requirements for helium ash removal.")
-        else:
-            process_output.ocmmnt(
-                self.outfile, "requirements for D-T removal at fuelling rate."
-            )
+        match imax:
+            case 1:
+                process_output.ocmmnt(
+                    self.outfile, "requirements for pumpdown to base pressure."
+                )
+            case 2:
+                process_output.ocmmnt(
+                    self.outfile, "requirements for pumpdown between burns."
+                )
+            case 3:
+                process_output.ocmmnt(
+                    self.outfile, "requirements for helium ash removal."
+                )
+            case _:
+                process_output.ocmmnt(
+                    self.outfile, "requirements for D-T removal at fuelling rate."
+                )
 
         process_output.oblnkl(self.outfile)
         process_output.ovarre(
