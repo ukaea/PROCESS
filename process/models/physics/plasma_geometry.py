@@ -532,37 +532,43 @@ class PlasmaGeom(Model):
         po.oheadr(self.outfile, "Plasma Geometry")
 
         if self.data.stellarator.istell == StellaratorModel.DISABLED:
-            if self.data.divertor.n_divertors == 0:
-                po.ocmmnt(self.outfile, "Plasma configuration = limiter")
-            elif self.data.divertor.n_divertors == 1:
-                po.ocmmnt(self.outfile, "Plasma configuration = single null divertor")
-            elif self.data.divertor.n_divertors == 2:
-                po.ocmmnt(self.outfile, "Plasma configuration = double null divertor")
-            else:
-                raise ProcessValueError(
-                    "Illegal value of n_divertors",
-                    n_divertors=self.data.divertor.n_divertors,
-                )
+            match self.data.divertor.n_divertors:
+                case 0:
+                    po.ocmmnt(self.outfile, "Plasma configuration = limiter")
+                case 1:
+                    po.ocmmnt(
+                        self.outfile, "Plasma configuration = single null divertor"
+                    )
+                case 2:
+                    po.ocmmnt(
+                        self.outfile, "Plasma configuration = double null divertor"
+                    )
+                case _:
+                    raise ProcessValueError(
+                        "Illegal value of n_divertors",
+                        n_divertors=self.data.divertor.n_divertors,
+                    )
         else:
             po.ocmmnt(self.outfile, "Plasma configuration = stellarator")
 
         if self.data.stellarator.istell == StellaratorModel.DISABLED:
-            if self.data.physics.itart == 0:
-                self.data.physics.itart_r = self.data.physics.itart
-                po.ovarre(
-                    self.outfile,
-                    "Tokamak aspect ratio = Conventional, itart = 0",
-                    "(itart)",
-                    self.data.physics.itart_r,
-                )
-            elif self.data.physics.itart == 1:
-                self.data.physics.itart_r = self.data.physics.itart
-                po.ovarre(
-                    self.outfile,
-                    "Tokamak aspect ratio = Spherical, itart = 1",
-                    "(itart)",
-                    self.data.physics.itart_r,
-                )
+            match self.data.physics.itart:
+                case 0:
+                    self.data.physics.itart_r = self.data.physics.itart
+                    po.ovarre(
+                        self.outfile,
+                        "Tokamak aspect ratio = Conventional, itart = 0",
+                        "(itart)",
+                        self.data.physics.itart_r,
+                    )
+                case 1:
+                    self.data.physics.itart_r = self.data.physics.itart
+                    po.ovarre(
+                        self.outfile,
+                        "Tokamak aspect ratio = Spherical, itart = 1",
+                        "(itart)",
+                        self.data.physics.itart_r,
+                    )
 
         po.ovarre(
             self.outfile,

@@ -12,7 +12,7 @@ from process.core import constants, process_output
 from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.build_variables import TFCSRadialConfiguration
-from process.data_structure.physics import ConfinementRadiationLossModel
+from process.data_structure.physics_variables import ConfinementRadiationLossModel
 from process.data_structure.stellarator_variables import StellaratorModel
 from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.exhaust import PlasmaExhaust
