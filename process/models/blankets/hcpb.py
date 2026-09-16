@@ -803,197 +803,199 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             1 - self.data.first_wall.a_fw_outboard / self.data.first_wall.a_fw_total
         )
 
-        i_p_coolant_pumping = PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping)
-        if i_p_coolant_pumping == PumpingPowerModelTypes.FRACTION_OF_HEAT:
-            # User sets mechanical pumping power directly
-            (
-                self.data.heat_transport.p_fw_coolant_pump_mw,
-                self.data.heat_transport.p_blkt_coolant_pump_mw,
-                self.data.heat_transport.p_shld_coolant_pump_mw,
-                self.data.heat_transport.p_div_coolant_pump_mw,
-            ) = pumping_powers_as_fractions(
-                f_p_fw_coolant_pump_total_heat=self.data.heat_transport.f_p_fw_coolant_pump_total_heat,
-                f_p_blkt_coolant_pump_total_heat=self.data.heat_transport.f_p_blkt_coolant_pump_total_heat,
-                f_p_shld_coolant_pump_total_heat=self.data.heat_transport.f_p_shld_coolant_pump_total_heat,
-                f_p_div_coolant_pump_total_heat=self.data.heat_transport.f_p_div_coolant_pump_total_heat,
-                p_fw_nuclear_heat_total_mw=self.data.fwbs.p_fw_nuclear_heat_total_mw,
-                psurffwi=self.data.fwbs.psurffwi,
-                psurffwo=self.data.fwbs.psurffwo,
-                p_blkt_nuclear_heat_total_mw=self.data.fwbs.p_blkt_nuclear_heat_total_mw,
-                p_shld_nuclear_heat_mw=self.data.heat_transport.p_shld_nuclear_heat_mw,
-                p_cp_shield_nuclear_heat_mw=self.data.fwbs.p_cp_shield_nuclear_heat_mw,
-                p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
-                p_div_nuclear_heat_total_mw=self.data.fwbs.p_div_nuclear_heat_total_mw,
-                p_div_rad_total_mw=self.data.fwbs.p_div_rad_total_mw,
-            )
-
-        elif i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL:
-            # Calculate the required material properties of the FW and BB coolant.
-            self.primary_coolant_properties(output=output)
-            # Mechanical pumping power is calculated for first wall and blanket
-            self.thermo_hydraulic_model(output)
-
-            # For divertor and shield, mechanical pumping power is a fraction of thermal
-            # power removed by coolant
-            self.data.heat_transport.p_shld_coolant_pump_mw = (
-                self.data.heat_transport.f_p_shld_coolant_pump_total_heat
-                * (
-                    self.data.fwbs.p_shld_nuclear_heat_mw
-                    + self.data.fwbs.p_cp_shield_nuclear_heat_mw
-                )
-            )
-            self.data.heat_transport.p_div_coolant_pump_mw = (
-                self.data.heat_transport.f_p_div_coolant_pump_total_heat
-                * (
-                    self.data.physics.p_plasma_separatrix_mw
-                    + self.data.fwbs.p_div_nuclear_heat_total_mw
-                    + self.data.fwbs.p_div_rad_total_mw
-                )
-            )
-
-        elif i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP:
-            # Issue #503
-            # Mechanical pumping power is calculated using specified pressure drop for
-            # first wall and blanket circuit, including heat exchanger and pipes
-            pfactor = (
-                self.data.primary_pumping.p_he
-                / (self.data.primary_pumping.p_he - self.data.primary_pumping.dp_he)
-            ) ** (
-                (self.data.primary_pumping.gamma_he - 1)
-                / self.data.primary_pumping.gamma_he
-            )
-            # N.B. Currenlty i_p_coolant_pumping==3 uses separate variables found in
-            # primary_pumping_variables rather than self.data.fwbs.
-            # The pressure (p_he) is assumed to be the pressure at the
-            # blanket inlet/pump oulet.
-            # The pressures (found in fwbs_variables) for coolants using
-            # i_p_coolant_pumping==2 are assumed to be the pressure at the
-            # blanket oulet/pump inlet.
-            # The equation below is used for i_p_coolant_pumping==2:
-            # pfactor = ((pressure+deltap)/pressure)**((gamma-1.0d0)/gamma)
-            t_in_compressor = self.data.primary_pumping.t_in_bb / pfactor
-            dt_he = (
-                self.data.primary_pumping.t_out_bb - self.data.primary_pumping.t_in_bb
-            )
-            fpump = t_in_compressor / (self.data.fwbs.etaiso * dt_he) * (pfactor - 1)
-            p_plasma = (
-                self.data.fwbs.p_fw_nuclear_heat_total_mw
-                + self.data.fwbs.psurffwi
-                + self.data.fwbs.psurffwo
-                + self.data.fwbs.p_blkt_nuclear_heat_total_mw
-            )
-            self.data.primary_pumping.p_fw_blkt_coolant_pump_mw = (
-                self.data.primary_pumping.f_p_fw_blkt_pump
-                * fpump
-                / (1 - fpump)
-                * p_plasma
-            )
-
-            # For divertor and shield, mechanical pumping power is a fraction of thermal
-            # power removed by coolant
-            self.data.heat_transport.p_shld_coolant_pump_mw = (
-                self.data.heat_transport.f_p_shld_coolant_pump_total_heat
-                * (
-                    self.data.fwbs.p_shld_nuclear_heat_mw
-                    + self.data.fwbs.p_cp_shield_nuclear_heat_mw
-                )
-            )
-            self.data.heat_transport.p_div_coolant_pump_mw = (
-                self.data.heat_transport.f_p_div_coolant_pump_total_heat
-                * (
-                    self.data.physics.p_plasma_separatrix_mw
-                    + self.data.fwbs.p_div_nuclear_heat_total_mw
-                    + self.data.fwbs.p_div_rad_total_mw
-                )
-            )
-            if output:
-                po.oheadr(self.outfile, "Pumping for primary coolant (helium)")
-                po.ovarre(
-                    self.outfile,
-                    "Pressure drop in FW and blanket coolant incl. hx and pipes (Pa)",
-                    "(dp_he)",
-                    self.data.primary_pumping.dp_he,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Fraction of FW and blanket thermal power required for pumping",
-                    "(fpump)",
-                    fpump,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Total power absorbed by FW & blanket (MW)",
-                    "(p_plasma)",
-                    p_plasma,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Inlet temperature of FW & blanket coolant pump (K)",
-                    "(t_in_compressor)",
-                    t_in_compressor,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Coolant pump outlet/Inlet temperature of FW & blanket (K)",
-                    "(t_in_bb)",
-                    self.data.primary_pumping.t_in_bb,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Outlet temperature of FW & blanket (K)",
-                    "(t_out_bb)",
-                    self.data.primary_pumping.t_out_bb,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Mechanical pumping power for FW and "
-                    "blanket cooling loop including heat exchanger (MW)",
-                    "(p_fw_blkt_coolant_pump_mw)",
-                    self.data.primary_pumping.p_fw_blkt_coolant_pump_mw,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Pumping power for FW and Blanket multiplier factor",
-                    "(f_p_fw_blkt_pump)",
-                    self.data.primary_pumping.f_p_fw_blkt_pump,
-                    "IP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Mechanical pumping power for divertor (MW)",
-                    "(p_div_coolant_pump_mw)",
-                    self.data.heat_transport.p_div_coolant_pump_mw,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Mechanical pumping power for shield and vacuum vessel (MW)",
-                    "(p_shld_coolant_pump_mw)",
+        match PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping):
+            case PumpingPowerModelTypes.FRACTION_OF_HEAT:
+                # User sets mechanical pumping power directly
+                (
+                    self.data.heat_transport.p_fw_coolant_pump_mw,
+                    self.data.heat_transport.p_blkt_coolant_pump_mw,
                     self.data.heat_transport.p_shld_coolant_pump_mw,
-                    "OP ",
+                    self.data.heat_transport.p_div_coolant_pump_mw,
+                ) = pumping_powers_as_fractions(
+                    f_p_fw_coolant_pump_total_heat=self.data.heat_transport.f_p_fw_coolant_pump_total_heat,
+                    f_p_blkt_coolant_pump_total_heat=self.data.heat_transport.f_p_blkt_coolant_pump_total_heat,
+                    f_p_shld_coolant_pump_total_heat=self.data.heat_transport.f_p_shld_coolant_pump_total_heat,
+                    f_p_div_coolant_pump_total_heat=self.data.heat_transport.f_p_div_coolant_pump_total_heat,
+                    p_fw_nuclear_heat_total_mw=self.data.fwbs.p_fw_nuclear_heat_total_mw,
+                    psurffwi=self.data.fwbs.psurffwi,
+                    psurffwo=self.data.fwbs.psurffwo,
+                    p_blkt_nuclear_heat_total_mw=self.data.fwbs.p_blkt_nuclear_heat_total_mw,
+                    p_shld_nuclear_heat_mw=self.data.heat_transport.p_shld_nuclear_heat_mw,
+                    p_cp_shield_nuclear_heat_mw=self.data.fwbs.p_cp_shield_nuclear_heat_mw,
+                    p_plasma_separatrix_mw=self.data.physics.p_plasma_separatrix_mw,
+                    p_div_nuclear_heat_total_mw=self.data.fwbs.p_div_nuclear_heat_total_mw,
+                    p_div_rad_total_mw=self.data.fwbs.p_div_rad_total_mw,
                 )
-                po.ovarre(
-                    self.outfile,
-                    "Radius of blanket cooling channels (m)",
-                    "(radius_blkt_channel)",
-                    self.data.fwbs.radius_blkt_channel,
+
+            case PumpingPowerModelTypes.MECHANICAL:
+                # Calculate the required material properties of the FW and BB coolant.
+                self.primary_coolant_properties(output=output)
+                # Mechanical pumping power is calculated for first wall and blanket
+                self.thermo_hydraulic_model(output)
+
+                # For divertor and shield, mechanical pumping power is a fraction
+                # of thermal power removed by coolant
+                self.data.heat_transport.p_shld_coolant_pump_mw = (
+                    self.data.heat_transport.f_p_shld_coolant_pump_total_heat
+                    * (
+                        self.data.fwbs.p_shld_nuclear_heat_mw
+                        + self.data.fwbs.p_cp_shield_nuclear_heat_mw
+                    )
                 )
-                po.ovarre(
-                    self.outfile,
-                    "Radius of 90 degree coolant channel bend (m)",
-                    "(radius_blkt_channel_90_bend)",
-                    self.data.fwbs.radius_blkt_channel_90_bend,
+                self.data.heat_transport.p_div_coolant_pump_mw = (
+                    self.data.heat_transport.f_p_div_coolant_pump_total_heat
+                    * (
+                        self.data.physics.p_plasma_separatrix_mw
+                        + self.data.fwbs.p_div_nuclear_heat_total_mw
+                        + self.data.fwbs.p_div_rad_total_mw
+                    )
                 )
-                po.ovarre(
-                    self.outfile,
-                    "Radius of 180 degree coolant channel bend (m)",
-                    "(radius_blkt_channel_180_bend)",
-                    self.data.fwbs.radius_blkt_channel_180_bend,
+
+            case PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP:
+                # Issue #503
+                # Mechanical pumping power is calculated using specified pressure drop
+                # for first wall and blanket circuit, including heat exchanger and pipes
+                pfactor = (
+                    self.data.primary_pumping.p_he
+                    / (self.data.primary_pumping.p_he - self.data.primary_pumping.dp_he)
+                ) ** (
+                    (self.data.primary_pumping.gamma_he - 1)
+                    / self.data.primary_pumping.gamma_he
                 )
+                # N.B. Currenlty i_p_coolant_pumping==3 uses separate variables found in
+                # primary_pumping_variables rather than self.data.fwbs.
+                # The pressure (p_he) is assumed to be the pressure at the
+                # blanket inlet/pump oulet.
+                # The pressures (found in fwbs_variables) for coolants using
+                # i_p_coolant_pumping==2 are assumed to be the pressure at the
+                # blanket oulet/pump inlet.
+                # The equation below is used for i_p_coolant_pumping==2:
+                # pfactor = ((pressure+deltap)/pressure)**((gamma-1.0d0)/gamma)
+                t_in_compressor = self.data.primary_pumping.t_in_bb / pfactor
+                dt_he = (
+                    self.data.primary_pumping.t_out_bb
+                    - self.data.primary_pumping.t_in_bb
+                )
+                fpump = t_in_compressor / (self.data.fwbs.etaiso * dt_he) * (pfactor - 1)
+                p_plasma = (
+                    self.data.fwbs.p_fw_nuclear_heat_total_mw
+                    + self.data.fwbs.psurffwi
+                    + self.data.fwbs.psurffwo
+                    + self.data.fwbs.p_blkt_nuclear_heat_total_mw
+                )
+                self.data.primary_pumping.p_fw_blkt_coolant_pump_mw = (
+                    self.data.primary_pumping.f_p_fw_blkt_pump
+                    * fpump
+                    / (1 - fpump)
+                    * p_plasma
+                )
+
+                # For divertor and shield, mechanical pumping power is a fraction of
+                # thermal power removed by coolant
+                self.data.heat_transport.p_shld_coolant_pump_mw = (
+                    self.data.heat_transport.f_p_shld_coolant_pump_total_heat
+                    * (
+                        self.data.fwbs.p_shld_nuclear_heat_mw
+                        + self.data.fwbs.p_cp_shield_nuclear_heat_mw
+                    )
+                )
+                self.data.heat_transport.p_div_coolant_pump_mw = (
+                    self.data.heat_transport.f_p_div_coolant_pump_total_heat
+                    * (
+                        self.data.physics.p_plasma_separatrix_mw
+                        + self.data.fwbs.p_div_nuclear_heat_total_mw
+                        + self.data.fwbs.p_div_rad_total_mw
+                    )
+                )
+                if output:
+                    po.oheadr(self.outfile, "Pumping for primary coolant (helium)")
+                    po.ovarre(
+                        self.outfile,
+                        "Pressure drop in FW and blanket coolant incl. hx and "
+                        "pipes [Pa]",
+                        "(dp_he)",
+                        self.data.primary_pumping.dp_he,
+                    )
+                    po.ovarre(
+                        self.outfile,
+                        "Fraction of FW and blanket thermal power required for pumping",
+                        "(fpump)",
+                        fpump,
+                        "OP ",
+                    )
+                    po.ovarre(
+                        self.outfile,
+                        "Total power absorbed by FW & blanket (MW)",
+                        "(p_plasma)",
+                        p_plasma,
+                        "OP ",
+                    )
+                    po.ovarre(
+                        self.outfile,
+                        "Inlet temperature of FW & blanket coolant pump (K)",
+                        "(t_in_compressor)",
+                        t_in_compressor,
+                        "OP ",
+                    )
+                    po.ovarre(
+                        self.outfile,
+                        "Coolant pump outlet/Inlet temperature of FW & blanket (K)",
+                        "(t_in_bb)",
+                        self.data.primary_pumping.t_in_bb,
+                    )
+                    po.ovarre(
+                        self.outfile,
+                        "Outlet temperature of FW & blanket (K)",
+                        "(t_out_bb)",
+                        self.data.primary_pumping.t_out_bb,
+                    )
+                    po.ovarre(
+                        self.outfile,
+                        "Mechanical pumping power for FW and "
+                        "blanket cooling loop including heat exchanger (MW)",
+                        "(p_fw_blkt_coolant_pump_mw)",
+                        self.data.primary_pumping.p_fw_blkt_coolant_pump_mw,
+                        "OP ",
+                    )
+                    po.ovarre(
+                        self.outfile,
+                        "Pumping power for FW and Blanket multiplier factor",
+                        "(f_p_fw_blkt_pump)",
+                        self.data.primary_pumping.f_p_fw_blkt_pump,
+                        "IP ",
+                    )
+                    po.ovarre(
+                        self.outfile,
+                        "Mechanical pumping power for divertor (MW)",
+                        "(p_div_coolant_pump_mw)",
+                        self.data.heat_transport.p_div_coolant_pump_mw,
+                        "OP ",
+                    )
+                    po.ovarre(
+                        self.outfile,
+                        "Mechanical pumping power for shield and vacuum vessel (MW)",
+                        "(p_shld_coolant_pump_mw)",
+                        self.data.heat_transport.p_shld_coolant_pump_mw,
+                        "OP ",
+                    )
+                    po.ovarre(
+                        self.outfile,
+                        "Radius of blanket cooling channels (m)",
+                        "(radius_blkt_channel)",
+                        self.data.fwbs.radius_blkt_channel,
+                    )
+                    po.ovarre(
+                        self.outfile,
+                        "Radius of 90 degree coolant channel bend (m)",
+                        "(radius_blkt_channel_90_bend)",
+                        self.data.fwbs.radius_blkt_channel_90_bend,
+                    )
+                    po.ovarre(
+                        self.outfile,
+                        "Radius of 180 degree coolant channel bend (m)",
+                        "(radius_blkt_channel_180_bend)",
+                        self.data.fwbs.radius_blkt_channel_180_bend,
+                    )
 
     @staticmethod
     def st_cp_angle_fraction(z_cp_top, r_cp_mid, r_cp_top, rmajor):
@@ -1415,19 +1417,20 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         #  ST centre post
         if self.data.physics.itart == 1:
-            if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-                po.osubhd(self.outfile, "(Copper resistive centrepost used)")
-            elif self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-                po.osubhd(self.outfile, "(Superdonducting magnet centrepost used)")
-                po.ovarre(
-                    self.outfile,
-                    "ST centrepost TF fast neutron fllux (E > 0.1 MeV) (m^(-2).s^(-1))",
-                    "(neut_flux_cp)",
-                    self.data.fwbs.neut_flux_cp,
-                    "OP ",
-                )
-            elif self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-                po.osubhd(self.outfile, "(Aluminium magnet centrepost used)")
+            match TFConductorModel(self.data.tfcoil.i_tf_sup):
+                case TFConductorModel.WATER_COOLED_COPPER:
+                    po.osubhd(self.outfile, "(Copper resistive centrepost used)")
+                case TFConductorModel.SUPERCONDUCTING:
+                    po.osubhd(self.outfile, "(Superconducting magnet centrepost used)")
+                    po.ovarre(
+                        self.outfile,
+                        "ST centrepost TF fast neutron fllux (E > 0.1 MeV) [m⁻²s⁻¹]",
+                        "(neut_flux_cp)",
+                        self.data.fwbs.neut_flux_cp,
+                        "OP ",
+                    )
+                case TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+                    po.osubhd(self.outfile, "(Aluminium magnet centrepost used)")
 
             po.ovarre(
                 self.outfile,

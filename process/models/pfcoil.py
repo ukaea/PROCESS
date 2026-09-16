@@ -247,113 +247,111 @@ class PFCoil(Model):
 
         # N.B. Problems here if coil=n_pf_coils_in_group(group) is greater than 2.
         for group in range(self.data.pf_coil.n_pf_coil_groups):
-            if self.data.pf_coil.i_pf_location[group] == PFLocationTypes.ABOVE_CS:
-                # PF coil is stacked on top of the Central Solenoid
-                # Use a helper function to compute r_pf_coil_middle_group_array and
-                # z_pf_coil_middle_group_array arrays for this group
+            match self.data.pf_coil.i_pf_location[group]:
+                case PFLocationTypes.ABOVE_CS:
+                    # PF coil is stacked on top of the Central Solenoid
+                    # Use a helper function to compute r_pf_coil_middle_group_array and
+                    # z_pf_coil_middle_group_array arrays for this group
 
-                r_pf_coil_middle_group_array, z_pf_coil_middle_group_array = (
-                    self.place_pf_above_cs(
+                    r_pf_coil_middle_group_array, z_pf_coil_middle_group_array = (
+                        self.place_pf_above_cs(
+                            n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
+                            n_pf_group=group,
+                            r_cs_middle=self.data.pf_coil.r_cs_middle,
+                            dr_pf_cs_middle_offset=self.data.pf_coil.dr_pf_cs_middle_offset,
+                            z_tf_inside_half=self.data.build.z_tf_inside_half,
+                            dr_tf_inboard=self.data.build.dr_tf_inboard,
+                            z_cs_coil_upper=self.data.pf_coil.dz_cs_full / 2,
+                        )
+                    )
+                    for coil in range(self.data.pf_coil.n_pf_coils_in_group[group]):
+                        self.data.pf_coil.r_pf_coil_middle_group_array[group, coil] = (
+                            r_pf_coil_middle_group_array[group, coil]
+                        )
+                        self.data.pf_coil.z_pf_coil_middle_group_array[group, coil] = (
+                            z_pf_coil_middle_group_array[group, coil]
+                        )
+
+                case PFLocationTypes.ABOVE_TF:
+                    # PF coil is on top of the TF coil
+                    (
+                        r_pf_coil_middle_group_array,
+                        z_pf_coil_middle_group_array,
+                        top_bottom,
+                    ) = self.place_pf_above_tf(
                         n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
                         n_pf_group=group,
-                        r_cs_middle=self.data.pf_coil.r_cs_middle,
-                        dr_pf_cs_middle_offset=self.data.pf_coil.dr_pf_cs_middle_offset,
+                        rmajor=self.data.physics.rmajor,
+                        triang=self.data.physics.triang,
+                        rminor=self.data.physics.rminor,
+                        itart=self.data.physics.itart,
+                        itartpf=self.data.physics.itartpf,
                         z_tf_inside_half=self.data.build.z_tf_inside_half,
-                        dr_tf_inboard=self.data.build.dr_tf_inboard,
-                        z_cs_coil_upper=self.data.pf_coil.dz_cs_full / 2,
-                    )
-                )
-                for coil in range(self.data.pf_coil.n_pf_coils_in_group[group]):
-                    self.data.pf_coil.r_pf_coil_middle_group_array[group, coil] = (
-                        r_pf_coil_middle_group_array[group, coil]
-                    )
-                    self.data.pf_coil.z_pf_coil_middle_group_array[group, coil] = (
-                        z_pf_coil_middle_group_array[group, coil]
+                        dz_tf_upper_lower_midplane=self.data.build.dz_tf_upper_lower_midplane,
+                        z_tf_top=self.data.build.z_tf_top,
+                        top_bottom=top_bottom,
+                        rpf2=self.data.pf_coil.rpf2,
+                        zref=self.data.pf_coil.zref,
                     )
 
-            elif self.data.pf_coil.i_pf_location[group] == PFLocationTypes.ABOVE_TF:
-                # PF coil is on top of the TF coil
-                (
-                    r_pf_coil_middle_group_array,
-                    z_pf_coil_middle_group_array,
-                    top_bottom,
-                ) = self.place_pf_above_tf(
-                    n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
-                    n_pf_group=group,
-                    rmajor=self.data.physics.rmajor,
-                    triang=self.data.physics.triang,
-                    rminor=self.data.physics.rminor,
-                    itart=self.data.physics.itart,
-                    itartpf=self.data.physics.itartpf,
-                    z_tf_inside_half=self.data.build.z_tf_inside_half,
-                    dz_tf_upper_lower_midplane=self.data.build.dz_tf_upper_lower_midplane,
-                    z_tf_top=self.data.build.z_tf_top,
-                    top_bottom=top_bottom,
-                    rpf2=self.data.pf_coil.rpf2,
-                    zref=self.data.pf_coil.zref,
-                )
+                    for coil in range(self.data.pf_coil.n_pf_coils_in_group[group]):
+                        self.data.pf_coil.r_pf_coil_middle_group_array[group, coil] = (
+                            r_pf_coil_middle_group_array[group, coil]
+                        )
+                        self.data.pf_coil.z_pf_coil_middle_group_array[group, coil] = (
+                            z_pf_coil_middle_group_array[group, coil]
+                        )
 
-                for coil in range(self.data.pf_coil.n_pf_coils_in_group[group]):
-                    self.data.pf_coil.r_pf_coil_middle_group_array[group, coil] = (
-                        r_pf_coil_middle_group_array[group, coil]
-                    )
-                    self.data.pf_coil.z_pf_coil_middle_group_array[group, coil] = (
-                        z_pf_coil_middle_group_array[group, coil]
+                case PFLocationTypes.OUTSIDE_TF:
+                    # PF coil is radially outside the TF coil
+                    (
+                        r_pf_coil_middle_group_array,
+                        z_pf_coil_middle_group_array,
+                    ) = self.place_pf_outside_tf(
+                        n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
+                        n_pf_group=group,
+                        rminor=self.data.physics.rminor,
+                        zref=self.data.pf_coil.zref,
+                        i_tf_shape=self.data.tfcoil.i_tf_shape,
+                        i_r_pf_outside_tf_placement=self.data.pf_coil.i_r_pf_outside_tf_placement,
+                        r_pf_outside_tf_midplane=self.data.pf_coil.r_pf_outside_tf_midplane,
                     )
 
-            elif self.data.pf_coil.i_pf_location[group] == PFLocationTypes.OUTSIDE_TF:
-                # PF coil is radially outside the TF coil
-                (
-                    r_pf_coil_middle_group_array,
-                    z_pf_coil_middle_group_array,
-                ) = self.place_pf_outside_tf(
-                    n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
-                    n_pf_group=group,
-                    rminor=self.data.physics.rminor,
-                    zref=self.data.pf_coil.zref,
-                    i_tf_shape=self.data.tfcoil.i_tf_shape,
-                    i_r_pf_outside_tf_placement=self.data.pf_coil.i_r_pf_outside_tf_placement,
-                    r_pf_outside_tf_midplane=self.data.pf_coil.r_pf_outside_tf_midplane,
-                )
+                    for coil in range(self.data.pf_coil.n_pf_coils_in_group[group]):
+                        self.data.pf_coil.r_pf_coil_middle_group_array[group, coil] = (
+                            r_pf_coil_middle_group_array[group, coil]
+                        )
+                        self.data.pf_coil.z_pf_coil_middle_group_array[group, coil] = (
+                            z_pf_coil_middle_group_array[group, coil]
+                        )
 
-                for coil in range(self.data.pf_coil.n_pf_coils_in_group[group]):
-                    self.data.pf_coil.r_pf_coil_middle_group_array[group, coil] = (
-                        r_pf_coil_middle_group_array[group, coil]
-                    )
-                    self.data.pf_coil.z_pf_coil_middle_group_array[group, coil] = (
-                        z_pf_coil_middle_group_array[group, coil]
+                case PFLocationTypes.GENERALLY_PLACED:
+                    (
+                        r_pf_coil_middle_group_array,
+                        z_pf_coil_middle_group_array,
+                    ) = self.place_pf_generally(
+                        n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
+                        n_pf_group=group,
+                        rminor=self.data.physics.rminor,
+                        rmajor=self.data.physics.rmajor,
+                        zref=self.data.pf_coil.zref,
+                        rref=self.data.pf_coil.rref,
                     )
 
-            elif (
-                self.data.pf_coil.i_pf_location[group]
-                == PFLocationTypes.GENERALLY_PLACED
-            ):
-                (
-                    r_pf_coil_middle_group_array,
-                    z_pf_coil_middle_group_array,
-                ) = self.place_pf_generally(
-                    n_pf_coils_in_group=self.data.pf_coil.n_pf_coils_in_group,
-                    n_pf_group=group,
-                    rminor=self.data.physics.rminor,
-                    rmajor=self.data.physics.rmajor,
-                    zref=self.data.pf_coil.zref,
-                    rref=self.data.pf_coil.rref,
-                )
+                    for coil in range(self.data.pf_coil.n_pf_coils_in_group[group]):
+                        self.data.pf_coil.r_pf_coil_middle_group_array[group, coil] = (
+                            r_pf_coil_middle_group_array[group, coil]
+                        )
+                        self.data.pf_coil.z_pf_coil_middle_group_array[group, coil] = (
+                            z_pf_coil_middle_group_array[group, coil]
+                        )
 
-                for coil in range(self.data.pf_coil.n_pf_coils_in_group[group]):
-                    self.data.pf_coil.r_pf_coil_middle_group_array[group, coil] = (
-                        r_pf_coil_middle_group_array[group, coil]
+                case _:
+                    raise ProcessValueError(
+                        "Illegal i_pf_location value",
+                        group=group,
+                        i_pf_location=self.data.pf_coil.i_pf_location[group],
                     )
-                    self.data.pf_coil.z_pf_coil_middle_group_array[group, coil] = (
-                        z_pf_coil_middle_group_array[group, coil]
-                    )
-
-            else:
-                raise ProcessValueError(
-                    "Illegal i_pf_location value",
-                    group=group,
-                    i_pf_location=self.data.pf_coil.i_pf_location[group],
-                )
 
         # Allocate current to the PF coils:
         # "Flux swing coils" participate in cancellation of the CS
@@ -412,35 +410,34 @@ class PFCoil(Model):
             # Bypasses SVD solver
             if self.data.physics.itart == 1 and self.data.physics.itartpf == 0:
                 for i in range(self.data.pf_coil.n_pf_coil_groups):
-                    if self.data.pf_coil.i_pf_location[i] == PFLocationTypes.ABOVE_CS:
-                        # PF coil is stacked on top of the Central Solenoid
-                        self.data.pf_coil.ccls[i] = 0.0e0
-                        raise ProcessValueError(
-                            "i_pf_location(i) should not be 1 if itart=1", i=i
-                        )
+                    match self.data.pf_coil.i_pf_location[i]:
+                        case PFLocationTypes.ABOVE_CS:
+                            # PF coil is stacked on top of the Central Solenoid
+                            self.data.pf_coil.ccls[i] = 0.0e0
+                            raise ProcessValueError(
+                                "i_pf_location(i) should not be 1 if itart=1", i=i
+                            )
 
-                    if self.data.pf_coil.i_pf_location[i] == PFLocationTypes.ABOVE_TF:
-                        # PF coil is on top of the TF coil
-                        self.data.pf_coil.ccls[i] = (
-                            0.3e0
-                            * self.data.physics.aspect**1.6e0
-                            * self.data.physics.plasma_current
-                        )
+                        case PFLocationTypes.ABOVE_TF:
+                            # PF coil is on top of the TF coil
+                            self.data.pf_coil.ccls[i] = (
+                                0.3e0
+                                * self.data.physics.aspect**1.6e0
+                                * self.data.physics.plasma_current
+                            )
 
-                    elif (
-                        self.data.pf_coil.i_pf_location[i] == PFLocationTypes.OUTSIDE_TF
-                    ):
-                        # PF coil is radially outside the TF coil
-                        self.data.pf_coil.ccls[i] = (
-                            -0.4e0 * self.data.physics.plasma_current
-                        )
+                        case PFLocationTypes.OUTSIDE_TF:
+                            # PF coil is radially outside the TF coil
+                            self.data.pf_coil.ccls[i] = (
+                                -0.4e0 * self.data.physics.plasma_current
+                            )
 
-                    else:
-                        raise ProcessValueError(
-                            "Illegal value of i_pf_location(i)",
-                            i=i,
-                            i_pf_location=self.data.pf_coil.i_pf_location[i],
-                        )
+                        case _:
+                            raise ProcessValueError(
+                                "Illegal value of i_pf_location(i)",
+                                i=i,
+                                i_pf_location=self.data.pf_coil.i_pf_location[i],
+                            )
 
                 # Vertical field (T)
                 self.data.physics.b_plasma_vertical_required = (
@@ -461,84 +458,97 @@ class PFCoil(Model):
                 ngrp0 = 0
                 nocoil = 0
                 for i in range(self.data.pf_coil.n_pf_coil_groups):
-                    if self.data.pf_coil.i_pf_location[i] == PFLocationTypes.ABOVE_CS:
-                        # Do not allow if no central solenoid
-                        if self.data.build.iohcl == 0:
-                            raise ProcessValueError(
-                                "i_pf_location(i) should not be 1 if iohcl=0"
-                            )
-                        # PF coil is stacked on top of the Central Solenoid
-                        # This coil is to balance Central Solenoid flux and should
-                        # not be involved in equilibrium calculation -- RK 07/12
-                        self.data.pf_coil.ccls[i] = 0.0e0
-                        nfxf0 += self.data.pf_coil.n_pf_coils_in_group[i]
-                        for ccount in range(self.data.pf_coil.n_pf_coils_in_group[i]):
-                            self.data.pf_coil.r_pf_cs_current_filaments[nocoil] = (
-                                self.data.pf_coil.r_pf_coil_middle_group_array[i, ccount]
-                            )
-                            self.data.pf_coil.z_pf_cs_current_filaments[nocoil] = (
-                                self.data.pf_coil.z_pf_coil_middle_group_array[i, ccount]
-                            )
-                            self.data.pf_coil.c_pf_cs_current_filaments[nocoil] = (
-                                self.data.pf_coil.ccls[i]
-                            )
-                            nocoil += 1
+                    match self.data.pf_coil.i_pf_location[i]:
+                        case PFLocationTypes.ABOVE_CS:
+                            # Do not allow if no central solenoid
+                            if self.data.build.iohcl == 0:
+                                raise ProcessValueError(
+                                    "i_pf_location(i) should not be 1 if iohcl=0"
+                                )
+                            # PF coil is stacked on top of the Central Solenoid
+                            # This coil is to balance Central Solenoid flux and should
+                            # not be involved in equilibrium calculation -- RK 07/12
+                            self.data.pf_coil.ccls[i] = 0.0e0
+                            nfxf0 += self.data.pf_coil.n_pf_coils_in_group[i]
+                            for ccount in range(
+                                self.data.pf_coil.n_pf_coils_in_group[i]
+                            ):
+                                self.data.pf_coil.r_pf_cs_current_filaments[nocoil] = (
+                                    self.data.pf_coil.r_pf_coil_middle_group_array[
+                                        i, ccount
+                                    ]
+                                )
+                                self.data.pf_coil.z_pf_cs_current_filaments[nocoil] = (
+                                    self.data.pf_coil.z_pf_coil_middle_group_array[
+                                        i, ccount
+                                    ]
+                                )
+                                self.data.pf_coil.c_pf_cs_current_filaments[nocoil] = (
+                                    self.data.pf_coil.ccls[i]
+                                )
+                                nocoil += 1
 
-                    elif self.data.pf_coil.i_pf_location[i] == PFLocationTypes.ABOVE_TF:
-                        # PF coil is on top of the TF coil; divertor coil
-                        # This is a fixed current for this calculation -- RK 07/12
+                        case PFLocationTypes.ABOVE_TF:
+                            # PF coil is on top of the TF coil; divertor coil
+                            # This is a fixed current for this calculation -- RK 07/12
 
-                        self.data.pf_coil.ccls[i] = (
-                            self.data.physics.plasma_current
-                            * 2.0e0
-                            * (
-                                1.0e0
-                                - (self.data.physics.kappa * self.data.physics.rminor)
-                                / abs(
-                                    self.data.pf_coil.z_pf_coil_middle_group_array[i, 0]
+                            self.data.pf_coil.ccls[i] = (
+                                self.data.physics.plasma_current
+                                * 2.0e0
+                                * (
+                                    1.0e0
+                                    - (
+                                        self.data.physics.kappa
+                                        * self.data.physics.rminor
+                                    )
+                                    / abs(
+                                        self.data.pf_coil.z_pf_coil_middle_group_array[
+                                            i, 0
+                                        ]
+                                    )
                                 )
                             )
-                        )
-                        nfxf0 += self.data.pf_coil.n_pf_coils_in_group[i]
-                        for ccount in range(self.data.pf_coil.n_pf_coils_in_group[i]):
-                            self.data.pf_coil.r_pf_cs_current_filaments[nocoil] = (
-                                self.data.pf_coil.r_pf_coil_middle_group_array[i, ccount]
+                            nfxf0 += self.data.pf_coil.n_pf_coils_in_group[i]
+                            for ccount in range(
+                                self.data.pf_coil.n_pf_coils_in_group[i]
+                            ):
+                                self.data.pf_coil.r_pf_cs_current_filaments[nocoil] = (
+                                    self.data.pf_coil.r_pf_coil_middle_group_array[
+                                        i, ccount
+                                    ]
+                                )
+                                self.data.pf_coil.z_pf_cs_current_filaments[nocoil] = (
+                                    self.data.pf_coil.z_pf_coil_middle_group_array[
+                                        i, ccount
+                                    ]
+                                )
+                                self.data.pf_coil.c_pf_cs_current_filaments[nocoil] = (
+                                    self.data.pf_coil.ccls[i]
+                                )
+                                nocoil += 1
+
+                        case PFLocationTypes.OUTSIDE_TF:
+                            # PF coil is radially outside the TF coil
+                            # This is an equilibrium coil, current must be solved for
+
+                            pcls0[ngrp0] = i + 1
+                            ngrp0 += 1
+
+                        case PFLocationTypes.GENERALLY_PLACED:
+                            # PF coil is generally placed
+                            # See issue 1418
+                            # https://git.ccfe.ac.uk/process/process/-/issues/1418
+                            # This is an equilibrium coil, current must be solved for
+
+                            pcls0[ngrp0] = i + 1
+                            ngrp0 += 1
+
+                        case _:
+                            raise ProcessValueError(
+                                "Illegal value of i_pf_location(i)",
+                                i=i,
+                                i_pf_location=self.data.pf_coil.i_pf_location[i],
                             )
-                            self.data.pf_coil.z_pf_cs_current_filaments[nocoil] = (
-                                self.data.pf_coil.z_pf_coil_middle_group_array[i, ccount]
-                            )
-                            self.data.pf_coil.c_pf_cs_current_filaments[nocoil] = (
-                                self.data.pf_coil.ccls[i]
-                            )
-                            nocoil += 1
-
-                    elif (
-                        self.data.pf_coil.i_pf_location[i] == PFLocationTypes.OUTSIDE_TF
-                    ):
-                        # PF coil is radially outside the TF coil
-                        # This is an equilibrium coil, current must be solved for
-
-                        pcls0[ngrp0] = i + 1
-                        ngrp0 += 1
-
-                    elif (
-                        self.data.pf_coil.i_pf_location[i]
-                        == PFLocationTypes.GENERALLY_PLACED
-                    ):
-                        # PF coil is generally placed
-                        # See issue 1418
-                        # https://git.ccfe.ac.uk/process/process/-/issues/1418
-                        # This is an equilibrium coil, current must be solved for
-
-                        pcls0[ngrp0] = i + 1
-                        ngrp0 += 1
-
-                    else:
-                        raise ProcessValueError(
-                            "Illegal value of i_pf_location(i)",
-                            i=i,
-                            i_pf_location=self.data.pf_coil.i_pf_location[i],
-                        )
 
                 for ccount in range(ngrp0):
                     ncls0[ccount] = 2
@@ -4723,176 +4733,180 @@ def superconpf(
         """
         return j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-    # Find critical current density in superconducting strand, jcritstr
-    if isumat == SuperconductorModel.ITER_NB3SN:
-        # ITER Nb3Sn critical surface parameterization
-        bc20m = (
-            SuperconductorModel.ITER_NB3SN.b_crit_zero_field_strain
-        )  # [T] critical field at 0 K and 0 strain
-        tc0m = (
-            SuperconductorModel.ITER_NB3SN.temp_crit_zero_field_strain
-        )  # [K] critical temperature at 0 T and 0 strain
+    match SuperconductorModel(isumat):
+        case SuperconductorModel.ITER_NB3SN:
+            # ITER Nb3Sn critical surface parameterization
+            # ITER Nb3Sn critical surface parameterization
+            bc20m = (
+                SuperconductorModel.ITER_NB3SN.b_crit_zero_field_strain
+            )  # [T] critical field at 0 K and 0 strain
+            tc0m = (
+                SuperconductorModel.ITER_NB3SN.temp_crit_zero_field_strain
+            )  # [K] critical temperature at 0 T and 0 strain
 
-        # j_crit_sc returned by superconductors.itersc is
-        # the critical current density in the superconductor
-        # - not the whole strand, which contains copper
+            # j_crit_sc returned by superconductors.itersc is
+            # the critical current density in the superconductor
+            # - not the whole strand, which contains copper
 
-        j_crit_sc, _, _ = superconductors.itersc(
-            temp_conductor=temp_pf_peak_field,
-            b_conductor=b_pf_peak,
-            strain=strain,
-            b_c20max=bc20m,
-            temp_c0max=tc0m,
-        )
-        j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
+            j_crit_sc, _, _ = superconductors.itersc(
+                temp_conductor=temp_pf_peak_field,
+                b_conductor=b_pf_peak,
+                strain=strain,
+                b_c20max=bc20m,
+                temp_c0max=tc0m,
+            )
+            j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
 
-    elif isumat == SuperconductorModel.BI2212:
-        # Bi-2212 high temperature superconductor parameterization
+        case SuperconductorModel.BI2212:
+            # Bi-2212 high temperature superconductor parameterization
+            # Bi-2212 high temperature superconductor parameterization
 
-        # Current density in a strand of Bi-2212 conductor
-        # N.B. jcrit returned by superconductors.bi2212 is the critical current density
-        # in the strand, not just the superconducting portion.
-        # The parameterization for j_crit_cable assumes a particular strand
-        # composition that does not require a user-defined copper fraction,
-        # so this is irrelevant in this model
+            # Current density in a strand of Bi-2212 conductor
+            # N.B. jcrit returned by superconductors.bi2212 is the critical current
+            # density in the strand, not just the superconducting portion.
+            # The parameterization for j_crit_cable assumes a particular strand
+            # composition that does not require a user-defined copper fraction,
+            # so this is irrelevant in this model
 
-        #  j_pf_wp / conductor fraction of cable
-        jstrand = j_pf_wp / (1.0e0 - fhe)
-        j_crit_cable, tmarg = superconductors.bi2212(
-            b_conductor=b_pf_peak,
-            jstrand=jstrand,
-            temp_conductor=temp_pf_peak_field,
-            f_strain=fhts,
-        )
-        #  j_crit_cable / non-copper fraction of conductor
-        j_crit_sc = j_crit_cable / (1.0e0 - fcu)
+            #  j_pf_wp / conductor fraction of cable
+            jstrand = j_pf_wp / (1.0e0 - fhe)
+            j_crit_cable, tmarg = superconductors.bi2212(
+                b_conductor=b_pf_peak,
+                jstrand=jstrand,
+                temp_conductor=temp_pf_peak_field,
+                f_strain=fhts,
+            )
+            #  j_crit_cable / non-copper fraction of conductor
+            j_crit_sc = j_crit_cable / (1.0e0 - fcu)
 
-    elif isumat == SuperconductorModel.OLD_LUBELL_NBTI:
-        # NbTi data
-        bc20m = (
-            SuperconductorModel.OLD_LUBELL_NBTI.b_crit_zero_field_strain
-        )  # [T] critical field at 0 K and 0 strain
-        tc0m = (
-            SuperconductorModel.OLD_LUBELL_NBTI.temp_crit_zero_field_strain
-        )  # [K] critical temperature at 0 T and 0 strain
-        c0 = 1.0e10  # # [A/m²]
-        j_crit_sc, _ = superconductors.jcrit_nbti(
-            temp_conductor=temp_pf_peak_field,
-            b_conductor=b_pf_peak,
-            c0=c0,
-            b_c20max=bc20m,
-            temp_c0max=tc0m,
-        )
-        j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
+        case SuperconductorModel.OLD_LUBELL_NBTI:
+            # NbTi data
+            bc20m = (
+                SuperconductorModel.OLD_LUBELL_NBTI.b_crit_zero_field_strain
+            )  # [T] critical field at 0 K and 0 strain
+            tc0m = (
+                SuperconductorModel.OLD_LUBELL_NBTI.temp_crit_zero_field_strain
+            )  # [K] critical temperature at 0 T and 0 strain
+            c0 = 1.0e10  # # [A/m²]
+            j_crit_sc, _ = superconductors.jcrit_nbti(
+                temp_conductor=temp_pf_peak_field,
+                b_conductor=b_pf_peak,
+                c0=c0,
+                b_c20max=bc20m,
+                temp_c0max=tc0m,
+            )
+            j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
 
-    elif isumat == SuperconductorModel.USER_DEFINED_NB3SN:
-        # As (1), but user-defined parameters
-        bc20m = bcritsc
-        tc0m = tcritsc
-        j_crit_sc, _, _ = superconductors.itersc(
-            temp_conductor=temp_pf_peak_field,
-            b_conductor=b_pf_peak,
-            strain=strain,
-            b_c20max=bc20m,
-            temp_c0max=tc0m,
-        )
-        j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
+        case SuperconductorModel.USER_DEFINED_NB3SN:
+            # As (1), but user-defined parameters
+            bc20m = bcritsc
+            tc0m = tcritsc
+            j_crit_sc, _, _ = superconductors.itersc(
+                temp_conductor=temp_pf_peak_field,
+                b_conductor=b_pf_peak,
+                strain=strain,
+                b_c20max=bc20m,
+                temp_c0max=tc0m,
+            )
+            j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
 
-    elif isumat == SuperconductorModel.WST_NB3SN:
-        # WST Nb3Sn parameterisation
-        bc20m = (
-            SuperconductorModel.WST_NB3SN.b_crit_zero_field_strain
-        )  # [T] critical field at 0 K and 0 strain
-        tc0m = (
-            SuperconductorModel.WST_NB3SN.temp_crit_zero_field_strain
-        )  # [K] critical temperature at 0 T and 0 strain
+        case SuperconductorModel.WST_NB3SN:
+            # WST Nb3Sn parameterisation
+            bc20m = (
+                SuperconductorModel.WST_NB3SN.b_crit_zero_field_strain
+            )  # [T] critical field at 0 K and 0 strain
+            tc0m = (
+                SuperconductorModel.WST_NB3SN.temp_crit_zero_field_strain
+            )  # [K] critical temperature at 0 T and 0 strain
 
-        # j_crit_sc returned by superconductors.itersc is the critical current density
-        # in the superconductor - not the whole strand, which contains copper
+            # j_crit_sc returned by superconductors.itersc is the critical current
+            # density in the superconductor - not the whole strand, which contains copper
 
-        j_crit_sc, _, _ = superconductors.western_superconducting_nb3sn(
-            temp_conductor=temp_pf_peak_field,
-            b_conductor=b_pf_peak,
-            strain=strain,
-            b_c20max=bc20m,
-            temp_c0max=tc0m,
-        )
-        j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
+            j_crit_sc, _, _ = superconductors.western_superconducting_nb3sn(
+                temp_conductor=temp_pf_peak_field,
+                b_conductor=b_pf_peak,
+                strain=strain,
+                b_c20max=bc20m,
+                temp_c0max=tc0m,
+            )
+            j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
 
-    elif isumat == SuperconductorModel.CROCO_REBCO:
-        # "REBCO" 2nd generation HTS superconductor in CrCo strand
-        b_c20m = (
-            SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain
-        )  # [T] critical field at 0 K and 0 strain
-        t_c0m = (
-            SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain
-        )  # [K] critical temperature at 0 T and 0 strain
-        j_crit_sc, _, _, _ = superconductors.jcrit_rebco(
-            temp_conductor=temp_pf_peak_field,
-            b_conductor=b_pf_peak,
-            b_c20_max=b_c20m,
-            temp_c0_max=t_c0m,
-        )
-        j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
+        case SuperconductorModel.CROCO_REBCO:
+            # "REBCO" 2nd generation HTS superconductor in CrCo strand
+            b_c20m = (
+                SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain
+            )  # [T] critical field at 0 K and 0 strain
+            t_c0m = (
+                SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain
+            )  # [K] critical temperature at 0 T and 0 strain
+            j_crit_sc, _, _, _ = superconductors.jcrit_rebco(
+                temp_conductor=temp_pf_peak_field,
+                b_conductor=b_pf_peak,
+                b_c20_max=b_c20m,
+                temp_c0_max=t_c0m,
+            )
+            j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
 
-    elif isumat == SuperconductorModel.DURHAM_NBTI:
-        # Durham Ginzburg-Landau critical surface model for Nb-Ti
-        bc20m = (
-            SuperconductorModel.DURHAM_NBTI.b_crit_zero_field_strain
-        )  # [T] critical field at 0 K and 0 strain
-        tc0m = (
-            SuperconductorModel.DURHAM_NBTI.temp_crit_zero_field_strain
-        )  # [K] critical temperature at 0 T and 0 strain
-        j_crit_sc, _, _ = superconductors.gl_nbti(
-            temp_conductor=temp_pf_peak_field,
-            b_conductor=b_pf_peak,
-            strain=strain,
-            b_c20max=bc20m,
-            t_c0=tc0m,
-        )
-        j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
+        case SuperconductorModel.DURHAM_NBTI:
+            # Durham Ginzburg-Landau critical surface model for Nb-Ti
+            bc20m = (
+                SuperconductorModel.DURHAM_NBTI.b_crit_zero_field_strain
+            )  # [T] critical field at 0 K and 0 strain
+            tc0m = (
+                SuperconductorModel.DURHAM_NBTI.temp_crit_zero_field_strain
+            )  # [K] critical temperature at 0 T and 0 strain
+            j_crit_sc, _, _ = superconductors.gl_nbti(
+                temp_conductor=temp_pf_peak_field,
+                b_conductor=b_pf_peak,
+                strain=strain,
+                b_c20max=bc20m,
+                t_c0=tc0m,
+            )
+            j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
 
-    elif isumat == SuperconductorModel.DURHAM_REBCO:
-        # Durham Ginzburg-Landau critical surface model for REBCO
-        bc20m = (
-            SuperconductorModel.DURHAM_REBCO.b_crit_zero_field_strain
-        )  # [T] critical field at 0 K and 0 strain
-        tc0m = (
-            SuperconductorModel.DURHAM_REBCO.temp_crit_zero_field_strain
-        )  # [K] critical temperature at 0 T and 0 strain
-        j_crit_sc, _, _ = superconductors.gl_rebco(
-            temp_conductor=temp_pf_peak_field,
-            b_conductor=b_pf_peak,
-            strain=strain,
-            b_c20max=bc20m,
-            t_c0=tc0m,
-        )
-        # A0 calculated for tape cross section already
-        j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
+        case SuperconductorModel.DURHAM_REBCO:
+            # Durham Ginzburg-Landau critical surface model for REBCO
+            bc20m = (
+                SuperconductorModel.DURHAM_REBCO.b_crit_zero_field_strain
+            )  # [T] critical field at 0 K and 0 strain
+            tc0m = (
+                SuperconductorModel.DURHAM_REBCO.temp_crit_zero_field_strain
+            )  # [K] critical temperature at 0 T and 0 strain
+            j_crit_sc, _, _ = superconductors.gl_rebco(
+                temp_conductor=temp_pf_peak_field,
+                b_conductor=b_pf_peak,
+                strain=strain,
+                b_c20max=bc20m,
+                t_c0=tc0m,
+            )
+            # A0 calculated for tape cross section already
+            j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
 
-    elif isumat == SuperconductorModel.HAZELTON_ZHAI_REBCO:
-        # Hazelton experimental data + Zhai conceptual model for REBCO
-        bc20m = (
-            SuperconductorModel.HAZELTON_ZHAI_REBCO.b_crit_zero_field_strain
-        )  # [T] critical field at 0 K and 0 strain
-        tc0m = (
-            SuperconductorModel.HAZELTON_ZHAI_REBCO.temp_crit_zero_field_strain
-        )  # [K] critical temperature at 0 T and 0 strain
-        j_crit_sc, _, _ = superconductors.hijc_rebco(
-            temp_conductor=temp_pf_peak_field,
-            b_conductor=b_pf_peak,
-            b_c20max=bc20m,
-            t_c0=tc0m,
-            dr_hts_tape=dr_hts_tape,
-            dx_hts_tape_rebco=dx_hts_tape_rebco,
-            dx_hts_tape_total=dx_hts_tape_total,
-        )
-        # A0 calculated for tape cross section already
-        j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
+        case SuperconductorModel.HAZELTON_ZHAI_REBCO:
+            # Hazelton experimental data + Zhai conceptual model for REBCO
+            bc20m = (
+                SuperconductorModel.HAZELTON_ZHAI_REBCO.b_crit_zero_field_strain
+            )  # [T] critical field at 0 K and 0 strain
+            tc0m = (
+                SuperconductorModel.HAZELTON_ZHAI_REBCO.temp_crit_zero_field_strain
+            )  # [K] critical temperature at 0 T and 0 strain
+            j_crit_sc, _, _ = superconductors.hijc_rebco(
+                temp_conductor=temp_pf_peak_field,
+                b_conductor=b_pf_peak,
+                b_c20max=bc20m,
+                t_c0=tc0m,
+                dr_hts_tape=dr_hts_tape,
+                dx_hts_tape_rebco=dx_hts_tape_rebco,
+                dx_hts_tape_total=dx_hts_tape_total,
+            )
+            # A0 calculated for tape cross section already
+            j_crit_cable = j_crit_cable_frac(j_crit_sc, fcu, fhe)
 
-    else:
-        # Error condition
-        raise ProcessValueError("Illegal value for i_pf_superconductor", isumat=isumat)
+        case _:
+            # Error condition
+            raise ProcessValueError(
+                "Illegal value for i_pf_superconductor", isumat=isumat
+            )
 
     #  Critical current density in winding pack
     jcritwp = j_crit_cable

@@ -16,54 +16,11 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.data_structure.physics_variables import PlasmaCurrentModel
 from process.data_structure.stellarator_variables import StellaratorModel
 from process.models.physics.plasma_geometry import PlasmaGeometryModelType
 
 logger = logging.getLogger(__name__)
-
-
-@unique
-class PlasmaCurrentModel(IntEnum):
-    """Enumeration of plasma current scaling models available for calculations.
-
-    Each model represents a different scaling law used to calculate plasma
-    current based on various plasma and machine parameters.
-    """
-
-    PENG_ANALYTIC_FIT = (1, "Peng analytic fit")
-    PENG_DIVERTOR_SCALING = (2, "Peng divertor scaling")
-    ITER_SCALING = (3, "Simple ITER scaling (cylindrical case)")
-    IPDG89_SCALING = (4, "IPDG89 scaling")
-    TODD_EMPIRICAL_SCALING_I = (5, "Todd empirical scaling I")
-    TODD_EMPIRICAL_SCALING_II = (6, "Todd empirical scaling II")
-    CONNOR_HASTIE_MODEL = (7, "Connor-Hastie model")
-    SAUTER_SCALING = (8, "Sauter scaling")
-    FIESTA_ST_SCALING = (9, "FIESTA ST scaling")
-
-    def __new__(cls, value: int, full_name: str):
-        """Create a new PlasmaCurrentModel enum member with value and full_name.
-
-        Parameters
-        ----------
-        value : int
-            The numeric value of the enum member.
-        full_name : str
-            The full name description of the plasma current model.
-
-        Returns
-        -------
-        PlasmaCurrentModel
-            A new enum member with the specified value and full_name.
-        """
-        obj = int.__new__(cls, value)
-        obj._value_ = value
-        obj._full_name_ = full_name
-        return obj
-
-    @DynamicClassAttribute
-    def full_name(self):
-        """The full name of the plasma current model."""
-        return self._full_name_
 
 
 class PlasmaCurrent(Model):
@@ -220,13 +177,13 @@ class PlasmaCurrent(Model):
         Parameters
         ----------
         alphaj : float
-            Current profile index.
+            Current profile index [-].
         alphap : float
-            Pressure profile index.
+            Pressure profile index [-].
         b_plasma_toroidal_on_axis : float
-            Toroidal field on axis (T).
+            Toroidal field on axis [T].
         eps : float
-            Inverse aspect ratio.
+            Inverse aspect ratio [-].
         i_plasma_current : int
             Current scaling model to use.
             1 = Peng analytic fit
@@ -239,23 +196,23 @@ class PlasmaCurrent(Model):
             8 = Sauter scaling (allowing negative triangularity)
             9 = FIESTA ST scaling
         kappa : float
-            Plasma elongation.
+            Plasma elongation [-].
         kappa95 : float
-            Plasma elongation at 95% surface.
+            Plasma elongation at 95% surface [-].
         pres_plasma_on_axis : float
-            Central plasma pressure (Pa).
+            Central plasma pressure [Pa].
         len_plasma_poloidal : float
-            Plasma perimeter length (m).
+            Plasma perimeter length [m].
         q95 : float
-            Plasma safety factor at 95% flux.
+            Plasma safety factor at 95% flux [-].
         rmajor : float
-            Major radius (m).
+            Major radius [m].
         rminor : float
-            Minor radius (m).
+            Minor radius [m].
         triang : float
-            Plasma triangularity.
+            Plasma triangularity [-].
         triang95 : float
-            Plasma triangularity at 95% surface.
+            Plasma triangularity at 95% surface [-].
 
         Returns
         -------
@@ -272,7 +229,7 @@ class PlasmaCurrent(Model):
 
         Notes
         -----
-        This routine calculates the plasma current based on the edge safety factor
+        - This routine calculates the plasma current based on the edge safety factor
         q95. It will also make the current profile parameters consistent with the
         q-profile if required.
 
@@ -304,85 +261,91 @@ class PlasmaCurrent(Model):
 
         # Only the Sauter scaling (i_plasma_current=8) is suitable for negative
         # triangularity:
-        if i_plasma_current != 8 and triang < 0.0:
+        if (
+            PlasmaCurrentModel(i_plasma_current) != PlasmaCurrentModel.SAUTER_SCALING
+            and triang < 0.0
+        ):
             raise ProcessValueError(
                 f"Triangularity is negative without i_plasma_current = 8 selected:"
                 f" {triang=}, {i_plasma_current=}"
             )
+
         try:  # noqa: PLW0717
             model = PlasmaCurrentModel(int(i_plasma_current))
-            # Calculate the function Fq that scales the edge q from the
-            # circular cross-section cylindrical case
+            match model:
+                # Calculate the function Fq that scales the edge q from the
+                # circular cross-section cylindrical case
 
-            # Peng analytical fit
-            if model == PlasmaCurrentModel.PENG_ANALYTIC_FIT:
-                fq = self.calculate_current_coefficient_peng(
-                    eps=eps, len_plasma_poloidal=len_plasma_poloidal, rminor=rminor
-                )
-
-            # Peng scaling for double null divertor; TARTs [STAR Code]
-            elif model == PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
-                plasma_current = 1.0e6 * self.calculate_plasma_current_peng(
-                    q95=q95,
-                    aspect=aspect_ratio,
-                    rminor=rminor,
-                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-                    kappa=kappa,
-                    triang=triang,
-                )
-
-            # Simple ITER scaling (simply the cylindrical case)
-            elif model == PlasmaCurrentModel.ITER_SCALING:
-                fq = 1.0
-
-            # ITER formula (IPDG89)
-            elif model == PlasmaCurrentModel.IPDG89_SCALING:
-                fq = self.calculate_current_coefficient_ipdg89(
-                    eps=eps, kappa95=kappa95, triang95=triang95
-                )
-
-            # Todd empirical scalings
-            # D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
-            elif model in {
-                PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_I,
-                PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II,
-            }:
-                fq = self.calculate_current_coefficient_todd(
-                    eps=eps, kappa95=kappa95, triang95=triang95, model=1
-                )
-
-                if model == PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II:
-                    fq = self.calculate_current_coefficient_todd(
-                        eps=eps, kappa95=kappa95, triang95=triang95, model=2
+                # Peng analytical fit
+                case PlasmaCurrentModel.PENG_ANALYTIC_FIT:
+                    fq = self.calculate_current_coefficient_peng(
+                        eps=eps, len_plasma_poloidal=len_plasma_poloidal, rminor=rminor
                     )
 
-            # Connor-Hastie asymptotically-correct expression
-            elif model == PlasmaCurrentModel.CONNOR_HASTIE_MODEL:
-                fq = self.calculate_current_coefficient_hastie(
-                    alphaj=alphaj,
-                    alphap=alphap,
-                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-                    triang95=triang95,
-                    eps=eps,
-                    kappa95=kappa95,
-                    pres_plasma_on_axis=pres_plasma_on_axis,
-                    rmu0=constants.RMU0,
-                )
+                # Peng scaling for double null divertor; TARTs [STAR Code]
+                case PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
+                    plasma_current = 1.0e6 * self.calculate_plasma_current_peng(
+                        q95=q95,
+                        aspect=aspect_ratio,
+                        rminor=rminor,
+                        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                        kappa=kappa,
+                        triang=triang,
+                    )
 
-            # Sauter scaling allowing negative triangularity [FED May 2016]
-            # https://doi.org/10.1016/j.fusengdes.2016.04.033.
-            elif model == PlasmaCurrentModel.SAUTER_SCALING:
-                # Assumes zero squareness, note takes kappa, delta at separatrix not _95
-                fq = self.calculate_current_coefficient_sauter(
-                    eps=eps, kappa=kappa, triang=triang
-                )
+                # Simple ITER scaling (simply the cylindrical case)
+                case PlasmaCurrentModel.ITER_SCALING:
+                    fq = 1.0
 
-            # FIESTA ST scaling
-            # https://doi.org/10.1016/j.fusengdes.2020.111530.
-            elif model == PlasmaCurrentModel.FIESTA_ST_SCALING:
-                fq = self.calculate_current_coefficient_fiesta(
-                    eps=eps, kappa=kappa, triang=triang
-                )
+                # ITER formula (IPDG89)
+                case PlasmaCurrentModel.IPDG89_SCALING:
+                    fq = self.calculate_current_coefficient_ipdg89(
+                        eps=eps, kappa95=kappa95, triang95=triang95
+                    )
+
+                # Todd empirical scalings
+                # D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
+                case (
+                    PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_I
+                    | PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II
+                ):
+                    fq = self.calculate_current_coefficient_todd(
+                        eps=eps, kappa95=kappa95, triang95=triang95, model=1
+                    )
+
+                    if model == PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II:
+                        fq = self.calculate_current_coefficient_todd(
+                            eps=eps, kappa95=kappa95, triang95=triang95, model=2
+                        )
+
+                # Connor-Hastie asymptotically-correct expression
+                case PlasmaCurrentModel.CONNOR_HASTIE_MODEL:
+                    fq = self.calculate_current_coefficient_hastie(
+                        alphaj=alphaj,
+                        alphap=alphap,
+                        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                        triang95=triang95,
+                        eps=eps,
+                        kappa95=kappa95,
+                        pres_plasma_on_axis=pres_plasma_on_axis,
+                        rmu0=constants.RMU0,
+                    )
+
+                # Sauter scaling allowing negative triangularity [FED May 2016]
+                # https://doi.org/10.1016/j.fusengdes.2016.04.033.
+                case PlasmaCurrentModel.SAUTER_SCALING:
+                    # Assumes zero squareness, note takes kappa, delta at
+                    # separatrix not _95
+                    fq = self.calculate_current_coefficient_sauter(
+                        eps=eps, kappa=kappa, triang=triang
+                    )
+
+                # FIESTA ST scaling
+                # https://doi.org/10.1016/j.fusengdes.2020.111530.
+                case PlasmaCurrentModel.FIESTA_ST_SCALING:
+                    fq = self.calculate_current_coefficient_fiesta(
+                        eps=eps, kappa=kappa, triang=triang
+                    )
 
         except ValueError as e:
             raise ProcessValueError(
@@ -428,31 +391,31 @@ class PlasmaCurrent(Model):
         Parameters
         ----------
         alphaj :
-            current profile index
+            current profile index [-].
         alphap :
-            pressure profile index
+            pressure profile index [-].
         b_plasma_toroidal_on_axis :
-            toroidal field on axis (T)
+            toroidal field on axis [T].
         eps :
-            inverse aspect ratio
+            inverse aspect ratio [-].
         kappa :
-            plasma elongation
+            plasma elongation [-].
         kappa95 :
-            plasma elongation at 95% surface
+            plasma elongation at 95% surface [-].
         pres_plasma_on_axis :
-            central plasma pressure (Pa)
+            central plasma pressure [Pa].
         len_plasma_poloidal :
-            plasma perimeter length (m)
+            plasma perimeter length [m].
         q95 :
-            plasma safety factor at 95% flux
+            plasma safety factor at 95% flux [-].
         rmajor :
-            major radius (m)
+            major radius [m].
         rminor :
-            minor radius (m)
+            minor radius [m].
         triang :
-            plasma triangularity
+            plasma triangularity [-].
         triang95 :
-            plasma triangularity at 95% surface
+            plasma triangularity at 95% surface [-].
 
         Returns
         -------
@@ -603,18 +566,18 @@ class PlasmaCurrent(Model):
         Parameters
         ----------
         rminor :
-            plasma minor radius (m)
+            plasma minor radius [m].
         rmajor :
-            plasma major radius (m)
+            plasma major radius [m].
         q95 :
-            plasma safety factor at 95% flux
+            plasma safety factor at 95% flux [-].
         b_plasma_toroidal_on_axis :
-            toroidal field on axis (T)
+            toroidal field on axis [T].
 
         Returns
         -------
         float
-            plasma current (A)
+            plasma current [A].
 
         """
         return (
@@ -638,17 +601,17 @@ class PlasmaCurrent(Model):
         Parameters
         ----------
         aspect :
-            plasma aspect ratio
+            plasma aspect ratio [-].
         eps :
-            inverse aspect ratio
+            inverse aspect ratio [-].
         kappa :
-            plasma elongation
+            plasma elongation [-].
         triang :
-            plasma triangularity
+            plasma triangularity [-].
 
         Returns
         -------
-        :
+        tuple[float, float, float, float]
             coefficients ff1, ff2, d1, d2
 
         References
@@ -700,11 +663,11 @@ class PlasmaCurrent(Model):
         Parameters
         ----------
         eps:
-            Plasma inverse aspect ratio.
+            Plasma inverse aspect ratio [-].
         len_plasma_poloidal:
-            Plasma poloidal perimeter length (m).
+            Plasma poloidal perimeter length [m].
         rminor:
-            Plasma minor radius (m).
+            Plasma minor radius [m].
 
         Returns
         -------
@@ -735,16 +698,16 @@ class PlasmaCurrent(Model):
 
         Parameters
         ----------
-        - q95: float, 95% flux surface safety factor
-        - aspect: float, plasma aspect ratio
-        - rminor: float, plasma minor radius (m)
-        - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
-        - kappa: float, plasma elongation
-        - triang: float, plasma triangularity
+        - q95: float, 95% flux surface safety factor [-].
+        - aspect: float, plasma aspect ratio [-].
+        - rminor: float, plasma minor radius [m].
+        - b_plasma_toroidal_on_axis: float, toroidal field on axis [T].
+        - kappa: float, plasma elongation [-].
+        - triang: float, plasma triangularity [-].
 
         Returns
         -------
-        - float, plasma current in MA
+        - float, plasma current [MA].
 
         This function calculates the plasma current in MA,
         using a scaling from Peng, Galambos and Shipe (1992).
@@ -794,16 +757,17 @@ class PlasmaCurrent(Model):
 
         Parameters
         ----------
-        - eps: float, plasma inverse aspect ratio
-        - kappa95: float, plasma elongation 95%
-        - triang95: float, plasma triangularity 95%
+        eps : float
+            plasma inverse aspect ratio [-].
+        kappa95 : float
+            plasma elongation 95% [-].
+        triang95 : float
+            plasma triangularity 95% [-].
 
         Returns
         -------
-        - float, the fq plasma current coefficient
-
-        This function calculates the fq coefficient used in the IPDG89 plasma current
-        scaling, based on the given plasma parameters.
+        float
+            the fq plasma current coefficient
 
         References
         ----------
@@ -828,13 +792,17 @@ class PlasmaCurrent(Model):
 
         Parameters
         ----------
-        - eps: float, plasma inverse aspect ratio
-        - kappa95: float, plasma elongation 95%
-        - triang95: float, plasma triangularity 95%
+        eps: float
+            plasma inverse aspect ratio [-].
+        kappa95: float
+            plasma elongation 95% [-].
+        triang95: float
+            plasma triangularity 95% [-].
 
         Returns
         -------
-        - float, the fq plasma current coefficient
+        float
+            the fq plasma current coefficient
 
         Raises
         ------
@@ -885,18 +853,27 @@ class PlasmaCurrent(Model):
 
         Parameters
         ----------
-        - alphaj: float, the current profile index
-        - alphap: float, the pressure profile index
-        - b_plasma_toroidal_on_axis: float, the toroidal field on axis (T)
-        - triang95: float, the plasma triangularity 95%
-        - eps: float, the inverse aspect ratio
-        - kappa95: float, the plasma elongation 95%
-        - pres_plasma_on_axis: float, the central plasma pressure (Pa)
-        - rmu0: float, the vacuum permeability (H/m)
+        alphaj: float
+                the current profile index [-].
+        alphap: float
+                the pressure profile index [-].
+        b_plasma_toroidal_on_axis: float
+                the toroidal field on axis [T].
+        triang95: float
+                the plasma triangularity 95% [-].
+        eps: float
+                the inverse aspect ratio [-].
+        kappa95: float
+                the plasma elongation 95% [-].
+        pres_plasma_on_axis: float
+                the central plasma pressure (Pa) [Pa].
+        rmu0: float
+                the vacuum permeability [H/m].
 
         Returns
         -------
-        - float, the F coefficient
+        float
+            the F coefficient
 
         This routine calculates the f_q coefficient used for scaling the plasma current,
         using the Connor-Hastie scaling
@@ -967,13 +944,17 @@ class PlasmaCurrent(Model):
 
         Parameters
         ----------
-        - eps: float, inverse aspect ratio
-        - kappa: float, plasma elongation at the separatrix
-        - triang: float, plasma triangularity at the separatrix
+        eps: float
+                inverse aspect ratio [-].
+        kappa: float
+                plasma elongation at the separatrix [-].
+        triang: float
+                plasma triangularity at the separatrix [-].
 
         Returns
         -------
-        - float, the fq coefficient
+        float
+            the fq coefficient
 
         References
         ----------
@@ -1001,13 +982,17 @@ class PlasmaCurrent(Model):
 
         Parameters
         ----------
-        - eps: float, plasma inverse aspect ratio
-        - kappa: float, plasma elongation at the separatrix
-        - triang: float, plasma triangularity at the separatrix
+        eps: float
+                plasma inverse aspect ratio [-].
+        kappa: float
+                plasma elongation at the separatrix [-].
+        triang: float
+                plasma triangularity at the separatrix [-].
 
         Returns
         -------
-        - float, the fq plasma current coefficient
+        float
+            the fq plasma current coefficient
 
         This function calculates the fq coefficient based on the given plasma parameters
         for the FIESTA scaling.
@@ -1083,21 +1068,15 @@ class PlasmaDiamagneticCurrent(Model):
                 self.data.physics.q0,
             )
         )
-
-        if (
-            self.data.physics.i_diamagnetic_current
-            == PlasmaDiamagneticCurrentModel.HENDER_ST_FIT
-        ):
-            self.data.current_drive.f_c_plasma_diamagnetic = (
-                self.data.current_drive.f_c_plasma_diamagnetic_hender
-            )
-        elif (
-            self.data.physics.i_diamagnetic_current
-            == PlasmaDiamagneticCurrentModel.SCENE_FIT
-        ):
-            self.data.current_drive.f_c_plasma_diamagnetic = (
-                self.data.current_drive.f_c_plasma_diamagnetic_scene
-            )
+        match PlasmaDiamagneticCurrentModel(self.data.physics.i_diamagnetic_current):
+            case PlasmaDiamagneticCurrentModel.HENDER_ST_FIT:
+                self.data.current_drive.f_c_plasma_diamagnetic = (
+                    self.data.current_drive.f_c_plasma_diamagnetic_hender
+                )
+            case PlasmaDiamagneticCurrentModel.SCENE_FIT:
+                self.data.current_drive.f_c_plasma_diamagnetic = (
+                    self.data.current_drive.f_c_plasma_diamagnetic_scene
+                )
 
     def output(self):
         """Output the plasma diamagnetic current model results."""
@@ -1149,7 +1128,7 @@ class PlasmaDiamagneticCurrent(Model):
         Parameters
         ----------
         beta :
-            the plasma beta value
+            the plasma beta value [-].
 
         Returns
         -------
@@ -1167,11 +1146,11 @@ class PlasmaDiamagneticCurrent(Model):
         Parameters
         ----------
         beta :
-            the plasma beta value
+            the plasma beta value [-].
         q95 :
-            the normalized safety factor at 95% of the plasma radius
+            the normalized safety factor at 95% of the plasma radius [-].
         q0 :
-            the normalized safety factor at the magnetic axis
+            the normalized safety factor at the magnetic axis [-].
 
         Returns
         -------
