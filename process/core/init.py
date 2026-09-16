@@ -10,7 +10,6 @@ import subprocess  # noqa: S404
 from dataclasses import MISSING
 from pathlib import Path
 from typing import TYPE_CHECKING
-from unittest import case
 
 import process
 from process.core import constants, process_output
@@ -710,7 +709,8 @@ def check_process(inputs, data):  # noqa: ARG001
             # Call a lvl 3 error if superconductor magnets are used
             case TFConductorModel.SUPERCONDUCTING:
                 logger.warning(
-                    "Joints res not cal. for SC (itart = 1) TF (data.tfcoil.i_tf_sup = 1)",
+                    "Joints res not cal. for SC (itart = 1) TF "
+                    "(data.tfcoil.i_tf_sup = 1)",
                     stacklevel=2,
                 )
 
@@ -722,11 +722,12 @@ def check_process(inputs, data):  # noqa: ARG001
                 # Motivation : ill-defined aluminium resistivity fit for T > 40-50 K
                 if data.tfcoil.temp_cp_coolant_inlet > 40.0:
                     raise ProcessValidationError(
-                        "Coolant temperature (temp_cp_coolant_inlet) should be < 40 K for"
-                        " the cryo-al resistivity to be defined"
+                        "Coolant temperature (temp_cp_coolant_inlet) should be "
+                        "< 40 K for the cryo-al resistivity to be defined"
                     )
 
-                # Check if the leg average temperature is low enough for the resisitivity fit
+                # Check if the leg average temperature is low enough for the
+                # resisitivity fit
                 if data.tfcoil.temp_tf_legs_outboard > 50.0:
                     raise ProcessValidationError(
                         "TF legs conductor temperature (temp_tf_legs_outboard) should be"
@@ -738,8 +739,8 @@ def check_process(inputs, data):  # noqa: ARG001
                     data.numerics.ixc[: data.numerics.n_iteration_variables] == 20
                 ).any() and data.numerics.boundu[19] > 50.0:
                     raise ProcessValidationError(
-                        "Too large CP conductor temperature (temp_cp_average). Upper limit"
-                        " for cryo-al < 50 K"
+                        "Too large CP conductor temperature (temp_cp_average). "
+                        "Upper limit for cryo-al < 50 K"
                     )
 
                 # Otherwise intitialise the average conductor temperature at

@@ -298,20 +298,13 @@ class Caller:
 
         # Toroidal field coil superconductor model
         if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            if (
-                SuperconductingTFTurnType(
-                    self.data.superconducting_tfcoil.i_tf_turn_type
-                )
-                == SuperconductingTFTurnType.CABLE_IN_CONDUIT
+            match SuperconductingTFTurnType(
+                self.data.superconducting_tfcoil.i_tf_turn_type
             ):
-                self.models.cicc_sctfcoil.run()
-            elif (
-                SuperconductingTFTurnType(
-                    self.data.superconducting_tfcoil.i_tf_turn_type
-                )
-                == SuperconductingTFTurnType.CROSS_CONDUCTOR
-            ):
-                self.models.croco_sctfcoil.run()
+                case SuperconductingTFTurnType.CABLE_IN_CONDUIT:
+                    self.models.cicc_sctfcoil.run()
+                case SuperconductingTFTurnType.CROSS_CONDUCTOR:
+                    self.models.croco_sctfcoil.run()
 
         if self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             self.models.aluminium_tf_coil.run()
@@ -341,13 +334,13 @@ class Caller:
         4    |  KIT HCLL model
         5    |  DCLL model
         """
-        if self.data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
-            # CCFE HCPB model
-            self.models.ccfe_hcpb.run()
-
-        elif self.data.fwbs.i_blanket_type == BlktModelTypes.DCLL:
-            # DCLL model
-            self.models.dcll.run()
+        match BlktModelTypes(self.data.fwbs.i_blanket_type):
+            case BlktModelTypes.CCFE_HCPB:
+                # CCFE HCPB model
+                self.models.ccfe_hcpb.run()
+            case BlktModelTypes.DCLL:
+                # DCLL model
+                self.models.dcll.run()
 
         self.models.cryostat.run()
 
