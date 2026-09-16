@@ -3447,7 +3447,8 @@ class TFCoil(Model):
                 else:
                     po.write(
                         self.outfile,
-                        "  Layers \t\t\t\t CS \t\t bucking \t\t conductor \t\t Outer case",
+                        "  Layers \t\t\t\t CS \t\t bucking \t\t conductor \t\t "
+                        "Outer case",
                     )
 
             case 3:

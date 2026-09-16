@@ -287,6 +287,12 @@ def constraint_equation_2(constraint_registration, data):
      p_hcd_injected_total_mw:
         total auxiliary injected power (MW)
      vol_plasma: plasma volume (m3)
+
+    Raises
+    ------
+    ValueError
+        If an unknown ConfinementRadiationLossModel or PlasmaIgnitionModel is
+        encountered.
     """
     # pscaling: total transport power per volume (MW/m3)
 
@@ -806,6 +812,11 @@ def constraint_equation_24(constraint_registration, data):
     beta_beam: neutral beam beta component
     b_plasma_toroidal_on_axis: toroidal field
     b_plasma_total: total field
+
+    Raises
+    ------
+    ValueError
+        If an unknown beta component limit is specified.
     """
     match data.physics.i_beta_component:
         case BetaComponentLimits.TOTAL:
@@ -1829,6 +1840,12 @@ def constraint_equation_85(constraint_registration, data):
     life_div_fpy: calculated divertor  power year lifetime (years)
     i_cp_lifetime: switch chosing which plant element the CP
         the CP lifetime must equate
+
+
+    Raises
+    ------
+    ValueError
+        If an unknown i_cp_lifetime option is specified.
     """
     match data.costs.i_cp_lifetime:
         case 0:

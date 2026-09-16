@@ -551,7 +551,7 @@ class ElectronTemperatureProfile(Profile):
         """Calculates and sets physics variables required for the temperature profile."""
         match PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal):
             case PlasmaProfileShapeType.PARABOLIC_PROFILE:
-                self.data.physics.temp_plasma_electron_on_axis_kev = self.calculate_parabolic_profile_on_axis_temperature(
+                self.data.physics.temp_plasma_electron_on_axis_kev = self.calculate_parabolic_profile_on_axis_temperature(  # noqa: E501
                     temp_vol_avg_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
                     alphat=self.data.physics.alphat,
                 )

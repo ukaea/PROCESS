@@ -803,7 +803,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             1 - self.data.first_wall.a_fw_outboard / self.data.first_wall.a_fw_total
         )
 
-        i_p_coolant_pumping = PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping)
         match PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping):
             case PumpingPowerModelTypes.FRACTION_OF_HEAT:
                 # User sets mechanical pumping power directly
@@ -834,8 +833,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 # Mechanical pumping power is calculated for first wall and blanket
                 self.thermo_hydraulic_model(output)
 
-                # For divertor and shield, mechanical pumping power is a fraction of thermal
-                # power removed by coolant
+                # For divertor and shield, mechanical pumping power is a fraction
+                # of thermal power removed by coolant
                 self.data.heat_transport.p_shld_coolant_pump_mw = (
                     self.data.heat_transport.f_p_shld_coolant_pump_total_heat
                     * (
@@ -854,8 +853,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
             case PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP:
                 # Issue #503
-                # Mechanical pumping power is calculated using specified pressure drop for
-                # first wall and blanket circuit, including heat exchanger and pipes
+                # Mechanical pumping power is calculated using specified pressure drop
+                # for first wall and blanket circuit, including heat exchanger and pipes
                 pfactor = (
                     self.data.primary_pumping.p_he
                     / (self.data.primary_pumping.p_he - self.data.primary_pumping.dp_he)
@@ -891,8 +890,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     * p_plasma
                 )
 
-                # For divertor and shield, mechanical pumping power is a fraction of thermal
-                # power removed by coolant
+                # For divertor and shield, mechanical pumping power is a fraction of
+                # thermal power removed by coolant
                 self.data.heat_transport.p_shld_coolant_pump_mw = (
                     self.data.heat_transport.f_p_shld_coolant_pump_total_heat
                     * (
@@ -912,7 +911,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     po.oheadr(self.outfile, "Pumping for primary coolant (helium)")
                     po.ovarre(
                         self.outfile,
-                        "Pressure drop in FW and blanket coolant incl. hx and pipes (Pa)",
+                        "Pressure drop in FW and blanket coolant incl. hx and "
+                        "pipes [Pa]",
                         "(dp_he)",
                         self.data.primary_pumping.dp_he,
                     )
@@ -1424,7 +1424,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     po.osubhd(self.outfile, "(Superconducting magnet centrepost used)")
                     po.ovarre(
                         self.outfile,
-                        "ST centrepost TF fast neutron fllux (E > 0.1 MeV) (m^(-2).s^(-1))",
+                        "ST centrepost TF fast neutron fllux (E > 0.1 MeV) [m⁻²s⁻¹]",
                         "(neut_flux_cp)",
                         self.data.fwbs.neut_flux_cp,
                         "OP ",

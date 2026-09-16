@@ -164,7 +164,7 @@ class PlasmaConfinementTime(Model):
             p_plasma_loss_mw += p_hcd_injected_total_mw
 
         # Include the radiation as a loss term based on radiation model
-        try:
+        try:  # noqa: PLW0717
             model = ConfinementRadiationLossModel(int(self.data.physics.i_rad_loss))
 
             match model:

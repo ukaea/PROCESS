@@ -2050,7 +2050,8 @@ class Power(Model):
                 ):
                     logger.warning(
                         "Turbine temperature temp_turbine_coolant_in out of range "
-                        f"of validity: {self.data.heat_transport.temp_turbine_coolant_in=}"
+                        "of validity: "
+                        f"{self.data.heat_transport.temp_turbine_coolant_in=}"
                     )
 
                 eta_turbine = (

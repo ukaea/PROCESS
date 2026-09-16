@@ -10,6 +10,7 @@ import subprocess  # noqa: S404
 from dataclasses import MISSING
 from pathlib import Path
 from typing import TYPE_CHECKING
+from unittest import case
 
 import process
 from process.core import constants, process_output
@@ -675,73 +676,74 @@ def check_process(inputs, data):  # noqa: ARG001
             data.pf_coil.i_pf_location[1] = PFLocationTypes.OUTSIDE_TF
             data.pf_coil.i_pf_location[2] = PFLocationTypes.OUTSIDE_TF
 
-        # Water cooled copper magnets initialisation / checks
-        if data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-            # Check if the initial centrepost coolant loop adapted to the
-            # magnet technology
-            # Ice cannot flow so temp_cp_coolant_inlet > 273.15 K
-            if data.tfcoil.temp_cp_coolant_inlet < 273.15:
-                raise ProcessValidationError(
-                    "Coolant temperature (temp_cp_coolant_inlet) cannot be < 0 C"
-                    " (273.15 K) for water cooled copper magents"
+        match TFConductorModel(data.tfcoil.i_tf_sup):
+            # Water cooled copper magnets initialisation / checks
+            case TFConductorModel.WATER_COOLED_COPPER:
+                # Check if the initial centrepost coolant loop adapted to the
+                # magnet technology
+                # Ice cannot flow so temp_cp_coolant_inlet > 273.15 K
+                if data.tfcoil.temp_cp_coolant_inlet < 273.15:
+                    raise ProcessValidationError(
+                        "Coolant temperature (temp_cp_coolant_inlet) cannot be < 0 C"
+                        " (273.15 K) for water cooled copper magents"
+                    )
+
+                # Temperature of the TF legs cannot be cooled down
+                if (
+                    data.tfcoil.temp_tf_legs_outboard > 0
+                    and data.tfcoil.temp_tf_legs_outboard < 273.15
+                ):
+                    raise ProcessValidationError(
+                        "TF legs conductor temperature (temp_tf_legs_outboard) cannot be"
+                        " < 0 C (273.15 K) for water cooled magents"
+                    )
+
+                # Check if conductor upper limit is properly set to 50 K or below
+                if (
+                    data.numerics.ixc[: data.numerics.n_iteration_variables] == 20
+                ).any() and data.numerics.boundu[19] < 273.15:
+                    raise ProcessValidationError(
+                        "Too low CP conductor temperature (temp_cp_average)."
+                        " Lower limit for copper > 273.15 K"
+                    )
+
+            # Call a lvl 3 error if superconductor magnets are used
+            case TFConductorModel.SUPERCONDUCTING:
+                logger.warning(
+                    "Joints res not cal. for SC (itart = 1) TF (data.tfcoil.i_tf_sup = 1)",
+                    stacklevel=2,
                 )
 
-            # Temperature of the TF legs cannot be cooled down
-            if (
-                data.tfcoil.temp_tf_legs_outboard > 0
-                and data.tfcoil.temp_tf_legs_outboard < 273.15
-            ):
-                raise ProcessValidationError(
-                    "TF legs conductor temperature (temp_tf_legs_outboard) cannot be"
-                    " < 0 C (273.15 K) for water cooled magents"
-                )
+            # Aluminium magnets initialisation / checks
+            # Initialize the CP conductor temperature to cryogenic temperature for
+            # cryo-al magnets (20 K)
+            case TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+                # Call a lvl 3 error if the inlet coolant temperature is too large
+                # Motivation : ill-defined aluminium resistivity fit for T > 40-50 K
+                if data.tfcoil.temp_cp_coolant_inlet > 40.0:
+                    raise ProcessValidationError(
+                        "Coolant temperature (temp_cp_coolant_inlet) should be < 40 K for"
+                        " the cryo-al resistivity to be defined"
+                    )
 
-            # Check if conductor upper limit is properly set to 50 K or below
-            if (
-                data.numerics.ixc[: data.numerics.n_iteration_variables] == 20
-            ).any() and data.numerics.boundu[19] < 273.15:
-                raise ProcessValidationError(
-                    "Too low CP conductor temperature (temp_cp_average)."
-                    " Lower limit for copper > 273.15 K"
-                )
+                # Check if the leg average temperature is low enough for the resisitivity fit
+                if data.tfcoil.temp_tf_legs_outboard > 50.0:
+                    raise ProcessValidationError(
+                        "TF legs conductor temperature (temp_tf_legs_outboard) should be"
+                        " < 40 K for the cryo-al resistivity to be defined"
+                    )
 
-        # Call a lvl 3 error if superconductor magnets are used
-        elif data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            logger.warning(
-                "Joints res not cal. for SC (itart = 1) TF (data.tfcoil.i_tf_sup = 1)",
-                stacklevel=2,
-            )
+                # Check if conductor upper limit is properly set to 50 K or below
+                if (
+                    data.numerics.ixc[: data.numerics.n_iteration_variables] == 20
+                ).any() and data.numerics.boundu[19] > 50.0:
+                    raise ProcessValidationError(
+                        "Too large CP conductor temperature (temp_cp_average). Upper limit"
+                        " for cryo-al < 50 K"
+                    )
 
-        # Aluminium magnets initialisation / checks
-        # Initialize the CP conductor temperature to cryogenic temperature for
-        # cryo-al magnets (20 K)
-        elif data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-            # Call a lvl 3 error if the inlet coolant temperature is too large
-            # Motivation : ill-defined aluminium resistivity fit for T > 40-50 K
-            if data.tfcoil.temp_cp_coolant_inlet > 40.0:
-                raise ProcessValidationError(
-                    "Coolant temperature (temp_cp_coolant_inlet) should be < 40 K for"
-                    " the cryo-al resistivity to be defined"
-                )
-
-            # Check if the leg average temperature is low enough for the resisitivity fit
-            if data.tfcoil.temp_tf_legs_outboard > 50.0:
-                raise ProcessValidationError(
-                    "TF legs conductor temperature (temp_tf_legs_outboard) should be"
-                    " < 40 K for the cryo-al resistivity to be defined"
-                )
-
-            # Check if conductor upper limit is properly set to 50 K or below
-            if (
-                data.numerics.ixc[: data.numerics.n_iteration_variables] == 20
-            ).any() and data.numerics.boundu[19] > 50.0:
-                raise ProcessValidationError(
-                    "Too large CP conductor temperature (temp_cp_average). Upper limit"
-                    " for cryo-al < 50 K"
-                )
-
-            # Otherwise intitialise the average conductor temperature at
-            data.tfcoil.temp_cp_average = data.tfcoil.temp_cp_coolant_inlet
+                # Otherwise intitialise the average conductor temperature at
+                data.tfcoil.temp_cp_average = data.tfcoil.temp_cp_coolant_inlet
 
         # Check if the boostrap current selection is addapted to ST
         if data.physics.i_bootstrap_current == 1:
@@ -965,12 +967,13 @@ def check_process(inputs, data):  # noqa: ARG001
     # Setting the default cryo-plants efficiencies
     if abs(data.tfcoil.eff_tf_cryo + 1) < 1e-6:
         # The ITER cyoplant efficiency is used for SC
-        if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            data.tfcoil.eff_tf_cryo = 0.13
+        match TFConductorModel(data.tfcoil.i_tf_sup):
+            case TFConductorModel.SUPERCONDUCTING:
+                data.tfcoil.eff_tf_cryo = 0.13
 
-        # Strawbrige plot extrapolation is used for Cryo-Al
-        elif data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-            data.tfcoil.eff_tf_cryo = 0.40
+            # Strawbrige plot extrapolation is used for Cryo-Al
+            case TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+                data.tfcoil.eff_tf_cryo = 0.40
 
     # Cryo-plane efficiency must be in [0-1.0]
     elif data.tfcoil.eff_tf_cryo > 1.0 or data.tfcoil.eff_tf_cryo < 0.0:
@@ -995,17 +998,15 @@ def check_process(inputs, data):  # noqa: ARG001
     if data.tfcoil.eyoung_ins <= 1.0e8:
         # Copper magnets, no insulation material defined
         # But use the ITER design by default
-        if data.tfcoil.i_tf_sup in {
-            TFConductorModel.WATER_COOLED_COPPER,
-            TFConductorModel.SUPERCONDUCTING,
-        }:
-            # SC magnets
-            # Value from DDD11-2 v2 2 (2009)
-            data.tfcoil.eyoung_ins = 20.0e9
+        match TFConductorModel(data.tfcoil.i_tf_sup):
+            case TFConductorModel.WATER_COOLED_COPPER | TFConductorModel.SUPERCONDUCTING:
+                # SC magnets
+                # Value from DDD11-2 v2 2 (2009)
+                data.tfcoil.eyoung_ins = 20.0e9
 
-        # Cryo-aluminum magnets (Kapton polymer)
-        elif data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-            data.tfcoil.eyoung_ins = 2.5e9
+            # Cryo-aluminum magnets (Kapton polymer)
+            case TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+                data.tfcoil.eyoung_ins = 2.5e9
 
     # Setting the default WP geometry
     i_tf_wp_geom = SuperconductingTFWPShapeType(data.tfcoil.i_tf_wp_geom)
@@ -1022,49 +1023,39 @@ def check_process(inputs, data):  # noqa: ARG001
             data.tfcoil.i_tf_wp_geom = SuperconductingTFWPShapeType.RECTANGULAR
 
     # Setting the TF coil conductor elastic properties
-
-    if data.tfcoil.i_tf_cond_eyoung_axial == 0:
-        # Conductor stiffness is not considered
-        data.tfcoil.eyoung_cond_axial = 0
-        data.tfcoil.eyoung_cond_trans = 0
-    elif data.tfcoil.i_tf_cond_eyoung_axial == 2:
-        # Select sensible defaults from the literature
-        if (
-            SuperconductorModel(data.tfcoil.i_tf_sc_mat).material
-            == SuperconductorMaterial.NB3SN
-        ):
-            # Nb3Sn: Nyilas, A et. al, Superconductor Science and Technology 16,
-            # no. 9 (2003): 1036-42. https://doi.org/10.1088/0953-2048/16/9/313.
-            data.tfcoil.eyoung_cond_axial = 32e9
-        elif (
-            SuperconductorModel(data.tfcoil.i_tf_sc_mat).material
-            == SuperconductorMaterial.BI2212
-        ):
-            # Bi-2212: Brown, M. et al, IOP Conference Series: Materials Science
-            # and Engineering 279 (2017): 012022.
-            # https://doi.org/10.1088/1757-899X/279/1/012022.
-            data.tfcoil.eyoung_cond_axial = 80e9
-        elif (
-            SuperconductorModel(data.tfcoil.i_tf_sc_mat).material
-            == SuperconductorMaterial.NBTI
-        ):
-            # NbTi: Vedrine, P. et. al, IEEE Transactions on Applied Superconductivity
-            #  9, no. 2 (1999): 236-39. https://doi.org/10.1109/77.783280.
-            data.tfcoil.eyoung_cond_axial = 6.8e9
-        elif (
-            SuperconductorModel(data.tfcoil.i_tf_sc_mat).material
-            == SuperconductorMaterial.REBCO
-        ):
-            # REBCO: Fujishiro, H. et. al, Physica C: Superconductivity,
-            # 426-431 (2005): 699-704. https://doi.org/10.1016/j.physc.2005.01.045.
-            data.tfcoil.eyoung_cond_axial = 145e9
-
-        if data.tfcoil.i_tf_cond_eyoung_trans == 0:
-            # Transverse stiffness is not considered
+    match data.tfcoil.i_tf_cond_eyoung_axial:
+        case 0:
+            # Conductor stiffness is not considered
+            data.tfcoil.eyoung_cond_axial = 0
             data.tfcoil.eyoung_cond_trans = 0
-        else:
-            # Transverse stiffness is significant
-            data.tfcoil.eyoung_cond_trans = data.tfcoil.eyoung_cond_axial
+        case 2:
+            # Select sensible defaults from the literature
+            match SuperconductorModel(data.tfcoil.i_tf_sc_mat).material:
+                case SuperconductorMaterial.NB3SN:
+                    # Nb3Sn: Nyilas, A et. al, Superconductor Science and Technology 16,
+                    # no. 9 (2003): 1036-42. https://doi.org/10.1088/0953-2048/16/9/313.
+                    data.tfcoil.eyoung_cond_axial = 32e9
+                case SuperconductorMaterial.BI2212:
+                    # Bi-2212: Brown, M. et al, IOP Conference Series: Materials Science
+                    # and Engineering 279 (2017): 012022.
+                    # https://doi.org/10.1088/1757-899X/279/1/012022.
+                    data.tfcoil.eyoung_cond_axial = 80e9
+                case SuperconductorMaterial.NBTI:
+                    # NbTi: Vedrine, P. et. al, IEEE Transactions on
+                    # Applied Superconductivity 9, no. 2 (1999): 236-39.
+                    # https://doi.org/10.1109/77.783280.
+                    data.tfcoil.eyoung_cond_axial = 6.8e9
+                case SuperconductorMaterial.REBCO:
+                    # REBCO: Fujishiro, H. et. al, Physica C: Superconductivity,
+                    # 426-431 (2005): 699-704. https://doi.org/10.1016/j.physc.2005.01.045.
+                    data.tfcoil.eyoung_cond_axial = 145e9
+
+            if data.tfcoil.i_tf_cond_eyoung_trans == 0:
+                # Transverse stiffness is not considered
+                data.tfcoil.eyoung_cond_trans = 0
+            else:
+                # Transverse stiffness is significant
+                data.tfcoil.eyoung_cond_trans = data.tfcoil.eyoung_cond_axial
 
     # Check if the user has set the critical current density and temperature for
     # non-user-defined superconductors
@@ -1086,30 +1077,36 @@ def check_process(inputs, data):  # noqa: ARG001
     # Rem : Only verified if the WP thickness is used
     if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 140).any():
         # Minimal WP thickness
-        if data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            dr_tf_wp_min = 2.0 * (
-                data.tfcoil.dx_tf_wp_insulation
-                + data.tfcoil.dx_tf_wp_insertion_gap
-                + data.tfcoil.dx_tf_turn_insulation
-                + data.tfcoil.dia_tf_turn_coolant_channel
-            )
+        match TFConductorModel(data.tfcoil.i_tf_sup):
+            case TFConductorModel.SUPERCONDUCTING:
+                dr_tf_wp_min = 2.0 * (
+                    data.tfcoil.dx_tf_wp_insulation
+                    + data.tfcoil.dx_tf_wp_insertion_gap
+                    + data.tfcoil.dx_tf_turn_insulation
+                    + data.tfcoil.dia_tf_turn_coolant_channel
+                )
 
-            # Steel conduit thickness (can be an iteration variable)
-            if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 58).any():
-                dr_tf_wp_min += 2.0 * data.numerics.boundl[57]
-            else:
-                dr_tf_wp_min += 2.0 * data.tfcoil.dx_tf_turn_steel
+                # Steel conduit thickness (can be an iteration variable)
+                if (
+                    data.numerics.ixc[: data.numerics.n_iteration_variables] == 58
+                ).any():
+                    dr_tf_wp_min += 2.0 * data.numerics.boundl[57]
+                else:
+                    dr_tf_wp_min += 2.0 * data.tfcoil.dx_tf_turn_steel
 
-        # Minimal conductor layer thickness
-        elif data.tfcoil.i_tf_sup in {
-            TFConductorModel.WATER_COOLED_COPPER,
-            TFConductorModel.HELIUM_COOLED_ALUMINIUM,
-        }:
-            dr_tf_wp_min = (
-                2.0
-                * (data.tfcoil.dx_tf_turn_insulation + data.tfcoil.dx_tf_wp_insulation)
-                + 4.0 * data.tfcoil.radius_cp_coolant_channel
-            )
+            # Minimal conductor layer thickness
+            case (
+                TFConductorModel.WATER_COOLED_COPPER
+                | TFConductorModel.HELIUM_COOLED_ALUMINIUM
+            ):
+                dr_tf_wp_min = (
+                    2.0
+                    * (
+                        data.tfcoil.dx_tf_turn_insulation
+                        + data.tfcoil.dx_tf_wp_insulation
+                    )
+                    + 4.0 * data.tfcoil.radius_cp_coolant_channel
+                )
 
         if data.numerics.boundl[139] < dr_tf_wp_min:
             raise ProcessValidationError(
