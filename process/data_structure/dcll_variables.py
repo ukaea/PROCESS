@@ -18,110 +18,108 @@ Acronyms for this module:
 
 from dataclasses import dataclass
 
-from process.core.data_structure.parameter import Parameter, PROCESSModelData
-
 
 @dataclass(slots=True)
-class DCLLData(PROCESSModelData):
+class DCLLData:
     """Dataclass holding DCLL variables"""
 
-    r_fci: Parameter[float] = 0.0
+    r_fci: float = 0.0
     """Radial thickness of FCIs [m]"""
 
-    r_backwall: Parameter[float] = 0.0
+    r_backwall: float = 0.0
     """Radial thickness of back wall [m]"""
 
-    bz_r_ib: Parameter[float] = 0.0
+    bz_r_ib: float = 0.0
     """Radial BZ thickness [m]"""
 
-    bz_r_ob: Parameter[float] = 0.0
+    bz_r_ob: float = 0.0
     """Radial BZ thickness [m]"""
 
-    f_vol_stff_plates: Parameter[float] = 0.0
+    f_vol_stff_plates: float = 0.0
     """Structure/coolant compositional fractions"""
 
-    f_vol_stl_bz_struct: Parameter[float] = 0.0
+    f_vol_stl_bz_struct: float = 0.0
     """Structure/coolant compositional fractions"""
 
-    f_vol_stl_back_wall: Parameter[float] = 0.0
+    f_vol_stl_back_wall: float = 0.0
     """Structure/coolant compositional fractions"""
 
-    f_vol_stl_fw: Parameter[float] = 0.0
+    f_vol_stl_fw: float = 0.0
     """Structure/coolant compositional fractions"""
 
-    f_vol_mfbss_stl: Parameter[float] = 0.0
+    f_vol_mfbss_stl: float = 0.0
     """MF/BSS compositional fractions"""
 
-    f_vol_mfbss_he: Parameter[float] = 0.0
+    f_vol_mfbss_he: float = 0.0
     """MF/BSS compositional fractions"""
 
-    f_vol_mfbss_pbli: Parameter[float] = 0.0
+    f_vol_mfbss_pbli: float = 0.0
     """MF/BSS compositional fractions"""
 
-    vol_fci: Parameter[float] = 0.0
+    vol_fci: float = 0.0
     """Volume of FCIs [m^3]"""
 
-    vol_bz_struct: Parameter[float] = 0.0
+    vol_bz_struct: float = 0.0
     """Volume of other BZ structure [m^3]"""
 
-    vol_bz_liq: Parameter[float] = 0.0
+    vol_bz_liq: float = 0.0
     """Volume of liquid channels [m^3]"""
 
-    vol_bz_liq_ib: Parameter[float] = 0.0
+    vol_bz_liq_ib: float = 0.0
     """Volume of liquid channels [m^3]"""
 
-    vol_bz_liq_ob: Parameter[float] = 0.0
+    vol_bz_liq_ob: float = 0.0
     """Volume of liquid channels [m^3]"""
 
-    vol_bw: Parameter[float] = 0.0
+    vol_bw: float = 0.0
     """Volume of back wall [m^3]"""
 
-    vol_bss: Parameter[float] = 0.0
+    vol_bss: float = 0.0
     """Volume of MF/BSS [m^3]"""
 
-    wht_cer: Parameter[float] = 0.0
+    wht_cer: float = 0.0
     """BZ masses by composition [kg]"""
 
-    wht_stl_struct: Parameter[float] = 0.0
+    wht_stl_struct: float = 0.0
     """BZ masses by composition [kg]"""
 
-    wht_cool_struct: Parameter[float] = 0.0
+    wht_cool_struct: float = 0.0
     """BZ masses by composition [kg]"""
 
-    wht_bw_stl: Parameter[float] = 0.0
+    wht_bw_stl: float = 0.0
     """Back wall masses by composition [kg]"""
 
-    wht_bw_cool: Parameter[float] = 0.0
+    wht_bw_cool: float = 0.0
     """Back wall masses by composition [kg]"""
 
-    wht_mfbss_stl: Parameter[float] = 0.0
+    wht_mfbss_stl: float = 0.0
     """MF/BSS masses by composition [kg]"""
 
-    wht_mfbss_cool: Parameter[float] = 0.0
+    wht_mfbss_cool: float = 0.0
     """MF/BSS masses by composition [kg]"""
 
-    wht_mfbss_pbli: Parameter[float] = 0.0
+    wht_mfbss_pbli: float = 0.0
     """MF/BSS masses by composition [kg]"""
 
-    fwmass_stl: Parameter[float] = 0.0
+    fwmass_stl: float = 0.0
     """FW masses by composition [kg]"""
 
-    fwmass_cool: Parameter[float] = 0.0
+    fwmass_cool: float = 0.0
     """FW masses by composition [kg]"""
 
-    mass_cool_blanket: Parameter[float] = 0.0
+    mass_cool_blanket: float = 0.0
     """Total masses of material in blanket [kg]"""
 
-    mass_liq_blanket: Parameter[float] = 0.0
+    mass_liq_blanket: float = 0.0
     """Total masses of material in blanket [kg]"""
 
-    mass_stl_blanket: Parameter[float] = 0.0
+    mass_stl_blanket: float = 0.0
     """Total masses of material in blanket [kg]"""
 
-    mass_segm_ib: Parameter[float] = 0.0
+    mass_segm_ib: float = 0.0
     """Total mass for an inboard/outboard reactor segment [kg]"""
 
-    mass_segm_ob: Parameter[float] = 0.0
+    mass_segm_ob: float = 0.0
     """Total mass for an inboard/outboard reactor segment [kg]"""
 
 
