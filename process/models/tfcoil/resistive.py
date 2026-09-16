@@ -7,7 +7,6 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
-from process.core.data_structure.parameter import unwrap_parameter
 from process.models.tfcoil.base import TFCoil, TFConductorModel
 
 logger = logging.getLogger(__name__)
@@ -1212,7 +1211,6 @@ class ResistiveTFCoil(TFCoil):
                 po.oblnkl(self.outfile)
 
     @staticmethod
-    @unwrap_parameter
     @numba.njit(cache=True)
     def cpost(
         r_tf_inboard_in,
