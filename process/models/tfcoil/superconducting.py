@@ -1304,7 +1304,8 @@ class SuperconductingTFCoil(TFCoil):
                     )
             case _:
                 raise ProcessValueError(
-                    f"Unknown superconductor type: i_tf_superconductor={i_tf_superconductor}"
+                    f"Unknown superconductor type: "
+                    f"i_tf_superconductor={i_tf_superconductor}"
                 )
 
         return temp_tf_superconductor_margin
