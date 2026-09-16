@@ -4,6 +4,7 @@ import numpy as np
 from numba import njit
 
 from process.core import constants
+from process.core.data_structure.parameter import unwrap_parameter
 from process.core.model import Model
 
 
@@ -176,6 +177,7 @@ class CsFatigue(Model):
         )
 
     @staticmethod
+    @unwrap_parameter
     @njit(cache=True)
     def surface_stress_intensity_factor(hoop_stress, t, w, a, c, phi):
         """
