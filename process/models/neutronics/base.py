@@ -847,8 +847,11 @@ class NeutronFluxProfile:
                 self.extended_boundary[n],
                 in_scatter_max_group,
             )
+            eqn_32_matrix = np.array([top_row, bot_row])
+            eqn_32_vector = np.array([y, z])
+            det_32 = np.linalg.det(eqn_32_matrix)
             self.coefficients[0, n].c[n], self.coefficients[0, n].s[n] = np.linalg.solve(
-                [top_row, bot_row], [y, z]
+                eqn_32_matrix, eqn_32_vector
             )
             # nonnegativity check for layer 0
             if (self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[0]) < 0) or (
@@ -861,6 +864,14 @@ class NeutronFluxProfile:
                     r"layer thickness < 3 λ_{tr}.",
                     stacklevel=2,
                 )
+
+            print(f"For {n = }")
+            print("Eqn (32) matrix:", np.array([top_row, bot_row]))
+            print("whose determinant is:", np.linalg.det(np.array([top_row, bot_row])))
+            print("in particular, affine_transform_matrix_stack=", affine_transform_matrix_stack)
+            print("affine_transformed_column_vector=", affine_transformed_column_vector)
+            print("Eqn (32) vector:", y, z)
+            print("Solution coefficients", self.coefficients[0, n].c[n], self.coefficients[0, n].s[n])
 
             for num_layer in range(self.n_layers - 1):
                 [
