@@ -12,6 +12,7 @@ from process.core import constants, process_output
 from process.core.data_structure.base import DataStructure
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure.build_variables import TFCSRadialConfiguration
+from process.data_structure.physics import ConfinementRadiationLossModel
 from process.data_structure.stellarator_variables import StellaratorModel
 from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.exhaust import PlasmaExhaust
@@ -293,32 +294,38 @@ def constraint_equation_2(constraint_registration, data):
         data.physics.pden_electron_transport_loss_mw
         + data.physics.pden_ion_transport_loss_mw
     )
-    # Total power lost is scaling power plus radiation:
-    if data.physics.i_rad_loss == 0:
-        pnumerator = pscaling + data.physics.pden_plasma_rad_mw
-    elif data.physics.i_rad_loss == 1:
-        pnumerator = pscaling + data.physics.pden_plasma_core_rad_mw
-    else:
-        pnumerator = pscaling
+    match ConfinementRadiationLossModel(data.physics.i_rad_loss):
+        case ConfinementRadiationLossModel.FULL_RADIATION:
+            pnumerator = pscaling + data.physics.pden_plasma_rad_mw
+        case ConfinementRadiationLossModel.CORE_ONLY:
+            pnumerator = pscaling + data.physics.pden_plasma_core_rad_mw
+        case ConfinementRadiationLossModel.NO_RADIATION:
+            pnumerator = pscaling
+        case _:
+            raise ValueError(
+                f"Unknown ConfinementRadiationLossModel: {data.physics.i_rad_loss}"
+            )
 
-    # if plasma not ignited include injected power
-    if (
-        PlasmaIgnitionModel(data.physics.i_plasma_ignited)
-        == PlasmaIgnitionModel.NON_IGNITED
-    ):
-        pdenom = (
-            data.physics.f_p_alpha_plasma_deposited * data.physics.pden_alpha_total_mw
-            + data.physics.pden_non_alpha_charged_mw
-            + data.physics.pden_plasma_ohmic_mw
-            + data.current_drive.p_hcd_injected_total_mw / data.physics.vol_plasma
-        )
-    else:
-        # if plasma ignited
-        pdenom = (
-            data.physics.f_p_alpha_plasma_deposited * data.physics.pden_alpha_total_mw
-            + data.physics.pden_non_alpha_charged_mw
-            + data.physics.pden_plasma_ohmic_mw
-        )
+    match PlasmaIgnitionModel(data.physics.i_plasma_ignited):
+        case PlasmaIgnitionModel.NON_IGNITED:
+            pdenom = (
+                data.physics.f_p_alpha_plasma_deposited
+                * data.physics.pden_alpha_total_mw
+                + data.physics.pden_non_alpha_charged_mw
+                + data.physics.pden_plasma_ohmic_mw
+                + data.current_drive.p_hcd_injected_total_mw / data.physics.vol_plasma
+            )
+        case PlasmaIgnitionModel.IGNITED:
+            pdenom = (
+                data.physics.f_p_alpha_plasma_deposited
+                * data.physics.pden_alpha_total_mw
+                + data.physics.pden_non_alpha_charged_mw
+                + data.physics.pden_plasma_ohmic_mw
+            )
+        case _:
+            raise ValueError(
+                f"Unknown PlasmaIgnitionModel: {data.physics.i_plasma_ignited}"
+            )
 
     return eq(pnumerator, pdenom, constraint_registration)
 
@@ -800,23 +807,27 @@ def constraint_equation_24(constraint_registration, data):
     b_plasma_toroidal_on_axis: toroidal field
     b_plasma_total: total field
     """
+    match data.physics.i_beta_component:
+        case BetaComponentLimits.TOTAL:
+            value = data.physics.beta_total_vol_avg
+        case BetaComponentLimits.THERMAL:
+            # Here, the beta limit applies to only the thermal component,
+            # not the fast alpha or neutral beam parts
+            value = data.physics.beta_thermal_vol_avg
+        case BetaComponentLimits.THERMAL_AND_BEAM:
+            # Beta limit applies to thermal + neutral beam: components of the total beta,
+            # i.e. excludes alphas
+            value = data.physics.beta_thermal_vol_avg + data.physics.beta_beam
+        case BetaComponentLimits.TOROIDAL:
+            # Beta limit applies to toroidal beta
+            value = data.physics.beta_toroidal_vol_avg
+        case _:
+            raise ValueError(
+                f"Unknown BetaComponentLimits: {data.physics.i_beta_component}"
+            )
     # Include all beta components: relevant for both tokamaks and stellarators
-    if (
-        data.physics.i_beta_component == BetaComponentLimits.TOTAL
-        or data.stellarator.istell != StellaratorModel.DISABLED
-    ):
+    if data.stellarator.istell != StellaratorModel.DISABLED:
         value = data.physics.beta_total_vol_avg
-    # Here, the beta limit applies to only the thermal component,
-    # not the fast alpha or neutral beam parts
-    elif data.physics.i_beta_component == BetaComponentLimits.THERMAL:
-        value = data.physics.beta_thermal_vol_avg
-    # Beta limit applies to thermal + neutral beam: components of the total beta,
-    # i.e. excludes alphas
-    elif data.physics.i_beta_component == BetaComponentLimits.THERMAL_AND_BEAM:
-        value = data.physics.beta_thermal_vol_avg + data.physics.beta_beam
-    # Beta limit applies to toroidal beta
-    elif data.physics.i_beta_component == BetaComponentLimits.TOROIDAL:
-        value = data.physics.beta_toroidal_vol_avg
 
     return leq(
         value,
@@ -1819,20 +1830,17 @@ def constraint_equation_85(constraint_registration, data):
     i_cp_lifetime: switch chosing which plant element the CP
         the CP lifetime must equate
     """
-    # The CP lifetime is equal to the the divertor one
-    if data.costs.i_cp_lifetime == 0:
-        bound = data.costs.cplife_input
-
-    elif data.costs.i_cp_lifetime == 1:
-        bound = data.costs.life_div_fpy
-
-    # The CP lifetime is equal to the tritium breeding blankets / FW one
-    elif data.costs.i_cp_lifetime == 2:
-        bound = data.fwbs.life_blkt_fpy
-
-    elif data.costs.i_cp_lifetime == 3:
-        bound = data.costs.life_plant
-
+    match data.costs.i_cp_lifetime:
+        case 0:
+            bound = data.costs.cplife_input
+        case 1:
+            bound = data.costs.life_div_fpy
+        case 2:
+            bound = data.fwbs.life_blkt_fpy
+        case 3:
+            bound = data.costs.life_plant
+        case _:
+            raise ValueError(f"Unknown i_cp_lifetime: {data.costs.i_cp_lifetime}")
     return eq(data.costs.cplife, bound, constraint_registration)
 
 
