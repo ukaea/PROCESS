@@ -819,7 +819,7 @@ class ElectronCyclotron(Model):
             self.data.physics.radius_plasma_pedestal_temp_norm,
             self.data.physics.temp_plasma_electron_on_axis_kev,
             self.data.physics.temp_plasma_pedestal_electron_kev,
-            self.data.physics.temp_plasma_separatrix_kev,
+            self.data.physics.temp_plasma_separatrix_electron_kev,
             self.data.physics.alphat,
             self.data.physics.tbeta,
         )
@@ -1365,7 +1365,7 @@ class LowerHybrid(Model):
             self.data.physics.radius_plasma_pedestal_temp_norm,
             self.data.physics.temp_plasma_electron_on_axis_kev,
             self.data.physics.temp_plasma_pedestal_electron_kev,
-            self.data.physics.temp_plasma_separatrix_kev,
+            self.data.physics.temp_plasma_separatrix_electron_kev,
             self.data.physics.alphat,
             self.data.physics.tbeta,
         )
@@ -1513,7 +1513,7 @@ class LowerHybrid(Model):
             self.data.physics.radius_plasma_pedestal_temp_norm,
             self.data.physics.temp_plasma_electron_on_axis_kev,
             self.data.physics.temp_plasma_pedestal_electron_kev,
-            self.data.physics.temp_plasma_separatrix_kev,
+            self.data.physics.temp_plasma_separatrix_electron_kev,
             self.data.physics.alphat,
             self.data.physics.tbeta,
         )

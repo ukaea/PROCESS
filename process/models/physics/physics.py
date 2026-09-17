@@ -1088,7 +1088,7 @@ class Physics(Model):
                 self.outfile,
                 (
                     "reinke t and fz, physics = "
-                    f"{self.data.physics.temp_plasma_separatrix_kev} , "
+                    f"{self.data.physics.temp_plasma_separatrix_electron_kev} , "
                     f"{self.data.reinke.fzmin}"
                 ),
             )
@@ -1097,7 +1097,7 @@ class Physics(Model):
                 / self.data.physics.nd_plasma_electrons_vol_avg
             )
             # calculate separatrix temperature, if Reinke criterion is used
-            self.data.physics.temp_plasma_separatrix_kev = reinke_tsep(
+            self.data.physics.temp_plasma_separatrix_electron_kev = reinke_tsep(
                 self.data.physics.b_plasma_toroidal_on_axis,
                 self.data.physics.p_plasma_separatrix_mw
                 / self.data.physics.p_l_h_threshold_mw,
@@ -2830,16 +2830,16 @@ class Physics(Model):
                 po.ovarre(
                     self.outfile,
                     "Electron temperature at separatrix (Tₑ,ₛₑₚ) (keV)",
-                    "(temp_plasma_separatrix_kev)",
-                    self.data.physics.temp_plasma_separatrix_kev,
+                    "(temp_plasma_separatrix_electron_kev)",
+                    self.data.physics.temp_plasma_separatrix_electron_kev,
                     "OP ",
                 )
             else:
                 po.ovarre(
                     self.outfile,
                     "Electron temperature at separatrix (Tₑ,ₛₑₚ) (keV)",
-                    "(temp_plasma_separatrix_kev)",
-                    self.data.physics.temp_plasma_separatrix_kev,
+                    "(temp_plasma_separatrix_electron_kev)",
+                    self.data.physics.temp_plasma_separatrix_electron_kev,
                 )
             po.oblnkl(self.outfile)
 

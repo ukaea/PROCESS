@@ -322,7 +322,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     rminor: Any = None
 
-    temp_plasma_separatrix_kev: Any = None
+    temp_plasma_separatrix_electron_kev: Any = None
 
     temp_plasma_ion_vol_avg_kev: Any = None
 
@@ -381,7 +381,7 @@ class BootstrapFractionSauterParam(NamedTuple):
         BootstrapFractionSauterParam(
             nd_plasma_ions_total_vol_avg=7.1297522422781575e19,
             rminor=2.6666666666666665,
-            temp_plasma_separatrix_kev=0.10000000000000001,
+            temp_plasma_separatrix_electron_kev=0.10000000000000001,
             temp_plasma_ion_vol_avg_kev=12.570861186498382,
             triang=0.5,
             q0=1,
@@ -427,7 +427,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     for field in [
         "nd_plasma_ions_total_vol_avg",
         "rminor",
-        "temp_plasma_separatrix_kev",
+        "temp_plasma_separatrix_electron_kev",
         "temp_plasma_ion_vol_avg_kev",
         "triang",
         "q0",

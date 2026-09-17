@@ -965,7 +965,7 @@ class PhysicsData:
     temp_plasma_pedestal_electron_kev: float = 1.0
     """Plasma electron temperature of pedestal (Tₑ,pedestal) [keV] (`i_plasma_pedestal==1`)"""
 
-    temp_plasma_separatrix_kev: float = 0.1
+    temp_plasma_separatrix_electron_kev: float = 0.1
     """Plasma electron temperature at separatrix (Tₑ,ₛₑₚ) [keV] (`i_plasma_pedestal==1`) calculated if reinke
     criterion is used (`icc=78`)
     """
