@@ -212,6 +212,18 @@ def initialise_imprad(data: DataStructure):
         data=data,
     )
 
+    #  Boron
+    init_imp_element(
+        n_species_index=15,
+        name_label=data.impurity_radiation.imp_label[14],
+        z=5,
+        m_species_amu=constants.M_BORON11_AMU,
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=N_IMPURITIY_LOSS_FUNCTION_POINTS,
+        error=errorflag,
+        data=data,
+    )
+
 
 @dataclasses.dataclass
 class ImpurityDataHeader:
@@ -427,6 +439,8 @@ def calculate_average_charge_at_temp(
     numpy.array
         zav_of_te - electron temperature dependent average atomic charge
     """
+    if imp_element_index == 15:
+        return 5.0
     return _calculate_average_charge_at_temp_compiled(
         imp_element_index=imp_element_index,
         temp_electron_kev=temp_electron_kev,

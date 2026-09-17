@@ -5,6 +5,9 @@ from enum import IntEnum, unique
 
 import numpy as np
 
+N_LCFS_POINTS_MAX = 1000
+"""Maximum number of LCFS (R, Z) boundary points for `i_plasma_geometry = 13`."""
+
 
 @unique
 class OutbordSOLPowerDecayLengthModel(IntEnum):
@@ -799,6 +802,23 @@ class PhysicsData:
     f_plasma_fuel_tritium: float = 0.5
     """Plasma tritium fuel fraction"""
 
+    f_plasma_fuel_boron11: float = 0.0
+    """Boron-11 fuel fraction (`i_fusion_reactions='p-b11'`)"""
+
+    f_plasma_fuel_proton: float = 0.0
+    """Proton fuel fraction (`i_fusion_reactions='p-b11'`)"""
+
+    f_nd_protons_electrons_input: float = 0.0
+    """Proton density fraction relative to electron density
+    (`i_fusion_reactions='p-b11'`, `i_nd_plasma_protons=1`)
+    """
+
+    i_fusion_reactions: str = "dt"
+    """Fusion reaction type: ``dt`` for D-T, ``p-b11`` for proton-boron11"""
+
+    i_nd_plasma_protons: int = 0
+    """Proton density mode for p-b11: 0=no other protons except fuel, 1=user input"""
+
     fusden_total: float = 0.0
     """fusion reaction rate density, from beams and plasma (reactions/m3/sec)"""
 
@@ -870,6 +890,7 @@ class PhysicsData:
 
     i_plasma_current: int = 4
     """switch for plasma current scaling to use
+    - =0 user input (`plasma_current_user_input`)
     - =1 Peng analytic fit
     - =2 Peng double null divertor scaling (ST)
     - =3 simple ITER scaling (k = 2.2, d = 0.6)
@@ -979,6 +1000,12 @@ class PhysicsData:
     i_alphaj: int = 0
     """Switch for plasma current profile index scaling (αⱼ) """
 
+    i_equilibrium_solve: int = 0
+    """switch for veqpy equilibrium iteration on ne/te axis values
+    - =0 use standard PROCESS profile parameterisation
+    - =1 iterate axis values to match volume averages in veqpy geometry
+    """
+
     i_rad_loss: int = 1
     """switch for radiation loss term usage in power balance (see User Guide):
     - =0 total power lost is scaling power plus radiation
@@ -1011,7 +1038,22 @@ class PhysicsData:
     - =10 set kappa to maximum stable value at a given aspect ratio (2.6<A<3.6)), triang input (#1399)
     - =11 set kappa Menard 2016 aspect-ratio-dependent scaling, triang input (#1439)
     - =12 set kappa Menard 1997 aspect-ratio-dependent scaling, triang input
+    - =13 use input LCFS r_array, z_array to set aspect, rmajor, kappa, triang and
+      integral geometry (surface area, volume, etc.)
     """
+
+    r_array: list[float] = field(
+        default_factory=lambda: np.zeros(N_LCFS_POINTS_MAX, dtype=np.float64)
+    )
+    """LCFS radial coordinates R (m). Used when `i_plasma_geometry = 13`."""
+
+    z_array: list[float] = field(
+        default_factory=lambda: np.zeros(N_LCFS_POINTS_MAX, dtype=np.float64)
+    )
+    """LCFS vertical coordinates Z (m). Used when `i_plasma_geometry = 13`."""
+
+    n_lcfs_points: int = 0
+    """Number of valid LCFS points in `r_array` / `z_array` (`i_plasma_geometry = 13`)."""
 
     i_plasma_shape: int = 0
     """switch for plasma boundary shape:
@@ -1041,10 +1083,10 @@ class PhysicsData:
     """Plasma squareness (ζ)"""
 
     kappa: float = 1.792
-    """Plasma separatrix elongation (κₐ)  (calculated if `i_plasma_geometry = 1-5, 7 or 9-10`)"""
+    """Plasma separatrix elongation (κₐ)  (calculated if `i_plasma_geometry = 1-5, 7, 9-10 or 13`)"""
 
     kappa95: float = 1.6
-    """Plasma elongation at 95% surface (κ₉₅) (calculated if `i_plasma_geometry = 0-3, 6, or 8-10`)"""
+    """Plasma elongation at 95% surface (κ₉₅) (calculated if `i_plasma_geometry = 0-3, 6, 8-10 or 13`)"""
 
     kappa_ipb: float = 0.0
     """Separatrix elongation calculated for IPB scalings"""
@@ -1192,6 +1234,9 @@ class PhysicsData:
 
     plasma_current: float = 0.0
     """Plasma current (Iₚ) [A]"""
+
+    plasma_current_user_input: float = 0.0
+    """User-specified plasma current (Iₚ) [A] (`i_plasma_current=0`)"""
 
     c_plasma_peng_analytic: float = 0.0
     """Peng analytic plasma current (A)"""
@@ -1455,10 +1500,10 @@ class PhysicsData:
     """Plasma ratio of ion temperature to electron temperature (used to calculate temp_plasma_ion_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`)"""
 
     triang: float = 0.36
-    """Plasma separatrix triangularity (δₐ) (calculated if `i_plasma_geometry = 1, 3-5 or 7`)"""
+    """Plasma separatrix triangularity (δₐ) (calculated if `i_plasma_geometry = 1, 3-5, 7 or 13`)"""
 
     triang95: float = 0.24
-    """Plasma triangularity at 95% surface (δ₉₅) (calculated if `i_plasma_geometry = 0-2, 6, 8 or 9`)"""
+    """Plasma triangularity at 95% surface (δ₉₅) (calculated if `i_plasma_geometry = 0-2, 6, 8, 9 or 13`)"""
 
     vol_plasma: float = 0.0
     """Plasma volume [m³]"""
