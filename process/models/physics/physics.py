@@ -2823,8 +2823,8 @@ class Physics(Model):
             po.ovarre(
                 self.outfile,
                 "Electron temperature pedestal height (Tₑ,pedestal) (keV)",
-                "(temp_plasma_pedestal_kev)",
-                self.data.physics.temp_plasma_pedestal_kev,
+                "(temp_plasma_pedestal_electron_kev)",
+                self.data.physics.temp_plasma_pedestal_electron_kev,
             )
             if 78 in self.data.numerics.icc:
                 po.ovarre(

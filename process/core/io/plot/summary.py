@@ -4269,7 +4269,9 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
     i_plasma_pedestal = mfile.get("i_plasma_pedestal", scan=scan)
     rho = np.linspace(0, 1.0, n_plasma_profile_elements)
-    temp_plasma_pedestal_kev = mfile.get("temp_plasma_pedestal_kev", scan=scan)
+    temp_plasma_pedestal_electron_kev = mfile.get(
+        "temp_plasma_pedestal_electron_kev", scan=scan
+    )
     temp_plasma_separatrix_kev = mfile.get("temp_plasma_separatrix_kev", scan=scan)
     f_temp_plasma_ion_electron = mfile.get("f_temp_plasma_ion_electron", scan=scan)
     tbeta = mfile.get("tbeta", scan=scan)
@@ -4278,14 +4280,14 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     if i_plasma_pedestal == 1:
         rhocore = np.linspace(0.0, radius_plasma_pedestal_temp_norm)
         tcore = (
-            temp_plasma_pedestal_kev
-            + (te0 - temp_plasma_pedestal_kev)
+            temp_plasma_pedestal_electron_kev
+            + (te0 - temp_plasma_pedestal_electron_kev)
             * (1 - (rhocore / radius_plasma_pedestal_temp_norm) ** tbeta) ** alphat
         )
 
         rhosep = np.linspace(radius_plasma_pedestal_temp_norm, 1)
         tsep = temp_plasma_separatrix_kev + (
-            temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
+            temp_plasma_pedestal_electron_kev - temp_plasma_separatrix_kev
         ) * (1 - rhosep) / (1 - min(0.9999, radius_plasma_pedestal_temp_norm))
 
         rho = np.append(rhocore, rhosep)
@@ -4313,7 +4315,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     if i_plasma_pedestal != 0:
         # Plot pedestal lines
         prof.axhline(
-            y=temp_plasma_pedestal_kev,
+            y=temp_plasma_pedestal_electron_kev,
             xmax=radius_plasma_pedestal_temp_norm,
             color="r",
             linestyle="-",
@@ -4323,7 +4325,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         prof.vlines(
             x=radius_plasma_pedestal_temp_norm,
             ymin=0.0,
-            ymax=temp_plasma_pedestal_kev,
+            ymax=temp_plasma_pedestal_electron_kev,
             color="r",
             linestyle="-",
             linewidth=0.4,
@@ -4344,7 +4346,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
             rf"$\hspace{{2}} \alpha_{{\text{{T}}}}$:   {alphat:.3f}"
         ),
         (
-            rf"$T_{{\text{{e,ped}}}}$: {temp_plasma_pedestal_kev:.3f} keV"
+            rf"$T_{{\text{{e,ped}}}}$: {temp_plasma_pedestal_electron_kev:.3f} keV"
             r"$ \hspace{3} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
             f"{f_temp_plasma_ion_electron:.3f}"
         ),
@@ -4521,7 +4523,9 @@ def profiles_with_pedestal(mfile, scan: int):
     ne0 = mfile.get("nd_plasma_electron_on_axis", scan=scan)
     rho = np.linspace(0, 1.0, n_plasma_profile_elements)
     nd_plasma_separatrix_electron = mfile.get("nd_plasma_separatrix_electron", scan=scan)
-    temp_plasma_pedestal_kev = mfile.get("temp_plasma_pedestal_kev", scan=scan)
+    temp_plasma_pedestal_electron_kev = mfile.get(
+        "temp_plasma_pedestal_electron_kev", scan=scan
+    )
     temp_plasma_separatrix_kev = mfile.get("temp_plasma_separatrix_kev", scan=scan)
     tbeta = mfile.get("tbeta", scan=scan)
     te0 = mfile.get("temp_plasma_electron_on_axis_kev", scan=scan)
@@ -4560,15 +4564,15 @@ def profiles_with_pedestal(mfile, scan: int):
             # Core temperature region
             if rho[q] <= radius_plasma_pedestal_temp_norm:
                 te[q] = (
-                    temp_plasma_pedestal_kev
-                    + (te0 - temp_plasma_pedestal_kev)
+                    temp_plasma_pedestal_electron_kev
+                    + (te0 - temp_plasma_pedestal_electron_kev)
                     * (1 - (rho[q] / radius_plasma_pedestal_temp_norm) ** tbeta)
                     ** alphat
                 )
             else:
                 # Pedestal temperature region
                 te[q] = temp_plasma_separatrix_kev + (
-                    temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
+                    temp_plasma_pedestal_electron_kev - temp_plasma_separatrix_kev
                 ) * (1 - rho[q]) / (1 - radius_plasma_pedestal_temp_norm)
 
     return rho, ne, te

@@ -394,7 +394,7 @@ class ElectronTemperatureProfile(Profile):
             rho=self.profile_x,
             radius_plasma_pedestal_temp_norm=self.data.physics.radius_plasma_pedestal_temp_norm,
             temp_on_axis_kev=self.data.physics.temp_plasma_electron_on_axis_kev,
-            temp_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
+            temp_pedestal_kev=self.data.physics.temp_plasma_pedestal_electron_kev,
             temp_separatrix_kev=self.data.physics.temp_plasma_separatrix_kev,
             alphat=self.data.physics.alphat,
             tbeta=self.data.physics.tbeta,
@@ -571,7 +571,7 @@ class ElectronTemperatureProfile(Profile):
         ):
             self.data.physics.temp_plasma_electron_on_axis_kev = self.calculate_pedestal_profile_on_axis_temperature(  # noqa: E501
                 radius_plasma_pedestal_temp_norm=self.data.physics.radius_plasma_pedestal_temp_norm,
-                temp_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
+                temp_pedestal_kev=self.data.physics.temp_plasma_pedestal_electron_kev,
                 temp_separatrix_kev=self.data.physics.temp_plasma_separatrix_kev,
                 temp_vol_avg_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
                 alphat=self.data.physics.alphat,
@@ -656,7 +656,7 @@ class IonTemperatureProfile(Profile):
         self.profile_dx = self.electron_temperature_profile.profile_dx
         self.calculate_profile_y()
         self.integrate_profile_y()
-        
+
         self.data.physics.temp_plasma_ion_on_axis_kev = (
             self.data.physics.temp_plasma_ion_vol_avg_kev
             / self.data.physics.temp_plasma_electron_vol_avg_kev

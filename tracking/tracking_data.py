@@ -120,7 +120,7 @@ DEFAULT_TRACKING_VARIABLES = {
     "Physics.hfact",
     "Physics.kappa",
     "Physics.p_fusion_total_mw",
-    "Physics.temp_plasma_pedestal_kev",
+    "Physics.temp_plasma_pedestal_electron_kev",
     "Physics.p_plasma_loss_mw",
     "Physics.kappa95",
     "Physics.nd_plasma_pedestal_electron",

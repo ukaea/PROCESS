@@ -962,7 +962,7 @@ class PhysicsData:
     tbeta: float = 2.0
     """Plasma temperature profile index beta (βₜ)  (`i_plasma_pedestal==1)"""
 
-    temp_plasma_pedestal_kev: float = 1.0
+    temp_plasma_pedestal_electron_kev: float = 1.0
     """Plasma electron temperature of pedestal (Tₑ,pedestal) [keV] (`i_plasma_pedestal==1`)"""
 
     temp_plasma_separatrix_kev: float = 0.1
