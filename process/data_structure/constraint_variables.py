@@ -132,7 +132,7 @@ class ConstraintData:
     """
 
     magnetic_stored_energy_copper_vol_ratio: float = 0.25
-    """TF coil stored energy to copper volume ratio (`constraint equation 93`) """
+    """TF coil stored energy to copper volume ratio [m3/GJ] (`constraint equation 93`) """
 
 
 CREATE_DICTS_FROM_DATACLASS = ConstraintData
