@@ -1088,7 +1088,7 @@ class Physics(Model):
                 self.outfile,
                 (
                     "reinke t and fz, physics = "
-                    f"{self.data.physics.temp_plasma_separatrix_kev} , "
+                    f"{self.data.physics.temp_plasma_separatrix_electron_kev} , "
                     f"{self.data.reinke.fzmin}"
                 ),
             )
@@ -1097,7 +1097,7 @@ class Physics(Model):
                 / self.data.physics.nd_plasma_electrons_vol_avg
             )
             # calculate separatrix temperature, if Reinke criterion is used
-            self.data.physics.temp_plasma_separatrix_kev = reinke_tsep(
+            self.data.physics.temp_plasma_separatrix_electron_kev = reinke_tsep(
                 self.data.physics.b_plasma_toroidal_on_axis,
                 self.data.physics.p_plasma_separatrix_mw
                 / self.data.physics.p_l_h_threshold_mw,
@@ -2823,23 +2823,23 @@ class Physics(Model):
             po.ovarre(
                 self.outfile,
                 "Electron temperature pedestal height (Tₑ,pedestal) (keV)",
-                "(temp_plasma_pedestal_kev)",
-                self.data.physics.temp_plasma_pedestal_kev,
+                "(temp_plasma_pedestal_electron_kev)",
+                self.data.physics.temp_plasma_pedestal_electron_kev,
             )
             if 78 in self.data.numerics.icc:
                 po.ovarre(
                     self.outfile,
                     "Electron temperature at separatrix (Tₑ,ₛₑₚ) (keV)",
-                    "(temp_plasma_separatrix_kev)",
-                    self.data.physics.temp_plasma_separatrix_kev,
+                    "(temp_plasma_separatrix_electron_kev)",
+                    self.data.physics.temp_plasma_separatrix_electron_kev,
                     "OP ",
                 )
             else:
                 po.ovarre(
                     self.outfile,
                     "Electron temperature at separatrix (Tₑ,ₛₑₚ) (keV)",
-                    "(temp_plasma_separatrix_kev)",
-                    self.data.physics.temp_plasma_separatrix_kev,
+                    "(temp_plasma_separatrix_electron_kev)",
+                    self.data.physics.temp_plasma_separatrix_electron_kev,
                 )
             po.oblnkl(self.outfile)
 
@@ -2851,7 +2851,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Electron temperature on axis (Tₑ₀) (keV)",
+            "Electron temperature on axis (Tₑ,₀) (keV)",
             "(temp_plasma_electron_on_axis_kev)",
             self.data.physics.temp_plasma_electron_on_axis_kev,
             "OP ",
@@ -2886,7 +2886,7 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Ratio of ion to electron volume-averaged temperature",
+            "Ratio of ion to electron volume-averaged temperature (⟨Tᵢ⟩/⟨Tₑ⟩)",
             "(f_temp_plasma_ion_electron)",
             self.data.physics.f_temp_plasma_ion_electron,
             "IP ",
@@ -2900,11 +2900,27 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Ion temperature on axis (Tᵢ₀) (keV)",
+            "Ion temperature on axis (Tᵢ,₀) (keV)",
             "(temp_plasma_ion_on_axis_kev)",
             self.data.physics.temp_plasma_ion_on_axis_kev,
             "OP ",
         )
+        if (
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
+            po.ovarre(
+                self.outfile,
+                "Ion temperature pedestal (Tᵢ,pedestal) [keV]",
+                "(temp_plasma_pedestal_ion_kev)",
+                self.data.physics.temp_plasma_pedestal_ion_kev,
+            )
+            po.ovarre(
+                self.outfile,
+                "Ion temperature at separatrix (Tᵢ,ₛₑₚ) [keV]",
+                "(temp_plasma_separatrix_ion_kev)",
+                self.data.physics.temp_plasma_separatrix_ion_kev,
+            )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
 
@@ -5125,54 +5141,48 @@ class DetailedPhysics(Model):
 
         self.data.physics.vel_plasma_deuteron_profile = (
             self.calculate_relativistic_particle_speed(
-                e_kinetic=self.plasma_profile.teprofile.profile_y
-                * constants.KILOELECTRON_VOLT
-                * self.data.physics.f_temp_plasma_ion_electron,
+                e_kinetic=self.plasma_profile.tiprofile.profile_y
+                * constants.KILOELECTRON_VOLT,
                 mass=constants.DEUTERON_MASS,
             )
         )
 
         self.data.physics.vel_plasma_deuteron_vol_avg = (
             self.calculate_relativistic_particle_speed(
-                e_kinetic=self.data.physics.temp_plasma_electron_vol_avg_kev
-                * constants.KILOELECTRON_VOLT
-                * self.data.physics.f_temp_plasma_ion_electron,
+                e_kinetic=self.data.physics.temp_plasma_ion_vol_avg_kev
+                * constants.KILOELECTRON_VOLT,
                 mass=constants.DEUTERON_MASS,
             )
         )
 
         self.data.physics.vel_plasma_triton_profile = (
             self.calculate_relativistic_particle_speed(
-                e_kinetic=self.plasma_profile.teprofile.profile_y
-                * constants.KILOELECTRON_VOLT
-                * self.data.physics.f_temp_plasma_ion_electron,
+                e_kinetic=self.plasma_profile.tiprofile.profile_y
+                * constants.KILOELECTRON_VOLT,
                 mass=constants.TRITON_MASS,
             )
         )
 
         self.data.physics.vel_plasma_triton_vol_avg = (
             self.calculate_relativistic_particle_speed(
-                e_kinetic=self.data.physics.temp_plasma_electron_vol_avg_kev
-                * constants.KILOELECTRON_VOLT
-                * self.data.physics.f_temp_plasma_ion_electron,
+                e_kinetic=self.data.physics.temp_plasma_ion_vol_avg_kev
+                * constants.KILOELECTRON_VOLT,
                 mass=constants.TRITON_MASS,
             )
         )
 
         self.data.physics.vel_plasma_alpha_thermal_profile = (
             self.calculate_relativistic_particle_speed(
-                e_kinetic=self.plasma_profile.teprofile.profile_y
-                * constants.KILOELECTRON_VOLT
-                * self.data.physics.f_temp_plasma_ion_electron,
+                e_kinetic=self.plasma_profile.tiprofile.profile_y
+                * constants.KILOELECTRON_VOLT,
                 mass=constants.ALPHA_MASS,
             )
         )
 
         self.data.physics.vel_plasma_alpha_thermal_vol_avg = (
             self.calculate_relativistic_particle_speed(
-                e_kinetic=self.data.physics.temp_plasma_electron_vol_avg_kev
-                * constants.KILOELECTRON_VOLT
-                * self.data.physics.f_temp_plasma_ion_electron,
+                e_kinetic=self.data.physics.temp_plasma_ion_vol_avg_kev
+                * constants.KILOELECTRON_VOLT,
                 mass=constants.ALPHA_MASS,
             )
         )
