@@ -411,7 +411,7 @@ OBS_VARS = {
     "taumax": "t_plasma_energy_confinement_max",
     "te": "temp_plasma_electron_vol_avg_kev",
     "teped": "temp_plasma_pedestal_electron_kev",
-    "tesep": "temp_plasma_separatrix_kev",
+    "tesep": "temp_plasma_separatrix_electron_kev",
     "ti": "temp_plasma_ion_vol_avg_kev",
     "tratio": "f_temp_plasma_ion_electron",
     "ipedestal": "i_plasma_pedestal",
@@ -479,6 +479,8 @@ OBS_VARS = {
     "neqns": "n_equality_constraints",
     "nineqns": "n_inequality_constraints",
     "f_p_div_lower": "f_p_div_lower_separatrix",
+    "temp_plasma_pedestal_kev": "temp_plasma_pedestal_electron_kev",
+    "temp_plasma_separatrix_kev": "temp_plasma_separatrix_electron_kev",
 }
 
 OBS_VARS_HELP = {

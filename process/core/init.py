@@ -431,18 +431,18 @@ def check_process(inputs, data):  # noqa: ARG001
         # Temperature checks
         if (
             data.physics.temp_plasma_pedestal_electron_kev
-            < data.physics.temp_plasma_separatrix_kev
+            < data.physics.temp_plasma_separatrix_electron_kev
         ):
             raise ProcessValidationError(
                 "Pedestal temperature is lower than separatrix temperature",
                 temp_plasma_pedestal_electron_kev=data.physics.temp_plasma_pedestal_electron_kev,
-                temp_plasma_separatrix_kev=data.physics.temp_plasma_separatrix_kev,
+                temp_plasma_separatrix_electron_kev=data.physics.temp_plasma_separatrix_electron_kev,
             )
 
         if (abs(data.physics.radius_plasma_pedestal_temp_norm - 1.0) <= 1e-7) and (
             (
                 data.physics.temp_plasma_pedestal_electron_kev
-                - data.physics.temp_plasma_separatrix_kev
+                - data.physics.temp_plasma_separatrix_electron_kev
             )
             >= 1e-7
         ):
@@ -450,8 +450,8 @@ def check_process(inputs, data):  # noqa: ARG001
                 f"Temperature pedestal is at plasma edge, "
                 "but temp_plasma_pedestal_electron_kev "
                 f"({data.physics.temp_plasma_pedestal_electron_kev}) differs from"
-                " temp_plasma_separatrix_kev"
-                f" ({data.physics.temp_plasma_separatrix_kev})",
+                " temp_plasma_separatrix_electron_kev"
+                f" ({data.physics.temp_plasma_separatrix_electron_kev})",
                 stacklevel=2,
             )
 
@@ -616,12 +616,12 @@ def check_process(inputs, data):  # noqa: ARG001
         ]
         == 78
     ).any():
-        # If Reinke criterion is used temp_plasma_separatrix_kev is calculated and
-        # cannot be an iteration variable
+        # If Reinke criterion is used temp_plasma_separatrix_electron_kev is
+        # calculated and cannot be an iteration variable
         if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 119).any():
             raise ProcessValidationError(
-                "REINKE IMPURITY MODEL: temp_plasma_separatrix_kev is calculated and "
-                "cannot be an iteration variable for the Reinke model"
+                "REINKE IMPURITY MODEL: temp_plasma_separatrix_electron_kev is "
+                "calculated and cannot be an iteration variable for the Reinke model"
             )
 
         # If Reinke criterion is used need to enforce LH-threshold

@@ -102,7 +102,7 @@ ITERATION_VARIABLES = {
     108: IterationVariable("breeder_f", "fwbs", 0.060, 1.0),
     109: IterationVariable("f_nd_alpha_thermal_electron", "physics", 0.05, 0.15),
     114: IterationVariable("len_fw_channel", "fwbs", 0.001, 1.0e3),
-    119: IterationVariable("temp_plasma_separatrix_kev", "physics", 0.0, 1.0e1),
+    119: IterationVariable("temp_plasma_separatrix_electron_kev", "physics", 0.0, 1.0e1),
     122: IterationVariable("f_a_cs_turn_steel", "pf_coil", 0.001, 0.950),
     125: IterationVariable(
         "f_nd_impurity_electrons(03)",

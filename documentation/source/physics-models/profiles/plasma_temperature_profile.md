@@ -99,7 +99,7 @@ A list of input parameters for calculating the core plasma temperature can be fo
 |----------------------------------|-----------|
 | Pedestal radius (r/a)            | `radius_plasma_pedestal_temp_norm`, $\rho_{\text{ped,T}}$ |
 | Pedestal value                   | `temp_plasma_pedestal_electron_kev`, $T_{\text{ped}}$ |
-| Separatrix value                 | `temp_plasma_separatrix_kev`, $T_{\text{sep}}$ |
+| Separatrix value                 | `temp_plasma_separatrix_electron_kev`, $T_{\text{sep}}$ |
 | Average temperature             | `temp_vol_avg_kev`, $\langle T \rangle$ |
 | Profile index/ peaking parameter | `alphat`, $\alpha_T$ |
 | Profile index/ peaking parameter | `tbeta`, $\beta_T$ |
@@ -271,7 +271,7 @@ A table of the input variables can be found below
 | Pedestal radius (r/a)            | `radius_plasma_pedestal_temp_norm`, $\rho_{\text{ped,T}}$ |
 | Core temperature                | `temp_plasma_electron_on_axis_kev`, $T_{\text{e0}}$ |
 | Pedestal value                   | `temp_plasma_pedestal_electron_kev`, $T_{\text{ped}}$ |
-| Separatrix value                 | `temp_plasma_separatrix_kev`, $T_{\text{sep}}$ |
+| Separatrix value                 | `temp_plasma_separatrix_electron_kev`, $T_{\text{sep}}$ |
 | Profile index/ peaking parameter | `alphat`, $\alpha_T$ |
 | 2nd profile index/ peaking parameter | `tbeta`, $\beta_T$ |
 

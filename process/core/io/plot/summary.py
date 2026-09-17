@@ -4281,7 +4281,9 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     temp_plasma_pedestal_electron_kev = mfile.get(
         "temp_plasma_pedestal_electron_kev", scan=scan
     )
-    temp_plasma_separatrix_kev = mfile.get("temp_plasma_separatrix_kev", scan=scan)
+    temp_plasma_separatrix_electron_kev = mfile.get(
+        "temp_plasma_separatrix_electron_kev", scan=scan
+    )
     f_temp_plasma_ion_electron = mfile.get("f_temp_plasma_ion_electron", scan=scan)
     tbeta = mfile.get("tbeta", scan=scan)
     te0 = mfile.get("temp_plasma_electron_on_axis_kev", scan=scan)
@@ -4295,8 +4297,8 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         )
 
         rhosep = np.linspace(radius_plasma_pedestal_temp_norm, 1)
-        tsep = temp_plasma_separatrix_kev + (
-            temp_plasma_pedestal_electron_kev - temp_plasma_separatrix_kev
+        tsep = temp_plasma_separatrix_electron_kev + (
+            temp_plasma_pedestal_electron_kev - temp_plasma_separatrix_electron_kev
         ) * (1 - rhosep) / (1 - min(0.9999, radius_plasma_pedestal_temp_norm))
 
         rho = np.append(rhocore, rhosep)
@@ -4365,7 +4367,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
             f"{mfile.get('f_temp_plasma_electron_on_axis_vol_avg', scan=scan):.3f}"
         ),
         (
-            rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_kev:.3f} keV"
+            rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_electron_kev:.3f} keV"
             r"$ \hspace{3} \frac{{{\langle T_e \rangle_n}}}{{{\langle T_e \rangle_V}}}$: "
             f"{mfile.get('f_temp_plasma_electron_density_vol_avg', scan=scan):.3f}"
         ),
@@ -4535,7 +4537,9 @@ def profiles_with_pedestal(mfile, scan: int):
     temp_plasma_pedestal_electron_kev = mfile.get(
         "temp_plasma_pedestal_electron_kev", scan=scan
     )
-    temp_plasma_separatrix_kev = mfile.get("temp_plasma_separatrix_kev", scan=scan)
+    temp_plasma_separatrix_electron_kev = mfile.get(
+        "temp_plasma_separatrix_electron_kev", scan=scan
+    )
     tbeta = mfile.get("tbeta", scan=scan)
     te0 = mfile.get("temp_plasma_electron_on_axis_kev", scan=scan)
 
@@ -4580,8 +4584,9 @@ def profiles_with_pedestal(mfile, scan: int):
                 )
             else:
                 # Pedestal temperature region
-                te[q] = temp_plasma_separatrix_kev + (
-                    temp_plasma_pedestal_electron_kev - temp_plasma_separatrix_kev
+                te[q] = temp_plasma_separatrix_electron_kev + (
+                    temp_plasma_pedestal_electron_kev
+                    - temp_plasma_separatrix_electron_kev
                 ) * (1 - rho[q]) / (1 - radius_plasma_pedestal_temp_norm)
 
     return rho, ne, te

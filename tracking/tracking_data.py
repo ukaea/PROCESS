@@ -105,7 +105,7 @@ DEFAULT_TRACKING_VARIABLES = {
     "Physics.triang",
     "Physics.triang95",
     "Physics.p_plasma_inner_rad_mw",
-    "Physics.temp_plasma_separatrix_kev",
+    "Physics.temp_plasma_separatrix_electron_kev",
     "Physics.f_nd_alpha_thermal_electron",
     "Physics.pflux_fw_neutron_mw",
     "Physics.aspect",
