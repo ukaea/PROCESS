@@ -141,7 +141,7 @@ $\alpha_T$ as well as the second exponent $\beta_T$ (input parameter
 `tbeta`, not to be confused with the plasma beta) in the temperature
 profile can be chosen by the user, as can the pedestal heights and the values
 at the separatrix (`nd_plasma_pedestal_electron, nd_plasma_separatrix_electron` for the electron density, and
-`temp_plasma_pedestal_kev, temp_plasma_separatrix_kev` for the electron temperature); the ion equivalents are
+`temp_plasma_pedestal_electron_kev, temp_plasma_separatrix_kev` for the electron temperature); the ion equivalents are
 scaled from the electron values by the ratio of the volume-averaged values).
 
 !!! note "$\beta_T$ setting"
@@ -158,7 +158,7 @@ A table of the the associated variables can be seen below
 |----------------------------------|-----------|-------------|
 | Pedestal radius (r/a)            | `radius_plasma_pedestal_density_norm`, $\rho_{\text{ped},n}$ |   `radius_plasma_pedestal_temp_norm`, $\rho_{\text{ped},T}$   |  
 | Plasma centre value              | `nd_plasma_electron_on_axis`, $n_0$      |           `temp_plasma_electron_on_axis_kev`, $T_0$       |
-| Pedestal value                   | `nd_plasma_pedestal_electron`, $n_{\text{ped}}$    |       `temp_plasma_pedestal_kev`, $T_{\text{ped}}$     |
+| Pedestal value                   | `nd_plasma_pedestal_electron`, $n_{\text{ped}}$    |       `temp_plasma_pedestal_electron_kev`, $T_{\text{ped}}$     |
 | Separatrix value                 | `nd_plasma_separatrix_electron`, $n_{\text{sep}}$   |        `temp_plasma_separatrix_kev`, $T_{\text{sep}}$     |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$  |       `alphat`, $\alpha_T$    |
 | Profile index $\beta$            |           |                 `tbeta`, $\beta_T$     |

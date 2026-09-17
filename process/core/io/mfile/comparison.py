@@ -120,7 +120,7 @@ BASELINE_LIST = [
     "f_nd_plasma_greenwald",
     "temp_plasma_separatrix_kev",
     "nd_plasma_separatrix_electron",
-    "temp_plasma_pedestal_kev",
+    "temp_plasma_pedestal_electron_kev",
     "nd_plasma_pedestal_electron",
     "n_charge_plasma_effective_vol_avg",
     "nd_plasma_impurities_vol_avg",

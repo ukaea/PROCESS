@@ -825,7 +825,9 @@ INPUT_VARIABLES = {
     "temp_fw_coolant_in": InputVariable("fwbs", float, range=(300.0, 1500.0)),
     "temp_fw_coolant_out": InputVariable("fwbs", float, range=(300.0, 1500.0)),
     "temp_fw_max": InputVariable("fwbs", float, range=(500.0, 2000.0)),
-    "temp_plasma_pedestal_kev": InputVariable("physics", float, range=(0.0, 20.0)),
+    "temp_plasma_pedestal_electron_kev": InputVariable(
+        "physics", float, range=(0.0, 20.0)
+    ),
     "temp_plasma_separatrix_kev": InputVariable("physics", float, range=(0.0, 20.0)),
     "tfcbv": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
     "dx_tf_wp_insertion_gap": InputVariable("tfcoil", float, range=(1e-10, 0.1)),

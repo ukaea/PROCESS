@@ -106,7 +106,7 @@ class PlasmaProfile(Model):
         if (
             self.data.physics.radius_plasma_pedestal_temp_norm != 1.0
             or self.data.physics.radius_plasma_pedestal_density_norm != 1.0
-            or self.data.physics.temp_plasma_pedestal_kev != 0.0
+            or self.data.physics.temp_plasma_pedestal_electron_kev != 0.0
             or self.data.physics.temp_plasma_separatrix_kev != 0.0
             or self.data.physics.nd_plasma_pedestal_electron != 0.0
             or self.data.physics.nd_plasma_separatrix_electron != 0.0
@@ -116,7 +116,8 @@ class PlasmaProfile(Model):
                 "Parabolic plasma profiles is used for an L-Mode plasma, "
                 "but the physics variables do not describe an L-Mode plasma. "
                 "'radius_plasma_pedestal_temp_norm', "
-                "'radius_plasma_pedestal_density_norm', 'temp_plasma_pedestal_kev', "
+                "'radius_plasma_pedestal_density_norm', "
+                "'temp_plasma_pedestal_electron_kev', "
                 "'temp_plasma_separatrix_kev', 'nd_plasma_pedestal_electron', "
                 "'nd_plasma_separatrix_electron', "
                 "and 'tbeta' have all been reset to L-Mode appropriate values"
@@ -124,7 +125,7 @@ class PlasmaProfile(Model):
 
             self.data.physics.radius_plasma_pedestal_temp_norm = 1.0e0
             self.data.physics.radius_plasma_pedestal_density_norm = 1.0e0
-            self.data.physics.temp_plasma_pedestal_kev = 0.0e0
+            self.data.physics.temp_plasma_pedestal_electron_kev = 0.0e0
             self.data.physics.temp_plasma_separatrix_kev = 0.0e0
             self.data.physics.nd_plasma_pedestal_electron = 0.0e0
             self.data.physics.nd_plasma_separatrix_electron = 0.0e0
