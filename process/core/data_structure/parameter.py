@@ -193,6 +193,13 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
             )
         return deepcopy(self._used)
 
+    def __deepcopy__(self, memo):
+        """Create a copy of this Parameter.
+
+        Only copies across the value, not the history or use/edit records etc.
+        """
+        return self.__class__(name=self._name, value=deepcopy(self._value))
+
 
 @dataclass(slots=True, kw_only=True)
 class ParameterMetadata:
