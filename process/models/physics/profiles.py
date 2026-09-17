@@ -663,6 +663,15 @@ class IonTemperatureProfile(Profile):
             * self.data.physics.temp_plasma_electron_on_axis_kev
         )
 
+        self.data.physics.temp_plasma_pedestal_ion_kev = (
+            self.data.physics.f_temp_plasma_ion_electron
+            * self.data.physics.temp_plasma_pedestal_electron_kev
+        )
+        self.data.physics.temp_plasma_separatrix_ion_kev = (
+            self.data.physics.f_temp_plasma_ion_electron
+            * self.data.physics.temp_plasma_separatrix_electron_kev
+        )
+
     def calculate_profile_y(self):
         """Calculate the ion temperature profile based on the electron temperature
         profile and the ion-to-electron volume-averaged temperature ratio.

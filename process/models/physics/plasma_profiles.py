@@ -108,6 +108,8 @@ class PlasmaProfile(Model):
             or self.data.physics.radius_plasma_pedestal_density_norm != 1.0
             or self.data.physics.temp_plasma_pedestal_electron_kev != 0.0
             or self.data.physics.temp_plasma_separatrix_electron_kev != 0.0
+            or self.data.physics.temp_plasma_pedestal_ion_kev != 0.0
+            or self.data.physics.temp_plasma_separatrix_ion_kev != 0.0
             or self.data.physics.nd_plasma_pedestal_electron != 0.0
             or self.data.physics.nd_plasma_separatrix_electron != 0.0
             or self.data.physics.tbeta != 2.0
@@ -118,7 +120,10 @@ class PlasmaProfile(Model):
                 "'radius_plasma_pedestal_temp_norm', "
                 "'radius_plasma_pedestal_density_norm', "
                 "'temp_plasma_pedestal_electron_kev', "
-                "'temp_plasma_separatrix_electron_kev', 'nd_plasma_pedestal_electron', "
+                "'temp_plasma_separatrix_electron_kev', "
+                "'temp_plasma_pedestal_ion_kev', "
+                "'temp_plasma_separatrix_ion_kev', "
+                "'nd_plasma_pedestal_electron', "
                 "'nd_plasma_separatrix_electron', "
                 "and 'tbeta' have all been reset to L-Mode appropriate values"
             )
@@ -127,6 +132,8 @@ class PlasmaProfile(Model):
             self.data.physics.radius_plasma_pedestal_density_norm = 1.0e0
             self.data.physics.temp_plasma_pedestal_electron_kev = 0.0e0
             self.data.physics.temp_plasma_separatrix_electron_kev = 0.0e0
+            self.data.physics.temp_plasma_pedestal_ion_kev = 0.0e0
+            self.data.physics.temp_plasma_separatrix_ion_kev = 0.0e0
             self.data.physics.nd_plasma_pedestal_electron = 0.0e0
             self.data.physics.nd_plasma_separatrix_electron = 0.0e0
             self.data.physics.tbeta = 2.0e0

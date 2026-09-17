@@ -4345,22 +4345,26 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         ),
         (
             rf"$T_{{\text{{e,0}}}}$:    {te0:.3f} keV"
-            rf"$\hspace{{2}} \alpha_{{\text{{T}}}}$:   {alphat:.3f}"
+            rf"$\hspace{{2}} \alpha_{{\text{{T}}}}$:   {alphat:.3f}    "
+            rf"$\hspace{{3}} \langle T_{{\text{{i}}}} \rangle_\text{{V}}$: {mfile.get('temp_plasma_ion_vol_avg_kev', scan=scan):.3f} keV"
         ),
         (
             rf"$T_{{\text{{e,ped}}}}$: {temp_plasma_pedestal_electron_kev:.3f} keV"
             r"$ \hspace{3} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
-            f"{f_temp_plasma_ion_electron:.3f}"
+            f"{f_temp_plasma_ion_electron:.3f}   "
+            f"$\\hspace{{4}} T_{{\\text{{i,0}}}}$: {mfile.get('temp_plasma_ion_on_axis_kev', scan=scan):.3f} keV"
         ),
         (
             rf"$\rho_{{\text{{ped,T}}}}$: {radius_plasma_pedestal_temp_norm:.3f}"
             r"$ \hspace{5} \frac{T_{e,0}}{\langle T_e \rangle}$: "
-            f"{mfile.get('f_temp_plasma_electron_on_axis_vol_avg', scan=scan):.3f}"
+            f"{mfile.get('f_temp_plasma_electron_on_axis_vol_avg', scan=scan):.3f}  "
+            f"$\\hspace{{4}}  T_{{\\text{{i,ped}}}}$: {mfile.get('temp_plasma_pedestal_ion_kev', scan=scan):.3f} keV"
         ),
         (
             rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_electron_kev:.3f} keV"
             r"$ \hspace{3} \frac{{{\langle T_e \rangle_n}}}{{{\langle T_e \rangle_V}}}$: "
             f"{mfile.get('f_temp_plasma_electron_density_vol_avg', scan=scan):.3f}"
+            f"$\\hspace{{4}} T_{{\\text{{i,sep}}}}$: {mfile.get('temp_plasma_separatrix_ion_kev', scan=scan):.3f} keV"
         ),
     ))
 

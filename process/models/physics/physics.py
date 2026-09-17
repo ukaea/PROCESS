@@ -2851,7 +2851,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Electron temperature on axis (Tₑ₀) (keV)",
+            "Electron temperature on axis (Tₑ,₀) (keV)",
             "(temp_plasma_electron_on_axis_kev)",
             self.data.physics.temp_plasma_electron_on_axis_kev,
             "OP ",
@@ -2886,7 +2886,7 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Ratio of ion to electron volume-averaged temperature",
+            "Ratio of ion to electron volume-averaged temperature (⟨Tᵢ⟩/⟨Tₑ⟩)",
             "(f_temp_plasma_ion_electron)",
             self.data.physics.f_temp_plasma_ion_electron,
             "IP ",
@@ -2900,11 +2900,27 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Ion temperature on axis (Tᵢ₀) (keV)",
+            "Ion temperature on axis (Tᵢ,₀) (keV)",
             "(temp_plasma_ion_on_axis_kev)",
             self.data.physics.temp_plasma_ion_on_axis_kev,
             "OP ",
         )
+        if (
+            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
+            po.ovarre(
+                self.outfile,
+                "Ion temperature pedestal (Tᵢ,pedestal) [keV]",
+                "(temp_plasma_pedestal_ion_kev)",
+                self.data.physics.temp_plasma_pedestal_ion_kev,
+            )
+            po.ovarre(
+                self.outfile,
+                "Ion temperature at separatrix (Tᵢ,ₛₑₚ) [keV]",
+                "(temp_plasma_separatrix_ion_kev)",
+                self.data.physics.temp_plasma_separatrix_ion_kev,
+            )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
 
