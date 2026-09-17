@@ -578,12 +578,6 @@ class ElectronTemperatureProfile(Profile):
                 tbeta=self.data.physics.tbeta,
             )
 
-        self.data.physics.temp_plasma_ion_on_axis_kev = (
-            self.data.physics.temp_plasma_ion_vol_avg_kev
-            / self.data.physics.temp_plasma_electron_vol_avg_kev
-            * self.data.physics.temp_plasma_electron_on_axis_kev
-        )
-
 
 def calculate_vol_avg_of_profile(
     profile_x: np.ndarray, profile_y: np.ndarray, profile_dx: float | None = None
@@ -662,6 +656,12 @@ class IonTemperatureProfile(Profile):
         self.profile_dx = self.electron_temperature_profile.profile_dx
         self.calculate_profile_y()
         self.integrate_profile_y()
+        
+        self.data.physics.temp_plasma_ion_on_axis_kev = (
+            self.data.physics.temp_plasma_ion_vol_avg_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
+            * self.data.physics.temp_plasma_electron_on_axis_kev
+        )
 
     def calculate_profile_y(self):
         """Calculate the ion temperature profile based on the electron temperature
