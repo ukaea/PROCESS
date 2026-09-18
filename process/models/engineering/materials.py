@@ -5,6 +5,8 @@ import logging
 import numba
 import numpy as np
 
+from process.core.data_structure.parameter import unwrap_parameter
+
 logger = logging.getLogger(__name__)
 
 poisson_steel: float = 0.3
@@ -49,6 +51,7 @@ def eurofer97_thermal_conductivity(temp: float, fw_th_conductivity: float) -> fl
     )
 
 
+@unwrap_parameter
 @numba.njit(cache=True)
 def calculate_tresca_stress(
     stress_x: float | np.ndarray,
@@ -82,6 +85,7 @@ def calculate_tresca_stress(
     )
 
 
+@unwrap_parameter
 @numba.njit(cache=True)
 def calculate_von_mises_stress(
     stress_x: float | np.ndarray,

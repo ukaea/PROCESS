@@ -15,6 +15,7 @@ from tabulate import tabulate
 from process.core import constants
 from process.core import process_output as op
 from process.core.data_structure.base import DataStructure
+from process.core.data_structure.parameter import unwrap_parameter
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.pfcoil_variables import (
@@ -3591,15 +3592,17 @@ class CSCoil(Model):
             # Calculation of CS fatigue
             # this is only valid for pulsed reactor design
             if self.data.physics.f_c_plasma_inductive > 0.0e-4:
+                # ncycle does some implicit copies of the value which don't work
+                # with mutable parameter, hence .value
                 (
                     self.data.cs_fatigue.n_cycle,
                     self.data.cs_fatigue.t_crack_radial,
                 ) = self.cs_fatigue.ncycle(
-                    self.data.pf_coil.stress_hoop_cs_inner,
-                    self.data.cs_fatigue.residual_sig_hoop,
-                    self.data.cs_fatigue.t_crack_vertical,
-                    self.data.cs_fatigue.dz_cs_turn_conduit,
-                    self.data.cs_fatigue.dr_cs_turn_conduit,
+                    self.data.pf_coil.stress_hoop_cs_inner.value,
+                    self.data.cs_fatigue.residual_sig_hoop.value,
+                    self.data.cs_fatigue.t_crack_vertical.value,
+                    self.data.cs_fatigue.dz_cs_turn_conduit.value,
+                    self.data.cs_fatigue.dr_cs_turn_conduit.value,
                 )
 
             # Now steel area fraction is iteration variable and constraint
@@ -5261,6 +5264,7 @@ def rsid(npts, brin, bzin, nfix, n_pf_coil_groups, ccls, bfix, gmat):
     return brssq, brnrm, bzssq, bznrm, ssq
 
 
+@unwrap_parameter
 @numba.njit(cache=True)
 def fixb(lrow1, npts, rpts, zpts, nfix, rfix, zfix, cfix):
     """Calculates the field from the fixed current loops.
@@ -5314,6 +5318,7 @@ def fixb(lrow1, npts, rpts, zpts, nfix, rfix, zfix, cfix):
     return bfix
 
 
+@unwrap_parameter
 @numba.njit(cache=True)
 def mtrx(
     lrow1,
