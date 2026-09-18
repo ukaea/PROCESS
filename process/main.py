@@ -700,10 +700,8 @@ class Models:
         self.plasma_fields = PlasmaFields()
         self.plasma_dia_current = PlasmaDiamagneticCurrent()
         self.scrape_off_layer = ScrapeOffLayer()
-        self.plasma_reactions = PlasmaReactions(
-            plasma_profile=self.plasma_profile, data=self.data
-        )
-        self.beam_reactions = BeamReactions(data=self.data)
+        self.plasma_reactions = PlasmaReactions(plasma_profile=self.plasma_profile)
+        self.beam_reactions = BeamReactions()
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
@@ -830,6 +828,8 @@ class Models:
             self.physics_detailed,
             self.electron_cyclotron,
             self.lower_hybrid,
+            self.plasma_reactions,
+            self.beam_reactions,
         )
 
     def setup_data_structure(self):

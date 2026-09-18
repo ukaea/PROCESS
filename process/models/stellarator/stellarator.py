@@ -1981,12 +1981,11 @@ class Stellarator(Model):
 
         # Calculate fusion power
 
-        fusion_reactions = reactions.FusionReactionRate(self.plasma_profile, self.data)
-        fusion_reactions.deuterium_branching(
+        self.physics.plasma_reactions.deuterium_branching(
             self.data.physics.temp_plasma_ion_vol_avg_kev
         )
-        fusion_reactions.calculate_fusion_rates()
-        fusion_reactions.set_physics_variables()
+        self.physics.plasma_reactions.calculate_fusion_rates()
+        self.physics.plasma_reactions.set_physics_variables()
 
         # D-T power density is named differently to differentiate it from the beam given
         # component
@@ -2011,7 +2010,7 @@ class Stellarator(Model):
                 self.data.physics.beta_beam,
                 self.data.physics.nd_beam_ions_out,
                 self.data.physics.p_beam_alpha_mw,
-            ) = reactions.beam_fusion(
+            ) = self.physics.beam_reactions.beam_fusion(
                 self.data.physics.beamfus0,
                 self.data.physics.betbm0,
                 self.data.physics.b_plasma_total,
