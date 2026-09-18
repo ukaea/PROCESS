@@ -16507,6 +16507,48 @@ def plot_pf_dimensions(
     axis.set_aspect("equal", adjustable="box")
 
 
+def plot_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: int):
+    """Function to plot plasma thermal energy profiles on the given axis.
+
+    Parameters
+    ----------
+    axis :
+        Matplotlib axis to plot on
+    m_file :
+        MFILE
+    scan :
+        scan to read from MFILE
+    """
+    n_plasma_profile_elements = int(m_file.get("n_plasma_profile_elements", scan=scan))
+    # Example implementation (replace with actual plotting code)
+    e_plasma_electrons_thermal_profile_mj = [
+        m_file.get(f"e_plasma_electrons_thermal_profile{i}", scan=scan)/1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    # axis.plot(
+    #     np.linspace(0, 1, n_plasma_profile_elements),
+    #     e_plasma_electrons_thermal_profile_mj,
+    #     label="Plasma thermal energy in electrons",
+    # )
+    # axis.plot(
+    #     np.linspace(0, 1, n_plasma_profile_elements),
+    #     np.cumsum(e_plasma_electrons_thermal_profile_mj),
+    #     label="Cumulative plasma thermal energy in electrons",
+    # )
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        np.gradient(np.cumsum(e_plasma_electrons_thermal_profile_mj)),
+        label="Gradient of cumulative plasma thermal energy in electrons",
+    )
+    axis.grid(True, alpha=0.3)
+    axis.minorticks_on()
+    axis.set_xlabel(r"$\rho \quad [r/a]$")
+    axis.set_xlim(left=0.0)
+    axis.set_ylabel("Thermal Energy [MJ]")
+    axis.legend()
+
+
 def main_plot(
     m_file: MFile,
     scan: int,
@@ -16733,6 +16775,8 @@ def main_plot(
         _add_page("beta").add_subplot(122, aspect="equal"), m_file, scan
     )
     plot_beta_profiles(pages["beta"].add_subplot(321), m_file, scan)
+    
+    plot_plasma_thermal_energy_profiles(pages["beta"].add_subplot(223), m_file, scan)
 
     plot_ebw_ecrh_coupling_graph(_add_page().add_subplot(111), m_file, scan)
 
