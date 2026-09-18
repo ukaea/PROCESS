@@ -1196,6 +1196,11 @@ def parse_input_file(data_structure_obj: DataStructure, in_dat: InDat):
     in_dat: InDat
         The input file data from InDat
 
+    Raises
+    ------
+    ProcessValidationError
+        If bounds are not of the correct form of boundl(index) = value
+
     """
     # These get incremented when reading the file, so need
     # to ensure they are 0 before we parse the file
@@ -1212,7 +1217,12 @@ def parse_input_file(data_structure_obj: DataStructure, in_dat: InDat):
             boundl = {}
             boundu = {}
             for index, bounds_dict in info.value.items():
-                idx = int(index)
+                try:
+                    idx = int(index)
+                except ValueError as e:
+                    raise ProcessValidationError(
+                        "The bounds need to be of the form boundl/u(index) = value"
+                    ) from e
                 if "l" in bounds_dict:
                     boundl[idx] = bounds_dict["l"]
                 if "u" in bounds_dict:
@@ -1249,7 +1259,7 @@ def parse_input_file(data_structure_obj: DataStructure, in_dat: InDat):
 
 
 def set_on_datastructure(variable_name, info, data_structure_obj, variables):
-
+    """TODO after review"""
     variable_config = copy.copy(INPUT_VARIABLES.get(variable_name))
 
     # string indicates it should be set on the new object data structure
@@ -1368,8 +1378,6 @@ def validate_variable(
         Variable validation failure
     """
     # check that if the variable should be an array, then an array index is provided
-    # EXCEPT for if check_array is False TODO this doesn't exist?. This should only be the case when parsing
-    # entire arrays (e.g. my_array = 1,2,2,4,5) where there will be no array index.
 
     if array_index is None and config.array:
         error_msg = f"Expected '{name}' to be an array."
