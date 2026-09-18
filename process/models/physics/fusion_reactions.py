@@ -1,7 +1,10 @@
 """Fusion reaction physics models and constants."""
 
+from __future__ import annotations
+
 import logging
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import numpy as np
 from scipy import integrate
@@ -9,12 +12,13 @@ from typing_extensions import Self
 
 from process.core import constants
 from process.core import process_output as po
-from process.core.data_structure.base import DataStructure
-from process.models.physics.plasma_profiles import PlasmaProfile
+from process.core.model import Model
 from process.models.physics.profiles import calculate_vol_avg_of_profile
 
 logger = logging.getLogger(__name__)
 
+if TYPE_CHECKING:
+    from process.models.physics.plasma_profiles import PlasmaProfile
 
 REACTION_CONSTANTS_DT = {
     "bg": 34.3827,
@@ -83,6 +87,8 @@ class FusionYieldDensities:
         Alpha particle production rate per unit volume [particles/m³/s].
     fusden_plasma_protons_vol_avg :
         Proton production rate per unit volume [particles/m³/s].
+
+
     """
 
     pden_plasma_alpha_vol_avg_mw: float = 0.0
@@ -92,8 +98,17 @@ class FusionYieldDensities:
     fusden_plasma_alpha_vol_avg: float = 0.0
     fusden_plasma_protons_vol_avg: float = 0.0
 
-    def __iadd__(self, other: "FusionYieldDensities") -> Self:
-        """In-place addition of fusion rate densities."""
+    def __iadd__(self, other: FusionYieldDensities) -> Self:
+        """In-place addition of fusion rate densities.
+
+        Raises
+        ------
+        TypeError
+            If an attempt is made to add an object that is not an instance of
+            FusionYieldDensities.
+        """
+        if not isinstance(other, type(self)):
+            raise TypeError(f"other must be an instance of {type(self).__name__}")
         self.pden_plasma_alpha_vol_avg_mw += other.pden_plasma_alpha_vol_avg_mw
         self.pden_non_alpha_charged_vol_avg_mw += other.pden_non_alpha_charged_vol_avg_mw
         self.pden_neutron_vol_avg_mw += other.pden_neutron_vol_avg_mw
@@ -103,7 +118,7 @@ class FusionYieldDensities:
         return self
 
 
-class PlasmaReactions:
+class PlasmaReactions(Model):
     """Calculate the fusion reaction rate for each reaction case (DT, DHE3, DD1, DD2).
 
     This class provides methods to numerically integrate over the plasma cross-section
@@ -143,7 +158,7 @@ class PlasmaReactions:
     Apr. 1992, doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """  # noqa: RUF002
 
-    def __init__(self, plasma_profile: PlasmaProfile, data: DataStructure):
+    def __init__(self, plasma_profile: PlasmaProfile):
         """
         Initialize the PlasmaReactions class with the given plasma profile.
 
@@ -155,7 +170,6 @@ class PlasmaReactions:
 
         """
         self.plasma_profile = plasma_profile
-        self.data = data
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.sigma_v_plasma_dt_vol_avg = 0.0
@@ -164,6 +178,9 @@ class PlasmaReactions:
         self.dt_power_density = 0.0
         self.fusion_rates = FusionYieldDensities()
         self.f_dd_branching_trit = 0.0
+
+    def run(self) -> None:
+        """Run the plasma reactions calculations."""
 
     def deuterium_branching(self, ion_temperature: float) -> float:
         """Calculate the relative rate of tritium producing D-D reactions to 3He ones
@@ -892,7 +909,7 @@ class PlasmaReactions:
         po.oblnkl(self.outfile)
 
 
-class BeamReactions:
+class BeamReactions(Model):
     """Calculate neutral beam slowing-down and beam-target fusion power.
 
     This class calculates the beam-target fusion contribution from neutral beam
@@ -913,14 +930,19 @@ class BeamReactions:
         D-T fusion power from beam-target fusion [MW].
     """
 
-    def __init__(self, data: DataStructure):
-        self.data = data
+    def __init__(self):
 
         self.beta_beam = 0.0
         self.nd_beam_ions_out = 0.0
         self.p_beam_alpha_mw = 0.0
         self.p_beam_neutron_mw = 0.0
         self.p_beam_dt_mw = 0.0
+
+    def run(self) -> None:
+        """Run the beam reactions calculations."""
+
+    def output(self) -> None:
+        """Output the beam reactions results."""
 
     def calculate_beam_fusion(self):
         """Calculate neutral beam slowing-down and beam-target fusion power.
