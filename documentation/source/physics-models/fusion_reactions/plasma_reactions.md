@@ -79,16 +79,16 @@ Initialize the FusionReactionRate class with the given plasma profile.
 
 #### Attributes:
 - `plasma_profile (PlasmaProfile)`: The parameterized temperature and density profiles of the plasma.
-- `sigmav_dt_average (float)`: Average fusion reaction rate $\langle \sigma v \rangle$ for D-T.
-- `dhe3_power_density (float)`: Fusion power density produced by the D-3He reaction.
-- `dd_power_density (float)`: Fusion power density produced by the D-D reactions.
+- `sigma_v_plasma_dt_vol_avg (float)`: Average fusion reaction rate $\langle \sigma v \rangle$ for D-T.
+- `pden_dhe3_total_vol_avg_mw (float)`: Fusion power density produced by the D-3He reaction.
+- `pden_dd_total_vol_avg_mw (float)`: Fusion power density produced by the D-D reactions.
 - `dt_power_density (float)`: Fusion power density produced by the D-T reaction.
 - `alpha_power_density (float)`: Power density of alpha particles produced.
 - `pden_non_alpha_charged_mw (float)`: Power density of charged particles produced.
 - `neutron_power_density (float)`: Power density of neutrons produced.
 - `fusion_rate_density (float)`: Fusion reaction rate density.
 - `alpha_rate_density (float)`: Alpha particle production rate density.
-- `proton_rate_density (float)`: Proton production rate density.
+- `fusden_plasma_protons_vol_avg (float)`: Proton production rate density.
 - `f_dd_branching_trit (float)`: The rate of tritium producing D-D reactions to 3He ones.
 
 All variables above are initialized to be 0.0.
@@ -134,14 +134,14 @@ There are 4 key functions for calculating the fusion reaction for the plasma. Th
 #### Attributes Updated
 The method updates the following attributes:
 
-- `self.sigmav_dt_average`: Average fusion reaction rate `<sigma v>` for D-T.
+- `self.sigma_v_plasma_dt_vol_avg`: Average fusion reaction rate `<sigma v>` for D-T.
 - `self.dt_power_density`: Fusion power density produced by the D-T reaction.
 - `self.alpha_power_density`: Power density of alpha particles produced.
 - `self.pden_non_alpha_charged_mw`: Power density of charged particles produced.
 - `self.neutron_power_density`: Power density of neutrons produced.
 - `self.fusion_rate_density`: Fusion reaction rate density.
 - `self.alpha_rate_density`: Alpha particle production rate density.
-- `self.proton_rate_density`: Proton production rate density.
+- `self.fusden_plasma_protons_vol_avg`: Proton production rate density.
 
 -----------------------
 
@@ -180,16 +180,16 @@ It updates the instance attributes for the cumulative power densities and reacti
 This method sets the required physics variables on the `physics` data structure with the current instance's fusion power densities and reaction rates.
 
 #### Updates:
-- `pden_plasma_alpha_mw`: Updated with `self.alpha_power_density`
+- `pden_plasma_alpha_vol_avg_mw`: Updated with `self.alpha_power_density`
 - `pden_non_alpha_charged_mw`: Updated with `self.pden_non_alpha_charged_mw`
-- `pden_plasma_neutron_mw`: Updated with `self.neutron_power_density`
-- `fusden_plasma`: Updated with `self.fusion_rate_density`
-- `fusden_plasma_alpha`: Updated with `self.alpha_rate_density`
-- `proton_rate_density`: Updated with `self.proton_rate_density`
-- `sigmav_dt_average`: Updated with `self.sigmav_dt_average`
-- `dt_power_density_plasma`: Updated with `self.dt_power_density`
-- `dhe3_power_density`: Updated with `self.dhe3_power_density`
-- `dd_power_density`: Updated with `self.dd_power_density`
+- `pden_plasma_neutron_vol_avg_mw`: Updated with `self.neutron_power_density`
+- `fusden_plasma_vol_avg`: Updated with `self.fusion_rate_density`
+- `fusden_plasma_alpha_vol_avg`: Updated with `self.alpha_rate_density`
+- `fusden_plasma_protons_vol_avg`: Updated with `self.fusden_plasma_protons_vol_avg`
+- `sigma_v_plasma_dt_vol_avg`: Updated with `self.sigma_v_plasma_dt_vol_avg`
+- `pden_plasma_dt_vol_avg_mw`: Updated with `self.dt_power_density`
+- `pden_dhe3_total_vol_avg_mw`: Updated with `self.pden_dhe3_total_vol_avg_mw`
+- `pden_dd_total_vol_avg_mw`: Updated with `self.pden_dd_total_vol_avg_mw`
 - `f_dd_branching_trit`: Updated with `self.f_dd_branching_trit`
 
 -----------------------
