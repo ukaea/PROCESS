@@ -4577,7 +4577,7 @@ def profiles_with_pedestal(mfile, scan: int):
 def plot_line_brem_power_density_profile(
     axis: plt.Axes, mfile: MFile, scan: int, impp: str, demo_ranges: bool
 ):
-    """Function to plot Line and Bremsstrahlung radiation power density profile.
+    """Function to plot Line and Bremsstrahlung radiation power density [MW/m³] profile.
 
     Parameters
     ----------
@@ -4605,57 +4605,71 @@ def plot_line_brem_power_density_profile(
         mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
     ])
 
-    rho, ne, te = profiles_with_pedestal(mfile, scan)
+    rho, nd_electron, temp_electron_kev = profiles_with_pedestal(mfile=mfile, scan=scan)
+    # imp_data Te values are in eV, but te from profiles_with_pedestal is in keV
+    temp_electron_ev = temp_electron_kev * 1.0e3
 
     # Intailise the radiation profile arrays
-    pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
-    lz = np.zeros([imp_data.shape[0], te.shape[0]])
-    prad = np.zeros(te.shape[0])
+    pden_rad_array = np.zeros([imp_data.shape[0], temp_electron_kev.shape[0]])
+    lz = np.zeros([imp_data.shape[0], temp_electron_kev.shape[0]])
+    pden_total_profile = np.zeros(temp_electron_kev.shape[0])
 
     # Intailise the impurity radiation profile
-    for k in range(te.shape[0]):
-        for i in range(imp_data.shape[0]):
-            if te[k] <= imp_data[i][0][0]:
-                lz[i][k] = imp_data[i][0][1]
-            elif te[k] >= imp_data[i][imp_data.shape[1] - 1][0]:
-                lz[i][k] = imp_data[i][imp_data.shape[1] - 1][1]
+    for temp_point in range(temp_electron_kev.shape[0]):
+        for impurity in range(imp_data.shape[0]):
+            if temp_electron_ev[temp_point] <= imp_data[impurity][0][0]:
+                lz[impurity][temp_point] = imp_data[impurity][0][1]
+            elif (
+                temp_electron_ev[temp_point]
+                >= imp_data[impurity][imp_data.shape[1] - 1][0]
+            ):
+                lz[impurity][temp_point] = imp_data[impurity][imp_data.shape[1] - 1][1]
             else:
                 # Use np.interp for log-log interpolation
-                log_te_data = np.log([row[0] for row in imp_data[i]])
-                log_lz_data = np.log([row[1] for row in imp_data[i]])
-                lz[i][k] = np.exp(np.interp(np.log(te[k]), log_te_data, log_lz_data))
-            pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
+                log_te_data = np.log([row[0] for row in imp_data[impurity]])
+                log_lz_data = np.log([row[1] for row in imp_data[impurity]])
+                lz[impurity][temp_point] = np.exp(
+                    np.interp(
+                        np.log(temp_electron_ev[temp_point]), log_te_data, log_lz_data
+                    )
+                )
+            pden_rad_array[impurity][temp_point] = (
+                imp_frac[impurity]
+                * nd_electron[temp_point]
+                * nd_electron[temp_point]
+                * lz[impurity][temp_point]
+            )
 
         for l_ in range(imp_data.shape[0]):
-            prad[k] += pimpden[l_][k] * 1.0e-6
+            pden_total_profile[temp_point] += pden_rad_array[l_][temp_point] * 1.0e-6
 
-    axis.plot(rho, prad, label="Total", linestyle="dotted")
-    axis.plot(rho, pimpden[0] * 1.0e-6, label="H")
-    axis.plot(rho, pimpden[1] * 1.0e-6, label="He")
+    axis.plot(rho, pden_total_profile, label="Total", linestyle="dotted")
+    axis.plot(rho, pden_rad_array[0] * 1.0e-6, label="H")
+    axis.plot(rho, pden_rad_array[1] * 1.0e-6, label="He")
     if imp_frac[2] > 1.0e-30:
-        axis.plot(rho, pimpden[2] * 1.0e-6, label="Be")
+        axis.plot(rho, pden_rad_array[2] * 1.0e-6, label="Be")
     if imp_frac[3] > 1.0e-30:
-        axis.plot(rho, pimpden[3] * 1.0e-6, label="C")
+        axis.plot(rho, pden_rad_array[3] * 1.0e-6, label="C")
     if imp_frac[4] > 1.0e-30:
-        axis.plot(rho, pimpden[4] * 1.0e-6, label="N")
+        axis.plot(rho, pden_rad_array[4] * 1.0e-6, label="N")
     if imp_frac[5] > 1.0e-30:
-        axis.plot(rho, pimpden[5] * 1.0e-6, label="O")
+        axis.plot(rho, pden_rad_array[5] * 1.0e-6, label="O")
     if imp_frac[6] > 1.0e-30:
-        axis.plot(rho, pimpden[6] * 1.0e-6, label="Ne")
+        axis.plot(rho, pden_rad_array[6] * 1.0e-6, label="Ne")
     if imp_frac[7] > 1.0e-30:
-        axis.plot(rho, pimpden[7] * 1.0e-6, label="Si")
+        axis.plot(rho, pden_rad_array[7] * 1.0e-6, label="Si")
     if imp_frac[8] > 1.0e-30:
-        axis.plot(rho, pimpden[8] * 1.0e-6, label="Ar")
+        axis.plot(rho, pden_rad_array[8] * 1.0e-6, label="Ar")
     if imp_frac[9] > 1.0e-30:
-        axis.plot(rho, pimpden[9] * 1.0e-6, label="Fe")
+        axis.plot(rho, pden_rad_array[9] * 1.0e-6, label="Fe")
     if imp_frac[10] > 1.0e-30:
-        axis.plot(rho, pimpden[10] * 1.0e-6, label="Ni")
+        axis.plot(rho, pden_rad_array[10] * 1.0e-6, label="Ni")
     if imp_frac[11] > 1.0e-30:
-        axis.plot(rho, pimpden[11] * 1.0e-6, label="Kr")
+        axis.plot(rho, pden_rad_array[11] * 1.0e-6, label="Kr")
     if imp_frac[12] > 1.0e-30:
-        axis.plot(rho, pimpden[12] * 1.0e-6, label="Xe")
+        axis.plot(rho, pden_rad_array[12] * 1.0e-6, label="Xe")
     if imp_frac[13] > 1.0e-30:
-        axis.plot(rho, pimpden[13] * 1.0e-6, label="W")
+        axis.plot(rho, pden_rad_array[13] * 1.0e-6, label="W")
     axis.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1), ncol=4)
     axis.minorticks_on()
     # Plot a vertical line at the core region radius
@@ -4663,12 +4677,14 @@ def plot_line_brem_power_density_profile(
 
     # Plot a vertical line at the core region radius
     axis.axvline(x=core_radius, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
-    # Plot a box in the bottom left with f_{core,reduce}
+    # Plot a box in the bottom left with f_{core,reduce} and \rho_{core}
     props_core_reduce = {"boxstyle": "round", "facecolor": "khaki", "alpha": 0.8}
     axis.text(
         0.02,
         0.02,
-        rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}",
+        rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}"
+        "\n"
+        rf"$\rho_{{\text{{core}}}}$ =  {core_radius:.3f}",
         transform=axis.transAxes,
         fontsize=8,
         verticalalignment="bottom",
@@ -4682,11 +4698,11 @@ def plot_line_brem_power_density_profile(
     axis.yaxis.grid(True, which="both", alpha=0.2)
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        axis.set_ylim([1e-6, 0.5])
+        axis.set_ylim([1e-4, 0.5])
 
     # Adaptive ranges
     else:
-        axis.set_ylim([1e-6, axis.get_ylim()[1]])
+        axis.set_ylim([1e-4, axis.get_ylim()[1]])
     # ---
 
 
@@ -4718,23 +4734,32 @@ def plot_line_brem_loss_function_profile(
         mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
     ])
 
-    rho, _, te = profiles_with_pedestal(mfile, scan)
+    rho, _, temp_electron_kev = profiles_with_pedestal(mfile, scan)
+    # imp_data Te values are in eV, but te from profiles_with_pedestal is in keV
+    temp_electron_ev = temp_electron_kev * 1.0e3
 
     # Intailise the radiation profile arrays
-    lz = np.zeros([imp_data.shape[0], te.shape[0]])
+    lz = np.zeros([imp_data.shape[0], temp_electron_kev.shape[0]])
 
     # Intailise the impurity radiation profile
-    for k in range(te.shape[0]):
-        for i in range(imp_data.shape[0]):
-            if te[k] <= imp_data[i][0][0]:
-                lz[i][k] = imp_data[i][0][1]
-            elif te[k] >= imp_data[i][imp_data.shape[1] - 1][0]:
-                lz[i][k] = imp_data[i][imp_data.shape[1] - 1][1]
+    for temp_point in range(temp_electron_kev.shape[0]):
+        for impurity in range(imp_data.shape[0]):
+            if temp_electron_ev[temp_point] <= imp_data[impurity][0][0]:
+                lz[impurity][temp_point] = imp_data[impurity][0][1]
+            elif (
+                temp_electron_ev[temp_point]
+                >= imp_data[impurity][imp_data.shape[1] - 1][0]
+            ):
+                lz[impurity][temp_point] = imp_data[impurity][imp_data.shape[1] - 1][1]
             else:
                 # Use np.interp for log-log interpolation
-                log_te_data = np.log([row[0] for row in imp_data[i]])
-                log_lz_data = np.log([row[1] for row in imp_data[i]])
-                lz[i][k] = np.exp(np.interp(np.log(te[k]), log_te_data, log_lz_data))
+                log_te_data = np.log([row[0] for row in imp_data[impurity]])
+                log_lz_data = np.log([row[1] for row in imp_data[impurity]])
+                lz[impurity][temp_point] = np.exp(
+                    np.interp(
+                        np.log(temp_electron_ev[temp_point]), log_te_data, log_lz_data
+                    )
+                )
 
     axis.plot(rho, lz[0], label="H")
     axis.plot(rho, lz[1], label="He")
@@ -4810,6 +4835,8 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
 
     # Initialize the radius
     rho, ne, te = profiles_with_pedestal(mfile, scan)
+    # imp_data Te values are in eV, but te from profiles_with_pedestal is in keV
+    te_ev = te * 1.0e3
 
     # Intailise the radiation profile arrays
     pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
@@ -4822,19 +4849,19 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
         for impurity in range(imp_data.shape[0]):
             # Check if profile temperature is lower than dataset minimum.
             # If so, use the minimum loss function value
-            if te[rho] <= imp_data[impurity][0][0]:
+            if te_ev[rho] <= imp_data[impurity][0][0]:
                 lz[impurity][rho] = imp_data[impurity][0][1]
 
             # Check if profile temperature is higher than dataset maximum.
             # If so, use the maximum loss function value
-            elif te[rho] >= imp_data[impurity][imp_data.shape[1] - 1][0]:
+            elif te_ev[rho] >= imp_data[impurity][imp_data.shape[1] - 1][0]:
                 lz[impurity][rho] = imp_data[impurity][imp_data.shape[1] - 1][1]
             else:
                 # If profile valie is within dataset range, use log-log interpolation to find value for loss function
                 log_te_data = np.log([row[0] for row in imp_data[impurity]])
                 log_lz_data = np.log([row[1] for row in imp_data[impurity]])
                 lz[impurity][rho] = np.exp(
-                    np.interp(np.log(te[rho]), log_te_data, log_lz_data)
+                    np.interp(np.log(te_ev[rho]), log_te_data, log_lz_data)
                 )
             # Find the power density for each impurity at each rho
             pimpden[impurity][rho] = (
@@ -16596,6 +16623,7 @@ def main_plot(
     # Plot impurity profiles
     ax11 = pages["profiles"].add_subplot(233)
     ax11.set_position([0.7, 0.45, 0.25, 0.5])
+
     plot_line_brem_power_density_profile(
         axis=ax11, mfile=m_file, scan=scan, impp=imp, demo_ranges=demo_ranges
     )
