@@ -16521,32 +16521,95 @@ def plot_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: int):
     """
     n_plasma_profile_elements = int(m_file.get("n_plasma_profile_elements", scan=scan))
     # Example implementation (replace with actual plotting code)
+    eden_plasma_electrons_thermal_profile_mj = [
+        m_file.get(f"eden_plasma_electrons_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+    eden_plasma_ions_thermal_profile_mj = [
+        m_file.get(f"eden_plasma_ions_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+    eden_plasma_thermal_profile_mj = [
+        m_file.get(f"eden_plasma_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
     e_plasma_electrons_thermal_profile_mj = [
-        m_file.get(f"e_plasma_electrons_thermal_profile{i}", scan=scan)/1e6
+        m_file.get(f"e_plasma_electrons_thermal_profile{i}", scan=scan) / 1e6
         for i in range(n_plasma_profile_elements)
     ]
 
-    # axis.plot(
-    #     np.linspace(0, 1, n_plasma_profile_elements),
-    #     e_plasma_electrons_thermal_profile_mj,
-    #     label="Plasma thermal energy in electrons",
-    # )
-    # axis.plot(
-    #     np.linspace(0, 1, n_plasma_profile_elements),
-    #     np.cumsum(e_plasma_electrons_thermal_profile_mj),
-    #     label="Cumulative plasma thermal energy in electrons",
-    # )
+    e_plasma_ions_thermal_profile_mj = [
+        m_file.get(f"e_plasma_ions_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+    e_plasma_thermal_profile_mj = [
+        m_file.get(f"e_plasma_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+
     axis.plot(
         np.linspace(0, 1, n_plasma_profile_elements),
-        np.gradient(np.cumsum(e_plasma_electrons_thermal_profile_mj)),
-        label="Gradient of cumulative plasma thermal energy in electrons",
+        e_plasma_electrons_thermal_profile_mj,
+        label="$W_{\\text{e}}$",
+        color="tab:blue",
+        linestyle=":",
     )
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        e_plasma_ions_thermal_profile_mj,
+        label="$W_{\\text{i}}$",
+        color="tab:blue",
+        linestyle="--",
+    )
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        e_plasma_thermal_profile_mj,
+        label="$W_{\\text{total}}$",
+        color="tab:blue",
+        linestyle="-",
+    )
+
+    density_axis = axis.twinx()
+    density_axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        eden_plasma_electrons_thermal_profile_mj,
+        label="$W_{\\text{density, e}}$",
+        color="tab:orange",
+        linestyle=":",
+    )
+    density_axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        eden_plasma_ions_thermal_profile_mj,
+        label="$W_{\\text{density, i}}$",
+        color="tab:orange",
+        linestyle="--",
+    )
+    density_axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        eden_plasma_thermal_profile_mj,
+        label="$W_{\\text{density, total}}$",
+        color="tab:orange",
+        linestyle="-",
+    )
+
     axis.grid(True, alpha=0.3)
     axis.minorticks_on()
     axis.set_xlabel(r"$\rho \quad [r/a]$")
-    axis.set_xlim(left=0.0)
-    axis.set_ylabel("Thermal Energy [MJ]")
-    axis.legend()
+    axis.set_xlim(left=0.0, right=1.0)
+    axis.set_ylabel(
+        "Thermal Energy [MJ]",
+        color="tab:blue",
+    )
+    axis.set_title("Plasma Thermal Energy Profiles")
+    axis.tick_params(axis="y", colors="tab:blue")
+    density_axis.set_ylabel(
+        "Thermal Energy Density [MJ/m$^3$]",
+        color="tab:orange",
+    )
+    density_axis.tick_params(axis="y", colors="tab:orange")
+    handles, labels = axis.get_legend_handles_labels()
+    density_handles, density_labels = density_axis.get_legend_handles_labels()
+    axis.legend(handles + density_handles, labels + density_labels)
 
 
 def main_plot(

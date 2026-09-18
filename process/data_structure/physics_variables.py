@@ -698,8 +698,17 @@ class PhysicsData:
     eden_plasma_thermal_vol_avg: float = 0.0
     """Plasma volume averaged thermal energy density [J/m³]"""
 
+    eden_plasma_thermal_profile: list[float] = field(default_factory=list)
+    """Plasma total thermal energy density profile [J/m³]"""
+
+    e_plasma_thermal_profile: list[float] = field(default_factory=list)
+    """Plasma total stored thermal energy profile [J]"""
+
     e_plasma_electrons_thermal: float = 0.0
     """Plasma thermal energy in electrons [J]"""
+
+    eden_plasma_electrons_thermal_profile: list[float] = field(default_factory=list)
+    """Plasma thermal energy density in electrons profile [J/m³]"""
 
     e_plasma_electrons_thermal_profile: list[float] = field(default_factory=list)
     """Plasma thermal energy in electrons profile [J]"""
@@ -709,6 +718,9 @@ class PhysicsData:
 
     e_plasma_ions_thermal: float = 0.0
     """Plasma thermal energy in ions [J]"""
+
+    eden_plasma_ions_thermal_profile: list[float] = field(default_factory=list)
+    """Plasma thermal energy density in ions profile [J/m³]"""
 
     e_plasma_ions_thermal_profile: list[float] = field(default_factory=list)
     """Plasma thermal energy in ions profile [J]"""
