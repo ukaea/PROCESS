@@ -7,7 +7,7 @@ The rest of the derivation are done in a paper, the conversion is as follows:
 ---------------------------------------------
 |indexing from            |  1  |      0      |
 |group index (1)          |  i  |      n      |
-|group index (2)          |  j  |      g      |
+|group index (2)          |  j  | basis_group |
 |group index (3)          |     |      k      |
 |group index (4)          |  g  |      i      |
 |layer index (1)          |  m  |  num_layer  |
@@ -922,7 +922,7 @@ class NeutronFluxProfile:
                     l2g = mat.l2[basis_group]
                     l2_diff = l2g - l2n
                     if np.isclose(l2_diff, 0):
-                        # if the characteristic length of group [g] coincides with
+                        # if the characteristic length of group [basis_group] coincides with
                         # the characteristic length of group [n], then that particular
                         # cosh/sinh would be indistinguishable from group [n]'s
                         # cosh/sinh, causing issues. Currently we simply set the coefficient to 0.
@@ -940,8 +940,8 @@ class NeutronFluxProfile:
                     scale_factor = (l2n * l2g) / l2_diff / diffusion_const_n
                     in_scatter_min_group = 0 if include_upscatter else basis_group
                     print(f"WTF? {in_scatter_min_group=}, {in_scatter_max_group=}")
-                    # src_matrix: propto group i neutrons scattered into n
-                    # self.coefficients: the number of group i neutrons in the shape of group g's basis shape.
+                    # src_matrix: propto inscatter_group neutrons scattered into n
+                    # self.coefficients: the number of inscatter_group neutrons in the shape of group basis_group's basis.
                     coefs_num_layer.c.append(
                         fsum([
                             (src_matrix[inscatter_group, n]
