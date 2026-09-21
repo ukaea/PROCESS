@@ -422,17 +422,6 @@ def get_parameters(data, use_string_values=True):
                         value = data["zref"].get_value[j]
                         parameters[module][name] = value
 
-                elif item == "impurity_enrichment":
-                    for m in range(len(data["impurity_enrichment"].get_value)):
-                        name = f"impurity_enrichment({str(m + 1).zfill(1)})"
-                        value = data["impurity_enrichment"].get_value[m]
-                        parameters[module][name] = value
-
-                elif "vmec" in item:
-                    name = item
-                    value = data[item].value
-                    parameters[module][name] = value
-
                 else:
                     parameter = {}
 
@@ -483,7 +472,7 @@ def write_parameters(data, out_file):
         Output file for new IN.DAT
 
     """
-    filter_list = ["f_nd_impurity_electrons(", "zref(", "imp_rich", "vmec"]
+    filter_list = ["f_nd_impurity_electrons(", "zref("]
     # Special parameters that require different formatting
     parameters = get_parameters(data)
 
@@ -1073,7 +1062,7 @@ class InDat:
             if line.strip(" ") == "\n":
                 continue
             # Put everything in lower case
-            l_line = line.lower() if "vmec" not in line.split("=")[0].lower() else line
+            l_line = line.lower()
 
             # find the type of the line:
             # [constraint equation, iteration variable, bound, parameter]
