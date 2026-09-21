@@ -37,6 +37,22 @@ def fortran_python_scientific(var_value):
     return var_value.replace("D", "e").replace("d", "e")
 
 
+def remove_empty_lines(lines):
+    """Function to remove empty lines from list.
+
+    Parameters
+    ----------
+     lines:
+         list of lines (type=list)
+
+    Returns
+    -------
+    :
+         list of lines with empty lines removed (type=list)
+    """
+    return [line for line in lines if line.strip(" ") != "\n"]
+
+
 def is_title(line):
     """Function to determine if line is title line
 
@@ -957,22 +973,18 @@ class INVariable:
         Type of item
     comment:
         Comment for item
-    line_no:
-        Line number
-        Optional for purposes of write_indat()
     """
 
-    def __init__(self, name, value, v_type, comment, line_no: int | None = None):
+    def __init__(self, name, value, v_type, comment):
         self.name = name
         self.value = value
         self.v_type = v_type
         self.comment = comment
-        self.line_no = line_no or None
 
     def __eq__(self, value):
         """Determine if variables are equal"""
-        # intentionally missing .comment and .line_no,
-        # these are not necessary for the variables to be equal
+        # intentionally missing .comment
+        # this is not necessary for the variables to be equal
         return (
             self.name == value.name
             and self.value == value.value
@@ -988,7 +1000,7 @@ class INVariable:
         return (
             f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, "
             f"v_type={self.v_type!r}, "
-            f"comment={self.comment!r}, line_no={self.line_no!r})"
+            f"comment={self.comment!r}"
         )
 
     @property
@@ -1056,11 +1068,10 @@ class InDat:
             self.in_dat_lines = indat.readlines()
             self.in_dat_lines = self.in_dat_lines[self.start_line :]
 
-        # Remove empty lines from the file - removed this so can get the line numbers
-        for line_no, line in enumerate(self.in_dat_lines, start=1):
-            # Ignore empty lines
-            if line.strip(" ") == "\n":
-                continue
+        # Remove empty lines from the file
+        self.in_dat_lines = remove_empty_lines(self.in_dat_lines)
+
+        for line in self.in_dat_lines:
             # Put everything in lower case
             l_line = line.lower()
 
@@ -1072,9 +1083,9 @@ class InDat:
             if line_type not in {"Title", "Comment"}:
                 try:
                     # for non-title lines process line and store data.
-                    self.process_line(line_type, l_line, line_no)
+                    self.process_line(line_type, l_line)
                 except KeyError as err:
-                    msg = f"Unrecognised input at line {line_no} of input file:\n{line}"
+                    msg = f"Unrecognised input:\n{line}"
                     raise ProcessValidationError(msg) from err
 
         # Inform user of duplicate variables
@@ -1085,7 +1096,7 @@ class InDat:
                 f"\n{self.duplicates}"
             )
 
-    def process_line(self, line_type, line, line_no):
+    def process_line(self, line_type, line):
         """Function to process the line and return the appropriate INVariable
         object
 
@@ -1095,8 +1106,6 @@ class InDat:
             Type of information the line contains
         line:
             Line from IN.DAT to process
-        line_no:
-            Line number from IN.DAT
 
         """
         # Load dicts from dicts JSON file
@@ -1105,15 +1114,15 @@ class InDat:
         # Create bound variable class using INVariable class if the bounds entry
         # doesn't exist
         if "bounds" not in self.data:
-            self.data["bounds"] = INVariable("bounds", {}, "Bound", "Bounds", line_no)
+            self.data["bounds"] = INVariable("bounds", {}, "Bound", "Bounds")
 
         # Constraint equations
         if line_type == "Constraint Equation":
-            self.process_constraint_equation(line, line_no)
+            self.process_constraint_equation(line)
 
         # Iteration_variables
         elif line_type == "Iteration Variable":
-            self.process_iteration_variables(line, line_no)
+            self.process_iteration_variables(line)
 
         # Bounds
         elif line_type == "Bound":
@@ -1153,24 +1162,22 @@ class InDat:
                 # DICT_DEFAULT; don't want changes to data to change the
                 # defaults
                 self.data[array_name] = INVariable(
-                    array_name, empty_array_copy, array_name, comment, line_no
+                    array_name, empty_array_copy, array_name, comment
                 )
 
             self.process_array(line, empty_array)
 
         # Parameter
         else:
-            self.process_parameter(line, line_no)
+            self.process_parameter(line)
 
-    def process_parameter(self, line, line_no):
+    def process_parameter(self, line):
         """Function to process parameter entries in IN.DAT
 
         Parameters
         ----------
         line:
             Line from IN.DAT to process
-        line_no:
-            Line number from IN.DAT
 
         """
         # Load dicts from dicts JSON file
@@ -1222,17 +1229,15 @@ class InDat:
             self.add_duplicate_variable(name)
 
         # Populate the IN.DAT dictionary with the information
-        self.data[name] = INVariable(name, value, "Parameter", comment, line_no)
+        self.data[name] = INVariable(name, value, "Parameter", comment)
 
-    def process_constraint_equation(self, line, line_no):
+    def process_constraint_equation(self, line):
         """Function to process constraint equation entry in IN.DAT
 
         Parameters
         ----------
         line:
             Line from IN.DAT to process
-        line_no:
-            Line number from IN.DAT
 
         """
         # Remove comment from line to make things easier
@@ -1256,7 +1261,7 @@ class InDat:
         # INVariable class
         if "icc" not in self.data:
             self.data["icc"] = INVariable(
-                "icc", value, "Constraint Equation", "Constraint Equations", line_no
+                "icc", value, "Constraint Equation", "Constraint Equations"
             )
 
         else:
@@ -1271,15 +1276,13 @@ class InDat:
             # what's eq, what's ineq; first n_equality_constraints are eqs, rest are
             # ineqs
 
-    def process_iteration_variables(self, line, line_no):
+    def process_iteration_variables(self, line):
         """Function to process iteration variables entry in IN.DAT
 
         Parameters
         ----------
         line:
             Line from IN.DAT to process
-        line_no:
-            Line number from IN.DAT
 
         """
         # Remove comment from line to make things easier
@@ -1303,7 +1306,7 @@ class InDat:
         # INVariable class
         if "ixc" not in self.data:
             self.data["ixc"] = INVariable(
-                "ixc", value, "Iteration Variable", "Iteration Variables", line_no
+                "ixc", value, "Iteration Variable", "Iteration Variables"
             )
 
         else:
