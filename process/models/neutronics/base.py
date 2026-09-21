@@ -879,58 +879,12 @@ class NeutronFluxProfile:
                     self.coefficients[num_layer, n].c[n] = input_vector[i]
                     self.coefficients[num_layer, n].s[n] = input_vector[i + 1]
 
-            def _evaluate_fit():
-                conditions = np.zeros([2 * self.n_layers])
-                jacobians = np.zeros([2 * self.n_layers, 2 * self.n_layers])
-
-                # Net current at origin equal incident flux on that group.
-                conditions[0] = (
-                    self.groupwise_neutron_current_through_interface(n, 0)
-                    - self.fluxes[n]
-                )
-                jacobians[0, :2] = (
-                    self._groupwise_cs_differential_in_layer(
-                        n, 0, 0.0
-                    )
-                )
-
-                for num_layer in range(self.n_layers - 1):
-                    x = self.layer_x[num_layer]
-
-                    i = 2 * num_layer
-                    # Enforce flux continuity at self.interface[num_layer]
-                    conditions[i + 1] = (
-                        self.groupwise_neutron_flux_in_layer(n, num_layer, x)
-                        - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
-                    )
-                    jacobians[i + 1, i:i + 2] = self._groupwise_cs_values_in_layer(n, num_layer, x)
-                    jacobians[i + 1, i + 2:i + 4] = -self._groupwise_cs_values_in_layer(n, num_layer + 1, x)
-
-                    # Enforce current continuity at self.interface[num_layer]
-                    conditions[i + 2] = (
-                        self.groupwise_neutron_current_in_layer(n, num_layer, x)
-                        - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
-                    )
-                    jacobians[i + 2, i:i + 2] = self._groupwise_cs_differential_in_layer(n, num_layer, x)
-                    jacobians[i + 2, i + 2:i + 4] = -self._groupwise_cs_differential_in_layer(n, num_layer + 1, x)
-
-                # Enforce zero flux at extended boundary
-                conditions[2 * self.n_layers - 1] = self.groupwise_neutron_flux_in_layer(
-                    n, self.n_layers - 1, self.extended_boundary[n]
-                )
-                jacobians[2 * self.n_layers - 1, 2 * self.n_layers - 2:] = (
-                    self._groupwise_cs_values_in_layer(
-                        n, self.n_layers-1, self.extended_boundary[n]
-                    )
-                )
-                return np.array(conditions), np.array(jacobians)
-
             def objective(coefficients_vector):
                 _set_coefficients(coefficients_vector)
-                return _evaluate_fit()
+                return self._groupwise_fitness(n) # would not lead to recursion error as has_populated=True.
 
             results = optimize.root(objective, x0=init_coefs.flatten(), jac=True)
-            _set_coefficients(results.res)
+            _set_coefficients(results.x)
             extended_x_flux = self.groupwise_neutron_flux_in_layer(
                 n, self.n_layers-1, self.extended_boundary[n]
             )
@@ -960,6 +914,78 @@ class NeutronFluxProfile:
                     del self.coefficients[num_layer, n]
             raise e
         return
+
+    def _groupwise_fitness(
+            self, n: int, jac: bool=True
+        ) -> tuple[npt.NDArray[float], npt.NDArray]:
+            """
+            Calculate how far the current values of coefficients deviates
+            from the 2*n_layers equations, forming a vector with len=
+            2*n_layers. A jacobian of shape (2*n_layers, 2*n_layers)
+            is also produced.
+
+            Parameters
+            ----------
+            n:
+                The group that we want to evaluate the fitness for.
+
+            Returns
+            -------
+            conditions:
+                A 2*n_layers vector corresponding to the difference between
+                the LHS and RHS of the 2*n_layers equations
+            jacobians:
+                A 2*n_layers x 2*n_layers matrix, row i column j denotes
+                how much steeply does variable j affect condition i. The
+                variables are arranged as [self.coefficients[0, n].c[n],
+                self.coefficients[0, n].s[n], self.coefficients[1, n].c[n],
+                self.coefficients[1, n].c[n], ... etc.].
+            """
+            conditions = np.zeros([2 * self.n_layers])
+            jacobians = np.zeros([2 * self.n_layers, 2 * self.n_layers])
+
+            # Net current at origin equal incident flux on that group.
+            conditions[0] = (
+                self.groupwise_neutron_current_through_interface(n, 0)
+                - self.fluxes[n]
+            )
+            jacobians[0, :2] = (
+                self._groupwise_cs_differential_in_layer(
+                    n, 0, 0.0
+                )
+            )
+
+            for num_layer in range(self.n_layers - 1):
+                x = self.layer_x[num_layer]
+
+                i = 2 * num_layer
+                # Enforce flux continuity at self.interface[num_layer]
+                conditions[i + 1] = (
+                    self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+                    - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
+                )
+                jacobians[i + 1, i:i + 2] = self._groupwise_cs_values_in_layer(n, num_layer, x)
+                jacobians[i + 1, i + 2:i + 4] = -self._groupwise_cs_values_in_layer(n, num_layer + 1, x)
+
+                # Enforce current continuity at self.interface[num_layer]
+                conditions[i + 2] = (
+                    self.groupwise_neutron_current_in_layer(n, num_layer, x)
+                    - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
+                )
+                jacobians[i + 2, i:i + 2] = self._groupwise_cs_differential_in_layer(n, num_layer, x)
+                jacobians[i + 2, i + 2:i + 4] = -self._groupwise_cs_differential_in_layer(n, num_layer + 1, x)
+
+            # Enforce zero flux at extended boundary
+            conditions[2 * self.n_layers - 1] = self.groupwise_neutron_flux_in_layer(
+                n, self.n_layers - 1, self.extended_boundary[n]
+            )
+            jacobians[2 * self.n_layers - 1, 2 * self.n_layers - 2:] = (
+                self._groupwise_cs_values_in_layer(
+                    n, self.n_layers-1, self.extended_boundary[n]
+                )
+            )
+            return np.array(conditions), np.array(jacobians)
+
 
     def _check_if_in_layer(
         self, x: npt.NDArray[np.float64], num_layer: int
