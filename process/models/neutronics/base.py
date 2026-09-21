@@ -913,13 +913,13 @@ class NeutronFluxProfile:
                 src_matrix = mat.sigma_s + mat.sigma_in
                 diffusion_const_n = self.materials[num_layer].diffusion_const[n]
                 l2n = mat.l2[n]
-                for g in range(in_scatter_max_group):
-                    if g == n:
+                for basis_group in range(in_scatter_max_group):
+                    if basis_group == n:
                         # placeholder zeros, to be properly calculated later.
                         coefs_num_layer.c.append(0.0)
                         coefs_num_layer.s.append(0.0)
                         continue
-                    l2g = mat.l2[g]
+                    l2g = mat.l2[basis_group]
                     l2_diff = l2g - l2n
                     if np.isclose(l2_diff, 0):
                         # if the characteristic length of group [g] coincides with
@@ -931,28 +931,36 @@ class NeutronFluxProfile:
                         coefs_num_layer.c.append(0.0)
                         coefs_num_layer.s.append(0.0)
                         warnings.warn(
-                            f"Group {g} and group {n} has the same neutron "
-                            "diffusion lengths, which may lead to an error "
-                            "in the neutron flux profile.",
+                            f"Group {n} and group {basis_group} has the same "
+                            "neutron diffusion lengths, which may lead to an "
+                            "error in the neutron flux profile.",
                             stacklevel=2,
                         )
                         continue
                     scale_factor = (l2n * l2g) / l2_diff / diffusion_const_n
-                    in_scatter_min_group = 0 if include_upscatter else g
-
+                    in_scatter_min_group = 0 if include_upscatter else basis_group
+                    print(f"WTF? {in_scatter_min_group=}, {in_scatter_max_group=}")
+                    # src_matrix: propto group i neutrons scattered into n
+                    # self.coefficients: the number of group i neutrons in the shape of group g's basis shape.
                     coefs_num_layer.c.append(
                         fsum([
-                            (src_matrix[i, n] * self.coefficients[num_layer, i].c[g])
-                            for i in range(in_scatter_min_group, in_scatter_max_group)
-                            if i != n
+                            (src_matrix[inscatter_group, n]
+                                * self.coefficients[num_layer, inscatter_group].c[basis_group])
+                            for inscatter_group in range(
+                                in_scatter_min_group, in_scatter_max_group
+                            )
+                            if inscatter_group != n
                         ])
                         * scale_factor
                     )
                     coefs_num_layer.s.append(
                         fsum([
-                            (src_matrix[i, n] * self.coefficients[num_layer, i].s[g])
-                            for i in range(in_scatter_min_group, in_scatter_max_group)
-                            if i != n
+                            (src_matrix[inscatter_group, n]
+                                * self.coefficients[num_layer, inscatter_group].s[basis_group])
+                            for inscatter_group in range(
+                                in_scatter_min_group, in_scatter_max_group
+                            )
+                            if inscatter_group != n
                         ])
                         * scale_factor
                     )
