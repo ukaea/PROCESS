@@ -1257,9 +1257,24 @@ def parse_input_file(data_structure_obj: DataStructure, in_dat: InDat):
                 variables=variables,
             )
 
+    return variables
+
 
 def set_on_datastructure(variable_name, info, data_structure_obj, variables):
-    """TODO after review"""
+    """Set the values from the IN.DAT on the data structure, and store in
+    variables dictionary
+
+    Parameters
+    ----------
+    variable_name: str
+        The variable's name
+    info: INVariable
+        Information of a single variable from the IN.DAT file
+    data_structure_obj: DataStructure
+        The data structure object
+    variables: dict
+        Dictionary of variables to be updated
+    """
     variable_config = copy.copy(INPUT_VARIABLES.get(variable_name))
 
     # string indicates it should be set on the new object data structure
@@ -1275,16 +1290,10 @@ def set_on_datastructure(variable_name, info, data_structure_obj, variables):
     # If the variable value (after the = sign) contains a ',' or is a list (len > 0)
     # then it defines the whole array so needs to be split down into its elements
     # and the parsed like an array defined as 'my_array(<index>) = <value>'
-    # bounds is a dictionary, so needs to be cleaned here too
 
-    # TODO figure out why it's not being handled as an array variable
     if "," in variable_value:
         variable_value = list(variable_value.split(","))
-    if (
-        len(np.shape(variable_value)) > 0 or "," in variable_value
-        # or variable_name == "bounds"
-    ):
-        # TODO not the cleanest, but bounds is a dict now
+    if len(np.shape(variable_value)) > 0 or "," in variable_value:
         clean_variable_value = [
             validate_variable(
                 variable_name,
@@ -1396,6 +1405,7 @@ def validate_variable(
         for i in value:
             clean_value[i] = config.type(value[i])
         return clean_value
+
     try:
         clean_value = config.type(value)
     except ValueError as e:
