@@ -1089,12 +1089,12 @@ class InDat:
                     raise ProcessValidationError(msg) from err
 
         # Inform user of duplicate variables
-        # if len(self.duplicates) > 0:
-        #     raise ProcessValidationError(
-        #         "The following variables are duplicated in the IN.DAT and should only be"
-        #         " defined once:"
-        #         f"\n{self.duplicates}"
-        #     )
+        if len(self.duplicates) > 0:
+            raise ProcessValidationError(
+                "The following variables are duplicated in the IN.DAT and should only be"
+                " defined once:"
+                f"\n{self.duplicates}"
+            )
 
     def process_line(self, line_type, line, line_no):
         """Function to process the line and return the appropriate INVariable
