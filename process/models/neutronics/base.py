@@ -688,14 +688,14 @@ class NeutronFluxProfile:
         """Second derivative of the group n flux in num_layer at location x."""
         abs_x = abs(x)
         trig_funcs = []
-        for g, cs_coefs in enumerate(
+        for basis_group, cs_coefs in enumerate(
             zip(
                 self.coefficients[num_layer, n].c,
                 self.coefficients[num_layer, n].s,
                 strict=True,
             )
         ):
-            l2 = self.materials[num_layer].l2[g]
+            l2 = self.materials[num_layer].l2[basis_group]
             l = np.sqrt(abs(l2))  # noqa: E741
             c, s = (negexp, np.exp) if l2 > 0 else (np.cos, np.sin)
             trig_funcs.append(
@@ -704,7 +704,9 @@ class NeutronFluxProfile:
         return matrix_fsum(trig_funcs, axis=0)
 
     def _summation_shorthand(
-        self, n: int, num_layer: int, func: Callable, x: float, max_group: int
+        self, n: int, num_layer: int,
+        func: Callable[[int, int, float], npt.NDArray[np.float64]],
+        x: float, max_group: int
     ) -> float:
         """
         A repeating pattern of summation found in the code, so we extract it
@@ -716,14 +718,12 @@ class NeutronFluxProfile:
             The group of interest, where neutrons are scattered into.
         num_layer:
             The material layer index.
-        g:
-            The groups from which neutrons are scattered.
         func:
-            The function that takes in g, num_layer, and x and evaluates to
-            two scalars as the output.
-            It should have the signature of func(g, num_layer, x) since it
-            should be one of the _groupwise..._in_layer() function that takes
-            in group index before the layer.
+            The function that takes in basis_group, num_layer, and x, then
+            evaluates to two scalars as the output.
+            It should have the signature of func(basis_group, num_layer, x)
+            since it should be one of the _groupwise..._in_layer() function
+            that takes in group index before the layer.
         x:
             The x-coordinate at which the function func has to be evaluated at.
             (likely denotes an interface or the extended boundary.)
@@ -734,25 +734,26 @@ class NeutronFluxProfile:
             A scalar.
         """
 
-        def coef_pair(g: int) -> npt.NDArray[float]:
+        def coef_pair(basis_group: int) -> npt.NDArray[np.float64]:
             """
             A quick function to get the coefficient pair at the specified
             neutron group n, material layer num_layer, and in-scattering
-            neutron group g. For paramters: see parent function.
+            neutron group basis_group. For paramters: see parent function.
             """
             return np.array([
-                self.coefficients[num_layer, n].c[g],
-                self.coefficients[num_layer, n].s[g],
+                self.coefficients[num_layer, n].c[basis_group],
+                self.coefficients[num_layer, n].s[basis_group],
             ])
 
         summation_sequence = [
-            coef_pair(g) @ func(g, num_layer, x) for g in range(max_group) if g != n
+            coef_pair(basis_group) @ func(basis_group, num_layer, x)
+            for basis_group in range(max_group) if basis_group != n
         ]
         return matrix_fsum(summation_sequence, axis=-1)
 
     def _propagate_coefs_to_next_layer(
         self, n: int, num_layer: int, include_upscatter: bool
-    ) -> tuple[npt.NDArray, npt.NDArray[float]]:
+    ) -> tuple[npt.NDArray, npt.NDArray[np.float64]]:
         """
         Infer this layer's main basis functions' coefficients (.c[n] and .s[n])
         using using the previous layer's basis functions.
@@ -830,7 +831,7 @@ class NeutronFluxProfile:
 
     def _get_all_propagation_operator(
         self, n: int, include_upscatter: bool
-    ) -> tuple[list[npt.NDArray], list[npt.NDArray[float]]]:
+    ) -> tuple[list[npt.NDArray], list[npt.NDArray[np.float64]]]:
         """Get all of the m matrix and v vector, as two lists.
 
         Parameters
@@ -939,7 +940,6 @@ class NeutronFluxProfile:
                         continue
                     scale_factor = (l2n * l2g) / l2_diff / diffusion_const_n
                     in_scatter_min_group = 0 if include_upscatter else basis_group
-                    print(f"WTF? {in_scatter_min_group=}, {in_scatter_max_group=}")
                     # src_matrix: propto inscatter_group neutrons scattered into n
                     # self.coefficients: the number of inscatter_group neutrons in the shape of group basis_group's basis.
                     coefs_num_layer.c.append(
@@ -1075,7 +1075,7 @@ class NeutronFluxProfile:
 
     def _groupwise_fitness(
             self, n: int, jac: bool=True
-        ) -> tuple[npt.NDArray[float], npt.NDArray]:
+        ) -> tuple[npt.NDArray[np.float64], npt.NDArray]:
             """
             Calculate how far the current values of coefficients deviates
             from the 2*n_layers equations, forming a vector with len=
@@ -1329,11 +1329,13 @@ class NeutronFluxProfile:
                 n, self.n_layers - 1, np.sign(x) * self.layer_x[-1]
             )
         trig_funcs = []
-        for g in range(len(self.coefficients[num_layer, n])):
-            c_val, s_val = self._groupwise_cs_values_in_layer(g, num_layer, x)
+        for basis_group in range(len(self.coefficients[num_layer, n])):
+            c_val, s_val = self._groupwise_cs_values_in_layer(
+                basis_group, num_layer, x
+            )
             trig_funcs.extend([
-                self.coefficients[num_layer, n].c[g] * c_val,
-                self.coefficients[num_layer, n].s[g] * s_val,
+                self.coefficients[num_layer, n].c[basis_group] * c_val,
+                self.coefficients[num_layer, n].s[basis_group] * s_val,
             ])
         return matrix_fsum(trig_funcs, axis=0)
 
@@ -1359,11 +1361,13 @@ class NeutronFluxProfile:
                 n, self.n_layers - 1, np.sign(x) * self.layer_x[-1]
             )
         differentials = []
-        for g in range(len(self.coefficients[num_layer, n])):
-            c_diff, s_diff = self._groupwise_cs_differential_in_layer(g, num_layer, x)
+        for basis_group in range(len(self.coefficients[num_layer, n])):
+            c_diff, s_diff = self._groupwise_cs_differential_in_layer(
+                basis_group, num_layer, x
+            )
             differentials.extend([
-                self.coefficients[num_layer, n].c[g] * c_diff,
-                self.coefficients[num_layer, n].s[g] * s_diff,
+                self.coefficients[num_layer, n].c[basis_group] * c_diff,
+                self.coefficients[num_layer, n].s[basis_group] * s_diff,
             ])
 
         return (
@@ -1474,13 +1478,13 @@ class NeutronFluxProfile:
             x_start = 0.0
         x_end = self.layer_x[num_layer]
 
-        for g in range(len(self.coefficients[num_layer, n])):
+        for basis_group in range(len(self.coefficients[num_layer, n])):
             c_int, s_int = self._groupwise_cs_definite_integral_in_layer(
-                g, num_layer, x_start, x_end
+                basis_group, num_layer, x_start, x_end
             )
             integrals.extend([
-                self.coefficients[num_layer, n].c[g] * c_int,
-                self.coefficients[num_layer, n].s[g] * s_int,
+                self.coefficients[num_layer, n].c[basis_group] * c_int,
+                self.coefficients[num_layer, n].s[basis_group] * s_int,
             ])
         return matrix_fsum(integrals, axis=0)
 
