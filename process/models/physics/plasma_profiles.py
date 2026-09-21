@@ -12,6 +12,10 @@ import scipy as sp
 from process.core import constants
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.models.physics.plasma_equilibrium import (
+    PlasmaEquilibrium,
+    veqpy_equilibrium_available,
+)
 from process.models.physics.profiles import PlasmaProfileShapeType
 
 logger = logging.getLogger(__name__)
@@ -220,6 +224,11 @@ class PlasmaProfile(Model):
         integ1 = sp.integrate.simpson(arg1, x=rho, dx=drho)
         integ2 = sp.integrate.simpson(arg2, x=rho, dx=drho)
 
+        if veqpy_equilibrium_available(self.data):
+            eq = self.data.veqpy.equilibrium
+            integ1 = PlasmaEquilibrium.get_volume_average(eq, rho, dens * temp)
+            integ2 = PlasmaEquilibrium.get_volume_average(eq, rho, dens)
+
         #  Density-weighted temperatures
         self.data.physics.temp_plasma_electron_density_weighted_kev = integ1 / integ2
         self.data.physics.temp_plasma_ion_density_weighted_kev = (
@@ -366,6 +375,9 @@ class PlasmaProfile(Model):
                 * self.data.physics.a_plasma_poloidal
             )
         )
+        eq = self.data.veqpy.equilibrium
+        if eq is not None:
+            self.data.physics.j_plasma_on_axis = float(eq.jtor[0])
 
     def calculate_parabolic_profile_factors(self):
         """Calculate the gradient information for i_plasma_pedestal = 0.

@@ -160,6 +160,11 @@ var_dicts = {
     "triang": VariableMetadata(
         latex=r"$\delta_\mathrm{sep}$", description="Triangularity", units=""
     ),
+    "n_lcfs_points": VariableMetadata(
+        latex=r"$N_{\mathrm{LCFS}}$",
+        description="Number of LCFS (R, Z) points",
+        units="",
+    ),
     "f_a_tf_coil_inboard_steel": VariableMetadata(
         latex=r"f_\mathrm{steel}^\mathrm{TF}", description="TF steel fraction", units=""
     ),
@@ -368,6 +373,11 @@ var_dicts = {
     ),
     "f_nd_impurity_electrons(13)": VariableMetadata(
         latex=r"$Xe_{\mathrm{f}}$", description="Impurity fraction (Xenon)", units=""
+    ),
+    "f_nd_impurity_electrons(15)": VariableMetadata(
+        latex=r"$B_{\mathrm{f}}$",
+        description="Boron fuel fraction (when proton-boron fusion)",
+        units="",
     ),
     "pdivmax_over_rmajor": VariableMetadata(
         latex=r"$P_{\mathrm{div}}/R_\mathrm{maj}$ [MW/m]",

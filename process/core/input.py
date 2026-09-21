@@ -17,7 +17,10 @@ from process.core.solver.constraints import ConstraintManager
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import N_ITERATION_VARIABLES_MAX
 from process.data_structure.pfcoil_variables import N_PF_GROUPS_MAX
-from process.data_structure.physics_variables import N_CONFINEMENT_SCALINGS
+from process.data_structure.physics_variables import (
+    N_CONFINEMENT_SCALINGS,
+    N_LCFS_POINTS_MAX,
+)
 from process.data_structure.scan_variables import IPNSCNS, IPNSCNV
 
 if TYPE_CHECKING:
@@ -46,6 +49,28 @@ def _icc_additional_actions(
 ):
     data.numerics.icc[data.numerics.n_constraints] = value
     data.numerics.n_constraints += 1
+
+
+def _lcfs_array_additional_actions(
+    _name, value, array_index, _config, data: DataStructure
+):
+    """Track how many LCFS (R, Z) points were provided in the input file.
+
+    Raises
+    ------
+    ProcessValidationError
+        If an LCFS array exceeds the maximum allowed length.
+    """
+    if isinstance(value, list):
+        n_points = len(value)
+        if n_points > N_LCFS_POINTS_MAX:
+            raise ProcessValidationError(
+                f"LCFS array length {n_points} exceeds maximum "
+                f"{N_LCFS_POINTS_MAX} ({_name})"
+            )
+        data.physics.n_lcfs_points = n_points
+    elif array_index is not None:
+        data.physics.n_lcfs_points = max(data.physics.n_lcfs_points, int(array_index))
 
 
 @dataclass(slots=True)
@@ -435,6 +460,9 @@ INPUT_VARIABLES = {
     "f_rad": InputVariable("stellarator", float, range=(0.0, 1.0)),
     "f_sync_reflect": InputVariable("physics", float, range=(0.0, 1.0)),
     "f_plasma_fuel_tritium": InputVariable("physics", float, range=(0.0, 1.0)),
+    "f_plasma_fuel_boron11": InputVariable("physics", float, range=(0.0, 1.0)),
+    "f_plasma_fuel_proton": InputVariable("physics", float, range=(0.0, 1.0)),
+    "f_nd_protons_electrons_input": InputVariable("physics", float, range=(0.0, 1.0)),
     "f_beam_tritium": InputVariable("current_drive", float, range=(0.0, 1.0)),
     "f_vforce_inboard": InputVariable("tfcoil", float, range=(0.0, 1.0)),
     "f_w": InputVariable("stellarator", float, range=(0.1, 1.0)),
@@ -1004,10 +1032,17 @@ INPUT_VARIABLES = {
     "i_l_h_threshold": InputVariable("physics", int, range=(1, 21)),
     "i_pf_current": InputVariable("pf_coil", int, choices=[0, 1, 2]),
     "i_pfirsch_schluter_current": InputVariable("physics", int, choices=[0, 1]),
-    "i_plasma_current": InputVariable("physics", int, range=(1, 9)),
-    "i_plasma_geometry": InputVariable("physics", int, range=(0, 12)),
+    "i_plasma_current": InputVariable("physics", int, range=(0, 9)),
+    "plasma_current_user_input": InputVariable("physics", float, range=(1.0e5, 1.0e8)),
+    "i_plasma_geometry": InputVariable("physics", int, range=(0, 13)),
     "i_plasma_shape": InputVariable("physics", int, choices=[0, 1]),
     "i_plasma_wall_gap": InputVariable("physics", int, choices=[0, 1]),
+    "r_array": InputVariable(
+        "physics", float, array=True, additional_actions=_lcfs_array_additional_actions
+    ),
+    "z_array": InputVariable(
+        "physics", float, array=True, additional_actions=_lcfs_array_additional_actions
+    ),
     "i_pulsed_plant": InputVariable("pulse", int, choices=[0, 1]),
     "i_q95_fixed": InputVariable("constraints", int, choices=[0, 1]),
     "i_r_cp_top": InputVariable("build", int, choices=[0, 1, 2]),
@@ -1038,6 +1073,8 @@ INPUT_VARIABLES = {
     "ifetyp": InputVariable("ife", int, range=(0, 4)),
     "ifueltyp": InputVariable("costs", int, choices=[0, 1, 2]),
     "i_plasma_ignited": InputVariable("physics", int, choices=[0, 1]),
+    "i_fusion_reactions": InputVariable("physics", str, choices=["d-t-he3", "p-b11"]),
+    "i_nd_plasma_protons": InputVariable("physics", int, choices=[0, 1]),
     "i_blkt_module_segmentation": InputVariable("fwbs", int, choices=[0, 1]),
     "inuclear": InputVariable("fwbs", int, choices=[0, 1]),
     "iohcl": InputVariable("build", int, choices=[0, 1]),
@@ -1049,6 +1086,7 @@ INPUT_VARIABLES = {
     "i_beta_norm_max": InputVariable("physics", int, range=(0, 5)),
     "i_ind_plasma_internal_norm": InputVariable("physics", int, range=(0, 2)),
     "i_alphaj": InputVariable("physics", int, range=(0, 1)),
+    "i_equilibrium_solve": InputVariable("physics", int, choices=[0, 1]),
     "i_fw_blkt_shared_coolant": InputVariable("fwbs", int, choices=[0, 1, 2]),
     "ireactor": InputVariable("costs", int, choices=[0, 1]),
     "irefprop": InputVariable("fwbs", int, choices=[0, 1]),

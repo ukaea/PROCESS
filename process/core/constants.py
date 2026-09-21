@@ -125,6 +125,12 @@ Reference: National Institute of Standards and Technology (NIST)
 https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=Be
 """
 
+M_BORON11_AMU = 11.00930536
+"""Boron-11 atom mass [amu]
+Reference: National Institute of Standards and Technology (NIST)
+https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=B
+"""
+
 M_CARBON_AMU = 12.0096
 """Average Carbon atom mass [amu]
 Reference: National Institute of Standards and Technology (NIST)
