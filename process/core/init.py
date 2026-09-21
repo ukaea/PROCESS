@@ -554,6 +554,21 @@ def check_process(inputs, data):  # noqa: ARG001
                     }
                 ),
             )
+        if (
+            pedestal_type == DensityProfilePedestalType.GREENWALD_FRACTION 
+            and data.physics.i_equilibrium_solve == 1
+        ):
+            raise ProcessValidationError(
+                "Pedestal and separatrix densities must be input as absolute "
+                "values (nd_plasma_pedestal_electron, "
+                "nd_plasma_separatrix_electron) with "
+                "i_nd_plasma_pedestal_separatrix = 0 when i_equilibrium_solve = 1. "
+                "Greenwald-fraction inputs are not allowed.",
+                i_nd_plasma_pedestal_separatrix=(
+                    data.physics.i_nd_plasma_pedestal_separatrix
+                ),
+            )
+
 
         if (
             abs(data.physics.radius_plasma_pedestal_density_norm - 1.0) <= 1e-7
