@@ -242,7 +242,7 @@ class AutoPopulatingDict:
         return self._dict.items()
 
     def __repr__(self):
-        return f"<AutoPopulatingDict({self.name}):{self._dict}>"
+        return f"<{self.__class__.__name__}({self.name}):{self._dict}>"
 
 
 class LayerSpecificGroupwiseConstants:
