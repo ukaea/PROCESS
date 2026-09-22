@@ -868,17 +868,44 @@ class MaterialMacroInfo:
         self._diffusion_const = np.array(self._diffusion_const)
         self._l2 = np.array(self._l2)
 
-        self._conversion_factor = np.zeros([self.n_groups, self.n_groups])
+        self._populated = True
+        self._populate_conversion_factor()
+        return
+
+    def _populate_conversion_factor(self):
+        """
+        This conversion factor is used exclusively by the NeutronFluxProfile
+        object to infer the off-diagonal coefficients' values when the main-
+        diagonal coefficients for each layer is updated, using
+        conversion_factor = 1/(1/l2[n] - 1/l2[g]) * 1/diffusion_const
+        coef[n,g] = sum (over all groups i scattering into group n as basis g):
+            conversion_factor * material.sigma_source[i,n] * coef[i,g]
+
+        If the characteristic length [g] coincides with the characteristic
+        length of group [n], then that particular negexp/exp/cos/sin basis
+        would be indistinguishable from group [n]'s negexp/exp/cos/sin basis,
+        causing issues. Currently we simply set the coefficient to 0. The
+        correct way to handle characteristic length is to include another term
+        x^k negexp/exp/cos/sin, where k+=1 for every collision.
+        """
+        self.conversion_factor = np.zeros([self.n_groups, self.n_groups])
         l2_diff = np.subtract.outer(self._l2, self._l2)
         mask = ~np.isclose(
             np.broadcast_to(self._l2, [self.n_groups, self.n_groups]),
             np.broadcast_to(self._l2[:, None], [self.n_groups, self.n_groups]),
             atol=0.0
         )
-        self._conversion_factor[mask] = np.multiply.outer(
+        for n, basis_group in zip(*np.where(~mask)):
+            if n < basis_group:
+                warnings.warn(
+                    f"Group {n} and group {basis_group} has the same neutron "
+                    "diffusion lengths, which may lead to an error in the "
+                    "neutron flux profile.",
+                    stacklevel=2,
+                )
+        self.conversion_factor[mask] = np.multiply.outer(
             self._l2, self._l2
         )[mask]/(l2_diff * self._diffusion_const).T[mask]
-        self._populated = True
         return
 
     def _add_data_from_single_record(
@@ -1012,10 +1039,6 @@ class MaterialMacroInfo:
         if not self._populated:
             raise ValueError("Empty diffusion length data!")
         return self._l2
-
-    @property
-    def conversion_factor(self) -> float:
-        return self._conversion_factor
 
     @property
     def downscatter_only(self):
