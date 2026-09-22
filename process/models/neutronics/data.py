@@ -865,6 +865,19 @@ class MaterialMacroInfo:
             )
             self._diffusion_const.append(diff_const)
             self._l2.append(l2_i)
+        self._diffusion_const = np.array(self._diffusion_const)
+        self._l2 = np.array(self._l2)
+
+        self._conversion_factor = np.zeros([self.n_groups, self.n_groups])
+        l2_diff = np.subtract.outer(self._l2, self._l2)
+        mask = ~np.isclose(
+            np.broadcast_to(self._l2, [self.n_groups, self.n_groups]),
+            np.broadcast_to(self._l2[:, None], [self.n_groups, self.n_groups]),
+            atol=0.0
+        )
+        self._conversion_factor[mask] = np.multiply.outer(
+            self._l2, self._l2
+        )[mask]/(l2_diff * self._diffusion_const).T[mask]
         self._populated = True
         return
 
@@ -999,6 +1012,10 @@ class MaterialMacroInfo:
         if not self._populated:
             raise ValueError("Empty diffusion length data!")
         return self._l2
+
+    @property
+    def conversion_factor(self) -> float:
+        return self._conversion_factor
 
     @property
     def downscatter_only(self):
