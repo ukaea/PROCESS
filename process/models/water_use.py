@@ -77,7 +77,7 @@ class WaterUse(Model):
         Parameters
         ----------
         wastetherm:
-            thermal energy (MJ) to be cooled by this system
+            thermal energy per day (MJ/day) to be cooled by this system
         output:
 
         """
@@ -132,7 +132,7 @@ class WaterUse(Model):
         Parameters
         ----------
         wastetherm:
-            thermal energy (MJ) to be cooled by this system
+            thermal energy per day (MJ/day) to be cooled by this system
         output:
 
         """

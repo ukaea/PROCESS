@@ -35,7 +35,7 @@ class WaterUseData:
     """
 
     evapvol: float = 0.0
-    """evaporated volume of water (m3)"""
+    """evaporated volume of water (m3/day)"""
 
     energypervol: float = 0.0
     """input waste (heat) energy cooled per evaporated volume (J/m3)"""
@@ -44,13 +44,13 @@ class WaterUseData:
     """volume evaporated by units of heat energy (m3/MJ)"""
 
     waterusetower: float = 0.0
-    """total volume of water used in cooling tower (m3)"""
+    """total volume of water used in cooling tower (m3/day)"""
 
     wateruserecirc: float = 0.0
-    """total volume of water used in recirculating system (m3)"""
+    """total volume of water used in recirculating system (m3/day)"""
 
     wateruseonethru: float = 0.0
-    """total volume of water used in once-through system (m3)"""
+    """total volume of water used in once-through system (m3/day)"""
 
 
 # Another disgusting we may need to do in the transition period to support the dicts.
