@@ -953,6 +953,18 @@ class MaterialMacroInfo:
         return self._sigma_in
 
     @property
+    def sigma_source(self) -> npt.NDArray:
+        """
+        Cross-section for the production of neutrons, whether by scattering
+        (including within the same group) or by (n,2n) reactions.
+        phi * sigma_source = total number of neutrons outputted due to these
+        reactions.
+        """
+        if not self._populated:
+            raise ValueError("Empty cross-section data!")
+        return self._sigma_scatter + self._sigma_in
+
+    @property
     def sigma_triton(self) -> npt.NDArray[np.float64]:
         if not self._populated:
             raise ValueError("Empty cross-section data!")
@@ -1001,7 +1013,7 @@ class MaterialMacroInfo:
         as neutron fluxes in higher-lethargy groups in turn affects the neutron
         flux in lower-lethargy groups.
         """
-        return ~(np.tril(self.sigma_s, k=-1).any() or np.tril(self.sigma_in, k=-1).any())
+        return ~np.tril(self.sigma_source, k=-1).any()
 
     @property
     def element_set(self):
