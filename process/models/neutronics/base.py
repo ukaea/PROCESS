@@ -885,10 +885,10 @@ class NeutronFluxProfile:
             return  # skip if it has already been solved.
         # Included below: For future implementation to allow solving
         # non-down-scatter-only systems by iterating.
-        if self.contains_upscatter and self.num_iteration[n] > 0:
+        if self.contains_upscatter:
             raise NotImplementedError(
-                "This program has not been validted against systems containing"
-                " up-scatter yet."
+                "This program has not been validated against systems "
+                "containing up-scatter yet."
             )  # Sum over the addition in neutron flux due to the 2nd, 3rd, 4th
             # etc. generation of neutrons, which should eventually converge.
         for num_layer, mat in enumerate(self.materials):

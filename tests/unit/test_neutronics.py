@@ -39,9 +39,10 @@ def test_sigma_s_too_large():
 
 
 def test_warn_up_elastic_scatter():
-    with pytest.warns():
+    with pytest.raises(NotImplementedError):
         mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
         mat._set_sigma([1.0, 2.0], [[0.5, 0.5], [1.0, 1.0]])  # noqa: SLF001
+        NeutronFluxProfile(1.0, [1.0], [mat]).solve()
 
 
 def test_throw_index_error():
