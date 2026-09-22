@@ -10,6 +10,7 @@ Notes
                 generation script imports, and inspects, process.
 """
 
+import ast
 import sys
 from re import sub
 
@@ -842,59 +843,25 @@ def variable_constraint_type_check(item_number, var_type):
     Raises
     ------
     ValueError
-        Not a recognised format
+        If item_number is not an integer
+
     """
     # Check if item is in string format
     if isinstance(item_number, str):
-        # Try evaluate and convert to an integer. Warning if number is rounded
+        # Try evaluate and convert to an integer
         try:
-            # eval should produce int of float otherwise raise the ValueError
-            item_number = eval(item_number)
-
-            # Integer
-            if isinstance(item_number, int):
-                return item_number
-
-            # number must be float if exception not raised
-            if item_number.is_integer():
-                return int(item_number)
-
-            # rounded float number with warning
-            print(
-                f"Value {item_number} for {var_type} not an integer. "
-                f"Value rounded to {int(item_number)}."
-                " Check!"
-            )
-            return int(item_number)
-
-        except ValueError:
-            print(
-                f"Value {item_number} for {var_type} not valid. Check value!",
-                file=sys.stderr,
-            )
+            # eval should produce int or float otherwise raise the ValueError
+            item_number = ast.literal_eval(item_number)
+        except ValueError as err:
+            msg = f"Value {item_number} for {var_type} not an int. Check value!"
+            raise ValueError(msg) from err
 
     # Check if item is in float format
-    elif isinstance(item_number, float):
-        # If integer convert to float and return
-        if item_number.is_integer():
-            return int(item_number)
-
-        # If not an integer warn of rounding and return rounded integer
-        print(
-            f"Value {item_number} for {var_type} not an integer. "
-            f"Value rounded to {int(item_number)}. Check!"
-        )
+    if (isinstance(item_number, (float, int))) and item_number.is_integer():
         return int(item_number)
 
-    # If already an integer return unchanged
-    elif isinstance(item_number, int):
-        return item_number
-
-    # Value not recognised
-    else:
-        raise ValueError(  # noqa: TRY004
-            f"Value {item_number} for {var_type} not a recognised format. Check value!"
-        )
+    # Value not integer, or convertible to int
+    raise ValueError(f"Value {item_number} for {var_type} not an int. Check value!")
 
 
 def variable_bound_check(bound_number, bound_type):
@@ -1195,7 +1162,7 @@ class InDat:
                 value = no_comment_line[1].strip()
             except IndexError:
                 print(
-                    "Error when reading IN.DAT file on line",
+                    "Error when reading the following line in IN.DAT file: ",
                     no_comment_line,
                     "\n Please note, that our Python Library cannot cope with",
                     " variable definitions on multiple lines.",
@@ -1452,7 +1419,7 @@ class InDat:
             self.add_duplicate_variable(f"{name}({fortran_index})")
 
         # Now we are sure that the Python list index exists, set its value
-        self.data[name].value[index] = eval(fortran_python_scientific(value))
+        self.data[name].value[index] = ast.literal_eval(fortran_python_scientific(value))
 
     def add_duplicate_variable(self, name):
         """Records duplicate variables in the input file.
@@ -1650,12 +1617,11 @@ class InDat:
         obsolete_variables = ov.OBS_VARS
         obsolete_vars_help_message = ov.OBS_VARS_HELP
 
-        filename = self.filename
         variables_in_in_dat = []
         modified_lines = []
         changes_made = []  # To store details of the changes
 
-        with open(filename) as file:
+        with open(self.filename) as file:
             for line in file:
                 # Skip comment lines or lines without an assignment
                 if line.startswith("*") or "=" not in line:
@@ -1716,7 +1682,7 @@ class InDat:
         if obs_vars_in_in_dat:
             if self.update_obsolete:
                 # If update_obsolete is True, write the modified content to the file
-                with open(filename, "w") as file:
+                with open(self.filename, "w") as file:
                     file.writelines(modified_lines)
                 print(
                     "The IN.DAT file has been updated to replace or "
