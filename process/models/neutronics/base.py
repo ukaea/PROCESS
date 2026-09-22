@@ -120,7 +120,7 @@ class RegisterLater:
         self.installer(owner)
 
 
-def extrapolation_length(diffusion_constficient: float) -> float:
+def extrapolation_length(diffusion_const: float) -> float:
     """Get the extrapolation length of the final medium :math:`\\delta`.
 
     Notes
@@ -132,7 +132,7 @@ def extrapolation_length(diffusion_constficient: float) -> float:
     THis yields a very close approximation. All of this equation is provided by
     Duderstadt and Hamilton.
     """
-    return 0.7104 * 3 * diffusion_constficient
+    return 0.7104 * 3 * diffusion_const
 
 
 @dataclass
