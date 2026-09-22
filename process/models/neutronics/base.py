@@ -544,11 +544,11 @@ class NeutronFluxProfile:
         ])
 
         mat_name_list = [mat.name for mat in self.materials]
+        self.extended_boundary = self.layer_x[-1] + extrapolation_length(
+            self.materials[-1].diffusion_const
+        ) #  vector
         self.coefficients = LayerSpecificGroupwiseConstants(
             self.solve_group_n, mat_name_list, "Coefficients"
-        )
-        self.extended_boundary = AutoPopulatingDict(
-            self.solve_group_n, "extended_boundary"
         )
         self.num_iteration = [0 for n in range(self.n_groups)]
         self.contains_upscatter = any(not mat.downscatter_only for mat in self.materials)
@@ -900,9 +900,6 @@ class NeutronFluxProfile:
                     f"of group {n}.",
                     stacklevel=2,
                 )
-        self.extended_boundary[n] = self.layer_x[-1] + extrapolation_length(
-            self.materials[-1].diffusion_const[n]
-        )
 
         include_upscatter = self.contains_upscatter and self.num_iteration[n] != 0
         in_scatter_max_group = self.n_groups if include_upscatter else n + 1
@@ -953,7 +950,7 @@ class NeutronFluxProfile:
                             )
                             if inscatter_group != n
                         ])
-                        * scale_factor
+                        * mat.conversion_factor[n, basis_group]
                     )
                     coefs_num_layer.s.append(
                         fsum([
@@ -964,7 +961,7 @@ class NeutronFluxProfile:
                             )
                             if inscatter_group != n
                         ])
-                        * scale_factor
+                        * mat.conversion_factor[n, basis_group]
                     )
 
                 self.coefficients[num_layer, n] = coefs_num_layer
@@ -1674,7 +1671,7 @@ class NeutronFluxProfile:
             groupwise_function = getattr(self, f"groupwise_{method_name}")
         x_ranges = _generate_x_range(
             self.interface_x.copy(),
-            max(self.extended_boundary.values())
+            max(self.extended_boundary)
             if extend_plot_beyond_boundary
             else None,
             min_total_num_points=n_points,
