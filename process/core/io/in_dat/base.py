@@ -824,46 +824,6 @@ def _convert_parameter_python(param_type, value):
     return value
 
 
-def variable_constraint_type_check(item_number, var_type):
-    """Function to put input into correct format for altering values etc.
-
-    Parameters
-    ----------
-    item_number:
-        Number associated with variable or constraint
-    var_type:
-        States whether item is iteration variable or constraint
-        equation
-
-    Returns
-    -------
-    :
-        Formatted item_number
-
-    Raises
-    ------
-    ValueError
-        If item_number is not an integer
-
-    """
-    # Check if item is in string format
-    if isinstance(item_number, str):
-        # Try evaluate and convert to an integer
-        try:
-            # eval should produce int or float otherwise raise the ValueError
-            item_number = ast.literal_eval(item_number)
-        except ValueError as err:
-            msg = f"Value {item_number} for {var_type} not an int. Check value!"
-            raise ValueError(msg) from err
-
-    # Check if item is in float format
-    if (isinstance(item_number, (float, int))) and item_number.is_integer():
-        return int(item_number)
-
-    # Value not integer, or convertible to int
-    raise ValueError(f"Value {item_number} for {var_type} not an int. Check value!")
-
-
 def variable_bound_check(bound_number, bound_type):
     """Function to put bound_number and bound_type into correct format
 
@@ -1435,7 +1395,7 @@ class InDat:
         if name not in self.duplicates:
             self.duplicates.append(name)
 
-    def add_iteration_variable(self, variable_number):
+    def add_iteration_variable(self, variable_number: int):
         """Function to add iteration variable to IN.DAT data dictionary
 
         Parameters
@@ -1444,14 +1404,10 @@ class InDat:
             Iteration variable number to add
 
         """
-        # format iteration variable number
-        variable_number = variable_constraint_type_check(
-            variable_number, "iteration variable"
-        )
         # add iteration variable to IN.DAT data dictionary
         add_iteration_variable(self.data, variable_number)
 
-    def remove_iteration_variable(self, variable_number):
+    def remove_iteration_variable(self, variable_number: int):
         """Function to remove iteration variable to IN.DAT data dictionary
 
         Parameters
@@ -1460,14 +1416,10 @@ class InDat:
             Iteration variable number to remove
 
         """
-        # format iteration variable number
-        variable_number = variable_constraint_type_check(
-            variable_number, "iteration variable"
-        )
         # remove iteration variable from IN.DAT data dictionary
         remove_iteration_variable(self.data, variable_number)
 
-    def add_constraint_equation(self, equation_number):
+    def add_constraint_equation(self, equation_number: int):
         """Function to add constraint equation to IN.DAT data dictionary
 
         Parameters
@@ -1476,15 +1428,10 @@ class InDat:
             Constraint equation number to add
 
         """
-        # format constraint equation number
-        equation_number = variable_constraint_type_check(
-            equation_number, "constraint equation"
-        )
-
         # add constraint equation to IN.DAT data dictionary
         add_constraint_equation(self.data, equation_number)
 
-    def remove_constraint_equation(self, equation_number):
+    def remove_constraint_equation(self, equation_number: int):
         """Function to remove a constraint equation from IN.DAT data
         dictionary
 
@@ -1494,11 +1441,6 @@ class InDat:
             Constraint equation number to remove
 
         """
-        # format constraint equation number
-        equation_number = variable_constraint_type_check(
-            equation_number, "constraint equation"
-        )
-
         # remove constraint equation from IN.DAT data dictionary
         remove_constraint_equation(self.data, equation_number)
 
