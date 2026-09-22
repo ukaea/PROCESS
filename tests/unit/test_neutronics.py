@@ -195,12 +195,12 @@ def test_same_l_in_2_groups_warns():
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     x_fw = 5.72 * 0.01
     fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
-    fw_material._set_sigma(  # noqa: SLF001
-        [sigma_fw_t, sigma_fw_t], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
-    )
-    incoming_flux = 100.0
-    neutron_profile = NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
     with pytest.warns(UserWarning):
+        fw_material._set_sigma(  # noqa: SLF001
+            [sigma_fw_t, sigma_fw_t], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
+        )
+        incoming_flux = 100.0
+        neutron_profile = NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
         neutron_profile.solve()
 
 
