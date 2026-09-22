@@ -908,11 +908,12 @@ class NeutronFluxProfile:
         in_scatter_max_group = self.n_groups if include_upscatter else n + 1
 
         try:
+            print("Begin initialization loop:...")
             for num_layer in range(self.n_layers):
                 # Setting up aliases for shorter code
                 coefs_num_layer = Coefficients([], [])
                 mat = self.materials[num_layer]
-                src_matrix = mat.sigma_s + mat.sigma_in
+                src_matrix = mat.sigma_source
                 diffusion_const_n = self.materials[num_layer].diffusion_const[n]
                 l2n = mat.l2[n]
                 for basis_group in range(in_scatter_max_group):
