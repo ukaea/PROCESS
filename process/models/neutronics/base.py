@@ -881,15 +881,16 @@ class NeutronFluxProfile:
             )
         if n > 0 and not self.coefficients.has_populated(n - 1):
             self.solve_group_n(n - 1)
-        if self.contains_upscatter and self.num_iteration[n] > 1:
-            raise NotImplementedError(
-                "Will implement solve_group_n in a loop later."
-            )  # Sum over the addition in neutron flux due to the 2nd, 3rd, 4th
-            # etc. generation of neutrons, which should eventually converge.
         if self.coefficients.has_populated(n):
             return  # skip if it has already been solved.
-        # Parameter to be changed later, to allow solving non-down-scatter-only
-        # systems by iterating.
+        # Included below: For future implementation to allow solving
+        # non-down-scatter-only systems by iterating.
+        if self.contains_upscatter and self.num_iteration[n] > 0:
+            raise NotImplementedError(
+                "This program has not been validted against systems containing"
+                " up-scatter yet."
+            )  # Sum over the addition in neutron flux due to the 2nd, 3rd, 4th
+            # etc. generation of neutrons, which should eventually converge.
         for num_layer, mat in enumerate(self.materials):
             if mat.diffusion_const[n] > self.layer_x[num_layer]:
                 warnings.warn(
