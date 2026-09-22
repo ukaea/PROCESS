@@ -910,40 +910,13 @@ class NeutronFluxProfile:
                 # Setting up aliases for shorter code
                 coefs_num_layer = Coefficients([], [])
                 mat = self.materials[num_layer]
-                src_matrix = mat.sigma_source
-                diffusion_const_n = self.materials[num_layer].diffusion_const[n]
-                l2n = mat.l2[n]
                 for basis_group in range(in_scatter_max_group):
-                    if basis_group == n:
-                        # placeholder zeros, to be properly calculated later.
-                        coefs_num_layer.c.append(0.0)
-                        coefs_num_layer.s.append(0.0)
-                        continue
-                    l2g = mat.l2[basis_group]
-                    l2_diff = l2g - l2n
-                    if np.isclose(l2_diff, 0):
-                        # if the characteristic length of group [basis_group] coincides with
-                        # the characteristic length of group [n], then that particular
-                        # cosh/sinh would be indistinguishable from group [n]'s
-                        # cosh/sinh, causing issues. Currently we simply set the coefficient to 0.
-                        # The correct way multiplier of the sin(h) and cos(h) (x/L_g) function
-                        # should include a factor of x^k where k += 1.
-                        coefs_num_layer.c.append(0.0)
-                        coefs_num_layer.s.append(0.0)
-                        warnings.warn(
-                            f"Group {n} and group {basis_group} has the same "
-                            "neutron diffusion lengths, which may lead to an "
-                            "error in the neutron flux profile.",
-                            stacklevel=2,
-                        )
-                        continue
-                    scale_factor = (l2n * l2g) / l2_diff / diffusion_const_n
                     in_scatter_min_group = 0 if include_upscatter else basis_group
-                    # src_matrix: propto inscatter_group neutrons scattered into n
+                    # mat.sigma_source: propto inscatter_group neutrons scattered into n
                     # self.coefficients: the number of inscatter_group neutrons in the shape of group basis_group's basis.
                     coefs_num_layer.c.append(
                         fsum([
-                            (src_matrix[inscatter_group, n]
+                            (mat.sigma_source[inscatter_group, n]
                                 * self.coefficients[num_layer, inscatter_group].c[basis_group])
                             for inscatter_group in range(
                                 in_scatter_min_group, in_scatter_max_group
@@ -954,7 +927,7 @@ class NeutronFluxProfile:
                     )
                     coefs_num_layer.s.append(
                         fsum([
-                            (src_matrix[inscatter_group, n]
+                            (mat.sigma_source[inscatter_group, n]
                                 * self.coefficients[num_layer, inscatter_group].s[basis_group])
                             for inscatter_group in range(
                                 in_scatter_min_group, in_scatter_max_group
