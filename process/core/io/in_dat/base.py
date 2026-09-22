@@ -910,12 +910,12 @@ class INVariable:
 
     def __eq__(self, value):
         """Determine if variables are equal"""
-        # intentionally missing .comment
+        # intentionally missing .comment,
         # this is not necessary for the variables to be equal
         return (
-            self.name == value.name
-            and self.value == value.value
-            and self.v_type == value.v_type
+            f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, "
+            f"v_type={self.v_type!r}, "
+            f"comment={self.comment!r}"
         )
 
     def __hash__(self):
