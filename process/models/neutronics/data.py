@@ -855,12 +855,6 @@ class MaterialMacroInfo:
             raise ProcessValidationError(
                 "Total cross-section should include the scattering cross-section."
             )
-        if np.tril(self._sigma_scatter, k=-1).any():
-            warnings.warn(
-                "Elastic up-scattering seems unlikely in this model! "
-                "Check if the group structure is chosen correctly?",
-                stacklevel=2,
-            )
         self._diffusion_const, self._l2 = [], []
         for i in range(self.n_groups):
             diff_const, l2_i = get_diffusion_coefficient_and_length(
