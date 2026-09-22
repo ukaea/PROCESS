@@ -23,8 +23,8 @@ from process.data_structure.pfcoil_variables import PFConductorModel
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.engineering.materials import (
-    calculate_tresca_stress,
-    calculate_von_mises_stress,
+    calculate_tresca_stress_numba,
+    calculate_von_mises_stress_numba,
 )
 
 if TYPE_CHECKING:
@@ -3164,13 +3164,13 @@ class TFCoil(Model):
         # -----------------------------
         # Array equation
 
-        s_shear_tf = calculate_tresca_stress(
+        s_shear_tf = calculate_tresca_stress_numba(
             stress_x=sig_tf_r, stress_y=sig_tf_t, stress_z=sig_tf_z
         )
 
         # Array equation
 
-        sig_tf_vmises = calculate_von_mises_stress(
+        sig_tf_vmises = calculate_von_mises_stress_numba(
             stress_x=sig_tf_r,
             stress_y=sig_tf_t,
             stress_z=sig_tf_z,
@@ -3192,7 +3192,7 @@ class TFCoil(Model):
             ):
                 # Addaped Von-mises stress calculation to WP strucure [Pa]
 
-                svmxz = calculate_von_mises_stress(
+                svmxz = calculate_von_mises_stress_numba(
                     stress_x=0.0e0,
                     stress_y=sig_tf_t[ii],
                     stress_z=sig_tf_z[ii],
@@ -3201,7 +3201,7 @@ class TFCoil(Model):
                     stress_shear_zx=0.0e0,
                 )
 
-                svmyz = calculate_von_mises_stress(
+                svmyz = calculate_von_mises_stress_numba(
                     stress_x=sig_tf_r[ii],
                     stress_y=0.0e0,
                     stress_z=sig_tf_z[ii],
