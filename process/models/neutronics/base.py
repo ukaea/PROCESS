@@ -905,7 +905,6 @@ class NeutronFluxProfile:
         in_scatter_max_group = self.n_groups if include_upscatter else n + 1
 
         try:
-            print("Begin initialization loop:...")
             for num_layer in range(self.n_layers):
                 # Setting up aliases for shorter code
                 coefs_num_layer = Coefficients([], [])
@@ -914,6 +913,8 @@ class NeutronFluxProfile:
                     in_scatter_min_group = 0 if include_upscatter else basis_group
                     # mat.sigma_source: propto inscatter_group neutrons scattered into n
                     # self.coefficients: the number of inscatter_group neutrons in the shape of group basis_group's basis.
+                    # Updating a coef on the main diagonal will affect the values of its entire column (in-scatter from that basis STAYS in that basis!)
+                    # Note that each row not only represents the neutron flux, but also the in-scatter (:propto: neutron flux).
                     coefs_num_layer.c.append(
                         fsum([
                             (mat.sigma_source[inscatter_group, n]
@@ -939,110 +940,111 @@ class NeutronFluxProfile:
 
                 self.coefficients[num_layer, n] = coefs_num_layer
 
-            # Determine coefficient[0, n].c[n] and coefficient[0, n].s[n] by
-            # boundary conditions: top row enforces current at (x=0) = source
-            # current, bottom row enforces flux = 0 at the extended boundary.
-            top_row = self._groupwise_cs_differential_in_layer(n, 0, 0)
-            y = -(
-                self.fluxes[n] / self.materials[0].diffusion_const[n]
-            ) - self._summation_shorthand(
-                n, 0, self._groupwise_cs_differential_in_layer, 0.0, in_scatter_max_group
-            )
-
-            m_list, v_list = self._get_all_propagation_operator(n, include_upscatter)
-            affine_transform_matrix_stack = multiply_2_2_matrices(*m_list[::-1])
-            affine_transformed_column_vector = matrix_fsum(
-                [
-                    multiply_2_2_matrices(*m_list[:k:-1]) @ v_list[k]
-                    for k in range(self.n_layers - 1)
-                ]
-                or [[0, 0]],
-                axis=0,
-            )
-
-            bot_row = (
-                self._groupwise_cs_values_in_layer(
-                    n, self.n_layers - 1, self.extended_boundary[n]
-                )
-                @ affine_transform_matrix_stack
-            )
-            z = -(
-                self._groupwise_cs_values_in_layer(
-                    n, self.n_layers - 1, self.extended_boundary[n]
-                )
-                @ affine_transformed_column_vector
-            ) - self._summation_shorthand(
-                n,
-                self.n_layers - 1,
-                self._groupwise_cs_values_in_layer,
-                self.extended_boundary[n],
-                in_scatter_max_group,
-            )
-            eqn_32_matrix = np.array([top_row, bot_row])
-            eqn_32_vector = np.array([y, z])
-            det_32 = np.linalg.det(eqn_32_matrix)
-            self.coefficients[0, n].c[n], self.coefficients[0, n].s[n] = np.linalg.solve(
-                eqn_32_matrix, eqn_32_vector
-            )
-
-            for num_layer in range(self.n_layers - 1):
-                [
-                    self.coefficients[num_layer + 1, n].c[n],
-                    self.coefficients[num_layer + 1, n].s[n],
-                ] = (
-                    m_list[num_layer]
-                    @ np.array([
-                        self.coefficients[num_layer, n].c[n],
-                        self.coefficients[num_layer, n].s[n],
-                    ])
-                    + v_list[num_layer]
-                )
-            
-            init_coefs = np.array([
-                (self.coefficients[num_layer, n].c[n],
-                    self.coefficients[num_layer, n].s[n]
-                ) for num_layer in range(self.n_layers)
-            ])
-            def _set_coefficients(input_vector: Iterable[float]):
-                for num_layer in range(self.n_layers):
-                    i = num_layer * 2
-                    self.coefficients[num_layer, n].c[n] = input_vector[i]
-                    self.coefficients[num_layer, n].s[n] = input_vector[i + 1]
-
-            def objective(coefficients_vector):
-                _set_coefficients(coefficients_vector)
-                return self._groupwise_fitness(n) # would not lead to recursion error as has_populated=True.
-
-            results = optimize.root(objective, x0=init_coefs.flatten(), jac=True)
-            _set_coefficients(results.x)
-            extended_x_flux = self.groupwise_neutron_flux_in_layer(
-                n, self.n_layers-1, self.extended_boundary[n]
-            )
-            if not np.isclose(extended_x_flux, 0):
-                warnings.warn(
-                    "Boundary condition of flux (at extended_boundary) = 0 "
-                    f"is not adhered to for group {n}! "
-                    f"Instead flux = {extended_x_flux}."
-                )
-            # non-negativity check for layer = num_layer:
-            for num_layer in range(self.n_layers):
-                if (
-                    self.groupwise_neutron_flux_in_layer(n, num_layer, self.interface_x[num_layer]) < 0
-                ) or (
-                    self.groupwise_neutron_flux_in_layer(n, num_layer, self.layer_x[num_layer]) < 0
-                ):
-                    warnings.warn(
-                        "Negative flux found when solving for "
-                        f"group {n} in layer {num_layer}! Perhaps due to "
-                        "an unphysical cross-section value?",
-                        stacklevel=2,
-                    )
-            self.num_iteration[n] += 1
         except Exception as e:
             for num_layer in range(self.n_layers):
                 if n in self.coefficients[num_layer]:
                     del self.coefficients[num_layer, n]
             raise e
+        # Determine coefficient[0, n].c[n] and coefficient[0, n].s[n] by
+        # boundary conditions: top row enforces current at (x=0) = source
+        # current, bottom row enforces flux = 0 at the extended boundary.
+        top_row = self._groupwise_cs_differential_in_layer(n, 0, 0)
+        y = -(
+            self.fluxes[n] / self.materials[0].diffusion_const[n]
+        ) - self._summation_shorthand(
+            n, 0, self._groupwise_cs_differential_in_layer, 0.0, in_scatter_max_group
+        )
+
+        m_list, v_list = self._get_all_propagation_operator(n, include_upscatter)
+        affine_transform_matrix_stack = multiply_2_2_matrices(*m_list[::-1])
+        affine_transformed_column_vector = matrix_fsum(
+            [
+                multiply_2_2_matrices(*m_list[:k:-1]) @ v_list[k]
+                for k in range(self.n_layers - 1)
+            ]
+            or [[0, 0]],
+            axis=0,
+        )
+
+        bot_row = (
+            self._groupwise_cs_values_in_layer(
+                n, self.n_layers - 1, self.extended_boundary[n]
+            )
+            @ affine_transform_matrix_stack
+        )
+        z = -(
+            self._groupwise_cs_values_in_layer(
+                n, self.n_layers - 1, self.extended_boundary[n]
+            )
+            @ affine_transformed_column_vector
+        ) - self._summation_shorthand(
+            n,
+            self.n_layers - 1,
+            self._groupwise_cs_values_in_layer,
+            self.extended_boundary[n],
+            in_scatter_max_group,
+        )
+        eqn_32_matrix = np.array([top_row, bot_row])
+        eqn_32_vector = np.array([y, z])
+        det_32 = np.linalg.det(eqn_32_matrix)
+        self.coefficients[0, n].c[n], self.coefficients[0, n].s[n] = np.linalg.solve(
+            eqn_32_matrix, eqn_32_vector
+        )
+
+        for num_layer in range(self.n_layers - 1):
+            [
+                self.coefficients[num_layer + 1, n].c[n],
+                self.coefficients[num_layer + 1, n].s[n],
+            ] = (
+                m_list[num_layer]
+                @ np.array([
+                    self.coefficients[num_layer, n].c[n],
+                    self.coefficients[num_layer, n].s[n],
+                ])
+                + v_list[num_layer]
+            )
+        
+        init_coefs = np.array([
+            (self.coefficients[num_layer, n].c[n],
+                self.coefficients[num_layer, n].s[n]
+            ) for num_layer in range(self.n_layers)
+        ])
+        def _set_coefficients(input_vector: Iterable[float]):
+            for num_layer in range(self.n_layers):
+                i = num_layer * 2
+                self.coefficients[num_layer, n].c[n] = input_vector[i]
+                self.coefficients[num_layer, n].s[n] = input_vector[i + 1]
+                # self._update_main_diagonal_coefficients()
+
+        def objective(coefficients_vector):
+            _set_coefficients(coefficients_vector)
+            return self._groupwise_fitness(n) # would not lead to recursion error as has_populated=True.
+
+        results = optimize.root(objective, x0=init_coefs.flatten(), jac=True)
+        _set_coefficients(results.x)
+        extended_x_flux = self.groupwise_neutron_flux_in_layer(
+            n, self.n_layers-1, self.extended_boundary[n]
+        )
+        if not np.isclose(extended_x_flux, 0):
+            warnings.warn(
+                "Boundary condition of flux (at extended_boundary) = 0 "
+                f"is not adhered to for group {n}! "
+                f"Instead flux = {extended_x_flux}."
+            )
+        # non-negativity check for layer = num_layer:
+        for num_layer in range(self.n_layers):
+            if (
+                self.groupwise_neutron_flux_in_layer(n, num_layer, self.interface_x[num_layer]) < 0
+            ) or (
+                self.groupwise_neutron_flux_in_layer(n, num_layer, self.layer_x[num_layer]) < 0
+            ):
+                warnings.warn(
+                    "Negative flux found when solving for "
+                    f"group {n} in layer {num_layer}! Perhaps due to "
+                    "an unphysical cross-section value?",
+                    stacklevel=2,
+                )
+        self.num_iteration[n] += 1
         return
 
     def _groupwise_fitness(
