@@ -8,83 +8,91 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+from process.core.data_structure.parameter import Parameter, PROCESSModelData
+
 NO_ROOTS = 30
 """Number of Gauss laguerre roots"""
 
 
 @dataclass(slots=True)
-class NeoclassicsData:
+class NeoclassicsData(PROCESSModelData):
     """Dataclass holding neoclassics variables"""
 
-    densities: list[float] = field(default_factory=lambda: np.zeros(4))
+    densities: Parameter[list[float]] = field(default_factory=lambda: np.zeros(4))
     """Densities of the species that are considered [/m3]"""
 
-    temperatures: list[float] = field(default_factory=lambda: np.zeros(4))
+    temperatures: Parameter[list[float]] = field(default_factory=lambda: np.zeros(4))
     """Temperature of the species that are considered [J]"""
 
-    dr_densities: list[float] = field(default_factory=lambda: np.zeros(4))
+    dr_densities: Parameter[list[float]] = field(default_factory=lambda: np.zeros(4))
     """Radial derivative of the density of the species [/m3]"""
 
-    dr_temperatures: list[float] = field(default_factory=lambda: np.zeros(4))
+    dr_temperatures: Parameter[list[float]] = field(default_factory=lambda: np.zeros(4))
     """Radial derivative of the temperature of the species [J]"""
 
-    roots: list[float] = field(default_factory=lambda: np.zeros(NO_ROOTS))
+    roots: Parameter[list[float]] = field(default_factory=lambda: np.zeros(NO_ROOTS))
     """Gauss Laguerre Roots"""
 
-    weights: list[float] = field(default_factory=lambda: np.zeros(NO_ROOTS))
+    weights: Parameter[list[float]] = field(default_factory=lambda: np.zeros(NO_ROOTS))
     """Gauss Laguerre Weights"""
 
-    nu: list[float] = field(default_factory=lambda: np.zeros((4, NO_ROOTS)))
+    nu: Parameter[list[float]] = field(default_factory=lambda: np.zeros((4, NO_ROOTS)))
     """90-degree deflection frequency on GL roots"""
 
-    nu_star: list[float] = field(default_factory=lambda: np.zeros((4, NO_ROOTS)))
+    nu_star: Parameter[list[float]] = field(
+        default_factory=lambda: np.zeros((4, NO_ROOTS))
+    )
     """Dimensionless deflection frequency"""
 
-    nu_star_averaged: list[float] = field(default_factory=lambda: np.zeros(4))
+    nu_star_averaged: Parameter[list[float]] = field(default_factory=lambda: np.zeros(4))
     """Maxwellian averaged dimensionless 90-degree deflection frequency for electrons (index 1) and ions (index 2)"""
 
-    vd: list[float] = field(default_factory=lambda: np.zeros((4, NO_ROOTS)))
+    vd: Parameter[list[float]] = field(default_factory=lambda: np.zeros((4, NO_ROOTS)))
     """Drift velocity on GL roots"""
 
-    kt: list[float] = field(default_factory=lambda: np.zeros((4, NO_ROOTS)))
+    kt: Parameter[list[float]] = field(default_factory=lambda: np.zeros((4, NO_ROOTS)))
     """Thermal energy on GL roots"""
 
-    er: float = 0.0
+    er: Parameter[float] = 0.0
     """Radial electrical field [V/m]"""
 
-    iota: float = 1.0
+    iota: Parameter[float] = 1.0
     """Iota (1/safety factor)"""
 
-    d11_mono: list[float] = field(default_factory=lambda: np.zeros((4, NO_ROOTS)))
+    d11_mono: Parameter[list[float]] = field(
+        default_factory=lambda: np.zeros((4, NO_ROOTS))
+    )
     """Radial monoenergetic transport coefficient on GL roots (species dependent)"""
 
-    d11_plateau: list[float] = field(default_factory=lambda: np.zeros((4, NO_ROOTS)))
+    d11_plateau: Parameter[list[float]] = field(
+        default_factory=lambda: np.zeros((4, NO_ROOTS))
+    )
     """Toroidal monoenergetic transport coefficient as given by the stellarator
     input json file as function of nu_star, normalised by the banana value.
     """
 
-    d111: list[float] = field(default_factory=lambda: np.zeros(4))
+    d111: Parameter[list[float]] = field(default_factory=lambda: np.zeros(4))
     """Radial integrated transport coefficient (n=1) (species dependent)"""
 
-    d112: list[float] = field(default_factory=lambda: np.zeros(4))
+    d112: Parameter[list[float]] = field(default_factory=lambda: np.zeros(4))
     """Radial integrated transport coefficient (n=2) (species dependent)"""
 
-    d113: list[float] = field(default_factory=lambda: np.zeros(4))
+    d113: Parameter[list[float]] = field(default_factory=lambda: np.zeros(4))
     """Radial integrated transport coefficient (n=3) (species dependent)"""
 
-    q_flux: list[float] = field(default_factory=lambda: np.zeros(4))
+    q_flux: Parameter[list[float]] = field(default_factory=lambda: np.zeros(4))
     """energy transport flux (J/m2)"""
 
-    gamma_flux: list[float] = field(default_factory=lambda: np.zeros(4))
+    gamma_flux: Parameter[list[float]] = field(default_factory=lambda: np.zeros(4))
     """energy flux from particle transport"""
 
-    d31_mono: list[float] = field(default_factory=lambda: np.zeros(NO_ROOTS))
+    d31_mono: Parameter[list[float]] = field(default_factory=lambda: np.zeros(NO_ROOTS))
     """Toroidal monoenergetic transport coefficient"""
 
-    eps_eff: float = 1e-5
+    eps_eff: Parameter[float] = 1e-5
     """Epsilon effective (used in neoclassics_calc_D11_mono)"""
 
-    r_eff: float = 0.0
+    r_eff: Parameter[float] = 0.0
 
 
 CREATE_DICTS_FROM_DATACLASS = NeoclassicsData

@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+from process.core.data_structure.parameter import Parameter, PROCESSModelData
+
 N_IMPURITIY_LOSS_FUNCTION_POINTS = 600
 """Number of points in the impurity loss function (L_z) tables"""
 
@@ -28,7 +30,7 @@ N_IMPURITIES = 14
 
 
 @dataclass(slots=True)
-class ImpurityRadiationData:
+class ImpurityRadiationData(PROCESSModelData):
     """Dataclass holding impurity radiation variables"""
 
     radius_plasma_core_norm: float = 0.6
@@ -37,7 +39,7 @@ class ImpurityRadiationData:
     f_p_plasma_core_rad_reduction: float = 1.0
     """Fraction of radiation from 'core' region"""
 
-    f_nd_impurity_electrons: list[float] = field(
+    f_nd_impurity_electrons: Parameter[list[float]] = field(
         default_factory=lambda: np.array([
             1.0,
             0.1,
@@ -56,7 +58,7 @@ class ImpurityRadiationData:
         ])
     )
 
-    n_charge_impurity_profile: list[float] = field(
+    n_charge_impurity_profile: Parameter[list[float]] = field(
         default_factory=lambda: np.zeros((
             N_IMPURITIES,
             N_IMPURITIY_LOSS_FUNCTION_POINTS,
@@ -87,14 +89,16 @@ class ImpurityRadiationData:
         default_factory=lambda: np.full(N_IMPURITIES, "  ")
     )
 
-    impurity_arr_z: list[float] = field(default_factory=lambda: np.zeros(N_IMPURITIES))
+    impurity_arr_z: Parameter[list[float]] = field(
+        default_factory=lambda: np.zeros(N_IMPURITIES)
+    )
 
-    m_impurity_amu_array: list[float] = field(
+    m_impurity_amu_array: Parameter[list[float]] = field(
         default_factory=lambda: np.zeros(N_IMPURITIES)
     )
     """2D array of impurity atomic masses in Atomic Mass Units (amu)"""
 
-    f_nd_impurity_electron_array: list[float] = field(
+    f_nd_impurity_electron_array: Parameter[list[float]] = field(
         default_factory=lambda: np.zeros(N_IMPURITIES)
     )
     """2D array of impurity relative densities (n_imp/n_e)"""
@@ -103,7 +107,7 @@ class ImpurityRadiationData:
         default_factory=lambda: np.full(N_IMPURITIES, 0)
     )
 
-    temp_impurity_keV_array: list[float] = field(
+    temp_impurity_keV_array: Parameter[list[float]] = field(
         default_factory=lambda: np.zeros((
             N_IMPURITIES,
             N_IMPURITIY_LOSS_FUNCTION_POINTS,
@@ -111,14 +115,14 @@ class ImpurityRadiationData:
     )
     """2D array of impurity temperatures in kilo-electronvolts (keV)"""
 
-    pden_impurity_lz_nd_temp_array: list[float] = field(
+    pden_impurity_lz_nd_temp_array: Parameter[list[float]] = field(
         default_factory=lambda: np.zeros((
             N_IMPURITIES,
             N_IMPURITIY_LOSS_FUNCTION_POINTS,
         ))
     )
 
-    impurity_arr_zav: list[float] = field(
+    impurity_arr_zav: Parameter[list[float]] = field(
         default_factory=lambda: np.zeros((
             N_IMPURITIES,
             N_IMPURITIY_LOSS_FUNCTION_POINTS,

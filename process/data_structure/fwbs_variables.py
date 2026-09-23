@@ -2,48 +2,50 @@
 
 from dataclasses import dataclass, field
 
+from process.core.data_structure.parameter import Parameter, PROCESSModelData
+
 
 @dataclass(slots=True)
-class FWBSData:
+class FWBSData(PROCESSModelData):
     """Dataclass holding first wall, blanket and shield variables"""
 
-    life_blkt_fpy: float = 0.0
+    life_blkt_fpy: Parameter[float] = 0.0
     """Full power blanket lifetime (years)"""
 
-    life_blkt: float = 0.0
+    life_blkt: Parameter[float] = 0.0
     """Calendar year blanket lifetime (years)"""
 
-    m_fw_blkt_div_coolant_total: float = 0.0
+    m_fw_blkt_div_coolant_total: Parameter[float] = 0.0
     """mass of water coolant (in shield, blanket, first wall, divertor) [kg]"""
 
-    m_vv: float = 0.0
+    m_vv: Parameter[float] = 0.0
     """vacuum vessel mass [kg]"""
 
-    den_steel: float = 7800.0
+    den_steel: Parameter[float] = 7800.0
     """density of steel [kg m^-3]"""
 
-    denwc: float = 15630.0
+    denwc: Parameter[float] = 15630.0
     """density of tungsten carbide [kg m^-3]"""
 
-    dewmkg: float = 0.0
+    dewmkg: Parameter[float] = 0.0
     """total mass of vacuum vessel + cryostat [kg] (calculated if blktmodel>0)"""
 
-    f_p_blkt_multiplication: float = 1.269
+    f_p_blkt_multiplication: Parameter[float] = 1.269
     """energy multiplication in blanket and shield"""
 
-    p_blkt_multiplication_mw: float = 0.0
+    p_blkt_multiplication_mw: Parameter[float] = 0.0
     """power due to energy multiplication in blanket and shield [MW]"""
 
-    fblss: float = 0.09705
+    fblss: Parameter[float] = 0.09705
     """KIT blanket model: steel fraction of breeding zone"""
 
-    f_ster_div_single: float = 0.115
+    f_ster_div_single: Parameter[float] = 0.115
     """Solid angle fraction taken by one divertor"""
 
-    f_a_fw_outboard_hcd: float = 0.0
+    f_a_fw_outboard_hcd: Parameter[float] = 0.0
     """area fraction of first wall covered by heating/current drive apparatus plus diagnostics"""
 
-    fhole: float = 0.0
+    fhole: Parameter[float] = 0.0
     """area fraction taken up by other holes (IFE)"""
 
     i_fw_blkt_vv_shape: int = 2
@@ -52,19 +54,19 @@ class FWBSData:
     - =2 defined by two ellipses
     """
 
-    life_fw_fpy: float = 0.0
+    life_fw_fpy: Parameter[float] = 0.0
     """first wall full-power year lifetime (y)"""
 
-    m_fw_total: float = 0.0
+    m_fw_total: Parameter[float] = 0.0
     """first wall mass [kg]"""
 
-    fw_armour_mass: float = 0.0
+    fw_armour_mass: Parameter[float] = 0.0
     """first wall armour mass [kg]"""
 
-    fw_armour_thickness: float = 0.005
+    fw_armour_thickness: Parameter[float] = 0.005
     """first wall armour thickness [m]"""
 
-    fw_armour_vol: float = 0.0
+    fw_armour_vol: Parameter[float] = 0.0
     """first wall armour volume [m^3]"""
 
     i_blanket_type: int = 1
@@ -84,105 +86,105 @@ class FWBSData:
     - =1 Fixed by user (qnuc)
     """
 
-    qnuc: float = 0.0
+    qnuc: Parameter[float] = 0.0
     """nuclear heating in the coils (W) (`inuclear=1`)"""
 
-    f_blkt_li6_enrichment: float = 30.0
+    f_blkt_li6_enrichment: Parameter[float] = 30.0
     """lithium-6 enrichment of breeding material (%)"""
 
-    p_blkt_nuclear_heat_total_mw: float = 0.0
+    p_blkt_nuclear_heat_total_mw: Parameter[float] = 0.0
     """nuclear heating in the blanket [MW]"""
 
-    pnuc_cp: float = 0.0
+    pnuc_cp: Parameter[float] = 0.0
     """Total nuclear heating in the ST centrepost [MW]"""
 
-    p_cp_shield_nuclear_heat_mw: float = 0.0
+    p_cp_shield_nuclear_heat_mw: Parameter[float] = 0.0
     """Neutronic shield nuclear heating in the ST centrepost [MW]"""
 
-    pnuc_cp_tf: float = 0.0
+    pnuc_cp_tf: Parameter[float] = 0.0
     """TF neutronic nuclear heating in the ST centrepost [MW]"""
 
-    p_div_nuclear_heat_total_mw: float = 0.0
+    p_div_nuclear_heat_total_mw: Parameter[float] = 0.0
     """nuclear heating in the divertor [MW]"""
 
-    p_fw_nuclear_heat_total_mw: float = 0.0
+    p_fw_nuclear_heat_total_mw: Parameter[float] = 0.0
     """nuclear heating in the first wall [MW]"""
 
-    p_fw_hcd_nuclear_heat_mw: float = 0.0
+    p_fw_hcd_nuclear_heat_mw: Parameter[float] = 0.0
     """Nuclear heating in the HCD apparatus and diagnostics on the first wall [MW]"""
 
-    pnucloss: float = 0.0
+    pnucloss: Parameter[float] = 0.0
     """nuclear heating lost via holes [MW]"""
 
-    pnucvvplus: float = 0.0
+    pnucvvplus: Parameter[float] = 0.0
     """nuclear heating to vacuum vessel and beyond [MW]"""
 
-    p_shld_nuclear_heat_mw: float = 0.0
+    p_shld_nuclear_heat_mw: Parameter[float] = 0.0
     """nuclear heating in the shield [MW]"""
 
-    m_blkt_total: float = 0.0
+    m_blkt_total: Parameter[float] = 0.0
     """mass of blanket [kg]"""
 
-    m_blkt_steel_total: float = 0.0
+    m_blkt_steel_total: Parameter[float] = 0.0
     """mass of blanket - steel part [kg]"""
 
-    armour_fw_bl_mass: float = 0.0
+    armour_fw_bl_mass: Parameter[float] = 0.0
     """Total mass of armour, first wall and blanket [kg]"""
 
     # CCFE HCPB Blanket Model i_blanket_type=1
 
-    breeder_f: float = 0.5
+    breeder_f: Parameter[float] = 0.5
     """Volume ratio: Li4SiO4/(Be12Ti+Li4SiO4) (`iteration variable 108`)"""
 
-    breeder_multiplier: float = 0.75
+    breeder_multiplier: Parameter[float] = 0.75
     """combined breeder/multiplier fraction of blanket by volume"""
 
-    vfcblkt: float = 0.05295
+    vfcblkt: Parameter[float] = 0.05295
     """He coolant fraction of blanket by volume (`i_blanket_type= 1` (CCFE HCPB))"""
 
-    vfpblkt: float = 0.1
+    vfpblkt: Parameter[float] = 0.1
     """He purge gas fraction of blanket by volume (`i_blanket_type= 1` (CCFE HCPB))"""
 
-    m_blkt_li4sio4: float = 0.0
+    m_blkt_li4sio4: Parameter[float] = 0.0
     """mass of lithium orthosilicate in blanket [kg] (`i_blanket_type=1` (CCFE HCPB))"""
 
-    m_blkt_tibe12: float = 0.0
+    m_blkt_tibe12: Parameter[float] = 0.0
     """mass of titanium beryllide in blanket [kg] (`i_blanket_type=1` (CCFE HCPB))"""
 
-    neut_flux_cp: float = 0.0
+    neut_flux_cp: Parameter[float] = 0.0
     """Centrepost TF fast neutron flux (E > 0.1 MeV) [m^(-2).^(-1)]
     This variable is only calculated for superconducting (i_tf_sup = 1 )
     spherical tokamal magnet designs (itart = 0)
     """
 
-    f_neut_shield: float = -1.0
+    f_neut_shield: Parameter[float] = -1.0
     """Fraction of nuclear power shielded before the CP magnet (ST)
     ( neut_absorb = -1 --> a fit on simplified MCNP neutronic
     calculation is used assuming water cooled (13%) tungsten carbide )
     """
 
-    f_a_fw_coolant_inboard: float = 0.0
+    f_a_fw_coolant_inboard: Parameter[float] = 0.0
     """Inboard FW coolant cross-sectional area void fraction"""
 
-    f_a_fw_coolant_outboard: float = 0.0
+    f_a_fw_coolant_outboard: Parameter[float] = 0.0
     """Outboard FW coolant cross-sectional area void fraction"""
 
-    psurffwi: float = 0.0
+    psurffwi: Parameter[float] = 0.0
     """Surface heat flux on first wall [MW] (sum = p_fw_rad_total_mw)"""
 
-    psurffwo: float = 0.0
+    psurffwo: Parameter[float] = 0.0
     """Surface heat flux on first wall [MW] (sum = p_fw_rad_total_mw)"""
 
-    vol_fw_total: float = 0.0
+    vol_fw_total: Parameter[float] = 0.0
     """First wall volume [m3]"""
 
-    f_vol_blkt_steel: float = 0.0
+    f_vol_blkt_steel: Parameter[float] = 0.0
     """Fractions of blanket by volume: steel"""
 
-    f_vol_blkt_li4sio4: float = 0.0
+    f_vol_blkt_li4sio4: Parameter[float] = 0.0
     """Fractions of blanket by volume: lithium orthosilicate"""
 
-    f_vol_blkt_tibe12: float = 0.0
+    f_vol_blkt_tibe12: Parameter[float] = 0.0
     """Fractions of blanket by volume: titanium beryllide"""
 
     breedmat: int = 1
@@ -192,25 +194,25 @@ class FWBSData:
     - =3 Lithium zirconate
     """
 
-    densbreed: float = 0.0
+    densbreed: Parameter[float] = 0.0
     """density of breeder material [kg m^-3]"""
 
-    fblbe: float = 0.6
+    fblbe: Parameter[float] = 0.6
     """beryllium fraction of blanket by volume"""
 
-    fblbreed: float = 0.154
+    fblbreed: Parameter[float] = 0.154
     """breeder fraction of blanket breeding zone by volume"""
 
-    fblhebmi: float = 0.4
+    fblhebmi: Parameter[float] = 0.4
     """helium fraction of inboard blanket box manifold by volume"""
 
-    fblhebmo: float = 0.4
+    fblhebmo: Parameter[float] = 0.4
     """helium fraction of outboard blanket box manifold by volume """
 
-    fblhebpi: float = 0.6595
+    fblhebpi: Parameter[float] = 0.6595
     """helium fraction of inboard blanket back plate by volume """
 
-    fblhebpo: float = 0.6713
+    fblhebpo: Parameter[float] = 0.6713
     """helium fraction of outboard blanket back plate by volume """
 
     hcdportsize: int = 1
@@ -219,7 +221,7 @@ class FWBSData:
     - =2 'large'
     """
 
-    flu_tf_neutron_fast_peak: float = 0.0
+    flu_tf_neutron_fast_peak: Parameter[float] = 0.0
     """peak fast neutron fluence on TF coil superconductor [n m^-2] """
 
     npdiv: int = 2
@@ -231,19 +233,19 @@ class FWBSData:
     nphcdout: int = 2
     """number of outboard ports for heating/current drive """
 
-    tbr: float = 0.0
+    tbr: Parameter[float] = 0.0
     """tritium breeding ratio"""
 
-    tritprate: float = 0.0
+    tritprate: Parameter[float] = 0.0
     """tritium production rate [g day^-1] """
 
-    wallpf: float = 1.21
+    wallpf: Parameter[float] = 1.21
     """neutron wall load peaking factor """
 
-    whtblbreed: float = 0.0
+    whtblbreed: Parameter[float] = 0.0
     """mass of blanket - breeder part [kg] """
 
-    m_blkt_beryllium: float = 0.0
+    m_blkt_beryllium: Parameter[float] = 0.0
     """mass of blanket - beryllium part [kg]"""
 
     i_p_coolant_pumping: int = 2
@@ -288,54 +290,54 @@ class FWBSData:
     - =2 water
     """
 
-    dr_fw_wall: float = 0.003
+    dr_fw_wall: Parameter[float] = 0.003
     """wall thickness of first wall coolant channels [m]"""
 
-    radius_fw_channel: float = 0.006
+    radius_fw_channel: Parameter[float] = 0.006
     """radius of first wall cooling channels [m]"""
 
-    dx_fw_module: float = 0.02
+    dx_fw_module: Parameter[float] = 0.02
     """Width of a FW module containing a cooling channel [m]"""
 
-    temp_fw_coolant_in: float = 573.0
+    temp_fw_coolant_in: Parameter[float] = 573.0
     """inlet temperature of first wall coolant [K]"""
 
-    temp_fw_coolant_out: float = 823.0
+    temp_fw_coolant_out: Parameter[float] = 823.0
     """outlet temperature of first wall coolant [K]"""
 
-    pres_fw_coolant: float = 15.5e6
+    pres_fw_coolant: Parameter[float] = 15.5e6
     """first wall coolant pressure [Pa] (`i_thermal_electric_conversion>1`)"""
 
-    temp_fw_peak: float = 873.0
+    temp_fw_peak: Parameter[float] = 873.0
     """peak first wall temperature [K]"""
 
-    roughness_fw_channel: float = 1.0e-6
+    roughness_fw_channel: Parameter[float] = 1.0e-6
     """first wall channel roughness epsilon [m]"""
 
-    len_fw_channel: float = 4.0
+    len_fw_channel: Parameter[float] = 4.0
     """Length of a single first wall channel (all in parallel) [m]
     (`iteration variable 114`, useful for `constraint equation 39`)
     """
 
-    f_fw_peak: float = 1.0
+    f_fw_peak: Parameter[float] = 1.0
     """peaking factor for first wall heat loads. (Applied separately to inboard and outboard loads.
     Applies to both neutron and surface loads. Only used to calculate peak temperature - not
     the coolant flow rate.)
     """
 
-    pres_blkt_coolant: float = 15.50e6
+    pres_blkt_coolant: Parameter[float] = 15.50e6
     """blanket coolant pressure [Pa] (`i_thermal_electric_conversion>1`)"""
 
-    temp_blkt_coolant_in: float = 573.0
+    temp_blkt_coolant_in: Parameter[float] = 573.0
     """inlet temperature of blanket coolant  [K] (`i_thermal_electric_conversion>1`)"""
 
-    temp_blkt_coolant_out: float = 823.0
+    temp_blkt_coolant_out: Parameter[float] = 823.0
     """Outlet temperature of blanket coolant [K] (`i_thermal_electric_conversion>1`)
     - input if `i_blkt_coolant_type=1` (helium)
     - calculated if `i_blkt_coolant_type=2` (water)
     """
 
-    coolp: float = 15.5e6
+    coolp: Parameter[float] = 15.5e6
     """blanket coolant pressure [Pa] (stellarator only)"""
 
     n_blkt_outboard_modules_poloidal: int = 8
@@ -350,130 +352,130 @@ class FWBSData:
     n_blkt_inboard_modules_toroidal: int = 32
     """number of inboard blanket modules in toroidal direction (`i_thermal_electric_conversion>1`)"""
 
-    temp_fw_max: float = 823.0
+    temp_fw_max: Parameter[float] = 823.0
     """maximum temperature of first wall material [K] (`i_thermal_electric_conversion>1`)"""
 
-    fw_th_conductivity: float = 28.34
+    fw_th_conductivity: Parameter[float] = 28.34
     """thermal conductivity of first wall material at 293 K (W/m/K) (Temperature dependence
     is as for unirradiated Eurofer)
     """
 
-    fvoldw: float = 1.74
+    fvoldw: Parameter[float] = 1.74
     """area coverage factor for vacuum vessel volume"""
 
-    fvolsi: float = 1.0
+    fvolsi: Parameter[float] = 1.0
     """area coverage factor for inboard shield volume"""
 
-    fvolso: float = 0.64
+    fvolso: Parameter[float] = 0.64
     """area coverage factor for outboard shield volume"""
 
-    fwclfr: float = 0.15
+    fwclfr: Parameter[float] = 0.15
     """first wall coolant fraction (calculated if `i_pulsed_plant=1` or `ipowerflow=1`)"""
 
-    p_div_rad_total_mw: float = 0.0
+    p_div_rad_total_mw: Parameter[float] = 0.0
     """Total radiation power incident on the divertor(s) (MW)"""
 
-    p_fw_rad_total_mw: float = 0.0
+    p_fw_rad_total_mw: Parameter[float] = 0.0
     """Radiation power incident on the first wall (MW)"""
 
-    p_fw_hcd_rad_total_mw: float = 0.0
+    p_fw_hcd_rad_total_mw: Parameter[float] = 0.0
     """Radiation power incident on the heating and current drive systems on the first wall (MW)"""
 
-    pradloss: float = 0.0
+    pradloss: Parameter[float] = 0.0
     """Radiation power lost through holes (eventually hits shield) (MW)
     Only used for stellarator
     """
 
-    p_tf_nuclear_heat_mw: float = 0.0
+    p_tf_nuclear_heat_mw: Parameter[float] = 0.0
     """nuclear heating in the TF coil (MW)"""
 
-    ptfnucpm3: float = 0.0
+    ptfnucpm3: Parameter[float] = 0.0
     """nuclear heating in the TF coil (MW/m3) (`blktmodel>0`)"""
 
-    r_cryostat_inboard: float = 0.0
+    r_cryostat_inboard: Parameter[float] = 0.0
     """cryostat radius [m]"""
 
-    z_cryostat_half_inside: float = 0.0
+    z_cryostat_half_inside: Parameter[float] = 0.0
     """cryostat height [m]"""
 
-    dr_pf_cryostat: float = 0.5
+    dr_pf_cryostat: Parameter[float] = 0.5
     """Radial distance between outer edge of furthest away PF coil (or stellarator
     modular coil) and cryostat [m]
     """
 
-    vol_cryostat: float = 0.0
+    vol_cryostat: Parameter[float] = 0.0
     """Cryostat structure volume [m^3]"""
 
-    vol_cryostat_internal: float = 0.0
+    vol_cryostat_internal: Parameter[float] = 0.0
     """Internal volume of the cryostat [m^3]"""
 
-    vol_vv: float = 0.0
+    vol_vv: Parameter[float] = 0.0
     """vacuum vessel volume [m^3]"""
 
-    vfshld: float = 0.25
+    vfshld: Parameter[float] = 0.25
     """coolant void fraction in shield"""
 
-    vol_blkt_total: float = 0.0
+    vol_blkt_total: Parameter[float] = 0.0
     """volume of blanket [m^3]"""
 
-    vol_blkt_total_full_coverage: float = 0.0
+    vol_blkt_total_full_coverage: Parameter[float] = 0.0
     """Volume of blanket with no holes or ports (toroidally continuous) [m³]"""
 
-    vol_blkt_inboard: float = 0.0
+    vol_blkt_inboard: Parameter[float] = 0.0
     """volume of inboard blanket [m^3]"""
 
-    vol_blkt_inboard_full_coverage: float = 0.0
+    vol_blkt_inboard_full_coverage: Parameter[float] = 0.0
     """Volume of inboard blanket with no holes or ports (toroidally continuous) [m³]"""
 
-    vol_blkt_outboard: float = 0.0
+    vol_blkt_outboard: Parameter[float] = 0.0
     """volume of outboard blanket [m^3]"""
 
-    vol_blkt_outboard_full_coverage: float = 0.0
+    vol_blkt_outboard_full_coverage: Parameter[float] = 0.0
     """Volume of outboard blanket with no holes or ports (toroidally continuous) [m³]"""
 
-    vol_shld_total: float = 0.0
+    vol_shld_total: Parameter[float] = 0.0
     """volume of shield [m^3]"""
 
-    whtshld: float = 0.0
+    whtshld: Parameter[float] = 0.0
     """mass of shield [kg]"""
 
-    wpenshld: float = 0.0
+    wpenshld: Parameter[float] = 0.0
     """mass of the penetration shield [kg]"""
 
-    wtshldi: float = 0.0
+    wtshldi: Parameter[float] = 0.0
     """mass of inboard shield [kg]"""
 
-    wtshldo: float = 0.0
+    wtshldo: Parameter[float] = 0.0
     """mass of outboard shield [kg]"""
 
     irefprop: int = 1
     """Switch to use REFPROP routines (stellarator only)"""
 
-    fblli: float = 0.0
+    fblli: Parameter[float] = 0.0
     """lithium fraction of blanket by volume (stellarator only)"""
 
-    fblli2o: float = 0.08
+    fblli2o: Parameter[float] = 0.08
     """lithium oxide fraction of blanket by volume (stellarator only)"""
 
-    fbllipb: float = 0.68
+    fbllipb: Parameter[float] = 0.68
     """lithium lead fraction of blanket by volume (stellarator only)"""
 
-    fblvd: float = 0.0
+    fblvd: Parameter[float] = 0.0
     """vanadium fraction of blanket by volume (stellarator only)"""
 
-    m_blkt_li2o: float = 0.0
+    m_blkt_li2o: Parameter[float] = 0.0
     """mass of blanket - Li_2O part [kg]"""
 
-    wtbllipb: float = 0.0
+    wtbllipb: Parameter[float] = 0.0
     """mass of blanket - Li-Pb part [kg]"""
 
-    m_blkt_vanadium: float = 0.0
+    m_blkt_vanadium: Parameter[float] = 0.0
     """mass of blanket - vanadium part [kg]"""
 
-    m_blkt_lithium: float = 0.0
+    m_blkt_lithium: Parameter[float] = 0.0
     """mass of blanket - lithium part [kg]"""
 
-    f_a_blkt_cooling_channels: float = 0.25
+    f_a_blkt_cooling_channels: Parameter[float] = 0.25
     """coolant void fraction in blanket."""
 
     blktmodel: int = 0
@@ -482,13 +484,13 @@ class FWBSData:
     - =1 KIT model based on a helium-cooled pebble-bed blanket (HCPB) reference design
     """
 
-    declblkt: float = 0.075
+    declblkt: Parameter[float] = 0.075
     """neutron power deposition decay length of blanket structural material [m] (stellarators only)"""
 
-    declfw: float = 0.075
+    declfw: Parameter[float] = 0.075
     """neutron power deposition decay length of first wall structural material [m] (stellarators only)"""
 
-    declshld: float = 0.075
+    declshld: Parameter[float] = 0.075
     """neutron power deposition decay length of shield structural material [m] (stellarators only)"""
 
     blkttype: int = 3
@@ -504,10 +506,10 @@ class FWBSData:
     Feedheat & reheat cycle assumed
     """
 
-    etaiso: float = 0.85
+    etaiso: Parameter[float] = 0.85
     """isentropic efficiency of FW and blanket coolant pumps"""
 
-    eta_coolant_pump_electric: float = 0.95
+    eta_coolant_pump_electric: Parameter[float] = 0.95
     """electrical efficiency of primary coolant pumps"""
 
     i_fw_blkt_shared_coolant: int = 0
@@ -548,31 +550,31 @@ class FWBSData:
     n_liq_recirc: int = 10
     """Number of liquid metal breeder recirculations per day, for use with i_blkt_dual_coolant=1"""
 
-    r_f_liq_ib: float = 0.5
+    r_f_liq_ib: Parameter[float] = 0.5
     """Radial fraction of BZ liquid channels"""
 
-    r_f_liq_ob: float = 0.5
+    r_f_liq_ob: Parameter[float] = 0.5
     """Radial fraction of BZ liquid channels"""
 
-    w_f_liq_ib: float = 0.5
+    w_f_liq_ib: Parameter[float] = 0.5
     """Toroidal fraction of BZ liquid channels"""
 
-    w_f_liq_ob: float = 0.5
+    w_f_liq_ob: Parameter[float] = 0.5
     """Toroidal fraction of BZ liquid channels"""
 
-    den_ceramic: float = 3.21e3
+    den_ceramic: Parameter[float] = 3.21e3
     """FCI material density"""
 
-    th_wall_secondary: float = 1.25e-2
+    th_wall_secondary: Parameter[float] = 1.25e-2
     """Liquid metal coolant/breeder wall thickness thin conductor or FCI [m]"""
 
-    bz_channel_conduct_liq: float = 8.33e5
+    bz_channel_conduct_liq: Parameter[float] = 8.33e5
     """Liquid metal coolant/breeder thin conductor or FCI wall conductance [A V^-1 m^-1]"""
 
-    a_bz_liq: float = 0.2
+    a_bz_liq: Parameter[float] = 0.2
     """Toroidal width of the rectangular cooling channel [m] for long poloidal sections of blanket breeding zone"""
 
-    b_bz_liq: float = 0.2
+    b_bz_liq: Parameter[float] = 0.2
     """Radial width of the rectangular cooling channel [m] for long poloidal sections of blanket breeding zone"""
 
     nopol: int = 2
@@ -581,82 +583,82 @@ class FWBSData:
     nopipes: int = 4
     """Number of Liquid metal breeder/coolant channels per module/segment"""
 
-    den_liq: float = 9.5e3
+    den_liq: Parameter[float] = 9.5e3
     """Liquid metal breeder/coolant density [kg m^-3]"""
 
-    wht_liq: float = 0.0
+    wht_liq: Parameter[float] = 0.0
     """Liquid metal"""
 
-    wht_liq_ib: float = 0.0
+    wht_liq_ib: Parameter[float] = 0.0
     """Liquid metal"""
 
-    wht_liq_ob: float = 0.0
+    wht_liq_ob: Parameter[float] = 0.0
     """Liquid metal"""
 
-    specific_heat_liq: float = 1.9e2
+    specific_heat_liq: Parameter[float] = 1.9e2
     """Liquid metal breeder/coolant specific heat [J kg^-1 K^-1]"""
 
-    thermal_conductivity_liq: float = 30.0
+    thermal_conductivity_liq: Parameter[float] = 30.0
     """Liquid metal breeder/coolant thermal conductivity [W m^-1 K^-1]"""
 
-    dynamic_viscosity_liq: float = 0.0
+    dynamic_viscosity_liq: Parameter[float] = 0.0
     """Liquid metal breeder/coolant dynamic viscosity [Pa s]"""
 
-    electrical_conductivity_liq: float = 0.0
+    electrical_conductivity_liq: Parameter[float] = 0.0
     """Liquid metal breeder/coolant electrical conductivity [Ohm m]"""
 
-    hartmann_liq: list[float] = field(default_factory=lambda: [0.0, 0.0])
+    hartmann_liq: Parameter[list[float]] = field(default_factory=lambda: [0.0, 0.0])
     """Hartmann number"""
 
-    b_mag_blkt: list[float] = field(default_factory=lambda: [5.0, 5.0])
+    b_mag_blkt: Parameter[list[float]] = field(default_factory=lambda: [5.0, 5.0])
     """Toroidal Magnetic field strength for IB/OB blanket [T]"""
 
-    etaiso_liq: float = 0.85
+    etaiso_liq: Parameter[float] = 0.85
     """Isentropic efficiency of blanket liquid breeder/coolant pumps"""
 
-    blpressure_liq: float = 1.7e6
+    blpressure_liq: Parameter[float] = 1.7e6
     """blanket liquid metal breeder/coolant pressure [Pa]"""
 
-    inlet_temp_liq: float = 570.0
+    inlet_temp_liq: Parameter[float] = 570.0
     """Inlet (scan var 68) temperature of the liquid breeder/coolant [K]"""
 
-    outlet_temp_liq: float = 720.0
+    outlet_temp_liq: Parameter[float] = 720.0
     """Outlet (scan var 69) temperature of the liquid breeder/coolant [K]"""
 
-    den_fw_coolant: float = 0.0
+    den_fw_coolant: Parameter[float] = 0.0
     """Density of the FW primary coolant"""
 
-    visc_fw_coolant: float = 0.0
+    visc_fw_coolant: Parameter[float] = 0.0
     """Viscosity of the FW primary coolant"""
 
-    den_blkt_coolant: float = 0.0
+    den_blkt_coolant: Parameter[float] = 0.0
     """Density of the blanket primary coolant"""
 
-    visc_blkt_coolant: float = 0.0
+    visc_blkt_coolant: Parameter[float] = 0.0
     """Viscosity of the blanket primary coolant"""
 
-    cp_fw: float = 0.0
+    cp_fw: Parameter[float] = 0.0
     """Spesific heat for FW and blanket primary coolant(s)"""
 
-    cv_fw: float = 0.0
+    cv_fw: Parameter[float] = 0.0
     """Spesific heat for FW and blanket primary coolant(s)"""
 
-    cp_bl: float = 0.0
+    cp_bl: Parameter[float] = 0.0
     """Spesific heat for FW and blanket primary coolant(s)"""
 
-    cv_bl: float = 0.0
+    cv_bl: Parameter[float] = 0.0
     """Spesific heat for FW and blanket primary coolant(s)"""
 
-    f_nuc_pow_bz_struct: float = 0.34
+    f_nuc_pow_bz_struct: Parameter[float] = 0.34
     """For a dual-coolant blanket, fraction of BZ power cooled by primary coolant"""
 
-    f_nuc_pow_bz_liq: float = 0.66
+    f_nuc_pow_bz_liq: Parameter[float] = 0.66
     """For a dual-coolant blanket, fraction of BZ self-cooled power (secondary coolant)"""
 
-    pnuc_fw_ratio_dcll: float = 0.14
+    pnuc_fw_ratio_dcll: Parameter[float] = 0.14
     """For a dual-coolant blanket, ratio of FW nuclear power as fraction of total"""
 
-    pnuc_blkt_ratio_dcll: float = 0.86
+    pnuc_blkt_ratio_dcll: Parameter[float] = 0.86
     """For a dual-coolant blanket, ratio of Blanket nuclear power as fraction of total"""
 
     n_blkt_inboard_module_coolant_sections_radial: int = 4
@@ -699,22 +701,22 @@ class FWBSData:
     flow length in a blanket module (IB and OB)
     """
 
-    radius_blkt_channel: float = 0.0
+    radius_blkt_channel: Parameter[float] = 0.0
     """Radius of blanket cooling channels [m]"""
 
-    radius_blkt_channel_90_bend: float = 0.0
+    radius_blkt_channel_90_bend: Parameter[float] = 0.0
     """Radius of blanket cooling channel 90° bend [m]"""
 
-    radius_fw_channel_90_bend: float = 0.0
+    radius_fw_channel_90_bend: Parameter[float] = 0.0
     """Radius of first wall cooling channel 90° bend [m]"""
 
-    radius_fw_channel_180_bend: float = 0.0
+    radius_fw_channel_180_bend: Parameter[float] = 0.0
     """Radius of first wall cooling channel 180° bend [m]"""
 
-    radius_blkt_channel_180_bend: float = 0.0
+    radius_blkt_channel_180_bend: Parameter[float] = 0.0
     """Radius of blanket cooling channel 180° bend [m]"""
 
-    dz_fw_half: float = 0.0
+    dz_fw_half: Parameter[float] = 0.0
     """Half-height of first wall structure [m]"""
 
 
