@@ -191,7 +191,7 @@ jobs:
           comment-id: ${{ steps.find-warning-report-comment.outputs.comment-id }}
           issue-number: ${{ steps.workflow-run-info.outputs.pullRequestNumber }}
           body: |
-            Files changed by this PR have introduced ${{env.compared_errors}} more linting errors when compared to main.
+            Files changed by this PR have introduced $env.compared_errors more linting errors when compared to main.
             Please fix these
           edit-mode: replace
 
