@@ -166,7 +166,7 @@ jobs:
         if: steps.workflow-run-info.outputs.pullRequestNumber != ''
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ workflow-run-info.outputs.targetBranch }}
+          ref: ${{ steps.workflow-run-info.outputs.targetBranch }}
       - name: Linting comparison with main
         env:
           num_main_errors: $(($(hatch run lint:fmt_extra "${files[@]}" | wc -l) - 1))
