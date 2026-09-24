@@ -3,8 +3,6 @@ import pytest
 
 from process.core.exceptions import ProcessValidationError
 from process.models.neutronics.base import (
-    AutoPopulatingDict,
-    LayerSpecificGroupwiseConstants,
     NeutronFluxProfile,
     _get_sign_of,
 )
@@ -42,27 +40,7 @@ def test_warn_up_elastic_scatter():
     with pytest.raises(NotImplementedError):
         mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0}, 999)
         mat._set_sigma([1.0, 2.0], [[0.5, 0.5], [1.0, 1.0]])  # noqa: SLF001
-        NeutronFluxProfile(1.0, [1.0], [mat]).solve()
-
-
-def test_throw_index_error():
-    layer_specific_const = LayerSpecificGroupwiseConstants(
-        lambda x: x, ["", ""], ["Dummy constants"]
-    )
-    with pytest.raises(IndexError):
-        layer_specific_const[0, 0, 0]
-    with pytest.raises(IndexError):
-        layer_specific_const[0, 0, 0] = 1
-
-
-def test_iter_and_len():
-    layer_specific_const = LayerSpecificGroupwiseConstants(
-        lambda x: x, ["", ""], ["Dummy constants"]
-    )
-    assert len(layer_specific_const) == 2
-    as_list = list(layer_specific_const)
-    assert len(as_list) == 2
-    assert isinstance(as_list[0], AutoPopulatingDict)
+        NeutronFluxProfile(1.0, [0.1], [mat])
 
 
 def test_has_local_fluxes():
@@ -201,7 +179,6 @@ def test_same_l_in_2_groups_warns():
         )
         incoming_flux = 100.0
         neutron_profile = NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
-        neutron_profile.solve()
 
 
 @pytest.mark.filterwarnings(
@@ -224,7 +201,6 @@ def test_same_l_in_2_groups_calculate_flux():
     incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
 
-    neutron_profile.solve()
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             0, 0, neutron_profile.extended_boundary[0]

@@ -93,10 +93,10 @@ def test_1_group_1_layer():
     )
 
     layer_group_coefs = neutron_profile.coefficients
-    assert np.isclose(layer_group_coefs[0, 0].c[0], 78.5454445887), "c1"
-    assert np.isclose(layer_group_coefs[0, 0].s[0], 1.98923249017), "c2"
-    assert np.isclose(layer_group_coefs[1, 0].c[0], 60.6997676395), "c3"
-    assert np.isclose(layer_group_coefs[1, 0].s[0], -0.0126020377605), "c4"
+    assert np.isclose(layer_group_coefs[0, 0, 0, 0], 78.5454445887), "c1"
+    assert np.isclose(layer_group_coefs[0, 0, 0, 1], 1.98923249017), "c2"
+    assert np.isclose(layer_group_coefs[1, 0, 0, 0], 60.6997676395), "c3"
+    assert np.isclose(layer_group_coefs[1, 0, 0, 1], -0.0126020377605), "c4"
 
     assert np.isclose(neutron_profile.neutron_flux_in_layer(0, x_fw), 48.72444)
     assert np.isclose(neutron_profile.neutron_flux_in_layer(1, x_fw), 48.72444)
@@ -301,6 +301,18 @@ def test_2_groups_2_layers():
                 err_msg=f"Group {n} neutron current continuity check at the {num_layer} layer interface ({x=}m.)"
             )
 
+def test_tabulate():
+    dummy = np.geomspace(MAX_E, MIN_E, 3)
+    mat1 = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="mat1")
+    mat1._set_sigma([100.0, 200], [[90, 1.0], [0.0, 199.5]])
+    mat2 = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="mat2")
+    mat2._set_sigma([10.0, 20], [[9, 1.0], [0.0, 8.0]])
+    neutron_profile = NeutronFluxProfile(
+        1.0,
+        [0.2, 0.3],
+        [mat1, mat2],
+    )
+    neutron_profile.tabulate()
 
 def test_2_groups_1_layer():
     dummy = np.geomspace(MAX_E, MIN_E, 3)  # dummy group structure
@@ -316,7 +328,6 @@ def test_2_groups_1_layer():
     )
     incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
-    neutron_profile.solve()
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             0, 0, neutron_profile.extended_boundary[0]
@@ -402,7 +413,6 @@ def test_3_groups_1_layer():
     )
     incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
-    neutron_profile.solve()
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             0, 0, neutron_profile.extended_boundary[0]
@@ -476,7 +486,6 @@ def test_4_groups_1_layer():
     )
     incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
-    neutron_profile.solve()
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             0, 0, neutron_profile.extended_boundary[0]
@@ -575,18 +584,25 @@ def test_4_groups_4_layers():
         np.cumsum([0.05, 0.3, 0.2, 0.4]),
         [tungsten, lithium, ss316, concrete],
     )
-    neutron_profile.solve()
 
+    for n in range(neutron_profile.n_groups):
+        np.testing.assert_almost_equal(
+            neutron_profile.groupwise_neutron_flux_in_layer(
+                n, neutron_profile.n_layers-1, neutron_profile.extended_boundary[n]
+            ),
+            0,
+            err_msg=f"Neutron flux at group {n}'s extended boundary is expected to be 0!"
+        )
     for num_layer in range(neutron_profile.n_layers):
         mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
         validate_diffusion_equation_at(neutron_profile, mid_point)
+    assert np.isclose( neutron_profile.groupwise_neutron_current_at(1, 0), 0), "No incoming neutron current at x=0 for group 1"
+    assert np.isclose( neutron_profile.groupwise_neutron_current_at(2, 0), 0), "No incoming neutron current at x=0 for group 2"
+    assert np.isclose( neutron_profile.groupwise_neutron_current_at(3, 0), 0), "No incoming neutron current at x=0 for group 3"
     removal_xs = [
         mat.sigma_t - mat.sigma_s.sum(axis=1) - mat.sigma_in.sum(axis=1)
         for mat in neutron_profile.materials
     ]
-    assert np.isclose( neutron_profile.groupwise_neutron_current_at(1, 0), 0), "No incoming neutron current at x=0 for group 1"
-    assert np.isclose( neutron_profile.groupwise_neutron_current_at(2, 0), 0), "No incoming neutron current at x=0 for group 2"
-    assert np.isclose( neutron_profile.groupwise_neutron_current_at(3, 0), 0), "No incoming neutron current at x=0 for group 3"
     assert np.isclose(
         sum(neutron_profile.fluxes),
         neutron_profile.neutron_current_escaped()
@@ -613,15 +629,6 @@ def test_4_groups_4_layers():
                 neutron_profile.groupwise_neutron_current_in_layer(n, num_layer+1, x),
                 err_msg=f"Group {n} neutron current continuity check at the {num_layer} layer interface ({x=}m.)"
             )
-    for n in range(neutron_profile.n_groups):
-        np.testing.assert_almost_equal(
-            neutron_profile.groupwise_neutron_flux_in_layer(
-                n, 0, neutron_profile.extended_boundary[n]
-            ),
-            0,
-            err_msg=f"Neutron flux at group {n}'s extended boundary is expected to be 0!"
-        )
-
 
 @pytest.mark.filterwarnings("ignore:Calculation of flux")
 def test_5_groups_5_layers():
@@ -676,7 +683,6 @@ def test_5_groups_5_layers():
     incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(incoming_flux, [5, 10, 15, 20, 25], mat_list)
 
-    neutron_profile.solve()
     for n in range(1, neutron_profile.n_groups):
         assert np.isclose(
             neutron_profile.groupwise_neutron_current_at(n, 0), 0
