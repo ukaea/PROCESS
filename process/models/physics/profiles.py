@@ -395,8 +395,8 @@ class ElectronTemperatureProfile(Profile):
             rho=self.profile_x,
             radius_plasma_pedestal_temp_norm=self.data.physics.radius_plasma_pedestal_temp_norm,
             temp_on_axis_kev=self.data.physics.temp_plasma_electron_on_axis_kev,
-            temp_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
-            temp_separatrix_kev=self.data.physics.temp_plasma_separatrix_kev,
+            temp_pedestal_kev=self.data.physics.temp_plasma_pedestal_electron_kev,
+            temp_separatrix_kev=self.data.physics.temp_plasma_separatrix_electron_kev,
             alphat=self.data.physics.alphat,
             tbeta=self.data.physics.tbeta,
         )
@@ -573,18 +573,12 @@ class ElectronTemperatureProfile(Profile):
         ):
             self.data.physics.temp_plasma_electron_on_axis_kev = self.calculate_pedestal_profile_on_axis_temperature(  # noqa: E501
                 radius_plasma_pedestal_temp_norm=self.data.physics.radius_plasma_pedestal_temp_norm,
-                temp_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
-                temp_separatrix_kev=self.data.physics.temp_plasma_separatrix_kev,
+                temp_pedestal_kev=self.data.physics.temp_plasma_pedestal_electron_kev,
+                temp_separatrix_kev=self.data.physics.temp_plasma_separatrix_electron_kev,
                 temp_vol_avg_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
                 alphat=self.data.physics.alphat,
                 tbeta=self.data.physics.tbeta,
             )
-
-        self.data.physics.temp_plasma_ion_on_axis_kev = (
-            self.data.physics.temp_plasma_ion_vol_avg_kev
-            / self.data.physics.temp_plasma_electron_vol_avg_kev
-            * self.data.physics.temp_plasma_electron_on_axis_kev
-        )
 
 
 def calculate_vol_avg_of_profile(
@@ -638,3 +632,53 @@ def calculate_vol_avg_of_profile(
         x=profile_x,
         dx=profile_dx if profile_dx is not None else profile_x[1] - profile_x[0],
     )
+
+
+class IonTemperatureProfile(Profile):
+    """Ion temperature (Tᵢ) profile class. Represents the same profile shape as an
+    [`ElectronTemperatureProfile`]
+    """
+
+    def __init__(self, electron_temperature_profile: ElectronTemperatureProfile):
+        """
+        Parameters
+        ----------
+        electron_temperature_profile :
+            The electron temperature profile whose shape is scaled to produce the ion
+            temperature profile.
+        """
+        super().__init__()
+        self.electron_temperature_profile = electron_temperature_profile
+
+    def run(self):
+        """Scale the electron temperature profile by the ion-to-electron
+        volume-averaged temperature ratio to obtain the ion temperature profile.
+        """
+        self.profile_x = self.electron_temperature_profile.profile_x
+        self.profile_dx = self.electron_temperature_profile.profile_dx
+        self.calculate_profile_y()
+        self.integrate_profile_y()
+
+        self.data.physics.temp_plasma_ion_on_axis_kev = (
+            self.data.physics.temp_plasma_ion_vol_avg_kev
+            / self.data.physics.temp_plasma_electron_vol_avg_kev
+            * self.data.physics.temp_plasma_electron_on_axis_kev
+        )
+
+        self.data.physics.temp_plasma_pedestal_ion_kev = (
+            self.data.physics.f_temp_plasma_ion_electron
+            * self.data.physics.temp_plasma_pedestal_electron_kev
+        )
+        self.data.physics.temp_plasma_separatrix_ion_kev = (
+            self.data.physics.f_temp_plasma_ion_electron
+            * self.data.physics.temp_plasma_separatrix_electron_kev
+        )
+
+    def calculate_profile_y(self):
+        """Calculate the ion temperature profile based on the electron temperature
+        profile and the ion-to-electron volume-averaged temperature ratio.
+        """
+        self.profile_y = (
+            self.electron_temperature_profile.profile_y
+            * self.data.physics.f_temp_plasma_ion_electron
+        )

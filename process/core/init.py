@@ -430,27 +430,28 @@ def check_process(inputs, data):  # noqa: ARG001
     if data.ife.ife != 1 and data.physics.i_plasma_pedestal == 1:
         # Temperature checks
         if (
-            data.physics.temp_plasma_pedestal_kev
-            < data.physics.temp_plasma_separatrix_kev
+            data.physics.temp_plasma_pedestal_electron_kev
+            < data.physics.temp_plasma_separatrix_electron_kev
         ):
             raise ProcessValidationError(
                 "Pedestal temperature is lower than separatrix temperature",
-                temp_plasma_pedestal_kev=data.physics.temp_plasma_pedestal_kev,
-                temp_plasma_separatrix_kev=data.physics.temp_plasma_separatrix_kev,
+                temp_plasma_pedestal_electron_kev=data.physics.temp_plasma_pedestal_electron_kev,
+                temp_plasma_separatrix_electron_kev=data.physics.temp_plasma_separatrix_electron_kev,
             )
 
         if (abs(data.physics.radius_plasma_pedestal_temp_norm - 1.0) <= 1e-7) and (
             (
-                data.physics.temp_plasma_pedestal_kev
-                - data.physics.temp_plasma_separatrix_kev
+                data.physics.temp_plasma_pedestal_electron_kev
+                - data.physics.temp_plasma_separatrix_electron_kev
             )
             >= 1e-7
         ):
             logger.warning(
-                f"Temperature pedestal is at plasma edge, but temp_plasma_pedestal_kev "
-                f"({data.physics.temp_plasma_pedestal_kev}) differs from"
-                " temp_plasma_separatrix_kev"
-                f" ({data.physics.temp_plasma_separatrix_kev})",
+                f"Temperature pedestal is at plasma edge, "
+                "but temp_plasma_pedestal_electron_kev "
+                f"({data.physics.temp_plasma_pedestal_electron_kev}) differs from"
+                " temp_plasma_separatrix_electron_kev"
+                f" ({data.physics.temp_plasma_separatrix_electron_kev})",
                 stacklevel=2,
             )
 
@@ -461,32 +462,35 @@ def check_process(inputs, data):  # noqa: ARG001
         # (which will only have an effect if this is an optimisation run)
         if (
             data.physics.temp_plasma_electron_vol_avg_kev
-            <= data.physics.temp_plasma_pedestal_kev
+            <= data.physics.temp_plasma_pedestal_electron_kev
         ):
             logger.warning(
                 f"Volume-averaged temperature ({data.physics.te}) has been "
                 "forced to exceed input pedestal height"
-                f" ({data.physics.temp_plasma_pedestal_kev}). "
-                "Changing to te = temp_plasma_pedestal_kev*1.001",
+                f" ({data.physics.temp_plasma_pedestal_electron_kev}). "
+                "Changing to te = temp_plasma_pedestal_electron_kev*1.001",
                 stacklevel=2,
             )
             data.physics.temp_plasma_electron_vol_avg_kev = (
-                data.physics.temp_plasma_pedestal_kev * 1.001
+                data.physics.temp_plasma_pedestal_electron_kev * 1.001
             )
 
         if (
             data.numerics.i_process_run_mode == PROCESSRunMode.OPTIMISATION
             and (data.numerics.ixc[: data.numerics.n_iteration_variables] == 4).any()
-            and data.numerics.boundl[3] < data.physics.temp_plasma_pedestal_kev * 1.001
+            and data.numerics.boundl[3]
+            < data.physics.temp_plasma_pedestal_electron_kev * 1.001
         ):
             logger.warning(
                 "Lower limit of volume averaged electron temperature"
                 " (temp_plasma_electron_vol_avg_kev)"
                 " has been raised to ensure"
-                " temp_plasma_electron_vol_avg_kev > temp_plasma_pedestal_kev",
+                " temp_plasma_electron_vol_avg_kev > temp_plasma_pedestal_electron_kev",
                 stacklevel=2,
             )
-            data.numerics.boundl[3] = data.physics.temp_plasma_pedestal_kev * 1.001
+            data.numerics.boundl[3] = (
+                data.physics.temp_plasma_pedestal_electron_kev * 1.001
+            )
             data.numerics.boundu[3] = max(
                 data.numerics.boundu[3], data.numerics.boundl[3]
             )
@@ -612,12 +616,12 @@ def check_process(inputs, data):  # noqa: ARG001
         ]
         == 78
     ).any():
-        # If Reinke criterion is used temp_plasma_separatrix_kev is calculated and
-        # cannot be an iteration variable
+        # If Reinke criterion is used temp_plasma_separatrix_electron_kev is
+        # calculated and cannot be an iteration variable
         if (data.numerics.ixc[: data.numerics.n_iteration_variables] == 119).any():
             raise ProcessValidationError(
-                "REINKE IMPURITY MODEL: temp_plasma_separatrix_kev is calculated and "
-                "cannot be an iteration variable for the Reinke model"
+                "REINKE IMPURITY MODEL: temp_plasma_separatrix_electron_kev is "
+                "calculated and cannot be an iteration variable for the Reinke model"
             )
 
         # If Reinke criterion is used need to enforce LH-threshold
