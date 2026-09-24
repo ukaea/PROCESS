@@ -284,7 +284,7 @@ class NeutronFluxProfile:
             material, and their corresponding coefficients.
         """
         tables = []
-        headers = [f"coef * basis {n}" for n in range(self.n_groups)]
+        headers = [f"coef * basis pair {n}" for n in range(self.n_groups)]
         for num_layer in range(self.n_layers):
 
             bases = []
@@ -308,13 +308,11 @@ class NeutronFluxProfile:
                     zip(self.coefficients[num_layer, n], bases, strict=True)
                 ):
                     str_repr = f"{coef_pair[0]:+.7e} * {basis_pair[0]} {coef_pair[1]:+.7e} * {basis_pair[1]}"
-                    if basis_group == 0 and str_repr.startswith("+"):
-                        str_repr = " " + str_repr[1:]
                     content[n].append(str_repr)
 
             tables.append(
                 tabulate(
-                    content, preserve_whitespace=True, headers=[
+                    content, headers=[
                         f"Neutron flux in layer {num_layer}",
                     ] + headers,
                 )
