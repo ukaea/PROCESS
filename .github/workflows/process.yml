@@ -163,7 +163,8 @@ jobs:
       - name: Get information about the current run
         uses: Fusion-Power-Plant-Framework/fppf-actions/get-workflow-origin@f94a8de5f658cf65c79e1f143a7a31fb94a05793
         id: workflow-run-info
-      - name: Checkout main for linting comparison
+      - name: Checkout
+        # check out main
         if: steps.workflow-run-info.outputs.pullRequestNumber != ''
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
