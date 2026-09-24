@@ -157,7 +157,7 @@ jobs:
 
         env: # need number of errors being flagged in these files
           # subtract 1 as final summary line is not an error
-          num_pr_errors: $(($(hatch run lint:fmt_extra "${files[@]}" | wc -l) - 1))
+          num_pr_errors: $((hatch run lint:fmt_extra | tail -1) | tr -dc '0-9')
 
       - name: Get information about the current run
         uses: Fusion-Power-Plant-Framework/fppf-actions/get-workflow-origin@f94a8de5f658cf65c79e1f143a7a31fb94a05793
@@ -169,7 +169,7 @@ jobs:
           ref: ${{ steps.workflow-run-info.outputs.targetBranch }}
       - name: Linting comparison with main
         env:
-          num_main_errors: $(($(hatch run lint:fmt_extra "${files[@]}" | wc -l) - 1))
+          num_main_errors: $((hatch run lint:fmt_extra | tail -1) | tr -dc '0-9')
           compared_errors: $((env.num_pr_errors - env.num_main_errors))
       - name: Warning comment
         if: env.compared_errors > 0
