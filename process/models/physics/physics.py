@@ -945,6 +945,43 @@ class Physics(Model):
             self.data.physics.vol_plasma,
             self.data,
         )
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            
+            radpwrdata = physics_funcs.calculate_power_radiation(
+                nd_plasma_electron_on_axis=self.data.physics.nd_plasma_electron_on_axis,
+                rminor=self.data.physics.rminor,
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+                aspect=self.data.physics.aspect,
+                alphan=self.data.physics.alphan,
+                alphat=self.data.physics.alphat,
+                tbeta=self.data.physics.tbeta,
+                temp_plasma_electron_on_axis_kev=self.data.physics.temp_plasma_electron_on_axis_kev,
+                f_sync_reflect=self.data.physics.f_sync_reflect,
+                rmajor=self.data.physics.rmajor,
+                kappa=self.data.physics.kappa,
+                vol_plasma=self.data.physics.vol_plasma,
+                i_calculate_radiation=self.data.physics.i_calculate_radiation,
+                i_equilibrium_solve=self.data.physics.i_equilibrium_solve,
+                f_density_h_isotope_electron=self.data.impurity_radiation.f_nd_impurity_electron_array[
+                    impurity_radiation.element2index("H_", self.data)
+                ],
+                f_density_he_isotope_electron=self.data.impurity_radiation.f_nd_impurity_electron_array[
+                    impurity_radiation.element2index("He", self.data)
+                ],
+                ndensity_b11_fuel_vol_avg=(
+                    self.data.physics.nd_plasma_fuel_ions_vol_avg 
+                    * self.data.physics.f_plasma_fuel_boron11
+                ),
+                impurity_radiation=self.data.impurity_radiation,
+                ne_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                temp_e_vol_avg=self.data.physics.temp_plasma_electron_vol_avg_kev,
+                rho=self.plasma_profile.neprofile.profile_x,
+                ne_profile=self.plasma_profile.neprofile.profile_y,
+                te_profile=self.plasma_profile.teprofile.profile_y,
+                f_power_rad_brem_core_reduction=self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
+                rho_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
+                eq=self.data.veqpy.equilibrium,
+            )
         self.data.physics.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_mw
         self.data.physics.pden_plasma_core_rad_mw = radpwrdata.pden_plasma_core_rad_mw
         self.data.physics.pden_plasma_outer_rad_mw = radpwrdata.pden_plasma_outer_rad_mw

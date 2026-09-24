@@ -1009,6 +1009,12 @@ class PhysicsData:
     - =1 iterate axis values to match volume averages in veqpy geometry
     """
 
+    i_calculate_radiation: int = 1
+    """p-B11 bremsstrahlung model:
+    - =1 volume-averaged temperature and density
+    - =2 profile or equilibrium integration
+    """
+
     i_rad_loss: int = 1
     """switch for radiation loss term usage in power balance (see User Guide):
     - =0 total power lost is scaling power plus radiation

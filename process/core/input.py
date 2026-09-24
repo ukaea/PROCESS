@@ -1046,6 +1046,7 @@ INPUT_VARIABLES = {
     "i_pulsed_plant": InputVariable("pulse", int, choices=[0, 1]),
     "i_q95_fixed": InputVariable("constraints", int, choices=[0, 1]),
     "i_r_cp_top": InputVariable("build", int, choices=[0, 1, 2]),
+    "i_calculate_radiation": InputVariable("physics", int, choices=[1, 2]),
     "i_rad_loss": InputVariable("physics", int, choices=[0, 1, 2]),
     "i_shield_mat": InputVariable("fwbs", int, choices=[0, 1]),
     "i_single_null": InputVariable("physics", int, choices=[0, 1]),

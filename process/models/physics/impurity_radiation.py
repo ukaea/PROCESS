@@ -339,6 +339,10 @@ def init_imp_element(
     )
     data.impurity_radiation.impurity_arr_len_tab[n_species_index - 1] = len_tab
 
+    # Boron fuel radiation is calculated analytically; do not read Lz tables.
+    if z == 5:
+        return
+
     if len_tab > N_IMPURITIY_LOSS_FUNCTION_POINTS:
         print(
             f"ERROR: len_tab is {len_tab} but has a maximum value of "
@@ -439,8 +443,8 @@ def calculate_average_charge_at_temp(
     numpy.array
         zav_of_te - electron temperature dependent average atomic charge
     """
-    if imp_element_index == 15:
-        return 5.0
+    if imp_element_index == 14:
+        return np.full_like(np.atleast_1d(temp_electron_kev), 5.0, dtype=float)
     return _calculate_average_charge_at_temp_compiled(
         imp_element_index=imp_element_index,
         temp_electron_kev=temp_electron_kev,
@@ -664,7 +668,8 @@ class ImpurityRadiation:
         self.data = data_structure
         self.plasma_profile = plasma_profile
         self.imp = np.nonzero(
-            self.data.impurity_radiation.f_nd_impurity_electron_array > 1.0e-30
+            (self.data.impurity_radiation.f_nd_impurity_electron_array > 1.0e-30)
+            & (self.data.impurity_radiation.impurity_arr_z != 5)
         )[0]
 
         self.pden_impurity_radiation_profile = np.zeros(
