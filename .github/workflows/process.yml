@@ -117,7 +117,8 @@ jobs:
         uses: Fusion-Power-Plant-Framework/fppf-actions/hatch-lint@c6af22fc8d00be67cca53a61177301462f499fb2
 
   improve_quality_check:
-    permissions: write
+    permissions:
+      pull-requests: write
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     needs: [pre-commit-quality-check]
