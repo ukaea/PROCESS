@@ -20,7 +20,7 @@ class ReinkeData:
 
     fzactual: float = 0.001
     """Actual impurity fraction of divertor impurity (impvardiv) in the SoL (taking
-    impurity_enrichment into account) (`iteration variable 148`)
+    impurity enrichment into account) (`iteration variable 148`)
     """
 
     reinke_mode: int = 0
