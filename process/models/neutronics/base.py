@@ -269,83 +269,56 @@ class NeutronFluxProfile:
         self._is_solved = np.zeros(self.n_groups, dtype=bool)
         self.num_iteration = [0 for n in range(self.n_groups)]
         self.contains_upscatter = any(not mat.downscatter_only for mat in self.materials)
-        
+
         self.solve()
 
-    def tabulate(self, side_by_side: bool=False) -> list[str]:
+    def tabulate(self) -> list[str]:
         """
-        List the coefficients and bases as tables/pairs of tables, indexed by
-        num_layer.
-
-        Parameters
-        ----------
-        side_by_side:
-            Whether to concatenate the c and s coefficient and bases table in
-            each layer together horizontally or not.
+        List the coefficients and bases as tables, indexed by num_layer.
 
         Returns
         -------
         tables:
-            If side_by_side = True:
-                The m-th item on this list is a pair of tables showing all of
-                the negexp-exp/cos-sin bases that applies to the m-th layer of
-                material, and their corresponding coefficients.
-            else if side_by_side = False:
-                The 2m-th item on the list is a table showing all of the
-                negexp/cos bases that applies to the m-th layer of material,
-                and their corresponding coefficients.
-                The (2m+1)-th item on the list is a table showing all of the
-                exp/sin bases that applies to the m-th layer of the material,
-                and their corresponding coefficients.
+            The m-th item on this list is a table showing all of the
+            negexp-exp/cos-sin bases that applies to the m-th layer of
+            material, and their corresponding coefficients.
         """
         tables = []
+        headers = [f"coef * basis {n}" for n in range(self.n_groups)]
         for num_layer in range(self.n_layers):
-            headers = [f"coef * basis {n}" for n in range(self.n_groups)]
 
-            c_bases, s_bases = [], []
+            bases = []
             for n in range(self.n_groups):
                 l2 = self.materials[num_layer].l2[n]
                 if l2 > 0:
-                    c_bases.append(f"exp(-|x|/{np.sqrt(l2):.4g})")
-                    s_bases.append(f"exp(|x|/{np.sqrt(l2):.4g})")
+                    bases.append((
+                        f"exp(-|x|/{np.sqrt(l2):.4g})",
+                        f"exp(|x|/{np.sqrt(l2):.4g})"
+                    ))
                 else:
-                    c_bases.append(f"cos(|x|/{np.sqrt(-l2):.4g})")
-                    s_bases.append(f"sin(|x|/{np.sqrt(-l2):.4g})")
+                    bases.append((
+                        f"cos(|x|/{np.sqrt(-l2):.4g})",
+                        f"sin(|x|/{np.sqrt(-l2):.4g})"
+                    ))
 
-            c_values, s_values = [], []  # TODO: may be presented differently?
+            content = [[] for _ in range(self.n_groups)]
             for n in range(self.n_groups):
-                c_values.append([f"contributed by group {n} neutrons [c] terms =",])
-                s_values.append([f"contributed by group {n} neutrons [s] terms =",])
-                c_values[-1].extend([f"{c_coef:+.7e} * {c_basis}" for c_coef, c_basis in zip(self.coefficients[num_layer, n, :, 0], c_bases)])
-                s_values[-1].extend([f"{s_coef:+.7e} * {s_basis}" for s_coef, s_basis in zip(self.coefficients[num_layer, n, :, 1], s_bases)])
-                # Remove leading "+" signs.
-                if c_values[-1][1].startswith("+"):
-                    c_values[-1][1] = " "+c_values[-1][1][1:]
-                if s_values[-1][1].startswith("+"):
-                    s_values[-1][1] = " "+s_values[-1][1][1:]
+                content[n].append(f"contributed by group {n} neutrons =")
+                for basis_group, (coef_pair, basis_pair) in enumerate(
+                    zip(self.coefficients[num_layer, n], bases, strict=True)
+                ):
+                    str_repr = f"{coef_pair[0]:+.7e} * {basis_pair[0]} {coef_pair[1]:+.7e} * {basis_pair[1]}"
+                    if basis_group == 0 and str_repr.startswith("+"):
+                        str_repr = " " + str_repr[1:]
+                    content[n].append(str_repr)
 
-            c_table = tabulate(
-                c_values, headers=[
-                    f"Neutron flux in layer {num_layer}",
-                ] + headers,
-            ).splitlines()
-            s_table = tabulate(
-                s_values, headers=[
-                    f"Neutron flux in layer {num_layer}",
-                ] + headers,
-            ).splitlines()
-
-
-            if side_by_side:
-                max_c_len = max(len(c_line) for c_line in c_table)
-                max_s_len = max(len(s_line) for s_line in s_table)
-                tables.append("\n".join(
-                    c_line.ljust(max_c_len) + " | " + s_line.ljust(max_s_len)
-                    for c_line, s_line in zip(c_table, s_table)
-                ))
-            else:
-                tables.append("\n".join(c_table))
-                tables.append("\n".join(s_table))
+            tables.append(
+                tabulate(
+                    content, preserve_whitespace=True, headers=[
+                        f"Neutron flux in layer {num_layer}",
+                    ] + headers,
+                )
+            )
         return tables
 
     def _groupwise_cs_values_in_layer(
@@ -994,6 +967,7 @@ class NeutronFluxProfile:
             c_val, s_val = self._groupwise_cs_values_in_layer(
                 basis_group, num_layer, abs(x)
             )
+            # TODO: these three .extend(c_.., s_..) could probably be done better.
             trig_funcs.extend([
                 self.coefficients[num_layer, n, basis_group, 0] * c_val,
                 self.coefficients[num_layer, n, basis_group, 1] * s_val,
