@@ -159,16 +159,16 @@ def gnielinski_heat_transfer_coefficient(
 
     # Check that Reynolds number is in valid range for the Gnielinski correlation
     if (reynolds <= 3000.0) or (reynolds > 5.0e6):
-        logger.error("Reynolds number out of range : [3e3-5000e3]. %s", reynolds)
+        logger.error("Reynolds number out of range [3e3-5000e3]: %s", reynolds)
 
     # Check that Prandtl number is in valid range for the Gnielinski correlation
     if (pr < 0.5) or (pr > 2000.0):
-        logger.error("Prandtl number out of range : [0.5-2000]. %s", pr)
+        logger.error("Prandtl number out of range [0.5-2000]: %s", pr)
 
     # Check that the Darcy friction factor is in valid range for the Gnielinski
     # correlation
     if f <= 0.0:
-        logger.error("Negative Darcy friction factor (f). %s", f)
+        logger.error("Negative Darcy friction factor (f): %s", f)
 
     return heat_transfer_coefficient
 

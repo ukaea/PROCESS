@@ -1783,7 +1783,8 @@ class SuperconductingTFCoil(TFCoil):
         # Negative WP area error reporting
         if a_tf_wp_no_insulation <= 0.0e0 or a_tf_wp_with_insulation <= 0.0e0:
             logger.error(
-                "Winding pack cross-section problem... %s %s",
+                "Winding pack cross-section problem... a_tf_wp_no_insulation=%s, "
+                "a_tf_wp_with_insulation=%s",
                 a_tf_wp_no_insulation,
                 a_tf_wp_with_insulation,
             )
@@ -1904,7 +1905,8 @@ class SuperconductingTFCoil(TFCoil):
         # Report error if the casing area is negative
         if a_tf_coil_inboard_case <= 0.0e0 or a_tf_coil_outboard_case <= 0.0e0:
             logger.error(
-                "Winding pack cross-section problem... %s %s",
+                "Winding pack cross-section problem... a_tf_coil_inboard_case=%s, "
+                "a_tf_coil_outboard_case=%s",
                 a_tf_coil_inboard_case,
                 a_tf_coil_outboard_case,
             )
@@ -3354,14 +3356,16 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         if a_tf_turn_cable_space_no_void <= 0.0e0:
             if dx_tf_turn_conduit_full_average < 0.0e0:
                 logger.error(
-                    "Negative cable space dimension. %s %s",
+                    "Negative cable space dimension. a_tf_turn_cable_space_no_void=%s, "
+                    "dx_tf_turn_cable_space_average=%s",
                     a_tf_turn_cable_space_no_void,
                     dx_tf_turn_cable_space_average,
                 )
             else:
                 logger.error(
-                    "Cable space area problem; artificially set rounded corner "
-                    "radius to 0. %s %s",
+                    "Cable space area problem; artificially setting rounded corner "
+                    "radius to 0. a_tf_turn_cable_space_no_void=%s, "
+                    "dx_tf_turn_cable_space_average=%s",
                     a_tf_turn_cable_space_no_void,
                     dx_tf_turn_cable_space_average,
                 )

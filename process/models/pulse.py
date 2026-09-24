@@ -306,7 +306,9 @@ class Pulse(Model):
         if t_plant_pulse_burn < 0.0e0:
             logger.error(
                 "Negative burn time available; reduce t_plant_pulse_fusion_ramp or "
-                "raise PF coil V-s capability. %s %s %s %s",
+                "raise PF coil V-s capability. t_plant_pulse_burn=%s, "
+                "vs_cs_pf_total_burn=%s, v_plasma_loop_burn=%s, "
+                "t_plant_pulse_fusion_ramp=%s",
                 t_plant_pulse_burn,
                 vs_cs_pf_total_burn,
                 v_plasma_loop_burn,
