@@ -425,9 +425,7 @@ class NeutronFluxProfile:
         ]
         return matrix_fsum(summation_sequence, axis=-1)
 
-    def _propagate_coefs_to_next_layer(
-        self, n: int, num_layer: int, include_upscatter: bool
-    ) -> tuple[npt.NDArray, npt.NDArray[np.float64]]:
+    def _propagate_coefs_to_next_layer(self, n: int, num_layer: int) -> tuple[npt.NDArray, npt.NDArray[np.float64]]:
         """
         Infer this layer's main basis functions' coefficients
         using using the previous layer's basis functions.
@@ -444,39 +442,39 @@ class NeutronFluxProfile:
         """
         xm = self.layer_x[num_layer]
 
+        this_mat, next_mat = self.materials[num_layer: num_layer+2]
         a_mmn = np.array([
             self._groupwise_cs_values_in_layer(n, num_layer, xm),
-            self.materials[num_layer].diffusion_const[n]
+            this_mat.diffusion_const[n]
             * self._groupwise_cs_differential_in_layer(n, num_layer, xm),
         ])
         a_lmn = np.array([
             self._groupwise_cs_values_in_layer(n, num_layer + 1, xm),
-            self.materials[num_layer + 1].diffusion_const[n]
+            next_mat.diffusion_const[n]
             * self._groupwise_cs_differential_in_layer(n, num_layer + 1, xm),
         ])
-        det_a_lmn = self.materials[num_layer + 1].diffusion_const[n] / np.sqrt(
-            abs(self.materials[num_layer + 1].l2[n])
+        det_a_lmn = next_mat.diffusion_const[n] / np.sqrt(
+            abs(next_mat.l2[n])
         )
-        if self.materials[num_layer + 1].l2[n] > 0:
+        if next_mat.l2[n] > 0:
             det_a_lmn *= 2
         inv_a_lmn = 1 / det_a_lmn * (a_lmn[::-1, ::-1].T * [[1, -1], [-1, 1]])
 
-        in_scatter_max_group = self.n_groups if include_upscatter else n
         b_mmn = np.array([
             self._summation_shorthand(
                 n,
                 num_layer,
                 self._groupwise_cs_values_in_layer,
                 xm,
-                in_scatter_max_group,
+                n if this_mat.downscatter_only else self.n_groups,
             ),
-            self.materials[num_layer].diffusion_const[n]
+            this_mat.diffusion_const[n]
             * self._summation_shorthand(
                 n,
                 num_layer,
                 self._groupwise_cs_differential_in_layer,
                 xm,
-                in_scatter_max_group,
+                n if this_mat.downscatter_only else self.n_groups,
             ),
         ])
         b_lmn = np.array([
@@ -485,15 +483,15 @@ class NeutronFluxProfile:
                 num_layer + 1,
                 self._groupwise_cs_values_in_layer,
                 xm,
-                in_scatter_max_group,
+                n if next_mat.downscatter_only else self.n_groups,
             ),
-            self.materials[num_layer + 1].diffusion_const[n]
+            next_mat.diffusion_const[n]
             * self._summation_shorthand(
                 n,
                 num_layer + 1,
                 self._groupwise_cs_differential_in_layer,
                 xm,
-                in_scatter_max_group,
+                n if next_mat.downscatter_only else self.n_groups,
             ),
         ])
 
@@ -502,7 +500,7 @@ class NeutronFluxProfile:
         return m, v
 
     def _get_all_propagation_operator(
-        self, n: int, include_upscatter: bool
+        self, n: int
     ) -> tuple[list[npt.NDArray], list[npt.NDArray[np.float64]]]:
         """Get all of the m matrix and v vector, as two lists.
 
@@ -510,9 +508,6 @@ class NeutronFluxProfile:
         ----------
         n:
             The neutron group index whose propagation operators that we want.
-        include_upscatter:
-            Whether we include the upscatter part of the propagation operator
-            or not. Warning: can't be called in iteration=0.
 
         Returns
         -------
@@ -525,7 +520,7 @@ class NeutronFluxProfile:
         """
         m_list, v_list = [], []
         for num_layer in range(self.n_layers - 1):
-            m, v = self._propagate_coefs_to_next_layer(n, num_layer, include_upscatter)
+            m, v = self._propagate_coefs_to_next_layer(n, num_layer)
             m_list.append(m)
             v_list.append(v)
         return m_list, v_list
@@ -544,7 +539,7 @@ class NeutronFluxProfile:
         ----------
         n:
             The index of the neutron group whose constants are being solved.
-            The allowed range of values = [0, self.n_groups-1]. Therefore,
+            The allowed range of values = range(0, self.n_groups). Therefore,
             n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         """
         if n not in range(self.n_groups):
@@ -573,50 +568,13 @@ class NeutronFluxProfile:
                     stacklevel=2,
                 )
 
-        include_upscatter = self.contains_upscatter and self.num_iteration[n] != 0
-        in_scatter_max_group = self.n_groups if include_upscatter else n + 1
+        include_upscatter = self.contains_upscatter and self.num_iteration[n] != 0  # even if contains_upscatter, there is no point including the upscatter terms when num_iteration>0 because those main diagonal elements had not been populated, therefore would've contributed zero to on the same column.
+        in_scatter_max_group = self.n_groups if include_upscatter else n
 
-        try:
-            for num_layer in range(self.n_layers):
-                # Setting up aliases for shorter code
-                mat = self.materials[num_layer]
-                for basis_group in range(in_scatter_max_group):
-                    in_scatter_min_group = 0 if include_upscatter else basis_group
-                    # mat.sigma_source: propto inscatter_group neutrons scattered into n
-                    # self.coefficients: the number of inscatter_group neutrons in the shape of group basis_group's basis.
-                    # Updating a coef on the main diagonal will affect the values of its entire column (in-scatter from that basis STAYS in that basis!)
-                    # Note that each row not only represents the neutron flux, but also the in-scatter (:propto: neutron flux).
-                    # Formula in Appendix A of the paper.
-                    # TODO: The following lines may be optimized to be faster & simpler.
-                    self.coefficients[num_layer, n, basis_group, 0] = fsum([
-                        (
-                            mat.sigma_source[inscatter_group, n]
-                            * self.coefficients[
-                                num_layer, inscatter_group, basis_group, 0
-                            ]
-                        )
-                        for inscatter_group in range(
-                            in_scatter_min_group, in_scatter_max_group
-                        )
-                        if inscatter_group != n
-                    ]) * mat.conversion_factor[n, basis_group]
+        for basis_group in range(in_scatter_max_group):
+            if n != basis_group:
+                self._update_off_diagonal_coefficients(n, basis_group)
 
-                    self.coefficients[num_layer, n, basis_group, 1] = fsum([
-                        (
-                            mat.sigma_source[inscatter_group, n]
-                            * self.coefficients[
-                                num_layer, inscatter_group, basis_group, 1
-                            ]
-                        )
-                        for inscatter_group in range(
-                            in_scatter_min_group, in_scatter_max_group
-                        )
-                        if inscatter_group != n
-                    ]) * mat.conversion_factor[n, basis_group]
-
-        except Exception as e:
-            self._is_solved[n] = False
-            raise e
         # Determine coefficients[0, n, n] by boundary conditions:
         # top row enforces current at (x=0) = source current,
         # bottom row enforces flux = 0 at the extended boundary.
@@ -627,7 +585,7 @@ class NeutronFluxProfile:
             n, 0, self._groupwise_cs_differential_in_layer, 0.0, in_scatter_max_group
         )
 
-        m_list, v_list = self._get_all_propagation_operator(n, include_upscatter)
+        m_list, v_list = self._get_all_propagation_operator(n)
         affine_transform_matrix_stack = multiply_2_2_matrices(*m_list[::-1])
         affine_transformed_column_vector = matrix_fsum(
             [
@@ -670,9 +628,15 @@ class NeutronFluxProfile:
             )
         
         init_coefs = self.coefficients[:, n, n]
-        def _set_coefficients(input_vector: Iterable[float]):
+        in_scatter_min_group = 0 if include_upscatter else n + 1
+        def _set_coefficients(input_vector: Iterable[float]) -> None:
             self.coefficients[:, n, n] = input_vector.reshape(self.n_layers, 2)
-            # self._update_main_diagonal_coefficients()
+            basis_group = n
+            for incoming_basis in range(in_scatter_min_group, in_scatter_max_group):
+                if incoming_basis != n:
+                    self._update_off_diagonal_coefficients(
+                        incoming_basis, basis_group
+                    )
 
         def objective(coefficients_vector):
             _set_coefficients(coefficients_vector)
@@ -705,6 +669,62 @@ class NeutronFluxProfile:
         self.num_iteration[n] += 1
         self._is_solved[n] = True
         return
+
+    def _update_off_diagonal_coefficients(self, n: int, basis_group: int) -> None:
+        """
+        Calculate the off-diagonal coefficients on row n.
+        Inferred from the formula in Appendix A of the paper.
+
+        Parameters
+        ----------
+        n:
+            The group number whose main diagonal value has just been updated.
+
+
+        Variables used
+        --------------
+        mat.sigma_source:
+            :propto: inscatter_group neutrons scattered into n
+        self.coefficients:
+            the number of inscatter_group neutrons in the shape
+            of group basis_group's basis.
+        Note
+        ----
+        Updating a coef on the main diagonal will affect the values of its
+        entire column (in-scatter from that basis STAYS in that basis!)
+        Note that each row not only represents the neutron flux, but also the in-scatter (:propto: neutron flux).
+        """
+            
+        for num_layer, mat in enumerate(self.materials):
+            if mat.downscatter_only:
+                in_scatter_min_group, in_scatter_max_group = basis_group, n
+            else:
+                in_scatter_min_group, in_scatter_max_group = 0, self.n_groups
+            self.coefficients[num_layer, n, basis_group, 0] = fsum([
+                (
+                    mat.sigma_source[inscatter_group, n]
+                    * self.coefficients[
+                        num_layer, inscatter_group, basis_group, 0
+                    ]
+                )
+                for inscatter_group in range(
+                    in_scatter_min_group, in_scatter_max_group
+                )
+                if inscatter_group != n
+            ]) * mat.conversion_factor[n, basis_group]
+
+            self.coefficients[num_layer, n, basis_group, 1] = fsum([
+                (
+                    mat.sigma_source[inscatter_group, n]
+                    * self.coefficients[
+                        num_layer, inscatter_group, basis_group, 1
+                    ]
+                )
+                for inscatter_group in range(
+                    in_scatter_min_group, in_scatter_max_group
+                )
+                if inscatter_group != n
+            ]) * mat.conversion_factor[n, basis_group]
 
     def _groupwise_fitness(
             self, n: int, jac: bool=True
