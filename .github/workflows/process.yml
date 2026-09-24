@@ -174,9 +174,6 @@ jobs:
         env:
           num_main_errors: $((hatch run lint:fmt_extra | tail -1) | tr -dc '0-9')
           compared_errors: $((env.num_pr_errors - env.num_main_errors))
-        run: |
-          echo ${{env.num_main_errors}} >> "${GITHUB_ENV}"
-          echo ${{env.compared_errors}} >> "${GITHUB_ENV}"
       - name: Warning comment
         if: env.compared_errors > 0
         uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
