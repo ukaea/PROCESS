@@ -155,7 +155,6 @@ jobs:
 
           hatch run lint:fmt_extra "${files[@]}"
 
-          echo $((hatch run lint:fmt_extra | tail -1) | tr -dc '0-9')
         env:
           # need number of errors being flagged in these files
           # subtract 1 as final summary line is not an error
@@ -175,7 +174,7 @@ jobs:
           num_main_errors: $((hatch run lint:fmt_extra | tail -1) | tr -dc '0-9')
           compared_errors: $((env.num_pr_errors - env.num_main_errors))
       - name: Warning comment
-        if: env.compared_errors > 0
+        # if: env.compared_errors > 0
         uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
         with:
           issue-number: ${{ steps.workflow-run-info.outputs.pullRequestNumber }}
