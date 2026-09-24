@@ -381,9 +381,9 @@ def calculate_power_radiation(
             ne=ne_vol_avg, 
             te=temp_e_vol_avg,
         )
-        pden_plasma_core_rad_mw = pden_rad_brem
+        pden_plasma_core_rad_mw = pden_rad_brem + pden_plasma_sync_mw
         pden_plasma_outer_rad_mw = 0.0
-        pden_plasma_rad_mw = pden_rad_brem
+        pden_plasma_rad_mw = pden_rad_brem + pden_plasma_sync_mw
     
     elif i_calculate_radiation == 2:
         # Xie, 2024, simple integration/equilibrium integration
@@ -432,7 +432,8 @@ def calculate_power_radiation(
                 * float(eq.grid.integrate(integrand_core))
             )
             power_rad_brem_edge = float(eq.grid.integrate(integrand_edge))
-        pden_plasma_core_rad_mw = power_rad_brem_core / vol_plasma
+        
+        pden_plasma_core_rad_mw = power_rad_brem_core / vol_plasma + pden_plasma_sync_mw
         pden_plasma_outer_rad_mw = power_rad_brem_edge / vol_plasma
         pden_plasma_rad_mw = pden_plasma_core_rad_mw + pden_plasma_outer_rad_mw
 
