@@ -117,6 +117,8 @@ jobs:
         uses: Fusion-Power-Plant-Framework/fppf-actions/hatch-lint@c6af22fc8d00be67cca53a61177301462f499fb2
 
   improve_quality_check:
+    permissions:
+      pull-requests: write
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     needs: [pre-commit-quality-check]
@@ -154,6 +156,44 @@ jobs:
           mapfile -t files <<< "${{ steps.changes.outputs.files }}"
 
           hatch run lint:fmt_extra "${files[@]}"
+
+        env:
+          # need number of errors being flagged in these files
+          # subtract 1 as final summary line is not an error
+          num_pr_errors: $((hatch run lint:fmt_extra | tail -1) | tr -dc '0-9')
+
+      - name: Get information about the current run
+        if: failure()
+        uses: Fusion-Power-Plant-Framework/fppf-actions/get-workflow-origin@f94a8de5f658cf65c79e1f143a7a31fb94a05793
+        id: workflow-run-info
+      - name: Checkout and lint on main
+        # check out main
+        if: failure() && steps.workflow-run-info.outputs.pullRequestNumber != ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.workflow-run-info.outputs.targetBranch }}
+        env:
+          num_main_errors: $((hatch run lint:fmt_extra | tail -1) | tr -dc '0-9')
+          compared_errors: $((env.num_pr_errors - env.num_main_errors))
+      - name: Find warning report comment
+        if: failure () # && steps.workflow-run-info.outputs.pullRequestNumber != '' && env.compared_errors > 0
+        uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
+        id: find-warning-report-comment
+        with:
+          issue-number: ${{ steps.workflow-run-info.outputs.pullRequestNumber }}
+          comment-author: "github-actions[bot]"
+          body-includes: ⚠️ improve_quality_job warning!
+          direction: last
+      - name: Warning comment
+        if: failure() # && env.compared_errors > 0
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
+        with:
+          comment-id: ${{ steps.find-warning-report-comment.outputs.comment-id }}
+          issue-number: ${{ steps.workflow-run-info.outputs.pullRequestNumber }}
+          body: |
+            Files changed by this PR have introduced $env.compared_errors more linting errors when compared to main.
+            Please fix these
+          edit-mode: replace
 
 
   tracking:
