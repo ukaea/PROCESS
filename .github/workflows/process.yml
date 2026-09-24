@@ -176,7 +176,7 @@ jobs:
           num_main_errors: $((hatch run lint:fmt_extra | tail -1) | tr -dc '0-9')
           compared_errors: $((env.num_pr_errors - env.num_main_errors))
       - name: Find warning report comment
-        if: failure () && steps.workflow-run-info.outputs.pullRequestNumber != '' && env.compared_errors > 0
+        if: failure () # && steps.workflow-run-info.outputs.pullRequestNumber != '' && env.compared_errors > 0
         uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
         id: find-warning-report-comment
         with:
@@ -185,7 +185,7 @@ jobs:
           body-includes: ⚠️ improve_quality_job warning!
           direction: last
       - name: Warning comment
-        if: failure() && env.compared_errors > 0
+        if: failure() # && env.compared_errors > 0
         uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
         with:
           comment-id: ${{ steps.find-warning-report-comment.outputs.comment-id }}
