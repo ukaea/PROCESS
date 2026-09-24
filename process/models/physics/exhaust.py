@@ -52,7 +52,7 @@ class PlasmaExhaust(Model):
         po.oheadr(self.outfile, "Plasma Exhaust")
         po.ovarre(
             self.outfile,
-            "Plasma separatrix power (Pₛₑₚ) (MW)",
+            "Plasma separatrix power (Pₛₑₚ) [MW]",
             "(p_plasma_separatrix_mw)",
             self.data.physics.p_plasma_separatrix_mw,
             "OP ",
@@ -75,7 +75,10 @@ class PlasmaExhaust(Model):
             )
             po.oblnkl(self.outfile)
 
-        if self.data.divertor.n_divertors == 2:
+        if (
+            DivertorNumberModels(self.data.physics.i_single_null)
+            == DivertorNumberModels.DOUBLE_NULL
+        ):
             # Double null divertor configuration
             po.ovarre(
                 self.outfile,
@@ -129,22 +132,22 @@ class PlasmaExhaust(Model):
         Parameters
         ----------
         f_p_alpha_plasma_deposited : float
-            Fraction of alpha power deposited in plasma.
+            Fraction of alpha power deposited in plasma [-]
         p_alpha_total_mw : float
-            Total alpha power produced (MW).
+            Total alpha power produced [MW].
         p_non_alpha_charged_mw : float
-            Power from non-alpha charged particles (MW).
+            Power from non-alpha charged particles [MW].
         p_hcd_injected_total_mw : float
-            Total power injected by heating and current drive (MW).
+            Total power injected by heating and current drive [MW].
         p_plasma_ohmic_mw : float
-            Ohmic heating power (MW).
+            Ohmic heating power [MW].
         p_plasma_rad_mw : float
-            Radiated power from plasma (MW).
+            Radiated power from plasma [MW].
 
         Returns
         -------
         float
-            Power crossing the separatrix (MW).
+            Power crossing the separatrix [MW].
         """
         return (
             f_p_alpha_plasma_deposited * p_alpha_total_mw
@@ -230,9 +233,9 @@ class PlasmaExhaust(Model):
         Parameters
         ----------
         p_plasma_rad_mw : float
-            Radiated power from plasma (MW).
+            Radiated power from plasma [MW].
         p_plasma_heating_mw : float
-            Total plasma heating power (MW).
+            Total plasma heating power [MW].
 
         Returns
         -------
@@ -272,18 +275,18 @@ class PlasmaExhaust(Model):
                 ),
                 None,
                 (
-                    "Outboard side heat flux decay length (m)",
+                    "Outboard side heat flux decay length [m]",
                     "(len_sol_outboard_power_decay)",
                     self.data.physics.len_sol_outboard_power_decay,
                 ),
                 None,
                 (
-                    "Fraction of separatrix power on the inner target(s)",
+                    "Fraction of separatrix power on the inner target",
                     "(f_p_div_inboard_separatrix)",
                     self.data.physics.f_p_div_inboard_separatrix,
                 ),
                 (
-                    "Fraction of separatrix power on the outer target(s)",
+                    "Fraction of separatrix power on the outer target",
                     "(f_p_div_outboard_separatrix)",
                     self.data.physics.f_p_div_outboard_separatrix,
                 ),
@@ -294,7 +297,7 @@ class PlasmaExhaust(Model):
                     self.data.physics.f_p_div_lower_inboard_separatrix,
                 ),
                 (
-                    "Separatrix power on the inner lower target",
+                    "Separatrix power on the inner lower target [MW]",
                     "(p_div_lower_inboard_separatrix_mw)",
                     self.data.physics.p_div_lower_inboard_separatrix_mw,
                 ),
@@ -305,7 +308,7 @@ class PlasmaExhaust(Model):
                     self.data.physics.f_p_div_lower_outboard_separatrix,
                 ),
                 (
-                    "Separatrix power on the outer lower target",
+                    "Separatrix power on the outer lower target [MW]",
                     "(p_div_lower_outboard_separatrix_mw)",
                     self.data.physics.p_div_lower_outboard_separatrix_mw,
                 ),
@@ -331,7 +334,7 @@ class PlasmaExhaust(Model):
                         self.data.physics.f_p_div_upper_inboard_separatrix,
                     ),
                     (
-                        "Separatrix power on the inner upper target",
+                        "Separatrix power on the inner upper target [MW]",
                         "(p_div_upper_inboard_separatrix_mw)",
                         self.data.physics.p_div_upper_inboard_separatrix_mw,
                     ),
@@ -342,7 +345,7 @@ class PlasmaExhaust(Model):
                         self.data.physics.f_p_div_upper_outboard_separatrix,
                     ),
                     (
-                        "Separatrix power on the outer upper target",
+                        "Separatrix power on the outer upper target [MW]",
                         "(p_div_upper_outboard_separatrix_mw)",
                         self.data.physics.p_div_upper_outboard_separatrix_mw,
                     ),

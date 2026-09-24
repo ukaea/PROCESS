@@ -1962,114 +1962,108 @@ class Power(Model):
             self.data.fwbs.i_thermal_electric_conversion
         )
         i_blanket_type = BlktModelTypes(self.data.fwbs.i_blanket_type)
-        if i_thermal_electric_conversion == ElectricConversionModelTypes.CCFE_HCPB_VALUE:
-            #  CCFE HCPB Model
-            if i_blanket_type == BlktModelTypes.CCFE_HCPB:
-                #  HCPB, efficiency taken from M. Kovari 2016
-                # "PROCESS": A systems code for fusion power plants -
-                # Part 2: Engineering
-                # https://www.sciencedirect.com/science/article/pii/S0920379616300072
-                # Feedheat & reheat cycle assumed
-                eta_turbine = 0.411e0
-            else:
-                logger.log(f"{'i_blanket_type is not equal to 1'}")
+        match i_thermal_electric_conversion:
+            case ElectricConversionModelTypes.CCFE_HCPB_VALUE:
+                #  CCFE HCPB Model
+                if i_blanket_type == BlktModelTypes.CCFE_HCPB:
+                    #  HCPB, efficiency taken from M. Kovari 2016
+                    # "PROCESS": A systems code for fusion power plants -
+                    # Part 2: Engineering
+                    # https://www.sciencedirect.com/science/article/pii/S0920379616300072
+                    # Feedheat & reheat cycle assumed
+                    eta_turbine = 0.411e0
+                else:
+                    logger.log(f"{'i_blanket_type is not equal to 1'}")
 
             #  Etath from reference. Div power to primary
-        elif (
-            i_thermal_electric_conversion
-            == ElectricConversionModelTypes.CCFE_HCPB_VALUE_WITH_DIVERTOR
-        ):
-            #  CCFE HCPB Model
-            if self.data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
-                #  HCPB, efficiency taken from M. Kovari 2016
-                # "PROCESS": A systems code for fusion power plants -
-                # Part 2: Engineering
-                # https://www.sciencedirect.com/science/article/pii/S0920379616300072
-                # Feedheat & reheat cycle assumed
-                eta_turbine = 0.411e0 - self.data.power.delta_eta
-            else:
-                logger.log(f"{'i_blanket_type is not equal to 1.'}")
+            case ElectricConversionModelTypes.CCFE_HCPB_VALUE_WITH_DIVERTOR:
+                #  CCFE HCPB Model
+                if self.data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
+                    #  HCPB, efficiency taken from M. Kovari 2016
+                    # "PROCESS": A systems code for fusion power plants -
+                    # Part 2: Engineering
+                    # https://www.sciencedirect.com/science/article/pii/S0920379616300072
+                    # Feedheat & reheat cycle assumed
+                    eta_turbine = 0.411e0 - self.data.power.delta_eta
+                else:
+                    logger.log(f"{'i_blanket_type is not equal to 1.'}")
 
             #  User input used, eta_turbine not changed
-        elif i_thermal_electric_conversion == ElectricConversionModelTypes.USER_INPUT:
-            return eta_turbine
-            # Do nothing
+            case ElectricConversionModelTypes.USER_INPUT:
+                return eta_turbine
+                # Do nothing
 
             #  Steam Rankine cycle to be used
-        elif (
-            i_thermal_electric_conversion
-            == ElectricConversionModelTypes.STEAM_RANKINE_CYCLE
-        ):
-            #  CCFE HCPB Model
-            if self.data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
-                #  If coolant is helium, the steam cycle is assumed to be superheated
-                #  and a different correlation is used. The turbine inlet temperature
-                #  is assumed to be 20 degrees below the primary coolant outlet
-                #  temperature, as was stated for steam rankine cycle for Helium in
-                #  M. Kovari 2016, "PROCESS": A systems code for fusion power plants
-                #  - Part 2: Engineering
-                #  https://www.sciencedirect.com/science/article/pii/S0920379616300072
+            case ElectricConversionModelTypes.STEAM_RANKINE_CYCLE:
+                #  CCFE HCPB Model
+                if self.data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
+                    #  If coolant is helium, the steam cycle is assumed to be superheated
+                    #  and a different correlation is used. The turbine inlet temperature
+                    #  is assumed to be 20 degrees below the primary coolant outlet
+                    #  temperature, as was stated for steam rankine cycle for Helium in
+                    #  M. Kovari 2016, "PROCESS": A systems code for fusion power plants
+                    #  - Part 2: Engineering
+                    #  https://www.sciencedirect.com/science/article/pii/S0920379616300072
 
-                #  Superheated steam Rankine cycle correlation (C. Harrington)
-                #  Range of validity: 657 K
-                # < self.data.heat_transport.temp_turbine_coolant_in < 915 K
+                    #  Superheated steam Rankine cycle correlation (C. Harrington)
+                    #  Range of validity: 657 K
+                    # < self.data.heat_transport.temp_turbine_coolant_in < 915 K
+                    self.data.heat_transport.temp_turbine_coolant_in = (
+                        self.data.fwbs.temp_blkt_coolant_out - 20.0e0
+                    )
+                    if (self.data.heat_transport.temp_turbine_coolant_in < 657.0e0) or (
+                        self.data.heat_transport.temp_turbine_coolant_in > 915.0e0
+                    ):
+                        logger.warning(
+                            "Turbine temperature temp_turbine_coolant_in out of range "
+                            f"of validity: "
+                            f"{self.data.heat_transport.temp_turbine_coolant_in=}"
+                        )
+
+                    eta_turbine = (
+                        0.1802e0
+                        * np.log(self.data.heat_transport.temp_turbine_coolant_in)
+                        - 0.7823
+                        - self.data.power.delta_eta
+                    )
+
+                else:
+                    logger.log(f"{'i_blanket_type is not equal to 1.'}")
+
+            #  Supercritical CO2 cycle to be used
+            case ElectricConversionModelTypes.SUPERCRITICAL_CO2_CYCLE:
+                #  The same temperature/efficiency correlation is used regardless of
+                #  primary coolant choice.  The turbine inlet temperature is assumed to
+                #  be 20 degrees below the primary coolant outlet temperature.
+                #  s-CO2 can in theory be used for both helium and water primary coolants
+                #  so no differentiation is made, but for water the efficiency will be
+                #  very low and the correlation will reflect this.
+
+                #  Supercritical CO2 cycle correlation (C. Harrington)
+                #  Range of validity: 408 K
+                # < self.data.heat_transport.temp_turbine_coolant_in < 1023 K
                 self.data.heat_transport.temp_turbine_coolant_in = (
                     self.data.fwbs.temp_blkt_coolant_out - 20.0e0
                 )
-                if (self.data.heat_transport.temp_turbine_coolant_in < 657.0e0) or (
-                    self.data.heat_transport.temp_turbine_coolant_in > 915.0e0
+                if (self.data.heat_transport.temp_turbine_coolant_in < 408.0e0) or (
+                    self.data.heat_transport.temp_turbine_coolant_in > 1023.0e0
                 ):
                     logger.warning(
                         "Turbine temperature temp_turbine_coolant_in out of range "
-                        f"of validity: "
+                        "of validity: "
                         f"{self.data.heat_transport.temp_turbine_coolant_in=}"
                     )
 
                 eta_turbine = (
-                    0.1802e0 * np.log(self.data.heat_transport.temp_turbine_coolant_in)
-                    - 0.7823
-                    - self.data.power.delta_eta
+                    0.4347e0 * np.log(self.data.heat_transport.temp_turbine_coolant_in)
+                    - 2.5043e0
                 )
 
-            else:
-                logger.log(f"{'i_blanket_type is not equal to 1.'}")
-
-            #  Supercritical CO2 cycle to be used
-        elif (
-            i_thermal_electric_conversion
-            == ElectricConversionModelTypes.SUPERCRITICAL_CO2_CYCLE
-        ):
-            #  The same temperature/efficiency correlation is used regardless of
-            #  primary coolant choice.  The turbine inlet temperature is assumed to
-            #  be 20 degrees below the primary coolant outlet temperature.
-            #  s-CO2 can in theory be used for both helium and water primary coolants
-            #  so no differentiation is made, but for water the efficiency will be
-            #  very low and the correlation will reflect this.
-
-            #  Supercritical CO2 cycle correlation (C. Harrington)
-            #  Range of validity: 408 K
-            # < self.data.heat_transport.temp_turbine_coolant_in < 1023 K
-            self.data.heat_transport.temp_turbine_coolant_in = (
-                self.data.fwbs.temp_blkt_coolant_out - 20.0e0
-            )
-            if (self.data.heat_transport.temp_turbine_coolant_in < 408.0e0) or (
-                self.data.heat_transport.temp_turbine_coolant_in > 1023.0e0
-            ):
+            case _:
                 logger.warning(
-                    "Turbine temperature temp_turbine_coolant_in out of range "
-                    f"of validity: {self.data.heat_transport.temp_turbine_coolant_in=}"
+                    "i_thermal_electric_conversion does not appear to have a value"
+                    "within its range (0-4)"
                 )
-
-            eta_turbine = (
-                0.4347e0 * np.log(self.data.heat_transport.temp_turbine_coolant_in)
-                - 2.5043e0
-            )
-
-        else:
-            logger.warning(
-                "i_thermal_electric_conversion does not appear to have a value"
-                "within its range (0-4)"
-            )
         return eta_turbine
 
     def plant_thermal_efficiency_2(self, etath_liq: float) -> float:

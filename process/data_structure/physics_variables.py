@@ -2,8 +2,100 @@
 
 from dataclasses import dataclass, field
 from enum import IntEnum, unique
+from types import DynamicClassAttribute
 
 import numpy as np
+
+
+@unique
+class PlasmaConfinementTransitionModel(IntEnum):
+    """Enum for plasma L -> H and L -> I transition power threshold models."""
+
+    ITER1996_NOMINAL = (1, "ITER-1996 Nominal")
+    ITER1996_UPPER = (2, "ITER-1996 Upper")
+    ITER1996_LOWER = (3, "ITER-1996 Lower")
+    SNIPES1997_ITER = (4, "Snipes 1997 ITER Scaling I")
+    SNIPES1997_KAPPA = (5, "Snipes 1997 ITER Scaling II")
+    MARTIN08_NOMINAL = (6, "Martin 2008 Nominal")
+    MARTIN08_UPPER = (7, "Martin 2008 Upper")
+    MARTIN08_LOWER = (8, "Martin 2008 Lower")
+    SNIPES2000_NOMINAL = (9, "Snipes 2000 Nominal")
+    SNIPES2000_UPPER = (10, "Snipes 2000 Upper")
+    SNIPES2000_LOWER = (11, "Snipes 2000 Lower")
+    SNIPES2000_CLOSED_DIVERTOR_NOMINAL = (12, "Snipes 2000 Closed Divertor Nominal")
+    SNIPES2000_CLOSED_DIVERTOR_UPPER = (13, "Snipes 2000 Closed Divertor Upper")
+    SNIPES2000_CLOSED_DIVERTOR_LOWER = (14, "Snipes 2000 Closed Divertor Lower")
+    HUBBARD2012_NOMINAL = (15, "Hubbard 2012 Nominal")
+    HUBBARD2012_LOWER = (16, "Hubbard 2012 Lower")
+    HUBBARD2012_UPPER = (17, "Hubbard 2012 Upper")
+    HUBBARD2017_I_MODE = (18, "Hubbard 2017 I-Mode")
+    MARTIN08_ASPECT_NOMINAL = (19, "Martin 2008 Aspect Corrected Nominal")
+    MARTIN08_ASPECT_UPPER = (20, "Martin 2008 Aspect Corrected Upper")
+    MARTIN08_ASPECT_LOWER = (21, "Martin 2008 Aspect Corrected Lower")
+
+    def __new__(cls, value: int, full_name: str):
+        """Create a new PlasmaConfinementTransitionModel instance.
+
+        Parameters
+        ----------
+        value : int
+            The integer value of the enum member.
+        full_name : str
+            The full descriptive name of the enum member.
+
+        Returns
+        -------
+        PlasmaConfinementTransitionModel
+            A new instance of PlasmaConfinementTransitionModel.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj.full_name = full_name
+        return obj
+
+
+@unique
+class PlasmaCurrentModel(IntEnum):
+    """Enumeration of plasma current scaling models available for calculations.
+
+    Each model represents a different scaling law used to calculate plasma
+    current based on various plasma and machine parameters.
+    """
+
+    PENG_ANALYTIC_FIT = (1, "Peng analytic fit")
+    PENG_DIVERTOR_SCALING = (2, "Peng divertor scaling")
+    ITER_SCALING = (3, "Simple ITER scaling (cylindrical case)")
+    IPDG89_SCALING = (4, "IPDG89 scaling")
+    TODD_EMPIRICAL_SCALING_I = (5, "Todd empirical scaling I")
+    TODD_EMPIRICAL_SCALING_II = (6, "Todd empirical scaling II")
+    CONNOR_HASTIE_MODEL = (7, "Connor-Hastie model")
+    SAUTER_SCALING = (8, "Sauter scaling")
+    FIESTA_ST_SCALING = (9, "FIESTA ST scaling")
+
+    def __new__(cls, value: int, full_name: str):
+        """Create a new PlasmaCurrentModel enum member with value and full_name.
+
+        Parameters
+        ----------
+        value : int
+            The numeric value of the enum member.
+        full_name : str
+            The full name description of the plasma current model.
+
+        Returns
+        -------
+        PlasmaCurrentModel
+            A new enum member with the specified value and full_name.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        """The full name of the plasma current model."""
+        return self._full_name_
 
 
 @unique

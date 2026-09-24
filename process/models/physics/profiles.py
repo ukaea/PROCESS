@@ -307,72 +307,66 @@ class ElectronDensityProfile(Profile):
         """Sets the pedestal and separatrix density values based on the user input
         or greenwald fraction method.
         """
-        i_nd_plasma_pedestal_separatrix = DensityProfilePedestalType(
+        match DensityProfilePedestalType(
             self.data.physics.i_nd_plasma_pedestal_separatrix
-        )
-
-        if i_nd_plasma_pedestal_separatrix == DensityProfilePedestalType.USER_INPUT:
-            self.data.physics.f_nd_plasma_pedestal_greenwald = (
-                self.data.physics.nd_plasma_pedestal_electron
-                / (
-                    PlasmaDensityLimit.calculate_greenwald_density_limit(
-                        c_plasma=self.data.physics.plasma_current,
-                        rminor=self.data.physics.rminor,
-                    )
-                )
-            )
-
-            self.data.physics.f_nd_plasma_separatrix_greenwald = (
-                self.data.physics.nd_plasma_separatrix_electron
-                / (
-                    PlasmaDensityLimit.calculate_greenwald_density_limit(
-                        c_plasma=self.data.physics.plasma_current,
-                        rminor=self.data.physics.rminor,
-                    )
-                )
-            )
-        elif (
-            i_nd_plasma_pedestal_separatrix
-            == DensityProfilePedestalType.GREENWALD_FRACTION
         ):
-            self.data.physics.nd_plasma_pedestal_electron = (
-                self.data.physics.f_nd_plasma_pedestal_greenwald
-                * PlasmaDensityLimit.calculate_greenwald_density_limit(
-                    c_plasma=self.data.physics.plasma_current,
-                    rminor=self.data.physics.rminor,
+            case DensityProfilePedestalType.USER_INPUT:
+                self.data.physics.f_nd_plasma_pedestal_greenwald = (
+                    self.data.physics.nd_plasma_pedestal_electron
+                    / (
+                        PlasmaDensityLimit.calculate_greenwald_density_limit(
+                            c_plasma=self.data.physics.plasma_current,
+                            rminor=self.data.physics.rminor,
+                        )
+                    )
                 )
-            )
-            self.data.physics.nd_plasma_separatrix_electron = (
-                self.data.physics.f_nd_plasma_separatrix_greenwald
-                * PlasmaDensityLimit.calculate_greenwald_density_limit(
-                    c_plasma=self.data.physics.plasma_current,
-                    rminor=self.data.physics.rminor,
+
+                self.data.physics.f_nd_plasma_separatrix_greenwald = (
+                    self.data.physics.nd_plasma_separatrix_electron
+                    / (
+                        PlasmaDensityLimit.calculate_greenwald_density_limit(
+                            c_plasma=self.data.physics.plasma_current,
+                            rminor=self.data.physics.rminor,
+                        )
+                    )
                 )
-            )
+            case DensityProfilePedestalType.GREENWALD_FRACTION:
+                self.data.physics.nd_plasma_pedestal_electron = (
+                    self.data.physics.f_nd_plasma_pedestal_greenwald
+                    * PlasmaDensityLimit.calculate_greenwald_density_limit(
+                        c_plasma=self.data.physics.plasma_current,
+                        rminor=self.data.physics.rminor,
+                    )
+                )
+                self.data.physics.nd_plasma_separatrix_electron = (
+                    self.data.physics.f_nd_plasma_separatrix_greenwald
+                    * PlasmaDensityLimit.calculate_greenwald_density_limit(
+                        c_plasma=self.data.physics.plasma_current,
+                        rminor=self.data.physics.rminor,
+                    )
+                )
 
     def set_physics_variables(self):
         """Calculates and sets physics variables required for the profile."""
-        if (
-            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
-            == PlasmaProfileShapeType.PARABOLIC_PROFILE
+        match DensityProfilePedestalType(
+            self.data.physics.i_nd_plasma_pedestal_separatrix
         ):
-            self.data.physics.nd_plasma_electron_on_axis = (
-                self.calculate_parabolic_profile_on_axis_density(
+            case PlasmaProfileShapeType.PARABOLIC_PROFILE:
+                self.data.physics.nd_plasma_electron_on_axis = (
+                    self.calculate_parabolic_profile_on_axis_density(
+                        nd_vol_average=self.data.physics.nd_plasma_electrons_vol_avg,
+                        alphan=self.data.physics.alphan,
+                    )
+                )
+
+            case PlasmaProfileShapeType.PEDESTAL_PROFILE:
+                self.data.physics.nd_plasma_electron_on_axis = self.calculate_pedestal_profile_on_axis_density(  # noqa: E501
+                    radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
+                    nd_pedestal=self.data.physics.nd_plasma_pedestal_electron,
+                    nd_separatrix=self.data.physics.nd_plasma_separatrix_electron,
                     nd_vol_average=self.data.physics.nd_plasma_electrons_vol_avg,
                     alphan=self.data.physics.alphan,
                 )
-            )
-        elif (
-            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
-            == PlasmaProfileShapeType.PEDESTAL_PROFILE
-        ):
-            self.data.physics.nd_plasma_electron_on_axis = self.calculate_pedestal_profile_on_axis_density(  # noqa: E501
-                radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
-                nd_pedestal=self.data.physics.nd_plasma_pedestal_electron,
-                nd_separatrix=self.data.physics.nd_plasma_separatrix_electron,
-                nd_vol_average=self.data.physics.nd_plasma_electrons_vol_avg,
-                alphan=self.data.physics.alphan,
-            )
         self.data.physics.nd_plasma_ions_on_axis = (
             self.data.physics.nd_plasma_ions_total_vol_avg
             / self.data.physics.nd_plasma_electrons_vol_avg
@@ -557,28 +551,21 @@ class ElectronTemperatureProfile(Profile):
 
     def set_physics_variables(self):
         """Calculates and sets physics variables required for the temperature profile."""
-        if (
-            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
-            == PlasmaProfileShapeType.PARABOLIC_PROFILE
-        ):
-            self.data.physics.temp_plasma_electron_on_axis_kev = (
-                self.calculate_parabolic_profile_on_axis_temperature(
+        match PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal):
+            case PlasmaProfileShapeType.PARABOLIC_PROFILE:
+                self.data.physics.temp_plasma_electron_on_axis_kev = self.calculate_parabolic_profile_on_axis_temperature(  # noqa: E501
                     temp_vol_avg_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
                     alphat=self.data.physics.alphat,
                 )
-            )
-        elif (
-            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
-            == PlasmaProfileShapeType.PEDESTAL_PROFILE
-        ):
-            self.data.physics.temp_plasma_electron_on_axis_kev = self.calculate_pedestal_profile_on_axis_temperature(  # noqa: E501
-                radius_plasma_pedestal_temp_norm=self.data.physics.radius_plasma_pedestal_temp_norm,
-                temp_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
-                temp_separatrix_kev=self.data.physics.temp_plasma_separatrix_kev,
-                temp_vol_avg_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
-                alphat=self.data.physics.alphat,
-                tbeta=self.data.physics.tbeta,
-            )
+            case PlasmaProfileShapeType.PEDESTAL_PROFILE:
+                self.data.physics.temp_plasma_electron_on_axis_kev = self.calculate_pedestal_profile_on_axis_temperature(  # noqa: E501
+                    radius_plasma_pedestal_temp_norm=self.data.physics.radius_plasma_pedestal_temp_norm,
+                    temp_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
+                    temp_separatrix_kev=self.data.physics.temp_plasma_separatrix_kev,
+                    temp_vol_avg_kev=self.data.physics.temp_plasma_electron_vol_avg_kev,
+                    alphat=self.data.physics.alphat,
+                    tbeta=self.data.physics.tbeta,
+                )
 
         self.data.physics.temp_plasma_ion_on_axis_kev = (
             self.data.physics.temp_plasma_ion_vol_avg_kev

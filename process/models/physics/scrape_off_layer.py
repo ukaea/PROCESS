@@ -59,52 +59,29 @@ class ScrapeOffLayer(Model):
         )
 
         # Set to user input if OutbordSOLPowerDecayLengthModel = 1/USER_INUT
-
-        if (
-            OutbordSOLPowerDecayLengthModel(
-                self.data.physics.i_len_sol_outboard_power_decay
-            )
-            == OutbordSOLPowerDecayLengthModel.EICH_2013
+        match OutbordSOLPowerDecayLengthModel(
+            self.data.physics.i_len_sol_outboard_power_decay
         ):
-            self.data.physics.len_sol_outboard_power_decay = (
-                self.data.physics.len_plasma_sol_eich13_power_decay
-            )
-        elif (
-            OutbordSOLPowerDecayLengthModel(
-                self.data.physics.i_len_sol_outboard_power_decay
-            )
-            == OutbordSOLPowerDecayLengthModel.MAST_2014_1
-        ):
-            self.data.physics.len_sol_outboard_power_decay = (
-                self.data.physics.len_plasma_sol_mast14_power_decay_1
-            )
-        elif (
-            OutbordSOLPowerDecayLengthModel(
-                self.data.physics.i_len_sol_outboard_power_decay
-            )
-            == OutbordSOLPowerDecayLengthModel.MAST_2014_2
-        ):
-            self.data.physics.len_sol_outboard_power_decay = (
-                self.data.physics.len_plasma_sol_mast14_power_decay_2
-            )
-        elif (
-            OutbordSOLPowerDecayLengthModel(
-                self.data.physics.i_len_sol_outboard_power_decay
-            )
-            == OutbordSOLPowerDecayLengthModel.EICH_2011_JET
-        ):
-            self.data.physics.len_sol_outboard_power_decay = (
-                self.data.physics.len_plasma_sol_eich11_jet_power_decay
-            )
-        elif (
-            OutbordSOLPowerDecayLengthModel(
-                self.data.physics.i_len_sol_outboard_power_decay
-            )
-            == OutbordSOLPowerDecayLengthModel.EICH_2011_JET_ASDEX
-        ):
-            self.data.physics.len_sol_outboard_power_decay = (
-                self.data.physics.len_plasma_sol_eich11_jet_asdex_power_decay
-            )
+            case OutbordSOLPowerDecayLengthModel.EICH_2013:
+                self.data.physics.len_sol_outboard_power_decay = (
+                    self.data.physics.len_plasma_sol_eich13_power_decay
+                )
+            case OutbordSOLPowerDecayLengthModel.MAST_2014_1:
+                self.data.physics.len_sol_outboard_power_decay = (
+                    self.data.physics.len_plasma_sol_mast14_power_decay_1
+                )
+            case OutbordSOLPowerDecayLengthModel.MAST_2014_2:
+                self.data.physics.len_sol_outboard_power_decay = (
+                    self.data.physics.len_plasma_sol_mast14_power_decay_2
+                )
+            case OutbordSOLPowerDecayLengthModel.EICH_2011_JET:
+                self.data.physics.len_sol_outboard_power_decay = (
+                    self.data.physics.len_plasma_sol_eich11_jet_power_decay
+                )
+            case OutbordSOLPowerDecayLengthModel.EICH_2011_JET_ASDEX:
+                self.data.physics.len_sol_outboard_power_decay = (
+                    self.data.physics.len_plasma_sol_eich11_jet_asdex_power_decay
+                )
 
         self.data.physics.len_sol_inboard_power_decay = (
             self.data.physics.f_len_sol_power_decay_inboard_outboard
