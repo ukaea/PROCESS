@@ -155,7 +155,8 @@ jobs:
 
           hatch run lint:fmt_extra "${files[@]}"
 
-        env: # need number of errors being flagged in these files
+        env:
+          # need number of errors being flagged in these files
           # subtract 1 as final summary line is not an error
           num_pr_errors: $((hatch run lint:fmt_extra | tail -1) | tr -dc '0-9')
 
