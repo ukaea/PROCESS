@@ -837,6 +837,9 @@ class PhysicsData:
     fusrat_plasma_dhe3_profile: list[float] = field(default_factory=list)
     """Profile of D-3He fusion reaction rate in plasma, (reactions/sec)"""
 
+    fusrat_plasma_pb_profile: list[float] = field(default_factory=list)
+    """Profile of p-B11 fusion reaction rate in plasma, (reactions/sec)"""
+
     fusden_plasma: float = 0.0
     """fusion reaction rate, just from plasma (reactions/m3/sec)"""
 
@@ -1192,6 +1195,15 @@ class PhysicsData:
 
     p_dhe3_total_mw: float = 0.0
     """deuterium-helium3 fusion power (MW)"""
+
+    p_plasma_pb_mw: float = 0.0
+    """proton-boron11 fusion power, just from plasma (MW)"""
+
+    p_pb_total_mw: float = 0.0
+    """proton-boron11 fusion power, from plasma and beams (MW)"""
+
+    p_beam_pb_mw: float = 0.0
+    """proton-boron11 fusion power, from beams (MW)"""
 
     p_plasma_separatrix_mw: float = 0.0
     """power to conducted to the divertor region (MW)"""
@@ -1818,6 +1830,8 @@ class PhysicsData:
     sigmav_dt_average: float = 0.0
     dhe3_power_density: float = 0.0
     dd_power_density: float = 0.0
+    pb_power_density: float = 0.0
+    sigmav_pb_average: float = 0.0
     fusrat: float = 0.0
 
 

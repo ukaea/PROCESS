@@ -62,6 +62,17 @@ REACTION_CONSTANTS_DD2 = {
     "cc7": 0.0,
 }
 
+REACTION_CONSTANTS_PB = {
+    "bg": -1.0,
+    "mrc2": 0.0,
+    "cc1": 0.0,
+    "cc2": 0.0,
+    "cc3": 0.0,
+    "cc4": 0.0,
+    "cc5": 0.0,
+    "cc6": 0.0,
+    "cc7": 0.0,
+}
 
 class FusionReactionRate:
     """Calculate the fusion reaction rate for each reaction case (DT, DHE3, DD1, DD2).
@@ -117,9 +128,11 @@ class FusionReactionRate:
         self.data = data
 
         self.sigmav_dt_average = 0.0
+        self.sigmav_pb_average = 0.0
         self.dhe3_power_density = 0.0
         self.dd_power_density = 0.0
         self.dt_power_density = 0.0
+        self.pb_power_density = 0.0
         self.alpha_power_density = 0.0
         self.pden_non_alpha_charged_mw = 0.0
         self.neutron_power_density = 0.0
@@ -564,6 +577,91 @@ class FusionReactionRate:
             proton_rate_density,
         )
 
+    def pb_reaction(self):
+        """PB reaction
+        
+        This method calculates the fusion reaction rate and power density for the
+        pb fusion reaction.
+        
+        """
+        pb = BoschHaleConstants(**REACTION_CONSTANTS_PB)
+
+        # Calculate the fusion reaction rate integral using Simpson's rule
+        sigmav = integrate.simpson(
+            fusion_rate_integral(
+                self.plasma_profile,
+                pb,
+                physics_data=self.data.physics,
+            ),
+            x=self.plasma_profile.neprofile.profile_x,
+            dx=self.plasma_profile.neprofile.profile_dx,
+        )
+
+        self.data.physics.fusrat_plasma_pb_profile = (
+            nevins_reactivity(
+                (
+                    self.data.physics.temp_plasma_ion_vol_avg_kev
+                    / self.data.physics.temp_plasma_electron_vol_avg_kev
+                )
+                * self.plasma_profile.teprofile.profile_y,
+            )
+            * self.data.physics.f_plasma_fuel_proton
+            * self.data.physics.f_plasma_fuel_boron11
+            * (
+                self.plasma_profile.neprofile.profile_y
+                * (
+                    self.data.physics.nd_plasma_fuel_ions_vol_avg
+                    / self.data.physics.nd_plasma_electrons_vol_avg
+                )
+            )
+            ** 2
+        )
+
+        # Store the average fusion reaction rate
+        self.sigmav_pb_average = sigmav
+
+        # Reaction energy in MegaJoules [MJ]
+        reaction_energy = constants.PB_ENERGY / 1.0e6
+
+        # Calculate the fusion power density produced [MW/m^3]
+        # The power density is scaled by the branching ratio to simulate the different
+        # product pathways
+        fusion_power_density = (
+            sigmav
+            * reaction_energy
+            * (
+                self.data.physics.f_plasma_fuel_proton
+                * self.data.physics.nd_plasma_fuel_ions_vol_avg
+            )
+            * (
+                self.data.physics.f_plasma_fuel_boron11
+                * self.data.physics.nd_plasma_fuel_ions_vol_avg
+            )
+        )
+
+        # Power densities for different particles [MW/m³]
+        alpha_power_density = fusion_power_density
+        pden_non_alpha_charged_mw = 0.0
+        neutron_power_density = 0.0
+
+        # Calculate the fusion rate density [reactions/m³/s]
+        fusion_rate_density = fusion_power_density / reaction_energy
+        alpha_rate_density = fusion_rate_density * 3.0
+        proton_rate_density = 0.0
+
+        # Update the cumulative D-D power density
+        self.pb_power_density = fusion_power_density
+
+        # Sum the fusion rates for all particles
+        self.sum_fusion_rates(
+            alpha_power_density,
+            pden_non_alpha_charged_mw,
+            neutron_power_density,
+            fusion_rate_density,
+            alpha_rate_density,
+            proton_rate_density,
+        )
+
     def sum_fusion_rates(
         self,
         alpha_power_add: float,
@@ -612,6 +710,7 @@ class FusionReactionRate:
             - Deuterium-Helium-3 (D-3He)
             - Deuterium-Deuterium (D-D) first branch
             - Deuterium-Deuterium (D-D) second branch
+            - Proton-Boron-11 (p-B11), when ``i_fusion_reactions == "p-b11"``
 
         It updates the instance attributes for the cumulative power densities and
         reaction rates
@@ -623,6 +722,8 @@ class FusionReactionRate:
         self.dhe3_reaction()
         self.dd_helion_reaction()
         self.dd_triton_reaction()
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            self.pb_reaction()
 
     def set_physics_variables(self):
         """Set the required physics variables in the physics_variables and
@@ -644,6 +745,8 @@ class FusionReactionRate:
         self.data.physics.dhe3_power_density = self.dhe3_power_density
         self.data.physics.dd_power_density = self.dd_power_density
         self.data.physics.f_dd_branching_trit = self.f_dd_branching_trit
+        self.data.physics.pb_power_density = self.pb_power_density
+        self.data.physics.sigmav_pb_average = self.sigmav_pb_average
 
 
 @dataclass
@@ -699,7 +802,10 @@ def fusion_rate_integral(
     ) * plasma_profile.teprofile.profile_y
 
     # Number of fusion reactions per unit volume per particle volume density (m³/s)
-    sigv = bosch_hale_reactivity(ion_temperature_profile, reaction_constants)
+    if reaction_constants.bg > 0.0:
+        sigv = bosch_hale_reactivity(ion_temperature_profile, reaction_constants)
+    else:
+        sigv = nevins_reactivity(ion_temperature_profile)
 
     # Integrand for the volume averaged fusion reaction rate sigmav:
     # sigmav = integral(2 rho (sigv(rho) ni(rho)^2) drho),
@@ -793,11 +899,88 @@ def bosch_hale_reactivity(
     # Return np.ndarray of sigmav for each point in the ion temperature profile
     return sigmav
 
+def fsgmpb(e):
+    """
+    Calculate fusion cross-section for p + B11 -> 3He4
+    Ref: Nevins 2000
+    """
+    bgpb = np.sqrt(22.589e3)
+
+    # ind1 = np.argmin(np.abs(e - 400))
+    # ind2 = np.argmin(np.abs(e - 642))
+    if isinstance(e, float):
+        if e <= 400:
+            spb = 1.97e5 + 0.24e3 * e + 2.31e-1 * e**2 + 1.82e7 / ((e - 148.0)**2 + 2.35**2)
+        elif e <= 642:
+            e1 = e / 100.0 - 4.0
+            spb = 3.30e5 + 66.1e3 * e1 - 20.3e3 * e1**2 - 1.58e3 * e1**5
+        else:
+            spb = (4.38e3 + 2.57e9 / ((e - 581.3)**2 + 85.7**2) +
+                    5.67e8 / ((e - 1083.0)**2 + 234.0**2) +
+                    1.34e8 / ((e - 2405.0)**2 + 138.0**2) +
+                    5.68e8 / ((e - 3344.0)**2 + 309.0**2))
+    else:
+        ind1 = np.where(e <= 400)[0]
+        ind2 = np.where((e <= 642) & (e > 400))[0]
+        ind3 = np.where(e > 642)[0]
+
+        e1 = e[ind1]
+        # mid-band polynomial uses ξ = E/100 − 4 (same as scalar branch / Nevins 2000)
+        e2 = e[ind2] / 100.0 - 4.0
+        e3 = e[ind3]
+
+        spb1 = 1.97e5 + 0.24e3 * e1 + 2.31e-1 * e1**2 + 1.82e7 / ((e1 - 148.0)**2 + 2.35**2)
+        spb2 = 3.30e5 + 66.1e3 * e2 - 20.3e3 * e2**2 - 1.58e3 * e2**5
+        spb3 = (4.38e3 + 2.57e9 / ((e3 - 581.3)**2 + 85.7**2) +
+                5.67e8 / ((e3 - 1083.0)**2 + 234.0**2) +
+                1.34e8 / ((e3 - 2405.0)**2 + 138.0**2) +
+                5.68e8 / ((e3 - 3344.0)**2 + 309.0**2))
+
+        spb = np.concatenate([spb1, spb2, spb3])
+    sigmapb = spb / e * np.exp(-bgpb / np.sqrt(e)) * 1e-28
+    return sigmapb
+
+def nevins_reactivity(
+    ion_temperature_profile: np.ndarray,
+) -> np.ndarray:
+    """Calculate the volumetric fusion reaction rate 〈sigmav〉 (m³/s) for 
+    p-B reaction using the Nevins parametrization.
+    """
+    mp = 1.007276466621 * 1.66053906660e-27
+    mb = 11 * mp
+    mr = (mp * mb) / (mp + mb) 
+
+    e = 10 ** np.arange(-1, 3.6005, 0.0005)  # keV
+
+    sigma = fsgmpb(e)
+
+    # analytic integral
+    sgmv = np.zeros_like(ion_temperature_profile)
+    if isinstance(ion_temperature_profile, float):
+        len_teff = 1
+    else:
+        len_teff = len(ion_temperature_profile)
+    for j in range(len_teff):
+        if len_teff == 1:
+            teff_now = ion_temperature_profile
+        else:
+            teff_now = ion_temperature_profile[j]
+        sgmv_now = (
+            np.sqrt(constants.KILOELECTRON_VOLT * teff_now * 8 / (np.pi * mr))
+            / (teff_now ** 2)
+            * np.nansum(e[1:] * sigma[1:] * np.diff(e) * np.exp(-e[1:] / teff_now))
+        )
+        if len_teff == 1:
+            sgmv = sgmv_now
+        else:
+            sgmv[j] = sgmv_now
+    return sgmv
 
 def set_fusion_powers(
     f_alpha_electron: float,
     f_alpha_ion: float,
     p_beam_alpha_mw: float,
+    p_beam_neutron_mw: float,
     pden_non_alpha_charged_mw: float,
     pden_plasma_neutron_mw: float,
     vol_plasma: float,
@@ -869,13 +1052,7 @@ def set_fusion_powers(
 
     # Add extra neutron power from beams
     pden_neutron_total_mw = pden_plasma_neutron_mw + (
-        (
-            (
-                constants.DT_NEUTRON_ENERGY_FRACTION
-                / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION)
-            )
-            * p_beam_alpha_mw
-        )
+        p_beam_neutron_mw
         / vol_plasma
     )
 
@@ -1087,6 +1264,148 @@ def beam_fusion(
 
     return beta_beam, beam_state.nd_beam_hot, p_beam_alpha_mw
 
+def sigv_beam_target_integrand(e_rel, v_th, vb, m_fi, m):
+    mu = m_fi * m / (m_fi + m) * constants.ATOMIC_MASS_UNIT # reduced mass (kg)        
+    vr = np.sqrt(2.0 * e_rel * constants.KILOELECTRON_VOLT / mu)
+    fexp = np.exp(-((vb - vr) / v_th)**2) - np.exp(-((vb + vr) / v_th)**2)
+    sig = fsgmpb(e_rel)
+    return sig * fexp * vr * constants.KILOELECTRON_VOLT / mu
+
+def sigv_beam_target(eb, v_th, g, m_fi, m):
+    vb = np.sqrt(2.0 * eb * constants.KILOELECTRON_VOLT / (m_fi * constants.ATOMIC_MASS_UNIT))
+    # 被积函数在 vr≈vb 处呈热速度宽度的尖峰；内层积分值常 ~1e-9，
+    # 默认 epsabs(~1e-8) 过大，会触发 IntegrationWarning(roundoff)。
+    # 用相对容差，并把积分限收在峰附近若干 v_th。
+    mu = m_fi * m / (m_fi + m) * constants.ATOMIC_MASS_UNIT
+    vr_lo = max(vb - 8.0 * v_th, 0.0)
+    vr_hi = vb + 8.0 * v_th
+    e_lo = max(0.5 * mu * vr_lo**2 / constants.KILOELECTRON_VOLT, 1.0e-5)
+    e_hi = max(0.5 * mu * vr_hi**2 / constants.KILOELECTRON_VOLT, e_lo * 10.0)
+    sigv = integrate.quad(
+        sigv_beam_target_integrand,
+        e_lo,
+        e_hi,
+        args=(v_th, vb, m_fi, m),
+        epsabs=0.0,
+        epsrel=1.0e-8,
+        limit=200,
+    )[0]
+    sigv += integrate.quad(sigv_beam_target_integrand, 1.0e-5, e_lo, args=(v_th, vb, m_fi, m))[0]
+    if e_hi < 1000.0:
+        sigv += integrate.quad(sigv_beam_target_integrand, e_hi, 1000.0, args=(v_th, vb, m_fi, m))[0]
+    coef = 1.0 / (v_th * vb * np.sqrt(np.pi))
+    return sigv * coef * g(eb)
+
+def cal_beam_fusion_sigv(e_beam_kev, tau_slow_beam, e_crit_beam, s0_beam, m_fi, n_fi, m, temp):
+    """
+    积分外层函数得到反应率 <sigma*v>
+    """
+
+    dedt = lambda e, t, e_crit: -2.0 * e / t * (1.0 + (e_crit / e)**1.5)
+    g_beam = lambda e, t, e_crit, s0: - s0 / dedt(e, t, e_crit) * (e_crit > e) # m^-3 keV^-1
+    g = lambda e: g_beam(e, tau_slow_beam, e_crit_beam, s0_beam)
+
+    v_th = np.sqrt(2.0 * temp * constants.KILOELECTRON_VOLT / (m * constants.ATOMIC_MASS_UNIT))
+    # 嵌套积分：外层同样避免过紧的绝对容差
+    sigv = integrate.quad(
+        sigv_beam_target,
+        1.0e-5,
+        e_beam_kev,
+        args=(v_th, g, m_fi, m),
+        epsabs=0.0,
+        epsrel=1.0e-6,
+        limit=200,
+    )[0] / n_fi
+    return sigv
+
+def beam_fusion_p_b11(
+    sigmv_pb: float,
+    ti: float,
+    te: float,
+    vol_plasma: float,
+    current_beam_total: float,
+    b_total: float,
+    ne: float,
+    nd_fuel_b11: float,
+    charge_eff_mass_weighted: float,
+    dlamie: float,
+    dlamee: float,
+    betbm0: float,
+    beamfus0: float,
+    e_beam_kev: float,
+):
+
+    f_avg = sigmv_pb / nevins_reactivity(ti)
+    y = 8.68 * constants.ELECTRON_VOLT # MJ
+
+    #
+    const3 = 1000.0 * constants.ELECTRON_VOLT / constants.ATOMIC_MASS_UNIT
+    inv_e_vol = 1.0 / (vol_plasma * constants.ELECTRON_VOLT)
+    me = constants.ELECTRON_MASS
+
+
+    # reference:
+    # 1. the particle kinetics of the plasmas, page 307, subsection 7-11
+    # 2. fast ion pressure in fusion plasmas
+
+    # critical velocity
+    # assume：
+    # 0.proton beam, no boron
+    # 1.background particle is of Maxwellian distribution
+    # 2.x_i = v_fast_ion / v_ion > 1, x_e = v_fast_ion / v_electron < 1 => use asymptotic error function
+    # Gi = 1, Ge = 4/(3 * sqrt(pi)) * xe**3
+    # 3.ideal gas, E = 1/2 * m * v**2
+    v_crit = (
+        (
+            3.0 * np.sqrt(np.pi) /4.0 * me / constants.ATOMIC_MASS_UNIT 
+            / ne * (charge_eff_mass_weighted * dlamie) / dlamee
+        )**(1.0/3.0) 
+        * np.sqrt(2 * te / me * constants.KILOELECTRON_VOLT)
+    ) # m/s
+    e_crit_p = 0.5 * constants.M_PROTON_AMU * v_crit**2 / const3 # keV
+
+
+    # slowing down time
+    # × (dlamie / dlamee) not included in the formula in the reference
+    tau_slow_p = (
+        3.0 * (np.sqrt(2.0*np.pi))**3 * constants.EPSILON0**2 
+        * (te * constants.KILOELECTRON_VOLT)**1.5 * constants.M_PROTON_AMU        
+        / (np.sqrt(me) * constants.ELECTRON_CHARGE**4 * ne * dlamee) * (dlamie / dlamee)
+    ) * constants.ATOMIC_MASS_UNIT
+
+    # s0: unit time, unit volume of fast ion production
+    s0_p = current_beam_total * inv_e_vol
+
+
+    # fast ion density(fast ion density is the integral of the distribution function g from 0 to e_beam_kev)
+    x_crit_p = np.sqrt(e_beam_kev / e_crit_p)
+    nd_beam_p = tau_slow_p * s0_p * np.log(1.0 + x_crit_p**3) / 3.0
+    nd_beam = nd_beam_p
+
+
+    # fast ion pressure
+    # injection speed
+    v_p_i = np.sqrt(2 * e_beam_kev / constants.M_PROTON_AMU * const3)
+    pressure = lambda x, m, t, s0: constants.ATOMIC_MASS_UNIT * m * s0 * t * v_crit**2 / 3.0 *(
+        -np.atan(1/np.sqrt(3.0))/np.sqrt(3.0) + 0.5 * x**2 
+        - 1/np.sqrt(3.0) * np.atan((2.0 * x - 1) / np.sqrt(3.0))
+        + 0.5 * np.log(1 + x) - 1/6.0 * np.log(1 + x**3)
+    ) # Pa
+    pressure_p = pressure(v_p_i / v_crit, constants.M_PROTON_AMU, tau_slow_p, s0_p)
+
+    sigv_p = cal_beam_fusion_sigv(
+        e_beam_kev, tau_slow_p, e_crit_p, s0_p, constants.M_PROTON_AMU, nd_beam_p, constants.M_BORON11_AMU, ti
+    )
+
+    sigmv_p = sigv_p * f_avg
+
+    reaction_rate_beam = sigmv_p * beamfus0 * nd_fuel_b11 * nd_beam_p
+
+    p_beam_alpha_mw = reaction_rate_beam * y * vol_plasma * beamfus0
+    
+    beta_beam = betbm0 * 2 * constants.RMU0 * pressure_p / b_total**2
+
+    return beta_beam, nd_beam, p_beam_alpha_mw
 
 @dataclass(frozen=True)
 class BeamSlowingDownState:

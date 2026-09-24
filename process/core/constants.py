@@ -131,6 +131,12 @@ Reference: National Institute of Standards and Technology (NIST)
 https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=B
 """
 
+BORON11_MASS = M_BORON11_AMU * ATOMIC_MASS_UNIT - 5.0 * ELECTRON_MASS
+"""Boron-11 nuclear mass [kg]
+Atomic mass minus five electron masses.
+Reference: National Institute of Standards and Technology (NIST)
+"""
+
 M_CARBON_AMU = 12.0096
 """Average Carbon atom mass [amu]
 Reference: National Institute of Standards and Technology (NIST)
@@ -235,6 +241,14 @@ DD_TRITON_ENERGY = (
 ) * SPEED_LIGHT**2
 """Deuterium - Deuterium (Triton producing) reaction energy [J]
 Find the mass difference in the reactants and products of the D-D reaction
+Multiply by the speed of light squared to get the energy released
+"""
+
+PB_ENERGY = (
+    (PROTON_MASS + BORON11_MASS) - (ALPHA_MASS * 3.0)
+) * SPEED_LIGHT**2
+"""Proton - Boron-11 reaction energy [J]
+Find the mass difference in the reactants and products of the p-B11 reaction
 Multiply by the speed of light squared to get the energy released
 """
 
