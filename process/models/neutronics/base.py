@@ -28,7 +28,6 @@ import functools
 import inspect
 import warnings
 from collections.abc import Callable, Iterable
-from itertools import zip_longest
 from tabulate import tabulate
 from dataclasses import asdict, dataclass
 from itertools import pairwise
@@ -133,290 +132,6 @@ def extrapolation_length(diffusion_const: float) -> float:
     Duderstadt and Hamilton.
     """
     return 0.7104 * 3 * diffusion_const
-
-
-@dataclass
-class Coefficients:
-    """
-    Inside each material, there are two new hyperbolic trig funcs per group, i.e.
-    group n=0 has cosh(x/L[0]) and sinh(x/L[0]),
-    group n=1 has cosh(x/L[0]), sinh(x/L[0]), cosh(x/L[1]) and sinh(x/L[1]),
-    etc.
-    To get the neutron flux, each trig func has to be scaled by a coefficient.
-    E.g. Let's say for the first wall, which is num_layer=0,
-    group n=0: NeutronFluxProfile.coefficients[0, 0] = Coefficients(...)
-        fw_grp0 = NeutronFluxProfile.coefficients[0, 0]
-        flux = fw_grp0.c[0] * cosh(x/L[0]) + fw_grp0.s[0] * sinh(x/L[0])
-
-    group n=1: NeutronFluxProfile.coefficients[0, 1] = Coefficients(...)
-        fw_grp1 = NeutronFluxProfile.coefficients[0, 1]
-        flux = fw_grp1.c[0] * cosh(x/L[0]) + fw_grp1.c[1] * cosh(x/L[1])
-                + fw_grp1.s[0] * sinh(x/L[0]) + fw_grp1.s[1] * sinh(x/L[1])
-
-    """
-
-    c: Iterable[float]
-    s: Iterable[float]
-
-    def validate_length(self, exp_len: int, parent_name: str):
-        """Validate that all fields has the correct length."""
-        for const_name, const_value in asdict(self).items():
-            if len(const_value) != exp_len:
-                raise ProcessValueError(
-                    f"{parent_name}'s [{exp_len - 1}]-th item is expected to "
-                    f"have .{const_name} of length={exp_len}, but instead got "
-                    f"{const_value}."
-                )
-        self._len = exp_len
-
-    def __len__(self):
-        """Return number of coefficients pairs that has been populated."""
-        return self._len
-
-
-class AutoPopulatingDict:
-    """
-    Class that behaves like a dictionary, but if the required key does not
-    exist in the dictionary, it will call the populating_method to populate
-    that specific key.
-    """
-
-    def __init__(self, populating_method: Callable[[int], None], name: str):
-        """
-        Attributes
-        ----------
-        _dict:
-            A dictionary indexed by integers, so that we can populate its
-            values out of sequence.
-        populating_method:
-            The method to be called if the requested index n is currently
-            unpopulated in the dictionary. This method should populate the
-            dictionary.
-        """
-        self._dict = {}
-        self.name = name
-        self._attempting_to_access = set()
-        self.populating_method = populating_method
-
-    def __getitem__(self, i: int):
-        """Check if index i is in the dictionary or not. If not, populate it."""
-        if i in self._attempting_to_access:
-            raise RecursionError(
-                f"retrieving the value of {self.name}[{i}] requires the "
-                f"value of {self.name}[{i}]."
-            )
-        if i not in self._dict:
-            self._attempting_to_access.add(i)
-            self.populating_method(i)
-            if i not in self._dict:
-                raise RuntimeError(
-                    f"{self.populating_method}({i}) failed to populate key {i} "
-                    "in the dictionary!"
-                )
-            self._attempting_to_access.discard(i)
-        return self._dict[i]
-
-    def __contains__(self, i: int):
-        """Check if key 'i' is in the dictionary or not."""
-        return i in self._dict
-
-    def __len__(self):
-        """Return the number of items in the dict"""
-        return len(self._dict)
-
-    def __setitem__(self, i: int, value: float):
-        """Check if dict i is in the index or not."""
-        if hasattr(value, "validate_length"):
-            value.validate_length(len(self) + 1, parent_name=self.name)
-        self._dict[i] = value
-        self._attempting_to_access.discard(i)
-
-    def __delitem__(self, i: int):
-        """Delete item from underlying dict."""
-        del self._dict[i]
-
-    def values(self):
-        return self._dict.values()
-
-    def items(self):
-        return self._dict.items()
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__}({self.name}):{self._dict}>"
-
-
-class LayerSpecificGroupwiseConstants:
-    """An object containing multiple AutoPopulatingDict"""
-
-    def __init__(
-        self,
-        populating_method: Callable[[int], None],
-        layer_names: list[str],
-        quantity_description: str,
-    ):
-        """
-        Create an object that contains as many AutoPopulatingDict as there are
-        items in layer_names.
-
-        Parameters
-        ----------
-        populating_method:
-            The method to be called if the requested index n in any one of the
-            AutoPopulatingDict is currently unpopulated. This method should
-            populate that dictionary.
-        layer_names:
-            A list of strings, each of which is the descriptive name for that
-            layer. While the actual content in each string could be empty,
-            the length of this list MUST be equal to the total number
-            of dictionaries required.
-        quantity_description:
-            A name to be given to this specific instance of the class, to help
-            label what quantity is being stored.
-        """
-        self._name = quantity_description
-        layer_dicts = []
-        for num_layer, _layer_name in enumerate(layer_names):
-            name = f"{self._name} for layer {num_layer}"
-            if _layer_name:
-                name += f":{_layer_name}"
-            layer_dicts.append(AutoPopulatingDict(populating_method, name))
-        self._dicts = tuple(layer_dicts)
-        self.n_layers = len(self._dicts)
-
-    def __iter__(self):
-        return self._dicts.__iter__()
-
-    def __len__(self) -> int:
-        return len(self._dicts)
-
-    def __setitem__(self, index: int | tuple[int, int], value):
-        """
-        Act as if this is a 2D array, where the first-axis is the layer and the
-        second axis is the group. support slice of the thing,
-        """
-        if isinstance(index, tuple) and len(index) >= 2:
-            if len(index) > 2:
-                raise IndexError("2D array indexed with more than 2 indices!")
-            layer_index, group_index = index
-            self._dicts[layer_index][group_index] = value
-        else:
-            super().__setitem__(index, value)
-
-    def __getitem__(self, index: int | tuple[int, int]):
-        """
-        Act as if this is a 2D array, where the first-axis is the layer and the
-        second axis is the group. Handle slices as well.
-        """
-        if isinstance(index, tuple) and len(index) >= 2:
-            if len(index) > 2:
-                raise IndexError("2D array indexed with more than 2 indices!")
-            layer_index, group_index = index
-            if isinstance(layer_index, slice):
-                return tuple(_dict[group_index] for _dict in self._dicts[layer_index])
-            return self._dicts[layer_index][group_index]
-        return self._dicts[index]
-
-    def __delitem__(self, index: int | tuple[int, int]):
-        if isinstance(index, tuple) and len(index) >= 2:
-            if len(index) > 2:
-                raise IndexError("2D array indexed with more than 2 indices!")
-            layer_index, group_index = index
-            if isinstance(layer_index, slice):
-                raise NotImplementedError("Cannot delete slice!")
-            del self._dicts[layer_index][group_index]
-        else:
-            raise ValueError(
-                f"Deletion of a single dictionary in {self.__class__} is not permitted."
-            )
-
-    def has_populated(self, n: int) -> bool:
-        """
-        Check if group n's constants are populated for every layer's dict.
-
-        Parameter
-        ---------
-        n:
-            group number to check the population status of every layer's dict.
-
-
-        Returns
-        -------
-        :
-            Whether group n's constants are poplated across all dictionaries
-            stored by the current instance.
-        """
-        return all(n in layer_dict for layer_dict in self._dicts)
-
-    def __repr__(self):
-        return f"<A tuple of {self.n_layers} layers of {self._name}>"
-
-    def tabulate(
-        self, up_to_n_groups: int, side_by_side: bool=True
-    ) -> list[str]:
-        """
-        List the coefficients as tables/pairs of tables, indexed by num_layer.
-
-        Parameters
-        ----------
-        up_to_n_groups:
-            The maximum number of groups that we would like to tabulate.
-        side_by_side:
-            Whether to concatenate the c and s coefficient table in each layer
-            together horizontally or not.
-
-        Returns
-        -------
-        tables:
-            If side_by_side = True:
-                The m-th item on this list is a pair of tables showing a slice
-                of the c and s coefficient tensors, sliced to the coefficients
-                that applies to the m-th layer material.
-            else if side_by_side = False:
-                The 2m-th item on the list is the c coefficient tensor sliced
-                to show the m-th layer material's specific coefficients.
-                The (2m+1)-th item on the list is the s coefficient tensor
-                sliced to show the m-th layer material's specific coefficients.
-        """
-        tables = []
-        for num_layer in range(self.n_layers):
-            headers = [f"basis {n}" for n in range(up_to_n_groups)]
-            c_values, s_values = [], []
-            for n in range(up_to_n_groups):
-                c_values.append([f"caused by group {n} neutrons",])
-                s_values.append([f"caused by group {n} neutrons",])
-                if n in self[num_layer]:
-                    c_values[-1].extend(list(self[num_layer, n].c))
-                    c_values[-1].extend(
-                        [None,] * (up_to_n_groups + 1 - len(c_values[-1]))
-                    )
-                    s_values[-1].extend(list(self[num_layer, n].s))
-                    s_values[-1].extend(
-                        [None,] * (up_to_n_groups + 1 - len(s_values[-1]))
-                    )
-                else:
-                    c_values[-1].extend([None for _ in range(up_to_n_groups)])
-                    s_values[-1].extend([None for _ in range(up_to_n_groups)])
-
-            c_table = tabulate(
-                c_values,
-                headers=[f"{self._name} c for layer {num_layer}",] + headers,
-            ).splitlines()
-            s_table = tabulate(
-                s_values,
-                headers=[f"{self._name} s for layer {num_layer}",] + headers,
-            ).splitlines()
-
-            if side_by_side:
-                max_c_len = max(len(c_line) for c_line in c_table)
-                max_s_len = max(len(s_line) for s_line in s_table)
-                tables.append("\n".join(
-                    c_line.ljust(max_c_len) + " | " + s_line.ljust(max_s_len)
-                    for c_line, s_line in zip(c_table, s_table)
-                ))
-            else:
-                tables.append("\n".join(c_table))
-                tables.append("\n".join(s_table))
-        return tables
 
 
 UNIT_LOOKUP = {
@@ -547,11 +262,15 @@ class NeutronFluxProfile:
         self.extended_boundary = self.layer_x[-1] + extrapolation_length(
             self.materials[-1].diffusion_const
         ) #  vector
-        self.coefficients = LayerSpecificGroupwiseConstants(
-            self.solve_group_n, mat_name_list, "Coefficients"
+        self.coefficients = np.zeros(
+            [self.n_layers, self.n_groups, self.n_groups, 2],
+            # TODO: extend this to np.longdouble later.
         )
+        self._is_solved = np.zeros(self.n_groups, dtype=bool)
         self.num_iteration = [0 for n in range(self.n_groups)]
         self.contains_upscatter = any(not mat.downscatter_only for mat in self.materials)
+        
+        self.solve()
 
     def tabulate(self, side_by_side: bool=False) -> list[str]:
         """
@@ -593,16 +312,12 @@ class NeutronFluxProfile:
                     c_bases.append(f"cos(|x|/{np.sqrt(-l2):.4g})")
                     s_bases.append(f"sin(|x|/{np.sqrt(-l2):.4g})")
 
-            c_values, s_values = [], []
+            c_values, s_values = [], []  # TODO: may be presented differently?
             for n in range(self.n_groups):
                 c_values.append([f"contributed by group {n} neutrons [c] terms =",])
                 s_values.append([f"contributed by group {n} neutrons [s] terms =",])
-                if n in self.coefficients[num_layer]:
-                    c_values[-1].extend([f"{c_coef:+.7e} * {c_basis}" for c_coef, c_basis in zip_longest(self.coefficients[num_layer, n].c, c_bases, fillvalue=0.0)])
-                    s_values[-1].extend([f"{s_coef:+.7e} * {s_basis}" for s_coef, s_basis in zip_longest(self.coefficients[num_layer, n].s, s_bases, fillvalue=0.0)])
-                else:
-                    c_values[-1].extend([f"+0.000000 * {c_basis}" for c_basis in c_bases])
-                    s_values[-1].extend([f"+0.000000 * {s_basis}" for s_basis in s_bases])
+                c_values[-1].extend([f"{c_coef:+.7e} * {c_basis}" for c_coef, c_basis in zip(self.coefficients[num_layer, n, :, 0], c_bases)])
+                s_values[-1].extend([f"{s_coef:+.7e} * {s_basis}" for s_coef, s_basis in zip(self.coefficients[num_layer, n, :, 1], s_bases)])
                 # Remove leading "+" signs.
                 if c_values[-1][1].startswith("+"):
                     c_values[-1][1] = " "+c_values[-1][1][1:]
@@ -634,29 +349,25 @@ class NeutronFluxProfile:
         return tables
 
     def _groupwise_cs_values_in_layer(
-        self, n: int, num_layer: int, x: float | npt.NDArray
+        self, n: int, num_layer: int, abs_x: float | npt.NDArray
     ) -> npt.NDArray:
         """
         Calculate the num_layer-th layer n-th basis function at the specified
         x position(s).
         """
-        abs_x = abs(x)
         if self.materials[num_layer].l2[n] > 0:
             l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
-            c, s = negexp, np.exp
-        else:
-            l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
-            c, s = np.cos, np.sin
-        return np.array([c(abs_x / l), s(abs_x / l)])
+            return np.array([negexp(abs_x / l), np.exp(abs_x / l)])
+        l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
+        return np.array([np.cos(abs_x / l), np.sin(abs_x / l)])
 
     def _groupwise_cs_differential_in_layer(
-        self, n: int, num_layer: int, x: float | npt.NDArray
+        self, n: int, num_layer: int, abs_x: float | npt.NDArray
     ) -> npt.NDArray:
         """
         Differentiate the num_layer-th layer n-th basis function, and evaluate
         it at position(s) x.
         """
-        abs_x = abs(x)
         if self.materials[num_layer].l2[n] > 0:
             l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([-negexp(abs_x / l) / l, np.exp(abs_x / l) / l])
@@ -683,23 +394,18 @@ class NeutronFluxProfile:
         ])
 
     def _groupwise_flux_curvature_in_layer(
-        self, n: int, num_layer: int, x: float | npt.NDArray
+        self, n: int, num_layer: int, abs_x: float | npt.NDArray
     ) -> float | npt.NDArray:
         """Second derivative of the group n flux in num_layer at location x."""
-        abs_x = abs(x)
         trig_funcs = []
         for basis_group, cs_coefs in enumerate(
-            zip(
-                self.coefficients[num_layer, n].c,
-                self.coefficients[num_layer, n].s,
-                strict=True,
-            )
+            self.coefficients[num_layer, n]
         ):
             l2 = self.materials[num_layer].l2[basis_group]
             l = np.sqrt(abs(l2))  # noqa: E741
             c, s = (negexp, np.exp) if l2 > 0 else (np.cos, np.sin)
             trig_funcs.append(
-                cs_coefs @ np.array([c(abs_x / l) / l2, s(abs_x / l) / l2])
+                cs_coefs @ [c(abs_x / l) / l2, s(abs_x / l) / l2]
             )
         return matrix_fsum(trig_funcs, axis=0)
 
@@ -740,10 +446,7 @@ class NeutronFluxProfile:
             neutron group n, material layer num_layer, and in-scattering
             neutron group basis_group. For paramters: see parent function.
             """
-            return np.array([
-                self.coefficients[num_layer, n].c[basis_group],
-                self.coefficients[num_layer, n].s[basis_group],
-            ])
+            return self.coefficients[num_layer, n, basis_group]
 
         summation_sequence = [
             coef_pair(basis_group) @ func(basis_group, num_layer, x)
@@ -755,10 +458,8 @@ class NeutronFluxProfile:
         self, n: int, num_layer: int, include_upscatter: bool
     ) -> tuple[npt.NDArray, npt.NDArray[np.float64]]:
         """
-        Infer this layer's main basis functions' coefficients (.c[n] and .s[n])
+        Infer this layer's main basis functions' coefficients
         using using the previous layer's basis functions.
-        Can only be used when self.coefficients[num_layer, n].c[n] and
-        self.coefficients[num_layer, n].s[n] are both 0.0.
 
         Parameters
         ----------
@@ -879,9 +580,9 @@ class NeutronFluxProfile:
             raise ValueError(
                 f"n must be a positive integer between 0 and {self.n_groups - 1}!"
             )
-        if n > 0 and not self.coefficients.has_populated(n - 1):
+        if n > 0 and not self._is_solved[n - 1]:
             self.solve_group_n(n - 1)
-        if self.coefficients.has_populated(n):
+        if self._is_solved[n]:
             return  # skip if it has already been solved.
         # Included below: For future implementation to allow solving
         # non-down-scatter-only systems by iterating.
@@ -907,7 +608,6 @@ class NeutronFluxProfile:
         try:
             for num_layer in range(self.n_layers):
                 # Setting up aliases for shorter code
-                coefs_num_layer = Coefficients([], [])
                 mat = self.materials[num_layer]
                 for basis_group in range(in_scatter_max_group):
                     in_scatter_min_group = 0 if include_upscatter else basis_group
@@ -915,39 +615,40 @@ class NeutronFluxProfile:
                     # self.coefficients: the number of inscatter_group neutrons in the shape of group basis_group's basis.
                     # Updating a coef on the main diagonal will affect the values of its entire column (in-scatter from that basis STAYS in that basis!)
                     # Note that each row not only represents the neutron flux, but also the in-scatter (:propto: neutron flux).
-                    coefs_num_layer.c.append(
-                        fsum([
-                            (mat.sigma_source[inscatter_group, n]
-                                * self.coefficients[num_layer, inscatter_group].c[basis_group])
-                            for inscatter_group in range(
-                                in_scatter_min_group, in_scatter_max_group
-                            )
-                            if inscatter_group != n
-                        ])
-                        * mat.conversion_factor[n, basis_group]
-                    )
-                    coefs_num_layer.s.append(
-                        fsum([
-                            (mat.sigma_source[inscatter_group, n]
-                                * self.coefficients[num_layer, inscatter_group].s[basis_group])
-                            for inscatter_group in range(
-                                in_scatter_min_group, in_scatter_max_group
-                            )
-                            if inscatter_group != n
-                        ])
-                        * mat.conversion_factor[n, basis_group]
-                    )
+                    # Formula in Appendix A of the paper.
+                    # TODO: The following lines may be optimized to be faster & simpler.
+                    self.coefficients[num_layer, n, basis_group, 0] = fsum([
+                        (
+                            mat.sigma_source[inscatter_group, n]
+                            * self.coefficients[
+                                num_layer, inscatter_group, basis_group, 0
+                            ]
+                        )
+                        for inscatter_group in range(
+                            in_scatter_min_group, in_scatter_max_group
+                        )
+                        if inscatter_group != n
+                    ]) * mat.conversion_factor[n, basis_group]
 
-                self.coefficients[num_layer, n] = coefs_num_layer
+                    self.coefficients[num_layer, n, basis_group, 1] = fsum([
+                        (
+                            mat.sigma_source[inscatter_group, n]
+                            * self.coefficients[
+                                num_layer, inscatter_group, basis_group, 1
+                            ]
+                        )
+                        for inscatter_group in range(
+                            in_scatter_min_group, in_scatter_max_group
+                        )
+                        if inscatter_group != n
+                    ]) * mat.conversion_factor[n, basis_group]
 
         except Exception as e:
-            for num_layer in range(self.n_layers):
-                if n in self.coefficients[num_layer]:
-                    del self.coefficients[num_layer, n]
+            self._is_solved[n] = False
             raise e
-        # Determine coefficient[0, n].c[n] and coefficient[0, n].s[n] by
-        # boundary conditions: top row enforces current at (x=0) = source
-        # current, bottom row enforces flux = 0 at the extended boundary.
+        # Determine coefficients[0, n, n] by boundary conditions:
+        # top row enforces current at (x=0) = source current,
+        # bottom row enforces flux = 0 at the extended boundary.
         top_row = self._groupwise_cs_differential_in_layer(n, 0, 0)
         y = -(
             self.fluxes[n] / self.materials[0].diffusion_const[n]
@@ -987,38 +688,24 @@ class NeutronFluxProfile:
         eqn_32_matrix = np.array([top_row, bot_row])
         eqn_32_vector = np.array([y, z])
         det_32 = np.linalg.det(eqn_32_matrix)
-        self.coefficients[0, n].c[n], self.coefficients[0, n].s[n] = np.linalg.solve(
+        self.coefficients[0, n, n] = np.linalg.solve(
             eqn_32_matrix, eqn_32_vector
         )
 
         for num_layer in range(self.n_layers - 1):
-            [
-                self.coefficients[num_layer + 1, n].c[n],
-                self.coefficients[num_layer + 1, n].s[n],
-            ] = (
-                m_list[num_layer]
-                @ np.array([
-                    self.coefficients[num_layer, n].c[n],
-                    self.coefficients[num_layer, n].s[n],
-                ])
+            self.coefficients[num_layer + 1, n, n] = (
+                m_list[num_layer] @ self.coefficients[num_layer, n, n]
                 + v_list[num_layer]
             )
         
-        init_coefs = np.array([
-            (self.coefficients[num_layer, n].c[n],
-                self.coefficients[num_layer, n].s[n]
-            ) for num_layer in range(self.n_layers)
-        ])
+        init_coefs = self.coefficients[:, n, n]
         def _set_coefficients(input_vector: Iterable[float]):
-            for num_layer in range(self.n_layers):
-                i = num_layer * 2
-                self.coefficients[num_layer, n].c[n] = input_vector[i]
-                self.coefficients[num_layer, n].s[n] = input_vector[i + 1]
-                # self._update_main_diagonal_coefficients()
+            self.coefficients[:, n, n] = input_vector.reshape(self.n_layers, 2)
+            # self._update_main_diagonal_coefficients()
 
         def objective(coefficients_vector):
             _set_coefficients(coefficients_vector)
-            return self._groupwise_fitness(n) # would not lead to recursion error as has_populated=True.
+            return self._groupwise_fitness(n)
 
         results = optimize.root(objective, x0=init_coefs.flatten(), jac=True)
         _set_coefficients(results.x)
@@ -1045,6 +732,7 @@ class NeutronFluxProfile:
                     stacklevel=2,
                 )
         self.num_iteration[n] += 1
+        self._is_solved[n] = True
         return
 
     def _groupwise_fitness(
@@ -1069,9 +757,7 @@ class NeutronFluxProfile:
             jacobians:
                 A 2*n_layers x 2*n_layers matrix, row i column j denotes
                 how much steeply does variable j affect condition i. The
-                variables are arranged as [self.coefficients[0, n].c[n],
-                self.coefficients[0, n].s[n], self.coefficients[1, n].c[n],
-                self.coefficients[1, n].c[n], ... etc.].
+                variables are arranged as self.coefficients[:, n, n].flatten().
             """
             conditions = np.zeros([2 * self.n_layers])
             jacobians = np.zeros([2 * self.n_layers, 2 * self.n_layers])
@@ -1303,13 +989,14 @@ class NeutronFluxProfile:
                 n, self.n_layers - 1, np.sign(x) * self.layer_x[-1]
             )
         trig_funcs = []
-        for basis_group in range(len(self.coefficients[num_layer, n])):
+        max_groups = self.n_groups if self.contains_upscatter else n + 1
+        for basis_group in range(max_groups):
             c_val, s_val = self._groupwise_cs_values_in_layer(
-                basis_group, num_layer, x
+                basis_group, num_layer, abs(x)
             )
             trig_funcs.extend([
-                self.coefficients[num_layer, n].c[basis_group] * c_val,
-                self.coefficients[num_layer, n].s[basis_group] * s_val,
+                self.coefficients[num_layer, n, basis_group, 0] * c_val,
+                self.coefficients[num_layer, n, basis_group, 1] * s_val,
             ])
         return matrix_fsum(trig_funcs, axis=0)
 
@@ -1335,13 +1022,14 @@ class NeutronFluxProfile:
                 n, self.n_layers - 1, np.sign(x) * self.layer_x[-1]
             )
         differentials = []
-        for basis_group in range(len(self.coefficients[num_layer, n])):
+        max_groups = self.n_groups if self.contains_upscatter else n + 1
+        for basis_group in range(max_groups):
             c_diff, s_diff = self._groupwise_cs_differential_in_layer(
-                basis_group, num_layer, x
+                basis_group, num_layer, abs(x)
             )
             differentials.extend([
-                self.coefficients[num_layer, n].c[basis_group] * c_diff,
-                self.coefficients[num_layer, n].s[basis_group] * s_diff,
+                self.coefficients[num_layer, n, basis_group, 0] * c_diff,
+                self.coefficients[num_layer, n, basis_group, 1] * s_diff,
             ])
 
         return (
@@ -1452,13 +1140,14 @@ class NeutronFluxProfile:
             x_start = 0.0
         x_end = self.layer_x[num_layer]
 
-        for basis_group in range(len(self.coefficients[num_layer, n])):
+        max_groups = self.n_groups if self.contains_upscatter else n + 1
+        for basis_group in range(max_groups):
             c_int, s_int = self._groupwise_cs_definite_integral_in_layer(
                 basis_group, num_layer, x_start, x_end
             )
             integrals.extend([
-                self.coefficients[num_layer, n].c[basis_group] * c_int,
-                self.coefficients[num_layer, n].s[basis_group] * s_int,
+                self.coefficients[num_layer, n, basis_group, 0] * c_int,
+                self.coefficients[num_layer, n, basis_group, 1] * s_int,
             ])
         return matrix_fsum(integrals, axis=0)
 
