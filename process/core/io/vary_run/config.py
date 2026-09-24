@@ -504,7 +504,7 @@ class RunProcessConfig(ProcessConfig):
             if no_unfeasible <= self.no_allowed_unfeasible:
                 if no_unfeasible > 0:
                     logger.warning(
-                        "Non feasible point(s) in sweep, But finished anyway! %s ",
+                        "%s non feasible point(s) in sweep, But finished anyway!",
                         no_unfeasible,
                     )
                 if process_warnings(self.wdir, mfile):

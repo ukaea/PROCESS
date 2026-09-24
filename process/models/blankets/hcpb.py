@@ -678,7 +678,9 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         if p_blkt_nuclear_heat_total_mw < 1:
             logger.error(
-                "Blanket heating is <1 MW or NaN. Is something wrong?%s %s %s %s",
+                "Blanket heating is <1 MW or NaN. Is something wrong? "
+                "p_blkt_nuclear_heat_total_mw=%s, exp_blanket=%s, "
+                "p_fusion_total_mw=%s, m_blkt_total_tonnes%s",
                 p_blkt_nuclear_heat_total_mw,
                 exp_blanket,
                 p_fusion_total_mw,

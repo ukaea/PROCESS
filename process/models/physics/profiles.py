@@ -162,7 +162,7 @@ class ElectronDensityProfile(Profile):
 
     def calculate_profile_y(
         self,
-        rho: np.array,
+        rho: np.ndarray,
         radius_plasma_pedestal_density_norm: float,
         nd_on_axis: float,
         nd_pedestal: float,
@@ -196,7 +196,8 @@ class ElectronDensityProfile(Profile):
 
         if nd_on_axis < nd_pedestal:
             logger.info(
-                "NPROFILE: Pedestal density is higher than core density. %s, %s",
+                "NPROFILE: Pedestal density is higher than core density. nd_pedestal=%s,"
+                " nd_on_axis=%s",
                 nd_pedestal,
                 nd_on_axis,
             )
@@ -265,7 +266,7 @@ class ElectronDensityProfile(Profile):
             # if the run did not converge
             logger.error(
                 "nd_on_axis is going negative when solving. Please raise the value of "
-                "nd_plasma_electrons_vol_avg (⟨nₑ⟩) and or its lower limit."
+                "nd_plasma_electrons_vol_avg (⟨nₑ⟩) and/or its lower limit."
             )
             nd_on_axis = 1.0e-6
         return nd_on_axis
@@ -297,7 +298,7 @@ class ElectronDensityProfile(Profile):
             # if the run did not converge
             logger.error(
                 "nd_on_axis is going negative when solving. Please raise the value of "
-                "nd_plasma_electrons_vol_avg (⟨nₑ⟩) and or its lower limit."
+                "nd_plasma_electrons_vol_avg (⟨nₑ⟩) and/or its lower limit."
             )
             nd_on_axis = 1.0e-6
         return nd_on_axis
@@ -403,7 +404,7 @@ class ElectronTemperatureProfile(Profile):
 
     def calculate_profile_y(
         self,
-        rho: np.array,
+        rho: np.ndarray,
         radius_plasma_pedestal_temp_norm: float,
         temp_on_axis_kev: float,
         temp_pedestal_kev: float,
@@ -448,7 +449,8 @@ class ElectronTemperatureProfile(Profile):
 
         if temp_on_axis_kev < temp_pedestal_kev:
             logger.info(
-                "TPROFILE: Pedestal temperature is higher than core temperature. %s, %s",
+                "TPROFILE: Pedestal temperature is higher than core temperature. "
+                "temp_pedestal_kev=%s, temp_on_axis_kev=%s",
                 temp_pedestal_kev,
                 temp_on_axis_kev,
             )
