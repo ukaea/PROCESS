@@ -965,7 +965,6 @@ class NeutronFluxProfile:
             c_val, s_val = self._groupwise_cs_values_in_layer(
                 basis_group, num_layer, abs(x)
             )
-            # TODO: these three .extend(c_.., s_..) could probably be done better.
             trig_funcs.extend([
                 self.coefficients[num_layer, n, basis_group, 0] * c_val,
                 self.coefficients[num_layer, n, basis_group, 1] * s_val,
