@@ -2,6 +2,7 @@
 
 import logging
 import math
+from dataclasses import dataclass, field, fields
 
 import numpy as np
 
@@ -13,6 +14,93 @@ from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import dshellvol, eshellvol
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass(frozen=True)
+class VacuumSpecies:
+    """Dataclass for different particle species in the vacuum system"""
+
+    nitrogen: float
+    deuterium_tritium: float
+    helium: float
+    deuterium_tritium_again: float
+
+
+@dataclass(frozen=True)
+class VacuumPump:
+    """Base dataclass for vacuum pump specifications"""
+
+    name: str
+    """Name of the vacuum pump type"""
+    volflow_pump: VacuumSpecies
+    """Volumetric flow rates of the vacuum pump for different gases in m³/s"""
+    xmult: VacuumSpecies = field(
+        default_factory=lambda: VacuumSpecies(
+            nitrogen=1.0e0,
+            deuterium_tritium=0.423e0,
+            helium=0.378e0,
+            deuterium_tritium_again=0.423e0,
+        )
+    )
+    """Multiplier to convert conductance from gas species i to nitrogen"""
+    description: str = ""
+    """Description of the vacuum pump"""
+
+    def species(self):
+        """Yield species name, pump speed, and conductance multiplier.
+
+        Yields
+        ------
+        tuple[str, float, float]
+            Species name, volumetric flow rate, and conductance multiplier.
+        """
+        for species_field in fields(self.volflow_pump):
+            species_name = species_field.name
+            yield (
+                species_name,
+                getattr(self.volflow_pump, species_name),
+                getattr(self.xmult, species_name),
+            )
+
+
+@dataclass(frozen=True)
+class TurbomolecularPump(VacuumPump):
+    """Turbomolecular pump with magnetic bearing specifications
+
+    Nominal speed of 2.0 m^3/s
+    """
+
+    name: str = "Turbomolecular"
+    volflow_pump: VacuumSpecies = field(
+        default_factory=lambda: VacuumSpecies(
+            nitrogen=1.95,
+            deuterium_tritium=1.8,
+            helium=1.8,
+            deuterium_tritium_again=1.8,
+        )
+    )
+    description: str = (
+        "Turbomolecular pump (magnetic bearing) with nominal speed 2.0 m³/s"
+    )
+
+
+@dataclass(frozen=True)
+class CryoPump(VacuumPump):
+    """Compound cryopump specifications
+
+    Nominal speed of 10 m³/s
+    """
+
+    name: str = "Cryopump"
+    volflow_pump: VacuumSpecies = field(
+        default_factory=lambda: VacuumSpecies(
+            nitrogen=9.0,
+            deuterium_tritium=25.0,
+            helium=5.0,
+            deuterium_tritium_again=25.0,
+        )
+    )
+    description: str = "Compound cryopump with nominal speed 10 m³/s"
 
 
 class Vacuum(Model):
@@ -289,18 +377,15 @@ class Vacuum(Model):
         #  thickness
         thcsh = thshldi / 3.0e0
 
-        #  Multiplier to convert conductance from gas species i to nitrogen
-        xmult = [1.0e0, 0.423e0, 0.378e0, 0.423e0]
-        # nitrogen, D-T, helium, D-T again
         nduct = ntf * ndiv
 
         #  Speed of high-vacuum pumps (m^3/s)
         # nitrogen, DT, helium, DT again
-        sp = (
-            [1.95, 1.8, 1.8, 1.8]
+        pump = (
+            TurbomolecularPump()
             if VacuumPumpType(self.data.vacuum.i_vacuum_pump_type)
             == VacuumPumpType.TURBOMOLECULAR
-            else [9.0, 25.0, 5.0, 25.0]
+            else CryoPump()
         )
 
         #  Calculate required pumping speeds
@@ -378,17 +463,22 @@ class Vacuum(Model):
         ceff = np.full(4, 1e-6)
         d = np.full(4, 1e-6)
 
-        for i in range(4):
-            sss = nduct / (1.0e0 / sp[i] / pumpn + 1.0e0 / cmax * xmult[i] / xmult[imax])
+        pump_species = tuple(pump.species())
+
+        for i, (_, volflow_pump_species, x_multiplier) in enumerate(pump_species):
+            sss = nduct / (
+                1.0e0 / volflow_pump_species / pumpn
+                + 1.0e0 / cmax * x_multiplier / pump_species[imax][2]
+            )
             if sss > s[i]:
                 continue
             imax = i
 
             ccc = 2.0e0 * s[i] / nduct
-            pumpn1 = 1.0e0 / (sp[i] * (nduct / s[i] - 1.0e0 / ccc))
-            pumpn2 = 1.01e0 * s[i] / (sp[i] * nduct)
+            pumpn1 = 1.0e0 / (volflow_pump_species * (nduct / s[i] - 1.0e0 / ccc))
+            pumpn2 = 1.01e0 * s[i] / (volflow_pump_species * nduct)
             pumpn = max(pumpn, pumpn1, pumpn2)
-            ceff[i] = 1.0e0 / (nduct / s[i] - 1.0e0 / (sp[i] * pumpn))
+            ceff[i] = 1.0e0 / (nduct / s[i] - 1.0e0 / (volflow_pump_species * pumpn))
 
             ceff, nflag, d1max = self._newton_method_duct_diameter(
                 d, i, s, xmult, l1, l2, l3, ntf, r0, aw, ritf, thcsh, ceff
