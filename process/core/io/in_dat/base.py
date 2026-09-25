@@ -913,9 +913,9 @@ class INVariable:
         # intentionally missing .comment,
         # this is not necessary for the variables to be equal
         return (
-            f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, "
-            f"v_type={self.v_type!r}, "
-            f"comment={self.comment!r}"
+            self.name == value.name
+            and self.value == value.value
+            and self.v_type == value.v_type
         )
 
     def __hash__(self):
