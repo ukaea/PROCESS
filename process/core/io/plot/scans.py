@@ -87,39 +87,6 @@ def get_list_padded(inp, names):
     return inp_array[:target_len]
 
 
-def value_checks(
-    scan_var: ScanVariables,
-    scan_2_var: ScanVariables | None,
-    m_file: MFile,
-    input_files: Sequence[Path],
-):
-    """Check scan variable values
-
-    Raises
-    ------
-    ValueError
-        Scan variable not in MFILE
-    ValueError
-        Multiple input files specified for plotting
-    """
-    ve_string = (
-        "`{}` does not exist in PROCESS dicts\n"
-        " The scan variable ({}) is probably an upper/lower boundary\n"
-        " Please modify 'nsweep_dict' dict with the constrained var"
-    )
-    # Check if the scan variable is present
-    if scan_var.out_name not in m_file.data:
-        raise ValueError(ve_string.format(scan_var.out_name, scan_var.name))
-
-    # Check if the second scan variable is present
-    if scan_2_var is not None:
-        if scan_2_var.out_name not in m_file.data:
-            raise ValueError(ve_string.format(scan_2_var.out_name, scan_2_var.name))
-
-        if len(input_files) > 1:
-            raise ValueError("Only one input file can be used for 2D scans")
-
-
 def array_check(output_name: str, m_file: MFile) -> bool:
     """Check if the output variable exists in the MFILE"""
     if output_name not in m_file.data:
@@ -219,7 +186,8 @@ def plot_scan(
         else None
     )
 
-    value_checks(scan_var, scan_2_var, m_file, input_files)
+    if scan_2_var is not None and len(input_files) > 1:
+        raise ValueError("Only one input file can be used for 2D scans")
 
     x_max = get_list_padded(x_axis_max, output_names)
     x_axis = AxisData(
@@ -329,7 +297,7 @@ def oned_scan(
             if ifail == SolverOutputCondition.CONVERGED:
                 conv_i.append(ii + 1)
             else:
-                failed_value = scan_var.get_val(m_file, scan=ii + 1)
+                failed_value = m_file.get("scan_value", scan=ii + 1)
                 print(
                     "Warning : Non-convergent scan point : "
                     f"{scan_var.name} = {failed_value}\n"
@@ -339,7 +307,7 @@ def oned_scan(
         # Updating the number of scans
         n_scan = len(conv_i)
         scan_var_array[input_file] = np.array([
-            scan_var.get_val(m_file, scan=conv_i[ii]) for ii in range(n_scan)
+            m_file.get("scan_value", scan=conv_i[ii]) for ii in range(n_scan)
         ])
         output_arrays[input_file] = {
             output_name: create_o_array(n_scan, m_file, output_name, conv_i)
@@ -482,7 +450,7 @@ def plot_1d_scan(
                 color="blue" if len(input_files) == 1 else "black",
             )
             ax.set_xlabel(
-                get_label(scan_var.out_name),
+                get_label(scan_var.fname),
                 fontsize=x_axis.font_size,
             )
             if len(input_files) != 1:
@@ -491,7 +459,7 @@ def plot_1d_scan(
             ax.minorticks_on()
             ax.grid(True)
             ax.set_ylabel(get_label(output_name))
-            ax.set_xlabel(get_label(scan_var.out_name), fontsize=x_axis.font_size)
+            ax.set_xlabel(get_label(scan_var.fname), fontsize=x_axis.font_size)
 
             ymin, ymax = ax.get_ylim()
             if ymin < 0 and ymax > 0:
@@ -523,10 +491,10 @@ def plot_1d_scan(
                 fontsize=x_axis.font_size,
                 color="red" if len(output_names2) > 0 else "black",
             )
-            ax.set_xlabel(get_label(scan_var.out_name), fontsize=x_axis.font_size)
+            ax.set_xlabel(get_label(scan_var.fname), fontsize=x_axis.font_size)
 
             fig.suptitle(
-                f"{get_label(output_name)} vs {get_label(scan_var.out_name)}",
+                f"{get_label(output_name)} vs {get_label(scan_var.fname)}",
                 fontsize=x_axis.font_size,
             )
             if len(input_files) != 1:
@@ -588,8 +556,8 @@ def twod_scan(
                 conv_ij[ii].append(ii_jj)  # Only appends scan number if scan converged
                 contour_conv_ij.append(ii_jj)
             else:
-                failed_value_1 = scan_var.get_val(m_file, scan=ii_jj)
-                failed_value_2 = scan_2_var.get_val(m_file, scan=ii_jj)
+                failed_value_1 = m_file.get("scan_value", scan=ii_jj)
+                failed_value_2 = m_file.get("scan_value_2", scan=ii_jj)
                 print(
                     "Warning : Non-convergent scan point : "
                     f"({scan_var.name},{scan_2_var.name}) "
@@ -606,11 +574,11 @@ def twod_scan(
             continue
 
         fig, ax = plt.subplots()
-        x_contour = [scan_2_var.get_val(m_file, scan=i + 1) for i in range(n_scan_2)]
+        x_contour = [m_file.get("scan_value_2", scan=i + 1) for i in range(n_scan_2)]
 
         if twod_contour:
             y_contour = [
-                scan_var.get_val(m_file, scan=i + 1)
+                m_file.get("scan_value", scan=i + 1)
                 for i in range(1, n_scan_1 * n_scan_2, n_scan_2)
             ]
 
@@ -632,7 +600,7 @@ def twod_scan(
             fig.colorbar(contour).set_label(
                 label=get_label(output_name), size=y_axis.font_size
             )
-            ax.set_ylabel(get_label(scan_var.out_name), fontsize=y_axis.font_size)
+            ax.set_ylabel(get_label(scan_var.fname), fontsize=y_axis.font_size)
 
         else:
             y_contour = [m_file.get(output_name, scan=i + 1) for i in range(n_scan_2)]
@@ -642,20 +610,20 @@ def twod_scan(
                 # Scanned variables
                 scan_1_var_array, scan_2_var_array, output_array = np.array([
                     (
-                        scan_var.get_val(m_file, scan=conv_j[jj]),
-                        scan_2_var.get_val(m_file, scan=conv_j[jj]),
+                        m_file.get("scan_value", scan=conv_j[jj]),
+                        m_file.get("scan_value_2", scan=conv_j[jj]),
                         m_file.get(output_name, scan=conv_j[jj]),
                     )
                     for jj in range(len(conv_j))
                 ]).T
 
-                label = f"{get_label(scan_var.out_name)} = {scan_1_var_array[0]}"
+                label = f"{get_label(scan_var.fname)} = {scan_1_var_array[0]}"
                 ax.plot(scan_2_var_array, output_array, "--o", label=label)
 
             ax.set_ylabel(get_label(output_name), fontsize=y_axis.font_size)
-            fig.legend(loc="best", fontsize=x_axis.legend_size)
+            fig.legend(fontsize=x_axis.legend_size)
 
-        ax.set_xlabel(get_label(scan_2_var.out_name), fontsize=x_axis.font_size)
+        ax.set_xlabel(get_label(scan_2_var.fname), fontsize=x_axis.font_size)
 
         axis_manipulation(ax, axis=x_axis, index=index, contour=x_contour)
         axis_manipulation(ax, axis=y_axis, index=index, contour=y_contour)

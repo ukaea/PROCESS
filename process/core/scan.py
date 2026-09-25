@@ -35,7 +35,6 @@ class ScanVariable:
 
     number: int
     area: Area = field(repr=False)
-    _out_name_: str | None = None
 
 
 class Area(Enum):
@@ -82,13 +81,6 @@ class ScanVariables(ScanVariable, Enum):
         if "__" in self.name:
             return self.name.replace("__", "(") + ")"
         return self.name
-
-    @DynamicClassAttribute
-    def out_name(self):
-        """Output name"""
-        if self._out_name_ is None:
-            return self.fname
-        return self._out_name_
 
     def set(self, data: DataStructure, sweep_val: float):
         """Set value of scan variable
@@ -148,12 +140,6 @@ class ScanVariables(ScanVariable, Enum):
             return self._description_
         raise ValueError("Description not available")
 
-    def get_val(self, mfile, scan):
-        """Get value from mfile"""
-        # TODO this will fail for boundu/l we should write the scan variable to
-        # the mfile and use that directly (also replacign output names)
-        return mfile.get(self.out_name, scan=scan)
-
     aspect = (1, Area.P)
     pflux_div_heat_load_max_mw = (2, Area.D)
     p_plant_electric_net_required_mw = (3, Area.C)
@@ -168,7 +154,7 @@ class ScanVariables(ScanVariable, Enum):
     boundu__10 = (13, Area.NUM)
     f_j_tf_wp_critical_max = (14, Area.C)  # TODO is this needed
     rmajor = (16, Area.P)
-    b_tf_inboard_max = (17, Area.C, "b_tf_inboard_peak_symmetric")
+    b_tf_inboard_max = (17, Area.C)
     eta_cd_norm_hcd_primary_max = (18, Area.C)
     boundl__16 = (19, Area.NUM)
     t_burn_min = (20, Area.C)
