@@ -1,0 +1,1510 @@
+"""
+Most of derivation is basd on the book Reactor Analysis, Duderstadt and Hamilton, 1976,
+ISBN:9780471223634.
+
+The rest of the derivation are done in a paper, the conversion is as follows:
+|     quantity           |paper|this program |
+---------------------------------------------
+|indexing from            |  1  |      0      |
+|group index (1)          |  i  |      n      |
+|group index (2)          |  j  | basis_group |
+|group index (3)          |     |      k      |
+|group index (4)          |  g  |      i      |
+|layer index (1)          |  m  |  num_layer  |
+|layer index (2)          |l=m+1| num_layer+1 |
+|layer index (3)          |  k  |      k      |
+|total number of groups(1)|  N  |self.n_groups|
+|total number of layers(2)|  M  |self.n_layers|
+The reason for this deviation in variable names is because of code style,
+e.g. n and g are more descriptive (*n*umber and *g*roup) indices, and hence
+is the most frequently used letter for group index; while capital letters are
+frowned upon as standalone python variables, so aren't used in the program.
+This retains maintainability without having to refer to the paper.
+(Meanwhile, it is customary to use i,j,k,l,m as mathematical indices in
+academic publications)
+"""
+
+import functools
+import inspect
+import warnings
+from collections.abc import Callable, Iterable
+from tabulate import tabulate
+from dataclasses import asdict, dataclass
+from itertools import pairwise
+
+import numpy as np
+from matplotlib import pyplot as plt
+from numpy import typing as npt
+from scipy import optimize
+
+from process.core.exceptions import ProcessValidationError, ProcessValueError
+from process.models.neutronics.data import N_A, MaterialMacroInfo
+
+
+def negexp(x):
+    """Shorthand for a function that exponentiates -x rather than x."""
+    return np.exp(-x)
+
+
+def summarize_values(func):
+    """
+    Keep groupwise_func unchanged, but create a new method under a similar name
+    (but with the prefix "groupwise_" removed) which outputs the sum of every
+    groupwise value.
+    """
+    summary_method_name = func.__name__[10:]
+    # confirm this is a groupwise method
+    func_params = inspect.signature(func).parameters
+    if not (func.__name__.startswith("groupwise_") and "n" in func_params):
+        raise ValueError(
+            "The decorated method is designed to turn groupwise methods into "
+            "flux/integrated flux/current methods."
+        )
+
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        """Sum up the results across all groups."""
+        groupwise_func = getattr(self, func.__name__)
+        return np.sum(
+            [groupwise_func(n, *args, **kwargs) for n in range(self.n_groups)],
+            axis=0,
+        )
+
+    def wrapper_setattr(cls):
+        """
+        Attach the method that outputs the summed values of all of the
+        groupwise values to the same parent class.
+        """
+        setattr(cls, func.__name__, func)
+        setattr(cls, summary_method_name, wrapper)
+        return cls
+
+    # Instead of returning a function, we return a descriptor that registers itself later
+    return RegisterLater(wrapper_setattr)
+
+
+def gaussian_elim_solve_2x2(
+    matr: npt.NDArray[np.longdouble], vec: npt.NDArray[np.longdouble]
+) -> npt.NDArray[np.longdouble]:
+    """Manually solves a 2x2 system of simultaneous equations using
+    Gaussian elimination. matrccepts a long-double"""
+    matr = np.asarray(matr, dtype=np.longdouble).copy()
+    vec = np.asarray(vec, dtype=np.longdouble).copy()
+
+    # Scale each row so its largest element has magnitude 1.
+    scale = np.max(np.abs(matr), axis=1)
+    if np.any(scale == 0):
+        raise np.linalg.LinAlgError("Singular matrix")
+
+    matr /= scale[:, None]
+    vec /= scale
+
+    # Partial pivoting.
+    if abs(matr[1, 0]) > abs(matr[0, 0]):
+        matr[[0, 1]] = matr[[1, 0]]
+        vec[[0, 1]] = vec[[1, 0]]
+
+    # Eliminate matr[1, 0].
+    m = matr[1, 0] / matr[0, 0]
+    matr[1, 1] -= m * matr[0, 1]
+    vec[1] -= m * vec[0]
+
+    if matr[1, 1] == 0:
+        raise np.linalg.LinAlgError("Singular matrix")
+
+    # Back substitution.
+    x1 = vec[1] / matr[1, 1]
+    x0 = (vec[0] - matr[0, 1] * x1) / matr[0, 0]
+
+    return np.array([x0, x1], dtype=np.longdouble)
+
+
+class RegisterLater:
+    """Descriptor class"""
+
+    def __init__(self, installer):
+        """Modifies the class AFTER it has been created."""
+        self.installer = installer
+
+    def __set_name__(self, owner, name):
+        """Re-write method name"""
+        self.installer(owner)
+
+
+def extrapolation_length(diffusion_const: float) -> float:
+    """Get the extrapolation length of the final medium :math:`\\delta`.
+
+    Notes
+    -----
+    Diffusion theory breaks down at the vacuum boundary, where once the neutron exits,
+    it will travel indefinitely into free space, never to return. To counteract this
+    problem, we can approximate the neutron profile quite closely by assuming that the
+    flux goes to 0 at an extended boundary, rather than at the vacuum boundary.
+    THis yields a very close approximation. All of this equation is provided by
+    Duderstadt and Hamilton.
+    """
+    return 0.7104 * 3 * diffusion_const
+
+
+UNIT_LOOKUP = {
+    "linear_heating_density": "J m^-1",
+    "integrated_flux": "m^-1 s^-1",
+    "integrated_heating": "W m^-2",
+    "integrated_tritium_production": "mole m^-2 s^-1",
+    "flux": "m^-2 s^-1",
+    "current": "m^-2 s^-1",
+    "heating": "W m^-3",
+    "tritium_production": "mole m^-3 s^-1",
+}
+
+
+class NeutronFluxProfile:
+    """
+    Calculate the neutron flux, neutron current, and neutron heating in the
+    mirrored infinite-slab model, where each layer extend infinitely in y- and
+    z-directions, but has finite width in the x-direction. Each layer's
+    thickness is defined along the positive x-axis starting at 0, and then
+    reflected along x=0 to fill out the negative x-axis.
+    """
+
+    def __init__(
+        self,
+        flux: float,
+        layer_x: npt.NDArray[np.float64],
+        materials: Iterable[MaterialMacroInfo],
+    ):
+        """Initialize a particular geometry and neutron flux.
+
+        Parameters
+        ----------
+        flux:
+            Neutron flux directly emitted by the plasma, incident on the first
+            wall. unit: m^-2 s^-1
+
+        layer_x:
+            The x-coordinates of the right side of every layers. By definition,
+            the plasma is situated at x=0, so all values in layer_x must be >0.
+            E.g. layer_x[0] is the thickness of the first wall,
+            layer_x[1] is the thickness of the first wall + breeding zone,
+            etc.
+        materials:
+            Every layer's material information.
+
+        Attributes
+        ----------
+        interface_x:
+            The x-coordinates of every plasma-layer interfaces/ layer-layer
+            interface/ layer-void interface. For n_layers,
+            there will be the interface between the first layer and the plasma,
+            plus (n_layers - 1) interfaces between layers, plus the interface
+            between the final layer and the void into which neutrons are lost.
+            E.g. interface_x[0] = 0.0 = the plasma-fw interface.
+        n_layers:
+            Number of layers
+        n_groups:
+            Number of groups in the group structure
+        group_structure:
+            Energy bin edges, 1D array of len = n_groups+1
+        group_energy:
+            The average neutron energy of each group.
+        fluxes:
+            Particle flux (defined by number of neutrons 1 /s /m^2) entering
+            the first wall for the first time from the plasma. It's a vector
+            since each neutron group can have a different value.
+        init_neutron_energy:
+            Neutron's initial energy when it first exit the plasma, before any
+            downscattering or reactions. unit: J.
+        coefficients:
+            Coefficients that determine the flux shape (and therefore reaction
+            rates, neutron current, etc.) of each group. Each coefficient has
+            unit: [m^-2 s^-1]
+        l2:
+            Square of the characteristic diffusion length of each layer as
+            given by Reactor Analysis, Duderstadt and Hamilton. unit: [m^2]
+        diffusion_const:
+            Diffusion coefficient of each layer. unit: [m]
+        extended_boundary:
+            Extended boundary for each group. These values should be larger
+            than layer_x[-1].
+        num_iteration:
+            How many times the method has been called to solve all of the
+            neutron groups collectively.
+        downscatter_only:
+            A boolean to denote if all materials here only allow for
+            downscattering.
+        """
+        # layers
+        self.layer_x = np.array(layer_x).ravel()
+        if not (np.diff(self.layer_x) > 0).all():
+            raise ValueError("Model cannot have non-positive layer thicknesses.")
+
+        self.layer_x.flags.writeable = False
+        self.interface_x = np.array([0.0, *self.layer_x])
+        self.interface_x.flags.writeable = False
+
+        self.materials = tuple(materials)
+        if len(self.layer_x) != len(self.materials):
+            raise ProcessValidationError(
+                "The number of layers specified by self.materials must match "
+                "the number of x-positions specified by layer_x."
+            )
+        self.n_layers = len(self.materials)
+
+        # groups
+        fw_mat = self.materials[0]
+        for mat in self.materials[1:]:
+            if not np.allclose(
+                fw_mat.group_structure,
+                mat.group_structure,
+                atol=0,
+            ):
+                raise ProcessValidationError(
+                    "All material info must have the same group structure!"
+                )
+        self.n_groups = fw_mat.n_groups
+        self.group_structure = fw_mat.group_structure
+        self.group_energy = fw_mat.group_energy
+        self.incident_neutron_group = fw_mat.incident_neutron_group
+        self.fluxes = np.array([
+            flux if n == self.incident_neutron_group else 0.0
+            for n in range(self.n_groups)
+        ])
+
+        mat_name_list = [mat.name for mat in self.materials]
+        self.extended_boundary = self.layer_x[-1] + extrapolation_length(
+            self.materials[-1].diffusion_const
+        ) #  vector
+        self.coefficients = np.zeros(
+            [self.n_layers, self.n_groups, self.n_groups, 2],
+            dtype=np.longdouble,
+        )
+        self._is_solved = np.zeros(self.n_groups, dtype=bool)
+        self.num_iteration = [0 for n in range(self.n_groups)]
+        self.contains_upscatter = any(not mat.downscatter_only for mat in self.materials)
+
+        self.solve()
+
+    def tabulate(self) -> list[str]:
+        """
+        List the coefficients and bases as tables, indexed by num_layer.
+
+        Returns
+        -------
+        tables:
+            The m-th item on this list is a table showing all of the
+            negexp-exp/cos-sin bases that applies to the m-th layer of
+            material, and their corresponding coefficients.
+        """
+        tables = []
+        headers = [f"coef * basis pair {n}" for n in range(self.n_groups)]
+        for num_layer in range(self.n_layers):
+
+            bases = []
+            for n in range(self.n_groups):
+                l2 = self.materials[num_layer].l2[n]
+                if l2 > 0:
+                    bases.append((
+                        f"exp(-|x|/{np.sqrt(l2):.4g})",
+                        f"exp(|x|/{np.sqrt(l2):.4g})"
+                    ))
+                else:
+                    bases.append((
+                        f"cos(|x|/{np.sqrt(-l2):.4g})",
+                        f"sin(|x|/{np.sqrt(-l2):.4g})"
+                    ))
+
+            content = [[] for _ in range(self.n_groups)]
+            for n in range(self.n_groups):
+                content[n].append(f"contributed by group {n} neutrons =")
+                for basis_group, (coef_pair, basis_pair) in enumerate(
+                    zip(self.coefficients[num_layer, n], bases, strict=True)
+                ):
+                    str_repr = f"{coef_pair[0]:+.7e} * {basis_pair[0]} {coef_pair[1]:+.7e} * {basis_pair[1]}"
+                    content[n].append(str_repr)
+
+            tables.append(
+                tabulate(
+                    content, headers=[
+                        f"Neutron flux in layer {num_layer}",
+                    ] + headers,
+                )
+            )
+        return tables
+
+    def _groupwise_cs_values_in_layer(
+        self, n: int, num_layer: int, abs_x: float | npt.NDArray
+    ) -> npt.NDArray:
+        """
+        Calculate the num_layer-th layer n-th basis function at the specified
+        x position(s).
+        """
+        abs_x = np.longdouble(abs_x)
+        if self.materials[num_layer].l2[n] > 0:
+            l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
+            return np.array([negexp(abs_x / l), np.exp(abs_x / l)])
+        l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
+        return np.array([np.cos(abs_x / l), np.sin(abs_x / l)])
+
+    def _groupwise_cs_differential_in_layer(
+        self, n: int, num_layer: int, abs_x: float | npt.NDArray
+    ) -> npt.NDArray:
+        """
+        Differentiate the num_layer-th layer n-th basis function, and evaluate
+        it at position(s) x.
+        """
+        abs_x = np.longdouble(abs_x)
+        if self.materials[num_layer].l2[n] > 0:
+            l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
+            return np.array([-negexp(abs_x / l) / l, np.exp(abs_x / l) / l])
+        l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
+        return np.array([-np.sin(abs_x / l) / l, np.cos(abs_x / l) / l])
+
+    def _groupwise_cs_definite_integral_in_layer(
+        self, n: int, num_layer: int, x_lower: float | npt.NDArray, x_upper
+    ) -> npt.NDArray:
+        """
+        Integrate the num_layer-th layer n-th basis function
+        from x_lower to x_upper.
+        """
+        x_lower, x_upper = np.longdouble(x_lower), np.longdouble(x_upper)
+        if self.materials[num_layer].l2[n] > 0:
+            l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
+            return np.array([
+                l * negexp(x_upper / l) * np.expm1((x_upper-x_lower) / l),
+                l * np.exp(x_lower / l) * np.expm1((x_upper-x_lower) / l),
+            ])
+        l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
+        return np.array([
+            l * (np.sin(x_upper / l) - np.sin(x_lower / l)),
+            l * (np.cos(x_lower / l) - np.cos(x_upper / l)),  # reverse sign
+        ])
+
+    def _groupwise_flux_curvature_in_layer(
+        self, n: int, num_layer: int, abs_x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """Second derivative of the group n flux in num_layer at location x."""
+        abs_x = np.longdouble(abs_x)
+        trig_funcs = []
+        for basis_group, cs_coefs in enumerate(
+            self.coefficients[num_layer, n]
+        ):
+            l2 = self.materials[num_layer].l2[basis_group]
+            l = np.sqrt(abs(l2))  # noqa: E741
+            c, s = (negexp, np.exp) if l2 > 0 else (np.cos, np.sin)
+            trig_funcs.append(
+                cs_coefs @ [c(abs_x / l) / l2, s(abs_x / l) / l2]
+            )
+        return np.sum(trig_funcs, axis=0)
+
+    def _summation_shorthand(
+        self, n: int, num_layer: int,
+        func: Callable[[int, int, float], npt.NDArray[np.float64]],
+        x: float, max_group: int
+    ) -> float:
+        """
+        A repeating pattern of summation found in the code, so we extract it
+        to reduce duplication and increase robustness.
+
+        Parameters
+        ----------
+        n:
+            The group of interest, where neutrons are scattered into.
+        num_layer:
+            The material layer index.
+        func:
+            The function that takes in basis_group, num_layer, and x, then
+            evaluates to two scalars as the output.
+            It should have the signature of func(basis_group, num_layer, x)
+            since it should be one of the _groupwise..._in_layer() function
+            that takes in group index before the layer.
+        x:
+            The x-coordinate at which the function func has to be evaluated at.
+            (likely denotes an interface or the extended boundary.)
+
+        Returns
+        -------
+        sum:
+            A scalar.
+        """
+
+        def coef_pair(basis_group: int) -> npt.NDArray[np.float64]:
+            """
+            A quick function to get the coefficient pair at the specified
+            neutron group n, material layer num_layer, and in-scattering
+            neutron group basis_group. For paramters: see parent function.
+            """
+            return self.coefficients[num_layer, n, basis_group]
+
+        summation_sequence = [
+            coef_pair(basis_group) @ func(basis_group, num_layer, x)
+            for basis_group in range(max_group) if basis_group != n
+        ]
+        return np.sum(summation_sequence, axis=-1)
+
+    def _propagate_coefs_to_next_layer(self, n: int, num_layer: int) -> tuple[npt.NDArray, npt.NDArray[np.float64]]:
+        """
+        Infer this layer's main basis functions' coefficients
+        using using the previous layer's basis functions.
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        m:
+            The matrix m that forms part of the vec2 = (m*vec1 + v) equation.
+        v:
+            The vector v that forms part of the vec2 = (m*vec1 + v) equation.
+        """
+        xm = self.layer_x[num_layer]
+
+        this_mat, next_mat = self.materials[num_layer: num_layer+2]
+        a_mmn = np.array([
+            self._groupwise_cs_values_in_layer(n, num_layer, xm),
+            this_mat.diffusion_const[n]
+            * self._groupwise_cs_differential_in_layer(n, num_layer, xm),
+        ])
+        a_lmn = np.array([
+            self._groupwise_cs_values_in_layer(n, num_layer + 1, xm),
+            next_mat.diffusion_const[n]
+            * self._groupwise_cs_differential_in_layer(n, num_layer + 1, xm),
+        ])
+        det_a_lmn = next_mat.diffusion_const[n] / np.sqrt(
+            abs(next_mat.l2[n])
+        )
+        if next_mat.l2[n] > 0:
+            det_a_lmn *= 2
+        inv_a_lmn = 1 / det_a_lmn * (a_lmn[::-1, ::-1].T * [[1, -1], [-1, 1]])
+
+        b_mmn = np.array([
+            self._summation_shorthand(
+                n,
+                num_layer,
+                self._groupwise_cs_values_in_layer,
+                xm,
+                n if this_mat.downscatter_only else self.n_groups,
+            ),
+            this_mat.diffusion_const[n]
+            * self._summation_shorthand(
+                n,
+                num_layer,
+                self._groupwise_cs_differential_in_layer,
+                xm,
+                n if this_mat.downscatter_only else self.n_groups,
+            ),
+        ])
+        b_lmn = np.array([
+            self._summation_shorthand(
+                n,
+                num_layer + 1,
+                self._groupwise_cs_values_in_layer,
+                xm,
+                n if next_mat.downscatter_only else self.n_groups,
+            ),
+            next_mat.diffusion_const[n]
+            * self._summation_shorthand(
+                n,
+                num_layer + 1,
+                self._groupwise_cs_differential_in_layer,
+                xm,
+                n if next_mat.downscatter_only else self.n_groups,
+            ),
+        ])
+
+        m = inv_a_lmn @ a_mmn
+        v = inv_a_lmn @ (b_mmn - b_lmn)
+        return m, v
+
+    def _get_all_propagation_operator(
+        self, n: int
+    ) -> tuple[list[npt.NDArray], list[npt.NDArray[np.float64]]]:
+        """Get all of the m matrix and v vector, as two lists.
+
+        Parameters
+        ----------
+        n:
+            The neutron group index whose propagation operators that we want.
+
+        Returns
+        -------
+        m_list:
+            A list of m matrices, starting from subscript 1 to subscript
+            self.n_layers-1, each with shape (2, 2)
+        v_list:
+            A list of v vectors, starting from subscript 1 to subscript
+            self.n_layers-1, each with shape (2,)
+        """
+        m_list, v_list = [], []
+        for num_layer in range(self.n_layers - 1):
+            m, v = self._propagate_coefs_to_next_layer(n, num_layer)
+            m_list.append(m)
+            v_list.append(v)
+        return m_list, v_list
+
+    def solve(self):
+        """Alias for solving the highest lethargy group."""
+        return self.solve_group_n(self.n_groups - 1)
+
+    def solve_group_n(self, n: int) -> None:
+        """
+        Solve the n-th group of neutron's diffusion equation, where n <=
+        n_groups-1. Store the solved constants in self.extended_boundary[n],
+        and self.coefficients[:, n].
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose constants are being solved.
+            The allowed range of values = range(0, self.n_groups). Therefore,
+            n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
+        """
+        if n not in range(self.n_groups):
+            raise ValueError(
+                f"n must be a positive integer between 0 and {self.n_groups - 1}!"
+            )
+        if n > 0 and not self._is_solved[n - 1]:
+            self.solve_group_n(n - 1)
+        if self._is_solved[n]:
+            return  # skip if it has already been solved.
+        # Included below: For future implementation to allow solving
+        # non-down-scatter-only systems by iterating.
+        if self.contains_upscatter:
+            raise NotImplementedError(
+                "This program has not been validated against systems "
+                "containing up-scatter yet."
+            )  # Sum over the addition in neutron flux due to the 2nd, 3rd, 4th
+            # etc. generation of neutrons, which should eventually converge.
+        for num_layer, mat in enumerate(self.materials):
+            if mat.diffusion_const[n] > self.layer_x[num_layer]:
+                warnings.warn(
+                    f"Calculation of flux in group {n} may be inaccurate as "
+                    f"layer {num_layer}: {mat} is thinner than "
+                    r"λ_{tr} "
+                    f"of group {n}.",
+                    stacklevel=2,
+                )
+
+        # Determine coefficients[0, n, n] by boundary conditions:
+        # top row enforces current at (x=0) = source current,
+        # bottom row enforces flux = 0 at the extended boundary.
+        top_row = self._groupwise_cs_differential_in_layer(n, 0, 0)
+        y = -(
+            self.fluxes[n] / self.materials[0].diffusion_const[n]
+        ) - self._summation_shorthand(
+            n, 0, self._groupwise_cs_differential_in_layer, 0.0,
+            self.n_groups if (
+                not self.materials[0].downscatter_only and self.num_iteration[n]
+            ) else n
+        )
+
+        m_list, v_list = self._get_all_propagation_operator(n)
+        affine_transform_matrix_stack = multiply_2_2_matrices(*m_list[::-1])
+        affine_transformed_column_vector = np.sum(
+            [
+                multiply_2_2_matrices(*m_list[:k:-1]) @ v_list[k]
+                for k in range(self.n_layers - 1)
+            ]
+            or [[0, 0]],
+            axis=0,
+        )
+
+        bot_row = (
+            self._groupwise_cs_values_in_layer(
+                n, self.n_layers - 1, self.extended_boundary[n]
+            )
+            @ affine_transform_matrix_stack
+        )
+        z = -(
+            self._groupwise_cs_values_in_layer(
+                n, self.n_layers - 1, self.extended_boundary[n]
+            )
+            @ affine_transformed_column_vector
+        ) - self._summation_shorthand(
+            n,
+            self.n_layers - 1,
+            self._groupwise_cs_values_in_layer,
+            self.extended_boundary[n],
+            self.n_groups if (
+                not self.materials[0].downscatter_only and self.num_iteration[n]
+            ) else n,
+        )
+        eqn_32_matrix = np.array([top_row, bot_row])
+        eqn_32_vector = np.array([y, z])
+        self.coefficients[0, n, n] = gaussian_elim_solve_2x2(
+            eqn_32_matrix, eqn_32_vector
+        )
+
+        for num_layer in range(self.n_layers - 1):
+            self.coefficients[num_layer + 1, n, n] = (
+                m_list[num_layer] @ self.coefficients[num_layer, n, n]
+                + v_list[num_layer]
+            )
+        
+        init_coefs = self.coefficients[:, n, n].flatten()
+
+        def _set_coefficients(
+            input_vector: Iterable[float | np.double | np.longdouble]
+        ) -> None:
+            """
+            Set the main diagonals coefficients. Force input float vector's
+            floats into np.longdouble format if necessary.
+            """
+            self.coefficients[:, n, n] = np.asarray(
+                input_vector, dtype=np.longdouble
+            ).reshape(self.n_layers, 2)
+            self._update_off_diag_coefs_of_column_n(n)
+
+        def objective(coefficients_vector) -> tuple[npt.NDArray[float], npt.NDArray]:
+            _set_coefficients(coefficients_vector)
+            cond, jac = self._groupwise_fitness(n)
+            return (
+                np.asarray(cond, dtype=float),
+                np.asarray(jac, dtype=float),
+            )
+
+        _set_coefficients(init_coefs)
+        results = optimize.root(
+            objective, x0=np.asarray(init_coefs, dtype=float), jac=True
+        )
+        _set_coefficients(results.x)
+        extended_x_flux = self.groupwise_neutron_flux_in_layer(
+            n, self.n_layers-1, self.extended_boundary[n]
+        )
+        if not np.isclose(extended_x_flux, 0):
+            warnings.warn(
+                "Boundary condition of flux (at extended_boundary) = 0 "
+                f"is not adhered to for group {n}! "
+                f"Instead flux = {extended_x_flux}."
+            )
+        # non-negativity check for layer = num_layer:
+        for num_layer in range(self.n_layers):
+            if (
+                self.groupwise_neutron_flux_in_layer(n, num_layer, self.interface_x[num_layer]) < 0
+            ) or (
+                self.groupwise_neutron_flux_in_layer(n, num_layer, self.layer_x[num_layer]) < 0
+            ):
+                warnings.warn(
+                    "Negative flux found when solving for "
+                    f"group {n} in layer {num_layer}! Perhaps due to "
+                    "an unphysical cross-section value?",
+                    stacklevel=2,
+                )
+        self.num_iteration[n] += 1
+        if self.contains_upscatter:
+            if not ...:
+                self._is_solved[n] = True
+        else:
+            self._is_solved[n] = True
+        return
+
+    def _update_off_diag_coefs_of_column_n(self, leakage_basis: int) -> None:
+        """
+        Calculate the off-diagonal coefficients on column n.
+        Inferred from the formula in Appendix A of the paper.
+
+        Parameters
+        ----------
+        leakage_basis:
+            The group number whose main diagonal coefficients has just been
+            updated, and hence its neutron leakage into other groups (in the
+            shape of it's unique basis) has to be updated.
+
+        Variables used
+        --------------
+        mat.sigma_source:
+            :propto: inscatter_group neutrons scattered into n
+        self.coefficients:
+            the number of inscatter_group neutrons in the shape
+            of group basis_group's basis.
+        Note
+        ----
+        Updating a coef on the main diagonal will affect the values of its
+        entire column (in-scatter from that basis STAYS in that basis, i.e.
+        the same column.)
+        """
+        for num_layer, mat in enumerate(self.materials):
+            include_upscatter = (not mat.downscatter_only) and self.num_iteration[leakage_basis]
+            leakage_into_min_group = 0 if include_upscatter else leakage_basis
+
+            for n in range(leakage_into_min_group, self.n_groups):
+                if n != leakage_basis:
+                    if include_upscatter:
+                        in_scatter_groups = np.array([
+                            i for i in range(0, self.n_groups) if i != n],
+                            dtype=int,
+                        )
+                    else:
+                        in_scatter_groups = np.array([
+                            i for i in range(leakage_basis, n) if i != n],
+                            dtype=int,
+                        )
+                    self.coefficients[num_layer, n, leakage_basis] = np.sum(
+                        mat.sigma_source[in_scatter_groups, n, None]
+                        * self.coefficients[
+                            num_layer, in_scatter_groups, leakage_basis
+                        ],
+                        axis=0,
+                    ) * mat.conversion_factor[n, leakage_basis]
+
+    def _groupwise_fitness(
+            self, n: int, jac: bool=True
+        ) -> tuple[npt.NDArray[np.longdouble], npt.NDArray]:
+            """
+            Calculate how far the current values of coefficients deviates
+            from the 2*n_layers equations, forming a vector with len=
+            2*n_layers. A jacobian of shape (2*n_layers, 2*n_layers)
+            is also produced.
+
+            Parameters
+            ----------
+            n:
+                The group that we want to evaluate the fitness for.
+
+            Returns
+            -------
+            conditions:
+                A 2*n_layers vector corresponding to the difference between
+                the LHS and RHS of the 2*n_layers equations
+            jacobians:
+                A 2*n_layers x 2*n_layers matrix, row i column j denotes
+                how much steeply does variable j affect condition i. The
+                variables are arranged as self.coefficients[:, n, n].flatten().
+            """
+            conditions = np.zeros([2 * self.n_layers], dtype=np.longdouble)
+            jacobians = np.zeros(
+                [2 * self.n_layers, 2 * self.n_layers],
+                dtype=np.longdouble,
+            )
+
+            # Net current at origin equal incident flux on that group.
+            conditions[0] = (
+                self.groupwise_neutron_current_through_interface(n, 0)
+                - self.fluxes[n]
+            )
+            jacobians[0, :2] = (
+                self._groupwise_cs_differential_in_layer(
+                    n, 0, 0.0
+                )
+            )
+
+            for num_layer in range(self.n_layers - 1):
+                x = self.layer_x[num_layer]
+
+                i = 2 * num_layer
+                # Enforce flux continuity at self.interface[num_layer]
+                conditions[i + 1] = (
+                    self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+                    - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
+                )
+                jacobians[i + 1, i:i + 2] = self._groupwise_cs_values_in_layer(n, num_layer, x)
+                jacobians[i + 1, i + 2:i + 4] = -self._groupwise_cs_values_in_layer(n, num_layer + 1, x)
+
+                # Enforce current continuity at self.interface[num_layer]
+                conditions[i + 2] = (
+                    self.groupwise_neutron_current_in_layer(n, num_layer, x)
+                    - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
+                )
+                jacobians[i + 2, i:i + 2] = self._groupwise_cs_differential_in_layer(n, num_layer, x)
+                jacobians[i + 2, i + 2:i + 4] = -self._groupwise_cs_differential_in_layer(n, num_layer + 1, x)
+
+            # Enforce zero flux at extended boundary
+            conditions[2 * self.n_layers - 1] = self.groupwise_neutron_flux_in_layer(
+                n, self.n_layers - 1, self.extended_boundary[n]
+            )
+            jacobians[2 * self.n_layers - 1, 2 * self.n_layers - 2:] = (
+                self._groupwise_cs_values_in_layer(
+                    n, self.n_layers-1, self.extended_boundary[n]
+                )
+            )
+            return conditions, jacobians
+
+
+    def _check_if_in_layer(
+        self, x: npt.NDArray[np.float64], num_layer: int
+    ) -> npt.NDArray[bool]:
+        abs_x = abs(x)
+        if num_layer == (self.n_layers - 1):
+            return np.logical_and(
+                self.interface_x[num_layer] <= abs_x,
+                abs_x <= self.interface_x[num_layer + 1],
+            )
+        if num_layer == self.n_layers:
+            return abs_x > self.interface_x[-1]
+        return np.logical_and(
+            self.interface_x[num_layer] <= abs_x,
+            abs_x <= self.interface_x[num_layer + 1],
+        )
+
+    @summarize_values
+    def groupwise_neutron_flux_at(
+        self, n: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """
+        Neutron flux [m^-2 s^-1] anywhere. Neutron flux is assumed to be
+        unperturbed once it leaves the final layer.
+
+        Parameters
+        ----------
+        n:
+            Neutron group index. n <= n_groups - 1.
+            Therefore n=0 shows the heating for group 1, n=1 for group 2, etc.
+        x:
+            The depth where we want the neutron flux [m]. Neutron flux at
+            infinity is assumed to be the same as the neutron flux at the
+            nearest layer-void interface. This is achieved by clipping all out-
+            of-bounds x back to the the nearest interface_x.
+        """
+        if np.isscalar(x):
+            return self.groupwise_neutron_flux_at(n, [x])[0]
+        x = np.asarray(x)
+
+        out_flux = np.zeros_like(x, dtype=float)
+        for num_layer in range(self.n_layers + 1):
+            in_layer = self._check_if_in_layer(x, num_layer)
+            if in_layer.any():
+                out_flux[in_layer] = self.groupwise_neutron_flux_in_layer(
+                    n, num_layer, x[in_layer]
+                )
+        return out_flux
+
+    @summarize_values
+    def groupwise_neutron_current_at(
+        self, n: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """
+        Neutron current [m^-2 s^-1]. Neutron current is assumed to be
+        unperturbed once it leaves the final layer.
+
+        Parameters
+        ----------
+        n:
+            Neutron group index. n <= n_groups - 1.
+            Therefore n=0 shows the neutron current for group 1, n=1 for group 2, etc.
+        x:
+            The depth where we want the neutron current [m]. Neutron current at
+            infinity is assumed to be the same as the neutron flux at the
+            nearest layer-void interface; this is achieved by clipping all out-
+            of-bounds x back to the the nearest interface_x.
+        """
+        if np.isscalar(x):
+            return self.groupwise_neutron_current_at(n, [x])[0]
+        x = np.asarray(x)
+
+        current = np.zeros_like(x, dtype=float)
+        for num_layer in range(self.n_layers + 1):
+            in_layer = self._check_if_in_layer(x, num_layer)
+            if in_layer.any():
+                current[in_layer] = self.groupwise_neutron_current_in_layer(
+                    n, num_layer, x[in_layer]
+                )
+        return current
+
+    @summarize_values
+    def groupwise_neutron_heating_at(
+        self, n: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """
+        Neutron heating [W m^-3] of the n-th group at location x [m].
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose heating is being evaluated.
+            n <= n_groups - 1.
+            Therefore n=0 shows the heating for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the neutron heating for.
+        x:
+            The position where the neutron heating has to be evaluated.
+
+        Returns
+        -------
+        heating:
+            Volumetric neutron heating due to group n's neutrons at x.
+            unit: [W m^-3]
+        """
+        if np.isscalar(x):
+            return self.groupwise_neutron_heating_at(n, [x])[0]
+
+        out_heat = np.zeros_like(x, dtype=float)
+        for num_layer in range(self.n_layers + 1):
+            in_layer = self._check_if_in_layer(x, num_layer)
+            if in_layer.any():
+                out_heat[in_layer] = self.groupwise_neutron_heating_in_layer(
+                    n, num_layer, x[in_layer]
+                )
+        return out_heat
+
+    @summarize_values
+    def groupwise_tritium_production_at(
+        self, n: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """
+        Volumetric tritium production rate [mole m^-3 s^-1] of the n-th group in the
+        specified layer, at location x [m].
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose tritium production rate is
+            being evaluated. n <= n_groups - 1. Therefore n=0 shows the tritium
+            production rate for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the volumetric tritium
+            production rate for.
+        x:
+            The position where the volumetric tritium production rate has to
+            be evaluated.
+
+        Returns
+        -------
+        tritium_production:
+            Volumetric tritium production rate due to group n's neutrons at x.
+            unit: [mole m^-3 s^-1]
+        """
+        if np.isscalar(x):
+            return self.groupwise_tritium_production_at(n, [x])[0]
+
+        tritium_out = np.zeros_like(x, dtype=float)
+        for num_layer in range(self.n_layers + 1):
+            in_layer = self._check_if_in_layer(x, num_layer)
+            if in_layer.any():
+                tritium_out[in_layer] = self.groupwise_tritium_production_in_layer(
+                    n, num_layer, x[in_layer]
+                )
+        return tritium_out
+
+    @summarize_values
+    def groupwise_neutron_flux_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """
+        Neutron flux[m^-2 s^-1] of the n-th group in the specified layer,
+        at location x [m].
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose flux is being evaluated.
+            n <= n_groups - 1.
+            Therefore n=0 shows the heating for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the neutron flux for.
+        x:
+            The position where the neutron flux has to be evaluated.
+
+        Returns
+        -------
+        flux:
+            Neutron flux at x meter from the first wall.
+        """
+        if num_layer == self.n_layers:
+            return self.groupwise_neutron_flux_in_layer(
+                n, self.n_layers - 1, np.sign(x) * self.layer_x[-1]
+            )
+        trig_funcs = []
+        max_groups = self.n_groups if self.contains_upscatter else n + 1
+        for basis_group in range(max_groups):
+            c_val, s_val = self._groupwise_cs_values_in_layer(
+                basis_group, num_layer, abs(x)
+            )
+            trig_funcs.extend([
+                self.coefficients[num_layer, n, basis_group, 0] * c_val,
+                self.coefficients[num_layer, n, basis_group, 1] * s_val,
+            ])
+        return np.sum(trig_funcs, axis=0)
+
+    @summarize_values
+    def groupwise_neutron_current_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """
+        Get the neutron current (right=positive, left=negative) in any layer.
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group that needs to be solved. n <= n_groups - 1.
+            Therefore n=0 shows the integrated flux for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the neutron current for.
+        x:
+            The depth where we want the neutron current [m].
+        """
+        if num_layer == self.n_layers:
+            return self.groupwise_neutron_current_in_layer(
+                n, self.n_layers - 1, np.sign(x) * self.layer_x[-1]
+            )
+        differentials = []
+        max_groups = self.n_groups if self.contains_upscatter else n + 1
+        for basis_group in range(max_groups):
+            c_diff, s_diff = self._groupwise_cs_differential_in_layer(
+                basis_group, num_layer, abs(x)
+            )
+            differentials.extend([
+                self.coefficients[num_layer, n, basis_group, 0] * c_diff,
+                self.coefficients[num_layer, n, basis_group, 1] * s_diff,
+            ])
+
+        return (
+            -self.materials[num_layer].diffusion_const[n]
+            * np.sum(differentials, axis=0)
+            * _get_sign_of(x)
+        )
+
+    @summarize_values
+    def groupwise_neutron_heating_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """
+        Calculate volumetric heating (unit: [W m^-3]) in the specified group
+        and layer.
+
+        We do not recommend manually integrating this curve by sampling points
+        in [self.interface_x[n], self.interface_x[n+1]] to get the total amount
+        of heating across this entire layer, per unit area. Instead, use
+        groupwise_integrated_heating_in_layer/ integrated_heating_in_layer,
+        which is faster and more accurate.
+
+        Parameters
+        ----------
+        n:
+            Neutron group index. n <= n_groups - 1.
+            Therefore n=0 shows the heating for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the neutron heating for.
+        x:
+            The depth where we want the neutron heating [m].
+
+        Returns
+        -------
+        :
+            The neutron heating in that specific layer at position x, due to
+            group n's neutrons.
+        """
+        return self.groupwise_linear_heating_density_in_layer(
+            n, num_layer
+        ) * self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+
+    @summarize_values
+    def groupwise_tritium_production_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """
+        Calculate volumetric tritium production rate (unit: [mole m^-3 s^-1]) in
+        the specified group and layer.
+
+        We do not recommend manually integrating this curve by sampling points
+        in [self.interface_x[n], self.interface_x[n+1]] to get the total amount
+        of tritium production rate across this entire layer, per unit area.
+        Instead, use groupwise_integrated_tritium_production_in_layer/
+        integrated_tritium_production_in_layer, which is faster and
+        more accurate.
+
+        Parameters
+        ----------
+        n:
+            Neutron group index. n <= n_groups - 1. Therefore n=0 shows the
+            tritium production rate for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the tritium production
+            rate for.
+        x:
+            The depth where we want the tritium production rate [m].
+
+        Returns
+        -------
+        :
+            The tritium production rate in that specific layer at position x,
+            due to group n's neutrons. unit: [mole m^-3 s^-1]
+        """
+        if num_layer == self.n_layers:
+            tritium_production_macro_xs_as_mole = 0.0
+        else:
+            tritium_production_macro_xs_as_mole = (
+                self.materials[num_layer].sigma_triton[n] / N_A
+            )
+        return (
+            tritium_production_macro_xs_as_mole
+            * self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+        )
+
+    # scalar values (one such float per neutron group, and per layer.)
+    @summarize_values
+    def groupwise_integrated_flux_in_layer(self, n: int, num_layer: int) -> float:
+        """
+        Calculate the integrated flux[m^-1 s^-1], which can be mulitplied to any
+        macroscopic cross-section [m^-1] to get the reaction rate [s^-1] in
+        any layer specified.
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group that needs to be solved. n <= n_groups - 1.
+            Therefore n=0 shows the integrated flux for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the integrated flux for.
+        """
+        if num_layer == self.n_layers:
+            return np.nan
+        integrals = []
+        # set integration limits
+        x_start = self.layer_x[num_layer - 1]
+        if num_layer == 0:
+            x_start = 0.0
+        x_end = self.layer_x[num_layer]
+
+        max_groups = self.n_groups if self.contains_upscatter else n + 1
+        for basis_group in range(max_groups):
+            c_int, s_int = self._groupwise_cs_definite_integral_in_layer(
+                basis_group, num_layer, x_start, x_end
+            )
+            integrals.extend([
+                self.coefficients[num_layer, n, basis_group, 0] * c_int,
+                self.coefficients[num_layer, n, basis_group, 1] * s_int,
+            ])
+        return np.sum(integrals, axis=0)
+
+    @summarize_values
+    def groupwise_neutron_current_through_interface(
+        self, n: int, n_interface: int, *, default_to_inner_layer: bool = True
+    ) -> float:
+        """
+        Net current from left to right on the positive side of the model, at
+        the specified interface number.
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group that we want the current for. n <= n_groups - 1.
+            Therefore n=0 shows the neutron current for group 1, n=1 for group 2, etc.
+        n_interface:
+            The index of the interface that we want the net neutron current
+            through for.
+            E.g. for n_interface=0, that would be getting the current at the
+            plasma-fw interface. For n_interface=n_layers, that would be
+            getting the neutron current leaking from the final layer into the void.
+
+        Returns
+        -------
+        :
+            current in m^-2 s^-1
+        """
+        x = self.interface_x[n_interface]
+
+        if default_to_inner_layer:
+            if n_interface == 0:
+                return self.groupwise_neutron_current_in_layer(n, 0, x)
+            return self.groupwise_neutron_current_in_layer(n, n_interface - 1, x)
+        if n_interface == self.n_layers:
+            return self.groupwise_neutron_current_in_layer(n, self.n_layers - 1, x)
+        return self.groupwise_neutron_current_in_layer(n, n_interface, x)
+
+    @summarize_values
+    def groupwise_neutron_current_escaped(self, n: int) -> float:
+        """
+        Neutron current escaped from the breeding zone to outside the reactor.
+        Parameters
+        ----------
+        n:
+            The index of the neutron group that we want the current for. n <= n_groups - 1.
+            Therefore n=0 shows the neutron current for group 1, n=1 for group 2, etc.
+
+        Returns
+        -------
+        :
+            current in m^-2 s^-1
+        """
+        return self.groupwise_neutron_current_through_interface(n, self.n_layers)
+
+    @summarize_values
+    def groupwise_integrated_heating_in_layer(
+        self,
+        n: int,
+        num_layer: int,
+    ) -> float:
+        """
+        The total amount of heat produced (per unit area) due to neutron
+        heating across the entire num_layer-th layer. unit: [W m^-2]. It should
+        yield the same result as integrating the curve neutron_heating_in_layer
+        from self.interface_x[n] to self.interface_x[n+1].
+        """
+        if num_layer == self.n_layers:
+            return 0.0
+        return self.groupwise_linear_heating_density_in_layer(
+            n, num_layer
+        ) * self.groupwise_integrated_flux_in_layer(n, num_layer)
+
+    @summarize_values
+    def groupwise_integrated_tritium_production_in_layer(
+        self,
+        n: int,
+        num_layer: int,
+    ) -> float:
+        """
+        The total rate of tritium produced (per unit area) due to (n,t*)
+        reactions across the entire num_layer-th layer. unit: [mole m^-2 s^-1]. It should
+        yield the same result as integrating the curve tritium_production_in_layer
+        from self.interface_x[n] to self.interface_x[n+1].
+
+        Returns
+        -------
+        :
+            tritium production rate integrated across the entire layer.
+            unit: [mole m^-2 s^-1]
+        """
+        if num_layer == self.n_layers:
+            tritium_production_macro_xs_as_mole = 0.0
+        else:
+            tritium_production_macro_xs_as_mole = (
+                self.materials[num_layer].sigma_triton[n] / N_A
+            )
+        return (
+            tritium_production_macro_xs_as_mole
+            * self.groupwise_integrated_flux_in_layer(n, num_layer)
+        )
+
+    # Do NOT add a summarize_values decorator, as you can't add cross-sections
+    # from different groups together without first multiplying by flux to get reaction rate.
+    def groupwise_linear_heating_density_in_layer(
+        self,
+        n: int,
+        num_layer: int,
+    ) -> float:
+        """
+        unit: [J m^-1]
+        All reactions that does not lead to scattering are assumed to have
+        the full energy of the neutron deposited into the material.
+        Obviously this contradicts the assumption of neutrons retaining some of
+        its energy in the n,2n reaction, but we hope this is a small enough
+        error that we can overlook it.
+        """
+        if num_layer == self.n_layers:
+            return 0.0
+        mat = self.materials[num_layer]
+        non_scatter_xs = mat.sigma_t[n] - mat.sigma_s[n, :].sum()
+        lost_energy = (
+            (self.group_energy[n] - self.group_energy[n:]) * mat.sigma_s[n, n:]
+        ).sum()
+        return self.group_energy[n] * non_scatter_xs + lost_energy
+
+    @classmethod
+    def get_output_unit(cls, method: Callable) -> str | None:
+        """
+        Check a method's outputted quantity's unit
+        Parameters
+        ----------
+        method:
+            A method whose name we shall be inspecting and comparing against
+            UNIT_LOOKUP.
+        Returns
+        -------
+        :
+            If a match is found, return the unit as a string. Otherwise, return
+            None.
+        """
+        for quantity, unit in UNIT_LOOKUP.items():
+            if quantity in method.__name__:
+                return unit
+        return None
+
+    def plot(
+        self,
+        quantity: str = "flux",
+        ax: plt.Axes | None = None,
+        *,
+        plot_groups: bool = True,
+        symmetric: bool = True,
+        extend_plot_beyond_boundary: bool = True,
+        n_points: int = 100,
+    ):
+        """
+        Make a rough plot of the neutron flux.
+
+        Parameters
+        ----------
+        quantity:
+            Options of plotting which quantity: {"flux", "current", "heating"}.
+        ax:
+            A plt.Axes object to plot on.
+        n_points:
+            Number of points to be used for plotting.
+        symmetric:
+            Whether to plot from -x to x (symmetric), or from 0 to x
+            (right side only.)
+        plot_groups:
+            Whether to plot each individual group's neutron flux.
+            If True, a legend will be added to help label the groups.
+        """
+        self.solve()
+        ax = ax or plt.axes()
+        method_name = f"neutron_{quantity}_in_layer"
+        if quantity == "tritium_production":
+            method_name = "tritium_production_in_layer"
+        total_function = getattr(self, method_name)
+        unit = self.get_output_unit(total_function)
+        ylabel = f"{quantity}({unit})"
+
+        if plot_groups:
+            groupwise_function = getattr(self, f"groupwise_{method_name}")
+        x_ranges = _generate_x_range(
+            self.interface_x.copy(),
+            max(self.extended_boundary)
+            if extend_plot_beyond_boundary
+            else None,
+            min_total_num_points=n_points,
+            symmetric=symmetric,
+        )
+        for num_layer in range(self.n_layers + bool(extend_plot_beyond_boundary)):
+            if symmetric:
+                neg_x = next(x_ranges)
+                ax.plot(neg_x, total_function(num_layer, neg_x), color="black")
+            pos_x = next(x_ranges)
+            plot_dict = {"label": "total"} if num_layer == 0 else {}
+            ax.plot(
+                pos_x,
+                total_function(num_layer, pos_x),
+                color="black",
+                **plot_dict,
+            )
+            if plot_groups:
+                for n in range(self.n_groups):
+                    if symmetric:
+                        ax.plot(
+                            neg_x,
+                            groupwise_function(n, num_layer, neg_x),
+                            color=f"C{n}",
+                        )
+                    plot_dict = {"label": f"group {n}"} if num_layer == 0 else {}
+                    ax.plot(
+                        pos_x,
+                        groupwise_function(n, num_layer, pos_x),
+                        color=f"C{n}",
+                        **plot_dict,
+                    )
+        ax.legend()
+        if quantity == "tritium_production":
+            ax.set_title("Tritium production profile")
+        else:
+            ax.set_title(f"Neutron {quantity} profile")
+        ax.set_xlabel("Distance from the plasma-fw interface [m]")
+        ax.set_ylabel(ylabel)
+
+        # plotting the interfaces for ease of comprehension.
+        ylims = ax.get_ylim()
+        for (xmin, xmax), mat in zip(
+            pairwise(self.interface_x), self.materials, strict=False
+        ):
+            _plot_vertical_dotted_line(ax, xmin, ylims, symmetric=symmetric)
+            ax.text(np.mean([xmin, xmax]), 0, mat.name, ha="center", va="center")
+            if symmetric:
+                ax.text(
+                    -np.mean([xmin, xmax]),
+                    0,
+                    mat.name,
+                    ha="center",
+                    va="center",
+                )
+        _plot_vertical_dotted_line(ax, xmax, ylims, symmetric=symmetric)
+        return ax
+
+
+def _get_sign_of(x_values):
+    """
+    Get sign of any real number, but also forces 0.0 to be +ve and -0.0 to be -ve.
+    The neutron current for the first group (in a non-breeding/weakly breeding
+    scenario) is strongest at x=0, but have different signs when limit x-> 0^+
+    and limit x-> 0^-. This function allows the input x to behave like 0^+ when
+    it's =0.0 and like 0^- when it's =-0.0, giving the correct neutron current
+    at those locations, rather than setting the neutron current to zer0.
+    """
+    negatives = np.signbit(x_values)
+    return np.array(negatives, dtype=float) * -2 + 1
+
+
+def _plot_vertical_dotted_line(ax, x, ylims, *, symmetric: bool = True):
+    if symmetric:
+        ax.plot([-x, -x], ylims, color="black", ls="--", zorder=-1)
+    ax.plot([x, x], ylims, color="black", ls="--", zorder=-1)
+    return
+
+
+def _generate_x_range(
+    interface_x: npt.NDArray[np.float64],
+    extension_to_be_plotted: float | None = None,
+    *,
+    min_total_num_points: int = 100,
+    symmetric: bool = True,
+):
+    """Helper generator for finding the range of x-values to be plotted.
+
+    Parameters
+    ----------
+    interface_x:
+        The x-coordinates of each interface. It should be all-positive, and
+        ascending only.
+    extended_boundary:
+        extended boundary
+    min_total_num_points:
+        Approximate number of points to be plotted. Increase this number to increase the resolution
+    symmetric:
+        Whether to return two copies (one negative, one positive) of x-ranges
+        per layer.
+
+    Yields
+    -------
+    :
+        A generator of x-coordinates used for plotting, each of which falls
+        within the limit of the xmin and xmax of that layer, forming a total
+        of a minimum of min_total_num_points.
+        If symmetric=True, then the number of numpy arrays in the list
+        = 2*n_layers, where out_x_range[0] and out_x_range[1] are for the
+        negative and positive sides of the first layer respectively;
+        out_x_range[2] and out_x_range[3] are for the negative and positive
+        sides of the second layer respectively.
+        Otherwise, the number of numpy arrays in the list = n_layers.
+    """
+    full_x_range = np.linspace(
+        interface_x.min(), interface_x.max(), min_total_num_points
+    )
+    for xmin, xmax in pairwise(interface_x):
+        num_points = np.logical_and(xmin < full_x_range, full_x_range < xmax).sum() + 2
+        layer_x_range = np.linspace(xmin, xmax, num_points)
+        if symmetric:
+            yield -layer_x_range[::-1]
+        yield layer_x_range.copy()
+
+    if extension_to_be_plotted:
+        if (extension_to_be_plotted <= interface_x).any():
+            raise ValueError(
+                "The extension_to_be_plotted must extend beyond all of the "
+                "layers' x-coordinates!"
+            )
+        layer_x_range = np.array([
+            np.nextafter(xmax, np.inf),
+            extension_to_be_plotted,
+        ])
+        if symmetric:
+            yield -layer_x_range[::-1]
+        yield layer_x_range
+
+
+def multiply_2_2_matrices(*matrices):
+    """
+    Multiply a chain of 2x2 matrices from the left (smallest index) to the
+    right.
+
+    Parameters
+    ----------
+    Matrices:
+        An iterable of matrices.
+
+    Returns
+    -------
+    matrix:
+        A 2x2 matrix
+    """
+    seed_matrix = np.identity(2)
+    for matrix in matrices:
+        seed_matrix = seed_matrix @ matrix
+    return seed_matrix
