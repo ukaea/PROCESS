@@ -35,7 +35,6 @@ class ScanVariable:
 
     number: int
     area: Area = field(repr=False)
-    _out_name_: str | None = None
 
 
 class Area(Enum):
@@ -82,13 +81,6 @@ class ScanVariables(ScanVariable, Enum):
         if "__" in self.name:
             return self.name.replace("__", "(") + ")"
         return self.name
-
-    @DynamicClassAttribute
-    def out_name(self):
-        """Output name"""
-        if self._out_name_ is None:
-            return self.fname
-        return self._out_name_
 
     def set(self, data: DataStructure, sweep_val: float):
         """Set value of scan variable
@@ -148,12 +140,6 @@ class ScanVariables(ScanVariable, Enum):
             return self._description_
         raise ValueError("Description not available")
 
-    def get_val(self, mfile, scan):
-        """Get value from mfile"""
-        # TODO this will fail for boundu/l we should write the scan variable to
-        # the mfile and use that directly (also replacign output names)
-        return mfile.get(self.out_name, scan=scan)
-
     aspect = (1, Area.P)
     pflux_div_heat_load_max_mw = (2, Area.D)
     p_plant_electric_net_required_mw = (3, Area.C)
@@ -168,7 +154,7 @@ class ScanVariables(ScanVariable, Enum):
     boundu__10 = (13, Area.NUM)
     f_j_tf_wp_critical_max = (14, Area.C)  # TODO is this needed
     rmajor = (16, Area.P)
-    b_tf_inboard_max = (17, Area.C, "b_tf_inboard_peak_symmetric")
+    b_tf_inboard_max = (17, Area.C)
     eta_cd_norm_hcd_primary_max = (18, Area.C)
     boundl__16 = (19, Area.NUM)
     t_burn_min = (20, Area.C)
@@ -443,30 +429,6 @@ class Scan:
             "(isweep_2)",
             scan_data.isweep_2,
         )
-        process_output.ovarre(
-            constants.MFILE,
-            "Scanning first variable number",
-            "(nsweep)",
-            scan_data.nsweep,
-        )
-        process_output.ovarre(
-            constants.MFILE,
-            "Scanning second variable number",
-            "(nsweep_2)",
-            scan_data.nsweep_2,
-        )
-        process_output.ovarre(
-            constants.MFILE,
-            "Scanning second variable number",
-            "(nsweep_2)",
-            scan_data.nsweep_2,
-        )
-        process_output.ovarre(
-            constants.MFILE,
-            "Scanning second variable number",
-            "(nsweep_2)",
-            scan_data.nsweep_2,
-        )
 
     def scan_1d_write_point_header(self, iscan: int):
         """Scan 1d header"""
@@ -479,21 +441,34 @@ class Scan:
         process_output.oblnkl(constants.NOUT)
         process_output.ostars(constants.NOUT, 110)
 
+        current_value = self.data.scan.sweep[iscan - 1]
         process_output.write(
             constants.NOUT,
             f"***** Scan point {iscan} of {self.data.scan.isweep} : "
             f"{self.data.globals.xlabel}"
-            f", {self.data.globals.vlabel} = {self.data.scan.sweep[iscan - 1]} "
+            f", {self.data.globals.vlabel} = {current_value} "
             "*****",
         )
         process_output.ostars(constants.NOUT, 110)
         process_output.oblnkl(constants.MFILE)
         process_output.ovarre(constants.MFILE, "Scan point number", "(iscan)", iscan)
+        process_output.ovarre(
+            constants.MFILE,
+            "Scanning variable number",
+            "(nsweep)",
+            self.data.scan.nsweep,
+        )
+        process_output.ovarre(
+            constants.MFILE,
+            "Value of the scan variable at current iscan",
+            "(scan_value)",
+            current_value,
+        )
 
         print(
             f"Starting scan point {iscan} of {self.data.scan.isweep} : "
             f"{self.data.globals.xlabel} , {self.data.globals.vlabel}"
-            f" = {self.data.scan.sweep[iscan - 1]}"
+            f" = {current_value}"
         )
 
     def scan_2d_write_point_header(self, iscan, iscan_1, iscan_2):
@@ -505,27 +480,54 @@ class Scan:
         sv_1 = self.scan_select(self.data.scan.nsweep, self.data.scan.sweep, iscan_1)
 
         self.data.globals.vlabel = sv_1.fname
-        self.data.globals.xlabel = sv_1.data.description
+        self.data.globals.xlabel = sv_1.description
 
         sv_2 = self.scan_select(self.data.scan.nsweep_2, self.data.scan.sweep_2, iscan_r)
 
         self.data.globals.vlabel_2 = sv_2.fname
-        self.data.globals.xlabel_2 = sv_2.data.description
+        self.data.globals.xlabel_2 = sv_2.description
 
         process_output.oblnkl(constants.NOUT)
         process_output.ostars(constants.NOUT, 110)
+
+        current_value_dim1 = self.data.scan.sweep[iscan_1 - 1]
+        current_value_dim2 = self.data.scan.sweep_2[iscan_r - 1]
 
         process_output.write(
             constants.NOUT,
             f"***** 2D Scan point {iscan} of "
             f"{self.data.scan.isweep * self.data.scan.isweep_2} : "
-            f"{self.data.globals.vlabel} = {self.data.scan.sweep[iscan_1 - 1]} and"
-            f" {self.data.globals.vlabel_2} = {self.data.scan.sweep_2[iscan_r - 1]} "
+            f"{self.data.globals.vlabel} = {current_value_dim1} and"
+            f" {self.data.globals.vlabel_2} = {current_value_dim2} "
             "*****",
         )
         process_output.ostars(constants.NOUT, 110)
         process_output.oblnkl(constants.MFILE)
         process_output.ovarre(constants.MFILE, "Scan point number", "(iscan)", iscan)
+        process_output.ovarre(
+            constants.MFILE,
+            "Scanning variable number",
+            "(nsweep)",
+            self.data.scan.nsweep,
+        )
+        process_output.ovarre(
+            constants.MFILE,
+            "Value of the scan variable (dimension 1) at current iscan",
+            "(scan_value)",
+            current_value_dim1,
+        )
+        process_output.ovarre(
+            constants.MFILE,
+            "Scanning variable number",
+            "(nsweep_2)",
+            self.data.scan.nsweep_2,
+        )
+        process_output.ovarre(
+            constants.MFILE,
+            "Value of the scan variable (dimension 2) at current iscan",
+            "(scan_value_2)",
+            current_value_dim2,
+        )
 
         print(
             f"Starting scan point {iscan}:  {self.data.globals.xlabel}, "
@@ -545,12 +547,6 @@ class Scan:
                 "Number of scan points",
                 "(isweep)",
                 scan_data.isweep,
-            )
-            process_output.ovarre(
-                constants.MFILE,
-                "Scanning variable number",
-                "(nsweep)",
-                scan_data.nsweep,
             )
 
             scan_data.first_call_1d = False
