@@ -571,10 +571,6 @@ class NeutronFluxProfile:
         include_upscatter = self.contains_upscatter and self.num_iteration[n] != 0  # even if contains_upscatter, there is no point including the upscatter terms when num_iteration>0 because those main diagonal elements had not been populated, therefore would've contributed zero to on the same column.
         in_scatter_max_group = self.n_groups if include_upscatter else n
 
-        for basis_group in range(in_scatter_max_group):
-            if n != basis_group:
-                self._update_off_diagonal_coefficients(n, basis_group)
-
         # Determine coefficients[0, n, n] by boundary conditions:
         # top row enforces current at (x=0) = source current,
         # bottom row enforces flux = 0 at the extended boundary.
@@ -628,20 +624,22 @@ class NeutronFluxProfile:
             )
         
         init_coefs = self.coefficients[:, n, n]
-        in_scatter_min_group = 0 if include_upscatter else n + 1
+        in_scatter_min_group = 0 if include_upscatter else n
         def _set_coefficients(input_vector: Iterable[float]) -> None:
             self.coefficients[:, n, n] = input_vector.reshape(self.n_layers, 2)
-            basis_group = n
-            for incoming_basis in range(in_scatter_min_group, in_scatter_max_group):
-                if incoming_basis != n:
+            leakage_from_n = n
+            for output_neutron_group in range(in_scatter_min_group, self.n_groups):
+                if output_neutron_group != n:
                     self._update_off_diagonal_coefficients(
-                        incoming_basis, basis_group
+                        output_neutron_group, leakage_from_n
                     )
+                    # print(f"Updated coefficients {output_neutron_group}, {leakage_from_n}")
 
         def objective(coefficients_vector):
             _set_coefficients(coefficients_vector)
             return self._groupwise_fitness(n)
 
+        _set_coefficients(init_coefs)
         results = optimize.root(objective, x0=init_coefs.flatten(), jac=True)
         _set_coefficients(results.x)
         extended_x_flux = self.groupwise_neutron_flux_in_layer(
@@ -696,10 +694,10 @@ class NeutronFluxProfile:
         """
             
         for num_layer, mat in enumerate(self.materials):
-            if mat.downscatter_only:
-                in_scatter_min_group, in_scatter_max_group = basis_group, n
-            else:
+            if (not mat.downscatter_only) and self.num_iteration[n]:
                 in_scatter_min_group, in_scatter_max_group = 0, self.n_groups
+            else:
+                in_scatter_min_group, in_scatter_max_group = basis_group, n
             self.coefficients[num_layer, n, basis_group, 0] = fsum([
                 (
                     mat.sigma_source[inscatter_group, n]
