@@ -568,7 +568,7 @@ class NeutronFluxProfile:
                     stacklevel=2,
                 )
 
-        include_upscatter = self.contains_upscatter and self.num_iteration[n] != 0  # even if contains_upscatter, there is no point including the upscatter terms when num_iteration>0 because those main diagonal elements had not been populated, therefore would've contributed zero to on the same column.
+        include_upscatter = self.contains_upscatter and self.num_iteration[n]  # even if contains_upscatter, there is no point including the upscatter terms when num_iteration>0 because those main diagonal elements had not been populated, therefore would've contributed zero to on the same column.
         in_scatter_max_group = self.n_groups if include_upscatter else n
 
         # Determine coefficients[0, n, n] by boundary conditions:
@@ -624,16 +624,9 @@ class NeutronFluxProfile:
             )
         
         init_coefs = self.coefficients[:, n, n]
-        in_scatter_min_group = 0 if include_upscatter else n
         def _set_coefficients(input_vector: Iterable[float]) -> None:
             self.coefficients[:, n, n] = input_vector.reshape(self.n_layers, 2)
-            leakage_from_n = n
-            for output_neutron_group in range(in_scatter_min_group, self.n_groups):
-                if output_neutron_group != n:
-                    self._update_off_diagonal_coefficients(
-                        output_neutron_group, leakage_from_n
-                    )
-                    # print(f"Updated coefficients {output_neutron_group}, {leakage_from_n}")
+            self._update_off_diag_coefs_of_column_n(n)
 
         def objective(coefficients_vector):
             _set_coefficients(coefficients_vector)
@@ -668,9 +661,19 @@ class NeutronFluxProfile:
         self._is_solved[n] = True
         return
 
+    def _update_off_diag_coefs_of_column_n(self, leakage_from_n: int):
+        """Tmp function, expected tobe deleted later."""
+        include_upscatter = self.contains_upscatter and self.num_iteration[n]
+        in_scatter_min_group = 0 if include_upscatter else leakage_from_n
+        for output_neutron_group in range(in_scatter_min_group, self.n_groups):
+            if output_neutron_group != leakage_from_n:
+                self._update_off_diagonal_coefficients(
+                    output_neutron_group, leakage_from_n
+                )
+
     def _update_off_diagonal_coefficients(self, n: int, basis_group: int) -> None:
         """
-        Calculate the off-diagonal coefficients on row n.
+        Calculate the off-diagonal coefficients on column n.
         Inferred from the formula in Appendix A of the paper.
 
         Parameters
@@ -689,8 +692,8 @@ class NeutronFluxProfile:
         Note
         ----
         Updating a coef on the main diagonal will affect the values of its
-        entire column (in-scatter from that basis STAYS in that basis!)
-        Note that each row not only represents the neutron flux, but also the in-scatter (:propto: neutron flux).
+        entire column (in-scatter from that basis STAYS in that basis, i.e.
+        the same column.)
         """
             
         for num_layer, mat in enumerate(self.materials):
