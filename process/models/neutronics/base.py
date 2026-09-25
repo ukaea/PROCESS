@@ -568,9 +568,6 @@ class NeutronFluxProfile:
                     stacklevel=2,
                 )
 
-        include_upscatter = self.contains_upscatter and self.num_iteration[n]  # even if contains_upscatter, there is no point including the upscatter terms when num_iteration>0 because those main diagonal elements had not been populated, therefore would've contributed zero to on the same column.
-        in_scatter_max_group = self.n_groups if include_upscatter else n
-
         # Determine coefficients[0, n, n] by boundary conditions:
         # top row enforces current at (x=0) = source current,
         # bottom row enforces flux = 0 at the extended boundary.
@@ -578,7 +575,10 @@ class NeutronFluxProfile:
         y = -(
             self.fluxes[n] / self.materials[0].diffusion_const[n]
         ) - self._summation_shorthand(
-            n, 0, self._groupwise_cs_differential_in_layer, 0.0, in_scatter_max_group
+            n, 0, self._groupwise_cs_differential_in_layer, 0.0,
+            self.n_groups if (
+                not self.materials[0].downscatter_only and self.num_iteration[n]
+            ) else n
         )
 
         m_list, v_list = self._get_all_propagation_operator(n)
@@ -608,7 +608,9 @@ class NeutronFluxProfile:
             self.n_layers - 1,
             self._groupwise_cs_values_in_layer,
             self.extended_boundary[n],
-            in_scatter_max_group,
+            self.n_groups if (
+                not self.materials[0].downscatter_only and self.num_iteration[n]
+            ) else n,
         )
         eqn_32_matrix = np.array([top_row, bot_row])
         eqn_32_vector = np.array([y, z])
@@ -658,29 +660,24 @@ class NeutronFluxProfile:
                     stacklevel=2,
                 )
         self.num_iteration[n] += 1
-        self._is_solved[n] = True
+        if self.contains_upscatter:
+            if not ...:
+                self._is_solved[n] = True
+        else:
+            self._is_solved[n] = True
         return
 
-    def _update_off_diag_coefs_of_column_n(self, leakage_from_n: int):
-        """Tmp function, expected tobe deleted later."""
-        include_upscatter = self.contains_upscatter and self.num_iteration[n]
-        in_scatter_min_group = 0 if include_upscatter else leakage_from_n
-        for output_neutron_group in range(in_scatter_min_group, self.n_groups):
-            if output_neutron_group != leakage_from_n:
-                self._update_off_diagonal_coefficients(
-                    output_neutron_group, leakage_from_n
-                )
-
-    def _update_off_diagonal_coefficients(self, n: int, basis_group: int) -> None:
+    def _update_off_diag_coefs_of_column_n(self, leakage_basis: int) -> None:
         """
         Calculate the off-diagonal coefficients on column n.
         Inferred from the formula in Appendix A of the paper.
 
         Parameters
         ----------
-        n:
-            The group number whose main diagonal value has just been updated.
-
+        leakage_basis:
+            The group number whose main diagonal coefficients has just been
+            updated, and hence its neutron leakage into other groups (in the
+            shape of it's unique basis) has to be updated.
 
         Variables used
         --------------
@@ -695,37 +692,41 @@ class NeutronFluxProfile:
         entire column (in-scatter from that basis STAYS in that basis, i.e.
         the same column.)
         """
-            
         for num_layer, mat in enumerate(self.materials):
-            if (not mat.downscatter_only) and self.num_iteration[n]:
-                in_scatter_min_group, in_scatter_max_group = 0, self.n_groups
-            else:
-                in_scatter_min_group, in_scatter_max_group = basis_group, n
-            self.coefficients[num_layer, n, basis_group, 0] = fsum([
-                (
-                    mat.sigma_source[inscatter_group, n]
-                    * self.coefficients[
-                        num_layer, inscatter_group, basis_group, 0
-                    ]
-                )
-                for inscatter_group in range(
-                    in_scatter_min_group, in_scatter_max_group
-                )
-                if inscatter_group != n
-            ]) * mat.conversion_factor[n, basis_group]
+            include_upscatter = (not mat.downscatter_only) and self.num_iteration[leakage_basis]
+            leakage_into_min_group = 0 if include_upscatter else leakage_basis
 
-            self.coefficients[num_layer, n, basis_group, 1] = fsum([
-                (
-                    mat.sigma_source[inscatter_group, n]
-                    * self.coefficients[
-                        num_layer, inscatter_group, basis_group, 1
-                    ]
-                )
-                for inscatter_group in range(
-                    in_scatter_min_group, in_scatter_max_group
-                )
-                if inscatter_group != n
-            ]) * mat.conversion_factor[n, basis_group]
+            for n in range(leakage_into_min_group, self.n_groups):
+                if n != leakage_basis:
+                    if include_upscatter:
+                        in_scatter_min_group, in_scatter_max_group = 0, self.n_groups
+                    else:
+                        in_scatter_min_group, in_scatter_max_group = leakage_basis, n
+                    self.coefficients[num_layer, n, leakage_basis, 0] = fsum([
+                        (
+                            mat.sigma_source[inscatter_group, n]
+                            * self.coefficients[
+                                num_layer, inscatter_group, leakage_basis, 0
+                            ]
+                        )
+                        for inscatter_group in range(
+                            in_scatter_min_group, in_scatter_max_group
+                        )
+                        if inscatter_group != n
+                    ]) * mat.conversion_factor[n, leakage_basis]
+
+                    self.coefficients[num_layer, n, leakage_basis, 1] = fsum([
+                        (
+                            mat.sigma_source[inscatter_group, n]
+                            * self.coefficients[
+                                num_layer, inscatter_group, leakage_basis, 1
+                            ]
+                        )
+                        for inscatter_group in range(
+                            in_scatter_min_group, in_scatter_max_group
+                        )
+                        if inscatter_group != n
+                    ]) * mat.conversion_factor[n, leakage_basis]
 
     def _groupwise_fitness(
             self, n: int, jac: bool=True
