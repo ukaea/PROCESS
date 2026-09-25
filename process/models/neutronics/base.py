@@ -699,34 +699,22 @@ class NeutronFluxProfile:
             for n in range(leakage_into_min_group, self.n_groups):
                 if n != leakage_basis:
                     if include_upscatter:
-                        in_scatter_min_group, in_scatter_max_group = 0, self.n_groups
+                        in_scatter_groups = np.array([
+                            i for i in range(0, self.n_groups) if i != n],
+                            dtype=int,
+                        )
                     else:
-                        in_scatter_min_group, in_scatter_max_group = leakage_basis, n
-                    self.coefficients[num_layer, n, leakage_basis, 0] = fsum([
-                        (
-                            mat.sigma_source[inscatter_group, n]
-                            * self.coefficients[
-                                num_layer, inscatter_group, leakage_basis, 0
-                            ]
+                        in_scatter_groups = np.array([
+                            i for i in range(leakage_basis, n) if i != n],
+                            dtype=int,
                         )
-                        for inscatter_group in range(
-                            in_scatter_min_group, in_scatter_max_group
-                        )
-                        if inscatter_group != n
-                    ]) * mat.conversion_factor[n, leakage_basis]
-
-                    self.coefficients[num_layer, n, leakage_basis, 1] = fsum([
-                        (
-                            mat.sigma_source[inscatter_group, n]
-                            * self.coefficients[
-                                num_layer, inscatter_group, leakage_basis, 1
-                            ]
-                        )
-                        for inscatter_group in range(
-                            in_scatter_min_group, in_scatter_max_group
-                        )
-                        if inscatter_group != n
-                    ]) * mat.conversion_factor[n, leakage_basis]
+                    self.coefficients[num_layer, n, leakage_basis] = np.sum(
+                        mat.sigma_source[in_scatter_groups, n, None]
+                        * self.coefficients[
+                            num_layer, in_scatter_groups, leakage_basis
+                        ],
+                        axis=0,
+                    ) * mat.conversion_factor[n, leakage_basis]
 
     def _groupwise_fitness(
             self, n: int, jac: bool=True
