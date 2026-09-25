@@ -31,7 +31,6 @@ from collections.abc import Callable, Iterable
 from tabulate import tabulate
 from dataclasses import asdict, dataclass
 from itertools import pairwise
-from math import fsum
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -64,9 +63,9 @@ def summarize_values(func):
 
     @functools.wraps(func)
     def wrapper(self, *args, **kwargs):
-        """fsum up the results across all groups."""
+        """Sum up the results across all groups."""
         groupwise_func = getattr(self, func.__name__)
-        return matrix_fsum(
+        return np.sum(
             [groupwise_func(n, *args, **kwargs) for n in range(self.n_groups)],
             axis=0,
         )
@@ -84,27 +83,40 @@ def summarize_values(func):
     return RegisterLater(wrapper_setattr)
 
 
-def matrix_fsum(array: npt.NDArray, axis=None):
-    """Perform fsum, but ignoring one particular axis of a numpy array."""
-    if axis is None:
-        return fsum(array)
-    if axis < 0:
-        axis = np.ndim(array) + axis
-    if np.ndim(array) == 0:
-        return array
-    if np.ndim(array) == 1:
-        if axis != 0:
-            raise ValueError(
-                f"Shape of matrix is {np.shape(array)}, which "
-                f"cannot be summed over axis {axis}"
-            )
-        return fsum(array)
-    flattenable_array = np.transpose(
-        array, [axis] + [i for i in range(np.ndim(array)) if i != axis]
-    )
-    output_shape = np.shape(flattenable_array[0])
-    array_2d = np.array([val.flatten() for val in flattenable_array])
-    return np.array([fsum(summable) for summable in array_2d.T]).reshape(output_shape)
+def gaussian_elim_solve_2x2(
+    matr: npt.NDArray[np.longdouble], vec: npt.NDArray[np.longdouble]
+) -> npt.NDArray[np.longdouble]:
+    """Manually solves a 2x2 system of simultaneous equations using
+    Gaussian elimination. matrccepts a long-double"""
+    matr = np.asarray(matr, dtype=np.longdouble).copy()
+    vec = np.asarray(vec, dtype=np.longdouble).copy()
+
+    # Scale each row so its largest element has magnitude 1.
+    scale = np.max(np.abs(matr), axis=1)
+    if np.any(scale == 0):
+        raise np.linalg.LinAlgError("Singular matrix")
+
+    matr /= scale[:, None]
+    vec /= scale
+
+    # Partial pivoting.
+    if abs(matr[1, 0]) > abs(matr[0, 0]):
+        matr[[0, 1]] = matr[[1, 0]]
+        vec[[0, 1]] = vec[[1, 0]]
+
+    # Eliminate matr[1, 0].
+    m = matr[1, 0] / matr[0, 0]
+    matr[1, 1] -= m * matr[0, 1]
+    vec[1] -= m * vec[0]
+
+    if matr[1, 1] == 0:
+        raise np.linalg.LinAlgError("Singular matrix")
+
+    # Back substitution.
+    x1 = vec[1] / matr[1, 1]
+    x0 = (vec[0] - matr[0, 1] * x1) / matr[0, 0]
+
+    return np.array([x0, x1], dtype=np.longdouble)
 
 
 class RegisterLater:
@@ -264,7 +276,7 @@ class NeutronFluxProfile:
         ) #  vector
         self.coefficients = np.zeros(
             [self.n_layers, self.n_groups, self.n_groups, 2],
-            # TODO: extend this to np.longdouble later.
+            dtype=np.longdouble,
         )
         self._is_solved = np.zeros(self.n_groups, dtype=bool)
         self.num_iteration = [0 for n in range(self.n_groups)]
@@ -326,6 +338,7 @@ class NeutronFluxProfile:
         Calculate the num_layer-th layer n-th basis function at the specified
         x position(s).
         """
+        abs_x = np.longdouble(abs_x)
         if self.materials[num_layer].l2[n] > 0:
             l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([negexp(abs_x / l), np.exp(abs_x / l)])
@@ -339,6 +352,7 @@ class NeutronFluxProfile:
         Differentiate the num_layer-th layer n-th basis function, and evaluate
         it at position(s) x.
         """
+        abs_x = np.longdouble(abs_x)
         if self.materials[num_layer].l2[n] > 0:
             l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([-negexp(abs_x / l) / l, np.exp(abs_x / l) / l])
@@ -352,6 +366,7 @@ class NeutronFluxProfile:
         Integrate the num_layer-th layer n-th basis function
         from x_lower to x_upper.
         """
+        x_lower, x_upper = np.longdouble(x_lower), np.longdouble(x_upper)
         if self.materials[num_layer].l2[n] > 0:
             l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([
@@ -368,6 +383,7 @@ class NeutronFluxProfile:
         self, n: int, num_layer: int, abs_x: float | npt.NDArray
     ) -> float | npt.NDArray:
         """Second derivative of the group n flux in num_layer at location x."""
+        abs_x = np.longdouble(abs_x)
         trig_funcs = []
         for basis_group, cs_coefs in enumerate(
             self.coefficients[num_layer, n]
@@ -378,7 +394,7 @@ class NeutronFluxProfile:
             trig_funcs.append(
                 cs_coefs @ [c(abs_x / l) / l2, s(abs_x / l) / l2]
             )
-        return matrix_fsum(trig_funcs, axis=0)
+        return np.sum(trig_funcs, axis=0)
 
     def _summation_shorthand(
         self, n: int, num_layer: int,
@@ -423,7 +439,7 @@ class NeutronFluxProfile:
             coef_pair(basis_group) @ func(basis_group, num_layer, x)
             for basis_group in range(max_group) if basis_group != n
         ]
-        return matrix_fsum(summation_sequence, axis=-1)
+        return np.sum(summation_sequence, axis=-1)
 
     def _propagate_coefs_to_next_layer(self, n: int, num_layer: int) -> tuple[npt.NDArray, npt.NDArray[np.float64]]:
         """
@@ -583,7 +599,7 @@ class NeutronFluxProfile:
 
         m_list, v_list = self._get_all_propagation_operator(n)
         affine_transform_matrix_stack = multiply_2_2_matrices(*m_list[::-1])
-        affine_transformed_column_vector = matrix_fsum(
+        affine_transformed_column_vector = np.sum(
             [
                 multiply_2_2_matrices(*m_list[:k:-1]) @ v_list[k]
                 for k in range(self.n_layers - 1)
@@ -614,8 +630,7 @@ class NeutronFluxProfile:
         )
         eqn_32_matrix = np.array([top_row, bot_row])
         eqn_32_vector = np.array([y, z])
-        det_32 = np.linalg.det(eqn_32_matrix)
-        self.coefficients[0, n, n] = np.linalg.solve(
+        self.coefficients[0, n, n] = gaussian_elim_solve_2x2(
             eqn_32_matrix, eqn_32_vector
         )
 
@@ -625,17 +640,32 @@ class NeutronFluxProfile:
                 + v_list[num_layer]
             )
         
-        init_coefs = self.coefficients[:, n, n]
-        def _set_coefficients(input_vector: Iterable[float]) -> None:
-            self.coefficients[:, n, n] = input_vector.reshape(self.n_layers, 2)
+        init_coefs = self.coefficients[:, n, n].flatten()
+
+        def _set_coefficients(
+            input_vector: Iterable[float | np.double | np.longdouble]
+        ) -> None:
+            """
+            Set the main diagonals coefficients. Force input float vector's
+            floats into np.longdouble format if necessary.
+            """
+            self.coefficients[:, n, n] = np.asarray(
+                input_vector, dtype=np.longdouble
+            ).reshape(self.n_layers, 2)
             self._update_off_diag_coefs_of_column_n(n)
 
-        def objective(coefficients_vector):
+        def objective(coefficients_vector) -> tuple[npt.NDArray[float], npt.NDArray]:
             _set_coefficients(coefficients_vector)
-            return self._groupwise_fitness(n)
+            cond, jac = self._groupwise_fitness(n)
+            return (
+                np.asarray(cond, dtype=float),
+                np.asarray(jac, dtype=float),
+            )
 
         _set_coefficients(init_coefs)
-        results = optimize.root(objective, x0=init_coefs.flatten(), jac=True)
+        results = optimize.root(
+            objective, x0=np.asarray(init_coefs, dtype=float), jac=True
+        )
         _set_coefficients(results.x)
         extended_x_flux = self.groupwise_neutron_flux_in_layer(
             n, self.n_layers-1, self.extended_boundary[n]
@@ -718,7 +748,7 @@ class NeutronFluxProfile:
 
     def _groupwise_fitness(
             self, n: int, jac: bool=True
-        ) -> tuple[npt.NDArray[np.float64], npt.NDArray]:
+        ) -> tuple[npt.NDArray[np.longdouble], npt.NDArray]:
             """
             Calculate how far the current values of coefficients deviates
             from the 2*n_layers equations, forming a vector with len=
@@ -740,8 +770,11 @@ class NeutronFluxProfile:
                 how much steeply does variable j affect condition i. The
                 variables are arranged as self.coefficients[:, n, n].flatten().
             """
-            conditions = np.zeros([2 * self.n_layers])
-            jacobians = np.zeros([2 * self.n_layers, 2 * self.n_layers])
+            conditions = np.zeros([2 * self.n_layers], dtype=np.longdouble)
+            jacobians = np.zeros(
+                [2 * self.n_layers, 2 * self.n_layers],
+                dtype=np.longdouble,
+            )
 
             # Net current at origin equal incident flux on that group.
             conditions[0] = (
@@ -783,7 +816,7 @@ class NeutronFluxProfile:
                     n, self.n_layers-1, self.extended_boundary[n]
                 )
             )
-            return np.array(conditions), np.array(jacobians)
+            return conditions, jacobians
 
 
     def _check_if_in_layer(
@@ -979,7 +1012,7 @@ class NeutronFluxProfile:
                 self.coefficients[num_layer, n, basis_group, 0] * c_val,
                 self.coefficients[num_layer, n, basis_group, 1] * s_val,
             ])
-        return matrix_fsum(trig_funcs, axis=0)
+        return np.sum(trig_funcs, axis=0)
 
     @summarize_values
     def groupwise_neutron_current_in_layer(
@@ -1015,7 +1048,7 @@ class NeutronFluxProfile:
 
         return (
             -self.materials[num_layer].diffusion_const[n]
-            * matrix_fsum(differentials, axis=0)
+            * np.sum(differentials, axis=0)
             * _get_sign_of(x)
         )
 
@@ -1130,7 +1163,7 @@ class NeutronFluxProfile:
                 self.coefficients[num_layer, n, basis_group, 0] * c_int,
                 self.coefficients[num_layer, n, basis_group, 1] * s_int,
             ])
-        return matrix_fsum(integrals, axis=0)
+        return np.sum(integrals, axis=0)
 
     @summarize_values
     def groupwise_neutron_current_through_interface(
