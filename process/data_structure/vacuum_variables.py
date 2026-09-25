@@ -3,6 +3,8 @@
 from dataclasses import dataclass
 from enum import IntEnum, unique
 
+from process.core.data_structure.parameter import Parameter, PROCESSModelData
+
 
 @unique
 class VacuumPumpType(IntEnum):
@@ -13,7 +15,7 @@ class VacuumPumpType(IntEnum):
 
 
 @dataclass(slots=True)
-class VacuumData:
+class VacuumData(PROCESSModelData):
     """Dataclass holding vacuum vessel variables"""
 
     i_vacuum_pumping: str = "old"
@@ -24,7 +26,7 @@ class VacuumData:
       !#TODO: old and simple not suitable names.
     """
 
-    n_iter_vacuum_pumps: float = 0.0
+    n_iter_vacuum_pumps: Parameter[float] = 0.0
     """number of high vacuum pumps (real number), each with the throughput of one
     ITER cryopump (50 Pa m3 s-1), all operating at the same time (`i_vacuum_pumping='simple'`)
     """
@@ -41,28 +43,28 @@ class VacuumData:
     n_vv_vacuum_ducts: int = 0
     """number of ducts (torus to pumps)"""
 
-    dlscal: float = 0.0
+    dlscal: Parameter[float] = 0.0
     """vacuum system duct length scaling"""
 
-    pres_vv_chamber_base: float = 5.0e-4
+    pres_vv_chamber_base: Parameter[float] = 5.0e-4
     """base pressure during dwell before gas pre-fill(Pa)"""
 
-    pres_div_chamber_burn: float = 0.36
+    pres_div_chamber_burn: Parameter[float] = 0.36
     """divertor chamber pressure during burn (Pa)"""
 
-    molflow_vac_pumps: float = 1.2155e22
+    molflow_vac_pumps: Parameter[float] = 1.2155e22
     """Pump throughput (molecules/s) (default is ITER value)"""
 
-    outgrat_fw: float = 1.3e-8
+    outgrat_fw: Parameter[float] = 1.3e-8
     """plasma chamber wall outgassing rate (Pa-m/s)"""
 
-    temp_vv_chamber_gas_burn_end: float = 300.0
+    temp_vv_chamber_gas_burn_end: Parameter[float] = 300.0
     """neutral gas temperature in chamber (K)"""
 
-    m_vv_vacuum_duct_shield: float = 0.0
+    m_vv_vacuum_duct_shield: Parameter[float] = 0.0
     """mass of vacuum duct shield (kg)"""
 
-    dia_vv_vacuum_ducts: float = 0.0
+    dia_vv_vacuum_ducts: Parameter[float] = 0.0
     """diameter of duct passage (m)"""
 
     n_vac_pumps_high: int = 0
@@ -80,22 +82,22 @@ class VacuumData:
       http://dx.doi.org/10.1016/j.fusengdes.2015.07.011)(i_vacuum_pumping=simple')
     """
 
-    f_a_vac_pump_port_plasma_surface: float = 0.0203
+    f_a_vac_pump_port_plasma_surface: Parameter[float] = 0.0203
     """area of one pumping port as a fraction of plasma surface area"""
 
-    volflow_vac_pumps_max: float = 27.3
+    volflow_vac_pumps_max: Parameter[float] = 27.3
     """maximum pumping speed per unit area for deuterium & tritium, molecular flow"""
 
-    f_volflow_vac_pumps_impedance: float = 0.167
+    f_volflow_vac_pumps_impedance: Parameter[float] = 0.167
     """effective pumping speed reduction factor due to duct impedance"""
 
-    pres_vv_chamber_dwell_start: float = 1.0
+    pres_vv_chamber_dwell_start: Parameter[float] = 1.0
     """initial neutral pressure at the beginning of the dwell phase (Pa)"""
 
-    outgasindex: float = 1.0
+    outgasindex: Parameter[float] = 1.0
     """outgassing decay index"""
 
-    outgasfactor: float = 0.0235
+    outgasfactor: Parameter[float] = 0.0235
     """outgassing prefactor kw: outgassing rate at 1 s per unit area (Pa m s-1)"""
 
 
