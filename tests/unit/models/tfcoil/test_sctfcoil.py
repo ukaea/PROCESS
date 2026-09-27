@@ -1106,8 +1106,31 @@ class TfIntegerTurnGeomParam(NamedTuple):
         ),
     ],
 )
+@pytest.mark.parametrize(
+    (
+        "coolant_channel_diameter",
+        "extra_void_fraction",
+        "expected_effective_area",
+        "expected_cooling_fraction",
+    ),
+    [
+        pytest.param(0.0, 0.0, 0.001293323051622732, 0.0, id="no-cooling-space"),
+        pytest.param(
+            0.004,
+            0.3,
+            0.0008927597655215532,
+            0.3097163431816917,
+            id="channel-and-voids",
+        ),
+    ],
+)
 def test_tf_cable_in_conduit_integer_turn_geometry(
-    tfintegerturngeomparam, cicc_sctfcoil
+    tfintegerturngeomparam,
+    cicc_sctfcoil,
+    coolant_channel_diameter,
+    extra_void_fraction,
+    expected_effective_area,
+    expected_cooling_fraction,
 ):
     """
     Automatically generated Unit Test for
@@ -1122,6 +1145,9 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
+
+    cicc_sctfcoil.data.tfcoil.dia_tf_turn_coolant_channel = coolant_channel_diameter
+    cicc_sctfcoil.data.tfcoil.f_a_tf_turn_cable_space_extra_void = extra_void_fraction
 
     integer_turn_geometry = cicc_sctfcoil.tf_cable_in_conduit_integer_turn_geometry(
         dr_tf_wp_with_insulation=tfintegerturngeomparam.dr_tf_wp_with_insulation,
@@ -1138,6 +1164,14 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
 
     assert integer_turn_geometry.radius_tf_turn_cable_space_corners == pytest.approx(
         0.75 * tfintegerturngeomparam.dx_tf_turn_steel
+    )
+
+    assert integer_turn_geometry.a_tf_turn_cable_space_effective == pytest.approx(
+        expected_effective_area
+    )
+
+    assert integer_turn_geometry.f_a_tf_turn_cable_space_cooling == pytest.approx(
+        expected_cooling_fraction
     )
 
     assert integer_turn_geometry.dx_tf_turn_conduit_full_average == pytest.approx(
