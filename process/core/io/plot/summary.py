@@ -199,6 +199,12 @@ def plot_plasma(
         colour scheme to use for plots
     mirror_negative_x :
         if True, mirror the plot to the negative x-axis (Default value = False)
+
+
+    Raises
+    ------
+    ValueError
+        If an unsupported plasma shape model type is encountered.
     """
     r_0, a, triang, kappa, i_single_null, i_plasma_shape, plasma_square = (
         mfile.get_variables(

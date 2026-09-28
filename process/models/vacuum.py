@@ -7,6 +7,7 @@ import numpy as np
 
 from process.core import constants, process_output
 from process.core import process_output as po
+from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.vacuum_variables import VacuumPumpType
 from process.models.build import FwBlktVVShape
@@ -93,7 +94,7 @@ class Vacuum(Model):
             case "simple":
                 vp.n_iter_vacuum_pumps = self.vacuum_simple(output=output)
             case _:
-                logger.error(
+                ProcessValueError(
                     f"i_vacuum_pumping is invalid: {self.data.vacuum.i_vacuum_pumping}"
                 )
 
@@ -336,17 +337,21 @@ class Vacuum(Model):
         volume = plasma_vol * (aw + dsol) * (aw + dsol) / (aw * aw)
 
         #  dwell pumping options
-        match (self.data.vacuum.i_vac_pump_dwell, t_plant_pulse_dwell):
-            case (_, 0):
+        match self.data.vacuum.i_vac_pump_dwell:
+            case 1:
                 tpump = self.data.times.t_plant_pulse_coil_precharge
-            case (1, _):
-                tpump = self.data.times.t_plant_pulse_coil_precharge
-            case (2, _):
+            case 2:
                 tpump = (
                     t_plant_pulse_dwell + self.data.times.t_plant_pulse_coil_precharge
                 )
             case _:
                 tpump = t_plant_pulse_dwell
+
+        tpump = (
+            self.data.times.t_plant_pulse_coil_precharge
+            if t_plant_pulse_dwell == 0
+            else t_plant_pulse_dwell
+        )
 
         s.append(volume / tpump * math.log(pend / pstart))
 
