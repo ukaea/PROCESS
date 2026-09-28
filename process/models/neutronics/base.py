@@ -280,6 +280,7 @@ class NeutronFluxProfile:
         )
         self._is_solved = np.zeros(self.n_groups, dtype=bool)
         self.num_iteration = [0 for n in range(self.n_groups)]
+        self._optimization_record = [[] for n in range(self.n_groups)]
         self.contains_upscatter = any(not mat.downscatter_only for mat in self.materials)
 
         self.solve()
@@ -667,21 +668,49 @@ class NeutronFluxProfile:
             objective, x0=np.asarray(init_coefs, dtype=float), jac=True
         )
         _set_coefficients(results.x)
-        extended_x_flux = self.groupwise_neutron_flux_in_layer(
-            n, self.n_layers-1, self.extended_boundary[n]
-        )
-        if not np.isclose(extended_x_flux, 0):
+        conditions = self._groupwise_fitness(n, jac=False)
+        self._optimization_record[n].append((init_coefs, results))
+
+        if not np.isclose(conditions[0], 0):
+            warnings.warn(
+                f"Group {n} neutron current at x=0 != the predetermined "
+                f"value of {self.fluxes[n]}.",
+                stacklevel=2,
+            )
+        for num_layer in range(self.n_layers - 1):
+            # flux continuity
+            if not np.isclose(conditions[2 * num_layer + 1], 0):
+                warnings.warn(
+                    f"Group {n} neutron flux is not continuous at interface"
+                    f"[{num_layer + 1}]!",
+                    stacklevel=2,
+                )
+            # current continuity
+            if not np.isclose(conditions[2 * num_layer + 2], 0):
+                warnings.warn(
+                    f"Group {n} neutron current is not continuous at interface"
+                    f"[{num_layer + 1}]!",
+                    stacklevel=2,
+                )
+
+        # extended flux = 0
+        if not np.isclose(conditions[-1], 0):
             warnings.warn(
                 "Boundary condition of flux (at extended_boundary) = 0 "
                 f"is not adhered to for group {n}! "
-                f"Instead flux = {extended_x_flux}."
+                f"Instead flux = {conditions[-1]}.",
+                stacklevel=2,
             )
         # non-negativity check for layer = num_layer:
         for num_layer in range(self.n_layers):
             if (
-                self.groupwise_neutron_flux_in_layer(n, num_layer, self.interface_x[num_layer]) < 0
+                self.groupwise_neutron_flux_in_layer(
+                    n, num_layer, self.interface_x[num_layer]
+                ) < 0
             ) or (
-                self.groupwise_neutron_flux_in_layer(n, num_layer, self.layer_x[num_layer]) < 0
+                self.groupwise_neutron_flux_in_layer(
+                    n, num_layer, self.layer_x[num_layer]
+                ) < 0
             ):
                 warnings.warn(
                     "Negative flux found when solving for "
@@ -816,7 +845,9 @@ class NeutronFluxProfile:
                     n, self.n_layers-1, self.extended_boundary[n]
                 )
             )
-            return conditions, jacobians
+            if jac:
+                return conditions, jacobians
+            return conditions
 
 
     def _check_if_in_layer(
