@@ -2817,14 +2817,14 @@ class Physics(Model):
 
             po.ovarre(
                 self.outfile,
-                "Electron temperature pedestal height (Tₑ,pedestal) (keV)",
+                "Electron temperature pedestal height (Tₑ,pedestal) [keV]",
                 "(temp_plasma_pedestal_electron_kev)",
                 self.data.physics.temp_plasma_pedestal_electron_kev,
             )
             if 78 in self.data.numerics.icc:
                 po.ovarre(
                     self.outfile,
-                    "Electron temperature at separatrix (Tₑ,ₛₑₚ) (keV)",
+                    "Electron temperature at separatrix (Tₑ,ₛₑₚ) [keV]",
                     "(temp_plasma_separatrix_electron_kev)",
                     self.data.physics.temp_plasma_separatrix_electron_kev,
                     "OP ",
@@ -2832,7 +2832,7 @@ class Physics(Model):
             else:
                 po.ovarre(
                     self.outfile,
-                    "Electron temperature at separatrix (Tₑ,ₛₑₚ) (keV)",
+                    "Electron temperature at separatrix (Tₑ,ₛₑₚ) [keV]",
                     "(temp_plasma_separatrix_electron_kev)",
                     self.data.physics.temp_plasma_separatrix_electron_kev,
                 )
@@ -2840,13 +2840,13 @@ class Physics(Model):
 
         po.ovarre(
             self.outfile,
-            "Volume averaged electron temperature (⟨Tₑ⟩) (keV)",
+            "Volume averaged electron temperature (⟨Tₑ⟩) [keV]",
             "(temp_plasma_electron_vol_avg_kev)",
             self.data.physics.temp_plasma_electron_vol_avg_kev,
         )
         po.ovarre(
             self.outfile,
-            "Electron temperature on axis (Tₑ,₀) (keV)",
+            "Electron temperature on axis (Tₑ,₀) [keV]",
             "(temp_plasma_electron_on_axis_kev)",
             self.data.physics.temp_plasma_electron_on_axis_kev,
             "OP ",
@@ -2860,13 +2860,13 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Line averaged electron temperature (keV)",
+            "Line averaged electron temperature [keV]",
             "(temp_plasma_electron_line_avg_kev)",
             self.data.physics.temp_plasma_electron_line_avg_kev,
         )
         po.ovarre(
             self.outfile,
-            "Volume averaged density weighted electron temperature (⟨Tₑ⟩ₙ) (keV)",
+            "Volume averaged density weighted electron temperature (⟨Tₑ⟩ₙ) [keV]",
             "(temp_plasma_electron_density_weighted_kev)",
             self.data.physics.temp_plasma_electron_density_weighted_kev,
             "OP ",
@@ -2889,13 +2889,13 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Volume averaged ion temperature (⟨Tᵢ⟩) (keV)",
+            "Volume averaged ion temperature (⟨Tᵢ⟩) [keV]",
             "(temp_plasma_ion_vol_avg_kev)",
             self.data.physics.temp_plasma_ion_vol_avg_kev,
         )
         po.ovarre(
             self.outfile,
-            "Ion temperature on axis (Tᵢ,₀) (keV)",
+            "Ion temperature on axis (Tᵢ,₀) [keV]",
             "(temp_plasma_ion_on_axis_kev)",
             self.data.physics.temp_plasma_ion_on_axis_kev,
             "OP ",
@@ -2957,13 +2957,13 @@ class Physics(Model):
             ):
                 po.ovarre(
                     self.outfile,
-                    "Electron density pedestal height (nₑ_pedestal) (/m³)",
+                    "Electron density pedestal height (nₑ_pedestal) [/m³]",
                     "(nd_plasma_pedestal_electron)",
                     self.data.physics.nd_plasma_pedestal_electron,
                 )
                 po.ovarre(
                     self.outfile,
-                    "Electron separatrix density (nₑ,ₛₑₚ) (/m³)",
+                    "Electron separatrix density (nₑ,ₛₑₚ) [/m³]",
                     "(nd_plasma_separatrix_electron)",
                     self.data.physics.nd_plasma_separatrix_electron,
                 )
@@ -2988,14 +2988,14 @@ class Physics(Model):
             ):
                 po.ovarre(
                     self.outfile,
-                    "Electron density pedestal height (nₑ_pedestal) (/m³)",
+                    "Electron density pedestal height (nₑ_pedestal) [/m³]",
                     "(nd_plasma_pedestal_electron)",
                     self.data.physics.nd_plasma_pedestal_electron,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
-                    "Electron separatrix density (nₑ,ₛₑₚ) (/m³)",
+                    "Electron separatrix density (nₑ,ₛₑₚ) [/m³]",
                     "(nd_plasma_separatrix_electron)",
                     self.data.physics.nd_plasma_separatrix_electron,
                     "OP ",
@@ -3017,20 +3017,20 @@ class Physics(Model):
 
         po.ovarre(
             self.outfile,
-            "Volume averaged electron number density (⟨nₑ⟩) (/m³)",
+            "Volume averaged electron number density (⟨nₑ⟩) [/m³]",
             "(nd_plasma_electrons_vol_avg)",
             self.data.physics.nd_plasma_electrons_vol_avg,
         )
         po.ovarre(
             self.outfile,
-            "Electron number density on axis (nₑ₀) (/m³)",
+            "Electron number density on axis (nₑ₀) [/m³]",
             "(nd_plasma_electron_on_axis)",
             self.data.physics.nd_plasma_electron_on_axis,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Line-averaged electron number density (ñₑ) (/m³)",
+            "Line-averaged electron number density (ñₑ) [/m³]",
             "(nd_plasma_electron_line)",
             self.data.physics.nd_plasma_electron_line,
             "OP ",
@@ -3046,28 +3046,28 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Total ion volume averaged number density (⟨nᵢ⟩) (/m³)",
+            "Total ion volume averaged number density (⟨nᵢ⟩) [/m³]",
             "(nd_plasma_ions_total_vol_avg)",
             self.data.physics.nd_plasma_ions_total_vol_avg,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Fuel ion volume averaged number density (⟨n_fuel⟩) (/m³)",
+            "Fuel ion volume averaged number density (⟨n_fuel⟩) [/m³]",
             "(nd_plasma_fuel_ions_vol_avg)",
             self.data.physics.nd_plasma_fuel_ions_vol_avg,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Total impurity volume averaged number density with Z > 2 (⟨nᵢₘₚ⟩) (/m³)",
+            "Total impurity volume averaged number density with Z > 2 (⟨nᵢₘₚ⟩) [/m³]",
             "(nd_plasma_impurities_vol_avg)",
             self.data.physics.nd_plasma_impurities_vol_avg,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Thermalised alpha volume averaged number density (⟨n_αₜₕ⟩) (/m³)",
+            "Thermalised alpha volume averaged number density (⟨n_αₜₕ⟩) [/m³]",
             "(nd_plasma_alphas_thermal_vol_avg)",
             self.data.physics.nd_plasma_alphas_thermal_vol_avg,
             "OP ",
@@ -3080,7 +3080,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Proton volume averaged number density (⟨nₚ⟩) (/m³)",
+            "Proton volume averaged number density (⟨nₚ⟩) [/m³]",
             "(nd_plasma_protons_vol_avg)",
             self.data.physics.nd_plasma_protons_vol_avg,
             "OP ",
@@ -3095,7 +3095,7 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Hot beam ion volume averaged number density (⟨n_beam⟩) (/m³)",
+            "Hot beam ion volume averaged number density (⟨n_beam⟩) [/m³]",
             "(nd_beam_ions)",
             self.data.physics.nd_beam_ions,
             "OP ",
@@ -3121,14 +3121,14 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Plasma thermal pressure on axis (p₀) (Pa)",
+            "Plasma thermal pressure on axis (p₀) [Pa]",
             "(pres_plasma_thermal_on_axis)",
             self.data.physics.pres_plasma_thermal_on_axis,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Volume averaged plasma thermal pressure (⟨p⟩) (Pa)",
+            "Volume averaged plasma thermal pressure (⟨p⟩) [Pa]",
             "(pres_plasma_thermal_vol_avg)",
             self.data.physics.pres_plasma_thermal_vol_avg,
             "OP ",

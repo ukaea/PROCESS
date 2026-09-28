@@ -1,81 +1,4 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Temperature Profile | `ElectronTemperatureProfile(Profile)`
+# Electron Temperature Profile | `ElectronTemperatureProfile(Profile)`
 
 The temperature profile class is organised around a central runner function that is called each time the plasma is parameterised by the parent [`PlasmaProfile()`](plasma_profiles.md#plasma-profile-class-plasmaprofile) class. It is called by [`pedestal_parameterisation()`](plasma_profiles.md#pedestal_parameterisation) and [`parabolic parameterisation()`](plasma_profiles.md#parabolic_parameterisation). The sequence of the runner function can be seen below along with explanation of the following calculations.
 
@@ -298,6 +221,13 @@ $$\begin{aligned}
 \end{aligned}$$
 
 5. Profile is then integrated with `integrate_profile_y()` using Simpsons integration from the profile abstract base class
+
+---------------------
+
+# Ion Temperature Profile | `IonTemperatureProfile()`
+
+The ion temperature profile matches the exact same shape as the electron density profile but its values are scaled linearly via the value of `f_temp_plasma_ion_electron`. 
+
 
 [^1]: Jean, J. (2011). *HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies*. Fusion Science and Technology, 59(2), 308–349. <https://doi.org/10.13182/FST11-A11650>
 
