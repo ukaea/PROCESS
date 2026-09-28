@@ -723,4 +723,10 @@ def calculate_profile_shell_contributions(
     if np.any(np.diff(profile_x) <= 0):
         raise ValueError("profile_x must be strictly increasing.")
 
-    return 2.0 * vol_plasma * profile_y * profile_x * profile_dx
+    return (
+        2.0
+        * vol_plasma
+        * profile_y
+        * profile_x
+        * (profile_dx if profile_dx is not None else profile_x[1] - profile_x[0])
+    )
