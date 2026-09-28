@@ -653,7 +653,7 @@ $$
 The volume element is the surface area of the toroidal surface times the thickness $dV=2\pi R_0 2\pi\kappa r  dr  $
 
 $$
-I=\int_{0}^{1} G(\rho) 2\pi R_0 2\pi\kappa r  \ dr 
+I=\int_{0}^{1} G(\rho) 2\pi R_0 2\pi \kappa r  \ dr 
 $$
 
 Substituting the normalised minor radius coordinate $\rho=r/a$, and bringing the constants out in front,
@@ -676,10 +676,63 @@ $$
 
 If $G$ is a density then $2  \int_{0}^{1} G(\rho)  \rho  \ d\rho$ is the volume averaged density.
 
+--------
+
+## Calculate radials shell contribution | `calculate_profile_shell_contributions()`
+
+General method to convert a quantity from a per volume density, radially normalised profile into a local conttribution profile for each radial shell
+
+### Derivation
+
+For a tokamak with major radius $(R_0)$, minor radius $(a)$, elongation $(\kappa)$ and a volume density $(q(r))$, 
+the volume inside minor radius $(r)$ is the cross-sectional area times the toroidal circumference: 
+
+$$
+V(r) = \pi \kappa r^2 \times 2\pi R_0 = 2\pi^2\kappa R_0r^2  
+$$
+
+A thing annular shell therefore has volume:
+
+$$
+dV = \frac{dV}{dr}dr = 4\pi^2\kappa R_0r dr
+$$
+
+If $(q)$ is a quantity per unit volume, its contribution from that shell is:
+
+$$
+dQ = q(r) dV = 4\pi^2 \kappa R_0 q(r) r dr
+$$
+
+and its total inside the plasma is:
+
+$$
+Q = 4\pi^2\kappa R_0 \int_0^a q(r) r dr
+$$
+
+Using normalised radius $(\rho = r/a)$, with $(dr = a d\rho)$, and total plasma volume $(V = 2\pi^2 \kappa R_0 a^2)$, this becomes:
+
+$$
+dQ = 2V q(\rho) \rho d\rho
+$$
+
+$$
+Q = 2V \int_0^1 q(\rho) \rho d\rho
+$$
+
+So for profile samples, the approximate shell constribution at $(\rho_i)$ is:
+
+$$
+\Delta Q_i \approx 2V q(\rho_i) \rho_i \Delta \rho
+$$
+
+
+
+----------------
 
 ## Key Constraints
 
 --------
+
 
 
 ### Pedestal Density Upper limit

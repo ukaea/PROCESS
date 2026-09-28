@@ -29,6 +29,7 @@ from process.models.physics.exhaust import calculate_brunner_divertor_power_spli
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
     PlasmaProfileShapeType,
+    calculate_profile_shell_contributions,
 )
 from process.models.pulse import PulseTimings
 
@@ -3628,23 +3629,22 @@ class Physics(Model):
             + self.data.physics.eden_plasma_ions_thermal_profile
         )
 
-        rho = self.plasma_profile.teprofile.profile_x
-        dx = self.plasma_profile.teprofile.profile_dx
-
         self.data.physics.e_plasma_electrons_thermal_profile = (
-            2.0
-            * self.data.physics.vol_plasma
-            * self.data.physics.eden_plasma_electrons_thermal_profile
-            * rho
-            * dx
+            calculate_profile_shell_contributions(
+                profile_x=self.plasma_profile.teprofile.profile_x,
+                profile_y=self.data.physics.eden_plasma_electrons_thermal_profile,
+                vol_plasma=self.data.physics.vol_plasma,
+                profile_dx=self.plasma_profile.teprofile.profile_dx,
+            )
         )
 
         self.data.physics.e_plasma_ions_thermal_profile = (
-            2.0
-            * self.data.physics.vol_plasma
-            * self.data.physics.eden_plasma_ions_thermal_profile
-            * rho
-            * dx
+            calculate_profile_shell_contributions(
+                profile_x=self.plasma_profile.teprofile.profile_x,
+                profile_y=self.data.physics.eden_plasma_ions_thermal_profile,
+                vol_plasma=self.data.physics.vol_plasma,
+                profile_dx=self.plasma_profile.teprofile.profile_dx,
+            )
         )
 
         self.data.physics.e_plasma_thermal_profile = (
