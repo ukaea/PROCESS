@@ -329,3 +329,14 @@ def test_in_place_many_parameters():
     assert (integral == integral_param).all()
     assert id(fractional_param._value) == id_fractional_param
     assert id(integral_param._value) == id_integral_param
+
+
+def test_in_place_parameter_and_mutable():
+    x = np.array([1.5, 2.7, -3.2])
+    fractional = np.zeros_like(x)
+    integral = Parameter("integral", np.float64(0.0))
+
+    with pytest.raises(
+        TypeError, match="Numpy ufunc out keyword has a mixture of Parameter"
+    ):
+        np.modf(x, out=(fractional, integral))
