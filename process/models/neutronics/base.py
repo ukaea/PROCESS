@@ -674,24 +674,42 @@ class NeutronFluxProfile:
         if not np.isclose(conditions[0], 0):
             warnings.warn(
                 f"Group {n} neutron current at x=0 != the predetermined "
-                f"value of {self.fluxes[n]}.",
+                f"value of {self.fluxes[n]}! Instead current deviated by "
+                f"{conditions[0]}",
                 stacklevel=2,
             )
         for num_layer in range(self.n_layers - 1):
             # flux continuity
-            if not np.isclose(conditions[2 * num_layer + 1], 0):
+            i = 2 * num_layer
+            if not np.isclose(conditions[i + 1], 0):
+                deviation = conditions[i + 1] / self.groupwise_neutron_flux_in_layer(
+                    n, num_layer, self.layer_x[num_layer]
+                ) * 100
                 warnings.warn(
                     f"Group {n} neutron flux is not continuous at interface"
-                    f"[{num_layer + 1}]!",
+                    f"[{num_layer + 1}]! Deviated by {deviation} %.",
                     stacklevel=2,
                 )
             # current continuity
-            if not np.isclose(conditions[2 * num_layer + 2], 0):
-                warnings.warn(
+            if not np.isclose(conditions[i + 2], 0):
+                x = self.layer_x[num_layer]
+                this_current = self.groupwise_neutron_current_in_layer(n, num_layer, x)
+                # avoid divide by 0 situation
+                if this_current!=0:
+                    deviation = conditions[i + 2] / this_current * 100
+                    warnings.warn(
                     f"Group {n} neutron current is not continuous at interface"
-                    f"[{num_layer + 1}]!",
+                    f"[{num_layer + 1}]! Deviated by {deviation} %.",
                     stacklevel=2,
                 )
+                else:
+                    next_current = self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
+                    warnings.warn(
+                        f"Group {n} neutron current is not continuous at interface"
+                        f"[{num_layer + 1}]! Current = "
+                        f"{this_current} vs {next_current}",
+                        stacklevel=2,
+                    )
 
         # extended flux = 0
         if not np.isclose(conditions[-1], 0):
