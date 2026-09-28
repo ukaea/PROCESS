@@ -70,7 +70,7 @@ def init_process(data: DataStructure, update_obsolete: bool = False):
     # InDat reads in and updates obsolete variables if requested
     in_dat = InDat(filename=filename, update_obsolete=update_obsolete)
 
-    _inputs = parse_input_file(data, in_dat)
+    inputs = parse_input_file(data, in_dat)
 
     # Set active constraints
     set_active_constraints(data)
@@ -79,7 +79,7 @@ def init_process(data: DataStructure, update_obsolete: bool = False):
     set_device_type(data)
 
     # Check input data for errors/ambiguities
-    check_process(data, _inputs)
+    check_process(data, inputs)
 
     run_summary(data)
 
