@@ -92,13 +92,27 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
         latex_symbol: str = "",
         _value_types: tuple[type, ...] | None = None,
     ):
-        """Initialises the Parameter."""
+        """Initialises the Parameter.
+
+        Raises
+        ------
+        TypeError
+            If unit's are specified. PROCESS does not support unit's yet and so
+            everything should be unitless.
+        """
         self._latext_symbol = latex_symbol
         self._symbol = symbol
 
+        if unit:
+            error_msg = (
+                "PROCESS does not yet support the specification of units. "
+                "All Parameter's in PROCESS must be unitless!"
+            )
+            raise TypeError(error_msg)
+
         self._edited = []
         self._used = []
-        super().__init__(name, value, unit, source, description, long_name, _value_types)
+        super().__init__(name, value, "", source, description, long_name, _value_types)
 
     @property
     def symbol(self) -> str:
