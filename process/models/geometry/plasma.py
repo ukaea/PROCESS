@@ -83,18 +83,22 @@ def plasma_geometry(
         theta2 = np.arcsin((kappa * rminor) / r2)
         inang = 1.0 / r1
         outang = 1.5 / r2
-        if i_single_null == DivertorNumberModels.DOUBLE_NULL:
-            angs1 = np.linspace(
-                -(inang + theta1) + np.pi, (inang + theta1) + np.pi, 500, endpoint=True
-            )
-            angs2 = np.linspace(
-                -(outang + theta2), (outang + theta2), 500, endpoint=True
-            )
-        else:
-            angs1 = np.linspace(
-                -theta1 + np.pi, (inang + theta1) + np.pi, 500, endpoint=True
-            )
-            angs2 = np.linspace(-(outang + theta2), theta2, 500, endpoint=True)
+        match DivertorNumberModels(i_single_null):
+            case DivertorNumberModels.DOUBLE_NULL:
+                angs1 = np.linspace(
+                    -(inang + theta1) + np.pi,
+                    (inang + theta1) + np.pi,
+                    500,
+                    endpoint=True,
+                )
+                angs2 = np.linspace(
+                    -(outang + theta2), (outang + theta2), 500, endpoint=True
+                )
+            case DivertorNumberModels.SINGLE_NULL:
+                angs1 = np.linspace(
+                    -theta1 + np.pi, (inang + theta1) + np.pi, 500, endpoint=True
+                )
+                angs2 = np.linspace(-(outang + theta2), theta2, 500, endpoint=True)
 
         xs1 = -(r1 * np.cos(angs1) - x1)
         ys1 = r1 * np.sin(angs1)

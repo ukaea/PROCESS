@@ -27,7 +27,6 @@ from process.data_structure.physics_variables import (
     ConfinementTimeModel,
     DivertorNumberModels,
     OutbordSOLPowerDecayLengthModel,
-    PlasmaConfinementTransitionModel,
 )
 from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.build import Build
@@ -71,6 +70,7 @@ from process.models.physics.current_drive import (
 from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.exhaust import calculate_brunner_divertor_power_splits
 from process.models.physics.impurity_radiation import read_impurity_file
+from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.physics import (
     BetaComponentLimits,
     BetaNormMaxModel,
@@ -226,35 +226,38 @@ def plot_plasma(
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
-    if i_plasma_shape == PlasmaShapeModelType.PROCESS_ORIGINAL:
-        # Plot the 2 plasma outline arcs.
-        axis.plot(x_scale * np.array(pg.rs[0]), pg.zs[0], color="black")
-        axis.plot(x_scale * np.array(pg.rs[1]), pg.zs[1], color="black")
+    match PlasmaShapeModelType(i_plasma_shape):
+        case PlasmaShapeModelType.PROCESS_ORIGINAL:
+            # Plot the 2 plasma outline arcs.
+            axis.plot(x_scale * np.array(pg.rs[0]), pg.zs[0], color="black")
+            axis.plot(x_scale * np.array(pg.rs[1]), pg.zs[1], color="black")
 
-        # Set triang_95 to stop plotting plasma past boundary
-        # Assume IPDG scaling
-        triang_95 = triang / 1.5
+            # Set triang_95 to stop plotting plasma past boundary
+            # Assume IPDG scaling
+            triang_95 = triang / 1.5
 
-        # Colour in right side of plasma
-        axis.fill_between(
-            x=x_scale * np.array(pg.rs[0]),
-            y1=pg.zs[0],
-            where=(pg.rs[0] > r_0 - (triang_95 * a * 1.5)),
-            color=PLASMA_COLOUR[colour_scheme - 1],
-        )
-        # Colour in left side of plasma
-        axis.fill_between(
-            x=x_scale * np.array(pg.rs[1]),
-            y1=pg.zs[1],
-            where=(pg.rs[1] < r_0 - (triang_95 * a * 1.5)),
-            color=PLASMA_COLOUR[colour_scheme - 1],
-        )
+            # Colour in right side of plasma
+            axis.fill_between(
+                x=x_scale * np.array(pg.rs[0]),
+                y1=pg.zs[0],
+                where=(pg.rs[0] > r_0 - (triang_95 * a * 1.5)),
+                color=PLASMA_COLOUR[colour_scheme - 1],
+            )
+            # Colour in left side of plasma
+            axis.fill_between(
+                x=x_scale * np.array(pg.rs[1]),
+                y1=pg.zs[1],
+                where=(pg.rs[1] < r_0 - (triang_95 * a * 1.5)),
+                color=PLASMA_COLOUR[colour_scheme - 1],
+            )
 
-    elif i_plasma_shape == PlasmaShapeModelType.SAUTER:
-        axis.plot(x_scale * np.array(pg.rs), pg.zs, color="black")
-        axis.fill(
-            x_scale * np.array(pg.rs), pg.zs, color=PLASMA_COLOUR[colour_scheme - 1]
-        )
+        case PlasmaShapeModelType.SAUTER:
+            axis.plot(x_scale * np.array(pg.rs), pg.zs, color="black")
+            axis.fill(
+                x_scale * np.array(pg.rs), pg.zs, color=PLASMA_COLOUR[colour_scheme - 1]
+            )
+        case _:
+            raise ValueError(f"Unsupported plasma shape model type: {i_plasma_shape}")
 
 
 def plot_centre_cross(
@@ -4963,14 +4966,14 @@ def plot_vacuum_vessel_and_divertor(
     z_divertor_lower_top = (-kappa * rminor) - dz_xpoint_divertor
     z_divertor_lower_bottom = z_divertor_lower_top - dz_divertor
 
-    if i_single_null == 0:
+    if DivertorNumberModels(i_single_null) == DivertorNumberModels.DOUBLE_NULL:
         z_divertor_upper_bottom = (kappa * rminor) + dz_xpoint_divertor
         z_divertor_upper_top = z_divertor_upper_bottom + dz_divertor
 
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
-    if i_single_null == 1:
+    if DivertorNumberModels(i_single_null) == DivertorNumberModels.SINGLE_NULL:
         vvg_single_null = vacuum_vessel_geometry_single_null(
             cumulative_upper=cumulative_upper,
             upper=upper,
@@ -5032,7 +5035,7 @@ def plot_vacuum_vessel_and_divertor(
             )
         )
 
-    if i_single_null == 0:
+    if DivertorNumberModels(i_single_null) == DivertorNumberModels.DOUBLE_NULL:
         vvg_double_null = vacuum_vessel_geometry_double_null(
             cumulative_lower=cumulative_lower,
             lower=lower,
@@ -5181,25 +5184,26 @@ def plot_shield(
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
-    if i_single_null == 1:
-        shield_geometry = shield_geometry_single_null(
-            cumulative_upper=cumulative_upper,
-            radx_far=radx_far,
-            rminx_far=rminx_far,
-            radx_near=radx_near,
-            rminx_near=rminx_near,
-            triang=triang_95,
-            cumulative_lower=cumulative_lower,
-        )
-    else:
-        shield_geometry = shield_geometry_double_null(
-            cumulative_lower=cumulative_lower,
-            radx_far=radx_far,
-            radx_near=radx_near,
-            rminx_far=rminx_far,
-            rminx_near=rminx_near,
-            triang=triang_95,
-        )
+    match DivertorNumberModels(i_single_null):
+        case DivertorNumberModels.SINGLE_NULL:
+            shield_geometry = shield_geometry_single_null(
+                cumulative_upper=cumulative_upper,
+                radx_far=radx_far,
+                rminx_far=rminx_far,
+                radx_near=radx_near,
+                rminx_near=rminx_near,
+                triang=triang_95,
+                cumulative_lower=cumulative_lower,
+            )
+        case DivertorNumberModels.DOUBLE_NULL:
+            shield_geometry = shield_geometry_double_null(
+                cumulative_lower=cumulative_lower,
+                radx_far=radx_far,
+                radx_near=radx_near,
+                rminx_far=rminx_far,
+                rminx_near=rminx_near,
+                triang=triang_95,
+            )
 
     axis.plot(
         x_scale * np.array(shield_geometry.rs),
@@ -5260,98 +5264,99 @@ def plot_blanket(
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
-    if i_single_null == 1:
-        # Upper blanket: outer surface
-        radx_outer = (
-            cumulative_radial_build("dr_blkt_outboard", mfile, scan)
-            + cumulative_radial_build("vvblgapi", mfile, scan)
-        ) / 2.0
-        rminx_outer = (
-            cumulative_radial_build("dr_blkt_outboard", mfile, scan)
-            - cumulative_radial_build("vvblgapi", mfile, scan)
-        ) / 2.0
+    match DivertorNumberModels(i_single_null):
+        case DivertorNumberModels.SINGLE_NULL:
+            # Upper blanket: outer surface
+            radx_outer = (
+                cumulative_radial_build("dr_blkt_outboard", mfile, scan)
+                + cumulative_radial_build("vvblgapi", mfile, scan)
+            ) / 2.0
+            rminx_outer = (
+                cumulative_radial_build("dr_blkt_outboard", mfile, scan)
+                - cumulative_radial_build("vvblgapi", mfile, scan)
+            ) / 2.0
 
-        # Upper blanket: inner surface
-        radx_inner = (
-            cumulative_radial_build("dr_fw_outboard", mfile, scan)
-            + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
-        ) / 2.0
-        rminx_inner = (
-            cumulative_radial_build("dr_fw_outboard", mfile, scan)
-            - cumulative_radial_build("dr_blkt_inboard", mfile, scan)
-        ) / 2.0
-        bg_single_null = blanket_geometry_single_null(
-            radx_outer=radx_outer,
-            rminx_outer=rminx_outer,
-            radx_inner=radx_inner,
-            rminx_inner=rminx_inner,
-            cumulative_upper=cumulative_upper,
-            triang=triang_95,
-            cumulative_lower=cumulative_lower,
-            dz_blkt_upper=dz_blkt_upper,
-            c_shldith=c_shldith,
-            c_blnkoth=c_blnkoth,
-            dr_blkt_inboard=dr_blkt_inboard,
-            dr_blkt_outboard=dr_blkt_outboard,
-        )
+            # Upper blanket: inner surface
+            radx_inner = (
+                cumulative_radial_build("dr_fw_outboard", mfile, scan)
+                + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
+            ) / 2.0
+            rminx_inner = (
+                cumulative_radial_build("dr_fw_outboard", mfile, scan)
+                - cumulative_radial_build("dr_blkt_inboard", mfile, scan)
+            ) / 2.0
+            bg_single_null = blanket_geometry_single_null(
+                radx_outer=radx_outer,
+                rminx_outer=rminx_outer,
+                radx_inner=radx_inner,
+                rminx_inner=rminx_inner,
+                cumulative_upper=cumulative_upper,
+                triang=triang_95,
+                cumulative_lower=cumulative_lower,
+                dz_blkt_upper=dz_blkt_upper,
+                c_shldith=c_shldith,
+                c_blnkoth=c_blnkoth,
+                dr_blkt_inboard=dr_blkt_inboard,
+                dr_blkt_outboard=dr_blkt_outboard,
+            )
 
-        # Plot blanket
-        axis.plot(
-            x_scale * np.array(bg_single_null.rs),
-            bg_single_null.zs,
-            color="black",
-            lw=thin,
-            zorder=5,
-        )
-
-        axis.fill(
-            x_scale * np.array(bg_single_null.rs),
-            bg_single_null.zs,
-            color=BLANKET_COLOUR[colour_scheme - 1],
-            lw=0.01,
-            zorder=5,
-        )
-
-    if i_single_null == 0:
-        bg_double_null = blanket_geometry_double_null(
-            cumulative_lower=cumulative_lower,
-            triang=triang_95,
-            dz_blkt_upper=dz_blkt_upper,
-            c_shldith=c_shldith,
-            c_blnkoth=c_blnkoth,
-            dr_blkt_inboard=dr_blkt_inboard,
-            dr_blkt_outboard=dr_blkt_outboard,
-        )
-        # Plot blanket
-        axis.plot(
-            x_scale * np.array(bg_double_null.rs[0]),
-            bg_double_null.zs[0],
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            x_scale * np.array(bg_double_null.rs[0]),
-            bg_double_null.zs[0],
-            color=BLANKET_COLOUR[colour_scheme - 1],
-            lw=0.01,
-            zorder=5,
-        )
-        if dr_blkt_inboard > 0.0:
-            # only plot inboard blanket if inboard blanket thickness > 0
+            # Plot blanket
             axis.plot(
-                x_scale * np.array(bg_double_null.rs[1]),
-                bg_double_null.zs[1],
+                x_scale * np.array(bg_single_null.rs),
+                bg_single_null.zs,
                 color="black",
                 lw=thin,
                 zorder=5,
             )
+
             axis.fill(
-                x_scale * np.array(bg_double_null.rs[1]),
-                bg_double_null.zs[1],
+                x_scale * np.array(bg_single_null.rs),
+                bg_single_null.zs,
                 color=BLANKET_COLOUR[colour_scheme - 1],
                 lw=0.01,
                 zorder=5,
             )
+
+        case DivertorNumberModels.DOUBLE_NULL:
+            bg_double_null = blanket_geometry_double_null(
+                cumulative_lower=cumulative_lower,
+                triang=triang_95,
+                dz_blkt_upper=dz_blkt_upper,
+                c_shldith=c_shldith,
+                c_blnkoth=c_blnkoth,
+                dr_blkt_inboard=dr_blkt_inboard,
+                dr_blkt_outboard=dr_blkt_outboard,
+            )
+            # Plot blanket
+            axis.plot(
+                x_scale * np.array(bg_double_null.rs[0]),
+                bg_double_null.zs[0],
+                color="black",
+                lw=thin,
+            )
+            axis.fill(
+                x_scale * np.array(bg_double_null.rs[0]),
+                bg_double_null.zs[0],
+                color=BLANKET_COLOUR[colour_scheme - 1],
+                lw=0.01,
+                zorder=5,
+            )
+            if dr_blkt_inboard > 0.0:
+                # only plot inboard blanket if inboard blanket thickness > 0
+                axis.plot(
+                    x_scale * np.array(bg_double_null.rs[1]),
+                    bg_double_null.zs[1],
+                    color="black",
+                    lw=thin,
+                    zorder=5,
+                )
+                axis.fill(
+                    x_scale * np.array(bg_double_null.rs[1]),
+                    bg_double_null.zs[1],
+                    color=BLANKET_COLOUR[colour_scheme - 1],
+                    lw=0.01,
+                    zorder=5,
+                )
 
 
 def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: MFile, scan: int):
@@ -5633,93 +5638,94 @@ def plot_firstwall(
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
-    if i_single_null == 1:
-        # Upper first wall: outer surface
-        radx_outer = (
-            cumulative_radial_build("dr_fw_outboard", mfile, scan)
-            + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
-        ) / 2.0
-        rminx_outer = (
-            cumulative_radial_build("dr_fw_outboard", mfile, scan)
-            - cumulative_radial_build("dr_blkt_inboard", mfile, scan)
-        ) / 2.0
+    match DivertorNumberModels(i_single_null):
+        case DivertorNumberModels.SINGLE_NULL:
+            # Upper first wall: outer surface
+            radx_outer = (
+                cumulative_radial_build("dr_fw_outboard", mfile, scan)
+                + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
+            ) / 2.0
+            rminx_outer = (
+                cumulative_radial_build("dr_fw_outboard", mfile, scan)
+                - cumulative_radial_build("dr_blkt_inboard", mfile, scan)
+            ) / 2.0
 
-        # Upper first wall: inner surface
-        radx_inner = (
-            cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile, scan)
-            + cumulative_radial_build("dr_fw_inboard", mfile, scan)
-        ) / 2.0
-        rminx_inner = (
-            cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile, scan)
-            - cumulative_radial_build("dr_fw_inboard", mfile, scan)
-        ) / 2.0
+            # Upper first wall: inner surface
+            radx_inner = (
+                cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile, scan)
+                + cumulative_radial_build("dr_fw_inboard", mfile, scan)
+            ) / 2.0
+            rminx_inner = (
+                cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile, scan)
+                - cumulative_radial_build("dr_fw_inboard", mfile, scan)
+            ) / 2.0
 
-        fwg_single_null = first_wall_geometry_single_null(
-            radx_outer=radx_outer,
-            rminx_outer=rminx_outer,
-            radx_inner=radx_inner,
-            rminx_inner=rminx_inner,
-            cumulative_upper=cumulative_upper,
-            triang=triang_95,
-            cumulative_lower=cumulative_lower,
-            dz_blkt_upper=dz_blkt_upper,
-            c_blnkith=c_blnkith,
-            c_fwoth=c_fwoth,
-            dr_fw_inboard=dr_fw_inboard,
-            dr_fw_outboard=dr_fw_outboard,
-            tfwvt=tfwvt,
-        )
+            fwg_single_null = first_wall_geometry_single_null(
+                radx_outer=radx_outer,
+                rminx_outer=rminx_outer,
+                radx_inner=radx_inner,
+                rminx_inner=rminx_inner,
+                cumulative_upper=cumulative_upper,
+                triang=triang_95,
+                cumulative_lower=cumulative_lower,
+                dz_blkt_upper=dz_blkt_upper,
+                c_blnkith=c_blnkith,
+                c_fwoth=c_fwoth,
+                dr_fw_inboard=dr_fw_inboard,
+                dr_fw_outboard=dr_fw_outboard,
+                tfwvt=tfwvt,
+            )
 
-        # Plot first wall
-        axis.plot(
-            x_scale * np.array(fwg_single_null.rs),
-            fwg_single_null.zs,
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            x_scale * np.array(fwg_single_null.rs),
-            fwg_single_null.zs,
-            color=FIRSTWALL_COLOUR[colour_scheme - 1],
-            lw=0.01,
-        )
+            # Plot first wall
+            axis.plot(
+                x_scale * np.array(fwg_single_null.rs),
+                fwg_single_null.zs,
+                color="black",
+                lw=thin,
+            )
+            axis.fill(
+                x_scale * np.array(fwg_single_null.rs),
+                fwg_single_null.zs,
+                color=FIRSTWALL_COLOUR[colour_scheme - 1],
+                lw=0.01,
+            )
 
-    if i_single_null == 0:
-        fwg_double_null = first_wall_geometry_double_null(
-            cumulative_lower=cumulative_lower,
-            triang=triang_95,
-            dz_blkt_upper=dz_blkt_upper,
-            c_blnkith=c_blnkith,
-            c_fwoth=c_fwoth,
-            dr_fw_inboard=dr_fw_inboard,
-            dr_fw_outboard=dr_fw_outboard,
-            tfwvt=tfwvt,
-        )
-        # Plot first wall
-        axis.plot(
-            x_scale * np.array(fwg_double_null.rs[0]),
-            fwg_double_null.zs[0],
-            color="black",
-            lw=thin,
-        )
-        axis.plot(
-            x_scale * np.array(fwg_double_null.rs[1]),
-            fwg_double_null.zs[1],
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            x_scale * np.array(fwg_double_null.rs[0]),
-            fwg_double_null.zs[0],
-            color=FIRSTWALL_COLOUR[colour_scheme - 1],
-            lw=0.01,
-        )
-        axis.fill(
-            x_scale * np.array(fwg_double_null.rs[1]),
-            fwg_double_null.zs[1],
-            color=FIRSTWALL_COLOUR[colour_scheme - 1],
-            lw=0.01,
-        )
+        case DivertorNumberModels.DOUBLE_NULL:
+            fwg_double_null = first_wall_geometry_double_null(
+                cumulative_lower=cumulative_lower,
+                triang=triang_95,
+                dz_blkt_upper=dz_blkt_upper,
+                c_blnkith=c_blnkith,
+                c_fwoth=c_fwoth,
+                dr_fw_inboard=dr_fw_inboard,
+                dr_fw_outboard=dr_fw_outboard,
+                tfwvt=tfwvt,
+            )
+            # Plot first wall
+            axis.plot(
+                x_scale * np.array(fwg_double_null.rs[0]),
+                fwg_double_null.zs[0],
+                color="black",
+                lw=thin,
+            )
+            axis.plot(
+                x_scale * np.array(fwg_double_null.rs[1]),
+                fwg_double_null.zs[1],
+                color="black",
+                lw=thin,
+            )
+            axis.fill(
+                x_scale * np.array(fwg_double_null.rs[0]),
+                fwg_double_null.zs[0],
+                color=FIRSTWALL_COLOUR[colour_scheme - 1],
+                lw=0.01,
+            )
+            axis.fill(
+                x_scale * np.array(fwg_double_null.rs[1]),
+                fwg_double_null.zs[1],
+                color=FIRSTWALL_COLOUR[colour_scheme - 1],
+                lw=0.01,
+            )
 
 
 def plot_tf_coils(
@@ -14890,7 +14896,7 @@ def plot_blkt_structure(
         label="Blanket Half Height",
     )
 
-    if i_single_null == 0:
+    if DivertorNumberModels(i_single_null) == DivertorNumberModels.DOUBLE_NULL:
         # Plot arrows for the outboard blanket angles
         ax.annotate(
             "",
@@ -14913,11 +14919,12 @@ def plot_blkt_structure(
 
     # 3 to 6 o'clock position is -90 degrees,
     angle_start = -90.0
-    if i_single_null == 1:
-        angle_end = 90.0 + deg_div_poloidal_plasma
-    elif i_single_null == 0:
-        # 3 to 12 o'clock position is +90 degrees
-        angle_end = 90.0
+    match DivertorNumberModels(i_single_null):
+        case DivertorNumberModels.SINGLE_NULL:
+            angle_end = 90.0 + deg_div_poloidal_plasma
+        case DivertorNumberModels.DOUBLE_NULL:
+            # 3 to 12 o'clock position is +90 degrees
+            angle_end = 90.0
 
     theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
     arc_x = rmajor + arc_radius * np.cos(theta)
@@ -15006,7 +15013,7 @@ def plot_blkt_structure(
 
     # Plot arrows for the divertor angles
     # If double null then plot the upper also
-    if i_single_null == 0:
+    if DivertorNumberModels(i_single_null) == DivertorNumberModels.DOUBLE_NULL:
         # Plot arc showing the angle between the two arrows (divertor angle)
         arc_radius = 1.5
         # 3 to 12 o'clock position is +90 degrees,
@@ -16482,6 +16489,216 @@ def plot_pf_dimensions(
     axis.set_aspect("equal", adjustable="box")
 
 
+def plot_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: int):
+    """Function to plot plasma thermal energy profiles on the given axis.
+
+    Parameters
+    ----------
+    axis :
+        Matplotlib axis to plot on
+    m_file :
+        MFILE
+    scan :
+        scan to read from MFILE
+    """
+    n_plasma_profile_elements = int(m_file.get("n_plasma_profile_elements", scan=scan))
+    # Example implementation (replace with actual plotting code)
+    eden_plasma_electrons_thermal_profile_mj = [
+        m_file.get(f"eden_plasma_electrons_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+    eden_plasma_ions_thermal_profile_mj = [
+        m_file.get(f"eden_plasma_ions_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+    eden_plasma_thermal_profile_mj = [
+        m_file.get(f"eden_plasma_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+    e_plasma_electrons_thermal_profile_mj = [
+        m_file.get(f"e_plasma_electrons_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    e_plasma_ions_thermal_profile_mj = [
+        m_file.get(f"e_plasma_ions_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+    e_plasma_thermal_profile_mj = [
+        m_file.get(f"e_plasma_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        e_plasma_electrons_thermal_profile_mj,
+        label="$W_{\\text{e}}$",
+        color="tab:blue",
+        linestyle=":",
+    )
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        e_plasma_ions_thermal_profile_mj,
+        label="$W_{\\text{i}}$",
+        color="tab:blue",
+        linestyle="--",
+    )
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        e_plasma_thermal_profile_mj,
+        label="$W_{\\text{total}}$",
+        color="tab:blue",
+        linestyle="-",
+    )
+
+    total_thermal_energy_max_index = int(np.argmax(e_plasma_thermal_profile_mj))
+    total_thermal_energy_max_rho = np.linspace(0, 1, n_plasma_profile_elements)[
+        total_thermal_energy_max_index
+    ]
+    total_thermal_energy_max = e_plasma_thermal_profile_mj[
+        total_thermal_energy_max_index
+    ]
+    axis.axvline(
+        total_thermal_energy_max_rho,
+        color="tab:red",
+        linestyle=":",
+        alpha=0.7,
+    )
+    axis.axhline(
+        total_thermal_energy_max,
+        color="tab:red",
+        linestyle=":",
+        alpha=0.7,
+    )
+
+    density_axis = axis.twinx()
+    density_axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        eden_plasma_electrons_thermal_profile_mj,
+        label="$W_{\\text{density, e}}$",
+        color="tab:orange",
+        linestyle=":",
+    )
+    density_axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        eden_plasma_ions_thermal_profile_mj,
+        label="$W_{\\text{density, i}}$",
+        color="tab:orange",
+        linestyle="--",
+    )
+    density_axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        eden_plasma_thermal_profile_mj,
+        label="$W_{\\text{density, total}}$",
+        color="tab:orange",
+        linestyle="-",
+    )
+
+    axis.grid(True, alpha=0.3)
+    axis.minorticks_on()
+    axis.set_xlabel(r"$\rho \quad [r/a]$")
+    axis.set_xlim(left=0.0, right=1.0)
+    axis.set_ylabel(
+        "Thermal Energy [MJ]",
+        color="tab:blue",
+    )
+    axis.tick_params(axis="y", colors="tab:blue")
+    density_axis.set_ylabel(
+        "Thermal Energy Density [MJ/m$^3$]",
+        color="tab:orange",
+    )
+    density_axis.tick_params(axis="y", colors="tab:orange")
+    handles, labels = axis.get_legend_handles_labels()
+    density_handles, density_labels = density_axis.get_legend_handles_labels()
+    axis.legend(handles + density_handles, labels + density_labels)
+
+
+def plot_cumulative_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: int):
+    """Function to plot the cumulative plasma thermal energy profiles on the given axis.
+
+    Parameters
+    ----------
+    axis :
+        Matplotlib axis to plot on
+    m_file :
+        MFILE
+    scan :
+        scan to read from MFILE
+    """
+    n_plasma_profile_elements = int(m_file.get("n_plasma_profile_elements", scan=scan))
+    e_plasma_thermal_total_mj = m_file.get("e_plasma_thermal_total", scan=scan) / 1e6
+    # Example implementation (replace with actual plotting code)
+    e_plasma_electrons_thermal_profile_mj = [
+        m_file.get(f"e_plasma_electrons_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    e_plasma_ions_thermal_profile_mj = [
+        m_file.get(f"e_plasma_ions_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+    e_plasma_thermal_profile_mj = [
+        m_file.get(f"e_plasma_thermal_profile{i}", scan=scan) / 1e6
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        np.cumsum(e_plasma_electrons_thermal_profile_mj),
+        label="$\\Sigma W_{\\text{e}}$",
+        color="tab:blue",
+        linestyle=":",
+    )
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        np.cumsum(e_plasma_ions_thermal_profile_mj),
+        label="$\\Sigma W_{\\text{i}}$",
+        color="tab:blue",
+        linestyle="--",
+    )
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        np.cumsum(e_plasma_thermal_profile_mj),
+        label="$\\Sigma W_{\\text{total}}$",
+        color="tab:blue",
+        linestyle="-",
+    )
+    axis.axhline(
+        y=e_plasma_thermal_total_mj,
+        label="$W_{\\text{thermal,total}}$",
+        color="tab:red",
+        linestyle="--",
+    )
+    cumulative_thermal_energy_mj = np.cumsum(e_plasma_thermal_profile_mj)
+    half_thermal_energy_mj = 0.5 * e_plasma_thermal_total_mj
+    half_thermal_energy_position = np.interp(
+        half_thermal_energy_mj,
+        cumulative_thermal_energy_mj,
+        np.linspace(0, 1, n_plasma_profile_elements),
+    )
+    axis.axhline(
+        y=half_thermal_energy_mj,
+        label="$50\\%\\ W_{\\text{thermal,total}}$",
+        color="tab:green",
+        linestyle=":",
+    )
+    axis.axvline(
+        x=half_thermal_energy_position,
+        color="tab:green",
+        linestyle=":",
+    )
+
+    axis.legend()
+
+    axis.grid(True, alpha=0.3)
+    axis.minorticks_on()
+    axis.tick_params(axis="x", labelbottom=False)
+    axis.set_xlim(left=0.0, right=1.0)
+    axis.set_ylabel(
+        "Cumulative Thermal Energy [MJ]",
+    )
+
+
 def main_plot(
     m_file: MFile,
     scan: int,
@@ -16707,7 +16924,13 @@ def main_plot(
     plot_magnetic_fields_in_plasma(
         _add_page("beta").add_subplot(122, aspect="equal"), m_file, scan
     )
-    plot_beta_profiles(pages["beta"].add_subplot(221), m_file, scan)
+    plot_beta_profiles(pages["beta"].add_subplot(321), m_file, scan)
+
+    ax_thermal_energy = pages["beta"].add_subplot(325)
+    plot_plasma_thermal_energy_profiles(ax_thermal_energy, m_file, scan)
+    plot_cumulative_plasma_thermal_energy_profiles(
+        pages["beta"].add_subplot(323, sharex=ax_thermal_energy), m_file, scan
+    )
 
     plot_ebw_ecrh_coupling_graph(_add_page().add_subplot(111), m_file, scan)
 

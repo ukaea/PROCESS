@@ -638,16 +638,19 @@ def check_process(inputs, data):  # noqa: ARG001
                 stacklevel=2,
             )
     i_single_null = DivertorNumberModels(data.physics.i_single_null)
-    if i_single_null == DivertorNumberModels.DOUBLE_NULL:
-        data.divertor.n_divertors = 2
-        data.build.dz_fw_plasma_gap = data.build.dz_xpoint_divertor
-        data.build.dz_shld_upper = data.build.dz_shld_lower
-        data.build.dz_vv_upper = data.build.dz_vv_lower
-        logger.warning(
-            "Double-null: Upper vertical build forced to match lower", stacklevel=2
-        )
-    else:  # i_single_null == DivertorNumberModels.SINGLE_NULL
-        data.divertor.n_divertors = 1
+    match DivertorNumberModels(data.physics.i_single_null):
+        case DivertorNumberModels.DOUBLE_NULL:
+            data.divertor.n_divertors = 2
+            data.build.dz_fw_plasma_gap = data.build.dz_xpoint_divertor
+            data.build.dz_shld_upper = data.build.dz_shld_lower
+            data.build.dz_vv_upper = data.build.dz_vv_lower
+            logger.warning(
+                "Double-null: Upper vertical build forced to match lower", stacklevel=2
+            )
+        case (
+            DivertorNumberModels.SINGLE_NULL
+        ):  # i_single_null == DivertorNumberModels.SINGLE_NULL
+            data.divertor.n_divertors = 1
 
     #  Tight aspect ratio options (ST)
     if data.physics.itart == 1:

@@ -495,29 +495,30 @@ class Build(Model):
         )
 
         #  Vertical locations of divertor coils
-        if i_single_null == DivertorNumberModels.DOUBLE_NULL:
-            self.data.build.z_tf_top = (
-                self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
-            )
-            self.data.build.dz_tf_upper_lower_midplane = 0.0e0
-        else:
-            self.data.build.z_tf_top = (
-                self.data.build.dr_tf_inboard
-                + self.data.build.dr_tf_shld_gap
-                + self.data.build.dz_shld_thermal
-                + self.data.build.dz_shld_vv_gap
-                + self.data.build.dz_vv_upper
-                + self.data.build.dz_shld_upper
-                + self.data.build.dr_shld_blkt_gap
-                + self.data.build.dz_blkt_upper
-                + 0.5e0
-                * (self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard)
-                + self.data.build.dz_fw_plasma_gap
-                + self.data.build.z_plasma_xpoint_upper
-            )
-            self.data.build.dz_tf_upper_lower_midplane = self.data.build.z_tf_top - (
-                self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
-            )
+        match DivertorNumberModels(i_single_null):
+            case DivertorNumberModels.DOUBLE_NULL:
+                self.data.build.z_tf_top = (
+                    self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
+                )
+                self.data.build.dz_tf_upper_lower_midplane = 0.0e0
+            case DivertorNumberModels.SINGLE_NULL:
+                self.data.build.z_tf_top = (
+                    self.data.build.dr_tf_inboard
+                    + self.data.build.dr_tf_shld_gap
+                    + self.data.build.dz_shld_thermal
+                    + self.data.build.dz_shld_vv_gap
+                    + self.data.build.dz_vv_upper
+                    + self.data.build.dz_shld_upper
+                    + self.data.build.dr_shld_blkt_gap
+                    + self.data.build.dz_blkt_upper
+                    + 0.5e0
+                    * (self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard)
+                    + self.data.build.dz_fw_plasma_gap
+                    + self.data.build.z_plasma_xpoint_upper
+                )
+                self.data.build.dz_tf_upper_lower_midplane = self.data.build.z_tf_top - (
+                    self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
+                )
 
     def divgeom(self, output: bool):
         """Divertor geometry calculation
