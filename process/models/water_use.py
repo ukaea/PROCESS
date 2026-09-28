@@ -74,8 +74,8 @@ class WaterUse(Model):
     def cooling_towers(self, wastetherm: float):
         """Water used in cooling towers
 
-                Parameters
-                ----------
+        Parameters
+        ----------
                 wastetherm:
         <<<<<<< HEAD
                     thermal energy per day (MJ/day) to be cooled by this system

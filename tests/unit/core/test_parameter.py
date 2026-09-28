@@ -1,3 +1,4 @@
+import copy
 from dataclasses import dataclass
 from typing import Annotated
 
@@ -213,3 +214,118 @@ def test_arrayify_parameter():
 
     assert isinstance(array, np.ndarray)
     np.testing.assert_array_equal(array, np.array(42.0))
+
+
+@pytest.mark.parametrize(
+    "val1",
+    [
+        np.float64(1.0),
+        np.array(1.0),
+        np.array([1.0]),
+        np.array([[1.0]]),
+        np.int_(1),
+        np.array([[1]]),
+    ],
+)
+@pytest.mark.parametrize(
+    "val2",
+    [
+        np.float64(2.0),
+        np.array(2.0),
+        np.array([2.0]),
+        np.array([[2.0]]),
+        np.int_(2),
+        np.array([[2]]),
+    ],
+)
+def test_ops(val1, val2):
+    result_normal = val1 + val2
+
+    result_parameter = Parameter("val1", val1) + Parameter("val2", val2)
+    assert result_normal == result_parameter
+    # non-in-place ops should return the correct type e.g. float, not a Parameter
+    # python types WILL be coerced into a Numpy type
+    assert type(result_normal) is type(result_parameter)
+
+
+@pytest.mark.parametrize(
+    "val1",
+    [
+        np.float64(1.0),
+        np.array(1.0),
+        np.array([1.0]),
+        np.array([[1.0]]),
+        np.int_(1),
+        np.array([[1]]),
+    ],
+)
+@pytest.mark.parametrize(
+    "val2",
+    [
+        np.float64(2.0),
+        np.array(2.0),
+        np.array([2.0]),
+        np.array([[2.0]]),
+        np.int_(2),
+        np.array([[2]]),
+    ],
+)
+def test_ops_in_place(val1, val2):
+
+    val1_copy = copy.deepcopy(val1)
+    val2_copy = copy.deepcopy(val2)
+    try:
+        val1_copy += val2_copy
+    except Exception:  # ruff:ignore[BLE001]
+        pytest.skip("Not a valid in-place addition type combination.")
+
+    param1 = Parameter("param1", val1)
+    param2 = Parameter("param2", val2)
+
+    param1 += param2
+
+    assert val1_copy == param1
+    # non-in-place ops should return the correct type e.g. float, not a Parameter
+    # python types WILL be coerced into a Numpy type
+    assert type(val1_copy) is type(param1.value)
+
+
+def test_one_inplace_param():
+    a = np.array([1.0, 2.0, 3.0])
+    b = np.array([1.0, 2.0, 3.0])
+
+    result = np.add(a, b)
+
+    x = Parameter("x", np.zeros_like(a))
+    id_x = id(x._value)
+
+    result_param = np.add(a, b, out=x)
+
+    assert id(x._value) == id_x
+    assert (x == result).all()
+    assert (result_param == result).all()
+    assert result_param is x
+
+
+def test_in_place_many_parameters():
+    x = np.array([1.5, 2.7, -3.2])
+    fractional = np.zeros_like(x)
+    integral = np.zeros_like(x)
+
+    result = np.modf(x, out=(fractional, integral))
+
+    fractional_param = Parameter("fractional_param", np.zeros_like(x))
+    integral_param = Parameter("integral_param", np.zeros_like(x))
+
+    id_fractional_param = id(fractional_param._value)
+    id_integral_param = id(integral_param._value)
+
+    result_param = np.modf(x, out=(fractional_param, integral_param))
+
+    assert len(result_param) == 2
+    assert (result[0] == result_param[0]).all()
+    assert (result[1] == result_param[1]).all()
+    assert (fractional == fractional_param).all()
+    assert (integral == integral_param).all()
+    assert id(fractional_param._value) == id_fractional_param
+    assert id(integral_param._value) == id_integral_param
