@@ -15,6 +15,7 @@ import numpy as np
 from matplotlib import patches
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path as mplPath
+from scipy.integrate import cumulative_simpson
 from scipy.interpolate import interp1d
 
 from process.core import constants
@@ -11933,7 +11934,7 @@ def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
     )
 
 
-def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
+def plot_fusion_rate_density_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     """Plot the fusion rate density profiles on the given axis"""
     fusden_plasma_dt_profile = []
     fusden_plasma_dd_triton_profile = []
@@ -12311,6 +12312,181 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         transform=fig.transFigure,
     )
 
+def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
+    """Plot the fusion rate profiles on the given axis"""
+    fusrat_plasma_dt_profile = []
+    fusrat_plasma_dd_triton_profile = []
+    fusrat_plasma_dd_helion_profile = []
+    fusrat_plasma_dhe3_profile = []
+
+    n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
+    vol_plasma = mfile.get("vol_plasma", scan=scan)
+    
+    rho, ne, te = profiles_with_pedestal(mfile, scan)
+    
+    
+    
+    fusrat_plasma_dt_profile = [
+        mfile.get(f"fusrat_plasma_dt_profile{i}", scan=scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    fusrat_plasma_dd_triton_profile = [
+        mfile.get(f"fusrat_plasma_dd_triton_profile{i}", scan=scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    fusrat_plasma_dd_helion_profile = [
+        mfile.get(f"fusrat_plasma_dd_helion_profile{i}", scan=scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+    fusrat_plasma_dhe3_profile = [
+        mfile.get(f"fusrat_plasma_dhe3_profile{i}", scan=scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    fusden_plasma_total_profile = [
+        fusrat_plasma_dt_profile[i]
+        + fusrat_plasma_dd_triton_profile[i]
+        + fusrat_plasma_dd_helion_profile[i]
+        + fusrat_plasma_dhe3_profile[i]
+        for i in range(len(fusrat_plasma_dt_profile))
+    ]
+    
+    # Integrand for the volume integral N = vol_plasma * 2 * integral(fusden(rho) * rho, drho)
+    fusrat_plasma_total_profile = np.array([
+        fusden_plasma_total_profile[i] * vol_plasma * 2 * rho[i]
+        for i in range(len(fusden_plasma_total_profile))
+    ])
+
+    # Simpson's rule matches the quadrature used internally for fusrat_total, so the
+    # cumulative integral naturally lands on the reported total at rho=1
+    cum_fusrat = cumulative_simpson(fusrat_plasma_total_profile, x=rho, initial=0.0)
+    print(cum_fusrat[-1])
+    axis.spines["left"].set_color("red")
+    axis.yaxis.label.set_color("black")
+    axis.tick_params(axis="y", colors="red")
+
+    # Plot fusion rates (dashed lines, left axis) with axis color and different linestyles
+    # axis.plot(
+    #     np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
+    #     fusrat_plasma_dt_profile,
+    #     color=axis.spines["left"].get_edgecolor(),
+    #     linestyle="-",
+    #     label=r"$\mathrm{D-T}$",
+    # )
+    # axis.plot(
+    #     np.linspace(0, 1, len(fusrat_plasma_dd_triton_profile)),
+    #     fusrat_plasma_dd_triton_profile,
+    #     color=axis.spines["left"].get_edgecolor(),
+    #     linestyle=":",
+    #     label=r"$\mathrm{D-D \ Triton}$",
+    # )
+    # axis.plot(
+    #     np.linspace(0, 1, len(fusrat_plasma_dd_helion_profile)),
+    #     fusrat_plasma_dd_helion_profile,
+    #     color=axis.spines["left"].get_edgecolor(),
+    #     linestyle="-.",
+    #     label=r"$\mathrm{D-D \ Helion}$",
+    # )
+    # axis.plot(
+    #     np.linspace(0, 1, len(fusrat_plasma_dhe3_profile)),
+    #     fusrat_plasma_dhe3_profile,
+    #     color=axis.spines["left"].get_edgecolor(),
+    #     linestyle="--",
+    #     label=r"$\mathrm{D-3He}$",
+    # )
+    axis.plot(
+        np.linspace(0, 1, len(fusrat_plasma_total_profile)),
+        cum_fusrat,
+        color=axis.spines["left"].get_edgecolor(),
+        linestyle="None",
+        marker="d",
+        markersize=1,
+        label=r"Total",
+    )
+
+    # # Plot fusion power (solid lines, right axis) with axis color and different linestyles
+    # ax2 = axis.twinx()
+    # ax2.spines["right"].set_color("blue")
+    # ax2.yaxis.label.set_color("black")
+    # ax2.tick_params(axis="y", colors="blue")
+    # ax2.plot(
+    #     np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
+    #     np.array(fusrat_plasma_dt_profile) * constants.D_T_ENERGY,
+    #     color=ax2.spines["right"].get_edgecolor(),
+    #     linestyle="-",
+    # )
+
+    # ax2.plot(
+    #     np.linspace(0, 1, len(fusrat_plasma_dd_triton_profile)),
+    #     np.array(fusrat_plasma_dd_triton_profile) * constants.DD_TRITON_ENERGY,
+    #     color=ax2.spines["right"].get_edgecolor(),
+    #     linestyle=":",
+    # )
+    # ax2.plot(
+    #     np.linspace(0, 1, len(fusrat_plasma_dd_helion_profile)),
+    #     np.array(fusrat_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY,
+    #     color=ax2.spines["right"].get_edgecolor(),
+    #     linestyle="-.",
+    # )
+    # ax2.plot(
+    #     np.linspace(0, 1, len(fusrat_plasma_dhe3_profile)),
+    #     np.array(fusrat_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY,
+    #     color=ax2.spines["right"].get_edgecolor(),
+    #     linestyle="--",
+    # )
+    # ax2.plot(
+    #     np.linspace(0, 1, len(fusrat_plasma_total_profile)),
+    #     (
+    #         np.array(fusrat_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY
+    #         + np.array(fusrat_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY
+    #         + np.array(fusrat_plasma_dd_triton_profile) * constants.DD_TRITON_ENERGY
+    #         + np.array(fusrat_plasma_dt_profile) * constants.D_T_ENERGY
+    #     ),
+    #     color=ax2.spines["right"].get_edgecolor(),
+    #     linestyle="None",
+    #     marker="d",
+    #     markersize=1,
+    #     label=r"Total",
+    # )
+
+    # =================================================
+
+    
+
+    # =================================================
+
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.set_ylabel("Fusion Rate [reactions/second]")
+    axis.legend(
+        loc="lower left",
+        edgecolor="black",
+        facecolor="white",
+        labelcolor="black",
+        framealpha=1.0,
+        frameon=True,
+    )
+    #axis.set_yscale("log")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.set_xlim([0, 1.025])
+    axis.minorticks_on()
+    #axis.set_ylim([1e10, 1e23])
+    # axis.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
+    # axis.yaxis.set_minor_locator(
+    #     plt.LogLocator(base=10.0, subs=np.arange(1, 10) * 0.1, numticks=100)
+    # )
+    # axis.tick_params(axis="y", which="minor", colors="red")
+
+    # ax2.set_title("Fusion Rate and Fusion Power Profiles")
+    # ax2.set_ylabel("Fusion Power [W]")
+    # ax2.set_yscale("log")
+    # ax2.minorticks_on()
+    # ax2.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
+    # ax2.yaxis.set_minor_locator(
+    #     plt.LogLocator(base=10.0, subs=np.arange(1, 10) * 0.1, numticks=100)
+    # )
+    # ax2.tick_params(axis="y", which="minor", colors="blue")
 
 def plot_cover_page(
     axis: plt.Axes,
