@@ -658,8 +658,10 @@ def function_name(param1: Any, param2: Any) -> Any:
 
     References
     ----------
-    - Reference 1: Description of the reference.
-    - Reference 2: Description of the reference.
+    [1] Description of reference 1. Preferably in IEEE reference format with a 
+    DOI link (if applicable).
+    [2] Description of reference 2. Preferably in IEEE reference format with a 
+    DOI link (if applicable).
     """
 ```
 
