@@ -20,7 +20,8 @@ FILTER_EDIT_USE_RECORDS_PATH: Callable[[inspect.FrameInfo], bool] = lambda frame
 """An optional filter to find the frame to display in the edit/use record.
 
 If FILTER_EDIT_USE_RECORDS_PATH(frame) = True the first frame is returned
-(probably not a useful frame because it will be one of the functions in this file)
+(probably not a useful frame because it will be one of the functions in this file
+or the parameter_frame package).
 
 If FILTER_EDIT_USE_RECORDS_PATH(frame) = False no frame information is recorded.
 
@@ -65,6 +66,20 @@ class EditRecord(UseRecord):
 
 
 class Parameter(DefaultParameter, Generic[ParameterValueType]):
+    """The Parameter class wraps a variable with additional metadata and functionality.
+
+    The wrapped variable is assumed to be a Numpy type. Creating and operating on a
+    Parameter with a non-Numpy type could evoke errors or implicit type coercion.
+
+    The Parameter should be 'transparent' to numeric operations. That is, numeric/array
+    operations act upon the underlying ._value` property.
+
+    If process.core.data_structure.parameter.KEEP_EDIT_USE_RECORDS is True, the Parameter
+    will record all instances where the Parameter value is accessed or mutated. This
+    functionality is useful for debugging but is slow, so should not be enabled during
+    production operations.
+    """
+
     def __init__(
         self,
         name: str,
@@ -77,6 +92,7 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
         latex_symbol: str = "",
         _value_types: tuple[type, ...] | None = None,
     ):
+        """Initialises the Parameter."""
         self._latext_symbol = latex_symbol
         self._symbol = symbol
 
@@ -86,10 +102,12 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
 
     @property
     def symbol(self) -> str:
+        """The Parameter's symbol."""
         return self._symbol
 
     @property
     def latex_symbol(self) -> str:
+        """The Parameter's Latex symbol (used for plotting)."""
         return self._latex_symbol
 
     def __eq__(self, o, /):
@@ -111,14 +129,17 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
         return super().__eq__(o)
 
     def __hash__(self):
+        """Return the hash of the Parameter."""
         return super().__hash__()
 
     def reset_edit_use_records(self):
+        """Remove any existing edit/use records."""
         self._edited = []
         self._used = []
 
     @property
     def value(self):
+        """The data this Parameter wraps."""
         if KEEP_EDIT_USE_RECORDS:
             try:
                 called_from = next(filter(FILTER_EDIT_USE_RECORDS_PATH, inspect.stack()))
@@ -138,6 +159,7 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
         return super().value
 
     def set_value(self, new_value, source=""):
+        """Update the data that this Parameter wraps."""
         if KEEP_EDIT_USE_RECORDS:
             try:
                 called_from = next(
@@ -165,6 +187,13 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
 
     @property
     def edit_records(self) -> list[EditRecord]:
+        """The list of edit records, the most recent edit is recorded at index 0.
+
+        Raises
+        ------
+        RuntimeError
+            KEEP_EDIT_USE_RECORDS is False.
+        """
         if not KEEP_EDIT_USE_RECORDS:
             raise RuntimeError(
                 f"Edit records are disabled because {KEEP_EDIT_USE_RECORDS = }"
@@ -203,22 +232,73 @@ class Parameter(DefaultParameter, Generic[ParameterValueType]):
 
 @dataclass(slots=True, kw_only=True)
 class ParameterMetadata:
+    """The possible metadata fields of a Parameter."""
+
     unit: str = ""
     source: str = ""
     description: str = ""
     long_name: str = ""
+    symbol: str = ""
+    latex_symbol: str = ""
 
 
 class PROCESSModelData:
+    """The superclass for a dataclass which contains PROCESS model data.
+
+    Each class in the DataStructure should inherit this superclass.
+
+    The superclass enforces strict typing standards for these data structure
+    dataclasses and handles the creation of Parameter's with prescribed metadata.
+
+    There are three ways of defining data fields to these dataclasses:
+    ```python
+    @dataclass(slots=True)
+    class MyData(PROCESSModelData):
+        # 1. A normal float annotation. The field acts 'normally'
+        # and does not have any metadata.
+        my_float: float = 0.0
+
+        # 2. A Parameter annotation. The field gets converted into a Parameter
+        # when the dataclass is initialised. It has no metadata.
+        my_parameter: Parameter[float] = 0.0
+
+        # 3. An Annotated Parameter. The field still gets converted into
+        # a Parameter but the metadata attributes on said Parameter is populated.
+        my_annotated_param: Annotated[Parameter[float], ParameterMetadata(...)] = 0.0
+    ```
+    """
+
     __slots__ = []
 
     def __new__(cls, *args, **kwargs):
+        """Create a new PROCESSModelData class.
+
+        Raises
+        ------
+        TypeError
+            cls is not a dataclass.
+        """
         if not hasattr(cls, "__dataclass_fields__"):
             raise TypeError(f"{cls.__name__} must be a dataclass!")
 
         return super().__new__(cls, *args, **kwargs)
 
     def __post_init__(self):
+        """Post-initialisation validation and Parameter creation.
+
+        Raises
+        ------
+        TypeError
+            1. If a field of this dataclass is initialised as a Parameter.
+                E.g. `my_field: Parameter[float] = Parameter('my_field', 0.0)`
+                Because initialising any field as a mutable object is unsafe.
+            2. A field that is Annotated with metadata but does not use the
+                ParameterMetadata class to do so.
+                E.g. `my_field: Annotated[Parameter[float], 'not a ParameterMetadata'] = ...`
+            3. The Parameter type annotation is not generic.
+                E.g. `my_field: Parameter = ...`
+
+        """  # noqa: E501
         for f in fields(self):
             current_value = getattr(self, f.name)
             # Check that the Parameter has not been instantiated yet (this will cause
@@ -270,6 +350,7 @@ class PROCESSModelData:
                 setattr(self, f.name, parameter)
 
     def __setattr__(self, name, value):
+        """Sets an attribute on the dataclass."""
         # we are setting this attribute for the first time (e.g. creating the dataclass)
         if not hasattr(self, name):
             super().__setattr__(name, value)
@@ -281,7 +362,8 @@ class PROCESSModelData:
         if isinstance(current_value, Parameter):
             logger.debug(
                 f"Doing self.{name} = {value!r} only copies {value} into "
-                f"{name}.value. Use set_field to exactly set the dataclass field."
+                f"{name}.value. Use set_field to exactly set the dataclass field "
+                f"i.e. if you do not want self.{name} to be a Parameter anymore."
             )
             if isinstance(value, Parameter):
                 current_value.set_value(value.value, source=value.name)
@@ -300,6 +382,7 @@ class PROCESSModelData:
         super().__setattr__(name, value)
 
     def parameters(self) -> Generator[tuple[str, Parameter], None, None]:
+        """Provides a generator that yields all fields that are a Parameter type."""
         return (
             (field.name, param)
             for field in fields(self)
@@ -307,6 +390,7 @@ class PROCESSModelData:
         )
 
     def reset_edit_use_records(self):
+        """Removes existing edit/use records on all Parameter fields."""
         for field in fields(self):
             value = getattr(self, field.name)
 
@@ -315,6 +399,31 @@ class PROCESSModelData:
 
 
 def unwrap_parameter(func):
+    """A decorator that unwraps the Parameter value before calling the
+    decorated function.
+
+    This is necessary for @numba.njit functions which are unaware of how
+    to use a Parameter when jit compiling functions:
+
+    ```python
+    @unwrap_parameter
+    @numba.njit
+    def my_function(a, b, c):
+        ...
+    ```
+
+    Notes
+    -----
+    In the above example, `my_function` could not be used inside another numba-compiled
+    function. E.g. the following code would error
+    ```python
+    @unwrap_parameter
+    @numba.njit
+    def my_other_function(a, b, c):
+        my_function(a, b, c) # Errors here because it tries to compile this decorator!
+    ```
+    """
+
     def wrapper(*args, **kwargs):
         return func(
             *[arg.value if isinstance(arg, Parameter) else arg for arg in args],
