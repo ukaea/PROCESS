@@ -85,6 +85,7 @@ from process.models.physics.plasma_geometry import (
     PlasmaShapeModelType,
 )
 from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.physics.scrape_off_layer import Zhang0DBoxModel
 from process.models.pulse import PulseTimings
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
@@ -16729,6 +16730,60 @@ def main_plot(
         _add_page("plasma_compare_3").add_subplot(221), m_file, scan
     )
 
+    zhang_page_name = "zhang_0d_box_model"
+    zhang_required_outputs = (
+        "a_plasma_outboard_sol_parallel",
+        "m_fuel_amu",
+        "molflow_plasma_fuelling_required",
+        "pflux_plasma_outboard_sol_parallel_mw",
+        "q95",
+        "rmajor",
+    )
+    if all(output_name in m_file.data for output_name in zhang_required_outputs):
+        sol_parallel_area = m_file.get("a_plasma_outboard_sol_parallel", scan=scan)
+        ion_particle_rate = 2.0 * m_file.get(
+            "molflow_plasma_fuelling_required", scan=scan
+        )
+        if sol_parallel_area > 0.0 and ion_particle_rate > 0.0:
+            pages[zhang_page_name] = plot_zhang_0d_box_model_operating_map(
+                mfile=m_file,
+                scan=scan,
+                particle_flux_parallel=ion_particle_rate / sol_parallel_area,
+                ion_mass_amu=m_file.get("m_fuel_amu", scan=scan),
+                ion_charge_number=1.0,
+                len_parallel=(
+                    np.pi
+                    * m_file.get("rmajor", scan=scan)
+                    * m_file.get("q95", scan=scan)
+                ),
+                flux_expansion=1.0,
+                recycling_fraction=0.99,
+                electron_power_loss_fraction=0.0,
+                ion_power_loss_fraction=0.0,
+                momentum_loss_factor=1.0,
+                conduction_loss_fraction=1.0,
+            )
+        else:
+            _add_page(zhang_page_name).text(
+                0.5,
+                0.5,
+                "Zhang 0D SOL box-model map requires positive parallel SOL area "
+                "and plasma fuelling rate.",
+                ha="center",
+                va="center",
+                wrap=True,
+            )
+    else:
+        _add_page(zhang_page_name).text(
+            0.5,
+            0.5,
+            "Zhang 0D SOL box-model map is unavailable because this MFILE "
+            "does not contain the required SOL outputs.",
+            ha="center",
+            va="center",
+            wrap=True,
+        )
+
     plot_brunner_divertor_power_split_comparison_stackplot(
         _add_page("plasma_exhaust").add_subplot(121), m_file, scan
     )
@@ -17193,6 +17248,134 @@ def create_thickness_builds(m_file, scan: int):
     return RadialBuild(
         upper, lower, radial, cumulative_upper, cumulative_lower, cumulative_radial
     )
+
+
+def plot_zhang_0d_box_model_operating_map(
+    mfile: MFile,
+    particle_flux_parallel: float,
+    ion_mass_amu: float,
+    ion_charge_number: float,
+    len_parallel: float,
+    flux_expansion: float,
+    recycling_fraction: float,
+    electron_power_loss_fraction: float,
+    ion_power_loss_fraction: float,
+    momentum_loss_factor: float,
+    conduction_loss_fraction: float,
+    scan: int = -1,
+    electron_power_fraction: float = 0.5,
+    particle_flux_range: tuple[float, float] | None = None,
+    pflux_parallel_mw_range: tuple[float, float] | None = None,
+    n_points: int = 41,
+) -> plt.Figure:
+    """Plot Zhang 0D box-model output maps around the PROCESS SOL state.
+
+    The current PROCESS upstream parallel heat flux is taken from the MFILE.
+    PROCESS does not yet calculate an upstream particle flux, so
+    ``particle_flux_parallel`` explicitly sets both the overlaid operating point
+    and the centre of the swept particle-flux range.
+    """
+    if particle_flux_parallel <= 0.0 or n_points < 2:
+        raise ValueError("Particle flux must be positive and n_points must exceed one.")
+    if not 0.0 < electron_power_fraction < 1.0:
+        raise ValueError("Electron power fraction must be between zero and one.")
+
+    process_pflux_parallel_mw = mfile.get(
+        "pflux_plasma_outboard_sol_parallel_mw", scan=scan
+    )
+    if process_pflux_parallel_mw <= 0.0:
+        raise ValueError("PROCESS parallel SOL heat flux must be positive.")
+
+    particle_flux_range = particle_flux_range or (
+        particle_flux_parallel / 2,
+        particle_flux_parallel * 2,
+    )
+    pflux_parallel_mw_range = pflux_parallel_mw_range or (
+        process_pflux_parallel_mw / 2,
+        process_pflux_parallel_mw * 2,
+    )
+    if (
+        particle_flux_range[0] <= 0.0
+        or particle_flux_range[0] >= particle_flux_range[1]
+        or pflux_parallel_mw_range[0] <= 0.0
+        or pflux_parallel_mw_range[0] >= pflux_parallel_mw_range[1]
+    ):
+        raise ValueError("Operating-map ranges must be ordered positive pairs.")
+
+    particle_fluxes = np.geomspace(*particle_flux_range, n_points)
+    pfluxes_parallel_mw = np.geomspace(*pflux_parallel_mw_range, n_points)
+    output_names = (
+        "temp_plasma_divertor_electron_ev",
+        "temp_plasma_divertor_ion_ev",
+        "nd_plasma_divertor_electron",
+        "temp_plasma_outboard_midplane_electron_ev",
+    )
+    output_labels = (
+        r"$T_{e,t}$ [eV]",
+        r"$T_{i,t}$ [eV]",
+        r"$n_{e,t}$ [m$^{-3}$]",
+        r"$T_{e,u}$ [eV]",
+    )
+    output_maps = {name: np.full((n_points, n_points), np.nan) for name in output_names}
+
+    for pflux_index, pflux_parallel_mw in enumerate(pfluxes_parallel_mw):
+        for particle_flux_index, swept_particle_flux in enumerate(particle_fluxes):
+            try:
+                result = Zhang0DBoxModel.solve_at_point(
+                    pflux_electron_parallel_w=(
+                        electron_power_fraction * pflux_parallel_mw * 1.0e6
+                    ),
+                    particle_flux_electron_parallel=swept_particle_flux,
+                    pflux_ion_parallel_w=(
+                        (1.0 - electron_power_fraction) * pflux_parallel_mw * 1.0e6
+                    ),
+                    particle_flux_ion_parallel=swept_particle_flux,
+                    ion_mass_amu=ion_mass_amu,
+                    ion_charge_number=ion_charge_number,
+                    len_parallel=len_parallel,
+                    flux_expansion=flux_expansion,
+                    recycling_fraction=recycling_fraction,
+                    electron_power_loss_fraction=electron_power_loss_fraction,
+                    ion_power_loss_fraction=ion_power_loss_fraction,
+                    momentum_loss_factor=momentum_loss_factor,
+                    conduction_loss_fraction=conduction_loss_fraction,
+                )
+            except RuntimeError:
+                continue
+            for output_name in output_names:
+                output_maps[output_name][pflux_index, particle_flux_index] = result[
+                    output_name
+                ]
+
+    fig, axes = plt.subplots(2, 2, figsize=(12, 9), layout="constrained")
+    for axis, output_name, output_label in zip(
+        axes.flat, output_names, output_labels, strict=True
+    ):
+        contour = axis.contourf(
+            particle_fluxes,
+            pfluxes_parallel_mw,
+            output_maps[output_name],
+            levels=20,
+        )
+        axis.scatter(
+            particle_flux_parallel,
+            process_pflux_parallel_mw,
+            color="black",
+            marker="x",
+            s=60,
+            linewidths=2,
+            label="PROCESS operating point",
+        )
+        axis.set_xscale("log")
+        axis.set_yscale("log")
+        axis.set_xlabel(r"$\Gamma_{\parallel,u}$ [particles m$^{-2}$ s$^{-1}$]")
+        axis.set_ylabel(r"$q_{\parallel,u}$ [MW m$^{-2}$]")
+        axis.set_title(output_label)
+        axis.legend(loc="best")
+        fig.colorbar(contour, ax=axis, label=output_label)
+
+    fig.suptitle("Zhang 0D SOL box-model operating map")
+    return fig
 
 
 def plot_summary(
