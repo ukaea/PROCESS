@@ -3107,7 +3107,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
             case _:
                 raise ProcessValueError(
-                    "Illegal value for i_tf_sc_mat",
+                    "Illegal value for i_tf_superconductor",
                     i_tf_superconductor=i_tf_superconductor,
                 )
 

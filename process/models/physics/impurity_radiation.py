@@ -286,21 +286,21 @@ def init_imp_element(
     Parameters
     ----------
     n_species_index : int
-        Position of species in impurity array [-]
+        Position of species in impurity array
     name_label : str
-        Species name [-]
+        Species name
     z : int
-        Species charge number [-]
+        Species charge number
     m_species_amu : float
         Species atomic mass [amu]
     f_nd_species_electron : float
-        Number density / electron density [-]
+        Number density / electron density
     len_tab : int
-        Length of temperature and Lz tables [-]
+        Length of temperature and Lz tables
     error : int
-        Error flag; 0 = okay, 1 = missing impurity data [-]
+        Error flag; 0 = okay, 1 = missing impurity data
     data : DataStructure
-        Data structure containing impurity radiation information [-]
+        Data structure containing impurity radiation information
 
     Raises
     ------

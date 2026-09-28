@@ -922,14 +922,14 @@ class ElectronCyclotron(Model):
         tlocal : float
             Local electron temperature [keV].
         epsloc : float
-            Local inverse aspect ratio [-].
+            Local inverse aspect ratio.
         zlocal : float
-            Local plasma effective charge [-].
+            Local plasma effective charge.
         cosang : float
-            Cosine of the poloidal angle at which ECCD takes place [-]
+            Cosine of the poloidal angle at which ECCD takes place.
             (+1 outside, -1 inside).
         coulog : float
-            Local coulomb logarithm for ion-electron collisions [-].
+            Local coulomb logarithm for ion-electron collisions.
 
         Returns
         -------
@@ -1522,9 +1522,9 @@ class LowerHybrid(Model):
         Parameters
         ----------
         drfind:
-            correction to parallel refractive index [-]
+            correction to parallel refractive index
         rratio:
-            guess for radius of penetration / rminor [-]
+            guess for radius of penetration / rminor
 
         Returns
         -------

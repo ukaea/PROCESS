@@ -904,6 +904,12 @@ class Build(Model):
                 maximum ripple (m)
             - flag: Applicability flag (0 = OK, non-zero = fitted-range concern)
 
+
+        Raises
+        ------
+        ProcessValueError
+            If the TF coil parameters are not properly defined.
+
         Notes
         -----
         - Fitted coefficients originate from parametric MAGINT runs (M. Kovari, 2014).
@@ -917,8 +923,7 @@ class Build(Model):
                 # Minimal inboard WP radius [m]
                 r_wp_min = r_tf_wp_inboard_inner
 
-                i_tf_wp_geom = SuperconductingTFWPShapeType(i_tf_wp_geom)
-                match i_tf_wp_geom:
+                match SuperconductingTFWPShapeType(i_tf_wp_geom):
                     case SuperconductingTFWPShapeType.RECTANGULAR:
                         r_wp_max = r_wp_min
                     case SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
@@ -940,6 +945,9 @@ class Build(Model):
                 r_wp_max = r_tf_wp_inboard_outer
                 # Calculated maximum toroidal WP toroidal thickness [m]
                 dx_tf_wp_conductor_max = 2.0e0 * r_wp_max * np.tan(np.pi / n_tf_coils)
+
+            case _:
+                raise ProcessValueError("Unsupported TF conductor model.")
 
         flag = 0
         if i_tf_shape == TFCoilShapeModel.PICTURE_FRAME:

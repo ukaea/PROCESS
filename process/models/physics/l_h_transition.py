@@ -1162,10 +1162,10 @@ class PlasmaConfinementTransition(Model):
         Notes
         -----
         - A scaling with the total ion mass is used in this model. Snipes cites that
-            P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction in
-            the threshold power for a 50/50 D-T mixture compared with the pure
-            deuterium results above". We thus apply a (2/m_i) addition so that for a
-            50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+        P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction in
+        the threshold power for a 50/50 D-T mixture compared with the pure
+        deuterium results above". We thus apply a (2/m_i) addition so that for a
+        50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         References
         ----------

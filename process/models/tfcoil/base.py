@@ -1251,6 +1251,11 @@ class TFCoil(Model):
         This subroutine evaluates the parameters of the centrepost for a
         tight aspect ratio tokamak. The centrepost is assumed to be tapered,
         i.e. narrowest on the midplane (z=0).
+
+        Raises
+        ------
+        ProcessValueError
+            If the TART centrepost parameters are not properly defined.
         """
         # Vertical distance from the midplane to the top of the tapered section [m]
         if self.data.physics.itart == 1:
@@ -1359,7 +1364,7 @@ class TFCoil(Model):
                     tcool_calc - self.data.tfcoil.temp_cp_coolant_inlet
                 )
             case _:
-                logger.error("Unknown TF conductor model")
+                raise ProcessValueError("Unknown TF conductor model")
         # --------------
 
         # Average coolant temperature
@@ -1423,7 +1428,7 @@ class TFCoil(Model):
             case TFConductorModel.HELIUM_COOLED_ALUMINIUM:
                 conductor_th_cond = self.al_th_cond(tcool_film)
             case _:
-                logger.error("Unknown TF conductor model")
+                raise ProcessValueError("Unknown TF conductor model")
         # ******
 
         # Average temperature rise : To be changed with Garry Voss' better documented

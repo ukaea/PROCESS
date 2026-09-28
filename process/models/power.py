@@ -1958,11 +1958,8 @@ class Power(Model):
         eta_turbine :
 
         """
-        i_thermal_electric_conversion = ElectricConversionModelTypes(
-            self.data.fwbs.i_thermal_electric_conversion
-        )
         i_blanket_type = BlktModelTypes(self.data.fwbs.i_blanket_type)
-        match i_thermal_electric_conversion:
+        match ElectricConversionModelTypes(self.data.fwbs.i_thermal_electric_conversion):
             case ElectricConversionModelTypes.CCFE_HCPB_VALUE:
                 #  CCFE HCPB Model
                 if i_blanket_type == BlktModelTypes.CCFE_HCPB:
