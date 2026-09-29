@@ -8,7 +8,8 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
+from process.data_structure.physics_variables import PlasmaCurrentModel
+from process.models.physics.plasma_current import PlasmaCurrent
 
 logger = logging.getLogger(__name__)
 

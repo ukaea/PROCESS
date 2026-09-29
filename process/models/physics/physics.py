@@ -333,21 +333,16 @@ class Physics(Model):
             qstar=self.data.physics.qstar, q0=self.data.physics.q0
         )
 
-        if (
-            CurrentProfileIndexModel(self.data.physics.i_alphaj)
-            == CurrentProfileIndexModel.USER_INPUT
-        ):
-            self.data.physics.alphaj = self.data.physics.alphaj
-        elif (
-            CurrentProfileIndexModel(self.data.physics.i_alphaj)
-            == CurrentProfileIndexModel.WESSON
-        ):
-            self.data.physics.alphaj = self.data.physics.alphaj_wesson
-        else:
-            raise ProcessValueError(
-                "Illegal value of i_alphaj",
-                i_alphaj=self.data.physics.i_alphaj,
-            )
+        match CurrentProfileIndexModel(self.data.physics.i_alphaj):
+            case CurrentProfileIndexModel.USER_INPUT:
+                self.data.physics.alphaj = self.data.physics.alphaj
+            case CurrentProfileIndexModel.WESSON:
+                self.data.physics.alphaj = self.data.physics.alphaj_wesson
+            case _:
+                raise ProcessValueError(
+                    "Illegal value of i_alphaj",
+                    i_alphaj=self.data.physics.i_alphaj,
+                )
 
         # ==================================================
 
@@ -2939,6 +2934,7 @@ class Physics(Model):
                 "(radius_plasma_pedestal_density_norm)",
                 self.data.physics.radius_plasma_pedestal_density_norm,
             )
+
             if (
                 self.data.physics.i_nd_plasma_pedestal_separatrix
                 == DensityProfilePedestalType.USER_INPUT
@@ -4329,39 +4325,39 @@ class PlasmaBeta(Model):
             f"{BetaComponentLimits(self.data.physics.i_beta_component).full_name} ",
         )
         po.oblnkl(self.outfile)
-
-        if self.data.physics.i_beta_component == BetaComponentLimits.TOTAL:
-            po.ovarre(
-                self.outfile,
-                "Upper limit on volume averaged total beta (⟨β⟩<)",
-                "(beta_vol_avg_max)",
-                self.data.physics.beta_vol_avg_max,
-                "OP ",
-            )
-        elif self.data.physics.i_beta_component == BetaComponentLimits.THERMAL:
-            po.ovarre(
-                self.outfile,
-                "Upper limit on volume averaged thermal beta (⟨βₜₕ⟩<)",
-                "(beta_vol_avg_max)",
-                self.data.physics.beta_vol_avg_max,
-                "OP ",
-            )
-        elif self.data.physics.i_beta_component == BetaComponentLimits.THERMAL_AND_BEAM:
-            po.ovarre(
-                self.outfile,
-                "Upper limit on volume averaged thermal + NB beta (⟨βₜₕ+βₙᵦ⟩<)",
-                "(beta_vol_avg_max)",
-                self.data.physics.beta_vol_avg_max,
-                "OP ",
-            )
-        elif self.data.physics.i_beta_component == BetaComponentLimits.TOROIDAL:
-            po.ovarre(
-                self.outfile,
-                "Upper limit on volume averaged toroidal beta (⟨βₜ⟩<)",
-                "(beta_vol_avg_max)",
-                self.data.physics.beta_vol_avg_max,
-                "OP ",
-            )
+        match BetaComponentLimits(self.data.physics.i_beta_component):
+            case BetaComponentLimits.TOTAL:
+                po.ovarre(
+                    self.outfile,
+                    "Upper limit on volume averaged total beta (⟨β⟩<)",
+                    "(beta_vol_avg_max)",
+                    self.data.physics.beta_vol_avg_max,
+                    "OP ",
+                )
+            case BetaComponentLimits.THERMAL:
+                po.ovarre(
+                    self.outfile,
+                    "Upper limit on volume averaged thermal beta (⟨βₜₕ⟩<)",
+                    "(beta_vol_avg_max)",
+                    self.data.physics.beta_vol_avg_max,
+                    "OP ",
+                )
+            case BetaComponentLimits.THERMAL_AND_BEAM:
+                po.ovarre(
+                    self.outfile,
+                    "Upper limit on volume averaged thermal + NB beta (⟨βₜₕ+βₙᵦ⟩<)",
+                    "(beta_vol_avg_max)",
+                    self.data.physics.beta_vol_avg_max,
+                    "OP ",
+                )
+            case BetaComponentLimits.TOROIDAL:
+                po.ovarre(
+                    self.outfile,
+                    "Upper limit on volume averaged toroidal beta (⟨βₜ⟩<)",
+                    "(beta_vol_avg_max)",
+                    self.data.physics.beta_vol_avg_max,
+                    "OP ",
+                )
 
         po.ovarre(
             self.outfile,

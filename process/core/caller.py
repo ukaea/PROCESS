@@ -293,28 +293,22 @@ class Caller:
         # Toroidal field coil model
 
         # Toroidal field coil resistive model
-        if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-            self.models.copper_tf_coil.run()
+        match TFConductorModel(self.data.tfcoil.i_tf_sup):
+            case TFConductorModel.WATER_COOLED_COPPER:
+                self.models.copper_tf_coil.run()
 
-        # Toroidal field coil superconductor model
-        if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            if (
-                SuperconductingTFTurnType(
+            # Toroidal field coil superconductor model
+            case TFConductorModel.SUPERCONDUCTING:
+                match SuperconductingTFTurnType(
                     self.data.superconducting_tfcoil.i_tf_turn_type
-                )
-                == SuperconductingTFTurnType.CABLE_IN_CONDUIT
-            ):
-                self.models.cicc_sctfcoil.run()
-            elif (
-                SuperconductingTFTurnType(
-                    self.data.superconducting_tfcoil.i_tf_turn_type
-                )
-                == SuperconductingTFTurnType.CROSS_CONDUCTOR
-            ):
-                self.models.croco_sctfcoil.run()
+                ):
+                    case SuperconductingTFTurnType.CABLE_IN_CONDUIT:
+                        self.models.cicc_sctfcoil.run()
+                    case SuperconductingTFTurnType.CROSS_CONDUCTOR:
+                        self.models.croco_sctfcoil.run()
 
-        if self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-            self.models.aluminium_tf_coil.run()
+            case TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+                self.models.aluminium_tf_coil.run()
 
         # Poloidal field and central solenoid model
         self.models.pfcoil.run()
@@ -341,13 +335,13 @@ class Caller:
         4    |  KIT HCLL model
         5    |  DCLL model
         """
-        if self.data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
-            # CCFE HCPB model
-            self.models.ccfe_hcpb.run()
-
-        elif self.data.fwbs.i_blanket_type == BlktModelTypes.DCLL:
-            # DCLL model
-            self.models.dcll.run()
+        match BlktModelTypes(self.data.fwbs.i_blanket_type):
+            case BlktModelTypes.CCFE_HCPB:
+                # CCFE HCPB model
+                self.models.ccfe_hcpb.run()
+            case BlktModelTypes.DCLL:
+                # DCLL model
+                self.models.dcll.run()
 
         self.models.cryostat.run()
 
