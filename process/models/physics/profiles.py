@@ -647,8 +647,7 @@ class IonTemperatureProfile(Profile):
         self.integrate_profile_y()
 
         self.data.physics.temp_plasma_ion_on_axis_kev = (
-            self.data.physics.temp_plasma_ion_vol_avg_kev
-            / self.data.physics.temp_plasma_electron_vol_avg_kev
+            self.data.physics.f_temp_plasma_ion_electron
             * self.data.physics.temp_plasma_electron_on_axis_kev
         )
 
