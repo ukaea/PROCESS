@@ -1340,7 +1340,7 @@ class PhysicsData:
     """
 
     l_h_threshold_powers: list[float] = field(
-        default_factory=lambda: np.zeros(21, dtype=np.float64)
+        default_factory=lambda: np.zeros(24, dtype=np.float64)
     )
     """L-H power threshold for various scalings (MW)
     - =1 ITER 1996 scaling: nominal
@@ -1364,6 +1364,9 @@ class PhysicsData:
     - =19 Martin 2008 aspect ratio corrected scaling: nominal
     - =20 Martin 2008 aspect ratio corrected scaling: 95% upper bound
     - =21 Martin 2008 aspect ratio corrected scaling: 95% lower bound
+    - =22 Takizuka 2004 scaling: nominal
+    - =23 Takizuka 2004 scaling: upper bound
+    - =24 Takizuka 2004 scaling: lower bound
     """
 
     p_electron_transport_loss_mw: float = 0.0

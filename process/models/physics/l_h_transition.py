@@ -2,6 +2,7 @@
 
 import logging
 from enum import IntEnum, unique
+import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
@@ -35,6 +36,9 @@ class PlasmaConfinementTransitionModel(IntEnum):
     MARTIN08_ASPECT_NOMINAL = (19, "Martin 2008 Aspect Corrected Nominal")
     MARTIN08_ASPECT_UPPER = (20, "Martin 2008 Aspect Corrected Upper")
     MARTIN08_ASPECT_LOWER = (21, "Martin 2008 Aspect Corrected Lower")
+    TAKIZUKA04_NOMINAL = (22, "Takizuka 2004 Nominal")
+    TAKIZUKA04_UPPER = (23, "Takizuka 2004 Upper")
+    TAKIZUKA04_LOWER = (24, "Takizuka 2004 Lower")
 
     def __new__(cls, value: int, full_name: str):
         """Create a new PlasmaConfinementTransitionModel instance.
@@ -81,6 +85,7 @@ class PlasmaConfinementTransition(Model):
             self.data.physics.m_ions_total_amu,
             self.data.physics.aspect,
             self.data.physics.plasma_current,
+            self.data.physics.n_charge_plasma_effective_vol_avg,
         )
 
         # Enforced L-H power threshold value (if constraint 15 is turned on)
@@ -99,6 +104,7 @@ class PlasmaConfinementTransition(Model):
         m_ions_total_amu: float,
         aspect: float,
         plasma_current: float,
+        n_charge_plasma_effective_vol_avg: float,
     ) -> list[float]:
         """L-mode to H-mode power threshold calculation.
 
@@ -122,6 +128,8 @@ class PlasmaConfinementTransition(Model):
             Aspect ratio
         plasma_current : float
             Plasma current (A)
+        n_charge_plasma_effective_vol_avg : float
+            Volume-averaged effective charge
 
         Returns
         -------
@@ -270,6 +278,43 @@ class PlasmaConfinementTransition(Model):
 
         # ========================================================================
 
+        # Takizuka 2004 scaling for p-B and spherical tokamaks
+
+        # i_l_h_threshold = 22
+        takizuka_nominal = self.calculate_takizuka04_nominal(
+            b_plasma_toroidal_on_axis,
+            aspect,
+            rminor,
+            plasma_current,
+            dnla20,
+            a_plasma_surface,
+            n_charge_plasma_effective_vol_avg,
+        )
+
+        # i_l_h_threshold = 23
+        takizuka_ub = self.calculate_takizuka04_upper(
+            b_plasma_toroidal_on_axis,
+            aspect,
+            rminor,
+            plasma_current,
+            dnla20,
+            a_plasma_surface,
+            n_charge_plasma_effective_vol_avg,
+        )
+
+        # i_l_h_threshold = 24
+        takizuka_lb = self.calculate_takizuka04_lower(
+            b_plasma_toroidal_on_axis,
+            aspect,
+            rminor,
+            plasma_current,
+            dnla20,
+            a_plasma_surface,
+            n_charge_plasma_effective_vol_avg,
+        )
+
+        # ========================================================================
+
         return [
             iterdd,
             iterdd_ub,
@@ -292,6 +337,9 @@ class PlasmaConfinementTransition(Model):
             martin_nominal_aspect,
             martin_ub_aspect,
             martin_lb_aspect,
+            takizuka_nominal,
+            takizuka_ub,
+            takizuka_lb,
         ]
 
     def output(self) -> None:
@@ -473,6 +521,27 @@ class PlasmaConfinementTransition(Model):
             "Martin 2008 aspect ratio corrected scaling: 95% lower bound (MW)",
             "(l_h_threshold_powers(21))",
             self.data.physics.l_h_threshold_powers[20],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Takizuka 2004 scaling: nominal (MW)",
+            "(l_h_threshold_powers(22))",
+            self.data.physics.l_h_threshold_powers[21],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Takizuka 2004 scaling: upper bound (MW)",
+            "(l_h_threshold_powers(23))",
+            self.data.physics.l_h_threshold_powers[22],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Takizuka 2004 scaling: lower bound (MW)",
+            "(l_h_threshold_powers(24))",
+            self.data.physics.l_h_threshold_powers[23],
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -1474,4 +1543,133 @@ class PlasmaConfinementTransition(Model):
             * a_plasma_surface**0.922
             * (2.0 / m_ions_total_amu)
             * aspect_correction
+        )
+
+    @staticmethod
+    def calculate_takizuka04_lower(
+        b_plasma_toroidal_on_axis: float,
+        aspect: float,
+        rminor: float,
+        plasma_current: float,
+        dnla20: float,
+        a_plasma_surface: float,
+        n_charge_plasma_effective_vol_avg: float,
+    ):
+        """
+        for p-B reaction and ST 
+        reference:
+        Yumin WANG et al 2025 Plasma Sci. Technol. 27 024005
+
+        Takizuka T 2004 Plasma Phys. Control. Fusion 46 A227
+        DOI: 10.1088/0741-3335/46/5A/024
+        """
+        b_tout = b_plasma_toroidal_on_axis * aspect / (aspect + 1.0)
+        b_pout = (
+            constants.RMU0 * plasma_current 
+            / (2.0 * np.pi * rminor) 
+            * (1.0 + 1.0 / aspect)
+        )
+        b_out = np.sqrt(b_tout**2 + b_pout**2)
+        aspect_correction = (
+            0.1 * aspect
+            / (
+                1.0 - np.sqrt(
+                    2.0 / (1.0 + aspect)
+                )
+            )
+        ) 
+        gamma = 0.0
+        return (
+            0.072 
+            * b_out**0.7
+            * dnla20**0.7
+            * a_plasma_surface**0.9
+            * (n_charge_plasma_effective_vol_avg / 2.0)**0.7
+            * aspect_correction**gamma
+        )
+
+    @staticmethod
+    def calculate_takizuka04_nominal(
+        b_plasma_toroidal_on_axis: float,
+        aspect: float,
+        rminor: float,
+        plasma_current: float,
+        dnla20: float,
+        a_plasma_surface: float,
+        n_charge_plasma_effective_vol_avg: float,
+    ):
+        """
+        for p-B reaction and ST 
+        reference:
+        Yumin WANG et al 2025 Plasma Sci. Technol. 27 024005
+
+        Takizuka T 2004 Plasma Phys. Control. Fusion 46 A227
+        DOI: 10.1088/0741-3335/46/5A/024
+        """
+        b_tout = b_plasma_toroidal_on_axis * aspect / (aspect + 1.0)
+        b_pout = (
+            constants.RMU0 * plasma_current 
+            / (2.0 * np.pi * rminor) 
+            * (1.0 + 1.0 / aspect)
+        )
+        b_out = np.sqrt(b_tout**2 + b_pout**2)
+        aspect_correction = (
+            0.1 * aspect
+            / (
+                1.0 - np.sqrt(
+                    2.0 / (1.0 + aspect)
+                )
+            )
+        ) 
+        gamma = 0.5
+        return (
+            0.072 
+            * b_out**0.7
+            * dnla20**0.7
+            * a_plasma_surface**0.9
+            * (n_charge_plasma_effective_vol_avg / 2.0)**0.7
+            * aspect_correction**gamma
+        )
+
+    @staticmethod
+    def calculate_takizuka04_upper(
+        b_plasma_toroidal_on_axis: float,
+        aspect: float,
+        rminor: float,
+        plasma_current: float,
+        dnla20: float,
+        a_plasma_surface: float,
+        n_charge_plasma_effective_vol_avg: float,
+    ):
+        """
+        for p-B reaction and ST 
+        reference:
+        Yumin WANG et al 2025 Plasma Sci. Technol. 27 024005
+
+        Takizuka T 2004 Plasma Phys. Control. Fusion 46 A227
+        DOI: 10.1088/0741-3335/46/5A/024
+        """
+        b_tout = b_plasma_toroidal_on_axis * aspect / (aspect + 1.0)
+        b_pout = (
+            constants.RMU0 * plasma_current 
+            / (2.0 * np.pi * rminor) 
+            * (1.0 + 1.0 / aspect)
+        )
+        b_out = np.sqrt(b_tout**2 + b_pout**2)
+        aspect_correction = (
+            0.1 * aspect
+            / (
+                1.0 - np.sqrt(
+                    2.0 / (1.0 + aspect)
+                )
+            )
+        ) 
+        gamma = 1.0
+        return (
+            0.072 
+            * b_out**0.7
+            * dnla20**0.7
+            * a_plasma_surface**0.9
+            * (n_charge_plasma_effective_vol_avg / 2.0)**0.7
+            * aspect_correction**gamma
         )
