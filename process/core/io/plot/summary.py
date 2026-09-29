@@ -959,7 +959,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     axis.text(
         0.12,
         0.35,
-        f"$P_{{\\text{{secondary}}}}$:\n{mfile.get('p_hcd_secondary_electric_mw', scan=scan):.2f} MWe \n$\\eta$: {mfile.get('eta_hcd_secondary_injector_wall_plug', scan=scan):.2f}",
+        f"$P_{{\\text{{secondary}}}}$:\n{mfile.get('p_hcd_secondary_electric_mw', scan=scan):.2f} MWe\n$\\eta$: {mfile.get('eta_hcd_secondary_injector_wall_plug', scan=scan):.2f}",
         **_text_layout(fig),
         bbox=_box_style("lightyellow"),
     )
@@ -1011,7 +1011,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     axis.text(
         0.9,
         0.25,
-        f"$P_{{\\text{{primary,thermal}}}}$:\n{mfile.get('p_plant_primary_heat_mw', scan=scan):,.2f} MW \n$\\eta_{{\\text{{turbine}}}}$: {mfile.get('eta_turbine', scan=scan):.3f}",
+        f"$P_{{\\text{{primary,thermal}}}}$:\n{mfile.get('p_plant_primary_heat_mw', scan=scan):,.2f} MW\n$\\eta_{{\\text{{turbine}}}}$: {mfile.get('eta_turbine', scan=scan):.3f}",
         **_text_layout(fig),
         bbox=_box_style("orange"),
     )
@@ -1542,7 +1542,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.625,
         0.775,
         (
-            f"$P_{{\\text{{Blkt,nuclear}}}}$:\n{mfile.get('p_blkt_nuclear_heat_total_mw', scan=scan):,.2f} MW \n"
+            f"$P_{{\\text{{Blkt,nuclear}}}}$:\n{mfile.get('p_blkt_nuclear_heat_total_mw', scan=scan):,.2f} MW\n"
             f"$P_{{\\text{{Blkt,multiplication}}}}$:\n{mfile.get('p_blkt_multiplication_mw', scan=scan):,.2f} MW\n"
             f"$f_{{\\text{{multiplication}}}}$:\n{mfile.get('f_p_blkt_multiplication', scan=scan):,.2f}"
         ),
@@ -2432,7 +2432,7 @@ def plot_main_plasma_information(
     geom_type = PlasmaGeometryModelType(mfile.get("i_plasma_geometry", scan=scan))
 
     textstr_plasma = (
-        f"$\\mathbf{{Shaping:}}$\n \n"
+        f"$\\mathbf{{Shaping:}}$\n\n"
         f"$\\kappa_{{95}}$: {mfile.get('kappa95', scan=scan):.2f} ({geom_type.kappa95_model.description}) | $\\delta_{{95}}$: {mfile.get('triang95', scan=scan):.2f} ({geom_type.triang95_model.description}) | $\\zeta$: {mfile.get('plasma_square', scan=scan):.2f}\n"
         f"$\\kappa$: {mfile.get('kappa', scan=scan):.2f} ({geom_type.kappa_model.description}) | $\\delta$: {mfile.get('triang', scan=scan):.2f} ({geom_type.triang_model.description}) | A: {mfile.get('aspect', scan=scan):.2f}\n"
         f"$ V_{{\\text{{p}}}}:$ {mfile.get('vol_plasma', scan=scan):,.2f}$ \\ \\text{{m}}^3$ | $ A_{{\\text{{p,surface}}}}:$ {mfile.get('a_plasma_surface', scan=scan):,.2f}$ \\ \\text{{m}}^2$ | $ A_{{\\text{{p,poloidal}}}}:$ {mfile.get('a_plasma_poloidal', scan=scan):,.3f}$ \\ \\text{{m}}^2$\n"
@@ -2468,19 +2468,19 @@ def plot_main_plasma_information(
 
     # Add heating and current drive information
     textstr_hcd = (
-        f"$\\mathbf{{Heating \\ & \\ current \\ drive:}}$\n \n"
-        f"Total injected heat: {mfile.get('p_hcd_injected_total_mw', scan=scan):.3f} MW                       \n"
-        f"Ohmic heating power: {mfile.get('p_plasma_ohmic_mw', scan=scan):.3f} MW         \n\n"
-        f"$\\mathbf{{Primary \\ system: {CurrentDriveModel(i_hcd_primary).abbreviation}}}$ \n"
+        f"$\\mathbf{{Heating \\ & \\ current \\ drive:}}$\n\n"
+        f"Total injected heat: {mfile.get('p_hcd_injected_total_mw', scan=scan):.3f} MW\n"
+        f"Ohmic heating power: {mfile.get('p_plasma_ohmic_mw', scan=scan):.3f} MW\n\n"
+        f"$\\mathbf{{Primary \\ system: {CurrentDriveModel(i_hcd_primary).abbreviation}}}$\n"
         f"Current driving power {mfile.get('p_hcd_primary_injected_mw', scan=scan):.4f} MW\n"
         f"Extra heat power: {mfile.get('p_hcd_primary_extra_heat_mw', scan=scan):.4f} MW\n"
-        f"$\\eta_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_hcd_primary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,prim}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_primary', scan=scan):.4f}  \n"
+        f"$\\eta_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_hcd_primary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,prim}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_primary', scan=scan):.4f}\n"
         f"$\\gamma_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_norm_hcd_primary', scan=scan):.4f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
         f"Current driven by primary: {mfile.get('c_hcd_primary_driven', scan=scan) / 1e6:.3f} MA\n\n"
-        f"$\\mathbf{{Secondary \\ system: {CurrentDriveModel(i_hcd_secondary).abbreviation}}}$ \n"
+        f"$\\mathbf{{Secondary \\ system: {CurrentDriveModel(i_hcd_secondary).abbreviation}}}$\n"
         f"Current driving power {mfile.get('p_hcd_secondary_injected_mw', scan=scan):.4f} MW\n"
         f"Extra heat power: {mfile.get('p_hcd_secondary_extra_heat_mw', scan=scan):.4f} MW\n"
-        f"$\\eta_{{\\text{{CD,sec}}}}$: {mfile.get('eta_cd_hcd_secondary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,sec}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_secondary', scan=scan):.4f}  \n"
+        f"$\\eta_{{\\text{{CD,sec}}}}$: {mfile.get('eta_cd_hcd_secondary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,sec}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_secondary', scan=scan):.4f}\n"
         f"$\\gamma_{{\\text{{CD,sec}}}}$: {mfile.get('eta_cd_norm_hcd_secondary', scan=scan):.4f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
         f"Current driven by secondary: {mfile.get('c_hcd_secondary_driven', scan=scan) / 1e6:.3f} MA"
     )
@@ -2513,7 +2513,7 @@ def plot_main_plasma_information(
 
     # Add beta information
     textstr_beta = (
-        f"$\\mathbf{{Beta \\ Information:}}$\n \n"
+        f"$\\mathbf{{Beta \\ Information:}}$\n\n"
         f"Total beta,$ \\ \\langle \\beta \\rangle$: {mfile.get('beta_total_vol_avg', scan=scan):.4f}\n"
         f"Thermal beta,$ \\ \\langle \\beta_{{\\text{{thermal}}}} \\rangle$: {mfile.get('beta_thermal_vol_avg', scan=scan):.4f}\n"
         f"Toroidal beta,$ \\ \\langle \\beta_{{\\text{{t}}}} \\rangle$: {mfile.get('beta_toroidal_vol_avg', scan=scan):.4f}\n"
@@ -2542,8 +2542,8 @@ def plot_main_plasma_information(
 
     # Add volt-second information
     textstr_volt_second = (
-        f"$\\mathbf{{Volt-second \\ requirements:}}$\n \n"
-        f"Total volt-second consumption: {mfile.get('vs_plasma_total_required', scan=scan):.4f} Vs                \n"
+        f"$\\mathbf{{Volt-second \\ requirements:}}$\n\n"
+        f"Total volt-second consumption: {mfile.get('vs_plasma_total_required', scan=scan):.4f} Vs\n"
         f"  - Internal volt-seconds: {mfile.get('vs_plasma_internal', scan=scan):.4f} Vs\n"
         f"  - Volt-seconds needed for burn: {mfile.get('vs_plasma_burn_required', scan=scan):.4f} Vs\n"
         f"  - Volt-seconds needed for ramp: {mfile.get('vs_plasma_ramp_required', scan=scan):.4f} Vs | $C_{{\\text{{ejima}}}}$: {mfile.get('ejima_coeff', scan=scan):.4f}\n"
@@ -2572,8 +2572,8 @@ def plot_main_plasma_information(
 
     # Add divertor information
     textstr_div = (
-        f"\n$P_{{\\text{{sep}}}}$: {mfile.get('p_plasma_separatrix_mw', scan=scan):.2f} MW           \n"
-        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile.get('p_plasma_separatrix_rmajor_mw', scan=scan):.2f} MW/m               \n"
+        f"\n$P_{{\\text{{sep}}}}$: {mfile.get('p_plasma_separatrix_mw', scan=scan):.2f} MW\n"
+        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile.get('p_plasma_separatrix_rmajor_mw', scan=scan):.2f} MW/m\n"
         f"$\\frac{{P_{{\\text{{sep}}}}B_T}}{{q_{{95}} A  R}}$: {mfile.get('p_div_bt_q_aspect_rmajor_mw', scan=scan):.2f} MW T/m               "
     )
 
@@ -2594,7 +2594,7 @@ def plot_main_plasma_information(
 
     # Add confinement information
     textstr_confinement = (
-        f"$\\mathbf{{Confinement:}}$\n \n"
+        f"$\\mathbf{{Confinement:}}$\n\n"
         f"Confinement scaling law: {mfile.get('tauelaw', scan=scan)}\n"
         f"Confinement $H$ factor: {mfile.get('hfact', scan=scan):.4f}\n"
         f"Energy confinement time from scaling: {mfile.get('t_energy_confinement', scan=scan):.4f} s\n"
@@ -2643,7 +2643,7 @@ def plot_main_plasma_information(
     )
 
     textstr_alpha = (
-        f"$P_{{\\alpha,\\text{{loss}}}}$ {mfile.get('p_fw_alpha_mw', scan=scan):.2f} MW \n"
+        f"$P_{{\\alpha,\\text{{loss}}}}$ {mfile.get('p_fw_alpha_mw', scan=scan):.2f} MW\n"
         f"$f_{{\\alpha,\\text{{coupled}}}}$ {mfile.get('f_p_alpha_plasma_deposited', scan=scan):.2f}"
     )
 
@@ -2677,7 +2677,7 @@ def plot_main_plasma_information(
     )
 
     textstr_neutron = (
-        f"$P_{{\\text{{n,total}}}}$ {mfile.get('p_neutron_total_mw', scan=scan):.2f} MW \n"
+        f"$P_{{\\text{{n,total}}}}$ {mfile.get('p_neutron_total_mw', scan=scan):.2f} MW\n"
         f"$\\phi_{{\\text{{n,avg}}}}$ {mfile.get('pflux_plasma_surface_neutron_avg_mw', scan=scan):.3f} MW/m²"
     )
 
@@ -2695,8 +2695,8 @@ def plot_main_plasma_information(
 
     # Add fusion reaction information
     textstr_reactions = (
-        f"$\\mathbf{{Fusion \\ Reactions:}}$\n \n"
-        f"Fuel mixture: \n"
+        f"$\\mathbf{{Fusion \\ Reactions:}}$\n\n"
+        f"Fuel mixture:\n"
         f"|  D: {mfile.get('f_plasma_fuel_deuterium', scan=scan):.2f}  |  T: {mfile.get('f_plasma_fuel_tritium', scan=scan):.2f}  |  3He: {mfile.get('f_plasma_fuel_helium3', scan=scan):.2f}  |\n\n"
         f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile.get('p_fusion_total_mw', scan=scan):,.2f} MW\n"
         f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile.get('p_dt_total_mw', scan=scan):,.2f} MW\n"
@@ -2719,14 +2719,14 @@ def plot_main_plasma_information(
 
     # Add fuelling information
     textstr_fuelling = (
-        f"$\\mathbf{{Fuelling:}}$\n \n"
+        f"$\\mathbf{{Fuelling:}}$\n\n"
         f"Plasma mass: {mfile.get('m_plasma', scan=scan) * 1000:.4f} g\n"
         f"   - Average mass of all plasma ions: {mfile.get('m_ions_total_amu', scan=scan):.3f} amu\n"
         f"Fuel mass: {mfile.get('m_plasma_fuel_ions', scan=scan) * 1000:.4f} g\n"
         f"   - Average mass of all fuel ions: {mfile.get('m_fuel_amu', scan=scan):.3f} amu\n\n"
         f"Fueling rate: {mfile.get('molflow_plasma_fuelling_required', scan=scan):.3e} nucleus-pairs/s\n"
-        f"Fuel burn-up rate: {mfile.get('rndfuel', scan=scan):.3e} reactions/s \n"
-        f"Burn-up fraction: {mfile.get('burnup', scan=scan):.4f} \n"
+        f"Fuel burn-up rate: {mfile.get('rndfuel', scan=scan):.3e} reactions/s\n"
+        f"Burn-up fraction: {mfile.get('burnup', scan=scan):.4f}\n"
     )
 
     axis.text(
@@ -2746,7 +2746,7 @@ def plot_main_plasma_information(
     textstr_ions = (
         f"             $\\mathbf{{Ion \\ to \\ electron}}$\n"
         f"             $\\mathbf{{relative \\ number}}$\n"
-        f"             $\\mathbf{{densities:}}$\n \n"
+        f"             $\\mathbf{{densities:}}$\n\n"
         f"             Effective charge: {mfile.get('n_charge_plasma_effective_vol_avg', scan=scan):.3f}\n\n"
         + "\n".join(
             f"             {label.replace('_', '') + ':':<6}"
@@ -2778,7 +2778,7 @@ def plot_main_plasma_information(
     # Add plasma current information
     textstr_currents = (
         f"$\\mathbf{{Plasma\\ currents:}}$\n\n"
-        f"Plasma current ({PlasmaCurrentModel(int(mfile.get('i_plasma_current', scan=scan))).full_name}): {mfile.get('plasma_current_ma', scan=scan):.4f} MA    \n"
+        f"Plasma current ({PlasmaCurrentModel(int(mfile.get('i_plasma_current', scan=scan))).full_name}): {mfile.get('plasma_current_ma', scan=scan):.4f} MA\n"
         f"  - Bootstrap fraction ({BootstrapCurrentFractionModel(int(mfile.get('i_bootstrap_current', scan=scan))).full_name}): {mfile.get('f_c_plasma_bootstrap', scan=scan):.4f}\n"
         f"  - Diamagnetic fraction ({PlasmaDiamagneticCurrentModel(int(mfile.get('i_diamagnetic_current', scan=scan))).full_name}): {mfile.get('f_c_plasma_diamagnetic', scan=scan):.4f}\n"
         f"  - Pfirsch-Schlüter fraction {mfile.get('f_c_plasma_pfirsch_schluter', scan=scan):.4f}\n"
@@ -2802,10 +2802,10 @@ def plot_main_plasma_information(
     # Add magnetic field information
     textstr_fields = (
         f"$\\mathbf{{Magnetic\\ fields:}}$\n\n"
-        f"Toroidal field at $R_0$, $B_{{T}}$: {mfile.get('b_plasma_toroidal_on_axis', scan=scan):.4f} T                  \n"
-        f"  Ripple at outboard , $\\delta$: {mfile.get('ripple_b_tf_plasma_edge', scan=scan):.2f}%                  \n"
+        f"Toroidal field at $R_0$, $B_{{T}}$: {mfile.get('b_plasma_toroidal_on_axis', scan=scan):.4f} T\n"
+        f"  Ripple at outboard , $\\delta$: {mfile.get('ripple_b_tf_plasma_edge', scan=scan):.2f}%\n"
         f"Surface average poloidal field, $\\langle B_{{p}}(a) \\rangle$: {mfile.get('b_plasma_surface_poloidal_average', scan=scan):.4f} T\n"
-        f"Total field, $B_{{tot}}$: {mfile.get('b_plasma_total', scan=scan):.4f} T                \n"
+        f"Total field, $B_{{tot}}$: {mfile.get('b_plasma_total', scan=scan):.4f} T\n"
         f"Vertical field, $B_{{vert}}$: {mfile.get('b_plasma_vertical_required', scan=scan):.4f} T"
     )
 
@@ -3097,8 +3097,8 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
     # Add energy produced info
     textstr_energy = (
         f"$\\mathbf{{Energy \\ Production:}}$\n\n"
-        f"Energy produced over whole pulse: {mfile.get('e_plant_net_electric_pulse_mj', scan=scan):,.4f} MJ \n"
-        f"Energy produced over whole pulse: {mfile.get('e_plant_net_electric_pulse_kwh', scan=scan):,.4f} kWh \n"
+        f"Energy produced over whole pulse: {mfile.get('e_plant_net_electric_pulse_mj', scan=scan):,.4f} MJ\n"
+        f"Energy produced over whole pulse: {mfile.get('e_plant_net_electric_pulse_kwh', scan=scan):,.4f} kWh\n"
     )
 
     axis.text(
@@ -6244,7 +6244,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
         # Add info about the steel casing surrounding the WP
         textstr_casing = (
-            f"$\\mathbf{{Casing:}}$\n \n"
+            f"$\\mathbf{{Casing:}}$\n\n"
             f"Coil half angle: {mfile.get('rad_tf_coil_inboard_toroidal_half', scan=scan):.3f} radians\n\n"
             f"$\\text{{Full Coil Case:}}$\n"
             f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile.get('r_tf_inboard_in', scan=scan):.3f} $\\rightarrow$ {mfile.get('r_tf_inboard_out', scan=scan):.3f} m\n"
@@ -6281,7 +6281,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
         # Add info about the steel casing surrounding the WP
         textstr_wp_insulation = (
-            f"$\\mathbf{{Ground \\ Insulation:}}$\n \n"
+            f"$\\mathbf{{Ground \\ Insulation:}}$\n\n"
             f"Area of insulation around WP: {mfile.get('a_tf_wp_ground_insulation', scan=scan):.3f} $\\mathrm{{m}}^2$\n"
             f"$\\Delta r$: {mfile.get('dx_tf_wp_insulation', scan=scan):.4f} m\n\n"
             f"WP Insertion Gap:\n"
@@ -6305,7 +6305,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
         # Add info about the Winding Pack
         textstr_wp = (
-            f"$\\mathbf{{Winding \\  Pack:}}$\n \n"
+            f"$\\mathbf{{Winding \\  Pack:}}$\n\n"
             f"$N_{{\\text{{turns}}}}$: "
             f"{int(mfile.get('n_tf_coil_turns', scan=scan))} turns\n"
             f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile.get('r_tf_wp_inboard_inner', scan=scan):.3f} $\\rightarrow$ {mfile.get('r_tf_wp_inboard_outer', scan=scan):.3f} m\n"
@@ -6342,7 +6342,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
         # Add info about the Winding Pack
         textstr_general_info = (
-            f"$\\mathbf{{General \\ info:}}$\n \n"
+            f"$\\mathbf{{General \\ info:}}$\n\n"
             f"$N_{{\\text{{TF,coil}}}}$: {mfile.get('n_tf_coils', scan=scan)}\n"
             f"Self inductance of single coil: {mfile.get('ind_tf_coil', scan=scan) * 1e6:.4f} $\\mu$H\n"
             f"Stored energy of all coils: {mfile.get('e_tf_magnetic_stored_total_gj', scan=scan):.4f} GJ\n"
@@ -6768,7 +6768,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
     """Plot info about the resistive TF coils"""
     # Add info about the steel casing surrounding the WP
     textstr_casing = (
-        f"$\\mathbf{{Casing:}}$\n \n"
+        f"$\\mathbf{{Casing:}}$\n\n"
         f"Coil half angle: {mfile.get('rad_tf_coil_inboard_toroidal_half', scan=scan):.3f} radians\n\n"
         f"$\\text{{Full Coil Case:}}$\n"
         f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile.get('r_tf_inboard_in', scan=scan):.3f} $\\rightarrow$ {mfile.get('r_tf_inboard_out', scan=scan):.3f} m\n"
@@ -6796,7 +6796,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
     # Add info about the steel casing surrounding the WP
     textstr_wp_insulation = (
-        f"$\\mathbf{{Insulation:}}$\n \n"
+        f"$\\mathbf{{Insulation:}}$\n\n"
         f"Area of insulation around WP: {mfile.get('a_tf_wp_ground_insulation', scan=scan):.3f} $\\mathrm{{m}}^2$\n"
         f"$\\Delta r$: {mfile.get('dx_tf_wp_insulation', scan=scan):.4f} m\n\n"
         f"$\\text{{Turn Insulation:}}$\n"
@@ -6815,7 +6815,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
     # Add info about the Winding Pack
     textstr_wp = (
-        f"$\\mathbf{{Winding Pack:}}$\n \n"
+        f"$\\mathbf{{Winding Pack:}}$\n\n"
         f"$N_{{\\text{{turns}}}}$: "
         f"{int(mfile.get('n_tf_coil_turns', scan=scan))} turns\n"
         f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile.get('r_tf_wp_inboard_inner', scan=scan):.3f} $\\rightarrow$ {mfile.get('r_tf_wp_inboard_outer', scan=scan):.3f} m\n"
@@ -6840,7 +6840,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
     # Add info about the Winding Pack
     textstr_general_info = (
-        f"$\\mathbf{{General \\ info:}}$\n \n"
+        f"$\\mathbf{{General \\ info:}}$\n\n"
         f"Self inductance: {mfile.get('ind_tf_coil', scan=scan) * 1e6:.4f} $\\mu$H\n"
         f"Stored energy of all coils: {mfile.get('e_tf_magnetic_stored_total_gj', scan=scan):.4f} GJ\n"
     )
@@ -6857,7 +6857,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
     # Add info about the Winding Pack
     textstr_cooling = (
-        f"$\\mathbf{{Cooling \\ info:}}$\n \n"
+        f"$\\mathbf{{Cooling \\ info:}}$\n\n"
         f"Coolant inlet temperature: {mfile.get('temp_cp_coolant_inlet', scan=scan):.2f} K\n"
         f"Coolant temperature rise: {mfile.get('dtemp_cp_coolant', scan=scan):.2f} K\n"
         f"Coolant velocity: {mfile.get('vel_cp_coolant_midplane', scan=scan):.2f} $\\mathrm{{ms^{{-1}}}}$\n\n"
@@ -7345,15 +7345,15 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
             f"$\\Delta r:$ {cable_space_width:.3e} m\n"
             f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
-            f"Cable area with no cooling \nchannel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
+            f"Cable area with no cooling\nchannel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
             f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
         )
     elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
-            f"Cable space: \n$\\Delta r$: {cable_space_width_radial:.3e} m \n"
-            f"$\\Delta x$: {cable_space_width_toroidal:.3e} m \n"
+            f"Cable space:\n$\\Delta r$: {cable_space_width_radial:.3e} m\n"
+            f"$\\Delta x$: {cable_space_width_toroidal:.3e} m\n"
             f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
             f"Cable area with no cooling channel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
@@ -7415,23 +7415,23 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
 
     textstr_superconductor = (
-        f"$\\mathbf{{Superconductor:}}$\n \n"
-        f"Superconductor used: \n"
+        f"$\\mathbf{{Superconductor:}}$\n\n"
+        f"Superconductor used:\n"
         f"{SuperconductorModel(mfile.get('i_tf_sc_mat', scan=scan)).full_name}\n"
-        f"Critical field at zero \ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
-        f"Critical temperature at \nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
+        f"Critical field at zero\ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
+        f"Critical temperature at\nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
         f"Temperature at conductor: {mfile.get('tftmp', scan=scan):.4f} K\n"
         f"Field at conductor: {mfile.get('b_tf_inboard_peak_with_ripple', scan=scan):.4f} T\n"
-        f"Superconductor critical current density at \noperating conditions: {mfile.get('j_tf_superconductor_critical', scan=scan):.2e} A/m$^2$\n"
+        f"Superconductor critical current density at\noperating conditions: {mfile.get('j_tf_superconductor_critical', scan=scan):.2e} A/m$^2$\n"
         f"$I_{{\\text{{TF,turn critical}}}}$: {mfile.get('c_turn_cables_critical', scan=scan):,.2f} A\n"
         f"$I_{{\\text{{TF,turn}}}}$: {mfile.get('c_tf_turn', scan=scan):,.2f} A\n"
         f"Critcal current ratio: {mfile.get('f_c_tf_turn_operating_critical', scan=scan):,.4f}\n"
-        f"Superconductor temperature \nmargin: {mfile.get('temp_tf_superconductor_margin', scan=scan):,.4f} K\n"
-        f"\n$\\mathbf{{Quench:}}$\n \n"
+        f"Superconductor temperature\nmargin: {mfile.get('temp_tf_superconductor_margin', scan=scan):,.4f} K\n"
+        f"\n$\\mathbf{{Quench:}}$\n\n"
         f"Quench dump time: {mfile.get('t_tf_superconductor_quench', scan=scan):.4f} s\n"
         f"Quench detection time: {mfile.get('t_tf_quench_detection', scan=scan):.4f} s\n"
-        f"User input max temperature \nduring quench: {mfile.get('temp_tf_conductor_quench_max', scan=scan):.2f} K\n"
-        f"Required maxium WP current \ndensity for heat protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e} A/m$^2$\n"
+        f"User input max temperature\nduring quench: {mfile.get('temp_tf_conductor_quench_max', scan=scan):.2f} K\n"
+        f"Required maxium WP current\ndensity for heat protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e} A/m$^2$\n"
     )
     axis.text(
         0.75,
@@ -7589,15 +7589,15 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
             f"$\\Delta r:$ {cable_space_width:.3e} m\n"
             f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
-            f"Cable area with no cooling \nchannel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
+            f"Cable area with no cooling\nchannel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
             f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
         )
     elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
-            f"Cable space: \n$\\Delta r$: {cable_space_width_radial:.3e} m \n"
-            f"$\\Delta x$: {cable_space_width_toroidal:.3e} m \n"
+            f"Cable space:\n$\\Delta r$: {cable_space_width_radial:.3e} m\n"
+            f"$\\Delta x$: {cable_space_width_toroidal:.3e} m\n"
             f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
             f"Cable area with no cooling channel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
@@ -7659,22 +7659,22 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
 
     textstr_superconductor = (
-        f"$\\mathbf{{Superconductor:}}$\n \n"
+        f"$\\mathbf{{Superconductor:}}$\n\n"
         f"Superconductor used: {SuperconductorModel(mfile.get('i_tf_sc_mat', scan=scan)).full_name}\n"
-        f"Critical field at zero \ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
-        f"Critical temperature at \nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
+        f"Critical field at zero\ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
+        f"Critical temperature at\nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
         f"Temperature at conductor: {mfile.get('tftmp', scan=scan):.4f} K\n"
         f"Field at conductor: {mfile.get('b_tf_inboard_peak_with_ripple', scan=scan):.4f} T\n"
-        f"Superconductor critical current density at \noperating conditions: {mfile.get('j_tf_superconductor_critical', scan=scan):.2e} A/m$^2$\n"
+        f"Superconductor critical current density at\noperating conditions: {mfile.get('j_tf_superconductor_critical', scan=scan):.2e} A/m$^2$\n"
         f"$I_{{\\text{{TF,turn critical}}}}$: {mfile.get('c_turn_cables_critical', scan=scan):,.2f} A\n"
         f"$I_{{\\text{{TF,turn}}}}$: {mfile.get('c_tf_turn', scan=scan):,.2f} A\n"
         f"Critcal current ratio: {mfile.get('f_c_tf_turn_operating_critical', scan=scan):,.4f}\n"
-        f"Superconductor temperature \nmargin: {mfile.get('temp_tf_superconductor_margin', scan=scan):,.4f} K\n"
-        f"\n$\\mathbf{{Quench:}}$\n \n"
+        f"Superconductor temperature\nmargin: {mfile.get('temp_tf_superconductor_margin', scan=scan):,.4f} K\n"
+        f"\n$\\mathbf{{Quench:}}$\n\n"
         f"Quench dump time: {mfile.get('t_tf_superconductor_quench', scan=scan):.4e} s\n"
         f"Quench detection time: {mfile.get('t_tf_quench_detection', scan=scan):.4e} s\n"
-        f"User input max temperature \nduring quench: {mfile.get('temp_tf_conductor_quench_max', scan=scan):.2f} K\n"
-        f"Required maxium WP current \ndensity for heat protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e} A/m$^2$\n"
+        f"User input max temperature\nduring quench: {mfile.get('temp_tf_conductor_quench_max', scan=scan):.2f} K\n"
+        f"Required maxium WP current\ndensity for heat protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e} A/m$^2$\n"
     )
     axis.text(
         0.75,
@@ -7747,7 +7747,7 @@ def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
 
     textstr_cable = (
-        f"$\\mathbf{{Cable:}}$\n \n"
+        f"$\\mathbf{{Cable:}}$\n\n"
         f"Cable diameter: {cable_diameter_mm:,.4f} mm\n"
         f"Copper area fraction: {mfile.get('f_a_tf_turn_cable_copper', scan=scan):.4f}\n"
         f"Number of strands per turn: {int(mfile.get('n_tf_turn_superconducting_cables', scan=scan)):,}\n"
@@ -10111,7 +10111,7 @@ def plot_cs_coil_structure(
         )
 
     textstr_cs = (
-        f"$\\mathbf{{Coil \\ parameters:}}$\n \n"
+        f"$\\mathbf{{Coil \\ parameters:}}$\n\n"
         f"CS height vs TF internal height: {mfile.get('f_z_cs_tf_internal', scan=scan):.2f}\n"
         f"CS thickness: {mfile.get('dr_cs', scan=scan):.4f} m\n"
         f"CS radial middle: {mfile.get('r_cs_middle', scan=scan):.4f} m\n"
@@ -11479,11 +11479,6 @@ def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
 
 def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     """Plot the fusion rate density profiles on the given axis"""
-    fusden_plasma_dt_profile = []
-    fusden_plasma_dd_triton_profile = []
-    fusden_plasma_dd_helion_profile = []
-    fusden_plasma_dhe3_profile = []
-
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     fusden_plasma_dt_profile = [
@@ -11678,7 +11673,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
     textstr_dt = (
         f"Total fusion power: {mfile.get('p_dt_total_mw', scan=scan):,.2f} MW\n"
-        f"Plasma fusion power: {mfile.get('p_plasma_dt_mw', scan=scan):,.2f} MW                     \n"
+        f"Plasma fusion power: {mfile.get('p_plasma_dt_mw', scan=scan):,.2f} MW\n"
         f"Volume-averaged fusion power density: plasma: {mfile.get('pden_plasma_dt_vol_avg_mw', scan=scan):,.3f} MW/m³\n"
         f"Beam fusion power: {mfile.get('p_beam_dt_mw', scan=scan):,.2f} MW\n"
     )
@@ -11705,7 +11700,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     textstr_dd = (
         f"Total fusion power: {mfile.get('p_dd_total_mw', scan=scan):,.2f} MW\n"
         f"Volume-averaged total power density: {mfile.get('pden_dd_total_vol_avg_mw', scan=scan):,.3e} MW/m³\n"
-        f"Tritium branching ratio: {mfile.get('f_dd_branching_trit', scan=scan):.4f}                      \n"
+        f"Tritium branching ratio: {mfile.get('f_dd_branching_trit', scan=scan):.4f}\n"
     )
 
     axis.text(
@@ -11728,7 +11723,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     # =================================================
 
     textstr_dhe3 = (
-        f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW                                 \n"
+        f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW\n\n"
         f"Volume-averaged total power density: {mfile.get('pden_dhe3_total_vol_avg_mw', scan=scan):,.3e} MW/m³\n\n"
     )
 
@@ -12616,13 +12611,13 @@ def plot_hts_tape_geometry(
 def plot_tf_corc_cable_summary_box(axis, fig, mfile: MFile, scan: int):
     """Plot TF CORC cable summary box"""
     textstr_cable = (
-        f"$\\mathbf{{CroCo \\ Cable:}}$\n \n"
+        f"$\\mathbf{{CroCo \\ Cable:}}$\n\n"
         f"Cable diameter: {mfile.get('dia_tf_turn_croco_cable', scan=scan) * 1e3:,.4f} mm\n"
         f"Copper width: {mfile.get('dx_tf_croco_strand_copper', scan=scan) * 1e3:,.4f} mm\n"
         f"Diameter of solder tape region: {mfile.get('dia_tf_croco_strand_tape_region', scan=scan) * 1e3:,.4f} mm\n"
         f"Height of tape stack: {mfile.get('dx_tf_croco_strand_tape_stack', scan=scan) * 1e3:,.4f} mm\n"
         f"Width of HTS tape / tape stack: {mfile.get('dr_tf_hts_tape', scan=scan) * 1e3:,.4f} mm\n"
-        f"Number of HTS tape layers: {int(mfile.get('n_tf_croco_strand_hts_tapes', scan=scan))}\n \n"
+        f"Number of HTS tape layers: {int(mfile.get('n_tf_croco_strand_hts_tapes', scan=scan))}\n\n"
         f"Total copper area: {mfile.get('a_tf_croco_strand_copper_total', scan=scan) * 1e6:,.4f} mm²\n"
         f"Total hastelloy area: {mfile.get('a_tf_croco_strand_hastelloy', scan=scan) * 1e6:,.4f} mm²\n"
         f"Total solder area: {mfile.get('a_tf_croco_strand_solder', scan=scan) * 1e6:,.4f} mm²\n"
@@ -14501,11 +14496,11 @@ def plot_blkt_structure(
 
     textstr_blkt_areas = (
         f"$\\mathbf{{Blanket \\ Areas:}}$\n\n"
-        f"Inboard blanket, with holes and gaps: {m_file.get('a_blkt_inboard_surface', scan=scan):,.3f} $\\text{{m}}^2$ \n"
-        f"Outboard blanket, with holes and gaps: {m_file.get('a_blkt_outboard_surface', scan=scan):,.3f} $\\text{{m}}^2$ \n"
-        f"Total blanket, with holes and gaps: {m_file.get('a_blkt_total_surface', scan=scan):,.3f} $\\text{{m}}^2$ \n\n"
-        f"Inboard blanket, full coverage: {m_file.get('a_blkt_inboard_surface_full_coverage', scan=scan):,.3f} $\\text{{m}}^2$ \n"
-        f"Outboard blanket, full coverage: {m_file.get('a_blkt_outboard_surface_full_coverage', scan=scan):,.3f} $\\text{{m}}^2$ \n"
+        f"Inboard blanket, with holes and gaps: {m_file.get('a_blkt_inboard_surface', scan=scan):,.3f} $\\text{{m}}^2$\n"
+        f"Outboard blanket, with holes and gaps: {m_file.get('a_blkt_outboard_surface', scan=scan):,.3f} $\\text{{m}}^2$\n"
+        f"Total blanket, with holes and gaps: {m_file.get('a_blkt_total_surface', scan=scan):,.3f} $\\text{{m}}^2$\n\n"
+        f"Inboard blanket, full coverage: {m_file.get('a_blkt_inboard_surface_full_coverage', scan=scan):,.3f} $\\text{{m}}^2$\n"
+        f"Outboard blanket, full coverage: {m_file.get('a_blkt_outboard_surface_full_coverage', scan=scan):,.3f} $\\text{{m}}^2$\n"
         f"Total blanket, full coverage: {m_file.get('a_blkt_total_surface_full_coverage', scan=scan):,.3f} $\\text{{m}}^2$ "
     )
 
@@ -14519,11 +14514,11 @@ def plot_blkt_structure(
 
     textstr_blkt_volumes = (
         f"$\\mathbf{{Blanket \\ Volumes:}}$\n\n"
-        f"Inboard blanket, with holes and gaps: {m_file.get('vol_blkt_inboard', scan=scan):,.3f} $\\text{{m}}^3$ \n"
-        f"Outboard blanket, with holes and gaps: {m_file.get('vol_blkt_outboard', scan=scan):,.3f} $\\text{{m}}^3$ \n"
-        f"Total blanket, with holes and gaps: {m_file.get('vol_blkt_total', scan=scan):,.3f} $\\text{{m}}^3$ \n\n"
-        f"Inboard blanket, full coverage: {m_file.get('vol_blkt_inboard_full_coverage', scan=scan):,.3f} $\\text{{m}}^3$ \n"
-        f"Outboard blanket, full coverage: {m_file.get('vol_blkt_outboard_full_coverage', scan=scan):,.3f} $\\text{{m}}^3$ \n"
+        f"Inboard blanket, with holes and gaps: {m_file.get('vol_blkt_inboard', scan=scan):,.3f} $\\text{{m}}^3$\n"
+        f"Outboard blanket, with holes and gaps: {m_file.get('vol_blkt_outboard', scan=scan):,.3f} $\\text{{m}}^3$\n"
+        f"Total blanket, with holes and gaps: {m_file.get('vol_blkt_total', scan=scan):,.3f} $\\text{{m}}^3$\n\n"
+        f"Inboard blanket, full coverage: {m_file.get('vol_blkt_inboard_full_coverage', scan=scan):,.3f} $\\text{{m}}^3$\n"
+        f"Outboard blanket, full coverage: {m_file.get('vol_blkt_outboard_full_coverage', scan=scan):,.3f} $\\text{{m}}^3$\n"
         f"Total blanket, full coverage: {m_file.get('vol_blkt_total_full_coverage', scan=scan):,.3f} $\\text{{m}}^3$ "
     )
 
@@ -15833,7 +15828,6 @@ def plot_pf_dimensions(
     axis.set_aspect("equal", adjustable="box")
 
 
-<<<<<<< HEAD
 def plot_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: int):
     """Function to plot plasma thermal energy profiles on the given axis.
 
@@ -16042,8 +16036,6 @@ def plot_cumulative_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: in
     )
 
 
-=======
->>>>>>> 36d00592d (repetition and unused vars)
 def main_plot(
     m_file: MFile,
     scan: int,
