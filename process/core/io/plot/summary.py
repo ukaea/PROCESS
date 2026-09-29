@@ -7492,7 +7492,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot the steel conduit
         axis.add_patch(
             Rectangle(
-                [insulation_thickness, insulation_thickness],
+                (insulation_thickness, insulation_thickness),
                 (turn_width - 2 * insulation_thickness),
                 (turn_width - 2 * insulation_thickness),
                 facecolor="grey",
@@ -7852,8 +7852,12 @@ def plot_pf_coils(
     )
 
     # Get axis height for fontsize scaling
-    bbox = axis.get_window_extent().transformed(axis.figure.dpi_scale_trans.inverted())
-    axis_height = bbox.height
+    axis_height = (
+        axis
+        .get_window_extent()
+        .transformed(axis.figure.dpi_scale_trans.inverted())
+        .height
+    )
 
     for i in range(len(coils_r)):
         mirrored_r_points = [x_scale * r for r in r_points[i]]
@@ -7977,12 +7981,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    xmin = 0
-    xmax = 1
-    ymin = -16
-    ymax = 1
-
-    setup_axis(axis, xmin, xmax, ymin, ymax)
+    setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     data2 = [
         (f"!{mfile.get('runtitle', scan=-1)}", "Run title", ""),
@@ -8565,43 +8564,28 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    boot_ipdg = mfile.get("f_c_plasma_bootstrap_iter89", scan=scan)
-    boot_sauter = mfile.get("f_c_plasma_bootstrap_sauter", scan=scan)
-    boot_nenins = mfile.get("f_c_plasma_bootstrap_nevins", scan=scan)
-    boot_wilson = mfile.get("f_c_plasma_bootstrap_wilson", scan=scan)
-    boot_sakai = mfile.get("f_c_plasma_bootstrap_sakai", scan=scan)
-    boot_aries = mfile.get("f_c_plasma_bootstrap_aries", scan=scan)
-    boot_andrade = mfile.get("f_c_plasma_bootstrap_andrade", scan=scan)
-    boot_hoang = mfile.get("f_c_plasma_bootstrap_hoang", scan=scan)
-    boot_wong = mfile.get("f_c_plasma_bootstrap_wong", scan=scan)
-    boot_gi_I = mfile.get("bscf_gi_i", scan=scan)  # noqa: N806
-    boot_gi_II = mfile.get("bscf_gi_ii", scan=scan)  # noqa: N806
-    boot_sugiyama_l = mfile.get("f_c_plasma_bootstrap_sugiyama_l", scan=scan)
-    boot_sugiyama_h = mfile.get("f_c_plasma_bootstrap_sugiyama_h", scan=scan)
-
     # Data for the box plot
     data = {
-        "IPDG": boot_ipdg,
-        "Sauter": boot_sauter,
-        "Nevins": boot_nenins,
-        "Wilson": boot_wilson,
-        "Sakai": boot_sakai,
-        "ARIES": boot_aries,
-        "Andrade": boot_andrade,
-        "Hoang": boot_hoang,
-        "Wong": boot_wong,
-        "Gi-I": boot_gi_I,
-        "Gi-II": boot_gi_II,
-        "Sugiyama (L-mode)": boot_sugiyama_l,
-        "Sugiyama (H-mode)": boot_sugiyama_h,
+        "IPDG": mfile.get("f_c_plasma_bootstrap_iter89", scan=scan),
+        "Sauter": mfile.get("f_c_plasma_bootstrap_sauter", scan=scan),
+        "Nevins": mfile.get("f_c_plasma_bootstrap_nevins", scan=scan),
+        "Wilson": mfile.get("f_c_plasma_bootstrap_wilson", scan=scan),
+        "Sakai": mfile.get("f_c_plasma_bootstrap_sakai", scan=scan),
+        "ARIES": mfile.get("f_c_plasma_bootstrap_aries", scan=scan),
+        "Andrade": mfile.get("f_c_plasma_bootstrap_andrade", scan=scan),
+        "Hoang": mfile.get("f_c_plasma_bootstrap_hoang", scan=scan),
+        "Wong": mfile.get("f_c_plasma_bootstrap_wong", scan=scan),
+        "Gi-I": mfile.get("bscf_gi_i", scan=scan),
+        "Gi-II": mfile.get("bscf_gi_ii", scan=scan),
+        "Sugiyama (L-mode)": mfile.get("f_c_plasma_bootstrap_sugiyama_l", scan=scan),
+        "Sugiyama (H-mode)": mfile.get("f_c_plasma_bootstrap_sugiyama_h", scan=scan),
     }
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    data_values = list(data.values())
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
     colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
@@ -8610,7 +8594,6 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
 
     # Calculate average, standard deviation, and median
-    data_values = list(data.values())
     avg_bootstrap = np.mean(data_values)
     std_bootstrap = np.std(data_values)
     median_bootstrap = np.median(data_values)
