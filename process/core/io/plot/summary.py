@@ -4972,167 +4972,168 @@ def plot_vacuum_vessel_and_divertor(
     z_divertor_lower_top = (-kappa * rminor) - dz_xpoint_divertor
     z_divertor_lower_bottom = z_divertor_lower_top - dz_divertor
 
-    if DivertorNumberModels(i_single_null) == DivertorNumberModels.DOUBLE_NULL:
-        z_divertor_upper_bottom = (kappa * rminor) + dz_xpoint_divertor
-        z_divertor_upper_top = z_divertor_upper_bottom + dz_divertor
-
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
-    if DivertorNumberModels(i_single_null) == DivertorNumberModels.SINGLE_NULL:
-        vvg_single_null = vacuum_vessel_geometry_single_null(
-            cumulative_upper=cumulative_upper,
-            upper=upper,
-            triang=triang_95,
-            radx_outer=radx_outer,
-            rminx_outer=rminx_outer,
-            radx_inner=radx_inner,
-            rminx_inner=rminx_inner,
-            cumulative_lower=cumulative_lower,
-            lower=lower,
-        )
-
-        axis.plot(
-            x_scale * np.array(vvg_single_null.rs),
-            vvg_single_null.zs,
-            color="black",
-            lw=thin,
-            zorder=5,
-        )
-
-        axis.fill(
-            x_scale * np.array(vvg_single_null.rs),
-            vvg_single_null.zs,
-            color=VESSEL_COLOUR[colour_scheme - 1],
-            lw=0.01,
-            zorder=5,
-        )
-
-        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
-        # Find the min and max R values of the vessel boundary between the divertor lines
-        mask = (vvg_single_null.zs >= z_divertor_lower_bottom) & (
-            vvg_single_null.zs <= z_divertor_lower_top
-        )
-        # Get the min/max R for the region between the divertor lines
-        r_min = (
-            np.min(vvg_single_null.rs[mask])
-            + dr_vv_inboard
-            + dr_shld_inboard
-            + (dr_blkt_inboard * 0.5)
-        )
-        r_max = (
-            np.max(vvg_single_null.rs[mask])
-            - dr_vv_outboard
-            - dr_shld_outboard
-            - (dr_blkt_outboard * 0.5)
-        )
-        # Draw a rectangle (box) between the two lines and inside the vessel
-        axis.add_patch(
-            patches.Rectangle(
-                (
-                    x_scale * r_min,
-                    z_divertor_lower_bottom,
-                ),
-                x_scale * (r_max - r_min),
-                z_divertor_lower_top - z_divertor_lower_bottom,
-                facecolor="black",
-                alpha=0.8,
-                zorder=1,
+    match DivertorNumberModels(i_single_null):
+        case DivertorNumberModels.SINGLE_NULL:
+            z_divertor_upper_bottom = None
+            z_divertor_upper_top = None
+            vvg_single_null = vacuum_vessel_geometry_single_null(
+                cumulative_upper=cumulative_upper,
+                upper=upper,
+                triang=triang_95,
+                radx_outer=radx_outer,
+                rminx_outer=rminx_outer,
+                radx_inner=radx_inner,
+                rminx_inner=rminx_inner,
+                cumulative_lower=cumulative_lower,
+                lower=lower,
             )
-        )
 
-    if DivertorNumberModels(i_single_null) == DivertorNumberModels.DOUBLE_NULL:
-        vvg_double_null = vacuum_vessel_geometry_double_null(
-            cumulative_lower=cumulative_lower,
-            lower=lower,
-            radx_inner=radx_inner,
-            radx_outer=radx_outer,
-            rminx_inner=rminx_inner,
-            rminx_outer=rminx_outer,
-            triang=triang_95,
-        )
-        axis.plot(
-            x_scale * np.array(vvg_double_null.rs),
-            vvg_double_null.zs,
-            color="black",
-            lw=thin,
-            zorder=5,
-        )
-
-        axis.fill(
-            x_scale * np.array(vvg_double_null.rs),
-            vvg_double_null.zs,
-            color=VESSEL_COLOUR[colour_scheme - 1],
-            lw=0.01,
-            zorder=5,
-        )
-
-        # Plot lower divertor
-        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
-        # Find the min and max R values of the vessel boundary between the divertor lines
-        mask = (vvg_double_null.zs >= z_divertor_lower_bottom) & (
-            vvg_double_null.zs <= z_divertor_lower_top
-        )
-        # Get the min/max R for the region between the divertor lines
-        r_min = (
-            np.min(vvg_double_null.rs[mask])
-            + dr_vv_inboard
-            + dr_shld_inboard
-            + (dr_blkt_inboard * 0.5)
-        )
-        r_max = (
-            np.max(vvg_double_null.rs[mask])
-            - dr_vv_outboard
-            - dr_shld_outboard
-            - (dr_blkt_outboard * 0.5)
-        )
-        # Draw a rectangle (box) between the two lines and inside the vessel
-        axis.add_patch(
-            patches.Rectangle(
-                (
-                    x_scale * r_min,
-                    z_divertor_lower_bottom,
-                ),
-                x_scale * (r_max - r_min),
-                z_divertor_lower_top - z_divertor_lower_bottom,
-                facecolor="black",
-                alpha=0.8,
-                zorder=1,
+            axis.plot(
+                x_scale * np.array(vvg_single_null.rs),
+                vvg_single_null.zs,
+                color="black",
+                lw=thin,
+                zorder=5,
             )
-        )
-        # Plot upper divertor
-        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
-        # Find the min and max R values of the vessel boundary between the divertor lines
-        mask = (vvg_double_null.zs >= z_divertor_upper_bottom) & (
-            vvg_double_null.zs <= z_divertor_upper_top
-        )
-        # Get the min/max R for the region between the divertor lines
-        r_min = (
-            np.min(vvg_double_null.rs[mask])
-            + dr_vv_inboard
-            + dr_shld_inboard
-            + (dr_blkt_inboard * 0.5)
-        )
-        r_max = (
-            np.max(vvg_double_null.rs[mask])
-            - dr_vv_outboard
-            - dr_shld_outboard
-            - (dr_blkt_outboard * 0.5)
-        )
-        # Draw a rectangle (box) between the two lines and inside the vessel
-        axis.add_patch(
-            patches.Rectangle(
-                (
-                    x_scale * r_min,
-                    z_divertor_upper_bottom,
-                ),
-                x_scale * (r_max - r_min),
-                z_divertor_upper_top - z_divertor_upper_bottom,
-                facecolor="black",
-                alpha=0.8,
-                zorder=1,
+
+            axis.fill(
+                x_scale * np.array(vvg_single_null.rs),
+                vvg_single_null.zs,
+                color=VESSEL_COLOUR[colour_scheme - 1],
+                lw=0.01,
+                zorder=5,
             )
-        )
+
+            # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
+            # Find the min and max R values of the vessel boundary between the divertor lines
+            mask = (vvg_single_null.zs >= z_divertor_lower_bottom) & (
+                vvg_single_null.zs <= z_divertor_lower_top
+            )
+            # Get the min/max R for the region between the divertor lines
+            r_min = (
+                np.min(vvg_single_null.rs[mask])
+                + dr_vv_inboard
+                + dr_shld_inboard
+                + (dr_blkt_inboard * 0.5)
+            )
+            r_max = (
+                np.max(vvg_single_null.rs[mask])
+                - dr_vv_outboard
+                - dr_shld_outboard
+                - (dr_blkt_outboard * 0.5)
+            )
+            # Draw a rectangle (box) between the two lines and inside the vessel
+            axis.add_patch(
+                patches.Rectangle(
+                    (
+                        x_scale * r_min,
+                        z_divertor_lower_bottom,
+                    ),
+                    x_scale * (r_max - r_min),
+                    z_divertor_lower_top - z_divertor_lower_bottom,
+                    facecolor="black",
+                    alpha=0.8,
+                    zorder=1,
+                )
+            )
+
+        case DivertorNumberModels.DOUBLE_NULL:
+            z_divertor_upper_bottom = (kappa * rminor) + dz_xpoint_divertor
+            z_divertor_upper_top = z_divertor_upper_bottom + dz_divertor
+            vvg_double_null = vacuum_vessel_geometry_double_null(
+                cumulative_lower=cumulative_lower,
+                lower=lower,
+                radx_inner=radx_inner,
+                radx_outer=radx_outer,
+                rminx_inner=rminx_inner,
+                rminx_outer=rminx_outer,
+                triang=triang_95,
+            )
+            axis.plot(
+                x_scale * np.array(vvg_double_null.rs),
+                vvg_double_null.zs,
+                color="black",
+                lw=thin,
+                zorder=5,
+            )
+
+            axis.fill(
+                x_scale * np.array(vvg_double_null.rs),
+                vvg_double_null.zs,
+                color=VESSEL_COLOUR[colour_scheme - 1],
+                lw=0.01,
+                zorder=5,
+            )
+
+            # Plot lower divertor
+            # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
+            # Find the min and max R values of the vessel boundary between the divertor lines
+            mask = (vvg_double_null.zs >= z_divertor_lower_bottom) & (
+                vvg_double_null.zs <= z_divertor_lower_top
+            )
+            # Get the min/max R for the region between the divertor lines
+            r_min = (
+                np.min(vvg_double_null.rs[mask])
+                + dr_vv_inboard
+                + dr_shld_inboard
+                + (dr_blkt_inboard * 0.5)
+            )
+            r_max = (
+                np.max(vvg_double_null.rs[mask])
+                - dr_vv_outboard
+                - dr_shld_outboard
+                - (dr_blkt_outboard * 0.5)
+            )
+            # Draw a rectangle (box) between the two lines and inside the vessel
+            axis.add_patch(
+                patches.Rectangle(
+                    (
+                        x_scale * r_min,
+                        z_divertor_lower_bottom,
+                    ),
+                    x_scale * (r_max - r_min),
+                    z_divertor_lower_top - z_divertor_lower_bottom,
+                    facecolor="black",
+                    alpha=0.8,
+                    zorder=1,
+                )
+            )
+            # Plot upper divertor
+            # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
+            # Find the min and max R values of the vessel boundary between the divertor lines
+            mask = (vvg_double_null.zs >= z_divertor_upper_bottom) & (
+                vvg_double_null.zs <= z_divertor_upper_top
+            )
+            # Get the min/max R for the region between the divertor lines
+            r_min = (
+                np.min(vvg_double_null.rs[mask])
+                + dr_vv_inboard
+                + dr_shld_inboard
+                + (dr_blkt_inboard * 0.5)
+            )
+            r_max = (
+                np.max(vvg_double_null.rs[mask])
+                - dr_vv_outboard
+                - dr_shld_outboard
+                - (dr_blkt_outboard * 0.5)
+            )
+            # Draw a rectangle (box) between the two lines and inside the vessel
+            axis.add_patch(
+                patches.Rectangle(
+                    (
+                        x_scale * r_min,
+                        z_divertor_upper_bottom,
+                    ),
+                    x_scale * (r_max - r_min),
+                    z_divertor_upper_top - z_divertor_upper_bottom,
+                    facecolor="black",
+                    alpha=0.8,
+                    zorder=1,
+                )
+            )
 
 
 def plot_shield(
