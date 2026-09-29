@@ -1132,7 +1132,7 @@ class PlasmaDiamagneticCurrent(Model):
         Parameters
         ----------
         beta :
-            the plasma beta value [-].
+            the plasma beta value
 
         Returns
         -------
