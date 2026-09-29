@@ -2,15 +2,17 @@
 
 from dataclasses import dataclass
 
+from process.core.data_structure.parameter import Parameter, PROCESSModelData
+
 
 @dataclass(slots=True)
-class PulseData:
+class PulseData(PROCESSModelData):
     """Dataclass holding pulse variables"""
 
-    bctmp: float = 320.0
+    bctmp: Parameter[float] = 320.0
     """first wall bulk coolant temperature (C)"""
 
-    dtstor: float = 300.0
+    dtstor: Parameter[float] = 300.0
     """maximum allowable temperature change in stainless steel thermal storage block (K) (`istore=3`)"""
 
     istore: int = 1

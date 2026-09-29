@@ -2,51 +2,53 @@
 
 from dataclasses import dataclass
 
+from process.core.data_structure.parameter import Parameter, PROCESSModelData
+
 
 @dataclass(slots=True)
-class ConstraintData:
+class ConstraintData(PROCESSModelData):
     """Dataclass holding constraint variables"""
 
-    p_hcd_injected_min_mw: float = 0.1
+    p_hcd_injected_min_mw: Parameter[float] = 0.1
     """minimum auxiliary power (MW) (`constraint equation 40`)"""
 
-    beta_poloidal_max: float = 0.19
+    beta_poloidal_max: Parameter[float] = 0.19
     """Maximum allowed poloidal beta (⟨βₚ⟩<) (`constraint equation 48`)"""
 
-    big_q_plasma_min: float = 10.0
+    big_q_plasma_min: Parameter[float] = 10.0
     """minimum fusion gain Q (`constraint equation 28`)"""
 
-    b_tf_inboard_max: float = 12.0
+    b_tf_inboard_max: Parameter[float] = 12.0
     """maximum peak toroidal field (T) (`constraint equation 25`)"""
 
-    f_nd_plasma_electron_limit_max: float = 1.0
+    f_nd_plasma_electron_limit_max: Parameter[float] = 1.0
     """Max allowed fraction of electron density limit (`constraint equation 5`)"""
 
-    f_p_plasma_separatrix_rad_max: float = 1.0
+    f_p_plasma_separatrix_rad_max: Parameter[float] = 1.0
     """Maximum allowed plasma radiation fraction at the separatrix
     (`constraint equation 17`)"""
 
-    f_j_tf_wp_critical_max: float = 0.7
+    f_j_tf_wp_critical_max: Parameter[float] = 0.7
     """Max allowed ratio of TF winding pack current density to critical current density
     (`constraint equation 33`)
     """
 
-    q95_fixed: float = 3.0
+    q95_fixed: Parameter[float] = 3.0
     """fixed safety factor q at 95% flux surface
     (`constraint equation 68`)
     """
 
-    fjohc: float = 0.7
+    fjohc: Parameter[float] = 0.7
     """Constraint margin for central solenoid current at end-of-flattop
     (`constraint equation 26`)
     """
 
-    fjohc0: float = 0.7
+    fjohc0: Parameter[float] = 0.7
     """Constraint margin for central solenoid current at beginning of pulse
     (`constraint equation 27`)
     """
 
-    eta_cd_norm_hcd_primary_max: float = 2.0
+    eta_cd_norm_hcd_primary_max: Parameter[float] = 2.0
     """maximum current drive gamma (`constraint equation 37`)"""
 
     i_q95_fixed: int = 0
@@ -54,78 +56,78 @@ class ConstraintData:
     (`constraint equation 68`)
     """
 
-    pflux_fw_rad_max: float = 1.0
+    pflux_fw_rad_max: Parameter[float] = 1.0
     """Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)"""
 
-    mvalim: float = 40.0
+    mvalim: Parameter[float] = 40.0
     """maximum MVA limit (`constraint equation 19`)"""
 
-    f_p_beam_shine_through_max: float = 1e-3
+    f_p_beam_shine_through_max: Parameter[float] = 1e-3
     """maximum neutral beam shine-through fraction (`constraint equation 59`)"""
 
-    flu_tf_neutron_fast_max: float = 1.0e23
+    flu_tf_neutron_fast_max: Parameter[float] = 1.0e23
     """Max allowed fast neutron fluence on TF coil (n/m²) (`blktmodel>0`) (`constraint equation 53`)
     Also used for demountable magnets (itart = 1) and superconducting coils (i_tf_sup = 1)
     and quench protection
     To set the CP lifetime (`constraint equation 85`)
     """
 
-    p_plasma_separatrix_min_mw: float = 150.0
+    p_plasma_separatrix_min_mw: Parameter[float] = 150.0
     """Minimum p_plasma_separatrix_mw [MW] (`constraint equation 80`)"""
 
-    f_fw_rad_max: float = 3.33
+    f_fw_rad_max: Parameter[float] = 3.33
     """peaking factor for radiation wall load (`constraint equation 67`)"""
 
-    pflux_fw_rad_max_mw: float = 0.0
+    pflux_fw_rad_max_mw: Parameter[float] = 0.0
     """Peak radiation wall load (MW/m^2) (`constraint equation 67`)"""
 
-    p_plant_electric_net_required_mw: float = 1.0e3
+    p_plant_electric_net_required_mw: Parameter[float] = 1.0e3
     """required net electric power (MW) (`constraint equation 16`)"""
 
-    p_fusion_total_max_mw: float = 1.5e3
+    p_fusion_total_max_mw: Parameter[float] = 1.5e3
     """maximum fusion power (MW) (`constraint equation 9`)"""
 
-    p_div_bt_q_aspect_rmajor_max_mw: float = 9.5
+    p_div_bt_q_aspect_rmajor_max_mw: Parameter[float] = 9.5
     """Max allowed value of  PₛₑₚBₜ / q₉₅AR₀ [MWT/m] (`constraint equation 68`)"""
 
-    p_plasma_separatrix_rmajor_max_mw: float = 25.0
+    p_plasma_separatrix_rmajor_max_mw: Parameter[float] = 25.0
     """Maximum allowed ratio of power crossing the separatrix to plasma major radius (Pₛₑₚ / R₀) [MW/m]
     (`constraint equation 56`)
     """
 
-    ptfnucmax: float = 1e-3
+    ptfnucmax: Parameter[float] = 1e-3
     """Maximum allowed nuclear heating in TF coil [MW/m³] (`constraint equation 54`)"""
 
-    tbrmin: float = 1.1
+    tbrmin: Parameter[float] = 1.1
     """minimum tritium breeding ratio (`constraint equation 52`)"""
 
-    t_burn_min: float = 1.0
+    t_burn_min: Parameter[float] = 1.0
     """minimum burn time (s) (KE - no longer itv., see issue #706)"""
 
-    t_cycle_min: float = 0.0
+    t_cycle_min: Parameter[float] = 0.0
     """minimum cycle time (s) (`constraint equation 42`)"""
 
-    t_current_ramp_up_min: float = 1.0
+    t_current_ramp_up_min: Parameter[float] = 1.0
     """minimum plasma current ramp-up time (s) (`constraint equation 41`)"""
 
-    pflux_fw_neutron_max_mw: float = 1.0
+    pflux_fw_neutron_max_mw: Parameter[float] = 1.0
     """allowable neutron wall-load (MW/m2) (`constraint equation 8`)"""
 
-    f_t_alpha_energy_confinement_min: float = 5.0
+    f_t_alpha_energy_confinement_min: Parameter[float] = 5.0
     """Minimum allowed value for f_t_alpha_energy_confinement, the ratio of alpha particle to energy confinement
     times (`constraint equation 62`)
     """
 
-    n_charge_plasma_effective_vol_avg_max: float = 3.6
+    n_charge_plasma_effective_vol_avg_max: Parameter[float] = 3.6
     """maximum value for Zeff (`constraint equation 64`)"""
 
-    f_h_mode_margin: float = 1.0
+    f_h_mode_margin: Parameter[float] = 1.0
     """Sets the constraint bound of the L-H power threshold limit for H-mode
 
     I.e. p_plasma_separatrix_mw / p_l_h_threshold_mw >= f_h_mode_margin
     """
 
-    f_l_mode_margin: float = 1.0
+    f_l_mode_margin: Parameter[float] = 1.0
     """Sets the constraint bound of the L-H power threshold limit.
 
     I.e. p_l_h_threshold_mw / p_plasma_separatrix_mw >= f_l_mode_margin

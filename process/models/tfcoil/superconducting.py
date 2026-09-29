@@ -812,7 +812,8 @@ class SuperconductingTFCoil(TFCoil):
         # TF coil radial build
         po.osubhd(self.outfile, "Radial build of TF coil centre-line :")
 
-        radius = self.data.build.r_tf_inboard_in
+        # Take .value to avoid mutating the Parameter
+        radius = self.data.build.r_tf_inboard_in.value
         po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
 
         radius += self.data.tfcoil.dr_tf_nose_case
@@ -2147,7 +2148,7 @@ class SuperconductingTFCoil(TFCoil):
                 n_radial_array=int(self.data.tfcoil.n_rad_per_layer),
                 n_tf_wp_stress_layers=int(self.data.tfcoil.n_tf_wp_stress_layers),
                 i_tf_bucking=int(self.data.tfcoil.i_tf_bucking),
-                r_tf_inboard_in=float(self.data.build.r_tf_inboard_in),
+                r_tf_inboard_in=self.data.build.r_tf_inboard_in,
                 dr_bore=self.data.build.dr_bore,
                 dr_cs=self.data.build.dr_cs,
                 i_tf_inside_cs=self.data.build.i_tf_inside_cs,
@@ -2550,7 +2551,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 n_radial_array=int(self.data.tfcoil.n_rad_per_layer),
                 n_tf_wp_stress_layers=int(self.data.tfcoil.n_tf_wp_stress_layers),
                 i_tf_bucking=int(self.data.tfcoil.i_tf_bucking),
-                r_tf_inboard_in=float(self.data.build.r_tf_inboard_in),
+                r_tf_inboard_in=self.data.build.r_tf_inboard_in,
                 dr_bore=self.data.build.dr_bore,
                 dr_cs=self.data.build.dr_cs,
                 i_tf_inside_cs=self.data.build.i_tf_inside_cs,
@@ -4079,7 +4080,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 n_radial_array=int(self.data.tfcoil.n_rad_per_layer),
                 n_tf_wp_stress_layers=int(self.data.tfcoil.n_tf_wp_stress_layers),
                 i_tf_bucking=int(self.data.tfcoil.i_tf_bucking),
-                r_tf_inboard_in=float(self.data.build.r_tf_inboard_in),
+                r_tf_inboard_in=self.data.build.r_tf_inboard_in,
                 dr_bore=self.data.build.dr_bore,
                 dr_cs=self.data.build.dr_cs,
                 i_tf_inside_cs=self.data.build.i_tf_inside_cs,

@@ -45,7 +45,7 @@ class TestVacuum:
         )
         monkeypatch.setattr(vacuum.data.physics, "a_plasma_surface", 1500.3146527709359)
         monkeypatch.setattr(vacuum.data.tfcoil, "n_tf_coils", 18)
-        monkeypatch.setattr(vacuum.data.times, "t_plant_pulse_dwell", 500)
+        monkeypatch.setattr(vacuum.data.times, "t_plant_pulse_dwell", 500.0)
         monkeypatch.setattr(vacuum.data.vacuum, "outgasfactor", 0.0235)
         monkeypatch.setattr(vacuum.data.vacuum, "outgasindex", 1)
         monkeypatch.setattr(vacuum.data.vacuum, "pres_vv_chamber_base", 0.0005)

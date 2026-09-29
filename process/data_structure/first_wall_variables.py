@@ -2,27 +2,29 @@
 
 from dataclasses import dataclass
 
+from process.core.data_structure.parameter import Parameter, PROCESSModelData
+
 
 @dataclass(slots=True)
-class FirstWallData:
+class FirstWallData(PROCESSModelData):
     """Dataclass holding first wall variables"""
 
-    a_fw_total_full_coverage: float = 0.0
+    a_fw_total_full_coverage: Parameter[float] = 0.0
     """First wall total surface area with no holes or ports [m^2]"""
 
-    a_fw_inboard_full_coverage: float = 0.0
+    a_fw_inboard_full_coverage: Parameter[float] = 0.0
     """Inboard first wall surface area with no holes or ports [m^2]"""
 
-    a_fw_outboard_full_coverage: float = 0.0
+    a_fw_outboard_full_coverage: Parameter[float] = 0.0
     """Outboard first wall surface area with no holes or ports [m^2]"""
 
-    a_fw_total: float = 0.0
+    a_fw_total: Parameter[float] = 0.0
     """First wall total surface area [m^2]"""
 
-    a_fw_inboard: float = 0.0
+    a_fw_inboard: Parameter[float] = 0.0
     """Inboard first wall surface area [m^2]"""
 
-    a_fw_outboard: float = 0.0
+    a_fw_outboard: Parameter[float] = 0.0
     """Outboard first wall surface area [m^2]"""
 
 
