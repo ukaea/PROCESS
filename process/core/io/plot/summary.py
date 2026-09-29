@@ -5,7 +5,7 @@ import textwrap
 from dataclasses import dataclass
 from importlib import resources
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, TypedDict
 
 import matplotlib as mpl
 import matplotlib.backends.backend_pdf as bpdf
@@ -15,6 +15,7 @@ import numpy as np
 from matplotlib import patches
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path as mplPath
+from matplotlib.transforms import Transform
 from scipy.interpolate import interp1d
 
 from process.core import constants
@@ -183,6 +184,22 @@ ANIMATION_INFO = [
 
 rtangle = np.pi / 2
 rtangle2 = 2 * rtangle
+
+
+def _box_style(colour: str):
+    return {"boxstyle": "round", "facecolor": colour, "alpha": 1.0, "linewidth": 2}
+
+
+white_box = {"boxstyle": "round", "facecolor": "white", "alpha": 1.0}
+
+
+def text_layout(fig):
+    return {
+        "fontsize": 9,
+        "verticalalignment": "bottom",
+        "horizontalalignment": "left",
+        "transform": fig.transFigure,
+    }
 
 
 def plot_plasma(
@@ -713,10 +730,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.37,
         0.775,
         f"$P_{{\\text{{neutron}}}}$:\n{mfile.get('p_neutron_total_mw', scan=scan):,.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "grey",
@@ -736,16 +750,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.0725,
         0.83,
         f"$P_{{\\text{{HCD,primary}}}}$: {mfile.get('p_hcd_primary_injected_mw', scan=scan) + mfile.get('p_hcd_primary_extra_heat_mw', scan=scan):.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     # Add HCD secondary injected power
@@ -753,16 +759,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.0725,
         0.725,
         f"$P_{{\\text{{HCD,secondary}}}}$: {mfile.get('p_hcd_secondary_injected_mw', scan=scan) + mfile.get('p_hcd_secondary_extra_heat_mw', scan=scan):.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     # Load the HCD injector image
@@ -811,16 +809,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.04,
         0.45,
         "\n\nH&CD Power Supply\n\n",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightyellow"),
         zorder=4,
     )
 
@@ -845,17 +835,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.2,
         0.435,
         f"$P_{{\\text{{secondary,loss}}}}$:\n{mfile.get('p_hcd_secondary_electric_mw', scan=scan) * (1.0 - mfile.get('eta_hcd_secondary_injector_wall_plug', scan=scan)):.2f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
     # Draw an arrow from HCD secondary losses to the total secondary heat power
@@ -927,17 +908,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.2,
         0.485,
         f"$P_{{\\text{{primary,loss}}}}$:\n{mfile.get('p_hcd_primary_electric_mw', scan=scan) * (1.0 - mfile.get('eta_hcd_primary_injector_wall_plug', scan=scan)):.2f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
     # Draw arrow from HCD primary electric box to HCD power supply box
@@ -973,16 +945,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.12,
         0.35,
         f"$P_{{\\text{{secondary}}}}$:\n{mfile.get('p_hcd_secondary_electric_mw', scan=scan):.2f} MWe \n$\\eta$: {mfile.get('eta_hcd_secondary_injector_wall_plug', scan=scan):.2f}",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     # Plot HCD primary electric box
@@ -990,16 +954,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.025,
         0.35,
         f"$P_{{\\text{{primary}}}}$:\n{mfile.get('p_hcd_primary_electric_mw', scan=scan):.2f} MWe\n$\\eta$: {mfile.get('eta_hcd_primary_injector_wall_plug', scan=scan):.2f}",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     # =============================================
@@ -1017,13 +973,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         verticalalignment="bottom",
         horizontalalignment="center",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        bbox=_box_style("lightblue") | {"linestyle": "dashed"},
         zorder=4,
     )
 
@@ -1047,16 +997,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.9,
         0.25,
         f"$P_{{\\text{{primary,thermal}}}}$:\n{mfile.get('p_plant_primary_heat_mw', scan=scan):,.2f} MW \n$\\eta_{{\\text{{turbine}}}}$: {mfile.get('eta_turbine', scan=scan):.3f}",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "orange",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("orange"),
     )
 
     # Draw arrow from bend to turbine inlet
@@ -1120,10 +1062,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.79,
         0.16,
         "Generator",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         zorder=20,
     )
 
@@ -1174,16 +1113,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.68,
         0.15,
         f"$P_{{\\text{{gross}}}}$:\n{mfile.get('p_plant_electric_gross_mw', scan=scan):,.2f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lime",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lime"),
     )
 
     # Gross to net electric power
@@ -1206,17 +1137,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.875,
         0.05,
         f"$P_{{\\text{{loss}}}}$:\n{mfile.get('p_turbine_loss_mw', scan=scan):,.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "orange",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        **text_layout(fig),
+        bbox=_box_style("orange") | {"linestyle": "dashed"},
     )
 
     # Shield primary thermal to plant total primary thermal arrow
@@ -1239,16 +1161,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.68,
         0.05,
         f"$P_{{\\text{{net,electric}}}}$:\n{mfile.get('p_plant_electric_net_mw', scan=scan):,.2f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lime",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lime"),
     )
 
     # Plot the recirculated electric power box
@@ -1259,16 +1173,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"$P_{{\\text{{recirc,electric}}}}$:\n{mfile.get('p_plant_electric_recirc_mw', scan=scan):,.2f} MWe\n"
             f"$f_{{\\text{{recirc}}}}$:\n{mfile.get('f_p_plant_electric_recirc', scan=scan):,.2f}"
         ),
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lime",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lime"),
     )
 
     # Gross to recirculated power arrow
@@ -1392,16 +1298,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.46,
         0.85,
         f"$P_{{\\text{{FW, }}\\alpha}}$:\n{mfile.get('p_fw_alpha_mw', scan=scan):.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "red",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("red"),
     )
 
     # Neutron power incident on first wall box
@@ -1409,10 +1307,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.46,
         0.775,
         f"$P_{{\\text{{FW,nuclear}}}}$:\n{mfile.get('p_fw_nuclear_heat_total_mw', scan=scan):,.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "grey",
@@ -1426,10 +1321,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.46,
         0.71,
         f"$P_{{\\text{{FW,rad}}}}$:\n{mfile.get('p_fw_rad_total_mw', scan=scan):,.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "dodgerblue",
@@ -1488,10 +1380,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.5,
         0.555,
         f"Primary thermal\n(inc pump): {mfile.get('p_fw_heat_deposited_mw', scan=scan):,.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "orange",
@@ -1504,10 +1393,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.7,
         0.555,
         f"Primary thermal\n(inc pump): {mfile.get('p_blkt_heat_deposited_mw', scan=scan):,.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "orange",
@@ -1520,10 +1406,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.875,
         0.555,
         f"Primary thermal:\n{mfile.get('p_shld_heat_deposited_mw', scan=scan):.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "orange",
@@ -1611,16 +1494,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.6,
         0.49,
         f"Primary thermal (inc pump): {mfile.get('p_fw_blkt_heat_deposited_mw', scan=scan):,.2f} MWth\n",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "orange",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("orange"),
     )
 
     # Load the blanket image
@@ -1656,10 +1531,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"$P_{{\\text{{Blkt,multiplication}}}}$:\n{mfile.get('p_blkt_multiplication_mw', scan=scan):,.2f} MW\n"
             f"$f_{{\\text{{multiplication}}}}$:\n{mfile.get('f_p_blkt_multiplication', scan=scan):,.2f}"
         ),
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "grey",
@@ -1695,17 +1567,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.38,
         0.375,
         f"$P_{{\\text{{shld,secondary}}}}$:\n{mfile.get('p_shld_secondary_heat_mw', scan=scan):,.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
     # Shield secondary power box to secondary heat total
@@ -1786,10 +1649,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.29,
         0.57,
         f"$P_{{\\text{{div,rad}}}}$:\n{mfile.get('p_div_rad_total_mw', scan=scan):,.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "dodgerblue",
@@ -1803,10 +1663,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.4,
         0.58,
         f"$P_{{\\text{{div,nuclear}}}}$:\n{mfile.get('p_div_nuclear_heat_total_mw', scan=scan):,.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "grey",
@@ -1824,10 +1681,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"Solid angle fraction: {mfile.get('f_ster_div_single', scan=scan):.3f}\n"
             f"Primary heat fraction: {mfile.get('f_p_div_primary_heat', scan=scan):.3f}"
         ),
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "orange",
@@ -1841,17 +1695,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.3,
         0.375,
         f"$P_{{\\text{{div,secondary}}}}$:\n{mfile.get('p_div_secondary_heat_mw', scan=scan):.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
     # Divertor to divertor secondary heat arrow
@@ -1912,10 +1757,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.55,
         0.33,
         f"$P_{{\\text{{div,pump}}}}$: {mfile.get('p_div_coolant_pump_mw', scan=scan):.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -1974,10 +1816,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.875,
         0.325,
         f"$P_{{\\text{{shld,pump}}}}$:\n{mfile.get('p_shld_coolant_pump_mw', scan=scan):.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -1991,10 +1830,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.725,
         0.4,
         f"$P_{{\\text{{FW + Blkt}}}}$:\n{mfile.get('p_fw_blkt_coolant_pump_mw', scan=scan):.2f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -2056,10 +1892,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"Coolant pumps electric:\n{mfile.get('p_coolant_pump_elec_total_mw', scan=scan):.3f} MWe\n"
             f"$\\eta$: {mfile.get('eta_coolant_pump_electric', scan=scan):.3f}"
         ),
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "lime",
@@ -2073,10 +1906,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.7,
         0.325,
         f"Coolant pumps total:\n{mfile.get('p_coolant_pump_total_mw', scan=scan):.3f} MW",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -2105,10 +1935,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.5,
         0.235,
         f"Coolant pumps losses total:\n{mfile.get('p_coolant_pump_loss_total_mw', scan=scan):.3f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "lightblue",
@@ -2161,10 +1988,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.49,
         0.05,
         f"Cryo Plant:\n{mfile.get('p_cryo_plant_electric_mw', scan=scan):.3f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2193,10 +2017,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.4,
         0.05,
         f"Tritium Plant:\n{mfile.get('p_tritium_plant_electric_mw', scan=scan):.3f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2225,10 +2046,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.575,
         0.05,
         f"Vacuum pumps:\n{mfile.get('vachtmw', scan=scan):.3f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2261,10 +2079,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"Minimum base load:\n{mfile.get('p_plant_electric_base', scan=scan) * 1.0e-6:.3f} MWe\n"
             f"Plant floor power density:\n{mfile.get('pflux_plant_floor_electric', scan=scan) * 1.0e-3:.3f} kW$\\text{{m}}^{{-2}}$"
         ),
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2278,10 +2093,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.325,
         0.075,
         f"TF coils:\n{mfile.get('p_tf_electric_supplies_mw', scan=scan):.3f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2295,10 +2107,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.25,
         0.05,
         f"PF coils:\n{mfile.get('p_pf_electric_supplies_mw', scan=scan):.3f} MWe",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2357,10 +2166,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.46,
         0.285,
         f"$P_{{\\text{{HCD,loss}}}}$:\n{mfile.get('p_hcd_secondary_heat_mw', scan=scan):.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
+        **text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "lightblue",
@@ -2407,17 +2213,8 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.155,
         0.25,
         f"$P_{{\\text{{TF,nuclear}}}}$:\n{mfile.get('p_tf_nuclear_heat_mw', scan=scan):.2f} MWth",
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "linestyle": "dashed",
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
     # TF nuclear heat to secondary heat total box arrow
@@ -2499,7 +2296,7 @@ def plot_main_plasma_information(
         fontsize=15,
         verticalalignment="center",
         horizontalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        bbox=white_box,
         transform=fig.transFigure,
     )
 
@@ -2521,7 +2318,7 @@ def plot_main_plasma_information(
         fontsize=9,
         color="black",
         ha="center",
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        bbox=white_box,
     )
 
     # ============================================
@@ -2542,7 +2339,7 @@ def plot_main_plasma_information(
         fontsize=9,
         color="black",
         ha="center",
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        bbox=white_box,
     )
 
     # ============================================
@@ -2565,7 +2362,7 @@ def plot_main_plasma_information(
         rotation=270,
         verticalalignment="center",
         transform=axis.transAxes,
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        bbox=white_box,
     )
 
     # =============================================
@@ -2587,7 +2384,7 @@ def plot_main_plasma_information(
         color="black",
         rotation=0,
         verticalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        bbox=white_box,
     )
 
     # =============================================
@@ -2610,7 +2407,7 @@ def plot_main_plasma_information(
         color="black",
         rotation=0,
         verticalalignment="center",
-        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        bbox=white_box,
     )
 
     # ================================================
@@ -2635,37 +2432,21 @@ def plot_main_plasma_information(
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("lightyellow"),
     )
 
     # ============================================
 
     # Draw a red arrow coming from the right and pointing at the plasma
-    axis.annotate(
-        "",
-        xy=(rmajor + (rminor * 0.8), kappa * rminor * 0.2),  # Pointing at the plasma
-        xytext=(
-            rmajor + (rminor * 1.4),
-            kappa * rminor * 0.2,
-        ),  # Starting point of the arrow
-        arrowprops={"facecolor": "red", "edgecolor": "red", "lw": 2},
-    )
-
-    # Draw a red arrow coming from the right and pointing at the plasma
-    axis.annotate(
-        "",
-        xy=(rmajor + (rminor * 0.8), -kappa * rminor * 0.2),  # Pointing at the plasma
-        xytext=(
-            rmajor + (rminor * 1.4),
-            -kappa * rminor * 0.2,
-        ),  # Starting point of the arrow
-        arrowprops={"facecolor": "red", "edgecolor": "red", "lw": 2},
-    )
+    for kap in (-kappa, kappa):
+        axis.annotate(
+            "",
+            # Pointing at plasma
+            xy=(rmajor + (rminor * 0.8), kap * rminor * 0.2),
+            # Starting point of arrow
+            xytext=(rmajor + (rminor * 1.4), kap * rminor * 0.2),
+            arrowprops={"facecolor": "red", "edgecolor": "red", "lw": 2},
+        )
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
     i_hcd_secondary = mfile.get("i_hcd_secondary", scan=scan)
@@ -2696,24 +2477,22 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=plt.gcf().transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "paleturquoise",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "edgecolor": "black",
-        },
+        bbox=_box_style("paleturquoise") | {"edgecolor": "black"},
     )
 
+    class TextArgs(TypedDict):
+        fontsize: int
+        verticalalignment: str
+        transform: Transform
+
+    text_args = TextArgs({
+        "fontsize": 23,
+        "verticalalignment": "top",
+        "transform": fig.transFigure,
+    })
+
     # Add injected power label
-    axis.text(
-        0.92,
-        0.625,
-        "$P_{\\text{inj}}$",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.92, 0.625, "$P_{\\text{inj}}$", **text_args)
 
     # ================================================
 
@@ -2738,23 +2517,11 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("lightblue"),
     )
 
     # Add beta label
-    axis.text(
-        0.27,
-        0.94,
-        "$\\beta$",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.27, 0.94, "$\\beta$", **text_args)
 
     # ================================================
 
@@ -2780,23 +2547,11 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightgreen",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("lightgreen"),
     )
 
     # Add volt second label
-    axis.text(
-        0.30,
-        0.77,
-        "Vs",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.30, 0.77, "Vs", **text_args)
 
     # =========================================
 
@@ -2814,23 +2569,11 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "orange",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("orange"),
     )
 
     # Add divertor label
-    axis.text(
-        0.45,
-        0.1,
-        "$P_{\\text{div}}$",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.45, 0.1, "$P_{\\text{div}}$", **text_args)
 
     # ================================================
 
@@ -2854,24 +2597,12 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "gainsboro",  # Changed to a not normal color (Aquamarine)
-            "alpha": 1.0,
-            "linewidth": 2,
-            "edgecolor": "black",
-        },
+        # Changed to a not normal color (Aquamarine)
+        bbox=_box_style("gainsboro") | {"edgecolor": "black"},
     )
 
     # Add tau label
-    axis.text(
-        0.3,
-        0.55,
-        "$\\tau_{\\text{e}} $",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.3, 0.55, "$\\tau_{\\text{e}} $", **text_args)
 
     # =========================================
 
@@ -2990,13 +2721,7 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "khaki",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "edgecolor": "black",
-        },
+        bbox=_box_style("khaki") | {"edgecolor": "black"},
     )
 
     # ================================================
@@ -3031,14 +2756,7 @@ def plot_main_plasma_information(
     )
 
     # Add ion charge label
-    axis.text(
-        0.815,
-        0.29,
-        "$Z$",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.815, 0.29, "$Z$", **text_args)
 
     # ================================================
 
@@ -3060,23 +2778,11 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#C8A2C8",  # Hex code for lilac color
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#C8A2C8"),  # Hex code for lilac color
     )
 
     # Add plasma current label
-    axis.text(
-        0.93,
-        0.9,
-        "$I_{\\text{p}} $",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.93, 0.9, "$I_{\\text{p}} $", **text_args)
 
     # Add magnetic field information
     textstr_fields = (
@@ -3095,23 +2801,11 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "royalblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("royalblue"),
     )
 
     # Add magnetic field label
-    axis.text(
-        0.75,
-        0.12,
-        "$B$",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.75, 0.12, "$B$", **text_args)
 
     # Add radiation information
     textstr_radiation = (
@@ -3132,13 +2826,7 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lavender",
-            "alpha": 1.0,
-            "linewidth": 2,
-            "edgecolor": "black",
-        },
+        bbox=_box_style("lavender") | {"edgecolor": "black"},
     )
 
     # Add radiation label
@@ -3166,12 +2854,7 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "peachpuff",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("peachpuff"),
     )
 
     # Add density limit information
@@ -3189,12 +2872,7 @@ def plot_main_plasma_information(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "pink",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("pink"),
     )
 
 
@@ -3415,12 +3093,7 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("grey"),
     )
 
     # Add energy produced info
@@ -3443,7 +3116,7 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={"boxstyle": "round", "facecolor": "grey", "alpha": 1.0, "linewidth": 2},
+        bbox=_box_style("grey"),
     )
 
 
@@ -7106,7 +6779,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={"boxstyle": "round", "facecolor": "grey", "alpha": 1.0, "linewidth": 2},
+        bbox=_box_style("grey"),
     )
 
     # Add info about the steel casing surrounding the WP
@@ -7192,12 +6865,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("wheat"),
     )
 
 
@@ -7639,12 +7307,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "red",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("red"),
     )
 
     # Add info about the steel casing surrounding the WP
@@ -7661,12 +7324,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("grey"),
     )
 
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
@@ -7698,12 +7356,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "royalblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("royalblue"),
     )
 
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
@@ -7728,12 +7381,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("wheat"),
     )
 
     # Add info about the steel casing surrounding the WP
@@ -7751,12 +7399,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "white",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("white"),
     )
 
     textstr_superconductor = (
@@ -7786,12 +7429,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#6dd3f7",  # light blue for superconductors
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#6dd3f7"),  # light blue for superconductors
     )
 
 
@@ -7920,12 +7558,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "red",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("red"),
     )
 
     # Add info about the steel casing surrounding the WP
@@ -7942,12 +7575,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("grey"),
     )
 
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
@@ -7979,12 +7607,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "royalblue",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("royalblue"),
     )
 
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
@@ -8009,12 +7632,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("wheat"),
     )
 
     # Add info about the steel casing surrounding the WP
@@ -8032,12 +7650,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "white",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("white"),
     )
 
     textstr_superconductor = (
@@ -8066,12 +7679,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#6dd3f7",  # light blue for superconductors
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#6dd3f7"),
     )
 
 
@@ -8149,12 +7757,7 @@ def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#cccccc",  # grayish color
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#cccccc"),
     )
 
     axis.set_aspect("equal")
@@ -10691,16 +10294,8 @@ def plot_cs_coil_structure(
         0.5,
         0.6,
         textstr_cs,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     # Plot the current filament points as blue dots and label them
@@ -10845,16 +10440,8 @@ def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.7,
         0.375,
         textstr_turn,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     axis.set_xlim(-dr_cs_turn * 0.2, dr_cs_turn * 1.2)
@@ -12251,16 +11838,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.85,
         textstr_general,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     # ============================================================================
@@ -12276,16 +11855,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.75,
         textstr_dt,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     axis.text(
@@ -12309,16 +11880,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.65,
         textstr_dd,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     axis.text(
@@ -12341,16 +11904,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.55,
         textstr_dhe3,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("lightyellow"),
     )
 
     axis.text(
@@ -12380,16 +11935,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.25,
         textstr_alpha,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "red",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("red"),
     )
 
     axis.text(
@@ -12415,16 +11962,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.1,
         textstr_neutron,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("grey"),
     )
 
     axis.text(
@@ -12519,12 +12058,7 @@ def plot_cover_page(
         ha="left",
         va="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#e0f7fa",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#e0f7fa"),
     )
 
     # Box 2: File/Branch Info
@@ -12542,12 +12076,7 @@ def plot_cover_page(
         ha="left",
         va="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#fffde7",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#fffde7"),
     )
 
     # Box 3: Run Settings
@@ -12571,12 +12100,7 @@ def plot_cover_page(
         ha="left",
         va="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#f3e5f5",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#f3e5f5"),
     )
 
     axis.text(
@@ -12753,12 +12277,11 @@ def plot_plasma_current_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     }
 
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    data_values = list(data.values())
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
     colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
@@ -12798,7 +12321,7 @@ def plot_plasma_current_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     axis.set_title("Plasma Current ($I_p$) Comparison")
     axis.set_ylabel(r"Plasma Current [MA]")
     axis.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x * 1e-6:.1f}"))
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
     axis.set_facecolor("#f0f0f0")
@@ -12832,14 +12355,12 @@ def plot_max_normalised_beta_comparison(axis: plt.Axes, mfile: MFile, scan: int)
         f"{BetaNormMaxModel.THOLERUS.full_name}": beta_norm_max_tholerus,
         f"{BetaNormMaxModel.STAMBAUGH.full_name}": beta_norm_max_stambaugh,
     }
-
+    data_values = list(data.values())
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
     colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
@@ -12878,7 +12399,7 @@ def plot_max_normalised_beta_comparison(axis: plt.Axes, mfile: MFile, scan: int)
 
     axis.set_title("Max Normalised Beta ($\\beta_N$) Comparison")
     axis.set_ylabel("Max Normalised Beta $\\beta_N$ [unitless]")
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
     axis.set_facecolor("#f0f0f0")
@@ -12929,7 +12450,7 @@ def plot_plasma_pressure_gradient_profiles(axis: plt.Axes, mfile: MFile, scan: i
     axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
     axis.set_title("Plasma Thermal Pressure Gradient Profiles")
     axis.grid(True, linestyle="--", alpha=0.5)
-    axis.set_xlim([0, 1.025])
+    axis.set_xlim(0, 1.025)
     axis.legend()
 
 
@@ -12975,7 +12496,6 @@ def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: MFile, scan: i
 
     # Mask points outside the plasma boundary (optional, but grid is inside by construction)
     # Plot filled contour
-    c = axis.contourf(r_grid, z_grid, pressure_grid, levels=50, cmap="plasma")
     c = axis.contourf(r_grid, -z_grid, pressure_grid, levels=50, cmap="plasma")
 
     # Add colorbar for pressure (now in kPa)
@@ -13023,45 +12543,35 @@ def interp1d_profile(profile, mfile: MFile, scan: int):
     )
 
     # Create a grid of (R, Z) points inside the plasma boundary
-    n_rho = 500
-    n_theta = 720
-    rho = np.linspace(0, 1, n_rho)
-    theta = np.linspace(0, 2 * np.pi, n_theta)
+    rho = np.linspace(0, 1, 500)
+    theta = np.linspace(0, 2 * np.pi, 720)
     rho_grid, theta_grid = np.meshgrid(rho, theta)
 
     # Map (rho, theta) to (R, Z) using plasma boundary shape
     # For each theta, get boundary (R, Z), then scale by rho
-    boundary_r = pg.rs
-    boundary_z = pg.zs
+    bdry_r = pg.rs
+    bdry_z = pg.zs
     # Interpolate boundary for all theta
-    boundary_theta = np.arctan2(boundary_z - pg.zs.mean(), boundary_r - pg.rs.mean())
-    # Ensure boundary_theta is monotonic and covers [0, 2pi]
-    boundary_theta = np.unwrap(boundary_theta)
-    # Sort boundary_theta and corresponding r/z for monotonic interpolation
-    sort_idx = np.argsort(boundary_theta)
-    boundary_theta = boundary_theta[sort_idx]
-    boundary_r = boundary_r[sort_idx]
-    boundary_z = boundary_z[sort_idx]
+    bdry_theta = np.arctan2(bdry_z - pg.zs.mean(), bdry_r - pg.rs.mean())
+    # Ensure bdry_theta is monotonic and covers [0, 2pi]
+    bdry_theta = np.unwrap(bdry_theta)
+    # Sort bdry_theta and corresponding r/z for monotonic interpolation
+    sort_idx = np.argsort(bdry_theta)
+    bdry_theta = bdry_theta[sort_idx]
+    bdry_r = bdry_r[sort_idx]
+    bdry_z = bdry_z[sort_idx]
     # Extend boundary to cover full [0, 2pi] if needed
-    if boundary_theta[0] > 0 or boundary_theta[-1] < 2 * np.pi:
-        boundary_theta = np.concatenate(([0], boundary_theta, [2 * np.pi]))
-        boundary_r = np.concatenate(([boundary_r[0]], boundary_r, [boundary_r[-1]]))
-        boundary_z = np.concatenate(([boundary_z[0]], boundary_z, [boundary_z[-1]]))
+    if bdry_theta[0] > 0 or bdry_theta[-1] < 2 * np.pi:
+        bdry_theta = np.concatenate(([0], bdry_theta, [2 * np.pi]))
+        bdry_r = np.concatenate(([bdry_r[0]], bdry_r, [bdry_r[-1]]))
+        bdry_z = np.concatenate(([bdry_z[0]], bdry_z, [bdry_z[-1]]))
     # Map theta to boundary r/z
     f_r = interp1d(
-        boundary_theta,
-        boundary_r,
-        kind="linear",
-        fill_value="extrapolate",
-        assume_sorted=True,
+        bdry_theta, bdry_r, kind="linear", fill_value="extrapolate", assume_sorted=True
     )
     # Map theta to boundary z
     f_z = interp1d(
-        boundary_theta,
-        boundary_z,
-        kind="linear",
-        fill_value="extrapolate",
-        assume_sorted=True,
+        bdry_theta, bdry_z, kind="linear", fill_value="extrapolate", assume_sorted=True
     )
     # For each (theta, rho), get boundary (R, Z), then scale by rho
     # Use the boundary center for scaling, not mean, to avoid vertical offset
@@ -13296,12 +12806,7 @@ def plot_tf_corc_cable_summary_box(axis, fig, mfile: MFile, scan: int):
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "#cccccc",  # grayish color
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=_box_style("#cccccc"),  # grayish color
     )
 
 
@@ -13371,51 +12876,24 @@ def reaction_plot_grid(
         ax.legend(legend_handles, legend_labels, loc="upper right", fontsize=8)
 
 
-def plot_fusion_rate_contours(
-    fig1,
-    fig2,
-    mfile: MFile,
-    scan: int,
-):
+def plot_fusion_rate_contours(fig1, fig2, mfile: MFile, scan: int):
     """Plot fusion rate density contours"""
-    fusden_plasma_dt_profile = []
-    fusden_plasma_dd_triton_profile = []
-    fusden_plasma_dd_helion_profile = []
-    fusden_plasma_dhe3_profile = []
-
     rmajor = mfile.get("rmajor", scan=scan)
     rminor = mfile.get("rminor", scan=scan)
     kappa = mfile.get("kappa", scan=scan)
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
-    fusden_plasma_dt_profile = [
-        mfile.get(f"fusden_plasma_dt_profile{i}", scan=scan)
-        for i in range(n_plasma_profile_elements)
-    ]
+    def fusrat(name):
+        fusrat_dat = [
+            mfile.get(f"fusrat_plasma_{name}_profile{i}", scan=scan)
+            for i in range(n_plasma_profile_elements)
+        ]
+        return interp1d_profile(fusrat_dat, mfile, scan)
 
-    fusden_plasma_dd_triton_profile = [
-        mfile.get(f"fusden_plasma_dd_triton_profile{i}", scan=scan)
-        for i in range(n_plasma_profile_elements)
-    ]
-
-    fusden_plasma_dd_helion_profile = [
-        mfile.get(f"fusden_plasma_dd_helion_profile{i}", scan=scan)
-        for i in range(n_plasma_profile_elements)
-    ]
-    fusden_plasma_dhe3_profile = [
-        mfile.get(f"fusden_plasma_dhe3_profile{i}", scan=scan)
-        for i in range(n_plasma_profile_elements)
-    ]
-
-    dt_grid, _r_grid, _z_grid = interp1d_profile(fusden_plasma_dt_profile, mfile, scan)
-
-    dd_triton_grid, _r_grid, _z_grid = interp1d_profile(
-        fusden_plasma_dd_triton_profile, mfile, scan
-    )
-    dd_helion_grid, _r_grid, _z_grid = interp1d_profile(
-        fusden_plasma_dd_helion_profile, mfile, scan
-    )
-    dhe3_grid, r_grid, z_grid = interp1d_profile(fusden_plasma_dhe3_profile, mfile, scan)
+    dt_grid, _r_grid, _z_grid = fusrat("dt")
+    dd_triton_grid, _r_grid, _z_grid = fusrat(" dd_triton ")
+    dd_helion_grid, _r_grid, _z_grid = fusrat(" dd_helion ")
+    dhe3_grid, r_grid, z_grid = fusrat(" dhe3")
 
     dt_axes = fig1.add_subplot(121, aspect="equal")
     dd_triton_axes = fig1.add_subplot(122, aspect="equal")
@@ -13492,7 +12970,7 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
         verticalalignment="center",
         horizontalalignment="center",
         transform=axis.transAxes,
-        bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 1.0, "linewidth": 2},
+        bbox=_box_style("wheat"),
     )
 
     # Text box for outboard toroidal field
@@ -13504,7 +12982,7 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
         verticalalignment="center",
         horizontalalignment="center",
         transform=axis.transAxes,
-        bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 1.0, "linewidth": 2},
+        bbox=_box_style("wheat"),
     )
 
     axis.set_xlabel("Radial Position [m]")
@@ -14115,7 +13593,7 @@ def plot_debye_length_profile(axis: plt.Axes, mfile_data: MFile, scan: int):
 
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
-    axis.set_xlim([0, 1.025])
+    axis.set_xlim(0, 1.025)
     axis.minorticks_on()
     axis.legend()
 
@@ -14181,7 +13659,7 @@ def plot_velocity_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
     axis.set_ylabel("Velocity [m/s]")
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
-    axis.set_xlim([0, 1.025])
+    axis.set_xlim(0, 1.025)
     axis.minorticks_on()
     axis.legend()
 
@@ -14980,20 +14458,14 @@ def plot_blkt_structure(
     r_fw_inboard_out = r_blkt_inboard_in + dr_blkt_inboard + dr_fw_inboard
 
     # Plot a horizontal line at dz_blkt_half (blanket half height)
-    ax.axhline(
-        dz_blkt_half,
-        color="purple",
-        linestyle="--",
-        linewidth=1.5,
-        label="Blanket Half Height",
-    )
-    ax.axhline(
-        -dz_blkt_half,
-        color="purple",
-        linestyle="--",
-        linewidth=1.5,
-        label="Blanket Half Height",
-    )
+    for dz_blkt in (dz_blkt_half, -dz_blkt_half):
+        ax.axhline(
+            dz_blkt,
+            color="purple",
+            linestyle="--",
+            linewidth=1.5,
+            label="Blanket Half Height",
+        )
 
     if DivertorNumberModels(i_single_null) == DivertorNumberModels.DOUBLE_NULL:
         # Plot arrows for the outboard blanket angles
@@ -15057,21 +14529,14 @@ def plot_blkt_structure(
     )
 
     # Plot arrows for the inboard blanket angles
-    ax.annotate(
-        "",
-        xy=(rmajor, 0),
-        xytext=(r_fw_inboard_out, dz_blkt_half),
-        arrowprops={"arrowstyle": "<-", "color": "green"},
-        zorder=5,
-    )
-
-    ax.annotate(
-        "",
-        xy=(rmajor, 0),
-        xytext=(r_fw_inboard_out, -dz_blkt_half),
-        arrowprops={"arrowstyle": "<-", "color": "green"},
-        zorder=5,
-    )
+    for dz_blkt in (dz_blkt_half, -dz_blkt_half):
+        ax.annotate(
+            "",
+            xy=(rmajor, 0),
+            xytext=(r_fw_inboard_out, dz_blkt),
+            arrowprops={"arrowstyle": "<-", "color": "green"},
+            zorder=5,
+        )
 
     # Plot arc showing the angle between the two inboard blanket arrows
     arc_radius = 1.0
@@ -15154,7 +14619,7 @@ def plot_blkt_structure(
     arc_radius = 1.5
     # 3 to 6 o'clock is -90 degrees
     angle_start = -90.0
-    angle_end = -90.0 - deg_div_poloidal_plasma
+    angle_end = angle_start - deg_div_poloidal_plasma
 
     theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
     arc_x = rmajor + arc_radius * np.cos(theta)
@@ -15189,32 +14654,18 @@ def plot_blkt_structure(
     )
 
     # Plot vertical lines at the inner and outer radial boundaries of the blanket
-    ax.axvline(
-        r_blkt_inboard_in, color="black", linestyle="--", linewidth=1.5, zorder=10
-    )
-    ax.axvline(
-        r_blkt_outboard_out, color="black", linestyle="--", linewidth=1.5, zorder=10
-    )
-    ax.axvline(r_fw_inboard_out, color="black", linestyle="--", linewidth=1.5, zorder=10)
-
-    ax.axvline(r_fw_outboard_in, color="black", linestyle="--", linewidth=1.5, zorder=10)
+    linestyle = {"color": "black", "linestyle": "--", "linewidth": 1.5, "zorder": 10}
+    ax.axvline(r_blkt_inboard_in, **linestyle)
+    ax.axvline(r_blkt_outboard_out, **linestyle)
+    ax.axvline(r_fw_inboard_out, **linestyle)
+    ax.axvline(r_fw_outboard_in, **linestyle)
 
     ax.axvline(
-        rmajor,
-        color="black",
-        linestyle="--",
-        linewidth=1.5,
-        label="Major Radius $R_0$",
+        rmajor, color="black", linestyle="--", linewidth=1.5, label="Major Radius $R_0$"
     )
 
     # Plot midplane line (horizontal dashed line at Z=0)
-    ax.axhline(
-        0.0,
-        color="black",
-        linestyle="--",
-        linewidth=1.5,
-        label="Midplane",
-    )
+    ax.axhline(0.0, color="black", linestyle="--", linewidth=1.5, label="Midplane")
 
     textstr_blkt_areas = (
         f"$\\mathbf{{Blanket \\ Areas:}}$\n\n"
@@ -15230,16 +14681,8 @@ def plot_blkt_structure(
         0.05,
         0.3,
         textstr_blkt_areas,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("wheat"),
     )
 
     textstr_blkt_volumes = (
@@ -15256,16 +14699,8 @@ def plot_blkt_structure(
         0.05,
         0.05,
         textstr_blkt_volumes,
-        fontsize=9,
-        verticalalignment="bottom",
-        horizontalalignment="left",
-        transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "wheat",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        **text_layout(fig),
+        bbox=_box_style("wheat"),
     )
 
 
