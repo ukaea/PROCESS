@@ -210,6 +210,12 @@ def setup_axis(axis, xmin, xmax, ymin, ymax):
     axis.set_autoscalex_on(False)
 
 
+def _colourbar(contour_fill, axis, colourbar_axis):
+    if colourbar_axis is None:
+        return axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
+    return axis.figure.colorbar(contour_fill, cax=colourbar_axis)
+
+
 def plot_plasma(
     axis: plt.Axes,
     mfile: MFile,
@@ -15273,10 +15279,7 @@ def plot_cs_radial_stress_contour_profile(
     )
 
     # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
-    if colorbar_axis is None:
-        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
-    else:
-        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Radial Stress (MPa)")
 
     axis.set_xlabel("R [m]")
@@ -15367,10 +15370,7 @@ def plot_cs_hoop_stress_contour_profile(
     )
 
     # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
-    if colorbar_axis is None:
-        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
-    else:
-        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Hoop Stress (MPa)")
 
     axis.set_xlabel("R [m]")
@@ -15481,10 +15481,7 @@ def plot_vertical_stress_contour_profile(
     )
 
     # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
-    if colorbar_axis is None:
-        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
-    else:
-        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Vertical Stress (MPa)")
 
     axis.set_xlabel("R [m]")
@@ -15553,7 +15550,6 @@ def plot_cs_tresca_2d_contour(
             )
 
     # Plot filled contour of Tresca stress distribution
-    contour_fill = axis.contourf(r, z, tresca_data, levels=15, cmap="RdYlBu_r")
     contour_lines = axis.contour(
         r,
         z,
@@ -15591,10 +15587,8 @@ def plot_cs_tresca_2d_contour(
     )
 
     # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
-    if colorbar_axis is None:
-        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
-    else:
-        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    contour_fill = axis.contourf(r, z, tresca_data, levels=15, cmap="RdYlBu_r")
+    cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Tresca Stress (MPa)")
 
     axis.set_xlabel("R [m]")
@@ -15667,7 +15661,6 @@ def plot_cs_von_mises_2d_contour(
             )
 
     # Plot filled contour of Von Mises stress distribution
-    contour_fill = axis.contourf(r, z, von_mises_data, levels=15, cmap="RdYlBu_r")
     contour_lines = axis.contour(
         r,
         z,
@@ -15705,10 +15698,8 @@ def plot_cs_von_mises_2d_contour(
     )
 
     # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
-    if colorbar_axis is None:
-        cbar = axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
-    else:
-        cbar = axis.figure.colorbar(contour_fill, cax=colorbar_axis)
+    contour_fill = axis.contourf(r, z, von_mises_data, levels=15, cmap="RdYlBu_r")
+    cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Von Mises Stress (MPa)")
 
     axis.set_xlabel("R [m]")
