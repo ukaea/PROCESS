@@ -13,6 +13,7 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import patches
+from matplotlib.axes import Axes
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path as mplPath
 from matplotlib.transforms import Transform
@@ -200,6 +201,14 @@ def text_layout(fig):
         "horizontalalignment": "left",
         "transform": fig.transFigure,
     }
+
+
+def setup_axis(axis, xmin, xmax, ymin, ymax):
+    axis.set_ylim(ymin, ymax)
+    axis.set_xlim(xmin, xmax)
+    axis.set_axis_off()
+    axis.set_autoscaley_on(False)
+    axis.set_autoscalex_on(False)
 
 
 def plot_plasma(
@@ -3856,7 +3865,7 @@ def plot_jprofile(prof, mfile: MFile, scan: int):
     prof.set_ylabel(r"Current density $[kA/m^2]$")
     prof.set_title("$J$ profile")
     prof.minorticks_on()
-    prof.set_xlim([0, 1.0])
+    prof.set_xlim(0, 1.0)
 
     rho = np.linspace(0, 1)
     y2 = (j_plasma_0 * (1 - rho**2) ** alphaj) / 1e3
@@ -4146,7 +4155,7 @@ def read_imprad_data(_skiprows, data_path):
             if "infinite confinement" in header.content:
                 zav = np.asarray(header.data, dtype=float)
 
-        lzdata[i] = np.column_stack((Te, lz, zav))
+        lzdata[i] = np.column_stack([Te, lz, zav])
 
     # then switch string to floats
     return np.array(lzdata, dtype=float)
@@ -4582,12 +4591,12 @@ def plot_line_brem_loss_function_profile(
     axis.set_xlabel(r"$\rho \quad [r/a]$")
     axis.set_ylabel(r"$L_z$ $[\mathrm{W}\mathrm{m}^3]$")
     axis.set_title("Line & Bremsstrahlung Loss Function ($L_z$) Profiles")
-    axis.set_xlim([0, 1.0])
+    axis.set_xlim(0, 1.0)
     axis.set_yscale("log")
     axis.yaxis.grid(True, which="both", alpha=0.2)
 
 
-def plot_rad_density_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
+def plot_rad_density_contour(axis: Axes, mfile: MFile, scan: int, impp: str):
     """Plots the contour of line and bremsstrahlung radiation density [MW/m³] for a
     plasma cross-section.
 
@@ -5713,7 +5722,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     if i_tf_sup == 1:
         axis.add_patch(
             Circle(
-                [0, 0],
+                (0, 0),
                 r_tf_inboard_in,
                 facecolor="none",
                 edgecolor="black",
@@ -5724,7 +5733,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         if i_tf_case_geom == TFPlasmaCaseType.CIRCULAR:
             axis.add_patch(
                 Circle(
-                    [0, 0],
+                    (0, 0),
                     r_tf_inboard_out,
                     facecolor="none",
                     edgecolor="black",
@@ -6392,7 +6401,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
 
     axis.add_patch(
         Circle(
-            [0, 0],
+            (0, 0),
             r_tf_inboard_in,
             facecolor="none",
             edgecolor="black",
@@ -6403,7 +6412,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     if i_tf_case_geom == TFPlasmaCaseType.CIRCULAR:
         axis.add_patch(
             Circle(
-                [0, 0],
+                (0, 0),
                 r_tf_inboard_out,
                 facecolor="none",
                 edgecolor="black",
@@ -7090,7 +7099,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         axis.add_patch(
             Rectangle(
-                [0, 0],
+                (0, 0),
                 turn_width,
                 turn_width,
                 facecolor="red",
@@ -7100,7 +7109,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot the steel conduit
         axis.add_patch(
             Rectangle(
-                [insulation_thickness, insulation_thickness],
+                (insulation_thickness, insulation_thickness),
                 (turn_width - 2 * insulation_thickness),
                 (turn_width - 2 * insulation_thickness),
                 facecolor="grey",
@@ -7111,10 +7120,10 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot the cable space with rounded corners
         axis.add_patch(
             patches.FancyBboxPatch(
-                [
+                (
                     insulation_thickness + steel_thickness,
                     insulation_thickness + steel_thickness,
-                ],
+                ),
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 boxstyle=patches.BoxStyle(
@@ -7128,10 +7137,10 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot dashed line around the cable space
         axis.add_patch(
             Rectangle(
-                [
+                (
                     insulation_thickness + steel_thickness,
                     insulation_thickness + steel_thickness,
-                ],
+                ),
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 facecolor="none",
@@ -7144,7 +7153,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot the coolant channel
         axis.add_patch(
             Circle(
-                [(turn_width / 2), (turn_width / 2)],
+                ((turn_width / 2), (turn_width / 2)),
                 he_pipe_diameter / 2,
                 facecolor="white",
                 edgecolor="black",
@@ -7195,7 +7204,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     elif TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.INTEGER:
         axis.add_patch(
             Rectangle(
-                [0, 0],
+                (0, 0),
                 turn_width,
                 turn_height,
                 facecolor="red",
@@ -7206,7 +7215,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot the steel conduit
         axis.add_patch(
             Rectangle(
-                [insulation_thickness, insulation_thickness],
+                (insulation_thickness, insulation_thickness),
                 (turn_width - 2 * insulation_thickness),
                 (turn_height - 2 * insulation_thickness),
                 facecolor="grey",
@@ -7217,10 +7226,10 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot the cable space with rounded corners
         axis.add_patch(
             patches.FancyBboxPatch(
-                [
+                (
                     insulation_thickness + steel_thickness,
                     insulation_thickness + steel_thickness,
-                ],
+                ),
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 (turn_height - 2 * (insulation_thickness + steel_thickness)),
                 boxstyle=patches.BoxStyle(
@@ -7233,10 +7242,10 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot dashed line around the cable space
         axis.add_patch(
             Rectangle(
-                [
+                (
                     insulation_thickness + steel_thickness,
                     insulation_thickness + steel_thickness,
-                ],
+                ),
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 (turn_height - 2 * (insulation_thickness + steel_thickness)),
                 facecolor="none",
@@ -7248,7 +7257,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         )
         axis.add_patch(
             Circle(
-                [(turn_width / 2), (turn_height / 2)],
+                ((turn_width / 2), (turn_height / 2)),
                 he_pipe_diameter / 2,
                 facecolor="white",
                 edgecolor="black",
@@ -7473,7 +7482,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     if TFWPIntegerTurnType(i_tf_turns_integer) == TFWPIntegerTurnType.NON_INTEGER:
         axis.add_patch(
             Rectangle(
-                [0, 0],
+                (0, 0),
                 turn_width,
                 turn_width,
                 facecolor="red",
@@ -7491,27 +7500,20 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             ),
         )
 
-        # Plot the central cable space
-        axis.add_patch(
-            Circle(
-                [(turn_width / 2), (turn_width / 2)],
-                1.5 * dia_tf_turn_croco_cable,
-                facecolor="white",
-                edgecolor="black",
-                linewidth=1.2,
-            ),
-        )
-
-        # PLot the central copper cyclinder
-        axis.add_patch(
-            Circle(
-                [(turn_width / 2), (turn_width / 2)],
-                dia_tf_turn_croco_cable / 2,
-                facecolor="#B87333",
-                edgecolor="black",
-                linewidth=1.2,
-            ),
-        )
+        # Plot the central cable space and copper cylinder
+        for rad, col in [
+            (1.5 * dia_tf_turn_croco_cable, "white"),
+            (dia_tf_turn_croco_cable / 2, "#B87333"),
+        ]:
+            axis.add_patch(
+                Circle(
+                    ((turn_width / 2), (turn_width / 2)),
+                    rad,
+                    facecolor=col,
+                    edgecolor="black",
+                    linewidth=1.2,
+                ),
+            )
 
         # Plot six surrounding Croco cables in a hexagonal layout.
         center_x = turn_width / 2
@@ -7980,11 +7982,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
     ymin = -16
     ymax = 1
 
-    axis.set_ylim(ymin, ymax)
-    axis.set_xlim(xmin, xmax)
-    axis.set_axis_off()
-    axis.set_autoscaley_on(False)
-    axis.set_autoscalex_on(False)
+    setup_axis(axis, xmin, xmax, ymin, ymax)
 
     data2 = [
         (f"!{mfile.get('runtitle', scan=-1)}", "Run title", ""),
@@ -8103,11 +8101,7 @@ def plot_geometry_info(axis: plt.Axes, mfile: MFile, scan: int):
     ymax = 1
 
     axis.text(-0.05, 1, "Geometry:", ha="left", va="center")
-    axis.set_ylim(ymin, ymax)
-    axis.set_xlim(xmin, xmax)
-    axis.set_axis_off()
-    axis.set_autoscaley_on(False)
-    axis.set_autoscalex_on(False)
+    setup_axis(axis, xmin, xmax, ymin, ymax)
 
     in_blanket_thk = mfile.get("dr_shld_inboard", scan=scan) + mfile.get(
         "dr_blkt_inboard", scan=scan
@@ -8152,11 +8146,7 @@ def plot_physics_info(axis: plt.Axes, mfile: MFile, scan: int):
     ymax = 1
 
     axis.text(-0.05, 1, "Physics:", ha="left", va="center")
-    axis.set_ylim(ymin, ymax)
-    axis.set_xlim(xmin, xmax)
-    axis.set_axis_off()
-    axis.set_autoscaley_on(False)
-    axis.set_autoscalex_on(False)
+    setup_axis(axis, xmin, xmax, ymin, ymax)
 
     nong = mfile.get("nd_plasma_electron_line", scan=scan) / mfile.get(
         "nd_plasma_electron_max_array(7)", scan=scan
@@ -8226,17 +8216,8 @@ def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
     # Check for Copper magnets
     i_tf_sup = int(mfile.get("i_tf_sup", scan=scan)) if "i_tf_sup" in mfile.data else 1
 
-    xmin = 0
-    xmax = 1
-    ymin = -16
-    ymax = 1
-
     axis.text(-0.05, 1, "Coil currents etc:", ha="left", va="center")
-    axis.set_ylim(ymin, ymax)
-    axis.set_xlim(xmin, xmax)
-    axis.set_axis_off()
-    axis.set_autoscaley_on(False)
-    axis.set_autoscalex_on(False)
+    setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     # Number of coils (1 is OH coil)
     number_of_coils = 0
@@ -8262,22 +8243,21 @@ def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
 
     t_plant_pulse_burn = mfile.get("t_plant_pulse_burn", scan=scan) / 3600.0
 
-    if "i_tf_bucking" in mfile.data:
-        i_tf_bucking = int(mfile.get("i_tf_bucking", scan=scan))
-    else:
-        i_tf_bucking = 1
+    i_tf_bucking = (
+        int(mfile.get("i_tf_bucking", scan=scan)) if "i_tf_bucking" in mfile.data else 1
+    )
 
     # Get superconductor material (i_tf_sc_mat)
     # If i_tf_sc_mat not present, assume resistive
-    if "i_tf_sc_mat" in mfile.data:
-        i_tf_sc_mat = int(mfile.get("i_tf_sc_mat", scan=scan))
-    else:
-        i_tf_sc_mat = 0
+    i_tf_sc_mat = (
+        int(mfile.get("i_tf_sc_mat", scan=scan)) if "i_tf_sc_mat" in mfile.data else 0
+    )
 
-    if i_tf_sc_mat > 0:
-        tftype = SuperconductorModel(int(mfile.get("i_tf_sc_mat", scan=scan))).full_name
-    else:
-        tftype = "Resistive Copper"
+    tftype = (
+        SuperconductorModel(int(mfile.get("i_tf_sc_mat", scan=scan))).full_name
+        if i_tf_sc_mat > 0
+        else "Resistive Copper"
+    )
 
     vssoft = mfile.get("vs_plasma_res_ramp", scan=scan) + mfile.get(
         "vs_plasma_ind_ramp", scan=scan
@@ -8352,17 +8332,8 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    xmin = 0
-    xmax = 1
-    ymin = -16
-    ymax = 1
-
     axis.text(-0.05, 1, "Power flows:", ha="left", va="center")
-    axis.set_ylim(ymin, ymax)
-    axis.set_xlim(xmin, xmax)
-    axis.set_axis_off()
-    axis.set_autoscaley_on(False)
-    axis.set_autoscalex_on(False)
+    setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     gross_eff = 100.0 * (
         mfile.get("p_plant_electric_gross_mw", scan=scan)
@@ -8443,28 +8414,17 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    xmin = 0
-    xmax = 1
-    ymin = -16
-    ymax = 1
-    i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
-    nbi = False
-    ecrh = False
-    ebw = False
-    lhcd = False
-    iccd = False
+    setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
-    if i_hcd_primary in {5, 8}:
-        nbi = True
+    i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
+
+    if nbi := (i_hcd_primary in {5, 8}):
         axis.text(-0.05, 1, "Neutral Beam Current Drive:", ha="left", va="center")
-    if i_hcd_primary in {3, 7, 10, 11, 13}:
-        ecrh = True
+    if ecrh := (i_hcd_primary in {3, 7, 10, 11, 13}):
         axis.text(-0.05, 1, "Electron Cyclotron Current Drive:", ha="left", va="center")
-    if i_hcd_primary == 12:
-        ebw = True
+    if ebw := (i_hcd_primary == 12):
         axis.text(-0.05, 1, "Electron Bernstein Wave Drive:", ha="left", va="center")
-    if i_hcd_primary in {1, 4, 6}:
-        lhcd = True
+    if lhcd := (i_hcd_primary in {1, 4, 6}):
         axis.text(
             -0.05,
             1,
@@ -8472,30 +8432,22 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
             ha="left",
             va="center",
         )
-    if i_hcd_primary == 2:
-        iccd = True
+    if iccd := (i_hcd_primary == 2):
         axis.text(-0.05, 1, "Ion Cyclotron Current Drive:", ha="left", va="center")
 
-    if "i_hcd_secondary" in mfile.data:
+    i_hcd_secondary = mfile.get("i_hcd_secondary", scan=scan) or 0
+    if i_hcd_secondary in {5, 8}:
+        secondary_heating = "NBI"
+    elif i_hcd_secondary in {3, 7, 10, 11, 13}:
+        secondary_heating = "ECH"
+    elif i_hcd_secondary == 12:
+        secondary_heating = "EBW"
+    elif i_hcd_secondary in {1, 4, 6}:
+        secondary_heating = "LHCD"
+    elif i_hcd_secondary == 2:
+        secondary_heating = "ICCD"
+    else:
         secondary_heating = ""
-        i_hcd_secondary = mfile.get("i_hcd_secondary", scan=scan)
-
-        if i_hcd_secondary in {5, 8}:
-            secondary_heating = "NBI"
-        if i_hcd_secondary in {3, 7, 10, 11, 13}:
-            secondary_heating = "ECH"
-        if i_hcd_secondary == 12:
-            secondary_heating = "EBW"
-        if i_hcd_secondary in {1, 4, 6}:
-            secondary_heating = "LHCD"
-        if i_hcd_secondary == 2:
-            secondary_heating = "ICCD"
-
-    axis.set_ylim(ymin, ymax)
-    axis.set_xlim(xmin, xmax)
-    axis.set_axis_off()
-    axis.set_autoscaley_on(False)
-    axis.set_autoscalex_on(False)
 
     pinjie = mfile.get("p_hcd_injected_total_mw", scan=scan)
     p_plasma_separatrix_mw = mfile.get("p_plasma_separatrix_mw", scan=scan)
@@ -8515,166 +8467,88 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
 
     # Assume Martin scaling if pthresh is not printed
     # Accounts for pthresh not being written prior to issue #679 and #680
-    if "p_l_h_threshold_mw" in mfile.data:
-        pthresh = mfile.get("p_l_h_threshold_mw", scan=scan)
-    else:
-        pthresh = mfile.get("l_h_threshold_powers(6)", scan=scan)
+    pthresh_name = (
+        "p_l_h_threshold_mw"
+        if "p_l_h_threshold_mw" in mfile.data
+        else "l_h_threshold_powers(6)"
+    )
+    pthresh = mfile.get(pthresh_name, scan=scan)
     flh = p_plasma_separatrix_mw / pthresh
 
     hstar = mfile.get("hstar", scan=scan)
 
-    if ecrh:
-        data = [
-            (pinjie, "Steady state auxiliary power", "MW"),
-            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
-            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
-            ("f_c_plasma_inductive", "Inductive fraction", ""),
-            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
-            (
-                "eta_cd_hcd_primary",
-                "Current drive efficiency",
-                "A W$^{-1}$",
-            ),
-            (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
-            (
-                pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
-                r"$\times 10^{-20}$ MW m$^{2}$",
-            ),
-            (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
-            (hstar, "H* (non-rad. corr.)", ""),
-        ]
-        # i_hcd_secondary is now always in the MFILE with = 0 meaning no fixed heating
-        if mfile.get("i_hcd_secondary", scan=scan) != 0:
-            data.insert(
-                1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
-            )
-            data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
-            data.insert(2, (pinjie, "Total auxillary power", "MW"))
-
-    if nbi:
-        data = [
-            (pinjie, "Steady state auxiliary power", "MW"),
-            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
-            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
-            ("f_c_plasma_inductive", "Inductive fraction", ""),
+    data = [
+        (pinjie, "Steady state auxiliary power", "MW"),
+        ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
+        ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
+        ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
+        ("f_c_plasma_inductive", "Inductive fraction", ""),
+        ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
+        (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
+        (
+            pdivnr,
+            r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
+            r"$\times 10^{-20}$ MW m$^{2}$",
+        ),
+        (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
+        (hstar, "H* (non-rad. corr.)", ""),
+    ]
+    # Optional override based on condition
+    field_overrides = {
+        "ecrh": (
+            "eta_cd_hcd_primary",
+            r"$\frac{P_{\mathrm{div}}}{R_{0}}$",
+            "A W$^{-1}$",
+        ),
+        "nbi": (
             ("gamnb", "NB gamma", "$10^{20}$ A W$^{-1}$ m$^{-2}$"),
             ("e_beam_kev", "NB energy", "keV"),
-            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
-            (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
-            (
-                pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
-                r"$\times 10^{-20}$ MW m$^{2}$",
-            ),
-            (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
-            (hstar, "H* (non-rad. corr.)", ""),
-        ]
-        if mfile.get("i_hcd_secondary", scan=scan) != 0:
-            data.insert(
-                1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
-            )
-            data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
-            data.insert(2, (pinjie, "Total auxillary power", "MW"))
+        ),
+        "ebw": (
+            "eta_cd_norm_hcd_primary",
+            "Normalised current drive efficiency of primary HCD system",
+            "(10$^{20}$ A/(Wm$^{2}$))",
+        ),
+        "lhcd": (
+            "eta_cd_norm_hcd_primary",
+            "Normalised current drive efficiency",
+            "(10$^{20}$ A/(Wm$^{2}$))",
+        ),
+        "iccd": (
+            "eta_cd_norm_hcd_primary",
+            "Normalised current drive efficiency",
+            "(10$^{20}$ A/(Wm$^{2}$))",
+        ),
+    }
 
-    if ebw:
-        data = [
-            (pinjie, "Steady state auxiliary power", "MW"),
-            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
-            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
-            ("f_c_plasma_inductive", "Inductive fraction", ""),
-            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
-            (
-                "eta_cd_norm_hcd_primary",
-                "Normalised current drive efficiency of primary HCD system",
-                "(10$^{20}$ A/(Wm$^{2}$))",
-            ),
-            (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
-            (
-                pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
-                r"$\times 10^{-20}$ MW m$^{2}$",
-            ),
-            (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
-            (hstar, "H* (non-rad. corr.)", ""),
-        ]
-        if "i_hcd_secondary" in mfile.data:
-            data.insert(
-                1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
-            )
-            data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
-            data.insert(2, (pinjie, "Total auxillary power", "MW"))
+    if ecrh:
+        data.insert(6, field_overrides["ecrh"])
+    elif nbi:
+        data.insert(6, field_overrides["nbi"][0])
+        data.insert(7, field_overrides["nbi"][1])
+    elif ebw:
+        data.insert(6, field_overrides["ebw"])
+    elif lhcd:
+        data.insert(6, field_overrides["lhcd"])
+    elif iccd:
+        data.insert(6, field_overrides["iccd"])
 
-    if lhcd:
-        data = [
-            (pinjie, "Steady state auxiliary power", "MW"),
-            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
-            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
-            ("f_c_plasma_inductive", "Inductive fraction", ""),
-            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
-            (
-                "eta_cd_norm_hcd_primary",
-                "Normalised current drive efficiency",
-                "(10$^{20}$ A/(Wm$^{2}$))",
-            ),
-            (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
-            (
-                pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
-                r"$\times 10^{-20}$ MW m$^{2}$",
-            ),
-            (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
-            (hstar, "H* (non-rad. corr.)", ""),
-        ]
-        if "i_hcd_secondary" in mfile.data:
-            data.insert(
-                1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
-            )
-            data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
-            data.insert(2, (pinjie, "Total auxillary power", "MW"))
-
-    if iccd:
-        data = [
-            (pinjie, "Steady state auxiliary power", "MW"),
-            ("p_hcd_primary_extra_heat_mw", "Power for heating only", "MW"),
-            ("f_c_plasma_bootstrap", "Bootstrap fraction", ""),
-            ("f_c_plasma_auxiliary", "Auxiliary fraction", ""),
-            ("f_c_plasma_inductive", "Inductive fraction", ""),
-            ("p_plasma_loss_mw", "Plasma heating used for H factor", "MW"),
-            (
-                "eta_cd_norm_hcd_primary",
-                "Normalised current drive efficiency",
-                "(10$^{20}$ A/(Wm$^{2}$))",
-            ),
-            (pdivr, r"$\frac{P_{\mathrm{div}}}{R_{0}}$", "MW m$^{-1}$"),
-            (
-                pdivnr,
-                r"$\frac{P_{\mathrm{div}}}{\langle n \rangle R_{0}}$",
-                r"$\times 10^{-20}$ MW m$^{2}$",
-            ),
-            (flh, r"$\frac{P_{\mathrm{div}}}{P_{\mathrm{LH}}}$", ""),
-            (hstar, "H* (non-rad. corr.)", ""),
-        ]
-        if "i_hcd_secondary" in mfile.data:
-            data.insert(
-                1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
-            )
-            data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
-            data.insert(2, (pinjie, "Total auxillary power", "MW"))
+    # Secondary heating logic — common across all cases
+    if mfile.get("i_hcd_secondary", scan=scan) != 0:
+        data.insert(
+            1, ("pinjmwfix", f"{secondary_heating} secondary auxiliary power", "MW")
+        )
+        data[0] = ((pinjie - pinjmwfix), "Primary auxiliary power", "MW")
+        data.insert(2, (pinjie, "Total auxillary power", "MW"))
 
     coe = mfile.get("coe", scan=scan)
-    if coe == 0.0:  # noqa: RUF069
-        data.append(("", "", ""))
-        data.append(("#Costs", "", ""))
-        data.append(("", "Cost output not selected", ""))
-    else:
-        data.append(("", "", ""))
-        data.append(("#Costs", "", ""))
-        data.append((coe, "Cost of electricity", r"\$/MWh"))
+    data.extend((
+        ("", "", ""),
+        ("#Costs", "", ""),
+        ("", "Cost output not selected", "")
+        if coe == 0.0  # noqa: RUF069
+        else (coe, "Cost of electricity", r"\$/MWh"),
+    ))
 
     plot_info(axis, data, mfile, scan)
 
@@ -8762,7 +8636,7 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
 
     axis.set_title("Bootstrap Current Fraction ($f_\\text{BS}$) Comparison")
     axis.set_ylabel("Bootstrap Current Fraction")
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
     axis.set_facecolor("#f0f0f0")
@@ -8848,7 +8722,7 @@ def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: i
 
     axis.set_title("SOL Power Decay Length ($\\lambda_q$) Comparison")
     axis.set_ylabel("Power Decay Length [mm]")
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
     axis.set_facecolor("#f0f0f0")
@@ -9237,7 +9111,7 @@ def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=
 
     axis.set_title("L-H Threshold ($P_\\text{LH}$) Comparison")
     axis.set_ylabel("L-H threshold power [MW]")
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
 
@@ -9579,7 +9453,7 @@ def plot_confinement_time_comparison(
 
     axis.set_title("Confinement time ($\\tau_{\\text{E}}$) Comparison")
     axis.set_ylabel("Confinement time, $\\tau_{\\text{E}}$ [s]")
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
 
@@ -10115,7 +9989,7 @@ def plot_density_limit_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     axis.set_title("Density Limit Comparison")
     axis.set_ylabel(r"Density Limit [$10^{20}$ m$^{-3}$]")
     axis.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x * 1e-20:.1f}"))
-    axis.set_xlim([0.5, 1.5])
+    axis.set_xlim(0.5, 1.5)
     axis.set_xticks([])
     axis.set_xticklabels([])
     axis.set_facecolor("#f0f0f0")
