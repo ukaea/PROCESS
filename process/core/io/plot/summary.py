@@ -16645,7 +16645,6 @@ def plot_cumulative_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: in
     """
     n_plasma_profile_elements = int(m_file.get("n_plasma_profile_elements", scan=scan))
     e_plasma_thermal_total_mj = m_file.get("e_plasma_thermal_total", scan=scan) / 1e6
-    # Example implementation (replace with actual plotting code)
     e_plasma_electrons_thermal_profile_mj = [
         m_file.get(f"e_plasma_electrons_thermal_profile{i}", scan=scan) / 1e6
         for i in range(n_plasma_profile_elements)
@@ -16707,7 +16706,7 @@ def plot_cumulative_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: in
     )
 
     axis.legend()
-
+    axis.set_title("Thermal Energy Profiles and Cumulative Distribution")
     axis.grid(True, alpha=0.3)
     axis.minorticks_on()
     axis.tick_params(axis="x", labelbottom=False)
@@ -16946,8 +16945,12 @@ def main_plot(
 
     ax_thermal_energy = pages["beta"].add_subplot(325)
     plot_plasma_thermal_energy_profiles(ax_thermal_energy, m_file, scan)
+    ax_thermal_energy_cumulative = pages["beta"].add_subplot(
+        323, sharex=ax_thermal_energy
+    )
+    ax_thermal_energy_cumulative.set_position([0.127, 0.35, 0.35, 0.2])
     plot_cumulative_plasma_thermal_energy_profiles(
-        pages["beta"].add_subplot(323, sharex=ax_thermal_energy), m_file, scan
+        ax_thermal_energy_cumulative, m_file, scan
     )
 
     plot_ebw_ecrh_coupling_graph(_add_page().add_subplot(111), m_file, scan)
