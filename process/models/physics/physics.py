@@ -377,22 +377,6 @@ class Physics(Model):
             b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
         )
 
-        # Calculate total magnetic field at the outboard [T]
-        self.data.physics.b_plasma_outboard_total = (
-            self.fields.calculate_total_magnetic_field(
-                b_plasma_toroidal=self.data.physics.b_plasma_outboard_toroidal,
-                b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
-            )
-        )
-
-        # Calculate total magnetic field at the inboard [T]
-        self.data.physics.b_plasma_inboard_total = (
-            self.fields.calculate_total_magnetic_field(
-                b_plasma_toroidal=self.data.physics.b_plasma_inboard_toroidal,
-                b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
-            )
-        )
-
         # Calculate the inboard and outboard toroidal field
         self.data.physics.b_plasma_inboard_toroidal = (
             self.fields.calculate_plasma_inboard_toroidal_field(
@@ -407,6 +391,22 @@ class Physics(Model):
                 b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
                 rmajor=self.data.physics.rmajor,
                 rminor=self.data.physics.rminor,
+            )
+        )
+
+        # Calculate total magnetic field at the outboard [T]
+        self.data.physics.b_plasma_outboard_total = (
+            self.fields.calculate_total_magnetic_field(
+                b_plasma_toroidal=self.data.physics.b_plasma_outboard_toroidal,
+                b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
+            )
+        )
+
+        # Calculate total magnetic field at the inboard [T]
+        self.data.physics.b_plasma_inboard_total = (
+            self.fields.calculate_total_magnetic_field(
+                b_plasma_toroidal=self.data.physics.b_plasma_inboard_toroidal,
+                b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
             )
         )
 
