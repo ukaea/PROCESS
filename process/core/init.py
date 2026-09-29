@@ -638,7 +638,7 @@ def check_process(inputs, data):  # noqa: ARG001
                 stacklevel=2,
             )
     i_single_null = DivertorNumberModels(data.physics.i_single_null)
-    match DivertorNumberModels(data.physics.i_single_null):
+    match i_single_null:
         case DivertorNumberModels.DOUBLE_NULL:
             data.divertor.n_divertors = 2
             data.build.dz_fw_plasma_gap = data.build.dz_xpoint_divertor
