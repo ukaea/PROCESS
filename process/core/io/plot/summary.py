@@ -11338,6 +11338,68 @@ def plot_tf_stress(axis: plt.Axes, mfile: MFile):
     plt.tight_layout()
 
 
+def draw_bend(
+    ax: Axes,
+    elbow_radius: float,
+    theta_span: float,
+    radius_pipe: float,
+    title: str = "Bend",
+    alpha: float = 0.8,
+):
+    """
+    Draws a circular pipe bend with centerline and inner/outer boundaries.
+
+    Parameters
+    ----------
+    ax:
+        Target axes for plotting.
+    elbow_radius:
+        Radius of the elbow in meters.
+    theta_span:
+        Array of angles [0, θ] where θ is pi/2 or pi.
+    radius_pipe:
+        Pipe radius in meters (fallback to 0.1m if not provided).
+    title:
+        Plot title string.
+    alpha:
+        fill opacity
+    """
+    # Convert all inputs to mm
+    elbow_radius_mm = elbow_radius * 1000
+    pipe_radius_mm = radius_pipe * 1000
+
+    theta = np.linspace(0, theta_span, 100)
+    x_center = elbow_radius_mm * np.cos(theta)
+    y_center = elbow_radius_mm * np.sin(theta)
+
+    # Outer and inner walls (offset by ± pipe radius in mm)
+    x_outer = (elbow_radius_mm + pipe_radius_mm) * np.cos(theta)
+    y_outer = (elbow_radius_mm + pipe_radius_mm) * np.sin(theta)
+    x_inner = (elbow_radius_mm - pipe_radius_mm) * np.cos(theta)
+    y_inner = (elbow_radius_mm - pipe_radius_mm) * np.sin(theta)
+
+    # Plot
+    ax.plot(x_center, y_center, color="black", linestyle="--", label="Centerline")
+    ax.plot(x_outer, y_outer, color="black")
+    ax.plot(x_inner, y_inner, color="black")
+    ax.fill(
+        np.concatenate([x_outer, x_inner[::-1]]),
+        np.concatenate([y_outer, y_inner[::-1]]),
+        color="lightgrey",
+        alpha=alpha,
+    )
+
+    ax.set_aspect("equal")
+    ax.set_xlabel("X [mm]")
+    ax.set_ylabel("Y [mm]")
+    ax.set_title(title)
+    ax.grid(True, linestyle="--", alpha=0.3)
+
+    # Legend: Centerline + pipe radius info
+    legend_text = f"Centerline\nPipe radius: {pipe_radius_mm:.2f} mm\nElbow radius: {elbow_radius_mm:.2f} mm"
+    ax.legend([legend_text], loc="upper right")
+
+
 def plot_blkt_pipe_bends(fig, m_file, scan: int):
     """Plot the blanket pipe bends on the given axis, with axes in mm.
 
@@ -11353,80 +11415,18 @@ def plot_blkt_pipe_bends(fig, m_file, scan: int):
     ax_90 = fig.add_subplot(341)
     ax_180 = fig.add_subplot(342)
 
-    # Get pipe radius from m_file, fallback to 0.1 m
     r = m_file.get("radius_blkt_channel", scan=scan)
-    elbow_radius_90 = m_file.get("radius_blkt_channel_90_bend", scan=scan)
+    fallback_radius = 0.1  # meters
 
-    # --- 90 degree bend ---
-    theta_90 = np.linspace(0, np.pi / 2, 100)
-    # Convert coordinates from meters to millimeters
-    x_center_90 = elbow_radius_90 * np.cos(theta_90) * 1000
-    y_center_90 = elbow_radius_90 * np.sin(theta_90) * 1000
-    x_outer_90 = (elbow_radius_90 + r) * np.cos(theta_90) * 1000
-    y_outer_90 = (elbow_radius_90 + r) * np.sin(theta_90) * 1000
-    x_inner_90 = (elbow_radius_90 - r) * np.cos(theta_90) * 1000
-    y_inner_90 = (elbow_radius_90 - r) * np.sin(theta_90) * 1000
-
-    ax_90.plot(
-        x_center_90, y_center_90, color="black", linestyle="--", label="Centerline"
+    elbow_radius_90 = (
+        m_file.get("radius_blkt_channel_90_bend", scan=scan) or fallback_radius
     )
-    ax_90.plot(x_outer_90, y_outer_90, color="black")
-    ax_90.plot(x_inner_90, y_inner_90, color="black")
-    ax_90.fill(
-        np.concatenate([x_outer_90, x_inner_90[::-1]]),
-        np.concatenate([y_outer_90, y_inner_90[::-1]]),
-        color="lightgrey",
-        alpha=1.0,
-    )
-    ax_90.set_aspect("equal")
-    ax_90.set_xlabel("X [mm]")
-    ax_90.set_ylabel("Y [mm]")
-    ax_90.set_title("Blanket Pipe 90° Bend")
-    ax_90.grid(True, linestyle="--", alpha=0.3)
-    # Add legend with radius values
-    ax_90.legend(
-        [
-            f"Centerline\nPipe radius: {r * 1000:.2f} mm\nElbow radius: {elbow_radius_90 * 1000:.2f} mm"
-        ],
-        loc="upper right",
+    elbow_radius_180 = (
+        m_file.get("radius_blkt_channel_180_bend", scan=scan) or fallback_radius
     )
 
-    # --- 180 degree bend ---
-
-    elbow_radius_180 = m_file.get("radius_blkt_channel_180_bend", scan=scan)
-
-    theta_180 = np.linspace(0, np.pi, 100)
-    x_center_180 = elbow_radius_180 * np.cos(theta_180) * 1000
-    y_center_180 = elbow_radius_180 * np.sin(theta_180) * 1000
-    x_outer_180 = (elbow_radius_180 + r) * np.cos(theta_180) * 1000
-    y_outer_180 = (elbow_radius_180 + r) * np.sin(theta_180) * 1000
-    x_inner_180 = (elbow_radius_180 - r) * np.cos(theta_180) * 1000
-    y_inner_180 = (elbow_radius_180 - r) * np.sin(theta_180) * 1000
-
-    ax_180.plot(
-        x_center_180, y_center_180, color="black", linestyle="--", label="Centerline"
-    )
-    ax_180.plot(x_outer_180, y_outer_180, color="black")
-    ax_180.plot(x_inner_180, y_inner_180, color="black")
-    ax_180.fill(
-        np.concatenate([x_outer_180, x_inner_180[::-1]]),
-        np.concatenate([y_outer_180, y_inner_180[::-1]]),
-        color="lightgrey",
-        alpha=1.0,
-    )
-
-    ax_180.set_aspect("equal")
-    ax_180.set_xlabel("X [mm]")
-    ax_180.set_ylabel("Y [mm]")
-    ax_180.set_title("Blanket Pipe 180° Bend")
-    ax_180.grid(True, linestyle="--", alpha=0.3)
-    # Add legend with radius values
-    ax_180.legend(
-        [
-            f"Centerline\nPipe radius: {r * 1000:.2f} mm\nElbow radius: {elbow_radius_180 * 1000:.2f} mm"
-        ],
-        loc="upper right",
-    )
+    draw_bend(ax_90, elbow_radius_90, np.pi / 2, r, title="Blanket Pipe 90° Bend")
+    draw_bend(ax_180, elbow_radius_180, np.pi, r, title="Blanket Pipe 180° Bend")
 
 
 def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
@@ -11445,35 +11445,8 @@ def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
     r = m_file.get("radius_fw_channel", scan=scan)
     elbow_radius = m_file.get("radius_fw_channel_90_bend", scan=scan)
 
-    # --- 90 degree bend ---
-    theta_90 = np.linspace(0, np.pi / 2, 100)
-    # Convert coordinates from meters to millimeters
-    x_center_90 = elbow_radius * np.cos(theta_90) * 1000
-    y_center_90 = elbow_radius * np.sin(theta_90) * 1000
-    x_outer_90 = (elbow_radius + r) * np.cos(theta_90) * 1000
-    y_outer_90 = (elbow_radius + r) * np.sin(theta_90) * 1000
-    x_inner_90 = (elbow_radius - r) * np.cos(theta_90) * 1000
-    y_inner_90 = (elbow_radius - r) * np.sin(theta_90) * 1000
-
-    ax.plot(x_center_90, y_center_90, color="black", linestyle="--", label="Centerline")
-    ax.plot(x_outer_90, y_outer_90, color="black")
-    ax.plot(x_inner_90, y_inner_90, color="black")
-    ax.fill(
-        np.concatenate([x_outer_90, x_inner_90[::-1]]),
-        np.concatenate([y_outer_90, y_inner_90[::-1]]),
-        color="lightgrey",
-        alpha=1.0,
-    )
-    ax.set_aspect("equal")
-    ax.set_xlabel("X [mm]")
-    ax.set_ylabel("Y [mm]")
-    ax.set_title("First Wall Pipe 90° Bend")
-    ax.grid(True, linestyle="--", alpha=0.3)
-    ax.legend(
-        [
-            f"Centerline\nPipe radius: {r * 1000:.2f} mm\nElbow radius: {elbow_radius * 1000:.2f} mm"
-        ],
-        loc="upper right",
+    draw_bend(
+        ax, elbow_radius, np.pi / 2, r, title="First Wall Pipe 90° Bend", alpha=1.0
     )
 
 
