@@ -691,7 +691,7 @@ $$
 V(r) = \pi \kappa r^2 \times 2\pi R_0 = 2\pi^2\kappa R_0r^2  
 $$
 
-A thing annular shell therefore has volume:
+A thin annular shell therefore has volume:
 
 $$
 dV = \frac{dV}{dr}dr = 4\pi^2\kappa R_0r dr

@@ -3245,7 +3245,7 @@ class Physics(Model):
         for i in range(len(self.data.physics.e_plasma_electrons_thermal_profile)):
             po.ovarre(
                 self.mfile,
-                "Plasma thermal energy in electrons at point",
+                f"Plasma thermal energy in electrons at point {i}",
                 f"(e_plasma_electrons_thermal_profile{i})",
                 self.data.physics.e_plasma_electrons_thermal_profile[i],
                 "OP ",

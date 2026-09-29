@@ -16520,7 +16520,7 @@ def plot_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: int):
         scan to read from MFILE
     """
     n_plasma_profile_elements = int(m_file.get("n_plasma_profile_elements", scan=scan))
-    # Example implementation (replace with actual plotting code)
+
     eden_plasma_electrons_thermal_profile_mj = [
         m_file.get(f"eden_plasma_electrons_thermal_profile{i}", scan=scan) / 1e6
         for i in range(n_plasma_profile_elements)
