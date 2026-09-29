@@ -40,6 +40,7 @@ from scipy import optimize
 from process.core.exceptions import ProcessValidationError, ProcessValueError
 from process.models.neutronics.data import N_A, MaterialMacroInfo
 
+NONCONVERGENCE_WARNING_ATOL = 1E-15
 
 def negexp(x):
     """Shorthand for a function that exponentiates -x rather than x."""
@@ -671,52 +672,65 @@ class NeutronFluxProfile:
         conditions = self._groupwise_fitness(n, jac=False)
         self._optimization_record[n].append((init_coefs, results))
 
-        if not np.isclose(conditions[0], 0):
+
+        if self.fluxes[n]:
+            source_current_deviation = conditions[0]/self.fluxes[n]
+            source_current_dev_text = f"{source_current_deviation} %"
+        else:
+            source_current_deviation = conditions[0]
+            source_current_dev_text = f"{source_current_deviation} m^-2 s^-1"
+        if not np.isclose(source_current_deviation, 0, atol=NONCONVERGENCE_WARNING_ATOL):
             warnings.warn(
                 f"Group {n} neutron current at x=0 != the predetermined "
                 f"value of {self.fluxes[n]}! Instead current deviated by "
-                f"{conditions[0]}",
+                f"{source_current_dev_text}.",
                 stacklevel=2,
             )
         for num_layer in range(self.n_layers - 1):
             # flux continuity
             i = 2 * num_layer
-            if not np.isclose(conditions[i + 1], 0):
-                deviation = conditions[i + 1] / self.groupwise_neutron_flux_in_layer(
-                    n, num_layer, self.layer_x[num_layer]
-                ) * 100
+            x = self.layer_x[num_layer]
+
+            this_flux = self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+            if this_flux:
+                flux_deviation = conditions[i + 1] / self.groupwise_neutron_flux_in_layer(
+                    n, num_layer, x
+                )
+                flux_dev_text = f"{flux_deviation * 100} %"
+            else:
+                flux_deviation = conditions[i + 1]
+                flux_dev_text = f"{flux_deviation} m^-2 s^-1"
+            if not np.isclose(flux_deviation, 0, atol=NONCONVERGENCE_WARNING_ATOL):
                 warnings.warn(
                     f"Group {n} neutron flux is not continuous at interface"
-                    f"[{num_layer + 1}]! Deviated by {deviation} %.",
+                    f"[{num_layer + 1}]! Deviated by {flux_dev_text}.",
                     stacklevel=2,
                 )
             # current continuity
-            if not np.isclose(conditions[i + 2], 0):
-                x = self.layer_x[num_layer]
-                this_current = self.groupwise_neutron_current_in_layer(n, num_layer, x)
+            this_current = self.groupwise_neutron_current_in_layer(n, num_layer, x)
+            if this_current:
+                current_deviation = conditions[i + 2] / this_current
+                current_dev_text = f"{current_deviation * 100} %"
+            else:
+                current_deviation = conditions[i + 2]
+                current_dev_text = f"{current_deviation} m^-2 s^-1"
+            if not np.isclose(current_deviation, 0, atol=NONCONVERGENCE_WARNING_ATOL):
                 # avoid divide by 0 situation
-                if this_current!=0:
-                    deviation = conditions[i + 2] / this_current * 100
-                    warnings.warn(
+                warnings.warn(
                     f"Group {n} neutron current is not continuous at interface"
-                    f"[{num_layer + 1}]! Deviated by {deviation} %.",
+                    f"[{num_layer + 1}]! Deviated by {current_dev_text}.",
                     stacklevel=2,
                 )
-                else:
-                    next_current = self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
-                    warnings.warn(
-                        f"Group {n} neutron current is not continuous at interface"
-                        f"[{num_layer + 1}]! Current = "
-                        f"{this_current} vs {next_current}",
-                        stacklevel=2,
-                    )
 
         # extended flux = 0
-        if not np.isclose(conditions[-1], 0):
+        final_flux = self.groupwise_neutron_flux_in_layer(
+            n, self.n_layers - 1, self.interface_x[self.n_layers - 1]
+        )
+        final_flux_deviation = conditions[-1] / final_flux if final_flux else conditions[-1]
+        if not np.isclose(final_flux_deviation, 0, atol=NONCONVERGENCE_WARNING_ATOL):
             warnings.warn(
-                "Boundary condition of flux (at extended_boundary) = 0 "
-                f"is not adhered to for group {n}! "
-                f"Instead flux = {conditions[-1]}.",
+                f"Group {n} neutrons has non-zero flux at the extended "
+                f"boundary! Instead flux = {conditions[-1]} m^-2 s^-1.",
                 stacklevel=2,
             )
         # non-negativity check for layer = num_layer:

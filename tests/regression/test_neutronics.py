@@ -395,6 +395,8 @@ def test_2_groups_2_layers_two_identical_materials():
         neutron_profile2.groupwise_neutron_flux_at(1, x)
     )
 
+@pytest.mark.filterwarnings("ignore:Group 1 neutron current at x=0 != the predetermined value of 0.0! Instead current deviated by")
+@pytest.mark.filterwarnings("ignore:Group 2 neutron current at x=0 != the predetermined value of 0.0! Instead current deviated by")
 def test_3_groups_1_layer():
     dummy = np.geomspace(MAX_E, MIN_E, 4)  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
@@ -455,6 +457,7 @@ def test_3_groups_1_layer():
     assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
 
 
+@pytest.mark.filterwarnings("ignore:Group 0 neutron current is not continuous at interface")
 def test_4_groups_1_layer():
     dummy = np.geomspace(MAX_E, MIN_E, 5)  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
@@ -535,6 +538,10 @@ def test_4_groups_1_layer():
         ),
     ), "Conservation of neutrons"
 
+@pytest.mark.filterwarnings("ignore:Group 3 neutron")
+@pytest.mark.filterwarnings("ignore:Group 2 neutron")
+@pytest.mark.filterwarnings("ignore:Group 1 neutron current is not continuous at interface")
+@pytest.mark.filterwarnings("ignore:Group 0 neutron current is not continuous at interface")
 def test_4_groups_4_layers():
     dummy = np.geomspace(MAX_E, MIN_E, 5)  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
@@ -631,6 +638,10 @@ def test_4_groups_4_layers():
             )
 
 @pytest.mark.filterwarnings("ignore:Calculation of flux")
+@pytest.mark.filterwarnings("ignore:Group 4 neutron")
+@pytest.mark.filterwarnings("ignore:Group 3 neutron")
+@pytest.mark.filterwarnings("ignore:Group 2 neutron")
+@pytest.mark.filterwarnings("ignore:Group 1 neutron")
 def test_5_groups_5_layers():
     """Create an arbitrary 5-layer 5-group model. Check for continuity and conformity to the equation."""
     dummy_group_structure = np.geomspace(MAX_E, MIN_E, 5 + 1)
