@@ -66,5 +66,3 @@ env-fork
 !documentation/**/*.html
 process/_version.py
 *.ipynb
-cost_conf.toml
-
