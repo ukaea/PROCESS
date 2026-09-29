@@ -418,17 +418,12 @@ def poloidal_cross_section(
     plot_tf_coils(axis, mfile, scan, colour_scheme)
     plot_pf_coils(axis, mfile, scan, colour_scheme)
 
-    # Ranges
-    # ---
-    # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        axis.set_ylim([-15, 15])
-        axis.set_xlim([0, 20])
+        axis.set_ylim(-15, 15)
+        axis.set_xlim(0, 20)
 
-    # Adaptive ranges
     else:
-        axis.set_xlim([0, axis.get_xlim()[1]])
-    # ---
+        axis.set_xlim(0, axis.get_xlim()[1])
 
 
 def plot_full_machine_poloidal_cross_section(
@@ -521,7 +516,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the plasma image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [-0.15, 0.6, 0.45, 0.45], transform=axis.transAxes, zorder=1
+        (-0.15, 0.6, 0.45, 0.45), transform=axis.transAxes, zorder=1
     )
     new_ax.imshow(plasma)
     new_ax.axis("off")
@@ -542,7 +537,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         neutron = mpimg.imread(img_path.open("rb"))
 
     new_ax = axis.inset_axes(
-        [0.2, 0.85, 0.03, 0.03], transform=axis.transAxes, zorder=10
+        (0.2, 0.85, 0.03, 0.03), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(neutron)
     new_ax.axis("off")
@@ -689,7 +684,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the alpha particle image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.16, 0.95, 0.025, 0.025], transform=axis.transAxes, zorder=10
+        (0.16, 0.95, 0.025, 0.025), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(alpha)
     new_ax.axis("off")
@@ -775,11 +770,11 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the injector image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [-0.2, 0.8, 0.15, 0.15], transform=axis.transAxes, zorder=10
+        (-0.2, 0.8, 0.15, 0.15), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(hcd_injector_1)
     new_ax.axis("off")
-    new_ax = axis.inset_axes([-0.2, 0.5, 0.15, 0.5], transform=axis.transAxes, zorder=10)
+    new_ax = axis.inset_axes((-0.2, 0.5, 0.15, 0.5), transform=axis.transAxes, zorder=10)
     new_ax.imshow(hcd_injector_2)
     new_ax.axis("off")
 
@@ -1042,7 +1037,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         turbine = mpimg.imread(img_path.open("rb"))
 
     # Display the turbine image over the figure, not the axes
-    new_ax = axis.inset_axes([1.1, 0.0, 0.15, 0.15], transform=axis.transAxes, zorder=10)
+    new_ax = axis.inset_axes((1.1, 0.0, 0.15, 0.15), transform=axis.transAxes, zorder=10)
     new_ax.imshow(turbine)
     new_ax.axis("off")
 
@@ -1099,7 +1094,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the generator image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.96, 0.0, 0.15, 0.15], transform=axis.transAxes, zorder=10
+        (0.96, 0.0, 0.15, 0.15), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(generator)
     new_ax.axis("off")
@@ -1168,7 +1163,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the pylon image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.925, -0.1, 0.1, 0.1], transform=axis.transAxes, zorder=10
+        (0.925, -0.1, 0.1, 0.1), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(pylon)
     new_ax.axis("off")
@@ -1376,7 +1371,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         fw = mpimg.imread(img_path.open("rb"))
 
     # Display the first wall image over the figure, not the axes
-    new_ax = axis.inset_axes([0.4, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10)
+    new_ax = axis.inset_axes((0.4, 0.625, 0.4, 0.4), transform=axis.transAxes, zorder=10)
     new_ax.imshow(fw)
     new_ax.axis("off")
 
@@ -1635,7 +1630,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the blanket image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.75, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10
+        (0.75, 0.625, 0.4, 0.4), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(blanket)
     new_ax.axis("off")
@@ -1678,7 +1673,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
 
     # Display the vacuum vessel image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.975, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10
+        (0.975, 0.625, 0.4, 0.4), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(vv)
     new_ax.axis("off")
@@ -1781,7 +1776,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         divertor = mpimg.imread(img_path.open("rb"))
 
     # Display the divertor image over the figure, not the axes
-    new_ax = axis.inset_axes([0.1, 0.4, 0.3, 0.25], transform=axis.transAxes, zorder=10)
+    new_ax = axis.inset_axes((0.1, 0.4, 0.3, 0.25), transform=axis.transAxes, zorder=10)
     new_ax.imshow(divertor)
     new_ax.axis("off")
 
@@ -2888,7 +2883,7 @@ def plot_main_plasma_information(
 
     # Display the neutron image over the figure, not the axes
     new_ax = axis.inset_axes(
-        [0.975, 0.275, 0.075, 0.075], transform=axis.transAxes, zorder=10
+        (0.975, 0.275, 0.075, 0.075), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(alpha_particle)
     new_ax.axis("off")
@@ -2921,7 +2916,7 @@ def plot_main_plasma_information(
     ) as neutron_image_path:
         neutron = mpimg.imread(neutron_image_path.open("rb"))
     new_ax = axis.inset_axes(
-        [0.975, 0.75, 0.075, 0.075], transform=axis.transAxes, zorder=10
+        (0.975, 0.75, 0.075, 0.075), transform=axis.transAxes, zorder=10
     )
     new_ax.imshow(neutron)
     new_ax.axis("off")
@@ -3146,26 +3141,14 @@ def plot_main_plasma_information(
     )
 
     # Add radiation label
-    axis.text(
-        0.725,
-        0.78,
-        "$\\gamma$",
-        fontsize=23,
-        verticalalignment="top",
-        transform=fig.transFigure,
-    )
+    axis.text(0.725, 0.78, "$\\gamma$", **text_args)
 
     # Add L-H threshold information
-    textstr_lh = (
-        f"$\\mathbf{{L-H \\ threshold:}}$\n"
-        f"({PlasmaConfinementTransitionModel(int(mfile.get('i_l_h_threshold', scan=scan))).full_name})\n\n"
-        f"$P_{{\\text{{L-H}}}}:$ {mfile.get('p_l_h_threshold_mw', scan=scan):.4f} MW\n"
-    )
-
-    # Wrap long model names to new line
     model_name = PlasmaConfinementTransitionModel(
         int(mfile.get("i_l_h_threshold", scan=scan))
     ).full_name
+
+    # Wrap long model names to new line
     if len(model_name) > 20:
         model_name = "\n".join(textwrap.wrap(model_name, width=20))
 
@@ -3507,8 +3490,8 @@ def plot_cryostat(
 
 def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1, 2]):
     """Function to plot the colour key"""
-    axis.set_ylim([0, 10])
-    axis.set_xlim([0, 10])
+    axis.set_ylim(0, 10)
+    axis.set_xlim(0, 10)
     axis.set_axis_off()
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
@@ -3552,7 +3535,7 @@ def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1,
         axis.text(x_pos, y_pos, text, ha="left", va="top", size="small")
         axis.add_patch(
             patches.Rectangle(
-                [x_pos + 1.5, y_pos - 0.35],
+                (x_pos + 1.5, y_pos - 0.35),
                 0.5,
                 0.4,
                 lw=0 if color != "none" else 1,
@@ -3795,13 +3778,13 @@ def toroidal_cross_section(
     # ---
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        axis.set_ylim([0, 20])
-        axis.set_xlim([0, 20])
+        axis.set_ylim(0, 20)
+        axis.set_xlim(0, 20)
 
     # Adaptive ranges
     else:
-        axis.set_ylim([0.0, axis.get_ylim()[1]])
-        axis.set_xlim([0.0, axis.get_xlim()[1]])
+        axis.set_ylim(0.0, axis.get_ylim()[1])
+        axis.set_xlim(0.0, axis.get_xlim()[1])
     # ---
 
 
@@ -4050,14 +4033,14 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     # Ranges
     # ---
     # DEMO : Fixed ranges for comparison
-    ax_main.set_xlim([0, 1])
-    ax_impurity.set_xlim([0, 1])
+    ax_main.set_xlim(0, 1)
+    ax_impurity.set_xlim(0, 1)
     if demo_ranges:
-        ax_main.set_ylim([0, 20])
+        ax_main.set_ylim(0, 20)
 
     # Adaptive ranges
     else:
-        ax_main.set_ylim([0, ax_main.get_ylim()[1]])
+        ax_main.set_ylim(0, ax_main.get_ylim()[1])
         # Use logarithmic scale for impurity axis if any impurity values are very small
         impurity_data = [
             imp_frac[i] * ne / 1e16
@@ -4067,7 +4050,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         if impurity_data and np.min(impurity_data) / np.max(impurity_data) < 0.01:
             # If range spans more than 100x, use log scale
             ax_impurity.set_yscale("log")
-        ax_impurity.set_ylim([1e-3, ax_impurity.get_ylim()[1]])
+        ax_impurity.set_ylim(1e-3, ax_impurity.get_ylim()[1])
 
     if i_plasma_pedestal != 0:
         # Print pedestal lines
@@ -4312,14 +4295,14 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
 
     # Ranges
     # ---
-    prof.set_xlim([0, 1])
+    prof.set_xlim(0, 1)
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        prof.set_ylim([0, 50])
+        prof.set_ylim(0, 50)
 
     # Adaptive ranges
     else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
+        prof.set_ylim(0, prof.get_ylim()[1])
 
     if i_plasma_pedestal != 0:
         # Plot pedestal lines
@@ -4421,14 +4404,14 @@ def plot_qprofile(prof, demo_ranges: bool, mfile: MFile, scan: int):
 
     # Ranges
     # ---
-    prof.set_xlim([0, 1])
+    prof.set_xlim(0, 1)
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        prof.set_ylim([0, 10])
+        prof.set_ylim(0, 10)
 
     # Adaptive ranges
     else:
-        prof.set_ylim([0, q95 * 1.2])
+        prof.set_ylim(0, q95 * 1.2)
 
     prof.text(
         0.6,
@@ -4684,16 +4667,16 @@ def plot_line_brem_power_density_profile(
     # Ranges
     # ---
     axis.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1), ncol=4)
-    axis.set_xlim([0, 1.0])
+    axis.set_xlim(0, 1.0)
     axis.set_yscale("log")
     axis.yaxis.grid(True, which="both", alpha=0.2)
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
-        axis.set_ylim([1e-4, 0.5])
+        axis.set_ylim(1e-4, 0.5)
 
     # Adaptive ranges
     else:
-        axis.set_ylim([1e-4, axis.get_ylim()[1]])
+        axis.set_ylim(1e-4, axis.get_ylim()[1])
     # ---
 
 
@@ -5628,8 +5611,8 @@ def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: MFile, scan: i
     axis.set_xlabel("X [cm]")
     axis.set_ylabel("R [cm]")
     axis.set_title("First Wall Top-Down Cross Section")
-    axis.set_xlim([-1, 2 * dx_fw_module + 1])
-    axis.set_ylim([-1, 2 * (dr_fw_wall + radius_fw_channel) + 1])
+    axis.set_xlim(-1, 2 * dx_fw_module + 1)
+    axis.set_ylim(-1, 2 * (dr_fw_wall + radius_fw_channel) + 1)
 
 
 def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: int):
@@ -5750,8 +5733,8 @@ def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: i
     axis.set_xlabel("R [m]")
     axis.set_ylabel("Z [m]")
     axis.set_title("First Wall Poloidal Cross Section")
-    axis.set_xlim([-0.01, (dx_fw_module + radius_fw_channel * 2) + 0.01])
-    axis.set_ylim([-0.2, len_fw_channel + 0.2])
+    axis.set_xlim(-0.01, (dx_fw_module + radius_fw_channel * 2) + 0.01)
+    axis.set_ylim(-0.2, len_fw_channel + 0.2)
 
 
 def plot_firstwall(
@@ -8393,8 +8376,8 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
     ymin = -16
     ymax = 1
 
-    axis.set_ylim([ymin, ymax])
-    axis.set_xlim([xmin, xmax])
+    axis.set_ylim(ymin, ymax)
+    axis.set_xlim(xmin, xmax)
     axis.set_axis_off()
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
@@ -8516,8 +8499,8 @@ def plot_geometry_info(axis: plt.Axes, mfile: MFile, scan: int):
     ymax = 1
 
     axis.text(-0.05, 1, "Geometry:", ha="left", va="center")
-    axis.set_ylim([ymin, ymax])
-    axis.set_xlim([xmin, xmax])
+    axis.set_ylim(ymin, ymax)
+    axis.set_xlim(xmin, xmax)
     axis.set_axis_off()
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
@@ -8565,8 +8548,8 @@ def plot_physics_info(axis: plt.Axes, mfile: MFile, scan: int):
     ymax = 1
 
     axis.text(-0.05, 1, "Physics:", ha="left", va="center")
-    axis.set_ylim([ymin, ymax])
-    axis.set_xlim([xmin, xmax])
+    axis.set_ylim(ymin, ymax)
+    axis.set_xlim(xmin, xmax)
     axis.set_axis_off()
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
@@ -8645,8 +8628,8 @@ def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
     ymax = 1
 
     axis.text(-0.05, 1, "Coil currents etc:", ha="left", va="center")
-    axis.set_ylim([ymin, ymax])
-    axis.set_xlim([xmin, xmax])
+    axis.set_ylim(ymin, ymax)
+    axis.set_xlim(xmin, xmax)
     axis.set_axis_off()
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
@@ -8771,8 +8754,8 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
     ymax = 1
 
     axis.text(-0.05, 1, "Power flows:", ha="left", va="center")
-    axis.set_ylim([ymin, ymax])
-    axis.set_xlim([xmin, xmax])
+    axis.set_ylim(ymin, ymax)
+    axis.set_xlim(xmin, xmax)
     axis.set_axis_off()
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
@@ -8904,8 +8887,8 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
         if i_hcd_secondary == 2:
             secondary_heating = "ICCD"
 
-    axis.set_ylim([ymin, ymax])
-    axis.set_xlim([xmin, xmax])
+    axis.set_ylim(ymin, ymax)
+    axis.set_xlim(xmin, xmax)
     axis.set_axis_off()
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
@@ -9322,11 +9305,11 @@ def plot_brunner_divertor_power_split_comparison_stackplot(
         alpha=0.5,
         label="$\u0394 r_{\\mathrm{sep}}$",
     )
-    axis.set_ylim([0.0, 1.0])
-    axis.set_xlim([
+    axis.set_ylim(0.0, 1.0)
+    axis.set_xlim(
         -5 * len_plasma_sol_outboard_pd,
         5 * len_plasma_sol_outboard_pd,
-    ])
+    )
     axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.35)
     axis.set_title("Brunner Divertor Power Split Fractions")
     axis.set_xlabel("$\\Delta r_{\\mathrm{sep}}$ [m]")
@@ -12235,9 +12218,9 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
     axis.set_yscale("log")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
-    axis.set_xlim([0, 1.025])
+    axis.set_xlim(0, 1.025)
     axis.minorticks_on()
-    axis.set_ylim([1e10, 1e23])
+    axis.set_ylim(1e10, 1e23)
     axis.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
     axis.yaxis.set_minor_locator(
         plt.LogLocator(base=10.0, subs=np.arange(1, 10) * 0.1, numticks=100)
@@ -12689,7 +12672,7 @@ def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
     axis.set_title("Plasma Thermal Pressure Profiles")
     axis.grid(True, linestyle="--", alpha=0.5)
-    axis.set_xlim([0, 1.025])
+    axis.set_xlim(0, 1.025)
     axis.set_ylim(bottom=0)
     axis.legend()
 
@@ -13349,10 +13332,7 @@ def reaction_plot_grid(
 
     ax.set_xlabel("R [m]")
     ax.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
-    ax.set_ylim(
-        -1.2 * rminor * kappa,
-        1.2 * kappa * rminor,
-    )
+    ax.set_ylim(-1.2 * rminor * kappa, 1.2 * kappa * rminor)
     ax.set_ylabel("Z [m]")
     ax.plot(
         rmajor,
@@ -17170,14 +17150,14 @@ def main_plot(
         demo_ranges,
         colour_scheme,
     )
-    ax_full_toroidal.set_ylim([
+    ax_full_toroidal.set_ylim(
         -ax_full_toroidal.get_ylim()[1],
         ax_full_toroidal.get_ylim()[1],
-    ])
-    ax_full_toroidal.set_xlim([
+    )
+    ax_full_toroidal.set_xlim(
         -ax_full_toroidal.get_xlim()[1],
         ax_full_toroidal.get_xlim()[1],
-    ])
+    )
 
     ax18 = _add_page().add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
