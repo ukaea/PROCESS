@@ -781,6 +781,15 @@ class Physics(Model):
             self.data.physics.aspect,
         )
 
+        # Ratio of fusion to input (injection+ohmic) power
+        # Moved out of current_drive model because ohmic heating is calculated
+        # in the physics model
+        self.data.current_drive.big_q_plasma = self.data.physics.p_fusion_total_mw / (
+            self.data.current_drive.p_hcd_injected_total_mw
+            + self.data.current_drive.p_beam_orbit_loss_mw
+            + self.data.physics.p_plasma_ohmic_mw
+        )
+
         # Calculate L- to H-mode power threshold for different scalings
         self.plasma_transition.run()
 
