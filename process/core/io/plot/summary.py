@@ -8998,65 +8998,49 @@ def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=
     u_seed :
          (Default value = None)
     """
-    iter_nominal = mfile.get("l_h_threshold_powers(1)", scan=scan)
-    iter_upper = mfile.get("l_h_threshold_powers(2)", scan=scan)
-    iter_lower = mfile.get("l_h_threshold_powers(3)", scan=scan)
-    iter_1997_1 = mfile.get("l_h_threshold_powers(4)", scan=scan)
-    iter_1997_2 = mfile.get("l_h_threshold_powers(5)", scan=scan)
-    martin_nominal = mfile.get("l_h_threshold_powers(6)", scan=scan)
-    martin_upper = mfile.get("l_h_threshold_powers(7)", scan=scan)
-    martin_lower = mfile.get("l_h_threshold_powers(8)", scan=scan)
-    snipes_nominal = mfile.get("l_h_threshold_powers(9)", scan=scan)
-    snipes_upper = mfile.get("l_h_threshold_powers(10)", scan=scan)
-    snipes_lower = mfile.get("l_h_threshold_powers(11)", scan=scan)
-    snipes_closed_nominal = mfile.get("l_h_threshold_powers(12)", scan=scan)
-    snipes_closed_upper = mfile.get("l_h_threshold_powers(13)", scan=scan)
-    snipes_closed_lower = mfile.get("l_h_threshold_powers(14)", scan=scan)
-    hubbard_nominal = mfile.get("l_h_threshold_powers(15)", scan=scan)
-    hubbard_lower = mfile.get("l_h_threshold_powers(16)", scan=scan)
-    hubbard_upper = mfile.get("l_h_threshold_powers(17)", scan=scan)
-    hubbard_2017 = mfile.get("l_h_threshold_powers(18)", scan=scan)
-    martin_aspect_nominal = mfile.get("l_h_threshold_powers(19)", scan=scan)
-    martin_aspect_upper = mfile.get("l_h_threshold_powers(20)", scan=scan)
-    martin_aspect_lower = mfile.get("l_h_threshold_powers(21)", scan=scan)
-
     # Data for the box plot
     data = {
-        "ITER 1996 Nominal": iter_nominal,
-        "ITER 1996 Upper": iter_upper,
-        "ITER 1996 Lower": iter_lower,
-        "ITER 1997 (1)": iter_1997_1,
-        "ITER 1997 (2)": iter_1997_2,
-        "Martin Nominal": martin_nominal,
-        "Martin Upper": martin_upper,
-        "Martin Lower": martin_lower,
-        "Snipes Nominal": snipes_nominal,
-        "Snipes Upper": snipes_upper,
-        "Snipes Lower": snipes_lower,
-        "Snipes Closed Divertor Nominal": snipes_closed_nominal,
-        "Snipes Closed Divertor Upper": snipes_closed_upper,
-        "Snipes Closed Divertor Lower": snipes_closed_lower,
-        "Hubbard Nominal (I-mode)": hubbard_nominal,
-        "Hubbard Lower (I-mode)": hubbard_lower,
-        "Hubbard Upper (I-mode)": hubbard_upper,
-        "Hubbard 2017 (I-mode)": hubbard_2017,
-        "Martin Aspect Corrected Nominal": martin_aspect_nominal,
-        "Martin Aspect Corrected Upper": martin_aspect_upper,
-        "Martin Aspect Corrected Lower": martin_aspect_lower,
+        "ITER 1996 Nominal": mfile.get("l_h_threshold_powers(1)", scan=scan),
+        "ITER 1996 Upper": mfile.get("l_h_threshold_powers(2)", scan=scan),
+        "ITER 1996 Lower": mfile.get("l_h_threshold_powers(3)", scan=scan),
+        "ITER 1997 (1)": mfile.get("l_h_threshold_powers(4)", scan=scan),
+        "ITER 1997 (2)": mfile.get("l_h_threshold_powers(5)", scan=scan),
+        "Martin Nominal": mfile.get("l_h_threshold_powers(6)", scan=scan),
+        "Martin Upper": mfile.get("l_h_threshold_powers(7)", scan=scan),
+        "Martin Lower": mfile.get("l_h_threshold_powers(8)", scan=scan),
+        "Snipes Nominal": mfile.get("l_h_threshold_powers(9)", scan=scan),
+        "Snipes Upper": mfile.get("l_h_threshold_powers(10)", scan=scan),
+        "Snipes Lower": mfile.get("l_h_threshold_powers(11)", scan=scan),
+        "Snipes Closed Divertor Nominal": mfile.get(
+            "l_h_threshold_powers(12)", scan=scan
+        ),
+        "Snipes Closed Divertor Upper": mfile.get("l_h_threshold_powers(13)", scan=scan),
+        "Snipes Closed Divertor Lower": mfile.get("l_h_threshold_powers(14)", scan=scan),
+        "Hubbard Nominal (I-mode)": mfile.get("l_h_threshold_powers(15)", scan=scan),
+        "Hubbard Lower (I-mode)": mfile.get("l_h_threshold_powers(16)", scan=scan),
+        "Hubbard Upper (I-mode)": mfile.get("l_h_threshold_powers(17)", scan=scan),
+        "Hubbard 2017 (I-mode)": mfile.get("l_h_threshold_powers(18)", scan=scan),
+        "Martin Aspect Corrected Nominal": mfile.get(
+            "l_h_threshold_powers(19)", scan=scan
+        ),
+        "Martin Aspect Corrected Upper": mfile.get(
+            "l_h_threshold_powers(20)", scan=scan
+        ),
+        "Martin Aspect Corrected Lower": mfile.get(
+            "l_h_threshold_powers(21)", scan=scan
+        ),
     }
-
+    data_values = list(data.values())
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
-    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data_values)))
     generator = np.random.default_rng(seed=u_seed)
-    x_values = generator.normal(loc=1, scale=0.01, size=len(data.values()))
+    x_values = generator.normal(loc=1, scale=0.01, size=len(data_values))
     for index, (key, value) in enumerate(data.items()):
         if "ITER 1996" in key:
             color = "blue"
@@ -9080,7 +9064,6 @@ def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=
         axis.legend(loc="upper left", bbox_to_anchor=(-1.1, 1), ncol=2)
 
     # Calculate average, standard deviation, and median
-    data_values = list(data.values())
     avg_threshold = np.mean(data_values)
     std_threshold = np.std(data_values)
     median_threshold = np.median(data_values)
