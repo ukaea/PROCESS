@@ -418,25 +418,32 @@ class PlasmaCurrent(Model):
         -------
         dict[PlasmaCurrentModel, float]
             Dictionary containing the plasma current for each model.
+            Models which do not run successfully will map to a NaN.
         """
         results = {}
         for model in PlasmaCurrentModel:
-            results[model] = self.calculate_plasma_current(
-                alphaj=alphaj,
-                alphap=alphap,
-                b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
-                eps=eps,
-                i_plasma_current=model.value,
-                kappa=kappa,
-                kappa95=kappa95,
-                pres_plasma_on_axis=pres_plasma_on_axis,
-                len_plasma_poloidal=len_plasma_poloidal,
-                q95=q95,
-                rmajor=rmajor,
-                rminor=rminor,
-                triang=triang,
-                triang95=triang95,
-            )
+            try:
+                results[model] = self.calculate_plasma_current(
+                    alphaj=alphaj,
+                    alphap=alphap,
+                    b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                    eps=eps,
+                    i_plasma_current=model.value,
+                    kappa=kappa,
+                    kappa95=kappa95,
+                    pres_plasma_on_axis=pres_plasma_on_axis,
+                    len_plasma_poloidal=len_plasma_poloidal,
+                    q95=q95,
+                    rmajor=rmajor,
+                    rminor=rminor,
+                    triang=triang,
+                    triang95=triang95,
+                )
+            except ProcessValueError:  # noqa: PERF203
+                # Since this method is only used for output reporting, if a
+                # Ip model cannot run (e.g. most models don't support negative triang)
+                # then assign it NaN.
+                results[model] = np.nan
         return results
 
     def output_plasma_current_models(self) -> None:
