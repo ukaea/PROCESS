@@ -92,10 +92,10 @@ def test_calculate_pedestal_profile_on_axis_density(
 class TeProfileParam(NamedTuple):
     radius_plasma_pedestal_temp_norm: float = 0.0
     tbeta: float = 0.0
-    temp_plasma_separatrix_kev: float = 0.0
+    temp_plasma_separatrix_electron_kev: float = 0.0
     i_plasma_pedestal: float = 0.0
     alphat: float = 0.0
-    temp_plasma_pedestal_kev: float = 0.0
+    temp_plasma_pedestal_electron_kev: float = 0.0
     expected_teprofile: Any = np.array
 
 
@@ -105,10 +105,10 @@ class TeProfileParam(NamedTuple):
         TeProfileParam(
             radius_plasma_pedestal_temp_norm=0.94000000000000006,
             tbeta=2,
-            temp_plasma_separatrix_kev=0.10000000000000001,
+            temp_plasma_separatrix_electron_kev=0.10000000000000001,
             i_plasma_pedestal=1,
             alphat=1.45,
-            temp_plasma_pedestal_kev=5.5,
+            temp_plasma_pedestal_electron_kev=5.5,
             expected_teprofile=[
                 18.85,
                 18.739472621498333,
@@ -180,7 +180,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     nd_plasma_separatrix_electron: float = 0.0
 
-    temp_plasma_separatrix_kev: float = 0.0
+    temp_plasma_separatrix_electron_kev: float = 0.0
 
     f_temp_plasma_electron_density_vol_avg: float = 0.0
 
@@ -208,7 +208,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     nd_plasma_electrons_vol_avg: float = 0.0
 
-    temp_plasma_pedestal_kev: float = 0.0
+    temp_plasma_pedestal_electron_kev: float = 0.0
 
     alphan: float = 0.0
 
@@ -264,7 +264,7 @@ class PlasmaProfilesParam(NamedTuple):
             temp_plasma_electron_on_axis_kev=0.0,
             pres_plasma_thermal_on_axis=0.0,
             nd_plasma_separatrix_electron=3.6421334486704804e19,
-            temp_plasma_separatrix_kev=0.10000000000000001,
+            temp_plasma_separatrix_electron_kev=0.10000000000000001,
             f_temp_plasma_electron_density_vol_avg=0.0,
             i_plasma_pedestal=1,
             nd_plasma_ions_on_axis=0.0,
@@ -278,7 +278,7 @@ class PlasmaProfilesParam(NamedTuple):
             temp_plasma_ion_vol_avg_kev=12.9,
             radius_plasma_pedestal_density_norm=0.94000000000000006,
             nd_plasma_electrons_vol_avg=7.983e19,
-            temp_plasma_pedestal_kev=5.5,
+            temp_plasma_pedestal_electron_kev=5.5,
             alphan=1,
             te=13.07,
             rho_ne_max=0.0,
@@ -310,7 +310,7 @@ class PlasmaProfilesParam(NamedTuple):
             temp_plasma_electron_on_axis_kev=27.369013322953624,
             pres_plasma_thermal_on_axis=868071.46874220832,
             nd_plasma_separatrix_electron=3.6421334486704804e19,
-            temp_plasma_separatrix_kev=0.10000000000000001,
+            temp_plasma_separatrix_electron_kev=0.10000000000000001,
             f_temp_plasma_electron_density_vol_avg=1.1110842637642833,
             i_plasma_pedestal=1,
             nd_plasma_ions_on_axis=9.210720071916929e19,
@@ -324,7 +324,7 @@ class PlasmaProfilesParam(NamedTuple):
             temp_plasma_ion_vol_avg_kev=13.07,
             radius_plasma_pedestal_density_norm=0.94000000000000006,
             nd_plasma_electrons_vol_avg=7.983e19,
-            temp_plasma_pedestal_kev=5.5,
+            temp_plasma_pedestal_electron_kev=5.5,
             alphan=1,
             te=13.07,
             rho_ne_max=0.0,
@@ -405,8 +405,8 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch, plasmaprofile):
 
     monkeypatch.setattr(
         plasmaprofile.data.physics,
-        "temp_plasma_separatrix_kev",
-        plasmaprofilesparam.temp_plasma_separatrix_kev,
+        "temp_plasma_separatrix_electron_kev",
+        plasmaprofilesparam.temp_plasma_separatrix_electron_kev,
     )
 
     monkeypatch.setattr(
@@ -485,8 +485,8 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch, plasmaprofile):
 
     monkeypatch.setattr(
         plasmaprofile.data.physics,
-        "temp_plasma_pedestal_kev",
-        plasmaprofilesparam.temp_plasma_pedestal_kev,
+        "temp_plasma_pedestal_electron_kev",
+        plasmaprofilesparam.temp_plasma_pedestal_electron_kev,
     )
 
     monkeypatch.setattr(plasmaprofile.data.physics, "alphan", plasmaprofilesparam.alphan)
