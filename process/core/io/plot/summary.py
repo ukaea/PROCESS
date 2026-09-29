@@ -193,7 +193,7 @@ def _box_style(colour: str):
 white_box = {"boxstyle": "round", "facecolor": "white", "alpha": 1.0}
 
 
-def text_layout(fig):
+def _text_layout(fig):
     return {
         "fontsize": 9,
         "verticalalignment": "bottom",
@@ -202,7 +202,7 @@ def text_layout(fig):
     }
 
 
-def setup_axis(axis, xmin, xmax, ymin, ymax):
+def _setup_axis(axis, xmin, xmax, ymin, ymax):
     axis.set_ylim(ymin, ymax)
     axis.set_xlim(xmin, xmax)
     axis.set_axis_off()
@@ -745,7 +745,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.37,
         0.775,
         f"$P_{{\\text{{neutron}}}}$:\n{mfile.get('p_neutron_total_mw', scan=scan):,.2f} MW",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "grey",
@@ -765,7 +765,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.0725,
         0.83,
         f"$P_{{\\text{{HCD,primary}}}}$: {mfile.get('p_hcd_primary_injected_mw', scan=scan) + mfile.get('p_hcd_primary_extra_heat_mw', scan=scan):.2f} MW",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightyellow"),
     )
 
@@ -774,7 +774,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.0725,
         0.725,
         f"$P_{{\\text{{HCD,secondary}}}}$: {mfile.get('p_hcd_secondary_injected_mw', scan=scan) + mfile.get('p_hcd_secondary_extra_heat_mw', scan=scan):.2f} MW",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightyellow"),
     )
 
@@ -824,7 +824,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.04,
         0.45,
         "\n\nH&CD Power Supply\n\n",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightyellow"),
         zorder=4,
     )
@@ -850,7 +850,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.2,
         0.435,
         f"$P_{{\\text{{secondary,loss}}}}$:\n{mfile.get('p_hcd_secondary_electric_mw', scan=scan) * (1.0 - mfile.get('eta_hcd_secondary_injector_wall_plug', scan=scan)):.2f} MWe",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
@@ -923,7 +923,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.2,
         0.485,
         f"$P_{{\\text{{primary,loss}}}}$:\n{mfile.get('p_hcd_primary_electric_mw', scan=scan) * (1.0 - mfile.get('eta_hcd_primary_injector_wall_plug', scan=scan)):.2f} MWe",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
@@ -960,7 +960,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.12,
         0.35,
         f"$P_{{\\text{{secondary}}}}$:\n{mfile.get('p_hcd_secondary_electric_mw', scan=scan):.2f} MWe \n$\\eta$: {mfile.get('eta_hcd_secondary_injector_wall_plug', scan=scan):.2f}",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightyellow"),
     )
 
@@ -969,7 +969,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.025,
         0.35,
         f"$P_{{\\text{{primary}}}}$:\n{mfile.get('p_hcd_primary_electric_mw', scan=scan):.2f} MWe\n$\\eta$: {mfile.get('eta_hcd_primary_injector_wall_plug', scan=scan):.2f}",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightyellow"),
     )
 
@@ -1012,7 +1012,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.9,
         0.25,
         f"$P_{{\\text{{primary,thermal}}}}$:\n{mfile.get('p_plant_primary_heat_mw', scan=scan):,.2f} MW \n$\\eta_{{\\text{{turbine}}}}$: {mfile.get('eta_turbine', scan=scan):.3f}",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("orange"),
     )
 
@@ -1077,7 +1077,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.79,
         0.16,
         "Generator",
-        **text_layout(fig),
+        **_text_layout(fig),
         zorder=20,
     )
 
@@ -1128,7 +1128,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.68,
         0.15,
         f"$P_{{\\text{{gross}}}}$:\n{mfile.get('p_plant_electric_gross_mw', scan=scan):,.2f} MWe",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lime"),
     )
 
@@ -1152,7 +1152,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.875,
         0.05,
         f"$P_{{\\text{{loss}}}}$:\n{mfile.get('p_turbine_loss_mw', scan=scan):,.2f} MWth",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("orange") | {"linestyle": "dashed"},
     )
 
@@ -1176,7 +1176,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.68,
         0.05,
         f"$P_{{\\text{{net,electric}}}}$:\n{mfile.get('p_plant_electric_net_mw', scan=scan):,.2f} MWe",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lime"),
     )
 
@@ -1188,7 +1188,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"$P_{{\\text{{recirc,electric}}}}$:\n{mfile.get('p_plant_electric_recirc_mw', scan=scan):,.2f} MWe\n"
             f"$f_{{\\text{{recirc}}}}$:\n{mfile.get('f_p_plant_electric_recirc', scan=scan):,.2f}"
         ),
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lime"),
     )
 
@@ -1313,7 +1313,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.46,
         0.85,
         f"$P_{{\\text{{FW, }}\\alpha}}$:\n{mfile.get('p_fw_alpha_mw', scan=scan):.2f} MW",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("red"),
     )
 
@@ -1322,7 +1322,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.46,
         0.775,
         f"$P_{{\\text{{FW,nuclear}}}}$:\n{mfile.get('p_fw_nuclear_heat_total_mw', scan=scan):,.2f} MW",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "grey",
@@ -1336,7 +1336,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.46,
         0.71,
         f"$P_{{\\text{{FW,rad}}}}$:\n{mfile.get('p_fw_rad_total_mw', scan=scan):,.2f} MW",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "dodgerblue",
@@ -1395,7 +1395,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.5,
         0.555,
         f"Primary thermal\n(inc pump): {mfile.get('p_fw_heat_deposited_mw', scan=scan):,.2f} MWth",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "orange",
@@ -1408,7 +1408,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.7,
         0.555,
         f"Primary thermal\n(inc pump): {mfile.get('p_blkt_heat_deposited_mw', scan=scan):,.2f} MWth",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "orange",
@@ -1421,7 +1421,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.875,
         0.555,
         f"Primary thermal:\n{mfile.get('p_shld_heat_deposited_mw', scan=scan):.2f} MWth",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "orange",
@@ -1509,7 +1509,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.6,
         0.49,
         f"Primary thermal (inc pump): {mfile.get('p_fw_blkt_heat_deposited_mw', scan=scan):,.2f} MWth\n",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("orange"),
     )
 
@@ -1546,7 +1546,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"$P_{{\\text{{Blkt,multiplication}}}}$:\n{mfile.get('p_blkt_multiplication_mw', scan=scan):,.2f} MW\n"
             f"$f_{{\\text{{multiplication}}}}$:\n{mfile.get('f_p_blkt_multiplication', scan=scan):,.2f}"
         ),
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "grey",
@@ -1582,7 +1582,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.38,
         0.375,
         f"$P_{{\\text{{shld,secondary}}}}$:\n{mfile.get('p_shld_secondary_heat_mw', scan=scan):,.2f} MWth",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
@@ -1664,7 +1664,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.29,
         0.57,
         f"$P_{{\\text{{div,rad}}}}$:\n{mfile.get('p_div_rad_total_mw', scan=scan):,.2f} MW",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "dodgerblue",
@@ -1678,7 +1678,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.4,
         0.58,
         f"$P_{{\\text{{div,nuclear}}}}$:\n{mfile.get('p_div_nuclear_heat_total_mw', scan=scan):,.2f} MW",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "grey",
@@ -1696,7 +1696,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"Solid angle fraction: {mfile.get('f_ster_div_single', scan=scan):.3f}\n"
             f"Primary heat fraction: {mfile.get('f_p_div_primary_heat', scan=scan):.3f}"
         ),
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "orange",
@@ -1710,7 +1710,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.3,
         0.375,
         f"$P_{{\\text{{div,secondary}}}}$:\n{mfile.get('p_div_secondary_heat_mw', scan=scan):.2f} MWth",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
@@ -1772,7 +1772,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.55,
         0.33,
         f"$P_{{\\text{{div,pump}}}}$: {mfile.get('p_div_coolant_pump_mw', scan=scan):.2f} MW",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -1831,7 +1831,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.875,
         0.325,
         f"$P_{{\\text{{shld,pump}}}}$:\n{mfile.get('p_shld_coolant_pump_mw', scan=scan):.2f} MW",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -1845,7 +1845,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.725,
         0.4,
         f"$P_{{\\text{{FW + Blkt}}}}$:\n{mfile.get('p_fw_blkt_coolant_pump_mw', scan=scan):.2f} MW",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -1907,7 +1907,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"Coolant pumps electric:\n{mfile.get('p_coolant_pump_elec_total_mw', scan=scan):.3f} MWe\n"
             f"$\\eta$: {mfile.get('eta_coolant_pump_electric', scan=scan):.3f}"
         ),
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "lime",
@@ -1921,7 +1921,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.7,
         0.325,
         f"Coolant pumps total:\n{mfile.get('p_coolant_pump_total_mw', scan=scan):.3f} MW",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -1950,7 +1950,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.5,
         0.235,
         f"Coolant pumps losses total:\n{mfile.get('p_coolant_pump_loss_total_mw', scan=scan):.3f} MWth",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "lightblue",
@@ -2003,7 +2003,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.49,
         0.05,
         f"Cryo Plant:\n{mfile.get('p_cryo_plant_electric_mw', scan=scan):.3f} MWe",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2032,7 +2032,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.4,
         0.05,
         f"Tritium Plant:\n{mfile.get('p_tritium_plant_electric_mw', scan=scan):.3f} MWe",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2061,7 +2061,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.575,
         0.05,
         f"Vacuum pumps:\n{mfile.get('vachtmw', scan=scan):.3f} MWe",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2094,7 +2094,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
             f"Minimum base load:\n{mfile.get('p_plant_electric_base', scan=scan) * 1.0e-6:.3f} MWe\n"
             f"Plant floor power density:\n{mfile.get('pflux_plant_floor_electric', scan=scan) * 1.0e-3:.3f} kW$\\text{{m}}^{{-2}}$"
         ),
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2108,7 +2108,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.325,
         0.075,
         f"TF coils:\n{mfile.get('p_tf_electric_supplies_mw', scan=scan):.3f} MWe",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2122,7 +2122,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.25,
         0.05,
         f"PF coils:\n{mfile.get('p_pf_electric_supplies_mw', scan=scan):.3f} MWe",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "burlywood",
@@ -2181,7 +2181,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.46,
         0.285,
         f"$P_{{\\text{{HCD,loss}}}}$:\n{mfile.get('p_hcd_secondary_heat_mw', scan=scan):.2f} MWth",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox={
             "boxstyle": "round",
             "facecolor": "lightblue",
@@ -2228,7 +2228,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
         0.155,
         0.25,
         f"$P_{{\\text{{TF,nuclear}}}}$:\n{mfile.get('p_tf_nuclear_heat_mw', scan=scan):.2f} MWth",
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightblue") | {"linestyle": "dashed"},
     )
 
@@ -7984,7 +7984,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
+    _setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     data2 = [
         (f"!{mfile.get('runtitle', scan=-1)}", "Run title", ""),
@@ -8103,7 +8103,7 @@ def plot_geometry_info(axis: plt.Axes, mfile: MFile, scan: int):
     ymax = 1
 
     axis.text(-0.05, 1, "Geometry:", ha="left", va="center")
-    setup_axis(axis, xmin, xmax, ymin, ymax)
+    _setup_axis(axis, xmin, xmax, ymin, ymax)
 
     in_blanket_thk = mfile.get("dr_shld_inboard", scan=scan) + mfile.get(
         "dr_blkt_inboard", scan=scan
@@ -8148,7 +8148,7 @@ def plot_physics_info(axis: plt.Axes, mfile: MFile, scan: int):
     ymax = 1
 
     axis.text(-0.05, 1, "Physics:", ha="left", va="center")
-    setup_axis(axis, xmin, xmax, ymin, ymax)
+    _setup_axis(axis, xmin, xmax, ymin, ymax)
 
     nong = mfile.get("nd_plasma_electron_line", scan=scan) / mfile.get(
         "nd_plasma_electron_max_array(7)", scan=scan
@@ -8219,7 +8219,7 @@ def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
     i_tf_sup = int(mfile.get("i_tf_sup", scan=scan)) if "i_tf_sup" in mfile.data else 1
 
     axis.text(-0.05, 1, "Coil currents etc:", ha="left", va="center")
-    setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
+    _setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     # Number of coils (1 is OH coil)
     number_of_coils = 0
@@ -8335,7 +8335,7 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
         scan number to use
     """
     axis.text(-0.05, 1, "Power flows:", ha="left", va="center")
-    setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
+    _setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     gross_eff = 100.0 * (
         mfile.get("p_plant_electric_gross_mw", scan=scan)
@@ -8416,7 +8416,7 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-    setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
+    _setup_axis(axis, xmin=0, xmax=1, ymin=-16, ymax=1)
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
 
@@ -9332,14 +9332,13 @@ def plot_confinement_time_comparison(
         rf"{ConfinementTimeModel.ITPA20.full_name}": itpa20,
         rf"{ConfinementTimeModel.ITPA20_IL.full_name}": itpa20_ilc,
     }
+    data_values = list(data.values())
 
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
     # Use a set of distinct colors for better differentiation
@@ -9384,7 +9383,6 @@ def plot_confinement_time_comparison(
     axis.legend(loc="upper left", bbox_to_anchor=(-1.3, 0.75), ncol=2)
 
     # Calculate average, standard deviation, and median
-    data_values = list(data.values())
     avg_threshold = np.mean(data_values)
     std_threshold = np.std(data_values)
     median_threshold = np.median(data_values)
@@ -9909,14 +9907,13 @@ def plot_density_limit_comparison(axis: plt.Axes, mfile: MFile, scan: int):
         "Greenwald": greenwald,
         "ASDEX New": asdex_new,
     }
+    data_values = list(data.values())
 
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
     colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
@@ -9925,7 +9922,6 @@ def plot_density_limit_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
 
     # Calculate average, standard deviation, and median
-    data_values = list(data.values())
     avg_density_limit = np.mean(data_values)
     std_density_limit = np.std(data_values)
     median_density_limit = np.median(data_values)
@@ -10132,13 +10128,7 @@ def plot_cs_coil_structure(
         f"$\\tau_{{\\text{{shear,peak}}}}:$ {mfile.get('stress_shear_cs_peak', scan=scan) / 1e6:.3f} MPa "
     )
 
-    axis.text(
-        0.5,
-        0.6,
-        textstr_cs,
-        **text_layout(fig),
-        bbox=_box_style("lightyellow"),
-    )
+    axis.text(0.5, 0.6, textstr_cs, **_text_layout(fig), bbox=_box_style("lightyellow"))
 
     # Plot the current filament points as blue dots and label them
 
@@ -10282,7 +10272,7 @@ def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.7,
         0.375,
         textstr_turn,
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightyellow"),
     )
 
@@ -11680,7 +11670,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.85,
         textstr_general,
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightyellow"),
     )
 
@@ -11697,7 +11687,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.75,
         textstr_dt,
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightyellow"),
     )
 
@@ -11722,7 +11712,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.65,
         textstr_dd,
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightyellow"),
     )
 
@@ -11746,7 +11736,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.55,
         textstr_dhe3,
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("lightyellow"),
     )
 
@@ -11777,7 +11767,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.25,
         textstr_alpha,
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("red"),
     )
 
@@ -11804,7 +11794,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
         0.05,
         0.1,
         textstr_neutron,
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("grey"),
     )
 
@@ -14523,7 +14513,7 @@ def plot_blkt_structure(
         0.05,
         0.3,
         textstr_blkt_areas,
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("wheat"),
     )
 
@@ -14541,7 +14531,7 @@ def plot_blkt_structure(
         0.05,
         0.05,
         textstr_blkt_volumes,
-        **text_layout(fig),
+        **_text_layout(fig),
         bbox=_box_style("wheat"),
     )
 
