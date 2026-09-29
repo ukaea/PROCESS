@@ -457,8 +457,8 @@ class PlasmaCurrent(Model):
         Returns
         -------
         dict[PlasmaCurrentModel, float]
-            Dictionary containing the plasma current for each model that runs
-            successfully.
+            Dictionary containing the plasma current for each model.
+            Models which do not run successfully will map to a NaN.
         """
         results = {}
         for model in PlasmaCurrentModel:
