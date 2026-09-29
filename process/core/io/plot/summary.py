@@ -212,6 +212,7 @@ def setup_axis(axis, xmin, xmax, ymin, ymax):
 
 
 def _colourbar(contour_fill, axis, colourbar_axis):
+    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
     if colourbar_axis is None:
         return axis.figure.colorbar(contour_fill, ax=axis, pad=0.02)
     return axis.figure.colorbar(contour_fill, cax=colourbar_axis)
@@ -4175,9 +4176,7 @@ def profiles_with_pedestal(mfile, scan: int):
     temp_plasma_electron_on_axis_kev = mfile.get(
         "temp_plasma_electron_on_axis_kev", scan=scan
     )
-    radius_plasma_pedestal_density_norm = mfile.get(
-        "radius_plasma_pedestal_density_norm", scan=scan
-    )
+
     radius_plasma_pedestal_temp_norm = mfile.get(
         "radius_plasma_pedestal_temp_norm", scan=scan
     )
@@ -4185,7 +4184,6 @@ def profiles_with_pedestal(mfile, scan: int):
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
     i_plasma_pedestal = mfile.get("i_plasma_pedestal", scan=scan)
     nd_plasma_pedestal_electron = mfile.get("nd_plasma_pedestal_electron", scan=scan)
-    ne0 = mfile.get("nd_plasma_electron_on_axis", scan=scan)
     radius_plasma_pedestal_density_norm = mfile.get(
         "radius_plasma_pedestal_density_norm", scan=scan
     )
@@ -8666,22 +8664,21 @@ def plot_sol_power_decay_length_comparison(axis: plt.Axes, mfile: MFile, scan: i
         f"{OutbordSOLPowerDecayLengthModel.EICH_2011_JET.description}": len_plasma_sol_eich11_jet_power_decay_mm,
         f"{OutbordSOLPowerDecayLengthModel.EICH_2011_JET_ASDEX.description}": len_plasma_sol_eich11_jet_asdex_power_decay_mm,
     }
+    data_values = list(data.values())
+
     # Create the violin plot
-    axis.violinplot(data.values(), showextrema=False)
+    axis.violinplot(data_values, showextrema=False)
 
     # Create the box plot
-    axis.boxplot(
-        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
-    )
+    axis.boxplot(data_values, showfliers=True, showmeans=True, meanline=True, widths=0.3)
 
     # Scatter plot for each data point
-    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data_values)))
     for index, (key, value) in enumerate(data.items()):
         axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
     axis.legend(loc="upper left", bbox_to_anchor=(1, 1))
 
     # Calculate average, standard deviation, and median
-    data_values = list(data.values())
     avg_decay_length = np.mean(data_values)
     std_decay_length = np.std(data_values)
     median_decay_length = np.median(data_values)
@@ -15279,7 +15276,6 @@ def plot_cs_radial_stress_contour_profile(
         linewidth=2,
     )
 
-    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
     cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Radial Stress (MPa)")
 
@@ -15370,7 +15366,6 @@ def plot_cs_hoop_stress_contour_profile(
         linewidth=2,
     )
 
-    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
     cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Hoop Stress (MPa)")
 
@@ -15481,7 +15476,6 @@ def plot_vertical_stress_contour_profile(
         linewidth=2,
     )
 
-    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
     cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Vertical Stress (MPa)")
 
@@ -15587,7 +15581,6 @@ def plot_cs_tresca_2d_contour(
         linewidth=2,
     )
 
-    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
     contour_fill = axis.contourf(r, z, tresca_data, levels=15, cmap="RdYlBu_r")
     cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Tresca Stress (MPa)")
@@ -15698,7 +15691,6 @@ def plot_cs_von_mises_2d_contour(
         linewidth=2,
     )
 
-    # Use a dedicated colorbar axes when provided so the main axes width is unchanged.
     contour_fill = axis.contourf(r, z, von_mises_data, levels=15, cmap="RdYlBu_r")
     cbar = _colourbar(contour_fill, axis, colorbar_axis)
     cbar.set_label("Von Mises Stress (MPa)")
