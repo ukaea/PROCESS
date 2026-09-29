@@ -681,6 +681,14 @@ def check_process(inputs, data):  # noqa: ARG001
                 "and is recommended for the Reinke model",
                 stacklevel=2,
             )
+    if (data.physics.i_fusion_reactions == "p-b11") and (
+        data.physics.i_l_h_threshold in {1, 2, 3, 4, 5, 15, 16, 17, 18}
+    ):
+        logger.warning(
+            "p-B11: i_l_h_threshold has no z_eff or m_ion correction; "
+            "a scaling that includes either is recommended",
+            stacklevel=2,
+        )
     i_single_null = DivertorNumberModels(data.physics.i_single_null)
     if i_single_null == DivertorNumberModels.DOUBLE_NULL:
         data.divertor.n_divertors = 2

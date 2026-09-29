@@ -1555,13 +1555,44 @@ class PlasmaConfinementTransition(Model):
         a_plasma_surface: float,
         n_charge_plasma_effective_vol_avg: float,
     ):
-        """
-        for p-B reaction and ST 
-        reference:
-        Yumin WANG et al 2025 Plasma Sci. Technol. 27 024005
+        """Calculate the lower Takizuka 2004 L-H transition power threshold.
 
-        Takizuka T 2004 Plasma Phys. Control. Fusion 46 A227
-        DOI: 10.1088/0741-3335/46/5A/024
+        Scaling for proton-boron fusion and spherical tokamaks. The aspect-ratio
+        correction exponent is 0.0.
+
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis : float
+            Toroidal magnetic field [T]
+        aspect : float
+            Plasma aspect ratio
+        rminor : float
+            Plasma minor radius [m]
+        plasma_current : float
+            Plasma current [A]
+        dnla20 : float
+            Line averaged electron density in units of 10^20 m^-3.
+        a_plasma_surface : float
+            Plasma surface area [m^2]
+        n_charge_plasma_effective_vol_avg : float
+            Volume-averaged effective charge
+
+        Returns
+        -------
+        float
+            The Takizuka 2004 L-H transition power threshold [MW]
+
+        References
+        ----------
+            - Y. Wang et al., “Predictions of H-mode access and edge pedestal
+            instability in the EHL-2 spherical torus,”
+            Plasma Science and Technology, vol. 27, p. 024005, 2025,
+            doi: https://doi.org/10.1088/2058-6272/ad9f27.
+
+            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
+            the H-mode power threshold in tokamaks of the ITPA database,”
+            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
+            Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
         """
         b_tout = b_plasma_toroidal_on_axis * aspect / (aspect + 1.0)
         b_pout = (
@@ -1598,13 +1629,44 @@ class PlasmaConfinementTransition(Model):
         a_plasma_surface: float,
         n_charge_plasma_effective_vol_avg: float,
     ):
-        """
-        for p-B reaction and ST 
-        reference:
-        Yumin WANG et al 2025 Plasma Sci. Technol. 27 024005
+        """Calculate the nominal Takizuka 2004 L-H transition power threshold.
 
-        Takizuka T 2004 Plasma Phys. Control. Fusion 46 A227
-        DOI: 10.1088/0741-3335/46/5A/024
+        Scaling for proton-boron fusion and spherical tokamaks. The aspect-ratio
+        correction exponent is 0.5.
+
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis : float
+            Toroidal magnetic field [T]
+        aspect : float
+            Plasma aspect ratio
+        rminor : float
+            Plasma minor radius [m]
+        plasma_current : float
+            Plasma current [A]
+        dnla20 : float
+            Line averaged electron density in units of 10^20 m^-3.
+        a_plasma_surface : float
+            Plasma surface area [m^2]
+        n_charge_plasma_effective_vol_avg : float
+            Volume-averaged effective charge
+
+        Returns
+        -------
+        float
+            The Takizuka 2004 L-H transition power threshold [MW]
+
+        References
+        ----------
+            - Y. Wang et al., “Predictions of H-mode access and edge pedestal
+            instability in the EHL-2 spherical torus,”
+            Plasma Science and Technology, vol. 27, p. 024005, 2025,
+            doi: https://doi.org/10.1088/2058-6272/ad9f27.
+
+            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
+            the H-mode power threshold in tokamaks of the ITPA database,”
+            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
+            Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
         """
         b_tout = b_plasma_toroidal_on_axis * aspect / (aspect + 1.0)
         b_pout = (
@@ -1641,13 +1703,44 @@ class PlasmaConfinementTransition(Model):
         a_plasma_surface: float,
         n_charge_plasma_effective_vol_avg: float,
     ):
-        """
-        for p-B reaction and ST 
-        reference:
-        Yumin WANG et al 2025 Plasma Sci. Technol. 27 024005
+        """Calculate the upper Takizuka 2004 L-H transition power threshold.
 
-        Takizuka T 2004 Plasma Phys. Control. Fusion 46 A227
-        DOI: 10.1088/0741-3335/46/5A/024
+        Scaling for proton-boron fusion and spherical tokamaks. The aspect-ratio
+        correction exponent is 1.0.
+
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis : float
+            Toroidal magnetic field [T]
+        aspect : float
+            Plasma aspect ratio
+        rminor : float
+            Plasma minor radius [m]
+        plasma_current : float
+            Plasma current [A]
+        dnla20 : float
+            Line averaged electron density in units of 10^20 m^-3.
+        a_plasma_surface : float
+            Plasma surface area [m^2]
+        n_charge_plasma_effective_vol_avg : float
+            Volume-averaged effective charge
+
+        Returns
+        -------
+        float
+            The Takizuka 2004 L-H transition power threshold [MW]
+
+        References
+        ----------
+            - Y. Wang et al., “Predictions of H-mode access and edge pedestal
+            instability in the EHL-2 spherical torus,”
+            Plasma Science and Technology, vol. 27, p. 024005, 2025,
+            doi: https://doi.org/10.1088/2058-6272/ad9f27.
+
+            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
+            the H-mode power threshold in tokamaks of the ITPA database,”
+            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
+            Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
         """
         b_tout = b_plasma_toroidal_on_axis * aspect / (aspect + 1.0)
         b_pout = (
