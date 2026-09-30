@@ -16579,13 +16579,12 @@ def plot_plasma_thermal_energy_profiles(axis, m_file: MFile, scan: int):
     axis.axvline(
         total_thermal_energy_max_rho,
         color="tab:red",
-        linestyle=":",
         alpha=0.7,
+        label="$W_{\\text{total, peak}}$",
     )
     axis.axhline(
         total_thermal_energy_max,
         color="tab:red",
-        linestyle=":",
         alpha=0.7,
     )
 
