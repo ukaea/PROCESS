@@ -26,10 +26,16 @@ from process.data_structure.stellarator_variables import StellaratorModel
 from process.models.physics import impurity_radiation
 from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.exhaust import calculate_brunner_divertor_power_splits
+from process.models.physics.plasma_equilibrium import (
+    PlasmaEquilibrium,
+    clear_veqpy_equilibrium_state,
+    store_veqpy_equilibrium,
+)
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
     PlasmaProfileShapeType,
 )
+from process.models.physics.plasma_current import PlasmaCurrentModel
 from process.models.pulse import PulseTimings
 
 if TYPE_CHECKING:
@@ -255,6 +261,8 @@ class Physics(Model):
         # Issue #261 Remove old radiation model (imprad_model=0)
         self.plasma_composition()
 
+        clear_veqpy_equilibrium_state(self.data)
+
         (
             self.data.physics.m_plasma_fuel_ions,
             self.data.physics.m_plasma_ions_total,
@@ -366,11 +374,76 @@ class Physics(Model):
 
         self.plasma_profile.run()
 
-        # Calculate total magnetic field [T]
-        self.data.physics.b_plasma_total = self.fields.calculate_total_magnetic_field(
-            b_plasma_toroidal=self.data.physics.b_plasma_toroidal_on_axis,
-            b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
-        )
+        if self.data.physics.i_equilibrium_solve == 1:
+            equilibrium = PlasmaEquilibrium(
+                alphaj=self.data.physics.alphaj,
+                i_plasma_pedestal=self.data.physics.i_plasma_pedestal,
+                alphan=self.data.physics.alphan,
+                alphat=self.data.physics.alphat,
+                tbeta=self.data.physics.tbeta,
+                nd_plasma_pedestal_electron=self.data.physics.nd_plasma_pedestal_electron,
+                nd_plasma_separatrix_electron=self.data.physics.nd_plasma_separatrix_electron,
+                temp_plasma_pedestal_kev=self.data.physics.temp_plasma_pedestal_kev,
+                temp_plasma_separatrix_kev=self.data.physics.temp_plasma_separatrix_kev,
+                radius_plasma_pedestal_density_norm=self.data.physics.radius_plasma_pedestal_density_norm,
+                radius_plasma_pedestal_temp_norm=self.data.physics.radius_plasma_pedestal_temp_norm,
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+                rminor=self.data.physics.rminor,
+                rmajor=self.data.physics.rmajor,
+                kappa=self.data.physics.kappa,
+                triang=self.data.physics.triang,
+            )
+            f_pres_ie = (
+                self.data.physics.nd_plasma_ions_total_vol_avg
+                / self.data.physics.nd_plasma_electrons_vol_avg
+            ) * (
+                self.data.physics.temp_plasma_ion_vol_avg_kev
+                / self.data.physics.temp_plasma_electron_vol_avg_kev
+            )
+            (
+                _ne_axis,
+                _te_axis,
+                _ne_vol,
+                _te_vol,
+                _q95,
+                _current,
+                eq,
+            ) = equilibrium.solve_axis_for_volume_averages(
+                f_pres_ie=f_pres_ie,
+                ne_vol_avg_target=self.data.physics.nd_plasma_electrons_vol_avg,
+                te_vol_avg_target=self.data.physics.temp_plasma_electron_vol_avg_kev,
+                q95_target=self.data.physics.q95,
+                current=self.data.physics.plasma_current,
+                ne_axis=self.data.physics.nd_plasma_electron_on_axis,
+                te_axis=self.data.physics.temp_plasma_electron_on_axis_kev,
+                match_q95=(self.data.physics.i_plasma_current != PlasmaCurrentModel.USER_INPUT),
+            )
+            store_veqpy_equilibrium(self.data, eq, _ne_axis, _te_axis)
+            psin = eq.psin
+            self.data.physics.q0 = float(eq.q[0])
+            self.data.physics.q95 = float(np.interp(0.95, psin, eq.q))
+            self.data.physics.kappa95 = float(np.interp(0.95, psin, eq.kappa))
+            triang_profile = equilibrium.miller_delta_profile(eq)
+            self.data.physics.triang95 = float(np.interp(0.95, psin, triang_profile))
+            self.data.physics.vol_plasma = (
+                float(eq.grid.integrate(eq.R * eq.J)) * 2.0 * np.pi
+            )
+            r_lcfs = eq.R[-1, :]
+            z_lcfs = eq.Z[-1, :]
+            ds = np.sqrt(np.diff(r_lcfs) ** 2 + np.diff(z_lcfs) ** 2)
+            self.data.physics.len_plasma_poloidal = float(np.sum(ds))
+            _, s_out, s, _, area, _ = self.geometry.cal_integral_geometry(r_lcfs, z_lcfs)
+            self.data.physics.a_plasma_surface_outboard = s_out
+            self.data.physics.a_plasma_surface = s
+            self.data.physics.a_plasma_poloidal = area
+
+            self.plasma_profile.run()
+            self.data.physics.ind_plasma_internal_norm = (
+                equilibrium.calculate_ind_plasma_internal_norm(
+                    eq=eq,
+                    b_poloidal_avg=self.data.physics.b_plasma_surface_poloidal_average,
+                )
+            )
 
         # Calculate the inboard and outboard toroidal field
         self.data.physics.b_plasma_inboard_toroidal = (
@@ -414,6 +487,50 @@ class Physics(Model):
                 rmajor=self.data.physics.rmajor,
                 rminor=self.data.physics.rminor,
                 n_plasma_profile_elements=self.data.physics.n_plasma_profile_elements,
+            )
+        )
+
+        if self.data.physics.i_equilibrium_solve == 1:
+            eq = self.data.veqpy.equilibrium
+            self.data.physics.b_plasma_inboard_toroidal = eq.F[-1] / (
+                self.data.physics.rmajor - self.data.physics.rminor
+            )
+            self.data.physics.b_plasma_outboard_toroidal = eq.F[-1] / (
+                self.data.physics.rmajor + self.data.physics.rminor
+            )
+            r_in = eq.Rc - self.data.physics.rminor * eq.rho
+            r_out = eq.Rc + self.data.physics.rminor * eq.rho
+            r_major = np.concatenate([r_in[::-1], r_out])
+            b_plasma_toroidal = np.concatenate([eq.F[::-1] / r_in[::-1], eq.F / r_out])
+            rho = np.linspace(
+                self.data.physics.rmajor - self.data.physics.rminor,
+                self.data.physics.rmajor + self.data.physics.rminor,
+                2 * self.data.physics.n_plasma_profile_elements,
+            )
+            rho = np.where(rho == 0, 1e-10, rho)
+            self.data.physics.b_plasma_toroidal_profile = np.interp(
+                rho, r_major, b_plasma_toroidal
+            )
+
+        # Calculate total magnetic field [T]
+        self.data.physics.b_plasma_total = self.fields.calculate_total_magnetic_field(
+            b_plasma_toroidal=self.data.physics.b_plasma_toroidal_on_axis,
+            b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
+        )
+
+        # Calculate total magnetic field at the outboard [T]
+        self.data.physics.b_plasma_outboard_total = (
+            self.fields.calculate_total_magnetic_field(
+                b_plasma_toroidal=self.data.physics.b_plasma_outboard_toroidal,
+                b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
+            )
+        )
+
+        # Calculate total magnetic field at the inboard [T]
+        self.data.physics.b_plasma_inboard_total = (
+            self.fields.calculate_total_magnetic_field(
+                b_plasma_toroidal=self.data.physics.b_plasma_inboard_toroidal,
+                b_plasma_poloidal=self.data.physics.b_plasma_surface_poloidal_average,
             )
         )
 
@@ -522,6 +639,12 @@ class Physics(Model):
         # ***************************** #
 
         self.dia_current.run()
+        if self.data.physics.i_equilibrium_solve == 1:
+            eq = self.data.veqpy.equilibrium
+            if eq is not None:
+                self.data.current_drive.f_c_plasma_diamagnetic = (
+                    self.dia_current.diamagnetic_integral(eq)
+                )
 
         # ***************************** #
         #    PFIRSCH-SCHLÜTER CURRENT   #
@@ -538,6 +661,31 @@ class Physics(Model):
             )
 
         self.plasma_bootstrap_current.run()
+        if self.data.physics.i_equilibrium_solve == 1:
+            zmain = 1.0 + self.data.physics.f_plasma_fuel_helium3
+            if self.data.physics.i_fusion_reactions == "p-b11":
+                zmain = 1.0 + self.data.physics.f_plasma_fuel_boron11 * 4.0
+            n_i_ratio = (
+                self.data.physics.nd_plasma_ions_total_vol_avg
+                / self.data.physics.nd_plasma_electrons_vol_avg
+            )
+            t_i_ratio = (
+                self.data.physics.temp_plasma_ion_vol_avg_kev
+                / self.data.physics.temp_plasma_electron_vol_avg_kev
+            )
+            self.data.current_drive.f_c_plasma_bootstrap = (
+                self.plasma_bootstrap_current.bootstrap_fraction_sauter_equilibrium(
+                    rminor=self.data.physics.rminor,
+                    zeff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                    zmain=zmain,
+                    rho=self.plasma_profile.neprofile.profile_x,
+                    ne=self.plasma_profile.neprofile.profile_y,
+                    ni=self.plasma_profile.neprofile.profile_y * n_i_ratio,
+                    te=self.plasma_profile.teprofile.profile_y,
+                    ti=self.plasma_profile.teprofile.profile_y * t_i_ratio,
+                    eq=self.data.veqpy.equilibrium,
+                )
+            )
 
         self.data.physics.err242 = 0
         if (
@@ -612,6 +760,11 @@ class Physics(Model):
         self.data.physics.p_dd_total_mw = (
             self.data.physics.dd_power_density * self.data.physics.vol_plasma
         )
+        self.data.physics.p_plasma_pb_mw = (
+            self.data.physics.pb_power_density * self.data.physics.vol_plasma
+        )
+        self.data.physics.p_pb_total_mw = self.data.physics.p_plasma_pb_mw
+        self.data.physics.p_beam_pb_mw = 0.0
 
         # Calculate neutral beam slowing down effects
         # If ignited, then ignore beam fusion effects
@@ -619,52 +772,98 @@ class Physics(Model):
             PlasmaIgnitionModel(self.data.physics.i_plasma_ignited)
             == PlasmaIgnitionModel.NON_IGNITED
         ):
-            (
-                self.data.physics.beta_beam,
-                self.data.physics.nd_beam_ions_out,
-                self.data.physics.p_beam_alpha_mw,
-            ) = reactions.beam_fusion(
-                self.data.physics.beamfus0,
-                self.data.physics.betbm0,
-                self.data.physics.b_plasma_total,
-                self.data.current_drive.c_beam_total,
-                self.data.physics.nd_plasma_electrons_vol_avg,
-                self.data.physics.nd_plasma_fuel_ions_vol_avg,
-                self.data.physics.dlamie,
-                self.data.current_drive.e_beam_kev,
-                self.data.physics.f_plasma_fuel_deuterium,
-                self.data.physics.f_plasma_fuel_tritium,
-                self.data.current_drive.f_beam_tritium,
-                self.data.physics.temp_plasma_electron_density_weighted_kev,
-                self.data.physics.vol_plasma,
-                self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
-            )
-            self.data.physics.fusden_total = (
-                self.data.physics.fusden_plasma
-                + 1.0e6
-                * self.data.physics.p_beam_alpha_mw
-                / (constants.DT_ALPHA_ENERGY)
-                / self.data.physics.vol_plasma
-            )
-            self.data.physics.fusden_alpha_total = (
-                self.data.physics.fusden_plasma_alpha
-                + 1.0e6
-                * self.data.physics.p_beam_alpha_mw
-                / (constants.DT_ALPHA_ENERGY)
-                / self.data.physics.vol_plasma
-            )
-            self.data.physics.p_dt_total_mw = (
-                self.data.physics.p_plasma_dt_mw
-                + (1.0 / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION))
-                * self.data.physics.p_beam_alpha_mw
-            )
-            self.data.physics.p_beam_neutron_mw = self.data.physics.p_beam_alpha_mw * (
-                constants.DT_NEUTRON_ENERGY_FRACTION
-                / (1 - constants.DT_NEUTRON_ENERGY_FRACTION)
-            )
-            self.data.physics.p_beam_dt_mw = self.data.physics.p_beam_alpha_mw * (
-                1 / (1 - constants.DT_NEUTRON_ENERGY_FRACTION)
-            )
+            if self.data.physics.i_fusion_reactions == "p-b11":
+                (
+                    self.data.physics.beta_beam,
+                    self.data.physics.nd_beam_ions_out,
+                    self.data.physics.p_beam_alpha_mw,
+                ) = reactions.beam_fusion_p_b11(
+                    sigmv_pb=self.data.physics.sigmav_pb_average,
+                    ti=self.data.physics.temp_plasma_ion_vol_avg_kev,
+                    te=self.data.physics.temp_plasma_electron_vol_avg_kev,
+                    vol_plasma=self.data.physics.vol_plasma,
+                    current_beam_total=self.data.current_drive.c_beam_total,
+                    b_total=self.data.physics.b_plasma_total,
+                    ne=self.data.physics.nd_plasma_electrons_vol_avg,
+                    nd_fuel_b11=self.data.physics.nd_plasma_fuel_ions_vol_avg * self.data.physics.f_plasma_fuel_boron11,
+                    charge_eff_mass_weighted=self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+                    dlamie=self.data.physics.dlamie,
+                    dlamee=self.data.physics.dlamee,
+                    betbm0=self.data.physics.betbm0,
+                    beamfus0=self.data.physics.beamfus0,
+                    e_beam_kev=self.data.current_drive.e_beam_kev,
+                )
+                self.data.physics.fusden_total = (
+                    self.data.physics.fusden_plasma
+                    + 1.0e6
+                    * self.data.physics.p_beam_alpha_mw
+                    / (constants.PB_ENERGY)
+                    / self.data.physics.vol_plasma
+                    )
+                self.data.physics.fusden_alpha_total = (
+                    self.data.physics.fusden_plasma_alpha
+                    + 1.0e6
+                    * self.data.physics.p_beam_alpha_mw
+                    / (constants.PB_ENERGY) * 3.0
+                    / self.data.physics.vol_plasma
+                )
+                self.data.physics.p_dt_total_mw = (
+                    self.data.physics.p_plasma_dt_mw
+                )
+                self.data.physics.p_pb_total_mw = (
+                    self.data.physics.p_plasma_pb_mw
+                    + self.data.physics.p_beam_alpha_mw
+                )
+                self.data.physics.p_beam_neutron_mw = 0.0
+                self.data.physics.p_beam_dt_mw = 0.0
+                self.data.physics.p_beam_pb_mw = self.data.physics.p_beam_alpha_mw
+            else:
+                (
+                    self.data.physics.beta_beam,
+                    self.data.physics.nd_beam_ions_out,
+                    self.data.physics.p_beam_alpha_mw,
+                ) = reactions.beam_fusion(
+                    self.data.physics.beamfus0,
+                    self.data.physics.betbm0,
+                    self.data.physics.b_plasma_total,
+                    self.data.current_drive.c_beam_total,
+                    self.data.physics.nd_plasma_electrons_vol_avg,
+                    self.data.physics.nd_plasma_fuel_ions_vol_avg,
+                    self.data.physics.dlamie,
+                    self.data.current_drive.e_beam_kev,
+                    self.data.physics.f_plasma_fuel_deuterium,
+                    self.data.physics.f_plasma_fuel_tritium,
+                    self.data.current_drive.f_beam_tritium,
+                    self.data.physics.temp_plasma_electron_density_weighted_kev,
+                    self.data.physics.vol_plasma,
+                    self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+                )
+                self.data.physics.fusden_total = (
+                    self.data.physics.fusden_plasma
+                    + 1.0e6
+                    * self.data.physics.p_beam_alpha_mw
+                    / (constants.DT_ALPHA_ENERGY)
+                    / self.data.physics.vol_plasma
+                    )
+                self.data.physics.fusden_alpha_total = (
+                    self.data.physics.fusden_plasma_alpha
+                    + 1.0e6
+                    * self.data.physics.p_beam_alpha_mw
+                    / (constants.DT_ALPHA_ENERGY)
+                    / self.data.physics.vol_plasma
+                )
+                self.data.physics.p_dt_total_mw = (
+                    self.data.physics.p_plasma_dt_mw
+                    + (1.0 / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION))
+                    * self.data.physics.p_beam_alpha_mw
+                )
+                self.data.physics.p_beam_neutron_mw = self.data.physics.p_beam_alpha_mw * (
+                    constants.DT_NEUTRON_ENERGY_FRACTION
+                    / (1 - constants.DT_NEUTRON_ENERGY_FRACTION)
+                )
+                self.data.physics.p_beam_dt_mw = self.data.physics.p_beam_alpha_mw * (
+                    1 / (1 - constants.DT_NEUTRON_ENERGY_FRACTION)
+                )
         else:
             # If no beams present then the total alpha rates and power are the same as
             # the plasma values
@@ -693,6 +892,7 @@ class Physics(Model):
             self.data.physics.f_alpha_electron,
             self.data.physics.f_alpha_ion,
             self.data.physics.p_beam_alpha_mw,
+            self.data.physics.p_beam_neutron_mw,
             self.data.physics.pden_non_alpha_charged_mw,
             self.data.physics.pden_plasma_neutron_mw,
             self.data.physics.vol_plasma,
@@ -714,6 +914,18 @@ class Physics(Model):
             f_plasma_fuel_deuterium=self.data.physics.f_plasma_fuel_deuterium,
         )
 
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            self.data.physics.beta_fast_alpha = self.beta.fast_alpha_beta_pb(
+                te=self.data.physics.temp_plasma_electron_vol_avg_kev,
+                ti=self.data.physics.temp_plasma_ion_vol_avg_kev,
+                ne=self.data.physics.nd_plasma_electrons_vol_avg,
+                ni=self.data.physics.nd_plasma_ions_total_vol_avg,
+                charge_mass_weighted=self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
+                charge_eff=self.data.physics.n_charge_plasma_effective_vol_avg,
+                dlamie=self.data.physics.dlamie,
+                b_total=self.data.physics.b_plasma_total,
+                fusden_alpha_total=self.data.physics.fusden_alpha_total
+            )
         # Calculate ion/electron equilibration power
 
         self.data.physics.pden_ion_electron_equilibration_mw = rether(
@@ -744,6 +956,43 @@ class Physics(Model):
             self.data.physics.vol_plasma,
             self.data,
         )
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            
+            radpwrdata = physics_funcs.calculate_power_radiation(
+                nd_plasma_electron_on_axis=self.data.physics.nd_plasma_electron_on_axis,
+                rminor=self.data.physics.rminor,
+                b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
+                aspect=self.data.physics.aspect,
+                alphan=self.data.physics.alphan,
+                alphat=self.data.physics.alphat,
+                tbeta=self.data.physics.tbeta,
+                temp_plasma_electron_on_axis_kev=self.data.physics.temp_plasma_electron_on_axis_kev,
+                f_sync_reflect=self.data.physics.f_sync_reflect,
+                rmajor=self.data.physics.rmajor,
+                kappa=self.data.physics.kappa,
+                vol_plasma=self.data.physics.vol_plasma,
+                i_calculate_radiation=self.data.physics.i_calculate_radiation,
+                i_equilibrium_solve=self.data.physics.i_equilibrium_solve,
+                f_density_h_isotope_electron=self.data.impurity_radiation.f_nd_impurity_electron_array[
+                    impurity_radiation.element2index("H_", self.data)
+                ],
+                f_density_he_isotope_electron=self.data.impurity_radiation.f_nd_impurity_electron_array[
+                    impurity_radiation.element2index("He", self.data)
+                ],
+                ndensity_b11_fuel_vol_avg=(
+                    self.data.physics.nd_plasma_fuel_ions_vol_avg 
+                    * self.data.physics.f_plasma_fuel_boron11
+                ),
+                impurity_radiation=self.data.impurity_radiation,
+                ne_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
+                temp_e_vol_avg=self.data.physics.temp_plasma_electron_vol_avg_kev,
+                rho=self.plasma_profile.neprofile.profile_x,
+                ne_profile=self.plasma_profile.neprofile.profile_y,
+                te_profile=self.plasma_profile.teprofile.profile_y,
+                f_power_rad_brem_core_reduction=self.data.impurity_radiation.f_p_plasma_core_rad_reduction,
+                rho_plasma_core_norm=self.data.impurity_radiation.radius_plasma_core_norm,
+                eq=self.data.veqpy.equilibrium,
+            )
         self.data.physics.pden_plasma_sync_mw = radpwrdata.pden_plasma_sync_mw
         self.data.physics.pden_plasma_core_rad_mw = radpwrdata.pden_plasma_core_rad_mw
         self.data.physics.pden_plasma_outer_rad_mw = radpwrdata.pden_plasma_outer_rad_mw
@@ -1211,6 +1460,19 @@ class Physics(Model):
                 / self.data.physics.fusden_alpha_total,
             )
 
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            if self.data.physics.i_nd_plasma_protons == 0:
+                self.data.physics.nd_plasma_protons_vol_avg = 0.0
+            elif self.data.physics.i_nd_plasma_protons == 1:
+                self.data.physics.nd_plasma_protons_vol_avg = (
+                    self.data.physics.f_nd_protons_electrons_input
+                    * self.data.physics.nd_plasma_electrons_vol_avg
+                )
+            else:
+                raise ProcessValueError(
+                    "Invalid value for i_nd_plasma_protons",
+                    i_nd_plasma_protons=self.data.physics.i_nd_plasma_protons,
+                )
         # ======================================================================
 
         # Beam hot ion component
@@ -1231,7 +1493,8 @@ class Physics(Model):
         # Sum of Zi.ni for all impurity ions (those with charge > helium)
         znimp = 0.0
         for imp in range(N_IMPURITIES):
-            if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
+            z_imp = self.data.impurity_radiation.impurity_arr_z[imp]
+            if z_imp > 2 and z_imp != 5:
                 znimp += impurity_radiation.calculate_average_charge_at_temp(
                     imp,
                     np.array([self.data.physics.temp_plasma_electron_vol_avg_kev]),
@@ -1266,9 +1529,14 @@ class Physics(Model):
         # = nD + nT + 2*nHe3
         # So nd_plasma_fuel_ions_vol_avg = znfuel - nHe3 = znfuel
         # - f_plasma_fuel_helium3*nd_plasma_fuel_ions_vol_avg
-        self.data.physics.nd_plasma_fuel_ions_vol_avg = znfuel / (
-            1.0 + self.data.physics.f_plasma_fuel_helium3
-        )
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            self.data.physics.nd_plasma_fuel_ions_vol_avg = znfuel / (
+                1.0 + self.data.physics.f_plasma_fuel_boron11 * 4.0
+            )
+        else:
+            self.data.physics.nd_plasma_fuel_ions_vol_avg = znfuel / (
+                1.0 + self.data.physics.f_plasma_fuel_helium3
+            )
 
         # ======================================================================
 
@@ -1281,6 +1549,7 @@ class Physics(Model):
             + (
                 self.data.physics.f_plasma_fuel_deuterium
                 + self.data.physics.f_plasma_fuel_tritium
+                + self.data.physics.f_plasma_fuel_proton
             )
             * self.data.physics.nd_plasma_fuel_ions_vol_avg
             + self.data.physics.nd_beam_ions
@@ -1295,12 +1564,26 @@ class Physics(Model):
             + self.data.physics.f_nd_alpha_thermal_electron
         )
 
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            self.data.impurity_radiation.f_nd_impurity_electron_array[
+                impurity_radiation.element2index("B_", self.data)
+            ] = (
+                self.data.physics.f_plasma_fuel_boron11
+                * self.data.physics.nd_plasma_fuel_ions_vol_avg
+                / self.data.physics.nd_plasma_electrons_vol_avg
+            )
+        else:
+            self.data.impurity_radiation.f_nd_impurity_electron_array[
+                impurity_radiation.element2index("B_", self.data)
+            ] = 0.0
+
         # ======================================================================
 
         # Total impurity density
         self.data.physics.nd_plasma_impurities_vol_avg = 0.0
         for imp in range(N_IMPURITIES):
-            if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
+            z_imp = self.data.impurity_radiation.impurity_arr_z[imp]
+            if z_imp > 2 and z_imp != 5:
                 self.data.physics.nd_plasma_impurities_vol_avg += (
                     self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
                     * self.data.physics.nd_plasma_electrons_vol_avg
@@ -1401,6 +1684,15 @@ class Physics(Model):
 
         # ======================================================================
 
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            self.data.physics.m_fuel_amu = (
+                constants.M_BORON11_AMU * self.data.physics.f_plasma_fuel_boron11
+                + constants.M_PROTON_AMU * self.data.physics.f_plasma_fuel_proton
+            )
+            self.data.physics.m_beam_amu = constants.M_PROTON_AMU
+
+        # ======================================================================
+
         # Average mass of all ions
         self.data.physics.m_ions_total_amu = (
             (
@@ -1415,7 +1707,8 @@ class Physics(Model):
             + (self.data.physics.m_beam_amu * self.data.physics.nd_beam_ions)
         )
         for imp in range(N_IMPURITIES):
-            if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
+            z_imp = self.data.impurity_radiation.impurity_arr_z[imp]
+            if z_imp > 2 and z_imp != 5:
                 self.data.physics.m_ions_total_amu += (
                     self.data.physics.nd_plasma_electrons_vol_avg
                     * self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
@@ -1429,7 +1722,7 @@ class Physics(Model):
         # ======================================================================
 
         # Mass weighted plasma effective charge
-        # Σ(Z²ᵢnᵢ) / mᵢ
+        # Σ(Z²ᵢnᵢ) / (mᵢZᵢnᵢ)
         self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg = (
             (
                 self.data.physics.f_plasma_fuel_deuterium
@@ -1464,8 +1757,31 @@ class Physics(Model):
                 / constants.M_TRITON_AMU
             )
         ) / self.data.physics.nd_plasma_electrons_vol_avg
+
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg = (
+                (
+                    25.0 * self.data.physics.f_plasma_fuel_boron11
+                    * self.data.physics.nd_plasma_fuel_ions_vol_avg
+                    / constants.M_BORON11_AMU
+                )
+                + (
+                    self.data.physics.f_plasma_fuel_proton
+                    * self.data.physics.nd_plasma_fuel_ions_vol_avg
+                    / constants.M_PROTON_AMU
+                )
+                + (
+                    4.0
+                    * self.data.physics.nd_plasma_alphas_thermal_vol_avg
+                    / constants.M_ALPHA_AMU
+                )
+                + (self.data.physics.nd_plasma_protons_vol_avg / constants.M_PROTON_AMU)
+                + (self.data.physics.nd_beam_ions / constants.M_PROTON_AMU)
+            ) / self.data.physics.nd_plasma_electrons_vol_avg
+
         for imp in range(N_IMPURITIES):
-            if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
+            z_imp = self.data.impurity_radiation.impurity_arr_z[imp]
+            if z_imp > 2 and z_imp != 5:
                 self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg += (
                     self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
                     * impurity_radiation.calculate_average_charge_at_temp(
@@ -1854,6 +2170,19 @@ class Physics(Model):
             "(f_plasma_fuel_helium3)",
             self.data.physics.f_plasma_fuel_helium3,
         )
+        if self.data.physics.i_fusion_reactions == "p-b11":
+            po.ovarre(
+                self.outfile,
+                "Boron-11 fuel fraction",
+                "(f_plasma_fuel_boron11)",
+                self.data.physics.f_plasma_fuel_boron11,
+            )
+            po.ovarre(
+                self.outfile,
+                "Proton fuel fraction",
+                "(f_plasma_fuel_proton)",
+                self.data.physics.f_plasma_fuel_proton,
+            )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
         po.osubhd(self.outfile, "Fusion rates :")
@@ -1964,6 +2293,13 @@ class Physics(Model):
             "D-He3 fusion power (MW)",
             "(p_dhe3_total_mw)",
             self.data.physics.p_dhe3_total_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "p-B11 fusion power (MW)",
+            "(p_pb_total_mw)",
+            self.data.physics.p_pb_total_mw,
             "OP ",
         )
 
@@ -4324,6 +4660,63 @@ class PlasmaBeta(Model):
             beta_fast_alpha = 0.0
 
         return beta_fast_alpha
+
+    @staticmethod
+    def fast_alpha_beta_pb(
+        te: float,
+        ti: float,
+        ne: float,
+        ni: float,
+        charge_mass_weighted: float,
+        charge_eff: float,
+        dlamie: float,
+        b_total: float,
+        fusden_alpha_total: float,
+    ):
+        """
+        input:
+            prof_data:
+            temp_e_vol_avg, ndensity_e_vol_avg, dlamii, dlamie, b_total
+            comp_data:
+            charge_eff_mass_weighted
+            power_data:
+            alpha_produce_rate_total
+        """
+        me_amu = constants.ELECTRON_MASS / constants.ATOMIC_MASS_UNIT
+        me = constants.ELECTRON_MASS
+
+        temp = ti * 1.0e3
+        # ref: 023 NRL PLASMA FORMULARY, page 34
+        dlamii = (
+            23.0 - np.log(charge_eff * charge_eff / temp) 
+            - np.log((ni * charge_eff**2 + ni * charge_eff**2) / temp) * 0.5
+        )
+
+        e_crit = (
+            te * constants.M_ALPHA_AMU 
+            * (
+                0.75 * np.sqrt(np.pi / me_amu) / ne 
+                * charge_mass_weighted * dlamii / dlamie
+            )**(2.0/3.0)
+        )
+        tau_slow_down = (
+            3.0 * (np.sqrt(2.0*np.pi))**3 
+            * constants.EPSILON0**2 * (te * constants.KILOELECTRON_VOLT)**1.5 
+            * constants.M_ALPHA_AMU
+            / (np.sqrt(me) * constants.ELECTRON_CHARGE**4 * ne * dlamie) 
+            * (dlamii / dlamie)
+        ) * (constants.ATOMIC_MASS_UNIT)
+        e_alpha_0 = 8.68e3 / 3.0
+        x0 = np.sqrt(e_alpha_0 / e_crit)
+        pressure = (
+            -np.atan(1/np.sqrt(3.0))/np.sqrt(3.0) + 0.5 * x0**2 
+            - 1/np.sqrt(3.0) * np.atan((2.0 * x0 - 1) / np.sqrt(3.0))
+            + 0.5 * np.log(1 + x0) - 1/6.0 * np.log(1 + x0**3)
+            ) * fusden_alpha_total * tau_slow_down * e_crit * 2.0 / 3.0 * constants.KILOELECTRON_VOLT # Pa
+
+        beta_fast_alpha = 2 * constants.RMU0 * pressure / b_total
+        return beta_fast_alpha
+
 
     def output_beta_information(self):
         """Output beta information to file."""

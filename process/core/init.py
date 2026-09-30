@@ -34,6 +34,7 @@ from process.data_structure.physics_variables import (
 from process.data_structure.stellarator_variables import StellaratorModel
 from process.data_structure.superconducting_tf_coil_variables import TFWPIntegerTurnType
 from process.models.pfcoil import PFLocationTypes
+from process.models.physics.plasma_current import PlasmaCurrentModel
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
     PlasmaProfileShapeType,
@@ -376,7 +377,21 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     #  Fuel ion fractions must add up to 1.0
-    if (
+    if data.physics.i_fusion_reactions == "p-b11":
+        if (
+            abs(
+                1.0
+                - data.physics.f_plasma_fuel_boron11
+                - data.physics.f_plasma_fuel_proton
+            )
+            > 1e-6
+        ):
+            raise ProcessValidationError(
+                "p-b11 fuel ion fractions do not sum to 1.0",
+                f_plasma_fuel_boron11=data.physics.f_plasma_fuel_boron11,
+                f_plasma_fuel_proton=data.physics.f_plasma_fuel_proton,
+            )
+    elif (
         abs(
             1.0
             - data.physics.f_plasma_fuel_deuterium
@@ -401,6 +416,15 @@ def check_process(inputs, data):  # noqa: ARG001
             "'data.heat_transport.p_tritium_plant_electric_mw'"
             "(power required for tritium processing) are set to 0",
             stacklevel=2,
+        )
+
+    if (
+        data.physics.i_plasma_current == PlasmaCurrentModel.USER_INPUT
+        and data.physics.plasma_current_user_input <= 0.0
+    ):
+        raise ProcessValidationError(
+            "plasma_current_user_input must be positive when i_plasma_current=0",
+            plasma_current_user_input=data.physics.plasma_current_user_input,
         )
 
     if data.impurity_radiation.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069
@@ -495,6 +519,11 @@ def check_process(inputs, data):  # noqa: ARG001
                 data.numerics.boundu[3], data.numerics.boundl[3]
             )
 
+        if data.physics.i_equilibrium_solve == 1 and data.physics.i_alphaj != 0:
+            raise ProcessValidationError(
+                "i_equilibrium_solve=1 requires i_alphaj=0 (user alphaj for veqpy j_tor)"
+            )
+
         # Density checks
         # Issue #589: Pedestal density is lower than separatrix density
         pedestal_type = DensityProfilePedestalType(
@@ -529,6 +558,21 @@ def check_process(inputs, data):  # noqa: ARG001
                     }
                 ),
             )
+        if (
+            pedestal_type == DensityProfilePedestalType.GREENWALD_FRACTION 
+            and data.physics.i_equilibrium_solve == 1
+        ):
+            raise ProcessValidationError(
+                "Pedestal and separatrix densities must be input as absolute "
+                "values (nd_plasma_pedestal_electron, "
+                "nd_plasma_separatrix_electron) with "
+                "i_nd_plasma_pedestal_separatrix = 0 when i_equilibrium_solve = 1. "
+                "Greenwald-fraction inputs are not allowed.",
+                i_nd_plasma_pedestal_separatrix=(
+                    data.physics.i_nd_plasma_pedestal_separatrix
+                ),
+            )
+
 
         if (
             abs(data.physics.radius_plasma_pedestal_density_norm - 1.0) <= 1e-7
@@ -641,6 +685,14 @@ def check_process(inputs, data):  # noqa: ARG001
                 "and is recommended for the Reinke model",
                 stacklevel=2,
             )
+    if (data.physics.i_fusion_reactions == "p-b11") and (
+        data.physics.i_l_h_threshold in {1, 2, 3, 4, 5, 15, 16, 17, 18}
+    ):
+        logger.warning(
+            "p-B11: i_l_h_threshold has no z_eff or m_ion correction; "
+            "a scaling that includes either is recommended",
+            stacklevel=2,
+        )
     i_single_null = DivertorNumberModels(data.physics.i_single_null)
     match i_single_null:
         case DivertorNumberModels.DOUBLE_NULL:

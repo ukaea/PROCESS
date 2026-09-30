@@ -118,6 +118,11 @@ def test_set_fusion_powers(setfusionpowersparam):
         f_alpha_electron=setfusionpowersparam.f_alpha_electron,
         f_alpha_ion=setfusionpowersparam.f_alpha_ion,
         p_beam_alpha_mw=setfusionpowersparam.p_beam_alpha_mw,
+        p_beam_neutron_mw=setfusionpowersparam.p_beam_alpha_mw
+        * (
+            constants.DT_NEUTRON_ENERGY_FRACTION
+            / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION)
+        ),
         pden_non_alpha_charged_mw=setfusionpowersparam.pden_non_alpha_charged_mw,
         pden_plasma_neutron_mw=setfusionpowersparam.pden_plasma_neutron_mw,
         vol_plasma=setfusionpowersparam.vol_plasma,

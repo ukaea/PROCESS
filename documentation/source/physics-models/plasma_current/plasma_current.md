@@ -105,6 +105,15 @@ the switch `i_plasma_current`, as follows:
 
 ---------------
 
+#### User input
+
+Switch value: `i_plasma_current = 0`
+
+The plasma current is taken directly from the input variable `plasma_current_user_input` [A].
+No scaling from $q_{95}$ is applied.
+
+---------------
+
 ### 1. Calculate plasma current shaping function $f_q$
 
 ------------

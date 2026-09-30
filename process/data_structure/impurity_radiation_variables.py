@@ -7,7 +7,7 @@ import numpy as np
 N_IMPURITIY_LOSS_FUNCTION_POINTS = 600
 """Number of points in the impurity loss function (L_z) tables"""
 
-N_IMPURITIES = 14
+N_IMPURITIES = 15
 """Number of ion species in impurity radiation model
 
 ( 1)  Hydrogen  (fraction calculated by code)
@@ -24,6 +24,7 @@ N_IMPURITIES = 14
 (12)  Krypton
 (13)  Xenon
 (14)  Tungsten
+(15)  Boron
 """
 
 
@@ -41,6 +42,7 @@ class ImpurityRadiationData:
         default_factory=lambda: np.array([
             1.0,
             0.1,
+            0.0,
             0.0,
             0.0,
             0.0,
@@ -80,6 +82,7 @@ class ImpurityRadiationData:
             "Kr",
             "Xe",
             "W_",
+            "B_",
         ])
     )
 

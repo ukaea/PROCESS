@@ -2053,6 +2053,10 @@ class Stellarator(Model):
             self.data.physics.p_dt_total_mw = self.data.physics.p_plasma_dt_mw
 
         # Create some derived values and add beam contribution to fusion power
+        self.data.physics.p_beam_neutron_mw = self.data.physics.p_beam_alpha_mw * (
+            constants.DT_NEUTRON_ENERGY_FRACTION
+            / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION)
+        )
         (
             self.data.physics.pden_neutron_total_mw,
             self.data.physics.p_plasma_alpha_mw,
@@ -2069,6 +2073,7 @@ class Stellarator(Model):
             self.data.physics.f_alpha_electron,
             self.data.physics.f_alpha_ion,
             self.data.physics.p_beam_alpha_mw,
+            self.data.physics.p_beam_neutron_mw,
             self.data.physics.pden_non_alpha_charged_mw,
             self.data.physics.pden_plasma_neutron_mw,
             self.data.physics.vol_plasma,

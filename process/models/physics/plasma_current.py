@@ -23,6 +23,51 @@ from process.models.physics.plasma_geometry import PlasmaGeometryModelType
 logger = logging.getLogger(__name__)
 
 
+@unique
+class PlasmaCurrentModel(IntEnum):
+    """Enumeration of plasma current scaling models available for calculations.
+
+    Each model represents a different scaling law used to calculate plasma
+    current based on various plasma and machine parameters.
+    """
+
+    USER_INPUT = (0, "User input")
+    PENG_ANALYTIC_FIT = (1, "Peng analytic fit")
+    PENG_DIVERTOR_SCALING = (2, "Peng divertor scaling")
+    ITER_SCALING = (3, "Simple ITER scaling (cylindrical case)")
+    IPDG89_SCALING = (4, "IPDG89 scaling")
+    TODD_EMPIRICAL_SCALING_I = (5, "Todd empirical scaling I")
+    TODD_EMPIRICAL_SCALING_II = (6, "Todd empirical scaling II")
+    CONNOR_HASTIE_MODEL = (7, "Connor-Hastie model")
+    SAUTER_SCALING = (8, "Sauter scaling")
+    FIESTA_ST_SCALING = (9, "FIESTA ST scaling")
+
+    def __new__(cls, value: int, full_name: str):
+        """Create a new PlasmaCurrentModel enum member with value and full_name.
+
+        Parameters
+        ----------
+        value : int
+            The numeric value of the enum member.
+        full_name : str
+            The full name description of the plasma current model.
+
+        Returns
+        -------
+        PlasmaCurrentModel
+            A new enum member with the specified value and full_name.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        """The full name of the plasma current model."""
+        return self._full_name_
+
+
 class PlasmaCurrent(Model):
     """Class to hold plasma current calculations for plasma processing."""
 
@@ -53,6 +98,14 @@ class PlasmaCurrent(Model):
                 self.outfile,
                 f"Plasma current model selected: {full_model_name} ",
             )
+
+            if self.data.physics.i_plasma_current == PlasmaCurrentModel.USER_INPUT:
+                po.ovarre(
+                    self.outfile,
+                    "User input plasma current (Iₚ) (A)",
+                    "(plasma_current_user_input)",
+                    self.data.physics.plasma_current_user_input,
+                )
 
             po.ovarre(
                 self.outfile,
@@ -186,6 +239,7 @@ class PlasmaCurrent(Model):
             Inverse aspect ratio .
         i_plasma_current : int
             Current scaling model to use.
+            0 = User input (`plasma_current_user_input`)
             1 = Peng analytic fit
             2 = Peng divertor scaling (TART,STAR)
             3 = Simple ITER scaling
@@ -216,9 +270,8 @@ class PlasmaCurrent(Model):
 
         Returns
         -------
-        tuple[float, float, float, float, float]
-            Tuple containing (b_plasma_poloidal_average, qstar, plasma_current,
-            betap, li).
+        float
+            Plasma current (A).
 
         Raises
         ------
@@ -259,15 +312,19 @@ class PlasmaCurrent(Model):
         # Aspect ratio
         aspect_ratio = 1.0 / eps
 
-        # Only the Sauter scaling (i_plasma_current=8) is suitable for negative
-        # triangularity:
+        # Only the Sauter scaling (i_plasma_current=8) and user input (0) are
+        # suitable for negative triangularity:
         if (
-            PlasmaCurrentModel(i_plasma_current) != PlasmaCurrentModel.SAUTER_SCALING
+            i_plasma_current
+            not in {
+                PlasmaCurrentModel.SAUTER_SCALING,
+                PlasmaCurrentModel.USER_INPUT,
+            }
             and triang < 0.0
         ):
             raise ProcessValueError(
-                f"Triangularity is negative without i_plasma_current = 8 selected:"
-                f" {triang=}, {i_plasma_current=}"
+                f"Triangularity is negative without i_plasma_current = 0 or 8"
+                f" selected: {triang=}, {i_plasma_current=}"
             )
 
         try:  # noqa: PLW0717
@@ -344,6 +401,10 @@ class PlasmaCurrent(Model):
                         eps=eps, kappa=kappa, triang=triang
                     )
 
+                # User input
+                case PlasmaCurrentModel.USER_INPUT:
+                    plasma_current = self.data.physics.plasma_current_user_input
+
         except ValueError as e:
             raise ProcessValueError(
                 "Illegal value of i_plasma_current",
@@ -351,7 +412,10 @@ class PlasmaCurrent(Model):
             ) from e
 
         # Main plasma current calculation using the fq value from the different settings
-        if model != PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
+        if model not in {
+            PlasmaCurrentModel.PENG_DIVERTOR_SCALING,
+            PlasmaCurrentModel.USER_INPUT,
+        }:
             plasma_current = (
                 self.calculate_cyclindrical_plasma_current(
                     rminor=rminor,
@@ -1088,6 +1152,31 @@ class PlasmaDiamagneticCurrent(Model):
                 self.data.current_drive.f_c_plasma_diamagnetic = (
                     self.data.current_drive.f_c_plasma_diamagnetic_scene
                 )
+
+    @staticmethod
+    def diamagnetic_integral(eq):
+        """Calculate the diamagnetic integral based on the equilibrium."""
+        r = eq.R
+        jacobian = eq.J
+        r_t = eq.surface_fields[2]
+        z_t = eq.Z_t
+
+        p_r = eq.P_r[:, None]
+        drhodr = -z_t / jacobian
+        drhodz = r_t / jacobian
+        dpdr = p_r * drhodr
+        dpdz = p_r * drhodz
+
+        psi_rho = eq.psin_r[:, None] * eq.alpha2
+        bz = psi_rho * drhodr / r
+        br = -psi_rho * drhodz / r
+        b_phi = eq.F[:, None] / r
+        b_total2 = br**2 + bz**2 + b_phi**2
+
+        j_dia_toroidal = -(dpdz * br - dpdr * bz) / b_total2
+        current_dia = float(eq.grid.integrate(j_dia_toroidal * jacobian))
+
+        return current_dia / float(eq.Ip)
 
     def output(self):
         """Output the plasma diamagnetic current model results."""

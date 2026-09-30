@@ -1,6 +1,8 @@
 """Module for plasma L-H and L-I transition power threshold calculations."""
 
 import logging
+from enum import IntEnum, unique
+import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
@@ -8,6 +10,56 @@ from process.core.model import Model
 from process.data_structure.physics_variables import PlasmaConfinementTransitionModel
 
 logger = logging.getLogger(__name__)
+
+
+@unique
+class PlasmaConfinementTransitionModel(IntEnum):
+    """Enum for plasma L -> H and L -> I transition power threshold models."""
+
+    ITER1996_NOMINAL = (1, "ITER-1996 Nominal")
+    ITER1996_UPPER = (2, "ITER-1996 Upper")
+    ITER1996_LOWER = (3, "ITER-1996 Lower")
+    SNIPES1997_ITER = (4, "Snipes 1997 ITER Scaling I")
+    SNIPES1997_KAPPA = (5, "Snipes 1997 ITER Scaling II")
+    MARTIN08_NOMINAL = (6, "Martin 2008 Nominal")
+    MARTIN08_UPPER = (7, "Martin 2008 Upper")
+    MARTIN08_LOWER = (8, "Martin 2008 Lower")
+    SNIPES2000_NOMINAL = (9, "Snipes 2000 Nominal")
+    SNIPES2000_UPPER = (10, "Snipes 2000 Upper")
+    SNIPES2000_LOWER = (11, "Snipes 2000 Lower")
+    SNIPES2000_CLOSED_DIVERTOR_NOMINAL = (12, "Snipes 2000 Closed Divertor Nominal")
+    SNIPES2000_CLOSED_DIVERTOR_UPPER = (13, "Snipes 2000 Closed Divertor Upper")
+    SNIPES2000_CLOSED_DIVERTOR_LOWER = (14, "Snipes 2000 Closed Divertor Lower")
+    HUBBARD2012_NOMINAL = (15, "Hubbard 2012 Nominal")
+    HUBBARD2012_LOWER = (16, "Hubbard 2012 Lower")
+    HUBBARD2012_UPPER = (17, "Hubbard 2012 Upper")
+    HUBBARD2017_I_MODE = (18, "Hubbard 2017 I-Mode")
+    MARTIN08_ASPECT_NOMINAL = (19, "Martin 2008 Aspect Corrected Nominal")
+    MARTIN08_ASPECT_UPPER = (20, "Martin 2008 Aspect Corrected Upper")
+    MARTIN08_ASPECT_LOWER = (21, "Martin 2008 Aspect Corrected Lower")
+    TAKIZUKA04_NOMINAL = (22, "Takizuka 2004 Nominal")
+    TAKIZUKA04_UPPER = (23, "Takizuka 2004 Upper")
+    TAKIZUKA04_LOWER = (24, "Takizuka 2004 Lower")
+
+    def __new__(cls, value: int, full_name: str):
+        """Create a new PlasmaConfinementTransitionModel instance.
+
+        Parameters
+        ----------
+        value : int
+            The integer value of the enum member.
+        full_name : str
+            The full descriptive name of the enum member.
+
+        Returns
+        -------
+        PlasmaConfinementTransitionModel
+            A new instance of PlasmaConfinementTransitionModel.
+        """
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj.full_name = full_name
+        return obj
 
 
 class PlasmaConfinementTransition(Model):
@@ -25,15 +77,16 @@ class PlasmaConfinementTransition(Model):
         """
         # Calculate L- to H-mode power threshold for different scalings
         self.data.physics.l_h_threshold_powers = self.l_h_threshold_power(
-            nd_plasma_electron_line=self.data.physics.nd_plasma_electron_line,
-            b_plasma_toroidal_on_axis=self.data.physics.b_plasma_toroidal_on_axis,
-            rmajor=self.data.physics.rmajor,
-            rminor=self.data.physics.rminor,
-            kappa=self.data.physics.kappa,
-            a_plasma_surface=self.data.physics.a_plasma_surface,
-            m_ions_total_amu=self.data.physics.m_ions_total_amu,
-            aspect=self.data.physics.aspect,
-            plasma_current=self.data.physics.plasma_current,
+            self.data.physics.nd_plasma_electron_line,
+            self.data.physics.b_plasma_toroidal_on_axis,
+            self.data.physics.rmajor,
+            self.data.physics.rminor,
+            self.data.physics.kappa,
+            self.data.physics.a_plasma_surface,
+            self.data.physics.m_ions_total_amu,
+            self.data.physics.aspect,
+            self.data.physics.plasma_current,
+            self.data.physics.n_charge_plasma_effective_vol_avg,
         )
 
         # Enforced L-H power threshold value (if constraint 15 is turned on)
@@ -52,6 +105,7 @@ class PlasmaConfinementTransition(Model):
         m_ions_total_amu: float,
         aspect: float,
         plasma_current: float,
+        n_charge_plasma_effective_vol_avg: float,
     ) -> list[float]:
         """L-mode to H-mode power threshold calculation.
 
@@ -74,7 +128,9 @@ class PlasmaConfinementTransition(Model):
         aspect : float
             Aspect ratio
         plasma_current : float
-            Plasma current [A]
+            Plasma current (A)
+        n_charge_plasma_effective_vol_avg : float
+            Volume-averaged effective charge
 
         Returns
         -------
@@ -284,6 +340,43 @@ class PlasmaConfinementTransition(Model):
 
         # ========================================================================
 
+        # Takizuka 2004 scaling for p-B and spherical tokamaks
+
+        # i_l_h_threshold = 22
+        takizuka_nominal = self.calculate_takizuka04_nominal(
+            b_plasma_toroidal_on_axis,
+            aspect,
+            rminor,
+            plasma_current,
+            dnla20,
+            a_plasma_surface,
+            n_charge_plasma_effective_vol_avg,
+        )
+
+        # i_l_h_threshold = 23
+        takizuka_ub = self.calculate_takizuka04_upper(
+            b_plasma_toroidal_on_axis,
+            aspect,
+            rminor,
+            plasma_current,
+            dnla20,
+            a_plasma_surface,
+            n_charge_plasma_effective_vol_avg,
+        )
+
+        # i_l_h_threshold = 24
+        takizuka_lb = self.calculate_takizuka04_lower(
+            b_plasma_toroidal_on_axis,
+            aspect,
+            rminor,
+            plasma_current,
+            dnla20,
+            a_plasma_surface,
+            n_charge_plasma_effective_vol_avg,
+        )
+
+        # ========================================================================
+
         return [
             iterdd,
             iterdd_ub,
@@ -306,6 +399,9 @@ class PlasmaConfinementTransition(Model):
             martin_nominal_aspect,
             martin_ub_aspect,
             martin_lb_aspect,
+            takizuka_nominal,
+            takizuka_ub,
+            takizuka_lb,
         ]
 
     def output(self) -> None:
@@ -487,6 +583,27 @@ class PlasmaConfinementTransition(Model):
             "Martin 2008 aspect ratio corrected scaling: 95% lower bound (MW)",
             "(l_h_threshold_powers(21))",
             self.data.physics.l_h_threshold_powers[20],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Takizuka 2004 scaling: nominal (MW)",
+            "(l_h_threshold_powers(22))",
+            self.data.physics.l_h_threshold_powers[21],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Takizuka 2004 scaling: upper bound (MW)",
+            "(l_h_threshold_powers(23))",
+            self.data.physics.l_h_threshold_powers[22],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Takizuka 2004 scaling: lower bound (MW)",
+            "(l_h_threshold_powers(24))",
+            self.data.physics.l_h_threshold_powers[23],
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -1496,4 +1613,226 @@ class PlasmaConfinementTransition(Model):
             * a_plasma_surface**0.922
             * (2.0 / m_ions_total_amu)
             * aspect_correction
+        )
+
+    @staticmethod
+    def calculate_takizuka04_lower(
+        b_plasma_toroidal_on_axis: float,
+        aspect: float,
+        rminor: float,
+        plasma_current: float,
+        dnla20: float,
+        a_plasma_surface: float,
+        n_charge_plasma_effective_vol_avg: float,
+    ):
+        """Calculate the lower Takizuka 2004 L-H transition power threshold.
+
+        Scaling for proton-boron fusion and spherical tokamaks. The aspect-ratio
+        correction exponent is 0.0.
+
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis : float
+            Toroidal magnetic field [T]
+        aspect : float
+            Plasma aspect ratio
+        rminor : float
+            Plasma minor radius [m]
+        plasma_current : float
+            Plasma current [A]
+        dnla20 : float
+            Line averaged electron density in units of 10^20 m^-3.
+        a_plasma_surface : float
+            Plasma surface area [m^2]
+        n_charge_plasma_effective_vol_avg : float
+            Volume-averaged effective charge
+
+        Returns
+        -------
+        float
+            The Takizuka 2004 L-H transition power threshold [MW]
+
+        References
+        ----------
+            - Y. Wang et al., “Predictions of H-mode access and edge pedestal
+            instability in the EHL-2 spherical torus,”
+            Plasma Science and Technology, vol. 27, p. 024005, 2025,
+            doi: https://doi.org/10.1088/2058-6272/ad9f27.
+
+            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
+            the H-mode power threshold in tokamaks of the ITPA database,”
+            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
+            Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
+        """
+        b_tout = b_plasma_toroidal_on_axis * aspect / (aspect + 1.0)
+        b_pout = (
+            constants.RMU0 * plasma_current 
+            / (2.0 * np.pi * rminor) 
+            * (1.0 + 1.0 / aspect)
+        )
+        b_out = np.sqrt(b_tout**2 + b_pout**2)
+        aspect_correction = (
+            0.1 * aspect
+            / (
+                1.0 - np.sqrt(
+                    2.0 / (1.0 + aspect)
+                )
+            )
+        ) 
+        gamma = 0.0
+        return (
+            0.072 
+            * b_out**0.7
+            * dnla20**0.7
+            * a_plasma_surface**0.9
+            * (n_charge_plasma_effective_vol_avg / 2.0)**0.7
+            * aspect_correction**gamma
+        )
+
+    @staticmethod
+    def calculate_takizuka04_nominal(
+        b_plasma_toroidal_on_axis: float,
+        aspect: float,
+        rminor: float,
+        plasma_current: float,
+        dnla20: float,
+        a_plasma_surface: float,
+        n_charge_plasma_effective_vol_avg: float,
+    ):
+        """Calculate the nominal Takizuka 2004 L-H transition power threshold.
+
+        Scaling for proton-boron fusion and spherical tokamaks. The aspect-ratio
+        correction exponent is 0.5.
+
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis : float
+            Toroidal magnetic field [T]
+        aspect : float
+            Plasma aspect ratio
+        rminor : float
+            Plasma minor radius [m]
+        plasma_current : float
+            Plasma current [A]
+        dnla20 : float
+            Line averaged electron density in units of 10^20 m^-3.
+        a_plasma_surface : float
+            Plasma surface area [m^2]
+        n_charge_plasma_effective_vol_avg : float
+            Volume-averaged effective charge
+
+        Returns
+        -------
+        float
+            The Takizuka 2004 L-H transition power threshold [MW]
+
+        References
+        ----------
+            - Y. Wang et al., “Predictions of H-mode access and edge pedestal
+            instability in the EHL-2 spherical torus,”
+            Plasma Science and Technology, vol. 27, p. 024005, 2025,
+            doi: https://doi.org/10.1088/2058-6272/ad9f27.
+
+            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
+            the H-mode power threshold in tokamaks of the ITPA database,”
+            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
+            Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
+        """
+        b_tout = b_plasma_toroidal_on_axis * aspect / (aspect + 1.0)
+        b_pout = (
+            constants.RMU0 * plasma_current 
+            / (2.0 * np.pi * rminor) 
+            * (1.0 + 1.0 / aspect)
+        )
+        b_out = np.sqrt(b_tout**2 + b_pout**2)
+        aspect_correction = (
+            0.1 * aspect
+            / (
+                1.0 - np.sqrt(
+                    2.0 / (1.0 + aspect)
+                )
+            )
+        ) 
+        gamma = 0.5
+        return (
+            0.072 
+            * b_out**0.7
+            * dnla20**0.7
+            * a_plasma_surface**0.9
+            * (n_charge_plasma_effective_vol_avg / 2.0)**0.7
+            * aspect_correction**gamma
+        )
+
+    @staticmethod
+    def calculate_takizuka04_upper(
+        b_plasma_toroidal_on_axis: float,
+        aspect: float,
+        rminor: float,
+        plasma_current: float,
+        dnla20: float,
+        a_plasma_surface: float,
+        n_charge_plasma_effective_vol_avg: float,
+    ):
+        """Calculate the upper Takizuka 2004 L-H transition power threshold.
+
+        Scaling for proton-boron fusion and spherical tokamaks. The aspect-ratio
+        correction exponent is 1.0.
+
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis : float
+            Toroidal magnetic field [T]
+        aspect : float
+            Plasma aspect ratio
+        rminor : float
+            Plasma minor radius [m]
+        plasma_current : float
+            Plasma current [A]
+        dnla20 : float
+            Line averaged electron density in units of 10^20 m^-3.
+        a_plasma_surface : float
+            Plasma surface area [m^2]
+        n_charge_plasma_effective_vol_avg : float
+            Volume-averaged effective charge
+
+        Returns
+        -------
+        float
+            The Takizuka 2004 L-H transition power threshold [MW]
+
+        References
+        ----------
+            - Y. Wang et al., “Predictions of H-mode access and edge pedestal
+            instability in the EHL-2 spherical torus,”
+            Plasma Science and Technology, vol. 27, p. 024005, 2025,
+            doi: https://doi.org/10.1088/2058-6272/ad9f27.
+
+            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
+            the H-mode power threshold in tokamaks of the ITPA database,”
+            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
+            Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
+        """
+        b_tout = b_plasma_toroidal_on_axis * aspect / (aspect + 1.0)
+        b_pout = (
+            constants.RMU0 * plasma_current 
+            / (2.0 * np.pi * rminor) 
+            * (1.0 + 1.0 / aspect)
+        )
+        b_out = np.sqrt(b_tout**2 + b_pout**2)
+        aspect_correction = (
+            0.1 * aspect
+            / (
+                1.0 - np.sqrt(
+                    2.0 / (1.0 + aspect)
+                )
+            )
+        ) 
+        gamma = 1.0
+        return (
+            0.072 
+            * b_out**0.7
+            * dnla20**0.7
+            * a_plasma_surface**0.9
+            * (n_charge_plasma_effective_vol_avg / 2.0)**0.7
+            * aspect_correction**gamma
         )
