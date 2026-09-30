@@ -1981,23 +1981,22 @@ class Stellarator(Model):
 
         # Calculate fusion power
 
-        fusion_reactions = reactions.FusionReactionRate(self.plasma_profile, self.data)
-        fusion_reactions.deuterium_branching(
+        self.physics.plasma_reactions.deuterium_branching(
             self.data.physics.temp_plasma_ion_vol_avg_kev
         )
-        fusion_reactions.calculate_fusion_rates()
-        fusion_reactions.set_physics_variables()
+        self.physics.plasma_reactions.calculate_fusion_rates()
+        self.physics.plasma_reactions.set_physics_variables()
 
         # D-T power density is named differently to differentiate it from the beam given
         # component
         self.data.physics.p_plasma_dt_mw = (
-            self.data.physics.dt_power_density_plasma * self.data.physics.vol_plasma
+            self.data.physics.pden_plasma_dt_vol_avg_mw * self.data.physics.vol_plasma
         )
         self.data.physics.p_dhe3_total_mw = (
-            self.data.physics.dhe3_power_density * self.data.physics.vol_plasma
+            self.data.physics.pden_dhe3_total_vol_avg_mw * self.data.physics.vol_plasma
         )
         self.data.physics.p_dd_total_mw = (
-            self.data.physics.dd_power_density * self.data.physics.vol_plasma
+            self.data.physics.pden_dd_total_vol_avg_mw * self.data.physics.vol_plasma
         )
 
         # Calculate neutral beam slowing down effects
@@ -2011,7 +2010,7 @@ class Stellarator(Model):
                 self.data.physics.beta_beam,
                 self.data.physics.nd_beam_ions_out,
                 self.data.physics.p_beam_alpha_mw,
-            ) = reactions.beam_fusion(
+            ) = self.physics.beam_reactions.beam_fusion(
                 self.data.physics.beamfus0,
                 self.data.physics.betbm0,
                 self.data.physics.b_plasma_total,
@@ -2027,15 +2026,15 @@ class Stellarator(Model):
                 self.data.physics.vol_plasma,
                 self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg,
             )
-            self.data.physics.fusden_total = (
-                self.data.physics.fusden_plasma
+            self.data.physics.fusden_total_vol_avg = (
+                self.data.physics.fusden_plasma_vol_avg
                 + 1.0e6
                 * self.data.physics.p_beam_alpha_mw
                 / (constants.DT_ALPHA_ENERGY)
                 / self.data.physics.vol_plasma
             )
-            self.data.physics.fusden_alpha_total = (
-                self.data.physics.fusden_plasma_alpha
+            self.data.physics.fusden_alpha_total_vol_avg = (
+                self.data.physics.fusden_plasma_alpha_vol_avg
                 + 1.0e6
                 * self.data.physics.p_beam_alpha_mw
                 / (constants.DT_ALPHA_ENERGY)
@@ -2048,19 +2047,23 @@ class Stellarator(Model):
         else:
             # If no beams present then the total alpha rates and power are the same as
             # the plasma values
-            self.data.physics.fusden_total = self.data.physics.fusden_plasma
-            self.data.physics.fusden_alpha_total = self.data.physics.fusden_plasma_alpha
+            self.data.physics.fusden_total_vol_avg = (
+                self.data.physics.fusden_plasma_vol_avg
+            )
+            self.data.physics.fusden_alpha_total_vol_avg = (
+                self.data.physics.fusden_plasma_alpha_vol_avg
+            )
             self.data.physics.p_dt_total_mw = self.data.physics.p_plasma_dt_mw
 
         # Create some derived values and add beam contribution to fusion power
         (
-            self.data.physics.pden_neutron_total_mw,
+            self.data.physics.pden_neutron_total_vol_avg_mw,
             self.data.physics.p_plasma_alpha_mw,
             self.data.physics.p_alpha_total_mw,
             self.data.physics.p_plasma_neutron_mw,
             self.data.physics.p_neutron_total_mw,
             self.data.physics.p_non_alpha_charged_mw,
-            self.data.physics.pden_alpha_total_mw,
+            self.data.physics.pden_alpha_total_vol_avg_mw,
             self.data.physics.f_pden_alpha_electron_mw,
             self.data.physics.f_pden_alpha_ions_mw,
             self.data.physics.p_charged_particle_mw,
@@ -2070,9 +2073,9 @@ class Stellarator(Model):
             self.data.physics.f_alpha_ion,
             self.data.physics.p_beam_alpha_mw,
             self.data.physics.pden_non_alpha_charged_mw,
-            self.data.physics.pden_plasma_neutron_mw,
+            self.data.physics.pden_plasma_neutron_vol_avg_mw,
             self.data.physics.vol_plasma,
-            self.data.physics.pden_plasma_alpha_mw,
+            self.data.physics.pden_plasma_alpha_vol_avg_mw,
             self.data.physics.f_p_alpha_plasma_deposited,
         )
 
@@ -2084,8 +2087,8 @@ class Stellarator(Model):
             self.data.physics.nd_plasma_ions_total_vol_avg,
             self.data.physics.temp_plasma_electron_density_weighted_kev,
             self.data.physics.temp_plasma_ion_density_weighted_kev,
-            self.data.physics.pden_alpha_total_mw,
-            self.data.physics.pden_plasma_alpha_mw,
+            self.data.physics.pden_alpha_total_vol_avg_mw,
+            self.data.physics.pden_plasma_alpha_vol_avg_mw,
             self.data.physics.i_beta_fast_alpha,
             self.data.physics.f_plasma_fuel_deuterium,
         )
@@ -2388,8 +2391,8 @@ class Stellarator(Model):
         ) = self.physics.phyaux(
             self.data.physics.aspect,
             self.data.physics.nd_plasma_fuel_ions_vol_avg,
-            self.data.physics.fusden_total,
-            self.data.physics.fusden_alpha_total,
+            self.data.physics.fusden_total_vol_avg,
+            self.data.physics.fusden_alpha_total_vol_avg,
             self.data.physics.plasma_current,
             sbar,
             self.data.physics.nd_plasma_alphas_thermal_vol_avg,

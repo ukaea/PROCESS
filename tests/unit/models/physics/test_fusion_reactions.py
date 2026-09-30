@@ -22,9 +22,9 @@ class SetFusionPowersParam(NamedTuple):
 
     vol_plasma: Any = None
 
-    pden_plasma_alpha_mw: Any = None
+    pden_plasma_alpha_vol_avg_mw: Any = None
 
-    pden_plasma_neutron_mw: Any = None
+    pden_plasma_neutron_vol_avg_mw: Any = None
 
     expected_alpha_power_density: Any = None
 
@@ -55,8 +55,8 @@ class SetFusionPowersParam(NamedTuple):
             p_beam_alpha_mw=0,
             pden_non_alpha_charged_mw=0.00066,
             vol_plasma=2426.25,
-            pden_plasma_alpha_mw=0.163,
-            pden_plasma_neutron_mw=0.654,
+            pden_plasma_alpha_vol_avg_mw=0.163,
+            pden_plasma_neutron_vol_avg_mw=0.654,
             expected_alpha_power_density=0.163,
             expected_neutron_power_density=0.654,
             expected_alpha_power_total=395.47875,
@@ -74,8 +74,8 @@ class SetFusionPowersParam(NamedTuple):
             p_beam_alpha_mw=100.5,
             pden_non_alpha_charged_mw=0.00066,
             vol_plasma=2426.25,
-            pden_plasma_alpha_mw=0.163,
-            pden_plasma_neutron_mw=0.654,
+            pden_plasma_alpha_vol_avg_mw=0.163,
+            pden_plasma_neutron_vol_avg_mw=0.654,
             expected_alpha_power_density=0.20442195,
             expected_neutron_power_density=0.8183263050336705,
             expected_alpha_power_total=495.97875,
@@ -103,13 +103,13 @@ def test_set_fusion_powers(setfusionpowersparam):
     """
 
     (
-        pden_neutron_total_mw,
+        pden_neutron_total_vol_avg_mw,
         _p_plasma_alpha_mw,
         p_alpha_total_mw,
         _p_plasma_neutron_mw,
         p_neutron_total_mw,
         p_non_alpha_charged_mw,
-        pden_alpha_total_mw,
+        pden_alpha_total_vol_avg_mw,
         f_pden_alpha_electron_mw,
         f_pden_alpha_ions_mw,
         p_charged_particle_mw,
@@ -119,16 +119,16 @@ def test_set_fusion_powers(setfusionpowersparam):
         f_alpha_ion=setfusionpowersparam.f_alpha_ion,
         p_beam_alpha_mw=setfusionpowersparam.p_beam_alpha_mw,
         pden_non_alpha_charged_mw=setfusionpowersparam.pden_non_alpha_charged_mw,
-        pden_plasma_neutron_mw=setfusionpowersparam.pden_plasma_neutron_mw,
+        pden_plasma_neutron_vol_avg_mw=setfusionpowersparam.pden_plasma_neutron_vol_avg_mw,
         vol_plasma=setfusionpowersparam.vol_plasma,
-        pden_plasma_alpha_mw=setfusionpowersparam.pden_plasma_alpha_mw,
+        pden_plasma_alpha_vol_avg_mw=setfusionpowersparam.pden_plasma_alpha_vol_avg_mw,
         f_p_alpha_plasma_deposited=setfusionpowersparam.f_p_alpha_plasma_deposited,
     )
 
-    assert pden_alpha_total_mw == pytest.approx(
+    assert pden_alpha_total_vol_avg_mw == pytest.approx(
         setfusionpowersparam.expected_alpha_power_density
     )
-    assert pden_neutron_total_mw == pytest.approx(
+    assert pden_neutron_total_vol_avg_mw == pytest.approx(
         setfusionpowersparam.expected_neutron_power_density
     )
     assert p_alpha_total_mw == pytest.approx(
@@ -255,3 +255,38 @@ def test_beam_reaction_rate_coefficient():
     )
 
     assert beam_reaction_rate == pytest.approx(7.465047902975452e-22)
+
+
+def test_fusion_yield_densities_iadd():
+    density_a = reactions.FusionYieldDensities(
+        pden_plasma_alpha_vol_avg_mw=1.0,
+        pden_non_alpha_charged_vol_avg_mw=2.0,
+        pden_neutron_vol_avg_mw=3.0,
+        fusden_vol_avg=4.0,
+        fusden_plasma_alpha_vol_avg=5.0,
+        fusden_plasma_protons_vol_avg=6.0,
+    )
+    density_b = reactions.FusionYieldDensities(
+        pden_plasma_alpha_vol_avg_mw=0.1,
+        pden_non_alpha_charged_vol_avg_mw=0.2,
+        pden_neutron_vol_avg_mw=0.3,
+        fusden_vol_avg=0.4,
+        fusden_plasma_alpha_vol_avg=0.5,
+        fusden_plasma_protons_vol_avg=0.6,
+    )
+
+    density_a += density_b
+
+    assert density_a.pden_plasma_alpha_vol_avg_mw == pytest.approx(1.1)
+    assert density_a.pden_non_alpha_charged_vol_avg_mw == pytest.approx(2.2)
+    assert density_a.pden_neutron_vol_avg_mw == pytest.approx(3.3)
+    assert density_a.fusden_vol_avg == pytest.approx(4.4)
+    assert density_a.fusden_plasma_alpha_vol_avg == pytest.approx(5.5)
+    assert density_a.fusden_plasma_protons_vol_avg == pytest.approx(6.6)
+
+
+def test_fusion_yield_densities_iadd_type_error():
+    density_a = reactions.FusionYieldDensities()
+
+    with pytest.raises(TypeError):
+        density_a += 1.0
