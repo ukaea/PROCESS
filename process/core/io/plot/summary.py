@@ -3008,20 +3008,20 @@ def plot_main_plasma_information(
         f"             $\\mathbf{{relative \\ number}}$\n"
         f"             $\\mathbf{{densities:}}$\n \n"
         f"             Effective charge: {mfile.get('n_charge_plasma_effective_vol_avg', scan=scan):.3f}\n\n"
-        f"             H:    {mfile.get('f_nd_impurity_electrons(01)', scan=scan):.4e}\n"
-        f"             He:  {mfile.get('f_nd_impurity_electrons(02)', scan=scan):.4e}\n"
-        f"             Be:  {mfile.get('f_nd_impurity_electrons(03)', scan=scan):.4e}\n"
-        f"             C:    {mfile.get('f_nd_impurity_electrons(04)', scan=scan):.4e}\n"
-        f"             N:    {mfile.get('f_nd_impurity_electrons(05)', scan=scan):.4e}\n"
-        f"             O:    {mfile.get('f_nd_impurity_electrons(06)', scan=scan):.4e}\n"
-        f"             Ne:  {mfile.get('f_nd_impurity_electrons(07)', scan=scan):.4e}\n"
-        f"             Si:   {mfile.get('f_nd_impurity_electrons(08)', scan=scan):.4e}\n"
-        f"             Ar:  {mfile.get('f_nd_impurity_electrons(09)', scan=scan):.4e}\n"
-        f"             Fe:  {mfile.get('f_nd_impurity_electrons(10)', scan=scan):.4e}\n"
-        f"             Ni:   {mfile.get('f_nd_impurity_electrons(11)', scan=scan):.4e}\n"
-        f"             Kr:   {mfile.get('f_nd_impurity_electrons(12)', scan=scan):.4e}\n"
-        f"             Xe:  {mfile.get('f_nd_impurity_electrons(13)', scan=scan):.4e}\n"
-        f"             W:   {mfile.get('f_nd_impurity_electrons(14)', scan=scan):.4e}"
+        f"             {ImpurityRadiationData().imp_label[0].replace('_', '')}:    {mfile.get('f_nd_impurity_electrons(01)', scan=scan):.4e}\n"
+        f"             {ImpurityRadiationData().imp_label[1].replace('_', '')}:  {mfile.get('f_nd_impurity_electrons(02)', scan=scan):.4e}\n"
+        f"             {ImpurityRadiationData().imp_label[2].replace('_', '')}:  {mfile.get('f_nd_impurity_electrons(03)', scan=scan):.4e}\n"
+        f"             {ImpurityRadiationData().imp_label[3].replace('_', '')}:    {mfile.get('f_nd_impurity_electrons(04)', scan=scan):.4e}\n"
+        f"             {ImpurityRadiationData().imp_label[4].replace('_', '')}:    {mfile.get('f_nd_impurity_electrons(05)', scan=scan):.4e}\n"
+        f"             {ImpurityRadiationData().imp_label[5].replace('_', '')}:    {mfile.get('f_nd_impurity_electrons(06)', scan=scan):.4e}\n"
+        f"             {ImpurityRadiationData().imp_label[6].replace('_', '')}:  {mfile.get('f_nd_impurity_electrons(07)', scan=scan):.4e}\n"
+        f"             {ImpurityRadiationData().imp_label[7].replace('_', '')}:   {mfile.get('f_nd_impurity_electrons(08)', scan=scan):.4e}\n"
+        f"             {ImpurityRadiationData().imp_label[8].replace('_', '')}:  {mfile.get('f_nd_impurity_electrons(09)', scan=scan):.4e}\n"
+        f"             {ImpurityRadiationData().imp_label[9].replace('_', '')}:  {mfile.get('f_nd_impurity_electrons(10)', scan=scan):.4e}\n"
+        f"             {ImpurityRadiationData().imp_label[10].replace('_', '')}:   {mfile.get('f_nd_impurity_electrons(11)', scan=scan):.4e}\n"
+        f"             {ImpurityRadiationData().imp_label[11].replace('_', '')}:   {mfile.get('f_nd_impurity_electrons(12)', scan=scan):.4e}\n"
+        f"             {ImpurityRadiationData().imp_label[12].replace('_', '')}:  {mfile.get('f_nd_impurity_electrons(13)', scan=scan):.4e}\n"
+        f"             {ImpurityRadiationData().imp_label[13].replace('_', '')}:   {mfile.get('f_nd_impurity_electrons(14)', scan=scan):.4e}"
     )
 
     axis.text(
@@ -4475,26 +4475,10 @@ def read_imprad_data(_skiprows, data_path):
         path to impurity data
 
     """
-    label = [
-        "H_",
-        "He",
-        "Be",
-        "C_",
-        "N_",
-        "O_",
-        "Ne",
-        "Si",
-        "Ar",
-        "Fe",
-        "Ni",
-        "Kr",
-        "Xe",
-        "W_",
-    ]
-    lzdata = [0.0 for x in range(len(label))]
+    lzdata = [0.0 for x in range(len(ImpurityRadiationData().imp_label))]
 
-    for i in range(len(label)):
-        file_iden = data_path + label[i].ljust(3, "_")
+    for i in range(len(ImpurityRadiationData().imp_label)):
+        file_iden = data_path + ImpurityRadiationData().imp_label[i].ljust(3, "_")
 
         Te = None
         lz = None
@@ -4679,7 +4663,7 @@ def plot_line_brem_power_density_profile(
             axis.plot(
                 rho,
                 pden_rad_array[ind] * 1.0e-6,
-                label=ImpurityRadiationData().imp_label[ind],
+                label=ImpurityRadiationData().imp_label[ind].replace("_", ""),
             )
 
     axis.minorticks_on()
@@ -4809,7 +4793,7 @@ def plot_line_brem_power_profile(
             axis.plot(
                 rho,
                 p_rad_array[ind] * 1.0e-6,
-                label=ImpurityRadiationData().imp_label[ind],
+                label=ImpurityRadiationData().imp_label[ind].replace("_", ""),
             )
 
     axis.plot(
@@ -4933,7 +4917,11 @@ def plot_line_brem_loss_function_profile(
     # Plot the remaining impurities if their fraction is significant
     for ind in range(2, imp_data.shape[0]):
         if imp_frac[ind] > 1.0e-30:
-            axis.plot(rho, lz[ind], label=ImpurityRadiationData().imp_label[ind])
+            axis.plot(
+                rho,
+                lz[ind],
+                label=ImpurityRadiationData().imp_label[ind].replace("_", ""),
+            )
 
     axis.legend(loc="best", ncol=4)
     axis.minorticks_on()
@@ -13976,13 +13964,13 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
             ]
             avg_ionisation = np.mean(rel_ion_state)
             avg_ionisation_percentages.append((
-                ImpurityRadiationData().imp_label[imp],
+                ImpurityRadiationData().imp_label[imp].replace("_", ""),
                 avg_ionisation,
             ))
             axis.plot(
                 np.linspace(0, 1, n_plasma_profile_elements),
                 rel_ion_state,
-                label=f"{ImpurityRadiationData().imp_label[imp]} (Z={z_max}): avg {avg_ionisation:.1f}%",
+                label=f"{ImpurityRadiationData().imp_label[imp].replace('_', '')} (Z={z_max}): avg {avg_ionisation:.1f}%",
             )
     axis.set_ylabel("Relative Ionisation State [% of $Z$]")
     axis.legend()

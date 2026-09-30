@@ -66,12 +66,12 @@ class ImpurityRadiationData:
 
     imp_label: list[str] = field(
         default_factory=lambda: np.array([
-            "H",
+            "H_",
             "He",
             "Be",
-            "C",
-            "N",
-            "O",
+            "C_",
+            "N_",
+            "O_",
             "Ne",
             "Si",
             "Ar",
@@ -79,7 +79,7 @@ class ImpurityRadiationData:
             "Ni",
             "Kr",
             "Xe",
-            "W",
+            "W_",
         ])
     )
     """Labels for impurity species"""
