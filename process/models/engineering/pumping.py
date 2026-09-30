@@ -183,7 +183,7 @@ def coolant_friction_pressure_drop(
     darcy_friction_factor = darcy_friction_haaland(
         reynolds=reynolds_number,
         roughness_channel=roughness_channel,
-        radius_channel=radius_channel,
+        dia_channel=dia_pipe,
     )
 
     # Pressure drop coefficient
@@ -267,7 +267,7 @@ def pipe_hydraulic_diameter(
 
 
 def darcy_friction_haaland(
-    reynolds: float, roughness_channel: float, radius_channel: float
+    reynolds: float, roughness_channel: float, dia_channel: float
 ) -> float:
     """Calculate Darcy friction factor using the Haaland equation.
 
@@ -276,9 +276,9 @@ def darcy_friction_haaland(
     reynolds:
         Reynolds number.
     roughness_channel:
-        Roughness of the first wall coolant channel (m).
-    radius_channel:
-        Radius of the first wall coolant channel (m).
+        Roughness of the coolant channel (m).
+    dia_channel:
+        Hydraulic diameter of the coolant channel (m).
 
     Returns
     -------
@@ -295,7 +295,7 @@ def darcy_friction_haaland(
     [1] https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation
     """
     # Bracketed term in Haaland equation
-    bracket = (roughness_channel / radius_channel / 3.7) ** 1.11 + 6.9 / reynolds
+    bracket = (roughness_channel / dia_channel / 3.7) ** 1.11 + 6.9 / reynolds
 
     # Calculate Darcy friction factor
     return (1.8 * np.log10(bracket)) ** (-2)
@@ -492,7 +492,7 @@ def gnielinski_heat_transfer_coefficient(
     f = darcy_friction_haaland(
         reynolds=reynolds,
         roughness_channel=roughness_channel,
-        radius_channel=radius_channel,
+        dia_channel=2 * radius_channel,
     )
 
     # Calculate the Nusselt number
