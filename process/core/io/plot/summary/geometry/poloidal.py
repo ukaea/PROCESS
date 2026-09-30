@@ -16,21 +16,23 @@ from process.core.io.plot.summary.constants import (
     VESSEL_COLOUR,
     thin,
 )
-from process.core.io.plot.summary.geometry.build import (
-    cumulative_radial_build,
-)
-from process.core.io.plot.summary.magnets import (
+from process.core.io.plot.summary.magnets.pf import (
     plot_pf_coils,
+)
+from process.core.io.plot.summary.magnets.tf import (
     plot_tf_coils,
 )
-from process.core.io.plot.summary.plasma import (
+from process.core.io.plot.summary.plasma.physics import (
     plot_plasma,
+)
+from process.core.io.plot.summary.radial_build import (
+    cumulative_radial_build,
 )
 from process.core.io.plot.summary.rendering import (
     draw_annotation,
     draw_text,
 )
-from process.core.io.plot.summary.reporting import (
+from process.core.io.plot.summary.reporting.misc import (
     plot_centre_cross,
 )
 from process.data_structure.physics_variables import DivertorNumberModels
@@ -54,7 +56,7 @@ from process.models.geometry.vacuum_vessel import (
 
 if TYPE_CHECKING:
     from process.core.io.mfile import MFile
-    from process.core.io.plot.summary.reporting import (
+    from process.core.io.plot.summary.reporting.misc import (
         RadialBuild,
     )
 

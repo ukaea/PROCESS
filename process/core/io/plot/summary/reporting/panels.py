@@ -14,16 +14,17 @@ from process.core.io.plot.summary.common import (
     box_style,
     setup_axis,
 )
-from process.core.io.plot.summary.geometry import (
+from process.core.io.plot.summary.geometry.poloidal import (
     poloidal_cross_section,
 )
-from process.core.io.plot.summary.plasma import (
+from process.core.io.plot.summary.plasma.physics import (
     plot_plasma,
 )
 from process.core.io.plot.summary.rendering import (
     draw_annotation,
     draw_text,
 )
+from process.core.io.plot.summary.reporting.text import plot_info
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
 
@@ -31,93 +32,6 @@ if TYPE_CHECKING:
     from process.core.io.plot.summary.reporting.misc import (
         RadialBuild,
     )
-
-
-def plot_info(axis: plt.Axes, data, mfile: MFile, scan: int):
-    """Function to plot data in written form on a matplotlib plot.
-
-    Parameters
-    ----------
-    axis :
-        axis object to plot to
-    data :
-        plot information
-    mfile :
-        MFILE
-    scan :
-        scan number to use
-    """
-    eqpos = 0.75
-    for i in range(len(data)):
-        colorflag = "black"
-        if mfile.data[data[i][0]].exists:
-            if mfile.data[data[i][0]].var_flag == "ITV":
-                colorflag = "red"
-            elif mfile.data[data[i][0]].var_flag == "OP":
-                colorflag = "blue"
-        draw_text(axis, 0, -i, data[i][1], color=colorflag, ha="left", va="center")
-        if isinstance(data[i][0], str):
-            if not data[i][0]:
-                draw_text(axis, eqpos, -i, "\n", ha="left", va="center")
-            elif data[i][0][0] == "#":
-                draw_text(
-                    axis,
-                    -0.05,
-                    -i,
-                    f"{data[i][0][1:]}\n",
-                    ha="left",
-                    va="center",
-                )
-            elif data[i][0][0] == "!":
-                value = data[i][0][1:].replace('"', "")
-                draw_text(
-                    axis,
-                    0.4,
-                    -i,
-                    f"-->  {value} {data[i][2]}",
-                    ha="left",
-                    va="center",
-                )
-            elif mfile.data[data[i][0]].exists:
-                dat = mfile.get(data[i][0], scan=scan)
-                if isinstance(dat, str):
-                    value = dat
-                else:
-                    value = f"{mfile.get(data[i][0], scan=scan):.4g}"
-                if "alpha" in data[i][0]:
-                    value = str(float(value) + 1.0)
-                draw_text(
-                    axis,
-                    eqpos,
-                    -i,
-                    f"= {value} {data[i][2]}",
-                    color=colorflag,
-                    ha="left",
-                    va="center",
-                )
-            else:
-                mfile.get(data[i][0], scan=-1)
-                draw_text(
-                    axis,
-                    eqpos,
-                    -i,
-                    "= ERROR! Var missing",
-                    color=colorflag,
-                    ha="left",
-                    va="center",
-                )
-        else:
-            dat = data[i][0]
-            value = dat if isinstance(dat, str) else f"{data[i][0]:.4g}"
-            draw_text(
-                axis,
-                eqpos,
-                -i,
-                f"= {value} {data[i][2]}",
-                color=colorflag,
-                ha="left",
-                va="center",
-            )
 
 
 def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
@@ -642,6 +556,5 @@ def plot_cover_page(
 __all__ = [
     "plot_cover_page",
     "plot_header",
-    "plot_info",
     "plot_separatrix_power_split",
 ]
