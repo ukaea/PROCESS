@@ -320,7 +320,7 @@ def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library):
     }
 
     dpres_total, _ = blanket_library.total_pressure_drop(False, **data)
-    assert dpres_total == pytest.approx(5884.982168510442)
+    assert dpres_total == pytest.approx(5839.298437354936)
 
 
 def test_deltap_tot_outboard_blanket_breeder_liquid(monkeypatch, blanket_library):
@@ -349,7 +349,7 @@ def test_deltap_tot_outboard_blanket_breeder_liquid(monkeypatch, blanket_library
     }
 
     dpres_total, _ = blanket_library.total_pressure_drop(False, **data)
-    assert dpres_total == pytest.approx(56.95922064419226)
+    assert dpres_total == pytest.approx(56.66392220444523)
 
 
 class ComponentHalfHeightParam(NamedTuple):

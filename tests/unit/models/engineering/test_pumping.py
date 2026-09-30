@@ -41,7 +41,7 @@ def test_gnielinski_heat_transfer_coefficient():
         visc_coolant=4.0416219836935569e-05,
         thermcond_coolant=0.3211653052986152,
         roughness_channel=6e-8,
-    ) == pytest.approx(1929.2042015869506)
+    ) == pytest.approx(1928.3502714369304)
 
 
 def test_calculate_reynolds_number():
@@ -147,7 +147,7 @@ class CoolantFrictionLossParam(NamedTuple):
             visc_coolant=3.604452999475736e-05,
             vel_coolant=32.753134225223164,
             label="Inboard first wall",
-            expected_pressure_drop_out=36213.58989742931,
+            expected_pressure_drop_out=35416.899017164345,
         ),
         CoolantFrictionLossParam(
             radius_channel=1.0,

@@ -52,19 +52,19 @@ class CoolantFrictionLossParameters:
     """Parameters for calculating coolant friction losses."""
 
     dpres_total: float
-    """Total pressure drop across the coolant channel (Pa)"""
+    """Total pressure drop across the coolant channel [Pa]"""
     dpres_straight: float
-    """Pressure drop due to straight length of the coolant channel (Pa)"""
+    """Pressure drop due to straight length of the coolant channel [Pa]"""
     dpres_90: float
-    """Pressure drop due to 90 degree bends in the coolant channel (Pa)"""
+    """Pressure drop due to 90 degree bends in the coolant channel [Pa]"""
     dpres_90_total: float
-    """Total pressure drop due to 90 degree bends in the coolant channel (Pa)"""
+    """Total pressure drop due to 90 degree bends in the coolant channel [Pa]"""
     dpres_180: float
-    """Pressure drop due to 180 degree bends in the coolant channel (Pa)"""
+    """Pressure drop due to 180 degree bends in the coolant channel [Pa]"""
     dpres_180_total: float
-    """Total pressure drop due to 180 degree bends in the coolant channel (Pa)"""
+    """Total pressure drop due to 180 degree bends in the coolant channel [Pa]"""
     dpres_bends_total: float
-    """Total pressure drop due to bends in the coolant channel (Pa)"""
+    """Total pressure drop due to bends in the coolant channel [Pa]"""
     reynolds_number: float
     """Reynolds number of the coolant flow in the channel"""
     darcy_friction_factor: float
@@ -72,7 +72,7 @@ class CoolantFrictionLossParameters:
     f_straight: float
     """Friction factor for straight length of the coolant channel"""
     len_straight: float
-    """Length of straight sections of the coolant channel (m)"""
+    """Length of straight sections of the coolant channel [m]"""
     f_elbow_90: float
     """Friction factor for 90 degree bends in the coolant channel"""
     f_elbow_180: float
@@ -166,7 +166,7 @@ def coolant_friction_pressure_drop(
         b_bz_liq=b_bz_liq,
     )
 
-    # Reynolds number
+    # Reynolds number (Re)
     reynolds_number = calculate_reynolds_number(
         den_coolant=den_coolant,
         vel_coolant=vel_coolant,
@@ -241,14 +241,21 @@ def coolant_friction_pressure_drop(
 def pipe_hydraulic_diameter(
     i_channel_shape, radius_fw_channel: float, a_bz_liq: float, b_bz_liq: float
 ) -> float:
-    """Caculate the hydraulic diameter (m) for a given coolant pipe size/shape.
+    """Caculate the hydraulic diameter [m] for a given coolant pipe size/shape.
 
 
     Parameters
     ----------
     i_channel_shape :
         switch for circular or rectangular channel crossection.
-        Shape depends on whether primary or secondary coolant
+        Shape depends on whether primary or secondary coolant is used.
+        1 = circular channel (primary coolant)
+        2 = rectangular channel (secondary coolant)
+
+    Returns
+    -------
+    :
+        Hydraulic diameter of the coolant channel [m].
 
     Raises
     ------
@@ -276,9 +283,9 @@ def darcy_friction_haaland(
     reynolds:
         Reynolds number.
     roughness_channel:
-        Roughness of the coolant channel (m).
+        Roughness of the coolant channel [m].
     dia_channel:
-        Hydraulic diameter of the coolant channel (m).
+        Hydraulic diameter of the coolant channel [m].
 
     Returns
     -------
@@ -287,8 +294,8 @@ def darcy_friction_haaland(
 
     Notes
     -----
-    The Haaland equation is an approximation to the implicit Colebrook-White equation.
-    It is used to calculate the Darcy friction factor for turbulent flow in pipes.
+    - The Haaland equation is an approximation to the implicit Colebrook-White equation.
+    - It is used to calculate the Darcy friction factor for turbulent flow in pipes.
 
     References
     ----------
@@ -322,19 +329,19 @@ def coolant_pumping_power(
         Switch for primary coolant or secondary coolant/breeder
         (1=primary He/H2O, 2=secondary PbLi/Li).
     temp_coolant_pump_outlet : float
-        Pump outlet temperature (K).
+        Pump outlet temperature [K].
     temp_coolant_pump_inlet : float
-        Pump inlet temperature (K).
+        Pump inlet temperature [K].
     pres_coolant_pump_inlet : float
-        Pump inlet pressure (Pa).
+        Pump inlet pressure [Pa].
     dpres_coolant : float
-        Coolant pressure drop (Pa).
+        Coolant pressure drop [Pa].
     mflow_coolant_total : float
-        Total coolant mass flow rate in (kg/s).
+        Total coolant mass flow rate [kg/s].
     i_coolant_type : int
         Type of FW/blanket coolant (e.g., 1=Helium, 2=Water)
     den_coolant : float
-        Density of coolant or liquid breeder (kg/m³).
+        Density of coolant or liquid breeder [kg/m³].
     etaiso : float
         Isentropic efficiency of the pump for primary coolant.
     etaiso_liq : float
@@ -342,8 +349,8 @@ def coolant_pumping_power(
 
     Returns
     -------
-    float
-        Pumping power in MW.
+    :float
+        Pumping power [MW].
 
     Raises
     ------
@@ -352,10 +359,10 @@ def coolant_pumping_power(
 
     References
     ----------
-        - Idel'Cik, I. E. (1969), Memento des pertes de charge
-        - S.P. Sukhatme (2005), A Textbook on Heat Transfer
+    [1] Idel'Cik, I. E. (1969), Memento des pertes de charge
+    [2] S.P. Sukhatme (2005), A Textbook on Heat Transfer
     """
-    # Pump outlet pressure (Pa)
+    # Pump outlet pressure [Pa]
     # The pump adds the pressure lost going through the coolant channels back
     pres_coolant_pump_outlet = pres_coolant_pump_inlet + dpres_coolant
 
@@ -370,8 +377,8 @@ def coolant_pumping_power(
             pressure=pres_coolant_pump_outlet,
         )
 
-        # Real gamma (cp/cv) at the pump outlet state, so liquid water (gamma~1)
-        # and superheated steam (gamma~1.3) are both handled correctly
+        # Real gamma (cp/cv) at the pump outlet state, so liquid water (γ~1) # noqa: RUF003
+        # and superheated steam (γ~1.3) are both handled correctly # noqa: RUF003
         gamma = (
             pump_outlet_fluid_properties.specific_heat_const_p
             / pump_outlet_fluid_properties.specific_heat_const_v
@@ -380,7 +387,7 @@ def coolant_pumping_power(
         # Assume isentropic pump so that s1 = s2
         s1 = pump_outlet_fluid_properties.entropy
 
-        # Get specific enthalpy at the outlet (J/kg) before pump using pressure and
+        # Get specific enthalpy at the outlet [J/kg] before pump using pressure and
         # entropy s1
         pump_inlet_fluid_properties = FluidProperties.of(
             fluid_name=CoolantType(i_coolant_type).full_name,
@@ -388,7 +395,7 @@ def coolant_pumping_power(
             entropy=s1,
         )
 
-        # Pumping power (MW) is given by enthalpy change, with a correction for
+        # Pumping power [MW] is given by enthalpy change, with a correction for
         # the isentropic efficiency of the pump.
         fp = (
             temp_coolant_pump_outlet
@@ -442,28 +449,28 @@ def gnielinski_heat_transfer_coefficient(
     Parameters
     ----------
     mflux_coolant:
-        Coolant mass flux in a single channel (kg/m²/s).
+        Coolant mass flux in a single channel [kg/m²/s].
     den_coolant:
-        Coolant density (average of inlet and outlet) (kg/m³).
+        Coolant density (average of inlet and outlet) [kg/m³].
     radius_channel:
-        Coolant pipe radius (m).
+        Coolant pipe radius [m].
     heatcap_coolant:
-        Coolant specific heat capacity (average of inlet and outlet) (J/kg/K).
+        Coolant specific heat capacity (average of inlet and outlet) [J/kg/K].
     visc_coolant:
-        Coolant viscosity (average of inlet and outlet) (Pa.s).
+        Coolant viscosity (average of inlet and outlet) [Pa.s].
     thermcond_coolant:
-        Thermal conductivity of coolant (average of inlet and outlet) (W/m.K).
+        Thermal conductivity of coolant (average of inlet and outlet) [W/m.K].
     roughness_channel:
-        Roughness of the coolant channel (m).
+        Roughness of the coolant channel [m].
 
     Returns
     -------
     :
-        Heat transfer coefficient (W/m²K).
+        Heat transfer coefficient [W/m²K].
 
     Notes
     -----
-    Gnielinski correlation. Ignore the distinction between wall and
+    - Gnielinski correlation. Ignore the distinction between wall and
     bulk temperatures. Valid for: 3000 < Re < 5e6, 0.5 < Pr < 2000
 
     References
@@ -477,7 +484,7 @@ def gnielinski_heat_transfer_coefficient(
     # Calculate flow velocity (m/s)
     vel_coolant = mflux_coolant / den_coolant
 
-    # Calculate Reynolds number
+    # Calculate Reynolds number (Re)
     reynolds = calculate_reynolds_number(
         den_coolant=den_coolant,
         vel_coolant=vel_coolant,
@@ -485,7 +492,7 @@ def gnielinski_heat_transfer_coefficient(
         visc_coolant=visc_coolant,
     )
 
-    # Calculate Prandtl number
+    # Calculate Prandtl number (Pr)
     pr = heatcap_coolant * visc_coolant / thermcond_coolant
 
     # Calculate Darcy friction factor, using Haaland equation
@@ -495,7 +502,7 @@ def gnielinski_heat_transfer_coefficient(
         dia_channel=2 * radius_channel,
     )
 
-    # Calculate the Nusselt number
+    # Calculate the Nusselt number (Nu)
     nusselt = (
         (f / 8.0)
         * (reynolds - 1000.0)
@@ -503,7 +510,7 @@ def gnielinski_heat_transfer_coefficient(
         / (1 + 12.7 * np.sqrt(f / 8.0) * (pr ** (2 / 3) - 1.0))
     )
 
-    # Calculate the heat transfer coefficient (W/m^2K)
+    # Calculate the heat transfer coefficient  [W/m²K]
     heat_transfer_coefficient = nusselt * thermcond_coolant / (2.0 * radius_channel)
 
     # Check that Reynolds number is in valid range for the Gnielinski correlation
@@ -528,23 +535,23 @@ def calculate_reynolds_number(
     radius_channel: float,
     visc_coolant: float,
 ) -> float:
-    """Calculate Reynolds number for flow in a pipe.
+    """Calculate Reynolds number (Re) for flow in a pipe.
 
     Parameters
     ----------
     den_coolant:
-        Coolant density (average of inlet and outlet) (kg/m³).
+        Coolant density (average of inlet and outlet) [kg/m³].
     vel_coolant:
-        Coolant velocity in a single channel (m/s).
+        Coolant velocity in a single channel [m/s].
     radius_channel:
-        Coolant pipe radius (m).
+        Coolant pipe radius [m].
     visc_coolant:
-        Coolant viscosity (average of inlet and outlet) (Pa.s).
+        Coolant viscosity (average of inlet and outlet) [Pa.s].
 
     Returns
     -------
     :
-        Reynolds number.
+        Reynolds number (Re).
 
     """
     # Calculate pipe diameter (m)
@@ -565,17 +572,17 @@ def elbow_coeff(
     Parameters
     ----------
     radius_pipe_elbow : float
-        Pipe elbow radius (m)
+        Pipe elbow radius [m].
     deg_pipe_elbow : float
-        Pipe elbow angle (degrees)
+        Pipe elbow angle [degrees]
     darcy_friction : float
         Darcy friction factor
     dia_pipe : float
-        Pipe diameter (m)
+        Pipe diameter [m]
 
     Returns
     -------
-    float
+    :float
         Elbow coefficient for pressure drop calculation
 
     Raises
@@ -637,22 +644,22 @@ def calculate_required_mass_flow_rate(
     Parameters
     ----------
     p_heat_total:
-        Total heat load to be removed (W).
+        Total heat load to be removed [W].
     heatcap_coolant:
-        Specific heat capacity of the coolant (J/kg/K).
+        Specific heat capacity of the coolant [J/kg/K].
     temp_in_coolant:
-        Inlet temperature of the coolant (K).
+        Inlet temperature of the coolant [K].
     temp_out_coolant:
-        Outlet temperature of the coolant (K).
+        Outlet temperature of the coolant [K].
 
     Returns
     -------
-    float
-        Required mass flow rate of the coolant (kg/s).
+    :float
+        Required mass flow rate of the coolant [kg/s].
 
     Notes
     -----
-    The heat capacity is assumed to be constant over the temperature range of the
+    - The heat capacity is assumed to be constant over the temperature range of the
     coolant.
 
     """
