@@ -573,7 +573,8 @@ class NeutronFluxProfile:
         if self.contains_upscatter:
             raise NotImplementedError(
                 "This program has not been validated against systems "
-                "containing up-scatter yet."
+                "containing up-scatter yet. Please raise an issue on the "
+                "process github/comment on a relevant issue if one exists."
             )  # Sum over the addition in neutron flux due to the 2nd, 3rd, 4th
             # etc. generation of neutrons, which should eventually converge.
         for num_layer, mat in enumerate(self.materials):
