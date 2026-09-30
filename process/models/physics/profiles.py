@@ -367,8 +367,11 @@ class ElectronDensityProfile(Profile):
                     nd_vol_average=self.data.physics.nd_plasma_electrons_vol_avg,
                     alphan=self.data.physics.alphan,
                 )
-        if self.data.physics.i_equilibrium_solve == 1 and self.equilibrium is not None:
-            self.data.physics.nd_plasma_electron_on_axis = self.equilibrium.ne_axis
+        if (
+            self.data.physics.i_equilibrium_solve == 1
+            and self.data.veqpy.equilibrium is not None
+        ):
+            self.data.physics.nd_plasma_electron_on_axis = self.data.veqpy.ne_axis_m3
         self.data.physics.nd_plasma_ions_on_axis = (
             self.data.physics.nd_plasma_ions_total_vol_avg
             / self.data.physics.nd_plasma_electrons_vol_avg
@@ -568,8 +571,13 @@ class ElectronTemperatureProfile(Profile):
                     alphat=self.data.physics.alphat,
                     tbeta=self.data.physics.tbeta,
                 )
-        if self.data.physics.i_equilibrium_solve == 1 and self.equilibrium is not None:
-            self.data.physics.temp_plasma_electron_on_axis_kev = self.equilibrium.te_axis
+        if (
+            self.data.physics.i_equilibrium_solve == 1
+            and self.data.veqpy.equilibrium is not None
+        ):
+            self.data.physics.temp_plasma_electron_on_axis_kev = (
+                self.data.veqpy.te_axis_kev
+            )
 
 
 def calculate_vol_avg_of_profile(

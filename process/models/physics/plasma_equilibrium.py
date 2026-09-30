@@ -49,17 +49,23 @@ def clear_veqpy_equilibrium_state(data) -> None:
     data.veqpy.clear()
 
 
-def store_veqpy_equilibrium(data, eq, ne_axis: float, te_axis: float) -> None:
+def store_veqpy_equilibrium(
+    data,
+    eq,
+    ne_axis: float,
+    te_axis: float,
+    f_temp_plasma_electron_density_vol_avg: float,
+) -> None:
     """Store veqpy equilibrium on ``data.veqpy`` (not on Model instances)."""
     data.veqpy.equilibrium = eq
     data.veqpy.ne_axis_m3 = float(ne_axis)
     data.veqpy.te_axis_kev = float(te_axis)
+    data.veqpy.f_temp_plasma_electron_density_vol_avg = float(
+        f_temp_plasma_electron_density_vol_avg
+    )
 
 
 class PlasmaEquilibrium(Model):
-    """Solve veqpy equilibria; results are stored on ``data.physics`` when bound."""
-
-
     def __init__(
         self,
         alphaj,
@@ -69,8 +75,8 @@ class PlasmaEquilibrium(Model):
         tbeta,
         nd_plasma_pedestal_electron,
         nd_plasma_separatrix_electron,
-        temp_plasma_pedestal_kev,
-        temp_plasma_separatrix_kev,
+        temp_plasma_pedestal_electron_kev,
+        temp_plasma_separatrix_electron_kev,
         radius_plasma_pedestal_density_norm,
         radius_plasma_pedestal_temp_norm,
         b_plasma_toroidal_on_axis,
@@ -86,8 +92,8 @@ class PlasmaEquilibrium(Model):
         self.tbeta = tbeta
         self.nd_plasma_pedestal_electron = nd_plasma_pedestal_electron
         self.nd_plasma_separatrix_electron = nd_plasma_separatrix_electron
-        self.temp_plasma_pedestal_kev = temp_plasma_pedestal_kev
-        self.temp_plasma_separatrix_kev = temp_plasma_separatrix_kev
+        self.temp_plasma_pedestal_electron_kev = temp_plasma_pedestal_electron_kev
+        self.temp_plasma_separatrix_electron_kev = temp_plasma_separatrix_electron_kev
         self.radius_plasma_pedestal_density_norm = radius_plasma_pedestal_density_norm
         self.radius_plasma_pedestal_temp_norm = radius_plasma_pedestal_temp_norm
         self.rminor = rminor
@@ -96,16 +102,11 @@ class PlasmaEquilibrium(Model):
         self.delta = triang
         self.b_toroidal_rmajor = b_plasma_toroidal_on_axis
         self.eq = None
-        self.te_profile = ElectronTemperatureProfile()
-        self.ne_profile = ElectronDensityProfile()
         self.ne_axis = 0.0
         self.te_axis = 0.0
         self.f_temp_plasma_electron_density_vol_avg = 0.0
 
 
-    def _bind_profile_data(self):
-        self.te_profile.data = self.data
-        self.ne_profile.data = self.data
     def run(self):
         """PlasmaEquilibrium is invoked on demand, not in the main model loop."""
 
@@ -197,92 +198,92 @@ class PlasmaEquilibrium(Model):
         return float(eq.grid.integrate(fun) / vol)
 
     @staticmethod
-    def nd_profile(
+    def ndensity_profile(
         rho,
         i_plasma_pedestal,
         alphan,
-        ne_ped,
-        ne_sep,
-        ne_axis,
+        nd_ped,
+        nd_sep,
+        nd_axis,
         rho_nd_ped,
     ):
         """Electron density vs rho (parabolic or HELIOS-style pedestal)."""
-        ne = np.zeros_like(rho)
+        ndensity = np.zeros_like(rho)
         if i_plasma_pedestal == 0:
-            return ne_axis * (1 - rho**2) ** alphan
-        if ne_axis < ne_ped:
+            return nd_axis * (1 - rho**2) ** alphan
+        if nd_axis < nd_ped:
             logger.info(
                 "NPROFILE: density pedestal is higher than core density. %s, %s",
-                ne_ped,
-                ne_axis,
+                nd_ped,
+                nd_axis,
             )
         rho_index = rho <= rho_nd_ped
-        ne[rho_index] = (
-            ne_ped
-            + (ne_axis - ne_ped)
+        ndensity[rho_index] = (
+            nd_ped
+            + (nd_axis - nd_ped)
             * (1 - (rho[rho_index] / rho_nd_ped) ** 2) ** alphan
         )
-        ne[~rho_index] = ne_sep + (ne_ped - ne_sep) * (1 - rho[~rho_index]) / (
+        ndensity[~rho_index] = nd_sep + (nd_ped - nd_sep) * (1 - rho[~rho_index]) / (
             1 - rho_nd_ped
         )
-        return ne
+        return ndensity
 
     @staticmethod
-    def te_profile(
+    def temp_profile(
         rho,
         i_plasma_pedestal,
         alphat,
         tbeta,
-        te_ped,
-        te_sep,
-        te_axis,
+        temp_ped,
+        temp_sep,
+        temp_axis,
         rho_temp_ped,
     ):
         """Electron temperature vs rho (parabolic or HELIOS-style pedestal)."""
         if i_plasma_pedestal == 0:
-            return np.maximum(te_axis * (1 - rho**2) ** alphat, 1e-8)
-        if te_axis < te_ped:
+            return np.maximum(temp_axis * (1 - rho**2) ** alphat, 1e-8)
+        if temp_axis < temp_ped:
             logger.info(
                 "TPROFILE: temperature pedestal is higher than core temperature. %s, %s",
-                te_ped,
-                te_axis,
+                temp_ped,
+                temp_axis,
             )
-        te = np.zeros_like(rho)
+        temp = np.zeros_like(rho)
         rho_index = rho <= rho_temp_ped
-        te[rho_index] = (
-            te_ped
-            + (te_axis - te_ped)
+        temp[rho_index] = (
+            temp_ped
+            + (temp_axis - temp_ped)
             * (1 - (rho[rho_index] / rho_temp_ped) ** tbeta)
             ** alphat
         )
-        te[~rho_index] = te_sep + (te_ped - te_sep) * (1 - rho[~rho_index]) / (
+        temp[~rho_index] = temp_sep + (temp_ped - temp_sep) * (1 - rho[~rho_index]) / (
             1 - rho_temp_ped
         )
-        if (te < 0).any():
+        if (temp < 0).any():
             raise ProcessValueError("Negative temperature in plasma profile")
-        return te
+        return temp
 
     def iterate_equilibrium(self, ne_axis, te_axis, f_pres_ie, current):
         """One veqpy solve for given axis ne/te; return volume averages and q95."""
         rho = np.linspace(0.0, 1.0, 101)
         j_toroidal_array = (1.0 - rho**2) ** self.alphaj
-        ne = self.nd_profile(
+        ne = self.ndensity_profile(
             rho=rho,
             i_plasma_pedestal=self.i_plasma_pedestal,
             alphan=self.alphan,
-            ne_ped=self.nd_plasma_pedestal_electron,
-            ne_sep=self.nd_plasma_separatrix_electron,
-            ne_axis=ne_axis,
+            nd_ped=self.nd_plasma_pedestal_electron,
+            nd_sep=self.nd_plasma_separatrix_electron,
+            nd_axis=ne_axis,
             rho_nd_ped=self.radius_plasma_pedestal_density_norm,
         )
-        te = self.te_profile(
+        te = self.temp_profile(
             rho=rho,
             i_plasma_pedestal=self.i_plasma_pedestal,
             alphat=self.alphat,
             tbeta=self.tbeta,
-            te_ped=self.temp_plasma_pedestal_kev,
-            te_sep=self.temp_plasma_separatrix_kev,
-            te_axis=te_axis,
+            temp_ped=self.temp_plasma_pedestal_electron_kev,
+            temp_sep=self.temp_plasma_separatrix_electron_kev,
+            temp_axis=te_axis,
             rho_temp_ped=self.radius_plasma_pedestal_temp_norm,
         )
         pres = ne * te * constants.KILOELECTRON_VOLT * (1.0 + f_pres_ie)
@@ -340,44 +341,47 @@ class PlasmaEquilibrium(Model):
         if ne_axis is None:
             density = ElectronDensityProfile
             if (
-                PlasmaProfileShapeType(physics.i_plasma_pedestal)
+                PlasmaProfileShapeType(self.i_plasma_pedestal)
                 == PlasmaProfileShapeType.PARABOLIC_PROFILE
             ):
                 ne_axis = density.calculate_parabolic_profile_on_axis_density(
                     ne_vol_avg_target,
-                    physics.alphan,
+                    self.alphan,
                 )
             else:
                 ne_axis = density.calculate_pedestal_profile_on_axis_density(
-                    physics.radius_plasma_pedestal_density_norm,
-                    physics.nd_plasma_pedestal_electron,
-                    physics.nd_plasma_separatrix_electron,
+                    self.radius_plasma_pedestal_density_norm,
+                    self.nd_plasma_pedestal_electron,
+                    self.nd_plasma_separatrix_electron,
                     ne_vol_avg_target,
-                    physics.alphan,
+                    self.alphan,
                 )
         if te_axis is None:
             temperature = ElectronTemperatureProfile
             if (
-                PlasmaProfileShapeType(physics.i_plasma_pedestal)
+                PlasmaProfileShapeType(self.i_plasma_pedestal)
                 == PlasmaProfileShapeType.PARABOLIC_PROFILE
             ):
                 te_axis = temperature.calculate_parabolic_profile_on_axis_temperature(
                     te_vol_avg_target,
-                    physics.alphat,
+                    self.alphat,
                 )
             else:
                 te_axis = temperature.calculate_pedestal_profile_on_axis_temperature(
-                    physics.radius_plasma_pedestal_temp_norm,
-                    physics.temp_plasma_pedestal_electron_kev,
-                    physics.temp_plasma_separatrix_electron_kev,
+                    self.radius_plasma_pedestal_temp_norm,
+                    self.temp_plasma_pedestal_electron_kev,
+                    self.temp_plasma_separatrix_electron_kev,
                     te_vol_avg_target,
-                    physics.alphat,
-                    physics.tbeta,
+                    self.alphat,
+                    self.tbeta,
                 )
 
         for _ in range(max_iter):
-            ne_vol_avg, te_vol_avg, q95, eq = self.iterate_equilibrium(
-                ne_axis, te_axis, f_pres_ie, current
+            ne_vol_avg, te_vol_avg, q95, f_temp_plasma_electron_density_vol_avg, eq = self.iterate_equilibrium(
+                f_pres_ie=f_pres_ie,
+                ne_axis=ne_axis,
+                te_axis=te_axis,
+                current=current,
             )
             ne_err = abs(ne_vol_avg - ne_vol_avg_target) / ne_vol_avg_target
             te_err = abs(te_vol_avg - te_vol_avg_target) / te_vol_avg_target
@@ -387,7 +391,22 @@ class PlasmaEquilibrium(Model):
                 or abs(q95 - q95_target) / q95_target <= tol
             )
             if ne_err <= tol and te_err <= tol and q95_ok:
-                return ne_axis, te_axis, ne_vol_avg, te_vol_avg, q95, current, eq
+                self.ne_axis = ne_axis
+                self.te_axis = te_axis
+                self.eq = eq
+                self.f_temp_plasma_electron_density_vol_avg = (
+                    f_temp_plasma_electron_density_vol_avg
+                )
+                return (
+                    ne_axis,
+                    te_axis,
+                    ne_vol_avg,
+                    te_vol_avg,
+                    q95,
+                    current,
+                    f_temp_plasma_electron_density_vol_avg,
+                    eq,
+                )
 
             if ne_vol_avg > 0.0:
                 ne_axis *= ne_vol_avg_target / ne_vol_avg
@@ -403,13 +422,13 @@ class PlasmaEquilibrium(Model):
                     self.nd_plasma_pedestal_electron,
                 )
                 ne_axis = self.nd_plasma_pedestal_electron
-            if te_axis < self.temp_plasma_pedestal_kev:
+            if te_axis < self.temp_plasma_pedestal_electron_kev:
                 logger.warning(
                     "Clamping te_axis from %g to pedestal %g keV",
                     te_axis,
-                    self.temp_plasma_pedestal_kev,
+                    self.temp_plasma_pedestal_electron_kev,
                 )
-                te_axis = self.temp_plasma_pedestal_kev
+                te_axis = self.temp_plasma_pedestal_electron_kev
 
         raise RuntimeError(
             "Failed to converge ne_axis/te_axis/q95: "
