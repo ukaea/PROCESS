@@ -11,8 +11,6 @@ import numpy as np
 class PlasmaConfinementTransitionModel(IntEnum):
     """Enum for plasma L -> H and L -> I transition power threshold models."""
 
-    full_name: str
-
     ITER1996_NOMINAL = (1, "ITER-1996 Nominal")
     ITER1996_UPPER = (2, "ITER-1996 Upper")
     ITER1996_LOWER = (3, "ITER-1996 Lower")
