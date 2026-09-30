@@ -452,6 +452,17 @@ class PlasmaGeom(Model):
                 self.data.physics.kappa95 = self.data.physics.kappa / 1.12e0
                 self.data.physics.triang95 = self.data.physics.triang / 1.50e0
 
+            case PlasmaGeometryModelType.R_AND_Z_ARRAY:
+                r, z = self._lcfs_arrays()
+                zmax = np.max(np.abs(z))
+                self.data.physics.kappa = zmax / self.data.physics.rminor
+                r_zmax = r[np.argmax(np.abs(z))]
+                self.data.physics.triang = (
+                    self.data.physics.rmajor - r_zmax
+                ) / self.data.physics.rminor
+                self.data.physics.kappa95 = self.data.physics.kappa / 1.12e0
+                self.data.physics.triang95 = self.data.physics.triang / 1.50e0
+
             case _:
                 raise ProcessValueError(
                     "Illegal value for plasma geometry model type",
@@ -459,17 +470,6 @@ class PlasmaGeom(Model):
                 )
 
         # ======================================================================
-
-        if self.data.physics.i_plasma_geometry == PlasmaGeometryModelType.R_AND_Z_ARRAY:
-            r, z = self._lcfs_arrays()
-            zmax = np.max(np.abs(z))
-            self.data.physics.kappa = zmax / self.data.physics.rminor
-            r_zmax = r[np.argmax(np.abs(z))]
-            self.data.physics.triang = (
-                self.data.physics.rmajor - r_zmax
-            ) / self.data.physics.rminor
-            self.data.physics.kappa95 = self.data.physics.kappa / 1.12e0
-            self.data.physics.triang95 = self.data.physics.triang / 1.50e0
 
         #  Scrape-off layer thicknesses
         if self.data.physics.i_plasma_wall_gap == 0:
