@@ -17,27 +17,39 @@ from process.core.io.plot.summary.constants import (
     RADIAL_BUILD,
     vertical_lower,
 )
-from process.core.io.plot.summary.geometry import (
+from process.core.io.plot.summary.geometry.build import (
+    plot_geometry_info,
+    plot_radial_build,
+)
+from process.core.io.plot.summary.geometry.misc import (
     plot_blkt_pipe_bends,
     plot_blkt_structure,
+)
+from process.core.io.plot.summary.geometry.poloidal import (
     plot_first_wall_poloidal_cross_section,
     plot_first_wall_top_down_cross_section,
     plot_full_machine_poloidal_cross_section,
-    plot_geometry_info,
-    plot_radial_build,
     poloidal_cross_section,
+)
+from process.core.io.plot.summary.geometry.toroidal import (
     toroidal_cross_section,
 )
-from process.core.io.plot.summary.magnets import (
+from process.core.io.plot.summary.magnets.cables import (
     plot_cable_in_conduit_cable,
-    plot_corc_cable_geometry,
+    plot_hts_tape_geometry,
+)
+from process.core.io.plot.summary.magnets.cs import (
     plot_cs_coil_structure,
     plot_cs_turn_structure,
-    plot_hts_tape_geometry,
     plot_magnetics_info,
     plot_pf_cs_plasma_mutual_inductance,
-    plot_pf_dimensions,
     plot_physics_info,
+)
+from process.core.io.plot.summary.magnets.pf import (
+    plot_pf_dimensions,
+)
+from process.core.io.plot.summary.magnets.tf import (
+    plot_corc_cable_geometry,
     plot_quench_time_evolution,
     plot_resistive_tf_info,
     plot_resistive_tf_wp,
@@ -48,75 +60,95 @@ from process.core.io.plot.summary.magnets import (
     plot_tf_croco_turn,
     plot_tf_stress,
 )
-from process.core.io.plot.summary.plasma import (
-    plot_bootstrap_comparison,
+from process.core.io.plot.summary.plasma.confinement import (
     plot_brunner_divertor_power_split_comparison_stackplot,
     plot_confinement_time_comparison,
+    plot_sol_power_decay_length_comparison,
+)
+from process.core.io.plot.summary.plasma.current_drive import (
+    plot_bootstrap_comparison,
+)
+from process.core.io.plot.summary.plasma.overview import (
     plot_detailed_plasma_parameters,
-    plot_magnetic_fields_in_plasma,
     plot_main_plasma_information,
+)
+from process.core.io.plot.summary.plasma.physics import (
+    plot_magnetic_fields_in_plasma,
     plot_max_normalised_beta_comparison,
     plot_plasma_coloumb_logarithms,
     plot_plasma_current_comparison,
     plot_plasma_outboard_toroidal_ripple_map,
-    plot_sol_power_decay_length_comparison,
 )
 from process.core.io.plot.summary.power_flow import (
     plot_main_power_flow,
     plot_power_info,
 )
-from process.core.io.plot.summary.profiles import (
-    plot_beta_profiles,
+from process.core.io.plot.summary.profiles.atomic import (
     plot_collision_frequency_profile,
     plot_collision_time_profile,
-    plot_cs_hoop_stress_contour_profile,
-    plot_cs_hoop_stress_profile,
+    plot_debye_length_profile,
+    plot_electron_frequency_profile,
+    plot_ion_charge_profile,
+    plot_ion_frequency_profile,
+    plot_ion_slowing_down_time_profile,
+    plot_mean_free_path_profile,
+    plot_resistivity_profile,
+    plot_velocity_profile,
+)
+from process.core.io.plot.summary.profiles.misc import (
+    plot_line_brem_loss_function_profile,
+    plot_line_brem_power_density_profile,
+)
+from process.core.io.plot.summary.profiles.plasma import (
+    plot_beta_profiles,
+    plot_cumulative_plasma_thermal_energy_profiles,
+    plot_fusion_rate_contours,
+    plot_fusion_rate_profiles,
+    plot_jprofile,
+    plot_n_profiles,
+    plot_plasma_effective_charge_profile,
+    plot_plasma_poloidal_pressure_contours,
+    plot_plasma_pressure_profiles,
+    plot_plasma_thermal_energy_profiles,
+    plot_qprofile,
+    plot_t_profiles,
+)
+from process.core.io.plot.summary.profiles.radiation import (
     plot_cs_radial_stress_contour_profile,
     plot_cs_radial_stress_profile,
+    plot_larmor_radius_profile,
+    plot_plasma_pressure_gradient_profiles,
+    plot_rad_contour,
+)
+from process.core.io.plot.summary.profiles.stress import (
+    plot_cs_hoop_stress_contour_profile,
+    plot_cs_hoop_stress_profile,
     plot_cs_stress_time_profile,
     plot_cs_tresca_2d_contour,
     plot_cs_vertical_stress_profile,
     plot_cs_von_mises_2d_contour,
-    plot_cumulative_plasma_thermal_energy_profiles,
-    plot_debye_length_profile,
-    plot_electron_frequency_profile,
-    plot_fusion_rate_contours,
-    plot_fusion_rate_profiles,
-    plot_ion_charge_profile,
-    plot_ion_frequency_profile,
-    plot_ion_slowing_down_time_profile,
-    plot_jprofile,
-    plot_larmor_radius_profile,
-    plot_line_brem_loss_function_profile,
-    plot_line_brem_power_density_profile,
-    plot_mean_free_path_profile,
-    plot_n_profiles,
-    plot_plasma_effective_charge_profile,
-    plot_plasma_poloidal_pressure_contours,
-    plot_plasma_pressure_gradient_profiles,
-    plot_plasma_pressure_profiles,
-    plot_plasma_thermal_energy_profiles,
-    plot_qprofile,
-    plot_rad_contour,
-    plot_resistivity_profile,
-    plot_t_profiles,
-    plot_velocity_profile,
     plot_vertical_stress_contour_profile,
 )
-from process.core.io.plot.summary.reporting import (
+from process.core.io.plot.summary.reporting.constraints import (
+    plot_equality_constraint_equations,
+    plot_inequality_constraint_equations,
+)
+from process.core.io.plot.summary.reporting.layouts import (
+    plot_upper_vertical_build,
+)
+from process.core.io.plot.summary.reporting.misc import (
     RadialBuild,
-    plot_cover_page,
     plot_density_limit_comparison,
     plot_ebw_ecrh_coupling_graph,
-    plot_equality_constraint_equations,
     plot_fw_90_deg_pipe_bend,
     plot_h_threshold_comparison,
-    plot_header,
-    plot_inequality_constraint_equations,
     plot_iteration_variables,
     plot_lower_vertical_build,
+)
+from process.core.io.plot.summary.reporting.panels import (
+    plot_cover_page,
+    plot_header,
     plot_separatrix_power_split,
-    plot_upper_vertical_build,
 )
 from process.core.io.plot.summary.time_profiles import (
     plot_current_profiles_over_time,

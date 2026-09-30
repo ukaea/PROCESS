@@ -12,7 +12,7 @@ from process.core.io.plot.summary.common import (
     box_style,
     text_layout,
 )
-from process.core.io.plot.summary.plasma import (
+from process.core.io.plot.summary.plasma.physics import (
     reaction_plot_grid,
 )
 from process.core.io.plot.summary.profiles.misc import (

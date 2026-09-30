@@ -7,18 +7,68 @@ from typing import TYPE_CHECKING
 import numpy as np
 from scipy.interpolate import interp1d
 
-from process.core.io.plot.summary.profiles.radiation import (
-    read_imprad_data,
-)
 from process.core.io.plot.summary.rendering import (
     draw_text,
 )
 from process.models.geometry.plasma import plasma_geometry
+from process.models.physics.impurity_radiation import read_impurity_file
 
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
 
     from process.core.io.mfile import MFile
+
+
+def read_imprad_data(_skiprows, data_path):
+    """Function to read all data needed for creation of radiation profile
+
+    Parameters
+    ----------
+    _skiprows :
+        number of rows to skip when reading impurity data files
+    data_path :
+        path to impurity data
+
+    """
+    label = [
+        "H_",
+        "He",
+        "Be",
+        "C_",
+        "N_",
+        "O_",
+        "Ne",
+        "Si",
+        "Ar",
+        "Fe",
+        "Ni",
+        "Kr",
+        "Xe",
+        "W_",
+    ]
+    lzdata = [0.0 for x in range(len(label))]
+
+    for i in range(len(label)):
+        file_iden = data_path + label[i].ljust(3, "_")
+
+        Te = None
+        lz = None
+        zav = None
+
+        for header in read_impurity_file(file_iden + "lz_tau.dat"):
+            if "Te[eV]" in header.content:
+                Te = np.asarray(header.data, dtype=float)
+
+            if "infinite confinement" in header.content:
+                lz = np.asarray(header.data, dtype=float)
+        for header in read_impurity_file(file_iden + "z_tau.dat"):
+            if "infinite confinement" in header.content:
+                zav = np.asarray(header.data, dtype=float)
+
+        lzdata[i] = np.column_stack([Te, lz, zav])
+
+    # then switch string to floats
+    return np.array(lzdata, dtype=float)
 
 
 def profiles_with_pedestal(mfile, scan: int):
