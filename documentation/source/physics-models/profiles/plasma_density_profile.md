@@ -1,4 +1,4 @@
-# Density Profile | `NeProfile(Profile)`
+# Density Profile | `ElectronDensityProfile(Profile)`
 
 The density profile class is organised around a central runner function that is called each time the plasma is parameterised by the parent [`PlasmaProfile()`](./plasma_profiles.md) class. It is called by [`pedestal_parameterisation()`](plasma_profiles.md#pedestal_parameterisation) and [`parabolic parameterisation()`](./plasma_profiles.md#parabolic_parameterisation). The sequence of the runner function can be seen below along with explanation of the following calculations.
 
@@ -12,16 +12,16 @@ The density profile class is organised around a central runner function that is 
 
 ### Calculate core values | `set_physics_variables()`
 
-The core electron density is calculated using the [`ncore`](plasma_density_profile.md#electron-core-density-of-a-pedestalised-profile--ncore) method.
+The core electron density is calculated differently depending if a parabolic or pedestal type profile is used.
 The core ion density is then set from $n_{\text{i}}$ (`nd_plasma_ions_total_vol_avg`) which is the total ion density such as:
 
 $$
 n_{\text{i0}} = \left(\frac{n_\text{i}}{n_\text{e}}\right)n_{\text{e0}}
 $$
 
-#### Electron core density of a pedestalised profile | `ncore()`
+#### Electron core density of a pedestal profile | `calculate_pedestal_profile_on_axis_density()`
 
-This function calculates the core electron density for a pedestalsied profile (`i_plasma_pedestal == 1`). It takes in values of
+This function calculates the core electron density for a pedestalised profile (`i_plasma_pedestal == 1`). It takes in values of
 
 | Profile parameter / Input               | Density   |
 |----------------------------------|-----------|
@@ -110,6 +110,84 @@ $\blacksquare$
 
 4. The y profile is then calculated using [`calculate_profile_y()`](plasma_density_profile.md#calculate-density-at-each-radius-position-calculate_profile_y). This routine calculates the density at each normalised minor radius position $\rho$ for a HELIOS-type density pedestal profile[^1]
 
+
+---------------
+
+#### Electron core density of a parabolic profile | `calculate_parabolic_profile_on_axis_density()`
+
+This function calculates the core electron density for a parabolic profile (`i_plasma_pedestal == 0`). It takes in values of
+
+| Profile parameter / Input               | Density   |
+|----------------------------------|-----------|
+| Volume-average density             | `nd_vol_average`, $\langle n \rangle$ |
+| Profile index/ peaking parameter | `alphan`, $\alpha_n$ |
+
+$$
+n_0 = \langle n \rangle \times \left(\alpha_n+1\right)
+$$
+
+----------
+
+
+##### Derivation
+
+We calculate the volume integrated profile and then divide by the volume of integration to get the volume average density $\langle n \rangle$. If we assume the plasma to be a torus of circular cross-section then we can use spherical coordinates. We can simplify the problem by representing the torus as a cylinder of height equal to the circumference of the torus, which is equal to $2\pi R$, where $R$ is the major radius of the torus.
+
+The cylindrical volume element is given by:
+
+$$
+V = \int \int \int dV = \int^{2\pi R}_0 \int^{2\pi}_0 \int^a_0 r \ dr \ d\theta \ dz
+$$
+
+Inserting our density function in the form where $\rho$ is expanded as $\rho = r/a$ we get:
+
+$$
+\int^{2\pi R}_0 \int^{2\pi}_0 \int^a_0     r  \left(n_0(1-r^2/a^2)^{\alpha_n}\right) \ dr \ d\theta \ dz
+$$
+
+Since our density function is only a function of $r$, and the torus is symmetric around its center, the integration simplifies to integrating over $r$, with the $d\theta$ and $dz$ integrals solving to give values for the full poloidal angle, and cylindrical height and torus length, respectively. This leads to:
+
+$$
+4\pi^2R \int^a_0     r  \left(n_0(1-r^2/a^2)^{\alpha_n}\right) \ dr  
+$$
+
+In the form of volume average density where the volume integrated density function has to be divided by the volume of the cylinder / torus we get:
+
+$$
+\langle n \rangle =  \frac{4\pi^2R \int^a_0     r  \left(n_0(1-r^2/a^2)^{\alpha_n}\right) \ dr}{2\pi^2Ra^2}  
+$$
+
+Simplify:
+
+$$
+\langle n \rangle =  \frac{2 \int^a_0     r  \left(n_0(1-r^2/a^2)^{\alpha_n}\right) \ dr}{a^2}  
+$$
+
+Integrate:
+
+$$
+\langle n \rangle =  \frac{2}{a^2} \frac{a^2n_0}{2(\alpha_n+1)}
+$$
+
+$$
+\therefore \langle n \rangle =   \frac{n_0}{\alpha_n+1}
+$$
+
+This is in agreement with the derivation from the ITER Physics Design 1989[^iter_design_89].
+
+Since all parabolic profiles are of the same form this proof holds for the density and temperature.
+
+A similar derivation is found in normalised coordinates, $\rho$ if the line averaged integral is swept around the poloidal circumference then divided by the poloidal area.
+
+$$
+\langle n \rangle =  \frac{2\pi \int^1_0     \rho  \left(n_0(1-\rho^2)^{\alpha_n}\right) \ d\rho}{\pi\rho^2}  
+$$
+
+$\blacksquare$
+
+------
+
+
 ### Calculate density at each radius position | `calculate_profile_y()`
 
 A table of the input variables can be found below
@@ -134,8 +212,8 @@ If it is less than a logger warning is pushed to the terminal at runtime.
 
 Values of the profile density are then assigned based on the density function below across bounds from 0 to `radius_plasma_pedestal_density_norm` and `radius_plasma_pedestal_density_norm` to 1.  
 
-$$\begin{aligned}
-\mbox{Density:} \ n(\rho) = \left\{
+$$
+\ n(\rho) = \left\{
 \begin{aligned}
     & n_{\text{ped}} + (n_0 - n_{\text{ped}}) \left( 1 -
     \frac{\rho^2}{\rho_{\text{ped,n}}^2}\right)^{\alpha_n}
@@ -144,7 +222,7 @@ $$\begin{aligned}
 & \ \rho_{\text{ped,n}} < \rho \leq 1
 \end{aligned}
 \right.
-\end{aligned}$$
+$$
 
 5. Profile is then integrated with `integrate_profile_y()` using Simpsons integration from the profile abstract base class
 
@@ -176,3 +254,5 @@ and `ixc = 152` respectively
 
 
 [^1]: Jean, J. (2011). *HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies*. Fusion Science and Technology, 59(2), 308–349. <https://doi.org/10.13182/FST11-A11650>
+
+[^iter_design_89]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',

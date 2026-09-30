@@ -92,7 +92,8 @@ class Structure(Model):
         blmass,
         m_fw_blkt_div_coolant_total,
         dewmass,
-        output,
+        *,
+        output: bool,
     ):
         """Method to calculate mass of support structure
 

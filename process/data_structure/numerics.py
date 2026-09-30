@@ -371,7 +371,7 @@ class NumericsData:
     * (68) Psep * Bt / qAR upper limit (itv 117)
     * (69) ensure separatrix power = the value from Kallenbach divertor (itv 118)
     * (70) ensure that teomp = separatrix temperature in the pedestal profile,
-    (itv 119 (temp_plasma_separatrix_kev))
+    (itv 119 (temp_plasma_separatrix_electron_kev))
     * (71) ensure that neomp = separatrix density (nd_plasma_separatrix_electron) x neratio
     * (72) central solenoid shear stress limit (Tresca yield criterion)
     * (73) Psep >= Plh + Paux
@@ -522,7 +522,7 @@ class NumericsData:
     * (115) NOT USED
     * (116) NOT USED
     * (117) NOT USED
-    * (119) temp_plasma_separatrix_kev:  separatrix temperature calculated by the Kallenbach divertor model
+    * (119) temp_plasma_separatrix_electron_kev:  separatrix temperature calculated by the Kallenbach divertor model
     * (120) ttarget: Plasma temperature adjacent to divertor sheath [eV]
     * (121) neratio: ratio of mean SOL density at OMP to separatrix density at OMP
     * (122) f_a_cs_turn_steel : streel fraction of Central Solenoid

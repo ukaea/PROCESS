@@ -199,6 +199,12 @@ def plot_plasma(
         colour scheme to use for plots
     mirror_negative_x :
         if True, mirror the plot to the negative x-axis (Default value = False)
+
+
+    Raises
+    ------
+    ValueError
+        If an unsupported plasma shape model type is encountered.
     """
     r_0, a, triang, kappa, i_single_null, i_plasma_shape, plasma_square = (
         mfile.get_variables(
@@ -226,35 +232,38 @@ def plot_plasma(
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
-    if i_plasma_shape == PlasmaShapeModelType.PROCESS_ORIGINAL:
-        # Plot the 2 plasma outline arcs.
-        axis.plot(x_scale * np.array(pg.rs[0]), pg.zs[0], color="black")
-        axis.plot(x_scale * np.array(pg.rs[1]), pg.zs[1], color="black")
+    match PlasmaShapeModelType(i_plasma_shape):
+        case PlasmaShapeModelType.PROCESS_ORIGINAL:
+            # Plot the 2 plasma outline arcs.
+            axis.plot(x_scale * np.array(pg.rs[0]), pg.zs[0], color="black")
+            axis.plot(x_scale * np.array(pg.rs[1]), pg.zs[1], color="black")
 
-        # Set triang_95 to stop plotting plasma past boundary
-        # Assume IPDG scaling
-        triang_95 = triang / 1.5
+            # Set triang_95 to stop plotting plasma past boundary
+            # Assume IPDG scaling
+            triang_95 = triang / 1.5
 
-        # Colour in right side of plasma
-        axis.fill_between(
-            x=x_scale * np.array(pg.rs[0]),
-            y1=pg.zs[0],
-            where=(pg.rs[0] > r_0 - (triang_95 * a * 1.5)),
-            color=PLASMA_COLOUR[colour_scheme - 1],
-        )
-        # Colour in left side of plasma
-        axis.fill_between(
-            x=x_scale * np.array(pg.rs[1]),
-            y1=pg.zs[1],
-            where=(pg.rs[1] < r_0 - (triang_95 * a * 1.5)),
-            color=PLASMA_COLOUR[colour_scheme - 1],
-        )
+            # Colour in right side of plasma
+            axis.fill_between(
+                x=x_scale * np.array(pg.rs[0]),
+                y1=pg.zs[0],
+                where=(pg.rs[0] > r_0 - (triang_95 * a * 1.5)),
+                color=PLASMA_COLOUR[colour_scheme - 1],
+            )
+            # Colour in left side of plasma
+            axis.fill_between(
+                x=x_scale * np.array(pg.rs[1]),
+                y1=pg.zs[1],
+                where=(pg.rs[1] < r_0 - (triang_95 * a * 1.5)),
+                color=PLASMA_COLOUR[colour_scheme - 1],
+            )
 
-    elif i_plasma_shape == PlasmaShapeModelType.SAUTER:
-        axis.plot(x_scale * np.array(pg.rs), pg.zs, color="black")
-        axis.fill(
-            x_scale * np.array(pg.rs), pg.zs, color=PLASMA_COLOUR[colour_scheme - 1]
-        )
+        case PlasmaShapeModelType.SAUTER:
+            axis.plot(x_scale * np.array(pg.rs), pg.zs, color="black")
+            axis.fill(
+                x_scale * np.array(pg.rs), pg.zs, color=PLASMA_COLOUR[colour_scheme - 1]
+            )
+        case _:
+            raise ValueError(f"Unsupported plasma shape model type: {i_plasma_shape}")
 
 
 def plot_centre_cross(
@@ -4270,8 +4279,12 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
     i_plasma_pedestal = mfile.get("i_plasma_pedestal", scan=scan)
     rho = np.linspace(0, 1.0, n_plasma_profile_elements)
-    temp_plasma_pedestal_kev = mfile.get("temp_plasma_pedestal_kev", scan=scan)
-    temp_plasma_separatrix_kev = mfile.get("temp_plasma_separatrix_kev", scan=scan)
+    temp_plasma_pedestal_electron_kev = mfile.get(
+        "temp_plasma_pedestal_electron_kev", scan=scan
+    )
+    temp_plasma_separatrix_electron_kev = mfile.get(
+        "temp_plasma_separatrix_electron_kev", scan=scan
+    )
     f_temp_plasma_ion_electron = mfile.get("f_temp_plasma_ion_electron", scan=scan)
     tbeta = mfile.get("tbeta", scan=scan)
     te0 = mfile.get("temp_plasma_electron_on_axis_kev", scan=scan)
@@ -4279,14 +4292,14 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     if i_plasma_pedestal == 1:
         rhocore = np.linspace(0.0, radius_plasma_pedestal_temp_norm)
         tcore = (
-            temp_plasma_pedestal_kev
-            + (te0 - temp_plasma_pedestal_kev)
+            temp_plasma_pedestal_electron_kev
+            + (te0 - temp_plasma_pedestal_electron_kev)
             * (1 - (rhocore / radius_plasma_pedestal_temp_norm) ** tbeta) ** alphat
         )
 
         rhosep = np.linspace(radius_plasma_pedestal_temp_norm, 1)
-        tsep = temp_plasma_separatrix_kev + (
-            temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
+        tsep = temp_plasma_separatrix_electron_kev + (
+            temp_plasma_pedestal_electron_kev - temp_plasma_separatrix_electron_kev
         ) * (1 - rhosep) / (1 - min(0.9999, radius_plasma_pedestal_temp_norm))
 
         rho = np.append(rhocore, rhosep)
@@ -4314,7 +4327,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     if i_plasma_pedestal != 0:
         # Plot pedestal lines
         prof.axhline(
-            y=temp_plasma_pedestal_kev,
+            y=temp_plasma_pedestal_electron_kev,
             xmax=radius_plasma_pedestal_temp_norm,
             color="r",
             linestyle="-",
@@ -4324,7 +4337,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         prof.vlines(
             x=radius_plasma_pedestal_temp_norm,
             ymin=0.0,
-            ymax=temp_plasma_pedestal_kev,
+            ymax=temp_plasma_pedestal_electron_kev,
             color="r",
             linestyle="-",
             linewidth=0.4,
@@ -4342,22 +4355,26 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         ),
         (
             rf"$T_{{\text{{e,0}}}}$:    {te0:.3f} keV"
-            rf"$\hspace{{2}} \alpha_{{\text{{T}}}}$:   {alphat:.3f}"
+            rf"$\hspace{{3}} \alpha_{{\text{{T}}}}$: {alphat:.3f}    "
+            rf"$\hspace{{3}} \langle T_{{\text{{i}}}} \rangle_\text{{V}}$: {mfile.get('temp_plasma_ion_vol_avg_kev', scan=scan):.3f} keV"
         ),
         (
-            rf"$T_{{\text{{e,ped}}}}$: {temp_plasma_pedestal_kev:.3f} keV"
-            r"$ \hspace{3} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
-            f"{f_temp_plasma_ion_electron:.3f}"
+            rf"$T_{{\text{{e,ped}}}}$: {temp_plasma_pedestal_electron_kev:.3f} keV"
+            r"$  \hspace{3} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
+            f"{f_temp_plasma_ion_electron:.3f}   "
+            f"$\\hspace{{4}} T_{{\\text{{i,0}}}}$: {mfile.get('temp_plasma_ion_on_axis_kev', scan=scan):.3f} keV"
         ),
         (
             rf"$\rho_{{\text{{ped,T}}}}$: {radius_plasma_pedestal_temp_norm:.3f}"
             r"$ \hspace{5} \frac{T_{e,0}}{\langle T_e \rangle}$: "
-            f"{mfile.get('f_temp_plasma_electron_on_axis_vol_avg', scan=scan):.3f}"
+            f"{mfile.get('f_temp_plasma_electron_on_axis_vol_avg', scan=scan):.3f}  "
+            f"$\\hspace{{4}} T_{{\\text{{i,ped}}}}$: {mfile.get('temp_plasma_pedestal_ion_kev', scan=scan):.3f} keV"
         ),
         (
-            rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_kev:.3f} keV"
-            r"$ \hspace{3} \frac{{{\langle T_e \rangle_n}}}{{{\langle T_e \rangle_V}}}$: "
+            rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_electron_kev:.3f} keV"
+            r"$\hspace{3} \frac{{{\langle T_e \rangle_n}}}{{{\langle T_e \rangle_V}}}$: "
             f"{mfile.get('f_temp_plasma_electron_density_vol_avg', scan=scan):.3f}"
+            f"$\\hspace{{4}} T_{{\\text{{i,sep}}}}$: {mfile.get('temp_plasma_separatrix_ion_kev', scan=scan):.3f} keV"
         ),
     ))
 
@@ -4522,8 +4539,12 @@ def profiles_with_pedestal(mfile, scan: int):
     ne0 = mfile.get("nd_plasma_electron_on_axis", scan=scan)
     rho = np.linspace(0, 1.0, n_plasma_profile_elements)
     nd_plasma_separatrix_electron = mfile.get("nd_plasma_separatrix_electron", scan=scan)
-    temp_plasma_pedestal_kev = mfile.get("temp_plasma_pedestal_kev", scan=scan)
-    temp_plasma_separatrix_kev = mfile.get("temp_plasma_separatrix_kev", scan=scan)
+    temp_plasma_pedestal_electron_kev = mfile.get(
+        "temp_plasma_pedestal_electron_kev", scan=scan
+    )
+    temp_plasma_separatrix_electron_kev = mfile.get(
+        "temp_plasma_separatrix_electron_kev", scan=scan
+    )
     tbeta = mfile.get("tbeta", scan=scan)
     te0 = mfile.get("temp_plasma_electron_on_axis_kev", scan=scan)
 
@@ -4561,15 +4582,16 @@ def profiles_with_pedestal(mfile, scan: int):
             # Core temperature region
             if rho[q] <= radius_plasma_pedestal_temp_norm:
                 te[q] = (
-                    temp_plasma_pedestal_kev
-                    + (te0 - temp_plasma_pedestal_kev)
+                    temp_plasma_pedestal_electron_kev
+                    + (te0 - temp_plasma_pedestal_electron_kev)
                     * (1 - (rho[q] / radius_plasma_pedestal_temp_norm) ** tbeta)
                     ** alphat
                 )
             else:
                 # Pedestal temperature region
-                te[q] = temp_plasma_separatrix_kev + (
-                    temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
+                te[q] = temp_plasma_separatrix_electron_kev + (
+                    temp_plasma_pedestal_electron_kev
+                    - temp_plasma_separatrix_electron_kev
                 ) * (1 - rho[q]) / (1 - radius_plasma_pedestal_temp_norm)
 
     return rho, ne, te
@@ -4964,167 +4986,168 @@ def plot_vacuum_vessel_and_divertor(
     z_divertor_lower_top = (-kappa * rminor) - dz_xpoint_divertor
     z_divertor_lower_bottom = z_divertor_lower_top - dz_divertor
 
-    if i_single_null == 0:
-        z_divertor_upper_bottom = (kappa * rminor) + dz_xpoint_divertor
-        z_divertor_upper_top = z_divertor_upper_bottom + dz_divertor
-
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
-    if i_single_null == 1:
-        vvg_single_null = vacuum_vessel_geometry_single_null(
-            cumulative_upper=cumulative_upper,
-            upper=upper,
-            triang=triang_95,
-            radx_outer=radx_outer,
-            rminx_outer=rminx_outer,
-            radx_inner=radx_inner,
-            rminx_inner=rminx_inner,
-            cumulative_lower=cumulative_lower,
-            lower=lower,
-        )
-
-        axis.plot(
-            x_scale * np.array(vvg_single_null.rs),
-            vvg_single_null.zs,
-            color="black",
-            lw=thin,
-            zorder=5,
-        )
-
-        axis.fill(
-            x_scale * np.array(vvg_single_null.rs),
-            vvg_single_null.zs,
-            color=VESSEL_COLOUR[colour_scheme - 1],
-            lw=0.01,
-            zorder=5,
-        )
-
-        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
-        # Find the min and max R values of the vessel boundary between the divertor lines
-        mask = (vvg_single_null.zs >= z_divertor_lower_bottom) & (
-            vvg_single_null.zs <= z_divertor_lower_top
-        )
-        # Get the min/max R for the region between the divertor lines
-        r_min = (
-            np.min(vvg_single_null.rs[mask])
-            + dr_vv_inboard
-            + dr_shld_inboard
-            + (dr_blkt_inboard * 0.5)
-        )
-        r_max = (
-            np.max(vvg_single_null.rs[mask])
-            - dr_vv_outboard
-            - dr_shld_outboard
-            - (dr_blkt_outboard * 0.5)
-        )
-        # Draw a rectangle (box) between the two lines and inside the vessel
-        axis.add_patch(
-            patches.Rectangle(
-                (
-                    x_scale * r_min,
-                    z_divertor_lower_bottom,
-                ),
-                x_scale * (r_max - r_min),
-                z_divertor_lower_top - z_divertor_lower_bottom,
-                facecolor="black",
-                alpha=0.8,
-                zorder=1,
+    match DivertorNumberModels(i_single_null):
+        case DivertorNumberModels.SINGLE_NULL:
+            z_divertor_upper_bottom = None
+            z_divertor_upper_top = None
+            vvg_single_null = vacuum_vessel_geometry_single_null(
+                cumulative_upper=cumulative_upper,
+                upper=upper,
+                triang=triang_95,
+                radx_outer=radx_outer,
+                rminx_outer=rminx_outer,
+                radx_inner=radx_inner,
+                rminx_inner=rminx_inner,
+                cumulative_lower=cumulative_lower,
+                lower=lower,
             )
-        )
 
-    if i_single_null == 0:
-        vvg_double_null = vacuum_vessel_geometry_double_null(
-            cumulative_lower=cumulative_lower,
-            lower=lower,
-            radx_inner=radx_inner,
-            radx_outer=radx_outer,
-            rminx_inner=rminx_inner,
-            rminx_outer=rminx_outer,
-            triang=triang_95,
-        )
-        axis.plot(
-            x_scale * np.array(vvg_double_null.rs),
-            vvg_double_null.zs,
-            color="black",
-            lw=thin,
-            zorder=5,
-        )
-
-        axis.fill(
-            x_scale * np.array(vvg_double_null.rs),
-            vvg_double_null.zs,
-            color=VESSEL_COLOUR[colour_scheme - 1],
-            lw=0.01,
-            zorder=5,
-        )
-
-        # Plot lower divertor
-        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
-        # Find the min and max R values of the vessel boundary between the divertor lines
-        mask = (vvg_double_null.zs >= z_divertor_lower_bottom) & (
-            vvg_double_null.zs <= z_divertor_lower_top
-        )
-        # Get the min/max R for the region between the divertor lines
-        r_min = (
-            np.min(vvg_double_null.rs[mask])
-            + dr_vv_inboard
-            + dr_shld_inboard
-            + (dr_blkt_inboard * 0.5)
-        )
-        r_max = (
-            np.max(vvg_double_null.rs[mask])
-            - dr_vv_outboard
-            - dr_shld_outboard
-            - (dr_blkt_outboard * 0.5)
-        )
-        # Draw a rectangle (box) between the two lines and inside the vessel
-        axis.add_patch(
-            patches.Rectangle(
-                (
-                    x_scale * r_min,
-                    z_divertor_lower_bottom,
-                ),
-                x_scale * (r_max - r_min),
-                z_divertor_lower_top - z_divertor_lower_bottom,
-                facecolor="black",
-                alpha=0.8,
-                zorder=1,
+            axis.plot(
+                x_scale * np.array(vvg_single_null.rs),
+                vvg_single_null.zs,
+                color="black",
+                lw=thin,
+                zorder=5,
             )
-        )
-        # Plot upper divertor
-        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
-        # Find the min and max R values of the vessel boundary between the divertor lines
-        mask = (vvg_double_null.zs >= z_divertor_upper_bottom) & (
-            vvg_double_null.zs <= z_divertor_upper_top
-        )
-        # Get the min/max R for the region between the divertor lines
-        r_min = (
-            np.min(vvg_double_null.rs[mask])
-            + dr_vv_inboard
-            + dr_shld_inboard
-            + (dr_blkt_inboard * 0.5)
-        )
-        r_max = (
-            np.max(vvg_double_null.rs[mask])
-            - dr_vv_outboard
-            - dr_shld_outboard
-            - (dr_blkt_outboard * 0.5)
-        )
-        # Draw a rectangle (box) between the two lines and inside the vessel
-        axis.add_patch(
-            patches.Rectangle(
-                (
-                    x_scale * r_min,
-                    z_divertor_upper_bottom,
-                ),
-                x_scale * (r_max - r_min),
-                z_divertor_upper_top - z_divertor_upper_bottom,
-                facecolor="black",
-                alpha=0.8,
-                zorder=1,
+
+            axis.fill(
+                x_scale * np.array(vvg_single_null.rs),
+                vvg_single_null.zs,
+                color=VESSEL_COLOUR[colour_scheme - 1],
+                lw=0.01,
+                zorder=5,
             )
-        )
+
+            # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
+            # Find the min and max R values of the vessel boundary between the divertor lines
+            mask = (vvg_single_null.zs >= z_divertor_lower_bottom) & (
+                vvg_single_null.zs <= z_divertor_lower_top
+            )
+            # Get the min/max R for the region between the divertor lines
+            r_min = (
+                np.min(vvg_single_null.rs[mask])
+                + dr_vv_inboard
+                + dr_shld_inboard
+                + (dr_blkt_inboard * 0.5)
+            )
+            r_max = (
+                np.max(vvg_single_null.rs[mask])
+                - dr_vv_outboard
+                - dr_shld_outboard
+                - (dr_blkt_outboard * 0.5)
+            )
+            # Draw a rectangle (box) between the two lines and inside the vessel
+            axis.add_patch(
+                patches.Rectangle(
+                    (
+                        x_scale * r_min,
+                        z_divertor_lower_bottom,
+                    ),
+                    x_scale * (r_max - r_min),
+                    z_divertor_lower_top - z_divertor_lower_bottom,
+                    facecolor="black",
+                    alpha=0.8,
+                    zorder=1,
+                )
+            )
+
+        case DivertorNumberModels.DOUBLE_NULL:
+            z_divertor_upper_bottom = (kappa * rminor) + dz_xpoint_divertor
+            z_divertor_upper_top = z_divertor_upper_bottom + dz_divertor
+            vvg_double_null = vacuum_vessel_geometry_double_null(
+                cumulative_lower=cumulative_lower,
+                lower=lower,
+                radx_inner=radx_inner,
+                radx_outer=radx_outer,
+                rminx_inner=rminx_inner,
+                rminx_outer=rminx_outer,
+                triang=triang_95,
+            )
+            axis.plot(
+                x_scale * np.array(vvg_double_null.rs),
+                vvg_double_null.zs,
+                color="black",
+                lw=thin,
+                zorder=5,
+            )
+
+            axis.fill(
+                x_scale * np.array(vvg_double_null.rs),
+                vvg_double_null.zs,
+                color=VESSEL_COLOUR[colour_scheme - 1],
+                lw=0.01,
+                zorder=5,
+            )
+
+            # Plot lower divertor
+            # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
+            # Find the min and max R values of the vessel boundary between the divertor lines
+            mask = (vvg_double_null.zs >= z_divertor_lower_bottom) & (
+                vvg_double_null.zs <= z_divertor_lower_top
+            )
+            # Get the min/max R for the region between the divertor lines
+            r_min = (
+                np.min(vvg_double_null.rs[mask])
+                + dr_vv_inboard
+                + dr_shld_inboard
+                + (dr_blkt_inboard * 0.5)
+            )
+            r_max = (
+                np.max(vvg_double_null.rs[mask])
+                - dr_vv_outboard
+                - dr_shld_outboard
+                - (dr_blkt_outboard * 0.5)
+            )
+            # Draw a rectangle (box) between the two lines and inside the vessel
+            axis.add_patch(
+                patches.Rectangle(
+                    (
+                        x_scale * r_min,
+                        z_divertor_lower_bottom,
+                    ),
+                    x_scale * (r_max - r_min),
+                    z_divertor_lower_top - z_divertor_lower_bottom,
+                    facecolor="black",
+                    alpha=0.8,
+                    zorder=1,
+                )
+            )
+            # Plot upper divertor
+            # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
+            # Find the min and max R values of the vessel boundary between the divertor lines
+            mask = (vvg_double_null.zs >= z_divertor_upper_bottom) & (
+                vvg_double_null.zs <= z_divertor_upper_top
+            )
+            # Get the min/max R for the region between the divertor lines
+            r_min = (
+                np.min(vvg_double_null.rs[mask])
+                + dr_vv_inboard
+                + dr_shld_inboard
+                + (dr_blkt_inboard * 0.5)
+            )
+            r_max = (
+                np.max(vvg_double_null.rs[mask])
+                - dr_vv_outboard
+                - dr_shld_outboard
+                - (dr_blkt_outboard * 0.5)
+            )
+            # Draw a rectangle (box) between the two lines and inside the vessel
+            axis.add_patch(
+                patches.Rectangle(
+                    (
+                        x_scale * r_min,
+                        z_divertor_upper_bottom,
+                    ),
+                    x_scale * (r_max - r_min),
+                    z_divertor_upper_top - z_divertor_upper_bottom,
+                    facecolor="black",
+                    alpha=0.8,
+                    zorder=1,
+                )
+            )
 
 
 def plot_shield(
@@ -5182,25 +5205,26 @@ def plot_shield(
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
-    if i_single_null == 1:
-        shield_geometry = shield_geometry_single_null(
-            cumulative_upper=cumulative_upper,
-            radx_far=radx_far,
-            rminx_far=rminx_far,
-            radx_near=radx_near,
-            rminx_near=rminx_near,
-            triang=triang_95,
-            cumulative_lower=cumulative_lower,
-        )
-    else:
-        shield_geometry = shield_geometry_double_null(
-            cumulative_lower=cumulative_lower,
-            radx_far=radx_far,
-            radx_near=radx_near,
-            rminx_far=rminx_far,
-            rminx_near=rminx_near,
-            triang=triang_95,
-        )
+    match DivertorNumberModels(i_single_null):
+        case DivertorNumberModels.SINGLE_NULL:
+            shield_geometry = shield_geometry_single_null(
+                cumulative_upper=cumulative_upper,
+                radx_far=radx_far,
+                rminx_far=rminx_far,
+                radx_near=radx_near,
+                rminx_near=rminx_near,
+                triang=triang_95,
+                cumulative_lower=cumulative_lower,
+            )
+        case DivertorNumberModels.DOUBLE_NULL:
+            shield_geometry = shield_geometry_double_null(
+                cumulative_lower=cumulative_lower,
+                radx_far=radx_far,
+                radx_near=radx_near,
+                rminx_far=rminx_far,
+                rminx_near=rminx_near,
+                triang=triang_95,
+            )
 
     axis.plot(
         x_scale * np.array(shield_geometry.rs),
@@ -5261,98 +5285,99 @@ def plot_blanket(
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
-    if i_single_null == 1:
-        # Upper blanket: outer surface
-        radx_outer = (
-            cumulative_radial_build("dr_blkt_outboard", mfile, scan)
-            + cumulative_radial_build("vvblgapi", mfile, scan)
-        ) / 2.0
-        rminx_outer = (
-            cumulative_radial_build("dr_blkt_outboard", mfile, scan)
-            - cumulative_radial_build("vvblgapi", mfile, scan)
-        ) / 2.0
+    match DivertorNumberModels(i_single_null):
+        case DivertorNumberModels.SINGLE_NULL:
+            # Upper blanket: outer surface
+            radx_outer = (
+                cumulative_radial_build("dr_blkt_outboard", mfile, scan)
+                + cumulative_radial_build("vvblgapi", mfile, scan)
+            ) / 2.0
+            rminx_outer = (
+                cumulative_radial_build("dr_blkt_outboard", mfile, scan)
+                - cumulative_radial_build("vvblgapi", mfile, scan)
+            ) / 2.0
 
-        # Upper blanket: inner surface
-        radx_inner = (
-            cumulative_radial_build("dr_fw_outboard", mfile, scan)
-            + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
-        ) / 2.0
-        rminx_inner = (
-            cumulative_radial_build("dr_fw_outboard", mfile, scan)
-            - cumulative_radial_build("dr_blkt_inboard", mfile, scan)
-        ) / 2.0
-        bg_single_null = blanket_geometry_single_null(
-            radx_outer=radx_outer,
-            rminx_outer=rminx_outer,
-            radx_inner=radx_inner,
-            rminx_inner=rminx_inner,
-            cumulative_upper=cumulative_upper,
-            triang=triang_95,
-            cumulative_lower=cumulative_lower,
-            dz_blkt_upper=dz_blkt_upper,
-            c_shldith=c_shldith,
-            c_blnkoth=c_blnkoth,
-            dr_blkt_inboard=dr_blkt_inboard,
-            dr_blkt_outboard=dr_blkt_outboard,
-        )
+            # Upper blanket: inner surface
+            radx_inner = (
+                cumulative_radial_build("dr_fw_outboard", mfile, scan)
+                + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
+            ) / 2.0
+            rminx_inner = (
+                cumulative_radial_build("dr_fw_outboard", mfile, scan)
+                - cumulative_radial_build("dr_blkt_inboard", mfile, scan)
+            ) / 2.0
+            bg_single_null = blanket_geometry_single_null(
+                radx_outer=radx_outer,
+                rminx_outer=rminx_outer,
+                radx_inner=radx_inner,
+                rminx_inner=rminx_inner,
+                cumulative_upper=cumulative_upper,
+                triang=triang_95,
+                cumulative_lower=cumulative_lower,
+                dz_blkt_upper=dz_blkt_upper,
+                c_shldith=c_shldith,
+                c_blnkoth=c_blnkoth,
+                dr_blkt_inboard=dr_blkt_inboard,
+                dr_blkt_outboard=dr_blkt_outboard,
+            )
 
-        # Plot blanket
-        axis.plot(
-            x_scale * np.array(bg_single_null.rs),
-            bg_single_null.zs,
-            color="black",
-            lw=thin,
-            zorder=5,
-        )
-
-        axis.fill(
-            x_scale * np.array(bg_single_null.rs),
-            bg_single_null.zs,
-            color=BLANKET_COLOUR[colour_scheme - 1],
-            lw=0.01,
-            zorder=5,
-        )
-
-    if i_single_null == 0:
-        bg_double_null = blanket_geometry_double_null(
-            cumulative_lower=cumulative_lower,
-            triang=triang_95,
-            dz_blkt_upper=dz_blkt_upper,
-            c_shldith=c_shldith,
-            c_blnkoth=c_blnkoth,
-            dr_blkt_inboard=dr_blkt_inboard,
-            dr_blkt_outboard=dr_blkt_outboard,
-        )
-        # Plot blanket
-        axis.plot(
-            x_scale * np.array(bg_double_null.rs[0]),
-            bg_double_null.zs[0],
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            x_scale * np.array(bg_double_null.rs[0]),
-            bg_double_null.zs[0],
-            color=BLANKET_COLOUR[colour_scheme - 1],
-            lw=0.01,
-            zorder=5,
-        )
-        if dr_blkt_inboard > 0.0:
-            # only plot inboard blanket if inboard blanket thickness > 0
+            # Plot blanket
             axis.plot(
-                x_scale * np.array(bg_double_null.rs[1]),
-                bg_double_null.zs[1],
+                x_scale * np.array(bg_single_null.rs),
+                bg_single_null.zs,
                 color="black",
                 lw=thin,
                 zorder=5,
             )
+
             axis.fill(
-                x_scale * np.array(bg_double_null.rs[1]),
-                bg_double_null.zs[1],
+                x_scale * np.array(bg_single_null.rs),
+                bg_single_null.zs,
                 color=BLANKET_COLOUR[colour_scheme - 1],
                 lw=0.01,
                 zorder=5,
             )
+
+        case DivertorNumberModels.DOUBLE_NULL:
+            bg_double_null = blanket_geometry_double_null(
+                cumulative_lower=cumulative_lower,
+                triang=triang_95,
+                dz_blkt_upper=dz_blkt_upper,
+                c_shldith=c_shldith,
+                c_blnkoth=c_blnkoth,
+                dr_blkt_inboard=dr_blkt_inboard,
+                dr_blkt_outboard=dr_blkt_outboard,
+            )
+            # Plot blanket
+            axis.plot(
+                x_scale * np.array(bg_double_null.rs[0]),
+                bg_double_null.zs[0],
+                color="black",
+                lw=thin,
+            )
+            axis.fill(
+                x_scale * np.array(bg_double_null.rs[0]),
+                bg_double_null.zs[0],
+                color=BLANKET_COLOUR[colour_scheme - 1],
+                lw=0.01,
+                zorder=5,
+            )
+            if dr_blkt_inboard > 0.0:
+                # only plot inboard blanket if inboard blanket thickness > 0
+                axis.plot(
+                    x_scale * np.array(bg_double_null.rs[1]),
+                    bg_double_null.zs[1],
+                    color="black",
+                    lw=thin,
+                    zorder=5,
+                )
+                axis.fill(
+                    x_scale * np.array(bg_double_null.rs[1]),
+                    bg_double_null.zs[1],
+                    color=BLANKET_COLOUR[colour_scheme - 1],
+                    lw=0.01,
+                    zorder=5,
+                )
 
 
 def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: MFile, scan: int):
@@ -5634,93 +5659,94 @@ def plot_firstwall(
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
-    if i_single_null == 1:
-        # Upper first wall: outer surface
-        radx_outer = (
-            cumulative_radial_build("dr_fw_outboard", mfile, scan)
-            + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
-        ) / 2.0
-        rminx_outer = (
-            cumulative_radial_build("dr_fw_outboard", mfile, scan)
-            - cumulative_radial_build("dr_blkt_inboard", mfile, scan)
-        ) / 2.0
+    match DivertorNumberModels(i_single_null):
+        case DivertorNumberModels.SINGLE_NULL:
+            # Upper first wall: outer surface
+            radx_outer = (
+                cumulative_radial_build("dr_fw_outboard", mfile, scan)
+                + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
+            ) / 2.0
+            rminx_outer = (
+                cumulative_radial_build("dr_fw_outboard", mfile, scan)
+                - cumulative_radial_build("dr_blkt_inboard", mfile, scan)
+            ) / 2.0
 
-        # Upper first wall: inner surface
-        radx_inner = (
-            cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile, scan)
-            + cumulative_radial_build("dr_fw_inboard", mfile, scan)
-        ) / 2.0
-        rminx_inner = (
-            cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile, scan)
-            - cumulative_radial_build("dr_fw_inboard", mfile, scan)
-        ) / 2.0
+            # Upper first wall: inner surface
+            radx_inner = (
+                cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile, scan)
+                + cumulative_radial_build("dr_fw_inboard", mfile, scan)
+            ) / 2.0
+            rminx_inner = (
+                cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile, scan)
+                - cumulative_radial_build("dr_fw_inboard", mfile, scan)
+            ) / 2.0
 
-        fwg_single_null = first_wall_geometry_single_null(
-            radx_outer=radx_outer,
-            rminx_outer=rminx_outer,
-            radx_inner=radx_inner,
-            rminx_inner=rminx_inner,
-            cumulative_upper=cumulative_upper,
-            triang=triang_95,
-            cumulative_lower=cumulative_lower,
-            dz_blkt_upper=dz_blkt_upper,
-            c_blnkith=c_blnkith,
-            c_fwoth=c_fwoth,
-            dr_fw_inboard=dr_fw_inboard,
-            dr_fw_outboard=dr_fw_outboard,
-            tfwvt=tfwvt,
-        )
+            fwg_single_null = first_wall_geometry_single_null(
+                radx_outer=radx_outer,
+                rminx_outer=rminx_outer,
+                radx_inner=radx_inner,
+                rminx_inner=rminx_inner,
+                cumulative_upper=cumulative_upper,
+                triang=triang_95,
+                cumulative_lower=cumulative_lower,
+                dz_blkt_upper=dz_blkt_upper,
+                c_blnkith=c_blnkith,
+                c_fwoth=c_fwoth,
+                dr_fw_inboard=dr_fw_inboard,
+                dr_fw_outboard=dr_fw_outboard,
+                tfwvt=tfwvt,
+            )
 
-        # Plot first wall
-        axis.plot(
-            x_scale * np.array(fwg_single_null.rs),
-            fwg_single_null.zs,
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            x_scale * np.array(fwg_single_null.rs),
-            fwg_single_null.zs,
-            color=FIRSTWALL_COLOUR[colour_scheme - 1],
-            lw=0.01,
-        )
+            # Plot first wall
+            axis.plot(
+                x_scale * np.array(fwg_single_null.rs),
+                fwg_single_null.zs,
+                color="black",
+                lw=thin,
+            )
+            axis.fill(
+                x_scale * np.array(fwg_single_null.rs),
+                fwg_single_null.zs,
+                color=FIRSTWALL_COLOUR[colour_scheme - 1],
+                lw=0.01,
+            )
 
-    if i_single_null == 0:
-        fwg_double_null = first_wall_geometry_double_null(
-            cumulative_lower=cumulative_lower,
-            triang=triang_95,
-            dz_blkt_upper=dz_blkt_upper,
-            c_blnkith=c_blnkith,
-            c_fwoth=c_fwoth,
-            dr_fw_inboard=dr_fw_inboard,
-            dr_fw_outboard=dr_fw_outboard,
-            tfwvt=tfwvt,
-        )
-        # Plot first wall
-        axis.plot(
-            x_scale * np.array(fwg_double_null.rs[0]),
-            fwg_double_null.zs[0],
-            color="black",
-            lw=thin,
-        )
-        axis.plot(
-            x_scale * np.array(fwg_double_null.rs[1]),
-            fwg_double_null.zs[1],
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            x_scale * np.array(fwg_double_null.rs[0]),
-            fwg_double_null.zs[0],
-            color=FIRSTWALL_COLOUR[colour_scheme - 1],
-            lw=0.01,
-        )
-        axis.fill(
-            x_scale * np.array(fwg_double_null.rs[1]),
-            fwg_double_null.zs[1],
-            color=FIRSTWALL_COLOUR[colour_scheme - 1],
-            lw=0.01,
-        )
+        case DivertorNumberModels.DOUBLE_NULL:
+            fwg_double_null = first_wall_geometry_double_null(
+                cumulative_lower=cumulative_lower,
+                triang=triang_95,
+                dz_blkt_upper=dz_blkt_upper,
+                c_blnkith=c_blnkith,
+                c_fwoth=c_fwoth,
+                dr_fw_inboard=dr_fw_inboard,
+                dr_fw_outboard=dr_fw_outboard,
+                tfwvt=tfwvt,
+            )
+            # Plot first wall
+            axis.plot(
+                x_scale * np.array(fwg_double_null.rs[0]),
+                fwg_double_null.zs[0],
+                color="black",
+                lw=thin,
+            )
+            axis.plot(
+                x_scale * np.array(fwg_double_null.rs[1]),
+                fwg_double_null.zs[1],
+                color="black",
+                lw=thin,
+            )
+            axis.fill(
+                x_scale * np.array(fwg_double_null.rs[0]),
+                fwg_double_null.zs[0],
+                color=FIRSTWALL_COLOUR[colour_scheme - 1],
+                lw=0.01,
+            )
+            axis.fill(
+                x_scale * np.array(fwg_double_null.rs[1]),
+                fwg_double_null.zs[1],
+                color=FIRSTWALL_COLOUR[colour_scheme - 1],
+                lw=0.01,
+            )
 
 
 def plot_tf_coils(
@@ -8067,10 +8093,10 @@ def plot_pf_coils(
     noc = number_of_coils - 1 if iohcl == 1 else number_of_coils
 
     for coil in range(noc):
-        coils_r.append(mfile.get(f"r_pf_coil_middle[{coil:01}]", scan=scan))
-        coils_z.append(mfile.get(f"z_pf_coil_middle[{coil:01}]", scan=scan))
-        coils_dr.append(mfile.get(f"pfdr({coil:01})", scan=scan))
-        coils_dz.append(mfile.get(f"pfdz({coil:01})", scan=scan))
+        coils_r.append(mfile.get(f"r_pf_coil_middle[{coil + 1:01}]", scan=scan))
+        coils_z.append(mfile.get(f"z_pf_coil_middle[{coil + 1:01}]", scan=scan))
+        coils_dr.append(mfile.get(f"pfdr({coil + 1:01})", scan=scan))
+        coils_dz.append(mfile.get(f"pfdz({coil + 1:01})", scan=scan))
         coil_text.append(str(coil + 1))
 
     r_points, z_points, central_coil = pfcoil_geometry(
@@ -14893,7 +14919,7 @@ def plot_blkt_structure(
         label="Blanket Half Height",
     )
 
-    if i_single_null == 0:
+    if DivertorNumberModels(i_single_null) == DivertorNumberModels.DOUBLE_NULL:
         # Plot arrows for the outboard blanket angles
         ax.annotate(
             "",
@@ -14916,11 +14942,12 @@ def plot_blkt_structure(
 
     # 3 to 6 o'clock position is -90 degrees,
     angle_start = -90.0
-    if i_single_null == 1:
-        angle_end = 90.0 + deg_div_poloidal_plasma
-    elif i_single_null == 0:
-        # 3 to 12 o'clock position is +90 degrees
-        angle_end = 90.0
+    match DivertorNumberModels(i_single_null):
+        case DivertorNumberModels.SINGLE_NULL:
+            angle_end = 90.0 + deg_div_poloidal_plasma
+        case DivertorNumberModels.DOUBLE_NULL:
+            # 3 to 12 o'clock position is +90 degrees
+            angle_end = 90.0
 
     theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
     arc_x = rmajor + arc_radius * np.cos(theta)
@@ -15009,7 +15036,7 @@ def plot_blkt_structure(
 
     # Plot arrows for the divertor angles
     # If double null then plot the upper also
-    if i_single_null == 0:
+    if DivertorNumberModels(i_single_null) == DivertorNumberModels.DOUBLE_NULL:
         # Plot arc showing the angle between the two arrows (divertor angle)
         arc_radius = 1.5
         # 3 to 12 o'clock position is +90 degrees,
@@ -15697,17 +15724,13 @@ def plot_pf_cs_plasma_mutual_inductance(
     axis.set_title("PF/CS Plasma Mutual Inductance")
     axis.set_xticks(range(n_pf_cs_plasma_circuits))
     axis.set_yticks(range(n_pf_cs_plasma_circuits))
-    x_labels = list(range(n_pf_cs_plasma_circuits))
+    labels = list(range(1, n_pf_cs_plasma_circuits + 1))
 
     if iohcl == 1:
-        x_labels[-2] = "CS"
-    x_labels[-1] = "Plasma"
-    y_labels = list(range(n_pf_cs_plasma_circuits))
-    if iohcl == 1:
-        y_labels[-2] = "CS"
-    y_labels[-1] = "Plasma"
-    axis.set_xticklabels(x_labels)
-    axis.set_yticklabels(y_labels)
+        labels[-2] = "CS"
+    labels[-1] = "Plasma"
+    axis.set_xticklabels(labels)
+    axis.set_yticklabels(labels)
 
     # Add boxes around each cell
     for i in range(n_pf_cs_plasma_circuits):
@@ -16354,11 +16377,13 @@ def plot_pf_dimensions(
     z_pf_coil_middle = []
     radial_thicknesses = []
     vertical_thicknesses = []
-    for coil in range(int(mfile.get("n_pf_cs_plasma_circuits", scan=scan) - 2)):
-        r_pf_coil_middle.append(mfile.get(f"r_pf_coil_middle[{coil}]", scan=scan))
-        z_pf_coil_middle.append(mfile.get(f"z_pf_coil_middle[{coil}]", scan=scan))
-        radial_thicknesses.append(mfile.get(f"pfdr({coil})", scan=scan))
-        vertical_thicknesses.append(mfile.get(f"pfdz({coil})", scan=scan))
+    iohcl = mfile.get("iohcl", scan=scan) if "iohcl" in mfile.data else 1
+    x = 1 if iohcl == 0 else 2
+    for coil in range(int(mfile.get("n_pf_cs_plasma_circuits", scan=scan) - x)):
+        r_pf_coil_middle.append(mfile.get(f"r_pf_coil_middle[{coil + 1}]", scan=scan))
+        z_pf_coil_middle.append(mfile.get(f"z_pf_coil_middle[{coil + 1}]", scan=scan))
+        radial_thicknesses.append(mfile.get(f"pfdr({coil + 1})", scan=scan))
+        vertical_thicknesses.append(mfile.get(f"pfdz({coil + 1})", scan=scan))
 
     plot_pf_coils(axis=axis, mfile=mfile, scan=scan, colour_scheme=colour_scheme)
 
@@ -16710,7 +16735,7 @@ def main_plot(
     plot_magnetic_fields_in_plasma(
         _add_page("beta").add_subplot(122, aspect="equal"), m_file, scan
     )
-    plot_beta_profiles(pages["beta"].add_subplot(221), m_file, scan)
+    plot_beta_profiles(pages["beta"].add_subplot(321), m_file, scan)
 
     plot_ebw_ecrh_coupling_graph(_add_page().add_subplot(111), m_file, scan)
 

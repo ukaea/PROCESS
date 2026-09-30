@@ -1099,7 +1099,7 @@ class SuperconductingTFCoil(TFCoil):
                 "(temp_tf_conductor_quench_max)",
                 self.data.tfcoil.temp_tf_conductor_quench_max,
             )
-        elif self.data.tfcoil == 6:
+        elif self.data.tfcoil.i_tf_sc_mat == 6:
             po.ocmmnt(self.outfile, "CroCo cable with jacket: ")
 
             if 75 in self.data.numerics.icc:
@@ -1229,81 +1229,84 @@ class SuperconductingTFCoil(TFCoil):
 
         #  Temperature margin (already calculated in superconductors.bi2212 for
         # i_tf_superconductor=2)
-
-        if SuperconductorModel(i_tf_superconductor) == SuperconductorModel.BI2212:
-            # Bi-2212: temperature margin already calculated elsewhere
-            temp_tf_superconductor_margin = 0.0
-            # Find temperature at which current density margin = 0
-        elif SuperconductorModel(i_tf_superconductor) in {
-            SuperconductorModel.ITER_NB3SN,
-            SuperconductorModel.OLD_LUBELL_NBTI,
-            SuperconductorModel.USER_DEFINED_NB3SN,
-            SuperconductorModel.WST_NB3SN,
-            SuperconductorModel.DURHAM_NBTI,
-            SuperconductorModel.DURHAM_REBCO,
-            SuperconductorModel.HAZELTON_ZHAI_REBCO,
-        }:
-            if (
-                SuperconductorModel(i_tf_superconductor)
-                == SuperconductorModel.OLD_LUBELL_NBTI
+        match SuperconductorModel(i_tf_superconductor):
+            case SuperconductorModel.BI2212:
+                # Bi-2212: temperature margin already calculated elsewhere
+                temp_tf_superconductor_margin = 0.0
+                # Find temperature at which current density margin = 0
+            case (
+                SuperconductorModel.ITER_NB3SN
+                | SuperconductorModel.OLD_LUBELL_NBTI
+                | SuperconductorModel.USER_DEFINED_NB3SN
+                | SuperconductorModel.WST_NB3SN
+                | SuperconductorModel.DURHAM_NBTI
+                | SuperconductorModel.DURHAM_REBCO
+                | SuperconductorModel.HAZELTON_ZHAI_REBCO
             ):
-                arguments = (
-                    i_tf_superconductor,
-                    j_superconductor,
-                    b_tf_inboard_peak,
-                    strain,
-                    bc20m,
-                    tc0m,
-                    data.superconducting_tfcoil.dr_tf_hts_tape,
-                    data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
-                    data.superconducting_tfcoil.dx_tf_hts_tape_total,
-                    c0,
-                )
-            else:
-                arguments = (
-                    i_tf_superconductor,
-                    j_superconductor,
-                    b_tf_inboard_peak,
-                    strain,
-                    bc20m,
-                    tc0m,
-                    data.superconducting_tfcoil.dr_tf_hts_tape,
-                    data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
-                    data.superconducting_tfcoil.dx_tf_hts_tape_total,
-                )
+                if (
+                    SuperconductorModel(i_tf_superconductor)
+                    == SuperconductorModel.OLD_LUBELL_NBTI
+                ):
+                    arguments = (
+                        i_tf_superconductor,
+                        j_superconductor,
+                        b_tf_inboard_peak,
+                        strain,
+                        bc20m,
+                        tc0m,
+                        data.superconducting_tfcoil.dr_tf_hts_tape,
+                        data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
+                        data.superconducting_tfcoil.dx_tf_hts_tape_total,
+                        c0,
+                    )
+                else:
+                    arguments = (
+                        i_tf_superconductor,
+                        j_superconductor,
+                        b_tf_inboard_peak,
+                        strain,
+                        bc20m,
+                        tc0m,
+                        data.superconducting_tfcoil.dr_tf_hts_tape,
+                        data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
+                        data.superconducting_tfcoil.dx_tf_hts_tape_total,
+                    )
 
-            another_estimate = 2 * temp_tf_coolant_peak_field
-            (
-                t_zero_margin,
-                _,
-            ) = optimize.newton(
-                superconductors.superconductor_current_density_margin,
-                temp_tf_coolant_peak_field,
-                fprime=None,
-                args=arguments,
-                tol=1.0e-06,
-                maxiter=50,
-                fprime2=None,
-                x1=another_estimate,
-                rtol=1.0e-6,
-                full_output=True,
-                disp=True,
-            )
-            temp_tf_superconductor_margin = t_zero_margin - temp_tf_coolant_peak_field
-            data.tfcoil.temp_margin = temp_tf_superconductor_margin
-
-            if temp_tf_superconductor_margin <= 0.0e0:
-                logger.error(
-                    """Negative TFC temperature margin
-                temp_tf_superconductor_margin: {temp_tf_superconductor_margin}
-                b_tf_inboard_peak: {b_tf_inboard_peak}
-                j_superconductor: {j_superconductor}
-                """
+                another_estimate = 2 * temp_tf_coolant_peak_field
+                (
+                    t_zero_margin,
+                    _,
+                ) = optimize.newton(
+                    superconductors.superconductor_current_density_margin,
+                    temp_tf_coolant_peak_field,
+                    fprime=None,
+                    args=arguments,
+                    tol=1.0e-06,
+                    maxiter=50,
+                    fprime2=None,
+                    x1=another_estimate,
+                    rtol=1.0e-6,
+                    full_output=True,
+                    disp=True,
                 )
-        else:
-            raise ProcessValueError(
-                f"Unknown superconductor type: i_tf_superconductor={i_tf_superconductor}"
-            )
+                temp_tf_superconductor_margin = (
+                    t_zero_margin - temp_tf_coolant_peak_field
+                )
+                data.tfcoil.temp_margin = temp_tf_superconductor_margin
+
+                if temp_tf_superconductor_margin <= 0.0e0:
+                    logger.error(
+                        f"""Negative TFC temperature margin
+                    temp_tf_superconductor_margin: {temp_tf_superconductor_margin}
+                    b_tf_inboard_peak: {b_tf_inboard_peak}
+                    j_superconductor: {j_superconductor}
+                    """
+                    )
+            case _:
+                raise ProcessValueError(
+                    f"Unknown superconductor type: "
+                    f"i_tf_superconductor={i_tf_superconductor}"
+                )
 
         return temp_tf_superconductor_margin
 
@@ -1435,19 +1438,17 @@ class SuperconductingTFCoil(TFCoil):
         d_sc_tf = self.data.superconducting_tfcoil
 
         d_sc_tf.vv_stress_quench = vv_stress_on_quench(
-            # TF shape
-            H_coil=H_coil,
-            ri_coil=ri_coil,
-            ro_coil=ro_coil,
-            rm_coil=rm_coil,
-            ccl_length_coil=self.data.tfcoil.len_tf_coil,
-            theta1_coil=self.data.tfcoil.theta1_coil,
-            # VV shape
-            H_vv=H_vv,
-            ri_vv=ri_vv,
-            ro_vv=ro_vv,
-            rm_vv=rm_vv,
-            theta1_vv=self.data.tfcoil.theta1_vv,
+            coil=TFComponentShape(
+                H=H_coil,
+                ri=ri_coil,
+                ro=ro_coil,
+                rm=rm_coil,
+                ccl_length=self.data.tfcoil.len_tf_coil,
+                theta1=self.data.tfcoil.theta1_coil,
+            ),
+            vv=VVComponentShape(
+                H=H_vv, ri=ri_vv, ro=ro_vv, rm=rm_vv, theta1=self.data.tfcoil.theta1_vv
+            ),
             # TF properties
             n_tf_coils=self.data.tfcoil.n_tf_coils,
             n_tf_coil_turns=self.data.tfcoil.n_tf_coil_turns,
@@ -1511,25 +1512,24 @@ class SuperconductingTFCoil(TFCoil):
         #  Set fitting coefficients for different numbers of TF coils
 
         int_n_tf = np.round(n_tf_coils)
-
-        if int_n_tf == 16:
-            a[0] = 0.28101e0
-            a[1] = 1.8481e0
-            a[2] = -0.88159e0
-            a[3] = 0.93834e0
-        elif int_n_tf == 18:
-            a[0] = 0.29153e0
-            a[1] = 1.81600e0
-            a[2] = -0.84178e0
-            a[3] = 0.90426e0
-        elif int_n_tf == 20:
-            a[0] = 0.29853e0
-            a[1] = 1.82130e0
-            a[2] = -0.85031e0
-            a[3] = 0.89808e0
-
-        else:
-            return 1.09e0 * b_tf_inboard_peak_symmetric
+        match int_n_tf:
+            case 16:
+                a[0] = 0.28101e0
+                a[1] = 1.8481e0
+                a[2] = -0.88159e0
+                a[3] = 0.93834e0
+            case 18:
+                a[0] = 0.29153e0
+                a[1] = 1.81600e0
+                a[2] = -0.84178e0
+                a[3] = 0.90426e0
+            case 20:
+                a[0] = 0.29853e0
+                a[1] = 1.82130e0
+                a[2] = -0.85031e0
+                a[3] = 0.89808e0
+            case _:
+                return 1.09e0 * b_tf_inboard_peak_symmetric
 
         #  Maximum winding pack width before adjacent packs touch
         #  (ignoring the external case and ground wall thicknesses)
@@ -1551,7 +1551,6 @@ class SuperconductingTFCoil(TFCoil):
 
         d_sc_tf.tf_fit_z = dr_tf_wp_no_insulation / dx_tf_wp_toroidal_max
         if (d_sc_tf.tf_fit_z < 0.26e0) or (d_sc_tf.tf_fit_z > 0.7e0):
-            # write(*,*) 'PEAK_TF_WITH_RIPPLE: fitting problem; z = ',z
             logger.warning(
                 "(TF coil peak field calculation) Winding pack radial thickness out of "
                 "fitted range"
@@ -1634,159 +1633,159 @@ class SuperconductingTFCoil(TFCoil):
             dx_tf_wp_insulation + dx_tf_wp_insertion_gap
         )
 
-        i_tf_wp_geom = SuperconductingTFWPShapeType(i_tf_wp_geom)
+        match SuperconductingTFWPShapeType(i_tf_wp_geom):
+            # Rectangular WP
+            # --------------
+            case SuperconductingTFWPShapeType.RECTANGULAR:
+                # Outer WP layer toroidal thickness [m]
+                dx_tf_wp_primary_toroidal = dx_tf_wp_toroidal_min
 
-        # Rectangular WP
-        # --------------
-        if i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
-            # Outer WP layer toroidal thickness [m]
-            dx_tf_wp_primary_toroidal = dx_tf_wp_toroidal_min
+                # No secondary WP here but will set for consistency
+                dx_tf_wp_secondary_toroidal = dx_tf_wp_toroidal_min
 
-            # No secondary WP here but will set for consistency
-            dx_tf_wp_secondary_toroidal = dx_tf_wp_toroidal_min
+                # Averaged toroidal thickness of of winding pack [m]
+                dx_tf_wp_toroidal_average = dx_tf_wp_toroidal_min
 
-            # Averaged toroidal thickness of of winding pack [m]
-            dx_tf_wp_toroidal_average = dx_tf_wp_toroidal_min
+                # Total cross-sectional area of winding pack [m²]
+                a_tf_wp_with_insulation = (
+                    dr_tf_wp_with_insulation * dx_tf_wp_primary_toroidal
+                )
 
-            # Total cross-sectional area of winding pack [m²]
-            a_tf_wp_with_insulation = (
-                dr_tf_wp_with_insulation * dx_tf_wp_primary_toroidal
-            )
-
-            # WP cross-section without insertion gap and ground insulation [m²]
-            a_tf_wp_no_insulation = (
-                dr_tf_wp_with_insulation
-                - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
-            ) * (
-                dx_tf_wp_primary_toroidal
-                - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
-            )
-
-            # Cross-section area of the WP ground insulation [m²]
-            a_tf_wp_ground_insulation = (
-                dr_tf_wp_with_insulation - 2.0e0 * dx_tf_wp_insertion_gap
-            ) * (
-                dx_tf_wp_primary_toroidal - 2.0e0 * dx_tf_wp_insertion_gap
-            ) - a_tf_wp_no_insulation
-
-        # Double rectangular WP
-        # ---------------------
-        elif i_tf_wp_geom == SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
-            # Thickness of winding pack section at R >
-            # d_sc_tf.r_tf_wp_inboard_centre [m]
-            dx_tf_wp_primary_toroidal = 2.0e0 * (
-                r_tf_wp_inboard_centre * tan_theta_coil - dx_tf_side_case_min
-            )
-
-            # Thickness of winding pack section at R <
-            # d_sc_tf.r_tf_wp_inboard_centre [m]
-            dx_tf_wp_secondary_toroidal = 2.0e0 * (
-                r_tf_wp_inboard_inner * tan_theta_coil - dx_tf_side_case_min
-            )
-
-            # Averaged toroidal thickness of of winding pack [m]
-            dx_tf_wp_toroidal_average = 0.5e0 * (
-                dx_tf_wp_primary_toroidal + dx_tf_wp_secondary_toroidal
-            )
-
-            # Total cross-sectional area of winding pack [m²]
-            # Including ground insulation and insertion gap
-            a_tf_wp_with_insulation = (
-                dr_tf_wp_with_insulation * dx_tf_wp_toroidal_average
-            )
-
-            # WP cross-section without insertion gap and ground insulation [m²]
-            a_tf_wp_no_insulation = (
-                0.5e0
-                * (
+                # WP cross-section without insertion gap and ground insulation [m²]
+                a_tf_wp_no_insulation = (
                     dr_tf_wp_with_insulation
                     - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
-                )
-                * (
+                ) * (
                     dx_tf_wp_primary_toroidal
-                    + dx_tf_wp_secondary_toroidal
-                    - 4.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
-                )
-            )
-
-            # Cross-section area of the WP ground insulation [m²]
-            a_tf_wp_ground_insulation = (
-                0.5e0
-                * (dr_tf_wp_with_insulation - 2.0e0 * dx_tf_wp_insertion_gap)
-                * (
-                    dx_tf_wp_primary_toroidal
-                    + dx_tf_wp_secondary_toroidal
-                    - 4.0e0 * dx_tf_wp_insertion_gap
-                )
-                - a_tf_wp_no_insulation
-            )
-
-        # Trapezoidal WP
-        # --------------
-        elif i_tf_wp_geom == SuperconductingTFWPShapeType.TRAPEZOIDAL:
-            # Thickness of winding pack section at r_tf_wp_inboard_outer [m]
-            dx_tf_wp_primary_toroidal = 2.0e0 * (
-                r_tf_wp_inboard_outer * tan_theta_coil - dx_tf_side_case_min
-            )
-
-            # Thickness of winding pack section at r_tf_wp_inboard_inner [m]
-            dx_tf_wp_secondary_toroidal = 2.0e0 * (
-                r_tf_wp_inboard_inner * tan_theta_coil - dx_tf_side_case_min
-            )
-
-            # Averaged toroidal thickness of of winding pack [m]
-            dx_tf_wp_toroidal_average = 0.5e0 * (
-                dx_tf_wp_primary_toroidal + dx_tf_wp_secondary_toroidal
-            )
-
-            # Total cross-sectional area of winding pack [m²]
-            # Including ground insulation and insertion gap
-            a_tf_wp_with_insulation = (
-                dr_tf_wp_with_insulation
-                * 0.5
-                * (dx_tf_wp_primary_toroidal + dx_tf_wp_secondary_toroidal)
-            )
-
-            # WP cross-section without insertion gap and ground insulation [m²]
-            a_tf_wp_no_insulation = (
-                (
-                    dr_tf_wp_with_insulation
                     - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
                 )
-                * (
-                    (
-                        dx_tf_wp_secondary_toroidal
+
+                # Cross-section area of the WP ground insulation [m²]
+                a_tf_wp_ground_insulation = (
+                    dr_tf_wp_with_insulation - 2.0e0 * dx_tf_wp_insertion_gap
+                ) * (
+                    dx_tf_wp_primary_toroidal - 2.0e0 * dx_tf_wp_insertion_gap
+                ) - a_tf_wp_no_insulation
+
+            # Double rectangular WP
+            # ---------------------
+            case SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
+                # Thickness of winding pack section at R >
+                # d_sc_tf.r_tf_wp_inboard_centre [m]
+                dx_tf_wp_primary_toroidal = 2.0e0 * (
+                    r_tf_wp_inboard_centre * tan_theta_coil - dx_tf_side_case_min
+                )
+
+                # Thickness of winding pack section at R <
+                # d_sc_tf.r_tf_wp_inboard_centre [m]
+                dx_tf_wp_secondary_toroidal = 2.0e0 * (
+                    r_tf_wp_inboard_inner * tan_theta_coil - dx_tf_side_case_min
+                )
+
+                # Averaged toroidal thickness of of winding pack [m]
+                dx_tf_wp_toroidal_average = 0.5e0 * (
+                    dx_tf_wp_primary_toroidal + dx_tf_wp_secondary_toroidal
+                )
+
+                # Total cross-sectional area of winding pack [m²]
+                # Including ground insulation and insertion gap
+                a_tf_wp_with_insulation = (
+                    dr_tf_wp_with_insulation * dx_tf_wp_toroidal_average
+                )
+
+                # WP cross-section without insertion gap and ground insulation [m²]
+                a_tf_wp_no_insulation = (
+                    0.5e0
+                    * (
+                        dr_tf_wp_with_insulation
                         - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
                     )
-                    + (
+                    * (
                         dx_tf_wp_primary_toroidal
-                        - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
+                        + dx_tf_wp_secondary_toroidal
+                        - 4.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
                     )
                 )
-                / 2
-            )
 
-            # Cross-section area of the WP ground insulation [m²]
-            a_tf_wp_ground_insulation = (
-                dr_tf_wp_with_insulation - 2.0e0 * dx_tf_wp_insertion_gap
-            ) * (
-                (
-                    (dx_tf_wp_primary_toroidal - 2.0e0 * dx_tf_wp_insertion_gap)
-                    + (dx_tf_wp_secondary_toroidal - 2.0e0 * dx_tf_wp_insertion_gap)
+                # Cross-section area of the WP ground insulation [m²]
+                a_tf_wp_ground_insulation = (
+                    0.5e0
+                    * (dr_tf_wp_with_insulation - 2.0e0 * dx_tf_wp_insertion_gap)
+                    * (
+                        dx_tf_wp_primary_toroidal
+                        + dx_tf_wp_secondary_toroidal
+                        - 4.0e0 * dx_tf_wp_insertion_gap
+                    )
+                    - a_tf_wp_no_insulation
                 )
-                / 2
-            ) - a_tf_wp_no_insulation
 
-        else:
-            raise ProcessValueError(
-                f"Invalid winding pack geometry index: {i_tf_wp_geom}"
-            )
+            # Trapezoidal WP
+            # --------------
+            case SuperconductingTFWPShapeType.TRAPEZOIDAL:
+                # Thickness of winding pack section at r_tf_wp_inboard_outer [m]
+                dx_tf_wp_primary_toroidal = 2.0e0 * (
+                    r_tf_wp_inboard_outer * tan_theta_coil - dx_tf_side_case_min
+                )
+
+                # Thickness of winding pack section at r_tf_wp_inboard_inner [m]
+                dx_tf_wp_secondary_toroidal = 2.0e0 * (
+                    r_tf_wp_inboard_inner * tan_theta_coil - dx_tf_side_case_min
+                )
+
+                # Averaged toroidal thickness of of winding pack [m]
+                dx_tf_wp_toroidal_average = 0.5e0 * (
+                    dx_tf_wp_primary_toroidal + dx_tf_wp_secondary_toroidal
+                )
+
+                # Total cross-sectional area of winding pack [m²]
+                # Including ground insulation and insertion gap
+                a_tf_wp_with_insulation = (
+                    dr_tf_wp_with_insulation
+                    * 0.5
+                    * (dx_tf_wp_primary_toroidal + dx_tf_wp_secondary_toroidal)
+                )
+
+                # WP cross-section without insertion gap and ground insulation [m²]
+                a_tf_wp_no_insulation = (
+                    (
+                        dr_tf_wp_with_insulation
+                        - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
+                    )
+                    * (
+                        (
+                            dx_tf_wp_secondary_toroidal
+                            - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
+                        )
+                        + (
+                            dx_tf_wp_primary_toroidal
+                            - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
+                        )
+                    )
+                    / 2
+                )
+
+                # Cross-section area of the WP ground insulation [m²]
+                a_tf_wp_ground_insulation = (
+                    dr_tf_wp_with_insulation - 2.0e0 * dx_tf_wp_insertion_gap
+                ) * (
+                    (
+                        (dx_tf_wp_primary_toroidal - 2.0e0 * dx_tf_wp_insertion_gap)
+                        + (dx_tf_wp_secondary_toroidal - 2.0e0 * dx_tf_wp_insertion_gap)
+                    )
+                    / 2
+                ) - a_tf_wp_no_insulation
+
+            case _:
+                raise ProcessValueError(
+                    f"Invalid winding pack geometry index: {i_tf_wp_geom}"
+                )
 
         # --------------
         # Negative WP area error reporting
         if a_tf_wp_no_insulation <= 0.0e0 or a_tf_wp_with_insulation <= 0.0e0:
             logger.error(
-                "Winding pack cross-section problem... %s %s",
+                "Winding pack cross-section problem... a_tf_wp_no_insulation=%s, "
+                "a_tf_wp_with_insulation=%s",
                 a_tf_wp_no_insulation,
                 a_tf_wp_with_insulation,
             )
@@ -1886,17 +1885,18 @@ class SuperconductingTFCoil(TFCoil):
         a_tf_coil_outboard_case = a_tf_leg_outboard - a_tf_wp_with_insulation
 
         # Front casing area [m²]
-        if i_tf_case_geom == TFPlasmaCaseType.CIRCULAR:
-            # Circular front case
-            a_tf_plasma_case = (
-                rad_tf_coil_inboard_toroidal_half * r_tf_inboard_out**2
-            ) - (tan_theta_coil * r_tf_wp_inboard_outer**2)
-        elif i_tf_case_geom == TFPlasmaCaseType.STRAIGHT:
-            # Straight front case [m²]
-            a_tf_plasma_case = (
-                (r_tf_wp_inboard_outer + dr_tf_plasma_case) ** 2
-                - r_tf_wp_inboard_outer**2
-            ) * tan_theta_coil
+        match TFPlasmaCaseType(i_tf_case_geom):
+            case TFPlasmaCaseType.CIRCULAR:
+                # Circular front case
+                a_tf_plasma_case = (
+                    rad_tf_coil_inboard_toroidal_half * r_tf_inboard_out**2
+                ) - (tan_theta_coil * r_tf_wp_inboard_outer**2)
+            case TFPlasmaCaseType.STRAIGHT:
+                # Straight front case [m²]
+                a_tf_plasma_case = (
+                    (r_tf_wp_inboard_outer + dr_tf_plasma_case) ** 2
+                    - r_tf_wp_inboard_outer**2
+                ) * tan_theta_coil
 
         # Nose casing area [m²]
         a_tf_coil_nose_case = (
@@ -1907,7 +1907,8 @@ class SuperconductingTFCoil(TFCoil):
         # Report error if the casing area is negative
         if a_tf_coil_inboard_case <= 0.0e0 or a_tf_coil_outboard_case <= 0.0e0:
             logger.error(
-                "Winding pack cross-section problem... %s %s",
+                "Winding pack cross-section problem... a_tf_coil_inboard_case=%s, "
+                "a_tf_coil_outboard_case=%s",
                 a_tf_coil_inboard_case,
                 a_tf_coil_outboard_case,
             )
@@ -1915,49 +1916,51 @@ class SuperconductingTFCoil(TFCoil):
         # Average lateral casing thickness [m]
         # --------------
         # Rectangular casing
-        if i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
-            dx_tf_side_case_average = (
-                dx_tf_side_case_min + 0.5e0 * tan_theta_coil * dr_tf_wp_with_insulation
-            )
+        match SuperconductingTFWPShapeType(i_tf_wp_geom):
+            case SuperconductingTFWPShapeType.RECTANGULAR:
+                dx_tf_side_case_average = (
+                    dx_tf_side_case_min
+                    + 0.5e0 * tan_theta_coil * dr_tf_wp_with_insulation
+                )
 
-        # Double rectangular WP
-        elif i_tf_wp_geom == SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
-            dx_tf_side_case_average = (
-                dx_tf_side_case_min + 0.25e0 * tan_theta_coil * dr_tf_wp_with_insulation
-            )
+            # Double rectangular WP
+            case SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
+                dx_tf_side_case_average = (
+                    dx_tf_side_case_min
+                    + 0.25e0 * tan_theta_coil * dr_tf_wp_with_insulation
+                )
 
-        # Trapezoidal WP
-        elif i_tf_wp_geom == SuperconductingTFWPShapeType.TRAPEZOIDAL:
-            dx_tf_side_case_average = dx_tf_side_case_min
-        else:
-            raise ProcessValueError(
-                "Unsupported TF winding pack geometry for average lateral "
-                "casing thickness",
-                {"i_tf_wp_geom": i_tf_wp_geom},
-            )
+            # Trapezoidal WP
+            case SuperconductingTFWPShapeType.TRAPEZOIDAL:
+                dx_tf_side_case_average = dx_tf_side_case_min
+            case _:
+                raise ProcessValueError(
+                    "Unsupported TF winding pack geometry for average lateral "
+                    "casing thickness",
+                    {"i_tf_wp_geom": i_tf_wp_geom},
+                )
 
         # Peak lateral casing thickness [m]
         # --------------
         # Rectangular casing
+        match SuperconductingTFWPShapeType(i_tf_wp_geom):
+            case SuperconductingTFWPShapeType.RECTANGULAR:
+                dx_tf_side_case_peak = (
+                    dx_tf_side_case_min + tan_theta_coil * dr_tf_wp_with_insulation
+                )
 
-        if i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
-            dx_tf_side_case_peak = (
-                dx_tf_side_case_min + tan_theta_coil * dr_tf_wp_with_insulation
-            )
-        # Double rectangular WP
-        elif i_tf_wp_geom == SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
-            dx_tf_side_case_peak = (
-                dx_tf_side_case_min + 0.5 * tan_theta_coil * dr_tf_wp_with_insulation
-            )
+            case SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
+                dx_tf_side_case_peak = (
+                    dx_tf_side_case_min + 0.5 * tan_theta_coil * dr_tf_wp_with_insulation
+                )
 
-        # Trapezoidal WP
-        # Constant thickness so min = average
-        elif i_tf_wp_geom == SuperconductingTFWPShapeType.TRAPEZOIDAL:
-            dx_tf_side_case_peak = dx_tf_side_case_min
-        else:
-            raise ProcessValueError(
-                f"Unsupported TF winding pack geometry: {i_tf_wp_geom}"
-            )
+            case SuperconductingTFWPShapeType.TRAPEZOIDAL:
+                dx_tf_side_case_peak = dx_tf_side_case_min
+
+            case _:
+                raise ProcessValueError(
+                    f"Unsupported TF winding pack geometry: {i_tf_wp_geom}"
+                )
 
         return (
             a_tf_coil_inboard_case,
@@ -2115,31 +2118,21 @@ class SuperconductingTFCoil(TFCoil):
 
         try:  # noqa: PLW0717
             (
-                sig_tf_r_max,
-                sig_tf_t_max,
-                sig_tf_z_max,
+                sig_tf_max,
                 sig_tf_vmises_max,
                 s_shear_tf_peak,
                 deflect,
-                eyoung_axial,
-                eyoung_trans,
-                eyoung_wp_axial,
-                eyoung_wp_trans,
+                eyoung,
+                eyoung_wp,
                 poisson_wp_trans,
                 radial_array,
                 s_shear_cea_tf_cond,
                 poisson_wp_axial,
-                sig_tf_r,
-                sig_tf_smeared_r,
-                sig_tf_smeared_t,
-                sig_tf_smeared_z,
-                sig_tf_t,
+                sig_tf,
+                sig_tf_smeared,
                 s_shear_tf,
                 sig_tf_vmises,
-                sig_tf_z,
-                str_tf_r,
-                str_tf_t,
-                str_tf_z,
+                str_tf,
                 n_radial_array,
                 n_tf_bucking,
                 self.data.tfcoil.sig_tf_wp,
@@ -2245,31 +2238,21 @@ class SuperconductingTFCoil(TFCoil):
             )
 
             self.out_stress(
-                sig_tf_r_max,
-                sig_tf_t_max,
-                sig_tf_z_max,
+                sig_tf_max,
                 sig_tf_vmises_max,
                 s_shear_tf_peak,
                 deflect,
-                eyoung_axial,
-                eyoung_trans,
-                eyoung_wp_axial,
-                eyoung_wp_trans,
+                eyoung,
+                eyoung_wp,
                 poisson_wp_trans,
                 radial_array,
                 s_shear_cea_tf_cond,
                 poisson_wp_axial,
-                sig_tf_r,
-                sig_tf_smeared_r,
-                sig_tf_smeared_t,
-                sig_tf_smeared_z,
-                sig_tf_t,
+                sig_tf,
+                sig_tf_smeared,
                 s_shear_tf,
                 sig_tf_vmises,
-                sig_tf_z,
-                str_tf_r,
-                str_tf_t,
-                str_tf_z,
+                str_tf,
                 n_radial_array,
                 n_tf_bucking,
                 sig_tf_wp_av_z,
@@ -2538,31 +2521,21 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         try:  # noqa: PLW0717
             (
-                sig_tf_r_max,
-                sig_tf_t_max,
-                sig_tf_z_max,
+                sig_tf_max,
                 sig_tf_vmises_max,
                 s_shear_tf_peak,
                 deflect,
-                eyoung_axial,
-                eyoung_trans,
-                eyoung_wp_axial,
-                eyoung_wp_trans,
+                eyoung,
+                eyoung_wp,
                 poisson_wp_trans,
                 radial_array,
                 s_shear_cea_tf_cond,
                 poisson_wp_axial,
-                sig_tf_r,
-                sig_tf_smeared_r,
-                sig_tf_smeared_t,
-                sig_tf_smeared_z,
-                sig_tf_t,
+                sig_tf,
+                sig_tf_smeared,
                 s_shear_tf,
                 sig_tf_vmises,
-                sig_tf_z,
-                str_tf_r,
-                str_tf_t,
-                str_tf_z,
+                str_tf,
                 n_radial_array,
                 n_tf_bucking,
                 self.data.tfcoil.sig_tf_wp,
@@ -2669,31 +2642,21 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
             if output:
                 self.out_stress(
-                    sig_tf_r_max,
-                    sig_tf_t_max,
-                    sig_tf_z_max,
+                    sig_tf_max,
                     sig_tf_vmises_max,
                     s_shear_tf_peak,
                     deflect,
-                    eyoung_axial,
-                    eyoung_trans,
-                    eyoung_wp_axial,
-                    eyoung_wp_trans,
+                    eyoung,
+                    eyoung_wp,
                     poisson_wp_trans,
                     radial_array,
                     s_shear_cea_tf_cond,
                     poisson_wp_axial,
-                    sig_tf_r,
-                    sig_tf_smeared_r,
-                    sig_tf_smeared_t,
-                    sig_tf_smeared_z,
-                    sig_tf_t,
+                    sig_tf,
+                    sig_tf_smeared,
                     s_shear_tf,
                     sig_tf_vmises,
-                    sig_tf_z,
-                    str_tf_r,
-                    str_tf_t,
-                    str_tf_z,
+                    str_tf,
                     n_radial_array,
                     n_tf_bucking,
                     sig_tf_wp_av_z,
@@ -2918,218 +2881,237 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             strain = data.tfcoil.str_wp
 
         # =================================================================
+        match SuperconductorModel(i_tf_superconductor):
+            # ITER Nb3Sn critical surface parameterization
+            case SuperconductorModel.ITER_NB3SN:
+                # Peak field and temperature at zero strain
+                bc20m = SuperconductorModel.ITER_NB3SN.b_crit_zero_field_strain  # [T]
+                tc0m = SuperconductorModel.ITER_NB3SN.temp_crit_zero_field_strain  # [K]
 
-        # ITER Nb3Sn critical surface parameterization
-        if i_tf_superconductor == SuperconductorModel.ITER_NB3SN:
-            # Peak field and temperature at zero strain
-            bc20m = SuperconductorModel.ITER_NB3SN.b_crit_zero_field_strain  # [T]
-            tc0m = SuperconductorModel.ITER_NB3SN.temp_crit_zero_field_strain  # [K]
+                # If strain limit achieved, throw a warning and use the lower strain
+                if abs(strain) > 0.5e-2:
+                    logger.error(
+                        f"TF strain={strain} was outside the region of applicability. "
+                        f"Used lower strain."
+                    )
+                    strain = np.sign(strain) * 0.5e-2
 
-            # If strain limit achieved, throw a warning and use the lower strain
-            if abs(strain) > 0.5e-2:
-                logger.error(
-                    f"TF strain={strain} was outside the region of applicability. "
-                    f"Used lower strain."
-                )
-                strain = np.sign(strain) * 0.5e-2
-
-            #  j_superconductor_critical returned by superconductors.itersc is the
-            # critical current density in the superconductor - not the whole strand,
-            # which contains copper
-            j_superconductor_critical, _, _ = superconductors.itersc(
-                temp_conductor=temp_tf_coolant_peak_field,
-                b_conductor=b_tf_inboard_peak,
-                strain=strain,
-                b_c20max=bc20m,
-                temp_c0max=tc0m,
-            )
-
-            # Scale for the copper area fraction of the cable
-            j_cables_critical = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
-
-            #  Critical current in turn all turn cables
-            c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
-
-            # Strand critical current calculation for costing in $/kAm
-            # = Superconducting filaments jc * (1 - strand copper fraction)
-            data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
-
-        # =================================================================
-
-        # Bi-2212 high temperature superconductor parameterization
-        elif i_tf_superconductor == SuperconductorModel.BI2212:
-            #  Current density in a strand of Bi-2212 conductor
-            #  N.B. jcrit returned by superconductors.bi2212 is the critical
-            # current density in the strand, not just the superconducting portion.
-            #  The parameterization for j_crit_cable assumes a particular strand
-            #  composition that does not require a user-defined copper fraction,
-            #  so this is irrelevant in this model
-            j_strand = (
-                j_tf_wp
-                * a_tf_turn
-                / (a_tf_turn_cable_space * f_a_tf_turn_cable_space_conductor)
-            )
-
-            j_crit_cable, _ = superconductors.bi2212(
-                b_conductor=b_tf_inboard_peak,
-                jstrand=j_strand,
-                temp_conductor=temp_tf_coolant_peak_field,
-                f_strain=f_strain_scale,
-            )
-            j_superconductor_critical = j_crit_cable / (1.0e0 - f_a_tf_turn_cable_copper)
-            #  Critical current in cable
-            c_turn_cables_critical = (
-                j_crit_cable * a_tf_turn_cable_space * f_a_tf_turn_cable_space_conductor
-            )
-
-            # Strand critical current calulation for costing in $ / kAm
-            # Copper in the strand is already accounted for
-            data.tfcoil.j_crit_str_tf = j_superconductor_critical
-        # =================================================================
-
-        # NbTi data
-        elif i_tf_superconductor == SuperconductorModel.OLD_LUBELL_NBTI:
-            bc20m = SuperconductorModel.OLD_LUBELL_NBTI.b_crit_zero_field_strain  # [T]
-            tc0m = SuperconductorModel.OLD_LUBELL_NBTI.temp_crit_zero_field_strain  # [K]
-            c0 = 1.0e10  # [A/m²]
-
-            j_superconductor_critical, _ = superconductors.jcrit_nbti(
-                temp_conductor=temp_tf_coolant_peak_field,
-                b_conductor=b_tf_inboard_peak,
-                c0=c0,
-                b_c20max=bc20m,
-                temp_c0max=tc0m,
-            )
-
-            # Scale for the copper area fraction of the cable
-            j_cables_critical = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
-
-            #  Critical current in turn all turn cables
-            c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
-
-            # Strand critical current calulation for costing in $ / kAm
-            # = superconducting filaments jc * (1 -strand copper fraction)
-            data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
-
-        # =================================================================
-
-        # ITER Nb3Sn parameterization, but user-defined parameters
-        elif i_tf_superconductor == SuperconductorModel.USER_DEFINED_NB3SN:
-            bc20m = bcritsc  # [T]
-            tc0m = tcritsc  # [K]
-
-            # If strain limit achieved, throw a warning and use the lower strain
-            if abs(strain) > 0.5e-2:
-                logger.error(
-                    f"TF strain={strain} was outside the region of applicability. "
-                    f"Used lower strain."
-                )
-                strain = np.sign(strain) * 0.5e-2
-
-            j_superconductor_critical, _, _ = superconductors.itersc(
-                temp_conductor=temp_tf_coolant_peak_field,
-                b_conductor=b_tf_inboard_peak,
-                strain=strain,
-                b_c20max=bc20m,
-                temp_c0max=tc0m,
-            )
-            # Scale for the copper area fraction of the cable
-            j_cables_critical = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
-
-            #  Critical current in turn all turn cables
-            c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
-
-            # Strand critical current calulation for costing in $ / kAm
-            # = superconducting filaments jc * (1 -strand copper fraction)
-            data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
-
-        # =================================================================
-
-        # WST Nb3Sn parameterisation
-        elif i_tf_superconductor == SuperconductorModel.WST_NB3SN:
-            bc20m = SuperconductorModel.WST_NB3SN.b_crit_zero_field_strain  # [T]
-            tc0m = SuperconductorModel.WST_NB3SN.temp_crit_zero_field_strain  # [K]
-
-            # If strain limit achieved, throw a warning and use the lower strain
-            if abs(strain) > 0.5e-2:
-                logger.error(
-                    f"TF strain={strain} was outside the region of applicability. "
-                    f"Used lower strain."
-                )
-                strain = np.sign(strain) * 0.5e-2
-
-            #  j_superconductor_critical returned by superconductors.itersc is the
-            # critical current density in the superconductor - not the whole strand,
-            # which contains copper
-            j_superconductor_critical, _, _ = (
-                superconductors.western_superconducting_nb3sn(
+                #  j_superconductor_critical returned by superconductors.itersc is the
+                # critical current density in the superconductor - not the whole strand,
+                # which contains copper
+                j_superconductor_critical, _, _ = superconductors.itersc(
                     temp_conductor=temp_tf_coolant_peak_field,
                     b_conductor=b_tf_inboard_peak,
                     strain=strain,
                     b_c20max=bc20m,
                     temp_c0max=tc0m,
                 )
-            )
-            # Scale for the copper area fraction of the cable
-            j_cables_critical = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
 
-            #  Critical current in turn all turn cables
-            c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
+                # Scale for the copper area fraction of the cable
+                j_cables_critical = j_superconductor_critical * (
+                    1.0e0 - f_a_tf_turn_cable_copper
+                )
 
-            # Strand critical current calulation for costing in $ / kAm
-            # = superconducting filaments jc * (1 -strand copper fraction)
-            data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
+                #  Critical current in turn all turn cables
+                c_turn_cables_critical = (
+                    j_cables_critical * a_tf_turn_cable_space_effective
+                )
 
-        # =================================================================
+                # Strand critical current calculation for costing in $/kAm
+                # = Superconducting filaments jc * (1 - strand copper fraction)
+                data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
+                    1.0e0 - f_a_tf_turn_cable_copper
+                )
 
-        # Durham Ginzburg-Landau Nb-Ti parameterisation
-        elif i_tf_superconductor == SuperconductorModel.DURHAM_NBTI:
-            bc20m = SuperconductorModel.DURHAM_NBTI.b_crit_zero_field_strain  # [T]
-            tc0m = SuperconductorModel.DURHAM_NBTI.temp_crit_zero_field_strain  # [K]
+            # =================================================================
 
-            j_superconductor_critical, _, _ = superconductors.gl_nbti(
-                temp_conductor=temp_tf_coolant_peak_field,
-                b_conductor=b_tf_inboard_peak,
-                strain=strain,
-                b_c20max=bc20m,
-                t_c0=tc0m,
-            )
-            # Scale for the copper area fraction of the cable
-            j_cables_critical = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
+            # Bi-2212 high temperature superconductor parameterization
+            case SuperconductorModel.BI2212:
+                #  Current density in a strand of Bi-2212 conductor
+                #  N.B. jcrit returned by superconductors.bi2212 is the critical
+                # current density in the strand, not just the superconducting portion.
+                #  The parameterization for j_crit_cable assumes a particular strand
+                #  composition that does not require a user-defined copper fraction,
+                #  so this is irrelevant in this model
+                j_strand = (
+                    j_tf_wp
+                    * a_tf_turn
+                    / (a_tf_turn_cable_space * f_a_tf_turn_cable_space_conductor)
+                )
 
-            #  Critical current in turn all turn cables
-            c_turn_cables_critical = j_cables_critical * a_tf_turn_cable_space_effective
+                j_crit_cable, _ = superconductors.bi2212(
+                    b_conductor=b_tf_inboard_peak,
+                    jstrand=j_strand,
+                    temp_conductor=temp_tf_coolant_peak_field,
+                    f_strain=f_strain_scale,
+                )
+                j_superconductor_critical = j_crit_cable / (
+                    1.0e0 - f_a_tf_turn_cable_copper
+                )
+                #  Critical current in cable
+                c_turn_cables_critical = (
+                    j_crit_cable
+                    * a_tf_turn_cable_space
+                    * f_a_tf_turn_cable_space_conductor
+                )
 
-            # Strand critical current calulation for costing in $ / kAm
-            # = superconducting filaments jc * (1 -strand copper fraction)
-            data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
+                # Strand critical current calulation for costing in $ / kAm
+                # Copper in the strand is already accounted for
+                data.tfcoil.j_crit_str_tf = j_superconductor_critical
+            # =================================================================
 
-        # =================================================================
+            # NbTi data
+            case SuperconductorModel.OLD_LUBELL_NBTI:
+                bc20m = (
+                    SuperconductorModel.OLD_LUBELL_NBTI.b_crit_zero_field_strain
+                )  # [T]
+                tc0m = (
+                    SuperconductorModel.OLD_LUBELL_NBTI.temp_crit_zero_field_strain
+                )  # [K]
+                c0 = 1.0e10  # [A/m²]
 
-        else:
-            raise ProcessValueError(
-                "Illegal value for i_tf_sc_mat", i_tf_superconductor=i_tf_superconductor
-            )
+                j_superconductor_critical, _ = superconductors.jcrit_nbti(
+                    temp_conductor=temp_tf_coolant_peak_field,
+                    b_conductor=b_tf_inboard_peak,
+                    c0=c0,
+                    b_c20max=bc20m,
+                    temp_c0max=tc0m,
+                )
+
+                # Scale for the copper area fraction of the cable
+                j_cables_critical = j_superconductor_critical * (
+                    1.0e0 - f_a_tf_turn_cable_copper
+                )
+
+                #  Critical current in turn all turn cables
+                c_turn_cables_critical = (
+                    j_cables_critical * a_tf_turn_cable_space_effective
+                )
+
+                # Strand critical current calulation for costing in $ / kAm
+                # = superconducting filaments jc * (1 -strand copper fraction)
+                data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
+                    1.0e0 - f_a_tf_turn_cable_copper
+                )
+
+            # =================================================================
+
+            # ITER Nb3Sn parameterization, but user-defined parameters
+            case SuperconductorModel.USER_DEFINED_NB3SN:
+                bc20m = bcritsc  # [T]
+                tc0m = tcritsc  # [K]
+
+                # If strain limit achieved, throw a warning and use the lower strain
+                if abs(strain) > 0.5e-2:
+                    logger.error(
+                        f"TF strain={strain} was outside the region of applicability. "
+                        f"Used lower strain."
+                    )
+                    strain = np.sign(strain) * 0.5e-2
+
+                j_superconductor_critical, _, _ = superconductors.itersc(
+                    temp_conductor=temp_tf_coolant_peak_field,
+                    b_conductor=b_tf_inboard_peak,
+                    strain=strain,
+                    b_c20max=bc20m,
+                    temp_c0max=tc0m,
+                )
+                # Scale for the copper area fraction of the cable
+                j_cables_critical = j_superconductor_critical * (
+                    1.0e0 - f_a_tf_turn_cable_copper
+                )
+
+                #  Critical current in turn all turn cables
+                c_turn_cables_critical = (
+                    j_cables_critical * a_tf_turn_cable_space_effective
+                )
+
+                # Strand critical current calulation for costing in $ / kAm
+                # = superconducting filaments jc * (1 -strand copper fraction)
+                data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
+                    1.0e0 - f_a_tf_turn_cable_copper
+                )
+
+            # =================================================================
+
+            # WST Nb3Sn parameterisation
+            case SuperconductorModel.WST_NB3SN:
+                bc20m = SuperconductorModel.WST_NB3SN.b_crit_zero_field_strain  # [T]
+                tc0m = SuperconductorModel.WST_NB3SN.temp_crit_zero_field_strain  # [K]
+
+                # If strain limit achieved, throw a warning and use the lower strain
+                if abs(strain) > 0.5e-2:
+                    logger.error(
+                        f"TF strain={strain} was outside the region of applicability. "
+                        f"Used lower strain."
+                    )
+                    strain = np.sign(strain) * 0.5e-2
+
+                #  j_superconductor_critical returned by superconductors.itersc is the
+                # critical current density in the superconductor - not the whole strand,
+                # which contains copper
+                j_superconductor_critical, _, _ = (
+                    superconductors.western_superconducting_nb3sn(
+                        temp_conductor=temp_tf_coolant_peak_field,
+                        b_conductor=b_tf_inboard_peak,
+                        strain=strain,
+                        b_c20max=bc20m,
+                        temp_c0max=tc0m,
+                    )
+                )
+                # Scale for the copper area fraction of the cable
+                j_cables_critical = j_superconductor_critical * (
+                    1.0e0 - f_a_tf_turn_cable_copper
+                )
+
+                #  Critical current in turn all turn cables
+                c_turn_cables_critical = (
+                    j_cables_critical * a_tf_turn_cable_space_effective
+                )
+
+                # Strand critical current calulation for costing in $ / kAm
+                # = superconducting filaments jc * (1 -strand copper fraction)
+                data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
+                    1.0e0 - f_a_tf_turn_cable_copper
+                )
+
+            # =================================================================
+
+            # Durham Ginzburg-Landau Nb-Ti parameterisation
+            case SuperconductorModel.DURHAM_NBTI:
+                bc20m = SuperconductorModel.DURHAM_NBTI.b_crit_zero_field_strain  # [T]
+                tc0m = SuperconductorModel.DURHAM_NBTI.temp_crit_zero_field_strain  # [K]
+
+                j_superconductor_critical, _, _ = superconductors.gl_nbti(
+                    temp_conductor=temp_tf_coolant_peak_field,
+                    b_conductor=b_tf_inboard_peak,
+                    strain=strain,
+                    b_c20max=bc20m,
+                    t_c0=tc0m,
+                )
+                # Scale for the copper area fraction of the cable
+                j_cables_critical = j_superconductor_critical * (
+                    1.0e0 - f_a_tf_turn_cable_copper
+                )
+
+                #  Critical current in turn all turn cables
+                c_turn_cables_critical = (
+                    j_cables_critical * a_tf_turn_cable_space_effective
+                )
+
+                # Strand critical current calulation for costing in $ / kAm
+                # = superconducting filaments jc * (1 -strand copper fraction)
+                data.tfcoil.j_crit_str_tf = j_superconductor_critical * (
+                    1.0e0 - f_a_tf_turn_cable_copper
+                )
+
+            # =================================================================
+
+            case _:
+                raise ProcessValueError(
+                    "Illegal value for i_tf_superconductor",
+                    i_tf_superconductor=i_tf_superconductor,
+                )
 
         # =================================================================
 
@@ -3397,14 +3379,16 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         if a_tf_turn_cable_space_no_void <= 0.0e0:
             if dx_tf_turn_conduit_full_average < 0.0e0:
                 logger.error(
-                    "Negative cable space dimension. %s %s",
+                    "Negative cable space dimension. a_tf_turn_cable_space_no_void=%s, "
+                    "dx_tf_turn_cable_space_average=%s",
                     a_tf_turn_cable_space_no_void,
                     dx_tf_turn_cable_space_average,
                 )
             else:
                 logger.error(
-                    "Cable space area problem; artificially set rounded corner "
-                    "radius to 0. %s %s",
+                    "Cable space area problem; artificially setting rounded corner "
+                    "radius to 0. a_tf_turn_cable_space_no_void=%s, "
+                    "dx_tf_turn_cable_space_average=%s",
                     a_tf_turn_cable_space_no_void,
                     dx_tf_turn_cable_space_average,
                 )
@@ -3803,53 +3787,51 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         d_sc_tf = self.data.superconducting_tfcoil
 
-        # Setting the WP turn geometry / areas
-        if (
-            TFWPIntegerTurnType(self.data.tfcoil.i_tf_turns_integer)
-            == TFWPIntegerTurnType.NON_INTEGER
-        ):
-            # Non-ingeger number of turns
+        match TFWPIntegerTurnType(self.data.tfcoil.i_tf_turns_integer):
+            # Setting the WP turn geometry / areas
+            # Setting the WP turn geometry / areas
+            case TFWPIntegerTurnType.NON_INTEGER:
+                avg_turn_geometry = self.tf_croco_averaged_turn_geometry(
+                    j_tf_wp=self.data.tfcoil.j_tf_wp,
+                    dx_tf_turn_steel=self.data.tfcoil.dx_tf_turn_steel,
+                    dx_tf_turn_insulation=self.data.tfcoil.dx_tf_turn_insulation,
+                    dx_tf_turn_general=self.data.tfcoil.dx_tf_turn_general,
+                    c_tf_turn=self.data.tfcoil.c_tf_turn,
+                    i_dx_tf_turn_general_input=self.data.tfcoil.i_dx_tf_turn_general_input,
+                    i_dx_tf_turn_cable_space_general_input=self.data.tfcoil.i_dx_tf_turn_cable_space_general_input,
+                    dx_tf_turn_cable_space_general=self.data.tfcoil.dx_tf_turn_cable_space_general,
+                    layer_ins=self.data.tfcoil.layer_ins,
+                    a_tf_wp_no_insulation=d_sc_tf.a_tf_wp_no_insulation,
+                )
 
-            avg_turn_geometry = self.tf_croco_averaged_turn_geometry(
-                j_tf_wp=self.data.tfcoil.j_tf_wp,
-                dx_tf_turn_steel=self.data.tfcoil.dx_tf_turn_steel,
-                dx_tf_turn_insulation=self.data.tfcoil.dx_tf_turn_insulation,
-                dx_tf_turn_general=self.data.tfcoil.dx_tf_turn_general,
-                c_tf_turn=self.data.tfcoil.c_tf_turn,
-                i_dx_tf_turn_general_input=self.data.tfcoil.i_dx_tf_turn_general_input,
-                i_dx_tf_turn_cable_space_general_input=self.data.tfcoil.i_dx_tf_turn_cable_space_general_input,
-                dx_tf_turn_cable_space_general=self.data.tfcoil.dx_tf_turn_cable_space_general,
-                layer_ins=self.data.tfcoil.layer_ins,
-                a_tf_wp_no_insulation=d_sc_tf.a_tf_wp_no_insulation,
-            )
+                self.data.tfcoil.a_tf_turn_cable_space_no_void = (
+                    avg_turn_geometry.a_tf_turn_cable_space_no_void
+                )
+                self.data.tfcoil.a_tf_turn_steel = avg_turn_geometry.a_tf_turn_steel
+                self.data.tfcoil.a_tf_turn_insulation = (
+                    avg_turn_geometry.a_tf_turn_insulation
+                )
+                self.data.tfcoil.n_tf_coil_turns = avg_turn_geometry.n_tf_coil_turns
+                self.data.tfcoil.dx_tf_turn_general = (
+                    avg_turn_geometry.dx_tf_turn_general
+                )
+                self.data.tfcoil.c_tf_turn = avg_turn_geometry.c_tf_turn
+                self.data.tfcoil.dx_tf_turn_general = (
+                    avg_turn_geometry.dx_tf_turn_general
+                )
+                d_sc_tf.dr_tf_turn = avg_turn_geometry.dr_tf_turn
+                d_sc_tf.dx_tf_turn = avg_turn_geometry.dx_tf_turn
+                self.data.tfcoil.dx_tf_turn_conduit_full_average = (
+                    avg_turn_geometry.dx_tf_turn_conduit_full_average
+                )
+                d_sc_tf.dx_tf_turn_cable_space_average = (
+                    avg_turn_geometry.dx_tf_turn_cable_space_average
+                )
 
-            self.data.tfcoil.a_tf_turn_cable_space_no_void = (
-                avg_turn_geometry.a_tf_turn_cable_space_no_void
-            )
-            self.data.tfcoil.a_tf_turn_steel = avg_turn_geometry.a_tf_turn_steel
-            self.data.tfcoil.a_tf_turn_insulation = (
-                avg_turn_geometry.a_tf_turn_insulation
-            )
-            self.data.tfcoil.n_tf_coil_turns = avg_turn_geometry.n_tf_coil_turns
-            self.data.tfcoil.dx_tf_turn_general = avg_turn_geometry.dx_tf_turn_general
-            self.data.tfcoil.c_tf_turn = avg_turn_geometry.c_tf_turn
-            self.data.tfcoil.dx_tf_turn_general = avg_turn_geometry.dx_tf_turn_general
-            d_sc_tf.dr_tf_turn = avg_turn_geometry.dr_tf_turn
-            d_sc_tf.dx_tf_turn = avg_turn_geometry.dx_tf_turn
-            self.data.tfcoil.dx_tf_turn_conduit_full_average = (
-                avg_turn_geometry.dx_tf_turn_conduit_full_average
-            )
-            d_sc_tf.dx_tf_turn_cable_space_average = (
-                avg_turn_geometry.dx_tf_turn_cable_space_average
-            )
-
-        elif (
-            TFWPIntegerTurnType(self.data.tfcoil.i_tf_turns_integer)
-            == TFWPIntegerTurnType.INTEGER
-        ):
-            raise ProcessValueError(
-                "Integer turn geometry not implemented for CroCo conductor."
-            )
+            case TFWPIntegerTurnType.INTEGER:
+                raise ProcessValueError(
+                    "Integer turn geometry not implemented for CroCo conductor."
+                )
 
         croco_cable_space_geometry = self.tf_turn_croco_cable_space_properties(
             dx_tf_turn_conduit_full_average=self.data.tfcoil.dx_tf_turn_conduit_full_average,
@@ -4068,31 +4050,21 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         try:  # noqa: PLW0717
             (
-                sig_tf_r_max,
-                sig_tf_t_max,
-                sig_tf_z_max,
+                sig_tf_max,
                 sig_tf_vmises_max,
                 s_shear_tf_peak,
                 deflect,
-                eyoung_axial,
-                eyoung_trans,
-                eyoung_wp_axial,
-                eyoung_wp_trans,
+                eyoung,
+                eyoung_wp,
                 poisson_wp_trans,
                 radial_array,
                 s_shear_cea_tf_cond,
                 poisson_wp_axial,
-                sig_tf_r,
-                sig_tf_smeared_r,
-                sig_tf_smeared_t,
-                sig_tf_smeared_z,
-                sig_tf_t,
+                sig_tf,
+                sig_tf_smeared,
                 s_shear_tf,
                 sig_tf_vmises,
-                sig_tf_z,
-                str_tf_r,
-                str_tf_t,
-                str_tf_z,
+                str_tf,
                 n_radial_array,
                 n_tf_bucking,
                 self.data.tfcoil.sig_tf_wp,
@@ -4198,31 +4170,21 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             )
             if output:
                 self.out_stress(
-                    sig_tf_r_max,
-                    sig_tf_t_max,
-                    sig_tf_z_max,
+                    sig_tf_max,
                     sig_tf_vmises_max,
                     s_shear_tf_peak,
                     deflect,
-                    eyoung_axial,
-                    eyoung_trans,
-                    eyoung_wp_axial,
-                    eyoung_wp_trans,
+                    eyoung,
+                    eyoung_wp,
                     poisson_wp_trans,
                     radial_array,
                     s_shear_cea_tf_cond,
                     poisson_wp_axial,
-                    sig_tf_r,
-                    sig_tf_smeared_r,
-                    sig_tf_smeared_t,
-                    sig_tf_smeared_z,
-                    sig_tf_t,
+                    sig_tf,
+                    sig_tf_smeared,
                     s_shear_tf,
                     sig_tf_vmises,
-                    sig_tf_z,
-                    str_tf_r,
-                    str_tf_t,
-                    str_tf_z,
+                    str_tf,
                     n_radial_array,
                     n_tf_bucking,
                     sig_tf_wp_av_z,
@@ -4458,75 +4420,80 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         else:
             strain = self.data.tfcoil.str_wp
 
-        # =================================================================
+        match SuperconductorModel(i_tf_superconductor):
+            # =================================================================
 
-        if i_tf_superconductor == SuperconductorModel.CROCO_REBCO:
-            b_c20_max = SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain  # [T]
-            t_c0 = SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain  # [K]
-            #  Find critical current density in superconducting cable, j_crit_cable
-            j_superconductor_critical, _, bc20m, tc0m = superconductors.jcrit_rebco(
-                temp_conductor=temp_tf_peak,
-                b_conductor=b_tf_inboard_peak,
-                temp_c0_max=t_c0,
-                b_c20_max=b_c20_max,
-            )
-
-        # =================================================================
-
-        # Durham Ginzburg-Landau critical surface model for REBCO
-        elif i_tf_superconductor == SuperconductorModel.DURHAM_REBCO:
-            bc20m = SuperconductorModel.DURHAM_REBCO.b_crit_zero_field_strain  # [T]
-            tc0m = SuperconductorModel.DURHAM_REBCO.temp_crit_zero_field_strain  # [K]
-
-            # If strain limit achieved, throw a warning and use the lower strain
-            if abs(strain) > 0.7e-2:
-                logger.error(
-                    f"TF strain={strain} was outside the region of applicability. "
-                    f"Used lower strain."
+            case SuperconductorModel.CROCO_REBCO:
+                b_c20_max = (
+                    SuperconductorModel.CROCO_REBCO.b_crit_zero_field_strain
+                )  # [T]
+                t_c0 = SuperconductorModel.CROCO_REBCO.temp_crit_zero_field_strain  # [K]
+                #  Find critical current density in superconducting cable, j_crit_cable
+                j_superconductor_critical, _, bc20m, tc0m = superconductors.jcrit_rebco(
+                    temp_conductor=temp_tf_peak,
+                    b_conductor=b_tf_inboard_peak,
+                    temp_c0_max=t_c0,
+                    b_c20_max=b_c20_max,
                 )
-                strain = np.sign(strain) * 0.7e-2
 
-            j_superconductor_critical, _, _ = superconductors.gl_rebco(
-                temp_conductor=temp_tf_peak,
-                b_conductor=b_tf_inboard_peak,
-                strain=strain,
-                b_c20max=bc20m,
-                t_c0=tc0m,
-            )
+            # =================================================================
 
-        # =================================================================
+            # Durham Ginzburg-Landau critical surface model for REBCO
+            case SuperconductorModel.DURHAM_REBCO:
+                bc20m = SuperconductorModel.DURHAM_REBCO.b_crit_zero_field_strain  # [T]
+                tc0m = (
+                    SuperconductorModel.DURHAM_REBCO.temp_crit_zero_field_strain
+                )  # [K]
 
-        # Hazelton experimental data + Zhai conceptual model for REBCO
-        elif i_tf_superconductor == SuperconductorModel.HAZELTON_ZHAI_REBCO:
-            bc20m = (
-                SuperconductorModel.HAZELTON_ZHAI_REBCO.b_crit_zero_field_strain
-            )  # [T]
-            tc0m = (
-                SuperconductorModel.HAZELTON_ZHAI_REBCO.temp_crit_zero_field_strain
-            )  # [K]
+                # If strain limit achieved, throw a warning and use the lower strain
+                if abs(strain) > 0.7e-2:
+                    logger.error(
+                        f"TF strain={strain} was outside the region of applicability. "
+                        f"Used lower strain."
+                    )
+                    strain = np.sign(strain) * 0.7e-2
 
-            # If strain limit achieved, throw a warning and use the lower strain
-            if abs(strain) > 0.7e-2:
-                logger.error(
-                    f"TF strain={strain} was outside the region of applicability. "
-                    f"Used lower strain."
+                j_superconductor_critical, _, _ = superconductors.gl_rebco(
+                    temp_conductor=temp_tf_peak,
+                    b_conductor=b_tf_inboard_peak,
+                    strain=strain,
+                    b_c20max=bc20m,
+                    t_c0=tc0m,
                 )
-                strain = np.sign(strain) * 0.7e-2
 
-            # 'high current density' as per parameterisation described in Wolf,
-            #  and based on Hazelton experimental data and Zhai conceptual model;
-            #  see subroutine for full references
-            j_superconductor_critical, _, _ = superconductors.hijc_rebco(
-                temp_conductor=temp_tf_peak,
-                b_conductor=b_tf_inboard_peak,
-                b_c20max=bc20m,
-                t_c0=tc0m,
-                dr_hts_tape=dr_tf_hts_tape,
-                dx_hts_tape_rebco=dx_tf_hts_tape_rebco,
-                dx_hts_tape_total=dx_tf_hts_tape_total,
-            )
+            # =================================================================
 
-        # =================================================================
+            # Hazelton experimental data + Zhai conceptual model for REBCO
+            case SuperconductorModel.HAZELTON_ZHAI_REBCO:
+                bc20m = (
+                    SuperconductorModel.HAZELTON_ZHAI_REBCO.b_crit_zero_field_strain
+                )  # [T]
+                tc0m = (
+                    SuperconductorModel.HAZELTON_ZHAI_REBCO.temp_crit_zero_field_strain
+                )  # [K]
+
+                # If strain limit achieved, throw a warning and use the lower strain
+                if abs(strain) > 0.7e-2:
+                    logger.error(
+                        f"TF strain={strain} was outside the region of applicability. "
+                        f"Used lower strain."
+                    )
+                    strain = np.sign(strain) * 0.7e-2
+
+                # 'high current density' as per parameterisation described in Wolf,
+                #  and based on Hazelton experimental data and Zhai conceptual model;
+                #  see subroutine for full references
+                j_superconductor_critical, _, _ = superconductors.hijc_rebco(
+                    temp_conductor=temp_tf_peak,
+                    b_conductor=b_tf_inboard_peak,
+                    b_c20max=bc20m,
+                    t_c0=tc0m,
+                    dr_hts_tape=dr_tf_hts_tape,
+                    dx_hts_tape_rebco=dx_tf_hts_tape_rebco,
+                    dx_hts_tape_total=dx_tf_hts_tape_total,
+                )
+
+            # =================================================================
 
         # Strand critical current calulation for costing in $ / kAm
         # Already includes buffer and support layers so no need to include
@@ -4697,30 +4664,31 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         """Calculates CROCO voltage"""
         d_sc_tf = self.data.superconducting_tfcoil
 
-        if self.data.tfcoil.quench_model == "linear":
-            d_sc_tf.time2 = self.data.tfcoil.t_tf_superconductor_quench
-            croco_voltage = (
-                2.0e0
-                / d_sc_tf.time2
-                * (
-                    self.data.tfcoil.e_tf_magnetic_stored_total
-                    / self.data.tfcoil.n_tf_coils
+        match self.data.tfcoil.quench_model:
+            case "linear":
+                d_sc_tf.time2 = self.data.tfcoil.t_tf_superconductor_quench
+                croco_voltage = (
+                    2.0e0
+                    / d_sc_tf.time2
+                    * (
+                        self.data.tfcoil.e_tf_magnetic_stored_total
+                        / self.data.tfcoil.n_tf_coils
+                    )
+                    / self.data.tfcoil.c_tf_turn
                 )
-                / self.data.tfcoil.c_tf_turn
-            )
-        elif self.data.tfcoil.quench_model == "exponential":
-            d_sc_tf.tau2 = self.data.tfcoil.t_tf_superconductor_quench
-            croco_voltage = (
-                2.0e0
-                / d_sc_tf.tau2
-                * (
-                    self.data.tfcoil.e_tf_magnetic_stored_total
-                    / self.data.tfcoil.n_tf_coils
+            case "exponential":
+                d_sc_tf.tau2 = self.data.tfcoil.t_tf_superconductor_quench
+                croco_voltage = (
+                    2.0e0
+                    / d_sc_tf.tau2
+                    * (
+                        self.data.tfcoil.e_tf_magnetic_stored_total
+                        / self.data.tfcoil.n_tf_coils
+                    )
+                    / self.data.tfcoil.c_tf_turn
                 )
-                / self.data.tfcoil.c_tf_turn
-            )
-        else:
-            return 0.0
+            case _:
+                return 0.0
 
         return croco_voltage
 
@@ -4982,20 +4950,40 @@ def _theta_factor_integral(
     return (chi1 + 2.0 * chi2) / (2.0 * np.pi)
 
 
+@dataclass
+class ComponentShape:
+    """Shape properties for a component all on the current centre line"""
+
+    H: float
+    """The maximum height of the shape"""
+    ri: float
+    """The radius of the inboard edge"""
+    ro: float
+    """The radius of the outboard edge"""
+    rm: float
+    """The radius where the maximum height occurs"""
+    theta1: float
+    """The polar angle of the point at which one circular arc is
+    joined to another circular arc in the approximation to the CCL,
+    using an arbitrary origin of coordinates (Rc2, Zc2)."""
+
+
+@dataclass
+class TFComponentShape(ComponentShape):
+    """Shape properties for a TF coil"""
+
+    ccl_length: float
+    """The length of the TF coil CCL"""
+
+
+@dataclass
+class VVComponentShape(ComponentShape):
+    """Shape properties for a vacuum vessel"""
+
+
 def vv_stress_on_quench(
-    # TF shape
-    H_coil: float,
-    ri_coil: float,
-    ro_coil: float,
-    rm_coil: float,
-    ccl_length_coil: float,
-    theta1_coil: float,
-    # VV shape
-    H_vv: float,
-    ri_vv: float,
-    ro_vv: float,
-    rm_vv: float,
-    theta1_vv: float,
+    coil: TFComponentShape,
+    vv: VVComponentShape,
     # TF properties
     n_tf_coils: float,
     n_tf_coil_turns: float,
@@ -5021,32 +5009,10 @@ def vv_stress_on_quench(
 
     Parameters
     ----------
-    H_coil :
-        the maximum height of the TF coil CCL
-    ri_coil :
-        the radius of the inboard edge of the TF coil CCL
-    ro_coil :
-        the radius of the outboard edge of the TF coil CCL
-    rm_coil :
-        the radius where the maximum height of the TF coil CCL occurs
-    ccl_length_coil :
-        the length of the TF coil CCL
-    theta1_coil :
-        the polar angle of the point at which one circular arc is
-        joined to another circular arc in the approximation to the coil CCL,
-        using an arbitrary origin of coordinates (Rc2, Zc2).
-    H_vv :
-        the maximum height of the VV CCL
-    ri_vv :
-        the radius of the inboard edge of the VV CCL
-    ro_vv :
-        the radius of the outboard edge of the VV CCL
-    rm_vv :
-        the radius where the maximum height of the VV CCL occurs
-    theta1_vv :
-        the polar angle of the point at which one circular arc is
-        joined to another circular arc in the approximation to the VV CCL,
-        using an arbitrary origin of coordinates (Rc2, Zc2).
+    coil :
+        Tf coil properties on the CCL
+    vv :
+        VV properties on the CCL
     n_tf_coils :
         the number of TF coils
     n_tf_coil_turns :
@@ -5084,23 +5050,23 @@ def vv_stress_on_quench(
     ‌
     """
     # Convert angles into radians
-    theta1_vv_rad = np.pi * (theta1_vv / 180.0)
+    theta1_vv_rad = np.pi * (vv.theta1 / 180.0)
 
     # Poloidal loop resistance (PLR) in ohms
-    theta_vv = _theta_factor_integral(ro_vv, ri_vv, rm_vv, H_vv, theta1_vv_rad)
-    plr_coil = ((0.5 * ccl_length_coil) / (n_tf_coils * (s_cc + s_rp))) * 1e-6
+    theta_vv = _theta_factor_integral(vv.ro, vv.ri, vv.rm, vv.H, theta1_vv_rad)
+    plr_coil = ((0.5 * coil.ccl_length) / (n_tf_coils * (s_cc + s_rp))) * 1e-6
     plr_vv = ((0.84 / d_vv) * theta_vv) * 1e-6
 
     # relevant self-inductances in henry (H)
     coil_structure_self_inductance = (
         (constants.RMU0 / np.pi)
-        * H_coil
-        * _inductance_factor(H_coil, ri_coil, ro_coil, rm_coil, theta1_coil)
+        * coil.H
+        * _inductance_factor(coil.H, coil.ri, coil.ro, coil.rm, coil.theta1)
     )
     vv_self_inductance = (
         (constants.RMU0 / np.pi)
-        * H_vv
-        * _inductance_factor(H_vv, ri_vv, ro_vv, rm_vv, theta1_vv)
+        * vv.H
+        * _inductance_factor(vv.H, vv.ri, vv.ro, vv.rm, vv.theta1)
     )
 
     # s^-1
@@ -5124,15 +5090,15 @@ def vv_stress_on_quench(
     )
     i2 = (lambda1 / lambda2) * i1
 
-    a_vv = (ro_vv + ri_vv) / (ro_vv - ri_vv)
+    a_vv = (vv.ro + vv.ri) / (vv.ro - vv.ri)
     b_vvi = (constants.RMU0 * (n_tf_coils * n_tf_coil_turns * i0 + i1 + (i2 / 2))) / (
-        2 * np.pi * ri_vv
+        2 * np.pi * vv.ri
     )
-    j_vvi = i2 / (2 * np.pi * d_vv * ri_vv)
+    j_vvi = i2 / (2 * np.pi * d_vv * vv.ri)
 
     zeta = 1 + ((a_vv - 1) * np.log((a_vv + 1) / (a_vv - 1)) / (2 * a_vv))
 
-    return zeta * b_vvi * j_vvi * ri_vv
+    return zeta * b_vvi * j_vvi * vv.ri
 
 
 def _inductance_factor(

@@ -105,31 +105,21 @@ class ResistiveTFCoil(TFCoil):
 
         try:  # noqa: PLW0717
             (
-                sig_tf_r_max,
-                sig_tf_t_max,
-                sig_tf_z_max,
+                sig_tf_max,
                 sig_tf_vmises_max,
                 s_shear_tf_peak,
                 deflect,
-                eyoung_axial,
-                eyoung_trans,
-                eyoung_wp_axial,
-                eyoung_wp_trans,
+                eyoung,
+                eyoung_wp,
                 poisson_wp_trans,
                 radial_array,
                 s_shear_cea_tf_cond,
                 poisson_wp_axial,
-                sig_tf_r,
-                sig_tf_smeared_r,
-                sig_tf_smeared_t,
-                sig_tf_smeared_z,
-                sig_tf_t,
+                sig_tf,
+                sig_tf_smeared,
                 s_shear_tf,
                 sig_tf_vmises,
-                sig_tf_z,
-                str_tf_r,
-                str_tf_t,
-                str_tf_z,
+                str_tf,
                 n_radial_array,
                 n_tf_bucking,
                 self.data.tfcoil.sig_tf_wp,
@@ -236,31 +226,21 @@ class ResistiveTFCoil(TFCoil):
 
             if output:
                 self.out_stress(
-                    sig_tf_r_max,
-                    sig_tf_t_max,
-                    sig_tf_z_max,
+                    sig_tf_max,
                     sig_tf_vmises_max,
                     s_shear_tf_peak,
                     deflect,
-                    eyoung_axial,
-                    eyoung_trans,
-                    eyoung_wp_axial,
-                    eyoung_wp_trans,
+                    eyoung,
+                    eyoung_wp,
                     poisson_wp_trans,
                     radial_array,
                     s_shear_cea_tf_cond,
                     poisson_wp_axial,
-                    sig_tf_r,
-                    sig_tf_smeared_r,
-                    sig_tf_smeared_t,
-                    sig_tf_smeared_z,
-                    sig_tf_t,
+                    sig_tf,
+                    sig_tf_smeared,
                     s_shear_tf,
                     sig_tf_vmises,
-                    sig_tf_z,
-                    str_tf_r,
-                    str_tf_t,
-                    str_tf_z,
+                    str_tf,
                     n_radial_array,
                     n_tf_bucking,
                     sig_tf_wp_av_z,
@@ -477,22 +457,25 @@ class ResistiveTFCoil(TFCoil):
             - https://cirris.com/temperature-coefficient-of-copper/
         """
         # Resistivity of the Glidcop copper centerpost
-        if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-            self.data.tfcoil.rho_cp = (
-                # 1.86 is the resistivity at `20°C` for GLIDCOP AL-15
-                # 0.00393 is the coefficient of resistivity for copper
-                self.data.tfcoil.frhocp
-                * (1.86e0 + 0.00393e0 * (self.data.tfcoil.temp_cp_average - 293.15e0))
-                * 1.0e-8
-            )
+        match TFConductorModel(self.data.tfcoil.i_tf_sup):
+            case TFConductorModel.WATER_COOLED_COPPER:
+                self.data.tfcoil.rho_cp = (
+                    # 1.86 is the resistivity at `20°C` for GLIDCOP AL-15
+                    # 0.00393 is the coefficient of resistivity for copper
+                    self.data.tfcoil.frhocp
+                    * (
+                        1.86e0
+                        + 0.00393e0 * (self.data.tfcoil.temp_cp_average - 293.15e0)
+                    )
+                    * 1.0e-8
+                )
 
-        # Resistivity of the aluminium centerpost
-        if self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-            self.data.tfcoil.rho_cp = self.data.tfcoil.frhocp * (
-                2.00016e-14 * self.data.tfcoil.temp_cp_average**3
-                - 6.75384e-13 * self.data.tfcoil.temp_cp_average**2
-                + 8.89159e-12 * self.data.tfcoil.temp_cp_average
-            )
+            case TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+                self.data.tfcoil.rho_cp = self.data.tfcoil.frhocp * (
+                    2.00016e-14 * self.data.tfcoil.temp_cp_average**3
+                    - 6.75384e-13 * self.data.tfcoil.temp_cp_average**2
+                    + 8.89159e-12 * self.data.tfcoil.temp_cp_average
+                )
 
         # Calculations dedicated for configurations with CP
         if self.data.physics.itart == 1:
@@ -505,21 +488,23 @@ class ResistiveTFCoil(TFCoil):
                 self.data.tfcoil.temp_tf_legs_outboard = self.data.tfcoil.temp_cp_average
 
             # Leg resistivity (different leg temperature as separate cooling channels)
-            if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-                self.data.tfcoil.rho_tf_leg = (
-                    self.data.tfcoil.frholeg
-                    * (
-                        1.86e0
-                        + 0.00393e0 * (self.data.tfcoil.temp_tf_legs_outboard - 293.15e0)
+            match TFConductorModel(self.data.tfcoil.i_tf_sup):
+                case TFConductorModel.WATER_COOLED_COPPER:
+                    self.data.tfcoil.rho_tf_leg = (
+                        self.data.tfcoil.frholeg
+                        * (
+                            1.86e0
+                            + 0.00393e0
+                            * (self.data.tfcoil.temp_tf_legs_outboard - 293.15e0)
+                        )
+                        * 1.0e-8
                     )
-                    * 1.0e-8
-                )
-            elif self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-                self.data.tfcoil.rho_tf_leg = self.data.tfcoil.frholeg * (
-                    2.00016e-14 * self.data.tfcoil.temp_tf_legs_outboard**3
-                    - 6.75384e-13 * self.data.tfcoil.temp_tf_legs_outboard**2
-                    + 8.89159e-12 * self.data.tfcoil.temp_tf_legs_outboard
-                )
+                case TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+                    self.data.tfcoil.rho_tf_leg = self.data.tfcoil.frholeg * (
+                        2.00016e-14 * self.data.tfcoil.temp_tf_legs_outboard**3
+                        - 6.75384e-13 * self.data.tfcoil.temp_tf_legs_outboard**2
+                        + 8.89159e-12 * self.data.tfcoil.temp_tf_legs_outboard
+                    )
 
             # Tricky trick to make the leg / CP temperatures the same
             if self.data.superconducting_tfcoil.is_leg_cp_temp_same == 1:
@@ -757,68 +742,69 @@ class ResistiveTFCoil(TFCoil):
             )
 
         # Copper magnets casing/conductor weights per coil [kg]
-        if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-            self.data.tfcoil.m_tf_coil_case = (
-                self.data.fwbs.den_steel * vol_case / self.data.tfcoil.n_tf_coils
-            )  # Per TF leg, no casing for outer leg
-            self.data.tfcoil.m_tf_coil_copper = (
-                constants.DEN_COPPER * vol_cond / self.data.tfcoil.n_tf_coils
-            )
-            self.data.tfcoil.whtconal = 0.0e0
-
-            # Outer legs/CP weights
-            if self.data.physics.itart == 1:
-                # Weight of all the TF legs
-                self.data.tfcoil.whttflgs = self.data.tfcoil.n_tf_coils * (
-                    constants.DEN_COPPER * vol_cond_leg
-                    + self.data.tfcoil.den_tf_wp_turn_insulation
-                    * (vol_ins_leg + vol_gr_ins_leg)
+        match TFConductorModel(self.data.tfcoil.i_tf_sup):
+            case TFConductorModel.WATER_COOLED_COPPER:
+                self.data.tfcoil.m_tf_coil_case = (
+                    self.data.fwbs.den_steel * vol_case / self.data.tfcoil.n_tf_coils
+                )  # Per TF leg, no casing for outer leg
+                self.data.tfcoil.m_tf_coil_copper = (
+                    constants.DEN_COPPER * vol_cond / self.data.tfcoil.n_tf_coils
                 )
+                self.data.tfcoil.whtconal = 0.0e0
 
-                # CP weight
-                self.data.tfcoil.whtcp = (
-                    constants.DEN_COPPER * self.data.tfcoil.vol_cond_cp
-                    + self.data.tfcoil.den_tf_wp_turn_insulation
-                    * (
-                        self.data.superconducting_tfcoil.vol_ins_cp
-                        + self.data.superconducting_tfcoil.vol_gr_ins_cp
+                # Outer legs/CP weights
+                if self.data.physics.itart == 1:
+                    # Weight of all the TF legs
+                    self.data.tfcoil.whttflgs = self.data.tfcoil.n_tf_coils * (
+                        constants.DEN_COPPER * vol_cond_leg
+                        + self.data.tfcoil.den_tf_wp_turn_insulation
+                        * (vol_ins_leg + vol_gr_ins_leg)
                     )
-                    + self.data.superconducting_tfcoil.vol_case_cp
-                    * self.data.fwbs.den_steel
-                )
 
-        # Cryo-aluminium conductor weights
-        # Casing made of re-inforced aluminium alloy
-        elif self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-            # Casing weight (CP only if self.data.physics.itart = 1)bper leg/coil
-            self.data.tfcoil.m_tf_coil_case = (
-                constants.DEN_ALUMINIUM * vol_case / self.data.tfcoil.n_tf_coils
-            )
-            self.data.tfcoil.m_tf_coil_copper = 0.0e0
-            self.data.tfcoil.whtconal = (
-                constants.DEN_ALUMINIUM * vol_cond / self.data.tfcoil.n_tf_coils
-            )
-
-            # Outer legs/CP weights
-            if self.data.physics.itart == 1:
-                # Weight of all the TF legs
-                self.data.tfcoil.whttflgs = self.data.tfcoil.n_tf_coils * (
-                    constants.DEN_ALUMINIUM * vol_cond_leg
-                    + self.data.tfcoil.den_tf_wp_turn_insulation
-                    * (vol_ins_leg + vol_gr_ins_leg)
-                )
-
-                # CP weight
-                self.data.tfcoil.whtcp = (
-                    constants.DEN_ALUMINIUM * self.data.tfcoil.vol_cond_cp
-                    + self.data.tfcoil.den_tf_wp_turn_insulation
-                    * (
-                        self.data.superconducting_tfcoil.vol_ins_cp
-                        + self.data.superconducting_tfcoil.vol_gr_ins_cp
+                    # CP weight
+                    self.data.tfcoil.whtcp = (
+                        constants.DEN_COPPER * self.data.tfcoil.vol_cond_cp
+                        + self.data.tfcoil.den_tf_wp_turn_insulation
+                        * (
+                            self.data.superconducting_tfcoil.vol_ins_cp
+                            + self.data.superconducting_tfcoil.vol_gr_ins_cp
+                        )
+                        + self.data.superconducting_tfcoil.vol_case_cp
+                        * self.data.fwbs.den_steel
                     )
-                    + self.data.superconducting_tfcoil.vol_case_cp
-                    * self.data.fwbs.den_steel
+
+            # Cryo-aluminium conductor weights
+            # Casing made of re-inforced aluminium alloy
+            case TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+                # Casing weight (CP only if self.data.physics.itart = 1)bper leg/coil
+                self.data.tfcoil.m_tf_coil_case = (
+                    constants.DEN_ALUMINIUM * vol_case / self.data.tfcoil.n_tf_coils
                 )
+                self.data.tfcoil.m_tf_coil_copper = 0.0e0
+                self.data.tfcoil.whtconal = (
+                    constants.DEN_ALUMINIUM * vol_cond / self.data.tfcoil.n_tf_coils
+                )
+
+                # Outer legs/CP weights
+                if self.data.physics.itart == 1:
+                    # Weight of all the TF legs
+                    self.data.tfcoil.whttflgs = self.data.tfcoil.n_tf_coils * (
+                        constants.DEN_ALUMINIUM * vol_cond_leg
+                        + self.data.tfcoil.den_tf_wp_turn_insulation
+                        * (vol_ins_leg + vol_gr_ins_leg)
+                    )
+
+                    # CP weight
+                    self.data.tfcoil.whtcp = (
+                        constants.DEN_ALUMINIUM * self.data.tfcoil.vol_cond_cp
+                        + self.data.tfcoil.den_tf_wp_turn_insulation
+                        * (
+                            self.data.superconducting_tfcoil.vol_ins_cp
+                            + self.data.superconducting_tfcoil.vol_gr_ins_cp
+                        )
+                        + self.data.superconducting_tfcoil.vol_case_cp
+                        * self.data.fwbs.den_steel
+                    )
 
         # Turn insulation mass [kg]
         self.data.tfcoil.m_tf_coil_wp_turn_insulation = (

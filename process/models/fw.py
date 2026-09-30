@@ -480,7 +480,7 @@ class FirstWall(Model):
             logger.error("NaN first wall temperature")
         elif (temp_k <= 100) or (temp_k > 1500):
             logger.error(
-                "First wall temperature (temp_k) out of range : [100-1500] K. %s", temp_k
+                "First wall temperature (temp_k) out of range [100-1500] K: %s", temp_k
             )
 
         # Thermal conductivity of first wall material (W/m.K)

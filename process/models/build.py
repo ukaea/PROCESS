@@ -1,6 +1,7 @@
 """Module containing routines for build calculations"""
 
 import logging
+from dataclasses import dataclass
 from enum import IntEnum, unique
 
 import numpy as np
@@ -8,6 +9,7 @@ from tabulate import tabulate
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure.build_variables import (
     CSPrecompressionConfiguration,
@@ -18,10 +20,18 @@ from process.models.physics.current_drive import (
     CurrentDriveMethodType,
     CurrentDriveModel,
 )
-from process.models.tfcoil.base import TFCoilShapeModel
+from process.models.tfcoil.base import TFCoilShapeModel, TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class RZPoint:
+    """A generic container for data that has r and z components"""
+
+    r: float
+    z: float
 
 
 @unique
@@ -415,7 +425,19 @@ class Build(Model):
         ----------
         output : bool
             Flag indicating whether to output results
+
+        Raises
+        ------
+        ProcessValueError
+            Only 1 or 2 divertors are supported
+
         """
+        if self.data.divertor.n_divertors not in {1, 2}:
+            raise ProcessValueError(
+                f"n_divertors = {self.data.divertor.n_divertors} is invalid. "
+                "Only 1 or 2 divertors are supported."
+            )
+
         # Set the X-point heights for the top and bottom of the plasma
         # Assumes top-down plasma symmetry
         self.data.build.z_plasma_xpoint_upper = (
@@ -473,29 +495,30 @@ class Build(Model):
         )
 
         #  Vertical locations of divertor coils
-        if i_single_null == DivertorNumberModels.DOUBLE_NULL:
-            self.data.build.z_tf_top = (
-                self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
-            )
-            self.data.build.dz_tf_upper_lower_midplane = 0.0e0
-        else:
-            self.data.build.z_tf_top = (
-                self.data.build.dr_tf_inboard
-                + self.data.build.dr_tf_shld_gap
-                + self.data.build.dz_shld_thermal
-                + self.data.build.dz_shld_vv_gap
-                + self.data.build.dz_vv_upper
-                + self.data.build.dz_shld_upper
-                + self.data.build.dr_shld_blkt_gap
-                + self.data.build.dz_blkt_upper
-                + 0.5e0
-                * (self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard)
-                + self.data.build.dz_fw_plasma_gap
-                + self.data.build.z_plasma_xpoint_upper
-            )
-            self.data.build.dz_tf_upper_lower_midplane = self.data.build.z_tf_top - (
-                self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
-            )
+        match DivertorNumberModels(i_single_null):
+            case DivertorNumberModels.DOUBLE_NULL:
+                self.data.build.z_tf_top = (
+                    self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
+                )
+                self.data.build.dz_tf_upper_lower_midplane = 0.0e0
+            case DivertorNumberModels.SINGLE_NULL:
+                self.data.build.z_tf_top = (
+                    self.data.build.dr_tf_inboard
+                    + self.data.build.dr_tf_shld_gap
+                    + self.data.build.dz_shld_thermal
+                    + self.data.build.dz_shld_vv_gap
+                    + self.data.build.dz_vv_upper
+                    + self.data.build.dz_shld_upper
+                    + self.data.build.dr_shld_blkt_gap
+                    + self.data.build.dz_blkt_upper
+                    + 0.5e0
+                    * (self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard)
+                    + self.data.build.dz_fw_plasma_gap
+                    + self.data.build.z_plasma_xpoint_upper
+                )
+                self.data.build.dz_tf_upper_lower_midplane = self.data.build.z_tf_top - (
+                    self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
+                )
 
     def divgeom(self, output: bool):
         """Divertor geometry calculation
@@ -593,21 +616,15 @@ class Build(Model):
                 thetao=thetao,
                 rco=rco,
                 rci=rci,
-                rxpt=rxpt,
-                zxpt=zxpt,
-                rspi=rspi,
-                zspi=zspi,
+                xpt=RZPoint(r=rxpt, z=zxpt),
+                spi=RZPoint(r=rspi, z=zspi),
                 zspo=zspo,
                 # Position of inner strike points
-                rplti=rspi + inner_plte_cos,
-                rplbi=rspi - inner_plte_cos,
-                zplti=zplti,
-                zplbi=zplbi,
+                plti=RZPoint(r=rspi + inner_plte_cos, z=zplti),
+                plbi=RZPoint(r=rspi - inner_plte_cos, z=zplbi),
                 # Position of outer plate ends
-                rplto=self.data.build.rspo - outer_plte_cos,
-                rplbo=self.data.build.rspo + outer_plte_cos,
-                zplto=zplto,
-                zplbo=zplbo,
+                plto=RZPoint(r=self.data.build.rspo - outer_plte_cos, z=zplto),
+                plbo=RZPoint(r=self.data.build.rspo + outer_plte_cos, z=zplbo),
             )
 
         return divht
@@ -621,19 +638,13 @@ class Build(Model):
         thetao,
         rco,
         rci,
-        rxpt,
-        zxpt,
-        rspi,
-        zspi,
+        xpt,
+        spi,
         zspo,
-        rplti,
-        rplbi,
-        zplti,
-        zplbi,
-        rplto,
-        rplbo,
-        zplto,
-        zplbo,
+        plti,
+        plbi,
+        plto,
+        plbo,
     ):
         """Divertor geometry output"""
         po.oheadr(self.outfile, "Divertor build and plasma position")
@@ -668,8 +679,8 @@ class Build(Model):
                 ),
                 ("Plasma outer arc radius of curvature (m)", "(rco)", rco),
                 ("Plasma inner arc radius of curvature (m)", "(rci)", rci),
-                ("Plasma lower X-pt, radial (m)", "(rxpt)", rxpt),
-                ("Plasma lower X-pt, vertical (m)", "(zxpt)", zxpt),
+                ("Plasma lower X-pt, radial (m)", "(rxpt)", xpt.r),
+                ("Plasma lower X-pt, vertical (m)", "(zxpt)", xpt.z),
                 (
                     "Poloidal plane angle between vertical and inner leg (rad)",
                     "(thetai)",
@@ -702,18 +713,18 @@ class Build(Model):
                 ),
                 ("Inner divertor plate length (m)", "(plleni)", self.data.build.plleni),
                 ("Outer divertor plate length (m)", "(plleno)", self.data.build.plleno),
-                ("Inner strike point, radial (m)", "(rspi)", rspi),
-                ("Inner strike point, vertical (m)", "(zspi)", zspi),
-                ("Inner plate top, radial (m)", "(rplti)", rplti),
-                ("Inner plate top, vertical (m)", "(zplti)", zplti),
-                ("Inner plate bottom, radial (m)", "(rplbi)", rplbi),
-                ("Inner plate bottom, vertical (m)", "(zplbi)", zplbi),
+                ("Inner strike point, radial (m)", "(rspi)", spi.r),
+                ("Inner strike point, vertical (m)", "(zspi)", spi.z),
+                ("Inner plate top, radial (m)", "(rplti)", plti.r),
+                ("Inner plate top, vertical (m)", "(zplti)", plti.z),
+                ("Inner plate bottom, radial (m)", "(rplbi)", plbi.r),
+                ("Inner plate bottom, vertical (m)", "(zplbi)", plbi.z),
                 ("Outer strike point, radial (m)", "(rspo)", self.data.build.rspo),
                 ("Outer strike point, vertical (m)", "(zspo)", zspo),
-                ("Outer plate top, radial (m)", "(rplto)", rplto),
-                ("Outer plate top, vertical (m)", "(zplto)", zplto),
-                ("Outer plate bottom, radial (m)", "(rplbo)", rplbo),
-                ("Outer plate bottom, vertical (m)", "(zplbo)", zplbo),
+                ("Outer plate top, radial (m)", "(rplto)", plto.r),
+                ("Outer plate top, vertical (m)", "(zplto)", plto.z),
+                ("Outer plate bottom, radial (m)", "(rplbo)", plbo.r),
+                ("Outer plate bottom, vertical (m)", "(zplbo)", plbo.z),
                 ("Calculated maximum divertor height (m)", "(divht)", divht),
             ]:
                 po.ovarre(self.outfile, desc, name, var, "OP ")
@@ -746,12 +757,12 @@ class Build(Model):
                     "(dz_tf_plasma_centre_offset)",
                     self.data.build.dz_tf_plasma_centre_offset,
                 ),
-                ("Plasma upper X-pt, radial (m)", "(rxpt)", rxpt),
-                ("Plasma upper X-pt, vertical (m)", "(-zxpt)", -zxpt),
+                ("Plasma upper X-pt, radial (m)", "(rxpt)", xpt.r),
+                ("Plasma upper X-pt, vertical (m)", "(-zxpt)", -xpt.z),
                 ("Plasma outer arc radius of curvature (m)", "(rco)", rco),
                 ("Plasma inner arc radius of curvature (m)", "(rci)", rci),
-                ("Plasma lower X-pt, radial (m)", "(rxpt)", rxpt),
-                ("Plasma lower X-pt, vertical (m)", "(zxpt)", zxpt),
+                ("Plasma lower X-pt, radial (m)", "(rxpt)", xpt.r),
+                ("Plasma lower X-pt, vertical (m)", "(zxpt)", xpt.z),
                 (
                     "Poloidal plane angle between vertical and inner leg (rad)",
                     "(thetai)",
@@ -784,48 +795,41 @@ class Build(Model):
                 ),
                 ("Inner divertor plate length (m)", "(plleni)", self.data.build.plleni),
                 ("Outer divertor plate length (m)", "(plleno)", self.data.build.plleno),
-                ("Upper inner strike point, radial (m)", "(rspi)", rspi),
-                ("Upper inner strike point, vertical (m)", "(-zspi)", -zspi),
-                ("Upper inner plate top, radial (m)", "(rplti)", rplti),
-                ("Upper inner plate top, vertical (m)", "(-zplti)", -zplti),
-                ("Upper inner plate bottom, radial (m)", "(rplbi)", rplbi),
-                ("Upper inner plate bottom, vertical (m)", "(-zplbi)", -zplbi),
+                ("Upper inner strike point, radial (m)", "(rspi)", spi.r),
+                ("Upper inner strike point, vertical (m)", "(-zspi)", -spi.z),
+                ("Upper inner plate top, radial (m)", "(rplti)", plti.r),
+                ("Upper inner plate top, vertical (m)", "(-zplti)", -plti.z),
+                ("Upper inner plate bottom, radial (m)", "(rplbi)", plbi.r),
+                ("Upper inner plate bottom, vertical (m)", "(-zplbi)", -plbi.z),
                 (
                     "Upper outer strike point, radial (m)",
                     "(rspo)",
                     self.data.build.rspo,
                 ),
                 ("Upper outer strike point, vertical (m)", "(-zspo)", -zspo),
-                ("Upper outer plate top, radial (m)", "(rplto)", rplto),
-                ("Upper outer plate top, vertical (m)", "(-zplto)", -zplto),
-                ("Upper outer plate bottom, radial (m)", "(rplbo)", rplbo),
-                ("Upper outer plate bottom, vertical (m)", "(-zplbo)", -zplbo),
-                ("Lower inner strike point, radial (m)", "(rspi)", rspi),
-                ("Lower inner strike point, vertical (m)", "(zspi)", zspi),
-                ("Lower inner plate top, radial (m)", "(rplti)", rplti),
-                ("Lower inner plate top, vertical (m)", "(zplti)", zplti),
-                ("Lower inner plate bottom, radial (m)", "(rplbi)", rplbi),
-                ("Lower inner plate bottom, vertical (m)", "(zplbi)", zplbi),
+                ("Upper outer plate top, radial (m)", "(rplto)", plto.r),
+                ("Upper outer plate top, vertical (m)", "(-zplto)", -plto.z),
+                ("Upper outer plate bottom, radial (m)", "(rplbo)", plbo.r),
+                ("Upper outer plate bottom, vertical (m)", "(-zplbo)", -plbo.z),
+                ("Lower inner strike point, radial (m)", "(rspi)", spi.r),
+                ("Lower inner strike point, vertical (m)", "(zspi)", spi.z),
+                ("Lower inner plate top, radial (m)", "(rplti)", plti.r),
+                ("Lower inner plate top, vertical (m)", "(zplti)", plti.z),
+                ("Lower inner plate bottom, radial (m)", "(rplbi)", plbi.r),
+                ("Lower inner plate bottom, vertical (m)", "(zplbi)", plbi.z),
                 (
                     "Lower outer strike point, radial (m)",
                     "(rspo)",
                     self.data.build.rspo,
                 ),
                 ("Lower outer strike point, vertical (m)", "(zspo)", zspo),
-                ("Lower outer plate top, radial (m)", "(rplto)", rplto),
-                ("Lower outer plate top, vertical (m)", "(zplto)", zplto),
-                ("Lower outer plate bottom, radial (m)", "(rplbo)", rplbo),
-                ("Lower outer plate bottom, vertical (m)", "(zplbo)", zplbo),
+                ("Lower outer plate top, radial (m)", "(rplto)", plto.r),
+                ("Lower outer plate top, vertical (m)", "(zplto)", plto.z),
+                ("Lower outer plate bottom, radial (m)", "(rplbo)", plbo.r),
+                ("Lower outer plate bottom, vertical (m)", "(zplbo)", plbo.z),
                 ("Calculated maximum divertor height (m)", "(divht)", divht),
             ]:
                 po.ovarre(self.outfile, desc, name, var, "OP ")
-        else:
-            po.oheadr(self.outfile, "Divertor build and plasma position")
-            po.ocmmnt(
-                self.outfile,
-                "ERROR: null value not supported, check i_single_null value.",
-            )
-
         po.ovarre(
             self.outfile,
             "Divertor poloidal angle subtended by plasma (degrees)",
@@ -901,6 +905,12 @@ class Build(Model):
                 maximum ripple (m)
             - flag: Applicability flag (0 = OK, non-zero = fitted-range concern)
 
+
+        Raises
+        ------
+        ProcessValueError
+            If the TF coil parameters are not properly defined.
+
         Notes
         -----
         - Fitted coefficients originate from parametric MAGINT runs (M. Kovari, 2014).
@@ -909,35 +919,36 @@ class Build(Model):
         - The routine sets an applicability flag when fitted-range assumptions are
         exceeded.
         """
-        if i_tf_sup == 1:
-            # Minimal inboard WP radius [m]
-            r_wp_min = r_tf_wp_inboard_inner
+        match TFConductorModel(i_tf_sup):
+            case TFConductorModel.SUPERCONDUCTING:
+                # Minimal inboard WP radius [m]
+                r_wp_min = r_tf_wp_inboard_inner
 
-            i_tf_wp_geom = SuperconductingTFWPShapeType(i_tf_wp_geom)
+                match SuperconductingTFWPShapeType(i_tf_wp_geom):
+                    case SuperconductingTFWPShapeType.RECTANGULAR:
+                        r_wp_max = r_wp_min
+                    case SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
+                        r_wp_max = r_tf_wp_inboard_centre
+                    case SuperconductingTFWPShapeType.TRAPEZOIDAL:
+                        r_wp_max = r_tf_wp_inboard_outer
 
-            # Rectangular WP
-            if i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
-                r_wp_max = r_wp_min
+                # Calculated maximum toroidal WP toroidal thickness [m]
+                dx_tf_wp_conductor_max = dx_tf_wp_primary_toroidal - 2.0 * (
+                    dx_tf_wp_insulation + dx_tf_wp_insertion_gap
+                )
 
-            # Double rectangle WP
-            elif i_tf_wp_geom == SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
-                r_wp_max = r_tf_wp_inboard_centre
-
-            # Trapezoidal WP
-            elif i_tf_wp_geom == SuperconductingTFWPShapeType.TRAPEZOIDAL:
+            # Resistive magnet case
+            case (
+                TFConductorModel.WATER_COOLED_COPPER
+                | TFConductorModel.HELIUM_COOLED_ALUMINIUM
+            ):
+                # Radius used to define the dx_tf_wp_conductor_max [m]
                 r_wp_max = r_tf_wp_inboard_outer
+                # Calculated maximum toroidal WP toroidal thickness [m]
+                dx_tf_wp_conductor_max = 2.0e0 * r_wp_max * np.tan(np.pi / n_tf_coils)
 
-            # Calculated maximum toroidal WP toroidal thickness [m]
-            dx_tf_wp_conductor_max = dx_tf_wp_primary_toroidal - 2.0 * (
-                dx_tf_wp_insulation + dx_tf_wp_insertion_gap
-            )
-
-        # Resistive magnet case
-        else:
-            # Radius used to define the dx_tf_wp_conductor_max [m]
-            r_wp_max = r_tf_wp_inboard_outer
-            # Calculated maximum toroidal WP toroidal thickness [m]
-            dx_tf_wp_conductor_max = 2.0e0 * r_wp_max * np.tan(np.pi / n_tf_coils)
+            case _:
+                raise ProcessValueError("Unsupported TF conductor model.")
 
         flag = 0
         if i_tf_shape == TFCoilShapeModel.PICTURE_FRAME:
@@ -1312,29 +1323,30 @@ class Build(Model):
             "Ripple result may be inaccurate, as the fit has been extrapolated"
         )
 
-        if self.data.build.ripflag == 1:
-            warning_str = (
-                "(TF coil ripple calculation) "
-                "Dimensionless coil width X out of fitted range. %s"
-            )
-            diagnostic = (
-                self.data.tfcoil.dx_tf_wp_primary_toroidal
-                * self.data.tfcoil.n_tf_coils
-                / self.data.physics.rmajor
-            )
-        elif self.data.build.ripflag == 2:
-            warning_str = (
-                "(TF coil ripple calculation) "
-                "No. of TF coils not between 16 and 20 inclusive "
-            )
-            diagnostic = f"{self.data.tfcoil.n_tf_coils=}"
-        else:
-            diagnostic = (
-                self.data.physics.rmajor + self.data.physics.rminor
-            ) / self.data.build.r_tf_outboard_mid
-            warning_str = (
-                "(TF coil ripple calculation) (R+a)/rtot=%s out of fitted range.",
-            )
+        match self.data.build.ripflag:
+            case 1:
+                warning_str = (
+                    "(TF coil ripple calculation) "
+                    "Dimensionless coil width X out of fitted range. %s"
+                )
+                diagnostic = (
+                    self.data.tfcoil.dx_tf_wp_primary_toroidal
+                    * self.data.tfcoil.n_tf_coils
+                    / self.data.physics.rmajor
+                )
+            case 2:
+                warning_str = (
+                    "(TF coil ripple calculation) "
+                    "No. of TF coils not between 16 and 20 inclusive "
+                )
+                diagnostic = f"{self.data.tfcoil.n_tf_coils=}"
+            case _:
+                diagnostic = (
+                    self.data.physics.rmajor + self.data.physics.rminor
+                ) / self.data.build.r_tf_outboard_mid
+                warning_str = (
+                    "(TF coil ripple calculation) (R+a)/rtot=%s out of fitted range.",
+                )
 
         logger.warning(warning_str, diagnostic)
 

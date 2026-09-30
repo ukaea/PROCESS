@@ -271,7 +271,7 @@ def intersect(x1, y1, x2, y2, xin):
 
         if x > xmax:
             logger.error(
-                "X has risen above Xmax; X=%s has been set equal to Xmax=%s", x, xmin
+                "X has risen above Xmax; X=%s has been set equal to Xmax=%s", x, xmax
             )
             x = xmax
             break

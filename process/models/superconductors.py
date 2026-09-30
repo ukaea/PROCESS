@@ -1070,7 +1070,8 @@ def bottura_scaling(
     # report error
     if temp_conductor / temp_c0_eps >= 1.0:
         logger.error(
-            "Reduced temperature t artificially lowered %s %s",
+            "Reduced temperature t artificially lowered, temp_conductor=%s, "
+            "temp_c0_eps=%s",
             temp_conductor,
             temp_c0_eps,
         )

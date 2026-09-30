@@ -99,7 +99,11 @@ from process.models.physics.plasma_current import (
 from process.models.physics.plasma_fields import PlasmaFields
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
-from process.models.physics.profiles import NeProfile, TeProfile
+from process.models.physics.profiles import (
+    ElectronDensityProfile,
+    ElectronTemperatureProfile,
+    IonTemperatureProfile,
+)
 from process.models.physics.scrape_off_layer import ScrapeOffLayer
 from process.models.power import Power
 from process.models.pulse import Pulse
@@ -664,9 +668,16 @@ class Models:
         self.pulse = Pulse()
         self.shield = Shield()
         self.ife = IFE(availability=self.availability, costs=self.costs)
-        self.ne_profile = NeProfile()
-        self.te_profile = TeProfile()
-        self.plasma_profile = PlasmaProfile(self.ne_profile, self.te_profile)
+        self.ne_profile = ElectronDensityProfile()
+        self.te_profile = ElectronTemperatureProfile()
+        self.ti_profile = IonTemperatureProfile(
+            electron_temperature_profile=self.te_profile
+        )
+        self.plasma_profile = PlasmaProfile(
+            ne_profile=self.ne_profile,
+            te_profile=self.te_profile,
+            ti_profile=self.ti_profile,
+        )
         self.fw = FirstWall()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(fw=self.fw)
@@ -814,6 +825,7 @@ class Models:
             self.plasma_inductance,
             self.ne_profile,
             self.te_profile,
+            self.ti_profile,
             self.plasma_fields,
             self.sauter_bootstrap_current,
             self.plasma_transition,

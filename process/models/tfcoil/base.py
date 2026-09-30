@@ -8,7 +8,7 @@ import logging
 from dataclasses import dataclass
 from enum import IntEnum, unique
 from types import DynamicClassAttribute
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, NamedTuple
 
 import numba
 import numpy as np
@@ -115,6 +115,26 @@ class TFGlobalGeometry:
     """Minimum thickness of the sidewall case [m]."""
 
 
+class RTZPoint(NamedTuple):
+    """A generic container for data that has radial, toroidal and z components"""
+
+    r: numba.float64[:]
+    """Radial component [m]"""
+    t: numba.float64[:]
+    """Toroidal component [m]"""
+    z: numba.float64[:]
+    """Vertical component [m]"""
+
+
+class YoungsModulusComponents(NamedTuple):
+    """Components of Young's modulus"""
+
+    axial: float | numba.float64[:]
+    """Axial component of Young's modulus [Pa]"""
+    trans: float | numba.float64[:]
+    """Transverse component of Young's modulus [Pa]"""
+
+
 class TFCoil(Model):
     """Calculates the parameters of a resistive TF coil system for a fusion
     power plant
@@ -130,7 +150,7 @@ class TFCoil(Model):
 
     def run_base_tf(self):
         """Run main tfcoil subroutine without outputting."""
-        global_tf_geometry: TFGlobalGeometry = self.tf_global_geometry(
+        global_tf_geometry = self.tf_global_geometry(
             i_tf_case_geom=self.data.tfcoil.i_tf_case_geom,
             i_f_dr_tf_plasma_case=self.data.tfcoil.i_f_dr_tf_plasma_case,
             f_dr_tf_plasma_case=self.data.tfcoil.f_dr_tf_plasma_case,
@@ -286,18 +306,19 @@ class TFCoil(Model):
         tan_theta_coil = np.tan(rad_tf_coil_inboard_toroidal_half)
 
         # TF coil inboard legs total mid-plane cross-section area [m^2]
-        if i_tf_case_geom == TFPlasmaCaseType.CIRCULAR:
-            # Circular plasma facing front case
-            a_tf_inboard_total = np.pi * (r_tf_inboard_out**2 - r_tf_inboard_in**2)
-        elif i_tf_case_geom == TFPlasmaCaseType.STRAIGHT:
-            # Straight plasma facing front case
-            a_tf_inboard_total = (
-                n_tf_coils
-                * np.sin(rad_tf_coil_inboard_toroidal_half)
-                * np.cos(rad_tf_coil_inboard_toroidal_half)
-                * r_tf_inboard_out**2
-                - np.pi * r_tf_inboard_in**2
-            )
+        match TFPlasmaCaseType(i_tf_case_geom):
+            case TFPlasmaCaseType.CIRCULAR:
+                # Circular plasma facing front case
+                a_tf_inboard_total = np.pi * (r_tf_inboard_out**2 - r_tf_inboard_in**2)
+            case TFPlasmaCaseType.STRAIGHT:
+                # Straight plasma facing front case
+                a_tf_inboard_total = (
+                    n_tf_coils
+                    * np.sin(rad_tf_coil_inboard_toroidal_half)
+                    * np.cos(rad_tf_coil_inboard_toroidal_half)
+                    * r_tf_inboard_out**2
+                    - np.pi * r_tf_inboard_in**2
+                )
 
         # TF coil width in toroidal direction at inboard leg outer edge [m]
 
@@ -502,87 +523,93 @@ class TFCoil(Model):
         tfa = np.zeros(4)
         tfb = np.zeros(4)
 
-        if i_tf_shape == TFCoilShapeModel.D_SHAPE and itart == 0:
-            # PROCESS D-shape parameterisation
-            r_tf_arc[0] = r_tf_inboard_out
-            r_tf_arc[1] = rmajor - 0.2e0 * rminor
-            r_tf_arc[2] = r_tf_outboard_in
-            r_tf_arc[3] = r_tf_arc[1]
-            r_tf_arc[4] = r_tf_arc[0]
+        match TFCoilShapeModel(i_tf_shape):
+            case TFCoilShapeModel.D_SHAPE if itart == 0:
+                # PROCESS D-shape parameterisation
+                r_tf_arc[0] = r_tf_inboard_out
+                r_tf_arc[1] = rmajor - 0.2e0 * rminor
+                r_tf_arc[2] = r_tf_outboard_in
+                r_tf_arc[3] = r_tf_arc[1]
+                r_tf_arc[4] = r_tf_arc[0]
 
-            if i_single_null == DivertorNumberModels.DOUBLE_NULL:
-                z_tf_arc[0] = FSTRAIGHT * z_tf_inside_half
-                z_tf_arc[1] = z_tf_inside_half
-                z_tf_arc[2] = 0
-                z_tf_arc[3] = -z_tf_inside_half
-                z_tf_arc[4] = -FSTRAIGHT * z_tf_inside_half
-            else:
-                z_tf_arc[0] = FSTRAIGHT * (z_tf_top - dr_tf_inboard)
+                match DivertorNumberModels(i_single_null):
+                    case DivertorNumberModels.DOUBLE_NULL:
+                        z_tf_arc[0] = FSTRAIGHT * z_tf_inside_half
+                        z_tf_arc[1] = z_tf_inside_half
+                        z_tf_arc[2] = 0
+                        z_tf_arc[3] = -z_tf_inside_half
+                        z_tf_arc[4] = -FSTRAIGHT * z_tf_inside_half
+                    case DivertorNumberModels.SINGLE_NULL:
+                        z_tf_arc[0] = FSTRAIGHT * (z_tf_top - dr_tf_inboard)
+                        z_tf_arc[1] = z_tf_top - dr_tf_inboard
+                        z_tf_arc[2] = 0
+                        z_tf_arc[3] = -z_tf_inside_half
+                        z_tf_arc[4] = -FSTRAIGHT * z_tf_inside_half
+
+                len_tf_coil = z_tf_arc[0] - z_tf_arc[4]
+
+                for ii in range(4):
+                    tfa[ii] = abs(r_tf_arc[ii + 1] - r_tf_arc[ii])
+                    tfb[ii] = abs(z_tf_arc[ii + 1] - z_tf_arc[ii])
+                    aa = tfa[ii] + 0.5e0 * dr_tf_inboard
+                    bb = tfb[ii] + 0.5e0 * dr_tf_inboard
+                    len_tf_coil += 0.25e0 * self.circumference(aa, bb)
+
+            case TFCoilShapeModel.D_SHAPE if itart == 1:
+                # Centrepost with D-shaped
+                r_tf_arc[0] = r_cp_top
+                r_tf_arc[1] = rmajor - 0.2e0 * rminor
+                r_tf_arc[2] = r_tf_outboard_in
+                r_tf_arc[3] = r_tf_arc[1]
+                r_tf_arc[4] = r_tf_arc[0]
+
+                z_tf_arc[0] = z_tf_top - dr_tf_inboard
                 z_tf_arc[1] = z_tf_top - dr_tf_inboard
                 z_tf_arc[2] = 0
                 z_tf_arc[3] = -z_tf_inside_half
-                z_tf_arc[4] = -FSTRAIGHT * z_tf_inside_half
+                z_tf_arc[4] = -z_tf_inside_half
 
-            len_tf_coil = z_tf_arc[0] - z_tf_arc[4]
+                len_tf_coil = 2 * (r_tf_arc[1] - r_tf_arc[0])
 
-            for ii in range(4):
-                tfa[ii] = abs(r_tf_arc[ii + 1] - r_tf_arc[ii])
-                tfb[ii] = abs(z_tf_arc[ii + 1] - z_tf_arc[ii])
-                aa = tfa[ii] + 0.5e0 * dr_tf_inboard
-                bb = tfb[ii] + 0.5e0 * dr_tf_inboard
-                len_tf_coil += 0.25e0 * self.circumference(aa, bb)
+                for ii in range(1, 3):
+                    tfa[ii] = abs(r_tf_arc[ii + 1] - r_tf_arc[ii])
+                    tfb[ii] = abs(z_tf_arc[ii + 1] - z_tf_arc[ii])
+                    aa = tfa[ii] + 0.5e0 * dr_tf_outboard
+                    bb = tfb[ii] + 0.5e0 * dr_tf_outboard
+                    len_tf_coil += 0.25e0 * self.circumference(aa, bb)
 
-        elif i_tf_shape == TFCoilShapeModel.D_SHAPE and itart == 1:
-            # Centrepost with D-shaped
-            r_tf_arc[0] = r_cp_top
-            r_tf_arc[1] = rmajor - 0.2e0 * rminor
-            r_tf_arc[2] = r_tf_outboard_in
-            r_tf_arc[3] = r_tf_arc[1]
-            r_tf_arc[4] = r_tf_arc[0]
+            case TFCoilShapeModel.PICTURE_FRAME:
+                # Picture frame coil
+                match itart:
+                    case 0:
+                        r_tf_arc[0] = r_tf_inboard_out
+                    case 1:
+                        r_tf_arc[0] = r_cp_top
+                r_tf_arc[1] = r_tf_outboard_in
+                r_tf_arc[2] = r_tf_arc[1]
+                r_tf_arc[3] = r_tf_arc[1]
+                r_tf_arc[4] = r_tf_arc[0]
 
-            z_tf_arc[0] = z_tf_top - dr_tf_inboard
-            z_tf_arc[1] = z_tf_top - dr_tf_inboard
-            z_tf_arc[2] = 0
-            z_tf_arc[3] = -z_tf_inside_half
-            z_tf_arc[4] = -z_tf_inside_half
+                z_tf_arc[0] = z_tf_top - dr_tf_inboard
+                z_tf_arc[1] = z_tf_top - dr_tf_inboard
+                z_tf_arc[2] = 0
+                z_tf_arc[3] = -z_tf_inside_half
+                z_tf_arc[4] = -z_tf_inside_half
 
-            len_tf_coil = 2 * (r_tf_arc[1] - r_tf_arc[0])
-
-            for ii in range(1, 3):
-                tfa[ii] = abs(r_tf_arc[ii + 1] - r_tf_arc[ii])
-                tfb[ii] = abs(z_tf_arc[ii + 1] - z_tf_arc[ii])
-                aa = tfa[ii] + 0.5e0 * dr_tf_outboard
-                bb = tfb[ii] + 0.5e0 * dr_tf_outboard
-                len_tf_coil += 0.25e0 * self.circumference(aa, bb)
-
-        elif i_tf_shape == TFCoilShapeModel.PICTURE_FRAME:
-            # Picture frame coil
-            if itart == 0:
-                r_tf_arc[0] = r_tf_inboard_out
-            if itart == 1:
-                r_tf_arc[0] = r_cp_top
-            r_tf_arc[1] = r_tf_outboard_in
-            r_tf_arc[2] = r_tf_arc[1]
-            r_tf_arc[3] = r_tf_arc[1]
-            r_tf_arc[4] = r_tf_arc[0]
-
-            z_tf_arc[0] = z_tf_top - dr_tf_inboard
-            z_tf_arc[1] = z_tf_top - dr_tf_inboard
-            z_tf_arc[2] = 0
-            z_tf_arc[3] = -z_tf_inside_half
-            z_tf_arc[4] = -z_tf_inside_half
-
-            if itart == 0:
-                len_tf_coil = 2.0e0 * (
-                    2.0e0 * z_tf_inside_half
-                    + dr_tf_inboard
-                    + r_tf_outboard_mid
-                    - r_tf_inboard_mid
-                )
-            elif itart == 1:
-                len_tf_coil = (
-                    z_tf_inside_half + z_tf_top + 2.0e0 * (r_tf_outboard_mid - r_cp_top)
-                )
+                match itart:
+                    case 0:
+                        len_tf_coil = 2.0e0 * (
+                            2.0e0 * z_tf_inside_half
+                            + dr_tf_inboard
+                            + r_tf_outboard_mid
+                            - r_tf_inboard_mid
+                        )
+                    case 1:
+                        len_tf_coil = (
+                            z_tf_inside_half
+                            + z_tf_top
+                            + 2.0e0 * (r_tf_outboard_mid - r_cp_top)
+                        )
 
         return len_tf_coil, tfa, tfb, r_tf_arc, z_tf_arc
 
@@ -669,22 +696,27 @@ class TFCoil(Model):
             "(i_tf_shape)",
             self.data.tfcoil.i_tf_shape,
         )
-        if self.data.tfcoil.i_tf_shape == TFCoilShapeModel.D_SHAPE:
-            po.oblnkl(self.outfile)
-            po.ocmmnt(self.outfile, "D-shape coil, inner surface shape approximated by")
-            po.ocmmnt(
-                self.outfile,
-                "by a straight segment and elliptical arcs between the "
-                "following points:",
-            )
-            po.oblnkl(self.outfile)
-        elif self.data.tfcoil.i_tf_shape == TFCoilShapeModel.PICTURE_FRAME:
-            po.oblnkl(self.outfile)
-            po.ocmmnt(self.outfile, "Picture frame coil, inner surface approximated by")
-            po.ocmmnt(
-                self.outfile, "by a straight segment between the following points:"
-            )
-            po.oblnkl(self.outfile)
+        match TFCoilShapeModel(self.data.tfcoil.i_tf_shape):
+            case TFCoilShapeModel.D_SHAPE:
+                po.oblnkl(self.outfile)
+                po.ocmmnt(
+                    self.outfile, "D-shape coil, inner surface shape approximated by"
+                )
+                po.ocmmnt(
+                    self.outfile,
+                    "by a straight segment and elliptical arcs between the "
+                    "following points:",
+                )
+                po.oblnkl(self.outfile)
+            case TFCoilShapeModel.PICTURE_FRAME:
+                po.oblnkl(self.outfile)
+                po.ocmmnt(
+                    self.outfile, "Picture frame coil, inner surface approximated by"
+                )
+                po.ocmmnt(
+                    self.outfile, "by a straight segment between the following points:"
+                )
+                po.oblnkl(self.outfile)
 
         po.write(self.outfile, "  Point          r(m)          z(m)")
         for ii in range(5):
@@ -750,37 +782,35 @@ class TFCoil(Model):
             "(i_tf_bucking)",
             self.data.tfcoil.i_tf_bucking,
         )
+        match self.data.tfcoil.i_tf_bucking:
+            case 0:
+                po.ocmmnt(self.outfile, "  -> No support structure")
+            case 1:
+                if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+                    po.ocmmnt(self.outfile, "  -> Steel casing")
+                elif (
+                    abs(self.data.tfcoil.eyoung_res_tf_buck - 205.0e9)
+                    < np.finfo(float(self.data.tfcoil.eyoung_res_tf_buck)).eps
+                ):
+                    po.ocmmnt(self.outfile, "  -> Steel bucking cylinder")
+                else:
+                    po.ocmmnt(self.outfile, "  -> Bucking cylinder")
 
-        if self.data.tfcoil.i_tf_bucking == 0:
-            po.ocmmnt(self.outfile, "  -> No support structure")
-        elif self.data.tfcoil.i_tf_bucking == 1:
-            if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-                po.ocmmnt(self.outfile, "  -> Steel casing")
-            elif (
-                abs(self.data.tfcoil.eyoung_res_tf_buck - 205.0e9)
-                < np.finfo(float(self.data.tfcoil.eyoung_res_tf_buck)).eps
+            case 2 | 3 if (
+                self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
             ):
-                po.ocmmnt(self.outfile, "  -> Steel bucking cylinder")
-            else:
-                po.ocmmnt(self.outfile, "  -> Bucking cylinder")
+                po.ocmmnt(
+                    self.outfile,
+                    "  -> TF in contact with dr_bore filler support "
+                    "(bucked and weged design)",
+                )
 
-        elif (
-            self.data.tfcoil.i_tf_bucking in {2, 3}
-            and self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_INSIDE_CS
-        ):
-            po.ocmmnt(
-                self.outfile,
-                "  -> TF in contact with dr_bore filler support "
-                "(bucked and weged design)",
-            )
-
-        elif (
-            self.data.tfcoil.i_tf_bucking in {2, 3}
-            and self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_OUTSIDE_CS
-        ):
-            po.ocmmnt(
-                self.outfile, "  -> TF in contact with CS (bucked and weged design)"
-            )
+            case 2 | 3 if (
+                self.data.build.i_tf_inside_cs == TFCSRadialConfiguration.TF_OUTSIDE_CS
+            ):
+                po.ocmmnt(
+                    self.outfile, "  -> TF in contact with CS (bucked and wedged design)"
+                )
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
@@ -1221,6 +1251,11 @@ class TFCoil(Model):
         This subroutine evaluates the parameters of the centrepost for a
         tight aspect ratio tokamak. The centrepost is assumed to be tapered,
         i.e. narrowest on the midplane (z=0).
+
+        Raises
+        ------
+        ProcessValueError
+            If the TART centrepost parameters are not properly defined.
         """
         # Vertical distance from the midplane to the top of the tapered section [m]
         if self.data.physics.itart == 1:
@@ -1276,57 +1311,60 @@ class TFCoil(Model):
         # **********************************************
         # Water coollant
         # --------------
-        if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-            # Water coolant physical properties
-            coolant_density = constants.DENH2O
-            coolant_cp = constants.CPH2O
-            coolant_visco = constants.MUH2O
-            coolant_th_cond = constants.KH2O
+        match TFConductorModel(self.data.tfcoil.i_tf_sup):
+            case TFConductorModel.WATER_COOLED_COPPER:
+                # Water coolant physical properties
+                coolant_density = constants.DENH2O
+                coolant_cp = constants.CPH2O
+                coolant_visco = constants.MUH2O
+                coolant_th_cond = constants.KH2O
 
-            # Mass flow rate [kg/s]
-            cool_mass_flow = (
-                acool * coolant_density * self.data.tfcoil.vel_cp_coolant_midplane
-            )
+                # Mass flow rate [kg/s]
+                cool_mass_flow = (
+                    acool * coolant_density * self.data.tfcoil.vel_cp_coolant_midplane
+                )
 
-            # Water temperature rise
-            self.data.tfcoil.dtemp_cp_coolant = ptot / (cool_mass_flow * coolant_cp)
+                # Water temperature rise
+                self.data.tfcoil.dtemp_cp_coolant = ptot / (cool_mass_flow * coolant_cp)
 
-            # Constant coolant velocity
-            vcool_max = self.data.tfcoil.vel_cp_coolant_midplane
+                # Constant coolant velocity
+                vcool_max = self.data.tfcoil.vel_cp_coolant_midplane
+                # --------------
+
+            # Helium coolant
             # --------------
+            case TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+                # Inlet coolant density [kg/m3]
+                coolant_density = self.he_density(self.data.tfcoil.temp_cp_coolant_inlet)
 
-        # Helium coolant
-        # --------------
-        elif self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-            # Inlet coolant density [kg/m3]
-            coolant_density = self.he_density(self.data.tfcoil.temp_cp_coolant_inlet)
+                # Mass flow rate [kg/s]
+                cool_mass_flow = (
+                    acool * coolant_density * self.data.tfcoil.vel_cp_coolant_midplane
+                )
 
-            # Mass flow rate [kg/s]
-            cool_mass_flow = (
-                acool * coolant_density * self.data.tfcoil.vel_cp_coolant_midplane
-            )
+                # Infinitesimal power deposition used in the integral
+                dptot = ptot / n_tcool_it
 
-            # Infinitesimal power deposition used in the integral
-            dptot = ptot / n_tcool_it
+                tcool_calc = copy.copy(self.data.tfcoil.temp_cp_coolant_inlet)  # K
+                for _i in range(n_tcool_it):
+                    # Thermal capacity Cp
+                    coolant_cp = self.he_cp(tcool_calc)
 
-            tcool_calc = copy.copy(self.data.tfcoil.temp_cp_coolant_inlet)  # K
-            for _i in range(n_tcool_it):
-                # Thermal capacity Cp
-                coolant_cp = self.he_cp(tcool_calc)
+                    # Temperature infinitesimal increase
+                    tcool_calc += dptot / (cool_mass_flow * coolant_cp)
 
-                # Temperature infinitesimal increase
-                tcool_calc += dptot / (cool_mass_flow * coolant_cp)
+                # Outlet coolant density (minimal coolant density value)
+                coolant_density = self.he_density(tcool_calc)
 
-            # Outlet coolant density (minimal coolant density value)
-            coolant_density = self.he_density(tcool_calc)
+                # Maxium coolant velocity
+                vcool_max = cool_mass_flow / (acool * coolant_density)
 
-            # Maxium coolant velocity
-            vcool_max = cool_mass_flow / (acool * coolant_density)
-
-            # Getting the global in-outlet temperature increase
-            self.data.tfcoil.dtemp_cp_coolant = (
-                tcool_calc - self.data.tfcoil.temp_cp_coolant_inlet
-            )
+                # Getting the global in-outlet temperature increase
+                self.data.tfcoil.dtemp_cp_coolant = (
+                    tcool_calc - self.data.tfcoil.temp_cp_coolant_inlet
+                )
+            case _:
+                raise ProcessValueError("Unknown TF conductor model")
         # --------------
 
         # Average coolant temperature
@@ -1384,12 +1422,13 @@ class TFCoil(Model):
         # Conductor thermal conductivity
         # ******
         # Copper conductor
-        if self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
-            conductor_th_cond = constants.K_COPPER
-
-        # Aluminium
-        elif self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
-            conductor_th_cond = self.al_th_cond(tcool_film)
+        match TFConductorModel(self.data.tfcoil.i_tf_sup):
+            case TFConductorModel.WATER_COOLED_COPPER:
+                conductor_th_cond = constants.K_COPPER
+            case TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+                conductor_th_cond = self.al_th_cond(tcool_film)
+            case _:
+                raise ProcessValueError("Unknown TF conductor model")
         # ******
 
         # Average temperature rise : To be changed with Garry Voss' better documented
@@ -1468,14 +1507,11 @@ class TFCoil(Model):
         )
 
         # Pumping efficiency
-        if (
-            self.data.tfcoil.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER
-        ):  # Water cooled
-            self.data.tfcoil.etapump = 0.8e0
-        elif (
-            self.data.tfcoil.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM
-        ):  # Cryogenic helium
-            self.data.tfcoil.etapump = 0.6e0
+        match TFConductorModel(self.data.tfcoil.i_tf_sup):
+            case TFConductorModel.WATER_COOLED_COPPER:
+                self.data.tfcoil.etapump = 0.8e0
+            case TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+                self.data.tfcoil.etapump = 0.6e0
 
         # Pressure drop calculation
         dpres = (
@@ -2226,7 +2262,7 @@ class TFCoil(Model):
 
     @staticmethod
     @numba.njit(cache=True)
-    def stresscl(
+    def stresscl(  # noqa: PLR0917
         n_tf_layer,
         n_radial_array,
         n_tf_wp_stress_layers,
@@ -3243,31 +3279,21 @@ class TFCoil(Model):
         # ----------------
 
         return (
-            sig_tf_r_max,
-            sig_tf_t_max,
-            sig_tf_z_max,
+            RTZPoint(r=sig_tf_r_max, t=sig_tf_t_max, z=sig_tf_z_max),
             sig_tf_vmises_max,
             s_shear_tf_peak,
             deflect,
-            eyoung_axial,
-            eyoung_trans,
-            eyoung_wp_axial,
-            eyoung_wp_trans,
+            YoungsModulusComponents(axial=eyoung_axial, trans=eyoung_trans),
+            YoungsModulusComponents(axial=eyoung_wp_axial, trans=eyoung_wp_trans),
             poisson_wp_trans,
             radial_array,
             s_shear_cea_tf_cond,
             poisson_wp_axial,
-            sig_tf_r,
-            sig_tf_smeared_r,
-            sig_tf_smeared_t,
-            sig_tf_smeared_z,
-            sig_tf_t,
+            RTZPoint(r=sig_tf_r, t=sig_tf_t, z=sig_tf_z),
+            RTZPoint(r=sig_tf_smeared_r, t=sig_tf_smeared_t, z=sig_tf_smeared_z),
             s_shear_tf,
             sig_tf_vmises,
-            sig_tf_z,
-            str_tf_r,
-            str_tf_t,
-            str_tf_z,
+            RTZPoint(r=str_tf_r, t=str_tf_t, z=str_tf_z),
             n_radial_array,
             n_tf_bucking,
             sig_tf_wp,
@@ -3279,33 +3305,23 @@ class TFCoil(Model):
             sig_tf_wp_av_z,
         )
 
-    def out_stress(
+    def out_stress(  # noqa: PLR0917
         self,
-        sig_tf_r_max,
-        sig_tf_t_max,
-        sig_tf_z_max,
+        sig_tf_max,
         sig_tf_vmises_max,
         s_shear_tf_peak,
         deflect,
-        eyoung_axial,
-        eyoung_trans,
-        eyoung_wp_axial,
-        eyoung_wp_trans,
+        eyoung,
+        eyoung_wp,
         poisson_wp_trans,
         radial_array,
         s_shear_cea_tf_cond,
         poisson_wp_axial,
-        sig_tf_r,
-        sig_tf_smeared_r,
-        sig_tf_smeared_t,
-        sig_tf_smeared_z,
-        sig_tf_t,
+        sig_tf,
+        sig_tf_smeared,
         s_shear_tf,
         sig_tf_vmises,
-        sig_tf_z,
-        str_tf_r,
-        str_tf_t,
-        str_tf_z,
+        str_tf,
         n_radial_array,
         n_tf_bucking,
         sig_tf_wp_av_z,
@@ -3316,11 +3332,7 @@ class TFCoil(Model):
 
         Parameters
         ----------
-        sig_tf_r_max :
-
-        sig_tf_t_max :
-
-        sig_tf_z_max :
+        sig_tf_max :
 
         sig_tf_vmises_max :
 
@@ -3328,13 +3340,9 @@ class TFCoil(Model):
 
         deflect :
 
-        eyoung_axial :
+        eyoung :
 
-        eyoung_trans :
-
-        eyoung_wp_axial :
-
-        eyoung_wp_trans :
+        eyoung_wp :
 
         poisson_wp_trans :
 
@@ -3344,27 +3352,15 @@ class TFCoil(Model):
 
         poisson_wp_axial :
 
-        sig_tf_r :
+        sig_tf :
 
-        sig_tf_smeared_r :
-
-        sig_tf_smeared_t :
-
-        sig_tf_smeared_z :
-
-        sig_tf_t :
+        sig_tf_smeared:
 
         s_shear_tf :
 
         sig_tf_vmises :
 
-        sig_tf_z :
-
-        str_tf_r :
-
-        str_tf_t :
-
-        str_tf_z :
+        str_tf:
 
         n_radial_array :
 
@@ -3428,63 +3424,66 @@ class TFCoil(Model):
             "Please use utilities/plot_stress_tf.py for radial plots plots summary",
         )
 
-        if self.data.tfcoil.i_tf_bucking == 0:
-            if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-                po.write(self.outfile, "  Layers \t\t\t\t WP \t\t Outer case")
-            else:
-                po.write(self.outfile, "  Layers \t\t\t\t conductor \t\t Outer case")
+        match self.data.tfcoil.i_tf_bucking:
+            case 0:
+                if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+                    po.write(self.outfile, "  Layers \t\t\t\t WP \t\t Outer case")
+                else:
+                    po.write(self.outfile, "  Layers \t\t\t\t conductor \t\t Outer case")
 
-        elif self.data.tfcoil.i_tf_bucking == 1:
-            if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-                po.write(
-                    self.outfile, "  Layers \t\t\t\t Steel case \t\t WP \t\t Outer case"
-                )
-            else:
-                po.write(
-                    self.outfile,
-                    "  Layers \t\t\t\t bucking \t\t conductor \t\t Outer case",
-                )
+            case 1:
+                if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+                    po.write(
+                        self.outfile,
+                        "  Layers \t\t\t\t Steel case \t\t WP \t\t Outer case",
+                    )
+                else:
+                    po.write(
+                        self.outfile,
+                        "  Layers \t\t\t\t bucking \t\t conductor \t\t Outer case",
+                    )
 
-        elif self.data.tfcoil.i_tf_bucking == 2:
-            if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-                po.write(
-                    self.outfile,
-                    "  Layers \t\t\t\t CS \t\t Steel case \t\t WP \t\t Outer case",
-                )
-            else:
-                po.write(
-                    self.outfile,
-                    "  Layers \t\t\t\t CS \t\t bucking \t\t conductor \t\t Outer case",
-                )
+            case 2:
+                if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+                    po.write(
+                        self.outfile,
+                        "  Layers \t\t\t\t CS \t\t Steel case \t\t WP \t\t Outer case",
+                    )
+                else:
+                    po.write(
+                        self.outfile,
+                        "  Layers \t\t\t\t CS \t\t bucking \t\t conductor \t\t "
+                        "Outer case",
+                    )
 
-        elif self.data.tfcoil.i_tf_bucking == 3:
-            if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-                po.write(
-                    self.outfile,
-                    "  Layers \t\t\t\t CS \t\t interface \t\t Steel case \t\t WP"
-                    "\t\t Outer case",
-                )
-            else:
-                po.write(
-                    self.outfile,
-                    "  Layers \t\t\t\t CS \t\t interface \t\t bucking \t\t conductor"
-                    "\t\t Outer case",
-                )
+            case 3:
+                if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+                    po.write(
+                        self.outfile,
+                        "  Layers \t\t\t\t CS \t\t interface \t\t Steel case \t\t WP"
+                        "\t\t Outer case",
+                    )
+                else:
+                    po.write(
+                        self.outfile,
+                        "  Layers \t\t\t\t CS \t\t interface \t\t bucking \t\t conductor"
+                        "\t\t Outer case",
+                    )
 
         po.write(
             self.outfile,
             f"  Radial stress \t\t\t (MPa) \t\t"
-            f"{table_format_arrays(sig_tf_r_max, 1e-6)}",
+            f"{table_format_arrays(sig_tf_max.r, 1e-6)}",
         )
         po.write(
             self.outfile,
             f"  Toroidal stress \t\t\t (MPa) \t\t"
-            f"{table_format_arrays(sig_tf_t_max, 1e-6)}",
+            f"{table_format_arrays(sig_tf_max.t, 1e-6)}",
         )
         po.write(
             self.outfile,
             f"  Vertical stress \t\t\t (MPa) \t\t"
-            f"{table_format_arrays(sig_tf_z_max, 1e-6)}",
+            f"{table_format_arrays(sig_tf_max.z, 1e-6)}",
         )
         po.write(
             self.outfile,
@@ -3512,26 +3511,26 @@ class TFCoil(Model):
         po.write(
             self.outfile,
             f"  Toroidal modulus \t\t\t (GPa) \t\t"
-            f"{table_format_arrays(eyoung_trans, 1e-9)}",
+            f"{table_format_arrays(eyoung.trans, 1e-9)}",
         )
         po.write(
             self.outfile,
             f"  Vertical modulus \t\t\t (GPa) \t\t"
-            f"{table_format_arrays(eyoung_axial, 1e-9)}",
+            f"{table_format_arrays(eyoung.axial, 1e-9)}",
         )
         po.write(self.outfile, "")
         po.ovarre(
             self.outfile,
             "WP transverse modulus (GPa)",
             "(eyoung_wp_trans*1.0d-9)",
-            eyoung_wp_trans * 1.0e-9,
+            eyoung_wp.trans * 1.0e-9,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "WP vertical modulus (GPa)",
             "(eyoung_wp_axial*1.0d-9)",
-            eyoung_wp_axial * 1.0e-9,
+            eyoung_wp.axial * 1.0e-9,
             "OP ",
         )
         po.ovarre(
@@ -3555,19 +3554,19 @@ class TFCoil(Model):
                 constants.MFILE,
                 f"Radial    stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_r_max({ii + 1}))",
-                sig_tf_r_max[ii],
+                sig_tf_max.r[ii],
             )
             po.ovarre(
                 constants.MFILE,
                 f"toroidal  stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_t_max({ii + 1}))",
-                sig_tf_t_max[ii],
+                sig_tf_max.t[ii],
             )
             po.ovarre(
                 constants.MFILE,
                 f"Vertical  stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_z_max({ii + 1}))",
-                sig_tf_z_max[ii],
+                sig_tf_max.z[ii],
             )
             po.ovarre(
                 constants.MFILE,
@@ -3597,12 +3596,12 @@ class TFCoil(Model):
         sig_file_data = {
             "Points per layers": n_radial_array,
             "Radius (m)": radial_array,
-            "Radial stress (MPa)": sig_tf_r * 1e-6,
-            "Toroidal stress (MPa)": sig_tf_t * 1e-6,
-            "Vertical stress (MPa)": sig_tf_z * 1e-6,
-            "Radial smear stress (MPa)": sig_tf_smeared_r * 1e-6,
-            "Toroidal smear stress (MPa)": sig_tf_smeared_t * 1e-6,
-            "Vertical smear stress (MPa)": sig_tf_smeared_z * 1e-6,
+            "Radial stress (MPa)": sig_tf.r * 1e-6,
+            "Toroidal stress (MPa)": sig_tf.t * 1e-6,
+            "Vertical stress (MPa)": sig_tf.z * 1e-6,
+            "Radial smear stress (MPa)": sig_tf_smeared.r * 1e-6,
+            "Toroidal smear stress (MPa)": sig_tf_smeared.t * 1e-6,
+            "Vertical smear stress (MPa)": sig_tf_smeared.z * 1e-6,
             "Von-Mises stress (MPa)": sig_tf_vmises * 1e-6,
             "CEA Tresca stress (MPa)": (
                 s_shear_cea_tf_cond * 1e-6
@@ -3614,9 +3613,9 @@ class TFCoil(Model):
         if self.data.tfcoil.i_tf_stress_model != 1:
             sig_file_data = {
                 **sig_file_data,
-                "Radial strain": str_tf_r,
-                "Toroidal strain": str_tf_t,
-                "Vertical strain": str_tf_z,
+                "Radial strain": str_tf.r,
+                "Toroidal strain": str_tf.t,
+                "Vertical strain": str_tf.z,
             }
 
         if self.data.tfcoil.i_tf_sup == TFConductorModel.SUPERCONDUCTING:

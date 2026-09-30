@@ -288,7 +288,7 @@ def init_imp_element(
     len_tab: int,
     error: int,
     data: DataStructure,
-):
+) -> None:
     """Initialise the impurity radiation data for a species.
 
     This routine initialises the impurity radiation data structure
@@ -304,13 +304,15 @@ def init_imp_element(
     z : int
         Species charge number
     m_species_amu : float
-        Species atomic mass (amu)
+        Species atomic mass [amu]
     f_nd_species_electron : float
         Number density / electron density
     len_tab : int
         Length of temperature and Lz tables
     error : int
         Error flag; 0 = okay, 1 = missing impurity data
+    data : DataStructure
+        Data structure containing impurity radiation information
 
     Raises
     ------
@@ -434,14 +436,14 @@ def calculate_average_charge_at_temp(
     imp_element_index:
         Impurity element index
     temp_electron_kev:
-        electron temperature in keV
+        electron temperature [keV]
     data:
         DataStructure containing impurity radiation data
 
     Returns
     -------
     numpy.array
-        zav_of_te - electron temperature dependent average atomic charge
+        zav_of_te - electron temperature dependent average atomic charge [-]
     """
     if imp_element_index == 14:
         return np.full_like(np.atleast_1d(temp_electron_kev), 5.0, dtype=float)
@@ -468,23 +470,23 @@ def _calculate_average_charge_at_temp_compiled(
     Parameters
     ----------
     imp_element_index:
-        Impurity element index
+        Impurity element index [-]
     temp_electron_kev:
-        electron temperature in keV
+        electron temperature [keV]
     temp_impurity_keV_array:
-        2D array of impurity temperatures in keV for each impurity element
+        2D array of impurity temperatures [keV] for each impurity element
     impurity_arr_zav:
         2D array of average charge values for each impurity element at the corresponding
-        temperatures in temp_impurity_keV_array
+        temperatures in temp_impurity_keV_array [-]
     impurity_arr_len_tab:
         1D array of the length of the temperature and average charge tables for each
-        impurity element
+        impurity element [-]
 
     Returns
     -------
     n_charge_impurity_average:
         electron temperature dependent average atomic charge of impurity element at the
-        given temperature(s)
+        given temperature(s) [-]
 
     """
     bins = temp_impurity_keV_array[imp_element_index]
@@ -622,13 +624,19 @@ def calculate_impurity_radiation_power_density(
     return pden_impurity_profile
 
 
-def element2index(element: str, data: DataStructure):
+def element2index(element: str, data: DataStructure) -> int:
     """Returns the index of the `element` in the impurity array with
     a given name
 
     Parameters
     ----------
     element: str :
+        Name of the impurity element [-]
+
+    Returns
+    -------
+    int
+        Index of the element in the impurity array [-]
 
     Raises
     ------
@@ -720,7 +728,7 @@ class ImpurityRadiation:
             self.pden_impurity_radiation_profile, pden_impurity_radiation_profile
         )
 
-    def calculate_radiation_loss_profiles(self):
+    def calculate_radiation_loss_profiles(self) -> None:
         """Calculate the Bremsstrahlung (radb), line radiation (radl), total impurity
         radiation from the core (pden_impurity_core_rad_total_mw) and total impurity
         radiation  (pden_impurity_rad_total_mw). Update the stored arrays with the
@@ -746,7 +754,7 @@ class ImpurityRadiation:
             self.pden_impurity_core_rad_profile, pden_impurity_core_rad_total
         )
 
-    def integrate_radiation_loss_profiles(self):
+    def integrate_radiation_loss_profiles(self) -> None:
         """Integrate the radiation loss profiles using the Simpson rule.
         Store the total values for each aspect of impurity radiation loss.
         """
@@ -766,7 +774,7 @@ class ImpurityRadiation:
             dx=self.plasma_profile.neprofile.profile_dx,
         )
 
-    def calculate_imprad(self):
+    def calculate_imprad(self) -> None:
         """Call the map function to calculate impurity radiation parameters for each
         impurity element. Calculate the radiation loss profiles, and integrate them to
         find the total values for radiation loss.
