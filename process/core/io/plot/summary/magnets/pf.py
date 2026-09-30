@@ -11,7 +11,7 @@ from process.core.io.plot.summary.constants import (
     CSCOMPRESSION_COLOUR,
     SOLENOID_COLOUR,
 )
-from process.core.io.plot.summary.geometry import (
+from process.core.io.plot.summary.radial_build import (
     cumulative_radial_build2,
 )
 from process.core.io.plot.summary.rendering import (

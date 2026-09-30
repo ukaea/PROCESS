@@ -14,10 +14,10 @@ from process.core.io.plot.summary.geometry.poloidal import (
     plot_blanket,
     plot_firstwall,
 )
-from process.core.io.plot.summary.plasma import (
+from process.core.io.plot.summary.plasma.physics import (
     plot_plasma,
 )
-from process.core.io.plot.summary.reporting import (
+from process.core.io.plot.summary.reporting.layouts import (
     draw_bend,
 )
 from process.data_structure.physics_variables import DivertorNumberModels

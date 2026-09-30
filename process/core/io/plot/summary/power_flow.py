@@ -14,7 +14,7 @@ from process.core.io.plot.summary.rendering import (
     draw_annotation,
     draw_text,
 )
-from process.core.io.plot.summary.reporting import (
+from process.core.io.plot.summary.reporting.text import (
     plot_info,
 )
 

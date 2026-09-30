@@ -10,7 +10,7 @@ from process.core.io.plot.summary.common import (
     box_style,
     get_pulse_timings,
 )
-from process.core.io.plot.summary.magnets import (
+from process.core.io.plot.summary.magnets.cs import (
     secs_to_hms,
 )
 from process.core.io.plot.summary.rendering import (

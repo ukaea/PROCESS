@@ -23,11 +23,11 @@ from process.core.io.plot.summary.constants import (
     VESSEL_COLOUR,
     rtangle,
 )
-from process.core.io.plot.summary.geometry.build import (
-    cumulative_radial_build2,
-)
-from process.core.io.plot.summary.magnets import (
+from process.core.io.plot.summary.magnets.tf import (
     TF_outboard,
+)
+from process.core.io.plot.summary.radial_build import (
+    cumulative_radial_build2,
 )
 from process.models.physics.current_drive import (
     CurrentDriveMethodType,

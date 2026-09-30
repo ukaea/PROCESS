@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
 
 import matplotlib.pyplot as plt
@@ -30,6 +31,7 @@ if TYPE_CHECKING:
     from process.core.io.mfile import MFile
 
 
+@dataclass
 class RadialBuild:
     """Dataclass containing radial build dictionaries"""
 
