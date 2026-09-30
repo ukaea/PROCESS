@@ -2352,16 +2352,6 @@ class CurrentDrive(Model):
             ):
                 self.data.heat_transport.p_hcd_electric_total_mw = 0.0e0
 
-            # Ratio of fusion to input (injection+ohmic) power
-            self.data.current_drive.big_q_plasma = (
-                self.data.physics.p_fusion_total_mw
-                / (
-                    self.data.current_drive.p_hcd_injected_total_mw
-                    + self.data.current_drive.p_beam_orbit_loss_mw
-                    + self.data.physics.p_plasma_ohmic_mw
-                )
-            )
-
     @staticmethod
     def calculate_normalised_current_drive_efficiency(
         eta_cd_hcd: float,
