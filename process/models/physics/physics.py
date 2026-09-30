@@ -33,6 +33,7 @@ from process.models.physics.exhaust import calculate_brunner_divertor_power_spli
 from process.models.physics.profiles import (
     DensityProfilePedestalType,
     PlasmaProfileShapeType,
+    calculate_profile_shell_contributions,
 )
 from process.models.pulse import PulseTimings
 
@@ -230,6 +231,7 @@ class Physics(Model):
     def output(self) -> None:
         """Output plasma physics information."""
         self.calculate_effective_charge_ionisation_profiles()
+        self.calculate_stored_thermal_energy_profiles()
         self.outplas()
         self.outtim()
 
@@ -2918,6 +2920,20 @@ class Physics(Model):
             self.data.physics.e_plasma_thermal_total,
             "OP ",
         )
+        for i in range(len(self.data.physics.eden_plasma_thermal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma thermal energy density at point {i}",
+                f"(eden_plasma_thermal_profile{i})",
+                self.data.physics.eden_plasma_thermal_profile[i],
+            )
+        for i in range(len(self.data.physics.e_plasma_thermal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma thermal energy at point {i}",
+                f"(e_plasma_thermal_profile{i})",
+                self.data.physics.e_plasma_thermal_profile[i],
+            )
         po.ovarre(
             self.outfile,
             "Plasma thermal energy in electrons [J]",
@@ -2925,6 +2941,23 @@ class Physics(Model):
             self.data.physics.e_plasma_electrons_thermal,
             "OP ",
         )
+        for i in range(len(self.data.physics.eden_plasma_electrons_thermal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma thermal energy density in electrons at point {i}",
+                f"(eden_plasma_electrons_thermal_profile{i})",
+                self.data.physics.eden_plasma_electrons_thermal_profile[i],
+                "OP ",
+            )
+        for i in range(len(self.data.physics.e_plasma_electrons_thermal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma thermal energy in electrons at point {i}",
+                f"(e_plasma_electrons_thermal_profile{i})",
+                self.data.physics.e_plasma_electrons_thermal_profile[i],
+                "OP ",
+            )
+
         po.ovarre(
             self.outfile,
             "Plasma thermal energy in ions [J]",
@@ -2932,6 +2965,22 @@ class Physics(Model):
             self.data.physics.e_plasma_ions_thermal,
             "OP ",
         )
+        for i in range(len(self.data.physics.eden_plasma_ions_thermal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma thermal energy density in ions at point {i}",
+                f"(eden_plasma_ions_thermal_profile{i})",
+                self.data.physics.eden_plasma_ions_thermal_profile[i],
+                "OP ",
+            )
+        for i in range(len(self.data.physics.e_plasma_ions_thermal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma thermal energy in ions at point {i}",
+                f"(e_plasma_ions_thermal_profile{i})",
+                self.data.physics.e_plasma_ions_thermal_profile[i],
+                "OP ",
+            )
         po.oblnkl(self.outfile)
 
         po.ovarre(
@@ -3253,6 +3302,62 @@ class Physics(Model):
         e_plasma_thermal = eden_plasma_thermal_vol_avg * vol_plasma
 
         return eden_plasma_thermal_vol_avg, e_plasma_thermal
+
+    def calculate_stored_thermal_energy_profiles(self) -> None:
+        """Calculate the per-point electron thermal energy profile.
+
+        Each entry is the shell contribution 2*vol_plasma*e(rho)*rho*dx, so that
+        np.cumsum() of the profile converges to e_plasma_electrons_thermal (matching
+        the rho-weighted volume integral used for the volume-averaged quantities).
+        """
+        self.data.physics.eden_plasma_electrons_thermal_profile, _ = (
+            self.calaculate_stored_thermal_energy(
+                vol_plasma=1.0,
+                nd_plasma_vol_avg=self.plasma_profile.neprofile.profile_y,
+                temp_plasma_density_weighted_vol_avg_kev=self.plasma_profile.teprofile.profile_y,
+            )
+        )
+
+        self.data.physics.eden_plasma_ions_thermal_profile, _ = (
+            self.calaculate_stored_thermal_energy(
+                vol_plasma=1.0,
+                nd_plasma_vol_avg=self.plasma_profile.neprofile.profile_y
+                * (
+                    self.data.physics.nd_plasma_ions_total_vol_avg
+                    / self.data.physics.nd_plasma_electrons_vol_avg
+                ),
+                temp_plasma_density_weighted_vol_avg_kev=self.plasma_profile.teprofile.profile_y
+                * self.data.physics.f_temp_plasma_ion_electron,
+            )
+        )
+
+        self.data.physics.eden_plasma_thermal_profile = (
+            self.data.physics.eden_plasma_electrons_thermal_profile
+            + self.data.physics.eden_plasma_ions_thermal_profile
+        )
+
+        self.data.physics.e_plasma_electrons_thermal_profile = (
+            calculate_profile_shell_contributions(
+                profile_x=self.plasma_profile.teprofile.profile_x,
+                profile_y=self.data.physics.eden_plasma_electrons_thermal_profile,
+                vol_plasma=self.data.physics.vol_plasma,
+                profile_dx=self.plasma_profile.teprofile.profile_dx,
+            )
+        )
+
+        self.data.physics.e_plasma_ions_thermal_profile = (
+            calculate_profile_shell_contributions(
+                profile_x=self.plasma_profile.teprofile.profile_x,
+                profile_y=self.data.physics.eden_plasma_ions_thermal_profile,
+                vol_plasma=self.data.physics.vol_plasma,
+                profile_dx=self.plasma_profile.teprofile.profile_dx,
+            )
+        )
+
+        self.data.physics.e_plasma_thermal_profile = (
+            self.data.physics.e_plasma_electrons_thermal_profile
+            + self.data.physics.e_plasma_ions_thermal_profile
+        )
 
 
 def res_diff_time(rmajor, res_plasma, kappa95):

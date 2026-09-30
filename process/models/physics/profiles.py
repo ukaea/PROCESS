@@ -585,7 +585,7 @@ def calculate_vol_avg_of_profile(
 
     Returns
     -------
-    float
+    float :
         The volume-averaged value (⟨profile_y⟩) of the profile.
 
     Raises
@@ -668,3 +668,65 @@ class IonTemperatureProfile(Profile):
             self.electron_temperature_profile.profile_y
             * self.data.physics.f_temp_plasma_ion_electron
         )
+
+
+def calculate_profile_shell_contributions(
+    profile_x: np.ndarray,
+    profile_y: np.ndarray,
+    vol_plasma: float,
+    profile_dx: float | None = None,
+) -> np.ndarray:
+    """Calculates the local absolute contributions of a per volume density profile given
+    in units of [/m³] and in normalised radial units.
+
+    This represents the contribution of each radial shell to the total quantity
+    within the plasma volume.
+
+    Parameters
+    ----------
+    profile_x :
+        The x-values of the profile.
+    profile_y :
+        The y-values of the profile.
+    vol_plasma :
+        The total plasma volume [m³].
+    profile_dx :
+        The spacing between consecutive x-values in the profile.
+
+    Returns
+    -------
+    np.ndarray :
+        The local absolute contributions of each radial shell to the total quantity
+        within the plasma volume.
+
+    Raises
+    ------
+    ValueError
+        If profile_x is not a 1D array, contains fewer than 2 points,
+        does not span from 0 to 1,or is not strictly increasing.
+
+    Notes
+    -----
+    - The 2 factor in the calculation arises using both sides of the profile and the
+    radial normalisation of the profile.
+
+    """
+    if profile_x.ndim != 1:
+        raise ValueError("profile_x must be a 1D array.")
+
+    if profile_x.size < 2:
+        raise ValueError("profile_x must contain at least 2 points.")
+
+    if not np.isclose(profile_x[0], 0.0) or not np.isclose(profile_x[-1], 1.0):
+        raise ValueError("profile_x must span from 0 to 1.")
+
+    if np.any(np.diff(profile_x) <= 0):
+        raise ValueError("profile_x must be strictly increasing.")
+
+    return (
+        2.0
+        * vol_plasma
+        * profile_y
+        * profile_x
+        * (profile_dx if profile_dx is not None else profile_x[1] - profile_x[0])
+    )
