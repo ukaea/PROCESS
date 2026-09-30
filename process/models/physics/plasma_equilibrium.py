@@ -66,7 +66,8 @@ class PlasmaEquilibrium(Model):
         p = np.interp(rho, rho_pres_array, pres_thermal_plasma_array)
         jtor = np.interp(rho, rho_j_array, j_toroidal_array)
 
-        # PJ1 + coordinate=rho + nodes=uniform：psin 由源积分得到，不能再开 active psin 剖面
+        # PJ1 with coordinate=rho and nodes=uniform: psin comes from integrating
+        # the source, so an active psin profile must not be enabled.
         topology = veq.KernelTopology(
             h_count=3,
             v_count=0,
@@ -292,7 +293,7 @@ class PlasmaEquilibrium(Model):
         r_t = eq.surface_fields[2]   # ∂R/∂θ
         z_t = eq.Z_t                 # ∂Z/∂θ
         bp2 = (eq.alpha2 * eq.psin_r[:, None])**2 * (r_t**2 + z_t**2) / (eq.J * eq.R)**2
-        # 体积平均 <Bp^2> = ∫ Bp^2 J R dθ dρ / V
+        # Volume average <Bp^2> = integral of Bp^2 J R dtheta drho / V
         bp2_vol_avg = self.get_volume_average_2(eq, bp2)
         li = bp2_vol_avg / b_poloidal_avg**2
         return li
