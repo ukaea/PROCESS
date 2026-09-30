@@ -4617,7 +4617,7 @@ def plot_line_brem_power_density_profile(
     """
     axis.set_xlabel(r"$\rho \quad [r/a]$")
     axis.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$")
-    axis.set_title("Raw Data: Line & Bremsstrahlung radiation profile")
+    axis.set_title("Raw Data: Line & Bremsstrahlung Radiation Density Profile")
 
     # read in the impurity data
     imp_data = read_imprad_data(_skiprows=2, data_path=impp)
@@ -4750,7 +4750,7 @@ def plot_line_brem_power_profile(
     """
     axis.set_xlabel(r"$\rho \quad [r/a]$")
     axis.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW}]$")
-    axis.set_title("Line & Bremsstrahlung Radiation Profile")
+    axis.set_title("Line & Bremsstrahlung Radiation Power Profile")
 
     # read in the impurity data
     imp_data = read_imprad_data(_skiprows=2, data_path=impp)
@@ -4760,7 +4760,9 @@ def plot_line_brem_power_profile(
         mfile.get(f"f_nd_impurity_electrons({i:02d})", scan=scan) for i in range(1, 15)
     ])
     vol_plasma = mfile.get("vol_plasma", scan=scan)
-    p_plasma_rad_imps_mw = mfile.get("p_plasma_rad_mw", scan=scan) - mfile.get("p_plasma_sync_mw", scan=scan)
+    p_plasma_rad_imps_mw = mfile.get("p_plasma_rad_mw", scan=scan) - mfile.get(
+        "p_plasma_sync_mw", scan=scan
+    )
 
     rho, nd_electron, temp_electron_kev = profiles_with_pedestal(mfile=mfile, scan=scan)
     # imp_data Te values are in eV, but te from profiles_with_pedestal is in keV
@@ -4804,42 +4806,47 @@ def plot_line_brem_power_profile(
         for l_ in range(imp_data.shape[0]):
             p_total_profile[temp_point] += p_rad_array[l_][temp_point] * 1.0e-6
 
-    axis.plot(rho, p_total_profile, label="Total", linestyle="dotted")
+    axis.plot(
+        rho, p_total_profile, label="$P_{\\Sigma\\text{Impurities}}$", linestyle="dotted"
+    )
+    imp_lab = [
+        "H",
+        "He",
+        "Be",
+        "C",
+        "N",
+        "O",
+        "Ne",
+        "Si",
+        "Ar",
+        "Fe",
+        "Ni",
+        "Kr",
+        "Xe",
+        "W",
+    ]
 
+    # Plot individual impurity radiation profiles
     axis.plot(rho, p_rad_array[0] * 1.0e-6, label="H")
     axis.plot(rho, p_rad_array[1] * 1.0e-6, label="He")
-    if imp_frac[2] > 1.0e-30:
-        axis.plot(rho, p_rad_array[2] * 1.0e-6, label="Be")
-    if imp_frac[3] > 1.0e-30:
-        axis.plot(rho, p_rad_array[3] * 1.0e-6, label="C")
-    if imp_frac[4] > 1.0e-30:
-        axis.plot(rho, p_rad_array[4] * 1.0e-6, label="N")
-    if imp_frac[5] > 1.0e-30:
-        axis.plot(rho, p_rad_array[5] * 1.0e-6, label="O")
-    if imp_frac[6] > 1.0e-30:
-        axis.plot(rho, p_rad_array[6] * 1.0e-6, label="Ne")
-    if imp_frac[7] > 1.0e-30:
-        axis.plot(rho, p_rad_array[7] * 1.0e-6, label="Si")
-    if imp_frac[8] > 1.0e-30:
-        axis.plot(rho, p_rad_array[8] * 1.0e-6, label="Ar")
-    if imp_frac[9] > 1.0e-30:
-        axis.plot(rho, p_rad_array[9] * 1.0e-6, label="Fe")
-    if imp_frac[10] > 1.0e-30:
-        axis.plot(rho, p_rad_array[10] * 1.0e-6, label="Ni")
-    if imp_frac[11] > 1.0e-30:
-        axis.plot(rho, p_rad_array[11] * 1.0e-6, label="Kr")
-    if imp_frac[12] > 1.0e-30:
-        axis.plot(rho, p_rad_array[12] * 1.0e-6, label="Xe")
-    if imp_frac[13] > 1.0e-30:
-        axis.plot(rho, p_rad_array[13] * 1.0e-6, label="W")
-    axis.plot(rho, np.cumsum(p_total_profile), label="$\\Sigma P_{\\text{total}}$")
+    # Only plot impurities with a significant fraction
+    for ind in range(2, 14):
+        if imp_frac[ind] > 1.0e-30:
+            axis.plot(rho, p_rad_array[ind] * 1.0e-6, label=imp_lab[ind])
+
+    axis.plot(
+        rho,
+        np.cumsum(p_total_profile),
+        label="$\\Sigma P_{\\Sigma\\text{Impurities}}$",
+        color="black",
+    )
     axis.axhline(
         y=p_plasma_rad_imps_mw,
-        color="tab:orange",
+        color="black",
         linestyle="--",
-        label="$P_{\\text{rad,imps}}$",
+        label="$P_{\\text{total}}$",
     )
-    axis.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1), ncol=4)
+
     axis.minorticks_on()
     # Plot a vertical line at the core region radius
     core_radius = mfile.get("radius_plasma_core_norm", scan=scan)
@@ -4849,7 +4856,7 @@ def plot_line_brem_power_profile(
     # Plot a box in the bottom left with f_{core,reduce} and \rho_{core}
     props_core_reduce = {"boxstyle": "round", "facecolor": "khaki", "alpha": 0.8}
     axis.text(
-        0.5,
+        0.05,
         0.02,
         rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}"
         "\n"
@@ -4859,8 +4866,7 @@ def plot_line_brem_power_profile(
         verticalalignment="bottom",
         bbox=props_core_reduce,
     )
-    
-    
+
     cumulative_thermal_energy_mj = np.cumsum(p_total_profile)
     half_thermal_energy_mj = 0.5 * p_plasma_rad_imps_mw
     half_thermal_energy_position = np.interp(
@@ -4870,7 +4876,7 @@ def plot_line_brem_power_profile(
     )
     axis.axhline(
         y=half_thermal_energy_mj,
-        label="$50\\%\\ W_{\\text{thermal,total}}$",
+        label="$50\\%\\ P_{\\text{total}}$",
         color="tab:green",
         linestyle=":",
     )
@@ -4883,6 +4889,7 @@ def plot_line_brem_power_profile(
     # Ranges
     # ---
     axis.set_xlim([0, 1.0])
+    axis.legend(loc="upper left", bbox_to_anchor=(1.0, 1.0), ncol=1)
     axis.set_yscale("log")
     axis.yaxis.grid(True, which="both", alpha=0.2)
 
@@ -4979,11 +4986,13 @@ def plot_line_brem_loss_function_profile(
     axis.yaxis.grid(True, which="both", alpha=0.2)
 
 
-def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
-    """Plots the contour of line and bremsstrahlung radiation density for a plasma cross-section.
+def plot_rad_density_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
+    """Plots the contour of line and bremsstrahlung radiation density [MW/m³] for a
+    plasma cross-section.
 
-    This function reads impurity and plasma profile data, computes the radiation density profile,
-    interpolates it onto a 2D grid, and plots the upper and lower half contours on the provided axis.
+    This function reads impurity and plasma profile data, computes the radiation
+    density profile, interpolates it onto a 2D grid, and plots the upper and lower
+    half contours on the provided axis.
 
     Parameters
     ----------
@@ -4998,10 +5007,12 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
 
     Notes
     -----
-    - The function assumes the existence of several global or previously defined variables and functions,
-        such as `read_imprad_data`, `interp1d_profile`, and plasma pedestal parameters.
-    - The plotted contours represent the radiation density in units of MW.m^-3.
-    - The function adds colorbar, axis labels, title, and core reduction annotation to the plot.
+    - The function assumes the existence of several global or previously defined
+    variables and functions, such as `read_imprad_data`, `interp1d_profile`, and plasma
+    pedestal parameters.
+    - The plotted contours represent the radiation density in units of [MW/m³]
+    - The function adds colorbar, axis labels, title, and core reduction annotation to
+    the plot.
     """
     rminor = mfile.get("rminor", scan=scan)
     rmajor = mfile.get("rmajor", scan=scan)
@@ -5056,10 +5067,10 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
 
     # Plot the upper half contour
     p_rad_upper = axis.contourf(
-        r_grid, z_grid, p_rad_grid, levels=50, cmap="plasma", zorder=2
+        r_grid, z_grid, p_rad_grid, levels=25, cmap="turbo", zorder=2
     )
     # Plot the lower half contour (mirror)
-    axis.contourf(r_grid, -z_grid, p_rad_grid, levels=50, cmap="plasma", zorder=2)
+    axis.contourf(r_grid, -z_grid, p_rad_grid, levels=25, cmap="turbo", zorder=2)
 
     axis.figure.colorbar(
         p_rad_upper,
@@ -17029,7 +17040,9 @@ def main_plot(
     )
 
     if i_shape == 1:
-        plot_rad_contour(pages["rad_contour"].add_subplot(122), m_file, scan, imp)
+        plot_rad_density_contour(
+            pages["rad_contour"].add_subplot(122, aspect="equal"), m_file, scan, imp
+        )
 
     if i_shape != 1:
         msg = (
@@ -17044,7 +17057,7 @@ def main_plot(
         )
 
     plot_line_brem_power_profile(
-        _add_page("line_brem_power").add_subplot(211), m_file, scan, imp
+        _add_page("line_brem_power").add_subplot(121), m_file, scan, imp
     )
 
     plot_fusion_rate_profiles(
