@@ -21,6 +21,7 @@ from process.core.io.plot.summary.rendering import (
     draw_annotation,
     draw_text,
 )
+from process.data_structure.impurity_radiation_variables import ImpurityRadiationData
 from process.models.geometry.plasma import plasma_geometry
 from process.models.physics.bootstrap_current import (
     BootstrapCurrentFractionModel,
@@ -653,38 +654,18 @@ def plot_main_plasma_information(
     # ================================================
 
     # Add ion density information
+    impurity_data = ImpurityRadiationData()
     textstr_ions = (
-        "             $\\mathbf{Ion \\ to \\ electron}$\n            "
-        " $\\mathbf{relative \\ number}$\n            "
-        " $\\mathbf{densities:}$\n\n             Effective charge:"
-        f" {mfile.get('n_charge_plasma_effective_vol_avg', scan=scan):.3f}\n\n"
-        "             H:   "
-        f" {mfile.get('f_nd_impurity_electrons(01)', scan=scan):.4e}\n        "
-        "     He: "
-        f" {mfile.get('f_nd_impurity_electrons(02)', scan=scan):.4e}\n        "
-        "     Be: "
-        f" {mfile.get('f_nd_impurity_electrons(03)', scan=scan):.4e}\n        "
-        "     C:   "
-        f" {mfile.get('f_nd_impurity_electrons(04)', scan=scan):.4e}\n        "
-        "     N:   "
-        f" {mfile.get('f_nd_impurity_electrons(05)', scan=scan):.4e}\n        "
-        "     O:   "
-        f" {mfile.get('f_nd_impurity_electrons(06)', scan=scan):.4e}\n        "
-        "     Ne: "
-        f" {mfile.get('f_nd_impurity_electrons(07)', scan=scan):.4e}\n        "
-        "     Si:  "
-        f" {mfile.get('f_nd_impurity_electrons(08)', scan=scan):.4e}\n        "
-        "     Ar: "
-        f" {mfile.get('f_nd_impurity_electrons(09)', scan=scan):.4e}\n        "
-        "     Fe: "
-        f" {mfile.get('f_nd_impurity_electrons(10)', scan=scan):.4e}\n        "
-        "     Ni:  "
-        f" {mfile.get('f_nd_impurity_electrons(11)', scan=scan):.4e}\n        "
-        "     Kr:  "
-        f" {mfile.get('f_nd_impurity_electrons(12)', scan=scan):.4e}\n        "
-        "     Xe: "
-        f" {mfile.get('f_nd_impurity_electrons(13)', scan=scan):.4e}\n        "
-        f"     W:   {mfile.get('f_nd_impurity_electrons(14)', scan=scan):.4e}"
+        f"             $\\mathbf{{Ion \\ to \\ electron}}$\n"
+        f"             $\\mathbf{{relative \\ number}}$\n"
+        f"             $\\mathbf{{densities:}}$\n\n"
+        "             Effective charge: "
+        f"{mfile.get('n_charge_plasma_effective_vol_avg', scan=scan):.3f}\n\n"
+        + "\n".join(
+            f"             {label.replace('_', '') + ':':<6}"
+            f"{mfile.get(f'f_nd_impurity_electrons({index:02d})', scan=scan):.4e}"
+            for index, label in enumerate(impurity_data.imp_label[:14], start=1)
+        )
     )
 
     draw_text(

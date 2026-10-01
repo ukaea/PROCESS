@@ -29,34 +29,33 @@ if TYPE_CHECKING:
     from process.core.io.mfile import MFile
 
 
-def plot_rad_contour(axis: Axes, mfile: MFile, scan: int, impp: str):
-    """Plots the contour of line and bremsstrahlung radiation density for a plasma
-    cross-section.
+def plot_rad_density_contour(axis: Axes, mfile: MFile, scan: int, impp: str):
+    """Plots the contour of line and bremsstrahlung radiation density [MW/m³]
+    for a plasma cross-section.
 
-    This function reads impurity and plasma profile data, computes the radiation density
-    profile,
-    interpolates it onto a 2D grid, and plots the upper and lower half contours on the
-    provided axis.
+    This function reads impurity and plasma profile data, computes the radiation
+    density profile, interpolates it onto a 2D grid, and plots the upper and lower
+    half contours on the provided axis.
 
     Parameters
     ----------
-    axis : matplotlib.axes.Axes
+    axis:
         The matplotlib axis object to plot the contours on.
-    mfile : Any
+    mfile:
         Data object containing plasma and impurity profile information.
-    scan : int
+    scan:
         The scan index to extract profile data for plotting.
-    impp : str
+    impp:
         The impurity data path
 
     Notes
     -----
     - The function assumes the existence of several global or previously defined
-    variables and functions,
-        such as `read_imprad_data`, `interp1d_profile`, and plasma pedestal parameters.
-    - The plotted contours represent the radiation density in units of MW.m^-3.
+       variables and functions, such as `read_imprad_data`, `interp1d_profile`,
+       and plasma pedestal parameters.
+    - The plotted contours represent the radiation density in units of [MW/m³]
     - The function adds colorbar, axis labels, title, and core reduction annotation to
-    the plot.
+       the plot.
     """
     rminor = mfile.get("rminor", scan=scan)
     rmajor = mfile.get("rmajor", scan=scan)
@@ -72,6 +71,8 @@ def plot_rad_contour(axis: Axes, mfile: MFile, scan: int, impp: str):
 
     # Initialize the radius
     rho, ne, te = profiles_with_pedestal(mfile, scan)
+    # imp_data Te values are in eV, but te from profiles_with_pedestal is in keV
+    te_ev = te * 1.0e3
 
     # Intailise the radiation profile arrays
     pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
@@ -85,12 +86,12 @@ def plot_rad_contour(axis: Axes, mfile: MFile, scan: int, impp: str):
         for impurity in range(imp_data.shape[0]):
             # Check if profile temperature is lower than dataset minimum.
             # If so, use the minimum loss function value
-            if te[rho] <= imp_data[impurity][0][0]:
+            if te_ev[rho] <= imp_data[impurity][0][0]:
                 lz[impurity][rho] = imp_data[impurity][0][1]
 
             # Check if profile temperature is higher than dataset maximum.
             # If so, use the maximum loss function value
-            elif te[rho] >= imp_data[impurity][imp_data.shape[1] - 1][0]:
+            elif te_ev[rho] >= imp_data[impurity][imp_data.shape[1] - 1][0]:
                 lz[impurity][rho] = imp_data[impurity][imp_data.shape[1] - 1][1]
             else:
                 # If profile valie is within dataset range, use log-log interpolation to
@@ -98,7 +99,7 @@ def plot_rad_contour(axis: Axes, mfile: MFile, scan: int, impp: str):
                 log_te_data = np.log([row[0] for row in imp_data[impurity]])
                 log_lz_data = np.log([row[1] for row in imp_data[impurity]])
                 lz[impurity][rho] = np.exp(
-                    np.interp(np.log(te[rho]), log_te_data, log_lz_data)
+                    np.interp(np.log(te_ev[rho]), log_te_data, log_lz_data)
                 )
             # Find the power density for each impurity at each rho
             pimpden[impurity][rho] = (
@@ -112,10 +113,10 @@ def plot_rad_contour(axis: Axes, mfile: MFile, scan: int, impp: str):
 
     # Plot the upper half contour
     p_rad_upper = axis.contourf(
-        r_grid, z_grid, p_rad_grid, levels=50, cmap="plasma", zorder=2
+        r_grid, z_grid, p_rad_grid, levels=25, cmap="turbo", zorder=2
     )
     # Plot the lower half contour (mirror)
-    axis.contourf(r_grid, -z_grid, p_rad_grid, levels=50, cmap="plasma", zorder=2)
+    axis.contourf(r_grid, -z_grid, p_rad_grid, levels=25, cmap="turbo", zorder=2)
 
     axis.figure.colorbar(
         p_rad_upper,
@@ -405,5 +406,5 @@ __all__ = [
     "plot_cs_radial_stress_profile",
     "plot_larmor_radius_profile",
     "plot_plasma_pressure_gradient_profiles",
-    "plot_rad_contour",
+    "plot_rad_density_contour",
 ]
