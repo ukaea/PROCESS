@@ -1010,3 +1010,7 @@ def setup_loggers(working_directory_log_path: Path | None = None):
         logging_file_input_location_handler.setLevel(logging.INFO)
         logging_file_input_location_handler.setFormatter(logging_formatter)
         logger.addHandler(logging_file_input_location_handler)
+
+
+if __name__ == "__main__":
+    process_cli()
